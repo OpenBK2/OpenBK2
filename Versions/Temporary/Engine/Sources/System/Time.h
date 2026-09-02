@@ -3,9 +3,10 @@
 #include "Dg.h"
 #include "time.hpp"
 
+#include "System_export.h"
 DEFINE_DG_CONSTANT_NODE( CCTime, STime );
 
-class CTimeCounter
+class SYSTEM_EXPORT CTimeCounter
 {
 	STime prevTime;
 	ZDATA

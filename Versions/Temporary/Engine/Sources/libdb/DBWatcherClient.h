@@ -1,4 +1,5 @@
 #pragma once
+#include "libdb_export.h"
 
 namespace NDBWatcherClient
 {
@@ -15,7 +16,7 @@ struct IDBWatcherClient : public CObjectBase
 	virtual EResult GetReferencingObjects( const std::string &szName, std::vector<CDBID> *pReferencingObjs ) = 0;
 };
 
-void RegisterSingleton();
+LIBDB_EXPORT void RegisterSingleton();
 
 }
 

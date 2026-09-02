@@ -4,7 +4,9 @@
 
 #include <fmt/format.h>
 
-CLogger theLogger;
+#include "libdb_export.h"
+
+LIBDB_EXPORT CLogger theLogger;
 
 CLogger::CLogger()
 : bCheckReferences( false ), pStream( 0 )

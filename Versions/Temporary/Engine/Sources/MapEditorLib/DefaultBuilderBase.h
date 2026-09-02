@@ -2,8 +2,9 @@
 
 #include "BuilderBase.h"
 
+#include "MapEditorLib_export.h"
 
-class CDefaultBuilderBase : public CBuilderBase
+class MAPEDITORLIB_EXPORT CDefaultBuilderBase : public CBuilderBase
 {
 public:
 	// CBuilderBase

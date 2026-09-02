@@ -2,6 +2,7 @@
 
 #include "DefaultController.h"
 #include "ManipulatorManager.h"
+#include "MapEditorLib_export.h"
 
 // TYPE_INSERT:
 // szName					- имя массива
@@ -28,7 +29,7 @@
 // szName					- имя элемента (не массив, не структура)
 // newValue				- 1 Expand, 0 Collapse
 
-class CObjectBaseController : public CDefaultController
+class MAPEDITORLIB_EXPORT CObjectBaseController : public CDefaultController
 {
 public:
 	struct SUndoData
@@ -65,7 +66,7 @@ public:
 		
 		void FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator );
 		bool Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
-		bool Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
+		MAPEDITORLIB_EXPORT bool Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 	};
 	//
 	typedef std::list<SUndoData> CUndoDataList;

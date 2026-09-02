@@ -3,8 +3,9 @@
 #include "InteractiveProcess.h"
 #include "Interface_Logger.h"
 
+#include "MapEditorLib_export.h"
 
-class CInteractiveMaya : public CObjectBase
+class MAPEDITORLIB_EXPORT CInteractiveMaya : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CInteractiveMaya );
 

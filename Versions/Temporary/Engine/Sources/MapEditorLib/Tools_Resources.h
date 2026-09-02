@@ -2,6 +2,7 @@
 
 #include "System/VFSOperations.h"
 
+#include "MapEditorLib_export.h"
 
 #include <cstdint>
 // Legacy
@@ -27,8 +28,8 @@ struct SFileStreamHolder
 };
 
 
-void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
-void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
+MAPEDITORLIB_EXPORT void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
+MAPEDITORLIB_EXPORT void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
 
 
 template<class TResource>
@@ -247,8 +248,8 @@ bool SaveTypedSuperBINResource( const std::string &rszResourceFileName, TResourc
 // если путь уже был абсолютным и начало пути не совпадает с указанным, то путь не изменяется
 // если путь уже был абсолютным и начало пути совпадает с указанным, то путь изменяется на относительный ( при bReturnAbsolutePath == false )
 // если путь был относительным, к нему прибавляется указаанный путь ( при bReturnAbsolutePath == true )
-bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const std::string &rszPathPrefix, bool *pbAbsolutePath );
-bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath );
+MAPEDITORLIB_EXPORT bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const std::string &rszPathPrefix, bool *pbAbsolutePath );
+MAPEDITORLIB_EXPORT bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath );
 
 
 
@@ -285,21 +286,21 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait );
 
 
-void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePage );
+MAPEDITORLIB_EXPORT void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePage );
 void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage );
 
 
-void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );
-void File2String( CString *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
-void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
-void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
-void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( CString *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
 
 
-void String2File( std::vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
-void String2File( const CString &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
-void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
-void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
-void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( const CString &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );
 
 

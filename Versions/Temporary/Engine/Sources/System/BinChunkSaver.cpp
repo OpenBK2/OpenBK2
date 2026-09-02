@@ -12,6 +12,8 @@
 
 #include <fmt/format.h>
 
+#include "System_export.h"
+
 SYSTEM_EXPORT int N_SAVELOAD_VERSION = 4;
 
 // remove this for final version

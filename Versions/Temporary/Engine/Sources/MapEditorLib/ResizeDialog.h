@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "MapEditorLib_export.h"
+
 #define DECLARE_RESIZE_DLG_WND_COMMON_METHODS( className )														\
 protected:																																						\
 	void	GetXMLFilePath( std::string *pszXMLFilePath ) { (*pszXMLFilePath) = #className; }	\
@@ -9,7 +11,7 @@ protected:																																						\
 	int GetMinimumYDimension() { return 130; }																					\
 	bool IsDrawGripper() { return false; }																							\
 
-class CResizeDialog : public CDialog
+class MAPEDITORLIB_EXPORT CResizeDialog : public CDialog
 {
 	struct SControlStyle
 	{

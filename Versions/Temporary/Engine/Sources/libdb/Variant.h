@@ -4,12 +4,14 @@
 
 #include <boost/uuid/uuid.hpp>
 
+#include "libdb_export.h"
+
 //#include "DBIDDef.h"
 
 /**
  * Variant class
  */
-class CVariant
+class LIBDB_EXPORT CVariant
 {
 public:
 	enum EVariantType

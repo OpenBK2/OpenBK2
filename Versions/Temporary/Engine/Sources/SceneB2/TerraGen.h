@@ -187,9 +187,9 @@ namespace NScene
 {
 	extern const std::string SZ_TERRA_BIN_FILE_NAME;
 	//
-	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
+	SCENEB2_EXPORT void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
 	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
-	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
+	SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
 };
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20

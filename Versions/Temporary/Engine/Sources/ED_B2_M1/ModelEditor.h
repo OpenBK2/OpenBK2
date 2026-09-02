@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ED_B2_M1_export.h"
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/DefaultView.h"
 #include "ModelWindow.h"
@@ -9,7 +10,7 @@
 
 #define TOOLBAR_MODEL_ELEMENTS_COUNT 13
 
-EXTERNVAR const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
+EXTERNVAR ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT];
 
 
 class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHandler

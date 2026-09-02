@@ -4,7 +4,9 @@
 
 #include <cstdint>
 
-EXTERNVAR const float MINIMAL_POINT_DISTANCE;	//2.0f
+#include "MapEditorLib_export.h"
+
+EXTERNVAR MAPEDITORLIB_EXPORT const float MINIMAL_POINT_DISTANCE;	//2.0f
 
 
 template<>
@@ -45,6 +47,6 @@ inline void UpdateBoundingBox( CVec3 *pvMin, CVec3 *pvMax, const CVec3 &rvPositi
 //void GetVectorByAIDirection( CVec2 *pVec2, uint16_t wDirection, float fRadius );
 
 //3D Geometry
-float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection );
+MAPEDITORLIB_EXPORT float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection );
 
 

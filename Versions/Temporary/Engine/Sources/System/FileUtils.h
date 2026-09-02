@@ -106,8 +106,9 @@ SYSTEM_EXPORT std::time_t GetLastWriteTime( const std::string &szFileName );
 // windows.h rewrites the name to DeleteFileA, and a translation unit that has not
 // included it would then look for a symbol nobody defines.
 SYSTEM_EXPORT bool RemoveFile( const std::string &szFileName );
-bool DoesFolderExist( const std::string &szFolderName );bool IsValidFileName( const std::string &szFileName );
+SYSTEM_EXPORT bool DoesFolderExist( const std::string &szFolderName );
 // is valid win32 file name
+SYSTEM_EXPORT bool IsValidFileName( const std::string &szFileName );
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
 SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
@@ -145,8 +146,8 @@ SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath 
 //! miss means the file is genuinely absent, so scanning would only cost time.
 SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath );
 
-std::string GetTempPath();
-std::string GetTempFileName();
+SYSTEM_EXPORT std::string GetTempPath();
+SYSTEM_EXPORT std::string GetTempFileName();
 
 // exported because every caller of these three is outside System: Game reads the
 // normalized one for its log paths, MapEditor sets the directory, and dbcodegen,

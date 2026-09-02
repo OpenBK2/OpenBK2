@@ -35,7 +35,7 @@ struct SVideoModeInfo
 };
 
 NWin32Helper::com_ptr<IDirect3D9> pD3D;
-NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
+_3DLIB_EXPORT NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 bool bNoTexture = false;
 SRenderStats renderStats;
 bool bHardwareVP, bHardwarePixelShaders, bHardwarePixelShaders14, bHardwarePixelShaders20, bHardwarePixelShaders20a;

@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "3Dmotor_export.h"
+
 namespace NAI
 {
 
@@ -13,7 +15,7 @@ struct SEdge
 	SEdge( uint16_t _wS, uint16_t _wF ): wStart(_wS), wFinish(_wF) {}
 };
 
-class CEdgesInfo
+class _3DMOTOR_EXPORT CEdgesInfo
 {
 	uint16_t InsertEdge( uint16_t i1, uint16_t i2, const std::vector<CVec3> &pts );
 public:

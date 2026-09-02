@@ -1,7 +1,8 @@
 #pragma once
 
+#include "MapEditorLib_export.h"
 
-class CStringManager
+class MAPEDITORLIB_EXPORT CStringManager
 {
 public:
 	static void CreateRecentListName( std::string *pszName, const struct SObjectSet &rObjectSet, bool bMainObject );

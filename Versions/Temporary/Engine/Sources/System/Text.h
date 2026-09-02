@@ -9,7 +9,7 @@ namespace NText
 	//! get text from resources by filename
 	SYSTEM_EXPORT const std::wstring &GetText( const std::string &szTextFileName );
 	//! reload text to resources (discard cached information)
-	void Reload( const std::string &szTextFileName );
+	SYSTEM_EXPORT void Reload( const std::string &szTextFileName );
 	//! load unicode text from stream to wstring
 	SYSTEM_EXPORT bool LoadUnicodeText( std::wstring *pwszRes, CDataStream *pStream );
 }

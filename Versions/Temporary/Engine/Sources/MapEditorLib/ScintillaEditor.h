@@ -2,7 +2,9 @@
 
 #include <cstdint>
 
-class CScintillaEditorWindow : public CWnd
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CScintillaEditorWindow : public CWnd
 {
 	int ( *pfnScintilla )( void*, int, int, int );
 	void *pScintilla;

@@ -18,6 +18,8 @@
 
 #include "System/SplashScreen.h"
 
+#include "libdb_export.h"
+
 // Singletons
 #include "UserDataContainer.h"
 #include "MainFrameContainer.h"
@@ -45,7 +47,7 @@
 #include "port/debugging.h"
 
 
-EXTERNVAR CLogger theLogger;
+EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
 BEGIN_MESSAGE_MAP(CEditorApp, CWinApp)
 	ON_COMMAND(ID_HELP, OnHelp)

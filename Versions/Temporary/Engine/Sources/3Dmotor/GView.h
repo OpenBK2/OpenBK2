@@ -247,7 +247,7 @@ _3DMOTOR_EXPORT void StopDynamicLighting( CObjectBase *_p );
 void SetNextLightmapViewMode( IGameView *p );
 void SetNextTranspRenderMode( IGameView *p );
 void SetNextHSRMode( IGameView *p );
-void ReloadTexture( const NDb::STexture *p );
+_3DMOTOR_EXPORT void ReloadTexture( const NDb::STexture *p );
 
 CLightmapsHolder *CalcLightmaps( IGameView *pScene, CObjectBase *pUser, int nUserID, const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder);
 void ApplyLightmaps( IGameView *pScene, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD );

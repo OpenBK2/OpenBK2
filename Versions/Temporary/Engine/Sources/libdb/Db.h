@@ -27,7 +27,7 @@ LIBDB_EXPORT void SetLoadDepth( int nLoadDepth );
 //! get object from database
 class CResource *GetObject( const CDBID &dbid );
 //! does object exist?
-bool DoesObjectExist( const CDBID &dbid );
+LIBDB_EXPORT bool DoesObjectExist( const CDBID &dbid );
 //! retrieve class type name for requested object
 LIBDB_EXPORT std::string GetClassTypeName( const CDBID &dbid );
 //! retrieve all objects by type

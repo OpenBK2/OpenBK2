@@ -1,4 +1,7 @@
 #pragma once
+
+#include "3Dmotor_export.h"
+
 // full description of buffers & textures for internal use & some internal data access
 
 #include <d3d9.h>
@@ -15,7 +18,7 @@ namespace NGfx
 	enum EFace : int;
 	enum EWrap : int;
 	extern NWin32Helper::com_ptr<IDirect3D9> pD3D;
-	extern NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
+	_3DMOTOR_EXPORT extern NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 	extern bool bNoTexture;
 	extern int nCurrentFrame;
 	extern bool bHardwareVP, bHardwarePixelShaders, bHardwarePixelShaders14, bHardwarePixelShaders20, bHardwarePixelShaders20a;

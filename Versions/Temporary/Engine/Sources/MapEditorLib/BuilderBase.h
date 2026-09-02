@@ -2,8 +2,9 @@
 
 #include "Interface_Builder.h"
 
+#include "MapEditorLib_export.h"
 
-class CBuilderBase : public IBuilder
+class MAPEDITORLIB_EXPORT CBuilderBase : public IBuilder
 {
 public:
 	// IBuilder

@@ -3,9 +3,10 @@
 
 #include "libdb/Manipulator.h"
 
+#include "MapEditorLib_export.h"
 
 class CMaskManipulatorIterator;
-class CMaskManipulator : public IManipulator
+class MAPEDITORLIB_EXPORT CMaskManipulator : public IManipulator
 {
 	friend class CMaskManipulatorIterator;
 

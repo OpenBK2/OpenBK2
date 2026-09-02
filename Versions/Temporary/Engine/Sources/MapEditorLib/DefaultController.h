@@ -3,9 +3,10 @@
 #include "Interface_Controller.h"
 #include "libdb/Manipulator.h"
 
+#include "MapEditorLib_export.h"
 
 class CDefaultView;
-class CDefaultController : public IController
+class MAPEDITORLIB_EXPORT CDefaultController : public IController
 {
 	friend class CDefaultView;
 	

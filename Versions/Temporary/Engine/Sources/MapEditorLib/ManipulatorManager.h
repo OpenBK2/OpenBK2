@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <boost/uuid/uuid_io.hpp>
 
+#include "MapEditorLib_export.h"
+
 //
 #define REFINFO_MAKE_UNIQUE_LIST	0x00000001
 #define REFINFO_PROPERTY_NAME			0x00000002
@@ -16,7 +18,7 @@
 #define REFINFO_ALL								0xFFffFFff
 //
 
-class CManipulatorManager
+class MAPEDITORLIB_EXPORT CManipulatorManager
 {
 public:
 	struct SReferenceInfo

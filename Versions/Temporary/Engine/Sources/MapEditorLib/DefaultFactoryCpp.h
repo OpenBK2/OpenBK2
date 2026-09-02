@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MapEditorLib_export.h"
 /*
 typedef std::unordered_map<std::string, ObjectFactoryNewFunc> CNewFuncsMap;
 static CNewFuncsMap *pNewFuncs = 0;

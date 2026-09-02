@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Interface_ObjectCollector.h"
+#include "MapEditorLib_export.h"
 struct IManipulator;
 
-class CBasicDataExtractor : public IObjectDataExtractor
+class MAPEDITORLIB_EXPORT CBasicDataExtractor : public IObjectDataExtractor
 {
 	bool LoadImagesFromCache( class CBitmap *pNormalBitmap, class CBitmap *pSmallBitmap, const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	void SaveImagesToCache( CArray2D<uint32_t> &rImageSmall, CArray2D<uint32_t> &rImageNormal, const std::string &rszObjectTypeName, const std::string &rszObjectName );

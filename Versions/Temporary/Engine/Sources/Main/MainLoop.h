@@ -43,7 +43,7 @@ MAIN_EXPORT void PushInterface( IInterfaceBase *pInterface );
 MAIN_EXPORT void PopInterface();
 MAIN_EXPORT IInterfaceBase *GetTopInterface();
 MAIN_EXPORT IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface );
-void SetInputEnabled( bool bEnabled );
+MAIN_EXPORT void SetInputEnabled( bool bEnabled );
 MAIN_EXPORT void Serialize( IBinSaver &saver, struct IProgressHook *pHook = 0 );
 void AfterLoad();
 }

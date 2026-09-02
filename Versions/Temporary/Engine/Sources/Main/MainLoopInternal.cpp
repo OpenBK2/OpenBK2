@@ -10,6 +10,8 @@
 
 #include <boost/predef.h>
 
+#include "libdb_export.h"
+
 #if BOOST_OS_WINDOWS
 #include <wtypes.h>
 #include <winbase.h>

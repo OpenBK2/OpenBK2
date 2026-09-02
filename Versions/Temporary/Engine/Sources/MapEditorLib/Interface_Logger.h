@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface_MainFrame.h"
+#include "MapEditorLib_export.h"
 
 namespace NLog
 {
@@ -15,12 +16,12 @@ namespace NLog
 	{
 		virtual ILogger * GetLogger() = 0;
 	};
-	void SetLogger( ILoggerSink * pLoggerSink );
+	MAPEDITORLIB_EXPORT void SetLogger( ILoggerSink * pLoggerSink );
 	//	
-	ILogger * GetLogger();
+	MAPEDITORLIB_EXPORT ILogger * GetLogger();
 //	void FlushLogBuffer();
 	//
-	void Log( ELogOutputType eLogOutputType, const char *pszFormat, ... );
+	MAPEDITORLIB_EXPORT void Log( ELogOutputType eLogOutputType, const char *pszFormat, ... );
 	void ClearLog();
 }
 

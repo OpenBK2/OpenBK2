@@ -24,9 +24,11 @@
 
 #include <cstdint>
 
+#include "3Dmotor_export.h"
+
 namespace NGfx
 {
-  EXTERNVAR NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
+  _3DMOTOR_EXPORT EXTERNVAR NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 }
 
 REGISTER_EXPORTER_IN_DLL( Texture, CTextureExporter )

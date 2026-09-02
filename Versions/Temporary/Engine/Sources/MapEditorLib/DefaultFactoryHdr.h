@@ -1,14 +1,15 @@
 #pragma once
+#include "MapEditorLib_export.h"
 
 #define DECLARE_FACTORY( TYPE )																													\
 struct I##TYPE;																																			\
 namespace N##TYPE##Factory																															\
 {																																												\
-	void Register##TYPE##Type( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );		\
-	void UnRegister##TYPE##Type( const std::string &szName );																	\
-	I##TYPE* Create##TYPE( const std::string &szName );																				\
-	bool CanCreate##TYPE( const std::string &szName );																					\
-	void StartRegister##TYPE();																														\
+	MAPEDITORLIB_EXPORT void Register##TYPE##Type( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );		\
+	MAPEDITORLIB_EXPORT void UnRegister##TYPE##Type( const std::string &szName );																	\
+	MAPEDITORLIB_EXPORT I##TYPE* Create##TYPE( const std::string &szName );																				\
+	MAPEDITORLIB_EXPORT bool CanCreate##TYPE( const std::string &szName );																					\
+	MAPEDITORLIB_EXPORT void StartRegister##TYPE();																														\
 };
 
 #define REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )															\

@@ -2,10 +2,12 @@
 
 #include <cstdint>
 
+#include "MapEditorLib_export.h"
+
 //Класс для работы с Registry, только REG_SZ, REG_DWORD
 //Возвращаемое значение - ERROR_SUCCES (0) или код GetLastError()
 //Все внутренние ключи указываются относительно открытой секции, новые подкаталоги запрещены
-class CRegistrySection
+class MAPEDITORLIB_EXPORT CRegistrySection
 {
   protected:
 	HKEY hRegistrySection;

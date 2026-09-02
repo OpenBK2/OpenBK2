@@ -81,7 +81,7 @@ INPUT_EXPORT bool GetEvent( SGameMessage *pGameMessage );
 void MakeEvent( SGameMessage *pMSG,  const std::string &szGameMessage, int nParam1, int nParam2, EControlType ct );
 INPUT_EXPORT void PostEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
 INPUT_EXPORT void PostWinEvent( const std::string &szGameMessage, int nParam1, int nParam2 );
-void PurgeEvents();
+INPUT_EXPORT void PurgeEvents();
 INPUT_EXPORT void PurgeUIEvents();
 
 };

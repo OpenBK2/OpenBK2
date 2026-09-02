@@ -3,6 +3,7 @@
 #include "ControlConfig.h"
 #include "ControlData.h"
 #include "ControlSelection.h"
+#include "MapEditorLib_export.h"
 
 // funtionality															struct	algorithm
 // item data expansion / storage						*

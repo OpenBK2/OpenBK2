@@ -2,9 +2,10 @@
 #pragma once
 #include "Interface_CommandHandler.h"
 
+#include "MapEditorLib_export.h"
 #define INVALID_SHORTCUT_INDEX (0xFFFF)
 
-class CDefaultShortcutBar : public SECShortcutBar
+class MAPEDITORLIB_EXPORT CDefaultShortcutBar : public SECShortcutBar
 {
 	std::vector<CWnd*> shortcutList;
 	unsigned nCommandHandlerID;

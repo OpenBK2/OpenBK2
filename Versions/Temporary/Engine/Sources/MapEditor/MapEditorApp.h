@@ -4,6 +4,7 @@
 	#error include 'stdafx.h' before including this file for PCH
 #endif
 
+#include "MapEditor_export.h"
 
 struct SCursomToolBarInfo
 {
@@ -37,7 +38,7 @@ namespace NVFS
 
 struct IEditorModule;
 
-class CEditorApp : public CWinApp
+class MAPEDITOR_EXPORT CEditorApp : public CWinApp
 {
 	class CMainFrame *pMainFrame;
 	CObj<NVFS::IVFS> pMainVFS;

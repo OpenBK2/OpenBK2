@@ -30,7 +30,7 @@ namespace NDb
 	struct SHeightFog;
 	struct SDepthOfField;
 
-	struct SModel : public CResource
+	struct _3DMOTOR_EXPORT SModel : public CResource
 	{
 		OBJECT_BASIC_METHODS( SModel )
 	public:

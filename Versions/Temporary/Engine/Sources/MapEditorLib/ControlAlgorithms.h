@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MapEditorLib_export.h"
 
 namespace NCA
 {
@@ -17,9 +18,9 @@ namespace NCA
 	bool IsParent( HTREEITEM hItem, HTREEITEM hParentItem, const SECTreeCtrl *pTreeControl );
 	void CreateFullName( std::string *pszFullName, HTREEITEM hItem, const std::string &rszTreeItemDivider, const SECTreeCtrl *pTreeControl );
 	bool IsTopSelection( HTREEITEM hItem, HTREEITEM hItemToSkip, const SECTreeCtrl *pTreeControl );
-	int CreateSelection( CHTREEITEMList *pSelection, ESelectionType eSelectionType, HTREEITEM hParentItem, HTREEITEM hItemToSkip, const SECTreeCtrl *pTreeControl );
-	void SelectAll( HTREEITEM hParentItem, HTREEITEM hItemToSkip, SECTreeCtrl *pTreeControl );
-	void FillWindowsClipboard( const CHTREEITEMList &rSelection,
+	MAPEDITORLIB_EXPORT int CreateSelection( CHTREEITEMList *pSelection, ESelectionType eSelectionType, HTREEITEM hParentItem, HTREEITEM hItemToSkip, const SECTreeCtrl *pTreeControl );
+	MAPEDITORLIB_EXPORT void SelectAll( HTREEITEM hParentItem, HTREEITEM hItemToSkip, SECTreeCtrl *pTreeControl );
+	MAPEDITORLIB_EXPORT void FillWindowsClipboard( const CHTREEITEMList &rSelection,
 														 const std::string &rszClipboardPrefix,
 														 const std::string &rszClipboardPostfix,
 														 const std::string &rszItemPrefix,
@@ -27,7 +28,7 @@ namespace NCA
 														 const std::string &rszTreeItemDivider,
 														 const std::string &rszColumnDivider,
 														 const SECTreeCtrl *pTreeControl );
-	bool TranslateAccelerators( bool bModal, unsigned nMessage, WPARAM wParam, LPARAM lParam );
+	MAPEDITORLIB_EXPORT bool TranslateAccelerators( bool bModal, unsigned nMessage, WPARAM wParam, LPARAM lParam );
 };
 
 

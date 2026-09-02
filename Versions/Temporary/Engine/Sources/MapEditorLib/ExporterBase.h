@@ -3,8 +3,9 @@
 #include "Interface_Exporter.h"
 #include "Tools_UniqueList.h"
 
+#include "MapEditorLib_export.h"
 
-class CExporterBase : public IExporter
+class MAPEDITORLIB_EXPORT CExporterBase : public IExporter
 {
 	typedef std::unordered_map<std::string, std::string> CExportObjectNameMap;
 	typedef std::unordered_map<std::string, std::string> CExportObjectTypeNameMap;

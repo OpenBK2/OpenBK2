@@ -4,9 +4,10 @@
 #include "libdb/Manipulator.h"
 #include "Tools_UniqueList.h"
 
+#include "MapEditorLib_export.h"
 
 class CMultiManipulatorIterator;
-class CMultiManipulator : public IManipulator
+class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 {
 	friend class CMultiManipulatorIterator;
 

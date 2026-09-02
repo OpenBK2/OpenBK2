@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "MapEditorLib/MapEditorModule.h"
 
+#include "ED_RTS_export.h"
+
 class CEditorModuleRTS : public IEditorModule
 {
 	void ModuleStartup();
@@ -67,7 +69,7 @@ void CEditorModuleRTS::ModulePostCreateMainFrame()
 
 static CEditorModuleRTS theEDRTSModule;
 
-IEditorModule* GetEditorModule0()
+ED_RTS_EXPORT IEditorModule* GetEditorModule0()
 {
 	return &theEDRTSModule;
 }

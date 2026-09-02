@@ -2,6 +2,7 @@
 
 #include "DefaultController.h"
 
+#include "MapEditorLib_export.h"
 
 // TYPE_INSERT:		( используется только для Update )
 // szDestination	- имя вставляемого объекта
@@ -32,7 +33,7 @@
 // TYPE_EXPORT		( используется только для Update )
 // szName					- имя объекта
 // newValue				- 1 Force Export, 0 Export
-class CFolderController : public CDefaultController
+class MAPEDITORLIB_EXPORT CFolderController : public CDefaultController
 {
 	OBJECT_NOCOPY_METHODS( CFolderController );
 
