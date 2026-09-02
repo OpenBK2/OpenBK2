@@ -3,6 +3,8 @@
 #include "EditorScene.h"
 #include "SceneB2/Scene.h"
 
+#include "ED_B2_export.h"
+
 #include <cstdint>
 
 void CEditorScene::RemoveAllScreens()

@@ -3,6 +3,8 @@
 #include "MainFrameContainer.h"
 #include "MapEditorLib/Interface_Logger.h"
 
+#include "MapEditor_export.h"
+
 
 
 class CMainFrameLoggerSink : public NLog::ILoggerSink
