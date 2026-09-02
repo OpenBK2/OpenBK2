@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include <afxadv.h>
+#include <afxpriv.h>
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -137,6 +140,61 @@ BOOL CMainFrame::PreCreateWindow( CREATESTRUCT &rCreateStruct )
 }
 
 
+namespace
+{
+
+// Does a saved bar layout still name bars this frame has?
+//
+// CFrameWnd::LoadBarState does not ask. It reads the layout, calls
+// GetControlBar for each bar in it, and ASSERTs when one comes back null, with
+// the comment "toolbar id's probably changed" next to the assert. In a release
+// build it carries on and quietly ignores the bar; in a debug build it stops the
+// editor before its window is up.
+//
+// Bar ids do change here, and will keep changing while the toolkit underneath is
+// being written. A layout saved by one build is not something the next build
+// should die on, so it is checked first and thrown away if it no longer fits.
+// The editor then comes up in its default layout, which is what a first run gets
+// anyway.
+//
+// The shape of this is Microsoft's own, from the knowledge base article on
+// verifying toolbar state; CDockState and CControlBarInfo are how MFC stores
+// what LoadBarState is about to read.
+bool BarStateStillFits( CFrameWnd *pFrame, LPCTSTR pszProfileName )
+{
+	CDockState state;
+	state.LoadState( pszProfileName );
+	for ( int i = 0; i < state.m_arrBarInfo.GetSize(); ++i )
+	{
+		const CControlBarInfo *pInfo = static_cast<CControlBarInfo *>( state.m_arrBarInfo[i] );
+		if ( pInfo == 0 )
+		{
+			return false;
+		}
+		// A dock bar lists the bars docked inside it. 0 is a row separator, and
+		// an id above 0xFFFF is a placeholder with the real id in its low word.
+		for ( int j = 0; j < pInfo->m_arrBarID.GetSize(); ++j )
+		{
+			const UINT nDockedID = pInfo->m_arrBarID[j];
+			if ( nDockedID == 0 )
+			{
+				continue;
+			}
+			if ( pFrame->GetControlBar( nDockedID & 0xFFFF ) == 0 )
+			{
+				return false;
+			}
+		}
+		// A floating bar gets a frame of its own rather than being looked up.
+		if ( !pInfo->m_bFloating && pFrame->GetControlBar( pInfo->m_nBarID ) == 0 )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+}
 int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 {
 	if ( SECWorkbook::OnCreate( pCreateStruct ) == -1 )
@@ -312,7 +370,10 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//Грузим расположение панелей
 	CString strRegistryKeyName;
 	strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
-	LoadBarState( strRegistryKeyName );
+	if ( BarStateStillFits( this, strRegistryKeyName ) )
+	{
+		LoadBarState( strRegistryKeyName );
+	}
 	pToolBarMgr->LoadState( strRegistryKeyName );
 	// Создаем дополнительные Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
