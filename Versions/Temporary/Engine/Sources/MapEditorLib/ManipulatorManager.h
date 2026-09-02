@@ -454,7 +454,7 @@ public:
 	}
 	//
 	template<>
-	static bool GetValue( GUID *pData, struct IManipulator *pManipulator, const std::string &rszName )
+	static bool GetValue( boost::uuids::uuid *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -463,12 +463,12 @@ public:
 		bResult = bResult && ( value.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
-			NI_ASSERT( ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(GUID) ),
-					fmt::format( "CManipulatorManager::GetValue<GUID>(): '{}' is not a GUID field", rszName.c_str() ) );
-			bResult = ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(GUID) );
+			NI_ASSERT( ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(boost::uuids::uuid) ),
+					fmt::format( "CManipulatorManager::GetValue<uuid>(): '{}' is not a uid field", rszName.c_str() ) );
+			bResult = ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(boost::uuids::uuid) );
 			if ( bResult )
 			{
-				memcpy( pData, value.GetPtr(), sizeof(GUID) );
+				memcpy( pData, value.GetPtr(), sizeof(boost::uuids::uuid) );
 			}
 		}
 		return bResult;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <boost/uuid/uuid_io.hpp>
 #include "Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -309,9 +310,9 @@ std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &sz
 	{
 		return szDestFolder + std::to_string(  pManipulator->GetID( "" ) );
 	}
-	GUID uid;
+	boost::uuids::uuid uid;
 	memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
-	return szDestFolder + NBinResources::GUIDToString( uid );
+	return szDestFolder + boost::uuids::to_string( uid );
 }
 
 

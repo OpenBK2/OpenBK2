@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <boost/uuid/uuid_io.hpp>
 
 #include "Misc/StrProc.h"
 #include "XMLExport.h"
@@ -122,9 +123,9 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 	case CVariant::VT_POINTER:
 		if ( ePCIType == PCIE_GUID )
 		{
-			NI_ASSERT( variant.GetBlobSize() == sizeof(GUID), "Size mismatch during GUID convertion" );
-			if ( variant.GetBlobSize() == sizeof(GUID) )
-				NStr::GUID2String( pString, *((GUID*)variant.GetPtr()) );
+			NI_ASSERT( variant.GetBlobSize() == sizeof(boost::uuids::uuid), "Size mismatch during GUID convertion" );
+			if ( variant.GetBlobSize() == sizeof(boost::uuids::uuid) )
+				*pString = boost::uuids::to_string( *static_cast<const boost::uuids::uuid*>( variant.GetPtr() ) );
 			else
 				pString->clear();
 		}
