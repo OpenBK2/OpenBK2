@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Scintilla/Scintilla.h"
+
 #include <cstdint>
 
 #include "MapEditorLib_export.h"
 
 class MAPEDITORLIB_EXPORT CScintillaEditorWindow : public CWnd
 {
-	int ( *pfnScintilla )( void*, int, int, int );
-	void *pScintilla;
+	SciFnDirect pfnScintilla;
+	sptr_t pScintilla;
 	CWnd* pwndStatusStringWindow;
 	//CWnd *pwndTargetWindow;
 
@@ -22,7 +24,7 @@ public:
 	virtual ~CScintillaEditorWindow();
 	//
 	virtual BOOL CreateEx( CWnd* pwndParentWindow, uint32_t dwStyleEx, uint32_t dwStyle, const CRect &rStartRect, unsigned nControlID /**, CWnd *_pwndTargetWindow **/ );
-	int Command( int nCommand, int wParam = 0, int lParam = 0 );
+	sptr_t Command( int nCommand, uptr_t wParam = 0, sptr_t lParam = 0 );
 	//
 	void SetStatusStringWindow( CWnd* _pwndStatusStringWindow );
 	CWnd* GetStatusStringWindow() { return pwndStatusStringWindow; }

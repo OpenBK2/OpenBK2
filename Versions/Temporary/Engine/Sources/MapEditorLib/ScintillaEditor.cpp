@@ -61,8 +61,8 @@ BOOL CScintillaEditorWindow::CreateEx(  CWnd* pwndParent, uint32_t dwStyleEx, ui
 	}
 	
 	//Настраеваем метод посылки команд
-	pfnScintilla = ( int( * )( void*, int, int, int ) )( SendMessage( SCI_GETDIRECTFUNCTION, 0, 0 ) );
-	pScintilla = ( void* )( SendMessage( SCI_GETDIRECTPOINTER, 0, 0 ) );
+	pfnScintilla = reinterpret_cast<SciFnDirect>( SendMessage( SCI_GETDIRECTFUNCTION, 0, 0 ) );
+	pScintilla = static_cast<sptr_t>( SendMessage( SCI_GETDIRECTPOINTER, 0, 0 ) );
 
 	//Скрываем по умолчанию все Margins
 	Command( SCI_SETMARGINWIDTHN, 0, 0 );
@@ -80,7 +80,7 @@ BOOL CScintillaEditorWindow::CreateEx(  CWnd* pwndParent, uint32_t dwStyleEx, ui
 }
 
 
-int CScintillaEditorWindow::Command( int nCommand, int wParam, int lParam )
+sptr_t CScintillaEditorWindow::Command( int nCommand, uptr_t wParam, sptr_t lParam )
 {
 	NI_ASSERT( pfnScintilla != 0, "CScintillaEditorWindow::Command(): pfnScintilla == 0" );
 	NI_ASSERT( pScintilla != 0, "CScintillaEditorWindow::Command(): pScintilla == 0" );
@@ -94,7 +94,7 @@ void CScintillaEditorWindow::SetText( const std::string &rszText )
 	const bool bReadOnly = Command( SCI_GETREADONLY );
 	Command( SCI_SETREADONLY, 0, 0 );
 	Command( SCI_CLEARALL );
-	Command( SCI_ADDTEXT, rszText.size(), (int)( rszText.c_str() ) );
+	Command( SCI_ADDTEXT, rszText.size(), (sptr_t)( rszText.c_str() ) );
 	Command( SCI_EMPTYUNDOBUFFER );
 	Command( SCI_SETREADONLY, bReadOnly, 0 );
 }
@@ -108,7 +108,7 @@ int CScintillaEditorWindow::GetText( std::string *pszText )
 		if ( nLength > 1 )
 		{
 			pszText->resize( nLength );
-			Command( SCI_GETTEXT, nLength, (int)( &( ( *pszText )[0] ) ) );
+			Command( SCI_GETTEXT, nLength, (sptr_t)( &( ( *pszText )[0] ) ) );
 			pszText->resize( nLength - 1 );
 		}
 		else
