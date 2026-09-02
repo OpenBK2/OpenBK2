@@ -470,7 +470,7 @@ const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const std::v
 {
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
 		if ( i->szName == pszLocatorName )
-			return i;
+			return &*i;
 	return 0;
 }
 
@@ -947,7 +947,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 		int nIdx = 0;
 		for ( std::vector<SGunInfo>::const_iterator j = rGuns.begin(); j != rGuns.end(); ++j, ++nIdx )
 		{
-			const SGunInfo *pG = j;
+			const SGunInfo *pG = &*j;
 
 			if ( szLocatorName != j->szShootPoint )
 				continue;
@@ -993,7 +993,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 	int nNewElemIdx = nNumElems;
 	for ( std::vector<SGunInfo>::const_iterator i = rGuns.begin(); i != rGuns.end(); ++i, ++nIdx )
 	{
-		const SGunInfo *pG = i;
+		const SGunInfo *pG = &*i;
 
 		if ( gunProcessed[nIdx] )
 			continue;
@@ -1103,7 +1103,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 		int nIdx = 0;
 		for ( std::vector<SPlatformInfo>::const_iterator j = rPlatforms.begin(); j != rPlatforms.end(); ++j, ++nIdx )
 		{
-			const SPlatformInfo *pP = j;
+			const SPlatformInfo *pP = &*j;
 			if ( szLocatorName != pP->szRotatePoint )
 			{
 				// pP это видимо новая платформа
@@ -1124,7 +1124,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 	int nNewElemIdx = nNumElems;
 	for ( std::vector<SPlatformInfo>::const_iterator i = rPlatforms.begin(); i != rPlatforms.end(); ++i, ++nIdx )
 	{
-		const SPlatformInfo *pP = i;
+		const SPlatformInfo *pP = &*i;
 
 		if ( platformProcessed[nIdx] )
 			continue;
@@ -1192,10 +1192,10 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 	// ограничения на горизонтальные повороты платформ
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
-		SPlatformInfo *pP = i;
+		SPlatformInfo *pP = &*i;
 		for ( std::vector<SConstraintInfo>::const_iterator j = constraints.begin(); j != constraints.end(); ++j )
 		{
-			const SConstraintInfo *pC = j;
+			const SConstraintInfo *pC = &*j;
 			if ( pC->szName == pP->szRotatePoint )
 			{
 				if ( pC->bRotConstrMinEnable[2] && pC->bRotConstrMaxEnable[2] )
@@ -1211,10 +1211,10 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 	// ограничения на вертикальный поворот платформы
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
-		SPlatformInfo *pP = i;
+		SPlatformInfo *pP = &*i;
 		for ( std::vector<SGunInfo>::const_iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
-			const SGunInfo *pG = j;
+			const SGunInfo *pG = &*j;
 			if ( pG->szRotatePoint.empty() )
 			{
 				// у пушки нет GunCarriage
@@ -1224,7 +1224,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 			bool bFound = false;
 			for ( std::vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
 			{
-				const SConstraintInfo *pC = k;
+				const SConstraintInfo *pC = &*k;
 				if ( pC->szName == pG->szRotatePoint )
 				{
 					// нам нужен ненулевой констрейн на поворот вокруг X
@@ -1246,16 +1246,16 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 	// ограничения на откат
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
-		SPlatformInfo *pP = i;
+		SPlatformInfo *pP = &*i;
 		for ( std::vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
-			SGunInfo *pG = j;
+			SGunInfo *pG = &*j;
 			if ( pG->szRecoilPoint.empty() )
 				continue;
 
 			for ( std::vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
 			{
-				const SConstraintInfo *pC = k;
+				const SConstraintInfo *pC = &*k;
 				if ( pC->szName == pG->szRecoilPoint )
 				{
 					// нам нужен констрейн на движение вдоль Y
@@ -1273,10 +1273,10 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 	// направление пушки
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
-		SPlatformInfo *pP = i;
+		SPlatformInfo *pP = &*i;
 		for ( std::vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
-			SGunInfo *pG = j;
+			SGunInfo *pG = &*j;
 			for ( CLocatorInfoConstIter k = rLocatorsInfo.begin(); k != rLocatorsInfo.end(); ++k )
 			{
 				if ( k->szName == pG->szShootPoint )
