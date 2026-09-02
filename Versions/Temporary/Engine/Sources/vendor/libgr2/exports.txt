@@ -2,6 +2,7 @@ GrannyBeginControlledAnimation
 GrannyBuildWorldPose
 GrannyCompleteControlAt
 GrannyControlIsComplete
+GrannyConvertSingleObject
 GrannyEaseControlIn
 GrannyEaseControlOut
 GrannyEndControlledAnimation

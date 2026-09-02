@@ -315,4 +315,38 @@ GR2_API( granny_int32x )
 	return static_cast<granny_int32x>( nTotal );
 }
 
+// Copy one object from one type definition to another, member by member and by
+// name. Not written. Returns without touching DestObject.
+//
+// The map editor is the only caller in the tree: GetAttributesFromBone in
+// ED_Common/TempAttributesTool.cpp builds a definition of GrannyReal32Member
+// fields named after Maya attributes and asks for a bone's ExtendedData to be
+// read into them. Nothing in the game reaches this.
+//
+// Doing nothing is the right stub for the data we have. Real 2.11 leaves
+// ExtendedData null on file_info, model, skeleton, bone and animation for every
+// file in this corpus, measured against the DLL and written up in
+// docs/GrannyReplacement.md, so SourceType and SourceObject are both null here
+// and there is nothing to read whatever this function does.
+//
+// Two things have to be settled before it can be written, and neither can be
+// guessed: what 2.11 does with a destination member that has no match in the
+// source, leave it or zero it, and whether it converts between member types or
+// only copies matching ones. GetAttributesFromBone does not initialise its
+// destination, so the first answer decides whether the editor reads its own
+// stack. Both are measurable against the vendored DLL the same way the rest of
+// the conversion was.
+//
+// The signature returns void, so there is no failure to report. The warn-once
+// line GR2_STUB emits is the whole signal that this was reached.
+GR2_API( void ) GrannyConvertSingleObject( granny_data_type_definition const *SourceType,
+                                           void const *SourceObject,
+                                           granny_data_type_definition const *DestType,
+                                           void *DestObject,
+                                           granny_conversion_handler *OverrideHandler )
+{
+	GR2_STUB( "SourceType={} SourceObject={} DestType={} DestObject={} OverrideHandler={}",
+	          SourceType, SourceObject, DestType, DestObject, OverrideHandler );
+}
+
 }
