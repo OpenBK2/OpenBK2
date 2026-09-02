@@ -2,7 +2,9 @@
 
 #include "Interface_View.h"
 
-class CDefaultView : public IView
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CDefaultView : public IView
 {
 	// Метка для последующего удаления Undo Operation из очереди
 	std::string szTemporaryLabel;
