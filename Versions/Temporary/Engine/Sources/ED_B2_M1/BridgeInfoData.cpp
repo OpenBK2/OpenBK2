@@ -244,14 +244,14 @@ namespace NMapInfoEditor
 		{
 			case DIRECTION_X:
 			{
-				const fY = float ( rvStart.y + rvEnd.y ) / 2.0f;
+				const float fY = float ( rvStart.y + rvEnd.y ) / 2.0f;
 				vStart = CVec3( rvStart.x, fY, rvStart.z );
 				vEnd = CVec3( rvEnd.x, fY, rvEnd.z );
 				break;
 			}				
 			case DIRECTION_Y:
 			{
-				const fX = float ( rvStart.x + rvEnd.x ) / 2.0f;
+				const float fX = float ( rvStart.x + rvEnd.x ) / 2.0f;
 				vStart = CVec3( fX, rvStart.y, rvStart.z );
 				vEnd = CVec3( fX, rvEnd.y, rvEnd.z );
 				break;
@@ -262,13 +262,13 @@ namespace NMapInfoEditor
 				const float fSizeY = abs( rvEnd.y - rvStart.y );
 				if ( fSizeY > fSizeX )
 				{
-					const fX = float ( rvStart.x + rvEnd.x ) / 2.0f;
+					const float fX = float ( rvStart.x + rvEnd.x ) / 2.0f;
 					vStart = CVec3( fX, rvStart.y, rvStart.z );
 					vEnd = CVec3( fX, rvEnd.y, rvEnd.z );
 				}
 				else
 				{
-					const fY = float ( rvStart.y + rvEnd.y ) / 2.0f;
+					const float fY = float ( rvStart.y + rvEnd.y ) / 2.0f;
 					vStart = CVec3( rvStart.x, fY, rvStart.z );
 					vEnd = CVec3( rvEnd.x, fY, rvEnd.z );
 				}

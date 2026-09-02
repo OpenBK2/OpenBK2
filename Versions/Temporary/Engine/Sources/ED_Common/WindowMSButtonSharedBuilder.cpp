@@ -184,7 +184,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 
 	// extract short name
 	std::string szShortName;
-	const nSlashPos = rszUniqueObjectName.rfind( PATH_SEPARATOR_CHAR );
+	const size_t nSlashPos = rszUniqueObjectName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nSlashPos == std::string::npos )
 		szShortName = rszUniqueObjectName;
 	else

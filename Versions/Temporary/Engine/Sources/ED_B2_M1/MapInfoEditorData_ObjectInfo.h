@@ -73,7 +73,7 @@ namespace NMapInfoEditor
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			inline CVec3 GetPosition( const CVec3 &rvPosition ) const { return rvPosition + vPosition + vAdditionalPosition; }
 			inline float GetDirection( const float _fDirection ) const { return _fDirection + fDirection + fAdditionalDirection; }
-			inline FixInvalidPos( const CTRect<float> &rSize, const CVec3 &rvPosition )
+			inline void FixInvalidPos( const CTRect<float> &rSize, const CVec3 &rvPosition )
 			{
 				const CVec3 vPos = GetPosition( rvPosition );
 				CVec3 vNewPos = vPos;

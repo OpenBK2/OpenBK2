@@ -1260,7 +1260,7 @@ namespace NMapInfoEditor
 				return false;
 			}
 			SObjectInfo::SMapInfoElement &rMapInfoElement = itMapInfoElement->second;
-			const nLinkID = itMapInfoElement->first;
+			const unsigned nLinkID = itMapInfoElement->first;
 			//
 			for ( CLinkIDList::iterator itLinkedLinkID = rMapInfoElement.linkedLinkIDIist.begin(); itLinkedLinkID != rMapInfoElement.linkedLinkIDIist.end(); ++itLinkedLinkID )
 			{
