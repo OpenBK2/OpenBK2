@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -98,7 +99,7 @@ void CPCStringDirRefEditor::OnBrowse()
 		//
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FOLDER_DIALOG_TITLE );
-		std::string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = fmt::sprintf( strTitle.GetString(), GetName() );
 
 		//return value...assume failure...
 		bool bResult = true;

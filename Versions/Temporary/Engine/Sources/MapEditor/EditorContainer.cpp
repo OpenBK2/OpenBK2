@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
@@ -193,7 +194,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	{
 		CString strPM;
 		strPM.LoadString( IDS_PM_CREATE_EDITOR );
-		NProgress::SetMessage( StrFmt( strPM, rObjectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), rObjectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 	}
 	NProgress::SetRange( 0, 2 );
 	NProgress::SetPosition( 0 );

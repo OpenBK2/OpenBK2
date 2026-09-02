@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "libdb/Manipulator.h"
 #include "SceneB2/TerraTools.h"
@@ -809,7 +810,7 @@ void SavePassProfile( const NDb::SPassProfile &passProfile, const std::string &_
 
 			for ( int j = 0; j < passProfile.polygons[i].verts.size(); ++j )
 			{
-				std::string szNode = StrFmt( (szStructName + ".[%d].verts").c_str(), i );//    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
+				std::string szNode = fmt::sprintf( (szStructName + ".[%d].verts").c_str(), i );//    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
 				pManipulator->InsertNode( szNode, j );
 
 				szNode += fmt::format( ".[{}].", j );

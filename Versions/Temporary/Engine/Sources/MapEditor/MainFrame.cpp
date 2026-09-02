@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "WMDefines.h"
@@ -251,7 +252,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 			strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
 			if ( CDWGDBBrowser *pwndGDBBrowser = new CDWGDBBrowser( *itGDBBrowserID ) )
 			{
-				if ( !pwndGDBBrowser->Create( this, StrFmt( strDWName, nWindowIndex ), dwDWStyle, dwDWStyleEx, *itGDBBrowserID ) )
+				if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), nWindowIndex ), dwDWStyle, dwDWStyleEx, *itGDBBrowserID ) )
 				{
 					delete pwndGDBBrowser;
 					return -1;
@@ -688,7 +689,7 @@ void CMainFrame::OnDWGDBBrowserNew()
 		const bool bEnableEdit = ( NGlobal::GetVar( "disable_edit", 0 ) == 0 );
 		if ( CDWGDBBrowser *pwndGDBBrowser = new CDWGDBBrowser( nUniqueBarID ) )
 		{
-			if ( !pwndGDBBrowser->Create( this, StrFmt( strDWName, gdbBrowserList.size() ), dwDWStyle, dwDWStyleEx, nUniqueBarID ) )
+			if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), gdbBrowserList.size() ), dwDWStyle, dwDWStyleEx, nUniqueBarID ) )
 			{
 				delete pwndGDBBrowser;
 				return;
@@ -738,7 +739,7 @@ void CMainFrame::OnDWGDBBrowserRemove()
 					//
 					for ( ;itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 					{
-						( *itGDBBrowser )->SetWindowText( StrFmt( strDWName, nWindowIndex ) );
+						( *itGDBBrowser )->SetWindowText( fmt::sprintf( strDWName.GetString(), nWindowIndex ) );
 						++nWindowIndex;
 					}
 					//
@@ -826,7 +827,7 @@ void CMainFrame::OnUpdateDWGDBBrowserWindow( CCmdUI *pCmdUI )
 				int nWindowIndex = 0;
 				for ( std::list<CDWGDBBrowser*>::const_iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 				{
-					std::string szLabel = ( nWindowIndex == 0 )  ? StrFmt( strMenuLabel, nWindowIndex ) : StrFmt( strMenuLabelShort, nWindowIndex );
+					std::string szLabel = ( nWindowIndex == 0 )  ? fmt::sprintf( strMenuLabel.GetString(), nWindowIndex ) : fmt::sprintf( strMenuLabelShort.GetString(), nWindowIndex );
 ;
 					pMenu->InsertMenu( nFirstMenuItemIndex + nWindowIndex, MF_BYPOSITION, ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, szLabel.c_str() );
 					pMenu->EnableMenuItem( ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, MF_ENABLED | MF_BYCOMMAND );

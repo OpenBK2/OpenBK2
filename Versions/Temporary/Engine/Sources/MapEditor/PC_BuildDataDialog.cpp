@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
 
@@ -169,7 +170,7 @@ void CPCBuildDataDialog::UpdateTitle()
 	{
 		CString strFormatString;
 		strFormatString.LoadString( IDS_PC_BD_DIALOG_TITLE );
-		SetWindowText( StrFmt( strFormatString, pBuildDataParams->szObjectTypeName.c_str() ) );
+		SetWindowText( fmt::sprintf( strFormatString.GetString(), pBuildDataParams->szObjectTypeName.c_str() ) );
 	}
 	bCreateControls = false;
 }

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 
 #include "libdb/Manipulator.h"
 #include "Misc/StrProc.h"
@@ -83,7 +84,7 @@ void CNewObjectDialog::UpdateTitle()
 	{
 		CString strFormatString;
 		strFormatString.LoadString( IDS_PC_BD_DIALOG_TITLE );
-		SetWindowText( StrFmt( strFormatString, pBuildDataParams->szObjectTypeName.c_str() ) );
+		SetWindowText( fmt::sprintf( strFormatString.GetString(), pBuildDataParams->szObjectTypeName.c_str() ) );
 	}
 	bCreateControls = false;
 }

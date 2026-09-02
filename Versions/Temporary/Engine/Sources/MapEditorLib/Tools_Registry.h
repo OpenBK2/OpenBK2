@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "MapEditorLib_export.h"
 
@@ -59,7 +60,7 @@ class MAPEDITORLIB_EXPORT CRegistrySection
 	template<class TValue>
   int32_t SaveNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const TValue &rSaveValue ) const
 	{
-		const std::string szBuffer = StrFmt( pszMask, rSaveValue );
+		const std::string szBuffer = fmt::sprintf( pszMask, rSaveValue );
 		return SaveString( pszRegistryKey, szBuffer );
 	}
 
@@ -98,7 +99,7 @@ class MAPEDITORLIB_EXPORT CRegistrySection
   int32_t SaveRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const CTRect<TValue> &rSaveValue ) const
 	{
 		const std::string szFormat = fmt::format( "{} {} {} {}", pszMask, pszMask, pszMask, pszMask );
-		const std::string szBuffer = StrFmt( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );
+		const std::string szBuffer = fmt::sprintf( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );
 		return SaveString( pszRegistryKey, szBuffer );
 	}
 };

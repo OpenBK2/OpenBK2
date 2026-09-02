@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 
 #include "MODContainer.h"
 #include "CreateMODDialog.h"
@@ -46,7 +47,7 @@ bool CMODContainer::NewMOD()
 			NProgress::Create( true );
 			CString strPM;
 			strPM.LoadString( IDS_PM_CREATE_MOD );
-			NProgress::SetMessage( StrFmt( strPM, szMODFolder.c_str() ) );
+			NProgress::SetMessage( fmt::sprintf( strPM.GetString(), szMODFolder.c_str() ) );
 			NProgress::SetRange( 0, 2 );
 			//
 			// Создать файлы с именем и описанием
@@ -90,7 +91,7 @@ bool CMODContainer::OpenMOD()
 			NProgress::Create( true );
 			CString strPM;
 			strPM.LoadString( IDS_PM_OPEN_MOD );
-			NProgress::SetMessage( StrFmt( strPM, mod.szFullFolderPath.c_str() ) );
+			NProgress::SetMessage( fmt::sprintf( strPM.GetString(), mod.szFullFolderPath.c_str() ) );
 			NProgress::SetRange( 0, 2 );
 			//
 			NMOD::InstantAttachMOD( mod.szFullFolderPath, NDb::DATABASE_MODE_EDITOR );
@@ -126,7 +127,7 @@ void CMODContainer::CloseMOD()
 		NProgress::Create( true );
 		CString strPM;
 		strPM.LoadString( IDS_PM_CLOSE_MOD );
-		NProgress::SetMessage( StrFmt( strPM, Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
+		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
 		NProgress::SetRange( 0, 2 );
 		//
 		NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_EDITOR );
