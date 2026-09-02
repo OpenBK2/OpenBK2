@@ -54,25 +54,26 @@ const char *Environment( const char *pszName )
 #endif
 }
 
-//! OBK2_STINGRAY_LOG=off|error|warn|info|debug|trace, trace by default.
+//! OBK2_STINGRAY_LOG=off|error|warn|info|debug|trace, debug by default.
 //!
-//! Trace is the default because a stub library that is not saying what was
-//! called is doing nothing at all. It is the whole deliverable of this stage,
-//! and the volume is user interface calls at startup rather than anything per
-//! frame.
+//! Every call this library is asked to make is logged, because a stub library
+//! that is not saying what was called is doing nothing at all. They log at
+//! debug; the handful MFC makes on every idle log at trace, one level further
+//! down, so that a default run says what the editor did without the 1,764 lines
+//! an idle loop added to a startup. OBK2_STINGRAY_LOG=trace asks for those too.
 spdlog::level::level_enum LevelFromEnvironment()
 {
 	const char *pszLevel = Environment( "OBK2_STINGRAY_LOG" );
 	if ( pszLevel == nullptr )
 	{
-		return spdlog::level::trace;
+		return spdlog::level::debug;
 	}
 	const spdlog::level::level_enum eLevel = spdlog::level::from_str( pszLevel );
 	// from_str answers "off" for anything it does not recognise, which would
 	// silently discard the trace over a typo.
 	if ( eLevel == spdlog::level::off && std::string( pszLevel ) != "off" )
 	{
-		return spdlog::level::trace;
+		return spdlog::level::debug;
 	}
 	return eLevel;
 }
