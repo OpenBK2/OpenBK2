@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "PC_Constants.h"
@@ -67,11 +68,11 @@ void CPCStringNewRefEditor::OnNew()
 			{
 				if ( itType->first == szDefaultObjectTypeName )
 				{
-					szObjectTypeName = std::string( StrFmt( "%s%c", itType->first.c_str(), TYPE_SEPARATOR_CHAR ) ) + szObjectTypeName;	
+					szObjectTypeName = std::string( fmt::format( "{}{:c}", itType->first.c_str(), TYPE_SEPARATOR_CHAR ) ) + szObjectTypeName;	
 				}
 				else
 				{
-					szObjectTypeName += StrFmt( "%c%s", TYPE_SEPARATOR_CHAR, itType->first.c_str() );	
+					szObjectTypeName += fmt::format( "{:c}{}", TYPE_SEPARATOR_CHAR, itType->first.c_str() );	
 				}
 			}
 		}
@@ -197,7 +198,7 @@ void CPCStringNewRefEditor::SetWindowTextByTypeAndName( const std::string &szTab
 		}
 		else
 		{
-			SetWindowText( StrFmt( "%s%c%s", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ) );
+			SetWindowText( fmt::format( "{}{:c}{}", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ) );
 		}
 	}
 	else

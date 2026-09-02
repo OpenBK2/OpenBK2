@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "CommonEditorMethods.h"
 
 #include "libdb/Manipulator.h"
@@ -32,7 +33,7 @@ void CreateRefKey( std::string *pszKey, const SPropertyDesc *pPropertyDesc )
 			}
 			else
 			{
-				( *pszKey ) += StrFmt( "%c%s", TYPE_SEPARATOR_CHAR, ( *itRefType ) );
+				( *pszKey ) += fmt::format( "{:c}{}", TYPE_SEPARATOR_CHAR, ( *itRefType ) );
 			}
 		}
 	}

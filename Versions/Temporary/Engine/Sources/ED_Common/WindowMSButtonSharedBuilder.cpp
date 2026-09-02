@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "WindowMSButtonSharedBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"
@@ -37,7 +38,7 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 
 	for ( int i = 0; i < nVisualStates; ++i )
 	{
-		const std::string elementName = StrFmt( "VisualStates.[%d]", i );
+		const std::string elementName = fmt::format( "VisualStates.[{}]", i );
 		
 		pBuildDataManipulator->GetValue( elementName + ".NormalTexture", &value );
 		if ( value.GetType() == CVariant::VT_NULL || (std::string (value.GetStr()).empty() ) )
@@ -176,10 +177,10 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 
 	CVariant value;
 
-	pBuildDataManipulator->GetValue( StrFmt( "VisualStates.[%d].%sTexture", index, szSuffixName ), &value );
+	pBuildDataManipulator->GetValue( fmt::format( "VisualStates.[{}].{}Texture", index, szSuffixName ), &value );
 	const std::string szTextureFileName = value.GetStr();
 	
-	pBuildDataManipulator->GetValue( StrFmt( "VisualStates.[%d].%sColor", index, szSuffixName ), &value );
+	pBuildDataManipulator->GetValue( fmt::format( "VisualStates.[{}].{}Color", index, szSuffixName ), &value );
 	const int nColor = value;
 
 	// extract short name
@@ -190,7 +191,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 	else
 		szShortName = rszUniqueObjectName.substr( nSlashPos+1 );
 
-	const std::string szBuilderGenPrefix = rszUniqueObjectName + PATH_SEPARATOR_CHAR +  StrFmt( "%s_%d", szShortName.c_str(), index );
+	const std::string szBuilderGenPrefix = rszUniqueObjectName + PATH_SEPARATOR_CHAR +  fmt::format( "{}_{}", szShortName.c_str(), index );
 	const std::string szTexObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
 	const std::string szBSTObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
 	
@@ -235,7 +236,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 	bResult = bResult && pBSTManipulator->SetValue( "TextureY", std::string("EPA_LOW_END") );
 
 	// Проставляем параметры WindowMSButtonShared
-	const std::string backgroundElementName = StrFmt( "VisualStates.[%d].%s.Background", index, szSuffixName );
+	const std::string backgroundElementName = fmt::format( "VisualStates.[{}].{}.Background", index, szSuffixName );
 	const std::string szBSTObjectRefName = std::string(BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME) + TYPE_SEPARATOR_CHAR + szBSTObjectName;
 	pMSBManipulator->SetValue( backgroundElementName, szBSTObjectRefName );
 

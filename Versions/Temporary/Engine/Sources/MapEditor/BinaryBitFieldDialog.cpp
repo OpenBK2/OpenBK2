@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "BinaryBitFieldDialog.h"
 #include "BinaryBitFieldDialog.h"
 #include "System/VFSOperations.h"
@@ -67,7 +68,7 @@ BOOL CBinaryBitFieldDialog::OnInitDialog()
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pXS == 0 ) 
 	{
-		NI_ASSERT( pXS != 0, StrFmt("Can't open stream \"%s\" to read bit fields", szFileName.c_str()) );
+		NI_ASSERT( pXS != 0, fmt::format("Can't open stream \"{}\" to read bit fields", szFileName.c_str()) );
 		return FALSE;
 	}
 	pXS->Add( "Fields", &fields );

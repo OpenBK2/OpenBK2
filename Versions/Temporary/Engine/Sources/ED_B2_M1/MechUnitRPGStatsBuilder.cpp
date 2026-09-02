@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
@@ -141,7 +142,7 @@ static bool CopyModel( const std::string &szOldModelName, const std::string &szN
 	for ( int i = 0; i < nMaterialsCount; ++i )
 	{
 		std::string szMaterial;
-		CPtr<IManipulator> pMaterial = CManipulatorManager::CreateManipulatorFromReference( StrFmt( "Materials.[%d]", i ), pOldModel, 0, &szMaterial, 0 );
+		CPtr<IManipulator> pMaterial = CManipulatorManager::CreateManipulatorFromReference( fmt::format( "Materials.[{}]", i ), pOldModel, 0, &szMaterial, 0 );
 		if ( !pMaterial )
 			return false;
 		std::string szTexture;
@@ -229,7 +230,7 @@ static bool CreateVisObj( IManipulator* pManipulator, const std::string &szObjec
 
 	for ( int i = 0; i < nModelCount; ++i )
 	{
-		const std::string szModelPath = StrFmt( "Models.[%d].", i );
+		const std::string szModelPath = fmt::format( "Models.[{}].", i );
 		std::string szModelName;
 		if ( !CManipulatorManager::GetParamsFromReference( szModelPath + "Model", pVisObj, 0, &szModelName, 0 ) )
 			continue;
@@ -381,14 +382,14 @@ static bool TryBuildHelicopter( const std::string &rszObjectName, IManipulator* 
 	{
 		std::unordered_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
 		pHelicopterStats->InsertNode( "Axes", NODE_ADD_INDEX );
-		const std::string szNodePrefix = StrFmt( "Axes.[%d].", i-1 );
+		const std::string szNodePrefix = fmt::format( "Axes.[{}].", i-1 );
 		pHelicopterStats->SetValue( szNodePrefix + "LocatorName", pos->second.szLocatorName );
-		const std::string szScaledVisObj = szVisObjName + PATH_SEPARATOR_CHAR + StrFmt( "Axis%02d_Scaled", i );
-		if ( !CreateVisObj( pManipulator, szScaledVisObj, StrFmt( "Axis%02d_Scaled", i ), pos->second.nScaledStart, pos->second.nScaledEnd, pos->second.fScaledSpeed ) )
+		const std::string szScaledVisObj = szVisObjName + PATH_SEPARATOR_CHAR + fmt::format( "Axis{:02d}_Scaled", i );
+		if ( !CreateVisObj( pManipulator, szScaledVisObj, fmt::format( "Axis{:02d}_Scaled", i ), pos->second.nScaledStart, pos->second.nScaledEnd, pos->second.fScaledSpeed ) )
 			return false;
 		CManipulatorManager::SetValue( szScaledVisObj, pHelicopterStats, szNodePrefix + "Scaled", true );
-		const std::string szDynamicVisObj = szVisObjName + PATH_SEPARATOR_CHAR + StrFmt( "Axis%02d_Dynamic", i );
-		if ( !CreateVisObj( pManipulator, szDynamicVisObj, StrFmt( "Axis%02d_Dynamic", i ), pos->second.nDynamicStart, pos->second.nDynamicEnd, pos->second.fDynamicSpeed ) )
+		const std::string szDynamicVisObj = szVisObjName + PATH_SEPARATOR_CHAR + fmt::format( "Axis{:02d}_Dynamic", i );
+		if ( !CreateVisObj( pManipulator, szDynamicVisObj, fmt::format( "Axis{:02d}_Dynamic", i ), pos->second.nDynamicStart, pos->second.nDynamicEnd, pos->second.fDynamicSpeed ) )
 			return false;
 		CManipulatorManager::SetValue( szDynamicVisObj, pHelicopterStats, szNodePrefix + "Dynamic", true );
 

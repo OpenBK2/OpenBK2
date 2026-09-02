@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ProgressDlg.h"
 
@@ -34,7 +35,7 @@ BOOL CProgressDlg::OnInitDialog()
 	if ( !CResizeDialog::OnInitDialog() )
 		return FALSE;
 
-	SetWindowText( StrFmt("Performing %s", szActionName) );
+	SetWindowText( fmt::format("Performing {}", szActionName) );
 	//
 	return TRUE;
 }

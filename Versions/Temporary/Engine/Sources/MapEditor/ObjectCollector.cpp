@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "ResourceDefines.h"
 
 #include "ObjectCollector.h"
@@ -374,7 +375,7 @@ void CObjectCollector::CreateImageLists()
 	//
 	const int nDefaultNormalImageIndex = normalImageList.Add( &defaultNormalObjectBitmap, zeroColor );
 	const int nDefaultSmallImageIndex = smallImageList.Add( &defaultSmallObjectBitmap, zeroColor );
-	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex, StrFmt( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
+	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex, fmt::format( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
 	nDefaultImageIndex = nDefaultNormalImageIndex;
 }
 
@@ -449,7 +450,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 				//
 				const int nNormalImageIndex = normalImageList.Add( &normalBitmap, zeroColor );
 				const int nSmallImageIndex = smallImageList.Add( &smallBitmap, zeroColor );
-				NI_ASSERT( nNormalImageIndex == nSmallImageIndex, StrFmt( "nNormalImageIndex != nSmallImageIndex" ) );
+				NI_ASSERT( nNormalImageIndex == nSmallImageIndex, fmt::format( "nNormalImageIndex != nSmallImageIndex" ) );
 				//
 				pObjectParams->nIconIndex = nNormalImageIndex;
 			}
@@ -470,7 +471,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 			}
 			else
 			{
-				pObjectParams->strLabel = StrFmt( "%s%c%s", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
+				pObjectParams->strLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
 			}
 		}
 	}
@@ -632,7 +633,7 @@ void CObjectCollector::RegisterDataExtractor( const std::string &rszDataExtracto
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Object data extractor already registered\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tType: %s\n", rszDataExtractorType.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tType: {}\n", rszDataExtractorType.c_str()) );
 		return;
 	}
 	//

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "MapEditorLib/Tools_Gradient.h"
 
 
@@ -366,7 +367,7 @@ template<class TYPE>
 static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 {
 	NI_ASSERT( ( rRect.Width() > 0 ) && ( rRect.Height() > 0 ),
-						 StrFmt( "Invalid sizes: (%d, %d)\n", rRect.Width(), rRect.Height() ) );
+						 fmt::format( "Invalid sizes: ({}, {})\n", rRect.Width(), rRect.Height() ) );
 	if ( ( rRect.Width() <= 0 ) || ( rRect.Height() <= 0 ) )
 	{
 		return false;

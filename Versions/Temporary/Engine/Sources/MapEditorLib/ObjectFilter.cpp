@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "ObjectFilter.h"
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
@@ -61,7 +62,7 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 			eOpType = SEntry::OPERATION_DIFFERENCE;
 		else
 		{
-			NI_ASSERT( false, StrFmt("Unknown operation type \"%s\" (valid are: union, intersection, difference)", szOpType) );
+			NI_ASSERT( false, fmt::format("Unknown operation type \"{}\" (valid are: union, intersection, difference)", szOpType) );
 		}
 	}
 	else

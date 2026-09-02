@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 
@@ -114,11 +115,11 @@ namespace NMapInfoEditor
 		{
 			if ( bObject )
 			{
-				CManipulatorManager::GetValue( &nLinkID, pManipulator, StrFmt( "Objects.[%d].Link.LinkID", nObjectIndex ) );
+				CManipulatorManager::GetValue( &nLinkID, pManipulator, fmt::format( "Objects.[{}].Link.LinkID", nObjectIndex ) );
 			}
 			else
 			{
-				CManipulatorManager::GetValue( &nLinkID, pManipulator, StrFmt( "Spots.[%d].SpotID", nObjectIndex ) );
+				CManipulatorManager::GetValue( &nLinkID, pManipulator, fmt::format( "Spots.[{}].SpotID", nObjectIndex ) );
 			}
 		}
 		else

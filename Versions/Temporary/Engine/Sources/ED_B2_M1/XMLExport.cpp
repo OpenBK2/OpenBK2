@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "XMLExport.h"
@@ -99,7 +100,7 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 		break;
 
 	case CVariant::VT_FLOAT:
-		*pString = StrFmt( "%g", (float)variant );
+		*pString = fmt::format( "{:g}", (float)variant );
 		break;
 
 	case CVariant::VT_BOOL:
@@ -135,7 +136,7 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 		break;
 
 	default:
-		NI_ASSERT( false, StrFmt("Can't convert type %d to string", variant.GetType()) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to string", variant.GetType()) );
 	}
 }
 
@@ -265,7 +266,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 	// base element with attribute -> ObjectRecordID
 	{
 		std::list< std::pair<std::string, std::string> > attributes;
-		attributes.push_back( std::pair<std::string, std::string>("ObjectRecordID", StrFmt("%d", nObjectID)) );
+		attributes.push_back( std::pair<std::string, std::string>("ObjectRecordID", fmt::format("{}", nObjectID)) );
 		StartLevel( szTypeName, szTypeName, levels, file, -1, &attributes );
 	}
 	//
@@ -366,7 +367,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 									// convert type-rename int and uint32_t to int value before saving
 									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "uint32_t" )
 									{
-										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, StrFmt("Can't convert type %d to %s", value.GetType(), pDesc->szTypeRename.c_str()) );
+										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, fmt::format("Can't convert type {} to {}", value.GetType(), pDesc->szTypeRename.c_str()) );
 										if ( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4 )
 										{
 											int nIntValue = *( (int*)value.GetPtr() );
@@ -405,7 +406,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 											fprintf( file, "<y2>%s</y2>\n", szValue.c_str() );
 										else
 										{
-											NI_ASSERT( false, StrFmt("Unknown field \"%s\" for rect export!", szFullFieldName.c_str()) );
+											NI_ASSERT( false, fmt::format("Unknown field \"{}\" for rect export!", szFullFieldName.c_str()) );
 										}
 									}
 									else

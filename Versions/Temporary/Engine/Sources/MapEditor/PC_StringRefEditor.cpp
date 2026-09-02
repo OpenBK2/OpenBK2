@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "PC_Constants.h"
@@ -121,7 +122,7 @@ void CPCStringRefEditor::SetWindowTextByTypeAndName( const std::string &szTableN
 		}
 		else
 		{
-			SetWindowText( StrFmt( "%s%c%s", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ) );
+			SetWindowText( fmt::format( "{}{:c}{}", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ) );
 		}
 	}
 	else

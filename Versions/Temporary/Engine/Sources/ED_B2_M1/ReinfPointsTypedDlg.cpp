@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ReinfPointsTypedDlg.h"
 #include "MapEditorLib/Interface_MainFrame.h"
@@ -52,7 +53,7 @@ END_MESSAGE_MAP()
 void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 {
 	// create new node in DB
-	const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
+	const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints.[{}].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
 	int nOldTemplatesCount;
 	CManipulatorManager::GetValue( &nOldTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
 	CPtr<CObjectBaseController> pObjectController = new CObjectController;
@@ -66,7 +67,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 		CManipulatorManager::GetValue( &nNewTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
 
 		// use new node in dialog
-		std::string szTypedName = szName + StrFmt( ".[%d]", nNewTemplatesCount - 1 );
+		std::string szTypedName = szName + fmt::format( ".[{}]", nNewTemplatesCount - 1 );
 		CReinfPointsTypedTemplateAddDlg dlgAdd( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szTypedName, pMapInfoEditor );
 		if ( dlgAdd.DoModal() == IDOK )
 		{
@@ -103,9 +104,9 @@ void CReinfPointsTypedDlg::SetDialogData()
 	for ( int i = 0; i < pTypedTemplateDlgData->size(); ++i )
 	{
 		int nItem = lcTypedTempl.InsertItem( i, "" );
-		lcTypedTempl.SetItemText( nItem, 0, StrFmt("%d", i)  );
-		lcTypedTempl.SetItemText( nItem, 1, StrFmt("%s", (*pTypedTemplateDlgData)[i].szTemplateType) );
-		lcTypedTempl.SetItemText( nItem, 2, StrFmt("%s", (*pTypedTemplateDlgData)[i].szTemplate) );
+		lcTypedTempl.SetItemText( nItem, 0, fmt::format("{}", i)  );
+		lcTypedTempl.SetItemText( nItem, 1, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplateType) );
+		lcTypedTempl.SetItemText( nItem, 2, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplate) );
 		lcTypedTempl.SetItemData( nItem, i );
 	}
 	if ( nSelectedTemplate >= 0 && nSelectedTemplate < lcTypedTempl.GetItemCount() )
@@ -133,7 +134,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedRemove()
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
-		const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints.[%d].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
+		const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints.[{}].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
 		CPtr<CObjectBaseController> pObjectController = new CObjectController;
 		if ( pObjectController->AddRemoveOperation( szName, nSelectedTemplate, pMapInfoEditor->GetViewManipulator()) )
 		{

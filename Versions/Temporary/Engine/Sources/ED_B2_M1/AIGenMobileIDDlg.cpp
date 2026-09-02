@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "AIGenMobileIDDlg.h"
 
 //
@@ -25,7 +26,7 @@ BOOL CAIGenMobileDlg::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
 
-	edMobileID.SetWindowText( StrFmt("%d", *pMobileID) );
+	edMobileID.SetWindowText( fmt::format("{}", *pMobileID) );
 
 	return true;
 }

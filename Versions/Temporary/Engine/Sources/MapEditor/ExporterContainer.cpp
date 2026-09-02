@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -33,9 +34,9 @@ bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nStartExport throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszExportTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nStartExport throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszExportTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 				bResult = false;
 			}
 			//DebugTrace( "result: %s", bResult ? "true" : "false" );
@@ -50,9 +51,9 @@ bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nStartCheck throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszExportTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nStartCheck throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszExportTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 				bResult = false;
 			}
 			//DebugTrace( "result: %s", bResult ? "true" : "false" );
@@ -81,9 +82,9 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nFinishExport throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszExportTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nFinishExport throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszExportTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 			}
 		}
 		//DebugTrace( "CExporterContainer::FinishCheck(): <%s>", rszObjectTypeName.c_str() );
@@ -94,9 +95,9 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 		catch ( ... ) 
 		{
 			ILogger *pLogger = NLog::GetLogger();
-			pLogger->Log( LT_ERROR, StrFmt( "\nFinishCheck throw exception\n" ) );
-			pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszExportTypeName.c_str() ) );
-			pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\nFinishCheck throw exception\n" ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszExportTypeName.c_str() ) );
+			pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 		}
 		//
 		if ( bFinishTools )
@@ -130,11 +131,11 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportType
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nExportObject throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_NO_REF\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_NO_REF\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 				eResult = ER_FAIL;
 			}
 			//DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : "ER_BREAK" );
@@ -149,11 +150,11 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportType
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nCheckObject throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_NO_REF\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_NO_REF\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 				eResult = ER_FAIL;
 			}
 			//DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : "ER_BREAK" );

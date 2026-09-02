@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "InteractiveProcess.h"
 
@@ -110,7 +111,7 @@ namespace
 		}
 		else
 		{
-			*pszText += StrFmt( "::FormatMessage error %d", GetLastError() );
+			*pszText += fmt::format( "::FormatMessage error {}", GetLastError() );
 		}
 	}
 
@@ -384,7 +385,7 @@ bool CInteractiveProcess::Execute( const std::string &szScript, const std::strin
 				nSleepDuration += SLEEP_STEP;
 				if( nSleepDuration > RESPONSEWAIT_TIMEOUT )
 				{
-					*pszErrorMessage = StrFmt("time of execution exceeded %u seconds\n", RESPONSEWAIT_TIMEOUT / 1000 );
+					*pszErrorMessage = fmt::format("time of execution exceeded {} seconds\n", RESPONSEWAIT_TIMEOUT / 1000 );
 					bResult = false;
 				}
 			}

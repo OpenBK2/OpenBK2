@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ExporterFactory.h"
 #include "EntrenchmentExporter.h"
@@ -29,7 +30,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 			CManipulatorManager::GetValue( &nSegments, pManipulator, "segments" );
 			for ( int nSegmentIndex = 0; nSegmentIndex < nSegments; ++nSegmentIndex )
 			{
-				const std::string szSegmentName = StrFmt( "segments.[%d].", nSegmentIndex );
+				const std::string szSegmentName = fmt::format( "segments.[{}].", nSegmentIndex );
 				std::string szObjName;
 				if ( CManipulatorManager::GetValue( &szObjName, pManipulator, szSegmentName + "VisObj" ) && ( !szObjName.empty() ) )
 				{
@@ -66,7 +67,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 							if ( !pManipulator->InsertNode( "fireplaces" ) ) 
 								continue;
 
-							std::string szNodeName = szSegmentName + StrFmt( "fireplaces.[%d]", nFireplaceIndex );
+							std::string szNodeName = szSegmentName + fmt::format( "fireplaces.[{}]", nFireplaceIndex );
 							CVec2 vPos( 0, 0 );
 
 							it->GetAttribute( "translatex", &vPos.x );

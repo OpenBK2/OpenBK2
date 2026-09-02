@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CommandHandlerDefines.h"
+#include <fmt/format.h>
 #include "MapEditorLib/MultiInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapInfoStoreInputState.h"
@@ -258,29 +259,29 @@ public:
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3, this );
 		//
 		pStoreInputState = new CMapInfoStoreInputState();
-		NI_ASSERT( pStoreInputState != 0, StrFmt( "CHeightState(): pStoreInputState == 0" ) );
+		NI_ASSERT( pStoreInputState != 0, fmt::format( "CHeightState(): pStoreInputState == 0" ) );
 
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
 		//	
 		CHeightTileStateV3 *pHeightTileState = new CHeightTileStateV3( this );
 		nStateIndex = AddInputState( pHeightTileState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_TILE, StrFmt( "CHeightState(): Wrong state number: %d (%d)", nStateIndex, SEditParameters::B_TILE ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_TILE, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_TILE ) );
 		//
 		CHeightUpStateV3 *pHeightUpState = new CHeightUpStateV3( this );
 		nStateIndex = AddInputState( pHeightUpState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_UP, StrFmt( "CHeightState(): Wrong state number: %d (%d)", nStateIndex, SEditParameters::B_UP ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_UP, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_UP ) );
 		//
 		CHeightDownStateV3 *pHeightDownState = new CHeightDownStateV3( this );
 		nStateIndex = AddInputState( pHeightDownState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_DOWN, StrFmt( "CHeightState(): Wrong state number: %d (%d)", nStateIndex, SEditParameters::B_DOWN ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_DOWN, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_DOWN ) );
 		//
 		CHeightRoundStateV3 *pHeightRoundState = new CHeightRoundStateV3( this );
 		nStateIndex = AddInputState( pHeightRoundState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_ROUND, StrFmt( "CHeightState(): Wrong state number: %d (%d)", nStateIndex, SEditParameters::B_ROUND ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_ROUND, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_ROUND ) );
 		//
 		CHeightPlatoStateV3 *pHeightPlatoState = new CHeightPlatoStateV3( this );
 		nStateIndex = AddInputState( pHeightPlatoState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_PLATO, StrFmt( "CHeightState(): Wrong state number: %d (%d)", nStateIndex, SEditParameters::B_PLATO ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_PLATO, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_PLATO ) );
 		//
 		SetActiveInputState( SEditParameters::B_UP, true, false );
 	}

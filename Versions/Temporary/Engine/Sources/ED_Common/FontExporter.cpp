@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "FontExporter.h"
 
@@ -52,7 +53,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	if ( bResult == false )
 	{
 		pLogger->Log( LT_ERROR, "Can't read parameters to generate font\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tFont: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tFont: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	//
@@ -63,16 +64,16 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 		if ( Singleton<IFolderCallback>()->InsertObject("Texture", szTextureName) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't create texture for font\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tFont: %s\n", rszObjectName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tTexture: %s\n", szTextureName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFont: {}\n", rszObjectName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tTexture: {}\n", szTextureName.c_str()) );
 			return ER_FAIL;
 		}
 		CPtr<IManipulator> pTexMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Texture", szTextureName );
 		if ( pTexMan == 0 )
 		{
 			pLogger->Log( LT_ERROR, "Can't create texture manipulator for font\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tFont: %s\n", rszObjectName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tTexture: %s\n", szTextureName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFont: {}\n", rszObjectName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tTexture: {}\n", szTextureName.c_str()) );
 			return ER_FAIL;
 		}
 		szTextureFileName = szTextureName + ".tga";
@@ -113,13 +114,13 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	std::string szCommandLine;
 	if ( NFile::DoesFileExist( szCharsFileName ) )
 	{
-		szCommandLine = StrFmt( "FontGen.exe -h%d -w%d %s %s -%s -%s \"%s\" \"%s\" \"%s\" \"%s\"", nHeight, nWeight, 
+		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\" \"{}\"", nHeight, nWeight, 
 														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(), 
 														szFaceName.c_str(), szBinFileName.c_str(), szPicFileName.c_str(), szCharsFileName.c_str() );
 	}
 	else
 	{
-		szCommandLine = StrFmt( "FontGen.exe -h%d -w%d %s %s -%s -%s \"%s\" \"%s\" \"%s\"", nHeight, nWeight, 
+		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\"", nHeight, nWeight, 
 														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(), 
 														szFaceName.c_str(), szBinFileName.c_str(), szPicFileName.c_str() );
 	}
@@ -146,7 +147,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 
 
 /*
-const std::string szCommandLine = StrFmt( "%s -t%s -f%s -m%d -a%s -s%f %s \"%s\" \"%s\"", 
+const std::string szCommandLine = fmt::format( "{} -t{} -f{} -m{} -a{} -s{:f} {} \"{}\" \"{}\"", 
 pUserData->szTEToolFileName.c_str(),
 szType.c_str(),
 szFormat.c_str(),

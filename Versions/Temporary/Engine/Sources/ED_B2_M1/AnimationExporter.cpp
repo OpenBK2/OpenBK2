@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "AnimationExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -27,9 +28,9 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	const std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
 	if ( szSettingsFileName.empty() )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, StrFmt("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tExport type: %s\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
+		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
 		return false;
 	}
 	//
@@ -49,9 +50,9 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	const std::string szAttribSettingsFileName = GetGrannyExportSettingsFileName( "Attribs" );
 	if ( szAttribSettingsFileName.empty() )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, StrFmt("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tExport type: %s\n", "Attribs") );
+		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
+		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", "Attribs") );
 		return false;
 	}
 	//
@@ -149,8 +150,8 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	}
 	catch ( ... ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Can't open attribs file to update animation or can't open base animation file\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tBase animation file: %s\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Can't open attribs file to update animation or can't open base animation file\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tBase animation file: {}\n", szDstFileName.c_str()) );
 		bResult = false;
 	}
 	::DeleteFile( (szDstFileName + PARAMS_AABBA).c_str() );
@@ -169,23 +170,23 @@ EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
 	// check for number of skeletons in file
 	if ( fileInfo->SkeletonCount != 1 )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Incorrect number of skeletons in file - check RootJoint uniquness\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tAnimation: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSrcScenePath.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSkeletons count: %d\n", fileInfo->SkeletonCount) );
+		pLogger->Log( LT_ERROR, fmt::format("Incorrect number of skeletons in file - check RootJoint uniquness\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSkeletons count: {}\n", fileInfo->SkeletonCount) );
 		if ( fileInfo->SkeletonCount > 1 ) 
 		{
 			for ( int i = 0; i < fileInfo->SkeletonCount; ++i ) 
-				pLogger->Log( LT_ERROR, StrFmt("\t\t%s\n", fileInfo->Skeletons[i]->Name) );
+				pLogger->Log( LT_ERROR, fmt::format("\t\t{}\n", fileInfo->Skeletons[i]->Name) );
 		}
 		return ER_FAIL;
 	}
 	// check for number of bones
 	if ( fileInfo->Skeletons[0]->BoneCount == 0 ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Empty bones list in skeleton - check \"RootJoint\"\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tAnimation: %s\n", szObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSrcScenePath.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Empty bones list in skeleton - check \"RootJoint\"\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
 		return ER_FAIL;
 	}
 	return ER_SUCCESS;

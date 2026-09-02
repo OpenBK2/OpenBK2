@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "CommandHandlerDefines.h"
 #include "StringResources.h"
@@ -130,8 +131,8 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 	{
 		const SReinfPointsWindowData::SReinfPoint &rp = pData->reinfPoints[i];
 		int nItem = lcReinfPoints.InsertItem( i, "" );
-		lcReinfPoints.SetItemText( nItem, 0, StrFmt("%d", i) );
-		lcReinfPoints.SetItemText( nItem, 1, StrFmt("%s", rp.szDeployTemplate) );
+		lcReinfPoints.SetItemText( nItem, 0, fmt::format("{}", i) );
+		lcReinfPoints.SetItemText( nItem, 1, fmt::format("{}", rp.szDeployTemplate) );
 		lcReinfPoints.SetItemText( nItem, 2, std::to_string(  rp.typedTemplates.size()) );
 		lcReinfPoints.SetItemData( nItem, i );
 	}

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "CommandHandlerDefines.h"
@@ -176,7 +177,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 		pointsList.SetItemData( nIdx, 0 );
 		for ( int i = 0; i < pData->nNumPoints; ++i )
 		{
-			int nIdx = pointsList.InsertItem( i+1, StrFmt("%s %d", (const char*)szLabel, i) );
+			int nIdx = pointsList.InsertItem( i+1, fmt::format("{} {}", (const char*)szLabel, i) );
 			pointsList.SetItemData( nIdx, i+1 );
 		}
 	}
@@ -184,7 +185,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 	{
 		for ( int i = 0; i < pData->nNumPoints; ++i )
 		{
-			int nIdx = pointsList.InsertItem( i, StrFmt("%s %3d", (const char*)szLabel, i) );
+			int nIdx = pointsList.InsertItem( i, fmt::format("{} {:3d}", (const char*)szLabel, i) );
 			pointsList.SetItemData( nIdx, i );
 		}
 	}

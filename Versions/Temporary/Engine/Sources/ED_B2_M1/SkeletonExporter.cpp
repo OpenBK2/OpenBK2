@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "SkeletonExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -60,7 +61,7 @@ bool CSkeletonExporter::FormScript( std::string *pScriptText,
 	for ( int nRefIndex = 0; nRefIndex < nRefCount; ++nRefIndex )
 	{
 		std::string szRef;
-		CManipulatorManager::GetValue( &szRef, pManipulator, StrFmt("Animations.[%d]", nRefIndex) );
+		CManipulatorManager::GetValue( &szRef, pManipulator, fmt::format("Animations.[{}]", nRefIndex) );
 		if ( !szRef.empty() )
 			animations[szRef] = 1;
 	}
@@ -143,7 +144,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
 					NStr::ToLowerASCII( &szMnemonic );
 					if ( nNumber != INVALID_NODE_ID )
-						szAnimationName = StrFmt( "%s_%02d", szMnemonic.c_str(), nNumber ); 
+						szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber ); 
 					else
 						szAnimationName = szMnemonic;
 					bResult = bResult && itAttribute->GetAttribute( "starttime", &nFirstFrame );
@@ -157,8 +158,8 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 						itAttribute->GetAttribute( "aabbindex", &nAABBIndex );
 						if ( nAABBIndex != INVALID_NODE_ID )
 						{
-							szAABBAName = StrFmt( "AABB_A%02d", nAABBIndex );
-							szAABBDName = StrFmt( "AABB_D%02d", nAABBIndex );
+							szAABBAName = fmt::format( "AABB_A{:02d}", nAABBIndex );
+							szAABBDName = fmt::format( "AABB_D{:02d}", nAABBIndex );
 						}
 					}
 					// optional attribs
@@ -201,7 +202,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					bResult = bResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
 					// Добавим анимацию в скелет
 					bResult = bResult && pManipulator->InsertNode( "Animations" );
-					bResult = bResult && pManipulator->SetValue( StrFmt( "Animations.[%d]", nAnimationRefCount ), szTypeAndName );
+					bResult = bResult && pManipulator->SetValue( fmt::format( "Animations.[{}]", nAnimationRefCount ), szTypeAndName );
 				}
 			}
 			if ( bResult )

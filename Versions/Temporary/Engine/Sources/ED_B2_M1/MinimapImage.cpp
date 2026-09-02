@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
@@ -118,12 +119,12 @@ void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *
 						 ( nYIndex < ( pTerrainInfo->heights.GetSizeY() - 1 ) ),
 						 //( nXIndex < ( pTerrainInfo->addHeights.GetSizeX() - 1 ) ) &&
 						 //( nYIndex < ( pTerrainInfo->addHeights.GetSizeY() - 1 ) ),
-						 //StrFmt( "Wrong point: height: (%d, %d), point: (%d, %d)",
+						 //fmt::format( "Wrong point: height: ({}, {}), point: ({}, {})",
 							//			 pTerrainInfo->addHeights.GetSizeX(),
 							//			 pTerrainInfo->addHeights.GetSizeY(),
 							//			 nXIndex,
 							//			 nYIndex ) );
-						 StrFmt( "Wrong point: point: (%d, %d)",
+						 fmt::format( "Wrong point: point: ({}, {})",
 										 nXIndex,
 										 nYIndex ) );
 	////const float fH00 = ( pTerrainInfo->heights[nYIndex + 0][nXIndex + 0] + pTerrainInfo->addHeights[nYIndex + 0][nXIndex + 0] );
@@ -776,7 +777,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	NI_ASSERT( pMinimap != 0, "Wrong parameter: pMinimap == 0" );
 	NI_ASSERT( ( pTerrainInfo->tileTerraMap.GetSizeX() >= pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH ) &&
 						 ( pTerrainInfo->tileTerraMap.GetSizeY() >= pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
-						 StrFmt( "Wrong terrain size: terrain: (%d, %d), mapInfo: (%d, %d)",
+						 fmt::format( "Wrong terrain size: terrain: ({}, {}), mapInfo: ({}, {})",
 										 pTerrainInfo->tileTerraMap.GetSizeX(),
 										 pTerrainInfo->tileTerraMap.GetSizeY(),
 										 pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
@@ -839,7 +840,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_TERRAIN;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -860,7 +861,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_OCEAN;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -874,7 +875,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_LAKE;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -888,7 +889,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_SWAMP;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -902,7 +903,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_GRAG;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -916,7 +917,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_FLORA;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -930,7 +931,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_ROAD;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -944,7 +945,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_RAILOAD;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -958,7 +959,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_RIVER;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -972,7 +973,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_BUILDING;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -986,7 +987,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_BRIDGE;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), StrFmt( "Invalid layer index: %d", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -1072,7 +1073,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 		NI_ASSERT( ( itCreateParameter->size.x != 0 ) &&
 							 ( itCreateParameter->size.y != 0 ) &&
 							 ( !itCreateParameter->szImageFileName.empty() ),
-							 StrFmt( "Invalid image size: (%d, %d) or name: %s",
+							 fmt::format( "Invalid image size: ({}, {}) or name: {}",
 											 itCreateParameter->size.x,
 											 itCreateParameter->size.y,
 											 itCreateParameter->szImageFileName.c_str() ) );
@@ -1178,7 +1179,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 				}
 				/**
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\step%d.tga", nLayerIndex );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\step{}.tga", nLayerIndex );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( minimapImage );
 					NImage::SaveAsTGA( minimapImage, &imageStream );
@@ -1206,7 +1207,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 				{
 					/**
 					{
-						const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\noised%d.tga", nIndex );
+						const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\noised{}.tga", nIndex );
 						CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 						NImage::FlipY( *( *itNoisedLayer ) );
 						NImage::SaveAsTGA( *( *itNoisedLayer ), &imageStream );
@@ -1228,7 +1229,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			{
 				/**
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\shadow%d.tga", nIndex );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\shadow{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itShadowLayer ) );
 					NImage::SaveAsTGA( *( *itShadowLayer ), &imageStream );
@@ -1249,7 +1250,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			{
 				/**
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\alphaEmboss%d.tga", nIndex );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\alphaEmboss{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itAphaEmbossLayer ) );
 					NImage::SaveAsTGA( *( *itAphaEmbossLayer ), &imageStream );
@@ -1270,7 +1271,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			{
 				/**
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\MinimapTest\\layer%d.tga", nIndex );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\MinimapTest\\layer{}.tga", nIndex );
 					CFileStream imageStream(  szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( *( *itLayer ) );
 					NImage::SaveAsTGA( *( *itLayer ), &imageStream );

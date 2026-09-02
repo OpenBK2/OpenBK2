@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
@@ -33,7 +34,7 @@ IManipulator* CreateModelManipulatorFromVisObj( IManipulator *pVisObjectManipula
 	{
 		for ( int nModelIndex = 0; nModelIndex < nModelCount; ++nModelIndex )
 		{
-			const std::string szModelPath = StrFmt( "Models.[%d].", nModelIndex );
+			const std::string szModelPath = fmt::format( "Models.[{}].", nModelIndex );
 			std::string szSeason;
 			if ( CManipulatorManager::GetValue( &szSeason, pVisObjectManipulator, szModelPath + "Season" ) &&
 				( szSeason == NDB_DEFAULT_SEASON_MNEMONIC ) )
@@ -247,7 +248,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Bad or missing skeleton file while reading locators info. Check 'RootJoint' field.\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tFile name: %s%d\n", szSkeletonsFolder.c_str(), handle.nFileName) );
+		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}{}\n", szSkeletonsFolder.c_str(), handle.nFileName) );
 		return;
 	}
 	*/
@@ -256,7 +257,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Can't create animator from skeleton while reading locators info.\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tFile name: %s:%s\n", szSkeletonsFolder.c_str(), NDb::GetResName(handle.pSkeleton)) );
+		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}:{}\n", szSkeletonsFolder.c_str(), NDb::GetResName(handle.pSkeleton)) );
 		return;
 	}
 	//
@@ -632,7 +633,7 @@ static void FixLocators( IManipulator *pManipulator, const std::string &szLocato
 		for ( int i = 0; i < nArraySize; ++i )
 		{
 			CVariant vLocatorName;
-			const std::string szNodeName = szArrayName + StrFmt( ".[%d].Locator", i );
+			const std::string szNodeName = szArrayName + fmt::format( ".[{}].Locator", i );
 
 			if ( pManipulator->GetValue( szNodeName, &vLocatorName ) )
 			{
@@ -644,14 +645,14 @@ static void FixLocators( IManipulator *pManipulator, const std::string &szLocato
 					locatorFound[k] = true;
 					++nLocators;
 
-					const std::string szVecNodeName = szArrayName + StrFmt( ".[%d].AIRelativePos", i );
+					const std::string szVecNodeName = szArrayName + fmt::format( ".[{}].AIRelativePos", i );
 					CManipulatorManager::SetVec3( lc[k].inf.vPos, pManipulator, szVecNodeName );
 				}
 			}
 			else
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt("Can't find manipulator value: %s\n", szNodeName.c_str()) );
+				pLogger->Log( LT_ERROR, fmt::format("Can't find manipulator value: {}\n", szNodeName.c_str()) );
 				return;
 			}
 		}
@@ -664,10 +665,10 @@ static void FixLocators( IManipulator *pManipulator, const std::string &szLocato
 			if ( !locatorFound[i] )
 			{
 				pManipulator->InsertNode( szArrayName );
-				const std::string szLocatorNodeName = szArrayName + StrFmt( ".[%d].Locator", nLocators );
+				const std::string szLocatorNodeName = szArrayName + fmt::format( ".[{}].Locator", nLocators );
 				pManipulator->SetValue( szLocatorNodeName, CVariant( lc[i].inf.szName ) );
 
-				const std::string szVecNodeName = szArrayName + StrFmt( ".[%d].AIRelativePos", nLocators );
+				const std::string szVecNodeName = szArrayName + fmt::format( ".[{}].AIRelativePos", nLocators );
 				CManipulatorManager::SetVec3( lc[i].inf.vPos, pManipulator, szVecNodeName );
 
 				++nLocators;
@@ -677,7 +678,7 @@ static void FixLocators( IManipulator *pManipulator, const std::string &szLocato
 	else
 	{
 		ILogger *pLogger = NLog::GetLogger();
-		pLogger->Log( LT_ERROR, StrFmt("Can't find manipulator value: %s\n", szArrayName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Can't find manipulator value: {}\n", szArrayName.c_str()) );
 		return;
 	}
 }
@@ -795,7 +796,7 @@ bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const
 			                    Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFilesListFileName ) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't copy files list\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tFiles list: %s\n", szFilesListFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFiles list: {}\n", szFilesListFileName.c_str()) );
 			return false;
 		}
 		// then, load XML file and copy each movie
@@ -811,7 +812,7 @@ bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const
 					if ( NFile::CopyFile(szSrcFileName, szDstFileName) == false )
 					{
 						pLogger->Log( LT_ERROR, "Can't copy file\n" );
-						pLogger->Log( LT_ERROR, StrFmt("\tFile: %s\n", it->szFileName.c_str()) );
+						pLogger->Log( LT_ERROR, fmt::format("\tFile: {}\n", it->szFileName.c_str()) );
 					}
 				}
 			}
@@ -819,7 +820,7 @@ bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const
 		else
 		{
 			pLogger->Log( LT_ERROR, "Can't load files list to export\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tFiles list: %s\n", szFilesListFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tFiles list: {}\n", szFilesListFileName.c_str()) );
 			return false;
 		}
 	}

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Tools_SysCodes.h"
 
@@ -213,16 +214,16 @@ CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<unsigned>( 0, "" )
 std::string CWMMnemonicCodes::Get( unsigned nMessage )
 {
 	std::string szMnemonic = GetMnemonic( nMessage );
-	szMnemonic += StrFmt( "( 0x%X( %u ) )", nMessage, nMessage );
+	szMnemonic += fmt::format( "( 0x{:X}( {} ) )", nMessage, nMessage );
 	if ( szMnemonic.empty() )
 	{
 		if ( nMessage < WM_USER )
 		{
-			return StrFmt( "UNKNOWN( 0x%X( %u ) )", nMessage, nMessage );
+			return fmt::format( "UNKNOWN( 0x{:X}( {} ) )", nMessage, nMessage );
 		}
 		else
 		{
-			return StrFmt( "UNKNOWN( 0x%X( %u ) ): WM_USER( 0x%X ) + ( 0x%X( %u ) )", nMessage, nMessage, WM_USER, nMessage - WM_USER, nMessage - WM_USER );
+			return fmt::format( "UNKNOWN( 0x{:X}( {} ) ): WM_USER( 0x{:X} ) + ( 0x{:X}( {} ) )", nMessage, nMessage, WM_USER, nMessage - WM_USER, nMessage - WM_USER );
 		}
 	}
 	return szMnemonic;

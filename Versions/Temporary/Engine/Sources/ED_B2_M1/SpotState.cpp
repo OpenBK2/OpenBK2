@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -45,7 +46,7 @@ bool CSpotState::CanAddSpot()
 		}
 		if ( !bResult )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Spot have no material: %s%c%d\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first ) );
+			NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Spot have no material: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first ) );
 		}
 	}
 	return bResult;

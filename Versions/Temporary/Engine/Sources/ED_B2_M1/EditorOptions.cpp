@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "EditorOptions.h"
 
 #include "MapEditorLib/Interface_UserData.h"
@@ -46,7 +47,7 @@ int FindBySeason( const std::string &szDesiredSeason, const std::string &szName,
 	for ( int i = 0; i < nAmount; ++i ) 
 	{
 		std::string szSeason;
-		if ( CManipulatorManager::GetValue( &szSeason, pOptsMan, StrFmt("%s.[%d].Season", szName.c_str(), i) ) &&
+		if ( CManipulatorManager::GetValue( &szSeason, pOptsMan, fmt::format("{}.[{}].Season", szName.c_str(), i) ) &&
 			   szDesiredSeason == szSeason ) 
 		{
 			return i;
@@ -60,7 +61,7 @@ std::pair<int, int> FindBySeasonAndTime( const std::string &szDesiredSeason, con
 	const int nSeason = FindBySeason( szDesiredSeason, szName, pOptsMan );
 	if ( nSeason == -1 ) 
 		return std::pair<int, int>( -1, -1 );
-	const std::string szAddName = StrFmt( "%s.[%d].DayTimes", szName.c_str(), nSeason );
+	const std::string szAddName = fmt::format( "{}.[{}].DayTimes", szName.c_str(), nSeason );
 		//
 	int nAmount = 0;
 	CManipulatorManager::GetValue( &nAmount, pOptsMan, szAddName );
@@ -73,7 +74,7 @@ std::pair<int, int> FindBySeasonAndTime( const std::string &szDesiredSeason, con
 	for ( int i = 0; i < nAmount; ++i ) 
 	{
 		std::string szDayTime;
-		if ( CManipulatorManager::GetValue( &szDayTime, pOptsMan, StrFmt("%s.[%d].DayTime", szAddName.c_str(), i) ) &&
+		if ( CManipulatorManager::GetValue( &szDayTime, pOptsMan, fmt::format("{}.[{}].DayTime", szAddName.c_str(), i) ) &&
 			szDesiredTime == szDayTime ) 
 		{
 			return std::pair<int, int>( nSeason, i );
@@ -89,7 +90,7 @@ bool GetFromOptionsForSeason( TYPE *pRes, const std::string &szPreName, const st
 	const int nIndex = FindBySeason( szDesiredSeason, szPreName, pOptsMan );
 	if ( nIndex == -1 ) 
 		return false;
-	if ( CManipulatorManager::GetValue( pRes, pOptsMan, StrFmt("%s.[%d].%s", szPreName.c_str(), nIndex, szPostName.c_str()) ) )
+	if ( CManipulatorManager::GetValue( pRes, pOptsMan, fmt::format("{}.[{}].{}", szPreName.c_str(), nIndex, szPostName.c_str()) ) )
 		return true;
 	return false;
 }
@@ -102,7 +103,7 @@ bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const std::string &szPreName, c
 	const std::pair<int, int> seasonTime = FindBySeasonAndTime( szDesiredSeason, szDesiredTime, szPreName, pOptsMan );
 	if ( seasonTime.first == -1 || seasonTime.second == -1 ) 
 		return false;
-	if ( CManipulatorManager::GetValue( pRes, pOptsMan, StrFmt("%s.[%d].DayTimes.[%d].%s", szPreName.c_str(), seasonTime.first, seasonTime.second, szPostName.c_str()) ) )
+	if ( CManipulatorManager::GetValue( pRes, pOptsMan, fmt::format("{}.[{}].DayTimes.[{}].{}", szPreName.c_str(), seasonTime.first, seasonTime.second, szPostName.c_str()) ) )
 		return true;
 	return false;
 }

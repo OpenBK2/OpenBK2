@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
 #include "UI/UI.h"
@@ -519,7 +520,7 @@ void CWindowSimpleSharedState::RemoveChild( IWindow *pWindow )
 
 	for ( int i = 0; i < nChildren; ++i )
 	{
-		const std::string itemName = StrFmt( "Children.[%d]", i );
+		const std::string itemName = fmt::format( "Children.[{}]", i );
 		if ( pEditor->GetViewManipulator()->GetValue( itemName, &value ) )
 		{
 			const std::string fullName = value.GetStr();
@@ -705,7 +706,7 @@ bool CWindowSimpleSharedState::InsertChildInstanceToDB( const std::string & szSh
 
 	if ( pEditor->UOBegin( pEditor->GetViewManipulator(), szEditorTypeName, editorDBID ) )
 	{
-		bResult = bResult && pEditor->UOSetValue( StrFmt( "Children.[%d]", nChildIndex ), CVariant(instanceFullName) );
+		bResult = bResult && pEditor->UOSetValue( fmt::format( "Children.[{}]", nChildIndex ), CVariant(instanceFullName) );
 		bResult = bResult && pEditor->UOEnd();
 	}
 
@@ -770,7 +771,7 @@ bool CWindowSimpleSharedState::MakeInstanceName( const std::string & szInstanceT
 
 	do
 	{
-		shortName = (index == 0) ? szSharedShortName : StrFmt( "%s_%d", szSharedShortName.c_str(), index );
+		shortName = (index == 0) ? szSharedShortName : fmt::format( "{}_{}", szSharedShortName.c_str(), index );
 		objName = editorObjName + PATH_SEPARATOR_CHAR + shortName;
 		++index;
 	} while ( pFolderManipulator->GetID( objName ) != INVALID_NODE_ID );

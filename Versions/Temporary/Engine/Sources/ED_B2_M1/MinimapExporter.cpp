@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MinimapExporter.h"
 
@@ -26,7 +27,7 @@ EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator* pManipulator,
 	for ( int i = 0; i < nNumLayers; ++i )
 	{
 		std::string szNoiseImageFileName;
-		CManipulatorManager::GetValue( &szNoiseImageFileName, pManipulator, StrFmt("Layers.[%d].NoiseImage", i) );
+		CManipulatorManager::GetValue( &szNoiseImageFileName, pManipulator, fmt::format("Layers.[{}].NoiseImage", i) );
 		if ( !szNoiseImageFileName.empty() && szNoiseImageFileName != " " )
 		{
 			const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szNoiseImageFileName;

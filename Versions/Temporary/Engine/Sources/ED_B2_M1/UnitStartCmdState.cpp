@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -39,7 +40,7 @@ bool SStartCommand::LoadFromDB( IManipulator *pManipulator, int nIndex )
 	if ( nIndex < 0 )
 		return false;
 
-	const std::string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
+	const std::string szDBA = fmt::format( "startCommandsList.[{}]", nIndex );
 	//
 	std::string szDBAType = szDBA + ".CmdType";
 	if ( !CManipulatorManager::GetValue( &nCmdType, pManipulator, szDBAType ) )
@@ -73,7 +74,7 @@ bool SStartCommand::UpdateDB( IManipulator *pManipulator, int nIndex )
 	if ( nIndex < 0 )
 		return false;
 
-	const std::string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
+	const std::string szDBA = fmt::format( "startCommandsList.[{}]", nIndex );
 	//
 	std::string szDBAType = szDBA + ".CmdType";
 	if ( !CManipulatorManager::SetValue( nCmdType, pManipulator, szDBAType ) )
@@ -371,7 +372,7 @@ void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 				vCurrTargetPos.z = GetTerrainHeight( vCurrTargetPos.x, vCurrTargetPos.y );
 				UpdateCmdMarkers();
 				//
-				pEdUnitStartCmd->UpdateTarget( StrFmt( "%.0f : %.0f", vCurrTargetPos.x, vCurrTargetPos.y ) );
+				pEdUnitStartCmd->UpdateTarget( fmt::format( "{:.0f} : {:.0f}", vCurrTargetPos.x, vCurrTargetPos.y ) );
 			}
 		}
 	}
@@ -575,7 +576,7 @@ void CUnitStartCmdState::UsrEvtEditCmd( const SUnitStartCmdWindowData &data )
 	{
 		nCurrTargetUnit = -1;
 		dd.bSelectedCmdNeedTargetUnit = false;
-		dd.szTarget = StrFmt( "%.0f : %.0f", cmd.vTgtPos.x, cmd.vTgtPos.y );
+		dd.szTarget = fmt::format( "{:.0f} : {:.0f}", cmd.vTgtPos.x, cmd.vTgtPos.y );
 	}
 
 	pEdUnitStartCmd->SetDialogData( &dd );
@@ -799,7 +800,7 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 		wcmd.nIndex = i;
 		if ( cmd.nTgtLinkID == -1 )
 		{
-			wcmd.szTarget = StrFmt( "( %.0f , %.0f )", cmd.vTgtPos.x, cmd.vTgtPos.y );
+			wcmd.szTarget = fmt::format( "( {:.0f} , {:.0f} )", cmd.vTgtPos.x, cmd.vTgtPos.y );
 		}
 		else
 		{
@@ -953,7 +954,7 @@ std::string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 		const unsigned nPlayer = pElem->nPlayer;
 		const std::string szType = pElem->szRPGStatsTypeName;
 		const std::string szName = pElem->rpgStatsDBID.ToString();
-		szResult += StrFmt( "plr(%d) %s:%s\n", nPlayer, szType.c_str(), szName.c_str() );
+		szResult += fmt::format( "plr({}) {}:{}\n", nPlayer, szType.c_str(), szName.c_str() );
 	}
 	return szResult;
 }
@@ -1039,7 +1040,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 
 							wcmd.nIndex = nCmdIndex;
 							if ( itCmd->nTgtLinkID == -1 )
-								wcmd.szTarget = StrFmt( "%.0f : %.0f", itCmd->vTgtPos.x, itCmd->vTgtPos.y );
+								wcmd.szTarget = fmt::format( "{:.0f} : {:.0f}", itCmd->vTgtPos.x, itCmd->vTgtPos.y );
 							else
 							{
 								int nObjectID = GetObjectInfoCollector()->linkIDMap[itCmd->nTgtLinkID];

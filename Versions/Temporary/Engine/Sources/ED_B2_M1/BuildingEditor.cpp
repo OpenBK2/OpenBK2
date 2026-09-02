@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -101,7 +102,7 @@ void CBuildingEditor::CreateControls()
 						AfxSetResourceHandle( AfxGetInstanceHandle() );
 						if ( !bResult )
 						{
-							NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Creation of CPointListDialog dialog failed" ) );
+							NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Creation of CPointListDialog dialog failed" ) );
 						}
 						++nID;
 						CString strPaneLabel = listLabels[i];

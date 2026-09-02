@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ScriptCameraWindow.h"
 
@@ -198,7 +199,7 @@ bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 			if ( dwData > 0 )
 			{
 				bIsDataSetting = true;
-				SetDlgItemText( IDC_SMOV_YAW_EDIT, StrFmt("%g", *(float*)(dwData)) );
+				SetDlgItemText( IDC_SMOV_YAW_EDIT, fmt::format("{:g}", *(float*)(dwData)) );
 				bIsDataSetting = false;
 			}
 			return true;
@@ -209,7 +210,7 @@ bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 			if ( dwData > 0 )
 			{
 				bIsDataSetting = true;
-				SetDlgItemText( IDC_SMOV_PITCH_EDIT, StrFmt( "%g", *(float*)( dwData ) ) );
+				SetDlgItemText( IDC_SMOV_PITCH_EDIT, fmt::format( "{:g}", *(float*)( dwData ) ) );
 				bIsDataSetting = false;
 			}
 			return true;
@@ -352,11 +353,11 @@ void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
 	{
 		int nItem = lcCameras.InsertItem( i, "" );
-		lcCameras.SetItemText( nItem, 0, StrFmt("%s", it->szName) );
-		lcCameras.SetItemText( nItem, 1, StrFmt("%.0f : %.0f : %.0f", it->vPosition.x, it->vPosition.y, it->vPosition.z) );
-		lcCameras.SetItemText( nItem, 2, StrFmt("%.0f", it->fFOV) );
-		lcCameras.SetItemText( nItem, 3, StrFmt("%.0f", it->fYaw) );
-		lcCameras.SetItemText( nItem, 4, StrFmt("%.0f", it->fPitch) );
+		lcCameras.SetItemText( nItem, 0, fmt::format("{}", it->szName) );
+		lcCameras.SetItemText( nItem, 1, fmt::format("{:.0f} : {:.0f} : {:.0f}", it->vPosition.x, it->vPosition.y, it->vPosition.z) );
+		lcCameras.SetItemText( nItem, 2, fmt::format("{:.0f}", it->fFOV) );
+		lcCameras.SetItemText( nItem, 3, fmt::format("{:.0f}", it->fYaw) );
+		lcCameras.SetItemText( nItem, 4, fmt::format("{:.0f}", it->fPitch) );
 		lcCameras.SetItemData( nItem, i );
 	}
 	lcCameras.SetItemState( dialogData.nCurrentCamera, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED );

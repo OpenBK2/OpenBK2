@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/2Darray.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -70,8 +71,8 @@ void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 		//	{
 		//		//SStreamStats stats;
 		//		//pStream->GetStats( &stats );
-		//		//NI_ASSERT( pSaver != 0, StrFmt("Can't open stream \"%s\" to read map", stats.pszName) );
-		//		NI_ASSERT( pSaver != 0, StrFmt("Can't open stream \"\" to read map") );
+		//		//NI_ASSERT( pSaver != 0, fmt::format("Can't open stream \"{}\" to read map", stats.pszName) );
+		//		NI_ASSERT( pSaver != 0, fmt::format("Can't open stream \"\" to read map") );
 		//	}
 		//	pSaver->Add( 1, &terrainInfo );
 		//}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapObjectState.h"
+#include <fmt/format.h>
 #include "B2_M1_Terrain/DBTerrainSpot.h"
 
 
@@ -21,7 +22,7 @@ class CSpotState : public CMapObjectState
 	//конструкторы и операторы присваивания
 	CSpotState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
-		NI_ASSERT( pParentState != 0, StrFmt( "CSpotState(): pParentState == 0" ) );
+		NI_ASSERT( pParentState != 0, fmt::format( "CSpotState(): pParentState == 0" ) );
 	}
 	//
 	bool CanAddSpot();

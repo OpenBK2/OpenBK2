@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "ED_B2_M1Dll.h"
 #include "UnitStartCmdState.h"
@@ -114,7 +115,7 @@ void CEdUnitStartCmd::SetDialogData( const SDlgData *pData )
 		btnClear.EnableWindow( FALSE );
 	}
 
-	edData.SetWindowText( StrFmt("%d", pData->nData) );
+	edData.SetWindowText( fmt::format("{}", pData->nData) );
 }
 
 void CEdUnitStartCmd::GetDialogData( SDlgData *pData )

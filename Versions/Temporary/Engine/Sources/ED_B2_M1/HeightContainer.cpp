@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "HeightContainer.h"
 #include "Misc/Bresenham.h"
 #include "Image/Targa.h"
@@ -226,7 +227,7 @@ void CHeightContainer::Mark( const int x, const int y )
 	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
 	GetBits( &markedBitslList, point.x, point.y );
 	/**
-	std::string szMessage = StrFmt( "CHeightContainer::Mark( %d, %d ), marked Bits: ", x, y );
+	std::string szMessage = fmt::format( "CHeightContainer::Mark( {}, {} ), marked Bits: ", x, y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
 	{
 		if ( nStackIndex != 0 )
@@ -315,7 +316,7 @@ void CHeightContainer::InsertPolygon( const std::vector<CVec2> &rBlackPolygon, c
 				MakeLine2( start.x, start.y, finish.x, finish.y, STraceImageFunctor( 0xFF0000FF, &traceImage ) );
 			}
 		}
-		const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\bigPlane%03d.tga", nPlaneIndex );
+		const std::string szFileName = fmt::format( "C:\\B2\\Editor\\HeighContainer\\bigPlane{:03d}.tga", nPlaneIndex );
 		CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 		NImage::FlipY( traceImage );
 		NImage::SaveAsTGA( traceImage, &imageStream );
@@ -442,14 +443,14 @@ void CHeightContainer::Trace()
 					}
 				}
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\blackPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\HeighContainer\\blackPlane{:03d}.tga", nStackIndex * STACK_SIZE + nBit );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( blackPlane );
 					NImage::SaveAsTGA( blackPlane, &imageStream );
 					DebugTrace( "%s created", szFileName.c_str() );
 				}
 				{
-					const std::string szFileName = StrFmt( "C:\\B2\\Editor\\HeighContainer\\redPlane%03d.tga", nStackIndex * STACK_SIZE + nBit );
+					const std::string szFileName = fmt::format( "C:\\B2\\Editor\\HeighContainer\\redPlane{:03d}.tga", nStackIndex * STACK_SIZE + nBit );
 					CFileStream imageStream( szFileName, CFileStream::WIN_CREATE );
 					NImage::FlipY( redPlane );
 					NImage::SaveAsTGA( redPlane, &imageStream );

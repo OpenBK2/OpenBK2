@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Tools_Granny.h"
 #include "MapEditorLib/Tools_Geometry.h"
@@ -265,12 +266,12 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 //				const int nTotalSize = GrannyGetTotalObjectSize( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
 //				bool bHasPointers = GrannyMemberHasPointers( &(pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j]) );
 //				ILogger *pLogger = NLog::GetLogger();
-//				pLogger->Log( LT_ERROR, StrFmt("Attribute of type 'std::string' for \"%s\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
+//				pLogger->Log( LT_ERROR, fmt::format("Attribute of type 'std::string' for \"{}\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
 //				break;
 			}
 			else
 			{
-				NLog::GetLogger()->Log( LT_IMPORTANT, StrFmt("Unknown attribute type for \"%s\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
+				NLog::GetLogger()->Log( LT_IMPORTANT, fmt::format("Unknown attribute type for \"{}\"\n", pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name) );
 				break;
 			}
 		}

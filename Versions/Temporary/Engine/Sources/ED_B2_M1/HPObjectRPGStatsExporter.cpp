@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "HPObjectRPGStatsExporter.h"
 #include "MapEditorLib/ManipulatorManager.h"
@@ -21,8 +22,8 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector
 		if ( !pManipulator->InsertNode( "SurfacePoints" ) )
 			return false;
 		//
-		std::string szDBAPos = StrFmt( "SurfacePoints.[%d].Pos", i );
-		std::string szDBAOrient = StrFmt( "SurfacePoints.[%d].Orient", i );
+		std::string szDBAPos = fmt::format( "SurfacePoints.[{}].Pos", i );
+		std::string szDBAOrient = fmt::format( "SurfacePoints.[{}].Orient", i );
 		//
 		CVec3 pos = rPoints[i].vPos;
 		CVec3 n = rPoints[i].vNormal;
@@ -211,7 +212,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 
 				const STempLightInfo &tmpLight = *it;
 
-				const std::string szNodePrefix = StrFmt( "LightEffects.[%d].", nEffectIndex );
+				const std::string szNodePrefix = fmt::format( "LightEffects.[{}].", nEffectIndex );
 
 				pMan->SetValue( szNodePrefix + "LocatorName", tmpLight.szLocatorName );
 				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" ); 
@@ -242,7 +243,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			// 3.1 Update existing records, mark for deletion other items
 			for ( int i = 0; i < nExistingLights; ++i )
 			{
-				const std::string szNodePrefix = StrFmt( "LightEffects.[%d].", i );
+				const std::string szNodePrefix = fmt::format( "LightEffects.[{}].", i );
 
 				std::string szLocatorName;
 				CManipulatorManager::GetValue( &szLocatorName, pMan, szNodePrefix + "LocatorName" );
@@ -335,7 +336,7 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 		const std::string szIconTextureFileName = szTextureFolder + "icon.tga";
 		if ( NFile::DoesFileExist( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szIconTextureFileName ) )
 		{
-			szIconTextureName = szIconTexturePrefix + StrFmt( "%s\\%s", szObjectTypeName.c_str(), szObjectName.c_str() );
+			szIconTextureName = szIconTexturePrefix + fmt::format( "{}\\{}", szObjectTypeName.c_str(), szObjectName.c_str() );
 			pFolderCallback->InsertObject( "Texture", szIconTextureName );
 			CPtr<IManipulator> pIconTextureMan = pResourceManager->CreateObjectManipulator( "Texture", szIconTextureName );
 			if ( pIconTextureMan )

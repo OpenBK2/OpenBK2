@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "PC_Constants.h"
 #include "Misc/StrProc.h"
@@ -106,7 +107,7 @@ void CPCFloatSliderEditor::SetValue( const CVariant &rValue )
 	const float fValue = ( 1.0f * CStringManager::NormalizeValue( (int)( (float)rValue * nPowerPrecision + 0.5f ),
 																																(int)( fStep * nPowerPrecision ) ) ) /
 											 ( 1.0f * nPowerPrecision );
-//	const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//	const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 //	CVariant value = std::string( StrFmt( szFormat.c_str(), fValue ) ); 
 	CVariant value = CStringManager::GetFloatStringWithPrecision( fValue, nPrecision );
 	CPCStringSliderEditor::SetValue( value );
@@ -151,7 +152,7 @@ void CPCFloatSliderEditor::OnChangePos( int nPos )
 	float fSliderPos = ( 1.0f * CStringManager::NormalizeValue( GetSlider()->GetPos(),
 																															(int)( fStep * nPowerPrecision ) ) ) /
 										 ( 1.0f * nPowerPrecision );
-//	const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//	const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 //	SetWindowText( StrFmt( szFormat.c_str(), fSliderPos ) );
 	SetWindowText( CStringManager::GetFloatStringWithPrecision(fSliderPos, nPrecision).c_str() );
 }

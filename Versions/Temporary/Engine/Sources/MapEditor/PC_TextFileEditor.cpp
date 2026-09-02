@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 #include "PC_Constants.h"
@@ -111,7 +112,7 @@ void CPCTextFileEditor::OnNew()
 					//
 					CString strTitle;
 					strTitle.LoadString( IDS_PC_LUA_EDITOR_TITLE );
-					scriptEditor.SetTitle( StrFmt( "%s - %s", szFilePath.c_str(), strTitle ) );
+					scriptEditor.SetTitle( fmt::format( "{} - {}", szFilePath.c_str(), strTitle ) );
 					//
 					scriptEditor.SetText( szText );
 					scriptEditor.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
@@ -128,7 +129,7 @@ void CPCTextFileEditor::OnNew()
 					//
 					CString strTitle;
 					strTitle.LoadString( IDS_PC_TXT_EDITOR_TITLE );
-					textEditorDialog.SetTitle( StrFmt( "%s - %s", szFilePath.c_str(), strTitle ) );
+					textEditorDialog.SetTitle( fmt::format( "{} - {}", szFilePath.c_str(), strTitle ) );
 					//
 					textEditorDialog.SetType( typeTEMnemonics.Get( szEditor ) );
 					textEditorDialog.SetText( szText );

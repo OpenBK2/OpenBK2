@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "TGNoiseExporter.h"
 
@@ -29,7 +30,7 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
 			                    Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseFileName ) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't export noise\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tNoise: %s\n", szNoiseFileName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tNoise: {}\n", szNoiseFileName.c_str()) );
 			return ER_FAIL;
 		}
 	}

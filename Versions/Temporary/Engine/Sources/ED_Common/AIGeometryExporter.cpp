@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "AIGeometryExporter.h"
 #include "3Dmotor/aiObject.h"
@@ -34,9 +35,9 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 	if ( szSettingsFileName.empty() )
 	{
 		ILogger *pLogger = NLog::GetLogger();
-		pLogger->Log( LT_ERROR, StrFmt("Granny exporter settings file is not specified\n") );
-		pLogger->Log( LT_ERROR, StrFmt("Check ConstUserData.xml in \"MayaExport\" section\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tExport type: %s\n", szTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Granny exporter settings file is not specified\n") );
+		pLogger->Log( LT_ERROR, fmt::format("Check ConstUserData.xml in \"MayaExport\" section\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tExport type: {}\n", szTypeName.c_str()) );
 		return false;
 	}
 	//
@@ -83,8 +84,8 @@ bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObj
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Error while retrieving AABB from AI geometry\n" );
-		pLogger->Log( LT_ERROR, StrFmt("\tObject name: %s\n", szGeomObjName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tFile name: %s\n", szDstFileName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tObject name: {}\n", szGeomObjName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tFile name: {}\n", szDstFileName.c_str()) );
 	}
 	return false;
 }
@@ -110,8 +111,8 @@ EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
 			ILogger *pLogger = NLog::GetLogger();
 			std::string szSrcScenePath;
 			pLogger->Log( LT_ERROR, "AI Geometry is not closed\n" );
-			pLogger->Log( LT_ERROR, StrFmt("\tObject name: %s\n", szObjName.c_str()) );
-			pLogger->Log( LT_ERROR, StrFmt("\tSource file: %s\n", szSrcScenePath.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tObject name: {}\n", szObjName.c_str()) );
+			pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
 			return ER_FAIL;
 		}
 	}

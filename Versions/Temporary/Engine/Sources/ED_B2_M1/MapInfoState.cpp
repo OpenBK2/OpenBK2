@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -125,18 +126,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_TERRAIN, StrFmt( "CMapInfoState(): Wrong state number IS_TERRAIN: %d (%d)", nStateIndex, IS_TERRAIN ) );
+		NI_ASSERT( nStateIndex == IS_TERRAIN, fmt::format( "CMapInfoState(): Wrong state number IS_TERRAIN: {} ({})", nStateIndex, IS_TERRAIN ) );
 		// TERRAIN_ISS_HEIGHT_V3
 		{
 			CHeightStateV3 *pHeightStateV3 = new CHeightStateV3( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pHeightStateV3 );
-			NI_ASSERT( nStateIndex == TERRAIN_ISS_HEIGHT_V3, StrFmt( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_HEIGHT_V3: %d, (%d)", nStateIndex, TERRAIN_ISS_HEIGHT_V3 ) );
+			NI_ASSERT( nStateIndex == TERRAIN_ISS_HEIGHT_V3, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_HEIGHT_V3: {}, ({})", nStateIndex, TERRAIN_ISS_HEIGHT_V3 ) );
 		}
 		// TERRAIN_ISS_FIELD
 		{
 			CFieldState *pFieldState = new CFieldState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pFieldState );
-			NI_ASSERT( nStateIndex == TERRAIN_ISS_FIELD, StrFmt( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_FIELD: %d, (%d)", nStateIndex, TERRAIN_ISS_FIELD ) );
+			NI_ASSERT( nStateIndex == TERRAIN_ISS_FIELD, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_FIELD: {}, ({})", nStateIndex, TERRAIN_ISS_FIELD ) );
 		}
 	}
 
@@ -145,18 +146,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_OBJECT, StrFmt( "CMapInfoState(): Wrong state number IS_OBJECT: %d (%d)", nStateIndex, IS_OBJECT ) );
+		NI_ASSERT( nStateIndex == IS_OBJECT, fmt::format( "CMapInfoState(): Wrong state number IS_OBJECT: {} ({})", nStateIndex, IS_OBJECT ) );
 		// OBJECT_ISS_MAP_OBJECT
 		{
 			CMapObjectMultiState *pMapObjectMultiState = new CMapObjectMultiState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pMapObjectMultiState );
-			NI_ASSERT( nStateIndex == OBJECT_ISS_MAP_OBJECT, StrFmt( "CMapInfoMainState(): Wrong state number OBJECT_ISS_MAP_OBJECT: %d, (%d)", nStateIndex, OBJECT_ISS_MAP_OBJECT ) );
+			NI_ASSERT( nStateIndex == OBJECT_ISS_MAP_OBJECT, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_MAP_OBJECT: {}, ({})", nStateIndex, OBJECT_ISS_MAP_OBJECT ) );
 		}
 		// OBJECT_ISS_VSO
 		{
 			CVSOMultiState *pVSOMultiState = new CVSOMultiState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pVSOMultiState );
-			NI_ASSERT( nStateIndex == OBJECT_ISS_VSO, StrFmt( "CMapInfoMainState(): Wrong state number OBJECT_ISS_VSO: %d, (%d)", nStateIndex, OBJECT_ISS_VSO ) );
+			NI_ASSERT( nStateIndex == OBJECT_ISS_VSO, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_VSO: {}, ({})", nStateIndex, OBJECT_ISS_VSO ) );
 		}
 	}
 
@@ -165,30 +166,30 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_GAMEPLAY, StrFmt( "CMapInfoState(): Wrong state number IS_GAMEPLAY: %d (%d)", nStateIndex, IS_GAMEPLAY ) );
+		NI_ASSERT( nStateIndex == IS_GAMEPLAY, fmt::format( "CMapInfoState(): Wrong state number IS_GAMEPLAY: {} ({})", nStateIndex, IS_GAMEPLAY ) );
 		// GAMEPLAY_ISS_REINF_POINTS
 		{
 			CReinfPointsState *pState = new CReinfPointsState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_REINF_POINTS, StrFmt( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_REINF_POINTS: %d, (%d)", nStateIndex, GAMEPLAY_ISS_REINF_POINTS ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_REINF_POINTS, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_REINF_POINTS: {}, ({})", nStateIndex, GAMEPLAY_ISS_REINF_POINTS ) );
 		}
 		// GAMEPLAY_ISS_START_CAMERA
 		{
 			CCameraPositionState *pState = new CCameraPositionState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_START_CAMERA, StrFmt( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_START_CAMERA: %d, (%d)", nStateIndex, GAMEPLAY_ISS_START_CAMERA ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_START_CAMERA, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_START_CAMERA: {}, ({})", nStateIndex, GAMEPLAY_ISS_START_CAMERA ) );
 		}
 		// GAMEPLAY_ISS_AIGENERAL
 		{
 			CAIGeneralPointsState *pState = new CAIGeneralPointsState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_AIGENERAL, StrFmt( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_AIGENERAL: %d, (%d)", nStateIndex, GAMEPLAY_ISS_AIGENERAL ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_AIGENERAL, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_AIGENERAL: {}, ({})", nStateIndex, GAMEPLAY_ISS_AIGENERAL ) );
 		}
 		// GAMEPLAY_ISS_UNIT_START_CMD
 		{
 			CUnitStartCmdState *pState = new CUnitStartCmdState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_UNIT_START_CMD, StrFmt( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_UNIT_START_CMD: %d, (%d)", nStateIndex, GAMEPLAY_ISS_UNIT_START_CMD ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_UNIT_START_CMD, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_UNIT_START_CMD: {}, ({})", nStateIndex, GAMEPLAY_ISS_UNIT_START_CMD ) );
 		}
 	}
 
@@ -197,18 +198,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_SCRIPT, StrFmt( "CMapInfoState(): Wrong state number IS_SCRIPT: %d (%d)", nStateIndex, IS_SCRIPT ) );
+		NI_ASSERT( nStateIndex == IS_SCRIPT, fmt::format( "CMapInfoState(): Wrong state number IS_SCRIPT: {} ({})", nStateIndex, IS_SCRIPT ) );
 		// SCRIPT_ISS_SCRIPT_AREAS		
 		{
 			CScriptAreaState *pScriptAreaState = new CScriptAreaState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pScriptAreaState );
-			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_AREAS, StrFmt( "CMapInfoMainState(): Wrong state number SCRIPT_ISS_SCRIPT_AREAS: %d, (%d)", nStateIndex, SCRIPT_ISS_SCRIPT_AREAS ) );
+			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_AREAS, fmt::format( "CMapInfoMainState(): Wrong state number SCRIPT_ISS_SCRIPT_AREAS: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_AREAS ) );
 		}
 		// SCRIPT_ISS_SCRIPT_MOVIES
 		{
 			CScriptCameraState *pState = new CScriptCameraState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, StrFmt( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: %d, (%d)", nStateIndex, SCRIPT_ISS_SCRIPT_MOVIES ) );
+			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, fmt::format( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_MOVIES ) );
 		}
 	}
 	/**
@@ -218,12 +219,12 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 		{
 			CMultiInputState *pMultiInputState = new CMultiInputState();
 			nStateIndex = AddInputState( pMultiInputState );
-			NI_ASSERT( nStateIndex == IS_ADVANCED, StrFmt( "CMapInfoState(): Wrong state number IS_ADVANCED: %d (%d)", nStateIndex, IS_ADVANCED ) );
+			NI_ASSERT( nStateIndex == IS_ADVANCED, fmt::format( "CMapInfoState(): Wrong state number IS_ADVANCED: {} ({})", nStateIndex, IS_ADVANCED ) );
 			// ADV_ISS_CLIPBOARD
 			{
 				CAdvClipboardState *pState = new CAdvClipboardState( pMapInfoEditor );
 				nStateIndex = pMultiInputState->AddInputState( pState );
-				NI_ASSERT( nStateIndex == ADV_ISS_CLIPBOARD, StrFmt( "CMapInfoMainState(): Wrong state number ADV_ISS_CLIPBOARD: %d, (%d)", nStateIndex, ADV_ISS_CLIPBOARD ) );
+				NI_ASSERT( nStateIndex == ADV_ISS_CLIPBOARD, fmt::format( "CMapInfoMainState(): Wrong state number ADV_ISS_CLIPBOARD: {}, ({})", nStateIndex, ADV_ISS_CLIPBOARD ) );
 			}
 		}
 	}
@@ -341,10 +342,10 @@ void CMapInfoState::Enter2()
 						}
 						catch ( ... )
 						{
-							pLogger->Log( LT_ERROR, StrFmt("Map %s caused error during export\n", szName.c_str()) );
+							pLogger->Log( LT_ERROR, fmt::format("Map {} caused error during export\n", szName.c_str()) );
 						}
 					}
-					pLogger->Log( LT_NORMAL, StrFmt("Map %s was exported succesfully\n", szName.c_str()) );
+					pLogger->Log( LT_NORMAL, fmt::format("Map {} was exported succesfully\n", szName.c_str()) );
 					DebugTrace( "Map %s (%dx%d) : %g", szName.c_str(), pMapInfoEditor->pMapInfo->nNumPatchesX, pMapInfoEditor->pMapInfo->nNumPatchesY, NHPTimer::GetTimePassed(&time) );
 				}
 			}
@@ -429,7 +430,7 @@ void CMapInfoState::Enter()
 		//
 		SSWTParams swtParams;
 		swtParams.dwFlags = SWT_PARAMS;
-		swtParams.szParams = StrFmt( "%dx%d", pMapInfoEditor->pMapInfo->nNumPatchesX, pMapInfoEditor->pMapInfo->nNumPatchesY );
+		swtParams.szParams = fmt::format( "{}x{}", pMapInfoEditor->pMapInfo->nNumPatchesX, pMapInfoEditor->pMapInfo->nNumPatchesY );
 		Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
 		NProgress::IteratePosition(); // 6
 		//
@@ -463,14 +464,14 @@ void CMapInfoState::Enter()
 		{
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
 			{
-				NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map object %d on the map \"%s\" has no RPG stats. Skiping...\n", nObjectIndex, NDb::GetResName(pMapInfoEditor->pMapInfo) ) );
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map object {} on the map \"{}\" has no RPG stats. Skiping...\n", nObjectIndex, NDb::GetResName(pMapInfoEditor->pMapInfo) ) );
 				continue;				
 			}
 			if ( !pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID( pMapInfoEditor->pMapInfo->objects[nObjectIndex].link.nLinkID ) )
 			{
 				const int nLinkID = pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID();
 				CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
-				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 				if ( pObjectController->AddChangeOperation( szObjectPrefix + ".Link.LinkID", nLinkID, pMapInfoManipulator ) )
 				{
 					pObjectController->Redo( false, true, pMapInfoEditor );
@@ -488,14 +489,14 @@ void CMapInfoState::Enter()
 		{
 			if ( pMapInfoEditor->pMapInfo->spots[nSpotIndex].pDescriptor == 0 )
 			{
-				NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Spot %d on the map \"%s\" has no RPG stats. Skiping...\n", nSpotIndex, NDb::GetResName(pMapInfoEditor->pMapInfo) ) );
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Spot {} on the map \"{}\" has no RPG stats. Skiping...\n", nSpotIndex, NDb::GetResName(pMapInfoEditor->pMapInfo) ) );
 				continue;
 			}
 			if ( !pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID( pMapInfoEditor->pMapInfo->spots[nSpotIndex].nSpotID ) )
 			{
 				int nLinkID = pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID();
 				CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
-				const std::string szObjectPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+				const std::string szObjectPrefix = fmt::format( "Spots.[{}]", nSpotIndex );
 				if ( pObjectController->AddChangeOperation( szObjectPrefix + ".SpotID", nLinkID, pMapInfoManipulator ) )
 				{
 					pObjectController->Redo( false, true, pMapInfoEditor );
@@ -970,7 +971,7 @@ namespace NTest
 			CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pMapInfoManipulator, &szRPGStatsTypeName, &szRPGStatsName, &nObjectRPGStatsTypeID, &nObjectRPGStatsID, 0 );
 			if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 			{
-				NI_ASSERT( 0, StrFmt( "Empty object %d", nObjectIndex ) );
+				NI_ASSERT( 0, fmt::format( "Empty object {}", nObjectIndex ) );
 				continue;
 			}
 			/**/
@@ -978,7 +979,7 @@ namespace NTest
 			CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pMapInfoManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0, 0, 0 );
 			if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 			{
-				NI_ASSERT( 0, StrFmt( "Empty object %d", nObjectIndex ) );
+				NI_ASSERT( 0, fmt::format( "Empty object {}", nObjectIndex ) );
 				continue;
 			}
 			/**/

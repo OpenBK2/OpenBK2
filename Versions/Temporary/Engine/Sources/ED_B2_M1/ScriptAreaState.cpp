@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -37,7 +38,7 @@ void CScriptAreaState::GetScriptAreaMap()
 	//
 	for ( int nScriptAreIndex = 0; nScriptAreIndex < nScriptAreaCount; ++nScriptAreIndex )
 	{
-		const std::string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreIndex );
+		const std::string szScriptAreaPefix = fmt::format( "ScriptAreas.[{}]", nScriptAreIndex );
 		//
 		CScriptAreaState::SScriptArea scriptArea;
 		// 
@@ -115,7 +116,7 @@ void CScriptAreaState::UpdateScriptArea( unsigned nScriptAreaID )
 	}
 	IManipulator *pManipulator = pMapInfoEditor->GetViewManipulator();
 	const int nScriptAreaIndex = scriptAreaIDToIndexCollector.Get( nScriptAreaID );
-	const std::string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreaIndex );
+	const std::string szScriptAreaPefix = fmt::format( "ScriptAreas.[{}]", nScriptAreaIndex );
 	//
 	std::string szType;
 	if ( posScriptArea->second.eType == NDb::EAT_RECTANGLE )

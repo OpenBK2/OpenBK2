@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -28,7 +29,7 @@ static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMa
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
 		return false;
 	//
-	const std::string szCamera = StrFmt( "Players.[%d].Camera.", nPlayerIndex );
+	const std::string szCamera = fmt::format( "Players.[{}].Camera.", nPlayerIndex );
 	//
 	SCameraPos camPos;
 	bool bResult = true;
@@ -65,7 +66,7 @@ static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCamera
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
 		return false;
 	//
-	const std::string szCamera = StrFmt( "Players.[%d].Camera.", nPlayerIndex );
+	const std::string szCamera = fmt::format( "Players.[{}].Camera.", nPlayerIndex );
 	//
 	bool bResult = true;
 	bResult = bResult && CManipulatorManager::SetValue( rCamPos.vAnchor, pMapInfoMan, szCamera + "Anchor" );
@@ -298,7 +299,7 @@ void CCameraPositionState::PostDraw( CPaintDC *pPaintDC )
 		AI2Vis( &pos, pos );
 
 		if ( TestRayInFrustrum( pos, ts, pScene->GetScreenRect(), &res ) )
-			NDrawToolsDC::DrawLabelDC( pPaintDC, StrFmt( "Player %d camera", i ) , res );			
+			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ) , res );			
 	}
 }
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
@@ -97,7 +98,7 @@ CWnd* CDefaultShortcutBar::GetShortcutWindow( int nShortcutIndex )
 {
 	NI_ASSERT( ( nShortcutIndex >=0 ) &&
 						 ( nShortcutIndex < shortcutList.size() ),
-						 StrFmt( "CDefaultShortcutBar::GetShortcutWindow(): invalid nShortcutIndex: %d [0...%d)", nShortcutIndex, shortcutList.size() ) );
+						 fmt::format( "CDefaultShortcutBar::GetShortcutWindow(): invalid nShortcutIndex: {} [0...{})", nShortcutIndex, shortcutList.size() ) );
 	return shortcutList[nShortcutIndex]; 
 }
 

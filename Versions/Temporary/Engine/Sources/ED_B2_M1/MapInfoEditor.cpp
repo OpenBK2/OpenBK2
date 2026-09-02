@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -628,7 +629,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 			if ( !NEditor::SaveTerrain( EditorScene()->GetTerraManager() ) )
 			{
 				NLog::GetLogger()->Log( LT_ERROR, "Failed to save map\n" );
-				NLog::GetLogger()->Log( LT_ERROR, StrFmt("\tObjectID: %s\n", NDb::GetResName(pMapInfo)) );
+				NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tObjectID: {}\n", NDb::GetResName(pMapInfo)) );
 			}
 		}
 		catch ( ... ) 
@@ -704,7 +705,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("Roads.[%d].points.[%d].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Roads.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -726,7 +727,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("Rivers.[%d].points.[%d].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Rivers.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -748,7 +749,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("Crags.[%d].points.[%d].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Crags.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -770,7 +771,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
 					Normalize( &vNorm );
 					vNorm.Set( vNorm.y, -vNorm.x, 0.0f );
 
-					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( StrFmt("Lakes.[%d].points.[%d].Norm", i, nPointIndex), vNorm, pManipulator );
+					bResult = bResult && pObjectController->AddChangeVec3Operation<CVec3, float>( fmt::format("Lakes.[{}].points.[{}].Norm", i, nPointIndex), vNorm, pManipulator );
 				}
 				if ( bResult )
 				{
@@ -1790,7 +1791,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				{
 					changedObjectList.erase( posControllerChangeInfo );
 				}
-				//const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				//const std::string szObjectPrefix = fmt::format( "Objects.[{}]", *itIndex );
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, pManipulator, true );
 				objectInfoCollector.linkIDCollector.LockID( nLinkID );
 				objectInfoCollector.linkIDToIndexCollector.Insert( nLinkID, *itIndex, true );
@@ -1802,16 +1803,16 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				std::unordered_map<int, int>::const_iterator posObjectIndexToLinkID = objectIndexToLinkIDMap.find( *itIndex );
 				if ( posObjectIndexToLinkID == objectIndexToLinkIDMap.end() )
 				{
-					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map object %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
+					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map object {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
 					continue;				
 				}
-				const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
 				std::string szRPGStatsName;
 				CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
-					NI_ASSERT( 0, StrFmt( "Empty object %d", *itIndex ) );
+					NI_ASSERT( 0, fmt::format( "Empty object {}", *itIndex ) );
 					continue;
 				}
 				// создаем записи в mapInfo в зависимости от типа объекта
@@ -1932,7 +1933,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				{
 					changedSpotList.erase( posControllerChangeInfo );
 				}
-				//const std::string szObjectPrefix = StrFmt( "Objects.[%d]", *itIndex );
+				//const std::string szObjectPrefix = fmt::format( "Objects.[{}]", *itIndex );
 				const int nLinkID = objectInfoCollector.GetLinkIDByObjectIndex( *itIndex, pManipulator, false );
 				objectInfoCollector.linkIDCollector.LockID( nLinkID );
 				objectInfoCollector.spotIDToIndexCollector.Insert( nLinkID, *itIndex, true );
@@ -1944,16 +1945,16 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				std::unordered_map<int, int>::const_iterator posSpotIndexToLinkID = spotIndexToLinkIDMap.find( *itIndex );
 				if ( posSpotIndexToLinkID == spotIndexToLinkIDMap.end() )
 				{
-					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map spot %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
+					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map spot {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
 					continue;				
 				}
-				const std::string szSpotPrefix = StrFmt( "Spots.[%d]", *itIndex );
+				const std::string szSpotPrefix = fmt::format( "Spots.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
 				std::string szRPGStatsName;
 				CManipulatorManager::GetParamsFromReference( szSpotPrefix + ".Descriptor", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 				{
-					NI_ASSERT( 0, StrFmt( "Empty Spot %d", *itIndex ) );
+					NI_ASSERT( 0, fmt::format( "Empty Spot {}", *itIndex ) );
 					continue;
 				}
 				pManipulator->SetValue( szSpotPrefix + ".points", 4 );
@@ -2332,7 +2333,7 @@ void CMapInfoEditor::RunGame()
 		EditorScene()->SetSceneConsts( pEditorSceneConsts );
 	Camera()->Init();
 	//
-	const std::wstring wszCommand = NStr::ToUnicode( StrFmt( "map %d", GetObjectSet().objectNameSet.begin()->first ) );
+	const std::wstring wszCommand = NStr::ToUnicode( fmt::format( "map {}", GetObjectSet().objectNameSet.begin()->first ) );
 	NGlobal::ProcessCommand( wszCommand );
 	/**/
 }

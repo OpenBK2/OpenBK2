@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapObjectState.h"
+#include <fmt/format.h>
 
 
 class CSimpleObjectState : public CMapObjectState
@@ -25,7 +26,7 @@ class CSimpleObjectState : public CMapObjectState
 	//конструкторы и операторы присваивания
 	CSimpleObjectState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
-		NI_ASSERT( pParentState != 0, StrFmt( "CSimpleObjectState(): pParentState == 0" ) );
+		NI_ASSERT( pParentState != 0, fmt::format( "CSimpleObjectState(): pParentState == 0" ) );
 		ClearData();
 	}
 	//

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
@@ -65,7 +66,7 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectLoadInfo != 0, "SSimpleObjectInfo::Load(), pObjectLoadInfo == 0" );
 		//
 		// Устанавливаем общие параметры
-		const std::string szObjectPrefix = StrFmt( "Objects.[%d]", pObjectLoadInfo->nObjectIndex );
+		const std::string szObjectPrefix = fmt::format( "Objects.[{}]", pObjectLoadInfo->nObjectIndex );
 		// создаем SMapInfoElement и заполняем его данными
 		bool bResult = true;
 		{
@@ -123,7 +124,7 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectCreateInfo != 0, "SSimpleObjectInfo::Create(), pObjectCreateInfo == 0" );
 		//
 		const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( pObjectCreateInfo->rpgStatsDBID ) );
-		NI_ASSERT( pHPObjectRPGStats != 0, StrFmt( "%s not NDb::SHPObjectRPGStats type", pObjectCreateInfo->szRPGStatsTypeName.c_str() ) ); 
+		NI_ASSERT( pHPObjectRPGStats != 0, fmt::format( "{} not NDb::SHPObjectRPGStats type", pObjectCreateInfo->szRPGStatsTypeName.c_str() ) ); 
 		if (  pHPObjectRPGStats == 0 )
 		{
 			return false;
@@ -155,7 +156,7 @@ namespace NMapInfoEditor
 			mapInfoElement.linkedLinkIDIist.clear();
 			mapInfoElement.nLinkToLinkID = INVALID_NODE_ID;
 
-			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 			//Change

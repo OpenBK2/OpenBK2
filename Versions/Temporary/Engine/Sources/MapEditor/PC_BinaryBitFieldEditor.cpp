@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
@@ -17,18 +18,18 @@ bool CPCBinaryBitFieldEditor::GetPCItemStringValue( std::string *pszValue, const
 	{
 		const uint8_t *pValues = static_cast<const uint8_t*>( rValue.GetPtr() );
 		for ( int nByteIndex = 0; nByteIndex < pPropertyDesc->nSize; ++nByteIndex )
-			*pszValue += StrFmt( "%02X", pValues[nByteIndex] );
+			*pszValue += fmt::format( "{:02X}", pValues[nByteIndex] );
 	}
 	else if ( rValue.GetType() == CVariant::VT_INT )
 	{
 		const int nValue = (int)rValue;
 		const uint8_t *pValues = reinterpret_cast<const uint8_t *>( &nValue );
 		for ( int i = 0; i < 4; ++i )
-			*pszValue += StrFmt( "%02X", pValues[i] );
+			*pszValue += fmt::format( "{:02X}", pValues[i] );
 	}
 	else
 	{
-		NI_ASSERT( false, StrFmt("Can't convert type %d to bitfield", rValue.GetType()) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to bitfield", rValue.GetType()) );
 	}
 	return true;
 }

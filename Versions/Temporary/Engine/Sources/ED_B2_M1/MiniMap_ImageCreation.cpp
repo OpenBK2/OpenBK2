@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -68,7 +69,7 @@ bool CMapInfoEditor::CreateMinimapImage()
 						//	if ( stream.IsOk()  )
 						//	{
 						//		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
-						//		NI_ASSERT( pSaver != 0, StrFmt( "Can't open stream \"%s\" to read map", szTerrainInfoFileName.c_str() ) );
+						//		NI_ASSERT( pSaver != 0, fmt::format( "Can't open stream \"{}\" to read map", szTerrainInfoFileName.c_str() ) );
 						//		pSaver->Add( 1, &terrainInfo );
 						//		bTerrainLoaded = true;
 						//	}

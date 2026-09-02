@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "BasicExporter.h"
 #include "MapEditorLib/CommonExporterMethods.h"
@@ -18,7 +19,7 @@ bool CBasicExporter::LoadExporterSettings() const
 		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD	);
 		if ( textMapSettings.IsEmpty() )
 		{
-			std::string szText = StrFmt("Can't get %s exporter settings,\n"
+			std::string szText = fmt::format("Can't get {} exporter settings,\n"
 				"check UserData.xml in \"ObjectTypeDataMap\" section.\n",
 				szObjectTypeName.c_str()
 				);

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "3Dmotor/DBScene.h"
@@ -33,7 +34,7 @@ static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const C
 	if ( (nFormationIdx < 0) || (nFormationIdx > nFormationsNumber) )
 		return false;
 
-	std::string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
+	std::string szOrderDBA = fmt::format( "formations.[{}].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
 		return false;
@@ -43,7 +44,7 @@ static bool SetOrderPosition( IManipulator *pSquadManip, int nMemberIdx, const C
 	if ( (nMemberIdx < 0) || (nMemberIdx > nOrderElemNum) )
 		return false;
 
-	std::string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
+	std::string szOrderPosDBA = fmt::format( "formations.[{}].order.[{}].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::SetVec2( rvPos, pSquadManip, szOrderPosDBA ) ) 
 		return false;
@@ -66,7 +67,7 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 	if ( (nFormationIdx < 0) || (nFormationIdx > nFormationsNumber) )
 		return false;
 
-	std::string szOrderDBA = StrFmt( "formations.[%d].order", nFormationIdx );
+	std::string szOrderDBA = fmt::format( "formations.[{}].order", nFormationIdx );
 
 	if ( !pSquadManip->GetValue( szOrderDBA, &v ) )
 		return false;
@@ -76,7 +77,7 @@ static bool GetOrderPosition( CVec2 *pPos, IManipulator *pSquadManip, int nMembe
 	if ( (nMemberIdx < 0) || (nMemberIdx > nOrderElemNum) )
 		return false;
 
-	std::string szOrderPosDBA = StrFmt( "formations.[%d].order.[%d].Pos", nFormationIdx, nMemberIdx );
+	std::string szOrderPosDBA = fmt::format( "formations.[{}].order.[{}].Pos", nFormationIdx, nMemberIdx );
 
 	if ( !CManipulatorManager::GetVec2<CVec2,float>( pPos, pSquadManip, szOrderPosDBA ) ) 
 		return false;
@@ -122,7 +123,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 	for ( int i = 0; i < nFormationsNumber; ++i )
 	{
-		std::string szOrdersDBA = StrFmt( "formations.[%d].order", i );
+		std::string szOrdersDBA = fmt::format( "formations.[{}].order", i );
 
 		CVariant numOrders;
 		if ( !pSquadManip->GetValue( szOrdersDBA, &numOrders ) )
@@ -162,7 +163,7 @@ static bool SetFormationsAndOrders( IManipulator *pSquadManip )
 
 static int GetMembersNum( IManipulator *pSquadManip )
 {
-	std::string szDBA = StrFmt( "members" );
+	std::string szDBA = fmt::format( "members" );
 	CVariant v;
 	if ( pSquadManip->GetValue( szDBA, &v ) )
 		return (int)v;
@@ -181,7 +182,7 @@ static void GetMembersModels( std::vector<std::string> *pModels, IManipulator *p
 
 	for ( int i = 0; i < nMembNum; ++i )
 	{
-		std::string szDBA = StrFmt( "members.[%d]", i );
+		std::string szDBA = fmt::format( "members.[{}]", i );
 		try
 		{
 			CPtr<IManipulator> pInfantryManip = 
@@ -200,7 +201,7 @@ static void GetMembersModels( std::vector<std::string> *pModels, IManipulator *p
 		}
 		catch ( ... ) 
 		{
-			NLog::GetLogger()->Log( LT_IMPORTANT, StrFmt( "Can't get model for %d squad member\n", i ) );
+			NLog::GetLogger()->Log( LT_IMPORTANT, fmt::format( "Can't get model for {} squad member\n", i ) );
 		}
 	}
 }
@@ -217,7 +218,7 @@ void GetExistingFormations( SFormationWindowDialogData *pData, IManipulator *pSq
 
 	for ( int i = 0; i < nNumForm; ++i )
 	{
-		std::string szTypeDBA = StrFmt( "formations.[%d].type", i );
+		std::string szTypeDBA = fmt::format( "formations.[{}].type", i );
 
 		CVariant type;
 
@@ -355,7 +356,7 @@ void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 		int nMemberIndex = pSquadEditor->GetMemberIndexBySceneID( nSceneID );
 		if ( nMemberIndex != -1 )
 		{
-			std::string szSelId = StrFmt( "selected squad member id = %d", nMemberIndex );
+			std::string szSelId = fmt::format( "selected squad member id = {}", nMemberIndex );
 			pPaintDC->TextOut( 8, 8, szSelId.c_str(), szSelId.length() );
 		}
 	}
@@ -498,7 +499,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 		}
 	}
 
-	const std::string szMask = StrFmt( "%s.[%d].", "formations", nElemIndex );
+	const std::string szMask = fmt::format( "{}.[{}].", "formations", nElemIndex );
 	
 	pMaskManipulator = new CMaskManipulator( szMask, pSquadEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 

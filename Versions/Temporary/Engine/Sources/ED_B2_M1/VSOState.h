@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+#include <fmt/format.h>
 #include "Stats_B2_M1/IconsSet.h"
 #include "libdb/Manipulator.h"
 #include "VSOManager.h"
@@ -274,21 +275,21 @@ public:
 	CVSOState( class CVSOMultiState *_pParentState = 0 ) : pParentState( _pParentState ), nSelectedIndex( INVALID_NODE_ID ), mapRect( 0.0f, 0.0f, 0.0f, 0.0f )
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
-		NI_ASSERT( pStoreInputState != 0, StrFmt( "CVSOState(): pStoreInputState == 0" ) );
+		NI_ASSERT( pStoreInputState != 0, fmt::format( "CVSOState(): pStoreInputState == 0" ) );
 		
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
 		
 		CVSOSelectState *pVSOSelectState = new CVSOSelectState( this );
 		nStateIndex = AddInputState( pVSOSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, StrFmt( "CVSOState(): Wrong state number: %d (%d)", nStateIndex, IS_SELECT ) );
+		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, IS_SELECT ) );
 
 		CVSOEditState *pVSOEditState = new CVSOEditState( this );
 		nStateIndex = AddInputState( pVSOEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, StrFmt( "CVSOState(): Wrong state number: %d, (%d)", nStateIndex, IS_EDIT ) );
+		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, IS_EDIT ) );
 		
 		CVSOAddState *pVSOAddState = new CVSOAddState( this );
 		nStateIndex = AddInputState( pVSOAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, StrFmt( "CVSOState(): Wrong state number: %d, (%d)", nStateIndex, IS_ADD ) );
+		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, IS_ADD ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

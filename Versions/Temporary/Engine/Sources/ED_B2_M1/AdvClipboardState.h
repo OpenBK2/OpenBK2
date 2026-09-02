@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <fmt/format.h>
 
 /**
 
@@ -98,7 +99,7 @@ public:
 
 			sceneIDs[i] = nObjectSceneID;
 
-			//::OutputDebugString( StrFmt( "create: %s %d\n", oi.szName.c_str(), nObjectSceneID ) );
+			//::OutputDebugString( fmt::format( "create: {} {}\n", oi.szName.c_str(), nObjectSceneID ) );
 		}
 
 		std::list<int> tmp;
@@ -135,7 +136,7 @@ public:
 			{
 				int nSceneID = sceneIDs[i];
 				pScene->MoveObject( nSceneID, vObjectScenePosition, qObjectSceneRotation );
-				//::OutputDebugString( StrFmt( "move: %s %d\n", oi.szName.c_str(), nSceneID ) );
+				//::OutputDebugString( fmt::format( "move: {} {}\n", oi.szName.c_str(), nSceneID ) );
 			}
 		}
 	}

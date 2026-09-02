@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "UnitAnimationExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -225,7 +226,7 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 		return;
 	}
 	int nAnimType = typeAnimationMnemonics.GetValue( (std::string)var.GetStr() );
-	std::string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
+	std::string szDescName = fmt::format( "animdescs.[{}].anims", nAnimType );
 	bResult = bResult && pUnitMan->InsertNode( szDescName );
 	bResult = bResult && pUnitMan->GetValue( szDescName, &var );
 	if ( !bResult )
@@ -233,7 +234,7 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 		NLog::Log( LT_ERROR, "TransferAnimInfo2Unit(): Can't insert animdescs.[%d].anims", nAnimType );
 		return;
 	}
-	szDescName += StrFmt( ".[%d]", ((int)var) - 1 );
+	szDescName += fmt::format( ".[{}]", ((int)var) - 1 );
 	//create aabb's and write indexes
 	bResult = bResult && pAnimMan->GetValue( "AABBAName", &var );
 	if ( !bResult )
@@ -253,8 +254,8 @@ static void TransferAnimInfo2Unit( IManipulator *pUnitMan, IManipulator *pAnimMa
 	{
 		bResult = bResult && pUnitMan->InsertNode( "aabb_as" );
 		bResult = bResult && pUnitMan->InsertNode( "aabb_ds" );
-		bResult = bResult && CopyAABB2D( pAnimMan, pUnitMan, "aabb_a", StrFmt( "aabb_as.[%d]", (*pnAnimCounter) ) );
-		bResult = bResult && CopyAABB2D( pAnimMan, pUnitMan, "aabb_d", StrFmt( "aabb_ds.[%d]", (*pnAnimCounter) ) );
+		bResult = bResult && CopyAABB2D( pAnimMan, pUnitMan, "aabb_a", fmt::format( "aabb_as.[{}]", (*pnAnimCounter) ) );
+		bResult = bResult && CopyAABB2D( pAnimMan, pUnitMan, "aabb_d", fmt::format( "aabb_ds.[{}]", (*pnAnimCounter) ) );
 		if ( !bResult )
 		{
 			NLog::Log( LT_ERROR, "TransferAnimInfo2Unit(): Can't insert aabb_as & aabb_ds" );
@@ -314,7 +315,7 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 	int nNumDescs = var;
 	for ( int i = 0; i < nNumDescs; ++i )
 	{
-		bResult = bResult && pItUnit->RemoveNode( StrFmt( "animdescs.[%d].anims", i ) );
+		bResult = bResult && pItUnit->RemoveNode( fmt::format( "animdescs.[{}].anims", i ) );
 		if ( !bResult )
 		{
 			break;
@@ -395,7 +396,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 	int nNumDescs = var;
 	for ( int i = 0; i < nNumDescs; ++i )
 	{
-		bResult = bResult && pItUnit->RemoveNode( StrFmt( "animdescs.[%d].anims", i ) );
+		bResult = bResult && pItUnit->RemoveNode( fmt::format( "animdescs.[{}].anims", i ) );
 		if ( !bResult )
 		{
 			break;
@@ -462,7 +463,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 			int nNumAnimations = var;
 			for ( int j = 0; j < nNumAnimations; ++j )
 			{
-				if ( pItSkeleton->GetValue( StrFmt( "Animations.[%d]", j ), &var ) && !IsDBIDEmpty(var) )
+				if ( pItSkeleton->GetValue( fmt::format( "Animations.[{}]", j ), &var ) && !IsDBIDEmpty(var) )
 				{
 					std::string szAnimName = var.GetStr();
 					int nTypeSepPos = szAnimName.find( ':' );
@@ -496,17 +497,17 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 	std::string szArmJointName;
 	if ( CManipulatorManager::GetValue( &szArmJointName, pManipulator, "GunBoneName" ) == false )
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Can't extract 'GunBoneName' from RPG stats\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tStats type: %s\n", rszObjectTypeName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tUnit: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Can't extract 'GunBoneName' from RPG stats\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tStats type: {}\n", rszObjectTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tUnit: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	//
 	if ( szArmJointName.empty() || szArmJointName == " " ) 
 	{
-		pLogger->Log( LT_ERROR, StrFmt("Empty 'GunBoneName' - infantry unit will be without weapon in hands!\n") );
-		pLogger->Log( LT_ERROR, StrFmt("\tStats type: %s\n", rszObjectTypeName.c_str()) );
-		pLogger->Log( LT_ERROR, StrFmt("\tUnit: %s\n", rszObjectName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("Empty 'GunBoneName' - infantry unit will be without weapon in hands!\n") );
+		pLogger->Log( LT_ERROR, fmt::format("\tStats type: {}\n", rszObjectTypeName.c_str()) );
+		pLogger->Log( LT_ERROR, fmt::format("\tUnit: {}\n", rszObjectName.c_str()) );
 		return ER_FAIL;
 	}
 	return ER_SUCCESS;

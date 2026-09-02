@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "PC_Constants.h"
 #include "Misc/StrProc.h"
@@ -44,7 +45,7 @@ bool CPCFloatComboEditor::CreateEditor( const std::string &rszName, EPCIEType _n
 			nPrecision = PCSV_DEFAULT_RECISION;
 		}
 		//		
-//		const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//		const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 		int nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
 		while( nLeftPos != std::string::npos )
 		{
@@ -115,7 +116,7 @@ bool CPCFloatComboEditor::CreateEditor( const std::string &rszName, EPCIEType _n
 
 void CPCFloatComboEditor::SetValue( const CVariant &rValue )
 {
-//	const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//	const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 	CVariant value = CStringManager::GetFloatStringWithPrecision( (float)rValue, nPrecision );//StrFmt( szFormat.c_str(), (float)rValue ) );
 	CPCStringComboEditor::SetValue( value );
 }

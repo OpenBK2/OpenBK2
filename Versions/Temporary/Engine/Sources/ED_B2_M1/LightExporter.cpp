@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "LightExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -21,7 +22,7 @@ bool CLightExporter::StartExport( const std::string &rszObjectTypeName, bool bFo
 	bNeedExport = false;
 	MEStartScript( &szScriptText, false );
 	//
-	szScriptText += StrFmt( "loadPlugin \"%s\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginFileName).c_str() );
+	szScriptText += fmt::format( "loadPlugin \"{}\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginFileName).c_str() );
 	return true;
 }
 
@@ -64,12 +65,12 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 	std::string szSelectNode;
 	CManipulatorManager::GetValue( &szSelectNode, pManipulator, "SelectNode" );
 	//
-	szScriptText += StrFmt( "print \"%s\";\r\n", rszObjectName.c_str() );
-	szScriptText += StrFmt( "sysFile -del \"%s\";\r\n", szDestination.c_str() );
-	szScriptText += StrFmt( "file -o -f \"%s\";\r\n", szSource.c_str() );
-	szScriptText += StrFmt( "select -cl;\r\n" );
-	szScriptText += StrFmt( "select \"%s\";\r\n", szSelectNode.c_str() );
-	szScriptText += StrFmt( "file -es -f -typ \"%s\" -op \"light=1;\" \"%s\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginName).c_str(), szDestination.c_str() );
+	szScriptText += fmt::format( "print \"{}\";\r\n", rszObjectName.c_str() );
+	szScriptText += fmt::format( "sysFile -del \"{}\";\r\n", szDestination.c_str() );
+	szScriptText += fmt::format( "file -o -f \"{}\";\r\n", szSource.c_str() );
+	szScriptText += fmt::format( "select -cl;\r\n" );
+	szScriptText += fmt::format( "select \"{}\";\r\n", szSelectNode.c_str() );
+	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"light=1;\" \"{}\";\r\n", GetOption(&SUserData::SMayaExportData::szOldPluginName).c_str(), szDestination.c_str() );
 	//
 	bNeedExport = true;
 	return ER_SUCCESS;

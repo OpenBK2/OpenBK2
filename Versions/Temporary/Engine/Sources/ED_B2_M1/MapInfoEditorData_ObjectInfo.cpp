@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "MapInfoEditorData_ObjectInfo.h"
 #include "MapInfoEditorData_ObjectInfoCollector.h"
@@ -791,7 +792,7 @@ namespace NMapInfoEditor
 				const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 				if ( nObjectIndex != INVALID_NODE_ID )
 				{
-					const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+					const std::string szObjectProperty = fmt::format( "Objects.[{}].", nObjectIndex );
 					//Change
 					const CVec3 vObjectDBPosition = itMapInfoElement->second.GetPosition( vPosition );
 					const uint16_t wObjectDBDirection = Vis2AIRad( itMapInfoElement->second.GetDirection( fDirection ) );
@@ -853,13 +854,13 @@ namespace NMapInfoEditor
 			for ( int nCommandIndex = 0; nCommandIndex < nCommandCount; )
 			{
 				bool bCommandRemoved = false;
-				const std::string szCommandPrefix = StrFmt( "startCommandsList.[%d]", nCommandIndex );
+				const std::string szCommandPrefix = fmt::format( "startCommandsList.[{}]", nCommandIndex );
 				int nCommandLinkIDCount = 0;
 				CManipulatorManager::GetValue( &nCommandLinkIDCount, pManipulator, szCommandPrefix + ".unitLinkIDs" );
 				int nCommandLinkIDIndex = 0;
 				while ( nCommandLinkIDIndex < nCommandLinkIDCount )
 				{
-					const std::string szCommandLinkIDPrefix = szCommandPrefix + StrFmt( ".unitLinkIDs.[%d]", nCommandLinkIDIndex );
+					const std::string szCommandLinkIDPrefix = szCommandPrefix + fmt::format( ".unitLinkIDs.[{}]", nCommandLinkIDIndex );
 					int nCommandLinkID = INVALID_NODE_ID;
 					CManipulatorManager::GetValue( &nCommandLinkID, pManipulator, szCommandLinkIDPrefix );
 					if ( nCommandLinkID == itMapInfoElement->first )
@@ -1012,7 +1013,7 @@ namespace NMapInfoEditor
 						if ( bUpdateDB )
 						{
 							const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
-							const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+							const std::string szObjectProperty = fmt::format( "Objects.[{}].", nObjectIndex );
 							bResult = bResult && pObjectController->AddChangeValueOperation<unsigned>( szObjectProperty + "Link.LinkWith", nLinkToLinkID, pManipulator );
 						}
 						itMapInfoElement->second.nLinkToLinkID = nLinkToLinkID;
@@ -1074,7 +1075,7 @@ namespace NMapInfoEditor
 				if ( bUpdateDB )
 				{
 					const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
-					const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+					const std::string szObjectProperty = fmt::format( "Objects.[{}].", nObjectIndex );
 					bResult = bResult && pObjectController->AddChangeValueOperation<int>( szObjectProperty + "Link.LinkWith", INVALID_NODE_ID, pManipulator );
 					if ( !bResult )
 					{
@@ -1094,7 +1095,7 @@ namespace NMapInfoEditor
 		if ( SMapInfoElement* pMapInfoElement = GetMapInfoElementByLinkID( nLinkID ) )
 		{
 			const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
-			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 			if ( ( nFlags & POSITION_CHANGED ) || ( nFlags & DIRECTION_CHANGED ) )
 			{
 				MakeAbsolute();
@@ -1200,7 +1201,7 @@ namespace NMapInfoEditor
 				const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 				if ( nObjectIndex != INVALID_NODE_ID )
 				{
-					szMask = StrFmt( "Objects.[%d].", nObjectIndex );
+					szMask = fmt::format( "Objects.[{}].", nObjectIndex );
 				}
 				//
 				pMaskManipulator->SetMask( szMask );
@@ -1287,7 +1288,7 @@ namespace NMapInfoEditor
 				}
 			}
 			//
-			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = fmt::format( "Objects.[{}]", nObjectIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 			//Change

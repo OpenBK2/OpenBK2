@@ -1,6 +1,7 @@
 #pragma once
 
 #include "System/BinaryResources.h"
+#include <fmt/format.h>
 #include "libdb/Manipulator.h"
 
 #include <cstdint>
@@ -144,8 +145,8 @@ public:
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec2(): pManipulator == 0" );
 		bool bResult = true;
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
 		return bResult;
 	}
 	//
@@ -154,9 +155,9 @@ public:
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec3(): pManipulator == 0" );
 		bool bResult = true;
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cz", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.z ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}z", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.z ) );
 		return bResult;
 	}
 	//
@@ -165,10 +166,10 @@ public:
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec4(): pManipulator == 0" );
 		bool bResult = true;
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cz", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.z ) );
-		bResult = bResult && pManipulator->SetValue( StrFmt( "%s%cw", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.w ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.x ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.y ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}z", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.z ) );
+		bResult = bResult && pManipulator->SetValue( fmt::format( "{}{:c}w", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), CVariant( rvData.w ) );
 		return bResult;
 	}
 	//
@@ -203,7 +204,7 @@ public:
 				{
 					bResult = pManipulator->InsertNode( rszName, nElementIndex );
 				}
-				bResult = bResult && SetValue( ( *itElement ), pManipulator, StrFmt( "%s%c%c%d%c", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
+				bResult = bResult && SetValue( ( *itElement ), pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
 				if ( !bResult )
 				{
 					break;
@@ -229,7 +230,7 @@ public:
 	static bool Set2DArray( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Set2DArray(): pManipulator == 0" );
-		const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+		const std::string sz2DArrayName = fmt::format( "{}{:c}data", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 		int nExistingXCount = 0;
 		bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
 		if ( bResult )
@@ -245,7 +246,7 @@ public:
 				{
 					bResult = pManipulator->InsertNode( sz2DArrayName, nXIndex );
 				}
-				const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+				const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 				// Добавляем внутренний массив
 				int nExistingYCount = 0;
 				bResult = bResult && GetValue( &nExistingYCount, pManipulator, szArrayName );
@@ -259,7 +260,7 @@ public:
 						{
 							bResult = pManipulator->InsertNode( szArrayName, nYIndex );
 						}
-						bResult = bResult && SetValue( rData[nYIndex][nXIndex], pManipulator, StrFmt( "%s%c%c%d%c", szArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nYIndex, ARRAY_NODE_END_CHAR ) );
+						bResult = bResult && SetValue( rData[nYIndex][nXIndex], pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", szArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nYIndex, ARRAY_NODE_END_CHAR ) );
 						if ( !bResult )
 						{
 							break;
@@ -276,7 +277,7 @@ public:
 				for ( ;nXIndex < nExistingXCount; --nExistingXCount )
 				{
 					// Удаляем сначало внутренний массив
-					const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+					const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 					bResult = pManipulator->RemoveNode( szArrayName );
 					// Удаляем элемент внешнего массива
 					bResult = bResult && pManipulator->RemoveNode( sz2DArrayName, nXIndex );
@@ -372,9 +373,9 @@ public:
 		CVariant valueX;
 		CVariant valueY;
 		bool bResult = true;
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
 		bResult = bResult && ( valueX.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
 		bResult = bResult && ( valueY.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
@@ -393,11 +394,11 @@ public:
 		CVariant valueY;
 		CVariant valueZ;
 		bool bResult = true;
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
 		bResult = bResult && ( valueX.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
 		bResult = bResult && ( valueY.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cz", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueZ );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}z", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueZ );
 		bResult = bResult && ( valueZ.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
@@ -418,13 +419,13 @@ public:
 		CVariant valueZ;
 		CVariant valueW;
 		bool bResult = true;
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cx", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}x", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueX );
 		bResult = bResult && ( valueX.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cy", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}y", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueY );
 		bResult = bResult && ( valueY.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cz", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueZ );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}z", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueZ );
 		bResult = bResult && ( valueZ.GetType() != CVariant::VT_NULL );
-		bResult = bResult && pManipulator->GetValue( StrFmt( "%s%cw", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueW );
+		bResult = bResult && pManipulator->GetValue( fmt::format( "{}{:c}w", rszName.c_str(), LEVEL_SEPARATOR_CHAR ), &valueW );
 		bResult = bResult && ( valueW.GetType() != CVariant::VT_NULL );
 		if ( bResult )
 		{
@@ -463,7 +464,7 @@ public:
 		if ( bResult )
 		{
 			NI_ASSERT( ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(GUID) ),
-					StrFmt( "CManipulatorManager::GetValue<GUID>(): '%s' is not a GUID field", rszName.c_str() ) );
+					fmt::format( "CManipulatorManager::GetValue<GUID>(): '{}' is not a GUID field", rszName.c_str() ) );
 			bResult = ( value.GetType() == CVariant::VT_POINTER ) && ( value.GetBlobSize() == sizeof(GUID) );
 			if ( bResult )
 			{
@@ -498,7 +499,7 @@ public:
 			for ( int nElementIndex = 0; nElementIndex != nExistingElementCount; ++nElementIndex )
 			{
 				TElementType element;
-				bResult = GetValue( &element, pManipulator, StrFmt( "%s%c%c%d%c", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
+				bResult = GetValue( &element, pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
 				if ( !bResult )
 				{
 					break;
@@ -521,7 +522,7 @@ public:
 			for ( int nElementIndex = 0; nElementIndex != nExistingElementCount; ++nElementIndex )
 			{
 				TElementType element;
-				bResult = GetVec2( &element, pManipulator, StrFmt( "%s%c%c%d%c", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
+				bResult = GetVec2( &element, pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
 				if ( !bResult )
 				{
 					break;
@@ -544,7 +545,7 @@ public:
 			for ( int nElementIndex = 0; nElementIndex != nExistingElementCount; ++nElementIndex )
 			{
 				TElementType element;
-				bResult = GetVec3( &element, pManipulator, StrFmt( "%s%c%c%d%c", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
+				bResult = GetVec3( &element, pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", rszName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR ) );
 				if ( !bResult )
 				{
 					break;
@@ -560,7 +561,7 @@ public:
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::Get2DArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Get2DArray(): pManipulator == 0" );
-		const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+		const std::string sz2DArrayName = fmt::format( "{}{:c}data", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 		int nExistingXCount = 0;
 		int nExistingYCount = 0;
 		bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
@@ -571,7 +572,7 @@ public:
 			sizeList.resize( nExistingXCount );
 			for ( int nXIndex = 0; nXIndex != nExistingXCount; ++nXIndex )
 			{
-				const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+				const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 				int nLocalYCount = 0;
 				bResult = GetValue( &nLocalYCount, pManipulator, szArrayName );
 				if ( !bResult )
@@ -593,10 +594,10 @@ public:
 					// заполняем массив значениями
 					for ( int nXIndex = 0; nXIndex != nExistingXCount; ++nXIndex )
 					{
-						const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+						const std::string szArrayName = fmt::format( "{}{:c}{:c}{}{:c}{:c}data", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 						for ( int nYIndex = 0; nYIndex != sizeList[nXIndex]; ++nYIndex )
 						{
-							bResult = CManipulatorManager::GetValue( &( ( *pvData )[nYIndex][nXIndex] ), pManipulator, StrFmt( "%s%c%c%d%c", szArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nYIndex, ARRAY_NODE_END_CHAR ) );
+							bResult = CManipulatorManager::GetValue( &( ( *pvData )[nYIndex][nXIndex] ), pManipulator, fmt::format( "{}{:c}{:c}{}{:c}", szArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nYIndex, ARRAY_NODE_END_CHAR ) );
 							if ( !bResult )
 							{
 								break;

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/2Darray.h"
 #include "TextureExporter.h"
@@ -211,7 +212,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 					// non-2d texture must be power of 2
 					if ( image.GetSizeX() != GetNextPow2(image.GetSizeX()) ||image.GetSizeY() != GetNextPow2(image.GetSizeY()) )
 					{
-						const std::string szError = StrFmt( "Source image \"%s\" must be power two size (%d : %d)\n", 
+						const std::string szError = fmt::format( "Source image \"{}\" must be power two size ({} : {})\n", 
 							                             szSource.c_str(), image.GetSizeX(), image.GetSizeY() );
 						NLog::Log( LT_ERROR, "Source image size must be power of 2\n" );
 						NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
@@ -312,14 +313,14 @@ EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
 	// check texture file name
 	if ( bStandardExport && !NFile::IsValidFileName( szSrcFileName.c_str() ) ) 
 	{
-		const std::string szError = StrFmt( "Texture \"%s\" has invalid source file name \"%s\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = fmt::format( "Texture \"{}\" has invalid source file name \"{}\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check source file (!)
 	if ( bStandardExport && !NFile::DoesFileExist( szSrcFileName ) ) 
 	{
-		const std::string szError = StrFmt( "Texture \"%s\" source file \"%s\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = fmt::format( "Texture \"{}\" source file \"{}\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}

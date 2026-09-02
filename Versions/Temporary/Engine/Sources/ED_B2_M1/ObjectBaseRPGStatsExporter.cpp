@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
@@ -57,10 +58,10 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 		for ( int i = 0; i < nDamageLevels; ++i )
 		{
 			float fHP = 0;
-			CManipulatorManager::GetValue( &fHP, pManipulator, StrFmt( "DamageLevels.[%d].DamageHP", i ) );
+			CManipulatorManager::GetValue( &fHP, pManipulator, fmt::format( "DamageLevels.[{}].DamageHP", i ) );
 			if ( fHP <= 0 )
 			{
-				CManipulatorManager::GetValue( &szVisObj, pManipulator, StrFmt( "DamageLevels.[%d].VisObj", i ) );
+				CManipulatorManager::GetValue( &szVisObj, pManipulator, fmt::format( "DamageLevels.[{}].VisObj", i ) );
 				break;
 			}
 		}
@@ -93,7 +94,7 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 			for ( int i = 0; i < nOldCount; ++i )
 			{
 				std::string szOldMaterial = "";
-				CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( StrFmt( "DynamicDebris.Masks.[%d].Material", i ), pManipulator, 0, &szOldMaterial, 0 );
+				CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( fmt::format( "DynamicDebris.Masks.[{}].Material", i ), pManipulator, 0, &szOldMaterial, 0 );
 				if ( pMaterialMan != 0 )
 				{
 					oldMaterials.push_back( szOldMaterial );
@@ -115,14 +116,14 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 			for ( int i = 0; i < nNewCount; ++i )
 			{
 				CVariant var;
-				pDebrisSet->GetValue( StrFmt( "Debris.[%d].Texture", i ), &var );
+				pDebrisSet->GetValue( fmt::format( "Debris.[{}].Texture", i ), &var );
 				if ( !IsDBIDEmpty(var) )
 				{
 					std::string szSeason;
-					CManipulatorManager::GetValue( &szSeason, pDebrisSet, StrFmt( "Debris.[%d].Season", i ) );
+					CManipulatorManager::GetValue( &szSeason, pDebrisSet, fmt::format( "Debris.[{}].Season", i ) );
 					debrisTextures[szSeason].first = std::string( var.GetStr() );
 					float fWidth;
-					CManipulatorManager::GetValue( &fWidth, pDebrisSet, StrFmt( "Debris.[%d].Width", i ) );
+					CManipulatorManager::GetValue( &fWidth, pDebrisSet, fmt::format( "Debris.[{}].Width", i ) );
 					debrisTextures[szSeason].second = fWidth;
 				}
 			}
@@ -130,12 +131,12 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 			for ( CSeasonDebrisMap::const_iterator it = debrisTextures.begin(); it != debrisTextures.end(); ++it, ++nEntryCounter )
 			{
 				CVec2 vDynamicDebrisOrigin( 0, 0 );
-				std::string szDynamicDebrisTextureFileName = StrFmt( "%sDynDebris_%d.tga", szObjectPath.c_str(), nEntryCounter );
+				std::string szDynamicDebrisTextureFileName = fmt::format( "{}DynDebris_{}.tga", szObjectPath.c_str(), nEntryCounter );
 				CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 				const std::string szGeometryFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 				CreateObjectDynamicDebris( szGeometryFileName, pUserData->constUserData.szExportSourceFolder + szDynamicDebrisTextureFileName, &vDynamicDebrisOrigin, it->second.second );
-				const std::string szMaterialName = StrFmt( "%sDynDebris%d_Material.xdb", szObjectPath.c_str(), nEntryCounter );
-				const std::string szTextureName = StrFmt( "%sDynDebris%d_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
+				const std::string szMaterialName = fmt::format( "{}DynDebris{}_Material.xdb", szObjectPath.c_str(), nEntryCounter );
+				const std::string szTextureName = fmt::format( "{}DynDebris{}_Texture.xdb", szObjectPath.c_str(), nEntryCounter );
 				pTextureFolderManipulator->InsertNode( szTextureName );
 				CPtr<IManipulator> pTextureMan = pResourceManager->CreateObjectManipulator( "Texture", szTextureName );
 				CManipulatorManager::SetValue( szDynamicDebrisTextureFileName, pTextureMan, "SrcName", false );
@@ -263,8 +264,8 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 				// пробегаем по списку установленных 
 				for ( int nDebrisIndex = 0; nDebrisIndex < nDebrisCount; ++nDebrisIndex )
 				{
-					const std::string szDebrisPrefix = StrFmt( "Debris.[%d]", nDebrisIndex );
-					const std::string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nDebrisIndex );
+					const std::string szDebrisPrefix = fmt::format( "Debris.[{}]", nDebrisIndex );
+					const std::string szMaskPrefix = fmt::format( "StaticDebris.Masks.[{}]", nDebrisIndex );
 
 					std::string szSeasonName;
 					float fWidth = 20;
@@ -273,7 +274,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 					//
 					CVec2 vMaskOrigin = VNULL2;
 					const std::string szSeasonFilePostfix = typeSeasonFilePostfixMnemonics.GetMnemonic( typeSeasonMnemonics.GetValue( szSeasonName ) );
-					const std::string szMaskFileName = szSeasonFilePostfix.empty() ? StrFmt( "%sStaticDebris.tga", szTextureFileFolder.c_str() ) : StrFmt( "%sStaticDebris_%s.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
+					const std::string szMaskFileName = szSeasonFilePostfix.empty() ? fmt::format( "{}StaticDebris.tga", szTextureFileFolder.c_str() ) : fmt::format( "{}StaticDebris_{}.tga", szTextureFileFolder.c_str(), szSeasonFilePostfix.c_str() );
 					bResult = bResult && CreateObjectStaticDebris( szDestination, pUserData->constUserData.szExportSourceFolder + szMaskFileName, &vMaskOrigin, (int)fWidth );
 					//
 					bResult = bResult && CManipulatorManager::SetValue( szSeasonName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "Season" );
@@ -293,7 +294,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 			bResult = bResult && CManipulatorManager::GetValue( &nMasksCount, pManipulator, "StaticDebris.Masks" );
 			for ( int nMasksIndex = 0; nMasksIndex < nMasksCount; ++nMasksIndex )
 			{
-				const std::string szMaskPrefix = StrFmt( "StaticDebris.Masks.[%d]", nMasksIndex );
+				const std::string szMaskPrefix = fmt::format( "StaticDebris.Masks.[{}]", nMasksIndex );
 				//
 				std::string szMaskFileName;
 				if ( CManipulatorManager::GetValue( &szMaskFileName, pManipulator, szMaskPrefix + LEVEL_SEPARATOR_CHAR + "SrcName" ) )

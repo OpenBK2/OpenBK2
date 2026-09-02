@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "Tools_SceneGeometry.h"
 #include "MapInfoStoreInputState.h"
@@ -8,7 +9,7 @@
 void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo )
 {
 	NI_ASSERT( ( rInputStateEventInfo.nEventType >= 0 ) && ( rInputStateEventInfo.nEventType < ISE_COUNT ),
-							StrFmt( "CMapInfoStoreInputState::OnInputStateEvent(): Invalid rInputStateEventInfo.nEventType: %d [0, %d)\n",
+							fmt::format( "CMapInfoStoreInputState::OnInputStateEvent(): Invalid rInputStateEventInfo.nEventType: {} [0, {})\n",
 											rInputStateEventInfo.nEventType,
 											ISE_COUNT ) );
 	//
@@ -55,7 +56,7 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 		lastEventInfo.isValid = true;
 	}
 	eventInfoList[rInputStateEventInfo.nEventType].isValid = true;
-	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2, StrFmt( "(%g, %g), [%d, %d]", lastEventInfo.vTerrainPos.x, lastEventInfo.vTerrainPos.y, lastEventInfo.visTilePos.x, lastEventInfo.visTilePos.y ) );
+	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2, fmt::format( "({:g}, {:g}), [{}, {}]", lastEventInfo.vTerrainPos.x, lastEventInfo.vTerrainPos.y, lastEventInfo.visTilePos.x, lastEventInfo.visTilePos.y ) );
 }
 
 // basement storage  

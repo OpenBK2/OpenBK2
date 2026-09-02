@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "libdb/ResourceManager.h"
 #include "ManipulatorManager.h"
@@ -103,7 +104,7 @@ bool CExporterBase::GetObjectTypeNameSet( IManipulator* pManipulator,
 								// CRAP{ PLAIN_TEXT
 								if ( s_bReportSafeRefs )
 								{
-									const std::string szMessage = StrFmt( "Empty safe ref: Object: %s:%s, Poperty:<%s>\r\n",
+									const std::string szMessage = fmt::format( "Empty safe ref: Object: {}:{}, Poperty:<{}>\r\n",
 																										posInvalidLink->szObjectTypeName.c_str(),
 																										posInvalidLink->szObjectName.c_str(),
 																										posInvalidLink->szPropertyName.c_str() );
@@ -143,9 +144,9 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 					catch ( ... ) 
 					{
 						ILogger *pLogger = NLog::GetLogger();
-						pLogger->Log( LT_ERROR, StrFmt( "\nStartExport throw exception\n" ) );
-						pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-						pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\nStartExport throw exception\n" ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 						bResult = false;
 					}
 					DebugTrace( "result: %s", bResult ? "true" : "false" );
@@ -160,9 +161,9 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 					catch ( ... ) 
 					{
 						ILogger *pLogger = NLog::GetLogger();
-						pLogger->Log( LT_ERROR, StrFmt( "\nStartCheck throw exception\n" ) );
-						pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-						pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\nStartCheck throw exception\n" ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+						pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 						bResult = false;
 					}
 					DebugTrace( "result: %s", bResult ? "true" : "false" );
@@ -203,9 +204,9 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 				catch ( ... ) 
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt( "\nFinishExport throw exception\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\nFinishExport throw exception\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 				}
 			}
 			DebugTrace( "CExporterBase::FinishCheck(): <%s>", rszObjectTypeName.c_str() );
@@ -216,9 +217,9 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 			catch ( ... ) 
 			{
 				ILogger *pLogger = NLog::GetLogger();
-				pLogger->Log( LT_ERROR, StrFmt( "\nFinishCheck throw exception\n" ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-				pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\nFinishCheck throw exception\n" ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+				pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
 			}
 		}
 	}
@@ -230,7 +231,7 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 		NLog::GetLogger()->Log( LT_ERROR, szMessage );
 		for ( CInvalidLinkList::const_iterator itInvalidLink = invalidLinkList.begin(); itInvalidLink != invalidLinkList.end(); ++itInvalidLink )
 		{
-			szMessage = StrFmt( "Object:<%s:%s>, Poperty:<%s>\r\n",
+			szMessage = fmt::format( "Object:<{}:{}>, Poperty:<{}>\r\n",
 													itInvalidLink->szObjectTypeName.c_str(),
 													itInvalidLink->szObjectName.c_str(),
 													itInvalidLink->szPropertyName.c_str() );
@@ -279,11 +280,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				catch ( ... ) 
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt( "\nExportObject throw exception\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_BEFORE_REF\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_BEFORE_REF\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
 				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
@@ -298,11 +299,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				catch ( ... ) 
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt( "\nCheckObject throw exception\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_BEFORE_REF\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_BEFORE_REF\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
 				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
@@ -335,11 +336,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				catch ( ... ) 
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt( "\nExportObject throw exception\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_AFTER_REF\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_AFTER_REF\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
 				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );
@@ -354,11 +355,11 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				catch ( ... ) 
 				{
 					ILogger *pLogger = NLog::GetLogger();
-					pLogger->Log( LT_ERROR, StrFmt( "\nCheckObject throw exception\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tLocation: ET_AFTER_REF\n" ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tExportType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectType: %s\n", rszObjectTypeName.c_str() ) );
-					pLogger->Log( LT_ERROR, StrFmt( "\tObjectName: %s\n", rszObjectName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tLocation: ET_AFTER_REF\n" ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tExportType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectType: {}\n", rszObjectTypeName.c_str() ) );
+					pLogger->Log( LT_ERROR, fmt::format( "\tObjectName: {}\n", rszObjectName.c_str() ) );
 					eResult = ER_FAIL;
 				}
 				DebugTrace( "result: %s", ( eResult == ER_FAIL ) ? "ER_FAIL" : ( eResult == ER_SUCCESS ) ? "ER_SUCCESS" : ( eResult == ER_NOT_CHANGED ) ? "ER_NOT_CHANGED" : "ER_BREAK" );

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "libdb/ResourceManager.h"
 #include "libdb/Db.h"
@@ -107,10 +108,10 @@ bool CFolderCallback::UniqueName( const std::string &szTypeName, std::string *ps
 		}
 		while ( bExists && ( dwNumber < dwMaxNumber ) )
 		{
-			( *pszName ) = szName + StrFmt( " (%u)", dwNumber );
+			( *pszName ) = szName + fmt::format( " ({})", dwNumber );
 			if ( bFolder )
 			{
-				szName += StrFmt( "%c", PATH_SEPARATOR_CHAR );
+				szName += fmt::format( "{:c}", PATH_SEPARATOR_CHAR );
 			}
 			bExists = NDb::DoesObjectExist( CDBID( *pszName ) );
 		}

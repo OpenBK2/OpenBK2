@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 
 #include "BaseUIBuilder.h"
 #include "libdb/ResourceManager.h"
@@ -27,7 +28,7 @@ bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
 		std::string szSrcChildRefName;
-		bResult = bResult && CManipulatorManager::GetValue( &szSrcChildRefName, pManipulator, StrFmt( "Children.[%d]", i) );
+		bResult = bResult && CManipulatorManager::GetValue( &szSrcChildRefName, pManipulator, fmt::format( "Children.[{}]", i) );
 		// avoid empty refs
 		if ( bResult && !szSrcChildRefName.empty() )
 		{
@@ -44,7 +45,7 @@ bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std
 			{
 				std::string szChildRefName;
 				CStringManager::GetRefValueFromTypeAndName( &szChildRefName, szChildTypeName, szDstChildName, TYPE_SEPARATOR_CHAR );
-				bResult = bResult && pManipulator->SetValue( StrFmt( "Children.[%d]", i), szChildRefName );
+				bResult = bResult && pManipulator->SetValue( fmt::format( "Children.[{}]", i), szChildRefName );
 			}
 		}
 	}
@@ -73,7 +74,7 @@ bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
 		std::string szChildRefName;
-		bResult = bResult && CManipulatorManager::GetValue( &szChildRefName, pManipulator, StrFmt( "Children.[%d]", i) );
+		bResult = bResult && CManipulatorManager::GetValue( &szChildRefName, pManipulator, fmt::format( "Children.[{}]", i) );
 		children.push_back( szChildRefName );
 	}
 

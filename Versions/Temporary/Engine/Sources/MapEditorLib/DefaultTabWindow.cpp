@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/format.h>
 #include "DefaultTabWindow.h"
 #include "DefaultShortcutBar.h"
 
@@ -44,7 +45,7 @@ CWnd* CDefault3DTabWindow::GetTabWindow( int nTabIndex )
 {
 	NI_ASSERT( ( nTabIndex >=0 ) &&
 						 ( nTabIndex < tabList.size() ),
-						 StrFmt( "CDefault3DTabWindow::GetTabWindow(): invalid nTabIndex: %d [0...%d)", nTabIndex, tabList.size() ) );
+						 fmt::format( "CDefault3DTabWindow::GetTabWindow(): invalid nTabIndex: {} [0...{})", nTabIndex, tabList.size() ) );
 	return tabList[nTabIndex]; 
 }
 
