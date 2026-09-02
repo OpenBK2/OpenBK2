@@ -1,0 +1,14 @@
+// Stub for Stingray Objective Toolkit's resource script.
+//
+// ED_B2_M1.rc and ED_B2.rc include "toolkit\secres.rc" near their end, so the
+// include has to resolve before either can be compiled. MapEditor.rc has the
+// same line commented out already.
+//
+// The real script defined the toolkit's own dialogs, menus, bitmaps and
+// strings. Those shipped inside the commercial library and are not in this
+// tree; the menus recovered from the retail editor are noted in
+// B2_MapEditor/legacy.rc and were left out of it for the same reason.
+//
+// Empty on purpose. Our Stingray is a stub that never loads any of them. Add
+// resources here if the real control bars are ever implemented and start
+// asking for their own.
