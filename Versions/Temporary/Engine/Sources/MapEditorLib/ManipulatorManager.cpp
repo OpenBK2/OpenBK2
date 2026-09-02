@@ -90,7 +90,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 	}
 
 	//создаем список полей
-	hash_map<string, uint32_t> destinationFields;
+	std::unordered_map<string, uint32_t> destinationFields;
 	if ( !bEqual )
 	{
 		CPtr<IManipulatorIterator> pDestinationManipulatorIterator = pDestinationManipulator->Iterate( true, ECT_CACHE_LOCAL );
@@ -270,7 +270,7 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
   NI_ASSERT( pSourceManipulator != 0, "EnumReferences() pSourceManipulator == 0" );
 	//
 	string szRefValue;
-	hash_map<string, unsigned> propertyMap;
+	std::unordered_map<string, unsigned> propertyMap;
 	if ( nFlags & REFINFO_MAKE_UNIQUE_LIST )
 	{
 		for ( CReferenceInfoList::const_iterator itReferenceInfo = pReferenceInfoList->begin(); itReferenceInfo != pReferenceInfoList->end(); ++itReferenceInfo )

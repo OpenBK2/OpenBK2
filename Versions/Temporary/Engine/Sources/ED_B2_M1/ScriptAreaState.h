@@ -35,7 +35,7 @@ public:
 		void Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const;
 		bool Pick( const CVec3 &rPoint ) const;
 	};
-	typedef hash_map<unsigned, SScriptArea> CScriptAreaMap;
+	typedef std::unordered_map<unsigned, SScriptArea> CScriptAreaMap;
 	//
 private:
 	CMapInfoEditor *pMapInfoEditor;

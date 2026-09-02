@@ -6,15 +6,15 @@
 
 #include <cstdint>
 
-typedef hash_map< string, int > CIniValues;
+typedef std::unordered_map< string, int > CIniValues;
 
 class CBinaryBitFieldDialog : public CResizeDialog
 {
 	bool bCreateControls;
 	CCheckListBox wndTablesList;
 	string szFileName;
-	hash_map< string, int > name2value;
-	hash_map< int, string > value2name;
+	std::unordered_map< string, int > name2value;
+	std::unordered_map< int, string > value2name;
 	const uint8_t *pData;
 	int nSize;
 

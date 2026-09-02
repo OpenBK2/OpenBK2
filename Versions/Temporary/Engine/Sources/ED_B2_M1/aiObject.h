@@ -39,7 +39,7 @@ struct SJunction
 };
 
 //class CPrecalcSpheres;
-//typedef hash_map<int, CPtr<CPrecalcSpheres> > CPrecalcPieces;
+//typedef std::unordered_map<int, CPtr<CPrecalcSpheres> > CPrecalcPieces;
 
 struct SPiece
 {
@@ -54,7 +54,7 @@ class CGeometryInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CGeometryInfo);
 public:
-	typedef hash_map<int, SPiece> CPieceMap;
+	typedef std::unordered_map<int, SPiece> CPieceMap;
 
 	SBound bound;
 	vector<SMassSphere> spheres;

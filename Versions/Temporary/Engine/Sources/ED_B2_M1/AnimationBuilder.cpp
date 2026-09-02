@@ -139,7 +139,7 @@ bool CAnimationBuilder::UpdateAminations( const string &rszAnimationFolder )
 		if ( bResult )
 		{
 			// CRAP{ HASH_SET
-			typedef hash_map<string, int> CAnimationMap;
+			typedef std::unordered_map<string, int> CAnimationMap;
 			CAnimationMap animationMap;
 			// CRAP} HASH_SET
 			// Находим все анимации в текущем каталоге

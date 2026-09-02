@@ -12,7 +12,7 @@ class CMultiManipulator : public IManipulator
 
 	OBJECT_BASIC_METHODS( CMultiManipulator )
 
-	typedef hash_map<CDBID, CPtr<IManipulator> > CManipulatorMap;
+	typedef std::unordered_map<CDBID, CPtr<IManipulator> > CManipulatorMap;
 	typedef list<string> CNameMap;
 	typedef CUniqueList<CNameMap, string> CUniqueNameList;
 	

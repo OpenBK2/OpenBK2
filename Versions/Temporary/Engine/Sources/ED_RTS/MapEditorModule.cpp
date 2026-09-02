@@ -7,7 +7,7 @@ class CEditorModuleRegistrator : public IEditorModuleRegistrator
 	friend void RegisterMapEditorTypeDelayed( const string &szType, const string &szName, ObjectFactoryNewFunc pfnNewFunc );
 	//
 	typedef list< pair<string, ObjectFactoryNewFunc> > CMapEditorFactoryNewFuncsList;
-	typedef hash_map<string, CMapEditorFactoryNewFuncsList> CMapEditorFactoryNewFuncsMap;
+	typedef std::unordered_map<string, CMapEditorFactoryNewFuncsList> CMapEditorFactoryNewFuncsMap;
 	CMapEditorFactoryNewFuncsMap newFuncs;
 	//
 	void AddMapEditorType( const string &szType, const string &szName, ObjectFactoryNewFunc pfnNewFunc )

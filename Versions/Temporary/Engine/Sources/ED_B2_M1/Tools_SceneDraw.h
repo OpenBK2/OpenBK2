@@ -22,8 +22,8 @@ class CSceneDrawTool
 	static const float SCENE_Z_SHIFT;
 
 	// CRAP{ HASH_SET
-	typedef hash_map<int, uint32_t> CModelIDSet;
-	typedef hash_map<int, uint32_t> CPolylineIDSet;
+	typedef std::unordered_map<int, uint32_t> CModelIDSet;
+	typedef std::unordered_map<int, uint32_t> CPolylineIDSet;
 	// CRAP} HASH_SET
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SModelInfo

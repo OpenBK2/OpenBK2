@@ -11,7 +11,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	struct SCommandRange
 	{
 		// CRAP{ HASH_SET
-		typedef hash_map<unsigned, int> CCommandIDSet; // важно наличие
+		typedef std::unordered_map<unsigned, int> CCommandIDSet; // важно наличие
 		// CRAP} HASH_SET
 		CCommandIDSet commandIDSet;
 
@@ -27,9 +27,9 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 		}	
 	};
 	//
-	typedef hash_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
-	typedef hash_map<unsigned, unsigned> CCommandIDToCommandHandlerIDMap;
-	typedef hash_map<unsigned, ICommandHandler*> CCommandHandlerMap;
+	typedef std::unordered_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
+	typedef std::unordered_map<unsigned, unsigned> CCommandIDToCommandHandlerIDMap;
+	typedef std::unordered_map<unsigned, ICommandHandler*> CCommandHandlerMap;
 	//
 	CCommandHandlerIDToCommandIDMap commandHandlerIDToCommandIDMap;
 	CCommandIDToCommandHandlerIDMap commandIDToCommandHandlerIDMap;

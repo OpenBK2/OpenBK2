@@ -302,7 +302,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 	{
 		return false;
 	}
-  hash_set<string> models; //имена моделей, которым надо подправить анимацию
+  std::unordered_set<string> models; //имена моделей, которым надо подправить анимацию
 	int nModelCount = 0;
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 	{
@@ -321,7 +321,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 			models.insert( szModelName );
 		}
 	}
-	for ( hash_set<string>::const_iterator it = models.begin(); it != models.end(); ++it )
+	for ( std::unordered_set<string>::const_iterator it = models.begin(); it != models.end(); ++it )
 	{
 		CPtr<IManipulator> pModel = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", *it );
 		if ( !pModel )
@@ -456,7 +456,7 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, 
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 		return false;
 
-	hash_map<string, int> models; // имя модели - на индекс имени в names
+	std::unordered_map<string, int> models; // имя модели - на индекс имени в names
 	vector<string> names; // новые имена моделей
 
 	for ( int i = 0; i < nModelCount; ++i )
@@ -467,7 +467,7 @@ const bool CBuildingRPGStatsExporter::CreateVisObj( IManipulator* pManipulator, 
 		{
 			continue;
 		}
-		hash_map<string, int>::const_iterator pos = models.find( szModelName );
+		std::unordered_map<string, int>::const_iterator pos = models.find( szModelName );
 		int nNameIndex = -1;
 		if ( pos == models.end() )
 		{
@@ -824,7 +824,7 @@ const string CBuildingRPGStatsExporter::GetMaterial( const string &szModelName, 
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	const int nMaterialIndex = nMaterial + ( bTransparent ? 0x10000000 : 0 ) + ( bReflective ? 0x20000000 : 0 );
-	hash_map<int, string>::const_iterator pos = materials.find( nMaterialIndex );
+	std::unordered_map<int, string>::const_iterator pos = materials.find( nMaterialIndex );
 	if ( pos == materials.end() )
 	{
 		const string szMaterialNamePrefix = szModelName + StrFmt( " (%d.tga", nMaterial );
@@ -888,7 +888,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 
 	int nModelsCount = 0;
 	CManipulatorManager::GetValue( &nModelsCount, pVisObj, "Models" );
-	hash_set<string> models;
+	std::unordered_set<string> models;
 	for ( int i = 0; i < nModelsCount; ++i )
 	{
 		string szModelName;
@@ -904,7 +904,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 	{
 		return false;
 	}
-	for ( hash_set<string>::const_iterator itModel = models.begin(); itModel != models.end(); ++itModel )
+	for ( std::unordered_set<string>::const_iterator itModel = models.begin(); itModel != models.end(); ++itModel )
 	{
 		CPtr<IManipulator> pModel = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", *itModel );
 		if ( !pModel )
@@ -914,7 +914,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 		// чтение аттрибутов каждого mesh'а: поиск transparent и reflective
 		CGrannyBoneAttributesList attribs;
 		ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel( pModel ), "", true );
-		hash_map<string, int> attributes;
+		std::unordered_map<string, int> attributes;
 		for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr ) 
 		{
 			SGrannyBoneAttributes::CAttributeMap::const_iterator posTransparent = itAttr->attributeMap.find( "transparent" );

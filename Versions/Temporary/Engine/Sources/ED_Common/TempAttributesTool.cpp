@@ -34,7 +34,7 @@ class CTempAttributesTool : public IExportTool
 	string szAttribsExportSettings;
 	//
 	typedef list<SDesc> CDescsList;
-	typedef hash_map<string, CDescsList> CDescsMap; 
+	typedef std::unordered_map<string, CDescsList> CDescsMap; 
 	CDescsMap descsMap;
 	// load export settings and script template
 	bool LoadSettings()

@@ -44,8 +44,8 @@ private:
 		}	
 	};
 	typedef list<string> CPropertyList;								// для хранения порядка следования
-	typedef hash_map<string, SProperty> CPropertyMap;	// для хранения данных
-	typedef hash_map<int, string> CPropertyIDMap;			// для хранения данных
+	typedef std::unordered_map<string, SProperty> CPropertyMap;	// для хранения данных
+	typedef std::unordered_map<int, string> CPropertyIDMap;			// для хранения данных
 
 	EMaskMode maskMode;																// Тип путей воспринимаемых редактором
 	CPropertyList propertyList;												// Информация по последовательности полей

@@ -4,7 +4,7 @@ template<class TID>
 class CIndexCollector
 {
 public:
-	typedef hash_map<TID, unsigned> CIDToIndexMap;
+	typedef std::unordered_map<TID, unsigned> CIDToIndexMap;
 	//
 private:
 	TID invalidID;

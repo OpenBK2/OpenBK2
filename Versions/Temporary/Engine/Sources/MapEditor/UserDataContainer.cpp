@@ -8,7 +8,7 @@
 
 #define START_FOLDER_TOKEN "%START%\\"
 
-typedef hash_map<string, string> CTokensMap;
+typedef std::unordered_map<string, string> CTokensMap;
 static CTokensMap s_TokensMap;
 
 void AddToken( const string &szName, const string &szValue )

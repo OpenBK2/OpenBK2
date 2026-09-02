@@ -81,9 +81,9 @@ namespace NMapInfoEditor
 	typedef vector<CVec3> CSelectionSquare;
 	typedef list<int> CSceneIDList;
 	typedef list<int> CIndicesList;
-	typedef hash_map<unsigned, int> CObjectInfoIDSet;
+	typedef std::unordered_map<unsigned, int> CObjectInfoIDSet;
 	typedef vector<unsigned> CLinkIDList;
-	typedef hash_map<unsigned, unsigned> CLinkIDMap;
+	typedef std::unordered_map<unsigned, unsigned> CLinkIDMap;
 
 	enum EObjectInfoType
 	{

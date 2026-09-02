@@ -50,7 +50,7 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 					}
 					if ( bFileExist )
 					{
-						hash_map<string, int> bonesMap;
+						std::unordered_map<string, int> bonesMap;
 						CGrannyFileInfoGuard pInfo( szSkeletonFileName );
 						for ( int i = 0; i < pInfo->Skeletons[0]->BoneCount; ++i ) 
 							bonesMap[pInfo->Skeletons[0]->Bones[i].Name] = 1;

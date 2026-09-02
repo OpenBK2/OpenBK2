@@ -1,7 +1,7 @@
 #pragma once
 
 /*
-typedef hash_map<string, ObjectFactoryNewFunc> CNewFuncsMap;
+typedef std::unordered_map<string, ObjectFactoryNewFunc> CNewFuncsMap;
 static CNewFuncsMap *pNewFuncs = 0;
 static struct SNewFuncsMapAutoMagic
 {
@@ -52,7 +52,7 @@ bool CanCreate( const string &szName )
 #define DEFINE_FACTORY( TYPE )																											 \
 namespace N##TYPE##Factory																													 \
 {																																										 \
-typedef hash_map<string, ObjectFactoryNewFunc> C##TYPE##NewFuncsMap;								 \
+typedef std::unordered_map<string, ObjectFactoryNewFunc> C##TYPE##NewFuncsMap;								 \
 static C##TYPE##NewFuncsMap *pNewFuncs = 0;																					 \
 static struct S##TYPE##NewFuncsMapAutoMagic																					 \
 {																																										 \

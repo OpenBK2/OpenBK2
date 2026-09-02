@@ -250,7 +250,7 @@ void CDWGDBBrowser::CreateTabs()
 	// соберем таблицы которые уже заполнены
 	/**
 	{
-		hash_map<string, CTreeGDBBrowser*> existingTabs;
+		std::unordered_map<string, CTreeGDBBrowser*> existingTabs;
 		//
 		char pBuffer[0xFFF];
 		bool bSelected = false;

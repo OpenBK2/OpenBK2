@@ -43,8 +43,8 @@ struct IObjectDataExtractor : public CObjectBase
 
 struct IObjectFilter
 {
-	typedef hash_map<NFile::CFilePath, int> CObjectNameCollection;
-	typedef hash_map<NFile::CFilePath, CObjectNameCollection> CObjectCollection;
+	typedef std::unordered_map<NFile::CFilePath, int> CObjectNameCollection;
+	typedef std::unordered_map<NFile::CFilePath, CObjectNameCollection> CObjectCollection;
 	//
 	virtual int GetObjectCollection( CObjectCollection *pObjectCollection ) const = 0;
 	virtual bool Match( const string &szObjectTypeName, const string &szObjectName ) const = 0;
@@ -56,7 +56,7 @@ struct IObjectFilterCollector : public CObjectBase
 	enum { tidTypeID = 0x14216B00 };
 	//
 	typedef vector<CString> CFilterList;
-	typedef hash_map<string, CFilterList> CFilterListMap;
+	typedef std::unordered_map<string, CFilterList> CFilterListMap;
 	//
 	virtual bool Load( CDataStream *pStream ) = 0;
 	virtual bool Save( CDataStream *pStream ) = 0;
@@ -83,8 +83,8 @@ struct IObjectCollector : public CObjectBase
 		int nIconIndex;
 		CString strLabel;
 	};
-	typedef hash_map<string, SObjectParams> CObjectNameCollection;
-	typedef hash_map<string, CObjectNameCollection> CObjectCollection;
+	typedef std::unordered_map<string, SObjectParams> CObjectNameCollection;
+	typedef std::unordered_map<string, CObjectNameCollection> CObjectCollection;
 	//
 	virtual bool Load( CDataStream *pStream ) = 0;
 	virtual bool Save( CDataStream *pStream ) = 0;

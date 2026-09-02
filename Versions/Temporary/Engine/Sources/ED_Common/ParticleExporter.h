@@ -9,7 +9,7 @@ class CParticleExporter : public CStoreObjectExporter
 	string szScriptText;
 	bool bNeedExport;
 	// dst_name => temp_name
-	typedef hash_map<string, string> CExportedFilesMap;
+	typedef std::unordered_map<string, string> CExportedFilesMap;
 	CExportedFilesMap exportedFilesMap;
 	//
 	bool ImportInfoToDBAfterRefs( const string &szObjName,

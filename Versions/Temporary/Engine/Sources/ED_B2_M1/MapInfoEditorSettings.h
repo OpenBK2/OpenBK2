@@ -12,7 +12,7 @@
 class CMapInfoEditorSettings
 {
 public:
-	typedef hash_map<int,int> CActiveStateMap;
+	typedef std::unordered_map<int,int> CActiveStateMap;
 	//
 	bool bFitToGrid;
 	bool bRotateTo90Degree;

@@ -6,10 +6,10 @@
 
 class CExporterBase : public IExporter
 {
-	typedef hash_map<string, string> CExportObjectNameMap;
-	typedef hash_map<string, string> CExportObjectTypeNameMap;
+	typedef std::unordered_map<string, string> CExportObjectNameMap;
+	typedef std::unordered_map<string, string> CExportObjectTypeNameMap;
 	typedef CUniqueList<list<string>, string> CObjectTypeNameList;
-	typedef hash_map<string, EXPORT_RESULT> CResultMap;
+	typedef std::unordered_map<string, EXPORT_RESULT> CResultMap;
 	//
 	struct SInvalidLink
 	{

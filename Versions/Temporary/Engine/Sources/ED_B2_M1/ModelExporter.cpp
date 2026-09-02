@@ -100,7 +100,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	ReadAttributes( &attribs, NMEGeomAttribs::GetAttribsByModel(pModelMan), "", true );
 	// find opacity attribute for each mesh
 	bool bHasTransparency = false;
-	hash_map<string, bool> meshTranspInfoMap;
+	std::unordered_map<string, bool> meshTranspInfoMap;
 	for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
 	{
 		SGrannyBoneAttributes::CAttributeMap::const_iterator posAttribute = it->attributeMap.find( "transparent" );

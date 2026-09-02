@@ -1,7 +1,7 @@
 #pragma once
 
 
-template <class TItem, class TID, class TData, class TItemHash = hash<TItem>, class TIDHash = hash<TID> >
+template <class TItem, class TID, class TData, class TItemHash = std::hash<TItem>, class TIDHash = std::hash<TID> >
 class CControlData
 {
 public:
@@ -12,8 +12,8 @@ public:
 		TData data;
 	};
 	//
-	typedef hash_map<TItem, SControlItemData, TItemHash> CControlItemDataMap;
-	typedef hash_map<TID, TItem, TIDHash> CItemMap;
+	typedef std::unordered_map<TItem, SControlItemData, TItemHash> CControlItemDataMap;
+	typedef std::unordered_map<TID, TItem, TIDHash> CItemMap;
 	//
 private:
 	CControlItemDataMap controlItemDataMap;

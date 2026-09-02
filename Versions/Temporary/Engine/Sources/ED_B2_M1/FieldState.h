@@ -112,7 +112,7 @@ private:
 
 	typedef list<CVec2> CFieldPolygon;
 	typedef vector<int> CXPosList;
-	typedef hash_map<LPARAM, float> CFieldDistanceMap;
+	typedef std::unordered_map<LPARAM, float> CFieldDistanceMap;
 	typedef NWV::CWeightVector<int, NWV::SClientRandom> CTileSetWeightVector;
 	typedef	vector<CTileSetWeightVector> CTileSetWeightVectorList;
 	typedef NWV::CWeightVector<CDBPtr<NDb::SHPObjectRPGStats>, NWV::SClientRandom> CObjectSetWeightVector;

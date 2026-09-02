@@ -170,9 +170,9 @@ namespace NMapInfoEditor
 		};
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		typedef hash_map<unsigned, SMapInfoElement> CMapInfoElementMap;		// Соответствие LinkID объектв в структуре ObjectInfoCollector к данным об объекте
-		typedef hash_map<unsigned, SSceneElement> CSceneElementMap;				// Соответствие SceneID визуальной части к данным об визуальной части
-		typedef hash_map<unsigned, unsigned> CSceneIDToLinkIDMap;							// Хранилище пересчета визуальных составляющих в элементы объекта
+		typedef std::unordered_map<unsigned, SMapInfoElement> CMapInfoElementMap;		// Соответствие LinkID объектв в структуре ObjectInfoCollector к данным об объекте
+		typedef std::unordered_map<unsigned, SSceneElement> CSceneElementMap;				// Соответствие SceneID визуальной части к данным об визуальной части
+		typedef std::unordered_map<unsigned, unsigned> CSceneIDToLinkIDMap;							// Хранилище пересчета визуальных составляющих в элементы объекта
 		//
 		struct SObjectInfoCollector *pObjectInfoCollector;						// родительская структура
 		unsigned nObjectInfoID;																						// ID объекта в родительской структуре

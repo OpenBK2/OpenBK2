@@ -2,8 +2,8 @@
 
 #include "MapEditorLib/Interface_View.h"
 
-typedef hash_map<CDBID, CViewSet> CViewSetMap;
-typedef hash_map<string, CViewSetMap> CViewSetMapTypeMap;
+typedef std::unordered_map<CDBID, CViewSet> CViewSetMap;
+typedef std::unordered_map<string, CViewSetMap> CViewSetMapTypeMap;
 
 
 class CViewContainer : public IViewContainer

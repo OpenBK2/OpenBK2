@@ -208,7 +208,7 @@ void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &
 
 class CXmlExporterB2 : public CXmlExporter
 {
-	typedef hash_map<string, string> CNamesMap;
+	typedef std::unordered_map<string, string> CNamesMap;
 	CNamesMap namesMap;
 	//
 	string MakePathNameOther( const string &szObjectName, const string &szClassTypeName, const string &szFieldName );

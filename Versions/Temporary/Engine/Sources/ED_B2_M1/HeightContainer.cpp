@@ -92,7 +92,7 @@ void CHeightContainer::EraseStack()
 
 int CHeightContainer::AddPlane( int nPolygonID )
 {
-	hash_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
+	std::unordered_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
 	if ( posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end() )
 	{
 		const int nPlaneIndex = posPolygonID2PlaneIndex->second;
@@ -116,7 +116,7 @@ int CHeightContainer::AddPlane( int nPolygonID )
 
 void CHeightContainer::ErasePlane( int nPolygonID )
 {
-	hash_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
+	std::unordered_map<int, int>::iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.find( nPolygonID );
 	if ( posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end() )
 	{
 		const int nPlaneIndex = posPolygonID2PlaneIndex->second;
@@ -418,7 +418,7 @@ void CHeightContainer::Trace()
 	DebugTrace( "%s", szMessage.c_str() );
 	freePlaneIndexCollector.Trace();
 	DebugTrace( "polygonID2PlaneIndexMap [PolygonID] = planeIndex, begin" );
-	for ( hash_map<int, int>::const_iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.begin(); posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end(); ++posPolygonID2PlaneIndex )
+	for ( std::unordered_map<int, int>::const_iterator posPolygonID2PlaneIndex = polygonID2PlaneIndexMap.begin(); posPolygonID2PlaneIndex != polygonID2PlaneIndexMap.end(); ++posPolygonID2PlaneIndex )
 	{
 		DebugTrace( "[%d] = %d", posPolygonID2PlaneIndex->first, posPolygonID2PlaneIndex->second );
 	}

@@ -114,9 +114,9 @@ class CPassabilityProfileCreator
 	float fInfinity;
 
 	list<SConnectedPoint> connectedPoints;
-	hash_map<int, CVec2> connNum2Point;
+	std::unordered_map<int, CVec2> connNum2Point;
 	CArray2D<int> connections;
-	hash_set<int> deleted;
+	std::unordered_set<int> deleted;
 	list<SPolygon> cover;
 
 	//
@@ -374,7 +374,7 @@ void CPassabilityProfileCreator::MakeConnections()
 
 	/*
 	mask.Clear();
-	for ( hash_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
+	for ( std::unordered_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
 	{
 	mask.DrawPoint( iter->second, NImage::SColor( 255,255,0,0 ) );
 	const int n = iter->first;
@@ -390,7 +390,7 @@ void CPassabilityProfileCreator::MakeConnections()
 
 void CPassabilityProfileCreator::DelNotBreaks()
 {
-	hash_set<int> goodPoints;
+	std::unordered_set<int> goodPoints;
 
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
@@ -428,7 +428,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 	}
 
-	//for ( hash_set<int>::iterator iter = goodPoints.begin(); iter != goodPoints.end(); ++iter )
+	//for ( std::unordered_set<int>::iterator iter = goodPoints.begin(); iter != goodPoints.end(); ++iter )
 	//	mask.DrawPoint( connNum2Point[*iter], NImage::SColor( 255, 255, 255, 0 ) );
 	//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
@@ -447,7 +447,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		}
 	}
 
-	hash_map<int, hash_set<int> > connTable;
+	std::unordered_map<int, std::unordered_set<int> > connTable;
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
 		if ( goodPoints.find( i ) != goodPoints.end() )
@@ -460,7 +460,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 		}
 	}
 
-	hash_set<int> toDelete;
+	std::unordered_set<int> toDelete;
 	for ( int i = 0; i < connections.GetSizeX(); ++i )
 	{
 		if ( !connTable.empty() && connTable[i].size() < 2 )
@@ -469,11 +469,11 @@ void CPassabilityProfileCreator::DelNotBreaks()
 
 	while ( !toDelete.empty() )
 	{
-		hash_set<int> toDeleteNew;
-		for ( hash_set<int>::iterator iter = toDelete.begin(); iter != toDelete.end(); ++iter )
+		std::unordered_set<int> toDeleteNew;
+		for ( std::unordered_set<int>::iterator iter = toDelete.begin(); iter != toDelete.end(); ++iter )
 		{
 			const int i = *iter;
-			for ( hash_set<int>::iterator iter1 = connTable[i].begin(); iter1 != connTable[i].end(); ++iter1 )
+			for ( std::unordered_set<int>::iterator iter1 = connTable[i].begin(); iter1 != connTable[i].end(); ++iter1 )
 			{
 				const int j = *iter1;
 				connTable[j].erase( i );
@@ -493,7 +493,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 			connNum2Point.erase( i );
 		else
 		{
-			for ( hash_set<int>::iterator iter = connTable[i].begin(); iter != connTable[i].end(); ++iter )
+			for ( std::unordered_set<int>::iterator iter = connTable[i].begin(); iter != connTable[i].end(); ++iter )
 				connections[i][*iter] = 1;
 		}
 	}
@@ -503,7 +503,7 @@ void CPassabilityProfileCreator::FormPolygon()
 {
 	SConnectedPoint point;
 	bool bFirst = true;
-	for ( hash_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
+	for ( std::unordered_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
 	{
 		if ( deleted.find( iter->first ) == deleted.end() )
 		{
@@ -610,7 +610,7 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 {
 	if ( polygon.points.size() == 1 )
 	{
-		for ( hash_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
+		for ( std::unordered_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
 		{
 			const CVec2 &vPoint = iter->second;
 			if ( IsEqual( vPoint, polygon.points.front() ) )
@@ -620,7 +620,7 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 	else
 	{
 		const vector<CVec2> &points = polygon.points;
-		for ( hash_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
+		for ( std::unordered_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
 		{
 			const CVec2 &vPoint = iter->second;
 

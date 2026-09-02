@@ -224,7 +224,7 @@ static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName
 	if ( !CManipulatorManager::GetValue( &nModelCount, pVisObj, "Models" ) )
 		return false;
 
-	hash_map<string, int> models; // ID модели - на индекс имени в names
+	std::unordered_map<string, int> models; // ID модели - на индекс имени в names
 	vector<string> names; // новые имена моделей
 
 	for ( int i = 0; i < nModelCount; ++i )
@@ -233,7 +233,7 @@ static bool CreateVisObj( IManipulator* pManipulator, const string &szObjectName
 		string szModelName;
 		if ( !CManipulatorManager::GetParamsFromReference( szModelPath + "Model", pVisObj, 0, &szModelName, 0 ) )
 			continue;
-		hash_map<string, int>::const_iterator pos = models.find( szModelName );
+		std::unordered_map<string, int>::const_iterator pos = models.find( szModelName );
 		int nNameIndex = -1;
 		if ( pos == models.end() )
 		{
@@ -294,7 +294,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 
 	// вытаскиваем информацию о пропеллерах
 	CGrannyBoneAttributesList attribs;
-	hash_map<int, SPropellerInfo> propellers;
+	std::unordered_map<int, SPropellerInfo> propellers;
 	int nPropellersCount = 0;
 	if ( GetGeometryAttributes( pGeomManipulator, &attribs ) )
 	{
@@ -329,7 +329,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 			if ( NStr::IsDecDigit( it->szBoneName[11] ) && NStr::IsDecDigit( it->szBoneName[12] ) )
 			{
 				const int nIndex = NStr::ToInt( it->szBoneName.substr( 11, 2 ) );
-				hash_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
+				std::unordered_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
 				if ( pos == propellers.end() )
 					return false;
 				it->GetAttribute( "starttime", &( pos->second.nScaledStart) );
@@ -343,7 +343,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 			if ( NStr::IsDecDigit( it->szBoneName[11] ) && NStr::IsDecDigit( it->szBoneName[12] ) )
 			{
 				const int nIndex = NStr::ToInt( it->szBoneName.substr( 11, 2 ) );
-				hash_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
+				std::unordered_map<int, SPropellerInfo>::iterator pos = propellers.find( nIndex );
 				if ( pos == propellers.end() )
 					return false;
 				it->GetAttribute( "starttime", &( pos->second.nDynamicStart) );
@@ -357,7 +357,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 	// проверка что все пропеллеры есть
 	for ( int i = 1; i <= nPropellersCount; ++i )
 	{
-		hash_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
+		std::unordered_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
 		if ( pos == propellers.end() )
 			return false;
 		if ( !pos->second.IsDefined() )
@@ -379,7 +379,7 @@ static bool TryBuildHelicopter( const string &rszObjectName, IManipulator* pMani
 	
 	for ( int i = 1; i <= nPropellersCount; ++i )
 	{
-		hash_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
+		std::unordered_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
 		pHelicopterStats->InsertNode( "Axes", NODE_ADD_INDEX );
 		const string szNodePrefix = StrFmt( "Axes.[%d].", i-1 );
 		pHelicopterStats->SetValue( szNodePrefix + "LocatorName", pos->second.szLocatorName );

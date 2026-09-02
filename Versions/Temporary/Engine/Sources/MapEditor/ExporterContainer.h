@@ -6,7 +6,7 @@ class CExporterContainer : public IExporterContainer
 {
 	OBJECT_NOCOPY_METHODS( CExporterContainer );
 	//
-	typedef hash_map<string, CPtr<IExporter> > CExporterMap;
+	typedef std::unordered_map<string, CPtr<IExporter> > CExporterMap;
 	typedef list<CPtr<IExportTool> > CExportToolList;
 	//
 	CExporterMap exporterMap;

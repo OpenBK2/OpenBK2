@@ -14,7 +14,7 @@ int GetGrannyAnimationLength( granny_file_info *pInfo );
 
 struct SGrannyBoneAttributes
 {
-	typedef hash_map<string, float> CAttributeMap;
+	typedef std::unordered_map<string, float> CAttributeMap;
 	//
 	string szBoneName;
 	string szRealName;					// Not forced to lowercase

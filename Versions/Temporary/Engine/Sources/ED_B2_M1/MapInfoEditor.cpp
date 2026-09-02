@@ -1780,7 +1780,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 		if ( !objectList.empty() )
 		{
 			// Добавляем объекты
-			hash_map<int, int> objectIndexToLinkIDMap;
+			std::unordered_map<int, int> objectIndexToLinkIDMap;
 			objectList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
 			{
@@ -1798,7 +1798,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			//
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = objectList.begin(); itIndex != objectList.end(); ++itIndex )
 			{
-				hash_map<int, int>::const_iterator posObjectIndexToLinkID = objectIndexToLinkIDMap.find( *itIndex );
+				std::unordered_map<int, int>::const_iterator posObjectIndexToLinkID = objectIndexToLinkIDMap.find( *itIndex );
 				if ( posObjectIndexToLinkID == objectIndexToLinkIDMap.end() )
 				{
 					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map object %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
@@ -1922,7 +1922,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			//NDb::SMapInfo *pMutablMapInfo = const_cast<NDb::SMapInfo*>( pMapInfo );
 			// Добавляем spots
 			// Добавляем объекты
-			hash_map<int, int> spotIndexToLinkIDMap;
+			std::unordered_map<int, int> spotIndexToLinkIDMap;
 			spotList.sort();
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
 			{
@@ -1940,7 +1940,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			//
 			for ( NMapInfoEditor::CIndicesList::const_iterator itIndex = spotList.begin(); itIndex != spotList.end(); ++itIndex )
 			{
-				hash_map<int, int>::const_iterator posSpotIndexToLinkID = spotIndexToLinkIDMap.find( *itIndex );
+				std::unordered_map<int, int>::const_iterator posSpotIndexToLinkID = spotIndexToLinkIDMap.find( *itIndex );
 				if ( posSpotIndexToLinkID == spotIndexToLinkIDMap.end() )
 				{
 					NLog::GetLogger()->Log( LT_ERROR, StrFmt( "Map spot %d on the map \"%s\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
@@ -2251,7 +2251,7 @@ void CMapInfoEditor::ApplyViewFilter()
 		return;
 
 	// получить idшники типов объектов, которые должны быть скрыты фильтром
-	hash_map<string,bool> filterSettings;
+	std::unordered_map<string,bool> filterSettings;
 	for ( int t = 0; t < editorSettings.viewFilterData.objTypeFilter.size(); ++t )
 	{
 		string szTypeName = editorSettings.viewFilterData.objTypeFilter[t].szObjTypeName;
@@ -2283,7 +2283,7 @@ void CMapInfoEditor::ApplyViewFilter()
 			NMapInfoEditor::SObjectInfo::SMapInfoElement *pElement = &(itElement->second);
 			//
 			const string szElementTypeName = pElement->szRPGStatsTypeName;
-			hash_map<string,bool>::iterator itFilter = filterSettings.find( szElementTypeName );
+			std::unordered_map<string,bool>::iterator itFilter = filterSettings.find( szElementTypeName );
 			if ( itFilter == filterSettings.end() || itFilter->second == true )
 				pEditorScene->ShowObject( nSceneID, true );
 			else
@@ -2341,17 +2341,17 @@ void CMapInfoEditor::RunGame()
 
 		/**
 		// удаляемые объекты убираем из добавляемых
-		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for ( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			{
-				hash_map<unsigned,int>::iterator posObjectIndex = insertedObjectMap.find( itObjectIndex->first );
+				std::unordered_map<unsigned,int>::iterator posObjectIndex = insertedObjectMap.find( itObjectIndex->first );
 				if ( posObjectIndex != insertedObjectMap.end() )
 				{
 					insertedObjectMap.erase( posObjectIndex );
 				}
 			}
 			{
-				hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+				std::unordered_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 				if ( posObjectIndex != changedObjectMap.end() )
 				{
 					changedObjectMap.erase( posObjectIndex );
@@ -2359,38 +2359,38 @@ void CMapInfoEditor::RunGame()
 			}
 		}
 		// добавляемые и убираемые объекты убираем из обновляемых
-		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
+		for ( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
-			hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+			std::unordered_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 			if ( posObjectIndex != changedObjectMap.end() )
 			{
 				changedObjectMap.erase( posObjectIndex );
 			}
 		}
-		for ( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for ( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
-			hash_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
+			std::unordered_map<unsigned,unsigned>::iterator posObjectIndex = changedObjectMap.find( itObjectIndex->first );
 			if ( posObjectIndex != changedObjectMap.end() )
 			{
 				changedObjectMap.erase( posObjectIndex );
 			}
 		}
 		// добавляем объекты
-		for( hash_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
+		for( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = insertedObjectMap.begin(); itObjectIndex != insertedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.InsertObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
 		// удаляем объекты
-		for( hash_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
+		for( std::unordered_map<unsigned,int>::const_iterator itObjectIndex = removedObjectMap.begin(); itObjectIndex != removedObjectMap.end(); ++itObjectIndex )
 		{
 			objectInfoCollector.RemoveObjectByController( itObjectIndex->first, EditorScene(), GetViewManipulator(), EditorScene()->GetHeights() );
 		}
 		// добавляем мосты
-		for( hash_map<unsigned,int>::const_iterator itBridgeIndex = insertedBridgeMap.begin(); itBridgeIndex != insertedBridgeMap.end(); ++itBridgeIndex )
+		for( std::unordered_map<unsigned,int>::const_iterator itBridgeIndex = insertedBridgeMap.begin(); itBridgeIndex != insertedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
 		// удаляем мосты
-		for( hash_map<unsigned,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
+		for( std::unordered_map<unsigned,int>::const_iterator itBridgeIndex = removedBridgeMap.begin(); itBridgeIndex != removedBridgeMap.end(); ++itBridgeIndex )
 		{
 		}
 		/**/

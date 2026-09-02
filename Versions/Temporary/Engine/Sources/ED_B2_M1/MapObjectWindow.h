@@ -13,7 +13,7 @@ class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 		string szObjectTypeName;
 		CDBID objectDBID;
 	};
-	typedef hash_map<unsigned, SObjectListElement> CObjectListElementMap;
+	typedef std::unordered_map<unsigned, SObjectListElement> CObjectListElementMap;
 
 	bool bCreateControls;
 	bool bFull;

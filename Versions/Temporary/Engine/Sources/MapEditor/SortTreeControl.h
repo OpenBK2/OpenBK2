@@ -10,9 +10,9 @@
 class CSortTreeControl : public SECTreeCtrl
 {
 protected:
-	typedef hash_map<string, HTREEITEM> CTreeItemMap;
-	typedef hash_map<HTREEITEM, COLORREF> CTreeItemColorMap;
-	typedef hash_map<HTREEITEM, bool> CTreeItemBoolMap;
+	typedef std::unordered_map<string, HTREEITEM> CTreeItemMap;
+	typedef std::unordered_map<HTREEITEM, COLORREF> CTreeItemColorMap;
+	typedef std::unordered_map<HTREEITEM, bool> CTreeItemBoolMap;
 	
 private:
 	CTreeItemMap treeItemMap;

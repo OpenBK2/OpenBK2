@@ -55,7 +55,7 @@ class CUnitStartCmdState : public CMapObjectState
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 
-	hash_map<int,SUnitCommandTypeInfo> commandTypesMnemonic;
+	std::unordered_map<int,SUnitCommandTypeInfo> commandTypesMnemonic;
 	//
 	bool bEdCmdVisible;
 	CPtr<CEdUnitStartCmd> pEdUnitStartCmd;

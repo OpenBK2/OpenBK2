@@ -68,7 +68,7 @@ class CObjectFilterCollector : public IObjectFilterCollector
 		bool Match( const string &szObjectTypeName, const string &szObjectName ) const;
 	};
 	typedef vector<SObjectFilter> CObjectFilterList;
-	typedef hash_map<string, CObjectFilterList> CObjectFilterListMap;
+	typedef std::unordered_map<string, CObjectFilterList> CObjectFilterListMap;
 	//
 	CObjectFilterListMap objectFilterListMap;
 
@@ -96,10 +96,10 @@ class CObjectCollector : public IObjectCollector
 	static const string DEFAULT_DATA_EXTRACTOR_TYPE;
 
 	typedef vector<string> CObjectTypeNameList;
-	typedef hash_map<string, CObjectTypeNameList> CDataExtractorTypeMap;
+	typedef std::unordered_map<string, CObjectTypeNameList> CDataExtractorTypeMap;
 	//
-	typedef hash_map<IObjectCollectorCallback*, int> CObjectCollectorCallbackMap;
-	typedef hash_map<string, CObj<IObjectDataExtractor> > CDataExtractorMap;
+	typedef std::unordered_map<IObjectCollectorCallback*, int> CObjectCollectorCallbackMap;
+	typedef std::unordered_map<string, CObj<IObjectDataExtractor> > CDataExtractorMap;
 	//
 	CObjectCollection objectCollection;
 	CObjectCollectorCallbackMap objectCollectorCallbackMap;

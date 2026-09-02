@@ -8,7 +8,7 @@ class CInfantryExporter : public CBasicExporter
 {
 	OBJECT_NOCOPY_METHODS( CInfantryExporter );
 	
-	hash_map<uint32_t, list<string> > animsMap;
+	std::unordered_map<uint32_t, list<string> > animsMap;
 	//
 	void BuildAnimsMap();
 	//

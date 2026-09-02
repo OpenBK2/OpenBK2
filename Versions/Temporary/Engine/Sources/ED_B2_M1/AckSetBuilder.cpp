@@ -82,8 +82,8 @@ static SAckDesc s_AckDescs[] =
 	{ "ACK_START_SERVICE_BUILDING", "ACK_START_SERVICE_BUILDING", NDb::ACK_START_SERVICE_BUILDING },
 	{ 0, 0, NDb::ACK_NONE }
 };
-static hash_map<string, string> s_AckTypesMap;
-typedef hash_map<CDBID, string> CDBIDMap;
+static std::unordered_map<string, string> s_AckTypesMap;
+typedef std::unordered_map<CDBID, string> CDBIDMap;
 static struct SEditorAckTypesAutoMagic
 {
 	SEditorAckTypesAutoMagic()
@@ -139,13 +139,13 @@ struct SAckSetKey
 };
 }
 
-namespace nstl
+// Specialised at namespace scope rather than inside the old nstl namespace:
+// std::hash can only be specialised for std, and C++17 allows the qualified
+// form here.
+template<> struct std::hash<NAcks::SAckSetKey>
 {
-	template<> struct hash<NAcks::SAckSetKey>
-	{
-		size_t operator()( const NAcks::SAckSetKey &key ) const { return hash<string>()( key.szTypeName ) + key.nSubtype + key.nVoiceID; }
-	};
-}
+	size_t operator()( const NAcks::SAckSetKey &key ) const { return std::hash<string>()( key.szTypeName ) + key.nSubtype + key.nVoiceID; }
+};
 
 namespace NAcks
 {
@@ -157,7 +157,7 @@ struct SAckSet
 		string szFileName;
 		float fProbability;
 	};
-	hash_map<string, list<SAck> > acks;
+	std::unordered_map<string, list<SAck> > acks;
 };
 
 bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEditor, const string &szSoundSource )
@@ -207,7 +207,7 @@ bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEdito
 	//
 	// create new ack sets from excel file
 	//
-	typedef hash_map<SAckSetKey, SAckSet> CAckSetsMap;
+	typedef std::unordered_map<SAckSetKey, SAckSet> CAckSetsMap;
 	CAckSetsMap newAckSets;
 	for ( vector<SAckEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
@@ -249,7 +249,7 @@ bool UpdateAckSets( const string &szExcelFileName, const string &szFolderInEdito
 			pAckSetMan->SetValue( "VoiceNumber", itAckSet->first.nVoiceID );
 			//
 			int nTypeNumber = 0;
-			for ( hash_map<string, list<SAckSet::SAck> >::const_iterator itAckList = itAckSet->second.acks.begin(); itAckList != itAckSet->second.acks.end(); ++itAckList )
+			for ( std::unordered_map<string, list<SAckSet::SAck> >::const_iterator itAckList = itAckSet->second.acks.begin(); itAckList != itAckSet->second.acks.end(); ++itAckList )
 			{
 				const string szAckSituationName = s_AckTypesMap[itAckList->first];
 				const string szComplexSoundDescName = szAckSetFolder + szAckSituationName + ".xdb";
