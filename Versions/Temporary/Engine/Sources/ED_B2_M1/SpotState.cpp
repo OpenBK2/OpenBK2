@@ -46,7 +46,7 @@ bool CSpotState::CanAddSpot()
 		}
 		if ( !bResult )
 		{
-			NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Spot have no material: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first ) );
+			NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Spot have no material: {}{:c}{}\n", objectSet.szObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, objectSet.objectNameSet.begin()->first.ToString() ) );
 		}
 	}
 	return bResult;

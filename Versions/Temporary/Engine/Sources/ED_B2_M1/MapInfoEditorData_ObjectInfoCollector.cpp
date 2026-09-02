@@ -1141,7 +1141,7 @@ namespace NMapInfoEditor
 		DebugTrace( "SceneIDCollector" );
 		CFreeIDCollector sceneIDCollector;
 		//
-		DebugTrace( "pPropertyManipulator: 0x%X", pPropertyManipulator );
+		DebugTrace( "pPropertyManipulator: %p", static_cast<const void*>( pPropertyManipulator.GetPtr() ) );
 		DebugTrace( "SObjectInfoCollector::Trace(): end" );
 		DebugTrace( "" );
 	}

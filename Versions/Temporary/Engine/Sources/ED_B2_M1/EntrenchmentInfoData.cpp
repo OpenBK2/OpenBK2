@@ -385,7 +385,7 @@ namespace NMapInfoEditor
 				bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".FrameIndex", (int)( nSegType ), pManipulator );
 				bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".Player", (int)( pObjectCreateInfo->nPlayer ), pManipulator );
 				bResult = bResult && pObjectController->AddChangeOperation( szObjectPrefix + ".HP", (int)( pObjectCreateInfo->fHP ), pManipulator );
-				DebugTrace( "Add segment, type: %d", pSgInfo->eSegType );
+				DebugTrace( "Add segment, type: %d", static_cast<int>( pSgInfo->eSegType ) );
 				//
 				if ( bResult )
 				{
