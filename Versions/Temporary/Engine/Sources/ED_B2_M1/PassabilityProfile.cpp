@@ -325,7 +325,7 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 		if ( IsEqual( vPoint, iter->vPoint ) )
 			nNumber = iter->nNumber;
 
-		nMaxNumber = Max( nMaxNumber, iter->nNumber );
+		nMaxNumber = (std::max)( nMaxNumber, iter->nNumber );
 	}
 
 	return nNumber == -1 ? nMaxNumber + 1 : nNumber;
@@ -355,7 +355,7 @@ void CPassabilityProfileCreator::MakeConnections()
 			const int n2 = connectedPoints.back().nNumber; 
 			connNum2Point[n2] = v2;
 
-			nMaxPoint = Max( nMaxPoint, Max( n1, n2 ) );
+			nMaxPoint = (std::max)( nMaxPoint, (std::max)( n1, n2 ) );
 		}
 	}
 

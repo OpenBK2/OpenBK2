@@ -151,7 +151,7 @@ void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObject
 						{
 							if ( szObjectName.size() >= itName->size() )
 							{
-								const int nMinSize = Min( szObjectName.size(), itName->size() );
+								const int nMinSize = (std::min)( szObjectName.size(), itName->size() );
 								if ( NFile::ComparePathEq(0, nMinSize, szObjectName, 0, nMinSize, *itName) == true )
 								{
 									bMatch = true;
