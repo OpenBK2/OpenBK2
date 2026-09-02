@@ -5,6 +5,9 @@
 #include <spdlog/fmt/fmt.h>
 #include "logging.h"
 
+#include <cstdarg>
+#include <vector>
+
 
 void SECMDIChildWnd::SwapMenu(UINT nID) {
     spdlog::trace("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
@@ -74,10 +77,38 @@ void SECMDIFrameWnd::SwapMenu(UINT nID) {
     spdlog::trace("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
 }
 
+// Where the frame is told which menus the application has, and the only place
+// it is told, so it is where the menu bar learns them.
+//
+// The menu bar also has to become a window here. CMainFrame::ShowMenu will not
+// ask it to switch menus unless ::IsWindow(m_pMenuBar->m_hWnd), and nothing
+// else creates it: the toolkit creates its own, and this library had left
+// m_pMenuBar an object with no window, so every ShowMenu in the editor was
+// skipped and the frame kept the menu LoadFrame gave it. It reports a size of
+// zero, so having it costs the frame no room.
 BOOL SECMDIFrameWnd::LoadAdditionalMenus(UINT nCount, UINT nIDMenu, ...) {
-
     spdlog::trace("{} this={} nCount={} nIDMenu={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCount, nIDMenu);
-    return FALSE;
+    if (m_pMenuBar == nullptr) {
+        return FALSE;
+    }
+    if (m_pMenuBar->GetSafeHwnd() == nullptr
+        && !m_pMenuBar->CreateEx(0, this, WS_CHILD | CBRS_TOP,
+                                 SECControlBar::GetUniqueBarID(this, AFX_IDW_TOOLBAR),
+                                 "SECMenuBar")) {
+        spdlog::warn("SECMDIFrameWnd::LoadAdditionalMenus: the menu bar has no window");
+        return FALSE;
+    }
+    std::vector<UINT> menus;
+    if (nCount > 0) {
+        menus.push_back(nIDMenu);
+        va_list args;
+        va_start(args, nIDMenu);
+        for (UINT i = 1; i < nCount; ++i) {
+            menus.push_back(va_arg(args, UINT));
+        }
+        va_end(args);
+    }
+    return m_pMenuBar->SetMenus(menus);
 }
 
 void SECMDIFrameWnd::EnableOleContainmentMode() {

@@ -7,6 +7,9 @@
 
 #include "tbarcust.h"
 
+#include <utility>
+#include <vector>
+
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmenubar.htm
 // SECMenuBar uses SECCustomToolBar as a base class
 class SECMenuBar : public SECCustomToolBar {
@@ -38,6 +41,24 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmenubar__setmenuinfo.htm
     // Defines the menu resources to use.
     virtual BOOL SetMenuInfo(int nCount, UINT nIDMenu, ...);
+    // The same without the varargs, so a caller that already has the list can
+    // pass it on. SECMDIFrameWnd::LoadAdditionalMenus is one.
+    BOOL SetMenus(const std::vector<UINT> &menus);
+
+    // The toolkit's menu bar is a toolbar that draws the menu itself. This one
+    // puts the menu on the frame and draws nothing, so it asks for no room.
+    // Without these it would take a default bar thickness off the top.
+    CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz) override;
+    CSize CalcDynamicLayout(int nLength, DWORD dwMode) override;
+
+private:
+    // Menu id to loaded menu, loaded when SetMenuInfo names them rather than
+    // when SwitchMenu asks for one: the caller has the owning module's
+    // resources selected at the first and the executable's by the second.
+    std::vector<std::pair<UINT, HMENU>> m_menus;
+    UINT m_nCurMenuID = 0;
+
+public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmenubar__getcurmenuid.htm
     // Returns the current menu ID
     UINT GetCurMenuID() const;

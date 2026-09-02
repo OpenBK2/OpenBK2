@@ -12,12 +12,13 @@ BOOL SECCustomToolBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UIN
                   "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle,
                   rect.left, rect.top, rect.right, rect.bottom,
                   spdlog::fmt_lib::ptr(pParentWnd), spdlog::fmt_lib::ptr(pContext));
-    return TRUE;
+    return SECControlBar::Create(lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle, rect,
+                                 pParentWnd, pContext);
 }
 
 BOOL SECCustomToolBar::CreateEx(DWORD dwExStyle, CWnd* pParentWnd, DWORD dwStyle, UINT nID, LPCTSTR lpszTitle) {
     spdlog::trace("{} this={} dwExStyle={} pParentWnd={} dwStyle={} nID={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwExStyle, spdlog::fmt_lib::ptr(pParentWnd), dwStyle, nID, lpszTitle);
-    return FALSE;
+    return Create(nullptr, lpszTitle, nID, dwStyle, dwExStyle, CRect(0, 0, 0, 0), pParentWnd, nullptr);
 }
 
 void SECCustomToolBar::SetBarInfoEx(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd) {
