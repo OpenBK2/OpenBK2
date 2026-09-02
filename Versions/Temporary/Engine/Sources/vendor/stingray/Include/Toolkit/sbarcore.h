@@ -129,6 +129,7 @@ public:
     // Overridable
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccontrolbar__calcdynamiclayout.htm
     // Return the size of a dockable bar
+    virtual CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz);
     virtual CSize CalcDynamicLayout(int nLength, DWORD dwMode);
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccontrolbar__onbarbegindock.htm
     // Virtual function that can be overridden to handle special requirements before a bar is docked.

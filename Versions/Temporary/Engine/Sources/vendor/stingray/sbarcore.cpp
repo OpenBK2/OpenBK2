@@ -53,9 +53,27 @@ BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwSty
     return Create(lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle, rect, pParentWnd, pContext);
 }
 
+// Where a docking window may put what it contains: this bar's client area with
+// its borders taken off.
+//
+// Leaving the caller's rectangle untouched, which is what this did, is not a
+// harmless nothing. CDWLog::OnSize, CDWPropertyBrowser::OnSize and the GDB
+// browser all ask for it and then SetWindowPos their contents into whatever
+// came back, so the Scintilla control in the log window came out 0 by 0 inside
+// a bar that was 265 by 265.
+//
+// CalcInsideRect is MFC's own answer to the same question, and it is what
+// CControlBar's painting uses, so the contents land exactly inside the borders
+// the bar draws.
 void SECControlBar::GetInsideRect(CRect& rectInside) const {
     spdlog::trace("{} this={} rectInside.left={} rectInside.top={} rectInside.right={} rectInside.bottom={}",
         BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), rectInside.left, rectInside.top, rectInside.right, rectInside.bottom);
+    if (GetSafeHwnd() == nullptr) {
+        rectInside.SetRectEmpty();
+        return;
+    }
+    GetClientRect(&rectInside);
+    CalcInsideRect(rectInside, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
 }
 
 BOOL SECControlBar::IsMDIChild() const {
@@ -163,6 +181,14 @@ BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID)
 //
 // LM_HORZ says the bar lies along the top or bottom, so its length is cx and
 // its thickness cy, and the other way round when it is on the left or right.
+// A bar that is not CBRS_SIZE_DYNAMIC is measured through this one instead, and
+// CControlBar::CalcFixedLayout answers 0 for anything that has not overridden
+// it. The editor's shortcut bars are docked that way and came out 0 wide.
+CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
+    spdlog::trace("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
+    return CalcDynamicLayout(-1, (bStretch ? LM_STRETCH : 0) | (bHorz ? LM_HORZ : 0));
+}
+
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
     spdlog::trace("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
