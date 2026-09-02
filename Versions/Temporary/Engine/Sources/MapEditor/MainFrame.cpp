@@ -252,7 +252,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 			strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
 			if ( CDWGDBBrowser *pwndGDBBrowser = new CDWGDBBrowser( *itGDBBrowserID ) )
 			{
-				if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), nWindowIndex ), dwDWStyle, dwDWStyleEx, *itGDBBrowserID ) )
+				if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), nWindowIndex ).c_str(), dwDWStyle, dwDWStyleEx, *itGDBBrowserID ) )
 				{
 					delete pwndGDBBrowser;
 					return -1;
@@ -689,7 +689,7 @@ void CMainFrame::OnDWGDBBrowserNew()
 		const bool bEnableEdit = ( NGlobal::GetVar( "disable_edit", 0 ) == 0 );
 		if ( CDWGDBBrowser *pwndGDBBrowser = new CDWGDBBrowser( nUniqueBarID ) )
 		{
-			if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), gdbBrowserList.size() ), dwDWStyle, dwDWStyleEx, nUniqueBarID ) )
+			if ( !pwndGDBBrowser->Create( this, fmt::sprintf( strDWName.GetString(), gdbBrowserList.size() ).c_str(), dwDWStyle, dwDWStyleEx, nUniqueBarID ) )
 			{
 				delete pwndGDBBrowser;
 				return;
@@ -739,7 +739,7 @@ void CMainFrame::OnDWGDBBrowserRemove()
 					//
 					for ( ;itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 					{
-						( *itGDBBrowser )->SetWindowText( fmt::sprintf( strDWName.GetString(), nWindowIndex ) );
+						( *itGDBBrowser )->SetWindowText( fmt::sprintf( strDWName.GetString(), nWindowIndex ).c_str() );
 						++nWindowIndex;
 					}
 					//

@@ -35,7 +35,7 @@ BOOL CProgressDlg::OnInitDialog()
 	if ( !CResizeDialog::OnInitDialog() )
 		return FALSE;
 
-	SetWindowText( fmt::format("Performing {}", szActionName) );
+	SetWindowText( fmt::format("Performing {}", szActionName).c_str() );
 	//
 	return TRUE;
 }

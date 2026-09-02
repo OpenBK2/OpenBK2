@@ -133,7 +133,7 @@ void CPCIntSliderEditor::GetValue( CVariant *pValue )
 void CPCIntSliderEditor::OnChangePos( int nPos )
 {
 	int nSliderPos = CStringManager::NormalizeValue( GetSlider()->GetPos(), nStep );
-	SetWindowText( std::to_string(  nSliderPos ) );
+	SetWindowText( std::to_string(  nSliderPos ).c_str() );
 }
 
 // basement storage  

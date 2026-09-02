@@ -619,7 +619,7 @@ void CPCDBLinkDialog::UpdateDialogTitle()
 			}
 		}
 	}
-	SetWindowText( fmt::sprintf( strFormatString.GetString(), szCurrentTable.c_str() ) );
+	SetWindowText( fmt::sprintf( strFormatString.GetString(), szCurrentTable.c_str() ).c_str() );
 }
 
 
@@ -627,11 +627,11 @@ void CPCDBLinkDialog::UpdateCurrentObjectLabel()
 {
 	if ( bMultiRef )
 	{
-		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szCurrentTable.c_str(), TYPE_SEPARATOR_CHAR, szCurrentObject.c_str() ) );
+		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szCurrentTable.c_str(), TYPE_SEPARATOR_CHAR, szCurrentObject.c_str() ).c_str() );
 	}
 	else
 	{
-		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}", szCurrentObject.c_str() ) );
+		SetDlgItemText( IDC_PC_DBL_CUR_SEL_LABEL_RIGHT, fmt::format( "{}", szCurrentObject.c_str() ).c_str() );
 	}
 }
 
@@ -642,11 +642,11 @@ void CPCDBLinkDialog::UpdatePreviousObjectLabel()
 	{
 		if ( bMultiRef )
 		{
-			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szPreviousTable.c_str(), TYPE_SEPARATOR_CHAR, szPreviousObject.c_str() ) );
+			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}{:c}{}", szPreviousTable.c_str(), TYPE_SEPARATOR_CHAR, szPreviousObject.c_str() ).c_str() );
 		}
 		else
 		{
-			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}", szPreviousObject.c_str() ) );
+			SetDlgItemText( IDC_PC_DBL_PREV_SEL_LABEL_RIGHT, fmt::format( "{}", szPreviousObject.c_str() ).c_str() );
 		}
 	}
 	else

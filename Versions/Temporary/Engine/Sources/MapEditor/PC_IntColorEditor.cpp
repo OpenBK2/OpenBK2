@@ -109,11 +109,11 @@ void CPCIntColorEditor::OnBrowse()
 			const int b = nColor & 0xFF;
 			if ( GetItemEditorType() == PCIE_INT_COLOR_WITH_ALPHA )
 			{
-				SetWindowText( fmt::format( "{}, {}, {}, {}", a, r, g, b ) );
+				SetWindowText( fmt::format( "{}, {}, {}, {}", a, r, g, b ).c_str() );
 			}
 			else
 			{
-				SetWindowText( fmt::format( "{}, {}, {}", r, g, b ) );
+				SetWindowText( fmt::format( "{}, {}, {}", r, g, b ).c_str() );
 			}
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
