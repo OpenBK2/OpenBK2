@@ -9,8 +9,8 @@
 
 CEditorInterfaceBase::CEditorInterfaceBase()
 {
-	AddObserver( "camera_control_on", ToggleCameraControl, true );
-	AddObserver( "camera_control_off", ToggleCameraControl, false );
+	AddObserver( "camera_control_on", &CEditorInterfaceBase::ToggleCameraControl, true );
+	AddObserver( "camera_control_off", &CEditorInterfaceBase::ToggleCameraControl, false );
 }
 
 
