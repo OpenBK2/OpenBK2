@@ -646,6 +646,21 @@ void PumpMessages( bool bFocus )
 			}
 		}
 	}
+#if !BOOST_OS_WINDOWS
+	// Report one held state per press rather than once per frame. If a complete
+	// click lands between two pumps, the edge traces above remain but no held
+	// trace is emitted, which makes that timing visible in the log.
+	static bool bMiddleMouseHeldTraced = false;
+	const bool bMiddleMouseHeld = ( SDL_GetMouseState( 0, 0 ) & SDL_BUTTON_MASK( SDL_BUTTON_MIDDLE ) ) != 0;
+	if ( bMiddleMouseHeld && !bMiddleMouseHeldTraced )
+	{
+		bMiddleMouseHeldTraced = true;
+	}
+	else if ( !bMiddleMouseHeld )
+	{
+		bMiddleMouseHeldTraced = false;
+	}
+#endif
 	events.resize( nNumEvents );
 	///
 	sort( events.begin(), events.end(), SSeqNumberLessThenFunctional() );
@@ -1472,7 +1487,11 @@ bool SDLCALL EventWatch( void *pUserData, SDL_Event *pEvent )
 		const int nOfs = SdlMouseButtonToOffset( pEvent->button.button );
 		if ( nOfs >= 0 )
 		{
-			PushEvent( nMouseDeviceID, nOfs, pEvent->button.down ? 0x80 : 0, pEvent->button.timestamp );
+			// The event type is the edge SDL delivered. Deriving the state from it
+			// keeps a DOWN and an UP from ever taking the same path even if a backend
+			// leaves the redundant payload field in an unexpected state.
+			const bool bPressed = pEvent->type == SDL_EVENT_MOUSE_BUTTON_DOWN;
+			PushEvent( nMouseDeviceID, nOfs, bPressed ? 0x80 : 0, pEvent->button.timestamp );
 		}
 		break;
 	}

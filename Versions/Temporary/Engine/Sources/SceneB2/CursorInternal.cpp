@@ -165,8 +165,13 @@ void CCursor::AcquireLocal()
 	// SDL confines the pointer to a rectangle inside a window rather than to one
 	// on the screen, and takes a width and a height where Win32 takes a second
 	// corner. The game window is borderless and covers the display, so the two
-	// coordinate systems coincide: the callers pass 0,0 to the screen size, or a
-	// one pixel box when the camera wants the pointer held still while it drags.
+	// coordinate systems coincide.
+	//
+	// The camera uses a one-pixel box to hold the cursor still while dragging.
+	// Normal SDL motion is clamped to that box and quickly becomes zero, unlike
+	// the DirectInput deltas the Windows build receives. Relative mode preserves
+	// continuous physical deltas; the mouse rectangle keeps SDL's logical cursor
+	// at the original position so disabling relative mode restores it there.
 	SDL_Window *pWindow = AsSdlWindow( NWinFrame::GetWnd() );
 	if ( pWindow == 0 )
 		return;
@@ -174,10 +179,28 @@ void CCursor::AcquireLocal()
 	{
 		const SDL_Rect rect = { static_cast<int>( rcClip.left ), static_cast<int>( rcClip.top ),
 			static_cast<int>( rcClip.right - rcClip.left ), static_cast<int>( rcClip.bottom - rcClip.top ) };
-		SDL_SetWindowMouseRect( pWindow, &rect );
+		const bool bCameraDrag = rect.w == 1 && rect.h == 1;
+		if ( bCameraDrag )
+		{
+			SDL_SetWindowMouseRect( pWindow, &rect );
+			// The Windows path leaves the cursor visible during a camera drag.
+			SDL_SetHint( SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1" );
+			if ( !SDL_SetWindowRelativeMouseMode( pWindow, true ) )
+				DebugTrace( "INPUT: Cannot enable relative mouse mode: %s\n", SDL_GetError() );
+		}
+		else
+		{
+			// Disable while the old one-pixel rectangle is still installed, so
+			// SDL restores the pointer to the position at which the drag began.
+			SDL_SetWindowRelativeMouseMode( pWindow, false );
+			SDL_SetWindowMouseRect( pWindow, &rect );
+		}
 	}
 	else
+	{
+		SDL_SetWindowRelativeMouseMode( pWindow, false );
 		SDL_SetWindowMouseRect( pWindow, 0 );
+	}
 #endif
 }
 
