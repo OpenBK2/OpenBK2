@@ -13,11 +13,6 @@
 #include <windows.h>
 #endif
 
-#include <typeinfo>
-#include <cstdio>
-#include <cstdlib>
-#include <cassert>
-
 #else
 //#define _STLP_USE_MFC 1
 
@@ -31,6 +26,12 @@
 #endif // __AFX__
 
 #pragma component( mintypeinfo, on )
+// Unconditional: the MFC branch above brings in no <typeinfo>, and
+// System/System.h names std::type_info.
+#include <typeinfo>
+#include <cstdio>
+#include <cstdlib>
+#include <cassert>
 #include <cmath>
 #include <cstring>
 // 
