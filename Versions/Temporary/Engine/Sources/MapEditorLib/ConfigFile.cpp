@@ -52,7 +52,7 @@ int SConfigFile::Load( const std::string &rszFileName )
 	NStr::SplitString( szBuffer.c_str(), &lineList, '\n' );
 	for ( std::vector<std::string>::const_iterator itLine = lineList.begin(); itLine != lineList.end(); ++itLine )
 	{
-		CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
+		CConfigEntryList::iterator itConfigEntry = configEntryList.emplace( configEntryList.end() );
 		itConfigEntry->Load( *itLine );
 	}
 	return lineList.size();
@@ -107,14 +107,14 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKey
 
 void SConfigFile::AddLine( const std::string &rszLine )
 {
-	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
+	CConfigEntryList::iterator itConfigEntry = configEntryList.emplace( configEntryList.end() );
 	itConfigEntry->Load( rszLine );
 }
 
 
 void SConfigFile::AddKeyword( const std::string &rszKeyword, const std::string &rszParams )
 {
-	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
+	CConfigEntryList::iterator itConfigEntry = configEntryList.emplace( configEntryList.end() );
 	itConfigEntry->szLine = rszKeyword + std::string( " " ) + rszParams;
 	itConfigEntry->szKeyword = rszKeyword;
 	itConfigEntry->szParams = rszParams;
