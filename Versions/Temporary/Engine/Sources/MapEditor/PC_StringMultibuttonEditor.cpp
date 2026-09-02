@@ -313,7 +313,7 @@ void CPCStringMultibuttonEditor::SetDefaultValue()
 }
 
 
-bool CPCStringMultibuttonEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCStringMultibuttonEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

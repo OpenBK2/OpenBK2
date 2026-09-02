@@ -443,7 +443,7 @@ bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectType
 {
 	NI_ASSERT( pObjectSet != 0, "GetSelectedObjects(): SObjectSet == 0" );
 	//
-	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( pObjectSet ) );
+	bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( pObjectSet ) );
 	bResult = bResult && ( pObjectSet->szObjectTypeName == szObjectTypeName );
 	bResult = bResult && ( !pObjectSet->objectNameSet.empty() );
 	//

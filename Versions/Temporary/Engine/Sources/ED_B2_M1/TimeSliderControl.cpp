@@ -140,7 +140,7 @@ void CTimeSliderControl::OnPaint()
 }
 
 
-bool CTimeSliderControl::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CTimeSliderControl::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	//
 	return false;

@@ -202,7 +202,7 @@ void CPCIntInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCIntInputEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCIntInputEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

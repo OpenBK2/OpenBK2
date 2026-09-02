@@ -402,7 +402,7 @@ void CHeightWindowV3::OnHeightTimer()
 }
 
 
-bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -460,7 +460,7 @@ bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
 					pObjectManipulator = pMultiManipulator;
 				}
 				IView *pView = 0;
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 				if ( pView != 0 )
 				{
 					pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );

@@ -212,7 +212,7 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 				if ( ICamera *pCamera = Camera() )
 				{
 					CTPoint<int> dimensions( 0, 0 );
-					if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<uint32_t>( &dimensions ) ) )
+					if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_GET_DIMENSIONS, reinterpret_cast<uintptr_t>( &dimensions ) ) )
 					{
 						float vNewZ = 0.0f;
 						{
@@ -1256,7 +1256,7 @@ void CVSOState::SwitchToAddState()
 }
 
 
-bool CVSOState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CVSOState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

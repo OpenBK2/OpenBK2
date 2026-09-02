@@ -129,7 +129,7 @@ public:
 	void OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

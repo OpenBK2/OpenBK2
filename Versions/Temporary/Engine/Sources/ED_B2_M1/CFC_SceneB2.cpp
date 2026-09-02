@@ -115,7 +115,7 @@ void CCFCSceneB2::OnResizeChildFrameWnd( int cx, int cy )
 }
 
 
-bool CCFCSceneB2::KeyPressed( unsigned nChar, uint32_t dwData )
+bool CCFCSceneB2::KeyPressed( unsigned nChar, uintptr_t dwData )
 {
 	return ( ( dwData == nChar ) || ( ( GetAsyncKeyState( nChar ) & 0x8000 ) > 0 ) );
 }
@@ -140,7 +140,7 @@ void CCFCSceneB2::ResetCamera( bool bAll )
 }
 
 
-void CCFCSceneB2::UpdateCameraPosition( uint32_t dwData )
+void CCFCSceneB2::UpdateCameraPosition( uintptr_t dwData )
 {
 	if ( IsPacked2DCoords( dwData ) )
 	{
@@ -156,7 +156,7 @@ void CCFCSceneB2::UpdateCameraPosition( uint32_t dwData )
 }
 
 
-void CCFCSceneB2::UpdateCamera( uint32_t dwData )
+void CCFCSceneB2::UpdateCamera( uintptr_t dwData )
 {
 	if ( ICamera *pCamera = Camera() )
 	{
@@ -274,7 +274,7 @@ void CCFCSceneB2::ClearScene()
 }
 
 
-bool CCFCSceneB2::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CCFCSceneB2::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

@@ -142,7 +142,7 @@ void CCameraPositionState::SavePosition()
 }
 
 
-bool CCameraPositionState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -154,7 +154,7 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		case ID_CPE_ON_PLAYER_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
 			RefreshWindow( true );
 			return true;	
@@ -162,7 +162,7 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		case ID_CPW_PARAM_TYPE_CHANGED:
 		{
 			SCameraPositionWindowData data;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&data) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
 			cameraPositions[nCurrentPlayer].bUseAnchorOnly = !data.bAllParams;
 			SavePosition();
@@ -233,7 +233,7 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 	data.bAllParams = !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&data) );
+																												reinterpret_cast<uintptr_t>(&data) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 }

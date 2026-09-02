@@ -96,13 +96,13 @@ void CScriptCameraState::Leave()
 }
 
 
-bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{
 		case ID_SCRIPT_CAMERA_GET_YAW:
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_YAW, (uint32_t)( &fYaw ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_YAW, (uintptr_t)( &fYaw ) );
 			Camera()->SetYaw( ToRadian(fYaw) );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			break;
@@ -110,7 +110,7 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		//
 		case ID_SCRIPT_CAMERA_GET_PITCH:
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_PITCH, (uint32_t)( &fPitch ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_PITCH, (uintptr_t)( &fPitch ) );
 			Camera()->SetPitch( ToRadian(270.0 - fPitch) );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			break;
@@ -118,7 +118,7 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		//
 		case ID_SCRIPT_CAMERA_GET_FOV:
 		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_FOV, (uint32_t)( &nFOV ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_GET_FOV, (uintptr_t)( &nFOV ) );
 			Camera()->SetFOV( nFOV );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			break;
@@ -127,21 +127,21 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		case ID_SCRIPT_CAMERA_SET_YAW:
 		{
 			fYaw = Camera()->GetYaw();
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_YAW, (uint32_t)(&fYaw) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_YAW, (uintptr_t)(&fYaw) );
 			break;
 		}
 		//
 		case ID_SCRIPT_CAMERA_SET_PITCH:
 		{
 			fPitch = Camera()->GetPitch();
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_PITCH, (uint32_t)(&fPitch) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_PITCH, (uintptr_t)(&fPitch) );
 			break;
 		}
 		//
 		case ID_SCRIPT_CAMERA_SET_FOV:
 		{
 			nFOV = Camera()->GetFOV();
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uint32_t)(&nFOV) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uintptr_t)(&nFOV) );
 			break;
 		}
 		//
@@ -152,7 +152,7 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		//
 		case ID_SCRIPT_CAMERA_WINDOW_UI_EVENT:
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_SCRIPT_CAMERA_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&dialogData)) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_SCRIPT_CAMERA_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&dialogData)) )
 			{
 				switch ( dialogData.eLastAction )
 				{
@@ -204,7 +204,7 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		//
 		case ID_SCRIPT_CAMERA_MOV_ED_UI_EVENT:
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_MOVIES_EDITOR_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uint32_t>(&moviesData) ) )
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_MOVIES_EDITOR_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&moviesData) ) )
 			{
 				switch ( moviesData.eLastAction )
 				{
@@ -1023,17 +1023,17 @@ void CScriptCameraState::RefreshDialogData( bool bNeedUpdateFromDB )
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&dialogData) );
+																												reinterpret_cast<uintptr_t>(&dialogData) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MOVIES_EDITOR_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&moviesData) );
+																												reinterpret_cast<uintptr_t>(&moviesData) );
 
 	float fDist;
 	Camera()->GetPlacement( &fDist, &fPitch, &fYaw );
 	nFOV = (int)( Camera()->GetFOV() );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_YAW, (uint32_t)(&fYaw) );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_PITCH, (uint32_t)(&fPitch) );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uint32_t)(&nFOV) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_YAW, (uintptr_t)(&fYaw) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_PITCH, (uintptr_t)(&fPitch) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uintptr_t)(&nFOV) );
 }
 
 
@@ -1232,7 +1232,7 @@ void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 
 	Camera()->SetFOV( fNewFOV );
 	nFOV = (int)( fNewFOV );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uint32_t)( &nFOV ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, ID_SCRIPT_CAMERA_SET_FOV, (uintptr_t)( &nFOV ) );
 }
 
 

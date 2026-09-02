@@ -151,7 +151,7 @@ void CAdvClipboardWindow::SetDialogData( const SAdvClipboardWindowData *pData )
 }
 
 
-bool CAdvClipboardWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CAdvClipboardWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{

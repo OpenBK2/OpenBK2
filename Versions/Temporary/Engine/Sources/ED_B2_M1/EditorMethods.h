@@ -7,13 +7,13 @@
 template<class TEditParameters>
 inline bool GetEditParameters( TEditParameters *pEditParameters, unsigned nCommandHandlerType )
 {
-	return SetGetEditParameters( reinterpret_cast<uint32_t>( pEditParameters ), nCommandHandlerType, ID_GET_EDIT_PARAMETERS );
+	return SetGetEditParameters( reinterpret_cast<uintptr_t>( pEditParameters ), nCommandHandlerType, ID_GET_EDIT_PARAMETERS );
 }
 
 template<class TEditParameters>
 inline bool SetEditParameters( const TEditParameters &rEditParameters, unsigned nCommandHandlerType )
 {
-	return SetGetEditParameters( reinterpret_cast<uint32_t>( &rEditParameters ), nCommandHandlerType, ID_SET_EDIT_PARAMETERS );
+	return SetGetEditParameters( reinterpret_cast<uintptr_t>( &rEditParameters ), nCommandHandlerType, ID_SET_EDIT_PARAMETERS );
 }
 
 

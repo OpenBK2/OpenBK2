@@ -285,7 +285,7 @@ void CMiniMapWindow::OnContextMenu( CWnd* pWnd, CPoint point )
 }
 
 
-bool CMiniMapWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMiniMapWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

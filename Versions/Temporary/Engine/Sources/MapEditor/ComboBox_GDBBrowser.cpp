@@ -287,7 +287,7 @@ bool CComboBoxGDBBrowser::GetSelectionSet( SSelectionSet *pSelectionSet )
 }
 
 
-bool CComboBoxGDBBrowser::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CComboBoxGDBBrowser::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

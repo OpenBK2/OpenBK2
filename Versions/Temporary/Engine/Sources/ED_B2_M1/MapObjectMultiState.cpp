@@ -123,7 +123,7 @@ void CMapObjectMultiState::Leave()
 }
 
 
-bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

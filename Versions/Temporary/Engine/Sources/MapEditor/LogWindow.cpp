@@ -38,7 +38,7 @@ void CLogWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 }
 
 
-bool CLogWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CLogWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

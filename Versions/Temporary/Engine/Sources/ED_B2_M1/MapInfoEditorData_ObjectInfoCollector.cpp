@@ -851,7 +851,7 @@ namespace NMapInfoEditor
 				}
 			}
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->SetViewManipulator( pPropertyManipulator, rObjectSet, std::string() );
@@ -861,7 +861,7 @@ namespace NMapInfoEditor
 			if ( bCreateTree )
 			{
 				ICommandHandler *pCommandHandler = 0;
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<uint32_t>( &pCommandHandler ) );
+				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_COMMAND_HANDLER, reinterpret_cast<uintptr_t>( &pCommandHandler ) );
 				if ( pCommandHandler != 0 )
 				{
 					pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -877,7 +877,7 @@ namespace NMapInfoEditor
 		if ( pPropertyManipulator != 0 )
 		{
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->RemoveViewManipulator();

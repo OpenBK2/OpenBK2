@@ -176,7 +176,7 @@ void CPCStringInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCStringInputEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCStringInputEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

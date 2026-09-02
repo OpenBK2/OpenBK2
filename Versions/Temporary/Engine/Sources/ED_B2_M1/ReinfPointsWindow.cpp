@@ -148,7 +148,7 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 }
 
 
-bool CReinfPointsWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CReinfPointsWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SReinfPointsWindowData *pData = reinterpret_cast<SReinfPointsWindowData*>( dwData );
 

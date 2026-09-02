@@ -80,7 +80,7 @@ void CMapInfoAIMarkersSelectDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoAIMarkersSelectDlg::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMapInfoAIMarkersSelectDlg::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	return false;
 }

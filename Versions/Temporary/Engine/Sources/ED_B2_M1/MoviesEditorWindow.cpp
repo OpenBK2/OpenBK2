@@ -182,7 +182,7 @@ BOOL CMoviesEditorWindow::OnInitDialog()
 }
 
 
-bool CMoviesEditorWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMoviesEditorWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch ( nCommandID )
 	{

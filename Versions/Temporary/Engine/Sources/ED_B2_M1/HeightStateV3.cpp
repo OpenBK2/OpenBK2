@@ -1440,7 +1440,7 @@ void CHeightStateV3::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CHeightStateV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{

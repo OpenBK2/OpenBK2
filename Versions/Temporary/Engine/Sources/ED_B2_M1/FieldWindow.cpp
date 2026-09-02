@@ -221,7 +221,7 @@ void CFieldWindow::OnFillHeightsCheckBox()
 }
 
 
-bool CFieldWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CFieldWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

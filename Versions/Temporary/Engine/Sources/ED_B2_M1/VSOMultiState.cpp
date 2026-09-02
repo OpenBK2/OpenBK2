@@ -102,7 +102,7 @@ void CVSOMultiState::Leave()
 }
 
 
-bool CVSOMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CVSOMultiState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

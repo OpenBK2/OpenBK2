@@ -120,7 +120,7 @@ void CScriptCameraWindow::DoDataExchange( CDataExchange *pDX )
 }
 
 
-bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SScriptCameraWindowData *pData = reinterpret_cast<SScriptCameraWindowData*>( dwData );
 	NI_VERIFY( pData, "SScriptCameraWindowData::HandleCommand(): dwData == 0", return false );

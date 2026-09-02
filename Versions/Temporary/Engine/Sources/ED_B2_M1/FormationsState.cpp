@@ -271,7 +271,7 @@ void CFormationsState::Leave()
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SQUAD_FORMATIONS_STATE );
 }
 
-bool CFormationsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CFormationsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -289,7 +289,7 @@ bool CFormationsState::GetFormationWindowDialogData( SFormationWindowDialogData 
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FORMATION_LIST_DIALOG, 
 																																		ID_WINDOW_GET_DIALOG_DATA, 
-																																		reinterpret_cast<uint32_t>(pData) );
+																																		reinterpret_cast<uintptr_t>(pData) );
 
 	return bRes;
 }
@@ -298,7 +298,7 @@ bool CFormationsState::SetFormationWindowDialogData( SFormationWindowDialogData 
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_FORMATION_LIST_DIALOG, 
 																																		ID_WINDOW_SET_DIALOG_DATA, 
-																																		reinterpret_cast<uint32_t>(pData) );
+																																		reinterpret_cast<uintptr_t>(pData) );
 
 	return bRes;
 }
@@ -478,7 +478,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<uint32_t>(&pView) );
+																												reinterpret_cast<uintptr_t>(&pView) );
 	if ( pView != 0 )
 	{
 		pView->RemoveViewManipulator();
@@ -516,7 +516,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 		
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<uint32_t>(&pView) );
+																												reinterpret_cast<uintptr_t>(&pView) );
 	bool bNeedCreateTree = true;
 	if ( pView != 0 )
 	{
@@ -530,7 +530,7 @@ void CFormationsState::SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFor
 	ICommandHandler *pCommandHandler = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_COMMAND_HANDLER, 
-																												reinterpret_cast<uint32_t>(&pCommandHandler) );
+																												reinterpret_cast<uintptr_t>(&pCommandHandler) );
 	if ( pCommandHandler != 0 )
 	{
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -544,7 +544,7 @@ void CFormationsState::ClearMaskManipulator()
 		IView *pView = 0;
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
 																													ID_PC_DIALOG_GET_VIEW, 
-																													reinterpret_cast<uint32_t>(&pView) );
+																													reinterpret_cast<uintptr_t>(&pView) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();

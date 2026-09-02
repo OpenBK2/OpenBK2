@@ -141,7 +141,7 @@ HTREEITEM CSortTreeControl::InsertTreeItem( LPCTSTR lpszItem, int nImage, int nS
 {
 	if ( HTREEITEM hItem = InsertItem( lpszItem, nImage, nSelectedImage, hParent, hInsertAfter ) )
 	{
-		SetItemData( hItem, reinterpret_cast<uint32_t>( hItem ) );
+		SetItemData( hItem, reinterpret_cast<uintptr_t>( hItem ) );
 		//
 		std::string szHashName;
 		if ( GetTreeItemName( hItem, &szHashName ) )

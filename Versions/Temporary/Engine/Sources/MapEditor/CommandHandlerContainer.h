@@ -43,9 +43,9 @@ public:
 	void Remove( unsigned nType, ICommandHandler *pCommandHandler );
 	void Remove( unsigned nType );
 	ICommandHandler* Get( unsigned nType );
-	bool HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
 

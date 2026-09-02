@@ -140,7 +140,7 @@ void CFormationWindow::SetDialogData( const SFormationWindowDialogData *pData )
 }
 
 
-bool CFormationWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CFormationWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SFormationWindowDialogData *pData = reinterpret_cast<SFormationWindowDialogData*>( dwData );
 	

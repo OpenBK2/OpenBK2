@@ -40,7 +40,7 @@ public:
 	virtual BOOL OnInitDialog();
 
 	//ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	
 	DECLARE_MESSAGE_MAP()

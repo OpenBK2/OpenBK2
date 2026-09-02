@@ -339,14 +339,14 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 }
 
 
-bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{	
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -375,7 +375,7 @@ bool CAnimationBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool
 		case ID_TOOLS_CREATE_INF_ANIMS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == "AnimB2" );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );

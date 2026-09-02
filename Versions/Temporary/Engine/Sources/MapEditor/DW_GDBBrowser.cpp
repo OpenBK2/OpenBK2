@@ -733,7 +733,7 @@ void CDWGDBBrowser::OnGetLatest()
 }
 
 
-bool CDWGDBBrowser::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CDWGDBBrowser::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//

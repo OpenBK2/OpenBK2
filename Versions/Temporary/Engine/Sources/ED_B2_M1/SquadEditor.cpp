@@ -84,7 +84,7 @@ void CSquadEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-bool CSquadEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CSquadEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	return false;
 }

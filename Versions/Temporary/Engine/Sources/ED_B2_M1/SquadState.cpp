@@ -81,7 +81,7 @@ void CSquadState::LoadEnterConfig()
 void CSquadState::Enter()
 {
 	NI_ASSERT( pSquadEditor != 0, "CSquadState::Enter(), pSquadEditor == 0" );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
 	//
 	pSquadEditor->ReloadTerrain(); 
 	//
@@ -111,7 +111,7 @@ void CSquadState::Leave()
 }
 
 
-bool CSquadState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CSquadState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
  	switch( nCommandID )
 	{

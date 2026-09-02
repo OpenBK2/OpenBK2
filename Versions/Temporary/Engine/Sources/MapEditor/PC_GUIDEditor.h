@@ -37,7 +37,7 @@ public:
 	void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam ) {}
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// Необходимо для работы Multiedit Text Editor

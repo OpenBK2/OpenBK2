@@ -93,7 +93,7 @@ void CFenceState::InsertFence()
 }
 
 
-bool CFenceState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CFenceState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( CMapObjectState::HandleCommand( nCommandID, dwData ) )
 	{
@@ -147,7 +147,7 @@ void CFenceState::RefreshSelectedFenceInfo()
 	selectedFenceInfo = SSelectedFenceInfo();
 	//
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "FenceRPGStats" ) && ( !objectSet.objectNameSet.empty() );
 		if ( !bRes ) 

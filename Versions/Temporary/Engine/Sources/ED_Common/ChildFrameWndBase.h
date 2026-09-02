@@ -33,15 +33,15 @@ class ED_COMMON_EXPORT CChildFrameWndBase : public CWnd, public ICommandHandler
 	void AlignWndAspect();
 	//
 	void RemoveInput(); 
-	void EnableInput( uint32_t dwData );
-	void EnableAutoUpdate( uint32_t dwData );
+	void EnableInput( uintptr_t dwData );
+	void EnableAutoUpdate( uintptr_t dwData );
 	void EnableGameInput( struct IInterfaceCommand *pInterfaceCommand );
 	void DisableGameInput();
-	void GetDimensions( uint32_t dwData );
-	void EnableRunMode( uint32_t dwData );
-	void EnableRender( uint32_t dwData );
-	void EnableScrollbars( uint32_t dwData );
-	void EnableMouseCapture( uint32_t dwData );
+	void GetDimensions( uintptr_t dwData );
+	void EnableRunMode( uintptr_t dwData );
+	void EnableRender( uintptr_t dwData );
+	void EnableScrollbars( uintptr_t dwData );
+	void EnableMouseCapture( uintptr_t dwData );
 
 protected:
 	CRect rectBorder1, rectBorder2, rectWindow, rectMain;
@@ -91,7 +91,7 @@ public:
 
 	bool IsSceneUpdateEnabled() { return bEnableSceneUpdate; }
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	// methods

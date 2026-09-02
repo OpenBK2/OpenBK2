@@ -27,7 +27,7 @@ void CTerrainState::Enter()
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CTerrainState::Enter(): pScene == 0" );
 	
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CTerrainInterfaceCommand( new CTerrainInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CTerrainInterfaceCommand( new CTerrainInterface() ) ) );
 
 	// Загружаем Terrain
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, false );

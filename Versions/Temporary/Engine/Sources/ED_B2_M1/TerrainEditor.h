@@ -35,7 +35,7 @@ public:
 	void Redo( IController* pController ) {}
 	
 	//ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData ) { return false; }
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 };
 

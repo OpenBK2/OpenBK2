@@ -548,7 +548,7 @@ void CTreeGDBBrowserBase::UpdateSelectionManipulator( bool bUpdate )
 		if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 		{
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				//DebugTrace( "CTreeGDBBrowserBase::UpdateSelectionManipulator() SetViewManipulator( %d )", bUpdate );
@@ -643,7 +643,7 @@ void CTreeGDBBrowserBase::SetPCDialogCommandHandlerID( unsigned _nPCDialogComman
 	if ( nPCDialogCommandHandlerID != INVALID_COMMAND_HANDLER_ID )
 	{
 		IView *pView = 0;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( nPCDialogCommandHandlerID, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();
@@ -2125,7 +2125,7 @@ bool CTreeGDBBrowserBase::CanExport( bool bForce )
 }
 
 
-bool CTreeGDBBrowserBase::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CTreeGDBBrowserBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
