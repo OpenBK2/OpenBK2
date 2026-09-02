@@ -183,7 +183,7 @@ void SMarkerSet::AddMarker( const CVec3 &rPos,
 
 	if ( bUseOrigin )
 	{
-		swap( point.pos.x, point.pos.y );
+		std::swap( point.pos.x, point.pos.y );
 	}
 
 	int nAITileX = point.pos.x / AI_TILE_SIZE;

@@ -604,7 +604,7 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 				int nOldIndex = ordCmdIDs[i];
 				if ( nOldIndex <= 0 )
 					continue;
-				swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex-1] );
+				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex-1] );
 				newSelectedIdx.push_back( nOldIndex - 1 );
 			}
 			break;
@@ -621,7 +621,7 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 				int nOldIndex = ordCmdIDs[i];
 				if ( nOldIndex >= commandsList.commands.size() )
 					continue;
-				swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex+1] );
+				std::swap( commandsList.commands[nOldIndex], commandsList.commands[nOldIndex+1] );
 				newSelectedIdx.push_back( nOldIndex + 1 );
 			}
 			break;
