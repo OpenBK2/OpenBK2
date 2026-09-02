@@ -53,6 +53,17 @@ void CollectMeshNodes( const fastgltf::Asset &asset, std::size_t nodeIndex,
 		CollectMeshNodes( asset, child, pVisited, pResult );
 }
 
+void CollectNodeHierarchy( const fastgltf::Asset &asset, std::size_t nodeIndex,
+	std::vector<bool> *pVisited, std::vector<std::size_t> *pResult )
+{
+	if ( nodeIndex >= asset.nodes.size() || (*pVisited)[nodeIndex] )
+		return;
+	(*pVisited)[nodeIndex] = true;
+	pResult->push_back( nodeIndex );
+	for ( std::size_t child : asset.nodes[nodeIndex].children )
+		CollectNodeHierarchy( asset, child, pVisited, pResult );
+}
+
 bool FindUniqueNode( const TGltfFilePtr &file, const std::string &nodeName,
 	std::size_t *pResult )
 {
@@ -511,6 +522,86 @@ NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value )
 	return result;
 }
 
+namespace
+{
+bool BuildNodeSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
+	SSkeletonDefinition *pResult )
+{
+	if ( !file || !pResult )
+		return false;
+	if ( rootNodeName.empty() )
+	{
+		DebugTrace( "glTF: RootJoint is required for a node-animated file without skins: %s",
+			file->sourcePath.c_str() );
+		return false;
+	}
+
+	std::size_t rootNode = 0;
+	if ( !FindUniqueNode(file, rootNodeName, &rootNode) )
+		return false;
+	std::vector<std::size_t> nodes;
+	std::vector<bool> visited( file->asset.nodes.size(), false );
+	CollectNodeHierarchy( file->asset, rootNode, &visited, &nodes );
+	if ( nodes.empty() || nodes.size() > 256 )
+	{
+		DebugTrace( "glTF: RootJoint %s in %s has an unsupported node count (%d)",
+			rootNodeName.c_str(), file->sourcePath.c_str(), static_cast<int>(nodes.size()) );
+		return false;
+	}
+
+	pResult->boneNames.clear();
+	pResult->parents.assign( nodes.size(), -1 );
+	pResult->restPose.resize( nodes.size() );
+	pResult->inverseBindMatrices.resize( nodes.size() );
+	pResult->boneByName.clear();
+
+	std::unordered_map<std::size_t, int> boneByNode;
+	for ( std::size_t i = 0; i < nodes.size(); ++i )
+		boneByNode[nodes[i]] = static_cast<int>(i);
+
+	for ( std::size_t i = 0; i < nodes.size(); ++i )
+	{
+		const std::size_t nodeIndex = nodes[i];
+		const fastgltf::Node &node = file->asset.nodes[nodeIndex];
+		const std::string name = node.name.empty()
+			? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
+		if ( pResult->boneByName.find(name) != pResult->boneByName.end() )
+		{
+			DebugTrace( "glTF: duplicate node name %s in rigid hierarchy %s",
+				name.c_str(), file->sourcePath.c_str() );
+			return false;
+		}
+		pResult->boneNames.push_back( name );
+		pResult->boneByName[name] = static_cast<int>(i);
+
+		const int parentNode = file->nodeParents[nodeIndex];
+		if ( parentNode >= 0 )
+		{
+			const auto found = boneByNode.find( static_cast<std::size_t>(parentNode) );
+			if ( found != boneByNode.end() )
+				pResult->parents[i] = found->second;
+		}
+
+		SHMatrix local = file->nodeWorldTransforms[nodeIndex];
+		if ( pResult->parents[i] >= 0 )
+		{
+			const std::size_t parentIndex = nodes[pResult->parents[i]];
+			SHMatrix inverseParent;
+			inverseParent.HomogeneousInverse( file->nodeWorldTransforms[parentIndex] );
+			local = inverseParent * local;
+		}
+		pResult->restPose[i] = MakeBoneTransform( local );
+
+		// Rigid mesh vertices remain baked in model space, so the inverse rest
+		// transform makes the synthetic bone's bind-pose composite an identity.
+		SHMatrix inverse;
+		inverse.HomogeneousInverse( file->nodeWorldTransforms[nodeIndex] );
+		pResult->inverseBindMatrices[i] = inverse;
+	}
+	return true;
+}
+}
+
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult )
 {
 	if ( !file || !pResult || nSkin < 0 || nSkin >= static_cast<int>(file->asset.skins.size()) )
@@ -595,6 +686,10 @@ bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
 {
 	if ( !file )
 		return false;
+	// Skinless mechanical models use their node hierarchy as a rigid skeleton.
+	// Requiring RootJoint avoids guessing between unrelated scene roots.
+	if ( file->asset.skins.empty() )
+		return BuildNodeSkeleton( file, rootNodeName, pResult );
 	int skinIndex = nFallbackSkin;
 	if ( !ResolveSkinIndex(file, rootNodeName, nFallbackSkin, &skinIndex) )
 		return false;

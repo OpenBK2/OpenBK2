@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Model>
+	<Materials>
+		<Item href="/Units/Technics/USSR/Tanks/t_70/summer_2_material.xdb#xpointer(/Material)" />
+	</Materials>
+	<Geometry href="1_Geometry.xdb#xpointer(/Geometry)" />
+	<Skeleton href="1_Skeleton.xdb#xpointer(/Skeleton)" />
+	<Animations />
+	<WindPower>1</WindPower>
+</Model>

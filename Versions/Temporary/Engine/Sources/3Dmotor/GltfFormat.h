@@ -64,6 +64,7 @@ bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeNa
 int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
 	const std::string &rootNodeName );
 bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
+// With no glTF skins, RootJoint selects a rigid node hierarchy instead.
 bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
 	int nFallbackSkin, SSkeletonDefinition *pResult );
 

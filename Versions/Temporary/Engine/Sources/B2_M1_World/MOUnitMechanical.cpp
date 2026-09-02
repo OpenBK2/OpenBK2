@@ -660,6 +660,13 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 				mutator.push_back( NAnimation::ISkeletonAnimator::SDesiredBoneMove( turn.endTime - currTime, qRotTurret ) );
 				pAnimator->SetBoneMutator( szBoneName.c_str(), currTime, mutator );
 			}
+			else
+			{
+				// RotatePoint lookup is exact for both Granny and GLTF. Report authoring
+				// mismatches instead of silently dropping the synchronized turret update.
+				DebugTrace( "Turret rotation: RotatePoint '%s' was not found for object %d, platform %d",
+					szBoneName.c_str(), nID, turn.nPlantform );
+			}
 		}
 	}
 	else
@@ -676,6 +683,9 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 				NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, szBoneName );
 				if ( pAnimator )
 					pAnimator->SetBoneMutator( szBoneName.c_str(), currTime, mutator );
+				else
+					DebugTrace( "Gun elevation: RotatePoint '%s' was not found for object %d, platform %d, gun %d",
+						szBoneName.c_str(), nID, turn.nPlantform, i );
 			}
 		}
 	}

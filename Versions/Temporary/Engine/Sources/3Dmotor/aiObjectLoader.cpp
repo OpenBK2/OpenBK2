@@ -112,6 +112,11 @@ bool BuildTargetBoneMap( const SAISkinKey &key,
 	return true;
 }
 
+std::string GetGltfNodeName( const fastgltf::Node &node, std::size_t nodeIndex )
+{
+	return node.name.empty() ? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
+}
+
 void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex,
 	const fastgltf::Primitive &primitive, bool bAnimated,
 	const std::unordered_map<std::string, int> *pTargetBones,
@@ -128,6 +133,13 @@ void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeInd
 
 	const fastgltf::Asset &asset = file->asset;
 	const fastgltf::Node &node = asset.nodes[nodeIndex];
+	int nRigidBone = -1;
+	if ( bAnimated && !node.skinIndex.has_value() && pTargetBones )
+	{
+		const auto found = pTargetBones->find( GetGltfNodeName(node, nodeIndex) );
+		if ( found != pTargetBones->end() && found->second >= 0 && found->second <= 255 )
+			nRigidBone = found->second;
+	}
 	const std::vector<fastgltf::math::fvec3> positions =
 		ReadGltfAccessor<fastgltf::math::fvec3>( asset, positionAccessor );
 	const std::size_t vertexOffset = pPoints->size();
@@ -152,8 +164,21 @@ void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeInd
 	{
 		NGScene::SVertexWeight &target = (*pWeights)[vertexOffset + i];
 		memset( &target, 0, sizeof(target) );
-		// An unskinned or incompletely exported vertex follows the root bone.
+		// An incompletely exported vertex follows the root bone.
 		target.fWeights[0] = 1.0f;
+	}
+	if ( nRigidBone >= 0 )
+	{
+		// AI geometry uses the same model-space rest vertices as rendering and
+		// receives the matching synthetic node's transform delta at runtime.
+		for ( std::size_t i = 0; i < positions.size(); ++i )
+		{
+			NGScene::SVertexWeight &target = (*pWeights)[vertexOffset + i];
+			memset( &target, 0, sizeof(target) );
+			target.cBoneIndices[0] = static_cast<uint8_t>(nRigidBone);
+			target.fWeights[0] = 1.0f;
+		}
+		return;
 	}
 	if ( !node.skinIndex.has_value() || *node.skinIndex >= asset.skins.size() || !pTargetBones )
 		return;
@@ -184,8 +209,7 @@ void AppendGltfAIPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeInd
 			if ( sourceNodeIndex >= asset.nodes.size() )
 				continue;
 			const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
-			const std::string name = sourceNode.name.empty()
-				? "Node_" + std::to_string(sourceNodeIndex) : std::string(sourceNode.name);
+			const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
 			const auto found = pTargetBones->find( name );
 			if ( found == pTargetBones->end() || found->second < 0 || found->second > 255 )
 				continue;

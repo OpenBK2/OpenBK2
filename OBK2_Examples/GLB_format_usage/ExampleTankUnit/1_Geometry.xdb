@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Geometry>
+	<SrcName href="" />
+	<uid>B5520541-3591-4267-AB11-D5EEBD12EBAD</uid>
+	<RootMesh>Basis</RootMesh>
+	<RootJoint>Basis</RootJoint>
+	<Size>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</Size>
+	<Center>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</Center>
+	<AIGeometry href="1_AIGeometry.xdb#xpointer(/AIGeometry)" />
+	<NumMeshes>0</NumMeshes>
+	<MaterialQuantities />
+	<MeshNames />
+	<MeshAnimated />
+	<MeshWindAffected />
+	<ModelFileRef href="/model.glb" />
+</Geometry>

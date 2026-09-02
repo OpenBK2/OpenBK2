@@ -520,6 +520,27 @@ bool GetTargetBoneMap( const SPartAndSkeletonKey &key,
 	return false;
 }
 
+std::string GetGltfNodeName( const fastgltf::Node &node, std::size_t nodeIndex )
+{
+	return node.name.empty() ? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
+}
+
+int FindRigidTargetBone( const SPartAndSkeletonKey &key,
+	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
+	const NGltf::TGltfFilePtr &geometryFile, std::size_t nodeIndex )
+{
+	if ( !key.pSkeleton || !geometryFile || nodeIndex >= geometryFile->asset.nodes.size() ||
+		geometryFile->asset.nodes[nodeIndex].skinIndex.has_value() )
+		return -1;
+	std::unordered_map<std::string, int> targetBones;
+	if ( !GetTargetBoneMap(key, pGrannySkeletonFile, geometryFile, 0, &targetBones) )
+		return -1;
+	const auto found = targetBones.find(
+		GetGltfNodeName(geometryFile->asset.nodes[nodeIndex], nodeIndex) );
+	return found != targetBones.end() && found->second >= 0 && found->second <= 255
+		? found->second : -1;
+}
+
 void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex,
 	const fastgltf::Primitive &primitive, const SPartAndSkeletonKey &key,
 	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
@@ -535,6 +556,9 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 
 	const fastgltf::Asset &asset = file->asset;
 	const fastgltf::Node &node = asset.nodes[nodeIndex];
+	const bool bSkinned = node.skinIndex.has_value();
+	const int nRigidBone = bSkinned ? -1 :
+		FindRigidTargetBone( key, pGrannySkeletonFile, file, nodeIndex );
 	const std::vector<fastgltf::math::fvec3> positions =
 		ReadGltfAccessor<fastgltf::math::fvec3>( asset, positionAccessor );
 	const std::size_t normalAccessor = FindAttribute( primitive, "NORMAL" );
@@ -555,7 +579,6 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 
 	const std::size_t vertexOffset = pData->verts.size();
 	pData->verts.resize( vertexOffset + positions.size() );
-	const bool bSkinned = node.skinIndex.has_value();
 	for ( std::size_t i = 0; i < positions.size(); ++i )
 	{
 		SVertex &vertex = pData->verts[vertexOffset + i];
@@ -643,7 +666,7 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 
 	const std::size_t jointsAccessor = FindAttribute( primitive, "JOINTS_0" );
 	const std::size_t weightsAccessor = FindAttribute( primitive, "WEIGHTS_0" );
-	if ( bSkinned || !pData->weights.empty() )
+	if ( bSkinned || nRigidBone >= 0 || !pData->weights.empty() )
 	{
 		// Keep the arrays parallel even for a partially exported primitive. Bone
 		// zero is the safe fallback until valid source influences are rebound.
@@ -654,6 +677,19 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 			memset( &pData->weights[i], 0, sizeof(pData->weights[i]) );
 			pData->weights[i].fWeights[0] = 1.0f;
 		}
+	}
+	if ( nRigidBone >= 0 )
+	{
+		// Skinless mechanical parts are rigid: their baked rest vertices receive
+		// the transform delta of the synthetic bone matching this mesh node.
+		for ( std::size_t i = 0; i < positions.size(); ++i )
+		{
+			SVertexWeight &target = pData->weights[vertexOffset + i];
+			memset( &target, 0, sizeof(target) );
+			target.cBoneIndices[0] = static_cast<uint8_t>(nRigidBone);
+			target.fWeights[0] = 1.0f;
+		}
+		return;
 	}
 	if ( !node.skinIndex.has_value() ||
 		jointsAccessor == static_cast<std::size_t>(-1) ||
@@ -691,8 +727,7 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 			if ( sourceNodeIndex >= asset.nodes.size() )
 				continue;
 			const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
-			const std::string name = sourceNode.name.empty()
-				? "Node_" + std::to_string(sourceNodeIndex) : std::string(sourceNode.name);
+			const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
 			const auto found = targetBones.find( name );
 			if ( found == targetBones.end() || found->second < 0 || found->second > 255 )
 				continue;

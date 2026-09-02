@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Material>
+	<Texture href="1_Texture.xdb#xpointer(/Texture)" />
+	<Bump href="" />
+	<SpecFactor>0</SpecFactor>
+	<SpecColor>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</SpecColor>
+	<Gloss href="" />
+	<MetalMirror>0</MetalMirror>
+	<DielMirror>0</DielMirror>
+	<Mirror href="" />
+	<CastShadow>true</CastShadow>
+	<ReceiveShadow>true</ReceiveShadow>
+	<Priority>0</Priority>
+	<TranslucentColor>
+		<x>0</x>
+		<y>0</y>
+		<z>0</z>
+	</TranslucentColor>
+	<FloatParam>0</FloatParam>
+	<DetailTexture href="" />
+	<DetailScale>5</DetailScale>
+	<ProjectOnTerrain>false</ProjectOnTerrain>
+	<LightingMode>L_NORMAL</LightingMode>
+	<DynamicMode>DM_DONT_CARE</DynamicMode>
+	<Is2Sided>false</Is2Sided>
+	<Effect>M_GENERIC</Effect>
+	<AlphaMode>AM_OPAQUE</AlphaMode>
+	<AffectedByFog>true</AffectedByFog>
+	<AddPlaced>false</AddPlaced>
+	<IgnoreZBuffer>false</IgnoreZBuffer>
+	<BackFaceCastShadow>false</BackFaceCastShadow>
+</Material>
