@@ -122,7 +122,7 @@ void CPCStringRefEditor::SetWindowTextByTypeAndName( const std::string &szTableN
 		}
 		else
 		{
-			SetWindowText( fmt::format( "{}{:c}{}", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ) );
+			SetWindowText( fmt::format( "{}{:c}{}", szTableName.c_str(), TYPE_SEPARATOR_CHAR, szObjectName.c_str() ).c_str() );
 		}
 	}
 	else

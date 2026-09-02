@@ -471,7 +471,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 			}
 			else
 			{
-				pObjectParams->strLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
+				pObjectParams->strLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() ).c_str();
 			}
 		}
 	}

@@ -170,7 +170,7 @@ void CPCBuildDataDialog::UpdateTitle()
 	{
 		CString strFormatString;
 		strFormatString.LoadString( IDS_PC_BD_DIALOG_TITLE );
-		SetWindowText( fmt::sprintf( strFormatString.GetString(), pBuildDataParams->szObjectTypeName.c_str() ) );
+		SetWindowText( fmt::sprintf( strFormatString.GetString(), pBuildDataParams->szObjectTypeName.c_str() ).c_str() );
 	}
 	bCreateControls = false;
 }
