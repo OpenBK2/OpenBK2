@@ -1,0 +1,40 @@
+// Resources the retail editor carried that Nival's sources do not.
+//
+// MapEditorLib/ResourceDefines.h gives IDR_EDITORTYPE the value 128 and
+// MapEditor.rc gives it an icon and a caption string, but nothing in the tree
+// gives it a menu. CEditorApp::InitInstance reaches it through
+// CFrameWnd::LoadFrame( IDR_EDITORTYPE ) in MapEditor/MapEditorApp.cpp, which
+// loads the frame's menu, accelerator table, icon and caption from that one id,
+// so the frame comes up without a menu bar unless one is defined here.
+//
+// Recovered from the shipped editor with Resource Hacker. It is a placeholder
+// in the original too: the editor builds its real menus at runtime through
+// IMainFrame::AddMenuResources, driven by CEditorAppSpecific::CreateMenus.
+//
+// The shipped binary also carried Stingray Objective Toolkit's own menus, which
+// lived in the commercial library rather than in these sources. They are left
+// out: our Stingray is a stub that never loads them, and nothing in the tree
+// references those ids. Add them back beside the stub if the real control bars
+// are ever implemented.
+//
+// Only the menu is needed. The accelerator tables the editor actually uses are
+// IDA_MAIN and IDA_MODAL, which MapEditor.rc already defines and
+// MapEditorLib/ControlAlgorithms.cpp loads under a null check. The one call
+// that asks for IDR_EDITORTYPE accelerators, in MapEditor/PC_Dialog.cpp, sits
+// inside a block comment.
+
+#include "afxres.h"
+#include "MapEditorLib/ResourceDefines.h"
+
+IDR_EDITORTYPE MENU
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+{
+    POPUP "&File"
+    {
+        MENUITEM "E&xit", ID_APP_EXIT
+    }
+    POPUP "&Help"
+    {
+        MENUITEM "&About", ID_APP_ABOUT
+    }
+}
