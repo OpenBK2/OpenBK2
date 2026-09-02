@@ -39,5 +39,10 @@ target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main Map
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
 endif()
+# Dialogs and string tables, loaded out of this DLL by its own code.
+# Windows only: these are Win32 resource scripts.
+if(WIN32)
+    target_sources(ED_Common PRIVATE ED_Common.rc)
+endif()
 install(TARGETS ED_Common DESTINATION bin)
 add_version_info(ED_Common)

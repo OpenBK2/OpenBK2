@@ -67,5 +67,10 @@ target_link_libraries(Scintilla PRIVATE MemoryLib)
 if(WIN32)
     target_link_libraries(Scintilla PRIVATE Imm32 winapi)
 endif()
+# The editor's script control has one resource, its call tip window class.
+# Windows only: these are Win32 resource scripts.
+if(WIN32)
+    target_sources(Scintilla PRIVATE Scintilla.rc)
+endif()
 install(TARGETS Scintilla DESTINATION bin)
 add_version_info(Scintilla)

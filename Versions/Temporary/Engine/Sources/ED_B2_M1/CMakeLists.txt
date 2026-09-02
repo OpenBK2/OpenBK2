@@ -186,5 +186,11 @@ target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World E
 if(WIN32)
     target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi)
 endif()
+# The B2 map editor proper: the largest of these, 48 dialogs and the toolbar
+# and tree bitmaps under res/.
+# Windows only: these are Win32 resource scripts.
+if(WIN32)
+    target_sources(ED_B2_M1 PRIVATE ED_B2_M1.rc)
+endif()
 install(TARGETS ED_B2_M1 DESTINATION bin)
 add_version_info(ED_B2_M1)
