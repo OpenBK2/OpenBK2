@@ -32,6 +32,7 @@ GrannyGetMeshVertexCount
 GrannyGetMeshVertexType
 GrannyGetMeshVertices
 GrannyGetTotalObjectSize
+GrannyGetVersionString
 GrannyGetWorldPose4x4
 GrannyGetWorldPoseComposite4x4
 GrannyInstantiateModel
@@ -59,3 +60,4 @@ GrannySetSkeletonTrackMaskFromTrackGroup
 GrannySetTrackGroupAccumulation
 GrannySetTrackGroupModelMask
 GrannySetTrackGroupTarget
+GrannyVersionsMatch_

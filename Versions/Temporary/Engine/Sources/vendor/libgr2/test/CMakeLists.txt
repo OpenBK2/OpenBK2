@@ -62,6 +62,7 @@ gr2_add_test(SampleModelAnimations)
 gr2_add_test(WorldPose)
 gr2_add_test(Oodle0)
 gr2_add_test(Mesh)
+gr2_add_test(Version)
 
 # Oodle0 has no committed stream fixtures, because granny2.dll 2.11 decodes that
 # codec and cannot encode it: GrannyBeginFileCompression refuses it and no

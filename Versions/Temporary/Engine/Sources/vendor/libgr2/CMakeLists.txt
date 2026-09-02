@@ -86,6 +86,7 @@ set(GR2_SOURCES
     src/Transform.cpp
     src/TypeTree.cpp
     src/TypeTree.h
+    src/Version.cpp
     src/WorldPose.h
     include/gr2/granny.h)
 
@@ -113,9 +114,9 @@ target_link_libraries(gr2 PRIVATE spdlog::spdlog_header_only)
 
 set_target_properties(gr2 PROPERTIES
     OUTPUT_NAME ${GR2_OUTPUT_NAME}
-    # Nothing but the 61 entry points is public. On Windows that is already true,
+    # Nothing but the 63 entry points is public. On Windows that is already true,
     # since only __declspec(dllexport) exports; elsewhere it takes saying so, and
-    # the header's visibility("default") is what re-exposes the 61.
+    # the header's visibility("default") is what re-exposes the 63.
     CXX_VISIBILITY_PRESET hidden
     VISIBILITY_INLINES_HIDDEN ON
     FOLDER "vendor/libgr2")
@@ -152,7 +153,7 @@ add_custom_target(libgr2-verify-exports
     VERBATIM
     COMMENT "checking ${GR2_OUTPUT_NAME} exports against exports.txt")
 
-# The recording shim: the same 61 names, the same log, forwarded to the real
+# The recording shim: the same 63 names, the same log, forwarded to the real
 # granny2. It is what makes a libgr2 log worth diffing, since on its own a log
 # says what this library did and not what it should have done. Windows only,
 # because the DLL it forwards to is.
@@ -223,7 +224,7 @@ if(LIBGR2_BUILD_TESTS)
     # definitions at compile time and so cannot serve both.
     #
     # The cost is compiling twelve small files twice, which is worth paying for
-    # tests that reach the internals the 61 exports do not expose and that need no
+    # tests that reach the internals the 63 exports do not expose and that need no
     # DLL on PATH to run.
     add_library(gr2_static STATIC EXCLUDE_FROM_ALL ${GR2_SOURCES})
     target_include_directories(gr2_static

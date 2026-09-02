@@ -8,7 +8,7 @@ makes them comparable is shared code rather than generated: Trace.h gives object
 stable ids instead of addresses, and Identify.h names files by the hash of their
 bytes, so the same resource reads the same in both logs.
 
-The 61 forwarders themselves are mechanical, which is why they are generated
+The 63 forwarders themselves are mechanical, which is why they are generated
 rather than written. They are generated from libgr2's own public header, not from
 granny211.h, for two reasons: the header is the one both DLLs are compiled
 against, so the signatures cannot drift apart, and it keeps the shim inside a

@@ -6,7 +6,7 @@
 //
 // This header is the whole public surface. It is C, it includes nothing from
 // the engine, and it deliberately reproduces the *shape* of the Granny API it
-// replaces: the same 61 entry points, same names, same signatures, same calling
+// replaces: the same 63 entry points, same names, same signatures, same calling
 // convention, and a DLL with the same file name. That is what lets the engine be
 // relinked against this library without a single source change, and, on Windows,
 // lets both implementations run side by side in one process so that every call
@@ -270,6 +270,13 @@ GR2_API( void ) GrannySetControlEaseOutCurve( granny_control *Control, granny_re
                                               granny_real32 EndSeconds, granny_real32 StartValue,
                                               granny_real32 StartTangent, granny_real32 EndTangent,
                                               granny_real32 EndValue );
+
+// Which Granny this claims to be. 2.11.8.0, the ABI reproduced here. The map
+// editor logs the string at startup and checks the four numbers against the
+// ones granny211.h was compiled with.
+GR2_API( char const * ) GrannyGetVersionString( void );
+GR2_API( bool ) GrannyVersionsMatch_( granny_int32x MajorVersion, granny_int32x MinorVersion,
+                                      granny_int32x BuildNumber, granny_int32x Customization );
 
 #if defined( __cplusplus )
 }
