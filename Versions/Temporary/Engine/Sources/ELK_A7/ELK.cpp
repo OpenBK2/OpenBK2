@@ -17,7 +17,6 @@ BEGIN_MESSAGE_MAP(CELKApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-void DisableFastMemAlloc(); // defined in memory mgr
 CELKApp::CELKApp() : pMainFrame( 0 )
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
@@ -26,7 +25,6 @@ CELKApp::CELKApp() : pMainFrame( 0 )
 	//
 	int *pInitMem = new int;
 	delete pInitMem;
-	DisableFastMemAlloc();
 }
 
 
