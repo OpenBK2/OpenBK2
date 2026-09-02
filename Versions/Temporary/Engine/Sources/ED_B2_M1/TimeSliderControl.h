@@ -102,8 +102,8 @@ public:
 	}
 	bool IsPointInsideSelection( const float fPoint ) const
 	{
-		const float fStart = min( fSelectionStart, fSelectionStart + fSelectionLength );
-		const float fEnd = max( fSelectionStart, fSelectionStart + fSelectionLength );
+		const float fStart = (std::min)( fSelectionStart, fSelectionStart + fSelectionLength );
+		const float fEnd = (std::max)( fSelectionStart, fSelectionStart + fSelectionLength );
 
 		return ( (IsSelectionValid() && (fPoint >= fStart) && (fPoint <= fEnd)) || (IsPointUnderCursor(fPoint)) );
 	}
@@ -140,7 +140,7 @@ public:
 		float fTime = FP_MAX_VALUE;
 		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
-			fTime = min( fTime, itKey->fTime );
+			fTime = (std::min)( fTime, itKey->fTime );
 		}
 		return fTime;
 	}
@@ -152,7 +152,7 @@ public:
 		float fTime = 0.0f;
 		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
-			fTime = max( fTime, itKey->fTime );
+			fTime = (std::max)( fTime, itKey->fTime );
 		}
 		return fTime;
 	}
