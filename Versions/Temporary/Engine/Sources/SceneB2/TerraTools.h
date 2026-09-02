@@ -5,9 +5,11 @@
 
 #include <cstdint>
 
+#include "SceneB2_export.h"
+
 void GetVertices( granny_mesh *pMesh, std::vector<CVec3> *pRes, CVec3 *vMin, CVec3 *vMax );
 void GetTriangles( granny_mesh *pMesh, std::vector<STriangle> *pRes );
-void LoadGrannyModel( const std::string &szFileName, std::vector<CVec3> *pVerts, std::vector<STriangle> *pTrgs,
+void SCENEB2_EXPORT LoadGrannyModel( const std::string &szFileName, std::vector<CVec3> *pVerts, std::vector<STriangle> *pTrgs,
 														 CVec3 *vMin, CVec3 *vMax );
 
 void ScanFill( CArray2D<uint8_t> *pMask, const uint8_t nColor );

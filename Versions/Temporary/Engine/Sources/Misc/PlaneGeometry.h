@@ -72,7 +72,7 @@ enum EClassifyEdge
 	
 	CE_COUNT		= 8,
 };
-EXTERNVAR const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
+EXTERNVAR MISC_EXPORT const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
 
 
 enum EClassifyPolygon
@@ -113,7 +113,7 @@ enum EClassifyRotation
 
 	CR_COUNT						= 4,
 };
-EXTERNVAR const EClassifyRotation NEGATIVE_CLASSIFY_ROTATION[CR_COUNT + 1];
+EXTERNVAR MISC_EXPORT const EClassifyRotation NEGATIVE_CLASSIFY_ROTATION[CR_COUNT + 1];
 
 
 inline EClassifyEdge GetNegativeClassifyEdge( EClassifyEdge classifyEdge )

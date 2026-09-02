@@ -9,6 +9,7 @@
 #include "EditorScene.h"
 
 #include <zconf.h>
+#include "ED_B2_export.h"
 
 class CEditorModuleB2 : public IEditorModule
 {
@@ -80,12 +81,12 @@ void CEditorModuleB2::ModulePostCreateMainFrame()
 
 static CEditorModuleB2 theEDB2Module;
 
-IEditorModule* GetEditorModule2()
+ED_B2_EXPORT IEditorModule* GetEditorModule2()
 {
 	return &theEDB2Module;
 }
 
-IEditorModule* GetEditorModule3() { return 0; }
-IEditorModule* GetEditorModule4() { return 0; }
+ED_B2_EXPORT IEditorModule* GetEditorModule3() { return 0; }
+ED_B2_EXPORT IEditorModule* GetEditorModule4() { return 0; }
 
 

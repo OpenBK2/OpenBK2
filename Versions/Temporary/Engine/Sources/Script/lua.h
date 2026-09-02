@@ -174,7 +174,7 @@ int   lua_getn (lua_State *L, int index);
 
 void  lua_concat (lua_State *L, int n);
 
-int   lua_parsebuffer (lua_State *L, const char *buff, size_t size, const char *name);
+SCRIPT_EXPORT int   lua_parsebuffer (lua_State *L, const char *buff, size_t size, const char *name);
 
 
 // Multithread execution

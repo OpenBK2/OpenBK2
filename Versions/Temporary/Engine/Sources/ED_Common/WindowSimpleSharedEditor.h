@@ -10,6 +10,8 @@
 
 #include <cstdint>
 
+#include "ED_Common_export.h"
+
 struct SEditorState
 {
 	SObjectSet objectSet;
@@ -57,7 +59,7 @@ public:
 };
 
 
-class CWindowSimpleSharedEditor : public CEditorBase, public CDefaultView, public ICommandHandler
+class ED_COMMON_EXPORT CWindowSimpleSharedEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	//friend class CWindowSimpleSharedState;
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedEditor );

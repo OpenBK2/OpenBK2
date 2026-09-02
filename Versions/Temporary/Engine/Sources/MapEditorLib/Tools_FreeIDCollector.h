@@ -1,4 +1,5 @@
 #pragma once
+#include "MapEditorLib_export.h"
 
 /**
 template<class TID>
@@ -24,7 +25,7 @@ public:
 };
 /**/
 
-class CFreeIDCollector
+class MAPEDITORLIB_EXPORT CFreeIDCollector
 {
 	struct SLockedIDNode
 	{

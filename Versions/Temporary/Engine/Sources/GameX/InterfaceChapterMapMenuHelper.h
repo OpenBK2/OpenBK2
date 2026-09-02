@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "GameX_export.h"
+
 struct IWindow;
 namespace NDb
 {
@@ -11,7 +13,7 @@ namespace NDb
 	struct SCampaign;
 }
 
-struct SChapterMapMenuHelper : public CObjectBase
+struct GAMEX_EXPORT SChapterMapMenuHelper : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SChapterMapMenuHelper );
 public:
@@ -28,7 +30,7 @@ public:
 		CVec2 vDelta;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&points); f.Add(3,&fWidth); f.Add(4,&pTexture); f.Add(5,&nDependIndex); f.Add(7,&rcBounds); f.Add(8,&nID); f.Add(9,&vDelta); return 0; }
 		
-		uint32_t GetColor() const;
+		GAMEX_EXPORT uint32_t GetColor() const;
 		uint32_t GetDependentColor() const;
 	};
 	

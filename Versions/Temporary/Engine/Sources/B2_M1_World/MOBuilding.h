@@ -4,7 +4,9 @@
 
 #include <cstdint>
 
-class CMOBuilding : public IMOContainer
+#include "B2_M1_World_export.h"
+
+class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 {
 	OBJECT_NOCOPY_METHODS( CMOBuilding );
 

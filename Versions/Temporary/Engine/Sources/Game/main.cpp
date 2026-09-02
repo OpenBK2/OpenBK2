@@ -3,6 +3,8 @@
 #include <thread>
 #include <chrono>
 
+#include "GameX_export.h"
+
 #if USE_MIMALLOC
 // Overrides operator new and delete for this translation unit, which is what
 // puts mimalloc in front of the process allocator.
@@ -74,7 +76,7 @@ namespace NDb
 namespace NGameX
 {
 	bool Initialize();
-	void PostStorageInitialize();
+	GAMEX_EXPORT void PostStorageInitialize();
 };
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );

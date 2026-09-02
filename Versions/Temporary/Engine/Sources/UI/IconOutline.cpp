@@ -10,6 +10,8 @@
 #include "System/BasicShare.h"
 #include "3Dmotor/GRects.h"
 
+#include "3Dmotor_export.h"
+
 namespace NGScene
 {
 typedef CBasicShare<STextureKey, CFileTexture, STextureKeyHash> CTexShare;

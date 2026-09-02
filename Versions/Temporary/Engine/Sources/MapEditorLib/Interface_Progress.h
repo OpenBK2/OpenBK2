@@ -1,16 +1,17 @@
 #pragma once
 
+#include "MapEditorLib_export.h"
 
 namespace NProgress
 {
-	void Create( bool bShow );
-	void Destroy();
+	MAPEDITORLIB_EXPORT void Create( bool bShow );
+	MAPEDITORLIB_EXPORT void Destroy();
 
 	void SetTitle( const std::string &rszTitle );
-	void SetMessage( const std::string &rszMessage );
-	void SetRange( int nStart, int nFinish );
-	void SetPosition( int nPosition );
-	void IteratePosition();
+	MAPEDITORLIB_EXPORT void SetMessage( const std::string &rszMessage );
+	MAPEDITORLIB_EXPORT void SetRange( int nStart, int nFinish );
+	MAPEDITORLIB_EXPORT void SetPosition( int nPosition );
+	MAPEDITORLIB_EXPORT void IteratePosition();
 };
 
 

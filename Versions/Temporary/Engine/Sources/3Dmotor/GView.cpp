@@ -45,6 +45,8 @@
 #include <algorithm>
 #include <cstdint>
 
+#include "3Dmotor_export.h"
+
 //#define DEBUG_LIGHTING
 //#define FADE_TEST
 //namespace NAnimation

@@ -3,6 +3,7 @@
 
 #include "RegFunction.h"
 //#include "lsaver.h"
+#include "Script_export.h"
 
 //
 struct SLuaParams
@@ -20,7 +21,7 @@ const char *ErrorToString( int nErrorCode );
 class Script;
 extern Script* pCurrentScript;
 
-class Script
+class SCRIPT_EXPORT Script
 {
 	int nPushCount;
 public:

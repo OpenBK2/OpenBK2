@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include "ED_B2_M1_export.h"
+
 //
 #include "vendor/granny/include/granny.h"
 #include "MapEditorLib/Interface_Editor.h"
@@ -175,7 +178,7 @@ void CEditorModuleB2M1::ModulePostCreateMainFrame()
 	Singleton<IChildFrameContainer>()->Create( "__CHILD_FRAME_DX_SCENE_LABEL__" );
 }
 
-HINSTANCE theEDB2M1Instance;
+ED_B2_M1_EXPORT HINSTANCE theEDB2M1Instance;
 #ifdef NIVAL_DLL
 BOOL WINAPI DllMain( HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpReserved )
 {
@@ -194,7 +197,7 @@ static struct SInitb2m1dll {
 
 static CEditorModuleB2M1 theEDB2Module;
 
-IEditorModule* GetEditorModule1()
+ED_B2_M1_EXPORT IEditorModule* GetEditorModule1()
 {
 	return &theEDB2Module;
 }

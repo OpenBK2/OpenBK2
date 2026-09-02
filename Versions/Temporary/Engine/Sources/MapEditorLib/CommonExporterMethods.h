@@ -2,6 +2,7 @@
 
 #include "Interface_UserData.h"
 
+#include "MapEditorLib_export.h"
 
 template<class CArray2DType>
 void Trace2DByteArray( const CArray2DType &rArray, const std::string &rszAdditionalMessage )
@@ -76,7 +77,7 @@ template<class T> const T & GetOption( const T SUserData::SMayaExportData::* pFi
 
 
 // get granny export settings file name for Maya export
-std::string GetGrannyExportSettingsFileName( const std::string &szTypeName );
+MAPEDITORLIB_EXPORT std::string GetGrannyExportSettingsFileName( const std::string &szTypeName );
 
 // cut extension from file name
 void CutExtension( std::string *pFileName, const char *pszExt );
@@ -84,40 +85,40 @@ void MakeDoubleSlash( std::string *pszPath );
 // convert \ to / to make normal (exceptable in maya scripts) file path
 void NormalizeFilePath( std::string *pszPath );
 // construct full source file path from reference value
-bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue );
+MAPEDITORLIB_EXPORT bool BuildSrcFilePath( std::string *pszFilePath, const std::string &szRefValue );
 // construct full source file path from reference field
-bool BuildSrcFilePath( std::string *pszFilePath, struct IManipulator *pManipulator, const std::string &szRefFieldDBPath );
+MAPEDITORLIB_EXPORT bool BuildSrcFilePath( std::string *pszFilePath, struct IManipulator *pManipulator, const std::string &szRefFieldDBPath );
 // construct full destination file path from nObjectID or "uid" field (if present)
-std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &szDestFolder );
+MAPEDITORLIB_EXPORT std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &szDestFolder );
 
 // return true if bForced == true or if szSrc file is newer then szDst file
-bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced );
+MAPEDITORLIB_EXPORT bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced );
 
 // Interactive Maya support routines
 // retrieves Maya install path from registry
 void GetMayaInstallPath( std::string & szPath, const std::string &szMayaVersion );
 // launches interactive maya instance and executes startup script
-bool StartupMayaProcess( class CInteractiveMaya *pMayaProcess );
+MAPEDITORLIB_EXPORT bool StartupMayaProcess( class CInteractiveMaya *pMayaProcess );
 // Wait for file to be accessible
-bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime /* = 10000 */, bool bReportAsError = true );
+MAPEDITORLIB_EXPORT bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime /* = 10000 */, bool bReportAsError = true );
 // execute single script with interactive Maya
-bool ExecuteMayaScript( const std::string &szScript );
+MAPEDITORLIB_EXPORT bool ExecuteMayaScript( const std::string &szScript );
 
 // Non-interactive Maya Export (granny or particles)
 // Сформировать первые строки скрипта экспорта результатов работы Maya в данные игры
-void MEStartScript( std::string *pszScriptText, bool bGUIMode );
+MAPEDITORLIB_EXPORT void MEStartScript( std::string *pszScriptText, bool bGUIMode );
 // Завершить формирование скрипта экспорта результатов работы Maya в данные игры
-void MEFinishScript( std::string *pszScriptText, bool bGUIMode );
+MAPEDITORLIB_EXPORT void MEFinishScript( std::string *pszScriptText, bool bGUIMode );
 // Выполнить скрипт Maya
 // bNeedExport - есть необходимость выполнять скрит ( если false - только сохранить скрипт на диск )
-bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
+MAPEDITORLIB_EXPORT bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNamePostfix, bool bNeedExport, bool bGUIMode );
 
 // Получить размер картинки
-bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
+MAPEDITORLIB_EXPORT bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
 // Получить размер картинки
-bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
+MAPEDITORLIB_EXPORT bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize  );
 
-bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectTypeName );
+MAPEDITORLIB_EXPORT bool GetSelectedObjects( SObjectSet *pObjectSet, const std::string &szObjectTypeName );
 
 template<class TObjectHookFunctional>
 bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHookFunctional )
@@ -145,7 +146,7 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 }
 
 //! move temp file, made during export, to real destination and register it in RCS
-void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName );
+MAPEDITORLIB_EXPORT void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName );
 
  
 

@@ -2,9 +2,10 @@
 
 #include "Manipulator.h"
 
+#include "libdb_export.h"
 
 //interface for manipulating db data and related services
-struct IResourceManager : CObjectBase
+struct LIBDB_EXPORT IResourceManager : CObjectBase
 {
 	enum { tidTypeID = 0x10074AC0 };
 	//

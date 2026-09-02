@@ -3,8 +3,9 @@
 #include "Interface_PCItemEditor.h"
 #include "Tools_MnemonicsCollector.h"
 
+#include "MapEditorLib_export.h"
 
-class CPCIEMnemonics : public CMnemonicsCollector<int>
+class MAPEDITORLIB_EXPORT CPCIEMnemonics : public CMnemonicsCollector<int>
 {
 	public:
 	CPCIEMnemonics();
@@ -18,6 +19,6 @@ class CPCIEMnemonics : public CMnemonicsCollector<int>
 };
 
 
-EXTERNVAR CPCIEMnemonics typePCIEMnemonics;
+EXTERNVAR MAPEDITORLIB_EXPORT CPCIEMnemonics typePCIEMnemonics;
 
 

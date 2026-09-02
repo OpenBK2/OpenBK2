@@ -4,7 +4,9 @@
 
 #include <cstdint>
 
-class CChildFrameWndBase : public CWnd, public ICommandHandler
+#include "ED_Common_export.h"
+
+class ED_COMMON_EXPORT CChildFrameWndBase : public CWnd, public ICommandHandler
 {
 	static const int DEFAULT_REFRESH_RATE;
 	

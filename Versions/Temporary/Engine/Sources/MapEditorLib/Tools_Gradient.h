@@ -2,7 +2,9 @@
 
 #include <cstdint>
 
-struct SGradient
+#include "MapEditorLib_export.h"
+
+struct MAPEDITORLIB_EXPORT SGradient
 {
 private:
 	mutable float a;

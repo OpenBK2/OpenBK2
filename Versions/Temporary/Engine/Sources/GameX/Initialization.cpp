@@ -128,7 +128,7 @@ void InitConsts()
 	}
 }
 
-void PostStorageInitialize()
+GAMEX_EXPORT void PostStorageInitialize()
 {
 	InitConsts();
 }

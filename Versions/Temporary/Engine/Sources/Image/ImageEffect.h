@@ -4,33 +4,35 @@
 
 #include <cstdint>
 
+#include "Image_export.h"
+
 namespace NImage
 {
 
 EXTERNVAR const uint32_t BLACK_COLOR;
-EXTERNVAR const uint32_t WHITE_COLOR;
-EXTERNVAR const uint32_t GRAY_LIGHTER_COLOR;
+IMAGE_EXPORT EXTERNVAR const uint32_t WHITE_COLOR;
+IMAGE_EXPORT EXTERNVAR const uint32_t GRAY_LIGHTER_COLOR;
 EXTERNVAR const uint32_t GRAY_DARKER_COLOR;
 EXTERNVAR const uint32_t BASE_EMBOSS_COLOR;
 
 
 void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdwAverageColor, const CArray2D<uint32_t> &rImage );
 void Invert( CArray2D<uint32_t> *pImage );
-void FullColor( CArray2D<uint32_t> *pImage, float fRatio );
+IMAGE_EXPORT void FullColor( CArray2D<uint32_t> *pImage, float fRatio );
 void GammaCorrection( CArray2D<uint32_t> *pImage, float fBrightness, float fContrast, float fGamma ); // [-1...1]
 //
 void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint32_t dwMinAlpha );
-void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, uint32_t dwMinAlpha );
+IMAGE_EXPORT void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, uint32_t dwMinAlpha );
 void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha );
 //
 void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const CArray2D<int> &rFilter, uint32_t dwMinAlpha );
-void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha );
+IMAGE_EXPORT void Noise( CArray2D<uint32_t> *pImage, const CArray2D<uint32_t> &rNoise, bool bEqualize, uint32_t dwMinAlpha );
 //
-void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha );
+IMAGE_EXPORT void FastAddImageByAlpha( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwMinAlpha );
 void FastAddImageByColor( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, uint32_t dwColor, bool bInclude );
 //
-void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, uint32_t dwShadowColor, uint32_t dwNonShadowColor, uint32_t dwMinAlpha );
-void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, uint32_t dwMinAlpha );
+IMAGE_EXPORT void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, uint32_t dwShadowColor, uint32_t dwNonShadowColor, uint32_t dwMinAlpha );
+IMAGE_EXPORT void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourceImage, const CTPoint<int> &rShiftPoint, int nFilterSize, uint32_t dwMinAlpha );
 //
 void DrawLine( CArray2D<uint32_t> *pImage, const struct SVector &vStart, const struct SVector &vEnd, const struct SColor &color );
 //

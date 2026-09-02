@@ -6,6 +6,8 @@
 
 #include <boost/config.hpp>
 
+#include "3Dmotor_export.h"
+
 namespace NGScene
 {
 
@@ -95,7 +97,7 @@ struct SParticle
 
 #pragma pack( pop )
 
-class CParticlesInfo: public CObjectBase
+class _3DMOTOR_EXPORT CParticlesInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS(CParticlesInfo);
 public:
@@ -112,7 +114,7 @@ public:
 	void CalcBound( SBound *pRes );
 };
 
-class CParticlesLoader: public CLazyResourceLoader<int, CParticlesInfo>
+class _3DMOTOR_EXPORT CParticlesLoader: public CLazyResourceLoader<int, CParticlesInfo>
 {
 	OBJECT_BASIC_METHODS(CParticlesLoader);
 	virtual CFileRequest* CreateRequest();

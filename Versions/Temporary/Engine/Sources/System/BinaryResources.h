@@ -6,6 +6,6 @@
 
 namespace NBinResources
 {
-	std::string GetBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
-	std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
+	SYSTEM_EXPORT std::string GetBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
+	SYSTEM_EXPORT std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, int nRecordID, const boost::uuids::uuid &uid );
 }

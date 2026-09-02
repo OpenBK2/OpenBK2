@@ -17,7 +17,9 @@
 
 #include <fmt/format.h>
 
-EXTERNVAR CLogger theLogger;
+#include "libdb_export.h"
+
+EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
 namespace NDb
 {

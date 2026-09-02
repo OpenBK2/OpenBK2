@@ -1,4 +1,5 @@
 #pragma once
+#include "3dmotor_export.h"
 
 #include "3Dmotor_export.h"
 
@@ -273,8 +274,8 @@ CTexture* GetTransparentTextureCache();
 CTexture* GetTextureContainer( CTexture *pTex, STexturePlaceInfo *pPlace );
 CTexture* GetLinearBufferMRU( EBufferUsage usage );
 bool HasSameContainer( CTexture *p1, CTexture *p2 );
-void GetRenderTargetData( NGfx::CTexture *pTarget, NGfx::CTexture *pSrc );
-void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *pSrc );
+_3DMOTOR_EXPORT void GetRenderTargetData( NGfx::CTexture *pTarget, NGfx::CTexture *pSrc );
+_3DMOTOR_EXPORT void GetRenderTargetData( CArray2D<NGfx::SPixel8888> *pRes, NGfx::CTexture *pSrc );
 int CalcTouchedTextureSize();
 int CalcTouchedTextureSizeNotSetMip( int nMip );
 int CalcTotalTextureSize( int *pnTexturesCount );

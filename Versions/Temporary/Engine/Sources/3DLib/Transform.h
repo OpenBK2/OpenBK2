@@ -17,8 +17,8 @@ _3DLIB_EXPORT bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m );
 void TransformYupToZup( SHMatrix *pMatrix );
 _3DLIB_EXPORT void MakeProjectiveRay( CVec3 *pDir, CVec3 *pOrig, const SHMatrix &camera, const CVec2 &screenRect, const CVec2 &cursorPos, float fFovX = 90 );
 _3DLIB_EXPORT void MakeProjectiveRay( CVec3 *pRes, CVec3 *pOrig, const CTransformStack &ts, const CVec2 &vScreenRect, const CVec2 &cursorPos );
-bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 &screenRect, float fFovX = 90, CVec2 *pRes = 0 );
-bool TestRayInFrustrum( const CVec3 &ptPos, const CTransformStack &ts, const CVec2 &screenRect, CVec2 *pRes = 0, float *pZ = 0, float *pfMinDistance = 0, float *pfMaxDistance = 0 );
+_3DLIB_EXPORT bool TestRayInFrustrum( const CVec3 &ptPos, const SHMatrix &camera, const CVec2 &screenRect, float fFovX = 90, CVec2 *pRes = 0 );
+_3DLIB_EXPORT bool TestRayInFrustrum( const CVec3 &ptPos, const CTransformStack &ts, const CVec2 &screenRect, CVec2 *pRes = 0, float *pZ = 0, float *pfMinDistance = 0, float *pfMaxDistance = 0 );
 _3DLIB_EXPORT float CalcRadius2( const SBound &b, const SHMatrix &fwd );
 _3DLIB_EXPORT void TransformBound( SBound *pRes, const SBound &src, const SHMatrix &fwd );
 // original screen is (0,0) - (1,1), (0,0) - upper left corner

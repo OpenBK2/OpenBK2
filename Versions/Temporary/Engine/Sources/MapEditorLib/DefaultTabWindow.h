@@ -2,9 +2,10 @@
 #pragma once
 #include "Interface_CommandHandler.h"
 
+#include "MapEditorLib_export.h"
 #define INVALID_TAB_INDEX (0xFFFF)
 
-class CDefault3DTabWindow : public SEC3DTabWnd
+class MAPEDITORLIB_EXPORT CDefault3DTabWindow : public SEC3DTabWnd
 {
 	std::vector<CWnd*> tabList;
 	unsigned nCommandHandlerID;
