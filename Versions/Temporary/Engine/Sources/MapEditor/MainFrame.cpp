@@ -279,7 +279,19 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//
 	unsigned nDWID = 0;
 	CString strDWName;
-	const uint32_t dwDWStyle = WS_CHILD | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
+	// WS_VISIBLE, which this one line was missing and the two other places that
+	// create a docking window both have. Docking does not show a hidden bar:
+	// CDockBar::DockControlBar re-shows one only if it was visible already, so a
+	// bar created without WS_VISIBLE is docked and invisible.
+	//
+	// What used to make them appear was LoadBarState further down restoring the
+	// visibility a previous run saved, which cannot help a machine that has never
+	// run the editor, and no longer helps this one either now that a layout naming
+	// bars this build does not have is discarded rather than obeyed.
+	//
+	// LoadBarState still runs after this and can still hide a bar the user closed,
+	// so this sets the default rather than overriding anything.
+	const uint32_t dwDWStyle = WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_TOOLTIPS | CBRS_SIZE_DYNAMIC;
 	const uint32_t dwDWStyleEx = CBRS_EX_COOL | CBRS_EX_BORDERSPACE;
 	//	
 	//
