@@ -221,7 +221,7 @@ void CFenceState::FillScene( unsigned nFlags, const CVec3 &rTerrainPos )
 			{
 				for ( std::vector<CFenceDesignTool::SFenceSectionInfo>::iterator it = sectionsInfo.begin(); it != sectionsInfo.end(); ++it )
 				{
-					CFenceDesignTool::SFenceSectionInfo *pSectionInfo = it;
+					CFenceDesignTool::SFenceSectionInfo *pSectionInfo = &*it;
 					pSectionInfo->vPosition.z = GetTerrainHeight( pSectionInfo->vPosition.x, pSectionInfo->vPosition.y );
 
 					uint32_t dwNormal = Vec3ToDWORD( V3_AXIS_Z );
