@@ -104,9 +104,9 @@ void CReinfPointsTypedDlg::SetDialogData()
 	for ( int i = 0; i < pTypedTemplateDlgData->size(); ++i )
 	{
 		int nItem = lcTypedTempl.InsertItem( i, "" );
-		lcTypedTempl.SetItemText( nItem, 0, fmt::format("{}", i)  );
-		lcTypedTempl.SetItemText( nItem, 1, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplateType) );
-		lcTypedTempl.SetItemText( nItem, 2, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplate) );
+		lcTypedTempl.SetItemText( nItem, 0, fmt::format("{}", i).c_str()  );
+		lcTypedTempl.SetItemText( nItem, 1, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplateType).c_str() );
+		lcTypedTempl.SetItemText( nItem, 2, fmt::format("{}", (*pTypedTemplateDlgData)[i].szTemplate).c_str() );
 		lcTypedTempl.SetItemData( nItem, i );
 	}
 	if ( nSelectedTemplate >= 0 && nSelectedTemplate < lcTypedTempl.GetItemCount() )

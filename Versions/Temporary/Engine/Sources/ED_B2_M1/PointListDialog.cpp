@@ -177,7 +177,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 		pointsList.SetItemData( nIdx, 0 );
 		for ( int i = 0; i < pData->nNumPoints; ++i )
 		{
-			int nIdx = pointsList.InsertItem( i+1, fmt::format("{} {}", (const char*)szLabel, i) );
+			int nIdx = pointsList.InsertItem( i+1, fmt::format("{} {}", (const char*)szLabel, i).c_str() );
 			pointsList.SetItemData( nIdx, i+1 );
 		}
 	}
@@ -185,7 +185,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 	{
 		for ( int i = 0; i < pData->nNumPoints; ++i )
 		{
-			int nIdx = pointsList.InsertItem( i, fmt::format("{} {:3d}", (const char*)szLabel, i) );
+			int nIdx = pointsList.InsertItem( i, fmt::format("{} {:3d}", (const char*)szLabel, i).c_str() );
 			pointsList.SetItemData( nIdx, i );
 		}
 	}

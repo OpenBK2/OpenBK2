@@ -121,19 +121,19 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 	wndPlayerComboBox.ResetContent();
 	for ( int nPlayerIndex = 0; nPlayerIndex < pData->nPlayerCount; ++nPlayerIndex )
 	{
-		const int nStringNumber = wndPlayerComboBox.AddString( std::to_string(  nPlayerIndex ) );
+		const int nStringNumber = wndPlayerComboBox.AddString( std::to_string(  nPlayerIndex ).c_str() );
 		wndPlayerComboBox.SetItemData( nStringNumber, nPlayerIndex );
 	}
-	wndPlayerComboBox.SelectString( 0, std::to_string(  pData->nPlayerIndex ) );
+	wndPlayerComboBox.SelectString( 0, std::to_string(  pData->nPlayerIndex ).c_str() );
 	//
 	lcReinfPoints.DeleteAllItems();
 	for ( int i = 0; i < pData->reinfPoints.size(); ++i )
 	{
 		const SReinfPointsWindowData::SReinfPoint &rp = pData->reinfPoints[i];
 		int nItem = lcReinfPoints.InsertItem( i, "" );
-		lcReinfPoints.SetItemText( nItem, 0, fmt::format("{}", i) );
-		lcReinfPoints.SetItemText( nItem, 1, fmt::format("{}", rp.szDeployTemplate) );
-		lcReinfPoints.SetItemText( nItem, 2, std::to_string(  rp.typedTemplates.size()) );
+		lcReinfPoints.SetItemText( nItem, 0, fmt::format("{}", i).c_str() );
+		lcReinfPoints.SetItemText( nItem, 1, fmt::format("{}", rp.szDeployTemplate).c_str() );
+		lcReinfPoints.SetItemText( nItem, 2, std::to_string(  rp.typedTemplates.size()).c_str() );
 		lcReinfPoints.SetItemData( nItem, i );
 	}
 	lcReinfPoints.SetItemState( pData->nSelectedPoint, LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED );

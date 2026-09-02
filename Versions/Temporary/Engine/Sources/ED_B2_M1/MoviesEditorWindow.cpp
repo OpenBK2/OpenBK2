@@ -705,11 +705,11 @@ void CMoviesEditorWindow::SetDialogData( const SScriptMovieEditorData &rDialogDa
 	int i = -1;
 	for ( i = 0; i < dialogData.scriptMoviesData.scriptMovieSequences.size(); ++i )
 	{
-		const int nStringNumber = wndMovieCombo.AddString( fmt::format("{}", i) );
+		const int nStringNumber = wndMovieCombo.AddString( fmt::format("{}", i).c_str() );
 		wndMovieCombo.SetItemData( nStringNumber, i );
 	}
 	if ( (dialogData.nActiveMovie <= i) && (dialogData.nActiveMovie >= 0) )
-		wndMovieCombo.SelectString( 0, fmt::format("{}", dialogData.nActiveMovie) );
+		wndMovieCombo.SelectString( 0, fmt::format("{}", dialogData.nActiveMovie).c_str() );
 	else if ( i > 0 )
 		wndMovieCombo.SelectString( 0, "0" );
 
@@ -757,7 +757,7 @@ void CMoviesEditorWindow::UpdateDialogData()
 		}
 	}
 	const float fCurrTime = wndTimeSliderControl.GetCursorPos();
-	SetDlgItemText( IDC_DMOVED_TIME_EDIT, fmt::format("{:g}", fCurrTime) );
+	SetDlgItemText( IDC_DMOVED_TIME_EDIT, fmt::format("{:g}", fCurrTime).c_str() );
 }
 
 

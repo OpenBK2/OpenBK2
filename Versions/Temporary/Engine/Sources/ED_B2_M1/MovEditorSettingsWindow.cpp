@@ -32,7 +32,7 @@ void CMovEditorSettingsDlg::OnOK()
 
 BOOL CMovEditorSettingsDlg::OnInitDialog()
 {
-	SetDlgItemText( IDC_MOVEDS_LEN_EDIT, fmt::format("{:g}", (*pLength)) );
+	SetDlgItemText( IDC_MOVEDS_LEN_EDIT, fmt::format("{:g}", (*pLength)).c_str() );
 	return true;
 }
 

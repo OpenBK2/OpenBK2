@@ -26,7 +26,7 @@ BOOL CAIGenMobileDlg::OnInitDialog()
 {
 	CResizeDialog::OnInitDialog();
 
-	edMobileID.SetWindowText( fmt::format("{}", *pMobileID) );
+	edMobileID.SetWindowText( fmt::format("{}", *pMobileID).c_str() );
 
 	return true;
 }
