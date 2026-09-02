@@ -15,7 +15,7 @@ class CFolderCallback : public IFolderCallback
 	typedef list<SUndoData> CUndoDataList;
 	CUndoDataList undoDataList;
 
-	typedef hash_map<string, CObjectNameSet> CLockObjectMap;
+	typedef std::unordered_map<string, CObjectNameSet> CLockObjectMap;
 	CLockObjectMap lockObjectMap;
 
 protected:

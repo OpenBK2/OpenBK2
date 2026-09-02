@@ -279,7 +279,7 @@ void GetSkeletonLocatorsInfo( vector<SSkeletonLocatorInfo> *pLocatorsInfo, const
 	if ( !pInfo )
 		return;
 
-	hash_map<int,int> potentialParents;
+	std::unordered_map<int,int> potentialParents;
 
 	// вычисляем положение костей
 	granny_skeleton *pSkeleton = pInfo->Skeletons[0];

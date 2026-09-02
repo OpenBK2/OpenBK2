@@ -112,7 +112,7 @@ void CBinaryBitFieldDialog::OnOK()
 		if ( wndTablesList.GetCheck( nStringIndex ) )
 		{
 			wndTablesList.GetText( nStringIndex, strString );
-			hash_map<string, int>::const_iterator pos = name2value.find( string( strString ) );
+			std::unordered_map<string, int>::const_iterator pos = name2value.find( string( strString ) );
 			if ( pos != name2value.end() ) 
 			{
 				const int nValue = pos->second;

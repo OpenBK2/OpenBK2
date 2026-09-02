@@ -44,7 +44,7 @@ void CRefListDialog::BuildReferenceObjectsList()
 	string szRefObjectName;
 	string szFullName;
 
-	hash_map<string,SReferenceObject> objsHash;
+	std::unordered_map<string,SReferenceObject> objsHash;
 	list<string> fullNames;
 	for ( list<string>::const_iterator i = referenceObjectsList.begin(); i != referenceObjectsList.end(); ++i )
 	{

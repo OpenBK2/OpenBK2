@@ -114,7 +114,7 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	}
 	//
 	int nEntrenchmentCount = 0;
-	hash_map<unsigned, unsigned> entrenchmentUsedLinkIDList;
+	std::unordered_map<unsigned, unsigned> entrenchmentUsedLinkIDList;
 	CManipulatorManager::GetValue( &nEntrenchmentCount, pObjectManipulator, "Entrenchments" );
 	for ( unsigned nEntrenchmentIndex = 0; nEntrenchmentIndex < nObjectCount; ++nEntrenchmentIndex )
 	{

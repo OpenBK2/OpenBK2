@@ -33,7 +33,7 @@ class CResizeDialog : public CDialog
 		virtual int operator&( IXmlSaver &xs );
 	};
 
-	hash_map<unsigned, SControlStyle> resizeDialogControlStyles;
+	std::unordered_map<unsigned, SControlStyle> resizeDialogControlStyles;
 	CTPoint<int> resizeDialogOriginalSize;
 	string szToolTipText;
 

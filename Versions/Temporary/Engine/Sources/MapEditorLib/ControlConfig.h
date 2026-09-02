@@ -5,10 +5,10 @@
 // save / load columns count / width
 // save / load selected / focused elements
 
-template <class TID, class TIDHash = hash<TID> >
+template <class TID, class TIDHash = std::hash<TID> >
 struct IControlConfig
 {
-	typedef hash_map<TID, int> CIDSet;
+	typedef std::unordered_map<TID, int> CIDSet;
 	//
 	virtual void SetAttribute( const TID &rID, int nAttribute, bool bSet ) = 0;
 	virtual bool GetAttribute( const TID &rID, int nAttribute ) = 0;

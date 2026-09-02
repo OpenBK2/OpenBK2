@@ -83,7 +83,7 @@ void CResizeDialog::UpdateControlPositions()
  	resizeDialogOriginalSize.x = clientRect.right - clientRect.left;
 	resizeDialogOriginalSize.y = clientRect.bottom - clientRect.top;
 
-	for ( hash_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
+	for ( std::unordered_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
 	{
 		if ( CWnd* pControlWnd = GetDlgItem( itControlStyle->first ) )
 		{
@@ -143,7 +143,7 @@ void CResizeDialog::OnSize( unsigned nType, int cx, int cy )
 	CDialog::OnSize( nType, cx, cy );
 	
 	CTPoint<int> dSize( ( cx - resizeDialogOriginalSize.x ), ( cy - resizeDialogOriginalSize.y ) );
-	for ( hash_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
+	for ( std::unordered_map<unsigned, SControlStyle>::iterator itControlStyle = resizeDialogControlStyles.begin(); itControlStyle != resizeDialogControlStyles.end(); ++itControlStyle )
 	{
 		if ( CWnd* pControlWnd = GetDlgItem( itControlStyle->first ) )
 		{

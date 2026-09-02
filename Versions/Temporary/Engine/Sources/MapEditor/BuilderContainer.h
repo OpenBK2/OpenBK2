@@ -6,7 +6,7 @@ class CBuilderContainer : public IBuilderContainer
 {
 	OBJECT_NOCOPY_METHODS( CBuilderContainer );
 	//
-	typedef hash_map<string, CPtr<IBuilder> > CBuilderMap;
+	typedef std::unordered_map<string, CPtr<IBuilder> > CBuilderMap;
 	CBuilderMap builderMap;
 
 	IBuilder *GetBuilder( const string &rszObjectTypeName );

@@ -6,8 +6,8 @@ class CEditorContainer : public IEditorContainer
 {
 	OBJECT_NOCOPY_METHODS( CEditorContainer );
 	//
-	typedef hash_map<string, CPtr<IEditor> > CEditorMap;  // BaseObjectType -> Editor
-	typedef hash_map<string, string> CExtendTypeMap;			// ExtendObjectType -> BaseObjectType
+	typedef std::unordered_map<string, CPtr<IEditor> > CEditorMap;  // BaseObjectType -> Editor
+	typedef std::unordered_map<string, string> CExtendTypeMap;			// ExtendObjectType -> BaseObjectType
 	CEditorMap editorMap;
 	CExtendTypeMap extendTypeMap;
 	string szActiveTypeName;

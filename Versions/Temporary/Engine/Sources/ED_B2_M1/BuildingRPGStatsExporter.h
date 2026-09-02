@@ -17,7 +17,7 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 		SAnimationInfo( const int _nStartTime, const int _nEndTime ) : nStartTime( _nStartTime ), nEndTime( _nEndTime ) {}
 	};
 
-	hash_map<int, string> materials;
+	std::unordered_map<int, string> materials;
 
 	const bool UpdateVisObj( IManipulator* pManipulator, const string &szRefName, const vector<SAnimationInfo> &frames, const int nStage );
 	const bool CopyModel( const string &szOldModelName, const string &szNewName, const string &szRoot );

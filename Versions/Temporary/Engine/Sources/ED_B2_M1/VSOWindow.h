@@ -14,7 +14,7 @@ public:
 		string szObjectTypeName;
 		CDBID objectDBID;
 	};
-	typedef hash_map<int, SObjectListElement> CObjectListElementMap;
+	typedef std::unordered_map<int, SObjectListElement> CObjectListElementMap;
 	//
 	bool bCreateControls;
 	bool bEnableHeight;

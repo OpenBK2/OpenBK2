@@ -3,7 +3,7 @@
 
 class CTextMapSettings
 {
-	typedef hash_map<string, string> CTextMap;
+	typedef std::unordered_map<string, string> CTextMap;
 	CTextMap textMap;
 
 public:

@@ -719,7 +719,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	}
 
 	//collect skeletons
-	hash_map<string,bool> skeletons;
+	std::unordered_map<string,bool> skeletons;
 	for ( list<string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
 	{
 		CPtr<IManipulator> pItVisObj = pRM->CreateObjectManipulator( "VisObj", *it );
@@ -735,7 +735,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 
 	// convert animations from anims array to RPG stats structures
 	int nAnimCounter = 0;
-	for ( hash_map<string,bool>::const_iterator itSkeleton = skeletons.begin(); itSkeleton != skeletons.end(); ++itSkeleton )
+	for ( std::unordered_map<string,bool>::const_iterator itSkeleton = skeletons.begin(); itSkeleton != skeletons.end(); ++itSkeleton )
 	{
 		CPtr<IManipulator> pItSkeleton = pRM->CreateObjectManipulator( "Skeleton", itSkeleton->first );
 		// retrieve animation information

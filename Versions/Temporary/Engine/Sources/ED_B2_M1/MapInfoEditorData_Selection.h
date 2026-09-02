@@ -41,7 +41,7 @@ namespace NMapInfoEditor
 		void BackupPosition();
 		bool RollbackPosition();
 	};
-	typedef hash_map<unsigned, SObjectSelectionPart> CObjectSelectionPartMap;
+	typedef std::unordered_map<unsigned, SObjectSelectionPart> CObjectSelectionPartMap;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SObjectSelection

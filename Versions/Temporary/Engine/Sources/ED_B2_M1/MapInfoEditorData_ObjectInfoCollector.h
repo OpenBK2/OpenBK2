@@ -14,10 +14,10 @@ namespace NMapInfoEditor
 {
 	struct SObjectInfoCollector
 	{
-		typedef hash_map<unsigned, CPtr<SObjectInfo> > CObjectInfoMap;
-		typedef hash_map<string, unsigned> CObjectTypeMap;
-		typedef hash_map<unsigned, unsigned> CSceneIDMap;
-		typedef hash_map<unsigned, unsigned> CLinkIDMap;
+		typedef std::unordered_map<unsigned, CPtr<SObjectInfo> > CObjectInfoMap;
+		typedef std::unordered_map<string, unsigned> CObjectTypeMap;
+		typedef std::unordered_map<unsigned, unsigned> CSceneIDMap;
+		typedef std::unordered_map<unsigned, unsigned> CLinkIDMap;
 		//
 		CObjectInfoMap objectInfoMap;												// Список SObjectInfo
 		CLinkIDMap linkIDMap;																// Список LinkID->SObjectInfoID

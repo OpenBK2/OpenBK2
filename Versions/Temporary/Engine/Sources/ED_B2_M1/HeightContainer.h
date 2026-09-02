@@ -18,7 +18,7 @@ class CHeightContainer
 	vector<uint32_t> markedBitslList;										// набор битов помарканной точки (берется из черной плоскости)
 	vector<uint32_t> filledBitsList;											// набор битов указывающий заполненность ( если последнее число == 0, то можно сократить количество плоскостей ) (общее для обоих типов плоскостей)
 	CFreeIDCollector freePlaneIndexCollector;					// номера свободных плоскостей
-	hash_map<int, int> polygonID2PlaneIndexMap;				// PolygonID -> PlaneIndex (0...nCount)
+	std::unordered_map<int, int> polygonID2PlaneIndexMap;				// PolygonID -> PlaneIndex (0...nCount)
 	//
 	bool bTraceToImage;																// для тестовых целей
 	//

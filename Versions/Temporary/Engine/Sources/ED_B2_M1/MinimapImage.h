@@ -27,8 +27,8 @@ enum ELayerType
 //
 struct SLayerType
 {
-	hash_map<int,int> ndb2minimapMap;
-	hash_map<int,int> minimap2ndbMap;
+	std::unordered_map<int,int> ndb2minimapMap;
+	std::unordered_map<int,int> minimap2ndbMap;
 
 	SLayerType()
 	{
@@ -58,7 +58,7 @@ struct SLayerType
 	}
 	int GetMinimapLayer( NDb::EMinimapLayerType eMinimapLayerType ) const
 	{ 
-		hash_map<int,int>::const_iterator it = ndb2minimapMap.find( eMinimapLayerType );
+		std::unordered_map<int,int>::const_iterator it = ndb2minimapMap.find( eMinimapLayerType );
 		if ( it != ndb2minimapMap.end() )
 		{
 			return it->second;	
@@ -70,7 +70,7 @@ struct SLayerType
 	}
 	int GetNDbLayer( ELayerType eLayerType ) const
 	{
-		hash_map<int,int>::const_iterator it = minimap2ndbMap.find( eLayerType );
+		std::unordered_map<int,int>::const_iterator it = minimap2ndbMap.find( eLayerType );
 		if ( it != minimap2ndbMap.end() )
 		{
 			return it->second;	
@@ -86,7 +86,7 @@ extern const SLayerType typeLayerType;
 
 struct SScaleType
 {
-	hash_map<int,int> ndb2imageMap;
+	std::unordered_map<int,int> ndb2imageMap;
 
 	SScaleType()
 	{
@@ -101,7 +101,7 @@ struct SScaleType
 	}
 	NImage::EImageScaleMethod GetImageScaleMethod( NDb::EImageScaleMethod eScaleMethod ) const
 	{ 
-		hash_map<int,int>::const_iterator it = ndb2imageMap.find( eScaleMethod );
+		std::unordered_map<int,int>::const_iterator it = ndb2imageMap.find( eScaleMethod );
 		if ( it != ndb2imageMap.end() )
 		{
 			return (NImage::EImageScaleMethod)( it->second );	
@@ -124,7 +124,7 @@ enum ERoadType
 //
 struct SRoadType
 {
-	hash_map<int,int> ndb2roadMap;
+	std::unordered_map<int,int> ndb2roadMap;
 
 	SRoadType()
 	{
@@ -133,7 +133,7 @@ struct SRoadType
 	}
 	ERoadType GetRoadType( int nRoadType ) const
 	{ 
-		hash_map<int,int>::const_iterator it = ndb2roadMap.find( nRoadType );
+		std::unordered_map<int,int>::const_iterator it = ndb2roadMap.find( nRoadType );
 		if ( it != ndb2roadMap.end() )
 		{
 			return (ERoadType)( it->second );	
@@ -156,7 +156,7 @@ enum ELakeType
 //
 struct SLakeType
 {
-	hash_map<int,int> ndb2lakeMap;
+	std::unordered_map<int,int> ndb2lakeMap;
 
 	SLakeType()
 	{
@@ -165,7 +165,7 @@ struct SLakeType
 	}
 	ELakeType GetLakeType( int nLakeType ) const
 	{ 
-		hash_map<int,int>::const_iterator it = ndb2lakeMap.find( nLakeType );
+		std::unordered_map<int,int>::const_iterator it = ndb2lakeMap.find( nLakeType );
 		if ( it != ndb2lakeMap.end() )
 		{
 			return (ELakeType)( it->second );	

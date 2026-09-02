@@ -15,7 +15,7 @@ protected:
 private:
 	typedef list<SObjStackEntry> CObjectsStack;
 	CObjectsStack objectsStack;
-	typedef hash_map<string, bool> CExportedObjectsMap;
+	typedef std::unordered_map<string, bool> CExportedObjectsMap;
 	CExportedObjectsMap exportedObjects;
 	//
 	void ExportObjectToXML( FILE *file, const string &szTypeName, const int nClassTypeID, 

@@ -97,7 +97,7 @@ struct SUserData
 	//
 	struct SObjectTypeData
 	{
-		//typedef hash_map<string, string> CBrowsePathMap;
+		//typedef std::unordered_map<string, string> CBrowsePathMap;
 		// CRAP{ HASH_SET
 		typedef std::unordered_map<std::string, uint32_t> CExpandedPropertySet;
 		typedef std::unordered_map<std::string, uint32_t> CExpandedObjectSet;

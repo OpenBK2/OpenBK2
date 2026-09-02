@@ -6,7 +6,7 @@
 template<class TList, class TElement>
 class CUniqueList
 {
-	typedef hash_map<TElement, unsigned> CElementMap;
+	typedef std::unordered_map<TElement, unsigned> CElementMap;
 	//
 	CElementMap elementMap;
 	TList elementList;

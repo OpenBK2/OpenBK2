@@ -358,7 +358,7 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 
 			//write animation data to stats
 			int nAnimCounter = 0;
-			for ( hash_map<uint32_t, list<string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
+			for ( std::unordered_map<uint32_t, list<string> >::const_iterator itAnimList = animsMap.begin(); itAnimList != animsMap.end(); ++itAnimList )
 			{
 				const uint32_t dwAnimMask = itAnimList->first;
 				if ( dwAnimMask & dwWeaponMask )
@@ -426,7 +426,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 		}
 	}
 	//collect skeletons
-	typedef hash_map<string, bool> CSkeletonsMap;
+	typedef std::unordered_map<string, bool> CSkeletonsMap;
 	CSkeletonsMap skeletons;
 	for ( list<string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
 	{

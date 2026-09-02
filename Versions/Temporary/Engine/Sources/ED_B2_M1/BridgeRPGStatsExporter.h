@@ -24,7 +24,7 @@ class CBridgeRPGStatsExporter : public CStaticObjectRPGStatsExporter
 		AIG_COUNT		= 3,
 	};
 	//
-	typedef hash_map<string, string> CTempNamesMap;
+	typedef std::unordered_map<string, string> CTempNamesMap;
 	CTempNamesMap tempNamesMap;
 
 	void GetTempAIGeometryName( string *pszAIGeometryPrefix, const string &rszVisObjectName, const CDBID &rDBID, EAIGeometry eAIGeometry );

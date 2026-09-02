@@ -6,7 +6,7 @@ class CSkeletonExporter : public CBasicSceneExporter
 {
 	OBJECT_NOCOPY_METHODS( CSkeletonExporter );
 	// CRAP{ HASH_SET
-	typedef hash_map<CDBID, int> CAnimationRefMap;
+	typedef std::unordered_map<CDBID, int> CAnimationRefMap;
 	// CRAP} HASH_SET
 	CAnimationRefMap animations;
 	//

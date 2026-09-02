@@ -110,7 +110,7 @@ bool CObjectBaseRPGStatsExporter::ExportDynamicDebris( IManipulator *pManipulato
 				pTextureFolderManipulator->RemoveNode( *it );
 			int nNewCount = 0;
 			CManipulatorManager::GetValue( &nNewCount, pDebrisSet, "Debris" );
-			typedef hash_map< string, pair<string, float> > CSeasonDebrisMap;
+			typedef std::unordered_map< string, pair<string, float> > CSeasonDebrisMap;
 			CSeasonDebrisMap debrisTextures;
 			for ( int i = 0; i < nNewCount; ++i )
 			{
