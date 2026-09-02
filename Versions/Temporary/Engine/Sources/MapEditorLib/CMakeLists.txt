@@ -56,7 +56,7 @@ set(SOURCES
 add_library(MapEditorLib SHARED ${SOURCES})
 add_stdafx_pch(MapEditorLib)
 add_export_header(MapEditorLib)
-target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla System)
+target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc Scintilla stingray System)
 if(WIN32)
     target_link_libraries(MapEditorLib PRIVATE winapi)
 endif()
