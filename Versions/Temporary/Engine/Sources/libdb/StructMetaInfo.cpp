@@ -23,6 +23,13 @@ namespace NMetaInfo
 // **
 // ************************************************************************************************************************ //
 
+// Construct a field in place, in memory the record owns but has not built yet.
+//
+// Every case here has to match DestructBinary below, which is the one that says
+// what each type really is: an array field is a std::vector, a ref field is a
+// CDBPtr. Zeroing a type that is not trivially constructible is not the same as
+// constructing it, even where the zeroed bytes happen to read as the empty
+// value.
 void ConstructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize )
 {
 	switch ( eType )
@@ -35,8 +42,22 @@ void ConstructBinary( uint8_t *pData, NTypeDef::ETypeType eType, int nSize )
 		new(pData) std::wstring();
 		break;
 
+	// An array field was falling through to the memset. A zeroed std::vector
+	// reads as an empty one under a release STL, which is why this has stood, but
+	// it has no iterator proxy, so a debug STL fails the first dereference of
+	// anything begin() hands out with "can't dereference invalidated vector
+	// iterator". std::vector<uint8_t> is the same spelling BindArray resizes
+	// these through and DestructBinary destroys them as.
+	case NTypeDef::TYPE_TYPE_ARRAY:
+		new(pData) std::vector<uint8_t>();
+		break;
+
+	// This one was constructed and then immediately memset over, for want of a
+	// break. Harmless while a default CDBPtr is all zeroes, and not something to
+	// leave standing.
 	case NTypeDef::TYPE_TYPE_REF:
 		new(pData) CDBPtr<CResource>();
+		break;
 
 	default:
 		memset( pData, 0, nSize );
