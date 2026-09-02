@@ -48,7 +48,7 @@ bool CDefaultController::Redo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 }
 
 
-void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const string &rszName ) const
+void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const std::string &rszName ) const
 {
 	if ( pNameMap )
 	{
@@ -65,7 +65,7 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 			{
 				if ( rszName.compare( 0, posName->first.size(), posName->first ) == 0 )
 				{
-					const string szName = rszName.substr( posName->first.size() );
+					const std::string szName = rszName.substr( posName->first.size() );
 					( *pNameMap )[szName] = 0;
 				}
 			}

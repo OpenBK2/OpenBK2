@@ -7,19 +7,19 @@
 
 // CPCItemEditor
 
-bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCIntComboEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	if ( CPCStringComboEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
 		SetCreateControls( true );
 		ResetContent();
 		//
-		vector<string> stringList;
+		std::vector<std::string> stringList;
 		//
-		string szValues = GetPropertyDesc()->szStringParam;
+		std::string szValues = GetPropertyDesc()->szStringParam;
 		NStr::ToLowerASCII( &szValues );
 		//
-		string szNumbers;
+		std::string szNumbers;
 		if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_VALUES, 0, PCSP_STRONG_DIVIDERS, "", &szNumbers ) )
 		{
 			return false;
@@ -31,17 +31,17 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 		}
 		//		
 		int nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, 0 );
-		while( nLeftPos != string::npos )
+		while( nLeftPos != std::string::npos )
 		{
 			const int nRightPos = szNumbers.find_first_of( PCSP_SOFT_DIVIDERS, nLeftPos + 1 );
-			const string szNumberList = szNumbers.substr( nLeftPos, nRightPos - nLeftPos );
+			const std::string szNumberList = szNumbers.substr( nLeftPos, nRightPos - nLeftPos );
 			const int nRangePos = szNumberList.find_first_of( PCSP_RANGE_DIVIDERS );
-			if ( nRangePos == string::npos )
+			if ( nRangePos == std::string::npos )
 			{
 				int nValue = 0;
 				if ( sscanf( szNumberList.c_str(), "%d", &nValue ) == 1 )
 				{
-					const string szValue = std::to_string(  nValue );
+					const std::string szValue = std::to_string(  nValue );
 					stringList.push_back( szValue );
 				}
 				else
@@ -51,8 +51,8 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 			}
 			else
 			{
-				const string szMinValue = szNumberList.substr( 0, nRangePos );
-				const string szMaxValue = szNumberList.substr( nRangePos + 1 );
+				const std::string szMinValue = szNumberList.substr( 0, nRangePos );
+				const std::string szMaxValue = szNumberList.substr( nRangePos + 1 );
 				int nMinValue = 0;
 				int nMaxValue = 0;
 				if ( ( sscanf( szMinValue.c_str(), "%d", &nMinValue ) == 1 ) &&
@@ -66,18 +66,18 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 					}
 					for ( int nValue = nMinValue; nValue <= nMaxValue; nValue += nStep )
 					{
-						const string szValue = std::to_string(  nValue );
+						const std::string szValue = std::to_string(  nValue );
 						stringList.push_back( szValue );
 					}
 				}
 			}
-			if ( nRightPos != string::npos )
+			if ( nRightPos != std::string::npos )
 			{
 				nLeftPos = szNumbers.find_first_of( PCSP_NUMBERS, nRightPos + 1 );
 			}
 			else
 			{
-				nLeftPos = string::npos;
+				nLeftPos = std::string::npos;
 			}
 		}
 		//
@@ -87,7 +87,7 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 		}
 		//
 		sort( stringList.begin(), stringList.end(), CPCIntComboEditorCompareItem() ); 
-		for ( vector<string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
+		for ( std::vector<std::string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
 		{
 			AddString( itString->c_str() );
 		}
@@ -100,7 +100,7 @@ bool CPCIntComboEditor::CreateEditor( const string &rszName, EPCIEType _nEditorT
 
 void CPCIntComboEditor::SetValue( const CVariant &rValue )
 {
-	CVariant value = string( std::to_string(  (int)rValue ) );
+	CVariant value = std::string( std::to_string(  (int)rValue ) );
 	CPCStringComboEditor::SetValue( value );
 }
 

@@ -11,19 +11,19 @@
 #include "NewObjectDialog.h"
 #include "Misc/StrProc.h"
 
-bool CBuilderContainer::CanBuildObject( const string &rszObjectTypeName )
+bool CBuilderContainer::CanBuildObject( const std::string &rszObjectTypeName )
 {
 	return NBuilderFactory::CanCreateBuilder( rszObjectTypeName );
 }
 
 
-bool CBuilderContainer::CanDefaultBuildObject( const string &rszObjectTypeName )
+bool CBuilderContainer::CanDefaultBuildObject( const std::string &rszObjectTypeName )
 {
 	return NBuilderFactory::CanCreateBuilder( DEFAULT_BUILDER_LABEL_TXT );
 }
 
 
-void CBuilderContainer::Create( const string &rszObjectTypeName )
+void CBuilderContainer::Create( const std::string &rszObjectTypeName )
 {
 	CBuilderMap::iterator posBuilder = builderMap.find( rszObjectTypeName );
 
@@ -34,7 +34,7 @@ void CBuilderContainer::Create( const string &rszObjectTypeName )
 }
 
 
-void CBuilderContainer::Destroy( const string &rszObjectTypeName )
+void CBuilderContainer::Destroy( const std::string &rszObjectTypeName )
 {
 	CBuilderMap::iterator posBuilder = builderMap.find( rszObjectTypeName );
 	if ( posBuilder != builderMap.end() )
@@ -44,9 +44,9 @@ void CBuilderContainer::Destroy( const string &rszObjectTypeName )
 }
 
 
-IBuilder* CBuilderContainer::GetBuilder( const string &rszObjectTypeName )
+IBuilder* CBuilderContainer::GetBuilder( const std::string &rszObjectTypeName )
 {
-	string szBuilderType = CanBuildObject( rszObjectTypeName ) ? rszObjectTypeName : DEFAULT_BUILDER_LABEL_TXT;
+	std::string szBuilderType = CanBuildObject( rszObjectTypeName ) ? rszObjectTypeName : DEFAULT_BUILDER_LABEL_TXT;
 	CBuilderMap::iterator posBuilder = builderMap.find( szBuilderType );
 	if( posBuilder == builderMap.end() )
 	{
@@ -61,8 +61,8 @@ IBuilder* CBuilderContainer::GetBuilder( const string &rszObjectTypeName )
 }
 
 
-bool CBuilderContainer::InsertObject( string *pszObjectTypeName,
-																			string *pszUniqueObjectName,
+bool CBuilderContainer::InsertObject( std::string *pszObjectTypeName,
+																			std::string *pszUniqueObjectName,
 																			bool bFromMainMenu,
 																			bool *pbCanChangeObjectName,
 																			bool *pbNeedExport,
@@ -76,9 +76,9 @@ bool CBuilderContainer::InsertObject( string *pszObjectTypeName,
 }
 
 
-bool CBuilderContainer::CopyObject( const string &rszObjectTypeName,
-																		const string &rszDestination,
-																		const string &rszSource )
+bool CBuilderContainer::CopyObject( const std::string &rszObjectTypeName,
+																		const std::string &rszDestination,
+																		const std::string &rszSource )
 {
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
 	{
@@ -88,9 +88,9 @@ bool CBuilderContainer::CopyObject( const string &rszObjectTypeName,
 }
 
 
-bool CBuilderContainer::RenameObject( const string &rszObjectTypeName,
-																			const string &rszDestination,
-																			const string &rszSource )
+bool CBuilderContainer::RenameObject( const std::string &rszObjectTypeName,
+																			const std::string &rszDestination,
+																			const std::string &rszSource )
 {
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
 	{
@@ -100,8 +100,8 @@ bool CBuilderContainer::RenameObject( const string &rszObjectTypeName,
 }
 
 
-bool CBuilderContainer::RemoveObject( const string &rszObjectTypeName,
-																			const string &rszObjectName )
+bool CBuilderContainer::RemoveObject( const std::string &rszObjectTypeName,
+																			const std::string &rszObjectName )
 {
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
 	{
@@ -111,7 +111,7 @@ bool CBuilderContainer::RemoveObject( const string &rszObjectTypeName,
 }
 
 
-void CBuilderContainer::GetDefaultFolder( const string &rszObjectTypeName, string *pszDefaultFolder )
+void CBuilderContainer::GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder )
 {
 	if ( IBuilder *pBuilder = GetBuilder( rszObjectTypeName ) )
 	{
@@ -120,8 +120,8 @@ void CBuilderContainer::GetDefaultFolder( const string &rszObjectTypeName, strin
 }
 
 
-bool CBuilderContainer::FillBuildData( string *pszBuildDataTypeName,
-																			 string *pszBuildDataName,
+bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
+																			 std::string *pszBuildDataName,
 																			 SBuildDataParams *pBuildDataParams,					
 																			 IBuildDataCallback *pBuildDataCallback )
 {
@@ -152,7 +152,7 @@ bool CBuilderContainer::FillBuildData( string *pszBuildDataTypeName,
 		objectSet.szObjectTypeName = ( *pszBuildDataName ); 
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( *pszBuildDataName ) );
 		//
-		const string szTemporaryLabel = StrFmt( "%s%c%s", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
+		const std::string szTemporaryLabel = StrFmt( "%s%c%s", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
 		//
 		CPCBuildDataDialog buildDataDialog( AfxGetMainWnd() );
 		buildDataDialog.SetBuildDataParams( pBuildDataParams );
@@ -174,9 +174,9 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 	if ( pBuildDataParams != 0 )
 	{
 		CNewObjectDialog wndNewObjectDialog( AfxGetMainWnd() );
-		vector<string> objectTypeNameList;
+		std::vector<std::string> objectTypeNameList;
 		NStr::SplitString( pBuildDataParams->szObjectTypeName, &objectTypeNameList, TYPE_SEPARATOR_CHAR );
-		for ( vector<string>::iterator itObjectTypeName = objectTypeNameList.begin(); itObjectTypeName != objectTypeNameList.end(); ++itObjectTypeName )
+		for ( std::vector<std::string>::iterator itObjectTypeName = objectTypeNameList.begin(); itObjectTypeName != objectTypeNameList.end(); ++itObjectTypeName )
 		{
 			NStr::TrimBoth( *itObjectTypeName );
 		}

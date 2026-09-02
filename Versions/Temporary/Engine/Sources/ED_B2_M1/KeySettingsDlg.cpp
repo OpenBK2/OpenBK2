@@ -3,7 +3,7 @@
 #include "KeySettingsDlg.h"
 
 CMovEditorKeySettingsDlg::CMovEditorKeySettingsDlg( CWnd *pParentWindow, NDb::SScriptMovieKeyPos *_pKey, 
-																										string *_pszName )
+																										std::string *_pszName )
 	: CResizeDialog( CMovEditorKeySettingsDlg::IDD, pParentWindow ),
 	pKey( _pKey ),
 	pszName( _pszName )

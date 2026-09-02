@@ -29,10 +29,10 @@ struct SData
 	int bReadOnly;
 };
 //
-class CControlConfig : public IControlConfig<string>
+class CControlConfig : public IControlConfig<std::string>
 {
-	void SetAttribute( const string &rID, int nAttribute, bool bSet ) {}
-	bool GetAttribute( const string &rID, int nAttribute ) {}
+	void SetAttribute( const std::string &rID, int nAttribute, bool bSet ) {}
+	bool GetAttribute( const std::string &rID, int nAttribute ) {}
 	void ClearAll( int nAttribute ) {}
 	const CIDSet& GetAll( int nAttribute ) {}
 	//
@@ -40,8 +40,8 @@ class CControlConfig : public IControlConfig<string>
 	int GetWidth( int nColumnIndex ) {}
 };
 //
-typedef CControlData<HTREEITEM, string, SData, SHTREEITEMHash> CStringControlData;
-typedef CControlSelection<string, SData> CStringControlSelection;
+typedef CControlData<HTREEITEM, std::string, SData, SHTREEITEMHash> CStringControlData;
+typedef CControlSelection<std::string, SData> CStringControlSelection;
 //
 class CBaseTreeControl
 {

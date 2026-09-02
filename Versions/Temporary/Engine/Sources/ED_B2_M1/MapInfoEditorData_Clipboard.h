@@ -5,7 +5,7 @@
 
 namespace NMapInfoEditor
 {
-	typedef vector<CPtr<SObjectInfo> > CObjectClipboardPartList;
+	typedef std::vector<CPtr<SObjectInfo> > CObjectClipboardPartList;
 	struct SObjectClipboard
 	{
 		CObjectClipboardPartList objectClipboardPartlist;

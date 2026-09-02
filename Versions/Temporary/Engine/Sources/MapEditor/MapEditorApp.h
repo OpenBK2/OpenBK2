@@ -27,7 +27,7 @@ struct SCursomToolBarInfo
 		return *this;
 	}
 };
-typedef vector<SCursomToolBarInfo> CCursomToolBarInfoList;
+typedef std::vector<SCursomToolBarInfo> CCursomToolBarInfoList;
 
 namespace NVFS
 {
@@ -46,11 +46,11 @@ class CEditorApp : public CWinApp
 	void CreateUserDataSingleton();
 	bool CreateSingletons();
 	void DestroySingletons();
-	bool ParseCommandLine( const string &rszCommandLine );
+	bool ParseCommandLine( const std::string &rszCommandLine );
 	
 	void RegisterEditors();
 protected:
-	void SetMapFileName( const string &szMapFileName );
+	void SetMapFileName( const std::string &szMapFileName );
 public:
 	CEditorApp();
 	
@@ -62,9 +62,9 @@ public:
 	afx_msg void OnAppAbout();
 	afx_msg void OnHelp();
 
-	virtual void LoadMapEditorModule( const string &szModuleName ) = 0;
+	virtual void LoadMapEditorModule( const std::string &szModuleName ) = 0;
 	virtual void UnloadMapEditorModule() = 0;
-	virtual const vector<IEditorModule*>& GetEditorModules() = 0;
+	virtual const std::vector<IEditorModule*>& GetEditorModules() = 0;
 	virtual bool GameXInitialize() = 0;
 	virtual void GameXPostStorageInitialize() = 0;
 	virtual const struct SECBtnMapEntry* GetToolbarButtonsMap() const = 0;

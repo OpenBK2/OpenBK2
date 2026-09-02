@@ -39,7 +39,7 @@ public:
 	// Структура данных, с помощью которой конфигурационный диалог общается со стейтом
 	struct SEditParameters
 	{
-		typedef vector<string> CFieldList;
+		typedef std::vector<std::string> CFieldList;
 
 		unsigned nFlags;
 		//
@@ -110,13 +110,13 @@ private:
 	SEditParameters* GetEditParameters();
 	void UpdateEditParameters( unsigned nFlags );
 
-	typedef list<CVec2> CFieldPolygon;
-	typedef vector<int> CXPosList;
+	typedef std::list<CVec2> CFieldPolygon;
+	typedef std::vector<int> CXPosList;
 	typedef std::unordered_map<LPARAM, float> CFieldDistanceMap;
 	typedef NWV::CWeightVector<int, NWV::SClientRandom> CTileSetWeightVector;
-	typedef	vector<CTileSetWeightVector> CTileSetWeightVectorList;
+	typedef	std::vector<CTileSetWeightVector> CTileSetWeightVectorList;
 	typedef NWV::CWeightVector<CDBPtr<NDb::SHPObjectRPGStats>, NWV::SClientRandom> CObjectSetWeightVector;
-	typedef	vector<CObjectSetWeightVector> CObjectSetWeightVectorList;
+	typedef	std::vector<CObjectSetWeightVector> CObjectSetWeightVectorList;
 
 	static void CreateTileSetWeightVectorList( CTileSetWeightVectorList *pTileSetWeightVectorList, const NDb::SField &rField );
 	static void CreateObjectSetWeightVectorList( CObjectSetWeightVectorList *pObjectSetWeightVectorList, const NDb::SField &rField );

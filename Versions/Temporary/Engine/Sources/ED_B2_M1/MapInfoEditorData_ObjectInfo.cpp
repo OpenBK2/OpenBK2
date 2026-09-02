@@ -592,7 +592,7 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfo::SetSceneObjectOpacity( IEditorScene *pEditorScene, const float fOpacity )
 	{
-		list<int> sceneIDlist;
+		std::list<int> sceneIDlist;
 		for ( SObjectInfo::CSceneElementMap::const_iterator itSceneElement = sceneElementMap.begin(); itSceneElement != sceneElementMap.end(); ++itSceneElement )
 		{
 			sceneIDlist.push_back( itSceneElement->first );
@@ -791,7 +791,7 @@ namespace NMapInfoEditor
 				const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 				if ( nObjectIndex != INVALID_NODE_ID )
 				{
-					const string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+					const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
 					//Change
 					const CVec3 vObjectDBPosition = itMapInfoElement->second.GetPosition( vPosition );
 					const uint16_t wObjectDBDirection = Vis2AIRad( itMapInfoElement->second.GetDirection( fDirection ) );
@@ -853,13 +853,13 @@ namespace NMapInfoEditor
 			for ( int nCommandIndex = 0; nCommandIndex < nCommandCount; )
 			{
 				bool bCommandRemoved = false;
-				const string szCommandPrefix = StrFmt( "startCommandsList.[%d]", nCommandIndex );
+				const std::string szCommandPrefix = StrFmt( "startCommandsList.[%d]", nCommandIndex );
 				int nCommandLinkIDCount = 0;
 				CManipulatorManager::GetValue( &nCommandLinkIDCount, pManipulator, szCommandPrefix + ".unitLinkIDs" );
 				int nCommandLinkIDIndex = 0;
 				while ( nCommandLinkIDIndex < nCommandLinkIDCount )
 				{
-					const string szCommandLinkIDPrefix = szCommandPrefix + StrFmt( ".unitLinkIDs.[%d]", nCommandLinkIDIndex );
+					const std::string szCommandLinkIDPrefix = szCommandPrefix + StrFmt( ".unitLinkIDs.[%d]", nCommandLinkIDIndex );
 					int nCommandLinkID = INVALID_NODE_ID;
 					CManipulatorManager::GetValue( &nCommandLinkID, pManipulator, szCommandLinkIDPrefix );
 					if ( nCommandLinkID == itMapInfoElement->first )
@@ -892,7 +892,7 @@ namespace NMapInfoEditor
 			}
 		}
 		// коллекционируем индексы объектов для удаления:
-		list<int> objectIndexList;
+		std::list<int> objectIndexList;
 		for ( SObjectInfo::CMapInfoElementMap::const_iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 		{
 			const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
@@ -903,7 +903,7 @@ namespace NMapInfoEditor
 		}
 		objectIndexList.sort();
 		bool bResult = true;
-		for ( list<int>::const_iterator itObjectIndex = objectIndexList.end(); itObjectIndex != objectIndexList.begin(); )
+		for ( std::list<int>::const_iterator itObjectIndex = objectIndexList.end(); itObjectIndex != objectIndexList.begin(); )
 		{
 			--itObjectIndex;
 			bResult = bResult && pObjectController->AddRemoveOperation( "Objects", ( *itObjectIndex ), pManipulator );
@@ -952,14 +952,14 @@ namespace NMapInfoEditor
 			// Получаем RPGStatsID
 			if ( const SMapInfoElement *pLinkToMapInfoElement = pLinkToObjectInfo->GetMapInfoElementBySceneID( nLinkToSceneID ) )
 			{
-				const string szLinkToObjectRPGStatsTypeName = pLinkToMapInfoElement->szRPGStatsTypeName;
+				const std::string szLinkToObjectRPGStatsTypeName = pLinkToMapInfoElement->szRPGStatsTypeName;
 				const CDBID linkToObjectRPGStatsDBID = pLinkToMapInfoElement->rpgStatsDBID;
 				const unsigned nLinkToFrameIndex = pLinkToMapInfoElement->nFrameIndex;
 				if ( !szLinkToObjectRPGStatsTypeName.empty() && !linkToObjectRPGStatsDBID.IsEmpty() )
 				{
 					for ( SObjectInfo::CMapInfoElementMap::const_iterator itMapInfoElement = mapInfoElementMap.begin(); itMapInfoElement != mapInfoElementMap.end(); ++itMapInfoElement )
 					{
-						const string szObjectRPGStatsTypeName = itMapInfoElement->second.szRPGStatsTypeName;
+						const std::string szObjectRPGStatsTypeName = itMapInfoElement->second.szRPGStatsTypeName;
 						const CDBID objectRPGStatsDBID = itMapInfoElement->second.rpgStatsDBID;
 						const unsigned nFrameIndex = itMapInfoElement->second.nFrameIndex;
 						if ( !szObjectRPGStatsTypeName.empty() && !objectRPGStatsDBID.IsEmpty() )
@@ -1012,7 +1012,7 @@ namespace NMapInfoEditor
 						if ( bUpdateDB )
 						{
 							const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
-							const string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+							const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
 							bResult = bResult && pObjectController->AddChangeValueOperation<unsigned>( szObjectProperty + "Link.LinkWith", nLinkToLinkID, pManipulator );
 						}
 						itMapInfoElement->second.nLinkToLinkID = nLinkToLinkID;
@@ -1074,7 +1074,7 @@ namespace NMapInfoEditor
 				if ( bUpdateDB )
 				{
 					const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
-					const string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
+					const std::string szObjectProperty = StrFmt( "Objects.[%d].", nObjectIndex );
 					bResult = bResult && pObjectController->AddChangeValueOperation<int>( szObjectProperty + "Link.LinkWith", INVALID_NODE_ID, pManipulator );
 					if ( !bResult )
 					{
@@ -1094,7 +1094,7 @@ namespace NMapInfoEditor
 		if ( SMapInfoElement* pMapInfoElement = GetMapInfoElementByLinkID( nLinkID ) )
 		{
 			const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( nLinkID );
-			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 			if ( ( nFlags & POSITION_CHANGED ) || ( nFlags & DIRECTION_CHANGED ) )
 			{
 				MakeAbsolute();
@@ -1196,7 +1196,7 @@ namespace NMapInfoEditor
 				pMaskManipulator->AddName( "Object",							false, "", INVALID_NODE_ID, false );
 				pMaskManipulator->AddName( "ConstructorProfile",	false, "", INVALID_NODE_ID, false );
 				//
-				string szMask;
+				std::string szMask;
 				const int nObjectIndex = pObjectInfoCollector->linkIDToIndexCollector.Get( itMapInfoElement->first );
 				if ( nObjectIndex != INVALID_NODE_ID )
 				{
@@ -1287,7 +1287,7 @@ namespace NMapInfoEditor
 				}
 			}
 			//
-			const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+			const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Objects", NODE_ADD_INDEX, pManipulator );
 			//Change

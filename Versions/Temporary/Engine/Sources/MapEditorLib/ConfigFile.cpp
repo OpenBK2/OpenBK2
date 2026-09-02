@@ -6,7 +6,7 @@
 const char SConfigFile::DIVIDERS[] = " \t";
 
 
-void SConfigFile::SConfigEntry::Load( const string &rszLine )
+void SConfigFile::SConfigEntry::Load( const std::string &rszLine )
 {
 	szLine = rszLine;
 	NStr::TrimBoth( szLine, "\n\r" );
@@ -19,10 +19,10 @@ void SConfigFile::SConfigEntry::Load( const string &rszLine )
 	  if ( ( szLine.substr( 0, 1 ).compare( ";" ) != 0 ) &&
 				 ( szLine.substr( 0, 2 ).compare( "//" ) != 0 ) )  
 		{
-			string szLocalLine = szLine;
+			std::string szLocalLine = szLine;
 			NStr::TrimBoth( szLocalLine, DIVIDERS );
 			const int nPos = szLocalLine.find_first_of( DIVIDERS );
-			if ( nPos != string::npos )
+			if ( nPos != std::string::npos )
 			{
 				szKeyword = szLocalLine.substr( 0, nPos );
 				szParams = szLocalLine.substr( nPos );
@@ -38,19 +38,19 @@ void SConfigFile::SConfigEntry::Load( const string &rszLine )
 }
 
 
-int SConfigFile::Load( const string &rszFileName )
+int SConfigFile::Load( const std::string &rszFileName )
 {
 	Clear();
 	//
-  string szBuffer;
+  std::string szBuffer;
 	CFileStream stream( rszFileName, CFileStream::WIN_READ_ONLY );
   const int nSize = stream.GetSize();
   szBuffer.resize( nSize );
   stream.Read( &( szBuffer[0] ), nSize );
 	//
-	vector<string> lineList;
+	std::vector<std::string> lineList;
 	NStr::SplitString( szBuffer.c_str(), &lineList, '\n' );
-	for ( vector<string>::const_iterator itLine = lineList.begin(); itLine != lineList.end(); ++itLine )
+	for ( std::vector<std::string>::const_iterator itLine = lineList.begin(); itLine != lineList.end(); ++itLine )
 	{
 		CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
 		itConfigEntry->Load( *itLine );
@@ -59,9 +59,9 @@ int SConfigFile::Load( const string &rszFileName )
 }
 
 
-void SConfigFile::Save( const string &rszFileName )
+void SConfigFile::Save( const std::string &rszFileName )
 {
-  string szBuffer;
+  std::string szBuffer;
 	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin(); itConfigEntry != configEntryList.end(); ++itConfigEntry )
 	{
 		szBuffer += itConfigEntry->szLine + "\r\n";
@@ -72,9 +72,9 @@ void SConfigFile::Save( const string &rszFileName )
 }
 
 
-bool SConfigFile::GetParams( CParamsList *pParamsList, const string &rszKeyword, bool bIgnoreCase )
+bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKeyword, bool bIgnoreCase )
 {
-	string szKeyword = rszKeyword;
+	std::string szKeyword = rszKeyword;
 	if ( bIgnoreCase )
 	{
 		NStr::ToLower( &szKeyword );
@@ -83,7 +83,7 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const string &rszKeyword,
 	bool bFound = false;
 	for ( CConfigEntryList::const_iterator itConfigEntry = configEntryList.begin(); itConfigEntry != configEntryList.end(); ++itConfigEntry )
 	{
-		string szConfigEntryKeyword = itConfigEntry->szKeyword;
+		std::string szConfigEntryKeyword = itConfigEntry->szKeyword;
 		if ( bIgnoreCase )
 		{
 			NStr::ToLower( &szConfigEntryKeyword );
@@ -105,25 +105,25 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const string &rszKeyword,
 }
 
 
-void SConfigFile::AddLine( const string &rszLine )
+void SConfigFile::AddLine( const std::string &rszLine )
 {
 	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
 	itConfigEntry->Load( rszLine );
 }
 
 
-void SConfigFile::AddKeyword( const string &rszKeyword, const string &rszParams )
+void SConfigFile::AddKeyword( const std::string &rszKeyword, const std::string &rszParams )
 {
 	CConfigEntryList::iterator itConfigEntry = configEntryList.insert( configEntryList.end() );
-	itConfigEntry->szLine = rszKeyword + string( " " ) + rszParams;
+	itConfigEntry->szLine = rszKeyword + std::string( " " ) + rszParams;
 	itConfigEntry->szKeyword = rszKeyword;
 	itConfigEntry->szParams = rszParams;
 }
 
 
-int SConfigFile::RemoveKeyword( const string &rszKeyword, bool bIgnoreCase )
+int SConfigFile::RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase )
 {
-	string szKeyword = rszKeyword;
+	std::string szKeyword = rszKeyword;
 	if ( bIgnoreCase )
 	{
 		NStr::ToLower( &szKeyword );
@@ -132,7 +132,7 @@ int SConfigFile::RemoveKeyword( const string &rszKeyword, bool bIgnoreCase )
 	int nErasedCount = 0;
 	for ( CConfigEntryList::iterator itConfigEntry = configEntryList.begin(); itConfigEntry != configEntryList.end(); )
 	{
-		string szConfigEntryKeyword = itConfigEntry->szKeyword;
+		std::string szConfigEntryKeyword = itConfigEntry->szKeyword;
 		if ( bIgnoreCase )
 		{
 			NStr::ToLower( &szConfigEntryKeyword );

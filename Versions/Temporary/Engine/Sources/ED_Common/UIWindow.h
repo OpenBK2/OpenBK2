@@ -42,16 +42,16 @@ public:
 	void AddChild( IWindow *pWnd, bool bDoReposition = false ) {}
 	int GetNumChildren() {return 0;}
 	IWindow *GetChild( int nIndex ) { return 0; }
-	IWindow* GetChild( const string &_szName, const bool bRecursive = false ) { return 0; }
-	IWindow* GetVisibleChild( const string &_szName, const bool bRecursive = false ) { return 0; }
+	IWindow* GetChild( const std::string &_szName, const bool bRecursive = false ) { return 0; }
+	IWindow* GetVisibleChild( const std::string &_szName, const bool bRecursive = false ) { return 0; }
 	void CopyBackground( const IWindow *pSrcWnd ) {}
 	void SetTexture( const struct NDb::STexture *pDesc ) {}
 	void InitByDesc( const struct NDb::SUIDesc *pDesc ) {}
 	void RegisterObservers() {}
 	void SetOutline( int eOutlineType ) {}
-	void SetTextString( const wstring &szText ) {}
+	void SetTextString( const std::wstring &szText ) {}
 	const wchar_t *GetTextString() const { return 0; }
-	virtual wstring GetDBText() const { return wstring(); };
+	virtual std::wstring GetDBText() const { return std::wstring(); };
 	SWindowContext * GetContext() { return 0; }
 	void Init() {}
 	const struct NDb::SUIDesc * GetDesc() const { return 0; }
@@ -62,8 +62,8 @@ public:
 	const struct NDb::SWindowShared * GetSharedDesc() const { return 0; }
 	void RemoveChild( IWindow *_pChild ) {}
 	IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) { return 0; }
-	const string& GetName() const { return szFakeName; }
-	void SetName( const string &szName ) {}
+	const std::string& GetName() const { return szFakeName; }
+	void SetName( const std::string &szName ) {}
 
 	// help context
 	void SetTooltipIDForMLHandler( int nID ) {}
@@ -76,7 +76,7 @@ public:
 
 	// members
 protected:
-	string szFakeName;
+	std::string szFakeName;
 	CTRect<float> pos;
 	CDBPtr<NDb::STexture> pTexture;
 	uint32_t color;

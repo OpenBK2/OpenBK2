@@ -9,7 +9,7 @@
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 
-CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor, const string &rszTypeName, const CDBID &rDBID ) 
+CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor, const std::string &rszTypeName, const CDBID &rDBID ) 
 	: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )
 {
 }

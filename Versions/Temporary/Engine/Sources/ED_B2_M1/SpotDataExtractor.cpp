@@ -5,13 +5,13 @@
 
 #include <cstdint>
 
-bool CSpotDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+bool CSpotDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	if ( CPtr<IManipulator> pMaterialManipulator = CManipulatorManager::CreateManipulatorFromReference( "Material", pObjectManipulator, 0, 0, 0 ) )
 	{
 		if ( CPtr<IManipulator> pTexureManipulator = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, 0, 0 ) )
 		{
-			string szTextureName;
+			std::string szTextureName;
 			CManipulatorManager::GetValue( &szTextureName, pTexureManipulator, "DestName" );
 			return LoadImagesFromSource( pSmallImage, pNormalImage, szTextureName, LOAD_IMAGE_SCALE );
 		}

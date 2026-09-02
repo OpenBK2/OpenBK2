@@ -8,9 +8,9 @@ class CPCStringFileRefEditor : public CPCStringBrowseEditor
 	CPCStringFileRefEditor() {}
 	OBJECT_NOCOPY_METHODS( CPCStringFileRefEditor );
 
-	string szObjectTypeName;
+	std::string szObjectTypeName;
 public:
-	CPCStringFileRefEditor( const string &rszObjectTypeName );
+	CPCStringFileRefEditor( const std::string &rszObjectTypeName );
 
 	//CPCItemEditor
 	void GetValue( CVariant *pValue );

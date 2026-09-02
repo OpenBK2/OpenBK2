@@ -79,7 +79,7 @@ namespace NMapInfoEditor
 			return false;
 		}
 		// Устанавливаем общие параметры
-		const string szSpotPrefix = StrFmt( "Spots.[%d]", pSpotLoadInfo->nObjectIndex );
+		const std::string szSpotPrefix = StrFmt( "Spots.[%d]", pSpotLoadInfo->nObjectIndex );
 		// Добавляем объекты базы
 		nLinkID = INVALID_NODE_ID;
 		// создаем SMapInfoElement и заполняем его данными
@@ -95,7 +95,7 @@ namespace NMapInfoEditor
 			}
 			else
 			{
-				string szRPGStatsName;
+				std::string szRPGStatsName;
 				bResult = bResult && CManipulatorManager::GetParamsFromReference( szSpotPrefix + ".Descriptor", pManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 				rpgStatsDBID = CDBID( szRPGStatsName );
 				bResult = bResult && CManipulatorManager::GetValue( &nLinkID, pManipulator, szSpotPrefix + ".SpotID" );
@@ -147,7 +147,7 @@ namespace NMapInfoEditor
 		// создаем SMapInfoElements и заполняем их данными
 		bool bResult = true;
 		{
-			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Spots", NODE_ADD_INDEX, pManipulator );
 			//Change
@@ -168,7 +168,7 @@ namespace NMapInfoEditor
 				terrainSpotInstance.nSpotID = nLinkID;
 				terrainSpotInstance.points = spotSquare;
 				pEditorScene->GetTerraManager()->AddTerraSpot( &terrainSpotInstance );
-				//vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.end(), terrainSpotInfoInstance );
+				//std::vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.insert( pMutablMapInfo->spots.end(), terrainSpotInfoInstance );
 				//if ( !pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots.empty() )
 				//{
 					//NI_ASSERT(  nSpotIndex == ( pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots.size() - 1 ), "Invalid spot index creation" );
@@ -297,7 +297,7 @@ namespace NMapInfoEditor
 		{
 			MakeAbsoluteSpotSquare();
 			//
-			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
 			bool bResult = true;
 			for ( int nSpotPoint = 0; nSpotPoint < 4; ++nSpotPoint )
 			{
@@ -322,7 +322,7 @@ namespace NMapInfoEditor
 		//if ( ( nSpotIndex >= 0 ) && ( nSpotIndex < pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots.size() ) )
 		if ( bUpdateScene )
 		{
-			//vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.begin() + nSpotIndex;
+			//std::vector<NDb::STerrainSpotInstance>::iterator itSpot = pMutablMapInfo->spots.begin() + nSpotIndex;
 			//const NDb::STerrainSpotInstance *pTerrainSpotInstance = &( pObjectInfoCollector->pMapInfoEditor->pMapInfo->spots[nSpotIndex] );
 			//NI_ASSERT( pTerrainSpotInstance->nSpotID == nLinkID, "SSpotInfo::UpdateScene(), pTerrainSpotInstance->nSpotID != nLinkID" );
 			pEditorScene->GetTerraManager()->RemoveTerraSpot( nLinkID );
@@ -353,7 +353,7 @@ namespace NMapInfoEditor
 		const int nSpotIndex = pObjectInfoCollector->spotIDToIndexCollector.Get( nLinkID );
 		if ( ( nSpotIndex != INVALID_NODE_ID ) && ( nFlags > 0 ) )
 		{
-			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
 			CManipulatorManager::GetArray<CSpotSquare, CVec2>( &spotSquare, pManipulator, szSpotPrefix + ".points" );
 			ClearAdditionalPosition( false );
 			MakeRelativeSpotSquare( true );
@@ -448,7 +448,7 @@ namespace NMapInfoEditor
 		// создаем SMapInfoElements и заполняем их данными
 		bool bResult = true;
 		{
-			const string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
+			const std::string szSpotPrefix = StrFmt( "Spots.[%d]", nSpotIndex );
 			// Insert
 			bResult = bResult && pObjectController->AddInsertOperation( "Spots", NODE_ADD_INDEX, pManipulator );
 			//Change

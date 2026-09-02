@@ -30,8 +30,8 @@ protected:
 
 public:
 	void UpdateControls();
-	void SetProgressTitle( const string &rszProgressTitle );
-	void SetProgressMessage( const string &rszProgressMessage );
+	void SetProgressTitle( const std::string &rszProgressTitle );
+	void SetProgressMessage( const std::string &rszProgressMessage );
 	void SetProgressRange( int nStart, int nFinish );
 	void SetProgressPosition( int nPosition );
 	void IterateProgressPosition();

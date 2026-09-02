@@ -7,11 +7,11 @@
 
 #include <cstdint>
 
-bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "IconTexture", pObjectManipulator, 0, 0, 0 ) )
 	{
-		string szTextureName;
+		std::string szTextureName;
 		CManipulatorManager::GetValue( &szTextureName, pTextureManipulator, "DestName" );
 		return LoadImagesFromSource( pSmallImage, pNormalImage, szTextureName, LOAD_IMAGE_SCALE );
 	}
@@ -19,9 +19,9 @@ bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray
 }
 
 
-bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
-	string szNameFileName;
+	std::string szNameFileName;
 	if ( CManipulatorManager::GetValue( &szNameFileName, pObjectManipulator, "LocalizedNameFileRef" ) != false )
 	{
 		*pstrLabel = NStr::ToMBCS( NText::GetText( szNameFileName ) ).c_str();

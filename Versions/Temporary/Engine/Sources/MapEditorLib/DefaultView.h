@@ -5,7 +5,7 @@
 class CDefaultView : public IView
 {
 	// Метка для последующего удаления Undo Operation из очереди
-	string szTemporaryLabel;
+	std::string szTemporaryLabel;
 	// Набор изменяемых объектов
 	SObjectSet objectSet;
 	// Манипулятордля изменений обьектов (может быть MultiManipulator)
@@ -37,16 +37,16 @@ public:
 		return pTYPEObject;
 	}
 	inline const SObjectSet& GetObjectSet() const { return objectSet; }
-	inline const string& GetTemporaryLabel() const { return szTemporaryLabel; }
+	inline const std::string& GetTemporaryLabel() const { return szTemporaryLabel; }
 	//
 	virtual void SetViewManipulator( IManipulator* _pViewManipulator,
 																	 const SObjectSet &rObjectSet,
-																	 const string &rszTemporaryLabel );
+																	 const std::string &rszTemporaryLabel );
 	virtual IManipulator* GetViewManipulator() { return pViewManipulator; }
 	virtual void RemoveViewManipulator();
 	//
-	virtual void SetTemporaryLabel( const string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
-	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) { if ( pszTemporaryLabel ) { ( *pszTemporaryLabel ) = szTemporaryLabel; } }
+	virtual void SetTemporaryLabel( const std::string &rszTemporaryLabel ) { szTemporaryLabel = rszTemporaryLabel; }
+	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) { if ( pszTemporaryLabel ) { ( *pszTemporaryLabel ) = szTemporaryLabel; } }
 	//
 	virtual void GetObjectSet( SObjectSet *pObjectSet ) { if ( pObjectSet != 0 ) { ( *pObjectSet ) = objectSet; } }
 	virtual void Enter();

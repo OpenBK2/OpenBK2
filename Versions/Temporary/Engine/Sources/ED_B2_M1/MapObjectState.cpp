@@ -63,7 +63,7 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 			}
 		}
 		//
-		list<int> sceneIDList;
+		std::list<int> sceneIDList;
 		pScene->PickObjects( sceneIDList, CVec2( rMousePoint.x, rMousePoint.y ) );
 		pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, rMousePoint );
 		if ( !sceneIDList.empty() )
@@ -71,7 +71,7 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 			pParentState->selector.Clear();
 			pParentState->nSelectedSceneID = sceneIDList.front();
 			//
-			list<unsigned> selectedObjectSceneIDList;
+			std::list<unsigned> selectedObjectSceneIDList;
 			selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 			//
 			if ( !( pParentState->GetObjectInfoCollector()->IsInSelection( selectedObjectSceneIDList ) ) )
@@ -176,7 +176,7 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 		{
 			if ( IEditorScene *pScene = EditorScene() )
 			{
-				list<int> sceneIDList;
+				std::list<int> sceneIDList;
 				pScene->PickObjects( sceneIDList,
 														 CVec2( pParentState->selector.frameRect.minx, pParentState->selector.frameRect.miny ),
 														 CVec2( pParentState->selector.frameRect.maxx, pParentState->selector.frameRect.maxy ) );
@@ -224,7 +224,7 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 	}
 	if ( IEditorScene *pScene = EditorScene() )
 	{
-		list<int> sceneIDList;
+		std::list<int> sceneIDList;
 		pScene->PickObjects( sceneIDList, CVec2( rMousePoint.x, rMousePoint.y ) );
 		CString strStatusBarMessage;
 		if ( sceneIDList.size() > 1 )
@@ -388,7 +388,7 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 	{
 		if ( IEditorScene *pScene = EditorScene() )
 		{
-			list<int> sceneIDList;
+			std::list<int> sceneIDList;
 			pScene->PickObjects( sceneIDList, CVec2( rMousePoint.x, rMousePoint.y ) );
 			pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, rMousePoint );
 			if ( !sceneIDList.empty() )
@@ -399,7 +399,7 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 					// удаляем старый объект
 					if ( ( nFlags & MK_SHIFT ) == 0 )
 					{
-						list<unsigned> selectedObjectSceneIDList;
+						std::list<unsigned> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->RemoveFromSelection( selectedObjectSceneIDList );
 						// записываем его положение в базу:
@@ -422,7 +422,7 @@ void CMapObjectEditState::RecalculateSelection( unsigned nFlags, const CTPoint<i
 					pParentState->nSelectedSceneID = nNewSelectedObjectSceneID;
 					// вставляем новывй
 					{
-						list<unsigned> selectedObjectSceneIDList;
+						std::list<unsigned> selectedObjectSceneIDList;
 						selectedObjectSceneIDList.push_back( pParentState->nSelectedSceneID );
 						pParentState->GetObjectInfoCollector()->InsertToSelection( selectedObjectSceneIDList, false );
 					}
@@ -458,13 +458,13 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 			{
 				if ( IEditorScene *pScene = EditorScene() )
 				{
-					list<int> sceneIDList;
+					std::list<int> sceneIDList;
 					pScene->PickObjects( sceneIDList, CVec2( rMousePoint.x, rMousePoint.y ) );
 					pParentState->GetObjectInfoCollector()->Pick( &sceneIDList, rMousePoint );
 					if ( !sceneIDList.empty() )
 					{
 						int nLinkToSceneID = INVALID_NODE_ID;
-						for ( list<int>::const_iterator itDceneID = sceneIDList.begin(); itDceneID != sceneIDList.end(); ++itDceneID )
+						for ( std::list<int>::const_iterator itDceneID = sceneIDList.begin(); itDceneID != sceneIDList.end(); ++itDceneID )
 						{
 							if ( !pParentState->GetObjectInfoCollector()->IsInSelection( *itDceneID ) )
 							{
@@ -1067,12 +1067,12 @@ void CMapObjectPasteState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned
 }
 
 
-int CMapObjectState::GetNextSceneID( int nSceneID, list<int> *pSceneIDList )
+int CMapObjectState::GetNextSceneID( int nSceneID, std::list<int> *pSceneIDList )
 {
 	if ( ( pSceneIDList != 0 ) && ( !pSceneIDList->empty() ) )
 	{
 		pSceneIDList->sort();
-		list<int>::iterator itSceneID = find( pSceneIDList->begin(), pSceneIDList->end(), nSceneID );
+		std::list<int>::iterator itSceneID = find( pSceneIDList->begin(), pSceneIDList->end(), nSceneID );
 		if ( itSceneID != pSceneIDList->end() )
 		{
 			++itSceneID;
@@ -1181,12 +1181,12 @@ void CMapObjectState::Draw( CPaintDC *pPaintDC )
 			{
 				if ( selector.IsTerrainSelector() )
 				{
-					list<CVec3> pointList;
+					std::list<CVec3> pointList;
 					pointList.push_back( CVec3( selector.vTerrainPos0.x, selector.vTerrainPos0.y, 0.0f ) );
 					pointList.push_back( CVec3( selector.vTerrainPos1.x, selector.vTerrainPos0.y, 0.0f ) );
 					pointList.push_back( CVec3( selector.vTerrainPos1.x, selector.vTerrainPos1.y, 0.0f ) );
 					pointList.push_back( CVec3( selector.vTerrainPos0.x, selector.vTerrainPos1.y, 0.0f ) );
-					for ( list<CVec3>::iterator itPoint = pointList.begin(); itPoint != pointList.end(); ++itPoint )
+					for ( std::list<CVec3>::iterator itPoint = pointList.begin(); itPoint != pointList.end(); ++itPoint )
 					{
 						UpdateTerrainHeight( &( *itPoint ) );
 					}

@@ -26,7 +26,7 @@ struct SACBMarker : public CObjectBase
 	OBJECT_NOCOPY_METHODS( SACBMarker );
 
 public:
-	vector<int> sceneIDs;
+	std::vector<int> sceneIDs;
 	//
 	SACBMarker() {}
 	virtual ~SACBMarker()
@@ -101,7 +101,7 @@ public:
 			//::OutputDebugString( StrFmt( "create: %s %d\n", oi.szName.c_str(), nObjectSceneID ) );
 		}
 
-		list<int> tmp;
+		std::list<int> tmp;
 		for ( int i = 0; i < sceneIDs.size(); ++i )
 		{
 			if ( sceneIDs[i] != -1 )
@@ -216,8 +216,8 @@ class CAdvClipboardState : public CPolygonState, public ICommandHandler
 	bool CopyMapObjects( const char *pszTypeName );
 	bool CopyTerraHeights();
 	bool PasteTerraHeigts();
-	bool CopyVSOs( const string &szType, const vector< NDb::SVSOInstance > &mapVsoObjects );
-	bool PasteVSO( const string &szType, const NDb::SVSOInstance &vsoInstance );
+	bool CopyVSOs( const std::string &szType, const std::vector< NDb::SVSOInstance > &mapVsoObjects );
+	bool PasteVSO( const std::string &szType, const NDb::SVSOInstance &vsoInstance );
 	bool CopyTerrain();
 	bool PasteTerrain();
 	bool CopyHeightsCrags();
@@ -238,19 +238,19 @@ class CAdvClipboardState : public CPolygonState, public ICommandHandler
 	bool PasteUnitsSquads();
 	//
 	bool InsertVSOToBaseRoad( int nVSOIndex, const NDb::SVSOInstance &rVSO );
-	int InsertRoadVSO( int nRoadDescID, const vector<CVec3> &rControlPointList, const vector<NDb::SVSOPoint> &rPoints );
+	int InsertRoadVSO( int nRoadDescID, const std::vector<CVec3> &rControlPointList, const std::vector<NDb::SVSOPoint> &rPoints );
 	void UpdateVisualVSORoad( NDb::SVSOInstance *pVSO, bool bBothEdges );
 	//
 	bool InsertVSOToBaseRiver( int nVSOIndex, const NDb::SVSOInstance &rVSO );
-	int InsertRiverVSO( int nRoadDescID, const vector<CVec3> &rControlPointList, const vector<NDb::SVSOPoint> &rPoints );
+	int InsertRiverVSO( int nRoadDescID, const std::vector<CVec3> &rControlPointList, const std::vector<NDb::SVSOPoint> &rPoints );
 	void UpdateVisualVSORiver( NDb::SVSOInstance *pVSO, bool bBothEdges );
 	//
 	bool InsertVSOToBaseCrag( int nVSOIndex, const NDb::SVSOInstance &rVSO );
-	int InsertCragVSO( int nCragDescID, const vector<CVec3> &rControlPointList, const vector<NDb::SVSOPoint> &rPoints );
+	int InsertCragVSO( int nCragDescID, const std::vector<CVec3> &rControlPointList, const std::vector<NDb::SVSOPoint> &rPoints );
 	void UpdateVisualVSOCrag( NDb::SVSOInstance *pVSO, bool bBothEdges );
 	//
 	bool InsertVSOToBaseLake( int nVSOIndex, const NDb::SVSOInstance &rVSO );
-	int InsertLakeVSO( int nRoadDescID, const vector<CVec3> &rControlPointList, const vector<NDb::SVSOPoint> &rPoints );
+	int InsertLakeVSO( int nRoadDescID, const std::vector<CVec3> &rControlPointList, const std::vector<NDb::SVSOPoint> &rPoints );
 	void UpdateVisualVSOLake( NDb::SVSOInstance *pVSO, bool bBothEdges );
 	//
 	void DrawPasteRegion( CPaintDC *pPaintDC );

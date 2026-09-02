@@ -9,7 +9,7 @@
 
 class CComboBoxGDBBrowser : public ICommandHandler
 {
-	vector<CTreeGDBBrowserBase*> tabList;
+	std::vector<CTreeGDBBrowserBase*> tabList;
 	//
 	int nGDBBrowserID;
 	CWnd *pwndParent;
@@ -36,13 +36,13 @@ public:
 	bool ActivateTab( CTreeGDBBrowserBase* pwndActiveTab );
 	inline int GetTabCount() { return tabList.size(); }
 	CTreeGDBBrowserBase* GetTab( int nTabIndex );
-	CTreeGDBBrowserBase* GetTab( const string &rszObjectTypeName );
-	bool GetActiveTabName( string *pszName );
+	CTreeGDBBrowserBase* GetTab( const std::string &rszObjectTypeName );
+	bool GetActiveTabName( std::string *pszName );
 	bool ShowWindow( int nCmdShow );
 	bool IsFocused();
 	//
 	template<class TTAB>
-	TTAB* AddNewTab( TTAB *pwndCreatedTab,  const string &rszTabLabel ) 
+	TTAB* AddNewTab( TTAB *pwndCreatedTab,  const std::string &rszTabLabel ) 
 	{
 		TTAB *pwndNewTab = pwndCreatedTab;
 		if ( pwndNewTab == 0 )

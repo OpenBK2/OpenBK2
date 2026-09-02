@@ -10,9 +10,9 @@ struct IResourceManager;
 class CRefListWaitDialog : public CResizeDialog
 {
 
-	string szTargetTypeName;
-	string szTargetName;
-	list<string> *pResultList;
+	std::string szTargetTypeName;
+	std::string szTargetName;
+	std::list<std::string> *pResultList;
 	IResourceManager *pResourceManager;
 	bool bComplete;
 	unsigned nTimer;
@@ -26,7 +26,7 @@ protected:
 
 	//
 	// CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CRefListWaitDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CRefListWaitDialog"; }
 	int GetMinimumXDimension() { return 200; }
 	int GetMinimumYDimension() { return 50; }
 	bool IsDrawGripper() { return true; }
@@ -36,7 +36,7 @@ public:
 
 	CRefListWaitDialog( CWnd* pParent );
 
-	void SetData( list<string> *pResult, const string &szTypeName, const string &szName, IResourceManager *_pResourceManager ) 
+	void SetData( std::list<std::string> *pResult, const std::string &szTypeName, const std::string &szName, IResourceManager *_pResourceManager ) 
 		{ pResultList = pResult; szTargetTypeName = szTypeName; szTargetName = szName; pResourceManager = _pResourceManager; }
 	bool IsComplete() { return bComplete; }
 

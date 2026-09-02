@@ -50,7 +50,7 @@ public:
 		CVec3 vPosition;
 		float fDirection;
 	};
-	void GetSectionsInfo( vector<SFenceSectionInfo> *pSectionInfo, NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode ); 
+	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode ); 
 	///
 };
 
@@ -75,7 +75,7 @@ class CFenceState : public CMapObjectState
 	// выбранный для постановки забор
 	struct SSelectedFenceInfo
 	{ 
-		string szRPGStatsTypeName;
+		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SFenceRPGStats *pFenceRPGStats;
 		SSelectedFenceInfo() : pFenceRPGStats( 0 ) {}

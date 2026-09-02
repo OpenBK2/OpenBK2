@@ -9,7 +9,7 @@
 
 struct SClipboardObjectInfo : public NMapInfoEditor::SObjectCreateInfo
 {
-	string szName;
+	std::string szName;
 };
 
 
@@ -27,7 +27,7 @@ struct SClipboardBridge : public NMapInfoEditor::SBridgeCreateInfo
 
 struct SClipboardVSO
 {
-	string szType;
+	std::string szType;
 	int nTypeID;
 	int nDescID;
 	NDb::SVSOInstance vsoInstance;
@@ -42,7 +42,7 @@ struct SClipboardVSO
 
 struct SClipboardTerraSpot
 {
-	string szType;
+	std::string szType;
 	int nTypeID;
 	int nDescID;
 	NDb::STerrainSpotInstance spotInstance;
@@ -51,18 +51,18 @@ struct SClipboardTerraSpot
 
 class CMapClip
 {
-	vector<CVec3> pasteRegion;
+	std::vector<CVec3> pasteRegion;
 	//
 	CArray2D<float> heights;
 	CArray2D<uint8_t> tilesType;
 	//
-	vector<SClipboardVSO> vsoArray;
+	std::vector<SClipboardVSO> vsoArray;
 	//
-	vector<SClipboardEntrenchment> entrenchments;
-	vector<SClipboardBridge> bridges;
-	vector<SClipboardTerraSpot> spots;
+	std::vector<SClipboardEntrenchment> entrenchments;
+	std::vector<SClipboardBridge> bridges;
+	std::vector<SClipboardTerraSpot> spots;
 	//
-	vector<SClipboardObjectInfo> clipBuffer;
+	std::vector<SClipboardObjectInfo> clipBuffer;
 	//	
 
 public:
@@ -86,7 +86,7 @@ public:
 		spots.clear();
 	}
 	//
-	void SetRegion( const CVec3 &vCenter, const vector<CVec3> &controlPoints )
+	void SetRegion( const CVec3 &vCenter, const std::vector<CVec3> &controlPoints )
 	{
 		if ( controlPoints.empty() )
 			return;
@@ -120,7 +120,7 @@ public:
 		return &clipBuffer[nIdx];
 	}
 	//
-	void GetRegion( vector<CVec3> *pPolyline, const CVec3 &vCenter ) const
+	void GetRegion( std::vector<CVec3> *pPolyline, const CVec3 &vCenter ) const
 	{
 		if ( !pPolyline )
 			return;
@@ -132,7 +132,7 @@ public:
 		}
 	}
 	//
-	const vector<CVec3>& GetRegion() const
+	const std::vector<CVec3>& GetRegion() const
 	{
 		return pasteRegion;
 	}
@@ -162,7 +162,7 @@ public:
 		return heights[nY][nX];
 	}
 	//
-	void AddVso( const NDb::SVSOInstance &vsoInstance, const string &szType, int nTypeID, int nDescID )
+	void AddVso( const NDb::SVSOInstance &vsoInstance, const std::string &szType, int nTypeID, int nDescID )
 	{
 		SClipboardVSO vso;
 		vso.vsoInstance = vsoInstance;

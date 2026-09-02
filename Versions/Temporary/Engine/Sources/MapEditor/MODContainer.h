@@ -20,10 +20,10 @@ public:
 	void CloseMOD();
 	//
 	/**
-	bool IsValidFolder( const string &rszFolder );
-	bool IsValidPath( const string &rszPath );
+	bool IsValidFolder( const std::string &rszFolder );
+	bool IsValidPath( const std::string &rszPath );
 	/**/
-	string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType );
+	std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType );
 };
 
 

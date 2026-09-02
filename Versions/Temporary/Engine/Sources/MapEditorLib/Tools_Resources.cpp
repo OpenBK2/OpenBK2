@@ -10,11 +10,11 @@
 
 #include <cstdint>
 
-void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
+void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
 	if ( pStreamHolder )
 	{
-		if ( ( rszTextPath.find( ':' ) == string::npos ) && NVFS::GetMainVFS() )
+		if ( ( rszTextPath.find( ':' ) == std::string::npos ) && NVFS::GetMainVFS() )
 		{
 			pStreamHolder->pStream = new CFileStream( NVFS::GetMainVFS(), rszTextPath );
 		}
@@ -26,11 +26,11 @@ void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPa
 }
 
 
-void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszTextPath )
+void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
 	if ( pStreamHolder )
 	{
-		if ( ( rszTextPath.find( ':' ) == string::npos ) && NVFS::GetMainFileCreator() )
+		if ( ( rszTextPath.find( ':' ) == std::string::npos ) && NVFS::GetMainFileCreator() )
 		{
 			pStreamHolder->pStream = new CFileStream( NVFS::GetMainFileCreator(), rszTextPath );
 		}
@@ -42,7 +42,7 @@ void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const string &rszText
 }
 
 
-bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const string &rszPathPrefix, bool *pbAbsolutePath )
+bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturnAbsolutePath, const std::string &rszPathPrefix, bool *pbAbsolutePath )
 {
 	bool bResult = true;
 	NI_ASSERT( pszPath != 0, "NormalizePath() pszPath == 0" );
@@ -50,13 +50,13 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 	{
 		NStr::ReplaceAllChars( pszPath, '/', '\\' );
 		// Проверяем наличие слеша в конце пути
-		string szPathPrefix = rszPathPrefix;
+		std::string szPathPrefix = rszPathPrefix;
 		if ( ( szPathPrefix.size() > 0 ) && ( szPathPrefix[szPathPrefix.size() - 1] != '\\' ) )
 		{
 			szPathPrefix += "\\";
 		}
 		// Проверяем наличие отсутствия слеша в начале имени
-		string szPath = ( *pszPath );
+		std::string szPath = ( *pszPath );
 		if ( ( szPath.size() > 0 ) && ( szPath[0] == '\\' ) )
 		{
 			szPath = szPath.substr( 1 );
@@ -71,12 +71,12 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 		}
 		
 		// Расширяем имя файла до полного или отрезаем ненужное
-		string szLCPathPrefix = szPathPrefix;
-		string szLCPath = szPath;
+		std::string szLCPathPrefix = szPathPrefix;
+		std::string szLCPath = szPath;
 		NStr::ToLowerASCII( &szLCPathPrefix );
 		NStr::ToLowerASCII( &szLCPath );
 		// Имя по которому будет проверятся наличие фала на диске
-		string szCheckPath;
+		std::string szCheckPath;
 		//
 		if ( !szPathPrefix.empty() ) 
 		{
@@ -145,14 +145,14 @@ bool NormalizePath( string *pszPath, bool bFile, bool bExists, bool bReturnAbsol
 }
 
 
-bool IsValidFileName( const string &rszFileName, bool bAbsolutePath )
+bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 {
-	if ( rszFileName.find_first_of( "*?<>|" ) != string::npos )
+	if ( rszFileName.find_first_of( "*?<>|" ) != std::string::npos )
 	{
 		return false;
 	}
 	int nPos = rszFileName.find( ':' );
-	if ( ( nPos != string::npos ) && ( nPos != string::npos != 1 ) )
+	if ( ( nPos != std::string::npos ) && ( nPos != std::string::npos != 1 ) )
 	{
 		return false;			
 	}
@@ -161,7 +161,7 @@ bool IsValidFileName( const string &rszFileName, bool bAbsolutePath )
 		if ( bAbsolutePath )
 		{
 			nPos = rszFileName.find( nPos, ':' );
-			if ( nPos != string::npos )
+			if ( nPos != std::string::npos )
 			{
 				return false;			
 			}
@@ -176,7 +176,7 @@ bool IsValidFileName( const string &rszFileName, bool bAbsolutePath )
 
 /**
 
-bool CheckLatestBINResource( const string &rszResourceFileName, const string &rszXMLExtention, const string &rszBINExtention )
+bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::string &rszXMLExtention, const std::string &rszBINExtention )
 {
 	try
 	{
@@ -198,19 +198,19 @@ bool CheckLatestBINResource( const string &rszResourceFileName, const string &rs
 /**/
 
 
-bool SEnumFolderStructureParameter::IsFolderRelative( const string &rszFolder, const string &rszRelativeFolder )
+bool SEnumFolderStructureParameter::IsFolderRelative( const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
 	return IsFolderRelative( enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
 
-void SEnumFolderStructureParameter::SetRelativeFolder( const string &rszFolder, const string &rszRelativeFolder )
+void SEnumFolderStructureParameter::SetRelativeFolder( const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
 	SetRelativeFolder( &enumFolderMap, rszFolder, rszRelativeFolder );
 }
 
 
-bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnumFolderMap, const string &rszFolder, const string &rszRelativeFolder )
+bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
 	CEnumFolderMap::const_iterator folderIterator = rEnumFolderMap.find( rszFolder );
 	if ( folderIterator != rEnumFolderMap.end() )
@@ -221,7 +221,7 @@ bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnu
 }
 
 
-void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const string &rszFolder, const string &rszRelativeFolder )
+void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
 	NI_ASSERT( pEnumFolderMap != 0, StrFmt( "Wrong parameter: %x\n", pEnumFolderMap ) );
 	if ( pEnumFolderMap )
@@ -231,7 +231,7 @@ void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFold
 }
 
 
-void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter )
+void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pParameters, SEnumFolderStructureParameter *pEnumFolderStructureParameter )
 {
 	if ( pParameters || pEnumFolderStructureParameter )
 	{
@@ -247,13 +247,13 @@ void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParamete
 				rParameter.nExtentionLength = rParameter.szExtention.size();
 			}
 		}
-		vector<string> fileNameList;
-		NVFS::GetMainVFS()->GetAllFileNames( &fileNameList, string() );
-		vector<string> stringList;
+		std::vector<std::string> fileNameList;
+		NVFS::GetMainVFS()->GetAllFileNames( &fileNameList, std::string() );
+		std::vector<std::string> stringList;
 		int nCount = 0;
-		for ( vector<string>::const_iterator itFileName = fileNameList.begin(); itFileName != fileNameList.end(); ++itFileName )
+		for ( std::vector<std::string>::const_iterator itFileName = fileNameList.begin(); itFileName != fileNameList.end(); ++itFileName )
 		{
-			const string szFileName = ( *itFileName );
+			const std::string szFileName = ( *itFileName );
 			if ( !szFileName.empty() )
 			{
 				++nCount;
@@ -278,11 +278,11 @@ void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParamete
 							{
 								const int nDotPositon = szFileName.rfind( '.' );
 								const int nSlashPositon = szFileName.rfind( '\\' );
-								if ( nDotPositon == string::npos )
+								if ( nDotPositon == std::string::npos )
 								{
 									rParameter.fileNameList.push_back( szFileName );
 								}
-								else if ( (  nSlashPositon != string::npos ) && ( nDotPositon < nSlashPositon ) )
+								else if ( (  nSlashPositon != std::string::npos ) && ( nDotPositon < nSlashPositon ) )
 								{
 									rParameter.fileNameList.push_back( szFileName );
 								}
@@ -318,7 +318,7 @@ void EnumFilesInDataStorage( vector<SEnumFilesInDataStorageParameter> *pParamete
 }
 
 
-bool ExecuteProcess( const string &rszCommand, const string &rszCmdLine, const string &rszDirectory, bool bWait )
+bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait )
 {
 	char pszCommandLine[2048];
 	strcpy( pszCommandLine, rszCmdLine.c_str() );
@@ -341,7 +341,7 @@ bool ExecuteProcess( const string &rszCommand, const string &rszCmdLine, const s
 }
 
 
-void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage )
+void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePage )
 {
 	if ( pstrText )
 	{
@@ -354,7 +354,7 @@ void Unicode2MBSC( CString *pstrText, const wstring &rwszText, int nCodePage )
 }
 
 
-void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
+void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage )
 {
 	if ( pwszText )
 	{
@@ -367,7 +367,7 @@ void MBSC2Unicode( wstring *pwszText, const CString &rstrText, int nCodePage )
 }
 
 
-void File2String( CString *pstrText, bool *pbUnicode, const vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D )
+void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D )
 {
 	if ( pstrText )
 	{
@@ -381,7 +381,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const vector<uint8_t> &rBu
 			{
 				return;
 			}
-			wstring wszText;
+			std::wstring wszText;
 			wszText.resize( ( rBuffer.size() - 2 ) / sizeof( wchar_t ) );
 			memcpy( &( wszText[0] ), &( rBuffer[0] ) + 2, wszText.size() * sizeof( wchar_t ) );
 			if ( bRemove_0D )
@@ -412,7 +412,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const vector<uint8_t> &rBu
 		}
 		else if ( pstrText != 0 )
 		{
-			string szText;
+			std::string szText;
 			szText.resize( rBuffer.size() );
 			memcpy( &( szText[0] ), &( rBuffer[0] ), szText.size() );
 			if ( bRemove_0D )
@@ -448,7 +448,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const vector<uint8_t> &rBu
 }
 
 
-void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D )
+void File2String( CString *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D )
 {
 	if ( pstrText != 0 )
 	{
@@ -459,7 +459,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath,
 		{
 			if ( streamHolder.pStream->GetSize() > 0 )
 			{
-				vector<uint8_t> fileBuffer;
+				std::vector<uint8_t> fileBuffer;
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
@@ -470,7 +470,7 @@ void File2String( CString *pstrText, bool *pbUnicode, const string &rszTextPath,
 }
 
 
-void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, int nCodePage, bool bRemove_0D )
+void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D )
 {
 	if ( pszText != 0 )
 	{
@@ -481,7 +481,7 @@ void File2String( string *pszText, bool *pbUnicode, const string &rszTextPath, i
 }
 
 
-void File2String( wstring *pwszText, const vector<uint8_t> &rBuffer, bool bRemove_0D )
+void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
 	{
@@ -521,7 +521,7 @@ void File2String( wstring *pwszText, const vector<uint8_t> &rBuffer, bool bRemov
 }
 
 
-void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D )
+void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D )
 {
 	if ( pwszText != 0 )
 	{
@@ -532,7 +532,7 @@ void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D 
 		{
 			if ( streamHolder.pStream->GetSize() > 0 )
 			{
-				vector<uint8_t> fileBuffer;
+				std::vector<uint8_t> fileBuffer;
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
@@ -543,14 +543,14 @@ void File2String( wstring *pwszText, const string &rszTextPath, bool bRemove_0D 
 }
 
 
-void String2File( vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
+void String2File( std::vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
 	{
 		pBuffer->clear();
 		if ( bUnicode )
 		{
-			wstring wszText;
+			std::wstring wszText;
 			MBSC2Unicode( &wszText, rstrText, nCodePage );
 			if ( !wszText.empty() )
 			{
@@ -594,7 +594,7 @@ void String2File( vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnico
 		}
 		else
 		{
-			string szText = rstrText;
+			std::string szText = rstrText;
 			if ( !szText.empty() )
 			{
 				if ( bAdd_0D )
@@ -637,13 +637,13 @@ void String2File( vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnico
 }
 
 
-void String2File( const CString &rstrText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D )
+void String2File( const CString &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, rszTextPath );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
-		vector<uint8_t> fileBuffer;
+		std::vector<uint8_t> fileBuffer;
 		String2File( &fileBuffer, rstrText, bUnicode, nCodePage, bAdd_0D );
 		if ( fileBuffer.size() > 0 )
 		{
@@ -653,19 +653,19 @@ void String2File( const CString &rstrText, bool bUnicode, const string &rszTextP
 }
 
 
-void String2File( const string &rszText, bool bUnicode, const string &rszTextPath, int nCodePage, bool bAdd_0D )
+void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D )
 {
 	CString strText( rszText.c_str() );
 	String2File( strText, bUnicode, rszTextPath, nCodePage, bAdd_0D );
 }
 
 
-void String2File( vector<uint8_t> *pBuffer, const wstring &rwszText, bool bAdd_0D )
+void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
 	{
 		pBuffer->clear();
-		wstring wszText = rwszText;
+		std::wstring wszText = rwszText;
 		if ( bAdd_0D )
 		{
 			for ( int nIndex = 0; nIndex < wszText.size(); ++nIndex )
@@ -706,13 +706,13 @@ void String2File( vector<uint8_t> *pBuffer, const wstring &rwszText, bool bAdd_0
 }
 
 
-void String2File( const wstring &rwszText, const string &rszTextPath, bool bAdd_0D )
+void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, rszTextPath );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
-		vector<uint8_t> fileBuffer;
+		std::vector<uint8_t> fileBuffer;
 		String2File( &fileBuffer, rwszText, bAdd_0D );
 		if ( fileBuffer.size() > 0 )
 		{

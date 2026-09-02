@@ -47,7 +47,7 @@ namespace
 	{
 		try
 		{
-			const string szObjectFilterFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Filters.xml";
+			const std::string szObjectFilterFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Filters.xml";
 			{
 				CFileStream stream( szObjectFilterFileName, CFileStream::WIN_READ_ONLY );
 				if( stream.IsOk() )
@@ -55,7 +55,7 @@ namespace
 					Singleton<IObjectFilterCollector>()->Load( &stream );
 				}
 			}
-			const string szDataExtractorFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Extractors.xml";
+			const std::string szDataExtractorFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Extractors.xml";
 			{
 				CFileStream stream( szDataExtractorFileName, CFileStream::WIN_READ_ONLY );
 				if( stream.IsOk() )

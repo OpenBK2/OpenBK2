@@ -6,7 +6,7 @@
 namespace NXMLExport
 {
 
-void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &szTypeName )
+void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, const std::string &szTypeName )
 {
 	if ( szTypeName == "MapInfo" )
 	{
@@ -208,22 +208,22 @@ void MakePrefixAndPostfix( string *pszPrefix, string *pszPostfix, const string &
 
 class CXmlExporterB2 : public CXmlExporter
 {
-	typedef std::unordered_map<string, string> CNamesMap;
+	typedef std::unordered_map<std::string, std::string> CNamesMap;
 	CNamesMap namesMap;
 	//
-	string MakePathNameOther( const string &szObjectName, const string &szClassTypeName, const string &szFieldName );
+	std::string MakePathNameOther( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
 	//
-	string MakePathName( const string &szObjectName, const string &szClassTypeName, const string &szFieldName );
+	std::string MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName );
 };
 
-string CXmlExporterB2::MakePathName( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
+std::string CXmlExporterB2::MakePathName( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
 {
-	string szFullName = szClassTypeName + ':' + szObjectName;// + ':' + szFieldName;
+	std::string szFullName = szClassTypeName + ':' + szObjectName;// + ':' + szFieldName;
 	NStr::ToLowerASCII( &szFullName );
 	CNamesMap::const_iterator pos = namesMap.find( szFullName );
 	if ( pos == namesMap.end() )
 	{
-		string szFullPathName = MakePathNameOther( szObjectName, szClassTypeName, szFieldName );
+		std::string szFullPathName = MakePathNameOther( szObjectName, szClassTypeName, szFieldName );
 		NStr::ReplaceAllChars( &szFullPathName, ' ', '_' );
 		NStr::ReplaceAllChars( &szFullPathName, '\\', '/' );
 		// correct non-english file names
@@ -240,9 +240,9 @@ string CXmlExporterB2::MakePathName( const string &szObjectName, const string &s
 		return pos->second;
 }
 
-string CXmlExporterB2::MakePathNameOther( const string &szObjectName, const string &szClassTypeName, const string &szFieldName )
+std::string CXmlExporterB2::MakePathNameOther( const std::string &szObjectName, const std::string &szClassTypeName, const std::string &szFieldName )
 {
-	string szPrefix, szPostfix;
+	std::string szPrefix, szPostfix;
 	MakePrefixAndPostfix( &szPrefix, &szPostfix, szClassTypeName );
 	return szPrefix + szObjectName + szPostfix;
 }

@@ -27,15 +27,15 @@ BOOL CSearchObjectDialog::OnInitDialog()
 }
 
 
-void CSearchObjectDialog::SetText( const string &rszText )
+void CSearchObjectDialog::SetText( const std::string &rszText )
 {
 	strText = rszText.c_str();
 }
 
 
-string CSearchObjectDialog::GetText()
+std::string CSearchObjectDialog::GetText()
 {
-	return string( strText );
+	return std::string( strText );
 }
 
 // basement storage  

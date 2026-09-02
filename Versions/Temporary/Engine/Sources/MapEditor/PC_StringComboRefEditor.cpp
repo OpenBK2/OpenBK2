@@ -7,7 +7,7 @@
 
 // CPCItemEditor
 
-bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCStringComboRefEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	if ( CPCStringComboEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
@@ -15,17 +15,17 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 		ResetContent();
 		AddString( PCSV_NULL );
 		//
-		vector<string> stringList;
+		std::vector<std::string> stringList;
 		//
 		// Получаем список таблиц в базе данных
-		list<string> tables;
+		std::list<std::string> tables;
 		if ( IResourceManager *pResourceManager = Singleton<IResourceManager>() )
 		{
 			if ( CPtr<IManipulator> pTableManipulator = pResourceManager->CreateTableManipulator() )
 			{
 				if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_CACHE_LOCAL ) )
 				{
-					string szTableName;
+					std::string szTableName;
 					while ( !pTableManipulatorIterator->IsEnd() )
 					{
 						pTableManipulatorIterator->GetName( &szTableName );
@@ -35,7 +35,7 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 				}
 			}
 			// Заполняем список объектов
-			for ( list<string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
+			for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 			{
 				if ( GetPropertyDesc()->refTypes.find( *itTable ) != GetPropertyDesc()->refTypes.end() )
 				{
@@ -43,12 +43,12 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 					{
 						if ( CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_CACHE_LOCAL ) )
 						{
-							string szTableName;
+							std::string szTableName;
 							if ( typePCIEMnemonics.IsMultiRef( GetItemEditorType() ) )
 							{
 								szTableName = *itTable + TYPE_SEPARATOR_CHAR;
 							}
-							string szName;
+							std::string szName;
 							while ( !pFolderManipulatorIterator->IsEnd() )
 							{
 								pFolderManipulatorIterator->GetName( &szName );
@@ -66,7 +66,7 @@ bool CPCStringComboRefEditor::CreateEditor( const string &rszName, EPCIEType _nE
 		}
 		//
 		sort( stringList.begin(), stringList.end(), CPCStringComboRefEditorCompareItem() ); 
-		for ( vector<string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
+		for ( std::vector<std::string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
 		{
 			AddString( itString->c_str() );
 		}
@@ -81,7 +81,7 @@ void CPCStringComboRefEditor::SetValue( const CVariant &rValue )
 {
 	if ( rValue.GetType() == CVariant::VT_NULL )
 	{
-		CVariant nulRefValue = string( PCSV_NULL );
+		CVariant nulRefValue = std::string( PCSV_NULL );
 		CPCStringComboEditor::SetValue( nulRefValue );
 	}
 	else
@@ -96,7 +96,7 @@ void CPCStringComboRefEditor::GetValue( CVariant *pValue )
 	if ( pValue )
 	{
 		CPCStringComboEditor::GetValue( pValue );
-		if ( pValue->GetStringRecode().empty() || ( pValue->GetStringRecode() == string(PCSV_NULL) ) )
+		if ( pValue->GetStringRecode().empty() || ( pValue->GetStringRecode() == std::string(PCSV_NULL) ) )
 		{
 			( *pValue ) = CVariant();
 		}

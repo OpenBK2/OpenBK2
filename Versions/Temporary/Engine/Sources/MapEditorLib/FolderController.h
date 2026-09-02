@@ -49,14 +49,14 @@ public:
 			TYPE_EXPAND				= 6,
 		};
 		//
-		string szDestination;
-		string szSource;
+		std::string szDestination;
+		std::string szSource;
 		CVariant newValue;
 		//
 		EType eType;
 	};
 	//
-	typedef list<SUndoData> CUndoDataList;
+	typedef std::list<SUndoData> CUndoDataList;
 	
 	// список данных подвергнутых изменениям
 	CUndoDataList undoDataList;
@@ -71,12 +71,12 @@ public:
 	virtual bool IsEmpty() const { return undoDataList.empty(); }
 	virtual bool IsAbsolute() const { return true; }
 	// Helpers
-	bool AddInsertOperation( const string &rszObjectName );
-	bool AddRemoveOperation( const string &rszObjectName );
-	bool AddCopyOperation( const string &rszDestination, const string &rszSource );
-	bool AddRenameOperation( const string &rszDestination, const string &rszSource, bool bNewHTREEITEM );
-	bool AddColorOperation( const string &rszObjectName, int nNewColor );
-	bool AddExpandOperation( const string &rszObjectName, bool bExpand );
+	bool AddInsertOperation( const std::string &rszObjectName );
+	bool AddRemoveOperation( const std::string &rszObjectName );
+	bool AddCopyOperation( const std::string &rszDestination, const std::string &rszSource );
+	bool AddRenameOperation( const std::string &rszDestination, const std::string &rszSource, bool bNewHTREEITEM );
+	bool AddColorOperation( const std::string &rszObjectName, int nNewColor );
+	bool AddExpandOperation( const std::string &rszObjectName, bool bExpand );
 };
 
 

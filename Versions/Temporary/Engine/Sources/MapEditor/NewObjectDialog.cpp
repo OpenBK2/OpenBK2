@@ -51,13 +51,13 @@ void CNewObjectDialog::UpdateOKButton()
 		{
 			UpdateData( true );
 			//
-			szObjectTypeNamePostrfix = string( "_" ) + pBuildDataParams->szObjectTypeName;
-			string szObjectNameToCompare = pBuildDataParams->szObjectName;
-			string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
+			szObjectTypeNamePostrfix = std::string( "_" ) + pBuildDataParams->szObjectTypeName;
+			std::string szObjectNameToCompare = pBuildDataParams->szObjectName;
+			std::string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
 			NStr::ToLower( &szObjectNameToCompare );
 			NStr::ToLower( &szObjectTypeNamePostrfixToCompare );
 			//
-			string szObjectName;
+			std::string szObjectName;
 			pBuildDataParams->GetObjectName( &szObjectName );
 			//
 			pwndOKButton->EnableWindow( ( !strName.IsEmpty() ) &&
@@ -96,7 +96,7 @@ void CNewObjectDialog::CreateTypeList()
 	{
 		wndObjectTypeComboBox.ResetContent();
 		int nLocalObjectTypeNameIndex = 0;
-		for ( vector<string>::iterator itObjectTypeName = objectTypeNameList.begin(); itObjectTypeName != objectTypeNameList.end(); ++itObjectTypeName )
+		for ( std::vector<std::string>::iterator itObjectTypeName = objectTypeNameList.begin(); itObjectTypeName != objectTypeNameList.end(); ++itObjectTypeName )
 		{
 			const int nStringIndex = wndObjectTypeComboBox.AddString( itObjectTypeName->c_str() );
 			if ( nStringIndex != ( -1 ) )
@@ -139,7 +139,7 @@ BOOL CNewObjectDialog::OnInitDialog()
 }
 
 
-void CNewObjectDialog::SetBuildDataParams( const vector<string> &rObjectTypeNameList, int _nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams )
+void CNewObjectDialog::SetBuildDataParams( const std::vector<std::string> &rObjectTypeNameList, int _nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams )
 {
 	objectTypeNameList = rObjectTypeNameList;
 	nObjectTypeNameIndex = _nObjectTypeNameIndex;
@@ -155,7 +155,7 @@ void CNewObjectDialog::SetBuildDataParams( const vector<string> &rObjectTypeName
 	}
 	pBuildDataParams->szObjectName.clear();
 	//
-	string szObjectNameExtentionToCompare = pBuildDataParams->szObjectNameExtention;
+	std::string szObjectNameExtentionToCompare = pBuildDataParams->szObjectNameExtention;
 	NStr::ToLower( &szObjectNameExtentionToCompare );
 	bEnableType = ( szObjectNameExtentionToCompare == ".xdb" );
 }
@@ -163,14 +163,14 @@ void CNewObjectDialog::SetBuildDataParams( const vector<string> &rObjectTypeName
 
 void CNewObjectDialog::UpdateTypePostfix()
 {
-	szObjectTypeNamePostrfix = string( "_" ) + pBuildDataParams->szObjectTypeName;
+	szObjectTypeNamePostrfix = std::string( "_" ) + pBuildDataParams->szObjectTypeName;
 	const int nObjectTypeNameSize = szObjectTypeNamePostrfix.size();
 	const int nObjectNameSize = pBuildDataParams->szObjectName.size();
 	bool bPostfixExists = false;
 	if ( nObjectTypeNameSize <= nObjectNameSize )
 	{
-		string szObjectNameToCompare = pBuildDataParams->szObjectName;
-		string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
+		std::string szObjectNameToCompare = pBuildDataParams->szObjectName;
+		std::string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
 		NStr::ToLower( &szObjectNameToCompare );
 		NStr::ToLower( &szObjectTypeNamePostrfixToCompare );
 		bPostfixExists = ( szObjectNameToCompare.compare( nObjectNameSize - nObjectTypeNameSize, nObjectTypeNameSize, szObjectTypeNamePostrfixToCompare ) == 0 );

@@ -109,11 +109,11 @@ public:
 
 template <class TID> bool IsInvalid( const TID &rID ) { return rID.IsInvalid(); }
 template <> bool IsInvalid( const int &rID ) { return ( rID == ( -1 ) ); }
-template <> bool IsInvalid( const string &rID ) { return ( rID.empty() ); }
+template <> bool IsInvalid( const std::string &rID ) { return ( rID.empty() ); }
 
 template <class TID> void Invalidate( TID *pID ) { if ( pID != 0 ) { pID->Invalidate(); } }
 template <> void Invalidate( int *pID ) { if ( pID != 0 ) { ( *pID ) = ( -1 ); } }
-template <> void Invalidate( string *pID ) { if ( pID != 0 ) { pID->clear(); } }
+template <> void Invalidate( std::string *pID ) { if ( pID != 0 ) { pID->clear(); } }
 /**/
 
 

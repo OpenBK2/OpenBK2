@@ -8,7 +8,7 @@
 class CProgressDlg : public CResizeDialog
 {
 private:
-	string szActionName;
+	std::string szActionName;
 	CStatic	m_ProgressLabel;
 	CProgressCtrl	m_ProgressBar;
 	static const uint32_t START_TIMER_ID;
@@ -28,7 +28,7 @@ protected:
 	void OnStartTimer();
 
 	// CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { (*pszXMLFilePath) = "CProgressDlg"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { (*pszXMLFilePath) = "CProgressDlg"; }
 	int GetMinimumXDimension() { return 300; }
 	int GetMinimumYDimension() { return 125; }
 	bool IsDrawGripper() { return true; }
@@ -43,7 +43,7 @@ protected:
 public:
 	enum { IDD = IDD_PROGRESS };
 	//
-	CProgressDlg( const string &rszActionName, CWnd *pParentWindow = 0 );
+	CProgressDlg( const std::string &rszActionName, CWnd *pParentWindow = 0 );
 	virtual ~CProgressDlg() {}
 
 	bool Create( CWnd *pParentWindow );
@@ -53,7 +53,7 @@ public:
 	void IterateProgressPosition();
 	//
 	void ClearLog();
-	void AddLog( const string &rszLogMessage );
+	void AddLog( const std::string &rszLogMessage );
 	//
 	bool WasCancelled() const { return false; }
 };

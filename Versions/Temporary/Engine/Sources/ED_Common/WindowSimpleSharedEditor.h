@@ -22,7 +22,7 @@ class CWindowSimpleSharedController : public CObjectBaseController
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedController );
 public:
 	CObjectController * GetInternalController() { return &internalController; }
-	static const string GetTemporaryLabel()     { return "CWindowSimpleSharedController::TEMPORARY_LABEL"; }
+	static const std::string GetTemporaryLabel()     { return "CWindowSimpleSharedController::TEMPORARY_LABEL"; }
 	//
 	// IController
 	virtual bool IsEmpty() const { return internalController.IsEmpty(); }
@@ -31,17 +31,17 @@ public:
 		internalController.GetDescription( pstrDescription );
 	}
 	//
-	void SetChildDesc( const string & szTypeName, const CDBID &rDBID )
+	void SetChildDesc( const std::string & szTypeName, const CDBID &rDBID )
 	{
 		szChildTypeName = szTypeName;
 		dbid = rDBID;
 	}
-	inline const string & GetChildTypeName() const { return szChildTypeName; }
+	inline const std::string & GetChildTypeName() const { return szChildTypeName; }
 	inline const CDBID& GetChildID() const { return dbid; }
 	//
 private:
 	CObjectController internalController;
-	string szChildTypeName;
+	std::string szChildTypeName;
 	CDBID dbid;
 };
 
@@ -64,7 +64,7 @@ class CWindowSimpleSharedEditor : public CEditorBase, public CDefaultView, publi
 	//Данные специфичные для данного редактрора
 	
 	// Данные общего назначения 
-	vector<SEditorState> states;
+	std::vector<SEditorState> states;
 	CPtr<CWindowSimpleSharedController> pUndoController;
 	CPtr<IManipulator> pUndoManipulator;
 	bool bUOResult;
@@ -75,10 +75,10 @@ public:
 	CWindowSimpleSharedEditorSettings editorSettings;
 
 	//IEditor
-	void GetTemporaryLabel( string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
 	IView* GetView() { return this;  }
 	IInputState* GetInputState() { return states.back().pState; }
-	void GetChildFrameType( string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	void CreateControls() {}
 	void PostCreateControls() {}
 	void PreDestroyControls() {}
@@ -104,13 +104,13 @@ public:
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }
 
 	// methods
-	bool UOBegin( IManipulator *pManipulator, const string &rObjectTypeName, const CDBID &rDBID );
+	bool UOBegin( IManipulator *pManipulator, const std::string &rObjectTypeName, const CDBID &rDBID );
 	bool UOEnd();
-	bool UOSetValue( const string & szName, const CVariant &newValue );
-	bool UOInsertNode( const string &szName, const string &szChildTypeName, const CDBID &rDBID );
-	bool UORemoveNode( const string &szName, int nIndex, const string &szChildTypeName, const CDBID &rDBID );
-	bool InsertObject( IManipulator *pManipulator, const string &szName );
-	bool RemoveObject( IManipulator *pManipulator, const string &szName );
+	bool UOSetValue( const std::string & szName, const CVariant &newValue );
+	bool UOInsertNode( const std::string &szName, const std::string &szChildTypeName, const CDBID &rDBID );
+	bool UORemoveNode( const std::string &szName, int nIndex, const std::string &szChildTypeName, const CDBID &rDBID );
+	bool InsertObject( IManipulator *pManipulator, const std::string &szName );
+	bool RemoveObject( IManipulator *pManipulator, const std::string &szName );
 
 	void PushState( const SObjectSet & _objectSet, CDefaultInputState * pState, bool bCallEnterLeave = true );
 	void PopState();
@@ -118,7 +118,7 @@ public:
 	bool HasMoreThanOnePushedStates() const { return states.size() > 1; }
 	bool SetupState( const SObjectSet & _objectSet );
 
-	void PushRunModeState( const string &rszEditorTypeName, const CDBID &rDBID );
+	void PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID );
 	void PopRunModeState();
 };
 

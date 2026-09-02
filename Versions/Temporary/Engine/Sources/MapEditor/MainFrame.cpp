@@ -99,7 +99,7 @@ CMainFrame::CMainFrame() : nFreeToolbarID( AFX_IDW_TOOLBAR + 9 ), hwndPreviousFo
 
 CMainFrame::~CMainFrame()
 {
-	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 	{
 		if ( *itGDBBrowser )
 		{
@@ -245,7 +245,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//
 	{
 		int nWindowIndex = 0;
-		for ( list<int>::const_iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin(); itGDBBrowserID != pUserData->gdbBrowserIDList.end(); ++itGDBBrowserID )
+		for ( std::list<int>::const_iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin(); itGDBBrowserID != pUserData->gdbBrowserIDList.end(); ++itGDBBrowserID )
 		{
 			strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
 			if ( CDWGDBBrowser *pwndGDBBrowser = new CDWGDBBrowser( *itGDBBrowserID ) )
@@ -260,7 +260,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 			++nWindowIndex;
 		}
 	}
-	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 	{
 		if ( ( *itGDBBrowser ) )
 		{
@@ -339,7 +339,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	const bool bEnableEdit = ( NGlobal::GetVar( "disable_edit", 0 ) == 0 );
 	ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 	bool bObjectStorageNotSet = true;
-	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 	{
 		if ( *itGDBBrowser )
 		{
@@ -481,7 +481,7 @@ BOOL CMainFrame::OnCopyData( CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct )
 {
 	if ( ( pWnd == 0 ) && ( pCopyDataStruct != 0 ) && ( pCopyDataStruct->dwData == CMapEditorSingletonBase::OPEN_FILE ) )
 	{
-		string szCommandLine = static_cast<char*>( pCopyDataStruct->lpData );
+		std::string szCommandLine = static_cast<char*>( pCopyDataStruct->lpData );
 		OpenResource( szCommandLine );
 		return true;
 	}
@@ -503,7 +503,7 @@ void CMainFrame::OnDropFiles( HDROP hDropInfo )
 										 strFileName.GetBuffer( 0xFFF ),
 										 0xFFF );
 		strFileName.ReleaseBuffer();
-		string szResourceName = strFileName;
+		std::string szResourceName = strFileName;
 		OpenResource( szResourceName );
 		break;
 	}
@@ -511,15 +511,15 @@ void CMainFrame::OnDropFiles( HDROP hDropInfo )
 }
 
 
-void CMainFrame::OpenResource( const string &rszResourceName )
+void CMainFrame::OpenResource( const std::string &rszResourceName )
 {
 	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
 	{
-		string szResourceName = rszResourceName;
+		std::string szResourceName = rszResourceName;
 		NStr::TrimBoth( szResourceName, '"' );
 		if ( pUserData->NormalizePath( &szResourceName, true, true, false, SUserData::NPT_DATA_STORAGE, 0 ) )
 		{
-			string szExtention;
+			std::string szExtention;
 			CStringManager::SplitFileName( 0, 0, &szExtention, szResourceName );
 			NStr::ToLower( &szExtention );
 			if ( szExtention == ".xdb" )
@@ -533,7 +533,7 @@ void CMainFrame::OpenResource( const string &rszResourceName )
 					if ( CPtr<IManipulator> pObjectManipulator = CManipulatorManager::CreateObectSetManipulator( objectSet ) )
 					{
 						const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
-						string szName;
+						std::string szName;
 						CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
 						CStringManager::AddToRecentList( szName, bMainObject );
 						//
@@ -541,7 +541,7 @@ void CMainFrame::OpenResource( const string &rszResourceName )
 						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 						if ( pView != 0 )
 						{
-							pView->SetViewManipulator( pObjectManipulator, objectSet, string() );
+							pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
 							Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 						}
 						if ( CWnd *pwndParent = GetParent() )
@@ -718,11 +718,11 @@ void CMainFrame::OnDWGDBBrowserRemove()
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 		//
-		list<int>::iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin();
+		std::list<int>::iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin();
 		int nWindowIndex = 0;
 		CString strDWName;
 		strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
-		for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+		for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 		{
 			if ( *itGDBBrowser )
 			{
@@ -761,7 +761,7 @@ void CMainFrame::OnDWGDBBrowserWindow( unsigned nCommandID )
 {
 	const int nGDBBrowserIndex = nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST;
 	int nWindowIndex = 0;
-	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 	{
 		if ( nWindowIndex == nGDBBrowserIndex )
 		{
@@ -787,7 +787,7 @@ void CMainFrame::OnUpdateDWGDBBrowserRemove( CCmdUI* pCmdUI )
 	if ( gdbBrowserList.size() > 1 )
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-		for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+		for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 		{
 			if ( *itGDBBrowser )
 			{
@@ -823,9 +823,9 @@ void CMainFrame::OnUpdateDWGDBBrowserWindow( CCmdUI *pCmdUI )
 					pMenu->RemoveMenu( nFirstMenuItemIndex , MF_BYPOSITION );
 				}
 				int nWindowIndex = 0;
-				for ( list<CDWGDBBrowser*>::const_iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+				for ( std::list<CDWGDBBrowser*>::const_iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 				{
-					string szLabel = ( nWindowIndex == 0 )  ? StrFmt( strMenuLabel, nWindowIndex ) : StrFmt( strMenuLabelShort, nWindowIndex );
+					std::string szLabel = ( nWindowIndex == 0 )  ? StrFmt( strMenuLabel, nWindowIndex ) : StrFmt( strMenuLabelShort, nWindowIndex );
 ;
 					pMenu->InsertMenu( nFirstMenuItemIndex + nWindowIndex, MF_BYPOSITION, ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, szLabel.c_str() );
 					pMenu->EnableMenuItem( ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, MF_ENABLED | MF_BYCOMMAND );
@@ -1069,7 +1069,7 @@ bool CMainFrame::SetControlBarWindowContents( SECControlBar* _pwndDockingWindow,
 }
 
 
-bool CMainFrame::AddMenuResources( vector<unsigned> &rIDs )
+bool CMainFrame::AddMenuResources( std::vector<unsigned> &rIDs )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
 	{
@@ -1235,7 +1235,7 @@ SECCustomToolBar* CMainFrame::GetToolBar( unsigned nID )
 }
 
 
-void CMainFrame::SetStatusBarText( int nPaneIndex, const string &szText )
+void CMainFrame::SetStatusBarText( int nPaneIndex, const std::string &szText )
 {
 	wndStatusBar.SetPaneText( nPaneIndex, szText.c_str() );
 }
@@ -1250,7 +1250,7 @@ void CMainFrame::SetWindowTitle( const SSWTParams &rSWTParams )
 	bool bModified = false;
 	if ( rSWTParams.dwFlags & SWT_MOD )
 	{
-		string szMOD = rSWTParams.szMOD;
+		std::string szMOD = rSWTParams.szMOD;
 		if ( rSWTParams.bFillMODFromBase )
 		{
 			NMOD::SMOD mod;
@@ -1314,13 +1314,13 @@ void CMainFrame::SetWindowTitle( const SSWTParams &rSWTParams )
 	}
 	if ( bModified )
 	{
-		string szFilePath;
-		string szFileName;
-		string szFileExtention;
+		std::string szFilePath;
+		std::string szFileName;
+		std::string szFileExtention;
 		CStringManager::SplitFileName( &szFilePath, &szFileName, &szFileExtention, currentSWTParams.szObject ); 
 		//
-		string szTitle = szFilePath + szFileName;
-		string szExtention = szFileExtention;
+		std::string szTitle = szFilePath + szFileName;
+		std::string szExtention = szFileExtention;
 		//
 		if ( !currentSWTParams.szType.empty() )
 		{
@@ -1359,7 +1359,7 @@ void CMainFrame::SetWindowTitle( const SSWTParams &rSWTParams )
 }
 
 
-void CMainFrame::Log( ELogOutputType eLogOutputType, const string &szText )
+void CMainFrame::Log( ELogOutputType eLogOutputType, const std::string &szText )
 {
 	if ( ( eLogOutputType == LT_ERROR ) && !wndLog.IsVisible() )
 	{
@@ -1387,7 +1387,7 @@ void CMainFrame::RestoreObjectStorage()
 	ICommandHandlerContainer *pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	for ( list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itGDBBrowser = gdbBrowserList.begin(); itGDBBrowser != gdbBrowserList.end(); ++itGDBBrowser )
 	{
 		if ( *itGDBBrowser )
 		{
@@ -1401,11 +1401,11 @@ void CMainFrame::RestoreObjectStorage()
 }
 
 
-bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit )
+bool CMainFrame::BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit )
 {
 	NI_ASSERT( pPropertyDesc != 0, "CMainFrame::CreateToolBar() pPropertyDesc == 0" );
 	//
-	string szValues = pPropertyDesc->szStringParam;
+	std::string szValues = pPropertyDesc->szStringParam;
 	NStr::ToLowerASCII( &szValues );
 	//
 	const int	nWidth = CStringManager::GetIntValueFromString( szValues, PCSPL_WIDTH, 0, PCSP_DIVIDERS, 0 );
@@ -1416,8 +1416,8 @@ bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, c
 	pcDBLinkDialog.SetSelectedTables( pPropertyDesc->refTypes );
 	if ( !pPropertyDesc->refTypes.empty() )
 	{
-		string szTableName;
-		string szObjectName;
+		std::string szTableName;
+		std::string szObjectName;
 		const int nPos = rszInitialValue.find( TYPE_SEPARATOR_CHAR );
 		if ( nPos >= 0 )
 		{
@@ -1431,13 +1431,13 @@ bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, c
 		}
 		//
 		SUserData::CRefPathMap &rRefPathMap = Singleton<IUserDataContainer>()->Get()->refPathMap;
-		string szRefKey;
+		std::string szRefKey;
 		CreateRefKey( &szRefKey, pPropertyDesc );
 		//
 		if ( szObjectName.empty() )
 		{
-			string szRefValue = rRefPathMap[szRefKey];
-			string szLocalTableName;
+			std::string szRefValue = rRefPathMap[szRefKey];
+			std::string szLocalTableName;
 			CStringManager::GetTypeAndNameFromRefValue( &szLocalTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
 			if ( !szLocalTableName.empty() )
 			{
@@ -1454,7 +1454,7 @@ bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, c
 			pcDBLinkDialog.GetCurrentTable( &szTableName );
 			pcDBLinkDialog.GetCurrentObject( &szObjectName );
 			//
-			string szRefValue;
+			std::string szRefValue;
 			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
 			rRefPathMap[szRefKey] = szRefValue;
 			//
@@ -1473,16 +1473,16 @@ bool CMainFrame::BrowseLink( string *pszResult, const string &rszInitialValue, c
 }
 
 
-bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
+bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty )
 {
-	const string szObjectTypeName = ( pszObjectTypeName != 0 ) ? ( *pszObjectTypeName ) : string();
+	const std::string szObjectTypeName = ( pszObjectTypeName != 0 ) ? ( *pszObjectTypeName ) : std::string();
 	//
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
 	SUserData::CRefPathMap &rRefPathMap = pUserData->refPathMap;
-	const string szRefKey = StrFmt( "_OPEN:%s", szObjectTypeName.c_str() );
+	const std::string szRefKey = StrFmt( "_OPEN:%s", szObjectTypeName.c_str() );
 	//
 	CPCDBLinkDialog pcDBLinkDialog( bEnableEmpty ? CPCDBLinkDialog::TYPE_LINK : CPCDBLinkDialog::TYPE_OPEN, false, false, 0, 0, AfxGetMainWnd() );
 	CTableSet tableSet;
@@ -1492,7 +1492,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 		{
 			if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_NO_CACHE ) )
 			{
-				string szName;
+				std::string szName;
 				while ( !pTableManipulatorIterator->IsEnd() )
 				{
 					pTableManipulatorIterator->GetName( &szName );
@@ -1512,9 +1512,9 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 	pcDBLinkDialog.SetSelectedTables( tableSet );
 	pcDBLinkDialog.SetCurrentTable( szObjectTypeName );
 	{
-		string szRefValue = rRefPathMap[szRefKey];
-		string szTableName;
-		string szObjectName;
+		std::string szRefValue = rRefPathMap[szRefKey];
+		std::string szTableName;
+		std::string szObjectName;
 		CStringManager::GetTypeAndNameFromRefValue( &szTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
 		if ( !szTableName.empty() )
 		{
@@ -1529,13 +1529,13 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName,
 	const bool bResult = ( pcDBLinkDialog.DoModal() == IDOK );
 	if ( bResult )
 	{
-		string szTableName;
-		string szObjectName;
+		std::string szTableName;
+		std::string szObjectName;
 		pcDBLinkDialog.GetCurrentTable( &szTableName );
 		pcDBLinkDialog.GetCurrentObject( &szObjectName );
 		if ( !szObjectName.empty() )
 		{
-			string szRefValue;
+			std::string szRefValue;
 			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
 			rRefPathMap[szRefKey] = szRefValue;
 		}
@@ -1634,7 +1634,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 				//
 				CString strMessagePattern;
 				strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
-				string szName;
+				std::string szName;
 				{
 					CStringManager::GetRefValueFromTypeAndName( &szName, objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first.ToString(), TYPE_SEPARATOR_CHAR );
 				}
@@ -1665,7 +1665,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 			NProgress::Create( true );
 			CString strPM;
 			strPM.LoadString( IDS_PM_SAVE );
-			NProgress::SetMessage( string( strPM ) );
+			NProgress::SetMessage( std::string( strPM ) );
 			NProgress::SetRange( 0, pEditorContainer->GetActiveEditor() ? 2 : 1 );
 		}
 		CWaitCursor waitCursor;
@@ -1675,7 +1675,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 			SObjectSet objectSet;
 			pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
 			const bool bMainObject = ( objectSet.szObjectTypeName == pUserData->constUserData.szMainObjectType );
-			string szName;
+			std::string szName;
 			CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
 			CStringManager::AddToRecentList( szName, bMainObject );
 		}
@@ -1719,7 +1719,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 
 void CMainFrame::ReloadData()
 {
-	for ( list<CDWGDBBrowser*>::iterator itDWGDBBrowser = gdbBrowserList.begin(); itDWGDBBrowser != gdbBrowserList.end(); ++itDWGDBBrowser )
+	for ( std::list<CDWGDBBrowser*>::iterator itDWGDBBrowser = gdbBrowserList.begin(); itDWGDBBrowser != gdbBrowserList.end(); ++itDWGDBBrowser )
 	{
 		if ( ( *itDWGDBBrowser ) )
 		{
@@ -1759,7 +1759,7 @@ void CMainFrame::DestroyProgressDialog()
 }
 
 
-void CMainFrame::SetProgressDialogTitle( const string &rszTitle )
+void CMainFrame::SetProgressDialogTitle( const std::string &rszTitle )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
 	{
@@ -1768,7 +1768,7 @@ void CMainFrame::SetProgressDialogTitle( const string &rszTitle )
 }
 
 
-void CMainFrame::SetProgressDialogMessage( const string &rszMessage )
+void CMainFrame::SetProgressDialogMessage( const std::string &rszMessage )
 {
 	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
 	{
@@ -1808,7 +1808,7 @@ void CMainFrame::IterateProgressDialogPosition()
 
 /**
 
-void CMainFrame::ExecuteCommand( 	bool bCloseEditor, const wstring &rszCommandString )
+void CMainFrame::ExecuteCommand( 	bool bCloseEditor, const std::wstring &rszCommandString )
 {
 	if ( bCloseEditor )
 	{

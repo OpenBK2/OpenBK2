@@ -16,7 +16,7 @@ protected:
 	int GetMinimumXDimension() { return 204; }
 	int GetMinimumYDimension() { return 106; }
 
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CSelectTablesDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CSelectTablesDialog"; }
 	bool IsDrawGripper() { return true; }
 
 	virtual void DoDataExchange( CDataExchange* pDX );
@@ -27,7 +27,7 @@ public:
 	enum { IDD = IDD_CHOOSE_TABLES };
 
 	CTableSet selectedTables;
-	list<string> tables;
+	std::list<std::string> tables;
 
 	CSelectTablesDialog( CWnd* pParent = NULL );
 

@@ -29,14 +29,14 @@ void CPCFloatSliderEditor::OnChangeEditBox()
 
 // CPCItemEditor
 
-bool CPCFloatSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCFloatSliderEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	if ( CPCStringSliderEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
 		SetCreateControls( true );
 		if ( GetPropertyDesc() )
 		{
-			string szValues = GetPropertyDesc()->szStringParam;
+			std::string szValues = GetPropertyDesc()->szStringParam;
 			NStr::ToLower( &szValues );
 			//
 			float fMin = 0.0f;
@@ -106,8 +106,8 @@ void CPCFloatSliderEditor::SetValue( const CVariant &rValue )
 	const float fValue = ( 1.0f * CStringManager::NormalizeValue( (int)( (float)rValue * nPowerPrecision + 0.5f ),
 																																(int)( fStep * nPowerPrecision ) ) ) /
 											 ( 1.0f * nPowerPrecision );
-//	const string szFormat = StrFmt( "%%.%df", nPrecision );
-//	CVariant value = string( StrFmt( szFormat.c_str(), fValue ) ); 
+//	const std::string szFormat = StrFmt( "%%.%df", nPrecision );
+//	CVariant value = std::string( StrFmt( szFormat.c_str(), fValue ) ); 
 	CVariant value = CStringManager::GetFloatStringWithPrecision( fValue, nPrecision );
 	CPCStringSliderEditor::SetValue( value );
 	GetSlider()->SetPos( (int)( fValue * nPowerPrecision  + 0.5f ) );
@@ -151,7 +151,7 @@ void CPCFloatSliderEditor::OnChangePos( int nPos )
 	float fSliderPos = ( 1.0f * CStringManager::NormalizeValue( GetSlider()->GetPos(),
 																															(int)( fStep * nPowerPrecision ) ) ) /
 										 ( 1.0f * nPowerPrecision );
-//	const string szFormat = StrFmt( "%%.%df", nPrecision );
+//	const std::string szFormat = StrFmt( "%%.%df", nPrecision );
 //	SetWindowText( StrFmt( szFormat.c_str(), fSliderPos ) );
 	SetWindowText( CStringManager::GetFloatStringWithPrecision(fSliderPos, nPrecision).c_str() );
 }

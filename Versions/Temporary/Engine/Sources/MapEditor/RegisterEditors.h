@@ -8,16 +8,16 @@ class CRegisterEditorsSemiAutoMagic : public CObjectBase
 
 	struct SUIEditor
 	{
-		string szInstance;
+		std::string szInstance;
 
 		SUIEditor() {}
-		SUIEditor( const string &_szInstance ) : 
+		SUIEditor( const std::string &_szInstance ) : 
 			szInstance( _szInstance ) {}
 			
 		int operator&( IXmlSaver &xs );
 	};
 	
-	vector<SUIEditor> uiEditors;
+	std::vector<SUIEditor> uiEditors;
 private:
 	const char* GetXMLPath() const;
 	const char* GetLabel() const;

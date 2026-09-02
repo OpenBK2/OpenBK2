@@ -19,9 +19,9 @@
 struct IEditor : public CObjectBase
 {
 	// передается в View
-	virtual void GetTemporaryLabel( string *pszTemporaryLabel ) = 0;
+	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) = 0;
 	// получить тип child frame
-	virtual void GetChildFrameType( string *pszChildFrameTypeName ) = 0;
+	virtual void GetChildFrameType( std::string *pszChildFrameTypeName ) = 0;
 	// получить непосредственно - редактор.
 	virtual IView* GetView() = 0;
 	// получить непосредственно - IInputState
@@ -54,11 +54,11 @@ struct IEditorContainer : public CObjectBase
 	enum { tidTypeID = 0x1408A3C0 };
 	//
 	// Проверить на существование редактора
-	virtual bool CanCreate( const string &rszObjectTypeName ) = 0;
+	virtual bool CanCreate( const std::string &rszObjectTypeName ) = 0;
 	// Методы создания и удаления редакторов
-	virtual void Create( const string &rszObjectTypeName ) = 0;
-	virtual void AddExtendObjectType( const string &rszBaseObjectTypeName, const string &rszExtendObjectTypeName ) = 0;
-	virtual void Destroy( const string &rszObjectTypeName, bool bDestroyChildFrame ) = 0;
+	virtual void Create( const std::string &rszObjectTypeName ) = 0;
+	virtual void AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName ) = 0;
+	virtual void Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame ) = 0;
 	// Получить редактор
 	virtual IEditor* Create( IManipulator* _pManipulator, const SObjectSet &rObjectSet ) = 0;
 	// Перегрузить редактор ( тот которому сделали Enter )

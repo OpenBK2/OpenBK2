@@ -16,7 +16,7 @@ class CCreateMODDialog : public CResizeDialog
 protected:
 	int GetMinimumXDimension() { return 300; }
 	int GetMinimumYDimension() { return 150; }
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CCreateMODDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CCreateMODDialog"; }
 	bool IsDrawGripper() { return true; }
 
 	virtual void DoDataExchange( CDataExchange* pDX );
@@ -30,7 +30,7 @@ public:
 
 	CCreateMODDialog( CWnd* pParent = NULL );
 
-	const string GetFolder();
+	const std::string GetFolder();
 	const CString& GetName() { return strName; }
 	const CString& GetDescription() { return strDescription; }
 

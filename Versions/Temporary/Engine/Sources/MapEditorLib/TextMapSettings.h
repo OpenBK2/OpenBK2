@@ -3,7 +3,7 @@
 
 class CTextMapSettings
 {
-	typedef std::unordered_map<string, string> CTextMap;
+	typedef std::unordered_map<std::string, std::string> CTextMap;
 	CTextMap textMap;
 
 public:
@@ -26,7 +26,7 @@ public:
 		return (iter != textMap.end() ? iter->second.c_str() : pszKey);
 	}
 
-	void SetText( const string &szKey, const string &szValue )
+	void SetText( const std::string &szKey, const std::string &szValue )
 	{
 		textMap[szKey] = szValue;
 	}

@@ -21,7 +21,7 @@ class CTEMnemonics : public CMnemonicsCollector<int>
 {
 	public:
 	CTEMnemonics();
-	ETextEditorType Get( const string &rszMnemonic );
+	ETextEditorType Get( const std::string &rszMnemonic );
 };
 
 
@@ -39,8 +39,8 @@ class CTextEditorDialog : public CResizeDialog
 
 	//
 	ETextEditorType editorType;
-	string szText;
-	string szTitle;
+	std::string szText;
+	std::string szTitle;
 	bool bEnableEdit;
 	//
 	//void UpdateToolBar();
@@ -55,18 +55,18 @@ protected:
 	// CResizeDialog
 	int GetMinimumXDimension() { return 250; }
 	int GetMinimumYDimension() { return 180; }
-	void GetXMLFilePath( string *pszXMLFilePath );
+	void GetXMLFilePath( std::string *pszXMLFilePath );
 	bool IsDrawGripper() { return true; }
 
 public:
 	CTextEditorDialog( CWnd* pParent = NULL );
 	//
-	void SetTitle( const string &rszTitle ) { szTitle = rszTitle; }
+	void SetTitle( const std::string &rszTitle ) { szTitle = rszTitle; }
 	//
 	void SetType( ETextEditorType _editorType ) { editorType = _editorType; }
 	//
-	void SetText( const string &rszText ) { szText = rszText; }
-	void GetText( string *pszText );
+	void SetText( const std::string &rszText ) { szText = rszText; }
+	void GetText( std::string *pszText );
 	//
 	void EnableEdit( bool bEnable ) { bEnableEdit = bEnable; }
 

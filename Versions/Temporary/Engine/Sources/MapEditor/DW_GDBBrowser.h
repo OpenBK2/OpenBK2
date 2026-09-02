@@ -20,8 +20,8 @@ class CDWGDBBrowser : public SECControlBar, public ICommandHandler
 	CPtr<IManipulator> pTableManipulator;
 
 	CTableSet selectedTables;
-	list<string> tables;
-	string szCurrentTable;
+	std::list<std::string> tables;
+	std::string szCurrentTable;
 
 	void SetTableManipulator( IManipulator *_pTableManipulator );
 	virtual BOOL OnGripperClose();
@@ -43,8 +43,8 @@ protected:
 	void ClearTable();
 	void SelectObjectSet( const SObjectSet &rObjectSet );
 	//
-	void New( const string &rszObjectTypeName );
-	void Open( const string &rszObjectTypeName );
+	void New( const std::string &rszObjectTypeName );
+	void Open( const std::string &rszObjectTypeName );
 	void OnRecentList( int nIndex, bool bMainObject );
 	//
 	void OnCheckOut();

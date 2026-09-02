@@ -4,7 +4,7 @@
 
 class CPCEditorButton : public CButton
 {
-	string szText;
+	std::string szText;
 	CWnd *pwndTargetWindow;
 	CWnd *pwndNextWindow;
 	CWnd *pwndPreviousWindow;
@@ -22,10 +22,10 @@ public:
 	void SetTargetWindow( CWnd *_pwndTargetWindow ) { pwndTargetWindow = _pwndTargetWindow; }
 	void SetNextWindow( CWnd *_pwndNextWindow ) { pwndNextWindow = _pwndNextWindow; }
 	void SetPreviousWindow( CWnd *_pwndPreviousWindow ) { pwndPreviousWindow = _pwndPreviousWindow; }
-	void SetCaption( const string &rszText );
+	void SetCaption( const std::string &rszText );
 	//
 	DECLARE_MESSAGE_MAP()
 };
-typedef vector<CPCEditorButton*> CPCEditorButtonList;
+typedef std::vector<CPCEditorButton*> CPCEditorButtonList;
 
 

@@ -179,8 +179,8 @@ struct SLakeType
 
 extern const SLakeType typeLakeType;
 
-typedef list<CVec2> CLakePointList;
-typedef list<const CLakePointList*> CLakePointListPtrList;
+typedef std::list<CVec2> CLakePointList;
+typedef std::list<const CLakePointList*> CLakePointListPtrList;
 struct SLakeInfo
 {
 	const NDb::SLakeDesc *pDescriptor;
@@ -203,16 +203,16 @@ struct SLakeInfo
 		return *this;
 	}	
 };
-typedef list<SLakeInfo> CLakeList;
+typedef std::list<SLakeInfo> CLakeList;
 
 
 struct SCreateParameter
 {
-	string szImageFileName;
+	std::string szImageFileName;
 	CTPoint<int> size;
 	//
 	SCreateParameter() : size( 0, 0 ) {}
-	SCreateParameter( const string &rszImageFileName,
+	SCreateParameter( const std::string &rszImageFileName,
 										const CTPoint<int> &rSize )
 		: szImageFileName( rszImageFileName ),
 			size( rSize ) {}
@@ -229,7 +229,7 @@ struct SCreateParameter
 		return *this;
 	}	
 };
-typedef vector<SCreateParameter> CCreateParameterList;
+typedef std::vector<SCreateParameter> CCreateParameterList;
 
 const NDb::SMinimapLayer* GetMinimapLayer( ELayerType eLayerType, const NDb::SMinimap *pMinimap );
 void GetNormale( CVec3 *pNormale, int nXIndex, int nYIndex, const STerrainInfo *pTerrainInfo );

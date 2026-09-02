@@ -55,26 +55,26 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 		//
 		unsigned nFlags;
 		//
-		vector<string> lightList;
+		std::vector<std::string> lightList;
 		int nLightIndex;
 		CVec3 vColor;
 		int nFOV;
 		bool bTerrain;
-		vector<string> terrainSizeList;
+		std::vector<std::string> terrainSizeList;
 		int nTerrainSizeIndex;
 		CVec3 vTerrainColor;
 		int nTerrainColorOpacity;
 		bool bTerrainDoubleSided;
 		bool bTerrainGrid;
 		bool bAnim;
-		vector<string> animCountList;
+		std::vector<std::string> animCountList;
 		int nAnimCountIndex;
-		vector<string> animSpeedList;
+		std::vector<std::string> animSpeedList;
 		int nAnimSpeedIndex;
 		EAnimType eAnimType;
-		vector<string> animRadiusList;
+		std::vector<std::string> animRadiusList;
 		int nAnimRadiusIndex;
-		vector<string> animDistanceList;
+		std::vector<std::string> animDistanceList;
 		int nAnimDistanceIndex;
 		bool bAIGeometry;
 		EAIGeometryType eAIGeometryType;
@@ -88,7 +88,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 
 	//Данные специфичные для данного редактрора
 	int nModelSceneID;
-	list<int> animModelSceneIDList;
+	std::list<int> animModelSceneIDList;
 	CObj<CObjectBase> pPlane;
 	CObj<NDb::SModel> pMutableModel;
 

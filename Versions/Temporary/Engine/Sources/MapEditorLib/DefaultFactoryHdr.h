@@ -4,10 +4,10 @@
 struct I##TYPE;																																			\
 namespace N##TYPE##Factory																															\
 {																																												\
-	void Register##TYPE##Type( const string &szName, ObjectFactoryNewFunc pfnNewFunc );		\
-	void UnRegister##TYPE##Type( const string &szName );																	\
-	I##TYPE* Create##TYPE( const string &szName );																				\
-	bool CanCreate##TYPE( const string &szName );																					\
+	void Register##TYPE##Type( const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );		\
+	void UnRegister##TYPE##Type( const std::string &szName );																	\
+	I##TYPE* Create##TYPE( const std::string &szName );																				\
+	bool CanCreate##TYPE( const std::string &szName );																					\
 	void StartRegister##TYPE();																														\
 };
 
@@ -26,7 +26,7 @@ static struct SRegister##TYPE##name##classname##AutoMagic																\
 	}																																											\
 } aRegister##TYPE##name##classname##AutoMagic;
 
-void RegisterMapEditorTypeDelayed( const string &szType, const string &szName, ObjectFactoryNewFunc pfnNewFunc );
+void RegisterMapEditorTypeDelayed( const std::string &szType, const std::string &szName, ObjectFactoryNewFunc pfnNewFunc );
 
 #define REGISTER_ME_OBJECT_IN_DLL( TYPE, name, classname ) REGISTER_ME_OBJECT_IN_EXE( TYPE, name, classname )
 	/*

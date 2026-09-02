@@ -311,7 +311,7 @@ void CResizeDialog::LoadResizeDialogOptions()
 {
 	if ( SerializeToRegistry() )
 	{
-		string szRegistryKey;
+		std::string szRegistryKey;
 		GetRegistryKey( &szRegistryKey );
 		if ( !szRegistryKey.empty() )
 		{
@@ -326,27 +326,27 @@ void CResizeDialog::LoadResizeDialogOptions()
 			registrySection.LoadNumber( "fParams", "%d", &fParameters, 0 );
 			for ( int nParameterIndex = 0; nParameterIndex < nParameters; ++nParameterIndex )
 			{
-				vector<int>::iterator pos = resizeDialogOptions.nParameters.insert( resizeDialogOptions.nParameters.end(), 0 );
-				string szFormat = StrFmt( "nParam%d", nParameterIndex );
+				std::vector<int>::iterator pos = resizeDialogOptions.nParameters.insert( resizeDialogOptions.nParameters.end(), 0 );
+				std::string szFormat = StrFmt( "nParam%d", nParameterIndex );
 				registrySection.LoadNumber( szFormat.c_str(), "%d", &( *pos ), 0 );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < szParameters; ++nParameterIndex )
 			{
-				vector<string>::iterator pos = resizeDialogOptions.szParameters.insert( resizeDialogOptions.szParameters.end(), "" );
-				string szFormat = StrFmt( "szParam%d", nParameterIndex );
+				std::vector<std::string>::iterator pos = resizeDialogOptions.szParameters.insert( resizeDialogOptions.szParameters.end(), "" );
+				std::string szFormat = StrFmt( "szParam%d", nParameterIndex );
 				registrySection.LoadString( szFormat.c_str(), &( *pos ), "" );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < fParameters; ++nParameterIndex )
 			{
-				vector<float>::iterator pos = resizeDialogOptions.fParameters.insert( resizeDialogOptions.fParameters.end(), 0.0f );
-				string szFormat = StrFmt( "fParam%d", nParameterIndex );
+				std::vector<float>::iterator pos = resizeDialogOptions.fParameters.insert( resizeDialogOptions.fParameters.end(), 0.0f );
+				std::string szFormat = StrFmt( "fParam%d", nParameterIndex );
 				registrySection.LoadNumber( szFormat.c_str(), "%g", &( *pos ), 0.0f );
 			}
 		}
 	}
 	else
 	{
-		string szLabel;
+		std::string szLabel;
 		GetXMLFilePath( &szLabel );
 		if ( !szLabel.empty() )
 		{
@@ -360,7 +360,7 @@ void CResizeDialog::SaveResizeDialogOptions()
 {
 	if ( SerializeToRegistry() )
 	{
-		string szRegistryKey;
+		std::string szRegistryKey;
 		GetRegistryKey( &szRegistryKey );
 		if ( !szRegistryKey.empty() )
 		{
@@ -372,24 +372,24 @@ void CResizeDialog::SaveResizeDialogOptions()
 			registrySection.SaveNumber( "fParams", "%d", resizeDialogOptions.fParameters.size() );
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.nParameters.size(); ++nParameterIndex )
 			{
-				string szFormat = StrFmt( "nParam%d", nParameterIndex );
+				std::string szFormat = StrFmt( "nParam%d", nParameterIndex );
 				registrySection.SaveNumber( szFormat.c_str(), "%d", resizeDialogOptions.nParameters[nParameterIndex] );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.szParameters.size(); ++nParameterIndex )
 			{
-				string szFormat = StrFmt( "szParam%d", nParameterIndex );
+				std::string szFormat = StrFmt( "szParam%d", nParameterIndex );
 				registrySection.SaveString( szFormat.c_str(), resizeDialogOptions.szParameters[nParameterIndex] );
 			}
 			for ( int nParameterIndex = 0; nParameterIndex < resizeDialogOptions.fParameters.size(); ++nParameterIndex )
 			{
-				string szFormat = StrFmt( "fParam%d", nParameterIndex );
+				std::string szFormat = StrFmt( "fParam%d", nParameterIndex );
 				registrySection.SaveNumber( szFormat.c_str(), "%g", resizeDialogOptions.fParameters[nParameterIndex] );
 			}
 		}
 	}
 	else
 	{
-		string szLabel;
+		std::string szLabel;
 		GetXMLFilePath( &szLabel );
 		if ( !szLabel.empty() )
 			SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + RESIZE_DIALOG_OPTIONS_FILE_NAME + szLabel, ".xml", szLabel, resizeDialogOptions );

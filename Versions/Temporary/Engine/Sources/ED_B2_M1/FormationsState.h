@@ -21,7 +21,7 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 
 	SFormationWindowDialogData currDialogData;
 
-	list<int> pickObjects;
+	std::list<int> pickObjects;
 
 	void SetMaskManipulator( NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation );
 	void ClearMaskManipulator();

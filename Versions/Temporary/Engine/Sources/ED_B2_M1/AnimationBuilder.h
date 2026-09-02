@@ -13,14 +13,14 @@ class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback,
 	CAnimationBuilder();
 	~CAnimationBuilder();
 
-	bool UpdateAminations( const string &rszAnimationFolder );
+	bool UpdateAminations( const std::string &rszAnimationFolder );
 protected:
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
-	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
+	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
+	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 
 	// methods
 	uint32_t GetWeaponBits( const SGrannyBoneAttributes & gba ) const;

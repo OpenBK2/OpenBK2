@@ -24,7 +24,7 @@ namespace NLog
 		}
 
 		// ILogger
-		void Log( ELogOutputType eLogOutputType, const string &szText )
+		void Log( ELogOutputType eLogOutputType, const std::string &szText )
 		{
 			CLogBufferList::iterator posLogBuffer = logBufferList.insert( logBufferList.end(), SLogBuffer() );
 			posLogBuffer->eLogOutputType = eLogOutputType;

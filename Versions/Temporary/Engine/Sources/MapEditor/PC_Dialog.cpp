@@ -161,7 +161,7 @@ void CPCDialog::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
 	//
-	string szItemName;
+	std::string szItemName;
 	tree.GetSelectedPCItemDescription( &szItemName );
 	SetStatusBarMessage( szItemName );
 	//
@@ -169,7 +169,7 @@ void CPCDialog::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-void CPCDialog::SetStatusBarMessage( const string &rszMessage )
+void CPCDialog::SetStatusBarMessage( const std::string &rszMessage )
 {
 	SetDlgItemText( IDC_PC_STATUSBAR, rszMessage.c_str() );
 }

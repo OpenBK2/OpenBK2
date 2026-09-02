@@ -22,7 +22,7 @@ class CPointListDialog : public CResizeDialog, public ICommandHandler
 
 	unsigned nInstanceID;
 
-	static list<CPointListDialog*> otherDialogs;
+	static std::list<CPointListDialog*> otherDialogs;
 
 	int nSelectedIndex;
 	bool bIsDataSetting;

@@ -45,14 +45,14 @@ void CProgressDialog::UpdateControls()
 }
 
 
-void CProgressDialog::SetProgressTitle( const string &rszProgressTitle )
+void CProgressDialog::SetProgressTitle( const std::string &rszProgressTitle )
 {
 	SetWindowText( rszProgressTitle.c_str() );
 	UpdateControls();
 }
 
 
-void CProgressDialog::SetProgressMessage( const string &rszProgressMessage )
+void CProgressDialog::SetProgressMessage( const std::string &rszProgressMessage )
 {
 	m_ProgressLabel.SetWindowText( rszProgressMessage.c_str() );
 	UpdateControls();

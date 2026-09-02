@@ -25,8 +25,8 @@ public:
 	void SetStatusStringWindow( CWnd* _pwndStatusStringWindow );
 	CWnd* GetStatusStringWindow() { return pwndStatusStringWindow; }
 	//	
-	void SetText( const string &rszText );
-	int GetText( string *pszText );
+	void SetText( const std::string &rszText );
+	int GetText( std::string *pszText );
 	//
 	//void SetTargetWindow( CWnd* _pwndTargetWindow ) { pwndTargetWindow = _pwndTargetWindow; }
 	//CWnd* GetTargetWindow() { return pwndTargetWindow; }

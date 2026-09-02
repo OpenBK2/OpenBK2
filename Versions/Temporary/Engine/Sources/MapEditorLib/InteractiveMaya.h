@@ -8,10 +8,10 @@ class CInteractiveMaya : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CInteractiveMaya );
 
-	static const string INTERACTIVE_MAYA_PROMPT;
-	static const string INTERACTIVE_MAYA_RESULT_MARK;
-	const string INTERACTIVE_MAYA_INVOKE;
-	const string INTERACTIVE_MAYA_QUIT_DIRECTIVE;
+	static const std::string INTERACTIVE_MAYA_PROMPT;
+	static const std::string INTERACTIVE_MAYA_RESULT_MARK;
+	const std::string INTERACTIVE_MAYA_INVOKE;
+	const std::string INTERACTIVE_MAYA_QUIT_DIRECTIVE;
 
 	CInteractiveProcess process;
 	int nExecutionQuota;
@@ -20,7 +20,7 @@ class CInteractiveMaya : public CObjectBase
 	CInteractiveMaya();
 public:
 	static CInteractiveMaya * Get();
-	static bool ExtractResult( string *pszResult, const string &szOutput );
+	static bool ExtractResult( std::string *pszResult, const std::string &szOutput );
 
 	void SetResponseTimeout( int nResponseWaitTimeout );
 	void SetExecutionQuota( int n );
@@ -30,12 +30,12 @@ public:
 		return process.IsStarted();
 	}
 	bool Start();
-	bool Execute( const string &szScript, string *pszOutput, string *pszErrorOutput );
+	bool Execute( const std::string &szScript, std::string *pszOutput, std::string *pszErrorOutput );
 	bool Stop();
 
 	// helpers
-	bool TransactCommand( const string &szScript, const string &szExpectedResult );
-	bool TransactQuery( const string &szScript, string *pszResult );
+	bool TransactCommand( const std::string &szScript, const std::string &szExpectedResult );
+	bool TransactQuery( const std::string &szScript, std::string *pszResult );
 };
 
 

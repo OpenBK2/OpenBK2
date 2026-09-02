@@ -5,7 +5,7 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
-bool CBaseUIBuilder::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
+bool CBaseUIBuilder::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
 {
 	// call default implementation of copying (copy object itself)
 	if ( !CBuilderBase::CopyObject( rszObjectTypeName, rszDestination, rszSource ) )
@@ -26,23 +26,23 @@ bool CBaseUIBuilder::CopyObject( const string &rszObjectTypeName, const string &
 	// duplicate instances of children
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
-		string szSrcChildRefName;
+		std::string szSrcChildRefName;
 		bResult = bResult && CManipulatorManager::GetValue( &szSrcChildRefName, pManipulator, StrFmt( "Children.[%d]", i) );
 		// avoid empty refs
 		if ( bResult && !szSrcChildRefName.empty() )
 		{
-			string szChildTypeName, szSrcChildName;
-			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szSrcChildName, szSrcChildRefName, TYPE_SEPARATOR_CHAR, string() );
+			std::string szChildTypeName, szSrcChildName;
+			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szSrcChildName, szSrcChildRefName, TYPE_SEPARATOR_CHAR, std::string() );
 
 			const int npos = szSrcChildName.rfind( PATH_SEPARATOR_CHAR );
-			const string szChildShortName = ( npos == string::npos ) ? szSrcChildName : szSrcChildName.substr( npos+1 );
+			const std::string szChildShortName = ( npos == std::string::npos ) ? szSrcChildName : szSrcChildName.substr( npos+1 );
 
 			// copy child
-			const string szDstChildName = rszDestination + PATH_SEPARATOR_CHAR + szChildShortName;
+			const std::string szDstChildName = rszDestination + PATH_SEPARATOR_CHAR + szChildShortName;
 			bResult = bResult && Singleton<IBuilderContainer>()->CopyObject( szChildTypeName, szDstChildName, szSrcChildName );
 			if ( bResult )
 			{
-				string szChildRefName;
+				std::string szChildRefName;
 				CStringManager::GetRefValueFromTypeAndName( &szChildRefName, szChildTypeName, szDstChildName, TYPE_SEPARATOR_CHAR );
 				bResult = bResult && pManipulator->SetValue( StrFmt( "Children.[%d]", i), szChildRefName );
 			}
@@ -53,7 +53,7 @@ bool CBaseUIBuilder::CopyObject( const string &rszObjectTypeName, const string &
 }
 
 
-bool CBaseUIBuilder::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
+bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	return false;
 	//
@@ -67,12 +67,12 @@ bool CBaseUIBuilder::RemoveObject( const string &rszObjectTypeName, const string
 	int nChildren = 0;
 	bResult = bResult && CManipulatorManager::GetValue( &nChildren, pManipulator, "Children" );
 
-	list<string> children;
+	std::list<std::string> children;
 
 	// collect references to instances of children
 	for ( int i = 0; i < nChildren && bResult; ++i )
 	{
-		string szChildRefName;
+		std::string szChildRefName;
 		bResult = bResult && CManipulatorManager::GetValue( &szChildRefName, pManipulator, StrFmt( "Children.[%d]", i) );
 		children.push_back( szChildRefName );
 	}
@@ -81,13 +81,13 @@ bool CBaseUIBuilder::RemoveObject( const string &rszObjectTypeName, const string
 	bResult = bResult && CBuilderBase::RemoveObject( rszObjectTypeName, rszObjectName );
 
 	// second, remove instances of children
-	for ( list<string>::iterator it = children.begin(); it != children.end() && bResult; ++it )
+	for ( std::list<std::string>::iterator it = children.begin(); it != children.end() && bResult; ++it )
 	{
 		// avoid empty refs
 		if ( !it->empty() )
 		{
-			string szChildTypeName, szChildName;
-			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szChildName, *it, TYPE_SEPARATOR_CHAR, string() );
+			std::string szChildTypeName, szChildName;
+			CStringManager::GetTypeAndNameFromRefValue( &szChildTypeName,	&szChildName, *it, TYPE_SEPARATOR_CHAR, std::string() );
 			bResult = bResult && Singleton<IBuilderContainer>()->RemoveObject( szChildTypeName, szChildName );
 		}
 	}

@@ -38,20 +38,20 @@ namespace NImage
 bool CMapInfoEditor::CreateMinimapImage()
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
-	string szMiniMapMaterialName;
+	std::string szMiniMapMaterialName;
 	CManipulatorManager::GetValue( &szMiniMapMaterialName, GetViewManipulator(), "MiniMap" );
 	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " ) 
 	{
 		if ( CPtr<IManipulator> pMaterialMan = pRM->CreateObjectManipulator("Material", szMiniMapMaterialName) )
 		{
-			string szMiniMapTextureName;
+			std::string szMiniMapTextureName;
 			CManipulatorManager::GetValue( &szMiniMapTextureName, pMaterialMan, "Texture" );
 			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " ) 
 			{
 				// delete texture source and destination
 				if ( CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator("Texture", szMiniMapTextureName) )
 				{
-					string szSrcName;
+					std::string szSrcName;
 					if ( CManipulatorManager::GetValue( &szSrcName, pTexMan, "SrcName" ) != false && !szSrcName.empty() && szSrcName != " " )
 					{
 						const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -61,7 +61,7 @@ bool CMapInfoEditor::CreateMinimapImage()
 						//
 						bool bTerrainLoaded = false;
 						const STerrainInfo *pTerrainInfo = Scene()->GetTerraManager()->GetTerraInfo();
-						//const string szTerrainInfoFileName = GetTerrainBinFileName( pMapInfo );
+						//const std::string szTerrainInfoFileName = GetTerrainBinFileName( pMapInfo );
 						//if ( !szTerrainInfoFileName.empty() )
 						//{
 						//	CFileStream stream( NVFS::GetMainVFS(), szTerrainInfoFileName );
@@ -74,7 +74,7 @@ bool CMapInfoEditor::CreateMinimapImage()
 						//	}
 						//}
 						//
-						const string szMinimapName = NEditorOptions::GetMinimap( typeSeasonMnemonics.GetMnemonic( pMapInfo->eSeason ) );
+						const std::string szMinimapName = NEditorOptions::GetMinimap( typeSeasonMnemonics.GetMnemonic( pMapInfo->eSeason ) );
 						const NDb::SMinimap *pMinimap = NDb::Get<NDb::SMinimap>( CDBID( szMinimapName ) );
 						if ( pMapInfo && pMapInfo->pTerraSet && pMinimap )
 						{

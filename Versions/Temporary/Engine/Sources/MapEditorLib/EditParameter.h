@@ -7,8 +7,8 @@ void GetComboBoxEditParameters( TList *pList, int *pIndex, const TControl &rCont
 {
 	if ( bCount && ( pList != 0 ) )
 	{
-		vector<string> stringList;
-		stringList.resize( rControl.GetCount(), string() );
+		std::vector<std::string> stringList;
+		stringList.resize( rControl.GetCount(), std::string() );
 		for ( int nControlIndex = 0; nControlIndex < rControl.GetCount(); ++nControlIndex )
 		{
 			const int nListIndex = rControl.GetItemData( nControlIndex );
@@ -16,11 +16,11 @@ void GetComboBoxEditParameters( TList *pList, int *pIndex, const TControl &rCont
 			{
 				CString strText;
 				rControl.GetLBText( nControlIndex, strText );
-				stringList[nListIndex] = string( strText );
+				stringList[nListIndex] = std::string( strText );
 			}
 		}
 		pList->clear();
-		for ( vector<string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
+		for ( std::vector<std::string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
 		{
 			pList->push_back( *itString );
 		}
@@ -98,19 +98,19 @@ void GetListEditParameters( TList *pList, int *pIndex, const TControl &rControl,
 {
 	if ( bCount && ( pList != 0 ) )
 	{
-		vector<string> stringList;
-		stringList.resize( rControl.GetItemCount(), string() );
+		std::vector<std::string> stringList;
+		stringList.resize( rControl.GetItemCount(), std::string() );
 		for ( int nControlIndex = 0; nControlIndex < rControl.GetItemCount(); ++nControlIndex )
 		{
 			const int nListIndex = rControl.GetItemData( nControlIndex );
 			if ( ( nListIndex >= 0 ) && ( nListIndex < stringList.size() ) )
 			{
 				CString strText = rControl.GetItemText( nControlIndex, 0 );
-				stringList[nListIndex] = string( strText );
+				stringList[nListIndex] = std::string( strText );
 			}
 		}
 		pList->clear();
-		for ( vector<string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
+		for ( std::vector<std::string>::const_iterator itString = stringList.begin(); itString != stringList.end(); ++itString )
 		{
 			pList->push_back( *itString );
 		}
@@ -132,7 +132,7 @@ void GetListEditParameters( TList *pList, int *pIndex, const TControl &rControl,
 
 
 template <class TList, class TControl>
-void SetListEditParameters( const TList &rList, const int nIndex, TControl *pControl, const string &rszTypeName, TList *pList, const bool bCount, const bool bIndex )
+void SetListEditParameters( const TList &rList, const int nIndex, TControl *pControl, const std::string &rszTypeName, TList *pList, const bool bCount, const bool bIndex )
 {
 	CWaitCursor waitCursor;
 	if ( pControl )
@@ -160,7 +160,7 @@ void SetListEditParameters( const TList &rList, const int nIndex, TControl *pCon
 					int nListCount = 0;
 					for ( int nListIndex = 0; nListIndex < rList.size(); ++nListIndex )
 					{
-						string szNameForCompare = rList[nListIndex];
+						std::string szNameForCompare = rList[nListIndex];
 						//NStr::ToLower( &szNameForCompare );
 						IObjectCollector::CObjectNameCollection::const_iterator posObjectNameCollection = posObjectCollection->second.find( szNameForCompare );
 						if ( posObjectNameCollection != posObjectCollection->second.end() )

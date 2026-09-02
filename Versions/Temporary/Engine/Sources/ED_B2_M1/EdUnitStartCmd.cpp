@@ -194,7 +194,7 @@ int CEdUnitStartCmd::GetSelectedCommandType()
 	return cbCmdTypes.GetItemData( nSel );
 }
 
-void CEdUnitStartCmd::UpdateTarget( const string &szNewTarget )
+void CEdUnitStartCmd::UpdateTarget( const std::string &szNewTarget )
 {
 	edTgtUnit.SetWindowText( szNewTarget.c_str() );
 }

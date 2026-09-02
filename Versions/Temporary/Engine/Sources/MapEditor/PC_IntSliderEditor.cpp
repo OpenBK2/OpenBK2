@@ -31,14 +31,14 @@ void CPCIntSliderEditor::OnChangeEditBox()
 
 // CPCItemEditor
 
-bool CPCIntSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCIntSliderEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	if ( CPCStringSliderEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
 	{
 		SetCreateControls( true );
 		if ( GetPropertyDesc() )
 		{
-			string szValues = GetPropertyDesc()->szStringParam;
+			std::string szValues = GetPropertyDesc()->szStringParam;
 			NStr::ToLowerASCII( &szValues );
 			//
 			int nMin = 0;
@@ -94,7 +94,7 @@ bool CPCIntSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditor
 void CPCIntSliderEditor::SetValue( const CVariant &rValue )
 {
 	const int nValue = CStringManager::NormalizeValue( (int)rValue, nStep );
-	CVariant value = string( std::to_string(  nValue ) );
+	CVariant value = std::string( std::to_string(  nValue ) );
 	CPCStringSliderEditor::SetValue( value );
 	GetSlider()->SetPos( nValue );
 }

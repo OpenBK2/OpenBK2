@@ -9,7 +9,7 @@
 
 #include <cstdint>
 
-bool CPCGUIDEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
+bool CPCGUIDEditor::GetPCItemStringValue( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCBinaryBitFieldEditor::GetPCItemStringValue() pszValue == 0" );
 	pszValue->clear();
@@ -31,7 +31,7 @@ bool CPCGUIDEditor::GetPCItemStringValue( string *pszValue, const CVariant &rVal
 }
 
 
-bool CPCGUIDEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
+bool CPCGUIDEditor::GetPCItemValue( CVariant *pValue, const std::string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pValue != 0, "CPCBinaryBitFieldEditor::GetPCItemValue() pValue == 0" );
 	( *pValue ) = CVariant();
@@ -136,7 +136,7 @@ void CPCGUIDEditor::OnEnChange()
 
 // CPCItemEditor
 
-bool CPCGUIDEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCGUIDEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -184,7 +184,7 @@ bool CPCGUIDEditor::ActivateEditor( CDialog *pwndActiveDialog )
 
 void CPCGUIDEditor::SetValue( const CVariant &rValue )
 {
-	string szValue;
+	std::string szValue;
 	GetPCItemStringValue( &szValue, rValue, GetPropertyDesc() );
 	szDefaultValue = szValue;
 	if ( ::IsWindow( m_hWnd ) )
@@ -200,7 +200,7 @@ void CPCGUIDEditor::GetValue( CVariant *pValue )
 	{
 		CString strText;
 		GetWindowText( strText );
-		GetPCItemValue( pValue, string( strText ), GetPropertyDesc() );
+		GetPCItemValue( pValue, std::string( strText ), GetPropertyDesc() );
 	}
 }
 

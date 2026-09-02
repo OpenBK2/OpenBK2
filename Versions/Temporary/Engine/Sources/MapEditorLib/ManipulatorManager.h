@@ -22,10 +22,10 @@ public:
 	struct SReferenceInfo
 	{
 		unsigned nFlags;
-		string szName;
+		std::string szName;
 		//
-		string szObjectTypeName;
-		string szObjectName;
+		std::string szObjectTypeName;
+		std::string szObjectName;
 		//
 		bool isEmpty;
 		bool isValid;
@@ -52,23 +52,23 @@ public:
 			return *this;
 		}
 	};
-	typedef list<SReferenceInfo> CReferenceInfoList;
+	typedef std::list<SReferenceInfo> CReferenceInfoList;
 
 	// Скопировать значения из одного манипулятора в другой
 	static bool CloneDBManipulator( struct IManipulator *pDestinationManipulator,
 																	struct IManipulator *pSourceManipulator,
 																	bool bEqual );
 	// Проверить ссылку на то, что это ссылка, на заполненность, и получить данные о ней
-	static bool GetParamsFromReference( const string &rszRefValueName,
+	static bool GetParamsFromReference( const std::string &rszRefValueName,
 																			const struct IManipulator *pSourceManipulator,
-																			string *pszRefObjectTypeName,
-																			string *pszRefObjectName,
+																			std::string *pszRefObjectTypeName,
+																			std::string *pszRefObjectName,
 																			const SPropertyDesc **ppRefDesc );
 	// Получить манипулятор по ссылке ( если это ссылка )
-	static struct IManipulator* CreateManipulatorFromReference( const string &rszRefValueName,
+	static struct IManipulator* CreateManipulatorFromReference( const std::string &rszRefValueName,
 																																 const struct IManipulator *pSourceManipulator,
-																																 string *pszRefObjectTypeName,
-																																 string *pszRefObjectName,
+																																 std::string *pszRefObjectTypeName,
+																																 std::string *pszRefObjectName,
 																																 const SPropertyDesc **ppRefDesc );
 
 	// Получить манипулятор по ссылке ( если это ссылка ), если ссылка NULL,
@@ -88,10 +88,10 @@ public:
 	//   pszResultName      - указатель на строку, в которую вернется имя созданного объекта. Может быть 0.
 	static bool ForceCreateManipulatorForReference( CPtr<IManipulator> *pResultManipulator,
 	                                      IManipulator *pManipulator,
-																				const string &szTableName,
-																				const string &szFieldName,
-																				const string &szReferenceName,
-																				string *pszResultName );
+																				const std::string &szTableName,
+																				const std::string &szFieldName,
+																				const std::string &szReferenceName,
+																				std::string *pszResultName );
 
 	// получить список ссылок из манипулятора
 	static bool EnumReferences( CReferenceInfoList *pReferenceInfoList,
@@ -103,28 +103,28 @@ public:
 	// Привести размер массива к указанному ( добавить необходимое или удалить лишнее )
 	static bool EnsureArraySize( const int nSize,
 															 struct IManipulator *pManipulator,
-															 const string &rszArrayName );
+															 const std::string &rszArrayName );
 	// получить список ссылок из манипулятора
-	static void Trace( const string &rszPrefix, struct IManipulator* pManipulator );
+	static void Trace( const std::string &rszPrefix, struct IManipulator* pManipulator );
 	//
 	// создать манипулятор по ObjectSet 
 	static IManipulator *CreateObectSetManipulator( const struct SObjectSet &rObjectSet );
 
 	template<class TValue> 
-	static bool SetValue( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, CVariant( rData ) );
 	}
 	//
 	template<> 
-	static bool SetValue( const CVariant &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVariant &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		return pManipulator->SetValue( rszName, rData );
 	}
 	//
-	static bool SetValue( const string &rszData, struct IManipulator *pManipulator, const string &rszName, bool bReference )
+	static bool SetValue( const std::string &rszData, struct IManipulator *pManipulator, const std::string &rszName, bool bReference )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
 		if ( rszData.empty() && bReference )
@@ -138,7 +138,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec2( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetVec2( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec2(): pManipulator == 0" );
 		bool bResult = true;
@@ -148,7 +148,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec3( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetVec3( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec3(): pManipulator == 0" );
 		bool bResult = true;
@@ -159,7 +159,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool SetVec4( const TValue &rvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetVec4( const TValue &rvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetVec4(): pManipulator == 0" );
 		bool bResult = true;
@@ -171,23 +171,23 @@ public:
 	}
 	//
 	template<> 
-	static bool SetValue( const CVec2 &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec2 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec2<CVec2>( rData, pManipulator, rszName );
 	}
 	template<> 
-	static bool SetValue( const CVec3 &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec3 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec3<CVec3>( rData, pManipulator, rszName );
 	}
 	template<> 
-	static bool SetValue( const CVec4 &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetValue( const CVec4 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec4<CVec4>( rData, pManipulator, rszName );
 	}
 	//
 	template<class TValue> 
-	static bool SetArray( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool SetArray( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetArray(): pManipulator == 0" );
 		int nExistingElementCount = 0;
@@ -224,10 +224,10 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool Set2DArray( const TValue &rData, struct IManipulator *pManipulator, const string &rszName )
+	static bool Set2DArray( const TValue &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Set2DArray(): pManipulator == 0" );
-		const string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+		const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 		int nExistingXCount = 0;
 		bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
 		if ( bResult )
@@ -243,7 +243,7 @@ public:
 				{
 					bResult = pManipulator->InsertNode( sz2DArrayName, nXIndex );
 				}
-				const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+				const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 				// Добавляем внутренний массив
 				int nExistingYCount = 0;
 				bResult = bResult && GetValue( &nExistingYCount, pManipulator, szArrayName );
@@ -274,7 +274,7 @@ public:
 				for ( ;nXIndex < nExistingXCount; --nExistingXCount )
 				{
 					// Удаляем сначало внутренний массив
-					const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+					const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 					bResult = pManipulator->RemoveNode( szArrayName );
 					// Удаляем элемент внешнего массива
 					bResult = bResult && pManipulator->RemoveNode( sz2DArrayName, nXIndex );
@@ -289,7 +289,7 @@ public:
 	}
 	//
 	template<class TValue> 
-	static bool GetValue( TValue *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( TValue *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -304,7 +304,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( CVariant *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVariant *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -312,7 +312,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( string *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( std::string *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -333,7 +333,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( unsigned *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( unsigned *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -348,7 +348,7 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( uint16_t *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( uint16_t *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -363,7 +363,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec2( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetVec2( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec2(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec2(): pManipulator == 0" );
@@ -383,7 +383,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec3( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetVec3( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec3(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec3(): pManipulator == 0" );
@@ -407,7 +407,7 @@ public:
 	}
 	//
 	template<class TValue, class TFieldType>  
-	static bool GetVec4( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetVec4( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetVec4(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetVec4(): pManipulator == 0" );
@@ -435,23 +435,23 @@ public:
 	}
 	//
 	template<> 
-	static bool GetValue( CVec2 *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec2 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec2<CVec2, float>( pData, pManipulator, rszName );
 	}
 	template<> 
-	static bool GetValue( CVec3 *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec3 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec3<CVec3, float>( pData, pManipulator, rszName );
 	}
 	template<> 
-	static bool GetValue( CVec4 *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( CVec4 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec4<CVec4, float>( pData, pManipulator, rszName );
 	}
 	//
 	template<>
-	static bool GetValue( GUID *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetValue( GUID *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -470,7 +470,7 @@ public:
 		}
 		return bResult;
 	}
-	static bool GetGUIDAsString( string *pData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetGUIDAsString( std::string *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetValue(): pManipulator == 0" );
@@ -484,7 +484,7 @@ public:
 	}
 	//
 	template<class TValue, class TElementType> 
-	static bool GetArray( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetArray( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -507,7 +507,7 @@ public:
 		return bResult;
 	}
 	template<class TValue, class TElementType> 
-	static bool GetVec2Array( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetVec2Array( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -530,7 +530,7 @@ public:
 		return bResult;
 	}
 	template<class TValue, class TElementType> 
-	static bool GetVec3Array( TValue *pvData, struct IManipulator *pManipulator, const string &rszName )
+	static bool GetVec3Array( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::GetArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::GetArray(): pManipulator == 0" );
@@ -554,22 +554,22 @@ public:
 	}
 	//
 	template<class TValue, class TElementType> 
-	static bool Get2DArray( TValue *pvData, struct IManipulator *pManipulator, const string &rszName, const TElementType &rDefaultValue )
+	static bool Get2DArray( TValue *pvData, struct IManipulator *pManipulator, const std::string &rszName, const TElementType &rDefaultValue )
 	{
 		NI_ASSERT( pvData != 0, "CManipulatorManager::Get2DArray(): pvData == 0" );
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::Get2DArray(): pManipulator == 0" );
-		const string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
+		const std::string sz2DArrayName = StrFmt( "%s%cdata", rszName.c_str(), LEVEL_SEPARATOR_CHAR );
 		int nExistingXCount = 0;
 		int nExistingYCount = 0;
 		bool bResult = GetValue( &nExistingXCount, pManipulator, sz2DArrayName );
 		// необходимо получить максимальный размер по Y
 		if ( bResult )
 		{
-			vector<int> sizeList;
+			std::vector<int> sizeList;
 			sizeList.resize( nExistingXCount );
 			for ( int nXIndex = 0; nXIndex != nExistingXCount; ++nXIndex )
 			{
-				const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+				const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 				int nLocalYCount = 0;
 				bResult = GetValue( &nLocalYCount, pManipulator, szArrayName );
 				if ( !bResult )
@@ -591,7 +591,7 @@ public:
 					// заполняем массив значениями
 					for ( int nXIndex = 0; nXIndex != nExistingXCount; ++nXIndex )
 					{
-						const string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
+						const std::string szArrayName = StrFmt( "%s%c%c%d%c%cdata", sz2DArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nXIndex, ARRAY_NODE_END_CHAR, LEVEL_SEPARATOR_CHAR );
 						for ( int nYIndex = 0; nYIndex != sizeList[nXIndex]; ++nYIndex )
 						{
 							bResult = CManipulatorManager::GetValue( &( ( *pvData )[nYIndex][nXIndex] ), pManipulator, StrFmt( "%s%c%c%d%c", szArrayName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nYIndex, ARRAY_NODE_END_CHAR ) );
@@ -615,7 +615,7 @@ public:
 		return bResult;
 	}
 	//
-	static bool Remove2DArray( struct IManipulator *pManipulator, const string &rszName );
+	static bool Remove2DArray( struct IManipulator *pManipulator, const std::string &rszName );
 };
 
 

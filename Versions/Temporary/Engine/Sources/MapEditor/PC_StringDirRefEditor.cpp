@@ -37,7 +37,7 @@ static int CALLBACK CPCStringDirRefEditor_BrowseForFolderProc( HWND hwnd, unsign
 }
 
 
-CPCStringDirRefEditor::CPCStringDirRefEditor( const string &rszObjectTypeName ) : szObjectTypeName( rszObjectTypeName )
+CPCStringDirRefEditor::CPCStringDirRefEditor( const std::string &rszObjectTypeName ) : szObjectTypeName( rszObjectTypeName )
 {
 }
 
@@ -51,7 +51,7 @@ void CPCStringDirRefEditor::GetValue( CVariant *pValue )
 		if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
 		{
 			CPCStringBrowseEditor::GetValue( pValue );
-			string szPath = pValue->GetStr();
+			std::string szPath = pValue->GetStr();
 			bool bResult = false;
 			if ( !szPath.empty() )
 			{
@@ -65,8 +65,8 @@ void CPCStringDirRefEditor::GetValue( CVariant *pValue )
 					( *pValue ) = szPath;
 					//
 					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-					const string szFullPath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szPath;
-					string szObjectNamePrefix;
+					const std::string szFullPath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szPath;
+					std::string szObjectNamePrefix;
 					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullPath );
 					SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
 					rFilePathMap[FOLDER_PATH_LABEL] = szFullPath;
@@ -94,15 +94,15 @@ void CPCStringDirRefEditor::OnBrowse()
 	if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
 	{
 		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-		const string szInitialDir = rFilePathMap[FOLDER_PATH_LABEL];
+		const std::string szInitialDir = rFilePathMap[FOLDER_PATH_LABEL];
 		//
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FOLDER_DIALOG_TITLE );
-		string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = StrFmt( strTitle, GetName() );
 
 		//return value...assume failure...
 		bool bResult = true;
-		string szPath;
+		std::string szPath;
 
 		//Have to get the Shell's Memory Allocator
 		LPMALLOC pMalloc = 0;
@@ -178,8 +178,8 @@ void CPCStringDirRefEditor::OnBrowse()
 				{
 					pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
 				}
-				const string szFullPath = szPath;
-				const string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
+				const std::string szFullPath = szPath;
+				const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
 				if ( CStringManager::Compare( szFullPath, szDataFolder, true, true, true ) == 0 )
 				{
 					szPath = szFullPath.substr( szDataFolder.size() );

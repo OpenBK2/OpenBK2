@@ -69,8 +69,8 @@ namespace NMapInfoEditor
 	const float SCENE_NORMAL_OPACITY						= 1.0f;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool CheckLinkCapability( const string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
-														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex )
+	bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
+														const std::string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex )
 	{
 		/**					
 		case NDb::SBuildingRPGStats::typeID:

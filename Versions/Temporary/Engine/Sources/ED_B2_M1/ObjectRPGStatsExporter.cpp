@@ -15,8 +15,8 @@ REGISTER_EXPORTER_IN_DLL( ObjectRPGStats, CObjectRPGStatsExporter )
 
 
 EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
-																										const string &rszObjectTypeName,
-																										const string &rszObjectName,
+																										const std::string &rszObjectTypeName,
+																										const std::string &rszObjectName,
 																										bool bExport,
 																										EXPORT_TYPE exportType )
 {
@@ -35,13 +35,13 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 		{
 			if ( CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 ) ) 
 			{
-				string szSkeletonName;
+				std::string szSkeletonName;
 				if ( CManipulatorManager::GetParamsFromReference( "Skeleton", pModelMan, 0, &szSkeletonName, 0 ) && !szSkeletonName.empty() )
 				{
-					//const string szSkeletonFileName = pUserData->szExportDestinationFolder + StrFmt( "bin\\skeletons\\%d", nSkeletonID );
-					const string szSkeletonFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\skeletons\\";
+					//const std::string szSkeletonFileName = pUserData->szExportDestinationFolder + StrFmt( "bin\\skeletons\\%d", nSkeletonID );
+					const std::string szSkeletonFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\skeletons\\";
 					CDBPtr<NDb::SSkeleton> pDBSkeleton = NDb::Get<NDb::SSkeleton>( CDBID( szSkeletonName ) );
-					string szSkeletonFileName = NBinResources::GetBinaryFileName( szSkeletonFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid ); // uid
+					std::string szSkeletonFileName = NBinResources::GetBinaryFileName( szSkeletonFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid ); // uid
 					bool bFileExist = WaitForFile( szSkeletonFileName, 10000 );
 					if ( !bFileExist )
 					{
@@ -50,14 +50,14 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 					}
 					if ( bFileExist )
 					{
-						std::unordered_map<string, int> bonesMap;
+						std::unordered_map<std::string, int> bonesMap;
 						CGrannyFileInfoGuard pInfo( szSkeletonFileName );
 						for ( int i = 0; i < pInfo->Skeletons[0]->BoneCount; ++i ) 
 							bonesMap[pInfo->Skeletons[0]->Bones[i].Name] = 1;
 						//
 						for ( int i = 0; i < nNumSpecificJoints; ++i ) 
 						{
-							string szJointName;
+							std::string szJointName;
 							if ( CManipulatorManager::GetValue( &szJointName, pManipulator, StrFmt("SpecificJoints.[%d]", i) ) && !szJointName.empty() )
 							{
 								if ( bonesMap.find( szJointName ) == bonesMap.end() )

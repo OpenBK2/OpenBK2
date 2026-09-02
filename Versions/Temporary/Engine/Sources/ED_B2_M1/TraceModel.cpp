@@ -60,7 +60,7 @@ int IntersectTriangle(	float *t,
 }
 
 static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pSurfacePoint1,
-											const vector<STriangleForTrace> &rTrianglesForTrace, 
+											const std::vector<STriangleForTrace> &rTrianglesForTrace, 
 											const CVec3 &vRayOrig, const CVec3 vDir )
 {
 	//
@@ -150,8 +150,8 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 	return nResult;
 }
 
-void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints, 
-											const vector<STriangleForTrace> &rTrianglesForTrace,
+void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints, 
+											const std::vector<STriangleForTrace> &rTrianglesForTrace,
 											const CVec3 &rvMin, const CVec3 &rvMax,
 											int nNumPointsPerCell )
 {
@@ -239,7 +239,7 @@ void TraceTriangles(	vector<SModelSurfacePoint> *pSurfacePoints,
 	//
 }
 
-int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile )
+int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile )
 {
 	if ( !pSurfacePoints )
 		return -1;
@@ -258,7 +258,7 @@ int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pF
 	//
 	granny_model *pModel = pFile->Models[0];
 	//
-	vector<STriangleForTrace> trianglesForTrace;
+	std::vector<STriangleForTrace> trianglesForTrace;
 	int nTotalTriangles = 0;
 	for ( int nMeshIdx = 0; nMeshIdx < pModel->MeshBindingCount; ++nMeshIdx )
 	{
@@ -308,7 +308,7 @@ int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pF
 	return pSurfacePoints->size();
 }
 
-bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGeometryResourceName )
+bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::string &rszGeometryResourceName )
 {
 	if ( !pSurfacePoints )
 		return false;
@@ -317,13 +317,13 @@ bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGe
 	if ( !pUserData )
 		return false;;
 
-	const string szGeometriesFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szGeometriesFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 
 	//char pszBuf[32] = {0};
 	//sprintf( pszBuf, "%d", nGeometryResourceID );
-	//string szFilePath = szGeometriesFolder + pszBuf;
+	//std::string szFilePath = szGeometriesFolder + pszBuf;
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( rszGeometryResourceName ) );
-	string szFilePath = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid  ); // uid
+	std::string szFilePath = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid  ); // uid
 
 	WaitForFile( szFilePath, 10000 );
 	granny_file *pFile = GrannyReadEntireFile( szFilePath.c_str() );

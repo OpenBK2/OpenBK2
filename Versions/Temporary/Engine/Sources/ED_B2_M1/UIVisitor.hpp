@@ -11,7 +11,7 @@ class CUIVisitor : public IUIVisitor
 	CObj<NGScene::I2DGameView> p2DView;
 
 	CTRect<float> rcClip;
-	list< CTRect<float> > rcStoredClip;
+	std::list< CTRect<float> > rcStoredClip;
 	bool bClipApplied;
 
 	virtual void ClipRestore()

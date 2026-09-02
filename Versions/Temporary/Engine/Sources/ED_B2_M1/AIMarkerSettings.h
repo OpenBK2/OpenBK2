@@ -5,7 +5,7 @@ struct SAIMarkerSettings
 { 
 	struct SObjTypeShowMarker
 	{
-		string szObjTypeName;
+		std::string szObjTypeName;
 		bool bShowMarker;
 		///
 		SObjTypeShowMarker() : bShowMarker( false ) {}
@@ -17,7 +17,7 @@ struct SAIMarkerSettings
 			return 0;
 		}
 	};
-	vector<SObjTypeShowMarker> objTypeMarkers;		// отображать или нет маркеры 
+	std::vector<SObjTypeShowMarker> objTypeMarkers;		// отображать или нет маркеры 
 	bool bForSelectionOnly;														// отображать маркеры только для выбранного объекта
 	int nPlayer;																			// для юнитов какого игрока отображать маркеры (-1 -- для всех)
 	///
@@ -47,14 +47,14 @@ struct SAIMarkerSettings
 		//
 		if ( xs.IsReading() )
 		{
-			vector<string> newTypeNames;
+			std::vector<std::string> newTypeNames;
 			// очистить список считанный из файла от типов, которых нет в EDesignUnitType
-			for ( vector<SObjTypeShowMarker>::iterator it = objTypeMarkers.begin(); it != objTypeMarkers.end(); )
+			for ( std::vector<SObjTypeShowMarker>::iterator it = objTypeMarkers.begin(); it != objTypeMarkers.end(); )
 			{
 				bool bInvalidType = true;
 				for ( int j = 0; j < typeUnitDesignTypeMnemonics.Size() ; ++j )
 				{
-					string szTypeName = typeUnitDesignTypeMnemonics.GetMnemonic( j );
+					std::string szTypeName = typeUnitDesignTypeMnemonics.GetMnemonic( j );
 					if ( szTypeName == it->szObjTypeName )
 					{
 						bInvalidType = false;
@@ -76,7 +76,7 @@ struct SAIMarkerSettings
 			for ( int i = 0; i < typeUnitDesignTypeMnemonics.Size(); ++i )
 			{
 				bool bNew = true;
-				string szTypeName = typeUnitDesignTypeMnemonics.GetMnemonic( i );
+				std::string szTypeName = typeUnitDesignTypeMnemonics.GetMnemonic( i );
 				for ( int j = 0; j < objTypeMarkers.size(); ++j )
 				{
 					if ( objTypeMarkers[j].szObjTypeName == szTypeName )

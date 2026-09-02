@@ -4,7 +4,7 @@
 
 class CObjectRPGStatsBuilder : public CBuildDataBuilder
 {
-	static const string BUILD_DATA_TYPE_NAME;
+	static const std::string BUILD_DATA_TYPE_NAME;
 
 	OBJECT_NOCOPY_METHODS( CObjectRPGStatsBuilder );
 
@@ -12,12 +12,12 @@ class CObjectRPGStatsBuilder : public CBuildDataBuilder
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
+	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
-	bool InternalInsertObject( string *pszObjectTypeName,
-														 string *pszUniqueObjectName,
+	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	bool InternalInsertObject( std::string *pszObjectTypeName,
+														 std::string *pszUniqueObjectName,
 														 bool bFromMainMenu,
 														 bool *pbCanChangeObjectName,
 														 bool *pbNeedExport,

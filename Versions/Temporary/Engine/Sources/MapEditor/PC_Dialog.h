@@ -16,7 +16,7 @@ class CPCDialog : public CResizeDialog, public CPCBaseDialog
 
 	bool bCreateControls;
 	ICommandHandler *pPreviousCommandHandler;
-	string szXMLFileLabel;
+	std::string szXMLFileLabel;
 	//
 	CImageList typesImageList;
 	CImageList headerImageList;
@@ -25,7 +25,7 @@ class CPCDialog : public CResizeDialog, public CPCBaseDialog
 	CStatic	wndTreeStatusStringWindow;
 	//
 	void InitImageLists();
-	//void SetStatusBarMessage( const string &rszMessage );
+	//void SetStatusBarMessage( const std::string &rszMessage );
 	
 protected:
 	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam );
@@ -36,7 +36,7 @@ protected:
 	//afx_msg void OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult );
 	//
 	// CResizeDialog
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = szXMLFileLabel; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = szXMLFileLabel; }
 	bool IsRestoreSize() { return false; }
 
 public:
@@ -44,7 +44,7 @@ public:
 	//
 	CPCDialog( CWnd* pParent = NULL );
 	//
-	void SetXMLOptionsLabel(const string &rszXMLFileLabel ) { szXMLFileLabel = rszXMLFileLabel; }
+	void SetXMLOptionsLabel(const std::string &rszXMLFileLabel ) { szXMLFileLabel = rszXMLFileLabel; }
 	
 	//CPCBaseDialog
 	IView* GetView();

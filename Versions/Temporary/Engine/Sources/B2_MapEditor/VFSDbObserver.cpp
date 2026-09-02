@@ -9,7 +9,7 @@ class CVFSDbObserver : public IDbObserver
 {
 	OBJECT_BASIC_METHODS( CVFSDbObserver );
 	//
-	typedef list<CDBID> CObjectsList;
+	typedef std::list<CDBID> CObjectsList;
 	CObjectsList objects2remove;
 public:
 	void ObjectChanged( const CDBID &dbid ) {}

@@ -11,7 +11,7 @@ BEGIN_MESSAGE_MAP( CProgressDlg, CResizeDialog )
 	ON_WM_TIMER()
 END_MESSAGE_MAP()
 
-CProgressDlg::CProgressDlg( const string &rszActionName, CWnd *pParentWindow )
+CProgressDlg::CProgressDlg( const std::string &rszActionName, CWnd *pParentWindow )
 	:CResizeDialog( CProgressDlg::IDD, pParentWindow ),
 	szActionName( rszActionName )
 {
@@ -138,7 +138,7 @@ void CProgressDlg::ClearLog()
 }
 
 
-void CProgressDlg::AddLog( const string &rszLogMessage )
+void CProgressDlg::AddLog( const std::string &rszLogMessage )
 {
 	//
 	UpdateDialog();

@@ -3,7 +3,7 @@
 struct STriangleForTrace
 {
 	CVec3 vertices[3];
-	string szBodyPart;
+	std::string szBodyPart;
 	//
 	STriangleForTrace()
 	{
@@ -17,7 +17,7 @@ struct SModelSurfacePoint
 {
 	CVec3 vPos;
 	CVec3 vNormal;
-	string szBodyPart;
+	std::string szBodyPart;
 	//
 	SModelSurfacePoint() :
 		vPos( VNULL3 ),
@@ -27,8 +27,8 @@ struct SModelSurfacePoint
 };
 
 struct granny_file_info;
-int TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile );
-bool TraceModel( vector<SModelSurfacePoint> *pSurfacePoints, const string &rszGeometryResourceName );
+int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile );
+bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::string &rszGeometryResourceName );
 //////////////////////////////////////////////////////////////////////////////////////`////////////////////////////////////////
 
 

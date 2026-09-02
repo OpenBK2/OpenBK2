@@ -35,7 +35,7 @@ SMarkerSet::~SMarkerSet()
 		DetachFromScene();
 }
 
-void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points )
+void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &points )
 {
 	const CVec4 CLR_X( 0.5f,	0,		0,		1.0f );
 	const CVec4 CLR_Y( 0,			0.5f,	0,		1.0f );
@@ -65,14 +65,14 @@ void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points
 	CVec4 clrZ = ( bActive ? CLR_Z_ACTIVE : CLR_Z );
 	CVec4 clrA = ( bActive ? CLR_A_ACTIVE : CLR_A );
 
-	vector<CVec3> polyline;
+	std::vector<CVec3> polyline;
 	polyline.resize( points.size() * 2 );
 
-	vector<uint16_t> indices;
+	std::vector<uint16_t> indices;
 	indices.resize( points.size() * 2 );
 
 	int k = 0;
-	for ( vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
+	for ( std::vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
 	{
 		CVec3 v = i->pos;
 		
@@ -87,7 +87,7 @@ void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points
 	xAxisID[nIdx] = pScene->AddIndexedPolyline( nBaseIdx + nIdx, polyline, indices, clrX, false );
 
 	k = 0;
-	for ( vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
+	for ( std::vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
@@ -98,7 +98,7 @@ void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points
 	yAxisID[nIdx] = pScene->AddIndexedPolyline( nBaseIdx + nIdx, polyline, indices, clrY, false );
 
 	k = 0;
-	for ( vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
+	for ( std::vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
@@ -109,7 +109,7 @@ void SMarkerSet::AttachToScene( bool bActive, const vector<SMarkerPoint> &points
 	zAxisID[nIdx] = pScene->AddIndexedPolyline( nBaseIdx + nIdx, polyline, indices, clrZ, false );
 
 	k = 0;
-	for ( vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
+	for ( std::vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;

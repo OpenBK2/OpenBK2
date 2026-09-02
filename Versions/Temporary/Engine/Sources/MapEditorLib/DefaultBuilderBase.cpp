@@ -5,7 +5,7 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/StringManager.h"
 
-bool CDefaultBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
+bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName, std::string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {
 	if ( ( pszObjectTypeName != 0 ) && ( pszUniqueObjectName != 0 ) && ( pbNeedExport != 0 ) && ( pbNeedEdit != 0 ) )
 	{

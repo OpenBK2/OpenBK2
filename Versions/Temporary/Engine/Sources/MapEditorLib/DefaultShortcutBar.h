@@ -6,7 +6,7 @@
 
 class CDefaultShortcutBar : public SECShortcutBar
 {
-	vector<CWnd*> shortcutList;
+	std::vector<CWnd*> shortcutList;
 	unsigned nCommandHandlerID;
 	unsigned nCommandID;
 

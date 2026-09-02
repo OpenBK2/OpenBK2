@@ -49,8 +49,8 @@ void CCreateMODDialog::UpdateControls()
 		bool bEnable = ( !strFolder.IsEmpty() && !strName.IsEmpty() && ( strFolder.FindOneOf( "/\\" ) < 0 ) );
 		if ( bEnable )
 		{
-			string szFolder = GetFolder();
-			vector<NMOD::SMOD> modList;
+			std::string szFolder = GetFolder();
+			std::vector<NMOD::SMOD> modList;
 			NMOD::GetAllMODs( &modList );
 			for ( int nIndex = 0; nIndex < modList.size(); ++nIndex )
 			{
@@ -66,9 +66,9 @@ void CCreateMODDialog::UpdateControls()
 }
 
 
-const string CCreateMODDialog::GetFolder()
+const std::string CCreateMODDialog::GetFolder()
 {
-	string szFolder;
+	std::string szFolder;
 	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
 	{
 		szFolder = pUserData->constUserData.szDataStorageFolder;
@@ -81,7 +81,7 @@ const string CCreateMODDialog::GetFolder()
 		{
 			szFolder = szFolder.substr( 0, nPos );
 		}
-		szFolder += string( "\\Mods\\" ) + string( strFolder ) + string( "\\" );
+		szFolder += std::string( "\\Mods\\" ) + std::string( strFolder ) + std::string( "\\" );
 	}
 	return szFolder;
 }

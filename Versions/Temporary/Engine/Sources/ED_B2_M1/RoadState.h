@@ -4,8 +4,8 @@
 
 class CRoadState : public CVSOStateEx
 {
-	static const string VSO_NAME;
-	static const string VSO_TYPE_NAME;
+	static const std::string VSO_NAME;
+	static const std::string VSO_TYPE_NAME;
 	
 	friend class CMultiInputState;
 	friend class CMapInfoState;
@@ -52,8 +52,8 @@ protected:
 	//CVSOStateEx
 	bool CanInsertVSO();
 	bool IsRealtimeUpdate() const { return true; }
-	const string GetVSOName() const { return VSO_NAME; }
-	const string GetVSOTypeName() const { return VSO_TYPE_NAME; }
+	const std::string GetVSOName() const { return VSO_NAME; }
+	const std::string GetVSOTypeName() const { return VSO_TYPE_NAME; }
 	int GetVSOTypeID() const { return NDb::SRoadDesc::typeID; }
 	const CMapInfoController::SVSOUndoData::EVSOType GetVSOType() const { return CMapInfoController::SVSOUndoData::VSO_ROAD; }
 	NMapInfoEditor::CVSOInstanceList* GetVSOList();

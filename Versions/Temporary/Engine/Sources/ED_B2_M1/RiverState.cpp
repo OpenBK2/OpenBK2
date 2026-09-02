@@ -19,8 +19,8 @@
 
 #include <zconf.h>
 
-const string CRiverState::VSO_NAME = "Rivers";
-const string CRiverState::VSO_TYPE_NAME = "RiverDesc";
+const std::string CRiverState::VSO_NAME = "Rivers";
+const std::string CRiverState::VSO_TYPE_NAME = "RiverDesc";
 
 
 /**
@@ -98,7 +98,7 @@ void CRiverState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			int nMinCount = INVALID_NODE_ID;
 			int nMaxCount = INVALID_NODE_ID;
 			GetControlPointBounds( &nMinCount, &nMaxCount );
-			//UniquePolygon<vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
+			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
 			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) && 
 					( pVSO->controlPoints.size() > 1 ) )
 			{

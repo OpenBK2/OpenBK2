@@ -219,7 +219,7 @@ bool CHeightWindowV3::SetEditParameters( const CHeightStateV3::SEditParameters &
 		CheckRadioButton( IDC_TMITHV3_BRUSH_TILE, IDC_TMITHV3_BRUSH_PLATO, rEditParameters.eBrush + IDC_TMITHV3_BRUSH_TILE );
 		/**
 		nLastIndex = rEditParameters.nTileIndex;
-		SetListEditParameters( vector<string>(),
+		SetListEditParameters( std::vector<std::string>(),
 													 ( rEditParameters.eBrush == CHeightStateV3::SEditParameters::B_TILE ) ? rEditParameters.nTileIndex : -1,
 													 &wndTileList,
 													 TILE_TYPE_NAME,
@@ -317,7 +317,7 @@ void CHeightWindowV3::OnBrushRadio()
 	{
 		CHeightStateV3::SEditParameters::EBrush eBrush = static_cast<CHeightStateV3::SEditParameters::EBrush>( GetCheckedRadioButton( IDC_TMITHV3_BRUSH_TILE, IDC_TMITHV3_BRUSH_PLATO ) - IDC_TMITHV3_BRUSH_TILE );
 		bCreateControls = true;
-		SetListEditParameters( vector<string>(),
+		SetListEditParameters( std::vector<std::string>(),
 													 ( eBrush == CHeightStateV3::SEditParameters::B_TILE ) ? nLastIndex : -1,
 													 &wndTileList,
 													 TILE_TYPE_NAME,
@@ -463,7 +463,7 @@ bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uint32_t dwData )
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 				if ( pView != 0 )
 				{
-					pView->SetViewManipulator( pObjectManipulator, objectSet, string() );
+					pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
 					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
 					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 				}

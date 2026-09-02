@@ -115,8 +115,8 @@ int CPCMainTreeControl::SortItemText( const CString &rstrText0, const CString &r
 	{
 		if ( IsIgnoreCase() )
 		{
-			string szText0 = rstrText0;
-			string szText1 = rstrText1;
+			std::string szText0 = rstrText0;
+			std::string szText1 = rstrText1;
 			NStr::ToLower( &szText0 );
 			NStr::ToLower( &szText1 );
 			return strcmpi( szText0.c_str(), szText1.c_str() );
@@ -187,7 +187,7 @@ void CPCMainTreeControl::PickTextColors( LvPaintContext* pPC )
 						COLORREF color = RGB( 0, 0, 0 );
 						if ( !GetTreeItemColor( pTvPC->tvi.hItem, &color ) )
 						{
-							string szName;
+							std::string szName;
 							GetTreeItemName( pTvPC->tvi.hItem, &szName );
 							//
 							CVariant value;
@@ -228,7 +228,7 @@ void CPCMainTreeControl::OnItemExpanded( NMHDR* pNMHDR, LRESULT* pResult )
 		HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 		bool bExpanded = ( pNMTreeView->itemNew.state & TVIS_EXPANDED ) > 0;
 
-		string szName;
+		std::string szName;
 		GetTreeItemName( hItem, &szName );
 
 		SUserData::SObjectTypeData::CExpandedPropertySet &rExpandedPropertySet = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].expandedPropertySet;
@@ -265,7 +265,7 @@ void CPCMainTreeControl::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult )
 		//
 		HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 
-		string szName;
+		std::string szName;
 		GetTreeItemName( hItem, &szName );
 
 		Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentProperty = szName;
@@ -379,7 +379,7 @@ EPCIEType CPCMainTreeControl::GetTreeItemType( HTREEITEM hItem )
 
 // CSortTreeControl
 
-HTREEITEM CPCMainTreeControl::GetTreeItem( const string &rszName )
+HTREEITEM CPCMainTreeControl::GetTreeItem( const std::string &rszName )
 {
 	HTREEITEM hItem = CSortTreeControl::GetTreeItem( rszName );
 	if ( hItem != 0 )
@@ -389,17 +389,17 @@ HTREEITEM CPCMainTreeControl::GetTreeItem( const string &rszName )
 	else
 	{
 		HTREEITEM hParentItem = TVI_ROOT;
-		string szAdditionalName = rszName;
-		int nDividerPos = string::npos;
+		std::string szAdditionalName = rszName;
+		int nDividerPos = std::string::npos;
 		do
 		{
 			nDividerPos = szAdditionalName.find( LEVEL_SEPARATOR_CHAR );
-			const string szName = szAdditionalName.substr( 0, nDividerPos );
+			const std::string szName = szAdditionalName.substr( 0, nDividerPos );
 			
 			HTREEITEM hItem = GetChildItem( hParentItem );
 			while ( hItem != 0 )
 			{
-				string szText = GetItemText( hItem );
+				std::string szText = GetItemText( hItem );
 				if ( szText == szName )
 				{
 					break;
@@ -413,16 +413,16 @@ HTREEITEM CPCMainTreeControl::GetTreeItem( const string &rszName )
 			}
 			szAdditionalName = szAdditionalName.substr( nDividerPos + 1 );
 		}
-		while ( nDividerPos != string::npos );
+		while ( nDividerPos != std::string::npos );
 		SetNameCache( rszName, hParentItem );
 		return hParentItem;
 	}
 }
 
 
-bool CPCMainTreeControl::GetTreeItemName( HTREEITEM hItem, string *pszName )
+bool CPCMainTreeControl::GetTreeItemName( HTREEITEM hItem, std::string *pszName )
 {
-	string szItemText = GetItemText( hItem );
+	std::string szItemText = GetItemText( hItem );
 	if ( pszName->empty() )
 	{
 		if ( pszName )
@@ -579,7 +579,7 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 				{
 					while ( !pCreateTreeManipulatorIterator->IsEnd() )
  					{
-						string szName;
+						std::string szName;
 						pCreateTreeManipulatorIterator->GetName( &szName );
 						if ( ( szName != szCreateTreeParentName ) && ( szName.compare( 0, szCreateTreeParentName.size(), szCreateTreeParentName ) == 0 ) )
 						{
@@ -615,7 +615,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 			int nCount = 0;
 			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( nCount < GetCreateTreeTimerCount() ) )
  			{
-				string szName;
+				std::string szName;
 				pCreateTreeManipulatorIterator->GetName( &szName );
 				if ( ( !szName.empty() ) &&
 						( !szCreateTreeParentName.empty() ) &&
@@ -678,7 +678,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 					 ( hCreateTreeParentItem != TVI_ROOT ) )
 			{
 				/**
-				string szItemName;
+				std::string szItemName;
 				GetTreeItemName( hCreateTreeParentItem, &szItemName );
 				DebugTrace( "CPCMainTreeControl::OnCreateTreeTimer(): %s", szItemName.c_str() );
 				/**/
@@ -735,17 +735,17 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 }
 
 
-HTREEITEM CPCMainTreeControl::AddTreeItem( const string &rszName, EPCIEType nType, const SPropertyDesc *pDesc )
+HTREEITEM CPCMainTreeControl::AddTreeItem( const std::string &rszName, EPCIEType nType, const SPropertyDesc *pDesc )
 {
 	//DebugTrace( "AddTreeItem: name:<%s>", rszName.c_str() );
 	//
 	int nDividerPos = rszName.find( LEVEL_SEPARATOR_CHAR );
-	string szParentName = rszName.substr( 0, nDividerPos );
-	while ( nDividerPos != string::npos ) 
+	std::string szParentName = rszName.substr( 0, nDividerPos );
+	while ( nDividerPos != std::string::npos ) 
 	{
 		if ( HTREEITEM hItem = GetTreeItem( szParentName ) )
 		{
-			const string szAdditionalName = rszName.substr( nDividerPos + 1 );
+			const std::string szAdditionalName = rszName.substr( nDividerPos + 1 );
 			return AddTreeItemInternal( hItem, szAdditionalName, nType, pDesc );
 		}
 		nDividerPos = szParentName.find( LEVEL_SEPARATOR_CHAR );
@@ -761,7 +761,7 @@ bool CPCMainTreeControl::ItemMustBeExpand( HTREEITEM hItem )
 	{
 		case NEEM_USER_DEFINED:
 		{
-			string szName;
+			std::string szName;
 			GetTreeItemName( hItem, &szName );
 			const SUserData::SObjectTypeData::CExpandedPropertySet &rExpandedPropertySet = Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].expandedPropertySet;
 			//DebugTrace( "rExpandedPropertySet: %d: %s", bExpand, szHashName.c_str() );
@@ -777,7 +777,7 @@ bool CPCMainTreeControl::ItemMustBeExpand( HTREEITEM hItem )
 }
 
 
-HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const string &rszAdditionalName, EPCIEType nType, const SPropertyDesc *pDesc )
+HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const std::string &rszAdditionalName, EPCIEType nType, const SPropertyDesc *pDesc )
 {
 	HTREEITEM hAddedItem = 0;
 	if ( rszAdditionalName.empty() )
@@ -785,14 +785,14 @@ HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const st
 		return hAddedItem;
 	}
 	const int nDividerPos = rszAdditionalName.find( LEVEL_SEPARATOR_CHAR );
-	const string szShortName = rszAdditionalName.substr( 0, nDividerPos );
-	if ( nDividerPos != string::npos )
+	const std::string szShortName = rszAdditionalName.substr( 0, nDividerPos );
+	if ( nDividerPos != std::string::npos )
 	{
-		const string szAdditionalName = rszAdditionalName.substr( nDividerPos + 1 );
+		const std::string szAdditionalName = rszAdditionalName.substr( nDividerPos + 1 );
 		HTREEITEM hItem = GetChildItem( hRootItem );
 		while ( hItem )
 		{
-			const string szItemText = GetItemText( hItem );
+			const std::string szItemText = GetItemText( hItem );
 			if ( szItemText == szShortName )
 			{
 				break;
@@ -852,7 +852,7 @@ HTREEITEM CPCMainTreeControl::AddTreeItemInternal( HTREEITEM hRootItem, const st
 void CPCMainTreeControl::SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pDesc )
 {
 	//DebugTrace( "CPCMainTreeControl::SetPCItemView()" );
-	string szName;
+	std::string szName;
 	GetTreeItemName( hItem, &szName );
 	const EPCIEType nType = GetTreeItemType( hItem );
 	//
@@ -874,7 +874,7 @@ void CPCMainTreeControl::SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pD
 	{
 		if ( GetValue( szName.c_str(), &value ) )
 		{
-			string szValue;
+			std::string szValue;
 			GetPCItemStringValue( &szValue, value, "", nType, pDesc, false );
 			SetItemText( hItem, 1, szValue.c_str() );
 		}
@@ -887,7 +887,7 @@ bool CPCMainTreeControl::ForceRelativeParam_ReadOnly( HTREEITEM hItem, bool bDef
 	bool bReadOnly = bDefaultValue;
 	if ( !GetTreeItemReadOnly( hItem, &bReadOnly ) )
 	{
-		string szName;
+		std::string szName;
 		const SPropertyDesc *pDesc = 0;
 		HTREEITEM hParentItem = hItem;
 		while ( hParentItem != 0 )
@@ -912,9 +912,9 @@ bool CPCMainTreeControl::ForceRelativeParam_ReadOnly( HTREEITEM hItem, bool bDef
 }
 
 
-string CPCMainTreeControl::ForceRelativeParam_StringParam( HTREEITEM hItem, const string &rszDefaultValue )
+std::string CPCMainTreeControl::ForceRelativeParam_StringParam( HTREEITEM hItem, const std::string &rszDefaultValue )
 {
-	string szName;
+	std::string szName;
 	const SPropertyDesc *pDesc = 0;
 	while ( hItem != 0 )
 	{
@@ -935,7 +935,7 @@ string CPCMainTreeControl::ForceRelativeParam_StringParam( HTREEITEM hItem, cons
 
 int CPCMainTreeControl::ForceRelativeParam_IntParam( HTREEITEM hItem, int nDefaultValue )
 {
-	string szName;
+	std::string szName;
 	const SPropertyDesc *pDesc = 0;
 	while ( hItem != 0 )
 	{
@@ -959,7 +959,7 @@ IPCItemEditor* CPCMainTreeControl::CreatePCItemEditor( HTREEITEM hItem )
 {
 	const EPCIEType nType = GetTreeItemType( hItem );
 	//
-	string szName;
+	std::string szName;
 	const SPropertyDesc *pDesc = 0;
 	if ( typePCIEMnemonics.IsLeaf( nType ) )
 	{
@@ -1133,7 +1133,7 @@ IPCItemEditor* CPCMainTreeControl::CreatePCItemEditor( HTREEITEM hItem )
 }
 
 
-bool CPCMainTreeControl::GetValue( const string &rszName, CVariant *pVariant )
+bool CPCMainTreeControl::GetValue( const std::string &rszName, CVariant *pVariant )
 {
 	if ( pVariant )
 	{
@@ -1158,7 +1158,7 @@ bool CPCMainTreeControl::GetValue( const string &rszName, CVariant *pVariant )
 }
 
 
-bool CPCMainTreeControl::AddChangeOperation( const string &rszName, const CVariant &rValue, CObjectBaseController *pObjectController )
+bool CPCMainTreeControl::AddChangeOperation( const std::string &rszName, const CVariant &rValue, CObjectBaseController *pObjectController )
 {
 	if ( const SPropertyDesc* pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( rszName ) ) )
 	{
@@ -1181,7 +1181,7 @@ bool CPCMainTreeControl::UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEdit
 	if ( GetViewManipulator() && pPCItemEditor && pPCItemEditor->IsEditEnabled() )
 	{
 		bool bValueChanged = false;
-		string szName = pPCItemEditor->GetName();
+		std::string szName = pPCItemEditor->GetName();
 		if ( !pPCItemEditor->IsDefaultValue() )
 		{
 			CVariant newValue;
@@ -1219,7 +1219,7 @@ bool CPCMainTreeControl::UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEdit
 				if ( GetValue( szName.c_str(), &oldValue ) )
 				{
 					const SPropertyDesc* pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( szName ) );
-					string szValue;
+					std::string szValue;
 					GetPCItemStringValue( &szValue, oldValue, "", nType, pDesc, false );
 					SetItemText( hItem, 1, szValue.c_str() );
 				}
@@ -1267,9 +1267,9 @@ void CPCMainTreeControl::ClosePCItemEditor( bool bAcceptChanges )
 bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nNewIndex )
 {
 	//DebugTrace( "InsertNode0: 0x%X 0x%X %d", hArrayItem, hItem, nNewIndex );
-	string szArrayName;
-	string szNewNodeName;
-	string szNewText;
+	std::string szArrayName;
+	std::string szNewNodeName;
+	std::string szNewText;
 	//	
 	GetTreeItemName( hArrayItem, &szArrayName );
 	const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( szArrayName ) );
@@ -1317,8 +1317,8 @@ bool CPCMainTreeControl::InsertPCNode( HTREEITEM hArrayItem, HTREEITEM hItem, in
 bool CPCMainTreeControl::DeletePCNode( HTREEITEM hArrayItem, HTREEITEM hItem, int nDeleteIndex )
 {
 	//DebugTrace( "DeleteNode0: 0x%X 0x%X %d", hArrayItem, hItem, nDeleteIndex );
-	string szArrayName;
-	string szNewText;
+	std::string szArrayName;
+	std::string szNewText;
 	//
 	GetTreeItemName( hArrayItem, &szArrayName );
 	if ( hItem == 0 )
@@ -1432,7 +1432,7 @@ void CPCMainTreeControl::AddNode()
 	// добавляем элемент к дереву и манипулятору
 	if ( HTREEITEM hArrayItem = GetSelectedItem() )
 	{
-		string szName;
+		std::string szName;
 		GetTreeItemName( hArrayItem, &szName );
 		//заполняем UNDO структуру
 		CPtr<CObjectBaseController> pObjectController = CreateController();
@@ -1458,7 +1458,7 @@ void CPCMainTreeControl::DeleteAllNodes()
 		strMessage.LoadString( IDS_PC_DELETE_ALL_MESSAGE );
 		if ( MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 		{
-			string szName;
+			std::string szName;
 			GetTreeItemName( hArrayItem, &szName );
 			//заполняем UNDO структуру
 			CPtr<CObjectBaseController> pObjectController = CreateController();
@@ -1481,7 +1481,7 @@ void CPCMainTreeControl::InsertNode()
 	if ( HTREEITEM hItem = GetSelectedItem() )
 	{
 		HTREEITEM hArrayItem = GetParentItem( hItem );
-		string szName;
+		std::string szName;
 		GetTreeItemName( hArrayItem, &szName );
 		CString strText = GetItemText( hItem );
 		int nNewIndex = 0;
@@ -1512,7 +1512,7 @@ void CPCMainTreeControl::DeleteNode()
 	if ( HTREEITEM hItem = GetSelectedItem() )
 	{
 		HTREEITEM hArrayItem = GetParentItem( hItem );
-		string szName;
+		std::string szName;
 		GetTreeItemName( hArrayItem, &szName );
 		CString strText = GetItemText( hItem );
 		int nNewIndex = 0;
@@ -1541,7 +1541,7 @@ void CPCMainTreeControl::ShowHidden()
 }
 
 
-bool CPCMainTreeControl::UpdateValue( const string &rszName )
+bool CPCMainTreeControl::UpdateValue( const std::string &rszName )
 {
 	if ( !GetViewManipulator() )
 	{
@@ -1566,7 +1566,7 @@ bool CPCMainTreeControl::UpdateValue( const string &rszName )
 }
 
 
-bool CPCMainTreeControl::SelectPCItem( const string &rszName )
+bool CPCMainTreeControl::SelectPCItem( const std::string &rszName )
 {
 	if ( !GetViewManipulator() )
 	{
@@ -1585,7 +1585,7 @@ bool CPCMainTreeControl::SelectPCItem( const string &rszName )
 }
 
 
-bool CPCMainTreeControl::GetSelectedPCItemName( string *pszName )
+bool CPCMainTreeControl::GetSelectedPCItemName( std::string *pszName )
 {
 	if ( !GetViewManipulator() )
 	{
@@ -1606,7 +1606,7 @@ bool CPCMainTreeControl::GetSelectedPCItemName( string *pszName )
 }
 
 
-bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
+bool CPCMainTreeControl::GetSelectedPCItemDescription( std::string *pszName )
 {
 	if ( !GetViewManipulator() )
 	{
@@ -1623,8 +1623,8 @@ bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
 				( *pszName ) =  GetObjectSet().objectNameSet.begin()->first.ToString();
 			}
 			/**
-			string szObjectID;
-			string szObjectPropertyName;
+			std::string szObjectID;
+			std::string szObjectPropertyName;
 			if ( GetObjectSet().objectNameSet.size() == 1 )
 			{
 				if ( szGUID.empty() )
@@ -1637,7 +1637,7 @@ bool CPCMainTreeControl::GetSelectedPCItemDescription( string *pszName )
 				}
 			}
 			GetTreeItemName( hItem, &szObjectPropertyName );
-			const string szDescription = GetItemText( hItem, 2 );
+			const std::string szDescription = GetItemText( hItem, 2 );
 			if ( !szDescription.empty() )
 			{
 				( *pszName ) =  StrFmt( "%s%s (%s)", szObjectID.c_str(), szObjectPropertyName.c_str(), szDescription.c_str() );
@@ -1865,7 +1865,7 @@ void CPCMainTreeControl::UpdateMultilineStringEditor()
 		{
 			const EPCIEType nType = GetTreeItemType( hItem );
 			
-			string szName;
+			std::string szName;
 			const SPropertyDesc *pDesc = 0;
 			if ( typePCIEMnemonics.IsLeaf( nType ) )
 			{
@@ -1903,7 +1903,7 @@ void CPCMainTreeControl::UpdateStatusStringWindow()
 {
 	if ( ( pwndStatusStringWindow != 0 ) && ::IsWindow( pwndStatusStringWindow->m_hWnd ) )
 	{
-		string szItemName;
+		std::string szItemName;
 		GetSelectedPCItemDescription( &szItemName );
 		pwndStatusStringWindow->SetWindowText( szItemName.c_str() );
 	}
@@ -1924,7 +1924,7 @@ void CPCMainTreeControl::CopySelection()
 			const EPCIEType nType = GetTreeItemType( *itTreeItem );
 			if ( typePCIEMnemonics.IsLeaf( nType ) )
 			{
-				string szName;
+				std::string szName;
 				GetTreeItemName( *itTreeItem, &szName );
 				//		
 				SUserData::SPCSelectionData selectionData;
@@ -2261,7 +2261,7 @@ bool CPCMainTreeControl::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 }
 
 
-void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const string &rszTemporaryLabel )
+void CPCMainTreeControl::SetViewManipulator( IManipulator* _pViewManipulator, const SObjectSet &rObjectSet, const std::string &rszTemporaryLabel )
 {
 	if ( pMultilineStringEditor != 0 )
 	{

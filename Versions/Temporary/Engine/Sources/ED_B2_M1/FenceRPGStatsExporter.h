@@ -11,19 +11,19 @@ class CFenceRPGStatsExporter : public CStaticObjectRPGStatsExporter
 	
 	CFenceRPGStatsExporter() {}
 	bool ExportVisobjs( IManipulator *pManipulator, 
-											const string &rszSegmentsSetName, 
+											const std::string &rszSegmentsSetName, 
 											const CArray2D<uint8_t> &rPassabilityArray,
 											const CVec3 &rvPassabilityOrigin );
 
-	void CreatePassProfiles( IManipulator *pManipulator, const string &rszSegmentsSetName );
+	void CreatePassProfiles( IManipulator *pManipulator, const std::string &rszSegmentsSetName );
 	bool GetGeom0FileName( IManipulator *pManipulator, 
-												const string &rszSegmentsSetName, 
-												string *pszGeomFileName );
+												const std::string &rszSegmentsSetName, 
+												std::string *pszGeomFileName );
 public:
 	// IExporter
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 	//

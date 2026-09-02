@@ -9,7 +9,7 @@ class CPCStringComboEditor : public CComboBox, public CPCItemEditor, public ICom
 {
 	OBJECT_NOCOPY_METHODS( CPCStringComboEditor );
 	
-	string szDefaultValue;
+	std::string szDefaultValue;
 	bool bCreateControls;
 
 protected:
@@ -29,7 +29,7 @@ public:
 	virtual BOOL PreTranslateMessage( MSG* pMsg );
 
 	//CPCItemEditor
-	bool CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
+	bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 	bool PlaceEditor( const CTRect<int> &rPlaceRect );
 	bool ActivateEditor( CDialog *pwndActiveDialog );
 

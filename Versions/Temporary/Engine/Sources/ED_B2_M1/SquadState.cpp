@@ -104,7 +104,7 @@ void CSquadState::Leave()
 	CMultiInputState::Leave();
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_BUILDING_STATE );
 	//
-	const string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
+	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }

@@ -30,8 +30,8 @@ void CFieldState::UpdateEditParameters( unsigned nFlags )
 		pEditParameters->nFlags = nFlags;
 		if ( pEditParameters->nFlags & MITFEP_FIELD_COUNT )
 		{
-			string szMapTerraSetTypeName;
-			string szMapTerraSetName;
+			std::string szMapTerraSetTypeName;
+			std::string szMapTerraSetName;
 			CManipulatorManager::GetParamsFromReference( "TerraSet", pMapInfoEditor->GetViewManipulator(), &szMapTerraSetTypeName, &szMapTerraSetName, 0 );
 			//
 			pEditParameters->fieldList.clear();
@@ -39,13 +39,13 @@ void CFieldState::UpdateEditParameters( unsigned nFlags )
 			{
 				for ( CPtr<IManipulatorIterator> it = pFolderManipulator->Iterate( false, ECT_NO_CACHE ); !it->IsEnd(); it->Next() )
 				{
-					string szName;
+					std::string szName;
 					if ( it->GetName( &szName ) && ( !szName.empty() ) && ( szName[szName.size() - 1] != PATH_SEPARATOR_CHAR ) )
 					{
 						if ( CPtr<IManipulator> pFieldManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( FIELD_TYPE_NAME, szName ) )
 						{
-							string szTerraSetTypeName;
-							string szTerraSetName;
+							std::string szTerraSetTypeName;
+							std::string szTerraSetName;
 							CManipulatorManager::GetParamsFromReference( "TerraSet", pFieldManipulator, &szTerraSetTypeName, &szTerraSetName, 0 );
 							//
 							if ( ( szMapTerraSetTypeName == szTerraSetTypeName ) && ( szMapTerraSetName == szTerraSetName ) )
@@ -143,7 +143,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 		{
 			if ( ( pEditParameters->nFieldIndex >= 0 ) && ( pEditParameters->nFieldIndex < pEditParameters->fieldList.size() ) )
 			{
-				const string szFieldName = pEditParameters->fieldList[pEditParameters->nFieldIndex];
+				const std::string szFieldName = pEditParameters->fieldList[pEditParameters->nFieldIndex];
 				if ( const NDb::SField *pField = NDb::Get<NDb::SField>( CDBID( szFieldName ) ) )
 				{
 					if ( CPtr<CMapInfoController> pMapInfoController = pMapInfoEditor->CreateController() )
@@ -518,7 +518,7 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 	{
 		CXPosList xposList;
 		int nCount = GetPolygonLine( nYIndex, fTileSize, rPolygon, CTPoint<int>( indices.minx, indices.maxx ), &xposList );
-		string szIndices;
+		std::string szIndices;
 		for ( int i = 0; i < xposList.size(); ++i )
 		{
 			szIndices += StrFmt( "%d ", xposList[i] );
@@ -641,7 +641,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	float fHeight = rField.fHeight;
 	float fPositiveRatio = rField.fPositiveRatio;
 	CTPoint<int> patternSize( rField.patternSize.nMin, rField.patternSize.nMax );
-	string szProfileFileName = rField.szProfileFileName;
+	std::string szProfileFileName = rField.szProfileFileName;
 	//
 	if ( fHeight < 0.0f )
 	{
@@ -716,10 +716,10 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 			}
 		}
 	}
-	vector<SHeightPattern> patternList;
+	std::vector<SHeightPattern> patternList;
 	for ( int nPatternSize = patternSize.x; nPatternSize <= patternSize.y; ++nPatternSize )
 	{
-		vector<SHeightPattern>::iterator posPattern = patternList.insert( patternList.end(), SHeightPattern() );
+		std::vector<SHeightPattern>::iterator posPattern = patternList.insert( patternList.end(), SHeightPattern() );
 		posPattern->CreateByGradient( 1.0f, nPatternSize * 2, gradient );
 	}
 	//пробегаем по тайлам

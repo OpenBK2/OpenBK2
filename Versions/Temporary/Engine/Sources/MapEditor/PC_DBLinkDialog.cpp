@@ -159,21 +159,21 @@ void CPCDBLinkDialog::SetSelectedTables( const CTableSet &rSelectedTables )
 }
 
 
-void CPCDBLinkDialog::SetCurrentTable( const string &rszCurrentTable )
+void CPCDBLinkDialog::SetCurrentTable( const std::string &rszCurrentTable )
 { 
 	szCurrentTable = rszCurrentTable;
 	szPreviousTable = szCurrentTable;
 }
 
 
-void CPCDBLinkDialog::SetCurrentObject( const string &rszCurrentObject )
+void CPCDBLinkDialog::SetCurrentObject( const std::string &rszCurrentObject )
 { 
 	szCurrentObject = rszCurrentObject;
 	szPreviousObject = szCurrentObject;
 }
 
 
-void CPCDBLinkDialog::GetCurrentTable( string *pszCurrentTable )
+void CPCDBLinkDialog::GetCurrentTable( std::string *pszCurrentTable )
 {
 	if ( pszCurrentTable )
 	{
@@ -182,7 +182,7 @@ void CPCDBLinkDialog::GetCurrentTable( string *pszCurrentTable )
 }
 
 
-void CPCDBLinkDialog::GetCurrentObject( string *pszCurrentObject )
+void CPCDBLinkDialog::GetCurrentObject( std::string *pszCurrentObject )
 {
 	if ( pszCurrentObject )
 	{
@@ -400,7 +400,7 @@ BOOL CPCDBLinkDialog::OnInitDialog()
 		{
 			if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_NO_CACHE ) )
 			{
-				string szName;
+				std::string szName;
 				while ( !pTableManipulatorIterator->IsEnd() )
 				{
 					pTableManipulatorIterator->GetName( &szName );
@@ -413,7 +413,7 @@ BOOL CPCDBLinkDialog::OnInitDialog()
 	tab.RemoveAllTabs();
 	// Необходимо сначало добавить все панели, а потом устанавливать активную
 	CTreeGDBLinkBrowser* pwndActiveTreeGBDBrowser = 0;
-	for ( list<string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
+	for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 	{
 		if ( selectedTables.find( *itTable ) != selectedTables.end() )
 		{
@@ -506,7 +506,7 @@ void CPCDBLinkDialog::OnSelchangedTree( NMHDR* pNMHDR, LRESULT* pResult )
 {
 	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
 	//
-	string szItemName;
+	std::string szItemName;
 	tree.GetSelectedPCItemDescription( &szItemName );
 	SetStatusBarMessage( szItemName );
 	//
@@ -545,7 +545,7 @@ void CPCDBLinkDialog::OnTabSelected()
 			InsertHashSetElement( &( collectionObjectSet.objectNameSet ), VIEW_COLLECTION_ID );
 			//
 			IResourceManager *pResourceManager = Singleton<IResourceManager>();
-			pwndTreeGBDBrowserBase->SetViewManipulator( pResourceManager->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, string() );
+			pwndTreeGBDBrowserBase->SetViewManipulator( pResourceManager->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
 			pwndTreeGBDBrowserBase->SetCurrentTreeItemName( szPreviousObject, false );
 			pwndTreeGBDBrowserBase->CreateTree();
 			//DebugTrace( "CDWGDBBrowser::OnTabSelected(): wParam: 0x%X(%u), lParam: 0x%X\n", wParam, wParam, lParam );
@@ -575,7 +575,7 @@ LRESULT CPCDBLinkDialog::OnMessageTreeGDBBrowser( WPARAM wParam, LPARAM lParam )
 	{
 		if ( LOWORD( wParam ) == TREE_GDB_BROWSER_CHANGE_SELECTION )
 		{
-			string szName;
+			std::string szName;
 			if ( pwndActiveTreeGBDBrowser->GetCurrentTreeItemName( &szName ) )
 			{
 				szCurrentObject = szName;

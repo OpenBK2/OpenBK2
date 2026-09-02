@@ -8,7 +8,7 @@ class CMayaAnimationMnemonics : public CMnemonicsCollector<int>
 	static const char DECIMAL_NUMBERS[];
 	public:
 	CMayaAnimationMnemonics();
-	NDb::EAnimationType Get( const string &rszMnemonicType, string *pszMnemonicLabel, unsigned *pnNumber );
+	NDb::EAnimationType Get( const std::string &rszMnemonicType, std::string *pszMnemonicLabel, unsigned *pnNumber );
 };
 
 

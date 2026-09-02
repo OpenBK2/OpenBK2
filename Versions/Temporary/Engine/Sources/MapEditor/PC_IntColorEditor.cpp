@@ -18,11 +18,11 @@ void CPCIntColorEditor::SetValue( const CVariant &rValue )
 	CVariant colorValue;
 	if ( GetItemEditorType() ==  PCIE_INT_COLOR_WITH_ALPHA )
 	{
-		colorValue = string( StrFmt( "%d, %d, %d, %d", a, r, g, b ) );
+		colorValue = std::string( StrFmt( "%d, %d, %d, %d", a, r, g, b ) );
 	}
 	else
 	{
-		colorValue = string( StrFmt( "%d, %d, %d", r, g, b ) );
+		colorValue = std::string( StrFmt( "%d, %d, %d", r, g, b ) );
 	}
 	CPCStringBrowseEditor::SetValue( colorValue );
 }

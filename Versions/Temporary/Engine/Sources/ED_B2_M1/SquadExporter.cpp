@@ -9,8 +9,8 @@
 REGISTER_EXPORTER_IN_DLL( SquadRPGStats, CSquadExporter )
 
 EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
-																					 const string &rszObjectTypeName,
-																				 	 const string &rszObjectName,
+																					 const std::string &rszObjectTypeName,
+																				 	 const std::string &rszObjectName,
 																					 bool bExport,
 																					 EXPORT_TYPE exportType )
 {
@@ -34,11 +34,11 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 		return ER_FAIL;
 	}
 	//
-	vector<string> formationTypes;
+	std::vector<std::string> formationTypes;
 	// check 'changesByEvent' for each formation and collect formation types
 	for ( int i = 0; i < nNumFormations; ++i ) 
 	{
-		string szFormationMoveType;
+		std::string szFormationMoveType;
 		CManipulatorManager::GetValue( &szFormationMoveType, pManipulator, StrFmt("formations.[%d].type", i) );
 		if ( !szFormationMoveType.empty() && szFormationMoveType != " " ) 
 			formationTypes.push_back( szFormationMoveType );
@@ -76,9 +76,9 @@ EXPORT_RESULT CSquadExporter::CheckObject( IManipulator* pManipulator,
 		*/
 	}
 	// check formation types uniqueness
-	for ( vector<string>::const_iterator it1 = formationTypes.begin(); it1 != formationTypes.end(); ++it1 ) 
+	for ( std::vector<std::string>::const_iterator it1 = formationTypes.begin(); it1 != formationTypes.end(); ++it1 ) 
 	{
-		for ( vector<string>::const_iterator it2 = it1 + 1; it2 != formationTypes.end(); ++it2 ) 
+		for ( std::vector<std::string>::const_iterator it2 = it1 + 1; it2 != formationTypes.end(); ++it2 ) 
 		{
 			if ( (*it1) == (*it2) )
 			{

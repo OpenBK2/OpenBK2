@@ -123,13 +123,13 @@ BOOL CPCBuildDataDialog::OnInitDialog()
 void CPCBuildDataDialog::UpdateOKButton()
 {
 	bool bEnableOKButton = true;
-	string szErrorMessage;
+	std::string szErrorMessage;
 	// Проверяем имя на уникальность
 	if ( bEnableOKButton )
 	{
 		if ( pBuildDataParams->nFlags & BDF_CHECK_FILE_NAME )
 		{
-			string szObjectName;
+			std::string szObjectName;
 			pBuildDataParams->GetObjectName( &szObjectName );
 			if ( pBuildDataParams->szObjectName.empty() )
 			{

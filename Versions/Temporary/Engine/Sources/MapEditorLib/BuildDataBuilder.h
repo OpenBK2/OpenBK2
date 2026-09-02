@@ -5,9 +5,9 @@
 class CBuildDataBuilder : public CBuilderBase, public IBuildDataCallback
 {
 protected:
-	virtual const string& GetBuildDataTypeName() = 0;
-	virtual bool InternalInsertObject( string *pszObjectTypeName,
-																		 string *pszUniqueObjectName,
+	virtual const std::string& GetBuildDataTypeName() = 0;
+	virtual bool InternalInsertObject( std::string *pszObjectTypeName,
+																		 std::string *pszUniqueObjectName,
 																		 bool bFromMainMenu,
 																		 bool *pbCanChangeObjectName,
 																		 bool *pbNeedExport,
@@ -16,14 +16,14 @@ protected:
 	virtual bool NeedBuildDataDialog() const { return true; }
 public:
 	// можно поменять значение по умолчанию для следужщего поля: ( *pbCanChangeObjectName ) = false;
-	virtual bool InsertObject( string *pszObjectTypeName,
-														 string *pszUniqueObjectName,
+	virtual bool InsertObject( std::string *pszObjectTypeName,
+														 std::string *pszUniqueObjectName,
 														 bool bFromMainMenu,
 														 bool *pbCanChangeObjectName,
 														 bool *pbNeedExport,
 														 bool *pbNeedEdit );
 
-	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
+	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 };
 
 

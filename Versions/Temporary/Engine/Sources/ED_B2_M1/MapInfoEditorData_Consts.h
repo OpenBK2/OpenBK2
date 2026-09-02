@@ -78,11 +78,11 @@ namespace NMapInfoEditor
 	extern const float SCENE_PASTE_OPACITY;
 	extern const float SCENE_NORMAL_OPACITY;
 
-	typedef vector<CVec3> CSelectionSquare;
-	typedef list<int> CSceneIDList;
-	typedef list<int> CIndicesList;
+	typedef std::vector<CVec3> CSelectionSquare;
+	typedef std::list<int> CSceneIDList;
+	typedef std::list<int> CIndicesList;
 	typedef std::unordered_map<unsigned, int> CObjectInfoIDSet;
-	typedef vector<unsigned> CLinkIDList;
+	typedef std::vector<unsigned> CLinkIDList;
 	typedef std::unordered_map<unsigned, unsigned> CLinkIDMap;
 
 	enum EObjectInfoType
@@ -114,7 +114,7 @@ namespace NMapInfoEditor
 			return *this;
 		}	
 	};
-	typedef list<NMapInfoEditor::SControllerChangeInfo> CControllerChangeInfoList;
+	typedef std::list<NMapInfoEditor::SControllerChangeInfo> CControllerChangeInfoList;
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SObjectLoadInfo
@@ -125,7 +125,7 @@ namespace NMapInfoEditor
 		bool bSearchIndices;
 		//
 		bool bAdditionalDataFilled;
-		string szRPGStatsTypeName;
+		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		CVec3 vPosition;
 		float fDirection;
@@ -154,7 +154,7 @@ namespace NMapInfoEditor
 		CVec3 vPosition;
 		float fDirection;
 		//
-		string szRPGStatsTypeName;
+		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		//
 		unsigned nFrameIndex;
@@ -188,7 +188,7 @@ namespace NMapInfoEditor
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	typedef vector<NDb::SVSOInstance> CVSOInstanceList;
+	typedef std::vector<NDb::SVSOInstance> CVSOInstanceList;
 	struct SVSOCollector
 	{
 		CVSOInstanceList roadList;
@@ -296,8 +296,8 @@ namespace NMapInfoEditor
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool CheckLinkCapability( const string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
-														const string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex );
+	bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
+														const std::string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex );
 };
 
 

@@ -32,7 +32,7 @@ bool CTreeGDBLinkBrowser::CanLoad()
 }
 
 
-bool CTreeGDBLinkBrowser::GetLoadContextMenuLabel( string *pszLabel )
+bool CTreeGDBLinkBrowser::GetLoadContextMenuLabel( std::string *pszLabel )
 {
 	if ( pszLabel )
 	{
@@ -43,7 +43,7 @@ bool CTreeGDBLinkBrowser::GetLoadContextMenuLabel( string *pszLabel )
 	return true;
 }
 
-bool CTreeGDBLinkBrowser::GetSaveHeaderWidthLabel( string *pszLabel )
+bool CTreeGDBLinkBrowser::GetSaveHeaderWidthLabel( std::string *pszLabel )
 {
 	if ( pszLabel )
 	{

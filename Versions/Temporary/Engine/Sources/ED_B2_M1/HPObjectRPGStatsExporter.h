@@ -7,12 +7,12 @@ class CHPObjectRPGStatsExporter : public CBasicExporter
 {
 	void ExportSingleLightFX( IManipulator *pMan );
 	void CreateSingleIcons( IManipulator *pMan, 
-													const string &szObjectTypeName, 
-													const string &szObjectName );
+													const std::string &szObjectTypeName, 
+													const std::string &szObjectName );
 public:
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															EXPORT_TYPE exportType );
 };

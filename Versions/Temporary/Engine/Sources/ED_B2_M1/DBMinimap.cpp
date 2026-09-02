@@ -12,7 +12,7 @@ namespace NDb
 {
 
 
-string EnumToString( NDb::EMinimapLayerType eValue )
+std::string EnumToString( NDb::EMinimapLayerType eValue )
 {
 	switch ( eValue )
 	{
@@ -45,7 +45,7 @@ string EnumToString( NDb::EMinimapLayerType eValue )
 	}
 }
 
-NDb::EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const string &szValue )
+NDb::EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const std::string &szValue )
 {
 	if ( szValue == "LAYER_UNKNOWN" )
 		return NDb::LAYER_UNKNOWN;
@@ -74,7 +74,7 @@ NDb::EMinimapLayerType StringToEnum_NDb_EMinimapLayerType( const string &szValue
 	return NDb::LAYER_UNKNOWN;
 }
 
-string EnumToString( NDb::EImageScaleMethod eValue )
+std::string EnumToString( NDb::EImageScaleMethod eValue )
 {
 	switch ( eValue )
 	{
@@ -99,7 +99,7 @@ string EnumToString( NDb::EImageScaleMethod eValue )
 	}
 }
 
-NDb::EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const string &szValue )
+NDb::EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const std::string &szValue )
 {
 	if ( szValue == "IMAGE_SCALE_METHOD_DEFAULT" )
 		return NDb::IMAGE_SCALE_METHOD_DEFAULT;
@@ -121,7 +121,7 @@ NDb::EImageScaleMethod StringToEnum_NDb_EImageScaleMethod( const string &szValue
 }
 
 
-void SShadowPoint::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SShadowPoint::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "x", (uint8_t*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "y", (uint8_t*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
@@ -160,7 +160,7 @@ uint32_t SShadowPoint::CalcCheckSum() const
 
 
 
-void SEmbossPoint::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SEmbossPoint::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "x", (uint8_t*)&nx - pThis, sizeof(nx), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "y", (uint8_t*)&ny - pThis, sizeof(ny), NTypeDef::TYPE_TYPE_INT );
@@ -199,7 +199,7 @@ uint32_t SEmbossPoint::CalcCheckSum() const
 
 
 
-void SMinimapLayer::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SMinimapLayer::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "EmbossFilterSize", (uint8_t*)&nEmbossFilterSize - pThis, sizeof(nEmbossFilterSize), NTypeDef::TYPE_TYPE_INT );

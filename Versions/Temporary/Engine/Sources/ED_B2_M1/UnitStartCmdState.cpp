@@ -39,25 +39,25 @@ bool SStartCommand::LoadFromDB( IManipulator *pManipulator, int nIndex )
 	if ( nIndex < 0 )
 		return false;
 
-	const string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
+	const std::string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
 	//
-	string szDBAType = szDBA + ".CmdType";
+	std::string szDBAType = szDBA + ".CmdType";
 	if ( !CManipulatorManager::GetValue( &nCmdType, pManipulator, szDBAType ) )
 		return false;
 	//
-	string szDBAunitLinkIDs = szDBA + ".unitLinkIDs";
-	if ( !CManipulatorManager::GetArray<vector<int>,int>( &unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
+	std::string szDBAunitLinkIDs = szDBA + ".unitLinkIDs";
+	if ( !CManipulatorManager::GetArray<std::vector<int>,int>( &unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
 		return false;
 	//
-	string 	szDBATgtLinkID = szDBA + ".LinkID";
+	std::string 	szDBATgtLinkID = szDBA + ".LinkID";
 	if ( !CManipulatorManager::GetValue( &nTgtLinkID, pManipulator, szDBATgtLinkID ) )
 		return false;
 	//
-	string szDBATgtPos = szDBA + ".Pos";
+	std::string szDBATgtPos = szDBA + ".Pos";
 	if ( !CManipulatorManager::GetVec2<CVec2,float>( &vTgtPos, pManipulator, szDBATgtPos ) )
 		return false;
 	//
-	string szDBAData = szDBA + ".Number";
+	std::string szDBAData = szDBA + ".Number";
 	if ( !CManipulatorManager::GetValue( &nData, pManipulator, szDBAData ) )
 		return false;
 
@@ -73,25 +73,25 @@ bool SStartCommand::UpdateDB( IManipulator *pManipulator, int nIndex )
 	if ( nIndex < 0 )
 		return false;
 
-	const string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
+	const std::string szDBA = StrFmt( "startCommandsList.[%d]", nIndex );
 	//
-	string szDBAType = szDBA + ".CmdType";
+	std::string szDBAType = szDBA + ".CmdType";
 	if ( !CManipulatorManager::SetValue( nCmdType, pManipulator, szDBAType ) )
 		return false;
 	//
-	string szDBAunitLinkIDs = szDBA + ".unitLinkIDs";
+	std::string szDBAunitLinkIDs = szDBA + ".unitLinkIDs";
 	if ( !CManipulatorManager::SetArray( unitLinkIDs, pManipulator, szDBAunitLinkIDs ) )
 		return false;
 	//
-	string 	szDBATgtLinkID = szDBA + ".LinkID";
+	std::string 	szDBATgtLinkID = szDBA + ".LinkID";
 	if ( !CManipulatorManager::SetValue( nTgtLinkID, pManipulator, szDBATgtLinkID ) )
 		return false;
 	//
-	string szDBATgtPos = szDBA + ".Pos";
+	std::string szDBATgtPos = szDBA + ".Pos";
 	if ( !CManipulatorManager::SetVec2( vTgtPos, pManipulator, szDBATgtPos ) )
 		return false;
 	//
-	string szDBAData = szDBA + ".Number";
+	std::string szDBAData = szDBA + ".Number";
 	if ( !CManipulatorManager::SetValue( nData, pManipulator, szDBAData ) )
 		return false;
 
@@ -164,14 +164,14 @@ bool SStartCommandList::LoadFromDB( IManipulator *pManipulator )
 }
 
 
-void SStartCommandList::RemoveCommands( const vector<int> &rIndices )
+void SStartCommandList::RemoveCommands( const std::vector<int> &rIndices )
 {
 	// удаляет команды с индексами из rIndices
 	//
 	if ( rIndices.empty() || commands.empty() )
 		return;
 	//
-	vector<uint8_t> mustCopy;
+	std::vector<uint8_t> mustCopy;
 	mustCopy.resize( commands.size() );
 	for ( int i = 0; i < commands.size(); ++i )
 		mustCopy[i] = true;
@@ -182,7 +182,7 @@ void SStartCommandList::RemoveCommands( const vector<int> &rIndices )
 		mustCopy[rIndices[j]] = false;
 	}
 	//
-	vector<SStartCommand> tmp = commands;
+	std::vector<SStartCommand> tmp = commands;
 	commands.clear();
 	for ( int k = 0; k < tmp.size(); ++k )
 	{
@@ -225,7 +225,7 @@ void CUnitStartCmdState::Enter()
 	ResetStateData();
 
 	commandTypesMnemonic.clear();
-	vector<SUnitCommandTypeInfo> tmp;
+	std::vector<SUnitCommandTypeInfo> tmp;
 	if ( LoadUnitCommandTypesFromXML( &tmp ) )
 	{
 		for ( int i = 0; i < tmp.size(); ++i )
@@ -356,7 +356,7 @@ void CUnitStartCmdState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMous
 				{
 					vCurrTargetPos = VNULL3;
 					nCurrTargetUnit = itObjectSelectionPart->first;
-					string szUnitName = GetMapObjectName( pObjectInfo );
+					std::string szUnitName = GetMapObjectName( pObjectInfo );
 					pEdUnitStartCmd->UpdateTarget( szUnitName );
 				}
 			}
@@ -403,7 +403,7 @@ void CUnitStartCmdState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMo
 				{
 					vCurrTargetPos = VNULL3;
 					nCurrTargetUnit = itObjectSelectionPart->first;
-					string szUnitName = GetMapObjectName( pObjectInfo );
+					std::string szUnitName = GetMapObjectName( pObjectInfo );
 					pEdUnitStartCmd->UpdateTarget( szUnitName );
 				}
 			}
@@ -446,7 +446,7 @@ void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 				{
 					vCurrTargetPos = VNULL3;
 					nCurrTargetUnit = itObjectSelectionPart->first;
-					string szUnitName = GetMapObjectName( pObjectInfo );
+					std::string szUnitName = GetMapObjectName( pObjectInfo );
 					pEdUnitStartCmd->UpdateTarget( szUnitName );
 				}
 			}
@@ -589,8 +589,8 @@ void CUnitStartCmdState::UsrEvtMoveCmd( EMoveDir eDir, const SUnitStartCmdWindow
 	if ( bEdCmdVisible )
 		return;
 
-	vector<int> ordCmdIDs = data.selectedCommands;
-	vector<int> newSelectedIdx;
+	std::vector<int> ordCmdIDs = data.selectedCommands;
+	std::vector<int> newSelectedIdx;
 	switch ( eDir )
 	{
 		case MV_UP:
@@ -670,7 +670,7 @@ void CUnitStartCmdState::UsrEvtSelChange( const SUnitStartCmdWindowData &data )
 }
 
 
-void CUnitStartCmdState::GetSelectedUnitIDs( vector<CMapObjID> *pIDs )
+void CUnitStartCmdState::GetSelectedUnitIDs( std::vector<CMapObjID> *pIDs )
 {
 	if ( !pIDs )
 		return;
@@ -718,7 +718,7 @@ void CUnitStartCmdState::EdCmdOK()
 		SStartCommand cmd;
 		cmd.nData = data.nData;
 		cmd.nCmdType = data.nSelectedCmdType;
-		vector<int> targetUnitElemIndices;
+		std::vector<int> targetUnitElemIndices;
 		if ( GetMapObjectElementIDs( nCurrTargetUnit, &targetUnitElemIndices ) && !targetUnitElemIndices.empty() )
 		{
 			cmd.nTgtLinkID = targetUnitElemIndices.front();
@@ -739,7 +739,7 @@ void CUnitStartCmdState::EdCmdOK()
 		cmd.nCmdType = data.nSelectedCmdType;
 		if ( nCurrTargetUnit != -1 )
 		{
-			vector<int> targetUnitElemIndices;
+			std::vector<int> targetUnitElemIndices;
 			if ( GetMapObjectElementIDs( nCurrTargetUnit, &targetUnitElemIndices ) && !targetUnitElemIndices.empty() )
 			{
 				cmd.nTgtLinkID = targetUnitElemIndices.front();
@@ -786,7 +786,7 @@ void CUnitStartCmdState::EdCmdClear()
 }
 
 
-void CUnitStartCmdState::RefreshDockingWindow( const vector<int> *pSelection )
+void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelection )
 {
 	ClearCmdMarkers();
 
@@ -906,7 +906,7 @@ void CUnitStartCmdState::DrawCommandMarkers()
 }
 
 
-bool CUnitStartCmdState::GetLinkIDs( vector<int> *pLinkIDs )
+bool CUnitStartCmdState::GetLinkIDs( std::vector<int> *pLinkIDs )
 {
 	if ( !pLinkIDs )
 		return false;
@@ -940,19 +940,19 @@ bool CUnitStartCmdState::GetLinkIDs( vector<int> *pLinkIDs )
 }
 
 
-string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
+std::string CUnitStartCmdState::GetMapObjectName( SObjectInfo *pMO )
 {
 	if ( !pMO )
 		return "<error>";
 
-	string szResult;
+	std::string szResult;
 	for ( SObjectInfo::CMapInfoElementMap::iterator itElem = pMO->mapInfoElementMap.begin();
 		itElem != pMO->mapInfoElementMap.end(); ++itElem )
 	{
 		SObjectInfo::SMapInfoElement *pElem = &itElem->second;
 		const unsigned nPlayer = pElem->nPlayer;
-		const string szType = pElem->szRPGStatsTypeName;
-		const string szName = pElem->rpgStatsDBID.ToString();
+		const std::string szType = pElem->szRPGStatsTypeName;
+		const std::string szName = pElem->rpgStatsDBID.ToString();
 		szResult += StrFmt( "plr(%d) %s:%s\n", nPlayer, szType.c_str(), szName.c_str() );
 	}
 	return szResult;
@@ -977,7 +977,7 @@ const SUnitCommandTypeInfo* CUnitStartCmdState::GetCurrentCommandType()
 }
 
 
-bool CUnitStartCmdState::GetMapObjectElementIDs( int nObjectID, vector<int> *pRes )
+bool CUnitStartCmdState::GetMapObjectElementIDs( int nObjectID, std::vector<int> *pRes )
 {
 	if ( !pRes )
 		return false;
@@ -1002,7 +1002,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 	if ( bEdCmdVisible )
 		return;
 
-	vector<CMapObjID> selection;
+	std::vector<CMapObjID> selection;
 	GetSelectedUnitIDs( &selection );
 	if ( selection.empty() )
 	{
@@ -1011,25 +1011,25 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 	}
 
 	SUnitStartCmdWindowData data;
-	vector<byte> usedCommands;
+	std::vector<byte> usedCommands;
 	usedCommands.resize( commandsList.commands.size(), 0 );
 
 	for ( int i = 0; i < selection.size(); ++i )
 	{
-		vector<int> elemIndices;
+		std::vector<int> elemIndices;
 		if ( GetMapObjectElementIDs( selection[i], &elemIndices ) && !elemIndices.empty() )
 		{
 			int nCmdIndex = 0;
-			for ( vector<int>::const_iterator itElem = elemIndices.begin(); itElem < elemIndices.end(); ++itElem )
+			for ( std::vector<int>::const_iterator itElem = elemIndices.begin(); itElem < elemIndices.end(); ++itElem )
 			{
 				const int nLinkID = (*itElem);
 				//
-				for ( vector<SStartCommand>::const_iterator itCmd = commandsList.commands.begin(); itCmd < commandsList.commands.end(); ++itCmd )
+				for ( std::vector<SStartCommand>::const_iterator itCmd = commandsList.commands.begin(); itCmd < commandsList.commands.end(); ++itCmd )
 				{
 					if ( usedCommands[nCmdIndex] )
 						continue;
 
-					for ( vector<int>::const_iterator itLinkId = itCmd->unitLinkIDs.begin(); itLinkId < itCmd->unitLinkIDs.end(); ++itLinkId )
+					for ( std::vector<int>::const_iterator itLinkId = itCmd->unitLinkIDs.begin(); itLinkId < itCmd->unitLinkIDs.end(); ++itLinkId )
 					{
 						if ( (*itLinkId) == nLinkID )
 						{

@@ -36,7 +36,7 @@ private:
 	///
 	CVec3 vStartPos;									// позиция стартового терминатора
 	float fStartDir;									// направление стартового терминатора 	
-	vector<ESegType> segments;				// типы сегментов составляющие окоп
+	std::vector<ESegType> segments;				// типы сегментов составляющие окоп
 	int nLock;												// блок (все сегменты с индексом <= блока считаются нередактируемыми)
 	///
 	CVec3 vDirMarker;									// вектор напраления от блока к курсору мыши
@@ -59,7 +59,7 @@ public:
 	void Complete();
 	bool IsComplete();
 	///
-	void GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo );
+	void GetSegmentsInfo( std::list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo );
 	///
 	void SetSegAABBSize( NDb::EEntrenchSegmType eSegType, const CVec3 &v );
 	void SetSegAABBCenter( NDb::EEntrenchSegmType eSegType, const CVec2 &v );
@@ -87,7 +87,7 @@ class CEntrenchmentState : public CMapObjectState
 	/// выбранный для постановки окоп
 	struct SSelectedEntrenchmentInfo
 	{ 
-		string szRPGStatsTypeName;
+		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats;
 		//

@@ -90,7 +90,7 @@ void CTimeSliderControl::OnPaint()
 	{
 		int nOldBkMode = dc.SetBkMode( OPAQUE );
 
-		for ( vector<SMovieKeyData>::const_iterator itKey = data.keys.begin(); itKey != data.keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::const_iterator itKey = data.keys.begin(); itKey != data.keys.end(); ++itKey )
 		{
 			if ( itKey->bActive )
 			{

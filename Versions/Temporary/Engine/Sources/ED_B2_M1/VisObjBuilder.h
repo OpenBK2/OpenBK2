@@ -26,50 +26,50 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 	static const char GEOMETRY_TYPE_NAME[];
 	static const char AIGEOMETRY_TYPE_NAME[];
 	static const char SKELETON_TYPE_NAME[];
-	static const string RESOURCE_PREFIX[RT_COUNT];
+	static const std::string RESOURCE_PREFIX[RT_COUNT];
 	static const char MODEL_FILE_NAME_EXTENTION[];
 	static const char TEXTURE_FILE_NAME_EXTENTION[];
-	static const string BUILD_DATA_TYPE_NAME;
+	static const std::string BUILD_DATA_TYPE_NAME;
 	//
 	OBJECT_NOCOPY_METHODS( CVisObjBuilder );
 	//
-	static void GetSeasonedFolderName( string *pszFileName, NDb::ESeason eSeason );
-	static void GetSeasonedFileName( string *pszFileName, NDb::ESeason eSeason );
-	static void GetResourceFileName( string *pszResourceFileName, EResourceType eResourceType, const string &rszVisObjFileName );
+	static void GetSeasonedFolderName( std::string *pszFileName, NDb::ESeason eSeason );
+	static void GetSeasonedFileName( std::string *pszFileName, NDb::ESeason eSeason );
+	static void GetResourceFileName( std::string *pszResourceFileName, EResourceType eResourceType, const std::string &rszVisObjFileName );
 	//
-	bool AddVisObjEntry( const string &rszUniqueObjectName,
+	bool AddVisObjEntry( const std::string &rszUniqueObjectName,
 											 IManipulator *pBuildDataManipulator,
-											 const string &rszMBFullFileName,
-											 const string &rszTGAFullFileName,
+											 const std::string &rszMBFullFileName,
+											 const std::string &rszTGAFullFileName,
 											 NDb::ESeason eSeason );
-	bool CreateVisObj( const string &rszVisObjFolder );
+	bool CreateVisObj( const std::string &rszVisObjFolder );
 	//
-	bool RemoveMaterial( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveTexture( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveGeometry( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveAIGeometry( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveSkeleton( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveAnimation( const string &rszObjectTypeName, const string &rszObjectName );	
-	bool RemoveModel( const string &rszObjectTypeName, const string &rszObjectName );	
+	bool RemoveMaterial( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveTexture( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveAIGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveSkeleton( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveAnimation( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveModel( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
 	//
 	CVisObjBuilder();
 	~CVisObjBuilder();
 
 protected:
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
+	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 
 	//CBuildDataBuilder
-	const string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
-	bool InternalInsertObject( string *pszObjectTypeName,
-														 string *pszUniqueObjectName,
+	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
+	bool InternalInsertObject( std::string *pszObjectTypeName,
+														 std::string *pszUniqueObjectName,
 														 bool bFromMainMenu,
 														 bool *pbCanChangeObjectName,
 														 bool *pbNeedExport,
 														 bool *pbNeedEdit,
 														 IManipulator *pBuildDataManipulator );
 	//CBuilderBase
-	bool RemoveObject( const string &rszObjectTypeName, const string &rszObjectName );
+	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uint32_t dwData );

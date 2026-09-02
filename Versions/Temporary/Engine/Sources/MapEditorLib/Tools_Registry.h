@@ -20,8 +20,8 @@ class CRegistrySection
 	bool IsValid() { return ( hRegistrySection != 0 ); }
 
   //STL строка
-	int32_t LoadString( LPCTSTR pszRegistryKey, string *pszLoadValue, const string &rszDefaultValue ) const;
-  int32_t SaveString( LPCTSTR pszRegistryKey, const string &szSaveValue ) const;
+	int32_t LoadString( LPCTSTR pszRegistryKey, std::string *pszLoadValue, const std::string &rszDefaultValue ) const;
+  int32_t SaveString( LPCTSTR pszRegistryKey, const std::string &szSaveValue ) const;
  
 	//uint32_t
 	int32_t LoadDWORD( LPCTSTR pszRegistryKey, uint32_t *pdwLoadValue, uint32_t dwDefaultValue ) const;
@@ -35,7 +35,7 @@ class CRegistrySection
 		{
 			( *pLoadValue ) = rDefaultValue;
 			
-			string szBuffer;
+			std::string szBuffer;
 			int32_t eResult = LoadString( pszRegistryKey, &szBuffer, "" );
 			if ( ( eResult == ERROR_SUCCESS ) && ( !szBuffer.empty() ) )
 			{
@@ -56,7 +56,7 @@ class CRegistrySection
 	template<class TValue>
   int32_t SaveNumber( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const TValue &rSaveValue ) const
 	{
-		const string szBuffer = StrFmt( pszMask, rSaveValue );
+		const std::string szBuffer = StrFmt( pszMask, rSaveValue );
 		return SaveString( pszRegistryKey, szBuffer );
 	}
 
@@ -68,7 +68,7 @@ class CRegistrySection
 		{
 			( *pLoadValue ) = rDefaultValue;
 			
-			string szBuffer;
+			std::string szBuffer;
 			int32_t eResult = LoadString( pszRegistryKey, &szBuffer, "" );
 			if ( ( eResult == ERROR_SUCCESS ) && ( !szBuffer.empty() ) )
 			{
@@ -94,8 +94,8 @@ class CRegistrySection
 	template<class TValue>
   int32_t SaveRect( LPCTSTR pszRegistryKey, LPCTSTR pszMask, const CTRect<TValue> &rSaveValue ) const
 	{
-		const string szFormat = StrFmt( "%s %s %s %s", pszMask, pszMask, pszMask, pszMask );
-		const string szBuffer = StrFmt( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );
+		const std::string szFormat = StrFmt( "%s %s %s %s", pszMask, pszMask, pszMask, pszMask );
+		const std::string szBuffer = StrFmt( szFormat.c_str(), rSaveValue.minx, rSaveValue.miny, rSaveValue.maxx, rSaveValue.maxy );
 		return SaveString( pszRegistryKey, szBuffer );
 	}
 };

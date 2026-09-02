@@ -11,7 +11,7 @@
 
 struct SScriptCameraWindowData
 {
-	vector<NCamera::CCameraPlacement> scriptCameras;
+	std::vector<NCamera::CCameraPlacement> scriptCameras;
 	int nCurrentCamera;
 	NDb::EScriptCameraRunType eRunType;
 
@@ -47,7 +47,7 @@ struct SScriptCameraWindowData
 
 struct SScriptCameraRunDlgData
 {
-	vector<NCamera::CCameraPlacement> scriptCameras;
+	std::vector<NCamera::CCameraPlacement> scriptCameras;
 	NDb::EScriptCameraRunType eRunType;
 	int nStartCamera;
 	int nFinishCamera;

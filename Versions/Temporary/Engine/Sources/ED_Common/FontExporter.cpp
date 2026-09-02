@@ -24,8 +24,8 @@ namespace
 
 
 EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
-																					 const string &rszObjectTypeName,
-																					 const string &rszObjectName,
+																					 const std::string &rszObjectTypeName,
+																					 const std::string &rszObjectName,
 																					 bool bForce,
 																					 EXPORT_TYPE exportType )
 {
@@ -37,7 +37,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	//
 	int nWeight = 400, nHeight = 20;
 	bool bItalic = false, bAntialiased = true;
-	string szPitch, szCharset, szFaceName, szTextureName, szTextureFileName, szFontName;
+	std::string szPitch, szCharset, szFaceName, szTextureName, szTextureFileName, szFontName;
 	//
 	bool bResult = true;
 	bResult = bResult && CManipulatorManager::GetValue( &nWeight, pManipulator, "Thickness" );
@@ -94,15 +94,15 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	if ( szTextureFileName.empty() || szTextureFileName == " " )
 		return ER_FAIL;
 	//
-	const string szItalic = bItalic ? "-it" : "";
-	const string szAA = bAntialiased ? "-aa" : "";
+	const std::string szItalic = bItalic ? "-it" : "";
+	const std::string szAA = bAntialiased ? "-aa" : "";
 
 	NStr::ToLower( &szPitch );
 	NStr::ToLower( &szCharset );
 
-	string szBinFileName = BuildDestFilePath( pManipulator, Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + FONTS_FOLDER );
-	string szPicFileName = pUserData->constUserData.szExportSourceFolder + szTextureFileName;
-	string szCharsFileName = NFile::GetTempPath() + string( ".TEMP_FONT_FOLDER\\" ) + szFontName + string( ".txt" );
+	std::string szBinFileName = BuildDestFilePath( pManipulator, Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + FONTS_FOLDER );
+	std::string szPicFileName = pUserData->constUserData.szExportSourceFolder + szTextureFileName;
+	std::string szCharsFileName = NFile::GetTempPath() + std::string( ".TEMP_FONT_FOLDER\\" ) + szFontName + std::string( ".txt" );
 	//
 	NStr::ReplaceAllChars( &szBinFileName, '/', '\\' );
 	NStr::ReplaceAllChars( &szPicFileName, '/', '\\' );
@@ -110,7 +110,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	//
 	NFile::CreatePath( NFile::GetFilePath(szBinFileName) );
 	NFile::CreatePath( NFile::GetFilePath(szPicFileName) );
-	string szCommandLine;
+	std::string szCommandLine;
 	if ( NFile::DoesFileExist( szCharsFileName ) )
 	{
 		szCommandLine = StrFmt( "FontGen.exe -h%d -w%d %s %s -%s -%s \"%s\" \"%s\" \"%s\" \"%s\"", nHeight, nWeight, 
@@ -146,7 +146,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 
 
 /*
-const string szCommandLine = StrFmt( "%s -t%s -f%s -m%d -a%s -s%f %s \"%s\" \"%s\"", 
+const std::string szCommandLine = StrFmt( "%s -t%s -f%s -m%d -a%s -s%f %s \"%s\" \"%s\"", 
 pUserData->szTEToolFileName.c_str(),
 szType.c_str(),
 szFormat.c_str(),

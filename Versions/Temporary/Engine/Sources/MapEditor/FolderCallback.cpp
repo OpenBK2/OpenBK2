@@ -59,7 +59,7 @@ void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 }
 
 
-bool CFolderCallback::IsObjectLocked( const string &rszTypeName, const CDBID &rDBID ) const
+bool CFolderCallback::IsObjectLocked( const std::string &rszTypeName, const CDBID &rDBID ) const
 {
 	if ( !rszTypeName.empty() && !rDBID.IsEmpty() )
 	{
@@ -73,7 +73,7 @@ bool CFolderCallback::IsObjectLocked( const string &rszTypeName, const CDBID &rD
 }
 
 
-bool CFolderCallback::IsUniqueName( const string &rszTypeName, const string &rszName )
+bool CFolderCallback::IsUniqueName( const std::string &rszTypeName, const std::string &rszName )
 {
 	if ( rszTypeName.empty() || rszName.empty() )
 	{
@@ -83,7 +83,7 @@ bool CFolderCallback::IsUniqueName( const string &rszTypeName, const string &rsz
 }
 
 
-bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
+bool CFolderCallback::UniqueName( const std::string &szTypeName, std::string *pszName )
 {
 	NI_ASSERT( pszName != 0, "Wrong parameter: pszObjectName == 0" );
 	if ( szTypeName.empty() || pszName->empty() )
@@ -96,7 +96,7 @@ bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
 		const uint32_t dwMaxNumber = 0x10000;
 		uint32_t dwNumber = 2;
 		const bool bFolder = ( ( *pszName )[pszName->size() - 1] == PATH_SEPARATOR_CHAR );
-		string szName;
+		std::string szName;
 		if ( bFolder )
 		{
 			szName = pszName->substr( 0, pszName->size() - 1 );
@@ -119,7 +119,7 @@ bool CFolderCallback::UniqueName( const string &szTypeName, string *pszName )
 }
 
 
-bool CFolderCallback::InsertObject( const string &rszObjectTypeName, const string &rszObjectName )
+bool CFolderCallback::InsertObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
 	{
@@ -146,7 +146,7 @@ bool CFolderCallback::InsertObject( const string &rszObjectTypeName, const strin
 }
 
 
-bool CFolderCallback::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
+bool CFolderCallback::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
 	{
@@ -173,7 +173,7 @@ bool CFolderCallback::CopyObject( const string &rszObjectTypeName, const string 
 }
 
 
-bool CFolderCallback::RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
+bool CFolderCallback::RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
 {
 	if ( rszObjectTypeName.empty() || rszDestination.empty() || rszSource.empty() )
 	{
@@ -193,7 +193,7 @@ bool CFolderCallback::RenameObject( const string &rszObjectTypeName, const strin
 }
 
 
-bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName, bool bRecursive )
+bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
 	{
@@ -220,7 +220,7 @@ bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const strin
 	bool bResult = folderController.Redo( true, true, 0 );
 	if ( bResult && bRecursive )
 	{
-		string szObjectName = rszObjectName;
+		std::string szObjectName = rszObjectName;
 		bool bLocalResult = true;
 		while ( bLocalResult )
 		{
@@ -232,7 +232,7 @@ bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const strin
 				szObjectName = szObjectName.substr( 0, szObjectName.size() - 1 );
 			}
 			const int nSlashPos = szObjectName.rfind( PATH_SEPARATOR_CHAR );
-			if ( nSlashPos != string::npos )
+			if ( nSlashPos != std::string::npos )
 			{
 				szObjectName = szObjectName.substr( 0, nSlashPos + 1 );
 				folderController.AddRemoveOperation( szObjectName );
@@ -248,7 +248,7 @@ bool CFolderCallback::RemoveObject( const string &rszObjectTypeName, const strin
 }
 
 
-bool CFolderCallback::SetColor( const string &rszObjectTypeName, const string &rszObjectName, const int nNewColor )
+bool CFolderCallback::SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor )
 {
 	if ( rszObjectTypeName.empty() || rszObjectName.empty() )
 	{

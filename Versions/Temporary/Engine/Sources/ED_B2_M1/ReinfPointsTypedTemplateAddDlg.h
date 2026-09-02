@@ -15,8 +15,8 @@ class CReinfPointsTypedTemplateAddDlg : public CResizeDialog
 	CEdit wndTempEdit;
 
 	CMapInfoEditor *pMapInfoEditor;
-	string *pDlgData;
-	string szLink;
+	std::string *pDlgData;
+	std::string szLink;
 	CReinfPointsState::STypedTemplate typedTemplate;
 
 	virtual void DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
@@ -28,7 +28,7 @@ class CReinfPointsTypedTemplateAddDlg : public CResizeDialog
 public:
 	enum { IDD = IDD_DLG_REINFPTS_ADD_TEMPLATE };
 
-	CReinfPointsTypedTemplateAddDlg( CWnd *pParentWindow, string *pTypeDlgData, CMapInfoEditor *_pMapInfoEditor );
+	CReinfPointsTypedTemplateAddDlg( CWnd *pParentWindow, std::string *pTypeDlgData, CMapInfoEditor *_pMapInfoEditor );
 	virtual ~CReinfPointsTypedTemplateAddDlg() {}
 
 	DECLARE_MESSAGE_MAP()

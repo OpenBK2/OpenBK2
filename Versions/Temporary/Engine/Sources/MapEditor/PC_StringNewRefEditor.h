@@ -17,8 +17,8 @@ private:
 	void OnNew();
 	void OnBrowse();
 	
-	void SetWindowTextByTypeAndName( const string &szObjectTypeName, const string &szObjectName );
-	//void GetUniqueName( const string &szObjectTypeName, string *pszObjectName );
+	void SetWindowTextByTypeAndName( const std::string &szObjectTypeName, const std::string &szObjectName );
+	//void GetUniqueName( const std::string &szObjectTypeName, std::string *pszObjectName );
 };
 
 

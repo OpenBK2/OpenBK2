@@ -8,35 +8,35 @@ namespace NEditorOptions
 // get editor options system manipulator
 IManipulator* CreateOptionsManipulator();
 //
-string GetStringFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason );
-int GetIntFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason );
-float GetFloatFromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason );
-CVec2 GetVec2FromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason );
-CVec3 GetVec3FromOptions( const string &szPreName, const string &szPostName, const string &szDesiredSeason );
+std::string GetStringFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+int GetIntFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+float GetFloatFromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+CVec2 GetVec2FromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
+CVec3 GetVec3FromOptions( const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason );
 
 // get peak mask texture for desired season (or for any season if no suitable)
-string GetPeakMaskTexture( const string &szDesiredSeason );
+std::string GetPeakMaskTexture( const std::string &szDesiredSeason );
 
 // get tileset for desired season (or for any season if no suitable)
-string GetTileset( const string &szDesiredSeason );
+std::string GetTileset( const std::string &szDesiredSeason );
 
 // get light & pre-light for desired season and daytime (or for any season/daytime if no suitable)
-string GetLight( const string &szDesiredSeason, const string &szDayTime );
-string GetPreLight( const string &szDesiredSeason, const string &szDayTime );
+std::string GetLight( const std::string &szDesiredSeason, const std::string &szDayTime );
+std::string GetPreLight( const std::string &szDesiredSeason, const std::string &szDayTime );
 
 // get ocean water descriptor for desired season (or for any season if no suitable)
-string GetOceanWater( const string &szDesiredSeason );
+std::string GetOceanWater( const std::string &szDesiredSeason );
 
 // get minimap creation params
-string GetMinimap( const string &szDesiredSeason );
+std::string GetMinimap( const std::string &szDesiredSeason );
 
 // get background map (for effects, etc) for desired season (or for any season if no suitable)
-string GetBgMap( const string &szDesiredSeason );
+std::string GetBgMap( const std::string &szDesiredSeason );
 
 // get background map anchor (for effects, etc) for desired season (or for any season if no suitable)
-CVec3 GetBgMapAnchor( const string &szDesiredSeason );
+CVec3 GetBgMapAnchor( const std::string &szDesiredSeason );
 
-string GetMiscString( const string &szName );
+std::string GetMiscString( const std::string &szName );
 
 }
 

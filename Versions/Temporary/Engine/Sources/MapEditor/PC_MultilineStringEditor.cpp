@@ -57,7 +57,7 @@ void CPCMultilineStringEditor::OnKillFocus( CWnd* pNewWnd )
 	//
 	if ( IsDefaultValue() )
 	{
-		string szValue;
+		std::string szValue;
 		GetText( &szValue );
 		if ( szValue.compare( szDefaultValue ) != 0 )
 		{
@@ -88,7 +88,7 @@ void CPCMultilineStringEditor::OnChar( unsigned nChar, unsigned nRepCnt, unsigne
 
 // CPCItemEditor
 
-bool CPCMultilineStringEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCMultilineStringEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	return CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow );
 }
@@ -118,7 +118,7 @@ void CPCMultilineStringEditor::SetValue( const CVariant &rValue )
 	szDefaultValue.clear();
 	if ( typePCIEMnemonics.IsLeaf( GetItemEditorType() ) )
 	{
-		if ( !GetPCItemStringValue( &szDefaultValue, rValue, string(), GetItemEditorType(), GetPropertyDesc(), true ) )
+		if ( !GetPCItemStringValue( &szDefaultValue, rValue, std::string(), GetItemEditorType(), GetPropertyDesc(), true ) )
 		{
 			szDefaultValue.clear();
 		}
@@ -144,7 +144,7 @@ void CPCMultilineStringEditor::GetValue( CVariant *pValue )
 		return;
 	}
 	//
-	string szText;
+	std::string szText;
 	GetText( &szText );
 	if ( typePCIEMnemonics.IsLeaf( GetItemEditorType() ) )
 	{

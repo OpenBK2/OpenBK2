@@ -21,7 +21,7 @@ BEGIN_MESSAGE_MAP(CPCEditorButton, CButton)
 END_MESSAGE_MAP()
 
 
-void CPCEditorButton::SetCaption( const string &rszText )
+void CPCEditorButton::SetCaption( const std::string &rszText )
 {
 	szText = rszText;
 	if ( ::IsWindow( m_hWnd ) )

@@ -29,7 +29,7 @@
 REGISTER_EXPORTER_IN_DLL( MapInfo, CMapInfoExporter )
 
 
-bool CMapInfoExporter::SReGenerateGeometry::operator()( const string &rszObjectTypeName, const CDBID &rDBID )
+bool CMapInfoExporter::SReGenerateGeometry::operator()( const std::string &rszObjectTypeName, const CDBID &rDBID )
 {
 	NLog::GetLogger()->Log( LT_NORMAL, StrFmt("Regenerating map: %s\n", rDBID.ToString().c_str() ) );
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -64,9 +64,9 @@ bool CMapInfoExporter::SReGenerateGeometry::operator()( const string &rszObjectT
 }
 
 
-bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, const CDBID &rDBID )
+bool CMapInfoExporter::SCheck::operator()( const std::string &rszObjectTypeName, const CDBID &rDBID )
 {
-	string szObjectName = rDBID.ToString();
+	std::string szObjectName = rDBID.ToString();
 	CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( rszObjectTypeName, rDBID );
 	if ( !pObjectManipulator )
 	{
@@ -88,10 +88,10 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	CManipulatorManager::GetValue( &nObjectCount, pObjectManipulator, "Objects" );
 	for ( unsigned nObjectIndex = 0; nObjectIndex < nObjectCount; ++nObjectIndex )
 	{
-		const string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
+		const std::string szObjectPrefix = StrFmt( "Objects.[%d]", nObjectIndex );
 		//
-		string szRPGStatsTypeName;
-		string szRPGStatsName;
+		std::string szRPGStatsTypeName;
+		std::string szRPGStatsName;
 		CManipulatorManager::GetParamsFromReference( szObjectPrefix + ".Object", pObjectManipulator, &szRPGStatsTypeName, &szRPGStatsName, 0 );
 		if ( szRPGStatsTypeName.empty() || szRPGStatsName.empty() )
 		{
@@ -118,16 +118,16 @@ bool CMapInfoExporter::SCheck::operator()( const string &rszObjectTypeName, cons
 	CManipulatorManager::GetValue( &nEntrenchmentCount, pObjectManipulator, "Entrenchments" );
 	for ( unsigned nEntrenchmentIndex = 0; nEntrenchmentIndex < nObjectCount; ++nEntrenchmentIndex )
 	{
-		const string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
+		const std::string szEntrenchmentPrefix = StrFmt( "Entrenchments.[%d]", nEntrenchmentIndex );
 		//
 		int nSectionCount = 0;
 		CManipulatorManager::GetValue( &nSectionCount, pObjectManipulator, StrFmt("%s.sections", szEntrenchmentPrefix.c_str()) );
 		for ( unsigned nSectionIndex = 0; nSectionIndex < nSectionCount; ++nSectionIndex )
 		{
-			const string szSectionPrefix = StrFmt( "%s.sections.[%d]", szEntrenchmentPrefix.c_str(), nSectionIndex );
+			const std::string szSectionPrefix = StrFmt( "%s.sections.[%d]", szEntrenchmentPrefix.c_str(), nSectionIndex );
 			//
-			vector<int> sectionPartList;
-			CManipulatorManager::GetArray<vector<int>, int>( &sectionPartList, pObjectManipulator, StrFmt("%s.data", szSectionPrefix.c_str()) );
+			std::vector<int> sectionPartList;
+			CManipulatorManager::GetArray<std::vector<int>, int>( &sectionPartList, pObjectManipulator, StrFmt("%s.data", szSectionPrefix.c_str()) );
 			for ( int nSectionPartIndex = 0; nSectionPartIndex < sectionPartList.size(); ++nSectionPartIndex )
 			{
 				if ( entrenchmentLinkIDToIndexCollector.Get(sectionPartList[nSectionPartIndex]) == INVALID_NODE_ID )
@@ -164,15 +164,15 @@ CMapInfoExporter::~CMapInfoExporter()
 }
 
 
-bool CMapInfoExporter::StartExport( const string &rszObjectTypeName, bool bForce )
+bool CMapInfoExporter::StartExport( const std::string &rszObjectTypeName, bool bForce )
 {
 	return true;
 }
 
 
 EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
-																							const string &rszObjectTypeName,
-																							const string &rszObjectName,
+																							const std::string &rszObjectTypeName,
+																							const std::string &rszObjectName,
 																							bool bForce,
 																							EXPORT_TYPE exportType )
 {
@@ -184,11 +184,11 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	string szMapFilesPath;
+	std::string szMapFilesPath;
 	if ( CManipulatorManager::GetValue(&szMapFilesPath, pManipulator, "MapFilesPath") == false || szMapFilesPath.empty() )
 		return ER_FAIL;
-	const string szSrcPath = pUserData->constUserData.szExportSourceFolder + szMapFilesPath + "map.b2m";
-	//const string szDstPath = pUserData->szExportDestinationFolder + StrFmt( "bin\\maps\\%d", nObjectID );
+	const std::string szSrcPath = pUserData->constUserData.szExportSourceFolder + szMapFilesPath + "map.b2m";
+	//const std::string szDstPath = pUserData->szExportDestinationFolder + StrFmt( "bin\\maps\\%d", nObjectID );
 	CVariant vtGUID;
 	if ( pManipulator->GetValue( "uid", &vtGUID ) == false || vtGUID.GetType() != CVariant::VT_POINTER || vtGUID.GetBlobSize() != 16 )
 		return ER_FAIL;
@@ -196,9 +196,9 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 //	const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( nObjectID );
 //	if ( !pMapInfo )
 //		return ER_FAIL;
-	string szGUID;
+	std::string szGUID;
 	NStr::GUID2String( &szGUID, guid );
-	const string szDstPath = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\maps\\" + szGUID;
+	const std::string szDstPath = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\maps\\" + szGUID;
 	//
 	if ( NFile::CopyFile( szSrcPath, szDstPath ) == 0 )
 	{

@@ -22,8 +22,8 @@
 
 struct IObjectCollectorCallback
 {
-	virtual void OnInsertObject( const string &szObjectTypeName, const string &szObjectName ) = 0;
-	virtual void OnRemoveObject( const string &szObjectTypeName, const string &szObjectName ) = 0;
+	virtual void OnInsertObject( const std::string &szObjectTypeName, const std::string &szObjectName ) = 0;
+	virtual void OnRemoveObject( const std::string &szObjectTypeName, const std::string &szObjectName ) = 0;
 	//
 	virtual void OnClearCollection() = 0;
 };
@@ -35,9 +35,9 @@ struct IObjectDataExtractor : public CObjectBase
 	virtual unsigned GetObjectData( class CBitmap *pNormalBitmap,
 															class CBitmap *pSmallBitmap,
 															CString *pstrLabel,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
-															const string &rszDataExtractorType ) = 0;
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
+															const std::string &rszDataExtractorType ) = 0;
 };
 
 
@@ -47,7 +47,7 @@ struct IObjectFilter
 	typedef std::unordered_map<NFile::CFilePath, CObjectNameCollection> CObjectCollection;
 	//
 	virtual int GetObjectCollection( CObjectCollection *pObjectCollection ) const = 0;
-	virtual bool Match( const string &szObjectTypeName, const string &szObjectName ) const = 0;
+	virtual bool Match( const std::string &szObjectTypeName, const std::string &szObjectName ) const = 0;
 };
 
 
@@ -55,19 +55,19 @@ struct IObjectFilterCollector : public CObjectBase
 {
 	enum { tidTypeID = 0x14216B00 };
 	//
-	typedef vector<CString> CFilterList;
-	typedef std::unordered_map<string, CFilterList> CFilterListMap;
+	typedef std::vector<CString> CFilterList;
+	typedef std::unordered_map<std::string, CFilterList> CFilterListMap;
 	//
 	virtual bool Load( CDataStream *pStream ) = 0;
 	virtual bool Save( CDataStream *pStream ) = 0;
 	//
-	virtual int GetFilterList( CFilterList* pFilterList, const string &rszFilterType ) const = 0;
+	virtual int GetFilterList( CFilterList* pFilterList, const std::string &rszFilterType ) const = 0;
 	//
-	virtual bool IsSeparator( const string &rszFilterType, const int nFilterIndex ) const = 0;
-	virtual const IObjectFilter* Get( const string &rszFilterType, const int nFilterIndex ) const = 0;
+	virtual bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
+	virtual const IObjectFilter* Get( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
 	// IDOK or IDCANCEL
-	virtual int ShowFilterSelectionDialog( CWnd* pParentWindow, string *pszFilterType, int *pnFilterIndex ) = 0;
-	virtual int ShowFilterCreationDialog( CWnd* pParentWindow, string *pszFilterType, int *pnFilterIndex ) = 0;
+	virtual int ShowFilterSelectionDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex ) = 0;
+	virtual int ShowFilterCreationDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex ) = 0;
 };
 
 
@@ -83,23 +83,23 @@ struct IObjectCollector : public CObjectBase
 		int nIconIndex;
 		CString strLabel;
 	};
-	typedef std::unordered_map<string, SObjectParams> CObjectNameCollection;
-	typedef std::unordered_map<string, CObjectNameCollection> CObjectCollection;
+	typedef std::unordered_map<std::string, SObjectParams> CObjectNameCollection;
+	typedef std::unordered_map<std::string, CObjectNameCollection> CObjectCollection;
 	//
 	virtual bool Load( CDataStream *pStream ) = 0;
 	virtual bool Save( CDataStream *pStream ) = 0;
 	//
 	virtual void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor ) = 0;
-	virtual void RegisterDataExtractor( const string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor ) = 0;
+	virtual void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor ) = 0;
 	//
 	virtual void InsertCallback( IObjectCollectorCallback *pObjectCollectorCallback ) = 0;
 	virtual void RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback ) = 0;
 	virtual void ClearCallbackList() = 0;
 	//
 	// возвращает количество объектов
-	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const string &rszObjectTypeName ) = 0;
+	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) = 0;
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter ) = 0;
-	virtual bool GetObjectParams( SObjectParams* pObjectParams, const string &rszObjectTypeName, const string &rszObjectName ) = 0;
+	virtual bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
 	//
 	virtual CImageList* GetImageList( int nImageListType ) = 0;
 	//

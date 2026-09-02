@@ -11,10 +11,10 @@
 
 const char CWindowMSButtonSharedBuilder::BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME[] = "BackgroundSimpleTexture";
 const char CWindowMSButtonSharedBuilder::TEXTURE_TYPE_NAME[] = "Texture";
-const string CWindowMSButtonSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowMSButtonSharedBuilder";
+const std::string CWindowMSButtonSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowMSButtonSharedBuilder";
 
 
-bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pszDescription == 0" );
@@ -37,10 +37,10 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 
 	for ( int i = 0; i < nVisualStates; ++i )
 	{
-		const string elementName = StrFmt( "VisualStates.[%d]", i );
+		const std::string elementName = StrFmt( "VisualStates.[%d]", i );
 		
 		pBuildDataManipulator->GetValue( elementName + ".NormalTexture", &value );
-		if ( value.GetType() == CVariant::VT_NULL || (string (value.GetStr()).empty() ) )
+		if ( value.GetType() == CVariant::VT_NULL || (std::string (value.GetStr()).empty() ) )
 		{
 			( *pszDescription ) = "<NormalTexture> should be defined.";
 			return false;
@@ -67,8 +67,8 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 }
 
 
-bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeName,
-																												 string *pszUniqueObjectName,
+bool CWindowMSButtonSharedBuilder::InternalInsertObject( std::string *pszObjectTypeName,
+																												 std::string *pszUniqueObjectName,
 																												 bool bFromMainMenu,
 																												 bool *pbCanChangeObjectName,
 																												 bool *pbNeedExport,
@@ -82,7 +82,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	bool bResult = true;
 
-	string szDescription;
+	std::string szDescription;
 	if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 	{
 		return false;
@@ -98,12 +98,12 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 
 	// get texture size (Normal, State 0)
 	pBuildDataManipulator->GetValue( "VisualStates.[0].NormalTexture", &value );
-	const string szTextureFileName = value.GetStr();
+	const std::string szTextureFileName = value.GetStr();
 		
 	CTPoint<int> imageSize(0,0);
 	if ( !szTextureFileName.empty() )
 	{
-		const string szTextureFilePath = Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szTextureFileName;
+		const std::string szTextureFilePath = Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szTextureFileName;
 		GetTGAImageSize( szTextureFilePath, &imageSize );
 	}
 	else
@@ -119,9 +119,9 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 	NI_ASSERT( pMSBManipulator != 0, "CWindowMSButtonSharedBuilder::InternalInsertObject() pMSBManipulator == 0" );
 
 	// Проставляем основные параметры WindowMSButtonShared
-	bResult = bResult && pMSBManipulator->SetValue( "Placement.VerAllign.First", string("EPA_LOW_END") );
+	bResult = bResult && pMSBManipulator->SetValue( "Placement.VerAllign.First", std::string("EPA_LOW_END") );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.VerAllign.Second", true );
-	bResult = bResult && pMSBManipulator->SetValue( "Placement.HorAllign.First", string("EPA_LOW_END") );
+	bResult = bResult && pMSBManipulator->SetValue( "Placement.HorAllign.First", std::string("EPA_LOW_END") );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.HorAllign.Second", true );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.Size.First.x", imageSize.x );
 	bResult = bResult && pMSBManipulator->SetValue( "Placement.Size.First.y", imageSize.y );
@@ -143,7 +143,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( string *pszObjectTypeNa
 }
 
 
-bool CWindowMSButtonSharedBuilder::CreateVisualState( const string		 & rszUniqueObjectName, 
+bool CWindowMSButtonSharedBuilder::CreateVisualState( const std::string		 & rszUniqueObjectName, 
 																										  IManipulator		 * pBuildDataManipulator, 
 																											IManipulator		 * pMSBManipulator,
 																											int								 index )
@@ -162,7 +162,7 @@ bool CWindowMSButtonSharedBuilder::CreateVisualState( const string		 & rszUnique
 }
 
 
-bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUniqueObjectName, 
+bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszUniqueObjectName, 
 																										  IManipulator		 * pBuildDataManipulator, 
 																											IManipulator		 * pMSBManipulator,
 																											int								 index,
@@ -177,22 +177,22 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 	CVariant value;
 
 	pBuildDataManipulator->GetValue( StrFmt( "VisualStates.[%d].%sTexture", index, szSuffixName ), &value );
-	const string szTextureFileName = value.GetStr();
+	const std::string szTextureFileName = value.GetStr();
 	
 	pBuildDataManipulator->GetValue( StrFmt( "VisualStates.[%d].%sColor", index, szSuffixName ), &value );
 	const int nColor = value;
 
 	// extract short name
-	string szShortName;
+	std::string szShortName;
 	const nSlashPos = rszUniqueObjectName.rfind( PATH_SEPARATOR_CHAR );
-	if ( nSlashPos == string::npos )
+	if ( nSlashPos == std::string::npos )
 		szShortName = rszUniqueObjectName;
 	else
 		szShortName = rszUniqueObjectName.substr( nSlashPos+1 );
 
-	const string szBuilderGenPrefix = rszUniqueObjectName + PATH_SEPARATOR_CHAR +  StrFmt( "%s_%d", szShortName.c_str(), index );
-	const string szTexObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
-	const string szBSTObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
+	const std::string szBuilderGenPrefix = rszUniqueObjectName + PATH_SEPARATOR_CHAR +  StrFmt( "%s_%d", szShortName.c_str(), index );
+	const std::string szTexObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
+	const std::string szBSTObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
 	
 	if ( !szTextureFileName.empty() )
 	{
@@ -205,10 +205,10 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 
 		// Проставляем основные параметры Texture
 		bResult = bResult && pTexManipulator->SetValue( "SrcName", szTextureFileName );
-		bResult = bResult && pTexManipulator->SetValue( "Type", string("TEXTURE_2D") );
-		bResult = bResult && pTexManipulator->SetValue( "ConversionType", string("CONVERT_ORDINARY") );
-		bResult = bResult && pTexManipulator->SetValue( "AddrType", string("CLAMP") );
-		bResult = bResult && pTexManipulator->SetValue( "Format", string("TF_8888") );
+		bResult = bResult && pTexManipulator->SetValue( "Type", std::string("TEXTURE_2D") );
+		bResult = bResult && pTexManipulator->SetValue( "ConversionType", std::string("CONVERT_ORDINARY") );
+		bResult = bResult && pTexManipulator->SetValue( "AddrType", std::string("CLAMP") );
+		bResult = bResult && pTexManipulator->SetValue( "Format", std::string("TF_8888") );
 		bResult = bResult && pTexManipulator->SetValue( "NMips", 1 );
 	}
 
@@ -231,12 +231,12 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const string		 & rszUnique
 		bResult = bResult && pBSTManipulator->SetValue( "Texture", szNormalStateTexObjectName );
 	}
 	bResult = bResult && pBSTManipulator->SetValue( "Color", nColor );
-	bResult = bResult && pBSTManipulator->SetValue( "TextureX", string("EPA_LOW_END") );
-	bResult = bResult && pBSTManipulator->SetValue( "TextureY", string("EPA_LOW_END") );
+	bResult = bResult && pBSTManipulator->SetValue( "TextureX", std::string("EPA_LOW_END") );
+	bResult = bResult && pBSTManipulator->SetValue( "TextureY", std::string("EPA_LOW_END") );
 
 	// Проставляем параметры WindowMSButtonShared
-	const string backgroundElementName = StrFmt( "VisualStates.[%d].%s.Background", index, szSuffixName );
-	const string szBSTObjectRefName = string(BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME) + TYPE_SEPARATOR_CHAR + szBSTObjectName;
+	const std::string backgroundElementName = StrFmt( "VisualStates.[%d].%s.Background", index, szSuffixName );
+	const std::string szBSTObjectRefName = std::string(BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME) + TYPE_SEPARATOR_CHAR + szBSTObjectName;
 	pMSBManipulator->SetValue( backgroundElementName, szBSTObjectRefName );
 
 	if ( bNormalState )

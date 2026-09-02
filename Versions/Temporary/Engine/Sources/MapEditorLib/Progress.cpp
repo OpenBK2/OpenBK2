@@ -28,7 +28,7 @@ namespace NProgress
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SetTitle( const string &rszTitle )
+	void SetTitle( const std::string &rszTitle )
 	{
 		if ( Singleton<IMainFrameContainer>() && Singleton<IMainFrameContainer>()->Get() )
 		{
@@ -37,7 +37,7 @@ namespace NProgress
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SetMessage( const string &rszMessage )
+	void SetMessage( const std::string &rszMessage )
 	{
 		if ( Singleton<IMainFrameContainer>() && Singleton<IMainFrameContainer>()->Get() )
 		{

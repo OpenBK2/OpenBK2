@@ -26,7 +26,7 @@ struct SBuildDataParams
 	unsigned nFlags;										// Параметры редактрования
 	std::string szObjectTypeName;				// Тип объекта
 	// имя формируется следующим образом:
-	// string szFileName = szObjectNamePrefix + szObjectName + szObjectNamePostfix;
+	// std::string szFileName = szObjectNamePrefix + szObjectName + szObjectNamePostfix;
 	// CStringManager::ExtendFileExtention( &szFileName, szObjectNameExtention );
 	// Если установлено, что редактируем каталог - не забудте в szObjectNamePostfix в начале поставить слеш
 	std::string szObjectNamePrefix;			// Нередактируемая часть

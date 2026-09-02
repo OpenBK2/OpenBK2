@@ -5,7 +5,7 @@
 
 #include <cstdint>
 
-bool CVSODataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const string &rszObjectTypeName, const string &rszObjectName, IManipulator *pObjectManipulator )
+bool CVSODataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	// получаем материал
 	CPtr<IManipulator> pMaterialManipulator = 0;
@@ -46,7 +46,7 @@ bool CVSODataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uin
 	{
 		if ( CPtr<IManipulator> pTextureManipulator = CManipulatorManager::CreateManipulatorFromReference( "Texture", pMaterialManipulator, 0, 0, 0 ) )
 		{
-			string szTextureName;
+			std::string szTextureName;
 			CManipulatorManager::GetValue( &szTextureName, pTextureManipulator, "DestName" );
 			return LoadImagesFromSource( pSmallImage, pNormalImage, szTextureName, LOAD_IMAGE_COPY );
 		}

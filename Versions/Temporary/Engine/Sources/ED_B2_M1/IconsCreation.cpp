@@ -60,7 +60,7 @@ static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene
 	return true;
 }
 
-static bool WriteTGA( const string &szFileName, const CArray2D<NGfx::SPixel8888> &texture )
+static bool WriteTGA( const std::string &szFileName, const CArray2D<NGfx::SPixel8888> &texture )
 {
 	const int nIconSizeX = N_ICONS_SIZE_X;
 	const int nIconSizeY = N_ICONS_SIZE_Y;
@@ -91,7 +91,7 @@ static bool WriteTGA( const string &szFileName, const CArray2D<NGfx::SPixel8888>
 	return true;
 }
 
-static bool CreateTextureItem( const string &szTextureName, const string &szTgaName )
+static bool CreateTextureItem( const std::string &szTextureName, const std::string &szTgaName )
 {
 	// Creating object
 	IResourceManager *pRM = Singleton<IResourceManager>();
@@ -159,17 +159,17 @@ void CModelEditor::CreateIcon()
 		return;
 
 	// Get unit name and generate directories and icon file names.
-	const string &szUnitName = pUnitStats->GetDBID().ToString();
+	const std::string &szUnitName = pUnitStats->GetDBID().ToString();
 
-	string szDirectory;
+	std::string szDirectory;
 	CStringManager::SplitFileName( &szDirectory, 0, 0, szUnitName );
 
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string &szExportSourceFolder = pUserData->constUserData.szExportSourceFolder;
+	const std::string &szExportSourceFolder = pUserData->constUserData.szExportSourceFolder;
 
-	const string szIconTgaName = szDirectory + "icon.tga";
-	const string szIconFullPath = szExportSourceFolder + szIconTgaName;
-	const string szTextureItemName = szDirectory + "icon_texture.xdb";
+	const std::string szIconTgaName = szDirectory + "icon.tga";
+	const std::string szIconFullPath = szExportSourceFolder + szIconTgaName;
+	const std::string szTextureItemName = szDirectory + "icon_texture.xdb";
 
 	// Prepare icons data and write tga
 	if ( !WriteTGA( szIconFullPath, texture ) )

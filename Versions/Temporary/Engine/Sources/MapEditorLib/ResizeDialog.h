@@ -4,7 +4,7 @@
 
 #define DECLARE_RESIZE_DLG_WND_COMMON_METHODS( className )														\
 protected:																																						\
-	void	GetXMLFilePath( string *pszXMLFilePath ) { (*pszXMLFilePath) = #className; }	\
+	void	GetXMLFilePath( std::string *pszXMLFilePath ) { (*pszXMLFilePath) = #className; }	\
 	int GetMinimumXDimension() { return 100; }																					\
 	int GetMinimumYDimension() { return 130; }																					\
 	bool IsDrawGripper() { return false; }																							\
@@ -24,9 +24,9 @@ class CResizeDialog : public CDialog
 	struct SOptions
 	{
 		CTRect<int> rect;
-		vector<int> nParameters;
-		vector<string> szParameters;
-		vector<float> fParameters;
+		std::vector<int> nParameters;
+		std::vector<std::string> szParameters;
+		std::vector<float> fParameters;
 
 		SOptions() : rect( 0, 0, 0, 0 ) {}
 		virtual int operator&( IBinSaver &bs );
@@ -35,7 +35,7 @@ class CResizeDialog : public CDialog
 
 	std::unordered_map<unsigned, SControlStyle> resizeDialogControlStyles;
 	CTPoint<int> resizeDialogOriginalSize;
-	string szToolTipText;
+	std::string szToolTipText;
 
 	public:
 	SOptions resizeDialogOptions;
@@ -81,10 +81,10 @@ protected:
 	virtual bool SerializeToRegistry() { return false; }
 	
 	//файл XML относительно текущего IDataStorage
-	virtual void GetXMLFilePath( string *pszXMLFilePath ) {}
+	virtual void GetXMLFilePath( std::string *pszXMLFilePath ) {}
 	
 	//ключ REGISTRY относительно HKEY_CURRENT_USER
-	virtual void GetRegistryKey( string *pszRegistryKey ) {}
+	virtual void GetRegistryKey( std::string *pszRegistryKey ) {}
 
 	//Рисовать или не рисовать гриппер
 	virtual bool IsToolTipsEnable() { return false; }
@@ -92,7 +92,7 @@ protected:
 	virtual bool IsRestoreSize() { return true; }
 
 	virtual HINSTANCE GetResourceHandle() { return 0; }
-	virtual bool GetToolTipText( string *pszToolTipText, const unsigned nControlID ) { return false; }
+	virtual bool GetToolTipText( std::string *pszToolTipText, const unsigned nControlID ) { return false; }
 	
 	virtual void DoDataExchange( CDataExchange* pDX );
 	virtual BOOL OnInitDialog();

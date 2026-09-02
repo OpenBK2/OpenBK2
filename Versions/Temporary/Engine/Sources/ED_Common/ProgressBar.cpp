@@ -25,7 +25,7 @@ void DestroyProgressBar()
 }
 
 
-void Start( int nRange, const string & szCaption )
+void Start( int nRange, const std::string & szCaption )
 {
 	progressBar.Start( nRange, szCaption );
 }
@@ -43,7 +43,7 @@ void StepIt()
 }
 
 
-void SetCaption( const string & szCaption )
+void SetCaption( const std::string & szCaption )
 {
 	progressBar.SetCaption( szCaption );
 }

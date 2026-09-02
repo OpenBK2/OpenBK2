@@ -4,7 +4,7 @@
 
 class CMultiInputState : public IInputState
 {
-	typedef vector<IInputState*> CInputStateList;
+	typedef std::vector<IInputState*> CInputStateList;
 	CInputStateList inputStateList;	
 	int nActiveInputState;
 

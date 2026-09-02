@@ -21,11 +21,11 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SEntrenchmentCreateInfo : public SObjectCreateInfo
 	{
-		list<SEntrenchmentSegInfo> segmentsInfo;
+		std::list<SEntrenchmentSegInfo> segmentsInfo;
 	};
 
-	typedef list<int> CSegmentLinkIDList;
-	typedef list<CSegmentLinkIDList> CSegmentLinkIDListList;
+	typedef std::list<int> CSegmentLinkIDList;
+	typedef std::list<CSegmentLinkIDList> CSegmentLinkIDListList;
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SEntrenchmentInfo : public SObjectInfo
 	{
@@ -52,7 +52,7 @@ namespace NMapInfoEditor
 		bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
 		bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
-		void GetMask( string *pszMask ) {}
+		void GetMask( std::string *pszMask ) {}
 
 		static bool GetEntrenchmentSegmentPositionOnTerrain( CVec3 *pPos,
 																												 CQuat *pQuat,

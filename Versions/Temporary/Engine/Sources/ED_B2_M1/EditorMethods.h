@@ -27,14 +27,14 @@ namespace NDb
 struct ITerraManager;
 namespace NEditor
 {
-	extern const string SZ_TERRA_BIN_FILE_NAME;
+	extern const std::string SZ_TERRA_BIN_FILE_NAME;
 	//
-	string MakeMapPath( const CDBID &dbid );
-	string GetTerrainBinFileName( const NDb::STerrain *pDesc );
+	std::string MakeMapPath( const CDBID &dbid );
+	std::string GetTerrainBinFileName( const NDb::STerrain *pDesc );
 	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
 	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
 	bool SaveTerrain( ITerraManager *pTerraManager );
-	void LoadBgMap( const string &szDesiredSeason, const string &rszMapInfoNameLoaded, CVec2 *pBgMapSize );
+	void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize );
 };
 
 inline float ADiff( const float a, const float b )
@@ -72,7 +72,7 @@ inline CVec3 GetVecDir( float fDir )
 
 struct SUnitCommandTypeInfo
 {
-	string szName;
+	std::string szName;
 	int nValue;
 	int nNeedTargetUnit;
 	///
@@ -81,10 +81,10 @@ struct SUnitCommandTypeInfo
 	int operator&( IXmlSaver &saver );
 };
 
-bool LoadUnitCommandTypesFromXML( vector<SUnitCommandTypeInfo> *pCmdTypes );
+bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes );
 
 
-bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax, const vector<CVec3> &rPoly );
+bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax, const std::vector<CVec3> &rPoly );
 CVec3 GetNearestTileCenter( const CVec3 &p );
 CVec3 GetNearestVisTileCorner( const CVec3 &p );
 

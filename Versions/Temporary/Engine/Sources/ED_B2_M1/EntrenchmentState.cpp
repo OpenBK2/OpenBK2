@@ -333,7 +333,7 @@ void CEntrenchmentDesignTool::DrawSeg( CSceneDrawTool *pDrawTool, const CVec3 &c
 	UpdateTerrainHeight( &v2 );
 	UpdateTerrainHeight( &v3 );
 	//
-	list<CVec3> pointList;
+	std::list<CVec3> pointList;
 	pointList.push_back( v0 );
 	pointList.push_back( v1 );
 	pointList.push_back( v2 );
@@ -612,7 +612,7 @@ bool CEntrenchmentDesignTool::IsComplete()
 }
 
 
-void CEntrenchmentDesignTool::GetSegmentsInfo( list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo )
+void CEntrenchmentDesignTool::GetSegmentsInfo( std::list<NMapInfoEditor::SEntrenchmentSegInfo> *pEntrenchmentElementsInfo )
 {
 	pEntrenchmentElementsInfo->clear();
 

@@ -17,8 +17,8 @@ public:
 	//
 	CSearchObjectDialog( CWnd* pParent = NULL );
 	//
-	void SetText( const string &rszText );
-	string GetText();
+	void SetText( const std::string &rszText );
+	std::string GetText();
 	//
 	DECLARE_MESSAGE_MAP()
 };

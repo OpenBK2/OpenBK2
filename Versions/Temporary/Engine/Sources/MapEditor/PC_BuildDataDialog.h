@@ -41,7 +41,7 @@ protected:
 	// CResizeDialog
 	int GetMinimumXDimension() { return 300; }
 	int GetMinimumYDimension() { return 200; }
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CPCBuildDataDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CPCBuildDataDialog"; }
 	bool IsDrawGripper() { return true; }
 
 	void UpdateOKButton();
@@ -53,7 +53,7 @@ public:
 	CPCBuildDataDialog( CWnd* pParent = NULL );
 	//	
 	void SetBuildDataParams( SBuildDataParams *_pBuildDataParams ) { pBuildDataParams = _pBuildDataParams; }
-	void SetTemporaryLabel( const string &rszTemporaryLabel ) { tree.SetTemporaryLabel( rszTemporaryLabel ); }
+	void SetTemporaryLabel( const std::string &rszTemporaryLabel ) { tree.SetTemporaryLabel( rszTemporaryLabel ); }
 	void SetBuildDataCallback( struct IBuildDataCallback *_pBuildDataCallback ) { pBuildDataCallback = _pBuildDataCallback; }
 	//
 	//CPCBaseDialog

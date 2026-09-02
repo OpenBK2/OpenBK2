@@ -17,13 +17,13 @@
 #include "MapEditorLib/Interface_UserData.h"
 
 
-static string szErr;
+static std::string szErr;
 static int ScriptLOG(lua_State* state)
 {
 	Script script(state);
 	Script::Object obj = script.GetObject(script.GetTop());
-	string sz = obj.GetString();
-	for ( string::const_iterator i = sz.begin(); i != sz.end(); ++i )
+	std::string sz = obj.GetString();
+	for ( std::string::const_iterator i = sz.begin(); i != sz.end(); ++i )
 		if ( *i != '\n' )
 			szErr += *i;
 		else
@@ -85,7 +85,7 @@ void CScriptEditor::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDCANCEL, m_ctrlCancel);
 }
 
-void CScriptEditor::SetText( const string &szText )
+void CScriptEditor::SetText( const std::string &szText )
 {
 	if ( !::IsWindow( m_hWnd ) )
 	{
@@ -98,7 +98,7 @@ void CScriptEditor::SetText( const string &szText )
 	bFreezeUpdate = false;
 }
 
-string CScriptEditor::GetText()
+std::string CScriptEditor::GetText()
 {
 	if ( ::IsWindow( m_LuaEditor ) )
 		return m_LuaEditor.GetText();
@@ -147,7 +147,7 @@ BOOL CScriptEditor::OnInitDialog()
 	//
 	try
 	{
-		string szKeyWordsFile;
+		std::string szKeyWordsFile;
 		if ( CPtr<IUserDataContainer> pUserData = Singleton<IUserDataContainer>() )
 		{
 			szKeyWordsFile = pUserData->Get()->constUserData.szStartFolder + 
@@ -155,8 +155,8 @@ BOOL CScriptEditor::OnInitDialog()
 		}
 		std::ifstream fKeywords( szKeyWordsFile.c_str() );
 
-		string szKeywords;
-		vector<string> vszAutoComplete;
+		std::string szKeywords;
+		std::vector<std::string> vszAutoComplete;
 
 		while ( !fKeywords.bad() && !fKeywords.eof() && !fKeywords.fail() )
 		{
@@ -180,15 +180,15 @@ BOOL CScriptEditor::OnInitDialog()
 		{
 			for ( int i = pDictionary->GetDictionaryCount() - 1; i >= 0; --i )
 			{
-				string szKeywordSet;
-				vector< string > vszDictionary;
+				std::string szKeywordSet;
+				std::vector< std::string > vszDictionary;
 				pDictionary->GetKeywords( i, vszDictionary );
 
 				vszAutoComplete.insert( vszAutoComplete.end(),
 					vszDictionary.begin(), vszDictionary.end() );
 			
 
-				vector< string >::iterator it = vszDictionary.begin();
+				std::vector< std::string >::iterator it = vszDictionary.begin();
 				if ( it != vszDictionary.end() )
 				{
 					while (true)
@@ -210,7 +210,7 @@ BOOL CScriptEditor::OnInitDialog()
 			}
 		} //if ( pDictionary )
 		
-		string::iterator end = szKeywords.end();
+		std::string::iterator end = szKeywords.end();
 		szKeywords.erase( --end );
 
 		sort( vszAutoComplete.begin(), vszAutoComplete.end() );

@@ -11,8 +11,8 @@ public:
 	void Load();
 	bool CanLoad();
 	bool CanAutoLoadAfterBuildingObject() { return false; }
-	bool GetLoadContextMenuLabel( string *pszLabel );
-	bool GetSaveHeaderWidthLabel( string *pszLabel );
+	bool GetLoadContextMenuLabel( std::string *pszLabel );
+	bool GetSaveHeaderWidthLabel( std::string *pszLabel );
 	void LoadHeaderWidth();
 	void SaveHeaderWidth();
 };

@@ -22,7 +22,7 @@ public:
 		int nSelectedCmdType;
 		bool bSelectedCmdNeedTargetUnit;
 		int nData;
-		string szTarget;
+		std::string szTarget;
 		int nCommandIndex;
 		//
 		SDlgData()
@@ -49,7 +49,7 @@ private:
 	CEdit edData;
 	CEdit edTgtUnit;
 	//
-	vector<SUnitCommandTypeInfo> cmdTypes;
+	std::vector<SUnitCommandTypeInfo> cmdTypes;
 	bool bEditMode;  // true - new command, false - edit command
 	int nCommandIndex; // -1 -- new command
 
@@ -81,7 +81,7 @@ public:
 	void GetDialogData( SDlgData *pData );
 
 	int GetSelectedCommandType();
-	void UpdateTarget( const string &szNewTarget );
+	void UpdateTarget( const std::string &szNewTarget );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnBnClickedButtonClear();

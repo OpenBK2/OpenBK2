@@ -16,7 +16,7 @@ void CPCStringRefEditor::SetValue( const CVariant &rValue )
 {
 	if ( rValue.GetType() == CVariant::VT_NULL )
 	{
-		CVariant nulRefValue = string();
+		CVariant nulRefValue = std::string();
 		CPCStringBrowseEditor::SetValue( nulRefValue );
 	}
 	else
@@ -45,7 +45,7 @@ void CPCStringRefEditor::OnBrowse()
 {
 	if ( GetPropertyDesc() )
 	{
-		string szValues = GetPropertyDesc()->szStringParam;
+		std::string szValues = GetPropertyDesc()->szStringParam;
 		NStr::ToLowerASCII( &szValues );
 		//
 		const int	nWidth = CStringManager::GetIntValueFromString( szValues, PCSPL_WIDTH, 0, PCSP_DIVIDERS, 0 );
@@ -59,8 +59,8 @@ void CPCStringRefEditor::OnBrowse()
 			CString strText;
 			GetWindowText( strText );
 			//
-			string szTableName;
-			string szObjectName = strText;
+			std::string szTableName;
+			std::string szObjectName = strText;
 			if ( typePCIEMnemonics.IsMultiRef( GetItemEditorType() ) )
 			{
 				CStringManager::GetTypeAndNameFromRefValue( &szTableName, &szObjectName, szObjectName, TYPE_SEPARATOR_CHAR, GetPropertyDesc()->refTypes.begin()->first );
@@ -71,13 +71,13 @@ void CPCStringRefEditor::OnBrowse()
 			}
 			//
 			SUserData::CRefPathMap &rRefPathMap = Singleton<IUserDataContainer>()->Get()->refPathMap;
-			string szRefKey;
+			std::string szRefKey;
 			CreateRefKey( &szRefKey, GetPropertyDesc() );
 			//
 			if ( szObjectName.empty() )
 			{
-				string szRefValue = rRefPathMap[szRefKey];
-				string szLocalTableName;
+				std::string szRefValue = rRefPathMap[szRefKey];
+				std::string szLocalTableName;
 				CStringManager::GetTypeAndNameFromRefValue( &szLocalTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
 				if ( !szLocalTableName.empty() )
 				{
@@ -94,7 +94,7 @@ void CPCStringRefEditor::OnBrowse()
 				pcDBLinkDialog.GetCurrentTable( &szTableName );
 				pcDBLinkDialog.GetCurrentObject( &szObjectName );
 				//
-				string szRefValue;
+				std::string szRefValue;
 				CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
 				rRefPathMap[szRefKey] = szRefValue;
 				//
@@ -111,7 +111,7 @@ void CPCStringRefEditor::OnBrowse()
 }
 
 
-void CPCStringRefEditor::SetWindowTextByTypeAndName( const string &szTableName, const string &szObjectName )
+void CPCStringRefEditor::SetWindowTextByTypeAndName( const std::string &szTableName, const std::string &szObjectName )
 {
 	if ( typePCIEMnemonics.IsMultiRef( GetItemEditorType() ) )
 	{

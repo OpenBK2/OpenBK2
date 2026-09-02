@@ -11,7 +11,7 @@ class CControllerContainer : public IControllerContainer, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CControllerContainer );
 	//
-	typedef list<CPtr<IController> > CControllerList;
+	typedef std::list<CPtr<IController> > CControllerList;
 	CControllerList controllerList;
 	CControllerList redoOperationList;
 	CMDDLDialog wndMDDLDialog;
@@ -29,7 +29,7 @@ public:
 	bool UndoArrow();
 	bool RedoArrow();
 	int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const;
-	int RemoveTemporaryControllers( const string &rszTemporaryLabel );
+	int RemoveTemporaryControllers( const std::string &rszTemporaryLabel );
 
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uint32_t dwData );

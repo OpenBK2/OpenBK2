@@ -210,9 +210,9 @@ CWMMnemonicCodes::CWMMnemonicCodes() : CMnemonicsCollector<unsigned>( 0, "" )
 }
 
 
-string CWMMnemonicCodes::Get( unsigned nMessage )
+std::string CWMMnemonicCodes::Get( unsigned nMessage )
 {
-	string szMnemonic = GetMnemonic( nMessage );
+	std::string szMnemonic = GetMnemonic( nMessage );
 	szMnemonic += StrFmt( "( 0x%X( %u ) )", nMessage, nMessage );
 	if ( szMnemonic.empty() )
 	{

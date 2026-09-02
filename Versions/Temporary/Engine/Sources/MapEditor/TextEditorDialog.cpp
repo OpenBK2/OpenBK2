@@ -9,7 +9,7 @@ CTEMnemonics::CTEMnemonics() : CMnemonicsCollector<int>( TE_UNKNOWN, "" )
 }
 
 
-ETextEditorType CTEMnemonics::Get( const string &rszMnemonic )
+ETextEditorType CTEMnemonics::Get( const std::string &rszMnemonic )
 {
 	return static_cast<ETextEditorType>( GetValue( rszMnemonic ) );
 }
@@ -44,7 +44,7 @@ BEGIN_MESSAGE_MAP(CTextEditorDialog, CResizeDialog)
 END_MESSAGE_MAP()
 
 
-void CTextEditorDialog::GetXMLFilePath( string *pszXMLFilePath )
+void CTextEditorDialog::GetXMLFilePath( std::string *pszXMLFilePath )
 {
 	( *pszXMLFilePath ) = TE_XML_FILE_NAME_LABEL_PREFIX + typeTEMnemonics.GetMnemonic( editorType );
 }
@@ -117,7 +117,7 @@ void CTextEditorDialog::UpdateToolBar()
 /**/
 
 
-void CTextEditorDialog::GetText( string *pszText )
+void CTextEditorDialog::GetText( std::string *pszText )
 {
 	if ( pszText )
 	{

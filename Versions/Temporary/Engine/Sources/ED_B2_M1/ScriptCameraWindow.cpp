@@ -349,7 +349,7 @@ void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 
 	lcCameras.DeleteAllItems();
 	int i = 0;
-	for ( vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
+	for ( std::vector<NCamera::CCameraPlacement>::const_iterator it = dialogData.scriptCameras.begin(); it < dialogData.scriptCameras.end(); ++it, ++i )
 	{
 		int nItem = lcCameras.InsertItem( i, "" );
 		lcCameras.SetItemText( nItem, 0, StrFmt("%s", it->szName) );

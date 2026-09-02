@@ -94,7 +94,7 @@ void CPCFloatInputEditor::OnEnChange()
 
 // CPCItemEditor
 
-bool CPCFloatInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCFloatInputEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -112,7 +112,7 @@ bool CPCFloatInputEditor::CreateEditor( const string &rszName, EPCIEType _nEdito
 				}
 			}
 
-			string szValues = GetPropertyDesc()->szStringParam;
+			std::string szValues = GetPropertyDesc()->szStringParam;
 			NStr::ToLowerASCII( &szValues );
 			
 			nPrecision = CStringManager::GetIntValueFromString( szValues, PCSPL_PRECISION, 0, PCSP_DIVIDERS, nPrecision );

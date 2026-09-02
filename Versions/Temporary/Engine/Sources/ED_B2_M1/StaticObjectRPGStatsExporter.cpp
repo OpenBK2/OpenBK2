@@ -3,8 +3,8 @@
 #include "StaticObjectRPGStatsExporter.h"
 
 EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																													const string &rszObjectTypeName,
-																													const string &rszObjectName,
+																													const std::string &rszObjectTypeName,
+																													const std::string &rszObjectName,
 																													bool bForce,
 																													EXPORT_TYPE exportType )
 {

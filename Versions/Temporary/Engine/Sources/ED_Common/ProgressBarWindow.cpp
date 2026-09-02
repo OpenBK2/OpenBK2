@@ -43,7 +43,7 @@ bool CProgressBarWindow::Create( CWnd *pParent )
 }
 
 
-void CProgressBarWindow::Start( int nRange, const string & szCaption )
+void CProgressBarWindow::Start( int nRange, const std::string & szCaption )
 {
 	wndProgress.ResetProgress();
 	wndProgress.SetRange( 0, nRange );
@@ -67,7 +67,7 @@ void CProgressBarWindow::Finish()
 }
 
 
-void CProgressBarWindow::SetCaption( const string & szCaption )
+void CProgressBarWindow::SetCaption( const std::string & szCaption )
 {
 	wndCaption.SetWindowText( szCaption.c_str() );
 }

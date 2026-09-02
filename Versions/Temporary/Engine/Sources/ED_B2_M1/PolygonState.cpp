@@ -559,7 +559,7 @@ void CPolygonState::Draw( CPaintDC *pPaintDC )
 			{
 				if ( CPolygonState::CControlPointList *pControlPointList = GetControlPoints( GetSelectedPolygonID() ) )
 				{
-					list<CVec3> pointList;
+					std::list<CVec3> pointList;
 					for ( int nControlPointIndex = 0; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
 					{
 						CVec3 vControlPoint = ( *pControlPointList )[nControlPointIndex];
@@ -590,7 +590,7 @@ void CPolygonState::Draw( CPaintDC *pPaintDC )
 		}
 		else if ( GetActiveInputStateIndex() == IS_ADD )
 		{
-			list<CVec3> pointList;
+			std::list<CVec3> pointList;
 			for ( CControlPointList::const_iterator itControlPoint = controlPointList.begin(); itControlPoint != controlPointList.end(); ++itControlPoint )
 			{
 				CVec3 vPoint = *itControlPoint;

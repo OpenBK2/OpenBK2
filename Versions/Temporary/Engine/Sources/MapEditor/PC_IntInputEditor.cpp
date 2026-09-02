@@ -8,7 +8,7 @@
 
 #include <cstdint>
 
-bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
+bool CPCIntInputEditor::GetPCItemStringValue( std::string *pszValue, const CVariant &rValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pszValue != 0, "CPCIntInputEditor::GetPCItemStringValue() pszValue == 0" );
 	( *pszValue ) = std::to_string(  (int)rValue );
@@ -16,7 +16,7 @@ bool CPCIntInputEditor::GetPCItemStringValue( string *pszValue, const CVariant &
 }
 
 
-bool CPCIntInputEditor::GetPCItemValue( CVariant *pValue, const string &rszValue, const SPropertyDesc *pPropertyDesc )
+bool CPCIntInputEditor::GetPCItemValue( CVariant *pValue, const std::string &rszValue, const SPropertyDesc *pPropertyDesc )
 {
 	NI_ASSERT( pValue != 0, "CPCIntInputEditor::GetPCItemValue() pValue == 0" );
 	int nValue = 0;
@@ -113,7 +113,7 @@ void CPCIntInputEditor::OnEnChange()
 
 // CPCItemEditor
 
-bool CPCIntInputEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCIntInputEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -176,7 +176,7 @@ void CPCIntInputEditor::GetValue( CVariant *pValue )
 	//
 	CString strText;
 	GetWindowText( strText );
-	if ( !GetPCItemValue( pValue, string( strText ), GetPropertyDesc() ) )
+	if ( !GetPCItemValue( pValue, std::string( strText ), GetPropertyDesc() ) )
 	{
 		( *pValue ) = nDefaultValue;
 	}
@@ -188,7 +188,7 @@ void CPCIntInputEditor::SetDefaultValue()
 	CPCItemEditor::SetDefaultValue();
 	//
 	bCreateControls = true;
-	string szValue;
+	std::string szValue;
 	GetPCItemStringValue( &szValue, CVariant( nDefaultValue ) , GetPropertyDesc() );
 	SetWindowText( szValue.c_str() );
 	bCreateControls = false;

@@ -472,7 +472,7 @@ bool CVSOWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
 			if ( pView != 0 )
 			{
-				pView->SetViewManipulator( pObjectManipulator, objectSet, string() );
+				pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
 			}

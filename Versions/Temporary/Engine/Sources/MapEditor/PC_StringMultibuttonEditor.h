@@ -9,7 +9,7 @@
 
 class CPCStringMultibuttonEditor : public CEdit, public CPCItemEditor, public ICommandHandler
 {
-	string szDefaultValue;
+	std::string szDefaultValue;
 	CPCEditorButtonList buttonList;
 	int nButtonCount;
 	bool bIgnoreFocusChange;
@@ -37,7 +37,7 @@ public:
 	virtual BOOL PreTranslateMessage( MSG* pMsg );
 
 	//CPCItemEditor
-	virtual bool CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
+	virtual bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 	virtual bool PlaceEditor( const CTRect<int> &rPlaceRect );
 	virtual bool ActivateEditor( CDialog *pwndActiveDialog );
 	//

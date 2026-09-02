@@ -27,7 +27,7 @@ namespace NMapInfoEditor
 	//  |---------------------------->|
 	//  v0                            v1
 	//
-	typedef vector<CVec2> CSpotSquare;
+	typedef std::vector<CVec2> CSpotSquare;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SSpotLoadInfo : public SObjectLoadInfo
 	{
@@ -46,7 +46,7 @@ namespace NMapInfoEditor
 		OBJECT_BASIC_METHODS( SSpotInfo );
 
 	public:
-		string szRPGStatsTypeName;
+		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		unsigned nLinkID;
 		CSpotSquare spotSquare;
@@ -110,7 +110,7 @@ namespace NMapInfoEditor
 		// заполнить свойствами MaskManipulator
 		void InsertMaskManipulators( class CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator ) {}
 		void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
-		void GetMask( string *pszMask ) {}
+		void GetMask( std::string *pszMask ) {}
 		//
 		// методы имеющие реализацию поумолчанию
 		// заполняет данные объекта, которые можно загрузить когда все объекты загружены

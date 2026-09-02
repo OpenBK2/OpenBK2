@@ -8,7 +8,7 @@
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/Interface_MOD.h"
 
-CPCStringFileRefEditor::CPCStringFileRefEditor( const string &rszObjectTypeName ) : szObjectTypeName( rszObjectTypeName )
+CPCStringFileRefEditor::CPCStringFileRefEditor( const std::string &rszObjectTypeName ) : szObjectTypeName( rszObjectTypeName )
 {
 }
 
@@ -22,7 +22,7 @@ void CPCStringFileRefEditor::GetValue( CVariant *pValue )
 		if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
 		{
 			CPCStringBrowseEditor::GetValue( pValue );
-			string szFilePath = pValue->GetStr();
+			std::string szFilePath = pValue->GetStr();
 			bool bResult = false;
 			if ( !szFilePath.empty() )
 			{
@@ -36,10 +36,10 @@ void CPCStringFileRefEditor::GetValue( CVariant *pValue )
 					( *pValue ) = szFilePath;
 					//
 					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-					const string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
-					string szObjectNamePrefix;
+					const std::string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( pathType ) + szFilePath;
+					std::string szObjectNamePrefix;
 					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
-					string szMask;
+					std::string szMask;
 					szMask = pDesc->szStringParam;
 					if ( szMask.empty() )
 					{
@@ -77,9 +77,9 @@ void CPCStringFileRefEditor::OnBrowse()
 	{
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE );
-		string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = StrFmt( strTitle, GetName() );
 		//
-		string szMask;
+		std::string szMask;
 		szMask = pDesc->szStringParam;
 		if ( szMask.empty() )
 		{
@@ -87,7 +87,7 @@ void CPCStringFileRefEditor::OnBrowse()
 		}
 		//
 		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-		const string szInitialDir = rFilePathMap[szMask];
+		const std::string szInitialDir = rFilePathMap[szMask];
 		//
 		{
 			NFile::CCurrDirHolder currDirHolder;
@@ -109,14 +109,14 @@ void CPCStringFileRefEditor::OnBrowse()
 					{
 						pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
 					}
-					const string szFullFilePath = fileDialog.GetNextPathName( position );
-					const string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
+					const std::string szFullFilePath = fileDialog.GetNextPathName( position );
+					const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
 					if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
 					{
-						const string szFilePath = szFullFilePath.substr( szDataFolder.size() );
+						const std::string szFilePath = szFullFilePath.substr( szDataFolder.size() );
 						SetWindowText( szFilePath.c_str() );
 						// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-						string szObjectNamePrefix;
+						std::string szObjectNamePrefix;
 						CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
 						rFilePathMap[szMask] = szObjectNamePrefix;
 					}

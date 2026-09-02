@@ -9,10 +9,10 @@ struct IProgressHook : public CObjectBase
 {
 	enum { tidTypeID = 0x1B24AB80 };
 
-	//string szProgressName;
+	//std::string szProgressName;
 
-	virtual void Create( const string &rszName, CWnd *pWnd ) = 0;
-	//virtual void GetName( string *pName ) const { (*pName) = szProgressName; }
+	virtual void Create( const std::string &rszName, CWnd *pWnd ) = 0;
+	//virtual void GetName( std::string *pName ) const { (*pName) = szProgressName; }
 	virtual CProgressDlg* GetProgressDialog() const = 0;
 	//
 	virtual void SetCancel( bool bHasCancel ) = 0;
@@ -24,7 +24,7 @@ struct IProgressHook : public CObjectBase
 	virtual void IterateProgressPosition() = 0;
 	//
 	virtual void ClearLog() = 0;
-	virtual void AddLog( const string &rzsLogMessage ) = 0;
+	virtual void AddLog( const std::string &rzsLogMessage ) = 0;
 };
 
 

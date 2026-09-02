@@ -37,11 +37,11 @@ void CScriptAreaState::GetScriptAreaMap()
 	//
 	for ( int nScriptAreIndex = 0; nScriptAreIndex < nScriptAreaCount; ++nScriptAreIndex )
 	{
-		const string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreIndex );
+		const std::string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreIndex );
 		//
 		CScriptAreaState::SScriptArea scriptArea;
 		// 
-		string szType;
+		std::string szType;
 		if ( !CManipulatorManager::GetValue( &szType, pManipulator, szScriptAreaPefix + ".Type" ) )
 		{
 			continue;
@@ -115,9 +115,9 @@ void CScriptAreaState::UpdateScriptArea( unsigned nScriptAreaID )
 	}
 	IManipulator *pManipulator = pMapInfoEditor->GetViewManipulator();
 	const int nScriptAreaIndex = scriptAreaIDToIndexCollector.Get( nScriptAreaID );
-	const string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreaIndex );
+	const std::string szScriptAreaPefix = StrFmt( "ScriptAreas.[%d]", nScriptAreaIndex );
 	//
-	string szType;
+	std::string szType;
 	if ( posScriptArea->second.eType == NDb::EAT_RECTANGLE )
 	{
 		szType = "EAT_RECTANGLE";
@@ -145,7 +145,7 @@ void CScriptAreaState::UpdateScriptArea( unsigned nScriptAreaID )
 
 
 unsigned CScriptAreaState::InsertScriptArea( NDb::EScriptAreaTypes eType,
-																				 const string &rszName,
+																				 const std::string &rszName,
 																				 const CVec3 &rStart,
 																				 const CVec3 &rFinish )
 {
@@ -352,7 +352,7 @@ unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPoint
 	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Area name", "Area name" );
 	if ( enterNameDialog.DoModal() == IDOK )
 	{
-		string szName; 
+		std::string szName; 
 		enterNameDialog.GetName( &szName );
 		if ( !szName.empty() )
 		{
@@ -550,7 +550,7 @@ void CScriptAreaState::SScriptArea::Draw( CPaintDC *pPaintDC, CSceneDrawTool *pS
 		//
 		case NDb::EAT_RECTANGLE:
 		{
-			list<CVec3> points;
+			std::list<CVec3> points;
 			//
 			float fX = GetAABBHalfSize().x;
 			float fY = GetAABBHalfSize().y;
@@ -599,7 +599,7 @@ bool CScriptAreaState::SScriptArea::Pick( const CVec3 &rPoint ) const
 		//
 		case NDb::EAT_RECTANGLE:
 		{
-			list<CVec2> pointList;
+			std::list<CVec2> pointList;
 			//
 			float fHalfA = fabs( GetAABBHalfSize().x );
 			float fHalfB = fabs( GetAABBHalfSize().y );

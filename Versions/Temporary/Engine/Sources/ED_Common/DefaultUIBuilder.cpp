@@ -6,7 +6,7 @@
 //REGISTER_BUILDER_IN_DLL( WindowScreenShared, CDefaultUIBuilder )
 
 
-const string CDefaultUIBuilder::DEFAULT_BUILD_DATA_TYPE_NAME = "DefaultUIBuilder";
+const std::string CDefaultUIBuilder::DEFAULT_BUILD_DATA_TYPE_NAME = "DefaultUIBuilder";
 
 
 

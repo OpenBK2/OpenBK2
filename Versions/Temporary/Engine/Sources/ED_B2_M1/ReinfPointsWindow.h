@@ -16,7 +16,7 @@ struct SReinfPointsWindowData
 	struct STypedTemplate
 	{
 		NDb::EReinforcementType reinfType;
-		string szTemplate;
+		std::string szTemplate;
 	};
 	//
 	int nPlayerIndex;
@@ -29,8 +29,8 @@ struct SReinfPointsWindowData
 		NDb::EReinforcementType eType;
 		bool bIsDefault;
 		int nNumPoints;
-		string szDeployTemplate;
-		vector<STypedTemplate> typedTemplates;
+		std::string szDeployTemplate;
+		std::vector<STypedTemplate> typedTemplates;
 		//
 		SReinfPoint() :
 			vPosition( VNULL2 ),
@@ -41,7 +41,7 @@ struct SReinfPointsWindowData
 		{
 		}
 	};
-	vector<SReinfPoint> reinfPoints;
+	std::vector<SReinfPoint> reinfPoints;
 	int nSelectedPoint;
 	bool bAviationPointSelected;
 	//

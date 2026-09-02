@@ -82,7 +82,7 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	// specific data memebers
 	CSquadEditorSettings editorSettings;
 	//
-	list<SSquadMemberInfo> membersInfo;
+	std::list<SSquadMemberInfo> membersInfo;
 	CVec3 vSquadCenterPos;
 	//
 	CPtr<SMarkerSet> pMarkers;
@@ -93,10 +93,10 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	//
 public:
 	//IEditor
-	void GetTemporaryLabel( string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
+	void GetTemporaryLabel( std::string *pszTemporaryLabel ) { pszTemporaryLabel->clear(); }
 	IView* GetView() { return this; }
 	IInputState* GetInputState() { return pSquadState; }
-	void GetChildFrameType( string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
+	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	void CreateControls();
 	void PostCreateControls() {}
 	void PreDestroyControls() {}

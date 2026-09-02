@@ -15,8 +15,8 @@ namespace NDrawToolsDC
 	void BackupDCSettings( CPaintDC *pDC );
 	void RestoreDCSettings( CPaintDC *pDC );
 
-	void DrawLabelDC( CPaintDC *pDC, const string &szLabel, const CVec2 &vScreenPos );
-	void DrawTextDC( CPaintDC *pDC, const string &szText, const CVec2 &vScreenPos );
+	void DrawLabelDC( CPaintDC *pDC, const std::string &szLabel, const CVec2 &vScreenPos );
+	void DrawTextDC( CPaintDC *pDC, const std::string &szText, const CVec2 &vScreenPos );
 
 	void DrawFrameBorders( CPaintDC *pDC, const CRect &rBorder1, const CRect &rBorder2, const CRect &rWindow );
 };

@@ -97,7 +97,7 @@ struct SUserData
 	//
 	struct SObjectTypeData
 	{
-		//typedef std::unordered_map<string, string> CBrowsePathMap;
+		//typedef std::unordered_map<std::string, std::string> CBrowsePathMap;
 		// CRAP{ HASH_SET
 		typedef std::unordered_map<std::string, uint32_t> CExpandedPropertySet;
 		typedef std::unordered_map<std::string, uint32_t> CExpandedObjectSet;
@@ -107,9 +107,9 @@ struct SUserData
 		//CBrowsePathMap browsePathMap;						// пути для диалогов OpenFile и т.д.
 		CExpandedPropertySet expandedPropertySet;	// открытые ветки в Property Control
 		CExpandedObjectSet expandedObjectSet;			// открытые ветки в дереве обьектов
-		//string szEditorSettingsFileName;					// имя файла с настройками редактора, если не задан генерируется по умолчанию
-		//string szExporterSettingsFileName;				// имя файла с настройками экспортера, если не задан генерируется по умолчанию
-		//string szBuilderSettingsFileName;					// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
+		//std::string szEditorSettingsFileName;					// имя файла с настройками редактора, если не задан генерируется по умолчанию
+		//std::string szExporterSettingsFileName;				// имя файла с настройками экспортера, если не задан генерируется по умолчанию
+		//std::string szBuilderSettingsFileName;					// имя файла с настройками компоновщика, если не задан генерируется по умолчанию
 
 		// serializing...
 		int operator&( IXmlSaver &xs )
@@ -211,7 +211,7 @@ struct SUserData
 	std::vector<int> tableHeaderWidthList;					// table header width values
 	std::vector<int> tableLinkHeaderWidthList;			// тоже самое но для диалога ObjectLink
 	// User Module (project-specific module)
-	//vector<string> userModuleFileNamesList;	// list of project specific modules to load at editor start
+	//std::vector<std::string> userModuleFileNamesList;	// list of project specific modules to load at editor start
 	std::string szUserModuleFileName;							// project specific module to load at editor start
 	//
 	CObjectTypeDataMap objectTypeDataMap;

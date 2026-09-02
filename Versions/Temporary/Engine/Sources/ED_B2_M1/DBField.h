@@ -28,7 +28,7 @@ namespace NDb
 			nWeight( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -48,7 +48,7 @@ namespace NDb
 			nWeight( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -69,7 +69,7 @@ namespace NDb
 			nMax( 0 )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -81,7 +81,7 @@ namespace NDb
 	private:
 		mutable uint32_t __dwCheckSum;
 	public:
-		vector< SFieldTileDesc > tiles;
+		std::vector< SFieldTileDesc > tiles;
 		float fWidth;
 
 		SFieldTileShell() :
@@ -89,7 +89,7 @@ namespace NDb
 			fWidth( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -101,7 +101,7 @@ namespace NDb
 	private:
 		mutable uint32_t __dwCheckSum;
 	public:
-		vector< SFieldObjectDesc > objects;
+		std::vector< SFieldObjectDesc > objects;
 		float fWidth;
 		int nBetweenDistance;
 		float fRatio;
@@ -113,7 +113,7 @@ namespace NDb
 			fRatio( 0.0f )
 		{ }
 		//
-		void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -125,9 +125,9 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SField )
 	public:
 		enum { typeID = 0x14130C40 };
-		vector< SFieldTileShell > tileShells;
+		std::vector< SFieldTileShell > tileShells;
 		CDBPtr< STGTerraSet > pTerraSet;
-		vector< SFieldObjectShell > objectShells;
+		std::vector< SFieldObjectShell > objectShells;
 		NFile::CFilePath szProfileFileName;
 		float fHeight;
 		SFieldPatternSize patternSize;

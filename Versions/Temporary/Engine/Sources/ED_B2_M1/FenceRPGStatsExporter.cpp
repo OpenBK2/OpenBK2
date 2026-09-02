@@ -20,8 +20,8 @@ REGISTER_EXPORTER_IN_DLL( FenceRPGStats, CFenceRPGStatsExporter )
 
 
 EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																										const string &rszObjectTypeName,
-																										const string &rszObjectName,
+																										const std::string &rszObjectTypeName,
+																										const std::string &rszObjectName,
 																										bool bForce,
 																										EXPORT_TYPE exportType )
 {
@@ -52,7 +52,7 @@ EXPORT_RESULT CFenceRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const string &rszSegmentsSetName, string *pszGeomFileName )
+bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const std::string &rszSegmentsSetName, std::string *pszGeomFileName )
 {
 	// Получаем манипулятор на VisObject-ы
 	int nNumVisobjs = 0;
@@ -64,7 +64,7 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 
 	// рассматриваем только первую модель (если их несколько)
 	// т.е. passability у них всех должна быть одинаковая
-	string szObjName = rszSegmentsSetName + ".VisObjes.[0]";
+	std::string szObjName = rszSegmentsSetName + ".VisObjes.[0]";
 
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	if ( !pResourceManager )
@@ -79,20 +79,20 @@ bool CFenceRPGStatsExporter::GetGeom0FileName( IManipulator *pManipulator, const
 	if ( pModelManipulator == 0 )
 		return false;
 
-	string szGeometryName;
+	std::string szGeometryName;
 	CManipulatorManager::GetParamsFromReference( "Geometry", pModelManipulator, 0, &szGeometryName, 0 );
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
+	const std::string szGeometriesFolder =	Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\Geometries\\";
 
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 	*pszGeomFileName = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid ); // uid
 	return true;
 }
 
-void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, const string &rszSegmentsSetName )
+void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, const std::string &rszSegmentsSetName )
 {
-	string szGrannyFileName;
+	std::string szGrannyFileName;
 	if ( GetGeom0FileName( pManipulator, rszSegmentsSetName, &szGrannyFileName ) )
 	{
 		NDb::SPassProfile passProfile;
@@ -102,7 +102,7 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 }
 
 bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator, 
-																					  const string &rszSegmentsSetName, 
+																					  const std::string &rszSegmentsSetName, 
 																						const CArray2D<uint8_t> &rPassabilityArray,
 																						const CVec3 &rvPassabilityOrigin )
 {

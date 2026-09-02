@@ -11,7 +11,7 @@ private:
 	mutable int nPreviousIndex;
 
 public:
-	typedef vector<float> CHeightList;
+	typedef std::vector<float> CHeightList;
 	//
 	CHeightList heightList;
 	CTPoint<float> range;

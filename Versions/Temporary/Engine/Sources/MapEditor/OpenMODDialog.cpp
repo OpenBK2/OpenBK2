@@ -42,12 +42,12 @@ BOOL COpenMODDialog::OnInitDialog()
 	}
 	nMODIndex = resizeDialogOptions.nParameters[0];
 	NMOD::GetAllMODs( &modList );
-	vector<string> nameList;
+	std::vector<std::string> nameList;
 	for ( int nIndex = 0; nIndex < modList.size(); ++nIndex )
 	{
 		CString strName;
 		Unicode2MBSC( &strName, modList[nIndex].wszName, ::GetACP() );
-		nameList.push_back( string( strName ) );
+		nameList.push_back( std::string( strName ) );
 	}
 	SetComboBoxEditParameters( nameList, nMODIndex, &wndNameComboBox, true, true );
 	UpdateControls();
@@ -79,7 +79,7 @@ void COpenMODDialog::UpdateControls()
 		CString strDescription;
 		Unicode2MBSC( &strDescription, mod.wszDesc, ::GetACP() );
 		//
-		string szDescription( strDescription );
+		std::string szDescription( strDescription );
 		szDescription.erase( remove( szDescription.begin(), szDescription.end(), 0x0D ), szDescription.end() );
 		for ( int nIndex = 0; nIndex < szDescription.size(); ++nIndex )
 		{
@@ -118,7 +118,7 @@ void COpenMODDialog::OnCbnSelchangeNameCombo()
 	if ( !bCreateControls )
 	{
 		UpdateData( true );
-		vector<string> nameList;
+		std::vector<std::string> nameList;
 		GetComboBoxEditParameters( &nameList, &nMODIndex, wndNameComboBox, false, true );
 		resizeDialogOptions.nParameters[0] = nMODIndex;
 		UpdateControls();

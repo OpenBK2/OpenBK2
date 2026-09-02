@@ -12,10 +12,10 @@
 
 const char CWindowSimpleSharedBuilder::BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME[] = "BackgroundSimpleTexture";
 const char CWindowSimpleSharedBuilder::TEXTURE_TYPE_NAME[] = "Texture";
-const string CWindowSimpleSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowSimpleSharedBuilder";
+const std::string CWindowSimpleSharedBuilder::BUILD_DATA_TYPE_NAME = "WindowSimpleSharedBuilder";
 
 
-bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView )
+bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView )
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pszDescription == 0" );
@@ -35,8 +35,8 @@ bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManip
 }
 
 
-bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName,
-																											 string *pszUniqueObjectName,
+bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTypeName,
+																											 std::string *pszUniqueObjectName,
 																											 bool bFromMainMenu,
 																											 bool *pbCanChangeObjectName,
 																											 bool *pbNeedExport,
@@ -50,7 +50,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	string szDescription;
+	std::string szDescription;
 	if ( !IsValidBuildData( pBuildDataManipulator, &szDescription, 0 ) )
 	{
 		return false;
@@ -66,22 +66,22 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 
 	// Считываем данные
 	pBuildDataManipulator->GetValue( "Texture", &value );
-	const string szTextureFileName = value.GetStr();
+	const std::string szTextureFileName = value.GetStr();
 	pBuildDataManipulator->GetValue( "Color", &value );
 	const int nColor = (int)value;
 
 	CTPoint<int> imageSize(0,0);
 	bool bResult = true;
 
-	const string szBuilderGenPrefix = *pszUniqueObjectName;
+	const std::string szBuilderGenPrefix = *pszUniqueObjectName;
 
-	const string szTexObjectName = szBuilderGenPrefix;
-	const string szBSTObjectName = szBuilderGenPrefix;
-	const string szWSSObjectName = *pszUniqueObjectName;
+	const std::string szTexObjectName = szBuilderGenPrefix;
+	const std::string szBSTObjectName = szBuilderGenPrefix;
+	const std::string szWSSObjectName = *pszUniqueObjectName;
 	
 	if ( !szTextureFileName.empty() )
 	{
-		const string szTextureFilePath = pUserData->constUserData.szExportSourceFolder + szTextureFileName;
+		const std::string szTextureFilePath = pUserData->constUserData.szExportSourceFolder + szTextureFileName;
 		GetTGAImageSize( szTextureFilePath, &imageSize );
 
 		// create Texture object
@@ -93,10 +93,10 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 
 		// Проставляем основные параметры Texture
 		bResult = bResult && pTexManipulator->SetValue( "SrcName", szTextureFileName );
-		bResult = bResult && pTexManipulator->SetValue( "Type", string("TEXTURE_2D") );
-		bResult = bResult && pTexManipulator->SetValue( "ConversionType", string("CONVERT_ORDINARY") );
-		bResult = bResult && pTexManipulator->SetValue( "AddrType", string("CLAMP") );
-		bResult = bResult && pTexManipulator->SetValue( "Format", string("TF_8888") );
+		bResult = bResult && pTexManipulator->SetValue( "Type", std::string("TEXTURE_2D") );
+		bResult = bResult && pTexManipulator->SetValue( "ConversionType", std::string("CONVERT_ORDINARY") );
+		bResult = bResult && pTexManipulator->SetValue( "AddrType", std::string("CLAMP") );
+		bResult = bResult && pTexManipulator->SetValue( "Format", std::string("TF_8888") );
 		bResult = bResult && pTexManipulator->SetValue( "NMips", 1 );
 	}
 	else
@@ -117,8 +117,8 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 		bResult = bResult && pBSTManipulator->SetValue( "Texture", szTexObjectName );
 	}
 	bResult = bResult && pBSTManipulator->SetValue( "Color", nColor );
-	bResult = bResult && pBSTManipulator->SetValue( "TextureX", string("EPA_LOW_END") );
-	bResult = bResult && pBSTManipulator->SetValue( "TextureY", string("EPA_LOW_END") );
+	bResult = bResult && pBSTManipulator->SetValue( "TextureX", std::string("EPA_LOW_END") );
+	bResult = bResult && pBSTManipulator->SetValue( "TextureY", std::string("EPA_LOW_END") );
 
 	// create WindowSimpleShared object
 	if ( !pFolderCallback->InsertObject( *pszObjectTypeName, szWSSObjectName ) )
@@ -128,12 +128,12 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( string *pszObjectTypeName
 	NI_ASSERT( pWSSManipulator != 0, "CWindowSimpleSharedBuilder::InternalInsertObject() pWSSManipulator == 0" );
 
 	// Проставляем основные параметры
-	string szBSTObjectRefName;
+	std::string szBSTObjectRefName;
 	CStringManager::GetRefValueFromTypeAndName( &szBSTObjectRefName, BACKGROUND_SIMPLE_TEXTURE_TYPE_NAME, szBSTObjectName, TYPE_SEPARATOR_CHAR );
 	bResult = bResult && pWSSManipulator->SetValue( "Background", szBSTObjectRefName );
-	bResult = bResult && pWSSManipulator->SetValue( "Placement.VerAllign.First", string("EPA_LOW_END") );
+	bResult = bResult && pWSSManipulator->SetValue( "Placement.VerAllign.First", std::string("EPA_LOW_END") );
 	bResult = bResult && pWSSManipulator->SetValue( "Placement.VerAllign.Second", true );
-	bResult = bResult && pWSSManipulator->SetValue( "Placement.HorAllign.First", string("EPA_LOW_END") );
+	bResult = bResult && pWSSManipulator->SetValue( "Placement.HorAllign.First", std::string("EPA_LOW_END") );
 	bResult = bResult && pWSSManipulator->SetValue( "Placement.HorAllign.Second", true );
 	bResult = bResult && pWSSManipulator->SetValue( "Placement.Size.First.x", imageSize.x );
 	bResult = bResult && pWSSManipulator->SetValue( "Placement.Size.First.y", imageSize.y );

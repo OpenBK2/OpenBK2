@@ -14,7 +14,7 @@ struct SMovieKeyData
 {
 	float fTime;
 	bool bActive;
-	string szCameraName;
+	std::string szCameraName;
 
 	SMovieKeyData() { Clear(); }
 	//
@@ -46,7 +46,7 @@ public:
 	float fMoveFromValue, fMoveToValue;
 
 	// keys are not sorted by time!!!
-	vector<SMovieKeyData> keys;
+	std::vector<SMovieKeyData> keys;
 
 	STimeSliderData() { Clear(); }
 	//
@@ -69,7 +69,7 @@ public:
 	//
 	bool HasActiveKeys() const
 	{
-		for ( vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			if ( itKey->bActive )
 			{
@@ -82,7 +82,7 @@ public:
 	bool HasSingleActiveKey() const
 	{
 		int nCount = 0;
-		for ( vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			if ( itKey->bActive )
 				++nCount;
@@ -110,7 +110,7 @@ public:
 	//
 	void UpdateSelection()
 	{
-		for ( vector<SMovieKeyData>::iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			itKey->bActive = IsPointInsideSelection( itKey->fTime );
 		}
@@ -138,7 +138,7 @@ public:
 		NI_VERIFY( keys.size() > 0, "", return 0.0f )
 
 		float fTime = FP_MAX_VALUE;
-		for ( vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			fTime = min( fTime, itKey->fTime );
 		}
@@ -150,7 +150,7 @@ public:
 		NI_VERIFY( keys.size() > 0, "", return 0.0f )
 
 		float fTime = 0.0f;
-		for ( vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
+		for ( std::vector<SMovieKeyData>::const_iterator itKey = keys.begin(); itKey != keys.end(); ++itKey )
 		{
 			fTime = max( fTime, itKey->fTime );
 		}

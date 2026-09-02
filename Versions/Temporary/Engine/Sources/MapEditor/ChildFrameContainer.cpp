@@ -9,7 +9,7 @@ CChildFrameContainer::~CChildFrameContainer()
 }
 
 
-bool CChildFrameContainer::CanCreate( const string &rszChildFrameTypeName )
+bool CChildFrameContainer::CanCreate( const std::string &rszChildFrameTypeName )
 {
 	if ( !rszChildFrameTypeName.empty() )
 	{
@@ -19,7 +19,7 @@ bool CChildFrameContainer::CanCreate( const string &rszChildFrameTypeName )
 }
 
 
-bool CChildFrameContainer::IsActive( const string &rszChildFrameTypeName )
+bool CChildFrameContainer::IsActive( const std::string &rszChildFrameTypeName )
 {
 	if ( !rszChildFrameTypeName.empty() )
 	{
@@ -29,7 +29,7 @@ bool CChildFrameContainer::IsActive( const string &rszChildFrameTypeName )
 }
 
 
-bool CChildFrameContainer::Create( const string &rszChildFrameTypeName )
+bool CChildFrameContainer::Create( const std::string &rszChildFrameTypeName )
 {
 	Destroy();
 	if ( !rszChildFrameTypeName.empty() )

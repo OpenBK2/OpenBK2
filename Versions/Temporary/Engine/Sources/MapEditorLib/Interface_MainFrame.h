@@ -24,10 +24,10 @@ struct SSWTParams
 {
 	uint32_t dwFlags;
 	//
-	string szMOD;
-	string szType;
-	string szObject;
-	string szParams;
+	std::string szMOD;
+	std::string szType;
+	std::string szObject;
+	std::string szParams;
 	bool bModified;
 	bool bFillMODFromBase;
 	//
@@ -37,7 +37,7 @@ struct SSWTParams
 
 struct ILogger
 {
-	virtual void Log( ELogOutputType eLogOutputType, const string &szText ) = 0;
+	virtual void Log( ELogOutputType eLogOutputType, const std::string &szText ) = 0;
 	virtual void ClearLog() = 0;
 };
 
@@ -60,7 +60,7 @@ struct IMainFrame : public ILogger
 																								 const int nWidth ) = 0;
 	virtual bool SetControlBarWindowContents( class SECControlBar* pwndDockingWindow, class CWnd *pwndContents ) = 0;
 	// Работа с Menu Bar ( 1 - 20 )
-	virtual bool AddMenuResources( vector<unsigned> &rMenuIDList ) = 0;
+	virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList ) = 0;
 	virtual void ShowMenu( const unsigned nResourceID ) = 0;
 	// Работа с Tool Bar
 	virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID ) = 0;
@@ -75,19 +75,19 @@ struct IMainFrame : public ILogger
 															const bool bMainToolBar ) = 0;
 	virtual class SECCustomToolBar* GetToolBar( unsigned nID ) = 0;
 	// Работа с Элементами оформления
-	virtual void SetStatusBarText( int nPaneIndex, const string &szText ) = 0;
+	virtual void SetStatusBarText( int nPaneIndex, const std::string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;
 	// Работа с DB
 	virtual void SaveObjectStorage( int nGDBBrowserID ) = 0;
 	virtual void RestoreObjectStorage() = 0;
-	virtual bool BrowseLink( string *pszResult, const string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit ) = 0;
-	virtual bool BrowseForObject( CDBID *pObjectDBID, string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty ) = 0;
+	virtual bool BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc* pPropertyDesc, bool bMultiRef, bool bEnableEdit ) = 0;
+	virtual bool BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectTypeName, bool bEnableEdit, bool bEnableEmpty ) = 0;
 	//
 	virtual void CreateProgressDialog() = 0;
 	virtual void DestroyProgressDialog() = 0;
 	//
-	virtual void SetProgressDialogTitle( const string &rszTitle ) = 0;
-	virtual void SetProgressDialogMessage( const string &rszMessage ) = 0;
+	virtual void SetProgressDialogTitle( const std::string &rszTitle ) = 0;
+	virtual void SetProgressDialogMessage( const std::string &rszMessage ) = 0;
 	virtual void SetProgressDialogRange( int nStart, int nFinish ) = 0;
 	virtual void SetProgressDialogPosition( int nPosition ) = 0;
 	virtual void IterateProgressDialogPosition() = 0;

@@ -112,10 +112,10 @@ void CWindowSimpleSharedEditor::PopState()
 
 bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
 {
-	const string szTypeName = _objectSet.szObjectTypeName;
+	const std::string szTypeName = _objectSet.szObjectTypeName;
 	if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szTypeName, _objectSet.objectNameSet.begin()->first ) )
 	{
-		string tempLabel;
+		std::string tempLabel;
 		GetTemporaryLabel( &tempLabel );
 
 		SetViewManipulator( pManipulator, _objectSet, tempLabel );
@@ -125,7 +125,7 @@ bool CWindowSimpleSharedEditor::SetupState( const SObjectSet & _objectSet )
 }
 
 
-bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const string &rObjectTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const std::string &rObjectTypeName, const CDBID &rDBID )
 {
 	CPtr<IManipulator> pTableManipulator = Singleton<IResourceManager>()->CreateTableManipulator();
 	NI_ASSERT( pTableManipulator != 0, "CWindowSimpleSharedEditor::BeginUndo: pTableManipulator == 0" );
@@ -162,7 +162,7 @@ bool CWindowSimpleSharedEditor::UOEnd()
 }
 
 
-bool CWindowSimpleSharedEditor::UOSetValue( const string & szName, const CVariant & newValue )
+bool CWindowSimpleSharedEditor::UOSetValue( const std::string & szName, const CVariant & newValue )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
 	{
@@ -176,7 +176,7 @@ bool CWindowSimpleSharedEditor::UOSetValue( const string & szName, const CVarian
 }
 
 
-bool CWindowSimpleSharedEditor::UOInsertNode( const string &szName, const string &szChildTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UOInsertNode( const std::string &szName, const std::string &szChildTypeName, const CDBID &rDBID )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult)
 	{
@@ -191,7 +191,7 @@ bool CWindowSimpleSharedEditor::UOInsertNode( const string &szName, const string
 }
 
 
-bool CWindowSimpleSharedEditor::UORemoveNode( const string &szName, int nIndex, const string &szChildTypeName, const CDBID &rDBID )
+bool CWindowSimpleSharedEditor::UORemoveNode( const std::string &szName, int nIndex, const std::string &szChildTypeName, const CDBID &rDBID )
 {
 	if ( (pUndoManipulator != 0) && (pUndoController != 0) && bUOResult )
 	{
@@ -206,14 +206,14 @@ bool CWindowSimpleSharedEditor::UORemoveNode( const string &szName, int nIndex, 
 }
 
 
-bool CWindowSimpleSharedEditor::InsertObject( IManipulator *pManipulator, const string & szName )
+bool CWindowSimpleSharedEditor::InsertObject( IManipulator *pManipulator, const std::string & szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->InsertNode( szName );
 }
 
 
-bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const string & szName )
+bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const std::string & szName )
 {
 	//TODO: implement undo-op
 	return pManipulator->RemoveNode( szName );
@@ -222,7 +222,7 @@ bool CWindowSimpleSharedEditor::RemoveObject( IManipulator *pManipulator, const 
 
 void CWindowSimpleSharedEditor::Undo( IController* pController )
 {
-	string tempLabel;
+	std::string tempLabel;
 	pController->GetTemporaryLabel( &tempLabel );
 
 	if ( tempLabel == CWindowSimpleSharedController::GetTemporaryLabel() )
@@ -232,10 +232,10 @@ void CWindowSimpleSharedEditor::Undo( IController* pController )
 			CObjectBaseController *pObjectController = pCustomController->GetInternalController();
 			pObjectController->Undo( true, true, 0 );
 
-			const string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
+			const std::string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
 			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin(); posUndoData != pObjectController->undoDataList.end(); ++posUndoData )
 			{
-				const string szName = posUndoData->szName;
+				const std::string szName = posUndoData->szName;
 				switch ( posUndoData->eType )
 				{
 					///////////////////////////////////////////
@@ -270,7 +270,7 @@ void CWindowSimpleSharedEditor::Undo( IController* pController )
 
 void CWindowSimpleSharedEditor::Redo( IController* pController )
 {
-	string tempLabel;
+	std::string tempLabel;
 	pController->GetTemporaryLabel( &tempLabel );
 
 	if ( tempLabel == CWindowSimpleSharedController::GetTemporaryLabel() )
@@ -280,11 +280,11 @@ void CWindowSimpleSharedEditor::Redo( IController* pController )
 			CObjectBaseController *pObjectController = pCustomController->GetInternalController();
 			pObjectController->Redo( false, true, 0 );
 
-			const string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
+			const std::string & szTypeName = pObjectController->GetObjectSet().szObjectTypeName;
 
 			for ( CObjectController::CUndoDataList::const_iterator posUndoData = pObjectController->undoDataList.begin(); posUndoData != pObjectController->undoDataList.end(); ++posUndoData )
 			{
-				const string szName = posUndoData->szName;
+				const std::string szName = posUndoData->szName;
 				switch ( posUndoData->eType )
 				{
 					///////////////////////////////////////////
@@ -314,7 +314,7 @@ void CWindowSimpleSharedEditor::Redo( IController* pController )
 }
 
 
-void CWindowSimpleSharedEditor::PushRunModeState( const string &rszEditorTypeName, const CDBID &rDBID )
+void CWindowSimpleSharedEditor::PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID )
 {
 	PushState( GetObjectSet(), new CUIRunModeState( this, rszEditorTypeName, rDBID ), true );
 }

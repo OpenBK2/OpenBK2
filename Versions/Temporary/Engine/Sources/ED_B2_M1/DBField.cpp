@@ -13,7 +13,7 @@ namespace NDb
 
 
 
-void SFieldTileDesc::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SFieldTileDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Value", (uint8_t*)&nValue - pThis, sizeof(nValue), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (uint8_t*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
@@ -52,7 +52,7 @@ uint32_t SFieldTileDesc::CalcCheckSum() const
 
 
 
-void SFieldObjectDesc::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SFieldObjectDesc::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Value", (uint8_t*)&pValue - pThis, sizeof(pValue), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Weight", (uint8_t*)&nWeight - pThis, sizeof(nWeight), NTypeDef::TYPE_TYPE_INT );
@@ -91,7 +91,7 @@ uint32_t SFieldObjectDesc::CalcCheckSum() const
 
 
 
-void SFieldPatternSize::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SFieldPatternSize::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Min", (uint8_t*)&nMin - pThis, sizeof(nMin), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Max", (uint8_t*)&nMax - pThis, sizeof(nMax), NTypeDef::TYPE_TYPE_INT );
@@ -130,7 +130,7 @@ uint32_t SFieldPatternSize::CalcCheckSum() const
 
 
 
-void SFieldTileShell::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SFieldTileShell::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Tiles", &tiles, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
@@ -169,7 +169,7 @@ uint32_t SFieldTileShell::CalcCheckSum() const
 
 
 
-void SFieldObjectShell::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const
+void SFieldObjectShell::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "Objects", &objects, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );

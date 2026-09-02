@@ -8,7 +8,7 @@
 #include "System/FileUtils.h"
 #include "3Dmotor/GPixelFormat.h"
 
-static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SModelSurfacePoint> &rPoints )
+static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector<SModelSurfacePoint> &rPoints )
 {
 	if ( !pManipulator )
 		return false;
@@ -21,8 +21,8 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const vector<SMod
 		if ( !pManipulator->InsertNode( "SurfacePoints" ) )
 			return false;
 		//
-		string szDBAPos = StrFmt( "SurfacePoints.[%d].Pos", i );
-		string szDBAOrient = StrFmt( "SurfacePoints.[%d].Orient", i );
+		std::string szDBAPos = StrFmt( "SurfacePoints.[%d].Pos", i );
+		std::string szDBAOrient = StrFmt( "SurfacePoints.[%d].Orient", i );
 		//
 		CVec3 pos = rPoints[i].vPos;
 		CVec3 n = rPoints[i].vNormal;
@@ -63,9 +63,9 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 		CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
 		if ( pModelMan != 0 ) 
 		{
-			string szGeometryName;
+			std::string szGeometryName;
 			CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, &szGeometryName, 0 );
-			vector<SModelSurfacePoint> surfacePoints;
+			std::vector<SModelSurfacePoint> surfacePoints;
 			bool bRes = TraceModel( &surfacePoints, szGeometryName );
 			if ( bRes )
 			{
@@ -79,7 +79,7 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 
 struct STempLightInfo
 {
-	string szLocatorName;
+	std::string szLocatorName;
 	CVec3 vEffectPos;
 	CVec4 vEffectRot;
 	CVec3 vFlarePos;
@@ -101,8 +101,8 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 	CVec3 vEffectPos;
 	CQuat qEffectRot;
 
-	list<STempLightInfo> lights;
-	list<int> toDelete;
+	std::list<STempLightInfo> lights;
+	std::list<int> toDelete;
 
 	int nEffectIndex = 0;
 	//
@@ -204,14 +204,14 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 		if ( nExistingLights <= 0 )
 		{
 			nEffectIndex = 0;
-			for ( list<STempLightInfo>::iterator it = lights.begin(); it != lights.end(); ++it )
+			for ( std::list<STempLightInfo>::iterator it = lights.begin(); it != lights.end(); ++it )
 			{
 				if ( !pMan->InsertNode( "LightEffects" ) ) 
 					continue;
 
 				const STempLightInfo &tmpLight = *it;
 
-				const string szNodePrefix = StrFmt( "LightEffects.[%d].", nEffectIndex );
+				const std::string szNodePrefix = StrFmt( "LightEffects.[%d].", nEffectIndex );
 
 				pMan->SetValue( szNodePrefix + "LocatorName", tmpLight.szLocatorName );
 				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" ); 
@@ -242,14 +242,14 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			// 3.1 Update existing records, mark for deletion other items
 			for ( int i = 0; i < nExistingLights; ++i )
 			{
-				const string szNodePrefix = StrFmt( "LightEffects.[%d].", i );
+				const std::string szNodePrefix = StrFmt( "LightEffects.[%d].", i );
 
-				string szLocatorName;
+				std::string szLocatorName;
 				CManipulatorManager::GetValue( &szLocatorName, pMan, szNodePrefix + "LocatorName" );
 
 				// Search the model for this locator
 				bool bFound = false;
-				list<STempLightInfo>::iterator itLight;
+				std::list<STempLightInfo>::iterator itLight;
 				for ( itLight = lights.begin(); itLight != lights.end(); ++itLight )
 				{
 					if ( (*itLight).szLocatorName == szLocatorName )
@@ -294,7 +294,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			}
 
 			// 3.2 delete marked items
-			for ( list<int>::iterator it = toDelete.begin(); it != toDelete.end(); ++it )
+			for ( std::list<int>::iterator it = toDelete.begin(); it != toDelete.end(); ++it )
 			{ // the list has the numbers back to front, so nodes are erased correctly
 				pMan->RemoveNode( "LightEffects", *it );
 			}
@@ -303,21 +303,21 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 }
 
 void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan, 
-																									 const string &szObjectTypeName, 
-																									 const string &szObjectName )
+																									 const std::string &szObjectTypeName, 
+																									 const std::string &szObjectName )
 {
-	const string szIconTexturePrefix = "All\\UI\\Mission\\Icons\\";
+	const std::string szIconTexturePrefix = "All\\UI\\Mission\\Icons\\";
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	CPtr<IManipulator> pTextureFolderMan = pResourceManager->CreateFolderManipulator( "Texture" );
 	if ( !pTextureFolderMan )
 		return;
 	//
-	string szIconTextureName;
+	std::string szIconTextureName;
 	CManipulatorManager::GetValue( &szIconTextureName, pMan, "IconTexture" );
 	if ( szIconTextureName.empty() )
 	{
-		string szTextureFolder;
+		std::string szTextureFolder;
 		// получим каталог с тектурами
 		CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
 		if ( pVisObjMan == 0 )
@@ -332,7 +332,7 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 		if ( szTextureFolder.empty() )
 			return;
 		szTextureFolder = szTextureFolder.substr( 0, szTextureFolder.rfind( '\\' ) + 1 );
-		const string szIconTextureFileName = szTextureFolder + "icon.tga";
+		const std::string szIconTextureFileName = szTextureFolder + "icon.tga";
 		if ( NFile::DoesFileExist( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szIconTextureFileName ) )
 		{
 			szIconTextureName = szIconTexturePrefix + StrFmt( "%s\\%s", szObjectTypeName.c_str(), szObjectName.c_str() );
@@ -341,10 +341,10 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 			if ( pIconTextureMan )
 			{
 				CManipulatorManager::SetValue( szIconTextureFileName, pIconTextureMan, "SrcName" );
-				CManipulatorManager::SetValue( string( "TEXTURE_2D" ), pIconTextureMan, "Type" );
-				CManipulatorManager::SetValue( string( "CONVERT_ORDINARY" ), pIconTextureMan, "ConversionType" );
-				CManipulatorManager::SetValue( string( "CLAMP" ), pIconTextureMan, "AddrType" );
-				CManipulatorManager::SetValue( string( "TF_8888" ), pIconTextureMan, "Format" );
+				CManipulatorManager::SetValue( std::string( "TEXTURE_2D" ), pIconTextureMan, "Type" );
+				CManipulatorManager::SetValue( std::string( "CONVERT_ORDINARY" ), pIconTextureMan, "ConversionType" );
+				CManipulatorManager::SetValue( std::string( "CLAMP" ), pIconTextureMan, "AddrType" );
+				CManipulatorManager::SetValue( std::string( "TF_8888" ), pIconTextureMan, "Format" );
 				CManipulatorManager::SetValue( 1, pIconTextureMan, "NMips" );
 			}
 			//
@@ -364,8 +364,8 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 }
 
 EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulator,
-																											const string &rszObjectTypeName,
-																											const string &rszObjectName,
+																											const std::string &rszObjectTypeName,
+																											const std::string &rszObjectName,
 																											bool bForce,
 																											EXPORT_TYPE exportType )
 {

@@ -334,7 +334,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 			{
 				if ( sceneIDlist.empty() )
 				{
-					string szSeason;
+					std::string szSeason;
 					CManipulatorManager::GetValue( &szSeason, pManipulator, "Season" );
 					const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
 					//
@@ -376,7 +376,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 				const int nAdditionalSpanCount = bridgeElementCenterPointList.size() - sceneIDlist.size();
 				if ( nAdditionalSpanCount > 0 )
 				{
-					string szSeason;
+					std::string szSeason;
 					CManipulatorManager::GetValue( &szSeason, pManipulator, "Season" );
 					const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
 					//

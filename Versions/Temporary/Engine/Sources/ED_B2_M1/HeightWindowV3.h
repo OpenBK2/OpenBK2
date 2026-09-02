@@ -33,7 +33,7 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	bool bCreateControls;
 	int nStyle;
 	int nLastIndex;
-	vector<string> tileList;
+	std::vector<std::string> tileList;
 
 	bool GetEditParameters( CHeightStateV3::SEditParameters *pEditParameters );
 	bool SetEditParameters( const CHeightStateV3::SEditParameters &rEditParameters );

@@ -219,10 +219,10 @@ CharacterRange CLuaEditor::GetSelection()
 	return crange;
 }
 
-string CLuaEditor::GetText()
+std::string CLuaEditor::GetText()
 {
 	int nLength = Sci( SCI_GETTEXTLENGTH ) + 1;
-	vector<char> buf( nLength );
+	std::vector<char> buf( nLength );
 	Sci( SCI_GETTEXT, nLength, (int)&buf[0] );
 	return &buf[0];
 }
@@ -312,12 +312,12 @@ void CLuaEditor::AddFunctionNames( const char *pList, int nFuncSet )
 	Sci( SCI_SETKEYWORDS, nFuncSet, (LPARAM)pList );
 }
 
-void CLuaEditor::SetAutoComplete( const vector<string> &vszKeywords,
-																 const string &szKeywords )
+void CLuaEditor::SetAutoComplete( const std::vector<std::string> &vszKeywords,
+																 const std::string &szKeywords )
 {
 	vszScriptKeywords = vszKeywords;
-	/*string sz;
-	for ( vector<string>::const_iterator i = vszKeywords.begin(); i != vszKeywords.end(); ++i )
+	/*std::string sz;
+	for ( std::vector<std::string>::const_iterator i = vszKeywords.begin(); i != vszKeywords.end(); ++i )
 		sz += *i + " ";/*D. Belyaev*/
 	//
 	szAutoComplete = szKeywords;
@@ -394,7 +394,7 @@ void CLuaEditor::SetLuaLexer()
 	Sci(SCI_STYLESETFORE,10, 0x000000);
 	//Sci(SCI_STYLESETBOLD,10, 1);
 	// style 11: identifiers (leave to default)
-	// style 12: end of line where string is not closed (black on violet, eol-filled)
+	// style 12: end of line where std::string is not closed (black on violet, eol-filled)
 	Sci(SCI_STYLESETFORE,12, 0x000000);
 	Sci(SCI_STYLESETBACK,12, 0xE0C0E0);
 	Sci(SCI_STYLESETEOLFILLED,12, 1);
@@ -460,11 +460,11 @@ void CLuaEditor::AutoComplete()
 		tr.lpstrText = linebuf;
 		Sci(SCI_GETTEXTRANGE, 0, long(&tr));
 		//
-		const string szLineBuf( linebuf );
+		const std::string szLineBuf( linebuf );
 		//
 		for ( int i = 0; i < vszScriptKeywords.size(); ++i )
 		{
-			const string &keyword = vszScriptKeywords[i];
+			const std::string &keyword = vszScriptKeywords[i];
 			if ( keyword.compare( 0, szLineBuf.size(), szLineBuf ) == 0 )
 			{
 				Sci( SCI_AUTOCSHOW, nCnt, (LPARAM)szAutoComplete.c_str() );
@@ -530,13 +530,13 @@ void CLuaEditor::OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
-void CFindNext::FindNext( const string &szText, bool bWholeWord, bool bMatchCase )
+void CFindNext::FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
 		pEditor->FindNext( szText, bWholeWord, bMatchCase );
 }
 
-void CFindNext::Replace( const string &szText, const string &szReplaceWith, bool bWholeWord, bool bMatchCase )
+void CFindNext::Replace( const std::string &szText, const std::string &szReplaceWith, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
 	{
@@ -545,7 +545,7 @@ void CFindNext::Replace( const string &szText, const string &szReplaceWith, bool
 	}
 }
 
-void CFindNext::ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase )
+void CFindNext::ReplaceAll( const std::string &szText, const std::string &szWith, bool bWholeWord, bool bMatchCase )
 {
 	if ( pEditor )
 		pEditor->ReplaceAll( szText, szWith, bWholeWord, bMatchCase );
@@ -562,7 +562,7 @@ void CLuaEditor::Find()
 	findDlg.ShowWindow( SW_SHOW );
 }
 
-void CLuaEditor::FindNext( const string &szText, bool bWholeWord, bool bMatchCase )
+void CLuaEditor::FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase )
 {
 	CString sz = szText.c_str();
 	szLastTextToFind = szText;
@@ -601,7 +601,7 @@ void CLuaEditor::Replace()
 	replaceDlg.ShowWindow( SW_SHOW );
 }
 
-bool CLuaEditor::Replace( const string &szReplaceWith )
+bool CLuaEditor::Replace( const std::string &szReplaceWith )
 {
 	CharacterRange cr = GetSelection();
 
@@ -611,7 +611,7 @@ bool CLuaEditor::Replace( const string &szReplaceWith )
 	return true;
 }
 
-void CLuaEditor::ReplaceAll( const string &szText, const string &szWith, bool bWholeWord, bool bMatchCase )
+void CLuaEditor::ReplaceAll( const std::string &szText, const std::string &szWith, bool bWholeWord, bool bMatchCase )
 {
 	CString sz = szText.c_str();
 	szLastTextToFind = szText;

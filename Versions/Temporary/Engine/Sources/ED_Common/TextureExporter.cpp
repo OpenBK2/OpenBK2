@@ -33,8 +33,8 @@ REGISTER_EXPORTER_IN_DLL( Texture, CTextureExporter )
 
 
 EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
-																							const string &rszObjectTypeName,
-																							const string &rszObjectName,
+																							const std::string &rszObjectTypeName,
+																							const std::string &rszObjectName,
 																							bool bForce,
 																							EXPORT_TYPE exportType )
 {
@@ -48,9 +48,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	ILogger *pLogger = NLog::GetLogger();
 	//
 	//
-	string szSourceValue;
+	std::string szSourceValue;
 	CManipulatorManager::GetValue( &szSourceValue, pManipulator, "SrcName" );
-	const string szSource = pUserData->constUserData.szExportSourceFolder + szSourceValue;
+	const std::string szSource = pUserData->constUserData.szExportSourceFolder + szSourceValue;
 	//
 	if ( szSourceValue.empty() || NFile::DoesFileExist(szSource) == false )
 	{
@@ -59,12 +59,12 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 		return ER_FAIL;
 	}
 	//
-	string szRealDestination = NFile::CutFileExt( rszObjectName, "xdb" ) + ".dds";
+	std::string szRealDestination = NFile::CutFileExt( rszObjectName, "xdb" ) + ".dds";
 	NFile::NormalizePath( &szRealDestination );
 	CManipulatorManager::SetValue( szRealDestination, pManipulator, "DestName" );
 	szRealDestination = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szRealDestination;
 	NFile::NormalizePath( &szRealDestination );
-	string szDestination = NFile::GetTempFileName() + ".dds";
+	std::string szDestination = NFile::GetTempFileName() + ".dds";
 	NFile::NormalizePath( &szDestination );
 	// check for source and destination times if not forced mode
 	if ( CheckFilesUpdated(szSource, szRealDestination, bForce) )
@@ -76,10 +76,10 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	if ( !bStandardExport ) 
 		return ER_SUCCESS;
 	//
-	string szType;
-	string szAddrType;
-	string szFormat;
-	string szUsageType;
+	std::string szType;
+	std::string szAddrType;
+	std::string szFormat;
+	std::string szUsageType;
 	int nMips = 0;
 	float fGain = 0.0f;
 	float fMSize = 0.0f;
@@ -209,7 +209,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 					// non-2d texture must be power of 2
 					if ( image.GetSizeX() != GetNextPow2(image.GetSizeX()) ||image.GetSizeY() != GetNextPow2(image.GetSizeY()) )
 					{
-						const string szError = StrFmt( "Source image \"%s\" must be power two size (%d : %d)\n", 
+						const std::string szError = StrFmt( "Source image \"%s\" must be power two size (%d : %d)\n", 
 							                             szSource.c_str(), image.GetSizeX(), image.GetSizeY() );
 						NLog::Log( LT_ERROR, "Source image size must be power of 2\n" );
 						NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
@@ -285,8 +285,8 @@ int GetDDSBPP( const SDDSHeader &hdr )
 
 
 EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
-																						 const string &rszObjectTypeName, 
-																						 const string &rszObjectName,
+																						 const std::string &rszObjectTypeName, 
+																						 const std::string &rszObjectName,
 																						 bool bExport,
 																						 EXPORT_TYPE exportType )
 {
@@ -302,39 +302,39 @@ EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
 	ILogger *pLogger = NLog::GetLogger();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	
-	string szSorceValue;
+	std::string szSorceValue;
 	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
 	bool bStandardExport = true;
 	CManipulatorManager::GetValue( &bStandardExport, pManipulator, "StandardExport" );
-	const string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szSorceValue;
+	const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szSorceValue;
 	// check texture file name
 	if ( bStandardExport && !NFile::IsValidFileName( szSrcFileName.c_str() ) ) 
 	{
-		const string szError = StrFmt( "Texture \"%s\" has invalid source file name \"%s\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = StrFmt( "Texture \"%s\" has invalid source file name \"%s\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check source file (!)
 	if ( bStandardExport && !NFile::DoesFileExist( szSrcFileName ) ) 
 	{
-		const string szError = StrFmt( "Texture \"%s\" source file \"%s\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
+		const std::string szError = StrFmt( "Texture \"%s\" source file \"%s\" doesn't exist!\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check destination
-	string szDestValue;
+	std::string szDestValue;
 	CManipulatorManager::GetValue( &szDestValue, pManipulator, "DestName" );
-	const string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDestValue;
+	const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDestValue;
 	if ( CheckDestination( szDstFileName, rszObjectName ) == false )
 		return ER_FAIL;
 	//
 	return ER_SUCCESS;
 }
 
-bool CTextureExporter::CheckDestination( const string &szFileName, const string &szObjectName ) const
+bool CTextureExporter::CheckDestination( const std::string &szFileName, const std::string &szObjectName ) const
 {
 	// check destination
-	string szDestValue;
+	std::string szDestValue;
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 	if ( !stream.IsOk() ) 
 	{

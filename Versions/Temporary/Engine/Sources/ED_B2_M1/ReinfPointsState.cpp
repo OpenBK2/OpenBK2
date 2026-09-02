@@ -31,7 +31,7 @@ bool CReinfPointsState::CreateReinfPoint()
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= n )
 		return false;
 	//
-	const string szName = StrFmt( "Players.[%d].ReinforcementPoints", nSelectedPlayer );
+	const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints", nSelectedPlayer );
 	//
 	CPtr<CObjectBaseController> pObjectController = 0;
 	pObjectController = pMapInfoEditor->CreateController();
@@ -45,8 +45,8 @@ bool CReinfPointsState::CreateReinfPoint()
 		if ( !CManipulatorManager::GetValue( &nPointsCount, pMapInfoMan, szName ) )
 			return false;
 
-		const string szCurReinfPos = szName + StrFmt( ".[%d].Position", nPointsCount-1 );
-		const string szCurAviaReinfPos = szName + StrFmt( ".[%d].AviationPosition", nPointsCount-1 );
+		const std::string szCurReinfPos = szName + StrFmt( ".[%d].Position", nPointsCount-1 );
+		const std::string szCurAviaReinfPos = szName + StrFmt( ".[%d].AviationPosition", nPointsCount-1 );
 		//
 		CManipulatorManager::SetValue( vCamAnchor.x, pMapInfoMan, szCurReinfPos + ".x" );
 		CManipulatorManager::SetValue( vCamAnchor.y, pMapInfoMan, szCurReinfPos + ".y" );
@@ -75,7 +75,7 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
-		const string szName = StrFmt( "Players.[%d].ReinforcementPoints", nSelectedPlayer );
+		const std::string szName = StrFmt( "Players.[%d].ReinforcementPoints", nSelectedPlayer );
 		CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
 
 		if ( pObjectController->AddRemoveOperation( szName, nSelectedReinfPoint, pMapInfoMan ) )
@@ -95,25 +95,25 @@ bool CReinfPointsState::GetReinfPointsFromWindow()
 	//
 	reinfPoints.clear();
 	//
-	string szPlayers = StrFmt( "Players" );
+	std::string szPlayers = StrFmt( "Players" );
 	int nPlayersCount = 0;
 	CManipulatorManager::GetValue( &nPlayersCount, pManipulator, szPlayers );
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= nPlayersCount )
 		return false;
 
-	string szReinfPoints = szPlayers + StrFmt( ".[%d].ReinforcementPoints", nSelectedPlayer );
+	std::string szReinfPoints = szPlayers + StrFmt( ".[%d].ReinforcementPoints", nSelectedPlayer );
 	int nReinfPointsCount = 0;
 	CManipulatorManager::GetValue( &nReinfPointsCount, pManipulator, szReinfPoints );
 	for ( int iReinfPoint = 0; iReinfPoint < nReinfPointsCount; ++iReinfPoint ) // for each point
 	{
 		SReinfPoint rp;
-		string szDBA = szReinfPoints + StrFmt( ".[%d]", iReinfPoint );
+		std::string szDBA = szReinfPoints + StrFmt( ".[%d]", iReinfPoint );
 		CManipulatorManager::GetValue( &rp.vPosition, pManipulator, szDBA + ".Position" );
 		CManipulatorManager::GetValue( &rp.vAviationPosition, pManipulator, szDBA + ".AviationPosition" );
 		CManipulatorManager::GetValue( &rp.nDirection, pManipulator, szDBA + ".Direction" );
 		CManipulatorManager::GetValue( &rp.szDeployTemplate, pManipulator, szDBA + ".Template" );
 
-		string szTypedTemplates = szDBA + ".TypedTemplates";
+		std::string szTypedTemplates = szDBA + ".TypedTemplates";
 		int nTypedTemplates = 0;
 		CManipulatorManager::GetValue( &nTypedTemplates, pManipulator, szTypedTemplates );
 		rp.typedTemplates.clear();
@@ -134,7 +134,7 @@ bool CReinfPointsState::GetReinfPointsFromWindow()
 }
 
 
-bool CReinfPointsState::SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint )
+bool CReinfPointsState::SaveCurrentReinfPoint( const std::vector<SReinfPoint> &rReinfPoints, int nPlayerIndex, int nSelectedReinfPoint )
 {
 	CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator();
 
@@ -144,17 +144,17 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinf
 	if ( nPlayerIndex < 0 || nPlayerIndex >= n )
 		return false;
 	//
-	const string szReinfPts = StrFmt( "Players.[%d].ReinforcementPoints", nPlayerIndex );
+	const std::string szReinfPts = StrFmt( "Players.[%d].ReinforcementPoints", nPlayerIndex );
 	int m = 0;
 	if ( !CManipulatorManager::GetValue( &m, pManipulator, szReinfPts ) )
 		return false;
 	if ( nSelectedReinfPoint < 0 || nSelectedReinfPoint >= m )
 		return false;
 	//
-	const string szCurReinfPt = szReinfPts + StrFmt( ".[%d]", nSelectedReinfPoint );
-	const string szCurReinfPos = szCurReinfPt + ".Position";
-	const string szCurAviaReinfPos = szCurReinfPt + ".AviationPosition";
-	const string szCurReinfDir = szCurReinfPt + ".Direction";
+	const std::string szCurReinfPt = szReinfPts + StrFmt( ".[%d]", nSelectedReinfPoint );
+	const std::string szCurReinfPos = szCurReinfPt + ".Position";
+	const std::string szCurAviaReinfPos = szCurReinfPt + ".AviationPosition";
+	const std::string szCurReinfDir = szCurReinfPt + ".Direction";
 	//
 	CPtr<CObjectBaseController> pObjectController = 0;
 	pObjectController = pMapInfoEditor->CreateController();
@@ -218,7 +218,7 @@ bool CReinfPointsState::SaveCurrentReinfPoint( const vector<SReinfPoint> &rReinf
 			pObjectController->Redo( false, true, pMapInfoEditor );
 			Singleton<IControllerContainer>()->Add( pObjectController );
 		}
-		const string szCurTypedTempl = szCurReinfPt + StrFmt( ".TypedTemplates.[%d]", i );
+		const std::string szCurTypedTempl = szCurReinfPt + StrFmt( ".TypedTemplates.[%d]", i );
 		CManipulatorManager::SetValue( rReinfPoints[nSelectedReinfPoint].typedTemplates[i].szTemplateType, pManipulator, szCurTypedTempl + ".Type" );
 		CManipulatorManager::SetValue( rReinfPoints[nSelectedReinfPoint].typedTemplates[i].szTemplate, pManipulator, szCurTypedTempl + ".Template", true );
 	}
@@ -434,7 +434,7 @@ void CReinfPointsState::Draw( CPaintDC *pPaintDC )
 	CVec3 vPos, vAviaPos;
 
 	int i = 0;
-	for ( vector<SReinfPoint>::const_iterator itPoint = reinfPoints.begin(); itPoint != reinfPoints.end(); ++itPoint, ++i )
+	for ( std::vector<SReinfPoint>::const_iterator itPoint = reinfPoints.begin(); itPoint != reinfPoints.end(); ++itPoint, ++i )
 	{
 		const SReinfPoint &point = *itPoint;
 		vPos = CVec3( point.vPosition, 0 );
@@ -537,7 +537,7 @@ void CReinfPointsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 	bRotate = false;
 	int i = 0;
 	float fDist = 0;
-	for ( vector<SReinfPoint>::const_iterator it = reinfPoints.begin(); it != reinfPoints.end(); ++it, ++i )
+	for ( std::vector<SReinfPoint>::const_iterator it = reinfPoints.begin(); it != reinfPoints.end(); ++it, ++i )
 	{
 		// ground
 		fDist = fabs( vPickedPosOnTerrain - CVec3(it->vPosition, 0) );
@@ -684,8 +684,8 @@ bool CReinfPointsState::EditPointDeployTemplate()
 		return false;
 	}
 
-	string szLink;
-	const string szCurReinfDir = StrFmt( "Players.[%d].ReinforcementPoints.[%d].Template", nSelectedPlayer, nSelectedReinfPoint );
+	std::string szLink;
+	const std::string szCurReinfDir = StrFmt( "Players.[%d].ReinforcementPoints.[%d].Template", nSelectedPlayer, nSelectedReinfPoint );
 	//
 	if ( Singleton<IMainFrameContainer>()->Get()->BrowseLink(&szLink, "", dynamic_cast<const SPropertyDesc*>(pMapInfoEditor->GetViewManipulator()->GetDesc(szCurReinfDir)), false, true) )
 	{
@@ -708,7 +708,7 @@ bool CReinfPointsState::EditPointTypedTemplate()
 		return false;
 	}
 
-	vector<STypedTemplate> vNewTypedTemplate = reinfPoints[nSelectedReinfPoint].typedTemplates;
+	std::vector<STypedTemplate> vNewTypedTemplate = reinfPoints[nSelectedReinfPoint].typedTemplates;
 	CReinfPointsTypedDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &vNewTypedTemplate, pMapInfoEditor, nSelectedPlayer, nSelectedReinfPoint );
 	if ( dlg.DoModal() == IDOK )
 	{

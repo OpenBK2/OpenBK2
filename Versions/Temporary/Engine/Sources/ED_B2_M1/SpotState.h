@@ -26,7 +26,7 @@ class CSpotState : public CMapObjectState
 	//
 	bool CanAddSpot();
 	void ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstance, const CVec3 &rvPosition, float fDirection );
-	void CreateSpotPointsList( list<CVec3> *pPointList, const NDb::STerrainSpotInstance &rTerrainSpotInstance );
+	void CreateSpotPointsList( std::list<CVec3> *pPointList, const NDb::STerrainSpotInstance &rTerrainSpotInstance );
 
 protected:
 	// CMapObjectState

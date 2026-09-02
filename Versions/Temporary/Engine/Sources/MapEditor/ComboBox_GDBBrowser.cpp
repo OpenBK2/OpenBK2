@@ -113,13 +113,13 @@ CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( int nTabIndex )
 }
 
 
-CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( const string &rszObjectTypeName )
+CTreeGDBBrowserBase* CComboBoxGDBBrowser::GetTab( const std::string &rszObjectTypeName )
 {
 	for ( int nItemIndex = 0; nItemIndex < wndComboBox.GetCount(); ++nItemIndex )
 	{
 		CString strName;
 		wndComboBox.GetLBText( nItemIndex, strName );
-		string szName = strName;
+		std::string szName = strName;
 		if ( szName == rszObjectTypeName )
 		{
 			const int nTabIndex = wndComboBox.GetItemData( nItemIndex );
@@ -152,7 +152,7 @@ bool CComboBoxGDBBrowser::GetActiveTab( CTreeGDBBrowserBase** ppwndActiveTab )
 }
 
 
-bool CComboBoxGDBBrowser::GetActiveTabName( string *pszName )
+bool CComboBoxGDBBrowser::GetActiveTabName( std::string *pszName )
 {
 	const int nSelectedString = wndComboBox.GetCurSel();
 	if ( nSelectedString != CB_ERR )

@@ -6,26 +6,26 @@ class CExporterContainer : public IExporterContainer
 {
 	OBJECT_NOCOPY_METHODS( CExporterContainer );
 	//
-	typedef std::unordered_map<string, CPtr<IExporter> > CExporterMap;
-	typedef list<CPtr<IExportTool> > CExportToolList;
+	typedef std::unordered_map<std::string, CPtr<IExporter> > CExporterMap;
+	typedef std::list<CPtr<IExportTool> > CExportToolList;
 	//
 	CExporterMap exporterMap;
 	CExportToolList exportToolList;
 
-	bool StartExport( const string &rszExportTypeName,
-										const string &rszObjectTypeName,
+	bool StartExport( const std::string &rszExportTypeName,
+										const std::string &rszObjectTypeName,
 										bool bExport,
 										bool bForce,
 										bool bStartTools );
-	void FinishExport( const string &rszExportTypeName,
-										 const string &rszObjectTypeName,
+	void FinishExport( const std::string &rszExportTypeName,
+										 const std::string &rszObjectTypeName,
 										 bool bExport,
 										 bool bForce,
 										 bool bFinishTools );
-	EXPORT_RESULT	ExportObject( const string &rszExportTypeName,
+	EXPORT_RESULT	ExportObject( const std::string &rszExportTypeName,
 															IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bExport,
 															bool bForce );
 
@@ -34,32 +34,32 @@ public:
 	~CExporterContainer() {}
 
 	// IExporterContainer
-	bool CanExportObject( const string &rszObjectTypeName );
-	IExporter* GetExporter( const string &rszObjectTypeName );
+	bool CanExportObject( const std::string &rszObjectTypeName );
+	IExporter* GetExporter( const std::string &rszObjectTypeName );
 	//
-	void Create( const string &rszObjectTypeName );
-	void Destroy( const string &rszObjectTypeName );
+	void Create( const std::string &rszObjectTypeName );
+	void Destroy( const std::string &rszObjectTypeName );
 	//
 	void RegisterExportTool( IExportTool *pExportTool );
 	void UnRegisterExportTool( IExportTool *pExportTool );
 	//
-	bool StartExport( const string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences );
-	void FinishExport( const string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences );
+	bool StartExport( const std::string &rszObjectTypeName, bool bForce, bool bStartTools, bool bExportReferences );
+	void FinishExport( const std::string &rszObjectTypeName, bool bForce, bool bFinishTools, bool bExportReferences );
 	EXPORT_RESULT	ExportObject( IManipulator* pManipulator,
-															const string &rszObjectTypeName,
-															const string &rszObjectName,
+															const std::string &rszObjectTypeName,
+															const std::string &rszObjectName,
 															bool bForce,
 															bool bExportReferences );
 	//
-	bool StartCheck( const string &rszObjectTypeName, bool bStartTools, bool bCheckReferences );
-	void FinishCheck( const string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences );
+	bool StartCheck( const std::string &rszObjectTypeName, bool bStartTools, bool bCheckReferences );
+	void FinishCheck( const std::string &rszObjectTypeName, bool bFinishTools, bool bCheckReferences );
 	EXPORT_RESULT	CheckObject( IManipulator* pManipulator,
-														 const string &rszObjectTypeName,
-														 const string &rszObjectName,
+														 const std::string &rszObjectTypeName,
+														 const std::string &rszObjectName,
 														 bool bCheckReferences );
 	//
-	EXPORT_RESULT GetExportResult( const string &rszObjectRefName );
-	EXPORT_RESULT GetExportResult( const string &rszObjectTypeName, const string &rszObjectName );
+	EXPORT_RESULT GetExportResult( const std::string &rszObjectRefName );
+	EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 };
 
 

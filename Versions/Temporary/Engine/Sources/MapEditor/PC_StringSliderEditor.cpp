@@ -127,7 +127,7 @@ LRESULT CPCStringSliderEditor::OnMessageEditorSliderChange( WPARAM wParam, LPARA
 
 // CPCItemEditor
 
-bool CPCStringSliderEditor::CreateEditor( const string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
+bool CPCStringSliderEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow )
 {
 	bCreateControls = true;
 	if ( CPCItemEditor::CreateEditor( rszName, _nEditorType, _pPropertyDesc, _nControlID, rObjectSet, _pwndTargetWindow ) )
@@ -206,7 +206,7 @@ void CPCStringSliderEditor::GetValue( CVariant *pValue )
 
 	CString strText;
 	GetWindowText( strText );
-	*pValue = string( strText );
+	*pValue = std::string( strText );
 }
 
 

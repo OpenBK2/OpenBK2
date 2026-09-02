@@ -70,7 +70,7 @@ public:
 		DrawLine( CVec2( v.x + fShift, v.y - fShift ), CVec2( v.x + fShift, v.y + fShift ), color );
 	}
 
-	void SaveImage( const string &szFileName )
+	void SaveImage( const std::string &szFileName )
 	{
 		CFileStream imageStream( CreateStream( szFileName, STREAM_PATH_ABSOLUTE ) );
 		NImage::SaveImageAsTGA( &imageStream, mask );
@@ -104,23 +104,23 @@ struct SConnectedPoint
 
 struct SPolygon
 {
-	vector<CVec2> points;
+	std::vector<CVec2> points;
 };
 
 static const float fEps = 0.0001f;
 class CPassabilityProfileCreator
 {
-	list<CSegment> segments;
+	std::list<CSegment> segments;
 	float fInfinity;
 
-	list<SConnectedPoint> connectedPoints;
+	std::list<SConnectedPoint> connectedPoints;
 	std::unordered_map<int, CVec2> connNum2Point;
 	CArray2D<int> connections;
 	std::unordered_set<int> deleted;
-	list<SPolygon> cover;
+	std::list<SPolygon> cover;
 
 	//
-	void GenerateStartSegments( const string &szFileName, const float fZEps );
+	void GenerateStartSegments( const std::string &szFileName, const float fZEps );
 	void GenerateAllSegments();
 	void MakeConnections();
 	void DelNotBreaks();
@@ -130,13 +130,13 @@ class CPassabilityProfileCreator
 	const int FindNumberForPoint( const CVec2 &vPoint );
 	void AddEdge( const int n1, const int n2 );
 public:
-	CPassabilityProfileCreator(const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
+	CPassabilityProfileCreator(const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
 };
 
-void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName, const float fZEps )
+void CPassabilityProfileCreator::GenerateStartSegments( const std::string &szFileName, const float fZEps )
 {
-	vector<CVec3> verts;
-	vector<STriangle> trgs;
+	std::vector<CVec3> verts;
+	std::vector<STriangle> trgs;
 	CVec3 vMin, vMax;
 
 	LoadGrannyModel( szFileName, &verts, &trgs, &vMin, &vMax );
@@ -149,15 +149,15 @@ void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName
 	const float fMaxZ = vMin.z + fZEps;
 
 	segments.clear();
-	for ( vector<STriangle>::iterator it = trgs.begin(); it != trgs.end(); ++it )
+	for ( std::vector<STriangle>::iterator it = trgs.begin(); it != trgs.end(); ++it )
 	{
-		vector<CVec3> points( 4 );
+		std::vector<CVec3> points( 4 );
 		points[0] = verts[it->i1];
 		points[1] = verts[it->i2];
 		points[2] = verts[it->i3];
 		points[3] = verts[it->i1];
 
-		vector<CVec2> prjPoints;
+		std::vector<CVec2> prjPoints;
 		for ( int i = 0; i < 3; ++i )
 		{
 			const uint8_t cFirst = (points[i].z <= fMaxZ) ? 1 : 0;
@@ -194,10 +194,10 @@ void CPassabilityProfileCreator::GenerateStartSegments( const string &szFileName
 	}
 
 #ifdef _DEBUG_GENERATION	
-	for ( list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 		mask.DrawLine( iter->p1, iter->p2, NImage::SColor( 100, 0, 255, 0 ) );
 
-	const string szImageName = NFile::GetFilePath( szGrannyFileName ) + NFile::GetFileTitle( szGrannyFileName );
+	const std::string szImageName = NFile::GetFilePath( szGrannyFileName ) + NFile::GetFileTitle( szGrannyFileName );
 	mask.SaveImage( szImageName + "_1.tga" );
 	mask.Clear();
 #endif //_DEBUG_GENERATION
@@ -238,7 +238,7 @@ bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 		Sign( vPoint.y - v1.y ) * Sign( v2.y - vPoint.y ) >= 0;
 }
 
-static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CVec2 &v22, list<CVec2> *pRes )
+static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v21, const CVec2 &v22, std::list<CVec2> *pRes )
 {
 	pRes->clear();
 
@@ -269,20 +269,20 @@ static void GetIntersections( const CVec2 &v11, const CVec2 &v12, const CVec2 &v
 
 void CPassabilityProfileCreator::GenerateAllSegments()
 {
-	list<CSegment> newSegments;
+	std::list<CSegment> newSegments;
 
-	for ( list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 	{
 		if ( iter->p2 - iter->p1 != VNULL2 )
 		{
-			list<CVec2> newPoints;
+			std::list<CVec2> newPoints;
 			newPoints.push_back( iter->p1 );
 
-			for ( list<CSegment>::iterator iter1 = segments.begin(); iter1 != segments.end(); ++iter1 )
+			for ( std::list<CSegment>::iterator iter1 = segments.begin(); iter1 != segments.end(); ++iter1 )
 			{
 				if ( iter1->p1 - iter1->p2 != VNULL2 )
 				{
-					list<CVec2> points;
+					std::list<CVec2> points;
 					const CVec2 &p1 = iter->p1;
 					const CVec2 &p2 = iter->p2;
 					const CVec2 &p3 = iter1->p1;
@@ -296,8 +296,8 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 
 			sort( newPoints.begin(), newPoints.end(), CPointsSort( iter->p1 ) );
 
-			list<CVec2>::iterator pred = newPoints.begin();
-			list<CVec2>::iterator cur = pred;
+			std::list<CVec2>::iterator pred = newPoints.begin();
+			std::list<CVec2>::iterator cur = pred;
 			++cur;
 			for ( ; cur != newPoints.end(); ++cur, ++pred )
 			{
@@ -310,7 +310,7 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 	segments.swap( newSegments );
 
 #ifdef _DEBUG_GENERATION
-	for ( list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 		mask.DrawLine( iter->p1, iter->p2, NImage::SColor( 255, 0, 255, 0 ) );
 	mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 #endif //_DEBUG_GENERATION
@@ -320,7 +320,7 @@ const int CPassabilityProfileCreator::FindNumberForPoint( const CVec2 &vPoint )
 {
 	int nNumber = -1;
 	int nMaxNumber = -1;
-	for ( list<SConnectedPoint>::iterator iter = connectedPoints.begin(); iter != connectedPoints.end() && nNumber == -1; ++iter )
+	for ( std::list<SConnectedPoint>::iterator iter = connectedPoints.begin(); iter != connectedPoints.end() && nNumber == -1; ++iter )
 	{
 		if ( IsEqual( vPoint, iter->vPoint ) )
 			nNumber = iter->nNumber;
@@ -340,7 +340,7 @@ void CPassabilityProfileCreator::AddEdge( const int n1, const int n2 )
 void CPassabilityProfileCreator::MakeConnections()
 {
 	int nMaxPoint = -1;
-	for ( list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
+	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 	{
 		const CVec2 v1 = iter->p1;
 		const CVec2 v2 = iter->p2;
@@ -362,7 +362,7 @@ void CPassabilityProfileCreator::MakeConnections()
 	connections.SetSizes( nMaxPoint + 1, nMaxPoint + 1 );
 	connections.FillZero();
 
-	list<SConnectedPoint>::iterator iter = connectedPoints.begin();
+	std::list<SConnectedPoint>::iterator iter = connectedPoints.begin();
 	while ( iter != connectedPoints.end() )
 	{
 		const int n1 = iter->nNumber;
@@ -619,7 +619,7 @@ void CPassabilityProfileCreator::DelPointsInsideOfPolygon( SPolygon &polygon )
 	}
 	else
 	{
-		const vector<CVec2> &points = polygon.points;
+		const std::vector<CVec2> &points = polygon.points;
 		for ( std::unordered_map<int, CVec2>::iterator iter = connNum2Point.begin(); iter != connNum2Point.end(); ++iter )
 		{
 			const CVec2 &vPoint = iter->second;
@@ -661,7 +661,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 {
 	const float fTolerance = 0.05f;
 
-	list<SPolygon>::iterator iter = cover.begin();
+	std::list<SPolygon>::iterator iter = cover.begin();
 	while ( iter != cover.end() )
 	{
 		SPolygon &polygon = *iter;
@@ -676,7 +676,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 			do
 			{
 				bChanged = false;
-				vector<int> toDelete( polygon.points.size(), 0 );
+				std::vector<int> toDelete( polygon.points.size(), 0 );
 
 				CVec2 vPredPoint = polygon.points[0];
 				CVec2 vPoint = polygon.points[1];
@@ -729,7 +729,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 	}
 }
 
-CPassabilityProfileCreator::CPassabilityProfileCreator(const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
+CPassabilityProfileCreator::CPassabilityProfileCreator(const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
 : fInfinity( 0.0f )
 {
 	GenerateStartSegments( szGrannyFileName, fZEps );
@@ -767,20 +767,20 @@ CPassabilityProfileCreator::CPassabilityProfileCreator(const string &szGrannyFil
 	pPassProfile->polygons.clear();
 	pPassProfile->polygons.resize( cover.size() );
 	int nCnt = 0;
-	for ( list<SPolygon>::iterator iter = cover.begin(); iter != cover.end(); ++iter, ++nCnt )
+	for ( std::list<SPolygon>::iterator iter = cover.begin(); iter != cover.end(); ++iter, ++nCnt )
 	{
 		SPolygon &polygon = *iter;
 		pPassProfile->polygons[nCnt].verts.swap( polygon.points );
 	}
 }
 
-bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
+bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
 {
 	CPassabilityProfileCreator profileCreator( szGrannyFileName, fZEps, pPassProfile );
 
 #ifdef _DEBUG_GENERATION
 	mask.Clear();
-	for ( list<SPolygon>::iterator iter = cover.begin(); iter != cover.end(); ++iter )
+	for ( std::list<SPolygon>::iterator iter = cover.begin(); iter != cover.end(); ++iter )
 	{
 		const SPolygon &polygon = *iter;
 		for ( int i = 0; i < polygon.points.size() - 1; ++i )
@@ -795,10 +795,10 @@ bool CreateObjectPassabilityProfile( const string &szGrannyFileName, const float
 	return true;
 }
 
-void SavePassProfile( const NDb::SPassProfile &passProfile, const string &_szPrefix, const string &szFieldName, IManipulator *pManipulator )
+void SavePassProfile( const NDb::SPassProfile &passProfile, const std::string &_szPrefix, const std::string &szFieldName, IManipulator *pManipulator )
 {
-	const string szPrefix = _szPrefix.empty() ? _szPrefix : _szPrefix + ".";
-	const string szStructName = szPrefix + szFieldName + ".polygons";
+	const std::string szPrefix = _szPrefix.empty() ? _szPrefix : _szPrefix + ".";
+	const std::string szStructName = szPrefix + szFieldName + ".polygons";
 	pManipulator->RemoveNode( szStructName );//szPrefix + "PassProfile.polygons" );
 	if ( !passProfile.polygons.empty() )
 	{
@@ -808,7 +808,7 @@ void SavePassProfile( const NDb::SPassProfile &passProfile, const string &_szPre
 
 			for ( int j = 0; j < passProfile.polygons[i].verts.size(); ++j )
 			{
-				string szNode = StrFmt( (szStructName + ".[%d].verts").c_str(), i );//    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
+				std::string szNode = StrFmt( (szStructName + ".[%d].verts").c_str(), i );//    szPrefix + "PassProfile.polygons.[%d].verts").c_str(), i );
 				pManipulator->InsertNode( szNode, j );
 
 				szNode += StrFmt( ".[%d].", j );

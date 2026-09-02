@@ -5,14 +5,14 @@ namespace NAcks
 
 struct SAckEntry
 {
-	string szSituationCode;
-	string szRecordCode;
-	string szFileName;
+	std::string szSituationCode;
+	std::string szRecordCode;
+	std::string szFileName;
 	float fProbability;
 	int nSubsetCode;
 };
 
-bool LoadAcksTable( vector<SAckEntry> *pRes, const string &szFileName );
+bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName );
 
 }
 

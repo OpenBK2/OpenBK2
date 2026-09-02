@@ -20,7 +20,7 @@ BEGIN_MESSAGE_MAP(CPointListDialog, CResizeDialog)
 END_MESSAGE_MAP()
 
 
-list<CPointListDialog*> CPointListDialog::otherDialogs;
+std::list<CPointListDialog*> CPointListDialog::otherDialogs;
 
 CPointListDialog::CPointListDialog( unsigned _nInstanceID, const CString &rszLabel )
 	:	CResizeDialog( CPointListDialog::IDD ),
@@ -203,7 +203,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 			break;
 		}
 	}
-	for ( list<CPointListDialog*>::iterator it = otherDialogs.begin(); it != otherDialogs.end(); ++it )
+	for ( std::list<CPointListDialog*>::iterator it = otherDialogs.begin(); it != otherDialogs.end(); ++it )
 	{
 		CPointListDialog *pDialog = *it;
 		if ( pDialog != this )
@@ -222,7 +222,7 @@ bool CPointListDialog::HandleCommand( unsigned nCommandID, uint32_t dwData )
 {
 	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
 	
-	list<CPointListDialog*>::iterator it; 
+	std::list<CPointListDialog*>::iterator it; 
 	for ( it = otherDialogs.begin(); it != otherDialogs.end(); ++it )
 	{
 		CPointListDialog *pDlg = *it;

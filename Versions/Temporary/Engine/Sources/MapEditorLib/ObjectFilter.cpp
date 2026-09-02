@@ -3,20 +3,20 @@
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
 
-static void NormalizeFileName( string *pFileName )
+static void NormalizeFileName( std::string *pFileName )
 {
 	NStr::ToLowerASCII( pFileName );
 	NStr::ReplaceAllChars( pFileName, '\\', '/' );
 }
 
-bool CObjectFilter::SEntry::Match( const string &szFullName, const string &szClassTypeName ) const
+bool CObjectFilter::SEntry::Match( const std::string &szFullName, const std::string &szClassTypeName ) const
 {
 	if ( szClassType != szClassTypeName )
 		return false;
 	if ( matches.empty() )
 		return true;
 	//
-	for ( vector<string>::const_iterator it = matches.begin(); it != matches.end(); ++it )
+	for ( std::vector<std::string>::const_iterator it = matches.begin(); it != matches.end(); ++it )
 	{
 		if ( szFullName.compare(0, it->size(), *it) == 0 )
 			return true;
@@ -24,16 +24,16 @@ bool CObjectFilter::SEntry::Match( const string &szFullName, const string &szCla
 	return false;
 }
 
-bool CObjectFilter::Match( const string &_szFullName, const string &szClassTypeName ) const
+bool CObjectFilter::Match( const std::string &_szFullName, const std::string &szClassTypeName ) const
 {
 	if ( entries.empty() )
 		return false;
 	//
 	bool bResult = false;
-	string szFullName = _szFullName;
+	std::string szFullName = _szFullName;
 	NormalizeFileName( &szFullName );
 	//
-	for ( vector<SEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
+	for ( std::vector<SEntry>::const_iterator it = entries.begin(); it != entries.end(); ++it )
 	{
 		if ( it->eOpType == SEntry::OPERATION_UNION && it->Match(szFullName, szClassTypeName) != false )
 			bResult = true;
@@ -51,7 +51,7 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 {
 	if ( saver.IsReading() )
 	{
-		string szOpType;
+		std::string szOpType;
 		saver.Add( "Operation", &szOpType );
 		if ( szOpType == "union" )
 			eOpType = SEntry::OPERATION_UNION;
@@ -66,7 +66,7 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 	}
 	else
 	{
-		string szOpType = "UNKNOWN";
+		std::string szOpType = "UNKNOWN";
 		switch ( eOpType )
 		{
 		case SEntry::OPERATION_UNION:
@@ -86,7 +86,7 @@ int CObjectFilter::SEntry::operator&( IXmlSaver &saver )
 	//
 	if ( saver.IsReading() )
 	{
-		for ( vector<string>::iterator it = matches.begin(); it != matches.end(); ++it )
+		for ( std::vector<std::string>::iterator it = matches.begin(); it != matches.end(); ++it )
 			NormalizeFileName( &(*it) );
 	}
 	return 0;

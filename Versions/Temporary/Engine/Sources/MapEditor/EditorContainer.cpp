@@ -12,7 +12,7 @@
 #include "MapEditorLib/EditorFactory.h"
 #include "EditorContainer.h"
 
-string CEditorContainer::GetBaseObjectType( const string &rszExtendObjectTypeName )
+std::string CEditorContainer::GetBaseObjectType( const std::string &rszExtendObjectTypeName )
 {
 	CExtendTypeMap::iterator posExtendType = extendTypeMap.find( rszExtendObjectTypeName );
 	if( posExtendType != extendTypeMap.end() )
@@ -26,15 +26,15 @@ string CEditorContainer::GetBaseObjectType( const string &rszExtendObjectTypeNam
 }
 
 
-bool CEditorContainer::CanCreate( const string &rszObjectTypeName )
+bool CEditorContainer::CanCreate( const std::string &rszObjectTypeName )
 {
 	return NEditorFactory::CanCreateEditor( GetBaseObjectType( rszObjectTypeName ) );
 }
 
 
-void CEditorContainer::Create( const string &rszObjectTypeName )
+void CEditorContainer::Create( const std::string &rszObjectTypeName )
 {
-	const string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
+	const std::string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	if( posEditor == editorMap.end() )
 	{
@@ -44,21 +44,21 @@ void CEditorContainer::Create( const string &rszObjectTypeName )
 }
 
 
-void CEditorContainer::AddExtendObjectType( const string &rszBaseObjectTypeName, const string &rszExtendObjectTypeName )
+void CEditorContainer::AddExtendObjectType( const std::string &rszBaseObjectTypeName, const std::string &rszExtendObjectTypeName )
 {
 	extendTypeMap[rszExtendObjectTypeName] = rszBaseObjectTypeName;
 }
 
 
-void CEditorContainer::Destroy( const string &rszObjectTypeName, bool bDestroyChildFrame )
+void CEditorContainer::Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame )
 {
 	//	
 	if ( szActiveTypeName == rszObjectTypeName )
 	{
-		DestroyActiveEditor( string(), string(), bDestroyChildFrame );
+		DestroyActiveEditor( std::string(), std::string(), bDestroyChildFrame );
 	}
 	//
-	const string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
+	const std::string szBaseObjectTypeName = GetBaseObjectType( rszObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	if ( posEditor != editorMap.end() )
 	{
@@ -69,12 +69,12 @@ void CEditorContainer::Destroy( const string &rszObjectTypeName, bool bDestroyCh
 }
 
 
-void CEditorContainer::DestroyActiveEditor( const string &rszNewEditorTypeName, const string &rszNewChildFrameTypeName, bool bDestroyChildFrame )
+void CEditorContainer::DestroyActiveEditor( const std::string &rszNewEditorTypeName, const std::string &rszNewChildFrameTypeName, bool bDestroyChildFrame )
 {
 	if ( !szActiveTypeName.empty() )
 	{
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
-		const string szNewBaseObjectTypeName = GetBaseObjectType( rszNewEditorTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szNewBaseObjectTypeName = GetBaseObjectType( rszNewEditorTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{
@@ -121,20 +121,20 @@ void CEditorContainer::DestroyActiveEditor( const string &rszNewEditorTypeName, 
 }
 
 
-void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const string &rszNewChildFrameTypeName )
+void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObjectSet &rObjectSet, const std::string &rszNewChildFrameTypeName )
 {
 	if ( !CanCreate( rObjectSet.szObjectTypeName ) )
 	{
 		return;
 	}
 	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
-	const string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
+	const std::string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	NI_ASSERT( posEditor != editorMap.end(), "CEditorContainer::CreateNewEditor(): posEditor = editorMap.end()" );
 	if ( posEditor->second )
 	{
 		// Создаем Child Frame
-		string szChildFrameTypeName;
+		std::string szChildFrameTypeName;
 		posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 		if ( !szChildFrameTypeName.empty() )
 		{
@@ -167,7 +167,7 @@ void CEditorContainer::CreateNewEditor( IManipulator* _pManipulator, const SObje
 		if ( pView )
 		{
 			DebugTrace( "Set Editor View Manipulator: <%s>", rObjectSet.szObjectTypeName.c_str() );
-			string szTemporaryLabel;
+			std::string szTemporaryLabel;
 			posEditor->second->GetTemporaryLabel( &szTemporaryLabel );
 			pView->SetViewManipulator( _pManipulator, rObjectSet, szTemporaryLabel );
 		}
@@ -204,7 +204,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 		return 0;
 	}
 	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
-	const string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
+	const std::string szBaseObjectTypeName = GetBaseObjectType( rObjectSet.szObjectTypeName );
 	CEditorMap::iterator posEditor = editorMap.find( szBaseObjectTypeName );
 	if( posEditor == editorMap.end() )
 	{
@@ -215,7 +215,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	//
 	if ( posEditor->second )
 	{
-		string szChildFrameTypeName;
+		std::string szChildFrameTypeName;
 		posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 
 		// Разрушаем старый редактор и закрываем ChildFrame (если необходимо)
@@ -243,7 +243,7 @@ void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 	NProgress::Create( true );
 	CString strPM;
 	strPM.LoadString( IDS_PM_DESTROY_EDITOR );
-	NProgress::SetMessage( string( strPM ) );
+	NProgress::SetMessage( std::string( strPM ) );
 	NProgress::SetRange( 0, 1 );
 	NProgress::SetPosition( 0 );
 	Destroy( szActiveTypeName, bDestroyChildFrame );
@@ -259,10 +259,10 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 		NProgress::Create( true );
 		CString strPM;
 		strPM.LoadString( IDS_PM_RELOAD_EDITOR );
-		NProgress::SetMessage( string( strPM ) );
+		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, 1 );
 		NProgress::SetPosition( 0 );
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{
@@ -275,7 +275,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 					DebugTrace( "Leave Editor Input State: <%s>", szActiveTypeName.c_str() );
 					pInputState->Leave();
 					// Перегружаем Child Frame
-					string szChildFrameTypeName;
+					std::string szChildFrameTypeName;
 					posEditor->second->GetChildFrameType( &szChildFrameTypeName );
 					if ( !szChildFrameTypeName.empty() )
 					{
@@ -315,7 +315,7 @@ IEditor* CEditorContainer::GetActiveEditor()
 {
 	if ( !szActiveTypeName.empty() )
 	{
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{
@@ -330,7 +330,7 @@ IInputState* CEditorContainer::GetActiveInputState()
 {
 	if ( !szActiveTypeName.empty() )
 	{
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{
@@ -384,7 +384,7 @@ void CEditorContainer::Save( bool bSaveChanges )
 {
 	if ( !szActiveTypeName.empty() )
 	{
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{
@@ -401,7 +401,7 @@ bool CEditorContainer::IsModified()
 {
 	if ( !szActiveTypeName.empty() )
 	{
-		const string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
+		const std::string szActiveBaseObjectTypeName = GetBaseObjectType( szActiveTypeName );
 		CEditorMap::iterator posEditor = editorMap.find( szActiveBaseObjectTypeName );
 		if ( posEditor != editorMap.end() )
 		{

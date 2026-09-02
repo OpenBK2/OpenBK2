@@ -29,9 +29,9 @@ public:
 		RESPONSEWAIT_TIMEOUT = nResponseWaitTimeout;
 	}
 
-	bool Start( const string &szCommandLine, string *pszErrorMessage );
-	bool Execute( const string &szScript, const string &szResponseEndLabel, string *pszOutput, string *pszErrorOutput, string *pszErrorMessage );
-	bool Stop( const string &szQuitScript );
+	bool Start( const std::string &szCommandLine, std::string *pszErrorMessage );
+	bool Execute( const std::string &szScript, const std::string &szResponseEndLabel, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage );
+	bool Stop( const std::string &szQuitScript );
 };
 
 

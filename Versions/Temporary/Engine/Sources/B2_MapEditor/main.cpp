@@ -44,13 +44,13 @@ END_BUTTON_MAP()
 
 class CEditorAppSpecific : public CEditorApp
 {
-	vector<IEditorModule*> extModules;
+	std::vector<IEditorModule*> extModules;
 public:
 	virtual BOOL InitInstance();
 
-	void LoadMapEditorModule( const string &szModuleName );
+	void LoadMapEditorModule( const std::string &szModuleName );
 	void UnloadMapEditorModule();
-	const vector<IEditorModule*>& GetEditorModules();
+	const std::vector<IEditorModule*>& GetEditorModules();
 	bool GameXInitialize() { return NGameX::Initialize(); }
 	void GameXPostStorageInitialize() 
 	{ 
@@ -64,7 +64,7 @@ public:
 };
 
 
-void CEditorAppSpecific::LoadMapEditorModule( const string &szModuleName ) // "c:\\b2\\system\\b2.dle"
+void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) // "c:\\b2\\system\\b2.dle"
 {
 	if ( IEditorModule *pModule = GetEditorModule0() )
 		extModules.push_back( pModule );
@@ -89,7 +89,7 @@ void CEditorAppSpecific::LoadMapEditorModule( const string &szModuleName ) // "c
 }
 
 
-const vector<IEditorModule*>& CEditorAppSpecific::GetEditorModules()
+const std::vector<IEditorModule*>& CEditorAppSpecific::GetEditorModules()
 {
 	return extModules;
 }
@@ -147,7 +147,7 @@ void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomT
 void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 {
 	AfxSetResourceHandle( theEDB2M1Instance );
-	vector<unsigned> nIDs;
+	std::vector<unsigned> nIDs;
 	nIDs.push_back( IDM_MAIN );
 	nIDs.push_back( IDM_MAPINFO );
 	nIDs.push_back( IDM_MODEL );

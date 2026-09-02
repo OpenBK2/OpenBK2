@@ -12,7 +12,7 @@ namespace NMapInfoEditor
 	public:
 		static const NDb::SModel* GetModel( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const NDb::ESeason eSeason );
 		static const NDb::SModel* ChooseModelWithHP( const NDb::SHPObjectRPGStats *pHPObjectRPGStats, const float fHP, const NDb::ESeason eSeason );
-		static bool NeedMakeOrientation( const string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID );
+		static bool NeedMakeOrientation( const std::string &rszRPGStatsTypeName, const CDBID &rRPGStatsDBID );
 		//
 		// SObjectInfo
 		SObjectInfo* CallDuplicate() const { return Duplicate(); }
@@ -25,7 +25,7 @@ namespace NMapInfoEditor
 		virtual bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pScene, IManipulator *pManipulator );
 		virtual bool Create( const SObjectCreateInfo* pObjectCreateInfo, IEditorScene *pScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		virtual void FillMaskManipulator( class CMaskManipulator *pMaskManipulator ) {}
-		virtual void GetMask( string *pszMask ) {}
+		virtual void GetMask( std::string *pszMask ) {}
 	};
 };
 

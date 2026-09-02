@@ -28,9 +28,9 @@ namespace NCA
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void AddFullName( string *pszFullName, HTREEITEM hItem, const string &rszTreeItemDivider, const SECTreeCtrl *pTreeControl )
+	void AddFullName( std::string *pszFullName, HTREEITEM hItem, const std::string &rszTreeItemDivider, const SECTreeCtrl *pTreeControl )
 	{
-		string szItemText = pTreeControl->GetItemText( hItem );
+		std::string szItemText = pTreeControl->GetItemText( hItem );
 		if ( pszFullName->empty() )
 		{
 			( *pszFullName ) = szItemText;
@@ -46,7 +46,7 @@ namespace NCA
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void CreateFullName( string *pszFullName, HTREEITEM hItem, const string &rszTreeItemDivider, const SECTreeCtrl *pTreeControl )
+	void CreateFullName( std::string *pszFullName, HTREEITEM hItem, const std::string &rszTreeItemDivider, const SECTreeCtrl *pTreeControl )
 	{
 		NI_ASSERT( pszFullName != 0, "CreateFullName(): Invalid parameter: pszFullName == 0" );
 		NI_ASSERT( pTreeControl != 0, "CreateFullName(): Invalid parameter: pTreeControl == 0" );
@@ -295,12 +295,12 @@ namespace NCA
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void FillWindowsClipboard( const CHTREEITEMList &rSelection,
-														 const string &rszClipboardPrefix,
-														 const string &rszClipboardPostfix,
-														 const string &rszItemPrefix,
-														 const string &rszItemPostfix,
-														 const string &rszTreeItemDivider,
-														 const string &rszColumnDivider,
+														 const std::string &rszClipboardPrefix,
+														 const std::string &rszClipboardPostfix,
+														 const std::string &rszItemPrefix,
+														 const std::string &rszItemPostfix,
+														 const std::string &rszTreeItemDivider,
+														 const std::string &rszColumnDivider,
 														 const SECTreeCtrl *pTreeControl )
 	{
 		NI_ASSERT( pTreeControl != 0, "CreateSelection(): Invalid parameter: pSelection == 0" );
@@ -308,7 +308,7 @@ namespace NCA
 		{
 			return;
 		}
-		string szWindowsClipboardText = rszClipboardPrefix;
+		std::string szWindowsClipboardText = rszClipboardPrefix;
 		const int nColumnCount = pTreeControl->GetColumnCount();
 		for ( CHTREEITEMList::const_iterator itSelection = rSelection.begin(); itSelection != rSelection.end(); ++itSelection )
 		{
@@ -317,7 +317,7 @@ namespace NCA
 				szWindowsClipboardText += "\r\n";
 			}
 			//
-			string szFullName;
+			std::string szFullName;
 			CreateFullName( &szFullName, *itSelection, rszTreeItemDivider, pTreeControl );
 			szWindowsClipboardText += rszItemPrefix + szFullName;
 			//
@@ -343,7 +343,7 @@ namespace NCA
 		{
 			if ( !szWindowsClipboardText.empty() )
 			{
-				wstring wszWindowsClipboardText;
+				std::wstring wszWindowsClipboardText;
 				NStr::ToUnicode( &wszWindowsClipboardText, szWindowsClipboardText );
 				HGLOBAL hglbCopy = ::GlobalAlloc( GMEM_MOVEABLE, ( wszWindowsClipboardText.size() + 1 ) * sizeof( wchar_t ) ); 
 				if ( hglbCopy != 0 ) 

@@ -11,9 +11,9 @@
 BEGIN_MESSAGE_MAP(CEnterNameDialog,CDialog)
 END_MESSAGE_MAP()
 
-string CEnterNameDialog::szLastName;
+std::string CEnterNameDialog::szLastName;
 
-CEnterNameDialog::CEnterNameDialog( CWnd* pParentWindow, const string &_szDlgCaption,  const string &_szLabelText )
+CEnterNameDialog::CEnterNameDialog( CWnd* pParentWindow, const std::string &_szDlgCaption,  const std::string &_szLabelText )
 	:	CResizeDialog( CEnterNameDialog::IDD, pParentWindow ),
 	szDlgCaption( _szDlgCaption ),
 	szLabelText( _szLabelText )
@@ -66,7 +66,7 @@ void CEnterNameDialog::OnCancel()
 }
 
 
-void CEnterNameDialog::GetName( string *pName )
+void CEnterNameDialog::GetName( std::string *pName )
 {
 	(*pName) = szName;
 }

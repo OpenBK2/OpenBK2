@@ -12,14 +12,14 @@ class COpenMODDialog : public CResizeDialog
 	CString strDescription;
 	CComboBox wndNameComboBox;
 	int nMODIndex;
-	vector<NMOD::SMOD> modList;
+	std::vector<NMOD::SMOD> modList;
 
 	void UpdateControls();
 
 protected:
 	int GetMinimumXDimension() { return 300; }
 	int GetMinimumYDimension() { return 150; }
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "COpenMODDialog"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "COpenMODDialog"; }
 	bool IsDrawGripper() { return true; }
 
 	virtual void DoDataExchange( CDataExchange* pDX );

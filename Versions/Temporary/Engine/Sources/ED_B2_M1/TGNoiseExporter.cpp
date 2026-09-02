@@ -11,8 +11,8 @@
 REGISTER_EXPORTER_IN_DLL( TGNoise, CTGNoiseExporter )
 
 EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
-																							const string &rszObjectTypeName,
-																							const string &rszObjectName,
+																							const std::string &rszObjectTypeName,
+																							const std::string &rszObjectName,
 																							bool bForce,
 																							EXPORT_TYPE exportType )
 {
@@ -22,7 +22,7 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	ILogger *pLogger = NLog::GetLogger();
 	//
-	string szNoiseFileName;
+	std::string szNoiseFileName;
 	if ( CManipulatorManager::GetValue(&szNoiseFileName, pManipulator, "FileName") != false && !szNoiseFileName.empty() )
 	{
 		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szNoiseFileName, 

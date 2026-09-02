@@ -47,7 +47,7 @@ void CMapObjectMultiState::UpdateEditParameters( unsigned nFlags )
 }
 
 
-void CMapObjectMultiState::SwitchState( const string &rszObjectTypeName )
+void CMapObjectMultiState::SwitchState( const std::string &rszObjectTypeName )
 {
 	int nNewState = GetActiveInputStateIndex();
 	//
@@ -156,7 +156,7 @@ bool CMapObjectMultiState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		}
 		case ID_MIMO_SWITCH_MULTI_STATE:
 		{
-			string *pszObjectTypeName = reinterpret_cast<string*>( dwData );
+			std::string *pszObjectTypeName = reinterpret_cast<std::string*>( dwData );
 			if ( pszObjectTypeName != 0 )
 			{
 				SwitchState( *pszObjectTypeName );

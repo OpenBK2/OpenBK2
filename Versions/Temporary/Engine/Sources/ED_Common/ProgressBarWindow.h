@@ -7,10 +7,10 @@ public:
 	CProgressBarWindow();
 	bool Create( CWnd *pParent );
 
-	void Start( int nRange, const string & szCaption );
+	void Start( int nRange, const std::string & szCaption );
 	void StepIt();
 	void Finish();
-	void SetCaption( const string & szCaption );
+	void SetCaption( const std::string & szCaption );
 
 protected:
 	virtual void DoDataExchange( CDataExchange* pDX );

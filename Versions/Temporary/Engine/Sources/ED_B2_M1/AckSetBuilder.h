@@ -12,14 +12,14 @@ class CAcksBuilder : public CDefaultBuilderBase, public IBuildDataCallback, publ
 	CAcksBuilder();
 	~CAcksBuilder();
 
-	bool UpdateAckSets( const string &rszAnimationFolder );
+	bool UpdateAckSets( const std::string &rszAnimationFolder );
 protected:
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	// IBuildDataCallback
-	bool IsValidBuildData( IManipulator *pBuildDataManipulator, string *pszDescription, IView *pBuildDataView );
-	bool IsUniqueObjectName( const string &szObjectType, const string &szObjectName );
+	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
+	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 };
 
 

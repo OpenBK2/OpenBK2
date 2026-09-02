@@ -13,8 +13,8 @@
 
 #include <zconf.h>
 
-const string CCragState::VSO_NAME = "Crags";
-const string CCragState::VSO_TYPE_NAME = "CragDesc";
+const std::string CCragState::VSO_NAME = "Crags";
+const std::string CCragState::VSO_TYPE_NAME = "CragDesc";
 
 /**
 bool CCragState::CanInsertVSO()
@@ -112,7 +112,7 @@ void CCragState::PickVSO( const CVec3 &rvPos, CVSOIDList *pPickVSOIDList )
 			NMapInfoEditor::CVSOInstanceList *pVSOList = GetVSOList();
 			for ( int nVSOIndex = 0; nVSOIndex < pVSOList->size(); ++nVSOIndex )
 			{
-				list<CVec3> boundingPolygon;
+				std::list<CVec3> boundingPolygon;
 				const NDb::SCragDesc *pCragDesc = checked_cast<const NDb::SCragDesc*>( &( *( ( *pVSOList )[nVSOIndex].pDescriptor ) ) );
 				CVSOManager::GetBoundingPolygon( &boundingPolygon, ( *pVSOList )[nVSOIndex].points, pCragDesc->bLeftSided ? CVSOManager::PT_OPNORMALE : CVSOManager::PT_NORMALE, 1.0f );
 				if ( ClassifyPolygon( boundingPolygon, rvPos ) != CP_OUTSIDE )

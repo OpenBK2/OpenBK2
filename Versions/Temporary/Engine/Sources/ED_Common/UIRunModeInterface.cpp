@@ -8,7 +8,7 @@
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
 
-CUIRunModeInterface::CUIRunModeInterface( const string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
+CUIRunModeInterface::CUIRunModeInterface( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
 {
 	LoadWindow( rszTypeName, rDBID, rTemplateWindowDBID, rTemplateScreenDBID );
 }
@@ -45,7 +45,7 @@ bool CUIRunModeInterface::ProcessEvent( const struct SGameMessage &msg )
 }
 
 
-void CUIRunModeInterface::LoadWindow( const string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
+void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID )
 {
 	const NDb::SUIGameConsts *pUI = 0;//pGameRoot->pConsts->pUI;
 	//const NDb::SGameRoot *pGameRoot = NDb::Get<NDb::SGameRoot>( GetGlobalVar("game_root", 2) );

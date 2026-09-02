@@ -15,7 +15,7 @@ public:
 	CDWPropertyBrowser();
 	virtual ~CDWPropertyBrowser();
 
-	void SetPCDialogXMLOptionsLabel( const string &rszOptionsLabel ) { wndContents.SetXMLOptionsLabel( rszOptionsLabel ); }
+	void SetPCDialogXMLOptionsLabel( const std::string &rszOptionsLabel ) { wndContents.SetXMLOptionsLabel( rszOptionsLabel ); }
 	void EnableEdit( bool bEnable ) { wndContents.EnableEdit( bEnable ); }
 	DECLARE_MESSAGE_MAP()
 };

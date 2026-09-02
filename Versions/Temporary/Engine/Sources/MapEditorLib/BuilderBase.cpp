@@ -5,7 +5,7 @@
 #include "MapEditorLib/Interface_UserData.h"
 #include "libdb/ResourceManager.h"
 
-bool CBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
+bool CBuilderBase::InsertObject( std::string *pszObjectTypeName, std::string *pszUniqueObjectName, bool bFromMainMenu, bool *pbCanChangeObjectName, bool *pbNeedExport, bool *pbNeedEdit )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	NI_ASSERT( pszObjectTypeName != 0, "CBuilderBase::InsertObject() pszObjectTypeName == 0" );
@@ -20,28 +20,28 @@ bool CBuilderBase::InsertObject( string *pszObjectTypeName, string *pszUniqueObj
 }
 
 
-bool CBuilderBase::CopyObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
+bool CBuilderBase::CopyObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->CopyObject( rszObjectTypeName, rszDestination, rszSource );
 }
 
 
-bool CBuilderBase::RenameObject( const string &rszObjectTypeName, const string &rszDestination, const string &rszSource )
+bool CBuilderBase::RenameObject( const std::string &rszObjectTypeName, const std::string &rszDestination, const std::string &rszSource )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->RenameObject( rszObjectTypeName, rszDestination, rszSource );
 }
 
 
-bool CBuilderBase::RemoveObject( const string &rszObjectTypeName, const string &rszObjectName )
+bool CBuilderBase::RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	return pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, false );
 }
 /**
 
-bool HierarchicalDelete( const string &szObjectTypeName, const string &szObjectName )
+bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string &szObjectName )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	if ( CPtr<IManipulator> pMan = pRM->CreateObjectManipulator(szObjectTypeName, szObjectName) ) 

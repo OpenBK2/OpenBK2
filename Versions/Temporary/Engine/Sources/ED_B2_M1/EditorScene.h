@@ -50,12 +50,12 @@ struct IEditorScene : public CObjectBase
 												 const bool bHasReflection = false ) = 0;
 	virtual bool MoveObject( const int nID, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale = CVec3(1, 1, 1) ) = 0;
 	virtual void RemoveObject( const int nID ) = 0;
-	virtual void SetFadedObjects( const list<int> &objects ) = 0;
-	virtual void SetFadedObjects( const list<int> &objects, float fFade ) = 0;
+	virtual void SetFadedObjects( const std::list<int> &objects ) = 0;
+	virtual void SetFadedObjects( const std::list<int> &objects, float fFade ) = 0;
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
 
-	virtual int AddPolyline( const int nID, const vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
-	virtual int AddIndexedPolyline( const int nID, const vector<CVec3> &points, const vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddPolyline( const int nID, const std::vector<CVec3> &points, const CVec4 &vColor, bool bDepthCheck ) = 0;
+	virtual int AddIndexedPolyline( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck ) = 0;
 	virtual void RemovePolyline( const int nID ) = 0;
 	virtual bool ToggleShow( ESceneShow eShow ) = 0;
 	virtual bool ToggleAIGeometryMode() = 0;
@@ -75,8 +75,8 @@ struct IEditorScene : public CObjectBase
 	virtual void ClearScene( const EScene eScene2Clear ) = 0;
 	virtual void Draw( NGScene::CRTPtr *pTarget ) = 0;
 
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos ) = 0;
-	virtual void PickObjects( list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 ) = 0;
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos ) = 0;
+	virtual void PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2 ) = 0;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY ) = 0;
 
 	virtual void ShowObject( const int nID, const bool bShow ) = 0;

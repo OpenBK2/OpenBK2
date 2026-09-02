@@ -21,9 +21,9 @@ public:
 	enum { IDD = IDD_SCRIPT_EDITOR };
 	virtual BOOL OnInitDialog();
 
-	void SetText( const string &szText );
-	void SetTitle( const string &rszTitle ) { szTitle = rszTitle; }
-	string GetText();
+	void SetText( const std::string &szText );
+	void SetTitle( const std::string &rszTitle ) { szTitle = rszTitle; }
+	std::string GetText();
 	void SetModal( bool _bModal ) { bModal = _bModal; }
 	//CString m_szText;
 	CString m_szErrLog;
@@ -32,9 +32,9 @@ protected:
 	bool bInitiallySelected;
 	BOOL bCheckSyntax;
 	CFont m_fntDef;
-	string szInitialText;
-	string szTitle;
-	string szLastText;
+	std::string szInitialText;
+	std::string szTitle;
+	std::string szLastText;
 	bool bFreezeUpdate;
 	bool bModal;
 	bool bEnableEdit;
@@ -53,7 +53,7 @@ protected:
 	// CResizeDialog
 	int GetMinimumXDimension() { return 400; }
 	int GetMinimumYDimension() { return 300; }
-	void GetXMLFilePath( string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CScriptEditor"; }
+	void GetXMLFilePath( std::string *pszXMLFilePath ) { ( *pszXMLFilePath ) = "CScriptEditor"; }
 	bool IsDrawGripper() { return true; }
 
 	DECLARE_MESSAGE_MAP()

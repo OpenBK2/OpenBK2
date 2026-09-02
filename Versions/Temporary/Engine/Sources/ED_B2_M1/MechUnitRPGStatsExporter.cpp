@@ -62,21 +62,21 @@
 	-----------------------		------------------------------			----------------------------------
 	Ammo											AmmoPoint														Vec2
 	BackWheel									BackWheel														Vec2
-	Cannon	(самолеты)				<?>																	string
-	Exhaust										exhaustPoints												string[0+]
+	Cannon	(самолеты)				<?>																	std::string
+	Exhaust										exhaustPoints												std::string[0+]
 	Explosion									скорее всего не исп.								-
-	FatalitySmoke							FatalitySmokePoint									string
+	FatalitySmoke							FatalitySmokePoint									std::string
 	FrontWheel								FrontWheel													Vec2
 	Gunner										Gunners															Vec2[0+][0+]
 	HookPoint									HookPoint														Vec2
-	MachineGun								platforms[i].guns[j].ShootPoint			string
-	MachineGun_Basis					platforms[i].guns[j].ShootPoint			string
-	MachineGun_Turret_Back		platforms[i].guns[j].ShootPoint			string
-	MachineGun_Turret_Coax		platforms[i].guns[j].ShootPoint			string
-	MachineGun_Turret_Cupol		platforms[i].guns[j].ShootPoint			string
-	MainGun										platforms[i].guns[0].ShootPoint			string
+	MachineGun								platforms[i].guns[j].ShootPoint			std::string
+	MachineGun_Basis					platforms[i].guns[j].ShootPoint			std::string
+	MachineGun_Turret_Back		platforms[i].guns[j].ShootPoint			std::string
+	MachineGun_Turret_Coax		platforms[i].guns[j].ShootPoint			std::string
+	MachineGun_Turret_Cupol		platforms[i].guns[j].ShootPoint			std::string
+	MainGun										platforms[i].guns[0].ShootPoint			std::string
 	People										PeoplePoints												Vec2[0+]
-	Smoke											damagePoints												string[0+]
+	Smoke											damagePoints												std::string[0+]
 	TowingPoint								TowPoint														Vec2
 	----------------------------------------------------------------------------------------------------------------
 
@@ -115,7 +115,7 @@ const char ANIMATEMODEL[]					= "AnimableModel";
 const char TRANSPORTABLEMODEL[]				= "TransportableModel";
 const char SKELETON_FIELD_IN_MODEL[]		= "Skeleton";
 
-void CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
+void CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const std::string &szSrc, const std::string &szDst )
 {
 	CVariant var;
 	pSrc->GetValue( szSrc + ".x", &var );
@@ -123,7 +123,7 @@ void CopyVector2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, 
 	pSrc->GetValue( szSrc + ".y", &var );
 	pDst->SetValue( szDst + ".y", var );
 }
-void CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const string &szSrc, const string &szDst )
+void CopyAABB2D( IManipulator *pSrc, IManipulator *pDst, const std::string &szSrc, const std::string &szDst )
 {
 	CopyVector2D( pSrc, pDst, szSrc + ".Center", szDst + ".Center" );
 	CopyVector2D( pSrc, pDst, szSrc + ".HalfSize", szDst + ".HalfSize" );
@@ -135,20 +135,20 @@ struct SGunInfo
 											// MAYA: rotation соответствующего локатора вокруг Z
 											// хранится в виде числа 0..64к
 	
-	string szShootPoint;	// имя пушки ( MAYA: имя локатора пушки, обязательно начинается с L: LMainGun, LMachineGun01 и т.п. )
+	std::string szShootPoint;	// имя пушки ( MAYA: имя локатора пушки, обязательно начинается с L: LMainGun, LMachineGun01 и т.п. )
 	
-	string szRecoilPoint;	// имя части пушки, которая участвует в отдаче (есть не у всех пушек)
+	std::string szRecoilPoint;	// имя части пушки, которая участвует в отдаче (есть не у всех пушек)
 												// MAYA: имя родительского трансформа пушки	(имя которого строго MainBarrel??)
 	
 	float fRecoilLength;	// если пушка вложена в RecoilPoint, то (trans_limit_Y_max - trans_limit_Y_min)
 	
 	bool bRecoil;					// есть ли отдача (true если fRecoilLength != 0)
 	
-	string szRotatePoint;	// точка вертикального поворота (есть не у всех пушек)
+	std::string szRotatePoint;	// точка вертикального поворота (есть не у всех пушек)
 												// MAYA: в родительский  трансформ с именем GunCarriage??
 
 	
-	string szPlatform;		// платформа, к которой прикреплена пушка
+	std::string szPlatform;		// платформа, к которой прикреплена пушка
 												// MAYA: родительский трансформ 
 												//		 имя платформы может быть только 
 												//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
@@ -271,7 +271,7 @@ struct SPlatformInfo
 	//		Basis или Basis_a - платформы верхнего уровня
 	//		Turret??		  - другие платформы (прилинкованные к Basis)
 	//
-	string szRotatePoint;	// имя платформы ( MAYA: имя трансформа )
+	std::string szRotatePoint;	// имя платформы ( MAYA: имя трансформа )
 
 	float constraint[2];	// горизонтальный констрейн ( MAYA: rot_limit_Z у трансформа платформы )
 
@@ -281,7 +281,7 @@ struct SPlatformInfo
 								 // только у одного из этих трансформов rot_limit_X != 0
 								 // именно этот rot_limit_X и кладется в constraintVertical
 
-	vector<SGunInfo> guns;
+	std::vector<SGunInfo> guns;
 	//
 	//
 	SPlatformInfo()
@@ -320,12 +320,12 @@ struct SPlatformInfo
 	}
 };
 //
-typedef vector<SPlatformInfo>::const_iterator CPlatformsInfoConstIter;
-typedef vector<SPlatformInfo>::iterator CPlatformsInfoIter;
+typedef std::vector<SPlatformInfo>::const_iterator CPlatformsInfoConstIter;
+typedef std::vector<SPlatformInfo>::iterator CPlatformsInfoIter;
 
 struct SConstraintInfo
 {
-	string szName;
+	std::string szName;
 
 	bool bTransConstrMinEnable[3];
 	CVec3 transLimitMin;
@@ -338,7 +338,7 @@ struct SConstraintInfo
 	CVec3 rotLimitMax;
 };
 
-static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+static void SetGunnersPoints( IManipulator* pManipulator, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	// расположение стрелков у пушек в 3-х возможных моделях пушки (стрельба+разворот+транспортировка)
 	pManipulator->RemoveNode( "Gunners", NODE_REMOVEALL_INDEX );	
@@ -346,7 +346,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 	pManipulator->InsertNode( "Gunners" );
 	pManipulator->InsertNode( "Gunners" );
 
-	vector<SLocatorQInfo> lc;
+	std::vector<SLocatorQInfo> lc;
 	SearchLocators( &lc, rLocatorsInfo, "LGunner??" ); 
 
 	int gunnersNumber[3] = {0,0,0};
@@ -380,8 +380,8 @@ static void SetGunnersPoints( IManipulator* pManipulator, const vector<SSkeleton
 	}
 }
 
-static string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
-								const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+static std::string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
+								const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 								const char *pszNamePattern )
 {
 	//
@@ -403,9 +403,9 @@ static string GetParentLocator(	const SSkeletonLocatorInfo &rGunLocator,
 	return "";
 }
 
-static string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
-									const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
-									const vector<SPlatformInfo> &rPlatformsInfo )
+static std::string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
+									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+									const std::vector<SPlatformInfo> &rPlatformsInfo )
 {
 	//
 	//	возвращает имя платформы к которой привязан локатор
@@ -414,7 +414,7 @@ static string GetLocatorPlatform(	const SSkeletonLocatorInfo &rGunLocator,
 	while ( (curLoc.nParentIdx != -1) )
 	{
 		SSkeletonLocatorInfo parentLocator = rLocatorsInfo[ curLoc.nParentIdx ];
-		for ( vector<SPlatformInfo>::const_iterator i = rPlatformsInfo.begin(); i != rPlatformsInfo.end(); ++i )
+		for ( std::vector<SPlatformInfo>::const_iterator i = rPlatformsInfo.begin(); i != rPlatformsInfo.end(); ++i )
 		{
 			if ( parentLocator.szName == i->szRotatePoint )
 				return parentLocator.szName;
@@ -466,7 +466,7 @@ static bool SetGunShootPoint(	IManipulator* pManipulator,
 	return CManipulatorManager::SetValue( pLocatorInfo->szName, pManipulator, pszDBA, false ); 
 }
 
-const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
 		if ( i->szName == pszLocatorName )
@@ -474,7 +474,7 @@ const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const vector
 	return 0;
 }
 
-static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+static void GetPlatforms( std::vector<SPlatformInfo> *pPlatforms, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	//
 	// функция считает № платформы: 
@@ -520,7 +520,7 @@ static void GetPlatforms( vector<SPlatformInfo> *pPlatforms, const vector<SSkele
 	}
 }
 
-static void GetConstraintInfoFromFile( vector<SConstraintInfo> *pConstraints, IManipulator *pMan )
+static void GetConstraintInfoFromFile( std::vector<SConstraintInfo> *pConstraints, IManipulator *pMan )
 {
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( VISUALOBJECT, pMan, 0, 0, 0 );
 	granny_file_info *pInfo = NMEGeomAttribs::GetAttribsByVisObj( pVisObjMan );
@@ -625,7 +625,7 @@ static void GetConstraintInfoFromFile( vector<SConstraintInfo> *pConstraints, IM
 	}
 }
 
-static void GetModelConstraints( vector<SConstraintInfo> *pConstraints, IManipulator* pRPGStatsManipulator )
+static void GetModelConstraints( std::vector<SConstraintInfo> *pConstraints, IManipulator* pRPGStatsManipulator )
 {
 	GetConstraintInfoFromFile( pConstraints, pRPGStatsManipulator );
 }
@@ -638,7 +638,7 @@ static void GetModelConstraints( vector<SConstraintInfo> *pConstraints, IManipul
 // **
 // ************************************************************************************************************************ //
 
-static bool IsStringEmpty( const string &szArg )
+static bool IsStringEmpty( const std::string &szArg )
 {
 	return szArg.empty() || szArg == " ";
 }
@@ -695,7 +695,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 		pItUnit->InsertNode( "animdescs" );
 
 	//collect visobjects
-	list<string> visObjects;
+	std::list<std::string> visObjects;
 	pItUnit->GetValue( "visualObject", &var );
 	if ( !IsDBIDEmpty(var) )
 		visObjects.push_back( var.GetStr() );
@@ -719,8 +719,8 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	}
 
 	//collect skeletons
-	std::unordered_map<string,bool> skeletons;
-	for ( list<string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
+	std::unordered_map<std::string,bool> skeletons;
+	for ( std::list<std::string>::const_iterator it = visObjects.begin(); it != visObjects.end(); ++it )
 	{
 		CPtr<IManipulator> pItVisObj = pRM->CreateObjectManipulator( "VisObj", *it );
 		CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
@@ -735,7 +735,7 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 
 	// convert animations from anims array to RPG stats structures
 	int nAnimCounter = 0;
-	for ( std::unordered_map<string,bool>::const_iterator itSkeleton = skeletons.begin(); itSkeleton != skeletons.end(); ++itSkeleton )
+	for ( std::unordered_map<std::string,bool>::const_iterator itSkeleton = skeletons.begin(); itSkeleton != skeletons.end(); ++itSkeleton )
 	{
 		CPtr<IManipulator> pItSkeleton = pRM->CreateObjectManipulator( "Skeleton", itSkeleton->first );
 		// retrieve animation information
@@ -746,23 +746,23 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 			pItSkeleton->GetValue( StrFmt( "Animations.[%d]", j ), &var );
 			if ( !IsDBIDEmpty(var) )
 			{
-				string szAddr = var.GetStr();
+				std::string szAddr = var.GetStr();
 				int nTypeSepPos = szAddr.find( ':' );
-				if ( nTypeSepPos != string::npos )
+				if ( nTypeSepPos != std::string::npos )
 					szAddr = szAddr.substr( nTypeSepPos + 1 );
 				CPtr<IManipulator> pAnimMan = pRM->CreateObjectManipulator( "AnimB2", szAddr );
 				//get type and create entry
 				pAnimMan->GetValue( "Type", &var );
-				int nAnimType = typeAnimationMnemonics.GetValue( (string)var.GetStr() );
-				string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
+				int nAnimType = typeAnimationMnemonics.GetValue( (std::string)var.GetStr() );
+				std::string szDescName = StrFmt( "animdescs.[%d].anims", nAnimType );
 				pItUnit->InsertNode( szDescName );
 				pItUnit->GetValue( szDescName, &var );
 				szDescName += StrFmt( ".[%d]", ((int)var) - 1 );
 				//create aabb's and write indexes
 				pAnimMan->GetValue( "AABBAName", &var );
-				string szAABBAName = var.GetStr();
+				std::string szAABBAName = var.GetStr();
 				pAnimMan->GetValue( "AABBDName", &var );
-				string szAABBDName = var.GetStr();
+				std::string szAABBDName = var.GetStr();
 				if ( !IsStringEmpty( szAABBAName ) || ! IsStringEmpty( szAABBDName ) )
 				{
 					pItUnit->InsertNode( "aabb_as" );
@@ -818,7 +818,7 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 	}
 }
 
-static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAttachedManipulator, const string &szVisObj )
+static void CopyAnimationsTo( IManipulator *pUnitManipulator, IManipulator *pAttachedManipulator, const std::string &szVisObj )
 {
 	CVariant var;
 	pUnitManipulator->GetValue( szVisObj, &var );
@@ -896,8 +896,8 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 
 static void ProcessGun(	SGunInfo *pGunInfo, 
 						const SSkeletonLocatorInfo &rGunLocator,
-						const vector<SSkeletonLocatorInfo> &rLocatorsInfo,
-						const vector<SPlatformInfo> &rPlatformsInfo )
+						const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
+						const std::vector<SPlatformInfo> &rPlatformsInfo )
 {
 	// имя пушки?
 	pGunInfo->szShootPoint = rGunLocator.szName;
@@ -919,33 +919,33 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 	pGunInfo->szRecoilPoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*MainBarrel*" );
 }
 
-static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vector<SGunInfo> &rGuns )
+static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std::vector<SGunInfo> &rGuns )
 {
-	const string szGunsDba = StrFmt( "platforms.[%d].guns", nPlatformIdx );
+	const std::string szGunsDba = StrFmt( "platforms.[%d].guns", nPlatformIdx );
 	
 	CVariant v;
 	if ( !pManipulator->GetValue( szGunsDba, &v ) )
 		return;
 
 	const int nNumElems = v;
-	vector<uint8_t> gunProcessed( rGuns.size(), uint8_t(0) );
+	std::vector<uint8_t> gunProcessed( rGuns.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
-		string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, i );
-		string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, i );
-		string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, i );
-		string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, i );
-		string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, i );
-		string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, i );
+		std::string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, i );
+		std::string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, i );
+		std::string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, i );
+		std::string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, i );
+		std::string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, i );
+		std::string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, i );
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
 			continue;
 
-		string szLocatorName = v.GetStr();
+		std::string szLocatorName = v.GetStr();
 
 		int nIdx = 0;
-		for ( vector<SGunInfo>::const_iterator j = rGuns.begin(); j != rGuns.end(); ++j, ++nIdx )
+		for ( std::vector<SGunInfo>::const_iterator j = rGuns.begin(); j != rGuns.end(); ++j, ++nIdx )
 		{
 			const SGunInfo *pG = j;
 
@@ -956,7 +956,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 			{
 				bool bRes;
 				CVariant v;
-				string szWarnMsg;
+				std::string szWarnMsg;
 
 				v = pG->nDirection;
 				bRes = pManipulator->SetValue( szDirectionDBA, v );
@@ -991,7 +991,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 	// добавить новые пушки
 	int nIdx = 0;
 	int nNewElemIdx = nNumElems;
-	for ( vector<SGunInfo>::const_iterator i = rGuns.begin(); i != rGuns.end(); ++i, ++nIdx )
+	for ( std::vector<SGunInfo>::const_iterator i = rGuns.begin(); i != rGuns.end(); ++i, ++nIdx )
 	{
 		const SGunInfo *pG = i;
 
@@ -1001,16 +1001,16 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const vect
 		if ( !pManipulator->InsertNode( szGunsDba ) )
 			continue;
 
-		string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, nNewElemIdx );
-		string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, nNewElemIdx );
-		string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, nNewElemIdx );
-		string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, nNewElemIdx );
-		string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, nNewElemIdx );
-		string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, nNewElemIdx );
+		std::string szLocNameDBA = StrFmt( "platforms.[%d].guns.[%d].ShootPoint", nPlatformIdx, nNewElemIdx );
+		std::string szDirectionDBA = StrFmt( "platforms.[%d].guns.[%d].Direction", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilPointDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilPoint", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilLengthDBA = StrFmt( "platforms.[%d].guns.[%d].RecoilLength", nPlatformIdx, nNewElemIdx );
+		std::string szRecoilDBA = StrFmt( "platforms.[%d].guns.[%d].Recoil", nPlatformIdx, nNewElemIdx );
+		std::string szRotatePointDBA = StrFmt( "platforms.[%d].guns.[%d].RotatePoint", nPlatformIdx, nNewElemIdx );
 
 		bool bRes;
 		CVariant v;
-		string szWarnMsg;
+		std::string szWarnMsg;
 
 		v = pG->szShootPoint;
 		bRes = pManipulator->SetValue( szLocNameDBA, v );
@@ -1051,8 +1051,8 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 {
 	bool bRes;
 	CVariant v;
-	string szDBA; 
-	string szWarnMsg;
+	std::string szDBA; 
+	std::string szWarnMsg;
 
 	v = pP->constraint[0];
 	szDBA = StrFmt( "platforms.[%d].constraint.Min", nElementIndex );
@@ -1079,7 +1079,7 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 	NI_ASSERT( bRes, szWarnMsg.c_str() );
 }
 
-static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformInfo> &rPlatforms )
+static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlatformInfo> &rPlatforms )
 { 
 	// обновить существующие платформы
 	CVariant v;
@@ -1087,21 +1087,21 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 		return;
 	const int nNumElems = v;
 
-	vector<uint8_t> platformProcessed( rPlatforms.size(), uint8_t(0) );
+	std::vector<uint8_t> platformProcessed( rPlatforms.size(), uint8_t(0) );
 	for ( int i = 0; i < nNumElems; ++i )
 	{
-		string szLocNameDBA = StrFmt( "platforms.[%d].RotatePoint", i );
-		string szConstraintDBA = StrFmt( "platforms.[%d].constraint", i );
-		string szConstraintVerticalDBA = StrFmt( "platforms.[%d].constraintVertical", i );
+		std::string szLocNameDBA = StrFmt( "platforms.[%d].RotatePoint", i );
+		std::string szConstraintDBA = StrFmt( "platforms.[%d].constraint", i );
+		std::string szConstraintVerticalDBA = StrFmt( "platforms.[%d].constraintVertical", i );
 
 		CVariant v;
 		if ( !pManipulator->GetValue( szLocNameDBA, &v ) )
 			continue;
 
-		string szLocatorName = v.GetStr();
+		std::string szLocatorName = v.GetStr();
 
 		int nIdx = 0;
-		for ( vector<SPlatformInfo>::const_iterator j = rPlatforms.begin(); j != rPlatforms.end(); ++j, ++nIdx )
+		for ( std::vector<SPlatformInfo>::const_iterator j = rPlatforms.begin(); j != rPlatforms.end(); ++j, ++nIdx )
 		{
 			const SPlatformInfo *pP = j;
 			if ( szLocatorName != pP->szRotatePoint )
@@ -1122,7 +1122,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 	// добавить новые платформы
 	int nIdx = 0;
 	int nNewElemIdx = nNumElems;
-	for ( vector<SPlatformInfo>::const_iterator i = rPlatforms.begin(); i != rPlatforms.end(); ++i, ++nIdx )
+	for ( std::vector<SPlatformInfo>::const_iterator i = rPlatforms.begin(); i != rPlatforms.end(); ++i, ++nIdx )
 	{
 		const SPlatformInfo *pP = i;
 
@@ -1133,9 +1133,9 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 			continue;
 
 		CVariant v = pP->szRotatePoint;
-		string szDBA = StrFmt( "platforms.[%d].RotatePoint", nNewElemIdx );
+		std::string szDBA = StrFmt( "platforms.[%d].RotatePoint", nNewElemIdx );
 		bool bRes = pManipulator->SetValue( szDBA, v );
-		string szWarnMsg = "WARNING: can't write: " + szDBA;
+		std::string szWarnMsg = "WARNING: can't write: " + szDBA;
 		NI_ASSERT( bRes, szWarnMsg.c_str() );
 
 		WritePlatformData( pManipulator, pP, nNewElemIdx );
@@ -1145,14 +1145,14 @@ static void UpdatePlatforms( IManipulator *pManipulator, const vector<SPlatformI
 	}
 }
 
-static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	// собрать данные о кол-ве платформ
-	vector<SPlatformInfo> platformsInfo;
+	std::vector<SPlatformInfo> platformsInfo;
 	GetPlatforms( &platformsInfo, rLocatorsInfo );
 	std::sort( platformsInfo.begin(), platformsInfo.end() );
 
-	vector<SGunInfo> gunsInfo;
+	std::vector<SGunInfo> gunsInfo;
 
 	// собрать данные о пушках
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
@@ -1168,9 +1168,9 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	}
 
 	// раскидать пушки по платформам
-	for ( vector<SGunInfo>::iterator i = gunsInfo.begin(); i != gunsInfo.end(); ++i )
+	for ( std::vector<SGunInfo>::iterator i = gunsInfo.begin(); i != gunsInfo.end(); ++i )
 	{
-		for ( vector<SPlatformInfo>::iterator j = platformsInfo.begin(); j != platformsInfo.end(); ++j )
+		for ( std::vector<SPlatformInfo>::iterator j = platformsInfo.begin(); j != platformsInfo.end(); ++j )
 		{
 			if ( i->szPlatform == j->szRotatePoint )
 			{
@@ -1181,19 +1181,19 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	}
 
 	// сортировка пушек 
-	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 		std::sort( i->guns.begin(), i->guns.end() );
 
 
 	// ограничения
-	vector<SConstraintInfo> constraints;
+	std::vector<SConstraintInfo> constraints;
 	GetModelConstraints( &constraints, pManipulator ); 
 
 	// ограничения на горизонтальные повороты платформ
-	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
-		for ( vector<SConstraintInfo>::const_iterator j = constraints.begin(); j != constraints.end(); ++j )
+		for ( std::vector<SConstraintInfo>::const_iterator j = constraints.begin(); j != constraints.end(); ++j )
 		{
 			const SConstraintInfo *pC = j;
 			if ( pC->szName == pP->szRotatePoint )
@@ -1209,10 +1209,10 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	}
 
 	// ограничения на вертикальный поворот платформы
-	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
-		for ( vector<SGunInfo>::const_iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
+		for ( std::vector<SGunInfo>::const_iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
 			const SGunInfo *pG = j;
 			if ( pG->szRotatePoint.empty() )
@@ -1222,7 +1222,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 			}
 
 			bool bFound = false;
-			for ( vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
+			for ( std::vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
 			{
 				const SConstraintInfo *pC = k;
 				if ( pC->szName == pG->szRotatePoint )
@@ -1244,16 +1244,16 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	}
 
 	// ограничения на откат
-	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
-		for ( vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
+		for ( std::vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
 			SGunInfo *pG = j;
 			if ( pG->szRecoilPoint.empty() )
 				continue;
 
-			for ( vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
+			for ( std::vector<SConstraintInfo>::const_iterator k = constraints.begin(); k != constraints.end(); ++k )
 			{
 				const SConstraintInfo *pC = k;
 				if ( pC->szName == pG->szRecoilPoint )
@@ -1271,10 +1271,10 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 	}
 
 	// направление пушки
-	for ( vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
+	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 	{
 		SPlatformInfo *pP = i;
-		for ( vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
+		for ( std::vector<SGunInfo>::iterator j = pP->guns.begin(); j != pP->guns.end(); ++j )
 		{
 			SGunInfo *pG = j;
 			for ( CLocatorInfoConstIter k = rLocatorsInfo.begin(); k != rLocatorsInfo.end(); ++k )
@@ -1310,7 +1310,7 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const vector<SSke
 //
 //
 
-static int FindLocator( const string &szLocatorName, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+static int FindLocator( const std::string &szLocatorName, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	int i = 0;
 	while ( i < rLocatorsInfo.size() && rLocatorsInfo[i].szName != szLocatorName )
@@ -1319,7 +1319,7 @@ static int FindLocator( const string &szLocatorName, const vector<SSkeletonLocat
 	return i < rLocatorsInfo.size() ? i : -1;
 }
 
-static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const vector<SSkeletonLocatorInfo> &rLocatorsInfo )
+static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
@@ -1329,9 +1329,9 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 	for ( int i = 0; i < nPlatforms; ++i )
 	{
 		// set platform position
-		const string szPlatformName = StrFmt( "platforms.[%d].", i );
+		const std::string szPlatformName = StrFmt( "platforms.[%d].", i );
 		
-		string szRotateBone;
+		std::string szRotateBone;
 		if ( !CManipulatorManager::GetValue( &szRotateBone, pManipulator, szPlatformName + "RotatePoint" ) )
 			CManipulatorManager::SetVec3( VNULL3, pManipulator, szPlatformName + "AIRotatePointPos" );
 		else 
@@ -1348,8 +1348,8 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 			const int nGuns = v;
 			for ( int j = 0; j < nGuns; ++j )
 			{
-				const string szGunName = szPlatformName + StrFmt( "guns.[%d].", j );
-				string szShootBone;
+				const std::string szGunName = szPlatformName + StrFmt( "guns.[%d].", j );
+				std::string szShootBone;
 
 				if ( CManipulatorManager::GetValue( &szShootBone, pManipulator, szGunName + "RotatePoint" ) )
 				{
@@ -1363,8 +1363,8 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 }
 
 EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulator,
-																											 const string &rszObjectTypeName,
-																											 const string &rszObjectName,
+																											 const std::string &rszObjectTypeName,
+																											 const std::string &rszObjectName,
 																											 bool bForce,
 																											 EXPORT_TYPE exportType )
 {
@@ -1377,10 +1377,10 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 
 	ProcessAABB( pManipulator );
 	//
-	vector<SSkeletonLocatorInfo> visualObjectLocators;
-	vector<SSkeletonLocatorInfo> animateModelLocators;
-	vector<SSkeletonLocatorInfo> transportableModelLocators;
-	vector<SSkeletonLocatorInfo> allModelsLocators;
+	std::vector<SSkeletonLocatorInfo> visualObjectLocators;
+	std::vector<SSkeletonLocatorInfo> animateModelLocators;
+	std::vector<SSkeletonLocatorInfo> transportableModelLocators;
+	std::vector<SSkeletonLocatorInfo> allModelsLocators;
 	//
 	GetModelLocators( &visualObjectLocators, pManipulator, VISUALOBJECT );
 	GetModelLocators( &animateModelLocators, pManipulator, ANIMATEMODEL );
@@ -1433,8 +1433,8 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 // ************************************************************************************************************************ //
 
 EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator,
-																											const string &rszObjectTypeName,
-																											const string &rszObjectName,
+																											const std::string &rszObjectTypeName,
+																											const std::string &rszObjectName,
 																											bool bExport,
 																											EXPORT_TYPE exportType )
 {
@@ -1444,7 +1444,7 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator
 	ILogger *pLogger = NLog::GetLogger();
 	// check for diving bomber
 	{
-		string szRPGType;
+		std::string szRPGType;
 		CManipulatorManager::GetValue( &szRPGType, pManipulator, "DBtype" );
 		if ( szRPGType == "DB_RPG_TYPE_AVIA_ATTACK" ) 
 		{

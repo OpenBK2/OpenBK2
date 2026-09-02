@@ -23,14 +23,14 @@ private:
 	void RemoveChild( IWindow *pWindow );
 	void LoadWindow();
 	void ReplaceChild( IWindow *pWindow, const CTPoint<int> &rMousePoint, int nFlags );
-	bool CheckInsertChild( const string & szTypeName, const CDBID &rDBID );
+	bool CheckInsertChild( const std::string & szTypeName, const CDBID &rDBID );
 	
-	bool InsertChildInstanceToDB( const string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID );
-	IWindow * InsertChildInstanceToUI( const string & szSharedTypeName, const CDBID &rDBID );
-	bool GenerateChildInstance( const string &szTypeName, const CDBID &rDBID, string *szInstanceFullName, CDBID *pInstanceDBID );
-	bool MakeInstanceName( const string & szInstanceTypeName, const string & szSharedShortName, string *pShortName, string *pFullName, string *pObjName );
-	bool MakeSharedName( const string & szSharedTypeName, const CDBID &rDBID, string *pSharedShortName, string *pSharedFullName );
-	bool GetEditorObjName( string *pObjName );
+	bool InsertChildInstanceToDB( const std::string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID );
+	IWindow * InsertChildInstanceToUI( const std::string & szSharedTypeName, const CDBID &rDBID );
+	bool GenerateChildInstance( const std::string &szTypeName, const CDBID &rDBID, std::string *szInstanceFullName, CDBID *pInstanceDBID );
+	bool MakeInstanceName( const std::string & szInstanceTypeName, const std::string & szSharedShortName, std::string *pShortName, std::string *pFullName, std::string *pObjName );
+	bool MakeSharedName( const std::string & szSharedTypeName, const CDBID &rDBID, std::string *pSharedShortName, std::string *pSharedFullName );
+	bool GetEditorObjName( std::string *pObjName );
 	void UpdatePropertyControl( bool bHardUpdate = false );
 	void ResetSelection();
 
@@ -40,8 +40,8 @@ private:
 	void OnKeyTab();
 	void OnKeyArrows( int dx, int dy );
 
-	static bool FindInstanceTypeNameByShared( const string & szSharedName, string *szInstanceName );
-	static bool IsPushableType( const string & szTypeName );
+	static bool FindInstanceTypeNameByShared( const std::string & szSharedName, std::string *szInstanceName );
+	static bool IsPushableType( const std::string & szTypeName );
 
 	void MakeUIScreenWithElement( const NDb::SUIDesc *pElement );
 public:
@@ -59,14 +59,14 @@ public:
 	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// methods
-	void UndoChange( const string & szTypeName, const CDBID &rDBID, const string & szName, const CVariant & oldValue );
-	void UndoInsert( const string & szTypeName, const CDBID &rDBID, const string & szName );
-	void UndoRemove( const string & szTypeName, const CDBID &rDBID, const string & szName );
+	void UndoChange( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName, const CVariant & oldValue );
+	void UndoInsert( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName );
+	void UndoRemove( const std::string & szTypeName, const CDBID &rDBID, const std::string & szName );
 
 	// members
 protected:
 	class CWindowSimpleSharedEditor *pEditor;
-	string szEditorTypeName;
+	std::string szEditorTypeName;
 	CDBID editorDBID;
 	CPtr<IWindow> pScreen;
 	CPtr<IWindow> pMainWindow;

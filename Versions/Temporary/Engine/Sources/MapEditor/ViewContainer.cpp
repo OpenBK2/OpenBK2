@@ -3,7 +3,7 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "ViewContainer.h"
 
-void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )
+void CViewContainer::Add( IView *pView, const std::string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Add, pView == 0" );
 	if ( !rszObjectTypeName.empty() )
@@ -13,7 +13,7 @@ void CViewContainer::Add( IView *pView, const string &rszObjectTypeName, const C
 }
 
 
-void CViewContainer::Remove( IView *pView, const string &rszObjectTypeName, const CDBID &rObjectDBID )
+void CViewContainer::Remove( IView *pView, const std::string &rszObjectTypeName, const CDBID &rObjectDBID )
 {
 	NI_ASSERT( pView != 0, "CViewContainer::Remove, pView == 0" );
 	if ( !rszObjectTypeName.empty() )
@@ -31,7 +31,7 @@ void CViewContainer::Remove( IView *pView, const string &rszObjectTypeName, cons
 }
 
 
-bool CViewContainer::GetViewSet( CViewSet *pViewSet, const string &rszObjectTypeName, const CDBID &rObjectDBID ) const
+bool CViewContainer::GetViewSet( CViewSet *pViewSet, const std::string &rszObjectTypeName, const CDBID &rObjectDBID ) const
 {
 	if ( !rszObjectTypeName.empty() )
 	{

@@ -9,8 +9,8 @@ struct SMainFrameParams
 
 	SMainFrameParams();
 
-	void GetRegistryKey( string *pszRegistryKey );
-	void GetXMLFilePath( string *pszXMLFilePath );
+	void GetRegistryKey( std::string *pszRegistryKey );
+	void GetXMLFilePath( std::string *pszXMLFilePath );
 
 	// serializing...
 	int operator&( IBinSaver &bs );

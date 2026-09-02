@@ -6,7 +6,7 @@ class CUIRunModeState : public CDefaultInputState
 {
 public:
 	//Life-cycle
-	CUIRunModeState( class CWindowSimpleSharedEditor *_pEditor, const string &rszTypeName, const CDBID &rDBID );
+	CUIRunModeState( class CWindowSimpleSharedEditor *_pEditor, const std::string &rszTypeName, const CDBID &rDBID );
 	virtual ~CUIRunModeState();
 	
 	//IInputState
@@ -18,7 +18,7 @@ public:
 protected:
 	class CWindowSimpleSharedEditor *pEditor;
 	CDBID dbid;
-	string szTypeName;
+	std::string szTypeName;
 };
 
 

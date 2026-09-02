@@ -203,7 +203,7 @@ void CDWGDBBrowser::OnTabSelected()
 			collectionObjectSet.szObjectTypeName = szCurrentTable;
 			InsertHashSetElement( &( collectionObjectSet.objectNameSet ), CDBID( VIEW_COLLECTION_ID ) );
 			//
-			pwndTreeGBDBrowserBase->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, string() );
+			pwndTreeGBDBrowserBase->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
 			pwndTreeGBDBrowserBase->CreateTree();
 			//DebugTrace( "CDWGDBBrowser::OnTabSelected(): wParam: 0x%X(%u), lParam: 0x%X\n", wParam, wParam, lParam );
 		}
@@ -228,7 +228,7 @@ void CDWGDBBrowser::SetTableManipulator( IManipulator *_pTableManipulator )
 		}
 		if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_CACHE_LOCAL ) )
 		{
-			string szName;
+			std::string szName;
 			while ( !pTableManipulatorIterator->IsEnd() )
 			{
 				pTableManipulatorIterator->GetName( &szName );
@@ -250,7 +250,7 @@ void CDWGDBBrowser::CreateTabs()
 	// соберем таблицы которые уже заполнены
 	/**
 	{
-		std::unordered_map<string, CTreeGDBBrowser*> existingTabs;
+		std::unordered_map<std::string, CTreeGDBBrowser*> existingTabs;
 		//
 		char pBuffer[0xFFF];
 		bool bSelected = false;
@@ -261,7 +261,7 @@ void CDWGDBBrowser::CreateTabs()
 		for ( int nTabIndex = 0; nTabIndex < nTabCount; ++nTabIndex )
 		{
 			wndContents.GetTabInfo( nTabIndex, pBuffer, bSelected, pWnd, pExtra );
-			const string szName( pBuffer );
+			const std::string szName( pBuffer );
 			if ( selectedTables.find( szName ) != selectedTables.end() )
 			{
 				existingTabs[szName] = dynamic_cast<CTreeGDBBrowser*>( pwnd );
@@ -275,7 +275,7 @@ void CDWGDBBrowser::CreateTabs()
 		wndContents.RemoveAllTabs();
 		// Необходимо сначало добавить все панели, а потом устанавливать активную
 		CTreeGDBBrowser* pwndActiveTreeGBDBrowser = 0;
-		for ( list<string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
+		for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 		{
 			if ( selectedTables.find( *itTable ) != selectedTables.end() )
 			{
@@ -340,18 +340,18 @@ void CDWGDBBrowser::ClearTable()
 		{
 			int nObjectsDeleted = 0;
 			int nFoldersDeleted = 0;
-			list<string> obectNameList;
+			std::list<std::string> obectNameList;
 			BeginWaitCursor();
 			// remove unreferenced objects
 			if ( CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE ) )
 			{
 				while ( !pFolderManipulatorIterator->IsEnd() )
 				{
-					string szType;
+					std::string szType;
 					pFolderManipulatorIterator->GetType( &szType );
 					if ( szType == "object" )
 					{
-						string szObjectName;
+						std::string szObjectName;
 						pFolderManipulatorIterator->GetName( &szObjectName );
 						if ( !szObjectName.empty() )
 						{
@@ -361,7 +361,7 @@ void CDWGDBBrowser::ClearTable()
 					pFolderManipulatorIterator->Next();
 				}
 			}
-			for ( list<string>::const_iterator itObjectName = obectNameList.begin(); itObjectName != obectNameList.end(); ++itObjectName )
+			for ( std::list<std::string>::const_iterator itObjectName = obectNameList.begin(); itObjectName != obectNameList.end(); ++itObjectName )
 			{
 				DebugTrace( "Delete object: <%s>", itObjectName->c_str() ); 
 				if ( pFolderManipulator->RemoveNode( *itObjectName ) )
@@ -370,17 +370,17 @@ void CDWGDBBrowser::ClearTable()
 				}
 			}
 			// remove emply folders
-			list<string> folderNameList;
-			list<string> folderStack;
+			std::list<std::string> folderNameList;
+			std::list<std::string> folderStack;
 			if ( CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE ) )
 			{
 				while ( !pFolderManipulatorIterator->IsEnd() )
 				{
-					string szName;
+					std::string szName;
 					pFolderManipulatorIterator->GetName( &szName );
 					if ( !szName.empty() )
 					{
-						string szType;
+						std::string szType;
 						pFolderManipulatorIterator->GetType( &szType );
 						
 						if ( szType == "folder" )
@@ -389,7 +389,7 @@ void CDWGDBBrowser::ClearTable()
 						}
 						else if ( szType == "object" )
 						{
-							for ( list<string>::iterator itName = folderStack.begin(); itName != folderStack.end(); )
+							for ( std::list<std::string>::iterator itName = folderStack.begin(); itName != folderStack.end(); )
 							{
 								if ( szName.compare( 0, itName->size(), *itName ) == 0 )
 								{
@@ -402,7 +402,7 @@ void CDWGDBBrowser::ClearTable()
 							}
 							if ( !folderStack.empty() )
 							{
-								for ( list<string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
+								for ( std::list<std::string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
 								{
 									--itName;
 									folderNameList.push_back( *itName );
@@ -415,14 +415,14 @@ void CDWGDBBrowser::ClearTable()
 				}
 				if ( !folderStack.empty() )
 				{
-					for ( list<string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
+					for ( std::list<std::string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
 					{
 						--itName;
 						folderNameList.push_back( *itName );
 					}
 				}
 			}
-			for ( list<string>::const_iterator itFolderName = folderNameList.begin(); itFolderName != folderNameList.end(); ++itFolderName )
+			for ( std::list<std::string>::const_iterator itFolderName = folderNameList.begin(); itFolderName != folderNameList.end(); ++itFolderName )
 			{
 				DebugTrace( "Delete Folder: <%s>", itFolderName->c_str() ); 
 				if ( pFolderManipulator->RemoveNode( *itFolderName ) )
@@ -494,7 +494,7 @@ void CDWGDBBrowser::SelectObjectSet( const SObjectSet &rObjectSet )
 }
 
 
-void CDWGDBBrowser::New( const string &rszObjectTypeName )
+void CDWGDBBrowser::New( const std::string &rszObjectTypeName )
 {
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
 	{
@@ -508,16 +508,16 @@ void CDWGDBBrowser::New( const string &rszObjectTypeName )
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//	
-	string szObjectTypeName = rszObjectTypeName;
+	std::string szObjectTypeName = rszObjectTypeName;
 	if ( szObjectTypeName.empty() )
 	{
 		return;
 	}
 	CString strObjectName;
 	strObjectName.LoadString( IDS_TREE_GDB_BROWSE_NEW_MAIN_OBJECT );
-	string szDefaultFolder;
+	std::string szDefaultFolder;
 	pBuilderContainer->GetDefaultFolder( szObjectTypeName, &szDefaultFolder );
-	string szObjectName = szDefaultFolder + string( strObjectName );
+	std::string szObjectName = szDefaultFolder + std::string( strObjectName );
 	pFolderCallback->UniqueName( szObjectTypeName, &szObjectName );
 	//
 	bool bCanChangeObjectName = true;
@@ -542,7 +542,7 @@ void CDWGDBBrowser::New( const string &rszObjectTypeName )
 				InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( szObjectName ) );
 				//
 				bool bMainObject = ( szObjectTypeName == pUserData->constUserData.szMainObjectType );
-				string szName;
+				std::string szName;
 				CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
 				CStringManager::AddToRecentList( szName, bMainObject );
 				SelectObjectSet( objectSet );
@@ -559,7 +559,7 @@ void CDWGDBBrowser::New( const string &rszObjectTypeName )
 }
 
 
-void CDWGDBBrowser::Open( const string &rszObjectTypeName )
+void CDWGDBBrowser::Open( const std::string &rszObjectTypeName )
 {
 	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
 	{
@@ -571,7 +571,7 @@ void CDWGDBBrowser::Open( const string &rszObjectTypeName )
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 
 	CDBID objectDBID;
-	string szObjectTypeName = rszObjectTypeName;
+	std::string szObjectTypeName = rszObjectTypeName;
 	if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &objectDBID, &szObjectTypeName, false, false ) )
 	{
 		if ( !objectDBID.IsEmpty() )
@@ -585,7 +585,7 @@ void CDWGDBBrowser::Open( const string &rszObjectTypeName )
 					InsertHashSetElement( &( objectSet.objectNameSet ), objectDBID );
 					//
 					bool bMainObject = ( szObjectTypeName == pUserData->constUserData.szMainObjectType );
-					string szName;
+					std::string szName;
 					CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
 					CStringManager::AddToRecentList( szName, bMainObject );
 					SelectObjectSet( objectSet );
@@ -608,7 +608,7 @@ void CDWGDBBrowser::OnRecentList( int nIndex, bool bMainObject )
 	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	string szName;
+	std::string szName;
 	if ( bMainObject )
 	{
 		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentList.size () ) )
@@ -768,12 +768,12 @@ bool CDWGDBBrowser::HandleCommand( unsigned nCommandID, uint32_t dwData )
 		}
 		case ID_MAIN_NEW_RESOURCE:
 		{
-			New( string() );
+			New( std::string() );
 			return true;
 		}
 		case ID_MAIN_OPEN_RESOURCE:
 		{
-			Open( string() );
+			Open( std::string() );
 			return true;
 		}
 		case ID_MAIN_SAVE:
