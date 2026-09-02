@@ -294,7 +294,7 @@ void CPassabilityProfileCreator::GenerateAllSegments()
 			}
 			newPoints.push_back( iter->p2 );
 
-			sort( newPoints.begin(), newPoints.end(), CPointsSort( iter->p1 ) );
+			newPoints.sort( CPointsSort( iter->p1 ) );
 
 			std::list<CVec2>::iterator pred = newPoints.begin();
 			std::list<CVec2>::iterator cur = pred;
