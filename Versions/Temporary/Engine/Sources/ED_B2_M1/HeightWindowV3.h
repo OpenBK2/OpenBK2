@@ -44,7 +44,7 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	virtual void DoDataExchange( CDataExchange* pDX );
 	//
 	virtual BOOL OnInitDialog();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 	//

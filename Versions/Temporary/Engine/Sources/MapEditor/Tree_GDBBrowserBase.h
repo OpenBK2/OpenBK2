@@ -150,7 +150,7 @@ private:
 protected:
 	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
 	afx_msg void OnDestroy();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	//
 	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
 	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );

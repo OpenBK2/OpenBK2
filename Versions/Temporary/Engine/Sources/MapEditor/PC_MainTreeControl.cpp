@@ -289,7 +289,7 @@ void CPCMainTreeControl::OnDestroy()
 }
 
 
-void CPCMainTreeControl::OnTimer( unsigned nIDEvent ) 
+void CPCMainTreeControl::OnTimer( UINT_PTR nIDEvent ) 
 {
   if ( nIDEvent == GetCreateTreeTimerID() )
 	{

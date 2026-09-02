@@ -369,7 +369,7 @@ void CHeightWindowV3::OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-void CHeightWindowV3::OnTimer( unsigned nIDEvent ) 
+void CHeightWindowV3::OnTimer( UINT_PTR nIDEvent ) 
 {
   if ( nIDEvent == GetHeightID() )
 	{

@@ -49,7 +49,7 @@ void CProgressDlg::DoDataExchange( CDataExchange *pDX )
 }
 
 
-void CProgressDlg::OnTimer( unsigned nIDEvent ) 
+void CProgressDlg::OnTimer( UINT_PTR nIDEvent ) 
 {
 	if ( nIDEvent == START_TIMER_ID )
 	{

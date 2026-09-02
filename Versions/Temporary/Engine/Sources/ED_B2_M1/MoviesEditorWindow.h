@@ -120,7 +120,7 @@ public:
 	afx_msg void OnCbnSelchangeComboMovie();
 	afx_msg void OnCbnSelChangeTimerSpeed();
 	afx_msg void OnPaint();
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
 	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
 	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );

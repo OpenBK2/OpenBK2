@@ -47,7 +47,7 @@ protected:
 	afx_msg void OnClickedSceneColorButton();
 	afx_msg void OnClickedTerrainColorButton();
 	//
-	afx_msg void OnTimer( unsigned nIDEvent );
+	afx_msg void OnTimer( UINT_PTR nIDEvent );
 
 	int32_t nSceneColorTimer;
   inline unsigned GetSceneColorID() { return 1; }

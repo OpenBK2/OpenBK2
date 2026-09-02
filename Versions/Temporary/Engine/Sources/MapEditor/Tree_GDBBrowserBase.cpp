@@ -201,7 +201,7 @@ void CTreeGDBBrowserBase::OnDestroy()
 }
 
 
-void CTreeGDBBrowserBase::OnTimer( unsigned nIDEvent ) 
+void CTreeGDBBrowserBase::OnTimer( UINT_PTR nIDEvent ) 
 {
   if ( nIDEvent == GetLabelEditSortTimerID() )
 	{

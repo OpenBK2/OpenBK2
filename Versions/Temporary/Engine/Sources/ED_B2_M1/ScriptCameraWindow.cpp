@@ -440,7 +440,7 @@ void CScriptCameraWindow::OnChangeFOV()
 }
 
 
-void CScriptCameraWindow::OnTimer( unsigned nIDEvent ) 
+void CScriptCameraWindow::OnTimer( UINT_PTR nIDEvent ) 
 {
   if ( nIDEvent == GetYawTimerID() )
 		OnYawTimer();
