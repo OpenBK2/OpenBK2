@@ -2,7 +2,9 @@
 
 #include "MapEditorLib/Interface_ChildFrame.h"
 
-class CChildFrameBase : public IChildFrame
+#include "ED_Common_export.h"
+
+class ED_COMMON_EXPORT CChildFrameBase : public IChildFrame
 {
 protected:
 	SECWorksheet *pwndChildFrame;

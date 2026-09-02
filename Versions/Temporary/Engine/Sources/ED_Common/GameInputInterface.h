@@ -3,7 +3,9 @@
 #include "Input/GameMessage.h"
 #include "InterfaceCommandDeclare.h"
 
-class CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer
+#include "ED_Common_export.h"
+
+class ED_COMMON_EXPORT CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer
 {
 public:	
 	virtual ~CGameInputInterface() {}

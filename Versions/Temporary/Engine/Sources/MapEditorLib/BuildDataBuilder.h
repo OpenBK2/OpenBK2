@@ -2,7 +2,9 @@
 #pragma once
 #include "DefaultBuilder.h"
 
-class CBuildDataBuilder : public CBuilderBase, public IBuildDataCallback
+#include "MapEditorLib_export.h"
+
+class MAPEDITORLIB_EXPORT CBuildDataBuilder : public CBuilderBase, public IBuildDataCallback
 {
 protected:
 	virtual const std::string& GetBuildDataTypeName() = 0;

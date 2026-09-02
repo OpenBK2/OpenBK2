@@ -1,6 +1,8 @@
 #pragma once
 
-class CLogger
+#include "libdb_export.h"
+
+class LIBDB_EXPORT CLogger
 {
 	bool bCheckReferences;
 	std::list<std::string> stkTrace;

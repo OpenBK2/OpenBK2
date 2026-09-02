@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Interface_MainFrame.h"
+#include "Interface_Progress.h"
 
 
 namespace NProgress
