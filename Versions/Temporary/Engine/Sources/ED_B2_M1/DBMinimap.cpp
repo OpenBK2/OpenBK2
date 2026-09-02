@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBMinimap.h"
 
+#include "ED_B2_M1_export.h"
+
 #include <cstdint>
 
 namespace NDb
@@ -303,5 +305,5 @@ int SMinimap::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( 0x1414DB40, SMinimap ) 
+REGISTER_DATABASE_CLASS( ED_B2_M1, 0x1414DB40, SMinimap ) 
 
