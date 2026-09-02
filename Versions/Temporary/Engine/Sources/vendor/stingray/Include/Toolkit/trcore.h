@@ -34,38 +34,44 @@ enum {
 #ifndef TVS_SHOWSELALWAYS
     TVS_SHOWSELALWAYS,
 #endif
+    // The toolkit's own extended styles share one word with Windows' WS_EX_ ones:
+    // callers pass WS_EX_CLIENTEDGE | TVXS_MULTISEL | ... as a single value. So
+    // these are given the high half of the word and WS_EX_ keeps the low half,
+    // which is where every WS_EX_ bit the editor asks for lives. SEC_TREECLASS
+    // splits the word on that boundary.
+    //
     // Displays the column header. This style removes the LVS_NOCOLUMNHEADER style so that all the columns display headers.
-    TVXS_COLUMNHEADER,
+    TVXS_COLUMNHEADER = 0x00010000,
     // Enable tooltips.
-    TVXS_FLYBYTOOLTIPS,
+    TVXS_FLYBYTOOLTIPS = 0x00020000,
     // Enables the user to select multiple items.
-    TVXS_MULTISEL,
+    TVXS_MULTISEL = 0x00040000,
     // Enables word wrapping of text if the first column is narrow. Specifying this style automatically enables the LVXS_WORDWRAP style, affecting all columns.
-    TVXS_WORDWRAP,
-    TVXS_ANIMATE,
+    TVXS_WORDWRAP = 0x00080000,
+    TVXS_ANIMATE = 0x00100000,
     // Disables multiple selection of items.
 #ifndef LVS_SINGLESEL
     LVS_SINGLESEL,
 #endif
     // The item column fills the width not occupied by subitem columns.
-    LVXS_FITCOLUMNSONSIZE,
+    LVXS_FITCOLUMNSONSIZE = 0x00200000,
     // Enable tooltips for additional columns. The TVXS_FLYBYTOOLTIPS style automatically enables this style.
-    LVXS_FLYBYTOOLTIPS,
-    LVXS_HILIGHTSUBITEMS,
+    LVXS_FLYBYTOOLTIPS = 0x00400000,
+    LVXS_HILIGHTSUBITEMS = 0x00800000,
     // Paints vertical lines between columns.
-    LVXS_LINESBETWEENCOLUMNS,
+    LVXS_LINESBETWEENCOLUMNS = 0x01000000,
     // Paints horizontal lines between items.
-    LVXS_LINESBETWEENITEMS,
+    LVXS_LINESBETWEENITEMS = 0x02000000,
     // Prevents automatic resizing of column 0 when a column is deleted.
-    LVXS_NOGROWCOLUMNONDELETE,
+    LVXS_NOGROWCOLUMNONDELETE = 0x04000000,
     // Specifies that additional columns do not display column headers. This style is automatically removed by specifying the TVXS_COLUMNHEADER style, which causes all columns to display headers.
 #ifndef LVS_NOCOLUMNHEADER
     LVS_NOCOLUMNHEADER,
 #endif
     // Enables word wrapping of item text if the column is narrow. The TVXS_WORDWRAP style automatically enables this style.
-    LVXS_WORDWRAP,
+    LVXS_WORDWRAP = 0x08000000,
     // Reserved.
-    LVXS_OWNERDRAWVARIABLE,
+    LVXS_OWNERDRAWVARIABLE = 0x10000000,
 };
 
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass.htm
@@ -519,4 +525,10 @@ public:
     virtual UINT GetSelectedCount() const;
     virtual void RecalcScrollBars();
     virtual CEdit* GetEditControl();
+
+protected:
+    // The toolkit's own extended styles (the TVXS_ and LVXS_ half of the word
+    // above). None of them is a window style, so they are kept here rather than
+    // read back off the window, and nothing acts on them yet.
+    DWORD m_dwTreeCtrlStyleEx;
 };
