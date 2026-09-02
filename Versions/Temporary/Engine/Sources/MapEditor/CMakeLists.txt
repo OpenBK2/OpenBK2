@@ -97,5 +97,11 @@ target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main
 if(WIN32)
     target_link_libraries(MapEditor PRIVATE Htmlhelp winapi)
 endif()
+# The property control, the browsers and the main frame: dialogs, menus,
+# toolbars, string tables and the bitmaps under res/.
+# Windows only: these are Win32 resource scripts.
+if(WIN32)
+    target_sources(MapEditor PRIVATE MapEditor.rc)
+endif()
 install(TARGETS MapEditor DESTINATION bin)
 add_version_info(MapEditor)
