@@ -155,7 +155,7 @@ bool CFolderController::RedoWithoutUpdateViews()
 		}
 		dwTime = GetCurrentTimeMilliseconds() - dwTime;
 		DebugTrace( "CFolderController: operation:%d, type: <%s>, dest:<%s>, source:<%s>, result:%s, time: %dmc",
-								itUndoData->eType,
+								static_cast<int>( itUndoData->eType ),
 								GetObjectSet().szObjectTypeName.c_str(),
 								itUndoData->szDestination.c_str(),
 								itUndoData->szSource.c_str(),
