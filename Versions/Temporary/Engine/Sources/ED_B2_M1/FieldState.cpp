@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -152,7 +153,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 						NProgress::Create( true );
 						CString strPM;
 						strPM.LoadString( IDS_PM_PLACE_FIELD );
-						NProgress::SetMessage( StrFmt( strPM, szFieldName.c_str() ) );
+						NProgress::SetMessage( fmt::sprintf( strPM.GetString(), szFieldName.c_str() ) );
 						NProgress::SetRange( 0, 6 );
 						NProgress::IteratePosition();	// 1
 						//

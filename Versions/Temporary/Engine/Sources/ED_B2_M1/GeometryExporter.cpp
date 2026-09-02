@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "GeometryExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -41,7 +42,7 @@ bool CGeometryExporter::FormScript( std::string *pScriptText,
 	if ( szRootMesh == szRootJoint ) 
 		szRootJoint.clear();
 
-	*pScriptText = StrFmt( szScriptTemplate.c_str(),
+	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 		szDstPath.c_str(), szSrcPath.c_str(),
 		szRootMesh.c_str(), szRootJoint.c_str(),
 		szSettingsFileName.c_str() );

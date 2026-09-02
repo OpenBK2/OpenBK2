@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -618,7 +619,7 @@ void CPCDBLinkDialog::UpdateDialogTitle()
 			}
 		}
 	}
-	SetWindowText( StrFmt( strFormatString, szCurrentTable.c_str() ) );
+	SetWindowText( fmt::sprintf( strFormatString.GetString(), szCurrentTable.c_str() ) );
 }
 
 

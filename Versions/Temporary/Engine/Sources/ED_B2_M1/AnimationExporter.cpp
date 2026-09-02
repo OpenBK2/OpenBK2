@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "AnimationExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
@@ -41,7 +42,7 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	CManipulatorManager::GetValue( &nLastFrame, pManipulator , "LastFrame" );
 	// main script - export animation
 	std::string szScriptTemplate = GetScriptTemplate( "ExportAnimation" );
-	*pScriptText = StrFmt( szScriptTemplate.c_str(),
+	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 		szDstPath.c_str(), szSrcPath.c_str(),
 		szRootJoint.c_str(), nFirstFrame, nLastFrame,
 		szSettingsFileName.c_str() );
@@ -61,7 +62,7 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	if ( CManipulatorManager::GetValue( &szAABBAName, pManipulator , "AABBAName" ) && !szAABBAName.empty() )
 	{
 		const std::string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
-		*pScriptText += StrFmt( szScriptTemplate.c_str(),
+		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
 			(szDstPath + PARAMS_AABBA).c_str(), szSrcPath.c_str(),
 			szAABBAName.c_str(), "", 
 			szAttribSettingsFileName.c_str() );
@@ -70,7 +71,7 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	std::string szAABBDName;
 	if ( CManipulatorManager::GetValue( &szAABBDName, pManipulator , "AABBDName" ) && !szAABBDName.empty() )
 	{
-		*pScriptText += StrFmt( szScriptTemplate.c_str(),
+		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
 			(szDstPath + PARAMS_AABBD).c_str(), szSrcPath.c_str(),
 			szAABBDName.c_str(), "", 
 			szAttribSettingsFileName.c_str() );

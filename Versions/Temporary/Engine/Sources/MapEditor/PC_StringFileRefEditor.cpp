@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -77,7 +78,7 @@ void CPCStringFileRefEditor::OnBrowse()
 	{
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE );
-		std::string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = fmt::sprintf( strTitle.GetString(), GetName() );
 		//
 		std::string szMask;
 		szMask = pDesc->szStringParam;

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "WMDefines.h"
@@ -2001,7 +2002,7 @@ void CTreeGDBBrowserBase::Find()
 			CString strMessagePattern;
 			strProgramTitle.LoadString( AFX_IDS_APP_TITLE );
 			strMessagePattern.LoadString( IDS_TREE_GDB_BROWSE_NO_OBJECT_FOUND_MESSAGE );
-			const CString strMessage = StrFmt( strMessagePattern, GetObjectSet().szObjectTypeName.c_str() );
+			const CString strMessage = fmt::sprintf( strMessagePattern.GetString(), GetObjectSet().szObjectTypeName.c_str() );
 			MessageBox( strMessage, strProgramTitle, MB_ICONINFORMATION | MB_OK | MB_DEFBUTTON1 );
 		}
 	}

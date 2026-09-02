@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "TempAttributesTool.h"
 
@@ -65,7 +66,7 @@ class CTempAttributesTool : public IExportTool
 		NStr::ReplaceAllChars( &szDstFileName, '\\', '/' );
 		std::string szSrcFileName = szFileName;
 		NStr::ReplaceAllChars( &szSrcFileName, '\\', '/' );
-		std::string szScript = StrFmt( szAttribsExportTemplate.c_str(), szDstFileName.c_str(), szSrcFileName.c_str(),
+		std::string szScript = fmt::sprintf( szAttribsExportTemplate.c_str(), szDstFileName.c_str(), szSrcFileName.c_str(),
 			                        szRootMesh.c_str(), szRootJoint.c_str(), szAttribsExportSettings.c_str() );
 		szScript += ";\n";
 		NFile::CreatePath( NFile::GetFilePath(szDstFileName) );

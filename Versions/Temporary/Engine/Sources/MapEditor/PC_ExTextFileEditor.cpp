@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 #include "PC_Constants.h"
@@ -227,7 +228,7 @@ void CPCExTextFileEditor::OnBrowse()
 	{
 		CString strTitle;
 		strTitle.LoadString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE );
-		std::string szTitle = StrFmt( strTitle, GetName() );
+		std::string szTitle = fmt::sprintf( strTitle.GetString(), GetName() );
 		//
 		std::string szMask;
 		if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) || szMask.empty() )

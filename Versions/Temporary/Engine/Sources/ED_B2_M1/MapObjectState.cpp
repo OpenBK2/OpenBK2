@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -230,7 +231,7 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 		if ( sceneIDList.size() > 1 )
 		{
 			strStatusBarMessage.LoadString( IDS_STATUS_STRING_OBJECTS );
-			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, StrFmt( strStatusBarMessage, sceneIDList.size() ) );
+			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.GetString(), sceneIDList.size() ) );
 		}
 		else if ( sceneIDList.size() > 0 )
 		{
@@ -242,7 +243,7 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 				{
 					dbid = pMapOnjectInfo->pObject->GetDBID();
 				}
-				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, StrFmt( strStatusBarMessage,
+				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.GetString(),
 																																							pMapOnjectInfo->nScriptID,
 																																							dbid.ToString().c_str() ) );
 			}

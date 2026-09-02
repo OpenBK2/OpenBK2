@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include "Misc/StrProc.h"
 #include "Misc/2Darray.h"
@@ -276,21 +277,21 @@ void CBridgeRPGStatsExporter::ExportAdditionalInfo( IManipulator *pManipulator, 
 		NFile::CreatePath( szBridgeFolder.c_str() );
 
 		// main AI geometry
-		std::string szScriptText = StrFmt( szScriptTemplate.c_str(),
+		std::string szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 			szObjectName.c_str(), szMAIDestination.c_str(), szSource.c_str(),
 			AI_GEOMETRY_PREFIX[AIG_MAI], "",
 			szSettingsFileName.c_str() );
 		szScriptText += ";\n";
 		ExecuteMayaScript( szScriptText );
 		// center part
-		szScriptText = StrFmt( szScriptTemplate.c_str(),
+		szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 			szObjectName.c_str(), szCenterDestination.c_str(), szSource.c_str(),
 			AI_GEOMETRY_PREFIX[AIG_CENTER], "",
 			szSettingsFileName.c_str() );
 		szScriptText += ";\n";
 		ExecuteMayaScript( szScriptText );
 		// borders
-		szScriptText = StrFmt( szScriptTemplate.c_str(),
+		szScriptText = fmt::sprintf( szScriptTemplate.c_str(),
 			szObjectName.c_str(), szBorderDestination.c_str(), szSource.c_str(),
 			AI_GEOMETRY_PREFIX[AIG_BORDER], "",
 			szSettingsFileName.c_str() );
