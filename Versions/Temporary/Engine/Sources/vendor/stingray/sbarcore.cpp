@@ -87,19 +87,41 @@ void SECControlBar::ModifyBarStyleEx(DWORD dwRemove, DWORD dwAdd, BOOL bAutoUpda
     spdlog::trace("{} this={} dwRemove={} dwAdd={} bAutoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemove, dwAdd, bAutoUpdate);
 }
 
+// Not a stub. A control bar's id is what CFrameWnd::GetControlBar looks it up
+// by, what LoadBarState and SaveBarState name it by, and what ShowControlBar
+// addresses it with. Returning 0 gave every docking window in the editor the
+// same id, and 0 is the one value GetControlBar refuses outright, so no bar
+// could be found by any of them and LoadBarState asserted on the first one it
+// read back.
+//
+// The first id at or above nBaseID that no control bar on this frame is using.
+// Stable across runs given the same creation order, which is what a saved
+// layout needs in order to still mean something the next time.
 UINT SECControlBar::GetUniqueBarID(CFrameWnd* pMainWnd, UINT nBaseID) {
     spdlog::trace("{} pMainWnd={} nBaseID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pMainWnd), nBaseID);
-	return 0;
+    if (pMainWnd == nullptr) {
+        return nBaseID;
+    }
+    UINT nID = nBaseID;
+    while (pMainWnd->GetControlBar(nID) != nullptr) {
+        ++nID;
+    }
+    return nID;
 }
 
+// Still a stub. Answering it means walking every control bar on the frame, and
+// CFrameWnd::m_listControlBars is not public; GetControlBar only looks one up
+// by id, which is the question already answered above. Nothing in this tree
+// calls it.
 BOOL SECControlBar::VerifyUniqueBarIds(CFrameWnd* pFrameWnd) {
     spdlog::trace("{} pFrameWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd));
     return FALSE;
 }
 
+// Also not a stub, and the same question GetUniqueBarID answers by counting.
 BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID) {
     spdlog::trace("{} pFrameWnd={} nBarID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd), nBarID);
-	return FALSE;
+    return pFrameWnd != nullptr && pFrameWnd->GetControlBar(nBarID) == nullptr;
 }
 
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
