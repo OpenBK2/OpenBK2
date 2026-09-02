@@ -966,7 +966,7 @@ void ListBoxX::Create(Window &parent, int ctrlID, int lineHeight_, bool unicodeM
 		WS_EX_WINDOWEDGE, ListBoxX_ClassName, "",
 		WS_CHILD | WS_THICKFRAME,
 		100,100, 150,80, reinterpret_cast<HWND>(parent.GetID()),
-		reinterpret_cast<HMENU>(ctrlID),
+		reinterpret_cast<HMENU>(static_cast<uintptr_t>(ctrlID)),
 		hinstanceParent,
 		this);
 	lb = ::GetWindow(reinterpret_cast<HWND>(id), GW_CHILD);

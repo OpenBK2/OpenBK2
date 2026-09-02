@@ -420,11 +420,13 @@ BOOL CResizeDialog::OnNeedToolTipText( unsigned id, NMHDR *pTTTStruct, LRESULT *
 	if ( pTTTStruct )
 	{
 		TOOLTIPTEXT *pTTT = (TOOLTIPTEXT*)( pTTTStruct );
-		unsigned nID = pTTTStruct->idFrom;
-		if ( ( pTTT->uFlags & TTF_IDISHWND ) != 0 )
-		{
-			nID = ::GetDlgCtrlID( (HWND)( nID ) );
-		}
+		// idFrom is a UINT_PTR: it is the control id normally, and the
+		// control's HWND when TTF_IDISHWND is set. Resolve it to an id
+		// first, and only then is it something an unsigned can hold.
+		const UINT_PTR nIdFrom = pTTTStruct->idFrom;
+		const unsigned nID = ( ( pTTT->uFlags & TTF_IDISHWND ) != 0 )
+		                         ? ::GetDlgCtrlID( reinterpret_cast<HWND>( nIdFrom ) )
+		                         : static_cast<unsigned>( nIdFrom );
 		if ( nID )
 		{
 			if ( GetToolTipText( &szToolTipText, nID ) )
