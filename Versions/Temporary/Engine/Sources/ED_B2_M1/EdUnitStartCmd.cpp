@@ -115,7 +115,7 @@ void CEdUnitStartCmd::SetDialogData( const SDlgData *pData )
 		btnClear.EnableWindow( FALSE );
 	}
 
-	edData.SetWindowText( fmt::format("{}", pData->nData) );
+	edData.SetWindowText( fmt::format("{}", pData->nData).c_str() );
 }
 
 void CEdUnitStartCmd::GetDialogData( SDlgData *pData )

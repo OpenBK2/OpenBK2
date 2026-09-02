@@ -212,7 +212,7 @@ bool CMapObjectWindow::GetEditParameters( CMapObjectMultiState::SEditParameters 
 			{
 				pEditParameters->fDirection = 360.0f;
 			}
-			SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", pEditParameters->fDirection ) );
+			SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", pEditParameters->fDirection ).c_str() );
 			bCreateControls = false;
 		}
 	}
@@ -240,7 +240,7 @@ bool CMapObjectWindow::SetEditParameters( const CMapObjectMultiState::SEditParam
 	}
 	if ( ( rEditParameters.nFlags & MIMOSEP_DIRECTION ) > 0 )
 	{
-		SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", rEditParameters.fDirection ) );
+		SetDlgItemText( IDC_TMIMO_DIRECTION_CUSTOM_EDIT, fmt::format( "{:g}", rEditParameters.fDirection ).c_str() );
 	}
 	if ( ( rEditParameters.nFlags & MIMOSEP_THUMBNAILS ) > 0 )
 	{

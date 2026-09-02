@@ -100,14 +100,14 @@ void CScriptCameraRunDlg::OnOK()
 			CResizeDialog::OnCancel();
 			return;
 		}
-		szScriptText += fmt::format( "Speed(\"{}\", \"{}\", {:g}", pDialogData->GetStartCamera().szName, pDialogData->GetFinishCamera().szName, fLinSpeed );
+		szScriptText += fmt::format( "Speed(\"{}\", \"{}\", {:g}", pDialogData->GetStartCamera().szName, pDialogData->GetFinishCamera().szName, fLinSpeed ).c_str();
 	}
 	else
 	{
-		szScriptText += fmt::format( "Time(" );// \"%s\", \"%s\", %g", pDialogData->GetStartCamera().szName, pDialogData->GetFinishCamera().szName, fTime );
-		szScriptText += fmt::format( "\"{}\", ", pDialogData->GetStartCamera().szName );
-		szScriptText += fmt::format( "\"{}\", ", pDialogData->GetFinishCamera().szName, fTime );
-		szScriptText += fmt::format( "{:g}", fTime );
+		szScriptText += fmt::format( "Time(" ).c_str();// \"%s\", \"%s\", %g", pDialogData->GetStartCamera().szName, pDialogData->GetFinishCamera().szName, fTime );
+		szScriptText += fmt::format( "\"{}\", ", pDialogData->GetStartCamera().szName ).c_str();
+		szScriptText += fmt::format( "\"{}\", ", pDialogData->GetFinishCamera().szName, fTime ).c_str();
+		szScriptText += fmt::format( "{:g}", fTime ).c_str();
 	}
 
 	switch ( pDialogData->eRunType )
@@ -116,7 +116,7 @@ void CScriptCameraRunDlg::OnOK()
 		{
 			GetDlgItemText( IDC_SCRUN_EDIT_ASPEED, szAngSpeed );
 			sscanf( szAngSpeed, "%g", &fAngSpeed );
-			szScriptText += fmt::format( ", {}, {:g}", nType, fAngSpeed );
+			szScriptText += fmt::format( ", {}, {:g}", nType, fAngSpeed ).c_str();
 		}
 		break;
 		//
@@ -124,7 +124,7 @@ void CScriptCameraRunDlg::OnOK()
 		{
 			GetDlgItemText( IDC_SCRUN_EDIT_TARGET, szTarget );
 			sscanf( szTarget, "%d", &nTarget );
-			szScriptText += fmt::format( ", {}, {}", nType, nTarget );
+			szScriptText += fmt::format( ", {}, {}", nType, nTarget ).c_str();
 		}
 		break;
 		//
@@ -134,7 +134,7 @@ void CScriptCameraRunDlg::OnOK()
 			GetDlgItemText( IDC_SCRUN_EDIT_SPLINE2, szSpline2 );
 			sscanf( szSpline1, "%g", &fSpline1 );
 			sscanf( szSpline2, "%g", &fSpline2 );
-			szScriptText += fmt::format( ", {}, {:g} {:g}", nType, fSpline1, fSpline2 );
+			szScriptText += fmt::format( ", {}, {:g} {:g}", nType, fSpline1, fSpline2 ).c_str();
 		}
 		break;
 	}
@@ -212,8 +212,8 @@ void CScriptCameraRunDlg::SetControlsMask()
 
 void CScriptCameraRunDlg::SetDialogData( const SScriptCameraRunDlgData &rDialogData )
 {
-	SetDlgItemText( IDC_SCRUN_EDIT_TIME, fmt::format("{:g}", rDialogData.fTime) );
-	SetDlgItemText( IDC_SCRUN_EDIT_LSPEED, fmt::format("{:g}", rDialogData.fLSpeed) );
+	SetDlgItemText( IDC_SCRUN_EDIT_TIME, fmt::format("{:g}", rDialogData.fTime).c_str() );
+	SetDlgItemText( IDC_SCRUN_EDIT_LSPEED, fmt::format("{:g}", rDialogData.fLSpeed).c_str() );
 	SetDlgItemText( IDC_SCRUN_EDIT_ASPEED, "" );
 	SetDlgItemText( IDC_SCRUN_EDIT_TARGET, "" );
 	SetDlgItemText( IDC_SCRUN_EDIT_SPLINE1, "" );
@@ -225,16 +225,16 @@ void CScriptCameraRunDlg::SetDialogData( const SScriptCameraRunDlgData &rDialogD
 		break;
 		//
 	case NDb::SCRT_DIRECT_ROTATE:
-		SetDlgItemText( IDC_SCRUN_EDIT_ASPEED, fmt::format("{:g}", rDialogData.fASpeed) );
+		SetDlgItemText( IDC_SCRUN_EDIT_ASPEED, fmt::format("{:g}", rDialogData.fASpeed).c_str() );
 		break;
 		//
 	case NDb::SCRT_DIRECT_FOLLOW:
-		SetDlgItemText( IDC_SCRUN_EDIT_TARGET, fmt::format("{}", rDialogData.nTargetScriptID) );
+		SetDlgItemText( IDC_SCRUN_EDIT_TARGET, fmt::format("{}", rDialogData.nTargetScriptID).c_str() );
 		break;
 		//
 	case NDb::SCRT_SPLINE:
-		SetDlgItemText( IDC_SCRUN_EDIT_SPLINE1, fmt::format("{:g}", rDialogData.fSpline1) );
-		SetDlgItemText( IDC_SCRUN_EDIT_SPLINE2, fmt::format("{:g}", rDialogData.fSpline2) );
+		SetDlgItemText( IDC_SCRUN_EDIT_SPLINE1, fmt::format("{:g}", rDialogData.fSpline1).c_str() );
+		SetDlgItemText( IDC_SCRUN_EDIT_SPLINE2, fmt::format("{:g}", rDialogData.fSpline2).c_str() );
 		break;
 	}
 }
@@ -252,7 +252,7 @@ void CScriptCameraRunDlg::OnEnUpdateScrunEditTime()
 	if ( fTime > 0 )
 	{
 		float fLSpeed = fabs(pDialogData->GetStartCamera().vPosition - pDialogData->GetFinishCamera().vPosition)/fTime;
-		SetDlgItemText( IDC_SCRUN_EDIT_LSPEED, fmt::format("{:g}", fLSpeed) );
+		SetDlgItemText( IDC_SCRUN_EDIT_LSPEED, fmt::format("{:g}", fLSpeed).c_str() );
 	}
 }
 

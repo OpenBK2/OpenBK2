@@ -351,19 +351,19 @@ bool CModelWindow::SetEditParameters( const CModelState::SEditParameters &rEditP
 	//
 	if ( rEditParameters.nFlags & MODEL_EP_FOV )
 	{
-		SetDlgItemText( IDC_MODEL_FOV_EDIT, std::to_string(  rEditParameters.nFOV ) );
+		SetDlgItemText( IDC_MODEL_FOV_EDIT, std::to_string(  rEditParameters.nFOV ).c_str() );
 	}
 	if ( rEditParameters.nFlags & MODEL_EP_TERRAIN_COLOR_OPACITY )
 	{
-		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_OPACITY_EDIT, std::to_string(  rEditParameters.nTerrainColorOpacity ) );
+		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_OPACITY_EDIT, std::to_string(  rEditParameters.nTerrainColorOpacity ).c_str() );
 	}
 	if ( rEditParameters.nFlags & MODEL_EP_COLOR )
 	{
-		SetDlgItemText( IDC_MODEL_SCENE_COLOR_EDIT, fmt::format( "{}, {}, {}", (int)( rEditParameters.vColor.r ),(int)( rEditParameters.vColor.g ), (int)( rEditParameters.vColor.b ) ) );
+		SetDlgItemText( IDC_MODEL_SCENE_COLOR_EDIT, fmt::format( "{}, {}, {}", (int)( rEditParameters.vColor.r ),(int)( rEditParameters.vColor.g ), (int)( rEditParameters.vColor.b ) ).c_str() );
 	}
 	if ( rEditParameters.nFlags & MODEL_EP_TERRAIN_COLOR )
 	{
-		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_EDIT, fmt::format( "{}, {}, {}", (int)( rEditParameters.vTerrainColor.r ), (int)( rEditParameters.vTerrainColor.g ), (int)( rEditParameters.vTerrainColor.b ) ) );
+		SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_EDIT, fmt::format( "{}, {}, {}", (int)( rEditParameters.vTerrainColor.r ), (int)( rEditParameters.vTerrainColor.g ), (int)( rEditParameters.vTerrainColor.b ) ).c_str() );
 	}
 	bCreateControls = false;
 	UpdateControls( rEditParameters );
@@ -583,7 +583,7 @@ void CModelWindow::OnClickedSceneColorButton()
 			g = ( nColor >> 8 ) & 0xFF;
 			b = ( nColor >> 16 ) & 0xFF;
 			bCreateControls = true;
-			SetDlgItemText( IDC_MODEL_SCENE_COLOR_EDIT, fmt::format( "{}, {}, {}", r, g, b ) );
+			SetDlgItemText( IDC_MODEL_SCENE_COLOR_EDIT, fmt::format( "{}, {}, {}", r, g, b ).c_str() );
 			bCreateControls = false;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_GET_EDIT_PARAMETERS, MODEL_EP_COLOR );
 		}
@@ -614,7 +614,7 @@ void CModelWindow::OnClickedTerrainColorButton()
 			g = ( nColor >> 8 ) & 0xFF;
 			b = ( nColor >> 16 ) & 0xFF;
 			bCreateControls = true;
-			SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_EDIT, fmt::format( "{}, {}, {}", r, g, b ) );
+			SetDlgItemText( IDC_MODEL_TERRAIN_COLOR_EDIT, fmt::format( "{}, {}, {}", r, g, b ).c_str() );
 			bCreateControls = false;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MODEL_STATE, ID_GET_EDIT_PARAMETERS, MODEL_EP_TERRAIN_COLOR );
 		}

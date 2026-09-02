@@ -89,10 +89,10 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 	wndPalyerComboBox.ResetContent();
 	for ( int nPlayerIndex = 0; nPlayerIndex < pData->nPlayerCount; ++nPlayerIndex )
 	{
-		const int nStringNumber = wndPalyerComboBox.AddString( std::to_string(  nPlayerIndex ) );
+		const int nStringNumber = wndPalyerComboBox.AddString( std::to_string(  nPlayerIndex ).c_str() );
 		wndPalyerComboBox.SetItemData( nStringNumber, nPlayerIndex );
 	}
-	wndPalyerComboBox.SelectString( 0, fmt::format("{}", pData->nPlayerIndex) );
+	wndPalyerComboBox.SelectString( 0, fmt::format("{}", pData->nPlayerIndex).c_str() );
 	CheckRadioButton( IDC_OW_POSITION_ONLY_RADIO, IDC_OW_ALL_PARAMS_RADIO, pData->bAllParams ? IDC_OW_ALL_PARAMS_RADIO : IDC_OW_POSITION_ONLY_RADIO );
 	bIsDataSetting = false;
 }

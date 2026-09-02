@@ -39,7 +39,7 @@ BOOL CAIGenParcelDlg::OnInitDialog()
 		comboType.SetItemData( nIdx, i );
 	}
 	comboType.SelectString( 0, typeAIGeneralParcel.GetMnemonic(*pType).c_str() );
-	edImportance.SetWindowText( fmt::format("{:f}", *pImportance) );
+	edImportance.SetWindowText( fmt::format("{:f}", *pImportance).c_str() );
 
 	return true;
 }

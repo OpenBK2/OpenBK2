@@ -234,17 +234,17 @@ void CAIGeneralPointsWindow::SetDialogData( const SAIGeneralPointsWindowData *pD
 	comboPlayer.ResetContent();
 	for ( int nPlayer = 0; nPlayer < dialogData.players.size(); ++nPlayer )
 	{
-		const int nStringNumber = comboPlayer.AddString( fmt::format("{}", nPlayer) );
+		const int nStringNumber = comboPlayer.AddString( fmt::format("{}", nPlayer).c_str() );
 		comboPlayer.SetItemData( nStringNumber, nPlayer );
 	}
-	comboPlayer.SelectString( 0, fmt::format("{}", dialogData.CurrentPlayer()) );
+	comboPlayer.SelectString( 0, fmt::format("{}", dialogData.CurrentPlayer()).c_str() );
 	//
 	lcIDs.DeleteAllItems();	
 	for ( int nID = 0; nID < player.mobileScriptIDs.size(); ++nID )
 	{
 		const int nItem = lcIDs.InsertItem( nID, "" );
-		lcIDs.SetItemText( nItem, 0, fmt::format("{}", nID) );
-		lcIDs.SetItemText( nItem, 1, fmt::format("{}", player.mobileScriptIDs[nID]) );
+		lcIDs.SetItemText( nItem, 0, fmt::format("{}", nID).c_str() );
+		lcIDs.SetItemText( nItem, 1, fmt::format("{}", player.mobileScriptIDs[nID]).c_str() );
 		lcIDs.SetItemData( nItem, nID );
 	}
 	lcIDs.SetItemState( dialogData.CurrentID(), LVIS_SELECTED|LVIS_FOCUSED, LVIS_SELECTED|LVIS_FOCUSED );
@@ -254,10 +254,10 @@ void CAIGeneralPointsWindow::SetDialogData( const SAIGeneralPointsWindowData *pD
 	for ( int nParcel = 0; nParcel < player.parcels.size(); ++nParcel )
 	{
 		const int nItem = lcParcels.InsertItem( nParcel, "" );
-		lcParcels.SetItemText( nItem, 0, fmt::format("{}", nParcel) );
-		lcParcels.SetItemText( nItem, 1, fmt::format("{}", player.parcels[nParcel].reinforcePoints.size()) );
-		lcParcels.SetItemText( nItem, 2, fmt::format("{:.0f}, {:.0f}", player.parcels[nParcel].vCenter.x, player.parcels[nParcel].vCenter.y) );
-		lcParcels.SetItemText( nItem, 3, fmt::format("{:.2f}", player.parcels[nParcel].fImportance) );
+		lcParcels.SetItemText( nItem, 0, fmt::format("{}", nParcel).c_str() );
+		lcParcels.SetItemText( nItem, 1, fmt::format("{}", player.parcels[nParcel].reinforcePoints.size()).c_str() );
+		lcParcels.SetItemText( nItem, 2, fmt::format("{:.0f}, {:.0f}", player.parcels[nParcel].vCenter.x, player.parcels[nParcel].vCenter.y).c_str() );
+		lcParcels.SetItemText( nItem, 3, fmt::format("{:.2f}", player.parcels[nParcel].fImportance).c_str() );
 		lcParcels.SetItemText( nItem, 4, typeAIGeneralParcel.GetMnemonic(player.parcels[nParcel].eType).c_str() );
 		lcParcels.SetItemData( nItem, nParcel );
 	}
