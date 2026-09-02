@@ -3,8 +3,8 @@
 // What an entry point does until it is written: record that it was called, in
 // what order, and with what arguments.
 //
-// The engine references 54 of the 61 entry points and the map editor the other
-// seven, but a reference is not a call.
+// The engine references 54 of the 63 entry points and the map editor the other
+// nine, but a reference is not a call.
 // Some of them sit on paths the shipped data never takes, and the linker has no
 // way to know it. A run against this library answers that, and the answer is
 // what orders the milestones. Full arguments matter as much as the sequence,

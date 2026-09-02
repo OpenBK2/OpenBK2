@@ -4,7 +4,7 @@
 # GR2_LIBRARY, GR2_EXPECTED and GR2_MSVC.
 #
 # The point is that the replacement is a drop-in: the engine's link against
-# granny2 has to resolve, and nothing beyond those 61 names should escape and
+# granny2 has to resolve, and nothing beyond those 63 names should escape and
 # collide with the real DLL when both are loaded for A/B comparison.
 
 if(NOT DEFINED GR2_LIBRARY OR NOT DEFINED GR2_EXPECTED)

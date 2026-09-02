@@ -530,6 +530,21 @@ GR2_API( granny_int32x ) GrannyGetTotalObjectSize( granny_data_type_definition c
 	return Result;
 }
 
+GR2_API( char const * ) GrannyGetVersionString(  )
+{
+	GR2_TRACE( "" );
+
+	typedef char const *( __stdcall *TFn )(  );
+	typedef char const * TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetVersionString" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn();
+	return Result;
+}
+
 GR2_API( granny_real32 * ) GrannyGetWorldPose4x4( granny_world_pose const *WorldPose, granny_int32x BoneIndex )
 {
 	GR2_TRACE( "WorldPose={} BoneIndex={}", WorldPose, BoneIndex );
@@ -902,6 +917,21 @@ GR2_API( void ) GrannySetTrackGroupTarget( granny_controlled_animation_builder *
 		return;
 	}
 	pfn( Builder, TrackGroupIndex, Model );
+}
+
+GR2_API( bool ) GrannyVersionsMatch_( granny_int32x MajorVersion, granny_int32x MinorVersion, granny_int32x BuildNumber, granny_int32x Customization )
+{
+	GR2_TRACE( "MajorVersion={} MinorVersion={} BuildNumber={} Customization={}", MajorVersion, MinorVersion, BuildNumber, Customization );
+
+	typedef bool ( __stdcall *TFn )( granny_int32x MajorVersion, granny_int32x MinorVersion, granny_int32x BuildNumber, granny_int32x Customization );
+	typedef bool TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyVersionsMatch_" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( MajorVersion, MinorVersion, BuildNumber, Customization );
+	return Result;
 }
 
 }
