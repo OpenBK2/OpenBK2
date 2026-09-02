@@ -71,8 +71,17 @@ BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol,int& nDockbarID,float& fPc
     return FALSE;
 }
 
+// Not a stub. Doing nothing here left every docking window in the editor
+// created but never placed, which is what an empty main frame looks like.
+//
+// MFC already does this: CControlBar::EnableDocking records the styles the bar
+// will accept and gives it a CDockContext, which is what CFrameWnd::DockControlBar
+// then needs. The toolkit's version differs in going through NewDockContext so
+// that a derived bar can supply its own; that stays a stub, and MFC makes the
+// context itself.
 void SECControlBar::EnableDocking(DWORD dwDockStyle) {
     spdlog::trace("{} this={} dwDockStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwDockStyle);
+    CControlBar::EnableDocking(dwDockStyle);
 }
 
 SECDockContext * SECControlBar::NewDockContext() {
