@@ -590,7 +590,7 @@ static void GetConstraintInfoFromFile( std::vector<SConstraintInfo> *pConstraint
 			{ GrannyEndMember }
 		};
 	  GrannyConvertSingleObject(	pBone->ExtendedData.Type, pBone->ExtendedData.Object,
-									SGrannyConstrTypedef, &grannyConstr );
+									SGrannyConstrTypedef, &grannyConstr, nullptr );
 		
 		inf.bTransConstrMinEnable[0] = grannyConstr.minTransXLimitEnable;
 		inf.bTransConstrMinEnable[1] = grannyConstr.minTransYLimitEnable;
