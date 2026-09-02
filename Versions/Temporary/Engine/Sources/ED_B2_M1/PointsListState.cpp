@@ -155,7 +155,7 @@ void CPointsListState::ClearMaskManipulator()
 		IView *pView = 0;
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																													ID_PC_DIALOG_GET_VIEW, 
-																													reinterpret_cast<uint32_t>(&pView) );
+																													reinterpret_cast<uintptr_t>(&pView) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();
@@ -188,7 +188,7 @@ void CPointsListState::SetMaskManipulator()
 	IView *pView = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<uint32_t>(&pView) );
+																												reinterpret_cast<uintptr_t>(&pView) );
 	if ( pView != 0 )
 		pView->RemoveViewManipulator();
 
@@ -209,7 +209,7 @@ void CPointsListState::SetMaskManipulator()
 	
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_VIEW, 
-																												reinterpret_cast<uint32_t>(&pView) );
+																												reinterpret_cast<uintptr_t>(&pView) );
 	bool bNeedCreateTree = true;
 	if ( pView != 0 )
 	{
@@ -222,13 +222,13 @@ void CPointsListState::SetMaskManipulator()
 	ICommandHandler *pCommandHandler = 0;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
 																												ID_PC_DIALOG_GET_COMMAND_HANDLER, 
-																												reinterpret_cast<uint32_t>(&pCommandHandler) );
+																												reinterpret_cast<uintptr_t>(&pCommandHandler) );
 	if ( pCommandHandler != 0 )
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
 }
 
 
-bool CPointsListState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPointsListState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -250,7 +250,7 @@ bool CPointsListState::GetPointListDialogData( SPointListDialogData *pData )
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG, 
 																																		ID_WINDOW_GET_DIALOG_DATA, 
-																																		reinterpret_cast<uint32_t>(pData) );
+																																		reinterpret_cast<uintptr_t>(pData) );
 	return bRes;
 }
 
@@ -259,7 +259,7 @@ bool CPointsListState::SetPointListDialogData( SPointListDialogData *pData )
 {
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG, 
 																																		ID_WINDOW_SET_DIALOG_DATA, 
-																																		reinterpret_cast<uint32_t>(pData) );
+																																		reinterpret_cast<uintptr_t>(pData) );
 	return bRes;
 }
 

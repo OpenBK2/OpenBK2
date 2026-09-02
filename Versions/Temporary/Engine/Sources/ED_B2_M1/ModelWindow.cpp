@@ -741,7 +741,7 @@ void CModelWindow::OnFOVTimer()
 }
 
 
-bool CModelWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CModelWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

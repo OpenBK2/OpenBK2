@@ -196,7 +196,7 @@ void CPCStringComboEditor::SetDefaultValue()
 }
 
 
-bool CPCStringComboEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCStringComboEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

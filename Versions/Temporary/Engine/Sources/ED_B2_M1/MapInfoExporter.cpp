@@ -213,7 +213,7 @@ EXPORT_RESULT CMapInfoExporter::ExportObject( IManipulator* pManipulator,
 }
 
 
-bool CMapInfoExporter::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMapInfoExporter::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SObjectSet objectSet;
 	bool bResult = false;

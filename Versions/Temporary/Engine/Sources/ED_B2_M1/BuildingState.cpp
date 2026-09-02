@@ -87,7 +87,7 @@ void CBuildingState::Enter()
 	NI_ASSERT( pBuildingEditor != 0, "CBuildingState::Enter(), pBuildingEditor == 0" );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, 
 																												ID_SCENE_ENABLE_GAME_INPUT, 
-																												reinterpret_cast<uint32_t>(new CBuildingInterfaceCommand(new CBuildingInterface())) );
+																												reinterpret_cast<uintptr_t>(new CBuildingInterfaceCommand(new CBuildingInterface())) );
 	
 	// читаем установки MapInfoEditor, чтобы выбрать террейн
 
@@ -133,7 +133,7 @@ void CBuildingState::Leave()
 }
 
 
-bool CBuildingState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CBuildingState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	//DebugTrace( "Changing building state: nCommandID = %d, dwData = %d", nCommandID, dwData );
  	switch( nCommandID )

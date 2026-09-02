@@ -36,7 +36,7 @@ void CEffectState::Enter()
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CEffectState::Enter(): pScene == 0" );
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CEffectInterfaceCommand( new CEffectInterface() ) ) );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CEffectInterfaceCommand( new CEffectInterface() ) ) );
 
 	const CVec3 vShift = CVec3( 8.0f * AI_TILE_SIZE, 8.0f * AI_TILE_SIZE, 0.0f );
 	CVec3 vCameraPos = Camera()->GetAnchor();

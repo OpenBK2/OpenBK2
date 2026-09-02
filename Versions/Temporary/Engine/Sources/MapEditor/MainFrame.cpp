@@ -540,7 +540,7 @@ void CMainFrame::OpenResource( const std::string &rszResourceName )
 						CStringManager::AddToRecentList( szName, bMainObject );
 						//
 						IView *pView = 0;
-						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+						Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 						if ( pView != 0 )
 						{
 							pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
@@ -1562,7 +1562,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 }
 
 
-bool CMainFrame::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMainFrame::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

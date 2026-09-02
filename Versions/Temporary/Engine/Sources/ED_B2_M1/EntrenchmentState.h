@@ -121,7 +121,7 @@ protected:
 	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectLButtonDblClk	( unsigned nFlags, const CVec3 &rTerrainPos );
 	///
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	///
 };

@@ -73,7 +73,7 @@ BOOL CUnitStartCmdWindow::OnInitDialog()
 }
 
 
-bool CUnitStartCmdWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CUnitStartCmdWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SUnitStartCmdWindowData *pData = reinterpret_cast<SUnitStartCmdWindowData*>( dwData );
 	//

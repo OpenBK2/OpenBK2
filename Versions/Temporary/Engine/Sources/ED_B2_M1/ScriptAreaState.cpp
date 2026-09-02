@@ -397,7 +397,7 @@ bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMa
 	}
 	//
 	dialogData.eChangeMask = eChangeMask;
-	uint32_t dwData = reinterpret_cast<uint32_t>( &dialogData );
+	uintptr_t dwData = reinterpret_cast<uintptr_t>( &dialogData );
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_AREA_WINDOW, ID_WINDOW_SET_DIALOG_DATA, dwData );
 	//
 	return bRes;
@@ -416,7 +416,7 @@ void CScriptAreaState::ClearSelection()
 
 bool CScriptAreaState::ProcessScriptAreaWindowData()
 {
-	uint32_t dwData = reinterpret_cast<uint32_t>( &dialogData );
+	uintptr_t dwData = reinterpret_cast<uintptr_t>( &dialogData );
 	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_AREA_WINDOW, ID_WINDOW_GET_DIALOG_DATA, dwData );
 	if ( !bRes )
 	{
@@ -474,7 +474,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 }
 
 
-bool CScriptAreaState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CScriptAreaState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{

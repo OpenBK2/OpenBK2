@@ -644,14 +644,14 @@ void CChildFrameWndBase::RemoveInput()
 }
 
 
-void CChildFrameWndBase::EnableInput( uint32_t dwData )
+void CChildFrameWndBase::EnableInput( uintptr_t dwData )
 {
 	DebugTrace( "CChildFrameWndBase::EnableInput( %d )", dwData );
 	bInputEnabled = ( dwData != 0 );
 }
 
 
-void CChildFrameWndBase::EnableAutoUpdate( uint32_t dwData )
+void CChildFrameWndBase::EnableAutoUpdate( uintptr_t dwData )
 {
 	if ( dwData != 0 )
 	{
@@ -665,7 +665,7 @@ void CChildFrameWndBase::EnableAutoUpdate( uint32_t dwData )
 }
 
 
-void CChildFrameWndBase::EnableRunMode( uint32_t dwData )
+void CChildFrameWndBase::EnableRunMode( uintptr_t dwData )
 {
 	bRunModeEnabled = ( dwData != 0 );
 	if ( bRunModeEnabled )
@@ -704,13 +704,13 @@ void CChildFrameWndBase::DisableGameInput()
 }
 
 
-void CChildFrameWndBase::EnableRender( uint32_t dwData )
+void CChildFrameWndBase::EnableRender( uintptr_t dwData )
 {
 	bRenderEnabled = ( dwData != 0 );
 }
 
 
-void CChildFrameWndBase::EnableScrollbars( uint32_t dwData )
+void CChildFrameWndBase::EnableScrollbars( uintptr_t dwData )
 {
 	if ( bEnableScroll != ( dwData > 0 ) )
 	{
@@ -741,7 +741,7 @@ void CChildFrameWndBase::EnableScrollbars( uint32_t dwData )
 }
 
 
-void CChildFrameWndBase::EnableMouseCapture( uint32_t dwData )
+void CChildFrameWndBase::EnableMouseCapture( uintptr_t dwData )
 {
 	if ( dwData > 0 )
 	{
@@ -754,7 +754,7 @@ void CChildFrameWndBase::EnableMouseCapture( uint32_t dwData )
 }
 
 
-void CChildFrameWndBase::GetDimensions( uint32_t dwData )
+void CChildFrameWndBase::GetDimensions( uintptr_t dwData )
 {
 	if ( dwData != 0 )
 	{
@@ -767,7 +767,7 @@ void CChildFrameWndBase::GetDimensions( uint32_t dwData )
 }
 
 
-bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

@@ -223,7 +223,7 @@ void CPCGUIDEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCGUIDEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCGUIDEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

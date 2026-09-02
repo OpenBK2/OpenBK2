@@ -95,7 +95,7 @@ ICommandHandler* CCommandHandlerContainer::Get( unsigned nType )
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData )
+bool CCommandHandlerContainer::HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData )
 {
 //	DebugTrace ( "CCommandHandlerContainer::HandleCommand ... nType = %d", nType );
 	ICommandHandler *pCommandHandler = Get( nType );
@@ -121,7 +121,7 @@ bool CCommandHandlerContainer::UpdateCommand( unsigned nType, unsigned nCommandI
 }
 
 
-bool CCommandHandlerContainer::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CCommandHandlerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	CCommandIDToCommandHandlerIDMap::iterator posCommandIDToCommandHandlerID = commandIDToCommandHandlerIDMap.find( nCommandID );
 	if ( posCommandIDToCommandHandlerID != commandIDToCommandHandlerIDMap.end() )

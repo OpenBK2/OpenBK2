@@ -258,7 +258,7 @@ void CUnitStartCmdState::Leave()
 }
 
 
-bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( CMapObjectState::HandleCommand(nCommandID, dwData) )
 		return true;
@@ -270,7 +270,7 @@ bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 			SUnitStartCmdWindowData data;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
 																																ID_WINDOW_GET_DIALOG_DATA, 
-																																reinterpret_cast<uint32_t>(&data)) )
+																																reinterpret_cast<uintptr_t>(&data)) )
 			{
 				switch ( data.eLastAction )
 				{
@@ -834,7 +834,7 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&data) );
+																												reinterpret_cast<uintptr_t>(&data) );
 }
 
 
@@ -1072,7 +1072,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 	
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA,
-																												reinterpret_cast<uint32_t>(&data) );
+																												reinterpret_cast<uintptr_t>(&data) );
 }
 
 
@@ -1114,7 +1114,7 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 	SUnitStartCmdWindowData data;
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
 																														ID_WINDOW_GET_DIALOG_DATA,
-																														reinterpret_cast<uint32_t>(&data)) )
+																														reinterpret_cast<uintptr_t>(&data)) )
 	{
 		for ( int i = 0; i < data.selectedCommands.size(); ++i )
 		{

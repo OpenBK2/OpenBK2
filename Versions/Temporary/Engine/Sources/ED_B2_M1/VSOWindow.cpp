@@ -377,7 +377,7 @@ void CVSOWindow::UpdateSelection()
 							//
 							ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 							pCommandHandlerContainer->Set( CHID_OBJECT_STORAGE, this );
-							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_MULTI_STATE, ID_MIVSO_SWITCH_MULTI_STATE, reinterpret_cast<uint32_t>( &( selectedObjectListElement.szObjectTypeName ) ) );
+							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_MULTI_STATE, ID_MIVSO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( selectedObjectListElement.szObjectTypeName ) ) );
 							pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_VSO_STATE, ID_MIVSO_SWITCH_ADD_STATE, 0 );	
 						}
 					}
@@ -408,7 +408,7 @@ void CVSOWindow::EnableHeight( bool bEnableHeight )
 }
 
 
-bool CVSOWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CVSOWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
@@ -470,7 +470,7 @@ bool CVSOWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
 				pObjectManipulator = pMultiManipulator;
 			}
 			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uint32_t>( &pView ) );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
 			if ( pView != 0 )
 			{
 				pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );

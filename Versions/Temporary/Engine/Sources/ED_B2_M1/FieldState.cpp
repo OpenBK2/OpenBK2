@@ -265,7 +265,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 }
 
 
-bool CFieldState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CFieldState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{

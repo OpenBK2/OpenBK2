@@ -427,14 +427,14 @@ bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 }
 
 
-bool CAcksBuilder::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CAcksBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
 	case ID_TOOLS_CREATE_ACK_SETS:
 		{	
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == ACK_SET_TYPE_NAME );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );
@@ -463,7 +463,7 @@ bool CAcksBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	case ID_TOOLS_CREATE_ACK_SETS:
 		{
 			SSelectionSet selectionSet;
-			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uint32_t>( &selectionSet ) );
+			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
 			bResult = bResult && ( szObjectTypeName == ACK_SET_TYPE_NAME );
 			bResult = bResult && ( !selectionSet.objectNameList.empty() );

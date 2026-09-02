@@ -134,7 +134,7 @@ void CDWLog::Append( const NLog::SLogBuffer &rLogBuffer )
 }
 
 
-bool CDWLog::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CDWLog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( ( Singleton<IUserDataContainer>() == 0 ) ||
 			 ( Singleton<IUserDataContainer>()->Get() == 0 ) )

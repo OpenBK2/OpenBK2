@@ -238,7 +238,7 @@ void CPCStringSliderEditor::ProcessMessage( unsigned nMessage, WPARAM wParam, LP
 }
 
 
-bool CPCStringSliderEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCStringSliderEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

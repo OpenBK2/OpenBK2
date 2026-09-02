@@ -661,7 +661,7 @@ void CPolygonState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CPolygonState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPolygonState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

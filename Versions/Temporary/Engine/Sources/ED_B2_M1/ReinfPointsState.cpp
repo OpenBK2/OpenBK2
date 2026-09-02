@@ -260,7 +260,7 @@ void CReinfPointsState::OnSetFocus( class CWnd* pNewWnd )
 }
 
 
-bool CReinfPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CReinfPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch ( nCommandID )
 	{
@@ -274,7 +274,7 @@ bool CReinfPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
 			SReinfPointsWindowData data;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(  CHID_REINF_POINTS_WINDOW, 
 																																	ID_WINDOW_GET_DIALOG_DATA, 
-																																	reinterpret_cast<uint32_t>(&data) ) )
+																																	reinterpret_cast<uintptr_t>(&data) ) )
 			{
 				nSelectedReinfPoint = data.nSelectedPoint;
 				nSelectedPlayer = data.nPlayerIndex;
@@ -417,7 +417,7 @@ void CReinfPointsState::RefreshReinfPointsWindow()
 	//
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_REINF_POINTS_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&data) );
+																												reinterpret_cast<uintptr_t>(&data) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, 
 																												ID_SCENE_UPDATE, 
 																												0 );

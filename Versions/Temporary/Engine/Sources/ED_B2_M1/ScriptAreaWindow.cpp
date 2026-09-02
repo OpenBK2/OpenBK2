@@ -94,7 +94,7 @@ void CScriptAreaWindow::OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-bool CScriptAreaWindow::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CScriptAreaWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SScriptAreaWindowData *pData = reinterpret_cast<SScriptAreaWindowData*>( dwData );
 	//

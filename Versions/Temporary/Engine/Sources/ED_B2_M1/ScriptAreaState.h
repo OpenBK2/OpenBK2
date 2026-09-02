@@ -85,7 +85,7 @@ public:
 	virtual void RemovePolygon( int nPolygonID );
 
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	//
 	void PostDraw( CPaintDC *pPaintDC );

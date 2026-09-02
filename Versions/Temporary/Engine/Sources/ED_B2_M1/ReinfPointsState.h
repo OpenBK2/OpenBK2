@@ -56,7 +56,7 @@ public:
 	void Draw( CPaintDC *pPaintDC );
 	void PostDraw( CPaintDC *pPaintDC );
 
-	bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );

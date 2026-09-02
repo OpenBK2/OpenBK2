@@ -11,7 +11,7 @@ struct ICommandHandler
 	virtual ~ICommandHandler() {}
 	//
 	// Обработать команду от User Interface, если вернули false, то команда не обработана
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) = 0;
 	// Можно ли сейчас обрабатывать команду? Если вернули false, то команда не обработана
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
@@ -36,11 +36,11 @@ struct ICommandHandlerContainer : public CObjectBase
 	// Получить обработчик команды 
 	virtual ICommandHandler* Get( unsigned nType ) = 0;
 	// Передать команду на обработку, последнему зарегистрированному обработчику
-	virtual bool HandleCommand( unsigned nType, unsigned nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData ) = 0;
 	// Проверить возможность обработки команды у последнего зарегистрированного обработчика
 	virtual bool UpdateCommand( unsigned nType, unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 	// Передать команду на обработку, обработчик получить из ранее зарегистрированных
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData ) = 0;
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) = 0;
 	// Проверить возможность обработки команды, обработчик получить из ранее зарегистрированных
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };

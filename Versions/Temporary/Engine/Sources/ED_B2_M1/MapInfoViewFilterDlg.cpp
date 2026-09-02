@@ -92,7 +92,7 @@ void CMapInfoViewFilterDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-bool CMapInfoViewFilterDlg::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CMapInfoViewFilterDlg::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	return false;
 }

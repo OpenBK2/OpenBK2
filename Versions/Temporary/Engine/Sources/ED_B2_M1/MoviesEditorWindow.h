@@ -101,7 +101,7 @@ public:
 	void ResetDialog();
 
 	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uint32_t dwData );
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();
 	virtual void NotifyHandler( SScriptMovieEditorData::EMoviesEditorLastAction eAction );

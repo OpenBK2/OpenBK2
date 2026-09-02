@@ -181,7 +181,7 @@ void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
 }
 
 
-bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{
@@ -195,7 +195,7 @@ bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uint32_t dwData 
 		{
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_AIGEN_POINTS_WINDOW, 
 																																ID_WINDOW_GET_DIALOG_DATA, 
-																																reinterpret_cast<uint32_t>(&dialogData)) )
+																																reinterpret_cast<uintptr_t>(&dialogData)) )
 			{
 				switch ( dialogData.eLastAction )
 				{
@@ -564,7 +564,7 @@ void CAIGeneralPointsState::RefreshWindowData()
 
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
-																												reinterpret_cast<uint32_t>(&dialogData) );
+																												reinterpret_cast<uintptr_t>(&dialogData) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 

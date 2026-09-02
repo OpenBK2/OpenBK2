@@ -252,7 +252,7 @@ int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemp
 }
 
 
-bool CControllerContainer::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CControllerContainer::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

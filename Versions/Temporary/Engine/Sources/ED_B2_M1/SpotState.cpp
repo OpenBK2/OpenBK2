@@ -26,7 +26,7 @@ bool CSpotState::CanAddSpot()
 {
 	bool bResult = false;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bResult = ( objectSet.szObjectTypeName == "TerrainSpotDesc" ) &&
 							( !objectSet.objectNameSet.empty() );
@@ -79,7 +79,7 @@ bool CSpotState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPo
 		}
 		//
 		SObjectSet objectSet;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 		if ( !objectSet.objectNameSet.empty() )
 		{
 			const float fDirection = ( pEditParameters->fDirection * FP_PI ) / 180.0f;
@@ -217,7 +217,7 @@ void CSpotState::InsertObjectEnter()
 		ClearData();
 		//
 		SObjectSet objectSet;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 		if ( !objectSet.objectNameSet.empty() )
 		{
 			const NDb::STerrainSpotDesc *pTerrainSpotDesc = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );

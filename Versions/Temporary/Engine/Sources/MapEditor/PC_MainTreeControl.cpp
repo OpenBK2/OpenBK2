@@ -1973,7 +1973,7 @@ void CPCMainTreeControl::SelectAll()
 }
 
 
-bool CPCMainTreeControl::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCMainTreeControl::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( !GetViewManipulator() )
 	{

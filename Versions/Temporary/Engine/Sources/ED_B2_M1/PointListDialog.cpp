@@ -219,7 +219,7 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 }
 
 
-bool CPointListDialog::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPointListDialog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
 	

@@ -168,7 +168,7 @@ void CPCMultilineStringEditor::SetDefaultValue()
 }
 
 
-bool CPCMultilineStringEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCMultilineStringEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	/**
 	switch( nCommandID )

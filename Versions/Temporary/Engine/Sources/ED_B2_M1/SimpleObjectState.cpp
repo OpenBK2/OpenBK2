@@ -60,7 +60,7 @@ bool CSimpleObjectState::CanAddSimpleObject()
 {
 	bool bResult = false;
 	SObjectSet objectSet;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bResult = ( ( objectSet.szObjectTypeName == "MineRPGStats" ) ||
 								( objectSet.szObjectTypeName == "BuildingRPGStats" ) ||
@@ -202,7 +202,7 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 		//
 		CWaitCursor waitCursor;
 		SObjectSet objectSet;
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;
@@ -312,7 +312,7 @@ void CSimpleObjectState::InsertObjectEnter()
 		ClearData();
 		SObjectSet objectSet;
 		//
-		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uint32_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
+		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
 			szRPGStatsTypeName = objectSet.szObjectTypeName;
 			rpgStatsDBID = objectSet.objectNameSet.begin()->first;

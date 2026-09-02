@@ -198,7 +198,7 @@ void CPCFloatInputEditor::EnableEdit( bool bEnable )
 }
 
 
-bool CPCFloatInputEditor::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CPCFloatInputEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{

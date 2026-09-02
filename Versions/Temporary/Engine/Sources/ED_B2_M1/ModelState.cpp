@@ -102,7 +102,7 @@ void CModelState::Enter()
 		UpdateLight();
 		// Обновляем сцену
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uint32_t>( new CModelInterfaceCommand( new CModelInterface() ) ) );
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CModelInterfaceCommand( new CModelInterface() ) ) );
 	}
 	//
 	CDefaultInputState::Enter();
@@ -1160,7 +1160,7 @@ void CModelState::SetEditParameters( unsigned nFlags ) // editorSettings -> edit
 }
 
 
-bool CModelState::HandleCommand( unsigned nCommandID, uint32_t dwData )
+bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( pModelEditor == 0 )
 	{
