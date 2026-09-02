@@ -233,7 +233,7 @@ void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **pps
 	}
 	gdtd[nNumAttribs].Type = GrannyEndMember;
 	//
-	GrannyConvertSingleObject( pBone->ExtendedData.Type, pBone->ExtendedData.Object, &(gdtd[0]), pDstData );
+	GrannyConvertSingleObject( pBone->ExtendedData.Type, pBone->ExtendedData.Object, &(gdtd[0]), pDstData, nullptr );
 }
 
 };
