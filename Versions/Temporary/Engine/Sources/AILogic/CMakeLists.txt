@@ -115,7 +115,6 @@ set(SOURCES
     GroupLogicSerialize.cpp
     GroupMoveExecutor.cpp
     GroupMover.cpp
-    GroupMoverNew.cpp
     Guns.cpp
     GunsSerialize.cpp
     HitsStore.cpp
