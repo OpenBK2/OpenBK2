@@ -294,6 +294,15 @@ class Granny(object):
         self.dll.GrannyGetMeshTriangleGroupCount.restype = c_int32
         self.dll.GrannyMeshIsRigid.argtypes = [c_void_p]
         self.dll.GrannyMeshIsRigid.restype = c_bool
+        for name, restype in [('GrannyGetMeshVertexCount', c_int32),
+                              ('GrannyGetMeshVertices', c_void_p),
+                              ('GrannyGetMeshVertexType', c_void_p),
+                              ('GrannyGetMeshIndexCount', c_int32),
+                              ('GrannyGetMeshIndices', c_void_p),
+                              ('GrannyGetMeshBytesPerIndex', c_int32)]:
+            fn = getattr(self.dll, name)
+            fn.argtypes = [c_void_p]
+            fn.restype = restype
         self.dll.GrannyFindBoneByName.argtypes = [c_void_p, c_char_p, POINTER(c_int32)]
         self.dll.GrannyFindBoneByName.restype = c_bool
         self.dll.GrannyMakeIdentity.argtypes = [c_void_p]
@@ -645,6 +654,12 @@ class Granny(object):
                                         if b.TriangleIndices else [],
             })
 
+        # The six accessors, reported as what they say *relative to* the
+        # structure, not as raw pointers: an address differs between two DLLs
+        # for every mesh and would drown the comparison. "vertices" and
+        # "indices" name which field the returned pointer equalled.
+        out['Accessors'] = self._accessors(mesh, address)
+
         v = mesh.PrimaryVertexData.contents if mesh.PrimaryVertexData else None
         if v is not None:
             stride = self.dll.GrannyGetTotalObjectSize(C.cast(v.VertexType, c_void_p))
@@ -673,6 +688,32 @@ class Granny(object):
                                if t.Indices else [],
             }
         return out
+
+    def _accessors(self, mesh, address):
+        """What the six mesh accessors return, named against the structure."""
+        v = mesh.PrimaryVertexData.contents if mesh.PrimaryVertexData else None
+        t = mesh.PrimaryTopology.contents if mesh.PrimaryTopology else None
+
+        def where(got, candidates):
+            if not got:
+                return 'null'
+            for name, ptr in candidates:
+                if ptr and C.cast(ptr, c_void_p).value == got:
+                    return name
+            return 'unknown'
+
+        return {
+            'VertexCount': self.dll.GrannyGetMeshVertexCount(address),
+            'Vertices': where(self.dll.GrannyGetMeshVertices(address),
+                              [('Vertices', v.Vertices if v else None)]),
+            'VertexType': where(self.dll.GrannyGetMeshVertexType(address),
+                                [('VertexType', v.VertexType if v else None)]),
+            'IndexCount': self.dll.GrannyGetMeshIndexCount(address),
+            'Indices': where(self.dll.GrannyGetMeshIndices(address),
+                             [('Indices', t.Indices if t else None),
+                              ('Indices16', t.Indices16 if t else None)]),
+            'BytesPerIndex': self.dll.GrannyGetMeshBytesPerIndex(address),
+        }
 
     def _components(self, vertex_type):
         out = []

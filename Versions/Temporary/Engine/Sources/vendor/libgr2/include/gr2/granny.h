@@ -6,7 +6,7 @@
 //
 // This header is the whole public surface. It is C, it includes nothing from
 // the engine, and it deliberately reproduces the *shape* of the Granny API it
-// replaces: the same 55 entry points, same names, same signatures, same calling
+// replaces: the same 61 entry points, same names, same signatures, same calling
 // convention, and a DLL with the same file name. That is what lets the engine be
 // relinked against this library without a single source change, and, on Windows,
 // lets both implementations run side by side in one process so that every call
@@ -16,10 +16,10 @@
 // refactored onto a format-neutral skeleton and pose interface, this header goes
 // away and the internal C++17 API becomes the public one.
 //
-// Nothing here is implemented yet. Every entry point is a stub that returns a
-// null, a zero or a false. This is the skeleton: it fixes the header, the build,
-// the export set and the file layout, so that the milestones can be filled in
-// one at a time against a target that already links.
+// Three entry points are stubs: the allocator pair, which nothing calls, and
+// GrannyConvertSingleObject, whose ExtendedData is null in every shipped file.
+// The rest are implemented and measured against the real DLL. See README.md for
+// which is which and how each was verified.
 
 #include <stdint.h>
 
@@ -173,6 +173,12 @@ GR2_API( void ) GrannyConvertSingleObject( granny_data_type_definition const *So
 // Geometry. M2.
 GR2_API( granny_int32x ) GrannyGetMeshTriangleGroupCount( granny_mesh const *Mesh );
 GR2_API( bool ) GrannyMeshIsRigid( granny_mesh const *Mesh );
+GR2_API( granny_int32x ) GrannyGetMeshVertexCount( granny_mesh const *Mesh );
+GR2_API( void * ) GrannyGetMeshVertices( granny_mesh const *Mesh );
+GR2_API( granny_data_type_definition * ) GrannyGetMeshVertexType( granny_mesh const *Mesh );
+GR2_API( granny_int32x ) GrannyGetMeshIndexCount( granny_mesh const *Mesh );
+GR2_API( void * ) GrannyGetMeshIndices( granny_mesh const *Mesh );
+GR2_API( granny_int32x ) GrannyGetMeshBytesPerIndex( granny_mesh const *Mesh );
 GR2_API( bool ) GrannyFindBoneByName( granny_skeleton const *Skeleton, char const *BoneName,
                                       granny_int32x *BoneIndex );
 
