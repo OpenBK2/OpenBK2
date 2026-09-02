@@ -3,6 +3,7 @@
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
+#include "logging.h"
 
 
 SECTab* SECTabWndBase::InsertTab(CWnd* pWnd, int nIndex, LPCTSTR lpszLabel) {

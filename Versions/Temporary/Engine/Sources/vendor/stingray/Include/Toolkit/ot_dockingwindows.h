@@ -1,7 +1,5 @@
 #pragma once
 
-void InitLogging();
-
 // SECControlBar
 #include "sbarcore.h"
 

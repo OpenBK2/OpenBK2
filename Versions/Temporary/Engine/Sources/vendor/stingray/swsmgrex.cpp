@@ -3,6 +3,7 @@
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
+#include "logging.h"
 
 
 SECWorkspaceManagerEx::SECWorkspaceManagerEx() {
