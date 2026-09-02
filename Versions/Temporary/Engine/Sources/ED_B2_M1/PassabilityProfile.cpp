@@ -483,7 +483,7 @@ void CPassabilityProfileCreator::DelNotBreaks()
 			connTable[i].clear();
 		}
 
-		swap( toDelete, toDeleteNew );
+		std::swap( toDelete, toDeleteNew );
 	}
 
 	connections.FillZero();
