@@ -410,6 +410,51 @@ GR2_API( granny_int32x ) GrannyGetMemberTypeSize( granny_data_type_definition co
 	return Result;
 }
 
+GR2_API( granny_int32x ) GrannyGetMeshBytesPerIndex( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef granny_int32x ( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef granny_int32x TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshBytesPerIndex" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
+GR2_API( granny_int32x ) GrannyGetMeshIndexCount( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef granny_int32x ( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef granny_int32x TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshIndexCount" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
+GR2_API( void * ) GrannyGetMeshIndices( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef void *( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef void * TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshIndices" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
 GR2_API( granny_int32x ) GrannyGetMeshTriangleGroupCount( granny_mesh const *Mesh )
 {
 	GR2_TRACE( "Mesh={}", Mesh );
@@ -417,6 +462,51 @@ GR2_API( granny_int32x ) GrannyGetMeshTriangleGroupCount( granny_mesh const *Mes
 	typedef granny_int32x ( __stdcall *TFn )( granny_mesh const *Mesh );
 	typedef granny_int32x TResult;
 	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshTriangleGroupCount" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
+GR2_API( granny_int32x ) GrannyGetMeshVertexCount( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef granny_int32x ( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef granny_int32x TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshVertexCount" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
+GR2_API( granny_data_type_definition * ) GrannyGetMeshVertexType( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef granny_data_type_definition *( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef granny_data_type_definition * TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshVertexType" ) );
+	if ( pfn == 0 )
+	{
+		return TResult();
+	}
+	TResult Result = pfn( Mesh );
+	return Result;
+}
+
+GR2_API( void * ) GrannyGetMeshVertices( granny_mesh const *Mesh )
+{
+	GR2_TRACE( "Mesh={}", Mesh );
+
+	typedef void *( __stdcall *TFn )( granny_mesh const *Mesh );
+	typedef void * TResult;
+	static const TFn pfn = reinterpret_cast<TFn>( NGr2::ShimEntry( "GrannyGetMeshVertices" ) );
 	if ( pfn == 0 )
 	{
 		return TResult();

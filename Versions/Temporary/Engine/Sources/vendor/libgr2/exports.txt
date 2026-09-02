@@ -24,7 +24,13 @@ GrannyGetFileInfo
 GrannyGetLocalPoseBoneCount
 GrannyGetLocalPoseTransform
 GrannyGetMemberTypeSize
+GrannyGetMeshBytesPerIndex
+GrannyGetMeshIndexCount
+GrannyGetMeshIndices
 GrannyGetMeshTriangleGroupCount
+GrannyGetMeshVertexCount
+GrannyGetMeshVertexType
+GrannyGetMeshVertices
 GrannyGetTotalObjectSize
 GrannyGetWorldPose4x4
 GrannyGetWorldPoseComposite4x4
