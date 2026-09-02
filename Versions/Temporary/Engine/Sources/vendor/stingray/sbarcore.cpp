@@ -14,7 +14,7 @@ namespace { const int DEFAULT_THICKNESS = 120; }
 BOOL SECControlBar::m_bOptimizedRedrawEnabled = FALSE;
 
 SECControlBar::SECControlBar() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 // Creating the window is only half of creating a control bar.
@@ -32,12 +32,12 @@ SECControlBar::SECControlBar() {
 // wants. Passing it through was asking Windows for whatever those bits happen to
 // mean there. It is dropped: this library draws none of what it selects.
 BOOL SECControlBar::Create(CWnd* pParentWnd) {
-    spdlog::trace("{} this={} pParentWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd));
+    spdlog::debug("{} this={} pParentWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd));
     return Create(pParentWnd, "SECControlBar", WS_CHILD | CBRS_TOP, 0, 0, nullptr);
 }
 
 BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID, DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd, CCreateContext* pContext) {
-    spdlog::trace("{} this={} lpszClassName={} lpszWindowName={} nID={} dwStyle={} dwExStyle={} "
+    spdlog::debug("{} this={} lpszClassName={} lpszWindowName={} nID={} dwStyle={} dwExStyle={} "
                   "rect.left={} rect.top={} rect.right={} rect.bottom={} "
                   "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle,
                   rect.left, rect.top, rect.right, rect.bottom, spdlog::fmt_lib::ptr(pParentWnd), spdlog::fmt_lib::ptr(pContext));
@@ -50,7 +50,7 @@ BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT n
 }
 
 BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwStyle, DWORD dwExStyle, UINT nID, CCreateContext* pContext) {
-    spdlog::trace("{} this={} pParentWnd={} lpszWindowName={} dwStyle={} dwExStyle={} nID={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd), lpszWindowName, dwStyle, dwExStyle, nID,
+    spdlog::debug("{} this={} pParentWnd={} lpszWindowName={} dwStyle={} dwExStyle={} nID={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd), lpszWindowName, dwStyle, dwExStyle, nID,
                       spdlog::fmt_lib::ptr(pContext));
     RECT rect{0, 0, 0, 0};
     LPCTSTR lpszClassName = AfxRegisterWndClass(CS_DBLCLKS, ::LoadCursor(nullptr, IDC_ARROW), reinterpret_cast<HBRUSH>(COLOR_3DFACE + 1), ::LoadIcon(nullptr, IDI_APPLICATION));
@@ -70,7 +70,7 @@ BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwSty
 // CControlBar's painting uses, so the contents land exactly inside the borders
 // the bar draws.
 void SECControlBar::GetInsideRect(CRect& rectInside) const {
-    spdlog::trace("{} this={} rectInside.left={} rectInside.top={} rectInside.right={} rectInside.bottom={}",
+    spdlog::debug("{} this={} rectInside.left={} rectInside.top={} rectInside.right={} rectInside.bottom={}",
         BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), rectInside.left, rectInside.top, rectInside.right, rectInside.bottom);
     if (GetSafeHwnd() == nullptr) {
         rectInside.SetRectEmpty();
@@ -81,32 +81,32 @@ void SECControlBar::GetInsideRect(CRect& rectInside) const {
 }
 
 BOOL SECControlBar::IsMDIChild() const {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return FALSE;
 }
 
 BOOL SECControlBar::GetOptimizeRedrawEnabled() {
-    spdlog::trace("{}", BOOST_CURRENT_FUNCTION);
+    spdlog::debug("{}", BOOST_CURRENT_FUNCTION);
     return m_bOptimizedRedrawEnabled;
 }
 
 void SECControlBar::SetOptimizedRedrawEnabled(BOOL bOptimize) {
-    spdlog::trace("{} bOptimize={}", BOOST_CURRENT_FUNCTION, bOptimize);
+    spdlog::debug("{} bOptimize={}", BOOST_CURRENT_FUNCTION, bOptimize);
     m_bOptimizedRedrawEnabled = bOptimize;
 }
 
 BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol) {
-    spdlog::trace("{} this={} nRow={} nCol={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol);
+    spdlog::debug("{} this={} nRow={} nCol={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol);
     return FALSE;
 }
 
 BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol,int& nDockbarID) {
-    spdlog::trace("{} this={} nRow={} nCol={} nDockbarID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol, nDockbarID);
+    spdlog::debug("{} this={} nRow={} nCol={} nDockbarID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol, nDockbarID);
     return FALSE;
 }
 
 BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol,int& nDockbarID,float& fPctWidth,int& nHeight) {
-    spdlog::trace("{} this={} nRow={} nCol={} nDockbarID={} fPctWidth={} nHeight={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol, nDockbarID, fPctWidth, nHeight);
+    spdlog::debug("{} this={} nRow={} nCol={} nDockbarID={} fPctWidth={} nHeight={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nRow, nCol, nDockbarID, fPctWidth, nHeight);
     return FALSE;
 }
 
@@ -119,21 +119,21 @@ BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol,int& nDockbarID,float& fPc
 // that a derived bar can supply its own; that stays a stub, and MFC makes the
 // context itself.
 void SECControlBar::EnableDocking(DWORD dwDockStyle) {
-    spdlog::trace("{} this={} dwDockStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwDockStyle);
+    spdlog::debug("{} this={} dwDockStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwDockStyle);
     CControlBar::EnableDocking(dwDockStyle);
 }
 
 SECDockContext * SECControlBar::NewDockContext() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return nullptr;
 }
 
 void SECControlBar::SetExBarStyle(DWORD dwExStyle, BOOL bAutoUpdate) {
-    spdlog::trace("{} this={} dwExStyle={} bAutoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwExStyle, bAutoUpdate);
+    spdlog::debug("{} this={} dwExStyle={} bAutoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwExStyle, bAutoUpdate);
 }
 
 void SECControlBar::ModifyBarStyleEx(DWORD dwRemove, DWORD dwAdd, BOOL bAutoUpdate) {
-    spdlog::trace("{} this={} dwRemove={} dwAdd={} bAutoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemove, dwAdd, bAutoUpdate);
+    spdlog::debug("{} this={} dwRemove={} dwAdd={} bAutoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemove, dwAdd, bAutoUpdate);
 }
 
 // Not a stub. A control bar's id is what CFrameWnd::GetControlBar looks it up
@@ -147,7 +147,7 @@ void SECControlBar::ModifyBarStyleEx(DWORD dwRemove, DWORD dwAdd, BOOL bAutoUpda
 // Stable across runs given the same creation order, which is what a saved
 // layout needs in order to still mean something the next time.
 UINT SECControlBar::GetUniqueBarID(CFrameWnd* pMainWnd, UINT nBaseID) {
-    spdlog::trace("{} pMainWnd={} nBaseID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pMainWnd), nBaseID);
+    spdlog::debug("{} pMainWnd={} nBaseID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pMainWnd), nBaseID);
     if (pMainWnd == nullptr) {
         return nBaseID;
     }
@@ -163,13 +163,13 @@ UINT SECControlBar::GetUniqueBarID(CFrameWnd* pMainWnd, UINT nBaseID) {
 // by id, which is the question already answered above. Nothing in this tree
 // calls it.
 BOOL SECControlBar::VerifyUniqueBarIds(CFrameWnd* pFrameWnd) {
-    spdlog::trace("{} pFrameWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd));
+    spdlog::debug("{} pFrameWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd));
     return FALSE;
 }
 
 // Also not a stub, and the same question GetUniqueBarID answers by counting.
 BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID) {
-    spdlog::trace("{} pFrameWnd={} nBarID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd), nBarID);
+    spdlog::debug("{} pFrameWnd={} nBarID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(pFrameWnd), nBarID);
     return pFrameWnd != nullptr && pFrameWnd->GetControlBar(nBarID) == nullptr;
 }
 
@@ -189,69 +189,73 @@ BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID)
 // CControlBar::CalcFixedLayout answers 0 for anything that has not overridden
 // it. The editor's shortcut bars are docked that way and came out 0 wide.
 CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
-    spdlog::trace("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
+    spdlog::debug("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
     return CalcDynamicLayout(-1, (bStretch ? LM_STRETCH : 0) | (bHorz ? LM_HORZ : 0));
 }
 
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
-    spdlog::trace("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
+    spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
     const int nAlong = (dwMode & LM_STRETCH) != 0 ? 32767 : (nLength >= 0 ? nLength : nThickness);
     return (dwMode & LM_HORZ) != 0 ? CSize(nAlong, nThickness) : CSize(nThickness, nAlong);
 }
 
 void SECControlBar::OnBarBeginDock() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 void SECControlBar::OnBarEndDock() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 void SECControlBar::OnBarBeginFloat() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 void SECControlBar::OnBarEndFloat() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 void SECControlBar::OnBarBeginMDIFloat() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 void SECControlBar::OnBarEndMDIFloat() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 BOOL SECControlBar::OnGripperClose() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return FALSE;
 }
 
 BOOL SECControlBar::OnGripperExpand() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return FALSE;
 }
 
+// MFC calls this on every bar on every idle, and a bar that holds a window
+// rather than buttons has nothing to update. It was 1,764 of the 1,946 lines
+// in a trace of one startup, so it stays a level below everything else here
+// and OBK2_STINGRAY_LOG=trace is what asks for it.
 void SECControlBar::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler) {
     spdlog::trace("{} this={} pTarget={} bDisableIfNoHndler={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pTarget), bDisableIfNoHndler);
 }
 
 BOOL SECStatusBar::SetIndicators(const UINT * indicators, int size) {
-    spdlog::trace("{} this={} indicators={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(indicators), size);
+    spdlog::debug("{} this={} indicators={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(indicators), size);
     return TRUE;
 }
 
 int SECStatusBar::CommandToIndex(UINT nID) {
-    spdlog::trace("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
+    spdlog::debug("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
     return 0;
 }
 
 void SECStatusBar::SetPaneInfo(int index, UINT nID, UINT status, UINT size) {
-    spdlog::trace("{} this={} index={} nID={} status={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, nID, status, size);
+    spdlog::debug("{} this={} index={} nID={} status={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, nID, status, size);
 }
 
 void SECStatusBar::SetPaneText(int index, const CString & text) {
-    spdlog::trace("{} this={} index={} text={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, text.GetString());
+    spdlog::debug("{} this={} index={} text={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, text.GetString());
 }

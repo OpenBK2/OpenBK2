@@ -9,11 +9,11 @@
 
 
 SECMenuBar::SECMenuBar() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 SECMenuBar::~SECMenuBar() {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
 // Load the menus this bar is to offer, and keep them.
@@ -29,7 +29,7 @@ BOOL SECMenuBar::SetMenus(const std::vector<UINT> &menus) {
             continue;
         }
         const HMENU hMenu = ::LoadMenu(AfxGetResourceHandle(), MAKEINTRESOURCE(nID));
-        spdlog::trace("SECMenuBar::SetMenus: menu {} loaded as {}", nID, spdlog::fmt_lib::ptr(hMenu));
+        spdlog::debug("SECMenuBar::SetMenus: menu {} loaded as {}", nID, spdlog::fmt_lib::ptr(hMenu));
         if (hMenu != nullptr) {
             m_menus.emplace_back(nID, hMenu);
         }
@@ -39,17 +39,17 @@ BOOL SECMenuBar::SetMenus(const std::vector<UINT> &menus) {
 
 // This bar draws nothing, so it takes no room. The menu goes on the frame.
 CSize SECMenuBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
-    spdlog::trace("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
+    spdlog::debug("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
     return CSize(0, 0);
 }
 
 CSize SECMenuBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
-    spdlog::trace("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
+    spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     return CSize(0, 0);
 }
 
 BOOL SECMenuBar::LoadMenu(UINT nIDResource) {
-    spdlog::trace("{} this={} nIDResource={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIDResource);
+    spdlog::debug("{} this={} nIDResource={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIDResource);
     return FALSE;
 }
 
@@ -63,7 +63,7 @@ BOOL SECMenuBar::LoadMenu(UINT nIDResource) {
 // its Window menu separately and fills the second in with the open documents.
 // Null for the second leaves it alone.
 BOOL SECMenuBar::SwitchMenu(UINT nIDResource) {
-    spdlog::trace("{} this={} nIDResource={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIDResource);
+    spdlog::debug("{} this={} nIDResource={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIDResource);
 
     HMENU hMenu = nullptr;
     for (const auto &entry : m_menus) {
@@ -99,24 +99,24 @@ BOOL SECMenuBar::SwitchMenu(UINT nIDResource) {
 }
 
 void SECMenuBar::EnableBitFlag(DWORD dwBit, BOOL bUpdate) {
-    spdlog::trace("{} this={} dwBit={} bUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwBit, bUpdate);
+    spdlog::debug("{} this={} dwBit={} bUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwBit, bUpdate);
 }
 
 void SECMenuBar::OnBarStyleChange(DWORD dwOldStyle, DWORD dwNewStyle) {
-    spdlog::trace("{} this={} dwOldStyle={} dwNewStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwOldStyle, dwNewStyle);
+    spdlog::debug("{} this={} dwOldStyle={} dwNewStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwOldStyle, dwNewStyle);
 }
 
 HFONT SECMenuBar::GetMenuFont() const {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return nullptr;
 }
 
 void SECMenuBar::ResetMenus(BOOL bNoUpdate) {
-    spdlog::trace("{} this={} bNoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bNoUpdate);
+    spdlog::debug("{} this={} bNoUpdate={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bNoUpdate);
 }
 
 BOOL SECMenuBar::SetMenuInfo(int nCount, UINT nIDMenu, ...) {
-    spdlog::trace("{} this={} nCount={} nIDMenu={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCount, nIDMenu);
+    spdlog::debug("{} this={} nCount={} nIDMenu={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCount, nIDMenu);
     std::vector<UINT> menus;
     if (nCount > 0) {
         menus.push_back(nIDMenu);
@@ -131,6 +131,6 @@ BOOL SECMenuBar::SetMenuInfo(int nCount, UINT nIDMenu, ...) {
 }
 
 UINT SECMenuBar::GetCurMenuID() const {
-    spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return m_nCurMenuID;
 }
