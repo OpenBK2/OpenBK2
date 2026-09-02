@@ -34,9 +34,8 @@ END_MESSAGE_MAP()
 
 void CLuaEditor::InitScintilla()
 {
-	m_fnScintilla = (int (*)(void *,int,int,int))
-		SendMessage(SCI_GETDIRECTFUNCTION,0,0);
-	m_ptrScintilla = (void *)SendMessage(SCI_GETDIRECTPOINTER,0,0);
+	m_fnScintilla = reinterpret_cast<SciFnDirect>( SendMessage(SCI_GETDIRECTFUNCTION,0,0) );
+	m_ptrScintilla = static_cast<sptr_t>( SendMessage(SCI_GETDIRECTPOINTER,0,0) );
 
 	Sci(SCI_SETMARGINWIDTHN, 1, 0);
 //	Sci(SCI_ASSIGNCMDKEY, MAKEWORD( 'F', SCMOD_CTRL ), int message)
@@ -58,7 +57,7 @@ BOOL CLuaEditor::Create(CWnd *pParentWnd, unsigned nCtrlId)
 	return TRUE;
 }
 
-int CLuaEditor::Sci(int nCmd, int wParam, int lParam)
+sptr_t CLuaEditor::Sci(int nCmd, uptr_t wParam, sptr_t lParam)
 {
 	ASSERT(m_fnScintilla);
 	ASSERT(m_ptrScintilla);
@@ -138,7 +137,7 @@ void CLuaEditor::GrabFocus()
 void CLuaEditor::SetEditorMargins()
 {
 	Sci(SCI_SETMARGINTYPEN, 0, SC_MARGIN_NUMBER);
-	int pixelWidth = 6 * Sci(SCI_TEXTWIDTH, STYLE_LINENUMBER, (int)"9");
+	int pixelWidth = 6 * Sci(SCI_TEXTWIDTH, STYLE_LINENUMBER, (sptr_t)"9");
 	Sci(SCI_SETMARGINWIDTHN, 0, pixelWidth);
 
 	Sci(SCI_SETMARGINTYPEN, 1, SC_MARGIN_SYMBOL);
@@ -170,7 +169,7 @@ void CLuaEditor::SetReadOnly(BOOL bReadOnly)
 
 void CLuaEditor::AddText(const char* szText)
 {
-	Sci(SCI_ADDTEXT, strlen(szText), (int)szText);
+	Sci(SCI_ADDTEXT, strlen(szText), (sptr_t)szText);
 }
 
 void CLuaEditor::ClearAll()
@@ -185,7 +184,7 @@ CString CLuaEditor::GetLine(int nLine)
 	if ( nLineLength>0 )
 	{
 		char *pszBuf = strLine.GetBuffer(nLineLength);
-		Sci(SCI_GETLINE, nLine, (int)pszBuf);
+		Sci(SCI_GETLINE, nLine, (sptr_t)pszBuf);
 		pszBuf[nLineLength] = '\0';
 		strLine.ReleaseBuffer();
 	}
@@ -223,7 +222,7 @@ std::string CLuaEditor::GetText()
 {
 	int nLength = Sci( SCI_GETTEXTLENGTH ) + 1;
 	std::vector<char> buf( nLength );
-	Sci( SCI_GETTEXT, nLength, (int)&buf[0] );
+	Sci( SCI_GETTEXT, nLength, (sptr_t)&buf[0] );
 	return &buf[0];
 }
 
@@ -323,7 +322,7 @@ void CLuaEditor::SetAutoComplete( const std::vector<std::string> &vszKeywords,
 	szAutoComplete = szKeywords;
 	//Sci( SCI_AUTOCSETAUTOHIDE, false );
 	Sci( SCI_AUTOCSETCANCELATSTART, false );
-	Sci( SCI_AUTOCSETFILLUPS, 0, (int)" (" );
+	Sci( SCI_AUTOCSETFILLUPS, 0, (sptr_t)" (" );
 }
 
 void CLuaEditor::SetKeywordColor( int nKeywordSet, uint32_t dwColor )
@@ -362,7 +361,7 @@ void CLuaEditor::SetLuaLexer()
 	Sci(SCI_STYLESETFORE,0, 0x808080);
 	// style 1: comment (not used in Lua)
 	// style 2: line comment (green)
-	Sci(SCI_STYLESETFONT,2, (int)monospace);
+	Sci(SCI_STYLESETFONT,2, (sptr_t)monospace);
 	Sci(SCI_STYLESETSIZE,2, fontsize);
 	Sci(SCI_STYLESETFORE,2, 0x00AA00);
 	// style 3: doc comment (grey???)
@@ -370,14 +369,14 @@ void CLuaEditor::SetLuaLexer()
 	// style 4: numbers (blue)
 	Sci(SCI_STYLESETFORE,4, 0xFF0000);
 	// style 5: keywords (black bold)
-	Sci(SCI_STYLESETFONT,5, (int)font);
+	Sci(SCI_STYLESETFONT,5, (sptr_t)font);
 	Sci(SCI_STYLESETSIZE,5, (int)fontsize);
 	Sci(SCI_STYLESETFORE,5, 0xDD0000);
 	//Sci(SCI_STYLESETBOLD,5, 1);
 	// style SCE_LUA_WORD2: keywords (black bold)
 	for ( int i = SCE_LUA_WORD2; i <= SCE_LUA_WORD8; ++i )
 	{
-		Sci( SCI_STYLESETFONT, i, (int)font );
+		Sci( SCI_STYLESETFONT, i, (sptr_t)font );
 		Sci( SCI_STYLESETSIZE, i, (int)fontsize );
 	}
 	Sci( SCI_STYLESETFORE, SCE_LUA_WORD2, 0x803280 );
@@ -389,7 +388,7 @@ void CLuaEditor::SetLuaLexer()
 	// style 8: UUIDs (IDL only, not used in Lua)
 	// style 9: preprocessor directives (not used in Lua 4)
 	// style 10: operators (black bold)
-	Sci(SCI_STYLESETFONT,10, (int)font);
+	Sci(SCI_STYLESETFONT,10, (sptr_t)font);
 	Sci(SCI_STYLESETSIZE,10, fontsize);
 	Sci(SCI_STYLESETFORE,10, 0x000000);
 	//Sci(SCI_STYLESETBOLD,10, 1);
@@ -414,7 +413,7 @@ void CLuaEditor::OnMouseMove(unsigned nFlags, CPoint point)
 		tr.chrg.cpMin = start;
 		tr.chrg.cpMax = end;
 		tr.lpstrText = linebuf;
-		Sci(SCI_GETTEXTRANGE, 0, long(&tr));
+		Sci(SCI_GETTEXTRANGE, 0, sptr_t(&tr));
 		
 		CString strCalltip;
 		if ( false/*pFrame->GetCalltip(linebuf, strCalltip)*/ )
@@ -424,7 +423,7 @@ void CLuaEditor::OnMouseMove(unsigned nFlags, CPoint point)
 
 			if (!Sci(SCI_CALLTIPACTIVE))
 			{
-				Sci(SCI_CALLTIPSHOW,  start,  (int)strCalltip.GetBuffer(0));
+				Sci(SCI_CALLTIPSHOW,  start,  (sptr_t)strCalltip.GetBuffer(0));
 				strCalltip.ReleaseBuffer();
 				m_strCallTip = strCalltip;
 			};
@@ -458,7 +457,7 @@ void CLuaEditor::AutoComplete()
 		tr.chrg.cpMin = nStart;
 		tr.chrg.cpMax = nEnd;
 		tr.lpstrText = linebuf;
-		Sci(SCI_GETTEXTRANGE, 0, long(&tr));
+		Sci(SCI_GETTEXTRANGE, 0, sptr_t(&tr));
 		//
 		const std::string szLineBuf( linebuf );
 		//
@@ -579,11 +578,11 @@ void CLuaEditor::FindNext( const std::string &szText, bool bWholeWord, bool bMat
 	Sci( SCI_SETTARGETSTART, nCurPos );
 	Sci( SCI_SETTARGETEND, Sci(SCI_GETTEXTLENGTH) );
 	Sci( SCI_SETSEARCHFLAGS, nFlags );
-	int nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (int)((LPCSTR)sz) );
+	int nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (sptr_t)((LPCSTR)sz) );
 	if ( nPos == -1 && nCurPos > 0 )
 	{
 		Sci( SCI_SETTARGETSTART, 0 );
-		nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (int)((LPCSTR)sz) );
+		nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (sptr_t)((LPCSTR)sz) );
 	}
 	//
 	if ( nPos >= 0 )
@@ -607,7 +606,7 @@ bool CLuaEditor::Replace( const std::string &szReplaceWith )
 
 	if ( abs( cr.cpMax - cr.cpMin ) == 0 )
 		return false;
-	Sci( SCI_REPLACESEL, 0, (int)szReplaceWith.c_str() );
+	Sci( SCI_REPLACESEL, 0, (sptr_t)szReplaceWith.c_str() );
 	return true;
 }
 
@@ -630,11 +629,11 @@ void CLuaEditor::ReplaceAll( const std::string &szText, const std::string &szWit
 	Sci( SCI_SETSEARCHFLAGS, nFlags );
 
 	int nPos = -1;
-	while( (nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (int)((LPCSTR)sz) )) >= 0 )
+	while( (nPos = Sci( SCI_SEARCHINTARGET, sz.GetLength(), (sptr_t)((LPCSTR)sz) )) >= 0 )
 	{
 		Sci( SCI_SETTARGETSTART, nPos );
 		Sci( SCI_SETTARGETEND, nPos + sz.GetLength() );
-		Sci( SCI_REPLACETARGET, szWith.size(), (int)szWith.c_str() );
+		Sci( SCI_REPLACETARGET, szWith.size(), (sptr_t)szWith.c_str() );
 		//
 		Sci( SCI_SETTARGETSTART, nPos + szWith.size() );
 		Sci( SCI_SETTARGETEND, Sci(SCI_GETTEXTLENGTH) );

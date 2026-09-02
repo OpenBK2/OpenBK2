@@ -78,8 +78,8 @@ public:
 	void ReplaceAll( const std::string &szText, const std::string &szWith, bool bWholeWord, bool bMatchCase );
 
 protected:
-	int (*m_fnScintilla)(void*,int,int,int);
-	void *m_ptrScintilla;
+	SciFnDirect m_fnScintilla;
+	sptr_t m_ptrScintilla;
 	CUIntArray	m_pages;
 	BOOL m_bShowCalltips;
 	CString m_strCallTip;
@@ -91,7 +91,7 @@ protected:
 	bool bLastWholeWord;
 	std::vector<std::string> vszScriptKeywords;
 
-	int Sci(int nCmd, int wParam=0, int lParam=0);
+	sptr_t Sci(int nCmd, uptr_t wParam=0, sptr_t lParam=0);
 
 	// Generated message map functions
 protected:

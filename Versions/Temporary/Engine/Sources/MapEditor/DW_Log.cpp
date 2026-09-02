@@ -122,7 +122,7 @@ void CDWLog::Append( const NLog::SLogBuffer &rLogBuffer )
 		const int nTextEnd = wndContents.Command( SCI_GETLENGTH );
 		const int nPosition = wndContents.Command( SCI_GETCURRENTPOS );
 		const int nAnchor = wndContents.Command( SCI_GETANCHOR );
-		wndContents.Command( SCI_APPENDTEXT, rLogBuffer.szText.size(), (int)( rLogBuffer.szText.c_str() ) );
+		wndContents.Command( SCI_APPENDTEXT, rLogBuffer.szText.size(), (sptr_t)( rLogBuffer.szText.c_str() ) );
 		wndContents.Command( SCI_STARTSTYLING, nTextEnd, 0x1f );
 		wndContents.Command( SCI_SETSTYLING, rLogBuffer.szText.size(), rLogBuffer.eLogOutputType );
 		if ( ( nPosition == nAnchor ) && ( nPosition == nTextEnd ) )
