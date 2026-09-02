@@ -7,17 +7,33 @@
 #include "logging.h"
 
 
+// What a docking window gets when nothing has told it how big to be. Wide
+// enough to read a tree or a log in, narrow enough not to take the frame.
+namespace { const int DEFAULT_THICKNESS = 120; }
+
 BOOL SECControlBar::m_bOptimizedRedrawEnabled = FALSE;
 
 SECControlBar::SECControlBar() {
     spdlog::trace("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
+// Creating the window is only half of creating a control bar.
+//
+// CControlBar keeps the CBRS_ half of the style in m_dwStyle, separately from
+// the window style, and every bar MFC ships sets it in its own Create:
+// CDialogBar::Create is m_dwStyle = (nStyle & CBRS_ALL) before it creates
+// anything. These stubs never did, so every docking window in the editor had
+// m_dwStyle 0: no CBRS_ALIGN_LEFT, no CBRS_SIZE_DYNAMIC, no borders. A bar with
+// no alignment is one CFrameWnd::RecalcLayout gives no room to, which is why
+// they stayed invisible even once they were docked and had WS_VISIBLE.
+//
+// The dwExStyle these take is the toolkit's own CBRS_EX_ set, the cool look and
+// the gripper, which has nothing to do with the WS_EX_ flags CreateWindowEx
+// wants. Passing it through was asking Windows for whatever those bits happen to
+// mean there. It is dropped: this library draws none of what it selects.
 BOOL SECControlBar::Create(CWnd* pParentWnd) {
     spdlog::trace("{} this={} pParentWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd));
-    RECT rect{ 0, 0, 0, 0 };
-    LPCTSTR lpszClassName = AfxRegisterWndClass(CS_DBLCLKS, ::LoadCursor(nullptr, IDC_ARROW), reinterpret_cast<HBRUSH>(COLOR_3DFACE + 1), ::LoadIcon(nullptr, IDI_APPLICATION));
-    return CControlBar::Create(lpszClassName, "SECControlBar", 0, rect, pParentWnd, 0, nullptr);
+    return Create(pParentWnd, "SECControlBar", WS_CHILD | CBRS_TOP, 0, 0, nullptr);
 }
 
 BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID, DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd, CCreateContext* pContext) {
@@ -25,7 +41,8 @@ BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT n
                   "rect.left={} rect.top={} rect.right={} rect.bottom={} "
                   "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle,
                   rect.left, rect.top, rect.right, rect.bottom, spdlog::fmt_lib::ptr(pParentWnd), spdlog::fmt_lib::ptr(pContext));
-    return CControlBar::CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
+    m_dwStyle = dwStyle & CBRS_ALL;
+    return CWnd::Create(lpszClassName, lpszWindowName, (dwStyle & ~CBRS_ALL) | WS_CHILD, rect, pParentWnd, nID, pContext);
 }
 
 BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwStyle, DWORD dwExStyle, UINT nID, CCreateContext* pContext) {
@@ -33,7 +50,7 @@ BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwSty
                       spdlog::fmt_lib::ptr(pContext));
     RECT rect{0, 0, 0, 0};
     LPCTSTR lpszClassName = AfxRegisterWndClass(CS_DBLCLKS, ::LoadCursor(nullptr, IDC_ARROW), reinterpret_cast<HBRUSH>(COLOR_3DFACE + 1), ::LoadIcon(nullptr, IDI_APPLICATION));
-    return CControlBar::CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, rect, pParentWnd, nID, pContext);
+    return Create(lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle, rect, pParentWnd, pContext);
 }
 
 void SECControlBar::GetInsideRect(CRect& rectInside) const {
@@ -134,9 +151,23 @@ BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID)
     return pFrameWnd != nullptr && pFrameWnd->GetControlBar(nBarID) == nullptr;
 }
 
+// How much room the frame should give this bar. Returning nothing is what a
+// stub can say and what an invisible docking window looks like.
+//
+// The toolkit measures a docking window from whatever is docked inside it, and
+// this library does not know what that is. What it does know is the size the
+// frame asked for when it docked the bar, which DockControlBarEx puts in
+// m_nMRUWidth, the member MFC keeps a dynamic bar's size in. So that is the
+// thickness, and the bar stretches along the edge it is docked to, which is
+// what every dockable bar does.
+//
+// LM_HORZ says the bar lies along the top or bottom, so its length is cx and
+// its thickness cy, and the other way round when it is on the left or right.
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
     spdlog::trace("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
-    return CSize(0, 0);
+    const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
+    const int nAlong = (dwMode & LM_STRETCH) != 0 ? 32767 : (nLength >= 0 ? nLength : nThickness);
+    return (dwMode & LM_HORZ) != 0 ? CSize(nAlong, nThickness) : CSize(nThickness, nAlong);
 }
 
 void SECControlBar::OnBarBeginDock() {
