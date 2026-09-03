@@ -242,20 +242,53 @@ void SECControlBar::OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler) {
     spdlog::trace("{} this={} pTarget={} bDisableIfNoHndler={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pTarget), bDisableIfNoHndler);
 }
 
+// CommandToIndex, SetPaneInfo and SetPaneText are gone from this file: with
+// CStatusBar underneath, MFC's own are correct and were only being shadowed.
+//
+// Returning a constant from CommandToIndex was not the harmless placeholder it
+// looked like. CMainFrame::OnCreate asks it where panes 140 and 141 are and then
+// sizes what it is told: both answers were 0, so both SetPaneInfo calls landed on
+// pane 0 with widths 500 and 200 and the second overwrote the first. Searching
+// the panes for the id, which is all CStatusBar::CommandToIndex does, answers 1
+// and 2.
+//
+// SetIndicators still needs an override, because MFC's reports failure that this
+// editor cannot survive.
+//
+// MFC loads a string resource per indicator, to size each pane from the width of
+// its text. The editor's two pane ids have no string resource -- not in this
+// build, and not in the shipped 2005 binary either, where LoadString for 140 and
+// 141 comes back empty as well. Since that editor ran with a working status bar,
+// the toolkit's SetIndicators plainly never looked a string up. These panes get
+// their text at runtime from CMainFrame::SetStatusBarText and their widths from
+// the SetPaneInfo calls that follow, so the lookup has nothing to contribute.
+//
+// Handing MFC the id array anyway is worse than a wasted lookup, because its loop
+// breaks out on the first string it cannot load. With { ID_SEPARATOR, 140, 141 }
+// it assigns pane 1 its id, fails to load 140's string and stops, so pane 2 keeps
+// the id 0 that AllocElements zeroed it to. CommandToIndex( 141 ) then finds no
+// such pane and answers -1, and CMainFrame::OnCreate feeds that straight to
+// SetPaneInfo, which asserts on the index.
+//
+// So the panes are allocated by passing no id array at all, which is the argument
+// the string lookup hangs off: with nullptr MFC skips that loop entirely. Each
+// pane is then given its id directly, which is all CommandToIndex searches for.
+//
+// The one thing MFC's skipped loop also does is make an id-less first pane the
+// stretchy one, and that is worth keeping: it is the pane the editor writes its
+// messages into, and it has to take whatever width the two sized panes leave.
 BOOL SECStatusBar::SetIndicators(const UINT * indicators, int size) {
     spdlog::debug("{} this={} indicators={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(indicators), size);
+    if (!CStatusBar::SetIndicators(nullptr, size)) {
+        return FALSE;
+    }
+    if (indicators == nullptr) {
+        return TRUE;
+    }
+    for (int i = 0; i < size; ++i) {
+        const UINT nStyle = (indicators[i] == 0 && i == 0) ? (SBPS_STRETCH | SBPS_NOBORDERS)
+                                                           : SBPS_NORMAL;
+        SetPaneInfo(i, indicators[i], nStyle, 0);
+    }
     return TRUE;
-}
-
-int SECStatusBar::CommandToIndex(UINT nID) {
-    spdlog::debug("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
-    return 0;
-}
-
-void SECStatusBar::SetPaneInfo(int index, UINT nID, UINT status, UINT size) {
-    spdlog::debug("{} this={} index={} nID={} status={} size={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, nID, status, size);
-}
-
-void SECStatusBar::SetPaneText(int index, const CString & text) {
-    spdlog::debug("{} this={} index={} text={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), index, text.GetString());
 }
