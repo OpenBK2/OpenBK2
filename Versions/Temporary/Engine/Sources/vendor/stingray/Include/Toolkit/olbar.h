@@ -9,11 +9,23 @@
 
 #include "trcore.h"
 
+#include <vector>
+
 // https://help.perforce.com/stingray/11/html/otug/5-3.html
 
 void RWSetDotNetStyle(bool);
 
-struct SECBar {};
+// One entry in the shortcut bar: the pane it opens and the button that opens it.
+// The toolkit hands this back from AddBar as an opaque handle, so it is a pointer
+// into the bar's own list and lives until that entry is removed.
+struct SECBar {
+    CWnd* pWnd = nullptr;
+    CString strLabel;
+    BOOL bEnabled = TRUE;
+    // Owned by the shortcut bar, one per entry, and what the user clicks.
+    CButton* pButton = nullptr;
+};
+
 struct SECListBar{};
 template<typename T>
 struct SECIterator {};
@@ -275,4 +287,25 @@ protected:
 
 public:
     void SelectPane( int iIndex );
+
+protected:
+    // Owned. Pointers so a SECBar handed back by AddBar survives the list
+    // growing.
+    std::vector<SECBar*> m_bars;
+    int m_nActiveBar = -1;
+    DWORD m_dwBarStyle = 0;
+    DWORD m_dwAlign = 0;
+    // Held so GetFontName has something with a lifetime to return a reference
+    // to. Not applied: the pane buttons take the shell font.
+    CString m_strFontName;
+
+    // An Outlook bar: a button per pane, the open one's window filling the gap
+    // between the buttons above it and those below.
+    void LayoutBars();
+    BOOL EnsureButton( int iIndex );
+    void DestroyButton( int iIndex );
+
+    afx_msg void OnSize( UINT nType, int cx, int cy );
+    afx_msg void OnBarButton( UINT nID );
+    DECLARE_MESSAGE_MAP()
 };
