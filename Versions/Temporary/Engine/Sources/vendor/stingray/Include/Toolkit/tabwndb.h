@@ -5,10 +5,19 @@
 #include <afxext.h>
 #include <afxcmn.h>
 
+#include <vector>
+
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectabwndbase.htm
 
+// One tab: the window it shows and the label above it. The toolkit returns this
+// from AddTab and InsertTab as an opaque handle, so it is handed back as a
+// pointer into the tab window's own list and stays valid until that tab is
+// removed. Nothing in this editor keeps one.
 struct SECTab {
-
+    CWnd* pWnd = nullptr;
+    CString strLabel;
+    BOOL bEnabled = TRUE;
+    void* pExtra = nullptr;
 };
 
 struct SECTabControlBase {
@@ -100,4 +109,29 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectabwndbase__gettabcontrol.htm
     // Returns a pointer to the SECTabControlBase object associated with the tab window.
     const SECTabControlBase* GetTabControl() const;
+
+    virtual ~SECTabWndBase();
+
+protected:
+    // The tab strip. The toolkit draws its own, which is what SEC3DTabWnd's
+    // styles select between and what makes the tabs draggable; this holds a
+    // common control instead and lays the pages out under it. That is the one
+    // place this class gives a poorer answer than the toolkit would.
+    CTabCtrl m_wndTabs;
+    // Owned. Pointers rather than values so a SECTab handed back by AddTab
+    // survives the list growing.
+    std::vector<SECTab*> m_tabs;
+    int m_nActive = -1;
+
+    // Create the strip once this window has one to be a child of.
+    BOOL EnsureTabControl();
+    // Put the strip across the top and the active page under it.
+    void LayoutTabs();
+    // Show only the active tab's window, sized to the display area.
+    void ShowActivePage();
+    int IndexOf(const CWnd* pWnd) const;
+
+    afx_msg void OnSize(UINT nType, int cx, int cy);
+    afx_msg void OnTabSelChange(NMHDR* pNMHDR, LRESULT* pResult);
+    DECLARE_MESSAGE_MAP()
 };

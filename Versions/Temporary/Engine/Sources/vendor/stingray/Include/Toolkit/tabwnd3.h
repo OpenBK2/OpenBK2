@@ -69,4 +69,11 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec3dtabwnd__istabenabled.htm
     // Determines if tab is enabled or disabled.
     BOOL IsTabEnabled(int nIndex);
+
+private:
+    // Kept so GetTabStyle can answer with what SetTabStyle was given. Nothing
+    // reads it: the TWS_ constants above are placeholders in this port, plain
+    // consecutive integers rather than the toolkit's bit flags, so they cannot
+    // be tested for and the strip is drawn one way regardless.
+    DWORD m_dwTabStyle = 0;
 };
