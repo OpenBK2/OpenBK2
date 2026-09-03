@@ -363,7 +363,7 @@ and that is not reproduced.
 No open source project implements this, so all of it was measured by scripting
 `granny2.dll` through the sequences `CSkeletonAnimator` issues, advancing the
 model clock forwards only, and reading the observables after every step. The
-harness is `scripts/port/gr2control.py`: it replays fifteen scenarios per file
+harness is `scripts/port/gr2control.py`: it replays nineteen scenarios per file
 against both implementations and compares the transcripts, and it is the
 record-and-replay rig this document asked for before M4 rather than after.
 
@@ -373,6 +373,23 @@ control's previous model clock. On the next local-clock read, the control adds
 subtracts whole float periods when another loop is available. This order and its
 intermediate float roundings match the original DLL; an absolute
 `fmod((modelClock - startTime) * speed, duration)` does not.
+
+The difference shows in what a speed change does to time already played, and it
+was found as a gameplay bug: infantry run animations snapping to an unrelated
+keyframe several times a second. `CMOUnitInfantry::AIUpdatePlacement` calls
+`SetSpeedFactorForAllAnimations` on every placement update of a moving soldier,
+and the model clock is absolute game time (`GAnimation.cpp`, `0.001f * time`), so
+the absolute form rescaled every second already elapsed by the new speed. Traced
+against the original DLL five minutes into a match on a 2.633 s clip, a run of 18
+frames with the speed nudged between 0.9 and 1.12 gave the DLL a smooth advance
+and gave the absolute form five discontinuities, the largest 68.5% of a period.
+The stateful form reproduces the DLL bit for bit over that trace, and over 42,480
+samples on 118 corpus animations across randomized speed schedules, finite loop
+counts and raw-clock writes. `Control.cpp`'s unit test
+`AMidPlaybackSpeedChangeDoesNotJumpTheClock` and `gr2control.py`'s
+`speed-changes-while-walking` scenario are that case; the `speed=N` scenarios all
+set the speed before the clock has moved, which is exactly the case the absolute
+form got right.
 
 | | |
 |---|---|

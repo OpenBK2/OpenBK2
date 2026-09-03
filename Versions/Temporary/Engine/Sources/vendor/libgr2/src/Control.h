@@ -16,11 +16,23 @@
 //   loop wrapping    subtracts whole float periods and updates nLoopIndex
 //   clamped local    is the resulting raw clock clamped to [0, duration]
 //
-// That stateful order is significant. It is not equivalent to calculating
-// fmod((modelClock - startTime) * speed, duration): float rounding can leave the
-// original DLL one ULP below the end of a period for one sample. The game reads
-// that value for infantry root motion, so replacing it with zero makes the model
-// jump by a full stride at the loop boundary.
+// That stateful order is significant, and it is not equivalent to calculating
+// fmod( ( modelClock - startTime ) * speed, duration ). The difference is what
+// a speed change does to time already played.
+//
+// The engine drives the model clock with absolute game time, 0.001f * time in
+// GAnimation.cpp, and rewrites a moving soldier's speed on every placement
+// update in CMOUnitInfantry::AIUpdatePlacement. The absolute form rescales every
+// second already elapsed by the new speed, so five minutes in a 3% speed change
+// moved the local clock by half a period: the looping run clip snapped to an
+// unrelated keyframe several times a second. Advancing by pendingDelta * speed
+// applies a speed change only to the frames that follow it, which is what
+// granny2.dll does. Control.cpp's test AMidPlaybackSpeedChangeDoesNotJumpTheClock
+// is that sequence.
+//
+// Keeping the intermediate float roundings matters separately and more subtly:
+// they can leave the clock one ULP below the end of a period where an absolute
+// fmod gives zero.
 //
 // A finite control stops wrapping on its last period and therefore clamps at the
 // duration. A loop count of zero wraps forever.

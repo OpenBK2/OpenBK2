@@ -18,10 +18,11 @@ which is a pure function of the bytes; this one compares what an implementation
 against the real DLL, which cannot exist: it needs the DLL and it needs 21,720
 files of Nival's copyrighted data.
 
-The fifteen scenarios below are the ones the engine can produce plus the ones it
-cannot but a caller might: loop counts, speeds, a start time in the future, a
-completion time, a deactivation partway through, both ease curve forms, and two
-clips blended against each other.
+The nineteen scenarios below are the ones the engine can produce plus the ones it
+cannot but a caller might: loop counts, speeds, a speed rewritten between frames
+on a clock that is already hours old, a start time in the future, a completion
+time, a deactivation partway through, both ease curve forms, and two clips
+blended against each other.
 
 Two comparisons are deliberately loose, and the reasons are in
 docs/GrannyReplacement.md under "What still differs":
@@ -195,6 +196,20 @@ def scenarios(d):
     for speed in (2.0, 0.5, 1.5):
         out['speed=%r' % speed] = ([('loop', 0), ('speed', speed)]
                                    + [('clock', t) for t in fine])
+
+    # The infantry path, and the one shape none of the scenarios above had.
+    # CMOUnitInfantry::AIUpdatePlacement calls SetSpeedFactorForAllAnimations on
+    # every placement update of a moving soldier, so a looping run clip has its
+    # speed rewritten between frames, on a model clock that is absolute game time
+    # in seconds. The speed=N scenarios all set the speed before the clock has
+    # moved at all, which is exactly the case a stateless
+    # fmod((modelClock - startTime) * speed, d) gets right; this is the case it
+    # gets wrong, by rescaling all the time already elapsed.
+    walking = [('loop', 0)]
+    for i, speed in enumerate([1.0, 1.0, 1.03, 1.03, 0.97, 1.0, 1.12, 0.9, 1.0]):
+        walking.append(('speed', speed))
+        walking.append(('clock', 300.0 + i * 0.04))
+    out['speed-changes-while-walking'] = walking
 
     out['complete-at'] = ([('loop', 0), ('completeat', 1.5 * d)]
                           + [('clock', t) for t in fine])

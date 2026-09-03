@@ -6,7 +6,7 @@
 // of granny2.dll by scripting the same call sequences against it.
 //
 // The corpus side of that measurement is scripts/port/gr2control.py, which
-// replays fifteen scenarios per file against both implementations. It cannot be
+// replays nineteen scenarios per file against both implementations. It cannot be
 // a unit test: it needs the DLL and it needs the corpus. What it reported,
 // including the remaining known difference, is in docs/GrannyReplacement.md.
 
@@ -262,6 +262,58 @@ TEST( Control, FractionalLoopBoundariesAdvanceLikeTheOriginalDll )
 	GrannySetModelClock( pInstance, fNextClock );
 	EXPECT_NEAR( 0.25f * clip.Duration(),
 	             GrannyGetControlClampedLocalClock( pControl ), 1e-6f );
+
+	GrannyFreeModelInstance( pInstance );
+}
+
+TEST( Control, AMidPlaybackSpeedChangeDoesNotJumpTheClock )
+{
+	// The infantry bug this playback model was rewritten for, in the shape the
+	// engine produces it.
+	//
+	// CMOUnitInfantry::AIUpdatePlacement calls SetSpeedFactorForAllAnimations on
+	// every placement update, so a running soldier's looping clip has its speed
+	// rewritten several times a second. The model clock it is driven with is
+	// absolute game time in seconds ( GAnimation.cpp: 0.001f * time ), so by the
+	// time this happens the clock is in the hundreds.
+	//
+	// Deriving local time as fmod( ( modelClock - startTime ) * speed, period )
+	// rescales all of that elapsed time on every speed change: the steps below
+	// became +1.042 and then -0.974 on a two second period, which is the visible
+	// snap to an unrelated keyframe. Advancing by pendingDelta * speed does not,
+	// and matches granny2.dll, whose steps for this sequence on a real 2.633 s
+	// clip are +0.0400085, +0.0411773 and +0.0360076.
+	CClip clip( 3, 2.0f );
+	granny_model_instance *pInstance = GrannyInstantiateModel( clip.Model() );
+	granny_control *pControl = Bind( clip, pInstance );
+	ASSERT_NE( nullptr, pControl );
+	GrannySetControlLoopCount( pControl, 0 );
+
+	// Five minutes of game time, then one 40 ms frame at the original speed.
+	GrannySetModelClock( pInstance, 300.0f );
+	EXPECT_FLOAT_EQ( 0.0f, GrannyGetControlClampedLocalClock( pControl ) );
+	GrannySetModelClock( pInstance, 300.04f );
+	const float fBefore = GrannyGetControlClampedLocalClock( pControl );
+	EXPECT_FLOAT_EQ( 0.040008545f, fBefore );
+
+	// The soldier speeds up a little, and the next frame must carry the clock
+	// forwards by that frame only.
+	GrannySetControlSpeed( pControl, 1.03f );
+	GrannySetModelClock( pInstance, 300.08f );
+	const float fFaster = GrannyGetControlClampedLocalClock( pControl );
+	EXPECT_FLOAT_EQ( 0.081185907f, fFaster );
+	// A frame's worth, not a period's worth. The tolerance is loose because a
+	// float model clock near 300 has an ULP of 3.05e-5, so the frame the control
+	// actually sees is 0.0399780 rather than 0.04; the bug moved the clock by
+	// 1.042, which is four orders of magnitude away from either.
+	EXPECT_NEAR( 0.04f * 1.03f, fFaster - fBefore, 1.0e-4f );
+
+	// And slows down again.
+	GrannySetControlSpeed( pControl, 0.9f );
+	GrannySetModelClock( pInstance, 300.12f );
+	const float fSlower = GrannyGetControlClampedLocalClock( pControl );
+	EXPECT_FLOAT_EQ( 0.117193595f, fSlower );
+	EXPECT_NEAR( 0.04f * 0.9f, fSlower - fFaster, 1.0e-4f );
 
 	GrannyFreeModelInstance( pInstance );
 }
