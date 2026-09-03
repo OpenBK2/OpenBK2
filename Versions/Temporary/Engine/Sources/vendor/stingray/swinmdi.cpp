@@ -91,9 +91,22 @@ BOOL SECMDIFrameWnd::LoadAdditionalMenus(UINT nCount, UINT nIDMenu, ...) {
     if (m_pMenuBar == nullptr) {
         return FALSE;
     }
+    // AFX_IDW_CONTROLBAR_LAST, which is the id the original editor's menu bar
+    // carries: its window tree shows it as 59647.
+    //
+    // Asking GetUniqueBarID for the first id free from AFX_IDW_TOOLBAR was
+    // wrong, and only became visibly wrong once the toolbars were real. It
+    // answered 59392, because at this point in startup no bar holds that id
+    // yet: SECToolBarManager has been given all six definitions but does not
+    // build them until later, and 59392 is the first one it will use. The menu
+    // bar and the File Toolbar then both had 59392, which is the id
+    // GetControlBar, ShowControlBar and LoadBarState address a bar by.
+    //
+    // The end of the control bar range cannot collide with them, since that is
+    // where the toolbar ids count up from.
     if (m_pMenuBar->GetSafeHwnd() == nullptr
         && !m_pMenuBar->CreateEx(0, this, WS_CHILD | CBRS_TOP,
-                                 SECControlBar::GetUniqueBarID(this, AFX_IDW_TOOLBAR),
+                                 AFX_IDW_CONTROLBAR_LAST,
                                  "SECMenuBar")) {
         spdlog::warn("SECMDIFrameWnd::LoadAdditionalMenus: the menu bar has no window");
         return FALSE;

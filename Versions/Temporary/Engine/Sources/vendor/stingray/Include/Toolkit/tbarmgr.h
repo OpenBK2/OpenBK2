@@ -8,6 +8,8 @@
 #include "sbarmgr.h"
 #include "tbarcust.h"
 
+#include <vector>
+
 struct SECBtnMapEntry {
     int a, b, c, d;
 };
@@ -144,4 +146,41 @@ public:
     BOOL SetMenuInfo(int nCount, UINT nIDMenu, ...);
     void LoadState(const CString &);
     void SaveState(const CString &);
+
+    ~SECToolBarManager() override;
+
+    // What DefineDefaultToolBar was told about one toolbar, held until there is
+    // somewhere to put it. See CreateBars for why it cannot be built at once.
+    struct ToolBarDef {
+        UINT nID = 0;
+        CString strTitle;
+        std::vector<UINT> btnIDs;
+        DWORD dwAlignment = CBRS_ALIGN_ANY;
+        UINT nDockBarID = AFX_IDW_DOCKBAR_TOP;
+        UINT nDockNextToID = 0;
+        BOOL bDocked = TRUE;
+        BOOL bVisible = TRUE;
+        // The bitmap this bar's button faces come from, paired by order of
+        // definition with the resources AddToolBarResource was handed.
+        UINT nBitmapID = 0;
+        SECCustomToolBar* pBar = nullptr;
+    };
+
+private:
+    // Build a bar per definition, dock it and show or hide it. Called late,
+    // from LoadState and SetDefaultDockState, and idempotent.
+    void CreateBars();
+    ToolBarDef* FindDef(UINT nID);
+
+    std::vector<ToolBarDef> m_defs;
+    // Bitmap resource ids, in the order they were loaded.
+    std::vector<UINT> m_bitmaps;
+
+    const SECBtnMapEntry* m_pButtonMap = nullptr;
+    BOOL m_bToolTips = FALSE;
+    BOOL m_bFlyBy = FALSE;
+    BOOL m_bLargeBtns = FALSE;
+    BOOL m_bCoolLook = FALSE;
+    DWORD m_dwCoolLookStyles = 0;
+    BOOL m_bBarsCreated = FALSE;
 };
