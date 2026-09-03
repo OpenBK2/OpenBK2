@@ -501,7 +501,20 @@ static bool ReadDeviceData( SInputDevice &sDevice, DIDEVICEOBJECTDATA *pObjects,
 	if ( hRes == DI_BUFFEROVERFLOW )
 		sDevice.bNeedResync = true;
 	if ( SUCCEEDED( hRes ) )
+	{
+		// DirectInput timestamps use the GetTickCount clock, while the binding
+		// accumulators use GetCurrentTimeMilliseconds. Preserve each event's age
+		// when moving it to the engine clock or a newly pressed key gets credited
+		// with the clocks' epoch offset and makes a slider (such as camera motion)
+		// jump on its first sample.
+		const uint32_t dwDirectInputNow = GetTickCount();
+		const uint32_t dwEngineNow = GetCurrentTimeMilliseconds();
+		for ( unsigned long nEvent = 0; nEvent < *pdwElements; ++nEvent )
+		{
+			pObjects[nEvent].dwTimeStamp = dwEngineNow - ( dwDirectInputNow - pObjects[nEvent].dwTimeStamp );
+		}
 		return true;
+	}
 
 	sDevice.pdiDevice->Acquire();
 	return false;
