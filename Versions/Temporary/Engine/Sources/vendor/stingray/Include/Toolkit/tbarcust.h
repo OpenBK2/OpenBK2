@@ -15,10 +15,29 @@ struct Wrapped {
 
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccustomtoolbar.htm
 
-// this class inherits from SECControlBar
-
-class SECCustomToolBar : public SECControlBar {
+// The toolkit derives this from SECControlBar and draws the buttons itself,
+// which is what makes it customizable by dragging. That is not reproduced here.
+// What the editor actually asks of it is the part MFC's CToolBar already is: a
+// bar of bitmap buttons with command ids, which can be measured, docked, shown
+// and hidden. So this derives from CToolBar and forwards.
+//
+// The customize-mode half stays unimplemented, and says so at each function.
+//
+// DECLARE_DYNAMIC is not decoration here, it fixes a live bug.
+// CMainFrame::GetToolBarButtonLeftBottomPos walks the frame's control bars
+// testing IsKindOf( RUNTIME_CLASS( SECCustomToolBar ) ), and RUNTIME_CLASS
+// expands to SECCustomToolBar::GetThisClass(). That is a *static* member
+// function, so with no DECLARE_DYNAMIC on this class the name resolved to the
+// nearest base that had one and the test asked "is this a CControlBar" instead:
+// true for every docking window and shortcut bar on the frame. The
+// dynamic_cast on the next line then answered null and GetBtnCount() was
+// called on it.
+class SECCustomToolBar : public CToolBar {
+    DECLARE_DYNAMIC(SECCustomToolBar)
 public:
+    SECCustomToolBar();
+    virtual ~SECCustomToolBar();
+
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccustomtoolbar__create.htm
     // Creates the child window for the customizable toolbar and attaches it to an SECCustomToolBar object.
     virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID,DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd = NULL,CCreateContext* pContext = NULL);
@@ -89,5 +108,15 @@ public:
     struct Button {
         UINT m_nID;
     };
+    // The editor reads this directly, as m_btns[i]->m_nID, to find the button
+    // carrying a command id. It is kept in step with the control's own buttons
+    // by RebuildButtons, which every function that changes them calls.
     std::vector<Button*> m_btns;
+
+private:
+    void RebuildButtons();
+    void ClearButtons();
+    // The command ids currently on the bar, in order, which is what SetButtons
+    // needs to be handed again in order to add or remove one.
+    std::vector<UINT> CurrentIDs() const;
 };
