@@ -22,6 +22,14 @@ namespace NErrors
 	PARSER_EXPORT void ShowErrorNoLine( const std::string &szError );
 }
 
+// The parser's VERIFY has nothing to do with MFC's or with the one in
+// Misc/Asserts.h: it takes three arguments, reports through NErrors rather than
+// asserting, and runs `statement` on failure. It has always shadowed the
+// one-argument macro of the same name; the #undef only makes that deliberate,
+// so that including Misc/Asserts.h first is not a redefinition warning.
+#ifdef VERIFY
+#undef VERIFY
+#endif
 #define VERIFY( x, user_text, statement )\
 {\
 	bool bCheck = (x);\

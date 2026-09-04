@@ -221,22 +221,17 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager );	
 	if ( TOOLBARS_COUNT > 0 )
 	{
-		// These two calls used to be wrapped in VERIFY, which discarded them.
-		// MFC defines VERIFY( f ) as ASSERT( f ), and Misc/Asserts.h undefines
-		// ASSERT and redefines it as NI_ASSERT( a, #a ), which without
-		// _DO_ASSERT_SLOW is ( ( void )0 ) -- the argument is never evaluated.
-		// So the toolbar bitmaps were never loaded and every toolbar came up
-		// with no button faces. Assigning the result first is what makes the
-		// call happen; the assert is then only an assert.
-		const BOOL bToolBarResourceLoaded = pToolBarMgr->LoadToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[0] ),
-																							MAKEINTRESOURCE( TOOLBAR_ID[0] ) );
-		NI_ASSERT( bToolBarResourceLoaded != FALSE, "CMainFrame::OnCreate() the first toolbar bitmap did not load" );
+		// These two calls are the reason VERIFY is defined in Misc/Asserts.h
+		// rather than left to MFC: under MFC's spelling the ASSERT redefinition
+		// in that header discarded them, so the toolbar bitmaps were never
+		// loaded and every toolbar came up with no button faces.
+		VERIFY( pToolBarMgr->LoadToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[0] ),
+																							MAKEINTRESOURCE( TOOLBAR_ID[0] ) ) );
 		//нулевой элемент пропускаем
 		for ( uint32_t nElementIndex = 1; nElementIndex < TOOLBARS_COUNT; ++nElementIndex )
 		{
-			const BOOL bToolBarResourceAdded = pToolBarMgr->AddToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ),
-																							MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ) );
-			NI_ASSERT( bToolBarResourceAdded != FALSE, "CMainFrame::OnCreate() a toolbar bitmap did not load" );
+			VERIFY( pToolBarMgr->AddToolBarResource( MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ),
+																							MAKEINTRESOURCE( TOOLBAR_ID[nElementIndex] ) ) );
 		}
 		//
 		CString strToolbarName;
