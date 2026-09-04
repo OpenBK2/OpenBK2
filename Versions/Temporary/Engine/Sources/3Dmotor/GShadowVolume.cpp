@@ -215,7 +215,11 @@ class CPartsRender: public CRasterizer<CPartsRender>
 	BOOST_FORCEINLINE void RasterSpan( int nY, int nLeft, int nRight, float fZ, float fDZ, int nBackface )
 	{
 		ASSERT( pDepthBufferBase == &pHZBuffer->GetDepthBuffer()[0][0] );
-		ASSERT( pIndexBufferBase = &indexBuffer[0][0] );
+		// was an assignment rather than a comparison, so it checked nothing and
+		// silently re-established the pointer instead. SetSizes() is what sets
+		// pIndexBufferBase, on the line after it sets pDepthBufferBase, and the
+		// line above checks that one; this checks the other, as intended.
+		ASSERT( pIndexBufferBase == &indexBuffer[0][0] );
 		ASSERT( nY >= 0 && nY < pHZBuffer->GetDepthBuffer().GetSizeY() );
 		ASSERT( nLeft >= 0 && nRight <= pHZBuffer->GetDepthBuffer().GetSizeX() );
 		int nShift = nY * nWidth;
