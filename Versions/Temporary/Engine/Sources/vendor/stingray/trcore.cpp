@@ -62,14 +62,44 @@ void SortSubtree( HWND hWnd, HTREEITEM hItem )
 
 
 
-SEC_TREECLASS::SEC_TREECLASS() : m_dwTreeCtrlStyleEx(0) {
+SEC_TREECLASS::SEC_TREECLASS() : m_dwTreeCtrlStyleEx(0), m_bStoreSubItemText(FALSE) {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    // Column zero exists before anyone inserts anything: the editor sets its
+    // heading, format, width and image first and only then inserts the rest.
+    // The width is what SetColumnWidth is about to overwrite; it is here so
+    // that a tree nobody configured still answers a usable number rather than
+    // zero, which is what PC_MainTreeControl sizes its in-place editor from.
+    SColumn first;
+    first.nFormat = LVCFMT_LEFT;
+    first.nWidth = 100;
+    first.nSubItem = 0;
+    first.nImage = -1;
+    m_columns.push_back(first);
 }
 
 int SEC_TREECLASS::GetActiveColumn() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    // Columns are the toolkit's own drawing; nothing here has more than one.
+    // The toolkit tracked which column the user was working in, for in-place
+    // editing and for the sort arrow. Nothing here tracks that yet, so the
+    // first column is the answer, and it is the right one for a tree that is
+    // not drawing the others.
     return 0;
+}
+
+void SEC_TREECLASS::ForgetSubItemText( HTREEITEM hItem ) {
+    // A null item or TVI_ROOT means the whole tree, which is also what
+    // TreeView_DeleteItem takes them to mean.
+    if (hItem == nullptr || hItem == TVI_ROOT) {
+        m_subItemText.clear();
+        return;
+    }
+    // Deleting an item deletes its children with it, and their handles go with
+    // them, so the subtree has to be walked before the control forgets it.
+    for (HTREEITEM hChild = TreeView_GetChild(GetSafeHwnd(), hItem); hChild != nullptr;
+         hChild = TreeView_GetNextSibling(GetSafeHwnd(), hChild)) {
+        ForgetSubItemText(hChild);
+    }
+    m_subItemText.erase(hItem);
 }
 
 BOOL SEC_TREECLASS::Create(DWORD dwStyle, const RECT& rect, CWnd* pParentWnd, UINT nID, CCreateContext* pContext) {
@@ -242,7 +272,13 @@ HTREEITEM SEC_TREECLASS::GetPrevItemInDisplayOrder(HTREEITEM hti) const {
 
 BOOL SEC_TREECLASS::SetItem(const LV_ITEM* pLVI, BOOL bRedraw) {
     spdlog::debug("{} this={} pLVI={} bRedraw={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pLVI), bRedraw);
-    // The list side of the toolkit's item, which is its columns.
+    // The list side of the toolkit's item, which is its columns. Those exist
+    // now and SetItemText fills them, but this overload cannot reach them: an
+    // LV_ITEM names its row by iItem, a list index, and this tree addresses
+    // items by HTREEITEM and has no stable row number to map one onto. The
+    // toolkit could do it because it drew the rows and so knew their order.
+    // Nothing in the editor calls this; if something starts to, it needs an
+    // index the tree does not currently keep.
     return FALSE;
 }
 
@@ -395,18 +431,27 @@ BOOL SEC_TREECLASS::IsCallbackItem(int nIndex) const {
 
 void SEC_TREECLASS::StoreSubItemText( BOOL bEnable ) {
     spdlog::debug("{} this={} bEnable={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bEnable);
+    m_bStoreSubItemText = bEnable;
+    if (!bEnable) {
+        m_subItemText.clear();
+    }
 }
 
 BOOL SEC_TREECLASS::IsStoringSubItemText() const {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    return FALSE;
+    return m_bStoreSubItemText;
 }
 
 CString SEC_TREECLASS::GetItemText(HTREEITEM hItem, int iSubItem) const {
     spdlog::debug("{} this={} hItem={} iSubItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), iSubItem);
     if (iSubItem > 0) {
-        // Subitem text belongs to the columns, which this library does not draw.
-        return CString();
+        // Column zero's text is the control's; the rest is only ever what was
+        // handed to SetItemText, and only when the tree was asked to keep it.
+        const std::map<HTREEITEM, std::vector<CString> >::const_iterator it = m_subItemText.find(hItem);
+        if (it == m_subItemText.end() || iSubItem >= static_cast<int>(it->second.size())) {
+            return CString();
+        }
+        return it->second[iSubItem];
     }
     TCHAR szText[512] = { 0 };
     TVITEM item = { 0 };
@@ -428,26 +473,31 @@ BOOL SEC_TREECLASS::SetItemText(HTREEITEM hItem, LPCTSTR lpszItem) {
 BOOL SEC_TREECLASS::SetItemText(HTREEITEM hItem, int nSubItem, LPCTSTR lpszItem) {
     spdlog::debug("{} this={} hItem={} nSubItem={} lpszItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), nSubItem, SafeString( lpszItem ));
     if (nSubItem > 0) {
-        // See GetItemText: no columns, so nothing to put in one.
-        return FALSE;
+        // FALSE here is now an answer rather than a refusal: it says the text
+        // was not kept, which is true exactly when nobody asked for it to be.
+        if (!m_bStoreSubItemText || hItem == nullptr) {
+            return FALSE;
+        }
+        std::vector<CString> &text = m_subItemText[hItem];
+        if (nSubItem >= static_cast<int>(text.size())) {
+            text.resize(nSubItem + 1);
+        }
+        text[nSubItem] = lpszItem != nullptr ? lpszItem : _T("");
+        return TRUE;
     }
     return SetItemText(hItem, lpszItem);
 }
 
 BOOL SEC_TREECLASS::SetItemString(HTREEITEM hti, int nSubItem, const CString& strItem) {
     spdlog::debug("{} this={} hti={} nSubItem={} strItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti), nSubItem, strItem.GetString());
-    if (nSubItem > 0) {
-        return FALSE;
-    }
-    return SetItemText(hti, strItem);
+    return SetItemText(hti, nSubItem, strItem);
 }
 
 BOOL SEC_TREECLASS::GetItemString(HTREEITEM hti, int nSubItem, CString& strItem) {
     spdlog::debug("{} this={} hti={} nSubItem={} strItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti), nSubItem, strItem.GetString());
-    if (nSubItem > 0) {
-        return FALSE;
-    }
-    strItem = GetItemText(hti, 0);
+    // The pair of this is SetItemString, so it answers from the same place:
+    // the control for column zero, the stored text for the rest.
+    strItem = GetItemText(hti, nSubItem);
     return TRUE;
 }
 
@@ -510,11 +560,15 @@ HTREEITEM SEC_TREECLASS::InsertItem(LPCTSTR lpszItem, int nImage, int nSelectedI
 
 BOOL SEC_TREECLASS::DeleteItem(HTREEITEM hItem) {
     spdlog::debug("{} this={} hItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem));
+    // Before the control deletes it: the walk needs the children to still be
+    // there, and afterwards they are not.
+    ForgetSubItemText(hItem);
     return TreeView_DeleteItem(GetSafeHwnd(), hItem);
 }
 
 BOOL SEC_TREECLASS::DeleteAllItems() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    m_subItemText.clear();
     return TreeView_DeleteAllItems(GetSafeHwnd());
 }
 
@@ -905,22 +959,44 @@ void SEC_TREECLASS::SetMaxAnimations( int nMaxAnimations ) {
 BOOL SEC_TREECLASS::InsertColumn( int nCol, const CString& strHeader, int nFormat, int wWidth, int iSubItem, int iImage, BOOL bUpdate ) {
     spdlog::debug("{} this={} nCol={} strHeader={} nFormat={} nWidth={} iSubItem={} iImage={} bUpdate={}",
         BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, strHeader.GetString(), nFormat, wWidth, iSubItem, iImage, bUpdate);
-    return FALSE;
+    if (nCol < 0 || nCol > static_cast<int>(m_columns.size())) {
+        return FALSE;
+    }
+    SColumn column;
+    column.strHeading = strHeader;
+    column.nFormat = nFormat;
+    column.nWidth = wWidth;
+    column.nSubItem = iSubItem;
+    column.nImage = iImage;
+    m_columns.insert(m_columns.begin() + nCol, column);
+    // bUpdate asked the toolkit to repaint. Nothing paints these yet, so there
+    // is nothing to repaint; when the custom-draw pass exists it belongs here.
+    return TRUE;
 }
 
 BOOL SEC_TREECLASS::DeleteColumn( int nCol ) {
     spdlog::debug("{} this={} nCol={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol);
-    return FALSE;
+    // Column zero is the item's own text and cannot go: the control owns it.
+    if (nCol <= 0 || nCol >= static_cast<int>(m_columns.size())) {
+        return FALSE;
+    }
+    m_columns.erase(m_columns.begin() + nCol);
+    return TRUE;
 }
 
 BOOL SEC_TREECLASS::DeleteColumn( const CString& strColumnHeading ) {
     spdlog::debug("{} this={} strColumnHeading={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), strColumnHeading.GetString());
+    for (size_t nCol = 0; nCol < m_columns.size(); ++nCol) {
+        if (m_columns[nCol].strHeading == strColumnHeading) {
+            return DeleteColumn(static_cast<int>(nCol));
+        }
+    }
     return FALSE;
 }
 
 UINT SEC_TREECLASS::GetColumnCount() const {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    return 0;
+    return static_cast<UINT>(m_columns.size());
 }
 
 BOOL SEC_TREECLASS::ModifyListCtrlStyle(DWORD dwRemove, DWORD dwAdd, BOOL bRedraw) {
@@ -935,23 +1011,42 @@ BOOL SEC_TREECLASS::ModifyListCtrlStyleEx(DWORD dwRemoveEx, DWORD dwAddEx, BOOL 
 
 void SEC_TREECLASS::SetColumnHeading( int nCol, const CString& strHeading ) {
     spdlog::debug("{} this={} nCol={} strHeading={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, strHeading.GetString());
+    if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
+        m_columns[nCol].strHeading = strHeading;
+    }
 }
 
 void SEC_TREECLASS::SetColumnFormat( int nCol, int fmt ) {
     spdlog::debug("{} this={} nCol={} fmt={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, fmt);
+    if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
+        m_columns[nCol].nFormat = fmt;
+    }
 }
 
 int SEC_TREECLASS::GetColumnWidth( int nCol ) const {
     spdlog::debug("{} this={} nCol={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol);
-    return 0;
+    // Zero used to be the answer for every column, and it is read back for two
+    // things that need a real number: the header widths the editor persists to
+    // the profile, and PC_MainTreeControl sizing its in-place editor to
+    // GetColumnWidth( 1 ) + 1, which made that editor one pixel wide.
+    if (nCol < 0 || nCol >= static_cast<int>(m_columns.size())) {
+        return 0;
+    }
+    return m_columns[nCol].nWidth;
 }
 
 void SEC_TREECLASS::SetColumnWidth( int nCol, int width ) {
     spdlog::debug("{} this={} nCol={} width={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, width);
+    if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
+        m_columns[nCol].nWidth = width;
+    }
 }
 
 void SEC_TREECLASS::SetColumnImage( int nCol, int nImage ) {
     spdlog::debug("{} this={} nCol={} nImage={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, nImage);
+    if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
+        m_columns[nCol].nImage = nImage;
+    }
 }
 
 void SEC_TREECLASS::PickTextColors(LvPaintContext* pPC) {
