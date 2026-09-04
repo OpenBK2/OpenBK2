@@ -990,33 +990,6 @@
 				</Item>
 				<Item>
 					<Type>4037cd10</Type>
-					<Name>RootMesh</Name>
-					<ChunkID>2</ChunkID>
-					<Description>Root AI mesh to export</Description>
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
-				<Item>
-					<Type>4037cd10</Type>
 					<Name>RootJoint</Name>
 					<ChunkID>2</ChunkID>
 					<Description>Root joint (single-skin) to export</Description>
@@ -1211,6 +1184,20 @@
 							</Attributes>
 						</__ObjectData>
 					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>RootMesh</Name>
+					<ChunkID>9</ChunkID>
+					<Description>GLB-only root node; its mesh and mesh-bearing descendants form the AI geometry.</Description>
+					<Constraints />
+					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
@@ -4074,60 +4061,6 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>d033cd10</Type>
-					<Name>FirstFrame</Name>
-					<ChunkID>6</ChunkID>
-					<Description>First frame in the common sequence</Description>
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
-				<Item>
-					<Type>d033cd10</Type>
-					<Name>LastFrame</Name>
-					<ChunkID>6</ChunkID>
-					<Description>Last frame in the common sequence</Description>
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
-				<Item>
 					<Type>4037cd10</Type>
 					<Name>AABBAName</Name>
 					<ChunkID>6</ChunkID>
@@ -4325,6 +4258,34 @@
 							</Attributes>
 						</__ObjectData>
 					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>d033cd10</Type>
+					<Name>FirstFrame</Name>
+					<ChunkID>12</ChunkID>
+					<Description>GLB-only range in the first sampled animation timeline. Length remains gameplay metadata.</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>d033cd10</Type>
+					<Name>LastFrame</Name>
+					<ChunkID>13</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
@@ -15740,33 +15701,6 @@
 				</Item>
 				<Item>
 					<Type>4037cd10</Type>
-					<Name>RootMesh</Name>
-					<ChunkID>3</ChunkID>
-					<Description>Root mesh to export</Description>
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
-				<Item>
-					<Type>4037cd10</Type>
 					<Name>RootJoint</Name>
 					<ChunkID>3</ChunkID>
 					<Description>Root joint (single-skin) or root mesh (bodyparts) to export. In the case of bodyparts this must be equal to &apos;RootMesh&apos;</Description>
@@ -16042,6 +15976,20 @@
 							</Attributes>
 						</__ObjectData>
 					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>RootMesh</Name>
+					<ChunkID>13</ChunkID>
+					<Description>GLB-only root node; its mesh and mesh-bearing descendants are loaded.</Description>
+					<Constraints />
+					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
@@ -31867,33 +31815,6 @@
 					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>4037cd10</Type>
-					<Name>RootJoint</Name>
-					<ChunkID>2</ChunkID>
-					<Description>Root joint (single-skin) or root mesh (bodyparts) to export</Description>
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-					<ComplexDefaultValue>
-						<Type>00000000</Type>
-					</ComplexDefaultValue>
-				</Item>
-				<Item>
 					<Type>f02acd10</Type>
 					<Name>MSRFormat</Name>
 					<ChunkID>2</ChunkID>
@@ -32003,6 +31924,20 @@
 							</Attributes>
 						</__ObjectData>
 					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>RootJoint</Name>
+					<ChunkID>6</ChunkID>
+					<Description>GLB-only root joint or skinned mesh selector. Empty selects the first skin.</Description>
+					<Constraints />
+					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
