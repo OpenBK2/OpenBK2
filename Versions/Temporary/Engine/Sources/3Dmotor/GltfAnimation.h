@@ -61,6 +61,8 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	bool bBoneMutatorsEnabled;
 	bool bSmthChanged;
 	bool bJustLoaded;
+	// Whether worldPose and compositePose still match the local pose and global placement.
+	bool bMatricesValid;
 	SAnimID nAnimWithMovement;
 	float fGlobalMovementSpeed;
 	STime tTransitDuration;
