@@ -5,6 +5,9 @@
 #include <afxext.h>
 #include <afxcmn.h>
 
+#include <map>
+#include <vector>
+
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__settreectrlstyleex.htm?Highlight=TVXS_MULTISEL
 
 // https://help.perforce.com/stingray/2024.1/Stingray_Studio_HTML_User_Guide/Content/otugTOC/Tree_Control_Tree_View_S.htm
@@ -531,4 +534,44 @@ protected:
     // above). None of them is a window style, so they are kept here rather than
     // read back off the window, and nothing acts on them yet.
     DWORD m_dwTreeCtrlStyleEx;
+
+    //! One of the tree's columns.
+    //!
+    //! The toolkit drew the tree itself and so had columns; SysTreeView32 has
+    //! none and drops every call about them. They are kept here instead, which
+    //! is what lets the calls answer honestly. Nothing paints them yet: that
+    //! needs a header control and a custom-draw pass, and it needs this first.
+    struct SColumn {
+        CString strHeading;
+        int nFormat;
+        int nWidth;
+        int nSubItem;
+        int nImage;
+    };
+
+    //! Never empty. The editor calls SetColumnHeading( 0, ... ) before it
+    //! inserts anything -- "первая колонка уже существует" in
+    //! ComboBox_GDBBrowser.h -- so column zero exists from construction, and
+    //! InsertColumn adds the ones after it.
+    std::vector<SColumn> m_columns;
+
+    //! Whether SetItemText keeps the text for columns past the first.
+    //!
+    //! Off until asked, which is the toolkit's model and what every caller in
+    //! this editor does: all four trees that use subitems call
+    //! StoreSubItemText( true ) as they are built. With it off, SetItemText for
+    //! a subitem answers FALSE because it really did not store it, which is a
+    //! different thing from the constant FALSE it used to answer.
+    BOOL m_bStoreSubItemText;
+
+    //! Text for columns past the first, per item.
+    //!
+    //! Column zero's text belongs to the control and is read back from it;
+    //! the rest has nowhere else to live. Keyed by HTREEITEM, so it has to be
+    //! forgotten when an item goes away -- the control reuses handles, and a
+    //! new item inheriting a dead one's text would be worse than having none.
+    std::map<HTREEITEM, std::vector<CString> > m_subItemText;
+
+    //! Drop the stored text for an item and everything under it.
+    void ForgetSubItemText( HTREEITEM hItem );
 };
