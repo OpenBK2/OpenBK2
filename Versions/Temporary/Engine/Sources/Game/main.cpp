@@ -58,9 +58,7 @@
 #include <boost/stacktrace/stacktrace.hpp>
 #endif
 
-#include <client/crashpad_client.h>
-#include <client/crash_report_database.h>
-#include <client/settings.h>
+#include "port/crashpad.h"
 
 #include <fmt/format.h>
 
@@ -86,34 +84,6 @@ static void StoreBuildInfo()
 {
 	const std::string szVersion = fmt::format( "Build {}, {} {}", NVersionInfo::nBuild, NVersionInfo::szDate, NVersionInfo::szTime );
 	NGlobal::SetVar( "version.info", szVersion );
-}
-
-namespace {
-	bool InitCrashpad() {
-		// base::FilePath holds a wstring on Windows and a string everywhere else,
-		// which is what FILE_PATH_LITERAL is for: it adds the L only where one
-		// belongs. The handler is a real executable, so its name carries the
-		// platform suffix; the other two name directories and do not.
-		//
-		// All three stay relative, resolved against the working directory, which is
-		// where the handler is installed beside the game.
-#if BOOST_OS_WINDOWS
-		base::FilePath handler( FILE_PATH_LITERAL( "crashpad_handler.exe" ) );
-#else
-		base::FilePath handler( FILE_PATH_LITERAL( "crashpad_handler" ) );
-#endif
-		base::FilePath db( FILE_PATH_LITERAL( "crashpad_db" ) );
-		base::FilePath metrics( FILE_PATH_LITERAL( "crashpad_metrics" ) );
-
-		auto database = crashpad::CrashReportDatabase::Initialize(db);
-		if (!database) {
-			return false;
-		}
-		database->GetSettings()->SetUploadsEnabled(false);
-
-		crashpad::CrashpadClient client;
-		return client.StartHandler(handler, db, metrics, "", "", {}, {}, true, false);
-	}
 }
 
 //! The name of the type currently being thrown, for the catch all below.
