@@ -525,25 +525,66 @@ std::string GetGltfNodeName( const fastgltf::Node &node, std::size_t nodeIndex )
 	return node.name.empty() ? "Node_" + std::to_string(nodeIndex) : std::string(node.name);
 }
 
-int FindRigidTargetBone( const SPartAndSkeletonKey &key,
-	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
+// The target bone map depends on the skeleton the key names and on the mesh node, and one
+// LoadGltfMesh call appends primitives of a single node against a single key. Building it
+// per primitive therefore rebuilt the same map for every primitive of a mesh, reloading and
+// rewalking a whole skeleton each time. It stays lazy because the rigid path asks for it
+// only when the key names a skeleton at all.
+class CTargetBones
+{
+public:
+	CTargetBones( const SPartAndSkeletonKey &_key,
+		NAnimation::CGrannyFileInfo *_pGrannySkeletonFile,
+		const NGltf::TGltfFilePtr &_geometryFile, std::size_t _sourceSkin ) :
+		key( _key ), pGrannySkeletonFile( _pGrannySkeletonFile ),
+		geometryFile( _geometryFile ), sourceSkin( _sourceSkin )
+	{
+	}
+
+	// Null when the key selects no usable skeleton.
+	const std::unordered_map<std::string, int> *Get()
+	{
+		if ( !bBuilt )
+		{
+			bBuilt = true;
+			bValid = GetTargetBoneMap( key, pGrannySkeletonFile, geometryFile,
+				sourceSkin, &bones );
+		}
+		return bValid ? &bones : nullptr;
+	}
+
+private:
+	const SPartAndSkeletonKey &key;
+	NAnimation::CGrannyFileInfo *pGrannySkeletonFile;
+	const NGltf::TGltfFilePtr &geometryFile;
+	std::size_t sourceSkin;
+	std::unordered_map<std::string, int> bones;
+	bool bBuilt = false;
+	bool bValid = false;
+};
+
+int FindRigidTargetBone( const SPartAndSkeletonKey &key, CTargetBones *pTargetBones,
 	const NGltf::TGltfFilePtr &geometryFile, std::size_t nodeIndex )
 {
 	if ( !key.pSkeleton || !geometryFile || nodeIndex >= geometryFile->asset.nodes.size() ||
 		geometryFile->asset.nodes[nodeIndex].skinIndex.has_value() )
+	{
 		return -1;
-	std::unordered_map<std::string, int> targetBones;
-	if ( !GetTargetBoneMap(key, pGrannySkeletonFile, geometryFile, 0, &targetBones) )
+	}
+	const std::unordered_map<std::string, int> *pBones = pTargetBones->Get();
+	if ( !pBones )
+	{
 		return -1;
-	const auto found = targetBones.find(
+	}
+	const auto found = pBones->find(
 		GetGltfNodeName(geometryFile->asset.nodes[nodeIndex], nodeIndex) );
-	return found != targetBones.end() && found->second >= 0 && found->second <= 255
+	return found != pBones->end() && found->second >= 0 && found->second <= 255
 		? found->second : -1;
 }
 
 void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex,
 	const fastgltf::Primitive &primitive, const SPartAndSkeletonKey &key,
-	NAnimation::CGrannyFileInfo *pGrannySkeletonFile,
+	CTargetBones *pTargetBones,
 	CObjectInfo::SData *pData )
 {
 	if ( primitive.type != fastgltf::PrimitiveType::Triangles &&
@@ -558,7 +599,7 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 	const fastgltf::Node &node = asset.nodes[nodeIndex];
 	const bool bSkinned = node.skinIndex.has_value();
 	const int nRigidBone = bSkinned ? -1 :
-		FindRigidTargetBone( key, pGrannySkeletonFile, file, nodeIndex );
+		FindRigidTargetBone( key, pTargetBones, file, nodeIndex );
 	const std::vector<fastgltf::math::fvec3> positions =
 		ReadGltfAccessor<fastgltf::math::fvec3>( asset, positionAccessor );
 	const std::size_t normalAccessor = FindAttribute( primitive, "NORMAL" );
@@ -698,9 +739,11 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 		return;
 
 	const fastgltf::Skin &sourceSkin = asset.skins[*node.skinIndex];
-	std::unordered_map<std::string, int> targetBones;
-	if ( !GetTargetBoneMap(key, pGrannySkeletonFile, file, *node.skinIndex, &targetBones) )
+	const std::unordered_map<std::string, int> *pTargetBoneMap = pTargetBones->Get();
+	if ( !pTargetBoneMap )
+	{
 		return;
+	}
 	const std::vector<fastgltf::math::uvec4> joints =
 		ReadGltfAccessor<fastgltf::math::uvec4>( asset, jointsAccessor );
 	const std::vector<fastgltf::math::fvec4> weights =
@@ -728,9 +771,11 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 				continue;
 			const fastgltf::Node &sourceNode = asset.nodes[sourceNodeIndex];
 			const std::string name = GetGltfNodeName( sourceNode, sourceNodeIndex );
-			const auto found = targetBones.find( name );
-			if ( found == targetBones.end() || found->second < 0 || found->second > 255 )
+			const auto found = pTargetBoneMap->find( name );
+			if ( found == pTargetBoneMap->end() || found->second < 0 || found->second > 255 )
+			{
 				continue;
+			}
 			target.cBoneIndices[targetInfluence] = static_cast<uint8_t>(found->second);
 			target.fWeights[targetInfluence] = weights[i][influence];
 			totalWeight += target.fWeights[targetInfluence++];
@@ -757,17 +802,25 @@ bool LoadGltfMesh( const SPartAndSkeletonKey &key,
 	if ( !node.meshIndex.has_value() || *node.meshIndex >= file->asset.meshes.size() )
 		return false;
 	const fastgltf::Mesh &mesh = file->asset.meshes[*node.meshIndex];
+	// Every primitive below belongs to this one node, so they all resolve their bones
+	// against the same skeleton. Build that mapping at most once for the whole mesh.
+	CTargetBones targetBones( key, pGrannySkeletonFile, file,
+		node.skinIndex.has_value() ? *node.skinIndex : 0 );
 	if ( key.nMaterialPart >= 0 )
 	{
 		if ( key.nMaterialPart >= static_cast<int>(mesh.primitives.size()) )
+		{
 			return false;
+		}
 		AppendGltfPrimitive( file, nodeIndex, mesh.primitives[key.nMaterialPart],
-			key, pGrannySkeletonFile, pResult );
+			key, &targetBones, pResult );
 	}
 	else
 	{
 		for ( const fastgltf::Primitive &primitive : mesh.primitives )
-			AppendGltfPrimitive( file, nodeIndex, primitive, key, pGrannySkeletonFile, pResult );
+		{
+			AppendGltfPrimitive( file, nodeIndex, primitive, key, &targetBones, pResult );
+		}
 	}
 	return !pResult->verts.empty() && !pResult->geometry.empty();
 }
