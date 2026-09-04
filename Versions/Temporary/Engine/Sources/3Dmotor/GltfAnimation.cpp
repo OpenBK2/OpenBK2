@@ -238,6 +238,7 @@ int CGltfSkeletonAnimator::SAnimationHolder::operator&( IBinSaver &f )
 
 CGltfSkeletonAnimator::CGltfSkeletonAnimator() :
 	bBoneMutatorsEnabled(false), bSmthChanged(true), bJustLoaded(false),
+	bMatricesValid(false),
 	nAnimWithMovement(-1), fGlobalMovementSpeed(0.0f), tTransitDuration(0)
 {
 }
@@ -245,6 +246,7 @@ CGltfSkeletonAnimator::CGltfSkeletonAnimator() :
 CGltfSkeletonAnimator::CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH,
 	CFuncBase<STime> *_pTime ) :
 	bBoneMutatorsEnabled(false), bSmthChanged(true), bJustLoaded(false),
+	bMatricesValid(false),
 	nAnimWithMovement(-1), fGlobalMovementSpeed(0.0f), tTransitDuration(0)
 {
 	Create( _skeletonH, _pTime );
@@ -257,6 +259,8 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 {
 	skeletonH = _skeletonH;
 	pTime = _pTime;
+	// The skeleton and the whole pose are about to be replaced.
+	bMatricesValid = false;
 	skeleton = NGltf::SSkeletonDefinition();
 	pSkeletonFile.reset();
 	if ( !_skeletonH.pSkeleton || _skeletonH.pSkeleton->szModelFileRef.empty() )
@@ -553,6 +557,7 @@ float CGltfSkeletonAnimator::GetLocalTime( const SAnimationHolder &holder, STime
 
 void CGltfSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &m )
 {
+	bMatricesValid = false;
 	value.poseGlobal[0] = m._11; value.poseGlobal[4] = m._12; value.poseGlobal[8] = m._13; value.poseGlobal[12] = m._14;
 	value.poseGlobal[1] = m._21; value.poseGlobal[5] = m._22; value.poseGlobal[9] = m._23; value.poseGlobal[13] = m._24;
 	value.poseGlobal[2] = m._31; value.poseGlobal[6] = m._32; value.poseGlobal[10] = m._33; value.poseGlobal[14] = m._34;
@@ -649,6 +654,16 @@ void CGltfSkeletonAnimator::ApplyBoneMutators( STime time )
 
 void CGltfSkeletonAnimator::BuildMatrices()
 {
+	// A single bone query used to rebuild every bone's world and composite matrix, and
+	// turret, gun and effect attachment code asks for several bones per unit per frame.
+	// The result depends only on the local pose, the global placement and the skeleton, so
+	// it is rebuilt on demand after any of those change, as the GR2 animator does with
+	// bGlobalPoseValid.
+	if ( bMatricesValid )
+	{
+		return;
+	}
+	bMatricesValid = true;
 	const SHMatrix global = GlobalMatrix( value );
 	value.worldPose.resize( value.localPose.size() );
 	value.compositePose.resize( value.localPose.size() );
@@ -681,7 +696,11 @@ void CGltfSkeletonAnimator::Recalc()
 {
 	CheckJustLoaded();
 	if ( skeleton.restPose.empty() )
+	{
 		return;
+	}
+	// Everything below rewrites the local pose; the BuildMatrices() at the end revalidates.
+	bMatricesValid = false;
 	const STime time = pTime->GetValue();
 	if ( pGlobalTransform )
 	{
