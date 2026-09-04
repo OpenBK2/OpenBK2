@@ -72,44 +72,22 @@ STime SSimpleBoneMutator::GetEnd() const
 
 // CSkeletonAnimator
 
-CSkeletonAnimator::CSkeletonAnimator() : pGrannyPose(0), bJustLoaded(false)
+CSkeletonAnimator::CSkeletonAnimator()
 {
-	// global movement
-	nAnimWithMovement = -1;
-	fGlobalMovementSpeed = 0.f;
-
-	fTransitHalfDuration = 0.f;
-
-	pSkeleton = 0;
-	model.Name = 0;
-	model.Skeleton = pSkeleton;
+	// Every other member has a default initializer in the header. An identity placement is the
+	// one value a zero-initialized granny_model does not already carry.
 	GrannyMakeIdentity( &model.InitialPlacement );
-	model.MeshBindingCount = 0;
-	model.MeshBindings = 0;
-	pModelInstance = 0;
-	nBones = 0;
-
-	pGlobalPose = 0;
-	bGlobalPoseValid = false;
-	bSmthChanged = true;
-
-	bBoneMutatorsEnabled = false;
-
 }
 
+// Delegates to the default constructor so the two construction paths cannot drift apart. This
+// matters because Create() gives up without assigning anything when the skeleton resource is
+// missing, and CreateSkeletonAnimator() then destroys the half-built object.
 CSkeletonAnimator::CSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime ) :
-	pGrannyPose(0)
+	CSkeletonAnimator()
 {
-	// global movement
-	nAnimWithMovement = -1;
-	fGlobalMovementSpeed = 0.f;
-
-	fTransitHalfDuration = 0.f;
-
 	Create( _skeletonH, _pTime );
 
 	// initializing mutators
-	bBoneMutatorsEnabled = false;
 	boneMutators.resize( nBones );
 	for ( int i = 0; i < nBones; ++i )
 		boneMutators[i].Enable( false );
@@ -160,13 +138,13 @@ void CSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase<STi
 	GrannyMakeIdentity( &model.InitialPlacement );
 	model.MeshBindingCount = 0;
 	model.MeshBindings = 0;
-	pModelInstance = GrannyInstantiateModel( &model );
+	pModelInstance.reset( GrannyInstantiateModel( &model ) );
 	nBones = pSkeleton->BoneCount;
 	value.localPose.resize( nBones );
 	value.worldPose.resize( nBones );
 	value.compositePose.resize( nBones );
 
-	pGlobalPose = 0;
+	pGlobalPose.reset();
 	bGlobalPoseValid = false;
 	bSmthChanged = true;
 }
@@ -191,17 +169,10 @@ void CSkeletonAnimator::ClearAnimVector()
 
 CSkeletonAnimator::~CSkeletonAnimator()
 {
+	// ClearAnimVector() has to run first: the granny controls it frees are attached to
+	// pModelInstance, which is released afterwards when the unique_ptr members are destroyed.
 	CheckJustLoaded();
 	ClearAnimVector();
-	if ( pModelInstance )
-		GrannyFreeModelInstance( pModelInstance );
-	if ( pGrannyPose )
-	{
-		GrannyFreeLocalPose( pGrannyPose );
-		pGrannyPose = 0;
-	}
-	if ( pGlobalPose )
-		GrannyFreeWorldPose( pGlobalPose );
 }
 
 // internal method to set position (without marking internal state as changed)
@@ -218,7 +189,7 @@ void CSkeletonAnimator::CopyPoseFromGranny()
 	value.localPose.resize( nBones );
 	for ( int i = 0; i < nBones; ++i )
 	{
-		const granny_transform *pSource = GrannyGetLocalPoseTransform( pGrannyPose, i );
+		const granny_transform *pSource = GrannyGetLocalPoseTransform( pGrannyPose.get(), i );
 		SBoneTransform &target = value.localPose[i];
 		if ( !pSource )
 			continue;
@@ -233,7 +204,7 @@ void CSkeletonAnimator::CopyPoseToGranny()
 {
 	for ( int i = 0; i < nBones; ++i )
 	{
-		granny_transform *pTarget = GrannyGetLocalPoseTransform( pGrannyPose, i );
+		granny_transform *pTarget = GrannyGetLocalPoseTransform( pGrannyPose.get(), i );
 		const SBoneTransform *pSource = value.GetBone( i );
 		if ( !pTarget || !pSource )
 			continue;
@@ -332,7 +303,7 @@ bool CSkeletonAnimator::NeedUpdate()
 		bNewGP = pGlobalTransform.Refresh();
 	if ( !pGrannyPose )
 		return true;
-	if ( GrannyGetLocalPoseBoneCount( pGrannyPose ) != nBones )
+	if ( GrannyGetLocalPoseBoneCount( pGrannyPose.get() ) != nBones )
 		return true;
 	if ( !bNewTime && !bNewGP )
 		return false;
@@ -359,17 +330,17 @@ void CSkeletonAnimator::Recalc()
 	}
 
 	if ( !pGrannyPose )
-		pGrannyPose = GrannyNewLocalPose( nBones );
+		pGrannyPose.reset( GrannyNewLocalPose( nBones ) );
 
 	bGlobalPoseValid = false;
 
-	GrannySetModelClock( pModelInstance, 0.001f * time );
+	GrannySetModelClock( pModelInstance.get(), 0.001f * time );
 	for ( int id = 0; id < animHolders.size(); ++id )
 	{
 		if ( GrannyControlIsComplete( animHolders[id].pControl ) )
 			GrannySetControlActive( animHolders[id].pControl, false );
 	}
-	GrannySampleModelAnimations( pModelInstance, 0, nBones, pGrannyPose );
+	GrannySampleModelAnimations( pModelInstance.get(), 0, nBones, pGrannyPose.get() );
 
 	if ( nAnimWithMovement != -1 )
 	{
@@ -394,7 +365,7 @@ void CSkeletonAnimator::Recalc()
 				CQuat qRot;
 				CVec3 vPos;
 				boneMutators[i].GetAtTime( time, &qRot, &vPos );
-				granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( pGrannyPose, i );
+				granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( pGrannyPose.get(), i );
 				if ( pBoneTransform ) 
 				{
 					granny_transform tr;
@@ -500,7 +471,7 @@ bool CSkeletonAnimator::AddAnimationInternal( CSkeletonAnimator::SAnimationHolde
 		granny_controlled_animation_builder *pBuilder = GrannyBeginControlledAnimation(newHolder.tStartTime / 1000.0f, pAnimation);
 
 		const int nTrackGroupIndex = 0;
-		GrannySetTrackGroupTarget(pBuilder, nTrackGroupIndex, pModelInstance);
+		GrannySetTrackGroupTarget(pBuilder, nTrackGroupIndex, pModelInstance.get());
 		GrannySetTrackGroupAccumulation(pBuilder, nTrackGroupIndex, GrannyNoAccumulation);
 
 		granny_track_mask *pModelMask = GrannyNewTrackMask( 1.0, pSkeleton->BoneCount );
@@ -854,14 +825,14 @@ void CSkeletonAnimator::RefreshWorldPose()
 		return;
 	bGlobalPoseValid = true;
 	if ( !pGlobalPose )
-		pGlobalPose = GrannyNewWorldPose( nBones );
-	GrannyBuildWorldPose( pSkeleton, 0, nBones, pGrannyPose, value.poseGlobal, pGlobalPose );
+		pGlobalPose.reset( GrannyNewWorldPose( nBones ) );
+	GrannyBuildWorldPose( pSkeleton, 0, nBones, pGrannyPose.get(), value.poseGlobal, pGlobalPose.get() );
 	value.worldPose.resize( nBones );
 	value.compositePose.resize( nBones );
 	for ( int i = 0; i < nBones; ++i )
 	{
-		const granny_real32 *pWorld = GrannyGetWorldPose4x4( pGlobalPose, i );
-		const granny_real32 *pComposite = GrannyGetWorldPoseComposite4x4( pGlobalPose, i );
+		const granny_real32 *pWorld = GrannyGetWorldPose4x4( pGlobalPose.get(), i );
+		const granny_real32 *pComposite = GrannyGetWorldPoseComposite4x4( pGlobalPose.get(), i );
 		if ( pWorld )
 		{
 			SHMatrix &m = value.worldPose[i];
