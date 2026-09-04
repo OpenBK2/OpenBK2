@@ -2,6 +2,8 @@
 #include "GAnimation.hpp"
 #include "vendor/granny/include/granny.h"
 
+#include <memory>
+
 namespace NDb
 {
 	struct SSkeleton;
@@ -9,6 +11,26 @@ namespace NDb
 
 namespace NAnimation
 {
+
+// Granny hands out raw C handles with matching Granny*Free* calls. Wrapping them in unique_ptr
+// makes the release automatic, so a partially constructed animator (Create() bails out whenever
+// the skeleton resource is missing) can no longer reach a manual free of an unassigned handle.
+struct SGrannyModelInstanceDeleter
+{
+	void operator()( granny_model_instance *pInstance ) const { GrannyFreeModelInstance( pInstance ); }
+};
+struct SGrannyLocalPoseDeleter
+{
+	void operator()( granny_local_pose *pPose ) const { GrannyFreeLocalPose( pPose ); }
+};
+struct SGrannyWorldPoseDeleter
+{
+	void operator()( granny_world_pose *pPose ) const { GrannyFreeWorldPose( pPose ); }
+};
+
+using TGrannyModelInstancePtr = std::unique_ptr<granny_model_instance, SGrannyModelInstanceDeleter>;
+using TGrannyLocalPosePtr = std::unique_ptr<granny_local_pose, SGrannyLocalPoseDeleter>;
+using TGrannyWorldPosePtr = std::unique_ptr<granny_world_pose, SGrannyWorldPoseDeleter>;
 
 struct SSimpleBoneMutator
 {
@@ -53,24 +75,27 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 
 	struct SAnimationHolder
 	{
+		// AddAnimation() default-constructs a holder and assigns the fields it knows about, so
+		// anything left out here would be serialized as an indeterminate value. tFadeDuration in
+		// particular reaches save games and replays, which have to be byte-identical between peers.
 		ZDATA
-		STime tStartTime;
+		STime tStartTime = 0;
 		ZSKIP
 		ZSKIP //bool bLoop;
-		float fSpeed;
-		float fWeight;
-		bool bFadeIn, bFadeOut;
-		STime tFadeDuration;
+		float fSpeed = 1.f;
+		float fWeight = 1.f;
+		bool bFadeIn = false, bFadeOut = false;
+		STime tFadeDuration = 0;
 		SAnimHandle hAnimation;
 		ZSKIP
 		ZSKIP
-		STime tEndTime;
-		int nLoopCount;
+		STime tEndTime = STime( -1 );
+		int nLoopCount = 0;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&tStartTime); f.Add(5,&fSpeed); f.Add(6,&fWeight); f.Add(7,&bFadeIn); f.Add(8,&bFadeOut); f.Add(9,&tFadeDuration); f.Add(10,&hAnimation); f.Add(13,&tEndTime); f.Add(14,&nLoopCount); return 0; }
 		CDGPtr<CPtrFuncBase<CGrannyFileInfo> > pAnimFileLoader;
-		granny_control *pControl;
+		granny_control *pControl = nullptr;
 		std::vector<STrackChannelBinding> scalarTracks;
-		granny_text_track *pAnnotationTrack;
+		granny_text_track *pAnnotationTrack = nullptr;
 	};
 
 	struct SScalarChannel
@@ -92,26 +117,28 @@ class CSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	std::vector<SScalarChannel> scalarChannels;
 
 	OBJECT_NOCOPY_METHODS(CSkeletonAnimator);
+	// Every member carries a default initializer: Create() returns early when the skeleton
+	// resource cannot be loaded, so no constructor may rely on it to assign these.
 	SGrannySkeletonHandle skeletonH;
 	CDGPtr< CFuncBase<STime> > pTime;
 	CDGPtr< CFuncBase<SFBTransform> > pGlobalTransform;
-	granny_skeleton *pSkeleton;
-	granny_model model;
-	granny_model_instance *pModelInstance;
-	granny_local_pose *pGrannyPose;
-	granny_world_pose *pGlobalPose;
-	int nBones;
+	granny_skeleton *pSkeleton = nullptr;
+	granny_model model = {};
+	TGrannyModelInstancePtr pModelInstance;
+	TGrannyLocalPosePtr pGrannyPose;
+	TGrannyWorldPosePtr pGlobalPose;
+	int nBones = 0;
 	CObj<IAnimMutator> pSpecMutator;
 	std::vector<SSimpleBoneMutator> boneMutators;
-	bool bBoneMutatorsEnabled;
+	bool bBoneMutatorsEnabled = false;
 	std::vector<SAnimationHolder> animHolders;
-	SAnimID nAnimWithMovement;
-	float fGlobalMovementSpeed;                     // in meters per second.
-	float fTransitHalfDuration;                     // in seconds
+	SAnimID nAnimWithMovement = -1;
+	float fGlobalMovementSpeed = 0.f;               // in meters per second.
+	float fTransitHalfDuration = 0.f;               // in seconds
 	CDGPtr<CPtrFuncBase<CGrannyFileInfo> > pSkeletonFileLoader;
-	bool bGlobalPoseValid;
-	bool bSmthChanged;
-	bool bJustLoaded;
+	bool bGlobalPoseValid = false;
+	bool bSmthChanged = true;
+	bool bJustLoaded = false;
 
 	void RecoverAnimHolder( SAnimID animID );
 	bool AddAnimationInternal( SAnimationHolder *pH );
