@@ -449,7 +449,20 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder )
 	pHolder->fSourceStart = animationStart;
 	pHolder->fDuration = animationEnd - animationStart;
 	if ( !clipName.empty() )
+	{
+		if ( rangeWasSpecified )
+		{
+			// ClipName names a whole clip, so there is no shared baked timeline left for
+			// FirstFrame/LastFrame to address and the range is dropped. Playing the whole
+			// clip is indistinguishable from a range that was applied and did nothing, so
+			// say which setting won rather than leaving the author to guess. The two frame
+			// slicing failures below already report themselves the same way.
+			DebugTrace( "glTF: ClipName %s and frame range %d..%d are both set for %s; "
+				"ClipName selects the clip and the frame range is ignored",
+				clipName.c_str(), firstFrame, lastFrame, pHolder->pFile->sourcePath.c_str() );
+		}
 		return true;
+	}
 
 	float timelineStart = 0.0f;
 	float secondsPerFrame = 0.0f;
