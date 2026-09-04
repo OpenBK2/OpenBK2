@@ -15,26 +15,13 @@ namespace NAnimation
 {
 namespace
 {
-template <class TValue>
-std::vector<TValue> ReadAccessor( const fastgltf::Asset &asset, std::size_t accessorIndex )
-{
-	std::vector<TValue> result;
-	if ( accessorIndex >= asset.accessors.size() )
-		return result;
-	const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
-	result.reserve( accessor.count );
-	for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
-		result.push_back( value );
-	return result;
-}
-
-bool GetAnimationTimeRange( const fastgltf::Asset &asset,
+bool GetAnimationTimeRange( const NGltf::CGltfFile &file,
 	const fastgltf::Animation &animation, float *pStart, float *pEnd )
 {
 	bool haveTimes = false;
 	for ( const fastgltf::AnimationSampler &sampler : animation.samplers )
 	{
-		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+		const std::vector<float> &times = file.ScalarAccessor( sampler.inputAccessor );
 		if ( times.empty() )
 			continue;
 		if ( !haveTimes )
@@ -52,7 +39,7 @@ bool GetAnimationTimeRange( const fastgltf::Asset &asset,
 	return haveTimes && *pEnd - *pStart > FP_EPSILON;
 }
 
-bool InferBakedFrameTimeline( const fastgltf::Asset &asset,
+bool InferBakedFrameTimeline( const NGltf::CGltfFile &file,
 	const fastgltf::Animation &animation, float animationStart, float animationEnd,
 	float *pTimelineStart, float *pSecondsPerFrame, std::size_t *pFrameCount )
 {
@@ -62,7 +49,7 @@ bool InferBakedFrameTimeline( const fastgltf::Asset &asset,
 	{
 		if ( !visitedAccessors.insert(sampler.inputAccessor).second )
 			continue;
-		const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
+		const std::vector<float> &times = file.ScalarAccessor( sampler.inputAccessor );
 		if ( times.size() < 3 || times.back() - times.front() <= FP_EPSILON )
 			continue;
 
@@ -303,6 +290,77 @@ void CGltfSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase
 
 bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 {
+	pHolder->boundChannels.clear();
+	if ( !SelectAnimationRange(pHolder) )
+	{
+		return false;
+	}
+	ResolveBoundChannels( pHolder );
+	return true;
+}
+
+// Reduce the selected animations to the channels this skeleton can actually drive, with the
+// target bone resolved and the keyframe data decoded. Everything here depends only on the
+// document and the skeleton, so none of it has to be repeated while the animation plays.
+void CGltfSkeletonAnimator::ResolveBoundChannels( SAnimationHolder *pHolder )
+{
+	const NGltf::CGltfFile &file = *pHolder->pFile;
+	for ( int animationIndex : pHolder->animationIndices )
+	{
+		if ( animationIndex < 0 ||
+			animationIndex >= static_cast<int>(file.asset.animations.size()) )
+		{
+			continue;
+		}
+		const fastgltf::Animation &animation = file.asset.animations[animationIndex];
+		for ( const fastgltf::AnimationChannel &channel : animation.channels )
+		{
+			if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= file.asset.nodes.size() ||
+				channel.samplerIndex >= animation.samplers.size() )
+			{
+				continue;
+			}
+			const fastgltf::Node &node = file.asset.nodes[*channel.nodeIndex];
+			const std::string nodeName = node.name.empty()
+				? "Node_" + std::to_string(*channel.nodeIndex) : std::string(node.name);
+			const int nBone = skeleton.FindBone( nodeName );
+			if ( nBone < 0 )
+			{
+				continue;
+			}
+
+			const fastgltf::AnimationSampler &sampler = animation.samplers[channel.samplerIndex];
+			const std::vector<float> &times = file.ScalarAccessor( sampler.inputAccessor );
+			if ( times.empty() )
+			{
+				continue;
+			}
+
+			SBoundChannel bound;
+			bound.nBone = nBone;
+			bound.path = channel.path;
+			bound.interpolation = sampler.interpolation;
+			bound.pTimes = &times;
+			if ( channel.path == fastgltf::AnimationPath::Translation ||
+				channel.path == fastgltf::AnimationPath::Scale )
+			{
+				bound.pVectors = &file.Vec3Accessor( sampler.outputAccessor );
+			}
+			else if ( channel.path == fastgltf::AnimationPath::Rotation )
+			{
+				bound.pRotations = &file.Vec4Accessor( sampler.outputAccessor );
+			}
+			else
+			{
+				continue;               // morph weights have no engine representation
+			}
+			pHolder->boundChannels.push_back( bound );
+		}
+	}
+}
+
+bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder )
+{
 	pHolder->pFile.reset();
 	pHolder->animationIndices.clear();
 	pHolder->fSourceStart = 0.0f;
@@ -362,7 +420,7 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 			pHolder->pFile->asset.animations[animationIndex];
 		float localStart = 0.0f;
 		float localEnd = 0.0f;
-		if ( GetAnimationTimeRange(pHolder->pFile->asset, animation, &localStart, &localEnd) )
+		if ( GetAnimationTimeRange(*pHolder->pFile, animation, &localStart, &localEnd) )
 		{
 			if ( !haveTimes )
 			{
@@ -398,12 +456,14 @@ bool CGltfSkeletonAnimator::BindAnimation( SAnimationHolder *pHolder )
 			pHolder->pFile->asset.animations[animationIndex];
 		float localStart = 0.0f;
 		float localEnd = 0.0f;
-		if ( !GetAnimationTimeRange(pHolder->pFile->asset, animation, &localStart, &localEnd) )
+		if ( !GetAnimationTimeRange(*pHolder->pFile, animation, &localStart, &localEnd) )
+		{
 			continue;
+		}
 		float candidateStart = 0.0f;
 		float candidateSecondsPerFrame = 0.0f;
 		std::size_t candidateFrameCount = 0;
-		if ( InferBakedFrameTimeline(pHolder->pFile->asset, animation, localStart, localEnd,
+		if ( InferBakedFrameTimeline(*pHolder->pFile, animation, localStart, localEnd,
 			&candidateStart, &candidateSecondsPerFrame, &candidateFrameCount) &&
 			candidateFrameCount > frameCount )
 		{
@@ -501,67 +561,47 @@ void CGltfSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &m )
 
 void CGltfSkeletonAnimator::ApplyAnimation( const SAnimationHolder &holder, float localTime, float weight )
 {
-	const fastgltf::Asset &asset = holder.pFile->asset;
 	const float sourceTime = holder.fSourceStart + localTime;
-	for ( int animationIndex : holder.animationIndices )
+	for ( const SBoundChannel &channel : holder.boundChannels )
 	{
-		if ( animationIndex < 0 || animationIndex >= static_cast<int>(asset.animations.size()) )
-			continue;
-		const fastgltf::Animation &animation = asset.animations[animationIndex];
-		for ( const fastgltf::AnimationChannel &channel : animation.channels )
+		SBoneTransform *pBone = value.GetBone( channel.nBone );
+		if ( !pBone )
 		{
-			if ( !channel.nodeIndex.has_value() || *channel.nodeIndex >= asset.nodes.size() ||
-				channel.samplerIndex >= animation.samplers.size() )
-				continue;
-			const fastgltf::Node &node = asset.nodes[*channel.nodeIndex];
-			const std::string nodeName = node.name.empty()
-				? "Node_" + std::to_string(*channel.nodeIndex) : std::string(node.name);
-			const int boneIndex = skeleton.FindBone( nodeName );
-			SBoneTransform *pBone = value.GetBone( boneIndex );
-			if ( !pBone )
-				continue;
+			continue;
+		}
 
-			const fastgltf::AnimationSampler &sampler = animation.samplers[channel.samplerIndex];
-			const std::vector<float> times = ReadAccessor<float>( asset, sampler.inputAccessor );
-			if ( times.empty() )
-				continue;
-			const SKeyInterval key = FindInterval( times, sourceTime );
-			if ( channel.path == fastgltf::AnimationPath::Translation ||
-				channel.path == fastgltf::AnimationPath::Scale )
+		const SKeyInterval key = FindInterval( *channel.pTimes, sourceTime );
+		if ( channel.path == fastgltf::AnimationPath::Translation ||
+			channel.path == fastgltf::AnimationPath::Scale )
+		{
+			const fastgltf::math::fvec3 sampled =
+				SampleVector( *channel.pVectors, key, channel.interpolation );
+			if ( channel.path == fastgltf::AnimationPath::Translation )
 			{
-				const std::vector<fastgltf::math::fvec3> values =
-					ReadAccessor<fastgltf::math::fvec3>( asset, sampler.outputAccessor );
-				const fastgltf::math::fvec3 sampled = SampleVector( values, key, sampler.interpolation );
-				const CVec3 converted = channel.path == fastgltf::AnimationPath::Translation
-					? NGltf::ConvertPosition(sampled) : NGltf::ConvertScale(sampled);
-				float *pTarget = channel.path == fastgltf::AnimationPath::Translation
-					? pBone->Position : &pBone->ScaleShear[0][0];
-				if ( channel.path == fastgltf::AnimationPath::Translation )
-				{
-					pTarget[0] += (converted.x - pTarget[0]) * weight;
-					pTarget[1] += (converted.y - pTarget[1]) * weight;
-					pTarget[2] += (converted.z - pTarget[2]) * weight;
-				}
-				else
-				{
-					pBone->ScaleShear[0][0] += (converted.x - pBone->ScaleShear[0][0]) * weight;
-					pBone->ScaleShear[1][1] += (converted.y - pBone->ScaleShear[1][1]) * weight;
-					pBone->ScaleShear[2][2] += (converted.z - pBone->ScaleShear[2][2]) * weight;
-				}
+				const CVec3 converted = NGltf::ConvertPosition( sampled );
+				pBone->Position[0] += (converted.x - pBone->Position[0]) * weight;
+				pBone->Position[1] += (converted.y - pBone->Position[1]) * weight;
+				pBone->Position[2] += (converted.z - pBone->Position[2]) * weight;
 			}
-			else if ( channel.path == fastgltf::AnimationPath::Rotation )
+			else
 			{
-				const std::vector<fastgltf::math::fvec4> values =
-					ReadAccessor<fastgltf::math::fvec4>( asset, sampler.outputAccessor );
-				const CQuat sampled = SampleQuaternion( values, key, sampler.interpolation );
-				CQuat current;
-				current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
-					pBone->Orientation[2], pBone->Orientation[3] );
-				CQuat blended;
-				blended.Interpolate( current, sampled, weight );
-				blended.Normalize();
-				memcpy( pBone->Orientation, &blended, sizeof(pBone->Orientation) );
+				const CVec3 converted = NGltf::ConvertScale( sampled );
+				pBone->ScaleShear[0][0] += (converted.x - pBone->ScaleShear[0][0]) * weight;
+				pBone->ScaleShear[1][1] += (converted.y - pBone->ScaleShear[1][1]) * weight;
+				pBone->ScaleShear[2][2] += (converted.z - pBone->ScaleShear[2][2]) * weight;
 			}
+		}
+		else if ( channel.path == fastgltf::AnimationPath::Rotation )
+		{
+			const CQuat sampled =
+				SampleQuaternion( *channel.pRotations, key, channel.interpolation );
+			CQuat current;
+			current.FromComponents( pBone->Orientation[0], pBone->Orientation[1],
+				pBone->Orientation[2], pBone->Orientation[3] );
+			CQuat blended;
+			blended.Interpolate( current, sampled, weight );
+			blended.Normalize();
+			memcpy( pBone->Orientation, &blended, sizeof(pBone->Orientation) );
 		}
 	}
 }
