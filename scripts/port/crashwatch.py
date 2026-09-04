@@ -58,7 +58,12 @@ DEFAULT_EXE = r"C:\Games\bk2\bin\B2_MapEditor.exe"
 #   c0000374  heap corruption, reported at the free that notices and not the
 #             write that caused it
 #   c0000409  fast fail, which is what /GS and the CRT's checks raise
-FATAL = ["av", "sov", "ch", "eh", "c0000374", "c0000409"]
+#   ud        anything else. cdb breaks on an unregistered code at second chance
+#             whether or not it was armed, but without a command attached it
+#             breaks to a prompt nobody is at and holds the process there
+#             forever. c000041d, a fault inside a window procedure, arrives this
+#             way and is exactly what an MFC editor produces.
+FATAL = ["av", "sov", "ch", "eh", "c0000374", "c0000409", "ud"]
 
 
 def find_cdb(override):
@@ -123,6 +128,8 @@ def main():
     ap.add_argument("--attach", type=int, help="watch this pid instead of launching")
     ap.add_argument("--cdb", help="path to cdb.exe")
     ap.add_argument("--out", help="directory for the log and dump")
+    ap.add_argument("--workdir", help="working directory for the editor "
+                                      "(default: the directory it lives in)")
     ap.add_argument("--no-symbol-server", action="store_true",
                     help="skip .symfix, for a machine with no network")
     args = ap.parse_args()
@@ -136,11 +143,13 @@ def main():
 
     if args.attach:
         symbol_dir = None
+        workdir = None
         target = ["-p", str(args.attach)]
     else:
         if not os.path.isfile(args.exe):
             sys.exit("no editor at %s (build and install it, or pass --exe)" % args.exe)
         symbol_dir = os.path.dirname(os.path.abspath(args.exe))
+        workdir = args.workdir or symbol_dir
         target = [args.exe]
 
     script = write_script(os.path.join(out, "crashwatch-%s.cdb" % stamp),
@@ -158,7 +167,13 @@ def main():
     # while the debuggee runs, and treats end of input as "quit", so handing it
     # the null device makes it kill the editor the moment it has started it.
     # A pipe with nothing on the far end is what keeps it waiting for the fault.
-    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    # The editor resolves its config, its profiles and the whole game database
+    # against the working directory, so it has to be started in its own
+    # directory the way a shortcut or a shell would start it. Inheriting the
+    # caller's instead produces an editor with an empty database, which crashes
+    # in NGameX::GetGameRoot()'s caller during InitInstance -- a real fault, but
+    # one this harness caused, and one that would be reported as the editor's.
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, cwd=workdir)
     try:
         rc = proc.wait()
     except KeyboardInterrupt:
