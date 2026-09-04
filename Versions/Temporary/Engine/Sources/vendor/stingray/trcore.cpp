@@ -322,13 +322,16 @@ BOOL SEC_TREECLASS::SetItemState(HTREEITEM hItem, UINT nState, UINT nStateMask) 
     return SetItem(hItem, TVIF_STATE, nullptr, 0, 0, nState, nStateMask, 0);
 }
 
-BOOL SEC_TREECLASS::SetItemData(HTREEITEM hItem, SEC_DWORD dwData) {
+BOOL SEC_TREECLASS::SetItemData(HTREEITEM hItem, SEC_ITEMDATA dwData) {
     spdlog::debug("{} this={} hItem={} dwData={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), dwData);
-    // SEC_DWORD is the toolkit's typedef for DWORD, so this half of the pair is
-    // 32 bit where the control's lParam is pointer sized. The editor's tree
-    // classes are told not to use item data at all, so nothing is losing a
-    // pointer here, but the API cannot carry one.
-    return SetItem(hItem, TVIF_PARAM, nullptr, 0, 0, 0, 0, static_cast<LPARAM>(dwData));
+    // This took SEC_DWORD, the toolkit's DWORD, which is 32 bit while the
+    // control's lParam is pointer sized. The comment here used to say the
+    // editor's tree classes do not use item data, so nothing was losing a
+    // pointer. That was wrong: CSortTreeControl::InsertTreeItem stores the
+    // item's own HTREEITEM in it, and half of it was going over the side on
+    // x64. Nothing reads it back yet, which is the only reason it never
+    // faulted. See SEC_ITEMDATA in trcore.h.
+    return SetItem(hItem, TVIF_PARAM, nullptr, 0, 0, 0, 0, dwData);
 }
 
 BOOL SEC_TREECLASS::GetItem(TV_ITEM* pItem, BOOL bCopyText, BOOL bGetDispInfo) const {
@@ -373,7 +376,7 @@ UINT SEC_TREECLASS::GetItemState(HTREEITEM hItem, UINT nStateMask) const {
     return TreeView_GetItemState(GetSafeHwnd(), hItem, nStateMask);
 }
 
-SEC_DWORD SEC_TREECLASS::GetItemData(HTREEITEM hItem) const {
+SEC_ITEMDATA SEC_TREECLASS::GetItemData(HTREEITEM hItem) const {
     spdlog::debug("{} this={} hItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem));
     TVITEM item = { 0 };
     item.mask = TVIF_PARAM;
@@ -381,7 +384,7 @@ SEC_DWORD SEC_TREECLASS::GetItemData(HTREEITEM hItem) const {
     if (!TreeView_GetItem(GetSafeHwnd(), &item)) {
         return 0;
     }
-    return static_cast<SEC_DWORD>(item.lParam);
+    return item.lParam;
 }
 
 Node* SEC_TREECLASS::GetNode( HTREEITEM hti ) const {
