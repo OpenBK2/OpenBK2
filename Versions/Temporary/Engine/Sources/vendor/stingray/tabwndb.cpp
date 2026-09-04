@@ -139,7 +139,7 @@ void SECTabWndBase::OnTabSelChange(NMHDR* pNMHDR, LRESULT* pResult) {
 }
 
 SECTab* SECTabWndBase::InsertTab(CWnd* pWnd, int nIndex, LPCTSTR lpszLabel) {
-    spdlog::debug("{} this={} pWnd={} nIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), nIndex, lpszLabel);
+    spdlog::debug("{} this={} pWnd={} nIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), nIndex, SafeString( lpszLabel ));
     if (pWnd == nullptr) {
         return nullptr;
     }
@@ -184,18 +184,18 @@ SECTab* SECTabWndBase::InsertTab(CWnd* pWnd, int nIndex, LPCTSTR lpszLabel) {
 // This editor always makes the window itself and passes it to the overload
 // above.
 SECTab* SECTabWndBase::InsertTab(CRuntimeClass* pViewClass, int nIndex, LPCTSTR lpszLabel, CCreateContext* pContext, UINT nID) {
-    spdlog::debug("{} this={} pViewClass={} lpszLabel={} pContext={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), lpszLabel, spdlog::fmt_lib::ptr(pContext), nID);
+    spdlog::debug("{} this={} pViewClass={} lpszLabel={} pContext={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), SafeString( lpszLabel ), spdlog::fmt_lib::ptr(pContext), nID);
     return nullptr;
 }
 
 SECTab* SECTabWndBase::AddTab(CWnd* pWnd, LPCTSTR lpszLabel) {
-    spdlog::debug("{} this={} pWnd={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), lpszLabel);
+    spdlog::debug("{} this={} pWnd={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), SafeString( lpszLabel ));
     return InsertTab(pWnd, static_cast<int>(m_tabs.size()), lpszLabel);
 }
 
 // Still a stub, for the reason given on the InsertTab that takes a class.
 SECTab* SECTabWndBase::AddTab(CRuntimeClass* pViewClass, LPCTSTR lpszLabel, CCreateContext* pContext, UINT nID) {
-    spdlog::debug("{} this={} pViewClass={} lpszLabel={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), lpszLabel, nID);
+    spdlog::debug("{} this={} pViewClass={} lpszLabel={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), SafeString( lpszLabel ), nID);
     return nullptr;
 }
 
@@ -247,12 +247,12 @@ void SECTabWndBase::RemoveTab(int nIndex) {
 }
 
 void SECTabWndBase::RenameTab(CWnd* pWnd, LPCTSTR lpszLabel) {
-    spdlog::debug("{} this={} pWnd={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), lpszLabel);
+    spdlog::debug("{} this={} pWnd={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), SafeString( lpszLabel ));
     RenameTab(IndexOf(pWnd), lpszLabel);
 }
 
 void SECTabWndBase::RenameTab(int nIndex, LPCTSTR lpszLabel) {
-    spdlog::debug("{} this={} nIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIndex, lpszLabel);
+    spdlog::debug("{} this={} nIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIndex, SafeString( lpszLabel ));
     if (nIndex < 0 || nIndex >= static_cast<int>(m_tabs.size()) || lpszLabel == nullptr) {
         return;
     }

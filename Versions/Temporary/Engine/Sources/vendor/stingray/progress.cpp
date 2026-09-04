@@ -48,7 +48,7 @@ void SECProgressCtrl::SetFont(CFont* pFont, BOOL bRedraw) {
 }
 
 void SECProgressCtrl::SetWindowText(LPCTSTR lpszNewText) {
-    spdlog::debug("{} this={} lpszNewText={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszNewText);
+    spdlog::debug("{} this={} lpszNewText={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszNewText ));
 }
 
 void SECProgressCtrl::GetWindowText(CString& strText) {

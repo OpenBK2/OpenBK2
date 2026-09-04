@@ -20,7 +20,7 @@ SECToolBarCmdPage::SECToolBarCmdPage(UINT nIDTemplate, UINT nIDCaption) {
 }
 
 SECToolBarCmdPage::SECToolBarCmdPage(LPCTSTR lpszTemplate, UINT nIDCaption) {
-    spdlog::debug("{} this={} lpszTemplate={} nIDCaption={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszTemplate, nIDCaption);
+    spdlog::debug("{} this={} lpszTemplate={} nIDCaption={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszTemplate ), nIDCaption);
 }
 
 void SECToolBarCmdPage::SetManager(SECToolBarManager* pManager) {
@@ -28,9 +28,9 @@ void SECToolBarCmdPage::SetManager(SECToolBarManager* pManager) {
 }
 
 void SECToolBarCmdPage::DefineBtnGroup(LPCTSTR lpszTitle, int nBtnCount, UINT* lpBtnIDs) {
-    spdlog::debug("{} this={} nIDCaption={} pParentWnd={} iSelectPage={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszTitle, nBtnCount, spdlog::fmt_lib::ptr(lpBtnIDs));
+    spdlog::debug("{} this={} nIDCaption={} pParentWnd={} iSelectPage={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszTitle ), nBtnCount, spdlog::fmt_lib::ptr(lpBtnIDs));
 }
 
 void SECToolBarCmdPage::DefineMenuGroup(LPCTSTR lpszTitle) {
-    spdlog::debug("{} this={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszTitle);
+    spdlog::debug("{} this={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszTitle ));
 }

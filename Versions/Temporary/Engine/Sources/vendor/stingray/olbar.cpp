@@ -394,22 +394,22 @@ void SECShortcutBar::SetFlatStyleMode( BOOL bEnabled ) {
 
 
 auto SECShortcutBar::AddBar(CWnd *pWnd, LPCTSTR lpszLabel, BOOL bRecalc) -> SECBar * {
-    spdlog::debug("{} this={} pWnd={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), lpszLabel, bRecalc);
+    spdlog::debug("{} this={} pWnd={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pWnd), SafeString( lpszLabel ), bRecalc);
     return InsertBar(static_cast<int>(m_bars.size()), pWnd, lpszLabel, bRecalc);
 }
 
 SECBar* SECShortcutBar::AddBar(CRuntimeClass* pViewClass, LPCTSTR lpszLabel, CCreateContext* pContext, BOOL bRecalc, UINT nID) {
-    spdlog::debug("{} this={} pViewClass={} lpszLabel={} pContext={} bRecalc={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), lpszLabel, spdlog::fmt_lib::ptr(pContext), bRecalc, nID);
+    spdlog::debug("{} this={} pViewClass={} lpszLabel={} pContext={} bRecalc={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pViewClass), SafeString( lpszLabel ), spdlog::fmt_lib::ptr(pContext), bRecalc, nID);
     return nullptr;
 }
 
 SECListBar* SECShortcutBar::AddBar( LPCTSTR lpszLabel, BOOL bRecalc ) {
-    spdlog::debug("{} this={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszLabel, bRecalc);
+    spdlog::debug("{} this={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszLabel ), bRecalc);
     return nullptr;
 }
 
 SECBar* SECShortcutBar::InsertBar( int iIndex, CWnd* pWnd, LPCTSTR lpszLabel, BOOL bRecalc) {
-    spdlog::debug("{} this={} iIndex={} pWnd={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, spdlog::fmt_lib::ptr(pWnd), lpszLabel, bRecalc);
+    spdlog::debug("{} this={} iIndex={} pWnd={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, spdlog::fmt_lib::ptr(pWnd), SafeString( lpszLabel ), bRecalc);
     if (pWnd == nullptr) {
         return nullptr;
     }
@@ -449,12 +449,12 @@ SECBar* SECShortcutBar::InsertBar( int iIndex, CWnd* pWnd, LPCTSTR lpszLabel, BO
 }
 
 SECBar* SECShortcutBar::InsertBar( int iIndex, CRuntimeClass* pViewClass, LPCTSTR lpszLabel, CCreateContext* pContext, BOOL bRecalc, UINT uID ) {
-    spdlog::debug("{} this={} iIndex={} pViewClass={} lpszLabel={} pContext={} bRecalc={} uID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, spdlog::fmt_lib::ptr(pViewClass), lpszLabel, spdlog::fmt_lib::ptr(pContext), bRecalc, uID);
+    spdlog::debug("{} this={} iIndex={} pViewClass={} lpszLabel={} pContext={} bRecalc={} uID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, spdlog::fmt_lib::ptr(pViewClass), SafeString( lpszLabel ), spdlog::fmt_lib::ptr(pContext), bRecalc, uID);
     return nullptr;
 }
 
 SECListBar* SECShortcutBar::InsertBar( int iIndex, LPCTSTR lpszLabel, BOOL bRecalc) {
-    spdlog::debug("{} this={} iIndex={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, lpszLabel, bRecalc);
+    spdlog::debug("{} this={} iIndex={} lpszLabel={} bRecalc={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, SafeString( lpszLabel ), bRecalc);
     return nullptr;
 }
 
@@ -488,7 +488,7 @@ void SECShortcutBar::RemoveBar( int iIndex ) {
 }
 
 void SECShortcutBar::RenameBar( int iIndex, LPCTSTR lpszLabel ) {
-    spdlog::debug("{} this={} iIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, lpszLabel);
+    spdlog::debug("{} this={} iIndex={} lpszLabel={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iIndex, SafeString( lpszLabel ));
     if (iIndex < 0 || iIndex >= static_cast<int>(m_bars.size()) || lpszLabel == nullptr) {
         return;
     }

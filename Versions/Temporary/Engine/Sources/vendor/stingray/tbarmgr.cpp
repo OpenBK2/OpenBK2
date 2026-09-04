@@ -22,7 +22,7 @@ UINT ResourceIDFromName(LPCTSTR lpszName) {
     // A genuine string name. Nothing in this editor uses one, and the bitmaps
     // here are paired to definitions by id, so there is nothing useful to do
     // with it but say so.
-    spdlog::warn("SECToolBarManager: toolbar resource named by string \"{}\", which is not handled", lpszName);
+    spdlog::warn("SECToolBarManager: toolbar resource named by string \"{}\", which is not handled", SafeString( lpszName ));
     return 0;
 }
 
@@ -205,7 +205,7 @@ SECCustomToolBar* SECToolBarManager::ToolBarFromID(const UINT nToolBarID) const 
 }
 
 SECCustomToolBar* SECToolBarManager::CreateUserToolBar(LPCTSTR lpszTitle) {
-    spdlog::debug("{} this={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszTitle);
+    spdlog::debug("{} this={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszTitle ));
     return nullptr;
 }
 
@@ -254,7 +254,7 @@ BOOL SECToolBarManager::AddToolBarResource(UINT nIDStdBmp, UINT nIDLargeBmp) {
 }
 
 BOOL SECToolBarManager::AddBitmapResource(LPCTSTR lpszStdBmpName, LPCTSTR lpszLargeBmpName, const UINT* lpIDArray, UINT nIDCount) {
-    spdlog::debug("{} this={} lpszStdBmpName={} lpszLargeBmpName={} lpIDArray={} nIDCount={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszStdBmpName, lpszLargeBmpName, spdlog::fmt_lib::ptr(lpIDArray), nIDCount);
+    spdlog::debug("{} this={} lpszStdBmpName={} lpszLargeBmpName={} lpIDArray={} nIDCount={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszStdBmpName ), SafeString( lpszLargeBmpName ), spdlog::fmt_lib::ptr(lpIDArray), nIDCount);
     return FALSE;
 }
 
