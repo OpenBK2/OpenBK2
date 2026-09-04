@@ -47,13 +47,23 @@ copy the following files and directories manually into the game directory:
 - [Versions/Current/Profiles](Versions/Current/Profiles)
 - [Versions/Current/Data](Versions/Current/Data)
 - [Versions/Current/splash.bmp](Versions/Current/splash.bmp)
+- [Versions/Current/Editor](Versions/Current/Editor) - only needed for the map editor
 
 assuming installation into the `C:\Games\bk2` directory, the commands to copy will be:
 ```cmd
 robocopy Versions\Current\Profiles\ C:\Games\bk2\Profiles\ /S /E >NUL
 robocopy Versions\Current\Data\ C:\Games\bk2\Data\ /S /E >NUL
+robocopy Versions\Current\Editor\ C:\Games\bk2\Editor\ /S /E >NUL
 xcopy Versions\Current\splash.bmp C:\Games\bk2\
 ```
+
+the `Editor` directory is easy to skip and the editor does not complain when it
+is missing - it comes up with a generic title and most of the `File` menu greyed
+out. `ConstUserData.xml` in it names `MainObjectType` as `MapInfo`, and
+`CDWGDBBrowser::UpdateCommand` enables `File -> New` and `File -> Open` only
+when that is set, so without the file there is nothing the editor will agree to
+open. `Editors.xml`, `Exporters.xml`, `Extractors.xml` and `Filters.xml` are
+read from the same place.
 
 copying will take a while - there are **MANY** small files.
 
