@@ -9,6 +9,7 @@
 #include <fastgltf/core.hpp>
 #include <fastgltf/tools.hpp>
 
+#include <deque>
 #include <filesystem>
 #include <mutex>
 #include <unordered_set>
@@ -18,9 +19,55 @@ namespace NGltf
 namespace
 {
 std::mutex fileCacheMutex;
-// Parsing also copies GLB buffer data, so keep one immutable document per VFS
-// path instead of reparsing it independently for every mesh/material part.
-std::unordered_map<NFile::CFilePath, TGltfFilePtr> fileCache;
+
+// Parsing also copies GLB buffer data, so keep one immutable document per VFS path instead
+// of reparsing it independently for every mesh/material part.
+//
+// The reference here is deliberately weak. A document lives as long as a loader, a mesh or
+// an animator holds its TGltfFilePtr, which is how CBasicShare keeps a CPtr and recreates
+// the value once it has died. Holding it strongly meant every GLB the process ever touched
+// stayed parsed, with its buffers and decoded accessors, until the process exited.
+//
+// The recorded file stats are what makes an edited .glb reload: a document is reused only
+// while the file behind it still looks the same.
+struct SCachedFile
+{
+	std::weak_ptr<CGltfFile> file;
+	std::size_t nSourceBytes = 0;
+	uint32_t dwModified = 0;
+	bool bHaveStats = false;
+};
+std::unordered_map<NFile::CFilePath, SCachedFile> fileCache;
+
+// Weak references on their own would reparse a document between two owners that each drop
+// it, and one map load resolves geometry, AI geometry and animation against the same GLB in
+// turn. Keeping the most recently loaded documents alive covers those gaps. The budget
+// counts source bytes, which is what is known at load time rather than the parsed footprint,
+// and one document is always kept however large it is, so nothing can thrash on its own.
+std::deque< std::pair<TGltfFilePtr, std::size_t> > recentFiles;
+std::size_t nRecentBytes = 0;
+const std::size_t MAX_RECENT_BYTES = 16 * 1024 * 1024;
+
+// Call with fileCacheMutex held.
+void KeepRecent( const TGltfFilePtr &file, std::size_t nBytes )
+{
+	for ( auto it = recentFiles.begin(); it != recentFiles.end(); ++it )
+	{
+		if ( it->first == file )
+		{
+			nRecentBytes -= it->second;
+			recentFiles.erase( it );
+			break;
+		}
+	}
+	recentFiles.push_front( std::make_pair(file, nBytes) );
+	nRecentBytes += nBytes;
+	while ( recentFiles.size() > 1 && nRecentBytes > MAX_RECENT_BYTES )
+	{
+		nRecentBytes -= recentFiles.back().second;
+		recentFiles.pop_back();
+	}
+}
 
 bool ReadVfsFile( const std::string &path, std::vector<std::byte> *pBytes )
 {
@@ -314,12 +361,31 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 {
 	const NFile::CFilePath path = ResolveModelFilePath( pOwner, modelFileRef );
 	if ( path.empty() )
+	{
 		return TGltfFilePtr();
+	}
+
+	NVFS::SFileStats stats;
+	NVFS::IVFS *pStatVFS = NVFS::GetMainVFS();
+	const bool bHaveStats = pStatVFS && pStatVFS->GetFileStats( &stats, path );
 	{
 		std::lock_guard<std::mutex> lock( fileCacheMutex );
 		const auto it = fileCache.find( path );
 		if ( it != fileCache.end() )
-			return it->second;
+		{
+			const TGltfFilePtr cached = it->second.file.lock();
+			// Without stats from either side there is nothing to compare, so fall back to
+			// trusting the entry rather than reparsing on every single call.
+			const bool bUnchanged = !bHaveStats || !it->second.bHaveStats ||
+				(it->second.dwModified == stats.mtime.dwFulltime &&
+					it->second.nSourceBytes == static_cast<std::size_t>((std::max)(stats.nSize, 0)));
+			if ( cached && bUnchanged )
+			{
+				KeepRecent( cached, it->second.nSourceBytes );
+				return cached;
+			}
+			fileCache.erase( it );
+		}
 	}
 
 	std::vector<std::byte> bytes;
@@ -382,7 +448,12 @@ TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 	TGltfFilePtr result = std::make_shared<CGltfFile>( std::move(asset), path );
 	{
 		std::lock_guard<std::mutex> lock( fileCacheMutex );
-		fileCache[path] = result;
+		SCachedFile &entry = fileCache[path];
+		entry.file = result;
+		entry.nSourceBytes = bytes.size();
+		entry.dwModified = bHaveStats ? stats.mtime.dwFulltime : 0;
+		entry.bHaveStats = bHaveStats;
+		KeepRecent( result, bytes.size() );
 	}
 	return result;
 }
