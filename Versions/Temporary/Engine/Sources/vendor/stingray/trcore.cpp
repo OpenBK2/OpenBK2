@@ -253,7 +253,7 @@ BOOL SEC_TREECLASS::SetItem(TV_ITEM* pItem) {
 
 BOOL SEC_TREECLASS::SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR lpszItem, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam) {
     spdlog::debug("{} this={} hItem={} nMask={} lpszItem={} nImage={} nSelectedImage={} nState={} nStateMask={} lParam={}",
-        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), nMask, lpszItem, nImage, nSelectedImage, nState, nStateMask, lParam);
+        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), nMask, SafeString( lpszItem ), nImage, nSelectedImage, nState, nStateMask, lParam);
     TVITEM item = { 0 };
     item.hItem = hItem;
     item.mask = nMask;
@@ -421,12 +421,12 @@ CString SEC_TREECLASS::GetItemText(HTREEITEM hItem, int iSubItem) const {
 }
 
 BOOL SEC_TREECLASS::SetItemText(HTREEITEM hItem, LPCTSTR lpszItem) {
-    spdlog::debug("{} this={} hItem={} lpszItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), lpszItem);
+    spdlog::debug("{} this={} hItem={} lpszItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), SafeString( lpszItem ));
     return SetItem(hItem, TVIF_TEXT, lpszItem, 0, 0, 0, 0, 0);
 }
 
 BOOL SEC_TREECLASS::SetItemText(HTREEITEM hItem, int nSubItem, LPCTSTR lpszItem) {
-    spdlog::debug("{} this={} hItem={} nSubItem={} lpszItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), nSubItem, lpszItem);
+    spdlog::debug("{} this={} hItem={} nSubItem={} lpszItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem), nSubItem, SafeString( lpszItem ));
     if (nSubItem > 0) {
         // See GetItemText: no columns, so nothing to put in one.
         return FALSE;
@@ -482,7 +482,7 @@ HTREEITEM SEC_TREECLASS::InsertItem(LPTV_INSERTSTRUCT lpInsertStruct) {
 
 HTREEITEM SEC_TREECLASS::InsertItem(UINT nMask, LPCTSTR lpszItem, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam, HTREEITEM hParent, HTREEITEM hInsertAfter) {
     spdlog::debug("{} this={} nMask={} lpszItem={} nImage={} nSelectedImage={} nState={} nStateMask={} lParam={} hParent={} hInsertAfter={}",
-        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nMask, lpszItem, nImage, nSelectedImage, nState, nStateMask, lParam, spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
+        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nMask, SafeString( lpszItem ), nImage, nSelectedImage, nState, nStateMask, lParam, spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
     TVINSERTSTRUCT insert = { 0 };
     insert.hParent = hParent;
     insert.hInsertAfter = hInsertAfter;
@@ -498,13 +498,13 @@ HTREEITEM SEC_TREECLASS::InsertItem(UINT nMask, LPCTSTR lpszItem, int nImage, in
 
 HTREEITEM SEC_TREECLASS::InsertItem(LPCTSTR lpszItem, HTREEITEM hParent, HTREEITEM hInsertAfter) {
     spdlog::debug("{} this={} lpszItem={} hParent={} hInsertAfter={}",
-        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszItem, spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
+        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszItem ), spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
     return InsertItem(TVIF_TEXT, lpszItem, 0, 0, 0, 0, 0, hParent, hInsertAfter);
 }
 
 HTREEITEM SEC_TREECLASS::InsertItem(LPCTSTR lpszItem, int nImage, int nSelectedImage, HTREEITEM hParent, HTREEITEM hInsertAfter) {
     spdlog::debug("{} this={} lpszItem={} nImage={} nSelectedImage={} hParent={} hInsertAfter={}",
-        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszItem, nImage, nSelectedImage, spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
+        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszItem ), nImage, nSelectedImage, spdlog::fmt_lib::ptr(hParent), spdlog::fmt_lib::ptr(hInsertAfter));
     return InsertItem(TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE, lpszItem, nImage, nSelectedImage, 0, 0, 0, hParent, hInsertAfter);
 }
 

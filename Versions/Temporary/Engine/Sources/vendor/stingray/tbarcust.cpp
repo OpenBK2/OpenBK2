@@ -67,7 +67,7 @@ std::vector<UINT> SECCustomToolBar::CurrentIDs() const {
 BOOL SECCustomToolBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID, DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd, CCreateContext* pContext) {
     spdlog::debug("{} this={} lpszClassName={} lpszWindowName={} nID={} dwStyle={} dwExStyle={} "
                   "rect.left={} rect.top={} rect.right={} rect.bottom={} "
-                  "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), lpszClassName, lpszWindowName, nID, dwStyle, dwExStyle,
+                  "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszClassName ), SafeString( lpszWindowName ), nID, dwStyle, dwExStyle,
                   rect.left, rect.top, rect.right, rect.bottom,
                   spdlog::fmt_lib::ptr(pParentWnd), spdlog::fmt_lib::ptr(pContext));
     if (!CToolBar::CreateEx(pParentWnd, TBSTYLE_FLAT, dwStyle, CRect(0, 0, 0, 0), nID)) {
@@ -82,7 +82,7 @@ BOOL SECCustomToolBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UIN
 }
 
 BOOL SECCustomToolBar::CreateEx(DWORD dwExStyle, CWnd* pParentWnd, DWORD dwStyle, UINT nID, LPCTSTR lpszTitle) {
-    spdlog::debug("{} this={} dwExStyle={} pParentWnd={} dwStyle={} nID={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwExStyle, spdlog::fmt_lib::ptr(pParentWnd), dwStyle, nID, lpszTitle);
+    spdlog::debug("{} this={} dwExStyle={} pParentWnd={} dwStyle={} nID={} lpszTitle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwExStyle, spdlog::fmt_lib::ptr(pParentWnd), dwStyle, nID, SafeString( lpszTitle ));
     return Create(nullptr, lpszTitle, nID, dwStyle, dwExStyle, CRect(0, 0, 0, 0), pParentWnd, nullptr);
 }
 
