@@ -216,6 +216,53 @@ CGltfFile::CGltfFile( fastgltf::Asset &&_asset, const NFile::CFilePath &_sourceP
 	}
 }
 
+namespace
+{
+// Decode an accessor once and keep it. An index past the end yields an empty vector, which
+// is what the callers already treated as "this channel has nothing to sample".
+template <class TValue>
+const std::vector<TValue> &MemoizeAccessor( std::mutex &mutex,
+	std::unordered_map<std::size_t, std::vector<TValue>> *pCache,
+	const fastgltf::Asset &asset, std::size_t accessorIndex )
+{
+	std::lock_guard<std::mutex> lock( mutex );
+	const auto it = pCache->find( accessorIndex );
+	if ( it != pCache->end() )
+	{
+		return it->second;
+	}
+
+	std::vector<TValue> decoded;
+	if ( accessorIndex < asset.accessors.size() )
+	{
+		const fastgltf::Accessor &accessor = asset.accessors[accessorIndex];
+		decoded.reserve( accessor.count );
+		for ( const TValue &value : fastgltf::iterateAccessor<TValue>(asset, accessor) )
+		{
+			decoded.push_back( value );
+		}
+	}
+	return pCache->emplace( accessorIndex, std::move(decoded) ).first->second;
+}
+}
+
+const std::vector<float> &CGltfFile::ScalarAccessor( std::size_t accessorIndex ) const
+{
+	return MemoizeAccessor( accessorMutex, &scalarAccessors, asset, accessorIndex );
+}
+
+const std::vector<fastgltf::math::fvec3> &CGltfFile::Vec3Accessor(
+	std::size_t accessorIndex ) const
+{
+	return MemoizeAccessor( accessorMutex, &vec3Accessors, asset, accessorIndex );
+}
+
+const std::vector<fastgltf::math::fvec4> &CGltfFile::Vec4Accessor(
+	std::size_t accessorIndex ) const
+{
+	return MemoizeAccessor( accessorMutex, &vec4Accessors, asset, accessorIndex );
+}
+
 int SSkeletonDefinition::FindBone( const std::string &name ) const
 {
 	const auto it = boneByName.find( name );

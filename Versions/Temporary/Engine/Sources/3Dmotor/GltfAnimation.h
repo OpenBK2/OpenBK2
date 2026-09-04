@@ -10,6 +10,21 @@ namespace NAnimation
 // Animation tracks are rebound to the separately loaded skeleton by node name.
 class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 {
+	// One glTF animation channel, reduced at bind time to what sampling actually needs.
+	// Resolving the target bone means building the node's name and hashing it, and the
+	// keyframe data has to be decoded out of the accessor; neither depends on time, so
+	// neither belongs on the per-frame path. The vectors live in the shared CGltfFile and
+	// are never erased, so these pointers stay good for as long as the holder keeps pFile.
+	struct SBoundChannel
+	{
+		int nBone = -1;
+		fastgltf::AnimationPath path = fastgltf::AnimationPath::Translation;
+		fastgltf::AnimationInterpolation interpolation = fastgltf::AnimationInterpolation::Linear;
+		const std::vector<float> *pTimes = nullptr;
+		const std::vector<fastgltf::math::fvec3> *pVectors = nullptr;
+		const std::vector<fastgltf::math::fvec4> *pRotations = nullptr;
+	};
+
 	struct SAnimationHolder
 	{
 		STime tStartTime;
@@ -22,6 +37,7 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 		// Derived from the current GLB resource during binding, so these are not serialized.
 		float fSourceStart;
 		std::vector<int> animationIndices;
+		std::vector<SBoundChannel> boundChannels;
 		bool bFadeIn;
 		bool bFadeOut;
 		int nLoopCount;
@@ -51,6 +67,8 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 
 	void Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
 	bool BindAnimation( SAnimationHolder *pHolder );
+	bool SelectAnimationRange( SAnimationHolder *pHolder );
+	void ResolveBoundChannels( SAnimationHolder *pHolder );
 	float GetEffectiveWeight( const SAnimationHolder &holder, STime time ) const;
 	float GetLocalTime( const SAnimationHolder &holder, STime time, bool *pActive ) const;
 	void SetGlobalPositionInternal( const SHMatrix &position );
