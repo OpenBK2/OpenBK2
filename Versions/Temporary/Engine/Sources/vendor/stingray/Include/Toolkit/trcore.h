@@ -120,6 +120,16 @@ struct TvPaintContext : LvPaintContext {
 
 using SEC_DWORD = DWORD;
 
+//! What the item data pair carries.
+//!
+//! The toolkit spelled these SEC_DWORD, which is DWORD, which is 32 bits on
+//! both targets. The control's TVITEM::lParam is pointer sized, and the one
+//! caller in this editor -- CSortTreeControl::InsertTreeItem -- stores an
+//! HTREEITEM in it, so on x64 the toolkit's own width silently threw half the
+//! handle away. Nothing reads it back today, which is the only reason that has
+//! not shown up as a fault; widening it here means it cannot.
+using SEC_ITEMDATA = LPARAM;
+
 class SEC_TREECLASS : public CWnd {
 public:
     // Construction/Initialization
@@ -228,7 +238,7 @@ public:
     BOOL SetItemState(HTREEITEM hItem, UINT nState, UINT nStateMask);
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__setitemdata.htm
     // Sets the 32-bit application-specific value associated with the item specified.
-    BOOL SetItemData(HTREEITEM hItem, SEC_DWORD dwData);
+    BOOL SetItemData(HTREEITEM hItem, SEC_ITEMDATA dwData);
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__getitem.htm
     // Retrieves the attributes of the specified item.
     virtual BOOL GetItem(TV_ITEM* pItem, BOOL bCopyText = TRUE, BOOL bGetDispInfo = FALSE) const;
@@ -249,7 +259,7 @@ public:
     UINT GetItemState(HTREEITEM hItem, UINT nStateMask) const;
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__getitemdata.htm
     // Gets the 32-bit application-specific value associated with the item specified.
-    SEC_DWORD GetItemData(HTREEITEM hItem) const;
+    SEC_ITEMDATA GetItemData(HTREEITEM hItem) const;
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__getnode.htm
     // Gets the stored pointer to a Node from an HTREEITEM.
     Node* GetNode( HTREEITEM hti ) const;
