@@ -383,8 +383,11 @@ BOOL SECToolBarManager::SetMenuInfo(int nCount, UINT nIDMenu, ...) {
 // exactly when they can be built.
 //
 // A bar's docked position is separately restored by the frame's own
-// LoadBarState, which CMainFrame::OnCreate calls just before this and which
-// finds these bars by the ids CreateBars gave them.
+// LoadBarState, which CMainFrame::OnCreate calls just *after* this and which
+// finds these bars by the ids CreateBars gave them. That order matters and this
+// comment used to have it backwards: with LoadBarState first, the bars it wants
+// have not been created, it cannot find them, and the editor's check discards
+// the whole saved layout rather than restoring any of it.
 void SECToolBarManager::LoadState(const CString & state) {
     spdlog::debug("{} this={} state={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), state.GetString());
     CreateBars();
