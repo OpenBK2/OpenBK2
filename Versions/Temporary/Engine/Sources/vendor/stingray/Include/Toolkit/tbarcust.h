@@ -7,6 +7,7 @@
 
 #include "sbarcore.h"
 
+#include <map>
 #include <vector>
 
 struct Wrapped {
@@ -105,6 +106,16 @@ public:
     // Returns TRUE if the toolbar accepts dropped buttons.
     virtual BOOL AcceptDrop() const;
 
+    //! The image list every bar shares and where each command's face is in
+    //! it, both owned by SECToolBarManager. Given to a bar before its
+    //! buttons go on, and reapplied by RebuildButtons after anything that
+    //! changes them, which is what lets a button keep its own face when it
+    //! is added to a bar it was not defined on.
+    //!
+    //! Without it a bar falls back to CToolBar's numbering, which is the
+    //! position of the button within the bar.
+    void SetSharedImages( CImageList *pImages, const std::map<UINT, int> *pImageForID );
+
     struct Button {
         UINT m_nID;
     };
@@ -114,6 +125,13 @@ public:
     std::vector<Button*> m_btns;
 
 private:
+    //! Point every button at its face in the shared list. Nothing to do,
+    //! and no harm done, when there is no shared list.
+    void ApplyButtonImages();
+
+    CImageList *m_pSharedImages = nullptr;
+    const std::map<UINT, int> *m_pImageForID = nullptr;
+
     void RebuildButtons();
     void ClearButtons();
     // The command ids currently on the bar, in order, which is what SetButtons

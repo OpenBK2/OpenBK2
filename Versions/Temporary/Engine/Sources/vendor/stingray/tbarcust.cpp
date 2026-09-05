@@ -41,6 +41,46 @@ void SECCustomToolBar::RebuildButtons() {
         pBtn->m_nID = CToolBar::GetItemID(i);
         m_btns.push_back(pBtn);
     }
+    // Here rather than in SetButtons, because this is what every function that
+    // changes the buttons calls, and every one of them has just left CToolBar
+    // numbering the faces by position.
+    ApplyButtonImages();
+}
+
+// The image list is set on the control rather than kept for later: it has to be
+// there before the faces are numbered, and TB_SETBITMAPSIZE would throw it away
+// if it were set afterwards.
+void SECCustomToolBar::SetSharedImages(CImageList* pImages, const std::map<UINT, int>* pImageForID) {
+    spdlog::debug("{} this={} pImages={} pImageForID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pImages), spdlog::fmt_lib::ptr(pImageForID));
+    m_pSharedImages = pImages;
+    m_pImageForID = pImageForID;
+    if (GetSafeHwnd() != nullptr && pImages != nullptr && pImages->GetSafeHandle() != nullptr) {
+        GetToolBarCtrl().SetImageList(pImages);
+    }
+    ApplyButtonImages();
+}
+
+// A command with no entry keeps whatever face CToolBar gave it. That is the
+// honest answer for a button whose bitmap never reached the manager, and it is
+// what a bar with no shared list at all gets throughout.
+void SECCustomToolBar::ApplyButtonImages() {
+    if (m_pImageForID == nullptr || GetSafeHwnd() == nullptr) {
+        return;
+    }
+    const int nCount = CToolBar::GetCount();
+    for (int i = 0; i < nCount; ++i) {
+        const UINT nID = CToolBar::GetItemID(i);
+        if (nID == 0) {
+            continue;       // a separator, which has no face
+        }
+        const std::map<UINT, int>::const_iterator it = m_pImageForID->find(nID);
+        if (it == m_pImageForID->end()) {
+            continue;
+        }
+        // The style word round-trips: GetButtonStyle packs fsStyle and fsState
+        // into one value and SetButtonInfo unpacks the same two.
+        CToolBar::SetButtonInfo(i, nID, CToolBar::GetButtonStyle(i), it->second);
+    }
 }
 
 std::vector<UINT> SECCustomToolBar::CurrentIDs() const {
@@ -178,15 +218,23 @@ int SECCustomToolBar::GetCurBtn() const {
     return -1;
 }
 
-// Still a stub. This maps a command id to its frame in the manager's shared
-// bitmap, which only the customize dialog needs in order to draw a button that
-// is not on a bar yet.
+// A command id to its frame in the shared list, which is what the customize
+// dialog needs in order to draw a button that is not on a bar yet.
+//
+// lphBmp stays null. The toolkit's frames lived in one HBITMAP it could hand
+// back; here they live in an image list, and there is no bitmap to name. The
+// index is against SECToolBarManager's list, which is also what
+// SECToolBarManager::GetButtonImage answers with.
 int SECCustomToolBar::IDToBmpIndex(UINT nID, HBITMAP* lphBmp) {
     spdlog::debug("{} this={} nID={} lphBmp={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID, spdlog::fmt_lib::ptr(lphBmp));
     if (lphBmp != nullptr) {
         *lphBmp = nullptr;
     }
-    return -1;
+    if (m_pImageForID == nullptr) {
+        return -1;
+    }
+    const std::map<UINT, int>::const_iterator it = m_pImageForID->find(nID);
+    return ( it != m_pImageForID->end() ) ? it->second : -1;
 }
 
 // A toolbar resource carries the bitmap and the button ids together, so this one
