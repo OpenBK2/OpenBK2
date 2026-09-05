@@ -124,11 +124,14 @@ BEGIN_MESSAGE_MAP( SEC_TREECLASS, CWnd )
     ON_WM_WINDOWPOSCHANGED()
     ON_WM_NCDESTROY()
     ON_WM_HSCROLL()
+    ON_WM_LBUTTONDOWN()
     // The control sends its custom draw to its parent, and MFC reflects it back
     // here, which is the same route TVN_SELCHANGED already takes to the editor's
     // own tree classes. Nothing between here and the control handles it, so the
     // reflection is not competing with anyone.
     ON_NOTIFY_REFLECT( NM_CUSTOMDRAW, OnCustomDraw )
+    // TVN_SELCHANGED and TVN_DELETEITEM are wanted too and are deliberately not
+    // here: see OnChildNotify for why a map entry would never have run.
 END_MESSAGE_MAP()
 
 
@@ -200,6 +203,15 @@ BOOL SEC_TREECLASS::Create(DWORD dwStyle, DWORD dwStyleEx, const RECT& rect, CWn
     // turns TVXS_MULTISEL and friends into whatever WS_EX_ bit they collide
     // with. The toolkit half is kept so the style getters can answer with it.
     m_dwTreeCtrlStyleEx = dwStyleEx & ~TREE_STYLE_EX_WINDOW_MASK;
+    // A multi-select tree needs TVS_SHOWSELALWAYS: only one of its selected
+    // items is the control's caret, and the rest are drawn selected only while
+    // the tree has the focus without it. Added here as well as in
+    // UpdateMultiSelectStyle because at this point there is no window to
+    // modify the style of, and ComboBox_GDBBrowser asks for TVXS_MULTISEL
+    // right here, in the creation word.
+    if ((m_dwTreeCtrlStyleEx & TVXS_MULTISEL) != 0) {
+        dwStyle |= TVS_SHOWSELALWAYS;
+    }
     return CWnd::CreateEx(dwStyleEx & TREE_STYLE_EX_WINDOW_MASK, WC_TREEVIEW, nullptr, dwStyle, rect, pParentWnd, nID, pContext);
 }
 
@@ -298,25 +310,46 @@ HTREEITEM SEC_TREECLASS::GetPrevVisibleItem(HTREEITEM hItem) const {
     return TreeView_GetPrevVisible(GetSafeHwnd(), hItem);
 }
 
+// The three below are the walk the editor does over a selection:
+//
+//     HTREEITEM h = GetFirstSelectedItem();
+//     while ( h ) { ...; h = GetNextSelectedItem( h ); }
+//
+// With one selection there was never a next one and the loop ran once. They
+// answer from m_selection now, which is in display order, so the walk visits
+// the selected items top to bottom. Without TVXS_MULTISEL nothing is kept and
+// the control's own single selection is still the answer.
 HTREEITEM SEC_TREECLASS::GetFirstSelectedItem() const {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    // The common control selects one item at a time, so the first selected item
-    // is the selected item and there is never a next one. The editor asks for
-    // multiple selection (TVXS_MULTISEL) and gets one item instead; that is the
-    // largest thing this control cannot do, and it is honest about it here
-    // rather than returning items that are not selected.
-    return TreeView_GetSelection(GetSafeHwnd());
+    if (!IsMultiSelect()) {
+        return TreeView_GetSelection(GetSafeHwnd());
+    }
+    return m_selection.empty() ? nullptr : m_selection.front();
 }
 
 HTREEITEM SEC_TREECLASS::GetNextSelectedItem(HTREEITEM hItem) const {
     spdlog::debug("{} this={} hItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem));
-    // See GetFirstSelectedItem: one selection, so the walk ends immediately.
+    if (!IsMultiSelect()) {
+        return nullptr;
+    }
+    for (size_t i = 0; i + 1 < m_selection.size(); ++i) {
+        if (m_selection[i] == hItem) {
+            return m_selection[i + 1];
+        }
+    }
     return nullptr;
 }
 
 HTREEITEM SEC_TREECLASS::GetPrevSelectedItem(HTREEITEM hItem) const {
     spdlog::debug("{} this={} hItem={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hItem));
-    // See GetFirstSelectedItem.
+    if (!IsMultiSelect()) {
+        return nullptr;
+    }
+    for (size_t i = 1; i < m_selection.size(); ++i) {
+        if (m_selection[i] == hItem) {
+            return m_selection[i - 1];
+        }
+    }
     return nullptr;
 }
 
@@ -325,9 +358,19 @@ HTREEITEM SEC_TREECLASS::GetCaretItem() const {
     return TreeView_GetSelection(GetSafeHwnd());
 }
 
+// The one selected item, for the callers that only want one.
+//
+// The caret, which is the ordinary answer and the same one this always gave.
+// A Ctrl+click that deselects the caret item is the exception: the caret moves
+// to another selected item, and only when nothing is left does this fall back
+// to the set, which is then empty too.
 HTREEITEM SEC_TREECLASS::GetSelectedItem() const {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    return TreeView_GetSelection(GetSafeHwnd());
+    const HTREEITEM hCaret = TreeView_GetSelection(GetSafeHwnd());
+    if (hCaret != nullptr || !IsMultiSelect()) {
+        return hCaret;
+    }
+    return m_selection.empty() ? nullptr : m_selection.front();
 }
 
 HTREEITEM SEC_TREECLASS::GetDropHilightItem() const {
@@ -801,17 +844,34 @@ UINT SEC_TREECLASS::GetChildCount(HTREEITEM hti, BOOL bRecursive, BOOL bExpanded
 
 BOOL SEC_TREECLASS::SelectAllVisibleChildren(HTREEITEM hti) {
     spdlog::debug("{} this={} hti={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti));
-    return FALSE;
+    if (!IsMultiSelect() || hti == nullptr) {
+        return FALSE;
+    }
+    AddVisibleChildren(hti);
+    SortSelection();
+    ApplySelection();
+    return TRUE;
 }
 
 BOOL SEC_TREECLASS::SelectItemRange( HTREEITEM htiFirst, HTREEITEM htiLast, BOOL bSelect) {
     spdlog::debug("{} this={} htiFirst={} htiLast={} bSelect={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(htiFirst), spdlog::fmt_lib::ptr(htiLast), bSelect);
-    return FALSE;
+    if (!IsMultiSelect()) {
+        return FALSE;
+    }
+    SelectRange(htiFirst, htiLast, bSelect != FALSE);
+    ApplySelection();
+    return TRUE;
 }
 
 BOOL SEC_TREECLASS::IsSelected(HTREEITEM hti) const {
     spdlog::debug("{} this={} hti={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti));
-    return hti != nullptr && TreeView_GetSelection(GetSafeHwnd()) == hti;
+    if (hti == nullptr) {
+        return FALSE;
+    }
+    if (IsMultiSelect()) {
+        return InSelection(hti) ? TRUE : FALSE;
+    }
+    return TreeView_GetSelection(GetSafeHwnd()) == hti;
 }
 
 BOOL SEC_TREECLASS::HideItem( HTREEITEM hti, BOOL bHide ) {
@@ -972,6 +1032,11 @@ void SEC_TREECLASS::EnableToolTips(BOOL bEnable) {
 
 void SEC_TREECLASS::EnableMultiSelect(BOOL bEnable) {
     spdlog::debug("{} this={} bEnable={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bEnable);
+    // The same switch the style word is, so both routes end in the same place.
+    // The editor uses the style: ModifyTreeCtrlStyleEx( 0, TVXS_MULTISEL ) in
+    // PC_Dialog and its two siblings, and the whole word at creation in
+    // ComboBox_GDBBrowser.
+    ModifyTreeCtrlStyleEx(bEnable ? 0 : TVXS_MULTISEL, bEnable ? TVXS_MULTISEL : 0);
 }
 
 BOOL SEC_TREECLASS::GetTreeCtrlStyles(DWORD& dwStyle, DWORD& dwStyleEx) const {
@@ -1006,6 +1071,7 @@ BOOL SEC_TREECLASS::SetTreeCtrlStyle(DWORD dwStyle, BOOL bRedraw) {
 BOOL SEC_TREECLASS::SetTreeCtrlStyleEx(DWORD dwStyleEx, BOOL bRedraw) {
     spdlog::debug("{} this={} dwStyle={} bRedraw={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwStyleEx, bRedraw);
     m_dwTreeCtrlStyleEx = dwStyleEx;
+    UpdateMultiSelectStyle();
     return TRUE;
 }
 
@@ -1017,6 +1083,7 @@ BOOL SEC_TREECLASS::ModifyTreeCtrlStyle(DWORD dwRemove, DWORD dwAdd, BOOL bRedra
 BOOL SEC_TREECLASS::ModifyTreeCtrlStyleEx(DWORD dwRemoveEx, DWORD dwAddEx, BOOL bRedraw) {
     spdlog::debug("{} this={} dwRemoveEx={} dwAddEx={} bRedraw={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemoveEx, dwAddEx, bRedraw);
     m_dwTreeCtrlStyleEx = (m_dwTreeCtrlStyleEx & ~dwRemoveEx) | dwAddEx;
+    UpdateMultiSelectStyle();
     return TRUE;
 }
 
@@ -1265,13 +1332,27 @@ BOOL SEC_TREECLASS::ApplyIconBkColor() {
 
 BOOL SEC_TREECLASS::DeselectAllItems(int iExclude) {
     spdlog::debug("{} this={} iExclude={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), iExclude);
-    // One selection, so clearing it is all there is to deselect and iExclude
-    // has nothing to exclude. See GetFirstSelectedItem.
-    return TreeView_SelectItem(GetSafeHwnd(), nullptr);
+    // iExclude is an index into the flat item list the toolkit kept, which this
+    // control does not have and this class does not build. Every caller in the
+    // editor takes the default of -1, so it has never been asked for; say so if
+    // one ever does rather than silently deselecting the item it wanted kept.
+    if (iExclude >= 0) {
+        spdlog::warn("SEC_TREECLASS::DeselectAllItems: iExclude={} ignored, items here have no index", iExclude);
+    }
+    m_selection.clear();
+    m_hSelAnchor = nullptr;
+    ApplySelection();
+    m_bOwnSelection = true;
+    const BOOL bResult = TreeView_SelectItem(GetSafeHwnd(), nullptr);
+    m_bOwnSelection = false;
+    return bResult;
 }
 
 UINT SEC_TREECLASS::GetSelectedCount() const {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+    if (IsMultiSelect()) {
+        return static_cast<UINT>(m_selection.size());
+    }
     return TreeView_GetSelection(GetSafeHwnd()) != nullptr ? 1 : 0;
 }
 
@@ -1289,6 +1370,351 @@ void SEC_TREECLASS::RecalcScrollBars() {
 CEdit* SEC_TREECLASS::GetEditControl() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return reinterpret_cast<CEdit*>(CWnd::FromHandle(TreeView_GetEditControl(GetSafeHwnd())));
+}
+
+
+// ---- multiple selection ----------------------------------------------------
+//
+// See trcore.h for why the set is kept here rather than asked of the control.
+// Nothing below is traced: these run inside painting and mouse handling, and a
+// line per item would bury the log.
+
+bool SEC_TREECLASS::IsMultiSelect() const {
+    return ( m_dwTreeCtrlStyleEx & TVXS_MULTISEL ) != 0;
+}
+
+bool SEC_TREECLASS::InSelection( HTREEITEM hItem ) const {
+    for ( HTREEITEM hSelected : m_selection ) {
+        if ( hSelected == hItem ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Appends, so the order is whatever the caller added in. SortSelection puts it
+// right, and everything that changes the set calls it before anyone reads.
+void SEC_TREECLASS::SetInSelection( HTREEITEM hItem, bool bSelected ) {
+    if ( hItem == nullptr ) {
+        return;
+    }
+    for ( size_t i = 0; i < m_selection.size(); ++i ) {
+        if ( m_selection[i] == hItem ) {
+            if ( !bSelected ) {
+                m_selection.erase( m_selection.begin() + i );
+            }
+            return;
+        }
+    }
+    if ( bSelected ) {
+        m_selection.push_back( hItem );
+    }
+}
+
+// The order the tree lists its items in, which is the order it would display
+// them in if everything were expanded. Collapsed children are walked too: an
+// item can be selected and then have its parent collapsed, and it is still
+// selected.
+HTREEITEM SEC_TREECLASS::NextInDocumentOrder( HTREEITEM hItem ) const {
+    const HWND hWnd = GetSafeHwnd();
+    if ( hWnd == nullptr ) {
+        return nullptr;
+    }
+    if ( hItem == nullptr ) {
+        return TreeView_GetRoot( hWnd );
+    }
+    if ( const HTREEITEM hChild = TreeView_GetChild( hWnd, hItem ) ) {
+        return hChild;
+    }
+    while ( hItem != nullptr ) {
+        if ( const HTREEITEM hSibling = TreeView_GetNextSibling( hWnd, hItem ) ) {
+            return hSibling;
+        }
+        hItem = TreeView_GetParent( hWnd, hItem );
+    }
+    return nullptr;
+}
+
+// One walk of the tree, keeping the selected items in the order it meets them.
+// An item that has been deleted is not met, so this is also what drops a handle
+// that no longer exists -- OnDeleteItem catches the ordinary case, and this
+// catches anything that removed items without one, such as a tree rebuilt from
+// under this class.
+void SEC_TREECLASS::SortSelection() {
+    if ( m_selection.empty() ) {
+        return;
+    }
+    std::vector<HTREEITEM> ordered;
+    ordered.reserve( m_selection.size() );
+    for ( HTREEITEM hItem = NextInDocumentOrder( nullptr );
+          hItem != nullptr && ordered.size() < m_selection.size();
+          hItem = NextInDocumentOrder( hItem ) ) {
+        if ( InSelection( hItem ) ) {
+            ordered.push_back( hItem );
+        }
+    }
+    m_selection.swap( ordered );
+}
+
+// Collected into a vector first rather than walked with a flag, because either
+// end of the range may come first and a single item is both ends at once.
+void SEC_TREECLASS::SelectRange( HTREEITEM hFirst, HTREEITEM hLast, bool bSelect ) {
+    if ( hFirst == nullptr || hLast == nullptr ) {
+        return;
+    }
+    std::vector<HTREEITEM> order;
+    for ( HTREEITEM hItem = NextInDocumentOrder( nullptr ); hItem != nullptr;
+          hItem = NextInDocumentOrder( hItem ) ) {
+        order.push_back( hItem );
+    }
+    int nFrom = -1;
+    int nTo = -1;
+    for ( size_t i = 0; i < order.size(); ++i ) {
+        if ( order[i] == hFirst ) {
+            nFrom = static_cast<int>( i );
+        }
+        if ( order[i] == hLast ) {
+            nTo = static_cast<int>( i );
+        }
+    }
+    if ( nFrom < 0 || nTo < 0 ) {
+        return;
+    }
+    if ( nFrom > nTo ) {
+        const int nSwap = nFrom;
+        nFrom = nTo;
+        nTo = nSwap;
+    }
+    for ( int i = nFrom; i <= nTo; ++i ) {
+        SetInSelection( order[i], bSelect );
+    }
+    SortSelection();
+}
+
+void SEC_TREECLASS::AddVisibleChildren( HTREEITEM hParent ) {
+    const HWND hWnd = GetSafeHwnd();
+    for ( HTREEITEM hChild = TreeView_GetChild( hWnd, hParent ); hChild != nullptr;
+          hChild = TreeView_GetNextSibling( hWnd, hChild ) ) {
+        SetInSelection( hChild, true );
+        // Visible means displayed, so the walk stops at anything collapsed.
+        if ( ( TreeView_GetItemState( hWnd, hChild, TVIS_EXPANDED ) & TVIS_EXPANDED ) != 0 ) {
+            AddVisibleChildren( hChild );
+        }
+    }
+}
+
+// Make the control's TVIS_SELECTED bits say exactly what m_selection says.
+//
+// Setting the state through TVM_SETITEM does not move the control's caret and
+// does not send a selection notification, which is what makes this safe to call
+// from inside handling one.
+void SEC_TREECLASS::ApplySelection() {
+    const HWND hWnd = GetSafeHwnd();
+    if ( hWnd == nullptr ) {
+        return;
+    }
+    const bool bWasOwn = m_bOwnSelection;
+    m_bOwnSelection = true;
+    for ( HTREEITEM hItem : m_selectionDrawn ) {
+        if ( !InSelection( hItem ) ) {
+            TreeView_SetItemState( hWnd, hItem, 0, TVIS_SELECTED );
+        }
+    }
+    // The control selects its own caret, so an item that has stopped being
+    // selected while staying the caret is not in m_selectionDrawn and still
+    // has to be cleared.
+    if ( const HTREEITEM hCaret = TreeView_GetSelection( hWnd ) ) {
+        if ( !InSelection( hCaret ) ) {
+            TreeView_SetItemState( hWnd, hCaret, 0, TVIS_SELECTED );
+        }
+    }
+    for ( HTREEITEM hItem : m_selection ) {
+        TreeView_SetItemState( hWnd, hItem, TVIS_SELECTED, TVIS_SELECTED );
+    }
+    m_selectionDrawn = m_selection;
+    m_bOwnSelection = bWasOwn;
+}
+
+void SEC_TREECLASS::MoveCaretIntoSelection() {
+    const HWND hWnd = GetSafeHwnd();
+    const HTREEITEM hCaret = TreeView_GetSelection( hWnd );
+    if ( hCaret != nullptr && InSelection( hCaret ) ) {
+        return;
+    }
+    // The nearest selected item, not the first: TreeView_SelectItem scrolls to
+    // what it selects, and taking m_selection.front() would jump the tree back
+    // to the top of the selection every time one item was Ctrl+clicked off.
+    HTREEITEM hTarget = nullptr;
+    if ( hCaret != nullptr ) {
+        bool bPassedCaret = false;
+        for ( HTREEITEM hItem = NextInDocumentOrder( nullptr ); hItem != nullptr;
+              hItem = NextInDocumentOrder( hItem ) ) {
+            if ( hItem == hCaret ) {
+                bPassedCaret = true;
+                if ( hTarget != nullptr ) {
+                    break;      // the last selected item above it will do
+                }
+                continue;
+            }
+            if ( InSelection( hItem ) ) {
+                hTarget = hItem;
+                if ( bPassedCaret ) {
+                    break;      // nothing above it, so the first one below
+                }
+            }
+        }
+    }
+    if ( hTarget == nullptr && !m_selection.empty() ) {
+        hTarget = m_selection.front();
+    }
+    // Null when nothing is selected, which clears the caret, and is what
+    // DeselectAllItems does too. The editor still hears about it: this sends
+    // TVN_SELCHANGED, and OnChildNotify passes it on.
+    m_bOwnSelection = true;
+    TreeView_SelectItem( hWnd, hTarget );
+    m_bOwnSelection = false;
+}
+
+void SEC_TREECLASS::UpdateMultiSelectStyle() {
+    if ( GetSafeHwnd() == nullptr ) {
+        return;
+    }
+    if ( !IsMultiSelect() ) {
+        if ( !m_selection.empty() ) {
+            m_selection.clear();
+            m_hSelAnchor = nullptr;
+            ApplySelection();
+        }
+        return;
+    }
+    ModifyStyle( 0, TVS_SHOWSELALWAYS );
+    // Whatever the control already had selected is the selection, so turning
+    // the style on mid-run does not lose the current item.
+    if ( m_selection.empty() ) {
+        if ( const HTREEITEM hCaret = TreeView_GetSelection( GetSafeHwnd() ) ) {
+            m_selection.assign( 1, hCaret );
+            m_hSelAnchor = hCaret;
+            m_selectionDrawn = m_selection;
+        }
+    }
+}
+
+// Where the modifier keys mean what they mean everywhere else: Ctrl adds one,
+// Shift takes a run, and a plain click starts again.
+//
+// The control has the click first. It takes the focus, moves the caret, decides
+// whether this is the start of a drag or a label edit, and tells the editor
+// through TVN_SELCHANGED -- none of which should be reimplemented here. What it
+// also does is select exactly one item, and everything after the call puts the
+// real selection back over that.
+void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
+    if ( !IsMultiSelect() ) {
+        CWnd::OnLButtonDown( nFlags, point );
+        return;
+    }
+
+    TVHITTESTINFO hitTest = { 0 };
+    hitTest.pt = point;
+    const HTREEITEM hItem = TreeView_HitTest( GetSafeHwnd(), &hitTest );
+    // The expand button, the indent and the space past the last item belong to
+    // the control and change no selection.
+    if ( hItem == nullptr
+         || ( hitTest.flags & ( TVHT_ONITEM | TVHT_ONITEMRIGHT ) ) == 0 ) {
+        CWnd::OnLButtonDown( nFlags, point );
+        return;
+    }
+
+    const bool bCtrl = ( nFlags & MK_CONTROL ) != 0;
+    const bool bShift = ( nFlags & MK_SHIFT ) != 0;
+
+    m_bOwnSelection = true;
+    CWnd::OnLButtonDown( nFlags, point );
+    m_bOwnSelection = false;
+
+    if ( bShift && m_hSelAnchor != nullptr ) {
+        // The anchor stays where it was, so dragging the shifted end back and
+        // forth grows and shrinks one run rather than leaving a trail.
+        m_selection.clear();
+        SelectRange( m_hSelAnchor, hItem, true );
+    } else if ( bCtrl ) {
+        const bool bWasSelected = InSelection( hItem );
+        SetInSelection( hItem, !bWasSelected );
+        SortSelection();
+        m_hSelAnchor = hItem;
+        if ( bWasSelected ) {
+            MoveCaretIntoSelection();
+        }
+    } else {
+        m_selection.assign( 1, hItem );
+        m_hSelAnchor = hItem;
+    }
+    ApplySelection();
+}
+
+// Where the two notifications this needs are caught, rather than in the message
+// map, and the reason is not a preference.
+//
+// A reflected notification is dispatched through the *most derived* class's
+// message map first, and both trees this matters for install their own:
+// CPCMainTreeControl and CTreeGDBBrowserBase each map TVN_SELCHANGED with a
+// plain ON_NOTIFY_REFLECT, which consumes it. An entry in this class's map
+// would never have run for exactly the two trees that ask for TVXS_MULTISEL.
+//
+// OnChildNotify is the virtual that dispatch goes through, so this sees the
+// notification whatever the derived map does with it afterwards. The set is
+// updated before the base is called, so the editor's own handler -- which is
+// what calls GetFirstSelectedItem -- runs with the selection already right.
+BOOL SEC_TREECLASS::OnChildNotify( UINT message, WPARAM wParam, LPARAM lParam, LRESULT *pLResult ) {
+    if ( message == WM_NOTIFY && lParam != 0 ) {
+        const NMHDR *const pHdr = reinterpret_cast< NMHDR * >( lParam );
+        // Both notifications come in an ANSI and a Unicode form, and the
+        // control sends whichever suits the window it was created as.
+        if ( pHdr->code == TVN_SELCHANGEDA || pHdr->code == TVN_SELCHANGEDW ) {
+            OnTreeSelChanged( pHdr );
+        } else if ( pHdr->code == TVN_DELETEITEMA || pHdr->code == TVN_DELETEITEMW ) {
+            OnTreeDeleteItem( pHdr );
+        }
+    }
+    return CWnd::OnChildNotify( message, wParam, lParam, pLResult );
+}
+
+// A caret move this class did not make: the keyboard, or the editor calling
+// SelectItem. Shift extends from the anchor, which is what Shift with an arrow
+// key means; anything else starts the selection again at the item the caret
+// landed on, which is what a plain arrow key means.
+void SEC_TREECLASS::OnTreeSelChanged( const NMHDR *pNMHDR ) {
+    if ( !IsMultiSelect() || m_bOwnSelection ) {
+        return;
+    }
+    const NMTREEVIEW *const pNotify = reinterpret_cast< const NMTREEVIEW * >( pNMHDR );
+    const HTREEITEM hItem = pNotify->itemNew.hItem;
+    if ( hItem == nullptr ) {
+        return;
+    }
+    if ( ( ::GetKeyState( VK_SHIFT ) & 0x8000 ) != 0 && m_hSelAnchor != nullptr ) {
+        m_selection.clear();
+        SelectRange( m_hSelAnchor, hItem, true );
+    } else {
+        m_selection.assign( 1, hItem );
+        m_hSelAnchor = hItem;
+    }
+    ApplySelection();
+}
+
+// The handle is about to stop existing and ApplySelection would write to it.
+void SEC_TREECLASS::OnTreeDeleteItem( const NMHDR *pNMHDR ) {
+    const NMTREEVIEW *const pNotify = reinterpret_cast< const NMTREEVIEW * >( pNMHDR );
+    const HTREEITEM hItem = pNotify->itemOld.hItem;
+    SetInSelection( hItem, false );
+    for ( size_t i = 0; i < m_selectionDrawn.size(); ++i ) {
+        if ( m_selectionDrawn[i] == hItem ) {
+            m_selectionDrawn.erase( m_selectionDrawn.begin() + i );
+            break;
+        }
+    }
+    if ( hItem == m_hSelAnchor ) {
+        m_hSelAnchor = nullptr;
+    }
 }
 
 
