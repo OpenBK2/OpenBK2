@@ -51,6 +51,32 @@ CModelEditor::CModelEditor() : pModelState( 0 ), nModelToolbarID( 0xFFFFFFFF ), 
 }
 
 
+void CModelEditor::ResetGUI( bool bActive )
+{
+    const CModelEditorSettings defaults;
+    editorSettings.bShowTool = defaults.bShowTool;
+    editorSettings.bShowToolbar = defaults.bShowToolbar;
+    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+    // The model and unit-stats views share controls but have separate profiles.
+    // Patch both profiles so switching objects cannot bring back old visibility.
+    for ( const char *profile : { "Model", "UnitStats" } )
+    {
+        CModelEditorSettings saved;
+        if ( std::string( profile ) == "UnitStats" )
+            saved.bDrawAnimations = saved.bDrawTerrain = false;
+        pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+        saved.bShowTool = defaults.bShowTool;
+        saved.bShowToolbar = defaults.bShowToolbar;
+        pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+    }
+    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+    if ( pwndTool )
+        pFrame->ShowControlBar( pwndTool, bActive && editorSettings.bShowTool, true );
+    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowToolbar, true );
+}
+
+
 void CModelEditor::CreateControls()
 {
 	NHPTimer::STime time = 0;

@@ -75,6 +75,22 @@ void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 	}
 }
 
+void CBuildingEditor::ResetGUI( bool bActive )
+{
+    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+    if ( !bActive )
+        pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+    // Copy only GUI fields from the defaults, preserving all editing settings.
+    const CBuildingRPGStatsEditorSettings defaults;
+    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+    pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+
+    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+    if ( pwndShortcutBar )
+        pFrame->ShowControlBar( pwndShortcutBar, bActive && editorSettings.bShowShortcutBar, true );
+}
+
+
 void CBuildingEditor::CreateControls()
 {
 	unsigned nID = ID_BUILDING_EDITOR_DW;

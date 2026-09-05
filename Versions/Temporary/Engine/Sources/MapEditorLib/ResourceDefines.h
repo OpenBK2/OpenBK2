@@ -57,6 +57,9 @@
 
 #define ID_TOOLS_CUSTOMIZE													920
 
+// Shared frame command, also present in the module-specific View menus.
+#define ID_VIEW_RESET_GUI 921
+
 #define ID_HELP_CONTENTS														930
 #define ID_HELP_ABOUT																931
 

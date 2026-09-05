@@ -363,6 +363,16 @@ void CEditorContainer::PostCreateControls()
 }
 
 
+void CEditorContainer::ResetGUI()
+{
+    IEditor *pActive = GetActiveEditor();
+    // Inactive editors retain default visibility for their next activation,
+    // while their controls stay hidden in the current editor.
+    for ( auto &entry : editorMap )
+        entry.second->ResetGUI( entry.second == pActive );
+}
+
+
 void CEditorContainer::PreDestroyControls()
 {
 	for ( CEditorMap::iterator itEditor = editorMap.begin(); itEditor != editorMap.end(); ++itEditor )

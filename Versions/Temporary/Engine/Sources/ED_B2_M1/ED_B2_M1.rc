@@ -1070,6 +1070,8 @@ BEGIN
                                                 ID_VIEW_DW_PROPERTY_BROWSER
         , GRAYED
         MENUITEM "&Log Window\tCtrl+Shift+L",   ID_VIEW_DW_LOG, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Reset GUI",                 ID_VIEW_RESET_GUI
     END
     POPUP "&Tools"
     BEGIN
@@ -1204,6 +1206,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "M&inimap Window",             ID_MI_VIEW_MINIMAP, GRAYED
         MENUITEM "Tools &Window",               ID_MI_VIEW_TOOL, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Reset GUI",                 ID_VIEW_RESET_GUI
     END
     POPUP "&Map"
     BEGIN
@@ -1353,6 +1357,8 @@ BEGIN
         MENUITEM "Mo&del Toolbar",              ID_MODEL_VIEW_TOOLBAR
         , GRAYED
         MENUITEM "Model Tool &Window",          ID_MODEL_VIEW_TOOL, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Reset GUI",                 ID_VIEW_RESET_GUI
     END
     POPUP "Model"
     BEGIN

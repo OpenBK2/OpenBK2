@@ -114,10 +114,9 @@ inline void MoveBarToRow( CDockBar *pDockBar, CControlBar *pBar, int nRow )
 // are both meant to share one column on the left, half its height each, and
 // instead they took a column each and 530 pixels of the frame with them.
 //
-// The two sizing numbers go to the bar, because a docked bar is the only thing
-// that is ever asked how big it is -- see SECControlBar::CalcDynamicLayout.
-// nHeight is the thickness across the docked edge, fPctWidth the share of that
-// edge's length.
+// The pane stores the requested thickness and weight. SECPaneDockBar shares
+// the available edge among visible panes in the row using those weights.
+// CalcDynamicLayout supplies independent docked and floating drag previews.
 //
 // nRow picks which of the dock bar's rows to join, counting from the first one
 // that has anything in it, and a row past the end gets a row of its own. nCol

@@ -18,6 +18,9 @@
 // Destructor()
 struct IEditor : public CObjectBase
 {
+    // Restore GUI visibility without recreating the document or editing state.
+    virtual void ResetGUI( bool bActive ) {}
+
 	// передается в View
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) = 0;
 	// получить тип child frame
@@ -51,6 +54,8 @@ struct IEditor : public CObjectBase
 
 struct IEditorContainer : public CObjectBase
 {
+    virtual void ResetGUI() = 0;
+
 	enum { tidTypeID = 0x1408A3C0 };
 	//
 	// Проверить на существование редактора

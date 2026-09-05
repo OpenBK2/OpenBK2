@@ -4,11 +4,16 @@
 // For the AFX_IDW_DOCKBAR_ ids, which name the frame's four dock bars, and for
 // CDockContext, which is what drags a bar out of one.
 #include <afxpriv.h>
+#include <algorithm>
 
 
 BEGIN_MESSAGE_MAP( SECControlBar, CControlBar )
+    ON_WM_SIZE()
     ON_WM_LBUTTONDOWN()
     ON_WM_LBUTTONUP()
+    ON_WM_LBUTTONDBLCLK()
+    ON_WM_SETCURSOR()
+    ON_WM_CAPTURECHANGED()
 END_MESSAGE_MAP()
 
 #include <boost/current_function.hpp>
@@ -17,38 +22,20 @@ END_MESSAGE_MAP()
 #include "logging.h"
 
 
-// What a docking window gets when nothing has told it how big to be. Wide
-// enough to read a tree or a log in, narrow enough not to take the frame.
-namespace { const int DEFAULT_THICKNESS = 120; }
-
 namespace
 {
-
-// How much of the frame one of its dock bars is currently taking across its
-// own direction. Zero for a dock bar that does not exist or holds nothing,
-// which is what an empty edge should contribute.
-int DockBarExtent( CFrameWnd *pFrame, UINT nDockBarID )
-{
-    if ( pFrame == nullptr )
-    {
-        return 0;
-    }
-    CControlBar *const pDockBar = pFrame->GetControlBar( nDockBarID );
-    if ( pDockBar == nullptr || pDockBar->GetSafeHwnd() == nullptr )
-    {
-        return 0;
-    }
-    CRect rectDockBar;
-    pDockBar->GetWindowRect( &rectDockBar );
-    return ( nDockBarID == AFX_IDW_DOCKBAR_TOP || nDockBarID == AFX_IDW_DOCKBAR_BOTTOM )
-        ? rectDockBar.Height() : rectDockBar.Width();
-}
-
+const int DEFAULT_THICKNESS = 120;
+const int MIN_PANE_SIZE = 64;
+const int RESIZE_STRIP = 5;
+const int MAX_PANE_SIZE = 16384;
 }
 
 BOOL SECControlBar::m_bOptimizedRedrawEnabled = FALSE;
 
-SECControlBar::SECControlBar() {
+SECControlBar::SECControlBar()
+    : m_szDockHorz(240, DEFAULT_THICKNESS), m_ptDockHorz(0, 0),
+      m_szDockVert(DEFAULT_THICKNESS, 240), m_szFloat(265, 400) {
+    m_fDockedPctWidth = m_fPctWidth = 1.0f;
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
 
@@ -65,7 +52,7 @@ SECControlBar::SECControlBar() {
 // The dwExStyle these take is the toolkit's own CBRS_EX_ set, the cool look and
 // the gripper, which has nothing to do with the WS_EX_ flags CreateWindowEx
 // wants. Passing it through was asking Windows for whatever those bits happen to
-// mean there. It is dropped: this library draws none of what it selects.
+// mean there. Keep it as toolkit metadata instead of a Win32 extended style.
 BOOL SECControlBar::Create(CWnd* pParentWnd) {
     spdlog::debug("{} this={} pParentWnd={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pParentWnd));
     return Create(pParentWnd, "SECControlBar", WS_CHILD | CBRS_TOP, 0, 0, nullptr);
@@ -77,6 +64,7 @@ BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT n
                   "pParentWnd={} pContext={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), SafeString( lpszClassName ), SafeString( lpszWindowName ), nID, dwStyle, dwExStyle,
                   rect.left, rect.top, rect.right, rect.bottom, spdlog::fmt_lib::ptr(pParentWnd), spdlog::fmt_lib::ptr(pContext));
     m_dwStyle = dwStyle & CBRS_ALL;
+    m_dwExStyle = dwExStyle;
     if (lpszClassName == nullptr) {
         lpszClassName = AfxRegisterWndClass(CS_DBLCLKS, ::LoadCursor(nullptr, IDC_ARROW),
                                             reinterpret_cast<HBRUSH>(COLOR_3DFACE + 1));
@@ -105,14 +93,12 @@ BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwSty
 // CControlBar's painting uses, so the contents land exactly inside the borders
 // the bar draws.
 void SECControlBar::GetInsideRect(CRect& rectInside) const {
-    spdlog::debug("{} this={} rectInside.left={} rectInside.top={} rectInside.right={} rectInside.bottom={}",
-        BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), rectInside.left, rectInside.top, rectInside.right, rectInside.bottom);
+    // rectInside is an output parameter and may not have been initialized.
     if (GetSafeHwnd() == nullptr) {
         rectInside.SetRectEmpty();
         return;
     }
-    GetClientRect(&rectInside);
-    CalcInsideRect(rectInside, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
+    GetPanelRect(rectInside);
     // The gripper comes out of the same rectangle the contents are given, which
     // is what makes it cost nothing elsewhere: CDefaultDockingWindow::OnSize
     // asks for this and positions its contents in it, so the pane's contents
@@ -142,9 +128,8 @@ BOOL SECControlBar::GetGripperRects(CRect *pRectGripper, CRect *pRectClose) cons
         return FALSE;
     }
     CRect rect;
-    GetClientRect(&rect);
-    CalcInsideRect(rect, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
-    rect.bottom = rect.top + nHeight;
+    GetPanelRect(rect);
+    rect.bottom = (std::min)(rect.bottom, rect.top + nHeight);
     if (rect.IsRectEmpty()) {
         return FALSE;
     }
@@ -167,9 +152,16 @@ BOOL SECControlBar::GetGripperRects(CRect *pRectGripper, CRect *pRectClose) cons
 // the close half of that, because closing is what the editor overrides
 // OnGripperClose for; there is nothing behind expand in this editor.
 void SECControlBar::DoPaint(CDC *pDC) {
+    if (pDC == nullptr) return;
     CControlBar::DoPaint(pDC);
+    CRect thickness, divider;
+    GetResizeRects(thickness, divider);
+    if (!thickness.IsRectEmpty())
+        pDC->Draw3dRect(thickness, ::GetSysColor(COLOR_3DHILIGHT), ::GetSysColor(COLOR_3DSHADOW));
+    if (!divider.IsRectEmpty())
+        pDC->Draw3dRect(divider, ::GetSysColor(COLOR_3DHILIGHT), ::GetSysColor(COLOR_3DSHADOW));
     CRect rectGripper;
-    if (pDC == nullptr || !GetGripperRects(&rectGripper, &m_rcGripperCloseButton)) {
+    if (!GetGripperRects(&rectGripper, &m_rcGripperCloseButton)) {
         return;
     }
     pDC->FillSolidRect(&rectGripper, ::GetSysColor(COLOR_3DFACE));
@@ -199,7 +191,23 @@ void SECControlBar::DoPaint(CDC *pDC) {
         DFCS_CAPTIONCLOSE | (m_bGripperCloseDown ? DFCS_PUSHED : 0));
 }
 
+void SECControlBar::OnSize(UINT nType, int cx, int cy) {
+    CControlBar::OnSize(nType, cx, cy);
+    // MFC invalidates only the changed borders when a bar is resized. Our close
+    // button moves with the caption's right edge, so copied client pixels can
+    // leave old X buttons behind. Repaint the entire caption at its new size.
+    CRect caption;
+    if (GetGripperRects(&caption, nullptr))
+        InvalidateRect(&caption, FALSE);
+}
+
 void SECControlBar::OnLButtonDown(UINT nFlags, CPoint point) {
+    CRect thickness, divider;
+    GetResizeRects(thickness, divider);
+    if (thickness.PtInRect(point) || divider.PtInRect(point)) {
+        TrackDockResize(!thickness.PtInRect(point), point);
+        return;
+    }
     CRect rectGripper;
     CRect rectClose;
     if (!GetGripperRects(&rectGripper, &rectClose) || !rectGripper.PtInRect(point)) {
@@ -227,9 +235,9 @@ void SECControlBar::OnLButtonUp(UINT nFlags, CPoint point) {
         return;
     }
     m_bGripperCloseDown = FALSE;
-    ::ReleaseCapture();
+    if (GetCapture() == this) ::ReleaseCapture();
     CRect rectClose;
-    GetGripperRects(nullptr, &rectClose);
+    if (!GetGripperRects(nullptr, &rectClose)) return;
     InvalidateRect(&rectClose);
     // Released somewhere else means the click was taken back, the way any
     // button behaves.
@@ -244,6 +252,228 @@ void SECControlBar::OnLButtonUp(UINT nFlags, CPoint point) {
     if (CFrameWnd *const pFrame = GetDockingFrame()) {
         pFrame->ShowControlBar(this, FALSE, FALSE);
     }
+}
+
+// m_arrBars also contains small integer placeholders for floating bars. Test
+// the full pointer-sized value before casting; LOWORD(pointer) is unsafe on x64.
+std::vector<SECControlBar*> SECControlBar::GetRowBars() const {
+    std::vector<SECControlBar*> row;
+    if (m_pDockBar == nullptr || IsFloating()) return row;
+    bool found = false;
+    for (INT_PTR i = 0; i < m_pDockBar->m_arrBars.GetSize(); ++i) {
+        void* entry = m_pDockBar->m_arrBars[i];
+        if (entry == nullptr) {
+            if (found) break;
+            row.clear();
+        } else if (reinterpret_cast<UINT_PTR>(entry) > 0xffff) {
+            auto* pane = dynamic_cast<SECControlBar*>(static_cast<CControlBar*>(entry));
+            if (pane != nullptr && pane->IsVisible()) {
+                row.push_back(pane);
+                if (pane == this) found = true;
+            }
+        }
+    }
+    if (!found) row.clear();
+    return row;
+}
+
+void SECControlBar::GetResizeRects(CRect& thickness, CRect& divider) const {
+    thickness.SetRectEmpty();
+    divider.SetRectEmpty();
+    if (GetSafeHwnd() == nullptr || m_pDockBar == nullptr || IsFloating()) return;
+    CRect rect;
+    GetClientRect(rect);
+    CalcInsideRect(rect, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
+    if (rect.Width() < RESIZE_STRIP * 2 || rect.Height() < RESIZE_STRIP * 2) return;
+    thickness = rect;
+    switch (m_dwStyle & CBRS_ALIGN_ANY) {
+    case CBRS_ALIGN_LEFT: thickness.left = thickness.right - RESIZE_STRIP; break;
+    case CBRS_ALIGN_RIGHT: thickness.right = thickness.left + RESIZE_STRIP; break;
+    case CBRS_ALIGN_TOP: thickness.top = thickness.bottom - RESIZE_STRIP; break;
+    case CBRS_ALIGN_BOTTOM: thickness.bottom = thickness.top + RESIZE_STRIP; break;
+    default: thickness.SetRectEmpty(); return;
+    }
+    const auto row = GetRowBars();
+    const auto it = std::find(row.begin(), row.end(), this);
+    if (it != row.end() && it + 1 != row.end()) {
+        divider = rect;
+        if (m_dwStyle & CBRS_ORIENT_HORZ) divider.left = divider.right - RESIZE_STRIP;
+        else divider.top = divider.bottom - RESIZE_STRIP;
+    }
+}
+
+void SECControlBar::GetPanelRect(CRect& rect) const {
+    GetClientRect(rect);
+    CalcInsideRect(rect, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
+    CRect thickness, divider;
+    GetResizeRects(thickness, divider);
+    if (!thickness.IsRectEmpty()) {
+        switch (m_dwStyle & CBRS_ALIGN_ANY) {
+        case CBRS_ALIGN_LEFT: rect.right -= RESIZE_STRIP; break;
+        case CBRS_ALIGN_RIGHT: rect.left += RESIZE_STRIP; break;
+        case CBRS_ALIGN_TOP: rect.bottom -= RESIZE_STRIP; break;
+        case CBRS_ALIGN_BOTTOM: rect.top += RESIZE_STRIP; break;
+        }
+    }
+    if (!divider.IsRectEmpty()) {
+        if (m_dwStyle & CBRS_ORIENT_HORZ) rect.right -= RESIZE_STRIP;
+        else rect.bottom -= RESIZE_STRIP;
+    }
+    rect.right = (std::max)(rect.left, rect.right);
+    rect.bottom = (std::max)(rect.top, rect.bottom);
+}
+
+BOOL SECControlBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) {
+    if (pWnd == this && nHitTest == HTCLIENT) {
+        CPoint point;
+        ::GetCursorPos(&point);
+        ScreenToClient(&point);
+        CRect thickness, divider;
+        GetResizeRects(thickness, divider);
+        const bool across = thickness.PtInRect(point) != FALSE;
+        if (across || divider.PtInRect(point)) {
+            const bool horz = (m_dwStyle & CBRS_ORIENT_HORZ) != 0;
+            ::SetCursor(::LoadCursor(nullptr, across == horz ? IDC_SIZENS : IDC_SIZEWE));
+            return TRUE;
+        }
+    }
+    return CControlBar::OnSetCursor(pWnd, nHitTest, message);
+}
+
+void SECControlBar::OnCaptureChanged(CWnd* pWnd) {
+    if (m_bGripperCloseDown) {
+        m_bGripperCloseDown = FALSE;
+        Invalidate(FALSE);
+    }
+    CControlBar::OnCaptureChanged(pWnd);
+}
+
+void SECControlBar::OnLButtonDblClk(UINT nFlags, CPoint point) {
+    CRect gripper, close;
+    if (m_pDockContext != nullptr && GetGripperRects(&gripper, &close)
+        && gripper.PtInRect(point) && !close.PtInRect(point)) {
+        m_pDockContext->ToggleDocking();
+        return;
+    }
+    CWnd::OnLButtonDblClk(nFlags, point);
+}
+
+// Resize the entire row's thickness, or trade length with the next pane. Work
+// from the original rectangles on every move so live layout cannot accumulate
+// rounding error. Escape, right-click and lost capture restore the original.
+void SECControlBar::TrackDockResize(bool bDivider, CPoint point) {
+    CFrameWnd* frame = m_pDockSite;
+    auto row = GetRowBars();
+    auto it = std::find(row.begin(), row.end(), this);
+    if (frame == nullptr || it == row.end() || GetCapture() != nullptr) return;
+    const size_t index = it - row.begin();
+    if (bDivider && index + 1 == row.size()) return;
+    const bool horz = (m_dwStyle & CBRS_ORIENT_HORZ) != 0;
+    struct SavedSize { CSize horizontal, vertical; float weight; };
+    std::vector<SavedSize> saved;
+    for (auto* pane : row)
+        saved.push_back({pane->m_szDockHorz, pane->m_szDockVert, pane->m_fDockedPctWidth});
+    CRect original, next(0, 0, 0, 0);
+    GetWindowRect(original);
+    if (bDivider) row[index + 1]->GetWindowRect(next);
+    const int firstLength = horz ? original.Width() : original.Height();
+    const int pairLength = firstLength + (horz ? next.Width() : next.Height());
+    if (bDivider && pairLength < 2) return;
+    const int originalThickness = horz ? original.Height() : original.Width();
+    CRect frameRect;
+    frame->GetClientRect(frameRect);
+    int maxThickness = (horz ? frameRect.Height() : frameRect.Width()) - 96;
+    // Limit growth to the space actually left in the document area.
+    CRect document;
+    frame->RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, CWnd::reposQuery, &document);
+    maxThickness = (std::min)(maxThickness,
+        originalThickness + (horz ? document.Height() : document.Width()) - 96);
+    maxThickness = (std::max)(MIN_PANE_SIZE, maxThickness);
+    ClientToScreen(&point);
+    SetCapture();
+    bool accepted = false;
+    bool closePending = false;
+    MSG msg = {};
+    while (GetCapture() == this) {
+        const BOOL result = ::GetMessage(&msg, nullptr, 0, 0);
+        if (result <= 0) {
+            if (result == 0) ::PostQuitMessage((int)msg.wParam);
+            break;
+        }
+        // Delay a queued close until the tracked windows are no longer in use.
+        if (msg.message == WM_CLOSE) { closePending = true; break; }
+        if (msg.message == WM_LBUTTONUP) { accepted = true; break; }
+        if (msg.message == WM_CANCELMODE || msg.message == WM_RBUTTONDOWN
+            || (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)) break;
+        if (msg.message == WM_MOUSEMOVE) {
+            CPoint current;
+            ::GetCursorPos(&current);
+            if (bDivider) {
+                const int delta = horz ? current.x - point.x : current.y - point.y;
+                const int minimum = (std::min)(MIN_PANE_SIZE, pairLength / 2);
+                const int length = (std::clamp)(firstLength + delta, minimum, pairLength - minimum);
+                const float weight = saved[index].weight + saved[index + 1].weight;
+                row[index]->m_fDockedPctWidth = weight * length / pairLength;
+                row[index + 1]->m_fDockedPctWidth = weight * (pairLength - length) / pairLength;
+            } else {
+                int delta = horz ? current.y - point.y : current.x - point.x;
+                if (m_dwStyle & (CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM)) delta = -delta;
+                const int thickness = (std::clamp)(originalThickness + delta, MIN_PANE_SIZE, maxThickness);
+                for (auto* pane : row) {
+                    if (horz) pane->m_szDockHorz.cy = thickness;
+                    else pane->m_szDockVert.cx = thickness;
+                }
+            }
+            frame->RecalcLayout();
+        } else if (msg.message < WM_KEYFIRST || msg.message > WM_KEYLAST) {
+            ::DispatchMessage(&msg);
+        }
+    }
+    if (GetCapture() == this) ::ReleaseCapture();
+    if (!accepted) {
+        for (size_t i = 0; i < row.size(); ++i) {
+            row[i]->m_szDockHorz = saved[i].horizontal;
+            row[i]->m_szDockVert = saved[i].vertical;
+            row[i]->m_fDockedPctWidth = saved[i].weight;
+        }
+    }
+    for (auto* pane : row) pane->m_fPctWidth = pane->m_fDockedPctWidth;
+    frame->RecalcLayout();
+    if (closePending) ::PostMessage(msg.hwnd, msg.message, msg.wParam, msg.lParam);
+}
+
+void SECControlBar::LoadPanelState(LPCTSTR profile) {
+    CString section;
+    section.Format(_T("%s-Pane-%u"), profile, (UINT)GetDlgCtrlID());
+    CWinApp* app = AfxGetApp();
+    if (app->GetProfileInt(section, _T("Version"), 0) != 1) return;
+    auto dimension = [&](LPCTSTR key, int fallback) {
+        const UINT value = app->GetProfileInt(section, key, fallback);
+        return value >= MIN_PANE_SIZE && value <= MAX_PANE_SIZE ? (int)value : fallback;
+    };
+    m_szDockHorz.cx = dimension(_T("HorzLength"), m_szDockHorz.cx);
+    m_szDockHorz.cy = dimension(_T("HorzThickness"), m_szDockHorz.cy);
+    m_szDockVert.cx = dimension(_T("VertThickness"), m_szDockVert.cx);
+    m_szDockVert.cy = dimension(_T("VertLength"), m_szDockVert.cy);
+    m_szFloat.cx = dimension(_T("FloatWidth"), m_szFloat.cx);
+    m_szFloat.cy = dimension(_T("FloatHeight"), m_szFloat.cy);
+    const UINT weight = app->GetProfileInt(section, _T("Weight"), 0);
+    if (weight >= 1 && weight <= 1000000)
+        m_fDockedPctWidth = m_fPctWidth = weight / 1000000.0f;
+}
+
+void SECControlBar::SavePanelState(LPCTSTR profile) const {
+    CString section;
+    section.Format(_T("%s-Pane-%u"), profile, (UINT)GetDlgCtrlID());
+    CWinApp* app = AfxGetApp();
+    app->WriteProfileInt(section, _T("HorzLength"), m_szDockHorz.cx);
+    app->WriteProfileInt(section, _T("HorzThickness"), m_szDockHorz.cy);
+    app->WriteProfileInt(section, _T("VertThickness"), m_szDockVert.cx);
+    app->WriteProfileInt(section, _T("VertLength"), m_szDockVert.cy);
+    app->WriteProfileInt(section, _T("FloatWidth"), m_szFloat.cx);
+    app->WriteProfileInt(section, _T("FloatHeight"), m_szFloat.cy);
+    app->WriteProfileInt(section, _T("Weight"), (int)(m_fDockedPctWidth * 1000000.0f + 0.5f));
+    app->WriteProfileInt(section, _T("Version"), 1);
 }
 
 BOOL SECControlBar::IsMDIChild() const {
@@ -276,22 +506,25 @@ BOOL SECControlBar::GetBarSizePos(int& nRow,int& nCol,int& nDockbarID,float& fPc
     return FALSE;
 }
 
-// Not a stub. Doing nothing here left every docking window in the editor
-// created but never placed, which is what an empty main frame looks like.
-//
-// MFC already does this: CControlBar::EnableDocking records the styles the bar
-// will accept and gives it a CDockContext, which is what CFrameWnd::DockControlBar
-// then needs. The toolkit's version differs in going through NewDockContext so
-// that a derived bar can supply its own; that stays a stub, and MFC makes the
-// context itself.
+// Create our context before the bar is first docked. Deleting a dock context
+// removes its bar from the dock array, so never replace one on a live docked bar.
 void SECControlBar::EnableDocking(DWORD dwDockStyle) {
-    spdlog::debug("{} this={} dwDockStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwDockStyle);
+    if (m_pDockContext == nullptr) {
+        m_pDockSite = GetParentFrame();
+        m_pDockContext = NewDockContext();
+    }
     CControlBar::EnableDocking(dwDockStyle);
 }
 
-SECDockContext * SECControlBar::NewDockContext() {
-    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    return nullptr;
+SECDockContext* SECControlBar::NewDockContext() {
+    return new SECDockContext(this);
+}
+
+void SECDockContext::StartResize(int nHitTest, CPoint pt) {
+    auto* pane = static_cast<SECControlBar*>(m_pBar);
+    pane->m_bFloatSizing = true;
+    CDockContext::StartResize(nHitTest, pt);
+    pane->m_bFloatSizing = false;
 }
 
 void SECControlBar::SetExBarStyle(DWORD dwExStyle, BOOL bAutoUpdate) {
@@ -339,120 +572,41 @@ BOOL SECControlBar::VerifyUniqueSpecificBarID(CFrameWnd* pFrameWnd, UINT nBarID)
     return pFrameWnd != nullptr && pFrameWnd->GetControlBar(nBarID) == nullptr;
 }
 
-// How much room the frame should give this bar. Returning nothing is what a
-// stub can say and what an invisible docking window looks like.
-//
-// The toolkit measures a docking window from whatever is docked inside it, and
-// this library does not know what that is. What it does know is the size the
-// frame asked for when it docked the bar, which DockControlBarEx puts in
-// m_nMRUWidth, the member MFC keeps a dynamic bar's size in. So that is the
-// thickness, and the bar stretches along the edge it is docked to, which is
-// what every dockable bar does.
-//
-// LM_HORZ says the bar lies along the top or bottom, so its length is cx and
-// its thickness cy, and the other way round when it is on the left or right.
-// A bar that is not CBRS_SIZE_DYNAMIC is measured through this one instead, and
-// CControlBar::CalcFixedLayout answers 0 for anything that has not overridden
-// it. The editor's shortcut bars are docked that way and came out 0 wide.
+// Docked dimensions and floating dimensions must be independent: MFC's MRU
+// width belongs to floating toolbars and cannot also store a pane's thickness.
 CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
-    spdlog::debug("{} this={} bStretch={} bHorz={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bStretch, bHorz);
-    return CalcDynamicLayout(-1, (bStretch ? LM_STRETCH : 0) | (bHorz ? LM_HORZ : 0));
+    return CalcDynamicLayout(-1, (bStretch ? LM_STRETCH : 0) |
+        (bHorz ? LM_HORZ | LM_HORZDOCK : LM_VERTDOCK));
 }
 
-void SECControlBar::SetDockedLayout( int nThickness, float fPctLength ) {
-    spdlog::debug("{} this={} nThickness={} fPctLength={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nThickness, fPctLength);
+void SECControlBar::SetDockedLayout(int nThickness, float fPctLength) {
     if (nThickness > 0) {
-        // m_nMRUWidth is MFC's own "how wide was this bar last", and it is what
-        // CControlBarInfo saves and restores, so the thickness lives there
-        // rather than in a member of our own. A layout read back from the
-        // profile then lands in the same place this does.
-        m_nMRUWidth = static_cast<UINT>( nThickness );
+        m_szDockHorz.cy = m_szDockVert.cx =
+            (std::clamp)(nThickness, MIN_PANE_SIZE, MAX_PANE_SIZE);
     }
-    m_fDockedPctLength = fPctLength;
+    m_fDockedPctWidth = m_fPctWidth =
+        fPctLength > 0.0f && fPctLength <= 1.0f ? fPctLength : 1.0f;
 }
 
-// How long this bar wants to be along the edge it is docked to.
-//
-// What the user last resized it to if they have, otherwise the share
-// DockControlBarEx was given, otherwise its own thickness.
-int SECControlBar::CalcDockedAlong(DWORD dwMode) const {
-    const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
-    if (m_nDockedAlong > 0) {
-        return m_nDockedAlong;
-    }
-    if (m_fDockedPctLength <= 0.0f) {
-        return nThickness;
-    }
-    CFrameWnd *const pFrame = const_cast<SECControlBar *>(this)->GetDockingFrame();
-    if (pFrame == nullptr) {
-        return nThickness;
-    }
-    CRect rectFrame;
-    pFrame->GetClientRect( &rectFrame );
-    int nEdge;
-    if ((dwMode & LM_HORZ) != 0) {
-        nEdge = rectFrame.Width();
-    } else {
-        nEdge = rectFrame.Height()
-            - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_TOP )
-            - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_BOTTOM );
-    }
-    const int nShare = static_cast<int>( nEdge * m_fDockedPctLength );
-    return (nShare > 0) ? nShare : nThickness;
-}
-
-// The mode flags decide, not nLength.
-//
-// This read nLength first and used it whenever it was not negative, and
-// CDockContext::StartDrag asks all three of its questions with nLength *zero*:
-//
-//     CalcDynamicLayout( 0, LM_HORZ | LM_HORZDOCK )   how big docked across
-//     CalcDynamicLayout( 0, LM_VERTDOCK )             how big docked down
-//     CalcDynamicLayout( 0, LM_HORZ | LM_MRUWIDTH )   how big floating
-//
-// so every one of them answered zero, every drag rectangle was a line, and
-// dropping the bar docked it at the size it had just claimed. Doing it twice
-// shrank it twice. The zero is not a length, it is "you tell me" -- the flags
-// are the question and nLength only means anything without them.
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
-    spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
-    const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
+    if (dwMode & LM_HORZDOCK) return m_szDockHorz;
+    if (dwMode & LM_VERTDOCK) return m_szDockVert;
+    if (dwMode & LM_MRUWIDTH) return m_szFloat;
 
-    // A finished resize. This is the only place a new size is meant to stick,
-    // which is why resizing a bar never used to survive anything.
-    if ((dwMode & LM_COMMIT) != 0 && nLength > 0) {
-        m_nDockedAlong = nLength;
-        m_nFloatWidth = nLength;
+    if (m_bFloatSizing && (dwMode & LM_COMMIT)) {
+        // CDockContext::EndResize passes width only, even for a height drag.
+        // Its accepted rectangle contains both dimensions (also screen-clamped).
+        m_szFloat = m_pDockContext->m_rectDragVert.Size();
+        m_nMRUWidth = m_szFloat.cx;
+        return m_szFloat;
     }
-    // Docked: the length is this bar's business and nLength is not being asked.
-    if ((dwMode & LM_HORZDOCK) != 0) {
-        return CSize( CalcDockedAlong( LM_HORZ ), nThickness );
+    if (m_bFloatSizing && nLength >= 0) {
+        CSize size = m_szFloat;
+        if (dwMode & LM_LENGTHY) size.cy = (std::clamp)(nLength, MIN_PANE_SIZE, MAX_PANE_SIZE);
+        else size.cx = (std::clamp)(nLength, MIN_PANE_SIZE, MAX_PANE_SIZE);
+        return size;
     }
-    if ((dwMode & LM_VERTDOCK) != 0) {
-        return CSize( nThickness, CalcDockedAlong( 0 ) );
-    }
-    // Floating: the size it was last left at, and something usable if never.
-    if ((dwMode & LM_MRUWIDTH) != 0) {
-        const int nWidth = (m_nFloatWidth > 0) ? m_nFloatWidth : nThickness;
-        const int nHeight = (m_nDockedAlong > 0) ? m_nDockedAlong : (nThickness * 2);
-        return CSize( nWidth, nHeight );
-    }
-
-    int nAlong;
-    if ((dwMode & LM_STRETCH) != 0) {
-        nAlong = 32767;
-    } else if (nLength > 0) {
-        // An interactive resize in progress: follow the pointer, but do not
-        // remember it until LM_COMMIT says the user let go.
-        nAlong = nLength;
-    } else {
-        // Nothing said how long. CDockBar::CalcFixedLayout gets here, asking
-        // with -1 and no dock flag, and the answer is the same one a docked bar
-        // gives: what the user last resized this to, or the share
-        // DockControlBarEx was given.
-        nAlong = CalcDockedAlong( dwMode );
-    }
-    return (dwMode & LM_HORZ) != 0 ? CSize(nAlong, nThickness) : CSize(nThickness, nAlong);
+    return IsFloating() ? m_szFloat : ((dwMode & LM_HORZ) ? m_szDockHorz : m_szDockVert);
 }
 
 void SECControlBar::OnBarBeginDock() {
@@ -480,8 +634,8 @@ void SECControlBar::OnBarEndMDIFloat() {
 }
 
 BOOL SECControlBar::OnGripperClose() {
-    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
-    return FALSE;
+    // Hide the pane; the editor's View commands can show the same window again.
+    return TRUE;
 }
 
 BOOL SECControlBar::OnGripperExpand() {

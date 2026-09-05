@@ -87,6 +87,7 @@ protected:
 	afx_msg void OnToolsCustomize();
 	//
 	afx_msg void OnViewToolBar( unsigned nCommandID );
+	afx_msg void OnResetGUI();
 	afx_msg void OnUpdateViewToolBar( CCmdUI *pCmdUI );
 	//
 	//afx_msg void OnShowDWGDBBrowser();

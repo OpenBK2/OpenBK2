@@ -1108,6 +1108,7 @@ END
 
 STRINGTABLE 
 BEGIN
+    ID_VIEW_RESET_GUI       "Restore default panels and toolbars\nReset GUI"
     ID_TOOLS_CUSTOMIZE      "Customize toolbars\nCustomize"
 END
 

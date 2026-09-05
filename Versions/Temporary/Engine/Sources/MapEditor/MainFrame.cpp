@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, SECWorkbook)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_DW_PROPERTY_BROWSER, OnUpdateShowDWPropertyBrowser)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_DW_LOG, OnUpdateShowDWLog)
 	//
+	ON_COMMAND(ID_VIEW_RESET_GUI, OnResetGUI)
 	ON_COMMAND(ID_TOOLS_CUSTOMIZE, OnToolsCustomize)
 	//
 	ON_COMMAND(ID_HELP_CONTENTS, OnHelpContents)
@@ -396,18 +397,16 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//Грузим расположение панелей
 	CString strRegistryKeyName;
 	strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
-	// The toolbars first, then the layout that positions them. This order is
-	// the point: SECToolBarManager::LoadState is what actually creates the nine
-	// toolbars, and until it has run they are not windows and not in the
-	// frame's control bar list, so LoadBarState cannot find them. It was the
-	// other way round, and the result was that every saved layout was rejected
-	// by BarStateStillFits below -- for want of bar 59392, the File Toolbar --
-	// and thrown away on every single run. Nothing restored anything.
+	// Build toolbar windows before restoring a layout that references their IDs.
 	pToolBarMgr->LoadState( strRegistryKeyName );
+	// Use a fresh profile for pane dimensions; retain older port layouts.
+	strRegistryKeyName += "-Docking-v2";
 	if ( BarStateStillFits( this, strRegistryKeyName ) )
 	{
 		LoadBarState( strRegistryKeyName );
 	}
+	// Module post-create callbacks still hide context-specific panes until
+	// their editor is opened; that editor saves its own visibility settings.
 	// Создаем дополнительные Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 	{
@@ -429,6 +428,13 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	if ( params.bMaximized )
 	{
 		PostMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 );
+	}
+	// Older port layouts saved every toolbar in a separate row. Upgrade only
+	// toolbar placement once, after restoring pane positions and frame size.
+	// SaveState marks the upgrade on normal exit; later starts keep user moves.
+	if ( pApp->GetProfileInt( strRegistryKeyName, "ToolbarLayoutVersion", 0 ) < 1 )
+	{
+		pToolBarMgr->SetDefaultDockState();
 	}
 	SetWindowText( pUserData->constUserData.szApplicationTitle.c_str() );
 	//
@@ -524,8 +530,11 @@ void CMainFrame::OnClose()
 			pApp->GetEditorModules()[nModuleIndex]->ModulePreDestroyControls();
 		}
 		//
+		// Global visibility and all pane positions/sizes survive here. Module
+		// visibility has already been saved by its editor before hiding its panes.
 		CString strRegistryKeyName;
 		strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
+		strRegistryKeyName += "-Docking-v2";
 		SaveBarState( strRegistryKeyName );
 		pToolBarMgr->SaveState( strRegistryKeyName );
 		//Закрываем текущий Child Frame ( если он уже не был закрыт из редактора )
@@ -731,6 +740,29 @@ void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 		pCmdUI->Enable( bEnable );
 		pCmdUI->SetCheck( bChecked );	
 	}
+}
+
+
+void CMainFrame::OnResetGUI()
+{
+    auto *pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager );
+    pToolBarMgr->ResetToolBars();
+    // Core panes are visible by default; retain all existing database browsers.
+    ShowControlBar( &wndLog, true, true );
+    ShowControlBar( &wndPropertyBrowser, true, true );
+    for ( auto *pBrowser : gdbBrowserList )
+        if ( pBrowser ) ShowControlBar( pBrowser, true, true );
+    Singleton<IEditorContainer>()->ResetGUI();
+    ResetPanelLayout();
+
+    // Replace the saved arrangement immediately, using the same profile as
+    // startup/normal close. No document reload or application restart is needed.
+    CString profile;
+    profile.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
+    profile += "-Docking-v2";
+    SaveBarState( profile );
+    pToolBarMgr->SaveState( profile );
+    RedrawWindow( nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_FRAME | RDW_ALLCHILDREN );
 }
 
 

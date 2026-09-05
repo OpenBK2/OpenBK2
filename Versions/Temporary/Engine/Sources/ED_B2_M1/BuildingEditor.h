@@ -62,6 +62,7 @@ public:
 	IInputState* GetInputState() { return reinterpret_cast<IInputState*>(pBuildingState); }
 	void GetChildFrameType( std::string *pszChildFrameTypeName ) { ( *pszChildFrameTypeName ) = "__CHILD_FRAME_DX_SCENE_LABEL__"; }
 	void CreateControls();
+	void ResetGUI( bool bActive ) override;
 	void PostCreateControls() {}
 	void PreDestroyControls() {}
 	void DestroyControls();

@@ -152,6 +152,8 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectoolbarmanager__setdefaultdockstate.htm
     // Load a default toolbar configuration state.
     virtual void SetDefaultDockState();
+    // Reset GUI also restores the original buttons and visibility.
+    void ResetToolBars();
     BOOL SetMenuInfo(int nCount, UINT nIDMenu, ...);
     void LoadState(const CString &);
     void SaveState(const CString &);
@@ -169,6 +171,7 @@ public:
         UINT nDockNextToID = 0;
         BOOL bDocked = TRUE;
         BOOL bVisible = TRUE;
+        BOOL bDefaultVisible = TRUE;
         // The bitmap this bar's button faces come from, paired by order of
         // definition with the resources AddToolBarResource was handed.
         UINT nBitmapID = 0;
@@ -191,6 +194,9 @@ private:
     // Build a bar per definition, dock it and show or hide it. Called late,
     // from LoadState and SetDefaultDockState, and idempotent.
     void CreateBars();
+    // Apply the definition's edge and neighboring toolbar without a layout
+    // pass between bars (startup geometry is not yet reliable).
+    void DockDefaultToolBar(ToolBarDef& def);
     ToolBarDef* FindDef(UINT nID);
 
     std::vector<ToolBarDef> m_defs;

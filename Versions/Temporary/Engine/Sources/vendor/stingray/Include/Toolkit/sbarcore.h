@@ -4,6 +4,8 @@
 #include <afxwin.h>
 #include <afxext.h>
 #include <afxcmn.h>
+#include <afxpriv.h>
+#include <vector>
 
 #include "sbarmgr.h"
 
@@ -11,14 +13,18 @@ struct SECGripperInfo {
 
 };
 
-struct SECDockContext {
-
+// Keep MFC's docking tracking, with rectangular sizes for floating panes.
+class SECDockContext : public CDockContext {
+public:
+    explicit SECDockContext(CControlBar* pBar) : CDockContext(pBar) {}
+    void StartResize(int nHitTest, CPoint pt) override;
 };
 
 // https://help.perforce.com/stingray/11/html/otug/8-7.html#871
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccontrolbar.htm
 
 class SECControlBar : public CControlBar {
+    friend class SECDockContext;
 public:
     // Construction
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/seccontrolbar__seccontrolbar.htm
@@ -181,46 +187,27 @@ protected:
     //! can be drawn pushed and so releasing off it takes the click back.
     BOOL m_bGripperCloseDown = FALSE;
 
-    //! The length along the docked edge the user last resized this bar to,
-    //! and the width it was last left at while floating. Zero until they
-    //! do, and then preferred over the share DockControlBarEx was given --
-    //! a size the user chose outranks a default.
-    //!
-    //! Only LM_COMMIT writes these. A resize in progress asks with the
-    //! length under the pointer on every mouse move, and remembering those
-    //! would make the bar keep whatever size it was dragged through rather
-    //! than the one it was left at.
-    int m_nDockedAlong = 0;
-    int m_nFloatWidth = 0;
-
-    //! How long this bar wants to be along the edge it is docked to.
-    int CalcDockedAlong( DWORD dwMode ) const;
+    // MFC commits floating width only; the resize context also supplies height.
+    bool m_bFloatSizing = false;
+    void GetPanelRect(CRect& rect) const;
+    void GetResizeRects(CRect& thickness, CRect& divider) const;
+    void TrackDockResize(bool bDivider, CPoint point);
 
     void DoPaint(CDC *pDC) override;
+    afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+    afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
+    afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+    afx_msg void OnCaptureChanged(CWnd* pWnd);
 
     DECLARE_MESSAGE_MAP()
 
 public:
-
-public:
-    //! What DockControlBarEx was told: the thickness this bar wants
-    //! across the edge it is docked to, and the share of that edge's
-    //! length it should take.
-    //!
-    //! Both are needed because a docked bar is asked for its size through
-    //! CalcDynamicLayout with a length of -1 and without LM_STRETCH, so
-    //! the bar itself is the only thing that decides either number. With
-    //! nothing to go on it could answer only its own thickness in both
-    //! directions, which is why every docking window came up square.
-    //!
-    //! A share rather than a size, because the frame gets resized and a
-    //! fraction of the edge is what survives that.
-    void SetDockedLayout( int nThickness, float fPctLength );
-
-protected:
-    //! Zero until DockControlBarEx says otherwise, and then the share of
-    //! the dock edge this bar was docked with.
-    float m_fDockedPctLength = 0.0f;
+    // Docked thickness, relative share within a row, and independent float size.
+    void SetDockedLayout(int nThickness, float fPctLength);
+    // MFC persists placement/visibility; these add pane sizes and proportions.
+    void LoadPanelState(LPCTSTR profile);
+    void SavePanelState(LPCTSTR profile) const;
+    std::vector<SECControlBar*> GetRowBars() const;
 };

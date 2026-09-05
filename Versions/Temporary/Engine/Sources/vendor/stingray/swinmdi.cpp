@@ -1,6 +1,7 @@
 #include "Toolkit/swinmdi.h"
 #include "Toolkit/tbarmgr.h"
 #include "dockex.h"
+#include "docklayout.h"
 
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
@@ -8,6 +9,7 @@
 #include "logging.h"
 
 #include <cstdarg>
+#include <algorithm>
 #include <vector>
 
 
@@ -19,6 +21,86 @@ END_MESSAGE_MAP()
 
 void SECMDIChildWnd::SwapMenu(UINT nID) {
     spdlog::debug("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
+}
+
+void SECMDIFrameWnd::EnableDocking(DWORD dwDockStyle) {
+    NDockEx::CreateDockBars(this, dwDockStyle);
+    CMDIFrameWnd::EnableDocking(dwDockStyle);
+}
+
+void SECMDIFrameWnd::LoadBarState(LPCTSTR profile) {
+    // Load sizes first: SetDockState creates and sizes floating frames itself.
+    for (POSITION pos = m_listControlBars.GetHeadPosition(); pos != nullptr;) {
+        auto* bar = static_cast<CControlBar*>(m_listControlBars.GetNext(pos));
+        if (auto* pane = dynamic_cast<SECControlBar*>(bar))
+            pane->LoadPanelState(profile);
+    }
+    CMDIFrameWnd::LoadBarState(profile);
+}
+
+void SECMDIFrameWnd::SaveBarState(LPCTSTR profile) const {
+    CMDIFrameWnd::SaveBarState(profile);
+    for (POSITION pos = m_listControlBars.GetHeadPosition(); pos != nullptr;) {
+        auto* bar = static_cast<const CControlBar*>(m_listControlBars.GetNext(pos));
+        if (auto* pane = dynamic_cast<const SECControlBar*>(bar))
+            pane->SavePanelState(profile);
+    }
+}
+
+void SECMDIFrameWnd::ResetPanelLayout() {
+    std::map<UINT, std::map<int, std::vector<SECControlBar*>>> rows;
+    std::vector<SECControlBar*> panes;
+    for (const auto& def : m_defaultPanes) {
+        auto* pane = dynamic_cast<SECControlBar*>(GetControlBar(def.id));
+        if (pane == nullptr || pane->GetSafeHwnd() != def.window)
+            continue;
+        // Let MFC reparent the window and dispose of its floating frame first.
+        CMDIFrameWnd::DockControlBar(pane, def.dockBarID);
+        pane->m_szDockHorz = def.horizontal;
+        pane->m_szDockVert = def.vertical;
+        pane->m_szFloat = def.floating;
+        pane->m_fPctWidth = pane->m_fDockedPctWidth = def.share;
+        pane->m_ptDockHorz = CPoint(0, 0);
+        pane->SetWindowPos(nullptr, 0, 0, 0, 0,
+            SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+        if (pane->m_pDockContext != nullptr) {
+            pane->m_pDockContext->m_uMRUDockID = def.dockBarID;
+            pane->m_pDockContext->m_ptMRUFloatPos = CPoint(CW_USEDEFAULT, 0);
+        }
+        rows[def.dockBarID][def.row].push_back(pane);
+        panes.push_back(pane);
+    }
+
+    // Rebuild pane rows after all native docking operations. Moving a bar that
+    // already shares a row does not otherwise restore its original row/order.
+    const UINT edges[] = { AFX_IDW_DOCKBAR_TOP, AFX_IDW_DOCKBAR_BOTTOM,
+                          AFX_IDW_DOCKBAR_LEFT, AFX_IDW_DOCKBAR_RIGHT };
+    for (UINT edge : edges) {
+        auto* dock = DYNAMIC_DOWNCAST(CDockBar, GetControlBar(edge));
+        if (dock == nullptr) continue;
+        CPtrArray& bars = dock->m_arrBars;
+        for (INT_PTR i = bars.GetSize() - 1; i >= 0; --i) {
+            bool remove = std::find(panes.begin(), panes.end(), bars[i]) != panes.end();
+            const UINT_PTR value = reinterpret_cast<UINT_PTR>(bars[i]);
+            if (value != 0 && value <= 0xffff) {
+                // Floating bars leave ID placeholders; reset discards these,
+                // including placeholders of browser windows since deleted.
+                for (const auto& def : m_defaultPanes)
+                    if (value == def.id) remove = true;
+            }
+            if (remove) bars.RemoveAt(i);
+        }
+        for (INT_PTR i = bars.GetSize() - 1; i > 0; --i)
+            if (bars[i] == nullptr && bars[i - 1] == nullptr)
+                bars.RemoveAt(i);
+        if (bars.IsEmpty()) bars.Add(nullptr);
+        // Toolbar rows stay ahead of pane rows on a shared edge.
+        for (const auto& row : rows[edge]) {
+            for (auto* pane : row.second) bars.Add(pane);
+            bars.Add(nullptr);
+        }
+    }
+    RecalcLayout();
 }
 
 void SECMDIFrameWnd::EnableContextListMode(BOOL bEnable) {
@@ -196,11 +278,40 @@ void SECMDIFrameWnd::OnDestroy() {
 // what the four mean now and how they are honoured.
 void SECMDIFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID,int nCol, int nRow, float fPctWidth, int nHeight) {
     spdlog::debug("{} this={} pBar={} nDockBarID={} nCol={} nRow={} fPctWidth={} nHeight={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pBar), nDockBarID, nCol, nRow, fPctWidth, nHeight);
+    if (nDockBarID == 0 && pBar != nullptr) {
+        const UINT edges[] = { AFX_IDW_DOCKBAR_TOP, AFX_IDW_DOCKBAR_BOTTOM,
+                              AFX_IDW_DOCKBAR_LEFT, AFX_IDW_DOCKBAR_RIGHT };
+        for (UINT edge : edges) {
+            CControlBar* dock = GetControlBar(edge);
+            if (dock != nullptr && (dock->GetBarStyle() & pBar->GetBarStyle() & CBRS_ALIGN_ANY)) {
+                nDockBarID = edge;
+                break;
+            }
+        }
+    }
+    if (auto* pane = dynamic_cast<SECControlBar*>(pBar)) {
+        if (pane->GetSafeHwnd() != nullptr && nDockBarID != 0) {
+            pane->SetDockedLayout(nHeight, fPctWidth);
+            DefaultPaneLayout def = { static_cast<UINT>(pane->GetDlgCtrlID()),
+                nDockBarID, pane->GetSafeHwnd(), nRow, pane->m_szDockHorz,
+                pane->m_szDockVert, pane->m_szFloat, pane->m_fDockedPctWidth };
+            auto found = std::find_if(m_defaultPanes.begin(), m_defaultPanes.end(),
+                [&](const DefaultPaneLayout& item) { return item.id == def.id; });
+            // The first explicit docking request is the default. Native mouse
+            // docking does not call this API, and a replacement window gets a
+            // fresh definition without retaining a pointer to the old pane.
+            if (found == m_defaultPanes.end())
+                m_defaultPanes.push_back(def);
+            else if (found->window != def.window)
+                *found = def;
+        }
+    }
     NDockEx::DockControlBarEx( this, pBar, nDockBarID, nCol, nRow, fPctWidth, nHeight );
 }
 
 void SECMDIFrameWnd::ReDockControlBar(CControlBar* pBar, CDockBar* pDockBar, LPCRECT lpRect) {
-    spdlog::debug("{} this={} pBar={} pDockBar={} lpRect={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pBar), spdlog::fmt_lib::ptr(pDockBar), spdlog::fmt_lib::ptr(lpRect));
+    // Preserve MFC's remembered row/position when returning from floating.
+    CMDIFrameWnd::ReDockControlBar(pBar, pDockBar, lpRect);
 }
 
 void SECMDIFrameWnd::FloatControlBarInMDIChild(CControlBar* pBar, CPoint point, DWORD dwStyle) {

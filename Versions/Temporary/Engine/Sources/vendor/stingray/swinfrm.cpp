@@ -1,5 +1,6 @@
 #include "Toolkit/swinfrm.h"
 #include "dockex.h"
+#include "docklayout.h"
 
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
@@ -17,7 +18,8 @@ BOOL SECFrameWnd::GetActiveState() {
 }
 
 void SECFrameWnd::EnableDocking(DWORD dwDockStyle, DWORD dwDockStyleEx) {
-    spdlog::debug("{} this={} dwDockStyle={} dwDockStyleEx={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwDockStyle, dwDockStyleEx);
+    NDockEx::CreateDockBars(this, dwDockStyle);
+    CFrameWnd::EnableDocking(dwDockStyle);
 }
 
 CDockBar* SECFrameWnd::CreateNewDockBar() {
@@ -30,7 +32,7 @@ void SECFrameWnd::EnableContextListMode(BOOL bEnable) {
 }
 
 void SECFrameWnd::FloatControlBar(CControlBar* pBar, CPoint point, DWORD dwStyle) {
-    spdlog::debug("{} this={} pBar={} point.x={} point.y={} dwStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pBar), point.x, point.y, dwStyle);
+    CFrameWnd::FloatControlBar(pBar, point, dwStyle);
 }
 
 // See dockex.h. This is the non-MDI frame's copy of the same call, and nothing

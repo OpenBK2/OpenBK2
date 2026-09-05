@@ -10,6 +10,7 @@
 #include "tmenufrm.h"
 
 #include <map>
+#include <vector>
 
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmdichildwnd.htm
 
@@ -28,6 +29,12 @@ enum AlignCaption {
 
 class SECMDIFrameWnd : public CMDIFrameWnd {
 public:
+    void EnableDocking(DWORD dwDockStyle);
+    // Extend MFC placement persistence with the dimensions of our panes.
+    void LoadBarState(LPCTSTR profile);
+    void SaveBarState(LPCTSTR profile) const;
+    // Restore the pane definitions supplied when their windows were created.
+    void ResetPanelLayout();
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmdiframewnd__enablecontextlistmode.htm
     // Enables or disables the control bar context list mode.
     void EnableContextListMode(BOOL bEnable = TRUE);
@@ -88,6 +95,16 @@ public:
     SECMenuBar * m_pMenuBar = nullptr;
 
 protected:
+    struct DefaultPaneLayout {
+        UINT id, dockBarID;
+        HWND window;
+        int row;
+        CSize horizontal, vertical, floating;
+        float share;
+    };
+    // IDs and window handles allow browser panes to be deleted/recreated safely.
+    std::vector<DefaultPaneLayout> m_defaultPanes;
+
     //! Whether EnableBmpMenus was asked for.
     BOOL m_bBmpMenus = FALSE;
 

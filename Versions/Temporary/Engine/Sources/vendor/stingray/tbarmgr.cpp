@@ -96,7 +96,7 @@ void SECToolBarManager::DefineDefaultToolBar(UINT nID, const CString& strTitle, 
     def.nDockBarID = nDockBarID;
     def.nDockNextToID = nDockNextToID;
     def.bDocked = bDocked;
-    def.bVisible = bVisible;
+    def.bVisible = def.bDefaultVisible = bVisible;
 
     // The toolkit builds one shared bitmap out of every resource it is given and
     // has each bar index into it. Here each bar loads its own, so a definition
@@ -148,8 +148,10 @@ void SECToolBarManager::CreateBars() {
             continue;
         }
         SECCustomToolBar *pBar = new SECCustomToolBar();
+        // MFC reserves and paints the gripper, and its mouse handlers route
+        // dragging/double-clicking that handle through the native dock context.
         const DWORD dwStyle = WS_CHILD | WS_VISIBLE | BarStyleForDockBar(def.nDockBarID) |
-                              CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY;
+                              CBRS_GRIPPER | CBRS_SIZE_DYNAMIC | CBRS_TOOLTIPS | CBRS_FLYBY;
         if (!pBar->CreateEx(0, pFrame, dwStyle, def.nID, def.strTitle)) {
             spdlog::warn("SECToolBarManager::CreateBars: toolbar {} \"{}\" failed to create", def.nID, def.strTitle.GetString());
             delete pBar;
@@ -172,12 +174,10 @@ void SECToolBarManager::CreateBars() {
         }
 
         pBar->EnableDocking(def.dwAlignment);
-        if (def.bDocked) {
-            pFrame->DockControlBar(pBar, def.nDockBarID);
-        }
+        def.pBar = pBar;
+        DockDefaultToolBar(def);
         pFrame->ShowControlBar(pBar, def.bVisible, TRUE);
 
-        def.pBar = pBar;
         spdlog::debug("SECToolBarManager::CreateBars: toolbar {} \"{}\" created with {} buttons, docked={} visible={}", def.nID, def.strTitle.GetString(), pBar->GetBtnCount(), def.bDocked, def.bVisible);
     }
     pFrame->RecalcLayout();
@@ -382,12 +382,73 @@ const SECBtnMapEntry* SECToolBarManager::GetButtonMap() const {
     return m_pButtonMap;
 }
 
-// Build the bars in the arrangement the definitions asked for, which is all the
-// default dock state is. CMainFrame has this call commented out and reaches the
-// same place through LoadState.
+// CFrameWnd::DockControlBar without a rectangle appends a new row. Toolbar
+// definitions instead name the previous bar in their row. Use that identity,
+// not startup rectangles, so hidden module toolbars are placed correctly too.
+void SECToolBarManager::DockDefaultToolBar(ToolBarDef& def) {
+    CFrameWnd* frame = GetFrameWnd();
+    SECCustomToolBar* bar = def.pBar;
+    if (frame == nullptr || bar == nullptr || !def.bDocked) return;
+    frame->DockControlBar(bar, def.nDockBarID);
+    CDockBar* dock = bar->m_pDockBar;
+    if (dock == nullptr) return;
+
+    CPtrArray& bars = dock->m_arrBars;
+    const int oldPos = dock->FindBar(bar);
+    if (oldPos < 1) return;
+    bars.RemoveAt(oldPos);
+    // Keep MFC's initial/trailing null and remove only an emptied row.
+    if (oldPos < bars.GetSize() && bars[oldPos - 1] == nullptr && bars[oldPos] == nullptr)
+        bars.RemoveAt(oldPos);
+
+    CControlBar* neighbor = def.nDockNextToID != 0
+        ? frame->GetControlBar(def.nDockNextToID) : nullptr;
+    const int neighborPos = neighbor != nullptr && neighbor != bar
+        && neighbor->m_pDockBar == dock ? dock->FindBar(neighbor) : -1;
+    if (neighborPos >= 1) {
+        bars.InsertAt(neighborPos + 1, bar);
+    } else {
+        bars.Add(bar);
+        bars.Add(nullptr);
+    }
+
+    // Clear old pixel offsets during default placement only. Native docking
+    // owns offsets after the user drags a toolbar, and SaveBarState keeps them.
+    bar->SetWindowPos(nullptr, 0, 0, 0, 0,
+        SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+    bar->m_pDockContext->m_uMRUDockID = dock->GetDlgCtrlID();
+    frame->DelayRecalcLayout();
+}
+
+// Reset placement of existing toolbars as well as creating any missing ones.
+// Pane placement and each toolbar's visibility are deliberately retained.
 void SECToolBarManager::SetDefaultDockState() {
-    spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     CreateBars();
+    for (ToolBarDef& def : m_defs)
+        DockDefaultToolBar(def);
+    if (CFrameWnd* frame = GetFrameWnd())
+        frame->RecalcLayout();
+}
+
+void SECToolBarManager::ResetToolBars() {
+    CreateBars();
+    for (ToolBarDef& def : m_defs) {
+        // ShowToolBar changes bVisible, so keep the original definition apart.
+        def.bVisible = def.bDefaultVisible;
+        ResetToolBar(def.nID);
+    }
+    if (CFrameWnd* frame = GetFrameWnd()) {
+        const UINT edges[] = { AFX_IDW_DOCKBAR_TOP, AFX_IDW_DOCKBAR_BOTTOM,
+                              AFX_IDW_DOCKBAR_LEFT, AFX_IDW_DOCKBAR_RIGHT };
+        for (UINT edge : edges) {
+            auto* dock = DYNAMIC_DOWNCAST(CDockBar, frame->GetControlBar(edge));
+            if (dock == nullptr) continue;
+            // Floating toolbars can retain an old slot on a different edge.
+            for (const auto& def : m_defs)
+                if (def.pBar != nullptr) dock->RemovePlaceHolder(def.pBar);
+        }
+    }
+    SetDefaultDockState();
 }
 
 // The menu resources the editor wants offered as commands.
@@ -625,11 +686,9 @@ void SECToolBarManager::LoadState(const CString & state) {
     CreateBars();
 }
 
-// Still a stub, and honestly empty. What the toolkit writes here is which
-// buttons the user rearranged onto which bar, and no arrangement is possible in
-// this library, so the definitions are the whole state and they come from the
-// editor's own tables every run. The bars' docked positions are saved by the
-// frame's SaveBarState, not by this.
+// Positions, row order, floating sizes and visibility are written by the
+// frame's SaveBarState. This marker prevents the one-time horizontal-default
+// migration from overwriting subsequent user arrangements.
 void SECToolBarManager::SaveState(const CString & state) {
-    spdlog::debug("{} this={} state={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), state.GetString());
+    AfxGetApp()->WriteProfileInt(state, _T("ToolbarLayoutVersion"), 1);
 }

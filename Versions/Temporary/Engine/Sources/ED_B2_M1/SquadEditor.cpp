@@ -146,6 +146,22 @@ bool CSquadEditor::RemoveModel( int nID )
 	return false;
 }
 
+void CSquadEditor::ResetGUI( bool bActive )
+{
+    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+    if ( !bActive )
+        pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+    // Copy only GUI fields from the defaults, preserving all editing settings.
+    const CSquadEditorSettings defaults;
+    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+    pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+
+    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+    if ( pwndShortcutBar )
+        pFrame->ShowControlBar( pwndShortcutBar, bActive && editorSettings.bShowShortcutBar, true );
+}
+
+
 void CSquadEditor::CreateControls()
 {
 	unsigned nID = ID_SQUAD_EDITOR_DW;

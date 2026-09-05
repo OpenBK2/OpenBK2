@@ -36,6 +36,7 @@ public:
 	//
 	void CreateControls();
 	void PostCreateControls();
+	void ResetGUI() override;
 	void PreDestroyControls();
 	void DestroyControls();
 	//

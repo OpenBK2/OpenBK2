@@ -103,6 +103,34 @@ CMapInfoEditor::CMapInfoEditor()
 
 //CRAP{ PLAIN_TEXT
 
+void CMapInfoEditor::ResetGUI( bool bActive )
+{
+    SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+    if ( !bActive )
+        pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
+    // Copy only GUI fields from the defaults, preserving all editing settings.
+    const CMapInfoEditorSettings defaults;
+    editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
+    editorSettings.bShowMinimapBar = defaults.bShowMinimapBar;
+    editorSettings.bShowMoviesEditor = defaults.bShowMoviesEditor;
+    editorSettings.bShowMapInfoToolsToolbar = defaults.bShowMapInfoToolsToolbar;
+    editorSettings.bShowMapInfoViewToolbar = defaults.bShowMapInfoViewToolbar;
+    pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
+
+    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+    if ( pwndShortcutBar )
+        pFrame->ShowControlBar( pwndShortcutBar, bActive && editorSettings.bShowShortcutBar, true );
+    if ( pwndMiniMap )
+        pFrame->ShowControlBar( pwndMiniMap, bActive && editorSettings.bShowMinimapBar, true );
+    if ( pwndMoviesEditor )
+        pFrame->ShowControlBar( pwndMoviesEditor, bActive && editorSettings.bShowMoviesEditor, true );
+    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowMapInfoToolsToolbar, true );
+    if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowMapInfoViewToolbar, true );
+}
+
+
 void CMapInfoEditor::CreateControls()
 {
 	NHPTimer::STime time = 0;
