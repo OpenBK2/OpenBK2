@@ -1171,7 +1171,13 @@ long ListBoxX::WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam) {
 		Draw(reinterpret_cast<DRAWITEMSTRUCT *>(lParam));
 		break;
 	case WM_DESTROY:
-		::SetWindowLong(hWnd, 0, 0);
+		// SetWindowPointer, not SetWindowLong, for the same reason as in
+		// ScintillaWin.cxx: this window's pointer is stored and read back
+		// through the 64 bit ...Ptr pair above, and SetWindowLong clears only
+		// the low half of that slot. The top half of the dead pointer stayed
+		// in the window, so the WM_NCDESTROY that follows found something that
+		// was not null and used it.
+		SetWindowPointer(hWnd, 0);
 		return ::DefWindowProc(hWnd, iMessage, wParam, lParam);
 	default:
 		return ::DefWindowProc(hWnd, iMessage, wParam, lParam);
