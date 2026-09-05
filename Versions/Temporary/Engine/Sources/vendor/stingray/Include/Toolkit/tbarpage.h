@@ -5,6 +5,8 @@
 #include <afxext.h>
 #include <afxcmn.h>
 
+#include <vector>
+
 enum {
     IDS_TOOLBAR_CUSTOMIZE,
     IDD_TOOLBAR_CUSTOMIZE,
@@ -41,4 +43,20 @@ public:
     // Defines a button group, consisting of a title and an array of button IDs
     void DefineBtnGroup(LPCTSTR lpszTitle, int nBtnCount, UINT* lpBtnIDs);
     void DefineMenuGroup(LPCTSTR lpszTitle);
+
+    //! One named group of commands, as the editor defines them: a toolbar's
+    //! buttons, or a menu offered whole.
+    struct CmdGroup {
+        CString strTitle;
+        std::vector<UINT> btnIDs;   //!< empty for a menu group
+        bool bMenu = false;
+    };
+
+protected:
+    //! Everything the editor described before opening the dialog. Kept so
+    //! that the page has its contents the moment it can draw them; it
+    //! cannot yet, because it has no dialog template. CMainFrame defines
+    //! nine toolbars and a menu group on every Tools -> Customize.
+    SECToolBarManager* m_pManager = nullptr;
+    std::vector<CmdGroup> m_groups;
 };

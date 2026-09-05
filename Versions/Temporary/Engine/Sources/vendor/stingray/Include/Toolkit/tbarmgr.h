@@ -141,6 +141,9 @@ public:
     //! SECMDIFrameWnd::EnableBmpMenus. False when the command is on no
     //! toolbar, or on one that has not been built yet.
     BOOL GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const;
+    //! The menu resources SetMenuInfo was given, in the order it got them.
+    //! They are what the Customize dialog offers as draggable commands.
+    const std::vector<UINT>& GetMenuIDs() const;
     void SetButtonMap(const SECBtnMapEntry* pMap);
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectoolbarmanager__getbuttonmap.htm
     // Get the button map information
@@ -178,6 +181,10 @@ private:
     ToolBarDef* FindDef(UINT nID);
 
     std::vector<ToolBarDef> m_defs;
+
+    //! Menu resource ids from SetMenuInfo. Kept, not acted on: the only
+    //! thing that would act on them is the Customize dialog.
+    std::vector<UINT> m_menuIDs;
     // Bitmap resource ids, in the order they were loaded.
     std::vector<UINT> m_bitmaps;
 
