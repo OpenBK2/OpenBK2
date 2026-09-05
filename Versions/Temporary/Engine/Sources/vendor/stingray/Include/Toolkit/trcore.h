@@ -130,6 +130,42 @@ using SEC_DWORD = DWORD;
 //! not shown up as a fault; widening it here means it cannot.
 using SEC_ITEMDATA = LPARAM;
 
+// The image list slot the toolkit kept for the column headings. Spelled out
+// here as well as in ot_dockingwindows.h, and to the same value, because
+// SetImageList has to recognise it and that lives in this header's own
+// implementation.
+#ifndef LVSIL_HEADER
+#define LVSIL_HEADER 3
+#endif
+
+class SEC_TREECLASS;
+
+//! A tree's column header.
+//!
+//! A child of the tree's parent and not of the tree, because a child window
+//! is confined to its parent's client area, and the tree's client area is
+//! exactly where the items are: a header inside it would sit on top of the
+//! first row, which is one row of every tree permanently out of sight. The
+//! tree gives up a strip of its frame instead, through WM_NCCALCSIZE, and
+//! this stands in it.
+//!
+//! Being a sibling, its notifications go to the tree's parent, which is
+//! where MFC reflects any control's back to the control -- and it reflects
+//! before it dispatches, so a parent with notification handlers of its own
+//! does not intercept these.
+class SECTreeHeaderCtrl : public CHeaderCtrl {
+public:
+    SECTreeHeaderCtrl();
+
+    //! The tree this heads. Not the parent window, so it has to be kept.
+    SEC_TREECLASS *m_pTree;
+
+protected:
+    afx_msg void OnItemChanged( NMHDR *pNMHDR, LRESULT *pResult );
+
+    DECLARE_MESSAGE_MAP()
+};
+
 class SEC_TREECLASS : public CWnd {
 public:
     // Construction/Initialization
@@ -584,4 +620,90 @@ protected:
 
     //! Drop the stored text for an item and everything under it.
     void ForgetSubItemText( HTREEITEM hItem );
+
+    //! So the header can hand a dragged width back to the columns.
+    friend class SECTreeHeaderCtrl;
+
+    // ---- the columns on screen ------------------------------------------
+    //
+    // The toolkit drew the tree itself, so its columns were simply part of
+    // that drawing. SysTreeView32 draws one column and knows nothing of any
+    // other, so the headings are a real header control put over the tree and
+    // the text for the columns past the first is painted in a custom-draw
+    // pass. Neither is something the control offers; both are additions on
+    // top of it, and each is commented where it gives a poorer answer than
+    // the toolkit's own drawing did.
+
+    //! The column heading control, created on the first EnableHeaderCtrl.
+    //! See SECTreeHeaderCtrl for why it is not a child of the tree.
+    SECTreeHeaderCtrl m_wndHeader;
+
+    //! The height of the strip the header stands in, and whether the tree
+    //! is currently giving it up. Asked for by OnNcCalcSize, which is called
+    //! often enough that measuring the header each time would be waste.
+    int m_nHeaderHeight;
+    bool m_bHeaderInset;
+
+    //! What EnableHeaderCtrl last said.
+    //!
+    //! Show and hide, not create and destroy: CPCMainTreeControl calls
+    //! EnableHeaderCtrl( GetCount() != 0 ) every time its contents change,
+    //! so the header goes whenever the tree empties and is wanted back with
+    //! the next item.
+    BOOL m_bHeaderEnabled;
+
+    //! The list styles, which the header is the only thing here that acts on.
+    //!
+    //! LVS_NOSORTHEADER decides whether the headings are buttons, and
+    //! LVXS_HILIGHTSUBITEMS whether a selected row is drawn selected across
+    //! all of its columns. The rest is kept only so that what was set is
+    //! what is read back.
+    DWORD m_dwListCtrlStyle;
+    DWORD m_dwListCtrlStyleEx;
+
+    //! The image list for the column headings, LVSIL_HEADER.
+    //!
+    //! The tree control has a normal list and a state list and no third
+    //! slot, so this used to be forwarded under a type number the control
+    //! does not define, and dropped. It belongs to the header, and
+    //! SetColumnImage picks out of it.
+    CImageList *m_pHeaderImageList;
+
+    //! Set while SyncHeaderColumns writes the header, so the changes it
+    //! causes are not read back as the user dragging a divider.
+    bool m_bSyncingHeader;
+
+    //! Where LayoutHeader last put the header and how much of it it last
+    //! showed, so a repaint does not move or re-clip a window that is
+    //! already right.
+    CRect m_rectHeaderPlaced;
+    CRect m_rectHeaderVisible;
+
+    //! A column's width as something to lay out with, so never negative.
+    //! InsertColumn's default is -1, which the toolkit read as "measure it";
+    //! nothing here measures, so it lays out as nothing.
+    int GetLayoutColumnWidth( int nCol ) const;
+    //! Left edge of a column in client coordinates, horizontal scroll included.
+    int GetColumnLeft( int nCol ) const;
+    //! Create the header if it is wanted and missing, then match it to the
+    //! columns and to whether it should be on screen.
+    void UpdateHeaderCtrl();
+    //! Replace the header's items with m_columns.
+    void SyncHeaderColumns();
+    //! Put the header across the top of the client area, scrolled with the tree.
+    void LayoutHeader();
+    //! Paint one item's columns past the first.
+    void DrawSubItems( CDC *pDC, HTREEITEM hItem );
+    //! Make the frame agree with whether there is a header to stand in it.
+    void UpdateHeaderInset();
+    //! A column width the user dragged, on its way back to m_columns.
+    void SetColumnWidthFromHeader( int nCol, int nWidth );
+
+    afx_msg void OnNcCalcSize( BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR *lpncsp );
+    afx_msg void OnWindowPosChanged( WINDOWPOS *lpwndpos );
+    afx_msg void OnNcDestroy();
+    afx_msg void OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrollBar );
+    afx_msg void OnCustomDraw( NMHDR *pNMHDR, LRESULT *pResult );
+
+    DECLARE_MESSAGE_MAP()
 };

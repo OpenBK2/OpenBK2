@@ -58,11 +58,85 @@ void SortSubtree( HWND hWnd, HTREEITEM hItem )
     }
 }
 
+// The header's control id. It is a sibling of the tree, so this shares a
+// namespace with whatever dialog the tree is on, which is why it is well above
+// the ids those use. Nothing looks the header up by it -- MFC reflects a
+// notification to the window it came from, not to the id -- so two trees on one
+// dialog giving their headers the same id costs nothing.
+const UINT ID_TREE_HEADER = 0x7FF0;
+
+// A column format is an LVCFMT_ value, of which only the alignment is anything
+// this can act on. LVCFMT_LEFT, _RIGHT and _CENTER happen to be 0, 1 and 2, and
+// so do HDF_LEFT, _RIGHT and _CENTER, but that is a coincidence rather than a
+// guarantee, so it is spelled out both ways round.
+int HeaderFormatFromColumnFormat( int nFormat )
+{
+    switch ( nFormat & LVCFMT_JUSTIFYMASK ) {
+    case LVCFMT_RIGHT:  return HDF_RIGHT;
+    case LVCFMT_CENTER: return HDF_CENTER;
+    default:            return HDF_LEFT;
+    }
+}
+
+UINT DrawTextFormatFromColumnFormat( int nFormat )
+{
+    switch ( nFormat & LVCFMT_JUSTIFYMASK ) {
+    case LVCFMT_RIGHT:  return DT_RIGHT;
+    case LVCFMT_CENTER: return DT_CENTER;
+    default:            return DT_LEFT;
+    }
+}
+
+// CLR_NONE is what the control answers when no colour was set, and it is not a
+// colour anything can be painted in.
+COLORREF ColorOrDefault( COLORREF rgb, int nSysColor )
+{
+    return rgb == static_cast< COLORREF >( CLR_NONE ) ? ::GetSysColor( nSysColor ) : rgb;
+}
+
 }  // namespace
 
 
+BEGIN_MESSAGE_MAP( SECTreeHeaderCtrl, CHeaderCtrl )
+    // Both spellings: which one a header sends depends on the character width
+    // the caller was built with, and this library has been compiled both ways.
+    ON_NOTIFY_REFLECT( HDN_ITEMCHANGEDA, OnItemChanged )
+    ON_NOTIFY_REFLECT( HDN_ITEMCHANGEDW, OnItemChanged )
+END_MESSAGE_MAP()
 
-SEC_TREECLASS::SEC_TREECLASS() : m_dwTreeCtrlStyleEx(0), m_bStoreSubItemText(FALSE) {
+
+SECTreeHeaderCtrl::SECTreeHeaderCtrl() : m_pTree(nullptr) {
+}
+
+void SECTreeHeaderCtrl::OnItemChanged( NMHDR *pNMHDR, LRESULT *pResult ) {
+    *pResult = 0;
+    const NMHEADER *const pHeader = reinterpret_cast< NMHEADER * >( pNMHDR );
+    if (m_pTree == nullptr || pHeader->pitem == nullptr
+        || ( pHeader->pitem->mask & HDI_WIDTH ) == 0) {
+        return;
+    }
+    m_pTree->SetColumnWidthFromHeader( pHeader->iItem, pHeader->pitem->cxy );
+}
+
+
+BEGIN_MESSAGE_MAP( SEC_TREECLASS, CWnd )
+    ON_WM_NCCALCSIZE()
+    ON_WM_WINDOWPOSCHANGED()
+    ON_WM_NCDESTROY()
+    ON_WM_HSCROLL()
+    // The control sends its custom draw to its parent, and MFC reflects it back
+    // here, which is the same route TVN_SELCHANGED already takes to the editor's
+    // own tree classes. Nothing between here and the control handles it, so the
+    // reflection is not competing with anyone.
+    ON_NOTIFY_REFLECT( NM_CUSTOMDRAW, OnCustomDraw )
+END_MESSAGE_MAP()
+
+
+SEC_TREECLASS::SEC_TREECLASS() : m_dwTreeCtrlStyleEx(0), m_bStoreSubItemText(FALSE),
+    m_bHeaderEnabled(FALSE), m_nHeaderHeight(0), m_bHeaderInset(false),
+    m_dwListCtrlStyle(0), m_dwListCtrlStyleEx(0),
+    m_pHeaderImageList(nullptr), m_bSyncingHeader(false),
+    m_rectHeaderPlaced(0, 0, 0, 0), m_rectHeaderVisible(0, 0, 0, 0) {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     // Column zero exists before anyone inserts anything: the editor sets its
     // heading, format, width and image first and only then inserts the rest.
@@ -838,8 +912,19 @@ CImageList* SEC_TREECLASS::GetImageList(UINT nImageList) const {
 
 CImageList* SEC_TREECLASS::SetImageList(CImageList* pImageList, int nImageListType) {
     spdlog::debug("{} this={} pImageList={} nImageListType={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pImageList), nImageListType);
-    // The control has a normal and a state list; a header list, which is what
-    // LVSIL_HEADER asks for, belongs to the columns and is dropped.
+    // The control has a normal list and a state list and no third slot, so
+    // LVSIL_HEADER -- which is 3, a type number the control does not define --
+    // used to be forwarded and dropped. It is the column headings' list, so it
+    // goes to the header instead, which is what SetColumnImage indexes into.
+    if (nImageListType == LVSIL_HEADER) {
+        CImageList *const pOldImageList = m_pHeaderImageList;
+        m_pHeaderImageList = pImageList;
+        if (m_wndHeader.GetSafeHwnd() != nullptr) {
+            m_wndHeader.SetImageList(pImageList);
+            SyncHeaderColumns();
+        }
+        return pOldImageList;
+    }
     const HIMAGELIST hOldImageList = TreeView_SetImageList(GetSafeHwnd(),
         pImageList != nullptr ? pImageList->GetSafeHandle() : nullptr, nImageListType);
     return CImageList::FromHandle(hOldImageList);
@@ -847,6 +932,12 @@ CImageList* SEC_TREECLASS::SetImageList(CImageList* pImageList, int nImageListTy
 
 void SEC_TREECLASS::EnableHeaderCtrl(BOOL bEnable, BOOL bSortHeader) {
     spdlog::debug("{} this={} bEnable={} bSortHeader={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bEnable, bSortHeader);
+    // bSortHeader asked the toolkit to sort the tree when a heading was
+    // clicked. Nothing here sorts on a click, so it is not acted on; the
+    // headings are still buttons unless LVS_NOSORTHEADER says otherwise, which
+    // is the style the editor actually sets.
+    m_bHeaderEnabled = bEnable;
+    UpdateHeaderCtrl();
 }
 
 void SEC_TREECLASS::EnableWordWrap(BOOL bEnable) {
@@ -972,8 +1063,14 @@ BOOL SEC_TREECLASS::InsertColumn( int nCol, const CString& strHeader, int nForma
     column.nSubItem = iSubItem;
     column.nImage = iImage;
     m_columns.insert(m_columns.begin() + nCol, column);
-    // bUpdate asked the toolkit to repaint. Nothing paints these yet, so there
-    // is nothing to repaint; when the custom-draw pass exists it belongs here.
+    UpdateHeaderCtrl();
+    // bUpdate asked the toolkit to repaint. The header has just been rebuilt
+    // either way, because a heading that disagrees with the text under it is
+    // worse than a repaint nobody asked for; this only decides whether the
+    // items are redrawn with it.
+    if (bUpdate) {
+        Invalidate();
+    }
     return TRUE;
 }
 
@@ -984,6 +1081,8 @@ BOOL SEC_TREECLASS::DeleteColumn( int nCol ) {
         return FALSE;
     }
     m_columns.erase(m_columns.begin() + nCol);
+    UpdateHeaderCtrl();
+    Invalidate();
     return TRUE;
 }
 
@@ -1004,18 +1103,45 @@ UINT SEC_TREECLASS::GetColumnCount() const {
 
 BOOL SEC_TREECLASS::ModifyListCtrlStyle(DWORD dwRemove, DWORD dwAdd, BOOL bRedraw) {
     spdlog::debug("{} this={} dwRemove={} dwAdd={} bRedraw={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemove, dwAdd, bRedraw);
-    return FALSE;
+    // These are the list half of the toolkit's styles, and they described the
+    // column drawing it did itself. The header is the only piece of that which
+    // exists here, so LVS_NOSORTHEADER is the only bit acted on; the rest is
+    // kept so that what was set is what comes back.
+    const DWORD dwStyle = ( m_dwListCtrlStyle & ~dwRemove ) | dwAdd;
+    if (dwStyle == m_dwListCtrlStyle) {
+        return FALSE;
+    }
+    m_dwListCtrlStyle = dwStyle;
+    if (m_wndHeader.GetSafeHwnd() != nullptr) {
+        const BOOL bNoSort = ( m_dwListCtrlStyle & LVS_NOSORTHEADER ) != 0;
+        m_wndHeader.ModifyStyle( bNoSort ? HDS_BUTTONS : 0, bNoSort ? 0 : HDS_BUTTONS );
+    }
+    if (bRedraw) {
+        Invalidate();
+    }
+    return TRUE;
 }
 
 BOOL SEC_TREECLASS::ModifyListCtrlStyleEx(DWORD dwRemoveEx, DWORD dwAddEx, BOOL bRedraw) {
     spdlog::debug("{} this={} dwRemoveEx={} dwAddEx={} bRedraw={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), dwRemoveEx, dwAddEx, bRedraw);
-    return FALSE;
+    // As above: LVXS_HILIGHTSUBITEMS is the one DrawSubItems reads, and the
+    // grid lines, word wrap and column fitting have nobody to act on them.
+    const DWORD dwStyleEx = ( m_dwListCtrlStyleEx & ~dwRemoveEx ) | dwAddEx;
+    if (dwStyleEx == m_dwListCtrlStyleEx) {
+        return FALSE;
+    }
+    m_dwListCtrlStyleEx = dwStyleEx;
+    if (bRedraw) {
+        Invalidate();
+    }
+    return TRUE;
 }
 
 void SEC_TREECLASS::SetColumnHeading( int nCol, const CString& strHeading ) {
     spdlog::debug("{} this={} nCol={} strHeading={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, strHeading.GetString());
     if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
         m_columns[nCol].strHeading = strHeading;
+        UpdateHeaderCtrl();
     }
 }
 
@@ -1023,6 +1149,7 @@ void SEC_TREECLASS::SetColumnFormat( int nCol, int fmt ) {
     spdlog::debug("{} this={} nCol={} fmt={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, fmt);
     if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
         m_columns[nCol].nFormat = fmt;
+        UpdateHeaderCtrl();
     }
 }
 
@@ -1042,6 +1169,8 @@ void SEC_TREECLASS::SetColumnWidth( int nCol, int width ) {
     spdlog::debug("{} this={} nCol={} width={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, width);
     if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
         m_columns[nCol].nWidth = width;
+        UpdateHeaderCtrl();
+        Invalidate();
     }
 }
 
@@ -1049,6 +1178,7 @@ void SEC_TREECLASS::SetColumnImage( int nCol, int nImage ) {
     spdlog::debug("{} this={} nCol={} nImage={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCol, nImage);
     if (nCol >= 0 && nCol < static_cast<int>(m_columns.size())) {
         m_columns[nCol].nImage = nImage;
+        UpdateHeaderCtrl();
     }
 }
 
@@ -1091,4 +1221,323 @@ void SEC_TREECLASS::RecalcScrollBars() {
 CEdit* SEC_TREECLASS::GetEditControl() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     return reinterpret_cast<CEdit*>(CWnd::FromHandle(TreeView_GetEditControl(GetSafeHwnd())));
+}
+
+
+// ---- the columns on screen -------------------------------------------------
+//
+// Everything below exists because SysTreeView32 has one column. The headings
+// are a header control laid over the top of the tree, and the text for the
+// columns past the first is painted after the control has drawn each item. See
+// trcore.h for what that costs against the toolkit's own drawing.
+
+int SEC_TREECLASS::GetLayoutColumnWidth( int nCol ) const {
+    if (nCol < 0 || nCol >= static_cast<int>(m_columns.size())) {
+        return 0;
+    }
+    // InsertColumn's default width is -1, which meant "measure the contents" to
+    // the toolkit. Nothing here measures, so such a column lays out as nothing
+    // rather than as a negative width that would drag the ones after it left.
+    return m_columns[nCol].nWidth > 0 ? m_columns[nCol].nWidth : 0;
+}
+
+int SEC_TREECLASS::GetColumnLeft( int nCol ) const {
+    // The tree scrolls its contents horizontally in pixels, and the columns
+    // have to scroll with them, so the origin is the scroll position negated.
+    int nLeft = -GetScrollPos( SB_HORZ );
+    for (int i = 0; i < nCol; ++i) {
+        nLeft += GetLayoutColumnWidth( i );
+    }
+    return nLeft;
+}
+
+void SEC_TREECLASS::UpdateHeaderCtrl() {
+    if (GetSafeHwnd() == nullptr) {
+        // Called before the window exists -- PC_Dialog sets its columns up
+        // around a SubclassTreeCtrlId, and ComboBox_GDBBrowser before the tab
+        // is shown. The columns are already kept, so the header is built out of
+        // them the first time this runs with a window to hang it on.
+        return;
+    }
+    if (m_wndHeader.GetSafeHwnd() == nullptr) {
+        if (!m_bHeaderEnabled) {
+            return;
+        }
+        CWnd *const pParent = GetParent();
+        if (pParent == nullptr) {
+            return;
+        }
+        DWORD dwStyle = WS_CHILD | HDS_HORZ;
+        if (( m_dwListCtrlStyle & LVS_NOSORTHEADER ) == 0) {
+            dwStyle |= HDS_BUTTONS;
+        }
+        const CRect rectEmpty( 0, 0, 0, 0 );
+        if (!m_wndHeader.Create( dwStyle, rectEmpty, pParent, ID_TREE_HEADER )) {
+            spdlog::debug("{} this={} header creation failed", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
+            return;
+        }
+        m_wndHeader.m_pTree = this;
+        // The header would otherwise come up in the system font while the tree
+        // is in whatever font its dialog gave it, which is visibly two
+        // different controls rather than one.
+        if (GetFont() != nullptr) {
+            m_wndHeader.SetFont( GetFont() );
+        }
+        // The tree's own painting stops at the strip the header stands in,
+        // rather than being drawn and then covered.
+        ModifyStyle( 0, WS_CLIPSIBLINGS );
+        if (m_pHeaderImageList != nullptr) {
+            m_wndHeader.SetImageList( m_pHeaderImageList );
+        }
+        // How tall the strip has to be. Measured once: it depends on the
+        // header's font and not on how wide it is laid out.
+        CRect rectProbe( 0, 0, 100, 100 );
+        WINDOWPOS wp = { 0 };
+        HDLAYOUT layout;
+        layout.prc = &rectProbe;
+        layout.pwpos = &wp;
+        m_nHeaderHeight = m_wndHeader.Layout( &layout ) ? wp.cy : 0;
+    }
+    SyncHeaderColumns();
+    UpdateHeaderInset();
+    LayoutHeader();
+}
+
+void SEC_TREECLASS::UpdateHeaderInset() {
+    const bool bInset = m_bHeaderEnabled && m_wndHeader.GetSafeHwnd() != nullptr
+        && m_nHeaderHeight > 0;
+    if (bInset == m_bHeaderInset) {
+        return;
+    }
+    m_bHeaderInset = bInset;
+    // The frame is what OnNcCalcSize is asked about, and it is only asked when
+    // something says the frame changed.
+    SetWindowPos( nullptr, 0, 0, 0, 0,
+        SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED );
+}
+
+void SEC_TREECLASS::SetColumnWidthFromHeader( int nCol, int nWidth ) {
+    if (m_bSyncingHeader || nCol < 0 || nCol >= static_cast<int>( m_columns.size() )) {
+        return;
+    }
+    // The user dragged a divider. The width has to come back to m_columns
+    // because that is what GetColumnWidth answers, and the editor writes that
+    // into the profile as the layout to restore next run.
+    m_columns[nCol].nWidth = nWidth;
+    LayoutHeader();
+    Invalidate();
+}
+
+void SEC_TREECLASS::SyncHeaderColumns() {
+    if (m_wndHeader.GetSafeHwnd() == nullptr) {
+        return;
+    }
+    // Rebuilt rather than reconciled: there are a handful of columns and this
+    // runs only when one is added, removed or relabelled.
+    m_bSyncingHeader = true;
+    while (m_wndHeader.GetItemCount() > 0) {
+        m_wndHeader.DeleteItem( 0 );
+    }
+    for (size_t nCol = 0; nCol < m_columns.size(); ++nCol) {
+        CString strHeading = m_columns[nCol].strHeading;
+        HDITEM item = { 0 };
+        item.mask = HDI_TEXT | HDI_WIDTH | HDI_FORMAT;
+        item.pszText = strHeading.GetBuffer( 0 );
+        item.cchTextMax = strHeading.GetLength();
+        item.cxy = GetLayoutColumnWidth( static_cast<int>( nCol ) );
+        item.fmt = HDF_STRING | HeaderFormatFromColumnFormat( m_columns[nCol].nFormat );
+        if (m_columns[nCol].nImage >= 0 && m_pHeaderImageList != nullptr) {
+            item.mask |= HDI_IMAGE;
+            item.iImage = m_columns[nCol].nImage;
+            item.fmt |= HDF_IMAGE;
+        }
+        m_wndHeader.InsertItem( static_cast<int>( nCol ), &item );
+        strHeading.ReleaseBuffer();
+    }
+    m_bSyncingHeader = false;
+}
+
+void SEC_TREECLASS::LayoutHeader() {
+    if (m_wndHeader.GetSafeHwnd() == nullptr) {
+        return;
+    }
+    CWnd *const pParent = GetParent();
+    if (pParent == nullptr) {
+        return;
+    }
+    if (!m_bHeaderInset || !IsWindowVisible()) {
+        // A header on a tree nobody can see would be a stray strip of headings
+        // in the dialog, since it is not the tree's child and does not go with
+        // it.
+        if (m_wndHeader.IsWindowVisible()) {
+            m_wndHeader.ShowWindow( SW_HIDE );
+        }
+        return;
+    }
+    // The tree's client area in the parent's coordinates. Taken this way round
+    // rather than from the window rect because the client rect already excludes
+    // both the border and the strip, so there is no frame arithmetic to get
+    // wrong.
+    CRect rectClient;
+    GetClientRect( &rectClient );
+    ClientToScreen( &rectClient );
+    pParent->ScreenToClient( &rectClient );
+
+    const int nScroll = GetScrollPos( SB_HORZ );
+    int nWidth = GetColumnLeft( static_cast<int>( m_columns.size() ) ) + nScroll;
+    if (nWidth < rectClient.Width()) {
+        nWidth = rectClient.Width();
+    }
+    // Laid out scrolled with the tree, and then clipped back to the tree's own
+    // width: a sibling has no parent client area to be clipped by, so columns
+    // scrolled off the left or running off the right would be drawn over the
+    // dialog beside the tree.
+    const CRect rectHeader( rectClient.left - nScroll, rectClient.top - m_nHeaderHeight,
+        rectClient.left - nScroll + nWidth, rectClient.top );
+    const CRect rectVisible( nScroll, 0, nScroll + rectClient.Width(), m_nHeaderHeight );
+
+    // Called from the custom-draw pass, which runs inside the tree's own
+    // painting, so it has to be silent when there is nothing to move.
+    if (rectHeader != m_rectHeaderPlaced) {
+        m_rectHeaderPlaced = rectHeader;
+        m_wndHeader.SetWindowPos( &wndTop, rectHeader.left, rectHeader.top,
+            rectHeader.Width(), rectHeader.Height(), SWP_NOACTIVATE | SWP_SHOWWINDOW );
+    } else if (!m_wndHeader.IsWindowVisible()) {
+        m_wndHeader.ShowWindow( SW_SHOWNOACTIVATE );
+    }
+    if (rectVisible != m_rectHeaderVisible) {
+        m_rectHeaderVisible = rectVisible;
+        CRgn rgnVisible;
+        rgnVisible.CreateRectRgnIndirect( &rectVisible );
+        // SetWindowRgn takes the region over, so it is detached rather than
+        // deleted by CRgn going out of scope.
+        m_wndHeader.SetWindowRgn( static_cast< HRGN >( rgnVisible.Detach() ), TRUE );
+    }
+}
+
+void SEC_TREECLASS::OnNcCalcSize( BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR *lpncsp ) {
+    CWnd::OnNcCalcSize( bCalcValidRects, lpncsp );
+    // The strip the header stands in. Taken out of the client area rather than
+    // laid over it, so the control's first item starts below the headings
+    // instead of behind them.
+    if (m_bHeaderInset && lpncsp->rgrc[0].top + m_nHeaderHeight < lpncsp->rgrc[0].bottom) {
+        lpncsp->rgrc[0].top += m_nHeaderHeight;
+    }
+}
+
+void SEC_TREECLASS::OnWindowPosChanged( WINDOWPOS *lpwndpos ) {
+    CWnd::OnWindowPosChanged( lpwndpos );
+    // Moved, resized, shown or hidden: the header is a sibling and follows none
+    // of that on its own.
+    LayoutHeader();
+}
+
+void SEC_TREECLASS::OnNcDestroy() {
+    // The header belongs to the tree's parent, so it outlives the tree unless
+    // it is taken down here.
+    if (m_wndHeader.GetSafeHwnd() != nullptr) {
+        m_wndHeader.DestroyWindow();
+    }
+    CWnd::OnNcDestroy();
+}
+
+void SEC_TREECLASS::DrawSubItems( CDC *pDC, HTREEITEM hItem ) {
+    if (pDC == nullptr || hItem == nullptr || m_columns.size() < 2) {
+        return;
+    }
+    CRect rectRow;
+    // The whole line the item occupies, which is what gives the top and bottom
+    // of every column. False here fails for an item that is not on screen,
+    // which the control does not ask to be drawn anyway.
+    if (!TreeView_GetItemRect( GetSafeHwnd(), hItem, &rectRow, FALSE )) {
+        return;
+    }
+    CRect rectClient;
+    GetClientRect( &rectClient );
+    const std::map<HTREEITEM, std::vector<CString> >::const_iterator it = m_subItemText.find( hItem );
+
+    COLORREF rgbBk = ColorOrDefault( TreeView_GetBkColor( GetSafeHwnd() ), COLOR_WINDOW );
+    COLORREF rgbText = ColorOrDefault( TreeView_GetTextColor( GetSafeHwnd() ), COLOR_WINDOWTEXT );
+    // LVXS_HILIGHTSUBITEMS is the toolkit's word for "a selected row is
+    // selected all the way across", and PC_Dialog asks for it. Without it, and
+    // without TVS_FULLROWSELECT, the control highlights the label alone and
+    // these columns are drawn unselected to match -- painting them highlighted
+    // would leave a gap of ordinary background between the label and column one.
+    const bool bHilightSubItems = ( m_dwListCtrlStyleEx & LVXS_HILIGHTSUBITEMS ) != 0
+        || ( GetStyle() & TVS_FULLROWSELECT ) != 0;
+    if (bHilightSubItems
+        && ( TreeView_GetItemState( GetSafeHwnd(), hItem, TVIS_SELECTED ) & TVIS_SELECTED ) != 0) {
+        rgbBk = ::GetSysColor( COLOR_HIGHLIGHT );
+        rgbText = ::GetSysColor( COLOR_HIGHLIGHTTEXT );
+    }
+
+    const int nOldBkMode = pDC->SetBkMode( TRANSPARENT );
+    const COLORREF rgbOldText = pDC->SetTextColor( rgbText );
+    // The font is the one the control selected to draw the item with, so it is
+    // left alone: the columns are the same row and read as the same row.
+    for (size_t nCol = 1; nCol < m_columns.size(); ++nCol) {
+        const int nWidth = GetLayoutColumnWidth( static_cast<int>( nCol ) );
+        if (nWidth <= 0) {
+            continue;
+        }
+        CRect rectColumn( GetColumnLeft( static_cast<int>( nCol ) ), rectRow.top, 0, rectRow.bottom );
+        rectColumn.right = rectColumn.left + nWidth;
+        if (rectColumn.right <= rectClient.left || rectColumn.left >= rectClient.right) {
+            continue;
+        }
+        // Filled before anything is written into it, and not only for the sake
+        // of the background: the control drew the item's own label as wide as
+        // its text, so a long name runs on past column zero, and this is what
+        // clips it back.
+        pDC->FillSolidRect( &rectColumn, rgbBk );
+        // Read straight out of the store rather than through GetItemText: that
+        // logs a line per call, and this runs for every column of every row of
+        // every repaint.
+        const CString strText = ( it != m_subItemText.end() && nCol < it->second.size() )
+            ? it->second[nCol] : CString();
+        if (strText.IsEmpty()) {
+            continue;
+        }
+        CRect rectText( rectColumn );
+        rectText.DeflateRect( 2, 0 );
+        pDC->DrawText( strText, &rectText, DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS
+            | DT_NOPREFIX | DrawTextFormatFromColumnFormat( m_columns[nCol].nFormat ) );
+    }
+    pDC->SetTextColor( rgbOldText );
+    pDC->SetBkMode( nOldBkMode );
+}
+
+void SEC_TREECLASS::OnCustomDraw( NMHDR *pNMHDR, LRESULT *pResult ) {
+    const NMTVCUSTOMDRAW *const pDraw = reinterpret_cast<NMTVCUSTOMDRAW *>( pNMHDR );
+    *pResult = CDRF_DODEFAULT;
+    switch (pDraw->nmcd.dwDrawStage) {
+    case CDDS_PREPAINT:
+        // Every repaint is also when the header's position is checked. The tree
+        // scrolls sideways for reasons that never reach OnHScroll -- an
+        // EnsureVisible, a keyboard move, an item widening the content -- and
+        // this is the one place that sees all of them.
+        LayoutHeader();
+        if (m_columns.size() > 1) {
+            *pResult = CDRF_NOTIFYITEMDRAW;
+        }
+        break;
+    case CDDS_ITEMPREPAINT:
+        // Let the control draw the item, then add the columns over the top of
+        // what it drew.
+        *pResult = CDRF_NOTIFYPOSTPAINT;
+        break;
+    case CDDS_ITEMPOSTPAINT:
+        DrawSubItems( CDC::FromHandle( pDraw->nmcd.hdc ),
+            reinterpret_cast<HTREEITEM>( pDraw->nmcd.dwItemSpec ) );
+        break;
+    default:
+        break;
+    }
+}
+
+void SEC_TREECLASS::OnHScroll( UINT nSBCode, UINT nPos, CScrollBar *pScrollBar ) {
+    // The control does the scrolling itself, in the default handler; this only
+    // has to move the header afterwards so the headings stay over their columns.
+    CWnd::OnHScroll( nSBCode, nPos, pScrollBar );
+    LayoutHeader();
 }
