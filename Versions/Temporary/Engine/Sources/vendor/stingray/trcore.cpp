@@ -215,7 +215,24 @@ BOOL SEC_TREECLASS::GetItemRect( HTREEITEM hti, LPRECT lpRect, UINT nCode ) cons
     spdlog::debug("{} this={} hti={} lpRect={} nCode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti), spdlog::fmt_lib::ptr(lpRect), nCode);
     // The control's only rectangle choice is text-only against whole-row, which
     // is what a caller passing a non-zero code is after.
-    return TreeView_GetItemRect(GetSafeHwnd(), hti, lpRect, nCode != 0);
+    if (!TreeView_GetItemRect(GetSafeHwnd(), hti, lpRect, nCode != 0)) {
+        return FALSE;
+    }
+    // "The whole line the item occupies" is the whole of the tree's own column,
+    // not the whole of every column: the toolkit drew the columns after the
+    // first itself, and the line it reported ended where they began.
+    // CPCMainTreeControl reads it that way -- GetTreeItemEditorPlace does
+    // itemRect.left = itemRect.right and then adds GetColumnWidth( 1 ), which
+    // puts the in-place editor on column one only if that right edge is column
+    // zero's. Against the control's answer, which runs to the client edge, the
+    // editor started at the far right and was clamped to nothing.
+    if (nCode == 0 && m_columns.size() > 1) {
+        const int nColumnRight = GetColumnLeft( 1 );
+        if (nColumnRight < lpRect->right) {
+            lpRect->right = nColumnRight;
+        }
+    }
+    return TRUE;
 }
 
 UINT SEC_TREECLASS::GetIndent() const {
@@ -1031,7 +1048,10 @@ BOOL SEC_TREECLASS::Update( HTREEITEM hti, BOOL bLabelOnly, BOOL bEraseBkgnd, BO
 inline BOOL SEC_TREECLASS::InvalidateItem(HTREEITEM hti) {
     spdlog::debug("{} this={} hti={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(hti));
     CRect rectItem;
-    if (!GetItemRect(hti, &rectItem, FALSE)) {
+    // Not through GetItemRect: this wants the row across every column, since
+    // the columns past the first are painted over it, and GetItemRect now
+    // answers with column zero's share of it.
+    if (!TreeView_GetItemRect(GetSafeHwnd(), hti, &rectItem, FALSE)) {
         return FALSE;
     }
     InvalidateRect(&rectItem);
