@@ -705,6 +705,12 @@ void CGScene::SelectNodes( CTransformStack *pTS, CVolumeNode *pNode, std::vector
 	if ( pNode == 0 )
 		return;
 
+	// Scene-wide update lists can insert geometry beyond the current root.
+	// Refresh them before testing its bound so the first frame uses the grown
+	// extent, even when the camera is already outside the previous extent.
+	if ( pNode == pVolume )
+		pNode->updatable.Update( nFrameCounter, pVolume, &trackers );
+
 	SSphere sClipTest;
 	pNode->GetBound( &sClipTest );
 	if ( !pTS->PushClipHint( sClipTest ) )

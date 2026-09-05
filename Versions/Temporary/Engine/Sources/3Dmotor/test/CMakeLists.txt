@@ -47,6 +47,17 @@ add_unit_test(MMXhelpers 3Dmotor Misc)
 add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 add_unit_test(BitOps Misc)
+# Spatial bounds must remain valid for camera and shadow selection on large maps.
+add_unit_test(OcTree 3DLib System Misc)
+# Picking uses the collision map and its software selection grid.
+# Name gr2 directly so the test's runtime DLL copy includes Granny as well.
+add_unit_test(LargeMapSelection 3Dmotor 3DLib System Misc gr2)
+# Internal DLL changes can leave the import library unchanged. Relink the test
+# so add_unit_test's runtime copy refreshes the collision code being tested.
+if(WIN32)
+    set_property(TARGET LargeMapSelection_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()
 
 # These two check against the MASM references under original/, so they exist only
 # where ml/ml64 does. On both architectures there, unlike the inline-__asm group.

@@ -11,7 +11,7 @@ Game also has multiplayer mode and replay system, which are based on command syn
 ## Coding
 Few rules:
 - If you have any questions - ask before coding anything!
-- Don't try build anything yourself, let the prompter/user do it instead.
+- On Windows, don't try build anything with regular system/CMD/Powershell CMake, this project used Visual Studio CMake and VS Developer Environment. On linux, you can use system CMake.
 - Add some comments when you make or change the code to make it clear what was done
 
 ### Game code projects
