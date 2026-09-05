@@ -159,4 +159,24 @@ public:
     virtual BOOL OnGripperExpand();
 
     void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+
+public:
+    //! What DockControlBarEx was told: the thickness this bar wants
+    //! across the edge it is docked to, and the share of that edge's
+    //! length it should take.
+    //!
+    //! Both are needed because a docked bar is asked for its size through
+    //! CalcDynamicLayout with a length of -1 and without LM_STRETCH, so
+    //! the bar itself is the only thing that decides either number. With
+    //! nothing to go on it could answer only its own thickness in both
+    //! directions, which is why every docking window came up square.
+    //!
+    //! A share rather than a size, because the frame gets resized and a
+    //! fraction of the edge is what survives that.
+    void SetDockedLayout( int nThickness, float fPctLength );
+
+protected:
+    //! Zero until DockControlBarEx says otherwise, and then the share of
+    //! the dock edge this bar was docked with.
+    float m_fDockedPctLength = 0.0f;
 };

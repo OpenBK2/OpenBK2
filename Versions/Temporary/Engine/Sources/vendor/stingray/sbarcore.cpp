@@ -1,6 +1,9 @@
 #include "Toolkit/sbarcore.h"
 #include "Toolkit/sbarstat.h"
 
+// For the AFX_IDW_DOCKBAR_ ids, which name the frame's four dock bars.
+#include <afxpriv.h>
+
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
@@ -10,6 +13,31 @@
 // What a docking window gets when nothing has told it how big to be. Wide
 // enough to read a tree or a log in, narrow enough not to take the frame.
 namespace { const int DEFAULT_THICKNESS = 120; }
+
+namespace
+{
+
+// How much of the frame one of its dock bars is currently taking across its
+// own direction. Zero for a dock bar that does not exist or holds nothing,
+// which is what an empty edge should contribute.
+int DockBarExtent( CFrameWnd *pFrame, UINT nDockBarID )
+{
+    if ( pFrame == nullptr )
+    {
+        return 0;
+    }
+    CControlBar *const pDockBar = pFrame->GetControlBar( nDockBarID );
+    if ( pDockBar == nullptr || pDockBar->GetSafeHwnd() == nullptr )
+    {
+        return 0;
+    }
+    CRect rectDockBar;
+    pDockBar->GetWindowRect( &rectDockBar );
+    return ( nDockBarID == AFX_IDW_DOCKBAR_TOP || nDockBarID == AFX_IDW_DOCKBAR_BOTTOM )
+        ? rectDockBar.Height() : rectDockBar.Width();
+}
+
+}
 
 BOOL SECControlBar::m_bOptimizedRedrawEnabled = FALSE;
 
@@ -193,10 +221,61 @@ CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
     return CalcDynamicLayout(-1, (bStretch ? LM_STRETCH : 0) | (bHorz ? LM_HORZ : 0));
 }
 
+void SECControlBar::SetDockedLayout( int nThickness, float fPctLength ) {
+    spdlog::debug("{} this={} nThickness={} fPctLength={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nThickness, fPctLength);
+    if (nThickness > 0) {
+        // m_nMRUWidth is MFC's own "how wide was this bar last", and it is what
+        // CControlBarInfo saves and restores, so the thickness lives there
+        // rather than in a member of our own. A layout read back from the
+        // profile then lands in the same place this does.
+        m_nMRUWidth = static_cast<UINT>( nThickness );
+    }
+    m_fDockedPctLength = fPctLength;
+}
+
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
     spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
-    const int nAlong = (dwMode & LM_STRETCH) != 0 ? 32767 : (nLength >= 0 ? nLength : nThickness);
+    int nAlong;
+    if ((dwMode & LM_STRETCH) != 0) {
+        nAlong = 32767;
+    } else if (nLength >= 0) {
+        nAlong = nLength;
+    } else {
+        // A docked bar is measured here with no length and no LM_STRETCH --
+        // CDockBar::CalcFixedLayout passes LM_VERTDOCK or LM_HORZ|LM_HORZDOCK
+        // and -1 -- so this is the only place the length can come from. The
+        // share DockControlBarEx was given is that length, taken against the
+        // frame's client area along the edge the bar is docked to.
+        //
+        // Falling back to the thickness, which is what this did for everything,
+        // is what made every docking window square.
+        nAlong = nThickness;
+        if (m_fDockedPctLength > 0.0f) {
+            if (CFrameWnd *const pFrame = GetDockingFrame()) {
+                CRect rectFrame;
+                pFrame->GetClientRect( &rectFrame );
+                // The share is of the edge this bar's dock bar actually gets,
+                // which is not the whole frame. MFC gives the top and bottom
+                // dock bars the full client width and leaves the left and right
+                // ones only the height between them, so a vertical bar taking
+                // half "the frame" takes more than half of what there is and
+                // the second one in the column runs off under the bottom bar.
+                int nEdge;
+                if ((dwMode & LM_HORZ) != 0) {
+                    nEdge = rectFrame.Width();
+                } else {
+                    nEdge = rectFrame.Height()
+                        - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_TOP )
+                        - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_BOTTOM );
+                }
+                const int nShare = static_cast<int>( nEdge * m_fDockedPctLength );
+                if (nShare > 0) {
+                    nAlong = nShare;
+                }
+            }
+        }
+    }
     return (dwMode & LM_HORZ) != 0 ? CSize(nAlong, nThickness) : CSize(nThickness, nAlong);
 }
 
