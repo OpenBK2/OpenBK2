@@ -5,25 +5,30 @@
 #include <afxext.h>
 #include <afxcmn.h>
 
+// One bit each. These are combined -- SEC_EX_PROGRESS_DEFAULTS is two of
+// them ORed together -- and an unnumbered enum gives them 0, 1, 2, 3 and so
+// on, so ORing SHOWPERCENT with TEXT_ALIGN_CENTER produced 7, which is
+// TEXT_ALIGN_CENTER on its own and no other bit. Nothing reads them yet,
+// so this cost nothing so far; it is written down so that it cannot.
 enum {
     // Vertical progress control
-    SEC_EX_PROGRESS_VERT,
+    SEC_EX_PROGRESS_VERT = 0x0001,
     // Horizontal displays right to left
-    SEC_EX_PROGRESS_RIGHT_TO_LEFT,
+    SEC_EX_PROGRESS_RIGHT_TO_LEFT = 0x0002,
     // Vertical displays top to bottom
-    SEC_EX_PROGRESS_TOP_TO_BOTTOM,
+    SEC_EX_PROGRESS_TOP_TO_BOTTOM = 0x0004,
     // Show percentage complete text
-    SEC_EX_PROGRESS_SHOWPERCENT,
+    SEC_EX_PROGRESS_SHOWPERCENT = 0x0008,
     // Show custom text inside bar
-    SEC_EX_PROGRESS_SHOWTEXT,
+    SEC_EX_PROGRESS_SHOWTEXT = 0x0010,
     // Left justify shown text/percent
-    SEC_EX_PROGRESS_TEXT_ALIGN_LEFT,
+    SEC_EX_PROGRESS_TEXT_ALIGN_LEFT = 0x0020,
     // Right justify shown text/percent
-    SEC_EX_PROGRESS_TEXT_ALIGN_RIGHT,
+    SEC_EX_PROGRESS_TEXT_ALIGN_RIGHT = 0x0040,
     // Center shown text/percent,
-    SEC_EX_PROGRESS_TEXT_ALIGN_CENTER,
+    SEC_EX_PROGRESS_TEXT_ALIGN_CENTER = 0x0080,
     // Has look and feel of CProgressCtrl
-    SEC_EX_PROGRESS_COMMCTRL32,
+    SEC_EX_PROGRESS_COMMCTRL32 = 0x0100,
     SEC_EX_PROGRESS_DEFAULTS = SEC_EX_PROGRESS_SHOWPERCENT | SEC_EX_PROGRESS_TEXT_ALIGN_CENTER,
 };
 
@@ -118,4 +123,21 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secprogressctrl__calcpercentcomplete.htm
     // Calculates the percent complete.
     virtual float CalcPercentComplete();
+
+protected:
+    //! The extended styles, kept and answered but not acted on.
+    //!
+    //! Every one of them describes drawing the toolkit did itself: vertical,
+    //! right to left, the text inside the bar and how it is aligned. The
+    //! common control offers none of that.
+    DWORD m_dwExStyle;
+
+    //! The text SetWindowText was given, which is kept and not shown.
+    //!
+    //! The toolkit painted it inside the bar. comctl32's progress bar has
+    //! nowhere to put it, so this is where the substitution gives a poorer
+    //! answer than what it replaces -- GetWindowText hands back what it was
+    //! given and nothing draws it. Text on screen wants a static beside the
+    //! bar, which is what CProgressBarWindow already has.
+    CString m_strText;
 };
