@@ -4,6 +4,13 @@ set(SOURCES
     stdafx.cpp
     VFSDbObserver.cpp
 )
+# The UTF-8 active code page, which the game has and this did not. Every
+# narrow string in the tree is UTF-8, and without this the process code page
+# is the system one -- 1251 here -- so every ...A call in MFC and the common
+# controls decoded those bytes as Cyrillic and unit names came out mojibake.
+# Listed as a source because that is how the linker merges a manifest in, and
+# it merges with the MANIFESTDEPENDENCY below rather than replacing it.
+list(APPEND SOURCES utf8.manifest)
 add_executable(B2_MapEditor WIN32 ${SOURCES})
 add_stdafx_pch(B2_MapEditor)
 target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common ED_RTS GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Scintilla Script Server_Client_Common Sound Stats_B2_M1 stingray System UISpecificB2 UI zlib)
