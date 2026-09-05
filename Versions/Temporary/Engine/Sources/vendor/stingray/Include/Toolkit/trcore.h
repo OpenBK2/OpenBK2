@@ -578,8 +578,65 @@ public:
 protected:
     // The toolkit's own extended styles (the TVXS_ and LVXS_ half of the word
     // above). None of them is a window style, so they are kept here rather than
-    // read back off the window, and nothing acts on them yet.
+    // read back off the window. TVXS_MULTISEL is acted on, below; the rest are
+    // only kept so that what was set is what is read back.
     DWORD m_dwTreeCtrlStyleEx;
+
+    // ---- multiple selection ---------------------------------------------
+    //
+    // SysTreeView32 selects one item. The editor asks for TVXS_MULTISEL on
+    // the database browser and on the property trees, and reads the answer
+    // back through GetFirstSelectedItem / GetNextSelectedItem loops -- 52
+    // call sites across 14 files -- every one of which used to run exactly
+    // once, so those trees could only ever act on one object.
+    //
+    // The control has no answer, so the set is kept here and drawn through
+    // it: TVIS_SELECTED is a state bit and the control highlights every item
+    // carrying it, not only its caret. What it will not do is remember them.
+    // Every caret move clears the item it moves off, so the set has to be
+    // put back afterwards -- ApplySelection -- and every accessor answers
+    // from m_selection rather than from TreeView_GetSelection while the
+    // style is on.
+
+    //! Whether TVXS_MULTISEL is set.
+    bool IsMultiSelect() const;
+
+    //! The selected items, in the order the tree displays them.
+    std::vector<HTREEITEM> m_selection;
+    //! What ApplySelection last drew, so it knows what to clear.
+    std::vector<HTREEITEM> m_selectionDrawn;
+    //! Where a Shift range starts.
+    HTREEITEM m_hSelAnchor = nullptr;
+    //! Set while this class is driving the control's own caret, so the
+    //! TVN_SELCHANGED that comes back is not read as the user moving it and
+    //! does not throw the set away.
+    bool m_bOwnSelection = false;
+
+    //! Is that item in the selection.
+    bool InSelection( HTREEITEM hItem ) const;
+    //! Add or remove one item. Changes nothing on screen; ApplySelection does.
+    void SetInSelection( HTREEITEM hItem, bool bSelected );
+    //! The next item in the order the tree displays: first child, then next
+    //! sibling, then the sibling after the nearest ancestor that has one.
+    HTREEITEM NextInDocumentOrder( HTREEITEM hItem ) const;
+    //! Put the selection back into display order, dropping items that have
+    //! gone from the tree.
+    void SortSelection();
+    //! Everything between two items in display order, inclusive, either way
+    //! round.
+    void SelectRange( HTREEITEM hFirst, HTREEITEM hLast, bool bSelect );
+    //! Every displayed descendant of an item, stopping at anything collapsed.
+    void AddVisibleChildren( HTREEITEM hParent );
+    //! Make the control draw exactly m_selection.
+    void ApplySelection();
+    //! The caret is the item carrying TVIS_SELECTED, so one that has been
+    //! deselected leaves the tree without a caret and the keyboard starting
+    //! from the top. This moves it to an item that is still selected.
+    void MoveCaretIntoSelection();
+    //! Take TVS_SHOWSELALWAYS from TVXS_MULTISEL, and seed the set from the
+    //! caret. A selected item that is not the caret is otherwise drawn
+    //! selected only while the tree has the focus.
+    void UpdateMultiSelectStyle();
 
     //! One of the tree's columns.
     //!
@@ -711,6 +768,17 @@ protected:
     //! A column width the user dragged, on its way back to m_columns.
     void SetColumnWidthFromHeader( int nCol, int nWidth );
 
+    afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
+
+    //! Where TVN_SELCHANGED and TVN_DELETEITEM are caught. Not in the message
+    //! map: a reflected notification is dispatched through the most derived
+    //! class's map first, and CPCMainTreeControl and CTreeGDBBrowserBase both
+    //! map TVN_SELCHANGED with a plain ON_NOTIFY_REFLECT, which consumes it.
+    //! An entry here would never have run for the two trees that ask for
+    //! TVXS_MULTISEL. See the definition.
+    BOOL OnChildNotify( UINT message, WPARAM wParam, LPARAM lParam, LRESULT *pLResult ) override;
+    void OnTreeSelChanged( const NMHDR *pNMHDR );
+    void OnTreeDeleteItem( const NMHDR *pNMHDR );
     afx_msg void OnNcCalcSize( BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR *lpncsp );
     afx_msg void OnWindowPosChanged( WINDOWPOS *lpwndpos );
     afx_msg void OnNcDestroy();

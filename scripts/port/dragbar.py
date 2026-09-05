@@ -39,11 +39,14 @@ SM_CXVIRTUALSCREEN, SM_CYVIRTUALSCREEN = 78, 79
 SM_CYSMCAPTION = 51
 
 INPUT_MOUSE = 0
+INPUT_KEYBOARD = 1
 MOUSEEVENTF_MOVE = 0x0001
 MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
 MOUSEEVENTF_ABSOLUTE = 0x8000
 MOUSEEVENTF_VIRTUALDESK = 0x4000
+KEYEVENTF_KEYUP = 0x0002
+VK_SHIFT, VK_CONTROL = 0x10, 0x11
 
 
 class MOUSEINPUT(C.Structure):
@@ -52,11 +55,32 @@ class MOUSEINPUT(C.Structure):
                 ('time', wintypes.DWORD), ('dwExtraInfo', C.POINTER(C.c_ulong))]
 
 
+class KEYBDINPUT(C.Structure):
+    _fields_ = [('wVk', wintypes.WORD), ('wScan', wintypes.WORD),
+                ('dwFlags', wintypes.DWORD), ('time', wintypes.DWORD),
+                ('dwExtraInfo', C.POINTER(C.c_ulong))]
+
+
 class INPUT(C.Structure):
     class _U(C.Union):
-        _fields_ = [('mi', MOUSEINPUT)]
+        _fields_ = [('mi', MOUSEINPUT), ('ki', KEYBDINPUT)]
     _anonymous_ = ('u',)
     _fields_ = [('type', wintypes.DWORD), ('u', _U)]
+
+
+def key(vk, up):
+    """Press or release one key, so a click can be modified.
+
+    Real input, for the same reason the mouse is: the modifier has to be down
+    in the system's own keyboard state when the click is dispatched, because
+    that is where GetKeyState and the MK_ bits in WM_LBUTTONDOWN come from.
+    Posting a WM_KEYDOWN would set neither.
+    """
+    inp = INPUT()
+    inp.type = INPUT_KEYBOARD
+    inp.ki.wVk = vk
+    inp.ki.dwFlags = KEYEVENTF_KEYUP if up else 0
+    u.SendInput(1, C.byref(inp), C.sizeof(INPUT))
 
 
 def send(flags, x=0, y=0):
@@ -112,6 +136,8 @@ def main():
     ap.add_argument('--dy', type=int, default=0)
     ap.add_argument('--steps', type=int, default=12,
                     help='intermediate moves; a drag loop needs more than one')
+    ap.add_argument('--ctrl', action='store_true', help='hold Ctrl over the click')
+    ap.add_argument('--shift', action='store_true', help='hold Shift over the click')
     args = ap.parse_args()
 
     hits, tops = find(args.image, args.id)
@@ -140,6 +166,13 @@ def main():
 
     send(MOUSEEVENTF_MOVE, x0, y0)
     time.sleep(0.2)
+    # Down before the click and up after it, so the modifier is in the system's
+    # keyboard state for the whole of the button down, the moves and the up.
+    if args.ctrl:
+        key(VK_CONTROL, False)
+    if args.shift:
+        key(VK_SHIFT, False)
+    time.sleep(0.1)
     send(MOUSEEVENTF_LEFTDOWN, x0, y0)
     time.sleep(0.2)
     for i in range(1, args.steps + 1):
@@ -148,7 +181,12 @@ def main():
         time.sleep(0.05)
     time.sleep(0.3)
     send(MOUSEEVENTF_LEFTUP, x1, y1)
-    time.sleep(0.8)
+    time.sleep(0.2)
+    if args.shift:
+        key(VK_SHIFT, True)
+    if args.ctrl:
+        key(VK_CONTROL, True)
+    time.sleep(0.6)
     print('done')
     return 0
 
