@@ -30,8 +30,28 @@ const int CMapInfoBuilder::MIN_PLAYER_COUNT = 3;
 const int CMapInfoBuilder::MAX_PLAYER_COUNT = 17;
 const int CMapInfoBuilder::MIN_TERRAIN_SIZE_X = 1;
 const int CMapInfoBuilder::MIN_TERRAIN_SIZE_Y = 1;
-const int CMapInfoBuilder::MAX_TERRAIN_SIZE_X = 20;
-const int CMapInfoBuilder::MAX_TERRAIN_SIZE_Y = 20;
+// Raised from the original 20. Nothing on the game side validates the patch count: every
+// container that scales with it is sized from nNumPatchesX/Y when the map loads, and the
+// only checks anywhere are these, which run from InternalInsertObject and so apply when a
+// map is created and never when one is opened. The matching combo range lives in
+// types.xml, as the MapInfoBuilder SizeX/SizeY "stringParam" attribute.
+//
+// Two constants elsewhere put a real ceiling above this value. Raise them before raising
+// this any further:
+//   - CommonPathFinder.cpp LONG_PATH_LENGTH bounds a traced path at 2000 AI tiles. A
+//     corner to corner run costs about 45 AI tiles per patch, so 44 patches spends the
+//     whole budget on the straight line with nothing left to walk around an obstacle.
+//     Failure is a refused path, not a crash. At 32 patches the diagonal is about 1450,
+//     which leaves roughly a quarter of the budget for detours.
+//   - Common_RTS_AI/Terrain.cpp seeds four minimum searches with 2 * CAIMap::GetMaxMapSize(),
+//     which is 2048 AI tiles. At 64 patches that stops exceeding a real tile coordinate and
+//     the searches quietly return wrong bounds. That is the only thing MAX_MAP_SIZE does.
+//
+// Cost is quadratic in the side, and the dominant term is CGlobalWarFog::ReInit, which
+// eagerly allocates one visibility bitmap per vis tile: roughly 500 bytes per vis tile
+// overall, so about 125 MB at 32 patches against about 50 MB at 20.
+const int CMapInfoBuilder::MAX_TERRAIN_SIZE_X = 32;
+const int CMapInfoBuilder::MAX_TERRAIN_SIZE_Y = 32;
 const char CMapInfoBuilder::TEXTURE_TYPE_NAME[] = "Texture";
 const char CMapInfoBuilder::MATERIAL_TYPE_NAME[] = "Material";
 const std::string CMapInfoBuilder::BUILD_DATA_TYPE_NAME = "MapInfoBuilder";

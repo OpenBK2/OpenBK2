@@ -19782,7 +19782,7 @@
 									<Key>stringParam</Key>
 									<Data>
 										<Type>03000000</Type>
-										<Data>values:1#20; step:1</Data>
+										<Data>values:1#32; step:1</Data>
 									</Data>
 								</Item>
 								<Item>
@@ -19817,7 +19817,7 @@
 									<Key>stringParam</Key>
 									<Data>
 										<Type>03000000</Type>
-										<Data>values:1#20; step:1</Data>
+										<Data>values:1#32; step:1</Data>
 									</Data>
 								</Item>
 								<Item>
