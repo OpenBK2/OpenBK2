@@ -136,12 +136,14 @@ BEGIN_MESSAGE_MAP(CPCMainTreeControl, CSortTreeControl)
 	ON_WM_TIMER()
 	ON_WM_HSCROLL()
 	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONDBLCLK()
 	ON_WM_VSCROLL()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_KEYDOWN()
 	ON_WM_SIZE()
 	ON_WM_SETFOCUS()
 	ON_WM_KILLFOCUS()
+	ON_WM_CTLCOLOR()
 	ON_WM_CONTEXTMENU()
 	ON_MESSAGE(WM_PC_ITEM_CHANGE, OnMessagePCItemChange)
 	ON_NOTIFY_REFLECT( TVN_ITEMEXPANDED, OnItemExpanded )
@@ -210,10 +212,11 @@ void CPCMainTreeControl::PickTextColors( LvPaintContext* pPC )
 						return;
 					}
 				}
-				if ( ForceRelativeParam_ReadOnly( pTvPC->tvi.hItem, false ) )
-				{
-					pTvPC->rgbText = ::GetSysColor( COLOR_GRAYTEXT );
-				}
+			}
+			// Read-only text stays gray when the row is selected or focused, too.
+			if ( !IsEditEnabled() || ForceRelativeParam_ReadOnly( pTvPC->tvi.hItem, false ) )
+			{
+				pTvPC->rgbText = ::GetSysColor( COLOR_GRAYTEXT );
 			}
 		}
 	}
@@ -468,53 +471,14 @@ void CPCMainTreeControl::EnableEdit( bool bEnable )
 
 bool CPCMainTreeControl::GetTreeItemEditorPlace( HTREEITEM hTreeItem, CTRect<int> *pRect )
 {
-	CRect clientRect;
-	GetClientRect( &clientRect );
-	CRect itemRect;
-	if ( !GetItemRect( hTreeItem, &itemRect, false ) )
-	{
+	CRect cell, client;
+	GetClientRect( &client );
+	// Painting and hit testing now use exactly the same column boundary,
+	// including horizontal scrolling and a partially visible last column.
+	if ( !GetSubItemRect( hTreeItem, 1, cell ) || !cell.IntersectRect( cell, client ) )
 		return false;
-	}
-	CRect verScrollBarRect( 0, 0, 0, 0 );
-	//
-	{
-		CScrollBar *pwndScrollBar = GetScrollBarCtrl( SB_VERT );
-		if ( pwndScrollBar && ::IsWindow( pwndScrollBar->GetSafeHwnd() ) )
-		{
-			//const int nPos = GetScrollPos( SB_VERT );
-			int nMinPos = 0;
-			int nMaxPos = 0;
-			GetScrollRange( SB_VERT, &nMinPos, &nMaxPos );
-			if ( pwndScrollBar->IsWindowVisible() && ( nMinPos != nMaxPos ) )
-			{
-				pwndScrollBar->GetWindowRect( &verScrollBarRect );
-			}
-		}
-	}
-	//
-	itemRect.left = itemRect.right;
-	itemRect.right = itemRect.left + GetColumnWidth( 1 ) + 1;
-	
-	itemRect.right -= 1;
-	itemRect.bottom += 1;
-	//
-	if ( ( clientRect.Width() - verScrollBarRect.Width() ) < itemRect.right )
-	{
-		itemRect.right = clientRect.Width() - verScrollBarRect.Width();
-	}
-	if ( itemRect.right < itemRect.left )
-	{
-		itemRect.right = itemRect.left;
-	}
-	//
 	if ( pRect )
-	{
-		pRect->left = itemRect.left;
-		pRect->top = itemRect.top;
-		pRect->right = itemRect.right;
-		pRect->bottom = itemRect.bottom;
-	}
-	//DebugTrace( "GetTreeItemEditorPlace: ( %d, %d, %d, %d ), [%dx%d]\n", pRect->left, pRect->top, pRect->right, pRect->bottom, pRect->Width(), pRect->Height() );
+		*pRect = CTRect<int>( cell.left, cell.top, cell.right, cell.bottom );
 	return true;
 }
 
@@ -1699,78 +1663,75 @@ void CPCMainTreeControl::OnSize( unsigned nType, int cx, int cy )
 }
 
 
-void CPCMainTreeControl::OnLButtonDown( unsigned nFlags, CPoint point ) 
+void CPCMainTreeControl::BeginPCItemEdit( HTREEITEM hItem )
 {
-	CSortTreeControl::OnLButtonDown( nFlags, point );
-
-	if ( !GetViewManipulator() )
-	{
+	if ( hItem == 0 || !GetViewManipulator() || bCreateControls || nCreateTreeTimer != 0 )
 		return;
-	}
-	//
-	if ( nCreateTreeTimer != 0 )
-	{
+	CDialog *pDialog = dynamic_cast<CDialog*>( GetParent() );
+	if ( pDialog == 0 )
 		return;
-	}
-	if ( HTREEITEM hItem = GetSelectedItem() )
+	// Finish the previous editor before assigning its replacement. Holding the
+	// new editor locally also keeps it alive through focus-change notifications.
+	SetFocus();
+	ClosePCItemEditor( true );
+	CPtr<IPCItemEditor> pEditor = CreatePCItemEditor( hItem );
+	pActiveItemEditor = pEditor;
+	if ( pEditor )
 	{
-		CTRect<int> pcItemRect( 0, 0, 0, 0 );
-		GetTreeItemEditorPlace( hItem, &pcItemRect );
-		if ( pcItemRect.IsInside( point.x, point.y ) )
+		UpdatePCItemEditorPosition( hItem );
+		if ( !pEditor->ActivateEditor( pDialog ) )
+			pActiveItemEditor = 0;
+		else if ( !pEditor->IsEditEnabled() )
 		{
-			if ( pActiveItemEditor = CreatePCItemEditor( hItem ) )
-			{
-				UpdatePCItemEditorPosition( hItem );
-				//
-				CDialog *pwndParentDialog = dynamic_cast<CDialog*>( GetParent() );
-				if ( pwndParentDialog )
-				{
-					if ( !pActiveItemEditor->ActivateEditor( pwndParentDialog ) )
-					{
-						pActiveItemEditor = 0;	
-					}
-				}
-			}
+			// GotoDlgCtrl selects all text. Keep the initial read-only appearance
+			// gray; the user can still select text explicitly to copy it.
+			if ( CEdit* pText = dynamic_cast<CEdit*>( static_cast<IPCItemEditor*>( pEditor ) ) )
+				pText->SetSel( 0, 0 );
 		}
 	}
 }
 
 
-void CPCMainTreeControl::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) 
+void CPCMainTreeControl::OnLButtonDown( unsigned nFlags, CPoint point )
 {
-	if ( nChar != VK_ESCAPE )
+	CSortTreeControl::OnLButtonDown( nFlags, point );
+	// Ctrl/Shift clicks adjust selection only. A plain click anywhere in the
+	// value cell edits the row actually under the mouse, including an empty value.
+	if ( ( nFlags & ( MK_CONTROL | MK_SHIFT ) ) != 0 )
+		return;
+	HTREEITEM hItem = HitTest( point );
+	CTRect<int> cell( 0, 0, 0, 0 );
+	if ( hItem && GetTreeItemEditorPlace( hItem, &cell ) && cell.IsInside( point.x, point.y ) )
+		BeginPCItemEdit( hItem );
+}
+
+
+void CPCMainTreeControl::OnLButtonDblClk( unsigned nFlags, CPoint point )
+{
+	HTREEITEM hItem = HitTest( point );
+	CTRect<int> cell( 0, 0, 0, 0 );
+	if ( hItem && GetTreeItemEditorPlace( hItem, &cell ) && cell.IsInside( point.x, point.y ) )
+		OnLButtonDown( nFlags, point );
+	else
+		CSortTreeControl::OnLButtonDblClk( nFlags, point );
+}
+
+
+void CPCMainTreeControl::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
+{
+	if ( nChar == VK_F2 || nChar == VK_RETURN || nChar == VK_SPACE )
 	{
-		CSortTreeControl::OnKeyDown( nChar, nRepCnt, nFlags );
-	}
-	if ( !GetViewManipulator() )
-	{
+		BeginPCItemEdit( GetSelectedItem() );
 		return;
 	}
-	if ( HTREEITEM hItem = GetSelectedItem() )
-	{
-		if ( ( nChar == VK_RETURN ) || ( nChar == VK_SPACE ) )
-		{
-			if ( pActiveItemEditor = CreatePCItemEditor( hItem ) )
-			{
-				UpdatePCItemEditorPosition( hItem );
-				//
-				CDialog *pwndParentDialog = dynamic_cast<CDialog*>( GetParent() );
-				if ( pwndParentDialog )
-				{
-					if ( !pActiveItemEditor->ActivateEditor( pwndParentDialog ) )
-					{
-						pActiveItemEditor = 0;	
-					}
-				}
-			}
-		}
-	}
+	if ( nChar != VK_ESCAPE )
+		CSortTreeControl::OnKeyDown( nChar, nRepCnt, nFlags );
 }
 
 
 void CPCMainTreeControl::OnContextMenu( CWnd *pwnd, CPoint point )
 {
-	CSortTreeControl::OnContextMenu( pwnd, point );
+	PrepareContextMenu( point );
 
 	CMenu mainPopupMenu;
 	mainPopupMenu.LoadMenu( IDM_PC_CONTEXT_MENU );
@@ -1849,6 +1810,19 @@ void CPCMainTreeControl::OnSetFocus( CWnd* pOldWnd )
 void CPCMainTreeControl::OnKillFocus( CWnd* pNewWnd )
 {
 	CSortTreeControl::OnKillFocus( pNewWnd );
+}
+
+
+HBRUSH CPCMainTreeControl::OnCtlColor( CDC* pDC, CWnd* pWnd, UINT nCtlColor )
+{
+	HBRUSH brush = CSortTreeControl::OnCtlColor( pDC, pWnd, nCtlColor );
+	// The inline read-only viewer is a separate native edit control, so the
+	// tree's PickTextColors hook cannot color its text.
+	if ( ( nCtlColor == CTLCOLOR_STATIC || nCtlColor == CTLCOLOR_EDIT ) &&
+			pWnd && pWnd->GetDlgCtrlID() == IDC_PC_ACTIVE_ITEM_EDITOR &&
+			pActiveItemEditor && !pActiveItemEditor->IsEditEnabled() )
+		pDC->SetTextColor( ::GetSysColor( COLOR_GRAYTEXT ) );
+	return brush;
 }
 
 

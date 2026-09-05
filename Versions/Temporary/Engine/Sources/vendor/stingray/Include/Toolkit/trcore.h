@@ -395,6 +395,8 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__hittest.htm
     // Determines the location of the specified point relative to the client area of a tree view control.
     HTREEITEM HitTest(CPoint pt, UINT* pFlags = NULL);
+    // Use the same scrolled column bounds for painting and in-place editors.
+    BOOL GetSubItemRect(HTREEITEM hItem, int nColumn, CRect& rect) const;
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__hittest.htm
     // Determines the location of the specified point relative to the client area of a tree view control.
     HTREEITEM HitTest(TV_HITTESTINFO* pHitTestInfo);
@@ -763,12 +765,17 @@ protected:
     void LayoutHeader();
     //! Paint one item's columns past the first.
     void DrawSubItems( CDC *pDC, HTREEITEM hItem );
+    void GetItemPaintContext(HTREEITEM hItem, int nColumn, TvPaintContext& context);
+    // Select the context-menu target and anchor keyboard menus to that row.
+    void PrepareContextMenu(CPoint& screenPoint);
     //! Make the frame agree with whether there is a header to stand in it.
     void UpdateHeaderInset();
     //! A column width the user dragged, on its way back to m_columns.
     void SetColumnWidthFromHeader( int nCol, int nWidth );
 
     afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
+    afx_msg void OnSetFocus(CWnd* pOldWnd);
+    afx_msg void OnKillFocus(CWnd* pNewWnd);
 
     //! Where TVN_SELCHANGED and TVN_DELETEITEM are caught. Not in the message
     //! map: a reflected notification is dispatched through the most derived

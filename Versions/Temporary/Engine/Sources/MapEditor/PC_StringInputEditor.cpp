@@ -131,6 +131,8 @@ bool CPCStringInputEditor::ActivateEditor( CDialog *pwndActiveDialog )
 	if ( pwndActiveDialog )
 	{
 		pwndActiveDialog->GotoDlgCtrl( this );
+		// Typing immediately replaces the value; another click positions the caret.
+		SetSel( 0, -1 );
 		return true;
 	}
 	return false;

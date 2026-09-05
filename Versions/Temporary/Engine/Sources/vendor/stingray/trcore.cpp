@@ -9,10 +9,10 @@
 // The toolkit draws its own tree, with columns, multiple selection, hidden and
 // disabled items and an animated expand. This library has none of that drawing,
 // so the window it creates is the common control, SysTreeView32, and every call
-// that the common control also has is forwarded to it as a message. What the
-// control has no counterpart for is still a stub that logs and answers nothing:
-// the columns, the toolkit's node and item indices, hidden and disabled items,
-// the filter level and the item colours. Where a forward had to give a poorer
+// that the common control also has is forwarded to it as a message. Columns,
+// multiple selection and per-cell colors are adapted below, together with the
+// editor's mouse/context-menu conventions. Node/item indices, hidden/disabled
+// items and filtering still have stub APIs. Where a forward has to give a poorer
 // answer than the toolkit would have, the reason is written at that function.
 //
 // A call made before Create or after the window is gone sends to a null window,
@@ -125,6 +125,8 @@ BEGIN_MESSAGE_MAP( SEC_TREECLASS, CWnd )
     ON_WM_NCDESTROY()
     ON_WM_HSCROLL()
     ON_WM_LBUTTONDOWN()
+    ON_WM_SETFOCUS()
+    ON_WM_KILLFOCUS()
     // The control sends its custom draw to its parent, and MFC reflects it back
     // here, which is the same route TVN_SELCHANGED already takes to the editor's
     // own tree classes. Nothing between here and the control handles it, so the
@@ -240,11 +242,20 @@ BOOL SEC_TREECLASS::GetItemRect( HTREEITEM hti, LPRECT lpRect, UINT nCode ) cons
     // editor started at the far right and was clamped to nothing.
     if (nCode == 0 && m_columns.size() > 1) {
         const int nColumnRight = GetColumnLeft( 1 );
-        if (nColumnRight < lpRect->right) {
-            lpRect->right = nColumnRight;
-        }
+        lpRect->right = nColumnRight;
     }
     return TRUE;
+}
+
+BOOL SEC_TREECLASS::GetSubItemRect(HTREEITEM hItem, int nColumn, CRect& rect) const {
+    if (nColumn < 0 || nColumn >= static_cast<int>(m_columns.size())
+        || !TreeView_GetItemRect(GetSafeHwnd(), hItem, &rect, FALSE)) {
+        rect.SetRectEmpty();
+        return FALSE;
+    }
+    rect.left = GetColumnLeft(nColumn);
+    rect.right = rect.left + GetLayoutColumnWidth(nColumn);
+    return !rect.IsRectEmpty();
 }
 
 UINT SEC_TREECLASS::GetIndent() const {
@@ -756,7 +767,24 @@ HTREEITEM SEC_TREECLASS::HitTest(CPoint pt, UINT* pFlags) {
     spdlog::debug("{} this={} pt.x={} pt.y={} pFlags={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), pt.x, pt.y, spdlog::fmt_lib::ptr(pFlags));
     TVHITTESTINFO hitTest = { 0 };
     hitTest.pt = pt;
-    const HTREEITEM hItem = TreeView_HitTest(GetSafeHwnd(), &hitTest);
+    HTREEITEM hItem = TreeView_HitTest(GetSafeHwnd(), &hitTest);
+    CRect client;
+    GetClientRect(&client);
+    if (hItem == nullptr && m_columns.size() > 1 && client.PtInRect(pt)
+        && pt.x >= GetColumnLeft(1)) {
+        // Some common-control versions report NOWHERE beyond the native label.
+        // The displayed value still belongs to the visible row at this height.
+        for (HTREEITEM row = TreeView_GetFirstVisible(GetSafeHwnd()); row != nullptr;
+             row = TreeView_GetNextVisible(GetSafeHwnd(), row)) {
+            CRect rect;
+            if (!TreeView_GetItemRect(GetSafeHwnd(), row, &rect, FALSE) || rect.top > pt.y) break;
+            if (pt.y < rect.bottom) {
+                hItem = row;
+                hitTest.flags = TVHT_ONITEMRIGHT;
+                break;
+            }
+        }
+    }
     if (pFlags != nullptr) {
         *pFlags = hitTest.flags;
     }
@@ -1125,7 +1153,11 @@ inline BOOL SEC_TREECLASS::InvalidateItem(HTREEITEM hti) {
     if (!TreeView_GetItemRect(GetSafeHwnd(), hti, &rectItem, FALSE)) {
         return FALSE;
     }
-    InvalidateRect(&rectItem);
+    CRect client;
+    GetClientRect(&client);
+    rectItem.left = client.left;
+    rectItem.right = client.right;
+    InvalidateRect(&rectItem, FALSE);
     return TRUE;
 }
 
@@ -1273,8 +1305,8 @@ void SEC_TREECLASS::SetColumnImage( int nCol, int nImage ) {
     }
 }
 
-void SEC_TREECLASS::PickTextColors(LvPaintContext* pPC) {
-    spdlog::debug("{} this={} pPC={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pPC));
+void SEC_TREECLASS::PickTextColors(LvPaintContext*) {
+    // Defaults are supplied by GetItemPaintContext before calling this hook.
 }
 
 BOOL SEC_TREECLASS::SetBkColor(COLORREF rgbBk) {
@@ -1518,6 +1550,7 @@ void SEC_TREECLASS::ApplySelection() {
     for ( HTREEITEM hItem : m_selectionDrawn ) {
         if ( !InSelection( hItem ) ) {
             TreeView_SetItemState( hWnd, hItem, 0, TVIS_SELECTED );
+            InvalidateItem(hItem);
         }
     }
     // The control selects its own caret, so an item that has stopped being
@@ -1530,6 +1563,7 @@ void SEC_TREECLASS::ApplySelection() {
     }
     for ( HTREEITEM hItem : m_selection ) {
         TreeView_SetItemState( hWnd, hItem, TVIS_SELECTED, TVIS_SELECTED );
+        InvalidateItem(hItem);
     }
     m_selectionDrawn = m_selection;
     m_bOwnSelection = bWasOwn;
@@ -1608,14 +1642,20 @@ void SEC_TREECLASS::UpdateMultiSelectStyle() {
 // also does is select exactly one item, and everything after the call puts the
 // real selection back over that.
 void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
-    if ( !IsMultiSelect() ) {
-        CWnd::OnLButtonDown( nFlags, point );
-        return;
-    }
-
     TVHITTESTINFO hitTest = { 0 };
     hitTest.pt = point;
-    const HTREEITEM hItem = TreeView_HitTest( GetSafeHwnd(), &hitTest );
+    const HTREEITEM hItem = HitTest(point, &hitTest.flags);
+    const bool subItem = hItem != nullptr && m_columns.size() > 1
+        && point.x >= GetColumnLeft(1);
+    if (!IsMultiSelect()) {
+        if (subItem) {
+            SetFocus();
+            TreeView_SelectItem(GetSafeHwnd(), hItem);
+        } else {
+            CWnd::OnLButtonDown(nFlags, point);
+        }
+        return;
+    }
     // The expand button, the indent and the space past the last item belong to
     // the control and change no selection.
     if ( hItem == nullptr
@@ -1628,7 +1668,10 @@ void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
     const bool bShift = ( nFlags & MK_SHIFT ) != 0;
 
     m_bOwnSelection = true;
-    CWnd::OnLButtonDown( nFlags, point );
+    // The native tree treats values as blank space to the right of its label.
+    // Do not let its label-edit/drag tracking consume a value-cell click.
+    if (subItem) SetFocus();
+    else CWnd::OnLButtonDown(nFlags, point);
     m_bOwnSelection = false;
 
     if ( bShift && m_hSelAnchor != nullptr ) {
@@ -1648,7 +1691,59 @@ void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
         m_selection.assign( 1, hItem );
         m_hSelAnchor = hItem;
     }
+    if (subItem && InSelection(hItem)) {
+        m_bOwnSelection = true;
+        TreeView_SelectItem(GetSafeHwnd(), hItem);
+        m_bOwnSelection = false;
+    }
     ApplySelection();
+}
+
+void SEC_TREECLASS::PrepareContextMenu(CPoint& screenPoint) {
+    SetFocus(); // Commits an open value editor before selecting a different row.
+    if (screenPoint == CPoint(-1, -1)) {
+        CRect rect;
+        const HTREEITEM selected = GetSelectedItem();
+        if (selected != nullptr) TreeView_EnsureVisible(GetSafeHwnd(), selected);
+        if (selected == nullptr || !TreeView_GetItemRect(GetSafeHwnd(), selected, &rect, TRUE))
+            GetClientRect(&rect);
+        CRect client;
+        GetClientRect(&client);
+        rect.IntersectRect(rect, client);
+        screenPoint = rect.IsRectEmpty() ? client.TopLeft() : rect.CenterPoint();
+        ClientToScreen(&screenPoint);
+        return;
+    }
+
+    CPoint point(screenPoint);
+    ScreenToClient(&point);
+    const HTREEITEM item = HitTest(point);
+    if (item == nullptr) return;
+    if (IsMultiSelect()) {
+        // Right-clicking an existing selection preserves it; otherwise start a
+        // new selection. Move its caret too, since editor commands use both.
+        if (!InSelection(item)) {
+            m_selection.assign(1, item);
+            m_hSelAnchor = item;
+        }
+        m_bOwnSelection = true;
+        TreeView_SelectItem(GetSafeHwnd(), item);
+        m_bOwnSelection = false;
+        ApplySelection();
+    } else {
+        TreeView_SelectItem(GetSafeHwnd(), item);
+    }
+}
+
+void SEC_TREECLASS::OnSetFocus(CWnd* pOldWnd) {
+    CWnd::OnSetFocus(pOldWnd);
+    Invalidate(FALSE);
+}
+
+void SEC_TREECLASS::OnKillFocus(CWnd* pNewWnd) {
+    CWnd::OnKillFocus(pNewWnd);
+    // The label and all extra columns must change selection colors together.
+    Invalidate(FALSE);
 }
 
 // Where the two notifications this needs are caught, rather than in the message
@@ -1669,6 +1764,17 @@ BOOL SEC_TREECLASS::OnChildNotify( UINT message, WPARAM wParam, LPARAM lParam, L
         const NMHDR *const pHdr = reinterpret_cast< NMHDR * >( lParam );
         // Both notifications come in an ANSI and a Unicode form, and the
         // control sends whichever suits the window it was created as.
+        if (pHdr->code == NM_RCLICK) {
+            // SysTreeView32 sends NM_RCLICK instead of the WM_CONTEXTMENU
+            // expected by the old editor trees. Queue it after native tracking
+            // unwinds; returning nonzero suppresses duplicate default handling.
+            CPoint point;
+            ::GetCursorPos(&point);
+            PostMessage(WM_CONTEXTMENU, reinterpret_cast<WPARAM>(GetSafeHwnd()),
+                MAKELPARAM(point.x, point.y));
+            if (pLResult != nullptr) *pLResult = 1;
+            return TRUE;
+        }
         if ( pHdr->code == TVN_SELCHANGEDA || pHdr->code == TVN_SELCHANGEDW ) {
             OnTreeSelChanged( pHdr );
         } else if ( pHdr->code == TVN_DELETEITEMA || pHdr->code == TVN_DELETEITEMW ) {
@@ -1683,6 +1789,9 @@ BOOL SEC_TREECLASS::OnChildNotify( UINT message, WPARAM wParam, LPARAM lParam, L
 // key means; anything else starts the selection again at the item the caret
 // landed on, which is what a plain arrow key means.
 void SEC_TREECLASS::OnTreeSelChanged( const NMHDR *pNMHDR ) {
+    const auto* change = reinterpret_cast<const NMTREEVIEW*>(pNMHDR);
+    if (change->itemOld.hItem != nullptr) InvalidateItem(change->itemOld.hItem);
+    if (change->itemNew.hItem != nullptr) InvalidateItem(change->itemNew.hItem);
     if ( !IsMultiSelect() || m_bOwnSelection ) {
         return;
     }
@@ -1950,74 +2059,91 @@ void SEC_TREECLASS::OnNcDestroy() {
     CWnd::OnNcDestroy();
 }
 
-void SEC_TREECLASS::DrawSubItems( CDC *pDC, HTREEITEM hItem ) {
-    if (pDC == nullptr || hItem == nullptr || m_columns.size() < 2) {
-        return;
-    }
-    CRect rectRow;
-    // The whole line the item occupies, which is what gives the top and bottom
-    // of every column. False here fails for an item that is not on screen,
-    // which the control does not ask to be drawn anyway.
-    if (!TreeView_GetItemRect( GetSafeHwnd(), hItem, &rectRow, FALSE )) {
-        return;
-    }
-    CRect rectClient;
-    GetClientRect( &rectClient );
-    const std::map<HTREEITEM, std::vector<CString> >::const_iterator it = m_subItemText.find( hItem );
+void SEC_TREECLASS::GetItemPaintContext(HTREEITEM hItem, int nColumn, TvPaintContext& context) {
+    context = TvPaintContext{};
+    context.tvi.hItem = hItem;
+    context.tvi.mask = TVIF_HANDLE | TVIF_STATE | TVIF_PARAM;
+    context.tvi.stateMask = TVIS_SELECTED | TVIS_DROPHILITED | TVIS_CUT | TVIS_BOLD;
+    TreeView_GetItem(GetSafeHwnd(), &context.tvi);
+    context.lvi.iSubItem = nColumn;
+    context.lvi.lParam = context.tvi.lParam;
+    if (context.tvi.state & TVIS_SELECTED) context.lvi.state |= LVIS_SELECTED;
+    if (context.tvi.state & TVIS_DROPHILITED) context.lvi.state |= LVIS_DROPHILITED;
+    if (context.tvi.state & TVIS_CUT) context.lvi.state |= LVIS_CUT;
+    const HWND focus = ::GetFocus();
+    const bool focused = focus == GetSafeHwnd() || ::IsChild(GetSafeHwnd(), focus);
+    if (focused && TreeView_GetSelection(GetSafeHwnd()) == hItem)
+        context.lvi.state |= LVIS_FOCUSED;
 
-    COLORREF rgbBk = ColorOrDefault( TreeView_GetBkColor( GetSafeHwnd() ), COLOR_WINDOW );
-    COLORREF rgbText = ColorOrDefault( TreeView_GetTextColor( GetSafeHwnd() ), COLOR_WINDOWTEXT );
-    // LVXS_HILIGHTSUBITEMS is the toolkit's word for "a selected row is
-    // selected all the way across", and PC_Dialog asks for it. Without it, and
-    // without TVS_FULLROWSELECT, the control highlights the label alone and
-    // these columns are drawn unselected to match -- painting them highlighted
-    // would leave a gap of ordinary background between the label and column one.
-    const bool bHilightSubItems = ( m_dwListCtrlStyleEx & LVXS_HILIGHTSUBITEMS ) != 0
-        || ( GetStyle() & TVS_FULLROWSELECT ) != 0;
-    if (bHilightSubItems
-        && ( TreeView_GetItemState( GetSafeHwnd(), hItem, TVIS_SELECTED ) & TVIS_SELECTED ) != 0) {
-        rgbBk = ::GetSysColor( COLOR_HIGHLIGHT );
-        rgbText = ::GetSysColor( COLOR_HIGHLIGHTTEXT );
-    }
+    const bool highlightColumn = nColumn == 0
+        || (m_dwListCtrlStyleEx & LVXS_HILIGHTSUBITEMS) || (GetStyle() & TVS_FULLROWSELECT);
+    const bool selected = highlightColumn
+        && (context.lvi.state & (LVIS_SELECTED | LVIS_DROPHILITED))
+        && (focused || (GetStyle() & TVS_SHOWSELALWAYS));
+    context.rgbText = selected ? ::GetSysColor(focused ? COLOR_HIGHLIGHTTEXT : COLOR_BTNTEXT)
+        : ColorOrDefault(TreeView_GetTextColor(GetSafeHwnd()), COLOR_WINDOWTEXT);
+    context.rgbItemBkgnd = selected ? ::GetSysColor(focused ? COLOR_HIGHLIGHT : COLOR_BTNFACE)
+        : ColorOrDefault(TreeView_GetBkColor(GetSafeHwnd()), COLOR_WINDOW);
+    context.rgbTextBkgnd = context.rgbIconBkgnd = context.rgbItemBkgnd;
+    // Property trees override this to gray read-only fields and show color swatches.
+    PickTextColors(&context);
+}
 
-    const int nOldBkMode = pDC->SetBkMode( TRANSPARENT );
-    const COLORREF rgbOldText = pDC->SetTextColor( rgbText );
-    // The font is the one the control selected to draw the item with, so it is
-    // left alone: the columns are the same row and read as the same row.
-    for (size_t nCol = 1; nCol < m_columns.size(); ++nCol) {
-        const int nWidth = GetLayoutColumnWidth( static_cast<int>( nCol ) );
-        if (nWidth <= 0) {
-            continue;
-        }
-        CRect rectColumn( GetColumnLeft( static_cast<int>( nCol ) ), rectRow.top, 0, rectRow.bottom );
-        rectColumn.right = rectColumn.left + nWidth;
-        if (rectColumn.right <= rectClient.left || rectColumn.left >= rectClient.right) {
-            continue;
-        }
-        // Filled before anything is written into it, and not only for the sake
-        // of the background: the control drew the item's own label as wide as
-        // its text, so a long name runs on past column zero, and this is what
-        // clips it back.
-        pDC->FillSolidRect( &rectColumn, rgbBk );
-        // Read straight out of the store rather than through GetItemText: that
-        // logs a line per call, and this runs for every column of every row of
-        // every repaint.
-        const CString strText = ( it != m_subItemText.end() && nCol < it->second.size() )
-            ? it->second[nCol] : CString();
-        if (strText.IsEmpty()) {
-            continue;
-        }
-        CRect rectText( rectColumn );
-        rectText.DeflateRect( 2, 0 );
-        pDC->DrawText( strText, &rectText, DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS
-            | DT_NOPREFIX | DrawTextFormatFromColumnFormat( m_columns[nCol].nFormat ) );
+void SEC_TREECLASS::DrawSubItems(CDC* pDC, HTREEITEM hItem) {
+    if (pDC == nullptr || hItem == nullptr || m_columns.size() < 2) return;
+    CRect label;
+    if (!TreeView_GetItemRect(GetSafeHwnd(), hItem, &label, TRUE)) return;
+    CRect client;
+    GetClientRect(&client);
+    const int savedDC = pDC->SaveDC();
+    pDC->IntersectClipRect(client);
+    pDC->SetBkMode(TRANSPARENT);
+
+    TvPaintContext context;
+    GetItemPaintContext(hItem, 0, context);
+    const bool highlightRow = (m_dwListCtrlStyleEx & LVXS_HILIGHTSUBITEMS)
+        || (GetStyle() & TVS_FULLROWSELECT);
+    // SysTreeView32 paints selection only behind its label. Repaint from the
+    // label through column zero's unused space, preserving the hierarchy/icons.
+    CRect first(label.left, label.top, GetColumnLeft(1), label.bottom);
+    if (!first.IsRectEmpty()) {
+        pDC->FillSolidRect(first, context.rgbItemBkgnd);
+        CRect textRect(first);
+        textRect.DeflateRect(2, 0);
+        pDC->SetTextColor(context.rgbText);
+        pDC->DrawText(GetItemText(hItem), textRect,
+            DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
     }
-    pDC->SetTextColor( rgbOldText );
-    pDC->SetBkMode( nOldBkMode );
+    CRect tail(GetColumnLeft(static_cast<int>(m_columns.size())),
+        label.top, client.right, label.bottom);
+    if (!tail.IsRectEmpty())
+        pDC->FillSolidRect(tail, highlightRow ? context.rgbItemBkgnd
+            : ColorOrDefault(TreeView_GetBkColor(GetSafeHwnd()), COLOR_WINDOW));
+
+    const auto found = m_subItemText.find(hItem);
+    for (int col = 1; col < static_cast<int>(m_columns.size()); ++col) {
+        CRect cell;
+        if (!GetSubItemRect(hItem, col, cell)
+            || cell.right <= client.left || cell.left >= client.right) continue;
+        GetItemPaintContext(hItem, col, context);
+        pDC->FillSolidRect(cell, context.rgbItemBkgnd);
+        if (found == m_subItemText.end() || col >= found->second.size()) continue;
+        cell.DeflateRect(2, 0);
+        pDC->SetTextColor(context.rgbText);
+        pDC->DrawText(found->second[col], cell, DT_SINGLELINE | DT_VCENTER
+            | DT_END_ELLIPSIS | DT_NOPREFIX | DrawTextFormatFromColumnFormat(m_columns[col].nFormat));
+    }
+    if (::GetFocus() == GetSafeHwnd() && TreeView_GetSelection(GetSafeHwnd()) == hItem
+        && !(SendMessage(WM_QUERYUISTATE) & UISF_HIDEFOCUS)) {
+        CRect focusRect(label);
+        focusRect.right = highlightRow ? client.right : (std::min)(label.right, static_cast<LONG>(GetColumnLeft(1)));
+        if (!focusRect.IsRectEmpty()) pDC->DrawFocusRect(focusRect);
+    }
+    pDC->RestoreDC(savedDC);
 }
 
 void SEC_TREECLASS::OnCustomDraw( NMHDR *pNMHDR, LRESULT *pResult ) {
-    const NMTVCUSTOMDRAW *const pDraw = reinterpret_cast<NMTVCUSTOMDRAW *>( pNMHDR );
+    NMTVCUSTOMDRAW *const pDraw = reinterpret_cast<NMTVCUSTOMDRAW *>( pNMHDR );
     *pResult = CDRF_DODEFAULT;
     switch (pDraw->nmcd.dwDrawStage) {
     case CDDS_PREPAINT:
@@ -2026,15 +2152,16 @@ void SEC_TREECLASS::OnCustomDraw( NMHDR *pNMHDR, LRESULT *pResult ) {
         // EnsureVisible, a keyboard move, an item widening the content -- and
         // this is the one place that sees all of them.
         LayoutHeader();
-        if (m_columns.size() > 1) {
-            *pResult = CDRF_NOTIFYITEMDRAW;
-        }
+        *pResult = CDRF_NOTIFYITEMDRAW;
         break;
-    case CDDS_ITEMPREPAINT:
-        // Let the control draw the item, then add the columns over the top of
-        // what it drew.
+    case CDDS_ITEMPREPAINT: {
+        TvPaintContext context;
+        GetItemPaintContext(reinterpret_cast<HTREEITEM>(pDraw->nmcd.dwItemSpec), 0, context);
+        pDraw->clrText = context.rgbText;
+        pDraw->clrTextBk = context.rgbTextBkgnd;
         *pResult = CDRF_NOTIFYPOSTPAINT;
         break;
+    }
     case CDDS_ITEMPOSTPAINT:
         DrawSubItems( CDC::FromHandle( pDraw->nmcd.hdc ),
             reinterpret_cast<HTREEITEM>( pDraw->nmcd.dwItemSpec ) );

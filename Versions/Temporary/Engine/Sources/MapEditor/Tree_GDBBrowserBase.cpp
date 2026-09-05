@@ -321,7 +321,7 @@ void CTreeGDBBrowserBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 
 void CTreeGDBBrowserBase::OnContextMenu( CWnd *pwnd, CPoint point )
 {
-	CSortTreeControl::OnContextMenu( pwnd, point );
+	PrepareContextMenu( point );
 	//
 	ScreenToClient( &point );
 	dragAndDropState.OnContextMenu( CTPoint<int>( point.x, point.y ) );

@@ -84,6 +84,7 @@ class CPCMainTreeControl : public CSortTreeControl, public ICommandHandler, publ
 	//
 	void SetPCItemView( HTREEITEM hItem, const SPropertyDesc *pDesc );
 	IPCItemEditor* CreatePCItemEditor( HTREEITEM hItem );
+	void BeginPCItemEdit( HTREEITEM hItem );
 	bool UpdateValueFromPCItemEditor( IPCItemEditor *pPCItemEditor );
 	void UpdatePCItemEditorPosition( HTREEITEM hItem );
 	void ClosePCItemEditor( bool bAcceptChanges );
@@ -109,12 +110,14 @@ protected:
 	afx_msg BOOL OnMouseWheel( unsigned nFlags, short zDelta, CPoint pt );
 	//
 	afx_msg void OnLButtonDown( unsigned nFlags, CPoint point );
+	afx_msg void OnLButtonDblClk( unsigned nFlags, CPoint point );
 	afx_msg void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	afx_msg void OnSize( unsigned nType, int cx, int cy );
 	//
 	afx_msg void OnSetFocus( CWnd* pOldWnd );
 	afx_msg void OnKillFocus( CWnd* pNewWnd );
+	afx_msg HBRUSH OnCtlColor( CDC* pDC, CWnd* pWnd, UINT nCtlColor );
 	//
 	afx_msg void OnContextMenu( CWnd *pwnd, CPoint point );
 	//

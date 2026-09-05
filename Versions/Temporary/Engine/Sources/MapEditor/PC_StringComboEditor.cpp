@@ -150,6 +150,8 @@ bool CPCStringComboEditor::ActivateEditor( CDialog *pwndActiveDialog )
 	if ( pwndActiveDialog )
 	{
 		pwndActiveDialog->GotoDlgCtrl( this );
+		// Activating a value cell should expose its choices on that same click.
+		ShowDropDown( TRUE );
 		return true;
 	}
 	return false;
