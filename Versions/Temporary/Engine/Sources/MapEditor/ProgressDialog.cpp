@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "ProgressDialog.h"
+#include "MapEditorLib/ShellFont.h"
 
 #include <cstdint>
 
@@ -30,6 +31,8 @@ END_MESSAGE_MAP()
 BOOL CProgressDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
 	SetStartTimer();
 	return false;
 }

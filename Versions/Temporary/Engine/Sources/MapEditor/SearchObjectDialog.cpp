@@ -2,6 +2,7 @@
 
 #include "libdb/Manipulator.h"
 #include "SearchObjectDialog.h"
+#include "MapEditorLib/ShellFont.h"
 
 CSearchObjectDialog::CSearchObjectDialog( CWnd* pParent ) : CDialog( CSearchObjectDialog::IDD, pParent )
 {
@@ -22,6 +23,8 @@ END_MESSAGE_MAP()
 BOOL CSearchObjectDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
 	GotoDlgCtrl( GetDlgItem( IDC_SO_TEXT_EDIT ) );
 	return true;
 }
