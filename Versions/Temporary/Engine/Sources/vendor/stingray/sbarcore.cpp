@@ -371,48 +371,86 @@ void SECControlBar::SetDockedLayout( int nThickness, float fPctLength ) {
     m_fDockedPctLength = fPctLength;
 }
 
+// How long this bar wants to be along the edge it is docked to.
+//
+// What the user last resized it to if they have, otherwise the share
+// DockControlBarEx was given, otherwise its own thickness.
+int SECControlBar::CalcDockedAlong(DWORD dwMode) const {
+    const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
+    if (m_nDockedAlong > 0) {
+        return m_nDockedAlong;
+    }
+    if (m_fDockedPctLength <= 0.0f) {
+        return nThickness;
+    }
+    CFrameWnd *const pFrame = const_cast<SECControlBar *>(this)->GetDockingFrame();
+    if (pFrame == nullptr) {
+        return nThickness;
+    }
+    CRect rectFrame;
+    pFrame->GetClientRect( &rectFrame );
+    int nEdge;
+    if ((dwMode & LM_HORZ) != 0) {
+        nEdge = rectFrame.Width();
+    } else {
+        nEdge = rectFrame.Height()
+            - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_TOP )
+            - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_BOTTOM );
+    }
+    const int nShare = static_cast<int>( nEdge * m_fDockedPctLength );
+    return (nShare > 0) ? nShare : nThickness;
+}
+
+// The mode flags decide, not nLength.
+//
+// This read nLength first and used it whenever it was not negative, and
+// CDockContext::StartDrag asks all three of its questions with nLength *zero*:
+//
+//     CalcDynamicLayout( 0, LM_HORZ | LM_HORZDOCK )   how big docked across
+//     CalcDynamicLayout( 0, LM_VERTDOCK )             how big docked down
+//     CalcDynamicLayout( 0, LM_HORZ | LM_MRUWIDTH )   how big floating
+//
+// so every one of them answered zero, every drag rectangle was a line, and
+// dropping the bar docked it at the size it had just claimed. Doing it twice
+// shrank it twice. The zero is not a length, it is "you tell me" -- the flags
+// are the question and nLength only means anything without them.
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
     spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     const int nThickness = m_nMRUWidth != 0 ? static_cast<int>(m_nMRUWidth) : DEFAULT_THICKNESS;
+
+    // A finished resize. This is the only place a new size is meant to stick,
+    // which is why resizing a bar never used to survive anything.
+    if ((dwMode & LM_COMMIT) != 0 && nLength > 0) {
+        m_nDockedAlong = nLength;
+        m_nFloatWidth = nLength;
+    }
+    // Docked: the length is this bar's business and nLength is not being asked.
+    if ((dwMode & LM_HORZDOCK) != 0) {
+        return CSize( CalcDockedAlong( LM_HORZ ), nThickness );
+    }
+    if ((dwMode & LM_VERTDOCK) != 0) {
+        return CSize( nThickness, CalcDockedAlong( 0 ) );
+    }
+    // Floating: the size it was last left at, and something usable if never.
+    if ((dwMode & LM_MRUWIDTH) != 0) {
+        const int nWidth = (m_nFloatWidth > 0) ? m_nFloatWidth : nThickness;
+        const int nHeight = (m_nDockedAlong > 0) ? m_nDockedAlong : (nThickness * 2);
+        return CSize( nWidth, nHeight );
+    }
+
     int nAlong;
     if ((dwMode & LM_STRETCH) != 0) {
         nAlong = 32767;
-    } else if (nLength >= 0) {
+    } else if (nLength > 0) {
+        // An interactive resize in progress: follow the pointer, but do not
+        // remember it until LM_COMMIT says the user let go.
         nAlong = nLength;
     } else {
-        // A docked bar is measured here with no length and no LM_STRETCH --
-        // CDockBar::CalcFixedLayout passes LM_VERTDOCK or LM_HORZ|LM_HORZDOCK
-        // and -1 -- so this is the only place the length can come from. The
-        // share DockControlBarEx was given is that length, taken against the
-        // frame's client area along the edge the bar is docked to.
-        //
-        // Falling back to the thickness, which is what this did for everything,
-        // is what made every docking window square.
-        nAlong = nThickness;
-        if (m_fDockedPctLength > 0.0f) {
-            if (CFrameWnd *const pFrame = GetDockingFrame()) {
-                CRect rectFrame;
-                pFrame->GetClientRect( &rectFrame );
-                // The share is of the edge this bar's dock bar actually gets,
-                // which is not the whole frame. MFC gives the top and bottom
-                // dock bars the full client width and leaves the left and right
-                // ones only the height between them, so a vertical bar taking
-                // half "the frame" takes more than half of what there is and
-                // the second one in the column runs off under the bottom bar.
-                int nEdge;
-                if ((dwMode & LM_HORZ) != 0) {
-                    nEdge = rectFrame.Width();
-                } else {
-                    nEdge = rectFrame.Height()
-                        - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_TOP )
-                        - DockBarExtent( pFrame, AFX_IDW_DOCKBAR_BOTTOM );
-                }
-                const int nShare = static_cast<int>( nEdge * m_fDockedPctLength );
-                if (nShare > 0) {
-                    nAlong = nShare;
-                }
-            }
-        }
+        // Nothing said how long. CDockBar::CalcFixedLayout gets here, asking
+        // with -1 and no dock flag, and the answer is the same one a docked bar
+        // gives: what the user last resized this to, or the share
+        // DockControlBarEx was given.
+        nAlong = CalcDockedAlong( dwMode );
     }
     return (dwMode & LM_HORZ) != 0 ? CSize(nAlong, nThickness) : CSize(nThickness, nAlong);
 }

@@ -181,6 +181,21 @@ protected:
     //! can be drawn pushed and so releasing off it takes the click back.
     BOOL m_bGripperCloseDown = FALSE;
 
+    //! The length along the docked edge the user last resized this bar to,
+    //! and the width it was last left at while floating. Zero until they
+    //! do, and then preferred over the share DockControlBarEx was given --
+    //! a size the user chose outranks a default.
+    //!
+    //! Only LM_COMMIT writes these. A resize in progress asks with the
+    //! length under the pointer on every mouse move, and remembering those
+    //! would make the bar keep whatever size it was dragged through rather
+    //! than the one it was left at.
+    int m_nDockedAlong = 0;
+    int m_nFloatWidth = 0;
+
+    //! How long this bar wants to be along the edge it is docked to.
+    int CalcDockedAlong( DWORD dwMode ) const;
+
     void DoPaint(CDC *pDC) override;
     afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
     afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
