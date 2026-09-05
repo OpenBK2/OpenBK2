@@ -1,4 +1,5 @@
 #include "Toolkit/swinfrm.h"
+#include "dockex.h"
 
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
@@ -32,8 +33,12 @@ void SECFrameWnd::FloatControlBar(CControlBar* pBar, CPoint point, DWORD dwStyle
     spdlog::debug("{} this={} pBar={} point.x={} point.y={} dwStyle={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pBar), point.x, point.y, dwStyle);
 }
 
+// See dockex.h. This is the non-MDI frame's copy of the same call, and nothing
+// in this editor reaches it -- CMainFrame is an MDI frame, so SECMDIFrameWnd's
+// is the one that runs.
 void SECFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID, int nCol, int nRow, float fPctWidth, int nHeight) {
     spdlog::debug("{} this={} pBar={} nDockBarID+{} nCol={} nRow={} fPctWith={} nHeight={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), spdlog::fmt_lib::ptr(pBar), nDockBarID, nCol, nRow, fPctWidth, nHeight);
+    NDockEx::DockControlBarEx( this, pBar, nDockBarID, nCol, nRow, fPctWidth, nHeight );
 }
 
 void SECFrameWnd::CreateCaptionAppFont(CFont& font) {
