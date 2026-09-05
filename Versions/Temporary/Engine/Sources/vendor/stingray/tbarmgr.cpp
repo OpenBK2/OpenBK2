@@ -401,6 +401,57 @@ const std::vector<UINT>& SECToolBarManager::GetMenuIDs() const {
     return m_menuIDs;
 }
 
+const std::vector<SECToolBarManager::ToolBarDef>& SECToolBarManager::GetToolBarDefs() const {
+    return m_defs;
+}
+
+// The window is the truth here, not the definition: the frame's own
+// LoadBarState restores what was on screen last run and never tells the
+// manager, so bVisible is only what the bar was created with.
+BOOL SECToolBarManager::IsToolBarVisible(UINT nID) const {
+    for (const ToolBarDef &def : m_defs) {
+        if (def.nID == nID) {
+            return def.pBar != nullptr && def.pBar->GetSafeHwnd() != nullptr &&
+                   def.pBar->IsWindowVisible();
+        }
+    }
+    return FALSE;
+}
+
+// ShowControlBar rather than ShowWindow, because a docked bar's row has to be
+// re-laid out around it and only the frame can do that.
+void SECToolBarManager::ShowToolBar(UINT nID, BOOL bShow) {
+    spdlog::debug("{} this={} nID={} bShow={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID, bShow);
+    ToolBarDef *pDef = FindDef(nID);
+    CFrameWnd *pFrame = GetFrameWnd();
+    if (pDef == nullptr || pFrame == nullptr) {
+        return;
+    }
+    pDef->bVisible = bShow;
+    if (pDef->pBar != nullptr && pDef->pBar->GetSafeHwnd() != nullptr) {
+        pFrame->ShowControlBar(pDef->pBar, bShow, FALSE);
+    }
+}
+
+// Back to the definition: the buttons the editor named, and the visibility it
+// asked for. Nothing here rearranges buttons yet, so in practice this restores
+// the visibility; it sets the buttons as well so that it stays correct once
+// something can.
+void SECToolBarManager::ResetToolBar(UINT nID) {
+    spdlog::debug("{} this={} nID={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nID);
+    ToolBarDef *pDef = FindDef(nID);
+    if (pDef == nullptr || pDef->pBar == nullptr || pDef->pBar->GetSafeHwnd() == nullptr) {
+        return;
+    }
+    if (!pDef->btnIDs.empty()) {
+        pDef->pBar->SetButtons(pDef->btnIDs.data(), static_cast<int>(pDef->btnIDs.size()));
+    }
+    if (CFrameWnd *pFrame = GetFrameWnd()) {
+        pFrame->ShowControlBar(pDef->pBar, pDef->bVisible, FALSE);
+        pFrame->RecalcLayout();
+    }
+}
+
 // Which toolbar image, if any, belongs to a command.
 //
 // The toolbars are the only place button faces exist, so this is what a menu

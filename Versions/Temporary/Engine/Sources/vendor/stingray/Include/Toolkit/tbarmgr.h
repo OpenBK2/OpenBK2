@@ -174,6 +174,18 @@ public:
         SECCustomToolBar* pBar = nullptr;
     };
 
+    //! Everything DefineDefaultToolBar was told, in the order it was told
+    //! it. This is what Tools -> Customize lists: the titles are what it
+    //! shows and the ids are how it names a bar back to the manager.
+    const std::vector<ToolBarDef>& GetToolBarDefs() const;
+    //! Whether that toolbar's window is on screen right now.
+    BOOL IsToolBarVisible( UINT nID ) const;
+    //! Show or hide one toolbar. The definition is updated too, so a
+    //! later CreateBars or ResetToolBar agrees with what is on screen.
+    void ShowToolBar( UINT nID, BOOL bShow );
+    //! Put one toolbar back to the buttons it was defined with.
+    void ResetToolBar( UINT nID );
+
 private:
     // Build a bar per definition, dock it and show or hide it. Called late,
     // from LoadState and SetDefaultDockState, and idempotent.
