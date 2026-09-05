@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AboutDialog.h"
+#include "MapEditorLib/ShellFont.h"
 #include "MapEditorLib/Interface_UserData.h"
 
 CAboutDialog::CAboutDialog( CWnd* pParent)
@@ -14,6 +15,8 @@ END_MESSAGE_MAP()
 BOOL CAboutDialog::OnInitDialog()
 {
    CDialog::OnInitDialog();
+   // Not a CResizeDialog, so it does not get the shell font from there.
+   NEditorFont::ApplyShellFont( this );
 
   //Set dialog title
   CString strDialogTitle;

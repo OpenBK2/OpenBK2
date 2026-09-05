@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "ProgressBarWindow.h"
+#include "MapEditorLib/ShellFont.h"
 
 CProgressBarWindow::CProgressBarWindow()
 	: CDialog( IDD_PROGRESS_BAR, 0 )
@@ -24,7 +25,9 @@ END_MESSAGE_MAP()
 BOOL CProgressBarWindow::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
+
 	wndProgress.AttachProgress( IDC_PROGRESS, this );
 	wndProgress.SetStep( 1 );
 

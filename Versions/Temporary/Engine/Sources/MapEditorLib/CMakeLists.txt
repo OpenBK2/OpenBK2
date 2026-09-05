@@ -39,6 +39,7 @@ set(SOURCES
     Progress.cpp
     ResizeDialog.cpp
     ScintillaEditor.cpp
+    ShellFont.cpp
     stdafx.cpp
     StoreInputState.cpp
     StringManager.cpp

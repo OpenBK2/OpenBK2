@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MDDLDialog.h"
+#include "MapEditorLib/ShellFont.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "libdb/Manipulator.h"
@@ -50,6 +51,8 @@ void CMDDLDialog::CreateList()
 BOOL CMDDLDialog::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
 	return true;
 }
 

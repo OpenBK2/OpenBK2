@@ -5,6 +5,7 @@
 #include "Interface_UserData.h"
 
 #include "ResizeDialog.h"
+#include "ShellFont.h"
 
 #include <cstdint>
 
@@ -56,9 +57,14 @@ BOOL CResizeDialog::OnEraseBkgnd( CDC* pDC )
 }
 
 
-BOOL CResizeDialog::OnInitDialog() 
+BOOL CResizeDialog::OnInitDialog()
 {
 	CDialog ::OnInitDialog();
+
+	// The shell's font instead of the one the 2005 template names. Here rather
+	// than in each of the forty five dialogs that derive from this, and before
+	// the positions below are recorded, though nothing moves either way.
+	NEditorFont::ApplyShellFont( this );
 
 	//получить размеры и позиции элементов
 	UpdateControlPositions();

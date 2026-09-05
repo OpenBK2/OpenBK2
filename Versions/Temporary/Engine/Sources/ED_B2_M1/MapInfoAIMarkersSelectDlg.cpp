@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ED_B2_M1Dll.h"
 #include "MapInfoAIMarkersSelectDlg.h"
+#include "MapEditorLib/ShellFont.h"
 
 #include <cstdint>
 
@@ -47,7 +48,9 @@ INT_PTR CMapInfoAIMarkersSelectDlg::DoModal()
 BOOL CMapInfoAIMarkersSelectDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
-	
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
+
 	lcUnitTypes.ModifyStyle( 0,	LVS_ALIGNLEFT|WS_CHILD|WS_VISIBLE|LVS_REPORT|LVS_NOCOLUMNHEADER, 0 ); 
 	lcUnitTypes.SetExtendedStyle( LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES ); 
 	CRect r;

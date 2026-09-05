@@ -3,6 +3,7 @@
 #include "ED_B2_M1Dll.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoViewFilterDlg.h"
+#include "MapEditorLib/ShellFont.h"
 
 #include <cstdint>
 
@@ -63,6 +64,8 @@ INT_PTR CMapInfoViewFilterDlg::DoModal()
 BOOL CMapInfoViewFilterDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	// Not a CResizeDialog, so it does not get the shell font from there.
+	NEditorFont::ApplyShellFont( this );
 	//
 	objTypesList.ModifyStyle( 0,	LVS_ALIGNLEFT|WS_CHILD|WS_VISIBLE|LVS_REPORT|LVS_NOCOLUMNHEADER, 0 ); 
 	objTypesList.SetExtendedStyle( LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES ); 
