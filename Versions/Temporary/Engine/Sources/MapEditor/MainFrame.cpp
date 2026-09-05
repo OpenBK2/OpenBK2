@@ -182,12 +182,22 @@ bool BarStateStillFits( CFrameWnd *pFrame, LPCTSTR pszProfileName )
 			}
 			if ( pFrame->GetControlBar( nDockedID & 0xFFFF ) == 0 )
 			{
+				// Named rather than merely refused. A layout is discarded whole,
+				// so one unknown bar silently costs the user every position they
+				// had, and working out which one took two sessions the last time
+				// it happened. A bar is only findable here once it has been
+				// created with the frame as its parent, so the usual answer is
+				// that it does not exist yet.
+				DebugTrace( "Saved bar layout discarded: bar %u, docked in %u, is not a control bar of this frame",
+										nDockedID & 0xFFFF, pInfo->m_nBarID );
 				return false;
 			}
 		}
 		// A floating bar gets a frame of its own rather than being looked up.
 		if ( !pInfo->m_bFloating && pFrame->GetControlBar( pInfo->m_nBarID ) == 0 )
 		{
+			DebugTrace( "Saved bar layout discarded: bar %u is not a control bar of this frame",
+									pInfo->m_nBarID );
 			return false;
 		}
 	}
@@ -386,11 +396,18 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	//Грузим расположение панелей
 	CString strRegistryKeyName;
 	strRegistryKeyName.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
+	// The toolbars first, then the layout that positions them. This order is
+	// the point: SECToolBarManager::LoadState is what actually creates the nine
+	// toolbars, and until it has run they are not windows and not in the
+	// frame's control bar list, so LoadBarState cannot find them. It was the
+	// other way round, and the result was that every saved layout was rejected
+	// by BarStateStillFits below -- for want of bar 59392, the File Toolbar --
+	// and thrown away on every single run. Nothing restored anything.
+	pToolBarMgr->LoadState( strRegistryKeyName );
 	if ( BarStateStillFits( this, strRegistryKeyName ) )
 	{
 		LoadBarState( strRegistryKeyName );
 	}
-	pToolBarMgr->LoadState( strRegistryKeyName );
 	// Создаем дополнительные Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 	{
