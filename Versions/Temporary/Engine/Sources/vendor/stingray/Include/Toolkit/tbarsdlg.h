@@ -20,4 +20,10 @@ public:
     SECToolBarsPage();
 
     void SetManager(SECToolBarManager* pManager);
+
+protected:
+    //! The manager whose toolbars this page is meant to list. Kept, so that
+    //! the page has what it needs the moment it can show anything; it
+    //! cannot yet, because it has no dialog template.
+    SECToolBarManager* m_pManager = nullptr;
 };

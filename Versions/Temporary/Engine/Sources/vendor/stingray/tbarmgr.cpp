@@ -1,5 +1,7 @@
 #include "Toolkit/tbarmgr.h"
 
+#include <cstdarg>
+
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/fmt.h>
@@ -368,9 +370,35 @@ void SECToolBarManager::SetDefaultDockState() {
     CreateBars();
 }
 
+// The menu resources the editor wants offered as commands.
+//
+// CMainFrame::AddMenuResources calls this with between one and ten menu
+// resource ids -- one overload per count, which is what the varargs are for --
+// every time a module contributes menus. They are the *source of commands* for
+// the Customize dialog: the toolkit walked each menu and offered its items as
+// buttons that could be dragged onto a toolbar. Nothing else uses them.
+//
+// So they are kept and answered rather than acted on, and the acting on them
+// belongs with SECToolBarCmdPage, which cannot show anything yet.
 BOOL SECToolBarManager::SetMenuInfo(int nCount, UINT nIDMenu, ...) {
     spdlog::debug("{} this={} nCount={} nIDMenu={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nCount, nIDMenu);
-    return FALSE;
+    if (nCount <= 0) {
+        return FALSE;
+    }
+    m_menuIDs.clear();
+    m_menuIDs.push_back(nIDMenu);
+    va_list args;
+    va_start(args, nIDMenu);
+    for (int i = 1; i < nCount; ++i) {
+        m_menuIDs.push_back(va_arg(args, UINT));
+    }
+    va_end(args);
+    spdlog::debug("SECToolBarManager::SetMenuInfo: keeping {} menu resource id(s)", m_menuIDs.size());
+    return TRUE;
+}
+
+const std::vector<UINT>& SECToolBarManager::GetMenuIDs() const {
+    return m_menuIDs;
 }
 
 // Which toolbar image, if any, belongs to a command.

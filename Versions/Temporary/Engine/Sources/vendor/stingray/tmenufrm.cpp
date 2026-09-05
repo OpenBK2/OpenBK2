@@ -43,6 +43,18 @@ CSize SECMenuBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz) {
     return CSize(0, 0);
 }
 
+// Zero on purpose: this bar is meant to have no size in this editor.
+//
+// The toolkit put the menus on a *control* docked in the top dock bar, which is
+// why the original's top dock bar is 29 pixels high and has a ToolbarWindow32
+// with the menu in it. This port puts a real HMENU on the frame instead, which
+// Windows draws itself above the dock bars, so the menu bar control exists,
+// carries the ids the editor gives it, and is deliberately not shown. Answering
+// a real size here would put a second copy of the menus on screen under the
+// first.
+//
+// The two shapes are both correct and they are not the same; if this editor is
+// ever meant to match the original's window tree, this is where that starts.
 CSize SECMenuBar::CalcDynamicLayout(int nLength, DWORD dwMode) {
     spdlog::debug("{} this={} nLength={} dwMode={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nLength, dwMode);
     return CSize(0, 0);

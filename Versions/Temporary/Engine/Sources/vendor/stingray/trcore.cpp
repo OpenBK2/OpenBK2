@@ -1275,6 +1275,13 @@ UINT SEC_TREECLASS::GetSelectedCount() const {
     return TreeView_GetSelection(GetSafeHwnd()) != nullptr ? 1 : 0;
 }
 
+// Nothing to do, and that is the answer rather than an omission.
+//
+// The toolkit drew the tree and so owned its scroll bars, and had to be told
+// when the contents changed. SysTreeView32 recalculates its own on every insert,
+// delete and expand, so there is no work here and doing any would be fighting
+// it. Counted as a stub by anything that looks for an empty body; it is an
+// honest empty body.
 void SEC_TREECLASS::RecalcScrollBars() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
 }
