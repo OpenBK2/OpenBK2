@@ -8,6 +8,7 @@
 #include "sbarmgr.h"
 #include "tbarcust.h"
 
+#include <map>
 #include <vector>
 
 struct SECBtnMapEntry {
@@ -193,6 +194,47 @@ private:
     ToolBarDef* FindDef(UINT nID);
 
     std::vector<ToolBarDef> m_defs;
+
+    // ---- the shared image list -----------------------------------------
+    //
+    // The toolkit built one image list out of every bitmap it was given and
+    // had every bar index into it. This used to hand each bar its own bitmap
+    // instead, which works for a bar whose buttons never change and fails
+    // the moment one moves: a button's face is its index within its own
+    // bar's bitmap, so the same button on another bar draws whatever that
+    // bar's bitmap happens to hold at that position.
+    //
+    // So the bitmaps are loaded into one list here, each bar is given it,
+    // and a command's face is looked up by command id rather than counted.
+
+    //! Every button face from every bitmap, in the order the bitmaps were
+    //! loaded. Owned here, and outlives the bars: they are deleted in this
+    //! class's destructor body, which runs before its members go.
+    CImageList m_images;
+
+    //! Where one bitmap's frames landed in that list.
+    struct BitmapImages {
+        UINT nID = 0;
+        int nBase = -1;     //!< index of its first frame, -1 if it failed
+        int nCount = 0;     //!< how many frames it contributed
+    };
+    std::vector<BitmapImages> m_bitmapImages;
+
+    //! Which frame is a command's face. Built from the definitions, so it
+    //! answers for a command whose bar has not been created and for one
+    //! that is about to be put on a different bar.
+    std::map<UINT, int> m_commandImage;
+
+    //! Load any bitmap that is not in the list yet, then remap the
+    //! commands. Idempotent, and called again whenever a definition or a
+    //! resource arrives late.
+    void BuildImageList();
+    //! Add one bitmap resource's frames to the list.
+    void AddBitmapToImageList( UINT nBitmapID );
+    //! Walk the definitions pairing each command with its frame.
+    void MapCommandImages();
+    //! Where that bitmap's frames are, or null if it has none.
+    const BitmapImages *FindBitmapImages( UINT nBitmapID ) const;
 
     //! Menu resource ids from SetMenuInfo. Kept, not acted on: the only
     //! thing that would act on them is the Customize dialog.

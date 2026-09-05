@@ -139,6 +139,10 @@ void SECToolBarManager::CreateBars() {
     }
     m_bBarsCreated = TRUE;
 
+    // Every bitmap into one list, and every command paired with its frame in
+    // it, before any bar is built. Both are needed by the first bar.
+    BuildImageList();
+
     for (ToolBarDef &def : m_defs) {
         if (def.pBar != nullptr) {
             continue;
@@ -152,12 +156,17 @@ void SECToolBarManager::CreateBars() {
             continue;
         }
 
-        // The bitmap first, then the buttons: CToolBar numbers the button faces
-        // in button order, skipping separators, which is the same order the
-        // bitmap's frames were authored in for this toolbar.
-        if (def.nBitmapID != 0 && !pBar->LoadBitmap(def.nBitmapID, nullptr, 0)) {
-            spdlog::warn("SECToolBarManager::CreateBars: toolbar {} \"{}\" could not load bitmap {}", def.nID, def.strTitle.GetString(), def.nBitmapID);
-        }
+        // Sizes, then the image list, then the buttons, and the order is not
+        // arbitrary. CToolBar took its button size from the bitmap it loaded
+        // and nothing loads one now, so it is stated; TB_SETBITMAPSIZE, which
+        // is what SetSizes sends, discards the control's images, so the list
+        // has to go on after it; and the faces are numbered when the buttons
+        // are set, so the list has to be there before that.
+        //
+        // 16x15 in a 23x22 button is CToolBar's own default and the size these
+        // 2005 bitmaps were drawn at, so nothing moves.
+        pBar->SetSizes( CSize( 23, 22 ), CSize( 16, 15 ) );
+        pBar->SetSharedImages( &m_images, &m_commandImage );
         if (!def.btnIDs.empty() && !pBar->SetButtons(def.btnIDs.data(), static_cast<int>(def.btnIDs.size()))) {
             spdlog::warn("SECToolBarManager::CreateBars: toolbar {} \"{}\" rejected its {} buttons", def.nID, def.strTitle.GetString(), def.btnIDs.size());
         }
@@ -226,7 +235,15 @@ BOOL SECToolBarManager::LoadToolBarResource(LPCTSTR lpszStdBmpName, LPCTSTR lpsz
 
 BOOL SECToolBarManager::LoadToolBarResource(UINT nIDStdBmp, UINT nIDLargeBmp) {
     spdlog::debug("{} this={} nIDStdBmp={} nIDLargeBmp={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), nIDStdBmp, nIDLargeBmp);
+    // This is the call that starts the list over, so the frames already in the
+    // shared image list go with it. In practice it is called once, before any
+    // toolbar is defined.
     m_bitmaps.clear();
+    m_bitmapImages.clear();
+    m_commandImage.clear();
+    if (m_images.GetSafeHandle() != nullptr) {
+        m_images.DeleteImageList();
+    }
     if (nIDStdBmp == 0) {
         return FALSE;
     }
@@ -318,14 +335,17 @@ BOOL SECToolBarManager::FlyByEnabled() const {
     return m_bFlyBy;
 }
 
-// The flag is kept and reported, but nothing acts on it: large buttons mean a
-// second, bigger bitmap per toolbar, and the large bitmap handed to
-// LoadToolBarResource is discarded here. Says so rather than pretending.
+// The flag is kept and reported, but nothing acts on it, and the shared image
+// list did not change that: large buttons need a second, bigger image list, and
+// there is nothing to fill it from. The editor calls LoadToolBarResource and
+// AddToolBarResource with a standard bitmap and no large one -- the trace shows
+// three resources going past, all in lpszStdBmpName -- so the large bitmaps do
+// not exist to be kept. Says so rather than pretending.
 void SECToolBarManager::EnableLargeBtns(BOOL bEnable) {
     spdlog::debug("{} this={} bEnable={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), bEnable);
     m_bLargeBtns = bEnable;
     if (bEnable) {
-        spdlog::warn("SECToolBarManager::EnableLargeBtns: large buttons are not drawn; the large bitmaps are not kept");
+        spdlog::warn("SECToolBarManager::EnableLargeBtns: large buttons are not drawn; the editor supplies no large bitmaps");
     }
 }
 
@@ -452,41 +472,137 @@ void SECToolBarManager::ResetToolBar(UINT nID) {
     }
 }
 
-// Which toolbar image, if any, belongs to a command.
+// ---- the shared image list -------------------------------------------------
 //
-// The toolbars are the only place button faces exist, so this is what a menu
-// asking for its own icons has to go through. A definition lists its buttons in
-// order and its bar holds one image per button, except that a separator has no
-// id and no image, so the image index is the count of real buttons before it
-// rather than the position in the list.
-BOOL SECToolBarManager::GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const {
-    if (nID == 0 || phImageList == nullptr || pnImage == nullptr) {
-        return FALSE;
+// See tbarmgr.h for why there is one list rather than a bitmap per bar.
+
+const SECToolBarManager::BitmapImages* SECToolBarManager::FindBitmapImages(UINT nBitmapID) const {
+    for (const BitmapImages &images : m_bitmapImages) {
+        if (images.nID == nBitmapID) {
+            return &images;
+        }
     }
-    for (size_t nDef = 0; nDef < m_defs.size(); ++nDef) {
-        const ToolBarDef &def = m_defs[nDef];
-        if (def.pBar == nullptr || def.pBar->GetSafeHwnd() == nullptr) {
+    return nullptr;
+}
+
+// One bitmap's frames onto the end of the list.
+//
+// LoadImage with LR_LOADMAP3DCOLORS rather than a plain LoadBitmap, because
+// that is what makes a 2005 toolbar bitmap look right on a modern theme: the
+// greys it was drawn with are mapped to the current button face and shadow
+// colours. It is also what CToolBar::LoadBitmap did here before, through
+// AfxLoadSysColorBitmap, so nothing about the faces changes.
+void SECToolBarManager::AddBitmapToImageList(UINT nBitmapID) {
+    BitmapImages images;
+    images.nID = nBitmapID;
+
+    const HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(nBitmapID), RT_BITMAP);
+    const HBITMAP hBitmap = static_cast<HBITMAP>(
+        ::LoadImage(hInst, MAKEINTRESOURCE(nBitmapID), IMAGE_BITMAP, 0, 0,
+                    LR_CREATEDIBSECTION | LR_LOADMAP3DCOLORS));
+    if (hBitmap == nullptr) {
+        spdlog::warn("SECToolBarManager: toolbar bitmap {} could not be loaded", nBitmapID);
+        m_bitmapImages.push_back(images);
+        return;
+    }
+
+    CBitmap bitmap;
+    bitmap.Attach(hBitmap);
+    const int nBefore = m_images.GetImageCount();
+    // The mask is the colour the greys were mapped *to*, not the grey they were
+    // drawn in: LR_LOADMAP3DCOLORS has already turned the background into
+    // COLOR_BTNFACE by the time this sees it.
+    const int nBase = m_images.Add(&bitmap, ::GetSysColor(COLOR_BTNFACE));
+    if (nBase < 0) {
+        spdlog::warn("SECToolBarManager: toolbar bitmap {} was not added to the image list", nBitmapID);
+        m_bitmapImages.push_back(images);
+        return;
+    }
+    images.nBase = nBase;
+    images.nCount = m_images.GetImageCount() - nBefore;
+    spdlog::debug("SECToolBarManager: bitmap {} gave {} frames at {}", nBitmapID, images.nCount, images.nBase);
+    m_bitmapImages.push_back(images);
+}
+
+// Each definition's buttons take the frames of the bitmap it was paired with,
+// in order, skipping separators -- which is the same rule CToolBar used within
+// one bar, moved up to the shared list.
+void SECToolBarManager::MapCommandImages() {
+    m_commandImage.clear();
+    for (const ToolBarDef &def : m_defs) {
+        const BitmapImages *const pImages = FindBitmapImages(def.nBitmapID);
+        if (pImages == nullptr || pImages->nBase < 0) {
             continue;
         }
         int nImage = 0;
-        for (size_t nBtn = 0; nBtn < def.btnIDs.size(); ++nBtn) {
-            if (def.btnIDs[nBtn] == 0) {
-                continue;
+        for (UINT nID : def.btnIDs) {
+            if (nID == 0) {
+                continue;       // a separator, which has no frame
             }
-            if (def.btnIDs[nBtn] == nID) {
-                const HIMAGELIST hImageList =
-                    def.pBar->GetToolBarCtrl().GetImageList()->GetSafeHandle();
-                if (hImageList == nullptr) {
-                    return FALSE;
-                }
-                *phImageList = hImageList;
-                *pnImage = nImage;
-                return TRUE;
+            // A bar with more buttons than its bitmap has frames would
+            // otherwise index into the next bitmap and draw someone else's
+            // icons, which the per bar bitmap could not do -- it drew blank.
+            if (nImage >= pImages->nCount) {
+                spdlog::warn("SECToolBarManager: toolbar {} \"{}\" has more buttons than bitmap {} has frames ({})",
+                             def.nID, def.strTitle.GetString(), def.nBitmapID, pImages->nCount);
+                break;
+            }
+            const std::map<UINT, int>::const_iterator it = m_commandImage.find(nID);
+            if (it == m_commandImage.end()) {
+                m_commandImage[nID] = pImages->nBase + nImage;
+            } else if (it->second != pImages->nBase + nImage) {
+                // The same command on two toolbars, drawn from two bitmaps. One
+                // face has to win; the bitmaps repeat the icon, so which one
+                // does not matter, but say so rather than pick silently.
+                spdlog::debug("SECToolBarManager: command {} appears on more than one toolbar, keeping frame {}", nID, it->second);
             }
             ++nImage;
         }
     }
-    return FALSE;
+}
+
+// Called from CreateBars, and again whenever a definition or a resource arrives
+// after the bars were built. Bitmaps already in the list are not reloaded; the
+// command map is rebuilt whole, which is cheap and avoids having to work out
+// what changed.
+void SECToolBarManager::BuildImageList() {
+    if (m_images.GetSafeHandle() == nullptr) {
+        // 16x15 is the frame size CToolBar assumes when it splits a toolbar
+        // bitmap, and so the size these bitmaps were drawn at. ILC_MASK because
+        // the frames are masked by their background colour, not alpha.
+        if (!m_images.Create(16, 15, ILC_COLOR24 | ILC_MASK, 0, 8)) {
+            spdlog::warn("SECToolBarManager: could not create the shared image list");
+            return;
+        }
+    }
+    for (size_t i = m_bitmapImages.size(); i < m_bitmaps.size(); ++i) {
+        AddBitmapToImageList(m_bitmaps[i]);
+    }
+    MapCommandImages();
+}
+
+// Which toolbar image, if any, belongs to a command.
+//
+// The toolbars are the only place button faces exist, so this is what a menu
+// asking for its own icons has to go through -- SECMDIFrameWnd::EnableBmpMenus.
+// It used to walk the built bars and count, which meant it could only answer
+// for a command on a bar that existed. It answers from the definitions now, so
+// a command on a toolbar that was never created has a face too.
+BOOL SECToolBarManager::GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const {
+    if (nID == 0 || phImageList == nullptr || pnImage == nullptr) {
+        return FALSE;
+    }
+    const HIMAGELIST hImageList = m_images.GetSafeHandle();
+    if (hImageList == nullptr) {
+        return FALSE;
+    }
+    const std::map<UINT, int>::const_iterator it = m_commandImage.find(nID);
+    if (it == m_commandImage.end()) {
+        return FALSE;
+    }
+    *phImageList = hImageList;
+    *pnImage = it->second;
+    return TRUE;
 }
 
 // Where the toolbars actually get built.

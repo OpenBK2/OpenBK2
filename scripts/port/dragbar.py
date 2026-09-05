@@ -23,6 +23,7 @@ import time
 from ctypes import wintypes
 
 u = C.WinDLL('user32', use_last_error=True)
+k = C.WinDLL('kernel32', use_last_error=True)
 WNDENUMPROC = C.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
 u.EnumWindows.argtypes = [WNDENUMPROC, wintypes.LPARAM]
 u.EnumChildWindows.argtypes = [wintypes.HWND, WNDENUMPROC, wintypes.LPARAM]
@@ -97,6 +98,38 @@ def send(flags, x=0, y=0):
     u.SendInput(1, C.byref(inp), C.sizeof(INPUT))
 
 
+def raise_window(hwnd):
+    """Bring a window to the front, and say whether it worked.
+
+    This matters more than it looks. Every click here is injected at a *screen*
+    coordinate worked out from the target's window rectangle, so if the target
+    is behind something else the click lands in whatever is on top -- another
+    application, belonging to whoever is at the keyboard. That has happened
+    twice while writing these probes.
+
+    SetForegroundWindow alone is not enough: Windows refuses it to a process
+    that does not already own the foreground, and returns success anyway. The
+    usual way round it is to join the input queue of the thread that does own
+    it, which makes the two threads share a notion of focus for the moment the
+    call takes.
+    """
+    u.GetForegroundWindow.restype = wintypes.HWND
+    u.AttachThreadInput.argtypes = [wintypes.DWORD, wintypes.DWORD, wintypes.BOOL]
+    if u.GetForegroundWindow() == hwnd:
+        return True
+    u.SetForegroundWindow(hwnd)
+    if u.GetForegroundWindow() == hwnd:
+        return True
+    here = k.GetCurrentThreadId()
+    there = u.GetWindowThreadProcessId(u.GetForegroundWindow(), None)
+    if there and there != here:
+        u.AttachThreadInput(here, there, True)
+        u.SetForegroundWindow(hwnd)
+        u.AttachThreadInput(here, there, False)
+    time.sleep(0.3)
+    return u.GetForegroundWindow() == hwnd
+
+
 def pids_for(image):
     txt = subprocess.run(['tasklist', '/FI', 'IMAGENAME eq ' + image, '/FO', 'CSV', '/NH'],
                          capture_output=True, text=True).stdout
@@ -160,9 +193,14 @@ def main():
     x1, y1 = x0 + args.dx, y0 + args.dy
     print('0x%X client %dx%d, dragging %d,%d -> %d,%d' % (hwnd, rc.right, rc.bottom, x0, y0, x1, y1))
 
-    for h in tops:
-        u.SetForegroundWindow(h)
-    time.sleep(0.6)
+    # Nothing is injected until the target is demonstrably in front, because a
+    # click at these coordinates would otherwise land in whatever is.
+    top = u.GetAncestor(hwnd, 2) or (tops[0] if tops else hwnd)
+    if not raise_window(top):
+        raise SystemExit('could not bring 0x%X to the front; refusing to click, '
+                         'because the click would land in whatever is there '
+                         'instead' % top)
+    time.sleep(0.4)
 
     send(MOUSEEVENTF_MOVE, x0, y0)
     time.sleep(0.2)
