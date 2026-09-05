@@ -373,6 +373,43 @@ BOOL SECToolBarManager::SetMenuInfo(int nCount, UINT nIDMenu, ...) {
     return FALSE;
 }
 
+// Which toolbar image, if any, belongs to a command.
+//
+// The toolbars are the only place button faces exist, so this is what a menu
+// asking for its own icons has to go through. A definition lists its buttons in
+// order and its bar holds one image per button, except that a separator has no
+// id and no image, so the image index is the count of real buttons before it
+// rather than the position in the list.
+BOOL SECToolBarManager::GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const {
+    if (nID == 0 || phImageList == nullptr || pnImage == nullptr) {
+        return FALSE;
+    }
+    for (size_t nDef = 0; nDef < m_defs.size(); ++nDef) {
+        const ToolBarDef &def = m_defs[nDef];
+        if (def.pBar == nullptr || def.pBar->GetSafeHwnd() == nullptr) {
+            continue;
+        }
+        int nImage = 0;
+        for (size_t nBtn = 0; nBtn < def.btnIDs.size(); ++nBtn) {
+            if (def.btnIDs[nBtn] == 0) {
+                continue;
+            }
+            if (def.btnIDs[nBtn] == nID) {
+                const HIMAGELIST hImageList =
+                    def.pBar->GetToolBarCtrl().GetImageList()->GetSafeHandle();
+                if (hImageList == nullptr) {
+                    return FALSE;
+                }
+                *phImageList = hImageList;
+                *pnImage = nImage;
+                return TRUE;
+            }
+            ++nImage;
+        }
+    }
+    return FALSE;
+}
+
 // Where the toolbars actually get built.
 //
 // The toolkit restores each customizable bar's saved buttons and position from

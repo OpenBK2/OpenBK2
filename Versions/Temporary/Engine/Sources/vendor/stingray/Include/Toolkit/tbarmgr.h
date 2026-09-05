@@ -136,6 +136,11 @@ public:
     BOOL CoolLookEnabled() const;
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectoolbarmanager__setbuttonmap.htm
     // Intialize the toolbar button map information across all toolbars
+    //! The toolbar image for a command, for anything that wants to draw
+    //! a button's face somewhere else -- the menus, through
+    //! SECMDIFrameWnd::EnableBmpMenus. False when the command is on no
+    //! toolbar, or on one that has not been built yet.
+    BOOL GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const;
     void SetButtonMap(const SECBtnMapEntry* pMap);
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sectoolbarmanager__getbuttonmap.htm
     // Get the button map information
