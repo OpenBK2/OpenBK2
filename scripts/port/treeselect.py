@@ -11,6 +11,7 @@ does.
     python treeselect.py --id 400                 # what is in there, what is selected
     python treeselect.py --id 400 --first         # select the first root item
     python treeselect.py --id 400 --index 3       # select the fourth root item
+    python treeselect.py --id 400 --leaf          # walk down to a leaf and select it
     python treeselect.py --id 400 --first --then-ok
 
 Everything here uses messages whose answer is the message result rather than
@@ -25,6 +26,7 @@ import argparse
 import ctypes as C
 import subprocess
 import sys
+import time
 from ctypes import wintypes
 
 u = C.WinDLL('user32', use_last_error=True)
@@ -41,13 +43,16 @@ u.SendMessageTimeoutW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM,
 u.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
 
 TV_FIRST = 0x1100
+TVM_EXPAND = TV_FIRST + 2
 TVM_GETCOUNT = TV_FIRST + 5
 TVM_GETNEXTITEM = TV_FIRST + 10
 TVM_SELECTITEM = TV_FIRST + 11
 TVM_ENSUREVISIBLE = TV_FIRST + 20
 TVGN_ROOT = 0x0000
 TVGN_NEXT = 0x0001
+TVGN_CHILD = 0x0004
 TVGN_CARET = 0x0009
+TVE_EXPAND = 0x0002
 WM_COMMAND = 0x0111
 IDOK = 1
 SMTO_ABORTIFHUNG = 0x0002
@@ -100,6 +105,12 @@ def main():
     ap.add_argument("--id", type=int, required=True, help="tree control id")
     ap.add_argument("--first", action="store_true", help="select the first root item")
     ap.add_argument("--index", type=int, help="select this root item, zero based")
+    ap.add_argument("--leaf", action="store_true",
+                    help="walk down the first child of each level to a leaf")
+    ap.add_argument("--depth", type=int, default=8,
+                    help="how far --leaf will walk")
+    ap.add_argument("--settle", type=float, default=0.6,
+                    help="seconds to let a level fill after expanding it")
     ap.add_argument("--then-ok", action="store_true",
                     help="post IDOK to the tree's dialog afterwards")
     args = ap.parse_args()
@@ -118,17 +129,32 @@ def main():
               % (hwnd, args.id, count, hex(selected) if selected else "none"))
 
         want = args.index if args.index is not None else (0 if args.first else None)
-        if want is None:
+        if want is None and not args.leaf:
             continue
 
         item = ask(hwnd, TVM_GETNEXTITEM, TVGN_ROOT, 0)
-        for _ in range(want):
+        for _ in range(want or 0):
             if not item:
                 break
             item = ask(hwnd, TVM_GETNEXTITEM, TVGN_NEXT, item)
         if not item:
-            print("  no root item at index %d" % want)
+            print("  no root item at index %d" % (want or 0))
             continue
+
+        if args.leaf:
+            # Down the first child of each level until there are no more. The
+            # object trees fill a level only when it is expanded, so each step
+            # is expand, wait, then ask for the child -- the objects a map is
+            # opened from are three levels in and none of them exists until the
+            # one above it has been opened.
+            for _ in range(args.depth):
+                ask(hwnd, TVM_SELECTITEM, TVGN_CARET, item)
+                ask(hwnd, TVM_EXPAND, TVE_EXPAND, item)
+                time.sleep(args.settle)
+                child = ask(hwnd, TVM_GETNEXTITEM, TVGN_CHILD, item)
+                if not child:
+                    break
+                item = child
 
         ask(hwnd, TVM_ENSUREVISIBLE, 0, item)
         ok = ask(hwnd, TVM_SELECTITEM, TVGN_CARET, item)
