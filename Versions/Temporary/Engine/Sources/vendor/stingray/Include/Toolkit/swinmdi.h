@@ -9,6 +9,8 @@
 #include "sbarmgr.h"
 #include "tmenufrm.h"
 
+#include <map>
+
 // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/secmdichildwnd.htm
 
 class SECMDIChildWnd : public CMDIChildWnd {
@@ -84,4 +86,23 @@ public:
 
     // m_pMenuBar is a member of SECFrameWnd so you do not have to create it yourself
     SECMenuBar * m_pMenuBar = nullptr;
+
+protected:
+    //! Whether EnableBmpMenus was asked for.
+    BOOL m_bBmpMenus = FALSE;
+
+    //! One bitmap per command, made on first sight and kept until the
+    //! frame goes away: a menu does not copy the bitmap it is handed,
+    //! so it has to outlive every popup that shows it. A command with
+    //! no toolbar image is remembered as a null so it is looked up
+    //! once rather than on every popup.
+    std::map< UINT, HBITMAP > m_menuBitmaps;
+
+    //! Put the toolbar face beside every command in one popup.
+    void DecorateMenuWithBitmaps( CMenu *pPopupMenu );
+
+    afx_msg void OnInitMenuPopup( CMenu *pPopupMenu, UINT nIndex, BOOL bSysMenu );
+    afx_msg void OnDestroy();
+
+    DECLARE_MESSAGE_MAP()
 };
