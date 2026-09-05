@@ -1436,7 +1436,22 @@ void SEC_TREECLASS::LayoutHeader() {
 }
 
 void SEC_TREECLASS::OnNcCalcSize( BOOL bCalcValidRects, NCCALCSIZE_PARAMS FAR *lpncsp ) {
+    // The base fills the rectangle in, by way of DefWindowProc, and this then
+    // takes the strip out of what it filled in. That order is MFC's own, in
+    // CMFCControlBarImpl and CMFCCaptionBar.
     CWnd::OnNcCalcSize( bCalcValidRects, lpncsp );
+    if (lpncsp == nullptr) {
+        return;
+    }
+    // Only rgrc[0], and that is not an accident. WM_NCCALCSIZE carries two
+    // shapes: with wParam TRUE the lParam is an NCCALCSIZE_PARAMS, and with
+    // wParam FALSE it is a single RECT. MFC's dispatcher casts to
+    // NCCALCSIZE_PARAMS either way, and that is safe only because the struct
+    // begins with RECT rgrc[3], so rgrc[0] is the same memory as the lone RECT
+    // of the second shape. rgrc[1] and rgrc[2] would be a read off the end of
+    // it, which is why bCalcValidRects has to be tested before touching those
+    // and does not have to be for this.
+    //
     // The strip the header stands in. Taken out of the client area rather than
     // laid over it, so the control's first item starts below the headings
     // instead of behind them.
