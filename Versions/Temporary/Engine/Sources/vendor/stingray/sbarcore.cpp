@@ -1,8 +1,15 @@
 #include "Toolkit/sbarcore.h"
 #include "Toolkit/sbarstat.h"
 
-// For the AFX_IDW_DOCKBAR_ ids, which name the frame's four dock bars.
+// For the AFX_IDW_DOCKBAR_ ids, which name the frame's four dock bars, and for
+// CDockContext, which is what drags a bar out of one.
 #include <afxpriv.h>
+
+
+BEGIN_MESSAGE_MAP( SECControlBar, CControlBar )
+    ON_WM_LBUTTONDOWN()
+    ON_WM_LBUTTONUP()
+END_MESSAGE_MAP()
 
 #include <boost/current_function.hpp>
 #include <spdlog/spdlog.h>
@@ -106,6 +113,137 @@ void SECControlBar::GetInsideRect(CRect& rectInside) const {
     }
     GetClientRect(&rectInside);
     CalcInsideRect(rectInside, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
+    // The gripper comes out of the same rectangle the contents are given, which
+    // is what makes it cost nothing elsewhere: CDefaultDockingWindow::OnSize
+    // asks for this and positions its contents in it, so the pane's contents
+    // move down by themselves and no editor code changes.
+    rectInside.top += GetGripperHeight();
+    if (rectInside.top > rectInside.bottom) {
+        rectInside.top = rectInside.bottom;
+    }
+}
+
+// How tall the gripper strip is, and zero when there is not one.
+//
+// A floating bar has a real caption of its own from its mini frame, so a second
+// one inside it would be two title bars stacked.
+int SECControlBar::GetGripperHeight() const {
+    if (!m_bShowGripper || GetSafeHwnd() == nullptr || (m_dwStyle & CBRS_FLOATING) != 0) {
+        return 0;
+    }
+    const int nHeight = ::GetSystemMetrics(SM_CYSMCAPTION);
+    return (nHeight > 0) ? nHeight : 16;
+}
+
+// Where the gripper is, and where its close button is inside it.
+BOOL SECControlBar::GetGripperRects(CRect *pRectGripper, CRect *pRectClose) const {
+    const int nHeight = GetGripperHeight();
+    if (nHeight <= 0) {
+        return FALSE;
+    }
+    CRect rect;
+    GetClientRect(&rect);
+    CalcInsideRect(rect, (m_dwStyle & CBRS_ORIENT_HORZ) != 0);
+    rect.bottom = rect.top + nHeight;
+    if (rect.IsRectEmpty()) {
+        return FALSE;
+    }
+    if (pRectGripper != nullptr) {
+        *pRectGripper = rect;
+    }
+    if (pRectClose != nullptr) {
+        // Square, at the right hand end, inset a little so it is not touching
+        // the border.
+        const int nButton = rect.Height() - 2;
+        *pRectClose = CRect(rect.right - nButton - 1, rect.top + 1, rect.right - 1, rect.top + 1 + nButton);
+    }
+    return TRUE;
+}
+
+// Draw the gripper: the pane's own title, and a close button.
+//
+// The toolkit drew a gripper with a close and an expand button and kept the
+// rectangles in m_rcGripperCloseButton and m_rcGripperExpandButton. This draws
+// the close half of that, because closing is what the editor overrides
+// OnGripperClose for; there is nothing behind expand in this editor.
+void SECControlBar::DoPaint(CDC *pDC) {
+    CControlBar::DoPaint(pDC);
+    CRect rectGripper;
+    if (pDC == nullptr || !GetGripperRects(&rectGripper, &m_rcGripperCloseButton)) {
+        return;
+    }
+    pDC->FillSolidRect(&rectGripper, ::GetSysColor(COLOR_3DFACE));
+    // A line under it, so the strip reads as a caption rather than as part of
+    // whatever the pane is showing.
+    pDC->FillSolidRect(rectGripper.left, rectGripper.bottom - 1, rectGripper.Width(), 1,
+        ::GetSysColor(COLOR_3DSHADOW));
+
+    CString strTitle;
+    GetWindowText(strTitle);
+    if (!strTitle.IsEmpty()) {
+        CRect rectText(rectGripper);
+        rectText.left += 4;
+        rectText.right = m_rcGripperCloseButton.left - 2;
+        const int nOldMode = pDC->SetBkMode(TRANSPARENT);
+        const COLORREF rgbOld = pDC->SetTextColor(::GetSysColor(COLOR_BTNTEXT));
+        CFont *const pOldFont = pDC->SelectObject(
+            CFont::FromHandle(reinterpret_cast<HFONT>(::GetStockObject(DEFAULT_GUI_FONT))));
+        pDC->DrawText(strTitle, &rectText, DT_SINGLELINE | DT_VCENTER | DT_END_ELLIPSIS | DT_NOPREFIX);
+        pDC->SelectObject(pOldFont);
+        pDC->SetTextColor(rgbOld);
+        pDC->SetBkMode(nOldMode);
+    }
+    // DFCS_CAPTIONCLOSE is the same X the system draws on a small caption, so
+    // it follows the user's theme without this having to know anything about it.
+    pDC->DrawFrameControl(&m_rcGripperCloseButton, DFC_CAPTION,
+        DFCS_CAPTIONCLOSE | (m_bGripperCloseDown ? DFCS_PUSHED : 0));
+}
+
+void SECControlBar::OnLButtonDown(UINT nFlags, CPoint point) {
+    CRect rectGripper;
+    CRect rectClose;
+    if (!GetGripperRects(&rectGripper, &rectClose) || !rectGripper.PtInRect(point)) {
+        CControlBar::OnLButtonDown(nFlags, point);
+        return;
+    }
+    if (rectClose.PtInRect(point)) {
+        m_bGripperCloseDown = TRUE;
+        InvalidateRect(&rectClose);
+        SetCapture();
+        return;
+    }
+    // Anywhere else on the strip is the handle: this is what a gripper is for
+    // besides closing, and MFC already knows how to drag a docked bar once it
+    // is told where the drag began.
+    if (m_pDockContext != nullptr) {
+        ClientToScreen(&point);
+        m_pDockContext->StartDrag(point);
+    }
+}
+
+void SECControlBar::OnLButtonUp(UINT nFlags, CPoint point) {
+    if (!m_bGripperCloseDown) {
+        CControlBar::OnLButtonUp(nFlags, point);
+        return;
+    }
+    m_bGripperCloseDown = FALSE;
+    ::ReleaseCapture();
+    CRect rectClose;
+    GetGripperRects(nullptr, &rectClose);
+    InvalidateRect(&rectClose);
+    // Released somewhere else means the click was taken back, the way any
+    // button behaves.
+    if (!rectClose.PtInRect(point)) {
+        return;
+    }
+    // The editor's own override gets to refuse: CDWGDBBrowser has one, and it
+    // has never been asked until now because nothing drew a button to ask from.
+    if (!OnGripperClose()) {
+        return;
+    }
+    if (CFrameWnd *const pFrame = GetDockingFrame()) {
+        pFrame->ShowControlBar(this, FALSE, FALSE);
+    }
 }
 
 BOOL SECControlBar::IsMDIChild() const {
