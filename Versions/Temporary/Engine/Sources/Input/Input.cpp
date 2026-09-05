@@ -358,7 +358,13 @@ bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 	if ( bInitialized )
 		return true;
 
+#if BOOST_OS_WINDOWS
+	// The editor can restart input with its 3D child window. DirectInput and
+	// the foreground-window check both need that window's top-level frame.
+	hWindow = GetAncestor( hWnd, GA_ROOT );
+#else
 	hWindow = hWnd;
+#endif
 	bNonExclusiveMode = _bNonExclusiveMode;
 
 	if ( !OpenDevices( nSampleBufferSize ) )
@@ -384,6 +390,11 @@ bool DoneInput()
 	SetFocus( false );
 	CloseDevices();
 	devices.clear();
+	// These flags describe the devices just destroyed, not the next session.
+	// In particular, every new DirectInput device needs its cooperative level set.
+	bCoopLevelSet = false;
+	bFocusCaptured = false;
+	hWindow = 0;
 	bInitialized = false;
 
 	return true;

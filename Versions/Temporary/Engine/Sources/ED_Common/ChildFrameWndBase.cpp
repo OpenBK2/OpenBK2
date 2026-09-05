@@ -700,6 +700,9 @@ void CChildFrameWndBase::DisableGameInput()
 	NInput::DoneInput();
 	NMainLoop::ResetStack();
 	bGameInputEnabled = false;
+	// Camera control can suppress editor clicks until its key-up event. Closing
+	// a map discards that input session, so do not carry the lock into the next map.
+	bInputEnabled = true;
 	EnableAutoUpdate( 0 );
 }
 
