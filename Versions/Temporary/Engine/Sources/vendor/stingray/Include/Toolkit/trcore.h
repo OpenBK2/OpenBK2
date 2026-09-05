@@ -673,6 +673,18 @@ protected:
     //! causes are not read back as the user dragging a divider.
     bool m_bSyncingHeader;
 
+    //! The colour behind an item's icon, and behind a selected item's.
+    //!
+    //! CLR_NONE until asked for, which is the image list's own "no
+    //! background, draw masked" and so is also the right starting value.
+    //! The two are kept apart because the toolkit had both, even though an
+    //! image list can only carry one -- see ApplyIconBkColor.
+    COLORREF m_rgbIconBk = CLR_NONE;
+    COLORREF m_rgbSelIconBk = CLR_NONE;
+
+    //! Push the icon background onto the image list, if there is one yet.
+    BOOL ApplyIconBkColor();
+
     //! Where LayoutHeader last put the header and how much of it it last
     //! showed, so a repaint does not move or re-clip a window that is
     //! already right.

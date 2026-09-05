@@ -944,6 +944,10 @@ CImageList* SEC_TREECLASS::SetImageList(CImageList* pImageList, int nImageListTy
     }
     const HIMAGELIST hOldImageList = TreeView_SetImageList(GetSafeHwnd(),
         pImageList != nullptr ? pImageList->GetSafeHandle() : nullptr, nImageListType);
+    if (nImageListType == TVSIL_NORMAL && m_rgbIconBk != CLR_NONE) {
+        // A colour asked for before there was a list to put it on.
+        ApplyIconBkColor();
+    }
     return CImageList::FromHandle(hOldImageList);
 }
 
@@ -1212,14 +1216,51 @@ BOOL SEC_TREECLASS::SetBkColor(COLORREF rgbBk) {
     return TRUE;
 }
 
+// The colour behind an item's icon.
+//
+// The toolkit drew the tree and so could paint whatever it liked behind an
+// icon. The common control's equivalent is the image list's own background: an
+// image drawn from a list whose background is CLR_NONE is masked and shows
+// whatever is under it, and one with a colour set is filled with that colour
+// first. So this is the same idea reached through the image list.
+//
+// The one caller is CPCMainTreeControl::EnableEdit, which greys the whole
+// property tree when editing is off -- SetBkColor, then these two with the same
+// colour -- so that the icons do not sit on white squares in a grey tree.
 BOOL SEC_TREECLASS::SetIconBkColor(COLORREF rgbIconBk) {
     spdlog::debug("{} this={} rgbIconBk={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), rgbIconBk);
-    return FALSE;
+    m_rgbIconBk = rgbIconBk;
+    return ApplyIconBkColor();
 }
 
 BOOL SEC_TREECLASS::SetSelIconBkColor(COLORREF rgbSelIconBk) {
     spdlog::debug("{} this={} rgbSelIconBk={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this), rgbSelIconBk);
-    return FALSE;
+    m_rgbSelIconBk = rgbSelIconBk;
+    return ApplyIconBkColor();
+}
+
+// An image list has one background colour, not one for selected items and
+// another for the rest, so the two can only both be honoured when they agree --
+// which is the only way this editor sets them. When they differ the unselected
+// one wins and the selected one is remembered but not drawn, because a selected
+// row is already painted by the control and repainting the icon under it would
+// mean drawing the icon again as well.
+BOOL SEC_TREECLASS::ApplyIconBkColor() {
+    const HIMAGELIST hImageList = TreeView_GetImageList(GetSafeHwnd(), TVSIL_NORMAL);
+    if (hImageList == nullptr) {
+        // Remembered for the image list that has not arrived yet: SetImageList
+        // applies it when one does.
+        return FALSE;
+    }
+    if (m_rgbSelIconBk != CLR_NONE && m_rgbSelIconBk != m_rgbIconBk) {
+        spdlog::debug("SEC_TREECLASS::ApplyIconBkColor: selected and unselected icon backgrounds differ, "
+                      "and an image list has only one; using the unselected one");
+    }
+    // Note this is the *image list's* colour, and the editor hands the same
+    // list to several trees, so a tree that greys itself greys the icons in
+    // its siblings too. The toolkit drew per tree and did not have that
+    // problem; nothing in this editor greys one tree and not another.
+    return ImageList_SetBkColor(hImageList, m_rgbIconBk) != CLR_NONE || m_rgbIconBk == CLR_NONE;
 }
 
 BOOL SEC_TREECLASS::DeselectAllItems(int iExclude) {
