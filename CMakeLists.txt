@@ -26,7 +26,7 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(BUILD_EDITOR "build editor" OFF)
+option(BUILD_EDITOR "build editor" ON)
 option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 

@@ -273,7 +273,7 @@ public:
 
 //! node size
 const int N_MINIMAL_OCTREE_NODE = 8;//16; 
-class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE>
+class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_NOCOPY_METHODS( CVolumeNode );
 public:
@@ -345,7 +345,7 @@ public:
 	}
 	virtual bool IsEmpty();
 private:	
-	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE> CParent;
+	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true> CParent;
 };
 
 void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR, 

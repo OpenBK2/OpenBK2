@@ -264,10 +264,21 @@ struct SFloorsSelector
 
 //! node size
 const int N_MINIMAL_OCTREE_NODE = 4; 
-class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE>
+class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_BASIC_METHODS( CVolumeNode );
-	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE> CParent;
+	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true> CParent;
+	void InitGrownChild( CVolumeNode *pChild ) const override
+	{
+		// CallCachedInforms skips a subtree when its parent's mask is zero.
+		// The root's pending aggregate also covers the old children; carry it
+		// through each new parent without copying trackers or firing them early.
+		if ( nInformMask != 0 )
+		{
+			pChild->bInform = bInform;
+			pChild->nInformMask = nInformMask;
+		}
+	}
 	void InformLowerTrackers( const SBound &b, int nMask, bool bDoorFlipped );
 	void InformCurrentTrackers( const SBound &b, int nMask, bool bDoorFlipped );
 public:
