@@ -160,6 +160,35 @@ public:
 
     void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
 
+    //! Whether this bar draws a gripper: a small caption strip across the
+    //! top carrying the pane's title and a close button.
+    //!
+    //! On by default, because every SECControlBar in this editor is a
+    //! docking window and a docking window with no way to close or drag it
+    //! is the state this port was in: OnGripperClose has been overridden by
+    //! CDWGDBBrowser the whole time and had never once been called, because
+    //! nothing drew a button to call it from.
+    BOOL m_bShowGripper = TRUE;
+
+    //! Height of that strip, and zero when there is not one -- a floating
+    //! bar has a caption of its own from its mini frame.
+    int GetGripperHeight() const;
+    //! The strip, and the close button inside it. False when there is none.
+    BOOL GetGripperRects(CRect *pRectGripper, CRect *pRectClose) const;
+
+protected:
+    //! Set between pressing the close button and letting go of it, so it
+    //! can be drawn pushed and so releasing off it takes the click back.
+    BOOL m_bGripperCloseDown = FALSE;
+
+    void DoPaint(CDC *pDC) override;
+    afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+    afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
+
+    DECLARE_MESSAGE_MAP()
+
+public:
+
 public:
     //! What DockControlBarEx was told: the thickness this bar wants
     //! across the edge it is docked to, and the share of that edge's
