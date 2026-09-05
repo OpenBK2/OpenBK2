@@ -1,14 +1,98 @@
-// Stub for Stingray Objective Toolkit's resource script.
+// Resource script for Stingray Objective Toolkit.
 //
 // ED_B2_M1.rc and ED_B2.rc include "toolkit\secres.rc" near their end, so the
 // include has to resolve before either can be compiled. MapEditor.rc has the
-// same line commented out already.
+// same line commented out already, which is why these land in the executable
+// through ED_B2_M1.rc.
 //
-// The real script defined the toolkit's own dialogs, menus, bitmaps and
-// strings. Those shipped inside the commercial library and are not in this
-// tree; the menus recovered from the retail editor are noted in
-// B2_MapEditor/legacy.rc and were left out of it for the same reason.
+// The real script shipped inside the commercial library. What is here was read
+// back out of the retail editor, which had the toolkit statically linked and so
+// carries its templates -- the same route legacy.rc's main frame menu came
+// from. scripts/port/resdlg.py walks RT_DIALOG in a binary and prints the
+// DIALOGEX block that would have produced each template; these three are its
+// output for 20509, 20511 and 20513, with the numeric ids replaced by the names
+// in secres.h and nothing else changed. A dialog template is a description of a
+// layout: positions, styles and control ids.
 //
-// Empty on purpose. Our Stingray is a stub that never loads any of them. Add
-// resources here if the real control bars are ever implemented and start
-// asking for their own.
+// Only the templates something in this tree opens are here. Tools -> Customize
+// is the one: it builds an SECToolBarSheet out of the two pages below, and
+// before this it failed with "A required resource was unavailable" because the
+// pages had no template at all.
+
+#include "toolkit\secres.h"
+
+#ifndef IDC_STATIC
+#define IDC_STATIC (-1)
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+// Dialog
+
+// Page one of Customize: which toolbars are shown, and the three display
+// options that apply to all of them.
+IDD_SEC_TOOLBARS_PAGE DIALOGEX 0, 0, 251, 181
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Toolbars"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Toolbars:",IDC_STATIC,7,7,30,8
+    CONTROL         "",IDC_SEC_LIST,"LISTBOX",LBS_OWNERDRAWFIXED |
+                    LBS_HASSTRINGS | LBS_NOTIFY | LBS_NOINTEGRALHEIGHT |
+                    WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VSCROLL |
+                    WS_TABSTOP,7,17,100,124
+    LTEXT           "Toolbar name:",IDC_SEC_NAME_LABEL,7,146,46,8,WS_DISABLED
+    EDITTEXT        IDC_SEC_NAME,7,156,100,13,ES_AUTOHSCROLL | WS_DISABLED
+    CONTROL         "&Show Tooltips",IDC_SEC_TOOLTIPS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,117,17,61,10
+    CONTROL         "C&ool Look",IDC_SEC_COOL_LOOK,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,117,29,61,10
+    CONTROL         "&Large Buttons",IDC_SEC_LARGE_BTNS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,117,41,61,10
+    PUSHBUTTON      "&New...",IDC_SEC_NEW,189,16,50,14
+    PUSHBUTTON      "&Reset",IDC_SEC_RESET,189,33,50,14
+END
+
+// Page two: every command the frame offers, by category, with its face and its
+// description. The toolkit let these be dragged onto a toolbar; that half is
+// not implemented, and the prompt below says what it says in the retail editor.
+IDD_SEC_COMMANDS_PAGE DIALOGEX 0, 0, 251, 181
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Commands"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Categories:",IDC_STATIC,8,7,36,8
+    CONTROL         "",IDC_SEC_LIST,"LISTBOX",LBS_NOTIFY |
+                    LBS_NOINTEGRALHEIGHT | WS_CHILD | WS_VISIBLE | WS_BORDER |
+                    WS_VSCROLL | WS_TABSTOP,7,16,59,91
+    GROUPBOX        "Buttons",IDC_SEC_BUTTONS_BOX,74,7,170,100
+    LTEXT           "Select a category, then click a button to see its description.",
+                    IDC_STATIC,7,113,237,18
+    GROUPBOX        "Description",IDC_STATIC,7,133,237,34
+    LTEXT           "",IDC_SEC_DESCRIPTION,13,144,225,19
+END
+
+// The prompt behind New... on the Toolbars page. Recovered with the other two
+// and kept here although nothing opens it yet: New... is disabled, because the
+// only way to put a button on a new toolbar is to drag one from the Commands
+// page and that is not implemented. See SECToolBarsPage::OnInitDialog.
+//
+// The retail template carried a Help button at ID_HELP as well; there is no
+// help file for the toolkit here, so it is left out rather than left inert.
+IDD_SEC_NEW_TOOLBAR DIALOGEX 0, 0, 174, 62
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New Toolbar"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "&Toolbar name:",IDC_STATIC,7,7,46,8
+    EDITTEXT        IDC_SEC_NEW_NAME,7,17,98,13,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "&OK",IDOK,117,7,50,14
+    PUSHBUTTON      "&Cancel",IDCANCEL,117,24,50,14
+END
+
+/////////////////////////////////////////////////////////////////////////////
+// String Table
+
+STRINGTABLE
+BEGIN
+    IDS_TOOLBAR_CUSTOMIZE   "Customize"
+END
