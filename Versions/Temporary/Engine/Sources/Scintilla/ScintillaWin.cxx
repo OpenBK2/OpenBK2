@@ -2030,7 +2030,9 @@ sptr_t PASCAL ScintillaWin::CTWndProc(
 		}
 	} else {
 		if (iMessage == WM_DESTROY) {
-			::SetWindowLong(hWnd, 0, 0);
+			// SetWindowPointer, not SetWindowLong: see SWndProc below, where
+			// the same line was clearing half of a 64 bit slot.
+			SetWindowPointer(hWnd, 0);
 			return ::DefWindowProc(hWnd, iMessage, wParam, lParam);
 		} else if (iMessage == WM_PAINT) {
 			PAINTSTRUCT ps;
@@ -2100,7 +2102,15 @@ sptr_t PASCAL ScintillaWin::SWndProc(
 		if (iMessage == WM_DESTROY) {
 			sci->Finalise();
 			delete sci;
-			::SetWindowLong(hWnd, 0, 0);
+			// SetWindowPointer, not SetWindowLong. The pointer is stored and
+			// read back through the ...Ptr pair above, which is 64 bits wide,
+			// and SetWindowLong writes only the low half of that slot. So this
+			// line left the top half of the deleted object's address in the
+			// window and PointerFromWindow answered 000001de`00000000 instead
+			// of nothing -- not null, so WM_NCDESTROY took the "already have an
+			// object" branch a moment later and dereferenced it. That is the
+			// access violation every clean exit of the editor produced.
+			SetWindowPointer(hWnd, 0);
 			return ::DefWindowProc(hWnd, iMessage, wParam, lParam);
 		} else {
 			return sci->WndProc(iMessage, wParam, lParam);
