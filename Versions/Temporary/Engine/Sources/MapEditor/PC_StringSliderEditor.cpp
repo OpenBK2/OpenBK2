@@ -142,16 +142,16 @@ bool CPCStringSliderEditor::CreateEditor( const std::string &rszName, EPCIEType 
 		{
 			ModifyStyleEx( 0, dwExStyle );
 			wndSlider.ModifyStyleEx( 0, dwSliderExStyle );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			if ( CFont* pFont = GetEditorFont() )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
-				{
-					SetFont( pFont );
-					wndSlider.SetFont( pFont );
-					wndSlider.SetTargetWindow( this );
-					wndSlider.SetPreviousWindow( this );
-				}
+				SetFont( pFont );
+				wndSlider.SetFont( pFont );
 			}
+			// Out of the font branch: without a font the slider used to be left
+			// unwired, which is a working editor turned into a dead one over an
+			// appearance detail.
+			wndSlider.SetTargetWindow( this );
+			wndSlider.SetPreviousWindow( this );
 			bCreateControls = false;
 			return true;
 		}

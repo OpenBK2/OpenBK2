@@ -115,12 +115,9 @@ bool CPCStringComboEditor::CreateEditor( const std::string &rszName, EPCIEType _
 		if ( CComboBox::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) )
 		{
 			SetExtendedUI( true );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			if ( CFont* pFont = GetEditorFont() )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
-				{
-					SetFont( pFont );
-				}
+				SetFont( pFont );
 			}
 			if ( GetItemEditorType() == PCIE_STRING_COMBO )
 			{

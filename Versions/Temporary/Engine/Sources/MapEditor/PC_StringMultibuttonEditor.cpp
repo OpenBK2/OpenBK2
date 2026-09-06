@@ -205,29 +205,34 @@ bool CPCStringMultibuttonEditor::CreateEditor( const std::string &rszName, EPCIE
 		if ( bResult )
 		{
 			ModifyStyleEx( 0, dwExStyle );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			CFont *pFont = GetEditorFont();
+			if ( pFont )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
+				SetFont( pFont );
+			}
+			// The wiring below runs whether or not a font was found. It used to
+			// sit inside the font branch, so a missing font left the buttons
+			// with no target and no tab order: a dead editor over an appearance
+			// detail.
+			CWnd *pPreviousWindow = this;
+			for ( CPCEditorButtonList::iterator itPCEditorButton = buttonList.begin(); itPCEditorButton != buttonList.end(); ++itPCEditorButton )
+			{
+				if ( ( *itPCEditorButton ) != 0 )
 				{
-					SetFont( pFont );
-					CWnd *pPreviousWindow = this;
-					for ( CPCEditorButtonList::iterator itPCEditorButton = buttonList.begin(); itPCEditorButton != buttonList.end(); ++itPCEditorButton )
+					if ( pFont )
 					{
-						if ( ( *itPCEditorButton ) != 0 )
-						{
-							( *itPCEditorButton )->SetFont( pFont );
-							( *itPCEditorButton )->SetTargetWindow( this );
-							//
-							( *itPCEditorButton )->SetPreviousWindow( pPreviousWindow );
-							pPreviousWindow = ( *itPCEditorButton );
-							//
-							CPCEditorButtonList::iterator itNextPCEditorButton = itPCEditorButton;
-							++itNextPCEditorButton;
-							if ( itNextPCEditorButton != buttonList.end() )
-							{
-								( *itPCEditorButton )->SetNextWindow( ( *itNextPCEditorButton ) );
-							}
-						}
+						( *itPCEditorButton )->SetFont( pFont );
+					}
+					( *itPCEditorButton )->SetTargetWindow( this );
+					//
+					( *itPCEditorButton )->SetPreviousWindow( pPreviousWindow );
+					pPreviousWindow = ( *itPCEditorButton );
+					//
+					CPCEditorButtonList::iterator itNextPCEditorButton = itPCEditorButton;
+					++itNextPCEditorButton;
+					if ( itNextPCEditorButton != buttonList.end() )
+					{
+						( *itPCEditorButton )->SetNextWindow( ( *itNextPCEditorButton ) );
 					}
 				}
 			}

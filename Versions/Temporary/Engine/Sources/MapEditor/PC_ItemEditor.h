@@ -26,6 +26,7 @@ public:
 	const	SPropertyDesc* GetPropertyDesc() const { return pPropertyDesc; }
 	int GetControlID() const { return nControlID; }
 	CWnd* GetTargetWindow() { return pwndTargetWindow; }
+	CFont* GetEditorFont();
 	//	
 	virtual bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 	virtual void SetDefaultValue() { bDefaultValue = true; }

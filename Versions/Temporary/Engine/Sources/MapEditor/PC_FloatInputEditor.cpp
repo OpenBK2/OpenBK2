@@ -104,12 +104,9 @@ bool CPCFloatInputEditor::CreateEditor( const std::string &rszName, EPCIEType _n
 		if ( CEdit::Create( dwStyle, CRect( 0, 0, 0, 0 ), GetTargetWindow(), GetControlID() ) )
 		{
 			ModifyStyleEx( 0, dwExStyle );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			if ( CFont* pFont = GetEditorFont() )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
-				{
-					SetFont( pFont );
-				}
+				SetFont( pFont );
 			}
 
 			std::string szValues = GetPropertyDesc()->szStringParam;

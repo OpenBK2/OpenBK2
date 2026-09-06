@@ -103,12 +103,9 @@ bool CPCStringInputEditor::CreateEditor( const std::string &rszName, EPCIEType _
 		if ( bResult )
 		{
 			ModifyStyleEx( 0, dwExStyle );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			if ( CFont* pFont = GetEditorFont() )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
-				{
-					SetFont( pFont );
-				}
+				SetFont( pFont );
 			}
 			bCreateControls = false;
 			return true;

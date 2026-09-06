@@ -149,12 +149,9 @@ bool CPCGUIDEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditor
 		if ( bResult )
 		{
 			ModifyStyleEx( 0, dwExStyle );
-			if ( GetTargetWindow() && GetTargetWindow()->GetParent() )
+			if ( CFont* pFont = GetEditorFont() )
 			{
-				if ( CFont* pFont = GetTargetWindow()->GetParent()->GetFont() )
-				{
-					SetFont( pFont );
-				}
+				SetFont( pFont );
 			}
 			bCreateControls = false;
 			SetReadOnly( true );

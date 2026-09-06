@@ -28,6 +28,39 @@ bool CPCItemEditor::CreateEditor( const std::string &rszName, EPCIEType _nEditor
 }
 
 
+//! The font an inline editor has to draw in to match the controls around it.
+//!
+//! The target window, which is the tree the editor is placed over, rather than
+//! that tree's parent dialog. NEditorFont::ApplyShellFont swaps the shell font
+//! in for the raster face the 2005 templates name, and a dialog window still
+//! answers WM_GETFONT with the template font afterwards, so asking the parent
+//! handed every editor "MS Sans Serif" while its neighbours drew in the shell
+//! font. It showed worst in a dropped combo list, which is tall enough for the
+//! difference to be unmistakable.
+//!
+//! Measured on the running editor rather than reasoned about: in the New Object
+//! dialog the tree, the OK and Cancel buttons and every label carry one font
+//! handle, the dialog answers with another, and the combo the property grid
+//! creates carried the dialog's. Handing the tree's font to that same combo
+//! made its list draw like the rest of the dialog.
+//!
+//! The parent stays as a fallback for a target window that has no font of its
+//! own, which is the case this replaces and is still better than none.
+CFont* CPCItemEditor::GetEditorFont()
+{
+	if ( pwndTargetWindow == 0 )
+	{
+		return 0;
+	}
+	if ( CFont *pFont = pwndTargetWindow->GetFont() )
+	{
+		return pFont;
+	}
+	CWnd *pwndParent = pwndTargetWindow->GetParent();
+	return pwndParent ? pwndParent->GetFont() : 0;
+}
+
+
 bool GetPCItemStringValue( std::string *pszValue,
 													 const CVariant &rValue,
 													 const std::string &rszDefaultValue,
