@@ -689,7 +689,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 }
 
 
-void CMapObjectAddState::OnSetFocus( CWnd* pNewWnd )
+void CMapObjectAddState::OnSetFocus( IWidget* pNewWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -705,7 +705,7 @@ void CMapObjectAddState::OnSetFocus( CWnd* pNewWnd )
 }
 
 
-void CMapObjectAddState::OnKillFocus( CWnd* pOldWnd )
+void CMapObjectAddState::OnKillFocus( IWidget* pOldWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1111,7 +1111,7 @@ CMapInfoEditor* CMapObjectState::GetMapInfoEditor()
 }
 
 
-void CMapObjectState::OnSetFocus( CWnd* pNewWnd )
+void CMapObjectState::OnSetFocus( IWidget* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
@@ -1172,7 +1172,7 @@ void CMapObjectState::Leave()
 }
 
 
-void CMapObjectState::Draw( CPaintDC *pPaintDC )
+void CMapObjectState::Draw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
@@ -1216,7 +1216,7 @@ void CMapObjectState::Draw( CPaintDC *pPaintDC )
 }
 
 
-void CMapObjectState::PostDraw( class CPaintDC *pPaintDC )
+void CMapObjectState::PostDraw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
@@ -1225,12 +1225,14 @@ void CMapObjectState::PostDraw( class CPaintDC *pPaintDC )
 			if ( !selector.IsTerrainSelector() )
 			{
 				// нарисовать рамку
-				CRect selectorRect( selector.frameRect.minx, selector.frameRect.miny, selector.frameRect.maxx, selector.frameRect.maxy );
-				selectorRect.NormalizeRect();
-				//
-				CBrush solidBrush;
-				solidBrush.CreateSolidBrush( GetBGRColorFromARGBColor( SELECTION_LINE_COLOR ) ); 
-				pPaintDC->FrameRect( &selectorRect, &solidBrush );
+				// Normalised by hand, as CRect::NormalizeRect did before: a frame
+				// rect built from a drag can have its corners either way round.
+				const CTRect<int> selectorRect(
+					(std::min)( selector.frameRect.minx, selector.frameRect.maxx ),
+					(std::min)( selector.frameRect.miny, selector.frameRect.maxy ),
+					(std::max)( selector.frameRect.minx, selector.frameRect.maxx ),
+					(std::max)( selector.frameRect.miny, selector.frameRect.maxy ) );
+				pPaintDC->FrameRect( selectorRect, GetBGRColorFromARGBColor( SELECTION_LINE_COLOR ) );
 			}
 		}
 	}

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Interface_Widget.h"
+
 
 #define INVALID_INPUT_STATE_INDEX (-1)
 
@@ -8,11 +10,11 @@ struct IInputState
 	virtual void Enter() = 0;
 	virtual void Leave() = 0;
 	//
-	virtual void Draw( class CPaintDC *pDC ) = 0;
-	virtual void PostDraw( class CPaintDC *pDC ) = 0;
+	virtual void Draw( IPaintContext *pDC ) = 0;
+	virtual void PostDraw( IPaintContext *pDC ) = 0;
 	//
-	virtual void OnSetFocus				( class CWnd* pNewWnd ) = 0;
-	virtual void OnKillFocus			( class CWnd* pOldWnd ) = 0;
+	virtual void OnSetFocus				( IWidget* pNewWnd ) = 0;
+	virtual void OnKillFocus			( IWidget* pOldWnd ) = 0;
 	//
 	virtual void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint ) = 0;
 	virtual bool OnMouseWheel			( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint ) = 0;

@@ -344,11 +344,11 @@ bool CFormationsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 	return false;
 }
 
-void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
+void CFormationsState::PostDraw( IPaintContext *pPaintDC )
 {
-	int nOldBkMode = pPaintDC->SetBkMode( TRANSPARENT );
-	COLORREF oldColor = pPaintDC->GetTextColor(); 
-	pPaintDC->SetTextColor( RGB(255,128,64) ); 
+	pPaintDC->SaveState();
+	pPaintDC->SetTextBackgroundOpaque( false );
+	pPaintDC->SetTextColor( RGB(255,128,64) );
 
 	if ( !pickObjects.empty() )
 	{
@@ -357,12 +357,11 @@ void CFormationsState::PostDraw( class CPaintDC *pPaintDC )
 		if ( nMemberIndex != -1 )
 		{
 			std::string szSelId = fmt::format( "selected squad member id = {}", nMemberIndex );
-			pPaintDC->TextOut( 8, 8, szSelId.c_str(), szSelId.length() );
+			pPaintDC->DrawString( 8, 8, szSelId );
 		}
 	}
 
-	pPaintDC->SetTextColor( oldColor ); 
-	pPaintDC->SetBkMode( nOldBkMode );
+	pPaintDC->RestoreState();
 }
 
 void CFormationsState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )

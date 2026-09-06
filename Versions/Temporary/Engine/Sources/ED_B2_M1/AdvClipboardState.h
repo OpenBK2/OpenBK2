@@ -279,7 +279,7 @@ public:
 	// IInputStateInterface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );

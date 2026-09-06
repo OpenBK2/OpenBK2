@@ -235,7 +235,7 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 }
 
 
-void CCameraPositionState::Draw( CPaintDC *pPaintDC )
+void CCameraPositionState::Draw( IPaintContext *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
 	if ( !pScene )
@@ -274,7 +274,7 @@ void CCameraPositionState::Draw( CPaintDC *pPaintDC )
 }
 
 
-void CCameraPositionState::PostDraw( CPaintDC *pPaintDC )
+void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 {
 	CPtr<IEditorScene> pScene = EditorScene();
   if ( !pScene )

@@ -934,7 +934,7 @@ bool CScriptCameraState::MoveKeys( const CArray1Bit &moveList, float fMoveValue,
 }
 
 
-void CScriptCameraState::Draw( CPaintDC *pPaintDC )
+void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 {
 	return;
 
@@ -979,7 +979,7 @@ void CScriptCameraState::Draw( CPaintDC *pPaintDC )
 }
 
 
-void CScriptCameraState::PostDraw( CPaintDC *pPaintDC )
+void CScriptCameraState::PostDraw( IPaintContext *pPaintDC )
 {
 	return;
 

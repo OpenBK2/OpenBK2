@@ -83,31 +83,65 @@ enum EDrawMode
 };
 
 
+// Which stock face text is drawn in. The editor only ever asked for two, both
+// through CFont::CreateStockObject, so this names them rather than carrying a
+// font descriptor no caller would fill in differently.
+enum EFontKind
+{
+	FONT_LABEL	= 0,
+	FONT_SMALL	= 1,
+};
+
+
 // The 2D overlay the editor's input states draw on top of the 3D viewport.
 //
-// This is small on purpose and it is not a general 2D API. Thirty-three input
-// states take a paint context and exactly three of them use it: the rest draw
-// through CSceneDrawTool, in the scene, and ignore this entirely. So the whole
-// surface is the ten operations those three files call, restated so that a pen
-// is a description rather than an object the caller has to create, select and
-// put back.
+// This is small on purpose and it is not a general 2D API. Sixty-three input
+// states take a paint context and four of them draw with it: the rest draw
+// through CSceneDrawTool, in the scene, and ignore this entirely. The surface
+// here is the union of what those four and NDrawToolsDC actually call, restated
+// so that a pen, brush or font is a description rather than an object the caller
+// has to create, select and put back.
+//
+// Pen, brush, font, draw mode, text colour and text background are context
+// state. FillRect and FrameRect take their colour directly instead, because
+// every caller of those built a one-use brush for the call and threw it away.
 struct IPaintContext
 {
 	virtual ~IPaintContext() {}
-	// Line drawing. SetPen replaces the create/SelectObject/restore dance; the
-	// context owns whatever it needs to make one.
+
+	// Save and restore the whole of the state above. The front-end draws on the
+	// same surface either side of a state's Draw, so a state that changes the
+	// pen has to put it back; this is that, without naming what "it" is.
+	virtual void SaveState() = 0;
+	virtual void RestoreState() = 0;
+
+	// State.
 	virtual void SetPen( EPenStyle ePenStyle, int nWidth, TWidgetColor color ) = 0;
+	virtual void SetBrush( TWidgetColor color ) = 0;
+	virtual void SetFont( EFontKind eFontKind ) = 0;
 	virtual void SetDrawMode( EDrawMode eDrawMode ) = 0;
-	virtual void MoveTo( int nX, int nY ) = 0;
-	virtual void LineTo( int nX, int nY ) = 0;
-	// Rectangles. FillRect paints the interior, FrameRect outlines it.
-	virtual void FillRect( const CTRect<int> &rRect, TWidgetColor color ) = 0;
-	virtual void FrameRect( const CTRect<int> &rRect, TWidgetColor color ) = 0;
-	// Text.
 	virtual void SetTextColor( TWidgetColor color ) = 0;
 	virtual TWidgetColor GetTextColor() const = 0;
 	// false leaves whatever is behind the glyphs alone, which is what every
 	// caller wants over a rendered viewport.
 	virtual void SetTextBackgroundOpaque( bool bOpaque ) = 0;
-	virtual void TextOut( int nX, int nY, const std::string &rszText ) = 0;
+
+	// Lines, drawn with the current pen.
+	virtual void MoveTo( int nX, int nY ) = 0;
+	virtual void LineTo( int nX, int nY ) = 0;
+
+	// Rectangles. Rectangle fills with the current brush and outlines with the
+	// current pen; the other two ignore both and use the colour given.
+	virtual void Rectangle( const CTRect<int> &rRect ) = 0;
+	virtual void FillRect( const CTRect<int> &rRect, TWidgetColor color ) = 0;
+	virtual void FrameRect( const CTRect<int> &rRect, TWidgetColor color ) = 0;
+
+	// Text, in the current font and text colour.
+	// Named DrawString rather than TextOut because <windows.h> defines TextOut
+	// as a macro for TextOutA, which would quietly rename this method and every
+	// call to it.
+	virtual void DrawString( int nX, int nY, const std::string &rszText ) = 0;
+	// The box rszText would occupy if drawn at the origin. Used to size a label
+	// before drawing its background.
+	virtual CTRect<int> MeasureText( const std::string &rszText ) const = 0;
 };

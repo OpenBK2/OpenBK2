@@ -82,14 +82,14 @@ void CAIGeneralPointsState::Leave()
 }
 
 
-void CAIGeneralPointsState::OnSetFocus( class CWnd* pNewWnd )
+void CAIGeneralPointsState::OnSetFocus( IWidget* pNewWnd )
 {
 	CDefaultInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
 }
 
 
-void CAIGeneralPointsState::Draw( CPaintDC *pPaintDC )
+void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 {
 	sceneDrawTool.Clear();
 	if ( dialogData.nCurrentPlayer == -1 )

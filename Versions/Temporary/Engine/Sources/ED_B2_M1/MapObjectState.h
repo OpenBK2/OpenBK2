@@ -102,8 +102,8 @@ class CMapObjectAddState : public CDefaultInputState
 	}
 
 	//IInputState interface
-	void OnSetFocus				( class CWnd* pNewWnd );
-	void OnKillFocus			( class CWnd* pOldWnd );
+	void OnSetFocus				( IWidget* pNewWnd );
+	void OnKillFocus			( IWidget* pOldWnd );
 	//
 	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	//
@@ -213,10 +213,10 @@ protected:
 	//IInputState interface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( class CPaintDC *pPaintDC );
-	virtual void PostDraw( class CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
+	virtual void PostDraw( IPaintContext *pPaintDC );
 	
-	virtual void OnSetFocus( class CWnd* pNewWnd );
+	virtual void OnSetFocus( IWidget* pNewWnd );
 
 	// CMapObjectState
 	// Возможно какое либо редактирование
@@ -240,10 +240,10 @@ protected:
 	// Вызывается из стейта добавления объекта ( если вернули true, переключится в IS_SELECT и автоматически обновится сцена ) 
 	virtual void InsertObjectEnter					() {}
 	virtual void InsertObjectLeave					() {}
-	virtual void InsertObjectDraw						( class CPaintDC *pPaintDC ) {}
+	virtual void InsertObjectDraw						( IPaintContext *pPaintDC ) {}
 	//
-	virtual bool InsertObjectSetFocus				( class CWnd* pNewWnd ) { return false; }
-	virtual bool InsertObjectKillFocus			( class CWnd* pOldWnd ) { return false; }
+	virtual bool InsertObjectSetFocus				( IWidget* pNewWnd ) { return false; }
+	virtual bool InsertObjectKillFocus			( IWidget* pOldWnd ) { return false; }
 	//
 	virtual bool InsertObjectMouseMove			( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }
 	virtual bool InsertObjectLButtonDown		( unsigned nFlags, const CVec3 &rTerrainPos ) { return false; }

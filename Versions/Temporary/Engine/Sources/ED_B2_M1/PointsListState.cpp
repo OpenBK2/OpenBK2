@@ -313,7 +313,7 @@ bool CPointsListState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 }
 
 
-void CPointsListState::PostDraw( CPaintDC *pPaintDC )
+void CPointsListState::PostDraw( IPaintContext *pPaintDC )
 {
 	if ( !IsValid(pProcess) || !pProcess->Update(GameTimer()->GetAbsTime()) )
 		pProcess = 0;
@@ -426,7 +426,7 @@ void CSurfacePointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 }
 
 
-void CSurfacePointsState::Draw( CPaintDC *pPaintDC )
+void CSurfacePointsState::Draw( IPaintContext *pPaintDC )
 {
 	for ( std::vector<NDb::SHPObjectRPGStats::SModelSurfacePoint>::iterator it = surfPoints.begin(); it < surfPoints.end(); ++it )
 	{

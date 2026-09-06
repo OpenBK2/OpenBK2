@@ -24,6 +24,7 @@
 #include "SceneB2/CameraScriptMutators.h"
 
 #include "DrawToolsDC.h"
+#include "MapEditorLib/MfcPaintContext.h"
 #include "System/GResource.h"
 
 #include <cstdint>
@@ -357,24 +358,33 @@ void CCFCSceneB2::DrawStatistic( CPaintDC *pDC )
 		CVec3 vCameraAnchor = pCamera->GetAnchor();
 		Vis2AI( &vCameraAnchor );
 
-		NDrawToolsDC::DrawTextDC( pDC, "Camera params:", vScreenPos );
+		// One context for the whole block: each DrawTextDC saves and restores
+		// around itself, so sharing it changes nothing except the churn.
+		CMfcPaintContext paintContext( pDC );
+		NDrawToolsDC::DrawTextDC( &paintContext, "Camera params:", vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
+		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
+		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
+		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
+		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( pDC, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
+		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
 	}
 }
 
 
 void CCFCSceneB2::DrawFrameBorders( CPaintDC *pDC )
 {
-	NDrawToolsDC::DrawFrameBorders( pDC, rectBorder1, rectBorder2, rectWindow );
+	CMfcPaintContext paintContext( pDC );
+	// CRect and CTRect<int> agree on member order, but the conversion is written
+	// out rather than cast so that the neutral side never sees a Windows RECT.
+	const CTRect<int> border1( rectBorder1.left, rectBorder1.top, rectBorder1.right, rectBorder1.bottom );
+	const CTRect<int> border2( rectBorder2.left, rectBorder2.top, rectBorder2.right, rectBorder2.bottom );
+	const CTRect<int> window( rectWindow.left, rectWindow.top, rectWindow.right, rectWindow.bottom );
+	NDrawToolsDC::DrawFrameBorders( &paintContext, border1, border2, window );
 }
 
 

@@ -55,8 +55,8 @@ public:
 	//	CDefaultInputState
 	void Enter();
 	void Leave();
-	void Draw( CPaintDC *pPaintDC );
-	void PostDraw( CPaintDC *pPaintDC );
+	void Draw( IPaintContext *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 	void DrawLabel( CPaintDC *pPaintDC, const std::string &szLabel, const CVec2 &pos );
 	
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );

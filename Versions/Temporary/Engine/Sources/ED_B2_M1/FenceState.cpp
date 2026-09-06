@@ -187,7 +187,7 @@ void CFenceState::InsertObjectLeave()
 }
 
 
-void CFenceState::InsertObjectDraw( CPaintDC *pPaintDC )
+void CFenceState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( !designTool.bRay )
 	{

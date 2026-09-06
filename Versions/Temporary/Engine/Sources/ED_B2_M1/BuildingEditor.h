@@ -81,7 +81,7 @@ public:
 	void ReloadModel( NDb::ESeason eSeason );
 	void ReloadTerrain( const std::string &rszMapInfoName, const CVec3 &vLastCameraAnchor );
 	//
-	void DrawPassability( class CPaintDC *pPaintDC );
+	void DrawPassability( IPaintContext *pPaintContext );
 	void SetDrawPassability( bool bSet ) { bDrawPassability = bSet; }
 	//
 	void SetScreenTitle( const std::string &rszScreenTitle );

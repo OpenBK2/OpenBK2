@@ -51,7 +51,7 @@ public:
 	//IInputState
 	void Enter();
 	void Leave();
-	void PostDraw( class CPaintDC *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );

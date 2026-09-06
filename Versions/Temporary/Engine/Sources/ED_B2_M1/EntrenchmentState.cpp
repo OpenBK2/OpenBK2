@@ -46,7 +46,7 @@ void CEntrenchmentState::InsertObjectLeave()
 }
 
 
-void CEntrenchmentState::InsertObjectDraw( CPaintDC *pPaintDC )
+void CEntrenchmentState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( !designTool.Draw( &sceneDrawTool ) )
 	{

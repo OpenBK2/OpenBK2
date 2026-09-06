@@ -37,7 +37,7 @@ protected:
 	//
 	void InsertObjectEnter();
 	void InsertObjectLeave();
-	void InsertObjectDraw( class CPaintDC *pPaintDC );
+	void InsertObjectDraw( IPaintContext *pPaintDC );
 	//	
 	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );

@@ -6,103 +6,69 @@
 
 namespace NDrawToolsDC
 {
-	static int s_nOldBkMode;
-	static COLORREF s_oldColor;
-	static CBrush *s_pOldBrush;
-	static CPen *s_pOldPen;
-	static CFont *s_pOldFont;
-
-	const unsigned LABEL_BORDER_COLOR		= RGB(0, 0, 0);
-	const unsigned LABEL_BG_COLOR				= RGB(255, 255, 221);
-	const unsigned LABEL_MAIN_FONT			= ANSI_VAR_FONT;
+	// RGB() packs 0x00BBGGRR, which is what TWidgetColor is documented to be, so
+	// these constants are unchanged in value as well as in meaning.
+	const TWidgetColor LABEL_BORDER_COLOR	= RGB(0, 0, 0);
+	const TWidgetColor LABEL_BG_COLOR			= RGB(255, 255, 221);
+	const EFontKind LABEL_MAIN_FONT				= FONT_LABEL;
 	//
-	//const unsigned SIMPLE_TEXT_COLOR		= RGB(255, 128, 64);
-	const unsigned SIMPLE_TEXT_COLOR		= RGB(255, 255, 255);
-	const unsigned SIMPLE_FONT_TYPE			= ANSI_VAR_FONT;
+	//const TWidgetColor SIMPLE_TEXT_COLOR	= RGB(255, 128, 64);
+	const TWidgetColor SIMPLE_TEXT_COLOR	= RGB(255, 255, 255);
+	const EFontKind SIMPLE_FONT_TYPE			= FONT_SMALL;
 	//
-	const unsigned BORDER_BG_COLOR			= RGB(127, 127, 127);
+	const TWidgetColor BORDER_BG_COLOR		= RGB(127, 127, 127);
 
-	void BackupDCSettings( CPaintDC *pDC )
+	// The DC state these used to back up and restore by hand, into file-scope
+	// statics, is IPaintContext::SaveState/RestoreState now. The statics were a
+	// single level deep and shared between all three functions, so a nested call
+	// would have clobbered them; the context keeps a stack instead.
+	void DrawLabelDC( IPaintContext *pPaintContext, const std::string &szLabel, const CVec2 &vScreenPos )
 	{
-		s_pOldBrush = pDC->GetCurrentBrush();
-		s_pOldFont = pDC->GetCurrentFont();
-		s_pOldPen = pDC->GetCurrentPen();
-		s_oldColor = pDC->GetTextColor();
-		s_nOldBkMode = pDC->GetBkMode();
-	}
-	//
-	void RestoreDCSettings( CPaintDC *pDC )
-	{
-		pDC->SelectObject( s_pOldBrush );
-		pDC->SelectObject( s_pOldFont );
-		pDC->SelectObject( s_pOldPen );
-		pDC->SetTextColor( s_oldColor );
-		pDC->SetBkMode( s_nOldBkMode );
-	}
-	//
-	void DrawLabelDC( CPaintDC *pDC, const std::string &szLabel, const CVec2 &vScreenPos )
-	{
-		BackupDCSettings( pDC );
+		pPaintContext->SaveState();
 
-		pDC->SetBkMode( TRANSPARENT );
+		pPaintContext->SetTextBackgroundOpaque( false );
+		pPaintContext->SetFont( LABEL_MAIN_FONT );
+		pPaintContext->SetBrush( LABEL_BG_COLOR );
+		pPaintContext->SetPen( PEN_SOLID, 1, LABEL_BORDER_COLOR );
 
-		CFont font;
-		font.CreateStockObject( LABEL_MAIN_FONT );
-		pDC->SelectObject( &font );
+		// Measure first, then draw the box the text will sit in, then the text.
+		const CTRect<int> textRect = pPaintContext->MeasureText( szLabel );
+		const int nLeft = static_cast<int>( vScreenPos.x );
+		const int nTop = static_cast<int>( vScreenPos.y );
+		const CTRect<int> placedRect( nLeft, nTop,
+																	nLeft + textRect.Width(), nTop + textRect.Height() );
 		//
-		CBrush brush;
-		brush.CreateSolidBrush( LABEL_BG_COLOR );
-		pDC->SelectObject( &brush );
+		const CTRect<int> borderRect( placedRect.left - 2, placedRect.top - 2,
+																	placedRect.right + 2, placedRect.bottom + 2 );
+		pPaintContext->Rectangle( borderRect );
+		pPaintContext->DrawString( placedRect.left, placedRect.top, szLabel );
+
+		pPaintContext->RestoreState();
+	}
+	//
+	void DrawTextDC( IPaintContext *pPaintContext, const std::string &szText, const CVec2 &vScreenPos )
+	{
+		pPaintContext->SaveState();
+
+		pPaintContext->SetTextBackgroundOpaque( false );
+		pPaintContext->SetFont( SIMPLE_FONT_TYPE );
+		pPaintContext->SetTextColor( SIMPLE_TEXT_COLOR );
+		pPaintContext->DrawString( static_cast<int>( vScreenPos.x ), static_cast<int>( vScreenPos.y ), szText );
+
+		pPaintContext->RestoreState();
+	}
+	//
+	void DrawFrameBorders( IPaintContext *pPaintContext, const CTRect<int> &rBorder1, const CTRect<int> &rBorder2, const CTRect<int> &rWindow )
+	{
+		pPaintContext->SaveState();
+
+		pPaintContext->SetTextBackgroundOpaque( false );
 		//
-		CPen pen;
-		pen.CreatePen( PS_SOLID, 1, (COLORREF)LABEL_BORDER_COLOR );
-		pDC->SelectObject( &pen );
+		// The two border rectangles are unused: filling them was commented out
+		// before this port and is left that way. They stay in the signature
+		// because the caller still computes and passes them.
+		pPaintContext->FrameRect( rWindow, SIMPLE_TEXT_COLOR );
 
-		CRect rect( vScreenPos.x, vScreenPos.y, 200, 200 );
-		pDC->DrawText( szLabel.c_str(), &rect, DT_CALCRECT | DT_LEFT );
-		CRect resizeRect = rect;
-		resizeRect.left -= 2;
-		resizeRect.top -= 2;
-		resizeRect.bottom += 2;
-		resizeRect.right += 2;
-		pDC->Rectangle( &resizeRect );
-		pDC->DrawText( szLabel.c_str(), &rect, DT_LEFT );
-
-		RestoreDCSettings( pDC );
-	}
-	//
-	void DrawTextDC( CPaintDC *pDC, const std::string &szText, const CVec2 &vScreenPos )
-	{
-		BackupDCSettings( pDC );
-
-		pDC->SetBkMode( TRANSPARENT );
-
-		CFont font;
-		font.CreateStockObject( SIMPLE_FONT_TYPE );
-		pDC->SelectObject( &font );
-
-		pDC->SetTextColor( SIMPLE_TEXT_COLOR );
-		pDC->TextOut( vScreenPos.x, vScreenPos.y, szText.c_str(), szText.length() );
-
-		RestoreDCSettings( pDC );
-	}
-	//
-	void DrawFrameBorders( CPaintDC *pDC, const CRect &rBorder1, const CRect &rBorder2, const CRect &rWindow )
-	{
-		BackupDCSettings( pDC );
-
-		pDC->SetBkMode( TRANSPARENT );
-
-		//pDC->FillSolidRect( rBorder1, BORDER_BG_COLOR );
-		//pDC->FillSolidRect( rBorder2, BORDER_BG_COLOR );
-
-		CBrush solidBrush;
-		solidBrush.CreateSolidBrush( SIMPLE_TEXT_COLOR );
-		pDC->FrameRect( rWindow, &solidBrush );
-
-		RestoreDCSettings( pDC );
+		pPaintContext->RestoreState();
 	}
 }
-
-
-

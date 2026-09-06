@@ -71,7 +71,7 @@ void CChapterState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
-void CChapterState::PostDraw( class CPaintDC *pPaintDC )
+void CChapterState::PostDraw( IPaintContext *pPaintDC )
 {
 	CTRect<float> wrc;
 	wrc.SetEmpty();
@@ -92,7 +92,8 @@ void CChapterState::PostDraw( class CPaintDC *pPaintDC )
 	
 	if ( !wrc.IsEmpty() )
 	{
-		int nOldBkMode = pPaintDC->SetBkMode( TRANSPARENT );
+		pPaintDC->SaveState();
+		pPaintDC->SetTextBackgroundOpaque( false );
 
 		const int x1 = wrc.left;
 		const int y1 = wrc.top;
@@ -100,49 +101,35 @@ void CChapterState::PostDraw( class CPaintDC *pPaintDC )
 		const int y2 = wrc.bottom-1;
 		const int HS = 4; // helper's size
 
-		int nOldROP2   = pPaintDC->SetROP2( R2_NOT );
+		// R2_NOT: the marquee is undrawn by drawing it again.
+		pPaintDC->SetDrawMode( DRAW_NOT );
 
 		// draw picked rect
-		CPen pen(PS_DOT, 1, RGB(255,255,255));
-		CPen * pOldPen = pPaintDC->SelectObject( &pen );
+		pPaintDC->SetPen( PEN_DOT, 1, RGB(255,255,255) );
 		pPaintDC->MoveTo( x1, y1 );
 		pPaintDC->LineTo( x2, y1 );
 		pPaintDC->LineTo( x2, y2 );
 		pPaintDC->LineTo( x1, y2 );
 		pPaintDC->LineTo( x1, y1 );
-		pPaintDC->SelectObject( pOldPen );
 
-		CBrush solidBrush;
-		solidBrush.CreateSolidBrush( RGB(0,255,0) ); 
-		CRect rc;
-		
-		rc.SetRect( x1-HS, y1-HS, x1+HS, y1+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
+		// The eight resize handles, at the corners and the edge midpoints.
+		const int xm = (x1+x2)/2;
+		const int ym = (y1+y2)/2;
+		const CTPoint<int> handleCentres[] =
+		{
+			CTPoint<int>( x1, y1 ), CTPoint<int>( x2, y1 ),
+			CTPoint<int>( x2, y2 ), CTPoint<int>( x1, y2 ),
+			CTPoint<int>( x1, ym ), CTPoint<int>( x2, ym ),
+			CTPoint<int>( xm, y1 ), CTPoint<int>( xm, y2 ),
+		};
+		for ( int nHandle = 0; nHandle < sizeof( handleCentres ) / sizeof( handleCentres[0] ); ++nHandle )
+		{
+			const CTPoint<int> &rCentre = handleCentres[nHandle];
+			pPaintDC->FillRect( CTRect<int>( rCentre.x-HS, rCentre.y-HS, rCentre.x+HS, rCentre.y+HS ),
+													RGB(0,255,0) );
+		}
 
-		rc.SetRect( x2-HS, y1-HS, x2+HS, y1+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-		
-		rc.SetRect( x2-HS, y2-HS, x2+HS, y2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		rc.SetRect( x1-HS, y2-HS, x1+HS, y2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		rc.SetRect( x1-HS, (y1+y2)/2-HS, x1+HS, (y1+y2)/2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		rc.SetRect( x2-HS, (y1+y2)/2-HS, x2+HS, (y1+y2)/2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-		
-		rc.SetRect( (x1+x2)/2-HS, y1-HS, (x1+x2)/2+HS, y1+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		rc.SetRect( (x1+x2)/2-HS, y2-HS, (x1+x2)/2+HS, y2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		pPaintDC->SetROP2( nOldROP2 );
-
-		pPaintDC->SetBkMode( nOldBkMode );
+		pPaintDC->RestoreState();
 	}
 
 	CDefaultInputState::PostDraw( pPaintDC );

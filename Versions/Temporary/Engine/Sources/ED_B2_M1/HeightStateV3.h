@@ -236,7 +236,7 @@ protected:
 	//IInputState interface
 	void Enter();
 	void Leave();
-	void Draw( class CPaintDC *pPaintDC );
+	void Draw( IPaintContext *pPaintDC );
 	//
 	void OnMouseMove	( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );

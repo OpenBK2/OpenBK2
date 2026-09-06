@@ -15,11 +15,11 @@ public:
 	virtual void Enter();
 	virtual void Leave();
 	//
-	virtual void Draw( class CPaintDC *pPaintDC );
-	virtual void PostDraw( class CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
+	virtual void PostDraw( IPaintContext *pPaintDC );
 	//
-	virtual void OnSetFocus				( class CWnd* pNewWnd );
-	virtual void OnKillFocus			( class CWnd* pOldWnd );
+	virtual void OnSetFocus				( IWidget* pNewWnd );
+	virtual void OnKillFocus			( IWidget* pOldWnd );
 	//
 	virtual void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	virtual bool OnMouseWheel			( unsigned nFlags, short zDelta, CTPoint<int> &rMousePoint );

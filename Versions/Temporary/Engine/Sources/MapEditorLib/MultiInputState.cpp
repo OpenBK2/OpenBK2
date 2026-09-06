@@ -15,14 +15,14 @@ void CMultiInputState::Leave()
 }
 
 
-void CMultiInputState::Draw( CPaintDC *pPaintDC )
+void CMultiInputState::Draw( IPaintContext *pPaintDC )
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 		inputStateList[nActiveInputState]->Draw( pPaintDC );
 }
 
 
-void CMultiInputState::PostDraw( CPaintDC *pPaintDC )
+void CMultiInputState::PostDraw( IPaintContext *pPaintDC )
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 		inputStateList[nActiveInputState]->PostDraw( pPaintDC );
@@ -30,14 +30,14 @@ void CMultiInputState::PostDraw( CPaintDC *pPaintDC )
 
 
 
-void CMultiInputState::OnSetFocus( CWnd* pNewWnd )
+void CMultiInputState::OnSetFocus( IWidget* pNewWnd )
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 		inputStateList[nActiveInputState]->OnSetFocus( pNewWnd );
 }
 
 
-void CMultiInputState::OnKillFocus( CWnd* pOldWnd )
+void CMultiInputState::OnKillFocus( IWidget* pOldWnd )
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 		inputStateList[nActiveInputState]->OnKillFocus( pOldWnd );

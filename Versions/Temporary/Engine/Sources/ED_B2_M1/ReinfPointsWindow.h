@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MapEditorLib/Interface_Widget.h"
+
 #include "MapEditorLib/ResizeDialog.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "ResourceDefines.h"
@@ -104,7 +106,7 @@ protected:
 	void Leave();
 	void GetDialogData( SReinfPointsWindowData *pData );
 	void SetDialogData( const SReinfPointsWindowData *pData );
-	void Draw( class CPaintDC *pPaintDC );
+	void Draw( IPaintContext *pPaintDC );
 	void NotifyHandler();
 
 	// ICommandHandler

@@ -38,7 +38,10 @@ CTimeSliderControl::CTimeSliderControl()
 void CTimeSliderControl::OnPaint()
 {
 	CPaintDC paintDC( this );
-	NDrawToolsDC::BackupDCSettings( &paintDC );
+	// Was NDrawToolsDC::BackupDCSettings, which is IPaintContext-based now and
+	// is for overlay drawing. This is a control painting itself, so it uses
+	// MFC's own save/restore, which also nests where the old statics did not.
+	const int nSavedDC = paintDC.SaveDC();
 
 	CRect rect;
 	GetClientRect( &rect );
@@ -136,7 +139,7 @@ void CTimeSliderControl::OnPaint()
 	paintDC.BitBlt( rect.left, rect.top, rect.Width(), rect.Height(), &dc, 0, 0, SRCCOPY );
 	dc.SelectObject( pOldBitmap );
 
-	NDrawToolsDC::RestoreDCSettings( &paintDC );
+	paintDC.RestoreDC( nSavedDC );
 }
 
 

@@ -109,7 +109,7 @@ protected:
 	// IInputState
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( CPaintDC *pDC );
+	virtual void Draw( IPaintContext *pDC );
 	
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );

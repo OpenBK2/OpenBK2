@@ -275,31 +275,32 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 	GetPassability( &modelPassability, pBuildingManipulator );
 }
 
-void CBuildingEditor::DrawPassability( class CPaintDC *pPaintDC )
+// The one colour the passability overlay is drawn in: text, cell outlines and
+// cell fill each spelled RGB(255,128,64) separately before.
+static const TWidgetColor PASSABILITY_COLOR = RGB( 255, 128, 64 );
+
+
+void CBuildingEditor::DrawPassability( IPaintContext *pPaintContext )
 {
-	int nOldBkMode = pPaintDC->SetBkMode( TRANSPARENT );
-	COLORREF oldColor = pPaintDC->GetTextColor(); 
-	pPaintDC->SetTextColor( RGB(255,128,64) ); 
+	// The old code saved the background mode and text colour by hand and put them
+	// back at the end; SaveState/RestoreState is that pair, and it also covers the
+	// brush and pen the passability block used to restore separately.
+	pPaintContext->SaveState();
+	pPaintContext->SetTextBackgroundOpaque( false );
+	pPaintContext->SetTextColor( PASSABILITY_COLOR );
 
 	if ( !szScreenTitle.empty() )
 	{
-		pPaintDC->TextOut( 8, 8, szScreenTitle.c_str(), szScreenTitle.length() );
+		pPaintContext->DrawString( 8, 8, szScreenTitle );
 	}
 
 	if ( bDrawPassability )
 	{
 		// passability
-		CBrush *pOldBrush = pPaintDC->GetCurrentBrush(); 
-		CPen *pOldPen = pPaintDC->GetCurrentPen();
+		pPaintContext->SetBrush( PASSABILITY_COLOR );
+		pPaintContext->SetPen( PEN_SOLID, 1, PASSABILITY_COLOR );
 
-		CBrush brush;
-		brush.CreateSolidBrush( RGB(255,128,64) );
-		CPen pen;
-		pen.CreatePen( PS_SOLID, 1, RGB(255,128,64) ); 
-		pPaintDC->SelectObject( &brush );
-		pPaintDC->SelectObject( &pen );
-
-		pPaintDC->TextOut( 8, 40, "passability" );
+		pPaintContext->DrawString( 8, 40, "passability" );
 		int yy = 80;
 
 		for ( int y = 0; y < modelPassability.GetSizeY(); ++y )
@@ -309,33 +310,30 @@ void CBuildingEditor::DrawPassability( class CPaintDC *pPaintDC )
 			{
 				if ( !modelPassability[y][x] )
 				{
-					pPaintDC->MoveTo( xx, yy );
-					pPaintDC->LineTo( xx + 7, yy ); 
+					// An impassable cell is outlined rather than filled.
+					pPaintContext->MoveTo( xx, yy );
+					pPaintContext->LineTo( xx + 7, yy );
 
-					pPaintDC->MoveTo( xx + 7, yy );
-					pPaintDC->LineTo( xx + 7, yy + 7 );
+					pPaintContext->MoveTo( xx + 7, yy );
+					pPaintContext->LineTo( xx + 7, yy + 7 );
 
-					pPaintDC->MoveTo( xx + 7, yy + 7 ); 
-					pPaintDC->LineTo( xx, yy + 7 );
+					pPaintContext->MoveTo( xx + 7, yy + 7 );
+					pPaintContext->LineTo( xx, yy + 7 );
 
-					pPaintDC->MoveTo( xx, yy + 7 ); 
-					pPaintDC->LineTo( xx, yy ); 
+					pPaintContext->MoveTo( xx, yy + 7 );
+					pPaintContext->LineTo( xx, yy );
 				}
 				else
 				{
-					pPaintDC->Rectangle( xx, yy, xx + 7, yy + 7 );
+					pPaintContext->Rectangle( CTRect<int>( xx, yy, xx + 7, yy + 7 ) );
 				}
 				xx += 10;
 			}
 			yy += 10;
 		}
-		//
-		pPaintDC->SelectObject( pOldPen );
-		pPaintDC->SelectObject( pOldBrush );
 	}
 
-	pPaintDC->SetTextColor( oldColor ); 
-	pPaintDC->SetBkMode( nOldBkMode );
+	pPaintContext->RestoreState();
 }
 
 void CBuildingEditor::ReloadTerrain( const std::string &rszMapInfoName, const CVec3 &_vLastCameraAnchor )

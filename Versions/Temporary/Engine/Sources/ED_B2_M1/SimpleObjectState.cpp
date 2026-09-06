@@ -467,7 +467,7 @@ void CSimpleObjectState::InsertObjectLeave()
 }
 
 
-void CSimpleObjectState::InsertObjectDraw( class CPaintDC *pPaintDC )
+void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( CanEdit() )
 	{

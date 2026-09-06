@@ -6,6 +6,8 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_Editor.h"
+#include "MapEditorLib/MfcPaintContext.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "Main/GameTimer.h"
 #include "Main/MainLoop.h"
 #include "Input/GameMessage.h"
@@ -141,7 +143,8 @@ void CChildFrameWndBase::OnSetFocus( CWnd* pOldWnd )
 	RedrawWindow();
 	if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 	{
-		pActiveInputState->OnSetFocus( pOldWnd );
+		CWndWidget oldWidget( pOldWnd );
+		pActiveInputState->OnSetFocus( &oldWidget );
 	}
 	NMainLoop::SetInputEnabled( true );
 	//
@@ -156,7 +159,8 @@ void CChildFrameWndBase::OnKillFocus( CWnd* pNewWnd )
 	RedrawWindow();
 	if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 	{
-		pActiveInputState->OnKillFocus( pNewWnd );
+		CWndWidget newWidget( pNewWnd );
+		pActiveInputState->OnKillFocus( &newWidget );
 	}
 	bInputEnabled = true;
 	NMainLoop::SetInputEnabled( false );
@@ -492,11 +496,15 @@ void CChildFrameWndBase::OnPaint()
 	OnPreDrawChildFrameWnd();
 	//
 	CPaintDC dc( this );
+	// The boundary: everything below IInputState draws through this and names no
+	// toolkit. DrawFocus and DrawStatistic stay on the DC because they are this
+	// front-end's own painting, not the editor's.
+	CMfcPaintContext paintContext( &dc );
 
 	IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState();
 	if ( pActiveInputState )
 	{
-		pActiveInputState->Draw( &dc );
+		pActiveInputState->Draw( &paintContext );
 	}
 	//
 	if ( bRenderEnabled )
@@ -506,7 +514,7 @@ void CChildFrameWndBase::OnPaint()
 	//
 	if ( pActiveInputState )
 	{
-		pActiveInputState->PostDraw( &dc );
+		pActiveInputState->PostDraw( &paintContext );
 	}
 	if ( GetFocus() == this )
 	{

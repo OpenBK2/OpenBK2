@@ -243,7 +243,7 @@ void CScriptAreaState::Leave()
 }
 
 
-void CScriptAreaState::Draw( CPaintDC *pPaintDC )
+void CScriptAreaState::Draw( IPaintContext *pPaintDC )
 {
 	sceneDrawTool.Clear();
 	//
@@ -534,7 +534,7 @@ CScriptAreaState::SScriptArea::SScriptArea() : eType( NDb::EAT_CIRCLE ), nScript
 {
 }
 
-void CScriptAreaState::SScriptArea::Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const
+void CScriptAreaState::SScriptArea::Draw( IPaintContext *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const
 {
 	const int N_NUM_CIRCLE_PARTS = 20;
 	uint32_t clr = bSelected ? CLR_SELECTED_AREA : CLR_NORMAL_AREA;
@@ -668,7 +668,7 @@ float CScriptAreaState::SScriptArea::GetRadius() const
 }
 
 
-void CScriptAreaState::PostDraw( CPaintDC *pPaintDC )
+void CScriptAreaState::PostDraw( IPaintContext *pPaintDC )
 {
 	ICamera *pCam = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();

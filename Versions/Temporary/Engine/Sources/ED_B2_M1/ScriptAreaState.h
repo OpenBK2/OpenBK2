@@ -32,7 +32,7 @@ public:
 		float GetRadius() const;
 		CVec2 GetAABBHalfSize() const;
 		CVec2 GetCenter() const;
-		void Draw( CPaintDC *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const;
+		void Draw( IPaintContext *pPaintDC, CSceneDrawTool *pSceneDrawTool ) const;
 		bool Pick( const CVec3 &rPoint ) const;
 	};
 	typedef std::unordered_map<unsigned, SScriptArea> CScriptAreaMap;
@@ -66,7 +66,7 @@ public:
 	// IInputStateInterface
 	void Enter();
 	void Leave();
-	void Draw( CPaintDC *pPaintDC );
+	void Draw( IPaintContext *pPaintDC );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	// CPolygonState
@@ -88,7 +88,7 @@ public:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	//
-	void PostDraw( CPaintDC *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 };
 
 

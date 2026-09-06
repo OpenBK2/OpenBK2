@@ -549,7 +549,7 @@ void CPolygonState::Leave()
 }
 
 
-void CPolygonState::Draw( CPaintDC *pPaintDC )
+void CPolygonState::Draw( IPaintContext *pPaintDC )
 {
 	if ( IEditorScene *pScene = EditorScene() )
 	{
@@ -654,7 +654,7 @@ void CPolygonState::OnDelete()
 }
 
 
-void CPolygonState::OnSetFocus( class CWnd* pNewWnd )
+void CPolygonState::OnSetFocus( IWidget* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );

@@ -253,7 +253,7 @@ void CReinfPointsState::Leave()
 }
 
 
-void CReinfPointsState::OnSetFocus( class CWnd* pNewWnd )
+void CReinfPointsState::OnSetFocus( IWidget* pNewWnd )
 {
 	CDefaultInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
@@ -424,7 +424,7 @@ void CReinfPointsState::RefreshReinfPointsWindow()
 }
 
 
-void CReinfPointsState::Draw( CPaintDC *pPaintDC )
+void CReinfPointsState::Draw( IPaintContext *pPaintDC )
 {
 	ICamera *pCam = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();
@@ -499,7 +499,7 @@ void CReinfPointsState::Draw( CPaintDC *pPaintDC )
 }
 
 
-void CReinfPointsState::PostDraw( CPaintDC *pPaintDC )
+void CReinfPointsState::PostDraw( IPaintContext *pPaintDC )
 {
 	ICamera *pCamera = Camera();
 	CPtr<IEditorScene> pScene = EditorScene();

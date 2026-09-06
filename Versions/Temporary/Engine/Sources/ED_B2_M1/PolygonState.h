@@ -168,10 +168,10 @@ protected:
 	//IInputState interface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( class CPaintDC *pPaintDC );
-	virtual void OnSetFocus( class CWnd* pNewWnd );
+	virtual void Draw( IPaintContext *pPaintDC );
+	virtual void OnSetFocus( IWidget* pNewWnd );
 
-	//virtual void OnSetFocus( class CWnd* pNewWnd );
+	//virtual void OnSetFocus( IWidget* pNewWnd );
 	// CPolygonState
 	// Сразу ли обновлять полигон после постановки или вклучать фазу редактирования
 	virtual bool SkipEnterAfterInsert() = 0;

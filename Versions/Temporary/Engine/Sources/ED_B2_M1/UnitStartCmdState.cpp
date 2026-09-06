@@ -481,7 +481,7 @@ void CUnitStartCmdState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMous
 }
 
 
-void CUnitStartCmdState::Draw( CPaintDC *pDC )
+void CUnitStartCmdState::Draw( IPaintContext *pDC )
 {
 	CMapObjectState::Draw( pDC );
 	DrawCommandMarkers();

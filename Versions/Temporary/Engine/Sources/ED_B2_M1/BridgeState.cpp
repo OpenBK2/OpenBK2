@@ -55,7 +55,7 @@ void CBridgeState::InsertObjectLeave()
 }
 
 
-void CBridgeState::InsertObjectDraw( CPaintDC *pPaintDC )
+void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( bPlaceBridge )
 	{

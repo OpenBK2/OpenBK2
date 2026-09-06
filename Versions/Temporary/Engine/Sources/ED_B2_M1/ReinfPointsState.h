@@ -52,9 +52,9 @@ public:
 	//
 	void Enter();
 	void Leave();
-	virtual void OnSetFocus( class CWnd* pNewWnd );
-	void Draw( CPaintDC *pPaintDC );
-	void PostDraw( CPaintDC *pPaintDC );
+	virtual void OnSetFocus( IWidget* pNewWnd );
+	void Draw( IPaintContext *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );

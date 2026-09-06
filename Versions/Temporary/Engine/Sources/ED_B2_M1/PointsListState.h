@@ -32,7 +32,7 @@ protected:
 	// IInputState interface
 	void Enter();
 	void Leave();
-	void PostDraw( CPaintDC *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 
 	// ICommandHandler
@@ -56,7 +56,7 @@ public:
 	CPointsListState( unsigned nCHID, unsigned nInstanceID, CBuildingEditor* _pBuildingEditor );
 	virtual ~CPointsListState();
 
-	virtual void Draw( CPaintDC *pPaintDC ) {}
+	virtual void Draw( IPaintContext *pPaintDC ) {}
 	virtual std::string GetPointsArrayFieldName() = 0;
 	virtual std::string GetPositionFieldName() { return "Pos"; }
 	virtual std::string GetDirectionFieldName() { return "Direction"; }
@@ -131,7 +131,7 @@ public:
 	virtual std::string GetPointsArrayFieldName() { return "SurfacePoints"; }
 	virtual void GetMaskFields( std::vector<std::string> *pMaskFields );
 	virtual std::string GetDirectionFieldName() { return ""; }
-	virtual void Draw( CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
 	virtual void AddPointSpecificMarker( IManipulator *pManipulator, int nPointIndex );
 };
 
@@ -150,7 +150,7 @@ public:
 	std::string GetPointsArrayFieldName() { return "DamageLevels"; }
 	void GetMaskFields( std::vector<std::string> *pMaskFields );
 	std::string GetDirectionFieldName() { return ""; }
-	void Draw( CPaintDC *pPaintDC ) {}
+	void Draw( IPaintContext *pPaintDC ) {}
 	void RefreshState();
 	void SetPointMarkers() {}
 	void Leave();

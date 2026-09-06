@@ -29,9 +29,9 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 	//IInputState interface
 	void Enter();
 	void Leave();
-	void Draw( CPaintDC *pPaintDC ) {}
+	void Draw( IPaintContext *pPaintDC ) {}
 
-	void PostDraw( CPaintDC *pPaintDC );
+	void PostDraw( IPaintContext *pPaintDC );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );

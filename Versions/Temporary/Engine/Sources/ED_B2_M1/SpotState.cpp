@@ -246,7 +246,7 @@ void CSpotState::InsertObjectLeave()
 }
 
 
-void CSpotState::InsertObjectDraw( class CPaintDC *pPaintDC )
+void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 {
 	if ( CanEdit() )
 	{

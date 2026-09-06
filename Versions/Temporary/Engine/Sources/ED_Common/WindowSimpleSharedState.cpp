@@ -413,41 +413,47 @@ void CWindowSimpleSharedState::UpdatePropertyControl( bool bHardUpdate )
 }
 
 
-void CWindowSimpleSharedState::PostDraw( CPaintDC *pPaintDC )
+namespace
+{
+	// The dotted outline drawn round a virtual-screen rectangle, three times over
+	// with only the colour differing.
+	void DrawDottedOutline( IPaintContext *pPaintContext, const CTRect<float> &rRect, TWidgetColor color )
+	{
+		pPaintContext->SetPen( PEN_DOT, 1, color );
+		pPaintContext->MoveTo( rRect.left,  rRect.top );
+		pPaintContext->LineTo( rRect.right, rRect.top );
+		pPaintContext->LineTo( rRect.right, rRect.bottom );
+		pPaintContext->LineTo( rRect.left,  rRect.bottom );
+		pPaintContext->LineTo( rRect.left,  rRect.top );
+	}
+
+	// A resize handle: a filled square centred on a corner.
+	void DrawHandle( IPaintContext *pPaintContext, int nX, int nY, int nHalfSize, TWidgetColor color )
+	{
+		pPaintContext->FillRect( CTRect<int>( nX - nHalfSize, nY - nHalfSize,
+																				 nX + nHalfSize, nY + nHalfSize ), color );
+	}
+}
+
+
+void CWindowSimpleSharedState::PostDraw( IPaintContext *pPaintDC )
 {
 	CTRect<float> wrc;
-	int nOldBkMode = pPaintDC->SetBkMode( TRANSPARENT );
+	pPaintDC->SaveState();
+	pPaintDC->SetTextBackgroundOpaque( false );
 
 	// draw virtual screen borders
 	{
 		wrc.SetRect(0, 0, 1024, 768);
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->VirtualToScreen( wrc, &wrc );
-
-		// draw screen rect
-		CPen pen(PS_DOT, 1, RGB(144,144,144));
-		CPen * pOldPen = pPaintDC->SelectObject( &pen );
-		pPaintDC->MoveTo( wrc.left,  wrc.top );
-		pPaintDC->LineTo( wrc.right, wrc.top );
-		pPaintDC->LineTo( wrc.right, wrc.bottom );
-		pPaintDC->LineTo( wrc.left,  wrc.bottom );
-		pPaintDC->LineTo( wrc.left,  wrc.top );
-		pPaintDC->SelectObject( pOldPen );
+		DrawDottedOutline( pPaintDC, wrc, RGB(144,144,144) );
 	}
 
 	if ( pMainWindow != 0 )
 	{
 		pMainWindow->FillWindowRect( &wrc );
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->VirtualToScreen( wrc, &wrc );
-
-		// draw screen rect
-		CPen pen(PS_DOT, 1, RGB(224,224,224));
-		CPen * pOldPen = pPaintDC->SelectObject( &pen );
-		pPaintDC->MoveTo( wrc.left,  wrc.top );
-		pPaintDC->LineTo( wrc.right, wrc.top );
-		pPaintDC->LineTo( wrc.right, wrc.bottom );
-		pPaintDC->LineTo( wrc.left,  wrc.bottom );
-		pPaintDC->LineTo( wrc.left,  wrc.top );
-		pPaintDC->SelectObject( pOldPen );
+		DrawDottedOutline( pPaintDC, wrc, RGB(224,224,224) );
 	}
 
 	if ( pPickedWindow != 0 )
@@ -461,37 +467,22 @@ void CWindowSimpleSharedState::PostDraw( CPaintDC *pPaintDC )
 		const int y2 = wrc.bottom-1;
 		const int HS = 4; // helper's size
 
-		int nOldROP2   = pPaintDC->SetROP2( R2_NOT );
+		// R2_NOT: the marquee is undrawn by drawing it again.
+		pPaintDC->SaveState();
+		pPaintDC->SetDrawMode( DRAW_NOT );
 
 		// draw picked rect
-		CPen pen(PS_DOT, 1, RGB(255,255,255));
-		CPen * pOldPen = pPaintDC->SelectObject( &pen );
-		pPaintDC->MoveTo( x1, y1 );
-		pPaintDC->LineTo( x2, y1 );
-		pPaintDC->LineTo( x2, y2 );
-		pPaintDC->LineTo( x1, y2 );
-		pPaintDC->LineTo( x1, y1 );
-		pPaintDC->SelectObject( pOldPen );
+		DrawDottedOutline( pPaintDC, CTRect<float>( x1, y1, x2, y2 ), RGB(255,255,255) );
 
-		CBrush solidBrush;
-		solidBrush.CreateSolidBrush( RGB(0,255,0) ); 
-		CRect rc;
-		
-		rc.SetRect( x1-HS, y1-HS, x1+HS, y1+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
+		// Corner handles only here, where CChapterState also draws edge midpoints.
+		DrawHandle( pPaintDC, x1, y1, HS, RGB(0,255,0) );
+		DrawHandle( pPaintDC, x2, y1, HS, RGB(0,255,0) );
+		DrawHandle( pPaintDC, x2, y2, HS, RGB(0,255,0) );
+		DrawHandle( pPaintDC, x1, y2, HS, RGB(0,255,0) );
 
-		rc.SetRect( x2-HS, y1-HS, x2+HS, y1+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-		
-		rc.SetRect( x2-HS, y2-HS, x2+HS, y2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		rc.SetRect( x1-HS, y2-HS, x1+HS, y2+HS );
-		pPaintDC->FillRect( &rc, &solidBrush );
-
-		pPaintDC->SetROP2( nOldROP2 );
+		pPaintDC->RestoreState();
 	}
-	pPaintDC->SetBkMode( nOldBkMode );
+	pPaintDC->RestoreState();
 	CDefaultInputState::PostDraw( pPaintDC );
 }
 

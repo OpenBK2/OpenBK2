@@ -52,8 +52,8 @@ protected:
 	// IInputState interface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( class CPaintDC *pPaintDC );
-	virtual void PostDraw( class CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
+	virtual void PostDraw( IPaintContext *pPaintDC );
 	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rMousePoint );

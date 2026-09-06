@@ -1254,7 +1254,7 @@ void CHeightStateV3::Leave()
 }
 
 
-void CHeightStateV3::Draw( CPaintDC *pPaintDC )
+void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{

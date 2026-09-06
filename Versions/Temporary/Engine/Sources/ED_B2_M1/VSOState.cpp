@@ -819,7 +819,7 @@ bool CVSOAddState::InsertVSO()
 }
 
 
-void CVSOAddState::OnSetFocus( CWnd* pNewWnd )
+void CVSOAddState::OnSetFocus( IWidget* pNewWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -828,7 +828,7 @@ void CVSOAddState::OnSetFocus( CWnd* pNewWnd )
 }
 
 
-void CVSOAddState::OnKillFocus( CWnd* pOldWnd )
+void CVSOAddState::OnKillFocus( IWidget* pOldWnd )
 {
 	if ( pParentState->CanEdit() )
 	{
@@ -1168,7 +1168,7 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 }
 
 
-void CVSOState::Draw( CPaintDC *pPaintDC )
+void CVSOState::Draw( IPaintContext *pPaintDC )
 {
 	if ( CanEdit() )
 	{	
@@ -1233,7 +1233,7 @@ void CVSOState::Draw( CPaintDC *pPaintDC )
 }
 
 
-void CVSOState::OnSetFocus( class CWnd* pNewWnd )
+void CVSOState::OnSetFocus( IWidget* pNewWnd )
 {
 	CMultiInputState::OnSetFocus( pNewWnd );
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );

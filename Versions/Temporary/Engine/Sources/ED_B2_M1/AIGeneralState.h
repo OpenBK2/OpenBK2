@@ -34,8 +34,8 @@ public:
 	// IInputStateInterface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void OnSetFocus( class CWnd* pNewWnd );
-	virtual void Draw( CPaintDC *pPaintDC );
+	virtual void OnSetFocus( IWidget* pNewWnd );
+	virtual void Draw( IPaintContext *pPaintDC );
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnRButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );

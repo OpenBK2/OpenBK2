@@ -108,8 +108,8 @@ class CVSOAddState : public CDefaultInputState
 	bool InsertVSO();
 
 	//IInputState interface
-	void OnSetFocus				( class CWnd* pNewWnd );
-	void OnKillFocus			( class CWnd* pOldWnd );
+	void OnSetFocus				( IWidget* pNewWnd );
+	void OnKillFocus			( IWidget* pOldWnd );
 
 	void OnMouseMove			( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp			( unsigned nFlags, const CTPoint<int> &rMousePoint );
@@ -212,9 +212,9 @@ protected:
 	//IInputState interface
 	virtual void Enter();
 	virtual void Leave();
-	virtual void Draw( class CPaintDC *pPaintDC );
+	virtual void Draw( IPaintContext *pPaintDC );
 	
-	virtual void OnSetFocus( class CWnd* pNewWnd );
+	virtual void OnSetFocus( IWidget* pNewWnd );
 
 	// CVSOState
 	// При постановке нового VSO необходимо использовать эту функуцию
