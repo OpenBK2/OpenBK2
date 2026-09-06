@@ -6,6 +6,7 @@
 
 #include "libdb/ResourceManager.h"
 #include "SelectTablesDialog.h"
+#include "SelectTablesView.h"
 #include "DW_GDBBrowser.h"
 #include "Tree_GDBBrowser.h"
 #include "MapEditorLib/Tools_HashSet.h"
@@ -316,15 +317,11 @@ void CDWGDBBrowser::CreateTabs()
 
 void CDWGDBBrowser::SelectTables()
 {
-	CSelectTablesDialog selectTablesDialog( this );
-	
-	selectTablesDialog.tables = tables;
-	selectTablesDialog.selectedTables = selectedTables;
-	
-	if ( selectTablesDialog.DoModal() == IDOK )
+	// Which dialog answers -- the MFC one or the wx one -- is NSelectTables'
+	// business, not this browser's. See SelectTablesView.h.
+	CWndWidget ownerWidget( this );
+	if ( NSelectTables::Run( &ownerWidget, tables, &selectedTables ) )
 	{
-		selectedTables = selectTablesDialog.selectedTables;
-
 		CreateTabs();
 	}
 }

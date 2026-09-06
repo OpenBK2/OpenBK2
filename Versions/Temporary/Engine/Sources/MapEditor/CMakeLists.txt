@@ -82,6 +82,8 @@ set(SOURCES
     ScriptEditor.cpp
     SearchObjectDialog.cpp
     SelectTablesDialog.cpp
+    SelectTablesViewMfc.cpp
+    SelectTablesViewWx.cpp
     SortTreeControl.cpp
     stdafx.cpp
     TextEditorDialog.cpp
