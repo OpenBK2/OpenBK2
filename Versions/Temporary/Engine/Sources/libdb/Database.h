@@ -97,6 +97,7 @@ public:
 	//
 	virtual void MarkChanged( const CDBID &dbid ) = 0;
 	virtual void SaveChanges() = 0;
+	virtual bool SaveChangedIndex() = 0;
 	virtual void DropCachedResources() = 0;
 	//
 	// retrieve all terminal classes list

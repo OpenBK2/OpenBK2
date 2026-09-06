@@ -33,10 +33,18 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorSingleton.h"
 #include "Main/MODs.h"
+#include "Main/MainLoop.h"
 
 #include "libdb/Db.h"
 
 #include <cstdint>
+#include <filesystem>
+#include <atlbase.h>
+#include <msxml6.h>
+#include "libdb/EditorDb.h"
+#include "libdb/TypeDef.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "System/VFS.h"
 
 IMPLEMENT_DYNAMIC(CMainFrame, SECWorkbook)
 
@@ -53,6 +61,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, SECWorkbook)
 	//
 	ON_REGISTERED_MESSAGE(WM_SECTOOLBARWNDNOTIFY, OnSECToolBarNotify)
 	//
+	// Handle this before the generic command range (which routes to the DB browser).
+	ON_COMMAND(ID_MAIN_REGISTER_XDB, OnRegisterXDB)
 	ON_COMMAND_RANGE(ID_FIRST_COMMAND_ID, ID_LAST_COMMAND_ID, OnUserCommand)
 	ON_UPDATE_COMMAND_UI_RANGE(ID_FIRST_COMMAND_ID, ID_LAST_COMMAND_ID, OnUpdateUserCommand)
 	//
@@ -390,6 +400,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	Singleton<IEditorContainer>()->CreateControls();
 	//
 	pToolBarMgr->SetButtonMap( pApp->GetToolbarButtonsMap() );
+	pToolBarMgr->AddCommandIconResource( ID_TOOLS_RUN_GAME, IDI_GAME_LAUNCH );
 	//pToolBarMgr->EnableToolTips( TRUE );
 	//pToolBarMgr->EnableFlyBy( TRUE );
 	pToolBarMgr->EnableCoolLook( true );
@@ -678,6 +689,11 @@ void CMainFrame::OnUserCommand( unsigned nCommandID )
 
 void CMainFrame::OnUpdateUserCommand( CCmdUI *pCmdUI )
 {
+	if ( pCmdUI->m_nID == ID_MAIN_REGISTER_XDB )
+	{
+		pCmdUI->Enable( NVFS::GetMainVFS() != 0 );
+		return;
+	}
 	unsigned nMenuID = INVALID_NODE_ID;
 	const SUserData::CRecentList *pRecentList = 0;
 	if ( ( pCmdUI->m_nID >= ID_MAIN_RECENT_0 )  && ( pCmdUI->m_nID <= ID_MAIN_RECENT_0 ) )
@@ -1844,6 +1860,190 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 	return true;	
 }
 
+
+
+namespace
+{
+// The old lightweight XML readers stop at the root header and do not report
+// malformed documents reliably. Validate the entire selected file with MSXML
+// before letting the database add its header to index.bin.
+bool ValidateXDB( const std::string &dbPath, std::string *pTypeName, std::string *pError )
+{
+	struct CComScope
+	{
+		HRESULT result = ::CoInitializeEx( nullptr, COINIT_APARTMENTTHREADED );
+		~CComScope() { if ( SUCCEEDED(result) ) ::CoUninitialize(); }
+	} com;
+	if ( FAILED(com.result) && com.result != RPC_E_CHANGED_MODE )
+	{
+		*pError = "Cannot initialize XML validation.";
+		return false;
+	}
+	ATL::CComPtr<IXMLDOMDocument2> document;
+	if ( FAILED(document.CoCreateInstance(__uuidof(DOMDocument60))) )
+	{
+		*pError = "Cannot create the MSXML 6 XML validator.";
+		return false;
+	}
+	document->put_async( VARIANT_FALSE );
+	document->put_validateOnParse( VARIANT_FALSE );
+	document->put_resolveExternals( VARIANT_FALSE );
+	document->setProperty( ATL::CComBSTR(L"ProhibitDTD"), ATL::CComVariant(true) );
+	// Validate the bytes the engine will read, including the mounted mod's
+	// precedence. XDB strings are UTF-8; MSXML alone would also accept UTF-16.
+	CFileStream stream( NVFS::GetMainVFS(), dbPath );
+	if ( !stream.IsOk() || stream.GetSize() == 0 )
+	{
+		*pError = "The XDB is empty or cannot be read from the current database.";
+		return false;
+	}
+	const char *data = reinterpret_cast<const char*>(stream.GetBuffer());
+	int size = stream.GetSize();
+	// loadXML takes Unicode text, so the byte-order mark must be removed before conversion.
+	if ( size >= 3 && memcmp(data, "\xef\xbb\xbf", 3) == 0 )
+	{
+		data += 3;
+		size -= 3;
+	}
+	const int length = ::MultiByteToWideChar( CP_UTF8, MB_ERR_INVALID_CHARS, data, size, nullptr, 0 );
+	if ( length == 0 || memchr(data, 0, size) != nullptr )
+	{
+		*pError = "XDB files must use UTF-8 text encoding.";
+		return false;
+	}
+	ATL::CComBSTR xml( length );
+	::MultiByteToWideChar( CP_UTF8, MB_ERR_INVALID_CHARS, data, size, xml.m_str, length );
+	VARIANT_BOOL loaded = VARIANT_FALSE;
+	const HRESULT result = document->loadXML( xml, &loaded );
+	if ( FAILED(result) || loaded != VARIANT_TRUE )
+	{
+		ATL::CComPtr<IXMLDOMParseError> error;
+		ATL::CComBSTR reason;
+		long line = 0;
+		document->get_parseError( &error );
+		if ( error )
+		{
+			error->get_reason( &reason );
+			error->get_line( &line );
+		}
+		*pError = fmt::format("Invalid XDB/XML at line {}: {}", line,
+			reason ? NStr::ToMBCS(std::wstring(reason, reason.Length())) : "Unable to read the document.");
+		return false;
+	}
+	ATL::CComPtr<IXMLDOMElement> root;
+	ATL::CComBSTR name;
+	if ( FAILED(document->get_documentElement(&root)) || !root || FAILED(root->get_tagName(&name)) || !name )
+	{
+		*pError = "The XDB has no resource root element.";
+		return false;
+	}
+	*pTypeName = NStr::ToMBCS( std::wstring(name, name.Length()) );
+	std::vector<NDb::NTypeDef::STypeClass*> types;
+	NDb::GetClassesList( &types );
+	for ( const auto *pType : types )
+	{
+		if ( pType && pType->nClassTypeID != -1 && pType->szTypeName == *pTypeName &&
+			 NObjectFactory::IsRegistered(pType->nClassTypeID) )
+			return true;
+	}
+	*pError = "Unknown game resource type <" + *pTypeName + ">. The file was not registered.";
+	return false;
+}
+}
+
+void CMainFrame::OnRegisterXDB()
+{
+	const auto ReportError = [this]( const std::string &message ) {
+		MessageBox( message.c_str(), "Register XDB", MB_OK | MB_ICONERROR );
+	};
+	// Attaching a mod changes the writable folder, but the base Data folder is
+	// still mounted. Accept both roots and use the same base path as MODs.cpp.
+	const std::string baseDataFolder = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_DATA );
+	std::vector<std::filesystem::path> dataRoots;
+	for ( const std::string &folder : {
+		Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_DATA_STORAGE ), baseDataFolder } )
+	{
+		std::error_code error;
+		auto rootPath = std::filesystem::canonical( std::filesystem::u8path(folder), error );
+		if ( error )
+		{
+			ReportError( "Cannot open the game/mod data folder:\n" + folder );
+			return;
+		}
+		dataRoots.push_back( rootPath.make_preferred() );
+	}
+	// Give the shell a canonical Windows path, without the mixed trailing
+	// separators used internally by the VFS. Always start in the game's Data.
+	const std::string initialFolder = dataRoots.back().string();
+	CFileDialog dialog( TRUE, "xdb", nullptr, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR,
+		"Game database files (*.xdb)|*.xdb||", this );
+	dialog.m_ofn.lpstrInitialDir = initialFolder.c_str();
+	dialog.m_ofn.lpstrTitle = "Register XDB in the current game or mod database";
+	if ( dialog.DoModal() != IDOK )
+		return;
+	std::error_code error;
+	const auto filePath = std::filesystem::canonical( std::filesystem::path(dialog.GetPathName().GetString()), error );
+	if ( error || _wcsicmp(filePath.extension().c_str(), L".xdb") != 0 )
+	{
+		ReportError( "Select an existing .xdb file." );
+		return;
+	}
+	std::string dbPath;
+	const std::wstring fullPath = filePath.wstring();
+	// Try the active mod first; the resulting DBID is relative to its mounted
+	// root, never prefixed with Data/ or Mods/<name>/. Compare whole directories.
+	for ( const auto &rootPath : dataRoots )
+	{
+		std::wstring rootPrefix = rootPath.wstring();
+		if ( rootPrefix.back() != L'\\' )
+			rootPrefix += L'\\';
+		if ( fullPath.size() > rootPrefix.size() &&
+			 _wcsnicmp(fullPath.c_str(), rootPrefix.c_str(), rootPrefix.size()) == 0 )
+		{
+			dbPath = std::filesystem::path(fullPath.substr(rootPrefix.size())).generic_u8string();
+			break;
+		}
+	}
+	if ( dbPath.empty() )
+	{
+		std::string message = "Select an XDB inside the game's Data folder:\n" + initialFolder;
+		if ( NMOD::DoesAnyMODAttached() )
+			message += "\n\nOr inside the active mod folder:\n" + dataRoots.front().string();
+		ReportError( message );
+		return;
+	}
+	std::string typeName, validationError;
+	if ( !ValidateXDB(dbPath, &typeName, &validationError) )
+	{
+		ReportError( validationError );
+		return;
+	}
+	const bool bAlreadyRegistered = NDb::IsFileRegistered( dbPath );
+	if ( bAlreadyRegistered && NDb::GetClassTypeName(CDBID(dbPath)) != typeName )
+	{
+		ReportError( "This database path is already registered with a different resource type. Use a new filename." );
+		return;
+	}
+	if ( !NDb::RegisterResourceFile(dbPath) )
+	{
+		ReportError( "The database could not read the selected XDB. It was not registered." );
+		return;
+	}
+	// Persist the combined database index in the active writable layer (the mod
+	// when attached). Base-data references are valid there too; do not copy XDBs
+	// or save unrelated resource edits.
+	const bool bSaved = NDb::SaveChangedIndex();
+	ReloadData();
+	if ( !bSaved )
+	{
+		ReportError( "The resource is registered for this session, but index.bin could not be saved.\nCheck data-folder permissions, then retry registration." );
+		return;
+	}
+	Log( LT_NORMAL, fmt::format("Registered {} ({})\n", dbPath, typeName) );
+	MessageBox( fmt::format("{}\nType: {}\n\n{}", dbPath, typeName,
+		bAlreadyRegistered ? "This resource was already registered." : "Registered and saved to the database index.").c_str(),
+		"Register XDB", MB_OK | MB_ICONINFORMATION );
+}
 
 void CMainFrame::ReloadData()
 {

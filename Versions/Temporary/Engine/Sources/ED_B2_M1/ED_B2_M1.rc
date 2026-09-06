@@ -982,6 +982,7 @@ BEGIN
         MENUITEM "Select &Tables\tCtrl+T",      ID_MAIN_SELECT, GRAYED
         MENUITEM "&Refresh Tables",             ID_MAIN_RELOAD, GRAYED
         MENUITEM "Save A&ll\t Ctrl+S",          ID_MAIN_SAVE, GRAYED
+        MENUITEM "Register &XDB...",           ID_MAIN_REGISTER_XDB
         MENUITEM SEPARATOR
         MENUITEM "New MOD",                     ID_MAIN_NEW_MOD, GRAYED
         MENUITEM "Open MOD",                    ID_MAIN_OPEN_MOD, GRAYED
@@ -1110,6 +1111,7 @@ BEGIN
         MENUITEM "Select &Tables\tCtrl+T",      ID_MAIN_SELECT, GRAYED
         MENUITEM "&Refresh Tables",             ID_MAIN_RELOAD, GRAYED
         MENUITEM "Save A&ll\t Ctrl+S",          ID_MAIN_SAVE, GRAYED
+        MENUITEM "Register &XDB...",           ID_MAIN_REGISTER_XDB
         MENUITEM SEPARATOR
         MENUITEM "New MOD",                     1073, GRAYED
         MENUITEM "Open MOD",                    1074, GRAYED
@@ -1211,6 +1213,8 @@ BEGIN
     END
     POPUP "&Map"
     BEGIN
+        MENUITEM "Start Mission in &Game",      ID_TOOLS_RUN_GAME
+        MENUITEM SEPARATOR
         MENUITEM "Reset Ca&mera",               ID_TOOLS_RESET_CAMERA
         , GRAYED
         MENUITEM "&Update Roads, Cliffs, Rivers", ID_TOOLS_UPDATE_VSO
@@ -1265,6 +1269,7 @@ BEGIN
         MENUITEM "Select &Tables\tCtrl+T",      ID_MAIN_SELECT, GRAYED
         MENUITEM "&Refresh Tables",             ID_MAIN_RELOAD, GRAYED
         MENUITEM "Save A&ll\t Ctrl+S",          ID_MAIN_SAVE, GRAYED
+        MENUITEM "Register &XDB...",           ID_MAIN_REGISTER_XDB
         MENUITEM SEPARATOR
         MENUITEM "New MOD",                     1073, GRAYED
         MENUITEM "Open MOD",                    1074, GRAYED
@@ -1557,7 +1562,6 @@ BEGIN
                             "Toggle ( show or hide ) the Passability\nDraw Passability"
     ID_TOOLS_SHOW_GRID      "Show grid\nShow Grid"
     ID_VIEW_FILTER          "Update view filter\nView Filter"
-    ID_TOOLS_RUN_GAME       "Run game\nRun Game"
     ID_TOOLS_REGEN_VSO_NORMALS 
                             "Regenerate normals of terrain objects\nRegenerate normals of terrain objects"
     ID_TOOLS_DEBUG_CHECK_MAP "Debug check map\nDebug Check Map"

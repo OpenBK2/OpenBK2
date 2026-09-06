@@ -143,6 +143,10 @@
 #define ID_MAIN_OPEN_MOD														1074
 #define ID_MAIN_CLOSE_MOD														1075
 #define ID_MAIN_OBJECT_LOCATE												1076
+// Import a loose XDB into the currently mounted database.
+#define ID_MAIN_REGISTER_XDB 1077
+// Handled by the active map editor; also exposed on the shared File toolbar.
+#define ID_TOOLS_RUN_GAME 3669
 #define ID_MAIN_LAST_COMMAND_ID											1079
 
 #define ID_SELECTION_FIRST_COMMAND_ID								1080

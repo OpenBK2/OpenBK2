@@ -217,7 +217,68 @@ bool CEditorDatabase::LoadTypesMap()
 		}
 		typesMap[ (*it)->GetTypeName() ] = *it;
 	}
-	//
+
+	// Installed game data often has the original types.xml. Unlike the game XML
+	// loader, editor binds only read fields declared there, so GLB references and
+	// selectors must be linked even when the external schema predates GLB support.
+	struct SModelField { const char *type; const char *name; int chunk; };
+	const SModelField modelFields[] = {
+		{ "Geometry", "ModelFileRef", 12 }, { "Geometry", "RootMesh", 13 },
+		{ "AIGeometry", "ModelFileRef", 8 }, { "AIGeometry", "RootMesh", 9 },
+		{ "Skeleton", "ModelFileRef", 5 }, { "Skeleton", "RootJoint", 6 },
+		{ "AnimB2", "ModelFileRef", 11 }, { "AnimB2", "FirstFrame", 12 },
+		{ "AnimB2", "LastFrame", 13 }, { "AnimB2", "ClipName", 14 }
+	};
+	for ( const SModelField &field : modelFields )
+	{
+		const auto type = typesMap.find( field.type );
+		const auto meta = metaInfoMap.find( field.type );
+		if ( type == typesMap.end() || meta == metaInfoMap.end() )
+			continue;
+		NTypeDef::STypeClass *pClass = dynamic_cast<NTypeDef::STypeClass*>( type->second.GetPtr() );
+		if ( !pClass )
+			continue;
+		const auto compiledField = meta->second->fields.find( field.name );
+		if ( compiledField == meta->second->fields.end() )
+			continue;
+		NTypeDef::STypeStructBase::SField *pField = 0;
+		for ( auto &existing : pClass->fields )
+		{
+			if ( existing.szName == field.name )
+			{
+				pField = &existing;
+				break;
+			}
+		}
+		if ( !pField )
+		{
+			const bool bInteger = compiledField->second.GetType() == NTypeDef::TYPE_TYPE_INT;
+			const char *pszType = bInteger ? "int" : "string";
+			if ( typesMap.find( pszType ) == typesMap.end() )
+				typesMap[pszType] = bInteger
+					? static_cast<NTypeDef::STypeDef*>(new NTypeDef::STypeInt())
+					: static_cast<NTypeDef::STypeDef*>(new NTypeDef::STypeString());
+			NTypeDef::STypeStructBase::SField added;
+			added.szName = field.name;
+			added.nChunkID = field.chunk;
+			added.pType = typesMap[pszType];
+			added.defaultValue = bInteger ? CVariant(0) : CVariant("");
+			added.wszDesc = L"GLTF/GLB model source or selector. Leave empty for legacy GR2 resources.";
+			pClass->fields.push_back( added );
+			pField = &pClass->fields.back();
+		}
+		if ( pField->szName == "ModelFileRef" && !pField->HasAttribute("filepath") )
+		{
+			// ModelFileRef is a FilePathRef, serialized as <ModelFileRef href="..."/>.
+			// Without this attribute the editor reads empty element text, falls back
+			// to the GR2 UID, and can erase the GLB reference when saving the resource.
+			// Repair existing incomplete schemas too, preserving their other attributes.
+			pField->pAttributes = pField->pAttributes
+				? new NTypeDef::SAttributes(pField->pAttributes->attributes)
+				: new NTypeDef::SAttributes();
+			pField->pAttributes->attributes["filepath"] = true;
+		}
+	}
 	return true;
 }
 

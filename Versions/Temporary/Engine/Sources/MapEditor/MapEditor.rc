@@ -30,6 +30,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_EDITORTYPE          ICON                    "..\\MapEditor\\res\\editor.ico"
+IDI_GAME_LAUNCH         ICON                    "..\\Game\\main.ico"
 IDR_MAINFRAME           ICON                    "..\\MapEditor\\res\\main_frame.ico"
 #endif    // Neutral (Default) resources
 /////////////////////////////////////////////////////////////////////////////
@@ -608,6 +609,8 @@ BEGIN
     BUTTON      ID_MAIN_OPEN_RESOURCE
     BUTTON      ID_MAIN_SAVE
     BUTTON      ID_MAIN_SELECT
+    SEPARATOR
+    BUTTON      ID_TOOLS_RUN_GAME
 END
 
 IDT_PROPERTY_CONTROL TOOLBAR  16, 16
@@ -722,6 +725,7 @@ BEGIN
         MENUITEM "Select &Tables",              ID_MAIN_SELECT, GRAYED
         MENUITEM "&Refresh Tables",             ID_MAIN_RELOAD, GRAYED
         MENUITEM "Save A&ll Tables",            ID_MAIN_SAVE, GRAYED
+        MENUITEM "Register &XDB...",           ID_MAIN_REGISTER_XDB
     END
     POPUP "TREE_GDB_BROWSER"
     BEGIN
@@ -1156,6 +1160,9 @@ BEGIN
     ID_MAIN_OPEN_RESOURCE   "Open existing game resource\nOpen resource"
     ID_MAIN_SAVE            "Save all unsaved data\nSave All"
     ID_MAIN_RELOAD          "Refresh active tables\nRefresh Tables"
+    ID_MAIN_REGISTER_XDB    "Register an existing XDB in the current game or mod database\nRegister XDB"
+    // Define shared command text once: b2_res.rc includes both editor resource scripts.
+    ID_TOOLS_RUN_GAME       "Save and start the open map in Game.exe\nStart Mission in Game"
     ID_MAIN_SELECT          "Select active tables\nSelect Tables"
     ID_MAIN_RECENT_0        "Open this map\nOpen"
     ID_MAIN_RECENT_1        "Open this map\nOpen"

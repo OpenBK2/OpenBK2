@@ -43,6 +43,10 @@
 #include "MapInfoViewFilterDlg.h"
 
 #include <cstdint>
+#include <filesystem>
+#include <shellapi.h>
+#include "Main/MODs.h"
+#include "libdb/EditorDb.h"
 
 //#include "../GameX/DBGameRoot.h"
 //#include "../GameX/DBConsts.h"
@@ -54,10 +58,7 @@
 
 REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 
-#define RUN_GAME_BAT_FILE_PATH "Editor\\RunGame.bat"
-#define GAME_CFG_FILE_PATH "Profiles\\Game.cfg"
-#define GAME_CFG_NEW_FILE_PATH "Editor\\Game.cfg.new"
-#define GAME_CFG_BACKUP_FILE_PATH "Editor\\Game.cfg.backup"
+
 
 
 ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = 
@@ -650,6 +651,7 @@ void CMapInfoEditor::Destroy()
 
 void CMapInfoEditor::Save( bool bSaveChanges )
 {
+	bSaveFailed = false;
 	if ( IsModified() && bSaveChanges )
 	{
 		try
@@ -658,10 +660,16 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 			{
 				NLog::GetLogger()->Log( LT_ERROR, "Failed to save map\n" );
 				NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tObjectID: {}\n", NDb::GetResName(pMapInfo)) );
+				bSaveFailed = true;
+				return;
 			}
 		}
-		catch ( ... ) 
+		catch ( ... )
 		{
+			// Preserve the dirty state and prevent launching stale terrain after a save failure.
+			bSaveFailed = true;
+			NLog::GetLogger()->Log( LT_ERROR, "Failed to save map terrain.\n" );
+			return;
 		}
 	}
 	//
@@ -2327,43 +2335,62 @@ void CMapInfoEditor::ApplyViewFilter()
 
 void CMapInfoEditor::RunGame()
 {
-	Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true );
-	/**
-	const std::string szStartFolder = Singleton<IUserDataContainer>()->Get()->szStartFolder;
-	//
-	SConfigFile configFile;	
-	configFile.Load( szStartFolder + GAME_CFG_FILE_PATH, STREAM_PATH_ABSOLUTE );
-	configFile.RemoveKeyword( "main_menu", true );
-	configFile.RemoveKeyword( "map", true );
-	configFile.AddKeyword( "map", std::to_string(  GetObjectSet().objectNameSet.begin()->first ) );
-	configFile.Save( szStartFolder + GAME_CFG_NEW_FILE_PATH, STREAM_PATH_ABSOLUTE );
-	//
-	const std::string szRunGameBatFilePath = szStartFolder + RUN_GAME_BAT_FILE_PATH;
-	::ShellExecute( 0, "open", szRunGameBatFilePath.c_str(), NULL, NULL, SW_SHOWNORMAL );
-	/**/
-	/**
-//	ClearHoldQueue();
-	// launch map
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_UPDATE, 0 );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_INPUT, 0 );
+	if ( !pMapInfo )
+		return;
+	const HWND hwndOwner = Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd();
+	const auto ReportError = [hwndOwner]( const std::string &message ) {
+		::MessageBox( hwndOwner, message.c_str(), "Start Mission in Game", MB_OK | MB_ICONERROR );
+	};
 
-	pEditorScene = EditorScene();
-	NSingleton::UnRegisterSingleton( IEditorScene::tidTypeID );
-	NSingleton::RegisterSingleton( CreateScene(), IEditorScene::tidTypeID );
-	EditorScene()->SwitchScene( SCENE_MISSION );
-	CreateAI();
-	// re-init DB-dependent consts
-	if ( const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts() )
-		Singleton<IUIInitialization>()->SetUIConsts( pUIConsts );
-	if ( const NDb::SClientGameConsts *pClientConsts = NGameX::GetClientConsts() )
-		Singleton<IClientAckManager>()->SetClientConsts( pClientConsts );
-	if ( const NDb::SSceneConsts *pEditorSceneConsts = NGameX::GetSceneConsts() )
-		EditorScene()->SetSceneConsts( pEditorSceneConsts );
-	Camera()->Init();
-	//
-	const std::wstring wszCommand = NStr::ToUnicode( fmt::format( "map {}", GetObjectSet().objectNameSet.begin()->first ) );
-	NGlobal::ProcessCommand( wszCommand );
-	/**/
+	// Resolve Game.exe beside the editor, independent of file-dialog working dirs.
+	std::vector<char> modulePath( 32768 );
+	const DWORD nLength = ::GetModuleFileName( 0, modulePath.data(), static_cast<DWORD>(modulePath.size()) );
+	if ( nLength == 0 || nLength >= modulePath.size() )
+	{
+		ReportError( "Cannot find the editor's executable directory." );
+		return;
+	}
+	const std::filesystem::path binFolder = std::filesystem::u8path(modulePath.data()).parent_path();
+	const std::string gamePath = (binFolder / "Game.exe").u8string();
+	if ( ::GetFileAttributes(gamePath.c_str()) == INVALID_FILE_ATTRIBUTES )
+	{
+		ReportError( "Game.exe was not found beside the map editor. Install the game executable in:\n" + binFolder.u8string() );
+		return;
+	}
+
+	const std::string mapPath = NDb::GetFileName( pMapInfo->GetDBID() );
+	NMOD::SMOD mod;
+	const std::string modPath = NMOD::GetAttachedMOD(&mod)
+		? std::filesystem::u8path(mod.szFullFolderPath.c_str()).generic_u8string() : std::string();
+	if ( mapPath.empty() || mapPath.find_first_of("\"\r\n;") != std::string::npos ||
+		 modPath.find_first_of("\"\r\n;") != std::string::npos )
+	{
+		ReportError( "The map/mod path cannot contain quotes, semicolons or line breaks." );
+		return;
+	}
+
+	// Save the current map and DB before the independent game process reads them.
+	bSaveFailed = false;
+	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand(ID_VIEW_SAVE_CHANGES, false) ||
+		 bSaveFailed || Singleton<IResourceManager>()->CanSyncDB() || !NDb::SaveChangedIndex() )
+	{
+		ReportError( "The map or database index could not be saved. Check the editor log." );
+		return;
+	}
+	const std::string arguments = "--editor-map=\"" + mapPath +
+		"\" --editor-mod=\"" + modPath + "\"";
+	SHELLEXECUTEINFO info = {};
+	info.cbSize = sizeof(info);
+	info.fMask = SEE_MASK_FLAG_NO_UI;
+	info.hwnd = hwndOwner;
+	info.lpVerb = "open";
+	info.lpFile = gamePath.c_str();
+	info.lpParameters = arguments.c_str();
+	const std::string workingFolder = binFolder.u8string();
+	info.lpDirectory = workingFolder.c_str();
+	info.nShow = SW_SHOWNORMAL;
+	if ( !::ShellExecuteEx(&info) )
+		ReportError( fmt::format("Could not start Game.exe (Windows error {}).", ::GetLastError()) );
 }
 
 

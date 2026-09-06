@@ -127,6 +127,11 @@ void SaveChanges()
 		s_pMainDatabase->SaveChanges();
 }
 
+bool SaveChangedIndex()
+{
+	return s_pMainDatabase && s_pMainDatabase->SaveChangedIndex();
+}
+
 void DropCachedResources()
 {
 	if ( s_pMainDatabase )
@@ -163,9 +168,16 @@ bool CBasicDatabase::ReadResourceHeader( STypeObjectHeader *pHeader, const CDBID
 	CFileStream stream( pVFS, GetFileName(dbid) );
 	if ( stream.IsOk() )
 	{
+		// Loose XDBs saved by modern text editors may start with a UTF-8 BOM.
+		// The header visitor stops early by design, so require an actual root name.
+		unsigned char prefix[3] = {};
+		if ( stream.GetSize() >= 3 )
+			stream.Read( prefix, 3 );
+		stream.Seek( prefix[0] == 0xef && prefix[1] == 0xbb && prefix[2] == 0xbf ? 3 : 0 );
+		pHeader->szClassTypeName.clear();
 		CObj<NLXML::IXmlSaxVisitor> pVisitor = new CObjectHeaderXmlSaxVisitor( pHeader );
 		NLXML::ParseXML( pVisitor, &stream );
-		return true;
+		return !pHeader->szClassTypeName.empty();
 	}
 	return false;
 }

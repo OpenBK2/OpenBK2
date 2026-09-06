@@ -169,7 +169,6 @@
 #define ID_TOOLS_SHOW_GRID													3667
 #define ID_VIEW_FILTER															3668
 //
-#define ID_TOOLS_RUN_GAME														3669
 #define ID_TOOLS_REGEN_VSO_NORMALS									3670
 //
 #define ID_TOOLS_DEBUG_CHECK_MAP										3671

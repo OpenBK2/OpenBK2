@@ -142,6 +142,8 @@ public:
     //! SECMDIFrameWnd::EnableBmpMenus. False when the command is on no
     //! toolbar, or on one that has not been built yet.
     BOOL GetButtonImage(UINT nID, HIMAGELIST *phImageList, int *pnImage) const;
+    // Register before creating bars; the resource is copied into the shared list.
+    void AddCommandIconResource(UINT nCommandID, UINT nIconID);
     //! The menu resources SetMenuInfo was given, in the order it got them.
     //! They are what the Customize dialog offers as draggable commands.
     const std::vector<UINT>& GetMenuIDs() const;
@@ -230,6 +232,8 @@ private:
     //! answers for a command whose bar has not been created and for one
     //! that is about to be put on a different bar.
     std::map<UINT, int> m_commandImage;
+    struct CommandIcon { HINSTANCE hInstance; UINT nResourceID; int nImage = -1; };
+    std::map<UINT, CommandIcon> m_commandIcons;
 
     //! Load any bitmap that is not in the list yet, then remap the
     //! commands. Idempotent, and called again whenever a definition or a

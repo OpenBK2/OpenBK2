@@ -585,9 +585,13 @@ void SECToolBarManager::AddBitmapToImageList(UINT nBitmapID) {
     m_bitmapImages.push_back(images);
 }
 
+// Explicit command icons share the same list as the original toolbar bitmaps.
+void SECToolBarManager::AddCommandIconResource(UINT nCommandID, UINT nIconID) {
+    m_commandIcons[nCommandID] = { AfxFindResourceHandle(MAKEINTRESOURCE(nIconID), RT_GROUP_ICON), nIconID };
+}
+
 // Each definition's buttons take the frames of the bitmap it was paired with,
-// in order, skipping separators -- which is the same rule CToolBar used within
-// one bar, moved up to the shared list.
+// in order, skipping separators and commands supplied by icon resources.
 void SECToolBarManager::MapCommandImages() {
     m_commandImage.clear();
     for (const ToolBarDef &def : m_defs) {
@@ -597,8 +601,8 @@ void SECToolBarManager::MapCommandImages() {
         }
         int nImage = 0;
         for (UINT nID : def.btnIDs) {
-            if (nID == 0) {
-                continue;       // a separator, which has no frame
+            if (nID == 0 || m_commandIcons.find(nID) != m_commandIcons.end()) {
+                continue;       // separators and explicit icons consume no bitmap frame
             }
             // A bar with more buttons than its bitmap has frames would
             // otherwise index into the next bitmap and draw someone else's
@@ -631,7 +635,7 @@ void SECToolBarManager::BuildImageList() {
         // 16x15 is the frame size CToolBar assumes when it splits a toolbar
         // bitmap, and so the size these bitmaps were drawn at. ILC_MASK because
         // the frames are masked by their background colour, not alpha.
-        if (!m_images.Create(16, 15, ILC_COLOR24 | ILC_MASK, 0, 8)) {
+        if (!m_images.Create(16, 15, ILC_COLOR32 | ILC_MASK, 0, 8)) {
             spdlog::warn("SECToolBarManager: could not create the shared image list");
             return;
         }
@@ -640,6 +644,19 @@ void SECToolBarManager::BuildImageList() {
         AddBitmapToImageList(m_bitmaps[i]);
     }
     MapCommandImages();
+    for (auto &entry : m_commandIcons) {
+        CommandIcon &icon = entry.second;
+        if (icon.nImage < 0) {
+            HICON hIcon = static_cast<HICON>(::LoadImage(icon.hInstance,
+                MAKEINTRESOURCE(icon.nResourceID), IMAGE_ICON, 16, 15, LR_DEFAULTCOLOR));
+            if (hIcon != nullptr) {
+                icon.nImage = m_images.Add(hIcon);
+                ::DestroyIcon(hIcon);
+            }
+        }
+        if (icon.nImage >= 0)
+            m_commandImage[entry.first] = icon.nImage;
+    }
 }
 
 // Which toolbar image, if any, belongs to a command.

@@ -14,6 +14,9 @@
 #define PCCMN_ARRAY_MULTI_NODE													4
 #define PCCMN_ARRAY_ARRAY																5
 
+// Reuse the actual game icon for the mission launch command.
+#define IDI_GAME_LAUNCH 137
+
 #define IDR_MANIFEST																		1
 #define IDR_MAINFRAME																		129
 

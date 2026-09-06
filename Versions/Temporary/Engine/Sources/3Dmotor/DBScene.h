@@ -725,6 +725,8 @@ namespace NDb
 		int GetTypeID() const { return typeID; }
 		//
 		void ReportMetaInfo() const;
+		// Editor bindings bypass the XML serializer that initializes GLB bounds.
+		_3DMOTOR_EXPORT void PostLoad( bool bInEditor ) override;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -757,6 +759,8 @@ namespace NDb
 		int GetTypeID() const { return typeID; }
 		//
 		void ReportMetaInfo() const;
+		// Editor bindings bypass the XML serializer that initializes GLB bounds.
+		_3DMOTOR_EXPORT void PostLoad( bool bInEditor ) override;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );

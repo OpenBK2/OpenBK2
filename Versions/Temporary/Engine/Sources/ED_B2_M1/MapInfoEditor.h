@@ -77,6 +77,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	SVSOCollector VSOCollector;
 	CHeightContainer heightContainer;
 	const NDb::SMapInfo *pMapInfo;
+	bool bSaveFailed = false;
 	//
 	inline void ClearMapInfoData()
 	{

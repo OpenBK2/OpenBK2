@@ -27,17 +27,19 @@ bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
 LIBDB_EXPORT void MarkChanged( const CDBID &dbid );
 //! save all objects, marked as changed
 LIBDB_EXPORT void SaveChanges();
+//! Persist newly registered files without saving unrelated edited resources.
+LIBDB_EXPORT bool SaveChangedIndex();
 //! drop all cached resources
 void DropCachedResources();
 //! check, have we changed DB objects?
 bool HasChangedObjects();
 //! retrieve all terminal classes list
-bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
+LIBDB_EXPORT bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
 //! retrieve all objects by type
 bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
 
-bool RegisterResourceFile( const std::string &szFileName );
-bool IsFileRegistered( const std::string &szFileName );
+LIBDB_EXPORT bool RegisterResourceFile( const std::string &szFileName );
+LIBDB_EXPORT bool IsFileRegistered( const std::string &szFileName );
 //! add database observer
 LIBDB_EXPORT void AddDbObserver( IDbObserver *pObserver );
 

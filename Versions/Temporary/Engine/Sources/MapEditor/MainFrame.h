@@ -12,7 +12,7 @@
 
 #define TOOLBARS_COUNT 6
 //
-#define TOOLBAR_MAIN_ELEMENTS_COUNT 5
+#define TOOLBAR_MAIN_ELEMENTS_COUNT 7
 #define TOOLBAR_SELECTION_ELEMENTS_COUNT 9
 #define TOOLBAR_CC_ELEMENTS_COUNT 2
 #define TOOLBAR_OBJECT_ELEMENTS_COUNT 12
@@ -88,6 +88,7 @@ protected:
 	//
 	afx_msg void OnViewToolBar( unsigned nCommandID );
 	afx_msg void OnResetGUI();
+	afx_msg void OnRegisterXDB();
 	afx_msg void OnUpdateViewToolBar( CCmdUI *pCmdUI );
 	//
 	//afx_msg void OnShowDWGDBBrowser();

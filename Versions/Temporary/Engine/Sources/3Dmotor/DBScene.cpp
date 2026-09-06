@@ -1234,6 +1234,13 @@ int SFont::operator&( IBinSaver &saver )
 
 
 
+void SAIGeometry::PostLoad( bool bInEditor )
+{
+	// Game serialization already calculates these; editor bindings need the same bounds.
+	if ( bInEditor && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
+}
+
 void SAIGeometry::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "AIGeometry", typeID, sizeof(*this) );
@@ -1282,6 +1289,13 @@ int SAIGeometry::operator&( IBinSaver &saver )
 }
 
 
+
+void SGeometry::PostLoad( bool bInEditor )
+{
+	// Game serialization already calculates these; editor bindings need the same bounds.
+	if ( bInEditor && !szModelFileRef.empty() )
+		CalculateGltfBounds( this );
+}
 
 void SGeometry::ReportMetaInfo() const
 {
