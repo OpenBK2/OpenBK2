@@ -29,7 +29,7 @@
 // Docking Windows
 #include "ScriptAreaWindow.h"
 #include "CameraPositionView.h"
-#include "UnitStartCmdWindow.h"
+#include "UnitStartCmdView.h"
 #include "MapObjectWindow.h"
 #include "VSOWindow.h"
 #include "AdvClipboardWindow.h"
@@ -291,11 +291,10 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
 				}
 				// unit start command
-				if ( CUnitStartCmdWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CUnitStartCmdWindow*>(0)) )
+				// Which toolkit draws this palette is NUnitStartCmdView's business,
+				// not the editor's.
+				if ( CWnd *pDialog = NUnitStartCmdView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CUnitStartCmdWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_UNIT_START_CMD] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

@@ -73,51 +73,8 @@ BOOL CUnitStartCmdWindow::OnInitDialog()
 }
 
 
-bool CUnitStartCmdWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SUnitStartCmdWindowData *pData = reinterpret_cast<SUnitStartCmdWindowData*>( dwData );
-	//
-	NI_ASSERT( pData, "CUnitStartCmdWindow::HandleCommand(): dwData == 0" );
-	if ( !pData )
-		return false;
-	//
-	switch ( nCommandID )
-	{
-		case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		//
-		case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-bool CUnitStartCmdWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CUnitStartCmdWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CUnitStartCmdWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-
-	return false;
-}
+// HandleCommand and UpdateCommand are CPaletteCommands' now, shared with the
+// wx palette; see PaletteCommands.h. The null check they had is there too.
 
 
 void CUnitStartCmdWindow::NotifyHandler()

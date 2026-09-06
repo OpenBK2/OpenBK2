@@ -71,6 +71,7 @@ MIGRATED = {
     # boundary in front of it is a different shape -- see CameraPositionView.h.
     "CCameraPositionWindow": "ED_B2_M1/CameraPositionViewWx.cpp (NCameraPositionView::Create)",
     "CFormationWindow": "ED_B2_M1/FormationViewWx.cpp (NFormationView::Create)",
+    "CUnitStartCmdWindow": "ED_B2_M1/UnitStartCmdViewWx.cpp (NUnitStartCmdView::Create)",
 }
 
 

@@ -2,65 +2,9 @@
 
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
-#include "StringResources.h"
+#include "UnitStartCmdData.h"
 
 #include <cstdint>
-
-//
-//
-//		UNITS START COMMANDS WINDOW DATA
-//
-//
-
-struct SUnitStartCmdWindowData
-{
-	//
-	struct SCmd // данные для создания row в списке команд
-	{
-		int nIndex;					// индекс команды в MapInfo.startCommandList[]
-		std::string szType;			// тип команды
-		std::string szTarget;	// местоназначение команды - имя юнита или координаты
-		//
-		SCmd()
-			:	nIndex(-1),
-			szType( RCSTR("<UNKNOWN>") )
-		{
-		}
-		bool operator== ( const SCmd &cmd ) const { return ( this->nIndex == cmd.nIndex ); }
-	};
-	std::vector<SCmd> commands;
-	//
-	enum EAction
-	{
-		NO_CMD,
-		ADD_CMD,
-		DEL_CMD,
-		EDIT_CMD,
-		ORDER_DOWN_CMD,
-		ORDER_UP_CMD,
-		SEL_CHANGE
-	};
-	EAction eLastAction;							// последнее событие интерфейса пользователя
-	std::vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
-	//
-	SUnitStartCmdWindowData() 
-	{
-		Clear();
-	}
-	//
-	void Clear()
-	{
-		eLastAction = NO_CMD; 
-		selectedCommands.clear();
-		commands.clear();
-	}
-	//
-	void SetLastAction( EAction eAction )
-	{
-		eLastAction = eAction;
-	}
-};
 
 //
 //
@@ -68,7 +12,7 @@ struct SUnitStartCmdWindowData
 //
 //
 
-class CUnitStartCmdWindow : public CResizeDialog, public ICommandHandler
+class CUnitStartCmdWindow : public CResizeDialog, public CUnitStartCmdCommands
 {
 	// controls
 	CButton btnAdd;
@@ -84,14 +28,17 @@ class CUnitStartCmdWindow : public CResizeDialog, public ICommandHandler
 	DECLARE_RESIZE_DLG_WND_COMMON_METHODS( CUnitStartCmdWindow )
 
 	// CUnitStartCmdWindow
-	void GetDialogData( SUnitStartCmdWindowData *pData );
-	void SetDialogData( const SUnitStartCmdWindowData *pData );
 	void NotifyHandler();
 	void NotifyHandler( SUnitStartCmdWindowData::EAction eAction );
 
 	void SetLastAction( SUnitStartCmdWindowData::EAction eAction ) { eLastAction = eAction; }
 
 public:
+	// CPaletteCommands. Public now because the dispatch that calls them is on
+	// the shared base rather than on this class.
+	virtual void GetDialogData( SUnitStartCmdWindowData *pData );
+	virtual void SetDialogData( const SUnitStartCmdWindowData *pData );
+
 	enum { IDD = IDD_TAB_MI_UNIT_START_CMD };
 
 	CUnitStartCmdWindow( CWnd *pParentWindow = 0 );
@@ -100,9 +47,8 @@ public:
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();
 	//
-	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// HandleCommand and UpdateCommand come from CPaletteCommands, which
+	// dispatches them to the two methods above.
 	//
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();

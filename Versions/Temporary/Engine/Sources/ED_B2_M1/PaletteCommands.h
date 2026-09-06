@@ -32,6 +32,17 @@ public:
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	{
 		TDialogData *pData = reinterpret_cast<TDialogData*>( dwData );
+		// The unit start commands palette guarded this and the others did not,
+		// which is the sort of difference that survives only because nobody
+		// compared them. Guarded for all of them now: a null here means the
+		// caller passed no struct, and there is nothing to read or fill.
+		//
+		// Not NI_ASSERT: it does not evaluate its argument in this build, so it
+		// would document the rule without enforcing it.
+		if ( pData == 0 )
+		{
+			return false;
+		}
 		switch ( nCommandID )
 		{
 			case ID_WINDOW_GET_DIALOG_DATA:

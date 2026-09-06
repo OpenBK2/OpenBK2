@@ -171,6 +171,8 @@ set(SOURCES
     UnitAnimationExporter.cpp
     UnitDesignTypes.cpp
     UnitStartCmdState.cpp
+    UnitStartCmdViewMfc.cpp
+    UnitStartCmdViewWx.cpp
     UnitStartCmdWindow.cpp
     VisObjBuilder.cpp
     VSODataExtractor.cpp
