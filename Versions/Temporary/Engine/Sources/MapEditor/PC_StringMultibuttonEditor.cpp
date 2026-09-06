@@ -244,25 +244,78 @@ bool CPCStringMultibuttonEditor::CreateEditor( const std::string &rszName, EPCIE
 }
 
 
+//! What one button needs to show its caption whole.
+//!
+//! The original gave every button 25 pixels. That fits "...", which is the only
+//! caption a one button editor has, and it does not fit "New" or "Edit" in the
+//! shell font this editor now draws in, so those came out clipped. Measuring
+//! the caption in the button's own font is what makes the width follow the font
+//! and the DPI instead of a number picked at one of each.
+int CPCStringMultibuttonEditor::GetButtonWidth( CPCEditorButton *pButton )
+{
+	// The old fixed width, kept as the floor so "..." keeps the size it had.
+	const int N_MIN_BUTTON_WIDTH = 25;
+	const int N_BUTTON_TEXT_MARGIN = 10;
+	if ( ( pButton == 0 ) || ( pButton->GetSafeHwnd() == 0 ) )
+	{
+		return N_MIN_BUTTON_WIDTH;
+	}
+	CFont *pFont = pButton->GetFont();
+	if ( pFont == 0 )
+	{
+		return N_MIN_BUTTON_WIDTH;
+	}
+	CDC *pDC = pButton->GetDC();
+	if ( pDC == 0 )
+	{
+		return N_MIN_BUTTON_WIDTH;
+	}
+	CString strTitle;
+	pButton->GetWindowText( strTitle );
+	CFont *pOldFont = pDC->SelectObject( pFont );
+	const CSize textSize = pDC->GetTextExtent( strTitle );
+	pDC->SelectObject( pOldFont );
+	pButton->ReleaseDC( pDC );
+	const int nWidth = textSize.cx + N_BUTTON_TEXT_MARGIN;
+	return ( nWidth > N_MIN_BUTTON_WIDTH ) ? nWidth : N_MIN_BUTTON_WIDTH;
+}
+
+
 bool CPCStringMultibuttonEditor::PlaceEditor( const CTRect<int> &rPlaceRect )
 {
-	CTRect<int> editRect( rPlaceRect );
-	//
-	editRect.right -= 25 * nButtonCount;
-	MoveWindow( editRect.left, editRect.top, editRect.Width(), editRect.Height(), true );
-	int nButtonIndex = nButtonCount;
+	// Each button takes the width its own caption needs; the edit keeps the rest.
+	std::vector<int> buttonWidths;
+	int nButtonsWidth = 0;
 	for ( CPCEditorButtonList::iterator itPCEditorButton = buttonList.begin(); itPCEditorButton != buttonList.end(); ++itPCEditorButton )
+	{
+		const int nWidth = ( ( *itPCEditorButton ) != 0 ) ? GetButtonWidth( *itPCEditorButton ) : 0;
+		buttonWidths.push_back( nWidth );
+		nButtonsWidth += nWidth;
+	}
+	//
+	CTRect<int> editRect( rPlaceRect );
+	editRect.right -= nButtonsWidth;
+	// A value column narrower than its buttons leaves the edit with no width
+	// rather than a negative one, which MoveWindow would take as a huge size.
+	if ( editRect.right < editRect.left )
+	{
+		editRect.right = editRect.left;
+	}
+	MoveWindow( editRect.left, editRect.top, editRect.Width(), editRect.Height(), true );
+	int nLeft = rPlaceRect.right - nButtonsWidth;
+	size_t nIndex = 0;
+	for ( CPCEditorButtonList::iterator itPCEditorButton = buttonList.begin(); itPCEditorButton != buttonList.end(); ++itPCEditorButton, ++nIndex )
 	{
 		if ( ( *itPCEditorButton ) != 0 )
 		{
 			CTRect<int> buttonRect( rPlaceRect );
-			buttonRect.left = rPlaceRect.right - 25 * nButtonIndex;
-			--nButtonIndex;
-			buttonRect.right = rPlaceRect.right - 25 * nButtonIndex;
+			buttonRect.left = nLeft;
+			buttonRect.right = nLeft + buttonWidths[nIndex];
 			buttonRect.bottom -= 1;
 			( *itPCEditorButton )->MoveWindow( buttonRect.left, buttonRect.top, buttonRect.Width(), buttonRect.Height(), true );
+			nLeft += buttonWidths[nIndex];
 		}
-	}	
+	}
 	return true;
 }
 

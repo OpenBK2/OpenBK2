@@ -28,6 +28,8 @@ protected:
 	void SetMultiLine( bool _bMultiLine ) { bMultiLine = _bMultiLine; }
 	void SetCreateControls( bool _bCreateControls ) { bCreateControls = _bCreateControls; }
 	bool GetCreateControls() { return bCreateControls; }
+	//
+	int GetButtonWidth( CPCEditorButton *pButton );
 
 public:
 
