@@ -8,9 +8,9 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/choice.h>
-#include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
@@ -39,7 +39,10 @@ namespace
 	// and a user switching between them keeps their remembered choice and size.
 	const char *const PSZ_STATE_NAME = "COpenMODDialog";
 
-	class COpenModWxDialog : public wxDialog
+	// CWxToolDialog rather than wxDialog: IDD_OPEN_MOD is EXSTYLE
+	// WS_EX_TOOLWINDOW like almost every template in this editor, and the first
+	// pass at this dialog dropped it. See WxToolDialog.h.
+	class COpenModWxDialog : public CWxToolDialog
 	{
 		const std::vector<NMOD::SMOD> &rModList;
 		SDialogState dialogState;
@@ -53,9 +56,9 @@ namespace
 
 	public:
 		COpenModWxDialog( wxWindow *pParent, const std::vector<NMOD::SMOD> &_rModList )
-			: wxDialog( pParent, wxID_ANY, "Open MOD",
-									wxDefaultPosition, wxSize( 380, 260 ),
-									wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
+			: CWxToolDialog( pParent, wxID_ANY, "Open MOD",
+											 wxDefaultPosition, wxSize( 380, 260 ),
+											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				rModList( _rModList )
 		{
 			NMOD::SMOD attachedMOD;

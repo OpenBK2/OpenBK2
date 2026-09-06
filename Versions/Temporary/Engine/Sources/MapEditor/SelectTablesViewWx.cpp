@@ -8,9 +8,9 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/checklst.h>
-#include <wx/dialog.h>
 #include <wx/sizer.h>
 
 // Select Tables, in wx: the first modal dialog of the migration.
@@ -34,7 +34,10 @@ namespace
 	// That is the whole of this dialog's layout, and it is the smallest real
 	// instance of the CResizeDialog-anchor to wx-sizer mapping that the .rc
 	// converter will have to do 49 times.
-	class CSelectTablesWxDialog : public wxDialog
+	// CWxToolDialog rather than wxDialog: IDD_CHOOSE_TABLES is EXSTYLE
+	// WS_EX_TOOLWINDOW like almost every template in this editor, and the first
+	// pass at this dialog dropped it. See WxToolDialog.h.
+	class CSelectTablesWxDialog : public CWxToolDialog
 	{
 		wxCheckListBox *pTablesList = nullptr;
 
@@ -42,9 +45,9 @@ namespace
 		CSelectTablesWxDialog( wxWindow *pParent,
 													 const std::list<std::string> &rTables,
 													 const CTableSet &rSelected )
-			: wxDialog( pParent, wxID_ANY, "Select tables",
-									wxDefaultPosition, wxSize( 260, 300 ),
-									wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
+			: CWxToolDialog( pParent, wxID_ANY, "Select tables",
+											 wxDefaultPosition, wxSize( 260, 300 ),
+											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 		{
 			pTablesList = NWx::Child<wxCheckListBox>( this, wxID_ANY );
 
