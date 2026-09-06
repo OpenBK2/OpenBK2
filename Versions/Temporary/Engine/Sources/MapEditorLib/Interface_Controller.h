@@ -44,7 +44,7 @@ struct IController : public CObjectBase
 	// Применение этогй операции влечет за собой очистку буфера UNDO в Containter
 	virtual bool IsAbsolute() const = 0;
 	// Получить краткое описание
-	virtual void GetDescription( CString *pstrDescription ) const = 0;
+	virtual void GetDescription( std::string *pszDescription ) const = 0;
 	// Если Undo Operation временная, то ее можно удалить по этому ID
 	virtual void GetTemporaryLabel( std::string *pszTemporaryLabel ) const = 0;
 };
@@ -52,7 +52,7 @@ struct IController : public CObjectBase
 
 // Управляющий операциями Undo
 // Складывает из в буфера и умеет из перекладывать
-typedef std::list<CString> CDescriptionList;
+typedef std::list<std::string> CDescriptionList;
 struct IControllerContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x1408A3C2 };

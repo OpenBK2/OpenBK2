@@ -28,9 +28,9 @@ public:
 	//
 	// IController
 	virtual bool IsEmpty() const { return internalController.IsEmpty(); }
-	virtual void GetDescription( CString *pstrDescription ) const
+	virtual void GetDescription( std::string *pszDescription ) const
 	{
-		internalController.GetDescription( pstrDescription );
+		internalController.GetDescription( pszDescription );
 	}
 	//
 	void SetChildDesc( const std::string & szTypeName, const CDBID &rDBID )

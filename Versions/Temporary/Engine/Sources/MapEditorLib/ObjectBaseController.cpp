@@ -338,13 +338,13 @@ bool CObjectBaseController::IsAbsolute() const
 
 //CRAP{ PLAIN_TEXT
 
-void CObjectBaseController::GetDescription( CString *pstrDescription ) const
+void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 {
-	if ( pstrDescription )
+	if ( pszDescription )
 	{
-		pstrDescription->Empty();
-		CDefaultController::GetDescription( pstrDescription );
-		if ( pstrDescription->IsEmpty() )
+		pszDescription->clear();
+		CDefaultController::GetDescription( pszDescription );
+		if ( pszDescription->empty() )
 		{
 			const int nSize = undoDataList.size();
 			
@@ -356,37 +356,39 @@ void CObjectBaseController::GetDescription( CString *pstrDescription ) const
 					case SUndoData::TYPE_INSERT:
 						if ( (int)rUndoData.newValue >= 0 )
 						{
-							pstrDescription->Format( "Insert [%d]", (int)rUndoData.newValue );
+							( *pszDescription ) = fmt::format( "Insert [{}]", (int)rUndoData.newValue );
 						}
 						else
 						{
-							pstrDescription->Format( "Add", rUndoData.szName );
+							// The original passed szName to a format string with no
+							// placeholder for it, so this has always been the bare word.
+							( *pszDescription ) = "Add";
 						}
 						return;
 					case SUndoData::TYPE_REMOVE:
 						if ( (int)rUndoData.newValue >= 0 )
 						{
-							pstrDescription->Format( "Delete [%d]", (int)rUndoData.newValue );
+							( *pszDescription ) = fmt::format( "Delete [{}]", (int)rUndoData.newValue );
 						}
 						else
 						{
-							pstrDescription->Format( "Delete all" );
+							( *pszDescription ) = "Delete all";
 						}
 						return;
 					case SUndoData::TYPE_CHANGE:
 					{	std::string szText;
 						rUndoData.newValue.ToText( &szText );
-						pstrDescription->Format( "Set to %s", szText.c_str() );
+						( *pszDescription ) = fmt::format( "Set to {}", szText );
 						return;
 					}
 					default:
-						pstrDescription->Format( "Unknown" );
+						( *pszDescription ) = "Unknown";
 						return;
 				}
 			}
 			else
 			{
-				pstrDescription->Format( "%d operations", nSize );
+				( *pszDescription ) = fmt::format( "{} operations", nSize );
 			}
 		}
 	}

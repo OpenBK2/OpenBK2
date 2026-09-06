@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MapEditorLib/Interface_ProgressHook.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "ProgressThread.h"
 
 
@@ -15,8 +16,7 @@ public:
 	CProgressHook();
 	virtual ~CProgressHook();
 
-	virtual void Create( const std::string &rszActionName, CWnd *pWnd );
-	virtual CProgressDlg* GetProgressDialog() const;
+	virtual void Create( const std::string &rszActionName, IWidget *pParentWidget );
 	//
 	virtual void SetCancel( bool bHasCancel ) { bHasCancelButton = bHasCancel; }
 	virtual bool HasCancel() const { return bHasCancelButton; }

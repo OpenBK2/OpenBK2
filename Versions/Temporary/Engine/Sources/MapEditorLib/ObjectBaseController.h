@@ -86,7 +86,7 @@ public:
 	// IController
 	virtual bool IsEmpty() const { return undoDataList.empty(); }
 	virtual bool IsAbsolute() const;
-	virtual void GetDescription( CString *pstrDescription ) const;
+	virtual void GetDescription( std::string *pszDescription ) const;
 
 	// Helpers
 	bool AddInsertOperation( const std::string &rszArrayName, const int nIndex, IManipulator *pObjectManipulator );

@@ -37,7 +37,8 @@ void CMDDLDialog::CreateList()
 	int nUndoDepth = 0;
 	for ( CDescriptionList::const_iterator itValue = valueList.begin(); itValue != valueList.end(); ++itValue )
 	{
-		const int nInsertedIndex = wndValueList.InsertString( -1, *itValue );
+		// CDescriptionList holds std::string now, and CListBox wants a C string.
+		const int nInsertedIndex = wndValueList.InsertString( -1, itValue->c_str() );
 		if ( nInsertedIndex != LB_ERR )
 		{
 			wndValueList.SetItemData( nInsertedIndex, nUndoDepth );

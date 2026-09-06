@@ -5,7 +5,11 @@
 #define INVALID_COMMAND_ID (0xFFffFFff)
 #define INVALID_COMMAND_HANDLER_ID (0xFFffFFff)
 
-// Наследуется от CWnd служит только для получения доступа, удалять не требуется
+// Обычно подмешивается в класс окна front-end'а, служит только для получения
+// доступа, удалять не требуется.
+// (Was "Наследуется от CWnd": the declaration never named CWnd, only this
+// comment did, and mixing this into a widget class is a front-end habit rather
+// than something this interface requires.)
 struct ICommandHandler
 {
 	virtual ~ICommandHandler() {}

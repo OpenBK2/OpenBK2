@@ -179,16 +179,16 @@ bool CControllerContainer::RedoArrow()
 int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const
 {
 	int nCount = 0;
-	CString strDescription;
+	std::string szDescription;
 	if ( bUndoList )
 	{
 		for ( CControllerList::const_iterator itController = controllerList.begin(); itController != controllerList.end(); ++itController )
 		{
 			if ( pDescriptionList )
 			{
-				strDescription.Empty();
-				( *itController )->GetDescription( &strDescription );
-				pDescriptionList->push_front( strDescription );
+				szDescription.clear();
+				( *itController )->GetDescription( &szDescription );
+				pDescriptionList->push_front( szDescription );
 			}
 			++nCount;
 		}
@@ -199,9 +199,9 @@ int CControllerContainer::GetDescriptionList( CDescriptionList *pDescriptionList
 		{
 			if ( pDescriptionList )
 			{
-				strDescription.Empty();
-				( *itRedoOperation )->GetDescription( &strDescription );
-				pDescriptionList->push_front( strDescription );
+				szDescription.clear();
+				( *itRedoOperation )->GetDescription( &szDescription );
+				pDescriptionList->push_front( szDescription );
 			}
 			++nCount;
 		}

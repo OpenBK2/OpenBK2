@@ -21,13 +21,13 @@ CProgressHook::~CProgressHook()
 }
 
 
-void CProgressHook::Create( const std::string &rszActionName, CWnd *pWnd )
+void CProgressHook::Create( const std::string &rszActionName, IWidget *pParentWidget )
 {
 	DebugTrace( "CProgressHook:: Creating dialog" );
 	//
 	//szProgressName = rszActionName;
 	//pProgressThread = static_cast<CProgressThread*>( AfxBeginThread(RUNTIME_CLASS(CProgressThread)) );
-	pProgressThread = new CProgressThread( rszActionName, pWnd );
+	pProgressThread = new CProgressThread( rszActionName, ToCWnd( pParentWidget ) );
 	if ( !pProgressThread->CreateThread(CREATE_SUSPENDED) )
 	{
 		delete pProgressThread;
@@ -36,17 +36,6 @@ void CProgressHook::Create( const std::string &rszActionName, CWnd *pWnd )
 	pProgressThread->ResumeThread();
 	//
 	NI_VERIFY( pProgressThread, "Progress dialog could not be created", return )
-}
-
-
-CProgressDlg* CProgressHook::GetProgressDialog() const
-{
-	DebugTrace( "CProgressHook:: get dialog" );
-	//
-	if ( pProgressThread )
-		return pProgressThread->GetProgressDialog();
-	else
-		return 0;
 }
 
 
