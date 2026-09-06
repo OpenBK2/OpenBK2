@@ -25,6 +25,15 @@ namespace
 	{
 		CLogWindow wndContents;
 
+		void SetStyleColour( ELogOutputType eLogOutputType )
+		{
+			const NLogView::SLogColour colour = NLogView::GetColour( eLogOutputType );
+			const int nScintillaColour = colour.nRed |
+																	 ( colour.nGreen << 8 ) |
+																	 ( colour.nBlue << 16 );
+			wndContents.Command( SCI_STYLESETFORE, eLogOutputType, nScintillaColour );
+		}
+
 	public:
 		virtual bool Create( IWidget *pParentPane, ICommandHandler *pSelectionHandler )
 		{
@@ -40,10 +49,12 @@ namespace
 			}
 			wndContents.SetSelectionHandler( pSelectionHandler );
 			wndContents.Command( SCI_SETREADONLY, false );
-			// One style per log type, which is what the wx view does not have yet.
-			wndContents.Command( SCI_STYLESETFORE, LT_NORMAL, 0x000000 );
-			wndContents.Command( SCI_STYLESETFORE, LT_IMPORTANT, 0x227722 );
-			wndContents.Command( SCI_STYLESETFORE, LT_ERROR, 0x3333ff );
+			// One Scintilla style per log type. The pack back to 0x00BBGGRR is
+			// here, at the one call that wants Scintilla's byte order, instead of
+			// being three literals nobody could read.
+			SetStyleColour( LT_NORMAL );
+			SetStyleColour( LT_IMPORTANT );
+			SetStyleColour( LT_ERROR );
 			wndContents.ShowWindow( SW_SHOW );
 			return true;
 		}
@@ -129,6 +140,24 @@ namespace
 
 namespace NLogView
 {
+	// The colours the editor has always used for its log, written as components.
+	// Defined here because this translation unit is always compiled and the wx
+	// one is not.
+	SLogColour GetColour( ELogOutputType eLogOutputType )
+	{
+		switch ( eLogOutputType )
+		{
+			case LT_IMPORTANT:
+				return SLogColour{ 0x22, 0x77, 0x22 };	// green
+			case LT_ERROR:
+				return SLogColour{ 0xff, 0x33, 0x33 };	// red, and it always was
+			case LT_NORMAL:
+			default:
+				return SLogColour{ 0x00, 0x00, 0x00 };	// black
+		}
+	}
+
+
 	ILogView* CreateScintillaLogView()
 	{
 		return new CLogViewScintilla();

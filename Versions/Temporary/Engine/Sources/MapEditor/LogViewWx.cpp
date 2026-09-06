@@ -38,9 +38,8 @@
 //   * No context menu. The pane's IDM_LOG_CONTEXT_MENU is an MFC menu resource
 //     tracked on the MFC frame; porting it is a separate question from whether
 //     a wx control can live here at all.
-//   * No per-line colour. wxTextCtrl can do it with wxTE_RICH2 and
-//     SetDefaultStyle and that is the next thing to add. Until then the log type
-//     is said in the text instead of shown, so nothing is silently lost.
+// It does have the log's three colours now: black, green and red, the same ones
+// the Scintilla view uses, from NLogView::GetColour so the two cannot drift.
 
 namespace
 {
@@ -104,9 +103,12 @@ namespace
 				return false;
 			}
 
+			// wxTE_RICH2 is what makes per-range colour possible at all: without
+			// it a wxTextCtrl on MSW is a plain EDIT and SetDefaultStyle does
+			// nothing.
 			pText = NWx::Child<wxTextCtrl>( pContainer, wxID_ANY, wxString(),
 																			wxDefaultPosition, wxDefaultSize,
-																			wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP );
+																			wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH2 );
 
 			// The same registration CLogWindow::OnSetFocus does on the MFC side:
 			// focus here means selection commands belong to this pane.
@@ -147,21 +149,14 @@ namespace
 			{
 				return;
 			}
-			const char *pszPrefix = "";
-			switch ( eLogOutputType )
-			{
-				case LT_IMPORTANT:
-					pszPrefix = "[!] ";
-					break;
-				case LT_ERROR:
-					pszPrefix = "[E] ";
-					break;
-				default:
-					break;
-			}
-			// FromUTF8 both halves: every narrow string in this tree is UTF-8 and
-			// wxString is wide. This is the boundary, and it is one line.
-			pText->AppendText( wxString::FromUTF8( pszPrefix ) + wxString::FromUTF8( rszText.c_str() ) );
+			// SetDefaultStyle applies to text appended after it, which is exactly
+			// the shape of a log. The same three colours as the Scintilla view,
+			// from the same place.
+			const NLogView::SLogColour colour = NLogView::GetColour( eLogOutputType );
+			pText->SetDefaultStyle( wxTextAttr( wxColour( colour.nRed, colour.nGreen, colour.nBlue ) ) );
+			// FromUTF8: every narrow string in this tree is UTF-8 and wxString is
+			// wide. This is the boundary, and it is one line.
+			pText->AppendText( wxString::FromUTF8( rszText.c_str() ) );
 		}
 
 		virtual void Clear()
