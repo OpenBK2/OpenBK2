@@ -1,9 +1,11 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/printf.h>
 
 #include "MODContainer.h"
 #include "CreateMODDialog.h"
 #include "OpenMODDialog.h"
+#include "OpenModView.h"
 #include "Main/MODs.h"
 #include "libdb/Db.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
@@ -82,11 +84,13 @@ bool CMODContainer::OpenMOD()
 	{
 		return false;
 	}
-	COpenMODDialog openMODDialog;
-	if	( openMODDialog.DoModal() == IDOK )
+	// Which dialog answers is NOpenMod's business, not this container's.
+	// The two questions the MFC pair asked -- accepted? and was anything
+	// chosen? -- are one question, so they are one call.
+	NMOD::SMOD mod;
 	{
-		NMOD::SMOD mod;
-		if ( openMODDialog.GetMOD( &mod ) )
+		CWndWidget ownerWidget( AfxGetMainWnd() );
+		if ( NOpenMod::Run( &ownerWidget, &mod ) )
 		{
 			NProgress::Create( true );
 			CString strPM;

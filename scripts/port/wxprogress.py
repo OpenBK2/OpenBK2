@@ -62,6 +62,7 @@ RC_DIALOG = re.compile(r"^[A-Za-z_0-9]+\s+DIALOG(?:EX)?\s", re.M)
 MIGRATED = {
     "CLogWindow": "MapEditor/LogViewWx.cpp (ILogView)",
     "CSelectTablesDialog": "MapEditor/SelectTablesViewWx.cpp (NSelectTables::Run)",
+    "COpenMODDialog": "MapEditor/OpenModViewWx.cpp (NOpenMod::Run)",
 }
 
 

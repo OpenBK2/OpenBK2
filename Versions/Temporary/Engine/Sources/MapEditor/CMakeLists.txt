@@ -34,6 +34,8 @@ set(SOURCES
     NewObjectDialog.cpp
     ObjectCollector.cpp
     OpenMODDialog.cpp
+    OpenModViewMfc.cpp
+    OpenModViewWx.cpp
     PC_BaseDialog.cpp
     PC_BinaryBitFieldEditor.cpp
     PC_BoolCheckBoxEditor.cpp
