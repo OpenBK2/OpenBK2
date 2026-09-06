@@ -1,5 +1,7 @@
 #pragma once
 
+#include "MapEditorLib/MfcWidget.h"
+
 #include "Misc/HashFuncs.h"
 #include "Misc/StrProc.h"
 #include "libdb/Manipulator.h"
@@ -84,8 +86,8 @@ protected:
 	bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const;
 	const IObjectFilter* Get( const std::string &rszFilterType, const int nFilterIndex ) const;
 
-	int ShowFilterSelectionDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex );
-	int ShowFilterCreationDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex );
+	int ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
+	int ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex );
 };
 
 
@@ -107,6 +109,10 @@ class CObjectCollector : public IObjectCollector
 	int nDefaultImageIndex;
 	CImageList normalImageList;
 	CImageList smallImageList;
+	// Handles onto the two above, handed out through IObjectCollector. They
+	// borrow: the lists themselves live and die with this collector.
+	CMfcImageList normalImageListHandle;
+	CMfcImageList smallImageListHandle;
 
 	CDataExtractorTypeMap dataExtractorTypeMap;
 	CDataExtractorMap dataExtractorMap;
@@ -141,12 +147,15 @@ protected:
 	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter );
 	bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	//
-	CImageList* GetImageList( int nImageListType );
+	IImageList* GetImageList( int nImageListType );
 	//
 	void ClearCollection();
 
 public:
-	CObjectCollector() : nDefaultImageIndex( INVALID_NODE_ID )
+	CObjectCollector()
+		: nDefaultImageIndex( INVALID_NODE_ID ),
+			normalImageListHandle( &normalImageList ),
+			smallImageListHandle( &smallImageList )
 	{
 		CreateImageLists();
 	}

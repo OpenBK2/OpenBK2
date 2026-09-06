@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -144,8 +145,8 @@ BOOL CHeightWindowV3::OnInitDialog()
 	wndBrushTypeSquareButton.SetIcon( imageList.ExtractIcon( TMITH_SQUARE ) );
 	//	
 	SetTileListStyle( LVS_ICON );
-	wndTileList.SetImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ), LVSIL_NORMAL );
-	wndTileList.SetImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ), LVSIL_SMALL );
+	wndTileList.SetImageList( ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ), LVSIL_NORMAL );
+	wndTileList.SetImageList( ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ), LVSIL_SMALL );
 
 	EnableToolTips( true );
 	bCreateControls = false;

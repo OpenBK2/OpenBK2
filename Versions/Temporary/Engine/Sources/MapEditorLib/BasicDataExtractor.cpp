@@ -54,8 +54,8 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 }
 
 
-bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
-																							 class CBitmap *pSmallBitmap,
+bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
+																	 CArray2D<uint32_t> *pSmallImage,
 																							 const std::string &rszObjectTypeName,
 																							 const std::string &rszObjectName )
 {
@@ -80,8 +80,8 @@ bool CBasicDataExtractor::LoadImagesFromCache( class CBitmap *pNormalBitmap,
 				if ( ( imageSmall.GetSizeX() == SMALL_IMAGE_SIZE_X ) && ( imageSmall.GetSizeY() == SMALL_IMAGE_SIZE_Y ) &&
 						 ( imageNormal.GetSizeX() == NORMAL_IMAGE_SIZE_X ) && ( imageNormal.GetSizeY() == NORMAL_IMAGE_SIZE_Y ) ) 
 				{
-					NImage::Load2Bitmap( pNormalBitmap, imageNormal );
-					NImage::Load2Bitmap( pSmallBitmap, imageSmall );
+					( *pNormalImage ) = imageNormal;
+					( *pSmallImage ) = imageSmall;
 					return true;
 				}
 			}
@@ -112,21 +112,21 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 }
 
 
-bool CBasicDataExtractor::GetLabel( CString *pstrLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
+bool CBasicDataExtractor::GetLabel( std::string *pszLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	int nPos = rszObjectName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nPos != std::string::npos )
 	{
-		( *pstrLabel ) = rszObjectName.substr( nPos + 1 ).c_str(); 
+		( *pszLabel ) = rszObjectName.substr( nPos + 1 ).c_str(); 
 		return true;
 	}
 	return false;
 }
 
 
-unsigned CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
-																				 class CBitmap *pSmallBitmap,
-																				 CString *pstrLabel,
+unsigned CBasicDataExtractor::GetObjectData( CArray2D<uint32_t> *pNormalImage,
+																		 CArray2D<uint32_t> *pSmallImage,
+																		 std::string *pszLabel,
 																				 const std::string &rszObjectTypeName,
 																				 const std::string &rszObjectName,
 																				 const std::string &rszDataExtractorType )
@@ -137,11 +137,11 @@ unsigned CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 	{
 		return 0;
 	}
-	if ( GetLabel( pstrLabel, rszObjectTypeName, rszObjectName, pObjectManipulator ) )
+	if ( GetLabel( pszLabel, rszObjectTypeName, rszObjectName, pObjectManipulator ) )
 	{
 		nResult |= OCDE_LABEL;
 	}
-	if ( LoadImagesFromCache( pNormalBitmap, pSmallBitmap, rszObjectTypeName, rszObjectName ) )
+	if ( LoadImagesFromCache( pNormalImage, pSmallImage, rszObjectTypeName, rszObjectName ) )
 	{
 		nResult |= OCDE_SMALL_BITMAP | OCDE_NORMAL_BITMAP;
 	}
@@ -151,8 +151,8 @@ unsigned CBasicDataExtractor::GetObjectData( class CBitmap *pNormalBitmap,
 		if ( GetImages( &smallImage, &normalImage, rszObjectTypeName, rszObjectName, pObjectManipulator ) )
 		{
 			SaveImagesToCache( smallImage, normalImage, rszObjectTypeName, rszObjectName );
-			NImage::Load2Bitmap( pSmallBitmap, smallImage );
-			NImage::Load2Bitmap( pNormalBitmap, normalImage );
+			( *pSmallImage ) = smallImage;
+			( *pNormalImage ) = normalImage;
 			nResult |= OCDE_SMALL_BITMAP | OCDE_NORMAL_BITMAP;
 		}
 	}

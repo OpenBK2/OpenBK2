@@ -165,7 +165,7 @@ void SetListEditParameters( const TList &rList, const int nIndex, TControl *pCon
 						IObjectCollector::CObjectNameCollection::const_iterator posObjectNameCollection = posObjectCollection->second.find( szNameForCompare );
 						if ( posObjectNameCollection != posObjectCollection->second.end() )
 						{
-							int nControlIndex = pControl->InsertItem( nListCount, posObjectNameCollection->second.strLabel, posObjectNameCollection->second.nIconIndex );
+							int nControlIndex = pControl->InsertItem( nListCount, posObjectNameCollection->second.szLabel.c_str(), posObjectNameCollection->second.nIconIndex );
 							pControl->SetItemData( nControlIndex, nListIndex );
 							++nListCount;
 						}

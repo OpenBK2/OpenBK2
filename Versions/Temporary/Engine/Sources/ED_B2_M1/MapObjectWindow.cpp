@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -129,8 +130,8 @@ BOOL CMapObjectWindow::OnInitDialog()
 	resizeDialogOptions.szParameters.resize( 1 );
 	//
 	SetObjectsListStyle( LVS_ICON );
-	wndObjectList.SetImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ), LVSIL_NORMAL );
-	wndObjectList.SetImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ), LVSIL_SMALL );
+	wndObjectList.SetImageList( ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ), LVSIL_NORMAL );
+	wndObjectList.SetImageList( ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ), LVSIL_SMALL );
 	//	
 	FillFilterComboBox();
 	//
@@ -281,7 +282,7 @@ void CMapObjectWindow::FillFilterComboBox()
 	{
 		for ( int nFilterIndex = 0; nFilterIndex < filterList.size(); ++nFilterIndex ) 
 		{
-			const int nStringNumber = wndFilterComboBox.AddString( filterList[nFilterIndex] );
+			const int nStringNumber = wndFilterComboBox.AddString( filterList[nFilterIndex].c_str() );
 			wndFilterComboBox.SetItemData( nStringNumber, nFilterIndex );
 		}
 		if ( filterList.size() > 0 )
@@ -326,7 +327,7 @@ void CMapObjectWindow::FillObjectList()
 						objectListElement.szObjectTypeName = itObjectCollection->first;
 						objectListElement.objectDBID = itObjectNameCollection->first;
 						//
-						nObjectIndex = wndObjectList.InsertItem( nObjectsCount, itObjectNameCollection->second.strLabel, itObjectNameCollection->second.nIconIndex );
+						nObjectIndex = wndObjectList.InsertItem( nObjectsCount, itObjectNameCollection->second.szLabel.c_str(), itObjectNameCollection->second.nIconIndex );
 						wndObjectList.SetItemData( nObjectIndex, nObjectsCount );
 						objectListElementMap[nObjectsCount] = objectListElement;
 						//DebugTrace( "CVSOWindow::FillObjectList: [%d] = %s:%d", nObjectsCount, objectListElement.szObjectTypeName.c_str(), objectListElement.nObjectID );

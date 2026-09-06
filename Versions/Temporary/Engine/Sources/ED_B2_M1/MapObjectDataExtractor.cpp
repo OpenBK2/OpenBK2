@@ -19,12 +19,12 @@ bool CMapObjectDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray
 }
 
 
-bool CMapObjectDataExtractor::GetLabel( CString *pstrLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
+bool CMapObjectDataExtractor::GetLabel( std::string *pszLabel, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator )
 {
 	std::string szNameFileName;
 	if ( CManipulatorManager::GetValue( &szNameFileName, pObjectManipulator, "LocalizedNameFileRef" ) != false )
 	{
-		*pstrLabel = NStr::ToMBCS( NText::GetText( szNameFileName ) ).c_str();
+		*pszLabel = NStr::ToMBCS( NText::GetText( szNameFileName ) ).c_str();
 		return true;
 	}
 	return false;

@@ -6,6 +6,8 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_Logger.h"
 #include "Misc/HPTimer.h"
+#include "Misc/2Darray.h"
+#include "MapEditorLib/Tools_Image.h"
 
 #include "port/unicode.h"
 
@@ -349,13 +351,13 @@ const IObjectFilter* CObjectFilterCollector::Get( const std::string &rszFilterTy
 }
 
 
-int CObjectFilterCollector::ShowFilterSelectionDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex )
+int CObjectFilterCollector::ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
 {
 	return IDCANCEL;
 }
 
 
-int CObjectFilterCollector::ShowFilterCreationDialog( CWnd* pParentWindow, std::string *pszFilterType, int *pnFilterIndex )
+int CObjectFilterCollector::ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
 {
 	return IDCANCEL;
 }
@@ -435,18 +437,25 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 		}
 		if ( posDataExtractor != dataExtractorMap.end() )
 		{
-			CBitmap normalBitmap;
-			CBitmap smallBitmap;
-			CString strLabel;
-			nFlags = posDataExtractor->second->GetObjectData( &normalBitmap,
-																												&smallBitmap,
-																												&strLabel,
-																												rszObjectTypeName,
-																												rszObjectName,
-																												rszDataExtractorType );
+			CArray2D<uint32_t> normalImage;
+			CArray2D<uint32_t> smallImage;
+			std::string szLabel;
+			nFlags = posDataExtractor->second->GetObjectData( &normalImage,
+																														&smallImage,
+																														&szLabel,
+																														rszObjectTypeName,
+																														rszObjectName,
+																														rszDataExtractorType );
 			if ( ( nFlags & OCDE_NORMAL_BITMAP ) && ( nFlags & OCDE_SMALL_BITMAP ) )
 			{
 				const COLORREF zeroColor = RGB( 0, 0, 0 );
+				//
+				// The pixels become front-end bitmaps here, which is the only place
+				// in this path that has any business knowing what a bitmap is.
+				CBitmap normalBitmap;
+				CBitmap smallBitmap;
+				NImage::Load2Bitmap( &normalBitmap, normalImage );
+				NImage::Load2Bitmap( &smallBitmap, smallImage );
 				//
 				const int nNormalImageIndex = normalImageList.Add( &normalBitmap, zeroColor );
 				const int nSmallImageIndex = smallImageList.Add( &smallBitmap, zeroColor );
@@ -456,7 +465,7 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 			}
 			if ( nFlags & OCDE_LABEL )
 			{
-				pObjectParams->strLabel = strLabel;
+				pObjectParams->szLabel = szLabel;
 			}
 		}
 		if ( ( ( nFlags & OCDE_NORMAL_BITMAP ) == 0 ) || ( ( nFlags & OCDE_SMALL_BITMAP ) == 0 ) )
@@ -467,11 +476,11 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 		{
 			if ( rszObjectTypeName.empty() )
 			{
-				pObjectParams->strLabel = rszObjectName.c_str();
+				pObjectParams->szLabel = rszObjectName;
 			}
 			else
 			{
-				pObjectParams->strLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() ).c_str();
+				pObjectParams->szLabel = fmt::format( "{}{:c}{}", rszObjectTypeName.c_str(), TYPE_SEPARATOR_CHAR, rszObjectName.c_str() );
 			}
 		}
 	}
@@ -754,9 +763,9 @@ bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const std:
 }
 
 
-CImageList* CObjectCollector::GetImageList( int nImageListType )
+IImageList* CObjectCollector::GetImageList( int nImageListType )
 {
-	return ( nImageListType == LVSIL_SMALL ) ? ( &smallImageList ) : ( &normalImageList );
+	return ( nImageListType == LVSIL_SMALL ) ? static_cast<IImageList*>( &smallImageListHandle ) : static_cast<IImageList*>( &normalImageListHandle );
 }
 
 
