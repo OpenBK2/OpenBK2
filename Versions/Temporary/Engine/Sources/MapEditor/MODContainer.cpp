@@ -3,7 +3,7 @@
 #include <fmt/printf.h>
 
 #include "MODContainer.h"
-#include "CreateMODDialog.h"
+#include "CreateModView.h"
 #include "OpenMODDialog.h"
 #include "OpenModView.h"
 #include "Main/MODs.h"
@@ -38,41 +38,45 @@ bool CMODContainer::NewMOD()
 	{
 		return false;
 	}
-	CCreateMODDialog createMODDialog;
-	if	( createMODDialog.DoModal() == IDOK )
+	// Which dialog answers is NCreateMod's business, not this container's. The
+	// two questions the MFC pair asked -- accepted? and is what came back
+	// usable? -- are one question, and the dialog already refused to accept an
+	// unusable answer.
+	CWndWidget ownerWidget( AfxGetMainWnd() );
+	NCreateMod::SNewMod newMod;
+	if ( NCreateMod::Run( &ownerWidget, &newMod ) )
 	{
-		std::string szMODFolder = createMODDialog.GetFolder();
-		CString strName = createMODDialog.GetName();
-		CString strDescriotion = createMODDialog.GetDescription();
-		if ( !szMODFolder.empty() && !strName.IsEmpty() )
+		const std::string &szMODFolder = newMod.szFolderPath;
+		NProgress::Create( true );
+		CString strPM;
+		strPM.LoadString( IDS_PM_CREATE_MOD );
+		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), szMODFolder.c_str() ) );
+		NProgress::SetRange( 0, 2 );
+		//
+		// Создать файлы с именем и описанием
+		//
+		// The wide overload: these files are UTF-16 with a BOM either way, and
+		// the narrow one only reached that by converting through ::GetACP()
+		// first. The text is already wide by the time it gets here.
+		String2File( newMod.wszName, szMODFolder + "name.txt", true );
+		String2File( newMod.wszDesc, szMODFolder + "desc.txt", true );
+		// Открыть новый мод
+		NMOD::InstantAttachMOD( szMODFolder, NDb::DATABASE_MODE_EDITOR );
+		NProgress::IteratePosition(); // 1
+		Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_RELOAD, true );
+		//
+		SSWTParams swtParams;
+		swtParams.dwFlags = SWT_MOD;
+		swtParams.bFillMODFromBase = true;
+		Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
+		//
+		if ( Singleton<IUserDataContainer>() && Singleton<IUserDataContainer>()->Get() )
 		{
-			NProgress::Create( true );
-			CString strPM;
-			strPM.LoadString( IDS_PM_CREATE_MOD );
-			NProgress::SetMessage( fmt::sprintf( strPM.GetString(), szMODFolder.c_str() ) );
-			NProgress::SetRange( 0, 2 );
-			//
-			// Создать файлы с именем и описанием
-			String2File( strName, true, szMODFolder + "name.txt", ::GetACP(), true );
-			String2File( strDescriotion, true, szMODFolder + "desc.txt", ::GetACP(), true );
-			// Открыть новый мод
-			NMOD::InstantAttachMOD( szMODFolder, NDb::DATABASE_MODE_EDITOR );
-			NProgress::IteratePosition(); // 1
-			Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_RELOAD, true );
-			//
-			SSWTParams swtParams;
-			swtParams.dwFlags = SWT_MOD;
-			swtParams.bFillMODFromBase = true;
-			Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
-			//
-			if ( Singleton<IUserDataContainer>() && Singleton<IUserDataContainer>()->Get() )
-			{
-				Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder = szMODFolder;
-			}
-			NProgress::IteratePosition(); //2
-			NProgress::Destroy();
-			return true;
+			Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder = szMODFolder;
 		}
+		NProgress::IteratePosition(); //2
+		NProgress::Destroy();
+		return true;
 	}
 	return false;
 }

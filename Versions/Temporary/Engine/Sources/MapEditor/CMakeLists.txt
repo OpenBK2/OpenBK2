@@ -10,6 +10,8 @@ set(SOURCES
     CommandHandlerContainer.cpp
     ControllerContainer.cpp
     CreateMODDialog.cpp
+    CreateModViewMfc.cpp
+    CreateModViewWx.cpp
     DefaultChildFrame.cpp
     DefaultDockingWindow.cpp
     DW_GDBBrowser.cpp

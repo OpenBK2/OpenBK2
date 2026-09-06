@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CreateMODDialog.h"
+#include "CreateModView.h"
 #include "Main/MODs.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Interface_UserData.h"
@@ -46,21 +47,11 @@ void CCreateMODDialog::UpdateControls()
 {
 	if ( CWnd *pwndButton = GetDlgItem( IDOK ) )
 	{
-		bool bEnable = ( !strFolder.IsEmpty() && !strName.IsEmpty() && ( strFolder.FindOneOf( "/\\" ) < 0 ) );
-		if ( bEnable )
-		{
-			std::string szFolder = GetFolder();
-			std::vector<NMOD::SMOD> modList;
-			NMOD::GetAllMODs( &modList );
-			for ( int nIndex = 0; nIndex < modList.size(); ++nIndex )
-			{
-				if ( CStringManager::Compare( modList[nIndex].szFullFolderPath, szFolder, true, true,false ) == 0 )
-				{
-					bEnable = false;
-					break;
-				}
-			}
-		}
+		// The rule -- a folder name that is one component and not already taken,
+		// plus a title -- is in CreateModView.h now, because the wx dialog has to
+		// apply the same one and two copies of it would drift.
+		const bool bEnable = NCreateMod::IsFolderNameFree( std::string( strFolder ) ) &&
+												 !strName.IsEmpty();
 		pwndButton->EnableWindow( bEnable );
 	}
 }
@@ -68,22 +59,8 @@ void CCreateMODDialog::UpdateControls()
 
 const std::string CCreateMODDialog::GetFolder()
 {
-	std::string szFolder;
-	if ( SUserData *pUserData = Singleton<IUserDataContainer>()->Get() )
-	{
-		szFolder = pUserData->constUserData.szDataStorageFolder;
-		if( !szFolder.empty() )
-		{
-			szFolder = szFolder.substr( 0, szFolder.size() - 1 );
-		}
-		int nPos = szFolder.rfind( '\\' );
-		if( nPos > 0 )
-		{
-			szFolder = szFolder.substr( 0, nPos );
-		}
-		szFolder += std::string( "\\Mods\\" ) + std::string( strFolder ) + std::string( "\\" );
-	}
-	return szFolder;
+	// Shared with the wx dialog; see CreateModView.h.
+	return NCreateMod::MakeFolderPath( std::string( strFolder ) );
 }
 
 

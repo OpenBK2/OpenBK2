@@ -287,7 +287,10 @@ bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLin
 
 
 MAPEDITORLIB_EXPORT void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePage );
-void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage );
+// Exported, like the conversion it is the other half of. It was not, which no
+// caller outside MapEditorLib had noticed until one wanted to convert the other
+// way; nothing about what it does changed.
+MAPEDITORLIB_EXPORT void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage );
 
 
 MAPEDITORLIB_EXPORT void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );

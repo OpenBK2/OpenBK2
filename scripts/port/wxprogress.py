@@ -65,6 +65,7 @@ MIGRATED = {
     "COpenMODDialog": "MapEditor/OpenModViewWx.cpp (NOpenMod::Run)",
     "CSearchObjectDialog": "MapEditor/SearchObjectViewWx.cpp (NSearchObject::Run)",
     "CAboutDialog": "MapEditor/AboutViewWx.cpp (NAbout::Run)",
+    "CCreateMODDialog": "MapEditor/CreateModViewWx.cpp (NCreateMod::Run)",
 }
 
 
