@@ -19,6 +19,8 @@ set(SOURCES
     ExporterContainer.cpp
     FindTextDlg.cpp
     FolderCallback.cpp
+    LogViewScintilla.cpp
+    LogViewWx.cpp
     LogWindow.cpp
     LuaEditor.cpp
     MainFrame.cpp
@@ -103,5 +105,14 @@ endif()
 if(WIN32)
     target_sources(MapEditor PRIVATE MapEditor.rc)
 endif()
+# The wx Log Window contents. LogViewWx.cpp compiles to nothing without
+# OBK2_WITH_WX, so it is listed unconditionally and costs nothing when the
+# option is off. No UNICODE defines here either: see cmake/wxwidgets.cmake.
+if(BUILD_WX_EDITOR)
+    target_compile_definitions(MapEditor PRIVATE OBK2_WITH_WX)
+    target_link_libraries(MapEditor PRIVATE wx::wx)
+    add_dependencies(MapEditor wxwidgets_external)
+endif()
+
 install(TARGETS MapEditor DESTINATION bin)
 add_version_info(MapEditor)

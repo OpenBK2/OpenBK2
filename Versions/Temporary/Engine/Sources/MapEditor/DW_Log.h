@@ -1,13 +1,16 @@
 #pragma once
 
 #include "MapEditorLib/Interface_Logger.h"
-#include "LogWindow.h"
+#include "LogView.h"
 
 #include <cstdint>
 
 class CDWLog : public SECControlBar, public ICommandHandler
 {
-	CLogWindow wndContents;
+	// Owned. Which implementation it is comes from NLogView::Create, and is a
+	// run-time choice so the Scintilla and wx ones can be compared in the same
+	// build. The pane itself never learns which it got.
+	ILogView *pLogView;
 	NLog::CLogBufferList logBufferList;
 
 	void UpdateLog();

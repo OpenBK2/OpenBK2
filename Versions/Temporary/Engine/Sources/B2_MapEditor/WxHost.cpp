@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "WxHost.h"
-#include "WxOwnership.h"
+#include "MapEditorLib/WxOwnership.h"
 
 #ifdef OBK2_WITH_WX
 

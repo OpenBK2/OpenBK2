@@ -20,7 +20,11 @@ void CLogWindow::OnSetFocus( CWnd* pOldWnd )
 {
 	CScintillaEditorWindow::OnSetFocus( pOldWnd );
 	//
-	Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
+	// The pane is the selection handler now, not this control: see LogWindow.h.
+	if ( pSelectionHandler != 0 )
+	{
+		Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, pSelectionHandler );
+	}
 }
 
 
@@ -38,50 +42,4 @@ void CLogWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 	mainPopupMenu.DestroyMenu();
 }
 
-
-bool CLogWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	switch( nCommandID )
-	{
-		case ID_SELECTION_COPY:
-			Command( SCI_COPY );
-			return true;
-		case ID_SELECTION_CLEAR:
-			Singleton<ICommandHandlerContainer>()->HandleCommand( ID_LOG_CLEAR_ALL, 0 );
-			return true;
-		case ID_SELECTION_SELECT_ALL:
-			Command( SCI_SELECTALL );
-			return true;
-		default:
-			return false;
-	}
-}
-
-
-bool CLogWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CLogWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CLogWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID )
-	{
-		case ID_SELECTION_COPY:
-			( *pbEnable ) = ( Command( SCI_GETSELECTIONSTART ) != Command( SCI_GETSELECTIONEND ) );
-			( *pbCheck ) = false;
-			return true;
-		case ID_SELECTION_CLEAR:
-			( *pbEnable ) = ( Command( SCI_GETLENGTH ) != 0 );
-			( *pbCheck ) = false;
-			return true;
-		case ID_SELECTION_SELECT_ALL:
-			( *pbEnable ) = ( Command( SCI_GETLENGTH ) != 0 );
-			( *pbCheck ) = false;
-			return true;
-		default:
-			return false;
-	}
-}
-
-// basement storage  
-
-
+// basement storage

@@ -93,15 +93,31 @@ namespace NWxHost
 	public:
 		typedef wxMFCApp<TBaseApp> CWxBase;
 
+		// wxMFCApp::InitInstance is deliberately NOT called. Its order is
+		// base-then-wx, which is right when the base is a plain CWinApp and
+		// wrong here: the editor's InitInstance builds CMainFrame, and
+		// CMainFrame builds its docking panes, and a pane whose contents are wx
+		// needs wx to already exist. So wx starts first and the editor second.
+		//
+		// This was learned twice, the same way both times: a wx window created
+		// before wxEntryStart dies on its first WM_ERASEBKGND inside
+		// wxBrushList::FindOrCreateBrush, because wx's stock objects are made by
+		// module initialisation that has not run. The stack arrives through
+		// mfc140!_AfxActivationWndProc and reads like an MFC/wx conflict. It is
+		// not one. If that signature appears again, look at ordering first.
 		virtual BOOL InitInstance()
 		{
-			// CWxBase::InitInstance runs the editor's own InitInstance first and
-			// only then starts wx, so anything that needs wx has to be after this
-			// line rather than inside the editor's. Getting that backwards is
-			// what the first version of this did, and it died in
-			// wxBrushList::FindOrCreateBrush on the probe frame's first
-			// WM_ERASEBKGND -- wx's stock objects not existing yet.
-			if ( !CWxBase::InitInstance() )
+			if ( !wxEntryStart( TBaseApp::m_hInstance ) )
+			{
+				return FALSE;
+			}
+			if ( !wxTheApp || !wxTheApp->CallOnInit() )
+			{
+				return FALSE;
+			}
+			// InitMainWnd is not called either: MFC owns the main window here,
+			// and the override below says so.
+			if ( !TBaseApp::InitInstance() )
 			{
 				return FALSE;
 			}
@@ -109,15 +125,20 @@ namespace NWxHost
 			return TRUE;
 		}
 
+		// Shut down in the opposite order to starting up: wx came up before the
+		// editor, so it goes down after it. In practice the frame and everything
+		// in it is already destroyed by the time MFC calls this -- the message
+		// loop has ended -- but ordering that has to be reasoned about twice is
+		// ordering worth writing down once.
 		virtual int ExitInstance()
 		{
+			const int nResult = TBaseApp::ExitInstance();
 			if ( wxTheApp )
 			{
 				wxTheApp->CallOnExit();
 			}
 			wxEntryCleanup();
-			// Straight to the editor's own, stepping over wxMFCApp's.
-			return TBaseApp::ExitInstance();
+			return nResult;
 		}
 
 	protected:

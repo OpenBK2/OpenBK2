@@ -2,6 +2,10 @@
 
 // wx's object ownership, stated once, and two helpers that put it in the name.
 //
+// In MapEditorLib beside MfcWidget.h and MfcPaintContext.h, which are the other
+// front-end-private headers, because every module that uses wx needs these
+// rules and MapEditorLib is the one they all already depend on.
+//
 // The rules below were read out of wx 3.3.3's own source rather than recalled,
 // because two of them are the opposite of what the code looks like:
 //
