@@ -43,6 +43,12 @@ if(BUILD_EDITOR)
     add_subdirectory("B2_MapEditor")
 endif()
 
+# The wxWidgets skeleton, which is a build-and-link rehearsal rather than
+# part of the editor. Off by default with the option that guards it.
+if(BUILD_WX_EDITOR)
+    add_subdirectory("WxEditor")
+endif()
+
 # Both aggregates exist by now, so the "run everything of ours" targets can be
 # defined. See cmake/benchmarks.cmake.
 if(TARGET unittests)

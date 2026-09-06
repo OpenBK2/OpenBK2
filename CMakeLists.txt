@@ -27,6 +27,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_EDITOR "build editor" ON)
+# The wxWidgets front-end, which is work in progress and is not part of a
+# normal build. See cmake/wxwidgets.cmake for why it is off by default.
+option(BUILD_WX_EDITOR "build the wxWidgets editor front-end (work in progress)" OFF)
 option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 
@@ -140,6 +143,9 @@ include(cmake/versioninfo.cmake)
 include(cmake/exportheader.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
+if(BUILD_WX_EDITOR)
+    include(cmake/wxwidgets.cmake)
+endif()
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
 
