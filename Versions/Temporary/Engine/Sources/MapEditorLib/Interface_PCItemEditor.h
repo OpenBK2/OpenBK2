@@ -3,6 +3,14 @@
 #include "libdb/Manipulator.h"
 #include "Interface_Controller.h"
 
+// Property-kind enum for the property control. Shared: MapEditorLib,
+// MapEditor and ED_B2_M1 all switch on it.
+//
+// IPCItemEditor itself used to be here. It is in MapEditor/PC_ItemEditor.h
+// now: it is declared, implemented, overridden and called only inside that
+// module, and its CWnd, CDialog and WPARAM/LPARAM are front-end details
+// rather than something the editor is layered on.
+//
 // Вставить индекс нового типа в EPCIEType
 // Изменить bmp в IDB_PC_TYPES_IMAGE_LIST ( в начало и в конец )
 // Найти по коду все вхождения подобного индейкса и вставить новые обработчики:
@@ -46,43 +54,3 @@ enum EPCIEType
 	PCIE_STRUCT									= 30,
 	PCIE_COUNT									= 31,
 };
-
-
-struct IPCItemEditor : public CObjectBase
-{
-	// Получить значение имени элемента дерева ( для совместимости )
-	virtual const std::string& GetName() const = 0;
-	// Получить значение типа элемента дерева ( для совместимости )
-	virtual EPCIEType GetItemEditorType() const = 0;
-	// Получить описатель элемента дерева ( для совместимости )
-	virtual const	SPropertyDesc* GetPropertyDesc() const = 0;
-	// Получить идентификатор окна связанного с редактором 
-	virtual int GetControlID() const = 0;
-	// Получить окно куда необходимо посылать все сообщения ( IC_... )
-	virtual class CWnd* GetTargetWindow() = 0;
-	//
-	// Создать окно редактора ( CDialog - для того чтобы можно было перескакивать по контролам )
-	virtual bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, class CWnd *_pwndTargetWindow ) = 0;
-	// Разместить окно редактора в произвольной области
-	virtual bool PlaceEditor( const CTRect<int> &rPlaceRect ) = 0;
-	// Перевести фокус на окно редактора
-	virtual bool ActivateEditor( class CDialog *pwndActiveDialog ) = 0;
-	//
-	// Установить значение
-	virtual void SetValue( const CVariant &rValue ) = 0;
-	// Получить значение
-	virtual void GetValue( CVariant *pValue ) = 0;
-	// Установить значение по умолчанию
-	virtual void SetDefaultValue() = 0;
-	// Определить что значение не менялось
-	virtual bool IsDefaultValue() = 0;
-	// установить режим работы редактора
-	virtual void EnableEdit( bool bEnable ) = 0;
-	//
-	virtual bool IsEditEnabled() = 0;
-	// Различного рода сообщения приходящие от контролов, которые не связяны c основным редактором
-	// Используется для получения сообщений от Slider
-	virtual void ProcessMessage( unsigned nMessage, WPARAM wParam, LPARAM lParam ) = 0;
-};
-
-
