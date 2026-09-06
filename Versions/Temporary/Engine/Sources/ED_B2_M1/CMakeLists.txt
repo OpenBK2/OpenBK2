@@ -66,6 +66,8 @@ set(SOURCES
     FieldWindow.cpp
     FormationMnemonics.cpp
     FormationsState.cpp
+    FormationViewMfc.cpp
+    FormationViewWx.cpp
     FormationWindow.cpp
     GameRootExporter.cpp
     GeometryExporter.cpp

@@ -12,7 +12,11 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/DefaultTabWindow.h"
 #include "SceneB2/Camera.h"
-#include "FormationWindow.h"
+// Explicitly, where it used to arrive through FormationWindow.h: this file
+// uses ID_SQUAD_EDITOR_DW and three more of its own ids, and the boundary
+// header in front of the palette has no business carrying them.
+#include "ResourceDefines.h"
+#include "FormationView.h"
 #include "ED_B2_M1Dll.h"
 #include "EditorMethods.h"
 #include "SquadEditor.h"
@@ -179,14 +183,11 @@ void CSquadEditor::CreateControls()
 				p3DTabWindow->SetCommandHandlerID( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE ); 
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 
-				CFormationWindow *pDlg = new CFormationWindow();
-				if ( p3DTabWindow->AddNewTab( pDlg ) )
+				// Which toolkit draws this palette is NFormationView's business,
+				// not the editor's. It creates the window and registers it in the
+				// tab list; the label and the tab are still put on here.
+				if ( CWnd *pDlg = NFormationView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					int bResult = pDlg->Create( CFormationWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
-					NI_ASSERT( bResult, "Creation of CFormationWindow dialog failed" );
-
 					CString strPaneLabel = RCSTR("Formations");
 					p3DTabWindow->AddTab( pDlg, strPaneLabel );
 				}

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ResourceDefines.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
+#include "PaletteCommands.h"
 #include "MapEditorLib/ResizeDialog.h"
 #include "DialogData.h"
 
@@ -13,7 +13,8 @@
 //
 //
 
-class CFormationWindow : public CResizeDialog, public ICommandHandler
+class CFormationWindow : public CResizeDialog,
+                         public CPaletteCommands<SFormationWindowDialogData>
 {
 	CListCtrl formationsList;
 	CButton chkPropMask;
@@ -27,10 +28,12 @@ class CFormationWindow : public CResizeDialog, public ICommandHandler
 	// CPointListDialog
 	void NotifyHandler();
 
-	void GetDialogData( SFormationWindowDialogData *pData );
-	void SetDialogData( const SFormationWindowDialogData *pData );
-
 public:
+	// CPaletteCommands. Public now because the dispatch that calls them is on
+	// the shared base rather than on this class.
+	virtual void GetDialogData( SFormationWindowDialogData *pData );
+	virtual void SetDialogData( const SFormationWindowDialogData *pData );
+
 	enum { IDD = IDD_TAB_SQD_FORMATION };
 
 	CFormationWindow( CWnd *pParentWindow = 0 );
@@ -39,10 +42,10 @@ public:
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();
 
-	//ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	
+	// HandleCommand and UpdateCommand come from CPaletteCommands, which
+	// dispatches them to the two methods above; both implementations of this
+	// palette share that.
+
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();
 	afx_msg void OnLvnItemchangedPointsList(NMHDR *pNMHDR, LRESULT *pResult);

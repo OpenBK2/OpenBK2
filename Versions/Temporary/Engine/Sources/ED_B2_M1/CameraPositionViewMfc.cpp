@@ -16,42 +16,7 @@
 // site, moved out of MapInfoEditor so that which toolkit draws the palette is
 // decided in one place.
 //
-// The command dispatch is here rather than in a third file because it is shared
-// by both implementations and this one is always compiled.
-
-bool CCameraPositionCommands::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SCameraPositionWindowData *pData = reinterpret_cast<SCameraPositionWindowData*>( dwData );
-	switch ( nCommandID )
-	{
-		case ID_WINDOW_GET_DIALOG_DATA:
-			GetDialogData( pData );
-			return true;
-		//
-		case ID_WINDOW_SET_DIALOG_DATA:
-			SetDialogData( pData );
-			return true;
-	}
-	return false;
-}
-
-
-bool CCameraPositionCommands::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CCameraPositionCommands::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CCameraPositionCommands::UpdateCommand(), pbCheck == 0" );
-	//
-	switch ( nCommandID )
-	{
-	case ID_WINDOW_SET_DIALOG_DATA:
-	case ID_WINDOW_GET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-}
+// The command dispatch is CPaletteCommands' now; see PaletteCommands.h.
 
 
 namespace NCameraPositionView

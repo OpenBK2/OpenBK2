@@ -70,6 +70,7 @@ MIGRATED = {
     # counted here because it is a CResizeDialog like the rest of them, but the
     # boundary in front of it is a different shape -- see CameraPositionView.h.
     "CCameraPositionWindow": "ED_B2_M1/CameraPositionViewWx.cpp (NCameraPositionView::Create)",
+    "CFormationWindow": "ED_B2_M1/FormationViewWx.cpp (NFormationView::Create)",
 }
 
 
