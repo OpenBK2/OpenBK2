@@ -131,13 +131,6 @@ file(MAKE_DIRECTORY ${WX_INSTALL}/include ${WX_LIB_DIR}/mswu)
 add_library(wx::wx INTERFACE IMPORTED GLOBAL)
 set_target_properties(wx::wx PROPERTIES
     INTERFACE_LINK_LIBRARIES wxwidgets_monolithic
-    # wx on MSW is a wide-character toolkit and there is no narrow build of it
-    # any more. The rest of this tree is the opposite -- no UNICODE define
-    # anywhere, narrow strings that are UTF-8, and a manifest setting the
-    # process code page to match -- so these two defines are scoped to the
-    # targets that actually talk to wx rather than set globally. Everything
-    # crossing that boundary converts, and it should convert in one place.
-    #
     # WXUSINGDLL is what tells wx's headers that wx is the shared build, so its
     # exported *data* is declared __declspec(dllimport). Leaving it out links
     # every function fine -- they come from the import library either way -- and
@@ -145,5 +138,22 @@ set_target_properties(wx::wx PROPERTIES
     # wxString::npos, wxAppConsoleBase::ms_appInstance, the control name
     # strings. A link error listing only data symbols and no functions is this
     # define missing.
-    INTERFACE_COMPILE_DEFINITIONS "UNICODE;_UNICODE;WXUSINGDLL"
+    #
+    # And *only* that one. This carried UNICODE and _UNICODE at first, on the
+    # assumption that a wide-character wx needs them. It does not, and getting
+    # this wrong in the other direction would have been expensive:
+    #
+    #   wxUSE_UNICODE lives in wx's own setup.h and decides what wxString and
+    #   wxChar are. It is 1 in this build and nothing here can change it.
+    #   _UNICODE decides Win32 TCHAR mapping in the *consumer's* code and, on
+    #   this project, which MFC is linked -- MFC ships separate MBCS and Unicode
+    #   runtimes and two of them in one process is not a thing that works.
+    #
+    # The two axes are independent, which was verified rather than reasoned: the
+    # skeleton builds and runs the same either way, still reporting
+    # wxUSE_UNICODE=1 and sizeof(wxChar)=2. So the editor stays MBCS throughout,
+    # a translation unit can include afxwin.h and wx/wx.h together, and none of
+    # this spreads. wxString still has to be converted at the boundary, which is
+    # a conversion and not a compilation mode.
+    INTERFACE_COMPILE_DEFINITIONS "WXUSINGDLL"
 )

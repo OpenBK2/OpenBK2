@@ -11,6 +11,9 @@ set(SOURCES
 # Listed as a source because that is how the linker merges a manifest in, and
 # it merges with the MANIFESTDEPENDENCY below rather than replacing it.
 list(APPEND SOURCES utf8.manifest)
+# The wx host, which is empty unless BUILD_WX_EDITOR is on. Listed
+# unconditionally so the file is visible in the IDE either way.
+list(APPEND SOURCES WxHost.cpp)
 add_executable(B2_MapEditor WIN32 ${SOURCES})
 add_stdafx_pch(B2_MapEditor)
 target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common ED_RTS GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Scintilla Script Server_Client_Common Sound Stats_B2_M1 stingray System UISpecificB2 UI zlib)
@@ -41,6 +44,27 @@ endif()
 if(MSVC)
     target_link_options(B2_MapEditor PRIVATE
         "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'")
+endif()
+
+# wx as a guest inside the MFC application. OBK2_WITH_WX is what WxHost.h and
+# main.cpp test; wx::wx brings the headers, the import library and WXUSINGDLL.
+# Note there is deliberately no _UNICODE here: this target stays MBCS, the same
+# as every other, so there is one MFC in the process. See cmake/wxwidgets.cmake.
+if(BUILD_WX_EDITOR)
+    target_compile_definitions(B2_MapEditor PRIVATE OBK2_WITH_WX)
+    target_link_libraries(B2_MapEditor PRIVATE wx::wx)
+    add_dependencies(B2_MapEditor wxwidgets_external)
+    add_custom_command(TARGET B2_MapEditor POST_BUILD
+        COMMAND ${CMAKE_COMMAND}
+                -DWX_LIB_DIR=${WX_LIB_DIR}
+                -DWX_DESTINATION=$<TARGET_FILE_DIR:B2_MapEditor>
+                -P ${CMAKE_SOURCE_DIR}/cmake/copy_wx_runtime.cmake
+        COMMENT "Copying the wxWidgets runtime beside B2_MapEditor"
+        VERBATIM)
+    # And into the install tree, because the installed editor links wx now.
+    # A directory glob for the same reason the build-tree copy is one: the DLL
+    # name carries wx's version, the compiler and the architecture.
+    install(DIRECTORY ${WX_LIB_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "*.dll")
 endif()
 
 install(TARGETS B2_MapEditor DESTINATION bin)
