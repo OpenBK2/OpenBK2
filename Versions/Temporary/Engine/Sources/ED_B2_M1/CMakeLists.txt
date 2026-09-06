@@ -131,6 +131,8 @@ set(SOURCES
     ReinfPointsState.cpp
     ReinfPointsTypedDlg.cpp
     ReinfPointsTypedTemplateAddDlg.cpp
+    ReinfPointsViewMfc.cpp
+    ReinfPointsViewWx.cpp
     ReinfPointsWindow.cpp
     RiverState.cpp
     RoadState.cpp

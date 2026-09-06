@@ -148,46 +148,8 @@ void CReinfPointsWindow::SetDialogData( const SReinfPointsWindowData *pData )
 }
 
 
-bool CReinfPointsWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SReinfPointsWindowData *pData = reinterpret_cast<SReinfPointsWindowData*>( dwData );
-
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		break;
-	case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-		break;
-	}
-
-	return false;
-}
-
-
-bool CReinfPointsWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CReinfPointsWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CReinfPointsWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-}
+// HandleCommand and UpdateCommand are CPaletteCommands' now, shared with the
+// wx palette; see PaletteCommands.h.
 
 
 void CReinfPointsWindow::NotifyHandler()

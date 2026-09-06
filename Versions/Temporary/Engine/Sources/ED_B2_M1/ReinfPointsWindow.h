@@ -3,83 +3,10 @@
 #include "MapEditorLib/Interface_Widget.h"
 
 #include "MapEditorLib/ResizeDialog.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
+#include "ReinfPointsData.h"
 #include "ResourceDefines.h"
-#include "Stats_B2_M1/RPGStats.h"
 
 #include <cstdint>
-
-//
-//						REINFPOINTS WINDOW DATA
-//
-
-struct SReinfPointsWindowData
-{
-	struct STypedTemplate
-	{
-		NDb::EReinforcementType reinfType;
-		std::string szTemplate;
-	};
-	//
-	int nPlayerIndex;
-	int nPlayerCount;
-	//
-	struct SReinfPoint
-	{
-		CVec2 vPosition;
-		CVec2 vAviationPosition;
-		NDb::EReinforcementType eType;
-		bool bIsDefault;
-		int nNumPoints;
-		std::string szDeployTemplate;
-		std::vector<STypedTemplate> typedTemplates;
-		//
-		SReinfPoint() :
-			vPosition( VNULL2 ),
-			eType( NDb::EReinforcementType(-1) ),
-			bIsDefault( false ),
-			nNumPoints( 0 ),
-			szDeployTemplate( "" )
-		{
-		}
-	};
-	std::vector<SReinfPoint> reinfPoints;
-	int nSelectedPoint;
-	bool bAviationPointSelected;
-	//
-	enum EReinfWndLastAction
-	{
-		RWA_UNKNOWN,
-		RWA_NO_ACTIONS,
-		RWA_POINT_ADD,
-		RWA_POINT_DEL,
-		RWA_POINT_EDIT_DEPLOY,
-		RWA_POINT_EDIT_TYPED,
-		RWA_POINT_JUMP,
-		RWA_POINT_SEL_CHANGE,
-		RWA_PLAYER_CHANGE
-	};
-	EReinfWndLastAction eLastAction;
-	//
-	SReinfPointsWindowData() :
-		nPlayerIndex(-1),
-		nPlayerCount( 0 ),
-		nSelectedPoint(-1),
-		bAviationPointSelected( false ),
-		eLastAction(RWA_NO_ACTIONS)
-	{
-	}
-	//
-	void Clear()
-	{
-		nPlayerIndex = -1;
-		nPlayerCount = 0;
-		reinfPoints.clear();
-		nSelectedPoint = -1;
-		bAviationPointSelected = false;
-		eLastAction = RWA_NO_ACTIONS;
-	}
-};
 
 //
 //
@@ -87,7 +14,7 @@ struct SReinfPointsWindowData
 //
 //
 
-class CReinfPointsWindow : public CResizeDialog, public ICommandHandler
+class CReinfPointsWindow : public CResizeDialog, public CReinfPointsCommands
 {
 protected:
 	//
@@ -102,18 +29,17 @@ protected:
 	int nSelectedIndex;
 	SReinfPointsWindowData::EReinfWndLastAction eLastAction;
 	//
-	void Enter();
-	void Leave();
-	void GetDialogData( SReinfPointsWindowData *pData );
-	void SetDialogData( const SReinfPointsWindowData *pData );
-	void Draw( IPaintContext *pPaintDC );
 	void NotifyHandler();
 
-	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// Enter, Leave and Draw were declared here and never defined anywhere, so
+	// they are gone rather than carried across.
 
 public:
+	// CPaletteCommands. Public now because the dispatch that calls them is on
+	// the shared base rather than on this class.
+	virtual void GetDialogData( SReinfPointsWindowData *pData );
+	virtual void SetDialogData( const SReinfPointsWindowData *pData );
+
 	enum { IDD = IDD_TAB_MI_REINF_POINTS };
 
 	CReinfPointsWindow( CWnd* pParentWindow = 0 );

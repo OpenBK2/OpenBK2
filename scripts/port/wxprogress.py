@@ -72,6 +72,7 @@ MIGRATED = {
     "CCameraPositionWindow": "ED_B2_M1/CameraPositionViewWx.cpp (NCameraPositionView::Create)",
     "CFormationWindow": "ED_B2_M1/FormationViewWx.cpp (NFormationView::Create)",
     "CUnitStartCmdWindow": "ED_B2_M1/UnitStartCmdViewWx.cpp (NUnitStartCmdView::Create)",
+    "CReinfPointsWindow": "ED_B2_M1/ReinfPointsViewWx.cpp (NReinfPointsView::Create)",
 }
 
 

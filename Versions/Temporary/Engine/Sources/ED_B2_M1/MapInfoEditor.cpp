@@ -35,7 +35,7 @@
 #include "AdvClipboardWindow.h"
 #include "FieldWindow.h"
 #include "HeightWindowV3.h"
-#include "ReinfPointsWindow.h"
+#include "ReinfPointsView.h"
 #include "ScriptCameraWindow.h"
 #include "AIGeneralWindow.h"
 
@@ -261,11 +261,10 @@ void CMapInfoEditor::CreateControls()
 			{
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 				// reinforcement points
-				if ( CReinfPointsWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CReinfPointsWindow*>(0)) )
+				// Which toolkit draws this palette is NReinfPointsView's business,
+				// not the editor's.
+				if ( CWnd *pDialog = NReinfPointsView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CReinfPointsWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_REINF_POINTS] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
