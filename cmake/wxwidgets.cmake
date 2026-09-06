@@ -90,13 +90,22 @@ ExternalProject_Add(wxwidgets_external
         # Nothing here wants an embedded browser, and it is one of the more
         # expensive parts of a wx build.
         -DwxUSE_WEBVIEW=OFF
-        # wxSTC is wx's Scintilla, and it drags Lexilla with it -- several
-        # hundred of the ~1100 translation units in a wx build are lexers for
-        # languages nothing here will ever open. This editor already vendors its
-        # own Scintilla under Sources/Scintilla and uses it for the script
-        # window, so a second copy inside wx would be dead weight even if it
-        # were free.
-        -DwxUSE_STC=OFF
+        # wxSTC is kept, and it is the expensive part of this build: it brings
+        # Lexilla with it and the two are roughly 40% of the translation units
+        # (1097 targets with, 680 without).
+        #
+        # It is kept because it is a candidate replacement for the Scintilla
+        # this tree vendors. Sources/Scintilla is the 2005 one: a flat directory
+        # with 37 Lex*.cxx compiled straight into the control, and
+        # DocumentAccessor, WindowAccessor and PropSet still in it, all of which
+        # upstream removed long ago. wx 3.3.3 carries Scintilla 5.0 and Lexilla
+        # 5.4.6. More to the point, wx's copy has a wx platform layer where ours
+        # has a Win32 one -- ScintillaWin.cxx and PlatWin.cxx, which is where
+        # both of this year's clean-exit crashes were, and which would have to
+        # be ported for a non-Windows editor.
+        #
+        # Turn it off with -DwxUSE_STC=OFF locally if a wx build is in the way
+        # of something; nothing depends on it yet.
     BUILD_BYPRODUCTS ${WX_IMPORT_LIB}
     USES_TERMINAL_DOWNLOAD TRUE
     USES_TERMINAL_BUILD    TRUE
