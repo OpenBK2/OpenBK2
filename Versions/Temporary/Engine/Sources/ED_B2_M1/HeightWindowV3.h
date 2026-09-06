@@ -54,7 +54,7 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	afx_msg void OnUpdateHeights();
 	afx_msg void OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult );
 
-	int32_t nHeightTimer;
+	UINT_PTR nHeightTimer; // SetTimer returns a pointer-sized timer ID on x64.
 	uint32_t dwHeightData;
   inline unsigned GetHeightID() { return 2; }
   inline unsigned GetHeightTimerInterval() { return 100; }	// Частота в миллисекундах

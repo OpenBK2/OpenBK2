@@ -4,6 +4,7 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "UnitStartCmdState.h"
+#include "ED_B2_M1Dll.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 
 #include <cstdint>
@@ -235,8 +236,17 @@ void CUnitStartCmdState::Enter()
 		}
 	}
 	//
-	pEdUnitStartCmd = new CEdUnitStartCmd( this );
-	pEdUnitStartCmd->Create( CEdUnitStartCmd::IDD );
+	// This dialog is modeless, so its DoModal resource switch is never used.
+	// Load it from the editor DLL and reuse it when this tab is entered again.
+	if ( !pEdUnitStartCmd )
+		pEdUnitStartCmd = new CEdUnitStartCmd( this );
+	if ( !pEdUnitStartCmd->GetSafeHwnd() )
+	{
+		const HINSTANCE hPreviousResource = AfxGetResourceHandle();
+		AfxSetResourceHandle( theEDB2M1Instance );
+		pEdUnitStartCmd->Create( CEdUnitStartCmd::IDD );
+		AfxSetResourceHandle( hPreviousResource );
+	}
 	pEdUnitStartCmd->ShowWindow( SW_HIDE );
 	//
 	if ( !commandsList.LoadFromDB( GetMapInfoEditor()->GetViewManipulator() ) )

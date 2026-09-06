@@ -45,7 +45,8 @@ const char CHeightWindowV3::TILE_TYPE_NAME[] = "TGTerraType";
 
 
 CHeightWindowV3::CHeightWindowV3( CWnd* pParent )
-	: CResizeDialog( CHeightWindowV3::IDD, pParent ), bCreateControls( true ), nLastIndex( -1 )
+	: CResizeDialog( CHeightWindowV3::IDD, pParent ), bCreateControls( true ), nLastIndex( -1 ),
+		nHeightTimer( 0 ), dwHeightData( 0 )
 {
 	SetControlStyle( IDC_TMITHV3_BRUSH_LABEL, ANCHORE_LEFT_TOP | RESIZE_HOR );
 	SetControlStyle( IDC_TMITHV3_BRUSH_UP, ANCHORE_LEFT_TOP );
@@ -361,7 +362,12 @@ void CHeightWindowV3::OnUpdateHeights()
 
 void CHeightWindowV3::OnItemchangedTileList( NMHDR* pNMHDR, LRESULT* pResult )
 {
-	if ( !bCreateControls )
+	*pResult = 0;
+	const NMLISTVIEW *pChange = reinterpret_cast<const NMLISTVIEW*>( pNMHDR );
+	// Focus and deselection also send LVN_ITEMCHANGED. Only an actual new
+	// texture selection should switch away from a height brush.
+	if ( !bCreateControls && ( pChange->uChanged & LVIF_STATE ) &&
+		!( pChange->uOldState & LVIS_SELECTED ) && ( pChange->uNewState & LVIS_SELECTED ) )
 	{
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3, ID_GET_EDIT_PARAMETERS, MITHV3EP_TILE_INDEX );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );

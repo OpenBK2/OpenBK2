@@ -700,25 +700,23 @@ bool CMapInfoState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	{
 		case ID_MIS_CHANGE_STATE:
 		{
-			unsigned nShortcutIndex = HIWORD( dwData );
-			unsigned nTabIndex = LOWORD( dwData );
-			if ( ( nShortcutIndex != INVALID_SHORTCUT_INDEX ) &&
-					 ( nShortcutIndex >= 0 ) &&
-					 ( nShortcutIndex < GetCount() ) )
-			{
-				SetActiveInputState( nShortcutIndex, true, false );
-			}
-			if ( ( nTabIndex != INVALID_TAB_INDEX ) &&
-					 IsMultiInputState( nShortcutIndex ) )
+			const unsigned nShortcutIndex = HIWORD( dwData );
+			const unsigned nTabIndex = LOWORD( dwData );
+			if ( nShortcutIndex >= GetCount() )
+				return false;
+
+			if ( nTabIndex != INVALID_TAB_INDEX && IsMultiInputState( nShortcutIndex ) )
 			{
 				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState*>( GetInputState( nShortcutIndex ) );
-				NI_ASSERT( pMultiInputState != 0, "CMapInfoState::HandleCommand(), pMultiInputState == 0" );
-				if ( ( nTabIndex >= 0 ) && 
-						 ( nTabIndex < pMultiInputState->GetCount() ) )
+				if ( nTabIndex < pMultiInputState->GetCount() )
 				{
-					pMultiInputState->SetActiveInputState( nTabIndex, true, false );
+					// Prepare an inactive section before entering it. Entering its old
+					// tab first can initialize or save a tool the user did not select.
+					pMultiInputState->SetActiveInputState( nTabIndex,
+						GetActiveInputStateIndex() == nShortcutIndex, false );
 				}
 			}
+			SetActiveInputState( nShortcutIndex, true, false );
 			return true;
 		}
 		default:

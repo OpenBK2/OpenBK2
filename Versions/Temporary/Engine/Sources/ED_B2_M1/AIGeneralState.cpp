@@ -754,7 +754,8 @@ void CAIGeneralPointsState::DeleteID()
 		{
 			if ( CPtr<IManipulator> pManipulator = pMapInfoEditor->GetViewManipulator() )
 			{
-				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.mobileScriptIDs"), dialogData.CurrentID(), pManipulator) )
+				// Include the selected player in the database path used for deletion.
+				if ( pObjectController->AddRemoveOperation(fmt::format("Players.[{}].general.mobileScriptIDs", dialogData.CurrentPlayer()), dialogData.CurrentID(), pManipulator) )
 				{
 					pObjectController->Redo( false, true, GetMapInfoEditor() );
 					Singleton<IControllerContainer>()->Add( pObjectController );

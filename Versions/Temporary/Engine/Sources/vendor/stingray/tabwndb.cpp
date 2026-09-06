@@ -128,10 +128,16 @@ void SECTabWndBase::OnSize(UINT nType, int cx, int cy) {
 // watches for in order to run the command bound to the tab.
 void SECTabWndBase::OnTabSelChange(NMHDR* pNMHDR, LRESULT* pResult) {
     const int nSel = m_wndTabs.GetCurSel();
-    if (nSel >= 0 && nSel < static_cast<int>(m_tabs.size())) {
-        m_nActive = nSel;
-        ShowActivePage();
+    if (ActivateTab(nSel)) {
         SendMessage(TCM_TABSEL, static_cast<WPARAM>(nSel), 0);
+        // Nested editor tabs bind their commands on the parent shortcut bar.
+        // Showing the page alone leaves its input state and controls inactive.
+        if (CWnd* pParent = GetParent()) {
+            pParent->SendMessage(TCM_TABSEL, static_cast<WPARAM>(nSel),
+                                 reinterpret_cast<LPARAM>(GetSafeHwnd()));
+        }
+    } else {
+        m_wndTabs.SetCurSel(m_nActive);
     }
     if (pResult != nullptr) {
         *pResult = 0;

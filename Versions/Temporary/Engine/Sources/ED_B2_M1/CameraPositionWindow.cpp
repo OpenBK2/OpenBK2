@@ -23,7 +23,7 @@ END_MESSAGE_MAP()
 
 
 CCameraPositionWindow::CCameraPositionWindow( CWnd *pParentWindow )
-	:	CResizeDialog( CCameraPositionWindow::IDD, pParentWindow )
+	:	CResizeDialog( CCameraPositionWindow::IDD, pParentWindow ), bIsDataSetting( false )
 {
 	SetControlStyle( IDC_OW_PLAYER_LABEL, ANCHORE_LEFT_TOP );
 	SetControlStyle( IDC_OW_PLAYER_COMBO_BOX, ANCHORE_LEFT_TOP | RESIZE_HOR );

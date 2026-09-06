@@ -49,6 +49,12 @@ BOOL CDefaultShortcutBar::OnChangeBar( int nShortcutIndex )
 			 ( nCommandID != INVALID_COMMAND_ID ) )
 	{
 		int nTabIndex = INVALID_TAB_INDEX;
+		// Activate the tab actually visible in this section, including restored
+		// layouts and tabs selected while another map was open.
+		if ( CDefault3DTabWindow *pTabs = dynamic_cast<CDefault3DTabWindow*>( GetBarWnd( nShortcutIndex ) ) )
+		{
+			pTabs->GetActiveTab( nTabIndex );
+		}
 		if ( ( nShortcutIndex < 0 ) || ( nShortcutIndex > INVALID_SHORTCUT_INDEX ) )
 		{
 			nShortcutIndex = INVALID_SHORTCUT_INDEX;
@@ -68,6 +74,14 @@ BOOL CDefaultShortcutBar::OnChangeBar( int nShortcutIndex )
 
 LRESULT CDefaultShortcutBar::OnNotifyChangeTab( WPARAM wParam, LPARAM lParam )
 {
+	// Ignore notifications from a hidden section; lParam identifies the tab
+	// window in the compatibility control's parent notification.
+	if ( lParam != 0 )
+	{
+		CWnd *pActivePane = GetBarWnd( GetActiveIndex() );
+		if ( !pActivePane || pActivePane->GetSafeHwnd() != reinterpret_cast<HWND>( lParam ) )
+			return 0;
+	}
 	if ( ( nCommandHandlerID != INVALID_COMMAND_HANDLER_ID ) &&
 			 ( nCommandID != INVALID_COMMAND_ID ) )
 	{

@@ -49,7 +49,7 @@ BOOL SECShortcutBar::EnsureButton(int iIndex) {
         return FALSE;
     }
     pBar->pButton = new CButton();
-    if (!pBar->pButton->Create(pBar->strLabel, WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+    if (!pBar->pButton->Create(pBar->strLabel, WS_CHILD | WS_VISIBLE | WS_TABSTOP | BS_RADIOBUTTON | BS_PUSHLIKE,
                               CRect(0, 0, 0, 0), this,
                               ID_BAR_BUTTON_FIRST + static_cast<UINT>(iIndex))) {
         spdlog::warn("SECShortcutBar::EnsureButton: pane button {} would not create", iIndex);
@@ -102,6 +102,9 @@ void SECShortcutBar::LayoutBars() {
         if (pBar->pButton == nullptr || pBar->pButton->GetSafeHwnd() == nullptr) {
             continue;
         }
+        // A section is a persistent single selection, not a dialog's default
+        // pushbutton. Explicitly clear every other section when it changes.
+        pBar->pButton->SetCheck(i == m_nActiveBar ? BST_CHECKED : BST_UNCHECKED);
         if (i <= m_nActiveBar || m_nActiveBar < 0) {
             pBar->pButton->SetWindowPos(nullptr, rcClient.left, nTop, rcClient.Width(),
                                         BAR_BUTTON_HEIGHT, SWP_NOZORDER | SWP_NOACTIVATE);

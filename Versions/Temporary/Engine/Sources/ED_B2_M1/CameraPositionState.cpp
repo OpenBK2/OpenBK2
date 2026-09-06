@@ -164,6 +164,9 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 			SCameraPositionWindowData data;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
+			// A map may have no players, or a combo may have no selection yet.
+			if ( nCurrentPlayer < 0 || nCurrentPlayer >= cameraPositions.size() )
+				return true;
 			cameraPositions[nCurrentPlayer].bUseAnchorOnly = !data.bAllParams;
 			SavePosition();
 			RefreshWindow( true );
@@ -217,20 +220,13 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 	}
 	//
 	SCameraPositionWindowData data;
-	if ( bGetFromDB )
-	{
-		data.nPlayerCount = GetPlayersCountFromDB();
-		if ( nCurrentPlayer >= data.nPlayerCount )
-		{
-			nCurrentPlayer = 0;
-		}
-	}
-	else
-	{
-		data.nPlayerCount = cameraPositions.size();
-	}
+	// Keep a slot for every player, including an unset camera, and handle
+	// maps with no players without indexing an empty camera list.
+	data.nPlayerCount = cameraPositions.size();
+	if ( nCurrentPlayer < 0 || nCurrentPlayer >= data.nPlayerCount )
+		nCurrentPlayer = data.nPlayerCount > 0 ? 0 : -1;
 	data.nPlayerIndex = nCurrentPlayer;
-	data.bAllParams = !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
+	data.bAllParams = nCurrentPlayer >= 0 && !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, 
 																												ID_WINDOW_SET_DIALOG_DATA, 
 																												reinterpret_cast<uintptr_t>(&data) );
@@ -386,8 +382,9 @@ void CCameraPositionState::GetDBInfo()
 		for ( int i = 0; i < GetPlayersCountFromDB(); ++i )
 		{
 			SCameraPos camPos;
-			if ( GetStartCameraPositionFromDB( &camPos, pMapInfoEditor->GetViewManipulator(), i ) )
-				cameraPositions.push_back( camPos );
+			// Missing camera data must not shift the remaining player indices.
+			GetStartCameraPositionFromDB( &camPos, pMapInfoEditor->GetViewManipulator(), i );
+			cameraPositions.push_back( camPos );
 		}
 	}
 }

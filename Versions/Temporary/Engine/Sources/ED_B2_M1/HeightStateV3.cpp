@@ -1210,18 +1210,22 @@ void CHeightStateV3::Enter()
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	// создаем градиент
+	// Keep height brushes usable without the optional editor profile image.
+	// The three samples give a smooth falloff from the center to the edge.
+	gradient = SGradient( SGradient::CHeightList{ 1.0f, 0.75f, 0.0f },
+		CTPoint<float>( 0.0f, 1.0f ), CTPoint<float>( 0.0f, 1.0f ) );
 	CArray2D<uint32_t> image;
 	{
 		CFileStream stream( pUserData->constUserData.szStartFolder + "Editor\\profile.tga", CFileStream::WIN_READ_ONLY );
 		if ( stream.IsOk() )
 		{
-			if ( NImage::LoadTGAImage( image, &stream ) )
+			if ( NImage::LoadTGAImage( image, &stream ) && image.GetSizeX() > 2 && image.GetSizeY() > 1 )
 			{
 				gradient.CreateFromImage( image, CTPoint<float>( 0.0f, 1.0f ), CTPoint<float>( 0.0f, 1.0f ) );
-				UpdateCommonPatterns();
 			}
 		}
 	}
+	UpdateCommonPatterns();
 	pStoreInputState->SetSizes( CTPoint<int>( pMapInfoEditor->pMapInfo->nNumPatchesX * VIS_TILES_IN_PATCH,
 																						pMapInfoEditor->pMapInfo->nNumPatchesY * VIS_TILES_IN_PATCH ),
 															true );
