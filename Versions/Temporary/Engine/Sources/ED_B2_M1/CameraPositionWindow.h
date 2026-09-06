@@ -1,37 +1,14 @@
 #pragma once
 
 #include "ResourceDefines.h"
+#include "CameraPositionData.h"
 #include "MapEditorLib/ResizeDialog.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 
-//
-//
-//				CAMERA POSITION WINDOW DATA
-//
-//
-
-struct SCameraPositionWindowData
-{
-	int nPlayerIndex;
-	int nPlayerCount;
-	bool bAllParams;
-	//	
-	SCameraPositionWindowData() :
-		nPlayerIndex( -1 ),
-		nPlayerCount( 0 ),
-		bAllParams( false )
-	{
-	}
-	//
-	void Clear()
-	{
-		nPlayerIndex = -1;
-		nPlayerCount = 0;
-		bAllParams = false;
-	}
-};
+// SCameraPositionWindowData and the ICommandHandler dispatch moved to
+// CameraPositionData.h, so the wx palette can share them rather than restate
+// them. Nothing about either changed.
 
 //
 //
@@ -39,7 +16,7 @@ struct SCameraPositionWindowData
 //
 //
 
-class CCameraPositionWindow : public CResizeDialog, public ICommandHandler
+class CCameraPositionWindow : public CResizeDialog, public CCameraPositionCommands
 {
 	CComboBox	wndPalyerComboBox;
 	bool bIsDataSetting;
@@ -47,11 +24,12 @@ class CCameraPositionWindow : public CResizeDialog, public ICommandHandler
 	// CResizeDialog
 	DECLARE_RESIZE_DLG_WND_COMMON_METHODS( CCameraPositionWindow )
 
-	// CCameraPositionWindow
-	void GetDialogData( SCameraPositionWindowData *pData );
-	void SetDialogData( const SCameraPositionWindowData *pData );
-
 public:
+	// CCameraPositionCommands. Public now because the dispatch that calls them
+	// is on the shared base rather than on this class.
+	virtual void GetDialogData( SCameraPositionWindowData *pData );
+	virtual void SetDialogData( const SCameraPositionWindowData *pData );
+
 	enum { IDD = IDD_TAB_MI_START_CAMERA };
 
 	CCameraPositionWindow( CWnd *pParentWindow = 0 );
@@ -60,9 +38,9 @@ public:
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();
 
-	//	ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// HandleCommand and UpdateCommand come from CCameraPositionCommands, which
+	// dispatches them to the two methods above; both implementations of this
+	// palette share that.
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();

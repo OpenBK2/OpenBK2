@@ -98,44 +98,8 @@ void CCameraPositionWindow::SetDialogData( const SCameraPositionWindowData *pDat
 }
 
 
-bool CCameraPositionWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SCameraPositionWindowData *pData = reinterpret_cast<SCameraPositionWindowData*>(dwData);
-	switch( nCommandID ) 
-	{
-		case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		//
-		case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-	}
-
-	return false;
-}
-
-
-bool CCameraPositionWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CCameraPositionWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CCameraPositionWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_SET_DIALOG_DATA:
-	case ID_WINDOW_GET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-}
+// HandleCommand and UpdateCommand are CCameraPositionCommands' now, shared
+// with the wx palette; see CameraPositionData.h.
 
 
 void CCameraPositionWindow::OnCbnSelchangeOwPlayerComboBox()

@@ -66,6 +66,10 @@ MIGRATED = {
     "CSearchObjectDialog": "MapEditor/SearchObjectViewWx.cpp (NSearchObject::Run)",
     "CAboutDialog": "MapEditor/AboutViewWx.cpp (NAbout::Run)",
     "CCreateMODDialog": "MapEditor/CreateModViewWx.cpp (NCreateMod::Run)",
+    # A palette rather than a dialog: a child window the tab control owns. It is
+    # counted here because it is a CResizeDialog like the rest of them, but the
+    # boundary in front of it is a different shape -- see CameraPositionView.h.
+    "CCameraPositionWindow": "ED_B2_M1/CameraPositionViewWx.cpp (NCameraPositionView::Create)",
 }
 
 

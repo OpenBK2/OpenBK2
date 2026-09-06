@@ -28,7 +28,7 @@
 
 // Docking Windows
 #include "ScriptAreaWindow.h"
-#include "CameraPositionWindow.h"
+#include "CameraPositionView.h"
 #include "UnitStartCmdWindow.h"
 #include "MapObjectWindow.h"
 #include "VSOWindow.h"
@@ -271,11 +271,11 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
 				}
 				// start camera positions
-				if ( CCameraPositionWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CCameraPositionWindow*>(0)) )
+				// Which toolkit draws this palette is NCameraPositionView's
+				// business, not the editor's. It creates the window and registers
+				// it in the tab list; the label and the tab are still put on here.
+				if ( CWnd *pDialog = NCameraPositionView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CCameraPositionWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_START_CAMERA] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

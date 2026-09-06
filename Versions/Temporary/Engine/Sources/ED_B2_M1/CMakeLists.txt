@@ -23,6 +23,8 @@ set(SOURCES
     BuildingRPGStatsExporter.cpp
     BuildingState.cpp
     CameraPositionState.cpp
+    CameraPositionViewMfc.cpp
+    CameraPositionViewWx.cpp
     CameraPositionWindow.cpp
     CampaignExporter.cpp
     CFC_SceneB2.cpp
@@ -192,5 +194,14 @@ endif()
 if(WIN32)
     target_sources(ED_B2_M1 PRIVATE ED_B2_M1.rc)
 endif()
+# The wx palettes. CameraPositionViewWx.cpp compiles to nothing without
+# OBK2_WITH_WX, so it is listed unconditionally and costs nothing when the
+# option is off. See cmake/wxwidgets.cmake for why there are no UNICODE defines.
+if(BUILD_WX_EDITOR)
+    target_compile_definitions(ED_B2_M1 PRIVATE OBK2_WITH_WX)
+    target_link_libraries(ED_B2_M1 PRIVATE wx::wx)
+    add_dependencies(ED_B2_M1 wxwidgets_external)
+endif()
+
 install(TARGETS ED_B2_M1 DESTINATION bin)
 add_version_info(ED_B2_M1)
