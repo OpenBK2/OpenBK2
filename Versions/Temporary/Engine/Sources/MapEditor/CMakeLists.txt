@@ -83,6 +83,8 @@ set(SOURCES
     ReplaceTextDlg.cpp
     ScriptEditor.cpp
     SearchObjectDialog.cpp
+    SearchObjectViewMfc.cpp
+    SearchObjectViewWx.cpp
     SelectTablesDialog.cpp
     SelectTablesViewMfc.cpp
     SelectTablesViewWx.cpp

@@ -18,7 +18,7 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/MultiManipulator.h"
 #include "MapEditorLib/ControlAlgorithms.h"
-#include "SearchObjectDialog.h"
+#include "SearchObjectView.h"
 #include "NewObjectDialog.h"
 #include "RefListDialog.h"
 #include "RefListWaitDialog.h"
@@ -1966,12 +1966,13 @@ HTREEITEM CTreeGDBBrowserBase::FindFirstItem( const std::string &rszSearch, HTRE
 
 void CTreeGDBBrowserBase::Find()
 {
+	// Which dialog answers -- the MFC one or the wx one -- is NSearchObject's
+	// business, not this tree's. The remembered text goes in and comes back out
+	// of the same string, which is what the setter/getter pair was doing.
 	std::string szSearch = Singleton<IUserDataContainer>()->Get()->szLastSearchedText;
-	CSearchObjectDialog searchObjectDialog;
-	searchObjectDialog.SetText( szSearch );
-	if ( searchObjectDialog.DoModal() == IDOK )
+	CWndWidget ownerWidget( this );
+	if ( NSearchObject::Run( &ownerWidget, &szSearch ) )
 	{
-		szSearch = searchObjectDialog.GetText();
 		Singleton<IUserDataContainer>()->Get()->szLastSearchedText = szSearch;
 		//
 		HTREEITEM hFocusedItem = GetSelectedItem();

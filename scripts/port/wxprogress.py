@@ -63,6 +63,7 @@ MIGRATED = {
     "CLogWindow": "MapEditor/LogViewWx.cpp (ILogView)",
     "CSelectTablesDialog": "MapEditor/SelectTablesViewWx.cpp (NSelectTables::Run)",
     "COpenMODDialog": "MapEditor/OpenModViewWx.cpp (NOpenMod::Run)",
+    "CSearchObjectDialog": "MapEditor/SearchObjectViewWx.cpp (NSearchObject::Run)",
 }
 
 
