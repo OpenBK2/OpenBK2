@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
@@ -126,7 +127,7 @@ bool CControllerContainer::Redo( int nCount )
 
 bool CControllerContainer::UndoArrow()
 {
-	SECWorkbook *pMainFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+	CWnd *pMainFrame = MainFrameWnd();
 	CPoint mouseCursorPos;
 	GetCursorPos( &mouseCursorPos );
 
@@ -152,7 +153,7 @@ bool CControllerContainer::UndoArrow()
 
 bool CControllerContainer::RedoArrow()
 {
-	SECWorkbook *pMainFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
+	CWnd *pMainFrame = MainFrameWnd();
 	CPoint mouseCursorPos;
 	GetCursorPos( &mouseCursorPos );
 

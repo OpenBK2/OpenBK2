@@ -574,7 +574,7 @@ void CMapObjectWindow::OnContextMenu( CWnd *pwnd, CPoint point )
 		CMenu *pMenu = mainPopupMenu.GetSubMenu( MICM_MAPOBJECT_OBJECT_LIST );
 		if ( pMenu )
 		{
-			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, Singleton<IMainFrameContainer>()->GetSECWorkbook(), 0 );
+			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, MainFrameWnd(), 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
 		mainPopupMenu.DestroyMenu();

@@ -21,9 +21,10 @@ public:
 };
 
 
-void CMainFrameContainer::Set( class CMainFrame* _pMainFrame )
+void CMainFrameContainer::Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow )
 {
 	pMainFrame = _pMainFrame;
+	pMainWindow = _pMainWindow;
 	pLoggerSink = (pMainFrame ? new CMainFrameLoggerSink(pMainFrame) : 0);
 	NLog::SetLogger( pLoggerSink );
 }

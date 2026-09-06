@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
@@ -352,7 +353,7 @@ void CTreeGDBBrowserBase::ShowContextMenu( const CTPoint<int> &rPoint )
 		pMenu->SetMenuItemInfo( ID_OBJECT_LOAD, &menuItemInfo, false );  
 		CPoint point( rPoint.x, rPoint.y );
 		ClientToScreen( &point ); 
-		pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, Singleton<IMainFrameContainer>()->GetSECWorkbook(), 0 );
+		pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, MainFrameWnd(), 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 	}
 	mainPopupMenu.DestroyMenu();

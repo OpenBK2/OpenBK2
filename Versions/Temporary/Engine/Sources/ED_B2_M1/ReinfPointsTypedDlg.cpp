@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "ReinfPointsTypedDlg.h"
@@ -68,7 +69,7 @@ void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 
 		// use new node in dialog
 		std::string szTypedName = szName + fmt::format( ".[{}]", nNewTemplatesCount - 1 );
-		CReinfPointsTypedTemplateAddDlg dlgAdd( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szTypedName, pMapInfoEditor );
+		CReinfPointsTypedTemplateAddDlg dlgAdd( MainFrameWnd(), &szTypedName, pMapInfoEditor );
 		if ( dlgAdd.DoModal() == IDOK )
 		{
 			// update pDialogData

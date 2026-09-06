@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "ResourceDefines.h"
@@ -147,7 +148,7 @@ void CPCTextFileEditor::OnNew()
 					strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
 					CString strMessage;
 					strMessage.Format( strMessagePattern, szFilePath.c_str() );
-					if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
+					if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
 					{
 						String2File( szNewText, bUnicode, szFilePath, ::GetACP(), false );
 						NText::Reload( szFilePath );

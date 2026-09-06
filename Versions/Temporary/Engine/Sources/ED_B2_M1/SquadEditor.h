@@ -75,7 +75,7 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	// common data memebers
 	CSquadState *pSquadState;
 	//
-	SECControlBar *pwndShortcutBar;
+	IDockPanel *pwndShortcutBar;
 	CDefaultShortcutBar wndShortcutBar;
 	//
 

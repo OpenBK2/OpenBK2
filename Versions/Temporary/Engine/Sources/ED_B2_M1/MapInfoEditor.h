@@ -87,9 +87,9 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	// другие переменные
 	unsigned nMapInfoToolsToolbarID;
 	unsigned nMapInfoViewToolbarID;
-	SECControlBar *pwndMiniMap; // MiniMap docking window
-	SECControlBar *pwndShortcutBar;
-	SECControlBar *pwndMoviesEditor;	// Script MovieEditor docking window
+	IDockPanel *pwndMiniMap; // MiniMap docking window
+	IDockPanel *pwndShortcutBar;
+	IDockPanel *pwndMoviesEditor;	// Script MovieEditor docking window
 	CMiniMapWindow wndMiniMap;
 	CMoviesEditorWindow wndMoviesEditor;
 	CDefaultShortcutBar wndShortcutBar;

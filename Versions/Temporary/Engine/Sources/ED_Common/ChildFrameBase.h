@@ -1,13 +1,14 @@
 #pragma once
 
 #include "MapEditorLib/Interface_ChildFrame.h"
+#include "MapEditorLib/Interface_Widget.h"
 
 #include "ED_Common_export.h"
 
 class ED_COMMON_EXPORT CChildFrameBase : public IChildFrame
 {
 protected:
-	SECWorksheet *pwndChildFrame;
+	IFrameWindow *pwndChildFrame;
 	CWnd *pChildWnd;
 
 public:

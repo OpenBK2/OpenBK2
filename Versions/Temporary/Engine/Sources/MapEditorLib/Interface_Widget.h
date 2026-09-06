@@ -60,6 +60,54 @@ struct IImageList
 };
 
 
+// A dockable panel on the main frame: the minimap, a shortcut bar, the movies
+// editor. Created through IMainFrame::CreateControlBar and then driven by the
+// domain editor that asked for it.
+//
+// IsAlive is here because the editors test ::IsWindow on the handle before
+// destroying it. A panel outlives the pointer to it only in the sense that the
+// pointer stays readable, so this answers whether the thing behind it is still
+// there.
+struct IDockPanel : public IWidget
+{
+	virtual ~IDockPanel() {}
+	// Show tells the frame, so the docking layout is recalculated.
+	// ShowWithoutLayout only shows or hides the panel's own window. The
+	// editors do both -- the toggle commands want the first and the creation
+	// paths used the second -- and they are not interchangeable.
+	virtual void Show( bool bShow ) = 0;
+	virtual void ShowWithoutLayout( bool bShow ) = 0;
+	virtual bool IsVisible() const = 0;
+	virtual bool IsAlive() const = 0;
+	virtual void Destroy() = 0;
+	virtual void Redraw() = 0;
+};
+
+
+// A toolbar on the main frame, looked up by id. Editors only show, hide and
+// query these; the buttons on them are the toolbar manager's business.
+struct IToolBar
+{
+	virtual ~IToolBar() {}
+	virtual void Show( bool bShow ) = 0;
+	virtual bool IsVisible() const = 0;
+};
+
+
+// A document window. Named IFrameWindow and not IChildFrame because
+// Interface_ChildFrame.h already has an IChildFrame and it means something
+// different: a registered child-frame *type*, with Create/Enter/Leave. This is
+// the window itself.
+struct IFrameWindow : public IWidget
+{
+	virtual ~IFrameWindow() {}
+	virtual void Show( bool bShow ) = 0;
+	virtual void Maximize() = 0;
+	virtual void Focus() = 0;
+	virtual void Destroy() = 0;
+};
+
+
 // Packed 0x00BBGGRR, which is what the editor's colour constants already are.
 typedef uint32_t TWidgetColor;
 

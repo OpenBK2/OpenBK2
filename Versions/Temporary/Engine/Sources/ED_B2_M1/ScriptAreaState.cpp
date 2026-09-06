@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -350,7 +351,7 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 
 unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
-	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Area name", "Area name" );
+	CEnterNameDialog enterNameDialog( MainFrameWnd(), "Area name", "Area name" );
 	if ( enterNameDialog.DoModal() == IDOK )
 	{
 		std::string szName; 

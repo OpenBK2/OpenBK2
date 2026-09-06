@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Interface_UserData.h"
+#include "Interface_Widget.h"
 
 #include <cstdint>
 
@@ -49,23 +50,23 @@ struct IMainFrame : public ILogger
 																							unsigned nButtonID,
 																							CTPoint<int> *pLeftBottomPos ) = 0;
 	// Работа с ChildFrame
-	virtual class SECWorksheet* CreateChildFrame( unsigned nResource ) = 0;
-	virtual bool SetChildFrameWindowContents( class SECWorksheet* pwndChildWindow, class CWnd *pwndContents ) = 0;
+	virtual IFrameWindow* CreateChildFrame( unsigned nResource ) = 0;
+	virtual bool SetChildFrameWindowContents( IFrameWindow* pChildWindow, IWidget *pContents ) = 0;
 	// Работа с Docking Window
-	virtual class SECControlBar* CreateControlBar( unsigned *pnID,
-																								 const CString &rstrTitle,
-																								 const unsigned nStyle,
-																								 const unsigned nPlace,
-																								 const float fRate,
-																								 const int nWidth ) = 0;
-	virtual bool SetControlBarWindowContents( class SECControlBar* pwndDockingWindow, class CWnd *pwndContents ) = 0;
+	virtual IDockPanel* CreateControlBar( unsigned *pnID,
+																						const std::string &rszTitle,
+																						const unsigned nStyle,
+																						const unsigned nPlace,
+																						const float fRate,
+																						const int nWidth ) = 0;
+	virtual bool SetControlBarWindowContents( IDockPanel* pDockPanel, IWidget *pContents ) = 0;
 	// Работа с Menu Bar ( 1 - 20 )
 	virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList ) = 0;
 	virtual void ShowMenu( const unsigned nResourceID ) = 0;
 	// Работа с Tool Bar
 	virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID ) = 0;
 	virtual void CreateToolBar( unsigned *pnID,
-															const CString &rstrTitle,
+														const std::string &rszTitle,
 															const unsigned nButtonCount,
 															const unsigned* pButtonIDMap,
 															const uint32_t dwAlignment,
@@ -73,7 +74,7 @@ struct IMainFrame : public ILogger
 															const bool bDocked,
 															const bool bVisible,
 															const bool bMainToolBar ) = 0;
-	virtual class SECCustomToolBar* GetToolBar( unsigned nID ) = 0;
+	virtual IToolBar* GetToolBar( unsigned nID ) = 0;
 	// Работа с Элементами оформления
 	virtual void SetStatusBarText( int nPaneIndex, const std::string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;
@@ -97,12 +98,15 @@ struct IMainFrame : public ILogger
 struct IMainFrameContainer : public CObjectBase
 {
 	enum { tidTypeID = 0x140943C1 };
-	// служебный метод ( не используется )
-	virtual void Set( class CMainFrame* _pMainFrame ) = 0;
+	// Registration, called by the front-end as it creates its main frame.
+	// Both pointers are the same object; they are passed separately so that
+	// this interface needs no concrete type to cross-cast between them.
+	virtual void Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow ) = 0;
 	// получить указатель на стандартный инерфейс IManFrame
 	virtual IMainFrame* Get() = 0;
 	// получить указательна на главный фрейм приложения ( используется в экстренных случаях )
-	virtual class SECWorkbook* GetSECWorkbook() = 0;
+	// The main window, for parenting dialogs, message boxes and popup menus.
+	virtual IWidget* GetMainWindow() = 0;
 };
 
 

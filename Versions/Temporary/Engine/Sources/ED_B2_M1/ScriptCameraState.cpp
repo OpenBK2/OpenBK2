@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "SceneB2/Scene.h"
@@ -522,7 +523,7 @@ bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage,
+	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage,
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -552,7 +553,7 @@ bool CScriptCameraState::AddScriptPlacement()
 	bool bReturn = false;
 
 	std::string szNewCameraName = std::to_string(  GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
-	//CScriptCameraAddDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &szNewCameraName, dialogData.scriptCameras );
+	//CScriptCameraAddDlg dlg( MainFrameWnd(), &szNewCameraName, dialogData.scriptCameras );
 	//if ( dlg.DoModal() == IDOK )
 	{
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -640,7 +641,7 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage,
+	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage,
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( !IsCameraPlacementInDB(nCamera) )
@@ -728,7 +729,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 			NDb::SScriptMovieKeyPos *pActKey = &(actSeq.posKeys[i]);
 			std::string szKeyName = fmt::format( "Movie {}, Key {}", nSeqIndex, i );
       
-			CMovEditorKeySettingsDlg dlg(	Singleton<IMainFrameContainer>()->GetSECWorkbook(), pActKey, &szKeyName );
+			CMovEditorKeySettingsDlg dlg(	MainFrameWnd(), pActKey, &szKeyName );
 			if ( dlg.DoModal() == IDOK )
 			{
 				if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -769,7 +770,7 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( bDeleteWholeSequence || (::MessageBox(Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage,
+	if ( bDeleteWholeSequence || (::MessageBox(MainFrameWnd()->GetSafeHwnd(), strMessage,
 																						 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) )
 	{
 		//const float fMaxDiff = 0.1f;
@@ -1312,7 +1313,7 @@ void CScriptCameraState::ScriptCameraRun( NDb::EScriptCameraRunType eRunType )
 	NI_VERIFY( !(dialogData.scriptCameras.empty()), "CScriptCameraState::ScriptCameraRun - No cameras in scene!\n", return );
 
 	runDialogData.scriptCameras = dialogData.scriptCameras;
-	CScriptCameraRunDlg dlg(	Singleton<IMainFrameContainer>()->GetSECWorkbook(), &runDialogData );
+	CScriptCameraRunDlg dlg(	MainFrameWnd(), &runDialogData );
 
 	if ( dlg.DoModal() == IDOK )
 	{

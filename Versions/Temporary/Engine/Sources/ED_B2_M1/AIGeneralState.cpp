@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -575,7 +576,7 @@ void CAIGeneralPointsState::AddID()
 		return;
 
 	int nNewMobileID = 0;
-	CAIGenMobileDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &nNewMobileID );
+	CAIGenMobileDlg dlg( MainFrameWnd(), &nNewMobileID );
 	if ( dlg.DoModal() == IDOK )
 	{
 		dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.push_back( nNewMobileID );
@@ -696,7 +697,7 @@ void CAIGeneralPointsState::DeletePoint()
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), 
+	if ( ::MessageBox(MainFrameWnd()->GetSafeHwnd(), 
 										strMessage, 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
@@ -734,7 +735,7 @@ void CAIGeneralPointsState::DeleteID()
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), 
+	if ( ::MessageBox(MainFrameWnd()->GetSafeHwnd(), 
 										strMessage, 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
@@ -773,7 +774,7 @@ void CAIGeneralPointsState::DeleteParcel()
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), 
+	if ( ::MessageBox(MainFrameWnd()->GetSafeHwnd(), 
 										strMessage, 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
@@ -808,7 +809,7 @@ void CAIGeneralPointsState::EditParcel()
 {
 	NDb::EParcelType newParcelType = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].eType;
 	float fNewImportance = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].fImportance;
-	CAIGenParcelDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &newParcelType, &fNewImportance );
+	CAIGenParcelDlg dlg( MainFrameWnd(), &newParcelType, &fNewImportance );
 	if ( dlg.DoModal() == IDOK )
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 
 #include "Misc/2Darray.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -51,7 +52,7 @@ void CSquadEditor::Create()
 		pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 	}
 	//
-	Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, editorSettings.bShowShortcutBar, true );
+	pwndShortcutBar->Show( editorSettings.bShowShortcutBar );
 
 	// Создаем стейты редактирования
 	if ( pSquadState == 0 )
@@ -65,7 +66,7 @@ void CSquadEditor::Destroy()
 	if ( pwndShortcutBar != 0 )
 	{
 		editorSettings.bShowShortcutBar = pwndShortcutBar->IsVisible();
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
+		pwndShortcutBar->Show( false );
 	}
 	// Записываем файл с установками (его могли поменять во время работы редактора)
 	{
@@ -156,9 +157,8 @@ void CSquadEditor::ResetGUI( bool bActive )
     editorSettings.bShowShortcutBar = defaults.bShowShortcutBar;
     pUserData->SerializeSettings( editorSettings, "SquadRPGStatsEditor", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
-    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
     if ( pwndShortcutBar )
-        pFrame->ShowControlBar( pwndShortcutBar, bActive && editorSettings.bShowShortcutBar, true );
+        pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
 }
 
 
@@ -169,7 +169,7 @@ void CSquadEditor::CreateControls()
 		CreateControlBar( &nID, "SquadEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_SQUAD_EDITOR_SHORTCUT_PANE_0;
-		if ( wndShortcutBar.Create( pwndShortcutBar, WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
+		if ( wndShortcutBar.Create( ToCWnd( pwndShortcutBar ), WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
 		{
 			// список типов формаций
 			++nID;
@@ -197,9 +197,10 @@ void CSquadEditor::CreateControls()
 			}
 			wndShortcutBar.SelectPane( 0 );
 
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &wndShortcutBar );
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
-			pwndShortcutBar->ShowWindow( SW_SHOW );
+			CWndWidget contentsWidget( &wndShortcutBar );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &contentsWidget );
+			pwndShortcutBar->Show( false );
+			pwndShortcutBar->ShowWithoutLayout( true );
 			wndShortcutBar.ShowWindow( SW_SHOW );
 			wndShortcutBar.SetCommandHandlerID( CHID_SQUAD_STATE, ID_SQUAD_CHANGE_STATE );
 		}
@@ -210,9 +211,9 @@ void CSquadEditor::DestroyControls()
 {
 	if ( pwndShortcutBar )
 	{
-		if ( ::IsWindow( pwndShortcutBar->m_hWnd ) )
+		if ( pwndShortcutBar->IsAlive() )
 		{
-			pwndShortcutBar->DestroyWindow();
+			pwndShortcutBar->Destroy();
 		}
 		delete pwndShortcutBar;
 		pwndShortcutBar = 0;

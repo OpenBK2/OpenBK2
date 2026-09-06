@@ -1,14 +1,16 @@
 #pragma once
 
 #include "Interface_Widget.h"
+#include "Interface_MainFrame.h"
 
 // The MFC front-end's side of the neutral handles in Interface_Widget.h.
 //
 // This header is front-end private: it names MFC, so nothing in the interface
-// layer and nothing in a domain editor should include it. It exists so that the
-// conversion between an IWidget and the CWnd behind it happens in one place,
-// which is where a wrong one can be caught, rather than as a static_cast spread
-// over the call sites.
+// layer should include it. The domain editors do, and legitimately -- they are
+// still full of MFC dialogs and windows themselves. What the interfaces no
+// longer do is require them to be. It exists so that the conversion between an
+// IWidget and the CWnd behind it happens in one place, which is where a wrong
+// one can be caught, rather than as a static_cast spread over the call sites.
 //
 // A second front-end gets its own equivalent of this file and never sees this
 // one. That is the whole point of the split: the interfaces carry the handle,
@@ -52,6 +54,15 @@ inline CWnd* ToCWnd( IWidget *pWidget )
 		return 0;
 	}
 	return static_cast<CWnd*>( pWidget->GetNativeWidget() );
+}
+
+
+// The main window as a CWnd, which is what the forty-odd call sites that used
+// to reach for GetSECWorkbook actually wanted: a parent for a dialog, a
+// message box or a popup menu.
+inline CWnd* MainFrameWnd()
+{
+	return ToCWnd( Singleton<IMainFrameContainer>()->GetMainWindow() );
 }
 
 

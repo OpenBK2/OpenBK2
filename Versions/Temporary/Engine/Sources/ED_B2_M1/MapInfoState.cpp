@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -363,7 +364,7 @@ void CMapInfoState::Enter()
 	//IProgressHook *pProgress = Singleton<IProgressHook>();
 	//if ( pProgress )
 	//{
-	//	pProgress->Create( "Open MapInfo", Singleton<IMainFrameContainer>()->GetSECWorkbook() );
+	//	pProgress->Create( "Open MapInfo", MainFrameWnd() );
 	//	//
 	//	CProgressDlg *pProgressDlg = pProgress->GetProgressDialog();
 	//	if ( pProgressDlg )

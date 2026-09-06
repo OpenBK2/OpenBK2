@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -25,7 +26,7 @@ bool CChildFrameBase::Create()
 
 	if ( pwndChildFrame )
 	{
-		pwndChildFrame->MDIDestroy();
+		pwndChildFrame->Destroy();
 		pwndChildFrame = 0;
 	}
 	//
@@ -33,19 +34,20 @@ bool CChildFrameBase::Create()
 	{
 		if ( pwndChildFrame = pMainFrame->CreateChildFrame( IDR_CHILD_FRAME_0 ) )
 		{
-			pwndChildFrame->ShowWindow( SW_HIDE );
+			pwndChildFrame->Show( false );
 			if ( pChildWnd->Create( 0,
 				0,
 				AFX_WS_DEFAULT_VIEW,
 				CRect( 0, 0, 0, 0 ),
-				pwndChildFrame,
+				ToCWnd( pwndChildFrame ),
 				AFX_IDW_PANE_FIRST,
 				0 ) )
 			{
-				pMainFrame->SetChildFrameWindowContents( pwndChildFrame, pChildWnd );
-				pwndChildFrame->ModifyStyle( WS_SYSMENU, 0 );
-				pwndChildFrame->MDIMaximize();
-				pwndChildFrame->ShowWindow( SW_SHOW );
+				CWndWidget contentsWidget( pChildWnd );
+				pMainFrame->SetChildFrameWindowContents( pwndChildFrame, &contentsWidget );
+				// Maximize drops WS_SYSMENU as well, which is what these two lines did.
+				pwndChildFrame->Maximize();
+				pwndChildFrame->Show( true );
 				//
 			}
 		}
@@ -62,7 +64,7 @@ void CChildFrameBase::Destroy()
 	DebugTrace( "CChildFrameBase::Destroy()" );
 	if ( pwndChildFrame )
 	{
-		pwndChildFrame->MDIDestroy();
+		pwndChildFrame->Destroy();
 		pwndChildFrame = 0;
 	}
 }
@@ -73,7 +75,7 @@ void CChildFrameBase::Enter()
 	DebugTrace( "CChildFrameBase::Enter()" );
 	if ( pwndChildFrame )
 	{
-		pwndChildFrame->SetFocus();
+		pwndChildFrame->Focus();
 	}
 }
 

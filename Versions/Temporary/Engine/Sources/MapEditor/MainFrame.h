@@ -1,5 +1,11 @@
 #pragma once
 
+#include "FrameHandles.h"
+#include "MapEditorLib/MfcWidget.h"
+
+#include <list>
+#include <map>
+
 #include "MapEditorSingleton.h"
 #include "MainFrameParams.h"
 
@@ -24,7 +30,7 @@
 #define DOCKING_WINDOWS_COUNT 3
 
 
-class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
+class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler, public IWidget
 {
 	static const int WM_SECTOOLBARWNDNOTIFY;
 	//
@@ -116,24 +122,36 @@ public:
 	afx_msg void OnHelpAbout();
 	afx_msg void OnUpdateHelpContents( CCmdUI *pCmdUI );
 
+	// IWidget: this frame is what dialogs, message boxes and popup menus are
+	// parented on, and IMainFrameContainer hands it out for that.
+	DECLARE_CWND_WIDGET();
+
+	// Handles handed out through IMainFrame. Never removed: an editor may
+	// still hold one after its window is gone, and IsAlive is how it finds
+	// out. Toolbars are keyed by id because the toolbar manager owns them and
+	// they outlive individual documents.
+	std::list<CDockPanelHandle> dockPanelHandles;
+	std::list<CFrameWindowHandle> frameWindowHandles;
+	std::map<unsigned, CToolBarHandle> toolBarHandles;
+
 	//IMainFrame
 	bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 																			unsigned nButtonID,
 																			CTPoint<int> *pLeftBottomPos );
-	SECWorksheet* CreateChildFrame( unsigned nResource );
-	bool SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, class CWnd *pwndContents );
-	SECControlBar* CreateControlBar( unsigned *pnID,
-																	 const CString &rstrTitle,
+	IFrameWindow* CreateChildFrame( unsigned nResource );
+	bool SetChildFrameWindowContents( IFrameWindow* pChildFrame, IWidget *pContents );
+	IDockPanel* CreateControlBar( unsigned *pnID,
+																	 const std::string &rszTitle,
 																	 const unsigned nStyle,
 																	 const unsigned nPlace,
 																	 const float fRate,
 																	 const int nWidth );
-	bool SetControlBarWindowContents( SECControlBar* _pwndDockingWindow, class CWnd *pwndContents );
+	bool SetControlBarWindowContents( IDockPanel* pDockPanel, IWidget *pContents );
 	bool AddMenuResources( std::vector<unsigned> &rMenuIDList );
 	void ShowMenu( const unsigned nResourceID );
 	bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID );
 	void CreateToolBar( unsigned *pnID,
-											const CString &rstrTitle,
+											const std::string &rszTitle,
 											const unsigned nButtonCount,
 											const unsigned* pButtonIDMap,
 											const uint32_t dwAlignment,
@@ -141,7 +159,7 @@ public:
 											const bool bDocked,
 											const bool bVisible,
 											const bool bMainToolBar );
-	SECCustomToolBar* GetToolBar( unsigned nID );
+	IToolBar* GetToolBar( unsigned nID );
 	void SetStatusBarText( int nPaneIndex, const std::string &szText );
 	void SetWindowTitle( const SSWTParams &rSWTParams );
 	//

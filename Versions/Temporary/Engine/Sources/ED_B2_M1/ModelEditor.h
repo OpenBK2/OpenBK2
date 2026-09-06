@@ -19,7 +19,7 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	OBJECT_NOCOPY_METHODS( CModelEditor );
 
 	unsigned nModelToolbarID;
-	SECControlBar *pwndTool;
+	IDockPanel *pwndTool;
 	CModelWindow modelWindow;
 	bool bPreviousCameraHandleType;
 	float fFOV;

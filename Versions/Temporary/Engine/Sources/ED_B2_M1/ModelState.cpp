@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -82,11 +83,11 @@ void CModelState::Enter()
 		}
 		if ( pModelEditor->pwndTool != 0 )
 		{
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pModelEditor->pwndTool, pModelEditor->editorSettings.bShowTool, true );
+			pModelEditor->pwndTool->Show( pModelEditor->editorSettings.bShowTool );
 		}
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( pModelEditor->nModelToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( pModelEditor->nModelToolbarID ) )
 		{
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, pModelEditor->editorSettings.bShowToolbar, true );
+			pToolbar->Show( pModelEditor->editorSettings.bShowToolbar );
 		}
 		UpdateTerrain();
 		UpdateTime( false );
@@ -119,12 +120,12 @@ void CModelState::Leave()
 		if ( pModelEditor->pwndTool != 0 )
 		{
 			pModelEditor->editorSettings.bShowTool = pModelEditor->pwndTool->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pModelEditor->pwndTool, false, true );
+			pModelEditor->pwndTool->Show( false );
 		}
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( pModelEditor->nModelToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( pModelEditor->nModelToolbarID ) )
 		{
 			pModelEditor->editorSettings.bShowToolbar = pToolbar->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+			pToolbar->Show( false );
 		}
 		SaveCamera( false );
 		UpdateAIGeometry( true );
@@ -584,7 +585,7 @@ void CModelState::SaveCamera( bool bDefaultCamera )
 			AfxSetResourceHandle( theEDB2M1Instance );
 			strMessage.LoadString( IDS_MODEL_SAVE_CAMERA_MESSAGE );
 			AfxSetResourceHandle( AfxGetInstanceHandle() );
-			if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+			if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 			{
 				pCameraPlacement = &( pModelEditor->editorSettings.defaultCamera );
 			}
@@ -661,7 +662,7 @@ void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 		CMenu *pMenu = mainPopupMenu.GetSubMenu( MCM_STATE );
 		if ( pMenu )
 		{
-			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, rMousePoint.x, rMousePoint.y, Singleton<IMainFrameContainer>()->GetSECWorkbook(), 0 );
+			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, rMousePoint.x, rMousePoint.y, MainFrameWnd(), 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
 		mainPopupMenu.DestroyMenu();

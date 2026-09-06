@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -541,7 +542,7 @@ void CUnitStartCmdState::UsrEvtDelCmd( const SUnitStartCmdWindowData &data )
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		commandsList.RemoveCommands( data.selectedCommands );
 		commandsList.UpdateDB( GetMapInfoEditor()->GetViewManipulator() );

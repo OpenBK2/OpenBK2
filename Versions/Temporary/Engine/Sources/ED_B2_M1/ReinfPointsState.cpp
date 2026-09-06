@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -74,7 +75,7 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 	//
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints", nSelectedPlayer );
 		CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();
@@ -710,7 +711,7 @@ bool CReinfPointsState::EditPointTypedTemplate()
 	}
 
 	std::vector<STypedTemplate> vNewTypedTemplate = reinfPoints[nSelectedReinfPoint].typedTemplates;
-	CReinfPointsTypedDlg dlg( Singleton<IMainFrameContainer>()->GetSECWorkbook(), &vNewTypedTemplate, pMapInfoEditor, nSelectedPlayer, nSelectedReinfPoint );
+	CReinfPointsTypedDlg dlg( MainFrameWnd(), &vNewTypedTemplate, pMapInfoEditor, nSelectedPlayer, nSelectedReinfPoint );
 	if ( dlg.DoModal() == IDOK )
 	{
 		reinfPoints[nSelectedReinfPoint].typedTemplates = vNewTypedTemplate;

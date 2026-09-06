@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -621,7 +622,7 @@ void CMoviesEditorWindow::OnBnClickedSettings()
 		const NDb::SScriptMovieSequence &seq = dialogData.scriptMoviesData.scriptMovieSequences[dialogData.nActiveMovie];
 		fNewLength = seq.GetLength();
 	}
-	CMovEditorSettingsDlg dlg(	Singleton<IMainFrameContainer>()->GetSECWorkbook(), &fNewLength );
+	CMovEditorSettingsDlg dlg(	MainFrameWnd(), &fNewLength );
 
 	if ( dlg.DoModal() == IDOK )
 	{
@@ -810,7 +811,7 @@ void CMoviesEditorWindow::OnContextMenu( CWnd *pWnd, CPoint point )
 		CMenu *pMenu = mainPopupMenu.GetSubMenu( MICM_MOVIES_EDITOR );
 		if ( pMenu )
 		{
-			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, Singleton<IMainFrameContainer>()->GetSECWorkbook(), 0 );
+			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, MainFrameWnd(), 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
 		mainPopupMenu.DestroyMenu();

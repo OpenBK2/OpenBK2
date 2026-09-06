@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include <cstdint>
@@ -23,7 +24,7 @@ bool CMapClip::SaveMapClipToDB(  CObjectBaseController *pObjectController ) cons
 	if ( !pFcb )
 		return false;
 
-	CEnterNameDialog enterNameDialog( Singleton<IMainFrameContainer>()->GetSECWorkbook(), "Clip name", "Clip name" );
+	CEnterNameDialog enterNameDialog( MainFrameWnd(), "Clip name", "Clip name" );
 	if ( enterNameDialog.DoModal() != IDOK )
 		return false;
   std::string szClipName;

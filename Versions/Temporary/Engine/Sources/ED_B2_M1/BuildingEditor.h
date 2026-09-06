@@ -33,7 +33,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	std::string szLastTerrainName;
 	std::string szCurrSeason;
 	//
-	SECControlBar *pwndShortcutBar;
+	IDockPanel *pwndShortcutBar;
 	CDefaultShortcutBar wndShortcutBar;
 	//
 	CTPoint<int> terrainSize;

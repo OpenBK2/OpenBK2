@@ -5,6 +5,7 @@
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "WMDefines.h"
 #include "Tree_GDBBrowserBase_Constants.h"
@@ -390,7 +391,7 @@ int CMainFrame::OnCreate( LPCREATESTRUCT pCreateStruct )
 	nDWID = SECControlBar::GetUniqueBarID( this, ID_DW_LOG_WINDOW );
 	//
 	// Создаем постоянные панели в различных редакторах
-	Singleton<IMainFrameContainer>()->Set( this );
+	Singleton<IMainFrameContainer>()->Set( this, this );
 	// Создаем дополнительные Controls
 	for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 	{
@@ -570,7 +571,7 @@ void CMainFrame::OnClose()
 		//
 		mapEditorSingletonApp.RemoveMapFile();
 		//
-		Singleton<IMainFrameContainer>()->Set( 0 );
+		Singleton<IMainFrameContainer>()->Set( 0, 0 );
 		//
 		SECWorkbook::OnClose();
 	}
@@ -1146,17 +1147,24 @@ bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 }
 
 
-SECWorksheet* CMainFrame::CreateChildFrame( unsigned nResource )
+IFrameWindow* CMainFrame::CreateChildFrame( unsigned nResource )
 {
-	return dynamic_cast<SECWorksheet*>( CreateNewChild( RUNTIME_CLASS( CDefaultChildFrame ), nResource, 0, 0 ) );
+	SECWorksheet *pWorksheet = dynamic_cast<SECWorksheet*>( CreateNewChild( RUNTIME_CLASS( CDefaultChildFrame ), nResource, 0, 0 ) );
+	if ( pWorksheet == 0 )
+	{
+		return 0;
+	}
+	frameWindowHandles.push_back( CFrameWindowHandle( pWorksheet ) );
+	return &frameWindowHandles.back();
 }
 
 
-bool CMainFrame::SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, class CWnd *pwndContents )
+bool CMainFrame::SetChildFrameWindowContents( IFrameWindow* pChildFrame, IWidget *pContents )
 {
-	if ( _pwndChildFrame )
+	if ( CFrameWindowHandle *pHandle = static_cast<CFrameWindowHandle*>( pChildFrame ) )
 	{
-		if ( CDefaultChildFrame *pwndChildFrame = checked_cast<CDefaultChildFrame*>( _pwndChildFrame ) )
+		CWnd *pwndContents = ToCWnd( pContents );
+		if ( CDefaultChildFrame *pwndChildFrame = checked_cast<CDefaultChildFrame*>( pHandle->GetWorksheet() ) )
 		{
 			pwndChildFrame->pwndContents = pwndContents;
 			return true;
@@ -1166,12 +1174,12 @@ bool CMainFrame::SetChildFrameWindowContents( SECWorksheet* _pwndChildFrame, cla
 }
 
 
-SECControlBar* CMainFrame::CreateControlBar( unsigned *pnID,
-																						 const CString &rstrTitle,
-																						 const unsigned nStyle,
-																						 const unsigned nPlace,
-																						 const float fRate,
-																						 const int nWidth )
+IDockPanel* CMainFrame::CreateControlBar( unsigned *pnID,
+																						const std::string &rszTitle,
+																						const unsigned nStyle,
+																						const unsigned nPlace,
+																						const float fRate,
+																						const int nWidth )
 {
 	NI_ASSERT( pnID != 0, "CMainFrame::CreateControlBar() pnID == 0" );
 
@@ -1180,7 +1188,7 @@ SECControlBar* CMainFrame::CreateControlBar( unsigned *pnID,
 	//	
 	( *pnID ) = SECControlBar::GetUniqueBarID( this, ( *pnID ) );
 	CDefaultDockingWindow *pwndDefaultDockingWindow = new CDefaultDockingWindow();
-	if ( pwndDefaultDockingWindow->Create( this, rstrTitle, dwDWStyle, dwDWStyleEx, ( *pnID ) ) )
+	if ( pwndDefaultDockingWindow->Create( this, rszTitle.c_str(), dwDWStyle, dwDWStyleEx, ( *pnID ) ) )
 	{
 		pwndDefaultDockingWindow->EnableDocking( nStyle );
 		DockControlBarEx( pwndDefaultDockingWindow,
@@ -1189,7 +1197,8 @@ SECControlBar* CMainFrame::CreateControlBar( unsigned *pnID,
 											0,
 											fRate,
 											nWidth );
-		return pwndDefaultDockingWindow;
+		dockPanelHandles.push_back( CDockPanelHandle( this, pwndDefaultDockingWindow ) );
+		return &dockPanelHandles.back();
 	}
 	else
 	{
@@ -1199,11 +1208,12 @@ SECControlBar* CMainFrame::CreateControlBar( unsigned *pnID,
 }
 
 
-bool CMainFrame::SetControlBarWindowContents( SECControlBar* _pwndDockingWindow, class CWnd *pwndContents )
+bool CMainFrame::SetControlBarWindowContents( IDockPanel* pDockPanel, IWidget *pContents )
 {
-	if ( _pwndDockingWindow )
+	if ( CDockPanelHandle *pHandle = static_cast<CDockPanelHandle*>( pDockPanel ) )
 	{
-		if ( CDefaultDockingWindow *pwndDockingWindow = checked_cast<CDefaultDockingWindow*>( _pwndDockingWindow ) )
+		CWnd *pwndContents = ToCWnd( pContents );
+		if ( CDefaultDockingWindow *pwndDockingWindow = checked_cast<CDefaultDockingWindow*>( pHandle->GetBar() ) )
 		{
 			pwndDockingWindow->pwndContents = pwndContents;
 			return true;
@@ -1337,7 +1347,7 @@ bool CMainFrame::AddToolBarResource( const unsigned nStandartResourceID, const u
 
 
 void CMainFrame::CreateToolBar( unsigned *pnID,
-																const CString &rstrTitle,
+															const std::string &rszTitle,
 																const unsigned nButtonCount,
 																const unsigned* pButtonIDMap,
 																const uint32_t dwAlignment,
@@ -1357,7 +1367,7 @@ void CMainFrame::CreateToolBar( unsigned *pnID,
 		}
 
 		pToolBarMgr->DefineDefaultToolBar( *pnID,
-																			 rstrTitle,
+																			 rszTitle.c_str(),
 																			 nButtonCount,
 																			 const_cast<unsigned*>( pButtonIDMap ),
 																			 dwAlignment,
@@ -1369,11 +1379,21 @@ void CMainFrame::CreateToolBar( unsigned *pnID,
 }
 
 
-SECCustomToolBar* CMainFrame::GetToolBar( unsigned nID )
+IToolBar* CMainFrame::GetToolBar( unsigned nID )
 {
 	if ( SECToolBarManager* pToolBarMgr = static_cast<SECToolBarManager*>( m_pControlBarManager ) )
 	{
-		return pToolBarMgr->ToolBarFromID( nID );
+		if ( SECCustomToolBar *pToolBar = pToolBarMgr->ToolBarFromID( nID ) )
+		{
+			// One handle per id, made on first ask. The manager owns the bars and
+			// they outlive any one document, so the handle can be reused.
+			std::map<unsigned, CToolBarHandle>::iterator posHandle = toolBarHandles.find( nID );
+			if ( posHandle == toolBarHandles.end() )
+			{
+				posHandle = toolBarHandles.insert( std::make_pair( nID, CToolBarHandle( this, pToolBar ) ) ).first;
+			}
+			return &posHandle->second;
+		}
 	}
 	return 0;
 }
@@ -1784,7 +1804,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 				}
 				CString strMessage;
 				strMessage.Format( strMessagePattern, szName.c_str() );
-				const int nButtonPressed = ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+				const int nButtonPressed = ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 				if ( nButtonPressed == IDCANCEL )
 				{
 					return false;
@@ -1795,7 +1815,7 @@ bool CMainFrame::SaveChanges( bool bShowConfirmDialog )
 			{
 				CString strMessagePattern;
 				strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
-				const int nButtonPressed = ::MessageBox( Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd(), strMessagePattern, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+				const int nButtonPressed = ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessagePattern, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 				if ( nButtonPressed == IDCANCEL )
 				{
 					return false;

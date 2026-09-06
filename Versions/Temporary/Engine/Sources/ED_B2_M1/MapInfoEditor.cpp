@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -118,17 +119,16 @@ void CMapInfoEditor::ResetGUI( bool bActive )
     editorSettings.bShowMapInfoViewToolbar = defaults.bShowMapInfoViewToolbar;
     pUserData->SerializeSettings( editorSettings, "MapInfo", SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
 
-    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
     if ( pwndShortcutBar )
-        pFrame->ShowControlBar( pwndShortcutBar, bActive && editorSettings.bShowShortcutBar, true );
+        pwndShortcutBar->Show( bActive && editorSettings.bShowShortcutBar );
     if ( pwndMiniMap )
-        pFrame->ShowControlBar( pwndMiniMap, bActive && editorSettings.bShowMinimapBar, true );
+        pwndMiniMap->Show( bActive && editorSettings.bShowMinimapBar );
     if ( pwndMoviesEditor )
-        pFrame->ShowControlBar( pwndMoviesEditor, bActive && editorSettings.bShowMoviesEditor, true );
+        pwndMoviesEditor->Show( bActive && editorSettings.bShowMoviesEditor );
     if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
-        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowMapInfoToolsToolbar, true );
+        pToolbar->Show( bActive && editorSettings.bShowMapInfoToolsToolbar );
     if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
-        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowMapInfoViewToolbar, true );
+        pToolbar->Show( bActive && editorSettings.bShowMapInfoViewToolbar );
 }
 
 
@@ -149,10 +149,11 @@ void CMapInfoEditor::CreateControls()
 	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
 	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MiniMap", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.2f, 265 ) )
 	{
-		if ( wndMiniMap.Create( pwndMiniMap ) )
+		if ( wndMiniMap.Create( ToCWnd( pwndMiniMap ) ) )
 		{
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMiniMap, &wndMiniMap );
-			pwndMiniMap->ShowWindow( SW_SHOW );
+			CWndWidget contentsWidget( &wndMiniMap );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMiniMap, &contentsWidget );
+			pwndMiniMap->ShowWithoutLayout( true );
 			wndMiniMap.ShowWindow( SW_SHOW );
 		}
 	}
@@ -164,7 +165,7 @@ void CMapInfoEditor::CreateControls()
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "ShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.8f, 265 ) )
 	{
 		nID = ID_MAPINFO_EDITOR_SHORTCUT_PANE_0;
-		if ( wndShortcutBar.Create( pwndShortcutBar, WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
+		if ( wndShortcutBar.Create( ToCWnd( pwndShortcutBar ), WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
 		{
 			++nID;
 
@@ -400,8 +401,9 @@ void CMapInfoEditor::CreateControls()
 			{
 				wndShortcutBar.SelectPane( CMapInfoState::DEFAULT_INPUT_STATE );
 			}
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &wndShortcutBar );
-			pwndShortcutBar->ShowWindow( SW_SHOW );
+			CWndWidget contentsWidget( &wndShortcutBar );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &contentsWidget );
+			pwndShortcutBar->ShowWithoutLayout( true );
 			wndShortcutBar.ShowWindow( SW_SHOW );
 			wndShortcutBar.SetCommandHandlerID( CHID_MAPINFO_STATE, ID_MIS_CHANGE_STATE );
 		}
@@ -414,10 +416,11 @@ void CMapInfoEditor::CreateControls()
 	nID = ID_MOVIES_EDITOR_DW;
 	if ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MoviesEditor", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_BOTTOM, 0.5f, 200 ) )
 	{
-		if ( wndMoviesEditor.Create( pwndMoviesEditor ) )
+		if ( wndMoviesEditor.Create( ToCWnd( pwndMoviesEditor ) ) )
 		{
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor, &wndMoviesEditor );
-			pwndMoviesEditor->ShowWindow( SW_SHOW );
+			CWndWidget contentsWidget( &wndMoviesEditor );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor, &contentsWidget );
+			pwndMoviesEditor->ShowWithoutLayout( true );
 			wndMoviesEditor.ShowWindow( SW_SHOW );
 		}
 	}
@@ -429,7 +432,7 @@ void CMapInfoEditor::CreateControls()
 	strToolbarName.LoadString( IDS_TOOLBAR_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_VIEW, IDT_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoViewToolbarID,
-																													strToolbarName,
+																													strToolbarName.GetString(),
 																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT,
 																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -440,7 +443,7 @@ void CMapInfoEditor::CreateControls()
 	strToolbarName.LoadString( IDS_TOOLBAR_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_TOOLS, IDT_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoToolsToolbarID,
-																													strToolbarName,
+																													strToolbarName.GetString(),
 																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT,
 																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -457,24 +460,24 @@ void CMapInfoEditor::PostCreateControls()
 {
 	if ( pwndShortcutBar != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
+		pwndShortcutBar->Show( false );
 	}
 	if ( pwndMiniMap != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMiniMap, false, true );
+		pwndMiniMap->Show( false );
 	}
 	if ( pwndMoviesEditor != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMoviesEditor, false, true );
+		pwndMoviesEditor->Show( false );
 	}
 
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
 }
 
@@ -483,24 +486,24 @@ void CMapInfoEditor::PreDestroyControls()
 {
 	if ( pwndShortcutBar != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
+		pwndShortcutBar->Show( false );
 	}
 	if ( pwndMiniMap != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMiniMap, false, true );
+		pwndMiniMap->Show( false );
 	}
 	if ( pwndMoviesEditor != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMoviesEditor, false, true );
+		pwndMoviesEditor->Show( false );
 	}
 
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
 }
 
@@ -510,9 +513,9 @@ void CMapInfoEditor::DestroyControls()
 	// разрушаем shortcut docking window 
 	if ( pwndShortcutBar != 0 )
 	{
-		if ( ::IsWindow( pwndShortcutBar->m_hWnd ) )
+		if ( pwndShortcutBar->IsAlive() )
 		{
-			pwndShortcutBar->DestroyWindow();
+			pwndShortcutBar->Destroy();
 		}
 		delete pwndShortcutBar;
 		pwndShortcutBar = 0;
@@ -526,9 +529,9 @@ void CMapInfoEditor::DestroyControls()
 	{
 		if ( pwndMiniMap != 0 )
 		{
-			if ( ::IsWindow( pwndMiniMap->m_hWnd ) )
+			if ( pwndMiniMap->IsAlive() )
 			{
-				pwndMiniMap->DestroyWindow();
+				pwndMiniMap->Destroy();
 			}
 			delete pwndMiniMap;
 			pwndMiniMap = 0;
@@ -542,9 +545,9 @@ void CMapInfoEditor::DestroyControls()
 	{
 		if ( pwndMoviesEditor != 0 )
 		{
-			if ( ::IsWindow( pwndMoviesEditor->m_hWnd ) )
+			if ( pwndMoviesEditor->IsAlive() )
 			{
-				pwndMoviesEditor->DestroyWindow();
+				pwndMoviesEditor->Destroy();
 			}
 			delete pwndMoviesEditor;
 			pwndMoviesEditor = 0;
@@ -567,19 +570,19 @@ void CMapInfoEditor::Create()
 	}
 
 	if ( pwndShortcutBar )
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, editorSettings.bShowShortcutBar, true );
+		pwndShortcutBar->Show( editorSettings.bShowShortcutBar );
 
 	if ( pwndMiniMap )
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMiniMap, editorSettings.bShowMinimapBar, true );
+		pwndMiniMap->Show( editorSettings.bShowMinimapBar );
 	
 	if ( pwndMoviesEditor )
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMoviesEditor, editorSettings.bShowMoviesEditor, true );
+		pwndMoviesEditor->Show( editorSettings.bShowMoviesEditor );
 
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoToolsToolbarID) )
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, editorSettings.bShowMapInfoToolsToolbar, true );
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoToolsToolbarID) )
+		pToolbar->Show( editorSettings.bShowMapInfoToolsToolbar );
 
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoViewToolbarID) )
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, editorSettings.bShowMapInfoViewToolbar, true );
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar(nMapInfoViewToolbarID) )
+		pToolbar->Show( editorSettings.bShowMapInfoViewToolbar );
 
 
 	NHPTimer::STime time = 0;
@@ -601,7 +604,7 @@ void CMapInfoEditor::Destroy()
 {
 	if ( Singleton<IMainFrameContainer>() &&
 			 Singleton<IMainFrameContainer>()->Get() &&
-			 Singleton<IMainFrameContainer>()->GetSECWorkbook() )
+			 MainFrameWnd() )
 	{
 		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
@@ -610,28 +613,28 @@ void CMapInfoEditor::Destroy()
 		if ( pwndShortcutBar )
 		{
 			editorSettings.bShowShortcutBar = pwndShortcutBar->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, false, true );
+			pwndShortcutBar->Show( false );
 		}
 		if ( pwndMiniMap )
 		{
 			editorSettings.bShowMinimapBar = pwndMiniMap->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMiniMap, false, true );
+			pwndMiniMap->Show( false );
 		}
 		if ( pwndMoviesEditor )
 		{
 			editorSettings.bShowMoviesEditor = pwndMoviesEditor->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMoviesEditor, false, true );
+			pwndMoviesEditor->Show( false );
 		}
 
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 		{
 			editorSettings.bShowMapInfoToolsToolbar = pToolbar->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+			pToolbar->Show( false );
 		}
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 		{
 			editorSettings.bShowMapInfoViewToolbar = pToolbar->IsVisible();
-			Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+			pToolbar->Show( false );
 		}
 		// Записываем файл с установками (его могли поменять во время работы редактора)
 		{
@@ -884,10 +887,10 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pwndMiniMap )
 			{
-				pwndMiniMap->Invalidate();
+				pwndMiniMap->Redraw();
 			}
 			//if ( pwndMoviesEditor )
-			//	pwndMoviesEditor->Invalidate();
+			//	pwndMoviesEditor->Redraw();
 			return true;
 		}
 		//
@@ -910,7 +913,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pwndMiniMap != 0 ) 
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMiniMap, !pwndMiniMap->IsVisible(), true );
+				pwndMiniMap->Show( !pwndMiniMap->IsVisible() );
 			}
 			return true;
 		}
@@ -919,7 +922,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pwndMoviesEditor != 0 ) 
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndMoviesEditor, dwData != 0, true );
+				pwndMoviesEditor->Show( dwData != 0 );
 			}
 			return true;
 		}
@@ -928,25 +931,25 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pwndShortcutBar != 0 ) 
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndShortcutBar, !pwndShortcutBar->IsVisible(), true );
+				pwndShortcutBar->Show( !pwndShortcutBar->IsVisible() );
 			}
 			return true;
 		}
 		//
 		case ID_MI_VIEW_VIEW_TOOLBAR:
 		{
-			if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, !pToolbar->IsVisible(), true );
+				pToolbar->Show( !pToolbar->IsVisible() );
 			}
 			return true;
 		}
 		//
 		case ID_MI_VIEW_TOOLS_TOOLBAR:
 		{
-			if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, !pToolbar->IsVisible(), true );
+				pToolbar->Show( !pToolbar->IsVisible() );
 			}
 			return true;
 		}
@@ -1072,7 +1075,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	case ID_MI_VIEW_VIEW_TOOLBAR:
 	{
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoViewToolbarID ) )
 		{
 			( *pbEnable ) = true;
 			( *pbCheck ) = pToolbar->IsVisible();
@@ -1087,7 +1090,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	case ID_MI_VIEW_TOOLS_TOOLBAR:
 	{
-		if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
+		if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nMapInfoToolsToolbarID ) )
 		{
 			( *pbEnable ) = true;
 			( *pbCheck ) = pToolbar->IsVisible();
@@ -2337,7 +2340,9 @@ void CMapInfoEditor::RunGame()
 {
 	if ( !pMapInfo )
 		return;
-	const HWND hwndOwner = Singleton<IMainFrameContainer>()->GetSECWorkbook()->GetSafeHwnd();
+	// IMainFrameContainer hands out a toolkit-neutral IWidget now, not a Stingray
+	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
+	const HWND hwndOwner = MainFrameWnd()->GetSafeHwnd();
 	const auto ReportError = [hwndOwner]( const std::string &message ) {
 		::MessageBox( hwndOwner, message.c_str(), "Start Mission in Game", MB_OK | MB_ICONERROR );
 	};

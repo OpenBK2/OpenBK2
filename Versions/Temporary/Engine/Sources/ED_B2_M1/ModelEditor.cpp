@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -69,11 +70,10 @@ void CModelEditor::ResetGUI( bool bActive )
         saved.bShowToolbar = defaults.bShowToolbar;
         pUserData->SerializeSettings( saved, profile, SUserData::EDITOR_SETTINGS, SUserData::ST_SAVE );
     }
-    SECWorkbook *pFrame = Singleton<IMainFrameContainer>()->GetSECWorkbook();
     if ( pwndTool )
-        pFrame->ShowControlBar( pwndTool, bActive && editorSettings.bShowTool, true );
+        pwndTool->Show( bActive && editorSettings.bShowTool );
     if ( auto *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
-        pFrame->ShowControlBar( pToolbar, bActive && editorSettings.bShowToolbar, true );
+        pToolbar->Show( bActive && editorSettings.bShowToolbar );
 }
 
 
@@ -86,13 +86,14 @@ void CModelEditor::CreateControls()
 	unsigned nID = ID_MODEL_EDITOR_DW;
 	CString strPaneLabel;
 	strPaneLabel.LoadString( theEDB2M1Instance, IDS_MODEL_TOOL_WINDOW_NAME  );
-	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel, CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
+	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel.GetString(), CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
 	{
 		AfxSetResourceHandle( theEDB2M1Instance );
-		modelWindow.Create( CModelWindow::IDD, pwndTool );
+		modelWindow.Create( CModelWindow::IDD, ToCWnd( pwndTool ) );
 		AfxSetResourceHandle( AfxGetInstanceHandle() );
-		Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, &modelWindow );
-		pwndTool->ShowWindow( SW_SHOW );
+		CWndWidget contentsWidget( &modelWindow );
+		Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, &contentsWidget );
+		pwndTool->ShowWithoutLayout( true );
 		modelWindow.ShowWindow( SW_SHOW );
 	}
 	//
@@ -101,7 +102,7 @@ void CModelEditor::CreateControls()
 	strToolbarName.LoadString( IDS_TOOLBAR_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MODEL, IDT_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nModelToolbarID,
-																													strToolbarName,
+																													strToolbarName.GetString(),
 																													TOOLBAR_MODEL_ELEMENTS_COUNT,
 																													TOOLBAR_MODEL_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -117,11 +118,11 @@ void CModelEditor::PostCreateControls()
 {
 	if ( pwndTool != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndTool, false, true );
+		pwndTool->Show( false );
 	}
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
 }
 
@@ -130,11 +131,11 @@ void CModelEditor::PreDestroyControls()
 {
 	if ( pwndTool != 0 )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndTool, false, true );
+		pwndTool->Show( false );
 	}
-	if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+	if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
 	{
-		Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, false, true );
+		pToolbar->Show( false );
 	}
 
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MODEL_EDITOR );
@@ -148,9 +149,9 @@ void CModelEditor::DestroyControls()
 	// разрушаем shortcut docking window 
 	if ( pwndTool != 0 )
 	{
-		if ( ::IsWindow( pwndTool->m_hWnd ) )
+		if ( pwndTool->IsAlive() )
 		{
-			pwndTool->DestroyWindow();
+			pwndTool->Destroy();
 		}
 		delete pwndTool;
 		pwndTool = 0;
@@ -184,7 +185,7 @@ void CModelEditor::Destroy()
 {
 	if ( Singleton<IMainFrameContainer>() &&
 			 Singleton<IMainFrameContainer>()->Get() &&
-			 Singleton<IMainFrameContainer>()->GetSECWorkbook() )
+			 MainFrameWnd() )
 	{
 		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
@@ -211,9 +212,9 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
-			if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pToolbar, !pToolbar->IsVisible(), true );
+				pToolbar->Show( !pToolbar->IsVisible() );
 			}
 			return true;
 		}
@@ -221,7 +222,7 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pwndTool != 0 ) 
 			{
-				Singleton<IMainFrameContainer>()->GetSECWorkbook()->ShowControlBar( pwndTool, !pwndTool->IsVisible(), true );
+				pwndTool->Show( !pwndTool->IsVisible() );
 			}
 		}
 		default:
@@ -239,7 +240,7 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
-			if ( SECCustomToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
+			if ( IToolBar *pToolbar = Singleton<IMainFrameContainer>()->Get()->GetToolBar( nModelToolbarID ) )
 			{
 				( *pbEnable ) = true;
 				( *pbCheck ) = pToolbar->IsVisible();

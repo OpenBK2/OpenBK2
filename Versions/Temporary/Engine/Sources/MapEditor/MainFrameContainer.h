@@ -8,17 +8,18 @@ class CMainFrameLoggerSink;
 class CMainFrameContainer : public IMainFrameContainer
 {
 	OBJECT_NOCOPY_METHODS( CMainFrameContainer );
-	CMainFrame *pMainFrame;
+	IMainFrame *pMainFrame;
+	IWidget *pMainWindow;
 	CObj<CMainFrameLoggerSink> pLoggerSink;
 
 public:
-	CMainFrameContainer() : pMainFrame( 0 ) {}
+	CMainFrameContainer() : pMainFrame( 0 ), pMainWindow( 0 ) {}
 	~CMainFrameContainer() {}
 
 	// IMainFrameContainer
-	void Set( class CMainFrame* _pMainFrame );
-	IMainFrame* Get() { return checked_cast<IMainFrame*>( pMainFrame ); }
-	SECWorkbook* GetSECWorkbook() { return checked_cast<SECWorkbook*>( pMainFrame ); }
+	void Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow );
+	IMainFrame* Get() { return pMainFrame; }
+	IWidget* GetMainWindow() { return pMainWindow; }
 };
 
 
