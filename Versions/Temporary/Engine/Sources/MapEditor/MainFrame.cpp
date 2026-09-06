@@ -21,7 +21,7 @@
 #include "MapEditorApp.h"
 #include "MainFrame.h"
 #include "MapEditorLib/MapEditorModule.h"
-#include "AboutDialog.h"
+#include "AboutView.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/Interface_Progress.h"
@@ -1088,8 +1088,9 @@ void CMainFrame::OnHelpContents()
 
 void CMainFrame::OnHelpAbout() 
 {
-	CAboutDialog aboutDialog( AfxGetMainWnd() );
-	aboutDialog.DoModal();
+	// Which dialog answers is NAbout's business, not the frame's.
+	CWndWidget ownerWidget( AfxGetMainWnd() );
+	NAbout::Run( &ownerWidget );
 }
 
 

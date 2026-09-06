@@ -1,6 +1,8 @@
 project(MapEditor)
 set(SOURCES
     AboutDialog.cpp
+    AboutViewMfc.cpp
+    AboutViewWx.cpp
     BinaryBitFieldDialog.cpp
     BuilderContainer.cpp
     ChildFrameContainer.cpp
@@ -121,4 +123,17 @@ if(BUILD_WX_EDITOR)
 endif()
 
 install(TARGETS MapEditor DESTINATION bin)
+# The application icon as a file, beside the binary that shows it.
+#
+# The .rc compiles it into the resource section as IDR_MAINFRAME, and that is
+# still where the frame and the MFC About box get it. But a resource reached by
+# a numeric id is the one form wx cannot load portably -- and cannot load at all
+# off Windows -- so the wx About box reads this copy and decodes it with
+# NWinImage. Installed rather than copied at build time because it has to sit
+# next to the *installed* executable, which is what wxStandardPaths answers with.
+#
+# Beside the binary rather than at the top of the install like the game's
+# main.ico: that one is game data read through NMainLoop::GetBaseDir(), and an
+# icon belonging to the editor is not.
+install(FILES res/main_frame.ico DESTINATION bin)
 add_version_info(MapEditor)
