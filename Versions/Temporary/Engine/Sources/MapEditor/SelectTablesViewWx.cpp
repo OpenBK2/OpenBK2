@@ -45,7 +45,11 @@ namespace
 		CSelectTablesWxDialog( wxWindow *pParent,
 													 const std::list<std::string> &rTables,
 													 const CTableSet &rSelected )
-			: CWxToolDialog( pParent, wxID_ANY, "Select tables",
+			// "Game Database Tables" is the CAPTION in IDD_CHOOSE_TABLES. The
+			// first pass at this dialog invented "Select tables" from the class
+			// name, which is what NSelectTables::Run is called, not what the
+			// window has ever said.
+			: CWxToolDialog( pParent, wxID_ANY, "Game Database Tables",
 											 wxDefaultPosition, wxSize( 260, 300 ),
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 		{
