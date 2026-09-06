@@ -48,8 +48,9 @@ endif()
 
 # wx as a guest inside the MFC application. OBK2_WITH_WX is what WxHost.h and
 # main.cpp test; wx::wx brings the headers, the import library and WXUSINGDLL.
-# Note there is deliberately no _UNICODE here: this target stays MBCS, the same
-# as every other, so there is one MFC in the process. See cmake/wxwidgets.cmake.
+# Note there is deliberately no UNICODE or _UNICODE here: this target stays
+# MBCS like every other, so there is one MFC in the process. wx does not want
+# either of them. See cmake/wxwidgets.cmake.
 if(BUILD_WX_EDITOR)
     target_compile_definitions(B2_MapEditor PRIVATE OBK2_WITH_WX)
     target_link_libraries(B2_MapEditor PRIVATE wx::wx)

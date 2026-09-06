@@ -140,20 +140,31 @@ set_target_properties(wx::wx PROPERTIES
     # define missing.
     #
     # And *only* that one. This carried UNICODE and _UNICODE at first, on the
-    # assumption that a wide-character wx needs them. It does not, and getting
-    # this wrong in the other direction would have been expensive:
+    # assumption that a wide-character wx needs them. It does not, and there are
+    # three separate switches here that are easy to run together:
     #
-    #   wxUSE_UNICODE lives in wx's own setup.h and decides what wxString and
-    #   wxChar are. It is 1 in this build and nothing here can change it.
-    #   _UNICODE decides Win32 TCHAR mapping in the *consumer's* code and, on
-    #   this project, which MFC is linked -- MFC ships separate MBCS and Unicode
-    #   runtimes and two of them in one process is not a thing that works.
+    #   wxUSE_UNICODE  is wx's own, out of its setup.h. It decides what wxString
+    #                  and wxChar are. It is 1 in this build and nothing on this
+    #                  side can change it.
+    #   UNICODE        is the Win32 one, read by <windows.h>. It decides whether
+    #                  GetMessage means GetMessageA or GetMessageW, and what
+    #                  LPTSTR is. Either can still be called explicitly; this is
+    #                  only the default.
+    #   _UNICODE       is the CRT one, read by <tchar.h>. It decides TCHAR and
+    #                  the _t* functions -- _tcscpy and that family.
     #
-    # The two axes are independent, which was verified rather than reasoned: the
-    # skeleton builds and runs the same either way, still reporting
-    # wxUSE_UNICODE=1 and sizeof(wxChar)=2. So the editor stays MBCS throughout,
-    # a translation unit can include afxwin.h and wx/wx.h together, and none of
-    # this spreads. wxString still has to be converted at the boundary, which is
-    # a conversion and not a compilation mode.
+    # MFC keys off _UNICODE: it is what selects CStringA against CStringW and
+    # what picks the import library, and MFC ships separate MBCS and Unicode
+    # runtimes that must not both be loaded into one process. So defining
+    # _UNICODE to satisfy wx would have quietly asked for the second MFC.
+    #
+    # wx needs none of the three from a consumer, which was verified rather than
+    # reasoned: the skeleton builds and runs identically either way, still
+    # reporting wxUSE_UNICODE=1 and sizeof(wxChar)=2, and the running editor
+    # loads exactly one MFC -- mfc140.dll, the MBCS one -- beside wx. So the
+    # editor stays MBCS throughout, one translation unit can include afxwin.h and
+    # wx/wx.h together, and none of this spreads. wxString still has to be
+    # converted at the boundary, which is a conversion and not a compilation
+    # mode.
     INTERFACE_COMPILE_DEFINITIONS "WXUSINGDLL"
 )

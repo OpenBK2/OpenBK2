@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "WxHost.h"
+#include "WxOwnership.h"
 
 #ifdef OBK2_WITH_WX
 
@@ -20,11 +21,9 @@ namespace NWxHost
 		//   3  + a button
 		//
 		// It is built this way because the first version, which was level 3, died
-		// with an access violation in wxButton::SetDefaultStyle underneath
-		// wxTopLevelWindowMSW::DoRestoreLastFocus, on the WM_ACTIVATE that
-		// arrives through mfc140!_AfxActivationWndProc. Bisecting by rebuilding
-		// three times would have cost three full editor builds; this costs one
-		// and the level is set from outside.
+		// on startup and the layering made it one rebuild to find out that the
+		// contents had nothing to do with it. (They did not: the frame was being
+		// created before wxEntryStart had run. See WxHost.h.)
 		class CProbeFrame : public wxFrame
 		{
 		public:
@@ -42,23 +41,33 @@ namespace NWxHost
 					return;
 				}
 
-				wxPanel *pPanel = new wxPanel( this );
-				wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
-				pSizer->Add( new wxStaticText( pPanel, wxID_ANY,
+				// Every window below is owned by its parent and every sizer by the
+				// window it is set on; see WxOwnership.h for where that is written
+				// down and how it was checked.
+				wxPanel *const pPanel = NWx::Child<wxPanel>( this );
+				wxBoxSizer *const pSizer = new wxBoxSizer( wxVERTICAL );
+
+				pSizer->Add( NWx::Child<wxStaticText>( pPanel, wxID_ANY,
 					"A wxWidgets window inside the MFC editor process.\n"
 					"MFC owns the message loop; wx is pumped from its idle." ),
 					wxSizerFlags().Border( wxALL, 12 ) );
-				pSizer->Add( new wxStaticLine( pPanel ), wxSizerFlags().Expand() );
+				pSizer->Add( NWx::Child<wxStaticLine>( pPanel ), wxSizerFlags().Expand() );
 
 				if ( nLevel >= 3 )
 				{
 					// A control that only works if events are being delivered,
 					// which is the half of this a screenshot cannot show.
-					wxButton *pButton = new wxButton( pPanel, wxID_ANY, "Click me" );
-					pButton->Bind( wxEVT_BUTTON, &CProbeFrame::OnClicked, this );
+					//
+					// Kept in a named pointer and used after the Add, which is
+					// legal: a sizer does not take ownership of a window and does
+					// not outlive one either way.
+					wxButton *const pButton = NWx::Child<wxButton>( pPanel, wxID_ANY, "Click me" );
 					pSizer->Add( pButton, wxSizerFlags().Border( wxALL, 12 ) );
+					pButton->Bind( wxEVT_BUTTON, &CProbeFrame::OnClicked, this );
 				}
 
+				// SetSizer takes ownership of pSizer, which is why that one is a
+				// bare new: there is no parent to name it after.
 				pPanel->SetSizer( pSizer );
 			}
 
@@ -71,6 +80,11 @@ namespace NWxHost
 
 			int nClicks = 0;
 		};
+
+		// Weak on purpose. wx owns the frame and destroys it when it is closed;
+		// this goes null at that moment, so "is the probe still up" is a question
+		// with an answer rather than a stale pointer.
+		wxWeakRef<CProbeFrame> s_pProbeFrame;
 	}
 
 
@@ -82,8 +96,14 @@ namespace NWxHost
 			return;
 		}
 		const int nLevel = std::atoi( pszProbe );
-		// Owned by wx once shown: a wxFrame deletes itself when destroyed.
-		( new CProbeFrame( nLevel > 0 ? nLevel : 1 ) )->Show( true );
+		s_pProbeFrame = NWx::TopLevel<CProbeFrame>( nLevel > 0 ? nLevel : 1 );
+		s_pProbeFrame->Show( true );
+	}
+
+
+	bool IsProbeFrameOpen()
+	{
+		return s_pProbeFrame != nullptr;
 	}
 }
 

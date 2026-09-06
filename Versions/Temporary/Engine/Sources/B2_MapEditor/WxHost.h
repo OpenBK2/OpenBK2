@@ -15,12 +15,15 @@
 // wxAppWithMFC for the wxApp side -- so this is wx's own supported arrangement
 // rather than something invented here.
 //
-// The reason it can be in the same translation unit as MFC at all: wx does not
-// need _UNICODE. wxUSE_UNICODE is wx's own, out of its setup.h, and decides what
-// wxString is; _UNICODE is Win32's and decides TCHAR mapping and which MFC
-// runtime is linked. Defining it to satisfy wx would have quietly asked for the
-// Unicode MFC alongside the MBCS one the rest of the editor uses. See
-// cmake/wxwidgets.cmake.
+// The reason it can be in the same translation unit as MFC at all: wx needs
+// neither UNICODE nor _UNICODE from a consumer. Three different switches are
+// easy to run together here -- wxUSE_UNICODE is wx's own and decides what
+// wxString is, UNICODE is Win32's and picks GetMessageA against GetMessageW,
+// _UNICODE is the CRT's and decides TCHAR. MFC keys off _UNICODE, which is what
+// selects CStringA against CStringW and which MFC import library is used, and
+// MFC's MBCS and Unicode runtimes must not both load into one process. Defining
+// it to satisfy wx would have asked for the second one. It is not defined, and
+// the running editor loads exactly one MFC. See cmake/wxwidgets.cmake.
 
 #ifdef OBK2_WITH_WX
 
@@ -34,6 +37,10 @@ namespace NWxHost
 	// Declared before the class that calls it; defined in WxHost.cpp. See the
 	// comment on it further down.
 	void ShowProbeFrameIfAsked();
+	// Whether the probe frame is still up. Answerable rather than assumed,
+	// because the frame is held by a wxWeakRef that goes null when wx destroys
+	// it -- see WxOwnership.h.
+	bool IsProbeFrameOpen();
 
 	// The wxApp for a process whose message loop belongs to MFC. wxAppWithMFC
 	// redirects the two things a wxApp would otherwise do to its own event loop
