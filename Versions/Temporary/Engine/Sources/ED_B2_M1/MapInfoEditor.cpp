@@ -37,7 +37,7 @@
 #include "HeightWindowV3.h"
 #include "ReinfPointsView.h"
 #include "ScriptCameraWindow.h"
-#include "AIGeneralWindow.h"
+#include "AIGeneralView.h"
 
 //#include "MoviesEditorWindow.h"
 
@@ -280,11 +280,10 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
 				}						
 				// ai general
-				if ( CAIGeneralPointsWindow *pDialog = p3DTabWindow->AddNewTab( static_cast<CAIGeneralPointsWindow*>(0)) )
+				// Which toolkit draws this palette is NAIGeneralView's business,
+				// not the editor's.
+				if ( CWnd *pDialog = NAIGeneralView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CAIGeneralPointsWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_AIGENERAL] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

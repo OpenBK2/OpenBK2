@@ -2,81 +2,9 @@
 
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
+#include "AIGeneralData.h"
 
 #include <cstdint>
-
-struct SAIGeneralPointsWindowData
-{
-	struct SAIPlayerInfo
-	{
-		struct SAIParcel : public NDb::SAIGeneralParcel
-		{
-			int nCurrentPoint;
-			SAIParcel()
-			{
-				NDb::SAIGeneralParcel();
-				Clear();
-			}
-			void Clear()
-			{
-				nCurrentPoint = -1;
-			}
-		};
-
-		std::vector<int> mobileScriptIDs;
-		std::vector<SAIParcel> parcels;
-		int nCurrentID;
-		int nCurrentParcel;
-		//
-		SAIPlayerInfo()
-		{
-			Clear();
-		}
-		void Clear()
-		{
-			mobileScriptIDs.clear();
-			parcels.clear();
-			nCurrentID = 0;
-			nCurrentParcel = 0;
-		}
-	};
-	//
-	enum EAIGenPointsLastAction
-	{
-		AIGP_UNKNOWN,
-		AIGP_NO_ACTIONS,
-		AIGP_ID_ADD,
-		AIGP_ID_DEL,
-		AIGP_ID_JUMP,
-		AIGP_PARCEL_ADD,
-		AIGP_PARCEL_DEL,
-		AIGP_PARCEL_JUMP,
-		AIGP_PARCEL_EDIT,
-		AIGP_PLAYER_JUMP
-	};
-
-	std::vector<SAIPlayerInfo> players;
-	int nCurrentPlayer;
-	EAIGenPointsLastAction eLastAction;
-
-	SAIGeneralPointsWindowData()
-	{
-		Clear();
-		nCurrentPlayer = 0;
-	}
-	void Clear()
-	{
-		players.clear();
-	}
-	//
-	int CurrentPlayer() { return nCurrentPlayer; }
-	int CurrentParcel() { return players[CurrentPlayer()].nCurrentParcel; }
-	int CurrentID() { return players[CurrentPlayer()].nCurrentID; }
-	int CurrentPoint() { return players[CurrentPlayer()].parcels[CurrentParcel()].nCurrentPoint; }
-};
-
 
 //
 //
@@ -84,7 +12,7 @@ struct SAIGeneralPointsWindowData
 //
 //
 
-class CAIGeneralPointsWindow : public CResizeDialog, public ICommandHandler
+class CAIGeneralPointsWindow : public CResizeDialog, public CAIGeneralPointsCommands
 {
 	bool bIsDataSetting;
 	SAIGeneralPointsWindowData::EAIGenPointsLastAction eLastAction;
@@ -101,11 +29,14 @@ class CAIGeneralPointsWindow : public CResizeDialog, public ICommandHandler
 	DECLARE_RESIZE_DLG_WND_COMMON_METHODS( CAIGeneralPointsWindowData )
 
 	// CScriptAreaWindow
-	void GetDialogData( SAIGeneralPointsWindowData *pData );
-	void SetDialogData( const SAIGeneralPointsWindowData *pData );
 	void SetLastAction( const SAIGeneralPointsWindowData::EAIGenPointsLastAction eAction ) { eLastAction = eAction; }
 
 public:
+	// CPaletteCommands. Public now because the dispatch that calls them is on
+	// the shared base rather than on this class.
+	virtual void GetDialogData( SAIGeneralPointsWindowData *pData );
+	virtual void SetDialogData( const SAIGeneralPointsWindowData *pData );
+
 	enum { IDD = IDD_TAB_MI_AIGENERAL };
 	//
 	CAIGeneralPointsWindow( CWnd* pParentWindow = 0 );
@@ -116,9 +47,8 @@ public:
 	void OnOK() {}
 	void OnCancel() {}
 
-	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// HandleCommand and UpdateCommand come from CPaletteCommands, which
+	// dispatches them to the two methods above.
 	virtual void NotifyHandler();
 	void NotifyHandler( SAIGeneralPointsWindowData::EAIGenPointsLastAction eAction );
 

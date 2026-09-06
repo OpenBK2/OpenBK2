@@ -73,6 +73,7 @@ MIGRATED = {
     "CFormationWindow": "ED_B2_M1/FormationViewWx.cpp (NFormationView::Create)",
     "CUnitStartCmdWindow": "ED_B2_M1/UnitStartCmdViewWx.cpp (NUnitStartCmdView::Create)",
     "CReinfPointsWindow": "ED_B2_M1/ReinfPointsViewWx.cpp (NReinfPointsView::Create)",
+    "CAIGeneralPointsWindow": "ED_B2_M1/AIGeneralViewWx.cpp (NAIGeneralView::Create)",
 }
 
 

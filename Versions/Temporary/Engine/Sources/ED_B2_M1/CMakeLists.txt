@@ -6,6 +6,8 @@ set(SOURCES
     AdvClipboardWindow.cpp
     AIGeneralState.cpp
     AIGeneralTypes.cpp
+    AIGeneralViewMfc.cpp
+    AIGeneralViewWx.cpp
     AIGeneralWindow.cpp
     AIGenMobileIDDlg.cpp
     AIGenParcelDlg.cpp

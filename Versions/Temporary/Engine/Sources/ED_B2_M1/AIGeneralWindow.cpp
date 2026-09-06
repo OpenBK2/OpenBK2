@@ -107,52 +107,8 @@ BOOL CAIGeneralPointsWindow::OnInitDialog()
 }
 
 
-bool CAIGeneralPointsWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SAIGeneralPointsWindowData *pData = reinterpret_cast<SAIGeneralPointsWindowData*>( dwData );
-	//
-	NI_ASSERT( pData, "CAIGeneralPointsWindow::HandleCommand(): dwData == 0" );
-	if ( !pData )
-		return false;
-	//
-	switch ( nCommandID )
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		break;
-	case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-		break;
-	}
-
-	return false;
-}
-
-
-bool CAIGeneralPointsWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CAIGeneralPointsWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-
-	return false;
-}
+// HandleCommand and UpdateCommand are CPaletteCommands' now, shared with the
+// wx palette; see PaletteCommands.h. The null check they had is there too.
 
 
 void CAIGeneralPointsWindow::NotifyHandler()
