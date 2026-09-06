@@ -4,6 +4,7 @@
 #include "Tools_Registry.h"
 #include "Interface_UserData.h"
 
+#include "DialogState.h"
 #include "ResizeDialog.h"
 #include "ShellFont.h"
 
@@ -18,24 +19,8 @@ BEGIN_MESSAGE_MAP( CResizeDialog, CDialog )
 END_MESSAGE_MAP()
 
 
-int CResizeDialog::SOptions::operator&( IBinSaver &bs )
-{
-	bs.Add( 1, &rect );	
-	bs.Add( 2, &nParameters );	
-	bs.Add( 3, &szParameters );	
-	bs.Add( 4, &fParameters );
-	return 0;
-}
-
-
-int CResizeDialog::SOptions::operator&( IXmlSaver &xs )
-{
-	xs.Add( "Rect", &rect );	
-	xs.Add( "IntParameterss", &nParameters );	
-	xs.Add( "StringParameters", &szParameters );	
-	xs.Add( "FloatParameters", &fParameters );
-	return 0;
-}
+// SOptions' serialization lives in DialogState.cpp now, beside the struct,
+// so that the wx dialogs write the same format from the same code.
 
 
 CResizeDialog::CResizeDialog( unsigned nIDTemplate, CWnd* pParent )
@@ -355,10 +340,7 @@ void CResizeDialog::LoadResizeDialogOptions()
 	{
 		std::string szLabel;
 		GetXMLFilePath( &szLabel );
-		if ( !szLabel.empty() )
-		{
-			LoadXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + RESIZE_DIALOG_OPTIONS_FILE_NAME + szLabel, ".xml", szLabel, resizeDialogOptions );
-		}
+		NDialogState::Load( szLabel, &resizeDialogOptions );
 	}
 }
 	
@@ -398,8 +380,7 @@ void CResizeDialog::SaveResizeDialogOptions()
 	{
 		std::string szLabel;
 		GetXMLFilePath( &szLabel );
-		if ( !szLabel.empty() )
-			SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + RESIZE_DIALOG_OPTIONS_FILE_NAME + szLabel, ".xml", szLabel, resizeDialogOptions );
+		NDialogState::Save( szLabel, &resizeDialogOptions );
 	}
 }
 

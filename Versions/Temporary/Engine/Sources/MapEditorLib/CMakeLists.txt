@@ -18,6 +18,7 @@ set(SOURCES
     DefaultShortcutBar.cpp
     DefaultTabWindow.cpp
     DefaultView.cpp
+    DialogState.cpp
     DefaultWindow.cpp
     EditorBase.cpp
     EditorFactory.cpp

@@ -4,6 +4,7 @@
 
 #ifdef OBK2_WITH_WX
 
+#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -33,9 +34,15 @@
 
 namespace
 {
+	// The same label COpenMODDialog::GetXMLFilePath answers with, so both
+	// implementations read and write Editor/ResizeDialogStyles/COpenMODDialog.xml
+	// and a user switching between them keeps their remembered choice and size.
+	const char *const PSZ_STATE_NAME = "COpenMODDialog";
+
 	class COpenModWxDialog : public wxDialog
 	{
 		const std::vector<NMOD::SMOD> &rModList;
+		SDialogState dialogState;
 		// The path of the MOD already attached, if any. Choosing it again is what
 		// the MFC version disables OK for, and that rule is kept.
 		NFile::CFilePath szAttachedPath;
@@ -72,7 +79,15 @@ namespace
 
 			pSizer->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Name:" ),
 									 wxSizerFlags().Border( wxLEFT | wxRIGHT | wxTOP, 8 ) );
-			pNames = NWx::Child<wxChoice>( this, wxID_ANY );
+			// wxCB_SORT because the MFC template says CBS_SORT: the names are shown
+			// in alphabetical order there, and a migrated dialog that listed them
+			// in a different order would be a visible difference for no reason.
+			//
+			// Sorting means the displayed position is not the modList index, so
+			// the index travels as client data exactly the way MFC carries it in
+			// GetItemData. The stored parameter is the modList index in both.
+			pNames = NWx::Child<wxChoice>( this, wxID_ANY, wxDefaultPosition,
+																		 wxDefaultSize, 0, nullptr, wxCB_SORT );
 			pSizer->Add( pNames, wxSizerFlags().Expand().Border( wxLEFT | wxRIGHT, 8 ) );
 
 			pSizer->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Description:" ),
@@ -90,17 +105,67 @@ namespace
 			for ( size_t nIndex = 0; nIndex < rModList.size(); ++nIndex )
 			{
 				// Straight in: wszName is already wide and so is wxString.
-				pNames->Append( wxString( rModList[nIndex].wszName ) );
+				// The client data is the index into rModList, which is what the
+				// stored parameter means and what GetMod needs back.
+				pNames->Append( wxString( rModList[nIndex].wszName ),
+												reinterpret_cast<void*>( static_cast<uintptr_t>( nIndex ) ) );
 			}
 
 			pNames->Bind( wxEVT_CHOICE, &COpenModWxDialog::OnNameChosen, this );
+
+			// What the dialog remembered last time: the chosen MOD in parameter 0,
+			// and its own size and position. Both come from the file CResizeDialog
+			// wrote, which is the point of sharing the format.
+			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
+			const int nRemembered = dialogState.GetIntParameter( 0, -1 );
+			if ( nRemembered >= 0 && nRemembered < (int)rModList.size() )
+			{
+				// Find the sorted position carrying that modList index, which is
+				// the loop SetComboBoxEditParameters does over GetItemData.
+				for ( unsigned nPos = 0; nPos < pNames->GetCount(); ++nPos )
+				{
+					if ( (int)reinterpret_cast<uintptr_t>( pNames->GetClientData( nPos ) ) == nRemembered )
+					{
+						pNames->SetSelection( nPos );
+						break;
+					}
+				}
+			}
+			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
+			{
+				SetSize( dialogState.rect.left, dialogState.rect.top,
+								 dialogState.rect.Width(), dialogState.rect.Height() );
+			}
 			UpdateControls();
 		}
 
+		// Called on the way out, whichever button was used: where the dialog
+		// ended up is worth remembering even when the answer was Cancel, which
+		// is how CResizeDialog behaved too.
+		void SaveState()
+		{
+			// left+width, not GetRight(): wx's GetRight() is the last pixel inside
+			// the rectangle and MFC's right is one past it. Writing GetRight() puts
+			// a 500x400 dialog back as 499x399, and it shrinks by a pixel in each
+			// direction every time it is opened and closed.
+			const wxRect placement = GetRect();
+			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
+																			placement.GetLeft() + placement.GetWidth(),
+																			placement.GetTop() + placement.GetHeight() );
+			dialogState.SetIntParameter( 0, GetSelectedIndex() );
+			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+		}
+
+		// The modList index, not the position on screen. They differ because the
+		// list is sorted.
 		int GetSelectedIndex() const
 		{
 			const int nSelection = pNames->GetSelection();
-			return nSelection == wxNOT_FOUND ? -1 : nSelection;
+			if ( nSelection == wxNOT_FOUND )
+			{
+				return -1;
+			}
+			return (int)reinterpret_cast<uintptr_t>( pNames->GetClientData( nSelection ) );
 		}
 
 		bool GetMod( NMOD::SMOD *pMod ) const
@@ -165,11 +230,9 @@ namespace NOpenMod
 		NMOD::GetAllMODs( &modList );
 
 		COpenModWxDialog dialog( nullptr, modList );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
-		{
-			return false;
-		}
-		return dialog.GetMod( pMod );
+		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		dialog.SaveState();
+		return bAccepted && dialog.GetMod( pMod );
 	}
 }
 

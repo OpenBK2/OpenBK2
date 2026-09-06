@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+#include "DialogState.h"
 #include "MapEditorLib_export.h"
 
 #define DECLARE_RESIZE_DLG_WND_COMMON_METHODS( className )														\
@@ -23,17 +24,11 @@ class MAPEDITORLIB_EXPORT CResizeDialog : public CDialog
 		float fVerResizeRatio;
 	};
 
-	struct SOptions
-	{
-		CTRect<int> rect;
-		std::vector<int> nParameters;
-		std::vector<std::string> szParameters;
-		std::vector<float> fParameters;
-
-		SOptions() : rect( 0, 0, 0, 0 ) {}
-		virtual int operator&( IBinSaver &bs );
-		virtual int operator&( IXmlSaver &xs );
-	};
+	// Moved to DialogState.h, so that the wx dialogs read and write the same
+	// on-disk format from the same struct rather than a second copy of it. The
+	// nested name is kept: about a dozen dialogs say SOptions or
+	// resizeDialogOptions and none of them had to change.
+	typedef SDialogState SOptions;
 
 	std::unordered_map<unsigned, SControlStyle> resizeDialogControlStyles;
 	CTPoint<int> resizeDialogOriginalSize;
