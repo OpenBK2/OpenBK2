@@ -3,56 +3,12 @@
 #include "ResourceDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/ResizeDialog.h"
-#include "Stats_B2_M1/DBMapInfo.h"
-#include "libdb/Manipulator.h"
+// SScriptAreaWindowData and CScriptAreaCommands moved here: the wx palette
+// needs the struct without MFC, and the state was including this dialog header
+// to get it.
+#include "ScriptAreaView.h"
 
 #include <cstdint>
-
-//
-//
-//		SCRIPT AREA WINDOW DATA
-//
-//
-
-struct SScriptAreaWindowData
-{
-	NDb::EScriptAreaTypes eAreaType;	// какая радио-кнопка выбрана в диалоге
-	//
-	struct SScriptArea	// данные для создания row в списке областей
-	{
-		std::string szName;
-		int nScriptAreaID;
-		NDb::EScriptAreaTypes eType;
-		//
-		SScriptArea() : nScriptAreaID( INVALID_NODE_ID ), eType( NDb::EAT_CIRCLE ) {}
-	};
-	std::vector<SScriptArea> scriptAreaList;				// содержимое лист-контрола
-	std::vector<unsigned> selectedScriptAreaIDList;		// ID поселекченных областей
-	//
-	enum EChangeMask	// что изменилось ( GET ) или что нужно изменить в диалоге ( SET )
-	{
-		CHANGE_NONE				= 0x00000000,
-		CHANGE_AREAS			= 0x00000001,	// обновить список областей ( SET )
-		CHANGE_SELECTION	= 0x00000002,	// обновить selection ( GET+SET )
-		CHANGE_DEL_SEL		= 0x00000004,	// удалить выделенные области ( GET )
-		CHANGE_AREA_TYPE	= 0x00000008,	// какая радио-кнопка выбрана в диалоге ( GET + SET )
-		CHANGE_SET_ALL		= ( CHANGE_AREAS | CHANGE_SELECTION | CHANGE_AREA_TYPE ),
-	};
-	EChangeMask eChangeMask; 
-	//
-	SScriptAreaWindowData()
-	{
-		Clear();
-	}
-	//
-	void Clear()
-	{
-		eAreaType = NDb::EAT_CIRCLE;
-		scriptAreaList.clear();
-		selectedScriptAreaIDList.clear();
-		eChangeMask = CHANGE_NONE;
-	}
-};
 
 //
 //
@@ -60,7 +16,7 @@ struct SScriptAreaWindowData
 //
 //
 
-class CScriptAreaWindow : public CResizeDialog, public ICommandHandler
+class CScriptAreaWindow : public CResizeDialog, public CScriptAreaCommands
 {
 	// controls
 	CButton rbnCircle;
@@ -72,9 +28,6 @@ class CScriptAreaWindow : public CResizeDialog, public ICommandHandler
 
 	bool IsDrawGripper() { return false; }
 	//
-	// CScriptAreaWindow
-	void GetDialogData( SScriptAreaWindowData *pData );
-	void SetDialogData( const SScriptAreaWindowData *pData );
 	void NotifyHandler();
 	void UpdateControls();
 
@@ -90,9 +43,13 @@ public:
 	virtual void OnOK() {}
 	virtual void OnCancel() {}
 
-	// ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	//	CScriptAreaCommands
+	//
+	// The dispatch itself is inherited: this palette answers the two dialog-data
+	// commands and nothing else, so there is no HandleCommand or UpdateCommand
+	// here at all.
+	virtual void GetDialogData( SScriptAreaWindowData *pData );
+	virtual void SetDialogData( const SScriptAreaWindowData *pData );
 
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult );

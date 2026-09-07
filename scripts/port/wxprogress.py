@@ -78,6 +78,7 @@ MIGRATED = {
     "CHeightWindowV3": "ED_B2_M1/HeightViewV3Wx.cpp (NHeightViewV3::CreateWx)",
     "CMapObjectWindow": "ED_B2_M1/MapObjectViewWx.cpp (NMapObjectView::CreateWx)",
     "CVSOWindow": "ED_B2_M1/VSOViewWx.cpp (NVSOView::CreateWx)",
+    "CScriptAreaWindow": "ED_B2_M1/ScriptAreaViewWx.cpp (NScriptAreaView::CreateWx)",
 }
 
 

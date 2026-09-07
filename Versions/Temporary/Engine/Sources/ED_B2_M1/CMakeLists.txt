@@ -143,6 +143,8 @@ set(SOURCES
     RiverState.cpp
     RoadState.cpp
     ScriptAreaState.cpp
+    ScriptAreaViewMfc.cpp
+    ScriptAreaViewWx.cpp
     ScriptAreaWindow.cpp
     ScriptCameraAddDlg.cpp
     ScriptCameraEditorData.cpp

@@ -27,7 +27,7 @@
 #include "EditorMethods.h"
 
 // Docking Windows
-#include "ScriptAreaWindow.h"
+#include "ScriptAreaView.h"
 #include "CameraPositionView.h"
 #include "UnitStartCmdView.h"
 #include "MapObjectView.h"
@@ -317,11 +317,10 @@ void CMapInfoEditor::CreateControls()
 			{
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 				// script area
-				if ( CScriptAreaWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CScriptAreaWindow*>(0)) )
+				// Which toolkit draws this palette is NScriptAreaView's business,
+				// not the editor's.
+				if ( CWnd *pDialog = NScriptAreaView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CScriptAreaWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_AREAS] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

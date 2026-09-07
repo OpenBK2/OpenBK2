@@ -94,52 +94,9 @@ void CScriptAreaWindow::OnItemchangedAreaList( NMHDR* pNMHDR, LRESULT* pResult )
 }
 
 
-bool CScriptAreaWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SScriptAreaWindowData *pData = reinterpret_cast<SScriptAreaWindowData*>( dwData );
-	//
-	NI_ASSERT( pData, "CScriptAreaWindow::HandleCommand(): dwData == 0" );
-	if ( !pData )
-		return false;
-	//
-	switch ( nCommandID )
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		break;
-	case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-		break;
-	}
-	//
-	return false;
-}
-
-
-bool CScriptAreaWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CScriptAreaWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CScriptAreaWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-	//
-	return false;
-}
+// HandleCommand and UpdateCommand were the same switch every palette wrote out;
+// they are CPaletteCommands' now, inherited whole, because this palette answers
+// nothing beyond the dialog-data pair.
 
 
 void CScriptAreaWindow::OnDestroy()

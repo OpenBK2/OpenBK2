@@ -2,7 +2,9 @@
 
 #include "PolygonState.h"
 #include "MapInfoEditor.h"
-#include "ScriptAreaWindow.h"
+// SScriptAreaWindowData, which is all this needed from the palette. It used to
+// include ScriptAreaWindow.h and take an MFC dialog class with it.
+#include "ScriptAreaView.h"
 #include "MapEditorLib/Tools_IndexCollector.h"
 #include "MapEditorLib/Tools_FreeIDCollector.h"
 
