@@ -119,9 +119,6 @@
 #define ID_MIVSO_SWITCH_MULTI_STATE									3512
 #define ID_MIVSO_ENABLE_HEIGHT											3513
 //
-//	CAdvClipboardState and CAdvClipboardWindow commands
-#define ID_ADV_CLIPBOARD_WINDOW_CHANGE_STATE				3550
-//
 //	CReinfPointsState and CReinfPointsWindow commands
 #define ID_REINF_POINTS_WINDOW_CHANGE_STATE					3560
 #define ID_REINF_POINTS_WINDOW_ADD									3561
@@ -207,7 +204,6 @@
 #define IDS_IS_OBJECT_LABEL													14001
 #define IDS_IS_GAMEPLAY_LABEL												14002
 #define IDS_IS_SCRIPT_LABEL													14003
-#define IDS_IS_ADVANCED_LABEL												14004
 //
 #define IDS_TERRAIN_ISS_TILE_LABEL									14010
 #define IDS_TERRAIN_ISS_HEIGHT_LABEL								14011
@@ -225,8 +221,6 @@
 //
 #define IDS_SCRIPT_ISS_SCRIPT_AREAS_LABEL						14040
 #define IDS_SCRIPT_ISS_SCRIPT_MOVIES_LABEL					14041
-//
-#define IDS_ADV_ISS_CLIPBOARD												14050
 
 #define IDS_SMOKE_POINTS														14060
 #define IDS_ENTRANCE_POINTS													14061
@@ -390,13 +384,6 @@
 #define IDC_COMBO_PLAYER														24151
 #define IDC_LIST_UNIT_TYPE													24152
 #define IDC_CHECK_SELECTION													24153
-//
-#define IDD_TAB_MI_ADV_CLIPBOARD										24160
-#define IDC_BUTTON_COPY															24161
-#define IDC_BUTTON_PASTE														24162
-#define IDC_BUTTON_SAVE_CLIP												24163
-#define IDC_LIST_CLIPS															24164
-#define IDC_BUTTON_LOAD_CLIP												24165
 //
 #define IDD_TAB_MI_REINF_POINTS											24170
 #define IDC_LIST_REINF_POINTS												24171

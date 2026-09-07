@@ -2,8 +2,6 @@ project(ED_B2_M1)
 set(SOURCES
     AckExcelReader.cpp
     AckSetBuilder.cpp
-    AdvClipboardState.cpp
-    AdvClipboardWindow.cpp
     AIGeneralState.cpp
     AIGeneralTypes.cpp
     AIGeneralViewMfc.cpp
@@ -85,7 +83,6 @@ set(SOURCES
     KeySettingsDlg.cpp
     LakeState.cpp
     LightExporter.cpp
-    MapClip.cpp
     MapInfoAIMarkersSelectDlg.cpp
     MapInfoBuilder.cpp
     MapInfoController.cpp

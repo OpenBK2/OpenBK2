@@ -32,7 +32,6 @@
 #include "UnitStartCmdView.h"
 #include "MapObjectWindow.h"
 #include "VSOWindow.h"
-#include "AdvClipboardWindow.h"
 #include "FieldView.h"
 #include "HeightWindowV3.h"
 #include "ReinfPointsView.h"
@@ -354,39 +353,6 @@ void CMapInfoEditor::CreateControls()
 				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_SCRIPT] );
 				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
 			}
-			/**
-			// Advanced clipboard
-			//
-			if ( CDefault3DTabWindow *p3DTabWindow = wndShortcutBar.AddNewShortcut(static_cast<CDefault3DTabWindow*>(0)) )
-			{
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-				// advanced clipboard
-				if ( CAdvClipboardWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CAdvClipboardWindow*>(0)) )
-				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CAdvClipboardWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::ADV_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::ADV_ISS_CLIPBOARD] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}		
-				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( CMapInfoState::IS_ADVANCED );
-				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
-						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[CMapInfoState::IS_ADVANCED] ) )
-				{
-					p3DTabWindow->ActivateTab( posActiveStateMap->second );
-				}
-				else
-				{
-					p3DTabWindow->ActivateTab( CMapInfoState::DEFAULT_INPUT_SUBSTATE[CMapInfoState::IS_ADVANCED] );
-				}
-				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_ADVANCED] );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
-			/**/
 			//
 			if ( ( editorSettings.nActiveStateIndex >= 0 ) &&
 					 ( editorSettings.nActiveStateIndex < CMapInfoState::IS_COUNT ) )

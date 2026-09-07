@@ -251,7 +251,6 @@ public:
 		enum EWhoDrawsVSO
 		{
 			BAD_DRAWER,
-			ADV_CLIPBOARD,
 			VSO_IS_SELECT,
 			VSO_IS_EDIT,
 			VSO_IS_ADD

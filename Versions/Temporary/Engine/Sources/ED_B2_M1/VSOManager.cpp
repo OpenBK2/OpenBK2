@@ -1520,7 +1520,6 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 			break;
 		case SVSODrawParams::VSO_IS_SELECT:
 		case SVSODrawParams::VSO_IS_EDIT:
-		case SVSODrawParams::ADV_CLIPBOARD:
 			{
 				if ( pDrawParams->pSelectedVSO )
 				{

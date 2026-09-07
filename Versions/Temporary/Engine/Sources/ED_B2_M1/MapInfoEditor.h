@@ -37,7 +37,6 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	friend class CScriptAreaState;
 	friend class CCameraPositionState;
 	friend class CUnitStartCmdState;
-	friend class CAdvClipboardState;
 
 	friend class CMapObjectMultiState;
 	friend class CMapObjectPasteState;

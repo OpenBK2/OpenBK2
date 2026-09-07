@@ -30,7 +30,6 @@ public:
 		IS_OBJECT											= 1,
 		IS_GAMEPLAY										= 2,
 		IS_SCRIPT											= 3,
-		//IS_ADVANCED										= 4,
 		IS_COUNT											= 4,
 	};
 	enum ETerrainInputSubstates
@@ -67,13 +66,6 @@ public:
 	//	MOV_EDITOR_ISS_EDITOR					= 0,
 	//	MOV_EDITOR_ISS_COUNT					= 1,
 	//};
-	/**
-	enum EAdvancedInputSubstates
-	{
-		ADV_ISS_CLIPBOARD							= 0,
-		ADV_ISS_COUNT									= 1,
-	};
-	/**/
 	//
 	static const unsigned INPUT_STATE_LABEL_ID[IS_COUNT];
 	static const unsigned TERRAIN_INPUT_SUSBSTATE_LABEL_ID[TERRAIN_ISS_COUNT];
@@ -81,7 +73,6 @@ public:
 	static const unsigned GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT];
 	static const unsigned SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT];
 	//static const unsigned MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT];
-	//static const unsigned ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT];
 	//
 	static const unsigned DEFAULT_INPUT_STATE;
 	static const unsigned INPUT_SUBSTATE_COUNT[IS_COUNT];

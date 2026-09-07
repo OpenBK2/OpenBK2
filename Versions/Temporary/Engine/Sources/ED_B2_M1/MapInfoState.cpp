@@ -23,7 +23,6 @@
 #include "ScriptAreaState.h"
 #include "CameraPositionState.h"
 #include "UnitStartCmdState.h"
-#include "AdvClipboardState.h"
 #include "AIGeneralState.h"
 #include "ReinfPointsState.h"
 #include "ScriptCameraState.h"
@@ -47,7 +46,6 @@ const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] =
 	IDS_IS_OBJECT_LABEL,
 	IDS_IS_GAMEPLAY_LABEL,
 	IDS_IS_SCRIPT_LABEL,
-	//IDS_IS_ADVANCED_LABEL,
 };
 
 
@@ -86,14 +84,6 @@ const unsigned CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] 
 //	IDS_MOV_EDITOR_ISS_EDITOR_LABEL
 //};
 
-/**
-
-const unsigned CMapInfoState::ADV_INPUT_SUSBSTATE_LABEL_ID[ADV_ISS_COUNT] =
-{
-	IDS_ADV_ISS_CLIPBOARD
-};
-/**/
-
 
 const unsigned CMapInfoState::DEFAULT_INPUT_STATE = IS_OBJECT;
 
@@ -104,7 +94,6 @@ const unsigned CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] =
 	OBJECT_ISS_COUNT,
 	GAMEPLAY_ISS_COUNT,
 	SCRIPT_ISS_COUNT,
-	//ADV_ISS_COUNT,
 };
 
 
@@ -114,7 +103,6 @@ const unsigned CMapInfoState::DEFAULT_INPUT_SUBSTATE[IS_COUNT] =
 	OBJECT_ISS_MAP_OBJECT,
 	GAMEPLAY_ISS_START_CAMERA,
 	SCRIPT_ISS_SCRIPT_AREAS,
-	//ADV_ISS_CLIPBOARD,
 };
 
 
@@ -213,23 +201,6 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, fmt::format( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_MOVIES ) );
 		}
 	}
-	/**
-	// IS_ADVANCED
-	//
-	{
-		{
-			CMultiInputState *pMultiInputState = new CMultiInputState();
-			nStateIndex = AddInputState( pMultiInputState );
-			NI_ASSERT( nStateIndex == IS_ADVANCED, fmt::format( "CMapInfoState(): Wrong state number IS_ADVANCED: {} ({})", nStateIndex, IS_ADVANCED ) );
-			// ADV_ISS_CLIPBOARD
-			{
-				CAdvClipboardState *pState = new CAdvClipboardState( pMapInfoEditor );
-				nStateIndex = pMultiInputState->AddInputState( pState );
-				NI_ASSERT( nStateIndex == ADV_ISS_CLIPBOARD, fmt::format( "CMapInfoMainState(): Wrong state number ADV_ISS_CLIPBOARD: {}, ({})", nStateIndex, ADV_ISS_CLIPBOARD ) );
-			}
-		}
-	}
-	/**/
 }
 
 
@@ -238,8 +209,7 @@ bool CMapInfoState::IsMultiInputState( int nStateIndex )
 	if ( ( nStateIndex == IS_TERRAIN ) ||
 			 ( nStateIndex == IS_OBJECT ) ||
 			 ( nStateIndex == IS_GAMEPLAY ) ||
-			 ( nStateIndex == IS_SCRIPT ) )/** ||
-			 ( nStateIndex == IS_ADVANCED ) )/**/
+			 ( nStateIndex == IS_SCRIPT ) )
 	{
 		return true;
 	}
