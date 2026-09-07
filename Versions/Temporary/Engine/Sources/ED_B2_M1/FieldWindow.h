@@ -6,13 +6,10 @@
 
 #include <cstdint>
 
-class CFieldWindow : public CResizeDialog, public ICommandHandler
+class CFieldWindow : public CResizeDialog, public CFieldCommands
 {
 	bool bCreateControls;
 	CComboBox	wndFieldComboBox;
-
-	bool GetEditParameters( CFieldState::SEditParameters *pEditParameters );
-	bool SetEditParameters( const CFieldState::SEditParameters &rEditParameters );
 
 protected:
 	virtual void DoDataExchange( CDataExchange* pDX );
@@ -34,10 +31,13 @@ public:
 	CFieldWindow( CWnd* pParent = 0 );
 	~CFieldWindow();
 
+	// CEditParameterCommands. Public now because the dispatch that calls them
+	// is on the shared base rather than on this class.
+	virtual bool GetEditParameters( CFieldState::SEditParameters *pEditParameters );
+	virtual bool SetEditParameters( const CFieldState::SEditParameters &rEditParameters );
 
-	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// HandleCommand and UpdateCommand come from CEditParameterCommands, which
+	// dispatches them to the two methods above.
 
 	DECLARE_MESSAGE_MAP()
 };

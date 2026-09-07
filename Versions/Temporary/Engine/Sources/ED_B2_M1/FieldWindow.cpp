@@ -221,56 +221,6 @@ void CFieldWindow::OnFillHeightsCheckBox()
 }
 
 
-bool CFieldWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	switch( nCommandID )
-	{
-		case ID_GET_EDIT_PARAMETERS:
-		{
-			CFieldState::SEditParameters *pEditParameters = reinterpret_cast<CFieldState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return GetEditParameters( pEditParameters );
-			}
-			return false;
-		}
-		case ID_SET_EDIT_PARAMETERS:
-		{
-			const CFieldState::SEditParameters *pEditParameters = reinterpret_cast<const CFieldState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return SetEditParameters( *pEditParameters );
-			}
-			return false;
-		}
-		default:
-			return false;
-	}
-	return false;
-}
-
-
-bool CFieldWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CFieldWindow::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CFieldWindow::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID )
-	{
-		case ID_GET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		default:
-			return false;
-	}
-	return false;
-}
-
 // basement storage  
 
 

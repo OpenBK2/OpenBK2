@@ -33,7 +33,7 @@
 #include "MapObjectWindow.h"
 #include "VSOWindow.h"
 #include "AdvClipboardWindow.h"
-#include "FieldWindow.h"
+#include "FieldView.h"
 #include "HeightWindowV3.h"
 #include "ReinfPointsView.h"
 #include "ScriptCameraWindow.h"
@@ -185,11 +185,10 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
 				}
 				// field
-				if ( CFieldWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CFieldWindow*>(0)) )
+				// Which toolkit draws this palette is NFieldView's business, not
+				// the editor's.
+				if ( CWnd *pDialog = NFieldView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CFieldWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_FIELD] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

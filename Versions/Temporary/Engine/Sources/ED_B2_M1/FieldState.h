@@ -7,6 +7,7 @@
 #include "MapInfoEditorData.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
+#include "PaletteCommands.h"
 
 #include <cstdint>
 
@@ -184,5 +185,13 @@ public:
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_FIELD_STATE );
 	}
 };
+
+
+// CFieldState drives its palette with the two edit-parameter commands, so the
+// dispatch is CEditParameterCommands' and only the reading and writing of
+// controls is written per implementation. Named here, next to the struct that
+// travels in those commands, so both implementations of the palette share it
+// rather than each restating what the other means.
+typedef CEditParameterCommands<CFieldState::SEditParameters> CFieldCommands;
 
 

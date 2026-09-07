@@ -74,6 +74,7 @@ MIGRATED = {
     "CUnitStartCmdWindow": "ED_B2_M1/UnitStartCmdViewWx.cpp (NUnitStartCmdView::Create)",
     "CReinfPointsWindow": "ED_B2_M1/ReinfPointsViewWx.cpp (NReinfPointsView::Create)",
     "CAIGeneralPointsWindow": "ED_B2_M1/AIGeneralViewWx.cpp (NAIGeneralView::Create)",
+    "CFieldWindow": "ED_B2_M1/FieldViewWx.cpp (NFieldView::Create)",
 }
 
 

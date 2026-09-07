@@ -65,6 +65,8 @@ set(SOURCES
     FenceRPGStatsExporter.cpp
     FenceState.cpp
     FieldState.cpp
+    FieldViewMfc.cpp
+    FieldViewWx.cpp
     FieldWindow.cpp
     FormationMnemonics.cpp
     FormationsState.cpp
