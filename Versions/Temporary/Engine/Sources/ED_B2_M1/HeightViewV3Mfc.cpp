@@ -2,15 +2,11 @@
 
 #include "HeightViewV3.h"
 #include "HeightWindowV3.h"
+#include "ObjectProperties.h"
 #include "ED_B2_M1Dll.h"
 
-#include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_Controller.h"
-#include "MapEditorLib/Interface_View.h"
-#include "MapEditorLib/MultiManipulator.h"
 #include "MapEditorLib/Tools_HashSet.h"
-#include "libdb/ResourceManager.h"
 
 #include <cstdlib>
 
@@ -30,30 +26,13 @@ namespace NHeightViewV3
 {
 	void ShowTileProperties( const std::string &rszTileName )
 	{
-		IResourceManager *pResourceManager = Singleton<IResourceManager>();
-		CPtr<IManipulator> pObjectManipulator = 0;
+		// A set of one. The showing itself is NObjectProperties::Show, because
+		// the map object and VSO palettes want the same thing and the block it
+		// replaces was already written out three times.
 		SObjectSet objectSet;
 		objectSet.szObjectTypeName = TILE_TYPE_NAME;
 		InsertHashSetElement( &( objectSet.objectNameSet ), rszTileName );
-		{
-			// A set of one, but built the same way: the property browser takes a
-			// manipulator over a set, and the multi manipulator is what makes one
-			// out of however many names are in it.
-			CMultiManipulator *pMultiManipulator = new CMultiManipulator();
-			for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
-			{
-				pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, itObjectName->first ), false, false );
-			}
-			pObjectManipulator = pMultiManipulator;
-		}
-		IView *pView = 0;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
-		if ( pView != 0 )
-		{
-			pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-		}
+		NObjectProperties::Show( objectSet );
 	}
 
 

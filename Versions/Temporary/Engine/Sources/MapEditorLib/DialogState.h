@@ -52,6 +52,24 @@ struct MAPEDITORLIB_EXPORT SDialogState
 		}
 		nParameters[nIndex] = nValue;
 	}
+
+	// The same for szParameters, which the palettes that carry a filter name
+	// use. CMapObjectWindow calls resize( 1 ) in OnInitDialog and indexes [0];
+	// this is that, said once.
+	const std::string& GetStringParameter( size_t nIndex ) const
+	{
+		static const std::string szEmpty;
+		return nIndex < szParameters.size() ? szParameters[nIndex] : szEmpty;
+	}
+
+	void SetStringParameter( size_t nIndex, const std::string &rszValue )
+	{
+		if ( szParameters.size() <= nIndex )
+		{
+			szParameters.resize( nIndex + 1, std::string() );
+		}
+		szParameters[nIndex] = rszValue;
+	}
 };
 
 

@@ -30,7 +30,7 @@
 #include "ScriptAreaWindow.h"
 #include "CameraPositionView.h"
 #include "UnitStartCmdView.h"
-#include "MapObjectWindow.h"
+#include "MapObjectView.h"
 #include "VSOWindow.h"
 #include "FieldView.h"
 #include "HeightViewV3.h"
@@ -218,12 +218,10 @@ void CMapInfoEditor::CreateControls()
 			{
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 				// map objects
+				// Which toolkit draws this palette is NMapObjectView's business,
+				// not the editor's.
+				if ( CWnd *pWindow = NMapObjectView::Create( p3DTabWindow ) )
 				{
-					CMapObjectWindow *pWindow = new CMapObjectWindow( false );
-					p3DTabWindow->AddNewTab( pWindow );
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pWindow->Create( CMapObjectWindow::IDD_NO_BUTTONS, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_MAP_OBJECT] );
 					p3DTabWindow->AddTab( pWindow, strPaneLabel );

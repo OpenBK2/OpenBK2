@@ -3,10 +3,11 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 #include "MapObjectMultiState.h"
+#include "MapObjectView.h"
 
 #include <cstdint>
 
-class CMapObjectWindow : public CResizeDialog, public ICommandHandler
+class CMapObjectWindow : public CResizeDialog, public CMapObjectCommands
 {
 	struct SObjectListElement
 	{
@@ -28,9 +29,6 @@ class CMapObjectWindow : public CResizeDialog, public ICommandHandler
 	CObjectListElementMap objectListElementMap;
 	//
 	int GetSelectedFilterIndex();
-	//
-	bool GetEditParameters( CMapObjectMultiState::SEditParameters *pEditParameters );
-	bool SetEditParameters( const CMapObjectMultiState::SEditParameters &rEditParameters );
 	//
 	void UpdateObjectsListStyle();
 	void SetObjectsListStyle( int nStyle );
@@ -59,7 +57,6 @@ protected:
 	bool IsDrawGripper() { return false; }
 
 public:
-	static const char FILTER_TYPE[];
 	static const char MAPOBJECT_EXTRACTOR_TYPE[];
 	static const char SPOT_EXTRACTOR_TYPE[];
 	enum
@@ -71,9 +68,18 @@ public:
 	CMapObjectWindow( bool _bFull = true, CWnd* pParent = 0 );
 	~CMapObjectWindow();
 
+	//	CMapObjectCommands
+	virtual bool GetEditParameters( CMapObjectMultiState::SEditParameters *pEditParameters );
+	virtual bool SetEditParameters( const CMapObjectMultiState::SEditParameters &rEditParameters );
+
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	//
+	// Overridden rather than inherited: this palette answers the object storage
+	// query, the clear-selection command and the object list's three context
+	// menu items as well, and falls through to CMapObjectCommands for the
+	// edit-parameter pair.
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

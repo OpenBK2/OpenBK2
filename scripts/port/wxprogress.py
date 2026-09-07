@@ -76,6 +76,7 @@ MIGRATED = {
     "CAIGeneralPointsWindow": "ED_B2_M1/AIGeneralViewWx.cpp (NAIGeneralView::Create)",
     "CFieldWindow": "ED_B2_M1/FieldViewWx.cpp (NFieldView::Create)",
     "CHeightWindowV3": "ED_B2_M1/HeightViewV3Wx.cpp (NHeightViewV3::CreateWx)",
+    "CMapObjectWindow": "ED_B2_M1/MapObjectViewWx.cpp (NMapObjectView::CreateWx)",
 }
 
 

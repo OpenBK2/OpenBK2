@@ -14,12 +14,17 @@
 #include "MapEditorLib/Interface_ObjectCollector.h"
 #include "ED_B2_M1Dll.h"
 #include "MapObjectWindow.h"
+#include "ObjectProperties.h"
 
 #include <cstdint>
 
 #include <zconf.h>
 
-const char CMapObjectWindow::FILTER_TYPE[] = "MAPOBJECT";
+// The filter type is NMapObjectView::FILTER_TYPE now, because the wx palette
+// needs the same string and a second copy of it would be a typo waiting to
+// happen. The extractor names stay here: ED_B2_M1Dll registers them off this
+// class and nothing else needs them.
+using NMapObjectView::FILTER_TYPE;
 const char CMapObjectWindow::MAPOBJECT_EXTRACTOR_TYPE[] = "MAPOBJECT";
 const char CMapObjectWindow::SPOT_EXTRACTOR_TYPE[] = "SPOT";
 
@@ -401,24 +406,6 @@ bool CMapObjectWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-		{
-			CMapObjectMultiState::SEditParameters *pEditParameters = reinterpret_cast<CMapObjectMultiState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return GetEditParameters( pEditParameters );
-			}
-			return false;
-		}
-		case ID_SET_EDIT_PARAMETERS:
-		{
-			const CMapObjectMultiState::SEditParameters *pEditParameters = reinterpret_cast<const CMapObjectMultiState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return SetEditParameters( *pEditParameters );
-			}
-			return false;
-		}
 		case ID_MIMO_CLEAR_SELECTION:
 		{
 			ClearSelection();
@@ -442,31 +429,18 @@ bool CMapObjectWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			return true;
 		case ID_MIMOOLCM_PROPERTIES:
 		{
-			CPtr<IManipulator> pObjectManipulator = 0;
+			// The showing itself is NObjectProperties::Show now, because the
+			// terrain height and VSO palettes want the same thing and this block
+			// was written out three times.
 			SObjectSet objectSet;
 			objectSet.szObjectTypeName = selectedObjectListElement.szObjectTypeName;
 			objectSet.objectNameSet[selectedObjectListElement.objectDBID] = 0;
-			IResourceManager *pResourceManager = Singleton<IResourceManager>();
-			{
-				CMultiManipulator *pMultiManipulator = new CMultiManipulator();
-				for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
-				{
-					pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, itObjectName->first ), false, false );
-				}
-				pObjectManipulator = pMultiManipulator;
-			}
-			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
-			if ( pView != 0 )
-			{
-				pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-			}
+			NObjectProperties::Show( objectSet );
 			return true;
 		}
+		// The edit-parameter pair is the shared dispatch's.
 		default:
-			return false;
+			return CMapObjectCommands::HandleCommand( nCommandID, dwData );
 	}
 	return false;
 }
@@ -479,14 +453,6 @@ bool CMapObjectWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 	//
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
 		case ID_MIMO_CLEAR_SELECTION:
 			( *pbEnable ) = true;
 			( *pbCheck ) = false;
@@ -508,7 +474,7 @@ bool CMapObjectWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 			( *pbCheck ) = false;
 			return true;
 		default:
-			return false;
+			return CMapObjectCommands::UpdateCommand( nCommandID, pbEnable, pbCheck );
 	}
 	return false;
 }

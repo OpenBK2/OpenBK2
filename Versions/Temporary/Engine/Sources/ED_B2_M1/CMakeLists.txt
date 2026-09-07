@@ -104,6 +104,8 @@ set(SOURCES
     MapObjectDataExtractor.cpp
     MapObjectMultiState.cpp
     MapObjectState.cpp
+    MapObjectViewMfc.cpp
+    MapObjectViewWx.cpp
     MapObjectWindow.cpp
     MarkerSet.cpp
     MechUnitRPGStatsBuilder.cpp
@@ -124,6 +126,7 @@ set(SOURCES
     MoviesEditorWindow.cpp
     MusicTrackExporter.cpp
     ObjectBaseRPGStatsExporter.cpp
+    ObjectProperties.cpp
     ObjectRPGStatsBuilder.cpp
     ObjectRPGStatsExporter.cpp
     PassabilityProfile.cpp
