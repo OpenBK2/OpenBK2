@@ -188,6 +188,8 @@ set(SOURCES
     VSOMultiState.cpp
     VSOState.cpp
     VSOStateEx.cpp
+    VSOViewMfc.cpp
+    VSOViewWx.cpp
     VSOWindow.cpp
     WeaponMnemonics.cpp
     XMLExport.cpp

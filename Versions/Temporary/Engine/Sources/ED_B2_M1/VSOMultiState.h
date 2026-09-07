@@ -3,6 +3,7 @@
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
 
+#include "PaletteCommands.h"
 #include "RoadState.h"
 #include "RiverState.h"
 #include "CragState.h"
@@ -145,6 +146,18 @@ public:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
+
+
+// The palette's half of the exchange above, whichever toolkit draws it. Beside
+// the state rather than beside a window because it is the state's data type
+// that decides it, and because both palettes need it and neither should include
+// the other's header to get it.
+//
+// A partial dispatch: this one answers six commands of its own -- the object
+// storage query, clear selection, enable height, and the object list's three
+// context menu items -- so it overrides HandleCommand and UpdateCommand and
+// falls through to here for the edit-parameter pair.
+typedef CEditParameterCommands<CVSOMultiState::SEditParameters> CVSOCommands;
 
 
 

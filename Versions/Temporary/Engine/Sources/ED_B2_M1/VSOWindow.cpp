@@ -13,12 +13,17 @@
 #include "libdb/ResourceManager.h"
 #include "ED_B2_M1Dll.h"
 #include "VSOWindow.h"
+#include "ObjectProperties.h"
 
 #include <cstdint>
 
 #include <zconf.h>
 
-const char CVSOWindow::FILTER_TYPE[] = "VSO";
+// The filter type is NVSOView::FILTER_TYPE now, because the wx palette needs
+// the same string and a second copy of it would be a typo waiting to happen.
+// The extractor name stays here: ED_B2_M1Dll registers it off this class and
+// nothing else needs it.
+using NVSOView::FILTER_TYPE;
 const char CVSOWindow::EXTRACTOR_TYPE[] = "VSO";
 
 CVSOWindow::CVSOWindow( CWnd* pParent )
@@ -413,24 +418,6 @@ bool CVSOWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-		{
-			CVSOMultiState::SEditParameters *pEditParameters = reinterpret_cast<CVSOMultiState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return GetEditParameters( pEditParameters );
-			}
-			return false;
-		}
-		case ID_SET_EDIT_PARAMETERS:
-		{
-			const CVSOMultiState::SEditParameters *pEditParameters = reinterpret_cast<const CVSOMultiState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return SetEditParameters( *pEditParameters );
-			}
-			return false;
-		}
 		case ID_MIVSO_CLEAR_SELECTION:
 		{
 			ClearSelection();
@@ -457,31 +444,18 @@ bool CVSOWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			return true;
 		case ID_MIVSOOLCM_PROPERTIES:
 		{
-			CPtr<IManipulator> pObjectManipulator = 0;
+			// The showing itself is NObjectProperties::Show now, because the
+			// terrain height and map object palettes want the same thing and
+			// this block was written out three times.
 			SObjectSet objectSet;
 			objectSet.szObjectTypeName = selectedObjectListElement.szObjectTypeName;
 			InsertHashSetElement( &( objectSet.objectNameSet ), selectedObjectListElement.objectDBID );
-			IResourceManager *pResourceManager = Singleton<IResourceManager>();
-			{
-				CMultiManipulator *pMultiManipulator = new CMultiManipulator();
-				for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
-				{
-					pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, itObjectName->first ), false, false );
-				}
-				pObjectManipulator = pMultiManipulator;
-			}
-			IView *pView = 0;
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
-			if ( pView != 0 )
-			{
-				pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-			}
+			NObjectProperties::Show( objectSet );
 			return true;
 		}
+		// The edit-parameter pair is the shared dispatch's.
 		default:
-			return false;
+			return CVSOCommands::HandleCommand( nCommandID, dwData );
 	}
 	return false;
 }
@@ -494,14 +468,6 @@ bool CVSOWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChe
 	//
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
 		case ID_MIVSO_CLEAR_SELECTION:
 			( *pbEnable ) = true;
 			( *pbCheck ) = false;
@@ -527,7 +493,7 @@ bool CVSOWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChe
 			( *pbCheck ) = false;
 			return true;
 		default:
-			return false;
+			return CVSOCommands::UpdateCommand( nCommandID, pbEnable, pbCheck );
 	}
 	return false;
 }

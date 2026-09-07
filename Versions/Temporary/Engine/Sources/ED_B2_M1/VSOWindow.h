@@ -3,10 +3,11 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 #include "VSOMultiState.h"
+#include "VSOView.h"
 
 #include <cstdint>
 
-class CVSOWindow : public CResizeDialog, public ICommandHandler
+class CVSOWindow : public CResizeDialog, public CVSOCommands
 {
 public:
 	struct SObjectListElement
@@ -27,9 +28,6 @@ public:
 	CObjectListElementMap objectListElementMap;
 	//
 	int GetSelectedFilterIndex();
-	//
-	bool GetEditParameters( CVSOMultiState::SEditParameters *pEditParameters );
-	bool SetEditParameters( const CVSOMultiState::SEditParameters &rEditParameters );
 	//
 	void UpdateObjectsListStyle();
 	void SetObjectsListStyle( int nStyle );
@@ -59,16 +57,24 @@ protected:
 	bool IsDrawGripper() { return false; }
 
 public:
-	static const char FILTER_TYPE[];
 	static const char EXTRACTOR_TYPE[];
 	enum { IDD = IDD_TAB_MI_VSO };
 
 	CVSOWindow( CWnd* pParent = 0 );
 	~CVSOWindow();
 
+	//	CVSOCommands
+	virtual bool GetEditParameters( CVSOMultiState::SEditParameters *pEditParameters );
+	virtual bool SetEditParameters( const CVSOMultiState::SEditParameters &rEditParameters );
+
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	//
+	// Overridden rather than inherited: this palette answers the object storage
+	// query, clear selection, enable height and the object list's three context
+	// menu items as well, and falls through to CVSOCommands for the
+	// edit-parameter pair.
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

@@ -31,7 +31,7 @@
 #include "CameraPositionView.h"
 #include "UnitStartCmdView.h"
 #include "MapObjectView.h"
-#include "VSOWindow.h"
+#include "VSOView.h"
 #include "FieldView.h"
 #include "HeightViewV3.h"
 // Was reached through HeightWindowV3.h, which this no longer includes: the
@@ -227,12 +227,10 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pWindow, strPaneLabel );
 				}
 				// VSO
+				// Which toolkit draws this palette is NVSOView's business, not
+				// the editor's.
+				if ( CWnd *pWindow = NVSOView::Create( p3DTabWindow ) )
 				{
-					CVSOWindow *pWindow = new CVSOWindow();
-					p3DTabWindow->AddNewTab( pWindow );
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pWindow->Create( CVSOWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_VSO] );
 					p3DTabWindow->AddTab( pWindow, strPaneLabel );
