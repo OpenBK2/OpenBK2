@@ -76,6 +76,8 @@ set(SOURCES
     HeightContainer.cpp
     HeightPattern.cpp
     HeightStateV3.cpp
+    HeightViewV3Mfc.cpp
+    HeightViewV3Wx.cpp
     HeightWindowV3.cpp
     HPObjectRPGStatsExporter.cpp
     IconsCreation.cpp

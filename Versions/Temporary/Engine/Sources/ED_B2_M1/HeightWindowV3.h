@@ -3,13 +3,13 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "ResourceDefines.h"
 #include "HeightStateV3.h"
+#include "HeightViewV3.h"
 #include "ED_B2_M1Dll.h"
 
 #include <cstdint>
 
-class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
+class CHeightWindowV3 : public CResizeDialog, public CHeightCommandsV3
 {
-	static const char TILE_TYPE_NAME[];
 	//
 	CImageList imageList;
 	//
@@ -34,9 +34,6 @@ class CHeightWindowV3 : public CResizeDialog, public ICommandHandler
 	int nStyle;
 	int nLastIndex;
 	std::vector<std::string> tileList;
-
-	bool GetEditParameters( CHeightStateV3::SEditParameters *pEditParameters );
-	bool SetEditParameters( const CHeightStateV3::SEditParameters &rEditParameters );
 
 	void UpdateTileListStyle();
 	void SetTileListStyle( int _nStyle );
@@ -78,9 +75,17 @@ public:
 	CHeightWindowV3( CWnd* pParent = 0 );
 	~CHeightWindowV3();
 
+	//	CHeightCommandsV3
+	virtual bool GetEditParameters( CHeightStateV3::SEditParameters *pEditParameters );
+	virtual bool SetEditParameters( const CHeightStateV3::SEditParameters &rEditParameters );
+
 	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	//
+	// Overridden rather than inherited: this palette answers the two timer
+	// commands and the tile list's three context menu items as well, and falls
+	// through to CHeightCommandsV3 for the edit-parameter pair.
+	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
+	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 	DECLARE_MESSAGE_MAP()
 };

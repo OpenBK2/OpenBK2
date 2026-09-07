@@ -22,27 +22,15 @@
 
 const char CHeightWindowV3::FILTER_TYPE[] = "TILE";
 const char CHeightWindowV3::EXTRACTOR_TYPE[] = "TILE";
-const char CHeightWindowV3::TILE_TYPE_NAME[] = "TGTerraType";
+// The tile type name is NHeightViewV3::TILE_TYPE_NAME now, because the wx
+// palette needs the same string and a second copy of it would be a typo waiting
+// to happen.
+using NHeightViewV3::TILE_TYPE_NAME;
 
 
-#define TMITH_TILE					0
-#define TMITH_UP						1
-#define TMITH_DOWN					2
-#define TMITH_ROUND					3
-#define TMITH_PLATO					4
-#define TMITH_CIRCLE				5
-#define TMITH_SQUARE				6
-#define TMITH_BRUSH_SIZE_C0	7
-#define TMITH_BRUSH_SIZE_C1	8
-#define TMITH_BRUSH_SIZE_C2	9
-#define TMITH_BRUSH_SIZE_C3	10
-#define TMITH_BRUSH_SIZE_C4	11
-#define TMITH_BRUSH_SIZE_R0	12
-#define TMITH_BRUSH_SIZE_R1	13
-#define TMITH_BRUSH_SIZE_R2	14
-#define TMITH_BRUSH_SIZE_R3	15
-#define TMITH_BRUSH_SIZE_R4	16
-#define TMITH_COUNT					17
+// The TMITH_* frame numbers of IDB_TMITH_BITMAP moved to HeightViewV3.h, under
+// the same names: the wx palette cuts up the same strip and the layout is one
+// fact about one bitmap.
 
 
 CHeightWindowV3::CHeightWindowV3( CWnd* pParent )
@@ -413,24 +401,6 @@ bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-		{
-			CHeightStateV3::SEditParameters *pEditParameters = reinterpret_cast<CHeightStateV3::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return GetEditParameters( pEditParameters );
-			}
-			return false;
-		}
-		case ID_SET_EDIT_PARAMETERS:
-		{
-			const CHeightStateV3::SEditParameters *pEditParameters = reinterpret_cast<const CHeightStateV3::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return SetEditParameters( *pEditParameters );
-			}
-			return false;
-		}
 		case ID_MITHV3_SET_TIMER:
 		{
 			SetHeightTimer();
@@ -450,35 +420,21 @@ bool CHeightWindowV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			return true;
 		case ID_MITHV3_PROPERTIES:
 		{
+			// The body of this moved to NHeightViewV3::ShowTileProperties, which
+			// names no toolkit and is what the wx palette's context menu calls
+			// too. All that is left here is working out which tile is selected.
 			int nListIndex = GetSelectedListIndex( wndTileList );
 			if ( ( nListIndex >= 0 ) && ( nListIndex <  tileList.size() ) )
 			{
-				IResourceManager *pResourceManager = Singleton<IResourceManager>();
-				CPtr<IManipulator> pObjectManipulator = 0;
-				SObjectSet objectSet;
-				objectSet.szObjectTypeName = TILE_TYPE_NAME;
-				InsertHashSetElement( &( objectSet.objectNameSet ), tileList[nListIndex] );
-				{
-					CMultiManipulator *pMultiManipulator = new CMultiManipulator();
-					for ( CObjectNameSet::const_iterator itObjectName = objectSet.objectNameSet.begin(); itObjectName != objectSet.objectNameSet.end(); ++itObjectName )
-					{
-						pMultiManipulator->InsertManipulator( itObjectName->first, pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, itObjectName->first ), false, false );
-					}
-					pObjectManipulator = pMultiManipulator;
-				}
-				IView *pView = 0;
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_GET_VIEW, reinterpret_cast<uintptr_t>( &pView ) );
-				if ( pView != 0 )
-				{
-					pView->SetViewManipulator( pObjectManipulator, objectSet, std::string() );
-					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
-					Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-				}
+				NHeightViewV3::ShowTileProperties( tileList[nListIndex] );
 				return true;
 			}
 		}
+		// Everything else, the edit-parameter pair included, is the shared
+		// dispatch's. Note that ID_MITHV3_PROPERTIES falls through to here when
+		// nothing is selected, which it always did.
 		default:
-			return false;
+			return CHeightCommandsV3::HandleCommand( nCommandID, dwData );
 	}
 	return false;
 }
@@ -491,11 +447,6 @@ bool CHeightWindowV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *
 	//
 	switch( nCommandID )
 	{
-		case ID_GET_EDIT_PARAMETERS:
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
 		case ID_MITHV3_SET_TIMER:
 		case ID_MITHV3_KILL_TIMER:
 			( *pbEnable ) = true;
@@ -514,7 +465,7 @@ bool CHeightWindowV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *
 			( *pbCheck ) = false;
 			return true;
 		default:
-			return false;
+			return CHeightCommandsV3::UpdateCommand( nCommandID, pbEnable, pbCheck );
 	}
 	return false;
 }

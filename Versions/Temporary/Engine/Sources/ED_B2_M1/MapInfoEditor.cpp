@@ -33,7 +33,11 @@
 #include "MapObjectWindow.h"
 #include "VSOWindow.h"
 #include "FieldView.h"
-#include "HeightWindowV3.h"
+#include "HeightViewV3.h"
+// Was reached through HeightWindowV3.h, which this no longer includes: the
+// palette is behind NHeightViewV3 now and the editor still loads its own
+// strings and menus out of this module's resources.
+#include "ED_B2_M1Dll.h"
 #include "ReinfPointsView.h"
 #include "ScriptCameraWindow.h"
 #include "AIGeneralView.h"
@@ -174,11 +178,10 @@ void CMapInfoEditor::CreateControls()
 			{
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 				// height V3
-				if ( CHeightWindowV3 *pDialog = p3DTabWindow->AddNewTab(static_cast<CHeightWindowV3*>(0)) )
+				// Which toolkit draws this palette is NHeightViewV3's business,
+				// not the editor's.
+				if ( CWnd *pDialog = NHeightViewV3::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CHeightWindowV3::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );

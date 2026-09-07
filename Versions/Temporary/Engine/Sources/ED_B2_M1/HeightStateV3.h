@@ -2,6 +2,7 @@
 
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
+#include "PaletteCommands.h"
 #include "MapEditorLib/MultiInputState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapInfoStoreInputState.h"
@@ -297,6 +298,18 @@ public:
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_HEIGHT_STATE_V3 );
 	}
 };
+
+
+// The palette's half of the exchange above, whichever toolkit draws it. Beside
+// the state rather than beside a window because it is the state's data type
+// that decides it, and because both palettes need it and neither should include
+// the other's header to get it.
+//
+// This one is a partial dispatch on purpose: the height palette answers five
+// commands of its own -- the two timer commands the state drives it with, and
+// the tile list's three context menu items -- so it overrides HandleCommand and
+// UpdateCommand and falls through to here for the edit-parameter pair.
+typedef CEditParameterCommands<CHeightStateV3::SEditParameters> CHeightCommandsV3;
 
 
 
