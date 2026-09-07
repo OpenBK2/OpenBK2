@@ -95,6 +95,13 @@ def write_script(path, dump, symbol_dir, no_symbol_server):
     # Print the source line where there is one, and do not truncate the stacks.
     lines.append(".lines -e")
 
+    # The whole fault handler is one cdb *quoted* command, and inside quotes cdb
+    # treats a backslash as an escape: an unescaped C:\ClaudeTmp\... arrives as
+    # CClaudeTmp..., and .dump writes a file with that name in cdb's working
+    # directory instead of failing. Doubling them is what puts the dump where it
+    # was asked for. Only the path needs it; nothing else here contains one.
+    dump = dump.replace("\\", "\\\\")
+
     onfault = "; ".join([
         ".echo ==== SECOND CHANCE, NOBODY HANDLED THIS ====",
         ".lastevent",
