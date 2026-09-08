@@ -487,10 +487,18 @@ BOOL CChildFrameWndBase::OnEraseBkgnd( CDC* pDC )
 
 void CChildFrameWndBase::OnPaint() 
 {
+	// MoveWindow in AlignWndAspect can synchronously send another WM_PAINT.
+	// Validate that nested paint without resizing or entering the renderer
+	// again while the outer paint is still arranging the preview window.
+	if ( bIsSettingUp )
+	{
+		CPaintDC dc( this );
+		return;
+	}
 	if ( bWasResized )
 	{
-		AlignWndAspect();
 		bWasResized = false;
+		AlignWndAspect();
 	}
 
 	OnPreDrawChildFrameWnd();
@@ -640,6 +648,13 @@ void CChildFrameWndBase::OnUpdateSceneTimer()
 			Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
 			RedrawWindow( 0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_NOERASE );
 		}
+	}
+	else if ( IsWindowVisible() && bRenderEnabled && !bRunModeEnabled )
+	{
+		// Resource previews must animate while the browser/property panel has
+		// focus. Advance rendering only; game input still requires viewport focus.
+		Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
+		RedrawWindow( 0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_NOERASE );
 	}
 }
 

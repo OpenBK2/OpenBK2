@@ -62,7 +62,8 @@ struct IImageList
 
 // A dockable panel on the main frame: the minimap, a shortcut bar, the movies
 // editor. Created through IMainFrame::CreateControlBar and then driven by the
-// domain editor that asked for it.
+// domain editor that asked for it. The frame owns the returned handle: callers
+// may call Destroy() to close the window, but must never delete the handle.
 //
 // IsAlive is here because the editors test ::IsWindow on the handle before
 // destroying it. A panel outlives the pointer to it only in the sense that the

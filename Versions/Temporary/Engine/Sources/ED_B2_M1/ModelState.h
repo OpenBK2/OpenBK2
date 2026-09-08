@@ -89,6 +89,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 	//Данные специфичные для данного редактрора
 	int nModelSceneID;
 	std::list<int> animModelSceneIDList;
+	std::vector<CObj<CObjectBase>> previewEffects;
 	CObj<CObjectBase> pPlane;
 	CObj<NDb::SModel> pMutableModel;
 

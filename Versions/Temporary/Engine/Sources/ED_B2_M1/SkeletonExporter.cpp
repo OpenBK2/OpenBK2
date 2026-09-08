@@ -3,6 +3,8 @@
 #include <fmt/printf.h>
 
 #include "SkeletonExporter.h"
+#include "ED_Common/GltfExporter.h"
+#include <set>
 #include "MapEditorLib/ExporterFactory.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/StringManager.h"
@@ -263,3 +265,53 @@ EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
 // basement storage  
 
 
+
+// Named glTF clips use the same animation mnemonics as the old source scenes.
+// Existing AnimB2 references retain their authored action times, speeds and types.
+bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
+{
+	const auto file = NEditorGltf::Load(resource);
+	if ( !file ) return false;
+	int count = 0;
+	CManipulatorManager::GetValue(&count, resource, "Animations");
+	// A populated list may deliberately use frame slices rather than named clips.
+	if ( count != 0 ) return true;
+	std::string reference, root;
+	CManipulatorManager::GetValue(&reference, resource, "ModelFileRef");
+	CManipulatorManager::GetValue(&root, resource, "RootJoint");
+	std::set<std::string> added;
+	for ( const auto &clip : file->asset.animations )
+	{
+		const std::string name(clip.name);
+		if ( name.empty() || !added.insert(name).second ) continue;
+		std::string mnemonic = name;
+		NStr::ToUpper(&mnemonic);
+		unsigned number = INVALID_NODE_ID;
+		const auto type = typeMayaAnimationMnemonics.Get(mnemonic, nullptr, &number);
+		if ( type == NDb::ANIMATION_UNKNOWN )
+		{
+			NLog::Log(LT_IMPORTANT, "GLTF clip '%s' needs an AnimB2 reference with an assigned Type.\n", name.c_str());
+			continue;
+		}
+		std::string safeName = name;
+		for ( char &c : safeName )
+			if ( !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || c == '_') ) c = '_';
+		const std::string animationName = NFile::CutFileExt(NDb::GetFileName(resource->GetDBID()), 0) +
+			"_" + safeName + "_" + std::to_string(count) + "_animb2.xdb";
+		IFolderCallback *folder = Singleton<IFolderCallback>();
+		if ( folder->IsUniqueName("AnimB2", animationName) && !folder->InsertObject("AnimB2", animationName) )
+			return false;
+		CPtr<IManipulator> animation = Singleton<IResourceManager>()->CreateObjectManipulator("AnimB2", animationName);
+		if ( !animation ) return false;
+		if ( !CManipulatorManager::SetValue(reference, animation, "ModelFileRef") ||
+			!CManipulatorManager::SetValue(root, animation, "RootJoint") ||
+			!CManipulatorManager::SetValue(name, animation, "ClipName") ||
+			!CManipulatorManager::SetValue(typeAnimationMnemonics.GetMnemonic(type), animation, "Type") ||
+			!NEditorGltf::Export(animation, "AnimB2", true) ) return false;
+		if ( !resource->InsertNode("Animations") ||
+			!CManipulatorManager::SetValue(animationName, resource, fmt::format("Animations.[{}]", count), true) )
+			return false;
+		++count;
+	}
+	return true;
+}

@@ -4,6 +4,7 @@ set(SOURCES
     BaseUIBuilder.cpp
     BasicExporter.cpp
     BasicSceneExporter.cpp
+    GltfExporter.cpp
     ChildFrameBase.cpp
     ChildFrameWndBase.cpp
     dbbulder.cpp
@@ -35,7 +36,7 @@ set(SOURCES
 add_library(ED_Common SHARED ${SOURCES})
 add_stdafx_pch(ED_Common)
 add_export_header(ED_Common)
-target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc stingray System fmt::fmt-header-only granny::granny)
+target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc stingray System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
 endif()

@@ -23,6 +23,7 @@ class CAnimationExporter : public CBasicSceneExporter
 														 const std::string &szDestinationPath,
                              IManipulator *pManipulator );
 
+	bool ImportGltfInfo( IManipulator *pManipulator ) override;
 	CAnimationExporter() {}
 };
 

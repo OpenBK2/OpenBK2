@@ -477,7 +477,7 @@ void CMapInfoEditor::DestroyControls()
 		{
 			pwndShortcutBar->Destroy();
 		}
-		delete pwndShortcutBar;
+		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndShortcutBar = 0;
 	}
 	wndShortcutBar.DestroyWindow();
@@ -493,7 +493,7 @@ void CMapInfoEditor::DestroyControls()
 			{
 				pwndMiniMap->Destroy();
 			}
-			delete pwndMiniMap;
+			// The frame owns this IDockPanel handle; only its window is destroyed here.
 			pwndMiniMap = 0;
 		}
 		wndMiniMap.Destroy();
@@ -509,7 +509,7 @@ void CMapInfoEditor::DestroyControls()
 			{
 				pwndMoviesEditor->Destroy();
 			}
-			delete pwndMoviesEditor;
+			// The frame owns this IDockPanel handle; only its window is destroyed here.
 			pwndMoviesEditor = 0;
 		}
 		wndMoviesEditor.DestroyWindow();

@@ -34,6 +34,7 @@ class ED_COMMON_EXPORT CBasicSceneExporter : public CBasicExporter
 																		 const std::string &szDestinationPath,
 																		 IManipulator *pManipulator ) { return ER_SUCCESS; }
 protected:
+	virtual bool ImportGltfInfo( IManipulator *pManipulator ) { return true; }
 	const char *GetScriptTemplate( const char *pszTemplateName ) const { return GetTextTemplate( pszTemplateName ); }
 	//
 	CBasicSceneExporter() {}

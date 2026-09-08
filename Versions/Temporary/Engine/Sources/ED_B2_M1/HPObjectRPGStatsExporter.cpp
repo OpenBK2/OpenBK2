@@ -130,7 +130,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			if ( !PatMat( it->szBoneName.c_str(), "leffect??" ) )
 				continue;
 
-			STempLightInfo tmpLight;
+			STempLightInfo tmpLight = {}; // Optional GLTF extras must have predictable defaults.
 
 			tmpLight.szLocatorName = it->szRealName;
 

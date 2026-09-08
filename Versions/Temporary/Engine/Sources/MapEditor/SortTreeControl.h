@@ -21,8 +21,44 @@ private:
 	CTreeItemMap clipboardTreeItemMap;
 	bool bClipboardCut;
 	bool bEnableEdit;
+	unsigned nUpdateDepth = 0;
+	bool bRestoreRedraw = false;
 
 protected:	
+
+	// Native tree controls recalculate layout on every insert unless redraw is
+	// disabled. Nesting lets synchronous property-tree batches share one update.
+	class CTreeUpdateLock
+	{
+		CSortTreeControl &tree;
+		bool bLocked = true;
+	public:
+		explicit CTreeUpdateLock( CSortTreeControl &value ) : tree(value)
+		{
+			if ( tree.nUpdateDepth++ == 0 )
+			{
+				tree.bRestoreRedraw = ( tree.GetStyle() & WS_VISIBLE ) != 0;
+				if ( tree.bRestoreRedraw )
+					tree.SetRedraw( FALSE );
+			}
+		}
+		~CTreeUpdateLock() { Unlock(); }
+		// Finish native layout before scrolling, selecting or positioning editors.
+		void Unlock()
+		{
+			if ( !bLocked )
+				return;
+			bLocked = false;
+			if ( --tree.nUpdateDepth == 0 && tree.bRestoreRedraw )
+			{
+				tree.SetRedraw( TRUE );
+				tree.RedrawWindow( nullptr, nullptr, RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN );
+			}
+		}
+		CTreeUpdateLock( const CTreeUpdateLock & ) = delete;
+		CTreeUpdateLock &operator=( const CTreeUpdateLock & ) = delete;
+	};
+
 	CSortTreeControl() : bClipboardCut( false ), bEnableEdit( true ) {}
 
 	void ClearTreeItemMap();

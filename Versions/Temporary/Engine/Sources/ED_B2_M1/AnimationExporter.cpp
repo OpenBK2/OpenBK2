@@ -3,6 +3,7 @@
 #include <fmt/printf.h>
 
 #include "AnimationExporter.h"
+#include "ED_Common/GltfExporter.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
 
@@ -196,3 +197,24 @@ EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
 // basement storage  
 
 
+
+bool CAnimationExporter::ImportGltfInfo( IManipulator *resource )
+{
+	const auto file = NEditorGltf::Load(resource);
+	if ( !file ) return false;
+	// Optional attack/defence boxes are named mesh nodes in the same document.
+	for ( const auto &box : {std::make_pair("AABBAName", "aabb_a"), std::make_pair("AABBDName", "aabb_d")} )
+	{
+		std::string name;
+		CManipulatorManager::GetValue(&name, resource, box.first);
+		if ( name.empty() ) continue;
+		CVec3 minimum, maximum;
+		if ( !NGltf::GetMeshBoundingBox(file, name, true, &minimum, &maximum) ) return false;
+		CVec3 center = (minimum + maximum) * 0.5f, halfSize = (maximum - minimum) * 0.5f;
+		Vis2AI(&center);
+		Vis2AI(&halfSize);
+		if ( !CManipulatorManager::SetVec3(center, resource, std::string(box.second) + ".Center") ||
+			!CManipulatorManager::SetVec3(halfSize, resource, std::string(box.second) + ".HalfSize") ) return false;
+	}
+	return true;
+}

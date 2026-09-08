@@ -244,6 +244,9 @@ bool LoadTGAImage( CArray2D<TOutColor> &dst, CDataStream *pStream )
 {
 	STGAFileHeader hdr;
 	LoadTGAHeader( &hdr, pStream );
+	// Reject empty/truncated inputs before taking the first pixel address.
+	if ( !pStream->IsOk() || hdr.imagespec.wImageWidth == 0 || hdr.imagespec.wImageHeight == 0 )
+		return false;
 	dst.SetSizes( hdr.imagespec.wImageWidth, hdr.imagespec.wImageHeight );
 	if ( LoadTGAImageData(&(dst[0][0]), hdr, pStream) == false ) 
 		return false;

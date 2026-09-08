@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GSkeleton.h"
+#include "3Dmotor_export.h"
 #include "System/FilePath.h"
 
 #include <fastgltf/types.hpp>
@@ -40,8 +41,8 @@ public:
 	// references to its elements valid across a rehash. A caller may therefore resolve a
 	// reference once and keep it for as long as it holds the CGltfFile, which is what
 	// keeps the animator's per-frame path free of any lookup or locking at all.
-	const std::vector<float> &ScalarAccessor( std::size_t accessorIndex ) const;
-	const std::vector<fastgltf::math::fvec3> &Vec3Accessor( std::size_t accessorIndex ) const;
+	_3DMOTOR_EXPORT const std::vector<float> &ScalarAccessor( std::size_t accessorIndex ) const;
+	_3DMOTOR_EXPORT const std::vector<fastgltf::math::fvec3> &Vec3Accessor( std::size_t accessorIndex ) const;
 	const std::vector<fastgltf::math::fvec4> &Vec4Accessor( std::size_t accessorIndex ) const;
 
 private:
@@ -68,33 +69,33 @@ struct SSkeletonDefinition
 
 // ModelFileRef first searches beside its owning DB resource. If that candidate
 // is absent, the supplied path is used directly (including absolute paths).
-NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
+_3DMOTOR_EXPORT NFile::CFilePath ResolveModelFilePath( const NDb::CResource *pOwner,
 	const NFile::CFilePath &modelFileRef );
-bool DoesModelFileExist( const NDb::CResource *pOwner,
+_3DMOTOR_EXPORT bool DoesModelFileExist( const NDb::CResource *pOwner,
 	const NFile::CFilePath &modelFileRef );
-TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
+_3DMOTOR_EXPORT TGltfFilePtr LoadFile( const NDb::CResource *pOwner,
 	const NFile::CFilePath &modelFileRef );
 // A non-empty selector is matched case-sensitively and includes mesh-bearing descendants.
-bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
+_3DMOTOR_EXPORT bool GetMeshNodes( const TGltfFilePtr &file, const std::string &rootNodeName,
 	std::vector<std::size_t> *pResult );
 // Calculates bounds in the same engine vertex space used by the GLB loaders.
 // Static AI geometry applies every node transform, while render geometry keeps
 // skinned vertices in their bind-pose mesh space for the animator.
-bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
+_3DMOTOR_EXPORT bool GetMeshBoundingBox( const TGltfFilePtr &file, const std::string &rootNodeName,
 	bool bApplyNodeTransformsToSkinnedMeshes, CVec3 *pMin, CVec3 *pMax );
-int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
+_3DMOTOR_EXPORT int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFileRef,
 	const std::string &rootNodeName );
-bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
+_3DMOTOR_EXPORT bool BuildSkeleton( const TGltfFilePtr &file, int nSkin, SSkeletonDefinition *pResult );
 // With no glTF skins, RootJoint selects a rigid node hierarchy instead.
-bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
+_3DMOTOR_EXPORT bool BuildSkeleton( const TGltfFilePtr &file, const std::string &rootNodeName,
 	int nFallbackSkin, SSkeletonDefinition *pResult );
 
-CVec3 ConvertPosition( const fastgltf::math::fvec3 &value );
+_3DMOTOR_EXPORT CVec3 ConvertPosition( const fastgltf::math::fvec3 &value );
 CVec3 ConvertDirection( const fastgltf::math::fvec3 &value );
 CQuat ConvertRotation( const fastgltf::math::fquat &value );
 CVec3 ConvertScale( const fastgltf::math::fvec3 &value );
 SHMatrix ConvertMatrix( const fastgltf::math::fmat4x4 &value );
-SHMatrix MakeLocalMatrix( const NAnimation::SBoneTransform &value );
-NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value );
+_3DMOTOR_EXPORT SHMatrix MakeLocalMatrix( const NAnimation::SBoneTransform &value );
+_3DMOTOR_EXPORT NAnimation::SBoneTransform MakeBoneTransform( const SHMatrix &value );
 
 }

@@ -613,6 +613,10 @@ protected:
     //! TVN_SELCHANGED that comes back is not read as the user moving it and
     //! does not throw the set away.
     bool m_bOwnSelection = false;
+    //! A mouse gesture may move the native caret before its final selection is
+    //! ready. Publish one notification after both agree, including Ctrl/Shift.
+    bool m_bDeferSelectionNotify = false;
+    void NotifySelectionChanged( HTREEITEM hOldCaret, UINT action );
 
     //! Is that item in the selection.
     bool InSelection( HTREEITEM hItem ) const;

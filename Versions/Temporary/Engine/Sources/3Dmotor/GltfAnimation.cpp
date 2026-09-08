@@ -365,21 +365,34 @@ void CGltfSkeletonAnimator::ResolveBoundChannels( SAnimationHolder *pHolder )
 
 bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder )
 {
-	pHolder->pFile.reset();
+	if ( !pHolder->hAnimation.pAnimFile )
+		return false;
+	const auto *source = pHolder->hAnimation.pAnimFile.GetPtr();
+	return SelectAnimationRange( pHolder, NGltf::LoadFile(source, source->GetModelFileRef()),
+		source->GetClipName(), source->GetFirstFrame(), source->GetLastFrame() );
+}
+
+bool CGltfSkeletonAnimator::GetSourceDuration( const NGltf::TGltfFilePtr &file,
+	const std::string &clipName, int firstFrame, int lastFrame, float *seconds )
+{
+	CGltfSkeletonAnimator animator;
+	animator.pSkeletonFile = file;
+	SAnimationHolder holder;
+	if ( !animator.SelectAnimationRange(&holder, file, clipName, firstFrame, lastFrame) )
+		return false;
+	*seconds = holder.fDuration;
+	return true;
+}
+
+bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
+	const NGltf::TGltfFilePtr &file, const std::string &clipName, int firstFrame, int lastFrame )
+{
+	pHolder->pFile = file;
 	pHolder->animationIndices.clear();
 	pHolder->fSourceStart = 0.0f;
 	pHolder->fDuration = 0.0f;
-	if ( !pHolder->hAnimation.pAnimFile ||
-		pHolder->hAnimation.pAnimFile->GetModelFileRef().empty() )
+	if ( !file || file->asset.animations.empty() )
 		return false;
-	pHolder->pFile = NGltf::LoadFile( pHolder->hAnimation.pAnimFile,
-		pHolder->hAnimation.pAnimFile->GetModelFileRef() );
-	if ( !pHolder->pFile || pHolder->pFile->asset.animations.empty() )
-		return false;
-
-	const std::string &clipName = pHolder->hAnimation.pAnimFile->GetClipName();
-	const int firstFrame = pHolder->hAnimation.pAnimFile->GetFirstFrame();
-	const int lastFrame = pHolder->hAnimation.pAnimFile->GetLastFrame();
 	const bool rangeWasSpecified = firstFrame != 0 || lastFrame != 0;
 	const bool bNodeSkeleton = pSkeletonFile && pSkeletonFile->asset.skins.empty();
 	if ( !clipName.empty() )

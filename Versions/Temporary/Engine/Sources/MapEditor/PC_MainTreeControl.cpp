@@ -573,6 +573,8 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 
 void CPCMainTreeControl::OnCreateTreeTimer()
 {
+	CTreeUpdateLock update( *this );
+	const DWORD batchStart = GetTickCount();
 	//DebugTrace( "CPCMainTreeControl::OnCreateTreeTimer()" );
 	KillCreateTreeTimer();
 	if ( bCreateTree )
@@ -580,7 +582,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 		if ( pCreateTreeManipulatorIterator )
 		{
 			int nCount = 0;
-			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( nCount < GetCreateTreeTimerCount() ) )
+			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( !bAsync || nCount == 0 || GetTickCount() - batchStart < 16 ) )
  			{
 				std::string szName;
 				pCreateTreeManipulatorIterator->GetName( &szName );
@@ -614,6 +616,8 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 			pCreateTreeManipulatorIterator = 0;
 			//
 			bCreateControls = true;
+			// Restoring the caret scrolls the native tree; finish its layout first.
+			update.Unlock();
 			//SortTree( TVI_ROOT, PCMainTreeControlCompareFunc, reinterpret_cast<LPARAM>( this ) );
 			SelectPCItem( Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[GetObjectSet().szObjectTypeName].szCurrentProperty );
 			UpdateStatusStringWindow();
@@ -621,11 +625,11 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 			bCreateControls = false;
 			UpdatePCItemEditorPosition( 0 );
 			//
-			RedrawWindow();
+
 		}
 		else
 		{
-			RedrawWindow();
+
 			if ( bAsync )
 			{
 				SetCreateTreeTimer();
@@ -639,7 +643,7 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 	else
 	{
 		int nCount = 0;
-		while ( ( hCreateTreeParentItem != 0 ) && ( nCount < GetCreateTreeTimerCount() ) )
+		while ( ( hCreateTreeParentItem != 0 ) && ( !bAsync || nCount == 0 || GetTickCount() - batchStart < 16 ) )
 		{
 			if ( ( hCreateTreeParentItem != 0 ) &&
 					 ( hCreateTreeParentItem != TVI_ROOT ) )

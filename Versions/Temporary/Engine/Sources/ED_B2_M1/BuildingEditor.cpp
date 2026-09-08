@@ -152,7 +152,7 @@ void CBuildingEditor::DestroyControls()
 		{
 			pwndShortcutBar->Destroy();
 		}
-		delete pwndShortcutBar;
+		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndShortcutBar = 0;
 	}
 	wndShortcutBar.DestroyWindow();

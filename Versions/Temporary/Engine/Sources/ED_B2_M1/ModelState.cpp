@@ -40,6 +40,33 @@
 
 #include <zconf.h>
 
+namespace
+{
+// Loop a private preview clock, leaving the effect's lifetime and cycle settings
+// unchanged in the database. Start on the first rendered frame, after loading.
+class CEffectPreviewTime : public CFuncBase<NTimer::STime>
+{
+	OBJECT_BASIC_METHODS( CEffectPreviewTime );
+	CDGPtr<CFuncBase<NTimer::STime>> clock;
+	NTimer::STime start = 0;
+	NTimer::STime duration = 1;
+	bool started = false;
+	bool NeedUpdate() override { return clock.Refresh(); }
+	void Recalc() override
+	{
+		const NTimer::STime now = clock->GetValue();
+		if ( !started ) { start = now; started = true; }
+		value = ( now - start ) % duration;
+	}
+public:
+	CEffectPreviewTime() {}
+	CEffectPreviewTime( CFuncBase<NTimer::STime> *source, float seconds ) : clock(source)
+	{
+		duration = static_cast<NTimer::STime>( Clamp(seconds, 0.1f, 3600.0f) * 1000 );
+	}
+};
+}
+
 CModelState::CModelState( CModelEditor *_pModelEditor ) : nModelSceneID( INVALID_NODE_ID ), pModelEditor( _pModelEditor ), pMutableModel( 0 ), eModelEditorType( ET_MODEL )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MODEL_STATE, this );
@@ -149,6 +176,7 @@ void CModelState::Leave()
 
 void CModelState::ClearScene( bool bClearAll )
 {
+	previewEffects.clear();
 	if ( IEditorScene *pScene = EditorScene() )
 	{
 		if ( bClearAll )
@@ -204,104 +232,46 @@ void CModelState::UpdateModels( bool bUpdateAll )
 			ClearScene( bUpdateAll );
 			if ( !pModelEditor->GetObjectSet().objectNameSet.empty() )
 			{
-				if ( pModelEditor->GetObjectSet().szObjectTypeName == "Effect" )
+				const std::string &type = pModelEditor->GetObjectSet().szObjectTypeName;
+				if ( type == "Effect" || type == "ComplexEffect" )
 				{
-					if ( const NDb::SEffect *pEffect = NDb::Get<NDb::SEffect>( pModelEditor->GetObjectSet().objectNameSet.begin()->first ) )
+					std::vector<const NDb::SEffect*> effects;
+					const CDBID dbid = pModelEditor->GetObjectSet().objectNameSet.begin()->first;
+					if ( type == "Effect" )
+						effects.push_back( NDb::Get<NDb::SEffect>(dbid) );
+					else if ( const NDb::SComplexEffect *complex = NDb::Get<NDb::SComplexEffect>(dbid) )
 					{
-						const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
-						const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f ); 
-						if ( bUpdateAll )
-						{
-							CVec3 vPos = vModelPos + pModelEditor->editorSettings.vShift;
-							Vis2AIFast( &vPos );
-							nModelSceneID = pScene->AddEffect( -1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vPos, CQuat( 0, V3_AXIS_Z ) );
-						}
-						if ( pModelEditor->editorSettings.bDrawAnimations )
-						{
-							const int nMaxAnimationsCount = Clamp<int>( pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64 );
-							for ( int nAnimationIndex = 0; nAnimationIndex < nMaxAnimationsCount; ++nAnimationIndex )
-							{
-								const float fAngle = nAnimationIndex * FP_2PI / nMaxAnimationsCount;
-								CVec3 vAnimationPos = VNULL3;
-								if ( pModelEditor->editorSettings.bAnimationsCircle )
-								{
-									vAnimationPos = vModelPos + CVec3( pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
-									RotatePoint( &vAnimationPos, fAngle, vModelPos );
-								}
-								else
-								{
-									vAnimationPos = vModelPos + CVec3( ( nAnimationIndex + 1 ) * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
-								}
-								CVec3 vPos = vAnimationPos + pModelEditor->editorSettings.vShift;
-								Vis2AIFast( &vPos );
-								const int nAnimObjectSceneID = pScene->AddEffect( -1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vPos, CQuat( fAngle, V3_AXIS_Z ) );
-								if ( nAnimObjectSceneID != INVALID_NODE_ID )
-								{
-									animModelSceneIDList.push_back( nAnimObjectSceneID );
-								}
-							}
-						}
-					}
-				}
-				else if ( pModelEditor->GetObjectSet().szObjectTypeName == "ComplexEffect" )
-				{
-					if ( const NDb::SComplexEffect *pComplexEffect = NDb::Get<NDb::SComplexEffect>( pModelEditor->GetObjectSet().objectNameSet.begin()->first ) )
-					{
-						const NDb::SEffect *pEffect = 0;
-						if ( pComplexEffect->sceneEffects.empty() )
-						{
-							pEffect = pComplexEffect->pSceneEffect;
-						}
+						if ( complex->sceneEffects.empty() )
+							effects.push_back( complex->pSceneEffect );
 						else
+							for ( const auto &effect : complex->sceneEffects )
+								effects.push_back( effect );
+					}
+					const int gridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
+					const CVec3 center( gridSize * VIS_TILE_SIZE / 2, gridSize * VIS_TILE_SIZE / 2, 0 );
+					const int copies = pModelEditor->editorSettings.bDrawAnimations
+						? Clamp<int>(pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64) : 0;
+					for ( int i = 0; !effects.empty() && i <= copies; ++i )
+					{
+						const NDb::SEffect *effect = effects[i % effects.size()];
+						if ( !effect )
+							continue;
+						float angle = 0;
+						CVec3 pos = center;
+						if ( i > 0 && pModelEditor->editorSettings.bAnimationsCircle )
 						{
-							pEffect = pComplexEffect->sceneEffects[0];
+							angle = (i - 1) * FP_2PI / copies;
+							pos += CVec3(pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0, 0);
+							RotatePoint( &pos, angle, center );
 						}
-						//
-						const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
-						const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f ); 
-						if ( ( pEffect != 0 ) && bUpdateAll )
-						{
-							CVec3 vPos = vModelPos + pModelEditor->editorSettings.vShift;
-							Vis2AIFast( &vPos );
-							nModelSceneID = pScene->AddEffect( -1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vPos, CQuat( 0, V3_AXIS_Z ) );
-						}
-						if ( pModelEditor->editorSettings.bDrawAnimations )
-						{
-							const int nMaxAnimationsCount = Clamp<int>( pModelEditor->editorSettings.nMaxAnimationsCount, 0, 64 );
-							for ( int nAnimationIndex = 0; nAnimationIndex < nMaxAnimationsCount; ++nAnimationIndex )
-							{
-								if ( pComplexEffect->sceneEffects.empty() )
-								{
-									pEffect = pComplexEffect->pSceneEffect;
-								}
-								else
-								{
-									pEffect = pComplexEffect->sceneEffects[ ( nAnimationIndex + pModelEditor->editorSettings.bAnimationsCircle ? 0 : 1 ) % pComplexEffect->sceneEffects.size()];
-								}
-								if ( pEffect != 0 )
-								{
-									float fAngle = 0.0f;
-									CVec3 vAnimationPos = VNULL3;
-									if ( pModelEditor->editorSettings.bAnimationsCircle )
-									{
-										fAngle = nAnimationIndex * FP_2PI / nMaxAnimationsCount;
-										vAnimationPos = vModelPos + CVec3( pModelEditor->editorSettings.fAnimationsCircleDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
-										RotatePoint( &vAnimationPos, fAngle, vModelPos );
-									}
-									else
-									{
-										vAnimationPos = vModelPos + CVec3( ( nAnimationIndex + 1 ) * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE, 0.0f, 0.0f );
-									}
-									CVec3 vPos = vAnimationPos + pModelEditor->editorSettings.vShift;
-									Vis2AIFast( &vPos );
-									const int nAnimObjectSceneID = pScene->AddEffect( -1, pEffect, Singleton<IGameTimer>()->GetGameTime(), vPos, CQuat( fAngle, V3_AXIS_Z ) );
-									if ( nAnimObjectSceneID != INVALID_NODE_ID )
-									{
-										animModelSceneIDList.push_back( nAnimObjectSceneID );
-									}
-								}
-							}
-						}
+						else if ( i > 0 )
+							pos.x += i * pModelEditor->editorSettings.fAnimationsBetweenDistance * VIS_TILE_SIZE;
+						SFBTransform placement;
+						MakeMatrix( &placement.forward, pos + pModelEditor->editorSettings.vShift,
+							CQuat(angle, V3_AXIS_Z), CVec3(1, 1, 1) );
+						placement.backward.HomogeneousInverse( placement.forward );
+						CObj<CEffectPreviewTime> time = new CEffectPreviewTime(pScene->GetGameTimer(), effect->fDuration);
+						previewEffects.push_back( pScene->GetGView()->CreateParticles(effect, 0, time, placement) );
 					}
 				}
 				else
@@ -511,23 +481,22 @@ void CModelState::UpdateSceneColor( bool bReset )
 
 void CModelState::UpdateAIGeometry( bool bReset )
 {
-	if ( pModelEditor != 0 )
+	if ( pModelEditor == 0 )
+		return;
+
+	IEditorScene *pScene = EditorScene();
+	// ToggleAIGeometryMode disables either visible mode in one step. Avoid
+	// cycling through visible modes when AI geometry is already hidden: each
+	// such step synchronously loads collision geometry and builds its meshes.
+	if ( pScene->IsShowOn( SCENE_SHOW_AI_GEOM ) )
+		pScene->ToggleAIGeometryMode();
+
+	if ( !bReset && pModelEditor->editorSettings.bDrawAIGeometry )
 	{
-		if ( bReset )
-		{
-			if ( pModelEditor->editorSettings.bDrawAIGeometry )
-			{
-				while( EditorScene()->ToggleShow( SCENE_SHOW_AI_GEOM ) != false );
-			}
-		}
-		else
-		{
-			if ( pModelEditor->editorSettings.bDrawAIGeometry )
-			{
-				while( EditorScene()->ToggleAIGeometryMode() != pModelEditor->editorSettings.bShowSolidAIGeometry );
-			}
-			while( EditorScene()->ToggleShow( SCENE_SHOW_AI_GEOM ) != pModelEditor->editorSettings.bDrawAIGeometry );
-		}
+		// ToggleShow cycles NONE -> OVER -> SOLID -> NONE.
+		pScene->ToggleShow( SCENE_SHOW_AI_GEOM );
+		if ( pModelEditor->editorSettings.bShowSolidAIGeometry )
+			pScene->ToggleShow( SCENE_SHOW_AI_GEOM );
 	}
 }
 

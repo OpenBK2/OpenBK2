@@ -864,6 +864,8 @@ void CTreeGDBBrowserBase::CreateTree()
 
 void CTreeGDBBrowserBase::OnCreateTreeTimer()
 {
+	CTreeUpdateLock update( *this );
+	const DWORD batchStart = GetTickCount();
 	KillCreateTreeTimer();
 	//
 	if ( pCreateTreeManipulatorIterator )
@@ -871,7 +873,7 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 		int nCount = 0;
 		if ( !GetObjectSet().szObjectTypeName.empty() )
 		{
-			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( nCount < GetCreateTreeTimerCount() ) )
+			while ( ( !pCreateTreeManipulatorIterator->IsEnd() ) && ( nCount == 0 || GetTickCount() - batchStart < 16 ) )
 			{
 				std::string szName;
 				std::string szType;
@@ -909,6 +911,10 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 			}
 		}
 	}
+	// EnsureVisible needs the native row/scroll layout rebuilt by WM_SETREDRAW.
+	// Calling it inside the insertion lock can recurse in comctl32 while loading
+	// the saved selection. Also avoid scrolling back to it after every batch.
+	update.Unlock();
 	if ( ( pCreateTreeManipulatorIterator == 0 ) || ( pCreateTreeManipulatorIterator->IsEnd() ) )
 	{
 		pCreateTreeManipulatorIterator = 0;
@@ -918,7 +924,7 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 			EnsureVisible( hItem );
 		}
 		bCreateControls = false;
-		RedrawWindow();
+
 
 		if ( !bCreateTreeSelectionChanged && szIgnoreSelectionName.empty() )
 		{
@@ -930,17 +936,10 @@ void CTreeGDBBrowserBase::OnCreateTreeTimer()
 			bCreateControls = false;
 		}
 		//
-		RedrawWindow();
+
 	}
 	else
 	{
-		bCreateControls = true;
-		if ( HTREEITEM hItem = GetFirstSelectedItem() )
-		{
-			EnsureVisible( hItem );
-		}
-		bCreateControls = false;
-		RedrawWindow();
 		SetCreateTreeTimer();
 	}
 }

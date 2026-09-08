@@ -27,7 +27,7 @@ bool Copy( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D
 bool CopyAB( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray2D<uint32_t> &dst, const CTPoint<long> &dstPos = CTPoint<long>(0, 0) );
 //
 bool LoadAnyImage( CArray2D<uint32_t> *pRes, CDataStream *pStream );
-IMAGE_EXPORT void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
+IMAGE_EXPORT bool ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize );
 
 struct SColor

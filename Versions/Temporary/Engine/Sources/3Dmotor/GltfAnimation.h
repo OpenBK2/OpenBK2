@@ -70,6 +70,8 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	void Create( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
 	bool BindAnimation( SAnimationHolder *pHolder );
 	bool SelectAnimationRange( SAnimationHolder *pHolder );
+	bool SelectAnimationRange( SAnimationHolder *pHolder, const NGltf::TGltfFilePtr &file,
+		const std::string &clipName, int firstFrame, int lastFrame );
 	void ResolveBoundChannels( SAnimationHolder *pHolder );
 	float GetEffectiveWeight( const SAnimationHolder &holder, STime time ) const;
 	float GetLocalTime( const SAnimationHolder &holder, STime time, bool *pActive ) const;
@@ -85,6 +87,9 @@ protected:
 	void Recalc() override;
 
 public:
+	// Export metadata must use the same clip/frame selection as playback.
+	_3DMOTOR_EXPORT static bool GetSourceDuration( const NGltf::TGltfFilePtr &file,
+		const std::string &clipName, int firstFrame, int lastFrame, float *seconds );
 	CGltfSkeletonAnimator();
 	CGltfSkeletonAnimator( const SSkeletonHandle &_skeletonH, CFuncBase<STime> *_pTime );
 	~CGltfSkeletonAnimator() override {}

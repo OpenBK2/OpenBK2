@@ -20,18 +20,19 @@ namespace NImage
 bool RecognizeFormatTGA( CDataStream *pStream )
 {
 	const int nOriginalPos = pStream->GetPosition();
-	// check for the new/original TGA file format
-	pStream->Seek( pStream->GetSize() - 26 );
-	STGAFileFooter footer;
-	pStream->Read( &footer, sizeof(footer) );
-	pStream->Seek( nOriginalPos );
-	// check for the new
-	char pszSignature[32];
-	memcpy( pszSignature, footer.cSignature, 16 );
-	pszSignature[16] = 0;
-	bool bNewTGA = ( footer.cReservedCharacter == '.' ) && ( strcmp(pszSignature, "TRUEVISION-XFILE") == 0 );
-	if ( bNewTGA )
-		return true;
+	// Original TGA files can be smaller than the optional 26-byte footer.
+	if ( pStream->GetSize() - nOriginalPos < sizeof(STGAFileHeader) )
+		return false;
+	if ( pStream->GetSize() >= sizeof(STGAFileFooter) )
+	{
+		pStream->Seek(pStream->GetSize() - sizeof(STGAFileFooter));
+		STGAFileFooter footer = {};
+		pStream->Read(&footer, sizeof(footer));
+		pStream->Seek(nOriginalPos);
+		if ( footer.cReservedCharacter == '.' &&
+			memcmp(footer.cSignature, "TRUEVISION-XFILE", 16) == 0 )
+			return true;
+	}
 	// check for the original
 	STGAFileHeader hdr;
 	pStream->Read( &hdr, sizeof(hdr) );

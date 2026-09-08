@@ -6,6 +6,7 @@
 #include "Stats_B2_M1/IconsSet.h"
 #include "Image/Targa.h"
 #include "ExporterMethods.h"
+#include "ED_Common/GltfExporter.h"
 #include "SeasonMnemonics.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
@@ -269,6 +270,35 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 
 	// читаем файл скелета для получения имен костей (локаторов)
 	const NDb::SSkeleton *pDBSkeleton = NDb::Get<NDb::SSkeleton>( dbidSkeleton );
+	if ( pDBSkeleton && !pDBSkeleton->szModelFileRef.empty() )
+	{
+		// The runtime animator already supports GLTF; names and hierarchy must
+		// come from that same skeleton instead of the legacy uid-based binary.
+		const auto file = NGltf::LoadFile(pDBSkeleton, pDBSkeleton->szModelFileRef);
+		NGltf::SSkeletonDefinition skeleton;
+		if ( !NGltf::BuildSkeleton(file, pDBSkeleton->szRootJoint, 0, &skeleton) )
+			return;
+		std::vector<int> indices(skeleton.boneNames.size(), -1);
+		const size_t first = pLocatorsInfo->size();
+		for ( size_t i = 0; i < skeleton.boneNames.size(); ++i )
+		{
+			SSkeletonLocatorInfo locator;
+			locator.szName = skeleton.boneNames[i];
+			if ( !pAnimator->GetBonePosition(locator.szName.c_str(), &locator.vPos) ||
+				!pAnimator->GetBonePosition(locator.szName.c_str(), &locator.mtx) )
+				continue;
+			Vis2AI(&locator.vPos);
+			locator.nParentIdx = skeleton.parents[i];
+			indices[i] = static_cast<int>(pLocatorsInfo->size());
+			pLocatorsInfo->push_back(locator);
+		}
+		for ( size_t i = first; i < pLocatorsInfo->size(); ++i )
+		{
+			int &parent = (*pLocatorsInfo)[i].nParentIdx;
+			parent = parent >= 0 && parent < indices.size() ? indices[parent] : -1;
+		}
+		return;
+	}
 	std::string szFilePath = NBinResources::GetExistentBinaryFileName( szSkeletonsFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid );
 
 	WaitForFile( szFilePath, 10000 );
@@ -749,6 +779,8 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 // Acquire attributes for a given model
 bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *pAttributeList )
 {
+	if ( NEditorGltf::IsGltf(pGeomMan) )
+		return NEditorGltf::ReadAttributes(pGeomMan, pAttributeList);
 	return ReadAttributes( pAttributeList, NMEGeomAttribs::GetAttribsByGeometry(pGeomMan), "", true );
 }
 

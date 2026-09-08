@@ -1636,11 +1636,9 @@ void SEC_TREECLASS::UpdateMultiSelectStyle() {
 // Where the modifier keys mean what they mean everywhere else: Ctrl adds one,
 // Shift takes a run, and a plain click starts again.
 //
-// The control has the click first. It takes the focus, moves the caret, decides
-// whether this is the start of a drag or a label edit, and tells the editor
-// through TVN_SELCHANGED -- none of which should be reimplemented here. What it
-// also does is select exactly one item, and everything after the call puts the
-// real selection back over that.
+// Keep the native click handling for focus, dragging and label editing, but
+// defer its selection notifications until the caret and our selection agree.
+// Property panels read m_selection in their reflected TVN_SELCHANGED handler.
 void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
     TVHITTESTINFO hitTest = { 0 };
     hitTest.pt = point;
@@ -1656,47 +1654,74 @@ void SEC_TREECLASS::OnLButtonDown( UINT nFlags, CPoint point ) {
         }
         return;
     }
-    // The expand button, the indent and the space past the last item belong to
-    // the control and change no selection.
-    if ( hItem == nullptr
-         || ( hitTest.flags & ( TVHT_ONITEM | TVHT_ONITEMRIGHT ) ) == 0 ) {
-        CWnd::OnLButtonDown( nFlags, point );
+    // Expand buttons, indentation and empty space keep their native behavior.
+    if (hItem == nullptr
+        || (hitTest.flags & (TVHT_ONITEM | TVHT_ONITEMRIGHT)) == 0) {
+        CWnd::OnLButtonDown(nFlags, point);
         return;
     }
 
-    const bool bCtrl = ( nFlags & MK_CONTROL ) != 0;
-    const bool bShift = ( nFlags & MK_SHIFT ) != 0;
+    const bool bCtrl = (nFlags & MK_CONTROL) != 0;
+    const bool bShift = (nFlags & MK_SHIFT) != 0;
+    const HTREEITEM hOldCaret = TreeView_GetSelection(GetSafeHwnd());
+    const auto oldSelection = m_selection;
+    bool bRemovedItem = false;
 
-    m_bOwnSelection = true;
-    // The native tree treats values as blank space to the right of its label.
-    // Do not let its label-edit/drag tracking consume a value-cell click.
-    if (subItem) SetFocus();
-    else CWnd::OnLButtonDown(nFlags, point);
-    m_bOwnSelection = false;
-
-    if ( bShift && m_hSelAnchor != nullptr ) {
-        // The anchor stays where it was, so dragging the shifted end back and
-        // forth grows and shrinks one run rather than leaving a trail.
+    // Prepare the set before native drag/focus callbacks can query it.
+    if (bShift && m_hSelAnchor != nullptr) {
         m_selection.clear();
-        SelectRange( m_hSelAnchor, hItem, true );
-    } else if ( bCtrl ) {
-        const bool bWasSelected = InSelection( hItem );
-        SetInSelection( hItem, !bWasSelected );
+        SelectRange(m_hSelAnchor, hItem, true);
+    } else if (bCtrl) {
+        bRemovedItem = InSelection(hItem);
+        SetInSelection(hItem, !bRemovedItem);
         SortSelection();
         m_hSelAnchor = hItem;
-        if ( bWasSelected ) {
-            MoveCaretIntoSelection();
-        }
     } else {
-        m_selection.assign( 1, hItem );
+        m_selection.assign(1, hItem);
         m_hSelAnchor = hItem;
     }
-    if (subItem && InSelection(hItem)) {
-        m_bOwnSelection = true;
+
+    const bool bWasOwn = m_bOwnSelection;
+    const bool bWasDeferred = m_bDeferSelectionNotify;
+    m_bOwnSelection = true;
+    m_bDeferSelectionNotify = true;
+    // Value columns are outside the native label; select their row explicitly.
+    if (subItem) SetFocus();
+    else CWnd::OnLButtonDown(nFlags, point);
+    if (InSelection(hItem))
         TreeView_SelectItem(GetSafeHwnd(), hItem);
-        m_bOwnSelection = false;
-    }
+    if (bRemovedItem)
+        MoveCaretIntoSelection();
     ApplySelection();
+    m_bOwnSelection = bWasOwn;
+    m_bDeferSelectionNotify = bWasDeferred;
+
+    // Ctrl/Shift can change the set without moving the caret. Native controls
+    // send no notification in that case, so publish the completed gesture here.
+    if (!bWasDeferred && (oldSelection != m_selection
+        || hOldCaret != TreeView_GetSelection(GetSafeHwnd())))
+        NotifySelectionChanged(hOldCaret, TVC_BYMOUSE);
+}
+
+void SEC_TREECLASS::NotifySelectionChanged( HTREEITEM hOldCaret, UINT action ) {
+    CWnd *parent = GetParent();
+    if (parent == nullptr) return;
+    NMTREEVIEW change = {};
+    change.hdr.hwndFrom = GetSafeHwnd();
+    change.hdr.idFrom = GetDlgCtrlID();
+    change.hdr.code = TVN_SELCHANGED;
+    change.action = action;
+    change.itemOld.hItem = hOldCaret;
+    change.itemNew.hItem = TreeView_GetSelection(GetSafeHwnd());
+    for (TVITEM *item : {&change.itemOld, &change.itemNew}) {
+        item->mask = TVIF_HANDLE | TVIF_PARAM | TVIF_STATE;
+        item->stateMask = TVIS_SELECTED;
+        if (item->hItem != nullptr) TreeView_GetItem(GetSafeHwnd(), item);
+    }
+    const bool bWasOwn = m_bOwnSelection;
+    m_bOwnSelection = true;
+    parent->SendMessage(WM_NOTIFY, change.hdr.idFrom, reinterpret_cast<LPARAM>(&change));
+    m_bOwnSelection = bWasOwn;
 }
 
 void SEC_TREECLASS::PrepareContextMenu(CPoint& screenPoint) {
@@ -1776,6 +1801,12 @@ BOOL SEC_TREECLASS::OnChildNotify( UINT message, WPARAM wParam, LPARAM lParam, L
             return TRUE;
         }
         if ( pHdr->code == TVN_SELCHANGEDA || pHdr->code == TVN_SELCHANGEDW ) {
+            // The derived property/browser handler must see the completed set,
+            // never the intermediate caret moves made during a mouse gesture.
+            if (m_bDeferSelectionNotify) {
+                if (pLResult != nullptr) *pLResult = 0;
+                return TRUE;
+            }
             OnTreeSelChanged( pHdr );
         } else if ( pHdr->code == TVN_DELETEITEMA || pHdr->code == TVN_DELETEITEMW ) {
             OnTreeDeleteItem( pHdr );

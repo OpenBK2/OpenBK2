@@ -2,6 +2,7 @@
 #include <fmt/format.h>
 
 #include "BasicSceneExporter.h"
+#include "GltfExporter.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_MOD.h"
 
@@ -56,6 +57,13 @@ EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator* pManipulator,
                                                  bool bForce,
                                                  EXPORT_TYPE exportType )
 {
+	// GLTF resources already contain engine-readable geometry and animations.
+	if ( NEditorGltf::IsGltf(pManipulator) )
+	{
+		if ( exportType == ET_AFTER_REF ) return ER_SUCCESS;
+		return NEditorGltf::Export(pManipulator, rszObjectTypeName, true) &&
+			ImportGltfInfo(pManipulator) ? ER_SUCCESS : ER_BREAK;
+	}
 	NI_ASSERT( pManipulator != 0, "CBasicSceneExporter::ExportObject() pManipulator == 0 )" );
 	ILogger *pLogger = NLog::GetLogger();
 	//
@@ -136,6 +144,8 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 																								bool bExport,
 																								EXPORT_TYPE exportType )
 {
+	if ( NEditorGltf::IsGltf(pManipulator) )
+		return NEditorGltf::Export(pManipulator, rszObjectTypeName, false) ? ER_SUCCESS : ER_BREAK;
 	if ( exportType == ET_BEFORE_REF ) 
 		return ER_SUCCESS;
 	//

@@ -9,6 +9,8 @@
 #include "System/BinaryResources.h"
 #include "3Dmotor/DBScene.h"
 #include "TraceModel.h"
+#include "3Dmotor/GltfFormat.h"
+#include <fastgltf/tools.hpp>
 
 //
 // http://www.acm.org/jgt/papers/MollerTrumbore97/code.html
@@ -160,9 +162,9 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 	//
 	float fAITileSize = VIS_TILE_SIZE / float( AI_TILES_IN_VIS_TILE );
 	//
-	int nDivX = (rvMax.x - rvMin.x) / Clamp( ( rvMax.x - rvMin.x ) / 10.0f, fAITileSize, fAITileSize * 8.0f );
-	int nDivY = (rvMax.y - rvMin.y) / Clamp( ( rvMax.y - rvMin.y ) / 10.0f, fAITileSize, fAITileSize * 8.0f );
-	int nDivZ = (rvMax.z - rvMin.z) / Clamp( ( rvMax.z - rvMin.z ) / 10.0f, fAITileSize, fAITileSize * 8.0f );
+	int nDivX = (std::max)(1, static_cast<int>((rvMax.x - rvMin.x) / Clamp( ( rvMax.x - rvMin.x ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
+	int nDivY = (std::max)(1, static_cast<int>((rvMax.y - rvMin.y) / Clamp( ( rvMax.y - rvMin.y ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
+	int nDivZ = (std::max)(1, static_cast<int>((rvMax.z - rvMin.z) / Clamp( ( rvMax.z - rvMin.z ) / 10.0f, fAITileSize, fAITileSize * 8.0f )));
 	//
 	float fDx = (rvMax.x - rvMin.x) / nDivX;
 	float fDy = (rvMax.y - rvMin.y) / nDivY;
@@ -323,6 +325,68 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 	//sprintf( pszBuf, "%d", nGeometryResourceID );
 	//std::string szFilePath = szGeometriesFolder + pszBuf;
 	CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( rszGeometryResourceName ) );
+	if ( pGeometry && !pGeometry->szModelFileRef.empty() )
+	{
+		const auto file = NGltf::LoadFile(pGeometry, pGeometry->szModelFileRef);
+		std::vector<size_t> nodes;
+		CVec3 minimum, maximum;
+		if ( !NGltf::GetMeshNodes(file, pGeometry->szRootMesh, &nodes) ||
+			!NGltf::GetMeshBoundingBox(file, pGeometry->szRootMesh, false, &minimum, &maximum) )
+			return false;
+		std::vector<STriangleForTrace> triangles;
+		for ( size_t index : nodes )
+		{
+			const auto &node = file->asset.nodes[index];
+			for ( const auto &primitive : file->asset.meshes[*node.meshIndex].primitives )
+			{
+				const auto position = primitive.findAttribute("POSITION");
+				if ( position == primitive.attributes.end() ) continue;
+				const auto &positions = file->Vec3Accessor(position->accessorIndex);
+				std::vector<uint32_t> indices;
+				if ( primitive.indicesAccessor )
+					fastgltf::iterateAccessor<uint32_t>(file->asset, file->asset.accessors[*primitive.indicesAccessor],
+						[&](uint32_t vertex) { indices.push_back(vertex); });
+				else
+					for ( size_t i = 0; i < positions.size(); ++i ) indices.push_back(static_cast<uint32_t>(i));
+				auto triangle = [&](uint32_t a, uint32_t b, uint32_t c)
+				{
+					if ( a >= positions.size() || b >= positions.size() || c >= positions.size() ) return false;
+					if ( a == b || b == c || a == c ) return true;
+					STriangleForTrace result;
+					result.szBodyPart = std::string(node.name);
+					// The Y/Z basis swap reverses winding, just as in the renderer.
+					const uint32_t vertices[] = {a, c, b};
+					for ( int v = 0; v < 3; ++v )
+					{
+						const CVec3 point = NGltf::ConvertPosition(positions[vertices[v]]);
+						if ( node.skinIndex ) result.vertices[v] = point;
+						else file->nodeWorldTransforms[index].RotateHVector(&result.vertices[v], point);
+					}
+					triangles.push_back(result);
+					return true;
+				};
+				if ( primitive.type == fastgltf::PrimitiveType::Triangles )
+				{
+					if ( indices.size() % 3 ) return false;
+					for ( size_t i = 0; i + 2 < indices.size(); i += 3 )
+						if ( !triangle(indices[i], indices[i+1], indices[i+2]) ) return false;
+				}
+				else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
+				{
+					for ( size_t i = 2; i < indices.size(); ++i )
+						if ( !triangle(indices[i-2+(i%2)], indices[i-1-(i%2)], indices[i]) ) return false;
+				}
+				else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
+				{
+					for ( size_t i = 2; i < indices.size(); ++i )
+						if ( !triangle(indices[0], indices[i-1], indices[i]) ) return false;
+				}
+			}
+		}
+		if ( triangles.empty() ) return false;
+		TraceTriangles(pSurfacePoints, triangles, minimum, maximum, 1);
+		return true;
+	}
 	std::string szFilePath = NBinResources::GetExistentBinaryFileName( szGeometriesFolder, pGeometry->GetRecordID(), pGeometry->uid  ); // uid
 
 	WaitForFile( szFilePath, 10000 );

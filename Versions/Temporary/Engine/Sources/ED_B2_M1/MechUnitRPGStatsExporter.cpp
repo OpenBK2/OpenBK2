@@ -101,6 +101,8 @@
 #include "AnimationMnemonics.h"
 #include "ExporterMethods.h"
 #include "MechUnitRPGStatsExporter.h"
+#include "ED_Common/GltfExporter.h"
+#include <unordered_set>
 #include "System/FastMath.h"
 #include "ED_Common/TempAttributesTool.h"
 
@@ -524,105 +526,41 @@ static void GetPlatforms( std::vector<SPlatformInfo> *pPlatforms, const std::vec
 static void GetConstraintInfoFromFile( std::vector<SConstraintInfo> *pConstraints, IManipulator *pMan )
 {
 	CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( VISUALOBJECT, pMan, 0, 0, 0 );
-	granny_file_info *pInfo = NMEGeomAttribs::GetAttribsByVisObj( pVisObjMan );
-	if ( !pInfo )
-		return;
-
-	granny_skeleton *pSkeleton = pInfo->Skeletons[0];
-	for ( int nBoneIndex = 0; nBoneIndex < pSkeleton->BoneCount; ++nBoneIndex )
+	CPtr<IManipulator> model = CreateModelManipulatorFromVisObj(pVisObjMan, nullptr);
+	if ( !model ) return;
+	CPtr<IManipulator> geometry = CManipulatorManager::CreateManipulatorFromReference("Geometry", model, 0, 0, 0);
+	CGrannyBoneAttributesList attributes;
+	if ( !geometry || !GetGeometryAttributes(geometry, &attributes) ) return;
+	// GLTF node extras retain the legacy constraint names and engine units.
+	for ( const auto &bone : attributes )
 	{
-		granny_bone *pBone = &pSkeleton->Bones[nBoneIndex];
-		SConstraintInfo inf;
-		inf.szName = pBone->Name;
-		//
-		struct SGrannyConstr
-		{
-			granny_real32 minTransXLimit;
-			granny_real32 minTransYLimit;
-			granny_real32 minTransZLimit;
-			granny_real32 maxTransXLimit;
-			granny_real32 maxTransYLimit;
-			granny_real32 maxTransZLimit;
-			granny_real32 minTransXLimitEnable;
-			granny_real32 minTransYLimitEnable;
-			granny_real32 minTransZLimitEnable;
-			granny_real32 maxTransXLimitEnable;
-			granny_real32 maxTransYLimitEnable;
-			granny_real32 maxTransZLimitEnable;
-			granny_real32 minRotXLimit;
-			granny_real32 minRotYLimit;
-			granny_real32 minRotZLimit;
-			granny_real32 maxRotXLimit;
-			granny_real32 maxRotYLimit;
-			granny_real32 maxRotZLimit;
-			granny_real32 minRotXLimitEnable;
-			granny_real32 minRotYLimitEnable;
-			granny_real32 minRotZLimitEnable;
-			granny_real32 maxRotXLimitEnable;
-			granny_real32 maxRotYLimitEnable;
-			granny_real32 maxRotZLimitEnable;
-		} grannyConstr = {0};
-		granny_data_type_definition SGrannyConstrTypedef[] =
-		{
-			{ GrannyReal32Member, "minTransXLimit" },
-			{ GrannyReal32Member, "minTransYLimit" },
-      { GrannyReal32Member, "minTransZLimit" },
-      { GrannyReal32Member, "maxTransXLimit" },
-      { GrannyReal32Member, "maxTransYLimit" },
-      { GrannyReal32Member, "maxTransZLimit" },
-      { GrannyReal32Member, "minTransXLimitEnable" },
-      { GrannyReal32Member, "minTransYLimitEnable" },
-      { GrannyReal32Member, "minTransZLimitEnable" },
-      { GrannyReal32Member, "maxTransXLimitEnable" },
-      { GrannyReal32Member, "maxTransYLimitEnable" },
-      { GrannyReal32Member, "maxTransZLimitEnable" },
-      { GrannyReal32Member, "minRotXLimit" },
-      { GrannyReal32Member, "minRotYLimit" },
-      { GrannyReal32Member, "minRotZLimit" },
-      { GrannyReal32Member, "maxRotXLimit" },
-      { GrannyReal32Member, "maxRotYLimit" },
-      { GrannyReal32Member, "maxRotZLimit" },
-      { GrannyReal32Member, "minRotXLimitEnable" },
-      { GrannyReal32Member, "minRotYLimitEnable" },
-      { GrannyReal32Member, "minRotZLimitEnable" },
-      { GrannyReal32Member, "maxRotXLimitEnable" },
-      { GrannyReal32Member, "maxRotYLimitEnable" },
-      { GrannyReal32Member, "maxRotZLimitEnable" },
-			{ GrannyEndMember }
-		};
-	  GrannyConvertSingleObject(	pBone->ExtendedData.Type, pBone->ExtendedData.Object,
-									SGrannyConstrTypedef, &grannyConstr, nullptr );
-		
-		inf.bTransConstrMinEnable[0] = grannyConstr.minTransXLimitEnable;
-		inf.bTransConstrMinEnable[1] = grannyConstr.minTransYLimitEnable;
-		inf.bTransConstrMinEnable[2] = grannyConstr.minTransZLimitEnable;
-		inf.transLimitMin.x = grannyConstr.minTransXLimit;
-		inf.transLimitMin.y = grannyConstr.minTransYLimit;
-		inf.transLimitMin.z = grannyConstr.minTransZLimit;
-
-		inf.bTransConstrMaxEnable[0] = grannyConstr.maxTransXLimitEnable;
-		inf.bTransConstrMaxEnable[1] = grannyConstr.maxTransYLimitEnable;
-		inf.bTransConstrMaxEnable[2] = grannyConstr.maxTransZLimitEnable;
-		inf.transLimitMax.x = grannyConstr.maxTransXLimit;
-		inf.transLimitMax.y = grannyConstr.maxTransYLimit;
-		inf.transLimitMax.z = grannyConstr.maxTransZLimit;
-
-		inf.bRotConstrMinEnable[0] = grannyConstr.minRotXLimitEnable;
-		inf.bRotConstrMinEnable[1] = grannyConstr.minRotYLimitEnable;
-		inf.bRotConstrMinEnable[2] = grannyConstr.minRotZLimitEnable;
-
-		inf.rotLimitMin.x = grannyConstr.minRotXLimit;
-		inf.rotLimitMin.y = grannyConstr.minRotYLimit;
-		inf.rotLimitMin.z = grannyConstr.minRotZLimit;
-
-		inf.bRotConstrMaxEnable[0] = grannyConstr.maxRotXLimitEnable;
-		inf.bRotConstrMaxEnable[1] = grannyConstr.maxRotYLimitEnable;
-		inf.bRotConstrMaxEnable[2] = grannyConstr.maxRotZLimitEnable;
-		inf.rotLimitMax.x = grannyConstr.maxRotXLimit;
-		inf.rotLimitMax.y = grannyConstr.maxRotYLimit;
-		inf.rotLimitMax.z = grannyConstr.maxRotZLimit;
-		//
-		pConstraints->push_back( inf );
+		SConstraintInfo inf = {};
+		inf.szName = bone.szRealName;
+		bone.GetAttribute("mintransxlimit", &inf.transLimitMin.x);
+		bone.GetAttribute("mintransxlimitenable", &inf.bTransConstrMinEnable[0]);
+		bone.GetAttribute("mintransylimit", &inf.transLimitMin.y);
+		bone.GetAttribute("mintransylimitenable", &inf.bTransConstrMinEnable[1]);
+		bone.GetAttribute("mintranszlimit", &inf.transLimitMin.z);
+		bone.GetAttribute("mintranszlimitenable", &inf.bTransConstrMinEnable[2]);
+		bone.GetAttribute("maxtransxlimit", &inf.transLimitMax.x);
+		bone.GetAttribute("maxtransxlimitenable", &inf.bTransConstrMaxEnable[0]);
+		bone.GetAttribute("maxtransylimit", &inf.transLimitMax.y);
+		bone.GetAttribute("maxtransylimitenable", &inf.bTransConstrMaxEnable[1]);
+		bone.GetAttribute("maxtranszlimit", &inf.transLimitMax.z);
+		bone.GetAttribute("maxtranszlimitenable", &inf.bTransConstrMaxEnable[2]);
+		bone.GetAttribute("minrotxlimit", &inf.rotLimitMin.x);
+		bone.GetAttribute("minrotxlimitenable", &inf.bRotConstrMinEnable[0]);
+		bone.GetAttribute("minrotylimit", &inf.rotLimitMin.y);
+		bone.GetAttribute("minrotylimitenable", &inf.bRotConstrMinEnable[1]);
+		bone.GetAttribute("minrotzlimit", &inf.rotLimitMin.z);
+		bone.GetAttribute("minrotzlimitenable", &inf.bRotConstrMinEnable[2]);
+		bone.GetAttribute("maxrotxlimit", &inf.rotLimitMax.x);
+		bone.GetAttribute("maxrotxlimitenable", &inf.bRotConstrMaxEnable[0]);
+		bone.GetAttribute("maxrotylimit", &inf.rotLimitMax.y);
+		bone.GetAttribute("maxrotylimitenable", &inf.bRotConstrMaxEnable[1]);
+		bone.GetAttribute("maxrotzlimit", &inf.rotLimitMax.z);
+		bone.GetAttribute("maxrotzlimitenable", &inf.bRotConstrMaxEnable[2]);
+		pConstraints->push_back(inf);
 	}
 }
 
@@ -658,7 +596,22 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 			return true;
 		//
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
+		if ( !pGeomMan ) return false;
 		CPtr<IManipulator> pAIGeomMan = CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
+		if ( !pAIGeomMan && NEditorGltf::IsGltf(pGeomMan) )
+		{
+			CVec3 minimum, maximum;
+			std::string root;
+			CManipulatorManager::GetValue(&root, pGeomMan, "RootMesh");
+			if ( !NGltf::GetMeshBoundingBox(NEditorGltf::Load(pGeomMan), root, true, &minimum, &maximum) )
+				return false;
+			CVec3 center = (minimum + maximum) * 0.5f, halfSize = (maximum - minimum) * 0.5f;
+			Vis2AI(&center);
+			Vis2AI(&halfSize);
+			return CManipulatorManager::SetVec2(CVec2(center.x, center.y), pItUnit, "AABBCenter") &&
+				CManipulatorManager::SetVec2(CVec2(halfSize.x, halfSize.y), pItUnit, "AABBHalfSize");
+		}
+		if ( !pAIGeomMan ) return false;
 		// AABB center
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
@@ -1363,20 +1316,81 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 	}
 }
 
+namespace
+{
+bool ValidateUnitModelSources( IManipulator *resource, const std::string &type,
+	std::unordered_set<CDBID> *visited, std::string *error )
+{
+	if ( !visited->insert(resource->GetDBID()).second ) return true;
+	if ( type == "Geometry" || type == "AIGeometry" || type == "Skeleton" || type == "AnimB2" )
+	{
+		if ( !NEditorGltf::IsGltf(resource) )
+		{
+			*error = "Maya/Granny source export is no longer supported for MechUnitRPGStats.\n"
+				"Set ModelFileRef (or SrcName) to a GLB/GLTF model first.\n\n" + NDb::GetFileName(resource->GetDBID());
+			return false;
+		}
+		if ( !NEditorGltf::Export(resource, type, false) )
+		{
+			*error = "Cannot export the GLB/GLTF resource below. Check its source file and "
+				"RootMesh, RootJoint or ClipName; details are in the log.\n\n" + NDb::GetFileName(resource->GetDBID());
+			return false;
+		}
+	}
+	CPtr<IManipulatorIterator> it = resource->Iterate(true, ECT_CACHE_GLOBAL);
+	if ( !it ) return true;
+	for ( ; !it->IsEnd(); it->Next() )
+	{
+		std::string name;
+		it->GetName(&name);
+		const auto *desc = dynamic_cast<const SPropertyDesc *>(resource->GetDesc(name));
+		if ( !desc || desc->refTypes.empty() ) continue;
+		std::string refType, refName;
+		if ( !CManipulatorManager::GetParamsFromReference(name, resource, &refType, &refName, nullptr) ||
+			refName.empty() ) continue;
+		// Only the model/animation graph needs source conversion; textures and
+		// gameplay references retain their own exporters and validation.
+		if ( refType != "VisObj" && refType != "Model" && refType != "Geometry" &&
+			refType != "AIGeometry" && refType != "Skeleton" && refType != "AnimB2" ) continue;
+		CPtr<IManipulator> child = CManipulatorManager::CreateManipulatorFromReference(name, resource, 0, 0, 0);
+		if ( !child )
+		{
+			*error = "Cannot load model resource: " + refName;
+			return false;
+		}
+		if ( !ValidateUnitModelSources(child, refType, visited, error) ) return false;
+	}
+	return true;
+}
+}
+
 EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																											 const std::string &rszObjectTypeName,
 																											 const std::string &rszObjectName,
 																											 bool bForce,
 																											 EXPORT_TYPE exportType )
 {
-	CHPObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
+	if ( exportType != ET_AFTER_REF )
+	{
+		// Abort before recursive exporters can launch Maya or replace unit data.
+		std::unordered_set<CDBID> visited;
+		std::string error;
+		if ( !ValidateUnitModelSources(pManipulator, rszObjectTypeName, &visited, &error) )
+		{
+			::MessageBoxA(nullptr, error.c_str(), "MechUnit export", MB_OK | MB_ICONERROR);
+			return ER_BREAK;
+		}
+	}
+	const EXPORT_RESULT baseResult = CHPObjectRPGStatsExporter::ExportObject(
+		pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType);
+	if ( baseResult == ER_FAIL || baseResult == ER_BREAK ) return baseResult;
 	//
 	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
 
 	ProcessMechUnitAnimations( pManipulator );
 
-	ProcessAABB( pManipulator );
+	if ( !ProcessAABB(pManipulator) ) return ER_FAIL;
 	//
 	std::vector<SSkeletonLocatorInfo> visualObjectLocators;
 	std::vector<SSkeletonLocatorInfo> animateModelLocators;

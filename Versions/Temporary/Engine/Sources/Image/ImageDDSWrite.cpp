@@ -43,7 +43,8 @@ namespace NImage
 
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
-	const int nMaxPossible = GetMSB( (std::min)(nWidth, nHeight) ) - ( (ePixelFormat >= CF_DXT1) && (ePixelFormat <= CF_DXT5) ? 2 : 0 );
+	// Include the base level and allow the tail down to 1x1, including DXT blocks.
+	const int nMaxPossible = GetMSB( (std::max)(nWidth, nHeight) ) + 1;
 	return nNumMipLevels <= 0 ? nMaxPossible : (std::min)( nNumMipLevels, nMaxPossible );
 }
 
@@ -55,26 +56,26 @@ static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelF
 // **
 // ************************************************************************************************************************ //
 
-static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
+static bool WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
 	const std::vector<CArray2D<uint32_t> > &mips )
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
-		return;
+		return false;
 	D3DFORMAT fmt = NGfx::PixelID2D3DFormat( ePixelFormat );
 	if ( fmt == D3DFMT_A8R8G8B8 && ePixelFormat != NGfx::CF_A8R8G8B8 )
 	{
 		NI_ASSERT( 0, fmt::format("Wrong destination format, DXT conversion failed (\"{}\")", szFileName) );
-		return;
+		return false;
 	}
 
 	NWin32Helper::com_ptr<IDirect3DTexture9> pDstTexture;
 	HRESULT hr = pDevice->CreateTexture( mips[0].GetSizeX(), mips[0].GetSizeY(), mips.size(), 0, fmt,
-		                                   D3DPOOL_MANAGED, pDstTexture.GetAddr(), 0 );
+		                                   D3DPOOL_SYSTEMMEM, pDstTexture.GetAddr(), 0 );
 	if ( FAILED(hr) )
 	{
 		NI_ASSERTHR( hr, fmt::format("Can't create DXT texture \"{}\", DXT conversion failed", szFileName) );
-		return;
+		return false;
 	}
 
 	for ( int nLevel = 0; nLevel < mips.size(); ++nLevel )
@@ -94,14 +95,14 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 		if ( FAILED(hr) ) 
 		{
 			NI_ASSERTHR( hr, fmt::format("Can't get {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
-			continue;
+			return false;
 		}
 		hr = D3DXLoadSurfaceFromMemory( pSurfaceLevel, NULL, NULL, &(image[0][0]), D3DFMT_A8R8G8B8,
 			                                      image.GetSizeX() * sizeof(uint32_t), NULL, &rect, D3DX_FILTER_NONE, 0 );
 		if ( FAILED(hr) ) 
 		{
 			NI_ASSERTHR( hr, fmt::format("Can't load {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
-			continue;
+			return false;
 		}
 	}
 
@@ -111,11 +112,14 @@ static void WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, 
 	{
 		NI_ASSERTHR( hr, fmt::format("Can't write final DXT texture \"{}\", DXT conversion failed", szFileName) );
 	}
+	return SUCCEEDED(hr);
 }
 
-static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
+static bool SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels )
 {
+	if ( srcImage.GetSizeX() <= 0 || srcImage.GetSizeY() <= 0 )
+		return false;
 	int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
 
 	std::vector<CArray2D<uint32_t> > mips;
@@ -124,25 +128,39 @@ static void SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFil
 
   for ( int nLevel = 1; nLevel < nNumMipLevels; ++nLevel )
   {
-    const int nSizeX = srcImage.GetSizeX() >> nLevel;
-    const int nSizeY = srcImage.GetSizeY() >> nLevel;
+    const int nSizeX = (std::max)(1, srcImage.GetSizeX() >> nLevel);
+    const int nSizeY = (std::max)(1, srcImage.GetSizeY() >> nLevel);
 		CArray2D<uint32_t> &image = mips[ nLevel ];
 		image.SetSizes( nSizeX, nSizeY );
 		Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
   }
-	WriteDDS( pDevice, szFileName, ePixelFormat, mips );
+	return WriteDDS( pDevice, szFileName, ePixelFormat, mips );
 }
 
 #define DEF_INV_255 ( 1.0f / 255 )
-void ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
+bool ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
 	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
-	if ( pDevice == NULL )
+	// Exporting is a CPU surface conversion. A NULLREF device also supports it
+	// before a 3D viewer has created the editor's rendering device.
+	NWin32Helper::com_ptr<IDirect3D9> d3d;
+	NWin32Helper::com_ptr<IDirect3DDevice9> exportDevice;
+	if ( !pDevice )
 	{
-		NI_ASSERT( pDevice != NULL, "D3DDevice is not ready, DXT conversion failed" );
-		return;
+		d3d = Direct3DCreate9( D3D_SDK_VERSION );
+		if ( !d3d )
+			return false;
+		D3DPRESENT_PARAMETERS pp = {};
+		pp.Windowed = TRUE;
+		pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+		pp.BackBufferWidth = pp.BackBufferHeight = 1;
+		pp.hDeviceWindow = GetDesktopWindow();
+		if ( FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_NULLREF, pp.hDeviceWindow,
+			D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, exportDevice.GetAddr())) )
+			return false;
+		pDevice = exportDevice;
 	}
-  SaveAsDDSWithDX( pDevice, szFileName, srcImage, nSubFormat, nNumMipLevels );
+	return SaveAsDDSWithDX( pDevice, szFileName, srcImage, nSubFormat, nNumMipLevels );
 }
 
 }

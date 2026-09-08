@@ -153,7 +153,7 @@ void CModelEditor::DestroyControls()
 		{
 			pwndTool->Destroy();
 		}
-		delete pwndTool;
+		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndTool = 0;
 	}
 	modelWindow.DestroyWindow();

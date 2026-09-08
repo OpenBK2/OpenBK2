@@ -538,7 +538,9 @@ void CScene::Draw( NGScene::CRTPtr *pTargetTexture )
 
 		MarkNewDGFrame();
 
-		if ( data[eScene]->pTerraManager || !data[eScene]->visObjects.empty() || !data[eScene]->polylines.empty() )
+		// Editor previews also own render nodes directly (particles, the ground
+		// plane and the icon target). They are absent from the map object lists.
+		if ( bEditorMode || data[eScene]->pTerraManager || !data[eScene]->visObjects.empty() || !data[eScene]->polylines.empty() )
 		{
 			if ( data[eScene]->GetGScene() ) 
 			{

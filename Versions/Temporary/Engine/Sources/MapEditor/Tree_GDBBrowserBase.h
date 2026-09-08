@@ -90,7 +90,7 @@ private:
 	std::string szIgnoreSelectionName;
 	CPtr<IManipulatorIterator> pCreateTreeManipulatorIterator;
   inline unsigned GetCreateTreeTimerID() { return 100; }
-  inline unsigned GetCreateTreeTimerInterval() { return 100; }	// Частота в миллисекундах
+  inline unsigned GetCreateTreeTimerInterval() { return 1; }	// Частота в миллисекундах
   inline unsigned GetCreateTreeTimerCount() { return 1000000; }		// Количество считываний за один раз
   void SetCreateTreeTimer();
   void KillCreateTreeTimer();

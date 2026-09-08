@@ -83,7 +83,8 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 		NLog::GetLogger()->Log( LT_ERROR, "Failed to set display mode. Desktop must be in 32bit mode\n" );
 		return false;
 	}
-	//
+	// Keep the viewport black when a map creates or recreates its scene.
+	EditorScene()->SetBackgroundColor( VNULL3 );
 	return true;
 }
 

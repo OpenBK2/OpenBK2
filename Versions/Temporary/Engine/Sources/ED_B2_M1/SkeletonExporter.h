@@ -26,6 +26,7 @@ class CSkeletonExporter : public CBasicSceneExporter
 														 const std::string &szSrcScenePath,
 														 const std::string &szDestinationPath, 
 														 IManipulator *pManipulator );
+	bool ImportGltfInfo( IManipulator *pManipulator ) override;
 	CSkeletonExporter() {}
 };
 

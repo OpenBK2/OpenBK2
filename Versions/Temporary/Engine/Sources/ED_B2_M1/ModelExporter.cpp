@@ -2,6 +2,7 @@
 #include <fmt/format.h>
 
 #include "ModelExporter.h"
+#include "ED_Common/GltfExporter.h"
 #include "ExporterMethods.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
@@ -55,6 +56,10 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 			return ER_FAIL;
 		}
+		// GLTF rendering uses the authored XDB material list in mesh-node order.
+		// Never try to regenerate that list by reading a nonexistent Granny binary.
+		if ( NEditorGltf::IsGltf(pGeomMan) )
+			return NEditorGltf::Export(pGeomMan, "Geometry", false) ? ER_SUCCESS : ER_BREAK;
 		// load geometry
 		CDBPtr<NDb::SGeometry> pGeometry = NDb::Get<NDb::SGeometry>( CDBID( szGeometryName ) );
 		CGrannyFileInfoGuard pInfo( NBinResources::GetExistentBinaryFileName( Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\geometries", pGeometry->GetRecordID(), pGeometry->uid ) ); // uid

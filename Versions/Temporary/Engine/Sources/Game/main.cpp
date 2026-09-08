@@ -77,6 +77,11 @@ namespace NGameX
 	GAMEX_EXPORT void PostStorageInitialize();
 };
 
+// Explicit editor arguments are kept outside profile variables so loading a
+// profile cannot replace the map or mod selected in the editor.
+static std::string szEditorMap;
+static std::string szEditorMod;
+
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
 static int RunGameGuarded( const std::vector<std::string> &arguments );
@@ -330,8 +335,9 @@ static int RunGame( const std::vector<std::string> &arguments )
 	NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_GAME );
 	NProfile::LoadProfile();
 	//
-	std::string szMOD2Attach = NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") );
-	if ( !szMOD2Attach.empty() )
+	std::string szMOD2Attach = szEditorMap.empty()
+		? NStr::ToMBCS( NGlobal::GetVar("current_attached_mod", "") ) : szEditorMod;
+	if ( szEditorMap.empty() && !szMOD2Attach.empty() )
 		szMOD2Attach = NFile::JoinPath( NMainLoop::GetBaseDir(), NFile::DIR_MODS, szMOD2Attach );
 	if ( NMOD::DoesMODAttached(szMOD2Attach) == false )
 		NMOD::InstantAttachMOD( szMOD2Attach, NDb::DATABASE_MODE_GAME );
@@ -349,6 +355,10 @@ static int RunGame( const std::vector<std::string> &arguments )
 		MessageBox( 0, "Can't setup scene mode from config", "Error", MB_OK );
 		return 0xDEAD;
 	}
+	// Run the normal mission command only after the game, profile and mod DB
+	// are initialized. Quoting preserves map folders and filenames with spaces.
+	if ( !szEditorMap.empty() )
+		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide(szEditorMap) + L"\"" );
 	// start
 	Cursor()->Acquire( true );
 	while ( 1 ) 
@@ -408,6 +418,25 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		std::string szString = *it;
 		if ( szString.empty() )
 			continue;
+
+		// Keep the old command-line syntax, adding unambiguous named map/mod
+		// arguments. WinMain retains quotes; POSIX shells already remove them.
+		const std::string mapPrefix = "--editor-map=";
+		const std::string modPrefix = "--editor-mod=";
+		if ( szString.compare(0, mapPrefix.size(), mapPrefix) == 0 ||
+			 szString.compare(0, modPrefix.size(), modPrefix) == 0 )
+		{
+			const bool bMap = szString.compare(0, mapPrefix.size(), mapPrefix) == 0;
+			std::string value = szString.substr( bMap ? mapPrefix.size() : modPrefix.size() );
+			NStr::TrimBoth( value, '"' );
+			if ( value.find_first_of("\"\r\n;") != std::string::npos || (bMap && value.empty()) )
+			{
+				MessageBox( 0, "Invalid editor map/mod argument.", "Start Mission in Game", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			(bMap ? szEditorMap : szEditorMod) = value;
+			continue;
+		}
 		// check for '-' at the begining
 		if ( szString == "-show-version" )
 		{

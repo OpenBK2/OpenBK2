@@ -54,26 +54,24 @@ const char *Environment( const char *pszName )
 #endif
 }
 
-//! OBK2_STINGRAY_LOG=off|error|warn|info|debug|trace, debug by default.
+//! OBK2_STINGRAY_LOG=off|error|warn|info|debug|trace, info by default.
 //!
-//! Every call this library is asked to make is logged, because a stub library
-//! that is not saying what was called is doing nothing at all. They log at
-//! debug; the handful MFC makes on every idle log at trace, one level further
-//! down, so that a default run says what the editor did without the 1,764 lines
-//! an idle loop added to a startup. OBK2_STINGRAY_LOG=trace asks for those too.
+// Per-item tree diagnostics can produce thousands of synchronous debugger/file
+// writes while filling one tree. Keep them opt-in with OBK2_STINGRAY_LOG=debug.
+// Warnings and errors remain visible during normal editor use.
 spdlog::level::level_enum LevelFromEnvironment()
 {
 	const char *pszLevel = Environment( "OBK2_STINGRAY_LOG" );
 	if ( pszLevel == nullptr )
 	{
-		return spdlog::level::debug;
+		return spdlog::level::info;
 	}
 	const spdlog::level::level_enum eLevel = spdlog::level::from_str( pszLevel );
 	// from_str answers "off" for anything it does not recognise, which would
 	// silently discard the trace over a typo.
 	if ( eLevel == spdlog::level::off && std::string( pszLevel ) != "off" )
 	{
-		return spdlog::level::debug;
+		return spdlog::level::info;
 	}
 	return eLevel;
 }
