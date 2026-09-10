@@ -86,7 +86,7 @@ Much of the apparent depth is already visible in the flat image:
 - **Wheels:** a pale partial rim and a few hub marks sit within a dark disk or strip. These are simplified cues, not fully modeled tire diagrams.
 - **Contacts and recesses:** soft dark halos or bands around mounted parts make them sit on the surrounding surface. Some intact atlases contain very strong dark patches beneath larger assemblies.
 
-Match the highlight direction to the part as it appears on the model. UV islands can be rotated, so “put the highlight at the top of every rectangle in the atlas” is not a reliable rule. Keep the painted shading broad enough to work alongside the game's lighting.
+Match the highlight direction to the part as it appears on the model. UV islands can be rotated, so “put the highlight at the top of every rectangle in the atlas” is not a reliable rule. Keep the painted shading broad enough to work alongside the game's lighting. In BK2, textures use bilinear scaling.
 
 ### Uneven surfaces, without covering everything in damage
 
