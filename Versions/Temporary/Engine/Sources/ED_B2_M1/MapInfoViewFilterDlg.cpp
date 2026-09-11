@@ -3,6 +3,7 @@
 #include "ED_B2_M1Dll.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapInfoViewFilterDlg.h"
+#include "MapInfoViewFilter.h"
 #include "MapEditorLib/ShellFont.h"
 
 #include <cstdint>
@@ -29,11 +30,14 @@ BEGIN_MESSAGE_MAP( CMapInfoViewFilterDlg, CDialog )
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST_OBJ_TYPES, OnLvnItemchangedListObjTypes)
 END_MESSAGE_MAP()
 
-CMapInfoViewFilterDlg::CMapInfoViewFilterDlg( CMapInfoEditorSettings *_pMapEditorSettings )
-	: CDialog( IDD_DLG_MAPINFO_VIEW_FILTER, ::AfxGetMainWnd() ),
-	pMapEditorSettings( _pMapEditorSettings )
+// The parent was always ::AfxGetMainWnd(); it now comes through the boundary,
+// which passes the main window, so it is the same window.
+CMapInfoViewFilterDlg::CMapInfoViewFilterDlg( CWnd *pParent, CMapInfoEditorSettings::SViewFilterData *_pViewFilter )
+	: CDialog( IDD_DLG_MAPINFO_VIEW_FILTER, pParent ),
+	bIsDataSetting( false ),
+	pViewFilter( _pViewFilter )
 {
-	defMapEditorSettings = (*pMapEditorSettings);
+	defViewFilter = (*pViewFilter);
 }
 
 
@@ -90,7 +94,7 @@ void CMapInfoViewFilterDlg::OnOK()
 
 void CMapInfoViewFilterDlg::OnCancel()
 {
-	(*pMapEditorSettings) = defMapEditorSettings;
+	(*pViewFilter) = defViewFilter;
 	Apply();
 	CDialog::OnCancel();
 }
@@ -115,28 +119,28 @@ void CMapInfoViewFilterDlg::OnDestroy()
 
 void CMapInfoViewFilterDlg::SetDialogData()
 {
-	if ( !pMapEditorSettings )
+	if ( !pViewFilter )
 		return;
 
 	bIsDataSetting = true;
 	// фильтр по типам объектов
 	objTypesList.DeleteAllItems();
-	for ( int i = 0; i < pMapEditorSettings->viewFilterData.objTypeFilter.size(); ++i )
+	for ( int i = 0; i < pViewFilter->objTypeFilter.size(); ++i )
 	{
-		int nItem = objTypesList.InsertItem( i, pMapEditorSettings->viewFilterData.objTypeFilter[i].szObjTypeName.c_str() );
-		objTypesList.SetCheck( nItem, pMapEditorSettings->viewFilterData.objTypeFilter[i].bShow ? 1 : 0 );
+		int nItem = objTypesList.InsertItem( i, pViewFilter->objTypeFilter[i].szObjTypeName.c_str() );
+		objTypesList.SetCheck( nItem, pViewFilter->objTypeFilter[i].bShow ? 1 : 0 );
 	}
 	//
-	chkGrid.SetCheck( pMapEditorSettings->viewFilterData.bShowGrid ? 1 : 0 );
-	chkBoundingBoxes.SetCheck( pMapEditorSettings->viewFilterData.bShowBBoxes  ? 1 : 0 );
-	chkWireFrame.SetCheck( pMapEditorSettings->viewFilterData.bWireFrame ? 1 : 0 );
-	chkShowTerrain.SetCheck( pMapEditorSettings->viewFilterData.bShowTerrain ? 1 : 0 );
-	chkShowShadows.SetCheck( pMapEditorSettings->viewFilterData.bShowShadows ? 1 : 0 );
-	chkShowWarfog.SetCheck( pMapEditorSettings->viewFilterData.bShowWarfog ? 1 : 0 );
-	chkShowStats.SetCheck( pMapEditorSettings->viewFilterData.bShowStats ? 1 : 0 );
-	chkMipmap.SetCheck( pMapEditorSettings->viewFilterData.bMipmap ? 1 : 0 );
-	chkOverdraw.SetCheck( pMapEditorSettings->viewFilterData.bOverdraw ? 1 : 0 );
-	comboGridSize.SelectString( 0, pMapEditorSettings->viewFilterData.szGridSize.c_str() );
+	chkGrid.SetCheck( pViewFilter->bShowGrid ? 1 : 0 );
+	chkBoundingBoxes.SetCheck( pViewFilter->bShowBBoxes  ? 1 : 0 );
+	chkWireFrame.SetCheck( pViewFilter->bWireFrame ? 1 : 0 );
+	chkShowTerrain.SetCheck( pViewFilter->bShowTerrain ? 1 : 0 );
+	chkShowShadows.SetCheck( pViewFilter->bShowShadows ? 1 : 0 );
+	chkShowWarfog.SetCheck( pViewFilter->bShowWarfog ? 1 : 0 );
+	chkShowStats.SetCheck( pViewFilter->bShowStats ? 1 : 0 );
+	chkMipmap.SetCheck( pViewFilter->bMipmap ? 1 : 0 );
+	chkOverdraw.SetCheck( pViewFilter->bOverdraw ? 1 : 0 );
+	comboGridSize.SelectString( 0, pViewFilter->szGridSize.c_str() );
 	//
 	bIsDataSetting = false;
 }
@@ -146,41 +150,41 @@ void CMapInfoViewFilterDlg::GetDialogData()
 	if ( bIsDataSetting )
 		return;
 
-	if ( !pMapEditorSettings )
+	if ( !pViewFilter )
 		return;
 
-	pMapEditorSettings->viewFilterData.objTypeFilter.clear();
+	pViewFilter->objTypeFilter.clear();
 	for ( int i = 0; i < objTypesList.GetItemCount(); ++i )
 	{
 		CMapInfoEditorSettings::SViewFilterData::SObjTypeFilter tf;
 		tf.szObjTypeName = (const char*)objTypesList.GetItemText( i, 0 );
 		tf.bShow = objTypesList.GetCheck( i );
-		pMapEditorSettings->viewFilterData.objTypeFilter.push_back( tf );
+		pViewFilter->objTypeFilter.push_back( tf );
 	}
 	//
-	pMapEditorSettings->viewFilterData.bShowGrid = chkGrid.GetCheck();
-	pMapEditorSettings->viewFilterData.bShowBBoxes = chkBoundingBoxes.GetCheck();
-	pMapEditorSettings->viewFilterData.bWireFrame = chkWireFrame.GetCheck();
-	pMapEditorSettings->viewFilterData.bShowTerrain = chkShowTerrain.GetCheck();
-	pMapEditorSettings->viewFilterData.bShowShadows = chkShowShadows.GetCheck();
-	pMapEditorSettings->viewFilterData.bShowWarfog = chkShowWarfog.GetCheck();
-	pMapEditorSettings->viewFilterData.bShowStats = chkShowStats.GetCheck();
-	pMapEditorSettings->viewFilterData.bMipmap = chkMipmap.GetCheck();
-	pMapEditorSettings->viewFilterData.bOverdraw = chkOverdraw.GetCheck();
+	pViewFilter->bShowGrid = chkGrid.GetCheck();
+	pViewFilter->bShowBBoxes = chkBoundingBoxes.GetCheck();
+	pViewFilter->bWireFrame = chkWireFrame.GetCheck();
+	pViewFilter->bShowTerrain = chkShowTerrain.GetCheck();
+	pViewFilter->bShowShadows = chkShowShadows.GetCheck();
+	pViewFilter->bShowWarfog = chkShowWarfog.GetCheck();
+	pViewFilter->bShowStats = chkShowStats.GetCheck();
+	pViewFilter->bMipmap = chkMipmap.GetCheck();
+	pViewFilter->bOverdraw = chkOverdraw.GetCheck();
 	//
 	CString szTmp;
 	comboGridSize.GetWindowText( szTmp );
-	pMapEditorSettings->viewFilterData.szGridSize = (const char*)szTmp;
+	pViewFilter->szGridSize = (const char*)szTmp;
 	//
 	Apply();
 }
 
 void CMapInfoViewFilterDlg::OnBnClickedButtonDefault()
 {
-	if ( !pMapEditorSettings )
+	if ( !pViewFilter )
 		return;
 	//
-	pMapEditorSettings->viewFilterData.SetDefault();
+	pViewFilter->SetDefault();
 	SetDialogData();
 	GetDialogData();
 }
@@ -193,11 +197,11 @@ void CMapInfoViewFilterDlg::OnLvnItemchangedListObjTypes(NMHDR *pNMHDR, LRESULT 
 	GetDialogData();
 }
 
+// The command moved to NMapInfoViewFilter::Apply so the wx dialog sends it the
+// same way.
 void CMapInfoViewFilterDlg::Apply()
 {
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MAPINFO_EDITOR, 
-																												ID_VIEW_APPLY_MI_FILTER, 
-																												0 );
+	NMapInfoViewFilter::Apply();
 }
 
 

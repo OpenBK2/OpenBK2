@@ -102,6 +102,8 @@ set(SOURCES
     MapInfoState.cpp
     MapInfoStoreInputState.cpp
     MapInfoViewFilterDlg.cpp
+    MapInfoViewFilterMfc.cpp
+    MapInfoViewFilterWx.cpp
     MapObjectDataExtractor.cpp
     MapObjectMultiState.cpp
     MapObjectState.cpp

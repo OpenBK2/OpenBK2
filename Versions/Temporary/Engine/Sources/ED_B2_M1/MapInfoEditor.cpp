@@ -44,7 +44,7 @@
 
 //#include "MoviesEditorWindow.h"
 
-#include "MapInfoViewFilterDlg.h"
+#include "MapInfoViewFilter.h"
 
 #include <cstdint>
 #include <filesystem>
@@ -2036,11 +2036,15 @@ void CMapInfoEditor::Redo( IController* pController )
 	}
 }
 
+// The dialog edits the filter in place and applies each change as it is made;
+// on OK it is applied once more, as it always was. Its parent was
+// ::AfxGetMainWnd(), which is the window GetMainWindow answers.
 void CMapInfoEditor::ConfigureViewFilter()
 {
-	CMapInfoViewFilterDlg dlg( &editorSettings );
-	if ( dlg.DoModal() == IDOK )
+	if ( NMapInfoViewFilter::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &editorSettings.viewFilterData ) )
+	{
 		ApplyViewFilter();
+	}
 }
 
 void CMapInfoEditor::ApplyViewFilter()

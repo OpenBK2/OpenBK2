@@ -83,6 +83,7 @@ MIGRATED = {
     "CModelWindow": "ED_B2_M1/ModelViewWx.cpp (NModelView::CreateWx)",
     "CAIGenMobileDlg": "ED_B2_M1/AIGeneralDialogsWx.cpp (NAIGenMobileDialog::Run)",
     "CAIGenParcelDlg": "ED_B2_M1/AIGeneralDialogsWx.cpp (NAIGenParcelDialog::Run)",
+    "CMapInfoViewFilterDlg": "ED_B2_M1/MapInfoViewFilterWx.cpp (NMapInfoViewFilter::Run)",
 }
 
 

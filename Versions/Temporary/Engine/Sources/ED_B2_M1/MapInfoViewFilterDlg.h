@@ -1,7 +1,8 @@
 #pragma once
 
-#include "MapInfoEditor.h"
+#include "MapInfoEditorSettings.h"
 #include "ResourceDefines.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 
@@ -27,8 +28,12 @@ class CMapInfoViewFilterDlg : public CDialog, public ICommandHandler
 	//
 	bool bIsDataSetting;
 	//
-	CMapInfoEditorSettings *pMapEditorSettings;
-	CMapInfoEditorSettings defMapEditorSettings;
+	// The filter being edited, and a copy of it as it was on entry for Cancel to
+	// put back. These were the whole editor settings and a copy of all of them,
+	// of which the dialog only ever touched viewFilterData; the boundary in
+	// MapInfoViewFilter.h hands over just that.
+	CMapInfoEditorSettings::SViewFilterData *pViewFilter;
+	CMapInfoEditorSettings::SViewFilterData defViewFilter;
 	//
 	void SetDialogData();
 	void GetDialogData();
@@ -37,7 +42,7 @@ class CMapInfoViewFilterDlg : public CDialog, public ICommandHandler
 public:
 	enum { IDD = IDD_DLG_MAPINFO_VIEW_FILTER };
 	//
-	CMapInfoViewFilterDlg( CMapInfoEditorSettings *pMapEditorSettings );
+	CMapInfoViewFilterDlg( CWnd *pParent, CMapInfoEditorSettings::SViewFilterData *pViewFilter );
 	virtual ~CMapInfoViewFilterDlg() {}
 
 	virtual void DoDataExchange( CDataExchange *pDX );
