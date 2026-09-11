@@ -38,9 +38,11 @@ public:
 	//
 #include "ViewFilterData.h"
 	SViewFilterData viewFilterData;
-#include "AIMarkerSettings.h"
-	SAIMarkerSettings sightRangeMarkerSettings;
-	SAIMarkerSettings fireRangeMarkerSettings;
+	// sightRangeMarkerSettings and fireRangeMarkerSettings were here, with the
+	// AIMarkerSettings.h that declared their type included in the class body.
+	// Nothing read them, wrote them or saved them; the only thing that would
+	// have was CMapInfoAIMarkersSelectDlg, which nothing opened. All three are
+	// gone.
 	//
 	CMapInfoEditorSettings();
 	// serializing...

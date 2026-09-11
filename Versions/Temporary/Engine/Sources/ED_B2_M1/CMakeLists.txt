@@ -85,7 +85,6 @@ set(SOURCES
     KeySettingsDlg.cpp
     LakeState.cpp
     LightExporter.cpp
-    MapInfoAIMarkersSelectDlg.cpp
     MapInfoBuilder.cpp
     MapInfoController.cpp
     MapInfoEditor.cpp

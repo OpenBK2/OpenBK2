@@ -380,10 +380,10 @@
 #define IDC_TMIVSO_FILTER_COMBO											24145
 #define IDC_TMIVSO_OBJECT_LIST											24146
 //
-#define IDD_MAPINFO_AI_MARKERS											24150
+// 24150, 24152 and 24153 were IDD_MAPINFO_AI_MARKERS and two of its controls;
+// the dialog is gone. IDC_COMBO_PLAYER stays: the AI general and reinforcement
+// palettes use it.
 #define IDC_COMBO_PLAYER														24151
-#define IDC_LIST_UNIT_TYPE													24152
-#define IDC_CHECK_SELECTION													24153
 //
 #define IDD_TAB_MI_REINF_POINTS											24170
 #define IDC_LIST_REINF_POINTS												24171
