@@ -127,18 +127,6 @@ bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 
 	switch ( nCommandID )
 	{
-		case ID_WINDOW_GET_DIALOG_DATA:
-		{
-			GetDialogData( pData );
-			return true;
-		}
-		//
-		case ID_WINDOW_SET_DIALOG_DATA:
-		{
-			SetDialogData( pData );
-			return true;
-		}
-		//
 		case ID_SCRIPT_CAMERA_SHOW_MANUAL_CONTROLS:
 		{
 			ShowManualControls( dwData > 0 );
@@ -228,7 +216,8 @@ bool CScriptCameraWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		}
 	}
 
-	return false;
+	// The dialog-data pair is the shared dispatch's.
+	return CScriptCameraCommands::HandleCommand( nCommandID, dwData );
 }
 
 
@@ -239,8 +228,6 @@ bool CScriptCameraWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bo
 
 	switch( nCommandID ) 
 	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
 	case ID_SCRIPT_CAMERA_SHOW_MANUAL_CONTROLS:
 	case ID_SCRIPT_CAMERA_GET_YAW:
 	case ID_SCRIPT_CAMERA_SET_YAW:
@@ -258,7 +245,7 @@ bool CScriptCameraWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bo
 		( *pbCheck ) = false;
 		return true;
 	default:
-		return false;
+		return CScriptCameraCommands::UpdateCommand( nCommandID, pbEnable, pbCheck );
 	}
 	//
 	return false;

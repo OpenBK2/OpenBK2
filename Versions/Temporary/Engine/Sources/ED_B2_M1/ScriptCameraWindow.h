@@ -3,6 +3,7 @@
 #include "ResourceDefines.h"
 #include "MapEditorLib/ResizeDialog.h"
 #include "ScriptCameraMovementTypes.h"
+#include "ScriptCameraView.h"
 
 #include <cstdint>
 
@@ -12,7 +13,7 @@
 //
 //
 
-class CScriptCameraWindow : public CResizeDialog, public ICommandHandler
+class CScriptCameraWindow : public CResizeDialog, public CScriptCameraCommands
 {
 	CListCtrl lcCameras;
 	CButton btnSave;
@@ -53,8 +54,9 @@ public:
 	void DoDataExchange( CDataExchange *pDX );
 	BOOL OnInitDialog();
 
-	void GetDialogData( SScriptCameraWindowData *pData );
-	void SetDialogData( const SScriptCameraWindowData *pData );
+	//	CScriptCameraCommands
+	virtual void GetDialogData( SScriptCameraWindowData *pData );
+	virtual void SetDialogData( const SScriptCameraWindowData *pData );
 	void ShowManualControls( bool bShow );
 
 	void SetLastAction( SScriptCameraWindowData::EScriptCameraLastAction eAction )
@@ -63,6 +65,10 @@ public:
 	}
 
 	// ICommandHandler
+	//
+	// Overridden rather than inherited: this palette answers the manual
+	// controls command and a get and a set for each of yaw, pitch and FOV, and
+	// falls through to CScriptCameraCommands for the dialog-data pair.
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	virtual void NotifyHandler();

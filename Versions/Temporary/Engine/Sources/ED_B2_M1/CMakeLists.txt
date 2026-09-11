@@ -151,6 +151,8 @@ set(SOURCES
     ScriptCameraMovementTypes.cpp
     ScriptCameraRun.cpp
     ScriptCameraState.cpp
+    ScriptCameraViewMfc.cpp
+    ScriptCameraViewWx.cpp
     ScriptCameraWindow.cpp
     SeasonMnemonics.cpp
     SimpleObjectInfoData.cpp

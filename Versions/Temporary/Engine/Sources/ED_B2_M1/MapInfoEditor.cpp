@@ -39,7 +39,7 @@
 // strings and menus out of this module's resources.
 #include "ED_B2_M1Dll.h"
 #include "ReinfPointsView.h"
-#include "ScriptCameraWindow.h"
+#include "ScriptCameraView.h"
 #include "AIGeneralView.h"
 
 //#include "MoviesEditorWindow.h"
@@ -326,11 +326,10 @@ void CMapInfoEditor::CreateControls()
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
 				}
 				// script movies
-				if ( CScriptCameraWindow *pDialog = p3DTabWindow->AddNewTab(static_cast<CScriptCameraWindow*>(0)) )
+				// Which toolkit draws this palette is NScriptCameraView's
+				// business, not the editor's.
+				if ( CWnd *pDialog = NScriptCameraView::Create( p3DTabWindow ) )
 				{
-					AfxSetResourceHandle( theEDB2M1Instance );
-					pDialog->Create( CScriptCameraWindow::IDD, p3DTabWindow );
-					AfxSetResourceHandle( AfxGetInstanceHandle() );
 					++nID;
 					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_MOVIES] );
 					p3DTabWindow->AddTab( pDialog, strPaneLabel );
