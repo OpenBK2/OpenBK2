@@ -1,0 +1,8 @@
+; The stub d3d9.dll's exports, under the names a d3d9.dll has. On x86 the
+; WINAPI functions are decorated (_Direct3DCreate9@4); this is what gives
+; them the plain names the engine and d3dx9 look up.
+LIBRARY d3d9
+EXPORTS
+    Direct3DCreate9
+    Direct3DCreate9Ex
+    DebugSetMute

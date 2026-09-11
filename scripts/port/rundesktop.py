@@ -9,6 +9,7 @@ the tooling has to remember, and the tooling forgot twice.
     python rundesktop.py                       # start the editor on bk2probe
     python rundesktop.py --list                # what is on that desktop now
     python rundesktop.py --kill
+    python rundesktop.py --d3d9stub            # with a D3D9 device that draws nothing
 
     powershell -File winshot.ps1 -Desktop bk2probe -Out shot.png
     python windump.py --desktop bk2probe
@@ -30,6 +31,8 @@ GetCursorPos() where the pointer is, and no posted message moves it.
 """
 import argparse
 import ctypes as C
+import os
+import shutil
 import subprocess
 import time
 from ctypes import wintypes
@@ -128,6 +131,47 @@ def windows_on(desktop):
     return found
 
 
+# Bytes only the stub d3d9.dll carries: its adapter description.
+STUB_MARKER = b'OpenBK2 D3D9 stub'
+
+
+def is_stub(path):
+    try:
+        with open(path, 'rb') as f:
+            return STUB_MARKER in f.read()
+    except OSError:
+        return False
+
+
+def place_d3d9_stub(exe, wanted):
+    """Put the stub d3d9.dll next to the editor for this run, or take it away.
+
+    The probe desktop cannot make a D3D9 device, so a map with anything in it
+    crashes there on a null device. The stub (vendor/d3d9stub) makes devices
+    that draw nothing, and Windows loads a d3d9.dll next to the executable
+    before System32's. It is installed to bin/d3d9stub/ so that nothing uses it
+    by accident, and copied up only for a run that asks. A run that does not
+    ask removes it -- but only if the file there is the stub: a d3d9.dll put
+    there on purpose, DXVK's say, is somebody else's and is left alone.
+    """
+    bindir = os.path.dirname(exe)
+    target = os.path.join(bindir, 'd3d9.dll')
+    source = os.path.join(bindir, 'd3d9stub', 'd3d9.dll')
+    if wanted:
+        if not os.path.exists(source):
+            raise SystemExit('no stub at %s; build and install the d3d9stub target' % source)
+        if os.path.exists(target) and not is_stub(target):
+            raise SystemExit('%s is not the stub; not replacing it' % target)
+        shutil.copyfile(source, target)
+        print('d3d9 stub in place: %s (log beside it, d3d9stub.log)' % target)
+    elif os.path.exists(target):
+        if is_stub(target):
+            os.remove(target)
+            print('d3d9 stub removed from %s' % bindir)
+        else:
+            print('note: %s is not the stub and is left in place' % target)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -138,6 +182,8 @@ def main():
     ap.add_argument('--wait', type=int, default=30, help='seconds to let it start')
     ap.add_argument('--list', action='store_true', help='what is on that desktop now')
     ap.add_argument('--kill', action='store_true')
+    ap.add_argument('--d3d9stub', action='store_true',
+                    help='run against the stub d3d9.dll, which makes devices that draw nothing')
     args = ap.parse_args()
 
     if args.kill:
@@ -150,6 +196,7 @@ def main():
             print('  0x%-10X pid=%-6d %-28s %s' % (h, pid, cls, title))
         return 0
 
+    place_d3d9_stub(args.exe, args.d3d9stub)
     desk, made = open_or_create(args.desktop)
     print('desktop %s %s (handle 0x%X)' % (args.desktop,
                                            'created' if made else 'already there', desk))

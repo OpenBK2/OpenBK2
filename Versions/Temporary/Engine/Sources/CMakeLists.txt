@@ -30,6 +30,11 @@ add_subdirectory("Parser")
 if(BUILD_EDITOR)
     add_subdirectory("vendor/stingray")
 
+    # A d3d9.dll that draws nothing, so the editor can be driven where D3D9
+    # gives it no device. Installed beside bin/, never into it; see its
+    # CMakeLists for how a run opts in.
+    add_subdirectory("vendor/d3d9stub")
+
     # Scintilla is the map editor's script text control. Nothing outside this
     # block links it: not Game, and no source in a shipped module names it.
     add_subdirectory("Scintilla")
