@@ -8,6 +8,7 @@
 #include "FieldState.h"
 #include "ResourceDefines.h"
 
+#include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 
@@ -171,14 +172,12 @@ namespace
 			}
 			if ( pEditParameters->nFlags & ( MITFEP_FIELD_COUNT | MITFEP_FIELD_INDEX ) )
 			{
-				if ( pEditParameters->nFlags & MITFEP_FIELD_COUNT )
-				{
-					ReadFieldList( &( pEditParameters->fieldList ) );
-				}
-				if ( pEditParameters->nFlags & MITFEP_FIELD_INDEX )
-				{
-					pEditParameters->nFieldIndex = SelectedField();
-				}
+				// CBS_SORT, so position is not list index; the helper carries the
+				// index as client data.
+				NWxEditParameter::ReadChoice( *pFields, &( pEditParameters->fieldList ),
+																			&( pEditParameters->nFieldIndex ),
+																			( pEditParameters->nFlags & MITFEP_FIELD_COUNT ) != 0,
+																			( pEditParameters->nFlags & MITFEP_FIELD_INDEX ) != 0 );
 			}
 			if ( pEditParameters->nFlags & MITFEP_RANDOMIZE )
 			{
@@ -225,9 +224,9 @@ namespace
 			}
 			if ( rEditParameters.nFlags & ( MITFEP_FIELD_COUNT | MITFEP_FIELD_INDEX ) )
 			{
-				WriteFieldList( rEditParameters.fieldList, rEditParameters.nFieldIndex,
-												( rEditParameters.nFlags & MITFEP_FIELD_COUNT ) != 0,
-												( rEditParameters.nFlags & MITFEP_FIELD_INDEX ) != 0 );
+				NWxEditParameter::WriteChoice( pFields, rEditParameters.fieldList, rEditParameters.nFieldIndex,
+																			 ( rEditParameters.nFlags & MITFEP_FIELD_COUNT ) != 0,
+																			 ( rEditParameters.nFlags & MITFEP_FIELD_INDEX ) != 0 );
 			}
 			if ( rEditParameters.nFlags & MITFEP_RANDOMIZE )
 			{
@@ -297,77 +296,6 @@ namespace
 			}
 		}
 
-		// The list index a control position carries, which is what the state
-		// names a field by.
-		int FieldAt( unsigned nPosition ) const
-		{
-			return (int)reinterpret_cast<uintptr_t>( pFields->GetClientData( nPosition ) );
-		}
-
-		int SelectedField() const
-		{
-			const int nPosition = pFields->GetSelection();
-			return ( nPosition == wxNOT_FOUND ) ? -1 : FieldAt( nPosition );
-		}
-
-		// GetComboBoxEditParameters, for a wxChoice: the control is sorted, so
-		// the list it reports is rebuilt in list order from the client data
-		// rather than read off the control top to bottom.
-		void ReadFieldList( CFieldState::SEditParameters::CFieldList *pList ) const
-		{
-			std::vector<std::string> stringList( pFields->GetCount(), std::string() );
-			for ( unsigned nPosition = 0; nPosition < pFields->GetCount(); ++nPosition )
-			{
-				const int nListIndex = FieldAt( nPosition );
-				if ( ( nListIndex >= 0 ) && ( nListIndex < static_cast<int>( stringList.size() ) ) )
-				{
-					stringList[nListIndex] = std::string( pFields->GetString( nPosition ).utf8_str() );
-				}
-			}
-			( *pList ) = stringList;
-		}
-
-		// SetComboBoxEditParameters, for a wxChoice. Refilling the control loses
-		// the selection, so the selected field is remembered as a list index --
-		// the one thing that survives a re-sort -- and looked up again after.
-		void WriteFieldList( const CFieldState::SEditParameters::CFieldList &rList,
-												 const int nIndex, const bool bCount, const bool bIndex )
-		{
-			if ( !bCount && !bIndex )
-			{
-				return;
-			}
-			int nSelectedIndex = SelectedField();
-			if ( nSelectedIndex < 0 )
-			{
-				nSelectedIndex = 0;
-			}
-			if ( bCount )
-			{
-				pFields->Clear();
-				for ( size_t nListIndex = 0; nListIndex < rList.size(); ++nListIndex )
-				{
-					pFields->Append( wxString::FromUTF8( rList[nListIndex].c_str() ),
-													 reinterpret_cast<void*>( static_cast<uintptr_t>( nListIndex ) ) );
-				}
-			}
-			if ( bIndex )
-			{
-				nSelectedIndex = nIndex;
-			}
-			if ( nSelectedIndex > static_cast<int>( pFields->GetCount() ) - 1 )
-			{
-				nSelectedIndex = 0;
-			}
-			for ( unsigned nPosition = 0; nPosition < pFields->GetCount(); ++nPosition )
-			{
-				if ( FieldAt( nPosition ) == nSelectedIndex )
-				{
-					pFields->SetSelection( nPosition );
-					break;
-				}
-			}
-		}
 
 		// One command, to one state, with the flag naming what changed. The
 		// state reads that field back out of the palette and decides what it

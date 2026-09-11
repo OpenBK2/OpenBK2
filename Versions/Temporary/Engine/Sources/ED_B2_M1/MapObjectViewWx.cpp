@@ -18,6 +18,7 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
 #include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "libdb/ResourceManager.h"
@@ -230,14 +231,12 @@ namespace
 			}
 			if ( pEditParameters->nFlags & ( MIMOSEP_PLAYER_COUNT | MIMOSEP_PLAYER_INDEX ) )
 			{
-				if ( pEditParameters->nFlags & MIMOSEP_PLAYER_COUNT )
-				{
-					ReadPlayerList( &( pEditParameters->playerList ) );
-				}
-				if ( pEditParameters->nFlags & MIMOSEP_PLAYER_INDEX )
-				{
-					pEditParameters->nPlayerIndex = SelectedPlayer();
-				}
+				// CBS_SORT, so position is not list index; the helper carries the
+				// index as client data.
+				NWxEditParameter::ReadChoice( *pPlayers, &( pEditParameters->playerList ),
+																			&( pEditParameters->nPlayerIndex ),
+																			( pEditParameters->nFlags & MIMOSEP_PLAYER_COUNT ) != 0,
+																			( pEditParameters->nFlags & MIMOSEP_PLAYER_INDEX ) != 0 );
 			}
 			if ( pEditParameters->nFlags & MIMOSEP_DIRECTION_TYPE )
 			{
@@ -282,9 +281,9 @@ namespace
 			// No bCreateControls here, deliberately; see the note at the top.
 			if ( rEditParameters.nFlags & ( MIMOSEP_PLAYER_COUNT | MIMOSEP_PLAYER_INDEX ) )
 			{
-				WritePlayerList( rEditParameters.playerList, rEditParameters.nPlayerIndex,
-												 ( rEditParameters.nFlags & MIMOSEP_PLAYER_COUNT ) != 0,
-												 ( rEditParameters.nFlags & MIMOSEP_PLAYER_INDEX ) != 0 );
+				NWxEditParameter::WriteChoice( pPlayers, rEditParameters.playerList, rEditParameters.nPlayerIndex,
+																			 ( rEditParameters.nFlags & MIMOSEP_PLAYER_COUNT ) != 0,
+																			 ( rEditParameters.nFlags & MIMOSEP_PLAYER_INDEX ) != 0 );
 			}
 			if ( rEditParameters.nFlags & MIMOSEP_DIRECTION_TYPE )
 			{
@@ -370,83 +369,6 @@ namespace
 		}
 
 	private:
-		// ------------------------------------------------------------------
-		// the player combo
-		// ------------------------------------------------------------------
-
-		int PlayerAt( unsigned nPosition ) const
-		{
-			return (int)reinterpret_cast<uintptr_t>( pPlayers->GetClientData( nPosition ) );
-		}
-
-		int SelectedPlayer() const
-		{
-			const int nPosition = pPlayers->GetSelection();
-			return ( nPosition == wxNOT_FOUND ) ? -1 : PlayerAt( nPosition );
-		}
-
-		// GetComboBoxEditParameters, for a wxChoice: the control is sorted, so
-		// the list it reports is rebuilt in list order from the client data
-		// rather than read off the control top to bottom.
-		void ReadPlayerList( SEditParams::CPlayerList *pList ) const
-		{
-			if ( pList == 0 )
-			{
-				return;
-			}
-			std::vector<std::string> stringList( pPlayers->GetCount(), std::string() );
-			for ( unsigned nPosition = 0; nPosition < pPlayers->GetCount(); ++nPosition )
-			{
-				const int nListIndex = PlayerAt( nPosition );
-				if ( ( nListIndex >= 0 ) && ( nListIndex < static_cast<int>( stringList.size() ) ) )
-				{
-					stringList[nListIndex] = std::string( pPlayers->GetString( nPosition ).utf8_str() );
-				}
-			}
-			( *pList ) = stringList;
-		}
-
-		// SetComboBoxEditParameters, for a wxChoice. Refilling loses the
-		// selection, so it is remembered as a list index and looked up again.
-		void WritePlayerList( const SEditParams::CPlayerList &rList, int nIndex,
-													bool bCount, bool bIndex )
-		{
-			if ( !bCount && !bIndex )
-			{
-				return;
-			}
-			int nSelectedIndex = SelectedPlayer();
-			if ( nSelectedIndex < 0 )
-			{
-				nSelectedIndex = 0;
-			}
-			if ( bCount )
-			{
-				pPlayers->Clear();
-				for ( size_t nListIndex = 0; nListIndex < rList.size(); ++nListIndex )
-				{
-					pPlayers->Append( wxString::FromUTF8( rList[nListIndex].c_str() ),
-														reinterpret_cast<void*>( static_cast<uintptr_t>( nListIndex ) ) );
-				}
-			}
-			if ( bIndex )
-			{
-				nSelectedIndex = nIndex;
-			}
-			if ( nSelectedIndex > static_cast<int>( pPlayers->GetCount() ) - 1 )
-			{
-				nSelectedIndex = 0;
-			}
-			for ( unsigned nPosition = 0; nPosition < pPlayers->GetCount(); ++nPosition )
-			{
-				if ( PlayerAt( nPosition ) == nSelectedIndex )
-				{
-					pPlayers->SetSelection( nPosition );
-					break;
-				}
-			}
-		}
-
 		// ------------------------------------------------------------------
 		// the filter combo
 		// ------------------------------------------------------------------
