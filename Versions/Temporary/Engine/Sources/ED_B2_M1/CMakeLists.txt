@@ -2,6 +2,8 @@ project(ED_B2_M1)
 set(SOURCES
     AckExcelReader.cpp
     AckSetBuilder.cpp
+    AIGeneralDialogsMfc.cpp
+    AIGeneralDialogsWx.cpp
     AIGeneralState.cpp
     AIGeneralTypes.cpp
     AIGeneralViewMfc.cpp

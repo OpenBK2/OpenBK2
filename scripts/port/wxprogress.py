@@ -81,6 +81,8 @@ MIGRATED = {
     "CScriptAreaWindow": "ED_B2_M1/ScriptAreaViewWx.cpp (NScriptAreaView::CreateWx)",
     "CScriptCameraWindow": "ED_B2_M1/ScriptCameraViewWx.cpp (NScriptCameraView::CreateWx)",
     "CModelWindow": "ED_B2_M1/ModelViewWx.cpp (NModelView::CreateWx)",
+    "CAIGenMobileDlg": "ED_B2_M1/AIGeneralDialogsWx.cpp (NAIGenMobileDialog::Run)",
+    "CAIGenParcelDlg": "ED_B2_M1/AIGeneralDialogsWx.cpp (NAIGenParcelDialog::Run)",
 }
 
 

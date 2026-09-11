@@ -8,8 +8,9 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "AIGeneralTypes.h"
 #include "SceneB2/Scene.h"
-#include "AIGenParcelDlg.h"
-#include "AIGenMobileIDDlg.h"
+// The two dialogs this state opens, behind their boundary: which toolkit draws
+// them is NAIGenMobileDialog's and NAIGenParcelDialog's business.
+#include "AIGeneralDialogs.h"
 #include "AIGeneralState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 
@@ -576,8 +577,7 @@ void CAIGeneralPointsState::AddID()
 		return;
 
 	int nNewMobileID = 0;
-	CAIGenMobileDlg dlg( MainFrameWnd(), &nNewMobileID );
-	if ( dlg.DoModal() == IDOK )
+	if ( NAIGenMobileDialog::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &nNewMobileID ) )
 	{
 		dialogData.players[dialogData.CurrentPlayer()].mobileScriptIDs.push_back( nNewMobileID );
 
@@ -809,8 +809,7 @@ void CAIGeneralPointsState::EditParcel()
 {
 	NDb::EParcelType newParcelType = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].eType;
 	float fNewImportance = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()].fImportance;
-	CAIGenParcelDlg dlg( MainFrameWnd(), &newParcelType, &fNewImportance );
-	if ( dlg.DoModal() == IDOK )
+	if ( NAIGenParcelDialog::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &newParcelType, &fNewImportance ) )
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
 		//
