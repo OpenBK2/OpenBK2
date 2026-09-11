@@ -741,55 +741,9 @@ void CModelWindow::OnFOVTimer()
 }
 
 
-bool CModelWindow::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	switch( nCommandID )
-	{
-		case ID_GET_EDIT_PARAMETERS:
-		{
-			CModelState::SEditParameters *pEditParameters = reinterpret_cast<CModelState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return GetEditParameters( pEditParameters );
-			}
-			return false;
-		}
-		case ID_SET_EDIT_PARAMETERS:
-		{
-			const CModelState::SEditParameters *pEditParameters = reinterpret_cast<const CModelState::SEditParameters*>( dwData );
-			if ( pEditParameters != 0 )
-			{
-				return SetEditParameters( *pEditParameters );
-			}
-			return false;
-		}
-		default:
-			return false;
-	}
-	return false;
-}
-
-
-bool CModelWindow::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CModelState::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CModelState::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID )
-	{
-		case ID_GET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		case ID_SET_EDIT_PARAMETERS:
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		default:
-			return false;
-	}
-	return false;
-}
+// HandleCommand and UpdateCommand were the edit-parameter switch every palette
+// wrote out; they are CEditParameterCommands' now, inherited whole through
+// CModelCommands, because this palette answers nothing else.
 
 // basement storage  
 

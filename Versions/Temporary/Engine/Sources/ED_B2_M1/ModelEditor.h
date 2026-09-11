@@ -3,10 +3,15 @@
 #include "ED_B2_M1_export.h"
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/DefaultView.h"
-#include "ModelWindow.h"
+// ModelView.h rather than ModelWindow.h: which toolkit draws the palette is
+// NModelView's business. ModelState.h was reached through ModelWindow.h and is
+// needed here in its own right, for GetInputState.
+#include "ModelView.h"
+#include "ModelState.h"
 #include "ModelEditorSettings.h"
 
 #include <cstdint>
+#include <memory>
 
 #define TOOLBAR_MODEL_ELEMENTS_COUNT 13
 
@@ -20,7 +25,10 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 
 	unsigned nModelToolbarID;
 	IDockPanel *pwndTool;
-	CModelWindow modelWindow;
+	// The palette in pwndTool. Owned here, as the CModelWindow member it
+	// replaces was; its window is destroyed in DestroyControls and the object
+	// with it.
+	std::unique_ptr<CWnd> pModelWindow;
 	bool bPreviousCameraHandleType;
 	float fFOV;
 

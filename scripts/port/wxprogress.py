@@ -80,6 +80,7 @@ MIGRATED = {
     "CVSOWindow": "ED_B2_M1/VSOViewWx.cpp (NVSOView::CreateWx)",
     "CScriptAreaWindow": "ED_B2_M1/ScriptAreaViewWx.cpp (NScriptAreaView::CreateWx)",
     "CScriptCameraWindow": "ED_B2_M1/ScriptCameraViewWx.cpp (NScriptCameraView::CreateWx)",
+    "CModelWindow": "ED_B2_M1/ModelViewWx.cpp (NModelView::CreateWx)",
 }
 
 

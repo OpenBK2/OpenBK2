@@ -67,18 +67,31 @@ namespace NWxModal
 	}
 
 
+	// The top-level window pOwner belongs to: the frame, for any widget in it
+	// -- a docking pane, a control. Null for a null widget.
+	//
+	// The walk to the top is the point. Disabling the window handed in would
+	// leave the rest of the frame live, which looks modal and is not. MFC does
+	// the same walk in CWnd::GetSafeOwner before DoModal disables anything, so
+	// matching it is what keeps a migrated dialog behaving like the one it
+	// replaced.
+	inline HWND FindOwnerFrame( IWidget *pOwner )
+	{
+		CWnd *const pwndOwner = ToCWnd( pOwner );
+		HWND hwndOwner = pwndOwner != 0 ? pwndOwner->GetSafeHwnd() : 0;
+		if ( hwndOwner != 0 )
+		{
+			hwndOwner = ::GetAncestor( hwndOwner, GA_ROOT );
+		}
+		return hwndOwner;
+	}
+
+
 	// Shows pDialog modally over pOwner and returns what ShowModal returned,
 	// so callers compare against wxID_OK as they would anywhere else.
 	//
-	// pOwner may be any widget in the frame -- a docking pane, a control. The
-	// walk to the top-level window is the point: disabling the window handed in
-	// would leave the rest of the frame live, which looks modal and is not. MFC
-	// does the same walk in CWnd::GetSafeOwner before DoModal disables anything,
-	// so matching it is what keeps a migrated dialog behaving like the one it
-	// replaced.
-	//
 	// The check worth running on every dialog that moves: while it is up, the
-	// frame's IsWindowEnabled must be false.
+	// frame's IsWindowEnabled must be false, and the frame must be its owner.
 	inline int ShowModalOver( wxDialog *pDialog, IWidget *pOwner )
 	{
 		if ( pDialog == 0 )
@@ -86,14 +99,20 @@ namespace NWxModal
 			return wxID_CANCEL;
 		}
 
-		CWnd *const pwndOwner = ToCWnd( pOwner );
-		HWND hwndOwner = pwndOwner != 0 ? pwndOwner->GetSafeHwnd() : 0;
-		if ( hwndOwner != 0 )
-		{
-			hwndOwner = ::GetAncestor( hwndOwner, GA_ROOT );
-		}
+		const HWND hwndOwner = FindOwnerFrame( pOwner );
 
-		if ( hwndOwner != 0 )
+		// The common dialogs -- colour, file, font -- have no window yet: on MSW
+		// they are the system's own, created inside ShowModal by ChooseColor and
+		// its siblings, so there is nothing here to set an owner on. They take
+		// their owner from wx's choice of parent, and wx refuses a parent that
+		// is not shown on screen, in which case they get none at all -- measured
+		// on the model palette's colour picker with its pane hidden. So a common
+		// dialog that has to be owned by the frame sets that itself, from its
+		// WM_INITDIALOG hook, before it is shown: see WxColourDialog.h. What is
+		// left to do here is the disabling, which is the half no wx dialog can
+		// do for itself, because the frame is not a wx window and
+		// wxWindowDisabler only knows about wx ones.
+		if ( hwndOwner != 0 && pDialog->GetHandle() != 0 )
 		{
 			// Before the disable, so the dialog is never ownerless while visible.
 			::SetWindowLongPtr( (HWND)pDialog->GetHandle(), GWLP_HWNDPARENT, (LONG_PTR)hwndOwner );

@@ -120,6 +120,8 @@ set(SOURCES
     ModelExporter.cpp
     ModelInterface.cpp
     ModelState.cpp
+    ModelViewMfc.cpp
+    ModelViewWx.cpp
     ModelWindow.cpp
     MovEditorSettingsWindow.cpp
     MoviesEditorData.cpp

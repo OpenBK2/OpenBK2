@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-class CModelWindow : public CResizeDialog, public ICommandHandler
+class CModelWindow : public CResizeDialog, public CModelCommands
 {
 	bool bCreateControls;
 
@@ -17,8 +17,6 @@ class CModelWindow : public CResizeDialog, public ICommandHandler
 	CComboBox	wndAnimRadiusComboBox;
 	CComboBox	wndAnimDistanceComboBox;
 
-	bool GetEditParameters( CModelState::SEditParameters *pEditParameters );
-	bool SetEditParameters( const CModelState::SEditParameters &rEditParameters );
 	void UpdateControls( const CModelState::SEditParameters &rEditParameters );
 protected:
 	virtual void DoDataExchange( CDataExchange* pDX );
@@ -86,9 +84,12 @@ public:
 	CModelWindow( CWnd* pParent = 0 );
 	~CModelWindow();
 
-	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	//	CModelCommands
+	//
+	// The dispatch is inherited whole: this palette answers the edit-parameter
+	// pair and nothing else, so there is no HandleCommand or UpdateCommand here.
+	virtual bool GetEditParameters( CModelState::SEditParameters *pEditParameters );
+	virtual bool SetEditParameters( const CModelState::SEditParameters &rEditParameters );
 
 	DECLARE_MESSAGE_MAP()
 };

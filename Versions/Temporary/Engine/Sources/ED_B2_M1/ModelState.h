@@ -3,6 +3,7 @@
 #include "MapEditorLib/DefaultInputState.h"
 #include "3Dmotor/DBScene.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "PaletteCommands.h"
 
 #include <cstdint>
 
@@ -39,6 +40,12 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 	friend class CModelEditor;
 	friend class CModelWindow;
 
+	// Public, as every other state's palette struct is. It was private and
+	// reached through the friend declaration above, which served while there
+	// was one palette class; the wx palette and the shared dispatch at the end
+	// of this file both need to name it, and neither is a friend. Nothing else
+	// in the class changes access -- the label after the struct restores it.
+public:
 	// Структура данных, с помощью которой конфигурационный диалог общается со стейтом
 	struct SEditParameters
 	{
@@ -80,6 +87,7 @@ class CModelState : public CDefaultInputState, public ICommandHandler
 		EAIGeometryType eAIGeometryType;
 	};
 
+private:
 	enum SModelEditorType
 	{
 		ET_MODEL,
@@ -133,6 +141,15 @@ public:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 };
+
+
+// The palette's half of the exchange above, whichever toolkit draws it.
+//
+// The whole of CEditParameterCommands, not a fall-through: the model palette
+// answers the edit-parameter pair and nothing else, so neither palette has a
+// HandleCommand or an UpdateCommand of its own. The last of the five
+// edit-parameter palettes, and the only one of them that needs nothing more.
+typedef CEditParameterCommands<CModelState::SEditParameters> CModelCommands;
 
 
 

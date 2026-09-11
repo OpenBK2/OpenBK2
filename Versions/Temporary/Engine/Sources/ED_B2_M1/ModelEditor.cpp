@@ -88,13 +88,19 @@ void CModelEditor::CreateControls()
 	strPaneLabel.LoadString( theEDB2M1Instance, IDS_MODEL_TOOL_WINDOW_NAME  );
 	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel.GetString(), CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
 	{
-		AfxSetResourceHandle( theEDB2M1Instance );
-		modelWindow.Create( CModelWindow::IDD, ToCWnd( pwndTool ) );
-		AfxSetResourceHandle( AfxGetInstanceHandle() );
-		CWndWidget contentsWidget( &modelWindow );
-		Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, &contentsWidget );
+		// Which toolkit draws the palette is NModelView's business. The pane is
+		// shown whether or not it could be created, as it always was.
+		pModelWindow = NModelView::Create( ToCWnd( pwndTool ) );
+		if ( pModelWindow )
+		{
+			CWndWidget contentsWidget( pModelWindow.get() );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, &contentsWidget );
+		}
 		pwndTool->ShowWithoutLayout( true );
-		modelWindow.ShowWindow( SW_SHOW );
+		if ( pModelWindow )
+		{
+			pModelWindow->ShowWindow( SW_SHOW );
+		}
 	}
 	//
 	AfxSetResourceHandle( theEDB2M1Instance );
@@ -156,7 +162,14 @@ void CModelEditor::DestroyControls()
 		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndTool = 0;
 	}
-	modelWindow.DestroyWindow();
+	// In the order it always was: the pane first, which usually takes the
+	// palette's window with it as a child, then the palette's own
+	// DestroyWindow, which is then a no-op. The object goes last.
+	if ( pModelWindow )
+	{
+		pModelWindow->DestroyWindow();
+		pModelWindow.reset();
+	}
 }
 
 
