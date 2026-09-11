@@ -11,7 +11,8 @@
 
 class CEnterNameDialog : public CResizeDialog
 {
-	static std::string szLastName;
+	// The starting text in, the accepted name out. The last name used to be a
+	// static here; NEnterName keeps it now, for both implementations.
 	std::string szName;
 	std::string szDlgCaption;
 	std::string szLabelText;
@@ -22,7 +23,8 @@ class CEnterNameDialog : public CResizeDialog
 public:
 	enum { IDD = IDD_DLG_AREA_NAME };
 
-	CEnterNameDialog( CWnd* pParentWindow, const std::string &szDlgCaption,  const std::string &szLabelText );
+	CEnterNameDialog( CWnd* pParentWindow, const std::string &szDlgCaption,  const std::string &szLabelText,
+										const std::string &rszInitialName );
 	virtual ~CEnterNameDialog() {}
 	
 	virtual void DoDataExchange( CDataExchange *pDX );

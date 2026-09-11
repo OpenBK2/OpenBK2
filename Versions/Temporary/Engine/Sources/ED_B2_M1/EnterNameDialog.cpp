@@ -11,10 +11,10 @@
 BEGIN_MESSAGE_MAP(CEnterNameDialog,CDialog)
 END_MESSAGE_MAP()
 
-std::string CEnterNameDialog::szLastName;
-
-CEnterNameDialog::CEnterNameDialog( CWnd* pParentWindow, const std::string &_szDlgCaption,  const std::string &_szLabelText )
+CEnterNameDialog::CEnterNameDialog( CWnd* pParentWindow, const std::string &_szDlgCaption,  const std::string &_szLabelText,
+																		const std::string &rszInitialName )
 	:	CResizeDialog( CEnterNameDialog::IDD, pParentWindow ),
+	szName( rszInitialName ),
 	szDlgCaption( _szDlgCaption ),
 	szLabelText( _szLabelText )
 {
@@ -35,7 +35,7 @@ BOOL CEnterNameDialog::OnInitDialog()
   
 	CEdit *pEdit = static_cast<CEdit*>( GetDlgItem( IDC_EDIT_NAME ) );
 	if ( pEdit )
-		pEdit->SetWindowText( szLastName.c_str() );
+		pEdit->SetWindowText( szName.c_str() );
 
 	CStatic *pLabel = static_cast<CStatic*>( GetDlgItem( IDC_STATIC_LABEL ) );
 	if ( pLabel )
@@ -53,7 +53,6 @@ void CEnterNameDialog::OnOK()
 		CString szStr;
 		pEdit->GetWindowText( szStr );
 		szName = (LPCSTR)szStr;
-		szLastName = szName;
 		CDialog::OnOK();
 	}
 }

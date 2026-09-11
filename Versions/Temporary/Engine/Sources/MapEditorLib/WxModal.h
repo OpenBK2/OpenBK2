@@ -25,7 +25,8 @@
 // **This file is scaffolding with a known end date.** When the main frame is a
 // wxFrame, every caller passes it as a wx parent, ShowModal does all of the
 // above itself, and this header is deleted. Nothing else should grow Win32 in
-// the meantime: a migrated dialog is pure wx plus one call to ShowModalOver.
+// the meantime: a migrated dialog is pure wx plus one call to ShowModalOver,
+// and one to CentreOver for where it opens.
 
 #ifdef OBK2_WITH_WX
 
@@ -33,6 +34,8 @@
 #include "MfcWidget.h"
 
 #include <wx/dialog.h>
+
+#include <algorithm>
 
 namespace NWxModal
 {
@@ -84,6 +87,43 @@ namespace NWxModal
 			hwndOwner = ::GetAncestor( hwndOwner, GA_ROOT );
 		}
 		return hwndOwner;
+	}
+
+
+	// Centres pDialog over the frame pOwner belongs to, kept on that frame's
+	// monitor's work area -- where an MFC dialog opens. A template with no
+	// position is centred by MFC on its owner (CWnd::CenterWindow, from
+	// _AfxPostInitDialog), measured on the area name dialog: its centre and
+	// the frame's were the same pixel. wxWindow::Centre cannot do it here: the
+	// dialog has no wx parent, so Centre centres on the screen, which is the
+	// same place only while the frame is maximised. Call it after the dialog
+	// has its size. With no owner, falls back to Centre.
+	inline void CentreOver( wxDialog *pDialog, IWidget *pOwner )
+	{
+		if ( pDialog == 0 )
+		{
+			return;
+		}
+		const HWND hwndOwner = FindOwnerFrame( pOwner );
+		RECT rcOwner;
+		if ( hwndOwner == 0 || !::IsWindowVisible( hwndOwner ) || ::IsIconic( hwndOwner ) ||
+				 !::GetWindowRect( hwndOwner, &rcOwner ) )
+		{
+			pDialog->Centre();
+			return;
+		}
+		const wxSize size = pDialog->GetSize();
+		int x = ( rcOwner.left + rcOwner.right - size.x ) / 2;
+		int y = ( rcOwner.top + rcOwner.bottom - size.y ) / 2;
+		MONITORINFO monitor = {};
+		monitor.cbSize = sizeof( monitor );
+		if ( ::GetMonitorInfo( ::MonitorFromWindow( hwndOwner, MONITOR_DEFAULTTONEAREST ), &monitor ) )
+		{
+			const RECT &rcWork = monitor.rcWork;
+			x = ( std::max )( static_cast<int>( rcWork.left ), ( std::min )( x, static_cast<int>( rcWork.right ) - size.x ) );
+			y = ( std::max )( static_cast<int>( rcWork.top ), ( std::min )( y, static_cast<int>( rcWork.bottom ) - size.y ) );
+		}
+		pDialog->Move( x, y );
 	}
 
 

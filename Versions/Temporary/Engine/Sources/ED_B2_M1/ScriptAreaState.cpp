@@ -7,7 +7,7 @@
 #include "SceneB2/Scene.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
-#include "EnterNameDialog.h"
+#include "EnterName.h"
 #include "ScriptAreaState.h"
 
 #include <cstdint>
@@ -351,11 +351,11 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 
 unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
-	CEnterNameDialog enterNameDialog( MainFrameWnd(), "Area name", "Area name" );
-	if ( enterNameDialog.DoModal() == IDOK )
+	// The prompt starts with the last name accepted; an empty name places
+	// nothing, as ever. Which toolkit draws it is NEnterName's business.
+	std::string szName;
+	if ( NEnterName::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), "Area name", "Area name", &szName ) )
 	{
-		std::string szName; 
-		enterNameDialog.GetName( &szName );
 		if ( !szName.empty() )
 		{
 			if ( rControlPointList.size() == 2 )

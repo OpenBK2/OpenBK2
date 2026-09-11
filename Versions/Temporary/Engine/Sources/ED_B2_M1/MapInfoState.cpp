@@ -326,8 +326,6 @@ void CMapInfoState::Enter2()
 	DebugTrace( "%d lakes, %d coasts", nLakesCount, nCoastsCount );
 }
 
-#include "EnterNameDialog.h"
-
 void CMapInfoState::Enter()
 {
 	// TODO: progress bar

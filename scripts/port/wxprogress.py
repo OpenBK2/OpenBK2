@@ -85,6 +85,7 @@ MIGRATED = {
     "CAIGenParcelDlg": "ED_B2_M1/AIGeneralDialogsWx.cpp (NAIGenParcelDialog::Run)",
     "CMapInfoViewFilterDlg": "ED_B2_M1/MapInfoViewFilterWx.cpp (NMapInfoViewFilter::Run)",
     "CPointListDialog": "ED_B2_M1/PointListViewWx.cpp (NPointListView::CreateWx)",
+    "CEnterNameDialog": "ED_B2_M1/EnterNameWx.cpp (NEnterName::Run)",
 }
 
 

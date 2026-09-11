@@ -57,6 +57,8 @@ set(SOURCES
     EffectInterface.cpp
     EffectState.cpp
     EnterNameDialog.cpp
+    EnterNameMfc.cpp
+    EnterNameWx.cpp
     EntrenchmentExporter.cpp
     EntrenchmentInfoData.cpp
     EntrenchmentMnemonics.cpp
