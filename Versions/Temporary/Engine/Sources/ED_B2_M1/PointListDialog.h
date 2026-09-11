@@ -1,10 +1,10 @@
 #pragma once
 
 #include "DialogData.h"
+#include "PointListView.h"
 
 #include "ResourceDefines.h"
 #include "MapEditorLib/ResizeDialog.h"
-#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 
@@ -12,7 +12,11 @@
 //						POINTS LIST DIALOG
 //
 
-class CPointListDialog : public CResizeDialog, public ICommandHandler
+// It was an ICommandHandler with a static list of every instance, and the last
+// one constructed registered for CHID_POINTS_LIST_DIALOG and looked the others
+// up by instance ID. NPointListView does that now for both implementations;
+// this class only answers for itself.
+class CPointListDialog : public CResizeDialog, public NPointListView::IPointList
 {
 	CButton chkPass;
 	CButton chkPropMask;
@@ -21,8 +25,6 @@ class CPointListDialog : public CResizeDialog, public ICommandHandler
 	CString szLabel;
 
 	unsigned nInstanceID;
-
-	static std::list<CPointListDialog*> otherDialogs;
 
 	int nSelectedIndex;
 	bool bIsDataSetting;
@@ -33,10 +35,13 @@ class CPointListDialog : public CResizeDialog, public ICommandHandler
 	// CPointListDialog
 	void NotifyHandler();
 
-	void GetDialogData( SPointListDialogData *pData );
-	void SetDialogData( const SPointListDialogData *pData );
-
 public:
+	// NPointListView::IPointList
+	virtual unsigned GetInstanceID() const { return nInstanceID; }
+	virtual void GetDialogData( SPointListDialogData *pData );
+	virtual void SetDialogData( const SPointListDialogData *pData );
+	virtual void FollowSeason( NDb::ESeason eSeason );
+
 	enum { IDD = IDD_TAB_BLD_POINTS };
 
 	CPointListDialog( CWnd *pParentWindow = 0 )
@@ -51,10 +56,6 @@ public:
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();
 
-	//ICommandHandler
-	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnDestroy();
 	afx_msg void OnCbnSelchangeSettingSelectCombo();

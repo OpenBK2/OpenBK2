@@ -136,6 +136,8 @@ set(SOURCES
     ObjectRPGStatsExporter.cpp
     PassabilityProfile.cpp
     PointListDialog.cpp
+    PointListViewMfc.cpp
+    PointListViewWx.cpp
     PointsListState.cpp
     PolygonState.cpp
     ReinforcementTypes.cpp

@@ -5,6 +5,7 @@
 #include "CommandHandlerDefines.h"
 #include "SeasonMnemonics.h"
 #include "PointListDialog.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 
 #include <cstdint>
 
@@ -21,8 +22,6 @@ BEGIN_MESSAGE_MAP(CPointListDialog, CResizeDialog)
 END_MESSAGE_MAP()
 
 
-std::list<CPointListDialog*> CPointListDialog::otherDialogs;
-
 CPointListDialog::CPointListDialog( unsigned _nInstanceID, const CString &rszLabel )
 	:	CResizeDialog( CPointListDialog::IDD ),
 	szLabel( rszLabel ), 
@@ -35,16 +34,15 @@ CPointListDialog::CPointListDialog( unsigned _nInstanceID, const CString &rszLab
 	SetControlStyle( IDC_CHECK_PROPMASK, ANCHORE_LEFT );
 	SetControlStyle( IDC_CHECK_PASSABILITY, ANCHORE_LEFT );
 
-	otherDialogs.push_back(this); 
-
-	Singleton<ICommandHandlerContainer>()->Set( CHID_POINTS_LIST_DIALOG, this );
+	// Was a push onto the static list and a Set of CHID_POINTS_LIST_DIALOG to
+	// this; NPointListView keeps both now.
+	NPointListView::Register( this );
 }
 
 
 CPointListDialog::~CPointListDialog()
 {
-	Singleton<ICommandHandlerContainer>()->Remove( CHID_POINTS_LIST_DIALOG );
-	otherDialogs.remove(this);
+	NPointListView::Unregister( this );
 }
 
 
@@ -204,69 +202,25 @@ void CPointListDialog::SetDialogData( const SPointListDialogData *pData )
 			break;
 		}
 	}
-	for ( std::list<CPointListDialog*>::iterator it = otherDialogs.begin(); it != otherDialogs.end(); ++it )
-	{
-		CPointListDialog *pDialog = *it;
-		if ( pDialog != this )
-		{
-			pDialog->seasonCombo.SelectString( 0, typeSeasonMnemonics.GetMnemonic(pData->eSeason).c_str() );  
-			chkPass.SetCheck( pData->bChkPassability ? BST_CHECKED : BST_UNCHECKED ); 	
-			chkPropMask.SetCheck( pData->bChkPropmask ? BST_CHECKED : BST_UNCHECKED ); 	
-		}
-	}
+	// The other lists' seasons follow this one. The loop this replaces also set
+	// chkPass and chkPropMask once per other list -- but this list's, not the
+	// other's, to the values already set above, so it did nothing and is gone.
+	// The other lists' check boxes have never followed.
+	NPointListView::FollowSeason( this, pData->eSeason );
 
 	bIsDataSetting = false ;
 }
 
 
-bool CPointListDialog::HandleCommand( unsigned nCommandID, uintptr_t dwData )
+// What the loop above did to each of the other lists, by name as it did it.
+void CPointListDialog::FollowSeason( NDb::ESeason eSeason )
 {
-	SPointListDialogData *pData = reinterpret_cast<SPointListDialogData*>( dwData );
-	
-	std::list<CPointListDialog*>::iterator it; 
-	for ( it = otherDialogs.begin(); it != otherDialogs.end(); ++it )
-	{
-		CPointListDialog *pDlg = *it;
-
-		if ( pData->nInstanceID == pDlg->nInstanceID )
-		{
-			switch( nCommandID ) 
-			{
-				case ID_WINDOW_GET_DIALOG_DATA:
-				{
-					pDlg->GetDialogData( pData );
-					return true;
-				}
-				//
-				case ID_WINDOW_SET_DIALOG_DATA:
-				{
-					pDlg->SetDialogData( pData );
-					return true;
-				}
-			}
-		}
-	}
-
-	return false;
+	seasonCombo.SelectString( 0, typeSeasonMnemonics.GetMnemonic( eSeason ).c_str() );
 }
 
 
-bool CPointListDialog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CPointListDialog::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CPointListDialog::UpdateCommand(), pbCheck == 0" );
-	//
-	switch( nCommandID ) 
-	{
-	case ID_WINDOW_GET_DIALOG_DATA:
-	case ID_WINDOW_SET_DIALOG_DATA:
-		( *pbEnable ) = true;
-		( *pbCheck ) = false;
-		return true;
-	default:
-		return false;
-	}
-}
+// HandleCommand and UpdateCommand were here, answering for every list at
+// once; they are NPointListView's dispatch now, in PointListViewMfc.cpp.
 
 
 

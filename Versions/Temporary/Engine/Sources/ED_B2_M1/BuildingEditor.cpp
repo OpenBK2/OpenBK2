@@ -7,7 +7,10 @@
 #include "Misc/2Darray.h"
 #include "SeasonMnemonics.h"
 #include "MapEditorLib/DefaultTabWindow.h"
-#include "PointListDialog.h"
+#include "PointListView.h"
+// This module's ids and strings; they came in through PointListDialog.h,
+// which this no longer includes.
+#include "ResourceDefines.h"
 #include "PointsListState.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_Logger.h"
@@ -108,18 +111,13 @@ void CBuildingEditor::CreateControls()
 				p3DTabWindow->SetCommandHandlerID( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE ); 
 				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
 
+				// Which toolkit draws the lists is NPointListView's business, not
+				// the editor's. It creates each window and registers it in the tab
+				// list; the label and the tab are still put on here.
 				for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
 				{
-					CPointListDialog* pPointListDlg = new CPointListDialog( i, listLabels[i] );
-					if ( p3DTabWindow->AddNewTab( pPointListDlg ) )
+					if ( CWnd *pPointListDlg = NPointListView::Create( p3DTabWindow, i, (const char*)listLabels[i] ) )
 					{
-						AfxSetResourceHandle( theEDB2M1Instance );
-						int bResult = pPointListDlg->Create( CPointListDialog::IDD, p3DTabWindow );
-						AfxSetResourceHandle( AfxGetInstanceHandle() );
-						if ( !bResult )
-						{
-							NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Creation of CPointListDialog dialog failed" ) );
-						}
 						++nID;
 						CString strPaneLabel = listLabels[i];
 						p3DTabWindow->AddTab( pPointListDlg, strPaneLabel );
