@@ -20,10 +20,23 @@ blend into whichever convention surrounds them. Content is never touched.
 import argparse
 import difflib
 import os
+import shutil
 import subprocess
 import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+
+
+def git():
+    """git, found even where it is not on PATH -- PowerShell here has none."""
+    found = shutil.which('git')
+    if found:
+        return found
+    for base in (os.environ.get('ProgramFiles', r'C:\Program Files'), os.environ.get('LOCALAPPDATA', '')):
+        candidate = os.path.join(base, 'Git', 'cmd', 'git.exe') if base else ''
+        if candidate and os.path.exists(candidate):
+            return candidate
+    raise SystemExit('git not found')
 
 
 def split(data):
@@ -70,7 +83,7 @@ def restored(head, work):
 def modified(paths):
     if paths:
         return paths
-    out = subprocess.run(['git', 'diff', '--name-only', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout
+    out = subprocess.run([git(), 'diff', '--name-only', 'HEAD'], cwd=ROOT, capture_output=True, text=True).stdout
     return [p for p in out.splitlines() if p]
 
 
@@ -84,7 +97,7 @@ def main():
     for rel in modified(a.paths):
         rel = os.path.relpath(os.path.abspath(rel), ROOT).replace('\\', '/') if os.path.exists(rel) else rel
         path = os.path.join(ROOT, rel)
-        blob = subprocess.run(['git', 'cat-file', 'blob', '%s:%s' % (a.rev, rel)], cwd=ROOT, capture_output=True)
+        blob = subprocess.run([git(), 'cat-file', 'blob', '%s:%s' % (a.rev, rel)], cwd=ROOT, capture_output=True)
         if blob.returncode != 0 or not os.path.isfile(path):
             continue
         head, work = blob.stdout, open(path, 'rb').read()
