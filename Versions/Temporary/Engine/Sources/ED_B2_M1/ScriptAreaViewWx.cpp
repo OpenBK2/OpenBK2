@@ -74,15 +74,9 @@ namespace
 			{
 				return false;
 			}
-			wxWindow *const pHostRoot = Root();
-
 			// Scrolled for the reason the other palettes are: three fixed rows
 			// and a list that takes the slack.
-			wxScrolledWindow *const pRoot = NWx::Child<wxScrolledWindow>( pHostRoot, wxID_ANY );
-			pRoot->SetScrollRate( 0, 8 );
-			wxBoxSizer *pHostSizer = new wxBoxSizer( wxVERTICAL );
-			pHostSizer->Add( pRoot, wxSizerFlags( 1 ).Expand() );
-			pHostRoot->SetSizer( pHostSizer );
+			wxScrolledWindow *const pRoot = CreateScrolledRoot();
 
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

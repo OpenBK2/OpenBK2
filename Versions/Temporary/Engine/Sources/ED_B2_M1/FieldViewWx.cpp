@@ -73,7 +73,6 @@ namespace
 			{
 				return false;
 			}
-			wxWindow *const pHostRoot = Root();
 
 			// **Why this palette scrolls and the earlier ones do not.** Every
 			// control in CFieldWindow's constructor carries the same anchor --
@@ -94,13 +93,9 @@ namespace
 			// the size it asked for, and a bar too short to hold them all scrolls
 			// to the rest instead of hiding it. Where the bar is tall enough --
 			// which is most of the time -- there is no scrollbar and nothing about
-			// this is visible.
-			wxScrolledWindow *const pRoot =
-					NWx::Child<wxScrolledWindow>( pHostRoot, wxID_ANY );
-			pRoot->SetScrollRate( 0, 8 );
-			wxBoxSizer *pHostSizer = new wxBoxSizer( wxVERTICAL );
-			pHostSizer->Add( pRoot, wxSizerFlags( 1 ).Expand() );
-			pHostRoot->SetSizer( pHostSizer );
+			// this is visible. The window itself is CWxHostWindow's, which every
+			// palette uses now.
+			wxScrolledWindow *const pRoot = CreateScrolledRoot();
 
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

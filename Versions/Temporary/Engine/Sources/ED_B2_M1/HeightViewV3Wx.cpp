@@ -148,7 +148,6 @@ namespace
 			{
 				return false;
 			}
-			wxWindow *const pHostRoot = Root();
 			LoadIcons();
 
 			// Scrolled for the same reason the field palette is: this is one
@@ -158,11 +157,7 @@ namespace
 			// tile list absorbs the slack when there is any -- it is the only
 			// item with a proportion -- and when there is not, the rows keep
 			// their size and the palette scrolls.
-			wxScrolledWindow *const pRoot = NWx::Child<wxScrolledWindow>( pHostRoot, wxID_ANY );
-			pRoot->SetScrollRate( 0, 8 );
-			wxBoxSizer *pHostSizer = new wxBoxSizer( wxVERTICAL );
-			pHostSizer->Add( pRoot, wxSizerFlags( 1 ).Expand() );
-			pHostRoot->SetSizer( pHostSizer );
+			wxScrolledWindow *const pRoot = CreateScrolledRoot();
 
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 

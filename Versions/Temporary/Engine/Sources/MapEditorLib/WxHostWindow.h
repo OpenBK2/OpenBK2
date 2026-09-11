@@ -34,8 +34,11 @@
 
 #include "Interface_Widget.h"
 #include "MfcWidget.h"
+#include "WxOwnership.h"
 
 #include <wx/nativewin.h>
+#include <wx/scrolwin.h>
+#include <wx/sizer.h>
 #include <wx/window.h>
 
 class CWxHostWindow : public CWnd, public IWidget
@@ -85,6 +88,46 @@ public:
 	wxWindow* Root() const
 	{
 		return pContainer;
+	}
+
+	// A surface filling the host that scrolls vertically and never
+	// horizontally, for a palette to put its controls on. Null before
+	// CreateHost succeeded.
+	//
+	// Palettes are a column of rows in a tab that is sometimes shorter than
+	// the column, so they scroll: every row keeps the size it asked for, and a
+	// tab too short for them all scrolls to the rest rather than squashing it.
+	// See FieldViewWx.cpp for the palette that made this necessary.
+	//
+	// **ShowScrollbars( wxSHOW_SB_NEVER, ... ) is the half that matters, and
+	// SetScrollRate( 0, 8 ) on its own does not do it.** A zero horizontal
+	// rate stops horizontal scrolling, but the layout does not look at the
+	// rate. wxScrollHelperBase::ScrollLayout lays the sizer out at the virtual
+	// size on every axis where IsScrollbarShown() is true, and that is
+	// `visibility != wxSHOW_SB_NEVER` -- true by default, whatever the rate. So
+	// a palette laid itself out at the wider of the tab and its own minimum
+	// width, and anything past the tab's edge was simply cut off. Nothing
+	// showed it until the script camera palette: a five column report list's
+	// best width is the sum of its columns, five 80 pixel defaults, and the
+	// palette came out 400 pixels wide in a 218 pixel tab, its columns sized
+	// to a width nobody could see.
+	//
+	// With the horizontal bar ruled out the width is always the tab's, and a
+	// row that stretches stretches to that.
+	wxScrolledWindow* CreateScrolledRoot()
+	{
+		wxWindow *const pHostRoot = Root();
+		if ( pHostRoot == 0 )
+		{
+			return nullptr;
+		}
+		wxScrolledWindow *const pScrolled = NWx::Child<wxScrolledWindow>( pHostRoot, wxID_ANY );
+		pScrolled->SetScrollRate( 0, 8 );
+		pScrolled->ShowScrollbars( wxSHOW_SB_NEVER, wxSHOW_SB_DEFAULT );
+		wxBoxSizer *pHostSizer = new wxBoxSizer( wxVERTICAL );
+		pHostSizer->Add( pScrolled, wxSizerFlags( 1 ).Expand() );
+		pHostRoot->SetSizer( pHostSizer );
+		return pScrolled;
 	}
 
 protected:
