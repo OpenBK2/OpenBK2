@@ -147,8 +147,6 @@ set(SOURCES
     ScriptAreaViewWx.cpp
     ScriptAreaWindow.cpp
     ScriptCameraEditorData.cpp
-    ScriptCameraMovementTypes.cpp
-    ScriptCameraRun.cpp
     ScriptCameraState.cpp
     ScriptCameraViewMfc.cpp
     ScriptCameraViewWx.cpp

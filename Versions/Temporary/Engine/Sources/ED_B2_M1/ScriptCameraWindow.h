@@ -2,7 +2,9 @@
 
 #include "ResourceDefines.h"
 #include "MapEditorLib/ResizeDialog.h"
-#include "ScriptCameraMovementTypes.h"
+// Was ScriptCameraMovementTypes.h, which held only the run dialog's type
+// mnemonics and otherwise passed this state header through.
+#include "ScriptCameraState.h"
 #include "ScriptCameraView.h"
 
 #include <cstdint>
@@ -18,7 +20,6 @@ class CScriptCameraWindow : public CResizeDialog, public CScriptCameraCommands
 	CListCtrl lcCameras;
 	CButton btnSave;
 	CButton btnDel;
-	CButton btnRun;
 
 	SScriptCameraWindowData dialogData;
 	bool bIsDataSetting;	// data setting flag
@@ -82,7 +83,6 @@ public:
 	afx_msg void OnBnClickedScriptCameraAdd();
 	afx_msg void OnBnClickedScriptCameraSave();
 	afx_msg void OnBnClickedScriptCameraDelete();
-	afx_msg void OnBnClickedScriptCameraRun();
 	afx_msg void OnLvnItemchangedListScriptCameras( NMHDR *pNMHDR, LRESULT *pResult );
 	afx_msg void OnNMDblclkListScriptCameras( NMHDR *pNMHDR, LRESULT *pResult );
 	afx_msg void OnChangeYaw();

@@ -408,7 +408,6 @@
 #define IDC_SMOV_BUTTON_ADD    											24201
 #define IDC_SMOV_BUTTON_DEL 												24202
 #define IDC_SMOV_BUTTON_SAVE												24203
-#define IDC_SMOV_BUTTON_RUN													24204
 #define IDC_SMOV_LIST_LABEL													24205
 #define IDC_SMOV_LIST         											24206
 #define IDC_SMOV_YAW_LABEL_LEFT											24207
@@ -420,27 +419,6 @@
 #define IDC_SMOV_FOV_LABEL_LEFT											24213
 #define IDC_SMOV_FOV_EDIT														24214
 #define IDC_SMOV_FOV_LABEL_RIGHT										24215
-//
-#define IDD_DLG_SCRIPT_CAMERA_RUN										24240
-#define IDC_SCRUN_COMBO_START												24241
-#define IDC_SCRUN_COMBO_FINISH											24242
-#define IDC_SCRUN_COMBO_TYPE												24243
-#define IDC_SCRUN_EDIT_TIME													24244
-#define IDC_SCRUN_EDIT_LSPEED												24245
-#define IDC_SCRUN_EDIT_ASPEED												24246
-#define IDC_SCRUN_LABEL_START												24247
-#define IDC_SCRUN_LABEL_FINISH											24248
-#define IDC_SCRUN_LABEL_TYPE												24249
-#define IDC_SCRUN_LABEL_TIME												24250
-#define IDC_SCRUN_LABEL_LSPEED											24251
-#define IDC_SCRUN_LABEL_ASPEED											24252
-#define IDC_SCRUN_EDIT_TARGET												24253
-#define IDC_SCRUN_LABEL_TARGET											24254
-#define IDC_SCRUN_EDIT_SPLINE1											24255
-#define IDC_SCRUN_LABEL_SPLINE1											24256
-#define IDC_SCRUN_EDIT_SPLINE2											24257
-#define IDC_SCRUN_LABEL_SPLINE2											24258
-#define IDC_SCRUN_DELIMITER0												24259
 //
 #define IDD_TAB_MI_AIGENERAL												24260
 #define IDC_AIGEN_LIST_PARCELS											24261

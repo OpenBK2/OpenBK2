@@ -34,14 +34,15 @@
 // script can cut or pan to, by ID, position, FOV, yaw and pitch. The palette
 // shows the list and a Save button; the state does the rest.
 //
-// **Three of its buttons are not drawn, because nobody has ever seen them.**
-// IDD_TAB_MI_SCRIPT_MOVIES has Add, Delete and Run, each six dialog units square
-// and NOT WS_VISIBLE, tucked into the top right corner -- and nothing ever shows
-// them. CScriptCameraWindow enables and disables them in SetDialogData, which
+// **Two of its buttons are not drawn, because nobody has ever seen them.**
+// IDD_TAB_MI_SCRIPT_MOVIES has Add and Delete, each six dialog units square and
+// NOT WS_VISIBLE, tucked into the top right corner -- and nothing ever shows
+// them. CScriptCameraWindow enables and disables Delete in SetDialogData, which
 // changes nothing a user can see, and their click handlers are unreachable.
-// Adding, deleting and running cameras happen elsewhere in the editor. Creating
-// three hidden wx buttons to have something to call Enable on would be
-// reproducing the template, not the palette, so they are not here.
+// Adding and deleting cameras happen elsewhere in the editor. Creating hidden
+// wx buttons to have something to call Enable on would be reproducing the
+// template, not the palette, so they are not here. There was a third, Run, and
+// it has been removed along with the run dialog it was the only way into.
 //
 // **Its keyboard shortcuts were never connected either.** OnKeyDown maps Return
 // to Save, Insert to Add and Delete to Delete, and there is no ON_WM_KEYDOWN in

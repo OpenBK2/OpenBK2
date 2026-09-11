@@ -17,7 +17,6 @@ BEGIN_MESSAGE_MAP(CScriptCameraWindow, CResizeDialog)
 	ON_BN_CLICKED( IDC_SMOV_BUTTON_ADD, OnBnClickedScriptCameraAdd )
 	ON_BN_CLICKED( IDC_SMOV_BUTTON_DEL, OnBnClickedScriptCameraDelete )
 	ON_BN_CLICKED( IDC_SMOV_BUTTON_SAVE, OnBnClickedScriptCameraSave )
-	ON_BN_CLICKED( IDC_SMOV_BUTTON_RUN, OnBnClickedScriptCameraRun )
 	ON_NOTIFY( NM_DBLCLK, IDC_SMOV_LIST, OnNMDblclkListScriptCameras )
 	ON_NOTIFY( LVN_ITEMCHANGED, IDC_SMOV_LIST, OnLvnItemchangedListScriptCameras )
 	ON_EN_CHANGE( IDC_SMOV_YAW_EDIT, OnChangeYaw )
@@ -36,7 +35,6 @@ CScriptCameraWindow::CScriptCameraWindow( CWnd *pParentWindow )
 	SetControlStyle( IDC_SMOV_BUTTON_ADD, ANCHORE_LEFT_TOP );
 	SetControlStyle( IDC_SMOV_BUTTON_DEL, ANCHORE_LEFT_TOP );
 	SetControlStyle( IDC_SMOV_BUTTON_SAVE, ANCHORE_LEFT_TOP );
-	SetControlStyle( IDC_SMOV_BUTTON_RUN, ANCHORE_RIGHT_TOP );
 	SetControlStyle( IDC_SMOV_LIST_LABEL, ANCHORE_LEFT_TOP );
 	SetControlStyle( IDC_SMOV_LIST, ANCHORE_LEFT_TOP | RESIZE_HOR_VER );
 	SetControlStyle( IDC_SMOV_YAW_LABEL_LEFT, ANCHORE_LEFT_BOTTOM );
@@ -116,7 +114,6 @@ void CScriptCameraWindow::DoDataExchange( CDataExchange *pDX )
 	DDX_Control( pDX, IDC_SMOV_LIST, lcCameras );
 	DDX_Control( pDX, IDC_SMOV_BUTTON_SAVE, btnSave );
 	DDX_Control( pDX, IDC_SMOV_BUTTON_DEL, btnDel );
-	DDX_Control( pDX, IDC_SMOV_BUTTON_RUN, btnRun );
 }
 
 
@@ -320,12 +317,6 @@ void CScriptCameraWindow::OnNMDblclkListScriptCameras( NMHDR *pNMHDR, LRESULT *p
 }
 
 
-void CScriptCameraWindow::OnBnClickedScriptCameraRun()
-{
-	NotifyHandler( SScriptCameraWindowData::SCA_CAMERA_RUN );
-}
-
-
 void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 {
 	if ( !pData )
@@ -351,7 +342,6 @@ void CScriptCameraWindow::SetDialogData( const SScriptCameraWindowData *pData )
 
 	btnDel.EnableWindow( dialogData.nCurrentCamera != -1 );
 	btnSave.EnableWindow( dialogData.nCurrentCamera != -1 );
-	btnRun.EnableWindow( !dialogData.scriptCameras.empty() );
 
 	SetLastAction( SScriptCameraWindowData::SCA_NO_ACTIONS );
 	//

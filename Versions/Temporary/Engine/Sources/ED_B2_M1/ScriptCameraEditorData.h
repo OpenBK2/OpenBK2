@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1/CameraRunTypes.h"
+// Stats_B2_M1/CameraRunTypes.h is no longer included: NDb::EScriptCameraRunType
+// was only here for the run dialog's data, and that dialog is gone. The game
+// still uses the type, through AILogic's SCRunTime and SCRunSpeed.
 #include "SceneB2/CameraInternal.h"
 
 //
@@ -13,8 +15,9 @@ struct SScriptCameraWindowData
 {
 	std::vector<NCamera::CCameraPlacement> scriptCameras;
 	int nCurrentCamera;
-	NDb::EScriptCameraRunType eRunType;
 
+	// SCA_CAMERA_RUN was last, and went with the run dialog it opened; nothing
+	// earlier moved. These are never saved, but the order is kept anyway.
 	enum EScriptCameraLastAction
 	{
 		SCA_UNKNOWN,
@@ -24,7 +27,6 @@ struct SScriptCameraWindowData
 		SCA_CAMERA_DELETE,
 		SCA_CAMERA_CHANGE,
 		SCA_CAMERA_JUMP,
-		SCA_CAMERA_RUN
 	};
 	EScriptCameraLastAction eLastAction;
 
@@ -38,67 +40,6 @@ struct SScriptCameraWindowData
 		scriptCameras.clear();
 		nCurrentCamera = -1;
 		eLastAction = SCA_NO_ACTIONS;
-	}
-};
-
-//
-//	Dialog data structure
-//
-
-struct SScriptCameraRunDlgData
-{
-	std::vector<NCamera::CCameraPlacement> scriptCameras;
-	NDb::EScriptCameraRunType eRunType;
-	int nStartCamera;
-	int nFinishCamera;
-	float fTime;
-	float fLSpeed;
-	float fASpeed;
-	int nTargetScriptID;
-	float fSpline1;
-	float fSpline2;
-
-	SScriptCameraRunDlgData()
-	{
-		Clear();
-	}
-	//
-	void Clear()
-	{
-		scriptCameras.clear();
-		eRunType = NDb::SCRT_DIRECT_MOVE;
-		nStartCamera = -1;
-		nFinishCamera = -1;
-		fTime = 0;
-		fLSpeed = 0;
-		fASpeed = 0;
-		nTargetScriptID = -1;
-		fSpline1 = 0;
-		fSpline2 = 0;
-	}
-	//
-	const NCamera::CCameraPlacement &GetScriptCamera( int nCamera )
-	{
-		//NI_ASSERT( IsValidCamera(nCamera), "Script Cameras out of range call\n" );
-		if ( IsValidCamera(nCamera) )
-			return scriptCameras[nCamera];
-		else
-			return scriptCameras[0];
-	}
-	//
-	const NCamera::CCameraPlacement &GetStartCamera()
-	{
-		return GetScriptCamera( nStartCamera );
-	}
-	//
-	const NCamera::CCameraPlacement &GetFinishCamera()
-	{
-		return GetScriptCamera( nFinishCamera );
-	}
-	//
-	bool IsValidCamera( int nCamera )
-	{
-		return  (nCamera >= 0) && (nCamera < scriptCameras.size());
 	}
 };
 

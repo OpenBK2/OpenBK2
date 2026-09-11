@@ -28,7 +28,6 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 
 	SScriptCameraWindowData dialogData;
 	SScriptMovieEditorData moviesData;
-	SScriptCameraRunDlgData runDialogData;
 	float fYaw, fPitch;
 	int nFOV;
 	bool bDrawMarkers;
@@ -65,7 +64,6 @@ protected:
 	bool UpdateScriptPlacement( int nCamera );
 	bool DeleteScriptPlacement( int nCamera );
 	bool AddScriptPlacement();
-	void ScriptCameraRun( NDb::EScriptCameraRunType eRunType );
 
 	// new movies engine
 	bool AddPosKey( float fTime, int nSeqIndex );

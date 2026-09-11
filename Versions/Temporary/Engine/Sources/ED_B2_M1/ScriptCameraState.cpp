@@ -13,7 +13,6 @@
 #include "DrawToolsDC.h"
 
 #include "ScriptCameraState.h"
-#include "ScriptCameraRun.h"
 #include "KeySettingsDlg.h"
 
 #include <cstdint>
@@ -187,12 +186,6 @@ bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 						GetCameraPlacementByID( &newCamera, dialogData.nCurrentCamera );
 						SetCameraPlacement( newCamera );
 						RefreshDialogData( false );
-						break;
-					}
-					//
-					case SScriptCameraWindowData::SCA_CAMERA_RUN:
-					{
-						ScriptCameraRun( dialogData.eRunType );
 						break;
 					}
 				}
@@ -1305,67 +1298,6 @@ void CScriptCameraState::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &r
 			}
 			dialogData.nCurrentCamera = -1;
 		}
-	}
-}
-
-
-void CScriptCameraState::ScriptCameraRun( NDb::EScriptCameraRunType eRunType )
-{
-	NI_VERIFY( !(dialogData.scriptCameras.empty()), "CScriptCameraState::ScriptCameraRun - No cameras in scene!\n", return );
-
-	runDialogData.scriptCameras = dialogData.scriptCameras;
-	CScriptCameraRunDlg dlg(	MainFrameWnd(), &runDialogData );
-
-	if ( dlg.DoModal() == IDOK )
-	{
-		const NTimer::STime timeStart = Singleton<IGameTimer>()->GetGameTime();
-		CCSTime *pTimer = EditorScene()->GetGameTimer();
-
-		NDb::SScriptMovies moviesData;
-		moviesData.scriptCameraPlacements.clear();
-		moviesData.scriptMovieSequences.clear();
-
-		NCamera::CCameraPlacement startCamera = runDialogData.GetStartCamera();
-		NCamera::CCameraPlacement finishCamera = runDialogData.GetFinishCamera();
-
-		NDb::SScriptMovieSequence seq;
-		seq.followKeys.clear();
-		seq.posKeys.clear();
-
-		NDb::SScriptMovieKeyPos startPos;
-		NDb::SScriptMovieKeyPos finishPos;
-
-		startPos.fStartTime = 0;
-		startPos.nPositionIndex = 0;
-		finishPos.fStartTime = runDialogData.fTime;
-		finishPos.nPositionIndex = 1;
-
-		seq.posKeys.push_back( startPos );
-		seq.posKeys.push_back( finishPos );
-
-		moviesData.scriptMovieSequences.push_back( seq );
-
-		NDb::SScriptCameraPlacement startCamPlacement;
-		NDb::SScriptCameraPlacement finishCamPlacement;
-
-		startCamPlacement.fYaw = startCamera.fYaw;
-		startCamPlacement.fPitch = startCamera.fPitch;
-		startCamPlacement.fFOV = startCamera.fFOV;
-		startCamPlacement.vPosition = startCamera.vPosition;
-
-		finishCamPlacement.fYaw = finishCamera.fYaw;
-		finishCamPlacement.fPitch = finishCamera.fPitch;
-		finishCamPlacement.fFOV = finishCamera.fFOV;
-		finishCamPlacement.vPosition = finishCamera.vPosition;
-
-		moviesData.scriptCameraPlacements.push_back( startCamPlacement );
-		moviesData.scriptCameraPlacements.push_back( finishCamPlacement );
-
-		CScriptMoviesMutatorHolder *pMoviesHolder = new CScriptMoviesMutatorHolder( moviesData, 0, pTimer );
-		pMoviesHolder->SetTime( 0.0f );
-		pMoviesHolder->SetSpeed( 1.0f );
-		pMoviesHolder->Play();
-		Camera()->SetScriptMutatorsHolder( pMoviesHolder );
 	}
 }
 
