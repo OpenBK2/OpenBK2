@@ -421,10 +421,6 @@
 #define IDC_SMOV_FOV_EDIT														24214
 #define IDC_SMOV_FOV_LABEL_RIGHT										24215
 //
-#define IDD_DLG_SCRIPT_CAMERA_ADD										24230
-#define IDC_SCAD_EDIT_NAME													24231
-#define IDC_SCAD_LABEL_NAME													24232
-//
 #define IDD_DLG_SCRIPT_CAMERA_RUN										24240
 #define IDC_SCRUN_COMBO_START												24241
 #define IDC_SCRUN_COMBO_FINISH											24242

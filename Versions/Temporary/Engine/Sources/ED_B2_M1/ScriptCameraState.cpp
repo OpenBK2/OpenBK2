@@ -13,7 +13,6 @@
 #include "DrawToolsDC.h"
 
 #include "ScriptCameraState.h"
-#include "ScriptCameraAddDlg.h"
 #include "ScriptCameraRun.h"
 #include "KeySettingsDlg.h"
 
@@ -552,9 +551,11 @@ bool CScriptCameraState::AddScriptPlacement()
 {
 	bool bReturn = false;
 
+	// A new camera is named by its index. There was a dialog asking for a name
+	// here, CScriptCameraAddDlg; its call was commented out before release, the
+	// braces below are what is left of the `if` around it, and the dialog itself
+	// has been removed since.
 	std::string szNewCameraName = std::to_string(  GetMapInfoEditor()->pMapInfo->scriptMovies.scriptCameraPlacements.size() );
-	//CScriptCameraAddDlg dlg( MainFrameWnd(), &szNewCameraName, dialogData.scriptCameras );
-	//if ( dlg.DoModal() == IDOK )
 	{
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 		{
