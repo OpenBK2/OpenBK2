@@ -33,7 +33,6 @@
 #include "BuilderContainer.h"
 #include "ExporterContainer.h"
 #include "FolderCallback.h"
-#include "ProgressHook.h"
 #include "MODContainer.h"
 
 #include "MapEditorLib/MapEditorModule.h"
@@ -213,7 +212,6 @@ bool CEditorApp::CreateSingletons()
 	NSingleton::RegisterSingleton( new CBuilderContainer(), IBuilderContainer::tidTypeID );
 	NSingleton::RegisterSingleton( new CExporterContainer(), IExporterContainer::tidTypeID );
 	NSingleton::RegisterSingleton( new CFolderCallback(), IFolderCallback::tidTypeID );
-	NSingleton::RegisterSingleton( new CProgressHook(), IProgressHook::tidTypeID );
 	NSingleton::RegisterSingleton( new CMODContainer(), IMODContainer::tidTypeID );
 	//
 	DebugTrace( "EditorApp() Create singletons: %g", NHPTimer::GetTimePassed( &time ) );

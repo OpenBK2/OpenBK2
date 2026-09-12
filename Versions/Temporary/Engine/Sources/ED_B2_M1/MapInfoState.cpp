@@ -36,9 +36,6 @@
 
 #include "libdb/ResourceManager.h"
 
-//#include "../MapEditorLib/Interface_ProgressHook.h"
-#include "MapEditor/ProgressHook.h"
-#include "MapEditor/ProgressDlg.h"
 
 const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 
 {
@@ -328,21 +325,9 @@ void CMapInfoState::Enter2()
 
 void CMapInfoState::Enter()
 {
-	// TODO: progress bar
-	//IProgressHook *pProgress = Singleton<IProgressHook>();
-	//if ( pProgress )
-	//{
-	//	pProgress->Create( "Open MapInfo", MainFrameWnd() );
-	//	//
-	//	CProgressDlg *pProgressDlg = pProgress->GetProgressDialog();
-	//	if ( pProgressDlg )
-	//	{
-	//		//pProgressDlg->ShowWindow( SW_SHOW );
-	//		//pwndProgressDialog->SetProgressMessage( StrFmt( _T( "Getting file structure..." ) ) );
-	//		//pwndProgressDialog->SetWindowText( _T( "Creating Statistics" ) );
-	//	}
-	//}
-	//pProgress->SetProgressRange( 0, 1000 );
+	// There was a commented-out sketch here of a second progress display, on the
+	// editor's IProgressHook singleton. That hook and the threaded dialog behind
+	// it never ran and have been removed; NProgress below is the one that works.
 
 	NProgress::Create( true );
 	NProgress::SetRange( 0, 20 );

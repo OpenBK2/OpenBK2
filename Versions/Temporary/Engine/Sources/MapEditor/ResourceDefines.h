@@ -242,10 +242,9 @@
 #define ID_REPLACE																			22141
 #define ID_REPLACEALL																		22142
 
-#define IDD_PROGRESS																		22150
-#define IDC_PROGRESS_LOG																22151
-#define IDC_PROGRESS_LINE																22152
-
+// 22150 to 22152 were IDD_PROGRESS and its two controls, the template
+// CProgressDlg used. Both are gone; the numbers are left unused rather than
+// reissued, as every other gap in this file is.
 
 #define IDD_PROGRESS_SIMPLE															22155
 #define IDC_PROGRESS_BAR																22156

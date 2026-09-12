@@ -25,10 +25,10 @@
 // was for -- the dialog and the frame behind it, both told to paint now -- and
 // each implementation does the same after every change.
 //
-// Note what is *not* here: CProgressDlg, CProgressThread and CProgressHook. The
-// hook is registered as a singleton in MapEditorApp.cpp and nothing ever calls
-// its Create, so the threaded progress dialog has never run. Only this one is
-// live.
+// There used to be a second progress display beside this one -- CProgressDlg on
+// a CWinThread, reached through an IProgressHook singleton -- and it never ran:
+// the hook was registered and nothing ever called its Create. It has been
+// removed, so this is the only one.
 namespace NProgressView
 {
 	class IView

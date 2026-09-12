@@ -82,9 +82,6 @@ set(SOURCES
     ProgressDialog.cpp
     ProgressViewMfc.cpp
     ProgressViewWx.cpp
-    ProgressDlg.cpp
-    ProgressHook.cpp
-    ProgressThread.cpp
     RefListDialog.cpp
     RefListViewMfc.cpp
     RefListViewWx.cpp
