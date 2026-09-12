@@ -84,6 +84,8 @@ set(SOURCES
     ProgressHook.cpp
     ProgressThread.cpp
     RefListDialog.cpp
+    RefListViewMfc.cpp
+    RefListViewWx.cpp
     RefListWaitDialog.cpp
     RegisterEditors.cpp
     ReplaceTextDlg.cpp

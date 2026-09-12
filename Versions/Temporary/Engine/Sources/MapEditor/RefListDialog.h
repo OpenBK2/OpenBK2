@@ -4,15 +4,14 @@
 #include "ResourceDefines.h"
 
 #include "MapEditorLib/ResizeDialog.h"
+#include "RefListView.h"
 
 
 class CRefListDialog : public CResizeDialog
 {
-	struct SReferenceObject
-	{
-		std::string szTypeName;
-		std::string szObjectName;
-	};
+	// The objects, the fields and the clearing are the boundary's, so that the
+	// wx dialog does the same things to the database; see RefListView.h.
+	typedef NRefList::SReferenceObject SReferenceObject;
 
 	CEdit fieldsCtrl;
 	CListCtrl objectsCtrl;
@@ -26,7 +25,7 @@ class CRefListDialog : public CResizeDialog
 	std::list<std::string> *pReferenceObjectsList;
 
 	void BuildReferenceObjectsList();
-	void BuildFieldsListForObject( const SReferenceObject &object );
+	void BuildFieldsListForObject( const NRefList::SReferenceObject &object );
 	
 protected:
 	virtual BOOL OnInitDialog();

@@ -20,8 +20,7 @@
 #include "MapEditorLib/ControlAlgorithms.h"
 #include "SearchObjectView.h"
 #include "NewObjectDialog.h"
-#include "RefListDialog.h"
-#include "RefListWaitDialog.h"
+#include "RefListView.h"
 #include "Misc/StrProc.h"
 #include "System/FilePath.h"
 #include "libdb/Db.h"
@@ -2025,16 +2024,11 @@ void CTreeGDBBrowserBase::LookupReferences()
 	GetTreeItemName( GetSelectedItem(), &szObjectName );
 	//
 	std::list<std::string> referenceObjectsList;
-	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	NI_VERIFY( pResourceManager, "Cannot find resource manager", return )
-	CRefListWaitDialog xdbAskDlg( this );
-	xdbAskDlg.SetData( &referenceObjectsList, szObjectTypeName, szObjectName, pResourceManager );
-	xdbAskDlg.DoModal();
-	if ( xdbAskDlg.IsComplete() )
+	// Which toolkit draws the two of them is NRefList' business.
+	CWndWidget ownerWidget( this );
+	if ( NRefList::RunScan( &ownerWidget, szObjectTypeName, szObjectName, &referenceObjectsList ) )
 	{
-		CRefListDialog refListDialog( this );
-		refListDialog.SetData( szObjectTypeName, szObjectName, &referenceObjectsList );
-		refListDialog.DoModal();
+		NRefList::Run( &ownerWidget, szObjectTypeName, szObjectName, &referenceObjectsList );
 	}
 	SetFocus();
 }

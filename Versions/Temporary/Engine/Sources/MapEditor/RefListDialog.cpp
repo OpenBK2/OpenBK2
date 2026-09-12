@@ -38,81 +38,21 @@ void CRefListDialog::BuildReferenceObjectsList()
 {
 	ASSERT( szTargetTypeName.empty() == false );
 
-	std::list<std::string> &referenceObjectsList = *pReferenceObjectsList;
-
-	std::string szRefObjectTypeName;
-	std::string szRefObjectName;
-	std::string szFullName;
-
-	std::unordered_map<std::string,SReferenceObject> objsHash;
-	std::list<std::string> fullNames;
-	for ( std::list<std::string>::const_iterator i = referenceObjectsList.begin(); i != referenceObjectsList.end(); ++i )
+	// Parsed and sorted by the boundary, so that the wx dialog lists the same
+	// objects in the same order; see RefListView.h.
+	NRefList::BuildObjects( &referenceObjects, *pReferenceObjectsList );
+	for ( int i = 0; i < referenceObjects.size(); ++i )
 	{
-    CStringManager::GetTypeAndNameFromRefValue( &szRefObjectTypeName, &szRefObjectName, (*i), TYPE_SEPARATOR_CHAR, "" );
-		if ( !szRefObjectTypeName.empty() )
-		{
-			CStringManager::GetRefValueFromTypeAndName( &szFullName, szRefObjectTypeName, szRefObjectName, TYPE_SEPARATOR_CHAR );
-			SReferenceObject obj;
-			obj.szObjectName = szRefObjectName;
-			obj.szTypeName = szRefObjectTypeName;
-			objsHash[szFullName] = obj;
-			fullNames.push_back( szFullName );
-		}
-		else
-		{
-			// something wrong with the supplied object's subscript (full name)
-			ASSERT( false && "Invalid referencing objects were encountered" );
-		}
+		objectsCtrl.InsertItem( i, referenceObjects[i].szDisplayName.c_str() );
 	}
-	fullNames.sort();
-	
-	int nElement = 0;
-	for ( std::list<std::string>::iterator it = fullNames.begin(); it != fullNames.end(); ++it )
-	{
-		const SReferenceObject& obj = objsHash[*it];
-    referenceObjects.push_back( obj );
-		const std::string szItemText = obj.szTypeName + TYPE_SEPARATOR_CHAR + obj.szObjectName;
-		objectsCtrl.InsertItem( nElement, szItemText.c_str() );
-		++nElement;
-	}
-
 }
 
-void CRefListDialog::BuildFieldsListForObject( const SReferenceObject &object )
+void CRefListDialog::BuildFieldsListForObject( const NRefList::SReferenceObject &object )
 {
-	const std::string &szName = object.szObjectName;
-	const std::string &szTypeName = object.szTypeName;
-
-	std::string szFieldName;
-	std::string szRefTargetTypeName;
-	std::string szRefTargetName;
-
 	std::string szText;
-
-	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	NI_VERIFY( pResourceManager, "Cannot find resource manager", return )
-	pCurrentManipulator = pResourceManager->CreateObjectManipulator( szTypeName, szName );
-	currentFields.clear();
-	if ( pCurrentManipulator )
-	{
-		CPtr<IManipulatorIterator> pFieldIt = pCurrentManipulator->Iterate( true, ECT_NO_CACHE );
-		while ( !pFieldIt->IsEnd() )
-		{
-			pFieldIt->GetName( &szFieldName );
-			if ( CManipulatorManager::GetParamsFromReference( szFieldName, pCurrentManipulator, &szRefTargetTypeName, &szRefTargetName, 0 )
-				&& szRefTargetTypeName == szTargetTypeName && szRefTargetName == szTargetName )
-			{
-				currentFields.push_back( szFieldName );
-				szText += szFieldName + "\r\n";
-			}
-			pFieldIt->Next();
-		}
-	}
-	else
-	{
-		szText = "Object has disappeared from the base since RefList was constructed";
-		// object has disappeared from the base since RefList was constructed
-	}
+	// Shared with the wx dialog; see RefListView.h.
+	pCurrentManipulator = NRefList::FindFields( &currentFields, &szText, object,
+																							szTargetTypeName, szTargetName );
 	fieldsCtrl.SetWindowText( szText.c_str() );
 }
 
@@ -194,33 +134,16 @@ void CRefListDialog::OnSetEmptyCurrent()
 		return;
 	CWaitCursor wait;
 
-	const CVariant nullRef;
-	bool bEverythingIsOK = true;
-
+	// Shared with the wx dialog; see RefListView.h. The running commentary is
+	// shown once at the end here rather than after every field: the MFC dialog
+	// rewrote the box inside the loop, which nothing could see -- it never
+	// yields to a paint between fields.
 	std::string szText = "Clearing..\r\n";
-	if ( pCurrentManipulator )
-	{
-		for ( std::list<std::string>::iterator it = currentFields.begin(); it != currentFields.end() && bEverythingIsOK; )
-		{
-			szText += std::string( *it );
-			if ( pCurrentManipulator->SetValue( *it, nullRef ) )
-			{
-				szText += " - ok\r\n";
-				it = currentFields.erase( it );
-			}
-			else
-			{
-				szText += " - cannot set!\r\n";
-				bEverythingIsOK = false;
-			}
-			fieldsCtrl.SetWindowText( szText.c_str() );
-		}
-	}
+	const bool bCleared = NRefList::ClearFields( &currentFields, &szText, pCurrentManipulator );
+	fieldsCtrl.SetWindowText( szText.c_str() );
 
-  if ( currentFields.empty() )
+  if ( bCleared )
 	{
-		szText += "Complete.\r\n";
-		fieldsCtrl.SetWindowText( szText.c_str() );
     objectsCtrl.DeleteItem( nSelectedItem );
 		std::vector<SReferenceObject> temp;
 		for ( int i = 0; i < referenceObjects.size(); ++i )
@@ -245,35 +168,10 @@ void CRefListDialog::OnClearAll()
 	if ( nResult == IDOK )
 	{
 		CWaitCursor wait;
-		bool bSuccess = true;
-		std::string szFieldName;
-		std::string szRefTargetTypeName;
-		std::string szRefTargetName;
-		const CVariant nullRef;
 		pCurrentManipulator = 0;
 		nSelectedItem = INVALID_NODE_ID;
-		for ( int i = 0; i < referenceObjects.size(); ++i )
-		{
-			const std::string &szName = referenceObjects[i].szObjectName;
-			const std::string &szTypeName = referenceObjects[i].szTypeName;
-
-			IResourceManager *pResourceManager = Singleton<IResourceManager>();
-			CPtr<IManipulator> pManipulator = pResourceManager->CreateObjectManipulator( szTypeName, szName );
-			if ( pManipulator )
-			{
-				CPtr<IManipulatorIterator> pFieldIt = pManipulator->Iterate( true, ECT_NO_CACHE );
-				while ( !pFieldIt->IsEnd() )
-				{
-					pFieldIt->GetName( &szFieldName );
-					if ( CManipulatorManager::GetParamsFromReference( szFieldName, pManipulator, &szRefTargetTypeName, &szRefTargetName, 0 )
-						&& szRefTargetTypeName == szTargetTypeName && szRefTargetName == szTargetName )
-					{
-						bSuccess = bSuccess && pManipulator->SetValue( szFieldName, nullRef );
-					}
-					pFieldIt->Next();
-				}
-			}
-		}
+		// Shared with the wx dialog; see RefListView.h.
+		const bool bSuccess = NRefList::ClearAll( referenceObjects, szTargetTypeName, szTargetName );
 		if ( !bSuccess )
 		{
 			CString strMessage( (LPCTSTR)IDS_REF_LIST_SET_EMPTY_FAILURE );
