@@ -237,7 +237,14 @@ protected:
 		CRect rect;
 		GetClientRect( &rect );
 
-		return rect.Width() * (fTime - data.fStartTime) / (data.fLength * data.fScale);
+		// With no movie chosen fLength is 0, and this divided by it: the cursor
+		// and the timeline's far end were then drawn at whatever the float to int
+		// conversion made of inf or NaN, which on MSVC is INT_MIN.
+		const float fSpan = data.fLength * data.fScale;
+		if ( fSpan <= 0.0f )
+			return 0;
+
+		return rect.Width() * (fTime - data.fStartTime) / fSpan;
 	}
 
 public:

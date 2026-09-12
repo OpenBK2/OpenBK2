@@ -7,6 +7,7 @@
 
 #include "TimeSliderControl.h"
 
+#include <climits>
 #include <cstdint>
 
 #define TSL_BG_COLOR				RGB( 0xBB, 0xBB, 0xBB )
@@ -74,14 +75,28 @@ void CTimeSliderControl::OnPaint()
 	}
 
 	// grid
+	if ( fSpacing > 0.0f )
 	{
 		CPen gridPen( PS_SOLID, 1, TSL_GRID_COLOR );
 		CPen* pOldPen = dc.SelectObject( &gridPen );
 
-		for ( int i = 0; i < (data.fStartTime + data.fLength * data.fScale) / fSpacing; ++i )
+		// The loop bound used to be this division itself, evaluated every
+		// iteration. With fSpacing at 0 -- which is what RefreshSpacing left
+		// behind while the control had no length yet -- it was +inf, so the loop
+		// never ended: the editor hung here drawing two billion grid lines at
+		// x = 0 as soon as a movie length arrived. The count is worked out once
+		// now, and only used when it is a real number of lines.
+		const double fGridLines = (data.fStartTime + data.fLength * data.fScale) / fSpacing;
+		const int nGridLines = ( (fGridLines > 0.0) && (fGridLines < (double)INT_MAX) ) ? (int)fGridLines : 0;
+
+		for ( int i = 0; i < nGridLines; ++i )
 		{
 			const int nGridPos = GetClientX( fSpacing * i );
-			if ( (nGridPos >= 0) && (nGridPos <= rect.Width()) )
+			// positions only grow with i, so past the right edge there is
+			// nothing left to draw
+			if ( nGridPos > rect.Width() )
+				break;
+			if ( nGridPos >= 0 )
 			{
 				dc.MoveTo( nGridPos, rect.Height() * 3.0f / 4.0f );
 				dc.LineTo( nGridPos, rect.Height() );
@@ -182,7 +197,21 @@ void CTimeSliderControl::RefreshSpacing()
 	CRect rect;
 	GetClientRect( &rect );
 
-	fSpacing = pow( TSL_DEF_SPACING_SCALE_COEFF, (int)(log(data.fLength * data.fScale * TSL_DEF_SPACING / rect.Width())/log(TSL_DEF_SPACING_SCALE_COEFF) - 1) );
+	// The control is sized before it has any data, and stays at length 0 until a
+	// movie is picked. log( 0 ) is -inf there, (int) of that is INT_MIN, and
+	// pow( 2, INT_MIN ) is 0 -- a spacing that means "a grid line every zero
+	// seconds". Keep the default spacing until there is a timeline to scale to.
+	const float fSpan = data.fLength * data.fScale;
+	if ( (fSpan <= 0.0f) || (rect.Width() <= 0) )
+	{
+		fSpacing = 1.0f;
+		return;
+	}
+
+	fSpacing = pow( TSL_DEF_SPACING_SCALE_COEFF, (int)(log(fSpan * TSL_DEF_SPACING / rect.Width())/log(TSL_DEF_SPACING_SCALE_COEFF) - 1) );
+	// a span small enough to underflow the power would do the same as above
+	if ( !(fSpacing > 0.0f) )
+		fSpacing = 1.0f;
 	//RedrawWindow();
 }
 
