@@ -8,8 +8,8 @@
 
 #include "AIGeneralTypes.h"
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -29,7 +29,7 @@
 // has WS_THICKFRAME, so neither is resizable here; each is fitted to its
 // contents rather than given the template's numbers. Both reopen where they
 // were last left, as the MFC pair do, and are centred on the frame the first
-// time; see CPlacement below.
+// time; see MapEditorLib/WxPlacement.h.
 //
 // **Where the focus starts is kept.** Both templates list OK first, and a
 // dialog puts the focus on its first tab stop, so both MFC dialogs open with OK
@@ -39,47 +39,6 @@
 
 namespace
 {
-	// Where each dialog opens. Both MFC dialogs are CResizeDialogs that call
-	// the base OnInitDialog, so they have always reopened where they were last
-	// left, from Editor/ResizeDialogStyles; these do the same, through the same
-	// files. Only the position is taken from the file. The size in it is the
-	// MFC template's, which would leave these -- fitted to their contents --
-	// with empty space, and writing a fitted size back would shrink the MFC
-	// dialog, whose controls do not move. So the size found there is left as it
-	// was. A dialog with nothing saved yet is centred on the frame.
-	class CPlacement
-	{
-		const char *pszName;
-		SDialogState state;
-
-	public:
-		explicit CPlacement( const char *_pszName ) : pszName( _pszName )
-		{
-			NDialogState::Load( pszName, &state );
-		}
-
-		// True if there was a placement to restore.
-		bool Restore( wxDialog *pDialog ) const
-		{
-			if ( state.rect.Width() <= 0 || state.rect.Height() <= 0 )
-			{
-				return false;
-			}
-			pDialog->Move( state.rect.left, state.rect.top );
-			return true;
-		}
-
-		void Save( const wxDialog *pDialog )
-		{
-			const wxPoint at = pDialog->GetPosition();
-			const int nWidth = state.rect.Width() > 0 ? state.rect.Width() : pDialog->GetSize().x;
-			const int nHeight = state.rect.Height() > 0 ? state.rect.Height() : pDialog->GetSize().y;
-			state.rect = CTRect<int>( at.x, at.y, at.x + nWidth, at.y + nHeight );
-			NDialogState::Save( pszName, &state );
-		}
-	};
-
-
 	// Where both dialogs start; see the note at the top.
 	void FocusOk( wxDialog *pDialog )
 	{
@@ -196,7 +155,7 @@ namespace NAIGenMobileDialog
 			return false;
 		}
 		CAIGenMobileWxDialog dialog( nullptr, *pMobileID );
-		CPlacement placement( "CAIGenMobileDlg" );
+		NWxPlacement::CPlacement placement( "CAIGenMobileDlg" );
 		if ( !placement.Restore( &dialog ) )
 		{
 			NWxModal::CentreOver( &dialog, pParent );
@@ -223,7 +182,7 @@ namespace NAIGenParcelDialog
 			return false;
 		}
 		CAIGenParcelWxDialog dialog( nullptr, *pType, *pImportance );
-		CPlacement placement( "CAIGenParcelDlg" );
+		NWxPlacement::CPlacement placement( "CAIGenParcelDlg" );
 		if ( !placement.Restore( &dialog ) )
 		{
 			NWxModal::CentreOver( &dialog, pParent );

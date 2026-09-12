@@ -7,7 +7,7 @@
 #include "MapEditorLib/EditParameter.h"
 #include "SceneB2/CameraScriptMutators.h"
 #include "CommandHandlerDefines.h"
-#include "MovEditorSettingsWindow.h"
+#include "MovieDialogs.h"
 #include "ED_B2_M1Dll.h"
 
 #include "MoviesEditorWindow.h"
@@ -62,7 +62,11 @@ CMoviesEditorWindow::CMoviesEditorWindow( CWnd *pParentWindow )
 	bIsDataSetting( false ),
 	nMovieMode( MOVIE_IS_STOPPED ),
 	nSliderMode( SLI_MODE_NOTHING ),
-	bIsSliderEnabled( false )
+	bIsSliderEnabled( false ),
+	// Never initialised, and the settings dialog shows it before any movie
+	// has been chosen: it opened on whatever was in that memory, 1.5e+19 in
+	// one run here, and wrote that back into the dialog data on OK.
+	fNewLength( 0 )
 {
 	SetControlStyle( IDC_DMOVED_JUMP_FIRST_KEY_BUTTON, ANCHORE_RIGHT_BOTTOM );
 	SetControlStyle( IDC_DMOVED_JUMP_LAST_KEY_BUTTON, ANCHORE_RIGHT_BOTTOM );
@@ -622,9 +626,8 @@ void CMoviesEditorWindow::OnBnClickedSettings()
 		const NDb::SScriptMovieSequence &seq = dialogData.scriptMoviesData.scriptMovieSequences[dialogData.nActiveMovie];
 		fNewLength = seq.GetLength();
 	}
-	CMovEditorSettingsDlg dlg(	MainFrameWnd(), &fNewLength );
-
-	if ( dlg.DoModal() == IDOK )
+	// Which toolkit draws it is NMovieSettings' business.
+	if ( NMovieSettings::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &fNewLength ) )
 	{
 		NotifyHandler( SScriptMovieEditorData::ME_RESIZE );
 	}

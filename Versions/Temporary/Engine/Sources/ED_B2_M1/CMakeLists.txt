@@ -129,6 +129,8 @@ set(SOURCES
     ModelViewWx.cpp
     ModelWindow.cpp
     MovEditorSettingsWindow.cpp
+    MovieDialogsMfc.cpp
+    MovieDialogsWx.cpp
     MoviesEditorData.cpp
     MoviesEditorWindow.cpp
     MusicTrackExporter.cpp

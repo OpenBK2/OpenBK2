@@ -86,6 +86,8 @@ MIGRATED = {
     "CMapInfoViewFilterDlg": "ED_B2_M1/MapInfoViewFilterWx.cpp (NMapInfoViewFilter::Run)",
     "CPointListDialog": "ED_B2_M1/PointListViewWx.cpp (NPointListView::CreateWx)",
     "CEnterNameDialog": "ED_B2_M1/EnterNameWx.cpp (NEnterName::Run)",
+    "CMovEditorSettingsDlg": "ED_B2_M1/MovieDialogsWx.cpp (NMovieSettings::Run)",
+    "CMovEditorKeySettingsDlg": "ED_B2_M1/MovieDialogsWx.cpp (NMovieKeySettings::Run)",
 }
 
 

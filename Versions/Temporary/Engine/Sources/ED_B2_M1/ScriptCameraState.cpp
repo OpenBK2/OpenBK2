@@ -13,7 +13,7 @@
 #include "DrawToolsDC.h"
 
 #include "ScriptCameraState.h"
-#include "KeySettingsDlg.h"
+#include "MovieDialogs.h"
 
 #include <cstdint>
 
@@ -723,8 +723,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 			NDb::SScriptMovieKeyPos *pActKey = &(actSeq.posKeys[i]);
 			std::string szKeyName = fmt::format( "Movie {}, Key {}", nSeqIndex, i );
       
-			CMovEditorKeySettingsDlg dlg(	MainFrameWnd(), pActKey, &szKeyName );
-			if ( dlg.DoModal() == IDOK )
+			if ( NMovieKeySettings::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), pActKey, szKeyName ) )
 			{
 				if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
 				{
