@@ -19,10 +19,18 @@
 // the size as well, and CreateModViewWx, OpenModViewWx and SelectTablesViewWx
 // each do that themselves.
 //
-// Check which of the three shapes an MFC dialog has before porting it: plain
-// CDialog (no placement at all), CResizeDialog with its OnInitDialog called
-// (placement), or CResizeDialog whose message map chains to CDialog, which
-// runs neither half -- CEnterNameDialog is the last of those.
+// Check which shape an MFC dialog has before porting it, and check for the
+// macro as well as the base class:
+//
+//   * plain CDialog: no placement at all;
+//   * CResizeDialog with its OnInitDialog called, *and*
+//     DECLARE_RESIZE_DLG_WND_COMMON_METHODS declared: placement, under the
+//     class name the macro was given;
+//   * CResizeDialog with its OnInitDialog called and no macro: the shell font
+//     but no placement, because GetXMLFilePath answers with an empty label and
+//     NDialogState refuses one -- the reinforcement point dialogs are these;
+//   * CResizeDialog whose message map chains to CDialog: neither half runs --
+//     CEnterNameDialog is the last of those.
 
 #ifdef OBK2_WITH_WX
 

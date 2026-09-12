@@ -4,7 +4,7 @@
 
 #include "ReinfPointsTypedDlg.h"
 #include "MapEditorLib/Interface_MainFrame.h"
-#include "ReinfPointsTypedTemplateAddDlg.h"
+#include "ReinfPointsDialogs.h"
 
 //
 //	CReinfPointsTypedDlg dialog
@@ -39,7 +39,6 @@ BOOL CReinfPointsTypedDlg::OnInitDialog()
 	lcTypedTempl.InsertColumn( 1, RCSTR("Type"), LVCFMT_LEFT, 200 );
 	lcTypedTempl.InsertColumn( 2, RCSTR("Template"), LVCFMT_LEFT, 200 );
 	//
-	nTemplatesCount = pTypedTemplateDlgData->size();
 	SetDialogData();
 	return TRUE;
 }
@@ -53,49 +52,13 @@ END_MESSAGE_MAP()
 
 void CReinfPointsTypedDlg::OnBnClickedTypedAdd()
 {
-	// create new node in DB
-	const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints.[{}].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
-	int nOldTemplatesCount;
-	CManipulatorManager::GetValue( &nOldTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
-	CPtr<CObjectBaseController> pObjectController = new CObjectController;
-	if ( pObjectController->AddInsertOperation( szName, NODE_ADD_INDEX, pMapInfoEditor->GetViewManipulator() ) )
+	// The node, the add dialog and the rollback if it is cancelled are shared
+	// with the wx dialog; see ReinfPointsDialogs.cpp. The add dialog's owner is
+	// the main frame, as it was when this opened it directly.
+	if ( NReinfPointsTemplates::Add( Singleton<IMainFrameContainer>()->GetMainWindow(), pTypedTemplateDlgData,
+																	 pMapInfoEditor, nCurrentPlayer, nCurrentReinfPt ) )
 	{
-		pObjectController->Redo( false, true, 0 );
-		Singleton<IControllerContainer>()->Add( pObjectController );
-
-		// get new size
-		int nNewTemplatesCount;
-		CManipulatorManager::GetValue( &nNewTemplatesCount, pMapInfoEditor->GetViewManipulator(), szName );
-
-		// use new node in dialog
-		std::string szTypedName = szName + fmt::format( ".[{}]", nNewTemplatesCount - 1 );
-		CReinfPointsTypedTemplateAddDlg dlgAdd( MainFrameWnd(), &szTypedName, pMapInfoEditor );
-		if ( dlgAdd.DoModal() == IDOK )
-		{
-			// update pDialogData
-			CReinfPointsState::STypedTemplate newTypedTemplate;
-			std::string szType = szTypedName + ".Type";
-			std::string szTempl = szTypedName + ".Template";
-
-			CManipulatorManager::GetValue( &newTypedTemplate.szTemplateType, pMapInfoEditor->GetViewManipulator(), szType );
-			CManipulatorManager::GetValue( &newTypedTemplate.szTemplate, pMapInfoEditor->GetViewManipulator(), szTempl );
-
-			pTypedTemplateDlgData->push_back( newTypedTemplate );
-
-			SetDialogData();
-
-			nTemplatesCount = pTypedTemplateDlgData->size();
-		}
-		else
-		{
-			// delete node from DB
-			CPtr<CObjectBaseController> pObjectController = new CObjectController;
-			if ( pObjectController->AddRemoveOperation( szName, nTemplatesCount + 1, pMapInfoEditor->GetViewManipulator() ) )
-			{
-				pObjectController->Redo( false, true, 0 );
-				Singleton<IControllerContainer>()->Add( pObjectController );
-			}
-		}
+		SetDialogData();
 	}
 }
 
@@ -135,14 +98,9 @@ void CReinfPointsTypedDlg::OnBnClickedTypedRemove()
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
-		const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints.[{}].TypedTemplates", nCurrentPlayer, nCurrentReinfPt );
-		CPtr<CObjectBaseController> pObjectController = new CObjectController;
-		if ( pObjectController->AddRemoveOperation( szName, nSelectedTemplate, pMapInfoEditor->GetViewManipulator()) )
-		{
-			pObjectController->Redo( false, true, 0 );
-			Singleton<IControllerContainer>()->Add( pObjectController );
-		}
-		pTypedTemplateDlgData->erase( pTypedTemplateDlgData->begin() + nSelectedTemplate );
+		// Shared with the wx dialog; see ReinfPointsDialogs.cpp.
+		NReinfPointsTemplates::Remove( pTypedTemplateDlgData, pMapInfoEditor, nCurrentPlayer, nCurrentReinfPt,
+																	 nSelectedTemplate );
 		nSelectedTemplate = -1;
 		SetDialogData();
 	}

@@ -145,6 +145,9 @@ set(SOURCES
     PointsListState.cpp
     PolygonState.cpp
     ReinforcementTypes.cpp
+    ReinfPointsDialogs.cpp
+    ReinfPointsDialogsMfc.cpp
+    ReinfPointsDialogsWx.cpp
     ReinfPointsState.cpp
     ReinfPointsTypedDlg.cpp
     ReinfPointsTypedTemplateAddDlg.cpp

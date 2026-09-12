@@ -88,6 +88,8 @@ MIGRATED = {
     "CEnterNameDialog": "ED_B2_M1/EnterNameWx.cpp (NEnterName::Run)",
     "CMovEditorSettingsDlg": "ED_B2_M1/MovieDialogsWx.cpp (NMovieSettings::Run)",
     "CMovEditorKeySettingsDlg": "ED_B2_M1/MovieDialogsWx.cpp (NMovieKeySettings::Run)",
+    "CReinfPointsTypedDlg": "ED_B2_M1/ReinfPointsDialogsWx.cpp (NReinfPointsTemplates::Run)",
+    "CReinfPointsTypedTemplateAddDlg": "ED_B2_M1/ReinfPointsDialogsWx.cpp (NReinfPointsAddTemplate::Run)",
 }
 
 

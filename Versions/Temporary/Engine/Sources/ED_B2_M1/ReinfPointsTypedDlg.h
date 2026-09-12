@@ -17,7 +17,6 @@ class CReinfPointsTypedDlg : public CResizeDialog
 	int nSelectedTemplate;
 	int nCurrentReinfPt;
 	CListCtrl lcTypedTempl;
-	int nTemplatesCount;
 
 	virtual void DoDataExchange( CDataExchange* pDX );    // DDX/DDV support
 	//

@@ -9,7 +9,7 @@
 
 #include "ReinfPointsState.h"
 #include "ReinfPointsWindow.h"
-#include "ReinfPointsTypedDlg.h"
+#include "ReinfPointsDialogs.h"
 
 #include <cstdint>
 
@@ -711,8 +711,8 @@ bool CReinfPointsState::EditPointTypedTemplate()
 	}
 
 	std::vector<STypedTemplate> vNewTypedTemplate = reinfPoints[nSelectedReinfPoint].typedTemplates;
-	CReinfPointsTypedDlg dlg( MainFrameWnd(), &vNewTypedTemplate, pMapInfoEditor, nSelectedPlayer, nSelectedReinfPoint );
-	if ( dlg.DoModal() == IDOK )
+	if ( NReinfPointsTemplates::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &vNewTypedTemplate,
+																	 pMapInfoEditor, nSelectedPlayer, nSelectedReinfPoint ) )
 	{
 		reinfPoints[nSelectedReinfPoint].typedTemplates = vNewTypedTemplate;
 		SaveCurrentReinfPoint( reinfPoints, nSelectedPlayer, nSelectedReinfPoint );
