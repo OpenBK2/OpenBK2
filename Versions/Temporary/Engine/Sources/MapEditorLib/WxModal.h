@@ -127,6 +127,27 @@ namespace NWxModal
 	}
 
 
+	// Gives pWindow the frame pOwner belongs to as its owner, and nothing else.
+	//
+	// This is the half of modality that a *modeless* window wants too: an owned
+	// window stays above its owner, minimises with it, and keeps no taskbar
+	// button of its own. The other half, disabling the owner, is what a modeless
+	// window must not do, which is why this is separate from ShowModalOver --
+	// that calls this and then disables.
+	inline void SetOwnerFrame( wxWindow *pWindow, IWidget *pOwner )
+	{
+		if ( pWindow == 0 || pWindow->GetHandle() == 0 )
+		{
+			return;
+		}
+		const HWND hwndOwner = FindOwnerFrame( pOwner );
+		if ( hwndOwner != 0 )
+		{
+			::SetWindowLongPtr( (HWND)pWindow->GetHandle(), GWLP_HWNDPARENT, (LONG_PTR)hwndOwner );
+		}
+	}
+
+
 	// Shows pDialog modally over pOwner and returns what ShowModal returned,
 	// so callers compare against wxID_OK as they would anywhere else.
 	//
@@ -152,11 +173,8 @@ namespace NWxModal
 		// left to do here is the disabling, which is the half no wx dialog can
 		// do for itself, because the frame is not a wx window and
 		// wxWindowDisabler only knows about wx ones.
-		if ( hwndOwner != 0 && pDialog->GetHandle() != 0 )
-		{
-			// Before the disable, so the dialog is never ownerless while visible.
-			::SetWindowLongPtr( (HWND)pDialog->GetHandle(), GWLP_HWNDPARENT, (LONG_PTR)hwndOwner );
-		}
+		// Before the disable, so the dialog is never ownerless while visible.
+		SetOwnerFrame( pDialog, pOwner );
 
 		NDetail::CDisabledOwner disabledOwner( hwndOwner );
 		return pDialog->ShowModal();

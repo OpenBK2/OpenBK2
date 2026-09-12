@@ -193,6 +193,8 @@ set(SOURCES
     UIScene.cpp
     UnitAnimationExporter.cpp
     UnitDesignTypes.cpp
+    UnitStartCmdDialogMfc.cpp
+    UnitStartCmdDialogWx.cpp
     UnitStartCmdState.cpp
     UnitStartCmdViewMfc.cpp
     UnitStartCmdViewWx.cpp

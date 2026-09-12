@@ -201,12 +201,22 @@ void SStartCommandList::RemoveCommands( const std::vector<int> &rIndices )
 //
 //
 
-CUnitStartCmdState::CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor ) : 
-	pMapInfoEditor( _pMapInfoEditor )
+CUnitStartCmdState::CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor ) :
+	pMapInfoEditor( _pMapInfoEditor ),
+	// ResetStateData below reads it, and it is a plain pointer now rather than a
+	// CPtr that nulls itself.
+	pEdUnitStartCmd( 0 )
 {
 	NI_ASSERT( GetMapInfoEditor() != 0, "CUnitStartCmdState(): Invalid parameter: pMapInfoEditor == 0" );
 	//
 	ResetStateData();
+}
+
+
+CUnitStartCmdState::~CUnitStartCmdState()
+{
+	delete pEdUnitStartCmd;
+	pEdUnitStartCmd = 0;
 }
 
 
@@ -237,18 +247,16 @@ void CUnitStartCmdState::Enter()
 		}
 	}
 	//
-	// This dialog is modeless, so its DoModal resource switch is never used.
-	// Load it from the editor DLL and reuse it when this tab is entered again.
+	// Modeless: made once, hidden, and reused when this tab is entered again.
+	// Which toolkit draws it is the boundary's business; see UnitStartCmdDialog.h.
 	if ( !pEdUnitStartCmd )
-		pEdUnitStartCmd = new CEdUnitStartCmd( this );
-	if ( !pEdUnitStartCmd->GetSafeHwnd() )
 	{
-		const HINSTANCE hPreviousResource = AfxGetResourceHandle();
-		AfxSetResourceHandle( theEDB2M1Instance );
-		pEdUnitStartCmd->Create( CEdUnitStartCmd::IDD );
-		AfxSetResourceHandle( hPreviousResource );
+		pEdUnitStartCmd = NUnitStartCmdDialog::Create( Singleton<IMainFrameContainer>()->GetMainWindow(), this );
 	}
-	pEdUnitStartCmd->ShowWindow( SW_HIDE );
+	if ( pEdUnitStartCmd )
+	{
+		pEdUnitStartCmd->Show( false );
+	}
 	//
 	if ( !commandsList.LoadFromDB( GetMapInfoEditor()->GetViewManipulator() ) )
 	{
@@ -490,22 +498,22 @@ void CUnitStartCmdState::Draw( IPaintContext *pDC )
 }
 
 
-void CUnitStartCmdState::OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EDlgEvents eEvt )
+void CUnitStartCmdState::OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent eEvent )
 {
-	switch ( eEvt )
+	switch ( eEvent )
 	{
-		case CEdUnitStartCmd::EV_OK:
+		case NUnitStartCmdDialog::EV_OK:
 			EdCmdOK();
 			GetObjectInfoCollector()->ClearSelection();
 			break;
-		case CEdUnitStartCmd::EV_CANCEL:
+		case NUnitStartCmdDialog::EV_CANCEL:
 			GetObjectInfoCollector()->ClearSelection();
 			EdCmdCancel();
 			break;
-		case CEdUnitStartCmd::EV_CLEAR:
+		case NUnitStartCmdDialog::EV_CLEAR:
 			EdCmdClear();
 			break;
-		case CEdUnitStartCmd::EV_TYPE_CHANGE:
+		case NUnitStartCmdDialog::EV_TYPE_CHANGE:
 			EdCmdTypeChange();
 			break;
 	}
@@ -525,10 +533,10 @@ void CUnitStartCmdState::UsrEvtAddCmd( const SUnitStartCmdWindowData &data )
 
 	UpdateCmdMarkers();
 	
-	CEdUnitStartCmd::SDlgData dd;
+	NUnitStartCmdDialog::SData dd;
 	pEdUnitStartCmd->SetDialogData( &dd );
 	bEdCmdVisible = true;
-	pEdUnitStartCmd->ShowWindow( SW_SHOW );
+	pEdUnitStartCmd->Show( true );
 }
 
 
@@ -560,7 +568,7 @@ void CUnitStartCmdState::UsrEvtEditCmd( const SUnitStartCmdWindowData &data )
 	if ( data.selectedCommands.size() != 1 )
 		return;
 
-	CEdUnitStartCmd::SDlgData dd;
+	NUnitStartCmdDialog::SData dd;
 	//
 	dd.bEditMode = false;
 	dd.nCommandIndex = data.selectedCommands.front();
@@ -592,7 +600,7 @@ void CUnitStartCmdState::UsrEvtEditCmd( const SUnitStartCmdWindowData &data )
 
 	pEdUnitStartCmd->SetDialogData( &dd );
 	bEdCmdVisible = true;
-	pEdUnitStartCmd->ShowWindow( SW_SHOW );
+	pEdUnitStartCmd->Show( true );
 }
 
 
@@ -712,7 +720,7 @@ void CUnitStartCmdState::ResetStateData()
 	commandsList.commands.clear();
 	if ( pEdUnitStartCmd )
 	{
-		pEdUnitStartCmd->ShowWindow( SW_HIDE );
+		pEdUnitStartCmd->Show( false );
 	}
 	bEdCmdVisible = false;
 }
@@ -722,7 +730,7 @@ void CUnitStartCmdState::EdCmdOK()
 {
 	bEdCmdVisible = false; 
 
-	CEdUnitStartCmd::SDlgData data;
+	NUnitStartCmdDialog::SData data;
 	pEdUnitStartCmd->GetDialogData( &data );
 
 	if ( data.bEditMode == true )

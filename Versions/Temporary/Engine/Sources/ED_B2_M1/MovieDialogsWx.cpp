@@ -32,9 +32,9 @@
 //     same, through the same file; see MapEditorLib/WxPlacement.h.
 //   * **Movie settings does not call it.** It gets neither the shell font nor
 //     the placement, and opens centred on the frame every time. It does still
-//     *write* a placement file, because its message map falls through to
-//     CResizeDialog's WM_DESTROY -- a file nothing ever reads, so nothing here
-//     writes one.
+//     *write* a placement file, because its OnOK chains to CResizeDialog's,
+//     which is where the writing happens -- a file nothing ever reads, so
+//     nothing here writes one.
 //
 // Where the focus starts is kept in both: each template lists an edit box
 // first, so that is where a dialog puts the focus, and the dialog manager
@@ -182,7 +182,8 @@ namespace NMovieKeySettings
 			NWxModal::CentreOver( &dialog, pParent );
 		}
 		const int nResult = NWxModal::ShowModalOver( &dialog, pParent );
-		// Kept whichever button was used, as CResizeDialog does on destroy.
+		// Kept whichever button was used, which is where CResizeDialog writes it
+		// too: its OnOK and its OnCancel.
 		placement.Save( &dialog );
 		if ( nResult != wxID_OK )
 		{

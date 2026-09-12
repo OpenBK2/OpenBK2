@@ -3,6 +3,7 @@
 #include "MapEditorLib/ResizeDialog.h"
 #include "EditorMethods.h"
 #include "ResourceDefines.h"
+#include "UnitStartCmdDialog.h"
 
 //
 //
@@ -10,39 +11,17 @@
 //
 //
 
-class CUnitStartCmdState;
 class CEdUnitStartCmd : public CResizeDialog, public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CEdUnitStartCmd );
 
 public:
-	struct SDlgData
-	{
-		bool bEditMode; // true - new command, false - edit command
-		int nSelectedCmdType;
-		bool bSelectedCmdNeedTargetUnit;
-		int nData;
-		std::string szTarget;
-		int nCommandIndex;
-		//
-		SDlgData()
-		{
-			Clear();
-		}
-		//
-		void Clear()
-		{
-			bEditMode = true;
-			nSelectedCmdType = -1;
-			nData = 0;
-			szTarget = "";
-			bSelectedCmdNeedTargetUnit = false;
-			nCommandIndex = -1;
-		}
-	};
+	// The data and the events are the boundary's now, so that the wx dialog
+	// answers in the same terms; see UnitStartCmdDialog.h. The names stay.
+	typedef NUnitStartCmdDialog::SData SDlgData;
 
 private:
-	CUnitStartCmdState *pCommandState;
+	NUnitStartCmdDialog::IListener *pCommandState;
 	//
 	CButton btnClear;
 	CComboBox cbCmdTypes;
@@ -59,16 +38,8 @@ private:
 public:
 	enum { IDD = IDD_DLG_UNIT_START_CMD };
 
-	CEdUnitStartCmd( CUnitStartCmdState *pCommandState = 0 );
+	CEdUnitStartCmd( NUnitStartCmdDialog::IListener *pCommandState = 0 );
 	virtual ~CEdUnitStartCmd() {}
-
-	enum EDlgEvents
-	{
-		EV_OK,
-		EV_CANCEL,
-		EV_CLEAR,
-		EV_TYPE_CHANGE
-	};
 
 	virtual void DoDataExchange( CDataExchange *pDX );
 	virtual BOOL OnInitDialog();

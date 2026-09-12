@@ -1,8 +1,9 @@
 #pragma once
 
+#include "EditorMethods.h"
 #include "MapInfoEditor.h"
 #include "SimpleObjectState.h"
-#include "EdUnitStartCmd.h"
+#include "UnitStartCmdDialog.h"
 #include "UnitStartCmdWindow.h"
 
 #include <cstdint>
@@ -49,8 +50,9 @@ enum EMoveDir
 //
 //
 
-class CEdUnitStartCmd;
-class CUnitStartCmdState : public CMapObjectState
+// The command editor is modeless and owned here for the life of the tab; it is
+// whichever toolkit's the session is running. See UnitStartCmdDialog.h.
+class CUnitStartCmdState : public CMapObjectState, public NUnitStartCmdDialog::IListener
 {
 	friend class CMultiInputState;
 	friend class CMapInfoState;
@@ -58,11 +60,14 @@ class CUnitStartCmdState : public CMapObjectState
 	std::unordered_map<int,SUnitCommandTypeInfo> commandTypesMnemonic;
 	//
 	bool bEdCmdVisible;
-	CPtr<CEdUnitStartCmd> pEdUnitStartCmd;
+	NUnitStartCmdDialog::IDialog *pEdUnitStartCmd;
 	//
 	CMapInfoEditor *pMapInfoEditor;
 	//
 	CUnitStartCmdState( CMapInfoEditor* _pMapInfoEditor = 0 );
+	// The dialog is owned here, plainly: it is made on the first Enter and
+	// destroyed with the state, which destroys its window.
+	virtual ~CUnitStartCmdState();
 	//
 	typedef int CMapObjID;
 	std::vector<CMapObjID> currCmdUnits;
@@ -132,7 +137,8 @@ protected:
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
 public:
-	void OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EDlgEvents eEvt );
+	// NUnitStartCmdDialog::IListener
+	virtual void OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EEvent eEvent );
 	//
 	void UsrEvtAddCmd( const SUnitStartCmdWindowData &data );
 	void UsrEvtDelCmd( const SUnitStartCmdWindowData &data );

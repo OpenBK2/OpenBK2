@@ -3,8 +3,11 @@
 // Where a migrated dialog opens, when the MFC one it replaces remembers that.
 //
 // A dialog deriving from CResizeDialog *and calling its OnInitDialog* restores
-// its placement from Editor/ResizeDialogStyles/<class>.xml and saves it again
-// on destroy, so it reopens where it was left. A wx dialog put in front of the
+// its placement from Editor/ResizeDialogStyles/<class>.xml, and writes it again
+// from CResizeDialog::OnOK and OnCancel -- so it reopens where it was left, as
+// long as it does not override both of those without calling the base. A
+// modeless one that does (CEdUnitStartCmd) restores from a file nothing ever
+// writes. A wx dialog put in front of the
 // same user should do the same, through the same file -- which is what
 // SDialogState and NDialogState are for.
 //
@@ -65,8 +68,9 @@ namespace NWxPlacement
 			return true;
 		}
 
-		// On the way out, whichever button was used, as CResizeDialog's OnDestroy
-		// does. The size already in the file is kept; see the note above.
+		// On the way out, whichever button was used, which is where
+		// CResizeDialog writes it too: its OnOK and its OnCancel, both. The size
+		// already in the file is kept; see the note above.
 		void Save( const wxDialog *pDialog )
 		{
 			if ( pDialog == 0 )

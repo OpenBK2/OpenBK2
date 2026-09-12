@@ -90,6 +90,9 @@ MIGRATED = {
     "CMovEditorKeySettingsDlg": "ED_B2_M1/MovieDialogsWx.cpp (NMovieKeySettings::Run)",
     "CReinfPointsTypedDlg": "ED_B2_M1/ReinfPointsDialogsWx.cpp (NReinfPointsTemplates::Run)",
     "CReinfPointsTypedTemplateAddDlg": "ED_B2_M1/ReinfPointsDialogsWx.cpp (NReinfPointsAddTemplate::Run)",
+    # Modeless, so the boundary is an interface the state keeps rather than a
+    # call that blocks: NUnitStartCmdDialog::IDialog, made by Create.
+    "CEdUnitStartCmd": "ED_B2_M1/UnitStartCmdDialogWx.cpp (NUnitStartCmdDialog::Create)",
 }
 
 

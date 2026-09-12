@@ -2,8 +2,8 @@
 #include <fmt/format.h>
 
 #include "ED_B2_M1Dll.h"
-#include "UnitStartCmdState.h"
 #include "EdUnitStartCmd.h"
+#include "StringResources.h"
 
 //
 //
@@ -16,7 +16,7 @@ BEGIN_MESSAGE_MAP(CEdUnitStartCmd,CResizeDialog)
 	ON_CBN_SELCHANGE(IDC_COMBO_CMD_TYPE, OnCbnSelchangeComboCmdType)
 END_MESSAGE_MAP()
 
-CEdUnitStartCmd::CEdUnitStartCmd( CUnitStartCmdState *_pCommandState )
+CEdUnitStartCmd::CEdUnitStartCmd( NUnitStartCmdDialog::IListener *_pCommandState )
 	:	CResizeDialog( CEdUnitStartCmd::IDD ),
 	pCommandState( _pCommandState ),
 	bEditMode( true ),
@@ -65,14 +65,14 @@ INT_PTR CEdUnitStartCmd::DoModal()
 void CEdUnitStartCmd::OnOK()
 {
 	if ( pCommandState )
-		pCommandState->OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EV_OK );
+		pCommandState->OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EV_OK );
 	ShowWindow( SW_HIDE );
 }
 
 void CEdUnitStartCmd::OnCancel()
 {
 	if ( pCommandState )
-		pCommandState->OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EV_CANCEL );
+		pCommandState->OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EV_CANCEL );
 	ShowWindow( SW_HIDE );
 }
 
@@ -159,14 +159,14 @@ void CEdUnitStartCmd::GetDialogData( SDlgData *pData )
 void CEdUnitStartCmd::OnBnClickedButtonClear()
 {
 	if ( pCommandState )
-		pCommandState->OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EV_CLEAR );
+		pCommandState->OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EV_CLEAR );
 }
 
 void CEdUnitStartCmd::OnCbnSelchangeComboCmdType()
 {
 	if ( pCommandState )
 	{
-		pCommandState->OnEdUnitStartCmdDialogEvent( CEdUnitStartCmd::EV_TYPE_CHANGE );
+		pCommandState->OnUnitStartCmdDialogEvent( NUnitStartCmdDialog::EV_TYPE_CHANGE );
 	}
 	int nSelection = cbCmdTypes.GetCurSel();
 	if ( nSelection != -1 )
