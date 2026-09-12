@@ -4,6 +4,7 @@
 #include "libdb/Manipulator.h"
 #include "Misc/StrProc.h"
 #include "NewObjectDialog.h"
+#include "NewObjectView.h"
 #include "MapEditorLib/Interface_FolderCallback.h"
 #include "MapEditorLib/StringManager.h"
 
@@ -51,19 +52,9 @@ void CNewObjectDialog::UpdateOKButton()
 		if ( CWnd *pwndOKButton = GetDlgItem( IDOK ) )
 		{
 			UpdateData( true );
-			//
-			szObjectTypeNamePostrfix = std::string( "_" ) + pBuildDataParams->szObjectTypeName;
-			std::string szObjectNameToCompare = pBuildDataParams->szObjectName;
-			std::string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
-			NStr::ToLower( &szObjectNameToCompare );
-			NStr::ToLower( &szObjectTypeNamePostrfixToCompare );
-			//
-			std::string szObjectName;
-			pBuildDataParams->GetObjectName( &szObjectName );
-			//
-			pwndOKButton->EnableWindow( ( !strName.IsEmpty() ) &&
-																	( szObjectNameToCompare != szObjectTypeNamePostrfixToCompare ) &&
-																	( Singleton<IFolderCallback>()->IsUniqueName( pBuildDataParams->szObjectTypeName, szObjectName ) ) );
+			// Shared with the wx dialog; see NewObjectView.h.
+			pwndOKButton->EnableWindow( NNewObject::CanAccept( pBuildDataParams,
+																												std::string( (const char*)strName ) ) );
 		}
 	}
 	else
@@ -82,9 +73,7 @@ void CNewObjectDialog::UpdateTitle()
 	bCreateControls = true;
 	if ( pBuildDataParams != 0 )
 	{
-		CString strFormatString;
-		strFormatString.LoadString( IDS_PC_BD_DIALOG_TITLE );
-		SetWindowText( fmt::sprintf( strFormatString.GetString(), pBuildDataParams->szObjectTypeName.c_str() ).c_str() );
+		SetWindowText( NNewObject::Title( pBuildDataParams ).c_str() );
 	}
 	bCreateControls = false;
 }
@@ -164,26 +153,10 @@ void CNewObjectDialog::SetBuildDataParams( const std::vector<std::string> &rObje
 
 void CNewObjectDialog::UpdateTypePostfix()
 {
-	szObjectTypeNamePostrfix = std::string( "_" ) + pBuildDataParams->szObjectTypeName;
-	const int nObjectTypeNameSize = szObjectTypeNamePostrfix.size();
-	const int nObjectNameSize = pBuildDataParams->szObjectName.size();
-	bool bPostfixExists = false;
-	if ( nObjectTypeNameSize <= nObjectNameSize )
-	{
-		std::string szObjectNameToCompare = pBuildDataParams->szObjectName;
-		std::string szObjectTypeNamePostrfixToCompare = szObjectTypeNamePostrfix;
-		NStr::ToLower( &szObjectNameToCompare );
-		NStr::ToLower( &szObjectTypeNamePostrfixToCompare );
-		bPostfixExists = ( szObjectNameToCompare.compare( nObjectNameSize - nObjectTypeNameSize, nObjectTypeNameSize, szObjectTypeNamePostrfixToCompare ) == 0 );
-	}
-	if ( ( ( resizeDialogOptions.nParameters[0] > 0 ) && bEnableType ) && !bPostfixExists )
-	{
-		pBuildDataParams->szObjectName += szObjectTypeNamePostrfix;
-	}
-	else if ( ( ( resizeDialogOptions.nParameters[0] == 0 ) || !bEnableType ) && bPostfixExists )
-	{
-		pBuildDataParams->szObjectName = pBuildDataParams->szObjectName.substr( 0, nObjectNameSize - nObjectTypeNameSize );
-	}
+	// Shared with the wx dialog; see NewObjectView.h. The button only counts
+	// when the type can be chosen at all, which is when the object is an .xdb.
+	NNewObject::ApplyTypePostfix( pBuildDataParams,
+																( resizeDialogOptions.nParameters[0] > 0 ) && bEnableType );
 	bCreateControls = true;
 	strName = pBuildDataParams->szObjectName.c_str();
 	UpdateData( false );

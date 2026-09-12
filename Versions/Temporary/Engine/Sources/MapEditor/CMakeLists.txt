@@ -36,6 +36,8 @@ set(SOURCES
     MDDLDialog.cpp
     MODContainer.cpp
     NewObjectDialog.cpp
+    NewObjectViewMfc.cpp
+    NewObjectViewWx.cpp
     ObjectCollector.cpp
     OpenMODDialog.cpp
     OpenModViewMfc.cpp

@@ -96,6 +96,7 @@ MIGRATED = {
     # A docking pane's contents rather than a dialog, and the last class in
     # ED_B2_M1: the timeline is drawn from TimeSliderData.h either way.
     "CMoviesEditorWindow": "ED_B2_M1/MoviesEditorViewWx.cpp (NMoviesEditorView::Create)",
+    "CNewObjectDialog": "MapEditor/NewObjectViewWx.cpp (NNewObject::Run)",
 }
 
 

@@ -9,7 +9,8 @@
 #include "libdb/Db.h"
 #include "BuilderContainer.h"
 #include "PC_BuildDataDialog.h"
-#include "NewObjectDialog.h"
+#include "NewObjectView.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "Misc/StrProc.h"
 
 bool CBuilderContainer::CanBuildObject( const std::string &rszObjectTypeName )
@@ -174,15 +175,15 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 {
 	if ( pBuildDataParams != 0 )
 	{
-		CNewObjectDialog wndNewObjectDialog( AfxGetMainWnd() );
 		std::vector<std::string> objectTypeNameList;
 		NStr::SplitString( pBuildDataParams->szObjectTypeName, &objectTypeNameList, TYPE_SEPARATOR_CHAR );
 		for ( std::vector<std::string>::iterator itObjectTypeName = objectTypeNameList.begin(); itObjectTypeName != objectTypeNameList.end(); ++itObjectTypeName )
 		{
 			NStr::TrimBoth( *itObjectTypeName );
 		}
-		wndNewObjectDialog.SetBuildDataParams( objectTypeNameList, 0, pBuildDataParams );
-		return ( wndNewObjectDialog.DoModal() == IDOK );
+		// Which toolkit draws it is NNewObject's business.
+		CWndWidget mainWindow( AfxGetMainWnd() );
+		return NNewObject::Run( &mainWindow, objectTypeNameList, 0, pBuildDataParams );
 	}
 	return false;
 }
