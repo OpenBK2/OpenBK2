@@ -10,16 +10,8 @@
 #include <climits>
 #include <cstdint>
 
-#define TSL_BG_COLOR				RGB( 0xBB, 0xBB, 0xBB )
-#define TSL_BG_E_COLOR			RGB( 0x33, 0x33, 0x33 )
-#define TSL_KEY_COLOR				RGB( 0xBB, 0x00, 0x00 )
-#define TSL_AKEY_COLOR			RGB( 0x33, 0x33, 0x00 )
-#define TSL_GRID_COLOR			RGB( 0x33, 0x33, 0x33 )
-#define TSL_SLIDER_COLOR		RGB( 0x00, 0x00, 0xBB )
-#define TSL_SEL_SPACE_COLOR	RGB( 0x00, 0xBB, 0xBB )
-#define TSL_DEF_SPACING				50
-#define TSL_DEF_CURSOR_WIDTH	20
-#define TSL_DEF_SPACING_SCALE_COEFF	2.0f
+// The colours and the spacing constants are in TimeSliderData.h, with the data
+// they draw, so that the wx timeline is the same timeline.
 
 BEGIN_MESSAGE_MAP( CTimeSliderControl, CWnd )
 	ON_WM_PAINT()
@@ -197,21 +189,8 @@ void CTimeSliderControl::RefreshSpacing()
 	CRect rect;
 	GetClientRect( &rect );
 
-	// The control is sized before it has any data, and stays at length 0 until a
-	// movie is picked. log( 0 ) is -inf there, (int) of that is INT_MIN, and
-	// pow( 2, INT_MIN ) is 0 -- a spacing that means "a grid line every zero
-	// seconds". Keep the default spacing until there is a timeline to scale to.
-	const float fSpan = data.fLength * data.fScale;
-	if ( (fSpan <= 0.0f) || (rect.Width() <= 0) )
-	{
-		fSpacing = 1.0f;
-		return;
-	}
-
-	fSpacing = pow( TSL_DEF_SPACING_SCALE_COEFF, (int)(log(fSpan * TSL_DEF_SPACING / rect.Width())/log(TSL_DEF_SPACING_SCALE_COEFF) - 1) );
-	// a span small enough to underflow the power would do the same as above
-	if ( !(fSpacing > 0.0f) )
-		fSpacing = 1.0f;
+	// Shared with the wx timeline, guard and all; see TimeSliderData.h.
+	fSpacing = CalcTimeSliderSpacing( data.fLength, data.fScale, rect.Width() );
 	//RedrawWindow();
 }
 

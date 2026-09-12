@@ -95,7 +95,8 @@ CMapInfoEditor::CMapInfoEditor()
 		pwndShortcutBar( 0 ), 
 		pwndMiniMap( 0 ), 
 		pwndMoviesEditor( 0 ),
-		pMapInfoState( 0 ), 
+		pMoviesEditorView( 0 ),
+		pMapInfoState( 0 ),
 		heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_EDITOR, this );
@@ -375,12 +376,13 @@ void CMapInfoEditor::CreateControls()
 	nID = ID_MOVIES_EDITOR_DW;
 	if ( pwndMoviesEditor = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MoviesEditor", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_BOTTOM, 0.5f, 200 ) )
 	{
-		if ( wndMoviesEditor.Create( ToCWnd( pwndMoviesEditor ) ) )
+		// Whichever toolkit draws the contents; the pane is the frame's either way.
+		pMoviesEditorView = NMoviesEditorView::Create();
+		if ( pMoviesEditorView != 0 && pMoviesEditorView->Create( pwndMoviesEditor ) )
 		{
-			CWndWidget contentsWidget( &wndMoviesEditor );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor, &contentsWidget );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMoviesEditor, pMoviesEditorView->GetWidget() );
 			pwndMoviesEditor->ShowWithoutLayout( true );
-			wndMoviesEditor.ShowWindow( SW_SHOW );
+			pMoviesEditorView->Show( true );
 		}
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create movies editor window: %g", NHPTimer::GetTimePassed( &time ) );
@@ -511,7 +513,8 @@ void CMapInfoEditor::DestroyControls()
 			// The frame owns this IDockPanel handle; only its window is destroyed here.
 			pwndMoviesEditor = 0;
 		}
-		wndMoviesEditor.DestroyWindow();
+		delete pMoviesEditorView;
+		pMoviesEditorView = 0;
 	}
 
 	Singleton<ICommandHandlerContainer>()->UnRegister( CHID_MAPINFO_EDITOR );

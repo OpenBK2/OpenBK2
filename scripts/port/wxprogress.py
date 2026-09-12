@@ -93,6 +93,9 @@ MIGRATED = {
     # Modeless, so the boundary is an interface the state keeps rather than a
     # call that blocks: NUnitStartCmdDialog::IDialog, made by Create.
     "CEdUnitStartCmd": "ED_B2_M1/UnitStartCmdDialogWx.cpp (NUnitStartCmdDialog::Create)",
+    # A docking pane's contents rather than a dialog, and the last class in
+    # ED_B2_M1: the timeline is drawn from TimeSliderData.h either way.
+    "CMoviesEditorWindow": "ED_B2_M1/MoviesEditorViewWx.cpp (NMoviesEditorView::Create)",
 }
 
 

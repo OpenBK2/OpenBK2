@@ -132,6 +132,8 @@ set(SOURCES
     MovieDialogsMfc.cpp
     MovieDialogsWx.cpp
     MoviesEditorData.cpp
+    MoviesEditorViewMfc.cpp
+    MoviesEditorViewWx.cpp
     MoviesEditorWindow.cpp
     MusicTrackExporter.cpp
     ObjectBaseRPGStatsExporter.cpp

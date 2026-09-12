@@ -11,7 +11,7 @@
 
 #include "MapEditorLib/DefaultShortcutBar.h"
 #include "MiniMapWindow.h"
-#include "MoviesEditorWindow.h"
+#include "MoviesEditorView.h"
 
 #include <cstdint>
 
@@ -90,7 +90,9 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	IDockPanel *pwndShortcutBar;
 	IDockPanel *pwndMoviesEditor;	// Script MovieEditor docking window
 	CMiniMapWindow wndMiniMap;
-	CMoviesEditorWindow wndMoviesEditor;
+	// The pane is the frame's; its contents are whichever toolkit's this
+	// session runs, and are owned here. See MoviesEditorView.h.
+	NMoviesEditorView::IView *pMoviesEditorView;
 	CDefaultShortcutBar wndShortcutBar;
 	CObj<IEditorScene> pEditorScene;
 	// Данные общего назначения 
