@@ -90,7 +90,6 @@ namespace
 			pSizer->Add( CreateStdDialogButtonSizer( wxOK ),
 									 wxSizerFlags().Centre().Border( wxALL, 10 ) );
 			SetSizerAndFit( pSizer );
-			Centre();
 		}
 
 	private:
@@ -112,6 +111,7 @@ namespace NAbout
 	void RunWx( IWidget *pParent )
 	{
 		CAboutWxDialog dialog( nullptr );
+		NWxModal::CentreOver( &dialog, pParent );
 		NWxModal::ShowModalOver( &dialog, pParent );
 	}
 }

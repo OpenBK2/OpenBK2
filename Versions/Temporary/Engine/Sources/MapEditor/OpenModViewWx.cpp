@@ -46,6 +46,9 @@ namespace
 	{
 		const std::vector<NMOD::SMOD> &rModList;
 		SDialogState dialogState;
+		// Whether the placement in that state was used. A dialog opening for
+		// the first time has none, and is centred over the frame instead.
+		bool bPlaced = false;
 		// The path of the MOD already attached, if any. Choosing it again is what
 		// the MFC version disables OK for, and that rule is kept.
 		NFile::CFilePath szAttachedPath;
@@ -138,9 +141,17 @@ namespace
 			{
 				SetSize( dialogState.rect.left, dialogState.rect.top,
 								 dialogState.rect.Width(), dialogState.rect.Height() );
+				bPlaced = true;
 			}
 			UpdateControls();
 		}
+
+		// Whether it opened where it was left last time.
+		bool WasPlaced() const
+		{
+			return bPlaced;
+		}
+
 
 		// Called on the way out, whichever button was used: where the dialog
 		// ended up is worth remembering even when the answer was Cancel, which
@@ -233,6 +244,10 @@ namespace NOpenMod
 		NMOD::GetAllMODs( &modList );
 
 		COpenModWxDialog dialog( nullptr, modList );
+		if ( !dialog.WasPlaced() )
+		{
+			NWxModal::CentreOver( &dialog, pParent );
+		}
 		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
 		dialog.SaveState();
 		return bAccepted && dialog.GetMod( pMod );

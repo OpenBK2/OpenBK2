@@ -67,7 +67,6 @@ namespace
 			// as big as its contents need, and then the numbers in the template
 			// stop being something anyone has to maintain.
 			SetSizerAndFit( pSizer );
-			Centre();
 
 			// What GotoDlgCtrl did. Focus alone is not the same thing: reaching an
 			// edit through the dialog manager selects its text, so typing replaces
@@ -93,6 +92,7 @@ namespace NSearchObject
 			return false;
 		}
 		CSearchObjectWxDialog dialog( nullptr, *pszText );
+		NWxModal::CentreOver( &dialog, pParent );
 		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
 		{
 			return false;

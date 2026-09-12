@@ -4,6 +4,7 @@
 
 #ifdef OBK2_WITH_WX
 
+#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxModal.h"
@@ -26,6 +27,12 @@
 
 namespace
 {
+	// The file CResizeDialog keeps this dialog's placement in, which is its
+	// class name -- so the MFC dialog and this one open where the other was
+	// left, as they already share the format.
+	const char *const PSZ_STATE_NAME = "CSelectTablesDialog";
+
+
 	// The anchors from CSelectTablesDialog's constructor, translated:
 	//
 	//   IDC_CT_TABLES_LIST  ANCHORE_LEFT_TOP | RESIZE_HOR_VER  -> proportion 1, wxEXPAND
@@ -40,6 +47,10 @@ namespace
 	class CSelectTablesWxDialog : public CWxToolDialog
 	{
 		wxCheckListBox *pTablesList = nullptr;
+		SDialogState dialogState;
+		// Whether the placement in that state was used. A dialog opening for
+		// the first time has none, and is centred over the frame instead.
+		bool bPlaced = false;
 
 	public:
 		CSelectTablesWxDialog( wxWindow *pParent,
@@ -73,7 +84,38 @@ namespace
 									 wxSizerFlags().Right().Border( wxALL, 6 ) );
 			SetSizer( pSizer );
 			SetMinSize( wxSize( 204, 106 ) );		// GetMinimumXDimension/YDimension
+
+			// Where it was left last time. CSelectTablesDialog is a CResizeDialog
+			// with a state file of its own, so it has always reopened where it was
+			// put; this dialog did not, until it was measured against that one.
+			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
+			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
+			{
+				SetSize( dialogState.rect.left, dialogState.rect.top,
+								 dialogState.rect.Width(), dialogState.rect.Height() );
+				bPlaced = true;
+			}
 		}
+
+		// Whether it opened where it was left last time.
+		bool WasPlaced() const
+		{
+			return bPlaced;
+		}
+
+
+		// On the way out whichever button was used, as CResizeDialog's OnDestroy
+		// does. left+width rather than GetRight(), which is the last pixel
+		// inside the rectangle where MFC's right is one past it.
+		void SaveState()
+		{
+			const wxRect placement = GetRect();
+			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
+																	placement.GetLeft() + placement.GetWidth(),
+																	placement.GetTop() + placement.GetHeight() );
+			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+		}
+
 
 		void ReadSelection( CTableSet *pSelectedTables ) const
 		{
@@ -101,7 +143,12 @@ namespace NSelectTables
 			return false;
 		}
 		CSelectTablesWxDialog dialog( nullptr, rTables, *pSelectedTables );
+		if ( !dialog.WasPlaced() )
+		{
+			NWxModal::CentreOver( &dialog, pParent );
+		}
 		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		dialog.SaveState();
 
 		if ( bAccepted )
 		{

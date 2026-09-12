@@ -20,11 +20,12 @@
 // View -> Filter, in wx: IDD_DLG_MAPINFO_VIEW_FILTER, "MapInfo View Filter".
 //
 // A fixed-size dialog like the others -- the template has no WS_THICKFRAME --
-// fitted to its contents and centred, keeping no placement. What makes it
-// different from the ones before it is that it is live: every click writes the
-// whole filter back and sends ID_VIEW_APPLY_MI_FILTER, so the map redraws under
-// the dialog, and Cancel undoes it all. That is kept exactly, including the
-// order: the dialog writes the filter, then asks for it to be applied.
+// fitted to its contents and centred on the frame, keeping no placement. What
+// makes it different from the ones before it is that it is live: every click
+// writes the whole filter back and sends ID_VIEW_APPLY_MI_FILTER, so the map
+// redraws under the dialog, and Cancel undoes it all. That is kept exactly,
+// including the order: the dialog writes the filter, then asks for it to be
+// applied.
 //
 // What the MFC dialog did that this one does on purpose:
 //
@@ -227,7 +228,6 @@ namespace
 
 			Fill();
 			SetSizerAndFit( pSizer );
-			Centre();
 			pOk->SetFocus();
 		}
 
@@ -269,6 +269,7 @@ namespace NMapInfoViewFilter
 		// Taken before the dialog touches anything: Cancel puts this back.
 		const CMapInfoEditorSettings::SViewFilterData original = ( *pFilter );
 		CMapInfoViewFilterWxDialog dialog( pFilter );
+		NWxModal::CentreOver( &dialog, pParent );
 		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
 		{
 			( *pFilter ) = original;

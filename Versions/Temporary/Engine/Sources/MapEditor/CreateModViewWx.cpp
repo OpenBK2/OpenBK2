@@ -35,6 +35,9 @@ namespace
 	class CCreateModWxDialog : public CWxToolDialog
 	{
 		SDialogState dialogState;
+		// Whether the placement in that state was used. A dialog opening for
+		// the first time has none, and is centred over the frame instead.
+		bool bPlaced = false;
 
 		wxTextCtrl *pFolder = nullptr;
 		wxTextCtrl *pName = nullptr;
@@ -99,9 +102,17 @@ namespace
 			{
 				SetSize( dialogState.rect.left, dialogState.rect.top,
 								 dialogState.rect.Width(), dialogState.rect.Height() );
+				bPlaced = true;
 			}
 			UpdateControls();
 		}
+
+		// Whether it opened where it was left last time.
+		bool WasPlaced() const
+		{
+			return bPlaced;
+		}
+
 
 		// Called on the way out whichever button was used, as CResizeDialog did:
 		// where the dialog ended up is worth keeping even after Cancel.
@@ -159,6 +170,10 @@ namespace NCreateMod
 			return false;
 		}
 		CCreateModWxDialog dialog( nullptr );
+		if ( !dialog.WasPlaced() )
+		{
+			NWxModal::CentreOver( &dialog, pParent );
+		}
 		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
 		dialog.SaveState();
 		if ( !bAccepted )
