@@ -10,7 +10,10 @@ const uint32_t CProgressDialog::START_TIMER_INTERVAL = 500;
 
 
 CProgressDialog::CProgressDialog( CWnd* pParent )
-	: CDialog( CProgressDialog::IDD, pParent )
+	: CDialog( CProgressDialog::IDD, pParent ),
+	// Never initialised, and SetStartTimer's first act is to read it: whatever
+	// was in that memory was passed to KillTimer before the timer existed.
+	dwStartTimer( 0 )
 {
 }
 

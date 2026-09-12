@@ -97,6 +97,7 @@ MIGRATED = {
     # ED_B2_M1: the timeline is drawn from TimeSliderData.h either way.
     "CMoviesEditorWindow": "ED_B2_M1/MoviesEditorViewWx.cpp (NMoviesEditorView::Create)",
     "CNewObjectDialog": "MapEditor/NewObjectViewWx.cpp (NNewObject::Run)",
+    "CProgressDialog": "MapEditor/ProgressViewWx.cpp (NProgressView::Create)",
     "CRefListDialog": "MapEditor/RefListViewWx.cpp (NRefList::Run)",
     "CRefListWaitDialog": "MapEditor/RefListViewWx.cpp (NRefList::RunScan)",
 }

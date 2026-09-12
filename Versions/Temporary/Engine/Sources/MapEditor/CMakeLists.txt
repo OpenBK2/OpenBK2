@@ -80,6 +80,8 @@ set(SOURCES
     PC_TextFileEditor.cpp
     PC_Vec3ColorEditor.cpp
     ProgressDialog.cpp
+    ProgressViewMfc.cpp
+    ProgressViewWx.cpp
     ProgressDlg.cpp
     ProgressHook.cpp
     ProgressThread.cpp

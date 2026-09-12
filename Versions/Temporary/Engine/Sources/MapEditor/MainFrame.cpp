@@ -102,7 +102,8 @@ LRESULT CMainFrame::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam )
 }
 /**/
 
-CMainFrame::CMainFrame() : nFreeToolbarID( AFX_IDW_TOOLBAR + 9 ), hwndPreviousFocusedWindow( 0 )
+CMainFrame::CMainFrame() : nFreeToolbarID( AFX_IDW_TOOLBAR + 9 ), hwndPreviousFocusedWindow( 0 ),
+	pProgressView( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
 	//
@@ -124,6 +125,8 @@ CMainFrame::~CMainFrame()
 		}
 	}
 	gdbBrowserList.clear();
+	delete pProgressView;
+	pProgressView = 0;
 	//parent variables uninitialization
 	if ( m_pControlBarManager )
 	{
@@ -2081,23 +2084,28 @@ void CMainFrame::ReloadData()
 void CMainFrame::CreateProgressDialog()
 {
 	hwndPreviousFocusedWindow = ::GetFocus();
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView == 0 )
 	{
-		progressDialog.ShowWindow( SW_SHOW );	
-		progressDialog.UpdateControls();
+		// Which toolkit draws it is NProgressView's business.
+		pProgressView = NProgressView::Create();
+	}
+	if ( pProgressView->IsCreated() )
+	{
+		pProgressView->Show();
 	}
 	else
 	{
-		progressDialog.Create( CProgressDialog::IDD, this );
+		CWndWidget frameWidget( this );
+		pProgressView->Create( &frameWidget );
 	}
 }
 
 
 void CMainFrame::DestroyProgressDialog()
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.DestroyWindow();
+		pProgressView->Destroy();
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -2110,45 +2118,45 @@ void CMainFrame::DestroyProgressDialog()
 
 void CMainFrame::SetProgressDialogTitle( const std::string &rszTitle )
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.SetProgressTitle( rszTitle );
+		pProgressView->SetTitle( rszTitle );
 	}
 }
 
 
 void CMainFrame::SetProgressDialogMessage( const std::string &rszMessage )
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.SetProgressMessage( rszMessage );
+		pProgressView->SetMessage( rszMessage );
 	}
 }
 
 
 void CMainFrame::SetProgressDialogRange( int nStart, int nFinish )
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.SetProgressRange( nStart, nFinish );
+		pProgressView->SetRange( nStart, nFinish );
 	}
 }
 
 
 void CMainFrame::SetProgressDialogPosition( int nPosition )
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.SetProgressPosition( nPosition );
+		pProgressView->SetPosition( nPosition );
 	}
 }
 
 
 void CMainFrame::IterateProgressDialogPosition()
 {
-	if ( ::IsWindow( progressDialog.GetSafeHwnd() ) )
+	if ( pProgressView != 0 )
 	{
-		progressDialog.IterateProgressPosition();
+		pProgressView->IteratePosition();
 	}
 }
 

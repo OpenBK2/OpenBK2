@@ -148,6 +148,24 @@ namespace NWxModal
 	}
 
 
+	// Paints the frame pOwner belongs to, now.
+	//
+	// For the one case that needs it: a window the editor puts up while it is
+	// busy, driven from code that will not return to a message loop until the
+	// work is done. Nothing paints on its own there, so the progress dialog
+	// repaints itself and the frame behind it by hand after every change --
+	// CProgressDialog::UpdateControls, in the toolkit that has no CWnd to call
+	// UpdateWindow on.
+	inline void RefreshOwnerFrame( IWidget *pOwner )
+	{
+		const HWND hwndOwner = FindOwnerFrame( pOwner );
+		if ( hwndOwner != 0 )
+		{
+			::UpdateWindow( hwndOwner );
+		}
+	}
+
+
 	// Shows pDialog modally over pOwner and returns what ShowModal returned,
 	// so callers compare against wxID_OK as they would anywhere else.
 	//

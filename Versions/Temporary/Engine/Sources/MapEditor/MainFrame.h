@@ -12,7 +12,7 @@
 #include "DW_GDBBrowser.h"
 #include "DW_PropertyBrowser.h"
 #include "DW_Log.h"
-#include "ProgressDialog.h"
+#include "ProgressView.h"
 
 #include <cstdint>
 
@@ -63,7 +63,9 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	//
 	CString strHelpFilePath;
 	SECStatusBar wndStatusBar;
-	CProgressDialog progressDialog;
+	// Whichever toolkit this session draws it with, made on the first use and
+	// owned here. See ProgressView.h.
+	NProgressView::IView *pProgressView;
 	HWND hwndPreviousFocusedWindow;
 	CMapEditorSingletonApp mapEditorSingletonApp;
 	SMainFrameParams params;
