@@ -156,13 +156,22 @@ namespace NWxModal
 	// repaints itself and the frame behind it by hand after every change --
 	// CProgressDialog::UpdateControls, in the toolkit that has no CWnd to call
 	// UpdateWindow on.
-	inline void RefreshOwnerFrame( IWidget *pOwner )
+	//
+	// The HWND form is for a window that outlives the call that gave it its
+	// owner. An IWidget is a borrowed handle, often a CWndWidget temporary, so
+	// such a window resolves the frame once with FindOwnerFrame and keeps that.
+	inline void RefreshOwnerFrame( HWND hwndOwner )
 	{
-		const HWND hwndOwner = FindOwnerFrame( pOwner );
-		if ( hwndOwner != 0 )
+		if ( hwndOwner != 0 && ::IsWindow( hwndOwner ) )
 		{
 			::UpdateWindow( hwndOwner );
 		}
+	}
+
+
+	inline void RefreshOwnerFrame( IWidget *pOwner )
+	{
+		RefreshOwnerFrame( FindOwnerFrame( pOwner ) );
 	}
 
 

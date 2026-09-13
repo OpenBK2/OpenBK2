@@ -32,15 +32,20 @@ namespace
 		wxStaticText *pLabel = nullptr;
 		wxGauge *pBar = nullptr;
 		wxTimer showTimer;
-		IWidget *pOwner = nullptr;
+		// The frame, resolved once. Not the IWidget it came from: that is a
+		// borrowed handle the caller is free to let go of, and this window lives
+		// on through every progress update after Create returns. Keeping the
+		// pointer is what crashed opening an object from the recent list, calling
+		// through a CWndWidget that had left the stack.
+		HWND hwndOwnerFrame = 0;
 
 	public:
 		// START_TIMER_INTERVAL, which is how long the editor may be busy before
 		// the user is told about it.
 		static const int START_TIMER_INTERVAL = 500;
 
-		explicit CProgressWxDialog( IWidget *_pOwner )
-			: CWxToolDialog( nullptr, wxID_ANY, "Progress" ), pOwner( _pOwner )
+		explicit CProgressWxDialog( IWidget *pOwner )
+			: CWxToolDialog( nullptr, wxID_ANY, "Progress" ), hwndOwnerFrame( NWxModal::FindOwnerFrame( pOwner ) )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 			// SS_LEFTNOWORDWRAP: one line, clipped rather than wrapped.
@@ -68,7 +73,7 @@ namespace
 		void UpdateControls()
 		{
 			Update();
-			NWxModal::RefreshOwnerFrame( pOwner );
+			NWxModal::RefreshOwnerFrame( hwndOwnerFrame );
 		}
 
 		void SetProgressTitle( const std::string &rszTitle )
@@ -125,7 +130,6 @@ namespace
 	class CWxProgressView : public NProgressView::IView
 	{
 		wxWeakRef<CProgressWxDialog> dialog;
-		IWidget *pOwner = nullptr;
 
 	public:
 		virtual ~CWxProgressView()
@@ -133,10 +137,10 @@ namespace
 			Destroy();
 		}
 
+		// pParent is only used during this call; see hwndOwnerFrame.
 		virtual bool Create( IWidget *pParent )
 		{
 			Destroy();
-			pOwner = pParent;
 			dialog = NWx::TopLevel<CProgressWxDialog>( pParent );
 			if ( !dialog )
 			{

@@ -2095,8 +2095,9 @@ void CMainFrame::CreateProgressDialog()
 	}
 	else
 	{
-		CWndWidget frameWidget( this );
-		pProgressView->Create( &frameWidget );
+		// The frame itself, not a CWndWidget temporary: the view outlives this
+		// call, and the frame outlives the view.
+		pProgressView->Create( this );
 	}
 }
 
