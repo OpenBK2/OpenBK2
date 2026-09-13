@@ -334,7 +334,10 @@ bool CVariant::ToText( std::string *pszText ) const
 			( *pszText ) = m_bool ? "true" : "false";
 			break;
 		case VT_POINTER:
-			( *pszText ) = fmt::format( "0x{:X}", m_pblob->m_ptr );
+			// As an integer: fmt accepts only {} and {:p} for a pointer, and throws
+			// format_error at run time for {:X}. Nothing caught it, so building the
+			// undo list after a bit field edit (a blob value) ended the editor.
+			( *pszText ) = fmt::format( "0x{:X}", reinterpret_cast<uintptr_t>( m_pblob->m_ptr ) );
 			break;
 		case VT_DBID:
 			*pszText = m_dbid->ToString();
