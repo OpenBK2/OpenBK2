@@ -72,6 +72,9 @@ public:
 	void AddFunctionNames( const char *pList, int nFuncSet );
 	void SetAutoComplete( const std::vector<std::string> &vszKeywords, const std::string &szKeywords );
 	void Find();
+	// Ctrl+F, Ctrl+H and F3, with the Ctrl state handed in: OnKeyDown passes the
+	// keyboard's, and NSimulatedKey a probe's. True when the key was consumed.
+	bool HandleShortcut( unsigned nChar, bool bControl );
 	void FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase );
 	void Replace();
 	bool Replace( const std::string &szReplaceWith );

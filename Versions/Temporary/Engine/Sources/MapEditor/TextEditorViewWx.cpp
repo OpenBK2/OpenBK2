@@ -5,6 +5,7 @@
 #ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/DialogState.h"
+#include "MapEditorLib/SimulatedKey.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -445,11 +446,20 @@ namespace
 			}
 		}
 
-		// CLuaEditor::OnKeyDown: Ctrl+F finds, Ctrl+H replaces, and F3 finds the
-		// last text again once there is a Find dialog to have typed it into.
 		void OnEditorKeyDown( wxKeyEvent &rEvent )
 		{
-			if ( pFindDialog != nullptr && rEvent.GetKeyCode() == WXK_F3 )
+			if ( !HandleShortcut( rEvent.GetKeyCode(), rEvent.ControlDown() ) )
+			{
+				rEvent.Skip();
+			}
+		}
+
+		// CLuaEditor::HandleShortcut: Ctrl+F finds, Ctrl+H replaces, and F3 finds
+		// the last text again once there is a Find dialog to have typed it into.
+		// nKey is a wx key code. True when the key was consumed; F3 is not.
+		bool HandleShortcut( int nKey, bool bControl )
+		{
+			if ( pFindDialog != nullptr && nKey == WXK_F3 )
 			{
 				if ( szLastTextToFind.empty() )
 				{
@@ -460,21 +470,52 @@ namespace
 					FindNext( szLastTextToFind, bLastWholeWord, bLastMatchCase );
 				}
 			}
-			if ( rEvent.ControlDown() )
+			if ( bControl )
 			{
-				if ( rEvent.GetKeyCode() == 'F' )
+				if ( nKey == 'F' )
 				{
 					OpenFind();
-					return;
+					return true;
 				}
-				if ( rEvent.GetKeyCode() == 'H' )
+				if ( nKey == 'H' )
 				{
 					OpenReplace();
-					return;
+					return true;
 				}
 			}
-			rEvent.Skip();
+			return false;
 		}
+
+#ifdef __WXMSW__
+		// NSimulatedKey, as CScriptEditor::OnSimulatedKey handles it. The message
+		// carries a Win32 virtual key; letters are the same code in wx, and the
+		// function keys are moved onto wx's.
+		virtual WXLRESULT MSWWindowProc( WXUINT nMessage, WXWPARAM wParam, WXLPARAM lParam )
+		{
+			if ( nMessage != NSimulatedKey::Message() )
+			{
+				return CWxToolDialog::MSWWindowProc( nMessage, wParam, lParam );
+			}
+			switch ( wParam )
+			{
+				case NSimulatedKey::OP_KEY:
+				{
+					const unsigned nVirtualKey = NSimulatedKey::KeyOf( lParam );
+					const int nKey = ( nVirtualKey >= VK_F1 && nVirtualKey <= VK_F24 )
+														 ? WXK_F1 + static_cast<int>( nVirtualKey - VK_F1 )
+														 : static_cast<int>( nVirtualKey );
+					HandleShortcut( nKey, NSimulatedKey::HasModifier( lParam, NSimulatedKey::MODIFIER_CONTROL ) );
+					return 1;
+				}
+				case NSimulatedKey::OP_SELECTION_START:
+					return pEditor->GetSelectionStart();
+				case NSimulatedKey::OP_SELECTION_END:
+					return pEditor->GetSelectionEnd();
+				default:
+					return 0;
+			}
+		}
+#endif
 
 		// CLuaEditor::AutoComplete: offer the list when the word at the caret
 		// starts some keyword.

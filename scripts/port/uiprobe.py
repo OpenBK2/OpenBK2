@@ -515,6 +515,21 @@ def click_button(h, wait=False):
     return post(h, BM_CLICK)
 
 
+BN_CLICKED = 0
+
+
+def command_button(h):
+    """The click as the button's parent hears it: WM_COMMAND with BN_CLICKED,
+    sent to the parent. BM_CLICK is documented to fail when the dialog is not
+    the active window -- measured on the script editor's Find dialog, where the
+    first click after another dialog took activation was lost -- and a probe
+    driving two modeless dialogs cannot keep either active. MFC reflects the
+    notification to a control that handles its own click; wx routes it by
+    handle. Sent, so it waits: do not use it on a button that opens a modal."""
+    parent, cid = u.GetParent(h), u.GetDlgCtrlID(h)
+    return send(parent, WM_COMMAND, (BN_CLICKED << 16) | (cid & 0xFFFF), h)
+
+
 def choose(combo, item):
     """Select an entry by text or index and notify as a user's pick does:
     CBN_SELCHANGE, which MFC answers, then CBN_SELENDOK, which wxChoice answers.

@@ -15,6 +15,10 @@
 //#pragma comment(linker, "/include:_ForceLuaLexer")
 
 #include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/SimulatedKey.h"
+
+// ON_REGISTERED_MESSAGE takes a variable, not a call.
+static const UINT nSimulatedKeyMessage = NSimulatedKey::Message();
 
 
 static std::string szErr;
@@ -255,7 +259,28 @@ BEGIN_MESSAGE_MAP(CScriptEditor, CResizeDialog)
 	ON_NOTIFY(SCN_MODIFIED, IDC_EDIT_TEXT, OnCnModified)
 	ON_EN_CHANGE(IDC_EDIT_TEXT, OnEnChangeEditText)
 	ON_WM_SIZE()
+	ON_REGISTERED_MESSAGE(nSimulatedKeyMessage, OnSimulatedKey)
 END_MESSAGE_MAP()
+
+
+// Sent to the dialog, which is what a probe finds by its caption, and passed to
+// the editor inside it -- the window whose OnKeyDown the real keys reach.
+LRESULT CScriptEditor::OnSimulatedKey( WPARAM wParam, LPARAM lParam )
+{
+	switch ( wParam )
+	{
+		case NSimulatedKey::OP_KEY:
+			m_LuaEditor.HandleShortcut( NSimulatedKey::KeyOf( lParam ),
+																	NSimulatedKey::HasModifier( lParam, NSimulatedKey::MODIFIER_CONTROL ) );
+			return 1;
+		case NSimulatedKey::OP_SELECTION_START:
+			return m_LuaEditor.GetSelection().cpMin;
+		case NSimulatedKey::OP_SELECTION_END:
+			return m_LuaEditor.GetSelection().cpMax;
+		default:
+			return 0;
+	}
+}
 
 
 // CScriptEditor message handlers

@@ -42,6 +42,9 @@ def main():
                     help='pick ITEM in the Nth combo box (default the first), as a user would')
     ap.add_argument('--click', action='append', default=[], metavar='CAPTION',
                     help='click a button that does not end the dialog (sent, waits)')
+    ap.add_argument('--command', action='append', default=[], metavar='CAPTION',
+                    help='WM_COMMAND BN_CLICKED to the dialog for that button: works when the '
+                         'dialog is not active, where --click can be lost')
     ap.add_argument('--toggle', action='append', default=[], type=int, metavar='ROW',
                     help='flip a row check box in the first list view')
     ap.add_argument('--move', metavar='X,Y,W,H', help='move and size the dialog')
@@ -79,6 +82,9 @@ def main():
     for caption in a.click:
         P.click_button(button(dlg, caption), wait=True)
         print('clicked %r' % caption)
+    for caption in a.command:
+        P.command_button(button(dlg, caption))
+        print('commanded %r' % caption)
     for row in a.toggle:
         lists = [h for h in kids if P.cls(h) == 'SysListView32']
         P.toggle_list_check(lists[0], row)

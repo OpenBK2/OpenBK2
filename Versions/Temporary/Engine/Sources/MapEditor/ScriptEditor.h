@@ -68,6 +68,8 @@ public:
 	afx_msg void OnCnCharAdded(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnCnModified(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnSize(unsigned nType, int cx, int cy);
+	// NSimulatedKey: the editor's shortcuts and selection, for the probe tooling.
+	afx_msg LRESULT OnSimulatedKey( WPARAM wParam, LPARAM lParam );
 	CButton m_ctrlOK;
 	CButton m_ctrlCancel;
 };

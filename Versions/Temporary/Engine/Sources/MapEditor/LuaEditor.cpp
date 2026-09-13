@@ -505,28 +505,43 @@ void CLuaEditor::NewLineIndent()
 
 void CLuaEditor::OnKeyDown(unsigned nChar, unsigned nRepCnt, unsigned nFlags)
 {
+	if ( HandleShortcut( nChar, ( 0x8000 & GetAsyncKeyState( VK_CONTROL ) ) != 0 ) )
+	{
+		return;
+	}
+	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
+}
+
+
+// What OnKeyDown did inline, unchanged, with the Ctrl state as a parameter so
+// NSimulatedKey can hand in one. F3 is acted on but not consumed, as before.
+bool CLuaEditor::HandleShortcut( unsigned nChar, bool bControl )
+{
 	if ( ::IsWindow( findDlg.m_hWnd ) && nChar == VK_F3 )
 	{
 		findDlg.UpdateData();
 		if ( szLastTextToFind.empty() )
+		{
 			Find();
+		}
 		else
+		{
 			FindNext( szLastTextToFind, bLastWholeWord, bLastMatchCase );
+		}
 	}
-	if ( 0x8000 & GetAsyncKeyState( VK_CONTROL ) )
+	if ( bControl )
 	{
 		switch ( nChar )
 		{
 			case 'F':
 				Find();
-				return;
+				return true;
 			case 'H':
 				Replace();
-				return;
+				return true;
 		}
 	}
-
-	CWnd::OnKeyDown(nChar, nRepCnt, nFlags);
+	return false;
 }
 
 void CFindNext::FindNext( const std::string &szText, bool bWholeWord, bool bMatchCase )
