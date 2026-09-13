@@ -9,7 +9,9 @@ This counts instead, so the answer is always about the tree in front of you.
 Four axes, because "how far along are we" means different things depending on
 what you are worried about:
 
-  module    CMake targets, and whether each still needs MFC or Stingray at all.
+  module    CMake targets, and whether each still links MFC or Stingray -- read
+            from its target_link_libraries, not guessed from its sources, which
+            miss what arrives through another module's headers.
             This is the one that reaches zero last and matters most: a module
             that links neither is a module that could build off Windows.
   file      Translation units naming MFC/ATL/Win32 GUI types. The broadest and
@@ -45,7 +47,6 @@ GUI_MFC = re.compile(
     r"CBitmap|CBrush|CPen|CFont|CScrollBar|CFileDialog|CColorDialog|CListBox|"
     r"CCheckListBox|CSplitterWnd|CWinThread|CResizeDialog|afx_msg|"
     r"DECLARE_MESSAGE_MAP|BEGIN_MESSAGE_MAP)\b")
-STINGRAY = re.compile(r"\bSEC[A-Z][A-Za-z0-9_]*\b")
 CONTROL_MEMBER = re.compile(
     r"^\s+(CButton|CEdit|CComboBox|CListBox|CCheckListBox|CListCtrl|CTreeCtrl|"
     r"CSliderCtrl|CSpinButtonCtrl|CProgressCtrl|CStatic|CTabCtrl|CScrollBar|"
@@ -119,6 +120,21 @@ def walk(module):
                 yield os.path.join(dirpath, name)
 
 
+def linked_libraries(module):
+    """Every library a module's CMakeLists.txt links it against, across all of
+    its target_link_libraries calls -- modules often have a second one under
+    if(WIN32), and both count."""
+    link_call = re.compile(r"target_link_libraries\(\s*([A-Za-z_0-9]+)\s+([^)]*)\)", re.S)
+    libs = set()
+    for match in link_call.finditer(read(os.path.join(SOURCES, module, "CMakeLists.txt"))):
+        if match.group(1) != module:
+            continue
+        for token in match.group(2).split():
+            if token not in ("PRIVATE", "PUBLIC", "INTERFACE"):
+                libs.add(token)
+    return libs
+
+
 def bar(done, total, width=22):
     if total == 0:
         return "-" * width + "   n/a"
@@ -140,7 +156,6 @@ def main():
 
     for module in MODULES:
         m_files = m_gui = m_ctrl = 0
-        m_mfc = m_sec = False
         for path in walk(module):
             src = read(path)
             m_files += 1
@@ -148,9 +163,6 @@ def main():
             if GUI_MFC.search(src):
                 m_gui += 1
                 files_gui += 1
-                m_mfc = True
-            if STINGRAY.search(src):
-                m_sec = True
             if path.endswith(".h"):
                 for name in DIALOG_CLASS.findall(src):
                     # CResizeDialog is the base every other one derives from,
@@ -165,6 +177,16 @@ def main():
             for name in filenames:
                 if name.endswith(".rc"):
                     rc_templates += len(RC_DIALOG.findall(read(os.path.join(dirpath, name))))
+        # What a module needs is what it links, not what its own files name. A
+        # search over one module's sources misses a type reached through another
+        # module's header -- ED_B2_M1 names no Stingray type itself, but holds a
+        # CDefaultShortcutBar, which derives from one -- and any MFC name that is
+        # not on the list, like ED_B2's CWaitCursor. The link line is what the
+        # build holds a module to. Linking stingray counts as MFC too: the shim
+        # links mfc PUBLIC, so every module on the shim is on MFC.
+        libs = linked_libraries(module)
+        m_sec = "stingray" in libs
+        m_mfc = m_sec or "mfc" in libs
         per_module[module] = dict(files=m_files, gui=m_gui, ctrl=m_ctrl,
                                   mfc=m_mfc, sec=m_sec)
 
@@ -172,8 +194,8 @@ def main():
 
     print("wx migration progress\n")
 
-    print("MODULE  -- targets still needing MFC or Stingray")
-    print("  %-14s %-5s %-5s %s" % ("module", "MFC", "SEC", "files with GUI MFC"))
+    print("MODULE  -- targets still linking MFC or Stingray, read from each CMakeLists.txt")
+    print("  %-14s %-5s %-5s %s" % ("module", "MFC", "SEC", "files naming GUI MFC"))
     clean = 0
     for module in MODULES:
         d = per_module[module]
