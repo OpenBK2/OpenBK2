@@ -1,13 +1,19 @@
 #include "stdafx.h"
 #include "DW_PropertyBrowser.h"
 
+#include "MapEditorLib/MfcWidget.h"
+
 CDWPropertyBrowser::CDWPropertyBrowser()
+	: pPane( 0 ),
+		bEnableEdit( true )
 {
 }
 
 
 CDWPropertyBrowser::~CDWPropertyBrowser()
 {
+	delete pPane;
+	pPane = 0;
 }
 
 
@@ -17,41 +23,44 @@ BEGIN_MESSAGE_MAP(CDWPropertyBrowser, SECControlBar)
 END_MESSAGE_MAP()
 
 
-int CDWPropertyBrowser::OnCreate( LPCREATESTRUCT pCreateStruct ) 
+int CDWPropertyBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 {
 	if ( SECControlBar::OnCreate( pCreateStruct ) == -1 )
 	{
 		return -1;
 	}
 
-	if ( !wndContents.Create( CPCDialog::IDD, this ) )
+	pPane = NPropertyPane::Create();
+	CWndWidget paneWidget( this );
+	if ( pPane == 0 || !pPane->Create( &paneWidget, szOptionsLabel ) )
 	{
 		return -1;
 	}
-	wndContents.ShowWindow( SW_SHOW );
+	pPane->Show( true );
 	return 0;
 }
 
 
-void CDWPropertyBrowser::OnSize( unsigned nType, int cx, int cy ) 
+void CDWPropertyBrowser::OnSize( unsigned nType, int cx, int cy )
 {
 	SECControlBar::OnSize( nType, cx, cy );
-	
-	if ( wndContents.GetSafeHwnd() != NULL )
+
+	if ( pPane != 0 && pPane->IsCreated() )
 	{
 		CRect insideRect;
 		GetInsideRect( insideRect );
-
-		wndContents.SetWindowPos( 0,
-															insideRect.left,
-															insideRect.top,
-															insideRect.Width(),
-															insideRect.Height(),
-															SWP_NOZORDER | SWP_NOACTIVATE );
+		pPane->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
 	}
 }
 
-// basement storage  
 
+void CDWPropertyBrowser::EnableEdit( bool bEnable )
+{
+	bEnableEdit = bEnable;
+	if ( pPane != 0 && pPane->IsCreated() )
+	{
+		pPane->EnableEdit( bEnable );
+	}
+}
 
-
+// basement storage
