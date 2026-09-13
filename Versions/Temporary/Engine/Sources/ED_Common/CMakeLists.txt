@@ -13,8 +13,6 @@ set(SOURCES
     GameInputInterface.cpp
     Initialize.cpp
     ParticleExporter.cpp
-    ProgressBar.cpp
-    ProgressBarWindow.cpp
     RunModeInterfaceBase.cpp
     stdafx.cpp
     StoreObjectExporter.cpp
@@ -40,10 +38,8 @@ target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main Map
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
 endif()
-# Dialogs and string tables, loaded out of this DLL by its own code.
-# Windows only: these are Win32 resource scripts.
-if(WIN32)
-    target_sources(ED_Common PRIVATE ED_Common.rc)
-endif()
+# No resource script: its one dialog belonged to CProgressBarWindow, which
+# nothing ever created, and went with it. Version info comes from
+# add_version_info below, not from a .rc of this module's own.
 install(TARGETS ED_Common DESTINATION bin)
 add_version_info(ED_Common)

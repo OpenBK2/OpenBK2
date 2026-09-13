@@ -7,7 +7,6 @@ add_library(stingray STATIC
     swinfrm.cpp # SECFrameWnd
     swinmdi.cpp # SECMDIFrameWnd
     secwb.cpp # SECWorkbook
-    progress.cpp # SECProgressCtrl
     sbarcore.cpp # SECControlBar
     trctlx.cpp # SECTreeCtrl
     swsmgrex.cpp # SECWorkspaceManagerEx
