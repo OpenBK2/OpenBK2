@@ -22,7 +22,13 @@ class CPCFloatComboEditor : public CPCStringComboEditor
 	int nPrecision;
 
 public:
-	CPCFloatComboEditor();	
+	// The values the list offers, from "values:" and "step:", formatted with
+	// "precision:" and sorted by number; *pnPrecision is the precision to start
+	// from and is left as the one used. False when there is nothing to offer, or
+	// a value does not parse. Shared with the wx property grid.
+	static bool BuildChoices( const SPropertyDesc *pDesc, std::vector<std::string> *pChoices, int *pnPrecision );
+
+	CPCFloatComboEditor();
 
 	//CPCItemEditor
 	bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );

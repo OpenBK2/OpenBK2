@@ -20,6 +20,12 @@ class CPCIntComboEditor : public CPCStringComboEditor
 	OBJECT_NOCOPY_METHODS( CPCIntComboEditor );
 
 public:
+	// The values the list offers, from the descriptor's "values:" and "step:",
+	// sorted by number. False when there is nothing to offer, or a value does
+	// not parse -- the editor refuses to open then. The wx property grid builds
+	// its list with this too, so the two offer the same values.
+	static bool BuildChoices( const SPropertyDesc *pDesc, std::vector<std::string> *pChoices );
+
 	//CPCItemEditor
 	bool CreateEditor( const std::string &rszName, EPCIEType _nEditorType, const SPropertyDesc* _pPropertyDesc, int _nControlID, const SObjectSet &rObjectSet, CWnd *_pwndTargetWindow );
 

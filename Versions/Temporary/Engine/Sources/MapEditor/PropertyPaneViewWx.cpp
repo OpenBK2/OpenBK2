@@ -44,8 +44,15 @@
 //   * answers expand, collapse, refresh and show hidden;
 //   * keeps the three column widths in the pane's state file.
 //
-// Every row is read-only to the grid itself for now. Editing, copy and paste,
-// the array commands and the context menu are the slices after this.
+// Editing, the second slice. A row is the property class its MFC editor
+// corresponds to -- text for the inputs, sliders, int colours and GUIDs, a list
+// for the combos and the bool combo and switcher, a check box for the bool
+// check box -- and a change goes through NPropertyPane: parsed by the type's
+// rules, written through a change controller onto the undo list, or put back
+// when it does not parse or changes nothing. Rows whose editor opens a dialog
+// (references, files, bit fields, text files, long strings, vec3 colours) stay
+// read-only until the slice that brings those. Copy and paste, the array
+// commands and the context menu come after.
 //
 // **Names.** A wxPropertyGrid property's GetName() is its path through its
 // non-category parents joined with '.', and LEVEL_SEPARATOR_CHAR is '.'. So each
@@ -110,6 +117,7 @@ namespace
 			pStatus = _pStatus;
 			szOptionsLabel = rszOptionsLabel;
 			pManager->Bind( wxEVT_PG_SELECTED, &CPropertyGridView::OnSelected, this );
+			pManager->Bind( wxEVT_PG_CHANGED, &CPropertyGridView::OnChanged, this );
 			pManager->Bind( wxEVT_PG_ITEM_EXPANDED, &CPropertyGridView::OnExpanded, this );
 			pManager->Bind( wxEVT_PG_ITEM_COLLAPSED, &CPropertyGridView::OnCollapsed, this );
 			pManager->Bind( wxEVT_PG_COL_END_DRAG, &CPropertyGridView::OnColumnDragged, this );
@@ -159,10 +167,16 @@ namespace
 
 		void EnableEdit( bool bEnable )
 		{
+			const bool bChanged = ( bEnableEdit != bEnable );
 			bEnableEdit = bEnable;
 			if ( pManager == nullptr )
 			{
 				return;
+			}
+			// Which rows can be edited is decided as they are made.
+			if ( bChanged && GetViewManipulator() != 0 )
+			{
+				BuildTree();
 			}
 			wxPropertyGrid *const pGrid = pManager->GetGrid();
 			if ( bEnable )
@@ -366,7 +380,7 @@ namespace
 			wxPGProperty *pProperty = Find( rszName );
 			if ( pProperty == nullptr )
 			{
-				pProperty = AppendRow( pParent, rszName.substr( nStart ) );
+				pProperty = AppendProperty( pParent, rszName.substr( nStart ), rszName, pDesc );
 			}
 			ShowProperty( pProperty, rszName, pDesc );
 			return pProperty;
@@ -376,9 +390,126 @@ namespace
 		{
 			const wxString name = FromNarrow( rszShortName );
 			wxPGProperty *const pRow = new wxStringProperty( name, name, wxString() );
-			// Nothing is edited in this slice.
+			// A folder the tree made for a missing parent: nothing to edit.
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, true );
 			return ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
+		}
+
+		// The types edited as text: CPCMainTreeControl::CreatePCItemEditor gives
+		// these an edit box, or an edit box beside a slider or a colour button.
+		static bool IsTextEdited( EPCIEType nType )
+		{
+			switch ( nType )
+			{
+				case PCIE_INT_INPUT:
+				case PCIE_INT_SLIDER:
+				case PCIE_INT_COLOR:
+				case PCIE_INT_COLOR_WITH_ALPHA:
+				case PCIE_FLOAT_INPUT:
+				case PCIE_FLOAT_SLIDER:
+				case PCIE_STRING_INPUT:
+				case PCIE_GUID:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		// Whether the row may be edited at all: the editor's mode, the
+		// database's read-only mark, and a value the objects agree on --
+		// CreatePCItemEditor opens nothing over a multivariant.
+		bool CanEdit( const std::string &rszName, EPCIEType nType )
+		{
+			if ( !bEnableEdit || !typePCIEMnemonics.IsLeaf( nType ) ||
+					 NPropertyPane::IsReadOnly( GetViewManipulator(), rszName ) )
+			{
+				return false;
+			}
+			CVariant value;
+			return NPropertyPane::GetValue( GetViewManipulator(), rszName, &value ) &&
+						 ( value.GetType() != CVariant::VT_MULTIVARIANT );
+		}
+
+		// A leaf's row, of the class its MFC editor corresponds to.
+		wxPGProperty* AppendProperty( wxPGProperty *pParent, const std::string &rszShortName,
+																	const std::string &rszName, const SPropertyDesc *pDesc )
+		{
+			const wxString name = FromNarrow( rszShortName );
+			const EPCIEType nType = typePCIEMnemonics.Get( pDesc, rszName );
+			bool bEditable = CanEdit( rszName, nType );
+			bool bCheckBox = false;
+			std::vector<std::string> choices;
+			wxPGProperty *pRow = nullptr;
+			if ( bEditable && nType == PCIE_BOOL_CHECKBOX )
+			{
+				pRow = new wxBoolProperty( name, name, false );
+				bCheckBox = true;
+			}
+			else if ( bEditable && NPropertyPane::GetChoices( pDesc, nType, &choices ) )
+			{
+				wxArrayString labels;
+				for ( std::vector<std::string>::const_iterator itChoice = choices.begin(); itChoice != choices.end(); ++itChoice )
+				{
+					labels.Add( FromNarrow( *itChoice ) );
+				}
+				// True and false are the whole list. Every other list is a combo box
+				// the stored value may not be in, which an enum could not show.
+				if ( nType == PCIE_BOOL_COMBO || nType == PCIE_BOOL_SWITCHER )
+				{
+					pRow = new wxEnumProperty( name, name, labels );
+				}
+				else
+				{
+					pRow = new wxEditEnumProperty( name, name, labels, wxArrayInt(), wxString() );
+				}
+			}
+			else
+			{
+				pRow = new wxStringProperty( name, name, wxString() );
+				bEditable = bEditable && IsTextEdited( nType );
+			}
+			pRow->ChangeFlag( wxPGFlags::ReadOnly, !bEditable );
+			wxPGProperty *const pAdded = ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
+			if ( bCheckBox )
+			{
+				pManager->SetPropertyAttribute( pAdded, wxPG_BOOL_USE_CHECKBOX, true );
+			}
+			return pAdded;
+		}
+
+		// The user changed a row. CPCMainTreeControl read the editor back on
+		// IC_KILL_FOCUS and IC_VALUE_CHANGED; the grid reports a finished edit
+		// here, so this is that moment.
+		void OnChanged( wxPropertyGridEvent &rEvent )
+		{
+			rEvent.Skip();
+			wxPGProperty *const pProperty = rEvent.GetProperty();
+			if ( bCreateControls || pProperty == nullptr || GetViewManipulator() == 0 )
+			{
+				return;
+			}
+			const std::string szName = FullName( pProperty );
+			CVariant newValue;
+			bool bParsed = false;
+			if ( dynamic_cast<wxBoolProperty*>( pProperty ) != nullptr )
+			{
+				newValue = pProperty->GetValue().GetBool();
+				bParsed = true;
+			}
+			else
+			{
+				bParsed = NPropertyPane::ParseValueText( GetViewManipulator(), szName,
+																								 ToNarrow( pProperty->GetValueAsString() ), &newValue );
+			}
+			// A commit redoes the change into every view on the object, this one
+			// included, which rewrites the row in its canonical form. Anything
+			// else puts the stored value back.
+			if ( !bParsed || !NPropertyPane::CommitValue( this, szName, newValue ) )
+			{
+				bCreateControls = true;
+				RefreshText( pProperty, szName );
+				bCreateControls = false;
+			}
 		}
 
 		// CPCMainTreeControl::SetPCItemView, and PickTextColors' grey.
@@ -407,12 +538,24 @@ namespace
 			}
 		}
 
+		// The row's value from the manipulator: as a bool for a check box, as
+		// its text for everything else, a list choosing the entry with that text.
 		void RefreshText( wxPGProperty *pProperty, const std::string &rszName )
 		{
+			if ( dynamic_cast<wxBoolProperty*>( pProperty ) != nullptr )
+			{
+				CVariant value;
+				if ( NPropertyPane::GetValue( GetViewManipulator(), rszName, &value ) &&
+						 ( value.GetType() != CVariant::VT_MULTIVARIANT ) )
+				{
+					pManager->SetPropertyValue( pProperty, (bool)value );
+				}
+				return;
+			}
 			std::string szText;
 			if ( NPropertyPane::GetValueText( GetViewManipulator(), rszName, &szText ) )
 			{
-				pManager->SetPropertyValue( pProperty, FromNarrow( szText ) );
+				pManager->SetPropertyValueString( pProperty, FromNarrow( szText ) );
 			}
 		}
 

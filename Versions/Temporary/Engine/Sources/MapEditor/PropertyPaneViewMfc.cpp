@@ -1,11 +1,17 @@
 #include "stdafx.h"
 
 #include "PropertyPaneView.h"
+#include "PC_Constants.h"
 #include "PC_Dialog.h"
+#include "PC_FloatComboEditor.h"
+#include "PC_IntComboEditor.h"
 #include "PC_ItemEditor.h"
+#include "PC_StringComboRefEditor.h"
 #include "PC_Vec3ColorEditor.h"
 
+#include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/ObjectController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 
 #include <cstdlib>
@@ -143,6 +149,95 @@ namespace NPropertyPane
 			}
 		}
 		return false;
+	}
+
+
+	bool GetChoices( const SPropertyDesc *pDesc, EPCIEType nType, std::vector<std::string> *pChoices )
+	{
+		if ( pDesc == 0 || pChoices == 0 )
+		{
+			return false;
+		}
+		pChoices->clear();
+		switch ( nType )
+		{
+			case PCIE_INT_COMBO:
+				return CPCIntComboEditor::BuildChoices( pDesc, pChoices );
+			case PCIE_FLOAT_COMBO:
+			{
+				int nPrecision = PCSV_DEFAULT_RECISION;
+				return CPCFloatComboEditor::BuildChoices( pDesc, pChoices, &nPrecision );
+			}
+			case PCIE_STRING_COMBO:
+				pChoices->assign( pDesc->values.begin(), pDesc->values.end() );
+				return true;
+			case PCIE_STRING_COMBO_REF:
+			case PCIE_STRING_COMBO_MULTI_REF:
+				pChoices->push_back( PCSV_NULL );
+				CPCStringComboRefEditor::BuildChoices( pDesc, nType, pChoices );
+				return true;
+			case PCIE_BOOL_COMBO:
+			case PCIE_BOOL_SWITCHER:
+				pChoices->push_back( PCSV_TRUE );
+				pChoices->push_back( PCSV_FALSE );
+				return true;
+			default:
+				return false;
+		}
+	}
+
+
+	bool ParseValueText( IManipulator *pManipulator, const std::string &rszName, const std::string &rszText, CVariant *pValue )
+	{
+		if ( pManipulator == 0 || pValue == 0 )
+		{
+			return false;
+		}
+		const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( rszName ) );
+		if ( pDesc == 0 )
+		{
+			return false;
+		}
+		return GetPCItemValue( pValue, rszText, CVariant(), typePCIEMnemonics.Get( pDesc, rszName ), pDesc );
+	}
+
+
+	// CPCMainTreeControl::UpdateValueFromPCItemEditor, and its AddChangeOperation
+	// with the vec3_color case.
+	bool CommitValue( CDefaultView *pView, const std::string &rszName, const CVariant &rNewValue )
+	{
+		IManipulator *const pManipulator = ( pView != 0 ) ? pView->GetViewManipulator() : 0;
+		if ( pManipulator == 0 )
+		{
+			return false;
+		}
+		CVariant oldValue;
+		if ( !GetValue( pManipulator, rszName, &oldValue ) || ( oldValue == rNewValue ) )
+		{
+			return false;
+		}
+		bool bResult = true;
+		pManipulator->CheckValue( rszName, rNewValue, &bResult );
+		if ( !bResult )
+		{
+			return false;
+		}
+		const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( rszName ) );
+		if ( pDesc == 0 )
+		{
+			return false;
+		}
+		CPtr<CObjectBaseController> pController = pView->CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
+		const bool bAdded = ( typePCIEMnemonics.Get( pDesc, rszName ) == PCIE_VEC3_COLOR )
+												? CPCVec3ColorEditor::AddChangeOperation( rszName, (int)rNewValue, pController, pManipulator )
+												: pController->AddChangeOperation( rszName, rNewValue, pManipulator );
+		if ( !bAdded )
+		{
+			return false;
+		}
+		pController->Redo( false, true, 0 );
+		Singleton<IControllerContainer>()->Add( pController );
+		return true;
 	}
 
 

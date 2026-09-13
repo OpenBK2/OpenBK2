@@ -1,12 +1,13 @@
 #pragma once
 
+#include "MapEditorLib/Interface_PCItemEditor.h"
 #include "MapEditorLib/Interface_Widget.h"
 #include "Misc/Geom.h"
 
 #include <string>
+#include <vector>
 
-struct IManipulator;
-class CVariant;
+class CDefaultView;
 
 // Selection Properties -- the property grid in its docking pane -- behind a
 // boundary that names no toolkit.
@@ -73,4 +74,22 @@ namespace NPropertyPane
 
 	// Read-only when the property, or any property above it, is marked so.
 	bool IsReadOnly( IManipulator *pManipulator, const std::string &rszName );
+
+	// The values a combo row offers, as its MFC editor lists them: the int and
+	// float combos' "values:" ranges, a string combo's descriptor values, the
+	// objects a combo ref may point at after "null", and true and false. False
+	// for a type that is not a list, and for a list the MFC editor would have
+	// refused to open.
+	bool GetChoices( const SPropertyDesc *pDesc, EPCIEType nType, std::vector<std::string> *pChoices );
+
+	// Text as typed or chosen, turned into a value by the type's rules. False
+	// when it does not parse, in which case the row goes back to what is stored.
+	bool ParseValueText( IManipulator *pManipulator, const std::string &rszName, const std::string &rszText, CVariant *pValue );
+
+	// Writes a value through the undo list, as CPCMainTreeControl's
+	// UpdateValueFromPCItemEditor does: nothing when it equals what is stored
+	// or the manipulator refuses it, otherwise a change controller, redone into
+	// every view on the object and added to the controller container. True when
+	// something was written.
+	bool CommitValue( CDefaultView *pView, const std::string &rszName, const CVariant &rNewValue );
 }
