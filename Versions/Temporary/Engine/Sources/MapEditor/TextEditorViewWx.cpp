@@ -4,10 +4,10 @@
 
 #ifdef OBK2_WITH_WX
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/SimulatedKey.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/button.h>
@@ -68,40 +68,6 @@ namespace
 		}
 		return text;
 	}
-
-
-	// Size and position through the file the MFC dialog uses. Both editors are
-	// resizable, so both are kept, as CResizeDialog keeps them -- saved from OK
-	// and from Cancel alike.
-	class CRememberedPlacement
-	{
-		std::string szName;
-		SDialogState state;
-		bool bPlaced = false;
-
-	public:
-		explicit CRememberedPlacement( const std::string &rszName ) : szName( rszName ) {}
-
-		void Restore( wxDialog *pDialog )
-		{
-			NDialogState::Load( szName, &state );
-			if ( state.rect.Width() > 0 && state.rect.Height() > 0 )
-			{
-				pDialog->SetSize( state.rect.left, state.rect.top, state.rect.Width(), state.rect.Height() );
-				bPlaced = true;
-			}
-		}
-
-		bool WasPlaced() const { return bPlaced; }
-
-		void Save( const wxDialog *pDialog )
-		{
-			const wxRect placement = pDialog->GetRect();
-			state.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																placement.GetRight() + 1, placement.GetBottom() + 1 );
-			NDialogState::Save( szName, &state );
-		}
-	};
 
 
 	// What Find and Replace ask the editor for -- CFindNext's three calls.
@@ -255,7 +221,7 @@ namespace
 	// "Script Editor", IDD_SCRIPT_EDITOR: CScriptEditor and the CLuaEditor in it.
 	class CScriptEditorWxDialog : public CWxToolDialog, private IFindTarget
 	{
-		CRememberedPlacement placement { "CScriptEditor" };
+		NWxPlacement::CSizedPlacement placement { "CScriptEditor" };
 		wxStyledTextCtrl *pEditor = nullptr;
 		wxTextCtrl *pErrors = nullptr;
 		NTextEditor::SLuaKeywords keywords;
@@ -664,7 +630,7 @@ namespace
 	// CScintillaEditorWindow in it.
 	class CTextEditorWxDialog : public CWxToolDialog
 	{
-		CRememberedPlacement placement;
+		NWxPlacement::CSizedPlacement placement;
 		wxStyledTextCtrl *pEditor = nullptr;
 
 	public:

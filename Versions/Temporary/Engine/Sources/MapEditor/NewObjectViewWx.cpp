@@ -4,10 +4,10 @@
 
 #ifdef OBK2_WITH_WX
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/WxModal.h"
 #include "Misc/StrProc.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/checkbox.h>
@@ -46,8 +46,8 @@ namespace
 
 	class CNewObjectWxDialog : public CWxToolDialog
 	{
-		SDialogState dialogState;
-		bool bPlaced = false;
+		// Size, position and the Add Type button, in CNewObjectDialog's file.
+		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 
 		wxChoice *pTypes = nullptr;
 		wxToggleButton *pAddType = nullptr;
@@ -137,13 +137,7 @@ namespace
 			// CNewObjectDialog::OnInitDialog, in its order: the remembered Add
 			// Type state, then the postfix that follows from it, then the list,
 			// then the OK button and the title.
-			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
-			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
-			{
-				SetSize( dialogState.rect.left, dialogState.rect.top,
-								 dialogState.rect.Width(), dialogState.rect.Height() );
-				bPlaced = true;
-			}
+			placement.Restore( this );
 			pAddType->SetValue( IsAddingType() );
 			pAddType->Enable( bEnableType );
 			pExport->SetValue( pBuildDataParams->bNeedExport );
@@ -158,22 +152,19 @@ namespace
 			pAddType->Bind( wxEVT_TOGGLEBUTTON, &CNewObjectWxDialog::OnAddTypeChanged, this );
 		}
 
-		bool WasPlaced() const { return bPlaced; }
+		bool WasPlaced() const { return placement.WasPlaced(); }
 
 		// The size, the position and the Add Type button, as CResizeDialog saves
 		// them from its OnOK and OnCancel -- so on either button, not just OK.
 		void SaveState()
 		{
-			const wxRect placement = GetRect();
-			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																			placement.GetRight() + 1, placement.GetBottom() + 1 );
-			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+			placement.Save( this );
 		}
 
 	private:
 		bool IsAddingType() const
 		{
-			return ( dialogState.GetIntParameter( N_ADD_TYPE_PARAMETER ) > 0 ) && bEnableType;
+			return ( placement.State().GetIntParameter( N_ADD_TYPE_PARAMETER ) > 0 ) && bEnableType;
 		}
 
 		void ApplyPostfixAndShowName()
@@ -247,7 +238,7 @@ namespace
 
 		void OnAddTypeChanged( wxCommandEvent & )
 		{
-			dialogState.SetIntParameter( N_ADD_TYPE_PARAMETER, pAddType->GetValue() ? 1 : 0 );
+			placement.State().SetIntParameter( N_ADD_TYPE_PARAMETER, pAddType->GetValue() ? 1 : 0 );
 			ApplyPostfixAndShowName();
 			UpdateOkButton();
 		}

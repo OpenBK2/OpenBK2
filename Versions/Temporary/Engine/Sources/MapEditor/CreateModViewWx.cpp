@@ -4,9 +4,9 @@
 
 #ifdef OBK2_WITH_WX
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/sizer.h>
@@ -15,7 +15,7 @@
 
 // Create MOD, in wx. Nothing new in it, which is the point: the fifth dialog
 // and the first assembled entirely out of pieces that were already here --
-// CWxToolDialog for the frame, NWxModal for the modality, SDialogState for the
+// CWxToolDialog for the frame, NWxModal for the modality, NWxPlacement for the
 // remembered size and position, and the anchor-to-sizer mapping for the layout.
 //
 // The two rules about what makes a creatable MOD are not duplicated here.
@@ -34,10 +34,9 @@ namespace
 
 	class CCreateModWxDialog : public CWxToolDialog
 	{
-		SDialogState dialogState;
-		// Whether the placement in that state was used. A dialog opening for
-		// the first time has none, and is centred over the frame instead.
-		bool bPlaced = false;
+		// Size and position in CCreateMODDialog's file. A dialog opening for the
+		// first time has none, and is centred over the frame instead.
+		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 
 		wxTextCtrl *pFolder = nullptr;
 		wxTextCtrl *pName = nullptr;
@@ -97,20 +96,14 @@ namespace
 
 			// Only the size and position: this dialog stores no parameters, and
 			// the fields start empty because a MOD name is not worth remembering.
-			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
-			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
-			{
-				SetSize( dialogState.rect.left, dialogState.rect.top,
-								 dialogState.rect.Width(), dialogState.rect.Height() );
-				bPlaced = true;
-			}
+			placement.Restore( this );
 			UpdateControls();
 		}
 
 		// Whether it opened where it was left last time.
 		bool WasPlaced() const
 		{
-			return bPlaced;
+			return placement.WasPlaced();
 		}
 
 
@@ -118,14 +111,7 @@ namespace
 		// where the dialog ended up is worth keeping even after Cancel.
 		void SaveState()
 		{
-			// left+width, not GetRight(): wx's GetRight() is the last pixel inside
-			// the rectangle and MFC's right is one past it, so GetRight() would
-			// shrink the dialog by a pixel each time it was opened and closed.
-			const wxRect placement = GetRect();
-			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																			placement.GetLeft() + placement.GetWidth(),
-																			placement.GetTop() + placement.GetHeight() );
-			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+			placement.Save( this );
 		}
 
 		void ReadMod( NCreateMod::SNewMod *pMod ) const

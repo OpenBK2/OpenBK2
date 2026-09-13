@@ -4,11 +4,11 @@
 
 #ifdef OBK2_WITH_WX
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/checklst.h>
@@ -47,10 +47,9 @@ namespace
 	class CSelectTablesWxDialog : public CWxToolDialog
 	{
 		wxCheckListBox *pTablesList = nullptr;
-		SDialogState dialogState;
-		// Whether the placement in that state was used. A dialog opening for
+		// Size and position in CSelectTablesDialog's file. A dialog opening for
 		// the first time has none, and is centred over the frame instead.
-		bool bPlaced = false;
+		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 
 	public:
 		CSelectTablesWxDialog( wxWindow *pParent,
@@ -88,32 +87,21 @@ namespace
 			// Where it was left last time. CSelectTablesDialog is a CResizeDialog
 			// with a state file of its own, so it has always reopened where it was
 			// put; this dialog did not, until it was measured against that one.
-			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
-			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
-			{
-				SetSize( dialogState.rect.left, dialogState.rect.top,
-								 dialogState.rect.Width(), dialogState.rect.Height() );
-				bPlaced = true;
-			}
+			placement.Restore( this );
 		}
 
 		// Whether it opened where it was left last time.
 		bool WasPlaced() const
 		{
-			return bPlaced;
+			return placement.WasPlaced();
 		}
 
 
 		// On the way out whichever button was used, as CResizeDialog's OnDestroy
-		// does. left+width rather than GetRight(), which is the last pixel
-		// inside the rectangle where MFC's right is one past it.
+		// does.
 		void SaveState()
 		{
-			const wxRect placement = GetRect();
-			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																	placement.GetLeft() + placement.GetWidth(),
-																	placement.GetTop() + placement.GetHeight() );
-			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+			placement.Save( this );
 		}
 
 

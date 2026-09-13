@@ -4,10 +4,10 @@
 
 #ifdef OBK2_WITH_WX
 
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/choice.h>
@@ -45,10 +45,9 @@ namespace
 	class COpenModWxDialog : public CWxToolDialog
 	{
 		const std::vector<NMOD::SMOD> &rModList;
-		SDialogState dialogState;
-		// Whether the placement in that state was used. A dialog opening for
-		// the first time has none, and is centred over the frame instead.
-		bool bPlaced = false;
+		// Size, position and the chosen MOD, in COpenMODDialog's file. A dialog
+		// opening for the first time has none, and is centred over the frame.
+		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 		// The path of the MOD already attached, if any. Choosing it again is what
 		// the MFC version disables OK for, and that rule is kept.
 		NFile::CFilePath szAttachedPath;
@@ -122,8 +121,7 @@ namespace
 			// What the dialog remembered last time: the chosen MOD in parameter 0,
 			// and its own size and position. Both come from the file CResizeDialog
 			// wrote, which is the point of sharing the format.
-			NDialogState::Load( PSZ_STATE_NAME, &dialogState );
-			const int nRemembered = dialogState.GetIntParameter( 0, -1 );
+			const int nRemembered = placement.State().GetIntParameter( 0, -1 );
 			if ( nRemembered >= 0 && nRemembered < (int)rModList.size() )
 			{
 				// Find the sorted position carrying that modList index, which is
@@ -137,19 +135,14 @@ namespace
 					}
 				}
 			}
-			if ( dialogState.rect.Width() > 0 && dialogState.rect.Height() > 0 )
-			{
-				SetSize( dialogState.rect.left, dialogState.rect.top,
-								 dialogState.rect.Width(), dialogState.rect.Height() );
-				bPlaced = true;
-			}
+			placement.Restore( this );
 			UpdateControls();
 		}
 
 		// Whether it opened where it was left last time.
 		bool WasPlaced() const
 		{
-			return bPlaced;
+			return placement.WasPlaced();
 		}
 
 
@@ -158,16 +151,8 @@ namespace
 		// is how CResizeDialog behaved too.
 		void SaveState()
 		{
-			// left+width, not GetRight(): wx's GetRight() is the last pixel inside
-			// the rectangle and MFC's right is one past it. Writing GetRight() puts
-			// a 500x400 dialog back as 499x399, and it shrinks by a pixel in each
-			// direction every time it is opened and closed.
-			const wxRect placement = GetRect();
-			dialogState.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																			placement.GetLeft() + placement.GetWidth(),
-																			placement.GetTop() + placement.GetHeight() );
-			dialogState.SetIntParameter( 0, GetSelectedIndex() );
-			NDialogState::Save( PSZ_STATE_NAME, &dialogState );
+			placement.State().SetIntParameter( 0, GetSelectedIndex() );
+			placement.Save( this );
 		}
 
 		// The modList index, not the position on screen. They differ because the

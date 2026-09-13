@@ -5,10 +5,10 @@
 #ifdef OBK2_WITH_WX
 
 #include "libdb/ResourceManager.h"
-#include "MapEditorLib/DialogState.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
 
 #include <wx/button.h>
@@ -35,46 +35,11 @@ namespace
 	const char *const PSZ_LIST_STATE_NAME = "CRefListDialog";
 
 
-	// Size and position through the file the MFC dialog uses. Both of these are
-	// resizable, so unlike WxPlacement.h's position-only case the size is taken
-	// as well -- the same thing CreateModViewWx does.
-	class CRememberedPlacement
-	{
-		const char *pszName;
-		SDialogState state;
-		bool bPlaced = false;
-
-	public:
-		explicit CRememberedPlacement( const char *_pszName ) : pszName( _pszName ) {}
-
-		void Restore( wxDialog *pDialog )
-		{
-			NDialogState::Load( pszName, &state );
-			if ( state.rect.Width() > 0 && state.rect.Height() > 0 )
-			{
-				pDialog->SetSize( state.rect.left, state.rect.top,
-													state.rect.Width(), state.rect.Height() );
-				bPlaced = true;
-			}
-		}
-
-		bool WasPlaced() const { return bPlaced; }
-
-		void Save( const wxDialog *pDialog )
-		{
-			const wxRect placement = pDialog->GetRect();
-			state.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
-																placement.GetRight() + 1, placement.GetBottom() + 1 );
-			NDialogState::Save( pszName, &state );
-		}
-	};
-
-
 	// "Requesting info from XDBWatcher", IDD_REF_LIST_WAIT: a line of text and
 	// one button, while the scan runs.
 	class CRefListWaitWxDialog : public CWxToolDialog
 	{
-		CRememberedPlacement placement { PSZ_WAIT_STATE_NAME };
+		NWxPlacement::CSizedPlacement placement { PSZ_WAIT_STATE_NAME };
 		wxTimer timer;
 
 		std::string szTargetTypeName;
@@ -146,7 +111,7 @@ namespace
 	// fields of whichever one is picked, and the two buttons that empty them.
 	class CRefListWxDialog : public CWxToolDialog
 	{
-		CRememberedPlacement placement { PSZ_LIST_STATE_NAME };
+		NWxPlacement::CSizedPlacement placement { PSZ_LIST_STATE_NAME };
 
 		wxListCtrl *pObjects = nullptr;
 		wxTextCtrl *pFields = nullptr;

@@ -18,9 +18,8 @@
 // left as it was, and a dialog that has never been opened is centred over the
 // frame instead (NWxModal::CentreOver).
 //
-// A resizable dialog is a different case and does not use this: it restores
-// the size as well, and CreateModViewWx, OpenModViewWx and SelectTablesViewWx
-// each do that themselves.
+// A resizable dialog is a different case: it restores the size as well, which
+// is CSizedPlacement below.
 //
 // Check which shape an MFC dialog has before porting it, and check for the
 // macro as well as the base class:
@@ -116,6 +115,19 @@ namespace NWxPlacement
 		bool WasPlaced() const
 		{
 			return bPlaced;
+		}
+
+		// The rest of the file, for a dialog that keeps parameters of its own in
+		// it -- New Object's checkbox, Open MOD's last choice. Loaded when this
+		// is constructed, and written with the placement by Save.
+		SDialogState& State()
+		{
+			return state;
+		}
+
+		const SDialogState& State() const
+		{
+			return state;
 		}
 
 		// On the way out, whichever button was used. left + width rather than
