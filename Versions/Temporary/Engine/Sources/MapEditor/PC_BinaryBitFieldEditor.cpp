@@ -4,7 +4,9 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 
 #include "PC_BinaryBitFieldEditor.h"
-#include "BinaryBitFieldDialog.h"
+#include "BitFieldView.h"
+
+#include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/Interface_UserData.h"
 
@@ -108,8 +110,13 @@ void CPCBinaryBitFieldEditor::OnBrowse()
 {
 	CVariant value;
 	GetValue( &value );
-	CBinaryBitFieldDialog binaryBitFieldDialog( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam, static_cast<const uint8_t*>( value.GetPtr() ), GetPropertyDesc()->nSize, GetTargetWindow() );
-	if ( ( binaryBitFieldDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
+	// OK writes the flags into the variant's buffer, which is this editor's own
+	// copy of the value; SetWindowText below is what hands them on.
+	CWndWidget ownerWidget( GetTargetWindow() );
+	if ( NBitField::Run( &ownerWidget,
+											 Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam,
+											 const_cast<uint8_t*>( static_cast<const uint8_t*>( value.GetPtr() ) ), GetPropertyDesc()->nSize ) &&
+			 ( ( GetStyle() & ES_READONLY ) == 0 ) )
 	{
 		std::string szValue;
 		GetPCItemStringValue( &szValue, value, GetPropertyDesc() );

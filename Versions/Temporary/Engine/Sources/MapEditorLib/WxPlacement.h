@@ -84,6 +84,55 @@ namespace NWxPlacement
 			NDialogState::Save( pszName, &state );
 		}
 	};
+
+
+	// The resizable case: size and position both, restored and saved as
+	// CResizeDialog does for a THICKFRAME template. Same file, same format.
+	class CSizedPlacement
+	{
+		std::string szName;
+		SDialogState state;
+		bool bPlaced = false;
+
+	public:
+		explicit CSizedPlacement( const std::string &rszStateName ) : szName( rszStateName )
+		{
+			NDialogState::Load( szName, &state );
+		}
+
+		// Sizes and moves the dialog to where it was left; false if nothing was
+		// saved yet, in which case the caller centres it.
+		bool Restore( wxDialog *pDialog )
+		{
+			if ( pDialog == 0 || state.rect.Width() <= 0 || state.rect.Height() <= 0 )
+			{
+				return false;
+			}
+			pDialog->SetSize( state.rect.left, state.rect.top, state.rect.Width(), state.rect.Height() );
+			bPlaced = true;
+			return true;
+		}
+
+		bool WasPlaced() const
+		{
+			return bPlaced;
+		}
+
+		// On the way out, whichever button was used. left + width rather than
+		// GetRight(), which is the last pixel inside where MFC's right is one past.
+		void Save( const wxDialog *pDialog )
+		{
+			if ( pDialog == 0 )
+			{
+				return;
+			}
+			const wxRect placement = pDialog->GetRect();
+			state.rect = CTRect<int>( placement.GetLeft(), placement.GetTop(),
+																placement.GetLeft() + placement.GetWidth(),
+																placement.GetTop() + placement.GetHeight() );
+			NDialogState::Save( szName, &state );
+		}
+	};
 }
 
 #endif // OBK2_WITH_WX

@@ -103,6 +103,8 @@ MIGRATED = {
     "CRefListWaitDialog": "MapEditor/RefListViewWx.cpp (NRefList::RunScan)",
     "CScriptEditor": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
     "CTextEditorDialog": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunText)",
+    "CBinaryBitFieldDialog": "MapEditor/BitFieldViewWx.cpp (NBitField::Run)",
+    "CMDDLDialog": "MapEditor/MenuDropDownViewWx.cpp (NMenuDropDown::Create)",
     # Owned by the script editor, and reached only through it.
     "CFindTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
     "CReplaceTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",

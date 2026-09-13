@@ -6,10 +6,11 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Progress.h"
 #include "ControllerContainer.h"
+#include "MenuDropDownView.h"
 
 #include <cstdint>
 
-CControllerContainer::CControllerContainer()
+CControllerContainer::CControllerContainer() : pMenuDropDown( 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_CONTROLLER_CONTAINER, this );
 }
@@ -18,6 +19,8 @@ CControllerContainer::CControllerContainer()
 CControllerContainer::~CControllerContainer()
 {
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_CONTROLLER_CONTAINER );
+	delete pMenuDropDown;
+	pMenuDropDown = 0;
 }
 
 
@@ -127,51 +130,36 @@ bool CControllerContainer::Redo( int nCount )
 
 bool CControllerContainer::UndoArrow()
 {
-	CWnd *pMainFrame = MainFrameWnd();
-	CPoint mouseCursorPos;
-	GetCursorPos( &mouseCursorPos );
-
-	CTPoint<int> leftBottomPos;
-	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( CTPoint<int>( mouseCursorPos.x, mouseCursorPos.y ), ID_CC_UNDO, &leftBottomPos ) )
-	{
-		CDescriptionList undoDescriptionList;
-		GetDescriptionList( &undoDescriptionList, true );
-		//
-		if ( !::IsWindow( wndMDDLDialog.m_hWnd ) )
-		{
-			wndMDDLDialog.Create( CMDDLDialog::IDD, pMainFrame );
-		}
-		CRect dialogRect;
-		wndMDDLDialog.SetParams( ID_CC_UNDO, undoDescriptionList );
-		wndMDDLDialog.GetWindowRect( &dialogRect );
-		wndMDDLDialog.MoveWindow( leftBottomPos.x, leftBottomPos.y, dialogRect.Width(), dialogRect.Height(), true );
-		wndMDDLDialog.ShowWindow( SW_SHOW );
-	}
-	return true;
+	return ShowOperationList( true );
 }
 
 
 bool CControllerContainer::RedoArrow()
 {
-	CWnd *pMainFrame = MainFrameWnd();
+	return ShowOperationList( false );
+}
+
+
+bool CControllerContainer::ShowOperationList( bool bUndo )
+{
 	CPoint mouseCursorPos;
 	GetCursorPos( &mouseCursorPos );
 
+	const unsigned nButtonID = bUndo ? ID_CC_UNDO : ID_CC_REDO;
 	CTPoint<int> leftBottomPos;
-	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( CTPoint<int>( mouseCursorPos.x, mouseCursorPos.y ), ID_CC_REDO, &leftBottomPos ) )
+	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( CTPoint<int>( mouseCursorPos.x, mouseCursorPos.y ), nButtonID, &leftBottomPos ) )
 	{
-		CDescriptionList redoDescriptionList;
-		GetDescriptionList( &redoDescriptionList, false );
-
-		if ( !::IsWindow( wndMDDLDialog.m_hWnd ) )
+		CDescriptionList descriptionList;
+		GetDescriptionList( &descriptionList, bUndo );
+		if ( pMenuDropDown == 0 )
 		{
-			wndMDDLDialog.Create( CMDDLDialog::IDD, pMainFrame );
+			// The frame's own widget, which outlives this container's use of it.
+			pMenuDropDown = NMenuDropDown::Create( Singleton<IMainFrameContainer>()->GetMainWindow() );
 		}
-		CRect dialogRect;
-		wndMDDLDialog.SetParams( ID_CC_REDO, redoDescriptionList );
-		wndMDDLDialog.GetWindowRect( &dialogRect );
-		wndMDDLDialog.MoveWindow( leftBottomPos.x, leftBottomPos.y, dialogRect.Width(), dialogRect.Height(), true );
-		wndMDDLDialog.ShowWindow( SW_SHOW );
+		if ( pMenuDropDown != 0 )
+		{
+			pMenuDropDown->Show( leftBottomPos.x, leftBottomPos.y, nButtonID, descriptionList );
+		}
 	}
 	return true;
 }

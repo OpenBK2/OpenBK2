@@ -1,13 +1,9 @@
 #include "stdafx.h"
-#include <fmt/format.h>
 #include "BinaryBitFieldDialog.h"
-#include "BinaryBitFieldDialog.h"
-#include "System/VFSOperations.h"
-#include "System/XmlSaver.h"
 
 #include <cstdint>
 
-CBinaryBitFieldDialog::CBinaryBitFieldDialog( const std::string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent )
+CBinaryBitFieldDialog::CBinaryBitFieldDialog( const std::string &_szFileName, uint8_t *_pData, const int _nSize, CWnd *pwndParent )
 	: CResizeDialog( CBinaryBitFieldDialog::IDD, pwndParent ),
 		bCreateControls( true ),
 		szFileName( _szFileName ),
@@ -36,64 +32,24 @@ BEGIN_MESSAGE_MAP(CBinaryBitFieldDialog, CResizeDialog)
 END_MESSAGE_MAP()
 
 
-struct SBinaryBitField
-{
-	std::string szName;
-	int nValue;
-
-	SBinaryBitField() : szName( "" ), nValue( -1 ) {}
-	SBinaryBitField( const std::string &_szName, const int _nValue )	: szName( _szName ), nValue( _nValue ) {}
-	SBinaryBitField( const char *_szName, const int _nValue )	: nValue( _nValue )
-	{
-		szName.assign( _szName );
-	}
-
-	int operator&( IXmlSaver &saver )
-	{
-		saver.Add( "Name", &szName );
-		saver.Add( "Value", &nValue );
-
-		return 0;
-	}
-};
-
-BOOL CBinaryBitFieldDialog::OnInitDialog() 
+BOOL CBinaryBitFieldDialog::OnInitDialog()
 {
 	bCreateControls = true;
 
 	CResizeDialog::OnInitDialog();
 
-	std::vector<SBinaryBitField> fields;
-	CFileStream stream( NVFS::GetMainVFS(), szFileName.c_str() );
-	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
-	if ( pXS == 0 ) 
+	if ( !NBitField::LoadFields( szFileName, &fields ) )
 	{
-		NI_ASSERT( pXS != 0, fmt::format("Can't open stream \"{}\" to read bit fields", szFileName.c_str()) );
+		bCreateControls = false;
 		return FALSE;
 	}
-	pXS->Add( "Fields", &fields );
-
-	for ( int i = 0; i < fields.size(); ++i )
+	// IDC_CT_FIELDS is not LBS_SORT, so list index and field index stay the same.
+	for ( size_t nField = 0; nField < fields.size(); ++nField )
 	{
-		name2value[fields[i].szName] = fields[i].nValue;
-		value2name[fields[i].nValue] = fields[i].szName;
-		wndTablesList.AddString( fields[i].szName.c_str() );
-	}
-
-	for ( int nByteIndex = 0; nByteIndex < nSize; ++nByteIndex )
-	{
-		uint8_t bMask = 1;
-		for ( int nBitIndex = 0; nBitIndex < 8; ++nBitIndex )
+		const int nIndex = wndTablesList.AddString( fields[nField].szName.c_str() );
+		if ( nIndex != LB_ERR && NBitField::IsSet( pData, nSize, fields[nField].nValue ) )
 		{
-			if ( pData[nByteIndex] & bMask )
-			{
-				const int index = wndTablesList.FindStringExact( 0, value2name[nByteIndex * 8 + nBitIndex].c_str() );
-				if ( index != LB_ERR )
-				{
-					wndTablesList.SetCheck( index, 1 );
-				}
-			}
-			bMask <<= 1;
+			wndTablesList.SetCheck( nIndex, 1 );
 		}
 	}
 	bCreateControls = false;
@@ -105,22 +61,11 @@ void CBinaryBitFieldDialog::OnOK()
 {
 	CResizeDialog::OnOK();
 
-	uint8_t *pNewData = const_cast<uint8_t *>( pData );
-	memset( pNewData, 0, nSize );
-	CString strString;
-	for ( int nStringIndex = 0; nStringIndex < wndTablesList.GetCount(); ++nStringIndex )
+	// EndDialog has not destroyed the list yet, so its checks can still be read.
+	std::vector<bool> checked( fields.size(), false );
+	for ( int nIndex = 0; nIndex < wndTablesList.GetCount() && nIndex < static_cast<int>( fields.size() ); ++nIndex )
 	{
-		if ( wndTablesList.GetCheck( nStringIndex ) )
-		{
-			wndTablesList.GetText( nStringIndex, strString );
-			std::unordered_map<std::string, int>::const_iterator pos = name2value.find( std::string( strString ) );
-			if ( pos != name2value.end() ) 
-			{
-				const int nValue = pos->second;
-				const int nIndex = nValue / 8;
-				pNewData[nIndex] |= ( 1UL << ( nValue - nIndex * 8 ) );
-			}
-		}
+		checked[nIndex] = wndTablesList.GetCheck( nIndex ) != 0;
 	}
+	NBitField::Store( fields, checked, pData, nSize );
 }
-

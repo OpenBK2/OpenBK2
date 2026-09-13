@@ -4,6 +4,8 @@ set(SOURCES
     AboutViewMfc.cpp
     AboutViewWx.cpp
     BinaryBitFieldDialog.cpp
+    BitFieldViewMfc.cpp
+    BitFieldViewWx.cpp
     BuilderContainer.cpp
     ChildFrameContainer.cpp
     ComboBox_GDBBrowser.cpp
@@ -34,6 +36,8 @@ set(SOURCES
     MapEditorApp.cpp
     MapEditorSingleton.cpp
     MDDLDialog.cpp
+    MenuDropDownViewMfc.cpp
+    MenuDropDownViewWx.cpp
     MODContainer.cpp
     NewObjectDialog.cpp
     NewObjectViewMfc.cpp

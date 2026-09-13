@@ -46,6 +46,8 @@ struct ILogger
 struct IMainFrame : public ILogger
 {
 	// Наити координаты только что нажатой кнопки на toolbar
+	// The bottom-left corner of button nButtonID: the one under rMousePoint, or,
+	// when none with that id is under it, the one in the first visible toolbar.
 	virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 																							unsigned nButtonID,
 																							CTPoint<int> *pLeftBottomPos ) = 0;

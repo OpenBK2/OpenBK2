@@ -1107,41 +1107,54 @@ bool CMainFrame::GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint,
 																								unsigned nButtonID,
 																								CTPoint<int> *pLeftBottomPos )
 {
-	CControlBar* pControlBar;
-	POSITION pos = m_listControlBars.GetHeadPosition();
-	while( pos )
+	// Two passes. The first is what this has always done: the button with that
+	// id under the mouse, in the toolbar under the mouse. The second takes the
+	// button in the first visible toolbar that has it, for a caller whose mouse
+	// is not over it. The Undo and Redo arrows are such callers: the mouse is on
+	// the arrow, which is a button of its own next to Undo or Redo, and a probe
+	// on its own desktop has a cursor nobody moves at all. Where the first pass
+	// found nothing, the arrow's list used to not appear.
+	const CPoint point( rMousePoint.x, rMousePoint.y );
+	for ( int nPass = 0; nPass < 2; ++nPass )
 	{
-		pControlBar = static_cast<CControlBar*>( m_listControlBars.GetNext( pos ) );
-		if ( pControlBar->IsKindOf( RUNTIME_CLASS( SECCustomToolBar ) ) )
+		POSITION pos = m_listControlBars.GetHeadPosition();
+		while( pos )
 		{
+			CControlBar *pControlBar = static_cast<CControlBar*>( m_listControlBars.GetNext( pos ) );
+			if ( !pControlBar->IsKindOf( RUNTIME_CLASS( SECCustomToolBar ) ) )
+			{
+				continue;
+			}
 			CRect controlRect;
 			pControlBar->GetWindowRect( &controlRect );
-			CPoint point( rMousePoint.x, rMousePoint.y );
-			if ( controlRect.PtInRect( point ) )
+			const bool bCandidate = ( nPass == 0 ) ? ( controlRect.PtInRect( point ) != FALSE )
+																						 : ( pControlBar->IsWindowVisible() != FALSE );
+			if ( !bCandidate )
 			{
-				SECCustomToolBar *pSECCustomToolBar = dynamic_cast<SECCustomToolBar*>( pControlBar );
-				int nButtons = pSECCustomToolBar->GetBtnCount();
-				for ( int nIndex = 0; nIndex < nButtons; ++nIndex )
+				continue;
+			}
+			SECCustomToolBar *pSECCustomToolBar = dynamic_cast<SECCustomToolBar*>( pControlBar );
+			int nButtons = pSECCustomToolBar->GetBtnCount();
+			for ( int nIndex = 0; nIndex < nButtons; ++nIndex )
+			{
+				if ( pSECCustomToolBar->m_btns[nIndex]->m_nID == nButtonID )
 				{
-					if ( pSECCustomToolBar->m_btns[nIndex]->m_nID == nButtonID ) 
-					{
-						CRect itemRect;
-						pSECCustomToolBar->GetItemRect( nIndex, &itemRect );
+					CRect itemRect;
+					pSECCustomToolBar->GetItemRect( nIndex, &itemRect );
 
-						itemRect.left += controlRect.left;
-						itemRect.right += controlRect.left;
-						itemRect.top += controlRect.top;
-						itemRect.bottom += controlRect.top;
-						
-						if ( itemRect.PtInRect( point ) )
+					itemRect.left += controlRect.left;
+					itemRect.right += controlRect.left;
+					itemRect.top += controlRect.top;
+					itemRect.bottom += controlRect.top;
+
+					if ( nPass == 1 || itemRect.PtInRect( point ) )
+					{
+						if ( pLeftBottomPos )
 						{
-							if ( pLeftBottomPos )
-							{
-								pLeftBottomPos->x = itemRect.left;
-								pLeftBottomPos->y = itemRect.bottom;
-							}
-							return true;
+							pLeftBottomPos->x = itemRect.left;
+							pLeftBottomPos->y = itemRect.bottom;
 						}
+						return true;
 					}
 				}
 			}

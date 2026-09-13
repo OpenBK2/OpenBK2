@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MDDLDialog.h"
+#include "MenuDropDownView.h"
 #include "MapEditorLib/ShellFont.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
@@ -61,9 +62,10 @@ BOOL CMDDLDialog::OnInitDialog()
 void CMDDLDialog::OnSelChange()
 {
 	ShowWindow( SW_HIDE );
-	int nSelectedValue = wndValueList.GetCurSel();
-	nSelectedValue = wndValueList.GetItemData( nSelectedValue );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CONTROLLER_CONTAINER, nCommandID, nSelectedValue );
+	// The item data is the entry's depth. Nothing selected is LB_ERR, which
+	// Choose ignores, as Undo and Redo ignored the -1 this used to send.
+	const int nSelected = wndValueList.GetCurSel();
+	NMenuDropDown::Choose( nCommandID, ( nSelected == LB_ERR ) ? -1 : static_cast<int>( wndValueList.GetItemData( nSelected ) ) );
 }
 
 

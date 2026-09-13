@@ -1,21 +1,21 @@
 #pragma once
 
 #include "ResourceDefines.h"
+#include "BitFieldView.h"
 #include "MapEditorLib/ResizeDialog.h"
 #include <afxwin.h> //CCheckListBox
 
 #include <cstdint>
 
-typedef std::unordered_map< std::string, int > CIniValues;
-
+// The MFC half of NBitField. Which names are listed, which are checked and what
+// OK writes come from NBitField, which the wx dialog uses as well.
 class CBinaryBitFieldDialog : public CResizeDialog
 {
 	bool bCreateControls;
 	CCheckListBox wndTablesList;
 	std::string szFileName;
-	std::unordered_map< std::string, int > name2value;
-	std::unordered_map< int, std::string > value2name;
-	const uint8_t *pData;
+	std::vector<NBitField::SField> fields;
+	uint8_t *pData;
 	int nSize;
 
 protected:
@@ -32,10 +32,8 @@ protected:
 public:
 	enum { IDD = IDD_BIT_FIELD };
 
-	CBinaryBitFieldDialog( const std::string &_szFileName, const uint8_t *_pData, const int _nSize, CWnd *pwndParent  );
+	CBinaryBitFieldDialog( const std::string &_szFileName, uint8_t *_pData, const int _nSize, CWnd *pwndParent  );
 	~CBinaryBitFieldDialog();
 
 	DECLARE_MESSAGE_MAP()
 };
-
-
