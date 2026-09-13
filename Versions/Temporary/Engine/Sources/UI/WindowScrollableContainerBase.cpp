@@ -365,10 +365,14 @@ void CWindowScrollableContainerBase::UpdateScrollBar()
 
 void CWindowScrollableContainerBase::SliderPosition( const float fPosition, class CWindow *pWho )
 {
+	// Layout dimensions are integer UI pixels. Fractional offsets introduce
+	// rounding errors in nested window widths (255 can become 254.99998), which
+	// repeatedly rewrap description text while an outer container is scrolling.
+	const int nPosition = static_cast<int>( fPosition + 0.5f );
 	if ( IsHorisontal() )
-		pContainer->SetPlacement(  -fPosition, 0, 0, 0, EWPF_POS_X );
+		pContainer->SetPlacement( -nPosition, 0, 0, 0, EWPF_POS_X );
 	else
-		pContainer->SetPlacement(  0, -fPosition, 0, 0, EWPF_POS_Y );
+		pContainer->SetPlacement( 0, -nPosition, 0, 0, EWPF_POS_Y );
 }
 
 bool CWindowScrollableContainerBase::OnMouseMove( const CVec2 &vPos, const int nButton )

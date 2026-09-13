@@ -11,21 +11,14 @@
 #include "GetConsts.h"
 #include "System/Text.h"
 #include "SceneB2/Cursor.h"
+#include "UI/DBUserInterface.h"
+#include "3Dmotor/DBScene.h"
 
 #include "GameX_export.h"
 
 #include <fmt/format.h>
 
 static bool s_bCampaignAutostartMission = false;
-
-const int MAX_CAMPAIGN_COUNT = 3;
-const int CAMPAIGN_WINDOW_COUNT = 5;
-const int CAMPAIGN_WINDOW_1_1 = 0;//1;
-const int CAMPAIGN_WINDOW_2_1 = 0;//3;
-const int CAMPAIGN_WINDOW_2_2 = 1;//4;
-const int CAMPAIGN_WINDOW_3_1 = 0;
-const int CAMPAIGN_WINDOW_3_2 = 1;
-const int CAMPAIGN_WINDOW_3_3 = 2;
 
 const wchar_t* NO_DIFFICULTY_INFO = L"******";
 const int CAMPAIGN_DEFAULT_DIFFICULTY = 1;
@@ -95,54 +88,13 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 {
 	pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
 
-	campaignWnds.resize( CAMPAIGN_WINDOW_COUNT );
-	for ( int i = 0; i < campaignWnds.size(); ++i )
-	{
-		IWindow *pWnd = GetChildChecked<IWindow>( pMain, fmt::format( "CampaignPanel{}", i + 1 ), true );
-		if ( pWnd )
-			pWnd->ShowWindow( false );
-		campaignWnds[i] = pWnd;
-	}
-
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	if ( !pGameRoot )
 		return;
 
-	int nCampaignCount = (std::min<int>)( MAX_CAMPAIGN_COUNT, pGameRoot->campaigns.size() );
-	switch ( nCampaignCount )
-	{
-		case 1:
-		{
-			AddCampaignWindow( CAMPAIGN_WINDOW_1_1, 0 );
-			break;
-		}
-
-		case 2:
-		{
-			AddCampaignWindow( CAMPAIGN_WINDOW_2_1, 0 );
-			AddCampaignWindow( CAMPAIGN_WINDOW_2_2, 1 );
-			break;
-		}
-
-		case 3:
-		{
-			AddCampaignWindow( CAMPAIGN_WINDOW_3_1, 0 );
-			AddCampaignWindow( CAMPAIGN_WINDOW_3_2, 1 );
-			AddCampaignWindow( CAMPAIGN_WINDOW_3_3, 2 );
-			break;
-		}
-	}
-
-#ifndef _FINALRELEASE
-	// additional test campaigns
-	bool bAllowTestCampaigns = NGlobal::GetVar( "allow_test_campaigns", 0 ) != 0;
-	if ( bAllowTestCampaigns )
-		nCampaignCount = (std::min<int>)( 5, pGameRoot->campaigns.size() );
-	if ( nCampaignCount >= 4 )
-		AddCampaignWindow( 3, 3 );
-	if ( nCampaignCount >= 5 )
-		AddCampaignWindow( 4, 4 );
-#endif //_FINALRELEASE
+	// GameRoot determines the list size; the shipped panels are only templates.
+	const int nCampaignCount = pGameRoot->campaigns.size();
+	CreateCampaignWindows( nCampaignCount );
 
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	
@@ -195,6 +147,9 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 			campaign.pDescCont->Update();
 	}
 	
+	if ( nCampaignCount > 3 )
+		CreateCampaignList();
+
 	pPlayBtn = GetChildChecked<IButton>( pMain, "PlayBtn", true );
 	pPlayOutroBtn = GetChildChecked<IButton>( pMain, "PlayOutroBtn", true );
 
@@ -212,11 +167,150 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	nSelected = -1;
 	
 	SelectCampaign( 0, true );
+	if ( pPlayBtn )
+		pPlayBtn->Enable( nSelected >= 0 );
+	if ( pPlayOutroBtn && nSelected < 0 )
+		pPlayOutroBtn->ShowWindow( false );
+}
+
+void CInterfaceCampaignSelectionMenu::CreateCampaignWindows( int nCampaignCount )
+{
+	if ( !pMain )
+		return;
+
+	// Reuse the original panel placements for the standard three-campaign menu.
+	// Discover the available templates without treating their count as a limit.
+	campaignWnds.clear();
+	for ( int i = 1; ; ++i )
+	{
+		IWindow *pWnd = pMain->GetChild( fmt::format( "CampaignPanel{}", i ), true );
+		if ( !pWnd )
+			break;
+		pWnd->ShowWindow( false );
+		campaignWnds.push_back( pWnd );
+	}
+	NI_VERIFY( !campaignWnds.empty(), "Campaign menu: panel template is missing", return );
+
+	campaigns.reserve( nCampaignCount );
+	for ( int i = 0; i < nCampaignCount; ++i )
+	{
+		if ( i >= campaignWnds.size() )
+		{
+			// Copy the descriptor, so every added campaign gets independent controls.
+			const NDb::SWindowSimple *pTemplate =
+				checked_cast<const NDb::SWindowSimple*>( campaignWnds[0]->GetDesc() );
+			CPtr<NDb::SWindowSimple> pPanel = pTemplate->Duplicate();
+			pPanel->szName = fmt::format( "CampaignPanel{}", i + 1 );
+			IWindow *pWnd = AddWindowCopy( pMain, pPanel );
+			NI_VERIFY( pWnd, "Campaign menu: cannot create campaign panel", return );
+			campaignWnds.push_back( pWnd );
+		}
+		AddCampaignWindow( i, i );
+	}
+}
+
+void CInterfaceCampaignSelectionMenu::CreateCampaignList()
+{
+	if ( !pMain || campaigns.empty() || !campaigns[0].pDescCont )
+		return;
+
+	// Clone the existing menu widgets so this also works with packed retail UI.
+	// Keep descriptors in CPtr: dropping the last CObj clears a resource even
+	// while widgets still hold CDBPtr references, resetting the slider to vertical.
+	// These copies must remain intact until the widgets release their references.
+	const NDb::SWindowScrollableContainer *pTemplate =
+		checked_cast<const NDb::SWindowScrollableContainer*>( campaigns[0].pDescCont->GetDesc() );
+	CPtr<NDb::SWindowScrollableContainer> pListDesc = pTemplate->Duplicate();
+	CPtr<NDb::SWindowScrollableContainerShared> pListShared =
+		checked_cast_ptr<const NDb::SWindowScrollableContainerShared*>( pTemplate->pShared )->Duplicate();
+	CPtr<NDb::SWindowSimple> pBorder =
+		checked_cast_ptr<const NDb::SWindowSimple*>( pListShared->pBorder )->Duplicate();
+	CPtr<NDb::SWindowScrollBar> pBar = pListShared->pScrollBar->Duplicate();
+	CPtr<NDb::SWindowScrollBarShared> pBarShared =
+		checked_cast_ptr<const NDb::SWindowScrollBarShared*>( pBar->pShared )->Duplicate();
+	CPtr<NDb::SWindowSlider> pSlider = pBarShared->pSlider->Duplicate();
+
+	// Reuse the game's horizontal track and thumb rather than vertical arrow art.
+	CDBPtr<NDb::SWindowSliderShared> pHorizontal = NDb::Get<NDb::SWindowSliderShared>(
+		CDBID( "UI/Game/Menu/MPCreateCustomGame/CommonSlider_WindowSliderShared.xdb" ) );
+	NI_VERIFY( pHorizontal, "Campaign menu: horizontal slider template is missing", return );
+	CPtr<NDb::SWindowSliderShared> pSliderShared = pHorizontal->Duplicate();
+	pSliderShared->fMaxLeverSize = 0; // Size the thumb to the visible fraction of the row.
+
+	// The options thumb uses a fixed-size texture, which only paints 40 pixels
+	// even when the draggable thumb is wider. Tile its center and keep the end
+	// caps intact so the visible artwork fills the thumb at every resolution.
+	CPtr<NDb::SWindowMSButton> pLever = pSliderShared->pLever->Duplicate();
+	CPtr<NDb::SWindowMSButtonShared> pLeverShared =
+		checked_cast_ptr<const NDb::SWindowMSButtonShared*>( pLever->pShared )->Duplicate();
+	const NDb::SBackground *pLeverBackground = pLeverShared->visualStates[0].normal.pBackground;
+	CPtr<NDb::SBackgroundTiledTexture> pLeverTiles =
+		checked_cast_ptr<const NDb::SBackgroundTiledTexture*>( pSliderShared->pBackground )->Duplicate();
+	pLeverTiles->pTexture = pLeverBackground->pTexture;
+	pLeverTiles->nColor = pLeverBackground->nColor;
+	const float fWidth = pLeverTiles->pTexture->nWidth;
+	const float fHeight = pLeverTiles->pTexture->nHeight;
+	const float fCapWidth = (std::min)( 8.0f, fWidth / 3 );
+	pLeverTiles->rL.ptSize = CTPoint<float>( fCapWidth, fHeight );
+	pLeverTiles->rL.rcMaps = CTRect<float>( 0, 0, fCapWidth, fHeight );
+	pLeverTiles->rR.ptSize = CTPoint<float>( fCapWidth, fHeight );
+	pLeverTiles->rR.rcMaps = CTRect<float>( fWidth - fCapWidth, 0, fWidth, fHeight );
+	pLeverTiles->rF.ptSize = CTPoint<float>( fWidth - 2 * fCapWidth, fHeight );
+	pLeverTiles->rF.rcMaps = CTRect<float>( fCapWidth, 0, fWidth - fCapWidth, fHeight );
+	pLeverShared->visualStates[0].normal.pBackground = pLeverTiles;
+	pLever->pShared = pLeverShared;
+	pSliderShared->pLever = pLever;
+
+	pSlider->pShared = pSliderShared;
+	pSlider->nSpecialPositions = 0;
+	pSlider->placement.position = CVec2( 0, 0 );
+	pSlider->placement.size = CVec2( 0, 0 );
+	pSlider->placement.horAllign = NDb::EPA_MARGIN;
+	pSlider->placement.verAllign = NDb::EPA_MARGIN;
+	pSlider->placement.lowerMargin = CVec2( 0, 0 );
+	pSlider->placement.upperMargin = CVec2( 0, 0 );
+	pBarShared->pSlider = pSlider;
+	pBarShared->pButtonLower = 0;
+	pBarShared->pButtonGreater = 0;
+	pBar->pShared = pBarShared;
+	pBar->placement = pSlider->placement;
+	pBar->placement.verAllign = NDb::EPA_HIGH_END;
+	pBar->placement.size = CVec2( 0, 18 );
+
+	// Reserve the bottom 20 pixels for the scrollbar, outside the clipped panels.
+	pBorder->placement = pSlider->placement;
+	pBorder->placement.upperMargin = CVec2( 0, 20 );
+	pListShared->children.clear();
+	pListShared->pScrollBar = pBar;
+	pListShared->pBorder = pBorder;
+	pListShared->pSelection = 0;
+	pListShared->pPreSelection = 0;
+	pListShared->pNegativeSelection = 0;
+	pListShared->nInterval = 9;
+	pListDesc->pShared = pListShared;
+	pListDesc->szName = "CampaignList";
+	pListDesc->placement = pSlider->placement;
+	pListDesc->placement.verAllign = NDb::ERA_CENTER;
+	pListDesc->placement.lowerMargin = CVec2( 11, 0 );
+	pListDesc->placement.upperMargin = CVec2( 11, 0 );
+	int nPanelHeight = 0;
+	campaigns[0].pWnd->GetPlacement( 0, 0, 0, &nPanelHeight );
+	pListDesc->placement.size = CVec2( 0, nPanelHeight + 20 );
+
+	pCampaignList = dynamic_cast<IScrollableContainer*>( AddWindowCopy( pMain, pListDesc ) );
+	NI_VERIFY( pCampaignList, "Campaign menu: cannot create scroll container", return );
+	for ( SCampaign &campaign : campaigns )
+	{
+		if ( campaign.pWnd )
+			pCampaignList->PushBack( campaign.pWnd, false );
+	}
+	pCampaignList->Update();
 }
 
 void CInterfaceCampaignSelectionMenu::AddCampaignWindow( int nWndIndex, int nCampaignIndex )
 {
 	SCampaign campaign;
+	campaign.ePlay = PT_CAMPAIGN;
 	campaign.pWnd = campaignWnds[nWndIndex];
 	campaign.pBtn = GetChildChecked<IButton>( campaign.pWnd, "SelectCampaignBtn", true );
 	campaign.pPictureWnd = GetChildChecked<IWindow>( campaign.pWnd, "Flag", true );
@@ -308,6 +402,10 @@ bool CInterfaceCampaignSelectionMenu::OnBack()
 
 bool CInterfaceCampaignSelectionMenu::OnPlay()
 {
+	// An empty campaign list has no valid selection to launch.
+	if ( nSelected < 0 || nSelected >= campaigns.size() )
+		return true;
+
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
 	{
@@ -358,7 +456,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	for ( int i = campaigns.size() - 1; i >= 0; --i )
 	{
 		SCampaign &campaign = campaigns[i];
-		if ( !campaign.pBtn->IsEnabled() )
+		if ( !campaign.pBtn || !campaign.pBtn->IsEnabled() )
 			continue;
 		nIndex = i;
 		if ( nIndex == _nIndex )
@@ -415,6 +513,14 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 	}
 
 	nSelected = nIndex;
+	if ( pCampaignList )
+	{
+		// Reveal a clipped selection without moving panels that are already visible.
+		const CTRect<float> panelRect = campaigns[nSelected].pWnd->GetWindowRect();
+		const CTRect<float> listRect = pCampaignList->GetWindowRect();
+		if ( panelRect.left < listRect.left || panelRect.right > listRect.right )
+			pCampaignList->EnsureElementVisible( campaigns[nSelected].pWnd );
+	}
 	
 	ePlay = PT_CAMPAIGN;
 	for ( int i = 0; i < campaigns.size(); ++i )

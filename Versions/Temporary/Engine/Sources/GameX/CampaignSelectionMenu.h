@@ -48,7 +48,8 @@ private:
 	CPtr<IComboBox> pDifficulty;
 	CPtr<IButton> pPlayBtn;
 	CPtr<IButton> pPlayOutroBtn;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&campaignWnds); f.Add(4,&campaigns); f.Add(5,&nSelected); f.Add(7,&ePlay); f.Add(8,&pDifficulty); f.Add(9,&pPlayBtn); f.Add(10,&pPlayOutroBtn); return 0; }
+	CPtr<IScrollableContainer> pCampaignList;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(3,&campaignWnds); f.Add(4,&campaigns); f.Add(5,&nSelected); f.Add(7,&ePlay); f.Add(8,&pDifficulty); f.Add(9,&pPlayBtn); f.Add(10,&pPlayOutroBtn); f.Add(11,&pCampaignList); return 0; }
 private:
 	bool OnSelectCampaign( const std::string &szSender );
 	bool OnBack();
@@ -57,6 +58,8 @@ private:
 
 	void SelectCampaign( int nIndex, bool bFirstTime );
 	void MakeInterior();
+	void CreateCampaignWindows( int nCampaignCount );
+	void CreateCampaignList();
 	void AddCampaignWindow( int nWndIndex, int nCampaignIndex );
 	void AddDifficultyLevel( const NDb::SDifficultyLevel *pDifficultyLevel );
 public:
