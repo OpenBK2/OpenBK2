@@ -4,11 +4,6 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 
 #include "PC_BinaryBitFieldEditor.h"
-#include "BitFieldView.h"
-
-#include "MapEditorLib/MfcWidget.h"
-
-#include "MapEditorLib/Interface_UserData.h"
 
 #include <cstdint>
 
@@ -106,23 +101,10 @@ void CPCBinaryBitFieldEditor::GetValue( CVariant *pValue )
 	}
 }
 
+// The bit field dialog over the box's bytes, in NPropertyButton.
 void CPCBinaryBitFieldEditor::OnBrowse()
 {
-	CVariant value;
-	GetValue( &value );
-	// OK writes the flags into the variant's buffer, which is this editor's own
-	// copy of the value; SetWindowText below is what hands them on.
-	CWndWidget ownerWidget( GetTargetWindow() );
-	if ( NBitField::Run( &ownerWidget,
-											 Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetPropertyDesc()->szStringParam,
-											 const_cast<uint8_t*>( static_cast<const uint8_t*>( value.GetPtr() ) ), GetPropertyDesc()->nSize ) &&
-			 ( ( GetStyle() & ES_READONLY ) == 0 ) )
-	{
-		std::string szValue;
-		GetPCItemStringValue( &szValue, value, GetPropertyDesc() );
-		SetWindowText( szValue.c_str() );
-	}
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
+	PressButton( NPropertyButton::BUTTON_BROWSE );
 }
 
 

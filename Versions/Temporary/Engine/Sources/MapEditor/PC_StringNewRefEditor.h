@@ -16,8 +16,7 @@ private:
 	// CPCStringNewBrowseEditor
 	void OnNew();
 	void OnBrowse();
-	
-	void SetWindowTextByTypeAndName( const std::string &szObjectTypeName, const std::string &szObjectName );
+
 	//void GetUniqueName( const std::string &szObjectTypeName, std::string *pszObjectName );
 };
 

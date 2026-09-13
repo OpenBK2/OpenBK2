@@ -5,6 +5,7 @@
 #include "PC_Constants.h"
 
 #include "PC_StringMultibuttonEditor.h"
+#include "MapEditorLib/MfcWidget.h"
 
 #include <cstdint>
 
@@ -278,6 +279,34 @@ int CPCStringMultibuttonEditor::GetButtonWidth( CPCEditorButton *pButton )
 	pButton->ReleaseDC( pDC );
 	const int nWidth = textSize.cx + N_BUTTON_TEXT_MARGIN;
 	return ( nWidth > N_MIN_BUTTON_WIDTH ) ? nWidth : N_MIN_BUTTON_WIDTH;
+}
+
+
+bool CPCStringMultibuttonEditor::PressButton( NPropertyButton::EButton eButton )
+{
+	if ( GetPropertyDesc() == 0 )
+	{
+		return false;
+	}
+	CString strText;
+	GetWindowText( strText );
+	// The dialogs belong to the tree, as they did when each editor opened its
+	// own over GetTargetWindow().
+	CWndWidget ownerWidget( GetTargetWindow() );
+	NPropertyButton::SContext context;
+	context.szName = GetName();
+	context.nType = GetItemEditorType();
+	context.pDesc = GetPropertyDesc();
+	context.pObjectSet = &GetObjectSet();
+	context.pOwner = &ownerWidget;
+	context.bEditable = ( GetStyle() & ES_READONLY ) == 0;
+	std::string szNewText;
+	if ( !NPropertyButton::Press( eButton, context, std::string( strText.GetString() ), &szNewText ) )
+	{
+		return false;
+	}
+	SetWindowText( szNewText.c_str() );
+	return true;
 }
 
 

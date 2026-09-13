@@ -4,6 +4,7 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "PC_ItemEditor.h"
 #include "PC_EditorButton.h"
+#include "PropertyButtons.h"
 
 #include <cstdint>
 
@@ -30,6 +31,10 @@ protected:
 	bool GetCreateControls() { return bCreateControls; }
 	//
 	int GetButtonWidth( CPCEditorButton *pButton );
+	//
+	// Runs the button through NPropertyButton, the code the wx property grid
+	// runs too, starting from this box's text; true when the box took the answer.
+	bool PressButton( NPropertyButton::EButton eButton );
 
 public:
 

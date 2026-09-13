@@ -7,8 +7,6 @@
 
 class CPCStringDirRefEditor : public CPCStringBrowseEditor
 {
-	static const char FOLDER_PATH_LABEL[];
-
 	CPCStringDirRefEditor() {}
 	OBJECT_NOCOPY_METHODS( CPCStringDirRefEditor );
 

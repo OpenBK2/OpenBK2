@@ -1,0 +1,715 @@
+#include "stdafx.h"
+#include <fmt/format.h>
+#include <fmt/printf.h>
+#include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/CommandHandlerDefines.h"
+#include "ResourceDefines.h"
+#include "PC_Constants.h"
+#include "PC_DBLinkDialog.h"
+
+#include "PropertyButtons.h"
+#include "BitFieldView.h"
+#include "PC_BinaryBitFieldEditor.h"
+#include "PC_ItemEditor.h"
+#include "TextEditorView.h"
+
+#include "Image/ImageColor.h"
+#include "Misc/StrProc.h"
+#include "System/FileUtils.h"
+#include "System/Text.h"
+#include "libdb/ResourceManager.h"
+#include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_MainFrame.h"
+#include "MapEditorLib/Interface_MOD.h"
+#include "MapEditorLib/Interface_UserData.h"
+#include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/PCIEMnemonics.h"
+#include "MapEditorLib/StringManager.h"
+
+#include "port/unicode.h"
+
+#include <cstdlib>
+#include <cstring>
+
+// What the buttons beside a property's value do, moved here from the MFC item
+// editors' OnBrowse, OnNew and OnEdit with their behaviour kept; the MFC colour
+// picker; and the dispatcher. Where the editors differed only in how they read
+// or wrote their own edit box, that is now the caller's text in and text out.
+
+namespace
+{
+	// The same flag every migrated dialog follows, so a session runs either the
+	// MFC set or the wx set.
+	bool UseWx()
+	{
+		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
+		return ( pszUseWx != 0 ) && ( pszUseWx[0] != '0' ) && ( pszUseWx[0] != '\0' );
+	}
+
+
+	std::string LoadResourceString( UINT nID )
+	{
+		CString strText;
+		strText.LoadString( nID );
+		return std::string( strText.GetString() );
+	}
+
+
+	// Every editor ended its dialog with this, so the scene drops whatever input
+	// state the click on the button started.
+	void RemoveSceneInput()
+	{
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
+	}
+
+
+	// nIntParam, when it names one of the data folders.
+	SUserData::ENormalizePathType GetPathType( const SPropertyDesc *pDesc )
+	{
+		if ( ( pDesc->nIntParam > SUserData::NPT_UNKNOWN ) && ( pDesc->nIntParam < SUserData::NPT_COUNT ) )
+		{
+			return static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
+		}
+		return SUserData::NPT_UNKNOWN;
+	}
+
+
+	// The "editor:" parameter, lower case; empty when there is none.
+	std::string GetEditorParameter( const SPropertyDesc *pDesc )
+	{
+		std::string szValues = pDesc->szStringParam;
+		NStr::ToLowerASCII( &szValues );
+		std::string szEditor;
+		if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, "", &szEditor ) )
+		{
+			szEditor.clear();
+		}
+		return szEditor;
+	}
+
+
+	// A file reference's whole string parameter is its mask; the text files
+	// name theirs with "mask:". It is also the key the last folder is kept under.
+	std::string GetFileMask( EPCIEType nType, const SPropertyDesc *pDesc )
+	{
+		std::string szMask;
+		if ( nType == PCIE_STRING_FILE_REF )
+		{
+			szMask = pDesc->szStringParam;
+		}
+		else if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) )
+		{
+			szMask.clear();
+		}
+		if ( szMask.empty() )
+		{
+			szMask = "All Files (*.*)|*.*||";
+		}
+		return szMask;
+	}
+
+
+	// SetWindowTextByTypeAndName, of both reference editors: "Table:Object" for
+	// a reference that may point into several tables, the object alone otherwise.
+	std::string GetRefText( EPCIEType nType, const std::string &rszTableName, const std::string &rszObjectName )
+	{
+		if ( typePCIEMnemonics.IsMultiRef( nType ) )
+		{
+			if ( rszTableName.empty() && rszObjectName.empty() )
+			{
+				return std::string();
+			}
+			return fmt::format( "{}{:c}{}", rszTableName, TYPE_SEPARATOR_CHAR, rszObjectName );
+		}
+		return rszObjectName;
+	}
+
+
+	// CPCStringRefEditor::OnBrowse and CPCStringNewRefEditor::OnBrowse. They
+	// differed in one line, the first telling the dialog whether it may edit;
+	// neither box was ever read-only, so both asked for the same thing.
+	bool BrowseRef( const NPropertyButton::SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		if ( pDesc->refTypes.empty() )
+		{
+			return false;
+		}
+		std::string szValues = pDesc->szStringParam;
+		NStr::ToLowerASCII( &szValues );
+		//
+		const int	nWidth = CStringManager::GetIntValueFromString( szValues, PCSPL_WIDTH, 0, PCSP_DIVIDERS, 0 );
+		const int	nHeight = CStringManager::GetIntValueFromString( szValues, PCSPL_HEIGHT, 0, PCSP_DIVIDERS, 0 );
+		const bool bTextEditor = CStringManager::GetBoolValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, false );
+		const bool bMultiRef = typePCIEMnemonics.IsMultiRef( rContext.nType );
+		//
+		CPCDBLinkDialog pcDBLinkDialog( CPCDBLinkDialog::TYPE_LINK, bMultiRef, bTextEditor, nWidth, nHeight, ToCWnd( rContext.pOwner ) );
+		pcDBLinkDialog.SetSelectedTables( pDesc->refTypes );
+		//
+		std::string szTableName;
+		std::string szObjectName = rszText;
+		if ( bMultiRef )
+		{
+			CStringManager::GetTypeAndNameFromRefValue( &szTableName, &szObjectName, rszText, TYPE_SEPARATOR_CHAR, pDesc->refTypes.begin()->first );
+		}
+		else
+		{
+			szTableName = pDesc->refTypes.begin()->first;
+		}
+		//
+		// An empty box opens where the last pick for the same set of tables was.
+		SUserData::CRefPathMap &rRefPathMap = Singleton<IUserDataContainer>()->Get()->refPathMap;
+		std::string szRefKey;
+		CreateRefKey( &szRefKey, pDesc );
+		if ( szObjectName.empty() )
+		{
+			std::string szRefValue = rRefPathMap[szRefKey];
+			std::string szLocalTableName;
+			CStringManager::GetTypeAndNameFromRefValue( &szLocalTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
+			if ( !szLocalTableName.empty() )
+			{
+				szTableName = szLocalTableName;
+			}
+		}
+		//
+		pcDBLinkDialog.SetCurrentTable( szTableName );
+		pcDBLinkDialog.SetCurrentObject( szObjectName );
+		pcDBLinkDialog.EnableEdit( rContext.bEditable );
+		//
+		bool bResult = false;
+		if ( ( pcDBLinkDialog.DoModal() == IDOK ) && rContext.bEditable )
+		{
+			pcDBLinkDialog.GetCurrentTable( &szTableName );
+			pcDBLinkDialog.GetCurrentObject( &szObjectName );
+			//
+			std::string szRefValue;
+			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
+			rRefPathMap[szRefKey] = szRefValue;
+			//
+			if ( pcDBLinkDialog.IsEmpty() )
+			{
+				szTableName.clear();
+				szObjectName.clear();
+			}
+			( *pszNewText ) = GetRefText( rContext.nType, szTableName, szObjectName );
+			bResult = true;
+		}
+		RemoveSceneInput();
+		return bResult;
+	}
+
+
+	// CPCStringNewRefEditor::OnNew: a new object, of a type the reference may
+	// point at, named after the first object shown and the property, made by
+	// the builder -- which asks for the name and type -- and exported if it
+	// says so.
+	bool NewRef( const NPropertyButton::SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		// The editor took the first object without looking; an empty set is
+		// refused here instead.
+		if ( pDesc->refTypes.empty() || ( rContext.pObjectSet == 0 ) || rContext.pObjectSet->objectNameSet.empty() )
+		{
+			return false;
+		}
+		// The types the new object may have, the one the box names first.
+		std::string szDefaultObjectTypeName;
+		CStringManager::GetTypeAndNameFromRefValue( &szDefaultObjectTypeName, 0, rszText, TYPE_SEPARATOR_CHAR, pDesc->refTypes.begin()->first );
+		std::string szObjectTypeName;
+		for ( SPropertyDesc::CTypesMap::const_iterator itType = pDesc->refTypes.begin(); itType != pDesc->refTypes.end(); ++itType )
+		{
+			if ( szObjectTypeName.empty() )
+			{
+				szObjectTypeName = itType->first;
+			}
+			else
+			{
+				if ( itType->first == szDefaultObjectTypeName )
+				{
+					szObjectTypeName = std::string( fmt::format( "{}{:c}", itType->first, TYPE_SEPARATOR_CHAR ) ) + szObjectTypeName;
+				}
+				else
+				{
+					szObjectTypeName += fmt::format( "{:c}{}", TYPE_SEPARATOR_CHAR, itType->first );
+				}
+			}
+		}
+		//
+		std::string szObjectName = rContext.pObjectSet->objectNameSet.begin()->first.ToString();
+		std::string szObjectNamePrefix;
+		CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szObjectName );
+		szObjectName = szObjectNamePrefix + rContext.szName;
+		CStringManager::ExtendFileExtention( &szObjectName, ".xdb" );
+		//
+		bool bCanChangeObjectName = true;
+		bool bNeedEdit = true;
+		bool bNeedExport = false;
+		Singleton<IFolderCallback>()->ClearUndoData();
+		if ( !Singleton<IBuilderContainer>()->InsertObject( &szObjectTypeName,
+																											 &szObjectName,
+																											 false,
+																											 &bCanChangeObjectName,
+																											 &bNeedExport,
+																											 &bNeedEdit ) )
+		{
+			return false;
+		}
+		if ( bNeedExport )
+		{
+			Singleton<IExporterContainer>()->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );
+			if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
+			{
+				bool bForceExport = true;
+				Singleton<IExporterContainer>()->ExportObject( pObjectManipulator,
+																											 szObjectTypeName,
+																											 szObjectName,
+																											 bForceExport,
+																											 EXPORT_REFERENCES );
+			}
+			Singleton<IExporterContainer>()->FinishExport( szObjectTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, EXPORT_REFERENCES );
+		}
+		Singleton<IFolderCallback>()->ClearUndoData();
+		( *pszNewText ) = GetRefText( rContext.nType, szObjectTypeName, szObjectName );
+		return true;
+	}
+
+
+	// OnBrowse of the file reference and both text files: a file under the
+	// property's data folder, as a path relative to it. A file anywhere else is
+	// not taken. The folder it was picked in is where the next picker with the
+	// same mask opens.
+	bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		const std::string szTitle = fmt::sprintf( LoadResourceString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE ), rContext.szName );
+		const std::string szMask = GetFileMask( rContext.nType, pDesc );
+		//
+		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
+		const std::string szInitialDir = rFilePathMap[szMask];
+		//
+		bool bResult = false;
+		{
+			NFile::CCurrDirHolder currDirHolder;
+			std::vector<char> fileBuffer( 0xFFFF, 0 );
+			CFileDialog fileDialog( true, "", "", OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST, szMask.c_str(), ToCWnd( rContext.pOwner ) );
+			fileDialog.m_ofn.lpstrFile = &fileBuffer[0];
+			fileDialog.m_ofn.nMaxFile = 0xFFFF - 1;
+			fileDialog.m_ofn.lpstrInitialDir = szInitialDir.c_str();
+			fileDialog.m_ofn.lpstrTitle = szTitle.c_str();
+			//
+			if ( ( fileDialog.DoModal() == IDOK ) && rContext.bEditable )
+			{
+				POSITION position = fileDialog.GetStartPosition();
+				while ( position )
+				{
+					const std::string szFullFilePath = fileDialog.GetNextPathName( position );
+					const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) );
+					if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
+					{
+						( *pszNewText ) = szFullFilePath.substr( szDataFolder.size() );
+						std::string szObjectNamePrefix;
+						CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
+						rFilePathMap[szMask] = szObjectNamePrefix;
+						bResult = true;
+					}
+				}
+			}
+			fileDialog.m_ofn.lpstrFile = 0;
+		}
+		RemoveSceneInput();
+		return bResult;
+	}
+
+
+	int CALLBACK BrowseForFolderProc( HWND hwnd, unsigned nCode, LPARAM lParam, LPARAM pData )
+	{
+		if ( nCode == BFFM_INITIALIZED )
+		{
+			::SendMessage( hwnd, BFFM_SETSELECTION, (WPARAM)0, pData );
+		}
+		return 0;
+	}
+
+
+	// CPCStringDirRefEditor::OnBrowse: a folder under the property's data
+	// folder, relative to it, with a trailing backslash.
+	//
+	// Kept as it was, including what it does not do: the picker opens only when
+	// the remembered folder parses as a shell path, so with nothing remembered
+	// yet no picker appears.
+	bool BrowseFolder( const NPropertyButton::SContext &rContext, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
+		const std::string szInitialDir = rFilePathMap[NPropertyButton::PSZ_FOLDER_PATH_LABEL];
+		const std::string szTitle = fmt::sprintf( LoadResourceString( IDS_BROWSE_FOR_FOLDER_DIALOG_TITLE ), rContext.szName );
+
+		std::string szPath;
+		LPMALLOC pMalloc = 0;
+		HRESULT hResult = ::SHGetMalloc( &pMalloc );
+		ASSERT( SUCCEEDED( hResult ) );
+		if ( SUCCEEDED( hResult ) )
+		{
+			LPSHELLFOLDER pShellFolder = 0;
+			hResult = ::SHGetDesktopFolder( &pShellFolder );
+			if ( SUCCEEDED( hResult ) )
+			{
+				LPITEMIDLIST pidl = NULL;
+				ULONG dwEaten = 0;
+				ULONG dwAttribs = 0;
+				// no _MAX_PATH buffer to overflow, and no silent truncation of
+				// a longer path either
+				std::wstring wszPath = UTF8ToWide( szInitialDir );
+				hResult = pShellFolder->ParseDisplayName( NULL, NULL, &wszPath[0], &dwEaten, &pidl, &dwAttribs );
+				if ( SUCCEEDED( hResult ) )
+				{
+					TCHAR pBuffer[_MAX_PATH];
+					memset( pBuffer, 0, sizeof( pBuffer ) );
+
+					BROWSEINFO bi;
+					memset( &bi, 0, sizeof( bi ) );
+					bi.hwndOwner = AfxGetMainWnd()->m_hWnd;
+					bi.pidlRoot = 0;
+					bi.pszDisplayName = pBuffer;
+					bi.lpszTitle = szTitle.c_str();
+					bi.ulFlags = BIF_USENEWUI;
+					bi.lpfn = BrowseForFolderProc;
+					bi.lParam = ( LPARAM )pidl;
+
+					LPITEMIDLIST pidlPath = ::SHBrowseForFolder( &bi );
+					if ( pidlPath != NULL )
+					{
+						if ( ::SHGetPathFromIDList( pidlPath, pBuffer ) )
+						{
+							szPath = pBuffer;
+							if ( ( !szPath.empty() ) && ( szPath[szPath.size() - 1] != '\\' ) )
+							{
+								szPath += "\\";
+							}
+						}
+						pMalloc->Free( pidlPath );
+					}
+					pMalloc->Free( pidl );
+				}
+				pShellFolder->Release();
+				pShellFolder = NULL;
+			}
+			pMalloc->Release();
+			pMalloc = NULL;
+		}
+		bool bResult = false;
+		if ( rContext.bEditable && !szPath.empty() )
+		{
+			const std::string szFullPath = szPath;
+			const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) );
+			if ( CStringManager::Compare( szFullPath, szDataFolder, true, true, true ) == 0 )
+			{
+				( *pszNewText ) = szFullPath.substr( szDataFolder.size() );
+				rFilePathMap[NPropertyButton::PSZ_FOLDER_PATH_LABEL] = szFullPath;
+				bResult = true;
+			}
+		}
+		RemoveSceneInput();
+		return bResult;
+	}
+
+
+	// CPCTextFileEditor::OnNew and CPCExTextFileEditor::OnEdit, which were the
+	// same code: the file the box names, in the Lua editor or the text editor,
+	// and written back only if the user says yes to saving it.
+	void EditTextFile( const NPropertyButton::SContext &rContext, const std::string &rszFilePath )
+	{
+		if ( rszFilePath.empty() || !::IsValidFileName( rszFilePath, false ) )
+		{
+			return;
+		}
+		std::string szText;
+		bool bUnicode = true;
+		File2String( &szText, &bUnicode, rszFilePath, ::GetACP(), false );
+		//
+		const std::string szEditor = GetEditorParameter( rContext.pDesc );
+		std::string szNewText;
+		bool bResult = false;
+		if ( szEditor == "lua" )
+		{
+			bUnicode = false;
+			bResult = NTextEditor::RunScript( rContext.pOwner, fmt::format( "{} - {}", rszFilePath, LoadResourceString( IDS_PC_LUA_EDITOR_TITLE ) ),
+																				szText, rContext.bEditable, &szNewText );
+		}
+		else
+		{
+			bUnicode = true;
+			bResult = NTextEditor::RunText( rContext.pOwner, fmt::format( "{} - {}", rszFilePath, LoadResourceString( IDS_PC_TXT_EDITOR_TITLE ) ),
+																			szEditor, szText, rContext.bEditable, &szNewText );
+		}
+		if ( bResult && ( szNewText != szText ) )
+		{
+			CString strMessagePattern;
+			strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
+			CString strMessage;
+			strMessage.Format( strMessagePattern, rszFilePath.c_str() );
+			if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
+			{
+				String2File( szNewText, bUnicode, rszFilePath, ::GetACP(), false );
+				NText::Reload( rszFilePath );
+			}
+		}
+		RemoveSceneInput();
+	}
+
+
+	// CPCExTextFileEditor::OnNew: an empty file beside the first object shown,
+	// named after the property -- the builder may rename it -- and then opened
+	// for editing.
+	bool NewTextFile( const NPropertyButton::SContext &rContext, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		if ( ( rContext.pObjectSet == 0 ) || rContext.pObjectSet->objectNameSet.empty() )
+		{
+			return false;
+		}
+		const std::string szExtention = ( GetEditorParameter( pDesc ) == "lua" ) ? ".lua" : ".txt";
+		//
+		std::string szFilePath = rContext.pObjectSet->objectNameSet.begin()->first.ToString();
+		std::string szObjectNamePrefix;
+		CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFilePath );
+		szFilePath = szObjectNamePrefix + rContext.szName;
+		CStringManager::ExtendFileExtention( &szFilePath, szExtention );
+		//
+		SBuildDataParams buildDataParams;
+		buildDataParams.szObjectTypeName = "Text";
+		CStringManager::SplitFileName( &( buildDataParams.szObjectNamePrefix ),
+																	 &( buildDataParams.szObjectName ),
+																	 &( buildDataParams.szObjectNameExtention ),
+																	 szFilePath );
+		buildDataParams.bNeedExport = false;
+		buildDataParams.bNeedEdit = false;
+		if ( !Singleton<IBuilderContainer>()->FillNewObjectName( &buildDataParams ) )
+		{
+			return false;
+		}
+		buildDataParams.GetObjectName( &szFilePath );
+		{
+			CFileStream stream( NVFS::GetMainFileCreator(), szFilePath );
+		}
+		const std::string szFullFilePath = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) ) + szFilePath;
+		std::string szFolder;
+		CStringManager::SplitFileName( &szFolder, 0, 0, szFullFilePath );
+		Singleton<IUserDataContainer>()->Get()->filePathMap[GetFileMask( rContext.nType, pDesc )] = szFolder;
+		//
+		( *pszNewText ) = szFilePath;
+		EditTextFile( rContext, szFilePath );
+		return true;
+	}
+
+
+	// CPCStringBigInputEditor::OnBrowse: the text itself, in the Lua editor or
+	// the text editor.
+	bool EditBigString( const NPropertyButton::SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		const std::string szEditor = GetEditorParameter( rContext.pDesc );
+		if ( szEditor == "lua" )
+		{
+			return NTextEditor::RunScript( rContext.pOwner, std::string(), rszText, rContext.bEditable, pszNewText );
+		}
+		const bool bResult = NTextEditor::RunText( rContext.pOwner, std::string(), szEditor, rszText, rContext.bEditable, pszNewText );
+		RemoveSceneInput();
+		return bResult;
+	}
+
+
+	// CPCBinaryBitFieldEditor::OnBrowse: the box's hex as bytes, a check per
+	// named bit, and the bytes as hex again.
+	bool EditBitField( const NPropertyButton::SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		const SPropertyDesc *const pDesc = rContext.pDesc;
+		CVariant value;
+		CPCBinaryBitFieldEditor::GetPCItemValue( &value, rszText, pDesc );
+		// OK writes the flags into the variant's own buffer.
+		const bool bResult = NBitField::Run( rContext.pOwner,
+																				 Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + pDesc->szStringParam,
+																				 const_cast<uint8_t*>( static_cast<const uint8_t*>( value.GetPtr() ) ), pDesc->nSize ) &&
+												 rContext.bEditable;
+		if ( bResult )
+		{
+			CPCBinaryBitFieldEditor::GetPCItemStringValue( pszNewText, value, pDesc );
+		}
+		RemoveSceneInput();
+		return bResult;
+	}
+
+
+	// OnBrowse of the int colour and vec3 colour editors: the colour picker,
+	// alpha kept as it was.
+	bool PickColourValue( const NPropertyButton::SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		CVariant value;
+		if ( !GetPCItemValue( &value, rszText, CVariant(), rContext.nType, rContext.pDesc ) )
+		{
+			return false;
+		}
+		int nColor = (int)value;
+		uint32_t nChosen = 0;
+		const bool bResult = NPropertyButton::PickColour( rContext.pOwner, GetBGRColorFromARGBColor( nColor ), &nChosen ) &&
+												 rContext.bEditable;
+		if ( bResult )
+		{
+			UpdateARGBColorFromBGRColor( nChosen, &nColor );
+			const CVariant colorValue = nColor;
+			GetPCItemStringValue( pszNewText, colorValue, std::string(), rContext.nType, rContext.pDesc, false );
+		}
+		RemoveSceneInput();
+		return bResult;
+	}
+}
+
+
+namespace NPropertyButton
+{
+	void GetButtons( EPCIEType nType, std::vector<EButton> *pButtons )
+	{
+		if ( pButtons == 0 )
+		{
+			return;
+		}
+		pButtons->clear();
+		switch ( nType )
+		{
+			case PCIE_INT_COLOR:
+			case PCIE_INT_COLOR_WITH_ALPHA:
+			case PCIE_VEC3_COLOR:
+			case PCIE_STRING_REF:
+			case PCIE_STRING_MULTI_REF:
+			case PCIE_STRING_FILE_REF:
+			case PCIE_STRING_DIR_REF:
+			case PCIE_STRING_BIG_INPUT:
+			case PCIE_BINARY_BIT_FIELD:
+				pButtons->push_back( BUTTON_BROWSE );
+				break;
+			case PCIE_STRING_NEW_REF:
+			case PCIE_STRING_NEW_MULTI_REF:
+				pButtons->push_back( BUTTON_BROWSE );
+				pButtons->push_back( BUTTON_NEW );
+				break;
+			// CPCTextFileEditor's second button was its "New" slot, captioned
+			// "Edit", and edited.
+			case PCIE_TEXT_FILE:
+				pButtons->push_back( BUTTON_BROWSE );
+				pButtons->push_back( BUTTON_EDIT );
+				break;
+			case PCIE_NEW_TEXT_FILE:
+				pButtons->push_back( BUTTON_BROWSE );
+				pButtons->push_back( BUTTON_NEW );
+				pButtons->push_back( BUTTON_EDIT );
+				break;
+			default:
+				break;
+		}
+	}
+
+
+	std::string GetTitle( EButton eButton )
+	{
+		switch ( eButton )
+		{
+			case BUTTON_BROWSE:
+				return LoadResourceString( IDS_BROWSE_BUTTON_TITLE );
+			case BUTTON_NEW:
+				return LoadResourceString( IDS_NEW_BUTTON_TITLE );
+			case BUTTON_EDIT:
+				return LoadResourceString( IDS_EDIT_BUTTON_TITLE );
+			default:
+				return std::string();
+		}
+	}
+
+
+	bool Press( EButton eButton, const SContext &rContext, const std::string &rszText, std::string *pszNewText )
+	{
+		if ( ( rContext.pDesc == 0 ) || ( pszNewText == 0 ) )
+		{
+			return false;
+		}
+		switch ( eButton )
+		{
+			case BUTTON_BROWSE:
+				switch ( rContext.nType )
+				{
+					case PCIE_STRING_REF:
+					case PCIE_STRING_MULTI_REF:
+					case PCIE_STRING_NEW_REF:
+					case PCIE_STRING_NEW_MULTI_REF:
+						return BrowseRef( rContext, rszText, pszNewText );
+					case PCIE_STRING_FILE_REF:
+					case PCIE_TEXT_FILE:
+					case PCIE_NEW_TEXT_FILE:
+						return BrowseFile( rContext, pszNewText );
+					case PCIE_STRING_DIR_REF:
+						return BrowseFolder( rContext, pszNewText );
+					case PCIE_STRING_BIG_INPUT:
+						return EditBigString( rContext, rszText, pszNewText );
+					case PCIE_BINARY_BIT_FIELD:
+						return EditBitField( rContext, rszText, pszNewText );
+					case PCIE_INT_COLOR:
+					case PCIE_INT_COLOR_WITH_ALPHA:
+					case PCIE_VEC3_COLOR:
+						return PickColourValue( rContext, rszText, pszNewText );
+					default:
+						return false;
+				}
+			case BUTTON_NEW:
+				switch ( rContext.nType )
+				{
+					case PCIE_STRING_NEW_REF:
+					case PCIE_STRING_NEW_MULTI_REF:
+						return NewRef( rContext, rszText, pszNewText );
+					case PCIE_NEW_TEXT_FILE:
+						return NewTextFile( rContext, pszNewText );
+					default:
+						return false;
+				}
+			case BUTTON_EDIT:
+				if ( ( rContext.nType == PCIE_TEXT_FILE ) || ( rContext.nType == PCIE_NEW_TEXT_FILE ) )
+				{
+					EditTextFile( rContext, rszText );
+				}
+				return false;
+			default:
+				return false;
+		}
+	}
+
+
+	// What both colour editors opened: ChooseColor full, with its sixteen custom
+	// colours pointed straight at the user data.
+	bool PickColourMfc( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
+	{
+		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
+		if ( ( pUserData == 0 ) || ( pnResult == 0 ) )
+		{
+			return false;
+		}
+		CColorDialog colorDialog( nStart, CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT, ToCWnd( pOwner ) );
+		pUserData->colorList.resize( 16, 0xFFffFFff );
+		colorDialog.m_cc.lpCustColors = &( pUserData->colorList[0] );
+		if ( colorDialog.DoModal() != IDOK )
+		{
+			return false;
+		}
+		( *pnResult ) = colorDialog.GetColor();
+		return true;
+	}
+
+
+	bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
+	{
+#ifdef OBK2_WITH_WX
+		if ( UseWx() )
+		{
+			return PickColourWx( pOwner, nStart, pnResult );
+		}
+#endif
+		return PickColourMfc( pOwner, nStart, pnResult );
+	}
+}

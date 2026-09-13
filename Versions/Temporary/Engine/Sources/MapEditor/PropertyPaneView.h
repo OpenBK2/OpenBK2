@@ -21,8 +21,8 @@ class CDefaultView;
 // UPDATE_VALUES -- and then through the IView it hands back. So an
 // implementation is whatever registers as CHID_PC_DIALOG and answers those.
 //
-// The wx one is a wxPropertyGrid, and is being built in slices: this first one
-// shows the tree and does not edit it.
+// The wx one is a wxPropertyGrid, built in slices: the tree, then editing in
+// place, then the buttons beside a value, which run NPropertyButton.
 struct IPropertyPane
 {
 	virtual ~IPropertyPane() {}
@@ -69,8 +69,10 @@ namespace NPropertyPane
 
 	// The value column's text, formatted as the property's editor formats it.
 	// False for a node, which has no value of its own, and for a name the
-	// manipulator does not know.
-	bool GetValueText( IManipulator *pManipulator, const std::string &rszName, std::string *pszText );
+	// manipulator does not know. A long string is cut at its first line break
+	// for the column; bMultiline keeps all of it, for the editor its button
+	// opens.
+	bool GetValueText( IManipulator *pManipulator, const std::string &rszName, std::string *pszText, bool bMultiline = false );
 
 	// Read-only when the property, or any property above it, is marked so.
 	bool IsReadOnly( IManipulator *pManipulator, const std::string &rszName );
@@ -84,6 +86,8 @@ namespace NPropertyPane
 
 	// Text as typed or chosen, turned into a value by the type's rules. False
 	// when it does not parse, in which case the row goes back to what is stored.
+	// A path that is not a valid file name does not parse, as the file and
+	// folder editors put their stored value back over one.
 	bool ParseValueText( IManipulator *pManipulator, const std::string &rszName, const std::string &rszText, CVariant *pValue );
 
 	// Writes a value through the undo list, as CPCMainTreeControl's

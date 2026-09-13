@@ -88,36 +88,14 @@ void CPCIntColorEditor::GetValue( CVariant *pValue )
 
 // CPCStringBrowseEditor
 
+// The colour picker, in NPropertyButton. GetValue first, for what it does to
+// the box: text that is not a colour is put back to the stored one, which is
+// where the picker then starts.
 void CPCIntColorEditor::OnBrowse()
 {
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	if( pUserData )
-	{
-		CVariant colorValue;
-		GetValue( &colorValue );
-		COLORREF startColor = GetBGRColorFromARGBColor( (int)colorValue );
-		CColorDialog colorDialog( startColor, CC_ANYCOLOR | CC_FULLOPEN | CC_RGBINIT, GetTargetWindow() );
-		pUserData->colorList.resize( 16, 0xFFffFFff );
-		colorDialog.m_cc.lpCustColors = &( pUserData->colorList[0] );
-		if ( ( colorDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
-		{
-			int nColor = (int)colorValue;
-			UpdateARGBColorFromBGRColor( colorDialog.GetColor(), &nColor );
-			const int a = ( nColor >> 24 ) & 0xFF;
-			const int r = ( nColor >> 16 ) & 0xFF;
-			const int g = ( nColor >> 8 ) & 0xFF;
-			const int b = nColor & 0xFF;
-			if ( GetItemEditorType() == PCIE_INT_COLOR_WITH_ALPHA )
-			{
-				SetWindowText( fmt::format( "{}, {}, {}, {}", a, r, g, b ).c_str() );
-			}
-			else
-			{
-				SetWindowText( fmt::format( "{}, {}, {}", r, g, b ).c_str() );
-			}
-		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-	}
+	CVariant colorValue;
+	GetValue( &colorValue );
+	PressButton( NPropertyButton::BUTTON_BROWSE );
 }
 
 // basement storage  

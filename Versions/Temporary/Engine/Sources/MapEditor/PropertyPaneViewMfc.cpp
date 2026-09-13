@@ -13,6 +13,7 @@
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ObjectController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
+#include "System/FileUtils.h"
 
 #include <cstdlib>
 
@@ -106,7 +107,7 @@ namespace NPropertyPane
 	// The value half of CPCMainTreeControl::SetPCItemView. The text is set even
 	// when GetPCItemStringValue has no format for the type, as the tree did:
 	// it answers the empty default then.
-	bool GetValueText( IManipulator *pManipulator, const std::string &rszName, std::string *pszText )
+	bool GetValueText( IManipulator *pManipulator, const std::string &rszName, std::string *pszText, bool bMultiline )
 	{
 		if ( pManipulator == 0 || pszText == 0 )
 		{
@@ -127,7 +128,7 @@ namespace NPropertyPane
 		{
 			return false;
 		}
-		GetPCItemStringValue( pszText, value, "", nType, pDesc, false );
+		GetPCItemStringValue( pszText, value, "", nType, pDesc, bMultiline );
 		return true;
 	}
 
@@ -198,7 +199,24 @@ namespace NPropertyPane
 		{
 			return false;
 		}
-		return GetPCItemValue( pValue, rszText, CVariant(), typePCIEMnemonics.Get( pDesc, rszName ), pDesc );
+		const EPCIEType nType = typePCIEMnemonics.Get( pDesc, rszName );
+		// GetValue of CPCStringFileRefEditor, CPCStringDirRefEditor and both text
+		// file editors: an empty path clears the value, an invalid one is refused.
+		switch ( nType )
+		{
+			case PCIE_STRING_FILE_REF:
+			case PCIE_STRING_DIR_REF:
+			case PCIE_TEXT_FILE:
+			case PCIE_NEW_TEXT_FILE:
+				if ( !rszText.empty() && !::IsValidFileName( rszText, false ) )
+				{
+					return false;
+				}
+				break;
+			default:
+				break;
+		}
+		return GetPCItemValue( pValue, rszText, CVariant(), nType, pDesc );
 	}
 
 

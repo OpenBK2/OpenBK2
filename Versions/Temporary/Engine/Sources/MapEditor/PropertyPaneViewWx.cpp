@@ -5,6 +5,7 @@
 #ifdef OBK2_WITH_WX
 
 #include "PC_BaseDialog.h"
+#include "PropertyButtons.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
@@ -17,12 +18,15 @@
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 
+#include <wx/propgrid/editors.h>
 #include <wx/propgrid/manager.h>
 #include <wx/propgrid/props.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
 
+#include <functional>
 #include <vector>
 
 // Selection Properties in wx: a wxPropertyGrid, first slice -- the tree as the
@@ -49,10 +53,18 @@
 // for the combos and the bool combo and switcher, a check box for the bool
 // check box -- and a change goes through NPropertyPane: parsed by the type's
 // rules, written through a change controller onto the undo list, or put back
-// when it does not parse or changes nothing. Rows whose editor opens a dialog
-// (references, files, bit fields, text files, long strings, vec3 colours) stay
-// read-only until the slice that brings those. Copy and paste, the array
-// commands and the context menu come after.
+// when it does not parse or changes nothing.
+//
+// The buttons, the third slice. A row whose MFC editor had "...", "New" or
+// "Edit" beside its box -- references, files, folders, bit fields, text files,
+// long strings, colours -- is a text row with those buttons, and a button runs
+// NPropertyButton, the code the MFC editors now run too. What it answers is
+// committed like typed text. A long string's box stays read-only, since the row
+// shows only its first line; its button edits the whole text.
+//
+// Copy and paste, the array commands and the context menu come after. So do
+// buttons on read-only rows: the MFC tree gave those a browse button for
+// looking, and here they have none.
 //
 // **Names.** A wxPropertyGrid property's GetName() is its path through its
 // non-category parents joined with '.', and LEVEL_SEPARATOR_CHAR is '.'. So each
@@ -86,6 +98,106 @@ namespace
 	}
 
 
+	// A value row with the buttons its MFC editor had beside the box. It knows
+	// which buttons, and whom to tell when one is pressed; CButtonEditor draws
+	// them.
+	class CButtonProperty : public wxStringProperty
+	{
+	public:
+		typedef std::function<void( wxPGProperty*, NPropertyButton::EButton, const std::string& )> TPressed;
+
+	private:
+		std::vector<NPropertyButton::EButton> buttons;
+		TPressed pressed;
+
+	public:
+		CButtonProperty( const wxString &rName, const std::vector<NPropertyButton::EButton> &rButtons, const TPressed &rPressed )
+			: wxStringProperty( rName, rName, wxString() ), buttons( rButtons ), pressed( rPressed ) {}
+
+		const std::vector<NPropertyButton::EButton>& GetButtons() const
+		{
+			return buttons;
+		}
+
+		// rszText is what the box holds now, typed but perhaps not committed.
+		void Press( size_t nButton, const std::string &rszText )
+		{
+			if ( ( nButton < buttons.size() ) && pressed )
+			{
+				pressed( this, buttons[nButton], rszText );
+			}
+		}
+	};
+
+
+	// The text box with a row of buttons after it, wx's wxPGMultiButton pattern:
+	// the buttons take their width from the right, the box keeps the rest.
+	class CButtonEditor : public wxPGTextCtrlEditor
+	{
+	public:
+		virtual wxString GetName() const override
+		{
+			return wxS( "OBK2PropertyButtons" );
+		}
+
+		virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid, wxPGProperty *pProperty,
+																					 const wxPoint &rPosition, const wxSize &rSize ) const override
+		{
+			const CButtonProperty *const pButtonProperty = dynamic_cast<const CButtonProperty*>( pProperty );
+			if ( ( pButtonProperty == nullptr ) || pButtonProperty->GetButtons().empty() )
+			{
+				return wxPGTextCtrlEditor::CreateControls( pGrid, pProperty, rPosition, rSize );
+			}
+			wxPGMultiButton *const pButtons = new wxPGMultiButton( pGrid, rSize );
+			const std::vector<NPropertyButton::EButton> &rButtons = pButtonProperty->GetButtons();
+			for ( std::vector<NPropertyButton::EButton>::const_iterator itButton = rButtons.begin(); itButton != rButtons.end(); ++itButton )
+			{
+				pButtons->Add( FromNarrow( NPropertyButton::GetTitle( *itButton ) ) );
+			}
+			wxPGWindowList windows = wxPGTextCtrlEditor::CreateControls( pGrid, pProperty, rPosition, pButtons->GetPrimarySize() );
+			pButtons->Finalize( pGrid, rPosition );
+			windows.SetSecondary( pButtons );
+			return windows;
+		}
+
+		virtual bool OnEvent( wxPropertyGrid *pGrid, wxPGProperty *pProperty, wxWindow *pPrimary, wxEvent &rEvent ) const override
+		{
+			if ( rEvent.GetEventType() == wxEVT_BUTTON )
+			{
+				CButtonProperty *const pButtonProperty = dynamic_cast<CButtonProperty*>( pProperty );
+				const wxPGMultiButton *const pButtons = dynamic_cast<const wxPGMultiButton*>( pGrid->GetEditorControlSecondary() );
+				if ( ( pButtonProperty != nullptr ) && ( pButtons != nullptr ) )
+				{
+					for ( unsigned nButton = 0; nButton < pButtons->GetCount(); ++nButton )
+					{
+						if ( rEvent.GetId() == pButtons->GetButtonId( nButton ) )
+						{
+							const wxTextCtrl *const pText = wxDynamicCast( pPrimary, wxTextCtrl );
+							pButtonProperty->Press( nButton, ToNarrow( ( pText != nullptr ) ? pText->GetValue() : pProperty->GetValueAsString() ) );
+							// The value is not changed through the box: a pressed button
+							// commits what it answers itself.
+							return false;
+						}
+					}
+				}
+			}
+			return wxPGTextCtrlEditor::OnEvent( pGrid, pProperty, pPrimary, rEvent );
+		}
+	};
+
+
+	// Registered with wx once, which owns it from then on.
+	wxPGEditor* ButtonEditor()
+	{
+		static wxPGEditor *s_pButtonEditor = nullptr;
+		if ( s_pButtonEditor == nullptr )
+		{
+			s_pButtonEditor = wxPropertyGrid::RegisterEditorClass( new CButtonEditor() );
+		}
+		return s_pButtonEditor;
+	}
+
+
 	// The IView and command handler the pane hands out: CPCMainTreeControl's
 	// place.
 	class CPropertyGridView : public CDefaultView, public ICommandHandler
@@ -99,6 +211,9 @@ namespace
 
 		wxPropertyGridManager *pManager = nullptr;
 		wxStaticText *pStatus = nullptr;
+		// The pane's host window, which the buttons' dialogs belong to. It lives
+		// as long as the pane, which outlives this view's use of it.
+		IWidget *pOwner = nullptr;
 		std::string szOptionsLabel;
 		// Set while this view changes the grid itself, so the grid's own events
 		// are not taken for the user's.
@@ -111,10 +226,11 @@ namespace
 		EExpandMode eExpandMode = EXPAND_USER_DEFINED;
 
 	public:
-		void Attach( wxPropertyGridManager *_pManager, wxStaticText *_pStatus, const std::string &rszOptionsLabel )
+		void Attach( wxPropertyGridManager *_pManager, wxStaticText *_pStatus, IWidget *_pOwner, const std::string &rszOptionsLabel )
 		{
 			pManager = _pManager;
 			pStatus = _pStatus;
+			pOwner = _pOwner;
 			szOptionsLabel = rszOptionsLabel;
 			pManager->Bind( wxEVT_PG_SELECTED, &CPropertyGridView::OnSelected, this );
 			pManager->Bind( wxEVT_PG_CHANGED, &CPropertyGridView::OnChanged, this );
@@ -396,7 +512,8 @@ namespace
 		}
 
 		// The types edited as text: CPCMainTreeControl::CreatePCItemEditor gives
-		// these an edit box, or an edit box beside a slider or a colour button.
+		// these an edit box, or an edit box beside a slider or buttons. Not the
+		// long string, whose row shows only its first line.
 		static bool IsTextEdited( EPCIEType nType )
 		{
 			switch ( nType )
@@ -405,9 +522,19 @@ namespace
 				case PCIE_INT_SLIDER:
 				case PCIE_INT_COLOR:
 				case PCIE_INT_COLOR_WITH_ALPHA:
+				case PCIE_VEC3_COLOR:
 				case PCIE_FLOAT_INPUT:
 				case PCIE_FLOAT_SLIDER:
 				case PCIE_STRING_INPUT:
+				case PCIE_STRING_REF:
+				case PCIE_STRING_MULTI_REF:
+				case PCIE_STRING_NEW_REF:
+				case PCIE_STRING_NEW_MULTI_REF:
+				case PCIE_STRING_FILE_REF:
+				case PCIE_STRING_DIR_REF:
+				case PCIE_TEXT_FILE:
+				case PCIE_NEW_TEXT_FILE:
+				case PCIE_BINARY_BIT_FIELD:
 				case PCIE_GUID:
 					return true;
 				default:
@@ -439,11 +566,29 @@ namespace
 			bool bEditable = CanEdit( rszName, nType );
 			bool bCheckBox = false;
 			std::vector<std::string> choices;
+			std::vector<NPropertyButton::EButton> buttons;
+			if ( bEditable )
+			{
+				NPropertyButton::GetButtons( nType, &buttons );
+			}
 			wxPGProperty *pRow = nullptr;
 			if ( bEditable && nType == PCIE_BOOL_CHECKBOX )
 			{
 				pRow = new wxBoolProperty( name, name, false );
 				bCheckBox = true;
+			}
+			else if ( !buttons.empty() )
+			{
+				pRow = new CButtonProperty( name, buttons,
+					[this]( wxPGProperty *pProperty, NPropertyButton::EButton eButton, const std::string &rszText )
+					{
+						OnButton( pProperty, eButton, rszText );
+					} );
+				pRow->SetEditor( ButtonEditor() );
+				// A read-only row still gets its editor in wx, with the box
+				// read-only and the buttons live -- which is what the long string
+				// wants, and only that type is not typed into.
+				bEditable = IsTextEdited( nType );
 			}
 			else if ( bEditable && NPropertyPane::GetChoices( pDesc, nType, &choices ) )
 			{
@@ -509,6 +654,83 @@ namespace
 				bCreateControls = true;
 				RefreshText( pProperty, szName );
 				bCreateControls = false;
+			}
+		}
+
+		// A button beside a value was pressed. What it opens runs once the grid
+		// is done with the click: New can make an object and move the editor on
+		// to it, which rebuilds this grid, and a row and its editor must not be
+		// deleted from inside their own event. So the row is carried by name.
+		void OnButton( wxPGProperty *pProperty, NPropertyButton::EButton eButton, const std::string &rszText )
+		{
+			if ( ( pManager == nullptr ) || ( pProperty == nullptr ) )
+			{
+				return;
+			}
+			const std::string szName = FullName( pProperty );
+			const std::string szText = rszText;
+			pManager->CallAfter( [this, szName, eButton, szText]()
+			{
+				RunButton( szName, eButton, szText );
+			} );
+		}
+
+		void RunButton( const std::string &rszName, NPropertyButton::EButton eButton, const std::string &rszText )
+		{
+			CPtr<IManipulator> pManipulator = GetViewManipulator();
+			if ( ( pManager == nullptr ) || !pManipulator )
+			{
+				return;
+			}
+			const SPropertyDesc *const pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( rszName ) );
+			if ( pDesc == 0 )
+			{
+				return;
+			}
+			const SObjectSet objectSet = GetObjectSet();
+			NPropertyButton::SContext context;
+			context.szName = rszName;
+			context.nType = typePCIEMnemonics.Get( pDesc, rszName );
+			context.pDesc = pDesc;
+			context.pObjectSet = &objectSet;
+			context.pOwner = pOwner;
+			context.bEditable = CanEdit( rszName, context.nType );
+			// The text the MFC editor's box would have held: what was typed, if it
+			// parses, and otherwise what is stored, which is what the editors put
+			// back over text that did not parse. A reference the grid shows as
+			// "null" was an empty box.
+			std::string szText = rszText;
+			CVariant boxValue;
+			if ( !IsTextEdited( context.nType ) || !NPropertyPane::ParseValueText( pManipulator, rszName, szText, &boxValue ) )
+			{
+				szText.clear();
+				NPropertyPane::GetValueText( pManipulator, rszName, &szText, true );
+				NPropertyPane::ParseValueText( pManipulator, rszName, szText, &boxValue );
+			}
+			if ( boxValue.GetType() == CVariant::VT_NULL )
+			{
+				szText.clear();
+			}
+			std::string szNewText;
+			const bool bAnswered = NPropertyButton::Press( eButton, context, szText, &szNewText );
+			// The dialog ran a message loop: the pane may be gone, or showing
+			// another object, and then there is nothing here to write to.
+			if ( ( pManager == nullptr ) || ( GetViewManipulator() != pManipulator.GetPtr() ) )
+			{
+				return;
+			}
+			CVariant newValue;
+			if ( !bAnswered || !NPropertyPane::ParseValueText( pManipulator, rszName, szNewText, &newValue ) ||
+					 !NPropertyPane::CommitValue( this, rszName, newValue ) )
+			{
+				// Whatever was typed and not committed goes back to what is stored,
+				// as it does when an edit does not parse.
+				if ( wxPGProperty *const pProperty = Find( rszName ) )
+				{
+					bCreateControls = true;
+					RefreshText( pProperty, rszName );
+					bCreateControls = false;
+				}
 			}
 		}
 
@@ -974,7 +1196,7 @@ namespace
 			pSizer->Add( pStatus, wxSizerFlags().Expand().Border( wxTOP, pRoot->FromDIP( 2 ) ) );
 			pRoot->SetSizer( pSizer );
 
-			view.Attach( pManager, pStatus, rszOptionsLabel );
+			view.Attach( pManager, pStatus, &host, rszOptionsLabel );
 
 			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
 			pPreviousCommandHandler = pContainer->Get( CHID_PC_DIALOG );

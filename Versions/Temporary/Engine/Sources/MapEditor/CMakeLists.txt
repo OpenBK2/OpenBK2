@@ -86,6 +86,8 @@ set(SOURCES
     ProgressDialog.cpp
     ProgressViewMfc.cpp
     ProgressViewWx.cpp
+    PropertyButtonsMfc.cpp
+    PropertyButtonsWx.cpp
     PropertyPaneViewMfc.cpp
     PropertyPaneViewWx.cpp
     RefListDialog.cpp

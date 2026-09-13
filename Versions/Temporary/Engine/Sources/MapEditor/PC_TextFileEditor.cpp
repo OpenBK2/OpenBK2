@@ -1,24 +1,12 @@
 #include "stdafx.h"
-#include "MapEditorLib/MfcWidget.h"
-#include <fmt/format.h>
-#include <fmt/printf.h>
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
 #include "PC_Constants.h"
-#include "PC_DBLinkDialog.h"
 
 #include "PC_TextFileEditor.h"
-#include "Misc/StrProc.h"
 #include "System/FileUtils.h"
 #include "MapEditorLib/StringManager.h"
-#include "libdb/ResourceManager.h"
-#include "MapEditorLib/Interface_Exporter.h"
-#include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/CommonEditorMethods.h"
-#include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/Interface_MOD.h"
-#include "TextEditorView.h"
-#include "System/Text.h"
 
 // CPCItemEditor
 
@@ -73,137 +61,18 @@ void CPCTextFileEditor::GetValue( CVariant *pValue )
 
 // CPCStringNewBrowseEditor
 
+// The second button, captioned "Edit": the file in the text editor, in
+// NPropertyButton.
 void CPCTextFileEditor::OnNew()
 {
-	if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
-	{
-		CVariant value;
-		CPCStringNewBrowseEditor::GetValue( &value );
-		std::string szFilePath = value.GetStr();
-		bool bResult = false;
-		if ( !szFilePath.empty() )
-		{
-			SUserData::ENormalizePathType pathType = SUserData::NPT_UNKNOWN;
-			if ( ( pDesc->nIntParam > SUserData::NPT_UNKNOWN ) && ( pDesc->nIntParam < SUserData::NPT_COUNT ) )
-			{
-				pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
-			}
-			if ( ::IsValidFileName( szFilePath, false ) )
-			{
-				std::string szText;
-				bool bUnicode = true;
-				File2String( &szText, &bUnicode, szFilePath, ::GetACP(), false );
-				//
-				std::string szValues = GetPropertyDesc()->szStringParam;
-				NStr::ToLowerASCII( &szValues );
-				//
-				std::string szEditor;
-				if ( !CStringManager::GetStringValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, "", &szEditor ) )
-				{
-					szEditor.clear();
-				}
-				//
-				std::string szNewText;
-				bool bResult = false;
-				//
-				if ( szEditor == "lua" )
-				{
-					bUnicode = false;
-					CString strTitle;
-					strTitle.LoadString( IDS_PC_LUA_EDITOR_TITLE );
-					CWndWidget ownerWidget( GetTargetWindow() );
-					bResult = NTextEditor::RunScript( &ownerWidget, fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ),
-																						szText, ( GetStyle() & ES_READONLY ) == 0, &szNewText );
-				}
-				else
-				{
-					bUnicode = true;
-					CString strTitle;
-					strTitle.LoadString( IDS_PC_TXT_EDITOR_TITLE );
-					CWndWidget ownerWidget( GetTargetWindow() );
-					bResult = NTextEditor::RunText( &ownerWidget, fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ),
-																					szEditor, szText, ( GetStyle() & ES_READONLY ) == 0, &szNewText );
-				}
-				if ( bResult && ( szNewText != szText ) )
-				{
-					CString strMessagePattern;
-					strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
-					CString strMessage;
-					strMessage.Format( strMessagePattern, szFilePath.c_str() );
-					if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
-					{
-						String2File( szNewText, bUnicode, szFilePath, ::GetACP(), false );
-						NText::Reload( szFilePath );
-					}
-				}
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-			}
-		}
-	}
+	PressButton( NPropertyButton::BUTTON_EDIT );
 }
 
 
-//"All supported Files (*.bzm; *.xml)|*.bzm; *.xml"
-//"XML files (*.xml)|*.xml"
-//"BZM files (*.bzm)|*.bzm"
-//"All Files (*.*)|*.*"
+// The file picker, in NPropertyButton.
 void CPCTextFileEditor::OnBrowse()
 {
-	if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
-	{
-		CString strTitle;
-		strTitle.LoadString( IDS_BROWSE_FOR_FILE_DIALOG_TITLE );
-		std::string szTitle = fmt::sprintf( strTitle.GetString(), GetName() );
-		//
-		std::string szMask;
-		if ( !CStringManager::GetStringValueFromString( pDesc->szStringParam, PCSPL_MASK, 0, PCSP_MASK_DIVIDERS, "", &szMask ) || szMask.empty() )
-		{
-			szMask = "All Files (*.*)|*.*||";
-		}
-		//
-		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-		const std::string szInitialDir = rFilePathMap[szMask];
-		//
-		{
-			NFile::CCurrDirHolder currDirHolder;
-			CFileDialog fileDialog( true, "", "", OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST, szMask.c_str(), GetTargetWindow() );
-			
-			fileDialog.m_ofn.lpstrFile = new char[0xFFFF];
-			fileDialog.m_ofn.lpstrFile[0] = 0;			
-			fileDialog.m_ofn.nMaxFile = 0xFFFF - 1;
-			fileDialog.m_ofn.lpstrInitialDir = szInitialDir.c_str();
-			fileDialog.m_ofn.lpstrTitle = szTitle.c_str();
-			
-			if ( ( fileDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
-			{
-				POSITION position = fileDialog.GetStartPosition();
-				while ( position )
-				{
-					SUserData::ENormalizePathType pathType = SUserData::NPT_UNKNOWN;
-					if ( ( pDesc->nIntParam > SUserData::NPT_UNKNOWN ) && ( pDesc->nIntParam < SUserData::NPT_COUNT ) )
-					{
-						pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
-					}
-					const std::string szFullFilePath = fileDialog.GetNextPathName( position );
-					const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
-					if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
-					{
-						std::string szFilePath = szFullFilePath.substr( szDataFolder.size() );
-						SetWindowText( szFilePath.c_str() );
-						//
-						// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-						std::string szObjectNamePrefix;
-						CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
-						rFilePathMap[szMask] = szObjectNamePrefix;
-					}
-				}
-			}
-			delete[] fileDialog.m_ofn.lpstrFile;
-			fileDialog.m_ofn.lpstrFile = 0;
-		}
-		//
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-	}
+	PressButton( NPropertyButton::BUTTON_BROWSE );
 }
 
 
@@ -220,6 +89,6 @@ bool CPCTextFileEditor::GetPCItemValue( CVariant *pValue, const std::string &rsz
 	return true;
 }
 
-// basement storage  
+// basement storage
 
 

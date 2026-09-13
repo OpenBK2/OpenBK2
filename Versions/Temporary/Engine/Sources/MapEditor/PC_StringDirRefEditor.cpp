@@ -1,42 +1,12 @@
 #include "stdafx.h"
-#include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 
 #include "PC_StringDirRefEditor.h"
 
-#include <cstring>
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
-
-#include "port/unicode.h"
-
-#include <cstdint>
-
-const char CPCStringDirRefEditor::FOLDER_PATH_LABEL[] = "_FOLDER_";
-
-
-static int CALLBACK CPCStringDirRefEditor_BrowseForFolderProc( HWND hwnd, unsigned nCode, LPARAM lParam, LPARAM pData )
-{
-	//BFFM_ENABLEOK:
-	//BFFM_SETEXPANDED:
-	//BFFM_SETOKTEXT:
-	//BFFM_SETSELECTION:
-	//BFFM_SETSTATUSTEXT:
-	
-	//TCHAR pBuffer[] = "Select Folder";
-	switch ( nCode )
-	{
-		case BFFM_INITIALIZED:
-			::SendMessage( hwnd, BFFM_SETSELECTION, (WPARAM)0, pData );
-			break;	
-		case BFFM_SELCHANGED:
-			break;	
-	}
-	return 0;
-}
-
 
 CPCStringDirRefEditor::CPCStringDirRefEditor( const std::string &rszObjectTypeName ) : szObjectTypeName( rszObjectTypeName )
 {
@@ -70,7 +40,7 @@ void CPCStringDirRefEditor::GetValue( CVariant *pValue )
 					std::string szObjectNamePrefix;
 					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullPath );
 					SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-					rFilePathMap[FOLDER_PATH_LABEL] = szFullPath;
+					rFilePathMap[NPropertyButton::PSZ_FOLDER_PATH_LABEL] = szFullPath;
 					bResult = true;
 				}
 			}
@@ -90,112 +60,12 @@ void CPCStringDirRefEditor::GetValue( CVariant *pValue )
 
 // CPCStringBrowseEditor
 
+// The folder picker, in NPropertyButton.
 void CPCStringDirRefEditor::OnBrowse()
 {
-	if ( const SPropertyDesc *pDesc = GetPropertyDesc() )
-	{
-		SUserData::CFilePathMap &rFilePathMap = Singleton<IUserDataContainer>()->Get()->filePathMap;
-		const std::string szInitialDir = rFilePathMap[FOLDER_PATH_LABEL];
-		//
-		CString strTitle;
-		strTitle.LoadString( IDS_BROWSE_FOR_FOLDER_DIALOG_TITLE );
-		std::string szTitle = fmt::sprintf( strTitle.GetString(), GetName() );
-
-		//return value...assume failure...
-		bool bResult = true;
-		std::string szPath;
-
-		//Have to get the Shell's Memory Allocator
-		LPMALLOC pMalloc = 0;
-		HRESULT hResult = ::SHGetMalloc( &pMalloc );
-		ASSERT( SUCCEEDED( hResult ) );
-
-		//Sanity check for Release builds
-		if ( SUCCEEDED( hResult ) )
-		{
-			LPSHELLFOLDER pShellFolder = 0;
-
-			hResult = ::SHGetDesktopFolder( &pShellFolder );
-	
-			if ( SUCCEEDED( hResult ) )
-			{
-				LPITEMIDLIST pidl = NULL;
-				ULONG dwEaten   = 0;
-				ULONG dwAttribs = 0;
-
-				// no _MAX_PATH buffer to overflow, and no silent truncation of
-				// a longer path either
-				std::wstring wszPath = UTF8ToWide( szInitialDir );
-
-				hResult = pShellFolder->ParseDisplayName( NULL, NULL, &wszPath[0], &dwEaten, &pidl, &dwAttribs );
-
-				if( SUCCEEDED( hResult ) )
-				{
-					TCHAR pBuffer[_MAX_PATH];
-					memset( pBuffer, 0, sizeof( pBuffer ) );
-
-					BROWSEINFO bi;
-					memset( &bi, 0, sizeof( bi ) );
-
-					bi.hwndOwner = AfxGetMainWnd()->m_hWnd;
-					bi.pidlRoot = 0;
-					bi.pszDisplayName = pBuffer;
-					bi.lpszTitle = szTitle.c_str();
-					bi.ulFlags = BIF_USENEWUI;
-					bi.lpfn = CPCStringDirRefEditor_BrowseForFolderProc;
-					bi.lParam = ( LPARAM )pidl;
-
-					LPITEMIDLIST pidlPath = ::SHBrowseForFolder( &bi );
-
-					if ( pidlPath != NULL )
-					{
-						if( ::SHGetPathFromIDList( pidlPath, pBuffer ) )
-						{
-							bResult = true;
-							szPath = pBuffer;
-							if ( ( !szPath.empty() ) &&
-									 ( szPath[ szPath.size() - 1] != '\\' ) )
-							{
-								szPath += "\\";
-							}
-						}
-						pMalloc->Free( pidlPath );
-					}
-					pMalloc->Free( pidl );
-				}
-				pShellFolder->Release();
-				pShellFolder = NULL;
-			}
-
-			pMalloc->Release();
-			pMalloc = NULL;
-		}
-		if ( bResult && ( ( GetStyle() & ES_READONLY ) == 0 ) )
-		{
-			if ( !szPath.empty() )
-			{
-				SUserData::ENormalizePathType pathType = SUserData::NPT_UNKNOWN;
-				if ( ( pDesc->nIntParam > SUserData::NPT_UNKNOWN ) && ( pDesc->nIntParam < SUserData::NPT_COUNT ) )
-				{
-					pathType = static_cast<SUserData::ENormalizePathType>( pDesc->nIntParam );
-				}
-				const std::string szFullPath = szPath;
-				const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( pathType );
-				if ( CStringManager::Compare( szFullPath, szDataFolder, true, true, true ) == 0 )
-				{
-					szPath = szFullPath.substr( szDataFolder.size() );
-					SetWindowText( szPath.c_str() );
-					// Устанавливаем каталог куда будем заглядывать при последующем вызове диалога открытия файла
-					rFilePathMap[FOLDER_PATH_LABEL] = szFullPath;
-				}
-			}
-		}
-		//
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-	}
-	/**/
+	PressButton( NPropertyButton::BUTTON_BROWSE );
 }
 
-// basement storage  
+// basement storage
 
 
