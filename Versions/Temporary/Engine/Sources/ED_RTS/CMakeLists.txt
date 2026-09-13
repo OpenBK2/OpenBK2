@@ -7,7 +7,9 @@ set(SOURCES
 add_library(ED_RTS SHARED ${SOURCES})
 add_stdafx_pch(ED_RTS)
 add_export_header(ED_RTS)
-target_link_libraries(ED_RTS PRIVATE MapEditorLib MemoryLib Misc SceneB2 stingray System)
+# Neither stingray nor mfc: nothing here uses Stingray or MFC. Without mfc,
+# __AFX__ is undefined and stdafx.h takes its plain <windows.h> branch.
+target_link_libraries(ED_RTS PRIVATE MapEditorLib MemoryLib Misc SceneB2 System)
 if(WIN32)
     target_link_libraries(ED_RTS PRIVATE winapi)
 endif()
