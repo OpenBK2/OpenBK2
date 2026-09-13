@@ -101,6 +101,11 @@ MIGRATED = {
     "CProgressDialog": "MapEditor/ProgressViewWx.cpp (NProgressView::Create)",
     "CRefListDialog": "MapEditor/RefListViewWx.cpp (NRefList::Run)",
     "CRefListWaitDialog": "MapEditor/RefListViewWx.cpp (NRefList::RunScan)",
+    "CScriptEditor": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
+    "CTextEditorDialog": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunText)",
+    # Owned by the script editor, and reached only through it.
+    "CFindTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
+    "CReplaceTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
 }
 
 

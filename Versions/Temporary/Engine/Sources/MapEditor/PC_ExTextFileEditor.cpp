@@ -17,8 +17,7 @@
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/PCIEMnemonics.h"
-#include "TextEditorDialog.h"
-#include "ScriptEditor.h"
+#include "TextEditorView.h"
 #include "System/Text.h"
 
 // CPCItemEditor
@@ -168,37 +167,20 @@ void CPCExTextFileEditor::OnEdit()
 				if ( szEditor == "lua" )
 				{
 					bUnicode = false;
-					CScriptEditor scriptEditor( 0, GetTargetWindow() );
-					//
 					CString strTitle;
 					strTitle.LoadString( IDS_PC_LUA_EDITOR_TITLE );
-					scriptEditor.SetTitle( fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ) );
-					//
-					scriptEditor.SetText( szText );
-					scriptEditor.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
-					if ( ( scriptEditor.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
-					{
-						szNewText = scriptEditor.GetText();
-						bResult = true;
-					}
+					CWndWidget ownerWidget( GetTargetWindow() );
+					bResult = NTextEditor::RunScript( &ownerWidget, fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ),
+																						szText, ( GetStyle() & ES_READONLY ) == 0, &szNewText );
 				}
 				else
 				{
 					bUnicode = true;
-					CTextEditorDialog textEditorDialog( GetTargetWindow() );
-					//
 					CString strTitle;
 					strTitle.LoadString( IDS_PC_TXT_EDITOR_TITLE );
-					textEditorDialog.SetTitle( fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ) );
-					//
-					textEditorDialog.SetType( typeTEMnemonics.Get( szEditor ) );
-					textEditorDialog.SetText( szText );
-					textEditorDialog.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
-					if ( ( textEditorDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
-					{
-						textEditorDialog.GetText( &szNewText );
-						bResult = true;
-					}
+					CWndWidget ownerWidget( GetTargetWindow() );
+					bResult = NTextEditor::RunText( &ownerWidget, fmt::format( "{} - {}", szFilePath.c_str(), strTitle.GetString() ),
+																					szEditor, szText, ( GetStyle() & ES_READONLY ) == 0, &szNewText );
 				}
 				if ( bResult && ( szNewText != szText ) )
 				{

@@ -5,10 +5,10 @@
 
 
 #include "PC_StringBigInputEditor.h"
-#include "TextEditorDialog.h"
+#include "TextEditorView.h"
 #include "Misc/StrProc.h"
+#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/StringManager.h"
-#include "ScriptEditor.h"
 
 // CPCItemEditor
 
@@ -42,25 +42,21 @@ void CPCStringBigInputEditor::OnBrowse()
 	if ( szEditor == "lua" )
 	{
 		// редактор LUA-скриптов
-		CScriptEditor scriptEditor( 0, GetTargetWindow() );
-		scriptEditor.SetText( value.GetStringRecode() );
-		scriptEditor.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
-		if ( ( scriptEditor.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
+		CWndWidget ownerWidget( GetTargetWindow() );
+		std::string szValue;
+		if ( NTextEditor::RunScript( &ownerWidget, std::string(), value.GetStringRecode(),
+																 ( GetStyle() & ES_READONLY ) == 0, &szValue ) )
 		{
-			std::string szValue = scriptEditor.GetText();
 			SetWindowText( szValue.c_str() );
 		}
 	}
 	else
 	{
-		CTextEditorDialog textEditorDialog( GetTargetWindow() );
-		textEditorDialog.SetType( typeTEMnemonics.Get( szEditor ) );
-		textEditorDialog.SetText( value.GetStringRecode() );
-		textEditorDialog.EnableEdit( ( GetStyle() & ES_READONLY ) == 0 );
-		if ( ( textEditorDialog.DoModal() == IDOK ) && ( ( GetStyle() & ES_READONLY ) == 0 ) )
+		CWndWidget ownerWidget( GetTargetWindow() );
+		std::string szValue;
+		if ( NTextEditor::RunText( &ownerWidget, std::string(), szEditor, value.GetStringRecode(),
+															 ( GetStyle() & ES_READONLY ) == 0, &szValue ) )
 		{
-			std::string szValue;
-			textEditorDialog.GetText( &szValue );
 			SetWindowText( szValue.c_str() );
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );

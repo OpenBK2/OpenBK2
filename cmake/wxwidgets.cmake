@@ -104,8 +104,10 @@ ExternalProject_Add(wxwidgets_external
         # both of this year's clean-exit crashes were, and which would have to
         # be ported for a non-Windows editor.
         #
-        # Turn it off with -DwxUSE_STC=OFF locally if a wx build is in the way
-        # of something; nothing depends on it yet.
+        # The wx text editors (MapEditor/TextEditorViewWx.cpp) are built on it,
+        # so -DwxUSE_STC=OFF no longer builds the editor. A build directory
+        # that turned it off earlier keeps OFF in the wx sub-build's own cache;
+        # set it back there with cmake -DwxUSE_STC=ON <that directory>.
     BUILD_BYPRODUCTS ${WX_IMPORT_LIB}
     USES_TERMINAL_DOWNLOAD TRUE
     USES_TERMINAL_BUILD    TRUE

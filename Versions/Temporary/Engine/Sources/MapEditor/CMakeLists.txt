@@ -98,6 +98,8 @@ set(SOURCES
     SortTreeControl.cpp
     stdafx.cpp
     TextEditorDialog.cpp
+    TextEditorViewMfc.cpp
+    TextEditorViewWx.cpp
     Tree_GDBBrowser.cpp
     Tree_GDBBrowserBase.cpp
     Tree_GDBBrowser_InputState.cpp
