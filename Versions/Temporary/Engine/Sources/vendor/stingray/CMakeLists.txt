@@ -20,11 +20,10 @@ add_library(stingray STATIC
     trcore.cpp # SEC_TREECLASS
 )
 target_include_directories(stingray PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+# MFC-as-DLL comes from cmake/mfc.cmake, and PUBLIC so that every module linking
+# the shim still gets it exactly as before -- see that file for why it moved.
+target_link_libraries(stingray PUBLIC mfc)
 if(MSVC)
-    target_compile_definitions(stingray PUBLIC __AFX__ _AFXDLL)
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        target_compile_definitions(stingray PUBLIC _AFX_FULL_DEBUG)
-    endif()
     target_link_libraries(stingray PRIVATE winapi)
 endif()
 target_link_libraries(stingray PRIVATE spdlog::spdlog_header_only Boost::assert)

@@ -108,6 +108,9 @@ if(MSVC)
 endif()
 
 include(cmake/winapi.cmake)
+# MFC-as-DLL, as its own target rather than a side effect of linking the
+# Stingray shim; see the file.
+include(cmake/mfc.cmake)
 
 set(ZLIB_COMPAT ON)
 include(cmake/zlib-ng.cmake)

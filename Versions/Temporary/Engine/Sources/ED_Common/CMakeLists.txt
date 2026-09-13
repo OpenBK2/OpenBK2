@@ -34,7 +34,9 @@ set(SOURCES
 add_library(ED_Common SHARED ${SOURCES})
 add_stdafx_pch(ED_Common)
 add_export_header(ED_Common)
-target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc stingray System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
+# mfc and not stingray: nothing in this module uses Stingray any more, but it
+# does use MFC, and linking mfc is what keeps it on the shared MFC DLL.
+target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc mfc System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
 endif()
