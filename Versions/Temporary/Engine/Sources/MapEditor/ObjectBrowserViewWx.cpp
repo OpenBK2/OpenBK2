@@ -2667,7 +2667,7 @@ namespace
 		}
 
 		// NObjectBrowser::CreateWxIn: the contents in a panel of pParent's.
-		bool CreateIn( wxWindow *pParent, IWidget *pOwner, IListener *_pListener, EKind _eKind )
+		bool CreateIn( wxWindow *pParent, IWidget *pOwner, IListener *_pListener, EKind _eKind, int _nGDBBrowserID )
 		{
 			if ( pParent == nullptr )
 			{
@@ -2675,7 +2675,7 @@ namespace
 			}
 			pListener = _pListener;
 			eKind = _eKind;
-			nGDBBrowserID = -1;
+			nGDBBrowserID = _nGDBBrowserID;
 			pRoot = NWx::Child<wxPanel>( pParent, wxID_ANY );
 			pTreeOwner = pOwner;
 			CreateContents();
@@ -2702,6 +2702,15 @@ namespace
 			if ( host.GetSafeHwnd() != 0 )
 			{
 				host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+			}
+			else if ( ( pRoot != nullptr ) && ( pRoot->IsShown() != bShow ) )
+			{
+				// A panel in a wx layout, which has to place what is left.
+				pRoot->Show( bShow );
+				if ( pRoot->GetParent() != nullptr )
+				{
+					pRoot->GetParent()->Layout();
+				}
 			}
 		}
 
@@ -2856,10 +2865,10 @@ namespace NObjectBrowser
 	}
 
 	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
-															IObjectBrowser::EKind eKind, wxWindow **ppWindow )
+															IObjectBrowser::EKind eKind, wxWindow **ppWindow, int nGDBBrowserID )
 	{
 		std::unique_ptr<CWxObjectBrowser> pBrowser( new CWxObjectBrowser() );
-		if ( !pBrowser->CreateIn( pParent, pOwner, pListener, eKind ) )
+		if ( !pBrowser->CreateIn( pParent, pOwner, pListener, eKind, nGDBBrowserID ) )
 		{
 			return nullptr;
 		}

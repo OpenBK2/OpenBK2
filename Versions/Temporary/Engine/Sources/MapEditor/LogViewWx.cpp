@@ -50,8 +50,9 @@ namespace
 		CWnd wndHost;
 		// The host, adopted. wx subclasses it; it does not destroy it.
 		wxNativeContainerWindow *pContainer = nullptr;
-		// Owned by pContainer, as any wx child is by its parent.
-		wxTextCtrl *pText = nullptr;
+		// Owned by pContainer, as any wx child is by its parent -- or, made
+		// straight in a wx window, by that window, which may go first.
+		wxWeakRef<wxTextCtrl> pText;
 		// Registered as the selection command handler when the contents take
 		// focus. Borrowed: the pane outlives this view.
 		ICommandHandler *pSelectionHandler = nullptr;
@@ -59,6 +60,12 @@ namespace
 	public:
 		virtual ~CLogViewWx()
 		{
+			if ( ( pContainer == nullptr ) && pText )
+			{
+				// Made straight in a wx window, which outlives this view: the text
+				// control is bound to it, so it goes with it.
+				pText->Destroy();
+			}
 			if ( pContainer != nullptr )
 			{
 				// Destroys the wx children; leaves the adopted host alone, which is
@@ -103,17 +110,39 @@ namespace
 				return false;
 			}
 
+			CreateText( pContainer );
+			return true;
+		}
+
+		// NLogView::CreateWxLogViewIn: the text control straight in a wx window.
+		bool CreateIn( wxWindow *pParent, ICommandHandler *_pSelectionHandler )
+		{
+			if ( pParent == nullptr )
+			{
+				return false;
+			}
+			pSelectionHandler = _pSelectionHandler;
+			CreateText( pParent );
+			return true;
+		}
+
+		wxWindow* GetWindow() const
+		{
+			return pText;
+		}
+
+		void CreateText( wxWindow *pParent )
+		{
 			// wxTE_RICH2 is what makes per-range colour possible at all: without
 			// it a wxTextCtrl on MSW is a plain EDIT and SetDefaultStyle does
 			// nothing.
-			pText = NWx::Child<wxTextCtrl>( pContainer, wxID_ANY, wxString(),
+			pText = NWx::Child<wxTextCtrl>( pParent, wxID_ANY, wxString(),
 																			wxDefaultPosition, wxDefaultSize,
 																			wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxTE_RICH2 );
 
 			// The same registration CLogWindow::OnSetFocus does on the MFC side:
 			// focus here means selection commands belong to this pane.
 			pText->Bind( wxEVT_SET_FOCUS, &CLogViewWx::OnSetFocus, this );
-			return true;
 		}
 
 		virtual bool IsCreated() const
@@ -123,8 +152,9 @@ namespace
 
 		virtual void SetBounds( const CTRect<int> &rBounds )
 		{
-			if ( pText == nullptr )
+			if ( ( pText == nullptr ) || ( wndHost.GetSafeHwnd() == nullptr ) )
 			{
+				// Made straight in a wx window, whose layout places it.
 				return;
 			}
 			// The MFC host takes the position inside the pane; the wx control
@@ -226,6 +256,22 @@ namespace NLogView
 	ILogView* CreateWxLogView()
 	{
 		return new CLogViewWx();
+	}
+
+
+	ILogView* CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow )
+	{
+		CLogViewWx *const pView = new CLogViewWx();
+		if ( !pView->CreateIn( pParent, pSelectionHandler ) )
+		{
+			delete pView;
+			return nullptr;
+		}
+		if ( ppWindow != nullptr )
+		{
+			( *ppWindow ) = pView->GetWindow();
+		}
+		return pView;
 	}
 }
 

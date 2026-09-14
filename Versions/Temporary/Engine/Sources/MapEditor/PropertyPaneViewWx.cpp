@@ -2155,7 +2155,23 @@ namespace
 	// itself.
 	class CWxPropertyPane : public IPropertyPane, public CPCBaseDialog
 	{
+		// A panel made in a wx window, destroyed when this goes -- after the view,
+		// which is declared below it and so destroyed first, while its grid is
+		// still there.
+		struct CPanel
+		{
+			wxWeakRef<wxWindow> pWindow;
+			~CPanel()
+			{
+				if ( pWindow )
+				{
+					pWindow->Destroy();
+				}
+			}
+		};
+
 		CWxHostWindow host;
+		CPanel panel;
 		CPropertyGridView view;
 		ICommandHandler *pPreviousCommandHandler = nullptr;
 		bool bRegistered = false;
@@ -2178,8 +2194,29 @@ namespace
 			{
 				return false;
 			}
-			wxWindow *const pRoot = host.Root();
+			CreateContents( host.Root(), &host, rszOptionsLabel );
+			return true;
+		}
 
+		// NPropertyPane::CreateWxIn: the contents in a panel of pParent's.
+		bool CreateIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel )
+		{
+			if ( pParent == nullptr )
+			{
+				return false;
+			}
+			panel.pWindow = NWx::Child<wxPanel>( pParent, wxID_ANY );
+			CreateContents( panel.pWindow, pOwner, rszOptionsLabel );
+			return true;
+		}
+
+		wxWindow* GetWindow() const
+		{
+			return panel.pWindow;
+		}
+
+		void CreateContents( wxWindow *pRoot, IWidget *pOwner, const std::string &rszOptionsLabel )
+		{
 			// IDD_PC: the tree filling the pane, with a client edge, over a sunken
 			// status line.
 			wxPropertyGridManager *const pManager = CreateGridManager( pRoot );
@@ -2192,28 +2229,38 @@ namespace
 			pSizer->Add( pStatus, wxSizerFlags().Expand().Border( wxTOP, pRoot->FromDIP( 2 ) ) );
 			pRoot->SetSizer( pSizer );
 
-			view.Attach( pManager, pStatus, &host, rszOptionsLabel );
+			view.Attach( pManager, pStatus, pOwner, rszOptionsLabel );
 
 			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
 			pPreviousCommandHandler = pContainer->Get( CHID_PC_DIALOG );
 			pContainer->Set( CHID_PC_DIALOG, this );
 			bRegistered = true;
-			return true;
 		}
 
 		virtual bool IsCreated() const
 		{
-			return host.GetSafeHwnd() != 0;
+			return ( host.GetSafeHwnd() != 0 ) || panel.pWindow;
 		}
 
+		// A host is placed and shown by its MFC pane; a panel, by its wx layout.
 		virtual void SetBounds( const CTRect<int> &rBounds )
 		{
-			host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
+			if ( host.GetSafeHwnd() != 0 )
+			{
+				host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
+			}
 		}
 
 		virtual void Show( bool bShow )
 		{
-			host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+			if ( host.GetSafeHwnd() != 0 )
+			{
+				host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+			}
+			else if ( panel.pWindow )
+			{
+				panel.pWindow->Show( bShow );
+			}
 		}
 
 		virtual void EnableEdit( bool bEnable )
@@ -2309,6 +2356,22 @@ namespace NPropertyPane
 	IGrid* CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel )
 	{
 		return new CWxPropertyGrid( pParent, pStatus, pOwner, rszOptionsLabel );
+	}
+
+
+	IPropertyPane* CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel, wxWindow **ppWindow )
+	{
+		CWxPropertyPane *const pPane = new CWxPropertyPane();
+		if ( !pPane->CreateIn( pParent, pOwner, rszOptionsLabel ) )
+		{
+			delete pPane;
+			return nullptr;
+		}
+		if ( ppWindow != nullptr )
+		{
+			( *ppWindow ) = pPane->GetWindow();
+		}
+		return pPane;
 	}
 }
 

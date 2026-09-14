@@ -24,6 +24,8 @@ set(SOURCES
     ExporterContainer.cpp
     FindTextDlg.cpp
     FolderCallback.cpp
+    GDBBrowserPane.cpp
+    LogPane.cpp
     LogViewScintilla.cpp
     LogViewWx.cpp
     LogWindow.cpp

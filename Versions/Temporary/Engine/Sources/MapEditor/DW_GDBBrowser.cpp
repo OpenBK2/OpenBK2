@@ -2,34 +2,22 @@
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "ResourceDefines.h"
 #include "WMDefines.h"
 
-#include "libdb/ResourceManager.h"
-#include "SelectTablesDialog.h"
-#include "SelectTablesView.h"
 #include "DW_GDBBrowser.h"
-#include "Tree_GDBBrowser.h"
-#include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/Interface_ChildFrame.h"
-#include "MapEditorLib/Interface_Editor.h"
-#include "MapEditorLib/Interface_Exporter.h"
-#include "MapEditorLib/Interface_MOD.h"
 
 #include <cstdint>
 
-//#include "..\MapEditorLib\Tools_SysCodes.h"
-
-CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID ) : bCreateControls( true ), nGDBBrowserID( _nGDBBrowserID ), pContents( 0 )
+CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID )
+	: contents( this, _nGDBBrowserID ), ownerWidget( this )
 {
 }
 
 
 CDWGDBBrowser::~CDWGDBBrowser()
 {
-	delete pContents;
-	pContents = 0;
 }
 
 
@@ -46,24 +34,21 @@ BEGIN_MESSAGE_MAP(CDWGDBBrowser, SECControlBar)
 END_MESSAGE_MAP()
 
 
-int CDWGDBBrowser::OnCreate( LPCREATESTRUCT pCreateStruct ) 
+int CDWGDBBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 {
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	selectedTables = pUserData->tableSetMap[nGDBBrowserID];
-	szCurrentTable = pUserData->szCurrentTableMap[nGDBBrowserID];
-
 	if ( SECControlBar::OnCreate( pCreateStruct ) == -1 )
 	{
 		return -1;
 	}
 	//
-
-	pContents = NObjectBrowser::Create();
+	// The MFC browser tells this pane about a table change with WM_GDB_BROWSER
+	// and CBN_SELCHANGE, handled below; a wx one tells the contents.
+	IObjectBrowser *const pBrowser = NObjectBrowser::Create();
 	CWndWidget paneWidget( this );
-	if ( ( pContents == 0 ) ||
-			 !pContents->Create( &paneWidget, this, IObjectBrowser::KIND_BROWSER, nGDBBrowserID, IDC_TREE_GDB_BROWSER ) )
+	if ( ( pBrowser == 0 ) ||
+			 !pBrowser->Create( &paneWidget, &contents, IObjectBrowser::KIND_BROWSER, contents.GetID(), IDC_TREE_GDB_BROWSER ) )
 	{
+		delete pBrowser;
 		return -1;
 	}
 	//
@@ -75,75 +60,66 @@ int CDWGDBBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 																 IDC_EMPTY_GDB_BROWSER,
 																 0 ) )
 	{
+		delete pBrowser;
 		return -1;
 	}
 	//
-	SetTableManipulator( Singleton<IResourceManager>()->CreateTableManipulator() );
-	//
+	contents.Start( pBrowser );
 	return 0;
 }
 
 
 void CDWGDBBrowser::OnDestroy()
 {
-	Singleton<ICommandHandlerContainer>()->Remove( CHID_OBJECT_STORAGE, GetContents() );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAIN, this );
-
+	contents.Stop();
 	SECControlBar::OnDestroy();
-	//
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	pUserData->tableSetMap[nGDBBrowserID] = selectedTables;
-	pUserData->szCurrentTableMap[nGDBBrowserID] = szCurrentTable;
 }
 
 
-void CDWGDBBrowser::OnSize( unsigned nType, int cx, int cy ) 
+void CDWGDBBrowser::OnSize( unsigned nType, int cx, int cy )
 {
 	SECControlBar::OnSize( nType, cx, cy );
-	//
+	LayoutContents();
+}
+
+
+void CDWGDBBrowser::LayoutContents()
+{
+	if ( GetSafeHwnd() == NULL )
+	{
+		return;
+	}
 	CRect insideRect;
 	GetInsideRect( insideRect );
 	//
-	if ( pContents != 0 )
+	if ( IObjectBrowser *const pBrowser = contents.GetBrowser() )
 	{
-		pContents->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
+		pBrowser->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
 	}
-	/**
-	if ( wndContents.GetSafeHwnd() != NULL )
-	{
-		wndContents.SetWindowPos( 0,
-															insideRect.left,
-															insideRect.top,
-															insideRect.Width(),
-															insideRect.Height(),
-															SWP_NOZORDER | SWP_NOACTIVATE );
-	}
-	/**/
-	//
 	if ( wndEmptyContents.GetSafeHwnd() != NULL )
 	{
 		wndEmptyContents.SetWindowPos( 0,
-															insideRect.left,
-															insideRect.top,
-															insideRect.Width(),
-															insideRect.Height(),
-															SWP_NOZORDER | SWP_NOACTIVATE );
+																	 insideRect.left,
+																	 insideRect.top,
+																	 insideRect.Width(),
+																	 insideRect.Height(),
+																	 SWP_NOZORDER | SWP_NOACTIVATE );
+	}
+}
+
+
+void CDWGDBBrowser::ShowEmpty( bool bEmpty )
+{
+	if ( wndEmptyContents.GetSafeHwnd() != NULL )
+	{
+		wndEmptyContents.ShowWindow( bEmpty ? SW_SHOW : SW_HIDE );
 	}
 }
 
 
 BOOL CDWGDBBrowser::OnGripperClose()
 {
-	/**
-	if ( wndContents.GetTabCount() != 0 )
-	{
-		if ( wndContents.IsFocused() )
-		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
-		}
-	}
-	/**/
 	return true;
 }
 
@@ -152,9 +128,9 @@ void CDWGDBBrowser::OnLButtonDown( unsigned nFlags, CPoint point )
 {
 	SECControlBar::OnLButtonDown( nFlags, point );
 	//
-	if ( nGDBBrowserID != -1 )
+	if ( contents.GetID() != -1 )
 	{
-		Singleton<IMainFrameContainer>()->Get()->SaveObjectStorage( nGDBBrowserID );
+		Singleton<IMainFrameContainer>()->Get()->SaveObjectStorage( contents.GetID() );
 	}
 }
 
@@ -163,9 +139,9 @@ void CDWGDBBrowser::OnRButtonDown( unsigned nFlags, CPoint point )
 {
 	SECControlBar::OnRButtonDown( nFlags, point );
 	//
-	if ( nGDBBrowserID != -1 )
+	if ( contents.GetID() != -1 )
 	{
-		Singleton<IMainFrameContainer>()->Get()->SaveObjectStorage( nGDBBrowserID );
+		Singleton<IMainFrameContainer>()->Get()->SaveObjectStorage( contents.GetID() );
 	}
 }
 
@@ -179,7 +155,7 @@ void CDWGDBBrowser::OnRButtonUp( unsigned nFlags, CPoint point )
 	CMenu *pMenu = mainPopupMenu.GetSubMenu( MCMN_DW_GDB_BROWSER );
 	if ( pMenu )
 	{
-		ClientToScreen( &point ); 
+		ClientToScreen( &point );
 		pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, point.x, point.y, MainFrameWnd(), 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 	}
@@ -189,877 +165,14 @@ void CDWGDBBrowser::OnRButtonUp( unsigned nFlags, CPoint point )
 
 LRESULT CDWGDBBrowser::OnTabSelected( WPARAM wParam, LPARAM lParam )
 {
-	OnTabSelected();
+	contents.OnTableSelected();
 	return 0;
 }
 
 
-//LRESULT CDWGDBBrowser::OnTabSelected( WPARAM wParam, LPARAM lParam )
 void CDWGDBBrowser::OnTabSelected()
 {
-	if ( !bCreateControls && ( pContents != 0 ) )
-	{
-		pContents->ShowActiveTable();
-		CRect insideRect;
-		GetInsideRect( insideRect );
-		pContents->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
-		//
-		pContents->GetActiveTableName( &szCurrentTable );
-		IObjectTree *const pwndTreeGBDBrowserBase = pContents->GetActiveTable();
-		if ( pwndTreeGBDBrowserBase == 0 )
-		{
-			return;
-		}
-		if ( !pwndTreeGBDBrowserBase->IsTreeCreated() )
-		{
-			SObjectSet collectionObjectSet;
-			collectionObjectSet.szObjectTypeName = szCurrentTable;
-			InsertHashSetElement( &( collectionObjectSet.objectNameSet ), CDBID( VIEW_COLLECTION_ID ) );
-			//
-			pwndTreeGBDBrowserBase->GetView()->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
-			pwndTreeGBDBrowserBase->CreateTree();
-			//DebugTrace( "CDWGDBBrowser::OnTabSelected(): wParam: 0x%X(%u), lParam: 0x%X\n", wParam, wParam, lParam );
-		}
-		else
-		{
-			pwndTreeGBDBrowserBase->UpdateSelectionManipulator( true );
-		}
-	}
-	//return 0;
+	contents.OnTableSelected();
 }
 
-
-void CDWGDBBrowser::SetTableManipulator( IManipulator *_pTableManipulator )
-{
-	if ( pTableManipulator != _pTableManipulator )
-	{
-		pTableManipulator = _pTableManipulator;
-		tables.clear();
-		if ( !pTableManipulator )
-		{
-			return;
-		}
-		if ( CPtr<IManipulatorIterator> pTableManipulatorIterator = pTableManipulator->Iterate( true, ECT_CACHE_LOCAL ) )
-		{
-			std::string szName;
-			while ( !pTableManipulatorIterator->IsEnd() )
-			{
-				pTableManipulatorIterator->GetName( &szName );
-				tables.push_back( szName );
-				pTableManipulatorIterator->Next();
-			}
-		}
-		CreateTabs();
-	}
-}
-
-
-void CDWGDBBrowser::CreateTabs()
-{
-	if ( !IsWindow( m_hWnd ) || ( pContents == 0 ) )
-	{
-		return;
-	}
-	// соберем таблицы которые уже заполнены
-	/**
-	{
-		std::unordered_map<std::string, CTreeGDBBrowser*> existingTabs;
-		//
-		char pBuffer[0xFFF];
-		bool bSelected = false;
-		CWnd *pwnd = 0;
-		void *pExtra = 0;
-		//
-		const int nTabCount = wndContents.GetTabsCount();
-		for ( int nTabIndex = 0; nTabIndex < nTabCount; ++nTabIndex )
-		{
-			wndContents.GetTabInfo( nTabIndex, pBuffer, bSelected, pWnd, pExtra );
-			const std::string szName( pBuffer );
-			if ( selectedTables.find( szName ) != selectedTables.end() )
-			{
-				existingTabs[szName] = dynamic_cast<CTreeGDBBrowser*>( pwnd );
-			}
-		}
-	}	
-	/**/
-	//создаем таблицы
-	{
-		bCreateControls = true;
-		pContents->RemoveAllTables();
-		// Необходимо сначало добавить все панели, а потом устанавливать активную
-		IObjectTree* pwndActiveTreeGBDBrowser = 0;
-		for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
-		{
-			if ( selectedTables.find( *itTable ) != selectedTables.end() )
-			{
-				if ( IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( *itTable ) )
-				{
-					if ( ( *itTable ) == szCurrentTable )
-					{
-						pwndActiveTreeGBDBrowser = pwndTreeGBDBrowser;
-					}
-					pwndTreeGBDBrowser->SetPCDialogCommandHandlerID( CHID_PC_DIALOG, false );
-				}
-			}
-		}
-		bCreateControls = false;
-		if ( pwndActiveTreeGBDBrowser )
-		{
-			pContents->ActivateTable( pwndActiveTreeGBDBrowser );
-		}
-		else if ( pContents->GetTableCount() > 0 )
-		{
-			pContents->ActivateTable( pContents->GetTable( 0 ) );
-		}
-	}
-
-	if ( pContents->GetTableCount() > 0 )
-	{
-		pContents->Show( true );
-		wndEmptyContents.ShowWindow( SW_HIDE );
-	}
-	else
-	{
-		pContents->Show( false );
-		wndEmptyContents.ShowWindow( SW_SHOW );
-	}
-}
-
-
-void CDWGDBBrowser::SelectTables()
-{
-	// Which dialog answers -- the MFC one or the wx one -- is NSelectTables'
-	// business, not this browser's. See SelectTablesView.h.
-	CWndWidget ownerWidget( this );
-	if ( NSelectTables::Run( &ownerWidget, tables, &selectedTables ) )
-	{
-		CreateTabs();
-	}
-}
-
-
-void CDWGDBBrowser::ClearTable()
-{
-	/**
-	if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ) )
-	{
-		CString strMessage;
-		strMessage.LoadString( IDS_TREE_GDB_BROWSE_CFM );
-		if ( MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
-		{
-			int nObjectsDeleted = 0;
-			int nFoldersDeleted = 0;
-			std::list<std::string> obectNameList;
-			BeginWaitCursor();
-			// remove unreferenced objects
-			if ( CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE ) )
-			{
-				while ( !pFolderManipulatorIterator->IsEnd() )
-				{
-					std::string szType;
-					pFolderManipulatorIterator->GetType( &szType );
-					if ( szType == "object" )
-					{
-						std::string szObjectName;
-						pFolderManipulatorIterator->GetName( &szObjectName );
-						if ( !szObjectName.empty() )
-						{
-							obectNameList.push_back( szObjectName );
-						}
-					}
-					pFolderManipulatorIterator->Next();
-				}
-			}
-			for ( std::list<std::string>::const_iterator itObjectName = obectNameList.begin(); itObjectName != obectNameList.end(); ++itObjectName )
-			{
-				DebugTrace( "Delete object: <%s>", itObjectName->c_str() ); 
-				if ( pFolderManipulator->RemoveNode( *itObjectName ) )
-				{
-					++nObjectsDeleted;
-				}
-			}
-			// remove emply folders
-			std::list<std::string> folderNameList;
-			std::list<std::string> folderStack;
-			if ( CPtr<IManipulatorIterator> pFolderManipulatorIterator = pFolderManipulator->Iterate( true, ECT_NO_CACHE ) )
-			{
-				while ( !pFolderManipulatorIterator->IsEnd() )
-				{
-					std::string szName;
-					pFolderManipulatorIterator->GetName( &szName );
-					if ( !szName.empty() )
-					{
-						std::string szType;
-						pFolderManipulatorIterator->GetType( &szType );
-						
-						if ( szType == "folder" )
-						{
-							folderStack.push_back( szName );
-						}
-						else if ( szType == "object" )
-						{
-							for ( std::list<std::string>::iterator itName = folderStack.begin(); itName != folderStack.end(); )
-							{
-								if ( szName.compare( 0, itName->size(), *itName ) == 0 )
-								{
-									folderStack.erase( itName++ );
-								}
-								else
-								{
-									++itName;
-								}
-							}
-							if ( !folderStack.empty() )
-							{
-								for ( std::list<std::string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
-								{
-									--itName;
-									folderNameList.push_back( *itName );
-								}
-							}
-							folderStack.clear();
-						}
-					}
-					pFolderManipulatorIterator->Next();
-				}
-				if ( !folderStack.empty() )
-				{
-					for ( std::list<std::string>::const_iterator itName = folderStack.end(); itName != folderStack.begin(); )
-					{
-						--itName;
-						folderNameList.push_back( *itName );
-					}
-				}
-			}
-			for ( std::list<std::string>::const_iterator itFolderName = folderNameList.begin(); itFolderName != folderNameList.end(); ++itFolderName )
-			{
-				DebugTrace( "Delete Folder: <%s>", itFolderName->c_str() ); 
-				if ( pFolderManipulator->RemoveNode( *itFolderName ) )
-				{
-					++nFoldersDeleted;
-				}
-			}
-			// messages and refresh folders
-			EndWaitCursor();
-			if ( nObjectsDeleted == 1 )
-			{
-				CreateTabs();
-				CString strMessagePattern;
-				strMessagePattern.LoadString( IDS_TREE_GDB_BROWSE_CFM_OBJECT_FOUND );
-				strMessage.Format( strMessagePattern, nObjectsDeleted );
-			}
-			else if ( nObjectsDeleted > 1 )
-			{
-				CreateTabs();
-				CString strMessagePattern;
-				strMessagePattern.LoadString( IDS_TREE_GDB_BROWSE_CFM_OBJECTS_FOUND );
-				strMessage.Format( strMessagePattern, nObjectsDeleted );
-			}
-			else
-			{
-				strMessage.LoadString( IDS_TREE_GDB_BROWSE_CFM_NO_OBJECT_FOUND );
-			}
-			MessageBox( strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONINFORMATION | MB_OK );
-		}
-	}
-	/**/
-}
-
-
-void CDWGDBBrowser::SelectObjectSet( const SObjectSet &rObjectSet )
-{
-	if ( !rObjectSet.objectNameSet.empty() && ( pContents != 0 ) )
-	{
-		if ( !rObjectSet.objectNameSet.begin()->first.IsEmpty() )
-		{
-			Singleton<IUserDataContainer>()->Get()->objectTypeDataMap[rObjectSet.szObjectTypeName].szCurrentObject = rObjectSet.objectNameSet.begin()->first.ToString();
-		}
-		//
-		if ( 	selectedTables.find( rObjectSet.szObjectTypeName ) != selectedTables.end() )
-		{
-			IObjectTree *pwndTab = pContents->GetTable( rObjectSet.szObjectTypeName );
-			if ( pwndTab != 0 )
-			{
-				pwndTab->SetStrongSelection();
-				pContents->ActivateTable( pwndTab );
-			}
-		}
-		else
-		{
-			bCreateControls = true;
-			InsertHashSetElement( &selectedTables, rObjectSet.szObjectTypeName );
-			IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( rObjectSet.szObjectTypeName );
-			bCreateControls = false;
-			// The table is added before anything is asked of its tree; a tree that
-			// could not be made used to be dereferenced here all the same.
-			if ( pwndTreeGBDBrowser == 0 )
-			{
-				return;
-			}
-			pwndTreeGBDBrowser->SetPCDialogCommandHandlerID( CHID_PC_DIALOG, false );
-			pwndTreeGBDBrowser->SetStrongSelection();
-			pContents->ActivateTable( pwndTreeGBDBrowser );
-			pContents->Show( true );
-			wndEmptyContents.ShowWindow( SW_HIDE );
-		}
-	}
-}
-
-
-void CDWGDBBrowser::New( const std::string &rszObjectTypeName )
-{
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
-	{
-		return;
-	}
-	//
-	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	IBuilderContainer *pBuilderContainer = Singleton<IBuilderContainer>();
-	IExporterContainer *pExporterContainer = Singleton<IExporterContainer>();
-	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
-	//	
-	std::string szObjectTypeName = rszObjectTypeName;
-	if ( szObjectTypeName.empty() )
-	{
-		return;
-	}
-	CString strObjectName;
-	strObjectName.LoadString( IDS_TREE_GDB_BROWSE_NEW_MAIN_OBJECT );
-	std::string szDefaultFolder;
-	pBuilderContainer->GetDefaultFolder( szObjectTypeName, &szDefaultFolder );
-	std::string szObjectName = szDefaultFolder + std::string( strObjectName );
-	pFolderCallback->UniqueName( szObjectTypeName, &szObjectName );
-	//
-	bool bCanChangeObjectName = true;
-	bool bNeedExport = false;
-	bool bNeedEdit = true;
-	//
-	if ( pBuilderContainer->InsertObject( &szObjectTypeName, &szObjectName, true, &bCanChangeObjectName, &bNeedExport, &bNeedEdit ) )
-	{
-		if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
-		{
-			// Экспортируем вновь созданный объект
-			if ( bNeedExport )
-			{
-				pExporterContainer->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );
-				pExporterContainer->ExportObject( pObjectManipulator, szObjectTypeName, szObjectName, FORCE_EXPORT, EXPORT_REFERENCES );
-				pExporterContainer->FinishExport( szObjectTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, EXPORT_REFERENCES );
-			}
-			if ( pEditorContainer->CanCreate( szObjectTypeName ) )
-			{
-				SObjectSet objectSet;
-				objectSet.szObjectTypeName = szObjectTypeName;
-				InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( szObjectName ) );
-				//
-				bool bMainObject = ( szObjectTypeName == pUserData->constUserData.szMainObjectType );
-				std::string szName;
-				CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
-				CStringManager::AddToRecentList( szName, bMainObject );
-				SelectObjectSet( objectSet );
-				pEditorContainer->Create( pObjectManipulator, objectSet );
-			}
-			pFolderCallback->ClearUndoData();
-		}
-		else
-		{
-			pFolderCallback->UndoChanges();
-		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-	}
-}
-
-
-void CDWGDBBrowser::Open( const std::string &rszObjectTypeName )
-{
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
-	{
-		return;
-	}
-	//
-	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-
-	CDBID objectDBID;
-	std::string szObjectTypeName = rszObjectTypeName;
-	if ( Singleton<IMainFrameContainer>()->Get()->BrowseForObject( &objectDBID, &szObjectTypeName, false, false ) )
-	{
-		if ( !objectDBID.IsEmpty() )
-		{
-			if ( pEditorContainer->CanCreate( szObjectTypeName ) )
-			{
-				if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( szObjectTypeName, objectDBID ) )
-				{
-					SObjectSet objectSet;
-					objectSet.szObjectTypeName = szObjectTypeName;
-					InsertHashSetElement( &( objectSet.objectNameSet ), objectDBID );
-					//
-					bool bMainObject = ( szObjectTypeName == pUserData->constUserData.szMainObjectType );
-					std::string szName;
-					CStringManager::CreateRecentListName( &szName, objectSet, bMainObject );
-					CStringManager::AddToRecentList( szName, bMainObject );
-					SelectObjectSet( objectSet );
-					pEditorContainer->Create( pObjectManipulator, objectSet );
-				}
-			}
-		}
-	}
-}
-
-
-void CDWGDBBrowser::OnRecentList( int nIndex, bool bMainObject )
-{
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
-	{
-		return;
-	}
-	//
-	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	IEditorContainer *pEditorContainer = Singleton<IEditorContainer>();
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	std::string szName;
-	if ( bMainObject )
-	{
-		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentList.size () ) )
-		{
-			int nNameIndex = 0;
-			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentList.begin(); itRecentName != pUserData->recentList.end(); ++itRecentName )
-			{
-				if ( nIndex == nNameIndex )
-				{
-					szName = ( *itRecentName );
-					break;
-				}
-				++nNameIndex;
-			}
-		}
-	}
-	else
-	{
-		if ( ( nIndex >= 0 ) && ( nIndex < pUserData->recentResourceList.size () ) )
-		{
-			int nNameIndex = 0;
-			for ( SUserData::CRecentList::const_iterator itRecentName = pUserData->recentResourceList.begin(); itRecentName != pUserData->recentResourceList.end(); ++itRecentName )
-			{
-				if ( nIndex == nNameIndex )
-				{
-					szName = ( *itRecentName );
-					break;
-				}
-				++nNameIndex;
-			}
-		}
-	}
-	if ( !szName.empty() )
-	{
-		SObjectSet objectSet;
-		CStringManager::CreateObjectSet( &objectSet, szName, bMainObject );
-		if ( pEditorContainer->CanCreate( objectSet.szObjectTypeName ) )
-		{
-			if ( CPtr<IManipulator> pObjectManipulator = pResourceManager->CreateObjectManipulator( objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first ) )
-			{
-				CStringManager::AddToRecentList( szName, bMainObject );
-				SelectObjectSet( objectSet );
-				pEditorContainer->Create( pObjectManipulator, objectSet );
-			}
-		}
-	}
-}
-
-
-void CDWGDBBrowser::OnCheckOut()
-{
-}
-
-
-void CDWGDBBrowser::OnCheckIn()
-{
-	CWaitCursor wc;
-	//
-	Singleton<IEditorContainer>()->DestroyActiveEditor( true );
-	Singleton<IChildFrameContainer>()->Destroy();
-	//
-	bool bResult = false;
-	try
-	{
-		bResult = Singleton<IResourceManager>()->CheckIn();
-	}
-	catch (...)	{}
-	//
-	if ( bResult )
-	{
-		AfxMessageBox( "Check in completed successfully.\r\n\r\n"
-				"MapEditor will exit now.",
-				MB_OK | MB_ICONINFORMATION
-				);
-	}
-	else
-	{
-		AfxMessageBox( "Check in failed.\r\n\r\n"
-				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
-				"This situation is CRITICAL.\r\n"
-				"If you do not want to lose changes you've done in your local database,\r\n"
-				"call to MapEditor's gurus immediately and do not try to start MapEditor again until they come.\r\n\r\n"
-				"MapEditor will exit now.",
-				MB_OK | MB_ICONERROR
-				);
-	}
-	AfxGetMainWnd()->PostMessage( WM_COMMAND, ID_APP_EXIT, 0 );
-}
-
-
-void CDWGDBBrowser::OnGetLatest()
-{
-	CWaitCursor wc;
-	//
-	Singleton<IEditorContainer>()->DestroyActiveEditor( true );
-	Singleton<IChildFrameContainer>()->Destroy();
-	//
-	bool bResult = false;
-	try
-	{
-		bResult = Singleton<IResourceManager>()->GetLatest();
-	}
-	catch (...)	{}
-	if ( bResult )
-	{
-		AfxMessageBox( "\"Get latest\" completed successfully\r\n\r\n"
-				"MapEditor will exit now.",
-				MB_OK | MB_ICONINFORMATION
-				);
-	}
-	else
-	{
-		AfxMessageBox( "Game database Get Latest operation has failed.\r\n\r\n"
-				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
-				"This situation is CRITICAL.\r\n"
-				"If you do not want to lose changes you've done in your local database, call to MapEditor's gurus immediately and do not try to start MapEditor again until they're come.\r\n\r\n"
-				"MapEditor will exit now.",
-				MB_OK | MB_ICONERROR
-				);
-	}
-	AfxGetMainWnd()->PostMessage( WM_COMMAND, ID_APP_EXIT, 0 );
-}
-
-
-bool CDWGDBBrowser::HandleCommand( unsigned nCommandID, uintptr_t dwData )
-{
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	switch( nCommandID )
-	{
-		case ID_MAIN_NEW:
-		{
-			if ( !pUserData->constUserData.szMainObjectType.empty() )
-			{
-				New( pUserData->constUserData.szMainObjectType );
-				return true;
-			}
-			break;
-		}
-		case ID_MAIN_OPEN:
-		{
-			if ( !pUserData->constUserData.szMainObjectType.empty() )
-			{
-				Open( pUserData->constUserData.szMainObjectType );
-				return true;
-			}
-			break;
-		}
-		case ID_MAIN_CLOSE:
-		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
-			{
-				Singleton<IEditorContainer>()->DestroyActiveEditor( false );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-			}
-			return true;
-		}
-		case ID_MAIN_NEW_RESOURCE:
-		{
-			New( std::string() );
-			return true;
-		}
-		case ID_MAIN_OPEN_RESOURCE:
-		{
-			Open( std::string() );
-			return true;
-		}
-		case ID_MAIN_SAVE:
-		{
-			Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false );
-			return true;
-		}
-		case ID_MAIN_RELOAD:
-		{
-			CreateTabs();
-			return true;
-		}
-		case ID_MAIN_SELECT:
-		{
-			SelectTables();
-			return true;
-		}
-		case ID_MAIN_CHECKOUT:
-		{
-			if ( NGlobal::GetVar( "enable_version_control", 0 ) == 1 )
-			{
-				OnCheckOut();
-			}
-			return true;
-		}
-		case ID_MAIN_CHECKIN:
-		{
-			if ( NGlobal::GetVar( "enable_version_control", 0 ) == 1 )
-			{
-				OnCheckIn();
-			}
-			return true;
-		}
-		case ID_MAIN_GETLATEST:
-		{
-			if ( NGlobal::GetVar( "enable_version_control", 0 ) == 1 )
-			{
-				OnGetLatest();
-			}
-			return true;
-		}
-		case ID_MAIN_RECENT_0:
-		case ID_MAIN_RECENT_1:
-		case ID_MAIN_RECENT_2:
-		case ID_MAIN_RECENT_3:
-		case ID_MAIN_RECENT_4:
-		case ID_MAIN_RECENT_5:
-		case ID_MAIN_RECENT_6:
-		case ID_MAIN_RECENT_7:
-		case ID_MAIN_RECENT_8:
-		case ID_MAIN_RECENT_9:
-		{
-			OnRecentList( nCommandID - ID_MAIN_RECENT_0, true );
-			break;
-		}
-		case ID_MAIN_RECENT_RESOURCE_0:
-		case ID_MAIN_RECENT_RESOURCE_1:
-		case ID_MAIN_RECENT_RESOURCE_2:
-		case ID_MAIN_RECENT_RESOURCE_3:
-		case ID_MAIN_RECENT_RESOURCE_4:
-		case ID_MAIN_RECENT_RESOURCE_5:
-		case ID_MAIN_RECENT_RESOURCE_6:
-		case ID_MAIN_RECENT_RESOURCE_7:
-		case ID_MAIN_RECENT_RESOURCE_8:
-		case ID_MAIN_RECENT_RESOURCE_9:
-		{
-			OnRecentList( nCommandID - ID_MAIN_RECENT_RESOURCE_0, false );
-			break;
-		}
-		case ID_MAIN_NEW_MOD:
-		{
-			if ( Singleton<IMODContainer>()->CanNewMOD() )
-			{
-				Singleton<IMODContainer>()->NewMOD();
-			}
-			break;
-		}
-		case ID_MAIN_OPEN_MOD:
-		{
-			if ( Singleton<IMODContainer>()->CanOpenMOD() )
-			{
-				Singleton<IMODContainer>()->OpenMOD();
-			}
-			break;
-		}
-		case ID_MAIN_CLOSE_MOD:
-		{
-			if ( Singleton<IMODContainer>()->CanCloseMOD() )
-			{
-				Singleton<IMODContainer>()->CloseMOD();
-			}
-			break;
-		}
-		case ID_MAIN_OBJECT_LOCATE:
-		{
-			LocateObject();
-			break;
-		}
-		default:
-			return false;
-	}
-	return false;
-}
-
-
-bool CDWGDBBrowser::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
-{
-	NI_ASSERT( pbEnable != 0, "CDWGDBBrowser::UpdateCommand(), pbEnable == 0" );
-	NI_ASSERT( pbCheck != 0, "CDWGDBBrowser::UpdateCommand(), pbCheck == 0" );
-	//
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	//
-	switch( nCommandID )
-	{
-		case ID_MAIN_NEW:
-		case ID_MAIN_OPEN:
-		{
-			( *pbEnable ) = ( !pUserData->constUserData.szMainObjectType.empty() );
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_CLOSE:
-		{
-			( *pbEnable ) = ( Singleton<IEditorContainer>()->GetActiveEditor() != 0 );
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_NEW_RESOURCE:
-		{
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_OPEN_RESOURCE:
-		{
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_SAVE:
-		{
-			{
-				bool bModified = ( Singleton<IEditorContainer>()->IsModified() || Singleton<IResourceManager>()->CanSyncDB() );
-				( *pbEnable ) = bModified;
-				( *pbCheck ) = false;
-				//
-				SSWTParams swtParams;
-				swtParams.dwFlags = SWT_MODIFIED;
-				swtParams.bModified = bModified;
-				Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
-			}
-			return true;
-		}
-		case ID_MAIN_RELOAD:
-		case ID_MAIN_SELECT:
-		{
-			( *pbEnable ) = true;
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_CHECKOUT:
-		case ID_MAIN_CHECKIN:
-		case ID_MAIN_GETLATEST:
-		{
-			( *pbEnable ) = ( NGlobal::GetVar( "enable_version_control", 0 ) == 1 );
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_RECENT_0:
-		case ID_MAIN_RECENT_1:
-		case ID_MAIN_RECENT_2:
-		case ID_MAIN_RECENT_3:
-		case ID_MAIN_RECENT_4:
-		case ID_MAIN_RECENT_5:
-		case ID_MAIN_RECENT_6:
-		case ID_MAIN_RECENT_7:
-		case ID_MAIN_RECENT_8:
-		case ID_MAIN_RECENT_9:
-		{
-			( *pbEnable ) = ( !pUserData->recentList.empty() );
-			( *pbCheck ) = false;
-			return true;
-			break;
-		}
-		case ID_MAIN_RECENT_RESOURCE_0:
-		case ID_MAIN_RECENT_RESOURCE_1:
-		case ID_MAIN_RECENT_RESOURCE_2:
-		case ID_MAIN_RECENT_RESOURCE_3:
-		case ID_MAIN_RECENT_RESOURCE_4:
-		case ID_MAIN_RECENT_RESOURCE_5:
-		case ID_MAIN_RECENT_RESOURCE_6:
-		case ID_MAIN_RECENT_RESOURCE_7:
-		case ID_MAIN_RECENT_RESOURCE_8:
-		case ID_MAIN_RECENT_RESOURCE_9:
-		{
-			( *pbEnable ) = ( !pUserData->recentResourceList.empty() );
-			( *pbCheck ) = false;
-			return true;
-			break;
-		}
-		case ID_MAIN_NEW_MOD:
-		{
-			( *pbEnable ) = Singleton<IMODContainer>()->CanNewMOD();
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_OPEN_MOD:
-		{
-			( *pbEnable ) = Singleton<IMODContainer>()->CanOpenMOD();
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_CLOSE_MOD:
-		{
-			( *pbEnable ) = Singleton<IMODContainer>()->CanCloseMOD();
-			( *pbCheck ) = false;
-			return true;
-		}
-		case ID_MAIN_OBJECT_LOCATE:
-		{
-			if ( IEditor *pEditor = Singleton<IEditorContainer>()->GetActiveEditor() )
-			{
-				if ( IView *pView = pEditor->GetView() )
-				{
-					SObjectSet objectSet;
-					pView->GetObjectSet( &objectSet );
-					if ( !objectSet.szObjectTypeName.empty() && !objectSet.objectNameSet.empty() )
-					{
-						( *pbEnable ) = true;
-						( *pbCheck ) = false;
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		default:
-			return false;
-	}
-	return false;
-}
-
-
-void CDWGDBBrowser::LocateObject()
-{
-	if ( IEditor *pEditor = Singleton<IEditorContainer>()->GetActiveEditor() )
-	{
-		if ( IView *pView = pEditor->GetView() )
-		{
-			SObjectSet objectSet;
-			pView->GetObjectSet( &objectSet );
-			if ( !objectSet.szObjectTypeName.empty() && !objectSet.objectNameSet.empty() )
-			{
-				CWaitCursor waitCursor;
-				SelectObjectSet( objectSet );
-				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
-			}
-		}
-	}
-}
-
-/**
-CWMMnemonicCodes mnemonicCodes;
-LRESULT CDWGDBBrowser::WindowProc( unsigned message, WPARAM wParam, LPARAM lParam ) 
-{
-	if ( message == WM_NOTIFY )
-	{
-		DebugTrace( "Message: %s, wParam: 0x%X(%u), lParam: 0x%X\n", mnemonicCodes.Get( message ).c_str(), wParam, wParam, lParam );
-	}
-	return SECControlBar::WindowProc( message, wParam, lParam );
-}
-/**/
-
-// basement storage  
-
-
-
+// basement storage

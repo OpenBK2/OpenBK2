@@ -162,6 +162,13 @@ namespace NPropertyPane
 	// open their dialogs over, and must outlive the grid; rszOptionsLabel names
 	// the state file the column widths are read from and kept in.
 	IGrid* CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel );
+
+	// The pane's contents, the grid over its status line, made straight inside
+	// a wx window for a wx frame's pane rather than inside an MFC one: already
+	// created and registered as CHID_PC_DIALOG. *ppWindow is what to put in the
+	// pane's layout; pOwner is what the grid's buttons open their dialogs over,
+	// and must outlive the contents. Owned by the caller; null on failure.
+	IPropertyPane* CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel, wxWindow **ppWindow );
 }
 
 #endif // OBK2_WITH_WX

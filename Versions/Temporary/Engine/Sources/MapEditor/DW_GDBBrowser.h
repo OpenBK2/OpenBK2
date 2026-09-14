@@ -1,31 +1,22 @@
 #pragma once
 
-//#include "3DTab_GDBBrowser.h"
-#include "ObjectBrowserView.h"
+#include "GDBBrowserPane.h"
 #include "Empty_GDBBrowser.h"
-#include "libdb/Manipulator.h"
-
-#include "MapEditorLib/Interface_UserData.h" //CTableSet
+#include "MapEditorLib/MfcWidget.h"
 
 #include <cstdint>
 
-class CDWGDBBrowser : public SECControlBar, public ICommandHandler, public IObjectBrowser::IListener
+// A Game Database pane in the MFC frame: a Stingray control bar around the
+// browser. What the pane shows and the commands it answers are
+// CGDBBrowserContents', shared with the wx frame's panes; see GDBBrowserPane.h.
+class CDWGDBBrowser : public SECControlBar, public ICommandHandler, public CGDBBrowserContents::IPane
 {
-	int nGDBBrowserID;
-	bool bCreateControls;
-
-	//C3DTabGDBBrowser wndContents;
-	// The tables and their trees, NObjectBrowser's; owned.
-	IObjectBrowser *pContents;
+	CGDBBrowserContents contents;
+	// Shown instead of the browser while no table is chosen.
 	CEmptyGDBBrowser wndEmptyContents;
+	// This pane, as what Select Tables opens over.
+	CWndWidget ownerWidget;
 
-	CPtr<IManipulator> pTableManipulator;
-
-	CTableSet selectedTables;
-	std::list<std::string> tables;
-	std::string szCurrentTable;
-
-	void SetTableManipulator( IManipulator *_pTableManipulator );
 	virtual BOOL OnGripperClose();
 
 protected:
@@ -38,39 +29,24 @@ protected:
 	afx_msg LRESULT OnTabSelected( WPARAM wParam, LPARAM lParam );
 	afx_msg void OnTabSelected();
 
-	//virtual LRESULT WindowProc( unsigned message, WPARAM wParam, LPARAM lParam) ;
-
-	void CreateTabs();
-	void SelectTables();
-	void ClearTable();
-	void SelectObjectSet( const SObjectSet &rObjectSet );
-	//
-	void New( const std::string &rszObjectTypeName );
-	void Open( const std::string &rszObjectTypeName );
-	void OnRecentList( int nIndex, bool bMainObject );
-	//
-	void OnCheckOut();
-	void OnCheckIn();
-	void OnGetLatest();
-	void LocateObject();
-
 public:
 	CDWGDBBrowser( int _nGDBBrowserID );
 	virtual ~CDWGDBBrowser();
 
 	// What answers CHID_OBJECT_STORAGE while this browser has the focus.
-	ICommandHandler *GetContents() { return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0; }
-	int GetDWGDBBrowserID() const { return nGDBBrowserID; }
-	void EnableEdit( bool bEnable ) { if ( pContents != 0 ) { pContents->EnableEdit( bEnable ); } }
+	ICommandHandler *GetContents() { return contents.GetObjectStorage(); }
+	int GetDWGDBBrowserID() const { return contents.GetID(); }
+	void EnableEdit( bool bEnable ) { contents.EnableEdit( bEnable ); }
 
-	// IObjectBrowser::IListener
-	virtual void OnTableSelected() { OnTabSelected(); }
+	// ICommandHandler: the frame registers the pane as CHID_MAIN; the contents
+	// answer.
+	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return contents.HandleCommand( nCommandID, dwData ); }
+	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return contents.UpdateCommand( nCommandID, pbEnable, pbCheck ); }
 
-	// ICommandHandler
-	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
-	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
+	// CGDBBrowserContents::IPane
+	virtual void LayoutContents();
+	virtual void ShowEmpty( bool bEmpty );
+	virtual IWidget* GetOwner() { return &ownerWidget; }
 
 	DECLARE_MESSAGE_MAP()
 };
-
-

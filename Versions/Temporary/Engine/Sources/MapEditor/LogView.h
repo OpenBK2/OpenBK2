@@ -85,3 +85,20 @@ namespace NLogView
 	ILogView* CreateWxLogView();
 #endif
 }
+
+
+#ifdef OBK2_WITH_WX
+
+class wxWindow;
+
+namespace NLogView
+{
+	// The wx contents made straight inside a wx window, for a wx frame's pane
+	// rather than inside an MFC one, and already created with
+	// pSelectionHandler. *ppWindow is what to put in the pane's layout, which
+	// then does what SetBounds does for an MFC pane. Owned by the caller; null
+	// on failure.
+	ILogView* CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
+}
+
+#endif // OBK2_WITH_WX
