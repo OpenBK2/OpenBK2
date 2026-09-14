@@ -34,6 +34,10 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 {
 	static const int WM_SECTOOLBARWNDNOTIFY;
 	//
+public:
+	// The frame's toolbars: resource, bar id, name, whether shown to begin
+	// with, and buttons. Public because the wx frame (MainFrameWx.cpp) makes
+	// the same toolbars from the same tables.
 	static const unsigned TOOLBAR_ID[TOOLBARS_COUNT];
 	static const unsigned TOOLBAR_CONTROL_ID[TOOLBARS_COUNT];
 	static const unsigned TOOLBAR_CONTROL_ID_TO_ARRANGE;
@@ -50,6 +54,7 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	//
 	static const uint32_t TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT];
 	static const unsigned* TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT];
+private:
 	//
 	static const unsigned STATUSBAR_INDICATORS_ID[STATUSBAR_ELEMENTS];
 	static const unsigned STATUSBAR_INDICATORS_SIZE[STATUSBAR_ELEMENTS];

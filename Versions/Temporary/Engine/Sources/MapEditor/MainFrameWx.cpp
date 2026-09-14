@@ -43,6 +43,7 @@ namespace NMainFrameWx
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 
+#include "MainFrame.h"
 #include "MainFrameParams.h"
 #include "MainFrameShared.h"
 #include "MainFrameWxPanes.h"
@@ -52,6 +53,8 @@ namespace NMainFrameWx
 
 #include <fmt/printf.h>
 
+#include <wx/aui/auibar.h>
+#include <wx/aui/barartmsw.h>
 #include <wx/aui/framemanager.h>
 #include <wx/dcclient.h>
 #include <wx/iconbndl.h>
@@ -69,10 +72,9 @@ namespace NMainFrameWx
 
 // The main frame, in wx: the frame itself, its menus, status bar, title,
 // command routing, placement and close, its docking panes in wxAUI -- its own
-// three and the editors' -- and the document window (see MainFrameWxPanes.h).
-// The toolbars are not here yet, and the IMainFrame calls for them answer
-// "none" -- every caller already copes with that, because CMainFrame could fail
-// to make them too.
+// three and the editors' -- the document window and the toolbars (see
+// MainFrameWxPanes.h). Not here yet: the layout is not kept between sessions,
+// and Reset GUI and Customize do nothing.
 //
 // What stays MFC for now, on purpose. The editors and dialogs still want the
 // main window as a CWnd -- AfxGetMainWnd(), MainFrameWnd(), a CDialog's owner --
@@ -236,6 +238,36 @@ namespace
 			strPrompt = strPrompt.Left( nNewLine );
 		}
 		return wxString::FromUTF8( strPrompt.GetString() );
+	}
+
+
+	// A toolbar button's tooltip: the command's string after its newline, where
+	// MFC's toolbars found it.
+	wxString CommandTooltip( unsigned nCommandID )
+	{
+		CString strPrompt;
+		if ( ( nCommandID == 0 ) || !strPrompt.LoadString( nCommandID ) )
+		{
+			return wxString();
+		}
+		const int nNewLine = strPrompt.Find( '\n' );
+		return ( nNewLine >= 0 ) ? wxString::FromUTF8( strPrompt.Mid( nNewLine + 1 ).GetString() ) : wxString();
+	}
+
+
+	// ToolBarButtonsMap.h's two-part buttons: a toolbar button and the command
+	// its arrow runs. 0 for a button without one.
+	unsigned ArrowCommand( unsigned nCommandID )
+	{
+		switch ( nCommandID )
+		{
+			case ID_CC_UNDO:
+				return ID_CC_UNDO_ARROW;
+			case ID_CC_REDO:
+				return ID_CC_REDO_ARROW;
+			default:
+				return 0;
+		}
 	}
 
 
@@ -415,6 +447,13 @@ namespace
 		// the same reason as the editors' panes.
 		wxPanel *pWorkspace = nullptr;
 		std::list<std::unique_ptr<NMainFrameWxPanes::CFrameWindow>> frameWindows;
+		// The toolbars, the frame's and the editors', by bar id, and the pictures
+		// their buttons are drawn from. The next id for a toolbar that asks for
+		// one, as CMainFrame counts them, and the next toolbar row.
+		NMainFrameWxPanes::CToolBarImages toolBarImages;
+		std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>> toolBars;
+		unsigned nFreeToolBarID = AFX_IDW_TOOLBAR + 9;
+		int nNextToolBarPosition = 0;
 		// Whether the manager has laid the frame out. The first layout waits for
 		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
 		// of the frame the first time it sizes it, and keeps what it gave.
@@ -430,6 +469,8 @@ namespace
 			Bind( wxEVT_MENU, &CWxMainFrame::OnMenu, this );
 			Bind( wxEVT_MENU_OPEN, &CWxMainFrame::OnMenuOpen, this );
 			Bind( wxEVT_DROP_FILES, &CWxMainFrame::OnDropFiles, this );
+			Bind( wxEVT_UPDATE_UI, &CWxMainFrame::OnUpdateUI, this );
+			Bind( wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &CWxMainFrame::OnToolDropDown, this );
 		}
 
 		virtual ~CWxMainFrame()
@@ -494,6 +535,7 @@ namespace
 			pWorkspace->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 			pWorkspace->SetSizer( new wxBoxSizer( wxVERTICAL ) );
 			auiManager.AddPane( pWorkspace, wxAuiPaneInfo().Name( "workspace" ).CenterPane() );
+			CreateMainToolBars();
 			CreatePanes();
 			//
 			Singleton<IMainFrameContainer>()->Set( this, this );
@@ -555,8 +597,37 @@ namespace
 		}
 
 		// IMainFrame
+		// As CMainFrame's: the button under the mouse, then the button in the
+		// first shown toolbar that has it -- in screen coordinates.
 		virtual bool GetToolBarButtonLeftBottomPos( const CTPoint<int> &rMousePoint, unsigned nButtonID, CTPoint<int> *pLeftBottomPos )
 		{
+			const wxPoint point( rMousePoint.x, rMousePoint.y );
+			for ( int nPass = 0; nPass < 2; ++nPass )
+			{
+				for ( std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>>::const_iterator itToolBar = toolBars.begin(); itToolBar != toolBars.end(); ++itToolBar )
+				{
+					wxAuiToolBar *const pToolBar = itToolBar->second->GetToolBar();
+					if ( ( pToolBar == nullptr ) || !pToolBar->IsShownOnScreen() )
+					{
+						continue;
+					}
+					const wxRect toolRect = pToolBar->GetToolRect( ToWxID( nButtonID ) );
+					if ( toolRect.IsEmpty() )
+					{
+						continue;
+					}
+					const wxRect screenRect( pToolBar->ClientToScreen( toolRect.GetPosition() ), toolRect.GetSize() );
+					if ( ( nPass == 1 ) || screenRect.Contains( point ) )
+					{
+						if ( pLeftBottomPos != 0 )
+						{
+							pLeftBottomPos->x = screenRect.GetLeft();
+							pLeftBottomPos->y = screenRect.GetBottom() + 1;
+						}
+						return true;
+					}
+				}
+			}
 			return false;
 		}
 
@@ -647,20 +718,79 @@ namespace
 			}
 		}
 
+		// The large pictures were never used: the toolbars are small.
 		virtual bool AddToolBarResource( const unsigned nStandartResourceID, const unsigned nLargeResourceID )
 		{
-			return false;
+			return toolBarImages.AddToolBarResource( nStandartResourceID );
 		}
 
+		// SECToolBarManager::DefineDefaultToolBar, docked along the top where
+		// nStyle says, next to the toolbar made before it.
 		virtual void CreateToolBar( unsigned *pnID, const std::string &rszTitle, const unsigned nButtonCount, const unsigned *pButtonIDMap,
 																const uint32_t dwAlignment, const unsigned nStyle, const bool bDocked, const bool bVisible, const bool bMainToolBar )
 		{
-			NotYet( rszTitle.c_str() );
+			NI_ASSERT( pnID != 0, "CWxMainFrame::CreateToolBar() pnID == 0" );
+			if ( ( *pnID ) == 0xFFFFFFFF )
+			{
+				( *pnID ) = nFreeToolBarID;
+				++nFreeToolBarID;
+			}
+			wxAuiToolBar *const pToolBar = NWx::Child<wxAuiToolBar>( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE );
+			pToolBar->SetArtProvider( new wxAuiMSWToolBarArt() );
+			pToolBar->SetToolBitmapSize( wxSize( 16, 16 ) );
+			for ( unsigned nButton = 0; nButton < nButtonCount; ++nButton )
+			{
+				const unsigned nCommandID = pButtonIDMap[nButton];
+				if ( nCommandID == ID_SEPARATOR )
+				{
+					pToolBar->AddSeparator();
+					continue;
+				}
+				// Every button is a check item, for the handlers that check one,
+				// but the two-part ones, whose arrow wx will not draw on one.
+				const bool bTwoPart = ( ArrowCommand( nCommandID ) != 0 );
+				pToolBar->AddTool( ToWxID( nCommandID ), wxString(), toolBarImages.Get( nCommandID ), CommandTooltip( nCommandID ),
+													 bTwoPart ? wxITEM_NORMAL : wxITEM_CHECK );
+				if ( bTwoPart )
+				{
+					pToolBar->SetToolDropDown( ToWxID( nCommandID ), true );
+				}
+			}
+			pToolBar->Realize();
+			//
+			// A row each, in the order they are made, as the MFC frame stacks its
+			// toolbars; a hidden one leaves no gap.
+			wxAuiPaneInfo info;
+			info.Name( wxString::Format( "ToolBar%u", *pnID ) ).Caption( wxString::FromUTF8( rszTitle.c_str() ) ).ToolbarPane().Row( nNextToolBarPosition ).Position( 0 );
+			switch ( nStyle )
+			{
+				case AFX_IDW_DOCKBAR_BOTTOM:
+					info.Bottom();
+					break;
+				case AFX_IDW_DOCKBAR_LEFT:
+					info.Left();
+					break;
+				case AFX_IDW_DOCKBAR_RIGHT:
+					info.Right();
+					break;
+				default:
+					info.Top();
+					break;
+			}
+			info.Show( bVisible );
+			++nNextToolBarPosition;
+			auiManager.AddPane( pToolBar, info );
+			if ( bLaidOut )
+			{
+				auiManager.Update();
+			}
+			toolBars[*pnID] = std::unique_ptr<NMainFrameWxPanes::CToolBar>( new NMainFrameWxPanes::CToolBar( &auiManager, pToolBar, &bLaidOut ) );
 		}
 
 		virtual IToolBar* GetToolBar( unsigned nID )
 		{
-			return 0;
+			const std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>>::const_iterator posToolBar = toolBars.find( nID );
+			return ( posToolBar != toolBars.end() ) ? posToolBar->second.get() : 0;
 		}
 
 		virtual void SetStatusBarText( int nPaneIndex, const std::string &szText )
@@ -814,6 +944,75 @@ namespace
 		static wxString PaneName( unsigned nID )
 		{
 			return wxString::Format( "Pane%u", nID );
+		}
+
+		// The start of CMainFrame::OnCreate: its toolbar resources, the game
+		// icon for Run Game, and its six toolbars from its own tables.
+		void CreateMainToolBars()
+		{
+			for ( int nToolBar = 0; nToolBar < TOOLBARS_COUNT; ++nToolBar )
+			{
+				toolBarImages.AddToolBarResource( CMainFrame::TOOLBAR_ID[nToolBar] );
+			}
+			toolBarImages.AddIcon( ID_TOOLS_RUN_GAME, IDI_GAME_LAUNCH );
+			for ( int nToolBar = 0; nToolBar < TOOLBARS_COUNT; ++nToolBar )
+			{
+				CString strName;
+				strName.LoadString( CMainFrame::TOOLBAR_NAME_ID[nToolBar] );
+				unsigned nID = CMainFrame::TOOLBAR_CONTROL_ID[nToolBar];
+				CreateToolBar( &nID, std::string( strName.GetString() ), CMainFrame::TOOLBAR_ELEMENTS_COUNT[nToolBar],
+											 CMainFrame::TOOLBAR_ELEMENTS_ID[nToolBar], CMainFrame::TOOLBAR_STYLE[nToolBar], AFX_IDW_DOCKBAR_TOP,
+											 true, CMainFrame::TOOLBAR_SHOW[nToolBar], false );
+			}
+		}
+
+		// A View > toolbar command's toolbar: CMainFrame::OnViewToolBar's.
+		NMainFrameWxPanes::CToolBar* ViewToolBar( unsigned nCommandID )
+		{
+			const std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>>::const_iterator posToolBar =
+				toolBars.find( CMainFrame::TOOLBAR_CONTROL_ID[nCommandID - ID_VIEW_TOOLBAR_MAIN] );
+			return ( posToolBar != toolBars.end() ) ? posToolBar->second.get() : nullptr;
+		}
+
+		// A toolbar button's state, asked on idle as MFC's toolbars asked
+		// through CCmdUI: the menus' own answer. wxAuiToolBar sends this for its
+		// buttons.
+		//
+		// Only for those. wx sends this on idle for every window, with the
+		// window's own id, and it reaches the frame: answering them all disabled
+		// the frame and everything in it, since no command has their ids. Menus
+		// send it too as they open, for submenus as well, under ids wx made up;
+		// answering those checked a submenu, and the editor went with no trace.
+		// OnMenuOpen already sets the menus' states.
+		void OnUpdateUI( wxUpdateUIEvent &rEvent )
+		{
+			if ( wxDynamicCast( rEvent.GetEventObject(), wxAuiToolBar ) == nullptr )
+			{
+				rEvent.Skip();
+				return;
+			}
+			const unsigned nCommandID = ToCommandID( rEvent.GetId() );
+			bool bEnable = false;
+			bool bCheck = false;
+			UpdateMenuCommand( nCommandID, &bEnable, &bCheck );
+			rEvent.Enable( bEnable );
+			if ( ArrowCommand( nCommandID ) == 0 )
+			{
+				rEvent.Check( bCheck );
+			}
+		}
+
+		// The arrow of a two-part button runs its own command, which shows the
+		// undo or redo list under the button.
+		void OnToolDropDown( wxAuiToolBarEvent &rEvent )
+		{
+			const unsigned nArrowID = ArrowCommand( ToCommandID( rEvent.GetId() ) );
+			if ( !rEvent.IsDropDownClicked() || ( nArrowID == 0 ) )
+			{
+				rEvent.Skip();
+				return;
+			}
+			NMainFrameShared::RunUserCommand( nArrowID );
 		}
 
 		// What CMainFrame::OnCreate makes, in its order: Log, Selection
@@ -1133,6 +1332,14 @@ namespace
 				}
 				return;
 			}
+			if ( ( nCommandID >= ID_VIEW_TOOLBAR_MAIN ) && ( nCommandID <= ID_VIEW_TOOLBAR_VIEW ) )
+			{
+				if ( NMainFrameWxPanes::CToolBar *const pToolBar = ViewToolBar( nCommandID ) )
+				{
+					pToolBar->Show( !pToolBar->IsVisible() );
+				}
+				return;
+			}
 			if ( ( nCommandID >= ID_FIRST_COMMAND_ID ) && ( nCommandID <= ID_LAST_COMMAND_ID ) )
 			{
 				NMainFrameShared::RunUserCommand( nCommandID );
@@ -1185,8 +1392,8 @@ namespace
 			}
 		}
 
-		// A menu item's state: CMainFrame's own handlers, then the user command
-		// range. The toolbar, Reset GUI and Customize items belong to parts of the
+		// A menu item's or toolbar button's state: CMainFrame's own handlers, then
+		// the user command range. Reset GUI and Customize belong to parts of the
 		// frame that are not here yet, and stay off.
 		void UpdateMenuCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 		{
@@ -1223,6 +1430,13 @@ namespace
 				const NMainFrameWxPanes::CGDBBrowserPane *const pPane = GDBBrowserPaneAt( nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST );
 				( *pbEnable ) = ( pPane != nullptr );
 				( *pbCheck ) = ( pPane != nullptr ) && IsPaneShown( pPane->GetPanel() );
+				return;
+			}
+			if ( ( nCommandID >= ID_VIEW_TOOLBAR_MAIN ) && ( nCommandID <= ID_VIEW_TOOLBAR_VIEW ) )
+			{
+				const NMainFrameWxPanes::CToolBar *const pToolBar = ViewToolBar( nCommandID );
+				( *pbEnable ) = ( pToolBar != nullptr );
+				( *pbCheck ) = ( pToolBar != nullptr ) && pToolBar->IsVisible();
 				return;
 			}
 			if ( ( nCommandID >= ID_FIRST_COMMAND_ID ) && ( nCommandID <= ID_LAST_COMMAND_ID ) )

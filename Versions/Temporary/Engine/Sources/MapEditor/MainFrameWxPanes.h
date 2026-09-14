@@ -25,10 +25,13 @@
 #include "PropertyPaneView.h"
 #include "MapEditorLib/Interface_Widget.h"
 
+#include <wx/aui/auibar.h>
 #include <wx/aui/framemanager.h>
+#include <wx/bitmap.h>
 #include <wx/panel.h>
 #include <wx/weakref.h>
 
+#include <map>
 #include <string>
 
 namespace NMainFrameWxPanes
@@ -111,6 +114,47 @@ namespace NMainFrameWxPanes
 		virtual bool IsAlive() const;
 		virtual void Destroy();
 		virtual void Redraw();
+	};
+
+
+	// Every toolbar button picture the frame knows, by command -- the pool
+	// SECToolBarManager kept. A toolbar asks for its buttons' pictures by
+	// command, whichever resource they came from.
+	class CToolBarImages
+	{
+		std::map<unsigned, wxBitmap> bitmaps;
+
+	public:
+		// A TOOLBAR resource and the BITMAP of the same id, in the module the
+		// resource handle finds them: the nth button that is not a separator is
+		// the nth square of the strip. Light grey is transparent, as in every
+		// MFC toolbar bitmap.
+		bool AddToolBarResource( unsigned nResourceID );
+		// An icon for one command, over whatever picture a toolbar resource gave
+		// it, as SECToolBarManager::AddCommandIconResource.
+		void AddIcon( unsigned nCommandID, unsigned nIconID );
+		// Null when no resource gave the command a picture.
+		wxBitmap Get( unsigned nCommandID ) const;
+	};
+
+
+	// The IToolBar an editor gets: a wxAuiToolBar pane of the frame's manager.
+	class CToolBar : public IToolBar
+	{
+		wxAuiManager *pManager;
+		wxWeakRef<wxAuiToolBar> pToolBar;
+		// As CDockPanel's.
+		const bool *pbLaidOut;
+
+	public:
+		CToolBar( wxAuiManager *_pManager, wxAuiToolBar *_pToolBar, const bool *_pbLaidOut )
+			: pManager( _pManager ), pToolBar( _pToolBar ), pbLaidOut( _pbLaidOut ) {}
+
+		wxAuiToolBar* GetToolBar() const { return pToolBar; }
+
+		// IToolBar
+		virtual void Show( bool bShow );
+		virtual bool IsVisible() const;
 	};
 
 

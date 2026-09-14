@@ -7,7 +7,10 @@
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "ResourceDefines.h"
+
+#include <wx/icon.h>
 
 #include <wx/settings.h>
 #include <wx/sizer.h>
@@ -73,6 +76,103 @@ namespace NMainFrameWxPanes
 
 
 	// No wxTAB_TRAVERSAL: nothing in the panel is wx's to navigate between.
+	bool CToolBarImages::AddToolBarResource( unsigned nResourceID )
+	{
+		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nResourceID ), RT_TOOLBAR );
+		// The A form by name: wx's Windows headers make FindResource the wide one.
+		const HRSRC hResource = ::FindResourceA( hInstance, MAKEINTRESOURCEA( nResourceID ), RT_TOOLBAR );
+		if ( hResource == 0 )
+		{
+			return false;
+		}
+		const HGLOBAL hData = ::LoadResource( hInstance, hResource );
+		const WORD *const pData = ( hData != 0 ) ? static_cast<const WORD*>( ::LockResource( hData ) ) : nullptr;
+		const DWORD nSize = ::SizeofResource( hInstance, hResource );
+		if ( ( pData == nullptr ) || ( nSize < 4 * sizeof( WORD ) ) )
+		{
+			return false;
+		}
+		// CToolBarData: version, width, height, item count, then the items, a
+		// command id each, 0 for a separator.
+		const int nWidth = pData[1];
+		const int nHeight = pData[2];
+		const int nCount = pData[3];
+		if ( ( nWidth <= 0 ) || ( nHeight <= 0 ) || ( nSize < ( 4 + nCount ) * sizeof( WORD ) ) )
+		{
+			return false;
+		}
+		wxImage strip = NWxResourceImages::LoadStrip( nResourceID );
+		if ( !strip.IsOk() )
+		{
+			return false;
+		}
+		strip.SetMaskColour( 192, 192, 192 );
+		int nImage = 0;
+		for ( int nItem = 0; nItem < nCount; ++nItem )
+		{
+			const unsigned nCommandID = pData[4 + nItem];
+			if ( nCommandID == 0 )
+			{
+				continue;
+			}
+			const wxRect rect( nImage * nWidth, 0, nWidth, nHeight );
+			if ( rect.GetRight() < strip.GetWidth() )
+			{
+				bitmaps[nCommandID] = wxBitmap( strip.GetSubImage( rect ) );
+			}
+			++nImage;
+		}
+		return true;
+	}
+
+
+	void CToolBarImages::AddIcon( unsigned nCommandID, unsigned nIconID )
+	{
+		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nIconID ), RT_GROUP_ICON );
+		const HICON hIcon = static_cast<HICON>( ::LoadImage( hInstance, MAKEINTRESOURCE( nIconID ), IMAGE_ICON, 16, 16, 0 ) );
+		if ( hIcon == 0 )
+		{
+			return;
+		}
+		wxIcon icon;
+		// The icon takes the handle and destroys it.
+		if ( icon.CreateFromHICON( hIcon ) )
+		{
+			bitmaps[nCommandID] = wxBitmap( icon );
+		}
+		else
+		{
+			::DestroyIcon( hIcon );
+		}
+	}
+
+
+	wxBitmap CToolBarImages::Get( unsigned nCommandID ) const
+	{
+		const std::map<unsigned, wxBitmap>::const_iterator posBitmap = bitmaps.find( nCommandID );
+		return ( posBitmap != bitmaps.end() ) ? posBitmap->second : wxBitmap();
+	}
+
+
+	void CToolBar::Show( bool bShow )
+	{
+		if ( pToolBar )
+		{
+			pManager->GetPane( pToolBar ).Show( bShow );
+			if ( *pbLaidOut )
+			{
+				pManager->Update();
+			}
+		}
+	}
+
+
+	bool CToolBar::IsVisible() const
+	{
+		return pToolBar && pManager->GetPane( pToolBar ).IsShown();
+	}
+
+
 	CMfcPanel::CMfcPanel( wxWindow *pParent )
 		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN ),
 			hwndContents( 0 )
