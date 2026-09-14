@@ -22,14 +22,28 @@
 #include "libdb/Db.h"
 #include "libdb/Manipulator.h"
 #include "libdb/ResourceManager.h"
+#include "RefListView.h"
+#include "SearchObjectView.h"
+#include "MapEditorLib/Interface_Builder.h"
+#include "MapEditorLib/Interface_Exporter.h"
+#include "MapEditorLib/Interface_FolderCallback.h"
+#include "MapEditorLib/StringManager.h"
+
+#include <fmt/format.h>
+#include <fmt/printf.h>
 
 #include <wx/choice.h>
 #include <wx/imaglist.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
+#include <wx/utils.h>
 #include <wx/sizer.h>
 #include <wx/time.h>
 #include <wx/treectrl.h>
 
 #include <cstring>
+#include <functional>
+#include <list>
 #include <memory>
 #include <unordered_map>
 #include <vector>
@@ -55,8 +69,12 @@
 //     tools, and follows folder changes made anywhere -- new objects, removals,
 //     renames, colours, opened folders -- through the view container.
 //
-// Renaming, new folders, cut, copy, paste, delete, colour, the context menu,
-// find, check and export come in the next slices, and drag and drop after.
+// And the commands that do not edit a row's name, second slice: the context
+// menu, New Object at the selected folder or the root, Find, List References,
+// Check and the Export variants.
+//
+// Renaming, new folders, cut, copy, paste, delete and colour come next, and
+// drag and drop after; until then the menu shows them greyed.
 //
 // **Names.** A row is found by its path, as the MFC tree found an HTREEITEM:
 // "Scenario\Campaigns\" for a folder, "Scenario\Campaigns\GER1.0\MapInfo.xdb"
@@ -193,6 +211,9 @@ namespace
 		wxTreeCtrl *pTree = nullptr;
 		IObjectBrowser::EKind eKind;
 		IObjectBrowser::IListener *pListener;
+		// What the tree's dialogs belong to: the browser's host window, which
+		// outlives every tree in it.
+		IWidget *pOwner;
 		int nGDBBrowserID;
 		unsigned nPCDialogCommandHandlerID = INVALID_COMMAND_HANDLER_ID;
 		bool bEnableEdit = true;
@@ -212,8 +233,8 @@ namespace
 		std::string szBuildFirstObject;
 
 	public:
-		CWxObjectTree( IObjectBrowser::EKind _eKind, IObjectBrowser::IListener *_pListener, int _nGDBBrowserID )
-			: eKind( _eKind ), pListener( _pListener ), nGDBBrowserID( _nGDBBrowserID )
+		CWxObjectTree( IObjectBrowser::EKind _eKind, IObjectBrowser::IListener *_pListener, IWidget *_pOwner, int _nGDBBrowserID )
+			: eKind( _eKind ), pListener( _pListener ), pOwner( _pOwner ), nGDBBrowserID( _nGDBBrowserID )
 		{
 		}
 
@@ -247,6 +268,8 @@ namespace
 			pTree->Bind( wxEVT_LEFT_DCLICK, &CWxObjectTree::OnDoubleClick, this );
 			pTree->Bind( wxEVT_SET_FOCUS, &CWxObjectTree::OnFocus, this );
 			pTree->Bind( wxEVT_DESTROY, &CWxObjectTree::OnDestroyed, this );
+			pTree->Bind( wxEVT_TREE_ITEM_MENU, &CWxObjectTree::OnItemMenu, this );
+			pTree->Bind( wxEVT_CONTEXT_MENU, &CWxObjectTree::OnContextMenu, this );
 		}
 
 		wxWindow* GetWindow() const
@@ -465,14 +488,44 @@ namespace
 		}
 
 		// ICommandHandler, registered as CHID_OBJECT and CHID_SELECTION while the
-		// tree has the focus. This slice answers Load; the rest of the tree's
-		// commands come with the slices that bring them.
+		// tree has the focus: CTreeGDBBrowserBase::HandleCommand, for the commands
+		// this slice has. The ones that edit rows answer false and so show greyed.
 		virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
+			if ( pTree == nullptr )
+			{
+				return false;
+			}
 			switch ( nCommandID )
 			{
 				case ID_OBJECT_LOAD:
 					Load();
+					return true;
+				case ID_OBJECT_NEW:
+				case ID_SELECTION_NEW:
+					if ( bEnableEdit )
+					{
+						NewObject( SelectedFolder() );
+					}
+					return true;
+				case ID_OBJECT_NEW_AT_ROOT:
+					if ( bEnableEdit )
+					{
+						NewObject( pTree->GetRootItem() );
+					}
+					return true;
+				case ID_OBJECT_CHECK:
+				case ID_OBJECT_EXPORT:
+				case ID_OBJECT_EXPORT_NO_REF:
+				case ID_OBJECT_EXPORT_FORCE:
+				case ID_OBJECT_EXPORT_NO_REF_FORCE:
+					CheckOrExport( nCommandID );
+					return true;
+				case ID_SELECTION_FIND:
+					Find();
+					return true;
+				case ID_OBJECT_REF_LOOKUP:
+					LookupReferences();
 					return true;
 				default:
 					return false;
@@ -481,16 +534,39 @@ namespace
 
 		virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 		{
-			if ( ( pbEnable == 0 ) || ( pbCheck == 0 ) )
+			if ( ( pbEnable == 0 ) || ( pbCheck == 0 ) || ( pTree == nullptr ) )
 			{
 				return false;
 			}
+			( *pbCheck ) = false;
 			switch ( nCommandID )
 			{
 				case ID_OBJECT_LOAD:
 					( *pbEnable ) = CanLoad();
-					( *pbCheck ) = false;
 					return true;
+				case ID_OBJECT_NEW:
+				case ID_OBJECT_NEW_AT_ROOT:
+				case ID_SELECTION_NEW:
+					( *pbEnable ) = bEnableEdit && CanNew();
+					return true;
+				case ID_OBJECT_CHECK:
+				case ID_OBJECT_EXPORT_FORCE:
+				case ID_OBJECT_EXPORT_NO_REF_FORCE:
+					( *pbEnable ) = CanExport();
+					return true;
+				case ID_OBJECT_EXPORT:
+				case ID_OBJECT_EXPORT_NO_REF:
+					( *pbEnable ) = CanExport();
+					return true;
+				case ID_SELECTION_FIND:
+					( *pbEnable ) = true;
+					return true;
+				case ID_OBJECT_REF_LOOKUP:
+				{
+					wxArrayTreeItemIds selected;
+					( *pbEnable ) = ( pTree->GetSelections( selected ) == 1 ) && ( TypeOf( pTree->GetFocusedItem() ) == GDBO_OBJECT );
+					return true;
+				}
 				default:
 					return false;
 			}
@@ -916,6 +992,465 @@ namespace
 			}
 		}
 
+		static std::string LoadResourceString( UINT nID )
+		{
+			CString strText;
+			strText.LoadString( nID );
+			return std::string( strText.GetString() );
+		}
+
+		// Where the frame sends a command: the ranges MapEditorApp registers.
+		// The menu has object and selection commands only.
+		static unsigned GetCommandHandlerFor( unsigned nCommandID )
+		{
+			if ( ( nCommandID >= ID_SELECTION_FIRST_COMMAND_ID ) && ( nCommandID <= ID_SELECTION_LAST_COMMAND_ID ) )
+			{
+				return CHID_SELECTION;
+			}
+			return CHID_OBJECT;
+		}
+
+		// The selected rows none of whose folders are selected too, in tree
+		// order: CSortTreeControl::IsTopSelection over the selection.
+		void GetTopSelection( std::vector<wxTreeItemId> *pRows ) const
+		{
+			const wxTreeItemId root = pTree->GetRootItem();
+			wxArrayTreeItemIds selected;
+			pTree->GetSelections( selected );
+			for ( size_t nRow = 0; nRow < selected.size(); ++nRow )
+			{
+				bool bTop = true;
+				for ( wxTreeItemId parent = pTree->GetItemParent( selected[nRow] ); parent.IsOk() && ( parent != root ); parent = pTree->GetItemParent( parent ) )
+				{
+					if ( pTree->IsSelected( parent ) )
+					{
+						bTop = false;
+						break;
+					}
+				}
+				if ( bTop )
+				{
+					pRows->push_back( selected[nRow] );
+				}
+			}
+		}
+
+		// The folder New puts an object in: the focused row, or the folder it is
+		// in; the root when there is none.
+		wxTreeItemId SelectedFolder() const
+		{
+			const wxTreeItemId root = pTree->GetRootItem();
+			wxTreeItemId item = pTree->GetFocusedItem();
+			while ( item.IsOk() && ( item != root ) && ( TypeOf( item ) != GDBO_FOLDER ) )
+			{
+				item = pTree->GetItemParent( item );
+			}
+			return ( item.IsOk() && ( item != root ) ) ? item : root;
+		}
+
+		// CTreeGDBBrowserBase::FindName with the type checked.
+		bool HasChild( const wxTreeItemId &rParent, const std::string &rszText, EGDBOType eType ) const
+		{
+			const wxTreeItemId child = FindChild( rParent, rszText );
+			return child.IsOk() && ( TypeOf( child ) == eType );
+		}
+
+		// CTreeGDBBrowserBase::GetUniqueName: "Name (2)", "Name (3)" and on, the
+		// .xdb kept at the end.
+		std::string UniqueName( const wxTreeItemId &rParent, const std::string &rszName, EGDBOType eType ) const
+		{
+			std::string szName = rszName;
+			std::string szBaseName = rszName;
+			const bool bExtension = CStringManager::CutFileExtention( &szBaseName, ".xdb" );
+			for ( uint32_t nNumber = 2; HasChild( rParent, szName, eType ); ++nNumber )
+			{
+				szName = szBaseName + fmt::format( " ({})", nNumber );
+				if ( bExtension )
+				{
+					CStringManager::ExtendFileExtention( &szName, ".xdb" );
+				}
+			}
+			return szName;
+		}
+
+		bool CanNew() const
+		{
+			return !pBuildIterator && Singleton<IBuilderContainer>()->CanDefaultBuildObject( GetObjectSet().szObjectTypeName );
+		}
+
+		// CTreeGDBBrowserBase::CanExport, which asked the same of both kinds.
+		bool CanExport() const
+		{
+			return Singleton<IExporterContainer>()->CanExportObject( DEFAULT_EXPORTER_LABEL_TXT ) && pTree->GetFocusedItem().IsOk();
+		}
+
+		// CTreeGDBBrowser's CanAutoLoadAfterBuildingObject, and the link tree's.
+		bool CanAutoLoad() const
+		{
+			return eKind == IObjectBrowser::KIND_BROWSER;
+		}
+
+		// CTreeGDBBrowserBase::New( HTREEITEM ): an object named "New Resource"
+		// under rParent, made by the builder, exported if the builder says so,
+		// and opened if it says that.
+		void NewObject( const wxTreeItemId &rParent )
+		{
+			if ( GetViewManipulator() == 0 )
+			{
+				return;
+			}
+			std::string szObjectTypeName = GetObjectSet().szObjectTypeName;
+			std::string szObjectName = UniqueName( rParent, LoadResourceString( IDS_TREE_GDB_BROWSE_NEW_RESOURCE ), GDBO_OBJECT );
+			CStringManager::ExtendFileExtention( &szObjectName, ".xdb" );
+			szObjectName = NameOf( rParent ) + szObjectName;
+			bool bCanChangeObjectName = true;
+			bool bNeedEdit = true;
+			bool bNeedExport = false;
+			Singleton<IFolderCallback>()->ClearUndoData();
+			if ( !Singleton<IBuilderContainer>()->InsertObject( &szObjectTypeName, &szObjectName, false,
+																													&bCanChangeObjectName, &bNeedExport, &bNeedEdit ) )
+			{
+				Singleton<IFolderCallback>()->UndoChanges();
+				return;
+			}
+			// The insert redid a folder controller into this view, which added the
+			// row; the tree may have gone with a dialog in between.
+			const wxTreeItemId item = ( pTree != nullptr ) ? FindRow( szObjectName ) : wxTreeItemId();
+			if ( item.IsOk() )
+			{
+				pTree->EnsureVisible( item );
+				// The table's first object: nothing else will hand the selection on.
+				if ( pTree->GetCount() == 1 )
+				{
+					SelectionChanged();
+				}
+				if ( bNeedExport )
+				{
+					if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, szObjectName ) )
+					{
+						IExporterContainer *const pExporters = Singleton<IExporterContainer>();
+						pExporters->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );
+						pExporters->ExportObject( pObjectManipulator, szObjectTypeName, szObjectName, FORCE_EXPORT, EXPORT_REFERENCES );
+						pExporters->FinishExport( szObjectTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, EXPORT_REFERENCES );
+					}
+				}
+				if ( CanAutoLoad() && bNeedEdit )
+				{
+					SelectOnly( item );
+					SelectionChanged();
+					if ( CanLoad() )
+					{
+						Load();
+					}
+				}
+			}
+			Singleton<IFolderCallback>()->ClearUndoData();
+		}
+
+		// CTreeGDBBrowserBase::FindFirstItem: depth first, starting after rStart
+		// or at the top, the first row whose path holds the text ignoring case,
+		// with '/' read as '\'.
+		wxTreeItemId FindFirstRow( const std::string &rszSearch, const wxTreeItemId &rStart ) const
+		{
+			if ( rszSearch.empty() )
+			{
+				return wxTreeItemId();
+			}
+			std::string szSearch = Lowered( rszSearch );
+			NStr::ReplaceAllChars( &szSearch, '/', '\\' );
+			const wxTreeItemId root = pTree->GetRootItem();
+			wxTreeItemIdValue cookie;
+			wxTreeItemId item = ( rStart.IsOk() && ( rStart != root ) ) ? rStart : pTree->GetFirstChild( root, cookie );
+			while ( item.IsOk() )
+			{
+				if ( ( item != rStart ) && ( Lowered( NameOf( item ) ).find( szSearch ) != std::string::npos ) )
+				{
+					return item;
+				}
+				wxTreeItemIdValue childCookie;
+				wxTreeItemId next = pTree->GetFirstChild( item, childCookie );
+				for ( wxTreeItemId climb = item; !next.IsOk() && climb.IsOk() && ( climb != root ); climb = pTree->GetItemParent( climb ) )
+				{
+					next = pTree->GetNextSibling( climb );
+				}
+				item = next;
+			}
+			return wxTreeItemId();
+		}
+
+		// CTreeGDBBrowserBase::Find.
+		void Find()
+		{
+			std::string szSearch = Singleton<IUserDataContainer>()->Get()->szLastSearchedText;
+			if ( !NSearchObject::Run( pOwner, &szSearch ) || ( pTree == nullptr ) )
+			{
+				return;
+			}
+			Singleton<IUserDataContainer>()->Get()->szLastSearchedText = szSearch;
+			const wxTreeItemId focused = pTree->GetFocusedItem();
+			wxTreeItemId found = FindFirstRow( szSearch, focused );
+			if ( !found.IsOk() )
+			{
+				found = FindFirstRow( szSearch, wxTreeItemId() );
+			}
+			if ( found.IsOk() )
+			{
+				// As the tree did, only a single selection moves to what was found.
+				wxArrayTreeItemIds selected;
+				if ( ( pTree->GetSelections( selected ) == 1 ) && ( found != focused ) )
+				{
+					SelectOnly( found );
+					SelectionChanged();
+				}
+			}
+			else
+			{
+				const std::string szMessage = fmt::sprintf( LoadResourceString( IDS_TREE_GDB_BROWSE_NO_OBJECT_FOUND_MESSAGE ), GetObjectSet().szObjectTypeName );
+				wxMessageDialog message( pTree, FromNarrow( szMessage ), FromNarrow( LoadResourceString( AFX_IDS_APP_TITLE ) ),
+																 wxOK | wxICON_INFORMATION );
+				message.ShowModal();
+			}
+			pTree->SetFocus();
+		}
+
+		// CTreeGDBBrowserBase::LookupReferences: the focused row's references,
+		// scanned and then listed.
+		void LookupReferences()
+		{
+			wxBusyCursor busy;
+			const std::string szObjectTypeName = GetObjectSet().szObjectTypeName;
+			const std::string szObjectName = NameOf( pTree->GetFocusedItem() );
+			std::list<std::string> referenceObjects;
+			if ( NRefList::RunScan( pOwner, szObjectTypeName, szObjectName, &referenceObjects ) )
+			{
+				NRefList::Run( pOwner, szObjectTypeName, szObjectName, &referenceObjects );
+			}
+			if ( pTree != nullptr )
+			{
+				pTree->SetFocus();
+			}
+		}
+
+		// ExecuteTreeOperation's TYPE_CHECK and TYPE_EXPORT: a row's children
+		// first, then the row itself when it is an object.
+		void ForEachObject( const wxTreeItemId &rItem, const std::function<void( const std::string& )> &rAction )
+		{
+			std::vector<wxTreeItemId> children;
+			wxTreeItemIdValue cookie;
+			for ( wxTreeItemId child = pTree->GetFirstChild( rItem, cookie ); child.IsOk(); child = pTree->GetNextChild( rItem, cookie ) )
+			{
+				children.push_back( child );
+			}
+			for ( size_t nChild = 0; nChild < children.size(); ++nChild )
+			{
+				ForEachObject( children[nChild], rAction );
+			}
+			if ( TypeOf( rItem ) == GDBO_OBJECT )
+			{
+				rAction( NameOf( rItem ) );
+			}
+		}
+
+		// CTreeGDBBrowserBase::Check.
+		void Check( bool bCheckReferences )
+		{
+			if ( GetViewManipulator() == 0 )
+			{
+				return;
+			}
+			wxBusyCursor busy;
+			const std::string szObjectTypeName = GetObjectSet().szObjectTypeName;
+			IExporterContainer *const pExporters = Singleton<IExporterContainer>();
+			Singleton<IFolderCallback>()->ClearUndoData();
+			pExporters->StartCheck( szObjectTypeName, START_EXPORT_TOOLS, bCheckReferences );
+			std::vector<wxTreeItemId> rows;
+			GetTopSelection( &rows );
+			for ( size_t nRow = 0; nRow < rows.size(); ++nRow )
+			{
+				ForEachObject( rows[nRow], [&]( const std::string &rszObjectName )
+				{
+					if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, rszObjectName ) )
+					{
+						pExporters->CheckObject( pObjectManipulator, szObjectTypeName, rszObjectName, bCheckReferences );
+					}
+				} );
+			}
+			pExporters->FinishCheck( szObjectTypeName, FINISH_EXPORT_TOOLS, bCheckReferences );
+			Singleton<IFolderCallback>()->ClearUndoData();
+			UpdateSelectionManipulator( true );
+			pTree->SetFocus();
+		}
+
+		// CTreeGDBBrowserBase::Export.
+		void Export( bool bForce, bool bExportReferences )
+		{
+			if ( GetViewManipulator() == 0 )
+			{
+				return;
+			}
+			wxBusyCursor busy;
+			const std::string szObjectTypeName = GetObjectSet().szObjectTypeName;
+			IExporterContainer *const pExporters = Singleton<IExporterContainer>();
+			Singleton<IFolderCallback>()->ClearUndoData();
+			pExporters->StartExport( szObjectTypeName, bForce, START_EXPORT_TOOLS, bExportReferences );
+			std::vector<wxTreeItemId> rows;
+			GetTopSelection( &rows );
+			for ( size_t nRow = 0; nRow < rows.size(); ++nRow )
+			{
+				ForEachObject( rows[nRow], [&]( const std::string &rszObjectName )
+				{
+					if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, rszObjectName ) )
+					{
+						pExporters->ExportObject( pObjectManipulator, szObjectTypeName, rszObjectName, bForce, bExportReferences );
+					}
+				} );
+			}
+			pExporters->FinishExport( szObjectTypeName, bForce, FINISH_EXPORT_TOOLS, bExportReferences );
+			Singleton<IEditorContainer>()->ReloadActiveEditor( true );
+			Singleton<IFolderCallback>()->ClearUndoData();
+			UpdateSelectionManipulator( true );
+			pTree->SetFocus();
+		}
+
+		// The warning each of check and export asks under, No the default. An
+		// empty message asks nothing, as in the tree.
+		bool AskYesNo( UINT nMessageID )
+		{
+			const std::string szMessage = LoadResourceString( nMessageID );
+			if ( szMessage.empty() )
+			{
+				return true;
+			}
+			wxMessageDialog question( pTree, FromNarrow( szMessage ),
+																FromNarrow( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle ),
+																wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION );
+			return question.ShowModal() == wxID_YES;
+		}
+
+		// The check and export commands. Holding Shift leaves references out of
+		// the ones that would follow them.
+		void CheckOrExport( unsigned nCommandID )
+		{
+			const bool bForce = ( nCommandID == ID_OBJECT_EXPORT_FORCE ) || ( nCommandID == ID_OBJECT_EXPORT_NO_REF_FORCE );
+			const bool bReferences = ( ( nCommandID == ID_OBJECT_CHECK ) || ( nCommandID == ID_OBJECT_EXPORT ) || ( nCommandID == ID_OBJECT_EXPORT_FORCE ) ) &&
+															 !wxGetKeyState( WXK_SHIFT );
+			UINT nMessageID = IDS_TREE_GDB_BROWSE_EXPORT_WARNING;
+			switch ( nCommandID )
+			{
+				case ID_OBJECT_CHECK:
+					nMessageID = IDS_TREE_GDB_BROWSE_CHECK_WARNING;
+					break;
+				case ID_OBJECT_EXPORT_NO_REF:
+					nMessageID = IDS_TREE_GDB_BROWSE_EXPORT_NO_REF_WARNING;
+					break;
+				case ID_OBJECT_EXPORT_FORCE:
+					nMessageID = IDS_TREE_GDB_BROWSE_EXPORT_FORCE_WARNING;
+					break;
+				case ID_OBJECT_EXPORT_NO_REF_FORCE:
+					nMessageID = IDS_TREE_GDB_BROWSE_EXPORT_NO_REF_FORCE_WARNING;
+					break;
+				default:
+					break;
+			}
+			if ( !AskYesNo( nMessageID ) )
+			{
+				return;
+			}
+			if ( nCommandID == ID_OBJECT_CHECK )
+			{
+				Check( bReferences );
+			}
+			else
+			{
+				Export( bForce, bReferences );
+			}
+		}
+
+		// An entry whose state and action are the command handler container's,
+		// as the resource menu had them from the frame.
+		void AppendCommand( wxMenu *pMenu, unsigned nCommandID, const std::string &rszLabel )
+		{
+			const unsigned nHandler = GetCommandHandlerFor( nCommandID );
+			bool bEnable = false;
+			bool bCheck = false;
+			Singleton<ICommandHandlerContainer>()->UpdateCommand( nHandler, nCommandID, &bEnable, &bCheck );
+			wxMenuItem *const pItem = pMenu->Append( nCommandID, FromNarrow( rszLabel ) );
+			pItem->Enable( bEnable );
+			pMenu->Bind( wxEVT_MENU,
+									 [nHandler, nCommandID]( wxCommandEvent & )
+									 {
+										 Singleton<ICommandHandlerContainer>()->HandleCommand( nHandler, nCommandID, 0 );
+									 },
+									 nCommandID );
+		}
+
+		// IDM_MAIN_CONTEXT_MENU's TREE_GDB_BROWSER popup, its first entry named
+		// for what loading does in this kind of tree.
+		void ShowContextMenu()
+		{
+			RegisterAsHandler();
+			wxMenu menu;
+			AppendCommand( &menu, ID_OBJECT_LOAD,
+										 LoadResourceString( ( eKind == IObjectBrowser::KIND_LINK ) ? IDS_TREE_GDB_LINK_BROWSE_SELECT : IDS_TREE_GDB_BROWSE_LOAD ) );
+			AppendCommand( &menu, ID_OBJECT_REF_LOOKUP, "List &References..." );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_OBJECT_NEW_FOLDER, "New &Folder" );
+			AppendCommand( &menu, ID_OBJECT_NEW, "&New Object" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_OBJECT_NEW_FOLDER_AT_ROOT, "New Root F&older" );
+			AppendCommand( &menu, ID_OBJECT_NEW_AT_ROOT, "Ne&w Root Object" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_SELECTION_CUT, "Cu&t" );
+			AppendCommand( &menu, ID_SELECTION_COPY, "&Copy" );
+			AppendCommand( &menu, ID_SELECTION_PASTE, "&Paste" );
+			AppendCommand( &menu, ID_SELECTION_CLEAR, "&Delete" );
+			AppendCommand( &menu, ID_SELECTION_RENAME, "Rena&me" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_SELECTION_SELECT_ALL, "Select &All" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_OBJECT_EXPORT_NO_REF, "&Export" );
+			AppendCommand( &menu, ID_OBJECT_EXPORT_NO_REF_FORCE, "Force E&xport" );
+			wxMenu *const pHierarchical = new wxMenu();
+			AppendCommand( pHierarchical, ID_OBJECT_CHECK, "C&heck" );
+			AppendCommand( pHierarchical, ID_OBJECT_EXPORT, "&Export" );
+			AppendCommand( pHierarchical, ID_OBJECT_EXPORT_FORCE, "Force E&xport" );
+			menu.AppendSubMenu( pHierarchical, "Hierarchical Export" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_SELECTION_FIND, "&Find..." );
+			pTree->PopupMenu( &menu );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
+		}
+
+		// A right click on a row: the row is selected first when it is not, as
+		// the tree's PrepareContextMenu did.
+		void OnItemMenu( wxTreeEvent &rEvent )
+		{
+			const wxTreeItemId item = rEvent.GetItem();
+			if ( item.IsOk() && !pTree->IsSelected( item ) )
+			{
+				SelectOnly( item );
+				SelectionChanged();
+			}
+			pTree->SetFocus();
+			ShowContextMenu();
+		}
+
+		// A right click below the rows, where no row menu is raised.
+		void OnContextMenu( wxContextMenuEvent &rEvent )
+		{
+			const wxPoint at = rEvent.GetPosition();
+			if ( at != wxDefaultPosition )
+			{
+				int nFlags = 0;
+				if ( pTree->HitTest( pTree->ScreenToClient( at ), nFlags ).IsOk() )
+				{
+					return;
+				}
+			}
+			pTree->SetFocus();
+			ShowContextMenu();
+		}
+
 		// CTreeGDBBrowser::CanLoad and CTreeGDBLinkBrowser::CanLoad.
 		bool CanLoad()
 		{
@@ -1142,7 +1677,7 @@ namespace
 			{
 				return 0;
 			}
-			std::unique_ptr<CWxObjectTree> pTable( new CWxObjectTree( eKind, pListener, nGDBBrowserID ) );
+			std::unique_ptr<CWxObjectTree> pTable( new CWxObjectTree( eKind, pListener, &host, nGDBBrowserID ) );
 			pTable->CreateWindow( host.Root(), pImages.get() );
 			pTable->GetWindow()->Hide();
 			pTable->EnableEdit( bEnableEdit );

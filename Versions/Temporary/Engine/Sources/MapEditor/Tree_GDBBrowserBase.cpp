@@ -1597,7 +1597,9 @@ void CTreeGDBBrowserBase::New( HTREEITEM hParentItem )
 					// Экспортируем вновь созданный объект
 					if ( bNeedExport )
 					{
-						if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, szObjectTypeName ) )
+						// The object just made, the one ExportObject below is told about.
+						// This passed the type name as the object name too.
+						if ( CPtr<IManipulator> pObjectManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szObjectTypeName, szUniqueObjectName ) )
 						{
 							Singleton<IExporterContainer>()->StartExport( szObjectTypeName, FORCE_EXPORT, START_EXPORT_TOOLS, EXPORT_REFERENCES );
 							Singleton<IExporterContainer>()->ExportObject( pObjectManipulator, szObjectTypeName, szUniqueObjectName, FORCE_EXPORT, EXPORT_REFERENCES );
