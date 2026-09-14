@@ -1,0 +1,150 @@
+#pragma once
+
+// The wx main frame's docking panes. Front-end private: only MainFrameWx.cpp
+// includes this.
+//
+// Two kinds, because what goes in them differs.
+//
+// The frame's own three -- Game Database, Selection Properties and Log -- hold
+// the wx views, made straight inside a wx panel, around the contents CMainFrame's
+// panes share with these: CGDBBrowserContents, the property pane, and
+// CLogPaneContents. They are wx all the way down.
+//
+// The panes the editors ask for through IMainFrame::CreateControlBar are
+// filled by the editors, and the editors make MFC windows in them -- a
+// Stingray shortcut bar, or a CWxHostWindow around their wx contents -- as
+// children of ToCWnd( pane ). So those panes are a wx panel with a CWnd
+// subclassed over its handle: the editors get the CWnd they expect, and MFC's
+// handling of what a child sends its parent, reflected notifications included,
+// still runs before wx's.
+
+#ifdef OBK2_WITH_WX
+
+#include "GDBBrowserPane.h"
+#include "LogPane.h"
+#include "PropertyPaneView.h"
+#include "MapEditorLib/Interface_Widget.h"
+
+#include <wx/aui/framemanager.h>
+#include <wx/panel.h>
+#include <wx/weakref.h>
+
+#include <string>
+
+namespace NMainFrameWxPanes
+{
+	// MFC's docking arguments as a wxAUI pane: AFX_IDW_DOCKBAR_* as the side, the
+	// width across the side, and fRate as the share of the side the pane takes
+	// among the others docked there.
+	wxAuiPaneInfo DockedPaneInfo( const wxString &rName, const std::string &rszTitle, unsigned nPlace, float fRate, int nWidth );
+
+
+	// A wx panel that MFC windows can be children of.
+	class CMfcPanel : public wxPanel
+	{
+		CWnd mfcWindow;
+		// The editor's contents window, kept the panel's size as
+		// CDefaultDockingWindow kept it its inside's.
+		HWND hwndContents;
+
+		void OnSize( wxSizeEvent &rEvent );
+
+	public:
+		explicit CMfcPanel( wxWindow *pParent );
+		virtual ~CMfcPanel();
+
+		CWnd* GetMfcWindow() { return &mfcWindow; }
+		void SetContents( HWND _hwndContents );
+		void FitContents();
+	};
+
+
+	// The IDockPanel an editor gets: a CMfcPanel in the frame's wxAUI manager.
+	class CDockPanel : public IDockPanel
+	{
+		wxAuiManager *pManager;
+		wxWeakRef<CMfcPanel> pPanel;
+		// The frame's: whether the manager has laid the frame out yet. Until it
+		// has, a layout would size the docks against the frame's size before it
+		// is placed, and wxAUI keeps the sizes it gives a dock the first time.
+		const bool *pbLaidOut;
+
+	public:
+		CDockPanel( wxAuiManager *_pManager, CMfcPanel *_pPanel, const bool *_pbLaidOut )
+			: pManager( _pManager ), pPanel( _pPanel ), pbLaidOut( _pbLaidOut ) {}
+
+		CMfcPanel* GetPanel() const { return pPanel; }
+
+		// IDockPanel. Show tells the manager, and the manager lays the frame out
+		// again; ShowWithoutLayout only shows or hides the panel's window, and the
+		// manager's next layout has the last word -- as a hide ShowControlBar
+		// delays had over a later ShowWindow on the bar, which is what the editors
+		// do when they make their panes.
+		virtual void* GetNativeWidget();
+		virtual void Show( bool bShow );
+		virtual void ShowWithoutLayout( bool bShow );
+		virtual bool IsVisible() const;
+		virtual bool IsAlive() const;
+		virtual void Destroy();
+		virtual void Redraw();
+	};
+
+
+	// Log: CLogPaneContents around the wx log view.
+	class CLogPane
+	{
+		CLogPaneContents contents;
+		wxWeakRef<wxPanel> pPanel;
+
+	public:
+		// Creates the pane in pFrame and adds it to pManager.
+		bool Create( wxWindow *pFrame, wxAuiManager *pManager );
+		wxPanel* GetPanel() const { return pPanel; }
+		CLogPaneContents& GetContents() { return contents; }
+	};
+
+
+	// Selection Properties: the wx property pane.
+	class CPropertiesPane
+	{
+		// Owned.
+		IPropertyPane *pPropertyPane;
+		wxWeakRef<wxPanel> pPanel;
+
+	public:
+		CPropertiesPane() : pPropertyPane( 0 ) {}
+		~CPropertiesPane();
+
+		// pOwner is what the grid's buttons open their dialogs over.
+		bool Create( wxWindow *pFrame, wxAuiManager *pManager, IWidget *pOwner );
+		wxPanel* GetPanel() const { return pPanel; }
+		void EnableEdit( bool bEnable );
+	};
+
+
+	// One Game Database pane: CGDBBrowserContents around the wx object browser,
+	// over an empty face shown while no table is chosen.
+	class CGDBBrowserPane : public CGDBBrowserContents::IPane
+	{
+		CGDBBrowserContents contents;
+		IWidget *pOwner;
+		wxWeakRef<wxPanel> pPanel;
+		wxWeakRef<wxPanel> pEmpty;
+
+	public:
+		CGDBBrowserPane( int nGDBBrowserID, IWidget *_pOwner ) : contents( this, nGDBBrowserID ), pOwner( _pOwner ) {}
+
+		// Creates the pane in pFrame, adds it to pManager captioned for its place
+		// in the list, and fills it.
+		bool Create( wxWindow *pFrame, wxAuiManager *pManager, int nWindowIndex );
+		wxPanel* GetPanel() const { return pPanel; }
+		CGDBBrowserContents& GetContents() { return contents; }
+
+		// CGDBBrowserContents::IPane
+		virtual void LayoutContents();
+		virtual void ShowEmpty( bool bEmpty );
+		virtual IWidget* GetOwner() { return pOwner; }
+	};
+}
+
+#endif // OBK2_WITH_WX

@@ -45,8 +45,12 @@ namespace NMainFrameWx
 
 #include "MainFrameParams.h"
 #include "MainFrameShared.h"
+#include "MainFrameWxPanes.h"
 #include "MapEditorApp.h"
 #include "MapEditorSingleton.h"
+#include "ResourceDefines.h"
+
+#include <fmt/printf.h>
 
 #include <wx/aui/framemanager.h>
 #include <wx/dcclient.h>
@@ -58,14 +62,17 @@ namespace NMainFrameWx
 #include <wx/weakref.h>
 
 #include <climits>
+#include <list>
 #include <map>
+#include <memory>
 #include <vector>
 
-// The main frame, in wx. Slice one of the frame's move: the frame itself, its
-// menus, status bar, title, command routing, placement and close; the docking
-// panes, the document window and the toolbars are not here yet, and the
-// IMainFrame calls for them answer "none" -- every caller already copes with
-// that, because CMainFrame could fail to make them too.
+// The main frame, in wx: the frame itself, its menus, status bar, title,
+// command routing, placement and close, and its docking panes in wxAUI -- its
+// own three and the editors' (see MainFrameWxPanes.h). The document window and
+// the toolbars are not here yet, and the IMainFrame calls for them answer
+// "none" -- every caller already copes with that, because CMainFrame could fail
+// to make them too.
 //
 // What stays MFC for now, on purpose. The editors and dialogs still want the
 // main window as a CWnd -- AfxGetMainWnd(), MainFrameWnd(), a CDialog's owner --
@@ -241,6 +248,22 @@ namespace
 	}
 
 
+	// A command item at nPosition. wx is given the label up to its tab and the
+	// native item gets the whole of it back: wx makes the text after a tab a
+	// shortcut the frame answers, where MFC's menu bar only shows it -- and read
+	// "\t Ctrl+N" as plain N, so typing N anywhere made a new map.
+	wxMenuItem* InsertCommandItem( wxMenu *pMenu, size_t nPosition, unsigned nCommandID, const wxString &rLabel, const wxString &rHelp )
+	{
+		wxMenuItem *const pItem = pMenu->InsertCheckItem( nPosition, ToWxID( nCommandID ), rLabel.BeforeFirst( '\t' ), rHelp );
+		std::wstring wszLabel = rLabel.ToStdWstring();
+		MENUITEMINFOW labelInfo = { sizeof( labelInfo ) };
+		labelInfo.fMask = MIIM_STRING;
+		labelInfo.dwTypeData = &wszLabel[0];
+		::SetMenuItemInfoW( pMenu->GetHMenu(), static_cast<UINT>( nPosition ), TRUE, &labelInfo );
+		return pItem;
+	}
+
+
 	// A menu resource's popup as a wx menu. Every command is a check item,
 	// because the editor's handlers may check any of them and wx refuses to
 	// check a plain one; unchecked, the two look the same.
@@ -269,15 +292,7 @@ namespace
 			}
 			else
 			{
-				// wx is given the label up to its tab and the native item gets the
-				// whole of it back. wx makes the text after a tab a shortcut the
-				// frame answers, where MFC's menu bar only shows it -- and read
-				// "\t Ctrl+N" as plain N, so typing N anywhere made a new map.
-				pMenu->AppendCheckItem( ToWxID( itemInfo.wID ), wxString( pszLabel ).BeforeFirst( '\t' ), CommandPrompt( itemInfo.wID ) );
-				MENUITEMINFOW labelInfo = { sizeof( labelInfo ) };
-				labelInfo.fMask = MIIM_STRING;
-				labelInfo.dwTypeData = pszLabel;
-				::SetMenuItemInfoW( pMenu->GetHMenu(), static_cast<UINT>( pMenu->GetMenuItemCount() - 1 ), TRUE, &labelInfo );
+				InsertCommandItem( pMenu, pMenu->GetMenuItemCount(), itemInfo.wID, wxString( pszLabel ), CommandPrompt( itemInfo.wID ) );
 			}
 		}
 		return pMenu;
@@ -387,6 +402,19 @@ namespace
 		SMainFrameParams params;
 		SSWTParams currentSWTParams;
 		NMainFrameShared::CProgressHost progress;
+		// The frame's own panes, as CMainFrame's wndLog, wndPropertyBrowser and
+		// gdbBrowserList. Destroyed on close, before the frame's windows.
+		std::unique_ptr<NMainFrameWxPanes::CLogPane> pLogPane;
+		std::unique_ptr<NMainFrameWxPanes::CPropertiesPane> pPropertiesPane;
+		std::list<std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane>> gdbBrowserPanes;
+		// The editors' panes. Never removed, as CMainFrame's handles are not: an
+		// editor may still hold one after its window is gone, and IsAlive is how
+		// it finds out.
+		std::list<std::unique_ptr<NMainFrameWxPanes::CDockPanel>> dockPanels;
+		// Whether the manager has laid the frame out. The first layout waits for
+		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
+		// of the frame the first time it sizes it, and keeps what it gave.
+		bool bLaidOut = false;
 
 	public:
 		CWxMainFrame()
@@ -461,6 +489,7 @@ namespace
 			wxPanel *const pWorkspace = NWx::Child<wxPanel>( this, wxID_ANY );
 			pWorkspace->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
 			auiManager.AddPane( pWorkspace, wxAuiPaneInfo().Name( "workspace" ).CenterPane() );
+			CreatePanes();
 			//
 			Singleton<IMainFrameContainer>()->Set( this, this );
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
@@ -473,7 +502,6 @@ namespace
 				pApp->GetEditorModules()[nModuleIndex]->ModulePostCreateControls();
 			}
 			Singleton<IEditorContainer>()->PostCreateControls();
-			auiManager.Update();
 			//
 			if ( ( params.rect.Width() != 0 ) && ( params.rect.Height() != 0 ) )
 			{
@@ -490,6 +518,7 @@ namespace
 				::SetWindowPlacement( GetHWND(), &windowPlacement );
 			}
 			//
+			RegisterObjectStorage();
 			DragAcceptFiles( true );
 			//
 			SSWTParams swtParams;
@@ -507,6 +536,9 @@ namespace
 				Maximize( true );
 			}
 			Show( true );
+			// Now that the frame has the size it will have.
+			auiManager.Update();
+			bLaidOut = true;
 			Update();
 		}
 
@@ -536,13 +568,33 @@ namespace
 
 		virtual IDockPanel* CreateControlBar( unsigned *pnID, const std::string &rszTitle, const unsigned nStyle, const unsigned nPlace, const float fRate, const int nWidth )
 		{
-			NotYet( rszTitle.c_str() );
-			return 0;
+			NI_ASSERT( pnID != 0, "CWxMainFrame::CreateControlBar() pnID == 0" );
+			// The id made unique among the panes, as SECControlBar::GetUniqueBarID
+			// made it among the bars, and handed back the same way.
+			while ( auiManager.GetPane( PaneName( *pnID ) ).IsOk() )
+			{
+				++( *pnID );
+			}
+			NMainFrameWxPanes::CMfcPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CMfcPanel>( this );
+			auiManager.AddPane( pPanel, NMainFrameWxPanes::DockedPaneInfo( PaneName( *pnID ), rszTitle, nPlace, fRate, nWidth ) );
+			if ( bLaidOut )
+			{
+				auiManager.Update();
+			}
+			dockPanels.push_back( std::unique_ptr<NMainFrameWxPanes::CDockPanel>( new NMainFrameWxPanes::CDockPanel( &auiManager, pPanel, &bLaidOut ) ) );
+			return dockPanels.back().get();
 		}
 
 		virtual bool SetControlBarWindowContents( IDockPanel *pDockPanel, IWidget *pContents )
 		{
-			return false;
+			NMainFrameWxPanes::CDockPanel *const pHandle = static_cast<NMainFrameWxPanes::CDockPanel*>( pDockPanel );
+			if ( ( pHandle == 0 ) || ( pHandle->GetPanel() == nullptr ) )
+			{
+				return false;
+			}
+			const CWnd *const pwndContents = ToCWnd( pContents );
+			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );
+			return true;
 		}
 
 		virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList )
@@ -609,14 +661,21 @@ namespace
 			}
 		}
 
-		// ILogger: the Log pane is not here yet.
+		// ILogger
 		virtual void Log( ELogOutputType eLogOutputType, const std::string &szText )
 		{
-			DebugTrace( "%s", szText.c_str() );
+			if ( pLogPane )
+			{
+				pLogPane->GetContents().Log( eLogOutputType, szText );
+			}
 		}
 
 		virtual void ClearLog()
 		{
+			if ( pLogPane )
+			{
+				pLogPane->GetContents().ClearLog();
+			}
 		}
 
 		virtual void SaveObjectStorage( int nGDBBrowserID )
@@ -625,9 +684,13 @@ namespace
 			RestoreObjectStorage();
 		}
 
+		// The focused Game Database pane answers CHID_OBJECT_STORAGE and CHID_MAIN.
 		virtual void RestoreObjectStorage()
 		{
-			// No Game Database pane to make the object storage yet.
+			if ( NMainFrameWxPanes::CGDBBrowserPane *const pPane = FindGDBBrowserPane( Singleton<IUserDataContainer>()->Get()->nFocusedGDBBrowserID ) )
+			{
+				SetFocusedGDBBrowserPane( pPane );
+			}
 		}
 
 		virtual bool BrowseLink( std::string *pszResult, const std::string &rszInitialValue, const SPropertyDesc *pPropertyDesc, bool bMultiRef, bool bEnableEdit )
@@ -681,9 +744,16 @@ namespace
 			switch ( nCommandID )
 			{
 				case ID_VIEW_SHOW_PROPERTY_BROWSER:
+					ShowPane( pPropertiesPane ? pPropertiesPane->GetPanel() : nullptr, dwData != 0 );
+					return true;
 				case ID_VIEW_SHOW_LOG:
+					ShowPane( pLogPane ? pLogPane->GetPanel() : nullptr, dwData != 0 );
+					return true;
 				case ID_VIEW_SHOW_GDB_BROWSER:
-					// The panes they show are not here yet.
+					if ( !gdbBrowserPanes.empty() )
+					{
+						ShowPane( gdbBrowserPanes.front()->GetPanel(), dwData != 0 );
+					}
 					return true;
 				case ID_VIEW_SAVE_CHANGES:
 					return NMainFrameShared::SaveChanges( dwData > 0, [this]() { ReloadData(); } );
@@ -713,9 +783,246 @@ namespace
 		}
 
 	private:
-		// CMainFrame::ReloadData tells each Game Database pane; there are none yet.
+		// CMainFrame::ReloadData: each Game Database pane reads its tables again.
 		void ReloadData()
 		{
+			for ( std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				rpPane->GetContents().HandleCommand( ID_MAIN_RELOAD, 0 );
+			}
+		}
+
+		static wxString PaneName( unsigned nID )
+		{
+			return wxString::Format( "Pane%u", nID );
+		}
+
+		// What CMainFrame::OnCreate makes, in its order: Log, Selection
+		// Properties, then the Game Database panes the user data lists, one to
+		// begin with. The order matters: a browser hands its selection to
+		// Selection Properties as it fills, so that has to be there first.
+		void CreatePanes()
+		{
+			pLogPane.reset( new NMainFrameWxPanes::CLogPane() );
+			pLogPane->Create( this, &auiManager );
+			pPropertiesPane.reset( new NMainFrameWxPanes::CPropertiesPane() );
+			pPropertiesPane->Create( this, &auiManager, this );
+			//
+			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+			if ( pUserData->gdbBrowserIDList.empty() )
+			{
+				pUserData->gdbBrowserIDList.push_back( FreeGDBBrowserID() );
+			}
+			int nWindowIndex = 0;
+			for ( std::list<int>::const_iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin(); itGDBBrowserID != pUserData->gdbBrowserIDList.end(); ++itGDBBrowserID )
+			{
+				AddGDBBrowserPane( *itGDBBrowserID, nWindowIndex );
+				++nWindowIndex;
+			}
+		}
+
+		NMainFrameWxPanes::CGDBBrowserPane* AddGDBBrowserPane( int nGDBBrowserID, int nWindowIndex )
+		{
+			std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> pPane( new NMainFrameWxPanes::CGDBBrowserPane( nGDBBrowserID, this ) );
+			if ( !pPane->Create( this, &auiManager, nWindowIndex ) )
+			{
+				return nullptr;
+			}
+			gdbBrowserPanes.push_back( std::move( pPane ) );
+			return gdbBrowserPanes.back().get();
+		}
+
+		// The end of CMainFrame::OnCreate: the focused Game Database pane, or the
+		// first, answers for the object storage, and every pane takes the
+		// disable_edit setting.
+		void RegisterObjectStorage()
+		{
+			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+			const bool bEnableEdit = ( NGlobal::GetVar( "disable_edit", 0 ) == 0 );
+			NMainFrameWxPanes::CGDBBrowserPane *pFocusedPane = FindGDBBrowserPane( pUserData->nFocusedGDBBrowserID );
+			if ( ( pFocusedPane == nullptr ) && !gdbBrowserPanes.empty() )
+			{
+				pFocusedPane = gdbBrowserPanes.front().get();
+				pUserData->nFocusedGDBBrowserID = pFocusedPane->GetContents().GetID();
+			}
+			if ( pFocusedPane != nullptr )
+			{
+				SetFocusedGDBBrowserPane( pFocusedPane );
+			}
+			for ( std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				rpPane->GetContents().EnableEdit( bEnableEdit );
+			}
+			if ( pPropertiesPane )
+			{
+				pPropertiesPane->EnableEdit( bEnableEdit );
+			}
+		}
+
+		void SetFocusedGDBBrowserPane( NMainFrameWxPanes::CGDBBrowserPane *pPane )
+		{
+			ICommandHandlerContainer *const pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
+			pCommandHandlerContainer->Set( CHID_OBJECT_STORAGE, pPane->GetContents().GetObjectStorage() );
+			pCommandHandlerContainer->Set( CHID_MAIN, &( pPane->GetContents() ) );
+		}
+
+		NMainFrameWxPanes::CGDBBrowserPane* FindGDBBrowserPane( int nGDBBrowserID ) const
+		{
+			for ( const std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				if ( rpPane->GetContents().GetID() == nGDBBrowserID )
+				{
+					return rpPane.get();
+				}
+			}
+			return nullptr;
+		}
+
+		NMainFrameWxPanes::CGDBBrowserPane* GDBBrowserPaneAt( int nIndex ) const
+		{
+			for ( const std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				if ( nIndex == 0 )
+				{
+					return rpPane.get();
+				}
+				--nIndex;
+			}
+			return nullptr;
+		}
+
+		// SECControlBar::GetUniqueBarID for a Game Database pane.
+		int FreeGDBBrowserID() const
+		{
+			int nGDBBrowserID = ID_DW_GDB_BROWSER;
+			while ( FindGDBBrowserPane( nGDBBrowserID ) != nullptr )
+			{
+				++nGDBBrowserID;
+			}
+			return nGDBBrowserID;
+		}
+
+		// CMainFrame::OnDWGDBBrowserNew: a pane more, focused.
+		void NewGDBBrowserPane()
+		{
+			if ( gdbBrowserPanes.size() >= static_cast<size_t>( ID_VIEW_DW_GDB_BROWSER_LAST - ID_VIEW_DW_GDB_BROWSER_FIRST ) )
+			{
+				return;
+			}
+			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+			const int nGDBBrowserID = FreeGDBBrowserID();
+			NMainFrameWxPanes::CGDBBrowserPane *const pPane = AddGDBBrowserPane( nGDBBrowserID, static_cast<int>( gdbBrowserPanes.size() ) );
+			if ( pPane == nullptr )
+			{
+				return;
+			}
+			auiManager.Update();
+			pPane->GetContents().EnableEdit( NGlobal::GetVar( "disable_edit", 0 ) == 0 );
+			SetFocusedGDBBrowserPane( pPane );
+			pUserData->nFocusedGDBBrowserID = nGDBBrowserID;
+			pUserData->gdbBrowserIDList.push_back( nGDBBrowserID );
+		}
+
+		// CMainFrame::OnDWGDBBrowserRemove: the focused pane goes, while it is not
+		// the last; the ones after it are renumbered and the first is focused.
+		void RemoveGDBBrowserPane()
+		{
+			if ( gdbBrowserPanes.size() <= 1 )
+			{
+				return;
+			}
+			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+			std::list<int>::iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin();
+			int nWindowIndex = 0;
+			CString strDWName;
+			strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
+			for ( std::list<std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane>>::iterator itPane = gdbBrowserPanes.begin(); itPane != gdbBrowserPanes.end(); ++itPane )
+			{
+				if ( ( *itPane )->GetContents().GetID() == pUserData->nFocusedGDBBrowserID )
+				{
+					( *itPane )->GetContents().Stop();
+					wxWindow *const pPanel = ( *itPane )->GetPanel();
+					itPane = gdbBrowserPanes.erase( itPane );
+					if ( pPanel != nullptr )
+					{
+						auiManager.DetachPane( pPanel );
+						pPanel->Destroy();
+					}
+					if ( itGDBBrowserID != pUserData->gdbBrowserIDList.end() )
+					{
+						pUserData->gdbBrowserIDList.erase( itGDBBrowserID );
+					}
+					for ( ; itPane != gdbBrowserPanes.end(); ++itPane )
+					{
+						auiManager.GetPane( ( *itPane )->GetPanel() ).Caption( wxString::FromUTF8( fmt::sprintf( strDWName.GetString(), nWindowIndex ).c_str() ) );
+						++nWindowIndex;
+					}
+					SetFocusedGDBBrowserPane( gdbBrowserPanes.front().get() );
+					pUserData->nFocusedGDBBrowserID = gdbBrowserPanes.front()->GetContents().GetID();
+					auiManager.Update();
+					return;
+				}
+				if ( itGDBBrowserID != pUserData->gdbBrowserIDList.end() )
+				{
+					++itGDBBrowserID;
+				}
+				++nWindowIndex;
+			}
+		}
+
+		// Before the frame's windows go, after the frame stopped being the main
+		// frame: what CDWGDBBrowser::OnDestroy did, then the views.
+		void DestroyPanes()
+		{
+			for ( std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				rpPane->GetContents().Stop();
+			}
+			gdbBrowserPanes.clear();
+			pPropertiesPane.reset();
+			pLogPane.reset();
+		}
+
+		bool IsPaneShown( wxWindow *pPanel )
+		{
+			return ( pPanel != nullptr ) && auiManager.GetPane( pPanel ).IsShown();
+		}
+
+		void ShowPane( wxWindow *pPanel, bool bShow )
+		{
+			if ( pPanel != nullptr )
+			{
+				auiManager.GetPane( pPanel ).Show( bShow );
+				auiManager.Update();
+			}
+		}
+
+		// View > Game Database: one item per pane, rebuilt when the menu opens, as
+		// CMainFrame::OnUpdateDWGDBBrowserWindow rebuilds it -- before the three
+		// fixed items, the separator, New Window and Remove Window.
+		void FillGDBBrowserMenu( wxMenu *pMenu )
+		{
+			const size_t N_FIXED_ITEMS = 3;
+			while ( pMenu->GetMenuItemCount() > N_FIXED_ITEMS )
+			{
+				pMenu->Destroy( pMenu->FindItemByPosition( 0 ) );
+			}
+			CString strMenuLabel;
+			CString strMenuLabelShort;
+			strMenuLabel.LoadString( IDS_DW_GDB_BROWSE_MENU_LABEL );
+			strMenuLabelShort.LoadString( IDS_DW_GDB_BROWSE_MENU_LABEL_SHORT );
+			int nWindowIndex = 0;
+			for ( ; nWindowIndex < static_cast<int>( gdbBrowserPanes.size() ); ++nWindowIndex )
+			{
+				const std::string szLabel = fmt::sprintf( ( ( nWindowIndex == 0 ) ? strMenuLabel : strMenuLabelShort ).GetString(), nWindowIndex );
+				InsertCommandItem( pMenu, nWindowIndex, ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, wxString::FromUTF8( szLabel.c_str() ), wxString() );
+			}
+			if ( nWindowIndex == 0 )
+			{
+				CString strEmptyLabel;
+				strEmptyLabel.LoadString( IDS_DW_GDB_BROWSE_EMPTY_MENU_LABEL );
+				InsertCommandItem( pMenu, 0, ID_VIEW_DW_GDB_BROWSER_FIRST, wxString::FromUTF8( strEmptyLabel.GetString() ), wxString() );
+			}
 		}
 
 		// CMainFrame::OnClose, in its order, less what is not here yet.
@@ -756,6 +1063,7 @@ namespace
 			//
 			mapEditorSingletonApp.RemoveMapFile();
 			Singleton<IMainFrameContainer>()->Set( 0, 0 );
+			DestroyPanes();
 			Destroy();
 		}
 
@@ -777,8 +1085,34 @@ namespace
 					// CWinApp::OnAppExit: close the main window.
 					Close();
 					return;
+				case ID_VIEW_DW_PROPERTY_BROWSER:
+					if ( pPropertiesPane )
+					{
+						ShowPane( pPropertiesPane->GetPanel(), !IsPaneShown( pPropertiesPane->GetPanel() ) );
+					}
+					return;
+				case ID_VIEW_DW_LOG:
+					if ( pLogPane )
+					{
+						ShowPane( pLogPane->GetPanel(), !IsPaneShown( pLogPane->GetPanel() ) );
+					}
+					return;
+				case ID_VIEW_DW_GDB_BROWSER_NEW:
+					NewGDBBrowserPane();
+					return;
+				case ID_VIEW_DW_GDB_BROWSER_REMOVE:
+					RemoveGDBBrowserPane();
+					return;
 				default:
 					break;
+			}
+			if ( ( nCommandID >= ID_VIEW_DW_GDB_BROWSER_FIRST ) && ( nCommandID <= ID_VIEW_DW_GDB_BROWSER_LAST ) )
+			{
+				if ( NMainFrameWxPanes::CGDBBrowserPane *const pPane = GDBBrowserPaneAt( nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST ) )
+				{
+					ShowPane( pPane->GetPanel(), !IsPaneShown( pPane->GetPanel() ) );
+				}
+				return;
 			}
 			if ( ( nCommandID >= ID_FIRST_COMMAND_ID ) && ( nCommandID <= ID_LAST_COMMAND_ID ) )
 			{
@@ -799,6 +1133,10 @@ namespace
 			if ( pMenu == nullptr )
 			{
 				return;
+			}
+			if ( ( pMenu->GetMenuItemCount() > 0 ) && ( ToCommandID( pMenu->FindItemByPosition( 0 )->GetId() ) == ID_VIEW_DW_GDB_BROWSER_FIRST ) )
+			{
+				FillGDBBrowserMenu( pMenu );
 			}
 			for ( size_t nIndex = 0; nIndex < pMenu->GetMenuItemCount(); ++nIndex )
 			{
@@ -829,8 +1167,8 @@ namespace
 		}
 
 		// A menu item's state: CMainFrame's own handlers, then the user command
-		// range. The toolbar, pane, Reset GUI and Customize items belong to parts
-		// of the frame that are not here yet, and stay off.
+		// range. The toolbar, Reset GUI and Customize items belong to parts of the
+		// frame that are not here yet, and stay off.
 		void UpdateMenuCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 		{
 			( *pbEnable ) = false;
@@ -844,8 +1182,29 @@ namespace
 				case ID_APP_EXIT:
 					( *pbEnable ) = true;
 					return;
+				case ID_VIEW_DW_PROPERTY_BROWSER:
+					( *pbEnable ) = true;
+					( *pbCheck ) = pPropertiesPane && IsPaneShown( pPropertiesPane->GetPanel() );
+					return;
+				case ID_VIEW_DW_LOG:
+					( *pbEnable ) = true;
+					( *pbCheck ) = pLogPane && IsPaneShown( pLogPane->GetPanel() );
+					return;
+				case ID_VIEW_DW_GDB_BROWSER_NEW:
+					( *pbEnable ) = gdbBrowserPanes.size() < static_cast<size_t>( ID_VIEW_DW_GDB_BROWSER_LAST - ID_VIEW_DW_GDB_BROWSER_FIRST );
+					return;
+				case ID_VIEW_DW_GDB_BROWSER_REMOVE:
+					( *pbEnable ) = ( gdbBrowserPanes.size() > 1 ) && ( FindGDBBrowserPane( Singleton<IUserDataContainer>()->Get()->nFocusedGDBBrowserID ) != nullptr );
+					return;
 				default:
 					break;
+			}
+			if ( ( nCommandID >= ID_VIEW_DW_GDB_BROWSER_FIRST ) && ( nCommandID <= ID_VIEW_DW_GDB_BROWSER_LAST ) )
+			{
+				const NMainFrameWxPanes::CGDBBrowserPane *const pPane = GDBBrowserPaneAt( nCommandID - ID_VIEW_DW_GDB_BROWSER_FIRST );
+				( *pbEnable ) = ( pPane != nullptr );
+				( *pbCheck ) = ( pPane != nullptr ) && IsPaneShown( pPane->GetPanel() );
+				return;
 			}
 			if ( ( nCommandID >= ID_FIRST_COMMAND_ID ) && ( nCommandID <= ID_LAST_COMMAND_ID ) )
 			{

@@ -33,6 +33,7 @@ set(SOURCES
     MainFrame.cpp
     MainFrameShared.cpp
     MainFrameWx.cpp
+    MainFrameWxPanes.cpp
     MainFrameContainer.cpp
     MainFrameParams.cpp
     MainFrame_Consts.cpp
