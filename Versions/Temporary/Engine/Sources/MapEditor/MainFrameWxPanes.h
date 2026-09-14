@@ -59,6 +59,30 @@ namespace NMainFrameWxPanes
 	};
 
 
+	// The document window IMainFrame::CreateChildFrame makes: a CMfcPanel
+	// filling the frame's workspace, as a maximised MDI child fills the MDI
+	// client. The editor makes its view in it as CChildFrameBase always has, a
+	// child of ToCWnd( frame window ).
+	class CFrameWindow : public IFrameWindow
+	{
+		wxWeakRef<CMfcPanel> pPanel;
+
+	public:
+		explicit CFrameWindow( CMfcPanel *_pPanel ) : pPanel( _pPanel ) {}
+
+		CMfcPanel* GetPanel() const { return pPanel; }
+
+		// IFrameWindow. Maximize has nothing to do: the panel always fills the
+		// workspace. Focus goes to the panel, as SetFocus on an MDI child left it
+		// on the frame rather than its contents.
+		virtual void* GetNativeWidget();
+		virtual void Show( bool bShow );
+		virtual void Maximize() {}
+		virtual void Focus();
+		virtual void Destroy();
+	};
+
+
 	// The IDockPanel an editor gets: a CMfcPanel in the frame's wxAUI manager.
 	class CDockPanel : public IDockPanel
 	{

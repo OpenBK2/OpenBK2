@@ -68,9 +68,9 @@ namespace NMainFrameWx
 #include <vector>
 
 // The main frame, in wx: the frame itself, its menus, status bar, title,
-// command routing, placement and close, and its docking panes in wxAUI -- its
-// own three and the editors' (see MainFrameWxPanes.h). The document window and
-// the toolbars are not here yet, and the IMainFrame calls for them answer
+// command routing, placement and close, its docking panes in wxAUI -- its own
+// three and the editors' -- and the document window (see MainFrameWxPanes.h).
+// The toolbars are not here yet, and the IMainFrame calls for them answer
 // "none" -- every caller already copes with that, because CMainFrame could fail
 // to make them too.
 //
@@ -411,6 +411,10 @@ namespace
 		// editor may still hold one after its window is gone, and IsAlive is how
 		// it finds out.
 		std::list<std::unique_ptr<NMainFrameWxPanes::CDockPanel>> dockPanels;
+		// Where documents open, and the document windows made there -- kept for
+		// the same reason as the editors' panes.
+		wxPanel *pWorkspace = nullptr;
+		std::list<std::unique_ptr<NMainFrameWxPanes::CFrameWindow>> frameWindows;
 		// Whether the manager has laid the frame out. The first layout waits for
 		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
 		// of the frame the first time it sizes it, and keeps what it gave.
@@ -483,11 +487,12 @@ namespace
 			//
 			pApp->CreateMenus( this );
 			//
-			// The area documents open in: an MDI client's colour until the
-			// document window is here.
+			// The area documents open in, an MDI client's colour, which the
+			// document window fills.
 			auiManager.SetManagedWindow( this );
-			wxPanel *const pWorkspace = NWx::Child<wxPanel>( this, wxID_ANY );
+			pWorkspace = NWx::Child<wxPanel>( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE );
 			pWorkspace->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+			pWorkspace->SetSizer( new wxBoxSizer( wxVERTICAL ) );
 			auiManager.AddPane( pWorkspace, wxAuiPaneInfo().Name( "workspace" ).CenterPane() );
 			CreatePanes();
 			//
@@ -557,13 +562,27 @@ namespace
 
 		virtual IFrameWindow* CreateChildFrame( unsigned nResource )
 		{
-			NotYet( "the document window" );
-			return 0;
+			if ( pWorkspace == nullptr )
+			{
+				return 0;
+			}
+			NMainFrameWxPanes::CMfcPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CMfcPanel>( pWorkspace );
+			pWorkspace->GetSizer()->Add( pPanel, wxSizerFlags( 1 ).Expand() );
+			pWorkspace->Layout();
+			frameWindows.push_back( std::unique_ptr<NMainFrameWxPanes::CFrameWindow>( new NMainFrameWxPanes::CFrameWindow( pPanel ) ) );
+			return frameWindows.back().get();
 		}
 
 		virtual bool SetChildFrameWindowContents( IFrameWindow *pChildFrame, IWidget *pContents )
 		{
-			return false;
+			NMainFrameWxPanes::CFrameWindow *const pHandle = static_cast<NMainFrameWxPanes::CFrameWindow*>( pChildFrame );
+			if ( ( pHandle == 0 ) || ( pHandle->GetPanel() == nullptr ) )
+			{
+				return false;
+			}
+			const CWnd *const pwndContents = ToCWnd( pContents );
+			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );
+			return true;
 		}
 
 		virtual IDockPanel* CreateControlBar( unsigned *pnID, const std::string &rszTitle, const unsigned nStyle, const unsigned nPlace, const float fRate, const int nWidth )

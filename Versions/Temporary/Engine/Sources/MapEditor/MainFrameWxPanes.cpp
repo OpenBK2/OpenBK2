@@ -72,8 +72,9 @@ namespace NMainFrameWxPanes
 	}
 
 
+	// No wxTAB_TRAVERSAL: nothing in the panel is wx's to navigate between.
 	CMfcPanel::CMfcPanel( wxWindow *pParent )
-		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL | wxCLIP_CHILDREN ),
+		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN ),
 			hwndContents( 0 )
 	{
 		mfcWindow.SubclassWindow( GetHWND() );
@@ -113,6 +114,49 @@ namespace NMainFrameWxPanes
 	{
 		rEvent.Skip();
 		FitContents();
+	}
+
+
+	void* CFrameWindow::GetNativeWidget()
+	{
+		return pPanel ? static_cast<CWnd*>( pPanel->GetMfcWindow() ) : nullptr;
+	}
+
+
+	void CFrameWindow::Show( bool bShow )
+	{
+		if ( pPanel )
+		{
+			pPanel->Show( bShow );
+			// The workspace's sizer leaves a hidden window out.
+			if ( wxWindow *const pWorkspace = pPanel->GetParent() )
+			{
+				pWorkspace->Layout();
+			}
+		}
+	}
+
+
+	void CFrameWindow::Focus()
+	{
+		if ( pPanel )
+		{
+			::SetFocus( pPanel->GetHWND() );
+		}
+	}
+
+
+	void CFrameWindow::Destroy()
+	{
+		if ( pPanel )
+		{
+			wxWindow *const pWorkspace = pPanel->GetParent();
+			pPanel->Destroy();
+			if ( pWorkspace != nullptr )
+			{
+				pWorkspace->Layout();
+			}
+		}
 	}
 
 
