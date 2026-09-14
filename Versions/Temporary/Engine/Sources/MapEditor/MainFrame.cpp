@@ -29,7 +29,7 @@
 #include "DefaultDockingWindow.h"
 #include "Misc/StrProc.h"
 #include "MapEditorLib/StringManager.h"
-#include "PC_DBLinkDialog.h"
+#include "DBLinkView.h"
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorSingleton.h"
@@ -1593,8 +1593,14 @@ bool CMainFrame::BrowseLink( std::string *pszResult, const std::string &rszIniti
 	const int	nHeight = CStringManager::GetIntValueFromString( szValues, PCSPL_HEIGHT, 0, PCSP_DIVIDERS, 0 );
 	const bool bTextEditor = CStringManager::GetBoolValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, false );
 	//
-	CPCDBLinkDialog pcDBLinkDialog( CPCDBLinkDialog::TYPE_LINK, bMultiRef, bTextEditor, nWidth, nHeight, AfxGetMainWnd() );
-	pcDBLinkDialog.SetSelectedTables( pPropertyDesc->refTypes );
+	NDBLink::SRequest request;
+	request.eType = NDBLink::TYPE_LINK;
+	request.bMultiRef = bMultiRef;
+	request.bTextEditor = bTextEditor;
+	request.nFixedWidth = nWidth;
+	request.nFixedHeight = nHeight;
+	request.bEnableEdit = bEnableEdit;
+	request.selectedTables = pPropertyDesc->refTypes;
 	if ( !pPropertyDesc->refTypes.empty() )
 	{
 		std::string szTableName;
@@ -1626,20 +1632,21 @@ bool CMainFrame::BrowseLink( std::string *pszResult, const std::string &rszIniti
 			}
 		}
 		//
-		pcDBLinkDialog.SetCurrentTable( szTableName );
-		pcDBLinkDialog.SetCurrentObject( szObjectName );
-		pcDBLinkDialog.EnableEdit( bEnableEdit );
+		request.szTable = szTableName;
+		request.szObject = szObjectName;
 		//
-		if ( ( pcDBLinkDialog.DoModal() == IDOK ) && bEnableEdit && ( pszResult != 0 ) )
+		CWndWidget mainWidget( AfxGetMainWnd() );
+		NDBLink::SResult result;
+		if ( NDBLink::Run( &mainWidget, request, &result ) && bEnableEdit && ( pszResult != 0 ) )
 		{
-			pcDBLinkDialog.GetCurrentTable( &szTableName );
-			pcDBLinkDialog.GetCurrentObject( &szObjectName );
+			szTableName = result.szTable;
+			szObjectName = result.szObject;
 			//
 			std::string szRefValue;
 			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
 			rRefPathMap[szRefKey] = szRefValue;
 			//
-			if ( pcDBLinkDialog.IsEmpty() )
+			if ( result.bEmpty )
 			{
 				pszResult->clear();
 			}
@@ -1665,7 +1672,8 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 	SUserData::CRefPathMap &rRefPathMap = pUserData->refPathMap;
 	const std::string szRefKey = fmt::format( "_OPEN:{}", szObjectTypeName.c_str() );
 	//
-	CPCDBLinkDialog pcDBLinkDialog( bEnableEmpty ? CPCDBLinkDialog::TYPE_LINK : CPCDBLinkDialog::TYPE_OPEN, false, false, 0, 0, AfxGetMainWnd() );
+	NDBLink::SRequest request;
+	request.eType = bEnableEmpty ? NDBLink::TYPE_LINK : NDBLink::TYPE_OPEN;
 	CTableSet tableSet;
 	if ( szObjectTypeName.empty() )
 	{
@@ -1690,8 +1698,8 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 	{
 		InsertHashSetElement( &tableSet, szObjectTypeName );
 	}
-	pcDBLinkDialog.SetSelectedTables( tableSet );
-	pcDBLinkDialog.SetCurrentTable( szObjectTypeName );
+	request.selectedTables = tableSet;
+	request.szTable = szObjectTypeName;
 	{
 		std::string szRefValue = rRefPathMap[szRefKey];
 		std::string szTableName;
@@ -1699,21 +1707,21 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 		CStringManager::GetTypeAndNameFromRefValue( &szTableName, &szObjectName, szRefValue, TYPE_SEPARATOR_CHAR, szTableName );
 		if ( !szTableName.empty() )
 		{
-			pcDBLinkDialog.SetCurrentTable( szTableName );
+			request.szTable = szTableName;
 		}
 		if ( !szObjectName.empty() )
 		{
-			pcDBLinkDialog.SetCurrentObject( szObjectName );
+			request.szObject = szObjectName;
 		}
 	}
-	pcDBLinkDialog.EnableEdit( bEnableEdit );
-	const bool bResult = ( pcDBLinkDialog.DoModal() == IDOK );
+	request.bEnableEdit = bEnableEdit;
+	CWndWidget mainWidget( AfxGetMainWnd() );
+	NDBLink::SResult result;
+	const bool bResult = NDBLink::Run( &mainWidget, request, &result );
 	if ( bResult )
 	{
-		std::string szTableName;
-		std::string szObjectName;
-		pcDBLinkDialog.GetCurrentTable( &szTableName );
-		pcDBLinkDialog.GetCurrentObject( &szObjectName );
+		const std::string szTableName = result.szTable;
+		const std::string szObjectName = result.szObject;
 		if ( !szObjectName.empty() )
 		{
 			std::string szRefValue;
@@ -1722,7 +1730,7 @@ bool CMainFrame::BrowseForObject( CDBID *pObjectDBID, std::string *pszObjectType
 		}
 		if ( pObjectDBID != 0 )
 		{
-			if ( !pcDBLinkDialog.IsEmpty() )
+			if ( !result.bEmpty )
 			{
 				( *pObjectDBID ) = CDBID( szObjectName );
 			}

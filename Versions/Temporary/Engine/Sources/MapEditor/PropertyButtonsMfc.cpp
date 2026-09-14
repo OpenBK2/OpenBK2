@@ -5,7 +5,7 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 #include "PC_Constants.h"
-#include "PC_DBLinkDialog.h"
+#include "DBLinkView.h"
 
 #include "PropertyButtons.h"
 #include "BitFieldView.h"
@@ -144,8 +144,14 @@ namespace
 		const bool bTextEditor = CStringManager::GetBoolValueFromString( szValues, PCSPL_EDITOR, 0, PCSP_DIVIDERS, false );
 		const bool bMultiRef = typePCIEMnemonics.IsMultiRef( rContext.nType );
 		//
-		CPCDBLinkDialog pcDBLinkDialog( CPCDBLinkDialog::TYPE_LINK, bMultiRef, bTextEditor, nWidth, nHeight, ToCWnd( rContext.pOwner ) );
-		pcDBLinkDialog.SetSelectedTables( pDesc->refTypes );
+		NDBLink::SRequest request;
+		request.eType = NDBLink::TYPE_LINK;
+		request.bMultiRef = bMultiRef;
+		request.bTextEditor = bTextEditor;
+		request.nFixedWidth = nWidth;
+		request.nFixedHeight = nHeight;
+		request.bEnableEdit = rContext.bEditable;
+		request.selectedTables = pDesc->refTypes;
 		//
 		std::string szTableName;
 		std::string szObjectName = rszText;
@@ -173,21 +179,21 @@ namespace
 			}
 		}
 		//
-		pcDBLinkDialog.SetCurrentTable( szTableName );
-		pcDBLinkDialog.SetCurrentObject( szObjectName );
-		pcDBLinkDialog.EnableEdit( rContext.bEditable );
+		request.szTable = szTableName;
+		request.szObject = szObjectName;
 		//
 		bool bResult = false;
-		if ( ( pcDBLinkDialog.DoModal() == IDOK ) && rContext.bEditable )
+		NDBLink::SResult result;
+		if ( NDBLink::Run( rContext.pOwner, request, &result ) && rContext.bEditable )
 		{
-			pcDBLinkDialog.GetCurrentTable( &szTableName );
-			pcDBLinkDialog.GetCurrentObject( &szObjectName );
+			szTableName = result.szTable;
+			szObjectName = result.szObject;
 			//
 			std::string szRefValue;
 			CStringManager::GetRefValueFromTypeAndName( &szRefValue, szTableName, szObjectName, TYPE_SEPARATOR_CHAR );
 			rRefPathMap[szRefKey] = szRefValue;
 			//
-			if ( pcDBLinkDialog.IsEmpty() )
+			if ( result.bEmpty )
 			{
 				szTableName.clear();
 				szObjectName.clear();

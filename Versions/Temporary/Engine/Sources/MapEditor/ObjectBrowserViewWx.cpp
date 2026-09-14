@@ -41,6 +41,7 @@
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <wx/panel.h>
 #include <wx/utils.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -2597,6 +2598,11 @@ namespace
 	class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 	{
 		CWxHostWindow host;
+		// What the list and the trees are children of: the host's root in a pane,
+		// a panel of the dialog's in a wx dialog.
+		wxWindow *pRoot = nullptr;
+		// What the trees' dialogs open over: the host, or the dialog's owner.
+		IWidget *pTreeOwner = nullptr;
 		wxChoice *pChoice = nullptr;
 		wxBoxSizer *pSizer = nullptr;
 		IListener *pListener = nullptr;
@@ -2618,6 +2624,23 @@ namespace
 			return static_cast<int>( reinterpret_cast<intptr_t>( pChoice->GetClientData( nChoice ) ) );
 		}
 
+		void CreateContents()
+		{
+			// CBS_DROPDOWNLIST | CBS_SORT over the chosen table's tree.
+			pChoice = NWx::Child<wxChoice>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_SORT );
+			pChoice->Bind( wxEVT_CHOICE, [this]( wxCommandEvent & )
+			{
+				if ( pListener != 0 )
+				{
+					pListener->OnTableSelected();
+				}
+			} );
+			pSizer = new wxBoxSizer( wxVERTICAL );
+			pSizer->Add( pChoice, wxSizerFlags().Expand() );
+			pRoot->SetSizer( pSizer );
+			pImages.reset( CreateTypeImages() );
+		}
+
 	public:
 		virtual ~CWxObjectBrowser()
 		{
@@ -2629,35 +2652,53 @@ namespace
 			pListener = _pListener;
 			eKind = _eKind;
 			nGDBBrowserID = _nGDBBrowserID;
-			if ( !host.CreateHost( ToCWnd( pParent ) ) )
+			if ( !host.CreateHost( ToCWnd( pParent ) ) || ( host.Root() == nullptr ) )
 			{
 				return false;
 			}
-			const wxWindow *const pRoot = host.Root();
-			// CBS_DROPDOWNLIST | CBS_SORT over the chosen table's tree.
-			pChoice = NWx::Child<wxChoice>( host.Root(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, nullptr, wxCB_SORT );
-			pChoice->Bind( wxEVT_CHOICE, [this]( wxCommandEvent & )
-			{
-				if ( pListener != 0 )
-				{
-					pListener->OnTableSelected();
-				}
-			} );
-			pSizer = new wxBoxSizer( wxVERTICAL );
-			pSizer->Add( pChoice, wxSizerFlags().Expand() );
-			host.Root()->SetSizer( pSizer );
-			pImages.reset( CreateTypeImages() );
-			return pRoot != nullptr;
+			pRoot = host.Root();
+			pTreeOwner = &host;
+			CreateContents();
+			return true;
 		}
 
+		// NObjectBrowser::CreateWxIn: the contents in a panel of pParent's.
+		bool CreateIn( wxWindow *pParent, IWidget *pOwner, IListener *_pListener, EKind _eKind )
+		{
+			if ( pParent == nullptr )
+			{
+				return false;
+			}
+			pListener = _pListener;
+			eKind = _eKind;
+			nGDBBrowserID = -1;
+			pRoot = NWx::Child<wxPanel>( pParent, wxID_ANY );
+			pTreeOwner = pOwner;
+			CreateContents();
+			return true;
+		}
+
+		wxWindow* GetRoot() const
+		{
+			return pRoot;
+		}
+
+		// A pane's host is placed and shown by the pane; a panel in a wx dialog,
+		// by the dialog's layout.
 		virtual void SetBounds( const CTRect<int> &rBounds )
 		{
-			host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
+			if ( host.GetSafeHwnd() != 0 )
+			{
+				host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
+			}
 		}
 
 		virtual void Show( bool bShow )
 		{
-			host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+			if ( host.GetSafeHwnd() != 0 )
+			{
+				host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+			}
 		}
 
 		virtual void EnableEdit( bool bEnable )
@@ -2680,12 +2721,12 @@ namespace
 
 		virtual IObjectTree* AddTable( const std::string &rszTableName )
 		{
-			if ( ( pChoice == nullptr ) || ( host.Root() == nullptr ) )
+			if ( ( pChoice == nullptr ) || ( pRoot == nullptr ) )
 			{
 				return 0;
 			}
-			std::unique_ptr<CWxObjectTree> pTable( new CWxObjectTree( eKind, pListener, &host, nGDBBrowserID ) );
-			pTable->CreateWindow( host.Root(), pImages.get() );
+			std::unique_ptr<CWxObjectTree> pTable( new CWxObjectTree( eKind, pListener, pTreeOwner, nGDBBrowserID ) );
+			pTable->CreateWindow( pRoot, pImages.get() );
 			pTable->GetWindow()->Hide();
 			pTable->EnableEdit( bEnableEdit );
 			pSizer->Add( pTable->GetWindow(), wxSizerFlags( 1 ).Expand() );
@@ -2756,9 +2797,9 @@ namespace
 			{
 				tables[nTable]->GetWindow()->Show( tables[nTable].get() == pActive );
 			}
-			if ( host.Root() != nullptr )
+			if ( pRoot != nullptr )
 			{
-				host.Root()->Layout();
+				pRoot->Layout();
 			}
 		}
 
@@ -2808,6 +2849,21 @@ namespace NObjectBrowser
 	IObjectBrowser* CreateWx()
 	{
 		return new CWxObjectBrowser();
+	}
+
+	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
+															IObjectBrowser::EKind eKind, wxWindow **ppWindow )
+	{
+		std::unique_ptr<CWxObjectBrowser> pBrowser( new CWxObjectBrowser() );
+		if ( !pBrowser->CreateIn( pParent, pOwner, pListener, eKind ) )
+		{
+			return nullptr;
+		}
+		if ( ppWindow != nullptr )
+		{
+			( *ppWindow ) = pBrowser->GetRoot();
+		}
+		return pBrowser.release();
 	}
 }
 

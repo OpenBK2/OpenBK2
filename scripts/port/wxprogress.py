@@ -110,6 +110,9 @@ MIGRATED = {
     # The Selection Properties pane's contents: the grid, its editors, the
     # buttons beside values and the tree's commands.
     "CPCDialog": "MapEditor/PropertyPaneViewWx.cpp (NPropertyPane::Create)",
+    # The wx database browser's trees beside the grid. A picker that asks for
+    # the multiline editor under the grid still opens the MFC dialog.
+    "CPCDBLinkDialog": "MapEditor/DBLinkViewWx.cpp (NDBLink::Run)",
     # Owned by the script editor, and reached only through it.
     "CFindTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
     "CReplaceTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",

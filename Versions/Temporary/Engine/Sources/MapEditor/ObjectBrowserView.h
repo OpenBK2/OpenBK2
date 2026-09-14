@@ -120,3 +120,21 @@ namespace NObjectBrowser
 	IObjectBrowser* CreateWx();
 #endif
 }
+
+
+#ifdef OBK2_WITH_WX
+
+class wxWindow;
+
+namespace NObjectBrowser
+{
+	// The wx contents made straight inside a wx window, for a wx dialog -- the
+	// link picker -- rather than inside an MFC pane. *ppWindow is what to put in
+	// the dialog's layout, which then does what SetBounds and Show do for a
+	// pane. pOwner is what the trees' dialogs open over, and must outlive the
+	// contents. Owned by the caller; null on failure.
+	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
+															IObjectBrowser::EKind eKind, wxWindow **ppWindow );
+}
+
+#endif // OBK2_WITH_WX
