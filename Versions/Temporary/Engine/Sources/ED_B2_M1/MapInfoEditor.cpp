@@ -93,8 +93,9 @@ CMapInfoEditor::CMapInfoEditor()
 		nMapInfoViewToolbarID( 0xFFFFFFFF ), 
 		pMapInfo( 0 ), 
 		pwndShortcutBar( 0 ), 
-		pwndMiniMap( 0 ), 
+		pwndMiniMap( 0 ),
 		pwndMoviesEditor( 0 ),
+		pMiniMapView( 0 ),
 		pMoviesEditorView( 0 ),
 		pMapInfoState( 0 ),
 		heightContainer( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE * 1.0f )
@@ -153,12 +154,13 @@ void CMapInfoEditor::CreateControls()
 	unsigned nID = ID_MAPINFO_EDITOR_MINIMAP_DW;
 	if ( pwndMiniMap = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "MiniMap", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.2f, 265 ) )
 	{
-		if ( wndMiniMap.Create( ToCWnd( pwndMiniMap ) ) )
+		// Whichever toolkit draws the contents; the pane is the frame's either way.
+		pMiniMapView = NMiniMapView::Create();
+		if ( ( pMiniMapView != 0 ) && pMiniMapView->Create( pwndMiniMap ) )
 		{
-			CWndWidget contentsWidget( &wndMiniMap );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMiniMap, &contentsWidget );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndMiniMap, pMiniMapView->GetWidget() );
 			pwndMiniMap->ShowWithoutLayout( true );
-			wndMiniMap.ShowWindow( SW_SHOW );
+			pMiniMapView->Show( true );
 		}
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create minimap window: %g", NHPTimer::GetTimePassed( &time ) );
@@ -497,7 +499,12 @@ void CMapInfoEditor::DestroyControls()
 			// The frame owns this IDockPanel handle; only its window is destroyed here.
 			pwndMiniMap = 0;
 		}
-		wndMiniMap.Destroy();
+		if ( pMiniMapView != 0 )
+		{
+			pMiniMapView->Destroy();
+			delete pMiniMapView;
+			pMiniMapView = 0;
+		}
 	}
 
 	// разрушаем Movies Editor docking window
@@ -640,8 +647,11 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 	//
 	CMapInfoBuilder::EnsureMinimapMaterialAndTexture( GetViewManipulator(), pMapInfo->GetDBID() );
 	CreateMinimapImage();
-	wndMiniMap.LoadMap( pMapInfo );
-	wndMiniMap.RedrawWindow();
+	if ( pMiniMapView != 0 )
+	{
+		pMiniMapView->LoadMap( pMapInfo );
+		pMiniMapView->Redraw();
+	}
 	//
 	CEditorBase::Save( bSaveChanges );
 }
@@ -838,7 +848,10 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			if ( IsPacked2DCoords( dwData ) )
 			{
 				const CVec2 size = UnPackCoords( dwData );
-				wndMiniMap.SetMapInfoEditorSize( size.x, size.y );
+				if ( pMiniMapView != 0 )
+				{
+					pMiniMapView->SetMapInfoEditorSize( size.x, size.y );
+				}
 			}
 			//if ( wndMoviesEditor )
 			//	wndMoviesEditor.ReDraw();
@@ -859,8 +872,11 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_MIMCO_GENERATE_MINIMAP_IMAGE:
 		{
 			CreateMinimapImage();
-			wndMiniMap.LoadMap( pMapInfo );
-			wndMiniMap.RedrawWindow();
+			if ( pMiniMapView != 0 )
+			{
+				pMiniMapView->LoadMap( pMapInfo );
+				pMiniMapView->Redraw();
+			}
 			return true;
 		}
 		//

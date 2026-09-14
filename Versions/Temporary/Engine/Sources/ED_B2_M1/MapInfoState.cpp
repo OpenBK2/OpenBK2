@@ -571,7 +571,10 @@ void CMapInfoState::Enter()
 		const bool bShowMiniMap = CStringManager::GetBoolValueFromString( szDebugParam, "ShowMiniMap", 0, ";: ,|\t", true );
 		if ( bShowMiniMap )
 		{
-			pMapInfoEditor->wndMiniMap.LoadMap( pMapInfoEditor->pMapInfo );
+			if ( pMapInfoEditor->pMiniMapView != 0 )
+			{
+				pMapInfoEditor->pMiniMapView->LoadMap( pMapInfoEditor->pMapInfo );
+			}
 			Singleton<ICommandHandlerContainer>()->Set( CHID_MAP_INFO_EDITOR, pMapInfoEditor );
 		}
 		//
@@ -636,7 +639,10 @@ void CMapInfoState::Leave()
 	if ( bShowMiniMap )
 	{
 		Singleton<ICommandHandlerContainer>()->Remove( CHID_MAP_INFO_EDITOR );
-		pMapInfoEditor->wndMiniMap.LoadMap( 0 );
+		if ( pMapInfoEditor->pMiniMapView != 0 )
+		{
+			pMapInfoEditor->pMiniMapView->LoadMap( 0 );
+		}
 	}
 
 	// Обновляем сцену

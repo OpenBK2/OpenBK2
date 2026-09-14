@@ -30,90 +30,48 @@ BEGIN_MESSAGE_MAP(CMiniMapWindow, CWnd)
 	ON_WM_CONTEXTMENU()
 END_MESSAGE_MAP()
 
-inline NImage::SColor GetColor( const NDb::STerrain &terrainDesc, const STerrainInfo &terrainInfo, const int nX, const int nY )
-{
-	if ( terrainInfo.tileTerraMap[nY][nX] >= terrainDesc.pTerraSet->terraTypes.size() )
-		return NImage::SColor( 0xFF, 0xFF, 0, 0 );
-	else
-		return NImage::SColor( terrainDesc.pTerraSet->terraTypes[terrainInfo.tileTerraMap[nY][nX]]->nColor );
-}
-
 void CMiniMapWindow::LoadMap( const NDb::STerrain *pTerrainDesc )
 {
 	if ( !IsWindow( m_hWnd ) )
 	{
 		return;
 	}
-	if ( pTerrainDesc == 0 ) 
+	if ( pTerrainDesc == 0 )
 	{
 		if ( bMapLoaded )
-		{		
+		{
 			mapDC.DeleteDC();
 			bMapLoaded = false;
 		}
+		image = NMiniMapView::SImage();
+		return;
 	}
-	else
+	if ( bMapLoaded )
 	{
-		if ( bMapLoaded )
-			LoadMap( 0 );
-		mapSize.cx = pTerrainDesc->nNumPatchesX * VIS_TILES_IN_PATCH;
-		mapSize.cy = pTerrainDesc->nNumPatchesY * VIS_TILES_IN_PATCH;
-
-		mapAISize.cx = pTerrainDesc->nNumPatchesX * AI_TILES_IN_PATCH;
-		mapAISize.cy = pTerrainDesc->nNumPatchesY * AI_TILES_IN_PATCH;
-		//
-		const STerrainInfo *pTerrainInfo = Scene()->GetTerraManager()->GetTerraInfo() ;
-		//const std::string szTerrainBinFileName = GetTerrainBinFileName( pTerrainDesc );
-		//CFileStream stream( NVFS::GetMainVFS(), szTerrainBinFileName );
-		//if ( stream.IsOk() )
-		//{
-		//	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
-		//	if ( pSaver == 0 )
-		//	{
-		//		//SStreamStats stats;
-		//		//pStream->GetStats( &stats );
-		//		//NI_ASSERT( pSaver != 0, fmt::format("Can't open stream \"{}\" to read map", stats.pszName) );
-		//		NI_ASSERT( pSaver != 0, fmt::format("Can't open stream \"\" to read map") );
-		//	}
-		//	pSaver->Add( 1, &terrainInfo );
-		//}
-		//
-		CDC *dc = GetDC();
-		mapDC.CreateCompatibleDC( dc );
-		mapBitmap.DeleteObject();
-		mapBitmap.CreateCompatibleBitmap( dc, mapSize.cx + mapSize.cy - 1, mapSize.cx + mapSize.cy - 1 );
-		mapDC.SelectObject( mapBitmap );
-		ReleaseDC( dc );
-		RECT r;
-		SetRect( &r, 0, 0, mapSize.cx + mapSize.cy - 1, mapSize.cx + mapSize.cy - 1 );
-		CBrush btnFace( COLOR_BTNFACE + 1 );
-		mapDC.FillRect( &r, &btnFace );
-
-		for ( int x = 0; x < mapSize.cx && x < pTerrainInfo->heights.GetSizeX() && x < pTerrainInfo->tileTerraMap.GetSizeX(); ++x )
-		{
-			for ( int y = 0; y < mapSize.cy && y < pTerrainInfo->heights.GetSizeY() && y < pTerrainInfo->tileTerraMap.GetSizeY(); ++y )
-			{
-				POINT p;
-				p.x = x + y;
-				p.y = x + mapSize.cy - y - 1;
-				const NImage::SColor color11 = GetColor( *pTerrainDesc, *pTerrainInfo, x, y );
-				mapDC.SetPixelV( p, RGB( color11.r, color11.g, color11.b ) );
-				if ( x > 0 && y > 0 )
-				{
-					const NImage::SColor color10 = GetColor( *pTerrainDesc, *pTerrainInfo, x, y - 1 );
-					const NImage::SColor color01 = GetColor( *pTerrainDesc, *pTerrainInfo, x - 1, y );
-					const NImage::SColor color00 = GetColor( *pTerrainDesc, *pTerrainInfo, x - 1, y - 1 );
-					const uint32_t r = (color00.r + color01.r + color10.r + color11.r)/4;
-					const uint32_t g = (color00.g + color01.g + color10.g + color11.g)/4;
-					const uint32_t b = (color00.b + color01.b + color10.b + color11.b)/4;
-					p.x --;
-					mapDC.SetPixelV( p, RGB( r, g, b ) );
-				}
-			}
-		}
-
-		bMapLoaded = true;
+		LoadMap( 0 );
 	}
+	// NMiniMapView::BuildImage draws the picture this set a pixel at a time
+	// with SetPixelV; the same pixels go into the bitmap at once.
+	if ( !NMiniMapView::BuildImage( pTerrainDesc, &image ) )
+	{
+		return;
+	}
+	CDC *dc = GetDC();
+	mapDC.CreateCompatibleDC( dc );
+	mapBitmap.DeleteObject();
+	mapBitmap.CreateCompatibleBitmap( dc, image.nSide, image.nSide );
+	mapDC.SelectObject( mapBitmap );
+	ReleaseDC( dc );
+	BITMAPINFO info = {};
+	info.bmiHeader.biSize = sizeof( info.bmiHeader );
+	info.bmiHeader.biWidth = image.nSide;
+	// Negative: rows top down, as the image holds them.
+	info.bmiHeader.biHeight = -image.nSide;
+	info.bmiHeader.biPlanes = 1;
+	info.bmiHeader.biBitCount = 32;
+	info.bmiHeader.biCompression = BI_RGB;
+	::SetDIBitsToDevice( mapDC.GetSafeHdc(), 0, 0, image.nSide, image.nSide, 0, 0, 0, image.nSide, &image.pixels[0], &info, DIB_RGB_COLORS );
+	bMapLoaded = true;
 }
 
 void CMiniMapWindow::SetMapInfoEditorSize( const int nSizeX, const int nSizeY )
@@ -157,20 +115,7 @@ bool CMiniMapWindow::EditorToMiniMap( CVec2 *pvResult, const CVec2 &vEditorPos )
 {
 	CRect clientRect;
 	GetClientRect( &clientRect );
-
-	ICamera *pCamera = Camera();
-
-	CVec3 vNear, vFar;
-	pCamera->GetProjectiveRayPoints( &vNear, &vFar, vEditorPos );
-
-	const float t = ( 0.0f - vNear.z)/( vFar.z - vNear.z );
-
-  const float fBitmapX = ( (( vFar.x - vNear.x )*t + vNear.x)/VIS_TILE_SIZE );
-	const float fBitmapY = ( (( vFar.y - vNear.y )*t + vNear.y)/VIS_TILE_SIZE );
-
-	pvResult->x = ( fBitmapX + fBitmapY )                        *(float)clientRect.Width()/ (float)(mapSize.cx+mapSize.cy-1);
-	pvResult->y = ( fBitmapX + (float)mapSize.cy - fBitmapY - 1 )*(float)clientRect.Height()/(float)(mapSize.cx+mapSize.cy-1);
-
+	( *pvResult ) = NMiniMapView::EditorToMiniMap( image, clientRect.Width(), clientRect.Height(), vEditorPos );
 	return true;
 }
 
@@ -178,13 +123,7 @@ bool CMiniMapWindow::MiniMapToEditor( CVec2 *pvResult, const CVec2 &vMiniMapPos 
 {
 	CRect clientRect;
 	GetClientRect( &clientRect );
-
-	const float fBitmapX = vMiniMapPos.x*(float)(mapSize.cx+mapSize.cy-1)/(float)clientRect.Width();
-	const float fBitmapY = vMiniMapPos.y*(float)(mapSize.cx+mapSize.cy-1)/(float)clientRect.Height();
-
-	pvResult->x = Clamp( ( fBitmapX + fBitmapY - (float)mapSize.cy + 1.0f )/2.0f, 0.0f, (float)mapSize.cx ) * VIS_TILE_SIZE;
-	pvResult->y = Clamp( ( fBitmapX - fBitmapY + (float)mapSize.cx - 1.0f )/2.0f, 0.0f, (float)mapSize.cy ) * VIS_TILE_SIZE;
-
+	( *pvResult ) = NMiniMapView::MiniMapToEditor( image, clientRect.Width(), clientRect.Height(), vMiniMapPos );
 	return true;
 }
 
@@ -205,7 +144,7 @@ void CMiniMapWindow::OnPaint()
 	if ( bMapLoaded )
 	{
 // draw terrain
-		dc.StretchBlt( clientRect.left, clientRect.top, clientRect.Width(), clientRect.Height(), &mapDC, 0, 0, mapSize.cx+mapSize.cy - 1, mapSize.cx + mapSize.cy - 1, SRCCOPY );
+		dc.StretchBlt( clientRect.left, clientRect.top, clientRect.Width(), clientRect.Height(), &mapDC, 0, 0, image.nSide, image.nSide, SRCCOPY );
 // draw current view rect
 		POINT rect[5];
 		CVec2 vCoord;

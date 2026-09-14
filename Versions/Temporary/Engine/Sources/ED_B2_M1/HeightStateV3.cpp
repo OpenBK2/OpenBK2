@@ -1160,8 +1160,11 @@ void CHeightStateV3::CreateMapInfoController()
 				if ( bSaveChanges )
 				{
 					pTerraManager->UpdateAfterTilesModifying();
-					pMapInfoEditor->wndMiniMap.LoadMap( pMapInfoEditor->pMapInfo );
-					pMapInfoEditor->wndMiniMap.UpdateWindow();
+					if ( pMapInfoEditor->pMiniMapView != 0 )
+					{
+						pMapInfoEditor->pMiniMapView->LoadMap( pMapInfoEditor->pMapInfo );
+						pMapInfoEditor->pMiniMapView->Update();
+					}
 					pMapInfoEditor->SetModified( true );
 					//
 					Singleton<IControllerContainer>()->Add( pMapInfoController );

@@ -118,6 +118,8 @@ set(SOURCES
     MinimapExporter.cpp
     MinimapImage.cpp
     MinimapMnemonics.cpp
+    MiniMapViewMfc.cpp
+    MiniMapViewWx.cpp
     MiniMapWindow.cpp
     MiniMap_ImageCreation.cpp
     ModelEditor.cpp

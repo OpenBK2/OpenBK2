@@ -3,14 +3,15 @@
 #include <afxwin.h>
 #include "B2_M1_Terrain/DBTerrain.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "MiniMapView.h"
 
 #include <cstdint>
 
 /*
-жестко заданный minimap, в виде ромба. вершины ромба лежат РОВНО на серединах сторон окна прямоугольника, 
+жестко заданный minimap, в виде ромба. вершины ромба лежат РОВНО на серединах сторон окна прямоугольника,
 являющегося minimap'ом:
 
-     x = 0, y = maxY  
+     x = 0, y = maxY
           /\
          /  \
 x = 0		/    \  x = maxX
@@ -31,18 +32,19 @@ y = 0   \    /  y = maxY
 			  \/
 */
 
+// The MFC minimap. The picture and the arithmetic are NMiniMapView's, shared
+// with the wx window; this draws them.
 class CMiniMapWindow : public CWnd, public ICommandHandler
 {
 	CFont fontMiniMap;
-	
+
 	bool bMapLoaded;
 
 	CSize	mapInfoEditorSize;
 
 	CDC mapDC;
 	CBitmap mapBitmap;
-	CSize	mapSize;
-	CSize mapAISize;
+	NMiniMapView::SImage image;
 
 	CPen	rectWhitePen;
 	CPen	rectBlackPen;
@@ -53,8 +55,6 @@ protected:
 	afx_msg void OnMouseMove( unsigned nFlags, CPoint point );
 	afx_msg void OnLButtonUp( unsigned nFlags, CPoint point );
 	afx_msg void OnContextMenu( CWnd* pWnd, CPoint point );
-
-	void RecreateImage();
 
 	bool EditorToMiniMap( CVec2 *pvResult, const CVec2 &vEditorPos );
 	bool MiniMapToEditor( CVec2 *pvResult, const CVec2 &vMiniMaprPos );
@@ -69,7 +69,7 @@ public:
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	
+
 	DECLARE_MESSAGE_MAP()
 };
 
