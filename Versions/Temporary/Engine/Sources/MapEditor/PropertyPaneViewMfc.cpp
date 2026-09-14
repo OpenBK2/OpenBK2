@@ -10,11 +10,13 @@
 #include "PC_Vec3ColorEditor.h"
 
 #include "MapEditorLib/DefaultView.h"
+#include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ObjectController.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "System/FileUtils.h"
 
+#include <cstdio>
 #include <cstdlib>
 
 // Selection Properties as it has always been, CPCDialog, behind the boundary;
@@ -252,6 +254,126 @@ namespace NPropertyPane
 		if ( !bAdded )
 		{
 			return false;
+		}
+		pController->Redo( false, true, 0 );
+		Singleton<IControllerContainer>()->Add( pController );
+		return true;
+	}
+
+
+	bool AddChangeOperation( CObjectBaseController *pController, IManipulator *pManipulator,
+													 const std::string &rszName, const CVariant &rValue )
+	{
+		if ( ( pController == 0 ) || ( pManipulator == 0 ) )
+		{
+			return false;
+		}
+		const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( rszName ) );
+		if ( pDesc == 0 )
+		{
+			return false;
+		}
+		if ( typePCIEMnemonics.Get( pDesc, rszName ) == PCIE_VEC3_COLOR )
+		{
+			return CPCVec3ColorEditor::AddChangeOperation( rszName, (int)rValue, pController, pManipulator );
+		}
+		return pController->AddChangeOperation( rszName, rValue, pManipulator );
+	}
+
+
+	// The tree read the index back from the element's label, "[3]", which is the
+	// name's last segment.
+	bool GetNodeIndex( const std::string &rszName, int *pnIndex )
+	{
+		if ( ( pnIndex == 0 ) || rszName.empty() || ( rszName[rszName.size() - 1] != ARRAY_NODE_END_CHAR ) )
+		{
+			return false;
+		}
+		const size_t nSeparator = rszName.rfind( LEVEL_SEPARATOR_CHAR );
+		const std::string szLast = ( nSeparator == std::string::npos ) ? rszName : rszName.substr( nSeparator + 1 );
+		return sscanf( szLast.c_str(), "[%d]", pnIndex ) == 1;
+	}
+
+
+	namespace
+	{
+		// The write every array command ends in.
+		bool AddNodeOperation( CDefaultView *pView, const std::string &rszArrayName, int nIndex, bool bInsert )
+		{
+			IManipulator *const pManipulator = ( pView != 0 ) ? pView->GetViewManipulator() : 0;
+			if ( pManipulator == 0 )
+			{
+				return false;
+			}
+			CPtr<CObjectBaseController> pController = pView->CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
+			const bool bAdded = bInsert ? pController->AddInsertOperation( rszArrayName, nIndex, pManipulator )
+																	: pController->AddRemoveOperation( rszArrayName, nIndex, pManipulator );
+			if ( !bAdded )
+			{
+				return false;
+			}
+			pController->Redo( false, true, 0 );
+			Singleton<IControllerContainer>()->Add( pController );
+			return true;
+		}
+	}
+
+
+	bool InsertNode( CDefaultView *pView, const std::string &rszArrayName, int nIndex )
+	{
+		return AddNodeOperation( pView, rszArrayName, nIndex, true );
+	}
+
+
+	bool RemoveNode( CDefaultView *pView, const std::string &rszArrayName, int nIndex )
+	{
+		return AddNodeOperation( pView, rszArrayName, nIndex, false );
+	}
+
+
+	void CopyValues( IManipulator *pManipulator, const std::vector<std::string> &rNames )
+	{
+		SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+		if ( ( pUserData == 0 ) || ( pManipulator == 0 ) )
+		{
+			return;
+		}
+		pUserData->pcSelection.Clear();
+		for ( std::vector<std::string>::const_iterator itName = rNames.begin(); itName != rNames.end(); ++itName )
+		{
+			const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( *itName ) );
+			if ( ( pDesc == 0 ) || !typePCIEMnemonics.IsLeaf( typePCIEMnemonics.Get( pDesc, *itName ) ) )
+			{
+				continue;
+			}
+			SUserData::SPCSelectionData selectionData;
+			if ( GetValue( pManipulator, *itName, &( selectionData.value ) ) )
+			{
+				pUserData->pcSelection.Insert( *itName, selectionData );
+			}
+		}
+	}
+
+
+	// As the tree wrote it: one controller, added to the undo list even when
+	// none of the copied fields is here.
+	bool PasteValues( CDefaultView *pView, const std::function<bool( const std::string& )> &rShown )
+	{
+		SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+		IManipulator *const pManipulator = ( pView != 0 ) ? pView->GetViewManipulator() : 0;
+		if ( ( pUserData == 0 ) || ( pManipulator == 0 ) || pUserData->pcSelection.IsEmpty() )
+		{
+			return false;
+		}
+		CPtr<CObjectBaseController> pController = pView->CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
+		const SUserData::CPCSelection::CControlSelectionDataMap &rSelectionDataMap = pUserData->pcSelection.Get();
+		for ( SUserData::CPCSelection::CControlSelectionDataMap::const_iterator itSelectionData = rSelectionDataMap.begin();
+					itSelectionData != rSelectionDataMap.end(); ++itSelectionData )
+		{
+			if ( rShown( itSelectionData->first ) )
+			{
+				AddChangeOperation( pController, pManipulator, itSelectionData->first, itSelectionData->second.data.value );
+			}
 		}
 		pController->Redo( false, true, 0 );
 		Singleton<IControllerContainer>()->Add( pController );

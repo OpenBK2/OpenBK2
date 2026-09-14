@@ -4,10 +4,12 @@
 #include "MapEditorLib/Interface_Widget.h"
 #include "Misc/Geom.h"
 
+#include <functional>
 #include <string>
 #include <vector>
 
 class CDefaultView;
+class CObjectBaseController;
 
 // Selection Properties -- the property grid in its docking pane -- behind a
 // boundary that names no toolkit.
@@ -96,4 +98,28 @@ namespace NPropertyPane
 	// every view on the object and added to the controller container. True when
 	// something was written.
 	bool CommitValue( CDefaultView *pView, const std::string &rszName, const CVariant &rNewValue );
+
+	// CPCMainTreeControl::AddChangeOperation: one change for a field, and three,
+	// one per float, for a vec3_color.
+	bool AddChangeOperation( CObjectBaseController *pController, IManipulator *pManipulator,
+													 const std::string &rszName, const CVariant &rValue );
+
+	// "Players.[3]" -> 3: an array element's index, from its last segment. False
+	// for a name that is not an array element.
+	bool GetNodeIndex( const std::string &rszName, int *pnIndex );
+
+	// An element put into, or taken out of, the array rszArrayName through the
+	// undo list, as AddNode, InsertNode, DeleteNode and DeleteAllNodes wrote them
+	// and redone into every view on the object. nIndex is where: NODE_ADD_INDEX
+	// appends, NODE_REMOVEALL_INDEX empties the array. True when written.
+	bool InsertNode( CDefaultView *pView, const std::string &rszArrayName, int nIndex );
+	bool RemoveNode( CDefaultView *pView, const std::string &rszArrayName, int nIndex );
+
+	// CopySelection's half that is not the clipboard: the value of every field
+	// among rNames, kept in SUserData::pcSelection for Paste. Nodes are skipped.
+	void CopyValues( IManipulator *pManipulator, const std::vector<std::string> &rNames );
+
+	// PasteSelection: every copied value whose field rShown says the view shows,
+	// as one controller on the undo list. False when nothing had been copied.
+	bool PasteValues( CDefaultView *pView, const std::function<bool( const std::string& )> &rShown );
 }

@@ -6,6 +6,7 @@
 
 #include "PC_BaseDialog.h"
 #include "PropertyButtons.h"
+#include "ResourceDefines.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
@@ -18,6 +19,10 @@
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
+#include <wx/menu.h>
+#include <wx/msgdlg.h>
 #include <wx/propgrid/editors.h>
 #include <wx/propgrid/manager.h>
 #include <wx/propgrid/props.h>
@@ -26,6 +31,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 
+#include <algorithm>
 #include <functional>
 #include <vector>
 
@@ -62,9 +68,21 @@
 // committed like typed text. A long string's box stays read-only, since the row
 // shows only its first line; its button edits the whole text.
 //
-// Copy and paste, the array commands and the context menu come after. So do
-// buttons on read-only rows: the MFC tree gave those a browse button for
-// looking, and here they have none.
+// The commands, the fourth slice, each CPCMainTreeControl's:
+//
+//   * several rows can be selected, and Select All selects every row on show;
+//   * Copy puts the selected rows and everything under them on the clipboard,
+//     a line each of name, value and description split by tabs, and keeps
+//     their values for Paste, which writes those the grid shows as one change;
+//   * Add and Delete All on an array, Insert and Delete on an element, through
+//     insert and remove operations on the undo list, the deletes asked first;
+//   * a text box open over a row takes Cut, Copy, Paste, Clear and Select All
+//     instead, as the MFC editors did while they had the focus;
+//   * the right-click menu is IDM_PC_CONTEXT_MENU's, its variant picked as the
+//     tree picked it, and its commands go where the frame would send them.
+//
+// Still to come: buttons on read-only rows, which the MFC tree gave a browse
+// button for looking and which here have none.
 //
 // **Names.** A wxPropertyGrid property's GetName() is its path through its
 // non-category parents joined with '.', and LEVEL_SEPARATOR_CHAR is '.'. So each
@@ -234,11 +252,15 @@ namespace
 			szOptionsLabel = rszOptionsLabel;
 			pManager->Bind( wxEVT_PG_SELECTED, &CPropertyGridView::OnSelected, this );
 			pManager->Bind( wxEVT_PG_CHANGED, &CPropertyGridView::OnChanged, this );
+			pManager->Bind( wxEVT_PG_RIGHT_CLICK, &CPropertyGridView::OnRightClick, this );
+			// The tree took Ctrl and Shift clicks, and Copy works on all it selected.
+			pManager->SetExtraStyle( pManager->GetExtraStyle() | wxPG_EX_MULTIPLE_SELECTION );
 			pManager->Bind( wxEVT_PG_ITEM_EXPANDED, &CPropertyGridView::OnExpanded, this );
 			pManager->Bind( wxEVT_PG_ITEM_COLLAPSED, &CPropertyGridView::OnCollapsed, this );
 			pManager->Bind( wxEVT_PG_COL_END_DRAG, &CPropertyGridView::OnColumnDragged, this );
 			pManager->Bind( wxEVT_DESTROY, &CPropertyGridView::OnDestroyed, this );
 			pManager->GetGrid()->Bind( wxEVT_SET_FOCUS, &CPropertyGridView::OnFocus, this );
+			pManager->Bind( wxEVT_CHILD_FOCUS, &CPropertyGridView::OnChildFocus, this );
 			pManager->GetGrid()->Bind( wxEVT_SIZE, &CPropertyGridView::OnGridSize, this );
 		}
 
@@ -329,8 +351,81 @@ namespace
 			{
 				return false;
 			}
+			// A text box open over a row takes the clipboard commands, as the MFC
+			// editors did by registering themselves as CHID_SELECTION while focused.
+			if ( HandleEditorTextCommand( nCommandID ) )
+			{
+				return true;
+			}
 			switch ( nCommandID )
 			{
+				case ID_SELECTION_CUT:
+				case ID_SELECTION_RENAME:
+				case ID_SELECTION_FIND:
+				case ID_SELECTION_PROPERTIES:
+					return true;
+				case ID_SELECTION_COPY:
+					CopySelection();
+					return true;
+				case ID_SELECTION_PASTE:
+					NPropertyPane::PasteValues( this, [this]( const std::string &rszName ) { return Find( rszName ) != nullptr; } );
+					return true;
+				// Insert on the keyboard: add to an array, insert before an element.
+				case ID_SELECTION_NEW:
+					if ( bEnableEdit )
+					{
+						if ( IsArrayRow( pManager->GetSelection() ) )
+						{
+							AddNode();
+						}
+						else if ( IsArrayElementRow( pManager->GetSelection() ) )
+						{
+							InsertNode();
+						}
+					}
+					return true;
+				// Delete on the keyboard: empty an array, delete an element.
+				case ID_SELECTION_CLEAR:
+					if ( bEnableEdit )
+					{
+						const wxPGProperty *const pSelected = pManager->GetSelection();
+						if ( IsArrayRow( pSelected ) && ( pSelected->GetChildCount() > 0 ) )
+						{
+							DeleteAllNodes();
+						}
+						else if ( IsArrayElementRow( pSelected ) )
+						{
+							DeleteNode();
+						}
+					}
+					return true;
+				case ID_SELECTION_SELECT_ALL:
+					SelectAll();
+					return true;
+				case ID_PC_ADD_NODE:
+					if ( bEnableEdit )
+					{
+						AddNode();
+					}
+					return true;
+				case ID_PC_DELETE_ALL_NODES:
+					if ( bEnableEdit )
+					{
+						DeleteAllNodes();
+					}
+					return true;
+				case ID_PC_INSERT_NODE:
+					if ( bEnableEdit )
+					{
+						InsertNode();
+					}
+					return true;
+				case ID_PC_DELETE_NODE:
+					if ( bEnableEdit )
+					{
+						DeleteNode();
+					}
+					return true;
 				case ID_PC_EXPAND_ALL:
 					SetExpandedBelow( pManager->GetGrid()->GetRoot(), true );
 					eExpandMode = EXPAND_ALWAYS;
@@ -384,9 +479,74 @@ namespace
 			{
 				return false;
 			}
+			if ( UpdateEditorTextCommand( nCommandID, pbEnable, pbCheck ) )
+			{
+				return true;
+			}
 			const wxPGProperty *const pSelected = pManager->GetSelection();
 			switch ( nCommandID )
 			{
+				case ID_SELECTION_CUT:
+				case ID_SELECTION_RENAME:
+				case ID_SELECTION_FIND:
+				case ID_SELECTION_PROPERTIES:
+					return false;
+				case ID_SELECTION_COPY:
+					( *pbEnable ) = !pManager->GetGrid()->GetSelectedProperties().empty();
+					( *pbCheck ) = false;
+					return true;
+				case ID_SELECTION_PASTE:
+				{
+					const SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+					( *pbEnable ) = ( pUserData != 0 ) && !pUserData->pcSelection.IsEmpty();
+					( *pbCheck ) = false;
+					return true;
+				}
+				case ID_SELECTION_NEW:
+					if ( !bEnableEdit || ( pSelected == nullptr ) )
+					{
+						return false;
+					}
+					( *pbEnable ) = IsArrayRow( pSelected ) || IsArrayElementRow( pSelected );
+					( *pbCheck ) = false;
+					return true;
+				case ID_SELECTION_CLEAR:
+					if ( !bEnableEdit )
+					{
+						return false;
+					}
+					( *pbEnable ) = ( IsArrayRow( pSelected ) && ( pSelected->GetChildCount() > 0 ) ) || IsArrayElementRow( pSelected );
+					( *pbCheck ) = false;
+					return true;
+				case ID_SELECTION_SELECT_ALL:
+					( *pbEnable ) = true;
+					( *pbCheck ) = false;
+					return true;
+				case ID_PC_ADD_NODE:
+					if ( pSelected == nullptr )
+					{
+						return false;
+					}
+					( *pbEnable ) = bEnableEdit && IsArrayRow( pSelected );
+					( *pbCheck ) = false;
+					return true;
+				case ID_PC_DELETE_ALL_NODES:
+					if ( !IsArrayRow( pSelected ) )
+					{
+						return false;
+					}
+					( *pbEnable ) = bEnableEdit && ( pSelected->GetChildCount() > 0 );
+					( *pbCheck ) = false;
+					return true;
+				case ID_PC_INSERT_NODE:
+				case ID_PC_DELETE_NODE:
+					if ( ( pSelected == nullptr ) || ( pSelected->GetParent() == nullptr ) || pSelected->GetParent()->IsRoot() )
+					{
+						return false;
+					}
+					( *pbEnable ) = bEnableEdit && IsArrayRow( pSelected->GetParent() );
+					( *pbCheck ) = false;
+					return true;
 				case ID_PC_EXPAND_ALL:
 				case ID_PC_COLLAPSE_ALL:
 					( *pbEnable ) = true;
@@ -655,6 +815,340 @@ namespace
 				RefreshText( pProperty, szName );
 				bCreateControls = false;
 			}
+		}
+
+		EPCIEType TypeOf( const std::string &rszName )
+		{
+			const SPropertyDesc *const pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( rszName ) );
+			return ( pDesc != 0 ) ? typePCIEMnemonics.Get( pDesc, rszName ) : PCIE_UNKNOWN;
+		}
+
+		// The tree asked the item's type for PCIE_LIST; the name answers the same.
+		bool IsArrayRow( const wxPGProperty *pProperty )
+		{
+			return ( pProperty != nullptr ) && ( TypeOf( FullName( pProperty ) ) == PCIE_LIST );
+		}
+
+		bool IsArrayElementRow( const wxPGProperty *pProperty )
+		{
+			const wxPGProperty *const pParent = ( pProperty != nullptr ) ? pProperty->GetParent() : nullptr;
+			return ( pParent != nullptr ) && !pParent->IsRoot() && IsArrayRow( pParent );
+		}
+
+		// IDS_PC_DELETE_MESSAGE and IDS_PC_DELETE_ALL_MESSAGE, under the
+		// application's title, No the default as MB_DEFBUTTON2 made it.
+		bool Confirm( UINT nMessageID )
+		{
+			CString strMessage;
+			strMessage.LoadString( nMessageID );
+			wxMessageDialog question( pManager, FromNarrow( std::string( strMessage.GetString() ) ),
+																FromNarrow( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle ),
+																wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION );
+			return question.ShowModal() == wxID_YES;
+		}
+
+		void AddNode()
+		{
+			const wxPGProperty *const pSelected = pManager->GetSelection();
+			if ( IsArrayRow( pSelected ) )
+			{
+				NPropertyPane::InsertNode( this, FullName( pSelected ), NODE_ADD_INDEX );
+			}
+		}
+
+		void DeleteAllNodes()
+		{
+			const wxPGProperty *const pSelected = pManager->GetSelection();
+			if ( !IsArrayRow( pSelected ) )
+			{
+				return;
+			}
+			// Named before asking: the question runs a message loop, and the row
+			// may not outlive it.
+			const std::string szArrayName = FullName( pSelected );
+			if ( Confirm( IDS_PC_DELETE_ALL_MESSAGE ) )
+			{
+				NPropertyPane::RemoveNode( this, szArrayName, NODE_REMOVEALL_INDEX );
+			}
+		}
+
+		// Before the selected element, which moves down one.
+		void InsertNode()
+		{
+			const wxPGProperty *const pSelected = pManager->GetSelection();
+			int nIndex = 0;
+			if ( IsArrayElementRow( pSelected ) && NPropertyPane::GetNodeIndex( FullName( pSelected ), &nIndex ) )
+			{
+				NPropertyPane::InsertNode( this, NPropertyPane::ParentName( FullName( pSelected ) ), nIndex );
+			}
+		}
+
+		void DeleteNode()
+		{
+			const wxPGProperty *const pSelected = pManager->GetSelection();
+			int nIndex = 0;
+			if ( !IsArrayElementRow( pSelected ) || !NPropertyPane::GetNodeIndex( FullName( pSelected ), &nIndex ) )
+			{
+				return;
+			}
+			// Named before asking: the question runs a message loop, and the row
+			// may not outlive it.
+			const std::string szArrayName = NPropertyPane::ParentName( FullName( pSelected ) );
+			if ( Confirm( IDS_PC_DELETE_MESSAGE ) )
+			{
+				NPropertyPane::RemoveNode( this, szArrayName, nIndex );
+			}
+		}
+
+		// Every selected row and all the rows under it, once each, in grid order:
+		// NCA::CreateSelection's ST_COMPLETE_SELECT.
+		void CollectSelected( wxPGProperty *pParent, bool bParentSelected, std::vector<wxPGProperty*> *pRows )
+		{
+			const wxArrayPGProperty &rSelected = pManager->GetGrid()->GetSelectedProperties();
+			for ( unsigned nChild = 0; nChild < pParent->GetChildCount(); ++nChild )
+			{
+				wxPGProperty *const pChild = pParent->Item( nChild );
+				const bool bSelected = bParentSelected || ( std::find( rSelected.begin(), rSelected.end(), pChild ) != rSelected.end() );
+				if ( bSelected )
+				{
+					pRows->push_back( pChild );
+				}
+				CollectSelected( pChild, bSelected, pRows );
+			}
+		}
+
+		// CPCMainTreeControl::CopySelection: the rows as NCA::FillWindowsClipboard
+		// wrote them -- name, value and description, tab separated, a line each
+		// -- and the fields' values kept for Paste.
+		void CopySelection()
+		{
+			std::vector<wxPGProperty*> rows;
+			CollectSelected( pManager->GetGrid()->GetRoot(), false, &rows );
+			std::string szText;
+			std::vector<std::string> names;
+			for ( std::vector<wxPGProperty*>::const_iterator itRow = rows.begin(); itRow != rows.end(); ++itRow )
+			{
+				const std::string szName = FullName( *itRow );
+				names.push_back( szName );
+				std::string szValue;
+				NPropertyPane::GetValueText( GetViewManipulator(), szName, &szValue );
+				std::string szDescription;
+				const SPropertyDesc *const pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( szName ) );
+				if ( ( pDesc != 0 ) && ( szName[szName.size() - 1] != ARRAY_NODE_END_CHAR ) )
+				{
+					szDescription = pDesc->szDesc;
+				}
+				if ( !szText.empty() )
+				{
+					szText += "\r\n";
+				}
+				szText += szName + "\t" + szValue + "\t" + szDescription;
+			}
+			if ( wxTheClipboard->Open() )
+			{
+				if ( szText.empty() )
+				{
+					wxTheClipboard->Clear();
+				}
+				else
+				{
+					wxTheClipboard->SetData( new wxTextDataObject( FromNarrow( szText ) ) );
+				}
+				wxTheClipboard->Close();
+			}
+			NPropertyPane::CopyValues( GetViewManipulator(), names );
+		}
+
+		// NCA::SelectAll: every row whose parents are all open.
+		void SelectVisibleBelow( wxPropertyGrid *pGrid, wxPGProperty *pParent )
+		{
+			for ( unsigned nChild = 0; nChild < pParent->GetChildCount(); ++nChild )
+			{
+				wxPGProperty *const pChild = pParent->Item( nChild );
+				pGrid->AddToSelection( pChild );
+				if ( ( pChild->GetChildCount() > 0 ) && pChild->IsExpanded() )
+				{
+					SelectVisibleBelow( pGrid, pChild );
+				}
+			}
+		}
+
+		void SelectAll()
+		{
+			wxPropertyGrid *const pGrid = pManager->GetGrid();
+			bCreateControls = true;
+			SelectVisibleBelow( pGrid, pGrid->GetRoot() );
+			bCreateControls = false;
+			pGrid->Refresh();
+		}
+
+		// The text box the grid has open over a row, while it has the focus.
+		wxTextCtrl* FocusedEditorText() const
+		{
+			if ( pManager == nullptr )
+			{
+				return nullptr;
+			}
+			wxTextCtrl *const pText = wxDynamicCast( pManager->GetGrid()->GetEditorControl(), wxTextCtrl );
+			return ( ( pText != nullptr ) && ( wxWindow::FindFocus() == pText ) ) ? pText : nullptr;
+		}
+
+		// CPCStringInputEditor's HandleCommand, and its siblings'.
+		bool HandleEditorTextCommand( unsigned nCommandID )
+		{
+			wxTextCtrl *const pText = FocusedEditorText();
+			if ( pText == nullptr )
+			{
+				return false;
+			}
+			switch ( nCommandID )
+			{
+				case ID_SELECTION_CUT:
+					pText->Cut();
+					return true;
+				case ID_SELECTION_COPY:
+					pText->Copy();
+					return true;
+				case ID_SELECTION_PASTE:
+					pText->Paste();
+					return true;
+				case ID_SELECTION_CLEAR:
+					pText->RemoveSelection();
+					return true;
+				case ID_SELECTION_SELECT_ALL:
+					pText->SelectAll();
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		bool UpdateEditorTextCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
+		{
+			const wxTextCtrl *const pText = FocusedEditorText();
+			if ( pText == nullptr )
+			{
+				return false;
+			}
+			long nFrom = 0;
+			long nTo = 0;
+			pText->GetSelection( &nFrom, &nTo );
+			switch ( nCommandID )
+			{
+				case ID_SELECTION_CUT:
+					( *pbEnable ) = pText->CanCut();
+					break;
+				case ID_SELECTION_COPY:
+					( *pbEnable ) = pText->CanCopy();
+					break;
+				case ID_SELECTION_PASTE:
+					( *pbEnable ) = pText->CanPaste();
+					break;
+				case ID_SELECTION_CLEAR:
+					( *pbEnable ) = pText->IsEditable() && ( nFrom != nTo );
+					break;
+				case ID_SELECTION_SELECT_ALL:
+					( *pbEnable ) = ( nFrom != 0 ) || ( nTo != pText->GetLastPosition() );
+					break;
+				default:
+					return false;
+			}
+			( *pbCheck ) = false;
+			return true;
+		}
+
+		// Where the frame sends a command: the ranges MapEditorApp registers.
+		static unsigned GetCommandHandlerFor( unsigned nCommandID )
+		{
+			if ( ( nCommandID >= ID_SELECTION_FIRST_COMMAND_ID ) && ( nCommandID <= ID_SELECTION_LAST_COMMAND_ID ) )
+			{
+				return CHID_SELECTION;
+			}
+			if ( ( nCommandID >= ID_PC_FIRST_COMMAND_ID ) && ( nCommandID <= ID_PC_LAST_COMMAND_ID ) )
+			{
+				return CHID_PROPERTY_CONTROL;
+			}
+			return CHID_CONTROLLER_CONTAINER;
+		}
+
+		// An entry whose state and action are the command handler container's,
+		// as the tree's resource menu had them from the frame.
+		void AppendCommand( wxMenu *pMenu, unsigned nCommandID, const char *pszLabel, bool bCheckable = false )
+		{
+			const unsigned nHandler = GetCommandHandlerFor( nCommandID );
+			bool bEnable = false;
+			bool bCheck = false;
+			Singleton<ICommandHandlerContainer>()->UpdateCommand( nHandler, nCommandID, &bEnable, &bCheck );
+			const wxString label = wxString::FromUTF8( pszLabel );
+			wxMenuItem *const pItem = bCheckable ? pMenu->AppendCheckItem( nCommandID, label ) : pMenu->Append( nCommandID, label );
+			pItem->Enable( bEnable );
+			if ( bCheckable )
+			{
+				pItem->Check( bCheck );
+			}
+			pMenu->Bind( wxEVT_MENU,
+									 [nHandler, nCommandID]( wxCommandEvent & )
+									 {
+										 Singleton<ICommandHandlerContainer>()->HandleCommand( nHandler, nCommandID, 0 );
+									 },
+									 nCommandID );
+		}
+
+		bool IsCommandEnabled( unsigned nCommandID )
+		{
+			bool bEnable = false;
+			bool bCheck = false;
+			return UpdateCommand( nCommandID, &bEnable, &bCheck ) && bEnable;
+		}
+
+		// CPCMainTreeControl::OnContextMenu. The grid has already selected the row
+		// clicked. The resource has six variants; which entries a variant has is
+		// decided here the way the tree chose among them.
+		void OnRightClick( wxPropertyGridEvent &rEvent )
+		{
+			rEvent.Skip();
+			if ( ( pManager == nullptr ) || ( GetViewManipulator() == 0 ) )
+			{
+				return;
+			}
+			// The tree took the focus on a right click, and the focus is what made it
+			// the handler the frame sent the menu's commands to. The grid does not
+			// take it on its own from a right click, so it is taken here, and the
+			// handlers set as the focus would set them.
+			pManager->GetGrid()->SetFocus();
+			RegisterAsHandler();
+			const bool bArray = IsCommandEnabled( ID_PC_ADD_NODE );
+			const bool bArrayNode = IsCommandEnabled( ID_PC_INSERT_NODE );
+			const bool bMultiNode = IsCommandEnabled( ID_PC_EXPAND ) || IsCommandEnabled( ID_PC_COLLAPSE );
+			wxMenu menu;
+			AppendCommand( &menu, ID_PC_REFRESH, "Re&fresh" );
+			AppendCommand( &menu, ID_SELECTION_COPY, "&Copy" );
+			AppendCommand( &menu, ID_SELECTION_PASTE, "&Paste" );
+			menu.AppendSeparator();
+			if ( bArray || bMultiNode )
+			{
+				AppendCommand( &menu, ID_PC_EXPAND, "&Expand" );
+				AppendCommand( &menu, ID_PC_COLLAPSE, "&Collapse" );
+				menu.AppendSeparator();
+			}
+			if ( bArray )
+			{
+				AppendCommand( &menu, ID_PC_ADD_NODE, "&Add" );
+				AppendCommand( &menu, ID_PC_DELETE_ALL_NODES, "De&lete All" );
+				menu.AppendSeparator();
+			}
+			if ( bArrayNode )
+			{
+				AppendCommand( &menu, ID_PC_INSERT_NODE, "&Insert" );
+				AppendCommand( &menu, ID_PC_DELETE_NODE, "&Delete" );
+				menu.AppendSeparator();
+			}
+			AppendCommand( &menu, ID_CC_UNDO, "&Undo" );
+			AppendCommand( &menu, ID_CC_REDO, "&Redo" );
+			menu.AppendSeparator();
+			AppendCommand( &menu, ID_PC_SHOW_HIDDEN, "&Show Hidden", true );
+			pManager->GetGrid()->PopupMenu( &menu );
+			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
 
 		// A button beside a value was pressed. What it opens runs once the grid
@@ -1087,6 +1581,12 @@ namespace
 			{
 				CurrentPropertyName() = FullName( pProperty );
 			}
+			// The tree could not be clicked without taking the focus, so a selected
+			// row always had its commands. A wx window can be: focus is withheld
+			// from a frame that is not active, as measured on a desktop with no
+			// input, and a row picked there answered no command until the grid was
+			// right-clicked. Selecting is as good a sign of the user's attention.
+			RegisterAsHandler();
 			UpdateStatus();
 		}
 
@@ -1125,11 +1625,24 @@ namespace
 			}
 		}
 
+		void RegisterAsHandler()
+		{
+			Singleton<ICommandHandlerContainer>()->Set( CHID_PROPERTY_CONTROL, this );
+			Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
+		}
+
 		void OnFocus( wxFocusEvent &rEvent )
 		{
 			rEvent.Skip();
-			Singleton<ICommandHandlerContainer>()->Set( CHID_PROPERTY_CONTROL, this );
-			Singleton<ICommandHandlerContainer>()->Set( CHID_SELECTION, this );
+			RegisterAsHandler();
+		}
+
+		// A click straight into a value gives the focus to the box the grid opens,
+		// not to the grid, and a focus event does not travel up; this one does.
+		void OnChildFocus( wxChildFocusEvent &rEvent )
+		{
+			rEvent.Skip();
+			RegisterAsHandler();
 		}
 
 		// A destroy event propagates up from every child the grid makes and
