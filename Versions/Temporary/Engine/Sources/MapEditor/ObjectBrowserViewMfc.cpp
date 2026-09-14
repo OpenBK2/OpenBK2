@@ -10,6 +10,7 @@
 
 #include "MapEditorLib/MfcWidget.h"
 
+#include <cstdlib>
 #include <memory>
 
 // The database browser's contents as they have always been, CComboBoxGDBBrowser
@@ -17,6 +18,15 @@
 
 namespace
 {
+	// The same flag every migrated view follows, so a session runs either the
+	// MFC set or the wx set.
+	bool UseWx()
+	{
+		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
+		return ( pszUseWx != 0 ) && ( pszUseWx[0] != '0' ) && ( pszUseWx[0] != '\0' );
+	}
+
+
 	class CMfcObjectBrowser : public IObjectBrowser
 	{
 		std::unique_ptr<CComboBoxGDBBrowser> pContents;
@@ -120,6 +130,12 @@ namespace NObjectBrowser
 
 	IObjectBrowser* Create()
 	{
+#ifdef OBK2_WITH_WX
+		if ( UseWx() )
+		{
+			return CreateWx();
+		}
+#endif
 		return CreateMfc();
 	}
 }

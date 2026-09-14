@@ -89,6 +89,7 @@ set(SOURCES
     BuildDataViewMfc.cpp
     BuildDataViewWx.cpp
     ObjectBrowserViewMfc.cpp
+    ObjectBrowserViewWx.cpp
     PropertyButtonsMfc.cpp
     PropertyButtonsWx.cpp
     PropertyPaneViewMfc.cpp

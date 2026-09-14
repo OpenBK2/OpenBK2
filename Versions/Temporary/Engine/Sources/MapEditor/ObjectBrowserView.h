@@ -63,12 +63,20 @@ struct IObjectBrowser
 	};
 
 	// What the contents tell the window they are in. The MFC implementation
-	// sends that window WM_GDB_BROWSER instead, as the combo box always has.
+	// sends that window WM_GDB_BROWSER and WM_TREE_GDB_BROWSER instead, as the
+	// combo box and the trees always have.
 	struct IListener
 	{
 		virtual ~IListener() {}
 		// Another table was chosen.
 		virtual void OnTableSelected() = 0;
+		// The selection in pTree changed, and was handed on. The browser pane has
+		// no use for this; the link picker shows the selected object.
+		virtual void OnTreeSelectionChanged( IObjectTree *pTree ) {}
+		// An object in pTree was loaded, by a double click or the Load command --
+		// after it was opened, for a browser pane's tree. The link picker takes
+		// it as OK.
+		virtual void OnTreeLoad( IObjectTree *pTree ) {}
 	};
 
 	virtual ~IObjectBrowser() {}
@@ -106,6 +114,9 @@ namespace NObjectBrowser
 	// Owned by the caller.
 	IObjectBrowser* Create();
 
-	// Named so the dispatcher can reach it; not for anything else to call.
+	// Named so the dispatcher can reach them; not for anything else to call.
 	IObjectBrowser* CreateMfc();
+#ifdef OBK2_WITH_WX
+	IObjectBrowser* CreateWx();
+#endif
 }
