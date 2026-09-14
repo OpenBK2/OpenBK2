@@ -30,6 +30,7 @@
 #include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/WxColourDialog.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "System/GlobalVars.h"
 
 #include <fmt/format.h>
@@ -38,6 +39,7 @@
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/headerctrl.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
@@ -208,56 +210,16 @@ namespace
 	// tree_types.bmp from the editor's resources, split into its 16 pixel
 	// icons with magenta as the mask, as CComboBoxGDBBrowser::InitImageLists made
 	// its image list.
-	//
-	// The pixels are read out as 32-bit colour and made into a wxImage. The
-	// bitmap is a palette one; handed to wx as it came from LoadImage, the image
-	// list drew every icon as a black silhouette.
 	wxImageList* CreateTypeImages()
 	{
 		wxImageList *const pImages = new wxImageList( 16, 16, true, GDBO_COUNT * 2 );
-		const LPCTSTR pszResource = MAKEINTRESOURCE( IDB_TABGDBB_TREE_TYPES_IMAGE_LIST );
-		const HBITMAP hBitmap = static_cast<HBITMAP>( ::LoadImage( AfxFindResourceHandle( pszResource, RT_BITMAP ), pszResource,
-																															 IMAGE_BITMAP, 0, 0, 0 ) );
-		if ( hBitmap == 0 )
+		// NWxResourceImages reads the palette bitmap out as colour; the image
+		// list cuts the strip into icons.
+		const wxImage strip = NWxResourceImages::LoadStrip( IDB_TABGDBB_TREE_TYPES_IMAGE_LIST );
+		if ( strip.IsOk() )
 		{
-			return pImages;
+			pImages->Add( wxBitmap( strip ) );
 		}
-		BITMAP header = { 0 };
-		if ( ( ::GetObject( hBitmap, sizeof( header ), &header ) == 0 ) || ( header.bmWidth <= 0 ) || ( header.bmHeight <= 0 ) )
-		{
-			::DeleteObject( hBitmap );
-			return pImages;
-		}
-		const int nWidth = header.bmWidth;
-		const int nHeight = header.bmHeight;
-		BITMAPINFO info = {};
-		info.bmiHeader.biSize = sizeof( info.bmiHeader );
-		info.bmiHeader.biWidth = nWidth;
-		// Negative: rows top-down, as wxImage holds them.
-		info.bmiHeader.biHeight = -nHeight;
-		info.bmiHeader.biPlanes = 1;
-		info.bmiHeader.biBitCount = 32;
-		info.bmiHeader.biCompression = BI_RGB;
-		std::vector<unsigned char> pixels( static_cast<size_t>( nWidth ) * nHeight * 4 );
-		const HDC hScreen = ::GetDC( 0 );
-		const int nRows = ::GetDIBits( hScreen, hBitmap, 0, nHeight, &pixels[0], &info, DIB_RGB_COLORS );
-		::ReleaseDC( 0, hScreen );
-		::DeleteObject( hBitmap );
-		if ( nRows != nHeight )
-		{
-			return pImages;
-		}
-		wxImage strip( nWidth, nHeight, false );
-		unsigned char *const pRGB = strip.GetData();
-		for ( size_t nPixel = 0; nPixel < static_cast<size_t>( nWidth ) * nHeight; ++nPixel )
-		{
-			// BGRX in, RGB out.
-			pRGB[nPixel * 3 + 0] = pixels[nPixel * 4 + 2];
-			pRGB[nPixel * 3 + 1] = pixels[nPixel * 4 + 1];
-			pRGB[nPixel * 3 + 2] = pixels[nPixel * 4 + 0];
-		}
-		strip.SetMaskColour( 255, 0, 255 );
-		pImages->Add( wxBitmap( strip ) );
 		return pImages;
 	}
 
@@ -2604,6 +2566,8 @@ namespace
 		// What the trees' dialogs open over: the host, or the dialog's owner.
 		IWidget *pTreeOwner = nullptr;
 		wxChoice *pChoice = nullptr;
+		// The trees' "Name" column header, shared by every table's tree.
+		wxHeaderCtrlSimple *pHeader = nullptr;
 		wxBoxSizer *pSizer = nullptr;
 		IListener *pListener = nullptr;
 		EKind eKind = KIND_BROWSER;
@@ -2637,8 +2601,48 @@ namespace
 			} );
 			pSizer = new wxBoxSizer( wxVERTICAL );
 			pSizer->Add( pChoice, wxSizerFlags().Expand() );
+			CreateHeader();
 			pRoot->SetSizer( pSizer );
 			pImages.reset( CreateTypeImages() );
+		}
+
+		// The user data's list the header width is kept in: the browser panes'
+		// or the link picker's, as CTreeGDBBrowser and CTreeGDBLinkBrowser kept
+		// them apart.
+		std::vector<int>& HeaderWidths() const
+		{
+			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
+			std::vector<int> &rWidths = ( eKind == KIND_LINK ) ? pUserData->tableLinkHeaderWidthList : pUserData->tableHeaderWidthList;
+			if ( rWidths.empty() )
+			{
+				rWidths.resize( 1, 0 );
+			}
+			return rWidths;
+		}
+
+		// The MFC trees' header: one column, "Name" with tree_header.bmp's icon,
+		// as wide as the user left it -- TABGDBB_TREE_COLUMN_WIDTH's 150 until
+		// then -- and the width kept when the user drags it, as LoadHeaderWidth
+		// and SaveHeaderWidth did.
+		void CreateHeader()
+		{
+			CString strName;
+			strName.LoadString( IDS_TABGDBB_PROPERTY_THN_0 );
+			const int nKeptWidth = HeaderWidths()[0];
+			wxHeaderColumnSimple column( FromNarrow( std::string( strName.GetString() ) ), ( nKeptWidth > 0 ) ? nKeptWidth : 150 );
+			column.SetResizeable( true );
+			const std::vector<wxBitmap> icons = NWxResourceImages::LoadIcons( IDB_TABGDBB_TREE_HEADER_IMAGE_LIST );
+			if ( !icons.empty() )
+			{
+				column.SetBitmap( icons[0] );
+			}
+			pHeader = NWx::Child<wxHeaderCtrlSimple>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+			pHeader->AppendColumn( column );
+			pHeader->Bind( wxEVT_HEADER_END_RESIZE, [this]( wxHeaderCtrlEvent &rEvent )
+			{
+				HeaderWidths()[0] = rEvent.GetWidth();
+			} );
+			pSizer->Add( pHeader, wxSizerFlags().Expand() );
 		}
 
 	public:

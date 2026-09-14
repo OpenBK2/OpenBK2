@@ -131,9 +131,13 @@ namespace
 			}
 
 			const bool bLink = ( request.eType == NDBLink::TYPE_LINK );
-			wxFlexGridSizer *const pSelections = new wxFlexGridSizer( 2, wxSize( FromDIP( 6 ), FromDIP( 3 ) ) );
+			// IDC_PC_DBL_CUR_SEL_LABEL_LEFT is 62 dialog units wide, and its value
+			// starts 3 units after it.
+			wxFlexGridSizer *const pSelections = new wxFlexGridSizer( 2, wxSize( ConvertDialogToPixels( wxSize( 3, 0 ) ).x, FromDIP( 3 ) ) );
 			pSelections->AddGrowableCol( 1 );
-			pSelections->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Current Selection:" ) );
+			wxStaticText *const pCurrentLabel = NWx::Child<wxStaticText>( this, wxID_ANY, "Current Selection:" );
+			pCurrentLabel->SetMinSize( wxSize( ConvertDialogToPixels( wxSize( 62, 0 ) ).x, -1 ) );
+			pSelections->Add( pCurrentLabel );
 			pCurrentSelection = NWx::Child<wxStaticText>( this, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize,
 																										wxST_NO_AUTORESIZE | wxST_ELLIPSIZE_END );
 			pSelections->Add( pCurrentSelection, wxSizerFlags().Expand() );
@@ -152,6 +156,16 @@ namespace
 			pBottomRow->Add( pSetEmpty, wxSizerFlags().CentreVertical() );
 			pBottomRow->AddStretchSpacer();
 			pBottomRow->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ), wxSizerFlags().CentreVertical() );
+			// The template's buttons are 50 by 14 dialog units, larger than wx's
+			// standard ones.
+			const wxSize buttonSize = ConvertDialogToPixels( wxSize( 50, 14 ) );
+			for ( wxWindow *pButton : { FindWindow( wxID_OK ), FindWindow( wxID_CANCEL ), static_cast<wxWindow*>( pSetEmpty ) } )
+			{
+				if ( pButton != nullptr )
+				{
+					pButton->SetMinSize( buttonSize );
+				}
+			}
 
 			wxBoxSizer *const pSizer = new wxBoxSizer( wxVERTICAL );
 			pSizer->Add( pColumns, wxSizerFlags( 1 ).Expand().Border( wxLEFT | wxRIGHT | wxTOP, nBorder ) );

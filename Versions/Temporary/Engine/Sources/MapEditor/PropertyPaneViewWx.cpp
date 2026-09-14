@@ -8,6 +8,8 @@
 #include "PropertyButtons.h"
 #include "ResourceDefines.h"
 
+#include "Image/ImageColor.h"
+
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/DialogState.h"
@@ -18,14 +20,17 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxResourceImages.h"
 
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/headerctrl.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/propgrid/editors.h>
 #include <wx/propgrid/manager.h>
 #include <wx/propgrid/props.h>
+#include <wx/renderer.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
@@ -216,6 +221,133 @@ namespace
 	}
 
 
+	// An icon strip, loaded once and never freed: the grids that draw its icons
+	// live until the editor closes, and a wxBitmap left to a static destructor
+	// would outlive wx.
+	const std::vector<wxBitmap>& Icons( UINT nResourceID )
+	{
+		static std::vector<wxBitmap> *s_pTypeIcons = nullptr;
+		static std::vector<wxBitmap> *s_pHeaderIcons = nullptr;
+		std::vector<wxBitmap> *&rpIcons = ( nResourceID == IDB_PC_TYPES_IMAGE_LIST ) ? s_pTypeIcons : s_pHeaderIcons;
+		if ( rpIcons == nullptr )
+		{
+			rpIcons = new std::vector<wxBitmap>( NWxResourceImages::LoadIcons( nResourceID ) );
+		}
+		return *rpIcons;
+	}
+
+
+	// pc_types.bmp's icon for a row of nType, the image CPCMainTreeControl gave
+	// InsertTreeItem. The strip holds a second icon per type after PCIE_COUNT,
+	// the tree's selected image, which a wx grid cell has no place for.
+	wxBitmapBundle TypeIcon( EPCIEType nType )
+	{
+		const std::vector<wxBitmap> &rIcons = Icons( IDB_PC_TYPES_IMAGE_LIST );
+		return ( ( nType >= 0 ) && ( static_cast<size_t>( nType ) < rIcons.size() ) ) ? wxBitmapBundle( rIcons[nType] ) : wxBitmapBundle();
+	}
+
+
+	// The types CPCMainTreeControl::PickTextColors painted the value cell of in
+	// the value's colour.
+	bool IsColourType( EPCIEType nType )
+	{
+		return ( nType == PCIE_INT_COLOR ) || ( nType == PCIE_INT_COLOR_WITH_ALPHA ) || ( nType == PCIE_VEC3_COLOR );
+	}
+
+
+	// A grid that draws its expand buttons as the MFC tree did, a box with a
+	// plus or a minus, rather than the platform's arrows: wx's generic renderer
+	// draws exactly that box.
+	//
+	// It also keeps a selected row visible while the grid has no focus. wx paints
+	// such a row in the margin's colour, and ApplyClassicLook makes the margin
+	// the rows' own colour, which would hide the selection. So an unfocused grid
+	// is painted as a focused one, with the selection in COLOR_3DFACE -- what an
+	// unfocused tree shows its selection in.
+	class CClassicPropertyGrid : public wxPropertyGrid
+	{
+	public:
+		CClassicPropertyGrid()
+		{
+			// Bound, so it runs before wxPropertyGrid's own OnPaint in its event table.
+			Bind( wxEVT_PAINT, &CClassicPropertyGrid::OnClassicPaint, this );
+		}
+
+	private:
+		void OnClassicPaint( wxPaintEvent &rEvent )
+		{
+			if ( ( m_iFlags & wxPG_FL_FOCUSED ) != 0 )
+			{
+				rEvent.Skip();
+				return;
+			}
+			const wxColour selectionBack = m_colSelBack;
+			const wxColour selectionFore = m_colSelFore;
+			m_iFlags |= wxPG_FL_FOCUSED;
+			m_colSelBack = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+			m_colSelFore = wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT );
+			wxPropertyGrid::OnPaint( rEvent );
+			m_colSelFore = selectionFore;
+			m_colSelBack = selectionBack;
+			m_iFlags &= ~wxPG_FL_FOCUSED;
+		}
+
+	protected:
+		virtual void DrawExpanderButton( wxDC &rDC, const wxRect &rRect, wxPGProperty *pProperty ) const override
+		{
+			// The tree's box was 9 pixels square, centred in the margin the grid
+			// gives the button; the grid's own button is the native one's size.
+			const int nSide = FromDIP( 9 );
+			const wxRect button( rRect.x + ( rRect.width - nSide ) / 2, rRect.y + ( rRect.height - nSide ) / 2, nSide, nSide );
+			wxRendererNative::GetGeneric().DrawTreeItemButton( const_cast<CClassicPropertyGrid*>( this ), rDC, button,
+																												 pProperty->IsExpanded() ? wxCONTROL_EXPANDED : wxCONTROL_NONE );
+		}
+	};
+
+
+	// A grid manager whose grid is a CClassicPropertyGrid. wxPropertyGridManager
+	// asks CreatePropertyGrid from Create, so the window is created from this
+	// constructor's body, where the call reaches this class's override.
+	class CClassicGridManager : public wxPropertyGridManager
+	{
+	public:
+		CClassicGridManager( wxWindow *pParent, long nStyle )
+		{
+			Create( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, nStyle );
+		}
+
+	protected:
+		virtual wxPropertyGrid* CreatePropertyGrid() const override
+		{
+			return new CClassicPropertyGrid();
+		}
+	};
+
+
+	// wxHeaderCtrlBase::GetColumn is protected, and the manager's header class
+	// that makes it public is private to wx. A class derived from the base may
+	// name the member, and a pointer to it may be applied to any header; this is
+	// never instantiated.
+	struct CHeaderColumnAccess : public wxHeaderCtrl
+	{
+		static const wxHeaderColumn& Column( const wxHeaderCtrl *pHeader, unsigned nColumn )
+		{
+			const wxHeaderColumn& ( wxHeaderCtrlBase::*pGetColumn )( unsigned int ) const = &CHeaderColumnAccess::GetColumn;
+			return ( pHeader->*pGetColumn )( nColumn );
+		}
+	};
+
+
+	// No lines between the rows or the columns and no grey margin, as the MFC
+	// tree drew its rows -- CPCDialog left LVXS_LINESBETWEENCOLUMNS and
+	// LVXS_LINESBETWEENITEMS commented out -- in the colour the rows are on.
+	void ApplyClassicLook( wxPropertyGrid *pGrid, const wxColour &rBackground )
+	{
+		pGrid->SetLineColour( rBackground );
+		pGrid->SetMarginColour( rBackground );
+	}
+
+
 	// The IView and command handler the pane hands out: CPCMainTreeControl's
 	// place.
 	class CPropertyGridView : public CDefaultView, public ICommandHandler
@@ -243,6 +375,9 @@ namespace
 		// ones, until the user drags a column.
 		int nKeptColumnWidth[2] = { 0, 0 };
 		bool bColumnWidthsLoaded = false;
+		// Set while the grid is too narrow for the kept widths and shows them cut
+		// down: what is kept is still the widths, not what shows.
+		bool bColumnsClipped = false;
 		// The dialog around the grid, told after undo and redo.
 		std::function<void()> changeCallback;
 		// CPCMainTreeControl's newElementExpandMode: Expand All and Collapse All
@@ -278,6 +413,13 @@ namespace
 				return false;
 			}
 			const wxPropertyGrid *const pGrid = pManager->GetGrid();
+			if ( bColumnsClipped )
+			{
+				pnWidths[0] = nKeptColumnWidth[0];
+				pnWidths[1] = nKeptColumnWidth[1];
+				pnWidths[2] = N_DEFAULT_COLUMN_WIDTH[2];
+				return true;
+			}
 			const int nFirst = pGrid->GetSplitterPosition( 0 );
 			const int nSecond = pGrid->GetSplitterPosition( 1 );
 			pnWidths[0] = nFirst;
@@ -367,6 +509,7 @@ namespace
 			if ( bEnable )
 			{
 				pGrid->ResetColours();
+				ApplyClassicLook( pGrid, pGrid->GetCellBackgroundColour() );
 			}
 			else
 			{
@@ -376,6 +519,7 @@ namespace
 				pGrid->SetCellBackgroundColour( face );
 				pGrid->SetEmptySpaceColour( face );
 				pGrid->SetCellTextColour( wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ) );
+				ApplyClassicLook( pGrid, face );
 			}
 		}
 
@@ -715,7 +859,10 @@ namespace
 			wxPGProperty *const pRow = new wxStringProperty( name, name, wxString() );
 			// A folder the tree made for a missing parent: nothing to edit.
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, true );
-			return ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
+			wxPGProperty *const pAdded = ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
+			// After adding, which gives a row a copy of its parent's cells.
+			pAdded->GetCell( 0 ).SetBitmap( TypeIcon( PCIE_FOLDER ) );
+			return pAdded;
 		}
 
 		// The types edited as text: CPCMainTreeControl::CreatePCItemEditor gives
@@ -1293,12 +1440,45 @@ namespace
 			const wxPGCell &rDefaultCell = pManager->GetGrid()->GetPropertyDefaultCell();
 			pProperty->SetCell( 2, wxPGCell( bHasDescription ? FromNarrow( pDesc->szDesc ) : wxString(), wxBitmapBundle(),
 																			 rDefaultCell.GetFgCol(), rDefaultCell.GetBgCol() ) );
+			// The type's icon before the name, as the tree's item image.
+			pProperty->GetCell( 0 ).SetBitmap( TypeIcon( ( pDesc != 0 ) ? typePCIEMnemonics.Get( pDesc, rszName ) : PCIE_UNKNOWN ) );
 			RefreshText( pProperty, rszName );
 			if ( NPropertyPane::IsReadOnly( GetViewManipulator(), rszName ) )
 			{
 				pManager->SetPropertyTextColour( pProperty, wxSystemSettings::GetColour( wxSYS_COLOUR_GRAYTEXT ),
 																				 wxPGPropertyValuesFlags::DontRecurse );
+				// PickTextColors took a colour before the grey.
+				ShowColour( pProperty, rszName );
 			}
+		}
+
+		// CPCMainTreeControl::PickTextColors: a colour's value cell painted in the
+		// colour, text and all, while the row is not selected -- the grid paints a
+		// selected row in the selection's colours whatever its cells say. A value
+		// the objects do not agree on shows as text.
+		void ShowColour( wxPGProperty *pProperty, const std::string &rszName )
+		{
+			if ( !IsColourType( TypeOf( rszName ) ) )
+			{
+				return;
+			}
+			wxPGCell &rCell = pProperty->GetCell( 1 );
+			CVariant value;
+			if ( NPropertyPane::GetValue( GetViewManipulator(), rszName, &value ) && ( value.GetType() != CVariant::VT_MULTIVARIANT ) )
+			{
+				// GetBGRColorFromARGBColor gives COLORREF's 0x00BBGGRR, which is what
+				// wxColour's unsigned long constructor reads.
+				const wxColour colour( static_cast<unsigned long>( GetBGRColorFromARGBColor( (int)value ) ) );
+				rCell.SetFgCol( colour );
+				rCell.SetBgCol( colour );
+			}
+			else
+			{
+				const wxPGCell &rDefaultCell = pManager->GetGrid()->GetPropertyDefaultCell();
+				rCell.SetFgCol( rDefaultCell.GetFgCol() );
+				rCell.SetBgCol( rDefaultCell.GetBgCol() );
+			}
+			pManager->GetGrid()->RefreshProperty( pProperty );
 		}
 
 		// The row's value from the manipulator: as a bool for a check box, as
@@ -1320,6 +1500,7 @@ namespace
 			{
 				pManager->SetPropertyValueString( pProperty, FromNarrow( szText ) );
 			}
+			ShowColour( pProperty, rszName );
 		}
 
 		void RefreshTexts( wxPGProperty *pParent )
@@ -1613,9 +1794,24 @@ namespace
 				bColumnWidthsLoaded = true;
 			}
 			wxPropertyGrid *const pGrid = pManager->GetGrid();
-			if ( pGrid->GetClientSize().x < nKeptColumnWidth[0] + nKeptColumnWidth[1] + 16 )
+			const int nClientWidth = pGrid->GetClientSize().x;
+			const int nNarrowest = 16;
+			if ( nClientWidth < 3 * nNarrowest )
 			{
 				return false;
+			}
+			int nFirst = nKeptColumnWidth[0];
+			int nSecond = nKeptColumnWidth[0] + nKeptColumnWidth[1];
+			// Narrower than the kept widths -- the docked pane usually is. The tree
+			// kept its columns and the pane cut them off at its edge, the value
+			// column going on out of sight. A grid column cannot run past the grid,
+			// so the first keeps its width as far as there is room, the value takes
+			// the rest, and the description is a sliver at the edge.
+			bColumnsClipped = ( nClientWidth < nSecond + nNarrowest );
+			if ( bColumnsClipped )
+			{
+				nSecond = nClientWidth - nNarrowest;
+				nFirst = ( std::min )( nFirst, nSecond - nNarrowest );
 			}
 			// Both, in this order. The grid's own SetSplitterPosition moves the row
 			// editor that is open with the column; the manager's does not, and left
@@ -1623,10 +1819,10 @@ namespace
 			// moves the header's columns, which the grid's does not -- outside the
 			// manager's resize handler, which updates the header after it, the
 			// header stayed at the squashed widths over rows at the right ones.
-			pGrid->SetSplitterPosition( nKeptColumnWidth[0], 0 );
-			pGrid->SetSplitterPosition( nKeptColumnWidth[0] + nKeptColumnWidth[1], 1 );
-			pManager->SetSplitterPosition( nKeptColumnWidth[0], 0 );
-			pManager->SetSplitterPosition( nKeptColumnWidth[0] + nKeptColumnWidth[1], 1 );
+			pGrid->SetSplitterPosition( nFirst, 0 );
+			pGrid->SetSplitterPosition( nSecond, 1 );
+			pManager->SetSplitterPosition( nFirst, 0 );
+			pManager->SetSplitterPosition( nSecond, 1 );
 			return true;
 		}
 
@@ -1753,8 +1949,7 @@ namespace
 	// up their trees.
 	wxPropertyGridManager* CreateGridManager( wxWindow *pParent )
 	{
-		wxPropertyGridManager *const pManager = NWx::Child<wxPropertyGridManager>(
-			pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPGMAN_DEFAULT_STYLE | wxBORDER_SUNKEN );
+		wxPropertyGridManager *const pManager = NWx::Child<CClassicGridManager>( pParent, wxPGMAN_DEFAULT_STYLE | wxBORDER_SUNKEN );
 		pManager->AddPage();
 		pManager->SetColumnCount( N_COLUMN_COUNT );
 		for ( unsigned nColumn = 0; nColumn < N_COLUMN_COUNT; ++nColumn )
@@ -1762,6 +1957,38 @@ namespace
 			pManager->SetColumnTitle( nColumn, PSZ_COLUMN_TITLES[nColumn] );
 		}
 		pManager->ShowHeader();
+		wxPropertyGrid *const pGrid = pManager->GetGrid();
+		ApplyClassicLook( pGrid, pGrid->GetCellBackgroundColour() );
+		// A row the font's height and a pixel either side: the tree's rows were
+		// 18 pixels where wx's default spacing makes 20.
+		pGrid->SetVerticalSpacing( 1 );
+		// pc_header.bmp's icon beside each title, SetColumnImage( index, index ).
+		// The manager does not hand out its header, which is its only
+		// wxHeaderCtrl child, and whose columns are wxHeaderColumnSimple. The
+		// bitmaps go into the columns alone: updating a column pushes its width
+		// to the native header, and the header's widths are stale until the
+		// manager works them out from the grid, which then squeezed the
+		// splitters to them. SetColumnCount below has it work them out first.
+		const std::vector<wxBitmap> &rHeaderIcons = Icons( IDB_PC_HEADER_IMAGE_LIST );
+		const wxWindowList &rChildren = pManager->GetChildren();
+		for ( wxWindowList::const_iterator itChild = rChildren.begin(); itChild != rChildren.end(); ++itChild )
+		{
+			wxHeaderCtrl *const pHeader = dynamic_cast<wxHeaderCtrl*>( *itChild );
+			if ( pHeader == nullptr )
+			{
+				continue;
+			}
+			for ( unsigned nColumn = 0; ( nColumn < pHeader->GetColumnCount() ) && ( nColumn < rHeaderIcons.size() ); ++nColumn )
+			{
+				if ( const wxHeaderColumnSimple *pColumn = dynamic_cast<const wxHeaderColumnSimple*>( &CHeaderColumnAccess::Column( pHeader, nColumn ) ) )
+				{
+					const_cast<wxHeaderColumnSimple*>( pColumn )->SetBitmap( rHeaderIcons[nColumn] );
+				}
+			}
+		}
+		// The same count again: the widths from the grid, then every column
+		// updated, bitmaps and all.
+		pManager->SetColumnCount( N_COLUMN_COUNT );
 		return pManager;
 	}
 

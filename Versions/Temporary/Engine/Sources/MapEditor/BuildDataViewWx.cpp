@@ -96,6 +96,16 @@ namespace
 			pExport = NWx::Child<wxCheckBox>( this, wxID_ANY, "Export object after creation" );
 			pBottomRow->Add( pExport, wxSizerFlags( 1 ).CentreVertical() );
 			pBottomRow->Add( CreateStdDialogButtonSizer( wxOK | wxCANCEL ), wxSizerFlags().CentreVertical() );
+			// IDD_PC_BD's buttons are 50 by 14 dialog units, larger than wx's
+			// standard ones.
+			const wxSize buttonSize = ConvertDialogToPixels( wxSize( 50, 14 ) );
+			for ( wxWindow *pButton : { FindWindow( wxID_OK ), FindWindow( wxID_CANCEL ) } )
+			{
+				if ( pButton != nullptr )
+				{
+					pButton->SetMinSize( buttonSize );
+				}
+			}
 
 			const int nBorder = FromDIP( 8 );
 			wxBoxSizer *const pSizer = new wxBoxSizer( wxVERTICAL );
