@@ -17,7 +17,6 @@ set(SOURCES
     DefaultChildFrame.cpp
     DefaultDockingWindow.cpp
     DW_GDBBrowser.cpp
-    DW_LayerBrowser.cpp
     DW_Log.cpp
     DW_PropertyBrowser.cpp
     EditorContainer.cpp
