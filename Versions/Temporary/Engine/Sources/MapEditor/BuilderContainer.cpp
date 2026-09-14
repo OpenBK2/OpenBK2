@@ -8,7 +8,7 @@
 #include "MapEditorLib/Tools_HashSet.h"
 #include "libdb/Db.h"
 #include "BuilderContainer.h"
-#include "PC_BuildDataDialog.h"
+#include "BuildDataView.h"
 #include "NewObjectView.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "Misc/StrProc.h"
@@ -156,16 +156,9 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 		//
 		const std::string szTemporaryLabel = fmt::format( "{}{:c}{}", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
 		//
-		CPCBuildDataDialog buildDataDialog( AfxGetMainWnd() );
-		buildDataDialog.SetBuildDataParams( pBuildDataParams );
-		buildDataDialog.SetTemporaryLabel( szTemporaryLabel );
-		buildDataDialog.SetBuildDataCallback( pBuildDataCallback );
-		buildDataDialog.GetView()->SetViewManipulator( pManipulator, objectSet, szTemporaryLabel );
-		//
-		bool bResult = ( buildDataDialog.DoModal() == IDOK );
-		pBuildDataParams->szObjectName = pBuildDataParams->szObjectName;
-		buildDataDialog.GetView()->RemoveViewManipulator();
-		return bResult;
+		// Which toolkit draws it is NBuildData's business.
+		CWndWidget mainWindow( AfxGetMainWnd() );
+		return NBuildData::Run( &mainWindow, pManipulator, objectSet, szTemporaryLabel, pBuildDataParams, pBuildDataCallback );
 	}
 	return false;
 }

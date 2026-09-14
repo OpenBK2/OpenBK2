@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_PCItemEditor.h"
 #include "MapEditorLib/Interface_Widget.h"
 #include "Misc/Geom.h"
@@ -123,3 +124,44 @@ namespace NPropertyPane
 	// as one controller on the undo list. False when nothing had been copied.
 	bool PasteValues( CDefaultView *pView, const std::function<bool( const std::string& )> &rShown );
 }
+
+
+#ifdef OBK2_WITH_WX
+
+class wxWindow;
+class wxStaticText;
+
+namespace NPropertyPane
+{
+	// The wx grid on its own, for a wx dialog that shows an object's fields
+	// among controls of its own: CPCBuildDataDialog and CPCDBLinkDialog put a
+	// CPCMainTreeControl in their templates as CPCDialog did in the pane.
+	struct IGrid
+	{
+		virtual ~IGrid() {}
+
+		// The window to put in the dialog's layout.
+		virtual wxWindow* GetWindow() = 0;
+		// What an editor gives a manipulator to, and what the builders'
+		// IsValidBuildData is handed -- they cast it to CDefaultView.
+		virtual CDefaultView* GetView() = 0;
+		virtual ICommandHandler* GetCommandHandler() = 0;
+		virtual void BuildTree() = 0;
+		virtual void UpdateValues() = 0;
+		virtual void EnableEdit( bool bEnable ) = 0;
+		// Called after the object under the grid changes -- an edit, an undo, a
+		// redo -- where the tree sent WM_PC_MANIPULATOR_CHANGE to its dialog.
+		virtual void SetChangeCallback( const std::function<void()> &rCallback ) = 0;
+		// The three column widths, for a dialog that keeps them in the file its
+		// placement is in. False until the grid has been laid out.
+		virtual bool GetColumnWidths( int *pnWidths ) const = 0;
+	};
+
+	// Makes the grid inside pParent. pStatus, which may be null, shows the
+	// object's name while a row is selected. pOwner is what the grid's buttons
+	// open their dialogs over, and must outlive the grid; rszOptionsLabel names
+	// the state file the column widths are read from and kept in.
+	IGrid* CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel );
+}
+
+#endif // OBK2_WITH_WX

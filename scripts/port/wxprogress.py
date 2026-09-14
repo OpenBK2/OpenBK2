@@ -105,6 +105,11 @@ MIGRATED = {
     "CTextEditorDialog": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunText)",
     "CBinaryBitFieldDialog": "MapEditor/BitFieldViewWx.cpp (NBitField::Run)",
     "CMDDLDialog": "MapEditor/MenuDropDownViewWx.cpp (NMenuDropDown::Create)",
+    # Its tree is the Selection Properties grid, NPropertyPane::CreateGridWx.
+    "CPCBuildDataDialog": "MapEditor/BuildDataViewWx.cpp (NBuildData::Run)",
+    # The Selection Properties pane's contents: the grid, its editors, the
+    # buttons beside values and the tree's commands.
+    "CPCDialog": "MapEditor/PropertyPaneViewWx.cpp (NPropertyPane::Create)",
     # Owned by the script editor, and reached only through it.
     "CFindTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",
     "CReplaceTextDlg": "MapEditor/TextEditorViewWx.cpp (NTextEditor::RunScript)",

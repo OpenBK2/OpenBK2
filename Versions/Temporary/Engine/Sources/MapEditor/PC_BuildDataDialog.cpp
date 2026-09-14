@@ -5,6 +5,7 @@
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"
 #include "PC_BuildDataDialog.h"
+#include "BuildDataView.h"
 
 const unsigned	CPCBuildDataDialog::PC_BD_TREE_COLUMN_NAME  [PC_BD_TREE_COLUMN_COUNT] = { IDS_PC_PROPERTY_THN_0, IDS_PC_PROPERTY_THN_1, IDS_PC_PROPERTY_THN_2 };
 const int		CPCBuildDataDialog::PC_BD_TREE_COLUMN_FORMAT[PC_BD_TREE_COLUMN_COUNT] = { LVCFMT_LEFT, LVCFMT_LEFT, LVCFMT_LEFT };
@@ -123,35 +124,9 @@ BOOL CPCBuildDataDialog::OnInitDialog()
 //CRAP{ PLAIN_TEXT
 void CPCBuildDataDialog::UpdateOKButton()
 {
-	bool bEnableOKButton = true;
+	// The rule is NBuildData::CanAccept, which the wx dialog runs too.
 	std::string szErrorMessage;
-	// Проверяем имя на уникальность
-	if ( bEnableOKButton )
-	{
-		if ( pBuildDataParams->nFlags & BDF_CHECK_FILE_NAME )
-		{
-			std::string szObjectName;
-			pBuildDataParams->GetObjectName( &szObjectName );
-			if ( pBuildDataParams->szObjectName.empty() )
-			{
-				bEnableOKButton = false;
-				szErrorMessage = "Object name is invalid. Name can't be empty.";
-			}
-			else if ( !pBuildDataCallback->IsUniqueObjectName( pBuildDataParams->szObjectTypeName, szObjectName ) )
-			{
-				bEnableOKButton = false;
-				szErrorMessage = "Object name is invalid. Object already exists!";
-			}
-		}
-	}
-	// Проверяем поля на правильность заполнения
-	if ( bEnableOKButton && ( pBuildDataParams->nFlags & BDF_CHECK_PROPERTIES ) )
-	{
-		if ( pBuildDataCallback && !pBuildDataCallback->IsValidBuildData( GetView()->GetViewManipulator(),  &szErrorMessage, &tree ) )
-		{
-			bEnableOKButton = false;
-		}
-	}
+	const bool bEnableOKButton = NBuildData::CanAccept( pBuildDataParams, pBuildDataCallback, GetView(), &szErrorMessage );
 	//
 	SetDlgItemText( IDC_PC_BD_TREE_STATUSBAR, szErrorMessage.c_str() );
 	//

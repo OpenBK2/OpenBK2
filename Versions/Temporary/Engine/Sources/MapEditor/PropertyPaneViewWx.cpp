@@ -239,11 +239,58 @@ namespace
 		bool bShowHidden = false;
 		bool bEnableEdit = true;
 		bool bColumnsRestored = false;
+		// The first two columns' widths the grid keeps through resizes: the saved
+		// ones, until the user drags a column.
+		int nKeptColumnWidth[2] = { 0, 0 };
+		bool bColumnWidthsLoaded = false;
+		// The dialog around the grid, told after undo and redo.
+		std::function<void()> changeCallback;
 		// CPCMainTreeControl's newElementExpandMode: Expand All and Collapse All
 		// decide for rows added afterwards, until the next full build.
 		EExpandMode eExpandMode = EXPAND_USER_DEFINED;
 
 	public:
+		virtual ~CPropertyGridView()
+		{
+			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
+			pContainer->Remove( CHID_PROPERTY_CONTROL, this );
+			pContainer->Remove( CHID_SELECTION, this );
+			// The grid calls into this view from its events, its destroy event
+			// last of all, so a view that goes first takes the grid with it. The
+			// destroy event clears pManager.
+			if ( pManager != nullptr )
+			{
+				pManager->Destroy();
+			}
+		}
+
+		void SetChangeCallback( const std::function<void()> &rCallback )
+		{
+			changeCallback = rCallback;
+		}
+
+		// First, second and third, as CPCDialog::OnDestroy measured them. False
+		// until the widths have been put in, since the grid squashes them before.
+		bool GetColumnWidths( int *pnWidths ) const
+		{
+			if ( ( pManager == nullptr ) || ( pnWidths == 0 ) || !bColumnsRestored )
+			{
+				return false;
+			}
+			const wxPropertyGrid *const pGrid = pManager->GetGrid();
+			const int nFirst = pGrid->GetSplitterPosition( 0 );
+			const int nSecond = pGrid->GetSplitterPosition( 1 );
+			pnWidths[0] = nFirst;
+			pnWidths[1] = nSecond - nFirst;
+			pnWidths[2] = pGrid->GetClientSize().x - nSecond;
+			return true;
+		}
+
+		wxPropertyGridManager* GetManager() const
+		{
+			return pManager;
+		}
+
 		void Attach( wxPropertyGridManager *_pManager, wxStaticText *_pStatus, IWidget *_pOwner, const std::string &rszOptionsLabel )
 		{
 			pManager = _pManager;
@@ -1530,28 +1577,56 @@ namespace
 				}
 			}
 			pManager->Refresh();
+			// CPCMainTreeControl sent WM_PC_MANIPULATOR_CHANGE to its dialog here,
+			// after an undo and after a redo.
+			if ( changeCallback )
+			{
+				changeCallback();
+			}
 		}
 
 		// False while the grid is too narrow for the first two columns: the grid
 		// clamps a splitter to its width, and then gives later growth to the last
 		// column, so widths set into a pane still being laid out stay squashed.
-		bool RestoreColumnWidths( int nGridWidth )
+		//
+		// And applied again after every resize, not once. The tree's columns kept
+		// their widths when the tree was resized; wx scales all of them with the
+		// grid. A dialog is laid out more than once before it settles -- fitted,
+		// then sized to its template, then to where it was left -- and the build
+		// data dialog opened with its first column squashed to 45 pixels from a
+		// saved 100, having been restored at a size it was then scaled down from.
+		bool ApplyColumnWidths()
 		{
-			SDialogState state;
-			NDialogState::Load( szOptionsLabel, &state );
-			int nWidth[N_COLUMN_COUNT];
-			for ( unsigned nColumn = 0; nColumn < N_COLUMN_COUNT; ++nColumn )
-			{
-				const int nSaved = state.GetIntParameter( nColumn );
-				nWidth[nColumn] = ( nSaved > 0 ) ? nSaved : N_DEFAULT_COLUMN_WIDTH[nColumn];
-			}
-			if ( nGridWidth < nWidth[0] + nWidth[1] + 16 )
+			if ( pManager == nullptr )
 			{
 				return false;
 			}
+			if ( !bColumnWidthsLoaded )
+			{
+				SDialogState state;
+				NDialogState::Load( szOptionsLabel, &state );
+				for ( unsigned nColumn = 0; nColumn < 2; ++nColumn )
+				{
+					const int nSaved = state.GetIntParameter( nColumn );
+					nKeptColumnWidth[nColumn] = ( nSaved > 0 ) ? nSaved : N_DEFAULT_COLUMN_WIDTH[nColumn];
+				}
+				bColumnWidthsLoaded = true;
+			}
 			wxPropertyGrid *const pGrid = pManager->GetGrid();
-			pGrid->SetSplitterPosition( nWidth[0], 0 );
-			pGrid->SetSplitterPosition( nWidth[0] + nWidth[1], 1 );
+			if ( pGrid->GetClientSize().x < nKeptColumnWidth[0] + nKeptColumnWidth[1] + 16 )
+			{
+				return false;
+			}
+			// Both, in this order. The grid's own SetSplitterPosition moves the row
+			// editor that is open with the column; the manager's does not, and left
+			// a selected row's buttons where the old splitter was. The manager's
+			// moves the header's columns, which the grid's does not -- outside the
+			// manager's resize handler, which updates the header after it, the
+			// header stayed at the squashed widths over rows at the right ones.
+			pGrid->SetSplitterPosition( nKeptColumnWidth[0], 0 );
+			pGrid->SetSplitterPosition( nKeptColumnWidth[0] + nKeptColumnWidth[1], 1 );
+			pManager->SetSplitterPosition( nKeptColumnWidth[0], 0 );
+			pManager->SetSplitterPosition( nKeptColumnWidth[0] + nKeptColumnWidth[1], 1 );
 			return true;
 		}
 
@@ -1608,20 +1683,35 @@ namespace
 			}
 		}
 
+		// What the user drags the columns to is what they keep from then on.
 		void OnColumnDragged( wxPropertyGridEvent &rEvent )
 		{
 			rEvent.Skip();
+			if ( pManager != nullptr )
+			{
+				const wxPropertyGrid *const pGrid = pManager->GetGrid();
+				nKeptColumnWidth[0] = pGrid->GetSplitterPosition( 0 );
+				nKeptColumnWidth[1] = pGrid->GetSplitterPosition( 1 ) - nKeptColumnWidth[0];
+				bColumnWidthsLoaded = true;
+			}
 			SaveColumnWidths();
 		}
 
-		// The widths are only worth setting once the grid has a width to put
-		// them in.
+		// After the grid's own resize handler, which is what rescales the
+		// columns: this one runs first, so the widths go back in once the event
+		// has been handled.
 		void OnGridSize( wxSizeEvent &rEvent )
 		{
 			rEvent.Skip();
-			if ( !bColumnsRestored && pManager != nullptr )
+			if ( pManager != nullptr )
 			{
-				bColumnsRestored = RestoreColumnWidths( rEvent.GetSize().x );
+				pManager->CallAfter( [this]()
+				{
+					if ( ApplyColumnWidths() )
+					{
+						bColumnsRestored = true;
+					}
+				} );
 			}
 		}
 
@@ -1659,6 +1749,23 @@ namespace
 	};
 
 
+	// The grid with its three titled columns, as CPCDialog and the dialogs set
+	// up their trees.
+	wxPropertyGridManager* CreateGridManager( wxWindow *pParent )
+	{
+		wxPropertyGridManager *const pManager = NWx::Child<wxPropertyGridManager>(
+			pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPGMAN_DEFAULT_STYLE | wxBORDER_SUNKEN );
+		pManager->AddPage();
+		pManager->SetColumnCount( N_COLUMN_COUNT );
+		for ( unsigned nColumn = 0; nColumn < N_COLUMN_COUNT; ++nColumn )
+		{
+			pManager->SetColumnTitle( nColumn, PSZ_COLUMN_TITLES[nColumn] );
+		}
+		pManager->ShowHeader();
+		return pManager;
+	}
+
+
 	// The pane's contents: the grid over its status line, in a host window the
 	// MFC pane can hold, registered as CHID_PC_DIALOG as CPCDialog registers
 	// itself.
@@ -1691,15 +1798,7 @@ namespace
 
 			// IDD_PC: the tree filling the pane, with a client edge, over a sunken
 			// status line.
-			wxPropertyGridManager *const pManager = NWx::Child<wxPropertyGridManager>(
-				pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxPGMAN_DEFAULT_STYLE | wxBORDER_SUNKEN );
-			pManager->AddPage();
-			pManager->SetColumnCount( N_COLUMN_COUNT );
-			for ( unsigned nColumn = 0; nColumn < N_COLUMN_COUNT; ++nColumn )
-			{
-				pManager->SetColumnTitle( nColumn, PSZ_COLUMN_TITLES[nColumn] );
-			}
-			pManager->ShowHeader();
+			wxPropertyGridManager *const pManager = CreateGridManager( pRoot );
 
 			wxStaticText *const pStatus = NWx::Child<wxStaticText>( pRoot, wxID_ANY, wxString(), wxDefaultPosition,
 																															wxSize( -1, pRoot->FromDIP( 18 ) ),
@@ -1759,6 +1858,59 @@ namespace
 			view.UpdateValues();
 		}
 	};
+
+
+	// The grid alone, laid out by a dialog of its own.
+	class CWxPropertyGrid : public NPropertyPane::IGrid
+	{
+		CPropertyGridView view;
+
+	public:
+		CWxPropertyGrid( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel )
+		{
+			view.Attach( CreateGridManager( pParent ), pStatus, pOwner, rszOptionsLabel );
+		}
+
+		virtual wxWindow* GetWindow()
+		{
+			return view.GetManager();
+		}
+
+		virtual CDefaultView* GetView()
+		{
+			return &view;
+		}
+
+		virtual ICommandHandler* GetCommandHandler()
+		{
+			return &view;
+		}
+
+		virtual void BuildTree()
+		{
+			view.BuildTree();
+		}
+
+		virtual void UpdateValues()
+		{
+			view.UpdateValues();
+		}
+
+		virtual void EnableEdit( bool bEnable )
+		{
+			view.EnableEdit( bEnable );
+		}
+
+		virtual void SetChangeCallback( const std::function<void()> &rCallback )
+		{
+			view.SetChangeCallback( rCallback );
+		}
+
+		virtual bool GetColumnWidths( int *pnWidths ) const
+		{
+			return view.GetColumnWidths( pnWidths );
+		}
+	};
 }
 
 
@@ -1767,6 +1919,12 @@ namespace NPropertyPane
 	IPropertyPane* CreateWx()
 	{
 		return new CWxPropertyPane();
+	}
+
+
+	IGrid* CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel )
+	{
+		return new CWxPropertyGrid( pParent, pStatus, pOwner, rszOptionsLabel );
 	}
 }
 
