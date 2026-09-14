@@ -121,6 +121,71 @@ namespace
 	}
 
 
+	// Where wxPropertyGrid puts a cell's text and icon: wxPG_XBEFORETEXT on MSW
+	// and wxCC_CUSTOM_IMAGE_MARGIN1, from wx/propgrid/private.h, which may not be
+	// included outside wx.
+	const int N_PG_TEXT_BEFORE = 4;
+	const int N_PG_IMAGE_BEFORE = 4;
+
+
+	// The tree cut a name or a value that did not fit its column off with an
+	// ellipsis; the grid clips it. This renderer draws a cell's text cut to the
+	// cell the same way, and leaves every cell with drawing of its own -- a check
+	// box, a custom image, a value the objects do not agree on, a list's popup --
+	// to wx's default renderer, which it is.
+	class CEllipsisRenderer : public wxPGDefaultRenderer
+	{
+	public:
+		virtual bool Render( wxDC &rDC, const wxRect &rRect, const wxPropertyGrid *pGrid, wxPGProperty *pProperty,
+												 int nColumn, int nItem, int nFlags ) const override
+		{
+			if ( ( nItem != -1 ) || ( nColumn == 1 && ( pProperty->IsValueUnspecified() || ( pProperty->GetCommonValue() >= 0 ) ||
+																								 ( pGrid->GetImageSize( pProperty, nItem ).x > 0 ) ||
+																								 ( ( pProperty->GetColumnEditor( 1 ) != nullptr ) &&
+																									 ( pProperty->GetColumnEditor( 1 )->GetName() == wxS( "CheckBox" ) ) ) ) ) )
+			{
+				return wxPGDefaultRenderer::Render( rDC, rRect, pGrid, pProperty, nColumn, nItem, nFlags );
+			}
+			wxString text;
+			wxPGCell cell;
+			pProperty->GetDisplayInfo( nColumn, -1, nFlags, &text, &cell );
+			const int nImageOffset = pProperty->GetImageOffset( PreDrawCell( rDC, rRect, pGrid, cell, nFlags ) );
+			// wxPGCellRenderer::DrawText puts the text this far into the cell.
+			const int nRoom = rRect.width - nImageOffset - 2 * N_PG_TEXT_BEFORE;
+			if ( nRoom > 0 )
+			{
+				DrawText( rDC, rRect, nImageOffset, wxControl::Ellipsize( text, rDC, wxELLIPSIZE_END, nRoom ) );
+			}
+			PostDrawCell( rDC, pGrid, cell, nFlags );
+			return !text.empty();
+		}
+	};
+
+
+	// One renderer for every row, made once and never freed: wx does not free
+	// what a property's GetCellRenderer returns, and it is used until the editor
+	// closes.
+	wxPGCellRenderer* EllipsisRenderer()
+	{
+		static CEllipsisRenderer *s_pRenderer = new CEllipsisRenderer();
+		return s_pRenderer;
+	}
+
+
+	// A wx property class whose cells draw through EllipsisRenderer.
+	template <class TProperty>
+	class CEllipsized : public TProperty
+	{
+	public:
+		using TProperty::TProperty;
+
+		virtual wxPGCellRenderer* GetCellRenderer( int nColumn ) const override
+		{
+			return EllipsisRenderer();
+		}
+	};
+
+
 	// A value row with the buttons its MFC editor had beside the box. It knows
 	// which buttons, and whom to tell when one is pressed; CButtonEditor draws
 	// them.
@@ -140,6 +205,11 @@ namespace
 		const std::vector<NPropertyButton::EButton>& GetButtons() const
 		{
 			return buttons;
+		}
+
+		virtual wxPGCellRenderer* GetCellRenderer( int nColumn ) const override
+		{
+			return EllipsisRenderer();
 		}
 
 		// rszText is what the box holds now, typed but perhaps not committed.
@@ -278,19 +348,106 @@ namespace
 		{
 			if ( ( m_iFlags & wxPG_FL_FOCUSED ) != 0 )
 			{
-				rEvent.Skip();
-				return;
+				wxPropertyGrid::OnPaint( rEvent );
 			}
-			const wxColour selectionBack = m_colSelBack;
-			const wxColour selectionFore = m_colSelFore;
-			m_iFlags |= wxPG_FL_FOCUSED;
-			m_colSelBack = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
-			m_colSelFore = wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT );
-			wxPropertyGrid::OnPaint( rEvent );
-			m_colSelFore = selectionFore;
-			m_colSelBack = selectionBack;
-			m_iFlags &= ~wxPG_FL_FOCUSED;
+			else
+			{
+				const wxColour selectionBack = m_colSelBack;
+				const wxColour selectionFore = m_colSelFore;
+				m_iFlags |= wxPG_FL_FOCUSED;
+				m_colSelBack = wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+				m_colSelFore = wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT );
+				wxPropertyGrid::OnPaint( rEvent );
+				m_colSelFore = selectionFore;
+				m_colSelBack = selectionBack;
+				m_iFlags &= ~wxPG_FL_FOCUSED;
+			}
+			DrawTreeLines();
 		}
+
+		// A dot every other pixel, on the even ones of the grid's unscrolled
+		// coordinates so the dots stay put as the rows scroll: the tree's lines.
+		void DrawDots( wxDC &rDC, int nX0, int nY0, int nX1, int nY1, int nScrollY ) const
+		{
+			for ( int nX = nX0; nX <= nX1; ++nX )
+			{
+				for ( int nY = nY0; nY <= nY1; ++nY )
+				{
+					if ( ( ( nX + nY + nScrollY ) % 2 ) == 0 )
+					{
+						rDC.DrawPoint( nX, nY );
+					}
+				}
+			}
+		}
+
+		// TVS_HASLINES and TVS_LINESATROOT: from each row's button column a line
+		// across to its icon, a line up to the row above at its level unless it is
+		// the first row of all, a line down while it has a sibling after it, and a
+		// line through the row at every level above whose row has a sibling after
+		// it. The box buttons are left clear. Drawn over the painted rows, in the
+		// margin, where nothing else is.
+		void DrawTreeLines()
+		{
+			wxClientDC dc( this );
+			dc.SetPen( wxPen( wxSystemSettings::GetColour( wxSYS_COLOUR_BTNSHADOW ) ) );
+			const int nSide = FromDIP( 9 );
+			const int nHalfSide = nSide / 2;
+			const int nClientHeight = GetClientSize().y;
+			int nUnused = 0;
+			int nScrollY = 0;
+			CalcUnscrolledPosition( 0, 0, &nUnused, &nScrollY );
+			for ( wxPGVIterator it = GetVIterator( wxPG_ITERATE_VISIBLE ); !it.AtEnd(); it.Next() )
+			{
+				const wxPGProperty *const pProperty = it.GetProperty();
+				const int nTop = pProperty->GetY() - nScrollY;
+				if ( nTop + m_lineHeight <= 0 )
+				{
+					continue;
+				}
+				if ( nTop >= nClientHeight )
+				{
+					break;
+				}
+				const int nBottom = nTop + m_lineHeight - 1;
+				const int nCentreY = nTop + m_lineHeight / 2;
+				const unsigned nDepth = pProperty->GetDepth();
+				// DrawItems' butRect, and the adjustment it makes below the top level.
+				const auto centreX = [this]( unsigned nLevel )
+				{
+					const int nLeft = static_cast<int>( nLevel - 1 ) * m_subgroup_extramargin;
+					return nLeft + ( ( nLeft > 0 ) ? IN_CELL_BUTTON_X_ADJUST : 0 ) + m_marginWidth / 2;
+				};
+				const int nCentreX = centreX( nDepth );
+				const bool bButton = pProperty->HasVisibleChildren();
+				const int nIconLeft = m_marginWidth + 1 + static_cast<int>( nDepth - 1 ) * m_subgroup_extramargin + N_PG_IMAGE_BEFORE;
+				DrawDots( dc, nCentreX + ( bButton ? nHalfSide + 1 : 0 ), nCentreY, nIconLeft - 2, nCentreY, nScrollY );
+				const wxPGProperty *const pParent = pProperty->GetParent();
+				const bool bFirstOfAll = ( nDepth == 1 ) && ( pProperty->GetIndexInParent() == 0 );
+				if ( !bFirstOfAll )
+				{
+					DrawDots( dc, nCentreX, nTop, nCentreX, nCentreY - ( bButton ? nHalfSide + 1 : 0 ), nScrollY );
+				}
+				if ( ( pParent != nullptr ) && ( pProperty->GetIndexInParent() + 1 < pParent->GetChildCount() ) )
+				{
+					DrawDots( dc, nCentreX, nCentreY + ( bButton ? nHalfSide + 1 : 0 ), nCentreX, nBottom, nScrollY );
+				}
+				unsigned nLevel = nDepth;
+				for ( const wxPGProperty *pAncestor = pParent; ( pAncestor != nullptr ) && ( nLevel > 1 ); pAncestor = pAncestor->GetParent() )
+				{
+					--nLevel;
+					const wxPGProperty *const pAncestorParent = pAncestor->GetParent();
+					if ( ( pAncestorParent != nullptr ) && ( pAncestor->GetIndexInParent() + 1 < pAncestorParent->GetChildCount() ) )
+					{
+						const int nAncestorX = centreX( nLevel );
+						DrawDots( dc, nAncestorX, nTop, nAncestorX, nBottom, nScrollY );
+					}
+				}
+			}
+		}
+
+		// wxPropertyGrid's IN_CELL_EXPANDER_BUTTON_X_ADJUST, private to its source.
+		static const int IN_CELL_BUTTON_X_ADJUST = 2;
 
 	protected:
 		virtual void DrawExpanderButton( wxDC &rDC, const wxRect &rRect, wxPGProperty *pProperty ) const override
@@ -856,7 +1013,7 @@ namespace
 		wxPGProperty* AppendRow( wxPGProperty *pParent, const std::string &rszShortName )
 		{
 			const wxString name = FromNarrow( rszShortName );
-			wxPGProperty *const pRow = new wxStringProperty( name, name, wxString() );
+			wxPGProperty *const pRow = new CEllipsized<wxStringProperty>( name, name, wxString() );
 			// A folder the tree made for a missing parent: nothing to edit.
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, true );
 			wxPGProperty *const pAdded = ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
@@ -928,7 +1085,7 @@ namespace
 			wxPGProperty *pRow = nullptr;
 			if ( bEditable && nType == PCIE_BOOL_CHECKBOX )
 			{
-				pRow = new wxBoolProperty( name, name, false );
+				pRow = new CEllipsized<wxBoolProperty>( name, name, false );
 				bCheckBox = true;
 			}
 			else if ( !buttons.empty() )
@@ -955,16 +1112,16 @@ namespace
 				// the stored value may not be in, which an enum could not show.
 				if ( nType == PCIE_BOOL_COMBO || nType == PCIE_BOOL_SWITCHER )
 				{
-					pRow = new wxEnumProperty( name, name, labels );
+					pRow = new CEllipsized<wxEnumProperty>( name, name, labels );
 				}
 				else
 				{
-					pRow = new wxEditEnumProperty( name, name, labels, wxArrayInt(), wxString() );
+					pRow = new CEllipsized<wxEditEnumProperty>( name, name, labels, wxArrayInt(), wxString() );
 				}
 			}
 			else
 			{
-				pRow = new wxStringProperty( name, name, wxString() );
+				pRow = new CEllipsized<wxStringProperty>( name, name, wxString() );
 				bEditable = bEditable && IsTextEdited( nType );
 			}
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, !bEditable );
