@@ -38,6 +38,7 @@
 #include "MapEditorLib/MapEditorModule.h"
 
 #include "MapEditorApp.h"
+#include "MainFrameWx.h"
 #include "libdb/EditorDb.h"
 #include "libdb/DBWatcherClient.h"
 
@@ -375,6 +376,15 @@ BOOL CEditorApp::InitInstance()
 	std::string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
+	// The frame this session has: CMainFrame, or the wx one beside it when
+	// OBK2_WX_FRAME asks for it. The wx frame answers to a mapping of its own,
+	// so one editor of each kind can run at once to be compared; each still
+	// refuses a second of its own kind.
+	const bool bWxFrame = NMainFrameWx::IsWanted();
+	if ( bWxFrame )
+	{
+		SetMapFileName( CMapEditorSingletonBase::GetMapFileName() + "_wx" );
+	}
 	// проверяем наличие предыдущего редактора
 	CMapEditorSingletonChecker mapEditorSingletonChecker;
 	if ( szCommandLine.empty() )
@@ -427,17 +437,28 @@ BOOL CEditorApp::InitInstance()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	pMainFrame = new CMainFrame();
-	m_pMainWnd = dynamic_cast<CWnd*>( pMainFrame );
-	//
-	DebugTrace( "EditorApp() Create mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
-	//	
-	if ( !pMainFrame->LoadFrame( IDR_EDITORTYPE ) )
+	if ( bWxFrame )
 	{
-		delete pMainFrame;
-		pMainFrame = 0;
-		m_pMainWnd = 0;
-		return false;
+		// Sets m_pMainWnd itself, before the editors make their controls.
+		if ( !NMainFrameWx::Create() )
+		{
+			return false;
+		}
+	}
+	else
+	{
+		pMainFrame = new CMainFrame();
+		m_pMainWnd = dynamic_cast<CWnd*>( pMainFrame );
+		//
+		DebugTrace( "EditorApp() Create mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
+		//
+		if ( !pMainFrame->LoadFrame( IDR_EDITORTYPE ) )
+		{
+			delete pMainFrame;
+			pMainFrame = 0;
+			m_pMainWnd = 0;
+			return false;
+		}
 	}
 	//
 	DebugTrace( "EditorApp() Load mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
@@ -471,11 +492,18 @@ BOOL CEditorApp::InitInstance()
 		pMainFrame->ModifyStyleEx( 0, WS_EX_TOPMOST, 0 );
 	}
 	/**/
-	pMainFrame->ShowWindow( m_nCmdShow );
-	pMainFrame->UpdateWindow();
+	if ( bWxFrame )
+	{
+		NMainFrameWx::Show();
+	}
+	else
+	{
+		pMainFrame->ShowWindow( m_nCmdShow );
+		pMainFrame->UpdateWindow();
+	}
 	if ( !szCommandLine.empty() && ( szCommandLine != "-reg" ) )
 	{
-		pMainFrame->OpenResource( szCommandLine );
+		NMainFrameShared::OpenResource( szCommandLine );
 	}
 	return true;
 }

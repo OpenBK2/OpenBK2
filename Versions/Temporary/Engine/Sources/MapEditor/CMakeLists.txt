@@ -30,6 +30,7 @@ set(SOURCES
     LuaEditor.cpp
     MainFrame.cpp
     MainFrameShared.cpp
+    MainFrameWx.cpp
     MainFrameContainer.cpp
     MainFrameParams.cpp
     MainFrame_Consts.cpp

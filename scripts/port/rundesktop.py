@@ -205,7 +205,10 @@ def main():
     print('the interactive desktop is untouched; nothing of this is on screen')
     for _ in range(args.wait):
         time.sleep(1)
-        if any(cls.startswith('Afx') and title for _, _, cls, title in windows_on(args.desktop)):
+        # The MFC frame's class is Afx...; the wx frame (OBK2_WX_FRAME) is one
+        # of wx's own, wxWindowNR.
+        if any((cls.startswith('Afx') or cls.startswith('wxWindow')) and title
+               for _, _, cls, title in windows_on(args.desktop)):
             break
     for h, wpid, cls, title in windows_on(args.desktop):
         if title:

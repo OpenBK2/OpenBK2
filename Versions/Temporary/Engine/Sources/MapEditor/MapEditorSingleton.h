@@ -16,6 +16,7 @@ public:
   };
 
 	static void SetMapFileName( const std::string &szMapFileName );
+	static const std::string& GetMapFileName() { return MAP_FILE_NAME; }
 };
 
 class CMapEditorSingletonApp : public CMapEditorSingletonBase
