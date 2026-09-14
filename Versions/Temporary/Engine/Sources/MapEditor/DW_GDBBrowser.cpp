@@ -21,13 +21,15 @@
 
 //#include "..\MapEditorLib\Tools_SysCodes.h"
 
-CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID ) : bCreateControls( true ), nGDBBrowserID( _nGDBBrowserID ), wndContents( nGDBBrowserID )
+CDWGDBBrowser::CDWGDBBrowser( int _nGDBBrowserID ) : bCreateControls( true ), nGDBBrowserID( _nGDBBrowserID ), pContents( 0 )
 {
 }
 
 
 CDWGDBBrowser::~CDWGDBBrowser()
 {
+	delete pContents;
+	pContents = 0;
 }
 
 
@@ -57,7 +59,10 @@ int CDWGDBBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 	}
 	//
 
-	if ( !wndContents.Create( this, IDC_TREE_GDB_BROWSER ) )
+	pContents = NObjectBrowser::Create();
+	CWndWidget paneWidget( this );
+	if ( ( pContents == 0 ) ||
+			 !pContents->Create( &paneWidget, this, IObjectBrowser::KIND_BROWSER, nGDBBrowserID, IDC_TREE_GDB_BROWSER ) )
 	{
 		return -1;
 	}
@@ -81,7 +86,7 @@ int CDWGDBBrowser::OnCreate( LPCREATESTRUCT pCreateStruct )
 
 void CDWGDBBrowser::OnDestroy()
 {
-	Singleton<ICommandHandlerContainer>()->Remove( CHID_OBJECT_STORAGE, &wndContents );
+	Singleton<ICommandHandlerContainer>()->Remove( CHID_OBJECT_STORAGE, GetContents() );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAIN, this );
 
 	SECControlBar::OnDestroy();
@@ -100,7 +105,10 @@ void CDWGDBBrowser::OnSize( unsigned nType, int cx, int cy )
 	CRect insideRect;
 	GetInsideRect( insideRect );
 	//
-	wndContents.MoveWindow( insideRect );
+	if ( pContents != 0 )
+	{
+		pContents->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
+	}
 	/**
 	if ( wndContents.GetSafeHwnd() != NULL )
 	{
@@ -189,23 +197,26 @@ LRESULT CDWGDBBrowser::OnTabSelected( WPARAM wParam, LPARAM lParam )
 //LRESULT CDWGDBBrowser::OnTabSelected( WPARAM wParam, LPARAM lParam )
 void CDWGDBBrowser::OnTabSelected()
 {
-	if ( !bCreateControls )
+	if ( !bCreateControls && ( pContents != 0 ) )
 	{
-		wndContents.SwitchTabs();
+		pContents->ShowActiveTable();
 		CRect insideRect;
 		GetInsideRect( insideRect );
-		wndContents.MoveWindow( insideRect );
+		pContents->SetBounds( CTRect<int>( insideRect.left, insideRect.top, insideRect.right, insideRect.bottom ) );
 		//
-		CTreeGDBBrowserBase* pwndTreeGBDBrowserBase = 0;
-		wndContents.GetActiveTabName( &szCurrentTable );
-		wndContents.GetActiveTab( &pwndTreeGBDBrowserBase );
+		pContents->GetActiveTableName( &szCurrentTable );
+		IObjectTree *const pwndTreeGBDBrowserBase = pContents->GetActiveTable();
+		if ( pwndTreeGBDBrowserBase == 0 )
+		{
+			return;
+		}
 		if ( !pwndTreeGBDBrowserBase->IsTreeCreated() )
 		{
 			SObjectSet collectionObjectSet;
 			collectionObjectSet.szObjectTypeName = szCurrentTable;
 			InsertHashSetElement( &( collectionObjectSet.objectNameSet ), CDBID( VIEW_COLLECTION_ID ) );
 			//
-			pwndTreeGBDBrowserBase->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
+			pwndTreeGBDBrowserBase->GetView()->SetViewManipulator( Singleton<IResourceManager>()->CreateFolderManipulator( szCurrentTable ), collectionObjectSet, std::string() );
 			pwndTreeGBDBrowserBase->CreateTree();
 			//DebugTrace( "CDWGDBBrowser::OnTabSelected(): wParam: 0x%X(%u), lParam: 0x%X\n", wParam, wParam, lParam );
 		}
@@ -245,7 +256,7 @@ void CDWGDBBrowser::SetTableManipulator( IManipulator *_pTableManipulator )
 
 void CDWGDBBrowser::CreateTabs()
 {
-	if ( !IsWindow( m_hWnd ) )
+	if ( !IsWindow( m_hWnd ) || ( pContents == 0 ) )
 	{
 		return;
 	}
@@ -274,14 +285,14 @@ void CDWGDBBrowser::CreateTabs()
 	//создаем таблицы
 	{
 		bCreateControls = true;
-		wndContents.RemoveAllTabs();
+		pContents->RemoveAllTables();
 		// Необходимо сначало добавить все панели, а потом устанавливать активную
-		CTreeGDBBrowser* pwndActiveTreeGBDBrowser = 0;
+		IObjectTree* pwndActiveTreeGBDBrowser = 0;
 		for ( std::list<std::string>::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 		{
 			if ( selectedTables.find( *itTable ) != selectedTables.end() )
 			{
-				if ( CTreeGDBBrowser* pwndTreeGBDBrowser = wndContents.AddNewTab( static_cast<CTreeGDBBrowser*>( 0 ), *itTable ) )
+				if ( IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( *itTable ) )
 				{
 					if ( ( *itTable ) == szCurrentTable )
 					{
@@ -294,22 +305,22 @@ void CDWGDBBrowser::CreateTabs()
 		bCreateControls = false;
 		if ( pwndActiveTreeGBDBrowser )
 		{
-			wndContents.ActivateTab( pwndActiveTreeGBDBrowser );
+			pContents->ActivateTable( pwndActiveTreeGBDBrowser );
 		}
-		else if ( wndContents.GetTabCount() > 0 )
+		else if ( pContents->GetTableCount() > 0 )
 		{
-			wndContents.ActivateTab( wndContents.GetTab( 0 ) );
+			pContents->ActivateTable( pContents->GetTable( 0 ) );
 		}
 	}
 
-	if ( wndContents.GetTabCount() > 0 )
+	if ( pContents->GetTableCount() > 0 )
 	{
-		wndContents.ShowWindow( SW_SHOW );
+		pContents->Show( true );
 		wndEmptyContents.ShowWindow( SW_HIDE );
 	}
 	else
 	{
-		wndContents.ShowWindow( SW_HIDE );
+		pContents->Show( false );
 		wndEmptyContents.ShowWindow( SW_SHOW );
 	}
 }
@@ -457,7 +468,7 @@ void CDWGDBBrowser::ClearTable()
 
 void CDWGDBBrowser::SelectObjectSet( const SObjectSet &rObjectSet )
 {
-	if ( !rObjectSet.objectNameSet.empty() )
+	if ( !rObjectSet.objectNameSet.empty() && ( pContents != 0 ) )
 	{
 		if ( !rObjectSet.objectNameSet.begin()->first.IsEmpty() )
 		{
@@ -466,26 +477,29 @@ void CDWGDBBrowser::SelectObjectSet( const SObjectSet &rObjectSet )
 		//
 		if ( 	selectedTables.find( rObjectSet.szObjectTypeName ) != selectedTables.end() )
 		{
-			CTreeGDBBrowserBase *pwndTab = wndContents.GetTab( rObjectSet.szObjectTypeName );
+			IObjectTree *pwndTab = pContents->GetTable( rObjectSet.szObjectTypeName );
 			if ( pwndTab != 0 )
 			{
 				pwndTab->SetStrongSelection();
-				wndContents.ActivateTab( pwndTab );
+				pContents->ActivateTable( pwndTab );
 			}
 		}
 		else
 		{
 			bCreateControls = true;
 			InsertHashSetElement( &selectedTables, rObjectSet.szObjectTypeName );
-			CTreeGDBBrowser* pwndTreeGBDBrowser = wndContents.AddNewTab( static_cast<CTreeGDBBrowser*>( 0 ), rObjectSet.szObjectTypeName );
-			if ( pwndTreeGBDBrowser != 0 )
-			{
-				pwndTreeGBDBrowser->SetPCDialogCommandHandlerID( CHID_PC_DIALOG, false );
-			}
+			IObjectTree* pwndTreeGBDBrowser = pContents->AddTable( rObjectSet.szObjectTypeName );
 			bCreateControls = false;
+			// The table is added before anything is asked of its tree; a tree that
+			// could not be made used to be dereferenced here all the same.
+			if ( pwndTreeGBDBrowser == 0 )
+			{
+				return;
+			}
+			pwndTreeGBDBrowser->SetPCDialogCommandHandlerID( CHID_PC_DIALOG, false );
 			pwndTreeGBDBrowser->SetStrongSelection();
-			wndContents.ActivateTab( pwndTreeGBDBrowser );
-			wndContents.ShowWindow( SW_SHOW );
+			pContents->ActivateTable( pwndTreeGBDBrowser );
+			pContents->Show( true );
 			wndEmptyContents.ShowWindow( SW_HIDE );
 		}
 	}

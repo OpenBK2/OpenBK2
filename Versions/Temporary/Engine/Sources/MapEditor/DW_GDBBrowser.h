@@ -1,20 +1,22 @@
 #pragma once
 
 //#include "3DTab_GDBBrowser.h"
-#include "ComboBox_GDBBrowser.h"
+#include "ObjectBrowserView.h"
 #include "Empty_GDBBrowser.h"
+#include "libdb/Manipulator.h"
 
 #include "MapEditorLib/Interface_UserData.h" //CTableSet
 
 #include <cstdint>
 
-class CDWGDBBrowser : public SECControlBar, public ICommandHandler
+class CDWGDBBrowser : public SECControlBar, public ICommandHandler, public IObjectBrowser::IListener
 {
 	int nGDBBrowserID;
 	bool bCreateControls;
 
 	//C3DTabGDBBrowser wndContents;
-	CComboBoxGDBBrowser wndContents;
+	// The tables and their trees, NObjectBrowser's; owned.
+	IObjectBrowser *pContents;
 	CEmptyGDBBrowser wndEmptyContents;
 
 	CPtr<IManipulator> pTableManipulator;
@@ -56,9 +58,13 @@ public:
 	CDWGDBBrowser( int _nGDBBrowserID );
 	virtual ~CDWGDBBrowser();
 
-	CComboBoxGDBBrowser *GetContents() { return &wndContents; }
+	// What answers CHID_OBJECT_STORAGE while this browser has the focus.
+	ICommandHandler *GetContents() { return ( pContents != 0 ) ? pContents->GetObjectStorage() : 0; }
 	int GetDWGDBBrowserID() const { return nGDBBrowserID; }
-	void EnableEdit( bool bEnable ) { wndContents.EnableEdit( bEnable ); }
+	void EnableEdit( bool bEnable ) { if ( pContents != 0 ) { pContents->EnableEdit( bEnable ); } }
+
+	// IObjectBrowser::IListener
+	virtual void OnTableSelected() { OnTabSelected(); }
 
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );

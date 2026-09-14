@@ -7,6 +7,7 @@
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/FolderController.h"
 #include "SortTreeControl.h"
+#include "ObjectBrowserView.h"
 
 #include <cstdint>
 
@@ -15,7 +16,9 @@
 int CALLBACK TreeGDBBrowserBaseCompareFunc( LPARAM lParam0, LPARAM lParam1, LPARAM lParamSort );
 
 class CGDBOMnemonics;
-class CTreeGDBBrowserBase : public CSortTreeControl, public ICommandHandler, public CDefaultView
+// IObjectTree is the part of it the browser pane uses, for which the methods
+// were already here under these names.
+class CTreeGDBBrowserBase : public CSortTreeControl, public ICommandHandler, public CDefaultView, public IObjectTree
 {
 	// Input State
 	friend class CTreeGDBBrowserInputState;
@@ -195,6 +198,8 @@ public:
 	inline bool GetStrongSelection() { bool bSelection = bStrongSelection; bStrongSelection = false; return bSelection; }
 
 	bool IsTreeCreated() { return GetViewManipulator() != 0; }
+	// IObjectTree
+	IView* GetView() { return this; }
 	void CreateTree();
 	// pszName = 0 необходимо самостоятельно получать имя
 	void SetTreeItemView( HTREEITEM hItem, const std::string *pszName );
