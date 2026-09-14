@@ -27,17 +27,22 @@
 #include "MapEditorLib/Interface_Builder.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_FolderCallback.h"
+#include "MapEditorLib/Interface_Logger.h"
 #include "MapEditorLib/StringManager.h"
+#include "MapEditorLib/WxColourDialog.h"
 
 #include <fmt/format.h>
 #include <fmt/printf.h>
 
 #include <wx/choice.h>
+#include <wx/clipbrd.h>
+#include <wx/dataobj.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
 #include <wx/utils.h>
 #include <wx/sizer.h>
+#include <wx/textctrl.h>
 #include <wx/time.h>
 #include <wx/treectrl.h>
 
@@ -73,8 +78,14 @@
 // menu, New Object at the selected folder or the root, Find, List References,
 // Check and the Export variants.
 //
-// Renaming, new folders, cut, copy, paste, delete and colour come next, and
-// drag and drop after; until then the menu shows them greyed.
+// And the commands that edit rows, third slice: renaming in place, from the
+// menu or with Space or Enter, the row then sorted among its siblings; New
+// Folder at the selected folder or the root, which starts a rename; cut, copy
+// and paste, into the tree's own clipboard of rows and as text onto the
+// system clipboard; delete, asked first; and colour. While a row's name is
+// being edited, the clipboard commands act on its text.
+//
+// Drag and drop comes last.
 //
 // **Names.** A row is found by its path, as the MFC tree found an HTREEITEM:
 // "Scenario\Campaigns\" for a folder, "Scenario\Campaigns\GER1.0\MapInfo.xdb"
@@ -147,6 +158,32 @@ namespace
 
 		explicit CRowData( EGDBOType _eType ) : eType( _eType ) {}
 	};
+
+
+	// A tree whose SortChildren orders rows as CompareRows does, which is what
+	// the MFC tree's TreeGDBBrowserBaseCompareFunc did after a rename. wxMSW
+	// asks OnCompareItems only of a class with class info of its own; otherwise
+	// it sorts by text alone.
+	class CSortedTreeCtrl : public wxTreeCtrl
+	{
+		wxDECLARE_CLASS( CSortedTreeCtrl );
+
+	public:
+		CSortedTreeCtrl( wxWindow *pParent, wxWindowID nID, const wxPoint &rPosition, const wxSize &rSize, long nStyle )
+			: wxTreeCtrl( pParent, nID, rPosition, rSize, nStyle )
+		{
+		}
+
+		virtual int OnCompareItems( const wxTreeItemId &rItem0, const wxTreeItemId &rItem1 ) override
+		{
+			const CRowData *const pData0 = dynamic_cast<const CRowData*>( GetItemData( rItem0 ) );
+			const CRowData *const pData1 = dynamic_cast<const CRowData*>( GetItemData( rItem1 ) );
+			return CompareRows( ToNarrow( GetItemText( rItem0 ) ), ( pData0 != nullptr ) ? pData0->eType : GDBO_UNKNOWN,
+													ToNarrow( GetItemText( rItem1 ) ), ( pData1 != nullptr ) ? pData1->eType : GDBO_UNKNOWN );
+		}
+	};
+
+	wxIMPLEMENT_CLASS( CSortedTreeCtrl, wxTreeCtrl );
 
 
 	// tree_types.bmp from the editor's resources, split into its 16 pixel
@@ -225,6 +262,15 @@ namespace
 		// Lowered path to row.
 		std::unordered_map<std::string, wxTreeItemId> rows;
 
+		// CSortTreeControl's clipboard: the rows cut or copied, by lowered path,
+		// kept until the next cut or copy. A row that goes away leaves it.
+		std::unordered_map<std::string, wxTreeItemId> clipboard;
+		bool bClipboardCut = false;
+
+		// The row whose name is being edited, and its text when the edit began.
+		wxTreeItemId labelEditItem;
+		std::string szLabelBeforeEdit;
+
 		// The fill in progress: CreateTree's iterator, handed out in batches. A
 		// new fill bumps the generation, which strands a batch still queued.
 		CPtr<IManipulatorIterator> pBuildIterator;
@@ -256,10 +302,13 @@ namespace
 		void CreateWindow( wxWindow *pParent, wxImageList *pImages )
 		{
 			// The MFC tree's styles: buttons, lines at the root, several rows
-			// selected at once. The root is wx's, and hidden.
-			pTree = NWx::Child<wxTreeCtrl>( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-																			wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT | wxTR_HIDE_ROOT |
-																			wxTR_MULTIPLE | wxBORDER_SUNKEN );
+			// selected at once, names edited in place. The root is wx's, and hidden.
+			pTree = NWx::Child<CSortedTreeCtrl>( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+																					 wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT | wxTR_HIDE_ROOT |
+																					 wxTR_MULTIPLE | wxTR_EDIT_LABELS | wxBORDER_SUNKEN );
+			pTree->Bind( wxEVT_TREE_BEGIN_LABEL_EDIT, &CWxObjectTree::OnBeginLabelEdit, this );
+			pTree->Bind( wxEVT_TREE_END_LABEL_EDIT, &CWxObjectTree::OnEndLabelEdit, this );
+			pTree->Bind( wxEVT_TREE_KEY_DOWN, &CWxObjectTree::OnTreeKey, this );
 			pTree->SetImageList( pImages );
 			pTree->AddRoot( wxString() );
 			pTree->Bind( wxEVT_TREE_SEL_CHANGED, &CWxObjectTree::OnSelectionChanged, this );
@@ -304,6 +353,7 @@ namespace
 			bCreateControls = true;
 			pTree->DeleteAllItems();
 			rows.clear();
+			clipboard.clear();
 			pTree->AddRoot( wxString() );
 			bBuildSelectionChanged = false;
 			szBuildFirstObject.clear();
@@ -488,18 +538,30 @@ namespace
 		}
 
 		// ICommandHandler, registered as CHID_OBJECT and CHID_SELECTION while the
-		// tree has the focus: CTreeGDBBrowserBase::HandleCommand, for the commands
-		// this slice has. The ones that edit rows answer false and so show greyed.
+		// tree has the focus: CTreeGDBBrowserBase::HandleCommand.
 		virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			if ( pTree == nullptr )
 			{
 				return false;
 			}
+			wxTextCtrl *const pLabelText = LabelEditor();
 			switch ( nCommandID )
 			{
 				case ID_OBJECT_LOAD:
 					Load();
+					return true;
+				case ID_OBJECT_NEW_FOLDER:
+					if ( bEnableEdit )
+					{
+						NewFolder( SelectedFolder() );
+					}
+					return true;
+				case ID_OBJECT_NEW_FOLDER_AT_ROOT:
+					if ( bEnableEdit )
+					{
+						NewFolder( pTree->GetRootItem() );
+					}
 					return true;
 				case ID_OBJECT_NEW:
 				case ID_SELECTION_NEW:
@@ -512,6 +574,85 @@ namespace
 					if ( bEnableEdit )
 					{
 						NewObject( pTree->GetRootItem() );
+					}
+					return true;
+				case ID_SELECTION_CUT:
+					if ( bEnableEdit && !pBuildIterator )
+					{
+						if ( pLabelText != nullptr )
+						{
+							pLabelText->Cut();
+						}
+						else
+						{
+							FillClipboard( true );
+						}
+					}
+					return true;
+				case ID_SELECTION_COPY:
+					if ( pLabelText != nullptr )
+					{
+						pLabelText->Copy();
+					}
+					else
+					{
+						FillClipboard( false );
+					}
+					return true;
+				case ID_SELECTION_PASTE:
+					if ( bEnableEdit && !pBuildIterator )
+					{
+						if ( pLabelText != nullptr )
+						{
+							pLabelText->Paste();
+						}
+						else
+						{
+							Paste();
+						}
+					}
+					return true;
+				case ID_SELECTION_CLEAR:
+					if ( bEnableEdit && !pBuildIterator )
+					{
+						if ( pLabelText != nullptr )
+						{
+							// The selected text, or the character after the caret, as the
+							// Delete key the MFC tree sent its edit box.
+							long nFrom = 0;
+							long nTo = 0;
+							pLabelText->GetSelection( &nFrom, &nTo );
+							if ( nFrom != nTo )
+							{
+								pLabelText->RemoveSelection();
+							}
+							else if ( nFrom < pLabelText->GetLastPosition() )
+							{
+								pLabelText->Remove( nFrom, nFrom + 1 );
+							}
+						}
+						else
+						{
+							Delete();
+						}
+					}
+					return true;
+				case ID_SELECTION_RENAME:
+					if ( bEnableEdit && !pBuildIterator )
+					{
+						Rename();
+					}
+					return true;
+				case ID_SELECTION_SELECT_ALL:
+					if ( pLabelText != nullptr )
+					{
+						pLabelText->SelectAll();
+					}
+					return true;
+				case ID_OBJECT_COLOR:
+					if ( bEnableEdit )
+					{
+						Color();
 					}
 					return true;
 				case ID_OBJECT_CHECK:
@@ -539,34 +680,78 @@ namespace
 				return false;
 			}
 			( *pbCheck ) = false;
+			const wxTextCtrl *const pLabelText = LabelEditor();
+			const bool bNotEditing = !labelEditItem.IsOk();
+			wxArrayTreeItemIds selected;
+			const size_t nSelected = pTree->GetSelections( selected );
 			switch ( nCommandID )
 			{
 				case ID_OBJECT_LOAD:
-					( *pbEnable ) = CanLoad();
+					( *pbEnable ) = CanLoad() && bNotEditing;
 					return true;
+				case ID_OBJECT_NEW_FOLDER:
+				case ID_OBJECT_NEW_FOLDER_AT_ROOT:
 				case ID_OBJECT_NEW:
 				case ID_OBJECT_NEW_AT_ROOT:
 				case ID_SELECTION_NEW:
-					( *pbEnable ) = bEnableEdit && CanNew();
+					( *pbEnable ) = bEnableEdit && CanNew() && bNotEditing;
 					return true;
-				case ID_OBJECT_CHECK:
-				case ID_OBJECT_EXPORT_FORCE:
-				case ID_OBJECT_EXPORT_NO_REF_FORCE:
-					( *pbEnable ) = CanExport();
-					return true;
-				case ID_OBJECT_EXPORT:
-				case ID_OBJECT_EXPORT_NO_REF:
-					( *pbEnable ) = CanExport();
-					return true;
-				case ID_SELECTION_FIND:
-					( *pbEnable ) = true;
-					return true;
-				case ID_OBJECT_REF_LOOKUP:
+				case ID_SELECTION_CUT:
+				case ID_SELECTION_COPY:
 				{
-					wxArrayTreeItemIds selected;
-					( *pbEnable ) = ( pTree->GetSelections( selected ) == 1 ) && ( TypeOf( pTree->GetFocusedItem() ) == GDBO_OBJECT );
+					bool bAllowed = ( nCommandID == ID_SELECTION_COPY ) || ( bEnableEdit && !pBuildIterator );
+					if ( pLabelText != nullptr )
+					{
+						long nFrom = 0;
+						long nTo = 0;
+						pLabelText->GetSelection( &nFrom, &nTo );
+						bAllowed = bAllowed && ( nFrom != nTo );
+					}
+					else
+					{
+						bAllowed = bAllowed && bNotEditing && ( nSelected > 0 );
+					}
+					( *pbEnable ) = bAllowed;
 					return true;
 				}
+				case ID_SELECTION_PASTE:
+					if ( pLabelText != nullptr )
+					{
+						( *pbEnable ) = bEnableEdit && !pBuildIterator && pLabelText->CanPaste();
+					}
+					else
+					{
+						( *pbEnable ) = bEnableEdit && bNotEditing && CanNew() && ( nSelected == 1 ) && !clipboard.empty() &&
+														!IsClipboardRow( PasteTarget() );
+					}
+					return true;
+				case ID_SELECTION_CLEAR:
+					( *pbEnable ) = bEnableEdit && !pBuildIterator && ( ( pLabelText != nullptr ) || ( bNotEditing && ( nSelected > 0 ) ) );
+					return true;
+				case ID_SELECTION_RENAME:
+					( *pbEnable ) = bEnableEdit && CanNew() && ( nSelected == 1 ) && bNotEditing;
+					return true;
+				case ID_SELECTION_SELECT_ALL:
+					// The MFC tree answered this one as not its own, so the frame kept
+					// it greyed; its edit box took Ctrl+A itself.
+					( *pbEnable ) = ( pLabelText != nullptr );
+					return false;
+				case ID_OBJECT_COLOR:
+					( *pbEnable ) = bEnableEdit && ( nSelected > 0 ) && bNotEditing;
+					return true;
+				case ID_OBJECT_CHECK:
+				case ID_OBJECT_EXPORT:
+				case ID_OBJECT_EXPORT_NO_REF:
+				case ID_OBJECT_EXPORT_FORCE:
+				case ID_OBJECT_EXPORT_NO_REF_FORCE:
+					( *pbEnable ) = CanExport() && bNotEditing;
+					return true;
+				case ID_SELECTION_FIND:
+					( *pbEnable ) = bNotEditing;
+					return true;
+				case ID_OBJECT_REF_LOOKUP:
+					( *pbEnable ) = ( nSelected == 1 ) && bNotEditing && ( TypeOf( pTree->GetFocusedItem() ) == GDBO_OBJECT );
+					return true;
 				default:
 					return false;
 			}
@@ -603,7 +788,7 @@ namespace
 					case CFolderController::SUndoData::TYPE_REMOVE:
 					{
 						const wxTreeItemId item = FindRow( itUndoData->szDestination );
-						if ( item.IsOk() && !pTree->ItemHasChildren( item ) )
+						if ( item.IsOk() && ( pTree->GetChildrenCount( item, false ) == 0 ) )
 						{
 							GetViewManipulator()->ClearCache();
 							DeleteRow( item );
@@ -815,7 +1000,37 @@ namespace
 		void DeleteRow( const wxTreeItemId &rItem )
 		{
 			ForgetRows( NameOf( rItem ) );
+			// A cut or copied row inside the one going is dropped from the
+			// clipboard while its id can still be walked.
+			for ( std::unordered_map<std::string, wxTreeItemId>::iterator itEntry = clipboard.begin(); itEntry != clipboard.end(); )
+			{
+				if ( IsWithin( itEntry->second, rItem ) )
+				{
+					itEntry = clipboard.erase( itEntry );
+				}
+				else
+				{
+					++itEntry;
+				}
+			}
+			if ( labelEditItem.IsOk() && IsWithin( labelEditItem, rItem ) )
+			{
+				labelEditItem = wxTreeItemId();
+			}
 			pTree->Delete( rItem );
+		}
+
+		// Whether rItem is rAncestor or lies under it.
+		bool IsWithin( wxTreeItemId item, const wxTreeItemId &rAncestor ) const
+		{
+			for ( ; item.IsOk(); item = pTree->GetItemParent( item ) )
+			{
+				if ( item == rAncestor )
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 
 		// TYPE_RENAME: a move adds the new row and takes the old one away once
@@ -826,7 +1041,7 @@ namespace
 			{
 				AddRow( pTree->GetRootItem(), rszDestination, TypeOfName( rszDestination ) );
 				const wxTreeItemId source = FindRow( rszSource );
-				if ( source.IsOk() && !pTree->ItemHasChildren( source ) )
+				if ( source.IsOk() && ( pTree->GetChildrenCount( source, false ) == 0 ) )
 				{
 					DeleteRow( source );
 				}
@@ -1451,6 +1666,511 @@ namespace
 			ShowContextMenu();
 		}
 
+		CFolderController* NewFolderController()
+		{
+			return CreateController<CFolderController>( static_cast<CFolderController*>( 0 ) );
+		}
+
+		// The text box of the row being renamed, while there is one.
+		wxTextCtrl* LabelEditor() const
+		{
+			return ( ( pTree != nullptr ) && labelEditItem.IsOk() ) ? pTree->GetEditControl() : nullptr;
+		}
+
+		std::vector<std::string> ChildNames( const wxTreeItemId &rItem ) const
+		{
+			std::vector<std::string> names;
+			wxTreeItemIdValue cookie;
+			for ( wxTreeItemId child = pTree->GetFirstChild( rItem, cookie ); child.IsOk(); child = pTree->GetNextChild( rItem, cookie ) )
+			{
+				names.push_back( NameOf( child ) );
+			}
+			return names;
+		}
+
+		// A folder's row by its name, the root for "".
+		wxTreeItemId FolderRow( const std::string &rszName ) const
+		{
+			return rszName.empty() ? pTree->GetRootItem() : FindRow( rszName );
+		}
+
+		// CTreeGDBBrowserBase::NewFolder( HTREEITEM ): "New Folder", numbered when
+		// taken, made under rParent and its name opened for editing.
+		void NewFolder( const wxTreeItemId &rParent )
+		{
+			if ( ( GetViewManipulator() == 0 ) || pBuildIterator )
+			{
+				return;
+			}
+			const std::string szName = NameOf( rParent ) + UniqueName( rParent, LoadResourceString( IDS_TREE_GDB_BROWSE_NEW_FOLDER ), GDBO_FOLDER ) +
+																 PATH_SEPARATOR_CHAR;
+			CPtr<CFolderController> pFolderController = NewFolderController();
+			pFolderController->AddInsertOperation( szName );
+			// This view is left out of the replay and adds the row itself.
+			if ( !pFolderController->Redo( true, true, this ) || ( pTree == nullptr ) )
+			{
+				return;
+			}
+			GetViewManipulator()->ClearCache();
+			const wxTreeItemId item = AddRow( pTree->GetRootItem(), szName, GDBO_FOLDER );
+			if ( item.IsOk() )
+			{
+				pTree->EnsureVisible( item );
+				pTree->EditLabel( item );
+			}
+		}
+
+		// CTreeGDBBrowserBase::Rename: the focused row's name, edited in place.
+		void Rename()
+		{
+			if ( ( GetViewManipulator() == 0 ) || pBuildIterator )
+			{
+				return;
+			}
+			const wxTreeItemId item = pTree->GetFocusedItem();
+			if ( item.IsOk() )
+			{
+				pTree->EnsureVisible( item );
+				pTree->EditLabel( item );
+			}
+		}
+
+		// CSortTreeControl::IsClipboardItem: whether the row is a cut or copied
+		// one, or lies inside one.
+		bool IsClipboardRow( const wxTreeItemId &rItem ) const
+		{
+			if ( !rItem.IsOk() || ( rItem == pTree->GetRootItem() ) )
+			{
+				return false;
+			}
+			for ( std::unordered_map<std::string, wxTreeItemId>::const_iterator itEntry = clipboard.begin(); itEntry != clipboard.end(); ++itEntry )
+			{
+				if ( IsWithin( rItem, itEntry->second ) )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		// Where paste puts rows: the focused folder, or the folder the focused
+		// object is in.
+		wxTreeItemId PasteTarget() const
+		{
+			const wxTreeItemId root = pTree->GetRootItem();
+			wxTreeItemId item = pTree->GetFocusedItem();
+			while ( item.IsOk() && ( item != root ) && ( TypeOf( item ) == GDBO_OBJECT ) )
+			{
+				item = pTree->GetItemParent( item );
+			}
+			return item.IsOk() ? item : root;
+		}
+
+		// CSortTreeControl::FillWindowsClipboard: a line for each row with nothing
+		// under it, "Type<tab>path".
+		void AppendClipboardText( const wxTreeItemId &rItem, std::string *pszText ) const
+		{
+			if ( pTree->GetChildrenCount( rItem, false ) > 0 )
+			{
+				wxTreeItemIdValue cookie;
+				for ( wxTreeItemId child = pTree->GetFirstChild( rItem, cookie ); child.IsOk(); child = pTree->GetNextChild( rItem, cookie ) )
+				{
+					AppendClipboardText( child, pszText );
+				}
+				return;
+			}
+			const std::string &rszPrefix = GetObjectSet().szObjectTypeName;
+			( *pszText ) += ( rszPrefix.empty() ? std::string() : ( rszPrefix + "\t" ) ) + NameOf( rItem ) + "\r\n";
+		}
+
+		// CSortTreeControl::FillClipboard, for Cut and Copy: the selected rows no
+		// selected folder holds, remembered for Paste and put on the system
+		// clipboard as text.
+		void FillClipboard( bool bCut )
+		{
+			if ( GetViewManipulator() == 0 )
+			{
+				return;
+			}
+			clipboard.clear();
+			std::string szText;
+			std::vector<wxTreeItemId> rows;
+			GetTopSelection( &rows );
+			for ( size_t nRow = 0; nRow < rows.size(); ++nRow )
+			{
+				clipboard[Lowered( NameOf( rows[nRow] ) )] = rows[nRow];
+				AppendClipboardText( rows[nRow], &szText );
+			}
+			bClipboardCut = bCut;
+			if ( wxTheClipboard->Open() )
+			{
+				wxTheClipboard->SetData( new wxTextDataObject( FromNarrow( szText ) ) );
+				wxTheClipboard->Close();
+			}
+			pTree->SetFocus();
+		}
+
+		// ExecuteTreeOperation's TYPE_COPY: the row rszSource copied into the
+		// folder rszFolder. An object whose name is taken there is numbered; a
+		// folder is numbered only when copied beside itself, and otherwise merged
+		// into the folder of that name. Rows are followed by name, since each step
+		// adds and removes rows.
+		void CopyRow( const std::string &rszFolder, const std::string &rszSource )
+		{
+			const wxTreeItemId source = FindRow( rszSource );
+			const wxTreeItemId folder = FolderRow( rszFolder );
+			if ( !source.IsOk() || !folder.IsOk() )
+			{
+				return;
+			}
+			const std::string szText = ToNarrow( pTree->GetItemText( source ) );
+			const EGDBOType eType = TypeOf( source );
+			const std::vector<std::string> children = ChildNames( source );
+			const wxTreeItemId existing = FindChild( folder, szText );
+			std::string szDestination = rszFolder;
+			bool bNeedCopy = true;
+			if ( !existing.IsOk() || ( TypeOf( existing ) != eType ) )
+			{
+				szDestination += szText;
+				if ( eType == GDBO_FOLDER )
+				{
+					szDestination += PATH_SEPARATOR_CHAR;
+				}
+			}
+			else if ( eType == GDBO_OBJECT )
+			{
+				szDestination += UniqueName( folder, szText, eType );
+			}
+			else if ( NameOf( existing ) == rszSource )
+			{
+				szDestination += UniqueName( folder, szText, eType ) + PATH_SEPARATOR_CHAR;
+			}
+			else
+			{
+				szDestination = NameOf( existing );
+				bNeedCopy = false;
+			}
+			if ( bNeedCopy )
+			{
+				if ( eType == GDBO_FOLDER )
+				{
+					CPtr<CFolderController> pFolderController = NewFolderController();
+					pFolderController->AddCopyOperation( szDestination, rszSource );
+					pFolderController->Redo( true, true, 0 );
+				}
+				else
+				{
+					Singleton<IFolderCallback>()->ClearUndoData();
+					if ( !Singleton<IBuilderContainer>()->CopyObject( GetObjectSet().szObjectTypeName, szDestination, rszSource ) )
+					{
+						Singleton<IFolderCallback>()->UndoChanges();
+					}
+					Singleton<IFolderCallback>()->ClearUndoData();
+				}
+			}
+			if ( ( eType == GDBO_FOLDER ) && ( pTree != nullptr ) && FindRow( szDestination ).IsOk() )
+			{
+				for ( size_t nChild = 0; nChild < children.size(); ++nChild )
+				{
+					CopyRow( szDestination, children[nChild] );
+				}
+			}
+		}
+
+		// ExecuteTreeOperation's TYPE_RENAME, for a cut row pasted: an object is
+		// renamed into the folder, numbered when its name is taken there; a folder
+		// is made there, or found there, its rows moved into it one by one, and
+		// the emptied folder removed.
+		void MoveRow( const std::string &rszFolder, const std::string &rszSource )
+		{
+			const wxTreeItemId source = FindRow( rszSource );
+			const wxTreeItemId folder = FolderRow( rszFolder );
+			if ( !source.IsOk() || !folder.IsOk() )
+			{
+				return;
+			}
+			const std::string szText = ToNarrow( pTree->GetItemText( source ) );
+			const EGDBOType eType = TypeOf( source );
+			const std::vector<std::string> children = ChildNames( source );
+			const wxTreeItemId existing = FindChild( folder, szText );
+			std::string szDestination = rszFolder;
+			if ( !existing.IsOk() || ( TypeOf( existing ) != eType ) )
+			{
+				szDestination += szText;
+				if ( eType == GDBO_FOLDER )
+				{
+					szDestination += PATH_SEPARATOR_CHAR;
+					CPtr<CFolderController> pFolderController = NewFolderController();
+					pFolderController->AddInsertOperation( szDestination );
+					pFolderController->Redo( true, true, 0 );
+				}
+			}
+			else if ( NameOf( existing ) == rszSource )
+			{
+				// Pasted where it already is.
+				return;
+			}
+			else if ( eType == GDBO_OBJECT )
+			{
+				szDestination += UniqueName( folder, szText, eType );
+			}
+			else
+			{
+				szDestination = NameOf( existing );
+			}
+			if ( eType == GDBO_OBJECT )
+			{
+				Singleton<IFolderCallback>()->ClearUndoData();
+				if ( !Singleton<IBuilderContainer>()->RenameObject( GetObjectSet().szObjectTypeName, szDestination, rszSource ) )
+				{
+					Singleton<IFolderCallback>()->UndoChanges();
+				}
+				Singleton<IFolderCallback>()->ClearUndoData();
+				return;
+			}
+			if ( ( pTree == nullptr ) || !FindRow( szDestination ).IsOk() )
+			{
+				return;
+			}
+			for ( size_t nChild = 0; nChild < children.size(); ++nChild )
+			{
+				MoveRow( szDestination, children[nChild] );
+			}
+			CPtr<CFolderController> pFolderController = NewFolderController();
+			pFolderController->AddRemoveOperation( rszSource );
+			pFolderController->Redo( true, true, 0 );
+		}
+
+		// CTreeGDBBrowserBase::Paste: the clipboard's rows copied, or moved when
+		// they were cut, into the paste target, unless it is one of them.
+		void Paste()
+		{
+			if ( ( GetViewManipulator() == 0 ) || pBuildIterator )
+			{
+				return;
+			}
+			const wxTreeItemId target = PasteTarget();
+			if ( !IsClipboardRow( target ) )
+			{
+				const std::string szFolder = NameOf( target );
+				std::vector<std::string> sources;
+				for ( std::unordered_map<std::string, wxTreeItemId>::const_iterator itEntry = clipboard.begin(); itEntry != clipboard.end(); ++itEntry )
+				{
+					sources.push_back( NameOf( itEntry->second ) );
+				}
+				const bool bMove = bClipboardCut;
+				for ( size_t nSource = 0; ( nSource < sources.size() ) && ( pTree != nullptr ); ++nSource )
+				{
+					if ( bMove )
+					{
+						MoveRow( szFolder, sources[nSource] );
+					}
+					else
+					{
+						CopyRow( szFolder, sources[nSource] );
+					}
+				}
+				UpdateSelectionManipulator( true );
+			}
+			if ( pTree != nullptr )
+			{
+				pTree->SetFocus();
+			}
+		}
+
+		// ExecuteTreeOperation's TYPE_REMOVE: a row's rows first, then the row once
+		// nothing is left under it -- a folder through the folder controller, an
+		// object through its builder unless it is locked.
+		void RemoveRow( const std::string &rszName )
+		{
+			wxTreeItemId item = FindRow( rszName );
+			if ( !item.IsOk() )
+			{
+				return;
+			}
+			const std::vector<std::string> children = ChildNames( item );
+			for ( size_t nChild = 0; nChild < children.size(); ++nChild )
+			{
+				RemoveRow( children[nChild] );
+			}
+			item = ( pTree != nullptr ) ? FindRow( rszName ) : wxTreeItemId();
+			if ( !item.IsOk() || ( pTree->GetChildrenCount( item, false ) > 0 ) )
+			{
+				return;
+			}
+			const std::string &rszObjectTypeName = GetObjectSet().szObjectTypeName;
+			if ( TypeOf( item ) == GDBO_FOLDER )
+			{
+				CPtr<CFolderController> pFolderController = NewFolderController();
+				pFolderController->AddRemoveOperation( rszName );
+				pFolderController->Redo( true, true, 0 );
+				return;
+			}
+			Singleton<IFolderCallback>()->ClearUndoData();
+			if ( !Singleton<IFolderCallback>()->IsObjectLocked( rszObjectTypeName, rszName ) )
+			{
+				if ( !Singleton<IBuilderContainer>()->RemoveObject( rszObjectTypeName, rszName ) )
+				{
+					Singleton<IFolderCallback>()->UndoChanges();
+				}
+			}
+			else
+			{
+				NLog::Log( LT_IMPORTANT, "Can't remove object. Object is locked. %s:%s\n", rszObjectTypeName.c_str(), rszName.c_str() );
+			}
+			Singleton<IFolderCallback>()->ClearUndoData();
+		}
+
+		// CTreeGDBBrowserBase::Delete: asked first, No by default.
+		void Delete()
+		{
+			if ( ( GetViewManipulator() == 0 ) || pBuildIterator )
+			{
+				return;
+			}
+			if ( AskYesNo( IDS_TREE_GDB_BROWSE_DELETE_OBJECTS_MESSAGE ) && ( pTree != nullptr ) )
+			{
+				std::vector<wxTreeItemId> rows;
+				GetTopSelection( &rows );
+				std::vector<std::string> names;
+				for ( size_t nRow = 0; nRow < rows.size(); ++nRow )
+				{
+					names.push_back( NameOf( rows[nRow] ) );
+				}
+				for ( size_t nName = 0; ( nName < names.size() ) && ( pTree != nullptr ); ++nName )
+				{
+					RemoveRow( names[nName] );
+				}
+				UpdateSelectionManipulator( true );
+			}
+			if ( pTree != nullptr )
+			{
+				pTree->SetFocus();
+			}
+		}
+
+		// CTreeGDBBrowserBase::Color: one colour for every selected row, started
+		// on the row's own when one is selected.
+		void Color()
+		{
+			if ( ( GetViewManipulator() == 0 ) || pBuildIterator )
+			{
+				return;
+			}
+			wxArrayTreeItemIds selected;
+			pTree->GetSelections( selected );
+			std::vector<std::string> names;
+			for ( size_t nRow = 0; nRow < selected.size(); ++nRow )
+			{
+				names.push_back( NameOf( selected[nRow] ) );
+			}
+			int nStartColour = 0;
+			if ( names.size() == 1 )
+			{
+				CManipulatorManager::GetValue( &nStartColour, GetViewManipulator(), names[0] );
+			}
+			wxColour chosen;
+			if ( NWxColourDialog::Pick( pTree, pOwner, wxColour( static_cast<unsigned long>( nStartColour ) ), &chosen ) )
+			{
+				const int nColour = static_cast<int>( chosen.GetRGB() );
+				for ( size_t nName = 0; nName < names.size(); ++nName )
+				{
+					CPtr<CFolderController> pFolderController = NewFolderController();
+					pFolderController->AddColorOperation( names[nName], nColour );
+					pFolderController->Redo( true, true, 0 );
+				}
+			}
+			if ( pTree != nullptr )
+			{
+				pTree->Refresh();
+			}
+		}
+
+		// CTreeGDBBrowserBase::OnBeginLabelEdit: only where editing is allowed,
+		// and one row at a time.
+		void OnBeginLabelEdit( wxTreeEvent &rEvent )
+		{
+			if ( !bEnableEdit || labelEditItem.IsOk() || !rEvent.GetItem().IsOk() )
+			{
+				rEvent.Veto();
+				return;
+			}
+			labelEditItem = rEvent.GetItem();
+			szLabelBeforeEdit = ToNarrow( pTree->GetItemText( labelEditItem ) );
+		}
+
+		// CTreeGDBBrowserBase::OnEndLabelEdit: a new name no sibling has renames
+		// the row through a folder controller, which every view on the table
+		// replays, this one included; the row is then sorted among its siblings.
+		// Anything else puts the old name back.
+		void OnEndLabelEdit( wxTreeEvent &rEvent )
+		{
+			const wxTreeItemId item = rEvent.GetItem();
+			const std::string szBefore = szLabelBeforeEdit;
+			labelEditItem = wxTreeItemId();
+			szLabelBeforeEdit.clear();
+			bool bRenamed = false;
+			if ( !rEvent.IsEditCancelled() && item.IsOk() && ( GetViewManipulator() != 0 ) )
+			{
+				const std::string szAfter = ToNarrow( rEvent.GetLabel() );
+				const wxTreeItemId parent = pTree->GetItemParent( item );
+				bool bTaken = false;
+				wxTreeItemIdValue cookie;
+				for ( wxTreeItemId sibling = pTree->GetFirstChild( parent, cookie ); sibling.IsOk(); sibling = pTree->GetNextChild( parent, cookie ) )
+				{
+					if ( ( sibling != item ) && ( Lowered( ToNarrow( pTree->GetItemText( sibling ) ) ) == Lowered( szAfter ) ) )
+					{
+						bTaken = true;
+						break;
+					}
+				}
+				if ( !szAfter.empty() && ( szAfter != szBefore ) && !bTaken )
+				{
+					const std::string szParentName = NameOf( parent );
+					std::string szDestination = szParentName + szAfter;
+					std::string szSource = szParentName + szBefore;
+					if ( TypeOf( item ) == GDBO_FOLDER )
+					{
+						szDestination += PATH_SEPARATOR_CHAR;
+						szSource += PATH_SEPARATOR_CHAR;
+					}
+					CPtr<CFolderController> pFolderController = NewFolderController();
+					pFolderController->AddRenameOperation( szDestination, szSource, false );
+					bRenamed = pFolderController->Redo( true, true, 0 );
+					if ( bRenamed && ( pTree != nullptr ) )
+					{
+						GetViewManipulator()->ClearCache();
+						pTree->EnsureVisible( item );
+						UpdateSelectionManipulator( true );
+						SortLater( szParentName );
+					}
+				}
+			}
+			if ( !bRenamed )
+			{
+				rEvent.Veto();
+			}
+			if ( pTree != nullptr )
+			{
+				pTree->SetFocus();
+			}
+		}
+
+		// OnLabelEditSortTimer: the folder's rows sorted once the edit has ended.
+		void SortLater( const std::string &rszFolder )
+		{
+			pTree->CallAfter( [this, rszFolder]()
+			{
+				const wxTreeItemId folder = ( pTree != nullptr ) ? FolderRow( rszFolder ) : wxTreeItemId();
+				if ( folder.IsOk() )
+				{
+					bCreateControls = true;
+					pTree->SortChildren( folder );
+					bCreateControls = false;
+				}
+			} );
+		}
+
 		// CTreeGDBBrowser::CanLoad and CTreeGDBLinkBrowser::CanLoad.
 		bool CanLoad()
 		{
@@ -1565,6 +2285,30 @@ namespace
 			if ( item.IsOk() && ( ( nFlags & ( wxTREE_HITTEST_ONITEMICON | wxTREE_HITTEST_ONITEMLABEL ) ) != 0 ) )
 			{
 				Load();
+			}
+		}
+
+		// CTreeGDBBrowserInputState::OnKeyDown: Space or Enter renames the one
+		// selected row. Started after the key is handled, as the tree is still
+		// inside its key notification here.
+		void OnTreeKey( wxTreeEvent &rEvent )
+		{
+			rEvent.Skip();
+			const int nKey = rEvent.GetKeyCode();
+			if ( ( nKey != WXK_SPACE ) && ( nKey != WXK_RETURN ) && ( nKey != WXK_NUMPAD_ENTER ) )
+			{
+				return;
+			}
+			wxArrayTreeItemIds selected;
+			if ( bEnableEdit && !labelEditItem.IsOk() && ( pTree->GetSelections( selected ) == 1 ) )
+			{
+				pTree->CallAfter( [this]()
+				{
+					if ( ( pTree != nullptr ) && !labelEditItem.IsOk() )
+					{
+						Rename();
+					}
+				} );
 			}
 		}
 
