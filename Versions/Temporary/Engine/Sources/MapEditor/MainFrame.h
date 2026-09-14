@@ -12,7 +12,7 @@
 #include "DW_GDBBrowser.h"
 #include "DW_PropertyBrowser.h"
 #include "DW_Log.h"
-#include "ProgressView.h"
+#include "MainFrameShared.h"
 
 #include <cstdint>
 
@@ -61,12 +61,11 @@ class CMainFrame : public SECWorkbook, public IMainFrame, public ICommandHandler
 	
 	DECLARE_DYNAMIC(CMainFrame)
 	//
-	CString strHelpFilePath;
+	std::string szHelpFilePath;
 	SECStatusBar wndStatusBar;
-	// Whichever toolkit this session draws it with, made on the first use and
-	// owned here. See ProgressView.h.
-	NProgressView::IView *pProgressView;
-	HWND hwndPreviousFocusedWindow;
+	// The progress dialog and where the focus goes back to after it. Shared
+	// with the wx frame; see MainFrameShared.h.
+	NMainFrameShared::CProgressHost progress;
 	CMapEditorSingletonApp mapEditorSingletonApp;
 	SMainFrameParams params;
 

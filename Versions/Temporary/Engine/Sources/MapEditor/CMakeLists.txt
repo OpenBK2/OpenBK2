@@ -29,6 +29,7 @@ set(SOURCES
     LogWindow.cpp
     LuaEditor.cpp
     MainFrame.cpp
+    MainFrameShared.cpp
     MainFrameContainer.cpp
     MainFrameParams.cpp
     MainFrame_Consts.cpp
