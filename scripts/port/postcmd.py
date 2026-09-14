@@ -19,6 +19,7 @@ u.OpenDesktopW.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.BOOL, wint
 u.OpenDesktopW.restype = wintypes.HANDLE
 u.GetWindowTextW.argtypes = [wintypes.HWND, wintypes.LPWSTR, C.c_int]
 u.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
+u.SetThreadDesktop.argtypes = [wintypes.HANDLE]
 
 WM_COMMAND = 0x0111
 
@@ -53,6 +54,16 @@ def main():
     ap.add_argument('--wait', type=float, default=1.5)
     args = ap.parse_args()
 
+    # A post to a window on another desktop fails, with nothing said, unless
+    # this process has that desktop open: the title search opened it, so a post
+    # after one worked, and --hwnd, which skipped the search, posted into
+    # nothing. So the thread goes onto the desktop first, as uiprobe.attach
+    # does, and every post is checked.
+    desk = u.OpenDesktopW(args.desktop, 0, False, 0x10000000)
+    if not desk:
+        raise SystemExit(f'no desktop {args.desktop}')
+    u.SetThreadDesktop(desk)
+
     if args.hwnd:
         targets = [args.hwnd]
     else:
@@ -62,14 +73,18 @@ def main():
         print('frame(s):', ' '.join(hex(h) for h in targets))
         targets = targets[:1]
 
+    def post(msg, wparam, lparam):
+        if not u.PostMessageW(targets[0], msg, wparam, lparam):
+            raise SystemExit(f'PostMessage(0x{targets[0]:x}, 0x{msg:x}) failed: {C.get_last_error()}')
+
     if args.wparam is not None:
-        u.PostMessageW(targets[0], args.msg, args.wparam, args.lparam)
+        post(args.msg, args.wparam, args.lparam)
         print(f'posted msg 0x{args.msg:x} wparam=0x{args.wparam:x} to 0x{targets[0]:x}')
         time.sleep(args.wait)
         return
 
     for cid in args.ids:
-        u.PostMessageW(targets[0], WM_COMMAND, cid, 0)
+        post(WM_COMMAND, cid, 0)
         print(f'posted WM_COMMAND {cid} to 0x{targets[0]:x}')
         time.sleep(args.wait)
 
