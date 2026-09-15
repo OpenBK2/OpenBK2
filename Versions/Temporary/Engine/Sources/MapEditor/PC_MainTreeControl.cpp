@@ -486,6 +486,9 @@ bool CPCMainTreeControl::GetTreeItemEditorPlace( HTREEITEM hTreeItem, CTRect<int
 
 void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, bool _bAsync )
 {
+	// Show Hidden replaces an existing tree. Batch its removal as well as the
+	// insertions, so the native control does not lay out intermediate states.
+	CTreeUpdateLock update( *this );
 	KillCreateTreeTimer();
 	//
 	bCreateTree = _bCreateTree;
@@ -499,11 +502,14 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 		//
 		if ( hParentItem != TVI_ROOT )
 		{
+			const bool bWasCreatingControls = bCreateControls;
+			bCreateControls = true;
 			const int nChildCount = GetChildCount( hParentItem, false, false );
 			for ( int nChildIndex = 0; nChildIndex < nChildCount; ++nChildIndex )
 			{
 				DeleteTreeItem( GetChildItem( hParentItem ) );
 			}
+			bCreateControls = bWasCreatingControls;
 			GetTreeItemName( hParentItem, &szCreateTreeParentName );
 			//		
 			if ( GetViewManipulator() == 0 )
@@ -525,7 +531,12 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 		}
 		else
 		{
+			// Deleting the caret is not a user selection change. Keep the saved
+			// property and avoid refreshing its editors while the tree is cleared.
+			const bool bWasCreatingControls = bCreateControls;
+			bCreateControls = true;
 			DeleteAllTreeItems();
+			bCreateControls = bWasCreatingControls;
 			if ( GetViewManipulator() == 0 )
 			{
 				EnableHeaderCtrl( false, false );
@@ -555,6 +566,9 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 						pCreateTreeManipulatorIterator->Next();
 					}
 				}
+				// The batch must own its redraw lock: completion restores the
+				// caret only after native layout has been enabled again.
+				update.Unlock();
 				OnCreateTreeTimer();
 			}
 		}
@@ -566,6 +580,7 @@ void CPCMainTreeControl::CreateTree( HTREEITEM hParentItem, bool _bCreateTree, b
 	else
 	{
 		hCreateTreeParentItem = hParentItem;
+		update.Unlock();
 		OnCreateTreeTimer();
 	}
 }
@@ -595,7 +610,9 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 					pCreateTreeManipulatorIterator = 0;
 					break;	
 				}
-				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( GetViewManipulator()->GetDesc( szName ) ) )
+				// The iterator already resolved this field, including its array
+				// element type. Avoid resolving the full DB path again per row.
+				if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>( pCreateTreeManipulatorIterator->GetDesc() ) )
 				{
 					EPCIEType nType = typePCIEMnemonics.Get( pDesc, szName );
 					//DebugTrace( "CreateTree: %s (%s:%d)", szName.c_str(), pDesc->szPropControlType.c_str(), nType );
@@ -708,19 +725,15 @@ void CPCMainTreeControl::OnCreateTreeTimer()
 
 HTREEITEM CPCMainTreeControl::AddTreeItem( const std::string &rszName, EPCIEType nType, const SPropertyDesc *pDesc )
 {
-	//DebugTrace( "AddTreeItem: name:<%s>", rszName.c_str() );
-	//
-	int nDividerPos = rszName.find( LEVEL_SEPARATOR_CHAR );
-	std::string szParentName = rszName.substr( 0, nDividerPos );
-	while ( nDividerPos != std::string::npos ) 
+	// Start at the nearest cached parent, not the first path component.
+	// Walking from the top rescans all preceding array elements for every
+	// nested field and makes large hidden property trees quadratic to build.
+	for ( size_t nDividerPos = rszName.rfind(LEVEL_SEPARATOR_CHAR);
+			nDividerPos != std::string::npos;
+			nDividerPos = nDividerPos == 0 ? std::string::npos : rszName.rfind(LEVEL_SEPARATOR_CHAR, nDividerPos - 1) )
 	{
-		if ( HTREEITEM hItem = GetTreeItem( szParentName ) )
-		{
-			const std::string szAdditionalName = rszName.substr( nDividerPos + 1 );
-			return AddTreeItemInternal( hItem, szAdditionalName, nType, pDesc );
-		}
-		nDividerPos = szParentName.find( LEVEL_SEPARATOR_CHAR );
-		szParentName = szParentName.substr( 0, nDividerPos );
+		if ( HTREEITEM hItem = CSortTreeControl::GetTreeItem(rszName.substr(0, nDividerPos)) )
+			return AddTreeItemInternal( hItem, rszName.substr(nDividerPos + 1), nType, pDesc );
 	}
 	return AddTreeItemInternal( TVI_ROOT, rszName, nType, pDesc );
 }
