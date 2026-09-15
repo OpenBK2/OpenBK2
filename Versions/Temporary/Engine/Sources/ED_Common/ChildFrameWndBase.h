@@ -1,15 +1,31 @@
 #pragma once
 
 #include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/Interface_Widget.h"
 
 #include <cstdint>
 
 #include "ED_Common_export.h"
 
-class ED_COMMON_EXPORT CChildFrameWndBase : public CWnd, public ICommandHandler
+struct ISceneSurface;
+
+// The 3D viewport: what goes to the active input state and what to the game,
+// when the scene steps and redraws, and the CHID_SCENE commands.
+//
+// This was a CWnd with a message map. The window is now an ISceneSurface
+// (SceneSurface.h), MFC's or wx's, which calls the On... methods below with
+// its messages as MFC's handlers received them, after doing what the CWnd base
+// class did with each. Nothing here names a toolkit, and the order of every
+// call is the one the message handlers made.
+//
+// The surface is known between OnCreate and OnDestroy. A command that arrives
+// outside that span, when there is no window to act on, does nothing.
+class ED_COMMON_EXPORT CChildFrameWndBase : public ICommandHandler
 {
 	static const int DEFAULT_REFRESH_RATE;
-	
+
+	ISceneSurface *pSurface;
+
 	bool bInputEnabled;
 	bool bRunModeEnabled;
 	bool bGameInputEnabled;
@@ -19,20 +35,18 @@ class ED_COMMON_EXPORT CChildFrameWndBase : public CWnd, public ICommandHandler
 	bool bEnableSceneUpdate;
 	bool bEnableScroll;
 	//
-	int32_t nUpdateSceneTimer;
+	bool bUpdateSceneTimer;
 	int32_t nUpdateSceneTimerInterval;
 
 	bool bIsSettingUp;
 	bool bWasResized;
 
-	unsigned GetUpdateSceneTimerID() { return 1; }
 	void SetUpdateSceneTimer();
 	void KillUpdateSceneTimer();
-	void OnUpdateSceneTimer();
 	//
 	void AlignWndAspect();
 	//
-	void RemoveInput(); 
+	void RemoveInput();
 	void EnableInput( uintptr_t dwData );
 	void EnableAutoUpdate( uintptr_t dwData );
 	void EnableGameInput( struct IInterfaceCommand *pInterfaceCommand );
@@ -44,52 +58,73 @@ class ED_COMMON_EXPORT CChildFrameWndBase : public CWnd, public ICommandHandler
 	void EnableMouseCapture( uintptr_t dwData );
 
 protected:
-	CRect rectBorder1, rectBorder2, rectWindow, rectMain;
+	CTRect<int> rectBorder1, rectBorder2, rectWindow, rectMain;
 
-	virtual BOOL PreCreateWindow( CREATESTRUCT &rCreateStruct );
-	afx_msg int OnCreate( LPCREATESTRUCT pCreateStruct );
-	afx_msg void OnDestroy();
-	afx_msg void OnTimer( UINT_PTR nIDEvent );
-	//
-	afx_msg void OnSetFocus			( CWnd* pOldWnd );
-	afx_msg void OnKillFocus		( CWnd* pNewWnd );
-
-	afx_msg void OnMouseMove		( unsigned nFlags, CPoint point );
-	afx_msg BOOL OnMouseWheel		( unsigned nFlags, short zDelta, CPoint point );
-	//
-	afx_msg void OnLButtonDown	( unsigned nFlags, CPoint point );
-	afx_msg void OnLButtonUp		( unsigned nFlags, CPoint point );
-	afx_msg void OnLButtonDblClk( unsigned nFlags, CPoint point );
-	//
-	afx_msg void OnRButtonDown	( unsigned nFlags, CPoint point );
-	afx_msg void OnRButtonUp		( unsigned nFlags, CPoint point );
-	afx_msg void OnRButtonDblClk( unsigned nFlags, CPoint point );
-	//
-	afx_msg void OnMButtonDown	( unsigned nFlags, CPoint point );
-	afx_msg void OnMButtonUp		( unsigned nFlags, CPoint point );
-	afx_msg void OnMButtonDblClk( unsigned nFlags, CPoint point );
-	//
-	afx_msg void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	afx_msg void OnKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	afx_msg void OnChar					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	afx_msg void OnSysKeyDown		( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	afx_msg void OnSysKeyUp			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	afx_msg void OnSysChar			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	//
-	afx_msg void OnContextMenu	( CWnd *pwnd, CPoint point );
-	//
-	afx_msg BOOL OnEraseBkgnd( CDC* pDC );
-	afx_msg void OnPaint();
-	//
-	afx_msg void OnSize( unsigned nType, int cx, int cy );
-	afx_msg void OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
-	afx_msg void OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar );
+	// The window, between OnCreate and OnDestroy; null outside them.
+	ISceneSurface* Surface() const { return pSurface; }
+	// Invalidate, erase and paint the window now, if there is one.
+	void Redraw();
 
 public:
 	CChildFrameWndBase();
 	virtual ~CChildFrameWndBase();
 
 	bool IsSceneUpdateEnabled() { return bEnableSceneUpdate; }
+	bool IsScrollEnabled() const { return bEnableScroll; }
+	// While the window is moving itself to keep the game's aspect: the size
+	// and paint messages that causes are not the viewport's to act on.
+	bool IsSettingUp() const { return bIsSettingUp; }
+
+	// From the surface. OnCreate is called while the window is being made and
+	// refuses it by returning false; OnDestroy while it is being destroyed.
+	bool OnCreate( ISceneSurface *_pSurface );
+	void OnDestroy();
+	// The scene update timer's tick.
+	void OnTimer();
+	//
+	void OnSetFocus			( IWidget *pOldWidget );
+	void OnKillFocus		( IWidget *pNewWidget );
+
+	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rPoint );
+	// rScreenPoint in screen coordinates, as WM_MOUSEWHEEL gives it, and
+	// bDefaultResult what the window's default handling of the wheel answered:
+	// the input state only hears of a wheel the window did something with.
+	bool OnMouseWheel		( unsigned nFlags, short zDelta, const CTPoint<int> &rScreenPoint, bool bDefaultResult );
+	//
+	void OnLButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
+	//
+	void OnRButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnRButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
+	//
+	void OnMButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnMButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );
+	void OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint );
+	//
+	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnChar					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnSysKeyDown		( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnSysKeyUp			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	void OnSysChar			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
+	//
+	// rScreenPoint in screen coordinates, or ( -1, -1 ) from the keyboard.
+	void OnContextMenu	( const CTPoint<int> &rScreenPoint );
+	//
+	// A paint in two halves around the surface's paint context. BeginPaint
+	// lays the window out and prepares the renderer, or answers false for a
+	// paint that arrives while the window is moving itself, which the surface
+	// only validates. Paint draws the input state's overlay, the scene and the
+	// front-end's own marks through the context.
+	bool BeginPaint();
+	void Paint( IPaintContext *pPaintContext );
+	//
+	void OnSize( int cx, int cy );
+	void OnHScroll( unsigned nSBCode, unsigned nPos );
+	void OnVScroll( unsigned nSBCode, unsigned nPos );
+
 	// ICommandHandler
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
@@ -100,11 +135,9 @@ public:
 	virtual void OnPreDrawChildFrameWnd() = 0;
 	virtual void OnDrawChildFrameWnd() = 0;
 	virtual void OnResizeChildFrameWnd( int cx, int cy ) = 0;
-	virtual void DrawFocus( CPaintDC *pDC ) = 0;
-	virtual void DrawStatistic( CPaintDC *pDC ) = 0;
-	virtual void DrawFrameBorders( CPaintDC *pDC ) = 0;
-
-	DECLARE_MESSAGE_MAP()
+	virtual void DrawFocus( IPaintContext *pPaintContext ) = 0;
+	virtual void DrawStatistic( IPaintContext *pPaintContext ) = 0;
+	virtual void DrawFrameBorders( IPaintContext *pPaintContext ) = 0;
 };
 
 

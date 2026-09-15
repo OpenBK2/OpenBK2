@@ -6,13 +6,12 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_Editor.h"
-#include "MapEditorLib/MfcPaintContext.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "Main/GameTimer.h"
 #include "Main/MainLoop.h"
 #include "Input/GameMessage.h"
 #include "UI/UI.h"
 #include "ChildFrameWndBase.h"
+#include "SceneSurface.h"
 
 #include "port/time.h"
 
@@ -21,41 +20,10 @@
 const int CChildFrameWndBase::DEFAULT_REFRESH_RATE = 50;
 
 
-BEGIN_MESSAGE_MAP(CChildFrameWndBase, CWnd)
-	ON_WM_CREATE()
-	ON_WM_DESTROY()
-	ON_WM_TIMER()
-	ON_WM_SETFOCUS()
-	ON_WM_KILLFOCUS()
-	ON_WM_MOUSEMOVE()
-	ON_WM_MOUSEWHEEL()
-	ON_WM_LBUTTONDOWN()
-	ON_WM_LBUTTONUP()
-	ON_WM_LBUTTONDBLCLK()
-	ON_WM_RBUTTONDOWN()
-	ON_WM_RBUTTONUP()
-	ON_WM_RBUTTONDBLCLK()
-	ON_WM_MBUTTONDOWN()
-	ON_WM_MBUTTONUP()
-	ON_WM_MBUTTONDBLCLK()
-	ON_WM_KEYDOWN()
-	ON_WM_KEYUP()
-	ON_WM_CHAR()
-	ON_WM_SYSKEYDOWN()
-	ON_WM_SYSKEYUP()
-	ON_WM_SYSCHAR()
-	ON_WM_CONTEXTMENU()
-	ON_WM_PAINT()
-	ON_WM_ERASEBKGND()
-	ON_WM_SIZE()
-	ON_WM_HSCROLL()
-	ON_WM_VSCROLL()
-END_MESSAGE_MAP()
-
-
-CChildFrameWndBase::CChildFrameWndBase() 
-	: nUpdateSceneTimer( 0 ), 
-		nUpdateSceneTimerInterval( 0 ), 
+CChildFrameWndBase::CChildFrameWndBase()
+	: pSurface( 0 ),
+		bUpdateSceneTimer( false ),
+		nUpdateSceneTimerInterval( 0 ),
 		bRunModeEnabled( false ),
 		bGameInputEnabled( false ),
 		bInputEnabled( true ),
@@ -65,7 +33,11 @@ CChildFrameWndBase::CChildFrameWndBase()
 		bEnableSceneUpdate( true ),
 		bEnableScroll( false ),
 		bIsSettingUp( false ),
-		bWasResized( true )
+		bWasResized( true ),
+		rectBorder1( 0, 0, 0, 0 ),
+		rectBorder2( 0, 0, 0, 0 ),
+		rectWindow( 0, 0, 0, 0 ),
+		rectMain( 0, 0, 0, 0 )
 {
 	Singleton<ICommandHandlerContainer>()->Set( CHID_SCENE, this );
 }
@@ -77,74 +49,80 @@ CChildFrameWndBase::~CChildFrameWndBase()
 }
 
 
-BOOL CChildFrameWndBase::PreCreateWindow( CREATESTRUCT &rCreateStruct ) 
+void CChildFrameWndBase::Redraw()
 {
-	if ( !CWnd::PreCreateWindow( rCreateStruct ) )
+	if ( pSurface != 0 )
 	{
-		return FALSE;
+		pSurface->Redraw();
 	}
-
-	rCreateStruct.dwExStyle |= WS_EX_CLIENTEDGE;
-	rCreateStruct.style |= bEnableScroll ? ( WS_VSCROLL | WS_HSCROLL ) : 0;
-	rCreateStruct.style &= ~WS_BORDER;
-	rCreateStruct.lpszClass = AfxRegisterWndClass( CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,
-																								 ::LoadCursor( NULL, IDC_ARROW ),
-																								 HBRUSH( COLOR_WINDOW + 1 ),
-																								 NULL );
-
-	return TRUE;
 }
 
 
-int CChildFrameWndBase::OnCreate( LPCREATESTRUCT pCreateStruct ) 
+bool CChildFrameWndBase::OnCreate( ISceneSurface *_pSurface )
 {
-	if ( CWnd::OnCreate( pCreateStruct ) == -1 )
-	{
-		return -1;
-	}
+	pSurface = _pSurface;
 	//
 	if ( !OnCreateChildFrameWnd() )
 	{
-		return -1;
+		return false;
 	}
 	//
 	NMainLoop::SetInputEnabled( false );
 	//
-	return 0;
+	return true;
 }
 
 
-void CChildFrameWndBase::OnDestroy() 
+void CChildFrameWndBase::OnDestroy()
 {
 	KillUpdateSceneTimer();
 	nUpdateSceneTimerInterval = 0;
 	//
 	OnDestroyChildFrameWnd();
-	//
-	CWnd::OnDestroy();
+	// The window is going; nothing below may reach for it any more.
+	pSurface = 0;
 }
 
 
-void CChildFrameWndBase::OnTimer( UINT_PTR nIDEvent ) 
+void CChildFrameWndBase::OnTimer()
 {
-	if ( nIDEvent == GetUpdateSceneTimerID() )
+	if ( pSurface == 0 )
 	{
-		OnUpdateSceneTimer();
+		return;
 	}
-	CWnd::OnTimer( nIDEvent );
+	if ( pSurface->HasFocus() )
+	{
+		if ( bRunModeEnabled || bGameInputEnabled )
+		{
+			// The application's idle work and the game's step, as the MFC viewport
+			// ran them: these are the application's, not the window's.
+			AfxGetApp()->OnIdle( 0 );
+			NMainLoop::StepApp( ::GetActiveWindow() == AfxGetMainWnd()->GetSafeHwnd() );
+		}
+		else
+		{
+			Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
+			pSurface->RedrawWithoutErase();
+		}
+	}
+	else if ( pSurface->IsShown() && bRenderEnabled && !bRunModeEnabled )
+	{
+		// Resource previews must animate while the browser/property panel has
+		// focus. Advance rendering only; game input still requires viewport focus.
+		Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
+		pSurface->RedrawWithoutErase();
+	}
 }
 
 //DebugTrace( "CChildFrameWndBase::On...(), flags: %u, ( %d, %d )\n", nFlags, point.x, point.y );
 
-void CChildFrameWndBase::OnSetFocus( CWnd* pOldWnd )
+void CChildFrameWndBase::OnSetFocus( IWidget *pOldWidget )
 {
-	CWnd::OnSetFocus( pOldWnd );
 	DebugTrace( "CChildFrameWndBase::OnSetFocus()\n" );
-	RedrawWindow();
+	Redraw();
 	if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 	{
-		CWndWidget oldWidget( pOldWnd );
-		pActiveInputState->OnSetFocus( &oldWidget );
+		pActiveInputState->OnSetFocus( pOldWidget );
 	}
 	NMainLoop::SetInputEnabled( true );
 	//
@@ -152,202 +130,200 @@ void CChildFrameWndBase::OnSetFocus( CWnd* pOldWnd )
 }
 
 
-void CChildFrameWndBase::OnKillFocus( CWnd* pNewWnd )
+void CChildFrameWndBase::OnKillFocus( IWidget *pNewWidget )
 {
-	CWnd::OnKillFocus( pNewWnd );
 	DebugTrace( "CChildFrameWndBase::OnKillFocus()\n" );
-	RedrawWindow();
+	Redraw();
 	if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 	{
-		CWndWidget newWidget( pNewWnd );
-		pActiveInputState->OnKillFocus( &newWidget );
+		pActiveInputState->OnKillFocus( pNewWidget );
 	}
 	bInputEnabled = true;
 	NMainLoop::SetInputEnabled( false );
 }
 
 
-void CChildFrameWndBase::OnMouseMove( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMouseMove( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnMouseMove( nFlags, point );
 	if ( bInputEnabled )
 	{
-		if ( nFlags & ( MK_LBUTTON | MK_RBUTTON | MK_MBUTTON ) )
+		if ( ( nFlags & ( MK_LBUTTON | MK_RBUTTON | MK_MBUTTON ) ) && ( pSurface != 0 ) )
 		{
-			SetFocus();
+			pSurface->Focus();
 		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnMouseMove( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnMouseMove( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_mouse_move", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_mouse_move", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-BOOL CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, CPoint point )
+bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPoint<int> &rScreenPoint, bool bDefaultResult )
 {
-	const BOOL bResult = CWnd::OnMouseWheel( nFlags, zDelta, point );
-	if ( bResult )
+	if ( bDefaultResult )
 	{
 		if ( bInputEnabled )
 		{
-			if ( nFlags & ( MK_LBUTTON | MK_RBUTTON | MK_MBUTTON ) )
+			if ( ( nFlags & ( MK_LBUTTON | MK_RBUTTON | MK_MBUTTON ) ) && ( pSurface != 0 ) )
 			{
-				SetFocus();
+				pSurface->Focus();
 			}
 			if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 			{
-				return pActiveInputState->OnMouseWheel( nFlags, zDelta, CTPoint<int>( point.x, point.y ) );
+				// IInputState takes the point by non-const reference.
+				CTPoint<int> point = rScreenPoint;
+				return pActiveInputState->OnMouseWheel( nFlags, zDelta, point );
 			}
 		}
 	}
-	return bResult;
+	return bDefaultResult;
 }
 
 
-void CChildFrameWndBase::OnLButtonDown( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnLButtonDown( nFlags, point );
 	if ( bInputEnabled )
 	{
-		SetFocus();
+		if ( pSurface != 0 )
+		{
+			pSurface->Focus();
+		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnLButtonDown( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnLButtonDown( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_left_button_down", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_left_button_down", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnLButtonUp( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnLButtonUp( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnLButtonUp( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnLButtonUp( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_left_button_up", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_left_button_up", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnLButtonDblClk( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnLButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnLButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnLButtonDblClk( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnLButtonDblClk( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_left_button_dblclk", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_left_button_dblclk", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnRButtonDown( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnRButtonDown( nFlags, point );
 	if ( bInputEnabled )
 	{
-		SetFocus();
+		if ( pSurface != 0 )
+		{
+			pSurface->Focus();
+		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnRButtonDown( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnRButtonDown( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_right_button_down", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_right_button_down", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnRButtonUp( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnRButtonUp( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnRButtonUp( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnRButtonUp( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_right_button_up", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_right_button_up", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnRButtonDblClk( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnRButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnRButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnRButtonDblClk( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnRButtonDblClk( nFlags, rPoint );
 		}
 	}
 	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
 	{
-		NInput::PostEvent( "win_right_button_dblclk", PackCoords( CVec2( point.x, point.y) ), nFlags );
+		NInput::PostEvent( "win_right_button_dblclk", PackCoords( CVec2( rPoint.x, rPoint.y ) ), nFlags );
 	}
 }
 
 
-void CChildFrameWndBase::OnMButtonDown( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnMButtonDown( nFlags, point );
 	if ( bInputEnabled )
 	{
-		SetFocus();
+		if ( pSurface != 0 )
+		{
+			pSurface->Focus();
+		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnMButtonDown( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnMButtonDown( nFlags, rPoint );
 		}
 	}
 }
 
 
-void CChildFrameWndBase::OnMButtonUp( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnMButtonUp( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnMButtonUp( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnMButtonUp( nFlags, rPoint );
 		}
 	}
 }
 
 
-void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, CPoint point ) 
+void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, const CTPoint<int> &rPoint )
 {
-	CWnd::OnMButtonDblClk( nFlags, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnMButtonDblClk( nFlags, CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnMButtonDblClk( nFlags, rPoint );
 		}
 	}
 }
@@ -355,14 +331,13 @@ void CChildFrameWndBase::OnMButtonDblClk( unsigned nFlags, CPoint point )
 
 void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnKeyDown( nChar, nRepCnt, nFlags );
 	if ( nChar == 'Q' )
 	{
 		if ( ( ( GetAsyncKeyState( VK_SHIFT ) & 0x8000 ) > 0 ) &&
 				 ( ( GetAsyncKeyState( VK_CONTROL ) & 0x8000 ) > 0 )	)
 		{
 			bShowStatistic = !bShowStatistic;
-			RedrawWindow();
+			Redraw();
 		}
 	}
 	else if ( nChar == 'W' )
@@ -372,12 +347,15 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 		{
 			bShowMovieBorders = !bShowMovieBorders;
 			bWasResized = true;
-			RedrawWindow();
+			Redraw();
 		}
 	}
 	if ( bInputEnabled )
 	{
-		SetFocus();
+		if ( pSurface != 0 )
+		{
+			pSurface->Focus();
+		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
 			pActiveInputState->OnKeyDown( nChar, nRepCnt, nFlags );
@@ -395,7 +373,6 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 
 void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnKeyUp( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
@@ -408,7 +385,6 @@ void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 
 void CChildFrameWndBase::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnChar( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
@@ -428,10 +404,12 @@ void CChildFrameWndBase::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFla
 
 void CChildFrameWndBase::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnSysKeyDown( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
 	{
-		SetFocus();
+		if ( pSurface != 0 )
+		{
+			pSurface->Focus();
+		}
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
 			pActiveInputState->OnSysKeyDown( nChar, nRepCnt, nFlags );
@@ -442,7 +420,6 @@ void CChildFrameWndBase::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 
 void CChildFrameWndBase::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnSysKeyUp( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
@@ -455,7 +432,6 @@ void CChildFrameWndBase::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned 
 
 void CChildFrameWndBase::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWnd::OnSysChar( nChar, nRepCnt, nFlags );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
@@ -466,34 +442,26 @@ void CChildFrameWndBase::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned n
 }
 
 
-void CChildFrameWndBase::OnContextMenu( CWnd *pWnd, CPoint point )
+void CChildFrameWndBase::OnContextMenu( const CTPoint<int> &rScreenPoint )
 {
-	CWnd::OnContextMenu( pWnd, point );
 	if ( bInputEnabled )
 	{
 		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 		{
-			pActiveInputState->OnContextMenu( CTPoint<int>( point.x, point.y ) );
+			pActiveInputState->OnContextMenu( rScreenPoint );
 		}
 	}
 }
 
 
-BOOL CChildFrameWndBase::OnEraseBkgnd( CDC* pDC )
+bool CChildFrameWndBase::BeginPaint()
 {
-	return FALSE;
-}
-
-
-void CChildFrameWndBase::OnPaint() 
-{
-	// MoveWindow in AlignWndAspect can synchronously send another WM_PAINT.
-	// Validate that nested paint without resizing or entering the renderer
+	// Place in AlignWndAspect can synchronously send another paint. The surface
+	// validates that nested paint without resizing or entering the renderer
 	// again while the outer paint is still arranging the preview window.
-	if ( bIsSettingUp )
+	if ( bIsSettingUp || ( pSurface == 0 ) )
 	{
-		CPaintDC dc( this );
-		return;
+		return false;
 	}
 	if ( bWasResized )
 	{
@@ -502,17 +470,19 @@ void CChildFrameWndBase::OnPaint()
 	}
 
 	OnPreDrawChildFrameWnd();
-	//
-	CPaintDC dc( this );
-	// The boundary: everything below IInputState draws through this and names no
-	// toolkit. DrawFocus and DrawStatistic stay on the DC because they are this
-	// front-end's own painting, not the editor's.
-	CMfcPaintContext paintContext( &dc );
+	return true;
+}
 
+
+void CChildFrameWndBase::Paint( IPaintContext *pPaintContext )
+{
+	// The boundary: everything below IInputState draws through the context and
+	// names no toolkit. DrawFocus and DrawStatistic are the front-end's own
+	// marks, drawn on the same context after the state's.
 	IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState();
 	if ( pActiveInputState )
 	{
-		pActiveInputState->Draw( &paintContext );
+		pActiveInputState->Draw( pPaintContext );
 	}
 	//
 	if ( bRenderEnabled )
@@ -522,40 +492,42 @@ void CChildFrameWndBase::OnPaint()
 	//
 	if ( pActiveInputState )
 	{
-		pActiveInputState->PostDraw( &paintContext );
+		pActiveInputState->PostDraw( pPaintContext );
 	}
-	if ( GetFocus() == this )
+	if ( pSurface == 0 )
 	{
-		DrawFocus( &dc );
+		return;
+	}
+	if ( pSurface->HasFocus() )
+	{
+		DrawFocus( pPaintContext );
 	}
 	if ( bShowStatistic )
 	{
-		DrawStatistic( &dc );
+		DrawStatistic( pPaintContext );
 	}
-	CRect size;
-	GetClientRect( size );
+	const CTPoint<int> size = pSurface->GetClientSize();
 	//
-	OnResizeChildFrameWnd( size.Width(), size.Height() );
+	OnResizeChildFrameWnd( size.x, size.y );
 }
 
 
-void CChildFrameWndBase::OnSize( unsigned nType, int cx, int cy )
+void CChildFrameWndBase::OnSize( int cx, int cy )
 {
-	if ( bIsSettingUp )
+	if ( bIsSettingUp || ( pSurface == 0 ) )
+	{
 		return;
+	}
 
-	CWnd::OnSize( nType, cx, cy );
-
-	CRect size;
-	GetClientRect( size );
-	rectMain = CRect( 0, 0, cx + 4, cy + 4 );
+	const CTPoint<int> size = pSurface->GetClientSize();
+	rectMain = CTRect<int>( 0, 0, cx + 4, cy + 4 );
 	//
-	OnResizeChildFrameWnd( size.Width(), size.Height() );
+	OnResizeChildFrameWnd( size.x, size.y );
 	if( bEnableScroll )
 	{
 		const int nGap = 16;
-		SetScrollRange( SB_HORZ, -nGap, 1024 - cx + 1 + nGap, TRUE );
-		SetScrollRange( SB_VERT, -nGap, 768 - cy + 1 + nGap, TRUE );
+		pSurface->SetScrollBarRange( false, -nGap, 1024 - cx + 1 + nGap );
+		pSurface->SetScrollBarRange( true, -nGap, 768 - cy + 1 + nGap );
 
 		rectMain.bottom += nGap;
 		rectMain.right += nGap;
@@ -579,30 +551,30 @@ void CChildFrameWndBase::AlignWndAspect()
 		{
 			const int nMainWidth = rectMain.Height() / fDefaultAspect;
 			const int nBorderWidth = ( rectMain.Width() - nMainWidth ) / 2;
-			rectBorder1 = CRect( rectMain.left, rectMain.top, rectMain.left + nBorderWidth, rectMain.bottom );
-			rectBorder2 = CRect( rectMain.right - nBorderWidth, rectMain.top, rectMain.right, rectMain.bottom );
-			rectWindow = CRect( rectBorder1.right, rectBorder1.top, rectBorder2.left, rectBorder2.bottom );
+			rectBorder1 = CTRect<int>( rectMain.left, rectMain.top, rectMain.left + nBorderWidth, rectMain.bottom );
+			rectBorder2 = CTRect<int>( rectMain.right - nBorderWidth, rectMain.top, rectMain.right, rectMain.bottom );
+			rectWindow = CTRect<int>( rectBorder1.right, rectBorder1.top, rectBorder2.left, rectBorder2.bottom );
 		}
 		else	// vertical layout
 		{
 			const int nMainHeight = rectMain.Width() * fDefaultAspect;
 			const int nBorderHeight = ( rectMain.Height() - nMainHeight ) / 2;
-			rectBorder1 = CRect( rectMain.left, rectMain.top, rectMain.right, rectMain.top + nBorderHeight );
-			rectBorder2 = CRect( rectMain.left, rectMain.bottom - nBorderHeight, rectMain.right, rectMain.bottom );
-			rectWindow = CRect( rectBorder1.left, rectBorder1.bottom, rectBorder2.right, rectBorder2.top );
+			rectBorder1 = CTRect<int>( rectMain.left, rectMain.top, rectMain.right, rectMain.top + nBorderHeight );
+			rectBorder2 = CTRect<int>( rectMain.left, rectMain.bottom - nBorderHeight, rectMain.right, rectMain.bottom );
+			rectWindow = CTRect<int>( rectBorder1.left, rectBorder1.bottom, rectBorder2.right, rectBorder2.top );
 		}
 
 		if ( bShowMovieBorders )
 		{
-			MoveWindow( rectMain );
+			pSurface->Place( rectMain );
 
-			CPaintDC dc( this );
-			dc.FillSolidRect( rectMain, RGB(127, 127, 127) );
-			MoveWindow( rectWindow );
+			// 0x00BBGGRR: RGB( 127, 127, 127 ).
+			pSurface->Fill( rectMain, 0x007F7F7F );
+			pSurface->Place( rectWindow );
 		}
 		else
 		{
-			MoveWindow( rectMain );
+			pSurface->Place( rectMain );
 		}
 	}
 
@@ -613,10 +585,10 @@ void CChildFrameWndBase::AlignWndAspect()
 void CChildFrameWndBase::SetUpdateSceneTimer()
 {
 	KillUpdateSceneTimer();
-	if ( nUpdateSceneTimerInterval != 0 )
+	if ( ( nUpdateSceneTimerInterval != 0 ) && ( pSurface != 0 ) )
 	{
-		nUpdateSceneTimer = SetTimer( GetUpdateSceneTimerID(), nUpdateSceneTimerInterval, 0 );
-		if ( nUpdateSceneTimer == 0 )
+		bUpdateSceneTimer = pSurface->StartUpdateTimer( nUpdateSceneTimerInterval );
+		if ( !bUpdateSceneTimer )
 		{
 			NI_ASSERT( 0, "CChildFrameWndBase::SetUpdateSceneTimer() Can't create timer" );
 		}
@@ -626,44 +598,23 @@ void CChildFrameWndBase::SetUpdateSceneTimer()
 
 void CChildFrameWndBase::KillUpdateSceneTimer()
 {
-	if ( nUpdateSceneTimer != 0 )
+	if ( bUpdateSceneTimer && ( pSurface != 0 ) )
 	{
-		KillTimer( nUpdateSceneTimer );
+		pSurface->StopUpdateTimer();
 	}
-	nUpdateSceneTimer = 0;
-}
-
-
-void CChildFrameWndBase::OnUpdateSceneTimer()
-{
-	if ( GetFocus() == this )
-	{
-		if ( bRunModeEnabled || bGameInputEnabled )
-		{
-			AfxGetApp()->OnIdle( 0 );
-			NMainLoop::StepApp( ::GetActiveWindow() == AfxGetMainWnd()->GetSafeHwnd() );
-		}
-		else
-		{
-			Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
-			RedrawWindow( 0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_NOERASE );
-		}
-	}
-	else if ( IsWindowVisible() && bRenderEnabled && !bRunModeEnabled )
-	{
-		// Resource previews must animate while the browser/property panel has
-		// focus. Advance rendering only; game input still requires viewport focus.
-		Singleton<IGameTimer>()->Update( GetCurrentTimeMilliseconds() );
-		RedrawWindow( 0, 0, RDW_INVALIDATE | RDW_UPDATENOW | RDW_NOERASE );
-	}
+	bUpdateSceneTimer = false;
 }
 
 
 void CChildFrameWndBase::RemoveInput()
 {
+	if ( pSurface == 0 )
+	{
+		return;
+	}
 	MSG msg;
-	PeekMessage( &msg, GetSafeHwnd(), WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE );
-	PeekMessage( &msg, GetSafeHwnd(), WM_KEYFIRST, WM_KEYLAST, PM_REMOVE );
+	PeekMessage( &msg, pSurface->GetHandle(), WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE );
+	PeekMessage( &msg, pSurface->GetHandle(), WM_KEYFIRST, WM_KEYLAST, PM_REMOVE );
 }
 
 
@@ -693,7 +644,7 @@ void CChildFrameWndBase::EnableRunMode( uintptr_t dwData )
 	bRunModeEnabled = ( dwData != 0 );
 	if ( bRunModeEnabled )
 	{
-		NInput::InitInput( m_hWnd, true );
+		NInput::InitInput( ( pSurface != 0 ) ? pSurface->GetHandle() : 0, true );
 		NInput::SetSection( "editor_mapeditor" );
 	}
 	else
@@ -707,7 +658,7 @@ void CChildFrameWndBase::EnableRunMode( uintptr_t dwData )
 
 void CChildFrameWndBase::EnableGameInput( IInterfaceCommand *pInterfaceCommand )
 {
-	NInput::InitInput( m_hWnd, true );
+	NInput::InitInput( ( pSurface != 0 ) ? pSurface->GetHandle() : 0, true );
 	NInput::SetSection( "editor_mapeditor" );
 	if ( pInterfaceCommand != 0 )
 	{
@@ -741,54 +692,31 @@ void CChildFrameWndBase::EnableScrollbars( uintptr_t dwData )
 	if ( bEnableScroll != ( dwData > 0 ) )
 	{
 		bEnableScroll = ( dwData > 0 );
-		if ( bEnableScroll ) 
+		if ( pSurface != 0 )
 		{
-			ModifyStyle( 0, WS_VSCROLL | WS_HSCROLL, 1 );
-			ShowScrollBar( SB_BOTH, true );
+			pSurface->ShowScrollBars( bEnableScroll );
 		}
-		else
-		{
-			ModifyStyle( WS_VSCROLL | WS_HSCROLL, 0, 1 );
-			ShowScrollBar( SB_BOTH, false );
-		}
-		// необходимо для того чобы показать изменения сразу
-		WINDOWPLACEMENT windowPlacement;
-		windowPlacement.length = sizeof( WINDOWPLACEMENT );
-		//
-		GetWindowPlacement( &windowPlacement );
-		windowPlacement.showCmd = SW_SHOWMINIMIZED;
-		SetWindowPlacement( &windowPlacement );
-		RedrawWindow();
-		//
-		windowPlacement.showCmd = SW_SHOWMAXIMIZED;
-		SetWindowPlacement( &windowPlacement );
-		RedrawWindow();
 	}
 }
 
 
 void CChildFrameWndBase::EnableMouseCapture( uintptr_t dwData )
 {
-	if ( dwData > 0 )
+	if ( pSurface != 0 )
 	{
-		SetCapture();
-	}
-	else
-	{
-		ReleaseCapture();
+		pSurface->SetMouseCapture( dwData > 0 );
 	}
 }
 
 
 void CChildFrameWndBase::GetDimensions( uintptr_t dwData )
 {
-	if ( dwData != 0 )
+	if ( ( dwData != 0 ) && ( pSurface != 0 ) )
 	{
 		CTPoint<int> *pDimensions = reinterpret_cast<CTPoint<int>*>( dwData );
-		CRect clientRect;
-		GetClientRect( &clientRect );
-		pDimensions->x = clientRect.Width();
-		pDimensions->y = clientRect.Height();
+		const CTPoint<int> size = pSurface->GetClientSize();
+		pDimensions->x = size.x;
+		pDimensions->y = size.y;
 	}
 }
 
@@ -798,7 +726,7 @@ bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 	case ID_SCENE_UPDATE:
-		RedrawWindow();
+		Redraw();
 		return true;
 	case ID_SCENE_REMOVE_INPUT:
 		RemoveInput();
@@ -831,16 +759,16 @@ bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		EnableMouseCapture( dwData );
 		return true;
 	case ID_SCENE_SET_FOCUS:
-		if ( GetFocus() != this )
+		if ( ( pSurface != 0 ) && !pSurface->HasFocus() )
 		{
-			SetFocus();
+			pSurface->Focus();
 		}
 		return true;
 	case ID_SCENE_GET_FOCUS:
-		return ( GetFocus() == this );
+		return ( pSurface != 0 ) && pSurface->HasFocus();
 	case ID_SCENE_SHOW_STATISTIC:
 		bShowStatistic = !bShowStatistic;
-		RedrawWindow();
+		Redraw();
 		if ( dwData != 0 )
 		{
 			( *( reinterpret_cast<bool*>( dwData ) ) ) = bShowStatistic;
@@ -848,7 +776,7 @@ bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		return true;
 	case ID_SCENE_SHOW_MOVIE_BORDERS:
 		bShowMovieBorders = !bShowMovieBorders;
-		RedrawWindow();
+		Redraw();
 		if ( dwData != 0 )
 		{
 			( *( reinterpret_cast<bool*>( dwData ) ) ) = bShowMovieBorders;
@@ -858,7 +786,7 @@ bool CChildFrameWndBase::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			bShowMovieBorders = (bool)(dwData);
 			bWasResized = true;
-			RedrawWindow();
+			Redraw();
 			return true;
 		}
 	case ID_SELECTION_NEW:
@@ -950,35 +878,34 @@ bool CChildFrameWndBase::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 }
 
 
-void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar )
+void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos )
 {
-	if ( bEnableScroll )
+	if ( bEnableScroll && ( pSurface != 0 ) )
 	{
-		CWnd::OnHScroll( nSBCode, nPos, pScrollBar );
+		int nMin = 0;
+		int nMax = 0;
+		int nCurrentPos = 0;
+		pSurface->GetScrollBarState( false, &nMin, &nMax, &nCurrentPos );
 
-		SCROLLINFO si;
-		si.cbSize = sizeof(si);
-		GetScrollInfo( SB_HORZ, &si );
-
-		int nStep = (si.nMax-si.nMin)/20;
+		int nStep = (nMax-nMin)/20;
 		if ( nStep == 0 )
 			nStep = 1;
 
 		switch( nSBCode )
 		{
 		case SB_RIGHT:
-			nPos = si.nMax;
+			nPos = nMax;
 			break;
 		case SB_LEFT:
-			nPos = si.nMin;
+			nPos = nMin;
 			break;
 		case SB_PAGERIGHT:
 		case SB_LINERIGHT:
-			nPos = si.nPos + nStep;
+			nPos = nCurrentPos + nStep;
 			break;
 		case SB_PAGELEFT:
 		case SB_LINELEFT:
-			nPos = si.nPos - nStep;
+			nPos = nCurrentPos - nStep;
 			break;
 		case SB_THUMBPOSITION:
 		case SB_THUMBTRACK:
@@ -986,57 +913,56 @@ void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos, CScrollBar*
 		default:
 			return;
 		}
-		if ( (int)nPos < (int)si.nMin )
-			nPos = si.nMin;
+		if ( (int)nPos < nMin )
+			nPos = nMin;
 		else
-			if ( (int)nPos > (int)si.nMax )
-				nPos = si.nMax;
+			if ( (int)nPos > nMax )
+				nPos = nMax;
 
-		if ( nPos != si.nPos )
+		if ( nPos != nCurrentPos )
 		{
-			SetScrollPos( SB_HORZ, nPos, TRUE );
+			pSurface->SetScrollBarPos( false, nPos );
 
 			int x, y;
 			Singleton<IUIInitialization>()->GetVirtualScreenController()->GetOrigin( &x, &y );
 			if ( x != nPos )
 			{
 				Singleton<IUIInitialization>()->GetVirtualScreenController()->SetOrigin( nPos, y );
-				RedrawWindow();
+				Redraw();
 			}
 		}
 	}
 }
 
 
-void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar* pScrollBar )
+void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos )
 {
-	if ( bEnableScroll )
+	if ( bEnableScroll && ( pSurface != 0 ) )
 	{
-		CWnd::OnVScroll( nSBCode, nPos, pScrollBar );
+		int nMin = 0;
+		int nMax = 0;
+		int nCurrentPos = 0;
+		pSurface->GetScrollBarState( true, &nMin, &nMax, &nCurrentPos );
 
-		SCROLLINFO si;
-		si.cbSize = sizeof(si);
-		GetScrollInfo( SB_VERT, &si );
-
-		int nStep = (si.nMax-si.nMin)/20;
+		int nStep = (nMax-nMin)/20;
 		if ( nStep == 0 )
 			nStep = 1;
 
 		switch( nSBCode )
 		{
 		case SB_BOTTOM:
-			nPos = si.nMax;
+			nPos = nMax;
 			break;
 		case SB_TOP:
-			nPos = si.nMin;
+			nPos = nMin;
 			break;
 		case SB_PAGEDOWN:
 		case SB_LINEDOWN:
-			nPos = si.nPos + nStep;
+			nPos = nCurrentPos + nStep;
 			break;
 		case SB_PAGEUP:
 		case SB_LINEUP:
-			nPos = si.nPos - nStep;
+			nPos = nCurrentPos - nStep;
 			break;
 		case SB_THUMBPOSITION:
 		case SB_THUMBTRACK:
@@ -1044,27 +970,27 @@ void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos, CScrollBar*
 		default:
 			return;
 		}
-		if ( (int)nPos < (int)si.nMin )
-			nPos = si.nMin;
+		if ( (int)nPos < nMin )
+			nPos = nMin;
 		else
-			if ( (int)nPos > (int)si.nMax )
-				nPos = si.nMax;
+			if ( (int)nPos > nMax )
+				nPos = nMax;
 
-		if ( nPos != si.nPos )
+		if ( nPos != nCurrentPos )
 		{
-			SetScrollPos( SB_VERT, nPos, TRUE );
+			pSurface->SetScrollBarPos( true, nPos );
 
 			int x, y;
 			Singleton<IUIInitialization>()->GetVirtualScreenController()->GetOrigin( &x, &y );
 			if ( y != nPos )
 			{
 				Singleton<IUIInitialization>()->GetVirtualScreenController()->SetOrigin( x, nPos );
-				RedrawWindow();
+				Redraw();
 			}
 		}
 	}
 }
 
-// basement storage  
+// basement storage
 
 

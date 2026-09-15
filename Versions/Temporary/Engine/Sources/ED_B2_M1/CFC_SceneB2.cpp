@@ -24,7 +24,7 @@
 #include "SceneB2/CameraScriptMutators.h"
 
 #include "DrawToolsDC.h"
-#include "MapEditorLib/MfcPaintContext.h"
+#include "ED_Common/SceneSurface.h"
 #include "System/GResource.h"
 
 #include <cstdint>
@@ -62,15 +62,20 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 {
 	NGScene::SFLB3_RunResourceLoadingThread();
 
-	if ( !NGfx::Init3D( m_hWnd ) )
+	// The viewport's window, whichever toolkit made it: the renderer draws in it
+	// and DirectSound cooperates with it.
+	const HWND hWindow = Surface()->GetHandle();
+	if ( !NGfx::Init3D( hWindow ) )
 	{
 		// DX not found
 		NLog::GetLogger()->Log( LT_ERROR, fmt::format( "CCFCSceneB2::OnCreateChildFrameWnd(): Failed to initialize Direct3D9" ) );
 		return false;
 	}
-	// init input system
-	NInput::InitInput( AfxGetMainWnd()->GetSafeHwnd() );
-	Singleton<ISFX>()->Init( m_hWnd, 0, SFX_OUTPUT_DSOUND, 44100, 32 );
+	// init input system. InitInput works with the top-level window of the one
+	// it is given, which for the viewport is the main window this passed
+	// before, AfxGetMainWnd().
+	NInput::InitInput( hWindow );
+	Singleton<ISFX>()->Init( hWindow, 0, SFX_OUTPUT_DSOUND, 44100, 32 );
 	//
 	NProfile::LoadProfile();
 	NGlobal::LoadConfig( NMainLoop::GetBaseDir() + "profiles\\autoexec.cfg" );
@@ -138,7 +143,7 @@ void CCFCSceneB2::ResetCamera( bool bAll )
 		pCamera->SetPlacement( fDefaultDistance, fDefaultPitch, fDefaultYaw );
 		pCamera->SetFOV( fDefaultFOV );
 	}
-	RedrawWindow();
+	Redraw();
 }
 
 
@@ -149,7 +154,7 @@ void CCFCSceneB2::UpdateCameraPosition( uintptr_t dwData )
 		const CVec2 vCameraPosition2 = UnPackCoords( dwData );
 		ICamera *pCamera = Camera();
 		pCamera->SetAnchor( CVec3( vCameraPosition2.x, vCameraPosition2.y, 0 ) );
-		RedrawWindow();
+		Redraw();
 	}
 	else
 	{
@@ -264,7 +269,7 @@ void CCFCSceneB2::UpdateCamera( uintptr_t dwData )
 		pCamera->SetAnchor( vCameraPosition );
 		pCamera->SetPlacement( fDistance, fPitch, fYaw );
 	}
-	RedrawWindow();
+	Redraw();
 }
 
 
@@ -325,20 +330,17 @@ bool CCFCSceneB2::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 }
 
 
-void CCFCSceneB2::DrawFocus( CPaintDC *pDC )
+void CCFCSceneB2::DrawFocus( IPaintContext *pPaintContext )
 {
-	CRect clientRect;
-	GetClientRect( &clientRect );
-	clientRect.right -= 1;
-	clientRect.bottom -= 1;
-	//
-	CBrush solidBrush;
-	solidBrush.CreateSolidBrush( RGB( 255, 30, 30 ) ); 
-	pDC->FrameRect( &clientRect, &solidBrush );
+	// The client rectangle less its last row and column, framed in red.
+	const CTPoint<int> size = Surface()->GetClientSize();
+	const CTRect<int> clientRect( 0, 0, size.x - 1, size.y - 1 );
+	// 0x00BBGGRR: RGB( 255, 30, 30 ).
+	pPaintContext->FrameRect( clientRect, 0x001E1EFF );
 }
 
 
-void CCFCSceneB2::DrawStatistic( CPaintDC *pDC )
+void CCFCSceneB2::DrawStatistic( IPaintContext *pPaintContext )
 {
 	CVec2 vScreenPos( 5, 5 );
 	const int nSpacing = 15;
@@ -359,33 +361,26 @@ void CCFCSceneB2::DrawStatistic( CPaintDC *pDC )
 		CVec3 vCameraAnchor = pCamera->GetAnchor();
 		Vis2AI( &vCameraAnchor );
 
-		// One context for the whole block: each DrawTextDC saves and restores
-		// around itself, so sharing it changes nothing except the churn.
-		CMfcPaintContext paintContext( pDC );
-		NDrawToolsDC::DrawTextDC( &paintContext, "Camera params:", vScreenPos );
+		// Each DrawTextDC saves and restores around itself, so the context the
+		// viewport's paint made serves for the whole block.
+		NDrawToolsDC::DrawTextDC( pPaintContext, "Camera params:", vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Position: ({:.0f}, {:.0f}, {:.0f})", vCameraAnchor.x, vCameraAnchor.y, vCameraAnchor.z ), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Distance: {:.0f}", fCamDist), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Yaw: {:.0f}", fCamYaw), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("Pitch: {:.0f}", fCamPitch), vScreenPos );
 		vScreenPos += V2_AXIS_Y * nSpacing;
-		NDrawToolsDC::DrawTextDC( &paintContext, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
+		NDrawToolsDC::DrawTextDC( pPaintContext, fmt::format("FOV: {:.0f}", fFOV), vScreenPos );
 	}
 }
 
 
-void CCFCSceneB2::DrawFrameBorders( CPaintDC *pDC )
+void CCFCSceneB2::DrawFrameBorders( IPaintContext *pPaintContext )
 {
-	CMfcPaintContext paintContext( pDC );
-	// CRect and CTRect<int> agree on member order, but the conversion is written
-	// out rather than cast so that the neutral side never sees a Windows RECT.
-	const CTRect<int> border1( rectBorder1.left, rectBorder1.top, rectBorder1.right, rectBorder1.bottom );
-	const CTRect<int> border2( rectBorder2.left, rectBorder2.top, rectBorder2.right, rectBorder2.bottom );
-	const CTRect<int> window( rectWindow.left, rectWindow.top, rectWindow.right, rectWindow.bottom );
-	NDrawToolsDC::DrawFrameBorders( &paintContext, border1, border2, window );
+	NDrawToolsDC::DrawFrameBorders( pPaintContext, rectBorder1, rectBorder2, rectWindow );
 }
 
 

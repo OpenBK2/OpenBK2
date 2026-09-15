@@ -28,9 +28,9 @@ public:
 	void OnPreDrawChildFrameWnd();
 	void OnDrawChildFrameWnd();
 	void OnResizeChildFrameWnd( int cx, int cy );
-	void DrawFocus( CPaintDC *pDC );
-	void DrawStatistic( CPaintDC *pDC );
-	void DrawFrameBorders( CPaintDC *pDC );
+	void DrawFocus( IPaintContext *pPaintContext );
+	void DrawStatistic( IPaintContext *pPaintContext );
+	void DrawFrameBorders( IPaintContext *pPaintContext );
 };
 
 

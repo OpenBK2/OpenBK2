@@ -7,8 +7,10 @@
 #include "System/GResource.h"
 
 #include "ChildFrameBase.h"
+#include "ChildFrameWndBase.h"
+#include "SceneSurface.h"
 
-CChildFrameBase::CChildFrameBase() : pwndChildFrame( 0 ), pChildWnd( 0 )
+CChildFrameBase::CChildFrameBase() : pSurface( 0 ), pwndChildFrame( 0 ), pChildWnd( 0 )
 {
 }
 
@@ -16,6 +18,15 @@ CChildFrameBase::CChildFrameBase() : pwndChildFrame( 0 ), pChildWnd( 0 )
 CChildFrameBase::~CChildFrameBase()
 {
 	Destroy();
+}
+
+
+void CChildFrameBase::DeleteSurface()
+{
+	// Only once its window is gone, which destroying the document window does
+	// at once: the window's destruction is what tells the viewport to let go.
+	delete pSurface;
+	pSurface = 0;
 }
 
 
@@ -29,22 +40,19 @@ bool CChildFrameBase::Create()
 		pwndChildFrame->Destroy();
 		pwndChildFrame = 0;
 	}
+	DeleteSurface();
 	//
 	if ( IMainFrame *pMainFrame = Singleton<IMainFrameContainer>()->Get() )
 	{
 		if ( pwndChildFrame = pMainFrame->CreateChildFrame( IDR_CHILD_FRAME_0 ) )
 		{
 			pwndChildFrame->Show( false );
-			if ( pChildWnd->Create( 0,
-				0,
-				AFX_WS_DEFAULT_VIEW,
-				CRect( 0, 0, 0, 0 ),
-				ToCWnd( pwndChildFrame ),
-				AFX_IDW_PANE_FIRST,
-				0 ) )
+			// Which toolkit draws the viewport's window is NSceneSurface's
+			// business; the viewport itself is the same either way.
+			pSurface = NSceneSurface::Create();
+			if ( pSurface->Create( pwndChildFrame, pChildWnd ) )
 			{
-				CWndWidget contentsWidget( pChildWnd );
-				pMainFrame->SetChildFrameWindowContents( pwndChildFrame, &contentsWidget );
+				pMainFrame->SetChildFrameWindowContents( pwndChildFrame, pSurface->GetWidget() );
 				// Maximize drops WS_SYSMENU as well, which is what these two lines did.
 				pwndChildFrame->Maximize();
 				pwndChildFrame->Show( true );
@@ -67,6 +75,7 @@ void CChildFrameBase::Destroy()
 		pwndChildFrame->Destroy();
 		pwndChildFrame = 0;
 	}
+	DeleteSurface();
 }
 
 

@@ -5,11 +5,21 @@
 
 #include "ED_Common_export.h"
 
+class CChildFrameWndBase;
+struct ISceneSurface;
+
 class ED_COMMON_EXPORT CChildFrameBase : public IChildFrame
 {
+	// The viewport's window, made with the document window and deleted after
+	// it: see SceneSurface.h.
+	ISceneSurface *pSurface;
+
+	void DeleteSurface();
+
 protected:
 	IFrameWindow *pwndChildFrame;
-	CWnd *pChildWnd;
+	// The viewport, made and deleted by the derived child frame.
+	CChildFrameWndBase *pChildWnd;
 
 public:
 	CChildFrameBase();
