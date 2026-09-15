@@ -86,8 +86,10 @@ public:
 	}
 
 	// Creates the host as a child of pParent and hands wx the inside of it.
-	// False if either half failed, with nothing left half-built.
-	bool CreateHost( CWnd *pParent )
+	// False if either half failed, with nothing left half-built. nControlID is
+	// the host's own, for a parent that finds its child by id -- the MDI child
+	// lays out the one that is AFX_IDW_PANE_FIRST.
+	bool CreateHost( CWnd *pParent, UINT nControlID = 0 )
 	{
 		if ( wxWindow *const pPage = PageOverride() )
 		{
@@ -102,7 +104,7 @@ public:
 		// visible inside it will be wx's. WS_CLIPCHILDREN so the host does not
 		// paint over what wx puts in it.
 		if ( !CreateEx( 0, AfxRegisterWndClass( 0 ), 0,
-										WS_CHILD | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), pParent, 0 ) )
+										WS_CHILD | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), pParent, nControlID ) )
 		{
 			return false;
 		}

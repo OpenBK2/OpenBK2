@@ -15,6 +15,7 @@ set(SOURCES
     ParticleExporter.cpp
     RunModeInterfaceBase.cpp
     SceneSurfaceMfc.cpp
+    SceneSurfaceWx.cpp
     stdafx.cpp
     StoreObjectExporter.cpp
     TempAttributesTool.cpp
@@ -40,6 +41,14 @@ add_export_header(ED_Common)
 target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc mfc System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
+endif()
+# The viewport's wx window. SceneSurfaceWx.cpp compiles to nothing without
+# OBK2_WITH_WX, so it is listed unconditionally. See cmake/wxwidgets.cmake for
+# why there are no UNICODE defines.
+if(BUILD_WX_EDITOR)
+    target_compile_definitions(ED_Common PRIVATE OBK2_WITH_WX)
+    target_link_libraries(ED_Common PRIVATE wx::wx)
+    add_dependencies(ED_Common wxwidgets_external)
 endif()
 # No resource script: its one dialog belonged to CProgressBarWindow, which
 # nothing ever created, and went with it. Version info comes from
