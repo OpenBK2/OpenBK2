@@ -156,6 +156,20 @@ SEC_TREECLASS::SEC_TREECLASS() : m_dwTreeCtrlStyleEx(0), m_bStoreSubItemText(FAL
     m_columns.push_back(first);
 }
 
+BOOL SEC_TREECLASS::PreTranslateMessage(MSG* pMsg) {
+    if (pMsg->message == WM_KEYDOWN &&
+        (pMsg->wParam == VK_RETURN || pMsg->wParam == VK_ESCAPE)) {
+        const HWND hEdit = TreeView_GetEditControl(GetSafeHwnd());
+        if (hEdit != nullptr && pMsg->hwnd == hEdit) {
+            // Finish the native label edit before a containing dialog consumes
+            // Enter for its default button or Escape for its Cancel button.
+            ::SendMessage(hEdit, pMsg->message, pMsg->wParam, pMsg->lParam);
+            return TRUE;
+        }
+    }
+    return CWnd::PreTranslateMessage(pMsg);
+}
+
 int SEC_TREECLASS::GetActiveColumn() {
     spdlog::debug("{} this={}", BOOST_CURRENT_FUNCTION, spdlog::fmt_lib::ptr(this));
     // The toolkit tracked which column the user was working in, for in-place

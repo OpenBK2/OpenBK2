@@ -42,6 +42,7 @@ class CFolderManipulatorIteratorWrapper : public IManipulatorIterator
 	{
 		CDBID dbid;
 		bool bObject;
+		std::string szFolderName; // Physical empty folders have no DB resource ID.
 		//
 		bool IsObject() const { return bObject; }
 	};
@@ -54,7 +55,7 @@ class CFolderManipulatorIteratorWrapper : public IManipulatorIterator
 protected:
 	CFolderManipulatorIteratorWrapper() {}
 public:
-	CFolderManipulatorIteratorWrapper( const std::string &szSrcPath, const std::string &szTypeName );
+	CFolderManipulatorIteratorWrapper( const std::string &szSrcPath, const std::string &szDstPath, const std::string &szTypeName );
 	
 	bool Next();
 	bool IsEnd() const;

@@ -172,6 +172,7 @@ public:
     // https://help.perforce.com/stingray/2023.2/Stingray_Studio_API_Documentation/Content/Toolkit/sec_treeclass__sec_treeclass.htm
     // Construction
     SEC_TREECLASS();
+    BOOL PreTranslateMessage(MSG* pMsg) override;
 
     // Operations
     // retrieve the active Column
