@@ -425,7 +425,7 @@ namespace
 		};
 
 		CMfcWindow mfcWindow;
-		wxAuiManager auiManager;
+		NMainFrameWxPanes::CAuiManager auiManager;
 		// Every menu bar the application added, by resource id. The frame owns
 		// the attached one while it is attached; this map owns them all.
 		std::map<unsigned, wxMenuBar*> menuBars;
@@ -473,6 +473,8 @@ namespace
 			Bind( wxEVT_MENU_OPEN, &CWxMainFrame::OnMenuOpen, this );
 			Bind( wxEVT_DROP_FILES, &CWxMainFrame::OnDropFiles, this );
 			Bind( wxEVT_UPDATE_UI, &CWxMainFrame::OnUpdateUI, this );
+			Bind( wxEVT_RIGHT_DOWN, &CWxMainFrame::OnRightDown, this );
+			Bind( wxEVT_RIGHT_UP, &CWxMainFrame::OnRightUp, this );
 			Bind( wxEVT_AUITOOLBAR_TOOL_DROPDOWN, &CWxMainFrame::OnToolDropDown, this );
 		}
 
@@ -1532,6 +1534,65 @@ namespace
 			if ( ( nCommandID >= ID_FIRST_COMMAND_ID ) && ( nCommandID <= ID_LAST_COMMAND_ID ) )
 			{
 				NMainFrameShared::UpdateUserCommand( nCommandID, pbEnable, pbCheck );
+			}
+		}
+
+		// The Game Database pane whose caption or border is at rPoint.
+		NMainFrameWxPanes::CGDBBrowserPane* GDBBrowserPaneFramedAt( const wxPoint &rPoint )
+		{
+			const wxWindow *const pWindow = auiManager.PaneFrameAt( rPoint );
+			if ( pWindow == nullptr )
+			{
+				return nullptr;
+			}
+			for ( const std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				if ( rpPane->GetPanel() == pWindow )
+				{
+					return rpPane.get();
+				}
+			}
+			return nullptr;
+		}
+
+		// CDWGDBBrowser::OnRButtonDown: a right click on a Game Database pane's
+		// own caption or border makes that browser the focused one.
+		void OnRightDown( wxMouseEvent &rEvent )
+		{
+			rEvent.Skip();
+			if ( NMainFrameWxPanes::CGDBBrowserPane *const pPane = GDBBrowserPaneFramedAt( rEvent.GetPosition() ) )
+			{
+				SaveObjectStorage( pPane->GetContents().GetID() );
+			}
+		}
+
+		// CDWGDBBrowser::OnRButtonUp: IDM_MAIN_CONTEXT_MENU's DW_GDB_BROWSER menu
+		// -- Select Tables, Refresh Tables, Save All Tables, Register XDB -- where
+		// the click was. Its items take their state as it opens, as the menu
+		// bar's do, and choosing one goes to OnMenu.
+		void OnRightUp( wxMouseEvent &rEvent )
+		{
+			rEvent.Skip();
+			if ( GDBBrowserPaneFramedAt( rEvent.GetPosition() ) == nullptr )
+			{
+				return;
+			}
+			const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( IDM_MAIN_CONTEXT_MENU ), RT_MENU );
+			const HMENU hMenu = ::LoadMenuW( hInstance, MAKEINTRESOURCEW( IDM_MAIN_CONTEXT_MENU ) );
+			if ( hMenu == 0 )
+			{
+				return;
+			}
+			std::unique_ptr<wxMenu> pMenu;
+			if ( const HMENU hSubMenu = ::GetSubMenu( hMenu, MCMN_DW_GDB_BROWSER ) )
+			{
+				pMenu.reset( MenuFromNative( hSubMenu ) );
+			}
+			::DestroyMenu( hMenu );
+			if ( pMenu )
+			{
+				PopupMenu( pMenu.get(), rEvent.GetPosition() );
+				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 			}
 		}
 

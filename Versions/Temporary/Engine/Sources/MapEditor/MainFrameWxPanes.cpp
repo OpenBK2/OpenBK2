@@ -37,6 +37,25 @@ namespace NMainFrameWxPanes
 	}
 
 
+	wxWindow* CAuiManager::PaneFrameAt( const wxPoint &rPoint )
+	{
+		const wxAuiDockUIPart *const pPart = HitTest( rPoint.x, rPoint.y );
+		if ( ( pPart == nullptr ) || ( pPart->pane == nullptr ) )
+		{
+			return nullptr;
+		}
+		switch ( pPart->type )
+		{
+			case wxAuiDockUIPart::typeCaption:
+			case wxAuiDockUIPart::typeGripper:
+			case wxAuiDockUIPart::typePaneBorder:
+				return pPart->pane->window;
+			default:
+				return nullptr;
+		}
+	}
+
+
 	wxAuiPaneInfo DockedPaneInfo( const wxString &rName, const std::string &rszTitle, unsigned nPlace, float fRate, int nWidth )
 	{
 		wxAuiPaneInfo info;

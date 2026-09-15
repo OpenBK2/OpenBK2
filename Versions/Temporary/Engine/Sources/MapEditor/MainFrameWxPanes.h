@@ -36,6 +36,20 @@
 
 namespace NMainFrameWxPanes
 {
+	// The frame's wxAUI manager, with one thing wxAuiManager keeps to itself:
+	// which pane's own frame is where. A Stingray control bar answered right
+	// clicks on its caption and border; wxAUI draws those on the managed window
+	// and does nothing with a right click there.
+	class CAuiManager : public wxAuiManager
+	{
+	public:
+		// The window of the pane whose caption, gripper or border is at rPoint,
+		// in the managed window's client coordinates. Null anywhere else,
+		// the pane's buttons and its own window included.
+		wxWindow* PaneFrameAt( const wxPoint &rPoint );
+	};
+
+
 	// MFC's docking arguments as a wxAUI pane: AFX_IDW_DOCKBAR_* as the side, the
 	// width across the side, and fRate as the share of the side the pane takes
 	// among the others docked there.
