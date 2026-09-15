@@ -42,11 +42,22 @@ namespace NMainFrameWxPanes
 	// and does nothing with a right click there.
 	class CAuiManager : public wxAuiManager
 	{
+		bool bUpdatePending = false;
+
 	public:
 		// The window of the pane whose caption, gripper or border is at rPoint,
 		// in the managed window's client coordinates. Null anywhere else,
 		// the pane's buttons and its own window included.
 		wxWindow* PaneFrameAt( const wxPoint &rPoint );
+
+		// Update once what is being done now has returned, however many times it
+		// is asked for meanwhile: CFrameWnd::ShowControlBar's bDelay, which is how
+		// the MFC frame shows and hides the editors' panes and toolbars. Update
+		// lays the frame out and paints it at once, and an editor hides its
+		// toolbars in the middle of taking itself apart -- in the height state,
+		// after the scene has let go of the terrain and before the state has, a
+		// paint then asked the scene for a terrain height and ended the process.
+		void UpdateLater();
 	};
 
 
@@ -103,7 +114,7 @@ namespace NMainFrameWxPanes
 	// The IDockPanel an editor gets: a CMfcPanel in the frame's wxAUI manager.
 	class CDockPanel : public IDockPanel
 	{
-		wxAuiManager *pManager;
+		CAuiManager *pManager;
 		wxWeakRef<CMfcPanel> pPanel;
 		// The frame's: whether the manager has laid the frame out yet. Until it
 		// has, a layout would size the docks against the frame's size before it
@@ -111,13 +122,14 @@ namespace NMainFrameWxPanes
 		const bool *pbLaidOut;
 
 	public:
-		CDockPanel( wxAuiManager *_pManager, CMfcPanel *_pPanel, const bool *_pbLaidOut )
+		CDockPanel( CAuiManager *_pManager, CMfcPanel *_pPanel, const bool *_pbLaidOut )
 			: pManager( _pManager ), pPanel( _pPanel ), pbLaidOut( _pbLaidOut ) {}
 
 		CMfcPanel* GetPanel() const { return pPanel; }
 
 		// IDockPanel. Show tells the manager, and the manager lays the frame out
-		// again; ShowWithoutLayout only shows or hides the panel's window, and the
+		// again once the caller has returned (CAuiManager::UpdateLater);
+		// ShowWithoutLayout only shows or hides the panel's window, and the
 		// manager's next layout has the last word -- as a hide ShowControlBar
 		// delays had over a later ShowWindow on the bar, which is what the editors
 		// do when they make their panes.
@@ -155,13 +167,13 @@ namespace NMainFrameWxPanes
 	// The IToolBar an editor gets: a wxAuiToolBar pane of the frame's manager.
 	class CToolBar : public IToolBar
 	{
-		wxAuiManager *pManager;
+		CAuiManager *pManager;
 		wxWeakRef<wxAuiToolBar> pToolBar;
 		// As CDockPanel's.
 		const bool *pbLaidOut;
 
 	public:
-		CToolBar( wxAuiManager *_pManager, wxAuiToolBar *_pToolBar, const bool *_pbLaidOut )
+		CToolBar( CAuiManager *_pManager, wxAuiToolBar *_pToolBar, const bool *_pbLaidOut )
 			: pManager( _pManager ), pToolBar( _pToolBar ), pbLaidOut( _pbLaidOut ) {}
 
 		wxAuiToolBar* GetToolBar() const { return pToolBar; }

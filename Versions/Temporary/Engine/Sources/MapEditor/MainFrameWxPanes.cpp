@@ -56,6 +56,28 @@ namespace NMainFrameWxPanes
 	}
 
 
+	void CAuiManager::UpdateLater()
+	{
+		wxWindow *const pFrame = GetManagedWindow();
+		if ( ( pFrame == nullptr ) || bUpdatePending )
+		{
+			return;
+		}
+		bUpdatePending = true;
+		// Queued on the frame, whose destruction drops it along with the manager.
+		pFrame->CallAfter( [this]()
+		{
+			bUpdatePending = false;
+			// The manager lets go of the frame as the frame closes, which can come
+			// between the asking and the doing.
+			if ( GetManagedWindow() != nullptr )
+			{
+				Update();
+			}
+		} );
+	}
+
+
 	wxAuiPaneInfo DockedPaneInfo( const wxString &rName, const std::string &rszTitle, unsigned nPlace, float fRate, int nWidth )
 	{
 		wxAuiPaneInfo info;
@@ -180,7 +202,8 @@ namespace NMainFrameWxPanes
 			pManager->GetPane( pToolBar ).Show( bShow );
 			if ( *pbLaidOut )
 			{
-				pManager->Update();
+				// Laid out once the editor has returned, as ShowControlBar's delay.
+				pManager->UpdateLater();
 			}
 		}
 	}
@@ -292,7 +315,8 @@ namespace NMainFrameWxPanes
 			pManager->GetPane( pPanel ).Show( bShow );
 			if ( *pbLaidOut )
 			{
-				pManager->Update();
+				// Laid out once the editor has returned, as ShowControlBar's delay.
+				pManager->UpdateLater();
 			}
 		}
 	}
