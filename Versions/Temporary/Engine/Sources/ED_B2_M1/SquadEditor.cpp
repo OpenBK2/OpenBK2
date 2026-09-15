@@ -173,37 +173,23 @@ void CSquadEditor::CreateControls()
 		CreateControlBar( &nID, "SquadEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_SQUAD_EDITOR_SHORTCUT_PANE_0;
-		if ( wndShortcutBar.Create( ToCWnd( pwndShortcutBar ), WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
+		pShortcutBarView.reset( NShortcutBar::Create() );
+		if ( pShortcutBarView->Create( pwndShortcutBar, nID ) )
 		{
-			// список типов формаций
-			++nID;
-			CDefault3DTabWindow *p3DTabWindow = new CDefault3DTabWindow();
-			if ( wndShortcutBar.AddNewShortcut( p3DTabWindow ) )
-			{
-				p3DTabWindow->SetCommandHandlerID( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE ); 
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-
-				// Which toolkit draws this palette is NFormationView's business,
-				// not the editor's. It creates the window and registers it in the
-				// tab list; the label and the tab are still put on here.
-				if ( CWnd *pDlg = NFormationView::Create( p3DTabWindow ) )
-				{
-					CString strPaneLabel = RCSTR("Formations");
-					p3DTabWindow->AddTab( pDlg, strPaneLabel );
-				}
-				p3DTabWindow->ActivateTab( 0 );
-
-				CString strPaneLabel = RCSTR("Squad");
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
-			wndShortcutBar.SelectPane( 0 );
-
-			CWndWidget contentsWidget( &wndShortcutBar );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &contentsWidget );
+			// The formation types: one bar with one tab. Its tab changes go to the
+			// building points state, as they always have. Which toolkit draws the
+			// palette is NFormationView's business.
+			const int nBar = pShortcutBarView->BeginBar( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE );
+			pShortcutBarView->AddTab( nBar, std::string( CString( RCSTR( "Formations" ) ).GetString() ), &NFormationView::Create );
+			pShortcutBarView->ActivateTab( nBar, 0 );
+			pShortcutBarView->EndBar( nBar, std::string( CString( RCSTR( "Squad" ) ).GetString() ) );
+			pShortcutBarView->SelectBar( 0 );
+			//
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
 			pwndShortcutBar->Show( false );
 			pwndShortcutBar->ShowWithoutLayout( true );
-			wndShortcutBar.ShowWindow( SW_SHOW );
-			wndShortcutBar.SetCommandHandlerID( CHID_SQUAD_STATE, ID_SQUAD_CHANGE_STATE );
+			pShortcutBarView->Show( true );
+			pShortcutBarView->SetCommandHandlerID( CHID_SQUAD_STATE, ID_SQUAD_CHANGE_STATE );
 		}
 	}
 }
@@ -219,7 +205,10 @@ void CSquadEditor::DestroyControls()
 		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndShortcutBar = 0;
 	}
-	wndShortcutBar.DestroyWindow();
+	if ( pShortcutBarView )
+	{
+		pShortcutBarView->Destroy();
+	}
 
 	Destroy();
 }

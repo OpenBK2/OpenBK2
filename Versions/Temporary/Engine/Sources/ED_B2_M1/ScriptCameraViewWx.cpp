@@ -332,16 +332,12 @@ namespace
 		}
 
 	protected:
-		virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
+		// Before the wx side comes down, however it comes down: a debounce
+		// firing after the palette is gone would ask the state to read a box
+		// that no longer exists.
+		virtual void BeforeTearDown()
 		{
-			if ( message == WM_DESTROY )
-			{
-				// Before the wx side comes down: a debounce firing after the
-				// palette is gone would ask the state to read a box that no
-				// longer exists.
-				StopTimers();
-			}
-			return CWxHostWindow::WindowProc( message, wParam, lParam );
+			StopTimers();
 		}
 
 	private:

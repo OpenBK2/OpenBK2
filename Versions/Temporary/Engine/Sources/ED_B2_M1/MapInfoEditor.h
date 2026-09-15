@@ -10,6 +10,8 @@
 #include "SpotInfoData.h"
 
 #include "MapEditorLib/DefaultShortcutBar.h"
+#include "ShortcutBarView.h"
+#include <memory>
 #include "MiniMapView.h"
 #include "MoviesEditorView.h"
 
@@ -94,7 +96,9 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	// MoviesEditorView.h. Null until CreateControls has made them.
 	NMiniMapView::IView *pMiniMapView;
 	NMoviesEditorView::IView *pMoviesEditorView;
-	CDefaultShortcutBar wndShortcutBar;
+	// The shortcut bar in the pane, in whichever toolkit this session draws it;
+	// see ShortcutBarView.h.
+	std::unique_ptr<NShortcutBar::IView> pShortcutBarView;
 	CObj<IEditorScene> pEditorScene;
 	// Данные общего назначения 
 	CMapInfoState *pMapInfoState;

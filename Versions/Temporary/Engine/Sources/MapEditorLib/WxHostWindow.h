@@ -37,6 +37,7 @@
 #include "WxOwnership.h"
 
 #include <wx/nativewin.h>
+#include <wx/panel.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
 #include <wx/window.h>
@@ -46,9 +47,38 @@ class CWxHostWindow : public CWnd, public IWidget
 	// The adopted handle's wx side. Owns the wx children; does not own, and
 	// does not destroy, the handle it was given.
 	wxNativeContainerWindow *pContainer = nullptr;
+	// Or, made while a CPageScope names a wx page, a panel of that page's with
+	// the wx side in it and no MFC window at all.
+	wxWeakRef<wxWindow> pPanel;
+
+	static wxWindow*& PageOverride()
+	{
+		static wxWindow *s_pPage = nullptr;
+		return s_pPage;
+	}
 
 public:
-	DECLARE_CWND_WIDGET();
+	// While one of these is alive, CreateHost puts the wx side in a panel of
+	// pPage instead of in an MFC window it makes. It is how the wx shortcut bar
+	// (ED_B2_M1/ShortcutBarViewWx.cpp) makes the palettes, which are written to
+	// be made in an MFC tab window, straight in its notebook pages, unchanged.
+	// Per module, since the variable is a function-local static in a header;
+	// the palettes and the bar are in the same one.
+	class CPageScope
+	{
+		wxWindow *pPrevious;
+
+	public:
+		explicit CPageScope( wxWindow *pPage ) : pPrevious( PageOverride() ) { PageOverride() = pPage; }
+		~CPageScope() { PageOverride() = pPrevious; }
+	};
+
+	// IWidget. What a palette opens its dialogs over. A host made in a wx page
+	// has no window, so the main window answers for it.
+	virtual void* GetNativeWidget()
+	{
+		return ( GetSafeHwnd() != 0 ) ? static_cast<CWnd*>( this ) : MainFrameWnd();
+	}
 
 	virtual ~CWxHostWindow()
 	{
@@ -59,6 +89,11 @@ public:
 	// False if either half failed, with nothing left half-built.
 	bool CreateHost( CWnd *pParent )
 	{
+		if ( wxWindow *const pPage = PageOverride() )
+		{
+			pPanel = NWx::Child<wxPanel>( pPage, wxID_ANY );
+			return true;
+		}
 		if ( pParent == 0 || pParent->GetSafeHwnd() == 0 )
 		{
 			return false;
@@ -87,7 +122,15 @@ public:
 	// The wx window to parent content on, or null before CreateHost succeeded.
 	wxWindow* Root() const
 	{
-		return pContainer;
+		return ( pContainer != nullptr ) ? pContainer : pPanel.get();
+	}
+
+	// Takes the wx side down now, while whatever it calls back into is still
+	// there. The owner of a host made in a wx page calls this before deleting
+	// it: that host gets no WM_DESTROY to do it by.
+	void DestroyContents()
+	{
+		TearDownWx();
 	}
 
 	// A surface filling the host that scrolls vertically and never
@@ -144,15 +187,32 @@ protected:
 		pContainer->Layout();
 	}
 
+	// What a derived host stops before its wx side goes -- a timer that would
+	// otherwise read controls that are no longer there. Called once, from
+	// TearDownWx, while the derived object still exists, except when the host
+	// is deleted without ever being torn down, when there is nothing to stop.
+	virtual void BeforeTearDown()
+	{
+	}
+
 	// Safe to call more than once, and safe to call having never created.
 	void TearDownWx()
 	{
+		if ( ( pContainer == 0 ) && !pPanel )
+		{
+			return;
+		}
+		BeforeTearDown();
 		if ( pContainer != 0 )
 		{
 			// Destroys the wx children; leaves the adopted handle alone, which is
 			// what wxNativeContainerWindow's destructor is documented to do.
 			pContainer->Destroy();
 			pContainer = 0;
+		}
+		if ( pPanel )
+		{
+			pPanel->Destroy();
 		}
 	}
 

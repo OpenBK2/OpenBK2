@@ -168,6 +168,8 @@ set(SOURCES
     ScriptCameraState.cpp
     ScriptCameraViewMfc.cpp
     ScriptCameraViewWx.cpp
+    ShortcutBarViewMfc.cpp
+    ShortcutBarViewWx.cpp
     ScriptCameraWindow.cpp
     SeasonMnemonics.cpp
     SimpleObjectInfoData.cpp

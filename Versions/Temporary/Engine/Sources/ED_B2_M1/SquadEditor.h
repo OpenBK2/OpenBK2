@@ -3,6 +3,8 @@
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/DefaultShortcutBar.h"
+#include "ShortcutBarView.h"
+#include <memory>
 #include "MarkerSet.h"
 #include "SquadState.h"
 
@@ -76,7 +78,9 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	CSquadState *pSquadState;
 	//
 	IDockPanel *pwndShortcutBar;
-	CDefaultShortcutBar wndShortcutBar;
+	// The shortcut bar in the pane, in whichever toolkit this session draws it;
+	// see ShortcutBarView.h.
+	std::unique_ptr<NShortcutBar::IView> pShortcutBarView;
 	//
 
 	// specific data memebers

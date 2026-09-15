@@ -395,16 +395,13 @@ namespace
 		}
 
 	protected:
-		virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
+		// Before the wx side comes down, however it comes down -- the MFC tab's
+		// window destroyed, or the wx shortcut bar taking its page away. The
+		// timer's only job is to poke the state on the palette's behalf, and a
+		// palette that is going away has nothing to say.
+		virtual void BeforeTearDown()
 		{
-			if ( message == WM_DESTROY )
-			{
-				// Before the wx side comes down. The timer's only job is to poke
-				// the state on the palette's behalf, and a palette that is going
-				// away has nothing to say.
-				heightTimer.Stop();
-			}
-			return CWxHostWindow::WindowProc( message, wParam, lParam );
+			heightTimer.Stop();
 		}
 
 	private:

@@ -101,43 +101,32 @@ void CBuildingEditor::CreateControls()
 		CreateControlBar( &nID, "BuildingEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_BUILDING_EDITOR_SHORTCUT_PANE_0;
-		if ( wndShortcutBar.Create( ToCWnd( pwndShortcutBar ), WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
+		pShortcutBarView.reset( NShortcutBar::Create() );
+		if ( pShortcutBarView->Create( pwndShortcutBar, nID ) )
 		{
-			// списки точек
-			++nID;
-			CDefault3DTabWindow *p3DTabWindow = new CDefault3DTabWindow();
-			if ( wndShortcutBar.AddNewShortcut( p3DTabWindow ) )
+			// The point lists: one bar, a tab per list, whose tab changes also go to
+			// the points state on their own. Which toolkit draws a list is
+			// NPointListView's business.
+			const int nBar = pShortcutBarView->BeginBar( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE );
+			for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
 			{
-				p3DTabWindow->SetCommandHandlerID( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE ); 
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-
-				// Which toolkit draws the lists is NPointListView's business, not
-				// the editor's. It creates each window and registers it in the tab
-				// list; the label and the tab are still put on here.
-				for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
+				const std::string szLabel = (const char*)listLabels[i];
+				pShortcutBarView->AddTab( nBar, szLabel, [i, szLabel]( CDefault3DTabWindow *pTabWindow )
 				{
-					if ( CWnd *pPointListDlg = NPointListView::Create( p3DTabWindow, i, (const char*)listLabels[i] ) )
-					{
-						++nID;
-						CString strPaneLabel = listLabels[i];
-						p3DTabWindow->AddTab( pPointListDlg, strPaneLabel );
-					}
-				}
-				//
-				p3DTabWindow->ActivateTab( 0 );
-
-				CString strPaneLabel;
-				strPaneLabel.LoadString( IDS_BUILDING_POINTS );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
+					return NPointListView::Create( pTabWindow, i, szLabel );
+				} );
 			}
-			wndShortcutBar.SelectPane( 0 );
-
-			CWndWidget contentsWidget( &wndShortcutBar );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &contentsWidget );
+			pShortcutBarView->ActivateTab( nBar, 0 );
+			CString strPaneLabel;
+			strPaneLabel.LoadString( IDS_BUILDING_POINTS );
+			pShortcutBarView->EndBar( nBar, std::string( strPaneLabel.GetString() ) );
+			pShortcutBarView->SelectBar( 0 );
+			//
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
 			pwndShortcutBar->Show( false );
 			pwndShortcutBar->ShowWithoutLayout( true );
-			wndShortcutBar.ShowWindow( SW_SHOW );
-			wndShortcutBar.SetCommandHandlerID( CHID_BUILDING_STATE, ID_BUILDING_CHANGE_STATE );
+			pShortcutBarView->Show( true );
+			pShortcutBarView->SetCommandHandlerID( CHID_BUILDING_STATE, ID_BUILDING_CHANGE_STATE );
 		}
 	}
 }
@@ -153,7 +142,10 @@ void CBuildingEditor::DestroyControls()
 		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndShortcutBar = 0;
 	}
-	wndShortcutBar.DestroyWindow();
+	if ( pShortcutBarView )
+	{
+		pShortcutBarView->Destroy();
+	}
 
 	Destroy();
 }

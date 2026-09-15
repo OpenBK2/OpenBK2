@@ -165,209 +165,70 @@ void CMapInfoEditor::CreateControls()
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create minimap window: %g", NHPTimer::GetTimePassed( &time ) );
 	
-	CString strPaneLabel;
 	nID = ID_MAPINFO_EDITOR_SHORTCUT_DW;
 	// создаем shortcut docking window
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "ShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_LEFT, 0.8f, 265 ) )
 	{
 		nID = ID_MAPINFO_EDITOR_SHORTCUT_PANE_0;
-		if ( wndShortcutBar.Create( ToCWnd( pwndShortcutBar ), WS_CHILD | WS_VISIBLE | SEC_OBS_VERT | SEC_OBS_ANIMATESCROLL, nID ) )
+		pShortcutBarView.reset( NShortcutBar::Create() );
+		if ( pShortcutBarView->Create( pwndShortcutBar, nID ) )
 		{
-			++nID;
-
-			// Terrain
-			//
-			if ( CDefault3DTabWindow *p3DTabWindow = wndShortcutBar.AddNewShortcut(static_cast<CDefault3DTabWindow*>(0)) )
+			// A bar per input state and a tab per substate, each palette made by its
+			// own view -- which toolkit draws it is that view's business -- and the
+			// substate the user left open shown.
+			const auto AddStateBar = [this]( auto eState, const std::vector<std::pair<unsigned, NShortcutBar::TPaletteFactory>> &rTabs )
 			{
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-				// height V3
-				// Which toolkit draws this palette is NHeightViewV3's business,
-				// not the editor's.
-				if ( CWnd *pDialog = NHeightViewV3::Create( p3DTabWindow ) )
+				const int nBar = pShortcutBarView->BeginBar( INVALID_COMMAND_HANDLER_ID, INVALID_COMMAND_ID );
+				CString strPaneLabel;
+				for ( const std::pair<unsigned, NShortcutBar::TPaletteFactory> &rTab : rTabs )
 				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				// field
-				// Which toolkit draws this palette is NFieldView's business, not
-				// the editor's.
-				if ( CWnd *pDialog = NFieldView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_FIELD] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
+					strPaneLabel.LoadString( theEDB2M1Instance, rTab.first );
+					pShortcutBarView->AddTab( nBar, std::string( strPaneLabel.GetString() ), rTab.second );
 				}
 				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( CMapInfoState::IS_TERRAIN );
+				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( eState );
 				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
 						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[CMapInfoState::IS_TERRAIN] ) )
+						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[eState] ) )
 				{
-					p3DTabWindow->ActivateTab( posActiveStateMap->second );
+					pShortcutBarView->ActivateTab( nBar, posActiveStateMap->second );
 				}
 				else
 				{
-					p3DTabWindow->ActivateTab( CMapInfoState::DEFAULT_INPUT_SUBSTATE[CMapInfoState::IS_TERRAIN] );
+					pShortcutBarView->ActivateTab( nBar, CMapInfoState::DEFAULT_INPUT_SUBSTATE[eState] );
 				}
 				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_TERRAIN] );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
-
-			// Objects
-			//
-			if ( CDefault3DTabWindow *p3DTabWindow = wndShortcutBar.AddNewShortcut(static_cast<CDefault3DTabWindow*>(0)) )
-			{
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-				// map objects
-				// Which toolkit draws this palette is NMapObjectView's business,
-				// not the editor's.
-				if ( CWnd *pWindow = NMapObjectView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_MAP_OBJECT] );
-					p3DTabWindow->AddTab( pWindow, strPaneLabel );
-				}
-				// VSO
-				// Which toolkit draws this palette is NVSOView's business, not
-				// the editor's.
-				if ( CWnd *pWindow = NVSOView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_VSO] );
-					p3DTabWindow->AddTab( pWindow, strPaneLabel );
-				}		
-				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( CMapInfoState::IS_OBJECT );
-				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
-						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[CMapInfoState::IS_OBJECT] ) )
-				{
-					p3DTabWindow->ActivateTab( posActiveStateMap->second );
-				}
-				else
-				{
-					p3DTabWindow->ActivateTab( CMapInfoState::DEFAULT_INPUT_SUBSTATE[CMapInfoState::IS_OBJECT] );
-				}
-				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_OBJECT] );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
-
-			// Gameplay
-			//
-			if ( CDefault3DTabWindow *p3DTabWindow = wndShortcutBar.AddNewShortcut(static_cast<CDefault3DTabWindow*>(0)) )
-			{
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-				// reinforcement points
-				// Which toolkit draws this palette is NReinfPointsView's business,
-				// not the editor's.
-				if ( CWnd *pDialog = NReinfPointsView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_REINF_POINTS] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				// start camera positions
-				// Which toolkit draws this palette is NCameraPositionView's
-				// business, not the editor's. It creates the window and registers
-				// it in the tab list; the label and the tab are still put on here.
-				if ( CWnd *pDialog = NCameraPositionView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_START_CAMERA] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}						
-				// ai general
-				// Which toolkit draws this palette is NAIGeneralView's business,
-				// not the editor's.
-				if ( CWnd *pDialog = NAIGeneralView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_AIGENERAL] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				// unit start command
-				// Which toolkit draws this palette is NUnitStartCmdView's business,
-				// not the editor's.
-				if ( CWnd *pDialog = NUnitStartCmdView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_UNIT_START_CMD] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( CMapInfoState::IS_GAMEPLAY );
-				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
-						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[CMapInfoState::IS_GAMEPLAY] ) )
-				{
-					p3DTabWindow->ActivateTab( posActiveStateMap->second );
-				}
-				else
-				{
-					p3DTabWindow->ActivateTab( CMapInfoState::DEFAULT_INPUT_SUBSTATE[CMapInfoState::IS_GAMEPLAY] );
-				}
-				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_GAMEPLAY] );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
-
-			// Script
-			//
-			if ( CDefault3DTabWindow *p3DTabWindow = wndShortcutBar.AddNewShortcut(static_cast<CDefault3DTabWindow*>(0)) )
-			{
-				p3DTabWindow->Create( &wndShortcutBar, WS_CHILD | WS_VISIBLE | TWS_TABS_ON_BOTTOM | TWS_DRAW_3D_NORMAL );
-				// script area
-				// Which toolkit draws this palette is NScriptAreaView's business,
-				// not the editor's.
-				if ( CWnd *pDialog = NScriptAreaView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_AREAS] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				// script movies
-				// Which toolkit draws this palette is NScriptCameraView's
-				// business, not the editor's.
-				if ( CWnd *pDialog = NScriptCameraView::Create( p3DTabWindow ) )
-				{
-					++nID;
-					strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_MOVIES] );
-					p3DTabWindow->AddTab( pDialog, strPaneLabel );
-				}
-				//
-				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( CMapInfoState::IS_SCRIPT );
-				if ( ( posActiveStateMap != editorSettings.activeStateMap.end() ) &&
-						 ( posActiveStateMap->second >= 0 ) &&
-						 ( posActiveStateMap->second < CMapInfoState::INPUT_SUBSTATE_COUNT[CMapInfoState::IS_SCRIPT] ) )
-				{
-					p3DTabWindow->ActivateTab( posActiveStateMap->second );
-				}
-				else
-				{
-					p3DTabWindow->ActivateTab( CMapInfoState::DEFAULT_INPUT_SUBSTATE[CMapInfoState::IS_SCRIPT] );
-				}
-				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[CMapInfoState::IS_SCRIPT] );
-				wndShortcutBar.AddBar( p3DTabWindow, strPaneLabel, true );
-			}
+				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[eState] );
+				pShortcutBarView->EndBar( nBar, std::string( strPaneLabel.GetString() ) );
+			};
+			AddStateBar( CMapInfoState::IS_TERRAIN, {
+				{ CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3], &NHeightViewV3::Create },
+				{ CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_FIELD], &NFieldView::Create } } );
+			AddStateBar( CMapInfoState::IS_OBJECT, {
+				{ CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_MAP_OBJECT], &NMapObjectView::Create },
+				{ CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::OBJECT_ISS_VSO], &NVSOView::Create } } );
+			AddStateBar( CMapInfoState::IS_GAMEPLAY, {
+				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_REINF_POINTS], &NReinfPointsView::Create },
+				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_START_CAMERA], &NCameraPositionView::Create },
+				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_AIGENERAL], &NAIGeneralView::Create },
+				{ CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::GAMEPLAY_ISS_UNIT_START_CMD], &NUnitStartCmdView::Create } } );
+			AddStateBar( CMapInfoState::IS_SCRIPT, {
+				{ CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_AREAS], &NScriptAreaView::Create },
+				{ CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::SCRIPT_ISS_SCRIPT_MOVIES], &NScriptCameraView::Create } } );
 			//
 			if ( ( editorSettings.nActiveStateIndex >= 0 ) &&
 					 ( editorSettings.nActiveStateIndex < CMapInfoState::IS_COUNT ) )
 			{
-				wndShortcutBar.SelectPane(editorSettings.nActiveStateIndex );
+				pShortcutBarView->SelectBar( editorSettings.nActiveStateIndex );
 			}
 			else
 			{
-				wndShortcutBar.SelectPane( CMapInfoState::DEFAULT_INPUT_STATE );
+				pShortcutBarView->SelectBar( CMapInfoState::DEFAULT_INPUT_STATE );
 			}
-			CWndWidget contentsWidget( &wndShortcutBar );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, &contentsWidget );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );
 			pwndShortcutBar->ShowWithoutLayout( true );
-			wndShortcutBar.ShowWindow( SW_SHOW );
-			wndShortcutBar.SetCommandHandlerID( CHID_MAPINFO_STATE, ID_MIS_CHANGE_STATE );
+			pShortcutBarView->Show( true );
+			pShortcutBarView->SetCommandHandlerID( CHID_MAPINFO_STATE, ID_MIS_CHANGE_STATE );
 		}
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create shotrcut window: %g", NHPTimer::GetTimePassed( &time ) );
@@ -483,7 +344,10 @@ void CMapInfoEditor::DestroyControls()
 		// The frame owns this IDockPanel handle; only its window is destroyed here.
 		pwndShortcutBar = 0;
 	}
-	wndShortcutBar.DestroyWindow();
+	if ( pShortcutBarView )
+	{
+		pShortcutBarView->Destroy();
+	}
 
 	// разрушаем minimap docking window
 	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
