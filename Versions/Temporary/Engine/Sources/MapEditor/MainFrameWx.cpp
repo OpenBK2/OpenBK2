@@ -73,8 +73,8 @@ namespace NMainFrameWx
 // The main frame, in wx: the frame itself, its menus, status bar, title,
 // command routing, placement and close, its docking panes in wxAUI -- its own
 // three and the editors' -- the document window and the toolbars (see
-// MainFrameWxPanes.h). Not here yet: the layout is not kept between sessions,
-// and Reset GUI and Customize do nothing.
+// MainFrameWxPanes.h), and their layout, kept between sessions and put back
+// by Reset GUI. Customize, Stingray's toolbar editor, has no counterpart.
 //
 // What stays MFC for now, on purpose. The editors and dialogs still want the
 // main window as a CWnd -- AfxGetMainWnd(), MainFrameWnd(), a CDialog's owner --
@@ -454,6 +454,9 @@ namespace
 		std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>> toolBars;
 		unsigned nFreeToolBarID = AFX_IDW_TOOLBAR + 9;
 		int nNextToolBarPosition = 0;
+		// The layout the frame has before a saved one is read: what a first run
+		// gets, and what Reset GUI goes back to.
+		wxString szDefaultLayout;
 		// Whether the manager has laid the frame out. The first layout waits for
 		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
 		// of the frame the first time it sizes it, and keeps what it gave.
@@ -544,6 +547,10 @@ namespace
 				pApp->GetEditorModules()[nModuleIndex]->ModuleCreateControls();
 			}
 			Singleton<IEditorContainer>()->CreateControls();
+			// Where CMainFrame loads its bar state: every pane and toolbar is made,
+			// and the editors have not yet hidden theirs.
+			szDefaultLayout = auiManager.SavePerspective();
+			LoadLayout();
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 			{
 				pApp->GetEditorModules()[nModuleIndex]->ModulePostCreateControls();
@@ -946,6 +953,82 @@ namespace
 			return wxString::Format( "Pane%u", nID );
 		}
 
+		// Where the layout is kept: beside the MFC frame's bar state, in the
+		// application's registry key, but a section of its own, since the two
+		// frames' layouts are nothing alike.
+		static CString LayoutSection()
+		{
+			CString strSection;
+			strSection.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
+			return strSection + "-wx";
+		}
+
+		void SaveLayout()
+		{
+			AfxGetApp()->WriteProfileString( LayoutSection(), "Layout", auiManager.SavePerspective().utf8_str() );
+		}
+
+		void LoadLayout()
+		{
+			const CString strLayout = AfxGetApp()->GetProfileString( LayoutSection(), "Layout", "" );
+			if ( !strLayout.IsEmpty() )
+			{
+				ApplyLayout( wxString::FromUTF8( strLayout.GetString() ) );
+			}
+		}
+
+		// wxAuiManager::LoadPerspective, less two things it does that do not suit
+		// a layout kept across builds and sessions: it hides every pane the layout
+		// does not name, and it gives the rest the captions they had when it was
+		// saved. A pane the layout does not know keeps what it had, and every pane
+		// keeps the caption the frame gave it.
+		bool ApplyLayout( const wxString &rLayout )
+		{
+			wxAuiPaneInfoArray &rPanes = auiManager.GetAllPanes();
+			std::vector<wxAuiPaneInfo> before;
+			for ( size_t nPane = 0; nPane < rPanes.GetCount(); ++nPane )
+			{
+				before.push_back( rPanes.Item( nPane ) );
+			}
+			if ( !auiManager.LoadPerspective( rLayout, false ) )
+			{
+				return false;
+			}
+			for ( size_t nPane = 0; ( nPane < rPanes.GetCount() ) && ( nPane < before.size() ); ++nPane )
+			{
+				wxAuiPaneInfo &rPane = rPanes.Item( nPane );
+				if ( rLayout.Find( "name=" + before[nPane].name + ";" ) == wxNOT_FOUND )
+				{
+					rPane.SafeSet( before[nPane] );
+				}
+				rPane.Caption( before[nPane].caption );
+			}
+			return true;
+		}
+
+		// CMainFrame::OnResetGUI: the layout a first run gets, the frame's own
+		// panes shown, the editors' panes as their defaults say, and the result
+		// kept at once.
+		void ResetLayout()
+		{
+			ApplyLayout( szDefaultLayout );
+			if ( pLogPane )
+			{
+				auiManager.GetPane( pLogPane->GetPanel() ).Show( true );
+			}
+			if ( pPropertiesPane )
+			{
+				auiManager.GetPane( pPropertiesPane->GetPanel() ).Show( true );
+			}
+			for ( std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane> &rpPane : gdbBrowserPanes )
+			{
+				auiManager.GetPane( rpPane->GetPanel() ).Show( true );
+			}
+			Singleton<IEditorContainer>()->ResetGUI();
+			auiManager.Update();
+			SaveLayout();
+		}
+
 		// The start of CMainFrame::OnCreate: its toolbar resources, the game
 		// icon for Run Game, and its six toolbars from its own tables.
 		void CreateMainToolBars()
@@ -1263,6 +1346,9 @@ namespace
 			{
 				pApp->GetEditorModules()[nModuleIndex]->ModulePreDestroyControls();
 			}
+			// Where CMainFrame saves its bar state: the editors have put their own
+			// panes' visibility away and hidden them.
+			SaveLayout();
 			Singleton<IChildFrameContainer>()->Destroy();
 			Singleton<IEditorContainer>()->DestroyControls();
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
@@ -1317,6 +1403,9 @@ namespace
 					return;
 				case ID_VIEW_DW_GDB_BROWSER_NEW:
 					NewGDBBrowserPane();
+					return;
+				case ID_VIEW_RESET_GUI:
+					ResetLayout();
 					return;
 				case ID_VIEW_DW_GDB_BROWSER_REMOVE:
 					RemoveGDBBrowserPane();
@@ -1393,8 +1482,8 @@ namespace
 		}
 
 		// A menu item's or toolbar button's state: CMainFrame's own handlers, then
-		// the user command range. Reset GUI and Customize belong to parts of the
-		// frame that are not here yet, and stay off.
+		// the user command range. Customize, Stingray's toolbar editor, has no wx
+		// counterpart and stays off.
 		void UpdateMenuCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck )
 		{
 			( *pbEnable ) = false;
@@ -1406,6 +1495,7 @@ namespace
 					return;
 				case ID_HELP_ABOUT:
 				case ID_APP_EXIT:
+				case ID_VIEW_RESET_GUI:
 					( *pbEnable ) = true;
 					return;
 				case ID_VIEW_DW_PROPERTY_BROWSER:
