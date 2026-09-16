@@ -5,6 +5,8 @@
 
 #ifdef OBK2_WITH_WX
 
+#include <wx/apptrait.h>
+#include <wx/evtloop.h>
 #include <wx/statline.h>
 
 #include <cstdlib>
@@ -105,11 +107,118 @@ namespace NWxHost
 	{
 		return s_pProbeFrame != nullptr;
 	}
+
+
+	namespace
+	{
+		bool s_bWxOwnsLoop = false;
+		SMfcHooks s_mfcHooks = { nullptr, nullptr, nullptr };
+
+
+		// wx's loop, with MFC's look at each message first, in the order
+		// wxMFCApp::PreTranslateMessage gave the two under MFC's loop.
+		class CEditorEventLoop : public wxGUIEventLoop
+		{
+		public:
+			virtual bool PreProcessMessage( WXMSG *pMsg ) override
+			{
+				if ( ( s_mfcHooks.pfnPreTranslateMessage != nullptr ) && s_mfcHooks.pfnPreTranslateMessage( s_mfcHooks.pContext, pMsg ) )
+				{
+					return true;
+				}
+				return wxGUIEventLoop::PreProcessMessage( pMsg );
+			}
+		};
+
+
+		// The traits are where wxApp gets its main loop from.
+		class CEditorAppTraits : public wxGUIAppTraits
+		{
+		public:
+			virtual wxEventLoopBase* CreateEventLoop() override
+			{
+				return new CEditorEventLoop();
+			}
+		};
+	}
+
+
+	void SetWxOwnsLoop( bool bWxOwnsLoop )
+	{
+		s_bWxOwnsLoop = bWxOwnsLoop;
+	}
+
+
+	bool WxOwnsLoop()
+	{
+		return s_bWxOwnsLoop;
+	}
+
+
+	int RunWxMainLoop( const SMfcHooks &rHooks )
+	{
+		s_mfcHooks = rHooks;
+		const int nResult = wxTheApp->OnRun();
+		s_mfcHooks = SMfcHooks { nullptr, nullptr, nullptr };
+		return nResult;
+	}
+
+
+	void CWxHostApp::ExitMainLoop()
+	{
+		if ( s_bWxOwnsLoop )
+		{
+			wxApp::ExitMainLoop();
+		}
+		else
+		{
+			wxAppWithMFC::ExitMainLoop();
+		}
+	}
+
+
+	void CWxHostApp::WakeUpIdle()
+	{
+		if ( s_bWxOwnsLoop )
+		{
+			wxApp::WakeUpIdle();
+		}
+		else
+		{
+			wxAppWithMFC::WakeUpIdle();
+		}
+	}
+
+
+	bool CWxHostApp::ProcessIdle()
+	{
+		const bool bMoreIdle = wxAppWithMFC::ProcessIdle();
+		if ( s_bWxOwnsLoop && ( s_mfcHooks.pfnOnIdle != nullptr ) )
+		{
+			// The two idle calls CWinThread::Run made after a burst of messages:
+			// 0 updates MFC's command UI, 1 frees its temporary window objects and
+			// answers that there is nothing more.
+			s_mfcHooks.pfnOnIdle( s_mfcHooks.pContext, 0 );
+			s_mfcHooks.pfnOnIdle( s_mfcHooks.pContext, 1 );
+		}
+		return bMoreIdle;
+	}
+
+
+	wxAppTraits* CWxHostApp::CreateTraits()
+	{
+		if ( s_bWxOwnsLoop )
+		{
+			return new CEditorAppTraits();
+		}
+		return wxAppWithMFC::CreateTraits();
+	}
 }
 
 
 // The wxApp instance. wxIMPLEMENT_APP_NO_MAIN registers the factory that
-// wxEntryStart uses; it writes no WinMain, which is the point -- MFC has one.
+// wxEntryStart uses; it writes no WinMain, which is the point -- MFC has one,
+// and CWxHostedApp::Run picks the loop.
 wxIMPLEMENT_APP_NO_MAIN( NWxHost::CWxHostApp );
 
 #endif // OBK2_WITH_WX

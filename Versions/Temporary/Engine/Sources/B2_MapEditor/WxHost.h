@@ -32,6 +32,8 @@
 #include <wx/wx.h>
 #include <wx/msw/mfc.h>
 
+#include "MapEditor/MainFrameWx.h"
+
 namespace NWxHost
 {
 	// Declared before the class that calls it; defined in WxHost.cpp. See the
@@ -42,14 +44,41 @@ namespace NWxHost
 	// it -- see WxOwnership.h.
 	bool IsProbeFrameOpen();
 
-	// The wxApp for a process whose message loop belongs to MFC. wxAppWithMFC
-	// redirects the two things a wxApp would otherwise do to its own event loop
-	// -- exiting it, and waking it for idle -- at MFC's instead.
+	// Whose message loop this session runs on: wx's for the wx frame, MFC's for
+	// CMainFrame. Decided once, before wx starts, because wx makes its main
+	// loop from traits it creates the first time it is asked for them.
+	void SetWxOwnsLoop( bool bWxOwnsLoop );
+	bool WxOwnsLoop();
+
+	// What of the MFC application wx's loop still has to run: its
+	// PreTranslateMessage, which walks the MFC windows from a message's window
+	// up to the main window -- the property tree and the MFC palettes translate
+	// the editor's accelerators there, and an MFC modeless dialog does its
+	// keyboard navigation there -- and its OnIdle, which updates MFC's command UI
+	// and frees MFC's temporary window objects. The base application's own, not
+	// wxMFCApp's, which would call back into wx.
+	struct SMfcHooks
+	{
+		void *pContext;
+		BOOL ( *pfnPreTranslateMessage )( void *pContext, MSG *pMsg );
+		BOOL ( *pfnOnIdle )( void *pContext, LONG lCount );
+	};
+
+	// wx's main loop, with MFC's look at every message and MFC's idle work in it,
+	// until the WM_QUIT the main frame posts when it goes.
+	int RunWxMainLoop( const SMfcHooks &rHooks );
+
+	// The wxApp. In an MFC session the message loop belongs to MFC, and
+	// wxAppWithMFC redirects the two things a wxApp would otherwise do to its own
+	// event loop -- exiting it, and waking it for idle -- at MFC's instead. In a
+	// session whose loop is wx's (WxOwnsLoop) those go to wx's own; its idle runs
+	// MFC's as well, and the loop it makes runs MFC's PreTranslateMessage before
+	// wx's own look at a message.
 	//
 	// OnInit deliberately creates nothing. In wx's own sample the wxApp creates
-	// the main window and MFC wraps it; here MFC created the main window twenty
-	// years ago and wx is the newcomer, so there is nothing for it to make until
-	// a real front-end asks.
+	// the main window and MFC wraps it; here the editor's startup makes the main
+	// window, whichever toolkit's, so there is nothing for wx to make until a
+	// real front-end asks.
 	class CWxHostApp : public wxAppWithMFC
 	{
 	public:
@@ -60,11 +89,19 @@ namespace NWxHost
 			// ends the application when its last top-level window closes, and
 			// wxAppWithMFC implements "end the application" as ::PostQuitMessage,
 			// which is MFC's message loop. So a wx tool window being closed could
-			// shut the whole editor down, with unsaved work in it. MFC owns this
-			// process's lifetime; wx does not get a vote.
+			// shut the whole editor down, with unsaved work in it. The main frame
+			// ends the loop when it goes, whichever frame and whichever loop, and
+			// nothing else gets a vote.
 			SetExitOnFrameDelete( false );
 			return true;
 		}
+
+		virtual void ExitMainLoop() override;
+		virtual void WakeUpIdle() override;
+		virtual bool ProcessIdle() override;
+
+	protected:
+		virtual wxAppTraits* CreateTraits() override;
 	};
 
 	// Mixed into the editor's own CWinApp-derived class. wxMFCApp<T> derives
@@ -107,6 +144,9 @@ namespace NWxHost
 		// not one. If that signature appears again, look at ordering first.
 		virtual BOOL InitInstance()
 		{
+			// Before wx starts, which may already make its traits, and they make
+			// the loop.
+			SetWxOwnsLoop( NMainFrameWx::IsWanted() );
 			if ( !wxEntryStart( TBaseApp::m_hInstance ) )
 			{
 				return FALSE;
@@ -139,6 +179,35 @@ namespace NWxHost
 			}
 			wxEntryCleanup();
 			return nResult;
+		}
+
+		// The message loop, which AfxWinMain runs between InitInstance and
+		// AfxWinTerm. MFC's, CWinThread::Run, for CMainFrame. For the wx frame,
+		// wx's, and then what CWinThread::Run does when its loop ends on WM_QUIT:
+		// ExitInstance, whose answer is the process's. MFC's entry point and its
+		// module initialisation stay MFC's either way.
+		virtual int Run()
+		{
+			if ( !WxOwnsLoop() )
+			{
+				return TBaseApp::Run();
+			}
+			const SMfcHooks hooks = { this, &PreTranslateHook, &IdleHook };
+			RunWxMainLoop( hooks );
+			return this->ExitInstance();
+		}
+
+	private:
+		// The base application's own, for SMfcHooks: what MFC's pump would have
+		// called, without wxMFCApp's wx half.
+		static BOOL PreTranslateHook( void *pContext, MSG *pMsg )
+		{
+			return static_cast<CWxHostedApp*>( pContext )->TBaseApp::PreTranslateMessage( pMsg );
+		}
+
+		static BOOL IdleHook( void *pContext, LONG lCount )
+		{
+			return static_cast<CWxHostedApp*>( pContext )->TBaseApp::OnIdle( lCount );
 		}
 
 	protected:

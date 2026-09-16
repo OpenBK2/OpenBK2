@@ -10,10 +10,14 @@
 //
 // Nothing here names wx, so CEditorApp can ask without knowing. In a build
 // without BUILD_WX_EDITOR, IsWanted answers false and the MFC frame is used.
+#include "MapEditor_export.h"
+
 namespace NMainFrameWx
 {
 	// OBK2_WX_FRAME is set to something other than 0, and wx is built in.
-	bool IsWanted();
+	// Exported because the executable asks too, before anything else runs, to
+	// decide whose message loop the session has.
+	MAPEDITOR_EXPORT bool IsWanted();
 	// Makes the frame, registers it as the main frame, and makes the MFC
 	// application's main window a CWnd over its handle, so AfxGetMainWnd and
 	// every MFC dialog owned by the frame keep working. Hidden until Show.
