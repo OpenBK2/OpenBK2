@@ -80,6 +80,9 @@ struct IMainFrame : public ILogger
 	// Работа с Элементами оформления
 	virtual void SetStatusBarText( int nPaneIndex, const std::string &szText ) = 0;
 	virtual void SetWindowTitle( const SSWTParams &rSWTParams ) = 0;
+	// Runs a frame command -- a menu item's, ID_APP_EXIT say -- once what is
+	// being done now has returned, as posting WM_COMMAND to the main window did.
+	virtual void PostCommand( unsigned nCommandID ) = 0;
 	// Работа с DB
 	virtual void SaveObjectStorage( int nGDBBrowserID ) = 0;
 	virtual void RestoreObjectStorage() = 0;

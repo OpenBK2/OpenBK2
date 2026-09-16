@@ -168,6 +168,7 @@ public:
 	IToolBar* GetToolBar( unsigned nID );
 	void SetStatusBarText( int nPaneIndex, const std::string &szText );
 	void SetWindowTitle( const SSWTParams &rSWTParams );
+	void PostCommand( unsigned nCommandID );
 	//
 	void Log( ELogOutputType eLogOutputType, const std::string &szText );
 	void ClearLog();

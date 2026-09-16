@@ -1509,6 +1509,12 @@ void CMainFrame::IterateProgressDialogPosition()
 	progress.IteratePosition();
 }
 
+
+void CMainFrame::PostCommand( unsigned nCommandID )
+{
+	PostMessage( WM_COMMAND, nCommandID, 0 );
+}
+
 // basement storage  
 
 

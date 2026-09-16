@@ -423,7 +423,7 @@ void CGDBBrowserContents::OnCheckIn()
 				MB_OK | MB_ICONERROR
 				);
 	}
-	AfxGetMainWnd()->PostMessage( WM_COMMAND, ID_APP_EXIT, 0 );
+	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }
 
 
@@ -457,7 +457,7 @@ void CGDBBrowserContents::OnGetLatest()
 				MB_OK | MB_ICONERROR
 				);
 	}
-	AfxGetMainWnd()->PostMessage( WM_COMMAND, ID_APP_EXIT, 0 );
+	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }
 
 

@@ -10,6 +10,7 @@
 #include "BuilderContainer.h"
 #include "BuildDataView.h"
 #include "NewObjectView.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "Misc/StrProc.h"
 
@@ -156,9 +157,8 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 		//
 		const std::string szTemporaryLabel = fmt::format( "{}{:c}{}", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
 		//
-		// Which toolkit draws it is NBuildData's business.
-		CWndWidget mainWindow( AfxGetMainWnd() );
-		return NBuildData::Run( &mainWindow, pManipulator, objectSet, szTemporaryLabel, pBuildDataParams, pBuildDataCallback );
+		// Which toolkit draws it is NBuildData's business, over the main window.
+		return NBuildData::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), pManipulator, objectSet, szTemporaryLabel, pBuildDataParams, pBuildDataCallback );
 	}
 	return false;
 }
@@ -174,9 +174,8 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 		{
 			NStr::TrimBoth( *itObjectTypeName );
 		}
-		// Which toolkit draws it is NNewObject's business.
-		CWndWidget mainWindow( AfxGetMainWnd() );
-		return NNewObject::Run( &mainWindow, objectTypeNameList, 0, pBuildDataParams );
+		// Which toolkit draws it is NNewObject's business, over the main window.
+		return NNewObject::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), objectTypeNameList, 0, pBuildDataParams );
 	}
 	return false;
 }

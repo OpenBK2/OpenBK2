@@ -832,6 +832,14 @@ namespace
 			}
 		}
 
+		// The menu event the command's item would send, queued: OnMenu answers
+		// it after the caller returns, as it answered the WM_COMMAND the callers
+		// posted to the main window before (ToCommandID maps both back).
+		virtual void PostCommand( unsigned nCommandID )
+		{
+			QueueEvent( new wxCommandEvent( wxEVT_MENU, ToWxID( nCommandID ) ) );
+		}
+
 		// ILogger
 		virtual void Log( ELogOutputType eLogOutputType, const std::string &szText )
 		{

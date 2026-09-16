@@ -42,9 +42,8 @@ bool CMODContainer::NewMOD()
 	// two questions the MFC pair asked -- accepted? and is what came back
 	// usable? -- are one question, and the dialog already refused to accept an
 	// unusable answer.
-	CWndWidget ownerWidget( AfxGetMainWnd() );
 	NCreateMod::SNewMod newMod;
-	if ( NCreateMod::Run( &ownerWidget, &newMod ) )
+	if ( NCreateMod::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &newMod ) )
 	{
 		const std::string &szMODFolder = newMod.szFolderPath;
 		NProgress::Create( true );
@@ -93,8 +92,7 @@ bool CMODContainer::OpenMOD()
 	// chosen? -- are one question, so they are one call.
 	NMOD::SMOD mod;
 	{
-		CWndWidget ownerWidget( AfxGetMainWnd() );
-		if ( NOpenMod::Run( &ownerWidget, &mod ) )
+		if ( NOpenMod::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &mod ) )
 		{
 			NProgress::Create( true );
 			CString strPM;

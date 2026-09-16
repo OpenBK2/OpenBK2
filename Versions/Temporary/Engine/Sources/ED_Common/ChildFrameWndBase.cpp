@@ -95,9 +95,11 @@ void CChildFrameWndBase::OnTimer()
 		if ( bRunModeEnabled || bGameInputEnabled )
 		{
 			// The application's idle work and the game's step, as the MFC viewport
-			// ran them: these are the application's, not the window's.
+			// ran them: these are the application's, not the window's. The game
+			// steps as the active application when the active window is the one
+			// the viewport is in -- the main window, whichever frame that is.
 			AfxGetApp()->OnIdle( 0 );
-			NMainLoop::StepApp( ::GetActiveWindow() == AfxGetMainWnd()->GetSafeHwnd() );
+			NMainLoop::StepApp( ::GetActiveWindow() == ::GetAncestor( pSurface->GetHandle(), GA_ROOT ) );
 		}
 		else
 		{
