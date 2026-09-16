@@ -146,9 +146,9 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_MODEL_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pPane )
 		{
-			if ( !CreateHost( pParent ) )
+			if ( !CreateHost( pPane ) )
 			{
 				return false;
 			}
@@ -648,16 +648,43 @@ namespace
 }
 
 
+namespace
+{
+	class CWxModelView : public NModelView::IView
+	{
+		CModelWxWindow window;
+		bool bCreated = false;
+
+	public:
+		virtual bool Create( IWidget *pPane )
+		{
+			bCreated = window.Build( pPane );
+			return bCreated;
+		}
+
+		virtual void Destroy()
+		{
+			window.DestroyHost();
+		}
+
+		virtual void Show( bool bShow )
+		{
+			window.ShowHost( bShow );
+		}
+
+		virtual IWidget* GetWidget()
+		{
+			return bCreated ? &window : 0;
+		}
+	};
+}
+
+
 namespace NModelView
 {
-	std::unique_ptr<CWnd> CreateWx( CWnd *pParent )
+	IView* CreateWx()
 	{
-		std::unique_ptr<CModelWxWindow> pWindow( new CModelWxWindow() );
-		if ( !pWindow->Build( pParent ) )
-		{
-			return nullptr;
-		}
-		return pWindow;
+		return new CWxModelView();
 	}
 }
 

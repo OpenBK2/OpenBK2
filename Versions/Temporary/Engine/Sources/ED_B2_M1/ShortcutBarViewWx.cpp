@@ -160,23 +160,19 @@ namespace
 		// IView
 		virtual bool Create( IWidget *pPane, unsigned nControlID )
 		{
-			if ( !CreateHost( ToCWnd( pPane ) ) || ( Root() == nullptr ) )
+			if ( !CreateHost( pPane ) || ( Root() == nullptr ) )
 			{
 				return false;
 			}
 			pSizer = new wxBoxSizer( wxVERTICAL );
 			Root()->SetSizer( pSizer );
-			ShowWindow( SW_SHOW );
+			ShowHost( true );
 			return true;
 		}
 
 		virtual void Destroy()
 		{
-			TearDownWx();
-			if ( GetSafeHwnd() != 0 )
-			{
-				DestroyWindow();
-			}
+			DestroyHost();
 			// The owners delete the palettes, whose wx side is already gone.
 			bars.clear();
 			nOpenBar = -1;
@@ -189,10 +185,7 @@ namespace
 
 		virtual void Show( bool bShow )
 		{
-			if ( GetSafeHwnd() != 0 )
-			{
-				ShowWindow( bShow ? SW_SHOW : SW_HIDE );
-			}
+			ShowHost( bShow );
 		}
 
 		virtual int BeginBar( unsigned nTabCommandHandlerID, unsigned nTabCommandID )

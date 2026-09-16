@@ -28,7 +28,7 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	// The palette in pwndTool. Owned here, as the CModelWindow member it
 	// replaces was; its window is destroyed in DestroyControls and the object
 	// with it.
-	std::unique_ptr<CWnd> pModelWindow;
+	std::unique_ptr<NModelView::IView> pModelView;
 	bool bPreviousCameraHandleType;
 	float fFOV;
 

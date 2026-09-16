@@ -274,7 +274,7 @@ namespace
 		virtual bool Create( IFrameWindow *pFrame, CChildFrameWndBase *_pCore )
 		{
 			pCore = _pCore;
-			if ( !CreateHost( ToCWnd( pFrame ), AFX_IDW_PANE_FIRST ) || ( Root() == nullptr ) )
+			if ( !CreateHost( pFrame, AFX_IDW_PANE_FIRST ) || ( Root() == nullptr ) )
 			{
 				return false;
 			}
@@ -291,12 +291,11 @@ namespace
 			{
 				// As a window whose WM_CREATE refused: destroyed, with the core
 				// told as its WM_DESTROY told it.
-				DestroyContents();
-				DestroyWindow();
+				DestroyHost();
 				pWindow = nullptr;
 				return false;
 			}
-			ShowWindow( SW_SHOW );
+			ShowHost( true );
 			return true;
 		}
 

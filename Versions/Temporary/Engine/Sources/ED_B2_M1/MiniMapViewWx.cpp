@@ -53,13 +53,13 @@ namespace
 		}
 
 		// CMiniMapWindow::Create: the handler first, then the window.
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pPane )
 		{
 			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
 			pContainer->Set( CHID_MAPINFO_MINIMAP_WINDOW, this );
 			pContainer->Register( CHID_MAPINFO_MINIMAP_WINDOW, ID_MIMCO_GENERATE_MINIMAP_IMAGE, ID_MIMCO_GENERATE_MINIMAP_IMAGE );
 			bRegistered = true;
-			if ( !CreateHost( pParent ) )
+			if ( !CreateHost( pPane ) )
 			{
 				return false;
 			}
@@ -279,7 +279,7 @@ namespace
 
 		virtual bool Create( IWidget *pPane )
 		{
-			bCreated = window.Build( ToCWnd( pPane ) );
+			bCreated = window.Build( pPane );
 			return bCreated;
 		}
 
@@ -288,7 +288,7 @@ namespace
 			window.Unregister();
 			if ( bCreated )
 			{
-				window.DestroyWindow();
+				window.DestroyHost();
 				bCreated = false;
 			}
 		}
@@ -297,7 +297,7 @@ namespace
 		{
 			if ( bCreated )
 			{
-				window.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+				window.ShowHost( bShow );
 			}
 		}
 

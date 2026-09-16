@@ -10,13 +10,14 @@
 // panes share with these: CGDBBrowserContents, the property pane, and
 // CLogPaneContents. They are wx all the way down.
 //
-// The panes the editors ask for through IMainFrame::CreateControlBar are
-// filled by the editors, and the editors make MFC windows in them -- a
-// Stingray shortcut bar, or a CWxHostWindow around their wx contents -- as
-// children of ToCWnd( pane ). So those panes are a wx panel with a CWnd
-// subclassed over its handle: the editors get the CWnd they expect, and MFC's
-// handling of what a child sends its parent, reflected notifications included,
-// still runs before wx's.
+// The panes the editors ask for through IMainFrame::CreateControlBar, and the
+// document window, are filled by the editors. A wx view is made straight in
+// the pane's wx panel, which the pane's handle hands out as an IWxWidget
+// (MapEditorLib/WxWidget.h). An MFC view -- a Stingray shortcut bar, say --
+// is made as a child of ToCWnd( pane ), so for that the panel subclasses a
+// CWnd over its own handle when first asked: the view gets the CWnd it
+// expects, and MFC's handling of what a child sends its parent, reflected
+// notifications included, still runs before wx's.
 
 #ifdef OBK2_WITH_WX
 
@@ -24,6 +25,7 @@
 #include "LogPane.h"
 #include "PropertyPaneView.h"
 #include "MapEditorLib/Interface_Widget.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/aui/auibar.h>
 #include <wx/aui/framemanager.h>
@@ -67,7 +69,11 @@ namespace NMainFrameWxPanes
 	wxAuiPaneInfo DockedPaneInfo( const wxString &rName, const std::string &rszTitle, unsigned nPlace, float fRate, int nWidth );
 
 
-	// A wx panel that MFC windows can be children of.
+	// A wx panel for an editor's contents: a wx view laid out in it, or an MFC
+	// window kept its size. It is an MFC parent only once something asks it for
+	// one -- an MFC view made in the pane -- when it subclasses its own handle;
+	// a wx view made in it asks for none, and nothing MFC stands between the
+	// frame and the view.
 	class CMfcPanel : public wxPanel
 	{
 		CWnd mfcWindow;
@@ -81,8 +87,11 @@ namespace NMainFrameWxPanes
 		explicit CMfcPanel( wxWindow *pParent );
 		virtual ~CMfcPanel();
 
-		CWnd* GetMfcWindow() { return &mfcWindow; }
+		CWnd* GetMfcWindow();
+		// An MFC window as the contents.
 		void SetContents( HWND _hwndContents );
+		// A wx window of this panel's as the contents, filling it.
+		void SetWxContents( wxWindow *pContents );
 		void FitContents();
 	};
 
@@ -91,7 +100,7 @@ namespace NMainFrameWxPanes
 	// filling the frame's workspace, as a maximised MDI child fills the MDI
 	// client. The editor makes its view in it as CChildFrameBase always has, a
 	// child of ToCWnd( frame window ).
-	class CFrameWindow : public IFrameWindow
+	class CFrameWindow : public IFrameWindow, public IWxWidget
 	{
 		wxWeakRef<CMfcPanel> pPanel;
 
@@ -99,6 +108,9 @@ namespace NMainFrameWxPanes
 		explicit CFrameWindow( CMfcPanel *_pPanel ) : pPanel( _pPanel ) {}
 
 		CMfcPanel* GetPanel() const { return pPanel; }
+
+		// IWxWidget: the panel, which a wx view is made in.
+		virtual wxWindow* GetWxWindow() { return pPanel.get(); }
 
 		// IFrameWindow. Maximize has nothing to do: the panel always fills the
 		// workspace. Focus goes to the panel, as SetFocus on an MDI child left it
@@ -112,7 +124,7 @@ namespace NMainFrameWxPanes
 
 
 	// The IDockPanel an editor gets: a CMfcPanel in the frame's wxAUI manager.
-	class CDockPanel : public IDockPanel
+	class CDockPanel : public IDockPanel, public IWxWidget
 	{
 		CAuiManager *pManager;
 		wxWeakRef<CMfcPanel> pPanel;
@@ -126,6 +138,9 @@ namespace NMainFrameWxPanes
 			: pManager( _pManager ), pPanel( _pPanel ), pbLaidOut( _pbLaidOut ) {}
 
 		CMfcPanel* GetPanel() const { return pPanel; }
+
+		// IWxWidget: the panel, which a wx view is made in.
+		virtual wxWindow* GetWxWindow() { return pPanel.get(); }
 
 		// IDockPanel. Show tells the manager, and the manager lays the frame out
 		// again once the caller has returned (CAuiManager::UpdateLater);

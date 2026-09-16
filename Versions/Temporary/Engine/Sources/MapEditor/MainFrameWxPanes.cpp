@@ -219,8 +219,19 @@ namespace NMainFrameWxPanes
 		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN ),
 			hwndContents( 0 )
 	{
-		mfcWindow.SubclassWindow( GetHWND() );
 		Bind( wxEVT_SIZE, &CMfcPanel::OnSize, this );
+	}
+
+
+	CWnd* CMfcPanel::GetMfcWindow()
+	{
+		// Only when an MFC window is to be made in the pane: a wx view asks the
+		// panel for itself (IWxWidget), and never subclasses it.
+		if ( mfcWindow.GetSafeHwnd() == 0 )
+		{
+			mfcWindow.SubclassWindow( GetHWND() );
+		}
+		return &mfcWindow;
 	}
 
 
@@ -239,6 +250,21 @@ namespace NMainFrameWxPanes
 	{
 		hwndContents = _hwndContents;
 		FitContents();
+	}
+
+
+	void CMfcPanel::SetWxContents( wxWindow *pContents )
+	{
+		wxSizer *pSizer = GetSizer();
+		if ( pSizer == nullptr )
+		{
+			pSizer = new wxBoxSizer( wxVERTICAL );
+			SetSizer( pSizer );
+		}
+		// The sizer does not own the windows in it; what was there stays a child.
+		pSizer->Clear( false );
+		pSizer->Add( pContents, wxSizerFlags( 1 ).Expand() );
+		Layout();
 	}
 
 

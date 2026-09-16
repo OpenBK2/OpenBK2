@@ -90,16 +90,19 @@ void CModelEditor::CreateControls()
 	{
 		// Which toolkit draws the palette is NModelView's business. The pane is
 		// shown whether or not it could be created, as it always was.
-		pModelWindow = NModelView::Create( ToCWnd( pwndTool ) );
-		if ( pModelWindow )
+		pModelView.reset( NModelView::Create() );
+		if ( pModelView->Create( pwndTool ) )
 		{
-			CWndWidget contentsWidget( pModelWindow.get() );
-			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, &contentsWidget );
+			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndTool, pModelView->GetWidget() );
+		}
+		else
+		{
+			pModelView.reset();
 		}
 		pwndTool->ShowWithoutLayout( true );
-		if ( pModelWindow )
+		if ( pModelView )
 		{
-			pModelWindow->ShowWindow( SW_SHOW );
+			pModelView->Show( true );
 		}
 	}
 	//
@@ -163,12 +166,12 @@ void CModelEditor::DestroyControls()
 		pwndTool = 0;
 	}
 	// In the order it always was: the pane first, which usually takes the
-	// palette's window with it as a child, then the palette's own
-	// DestroyWindow, which is then a no-op. The object goes last.
-	if ( pModelWindow )
+	// palette's window with it as a child, then the palette's own Destroy,
+	// which is then a no-op. The object goes last.
+	if ( pModelView )
 	{
-		pModelWindow->DestroyWindow();
-		pModelWindow.reset();
+		pModelView->Destroy();
+		pModelView.reset();
 	}
 }
 

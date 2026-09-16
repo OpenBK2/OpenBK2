@@ -660,6 +660,13 @@ namespace
 			{
 				return false;
 			}
+			// A wx view made in the panel is laid out in it; anything else is an
+			// MFC window kept its size.
+			if ( wxWindow *const pWxContents = ToWxWindow( pContents ) )
+			{
+				pHandle->GetPanel()->SetWxContents( pWxContents );
+				return true;
+			}
 			const CWnd *const pwndContents = ToCWnd( pContents );
 			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );
 			return true;
@@ -690,6 +697,12 @@ namespace
 			if ( ( pHandle == 0 ) || ( pHandle->GetPanel() == nullptr ) )
 			{
 				return false;
+			}
+			// As SetChildFrameWindowContents.
+			if ( wxWindow *const pWxContents = ToWxWindow( pContents ) )
+			{
+				pHandle->GetPanel()->SetWxContents( pWxContents );
+				return true;
 			}
 			const CWnd *const pwndContents = ToCWnd( pContents );
 			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );

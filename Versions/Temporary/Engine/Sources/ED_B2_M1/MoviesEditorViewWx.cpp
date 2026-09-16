@@ -524,12 +524,12 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_MOVIES_EDITOR_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pPane )
 		{
 			Singleton<ICommandHandlerContainer>()->Set( CHID_MOVIES_EDITOR_WINDOW, this );
 			Singleton<ICommandHandlerContainer>()->Register( CHID_MOVIES_EDITOR_WINDOW,
 																											ID_MIMOVED_INSERT_KEY, ID_MIMOVED_DELETE_KEYS );
-			if ( !CreateHost( pParent ) )
+			if ( !CreateHost( pPane ) )
 			{
 				return false;
 			}
@@ -1037,7 +1037,7 @@ namespace
 
 		virtual bool Create( IWidget *pPane )
 		{
-			bCreated = window.Build( ToCWnd( pPane ) );
+			bCreated = window.Build( pPane );
 			return bCreated;
 		}
 
@@ -1046,7 +1046,7 @@ namespace
 			if ( bCreated )
 			{
 				window.Unregister();
-				window.DestroyWindow();
+				window.DestroyHost();
 				bCreated = false;
 			}
 		}
@@ -1055,7 +1055,7 @@ namespace
 		{
 			if ( bCreated )
 			{
-				window.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
+				window.ShowHost( bShow );
 			}
 		}
 
