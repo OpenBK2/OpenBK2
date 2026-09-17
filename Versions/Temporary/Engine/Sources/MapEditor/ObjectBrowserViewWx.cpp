@@ -278,16 +278,13 @@ namespace
 
 		virtual ~CWxObjectTree()
 		{
-			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
-			pContainer->Remove( CHID_OBJECT, this );
-			pContainer->Remove( CHID_SELECTION, this );
-			++nBuildGeneration;
-			pBuildIterator = 0;
+			wxTreeCtrl *const pWindow = pTree;
+			StopTree();
 			RemoveViewManipulator();
 			// The tree calls into this view from its events, so it goes first.
-			if ( pTree != nullptr )
+			if ( pWindow != nullptr )
 			{
-				pTree->Destroy();
+				pWindow->Destroy();
 			}
 		}
 
@@ -1097,6 +1094,25 @@ namespace
 		{
 			++nBuildGeneration;
 			pBuildIterator = 0;
+		}
+
+		void StopTree()
+		{
+			// wxTreeCtrl deletes its selected items after wxEVT_DESTROY and can
+			// still send selection/focus events. Stop callbacks before releasing
+			// the view: the frame may already be gone, and this tree must not
+			// register itself as a command handler again while being destroyed.
+			if ( pTree != nullptr )
+			{
+				pTree->SetEvtHandlerEnabled( false );
+				pTree->DeletePendingEvents();
+				// The native message hook also becomes inert when pTree is null.
+				pTree = nullptr;
+			}
+			StopBuild();
+			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
+			pContainer->Remove( CHID_OBJECT, this );
+			pContainer->Remove( CHID_SELECTION, this );
 		}
 
 		void ScheduleBuild()
@@ -2549,9 +2565,8 @@ namespace
 			rEvent.Skip();
 			if ( rEvent.GetEventObject() == pTree )
 			{
-				++nBuildGeneration;
-				pBuildIterator = 0;
-				pTree = nullptr;
+				// Also covers the parent destroying the window before this view.
+				StopTree();
 			}
 		}
 	};
