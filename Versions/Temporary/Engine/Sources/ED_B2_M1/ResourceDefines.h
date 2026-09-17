@@ -156,6 +156,8 @@
 #define ID_MOV_ED_RESET_DIALOG											3654
 
 //	TOOLS MESSAGES
+// Temporary map tool; registered separately from the existing tool command ranges.
+#define ID_TOOLS_CREATE_SCRIPT_PATH_POINTS 3678
 #define ID_TOOLS_RESET_CAMERA												3660
 #define ID_TOOLS_UPDATE_VSO													3661
 #define ID_TOOLS_FIT_TO_GRID												3662

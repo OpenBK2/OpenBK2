@@ -166,6 +166,7 @@ set(SOURCES
     ScriptAreaWindow.cpp
     ScriptCameraEditorData.cpp
     ScriptCameraState.cpp
+    ScriptPathPointsState.cpp
     ScriptCameraViewMfc.cpp
     ScriptCameraViewWx.cpp
     ShortcutBarViewMfc.cpp

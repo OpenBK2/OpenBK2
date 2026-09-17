@@ -103,6 +103,7 @@ CMapInfoEditor::CMapInfoEditor()
 	Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_EDITOR, this );
 	//
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_TOOLS_RESET_CAMERA, ID_TOOLS_REGEN_VSO_NORMALS );
+	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, ID_TOOLS_CREATE_SCRIPT_PATH_POINTS );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_UPDATE_SCENE_SIZE, ID_UPDATE_SCENE_VIEW );
 	Singleton<ICommandHandlerContainer>()->Register( CHID_MAPINFO_EDITOR, ID_MI_VIEW_MINIMAP, ID_MI_VIEW_TOOLS_TOOLBAR );
 }
@@ -525,6 +526,13 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	switch( nCommandID ) 
 	{
+		case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
+		{
+			if ( !pMapInfo || !pMapInfoState )
+				return false;
+			pMapInfoState->ToggleScriptPathPoints();
+			return true;
+		}
 		case ID_TOOLS_RUN_GAME:
 		{
 			RunGame();
@@ -809,6 +817,12 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	switch( nCommandID ) 
 	{
+	case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
+	{
+		*pbEnable = pMapInfo != 0 && pMapInfoState != 0;
+		*pbCheck = *pbEnable && pMapInfoState->IsCreatingScriptPathPoints();
+		return true;
+	}
 	case ID_UPDATE_SCENE_SIZE:
 	case ID_UPDATE_SCENE_VIEW:
 	case ID_MIMCO_GENERATE_MINIMAP_IMAGE:

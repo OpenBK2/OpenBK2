@@ -991,6 +991,8 @@ BEGIN
     END
     POPUP "&Tools"
     BEGIN
+        MENUITEM "Create Script Path Points", ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "De&bug Check Map",            ID_TOOLS_DEBUG_CHECK_MAP
         , GRAYED
         MENUITEM "Regenerate &Terrain",         ID_TOOLS_REGEN_GEOMETRY
@@ -1148,6 +1150,8 @@ BEGIN
     END
     POPUP "&Tools"
     BEGIN
+        MENUITEM "Create Script Path Points", ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "De&bug Check Map",            ID_TOOLS_DEBUG_CHECK_MAP
         , GRAYED
         MENUITEM "Regenerate &Terrain",         ID_TOOLS_REGEN_GEOMETRY
@@ -1303,6 +1307,8 @@ BEGIN
     END
     POPUP "&Tools"
     BEGIN
+        MENUITEM "Create Script Path Points", ID_TOOLS_CREATE_SCRIPT_PATH_POINTS, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "De&bug Check Map",            ID_TOOLS_DEBUG_CHECK_MAP
         , GRAYED
         MENUITEM "Regenerate &Geometry",        ID_TOOLS_REGEN_GEOMETRY
@@ -1480,6 +1486,7 @@ BEGIN
     ID_TOOLS_REGEN_VSO_NORMALS 
                             "Regenerate normals of terrain objects\nRegenerate normals of terrain objects"
     ID_TOOLS_DEBUG_CHECK_MAP "Debug check map\nDebug Check Map"
+    ID_TOOLS_CREATE_SCRIPT_PATH_POINTS "Copy a Lua path: left click adds a point, right click removes the last point, Escape finishes\nCreate Script Path Points"
     ID_TOOLS_REGEN_GEOMETRY "Regenerate terrain geometry to fix any bad terrain junctions\nRegenerate Terrain"
     ID_TOOLS_CREATE_INF_ANIMS 
                             "Create infanrty animations\nCreate Infanrty Animations"

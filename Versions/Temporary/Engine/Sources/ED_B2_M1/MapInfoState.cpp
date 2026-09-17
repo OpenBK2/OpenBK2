@@ -26,6 +26,7 @@
 #include "AIGeneralState.h"
 #include "ReinfPointsState.h"
 #include "ScriptCameraState.h"
+#include "ScriptPathPointsState.h"
 
 #include "MapObjectMultiState.h"
 
@@ -198,6 +199,25 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, fmt::format( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_MOVIES ) );
 		}
 	}
+	// Keep temporary tools outside IS_COUNT so palette indices and saved settings stay stable.
+	nScriptPathInputState = AddInputState( new CScriptPathPointsState() );
+}
+
+
+void CMapInfoState::ToggleScriptPathPoints()
+{
+	if ( !pMapInfoEditor || !pMapInfoEditor->pMapInfo )
+		return;
+
+	if ( IsCreatingScriptPathPoints() )
+		SetActiveInputState( nPreviousInputState, true, false );
+	else
+	{
+		nPreviousInputState = GetActiveInputStateIndex();
+		SetActiveInputState( nScriptPathInputState, true, false );
+	}
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
 
 
@@ -619,6 +639,9 @@ void CMapInfoState::Enter()
 void CMapInfoState::Leave()
 {
 	CMultiInputState::Leave();
+	// Discard the temporary tool before saving the palette selection, without re-entering a tool.
+	if ( IsCreatingScriptPathPoints() )
+		SetActiveInputState( nPreviousInputState, false, false );
 	// сохраняем состояние панелей
 	SaveEnterConfig();
 	//
@@ -662,7 +685,7 @@ bool CMapInfoState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		{
 			const unsigned nShortcutIndex = HIWORD( dwData );
 			const unsigned nTabIndex = LOWORD( dwData );
-			if ( nShortcutIndex >= GetCount() )
+			if ( nShortcutIndex >= IS_COUNT )
 				return false;
 
 			if ( nTabIndex != INVALID_TAB_INDEX && IsMultiInputState( nShortcutIndex ) )

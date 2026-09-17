@@ -14,6 +14,9 @@ class CMapInfoState : public CMultiInputState, public ICommandHandler
 	// Данные общего назначения 
 	CMapInfoEditor *pMapInfoEditor;
 	CPtr<CMaskManipulator> pMaskManipulator;
+	// The clipboard tool has no palette or persisted state of its own.
+	int nScriptPathInputState;
+	int nPreviousInputState = DEFAULT_INPUT_STATE;
 	// Методы общего назначения
 	bool IsMultiInputState( int nStateIndex );
 	void LoadEnterConfig();
@@ -90,6 +93,8 @@ public:
 	void OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 
 	void CancelSelection();
+	void ToggleScriptPathPoints();
+	bool IsCreatingScriptPathPoints() { return GetActiveInputStateIndex() == nScriptPathInputState; }
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
