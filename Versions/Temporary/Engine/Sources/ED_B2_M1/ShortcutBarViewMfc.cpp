@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "ShortcutBarView.h"
 
@@ -129,8 +130,7 @@ namespace NShortcutBar
 #ifdef OBK2_WITH_WX
 		// The same flag every migrated piece follows -- and the one the palettes'
 		// Create functions follow, which is what gives a wx bar wx palettes.
-		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
-		if ( pszUseWx != 0 && pszUseWx[0] != '0' && pszUseWx[0] != '\0' )
+		if ( NToolkit::UseWxViews() )
 		{
 			return CreateWx();
 		}

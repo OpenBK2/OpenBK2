@@ -38,10 +38,13 @@ def sweep(toolkit, pane, mapname, outdir):
     run('editorstate.py', 'restore')
     run('editorstate.py', 'active', str(pane), '0')
     env = dict(os.environ)
+    # Both in the MFC frame, which is where the palettes were compared; the views
+    # are wx's unless asked for MFC's (MapEditorLib/ToolkitChoice.h).
+    env['OBK2_WX_FRAME'] = '0'
     if toolkit == 'wx':
-        env['OBK2_WX_DIALOGS'] = '1'
-    else:
         env.pop('OBK2_WX_DIALOGS', None)
+    else:
+        env['OBK2_WX_DIALOGS'] = '0'
     run('rundesktop.py', '--d3d9stub', env=env)
     opened = run('openrecent.py', mapname)
     if opened.returncode != 0:

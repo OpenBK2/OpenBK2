@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "MainFrameWx.h"
 
@@ -9,8 +10,7 @@ namespace NMainFrameWx
 	bool IsWanted()
 	{
 #ifdef OBK2_WITH_WX
-		const char *const pszWanted = std::getenv( "OBK2_WX_FRAME" );
-		return ( pszWanted != 0 ) && ( pszWanted[0] != '0' ) && ( pszWanted[0] != '\0' );
+		return NToolkit::UseWxFrame();
 #else
 		return false;
 #endif

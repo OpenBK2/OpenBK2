@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "MiniMapView.h"
 #include "MiniMapWindow.h"
@@ -23,8 +24,7 @@ namespace
 	// MFC set or the wx set.
 	bool UseWx()
 	{
-		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
-		return ( pszUseWx != 0 ) && ( pszUseWx[0] != '0' ) && ( pszUseWx[0] != '\0' );
+		return NToolkit::UseWxViews();
 	}
 
 

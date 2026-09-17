@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "CreateModView.h"
 #include "CreateMODDialog.h"
@@ -96,8 +97,7 @@ namespace NCreateMod
 #ifdef OBK2_WITH_WX
 		// The same flag every migrated dialog follows, so a session runs either
 		// the MFC set or the wx set. See SelectTablesViewMfc.cpp.
-		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
-		if ( pszUseWx != 0 && pszUseWx[0] != '0' && pszUseWx[0] != '\0' )
+		if ( NToolkit::UseWxViews() )
 		{
 			return RunWx( pParent, pMod );
 		}

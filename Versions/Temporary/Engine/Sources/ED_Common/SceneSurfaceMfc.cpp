@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "MapEditorLib/MfcPaintContext.h"
 #include "MapEditorLib/MfcWidget.h"
@@ -425,8 +426,7 @@ namespace NSceneSurface
 	{
 #ifdef OBK2_WITH_WX
 		// The same flag every migrated piece follows.
-		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
-		if ( pszUseWx != 0 && pszUseWx[0] != '0' && pszUseWx[0] != '\0' )
+		if ( NToolkit::UseWxViews() )
 		{
 			return CreateWx();
 		}

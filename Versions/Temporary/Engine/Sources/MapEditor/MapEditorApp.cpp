@@ -376,8 +376,8 @@ BOOL CEditorApp::InitInstance()
 	std::string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
-	// The frame this session has: CMainFrame, or the wx one beside it when
-	// OBK2_WX_FRAME asks for it. The wx frame answers to a mapping of its own,
+	// The frame this session has: the wx one, or CMainFrame beside it when
+	// OBK2_WX_FRAME=0 asks for it. The wx frame answers to a mapping of its own,
 	// so one editor of each kind can run at once to be compared; each still
 	// refuses a second of its own kind.
 	const bool bWxFrame = NMainFrameWx::IsWanted();

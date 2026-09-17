@@ -14,7 +14,7 @@
 
 namespace NMainFrameWx
 {
-	// OBK2_WX_FRAME is set to something other than 0, and wx is built in.
+	// wx is built in, and OBK2_WX_FRAME is not set to 0.
 	// Exported because the executable asks too, before anything else runs, to
 	// decide whose message loop the session has.
 	MAPEDITOR_EXPORT bool IsWanted();

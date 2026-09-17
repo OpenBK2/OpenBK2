@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/ToolkitChoice.h"
 
 #include "SelectTablesView.h"
 #include "SelectTablesDialog.h"
@@ -41,8 +42,7 @@ namespace NSelectTables
 		// move across they should all follow one flag, so that a session runs
 		// either the MFC set or the wx set and the comparison is of the editor
 		// rather than of one window.
-		const char *pszUseWx = std::getenv( "OBK2_WX_DIALOGS" );
-		if ( pszUseWx != 0 && pszUseWx[0] != '0' && pszUseWx[0] != '\0' )
+		if ( NToolkit::UseWxViews() )
 		{
 			return RunWx( pParent, rTables, pSelectedTables );
 		}

@@ -37,7 +37,7 @@ namespace NMoviesEditorView
 	};
 
 
-	// Which implementation the pane gets, from OBK2_WX_DIALOGS. The caller owns
+	// Which implementation the pane gets: wx, unless OBK2_WX_DIALOGS=0. The caller owns
 	// the result and destroys it with delete.
 	IView* Create();
 

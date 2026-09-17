@@ -1,9 +1,10 @@
-# wxWidgets, the toolkit the editor is being ported to.
+# wxWidgets, the toolkit the editor runs on by default.
 #
-# Gated behind BUILD_WX_EDITOR, which is OFF, and it should stay OFF until the wx
-# front-end does something. CI builds both presets from scratch on every push and
-# caches only the DirectX SDK -- no _deps cache, no ccache -- so an unconditional
-# wx would put a large library on every push twice over before it earns it.
+# Behind BUILD_WX_EDITOR, which is ON: the editor's frame and views are wx's,
+# and the MFC ones stay beside them for comparison (docs/EditorToolkits.md).
+# The cost is real. CI builds both presets from scratch on every push and caches
+# only the DirectX SDK -- no _deps cache, no ccache -- so every push builds this
+# library twice over; a build that wants none of it turns the option off.
 #
 # ExternalProject rather than FetchContent, which is what every other dependency
 # here uses, and the difference is deliberate:
@@ -35,10 +36,9 @@ set(WX_INSTALL ${WX_PREFIX}/install)
 # the DLL and the generated setup.h together. The tag is "vc" plus an
 # architecture suffix plus the linkage.
 #
-# The x64 spelling is the one that has been built and checked. wx leaves the
-# suffix off for 32-bit, so the other branch is what its convention says rather
-# than something observed -- if an x86 wx build ever fails to link, this is the
-# first line to look at.
+# wx leaves the suffix off for 32-bit. Both spellings have been built and
+# checked: an x64 and an x86 editor linked against the library found here, with
+# the DLL copied beside them.
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set(WX_TOOLCHAIN_TAG vc_x64_dll)
 else()
