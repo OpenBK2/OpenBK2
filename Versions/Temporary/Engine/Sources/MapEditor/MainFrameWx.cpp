@@ -449,7 +449,7 @@ namespace
 		std::list<std::unique_ptr<NMainFrameWxPanes::CFrameWindow>> frameWindows;
 		// The toolbars, the frame's and the editors', by bar id, and the pictures
 		// their buttons are drawn from. The next id for a toolbar that asks for
-		// one, as CMainFrame counts them, and the next toolbar row.
+		// one, as CMainFrame counts them, and the next position in the toolbar row.
 		NMainFrameWxPanes::CToolBarImages toolBarImages;
 		std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>> toolBars;
 		unsigned nFreeToolBarID = AFX_IDW_TOOLBAR + 9;
@@ -780,10 +780,10 @@ namespace
 			}
 			pToolBar->Realize();
 			//
-			// A row each, in the order they are made, as the MFC frame stacks its
-			// toolbars; a hidden one leaves no gap.
+			// Share a row in creation order, so the toolbars start side by side.
+			// wxAUI moves overlapping positions apart to fit each visible toolbar.
 			wxAuiPaneInfo info;
-			info.Name( wxString::Format( "ToolBar%u", *pnID ) ).Caption( wxString::FromUTF8( rszTitle.c_str() ) ).ToolbarPane().Row( nNextToolBarPosition ).Position( 0 );
+			info.Name( wxString::Format( "ToolBar%u", *pnID ) ).Caption( wxString::FromUTF8( rszTitle.c_str() ) ).ToolbarPane().Row( 0 ).Position( nNextToolBarPosition );
 			switch ( nStyle )
 			{
 				case AFX_IDW_DOCKBAR_BOTTOM:
@@ -1092,7 +1092,10 @@ namespace
 		// OnMenuOpen already sets the menus' states.
 		void OnUpdateUI( wxUpdateUIEvent &rEvent )
 		{
-			if ( wxDynamicCast( rEvent.GetEventObject(), wxAuiToolBar ) == nullptr )
+			// wxAuiToolBar also sends an update for its own window. Only answer
+			// button updates: disabling the toolbar itself disables its drag grip.
+			wxAuiToolBar *const pToolBar = wxDynamicCast( rEvent.GetEventObject(), wxAuiToolBar );
+			if ( ( pToolBar == nullptr ) || ( pToolBar->FindTool( rEvent.GetId() ) == nullptr ) )
 			{
 				rEvent.Skip();
 				return;
