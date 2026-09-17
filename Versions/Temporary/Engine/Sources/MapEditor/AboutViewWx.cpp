@@ -80,8 +80,8 @@ namespace
 			// reason.
 			pText->Add( NWx::Child<wxStaticText>(
 											this, wxID_ANY,
-											wxString::FromUTF8( "Copyright \xC2\xA9 2003 Nival Interactive."
-																					" All rights reserved." ) ),
+											wxString::FromUTF8( "Copyright \xC2\xA9 2003 Nival Interactive.\n"
+																					" All rights reserved.\nOpen Source port by OpenBK2 team." ) ),
 									wxSizerFlags().Border( wxTOP, 8 ) );
 
 			pTop->Add( pText, wxSizerFlags( 1 ).Expand().Border( wxTOP | wxRIGHT, 10 ) );
