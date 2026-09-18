@@ -2,6 +2,10 @@
 
 #include "MainFrameWxPanes.h"
 
+#include <set>
+#include <tuple>
+#include <vector>
+
 #ifdef OBK2_WITH_WX
 
 #include <fmt/printf.h>
@@ -56,8 +60,93 @@ namespace NMainFrameWxPanes
 	}
 
 
+	void CAuiManager::RememberDockSizes()
+	{
+		for ( wxAuiPaneInfo &rPane : m_panes )
+		{
+			if ( rPane.IsToolbar() || rPane.dock_direction == wxAUI_DOCK_CENTER )
+			{
+				continue;
+			}
+			for ( const wxAuiDockInfo &rDock : m_docks )
+			{
+				if ( rDock.dock_direction == rPane.dock_direction && rDock.dock_layer == rPane.dock_layer &&
+						 rDock.dock_row == rPane.dock_row && rDock.size > 0 )
+				{
+					rPane.dock_size = rDock.size;
+					break;
+				}
+			}
+		}
+	}
+
+
+	wxString CAuiManager::SaveEditorLayout()
+	{
+		RememberDockSizes();
+		wxString layout = SavePerspective();
+		std::set<std::tuple<int, int, int>> docks;
+		for ( const wxAuiDockInfo &rDock : m_docks )
+		{
+			docks.emplace( rDock.dock_direction, rDock.dock_layer, rDock.dock_row );
+		}
+		// SavePerspective omits docks whose panes are all hidden. Retain their
+		// last sizes using the same format, compatible with existing layouts.
+		for ( const wxAuiPaneInfo &rPane : m_panes )
+		{
+			if ( rPane.dock_size > 0 && !rPane.IsToolbar() && rPane.dock_direction != wxAUI_DOCK_CENTER &&
+					 docks.emplace( rPane.dock_direction, rPane.dock_layer, rPane.dock_row ).second )
+			{
+				layout += wxString::Format( "dock_size(%d,%d,%d)=%d|", rPane.dock_direction,
+															 rPane.dock_layer, rPane.dock_row, rPane.dock_size );
+			}
+		}
+		return layout;
+	}
+
+
+	bool CAuiManager::LoadEditorLayout( const wxString &rLayout )
+	{
+		std::vector<wxAuiPaneInfo> before;
+		for ( const wxAuiPaneInfo &rPane : m_panes )
+		{
+			before.push_back( rPane );
+		}
+		const wxAuiDockInfoArray previousDocks = m_docks;
+		const bool bPreviouslyMaximized = m_hasMaximized;
+		if ( !LoadPerspective( rLayout, false ) )
+		{
+			// wxAUI can reject a layout after partially applying it. Leave the
+			// current arrangement intact if a saved layout cannot be read.
+			for ( size_t nPane = 0; nPane < before.size(); ++nPane )
+			{
+				m_panes.Item( nPane ).SafeSet( before[nPane] );
+			}
+			m_docks = previousDocks;
+			m_hasMaximized = bPreviouslyMaximized;
+			return false;
+		}
+		for ( size_t nPane = 0; nPane < before.size(); ++nPane )
+		{
+			wxAuiPaneInfo &rPane = m_panes.Item( nPane );
+			// Layouts from older builds may not know about new panes. Keep them
+			// and current captions, rather than hiding or renaming them.
+			if ( rLayout.Find( "name=" + before[nPane].name + ";" ) == wxNOT_FOUND )
+			{
+				rPane.SafeSet( before[nPane] );
+			}
+			rPane.Caption( before[nPane].caption );
+		}
+		// PostCreateControls hides inactive editor panes before the first
+		// layout. Copy sizes now, before wxAUI removes their empty docks.
+		RememberDockSizes();
+		return true;
+	}
+
+
 	void CAuiManager::UpdateLater()
 	{
+		RememberDockSizes();
 		wxWindow *const pFrame = GetManagedWindow();
 		if ( ( pFrame == nullptr ) || bUpdatePending )
 		{

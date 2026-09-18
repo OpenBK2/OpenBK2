@@ -59,6 +59,9 @@
 
 // Shared frame command, also present in the module-specific View menus.
 #define ID_VIEW_RESET_GUI 921
+// Named docking layouts in the wx main frame.
+#define ID_VIEW_SAVE_LAYOUT 922
+#define ID_VIEW_LOAD_LAYOUT 923
 
 #define ID_HELP_CONTENTS														930
 #define ID_HELP_ABOUT																931

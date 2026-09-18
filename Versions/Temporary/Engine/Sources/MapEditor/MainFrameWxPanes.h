@@ -47,6 +47,12 @@ namespace NMainFrameWxPanes
 		bool bUpdatePending = false;
 
 	public:
+		// Keep dock widths/heights on the panes as well, so hiding the last
+		// pane in a dock does not discard its size when wxAUI removes the dock.
+		void RememberDockSizes();
+		wxString SaveEditorLayout();
+		bool LoadEditorLayout( const wxString &rLayout );
+
 		// The window of the pane whose caption, gripper or border is at rPoint,
 		// in the managed window's client coordinates. Null anywhere else,
 		// the pane's buttons and its own window included.

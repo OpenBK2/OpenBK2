@@ -57,13 +57,18 @@ namespace NMainFrameWx
 #include <wx/aui/auibar.h>
 #include <wx/aui/barartmsw.h>
 #include <wx/aui/framemanager.h>
+#include <wx/choicdlg.h>
 #include <wx/dcclient.h>
 #include <wx/iconbndl.h>
 #include <wx/menu.h>
+#include <wx/msgdlg.h>
 #include <wx/panel.h>
 #include <wx/settings.h>
+#include <wx/sstream.h>
 #include <wx/statusbr.h>
+#include <wx/textdlg.h>
 #include <wx/weakref.h>
+#include <wx/xml/xml.h>
 
 #include <climits>
 #include <list>
@@ -483,6 +488,27 @@ namespace
 	}
 
 
+	void AddLayoutsMenu( wxMenuBar *pMenuBar )
+	{
+		wxMenu *pView = nullptr;
+		if ( pMenuBar->FindItem( ToWxID( ID_VIEW_RESET_GUI ), &pView ) == nullptr )
+		{
+			return;
+		}
+		wxMenu *const pLayouts = new wxMenu();
+		pLayouts->Append( ToWxID( ID_VIEW_SAVE_LAYOUT ), "&Save Layout...", "Save the current panel and toolbar layout" );
+		pLayouts->Append( ToWxID( ID_VIEW_LOAD_LAYOUT ), "&Load Layout...", "Restore a saved panel and toolbar layout" );
+		pView->AppendSubMenu( pLayouts, "&Layouts" );
+	}
+
+
+	struct SNamedLayout
+	{
+		wxString name;
+		wxString perspective;
+	};
+
+
 	// A recent list's menu, rebuilt the way CMainFrame::OnUpdateUserCommand
 	// rebuilds it: one item per name, or the one "empty" item.
 	void FillRecentMenu( wxMenu *pMenu, const SUserData::CRecentList &rRecentList, unsigned nFirstID )
@@ -579,6 +605,7 @@ namespace
 		// The layout the frame has before a saved one is read: what a first run
 		// gets, and what Reset GUI goes back to.
 		wxString szDefaultLayout;
+		std::vector<SNamedLayout> namedLayouts;
 		// Whether the manager has laid the frame out. The first layout waits for
 		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
 		// of the frame the first time it sizes it, and keeps what it gave.
@@ -591,6 +618,11 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
 			mfcWindow.Attach( GetHWND() );
 			Bind( wxEVT_CLOSE_WINDOW, &CWxMainFrame::OnCloseWindow, this );
+			Bind( wxEVT_AUI_PANE_CLOSE, [this]( wxAuiManagerEvent &rEvent )
+			{
+				auiManager.RememberDockSizes();
+				rEvent.Skip();
+			} );
 			Bind( wxEVT_MENU, &CWxMainFrame::OnMenu, this );
 			Bind( wxEVT_MENU_OPEN, &CWxMainFrame::OnMenuOpen, this );
 			Bind( wxEVT_DROP_FILES, &CWxMainFrame::OnDropFiles, this );
@@ -645,6 +677,7 @@ namespace
 			//
 			mapEditorSingletonApp.CreateMapFile( GetHWND() );
 			params.Load( true );
+			ReadNamedLayouts();
 			szHelpFilePath = NMainFrameShared::GetHelpFilePath();
 			SetIcons( LoadFrameIcons() );
 			//
@@ -675,7 +708,7 @@ namespace
 			Singleton<IEditorContainer>()->CreateControls();
 			// Where CMainFrame loads its bar state: every pane and toolbar is made,
 			// and the editors have not yet hidden theirs.
-			szDefaultLayout = auiManager.SavePerspective();
+			szDefaultLayout = auiManager.SaveEditorLayout();
 			LoadLayout();
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
 			{
@@ -847,6 +880,7 @@ namespace
 				}
 				if ( wxMenuBar *const pMenuBar = MenuBarFromResource( *itMenuID ) )
 				{
+					AddLayoutsMenu( pMenuBar );
 					menuBars[*itMenuID] = pMenuBar;
 				}
 			}
@@ -1112,7 +1146,8 @@ namespace
 
 		void SaveLayout()
 		{
-			AfxGetApp()->WriteProfileString( LayoutSection(), "Layout", auiManager.SavePerspective().utf8_str() );
+			auiManager.Update();
+			AfxGetApp()->WriteProfileString( LayoutSection(), "Layout", auiManager.SaveEditorLayout().utf8_str() );
 		}
 
 		void LoadLayout()
@@ -1120,37 +1155,124 @@ namespace
 			const CString strLayout = AfxGetApp()->GetProfileString( LayoutSection(), "Layout", "" );
 			if ( !strLayout.IsEmpty() )
 			{
-				ApplyLayout( wxString::FromUTF8( strLayout.GetString() ) );
+				auiManager.LoadEditorLayout( wxString::FromUTF8( strLayout.GetString() ) );
 			}
 		}
 
-		// wxAuiManager::LoadPerspective, less two things it does that do not suit
-		// a layout kept across builds and sessions: it hides every pane the layout
-		// does not name, and it gives the rest the captions they had when it was
-		// saved. A pane the layout does not know keeps what it had, and every pane
-		// keeps the caption the frame gave it.
-		bool ApplyLayout( const wxString &rLayout )
+		void ReadNamedLayouts()
 		{
-			wxAuiPaneInfoArray &rPanes = auiManager.GetAllPanes();
-			std::vector<wxAuiPaneInfo> before;
-			for ( size_t nPane = 0; nPane < rPanes.GetCount(); ++nPane )
+			namedLayouts.clear();
+			const CString saved = AfxGetApp()->GetProfileString( LayoutSection(), "NamedLayouts", "" );
+			if ( saved.IsEmpty() )
 			{
-				before.push_back( rPanes.Item( nPane ) );
+				return;
 			}
-			if ( !auiManager.LoadPerspective( rLayout, false ) )
+			wxStringInputStream input( wxString::FromUTF8( saved.GetString() ) );
+			wxXmlDocument document;
+			if ( !document.Load( input ) || document.GetRoot() == nullptr || document.GetRoot()->GetName() != "layouts" )
 			{
-				return false;
+				return;
 			}
-			for ( size_t nPane = 0; ( nPane < rPanes.GetCount() ) && ( nPane < before.size() ); ++nPane )
+			for ( const wxXmlNode *pNode = document.GetRoot()->GetChildren(); pNode != nullptr; pNode = pNode->GetNext() )
 			{
-				wxAuiPaneInfo &rPane = rPanes.Item( nPane );
-				if ( rLayout.Find( "name=" + before[nPane].name + ";" ) == wxNOT_FOUND )
+				const wxString name = pNode->GetAttribute( "name" );
+				const wxString perspective = pNode->GetNodeContent();
+				if ( pNode->GetName() == "layout" && !name.empty() && !perspective.empty() )
 				{
-					rPane.SafeSet( before[nPane] );
+					namedLayouts.push_back( { name, perspective } );
 				}
-				rPane.Caption( before[nPane].caption );
 			}
-			return true;
+		}
+
+		bool WriteNamedLayouts( const std::vector<SNamedLayout> &rLayouts )
+		{
+			// One profile value keeps names and layouts together. XML escapes
+			// user-supplied names and wxAUI captions, including non-ASCII text.
+			wxXmlDocument document;
+			wxXmlNode *const pRoot = new wxXmlNode( wxXML_ELEMENT_NODE, "layouts" );
+			document.SetRoot( pRoot );
+			for ( const SNamedLayout &rLayout : rLayouts )
+			{
+				wxXmlNode *const pNode = new wxXmlNode( wxXML_ELEMENT_NODE, "layout" );
+				pNode->AddAttribute( "name", rLayout.name );
+				pNode->AddChild( new wxXmlNode( wxXML_TEXT_NODE, wxString(), rLayout.perspective ) );
+				pRoot->AddChild( pNode );
+			}
+			wxStringOutputStream output;
+			return document.Save( output ) &&
+				AfxGetApp()->WriteProfileString( LayoutSection(), "NamedLayouts", output.GetString().utf8_str() );
+		}
+
+		void SaveNamedLayout()
+		{
+			wxTextEntryDialog dialog( this, "Layout name:", "Save Layout" );
+			while ( dialog.ShowModal() == wxID_OK )
+			{
+				wxString name = dialog.GetValue();
+				name.Trim( true ).Trim( false );
+				if ( name.empty() )
+				{
+					wxMessageBox( "Enter a name for this layout.", "Save Layout", wxOK | wxICON_INFORMATION, this );
+					continue;
+				}
+				size_t nLayout = 0;
+				while ( nLayout < namedLayouts.size() && name.CmpNoCase( namedLayouts[nLayout].name ) != 0 )
+				{
+					++nLayout;
+				}
+				if ( nLayout < namedLayouts.size() &&
+						 wxMessageBox( "Replace the saved layout \"" + namedLayouts[nLayout].name + "\"?",
+													 "Save Layout", wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION, this ) != wxYES )
+				{
+					continue;
+				}
+				auiManager.Update();
+				std::vector<SNamedLayout> updated = namedLayouts;
+				const SNamedLayout layout = { name, auiManager.SaveEditorLayout() };
+				if ( nLayout == updated.size() )
+				{
+					updated.push_back( layout );
+				}
+				else
+				{
+					updated[nLayout] = layout;
+				}
+				if ( WriteNamedLayouts( updated ) )
+				{
+					namedLayouts.swap( updated );
+				}
+				else
+				{
+					wxMessageBox( "The layout could not be saved.", "Save Layout", wxOK | wxICON_ERROR, this );
+				}
+				return;
+			}
+		}
+
+		void LoadNamedLayout()
+		{
+			if ( namedLayouts.empty() )
+			{
+				return;
+			}
+			wxArrayString names;
+			for ( const SNamedLayout &rLayout : namedLayouts )
+			{
+				names.Add( rLayout.name );
+			}
+			wxSingleChoiceDialog dialog( this, "Choose a saved layout:", "Load Layout", names );
+			if ( dialog.ShowModal() != wxID_OK )
+			{
+				return;
+			}
+			// The preset includes shown/hidden flags for every dock and toolbar.
+			// Keep those flags instead of reapplying the current visibility.
+			if ( !auiManager.LoadEditorLayout( namedLayouts[dialog.GetSelection()].perspective ) )
+			{
+				wxMessageBox( "The saved layout could not be loaded.", "Load Layout", wxOK | wxICON_ERROR, this );
+				return;
+			}
+			auiManager.Update();
 		}
 
 		// CMainFrame::OnResetGUI: the layout a first run gets, the frame's own
@@ -1158,7 +1280,7 @@ namespace
 		// kept at once.
 		void ResetLayout()
 		{
-			ApplyLayout( szDefaultLayout );
+			auiManager.LoadEditorLayout( szDefaultLayout );
 			if ( pLogPane )
 			{
 				auiManager.GetPane( pLogPane->GetPanel() ).Show( true );
@@ -1443,6 +1565,7 @@ namespace
 		{
 			if ( pPanel != nullptr )
 			{
+				auiManager.RememberDockSizes();
 				auiManager.GetPane( pPanel ).Show( bShow );
 				auiManager.Update();
 			}
@@ -1488,6 +1611,9 @@ namespace
 				return;
 			}
 			progress.Destroy();
+			// Capture the user's sizes and proportions while all editor panes
+			// still exist. Teardown hides them and may collapse their docks.
+			SaveLayout();
 			//
 			CEditorApp *const pApp = dynamic_cast<CEditorApp*>( AfxGetApp() );
 			Singleton<IEditorContainer>()->DestroyActiveEditor( false );
@@ -1496,9 +1622,6 @@ namespace
 			{
 				pApp->GetEditorModules()[nModuleIndex]->ModulePreDestroyControls();
 			}
-			// Where CMainFrame saves its bar state: the editors have put their own
-			// panes' visibility away and hidden them.
-			SaveLayout();
 			Singleton<IChildFrameContainer>()->Destroy();
 			Singleton<IEditorContainer>()->DestroyControls();
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )
@@ -1553,6 +1676,12 @@ namespace
 					return;
 				case ID_VIEW_DW_GDB_BROWSER_NEW:
 					NewGDBBrowserPane();
+					return;
+				case ID_VIEW_SAVE_LAYOUT:
+					SaveNamedLayout();
+					return;
+				case ID_VIEW_LOAD_LAYOUT:
+					LoadNamedLayout();
 					return;
 				case ID_VIEW_RESET_GUI:
 					ResetLayout();
@@ -1660,7 +1789,11 @@ namespace
 				case ID_HELP_ABOUT:
 				case ID_APP_EXIT:
 				case ID_VIEW_RESET_GUI:
+				case ID_VIEW_SAVE_LAYOUT:
 					( *pbEnable ) = true;
+					return;
+				case ID_VIEW_LOAD_LAYOUT:
+					( *pbEnable ) = !namedLayouts.empty();
 					return;
 				case ID_VIEW_DW_PROPERTY_BROWSER:
 					( *pbEnable ) = true;
