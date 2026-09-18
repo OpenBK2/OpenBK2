@@ -53,6 +53,7 @@ namespace NMainFrameWx
 
 #include <fmt/printf.h>
 
+#include <wx/accel.h>
 #include <wx/aui/auibar.h>
 #include <wx/aui/barartmsw.h>
 #include <wx/aui/framemanager.h>
@@ -84,9 +85,9 @@ namespace NMainFrameWx
 //
 // Where this differs from CMainFrame in ways that show:
 //
-//   * menu shortcuts are live. A wx menu item's label after a tab is a shortcut
-//     wx registers for the frame; MFC's menu bar only displays that text, and
-//     the editor's own windows translate IDA_MAIN for themselves.
+//   * the keyboard shortcuts are IDA_MAIN's, as the MFC frame's are, installed
+//     as the frame's accelerator table (AcceleratorsFromResource). A menu
+//     item's text after its tab is only shown, as in MFC.
 
 namespace
 {
@@ -175,6 +176,7 @@ namespace
 		static const int N_FIRST_OWN_ID = 32000;
 		std::map<unsigned, int> wxIDs;
 		std::map<int, unsigned> commandIDs;
+		int nNextOwnID = N_FIRST_OWN_ID;
 
 	public:
 		int ToWx( unsigned nCommandID )
@@ -188,8 +190,17 @@ namespace
 			{
 				return posWxID->second;
 			}
-			const int nWxID = N_FIRST_OWN_ID + static_cast<int>( wxIDs.size() );
+			const int nWxID = nNextOwnID++;
 			wxIDs[nCommandID] = nWxID;
+			commandIDs[nWxID] = nCommandID;
+			return nWxID;
+		}
+
+		// An id no menu item has, for an accelerator: see AcceleratorsFromResource.
+		// Every call makes a new one; ToCommand maps it back all the same.
+		int NewWx( unsigned nCommandID )
+		{
+			const int nWxID = nNextOwnID++;
 			commandIDs[nWxID] = nCommandID;
 			return nWxID;
 		}
@@ -220,6 +231,116 @@ namespace
 	unsigned ToCommandID( int nWxID )
 	{
 		return s_commandIDs.ToCommand( nWxID );
+	}
+
+
+	// An ACCEL's virtual key as a wx key code: the keys IDA_MAIN uses. The
+	// letters and digits are their own codes in both; the punctuation keys are
+	// the characters they type on a US layout, which is how wx names them.
+	int ToWxKeyCode( WORD nVirtualKey )
+	{
+		if ( ( ( nVirtualKey >= 'A' ) && ( nVirtualKey <= 'Z' ) ) || ( ( nVirtualKey >= '0' ) && ( nVirtualKey <= '9' ) ) )
+		{
+			return nVirtualKey;
+		}
+		if ( ( nVirtualKey >= VK_F1 ) && ( nVirtualKey <= VK_F12 ) )
+		{
+			return WXK_F1 + ( nVirtualKey - VK_F1 );
+		}
+		switch ( nVirtualKey )
+		{
+			case VK_BACK:
+				return WXK_BACK;
+			case VK_TAB:
+				return WXK_TAB;
+			case VK_RETURN:
+				return WXK_RETURN;
+			case VK_ESCAPE:
+				return WXK_ESCAPE;
+			case VK_SPACE:
+				return WXK_SPACE;
+			case VK_DELETE:
+				return WXK_DELETE;
+			case VK_INSERT:
+				return WXK_INSERT;
+			case VK_HOME:
+				return WXK_HOME;
+			case VK_END:
+				return WXK_END;
+			case VK_ADD:
+				return WXK_NUMPAD_ADD;
+			case VK_SUBTRACT:
+				return WXK_NUMPAD_SUBTRACT;
+			case VK_OEM_MINUS:
+				return '-';
+			case VK_OEM_PLUS:
+				return '=';
+			default:
+				return WXK_NONE;
+		}
+	}
+
+
+	// The accelerator resource as a wx table, for the whole frame, as
+	// CFrameWnd::LoadFrame( IDR_EDITORTYPE ) gives the MFC frame IDA_MAIN (the two
+	// are both 128) and CFrameWnd::PreTranslateMessage translates it wherever the
+	// focus is in the frame. Without it Ctrl+S, Ctrl+C, Ctrl+V, Delete and the
+	// rest did nothing in the wx frame outside the two trees that translate the
+	// table themselves.
+	//
+	// Each key gets an id of its own rather than its menu item's. wx sends an
+	// accelerator for a menu bar item through the item, and refuses it if the
+	// item is disabled; the frame only sets its items' states as a menu opens, so
+	// Save stayed disabled after the File menu was last opened with nothing to
+	// save. With an id no item has, the key arrives at OnMenu as the command,
+	// and RunUserCommand asks whether it is enabled now, as MFC's CWnd::OnCommand
+	// does before routing one.
+	//
+	// Text controls keep their own editing keys -- Delete, Ctrl+C/V/X/Z/A,
+	// Shift+Ins, Alt+Back -- because wxTextCtrl opts them out of accelerator
+	// translation (wxMSWTextEntryShouldPreProcessMessage). A wx dialog is a
+	// navigation domain of its own, so none of this reaches into one.
+	wxAcceleratorTable AcceleratorsFromResource( unsigned nResourceID )
+	{
+		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nResourceID ), RT_ACCELERATOR );
+		const HACCEL hAccel = ::LoadAcceleratorsW( hInstance, MAKEINTRESOURCEW( nResourceID ) );
+		if ( hAccel == 0 )
+		{
+			return wxAcceleratorTable();
+		}
+		// A loaded accelerator table is a resource, freed with its module.
+		const int nCount = ::CopyAcceleratorTable( hAccel, nullptr, 0 );
+		std::vector<ACCEL> accels( nCount );
+		::CopyAcceleratorTable( hAccel, accels.data(), nCount );
+		std::vector<wxAcceleratorEntry> entries;
+		for ( const ACCEL &rAccel : accels )
+		{
+			if ( ( rAccel.fVirt & FVIRTKEY ) == 0 )
+			{
+				continue;
+			}
+			const int nKeyCode = ToWxKeyCode( rAccel.key );
+			if ( nKeyCode == WXK_NONE )
+			{
+				DebugTrace( "wx main frame: accelerator key 0x%X for command %u is not mapped", rAccel.key, rAccel.cmd );
+				continue;
+			}
+			int nFlags = wxACCEL_NORMAL;
+			if ( ( rAccel.fVirt & FCONTROL ) != 0 )
+			{
+				nFlags |= wxACCEL_CTRL;
+			}
+			if ( ( rAccel.fVirt & FSHIFT ) != 0 )
+			{
+				nFlags |= wxACCEL_SHIFT;
+			}
+			if ( ( rAccel.fVirt & FALT ) != 0 )
+			{
+				nFlags |= wxACCEL_ALT;
+			}
+			entries.emplace_back( nFlags, nKeyCode, s_commandIDs.NewWx( rAccel.cmd ) );
+		}
+		return wxAcceleratorTable( static_cast<int>( entries.size() ), entries.data() );
 	}
 
 
@@ -283,7 +404,8 @@ namespace
 	// A command item at nPosition. wx is given the label up to its tab and the
 	// native item gets the whole of it back: wx makes the text after a tab a
 	// shortcut the frame answers, where MFC's menu bar only shows it -- and read
-	// "\t Ctrl+N" as plain N, so typing N anywhere made a new map.
+	// "\t Ctrl+N" as plain N, so typing N anywhere made a new map. The keys
+	// themselves come from IDA_MAIN (AcceleratorsFromResource).
 	wxMenuItem* InsertCommandItem( wxMenu *pMenu, size_t nPosition, unsigned nCommandID, const wxString &rLabel, const wxString &rHelp )
 	{
 		wxMenuItem *const pItem = pMenu->InsertCheckItem( nPosition, ToWxID( nCommandID ), rLabel.BeforeFirst( '\t' ), rHelp );
@@ -532,6 +654,8 @@ namespace
 			SetStatusText( IdleMessage(), 0 );
 			//
 			pApp->CreateMenus( this );
+			// What LoadFrame( IDR_EDITORTYPE ) loads for CMainFrame.
+			SetAcceleratorTable( AcceleratorsFromResource( IDA_MAIN ) );
 			//
 			// The area documents open in, an MDI client's colour, which the
 			// document window fills.
