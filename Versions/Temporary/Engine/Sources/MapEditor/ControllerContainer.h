@@ -22,6 +22,25 @@ class CControllerContainer : public IControllerContainer, public ICommandHandler
 	typedef std::list<CPtr<IController> > CControllerList;
 	CControllerList controllerList;
 	CControllerList redoOperationList;
+	// Each modal picker has its own undo/redo history. Keep a separate record
+	// of applied edits as well: clearing the visible history must not make
+	// Cancel forget changes, and nested pickers must restore their parent.
+	struct SEditOperation
+	{
+		CPtr<IController> pController;
+		bool bApplied = true;
+	};
+	struct SEditSession
+	{
+		CControllerList savedUndo;
+		CControllerList savedRedo;
+		std::list<SEditOperation> operations;
+	};
+	std::list<SEditSession> editSessions;
+
+	void BeginEditSession();
+	bool EndEditSession( bool bAccept );
+	void SetEditOperationApplied( IController *pOperation, bool bApplied );
 	// The list under the Undo and Redo arrows, made the first time one is used.
 	NMenuDropDown::IView *pMenuDropDown;
 
@@ -29,9 +48,23 @@ class CControllerContainer : public IControllerContainer, public ICommandHandler
 	bool ShowOperationList( bool bUndo );
 
 public:
+	// Finish explicitly after the dialog closes; an exceptional exit cancels.
+	class CEditSession
+	{
+		CControllerContainer *pContainer;
+
+	public:
+		explicit CEditSession( CControllerContainer *_pContainer );
+		~CEditSession();
+		CEditSession( const CEditSession& ) = delete;
+		CEditSession& operator=( const CEditSession& ) = delete;
+		bool Finish( bool bAccept );
+	};
+
 	CControllerContainer();
 	~CControllerContainer();
 	// IControllerContainer
+	bool IsEditSessionActive() const override { return !editSessions.empty(); }
 	void Add( IController *pOperation );
 	void Clear();
 	bool CanUndo() const;

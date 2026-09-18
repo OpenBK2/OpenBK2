@@ -73,6 +73,8 @@ struct IControllerContainer : public CObjectBase
 	virtual int GetDescriptionList( CDescriptionList *pDescriptionList, bool bUndoList ) const = 0;
 	// Удалить временные Undo Operations
 	virtual int RemoveTemporaryControllers( const std::string &rszTemporaryLabel ) = 0;
+	// Modal property editors need complete undo data until OK or Cancel.
+	virtual bool IsEditSessionActive() const { return false; }
 };
 
 

@@ -24,10 +24,132 @@ CControllerContainer::~CControllerContainer()
 }
 
 
+CControllerContainer::CEditSession::CEditSession( CControllerContainer *_pContainer )
+	: pContainer( _pContainer )
+{
+	pContainer->BeginEditSession();
+}
+
+
+CControllerContainer::CEditSession::~CEditSession()
+{
+	if ( pContainer != nullptr && !Finish( false ) )
+	{
+		// Never leave the surrounding editor using an abandoned modal history.
+		DebugTrace( "Failed to cancel a property edit session; retaining its remaining changes" );
+		Finish( true );
+	}
+}
+
+
+bool CControllerContainer::CEditSession::Finish( bool bAccept )
+{
+	if ( pContainer == nullptr )
+	{
+		return true;
+	}
+	if ( !pContainer->EndEditSession( bAccept ) )
+	{
+		return false;
+	}
+	pContainer = nullptr;
+	return true;
+}
+
+
+void CControllerContainer::BeginEditSession()
+{
+	editSessions.emplace_back();
+	controllerList.swap( editSessions.back().savedUndo );
+	redoOperationList.swap( editSessions.back().savedRedo );
+}
+
+
+void CControllerContainer::SetEditOperationApplied( IController *pOperation, bool bApplied )
+{
+	if ( !editSessions.empty() )
+	{
+		for ( auto pos = editSessions.back().operations.rbegin(); pos != editSessions.back().operations.rend(); ++pos )
+		{
+			if ( pos->pController == pOperation )
+			{
+				pos->bApplied = bApplied;
+				return;
+			}
+		}
+	}
+}
+
+
+bool CControllerContainer::EndEditSession( bool bAccept )
+{
+	NI_VERIFY( !editSessions.empty(), "No property edit session to finish", return false );
+	SEditSession &rSession = editSessions.back();
+	if ( !bAccept )
+	{
+		// Reverse only changes still applied, including edits to objects the
+		// picker no longer shows. Undo updates the model and all its open views.
+		for ( auto pos = rSession.operations.rbegin(); pos != rSession.operations.rend(); ++pos )
+		{
+			if ( pos->bApplied )
+			{
+				if ( !pos->pController->Undo( true, true, nullptr ) )
+				{
+					return false;
+				}
+				pos->bApplied = false;
+				controllerList.remove( pos->pController );
+				// A partial rollback also invalidates the local redo branch.
+				redoOperationList.clear();
+			}
+		}
+		controllerList.clear();
+		redoOperationList.clear();
+	}
+	else if ( !rSession.operations.empty() )
+	{
+		// OK keeps the edits undoable and replaces the previous redo branch.
+		rSession.savedUndo.splice( rSession.savedUndo.end(), controllerList );
+		rSession.savedRedo.clear();
+		rSession.savedRedo.swap( redoOperationList );
+	}
+	controllerList.swap( rSession.savedUndo );
+	redoOperationList.swap( rSession.savedRedo );
+	std::list<SEditOperation> operations;
+	operations.swap( rSession.operations );
+	editSessions.pop_back();
+	if ( bAccept && !editSessions.empty() )
+	{
+		// An inner OK belongs to its outer picker until that picker accepts.
+		editSessions.back().operations.splice( editSessions.back().operations.end(), operations );
+	}
+	if ( editSessions.empty() )
+	{
+		while ( controllerList.size() > UNDO_BUFFER_SIZE )
+		{
+			controllerList.pop_front();
+		}
+		while ( redoOperationList.size() > UNDO_BUFFER_SIZE )
+		{
+			redoOperationList.pop_front();
+		}
+	}
+	return true;
+}
+
+
 void CControllerContainer::Add( IController *pOperation )
 {
 	if ( !pOperation->IsEmpty() )
 	{
+		// Irreversible browser actions keep their existing behavior. Property
+		// controllers retain the data needed for Cancel during an edit session.
+		if ( !editSessions.empty() && !pOperation->IsAbsolute() )
+		{
+			SEditOperation operation;
+			operation.pController = pOperation;
+			editSessions.back().operations.push_back( operation );
+		}
 		if ( pOperation->IsAbsolute() )
 		{
 			Clear();
@@ -36,7 +158,7 @@ void CControllerContainer::Add( IController *pOperation )
 		{
 			controllerList.push_back( pOperation );
 			redoOperationList.clear();
-			if ( controllerList.size() > UNDO_BUFFER_SIZE )
+			if ( editSessions.empty() && ( controllerList.size() > UNDO_BUFFER_SIZE ) )
 			{
 				controllerList.pop_front();
 			}
@@ -49,6 +171,13 @@ void CControllerContainer::Clear()
 {
 	controllerList.clear();
 	redoOperationList.clear();
+	// An irreversible operation also invalidates history saved by a picker.
+	// Its reversible property edits are still kept for Cancel.
+	for ( SEditSession &rSession : editSessions )
+	{
+		rSession.savedUndo.clear();
+		rSession.savedRedo.clear();
+	}
 }
 
 
@@ -87,6 +216,7 @@ bool CControllerContainer::Undo( int nCount )
 			}
 			controllerList.pop_back();
 			redoOperationList.push_back( pOperation );
+			SetEditOperationApplied( pOperation, false );
 			NProgress::IteratePosition();
 		}
 		//
@@ -119,6 +249,7 @@ bool CControllerContainer::Redo( int nCount )
 			}
 			redoOperationList.pop_back();
 			controllerList.push_back( pOperation );
+			SetEditOperationApplied( pOperation, true );
 			NProgress::IteratePosition();
 		}
 		//
@@ -236,6 +367,20 @@ int CControllerContainer::RemoveTemporaryControllers( const std::string &rszTemp
 				++itRedoOperation;
 			}
 		}
+	}
+	// A temporary view is releasing its object. Do not retain controllers for
+	// it in a modal session after their temporary data has been discarded.
+	for ( SEditSession &rSession : editSessions )
+	{
+		auto matches = [&rszTemporaryLabel]( const CPtr<IController> &pController )
+		{
+			std::string szLabel;
+			pController->GetTemporaryLabel( &szLabel );
+			return szLabel == rszTemporaryLabel;
+		};
+		rSession.savedUndo.remove_if( matches );
+		rSession.savedRedo.remove_if( matches );
+		rSession.operations.remove_if( [&matches]( const SEditOperation &rOperation ) { return matches( rOperation.pController ); } );
 	}
 	return nCount;
 }

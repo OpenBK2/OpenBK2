@@ -322,7 +322,8 @@ bool CObjectBaseController::IsAbsolute() const
 {
 	if ( !undoDataList.empty() )
 	{
-		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) > 0 )
+		// A modal picker must be able to restore removed array values on Cancel.
+		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) > 0 && !Singleton<IControllerContainer>()->IsEditSessionActive() )
 		{
 			for ( CObjectBaseController::CUndoDataList::const_iterator itUndoData = undoDataList.begin(); itUndoData != undoDataList.end(); ++itUndoData )
 			{
@@ -509,9 +510,12 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 	posNewUndoData->eType = CObjectBaseController::SUndoData::TYPE_REMOVE;
 	posNewUndoData->szName = rszArrayName;
 	posNewUndoData->newValue = nIndexToDelete;
+	// Retain deleted values for the picker's rollback even when ordinary
+	// array-removal undo is disabled in the editor configuration.
+	const bool bKeepUndoData = NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 || Singleton<IControllerContainer>()->IsEditSessionActive();
 	if ( nIndexToDelete == NODE_REMOVEALL_INDEX )
 	{
-		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 )
+		if ( bKeepUndoData )
 		{
 			posNewUndoData->FillLists( posNewUndoData->szName, pObjectManipulator );
 		}
@@ -526,7 +530,7 @@ bool CObjectBaseController::AddRemoveOperation( const std::string &rszArrayName,
 		{
 			posNewUndoData->oldValue = nIndex;
 		}
-		if ( NGlobal::GetVar( "disable_remove_undo", 0 ) == 0 )
+		if ( bKeepUndoData )
 		{
 			const std::string szStartNodeName = fmt::format( "{}{:c}{:c}{}{:c}",
 																						posNewUndoData->szName.c_str(),

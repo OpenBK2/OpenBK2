@@ -5,6 +5,7 @@
 #ifdef OBK2_WITH_WX
 
 #include "ObjectBrowserView.h"
+#include "ControllerContainer.h"
 #include "PC_BaseDialog.h"
 #include "PC_Constants.h"
 #include "PropertyPaneView.h"
@@ -28,6 +29,7 @@
 #include <fmt/printf.h>
 
 #include <wx/button.h>
+#include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
@@ -201,6 +203,8 @@ namespace
 		// is chosen, which fills its tree.
 		void Open()
 		{
+			// Also suppress selection callbacks if a failed Cancel reopens us.
+			bCreateControls = true;
 			ICommandHandlerContainer *const pContainer = Singleton<ICommandHandlerContainer>();
 			pPreviousCommandHandler = pContainer->Get( CHID_PC_DB_LINK_DIALOG );
 			pContainer->Set( CHID_PC_DB_LINK_DIALOG, this );
@@ -403,14 +407,30 @@ namespace NDBLink
 {
 	bool RunWx( IWidget *pParent, const SRequest &rRequest, SResult *pResult )
 	{
+		// Property buttons edit the shared database immediately. Give this
+		// picker an isolated history so Cancel restores its in-memory edits,
+		// including changes accepted by nested reference pickers.
+		CControllerContainer::CEditSession editSession( checked_cast<CControllerContainer*>( Singleton<IControllerContainer>() ) );
 		CDBLinkWxDialog dialog( rRequest );
 		if ( !dialog.WasPlaced() )
 		{
 			NWxModal::CentreOver( &dialog, pParent );
 		}
-		dialog.Open();
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
-		dialog.Close();
+		bool bAccepted = false;
+		do
+		{
+			dialog.Open();
+			bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+			// Detach the grid before rollback so losing focus or destroying its
+			// editor cannot commit a pending value after the undo has run.
+			dialog.Close();
+			if ( editSession.Finish( bAccepted ) )
+			{
+				break;
+			}
+			wxMessageBox( "Some property changes could not be undone. The picker will reopen so you can review them.",
+									"Unable to cancel changes", wxOK | wxICON_ERROR, &dialog );
+		} while ( true );
 		if ( bAccepted && ( pResult != 0 ) )
 		{
 			dialog.GetResult( pResult );
