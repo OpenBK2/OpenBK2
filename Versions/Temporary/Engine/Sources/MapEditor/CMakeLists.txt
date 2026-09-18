@@ -162,3 +162,5 @@ install(TARGETS MapEditor DESTINATION bin)
 # icon belonging to the editor is not.
 install(FILES res/main_frame.ico DESTINATION bin)
 add_version_info(MapEditor)
+# The wx About box shows the revision, for bug reports (AboutViewWx.cpp).
+add_git_revision(MapEditor)

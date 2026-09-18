@@ -44,6 +44,25 @@ function(add_version_info target)
     target_sources(${target} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/versioninfo.rc)
     target_compile_definitions(${target} PRIVATE
         REVISION_NUMBER_STR="${REVISION_NUMBER}"
-        BUILD_DATE_TIME_STR="${BUILD_DATETIME}"
+        BUILD_DATE_TIME_STR="${BUILD_DATE_TIME}"
     )
+endfunction()
+
+# GitRevision.h for a target: GIT_REVISION_STR, GIT_BRANCH_STR and
+# GIT_COMMIT_DATE_STR, refreshed on every build of the target (see
+# cmake/gitrevision.cmake). Include it only from the file that shows it, so a
+# new commit recompiles that one file.
+function(add_git_revision target)
+    set(GIT_REVISION_DIR ${CMAKE_CURRENT_BINARY_DIR}/git_revision)
+    set(GIT_REVISION_HEADER ${GIT_REVISION_DIR}/GitRevision.h)
+    add_custom_target(${target}_git_revision
+        COMMAND ${CMAKE_COMMAND}
+                -DGIT_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+                -DGIT_REVISION_HEADER=${GIT_REVISION_HEADER}
+                -P ${CMAKE_SOURCE_DIR}/cmake/gitrevision.cmake
+        BYPRODUCTS ${GIT_REVISION_HEADER}
+        COMMENT "Reading the git revision for ${target}"
+        VERBATIM)
+    add_dependencies(${target} ${target}_git_revision)
+    target_include_directories(${target} PRIVATE ${GIT_REVISION_DIR})
 endfunction()
