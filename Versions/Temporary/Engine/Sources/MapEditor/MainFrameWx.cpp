@@ -1467,11 +1467,19 @@ namespace
 		// when its menu opens. A popup is asked through its first item and changes
 		// nothing about itself: only the recent lists' handler does anything
 		// there, rebuilding the menu it heads.
+		//
+		// Only the frame's own menus: its menu bar's and the popups it shows itself.
+		// wxEVT_MENU_OPEN propagates up from any window, so a view's context menu
+		// -- the property grid's, say -- arrives here too; asking the frame's
+		// handlers about its items disabled them all, and checking one that is not
+		// a check item raised wx's assert and left the menu unshown. The view that
+		// popped the menu up has already set its states. GetWindow() is the frame
+		// for a menu bar's menus and the invoking window for a popup.
 		void OnMenuOpen( wxMenuEvent &rEvent )
 		{
 			rEvent.Skip();
 			wxMenu *const pMenu = rEvent.GetMenu();
-			if ( pMenu == nullptr )
+			if ( ( pMenu == nullptr ) || ( pMenu->GetWindow() != this ) )
 			{
 				return;
 			}
@@ -1503,7 +1511,13 @@ namespace
 				bool bCheck = false;
 				UpdateMenuCommand( ToCommandID( pItem->GetId() ), &bEnable, &bCheck );
 				pItem->Enable( bEnable );
-				pItem->Check( bCheck );
+				// The frame's command items are all check items (InsertCommandItem),
+				// but an item added some other way may not be, and wx asserts on
+				// checking a plain one.
+				if ( pItem->IsCheckable() )
+				{
+					pItem->Check( bCheck );
+				}
 			}
 		}
 
