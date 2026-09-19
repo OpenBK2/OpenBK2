@@ -4,8 +4,6 @@
 #include "ScriptCameraEditorData.h"
 #include "MapEditorLib/PaletteList.h"
 
-class CWnd;
-
 // The palette's half of the exchange with CScriptCameraState, whichever toolkit
 // draws it. The data type was already in a header of its own,
 // ScriptCameraEditorData.h, so only the dispatch is declared here.

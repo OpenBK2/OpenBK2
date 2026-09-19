@@ -2,8 +2,6 @@
 
 #include "MapEditorLib/PaletteList.h"
 
-class CWnd;
-
 // The VSO palette -- roads, rivers, crags, lakes and coasts -- behind a
 // boundary that names no toolkit.
 //

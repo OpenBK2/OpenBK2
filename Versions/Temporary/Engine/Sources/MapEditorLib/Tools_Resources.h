@@ -286,22 +286,22 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait );
 
 
-MAPEDITORLIB_EXPORT void Unicode2MBSC( CString *pstrText, const std::wstring &rwszText, int nCodePage );
+// The narrow text in these is std::string, UTF-8; the CString overloads went
+// with MFC, and the std::string ones that only converted to them are these now.
+MAPEDITORLIB_EXPORT void Unicode2MBSC( std::string *pszText, const std::wstring &rwszText, int nCodePage );
 // Exported, like the conversion it is the other half of. It was not, which no
 // caller outside MapEditorLib had noticed until one wanted to convert the other
 // way; nothing about what it does changed.
-MAPEDITORLIB_EXPORT void MBSC2Unicode( std::wstring *pwszText, const CString &rstrText, int nCodePage );
+MAPEDITORLIB_EXPORT void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText, int nCodePage );
 
 
-MAPEDITORLIB_EXPORT void File2String( CString *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );
-MAPEDITORLIB_EXPORT void File2String( CString *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D );
 MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
 
 
-MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const CString &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D );
-MAPEDITORLIB_EXPORT void String2File( const CString &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
+MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::string &rszText, bool bUnicode, int nCodePage, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );

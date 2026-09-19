@@ -6,8 +6,6 @@
 #include <string>
 
 class CPaletteList;
-class CWnd;
-
 // The shortcut bar, behind a boundary that names no toolkit.
 //
 // The map, building and squad editors each dock one: a column of bars --

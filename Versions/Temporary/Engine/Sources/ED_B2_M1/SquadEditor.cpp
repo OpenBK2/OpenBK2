@@ -180,9 +180,9 @@ void CSquadEditor::CreateControls()
 			// building points state, as they always have. Which toolkit draws the
 			// palette is NFormationView's business.
 			const int nBar = pShortcutBarView->BeginBar( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE );
-			pShortcutBarView->AddTab( nBar, std::string( CString( RCSTR( "Formations" ) ).GetString() ), &NFormationView::Create );
+			pShortcutBarView->AddTab( nBar, RCSTR( "Formations" ), &NFormationView::Create );
 			pShortcutBarView->ActivateTab( nBar, 0 );
-			pShortcutBarView->EndBar( nBar, std::string( CString( RCSTR( "Squad" ) ).GetString() ) );
+			pShortcutBarView->EndBar( nBar, RCSTR( "Squad" ) );
 			pShortcutBarView->SelectBar( 0 );
 			//
 			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );

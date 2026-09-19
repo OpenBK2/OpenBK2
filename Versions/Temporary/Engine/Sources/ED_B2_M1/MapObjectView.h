@@ -2,14 +2,12 @@
 
 #include "MapEditorLib/PaletteList.h"
 
-class CWnd;
-
 // The map object palette, behind a boundary that names no toolkit.
 //
-// Same shape as NFieldView and NHeightViewV3: the tab control owns its tabs and
-// deletes them through a CWnd*, so the factory hands one back rather than an
-// interface. Its data type is CMapObjectMultiState::SEditParameters and its
-// command dispatch is CMapObjectCommands, both in MapObjectMultiState.h.
+// Same shape as NFieldView and NHeightViewV3: the factory hands back the
+// palette's widget, which pPalettes owns. Its data type is
+// CMapObjectMultiState::SEditParameters and its command dispatch is
+// CMapObjectCommands, both in MapObjectMultiState.h.
 //
 // **There is no bFull here, and the FULL template is not drawn.**
 // CMapObjectWindow takes a bFull that picks between IDD_TAB_MI_MAPOBJECT_FULL

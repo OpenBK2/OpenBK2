@@ -4,8 +4,6 @@
 
 #include <string>
 
-class CWnd;
-
 // The frames of IDB_TMITH_BITMAP, which is a 544x32 strip of seventeen 32x32
 // icons keyed on magenta. Both palettes wear these, one through a CImageList
 // and the other by cutting the strip up itself, so the layout is stated once.
@@ -37,11 +35,10 @@ enum EHeightIconV3
 
 // The terrain height palette, behind a boundary that names no toolkit.
 //
-// Same shape as NFieldView: the tab control owns its tabs and deletes them
-// through a CWnd*, so the factory hands one back rather than an interface. Its
-// data type is CHeightStateV3::SEditParameters and its command dispatch is
-// CHeightCommandsV3, both in HeightStateV3.h, shared by the two
-// implementations.
+// Same shape as NFieldView: the factory hands back the palette's widget, which
+// pPalettes owns. Its data type is CHeightStateV3::SEditParameters and its
+// command dispatch is CHeightCommandsV3, both in HeightStateV3.h, shared by the
+// two implementations.
 namespace NHeightViewV3
 {
 	// The object collector's type name for the terrain tiles the list shows.

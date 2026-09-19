@@ -8,8 +8,6 @@
 #include <string>
 #include <vector>
 
-class CWnd;
-
 //
 //
 //		SCRIPT AREA WINDOW DATA

@@ -30,50 +30,6 @@ int CObjectFilterCollector::SObjectFilter::operator&( IXmlSaver &saver )
 	return 0;
 }
 
-/**
-void CObjectCollector::LoadUnicodeText( CString *pstrText, const std::string &rszFileName )
-{
-	if ( pstrText )
-	{
-		pstrText->Empty();
-		if ( CPtr<IDataStream> pFileStream = OpenStream( rszFileName ) )
-		{
-			std::vector<uint8_t> fileBuffer;
-			fileBuffer.resize( pFileStream->GetSize() );
-			pFileStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
-			//
-			if ( ( fileBuffer.size() > 3 ) && ( fileBuffer[0] == 0xFF ) && ( fileBuffer[1] == 0xFE ) )
-			{
-				pstrText->Empty();
-				std::wstring wszText;
-				wszText.resize( ( fileBuffer.size() - 2 ) / sizeof( wchar_t ) );
-				memcpy( &( wszText[0] ), &( fileBuffer[0] ) + 2, wszText.size() * sizeof( wchar_t ) );
-				//wszText.erase( remove_if( wszText.begin(), wszText.end(), bind2nd( std::equal_to<wchar_t>(), 0x0D ) ), wszText.end() );
-				// отрезаем переносы строк с обратного конца
-				int nLastIndex = 0;
-				for ( nLastIndex = ( wszText.size() - 1 ); nLastIndex >= 0; --nLastIndex )
-				{
-					if ( ( wszText[nLastIndex] != 0x0A ) && ( wszText[nLastIndex] != 0x0D ) )
-					{
-						break;
-					}
-				}
-				if ( nLastIndex < 0 )
-				{
-					wszText.clear();
-				}
-				else if ( nLastIndex < ( wszText.size() - 1 ) )
-				{
-					wszText = wszText.substr( 0, nLastIndex + 1 );
-				}
-				// переводим в СString
-				*pstrText = WideToUTF8( wszText ).c_str();
-			}
-		}
-	}
-}
-/**/
-
 
 const std::string CObjectCollector::DEFAULT_DATA_EXTRACTOR_TYPE = "_DEFAULT_DATA_EXTRACTOR_TYPE_";
 

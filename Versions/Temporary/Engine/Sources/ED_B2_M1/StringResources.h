@@ -1,24 +1,6 @@
 #pragma once
 
-#include <fmt/format.h>
-
+// A marker for text that was meant to move to the string tables one day; it
+// is the literal itself. RCStr, the CString loader beside it, had no callers
+// and went with MFC.
 #define RCSTR(s)	(s)
-
-inline CString RCStr( const unsigned nStringID )
-{
-	extern HINSTANCE theEDB2M1DllInstance;
-
-	CString s;
-	s.LoadString( theEDB2M1DllInstance, nStringID );
-
-	if ( s.IsEmpty() )
-	{
-		std::string szMsg = fmt::format( "WARNING: can't find string resource (ID={})", nStringID );
-		NI_ASSERT( 0, szMsg.c_str() );
-	}
-
-	return s;
-}
-
-
-

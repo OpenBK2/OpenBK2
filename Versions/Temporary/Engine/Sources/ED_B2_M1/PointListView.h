@@ -5,8 +5,6 @@
 
 #include <string>
 
-class CWnd;
-
 // The building editor's point lists, behind a boundary that names no toolkit.
 //
 // There are five of them, one tab each -- smoke, fire, entrance and surface

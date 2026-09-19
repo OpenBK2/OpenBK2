@@ -415,18 +415,6 @@ void CStringManager::ExtendFileExtention( std::string *pszFileName, const std::s
 }
 
 
-void CStringManager::ExtendFileExtention( CString *pstrFileName, const CString &rstrFileExtention )
-{
-	if ( pstrFileName )
-	{
-		std::string szFileName = ( *pstrFileName );
-		std::string szFileExtention = rstrFileExtention;
-		ExtendFileExtention( &szFileName, szFileExtention );
-		( *pstrFileName ) = szFileName.c_str();
-	}
-}
-
-
 void CStringManager::SplitFileName( std::string *pszFilePath, std::string *pszFileName, std::string *pszFileExtention, const std::string &rszFullFileName )
 {
 	std::string szFullFileName = rszFullFileName;

@@ -21,7 +21,6 @@ public:
 	static bool CutFileExtention( std::string *pszFileName );
 	static bool CutFileExtention( std::string *pszFileName, const std::string &rszFileExtention );
 	static void ExtendFileExtention( std::string *pszFileName, const std::string &rszFileExtention );
-	static void ExtendFileExtention( CString *pstrFileName, const CString &rstrFileExtention );
 	static std::string GetFloatStringWithPrecision( const float fValue, const int nPrecision );
 	static void SplitFileName( std::string *pszFilePath, std::string *pszFileName, std::string *pszFileExtention, const std::string &rszFullFileName );
 	static void RemoveDoubleSlashes( std::string *pszFilePath );

@@ -36,7 +36,6 @@ set(SOURCES
     PCIEMnemonics.cpp
     Progress.cpp
     Resources.cpp
-    ShellFont.cpp
     stdafx.cpp
     StoreInputState.cpp
     StringManager.cpp
