@@ -10,9 +10,11 @@
 
 #include <boost/predef.h>
 
-#if BOOST_OS_WINDOWS
+// Off Windows this is DXVK Native's windows.h, on the include path through
+// cmake/dxvk.cmake. It gives the Win32 types and macros the editor names
+// throughout (HWND, HINSTANCE, COLORREF, RGB, MAX_PATH) as opaque types, and
+// none of the functions: those calls get real replacements instead.
 #include <windows.h>
-#endif
 
 
 #pragma component( mintypeinfo, on )
