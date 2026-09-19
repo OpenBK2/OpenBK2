@@ -113,12 +113,28 @@ public:
 wxIMPLEMENT_APP_NO_MAIN( CWxSkeletonApp );
 
 
+// wmain is MSVC's wide entry point; everywhere else the arguments arrive
+// narrow through the standard main. wxEntry has an overload for each.
+static bool IsNoGuiArgument( const wchar_t *pszArg )
+{
+	return wcscmp( pszArg, L"--no-gui" ) == 0;
+}
+
+static bool IsNoGuiArgument( const char *pszArg )
+{
+	return strcmp( pszArg, "--no-gui" ) == 0;
+}
+
+#ifdef _WIN32
 int wmain( int argc, wchar_t **argv )
+#else
+int main( int argc, char **argv )
+#endif
 {
 	bool bNoGui = false;
 	for ( int nArg = 1; nArg < argc; ++nArg )
 	{
-		if ( wcscmp( argv[nArg], L"--no-gui" ) == 0 )
+		if ( IsNoGuiArgument( argv[nArg] ) )
 		{
 			bNoGui = true;
 		}
