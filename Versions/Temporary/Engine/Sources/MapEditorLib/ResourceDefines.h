@@ -1,11 +1,14 @@
 #pragma once
 
 
-// The few of MFC's own ids (afxres.h) that the editor's code still names,
-// with MFC's values: the resource scripts still include afxres.h, which is a
-// plain header rc.exe reads without MFC, and define the strings and menu
-// items against these numbers. Guarded, because a resource script that
-// includes both sees afxres.h's definitions first.
+// The few of MFC's own ids (afxres.h) that the editor's code and resource
+// scripts still name, with MFC's values, so that no string, menu item or
+// command changes number. The scripts include the SDK's winres.h now, not
+// afxres.h, so these are the only definitions; the guards are for an unbuilt
+// script that still includes afxres.h.
+#ifndef ID_APP_ABOUT
+#define ID_APP_ABOUT				0xE140
+#endif
 #ifndef ID_APP_EXIT
 #define ID_APP_EXIT					0xE141
 #endif

@@ -23,7 +23,9 @@
 // that asks for IDR_EDITORTYPE accelerators, in MapEditor/PC_Dialog.cpp, sits
 // inside a block comment.
 
-#include "afxres.h"
+// winres.h, the Windows SDK's, rather than MFC's afxres.h; ID_APP_EXIT and
+// ID_APP_ABOUT come from ResourceDefines.h with MFC's values.
+#include <winres.h>
 #include "MapEditorLib/ResourceDefines.h"
 
 IDR_EDITORTYPE MENU
