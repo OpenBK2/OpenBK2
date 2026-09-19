@@ -413,7 +413,9 @@ namespace
 
 		void OnEditorKeyDown( wxKeyEvent &rEvent )
 		{
-			if ( !HandleShortcut( rEvent.GetKeyCode(), rEvent.ControlDown() ) )
+			// Windows reports AltGr as Ctrl+Alt. Let it reach the text control
+			// so layout-specific characters (e.g. Croatian AltGr+F = [) can be typed.
+			if ( !HandleShortcut( rEvent.GetKeyCode(), rEvent.ControlDown() && !rEvent.AltDown() ) )
 			{
 				rEvent.Skip();
 			}
