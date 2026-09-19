@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Interface_View.h"
+// CreateController below casts to it and writes its members.
+#include "DefaultController.h"
 
 #include "MapEditorLib_export.h"
 
