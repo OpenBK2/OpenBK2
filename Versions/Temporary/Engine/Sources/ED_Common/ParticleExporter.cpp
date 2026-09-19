@@ -145,7 +145,9 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 	else
 		pParticle->SetKey( pManipulator->GetID( "" ) );
 
-	CDGPtr<CPtrFuncBase<NGScene::CParticlesInfo> > pFunc = pParticle;
+	// Through the raw pointer: CPtr to CDGPtr is two user conversions, which
+	// only MSVC chained in a copy-initialisation.
+	CDGPtr<CPtrFuncBase<NGScene::CParticlesInfo> > pFunc = pParticle.GetPtr();
 
 	pFunc.Refresh();
 	NGScene::CParticlesInfo *pInfo = pFunc->GetValue();
