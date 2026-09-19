@@ -30,8 +30,12 @@ add_subdirectory("Parser")
 if(BUILD_EDITOR)
     # A d3d9.dll that draws nothing, so the editor can be driven where D3D9
     # gives it no device. Installed beside bin/, never into it; see its
-    # CMakeLists for how a run opts in.
-    add_subdirectory("vendor/d3d9stub")
+    # CMakeLists for how a run opts in. Windows only: it is a replacement for
+    # the system DLL, built from the DirectX SDK's headers and a .def file, and
+    # off Windows d3d9 is DXVK Native, linked rather than found at load time.
+    if(WIN32)
+        add_subdirectory("vendor/d3d9stub")
+    endif()
 
     add_subdirectory("MapEditorLib")
     add_subdirectory("ED_Common")
