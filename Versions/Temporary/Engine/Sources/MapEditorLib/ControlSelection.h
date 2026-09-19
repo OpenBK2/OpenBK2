@@ -18,15 +18,8 @@ private:
 	//
 public:
 	const CControlSelectionDataMap& Get() const { return controlSelectionDataMap; }
-	TData* GetData( const TID &rID )
-	{
-		typename CControlSelectionDataMap::const_iterator posControlSelectionData = controlSelectionDataMap.find( rItem );
-		if ( posControlSelectionData != controlSelectionDataMap.end() )
-		{
-			return &( posControlSelectionData->second.data );
-		}
-		return 0;
-	}
+	// GetData is gone: nothing called it, and it looked up an rItem it does not
+	// have, so it had never been instantiated.
 	//
 	void Clear()
 	{
