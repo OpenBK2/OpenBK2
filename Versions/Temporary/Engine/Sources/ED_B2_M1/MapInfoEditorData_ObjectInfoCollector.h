@@ -6,6 +6,8 @@
 #include "MapInfoEditorData_ObjectInfo.h"
 #include "MapEditorLib/Tools_IndexCollector.h"
 #include "MapEditorLib/Tools_FreeIDCollector.h"
+// InsertHashSetElement, which the selection templates below call.
+#include "MapEditorLib/Tools_HashSet.h"
 #include "EditorUpdatableWorld.h"
 
 class CMapInfoEditor;
@@ -323,40 +325,9 @@ namespace NMapInfoEditor
 			AddLinkedObjectsToSelection();
 		}
 
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		template<class Type>
-		void RemoveFromSelection( const Type &rvPos0, const Type &rvPos1 )
-		{
-			CTRect<float> selectionRect( rvPos0.x, rvPos0.y, rvPos1.x, rvPos1.y );
-			selectionRect.Normalize();
-			// установим абсолютные координаты
-			objectSelection.MakeAbsolute();
-			// удалим элементы
-			for( CObjectInfoMap::iterator itObject = objectInfoMap.begin(); itObject != objectInfoMap.end(); ++itObject )
-			{
-				bool bInside = false;
-				for ( SObjectInfo::CSceneElementMap::const_iterator itSceneElement = itObject->second.sceneElementMap.begin(); itSceneElement != itObject->second.sceneElementMap.end(); ++itSceneElement )
-				{
-					CVec3 vObjectScenePosition = itSceneElement->second.GetPosition( itObject->second.vPosition );
-					bInside = selectionRect.IsInside( vObjectScenePosition.x, vObjectScenePosition.y );
-					if ( bInside )
-					{
-						break;
-					}
-				}
-				if ( bInside )
-				{
-					const unsigned nObjectInfoID = itObject->first;
-					CObjectSelectionPartMap::iterator posObjectSelectionPart = objectSelection.objectSelectionPartMap.find( nObjectInfoID );
-					if ( posObjectSelectionPart != objectSelection.objectSelectionPartMap.end() )
-					{
-						objectSelection.objectSelectionPartMap.erase( posObjectSelectionPart );
-					}
-				}
-			}
-			// установим относительные координаты
-			objectSelection.MakeRelative();
-		}
+		// RemoveFromSelection( pos0, pos1 ) is gone: nothing called it, and it read
+		// sceneElementMap and vPosition through a CPtr with '.', so it had never
+		// been instantiated.
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		template<class Type>
