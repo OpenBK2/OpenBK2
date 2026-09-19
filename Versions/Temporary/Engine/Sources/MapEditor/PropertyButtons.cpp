@@ -9,8 +9,7 @@
 
 #include "PropertyButtons.h"
 #include "BitFieldView.h"
-#include "PC_BinaryBitFieldEditor.h"
-#include "PC_ItemEditor.h"
+#include "PropertyValues.h"
 #include "TextEditorView.h"
 
 #include "Image/ImageColor.h"
@@ -19,6 +18,7 @@
 #include "System/Text.h"
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/CommonEditorMethods.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Exporter.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
@@ -523,7 +523,7 @@ namespace
 	{
 		const SPropertyDesc *const pDesc = rContext.pDesc;
 		CVariant value;
-		CPCBinaryBitFieldEditor::GetPCItemValue( &value, rszText, pDesc );
+		NPropertyValues::BitFieldValue( &value, rszText, pDesc );
 		// OK writes the flags into the variant's own buffer.
 		const bool bResult = NBitField::Run( rContext.pOwner,
 																				 Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + pDesc->szStringParam,
@@ -531,7 +531,7 @@ namespace
 												 rContext.bEditable;
 		if ( bResult )
 		{
-			CPCBinaryBitFieldEditor::GetPCItemStringValue( pszNewText, value, pDesc );
+			NPropertyValues::BitFieldString( pszNewText, value, pDesc );
 		}
 		RemoveSceneInput();
 		return bResult;

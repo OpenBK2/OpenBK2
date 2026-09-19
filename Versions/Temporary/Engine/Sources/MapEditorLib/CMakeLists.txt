@@ -19,7 +19,6 @@ set(SOURCES
     DefaultTabWindow.cpp
     DefaultView.cpp
     DialogState.cpp
-    DefaultWindow.cpp
     EditorBase.cpp
     EditorFactory.cpp
     ExporterBase.cpp
@@ -40,7 +39,6 @@ set(SOURCES
     PCIEMnemonics.cpp
     Progress.cpp
     ResizeDialog.cpp
-    ScintillaEditor.cpp
     ShellFont.cpp
     stdafx.cpp
     StoreInputState.cpp

@@ -2,11 +2,7 @@
 
 #include "PropertyPaneView.h"
 #include "PC_Constants.h"
-#include "PC_FloatComboEditor.h"
-#include "PC_IntComboEditor.h"
-#include "PC_ItemEditor.h"
-#include "PC_StringComboRefEditor.h"
-#include "PC_Vec3ColorEditor.h"
+#include "PropertyValues.h"
 
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/Interface_UserData.h"
@@ -44,7 +40,7 @@ namespace NPropertyPane
 		if ( typePCIEMnemonics.Get( pDesc, rszName ) == PCIE_VEC3_COLOR )
 		{
 			int nColor = 0xFFffFFff;
-			if ( CPCVec3ColorEditor::GetColorValue( &nColor, pManipulator, rszName ) )
+			if ( NPropertyValues::GetVec3Color( &nColor, pManipulator, rszName ) )
 			{
 				( *pValue ) = nColor;
 				return true;
@@ -114,11 +110,11 @@ namespace NPropertyPane
 		switch ( nType )
 		{
 			case PCIE_INT_COMBO:
-				return CPCIntComboEditor::BuildChoices( pDesc, pChoices );
+				return NPropertyValues::BuildIntChoices( pDesc, pChoices );
 			case PCIE_FLOAT_COMBO:
 			{
 				int nPrecision = PCSV_DEFAULT_RECISION;
-				return CPCFloatComboEditor::BuildChoices( pDesc, pChoices, &nPrecision );
+				return NPropertyValues::BuildFloatChoices( pDesc, pChoices, &nPrecision );
 			}
 			case PCIE_STRING_COMBO:
 				pChoices->assign( pDesc->values.begin(), pDesc->values.end() );
@@ -126,7 +122,7 @@ namespace NPropertyPane
 			case PCIE_STRING_COMBO_REF:
 			case PCIE_STRING_COMBO_MULTI_REF:
 				pChoices->push_back( PCSV_NULL );
-				CPCStringComboRefEditor::BuildChoices( pDesc, nType, pChoices );
+				NPropertyValues::BuildRefChoices( pDesc, nType, pChoices );
 				return true;
 			case PCIE_BOOL_COMBO:
 			case PCIE_BOOL_SWITCHER:
@@ -198,7 +194,7 @@ namespace NPropertyPane
 		}
 		CPtr<CObjectBaseController> pController = pView->CreateController<CObjectController>( static_cast<CObjectController*>( 0 ) );
 		const bool bAdded = ( typePCIEMnemonics.Get( pDesc, rszName ) == PCIE_VEC3_COLOR )
-												? CPCVec3ColorEditor::AddChangeOperation( rszName, (int)rNewValue, pController, pManipulator )
+												? NPropertyValues::AddVec3ColorChange( rszName, (int)rNewValue, pController, pManipulator )
 												: pController->AddChangeOperation( rszName, rNewValue, pManipulator );
 		if ( !bAdded )
 		{
@@ -224,7 +220,7 @@ namespace NPropertyPane
 		}
 		if ( typePCIEMnemonics.Get( pDesc, rszName ) == PCIE_VEC3_COLOR )
 		{
-			return CPCVec3ColorEditor::AddChangeOperation( rszName, (int)rValue, pController, pManipulator );
+			return NPropertyValues::AddVec3ColorChange( rszName, (int)rValue, pController, pManipulator );
 		}
 		return pController->AddChangeOperation( rszName, rValue, pManipulator );
 	}

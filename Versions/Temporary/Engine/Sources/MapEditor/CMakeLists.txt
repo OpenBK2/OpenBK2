@@ -5,20 +5,16 @@ set(SOURCES
     BitFieldViewWx.cpp
     BuilderContainer.cpp
     ChildFrameContainer.cpp
-    ComboBox_GDBBrowser.cpp
     CommandHandlerContainer.cpp
     ControllerContainer.cpp
     CreateModView.cpp
     CreateModViewWx.cpp
     EditorContainer.cpp
-    Empty_GDBBrowser.cpp
     ExporterContainer.cpp
-    FindTextDlg.cpp
     FolderCallback.cpp
     GDBBrowserPane.cpp
     LogPane.cpp
     LogViewWx.cpp
-    LuaEditor.cpp
     MainFrameShared.cpp
     MainFrameToolBars.cpp
     MainFrameWx.cpp
@@ -30,47 +26,11 @@ set(SOURCES
     MenuDropDownView.cpp
     MenuDropDownViewWx.cpp
     MODContainer.cpp
-    NewObjectDialog.cpp
     NewObjectView.cpp
     NewObjectViewWx.cpp
     ObjectCollector.cpp
     OpenModViewWx.cpp
     PC_BaseDialog.cpp
-    PC_BinaryBitFieldEditor.cpp
-    PC_BoolCheckBoxEditor.cpp
-    PC_BoolComboEditor.cpp
-    PC_BoolSwitcherEditor.cpp
-    PC_DBLinkDialog.cpp
-    PC_Dialog.cpp
-    PC_EditorButton.cpp
-    PC_EditorSlider.cpp
-    PC_ExTextFileEditor.cpp
-    PC_FloatComboEditor.cpp
-    PC_FloatInputEditor.cpp
-    PC_FloatSliderEditor.cpp
-    PC_GUIDEditor.cpp
-    PC_IntColorEditor.cpp
-    PC_IntComboEditor.cpp
-    PC_IntInputEditor.cpp
-    PC_IntSliderEditor.cpp
-    PC_ItemEditor.cpp
-    PC_MainTreeControl.cpp
-    PC_MultilineStringEditor.cpp
-    PC_String3ButtonEditor.cpp
-    PC_StringBigInputEditor.cpp
-    PC_StringBrowseEditor.cpp
-    PC_StringComboEditor.cpp
-    PC_StringComboRefEditor.cpp
-    PC_StringDirRefEditor.cpp
-    PC_StringFileRefEditor.cpp
-    PC_StringInputEditor.cpp
-    PC_StringMultibuttonEditor.cpp
-    PC_StringNewBrowseEditor.cpp
-    PC_StringNewRefEditor.cpp
-    PC_StringRefEditor.cpp
-    PC_StringSliderEditor.cpp
-    PC_TextFileEditor.cpp
-    PC_Vec3ColorEditor.cpp
     ProgressViewWx.cpp
     BuildDataView.cpp
     BuildDataViewWx.cpp
@@ -80,20 +40,15 @@ set(SOURCES
     PropertyButtonsWx.cpp
     PropertyPaneView.cpp
     PropertyPaneViewWx.cpp
+    PropertyValues.cpp
     RefListView.cpp
     RefListViewWx.cpp
     RegisterEditors.cpp
-    ReplaceTextDlg.cpp
     SearchObjectViewWx.cpp
     SelectTablesViewWx.cpp
-    SortTreeControl.cpp
     stdafx.cpp
     TextEditorView.cpp
     TextEditorViewWx.cpp
-    Tree_GDBBrowser.cpp
-    Tree_GDBBrowserBase.cpp
-    Tree_GDBBrowser_InputState.cpp
-    Tree_GDBLinkBrowser.cpp
     UserDataContainer.cpp
     ViewContainer.cpp
 )

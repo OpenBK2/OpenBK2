@@ -15,10 +15,10 @@ class CObjectBaseController;
 // Selection Properties -- the property grid in its docking pane -- behind a
 // boundary that names no toolkit.
 //
-// CDWPropertyBrowser is the pane, and stays MFC. What is inside it used to be a
-// CPCDialog held by value: a CPCMainTreeControl, the Stingray tree that lists an
-// object's fields with an inline editor over the value cell, and a status line.
-// Nothing outside the pane talks to that dialog directly. Every editor state
+// In the MFC editor the pane was CDWPropertyBrowser, holding a CPCDialog: a
+// CPCMainTreeControl, the Stingray tree that listed an object's fields with an
+// inline editor over the value cell, and a status line. All of those are gone.
+// Nothing outside the pane ever talked to that dialog directly. Every editor state
 // reaches it through the command handler registered as CHID_PC_DIALOG, with
 // four commands -- ID_PC_DIALOG_GET_VIEW, GET_COMMAND_HANDLER, CREATE_TREE and
 // UPDATE_VALUES -- and then through the IView it hands back. So an

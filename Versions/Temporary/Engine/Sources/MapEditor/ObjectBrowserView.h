@@ -11,10 +11,10 @@ struct IView;
 // The database browser's contents -- a list of tables over a tree of each
 // table's folders and objects -- behind a boundary that names no toolkit.
 //
-// CDWGDBBrowser is the docking pane and stays MFC. What is inside it used to be
-// a CComboBoxGDBBrowser held by value: a combo box of the tables the user
-// picked and a CTreeGDBBrowser for each, all of them children of the pane, only
-// the chosen table's tree shown. The pane adds the tables, switches between
+// The Game Database pane holds it (GDBBrowserPane.cpp). In the MFC editor the
+// pane was CDWGDBBrowser, holding a CComboBoxGDBBrowser by value: a combo box of
+// the tables the user picked and a CTreeGDBBrowser for each, only the chosen
+// table's tree shown; all of those are gone now. The pane adds the tables, switches between
 // them and points a tree at its table's folder the first time it is shown; the
 // tree does everything else itself, down to handing its selection to the
 // Selection Properties pane through CHID_PC_DIALOG. So the boundary is two

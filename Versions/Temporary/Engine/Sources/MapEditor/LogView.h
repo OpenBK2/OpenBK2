@@ -8,16 +8,12 @@
 
 // The contents of the Log Window, as an interface rather than a control.
 //
-// CDWLog is the docking pane -- SECControlBar, MFC, part of the frame -- and it
-// used to hold a CLogWindow by value and drive it in Scintilla's own terms:
-// SCI_APPENDTEXT, SCI_STARTSTYLING, SCI_GETLENGTH and so on. That is precisely
-// why the pane could not have any other kind of contents. Everything the pane
-// actually needs is below, and none of it names a toolkit or a text control.
-//
-// This is the first panel-at-a-time slice of the wx migration, and the shape is
-// meant to be the pattern for the rest: the pane stays MFC, the contents become
-// swappable, and the two implementations can be run against each other in the
-// same build.
+// In the MFC editor the pane was CDWLog, which held a CLogWindow by value and
+// drove it in Scintilla's own terms: SCI_APPENDTEXT, SCI_STARTSTYLING,
+// SCI_GETLENGTH and so on. That is precisely why the pane could not have any
+// other kind of contents. Everything the pane actually needs is below, and
+// none of it names a toolkit or a text control. The one implementation now is
+// wx's (LogViewWx.cpp); CDWLog and CLogWindow are gone.
 struct ILogView
 {
 	virtual ~ILogView() {}
