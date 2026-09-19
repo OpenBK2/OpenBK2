@@ -1,14 +1,23 @@
 name: Setup Windows build environment
 description: >
-  MSVC, Ninja and the DirectX SDK, which every Windows job here needs and which are
-  easy to get subtly wrong. Kept in one place so the build and test workflows cannot
-  drift apart: they did once, and the tests failed because they were missing the SDK
-  and were on a different compiler.
+  MSVC, Ninja, the DirectX SDK and ccache, which every Windows job here needs and
+  which are easy to get subtly wrong. Kept in one place so the build and test
+  workflows cannot drift apart: they did once, and the tests failed because they were
+  missing the SDK and were on a different compiler.
 
 inputs:
   arch:
     description: x64 or x86
     required: true
+  ccache-key:
+    description: >
+      Name of this job's compiler cache. Each job that builds something different
+      needs its own, since a job saves only what it used (see evict-old-files).
+    required: true
+  ccache-max-size:
+    description: Upper bound on the compiler cache this job saves
+    required: false
+    default: 1500M
 
 runs:
   using: composite
@@ -49,3 +58,20 @@ runs:
         7z x DXSDK_Jun10.exe DXSDK/Include -o_DX2010_
         7z x DXSDK_Jun10.exe DXSDK/Lib -o_DX2010_
         mv _DX2010_/DXSDK $HOME/cache
+
+    # Installs ccache and puts it on PATH, where cmake/ccache.cmake finds it at
+    # configure time, then restores this job's cache and saves it again when the
+    # job ends. The build is already set up for it: /Z7 rather than /Zi, and the
+    # sloppiness settings that let precompiled-header compiles be cached, both
+    # explained in cmake/ccache.cmake.
+    #
+    # The repository gets 10 GB of cache in total, shared by every job, so each
+    # one is capped, and evict-old-files drops whatever this job did not use
+    # before saving, so a cache holds one build's worth of objects rather than
+    # accumulating every revision's.
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ inputs.ccache-key }}
+        max-size: ${{ inputs.ccache-max-size }}
+        evict-old-files: job

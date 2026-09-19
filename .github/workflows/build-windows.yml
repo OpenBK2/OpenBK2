@@ -19,11 +19,27 @@ jobs:
       matrix:
         preset: [Windows-x64-Release, Windows-x86-Release]
 
+    env:
+      # Outside out/build, so it is a directory of its own that the cache steps
+      # below can restore and save without touching the build tree.
+      WX_ROOT: ${{ github.workspace }}/.wx/${{ matrix.preset }}
+
     steps:
+      # Only what the build reads. The full tree is 11 GB and 238k files, almost
+      # all of it game data, against 35 MB of engine source, and checking it out
+      # took about four minutes a job. Files at the root come with cone mode, so
+      # CMakeLists.txt and CMakePresets.json need no entry. blob:none leaves the
+      # contents of everything outside these directories undownloaded.
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
           submodules: recursive
+          filter: blob:none
+          sparse-checkout: |
+            .github
+            cmake
+            third_party
+            Versions/Temporary/Engine/Sources
 
       # Same steps as before, moved to a composite action so the test workflow uses
       # exactly this environment rather than its own approximation of it.
@@ -31,12 +47,45 @@ jobs:
         uses: ./.github/actions/setup-windows-build
         with:
           arch: ${{ contains(matrix.preset, 'x64') && 'x64' || 'x86' }}
+          ccache-key: build-${{ matrix.preset }}
+          ccache-max-size: 2G
+
+      # The most recent wx install for this preset, if there is one. cmake/wxwidgets.cmake
+      # decides whether it can be used: it reuses the install only if the build id
+      # recorded in it matches what this revision would build, and rebuilds it otherwise.
+      # So the lookup is by prefix alone, and a stale install is harmless.
+      - name: Restore wxWidgets
+        id: wx-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ env.WX_ROOT }}
+          key: wx-${{ matrix.preset }}
+          restore-keys: wx-${{ matrix.preset }}-
 
       - name: Configure with preset
-        run: cmake --preset ${{ matrix.preset }}
+        run: cmake --preset ${{ matrix.preset }} "-DWX_ROOT=${{ env.WX_ROOT }}"
 
       - name: Build with preset
         run: cmake --build --preset ${{ matrix.preset }} --parallel
+
+      # Saved under the build id, and only when that differs from what was restored,
+      # which is exactly when this job built wx. The id file inside the install is
+      # written last, so its presence also means the install is complete.
+      - name: Name the wxWidgets install
+        id: wx-id
+        shell: bash
+        run: |
+          id_file="$(cygpath -u "$WX_ROOT")/wx-build-id.txt"
+          if [ -f "$id_file" ]; then
+            echo "key=wx-${{ matrix.preset }}-$(cat "$id_file")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save wxWidgets
+        if: steps.wx-id.outputs.key != '' && steps.wx-id.outputs.key != steps.wx-restore.outputs.cache-matched-key
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ env.WX_ROOT }}
+          key: ${{ steps.wx-id.outputs.key }}
 
       - name: Install
         run: cmake --install out/build/${{ matrix.preset }} --prefix install/${{ matrix.preset }}
