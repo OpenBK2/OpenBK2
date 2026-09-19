@@ -57,9 +57,8 @@ set(SOURCES
 add_library(MapEditor SHARED ${SOURCES})
 add_stdafx_pch(MapEditor)
 add_export_header(MapEditor)
-# No mfc: without it __AFX__ is undefined and stdafx.h takes its plain
-# <windows.h> branch. CEditorApp is no longer a CWinApp, and NAppProfile
-# (AppProfile.h) keeps the registry profile CWinApp kept.
+# No mfc: CEditorApp is no longer a CWinApp, and NAppProfile (AppProfile.h)
+# keeps the registry profile CWinApp kept.
 target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script System fmt::fmt-header-only)
 if(WIN32)
     # comctl32: InitCommonControls and the object collector's image lists,

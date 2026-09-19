@@ -52,8 +52,7 @@ set(SOURCES
 add_library(MapEditorLib SHARED ${SOURCES})
 add_stdafx_pch(MapEditorLib)
 add_export_header(MapEditorLib)
-# No mfc: without it __AFX__ is undefined and stdafx.h takes its plain
-# <windows.h> branch. The image lists behind IImageList are Win32 ones
+# No mfc: the image lists behind IImageList are Win32 ones
 # (NativeImageList.h), and Tools_Image makes HBITMAPs rather than CBitmaps.
 target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc System fmt::fmt-header-only)
 if(WIN32)

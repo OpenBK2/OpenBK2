@@ -35,8 +35,7 @@ set(SOURCES
 add_library(ED_Common SHARED ${SOURCES})
 add_stdafx_pch(ED_Common)
 add_export_header(ED_Common)
-# No mfc: without it __AFX__ is undefined and stdafx.h takes its plain
-# <windows.h> branch. The viewport's CWinApp::OnIdle call was the last use.
+# No mfc: the viewport's CWinApp::OnIdle call was the last use.
 target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
     target_link_libraries(ED_Common PRIVATE winapi)
