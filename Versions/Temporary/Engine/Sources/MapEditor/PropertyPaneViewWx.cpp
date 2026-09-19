@@ -9,6 +9,7 @@
 #include "ResourceDefines.h"
 
 #include "Image/ImageColor.h"
+#include "libdb/EditorDb.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
@@ -27,6 +28,7 @@
 #include <wx/headerctrl.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
+#include <wx/odcombo.h>
 #include <wx/propgrid/editors.h>
 #include <wx/propgrid/manager.h>
 #include <wx/propgrid/props.h>
@@ -139,6 +141,18 @@ namespace
 		virtual bool Render( wxDC &rDC, const wxRect &rRect, const wxPropertyGrid *pGrid, wxPGProperty *pProperty,
 												 int nColumn, int nItem, int nFlags ) const override
 		{
+			// wx leaves the selected value cell white even when it has no editor.
+			// Carry the selection through arrays, folders and other display-only
+			// values, including the inactive selection colours used by our grid.
+			if ( nItem == -1 && nColumn == 1 && ( nFlags & wxPGCellRenderer::Selected ) != 0 )
+			{
+				const bool bFocused = pGrid->HasInternalFlag( wxPropertyGrid::wxPG_FL_FOCUSED );
+				const wxColour background = bFocused ? pGrid->GetSelectionBackgroundColour() : wxSystemSettings::GetColour( wxSYS_COLOUR_3DFACE );
+				rDC.SetBrush( wxBrush( background ) );
+				rDC.SetPen( wxPen( background ) );
+				rDC.SetTextForeground( bFocused ? pGrid->GetSelectionForegroundColour() : wxSystemSettings::GetColour( wxSYS_COLOUR_BTNTEXT ) );
+				nFlags |= wxPGCellRenderer::DontUseCellColours;
+			}
 			if ( ( nItem != -1 ) || ( nColumn == 1 && ( pProperty->IsValueUnspecified() || ( pProperty->GetCommonValue() >= 0 ) ||
 																								 ( pGrid->GetImageSize( pProperty, nItem ).x > 0 ) ||
 																								 ( ( pProperty->GetColumnEditor( 1 ) != nullptr ) &&
@@ -223,9 +237,78 @@ namespace
 	};
 
 
+	// The property-grid combo is created with wxBORDER_NONE. On Windows its
+	// theme paints the border itself, using this protected width; changing the
+	// native window style afterwards does not enable that border. Use the same
+	// width and layout update as a normally created wxComboCtrl.
+	struct CComboBorderAccess : public wxOwnerDrawnComboBox
+	{
+		static void EnableBorder( wxOwnerDrawnComboBox *pCombo )
+		{
+			wxCoord wxComboCtrlBase::*pWidth = &CComboBorderAccess::m_widthCustomBorder;
+			pCombo->*pWidth = pCombo->FromDIP( 1 );
+			void ( wxComboCtrlBase::*pRecalc )() = &CComboBorderAccess::RecalcAndRefresh;
+			( pCombo->*pRecalc )();
+		}
+	};
+
+
+	// Keep wx's validation, keyboard handling and choice popups, but give the
+	// active value editor a real border instead of the default label-like box.
+	template <class TEditor>
+	class CValueEditor : public TEditor
+	{
+	public:
+		virtual wxString GetName() const override
+		{
+			return wxS( "OBK2Value" ) + TEditor::GetName();
+		}
+
+		virtual wxPGWindowList CreateControls( wxPropertyGrid *pGrid, wxPGProperty *pProperty,
+																					 const wxPoint &rPosition, const wxSize &rSize ) const override
+		{
+			// ReadOnly alone creates a read-only text box in wx; NoEditor only
+			// suppresses it on rows with children, so it misses empty arrays.
+			if ( pProperty->HasFlag( wxPGFlags::ReadOnly ) )
+			{
+				return nullptr;
+			}
+			wxPGWindowList windows = TEditor::CreateControls( pGrid, pProperty, rPosition, rSize );
+			if ( wxWindow *pControl = windows.GetPrimary() )
+			{
+				if ( wxOwnerDrawnComboBox *pCombo = wxDynamicCast( pControl, wxOwnerDrawnComboBox ) )
+				{
+					CComboBorderAccess::EnableBorder( pCombo );
+				}
+				else
+				{
+					pControl->SetWindowStyleFlag( ( pControl->GetWindowStyleFlag() & ~wxBORDER_MASK ) | wxBORDER_SIMPLE );
+				}
+				// Undo the borderless text editor's offset and use the whole cell:
+				// the native border needs space on both sides of the text.
+				pControl->SetSize( rPosition.x, rPosition.y, rSize.x, rSize.y );
+				if ( wxTextCtrl *pText = wxDynamicCast( pControl, wxTextCtrl ) )
+				{
+					pText->SetMargins( pGrid->FromDIP( N_PG_TEXT_BEFORE - 1 ), 0 );
+				}
+			}
+			return windows;
+		}
+	};
+
+
+	// Registered once per editor type, and owned by wx after registration.
+	template <class TEditor>
+	wxPGEditor* ValueEditor()
+	{
+		static wxPGEditor *s_pEditor = wxPropertyGrid::RegisterEditorClass( new CValueEditor<TEditor>() );
+		return s_pEditor;
+	}
+
+
 	// The text box with a row of buttons after it, wx's wxPGMultiButton pattern:
 	// the buttons take their width from the right, the box keeps the rest.
-	class CButtonEditor : public wxPGTextCtrlEditor
+	class CButtonEditor : public CValueEditor<wxPGTextCtrlEditor>
 	{
 	public:
 		virtual wxString GetName() const override
@@ -239,7 +322,7 @@ namespace
 			const CButtonProperty *const pButtonProperty = dynamic_cast<const CButtonProperty*>( pProperty );
 			if ( ( pButtonProperty == nullptr ) || pButtonProperty->GetButtons().empty() )
 			{
-				return wxPGTextCtrlEditor::CreateControls( pGrid, pProperty, rPosition, rSize );
+				return CValueEditor<wxPGTextCtrlEditor>::CreateControls( pGrid, pProperty, rPosition, rSize );
 			}
 			wxPGMultiButton *const pButtons = new wxPGMultiButton( pGrid, rSize );
 			const std::vector<NPropertyButton::EButton> &rButtons = pButtonProperty->GetButtons();
@@ -247,7 +330,7 @@ namespace
 			{
 				pButtons->Add( FromNarrow( NPropertyButton::GetTitle( *itButton ) ) );
 			}
-			wxPGWindowList windows = wxPGTextCtrlEditor::CreateControls( pGrid, pProperty, rPosition, pButtons->GetPrimarySize() );
+			wxPGWindowList windows = CValueEditor<wxPGTextCtrlEditor>::CreateControls( pGrid, pProperty, rPosition, pButtons->GetPrimarySize() );
 			pButtons->Finalize( pGrid, rPosition );
 			windows.SetSecondary( pButtons );
 			return windows;
@@ -525,6 +608,7 @@ namespace
 		// Set while this view changes the grid itself, so the grid's own events
 		// are not taken for the user's.
 		bool bCreateControls = false;
+		uint64_t nPropertyChangeVersion = 0;
 		bool bShowHidden = false;
 		bool bEnableEdit = true;
 		bool bColumnsRestored = false;
@@ -612,6 +696,7 @@ namespace
 			pManager->Bind( wxEVT_PG_ITEM_COLLAPSED, &CPropertyGridView::OnCollapsed, this );
 			pManager->Bind( wxEVT_PG_COL_END_DRAG, &CPropertyGridView::OnColumnDragged, this );
 			pManager->Bind( wxEVT_DESTROY, &CPropertyGridView::OnDestroyed, this );
+			pManager->Bind( wxEVT_IDLE, &CPropertyGridView::OnIdle, this );
 			pManager->GetGrid()->Bind( wxEVT_SET_FOCUS, &CPropertyGridView::OnFocus, this );
 			pManager->Bind( wxEVT_CHILD_FOCUS, &CPropertyGridView::OnChildFocus, this );
 			pManager->GetGrid()->Bind( wxEVT_SIZE, &CPropertyGridView::OnGridSize, this );
@@ -1026,6 +1111,7 @@ namespace
 			wxPGProperty *const pRow = new CEllipsized<wxStringProperty>( name, name, wxString() );
 			// A folder the tree made for a missing parent: nothing to edit.
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, true );
+			pRow->SetEditor( ValueEditor<wxPGTextCtrlEditor>() );
 			wxPGProperty *const pAdded = ( pParent != nullptr ) ? pManager->AppendIn( pParent, pRow ) : pManager->Append( pRow );
 			// After adding, which gives a row a copy of its parent's cells.
 			pAdded->GetCell( 0 ).SetBitmap( TypeIcon( PCIE_FOLDER ) );
@@ -1106,9 +1192,8 @@ namespace
 						OnButton( pProperty, eButton, rszText );
 					} );
 				pRow->SetEditor( ButtonEditor() );
-				// A read-only row still gets its editor in wx, with the box
-				// read-only and the buttons live -- which is what the long string
-				// wants, and only that type is not typed into.
+				// Long strings show a summary and keep their dialog buttons, but
+				// must not open a text editor over that first-line-only summary.
 				bEditable = IsTextEdited( nType );
 			}
 			else if ( bEditable && NPropertyPane::GetChoices( pDesc, nType, &choices ) )
@@ -1123,15 +1208,18 @@ namespace
 				if ( nType == PCIE_BOOL_COMBO || nType == PCIE_BOOL_SWITCHER )
 				{
 					pRow = new CEllipsized<wxEnumProperty>( name, name, labels );
+					pRow->SetEditor( ValueEditor<wxPGChoiceEditor>() );
 				}
 				else
 				{
 					pRow = new CEllipsized<wxEditEnumProperty>( name, name, labels, wxArrayInt(), wxString() );
+					pRow->SetEditor( ValueEditor<wxPGComboBoxEditor>() );
 				}
 			}
 			else
 			{
 				pRow = new CEllipsized<wxStringProperty>( name, name, wxString() );
+				pRow->SetEditor( ValueEditor<wxPGTextCtrlEditor>() );
 				bEditable = bEditable && IsTextEdited( nType );
 			}
 			pRow->ChangeFlag( wxPGFlags::ReadOnly, !bEditable );
@@ -1647,10 +1735,60 @@ namespace
 			pManager->GetGrid()->RefreshProperty( pProperty );
 		}
 
+		void UpdateModifiedLabel( wxPGProperty *pProperty, const std::string &rszName )
+		{
+			bool bModified = false;
+			IManipulator::CNameMap names;
+			GetViewManipulator()->GetNameList( &names );
+			if ( names.empty() )
+			{
+				names[std::string()] = 0;
+			}
+			// Masked selections address fields inside a resource; a multi-object
+			// row is dirty if any of its corresponding saved values differs.
+			for ( const auto &object : GetObjectSet().objectNameSet )
+			{
+				for ( const auto &name : names )
+				{
+					bModified = NDb::IsPropertyModified( object.first, name.first + rszName ) || bModified;
+				}
+			}
+			wxPGCell &cell = pProperty->GetCell( 0 );
+			const wxFont font = pManager->GetGrid()->GetFont();
+			const wxFont labelFont = bModified ? font.Bold() : font;
+			if ( !cell.GetFont().IsOk() || cell.GetFont() != labelFont )
+			{
+				// Set the label's font only: wxPG_BOLD_MODIFIED bolds the values and
+				// descriptions too, and its flag does not follow undo or saves.
+				cell.SetFont( labelFont );
+				pManager->GetGrid()->RefreshProperty( pProperty );
+			}
+		}
+
+		void OnIdle( wxIdleEvent &rEvent )
+		{
+			rEvent.Skip();
+			if ( bCreateControls || pManager == nullptr || GetViewManipulator() == 0 ||
+					 nPropertyChangeVersion == NDb::GetPropertyChangeVersion() )
+			{
+				return;
+			}
+			nPropertyChangeVersion = NDb::GetPropertyChangeVersion();
+			// Saving changes no values, so it does not replay a controller. The
+			// database revision also refreshes labels after save/discard, without
+			// rebuilding the tree or replacing a currently active value editor.
+			for ( wxPGVIterator it = pManager->GetGrid()->GetVIterator( wxPG_ITERATE_ALL ); !it.AtEnd(); it.Next() )
+			{
+				UpdateModifiedLabel( it.GetProperty(), FullName( it.GetProperty() ) );
+			}
+		}
+
+
 		// The row's value from the manipulator: as a bool for a check box, as
 		// its text for everything else, a list choosing the entry with that text.
 		void RefreshText( wxPGProperty *pProperty, const std::string &rszName )
 		{
+			UpdateModifiedLabel( pProperty, rszName );
 			if ( dynamic_cast<wxBoolProperty*>( pProperty ) != nullptr )
 			{
 				CVariant value;
@@ -2136,9 +2274,8 @@ namespace
 		pManager->ShowHeader();
 		wxPropertyGrid *const pGrid = pManager->GetGrid();
 		ApplyClassicLook( pGrid, pGrid->GetCellBackgroundColour() );
-		// A row the font's height and a pixel either side: the tree's rows were
-		// 18 pixels where wx's default spacing makes 20.
-		pGrid->SetVerticalSpacing( 1 );
+		// Leave room for the value editor's border without clipping its text.
+		pGrid->SetVerticalSpacing( 2 );
 		// pc_header.bmp's icon beside each title, SetColumnImage( index, index ).
 		// The manager does not hand out its header, which is its only
 		// wxHeaderCtrl child, and whose columns are wxHeaderColumnSimple. The

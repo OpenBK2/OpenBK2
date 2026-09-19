@@ -3,6 +3,7 @@
 #include "libdb_export.h"
 
 #include "Db.h"
+#include <cstdint>
 
 namespace NDb
 {
@@ -25,6 +26,10 @@ LIBDB_EXPORT bool RemoveObject( const CDBID &dbid );
 bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
 //! mark object as changed to save it
 LIBDB_EXPORT void MarkChanged( const CDBID &dbid );
+// Property-tree dirty labels compare values against the last save, independently
+// of the bounded undo history. Querying enables tracking for this resource.
+LIBDB_EXPORT bool IsPropertyModified( const CDBID &dbid, const std::string &szName );
+LIBDB_EXPORT uint64_t GetPropertyChangeVersion();
 //! save all objects, marked as changed
 LIBDB_EXPORT void SaveChanges();
 //! Persist newly registered files without saving unrelated edited resources.

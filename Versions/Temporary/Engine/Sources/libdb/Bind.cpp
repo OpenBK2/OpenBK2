@@ -4,11 +4,30 @@
 #include "BindArray.h"
 #include "System/LightXML.h"
 #include "Database.h"
+#include "EditorDb.h"
 
 #include <cstdint>
 
 namespace NDb
 {
+namespace
+{
+	uint64_t nPropertyChangeVersion = 0;
+}
+
+uint64_t GetPropertyChangeVersion()
+{
+	return nPropertyChangeVersion;
+}
+
+bool IsPropertyModified( const CDBID &dbid, const std::string &szName )
+{
+	if ( dbid.IsEmpty() )
+		return false;
+	NBind::CBindStruct *pBind = dynamic_cast<NBind::CBindStruct*>( GetManipulator( dbid ) );
+	return pBind && pBind->IsPropertyModified( szName );
+}
+
   //
   void SetDatabaseDataChanged( const CDBID &dbid );
 
@@ -50,9 +69,68 @@ void CBindStruct::SetChanged()
 { 
 	if ( IsLoaded() )
 	{
+		if ( bTrackPropertyChanges && !bHaveSavedValues )
+		{
+			// SetChanged precedes SetValue/Insert/Remove. Snapshot the original
+			// fields, including array counts, before indices or values can change.
+			CObj<IObjManIterator> pIterator = CreateIterator( true );
+			while ( pIterator && !pIterator->IsEnd() )
+			{
+				CVariant value;
+				const std::string szName = pIterator->GetName();
+				const NTypeDef::STypeStructBase::SField *pField = pIterator->GetDesc();
+				// Struct rows have no scalar getter (array elements assert if
+				// queried as one); their children are visited by the iterator.
+				if ( pField && pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
+					savedPropertyValues.emplace( szName, value );
+				pIterator->Next();
+			}
+			bHaveSavedValues = true;
+		}
+		++nPropertyChangeVersion;
 		bChanged = true; 
 		SetDatabaseDataChanged( dbidMain );
 	}
+}
+
+// Saving/discarding establishes a new baseline; the next edit captures it.
+void CBindStruct::ResetChanged()
+{
+	bChanged = false;
+	bHaveSavedValues = false;
+	savedPropertyValues.clear();
+	++nPropertyChangeVersion;
+}
+
+bool CBindStruct::IsPropertyModified( const std::string &szName )
+{
+	bTrackPropertyChanges = true;
+	if ( !bHaveSavedValues )
+		return false;
+
+	const NTypeDef::STypeStructBase::SField *pField = GetDesc( szName );
+	if ( !pField )
+		return false;
+	CVariant value;
+	const auto saved = savedPropertyValues.find( szName );
+	if ( pField->pType->eType != NTypeDef::TYPE_TYPE_STRUCT && GetValue( szName, &value ) )
+	{
+		if ( saved == savedPropertyValues.end() || saved->second != value )
+			return true;
+	}
+	else if ( saved != savedPropertyValues.end() )
+		return true;
+
+	// Containers (including colour vectors) also represent their descendants.
+	// Compare full names with a separator so Foo cannot match FooBar.
+	const std::string szPrefix = szName + ".";
+	for ( auto it = savedPropertyValues.lower_bound( szPrefix );
+			it != savedPropertyValues.end() && it->first.compare( 0, szPrefix.size(), szPrefix ) == 0; ++it )
+	{
+		if ( !GetValue( it->first, &value ) || value != it->second )
+			return true;
+	}
+	return false;
 }
 
 std::wstring CBindStruct::GetAttribute( const std::string &szName ) const

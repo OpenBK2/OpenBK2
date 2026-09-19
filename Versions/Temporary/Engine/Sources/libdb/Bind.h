@@ -7,6 +7,8 @@
 #include "BindProcessor.h"
 #include "ObjManIterator.h"
 
+#include <map>
+
 namespace NLXML
 {
 	class CXMLNode;
@@ -36,6 +38,12 @@ class CBindStruct : public IObjMan, public ILoadableObjMan
 	bool bLoaded;			// indicates, does object was already loaded
 	bool bChanged;		// indicates changes in object (object requires save)
 	bool bNewObject;	// object was create as new, but newer saved to disk
+	// A baseline is captured only for resources displayed in a property tree,
+	// immediately before their first edit since saving. Keeping it with the
+	// resource makes undo, reopened dialogs and array index changes consistent.
+	bool bTrackPropertyChanges = false;
+	bool bHaveSavedValues = false;
+	std::map<std::string, CVariant> savedPropertyValues;
 public:
 	CBindStruct(): bLoaded( false ), bChanged( false ), bNewObject( false ) {}
 	CBindStruct( CResource *_pStruct, NMetaInfo::SStructMetaInfo *_pMetaInfo );
@@ -55,7 +63,8 @@ public:
 	void SetDBID( const CDBID &_dbid );
 	//
 	void SetChanged();
-	void ResetChanged() { bChanged = false; }
+	void ResetChanged();
+	bool IsPropertyModified( const std::string &szName );
 	bool IsChanged() const { return bLoaded && bChanged; }
 	//
 	IObjMan *CreateManipulator( const std::string &szName ) { return bindProcessor.CreateManipulator( szName, this ); }
@@ -79,7 +88,13 @@ public:
 	CBindArray *GetBindArray( const std::string &szName ) { return bindProcessor.GetBindArray( szName ); }
 	//
 	bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) { bool bRes = bindProcessor.LoadXML( szAddName, pType, pNode, this ); SetLoaded(); return bRes; }
-	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode ) { ResetChanged(); return bindProcessor.SaveXML( szAddName, pType, pNode, this ); }
+	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
+	{
+		const bool bSaved = bindProcessor.SaveXML( szAddName, pType, pNode, this );
+		if ( bSaved )
+			ResetChanged();
+		return bSaved;
+	}
 	bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) { SetChanged(); return bindProcessor.SetDefault( szAddName, pType ); }
 };
 
