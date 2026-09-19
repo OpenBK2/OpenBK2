@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -24,7 +25,7 @@ void CUIRunModeState::Enter()
 {
 	DebugTrace( "CUIRunModeState::Enter()" );
 
-	CWaitCursor wc;
+	CBusyCursor wc;
 
 	// clear the scene
 	Singleton<IUIScene>()->Create();

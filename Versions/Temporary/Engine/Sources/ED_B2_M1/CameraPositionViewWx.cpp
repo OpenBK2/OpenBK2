@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "CameraPositionView.h"
 
@@ -161,21 +162,21 @@ namespace
 			{
 				return;
 			}
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_STATE,
 																														ID_CPE_ON_PLAYER_CHANGED, 0 );
 		}
 
 		void OnSet( wxCommandEvent& )
 		{
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_STATE,
 																														ID_CPW_ON_SAVE, 0 );
 		}
 
 		void OnParamType( wxCommandEvent& )
 		{
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_STATE,
 																														ID_CPW_PARAM_TYPE_CHANGED, 0 );
 		}

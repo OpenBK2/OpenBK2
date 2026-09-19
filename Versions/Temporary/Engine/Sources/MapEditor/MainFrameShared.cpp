@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/MainWindow.h"
 
 #include <fmt/format.h>
@@ -216,7 +217,7 @@ namespace NMainFrameShared
 				NProgress::SetMessage( std::string( strPM ) );
 				NProgress::SetRange( 0, pEditorContainer->GetActiveEditor() ? 2 : 1 );
 			}
-			CWaitCursor waitCursor;
+			CBusyCursor waitCursor;
 			if ( pEditorContainer->GetActiveEditor() )
 			{
 				SUserData *pUserData = Singleton<IUserDataContainer>()->Get();

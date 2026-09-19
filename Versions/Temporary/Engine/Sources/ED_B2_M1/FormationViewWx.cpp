@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "FormationView.h"
 
@@ -168,7 +169,7 @@ namespace
 			{
 				return;
 			}
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			Singleton<ICommandHandlerContainer>()->HandleCommand(
 					CHID_SQUAD_FORMATIONS_STATE, ID_FORMATION_WINDOW_CHANGE_STATE,
 					static_cast<uint32_t>( nSelectedIndex ) );

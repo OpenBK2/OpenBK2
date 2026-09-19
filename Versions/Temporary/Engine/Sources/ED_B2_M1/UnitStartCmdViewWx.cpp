@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "UnitStartCmdView.h"
 
@@ -166,7 +167,7 @@ namespace
 
 		void OnSelectionChanged( wxListEvent& )
 		{
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			NotifyHandler( SUnitStartCmdWindowData::SEL_CHANGE );
 		}
 

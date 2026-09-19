@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "AIGeneralView.h"
 
@@ -305,7 +306,7 @@ namespace
 			eLastAction = eAction;
 			if ( !bIsDataSetting )
 			{
-				CWaitCursor wcur;
+				CBusyCursor wcur;
 				Singleton<ICommandHandlerContainer>()->HandleCommand(
 						CHID_AIGEN_POINTS_STATE, ID_AIGEN_POINTS_WINDOW_UI_EVENT, 0 );
 			}

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -200,7 +201,7 @@ bool CSimpleObjectState::InsertObjectLButtonUp( unsigned nFlags, const CVec3 &rT
 			return false;
 		}
 		//
-		CWaitCursor waitCursor;
+		CBusyCursor waitCursor;
 		SObjectSet objectSet;
 		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
@@ -324,7 +325,7 @@ void CSimpleObjectState::InsertObjectEnter()
 			CManipulatorManager::GetValue( &szSeason, pManipulator, "Season" );
 			const NDb::ESeason eSeason = static_cast<NDb::ESeason>( typeSeasonMnemonics.GetValue( szSeason ) );
 			// заполняем сцену и проставляем ссылки в mapInfo
-			CWaitCursor waitCursor;
+			CBusyCursor waitCursor;
 			const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( rpgStatsDBID ) );
 			if ( !pHPObjectRPGStats )
 			{

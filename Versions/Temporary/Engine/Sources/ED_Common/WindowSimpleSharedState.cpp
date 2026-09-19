@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "UI/CommandParam.h"
 #include "UI/DBUserInterface.h"
@@ -62,7 +63,7 @@ void CWindowSimpleSharedState::Enter()
 	DebugTrace( "CWindowSimpleSharedState::Enter()" );
 	NI_ASSERT( 1 == pEditor->GetObjectSet().objectNameSet.size(), "CWindowSimpleSharedState::Enter(): Only single selection supported" );
 
-	CWaitCursor wc;
+	CBusyCursor wc;
 
 	ResetSelection();
 
@@ -83,7 +84,7 @@ void CWindowSimpleSharedState::Leave()
 	DebugTrace( "CWindowSimpleSharedState::Leave()" );
 	CDefaultInputState::Leave();
 
-	CWaitCursor wc;
+	CBusyCursor wc;
 
 	ResetSelection();
 
@@ -214,7 +215,7 @@ void CWindowSimpleSharedState::ResetSelection()
 
 void CWindowSimpleSharedState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWaitCursor wc;
+	CBusyCursor wc;
 	switch( nChar )
 	{
 	case VK_DELETE:
@@ -314,7 +315,7 @@ void CWindowSimpleSharedState::OnLButtonDown( unsigned nFlags, const CTPoint<int
 	}
 	else if ( (nFlags & (MK_CONTROL | MK_SHIFT)) == (MK_CONTROL | MK_SHIFT) )
 	{
-		CWaitCursor wc;
+		CBusyCursor wc;
 		InsertChild( rMousePoint );
 		UpdatePropertyControl( true );
 	}
@@ -331,13 +332,13 @@ void CWindowSimpleSharedState::OnLButtonUp( unsigned nFlags, const CTPoint<int> 
 		const CTPoint<int> deltaPoint( rMousePoint - rStartPoint );
 		if ( 0 != deltaPoint.x || 0 != deltaPoint.y )
 		{
-			CWaitCursor wc;
+			CBusyCursor wc;
 			ReplaceChild( pPickedWindow, deltaPoint, RCH_DELTA | RCH_X | RCH_Y );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 		else
 		{
-			CWaitCursor wc;
+			CBusyCursor wc;
 			UpdatePropertyControl();
 		}
 		bDragging = false;
@@ -365,7 +366,7 @@ void CWindowSimpleSharedState::OnMouseMove( unsigned nFlags, const CTPoint<int> 
 
 void CWindowSimpleSharedState::OnRButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
-	CWaitCursor wc;
+	CBusyCursor wc;
 
 	// reset selection
 	ResetSelection();

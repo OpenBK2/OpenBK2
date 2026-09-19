@@ -2,6 +2,7 @@ project(MapEditorLib)
 set(SOURCES
     BaseTreeControl.cpp
     BasicDataExtractor.cpp
+    BusyCursor.cpp
     BuildDataBuilder.cpp
     BuilderBase.cpp
     BuilderFactory.cpp

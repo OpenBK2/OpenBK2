@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
@@ -208,7 +209,7 @@ namespace NMapInfoEditor
 	void SEntrenchmentInfo::Remove( bool bUpdateScene, IEditorScene *pEditorScene,
 																	bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
-		CWaitCursor wcur;
+		CBusyCursor wcur;
 		SObjectInfo::Remove( bUpdateScene, pEditorScene, bUpdateDB, pObjectController, pManipulator );
 		pObjectInfoCollector->trenchIDToIndexCollector.Remove( nEntrenchmentID, true );
 	}

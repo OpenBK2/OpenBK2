@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "MoviesEditorView.h"
 
@@ -721,7 +722,7 @@ namespace
 			eLastAction = eAction;
 			if ( !bIsDataSetting )
 			{
-				CWaitCursor wcur;
+				CBusyCursor wcur;
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_STATE,
 																															ID_SCRIPT_CAMERA_MOV_ED_UI_EVENT, 0 );
 			}

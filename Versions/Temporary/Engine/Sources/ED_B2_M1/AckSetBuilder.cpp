@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -385,7 +386,7 @@ bool CAcksBuilder::IsUniqueObjectName( const std::string &szObjectType, const st
 
 bool CAcksBuilder::UpdateAckSets( const std::string &rszAnimationFolder )
 {
-	CWaitCursor waitCursor;
+	CBusyCursor waitCursor;
 	//
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -43,7 +44,7 @@ void CBridgeState::InsertObjectEnter()
 	ClearScene();
 	ClearData();
 	//
-	CWaitCursor waitCursor;
+	CBusyCursor waitCursor;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) );
 }
 
@@ -294,7 +295,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		//
 		if ( bPlace )
 		{
-			CWaitCursor waitCursor;
+			CBusyCursor waitCursor;
 			// Записываем мост в базу
 			ClearScene();
 			const int nBridgeElementCount = bridgeElementCenterPointList.size();

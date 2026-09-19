@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 
 #include "ReinfPointsView.h"
 
@@ -240,7 +241,7 @@ namespace
 			{
 				return;
 			}
-			CWaitCursor wcur;
+			CBusyCursor wcur;
 			eLastAction = eAction;
 			if ( !bIsDataSetting )
 			{

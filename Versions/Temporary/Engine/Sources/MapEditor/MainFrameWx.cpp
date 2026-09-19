@@ -2,6 +2,7 @@
 
 #include "MainFrameWx.h"
 
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
@@ -1881,6 +1882,9 @@ namespace NMainFrameWx
 {
 	bool Create()
 	{
+		// What CBusyCursor shows while the editors run a long command: wx's busy
+		// cursor, which covers every wx window.
+		CBusyCursor::SetHandlers( []() { wxBeginBusyCursor(); }, []() { wxEndBusyCursor(); } );
 		s_pFrame = NWx::TopLevel<CWxMainFrame>();
 		s_pFrame->Build();
 		return true;

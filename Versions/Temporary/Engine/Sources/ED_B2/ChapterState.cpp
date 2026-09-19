@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "ChapterState.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -251,7 +252,7 @@ void CChapterState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 
 void CChapterState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
 {
-	CWaitCursor wc;
+	CBusyCursor wc;
 	switch( nChar )
 	{
 		case VK_UP:

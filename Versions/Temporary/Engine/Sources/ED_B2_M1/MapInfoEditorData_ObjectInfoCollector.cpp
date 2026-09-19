@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include <fmt/format.h>
 #include "ResourceDefines.h"
 #include "CommandHandlerDefines.h"
@@ -473,7 +474,7 @@ namespace NMapInfoEditor
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfoCollector::RemoveSelection( IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
-		CWaitCursor waitCursor;
+		CBusyCursor waitCursor;
 		HideSelectionPropertyManipulator();
 		//
 		for ( CObjectSelectionPartMap::const_iterator itObjectSelectionPart = objectSelection.objectSelectionPartMap.begin(); itObjectSelectionPart != objectSelection.objectSelectionPartMap.end(); ++itObjectSelectionPart )
@@ -653,10 +654,10 @@ namespace NMapInfoEditor
 																						bool bUpdateScene, IEditorScene *pEditorScene,
 																						bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
-		CWaitCursor *pWaitCursor = 0;
+		CBusyCursor *pWaitCursor = 0;
 		if ( bUpdateDB )
 		{
-			pWaitCursor = new CWaitCursor();
+			pWaitCursor = new CBusyCursor();
 		}
 		bool bResult = true;
 		if ( bSetToZero )
@@ -709,10 +710,10 @@ namespace NMapInfoEditor
 																							bool bUpdateScene, IEditorScene *pEditorScene,
 																							bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
-		CWaitCursor *pWaitCursor = 0;
+		CBusyCursor *pWaitCursor = 0;
 		if ( bUpdateDB )
 		{
-			pWaitCursor = new CWaitCursor();
+			pWaitCursor = new CBusyCursor();
 		}
 		bool bResult = true;
 		const float fOldDirection = objectSelection.fDirection;

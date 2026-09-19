@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -30,7 +31,7 @@ void CFenceState::InsertFence()
 	if ( CanEdit() )
 	{
 		CMapObjectMultiState::SEditParameters *pEditParameters = GetParentState()->GetEditParameters();
-		CWaitCursor wcur;
+		CBusyCursor wcur;
 
 		CPtr<IEditorScene> pScene = EditorScene();
 		CPtr<IManipulator> pManipulator = GetMapInfoEditor()->GetViewManipulator();
@@ -143,7 +144,7 @@ bool CFenceState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 
 void CFenceState::RefreshSelectedFenceInfo()
 {
-	CWaitCursor waitCursor;
+	CBusyCursor waitCursor;
 	selectedFenceInfo = SSelectedFenceInfo();
 	//
 	SObjectSet objectSet;

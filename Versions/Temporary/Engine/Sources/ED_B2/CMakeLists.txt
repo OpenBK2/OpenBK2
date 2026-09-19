@@ -12,8 +12,7 @@ set(SOURCES
 add_library(ED_B2 SHARED ${SOURCES})
 add_stdafx_pch(ED_B2)
 add_export_header(ED_B2)
-# mfc and not stingray: nothing here uses Stingray, but MFC it does -- a
-# CWaitCursor in ChapterState.cpp, and CString through MapEditorLib's
+# mfc: MFC it still uses, for CString through MapEditorLib's
 # StringManager.h and Tools_Resources.h.
 target_link_libraries(ED_B2 PRIVATE 3DLib 3Dmotor Common_RTS_AI ED_B2_M1 GameX Image libdb MapEditorLib MemoryLib Misc mfc SceneB2 System UISpecificB2 UI zlib fmt::fmt-header-only)
 if(WIN32)

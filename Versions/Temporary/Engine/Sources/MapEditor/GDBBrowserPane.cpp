@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -394,7 +395,7 @@ void CGDBBrowserContents::OnCheckOut()
 
 void CGDBBrowserContents::OnCheckIn()
 {
-	CWaitCursor wc;
+	CBusyCursor wc;
 	//
 	Singleton<IEditorContainer>()->DestroyActiveEditor( true );
 	Singleton<IChildFrameContainer>()->Destroy();
@@ -430,7 +431,7 @@ void CGDBBrowserContents::OnCheckIn()
 
 void CGDBBrowserContents::OnGetLatest()
 {
-	CWaitCursor wc;
+	CBusyCursor wc;
 	//
 	Singleton<IEditorContainer>()->DestroyActiveEditor( true );
 	Singleton<IChildFrameContainer>()->Destroy();
@@ -756,7 +757,7 @@ void CGDBBrowserContents::LocateObject()
 			pView->GetObjectSet( &objectSet );
 			if ( !objectSet.szObjectTypeName.empty() && !objectSet.objectNameSet.empty() )
 			{
-				CWaitCursor waitCursor;
+				CBusyCursor waitCursor;
 				SelectObjectSet( objectSet );
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_VIEW, ID_VIEW_SHOW_PROPERTY_BROWSER, 1 );
 			}

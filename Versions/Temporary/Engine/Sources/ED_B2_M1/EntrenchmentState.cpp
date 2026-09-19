@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
@@ -111,7 +112,7 @@ void CEntrenchmentState::InsertEntrenchment()
 	if ( CanEdit() )
 	{
 		CMapObjectMultiState::SEditParameters *pEditParameters = GetParentState()->GetEditParameters();
-		CWaitCursor wcur;
+		CBusyCursor wcur;
 		CPtr<IEditorScene> pScene = EditorScene();
 		CPtr<ICamera> pCamera = Camera();
 		CPtr<IResourceManager> pResourceManager = Singleton<IResourceManager>();
@@ -211,7 +212,7 @@ bool CEntrenchmentState::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 
 void CEntrenchmentState::RefreshSelectedEntrenchmentInfo()
 {
-	CWaitCursor waitCursor;
+	CBusyCursor waitCursor;
 	selectedEntrenchmentInfo = SSelectedEntrenchmentInfo();
 	//
 	SObjectSet objectSet;
