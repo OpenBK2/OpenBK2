@@ -5,7 +5,8 @@
 
 
 #pragma once
-#ifndef __AFX__
+// No MFC: nothing links it, so the __AFX__ branch that
+// included afxwin.h and friends is gone.
 
 #include <boost/predef.h>
 
@@ -18,20 +19,6 @@
 #include <cstdlib>
 #include <cassert>
 
-#else
-//#define _STLP_USE_MFC 1
-
-#if BOOST_OS_WINDOWS
-#include <afxwin.h>											// MFC core and standard components
-#include <afxext.h>											// MFC extensions
-#include <afxdtctl.h>										// MFC support for Internet Explorer 4 Common Controls
-#endif
-
-#ifndef _AFX_NO_AFXCMN_SUPPORT
-#include <afxcmn.h>											// MFC support for Windows Common Controls
-#endif // _AFX_NO_AFXCMN_SUPPORT
-#include <comutil.h>
-#endif // __AFX__
 
 #pragma component( mintypeinfo, on )
 #include <cmath>

@@ -88,9 +88,9 @@ set(WX_GIT_TAG v3.3.3)
 # the build id below is hashed from.
 set(WX_CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        # Has to match the rest of the build. MFC comes in as _AFXDLL, the
-        # shared MFC DLL, which means the shared CRT; a wx built against the
-        # static CRT would put two heaps in one process.
+        # Has to match the rest of the build, which uses the shared CRT
+        # (CMake's default, /MD); a wx built against the static CRT would put
+        # two heaps in one process.
         -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
         -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
@@ -222,18 +222,11 @@ set_target_properties(wx::wx PROPERTIES
     #   _UNICODE       is the CRT one, read by <tchar.h>. It decides TCHAR and
     #                  the _t* functions -- _tcscpy and that family.
     #
-    # MFC keys off _UNICODE: it is what selects CStringA against CStringW and
-    # what picks the import library, and MFC ships separate MBCS and Unicode
-    # runtimes that must not both be loaded into one process. So defining
-    # _UNICODE to satisfy wx would have quietly asked for the second MFC.
-    #
     # wx needs none of the three from a consumer, which was verified rather than
     # reasoned: the skeleton builds and runs identically either way, still
-    # reporting wxUSE_UNICODE=1 and sizeof(wxChar)=2, and the running editor
-    # loads exactly one MFC -- mfc140.dll, the MBCS one -- beside wx. So the
-    # editor stays MBCS throughout, one translation unit can include afxwin.h and
-    # wx/wx.h together, and none of this spreads. wxString still has to be
-    # converted at the boundary, which is a conversion and not a compilation
-    # mode.
+    # reporting wxUSE_UNICODE=1 and sizeof(wxChar)=2. So the editor stays MBCS
+    # throughout, like the rest of the engine, and none of this spreads. wxString
+    # still has to be converted at the boundary, which is a conversion and not a
+    # compilation mode.
     INTERFACE_COMPILE_DEFINITIONS "WXUSINGDLL"
 )
