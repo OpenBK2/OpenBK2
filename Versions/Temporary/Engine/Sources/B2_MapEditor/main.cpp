@@ -48,7 +48,7 @@ class CEditorAppSpecific : public CEditorApp
 {
 	std::vector<IEditorModule*> extModules;
 public:
-	virtual BOOL InitInstance();
+	bool Initialize( const std::string &rszCommandLine ) override;
 
 	void LoadMapEditorModule( const std::string &szModuleName );
 	void UnloadMapEditorModule();
@@ -109,7 +109,7 @@ void CEditorAppSpecific::UnloadMapEditorModule()
 }
 
 
-BOOL CEditorAppSpecific::InitInstance()
+bool CEditorAppSpecific::Initialize( const std::string &rszCommandLine )
 {
 	// Before anything else, because everything after it is what wants watching.
 	// The editor had no crash handler until now: a fault left a truncated
@@ -123,8 +123,8 @@ BOOL CEditorAppSpecific::InitInstance()
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
 	//
 	SetMapFileName( "CMapEditorSingletonBase_B2MapEditor_1.0" );
-	// wx is up by now: CWxHostedApp::InitInstance starts it before calling this.
-	return CEditorApp::InitInstance();
+	// wx is up by now: this runs from the wxApp's OnInit (WxHost.cpp).
+	return CEditorApp::Initialize( rszCommandLine );
 }
 
 
@@ -137,7 +137,17 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 	pMainFrame->AddMenuResources( nIDs );
 }
 
-// CWxHostedApp starts wx before the editor, runs wx's message loop, and shuts
-// wx down after the editor: see WxHost.h.
-NWxHost::CWxHostedApp<CEditorAppSpecific> theApp;
+// A global, as the CWinApp was, so that it exists -- and its constructor has
+// set the CRT's debug flags -- before WinMain runs. wx's application object
+// drives it: see WxHost.h.
+namespace
+{
+	CEditorAppSpecific theEditorApp;
+}
+
+
+CEditorApp& NWxHost::GetEditorApp()
+{
+	return theEditorApp;
+}
 

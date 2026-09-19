@@ -1,6 +1,7 @@
 project(MapEditor)
 set(SOURCES
     AboutViewWx.cpp
+    AppProfile.cpp
     BitFieldView.cpp
     BitFieldViewWx.cpp
     BuilderContainer.cpp
@@ -56,9 +57,14 @@ set(SOURCES
 add_library(MapEditor SHARED ${SOURCES})
 add_stdafx_pch(MapEditor)
 add_export_header(MapEditor)
-target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script mfc System fmt::fmt-header-only)
+# No mfc: without it __AFX__ is undefined and stdafx.h takes its plain
+# <windows.h> branch. CEditorApp is no longer a CWinApp, and NAppProfile
+# (AppProfile.h) keeps the registry profile CWinApp kept.
+target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script System fmt::fmt-header-only)
 if(WIN32)
-    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi)
+    # comctl32: InitCommonControls and the object collector's image lists,
+    # which MFC's headers used to link through #pragma comment.
+    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32)
 endif()
 # The property control, the browsers and the main frame: dialogs, menus,
 # toolbars, string tables and the bitmaps under res/.

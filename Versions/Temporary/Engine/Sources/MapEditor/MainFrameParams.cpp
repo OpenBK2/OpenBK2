@@ -7,6 +7,7 @@
 #include "MapEditorLib/Interface_UserData.h"
 
 #include "MainFrameParams.h"
+#include "AppProfile.h"
 
 SMainFrameParams::SMainFrameParams() 
 	: bMaximized( false )
@@ -17,14 +18,8 @@ SMainFrameParams::SMainFrameParams()
 void SMainFrameParams::GetRegistryKey( std::string *pszRegistryKey )
 {
 	NI_ASSERT( pszRegistryKey != 0, "SMainFrameParams::GetRegistryKey() pszRegistryKey is NULL" );
-	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
-	std::string strTitle = NResources::GetString( AFX_IDS_APP_TITLE );
-	std::string strKey = NResources::GetString( IDS_REGISTRY_KEY );
-	( *pszRegistryKey ) = fmt::format( "Software\\{}\\{}\\{}\\{}",
-																strPath.c_str(),
-																Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
-																strTitle.c_str(),
-																strKey.c_str() );
+	// A section of the application's profile.
+	( *pszRegistryKey ) = NAppProfile::GetRootKey() + "\\" + NResources::GetString( IDS_REGISTRY_KEY );
 }
 
 

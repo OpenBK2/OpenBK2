@@ -17,6 +17,7 @@
 #include "MainFrameShared.h"
 #include "MainFrameWxPanes.h"
 #include "MapEditorApp.h"
+#include "AppProfile.h"
 #include "MapEditorSingleton.h"
 #include "ResourceDefines.h"
 
@@ -613,7 +614,7 @@ namespace
 		// What CMainFrame::OnCreate does, in its order, less what is not here yet.
 		void Build()
 		{
-			CEditorApp *const pApp = dynamic_cast<CEditorApp*>( AfxGetApp() );
+			CEditorApp *const pApp = CEditorApp::Get();
 			//
 			mapEditorSingletonApp.CreateMapFile( GetHWND() );
 			params.Load( true );
@@ -1086,27 +1087,27 @@ namespace
 		void SaveLayout()
 		{
 			auiManager.Update();
-			AfxGetApp()->WriteProfileString( LayoutSection().c_str(), "Layout", auiManager.SaveEditorLayout().utf8_str() );
+			NAppProfile::WriteString( LayoutSection(), "Layout", std::string( auiManager.SaveEditorLayout().utf8_str() ) );
 		}
 
 		void LoadLayout()
 		{
-			const CString strLayout = AfxGetApp()->GetProfileString( LayoutSection().c_str(), "Layout", "" );
-			if ( !strLayout.IsEmpty() )
+			const std::string strLayout = NAppProfile::GetString( LayoutSection(), "Layout", "" );
+			if ( !strLayout.empty() )
 			{
-				auiManager.LoadEditorLayout( wxString::FromUTF8( strLayout.GetString() ) );
+				auiManager.LoadEditorLayout( wxString::FromUTF8( strLayout.c_str() ) );
 			}
 		}
 
 		void ReadNamedLayouts()
 		{
 			namedLayouts.clear();
-			const CString saved = AfxGetApp()->GetProfileString( LayoutSection().c_str(), "NamedLayouts", "" );
-			if ( saved.IsEmpty() )
+			const std::string saved = NAppProfile::GetString( LayoutSection(), "NamedLayouts", "" );
+			if ( saved.empty() )
 			{
 				return;
 			}
-			wxStringInputStream input( wxString::FromUTF8( saved.GetString() ) );
+			wxStringInputStream input( wxString::FromUTF8( saved.c_str() ) );
 			wxXmlDocument document;
 			if ( !document.Load( input ) || document.GetRoot() == nullptr || document.GetRoot()->GetName() != "layouts" )
 			{
@@ -1139,7 +1140,7 @@ namespace
 			}
 			wxStringOutputStream output;
 			return document.Save( output ) &&
-				AfxGetApp()->WriteProfileString( LayoutSection().c_str(), "NamedLayouts", output.GetString().utf8_str() );
+				NAppProfile::WriteString( LayoutSection(), "NamedLayouts", std::string( output.GetString().utf8_str() ) );
 		}
 
 		void SaveNamedLayout()
@@ -1549,7 +1550,7 @@ namespace
 			// still exist. Teardown hides them and may collapse their docks.
 			SaveLayout();
 			//
-			CEditorApp *const pApp = dynamic_cast<CEditorApp*>( AfxGetApp() );
+			CEditorApp *const pApp = CEditorApp::Get();
 			Singleton<IEditorContainer>()->DestroyActiveEditor( false );
 			Singleton<IEditorContainer>()->PreDestroyControls();
 			for ( int nModuleIndex = 0; nModuleIndex < pApp->GetEditorModules().size(); ++nModuleIndex )

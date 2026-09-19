@@ -112,7 +112,7 @@ namespace
 		}
 		strDetails << "\n";
 		strDetails << "Configuration : " << ConfigurationName() << ", " << ( sizeof( void* ) * 8 ) << "-bit, " << InstructionSetName() << "\n";
-		strDetails << "Compiler      : MSVC " << _MSC_FULL_VER << ", MFC " << wxString::Format( "0x%04X", _MFC_VER ) << "\n";
+		strDetails << "Compiler      : MSVC " << _MSC_FULL_VER << "\n";
 		strDetails << "MOD           : " << ( pUserData->szOpenedMODFolder.empty() ? wxString( "none" ) : wxString::FromUTF8( pUserData->szOpenedMODFolder.c_str() ) ) << "\n";
 		strDetails << "wx (compiled) : " << wxVERSION_STRING << ", debug level " << wxDEBUG_LEVEL << "\n";
 		// The DLL actually loaded, which is what can differ from the line above.

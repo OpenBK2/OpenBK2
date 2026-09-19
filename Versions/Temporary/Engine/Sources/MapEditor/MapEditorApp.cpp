@@ -37,6 +37,7 @@
 #include "MapEditorLib/MapEditorModule.h"
 
 #include "MapEditorApp.h"
+#include "AppProfile.h"
 #include "MainFrameWx.h"
 #include "MainFrameShared.h"
 #include "MapEditorSingleton.h"
@@ -51,8 +52,7 @@
 
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
-BEGIN_MESSAGE_MAP(CEditorApp, CWinApp)
-END_MESSAGE_MAP() 
+CEditorApp *CEditorApp::pInstance = nullptr;
 
 
 // ************************************************************************************************************************ //
@@ -73,6 +73,16 @@ CEditorApp::CEditorApp()
 	delete pInitMem;
 
 	//NGlobal::SetVar( "fixrandom", 1 );
+	pInstance = this;
+}
+
+
+CEditorApp::~CEditorApp()
+{
+	if ( pInstance == this )
+	{
+		pInstance = nullptr;
+	}
 }
 
 
@@ -316,12 +326,8 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 	std::string szRegistryVersion;
 	std::string strKey;
 
-	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
-	std::string strTitle = NResources::GetString( AFX_IDS_APP_TITLE );
-	const std::string szRegistryKey = fmt::format( "Software\\{}\\{}\\{}",
-																			 strPath.c_str(),
-																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
-																			 strTitle.c_str() );
+	// The profile's own key: the one CWinApp's profile calls used.
+	const std::string szRegistryKey = NAppProfile::GetRootKey();
 	//
 	{
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
@@ -354,7 +360,7 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 }
 
 
-BOOL CEditorApp::InitInstance()
+bool CEditorApp::Initialize( const std::string &rszCommandLine )
 {
 	//
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
@@ -362,9 +368,8 @@ BOOL CEditorApp::InitInstance()
 	//
 	InitCommonControls();
 
-	CWinApp::InitInstance();
 	// Получаем командную строку
-	std::string szCommandLine( m_lpCmdLine );
+	std::string szCommandLine( rszCommandLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
 	// проверяем наличие предыдущего редактора
@@ -401,12 +406,8 @@ BOOL CEditorApp::InitInstance()
 		return false;
 	}
 
-	// Установить рабочий раздел Registry
-	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
-	const std::string szRegistryKey = fmt::format( "{}\\{}",
-																			 strPath.c_str(),
-																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() );
-	SetRegistryKey( szRegistryKey.c_str() );
+	// The registry profile needed SetRegistryKey here; NAppProfile works its
+	// key out from the same strings when asked.
 	// Создаем все необходимые структуры данных
 	if ( !CreateSingletons() )
 	{
@@ -449,7 +450,6 @@ BOOL CEditorApp::InitInstance()
 	//DebugTrace( "EditorApp() ResetCache(): %g", NHPTimer::GetTimePassed( &time ) );
 	//	
 	// И показываем основное окно
-	m_nCmdShow = SW_SHOWNORMAL;
 	/**
 	if ( szCommandLine.find( "-topmost" ) != std::string::npos )
 	{
@@ -465,19 +465,10 @@ BOOL CEditorApp::InitInstance()
 }
 
 
-int CEditorApp::ExitInstance() 
+void CEditorApp::Shutdown()
 {
 	// Убираем все созданные в редакторе Singletons
 	DestroySingletons();
-	//
-	return CWinApp::ExitInstance();
-}
-
-
-
-BOOL CEditorApp::SaveAllModified() 
-{
-	return TRUE;
 }
 
 void CEditorApp::SetMapFileName( const std::string &szMapFileName )

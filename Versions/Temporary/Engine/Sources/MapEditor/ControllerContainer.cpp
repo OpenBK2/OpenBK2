@@ -271,7 +271,7 @@ bool CControllerContainer::RedoArrow()
 
 bool CControllerContainer::ShowOperationList( bool bUndo )
 {
-	CPoint mouseCursorPos;
+	POINT mouseCursorPos = {};
 	GetCursorPos( &mouseCursorPos );
 
 	const unsigned nButtonID = bUndo ? ID_CC_UNDO : ID_CC_REDO;

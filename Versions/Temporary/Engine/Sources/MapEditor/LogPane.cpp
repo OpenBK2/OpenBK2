@@ -38,7 +38,6 @@ void CLogPaneContents::Log( ELogOutputType eLogOutputType, const std::string &sz
 {
 	if ( !szText.empty() )
 	{
-		TRACE2( "%d: %s", eLogOutputType, szText );
 		//
 		NLog::CLogBufferList::iterator posLogBuffer = logBufferList.insert( logBufferList.end(), NLog::SLogBuffer() );
 		posLogBuffer->eLogOutputType = eLogOutputType;

@@ -1,6 +1,25 @@
 #pragma once
 
 
+// The few of MFC's own ids (afxres.h) that the editor's code still names,
+// with MFC's values: the resource scripts still include afxres.h, which is a
+// plain header rc.exe reads without MFC, and define the strings and menu
+// items against these numbers. Guarded, because a resource script that
+// includes both sees afxres.h's definitions first.
+#ifndef ID_APP_EXIT
+#define ID_APP_EXIT					0xE141
+#endif
+#ifndef AFX_IDS_APP_TITLE
+#define AFX_IDS_APP_TITLE		0xE000
+#endif
+#ifndef AFX_IDS_IDLEMESSAGE
+#define AFX_IDS_IDLEMESSAGE	0xE001
+#endif
+#ifndef RT_TOOLBAR
+#define RT_TOOLBAR					MAKEINTRESOURCE( 241 )
+#endif
+
+
 //00001...00135 служебные ID
 //00140...00199 Status bar panels
 //00200...00299 Child Frames
