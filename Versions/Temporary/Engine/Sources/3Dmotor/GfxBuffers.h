@@ -1,6 +1,6 @@
 #pragma once
-#include "3dmotor_export.h"
-
+// Once, and spelled as generate_export_header writes it: the lowercase
+// 3dmotor_export.h beside it only resolved on a case-insensitive file system.
 #include "3Dmotor_export.h"
 
 #include "GPixelFormat.h"
