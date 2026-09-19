@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Interface_UserData.h"
+// ILogger and NLog::GetLogger, which ForEachObject below uses.
+#include "Interface_Logger.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib_export.h"

@@ -5,6 +5,10 @@
 #include "Stats_B2_M1/RPGStats.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "ED_Common/Tools_Granny.h"
+// NDB_DEFAULT_SEASON and typeSeasonMnemonics, which the season templates below use.
+#include "ED_B2_M1/SeasonMnemonics.h"
+// CManipulatorManager, which the same templates read values through.
+#include "MapEditorLib/ManipulatorManager.h"
 
 #include <cstdint>
 
