@@ -2,6 +2,22 @@
 # the documented build and CI configure this, so nothing older has worked
 # here in a long time. It also covers TARGET_RUNTIME_DLLS, added in 3.21.
 CMAKE_MINIMUM_REQUIRED(VERSION 3.23)
+
+# CMP0168 (CMake 3.30): FetchContent populates a dependency directly instead of
+# generating and building a sub-project for it. Under the old behaviour every
+# reconfigure ran one nested CMake configure and build per dependency just to
+# confirm the pinned download was still in place, ~0.5-0.8 s each, about 10 s
+# across this tree's FetchContent dependencies.
+#
+# Set on its own rather than by raising the minimum to 3.30, which would switch
+# on every other policy up to 3.30 as well, CMP0141 among them: that one moves
+# MSVC's debug-information flag out of CMAKE_<LANG>_FLAGS_<CONFIG>, which is
+# where the /Zi -> /Z7 rewrite below looks for it. Guarded so an older CMake
+# keeps configuring, the old way.
+if(POLICY CMP0168)
+    cmake_policy(SET CMP0168 NEW)
+endif()
+
 project(b2 LANGUAGES C CXX)
 
 # ASM_MASM is for the MMX reference implementations under 3Dmotor/test/original/.
