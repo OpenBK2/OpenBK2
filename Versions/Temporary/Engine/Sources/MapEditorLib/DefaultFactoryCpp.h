@@ -81,7 +81,7 @@ void UnRegister##TYPE##Type( const std::string &szName )																	 \
 I##TYPE* Create##TYPE( const std::string &szName )																				 \
 {																																										 \
 	ObjectFactoryNewFunc pfnNewFunc = (*pNewFuncs)[szName];														 \
-	return pfnNewFunc != 0 ? checked_cast<I##TYPE##*>( (*pfnNewFunc)() ) : 0;					 \
+	return pfnNewFunc != 0 ? checked_cast<I##TYPE*>( (*pfnNewFunc)() ) : 0;					 \
 }																																										 \
 bool CanCreate##TYPE( const std::string &szName )																				 \
 {																																										 \
