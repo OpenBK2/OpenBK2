@@ -5,6 +5,13 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
         GIT_TAG cedfeef30e93db35eee6b25759117da63f8e5a4f
         #GIT_TAG 93685a9006952fdc49c58fa0f95306a9cff1ed83 (old version)
+        # None of its submodules. They are the bundled copies of the codec
+        # libraries under external/ (ogg, vorbis, opus, flac, mpg123, libxmp,
+        # ...), which SDL_mixer reads only with SDLMIXER_VENDORED, off here; the
+        # decoders this build uses live in src/ (stb_vorbis, dr_libs). FetchContent
+        # otherwise clones all ten recursively. An empty GIT_SUBMODULES means none
+        # under CMP0097, which cmake_minimum_required(3.23) sets.
+        GIT_SUBMODULES ""
         GIT_PROGRESS TRUE
 )
 
