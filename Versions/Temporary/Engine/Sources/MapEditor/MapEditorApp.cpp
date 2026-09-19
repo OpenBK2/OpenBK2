@@ -418,7 +418,8 @@ BOOL CEditorApp::InitInstance()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	// Sets m_pMainWnd itself, before the editors make their controls.
+	// Before the editors make their controls. MFC is not told about it:
+	// m_pMainWnd stays null, since the frame is wx's.
 	if ( !NMainFrameWx::Create() )
 	{
 		return false;

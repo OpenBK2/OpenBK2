@@ -94,11 +94,15 @@ void CChildFrameWndBase::OnTimer()
 	{
 		if ( bRunModeEnabled || bGameInputEnabled )
 		{
-			// The application's idle work and the game's step, as the MFC viewport
-			// ran them: these are the application's, not the window's. The game
-			// steps as the active application when the active window is the one
-			// the viewport is in -- the main window, whichever frame that is.
-			AfxGetApp()->OnIdle( 0 );
+			// The game's step, as the MFC viewport ran it: the application's, not
+			// the window's. The game steps as the active application when the
+			// active window is the one the viewport is in -- the main window,
+			// whichever frame that is.
+			//
+			// AfxGetApp()->OnIdle( 0 ) used to come first. With no MFC window
+			// left, CWinApp::OnIdle had nothing to do: no m_pMainWnd and no frame
+			// windows whose command UI to update, and no temporary CWnd maps to
+			// empty. It went with MFC.
 			NMainLoop::StepApp( ::GetActiveWindow() == ::GetAncestor( pSurface->GetHandle(), GA_ROOT ) );
 		}
 		else
