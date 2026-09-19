@@ -46,7 +46,6 @@ set(SOURCES
     Tools_MainFolder.cpp
     Tools_Registry.cpp
     Tools_Resources.cpp
-    Tools_SysCodes.cpp
     Tools_UniqueList.cpp
 )
 add_library(MapEditorLib SHARED ${SOURCES})
