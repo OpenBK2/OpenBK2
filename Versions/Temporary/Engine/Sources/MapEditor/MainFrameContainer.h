@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MainFrame.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 class CMainFrameLoggerSink;
 

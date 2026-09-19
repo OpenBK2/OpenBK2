@@ -1,19 +1,6 @@
 #include "stdafx.h"
-#include "MapEditorLib/ToolkitChoice.h"
 
 #include "MainFrameWx.h"
-
-#include <cstdlib>
-
-namespace NMainFrameWx
-{
-	bool IsWanted()
-	{
-		return NToolkit::UseWxFrame();
-	}
-}
-
-
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
@@ -24,7 +11,7 @@ namespace NMainFrameWx
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 
-#include "MainFrame.h"
+#include "MainFrameToolBars.h"
 #include "MainFrameParams.h"
 #include "MainFrameShared.h"
 #include "MainFrameWxPanes.h"
@@ -1283,19 +1270,19 @@ namespace
 		// icon for Run Game, and its six toolbars from its own tables.
 		void CreateMainToolBars()
 		{
-			for ( int nToolBar = 0; nToolBar < TOOLBARS_COUNT; ++nToolBar )
+			for ( int nToolBar = 0; nToolBar < NMainFrameToolBars::TOOLBARS_COUNT; ++nToolBar )
 			{
-				toolBarImages.AddToolBarResource( CMainFrame::TOOLBAR_ID[nToolBar] );
+				toolBarImages.AddToolBarResource( NMainFrameToolBars::TOOLBAR_ID[nToolBar] );
 			}
 			toolBarImages.AddIcon( ID_TOOLS_RUN_GAME, IDI_GAME_LAUNCH );
-			for ( int nToolBar = 0; nToolBar < TOOLBARS_COUNT; ++nToolBar )
+			for ( int nToolBar = 0; nToolBar < NMainFrameToolBars::TOOLBARS_COUNT; ++nToolBar )
 			{
 				CString strName;
-				strName.LoadString( CMainFrame::TOOLBAR_NAME_ID[nToolBar] );
-				unsigned nID = CMainFrame::TOOLBAR_CONTROL_ID[nToolBar];
-				CreateToolBar( &nID, std::string( strName.GetString() ), CMainFrame::TOOLBAR_ELEMENTS_COUNT[nToolBar],
-											 CMainFrame::TOOLBAR_ELEMENTS_ID[nToolBar], CMainFrame::TOOLBAR_STYLE[nToolBar], AFX_IDW_DOCKBAR_TOP,
-											 true, CMainFrame::TOOLBAR_SHOW[nToolBar], false );
+				strName.LoadString( NMainFrameToolBars::TOOLBAR_NAME_ID[nToolBar] );
+				unsigned nID = NMainFrameToolBars::TOOLBAR_CONTROL_ID[nToolBar];
+				CreateToolBar( &nID, std::string( strName.GetString() ), NMainFrameToolBars::TOOLBAR_ELEMENTS_COUNT[nToolBar],
+											 NMainFrameToolBars::TOOLBAR_ELEMENTS_ID[nToolBar], NMainFrameToolBars::TOOLBAR_STYLE[nToolBar], AFX_IDW_DOCKBAR_TOP,
+											 true, NMainFrameToolBars::TOOLBAR_SHOW[nToolBar], false );
 			}
 		}
 
@@ -1303,7 +1290,7 @@ namespace
 		NMainFrameWxPanes::CToolBar* ViewToolBar( unsigned nCommandID )
 		{
 			const std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>>::const_iterator posToolBar =
-				toolBars.find( CMainFrame::TOOLBAR_CONTROL_ID[nCommandID - ID_VIEW_TOOLBAR_MAIN] );
+				toolBars.find( NMainFrameToolBars::TOOLBAR_CONTROL_ID[nCommandID - ID_VIEW_TOOLBAR_MAIN] );
 			return ( posToolBar != toolBars.end() ) ? posToolBar->second.get() : nullptr;
 		}
 

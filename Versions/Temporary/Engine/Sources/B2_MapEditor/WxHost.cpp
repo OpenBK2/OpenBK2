@@ -110,7 +110,6 @@ namespace NWxHost
 
 	namespace
 	{
-		bool s_bWxOwnsLoop = false;
 		SMfcHooks s_mfcHooks = { nullptr, nullptr, nullptr };
 
 
@@ -142,18 +141,6 @@ namespace NWxHost
 	}
 
 
-	void SetWxOwnsLoop( bool bWxOwnsLoop )
-	{
-		s_bWxOwnsLoop = bWxOwnsLoop;
-	}
-
-
-	bool WxOwnsLoop()
-	{
-		return s_bWxOwnsLoop;
-	}
-
-
 	int RunWxMainLoop( const SMfcHooks &rHooks )
 	{
 		s_mfcHooks = rHooks;
@@ -163,36 +150,10 @@ namespace NWxHost
 	}
 
 
-	void CWxHostApp::ExitMainLoop()
-	{
-		if ( s_bWxOwnsLoop )
-		{
-			wxApp::ExitMainLoop();
-		}
-		else
-		{
-			wxAppWithMFC::ExitMainLoop();
-		}
-	}
-
-
-	void CWxHostApp::WakeUpIdle()
-	{
-		if ( s_bWxOwnsLoop )
-		{
-			wxApp::WakeUpIdle();
-		}
-		else
-		{
-			wxAppWithMFC::WakeUpIdle();
-		}
-	}
-
-
 	bool CWxHostApp::ProcessIdle()
 	{
-		const bool bMoreIdle = wxAppWithMFC::ProcessIdle();
-		if ( s_bWxOwnsLoop && ( s_mfcHooks.pfnOnIdle != nullptr ) )
+		const bool bMoreIdle = wxApp::ProcessIdle();
+		if ( s_mfcHooks.pfnOnIdle != nullptr )
 		{
 			// The two idle calls CWinThread::Run made after a burst of messages:
 			// 0 updates MFC's command UI, 1 frees its temporary window objects and
@@ -206,11 +167,7 @@ namespace NWxHost
 
 	wxAppTraits* CWxHostApp::CreateTraits()
 	{
-		if ( s_bWxOwnsLoop )
-		{
-			return new CEditorAppTraits();
-		}
-		return wxAppWithMFC::CreateTraits();
+		return new CEditorAppTraits();
 	}
 }
 

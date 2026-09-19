@@ -94,7 +94,9 @@ def find_frame(image_pids):
             title = C.create_unicode_buffer(256)
             u.GetClassNameW(h, cls, 160)
             u.GetWindowTextW(h, title, 256)
-            if cls.value.startswith('Afx') and title.value:
+            # wxWindowNR is the wx frame's class; Afx... was the MFC frame's,
+            # which is gone, and still matches an older build.
+            if (cls.value.startswith('Afx') or cls.value == 'wxWindowNR') and title.value:
                 found.append(h)
                 return False
         return True

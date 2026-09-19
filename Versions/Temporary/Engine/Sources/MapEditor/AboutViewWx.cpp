@@ -4,7 +4,6 @@
 
 
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/ToolkitChoice.h"
 #include "MapEditorLib/WxImage.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -41,7 +40,7 @@
 // Below the MFC dialog's contents, and not in it, a details box for bug
 // reports: which build this is (revision, CI build number, configuration,
 // architecture), which wx it runs on (what WxEditor's CollectDetails reports),
-// and how the session is put together (wx or MFC frame). Read-only
+// and the session it is (the MOD, the code page, the display scale). Read-only
 // text rather than labels so any of it can be selected, and a Copy button for
 // all of it.
 
@@ -92,12 +91,6 @@ namespace
 	}
 
 
-	const char* ToolkitName( bool bWx )
-	{
-		return bWx ? "wx" : "MFC";
-	}
-
-
 	// Everything a bug report should say about the editor it came from, one
 	// "name: value" per line.
 	wxString CollectDetails( const wxWindow *pWindow )
@@ -120,7 +113,6 @@ namespace
 		strDetails << "\n";
 		strDetails << "Configuration : " << ConfigurationName() << ", " << ( sizeof( void* ) * 8 ) << "-bit, " << InstructionSetName() << "\n";
 		strDetails << "Compiler      : MSVC " << _MSC_FULL_VER << ", MFC " << wxString::Format( "0x%04X", _MFC_VER ) << "\n";
-		strDetails << "Frame         : " << ToolkitName( NToolkit::UseWxFrame() ) << " (OBK2_WX_FRAME), message loop " << ToolkitName( NToolkit::UseWxFrame() ) << "\n";
 		strDetails << "MOD           : " << ( pUserData->szOpenedMODFolder.empty() ? wxString( "none" ) : wxString::FromUTF8( pUserData->szOpenedMODFolder.c_str() ) ) << "\n";
 		strDetails << "wx (compiled) : " << wxVERSION_STRING << ", debug level " << wxDEBUG_LEVEL << "\n";
 		// The DLL actually loaded, which is what can differ from the line above.

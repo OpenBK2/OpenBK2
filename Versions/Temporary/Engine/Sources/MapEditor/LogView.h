@@ -71,17 +71,6 @@ namespace NLogView
 	};
 
 	SLogColour GetColour( ELogOutputType eLogOutputType );
-
-	// Which implementation the pane gets. The wx one exists only in a build with
-	// BUILD_WX_EDITOR and is selected by OBK2_WX_LOG in the environment, so the
-	// two can be compared by restarting rather than rebuilding -- the same habit
-	// the probe scripts are built around. Falls back to the Scintilla one if wx
-	// is not compiled in or the variable is not set.
-	ILogView* Create();
-
-	// Named so the factory can reach them; not for anything else to call.
-	ILogView* CreateScintillaLogView();
-	ILogView* CreateWxLogView();
 }
 
 

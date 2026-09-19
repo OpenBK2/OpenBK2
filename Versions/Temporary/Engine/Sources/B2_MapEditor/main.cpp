@@ -44,12 +44,6 @@ ED_B2_EXPORT IEditorModule* GetEditorModule3();
 ED_B2_EXPORT IEditorModule* GetEditorModule4();
 
 
-BEGIN_BUTTON_MAP(COMMON_BUTTON_MAP)
-#include "MapEditor/ToolBarButtonsMap.h"
-#include "ToolBarButtonsMapSpecific.h"
-END_BUTTON_MAP()
-
-
 class CEditorAppSpecific : public CEditorApp
 {
 	std::vector<IEditorModule*> extModules;
@@ -66,8 +60,6 @@ public:
 		if ( NGlobal::GetVar("delete_removed_object", 0) != 0 )
 			NDb::AddDbObserver( NDb::CreateVFSDbObserver() );
 	}
-	const SECBtnMapEntry* GetToolbarButtonsMap() const	{ return COMMON_BUTTON_MAP; }
-	void GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomToolBarInfoList ) const;
 	void CreateMenus( IMainFrame *pMainFrame ) const;
 };
 
@@ -138,31 +130,6 @@ BOOL CEditorAppSpecific::InitInstance()
 	// because wx's stock objects are made by module initialisation that has not
 	// run.
 	return CEditorApp::InitInstance();
-}
-
-
-void CEditorAppSpecific::GetCursomToolBarsInfo( CCursomToolBarInfoList *pCursomToolBarInfoList ) const
-{
-	AfxSetResourceHandle( theEDB2M1Instance );
-	{
-		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
-		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MAPINFO_TOOLS );
-		itCursomToolBarInfo->nCount = TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID );
-	}
-	{
-		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
-		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MAPINFO_VIEW );
-		itCursomToolBarInfo->nCount = TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID );
-	}
-	{
-		CCursomToolBarInfoList::iterator itCursomToolBarInfo = pCursomToolBarInfoList->insert( pCursomToolBarInfoList->end(), SCursomToolBarInfo() );
-		itCursomToolBarInfo->strName.LoadString( IDS_TOOLBAR_MODEL );
-		itCursomToolBarInfo->nCount = TOOLBAR_MODEL_ELEMENTS_COUNT;
-		itCursomToolBarInfo->pButtons = static_cast<const unsigned*>( TOOLBAR_MODEL_ELEMENTS_ID );
-	}
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
 

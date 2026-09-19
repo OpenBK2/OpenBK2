@@ -1,0 +1,164 @@
+#include "stdafx.h"
+
+#include "MainFrameToolBars.h"
+#include "ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
+
+// CMainFrame's toolbar tables, unchanged but for the namespace: see
+// MainFrameToolBars.h.
+
+namespace NMainFrameToolBars
+{
+	namespace
+	{
+		const unsigned TOOLBAR_MAIN_ELEMENTS_ID[] =
+		{
+			ID_MAIN_NEW,
+			ID_MAIN_OPEN,
+			ID_MAIN_OPEN_RESOURCE,
+			ID_MAIN_SAVE,
+			ID_MAIN_SELECT,
+			ID_SEPARATOR,
+			ID_TOOLS_RUN_GAME,
+		};
+
+		const unsigned TOOLBAR_OBJECT_ELEMENTS_ID[] =
+		{
+			ID_OBJECT_LOAD,
+			ID_MAIN_OBJECT_LOCATE,
+			ID_OBJECT_REF_LOOKUP,
+			ID_SEPARATOR,
+			ID_OBJECT_NEW_FOLDER,
+			ID_OBJECT_NEW,
+			ID_SEPARATOR,
+			ID_OBJECT_CHECK,
+			ID_OBJECT_EXPORT,
+			ID_OBJECT_EXPORT_FORCE,
+			ID_OBJECT_EXPORT_NO_REF,
+			ID_OBJECT_EXPORT_NO_REF_FORCE,
+		};
+
+		const unsigned TOOLBAR_CC_ELEMENTS_ID[] =
+		{
+			ID_CC_UNDO,
+			ID_CC_REDO,
+		};
+
+		const unsigned TOOLBAR_SELECTION_ELEMENTS_ID[] =
+		{
+			ID_SELECTION_CUT,
+			ID_SELECTION_COPY,
+			ID_SELECTION_PASTE,
+			ID_SELECTION_CLEAR,
+			ID_SELECTION_RENAME,
+			ID_SEPARATOR,
+			ID_SELECTION_FIND,
+			ID_SEPARATOR,
+			ID_SELECTION_PROPERTIES,
+		};
+
+		const unsigned TOOLBAR_PC_ELEMENTS_ID[] =
+		{
+			ID_PC_EXPAND_ALL,
+			ID_PC_EXPAND,
+			ID_PC_COLLAPSE,
+			ID_PC_COLLAPSE_ALL,
+			ID_SEPARATOR,
+			ID_PC_OPTIMAL_WIDTH,
+			ID_SEPARATOR,
+			ID_PC_REFRESH,
+			ID_SEPARATOR,
+			ID_PC_ADD_NODE,
+			ID_PC_DELETE_ALL_NODES,
+			ID_SEPARATOR,
+			ID_PC_INSERT_NODE,
+			ID_PC_DELETE_NODE,
+			ID_SEPARATOR,
+			ID_PC_SHOW_HIDDEN,
+		};
+
+		const unsigned TOOLBAR_VIEW_ELEMENTS_ID[] =
+		{
+			ID_VIEW_DW_GDB_BROWSER_FIRST,
+			ID_VIEW_DW_PROPERTY_BROWSER,
+			ID_VIEW_DW_LOG,
+		};
+
+		template <size_t N>
+		constexpr uint32_t CountOf( const unsigned ( & )[N] )
+		{
+			return static_cast<uint32_t>( N );
+		}
+	}
+
+
+	const unsigned TOOLBAR_ID[TOOLBARS_COUNT] =
+	{
+		IDT_MAIN,
+		IDT_CONTROLLER_CONTAINER,
+		IDT_SELECTION,
+		IDT_OBJECT,
+		IDT_PROPERTY_CONTROL,
+		IDT_VIEW,
+	};
+
+	const unsigned TOOLBAR_CONTROL_ID[TOOLBARS_COUNT] =
+	{
+		AFX_IDW_TOOLBAR,
+		AFX_IDW_TOOLBAR + 4,
+		AFX_IDW_TOOLBAR + 5,
+		AFX_IDW_TOOLBAR + 6,
+		AFX_IDW_TOOLBAR + 7,
+		AFX_IDW_TOOLBAR + 8,
+	};
+
+	const unsigned TOOLBAR_NAME_ID[TOOLBARS_COUNT] =
+	{
+		IDS_TOOLBAR_MAIN,
+		IDS_TOOLBAR_CONTROLLER_CONTAINER,
+		IDS_TOOLBAR_SELECTION,
+		IDS_TOOLBAR_OBJECT,
+		IDS_TOOLBAR_PROPERTY_CONTROL,
+		IDS_TOOLBAR_VIEW,
+	};
+
+	const uint32_t TOOLBAR_STYLE[TOOLBARS_COUNT] =
+	{
+		CBRS_ALIGN_ANY,
+		CBRS_ALIGN_ANY,
+		CBRS_ALIGN_ANY,
+		CBRS_ALIGN_ANY,
+		CBRS_ALIGN_ANY,
+		CBRS_ALIGN_ANY,
+	};
+
+	const bool TOOLBAR_SHOW[TOOLBARS_COUNT] =
+	{
+		true,
+		true,
+		false,
+		false,
+		false,
+		false,
+	};
+
+	const uint32_t TOOLBAR_ELEMENTS_COUNT[TOOLBARS_COUNT] =
+	{
+		CountOf( TOOLBAR_MAIN_ELEMENTS_ID ),
+		CountOf( TOOLBAR_CC_ELEMENTS_ID ),
+		CountOf( TOOLBAR_SELECTION_ELEMENTS_ID ),
+		CountOf( TOOLBAR_OBJECT_ELEMENTS_ID ),
+		CountOf( TOOLBAR_PC_ELEMENTS_ID ),
+		CountOf( TOOLBAR_VIEW_ELEMENTS_ID ),
+	};
+
+	const unsigned* const TOOLBAR_ELEMENTS_ID[TOOLBARS_COUNT] =
+	{
+		TOOLBAR_MAIN_ELEMENTS_ID,
+		TOOLBAR_CC_ELEMENTS_ID,
+		TOOLBAR_SELECTION_ELEMENTS_ID,
+		TOOLBAR_OBJECT_ELEMENTS_ID,
+		TOOLBAR_PC_ELEMENTS_ID,
+		TOOLBAR_VIEW_ELEMENTS_ID,
+	};
+}

@@ -39,6 +39,8 @@
 
 #include "MapEditorApp.h"
 #include "MainFrameWx.h"
+#include "MainFrameShared.h"
+#include "MapEditorSingleton.h"
 #include "libdb/EditorDb.h"
 #include "libdb/DBWatcherClient.h"
 
@@ -51,8 +53,6 @@
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
 BEGIN_MESSAGE_MAP(CEditorApp, CWinApp)
-	ON_COMMAND(ID_HELP, OnHelp)
-	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 END_MESSAGE_MAP() 
 
 
@@ -64,7 +64,7 @@ END_MESSAGE_MAP()
 // **
 // ************************************************************************************************************************ //
 
-CEditorApp::CEditorApp() : pMainFrame( 0 )
+CEditorApp::CEditorApp()
 {
 	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 	const int nBreakId = -1;
@@ -376,15 +376,6 @@ BOOL CEditorApp::InitInstance()
 	std::string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );
 
-	// The frame this session has: the wx one, or CMainFrame beside it when
-	// OBK2_WX_FRAME=0 asks for it. The wx frame answers to a mapping of its own,
-	// so one editor of each kind can run at once to be compared; each still
-	// refuses a second of its own kind.
-	const bool bWxFrame = NMainFrameWx::IsWanted();
-	if ( bWxFrame )
-	{
-		SetMapFileName( CMapEditorSingletonBase::GetMapFileName() + "_wx" );
-	}
 	// проверяем наличие предыдущего редактора
 	CMapEditorSingletonChecker mapEditorSingletonChecker;
 	if ( szCommandLine.empty() )
@@ -437,28 +428,10 @@ BOOL CEditorApp::InitInstance()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
-	if ( bWxFrame )
+	// Sets m_pMainWnd itself, before the editors make their controls.
+	if ( !NMainFrameWx::Create() )
 	{
-		// Sets m_pMainWnd itself, before the editors make their controls.
-		if ( !NMainFrameWx::Create() )
-		{
-			return false;
-		}
-	}
-	else
-	{
-		pMainFrame = new CMainFrame();
-		m_pMainWnd = dynamic_cast<CWnd*>( pMainFrame );
-		//
-		DebugTrace( "EditorApp() Create mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
-		//
-		if ( !pMainFrame->LoadFrame( IDR_EDITORTYPE ) )
-		{
-			delete pMainFrame;
-			pMainFrame = 0;
-			m_pMainWnd = 0;
-			return false;
-		}
+		return false;
 	}
 	//
 	DebugTrace( "EditorApp() Load mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
@@ -492,15 +465,7 @@ BOOL CEditorApp::InitInstance()
 		pMainFrame->ModifyStyleEx( 0, WS_EX_TOPMOST, 0 );
 	}
 	/**/
-	if ( bWxFrame )
-	{
-		NMainFrameWx::Show();
-	}
-	else
-	{
-		pMainFrame->ShowWindow( m_nCmdShow );
-		pMainFrame->UpdateWindow();
-	}
+	NMainFrameWx::Show();
 	if ( !szCommandLine.empty() && ( szCommandLine != "-reg" ) )
 	{
 		NMainFrameShared::OpenResource( szCommandLine );
@@ -517,23 +482,6 @@ int CEditorApp::ExitInstance()
 	return CWinApp::ExitInstance();
 }
 
-
-void CEditorApp::OnAppAbout()
-{
-	if ( pMainFrame )
-	{
-		pMainFrame->OnHelpAbout();
-	}
-}
-
-
-void CEditorApp::OnHelp() 
-{
-	if ( pMainFrame != 0 )
-  {
-		pMainFrame->OnHelpContents();
-  }
-}
 
 
 BOOL CEditorApp::SaveAllModified() 

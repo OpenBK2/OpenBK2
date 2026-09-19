@@ -10,11 +10,6 @@ set(SOURCES
     ControllerContainer.cpp
     CreateModView.cpp
     CreateModViewWx.cpp
-    DefaultChildFrame.cpp
-    DefaultDockingWindow.cpp
-    DW_GDBBrowser.cpp
-    DW_Log.cpp
-    DW_PropertyBrowser.cpp
     EditorContainer.cpp
     Empty_GDBBrowser.cpp
     ExporterContainer.cpp
@@ -22,17 +17,14 @@ set(SOURCES
     FolderCallback.cpp
     GDBBrowserPane.cpp
     LogPane.cpp
-    LogViewScintilla.cpp
     LogViewWx.cpp
-    LogWindow.cpp
     LuaEditor.cpp
-    MainFrame.cpp
     MainFrameShared.cpp
+    MainFrameToolBars.cpp
     MainFrameWx.cpp
     MainFrameWxPanes.cpp
     MainFrameContainer.cpp
     MainFrameParams.cpp
-    MainFrame_Consts.cpp
     MapEditorApp.cpp
     MapEditorSingleton.cpp
     MenuDropDownView.cpp

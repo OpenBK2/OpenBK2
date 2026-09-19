@@ -2,14 +2,13 @@
 
 // wx hosted inside the editor's MFC application.
 //
-// The shape is fixed by who owns what. MFC's CWinApp owns the entry point, the
-// main window and the message loop, and it is going to keep owning them for as
-// long as both toolkits are in the process, so wx goes in as the guest: started
-// by hand after MFC is up, given a look at every message before MFC translates
-// it, pumped from MFC's idle, and shut down before MFC exits. wxWidgets ships
-// exactly this in wx/msw/mfc.h -- wxMFCApp<T> for the CWinApp side and
-// wxAppWithMFC for the wxApp side -- so this is wx's own supported arrangement
-// rather than something invented here.
+// The shape is fixed by who owns what. MFC's CWinApp still owns the entry point
+// and its module initialisation, for as long as MFC is in the process, so wx is
+// started by hand from the application's InitInstance and shut down from its
+// ExitInstance. The message loop and the main window are wx's: the application's
+// Run enters wx's loop, and MFC gets a look at each message and its idle work
+// from inside it (SMfcHooks). wxMFCApp<T>, from wx/msw/mfc.h, is the CWinApp
+// side of that.
 //
 // The reason it can be in the same translation unit as MFC at all: wx needs
 // neither UNICODE nor _UNICODE from a consumer. Three different switches are
@@ -27,7 +26,6 @@
 #include <wx/wx.h>
 #include <wx/msw/mfc.h>
 
-#include "MapEditor/MainFrameWx.h"
 
 namespace NWxHost
 {
@@ -38,12 +36,6 @@ namespace NWxHost
 	// because the frame is held by a wxWeakRef that goes null when wx destroys
 	// it -- see WxOwnership.h.
 	bool IsProbeFrameOpen();
-
-	// Whose message loop this session runs on: wx's for the wx frame, MFC's for
-	// CMainFrame. Decided once, before wx starts, because wx makes its main
-	// loop from traits it creates the first time it is asked for them.
-	void SetWxOwnsLoop( bool bWxOwnsLoop );
-	bool WxOwnsLoop();
 
 	// What of the MFC application wx's loop still has to run: its
 	// PreTranslateMessage, which walks the MFC windows from a message's window
@@ -63,36 +55,30 @@ namespace NWxHost
 	// until the WM_QUIT the main frame posts when it goes.
 	int RunWxMainLoop( const SMfcHooks &rHooks );
 
-	// The wxApp. In an MFC session the message loop belongs to MFC, and
-	// wxAppWithMFC redirects the two things a wxApp would otherwise do to its own
-	// event loop -- exiting it, and waking it for idle -- at MFC's instead. In a
-	// session whose loop is wx's (WxOwnsLoop) those go to wx's own; its idle runs
-	// MFC's as well, and the loop it makes runs MFC's PreTranslateMessage before
-	// wx's own look at a message.
+	// The wxApp. Its idle runs MFC's as well, and the loop it makes runs MFC's
+	// PreTranslateMessage before wx's own look at a message.
 	//
-	// OnInit deliberately creates nothing. In wx's own sample the wxApp creates
-	// the main window and MFC wraps it; here the editor's startup makes the main
-	// window, whichever toolkit's, so there is nothing for wx to make until a
-	// real front-end asks.
-	class CWxHostApp : public wxAppWithMFC
+	// A plain wxApp: wxAppWithMFC, which redirected exiting the loop and waking
+	// it for idle at MFC's loop, was for the sessions whose loop was MFC's, and
+	// those went with CMainFrame.
+	//
+	// OnInit deliberately creates nothing: the editor's startup makes the main
+	// window.
+	class CWxHostApp : public wxApp
 	{
 	public:
 		virtual bool OnInit()
 		{
 			// Stated rather than left to the default, because the default is the
 			// wrong answer here and the failure would be spectacular. wx normally
-			// ends the application when its last top-level window closes, and
-			// wxAppWithMFC implements "end the application" as ::PostQuitMessage,
-			// which is MFC's message loop. So a wx tool window being closed could
-			// shut the whole editor down, with unsaved work in it. The main frame
-			// ends the loop when it goes, whichever frame and whichever loop, and
+			// ends the application when its last top-level window closes, so a wx
+			// tool window being closed before the frame exists could shut the
+			// whole editor down. The main frame ends the loop when it goes, and
 			// nothing else gets a vote.
 			SetExitOnFrameDelete( false );
 			return true;
 		}
 
-		virtual void ExitMainLoop() override;
-		virtual void WakeUpIdle() override;
 		virtual bool ProcessIdle() override;
 
 	protected:
@@ -114,8 +100,8 @@ namespace NWxHost
 	//
 	//   ExitInstance - wx's version deletes m_pMainWnd, which it is entitled to
 	//                  do because in its model that pointer is the wxMFCWnd it
-	//                  made itself. Here it is the editor's CMainFrame, which
-	//                  MFC destroys through PostNcDestroy, and deleting it here
+	//                  made itself. Here it is the CWnd the wx frame keeps over
+	//                  its own handle, a member of the frame, and deleting it
 	//                  would be a double free on the way out. The rest of what
 	//                  that method does -- CallOnExit then wxEntryCleanup -- is
 	//                  kept, in that order.
@@ -127,9 +113,9 @@ namespace NWxHost
 
 		// wxMFCApp::InitInstance is deliberately NOT called. Its order is
 		// base-then-wx, which is right when the base is a plain CWinApp and
-		// wrong here: the editor's InitInstance builds CMainFrame, and
-		// CMainFrame builds its docking panes, and a pane whose contents are wx
-		// needs wx to already exist. So wx starts first and the editor second.
+		// wrong here: the editor's InitInstance builds the main frame, which is
+		// wx's, so wx has to exist first. So wx starts first and the editor
+		// second.
 		//
 		// This was learned twice, the same way both times: a wx window created
 		// before wxEntryStart dies on its first WM_ERASEBKGND inside
@@ -139,9 +125,6 @@ namespace NWxHost
 		// not one. If that signature appears again, look at ordering first.
 		virtual BOOL InitInstance()
 		{
-			// Before wx starts, which may already make its traits, and they make
-			// the loop.
-			SetWxOwnsLoop( NMainFrameWx::IsWanted() );
 			if ( !wxEntryStart( TBaseApp::m_hInstance ) )
 			{
 				return FALSE;
@@ -177,16 +160,11 @@ namespace NWxHost
 		}
 
 		// The message loop, which AfxWinMain runs between InitInstance and
-		// AfxWinTerm. MFC's, CWinThread::Run, for CMainFrame. For the wx frame,
-		// wx's, and then what CWinThread::Run does when its loop ends on WM_QUIT:
-		// ExitInstance, whose answer is the process's. MFC's entry point and its
-		// module initialisation stay MFC's either way.
+		// AfxWinTerm: wx's, and then what CWinThread::Run does when its loop ends
+		// on WM_QUIT: ExitInstance, whose answer is the process's. MFC's entry
+		// point and its module initialisation stay MFC's.
 		virtual int Run()
 		{
-			if ( !WxOwnsLoop() )
-			{
-				return TBaseApp::Run();
-			}
 			const SMfcHooks hooks = { this, &PreTranslateHook, &IdleHook };
 			RunWxMainLoop( hooks );
 			return this->ExitInstance();

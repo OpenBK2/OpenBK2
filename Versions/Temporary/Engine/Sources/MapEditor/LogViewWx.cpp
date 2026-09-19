@@ -252,9 +252,20 @@ namespace
 
 namespace NLogView
 {
-	ILogView* CreateWxLogView()
+	// The colours the editor has always used for its log, written as components.
+	// Moved here from the Scintilla log view when that went with CMainFrame.
+	SLogColour GetColour( ELogOutputType eLogOutputType )
 	{
-		return new CLogViewWx();
+		switch ( eLogOutputType )
+		{
+			case LT_IMPORTANT:
+				return SLogColour{ 0x22, 0x77, 0x22 };	// green
+			case LT_ERROR:
+				return SLogColour{ 0xff, 0x33, 0x33 };	// red, and it always was
+			case LT_NORMAL:
+			default:
+				return SLogColour{ 0x00, 0x00, 0x00 };	// black
+		}
 	}
 
 
