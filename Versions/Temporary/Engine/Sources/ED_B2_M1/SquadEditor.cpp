@@ -10,7 +10,7 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 #include "SceneB2/Camera.h"
 // Explicitly, where it used to arrive through FormationWindow.h: this file
 // uses ID_SQUAD_EDITOR_DW and three more of its own ids, and the boundary

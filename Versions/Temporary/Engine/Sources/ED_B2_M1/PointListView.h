@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DialogData.h"
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 
 #include <string>
 
@@ -46,9 +46,9 @@ namespace NPointListView
 	// Every registered list except pSource follows eSeason.
 	void FollowSeason( IPointList *pSource, NDb::ESeason eSeason );
 
-	// Creates the list for nInstanceID inside pTabWindow, registers it in the
-	// tab list, and returns it ready to be handed to AddTab. rszLabel names its
+	// Creates the list for nInstanceID in pPage, registers it in pPalettes,
+	// which owns it from then on, and returns it. rszLabel names its
 	// rows: "<label>   0", "<label>   1", ... Null if it could not be created.
-	CWnd* Create( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage, unsigned nInstanceID, const std::string &rszLabel );
 
 }

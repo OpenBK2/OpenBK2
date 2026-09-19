@@ -9,7 +9,7 @@
 #include "MapEditorLib/ObjectController.h"
 #include "SimpleObjectInfoData.h"
 
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 
 #include "MapInfoInterface.h"
 #include "MapInfoState.h"

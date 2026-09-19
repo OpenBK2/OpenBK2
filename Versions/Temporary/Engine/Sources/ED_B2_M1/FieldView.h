@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 
 class CWnd;
 
@@ -12,8 +12,8 @@ class CWnd;
 // CFieldCommands, both in FieldState.h, shared by the two implementations.
 namespace NFieldView
 {
-	// Creates the palette inside pTabWindow, registers it in the tab list, and
-	// returns it ready to be handed to AddTab with a label. Null if it could not
-	// be created.
-	CWnd* Create( CDefault3DTabWindow *pTabWindow );
+	// Creates the palette in pPage, its page of the shortcut bar, registers it
+	// in pPalettes, which owns it from then on, and returns it. Null if it could
+	// not be created.
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage );
 }

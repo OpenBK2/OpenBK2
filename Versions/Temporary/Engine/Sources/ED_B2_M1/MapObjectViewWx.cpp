@@ -126,7 +126,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -659,14 +659,14 @@ namespace
 
 namespace NMapObjectView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CMapObjectWxWindow *pWindow = pTabWindow->AddNewTab( new CMapObjectWxWindow() );
+		CMapObjectWxWindow *pWindow = pPalettes->Add( new CMapObjectWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

@@ -371,7 +371,6 @@ BOOL CEditorApp::InitInstance()
 	InitCommonControls();
 
 	CWinApp::InitInstance();
-	RWSetDotNetStyle( false );
 	// Получаем командную строку
 	std::string szCommandLine( m_lpCmdLine );
 	NStr::TrimBoth( szCommandLine, '\"' );

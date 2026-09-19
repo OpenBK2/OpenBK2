@@ -9,7 +9,7 @@
 #include "CommandHandlerDefines.h"
 #include "SceneB2/Camera.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 #include "SquadInterface.h"
 #include "SquadState.h"
 #include "SquadEditor.h"

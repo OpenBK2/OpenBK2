@@ -134,7 +134,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_VSO_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -778,14 +778,14 @@ namespace
 
 namespace NVSOView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CVSOWxWindow *pWindow = pTabWindow->AddNewTab( new CVSOWxWindow() );
+		CVSOWxWindow *pWindow = pPalettes->Add( new CVSOWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

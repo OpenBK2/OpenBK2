@@ -3,12 +3,11 @@
 #include "ShortcutBarView.h"
 
 
-#include "MapEditorLib/DefaultShortcutBar.h"
-#include "MapEditorLib/DefaultTabWindow.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
-#include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/PaletteList.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/notebook.h>
 #include <wx/panel.h>
@@ -23,12 +22,12 @@
 // pressed and its tabs, a notebook, filling the space under it, the buttons of
 // the bars after it at the bottom -- how SECShortcutBar lays its bars out.
 //
-// The palettes are made by their own Create functions, unchanged: each bar
-// keeps a CDefault3DTabWindow that never becomes a window as the list those
-// functions register in, and so as the owner that deletes them, and a
-// CWxHostWindow::CPageScope points the palette at the notebook page it goes in.
+// The palettes are made by their own Create functions, given the bar's
+// CPaletteList, which owns them, and the notebook page they go in, as a widget
+// that is wx's.
 //
-// What is reported is what CDefaultShortcutBar and CDefault3DTabWindow report:
+// What is reported is what the MFC bar and tab window, CDefaultShortcutBar and
+// CDefault3DTabWindow, reported:
 // opening a bar sends MAKELONG( its shown tab, bar ) to the bar's handler, and a
 // tab changed sends MAKELONG( tab, INVALID_SHORTCUT_INDEX ) to the bar's own tab
 // handler, when it has one, and then MAKELONG( tab, bar ) to the bar's handler
@@ -60,14 +59,27 @@ namespace
 	}
 
 
+	// A notebook page, as the parent a palette's Create is given.
+	class CPageWidget : public IWidget, public IWxWidget
+	{
+		wxWindow *pPage;
+
+	public:
+		explicit CPageWidget( wxWindow *_pPage ) : pPage( _pPage ) {}
+		// What a dialog asks for as its owner.
+		virtual void* GetNativeWidget() { return MainFrameWnd(); }
+		virtual wxWindow* GetWxWindow() { return pPage; }
+	};
+
+
 	class CWxShortcutBarView : public CWxHostWindow, public NShortcutBar::IView
 	{
 		struct SBar
 		{
 			wxToggleButton *pButton = nullptr;
 			wxNotebook *pTabs = nullptr;
-			// The palettes' list and owner; never a window.
-			CDefault3DTabWindow owner;
+			// The palettes' list and owner.
+			CPaletteList owner;
 			// The same palettes, to take their wx side down before they go.
 			std::vector<CWxHostWindow*> palettes;
 			unsigned nTabCommandHandlerID = INVALID_COMMAND_HANDLER_ID;
@@ -215,16 +227,12 @@ namespace
 			}
 			wxPanel *const pPage = NWx::Child<wxPanel>( pBar->pTabs, wxID_ANY );
 			pPage->SetSizer( new wxBoxSizer( wxVERTICAL ) );
-			CWnd *pPalette = 0;
-			{
-				CWxHostWindow::CPageScope pageScope( pPage );
-				pPalette = rFactory( &pBar->owner );
-			}
+			CPageWidget page( pPage );
+			IWidget *const pPalette = rFactory( &pBar->owner, &page );
 			CWxHostWindow *const pHost = dynamic_cast<CWxHostWindow*>( pPalette );
 			if ( ( pHost == nullptr ) || ( pHost->Root() == nullptr ) )
 			{
-				// No palette, or an MFC one, which a wx page cannot hold. The
-				// owner still deletes whatever was registered.
+				// No palette. The owner still deletes whatever was registered.
 				pPage->Destroy();
 				return false;
 			}

@@ -28,8 +28,6 @@ add_subdirectory("libdb")
 add_subdirectory("Parser")
 
 if(BUILD_EDITOR)
-    add_subdirectory("vendor/stingray")
-
     # A d3d9.dll that draws nothing, so the editor can be driven where D3D9
     # gives it no device. Installed beside bin/, never into it; see its
     # CMakeLists for how a run opts in.

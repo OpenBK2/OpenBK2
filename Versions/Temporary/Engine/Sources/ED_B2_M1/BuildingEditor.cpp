@@ -6,7 +6,7 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "Misc/2Darray.h"
 #include "SeasonMnemonics.h"
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 #include "PointListView.h"
 // This module's ids and strings; they came in through PointListDialog.h,
 // which this no longer includes.
@@ -111,9 +111,9 @@ void CBuildingEditor::CreateControls()
 			for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
 			{
 				const std::string szLabel = (const char*)listLabels[i];
-				pShortcutBarView->AddTab( nBar, szLabel, [i, szLabel]( CDefault3DTabWindow *pTabWindow )
+				pShortcutBarView->AddTab( nBar, szLabel, [i, szLabel]( CPaletteList *pPalettes, IWidget *pPage )
 				{
-					return NPointListView::Create( pTabWindow, i, szLabel );
+					return NPointListView::Create( pPalettes, pPage, i, szLabel );
 				} );
 			}
 			pShortcutBarView->ActivateTab( nBar, 0 );

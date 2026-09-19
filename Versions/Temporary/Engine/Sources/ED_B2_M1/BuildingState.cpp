@@ -5,7 +5,7 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "SeasonMnemonics.h"
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 #include "DialogData.h"
 #include "PointListView.h"
 #include "ResourceDefines.h"

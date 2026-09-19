@@ -1,14 +1,10 @@
 #pragma once
 
 #include <algorithm>
-//#define _SECDLL
-// alternative to above: if you want to include ALL OT headers, uncomment this line
-// to use the classic OT inclusion method (will increase build time)
-//#include <toolkit/config/ot_Default.h>
-//#include <toolkit/secall.h>
-#include <toolkit/ot_dockingwindows.h>		// Objective Toolkit Docking Windows
-#include <toolkit/ot_toolbar.h>						// Objective Toolkit Customizable Toolbar/Menubar
-#include <toolkit/ot_wdi.h>								// Objective Toolkit Workbook Interface
-#include <toolkit/ot_treectrl.h>					// Objective Toolkit Tree control & Tree view
-#include <toolkit/ot_tabwnd.h>						// Objective Toolkit Tab controls
-#include <toolkit/olbar.h>								// Objective Toolkit Shortcut bar
+// No Stingray: the Objective Toolkit headers this used to include were for
+// the MFC frame, panes, trees, tab windows and shortcut bar, all gone.
+//
+// They also brought in <afxpriv.h>, here, before any wx header. WxMfcOwnerDialog.h
+// needs it, and included after wx's headers it does not compile: afxconv.h
+// fails converting LPOLESTR to LPTSTR. So it is included here, as it was.
+#include <afxpriv.h>

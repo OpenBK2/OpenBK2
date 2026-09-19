@@ -23,7 +23,7 @@
 
 #include <afxwin.h>
 
-#include "MapEditorLib/DefaultTabWindow.h"
+#include "MapEditorLib/PaletteList.h"
 #include "EditorMethods.h"
 
 // Docking Windows

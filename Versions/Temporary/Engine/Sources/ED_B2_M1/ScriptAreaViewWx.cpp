@@ -67,7 +67,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_SCRIPT_AREA_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -283,14 +283,14 @@ namespace
 
 namespace NScriptAreaView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CScriptAreaWxWindow *pWindow = pTabWindow->AddNewTab( new CScriptAreaWxWindow() );
+		CScriptAreaWxWindow *pWindow = pPalettes->Add( new CScriptAreaWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

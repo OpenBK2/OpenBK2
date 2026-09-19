@@ -423,16 +423,13 @@ namespace
 		}
 
 	protected:
-		virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
+		// Before the wx side comes down: a debounce firing after the palette is
+		// gone would ask the state to read a box that no longer exists. This was
+		// a WM_DESTROY hook on the host's MFC window, which a host in a wx pane
+		// never had.
+		virtual void BeforeTearDown()
 		{
-			if ( message == WM_DESTROY )
-			{
-				// Before the wx side comes down: a debounce firing after the
-				// palette is gone would ask the state to read a box that no
-				// longer exists.
-				StopTimers();
-			}
-			return CWxHostWindow::WindowProc( message, wParam, lParam );
+			StopTimers();
 		}
 
 	private:

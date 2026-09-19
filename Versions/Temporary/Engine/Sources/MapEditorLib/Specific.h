@@ -2,10 +2,5 @@
 //
 #include <algorithm>
 
-//#define _SECDLL
-#include "vendor/stingray/Include/Toolkit/ot_dockingwindows.h"
-#include "vendor/stingray/Include/Toolkit/ot_toolbar.h"
-#include "vendor/stingray/Include/Toolkit/ot_wdi.h"
-#include "vendor/stingray/Include/Toolkit/ot_treectrl.h"
-#include "vendor/stingray/Include/Toolkit/ot_tabwnd.h"
-#include "vendor/stingray/Include/Toolkit/olbar.h"
+// No Stingray: the Objective Toolkit headers this used to include were for
+// the MFC frame, panes, trees, tab windows and shortcut bar, all gone.

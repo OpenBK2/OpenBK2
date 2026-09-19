@@ -58,7 +58,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_REINF_POINTS_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -305,14 +305,14 @@ namespace
 
 namespace NReinfPointsView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CReinfPointsWxWindow *pWindow = pTabWindow->AddNewTab( new CReinfPointsWxWindow() );
+		CReinfPointsWxWindow *pWindow = pPalettes->Add( new CReinfPointsWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

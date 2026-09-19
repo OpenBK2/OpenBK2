@@ -20,18 +20,12 @@
 // The start-camera-positions palette, in wx: the first piece of ED_B2_M1 to
 // move, and the first thing that is neither a modal dialog nor a docking pane.
 //
-// A palette is a child window the tab control owns -- CDefault3DTabWindow
-// deletes every tab it holds through a CWnd*, in its destructor and in
-// RemoveAllTabs -- so this has to *be* a CWnd, and the wx content lives inside
-// it. CWxHostWindow is that arrangement, and the teardown ordering it exists
-// for is the whole reason it is not written out here: wx's window procedure is
-// on the host's handle, so the wx side comes down on WM_DESTROY while the
-// handle is still alive.
+// A palette is a widget its shortcut bar's CPaletteList owns, with its wx
+// content in a panel of the bar's page. CWxHostWindow is that arrangement, and
+// the teardown ordering it exists for is the reason it is not written out here.
 //
-// What is not duplicated: the two commands CMapInfoState drives the palette
-// with are dispatched by CCameraPositionCommands, shared with the MFC palette,
-// so only the reading and writing of controls is written twice. That is the
-// part that genuinely differs.
+// The two commands CMapInfoState drives the palette with are dispatched by
+// CCameraPositionCommands, so only the reading and writing of controls is here.
 
 namespace
 {
@@ -56,7 +50,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_CAMERA_POSITION_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -191,18 +185,18 @@ namespace
 
 namespace NCameraPositionView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
 		// AddNewTab with a pointer rather than a null one: the template only
 		// allocates when handed nothing, and this needs building before it is
 		// registered. Either way the tab list owns it from here.
 		CCameraPositionWxWindow *pWindow =
-				pTabWindow->AddNewTab( new CCameraPositionWxWindow() );
+				pPalettes->Add( new CCameraPositionWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete, and
 			// removing it here would be the only place that ever did.

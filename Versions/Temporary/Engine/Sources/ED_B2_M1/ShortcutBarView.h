@@ -5,7 +5,7 @@
 #include <functional>
 #include <string>
 
-class CDefault3DTabWindow;
+class CPaletteList;
 class CWnd;
 
 // The shortcut bar, behind a boundary that names no toolkit.
@@ -28,7 +28,7 @@ namespace NShortcutBar
 {
 	// Makes one palette in a tab window, registers it in the window's list, and
 	// returns it: the shape of every palette's Create.
-	typedef std::function<CWnd*( CDefault3DTabWindow* )> TPaletteFactory;
+	typedef std::function<IWidget*( CPaletteList*, IWidget* )> TPaletteFactory;
 
 	class IView
 	{

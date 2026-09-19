@@ -60,7 +60,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_AIGEN_POINTS_WINDOW );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -376,14 +376,14 @@ namespace
 
 namespace NAIGeneralView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CAIGeneralWxWindow *pWindow = pTabWindow->AddNewTab( new CAIGeneralWxWindow() );
+		CAIGeneralWxWindow *pWindow = pPalettes->Add( new CAIGeneralWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

@@ -1,14 +1,11 @@
 #pragma once
 
 // A wx view's place in what it is put in: a panel of a wx parent's -- a pane
-// of the frame, the document window, or a page of the wx shortcut bar, which
-// names itself with a CPageScope, since the palettes' factories are given an
-// MFC tab window.
+// of the frame, the document window, or a page of the wx shortcut bar.
 //
-// It is still a CWnd, with no window of its own, because the palettes are
-// still handed about as CWnd* (the tab window's list, the factories' return
-// type). It used to be able to sit in an MFC parent too, as a plain MFC child
-// window that wx adopted; every MFC parent is gone, and that went with them.
+// It used to be a CWnd as well, and able to sit in an MFC parent, as a plain
+// MFC child window that wx adopted. Every MFC parent is gone, and the palettes
+// are handed about as IWidget* now, so that went with them.
 //
 // **Why the teardown order is not obvious.** The wx side has to come down, and
 // BeforeTearDown run, while what it calls back into is still there. A host
@@ -28,18 +25,12 @@
 #include <wx/sizer.h>
 #include <wx/window.h>
 
-class CWxHostWindow : public CWnd, public IWidget, public IWxWidget
+class CWxHostWindow : public IWidget, public IWxWidget
 {
 	// A panel of the parent's with the wx side in it.
 	wxWeakRef<wxWindow> pPanel;
 	// Whether BeforeTearDown has run for what was made.
 	bool bTornDown = false;
-
-	static wxWindow*& PageOverride()
-	{
-		static wxWindow *s_pPage = nullptr;
-		return s_pPage;
-	}
 
 	bool CreatePanel( wxWindow *pParent )
 	{
@@ -60,21 +51,6 @@ class CWxHostWindow : public CWnd, public IWidget, public IWxWidget
 	}
 
 public:
-	// While one of these is alive, CreateHost puts the wx side in a panel of
-	// pPage whatever it is given as the parent. It is how the wx shortcut bar
-	// (ED_B2_M1/ShortcutBarViewWx.cpp) makes the palettes, which are written to
-	// be made in an MFC tab window, straight in its notebook pages, unchanged.
-	// Per module, since the variable is a function-local static in a header;
-	// the palettes and the bar are in the same one.
-	class CPageScope
-	{
-		wxWindow *pPrevious;
-
-	public:
-		explicit CPageScope( wxWindow *pPage ) : pPrevious( PageOverride() ) { PageOverride() = pPage; }
-		~CPageScope() { PageOverride() = pPrevious; }
-	};
-
 	// IWidget. What a view opens its dialogs over. The host has no MFC window,
 	// so the main window answers for it.
 	virtual void* GetNativeWidget()
@@ -93,29 +69,14 @@ public:
 		TearDownWx();
 	}
 
-	// Creates the host: a panel of the shortcut bar page a CPageScope names,
-	// or else of pParent, which has to be wx's. False, with nothing made, for a
-	// parent that is neither -- an MFC one, which nothing passes any more.
+	// Creates the host: a panel of pParent, which has to be wx's -- a pane, the
+	// document window, or a shortcut bar page. False, with nothing made, for
+	// one that is not.
 	bool CreateHost( IWidget *pParent )
 	{
-		if ( wxWindow *const pPage = PageOverride() )
-		{
-			return CreatePanel( pPage );
-		}
 		if ( wxWindow *const pWxParent = ToWxWindow( pParent ) )
 		{
 			return CreatePanel( pWxParent );
-		}
-		return false;
-	}
-
-	// The same for a palette, whose factory is given the MFC tab window: only
-	// a CPageScope's page will do.
-	bool CreateHost( CWnd *pParent )
-	{
-		if ( wxWindow *const pPage = PageOverride() )
-		{
-			return CreatePanel( pPage );
 		}
 		return false;
 	}

@@ -2,7 +2,8 @@
 
 #include "MapEditorLib/EditorBase.h"
 #include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/PaletteList.h"
 #include "ShortcutBarView.h"
 #include <memory>
 #include "MarkerSet.h"

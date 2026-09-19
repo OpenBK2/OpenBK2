@@ -141,7 +141,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_TERRAIN_HEIGHT_WINDOW_V3 );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -847,17 +847,17 @@ namespace
 
 namespace NHeightViewV3
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
 		// AddNewTab with a pointer rather than a null one: the template only
 		// allocates when handed nothing, and this needs building before it is
 		// registered. Either way the tab list owns it from here.
-		CHeightWxWindowV3 *pWindow = pTabWindow->AddNewTab( new CHeightWxWindowV3() );
+		CHeightWxWindowV3 *pWindow = pPalettes->Add( new CHeightWxWindowV3() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete, and
 			// removing it here would be the only place that ever did.

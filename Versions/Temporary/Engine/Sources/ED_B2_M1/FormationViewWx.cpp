@@ -51,7 +51,7 @@ namespace
 			Singleton<ICommandHandlerContainer>()->Remove( CHID_FORMATION_LIST_DIALOG );
 		}
 
-		bool Build( CWnd *pParent )
+		bool Build( IWidget *pParent )
 		{
 			if ( !CreateHost( pParent ) )
 			{
@@ -199,14 +199,14 @@ namespace
 
 namespace NFormationView
 {
-	CWnd* Create( CDefault3DTabWindow *pTabWindow )
+	IWidget* Create( CPaletteList *pPalettes, IWidget *pPage )
 	{
-		CFormationWxWindow *pWindow = pTabWindow->AddNewTab( new CFormationWxWindow() );
+		CFormationWxWindow *pWindow = pPalettes->Add( new CFormationWxWindow() );
 		if ( pWindow == 0 )
 		{
 			return 0;
 		}
-		if ( !pWindow->Build( pTabWindow ) )
+		if ( !pWindow->Build( pPage ) )
 		{
 			// Left in the tab list deliberately: it is the list's to delete.
 			return 0;

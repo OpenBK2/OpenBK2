@@ -3,7 +3,8 @@
 #define EDITOR_BUILDING_ID (-4)
 
 #include "B2_M1_World/MOBuilding.h"
-#include "MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/PaletteList.h"
 #include "ShortcutBarView.h"
 #include <memory>
 #include "MapEditorLib/DefaultView.h"

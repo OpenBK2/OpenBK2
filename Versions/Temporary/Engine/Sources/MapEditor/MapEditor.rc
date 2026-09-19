@@ -8,7 +8,6 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
-#include "toolkit\secres.h"
 #include "ResourceDefines.h"
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -667,7 +666,6 @@ END
 2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
-    "#include ""toolkit\\secres.h""\r\n"
     "#include ""ResourceDefines.h""\0"
 END
 
@@ -683,7 +681,6 @@ BEGIN
     "#include ""afxres.rc""\r\n"
     "#endif\r\n"
     "//\r\n"
-    "//#include ""toolkit\\secres.rc""\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -1271,7 +1268,6 @@ LANGUAGE 9, 1
 #include "afxres.rc"
 #endif
 //
-//#include "toolkit\secres.rc"
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

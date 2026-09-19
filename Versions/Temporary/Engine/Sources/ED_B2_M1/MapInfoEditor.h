@@ -9,7 +9,8 @@
 #include "HeightContainer.h"
 #include "SpotInfoData.h"
 
-#include "MapEditorLib/DefaultShortcutBar.h"
+#include "MapEditorLib/Interface_CommandHandler.h"
+#include "MapEditorLib/PaletteList.h"
 #include "ShortcutBarView.h"
 #include <memory>
 #include "MiniMapView.h"
