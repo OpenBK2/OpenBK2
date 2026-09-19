@@ -177,13 +177,9 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
-#ifdef OBK2_WITH_WX
 // wxMFCApp<T> wraps InitInstance, ExitInstance, PreTranslateMessage and OnIdle
 // around the editor's own app class, which is what gets wx started, given a look
 // at each message, pumped from idle and shut down. Two of the four are
 // overridden in CWxHostedApp -- see WxHost.h for why.
 NWxHost::CWxHostedApp<CEditorAppSpecific> theApp;
-#else
-CEditorAppSpecific theApp;
-#endif
 

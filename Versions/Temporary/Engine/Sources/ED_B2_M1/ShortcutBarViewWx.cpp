@@ -2,7 +2,6 @@
 
 #include "ShortcutBarView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/DefaultShortcutBar.h"
 #include "MapEditorLib/DefaultTabWindow.h"
@@ -284,4 +283,3 @@ namespace NShortcutBar
 	}
 }
 
-#endif // OBK2_WITH_WX

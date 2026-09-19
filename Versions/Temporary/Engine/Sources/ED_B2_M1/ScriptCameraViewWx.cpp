@@ -2,7 +2,6 @@
 
 #include "ScriptCameraView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
@@ -476,4 +475,3 @@ namespace NScriptCameraView
 	}
 }
 
-#endif // OBK2_WITH_WX

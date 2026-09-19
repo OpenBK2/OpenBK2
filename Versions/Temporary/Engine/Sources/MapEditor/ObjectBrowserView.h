@@ -116,13 +116,10 @@ namespace NObjectBrowser
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IObjectBrowser* CreateMfc();
-#ifdef OBK2_WITH_WX
 	IObjectBrowser* CreateWx();
-#endif
 }
 
 
-#ifdef OBK2_WITH_WX
 
 class wxWindow;
 
@@ -139,4 +136,3 @@ namespace NObjectBrowser
 															IObjectBrowser::EKind eKind, wxWindow **ppWindow, int nGDBBrowserID = -1 );
 }
 
-#endif // OBK2_WITH_WX

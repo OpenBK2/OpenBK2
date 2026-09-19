@@ -2,7 +2,6 @@
 
 #include "LogView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -275,4 +274,3 @@ namespace NLogView
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -2,7 +2,6 @@
 
 #include "ReinfPointsDialogs.h"
 
-#ifdef OBK2_WITH_WX
 
 #include <fmt/format.h>
 
@@ -323,4 +322,3 @@ namespace NReinfPointsAddTemplate
 	}
 }
 
-#endif // OBK2_WITH_WX

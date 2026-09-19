@@ -138,14 +138,10 @@ endif()
 if(WIN32)
     target_sources(MapEditor PRIVATE MapEditor.rc)
 endif()
-# The wx Log Window contents. LogViewWx.cpp compiles to nothing without
-# OBK2_WITH_WX, so it is listed unconditionally and costs nothing when the
-# option is off. No UNICODE defines here either: see cmake/wxwidgets.cmake.
-if(BUILD_WX_EDITOR)
-    target_compile_definitions(MapEditor PRIVATE OBK2_WITH_WX)
-    target_link_libraries(MapEditor PRIVATE wx::wx)
-    add_dependencies(MapEditor wxwidgets_external)
-endif()
+# The main frame, its panes and the dialogs are wx. No UNICODE defines here
+# either: see cmake/wxwidgets.cmake.
+target_link_libraries(MapEditor PRIVATE wx::wx)
+add_dependencies(MapEditor wxwidgets_external)
 
 install(TARGETS MapEditor DESTINATION bin)
 # The application icon as a file, beside the binary that shows it.

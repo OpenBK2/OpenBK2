@@ -2,7 +2,6 @@
 
 #include "MapObjectView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
@@ -676,4 +675,3 @@ namespace NMapObjectView
 	}
 }
 
-#endif // OBK2_WITH_WX

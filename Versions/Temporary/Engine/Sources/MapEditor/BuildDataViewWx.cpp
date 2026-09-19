@@ -2,7 +2,6 @@
 
 #include "BuildDataView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "NewObjectView.h"
 #include "PC_BaseDialog.h"
@@ -259,4 +258,3 @@ namespace NBuildData
 	}
 }
 
-#endif // OBK2_WITH_WX

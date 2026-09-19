@@ -25,7 +25,5 @@ namespace NMapInfoViewFilter
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
-#endif
 }

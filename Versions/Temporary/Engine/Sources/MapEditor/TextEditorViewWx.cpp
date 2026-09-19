@@ -2,7 +2,6 @@
 
 #include "TextEditorView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/SimulatedKey.h"
 #include "MapEditorLib/WxModal.h"
@@ -741,4 +740,3 @@ namespace NTextEditor
 	}
 }
 
-#endif // OBK2_WITH_WX

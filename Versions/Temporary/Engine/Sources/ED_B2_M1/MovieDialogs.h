@@ -22,9 +22,7 @@ namespace NMovieSettings
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, float *pfLength );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, float *pfLength );
-#endif
 }
 
 
@@ -38,7 +36,5 @@ namespace NMovieKeySettings
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
-#endif
 }

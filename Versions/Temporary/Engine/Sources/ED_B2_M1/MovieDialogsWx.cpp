@@ -2,7 +2,6 @@
 
 #include "MovieDialogs.h"
 
-#ifdef OBK2_WITH_WX
 
 #include <fmt/format.h>
 
@@ -194,4 +193,3 @@ namespace NMovieKeySettings
 	}
 }
 
-#endif // OBK2_WITH_WX

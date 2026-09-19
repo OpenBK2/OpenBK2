@@ -2,7 +2,6 @@
 
 #include "MiniMapView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -337,4 +336,3 @@ namespace NMiniMapView
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -54,9 +54,7 @@ namespace NMiniMapView
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IView* CreateMfc();
-#ifdef OBK2_WITH_WX
 	IView* CreateWx();
-#endif
 
 
 	// The minimap's picture: a square nSide pixels across, rows top down, each

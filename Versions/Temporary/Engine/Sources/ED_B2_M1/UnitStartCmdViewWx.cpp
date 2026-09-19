@@ -2,7 +2,6 @@
 
 #include "UnitStartCmdView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -211,4 +210,3 @@ namespace NUnitStartCmdView
 	}
 }
 
-#endif // OBK2_WITH_WX

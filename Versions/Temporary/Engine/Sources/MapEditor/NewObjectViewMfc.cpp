@@ -118,12 +118,10 @@ namespace NNewObject
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, rObjectTypeNameList, nObjectTypeNameIndex, pBuildDataParams );
 		}
-#endif
 		return RunMfc( pParent, rObjectTypeNameList, nObjectTypeNameIndex, pBuildDataParams );
 	}
 }

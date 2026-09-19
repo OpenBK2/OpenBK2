@@ -51,12 +51,10 @@ namespace NRefList
 									 std::list<std::string> *pReferenceObjects );
 	void RunMfc( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 							 std::list<std::string> *pReferenceObjects );
-#ifdef OBK2_WITH_WX
 	bool RunScanWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 									std::list<std::string> *pReferenceObjects );
 	void RunWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 							std::list<std::string> *pReferenceObjects );
-#endif
 
 
 	// ---- the part that is not drawing ----

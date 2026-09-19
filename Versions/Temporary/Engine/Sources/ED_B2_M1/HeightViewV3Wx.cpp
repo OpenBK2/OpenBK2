@@ -2,7 +2,6 @@
 
 #include "HeightViewV3.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "HeightStateV3.h"
@@ -868,4 +867,3 @@ namespace NHeightViewV3
 	}
 }
 
-#endif // OBK2_WITH_WX

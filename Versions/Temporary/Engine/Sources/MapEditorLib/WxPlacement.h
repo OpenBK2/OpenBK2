@@ -34,7 +34,6 @@
 //   * CResizeDialog whose message map chains to CDialog: neither half runs --
 //     CEnterNameDialog is the last of those.
 
-#ifdef OBK2_WITH_WX
 
 #include "DialogState.h"
 
@@ -147,4 +146,3 @@ namespace NWxPlacement
 	};
 }
 
-#endif // OBK2_WITH_WX

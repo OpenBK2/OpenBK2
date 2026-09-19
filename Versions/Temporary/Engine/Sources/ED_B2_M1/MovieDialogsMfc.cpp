@@ -43,12 +43,10 @@ namespace NMovieSettings
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pfLength );
 		}
-#endif
 		return RunMfc( pParent, pfLength );
 	}
 }
@@ -72,12 +70,10 @@ namespace NMovieKeySettings
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pKey, rszName );
 		}
-#endif
 		return RunMfc( pParent, pKey, rszName );
 	}
 }

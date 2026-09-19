@@ -27,7 +27,6 @@
 // ::SetWindowLong here -- the one place that legitimately needs raw Win32 is
 // WxModal.h, and only until the frame is wx.
 
-#ifdef OBK2_WITH_WX
 
 #include <wx/dialog.h>
 
@@ -71,4 +70,3 @@ public:
 #endif // __WXMSW__
 };
 
-#endif // OBK2_WITH_WX

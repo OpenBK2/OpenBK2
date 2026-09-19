@@ -61,7 +61,5 @@ namespace NProgressView
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IView* CreateMfc();
-#ifdef OBK2_WITH_WX
 	IView* CreateWx();
-#endif
 }

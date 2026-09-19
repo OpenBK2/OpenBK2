@@ -50,12 +50,10 @@ namespace NMapInfoViewFilter
 
 	bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pFilter );
 		}
-#endif
 		return RunMfc( pParent, pFilter );
 	}
 }

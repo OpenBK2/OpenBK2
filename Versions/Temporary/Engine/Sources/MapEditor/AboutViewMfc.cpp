@@ -27,7 +27,6 @@ namespace NAbout
 
 	void Run( IWidget *pParent )
 	{
-#ifdef OBK2_WITH_WX
 		// The same flag every migrated dialog follows, so a session runs either
 		// the MFC set or the wx set. See SelectTablesViewMfc.cpp.
 		if ( NToolkit::UseWxViews() )
@@ -35,7 +34,6 @@ namespace NAbout
 			RunWx( pParent );
 			return;
 		}
-#endif
 		RunMfc( pParent );
 	}
 }

@@ -81,13 +81,10 @@ namespace NLogView
 
 	// Named so the factory can reach them; not for anything else to call.
 	ILogView* CreateScintillaLogView();
-#ifdef OBK2_WITH_WX
 	ILogView* CreateWxLogView();
-#endif
 }
 
 
-#ifdef OBK2_WITH_WX
 
 class wxWindow;
 
@@ -101,4 +98,3 @@ namespace NLogView
 	ILogView* CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
 }
 
-#endif // OBK2_WITH_WX

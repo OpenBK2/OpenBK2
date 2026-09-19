@@ -94,12 +94,10 @@ namespace NBitField
 
 	bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, rszFieldsFile, pData, nSize );
 		}
-#endif
 		return RunMfc( pParent, rszFieldsFile, pData, nSize );
 	}
 }

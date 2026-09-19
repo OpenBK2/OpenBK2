@@ -36,7 +36,5 @@ namespace NModelView
 
 	// Named so the factory can reach them; not for anything else to call.
 	IView* CreateMfc();
-#ifdef OBK2_WITH_WX
 	IView* CreateWx();
-#endif
 }

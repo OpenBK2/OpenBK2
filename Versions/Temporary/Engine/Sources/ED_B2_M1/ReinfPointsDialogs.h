@@ -34,10 +34,8 @@ namespace NReinfPointsTemplates
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
 							 CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
 							CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
-#endif
 
 	// The Add button: makes a node, asks the add dialog to fill it in, and takes
 	// the node out again if that dialog is cancelled. True when a template was
@@ -64,7 +62,5 @@ namespace NReinfPointsAddTemplate
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
-#endif
 }

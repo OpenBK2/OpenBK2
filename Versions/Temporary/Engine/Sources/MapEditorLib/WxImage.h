@@ -15,7 +15,6 @@
 // Header-only, like the other Wx*.h here, because MapEditorLib does not link wx
 // -- only the front-end targets that include these do.
 
-#ifdef OBK2_WITH_WX
 
 #include "System/WinImageFormats.h"
 
@@ -160,4 +159,3 @@ namespace NWxImage
 	}
 }
 
-#endif // OBK2_WITH_WX

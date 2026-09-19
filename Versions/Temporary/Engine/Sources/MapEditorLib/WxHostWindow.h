@@ -37,7 +37,6 @@
 // All end at BeforeTearDown once, and the destructor tears down once more for
 // the case where an object is deleted having never been created.
 
-#ifdef OBK2_WITH_WX
 
 #include "Interface_Widget.h"
 #include "MfcWidget.h"
@@ -319,4 +318,3 @@ protected:
 	}
 };
 
-#endif // OBK2_WITH_WX

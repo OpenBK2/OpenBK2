@@ -40,10 +40,8 @@ namespace NNewObject
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, const std::vector<std::string> &rObjectTypeNameList,
 							 int nObjectTypeNameIndex, SBuildDataParams *pBuildDataParams );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const std::vector<std::string> &rObjectTypeNameList,
 							int nObjectTypeNameIndex, SBuildDataParams *pBuildDataParams );
-#endif
 
 	// Adds "_<type>" to the object's name, or takes it off, so that the name
 	// carries its type exactly when bAddType says it should. Idempotent: it

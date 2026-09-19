@@ -2,7 +2,6 @@
 
 #include "AboutView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ToolkitChoice.h"
@@ -243,4 +242,3 @@ namespace NAbout
 	}
 }
 
-#endif // OBK2_WITH_WX

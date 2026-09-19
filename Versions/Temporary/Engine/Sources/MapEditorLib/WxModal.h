@@ -28,7 +28,6 @@
 // the meantime: a migrated dialog is pure wx plus one call to ShowModalOver,
 // and one to CentreOver for where it opens.
 
-#ifdef OBK2_WITH_WX
 
 #include "Interface_Widget.h"
 #include "MfcWidget.h"
@@ -208,4 +207,3 @@ namespace NWxModal
 	}
 }
 
-#endif // OBK2_WITH_WX

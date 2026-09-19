@@ -88,12 +88,10 @@ namespace NBuildData
 						const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
 						IBuildDataCallback *pBuildDataCallback )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pManipulator, rObjectSet, rszTemporaryLabel, pBuildDataParams, pBuildDataCallback );
 		}
-#endif
 		return RunMfc( pParent, pManipulator, rObjectSet, rszTemporaryLabel, pBuildDataParams, pBuildDataCallback );
 	}
 }

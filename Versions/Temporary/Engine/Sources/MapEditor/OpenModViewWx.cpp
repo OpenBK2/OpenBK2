@@ -2,7 +2,6 @@
 
 #include "OpenModView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/WxModal.h"
@@ -239,4 +238,3 @@ namespace NOpenMod
 	}
 }
 
-#endif // OBK2_WITH_WX

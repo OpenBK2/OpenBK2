@@ -259,12 +259,10 @@ namespace NTextEditor
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunScriptWx( pParent, rszTitle, rszText, bEnableEdit, pszNewText );
 		}
-#endif
 		return RunScriptMfc( pParent, rszTitle, rszText, bEnableEdit, pszNewText );
 	}
 
@@ -276,12 +274,10 @@ namespace NTextEditor
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunTextWx( pParent, rszTitle, rszEditor, rszText, bEnableEdit, pszNewText );
 		}
-#endif
 		return RunTextMfc( pParent, rszTitle, rszEditor, rszText, bEnableEdit, pszNewText );
 	}
 }

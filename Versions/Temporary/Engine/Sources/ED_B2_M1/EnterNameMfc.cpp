@@ -51,12 +51,8 @@ namespace NEnterName
 			return false;
 		}
 		std::string szName = szLastName;
-#ifdef OBK2_WITH_WX
 		const bool bAccepted = UseWx() ? RunWx( pParent, rszCaption, rszLabel, &szName )
 																	 : RunMfc( pParent, rszCaption, rszLabel, &szName );
-#else
-		const bool bAccepted = RunMfc( pParent, rszCaption, rszLabel, &szName );
-#endif
 		if ( !bAccepted )
 		{
 			return false;

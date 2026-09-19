@@ -2,7 +2,6 @@
 
 #include "PropertyPaneView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "PC_BaseDialog.h"
 #include "PropertyButtons.h"
@@ -2375,4 +2374,3 @@ namespace NPropertyPane
 	}
 }
 
-#endif // OBK2_WITH_WX

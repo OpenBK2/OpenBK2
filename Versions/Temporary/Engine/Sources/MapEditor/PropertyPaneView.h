@@ -52,9 +52,7 @@ namespace NPropertyPane
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IPropertyPane* CreateMfc();
-#ifdef OBK2_WITH_WX
 	IPropertyPane* CreateWx();
-#endif
 
 
 	// ---- the part that is not drawing ----
@@ -126,7 +124,6 @@ namespace NPropertyPane
 }
 
 
-#ifdef OBK2_WITH_WX
 
 class wxWindow;
 class wxStaticText;
@@ -171,4 +168,3 @@ namespace NPropertyPane
 	IPropertyPane* CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel, wxWindow **ppWindow );
 }
 
-#endif // OBK2_WITH_WX

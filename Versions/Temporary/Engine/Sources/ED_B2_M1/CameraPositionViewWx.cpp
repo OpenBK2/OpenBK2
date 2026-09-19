@@ -2,7 +2,6 @@
 
 #include "CameraPositionView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -213,4 +212,3 @@ namespace NCameraPositionView
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -19,7 +19,6 @@
 // answers that. Measured on the link picker: its window style read DISABLED
 // until it did.
 
-#ifdef OBK2_WITH_WX
 
 #include "MfcWidget.h"
 #include "WxToolDialog.h"
@@ -72,4 +71,3 @@ public:
 	}
 };
 
-#endif // OBK2_WITH_WX

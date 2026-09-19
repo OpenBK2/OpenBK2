@@ -2,7 +2,6 @@
 
 #include "AIGeneralView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "AIGeneralData.h"
 #include "AIGeneralTypes.h"
@@ -393,4 +392,3 @@ namespace NAIGeneralView
 	}
 }
 
-#endif // OBK2_WITH_WX

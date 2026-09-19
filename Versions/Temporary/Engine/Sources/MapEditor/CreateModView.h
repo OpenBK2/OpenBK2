@@ -43,7 +43,5 @@ namespace NCreateMod
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, SNewMod *pMod );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, SNewMod *pMod );
-#endif
 }

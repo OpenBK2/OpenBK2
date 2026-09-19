@@ -2,7 +2,6 @@
 
 #include "SceneSurface.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -467,4 +466,3 @@ namespace NSceneSurface
 	}
 }
 
-#endif // OBK2_WITH_WX

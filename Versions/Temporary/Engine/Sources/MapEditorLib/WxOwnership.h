@@ -36,7 +36,6 @@
 // lying and there is one place to annotate if clang-tidy's
 // cppcoreguidelines-owning-memory is ever turned on.
 
-#ifdef OBK2_WITH_WX
 
 #include <wx/wx.h>
 #include <wx/weakref.h>
@@ -68,4 +67,3 @@ namespace NWx
 	}
 }
 
-#endif // OBK2_WITH_WX

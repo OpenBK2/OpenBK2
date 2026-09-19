@@ -34,9 +34,7 @@ namespace NMenuDropDown
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IView* CreateMfc( IWidget *pParent );
-#ifdef OBK2_WITH_WX
 	IView* CreateWx( IWidget *pParent );
-#endif
 
 	// What choosing entry nIndex does, in both: the controller container is
 	// sent nCommandID with the index as its data. A negative index, which is

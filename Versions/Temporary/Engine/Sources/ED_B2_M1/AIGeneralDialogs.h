@@ -21,9 +21,7 @@ namespace NAIGenMobileDialog
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, int *pMobileID );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, int *pMobileID );
-#endif
 }
 
 
@@ -35,7 +33,5 @@ namespace NAIGenParcelDialog
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, NDb::EParcelType *pType, float *pImportance );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, NDb::EParcelType *pType, float *pImportance );
-#endif
 }

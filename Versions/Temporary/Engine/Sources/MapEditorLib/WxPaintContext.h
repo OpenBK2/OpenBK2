@@ -19,7 +19,6 @@
 //     FrameRect paint with PATCOPY whatever the ROP2 is, and a rubber band drawn
 //     in DRAW_NOT does not turn a label's background into an inversion.
 
-#ifdef OBK2_WITH_WX
 
 #include "Interface_Widget.h"
 
@@ -256,4 +255,3 @@ public:
 	}
 };
 
-#endif // OBK2_WITH_WX

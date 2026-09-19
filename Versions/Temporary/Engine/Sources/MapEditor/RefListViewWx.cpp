@@ -2,7 +2,6 @@
 
 #include "RefListView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_UserData.h"
@@ -310,4 +309,3 @@ namespace NRefList
 	}
 }
 
-#endif // OBK2_WITH_WX

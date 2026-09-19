@@ -38,7 +38,6 @@
 // Header-only and guarded, like the other Wx*.h here, because MapEditorLib
 // does not link wx.
 
-#ifdef OBK2_WITH_WX
 
 #include "Interface_UserData.h"
 #include "WxModal.h"
@@ -132,4 +131,3 @@ namespace NWxColourDialog
 	}
 }
 
-#endif // OBK2_WITH_WX

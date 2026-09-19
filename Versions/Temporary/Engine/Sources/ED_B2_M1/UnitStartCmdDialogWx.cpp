@@ -2,7 +2,6 @@
 
 #include "UnitStartCmdDialog.h"
 
-#ifdef OBK2_WITH_WX
 
 #include <fmt/format.h>
 
@@ -394,4 +393,3 @@ namespace NUnitStartCmdDialog
 	}
 }
 
-#endif // OBK2_WITH_WX

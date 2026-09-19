@@ -104,7 +104,5 @@ namespace NUnitStartCmdDialog
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	IDialog* CreateMfc( IWidget *pParent, IListener *pListener );
-#ifdef OBK2_WITH_WX
 	IDialog* CreateWx( IWidget *pParent, IListener *pListener );
-#endif
 }

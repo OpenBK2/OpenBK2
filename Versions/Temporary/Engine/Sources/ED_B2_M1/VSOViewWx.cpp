@@ -2,7 +2,6 @@
 
 #include "VSOView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
@@ -795,4 +794,3 @@ namespace NVSOView
 	}
 }
 
-#endif // OBK2_WITH_WX

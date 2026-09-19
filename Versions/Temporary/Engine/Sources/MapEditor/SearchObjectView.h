@@ -25,7 +25,5 @@ namespace NSearchObject
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, std::string *pszText );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, std::string *pszText );
-#endif
 }

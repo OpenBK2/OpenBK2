@@ -9,30 +9,11 @@ namespace NMainFrameWx
 {
 	bool IsWanted()
 	{
-#ifdef OBK2_WITH_WX
 		return NToolkit::UseWxFrame();
-#else
-		return false;
-#endif
 	}
 }
 
 
-#ifndef OBK2_WITH_WX
-
-namespace NMainFrameWx
-{
-	bool Create()
-	{
-		return false;
-	}
-
-	void Show()
-	{
-	}
-}
-
-#else // OBK2_WITH_WX
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
@@ -1958,4 +1939,3 @@ namespace NMainFrameWx
 	}
 }
 
-#endif // OBK2_WITH_WX

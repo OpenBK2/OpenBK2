@@ -6,7 +6,6 @@
 #include <tuple>
 #include <vector>
 
-#ifdef OBK2_WITH_WX
 
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
@@ -581,4 +580,3 @@ namespace NMainFrameWxPanes
 	}
 }
 
-#endif // OBK2_WITH_WX

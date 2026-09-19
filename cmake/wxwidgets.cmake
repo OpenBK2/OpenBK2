@@ -1,10 +1,10 @@
-# wxWidgets, the toolkit the editor runs on by default.
+# wxWidgets, the toolkit the editor is drawn with.
 #
-# Behind BUILD_WX_EDITOR, which is ON: the editor's frame and views are wx's,
-# and the MFC ones stay beside them for comparison (docs/EditorToolkits.md).
-# The cost is real. CI builds both presets from scratch on every push and caches
-# only the DirectX SDK -- no _deps cache, no ccache -- so every push builds this
-# library twice over; a build that wants none of it turns the option off.
+# Included with BUILD_EDITOR: the editor's frame and views are wx's and there
+# is no MFC front end to fall back to any more. The cost is real. CI builds
+# both presets from scratch on every push and caches only the DirectX SDK --
+# no _deps cache, no ccache -- so every push builds this library twice over; a
+# build that wants none of it turns BUILD_EDITOR off.
 #
 # ExternalProject rather than FetchContent, which is what every other dependency
 # here uses, and the difference is deliberate:

@@ -2,10 +2,6 @@
 
 // wx hosted inside the editor's MFC application.
 //
-// Compiled only when BUILD_WX_EDITOR is on; main.cpp includes this
-// unconditionally and gets an empty file otherwise, so the wx path is one
-// #ifdef in one header rather than a scatter of them through the app class.
-//
 // The shape is fixed by who owns what. MFC's CWinApp owns the entry point, the
 // main window and the message loop, and it is going to keep owning them for as
 // long as both toolkits are in the process, so wx goes in as the guest: started
@@ -25,7 +21,6 @@
 // it to satisfy wx would have asked for the second one. It is not defined, and
 // the running editor loads exactly one MFC. See cmake/wxwidgets.cmake.
 
-#ifdef OBK2_WITH_WX
 
 // wx/msw/mfc.h refuses to be included before the MFC headers, so this file has
 // to come after stdafx.h. It is included from exactly one place for that reason.
@@ -229,4 +224,3 @@ namespace NWxHost
 	void ShowProbeFrameIfAsked();
 }
 
-#endif // OBK2_WITH_WX

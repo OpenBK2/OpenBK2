@@ -42,12 +42,10 @@ namespace NReinfPointsTemplates
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pTemplates, pMapInfoEditor, nPlayer, nReinfPoint );
 		}
-#endif
 		return RunMfc( pParent, pTemplates, pMapInfoEditor, nPlayer, nReinfPoint );
 	}
 }
@@ -71,12 +69,10 @@ namespace NReinfPointsAddTemplate
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, rszNode, pMapInfoEditor );
 		}
-#endif
 		return RunMfc( pParent, rszNode, pMapInfoEditor );
 	}
 }

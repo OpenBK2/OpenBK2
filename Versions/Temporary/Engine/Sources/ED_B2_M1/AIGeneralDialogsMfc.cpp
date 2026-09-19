@@ -42,12 +42,10 @@ namespace NAIGenMobileDialog
 
 	bool Run( IWidget *pParent, int *pMobileID )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pMobileID );
 		}
-#endif
 		return RunMfc( pParent, pMobileID );
 	}
 }
@@ -68,12 +66,10 @@ namespace NAIGenParcelDialog
 
 	bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunWx( pParent, pType, pImportance );
 		}
-#endif
 		return RunMfc( pParent, pType, pImportance );
 	}
 }

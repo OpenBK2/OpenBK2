@@ -710,12 +710,10 @@ namespace NPropertyButton
 
 	bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return PickColourWx( pOwner, nStart, pnResult );
 		}
-#endif
 		return PickColourMfc( pOwner, nStart, pnResult );
 	}
 }

@@ -19,7 +19,6 @@
 // expects, and MFC's handling of what a child sends its parent, reflected
 // notifications included, still runs before wx's.
 
-#ifdef OBK2_WITH_WX
 
 #include "GDBBrowserPane.h"
 #include "LogPane.h"
@@ -262,4 +261,3 @@ namespace NMainFrameWxPanes
 	};
 }
 
-#endif // OBK2_WITH_WX

@@ -37,7 +37,6 @@ namespace NSelectTables
 
 	bool Run( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables )
 	{
-#ifdef OBK2_WITH_WX
 		// OBK2_WX_DIALOGS rather than a per-dialog switch: as more modal dialogs
 		// move across they should all follow one flag, so that a session runs
 		// either the MFC set or the wx set and the comparison is of the editor
@@ -46,7 +45,6 @@ namespace NSelectTables
 		{
 			return RunWx( pParent, rTables, pSelectedTables );
 		}
-#endif
 		return RunMfc( pParent, rTables, pSelectedTables );
 	}
 }

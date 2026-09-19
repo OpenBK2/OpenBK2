@@ -37,14 +37,12 @@ namespace NOpenMod
 
 	bool Run( IWidget *pParent, NMOD::SMOD *pMod )
 	{
-#ifdef OBK2_WITH_WX
 		// The same flag every migrated dialog follows, so a session runs either
 		// the MFC set or the wx set. See SelectTablesViewMfc.cpp.
 		if ( NToolkit::UseWxViews() )
 		{
 			return RunWx( pParent, pMod );
 		}
-#endif
 		return RunMfc( pParent, pMod );
 	}
 }

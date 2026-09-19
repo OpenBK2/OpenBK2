@@ -2,7 +2,6 @@
 
 #include "FieldView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "FieldState.h"
@@ -342,4 +341,3 @@ namespace NFieldView
 	}
 }
 
-#endif // OBK2_WITH_WX

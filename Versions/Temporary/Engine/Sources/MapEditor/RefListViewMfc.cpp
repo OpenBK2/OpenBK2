@@ -203,12 +203,10 @@ namespace NRefList
 		{
 			return false;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return RunScanWx( pParent, rszTypeName, rszName, pReferenceObjects );
 		}
-#endif
 		return RunScanMfc( pParent, rszTypeName, rszName, pReferenceObjects );
 	}
 
@@ -229,13 +227,11 @@ namespace NRefList
 		{
 			return;
 		}
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			RunWx( pParent, rszTypeName, rszName, pReferenceObjects );
 			return;
 		}
-#endif
 		RunMfc( pParent, rszTypeName, rszName, pReferenceObjects );
 	}
 }

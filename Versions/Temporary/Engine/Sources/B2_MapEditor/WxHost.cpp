@@ -3,7 +3,6 @@
 #include "WxHost.h"
 #include "MapEditorLib/WxOwnership.h"
 
-#ifdef OBK2_WITH_WX
 
 #include <wx/apptrait.h>
 #include <wx/evtloop.h>
@@ -221,4 +220,3 @@ namespace NWxHost
 // and CWxHostedApp::Run picks the loop.
 wxIMPLEMENT_APP_NO_MAIN( NWxHost::CWxHostApp );
 
-#endif // OBK2_WITH_WX

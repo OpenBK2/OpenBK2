@@ -49,8 +49,8 @@ if(BUILD_EDITOR)
 endif()
 
 # The wxWidgets skeleton, which is a build-and-link rehearsal rather than
-# part of the editor. Off by default with the option that guards it.
-if(BUILD_WX_EDITOR)
+# part of the editor. Built with the editor.
+if(BUILD_EDITOR)
     add_subdirectory("WxEditor")
 endif()
 

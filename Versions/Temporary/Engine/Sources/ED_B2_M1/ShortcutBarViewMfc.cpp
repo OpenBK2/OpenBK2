@@ -127,14 +127,12 @@ namespace NShortcutBar
 
 	IView* Create()
 	{
-#ifdef OBK2_WITH_WX
 		// The same flag every migrated piece follows -- and the one the palettes'
 		// Create functions follow, which is what gives a wx bar wx palettes.
 		if ( NToolkit::UseWxViews() )
 		{
 			return CreateWx();
 		}
-#endif
 		return CreateMfc();
 	}
 }

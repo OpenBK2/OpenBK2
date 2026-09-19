@@ -26,11 +26,9 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# The editor is drawn with wxWidgets, which it cannot be built without; see
+# cmake/wxwidgets.cmake.
 option(BUILD_EDITOR "build editor" ON)
-# The wxWidgets front-end, which is what the editor runs by default. OFF builds
-# the MFC editor alone. See cmake/wxwidgets.cmake, and docs/EditorToolkits.md
-# for running the MFC one beside it.
-option(BUILD_WX_EDITOR "build the wxWidgets editor front-end, the default one" ON)
 option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 
@@ -147,7 +145,7 @@ include(cmake/versioninfo.cmake)
 include(cmake/exportheader.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
-if(BUILD_WX_EDITOR)
+if(BUILD_EDITOR)
     include(cmake/wxwidgets.cmake)
 endif()
 

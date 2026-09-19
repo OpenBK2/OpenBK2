@@ -12,7 +12,6 @@
 //
 // Header-only because MapEditorLib does not link wx.
 
-#ifdef OBK2_WITH_WX
 
 #include "Interface_Widget.h"
 
@@ -38,4 +37,3 @@ inline wxWindow* ToWxWindow( IWidget *pWidget )
 	return nullptr;
 }
 
-#endif // OBK2_WITH_WX

@@ -2,7 +2,6 @@
 
 #include "ObjectBrowserView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -2895,4 +2894,3 @@ namespace NObjectBrowser
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -2,7 +2,6 @@
 
 #include "ReinfPointsView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "ReinfPointsData.h"
@@ -322,4 +321,3 @@ namespace NReinfPointsView
 	}
 }
 
-#endif // OBK2_WITH_WX

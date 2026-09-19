@@ -39,11 +39,9 @@ namespace NBuildData
 	bool RunMfc( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
 							 const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
 							 IBuildDataCallback *pBuildDataCallback );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
 							const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
 							IBuildDataCallback *pBuildDataCallback );
-#endif
 
 	// CPCBuildDataDialog::UpdateOKButton: whether OK should be enabled, and the
 	// reason in *pszErrorMessage when it should not -- empty otherwise. With

@@ -2,7 +2,6 @@
 
 #include "NewObjectView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/WxModal.h"
 #include "Misc/StrProc.h"
@@ -262,4 +261,3 @@ namespace NNewObject
 	}
 }
 
-#endif // OBK2_WITH_WX

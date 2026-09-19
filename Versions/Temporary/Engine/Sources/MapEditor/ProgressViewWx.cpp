@@ -2,7 +2,6 @@
 
 #include "ProgressView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -225,4 +224,3 @@ namespace NProgressView
 	}
 }
 
-#endif // OBK2_WITH_WX

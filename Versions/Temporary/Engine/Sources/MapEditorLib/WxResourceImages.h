@@ -10,7 +10,6 @@
 // black silhouette, so the pixels are read out as 32-bit colour into a wxImage
 // and the mask colour set on that.
 
-#ifdef OBK2_WITH_WX
 
 #include <wx/bitmap.h>
 #include <wx/image.h>
@@ -87,4 +86,3 @@ namespace NWxResourceImages
 	}
 }
 
-#endif // OBK2_WITH_WX

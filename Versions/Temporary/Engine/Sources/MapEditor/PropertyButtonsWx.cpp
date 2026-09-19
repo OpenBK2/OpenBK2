@@ -2,7 +2,6 @@
 
 #include "PropertyButtons.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/WxColourDialog.h"
 
@@ -28,4 +27,3 @@ namespace NPropertyButton
 	}
 }
 
-#endif // OBK2_WITH_WX

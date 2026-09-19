@@ -63,7 +63,5 @@ namespace NSceneSurface
 	// piece, unless OBK2_WX_DIALOGS=0 asks for the MFC one.
 	ISceneSurface* Create();
 	ISceneSurface* CreateMfc();
-#ifdef OBK2_WITH_WX
 	ISceneSurface* CreateWx();
-#endif
 }

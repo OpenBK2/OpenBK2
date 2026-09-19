@@ -424,13 +424,11 @@ namespace NSceneSurface
 
 	ISceneSurface* Create()
 	{
-#ifdef OBK2_WITH_WX
 		// The same flag every migrated piece follows.
 		if ( NToolkit::UseWxViews() )
 		{
 			return CreateWx();
 		}
-#endif
 		return CreateMfc();
 	}
 }

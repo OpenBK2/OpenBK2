@@ -70,14 +70,12 @@ namespace NModelView
 
 	IView* Create()
 	{
-#ifdef OBK2_WITH_WX
 		// The same flag every migrated piece follows, so a session runs either
 		// the MFC set or the wx set.
 		if ( NToolkit::UseWxViews() )
 		{
 			return CreateWx();
 		}
-#endif
 		return CreateMfc();
 	}
 }

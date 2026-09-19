@@ -74,7 +74,5 @@ namespace NPropertyButton
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool PickColourMfc( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
-#ifdef OBK2_WITH_WX
 	bool PickColourWx( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
-#endif
 }

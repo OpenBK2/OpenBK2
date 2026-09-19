@@ -2,7 +2,6 @@
 
 #include "SelectTablesView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/Tools_HashSet.h"
@@ -146,4 +145,3 @@ namespace NSelectTables
 	}
 }
 
-#endif // OBK2_WITH_WX

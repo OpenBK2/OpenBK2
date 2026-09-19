@@ -101,12 +101,10 @@ namespace NUnitStartCmdDialog
 
 	IDialog* Create( IWidget *pParent, IListener *pListener )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return CreateWx( pParent, pListener );
 		}
-#endif
 		return CreateMfc( pParent, pListener );
 	}
 }

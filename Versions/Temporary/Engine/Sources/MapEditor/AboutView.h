@@ -14,7 +14,5 @@ namespace NAbout
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	void RunMfc( IWidget *pParent );
-#ifdef OBK2_WITH_WX
 	void RunWx( IWidget *pParent );
-#endif
 }

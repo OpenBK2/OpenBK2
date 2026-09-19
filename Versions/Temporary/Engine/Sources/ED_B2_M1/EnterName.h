@@ -22,7 +22,5 @@ namespace NEnterName
 	// Named so the dispatcher can reach them; not for anything else to call.
 	// *pszName carries the starting text in and the result out.
 	bool RunMfc( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
-#endif
 }

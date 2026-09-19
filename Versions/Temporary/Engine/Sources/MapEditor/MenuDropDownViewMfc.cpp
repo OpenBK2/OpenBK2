@@ -71,12 +71,10 @@ namespace NMenuDropDown
 
 	IView* Create( IWidget *pParent )
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return CreateWx( pParent );
 		}
-#endif
 		return CreateMfc( pParent );
 	}
 }

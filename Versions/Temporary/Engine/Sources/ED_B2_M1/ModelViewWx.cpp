@@ -2,7 +2,6 @@
 
 #include "ModelView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include <fmt/format.h>
@@ -688,4 +687,3 @@ namespace NModelView
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -2,7 +2,6 @@
 
 #include "ScriptAreaView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
@@ -300,4 +299,3 @@ namespace NScriptAreaView
 	}
 }
 
-#endif // OBK2_WITH_WX

@@ -8,8 +8,7 @@
 // OBK2_WX_FRAME in the environment -- not by OBK2_WX_DIALOGS, which picks the
 // toolkit of the views inside whichever frame is up.
 //
-// Nothing here names wx, so CEditorApp can ask without knowing. In a build
-// without BUILD_WX_EDITOR, IsWanted answers false and the MFC frame is used.
+// Nothing here names wx, so CEditorApp can ask without knowing.
 #include "MapEditor_export.h"
 
 namespace NMainFrameWx

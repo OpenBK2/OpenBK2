@@ -21,7 +21,6 @@
 // Header-only and guarded, like the other Wx*.h here, because MapEditorLib
 // does not link wx; only the front ends that include this do.
 
-#ifdef OBK2_WITH_WX
 
 #include <wx/choice.h>
 
@@ -123,4 +122,3 @@ namespace NWxEditParameter
 	}
 }
 
-#endif // OBK2_WITH_WX

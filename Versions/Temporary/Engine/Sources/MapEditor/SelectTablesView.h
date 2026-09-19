@@ -38,7 +38,5 @@ namespace NSelectTables
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
-#endif
 }

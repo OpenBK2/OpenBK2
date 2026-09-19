@@ -389,12 +389,10 @@ namespace NPropertyPane
 
 	IPropertyPane* Create()
 	{
-#ifdef OBK2_WITH_WX
 		if ( UseWx() )
 		{
 			return CreateWx();
 		}
-#endif
 		return CreateMfc();
 	}
 }

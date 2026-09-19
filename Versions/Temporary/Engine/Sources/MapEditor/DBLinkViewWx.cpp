@@ -2,7 +2,6 @@
 
 #include "DBLinkView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "ObjectBrowserView.h"
 #include "ControllerContainer.h"
@@ -439,4 +438,3 @@ namespace NDBLink
 	}
 }
 
-#endif // OBK2_WITH_WX

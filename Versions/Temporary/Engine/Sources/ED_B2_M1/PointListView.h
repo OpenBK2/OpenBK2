@@ -53,7 +53,5 @@ namespace NPointListView
 
 	// Named so the factory can reach them; not for anything else to call.
 	CWnd* CreateMfc( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
-#ifdef OBK2_WITH_WX
 	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
-#endif
 }

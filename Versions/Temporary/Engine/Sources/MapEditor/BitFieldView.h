@@ -31,9 +31,7 @@ namespace NBitField
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
-#endif
 
 
 	// ---- the part that is not drawing ----

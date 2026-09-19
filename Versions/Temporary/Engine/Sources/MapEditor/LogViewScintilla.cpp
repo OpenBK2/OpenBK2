@@ -166,7 +166,6 @@ namespace NLogView
 
 	ILogView* Create()
 	{
-#ifdef OBK2_WITH_WX
 		// Chosen at run time so the two can be compared without rebuilding, which
 		// is the only way a comparison actually gets made.
 		const char *pszUseWx = std::getenv( "OBK2_WX_LOG" );
@@ -177,7 +176,6 @@ namespace NLogView
 				return pWxView;
 			}
 		}
-#endif
 		return CreateScintillaLogView();
 	}
 }

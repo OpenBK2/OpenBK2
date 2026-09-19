@@ -65,7 +65,5 @@ namespace NDBLink
 
 	// Named so the dispatcher can reach them; not for anything else to call.
 	bool RunMfc( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
-#ifdef OBK2_WITH_WX
 	bool RunWx( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
-#endif
 }

@@ -2,7 +2,6 @@
 
 #include "FormationView.h"
 
-#ifdef OBK2_WITH_WX
 
 #include "CommandHandlerDefines.h"
 #include "DialogData.h"
@@ -216,4 +215,3 @@ namespace NFormationView
 	}
 }
 
-#endif // OBK2_WITH_WX

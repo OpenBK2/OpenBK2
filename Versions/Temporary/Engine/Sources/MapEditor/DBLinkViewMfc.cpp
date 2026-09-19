@@ -49,14 +49,12 @@ namespace NDBLink
 
 	bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult )
 	{
-#ifdef OBK2_WITH_WX
 		// The multiline editor under the grid is the MFC property tree's own, and
 		// has no wx counterpart yet: a picker that asks for it stays MFC.
 		if ( UseWx() && !rRequest.bTextEditor )
 		{
 			return RunWx( pParent, rRequest, pResult );
 		}
-#endif
 		return RunMfc( pParent, rRequest, pResult );
 	}
 }
