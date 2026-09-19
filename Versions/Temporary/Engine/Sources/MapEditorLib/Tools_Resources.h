@@ -1,20 +1,16 @@
 #pragma once
 
 #include "System/VFSOperations.h"
+// The templates below name CreateXmlSaver and CStringManager in bodies that do
+// not depend on the resource type, so their declarations have to be visible
+// here. MSVC looked them up only on instantiation, by which point every caller
+// happened to have included both; GCC looks them up at the definition.
+#include "System/XmlSaver.h"
+#include "MapEditorLib/StringManager.h"
 
 #include "MapEditorLib_export.h"
 
 #include <cstdint>
-// Legacy
-template<class TResource>
-bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
-{
-	std::string szResourceFileName = rszResourceFileName;
-	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return LoadXMLResource( szResourceFileName, rszChunkLabel, rResource );
-}
-
-// New Legacy
 
 struct SFileStreamHolder
 {
@@ -31,6 +27,16 @@ struct SFileStreamHolder
 MAPEDITORLIB_EXPORT void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
 MAPEDITORLIB_EXPORT void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath );
 
+
+// Each overload that does the work comes before the one that adds a file
+// extension and forwards to it. The forwarding call names the resource type, so
+// GCC defers it to instantiation, but at that point it only finds an overload
+// declared later by argument-dependent lookup, which misses it for any resource
+// type outside the global namespace.
+//
+// LoadBINResource, SaveBINResource and their TypedSuper forms are gone: nothing
+// called them, and the TypedSuper ones could never have compiled, since
+// IBinSaver has no AddTypedSuper.
 
 template<class TResource>
 bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszChunkLabel, TResource &rResource )
@@ -51,11 +57,11 @@ bool LoadXMLResource( const std::string &rszResourceFileName, const std::string 
 
 // Legacy
 template<class TResource>
-bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
+bool LoadXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return LoadTypedSuperXMLResource( szResourceFileName, rResource );
+	return LoadXMLResource( szResourceFileName, rszChunkLabel, rResource );
 }
 
 
@@ -76,64 +82,13 @@ bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, TResourc
 }
 
 
+// Legacy
 template<class TResource>
-bool LoadBINResource( const std::string &rszResourceFileName, const std::string &rszExtention, int nChunkNumber, TResource &rResource )
+bool LoadTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return LoadBINResource( szResourceFileName, nChunkNumber, rResource );
-}
-
-
-template<class TResource>
-bool LoadBINResource( const std::string &rszResourceFileName, int nChunkNumber, TResource &rResource )
-{
-	SFileStreamHolder streamHolder;
-	OpenStreamHolder( &streamHolder, rszResourceFileName );
-	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
-	{
-		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( streamHolder.pStream, SAVER_MODE_READ ) )
-		{
-			pSaver->Add( nChunkNumber, &rResource );
-			return true;
-		}
-	}
-	return false;
-}
-
-
-template<class TResource>
-bool LoadTypedSuperBINResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
-{
-	std::string szResourceFileName = rszResourceFileName;
-	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return LoadTypedSuperBINResource( szResourceFileName, rResource );
-}
-
-
-template<class TResource>
-bool LoadTypedSuperBINResource( const std::string &rszResourceFileName, TResource &rResource )
-{
-	SFileStreamHolder streamHolder;
-	OpenStreamHolder( &streamHolder, rszResourceFileName );
-	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
-	{
-		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( streamHolder.pStream, SAVER_MODE_READ ) )
-		{
-			pSaver->AddTypedSuper( 1, &rResource );
-			return true;
-		}
-	}
-	return false;
-}
-
-
-template<class TResource>
-bool SaveXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
-{
-	std::string szResourceFileName = rszResourceFileName;
-	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return SaveXMLResource( szResourceFileName, rszChunkLabel, rResource );
+	return LoadTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
 
@@ -155,11 +110,11 @@ bool SaveXMLResource( const std::string &rszResourceFileName, const std::string 
 
 
 template<class TResource>
-bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
+bool SaveXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, const std::string &rszChunkLabel, TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return SaveTypedSuperXMLResource( szResourceFileName, rResource );
+	return SaveXMLResource( szResourceFileName, rszChunkLabel, rResource );
 }
 
 
@@ -181,54 +136,11 @@ bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, TResourc
 
 
 template<class TResource>
-bool SaveBINResource( const std::string &rszResourceFileName, const std::string &rszExtention, int nChunkNumber, TResource &rResource )
+bool SaveTypedSuperXMLResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
 {
 	std::string szResourceFileName = rszResourceFileName;
 	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return SaveBINResource( szResourceFileName, nChunkNumber, rResource );
-}
-
-
-template<class TResource>
-bool SaveBINResource( const std::string &rszResourceFileName, int nChunkNumber, TResource &rResource )
-{
-	SFileStreamHolder streamHolder;
-	CreateStreamHolder( &streamHolder, rszResourceFileName );
-	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
-	{
-		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( streamHolder.pStream, SAVER_MODE_WRITE ) )
-		{
-			pSaver->Add( nChunkNumber, &rResource );
-			return true;
-		}
-	}
-	return false;
-}
-
-
-template<class TResource>
-bool SaveTypedSuperBINResource( const std::string &rszResourceFileName, const std::string &rszExtention, TResource &rResource )
-{
-	std::string szResourceFileName = rszResourceFileName;
-	CStringManager::ExtendFileExtention( &szResourceFileName, rszExtention );
-	return SaveTypedSuperBINResource( szResourceFileName, rResource );
-}
-
-
-template<class TResource>
-bool SaveTypedSuperBINResource( const std::string &rszResourceFileName, TResource &rResource )
-{
-	SFileStreamHolder streamHolder;
-	CreateStreamHolder( &streamHolder, rszResourceFileName );
-	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
-	{
-		if ( CPtr<IBinSaver> pSaver = CreateBinSaver( streamHolder.pStream, SAVER_MODE_WRITE ) )
-		{
-			pSaver->AddTypedSuper( &rResource );
-			return true;
-		}
-	}
-	return false;
+	return SaveTypedSuperXMLResource( szResourceFileName, rResource );
 }
 
 
