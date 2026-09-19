@@ -113,25 +113,6 @@ public:
 		return posNewUndoData->Redo( pObjectManipulator, 0 );
 	}
 	//
-	template<> 
-	bool AddChangeValueOperation( const std::string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
-	{
-		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
-		//
-		unsigned oldData;
-		if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, rszPropertyName ) )
-		{
-			return false;
-		}
-		CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
-		posNewUndoData->eType = SUndoData::TYPE_CHANGE;
-		posNewUndoData->szName = rszPropertyName;
-		posNewUndoData->newValue = (int)rNewData;
-		posNewUndoData->oldValue = (int)oldData;
-		//
-		return posNewUndoData->Redo( pObjectManipulator, 0 );
-	}
-	//
 	template<class TValue, class TFieldType>  
 	bool AddChangeVec2Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
@@ -279,21 +260,6 @@ public:
 		return true;
 	}
 	//
-	template<> 
-		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec2 &vNewData, IManipulator *pObjectManipulator )
-	{
-		return AddChangeVec2Operation<CVec2, float>( rszPropertyName, vNewData, pObjectManipulator );
-	}
-	template<> 
-		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec3 &vNewData, IManipulator *pObjectManipulator )
-	{
-		return AddChangeVec3Operation<CVec3, float>( rszPropertyName, vNewData, pObjectManipulator );
-	}
-	template<> 
-		bool AddChangeValueOperation( const std::string &rszPropertyName, const CVec4 &vNewData, IManipulator *pObjectManipulator )
-	{
-		return AddChangeVec4Operation<CVec4, float>( rszPropertyName, vNewData, pObjectManipulator );
-	}
 	//
 	template<class TValue, class TElementType> 
 	bool AddChangeArrayOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
@@ -385,6 +351,48 @@ public:
 		return AddChangeArrayOperation<std::list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
 };
+
+// The typed AddChangeValueOperation, moved here from inside the class: GCC
+// rejects an explicit specialization written in class scope, which MSVC
+// accepted. They stay specializations rather than becoming overloads because
+// callers name the template argument (AddChangeValueOperation<unsigned>( ... )
+// among them), and a call written that way would pass an overload by.
+template<>
+inline bool CObjectBaseController::AddChangeValueOperation<unsigned>( const std::string &rszPropertyName, const unsigned &rNewData, IManipulator *pObjectManipulator )
+{
+	NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
+	//
+	unsigned oldData;
+	if ( !CManipulatorManager::GetValue( &oldData, pObjectManipulator, rszPropertyName ) )
+	{
+		return false;
+	}
+	CUndoDataList::iterator posNewUndoData = undoDataList.insert( undoDataList.end(), SUndoData() );
+	posNewUndoData->eType = SUndoData::TYPE_CHANGE;
+	posNewUndoData->szName = rszPropertyName;
+	posNewUndoData->newValue = (int)rNewData;
+	posNewUndoData->oldValue = (int)oldData;
+	//
+	return posNewUndoData->Redo( pObjectManipulator, 0 );
+}
+
+template<>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec2>( const std::string &rszPropertyName, const CVec2 &vNewData, IManipulator *pObjectManipulator )
+{
+	return AddChangeVec2Operation<CVec2, float>( rszPropertyName, vNewData, pObjectManipulator );
+}
+
+template<>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec3>( const std::string &rszPropertyName, const CVec3 &vNewData, IManipulator *pObjectManipulator )
+{
+	return AddChangeVec3Operation<CVec3, float>( rszPropertyName, vNewData, pObjectManipulator );
+}
+
+template<>
+inline bool CObjectBaseController::AddChangeValueOperation<CVec4>( const std::string &rszPropertyName, const CVec4 &vNewData, IManipulator *pObjectManipulator )
+{
+	return AddChangeVec4Operation<CVec4, float>( rszPropertyName, vNewData, pObjectManipulator );
+}
 
 
 
