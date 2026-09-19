@@ -25,6 +25,11 @@ public:
 	int operator&( IXmlSaver &xs );
 };
 
+// Declared here as well as befriended below: a friend declaration alone does
+// not make the name visible to the member declaration that follows it, which
+// MSVC allowed and GCC does not.
+class CBuildingState;
+
 class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommandHandler
 {
 	friend class CBuildingState;
