@@ -120,7 +120,12 @@ public:
 		return pManipulator->SetValue( rszName, CVariant( rData ) );
 	}
 	//
-	template<> 
+	// The typed SetValue and GetValue below were explicit specializations of the
+	// templates, written inside the class, which MSVC accepts and C++17 does not
+	// (GCC: "explicit specialization in non-namespace scope"). They are plain
+	// overloads now. For the same argument an exact non-template match is chosen
+	// over the template, so every call resolves as before; none names the type
+	// explicitly, which is the one form that would reach the template instead.
 	static bool SetValue( const CVariant &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pManipulator != 0, "CManipulatorManager::SetValue(): pManipulator == 0" );
@@ -173,17 +178,14 @@ public:
 		return bResult;
 	}
 	//
-	template<> 
 	static bool SetValue( const CVec2 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec2<CVec2>( rData, pManipulator, rszName );
 	}
-	template<> 
 	static bool SetValue( const CVec3 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec3<CVec3>( rData, pManipulator, rszName );
 	}
-	template<> 
 	static bool SetValue( const CVec4 &rData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return SetVec4<CVec4>( rData, pManipulator, rszName );
@@ -306,7 +308,6 @@ public:
 		return bResult;
 	}
 	//
-	template<> 
 	static bool GetValue( CVariant *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
@@ -314,7 +315,6 @@ public:
 		return pManipulator->GetValue( rszName, pData );
 	}
 	//
-	template<> 
 	static bool GetValue( std::string *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
@@ -335,7 +335,6 @@ public:
 		return bResult;
 	}
 	//
-	template<> 
 	static bool GetValue( unsigned *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
@@ -350,7 +349,6 @@ public:
 		return bResult;
 	}
 	//
-	template<> 
 	static bool GetValue( uint16_t *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
@@ -437,23 +435,19 @@ public:
 		return bResult;
 	}
 	//
-	template<> 
 	static bool GetValue( CVec2 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec2<CVec2, float>( pData, pManipulator, rszName );
 	}
-	template<> 
 	static bool GetValue( CVec3 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec3<CVec3, float>( pData, pManipulator, rszName );
 	}
-	template<> 
 	static bool GetValue( CVec4 *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		return GetVec4<CVec4, float>( pData, pManipulator, rszName );
 	}
 	//
-	template<>
 	static bool GetValue( boost::uuids::uuid *pData, struct IManipulator *pManipulator, const std::string &rszName )
 	{
 		NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );
