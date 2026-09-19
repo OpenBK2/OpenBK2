@@ -2190,7 +2190,6 @@ namespace
 			}
 		};
 
-		CWxHostWindow host;
 		CPanel panel;
 		CPropertyGridView view;
 		ICommandHandler *pPreviousCommandHandler = nullptr;
@@ -2206,16 +2205,6 @@ namespace
 				pContainer->Remove( CHID_PROPERTY_CONTROL, &view );
 				pContainer->Remove( CHID_SELECTION, &view );
 			}
-		}
-
-		virtual bool Create( IWidget *pParentPane, const std::string &rszOptionsLabel )
-		{
-			if ( !host.CreateHost( ToCWnd( pParentPane ) ) )
-			{
-				return false;
-			}
-			CreateContents( host.Root(), &host, rszOptionsLabel );
-			return true;
 		}
 
 		// NPropertyPane::CreateWxIn: the contents in a panel of pParent's.
@@ -2255,32 +2244,6 @@ namespace
 			pPreviousCommandHandler = pContainer->Get( CHID_PC_DIALOG );
 			pContainer->Set( CHID_PC_DIALOG, this );
 			bRegistered = true;
-		}
-
-		virtual bool IsCreated() const
-		{
-			return ( host.GetSafeHwnd() != 0 ) || panel.pWindow;
-		}
-
-		// A host is placed and shown by its MFC pane; a panel, by its wx layout.
-		virtual void SetBounds( const CTRect<int> &rBounds )
-		{
-			if ( host.GetSafeHwnd() != 0 )
-			{
-				host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
-			}
-		}
-
-		virtual void Show( bool bShow )
-		{
-			if ( host.GetSafeHwnd() != 0 )
-			{
-				host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
-			}
-			else if ( panel.pWindow )
-			{
-				panel.pWindow->Show( bShow );
-			}
 		}
 
 		virtual void EnableEdit( bool bEnable )
@@ -2372,12 +2335,6 @@ namespace
 
 namespace NPropertyPane
 {
-	IPropertyPane* Create()
-	{
-		return new CWxPropertyPane();
-	}
-
-
 	IGrid* CreateGridWx( wxWindow *pParent, wxStaticText *pStatus, IWidget *pOwner, const std::string &rszOptionsLabel )
 	{
 		return new CWxPropertyGrid( pParent, pStatus, pOwner, rszOptionsLabel );

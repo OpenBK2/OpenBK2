@@ -62,9 +62,8 @@ struct IObjectBrowser
 		KIND_LINK,
 	};
 
-	// What the contents tell the window they are in. The MFC implementation
-	// sends that window WM_GDB_BROWSER and WM_TREE_GDB_BROWSER instead, as the
-	// combo box and the trees always have.
+	// What the contents tell the window they are in, where the MFC combo box and
+	// trees sent it WM_GDB_BROWSER and WM_TREE_GDB_BROWSER.
 	struct IListener
 	{
 		virtual ~IListener() {}
@@ -81,11 +80,8 @@ struct IObjectBrowser
 
 	virtual ~IObjectBrowser() {}
 
-	// Builds the contents inside pParent. nControlID is the combo box's child
-	// id in the MFC implementation, which the parent's message map listens to.
-	virtual bool Create( IWidget *pParent, IListener *pListener, EKind eKind, int nGDBBrowserID, unsigned nControlID ) = 0;
-	// Position within the parent, in its client coordinates.
-	virtual void SetBounds( const CTRect<int> &rBounds ) = 0;
+	// Made by NObjectBrowser::CreateWxIn, below; Create and SetBounds were for
+	// the MFC pane and went with it.
 	virtual void Show( bool bShow ) = 0;
 	virtual void EnableEdit( bool bEnable ) = 0;
 
@@ -108,12 +104,6 @@ struct IObjectBrowser
 	virtual ICommandHandler* GetObjectStorage() = 0;
 };
 
-
-namespace NObjectBrowser
-{
-	// Owned by the caller.
-	IObjectBrowser* Create();
-}
 
 
 

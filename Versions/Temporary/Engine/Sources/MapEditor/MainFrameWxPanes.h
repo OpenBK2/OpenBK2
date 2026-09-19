@@ -74,45 +74,31 @@ namespace NMainFrameWxPanes
 	wxAuiPaneInfo DockedPaneInfo( const wxString &rName, const std::string &rszTitle, unsigned nPlace, float fRate, int nWidth );
 
 
-	// A wx panel for an editor's contents: a wx view laid out in it, or an MFC
-	// window kept its size. It is an MFC parent only once something asks it for
-	// one -- an MFC view made in the pane -- when it subclasses its own handle;
-	// a wx view made in it asks for none, and nothing MFC stands between the
-	// frame and the view.
-	class CMfcPanel : public wxPanel
+	// A wx panel for an editor's contents: a wx view laid out in it. It could
+	// also hold an MFC window, subclassing its own handle to be that window's
+	// parent; nothing MFC is made in a pane any more, and that went.
+	class CContentPanel : public wxPanel
 	{
-		CWnd mfcWindow;
-		// The editor's contents window, kept the panel's size as
-		// CDefaultDockingWindow kept it its inside's.
-		HWND hwndContents;
-
-		void OnSize( wxSizeEvent &rEvent );
-
 	public:
-		explicit CMfcPanel( wxWindow *pParent );
-		virtual ~CMfcPanel();
+		explicit CContentPanel( wxWindow *pParent );
 
-		CWnd* GetMfcWindow();
-		// An MFC window as the contents.
-		void SetContents( HWND _hwndContents );
 		// A wx window of this panel's as the contents, filling it.
 		void SetWxContents( wxWindow *pContents );
-		void FitContents();
 	};
 
 
-	// The document window IMainFrame::CreateChildFrame makes: a CMfcPanel
+	// The document window IMainFrame::CreateChildFrame makes: a CContentPanel
 	// filling the frame's workspace, as a maximised MDI child fills the MDI
 	// client. The editor makes its view in it as CChildFrameBase always has, a
 	// child of ToCWnd( frame window ).
 	class CFrameWindow : public IFrameWindow, public IWxWidget
 	{
-		wxWeakRef<CMfcPanel> pPanel;
+		wxWeakRef<CContentPanel> pPanel;
 
 	public:
-		explicit CFrameWindow( CMfcPanel *_pPanel ) : pPanel( _pPanel ) {}
+		explicit CFrameWindow( CContentPanel *_pPanel ) : pPanel( _pPanel ) {}
 
-		CMfcPanel* GetPanel() const { return pPanel; }
+		CContentPanel* GetPanel() const { return pPanel; }
 
 		// IWxWidget: the panel, which a wx view is made in.
 		virtual wxWindow* GetWxWindow() { return pPanel.get(); }
@@ -128,21 +114,21 @@ namespace NMainFrameWxPanes
 	};
 
 
-	// The IDockPanel an editor gets: a CMfcPanel in the frame's wxAUI manager.
+	// The IDockPanel an editor gets: a CContentPanel in the frame's wxAUI manager.
 	class CDockPanel : public IDockPanel, public IWxWidget
 	{
 		CAuiManager *pManager;
-		wxWeakRef<CMfcPanel> pPanel;
+		wxWeakRef<CContentPanel> pPanel;
 		// The frame's: whether the manager has laid the frame out yet. Until it
 		// has, a layout would size the docks against the frame's size before it
 		// is placed, and wxAUI keeps the sizes it gives a dock the first time.
 		const bool *pbLaidOut;
 
 	public:
-		CDockPanel( CAuiManager *_pManager, CMfcPanel *_pPanel, const bool *_pbLaidOut )
+		CDockPanel( CAuiManager *_pManager, CContentPanel *_pPanel, const bool *_pbLaidOut )
 			: pManager( _pManager ), pPanel( _pPanel ), pbLaidOut( _pbLaidOut ) {}
 
-		CMfcPanel* GetPanel() const { return pPanel; }
+		CContentPanel* GetPanel() const { return pPanel; }
 
 		// IWxWidget: the panel, which a wx view is made in.
 		virtual wxWindow* GetWxWindow() { return pPanel.get(); }

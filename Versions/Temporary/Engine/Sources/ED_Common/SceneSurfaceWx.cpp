@@ -273,7 +273,7 @@ namespace
 		virtual bool Create( IFrameWindow *pFrame, CChildFrameWndBase *_pCore )
 		{
 			pCore = _pCore;
-			if ( !CreateHost( pFrame, AFX_IDW_PANE_FIRST ) || ( Root() == nullptr ) )
+			if ( !CreateHost( pFrame ) || ( Root() == nullptr ) )
 			{
 				return false;
 			}

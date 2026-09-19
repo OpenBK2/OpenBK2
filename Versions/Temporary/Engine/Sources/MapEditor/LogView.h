@@ -18,20 +18,10 @@ struct ILogView
 {
 	virtual ~ILogView() {}
 
-	// Build the contents inside the pane, which is passed as a widget because
-	// that is all either implementation needs of it.
-	//
-	// pSelectionHandler is registered as the CHID_SELECTION command handler
-	// whenever the contents take focus. It is passed in rather than implemented
-	// here so that the copy/clear/select-all logic lives once, in the pane,
-	// rather than once per view.
-	virtual bool Create( IWidget *pParentPane, ICommandHandler *pSelectionHandler ) = 0;
-	virtual bool IsCreated() const = 0;
-
-	// Position within the pane, in the pane's client coordinates. The pane owns
-	// its own geometry; this only moves what is inside it.
-	virtual void SetBounds( const CTRect<int> &rBounds ) = 0;
-	virtual void Show( bool bShow ) = 0;
+	// Made by NLogView::CreateWxLogViewIn, below, with the pane's selection
+	// handler, which is registered as CHID_SELECTION whenever the contents take
+	// focus: the copy/clear/select-all logic lives once, in the pane. Create,
+	// SetBounds and Show were for the MFC pane and went with it.
 
 	// Content. Append is styled by log type; what that means is the view's
 	// business.

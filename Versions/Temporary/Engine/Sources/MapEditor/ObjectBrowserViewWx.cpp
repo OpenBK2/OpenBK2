@@ -2573,11 +2573,10 @@ namespace
 
 	class CWxObjectBrowser : public IObjectBrowser, public ICommandHandler
 	{
-		CWxHostWindow host;
-		// What the list and the trees are children of: the host's root in a pane,
-		// a panel of the dialog's in a wx dialog.
+		// What the list and the trees are children of: a panel of the pane's or
+		// the dialog's.
 		wxWindow *pRoot = nullptr;
-		// What the trees' dialogs open over: the host, or the dialog's owner.
+		// What the trees' dialogs open over: the pane's or the dialog's owner.
 		IWidget *pTreeOwner = nullptr;
 		wxChoice *pChoice = nullptr;
 		// The trees' "Name" column header, shared by every table's tree.
@@ -2665,21 +2664,6 @@ namespace
 			tables.clear();
 		}
 
-		virtual bool Create( IWidget *pParent, IListener *_pListener, EKind _eKind, int _nGDBBrowserID, unsigned nControlID )
-		{
-			pListener = _pListener;
-			eKind = _eKind;
-			nGDBBrowserID = _nGDBBrowserID;
-			if ( !host.CreateHost( ToCWnd( pParent ) ) || ( host.Root() == nullptr ) )
-			{
-				return false;
-			}
-			pRoot = host.Root();
-			pTreeOwner = &host;
-			CreateContents();
-			return true;
-		}
-
 		// NObjectBrowser::CreateWxIn: the contents in a panel of pParent's.
 		bool CreateIn( wxWindow *pParent, IWidget *pOwner, IListener *_pListener, EKind _eKind, int _nGDBBrowserID )
 		{
@@ -2701,23 +2685,9 @@ namespace
 			return pRoot;
 		}
 
-		// A pane's host is placed and shown by the pane; a panel in a wx dialog,
-		// by the dialog's layout.
-		virtual void SetBounds( const CTRect<int> &rBounds )
-		{
-			if ( host.GetSafeHwnd() != 0 )
-			{
-				host.MoveWindow( rBounds.left, rBounds.top, rBounds.Width(), rBounds.Height() );
-			}
-		}
-
 		virtual void Show( bool bShow )
 		{
-			if ( host.GetSafeHwnd() != 0 )
-			{
-				host.ShowWindow( bShow ? SW_SHOW : SW_HIDE );
-			}
-			else if ( ( pRoot != nullptr ) && ( pRoot->IsShown() != bShow ) )
+			if ( ( pRoot != nullptr ) && ( pRoot->IsShown() != bShow ) )
 			{
 				// A panel in a wx layout, which has to place what is left.
 				pRoot->Show( bShow );
@@ -2873,11 +2843,6 @@ namespace
 
 namespace NObjectBrowser
 {
-	IObjectBrowser* Create()
-	{
-		return new CWxObjectBrowser();
-	}
-
 	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
 															IObjectBrowser::EKind eKind, wxWindow **ppWindow, int nGDBBrowserID )
 	{

@@ -30,15 +30,9 @@ struct IPropertyPane
 {
 	virtual ~IPropertyPane() {}
 
-	// Builds the contents inside the pane and registers them as CHID_PC_DIALOG.
-	// rszOptionsLabel names the Editor/ResizeDialogStyles file the column widths
-	// are kept in. pParentPane is used only during this call.
-	virtual bool Create( IWidget *pParentPane, const std::string &rszOptionsLabel ) = 0;
-	virtual bool IsCreated() const = 0;
-
-	// Position within the pane, in the pane's client coordinates.
-	virtual void SetBounds( const CTRect<int> &rBounds ) = 0;
-	virtual void Show( bool bShow ) = 0;
+	// The pane's contents are made by NPropertyPane::CreateWxIn, below, which
+	// registers them as CHID_PC_DIALOG. Create, SetBounds and Show were for the
+	// MFC pane and went with it.
 
 	// The editor's read-only mode: everything grey, nothing editable.
 	virtual void EnableEdit( bool bEnable ) = 0;
@@ -47,11 +41,6 @@ struct IPropertyPane
 
 namespace NPropertyPane
 {
-	// Owned by the caller.
-	IPropertyPane* Create();
-
-
-
 	// ---- the part that is not drawing ----
 	//
 	// Property names are paths: "Weather.WindForce", "Players.[0].Name". These

@@ -771,7 +771,7 @@ namespace
 			{
 				return 0;
 			}
-			NMainFrameWxPanes::CMfcPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CMfcPanel>( pWorkspace );
+			NMainFrameWxPanes::CContentPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CContentPanel>( pWorkspace );
 			pWorkspace->GetSizer()->Add( pPanel, wxSizerFlags( 1 ).Expand() );
 			pWorkspace->Layout();
 			frameWindows.push_back( std::unique_ptr<NMainFrameWxPanes::CFrameWindow>( new NMainFrameWxPanes::CFrameWindow( pPanel ) ) );
@@ -785,16 +785,14 @@ namespace
 			{
 				return false;
 			}
-			// A wx view made in the panel is laid out in it; anything else is an
-			// MFC window kept its size.
+			// A wx view made in the panel is laid out in it. Nothing else is
+			// made in one any more; MFC contents went with the MFC views.
 			if ( wxWindow *const pWxContents = ToWxWindow( pContents ) )
 			{
 				pHandle->GetPanel()->SetWxContents( pWxContents );
 				return true;
 			}
-			const CWnd *const pwndContents = ToCWnd( pContents );
-			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );
-			return true;
+			return false;
 		}
 
 		virtual IDockPanel* CreateControlBar( unsigned *pnID, const std::string &rszTitle, const unsigned nStyle, const unsigned nPlace, const float fRate, const int nWidth )
@@ -806,7 +804,7 @@ namespace
 			{
 				++( *pnID );
 			}
-			NMainFrameWxPanes::CMfcPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CMfcPanel>( this );
+			NMainFrameWxPanes::CContentPanel *const pPanel = NWx::Child<NMainFrameWxPanes::CContentPanel>( this );
 			auiManager.AddPane( pPanel, NMainFrameWxPanes::DockedPaneInfo( PaneName( *pnID ), rszTitle, nPlace, fRate, nWidth ) );
 			if ( bLaidOut )
 			{
@@ -829,9 +827,7 @@ namespace
 				pHandle->GetPanel()->SetWxContents( pWxContents );
 				return true;
 			}
-			const CWnd *const pwndContents = ToCWnd( pContents );
-			pHandle->GetPanel()->SetContents( ( pwndContents != 0 ) ? pwndContents->GetSafeHwnd() : 0 );
-			return true;
+			return false;
 		}
 
 		virtual bool AddMenuResources( std::vector<unsigned> &rMenuIDList )

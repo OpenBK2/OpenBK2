@@ -1,41 +1,21 @@
 #pragma once
 
-// A wx view's place in whatever it is put in: a panel of a wx parent's, or,
-// where the parent is still MFC, an MFC window whose inside is drawn by wx.
+// A wx view's place in what it is put in: a panel of a wx parent's -- a pane
+// of the frame, the document window, or a page of the wx shortcut bar, which
+// names itself with a CPageScope, since the palettes' factories are given an
+// MFC tab window.
 //
-// **A wx parent.** The wx frame's panes and document window are wx panels, and
-// say so (WxWidget.h). A view made in one is a wx panel of it and nothing else:
-// no MFC window between the frame and the view. So is a palette made in a page
-// of the wx shortcut bar, which the bar names with a CPageScope, since the
-// palettes' factories are given an MFC tab window.
-//
-// **An MFC parent.** A Stingray pane, an MFC tab window, the MFC frame's
-// document window. This is the shape every piece of the editor took on its way
-// across, and the one it still takes in the MFC frame: the thing around it
-// expects a CWnd, and what is in it is wx.
-//
-// **Why there is an extra window then.** wxNativeContainerWindow adopts an
-// existing HWND so wx windows can be created inside it, and adopting means
-// *subclassing*: wx puts its own window procedure on the handle it is given.
-// Handing it a Stingray pane directly worked and cost the pane its caption bar
-// and close box, because SECControlBar draws those itself and its procedure no
-// longer ran. So this creates a plain child window of its own for wx to adopt.
-// The surrounding MFC window keeps its procedure; wx owns a rectangle inside it.
+// It is still a CWnd, with no window of its own, because the palettes are
+// still handed about as CWnd* (the tab window's list, the factories' return
+// type). It used to be able to sit in an MFC parent too, as a plain MFC child
+// window that wx adopted; every MFC parent is gone, and that went with them.
 //
 // **Why the teardown order is not obvious.** The wx side has to come down, and
-// BeforeTearDown run, while what it calls back into is still there. The ways a
-// host dies arrive differently:
-//
-//   * DestroyHost() or DestroyWindow() -- WM_DESTROY reaches WindowProc while the
-//     handle is still alive, which is the moment to do it;
-//   * an MFC parent being destroyed, where Windows destroys the child handles
-//     first and ~CDefault3DTabWindow then deletes the C++ objects -- by which
-//     point WM_DESTROY has already come;
-//   * a wx parent being destroyed, which destroys the panel with it and sends it
-//     wxEVT_DESTROY while its children still stand.
-//
-// All end at BeforeTearDown once, and the destructor tears down once more for
-// the case where an object is deleted having never been created.
+// BeforeTearDown run, while what it calls back into is still there. A host
+// dies either by DestroyHost, or by its wx parent being destroyed, which
+// destroys the panel with it and sends it wxEVT_DESTROY while its children
+// still stand. Both end at BeforeTearDown once, and the destructor tears down
+// once more for the case where an object is deleted having never been created.
 
 
 #include "Interface_Widget.h"
@@ -43,7 +23,6 @@
 #include "WxOwnership.h"
 #include "WxWidget.h"
 
-#include <wx/nativewin.h>
 #include <wx/panel.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
@@ -51,11 +30,7 @@
 
 class CWxHostWindow : public CWnd, public IWidget, public IWxWidget
 {
-	// The adopted handle's wx side. Owns the wx children; does not own, and
-	// does not destroy, the handle it was given.
-	wxNativeContainerWindow *pContainer = nullptr;
-	// Or, in a wx parent, a panel of the parent's with the wx side in it and no
-	// MFC window at all.
+	// A panel of the parent's with the wx side in it.
 	wxWeakRef<wxWindow> pPanel;
 	// Whether BeforeTearDown has run for what was made.
 	bool bTornDown = false;
@@ -100,15 +75,14 @@ public:
 		~CPageScope() { PageOverride() = pPrevious; }
 	};
 
-	// IWidget. What a view opens its dialogs over. A host made in a wx parent
-	// has no MFC window, so the main window answers for it.
+	// IWidget. What a view opens its dialogs over. The host has no MFC window,
+	// so the main window answers for it.
 	virtual void* GetNativeWidget()
 	{
-		return ( GetSafeHwnd() != 0 ) ? static_cast<CWnd*>( this ) : MainFrameWnd();
+		return MainFrameWnd();
 	}
 
-	// IWxWidget. A host made in a wx parent is its panel, which is what that
-	// parent lays out; one made in an MFC parent is an MFC window, and not wx's.
+	// IWxWidget. The panel, which is what the parent lays out.
 	virtual wxWindow* GetWxWindow()
 	{
 		return pPanel.get();
@@ -119,70 +93,43 @@ public:
 		TearDownWx();
 	}
 
-	// Creates the host in pParent: a panel of it if it is wx's, an MFC window
-	// the wx side adopts if it is MFC's. False if that failed, with nothing left
-	// half-built. nControlID is the MFC window's, for an MFC parent that finds
-	// its child by id -- the MDI child lays out the one that is
-	// AFX_IDW_PANE_FIRST; a wx parent is told its contents instead.
-	bool CreateHost( IWidget *pParent, UINT nControlID = 0 )
-	{
-		if ( PageOverride() == nullptr )
-		{
-			if ( wxWindow *const pWxParent = ToWxWindow( pParent ) )
-			{
-				return CreatePanel( pWxParent );
-			}
-		}
-		return CreateHost( ToCWnd( pParent ), nControlID );
-	}
-
-	// The same for a parent that is an MFC window, as a palette's tab window is.
-	bool CreateHost( CWnd *pParent, UINT nControlID = 0 )
+	// Creates the host: a panel of the shortcut bar page a CPageScope names,
+	// or else of pParent, which has to be wx's. False, with nothing made, for a
+	// parent that is neither -- an MFC one, which nothing passes any more.
+	bool CreateHost( IWidget *pParent )
 	{
 		if ( wxWindow *const pPage = PageOverride() )
 		{
 			return CreatePanel( pPage );
 		}
-		if ( pParent == 0 || pParent->GetSafeHwnd() == 0 )
+		if ( wxWindow *const pWxParent = ToWxWindow( pParent ) )
 		{
-			return false;
+			return CreatePanel( pWxParent );
 		}
-		// A bare child window with no class behaviour of its own; everything
-		// visible inside it will be wx's. WS_CLIPCHILDREN so the host does not
-		// paint over what wx puts in it.
-		if ( !CreateEx( 0, AfxRegisterWndClass( 0 ), 0,
-										WS_CHILD | WS_CLIPCHILDREN, CRect( 0, 0, 0, 0 ), pParent, nControlID ) )
+		return false;
+	}
+
+	// The same for a palette, whose factory is given the MFC tab window: only
+	// a CPageScope's page will do.
+	bool CreateHost( CWnd *pParent )
+	{
+		if ( wxWindow *const pPage = PageOverride() )
 		{
-			return false;
+			return CreatePanel( pPage );
 		}
-		pContainer = new wxNativeContainerWindow( GetSafeHwnd() );
-		if ( pContainer->GetHandle() == 0 )
-		{
-			// The documented failure report: GetHandle() answers null when the
-			// handle could not be used. Nothing else says so.
-			delete pContainer;
-			pContainer = 0;
-			DestroyWindow();
-			return false;
-		}
-		bTornDown = false;
-		return true;
+		return false;
 	}
 
 	// The wx window to parent content on, or null before CreateHost succeeded.
 	wxWindow* Root() const
 	{
-		return ( pContainer != nullptr ) ? pContainer : pPanel.get();
+		return pPanel.get();
 	}
 
-	// Shows or hides the host, whichever it is.
+	// Shows or hides the host.
 	void ShowHost( bool bShow )
 	{
-		if ( GetSafeHwnd() != 0 )
-		{
-			ShowWindow( bShow ? SW_SHOW : SW_HIDE );
-		}
-		else if ( pPanel )
+		if ( pPanel )
 		{
 			pPanel->Show( bShow );
 			// A sizer leaves a hidden window out.
@@ -193,19 +140,14 @@ public:
 		}
 	}
 
-	// Takes the host down, whichever it is: the wx side first, then the MFC
-	// window if there is one.
+	// Takes the host down.
 	void DestroyHost()
 	{
 		TearDownWx();
-		if ( GetSafeHwnd() != 0 )
-		{
-			DestroyWindow();
-		}
 	}
 
 	// Takes the wx side down now, while whatever it calls back into is still
-	// there, and leaves any MFC window standing.
+	// there. The same as DestroyHost, since there is no MFC window to leave.
 	void DestroyContents()
 	{
 		TearDownWx();
@@ -252,19 +194,6 @@ public:
 	}
 
 protected:
-	// Lays the wx side over the whole of the host. Call from the owner's resize.
-	void FitContainer()
-	{
-		if ( pContainer == 0 || GetSafeHwnd() == 0 )
-		{
-			return;
-		}
-		CRect rect;
-		GetClientRect( &rect );
-		pContainer->SetSize( 0, 0, rect.Width(), rect.Height() );
-		pContainer->Layout();
-	}
-
 	// What a derived host stops before its wx side goes -- a timer that would
 	// otherwise read controls that are no longer there. Called once, while the
 	// derived object still exists, except when the host is deleted without ever
@@ -276,7 +205,7 @@ protected:
 	// Safe to call more than once, and safe to call having never created.
 	void TearDownWx()
 	{
-		if ( ( pContainer == 0 ) && !pPanel )
+		if ( !pPanel )
 		{
 			return;
 		}
@@ -285,36 +214,10 @@ protected:
 			bTornDown = true;
 			BeforeTearDown();
 		}
-		if ( pContainer != 0 )
-		{
-			// Destroys the wx children; leaves the adopted handle alone, which is
-			// what wxNativeContainerWindow's destructor is documented to do.
-			pContainer->Destroy();
-			pContainer = 0;
-		}
 		if ( pPanel )
 		{
 			pPanel->Destroy();
 		}
-	}
-
-	// WindowProc rather than a message map, because a message map has to be
-	// defined in exactly one translation unit and this header has no .cpp --
-	// MapEditorLib does not link wx, only the front ends that include this do.
-	// CWnd::WindowProc is virtual for exactly this sort of thing.
-	virtual LRESULT WindowProc( UINT message, WPARAM wParam, LPARAM lParam )
-	{
-		if ( message == WM_DESTROY )
-		{
-			// Before the handle goes, because wx's window procedure is on it.
-			TearDownWx();
-		}
-		const LRESULT nResult = CWnd::WindowProc( message, wParam, lParam );
-		if ( message == WM_SIZE )
-		{
-			FitContainer();
-		}
-		return nResult;
 	}
 };
 

@@ -5,52 +5,23 @@
 
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
-#include "MapEditorLib/MfcWidget.h"
 
-#include <wx/nativewin.h>
 #include <wx/textctrl.h>
 
-// The Log Window's contents, drawn by wx, inside the MFC docking pane.
+// The Log Window's contents, drawn by wx: a read-only text control that is
+// appended to, cleared, copied from and selected, in the log's three colours
+// (NLogView::GetColour). It was the first piece of the editor drawn by wx,
+// and lived inside the MFC docking pane through an adopted child window; the
+// pane is wx's now, and the control is made straight in it.
 //
-// This is the first piece of the editor drawn by wx rather than MFC, and it is
-// deliberately a piece with no layout and almost no logic: a read-only text
-// control that is appended to, cleared, copied from and selected.
-//
-// How it gets inside an MFC pane, and why there is an extra window in the way.
-//
-// wxNativeContainerWindow adopts an existing HWND and lets wx windows be created
-// inside it; wxHAS_NATIVE_CONTAINER_WINDOW is defined on __WXMSW__ with HWND as
-// the handle type, and its destructor deliberately does not destroy the adopted
-// window. But adopting means *subclassing*: wx puts its own window procedure on
-// the HWND it is given. Handing it the pane directly worked and cost the pane
-// its caption bar and close box, because SECControlBar draws those itself and
-// its procedure no longer ran.
-//
-// So a plain MFC child window is created inside the pane first, and wx adopts
-// that. The pane keeps its own procedure, its gripper and its docking; wx owns
-// a rectangle inside it and nothing else. That is the boundary this whole slice
-// is about, and it needs to be a real window to hold.
-//
-// What this does NOT do, which the Scintilla one does, so that a comparison
-// between them is honest rather than flattering:
-//
-//   * No context menu. The pane's IDM_LOG_CONTEXT_MENU is an MFC menu resource
-//     tracked on the MFC frame; porting it is a separate question from whether
-//     a wx control can live here at all.
-// It does have the log's three colours now: black, green and red, the same ones
-// the Scintilla view uses, from NLogView::GetColour so the two cannot drift.
+// No context menu: the MFC pane's IDM_LOG_CONTEXT_MENU was never carried
+// across.
 
 namespace
 {
 	class CLogViewWx : public ILogView
 	{
-		// An MFC child of the pane, created here and owned here. wx adopts this
-		// rather than the pane, so that the pane's own window procedure survives.
-		CWnd wndHost;
-		// The host, adopted. wx subclasses it; it does not destroy it.
-		wxNativeContainerWindow *pContainer = nullptr;
-		// Owned by pContainer, as any wx child is by its parent -- or, made
-		// straight in a wx window, by that window, which may go first.
+		// Owned by the window it is made in, which may go first.
 		wxWeakRef<wxTextCtrl> pText;
 		// Registered as the selection command handler when the contents take
 		// focus. Borrowed: the pane outlives this view.
@@ -59,58 +30,12 @@ namespace
 	public:
 		virtual ~CLogViewWx()
 		{
-			if ( ( pContainer == nullptr ) && pText )
+			if ( pText )
 			{
-				// Made straight in a wx window, which outlives this view: the text
-				// control is bound to it, so it goes with it.
+				// The window it is made in outlives this view: the text control is
+				// bound to this view, so it goes with it.
 				pText->Destroy();
 			}
-			if ( pContainer != nullptr )
-			{
-				// Destroys the wx children; leaves the adopted host alone, which is
-				// what wxNativeContainerWindow's destructor is documented to do.
-				pContainer->Destroy();
-				pContainer = nullptr;
-				pText = nullptr;
-			}
-			// And the host is ours, so it goes too. After wx, not before: wx's
-			// window procedure is on it until the container is gone.
-			if ( wndHost.GetSafeHwnd() != nullptr )
-			{
-				wndHost.DestroyWindow();
-			}
-		}
-
-		virtual bool Create( IWidget *pParentPane, ICommandHandler *_pSelectionHandler )
-		{
-			CWnd *const pwndPane = ToCWnd( pParentPane );
-			if ( pwndPane == nullptr || pwndPane->GetSafeHwnd() == nullptr )
-			{
-				return false;
-			}
-			pSelectionHandler = _pSelectionHandler;
-
-			// A bare child window with no class behaviour of its own; everything
-			// visible inside it will be wx's.
-			if ( !wndHost.CreateEx( 0, AfxRegisterWndClass( 0 ), 0,
-															WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN,
-															CRect( 0, 0, 0, 0 ), pwndPane, 0 ) )
-			{
-				return false;
-			}
-
-			pContainer = new wxNativeContainerWindow( wndHost.GetSafeHwnd() );
-			if ( pContainer->GetHandle() == nullptr )
-			{
-				// The documented failure report: GetHandle() answers null when the
-				// handle could not be used. Nothing else says so.
-				delete pContainer;
-				pContainer = nullptr;
-				return false;
-			}
-
-			CreateText( pContainer );
-			return true;
 		}
 
 		// NLogView::CreateWxLogViewIn: the text control straight in a wx window.
@@ -142,34 +67,6 @@ namespace
 			// The same registration CLogWindow::OnSetFocus does on the MFC side:
 			// focus here means selection commands belong to this pane.
 			pText->Bind( wxEVT_SET_FOCUS, &CLogViewWx::OnSetFocus, this );
-		}
-
-		virtual bool IsCreated() const
-		{
-			return pText != nullptr;
-		}
-
-		virtual void SetBounds( const CTRect<int> &rBounds )
-		{
-			if ( ( pText == nullptr ) || ( wndHost.GetSafeHwnd() == nullptr ) )
-			{
-				// Made straight in a wx window, whose layout places it.
-				return;
-			}
-			// The MFC host takes the position inside the pane; the wx control
-			// fills the host. Two steps because the boundary is between them.
-			wndHost.SetWindowPos( 0, rBounds.left, rBounds.top,
-														rBounds.Width(), rBounds.Height(),
-														SWP_NOZORDER | SWP_NOACTIVATE );
-			pText->SetSize( 0, 0, rBounds.Width(), rBounds.Height() );
-		}
-
-		virtual void Show( bool bShow )
-		{
-			if ( pText != nullptr )
-			{
-				pText->Show( bShow );
-			}
 		}
 
 		virtual void Append( ELogOutputType eLogOutputType, const std::string &rszText )

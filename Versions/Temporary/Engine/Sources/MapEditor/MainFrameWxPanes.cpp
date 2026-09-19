@@ -8,6 +8,7 @@
 
 
 #include <fmt/printf.h>
+#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
@@ -303,45 +304,13 @@ namespace NMainFrameWxPanes
 	}
 
 
-	CMfcPanel::CMfcPanel( wxWindow *pParent )
-		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN ),
-			hwndContents( 0 )
+	CContentPanel::CContentPanel( wxWindow *pParent )
+		: wxPanel( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxCLIP_CHILDREN )
 	{
-		Bind( wxEVT_SIZE, &CMfcPanel::OnSize, this );
 	}
 
 
-	CWnd* CMfcPanel::GetMfcWindow()
-	{
-		// Only when an MFC window is to be made in the pane: a wx view asks the
-		// panel for itself (IWxWidget), and never subclasses it.
-		if ( mfcWindow.GetSafeHwnd() == 0 )
-		{
-			mfcWindow.SubclassWindow( GetHWND() );
-		}
-		return &mfcWindow;
-	}
-
-
-	CMfcPanel::~CMfcPanel()
-	{
-		// While the handle stands, and before CWnd's destructor, which would
-		// destroy it: wx's window procedure goes back on it.
-		if ( mfcWindow.GetSafeHwnd() != 0 )
-		{
-			mfcWindow.UnsubclassWindow();
-		}
-	}
-
-
-	void CMfcPanel::SetContents( HWND _hwndContents )
-	{
-		hwndContents = _hwndContents;
-		FitContents();
-	}
-
-
-	void CMfcPanel::SetWxContents( wxWindow *pContents )
+	void CContentPanel::SetWxContents( wxWindow *pContents )
 	{
 		wxSizer *pSizer = GetSizer();
 		if ( pSizer == nullptr )
@@ -356,26 +325,11 @@ namespace NMainFrameWxPanes
 	}
 
 
-	void CMfcPanel::FitContents()
-	{
-		if ( ( hwndContents != 0 ) && ::IsWindow( hwndContents ) )
-		{
-			const wxSize size = GetClientSize();
-			::SetWindowPos( hwndContents, 0, 0, 0, size.x, size.y, SWP_NOZORDER | SWP_NOACTIVATE );
-		}
-	}
-
-
-	void CMfcPanel::OnSize( wxSizeEvent &rEvent )
-	{
-		rEvent.Skip();
-		FitContents();
-	}
-
-
+	// What an MFC dialog asks for as its owner, the only use left for a
+	// window's CWnd: the main window, as for a view's host.
 	void* CFrameWindow::GetNativeWidget()
 	{
-		return pPanel ? static_cast<CWnd*>( pPanel->GetMfcWindow() ) : nullptr;
+		return MainFrameWnd();
 	}
 
 
@@ -416,9 +370,10 @@ namespace NMainFrameWxPanes
 	}
 
 
+	// As CFrameWindow's.
 	void* CDockPanel::GetNativeWidget()
 	{
-		return pPanel ? static_cast<CWnd*>( pPanel->GetMfcWindow() ) : nullptr;
+		return MainFrameWnd();
 	}
 
 
