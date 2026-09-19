@@ -1,10 +1,10 @@
 # wxWidgets, the toolkit the editor is drawn with.
 #
 # Included with BUILD_EDITOR: the editor's frame and views are wx's and there
-# is no MFC front end to fall back to any more. The cost is real. CI builds
-# both presets from scratch on every push and caches only the DirectX SDK --
-# no _deps cache, no ccache -- so every push builds this library twice over; a
-# build that wants none of it turns BUILD_EDITOR off.
+# is no MFC front end to fall back to any more. The cost is real: a wx build is
+# about 18 minutes of a CI job. CI keeps the finished install in its cache,
+# through WX_ROOT below, so it pays that only when what wx is built with
+# changes; a build that wants none of it turns BUILD_EDITOR off.
 #
 # ExternalProject rather than FetchContent, which is what every other dependency
 # here uses, and the difference is deliberate:
@@ -29,7 +29,24 @@
 include(ExternalProject)
 
 set(WX_PREFIX  ${CMAKE_BINARY_DIR}/_deps/wxwidgets)
-set(WX_INSTALL ${WX_PREFIX}/install)
+
+# Where wx is installed, and where a finished install is looked for. Empty means
+# inside this build directory, as before. Pointing it elsewhere lets a wx build
+# outlive the build directory: CI restores it from its cache, and two local
+# build directories of the same configuration can share one. An install there
+# is reused only if its build id matches (see below), so a stale one is rebuilt
+# rather than linked. One directory per configuration: Debug and Release have
+# different ids and would keep replacing each other's install.
+set(WX_ROOT "" CACHE PATH "Install prefix for wxWidgets, reused when its build id matches")
+
+if(WX_ROOT)
+    # Forward slashes: a Windows path given on the command line keeps its
+    # backslashes, which read as escapes once the path is written into the
+    # scripts ExternalProject generates.
+    file(TO_CMAKE_PATH "${WX_ROOT}" WX_INSTALL)
+else()
+    set(WX_INSTALL ${WX_PREFIX}/install)
+endif()
 
 # wx keeps its own library layout under the install prefix rather than the usual
 # lib/ and bin/: everything lands in lib/<toolchain tag>/, the import library,
@@ -64,16 +81,12 @@ endif()
 
 set(WX_IMPORT_LIB ${WX_LIB_DIR}/wxmsw33u${WX_LIB_SUFFIX}.lib)
 
-ExternalProject_Add(wxwidgets_external
-    GIT_REPOSITORY  https://github.com/wxWidgets/wxWidgets.git
-    GIT_TAG         v3.3.3
-    GIT_SHALLOW     TRUE
-    GIT_SUBMODULES_RECURSE TRUE
-    GIT_PROGRESS    TRUE
-    PREFIX          ${WX_PREFIX}
-    INSTALL_DIR     ${WX_INSTALL}
-    CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${WX_INSTALL}
+set(WX_GIT_TAG v3.3.3)
+
+# Everything wx is configured with, bar the install prefix. Kept in a list,
+# rather than written inline in ExternalProject_Add, because it is also what
+# the build id below is hashed from.
+set(WX_CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         # Has to match the rest of the build. MFC comes in as _AFXDLL, the
         # shared MFC DLL, which means the shared CRT; a wx built against the
@@ -108,10 +121,64 @@ ExternalProject_Add(wxwidgets_external
         # so -DwxUSE_STC=OFF no longer builds the editor. A build directory
         # that turned it off earlier keeps OFF in the wx sub-build's own cache;
         # set it back there with cmake -DwxUSE_STC=ON <that directory>.
-    BUILD_BYPRODUCTS ${WX_IMPORT_LIB}
-    USES_TERMINAL_DOWNLOAD TRUE
-    USES_TERMINAL_BUILD    TRUE
 )
+
+# Identifies what an install was built from: the wx release, the toolchain tag
+# and every argument above. The compiler paths are among those arguments, so an
+# MSVC update changes the id too, which is deliberately conservative. The
+# install prefix is left out so that an install can be restored to a different
+# path and still match.
+string(SHA256 WX_BUILD_ID "${WX_GIT_TAG};${WX_TOOLCHAIN_TAG};${WX_CMAKE_ARGS}")
+set(WX_BUILD_ID_FILE ${WX_INSTALL}/wx-build-id.txt)
+
+# Also written into the build directory, where CI reads it to name the cache
+# entry the install is saved under.
+file(WRITE ${CMAKE_BINARY_DIR}/wx-build-id.txt "${WX_BUILD_ID}")
+
+set(WX_INSTALLED_ID "")
+if(EXISTS ${WX_BUILD_ID_FILE} AND EXISTS ${WX_IMPORT_LIB})
+    file(READ ${WX_BUILD_ID_FILE} WX_INSTALLED_ID)
+    string(STRIP "${WX_INSTALLED_ID}" WX_INSTALLED_ID)
+endif()
+
+if(WX_INSTALLED_ID STREQUAL WX_BUILD_ID)
+    # A finished install built from exactly these arguments: nothing to clone,
+    # configure or build, which in CI is about 18 minutes per job. The editor
+    # targets still name wxwidgets_external in add_dependencies, so it stays,
+    # as a target that does nothing.
+    message(STATUS "wxWidgets: reusing ${WX_INSTALL}")
+    add_custom_target(wxwidgets_external)
+else()
+    message(STATUS "wxWidgets: building ${WX_GIT_TAG} into ${WX_INSTALL}")
+
+    # Removed first, so an install that is being replaced, or one interrupted
+    # half way through, is never mistaken for a match by the next configure.
+    file(REMOVE ${WX_BUILD_ID_FILE})
+    file(WRITE ${WX_PREFIX}/wx-build-id.txt "${WX_BUILD_ID}")
+
+    ExternalProject_Add(wxwidgets_external
+        GIT_REPOSITORY  https://github.com/wxWidgets/wxWidgets.git
+        GIT_TAG         ${WX_GIT_TAG}
+        GIT_SHALLOW     TRUE
+        GIT_SUBMODULES_RECURSE TRUE
+        GIT_PROGRESS    TRUE
+        PREFIX          ${WX_PREFIX}
+        INSTALL_DIR     ${WX_INSTALL}
+        CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${WX_INSTALL}
+            ${WX_CMAKE_ARGS}
+        BUILD_BYPRODUCTS ${WX_IMPORT_LIB}
+        USES_TERMINAL_DOWNLOAD TRUE
+        USES_TERMINAL_BUILD    TRUE
+    )
+
+    # The id goes in only once the install has finished, which is what makes
+    # its presence mean "complete".
+    ExternalProject_Add_Step(wxwidgets_external record_build_id
+        COMMAND ${CMAKE_COMMAND} -E copy ${WX_PREFIX}/wx-build-id.txt ${WX_BUILD_ID_FILE}
+        DEPENDEES install
+    )
+endif()
 
 # The imported target the front-end links. IMPORTED_IMPLIB names a file that
 # does not exist until wxwidgets_external has run, which is legal as long as
