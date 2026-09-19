@@ -123,12 +123,7 @@ BOOL CEditorAppSpecific::InitInstance()
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
 	//
 	SetMapFileName( "CMapEditorSingletonBase_B2MapEditor_1.0" );
-	// Note for anything that wants to touch wx from here: it does not exist yet.
-	// wxMFCApp::InitInstance calls this, as its base, *before* wxEntryStart. The
-	// wx probe is started from CWxHostedApp::InitInstance instead, which is
-	// after. Creating a wx window here dies in wxBrushList::FindOrCreateBrush,
-	// because wx's stock objects are made by module initialisation that has not
-	// run.
+	// wx is up by now: CWxHostedApp::InitInstance starts it before calling this.
 	return CEditorApp::InitInstance();
 }
 
@@ -144,9 +139,7 @@ void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
-// wxMFCApp<T> wraps InitInstance, ExitInstance, PreTranslateMessage and OnIdle
-// around the editor's own app class, which is what gets wx started, given a look
-// at each message, pumped from idle and shut down. Two of the four are
-// overridden in CWxHostedApp -- see WxHost.h for why.
+// CWxHostedApp starts wx before the editor, runs wx's message loop, and shuts
+// wx down after the editor: see WxHost.h.
 NWxHost::CWxHostedApp<CEditorAppSpecific> theApp;
 

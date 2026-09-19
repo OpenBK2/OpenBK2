@@ -27,7 +27,6 @@ set(SOURCES
     ManipulatorManager.cpp
     MapEditorModule.cpp
     MaskManipulator.cpp
-    MfcPaintContext.cpp
     MultiInputState.cpp
     MultiManipulator.cpp
     ObjectBaseController.cpp

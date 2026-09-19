@@ -57,7 +57,6 @@ public:
 	void Leave();
 	void Draw( IPaintContext *pPaintDC );
 	void PostDraw( IPaintContext *pPaintDC );
-	void DrawLabel( CPaintDC *pPaintDC, const std::string &szLabel, const CVec2 &pos );
 	
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
