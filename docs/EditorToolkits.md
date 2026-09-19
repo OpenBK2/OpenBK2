@@ -2,10 +2,10 @@
 
 The map editor (`B2_MapEditor`) is drawn with wxWidgets: the main frame, its
 panes and toolbars, the editors' palettes and dialogs, and the 3D viewport's
-window. The MFC editor it was ported from is gone. MFC itself is still linked
-while what is left of it is taken out: the application object and its entry
-point, the palette windows the wx palettes stand in for, and the file and
-folder pickers behind the property buttons.
+window. The MFC editor it was ported from is gone, and so is MFC: none of the
+editor's binaries links it, and wx owns the entry point. The resource scripts
+still include MFC's `afxres.h` for its standard ids, so building needs Visual
+Studio's MFC component installed; the running editor does not.
 
 ## Building
 
