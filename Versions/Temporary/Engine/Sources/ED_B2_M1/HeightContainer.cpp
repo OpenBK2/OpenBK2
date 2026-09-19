@@ -171,8 +171,12 @@ void CHeightContainer::FillPlane( int nPlaneIndex, const std::vector<CVec2> &rBl
 {
 	const int nStackIndex = nPlaneIndex / STACK_SIZE;
 	const CTRect<int> rect( 0, 0, planeSize.x, planeSize.y );
-	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rBlackPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( blackPlaneStackList[nStackIndex] ) ) );  
-	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, SModifyBitFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) ) );  
+	// Named: ApplyPointsInPolygon takes the functional by non-const reference,
+	// which a temporary cannot bind to outside MSVC's extension.
+	SModifyBitFunctional blackFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( blackPlaneStackList[nStackIndex] ) );
+	SModifyBitFunctional redFunctional( nPlaneIndex - ( nStackIndex * STACK_SIZE ), &( redPlaneStackList[nStackIndex] ) );
+	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rBlackPolygon, fTileSize, blackFunctional );
+	ApplyPointsInPolygon<SModifyBitFunctional, std::vector<CVec2>, CVec2>( rect, rRedPolygon, fTileSize, redFunctional );
 }
 
 
