@@ -95,7 +95,6 @@ main game:
 - [Net](Versions/Temporary/Engine/Sources/Net) - general network utilities, like IP address parsing and so on
 - [Parser](Versions/Temporary/Engine/Sources/Parser) - custom parser for `cll` files ([bison](https://www.gnu.org/software/bison/) based), grammar is in [lang.l](Versions/Temporary/Engine/Sources/Parser/lang.l) and [lang.y](Versions/Temporary/Engine/Sources/Parser/lang.y)
 - [SceneB2](Versions/Temporary/Engine/Sources/SceneB2) - terrain and map, objects like rivers, roads
-- [Scintilla](Versions/Temporary/Engine/Sources/Scintilla) - old bundled copy of [Scintilla](https://scintilla.org/) library
 - [Script](Versions/Temporary/Engine/Sources/Script) - Lua script commands (see available command in [Script.cpp](Versions/Temporary/Engine/Sources/Script/Script.cpp)), used in scenarios (custom missions) and in game console (press tilde)
 - [Server_Client_Common](Versions/Temporary/Engine/Sources/Server_Client_Common) - common code between client and server, essentially an implementation of multiplayer network protocol
 - [Sound](Versions/Temporary/Engine/Sources/Sound) - sound and music

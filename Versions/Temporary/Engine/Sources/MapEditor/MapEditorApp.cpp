@@ -2,12 +2,10 @@
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
-#include "Scintilla/Platform.h"
 
 #include <crtdbg.h>
 #include <Shlwapi.h>
 
-#include "Scintilla/Scintilla.h"
 #include "libdb/ResourceManager.h"
 #include "libdb/Logger.h"
 #include "Misc/StrProc.h"
@@ -119,8 +117,6 @@ bool CEditorApp::CreateSingletons()
 	NHPTimer::GetTime( &time );
 	//
 	::CoInitialize( 0 );
-	HINSTANCE hInstance = ::AfxGetResourceHandle();
-	Scintilla_RegisterClasses( hInstance );
 	//
 	DebugTrace( "EditorApp() Start: %g", NHPTimer::GetTimePassed( &time ) );
 
@@ -309,7 +305,6 @@ void CEditorApp::DestroySingletons()
 	//
 	NSingleton::DoneSingletons();
 	//
-	Scintilla_ReleaseResources();
 	::CoUninitialize();
 	//
 	DebugTrace( "EditorApp() Finalize: %g", NHPTimer::GetTimePassed( &time ) );

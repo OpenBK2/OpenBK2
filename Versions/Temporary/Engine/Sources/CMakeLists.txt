@@ -33,10 +33,6 @@ if(BUILD_EDITOR)
     # CMakeLists for how a run opts in.
     add_subdirectory("vendor/d3d9stub")
 
-    # Scintilla is the map editor's script text control. Nothing outside this
-    # block links it: not Game, and no source in a shipped module names it.
-    add_subdirectory("Scintilla")
-
     add_subdirectory("MapEditorLib")
     add_subdirectory("ED_Common")
     add_subdirectory("ED_B2_M1")

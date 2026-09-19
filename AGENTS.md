@@ -37,7 +37,6 @@ main game:
 - Net - general network utilities, like IP address parsing and so on
 - Parser - custom parser for cll files (bison based), grammar is in lang.l and lang.y
 - SceneB2 - terrain and map, objects like rivers, roads
-- Scintilla - old bundled copy of Scintilla library
 - Server_Client_Common - common code between client and server, essentially an implementation of multiplayer network protocol
 - Sound - sound and music
 - Stats_B2_M1 - mostly generated code for unit abilities and their actual stat numbers

@@ -4,7 +4,6 @@
 #include "ScriptDictionary.hpp"
 
 #include "MapEditorLib/Interface_UserData.h"
-#include "Scintilla/SciLexer.h"
 #include "Script/Script.h"
 
 #include <algorithm>
@@ -16,6 +15,13 @@
 
 namespace
 {
+	// The Lua lexer's keyword-list styles, SCE_LUA_WORD2 to SCE_LUA_WORD8 in
+	// Scintilla's SciLexer.h (wxSTC_LUA_WORD2 to wxSTC_LUA_WORD8 in wxSTC's).
+	// Written out here since the bundled Scintilla went: they are the lexer's
+	// numbers and do not change.
+	const int N_LUA_STYLE_WORD2 = 13;
+	const int N_LUA_STYLE_WORD8 = 19;
+
 	// What the Lua parser says, collected the way CScriptEditor's ScriptLOG
 	// collected it: each complaint appended, LF turned into CRLF for an edit box.
 	// A file-scope string because the parser calls back through a plain function
@@ -172,14 +178,14 @@ namespace NTextEditor
 				{ 5, pszFont, nSize, 0xDD0000, -1, false },		// keywords
 			};
 			styles.assign( table, table + sizeof( table ) / sizeof( table[0] ) );
-			for ( int nStyle = SCE_LUA_WORD2; nStyle <= SCE_LUA_WORD8; ++nStyle )
+			for ( int nStyle = N_LUA_STYLE_WORD2; nStyle <= N_LUA_STYLE_WORD8; ++nStyle )
 			{
 				const SLuaStyle word = { nStyle, pszFont, nSize, -1, -1, false };
 				styles.push_back( word );
 			}
 			const SLuaStyle rest[] =
 			{
-				{ SCE_LUA_WORD2, nullptr, 0, 0x803280, -1, false },
+				{ N_LUA_STYLE_WORD2, nullptr, 0, 0x803280, -1, false },
 				{ 6, nullptr, 0, 0x0099FF, -1, false },				// double quoted strings
 				{ 7, nullptr, 0, 0x0099FF, -1, false },				// single quoted strings
 				{ 10, pszFont, nSize, 0x000000, -1, false },	// operators

@@ -56,7 +56,7 @@ set(SOURCES
 add_library(MapEditor SHARED ${SOURCES})
 add_stdafx_pch(MapEditor)
 add_export_header(MapEditor)
-target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Scintilla Script mfc System fmt::fmt-header-only)
+target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script mfc System fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(MapEditor PRIVATE Htmlhelp winapi)
 endif()
