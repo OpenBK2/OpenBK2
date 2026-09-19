@@ -16,7 +16,7 @@
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/NativeImageList.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -557,7 +557,7 @@ namespace
 		// the object list
 		// ------------------------------------------------------------------
 
-		// Borrowed from the MFC front-end's object collector rather than copied;
+		// Borrowed from the object collector rather than copied;
 		// see the note in HeightViewV3Wx.cpp. wx creates its list controls with
 		// LVS_SHAREIMAGELISTS, so nothing here takes ownership.
 		void AttachObjectIcons()
@@ -567,13 +567,13 @@ namespace
 			{
 				return;
 			}
-			if ( CImageList *pNormal = ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
+			if ( const HIMAGELIST hNormal = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
 			{
-				ListView_SetImageList( hList, pNormal->GetSafeHandle(), LVSIL_NORMAL );
+				ListView_SetImageList( hList, hNormal, LVSIL_NORMAL );
 			}
-			if ( CImageList *pSmall = ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
+			if ( const HIMAGELIST hSmall = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
 			{
-				ListView_SetImageList( hList, pSmall->GetSafeHandle(), LVSIL_SMALL );
+				ListView_SetImageList( hList, hSmall, LVSIL_SMALL );
 			}
 		}
 

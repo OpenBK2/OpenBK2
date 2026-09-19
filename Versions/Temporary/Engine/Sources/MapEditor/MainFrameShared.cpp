@@ -9,7 +9,6 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Progress.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "ResourceDefines.h"
 #include "PC_Constants.h"

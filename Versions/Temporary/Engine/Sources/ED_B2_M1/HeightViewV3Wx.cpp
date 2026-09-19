@@ -11,7 +11,7 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/NativeImageList.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 
@@ -555,8 +555,8 @@ namespace
 		// The tile icons, borrowed from the object collector rather than built
 		// again.
 		//
-		// The collector is the MFC front-end's -- it lives in MapEditor and
-		// keeps its cache as CImageLists -- and wxImageList cannot be handed an
+		// The collector lives in MapEditor and keeps its cache as Win32 image
+		// lists (CNativeImageList), and wxImageList cannot be handed an
 		// existing HIMAGELIST. Copying instead would mean decoding a 64x64 and a
 		// 16x16 icon for every terrain tile a second time, into a second cache,
 		// for a list that shows the same pictures.
@@ -564,7 +564,7 @@ namespace
 		// So the handle is passed straight to the list control. ListView_SetImageList
 		// is exactly the call wxListCtrl::SetImageList makes, and wx creates its
 		// list controls with LVS_SHAREIMAGELISTS, so nothing here takes ownership
-		// of anything. This goes away when the collector itself is ported.
+		// of anything.
 		void AttachTileIcons()
 		{
 			const HWND hList = static_cast<HWND>( pTiles->GetHandle() );
@@ -572,13 +572,13 @@ namespace
 			{
 				return;
 			}
-			if ( CImageList *pNormal = ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
+			if ( const HIMAGELIST hNormal = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
 			{
-				ListView_SetImageList( hList, pNormal->GetSafeHandle(), LVSIL_NORMAL );
+				ListView_SetImageList( hList, hNormal, LVSIL_NORMAL );
 			}
-			if ( CImageList *pSmall = ToCImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
+			if ( const HIMAGELIST hSmall = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
 			{
-				ListView_SetImageList( hList, pSmall->GetSafeHandle(), LVSIL_SMALL );
+				ListView_SetImageList( hList, hSmall, LVSIL_SMALL );
 			}
 		}
 

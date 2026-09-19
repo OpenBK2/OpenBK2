@@ -17,13 +17,13 @@ void NImage::Copy( CArray2D<uint32_t> *pDestination, const CArray2D<uint32_t> &r
 }
 
 
-void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage )
+HBITMAP NImage::Load2Bitmap( const CArray2D<uint32_t> &rImage )
 {
-	Load2Bitmap( pBitmap, rImage, CTPoint<int>( rImage.GetSizeX(), rImage.GetSizeY() ) );
+	return Load2Bitmap( rImage, CTPoint<int>( rImage.GetSizeX(), rImage.GetSizeY() ) );
 }
 
 
-void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage, const CTPoint<int> &rSize )
+HBITMAP NImage::Load2Bitmap( const CArray2D<uint32_t> &rImage, const CTPoint<int> &rSize )
 {
 	try
 	{
@@ -36,8 +36,6 @@ void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage, co
 		{
 			size.y = rImage.GetSizeY();
 		}
-		pBitmap->DeleteObject();
-
 		BITMAPINFO bmi;
 		bmi.bmiHeader.biSize = sizeof( bmi.bmiHeader );
 		bmi.bmiHeader.biWidth = size.x;
@@ -52,11 +50,12 @@ void NImage::Load2Bitmap( CBitmap *pBitmap, const CArray2D<uint32_t> &rImage, co
 		HBITMAP hbm = CreateCompatibleBitmap( hDC, size.x, size.y );
 		::SetDIBits( hDC, hbm, 0, size.y, &(rImage[0][0]), &bmi, DIB_RGB_COLORS );
 		::ReleaseDC( GetDesktopWindow(), hDC );
-		pBitmap->Attach( hbm );
+		return hbm;
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 	}
+	return 0;
 }
 
 

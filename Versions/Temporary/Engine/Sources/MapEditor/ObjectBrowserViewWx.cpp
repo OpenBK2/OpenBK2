@@ -14,7 +14,6 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/ManipulatorManager.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"

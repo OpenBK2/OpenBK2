@@ -11,7 +11,6 @@
 #include "BuildDataView.h"
 #include "NewObjectView.h"
 #include "MapEditorLib/Interface_MainFrame.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "Misc/StrProc.h"
 
 bool CBuilderContainer::CanBuildObject( const std::string &rszObjectTypeName )

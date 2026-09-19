@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "MapEditorLib/MfcWidget.h"
 
 #include "Misc/2Darray.h"
 #include "MapEditorLib/ResourceDefines.h"

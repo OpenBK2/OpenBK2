@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
-#include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"

@@ -3,7 +3,6 @@
 #include "SelectTablesView.h"
 
 
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"

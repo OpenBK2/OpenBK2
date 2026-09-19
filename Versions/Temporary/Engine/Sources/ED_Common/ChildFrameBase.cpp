@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/ResourceDefines.h"

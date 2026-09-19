@@ -16,7 +16,6 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/Interface_View.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Tools_HashSet.h"

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MfcWidget.h"
 #include <fmt/printf.h>
 
 #include "MODContainer.h"

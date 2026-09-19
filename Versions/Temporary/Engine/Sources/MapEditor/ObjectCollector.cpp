@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "ResourceDefines.h"
 
@@ -319,20 +320,44 @@ int CObjectFilterCollector::ShowFilterCreationDialog( IWidget* pParentWidget, st
 }
 
 
+namespace
+{
+	// CBitmap::LoadBitmap without MFC: the bitmap from whichever module has it.
+	HBITMAP LoadResourceBitmap( unsigned nID )
+	{
+		const HINSTANCE hModule = NResources::FindModule( MAKEINTRESOURCEA( nID ), MAKEINTRESOURCEA( 2 ) );	// RT_BITMAP
+		return ::LoadBitmapA( hModule, MAKEINTRESOURCEA( nID ) );
+	}
+}
+
+
 void CObjectCollector::CreateImageLists()
 {
 	const COLORREF zeroColor = RGB( 0, 0, 0 );
 	//
-	CBitmap defaultNormalObjectBitmap;
-	CBitmap defaultSmallObjectBitmap;
-	defaultNormalObjectBitmap.LoadBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
-	defaultSmallObjectBitmap.LoadBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
+	const HBITMAP hDefaultNormalObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
+	const HBITMAP hDefaultSmallObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
 	//
-	normalImageList.Create( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y, ILC_COLOR24, 0, 10 );
-	smallImageList.Create( SMALL_IMAGE_SIZE_X, SMALL_IMAGE_SIZE_Y, ILC_COLOR24, 0, 10 );
+	// ClearCollection comes back here. The lists are emptied rather than made
+	// again: the palettes' list controls hold these handles, and a new list
+	// would leave them drawing from the old one. (CImageList::Create over a
+	// live list did exactly that, and leaked it.)
+	if ( normalImageList.GetHandle() == 0 )
+	{
+		normalImageList.Create( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y, ILC_COLOR24, 10 );
+	}
+	if ( smallImageList.GetHandle() == 0 )
+	{
+		smallImageList.Create( SMALL_IMAGE_SIZE_X, SMALL_IMAGE_SIZE_Y, ILC_COLOR24, 10 );
+	}
+	normalImageList.RemoveAll();
+	smallImageList.RemoveAll();
 	//
-	const int nDefaultNormalImageIndex = normalImageList.Add( &defaultNormalObjectBitmap, zeroColor );
-	const int nDefaultSmallImageIndex = smallImageList.Add( &defaultSmallObjectBitmap, zeroColor );
+	const int nDefaultNormalImageIndex = normalImageList.Add( hDefaultNormalObjectBitmap, zeroColor );
+	const int nDefaultSmallImageIndex = smallImageList.Add( hDefaultSmallObjectBitmap, zeroColor );
+	// The lists copied them.
+	::DeleteObject( hDefaultNormalObjectBitmap );
+	::DeleteObject( hDefaultSmallObjectBitmap );
 	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex, fmt::format( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
 	nDefaultImageIndex = nDefaultNormalImageIndex;
 }
@@ -408,13 +433,20 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 				//
 				// The pixels become front-end bitmaps here, which is the only place
 				// in this path that has any business knowing what a bitmap is.
-				CBitmap normalBitmap;
-				CBitmap smallBitmap;
-				NImage::Load2Bitmap( &normalBitmap, normalImage );
-				NImage::Load2Bitmap( &smallBitmap, smallImage );
+				const HBITMAP hNormalBitmap = NImage::Load2Bitmap( normalImage );
+				const HBITMAP hSmallBitmap = NImage::Load2Bitmap( smallImage );
 				//
-				const int nNormalImageIndex = normalImageList.Add( &normalBitmap, zeroColor );
-				const int nSmallImageIndex = smallImageList.Add( &smallBitmap, zeroColor );
+				const int nNormalImageIndex = normalImageList.Add( hNormalBitmap, zeroColor );
+				const int nSmallImageIndex = smallImageList.Add( hSmallBitmap, zeroColor );
+				// The lists copied them.
+				if ( hNormalBitmap != 0 )
+				{
+					::DeleteObject( hNormalBitmap );
+				}
+				if ( hSmallBitmap != 0 )
+				{
+					::DeleteObject( hSmallBitmap );
+				}
 				NI_ASSERT( nNormalImageIndex == nSmallImageIndex, fmt::format( "nNormalImageIndex != nSmallImageIndex" ) );
 				//
 				pObjectParams->nIconIndex = nNormalImageIndex;
@@ -721,7 +753,7 @@ bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const std:
 
 IImageList* CObjectCollector::GetImageList( int nImageListType )
 {
-	return ( nImageListType == LVSIL_SMALL ) ? static_cast<IImageList*>( &smallImageListHandle ) : static_cast<IImageList*>( &normalImageListHandle );
+	return ( nImageListType == LVSIL_SMALL ) ? &smallImageList : &normalImageList;
 }
 
 

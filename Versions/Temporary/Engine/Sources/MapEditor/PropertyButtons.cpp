@@ -26,7 +26,6 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/StringManager.h"
 

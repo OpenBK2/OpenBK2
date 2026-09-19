@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/NativeImageList.h"
 
 #include "Misc/HashFuncs.h"
 #include "Misc/StrProc.h"
@@ -107,12 +107,10 @@ class CObjectCollector : public IObjectCollector
 	CObjectCollectorCallbackMap objectCollectorCallbackMap;
 	//
 	int nDefaultImageIndex;
-	CImageList normalImageList;
-	CImageList smallImageList;
-	// Handles onto the two above, handed out through IObjectCollector. They
-	// borrow: the lists themselves live and die with this collector.
-	CMfcImageList normalImageListHandle;
-	CMfcImageList smallImageListHandle;
+	// Handed out through IObjectCollector as they are; they live and die with
+	// this collector.
+	CNativeImageList normalImageList;
+	CNativeImageList smallImageList;
 
 	CDataExtractorTypeMap dataExtractorTypeMap;
 	CDataExtractorMap dataExtractorMap;
@@ -153,9 +151,7 @@ protected:
 
 public:
 	CObjectCollector()
-		: nDefaultImageIndex( INVALID_NODE_ID ),
-			normalImageListHandle( &normalImageList ),
-			smallImageListHandle( &smallImageList )
+		: nDefaultImageIndex( INVALID_NODE_ID )
 	{
 		CreateImageLists();
 	}

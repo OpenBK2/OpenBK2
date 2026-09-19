@@ -9,7 +9,6 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/MapEditorModule.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 

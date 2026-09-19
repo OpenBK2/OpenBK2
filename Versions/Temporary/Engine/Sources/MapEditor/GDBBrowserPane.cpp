@@ -2,7 +2,6 @@
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/MainWindow.h"
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "ResourceDefines.h"
