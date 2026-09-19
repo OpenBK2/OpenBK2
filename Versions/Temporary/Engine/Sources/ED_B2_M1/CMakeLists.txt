@@ -180,9 +180,13 @@ set(SOURCES
 add_library(ED_B2_M1 SHARED ${SOURCES})
 add_stdafx_pch(ED_B2_M1)
 add_export_header(ED_B2_M1)
-target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Stats_B2_M1 mfc System UISpecificB2 UI zlib fmt::fmt-header-only granny::granny fastgltf::fastgltf)
+# No mfc: without it __AFX__ is undefined and stdafx.h takes its plain
+# <windows.h> branch. The Excel acks reader, the last MFC user, is plain ODBC.
+target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Stats_B2_M1 System UISpecificB2 UI zlib fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
-    target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi)
+    # odbc32 and odbccp32: AckExcelReader's ODBC calls, which MFC's afxdb.h
+    # used to link through #pragma comment.
+    target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi odbc32 odbccp32)
 endif()
 # The B2 map editor proper: the largest of these, 48 dialogs and the toolbar
 # and tree bitmaps under res/.

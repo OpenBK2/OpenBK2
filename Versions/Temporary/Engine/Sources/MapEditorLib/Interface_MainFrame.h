@@ -21,6 +21,26 @@ enum ELogOutputType
 #define SWT_ALL				0xFFffFFff
 
 
+// The values IMainFrame's bar calls take, which were MFC's own constants and
+// keep MFC's numbers: toolbar ids end up in saved layouts, and the code that
+// passes these still compiled against MFC while it was being moved off it.
+namespace NMainFrameBar
+{
+	// A toolbar's button list: the break between groups (ID_SEPARATOR).
+	constexpr unsigned SEPARATOR = 0;
+	// The first toolbar id (AFX_IDW_TOOLBAR); the frame's own are counted
+	// from it.
+	constexpr unsigned FIRST_TOOLBAR_ID = 0xE800;
+	// Where a bar or pane docks (AFX_IDW_DOCKBAR_*).
+	constexpr unsigned DOCK_TOP = 0xE81B;
+	constexpr unsigned DOCK_LEFT = 0xE81C;
+	constexpr unsigned DOCK_RIGHT = 0xE81D;
+	constexpr unsigned DOCK_BOTTOM = 0xE81E;
+	// Which sides a bar may dock to (CBRS_ALIGN_ANY): all of them.
+	constexpr unsigned ALIGN_ANY = 0xF000;
+}
+
+
 struct SSWTParams
 {
 	uint32_t dwFlags;

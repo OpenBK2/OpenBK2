@@ -3,6 +3,7 @@
 #include "MainFrameToolBars.h"
 #include "ResourceDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 
 // CMainFrame's toolbar tables, unchanged but for the namespace: see
 // MainFrameToolBars.h.
@@ -18,7 +19,7 @@ namespace NMainFrameToolBars
 			ID_MAIN_OPEN_RESOURCE,
 			ID_MAIN_SAVE,
 			ID_MAIN_SELECT,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_TOOLS_RUN_GAME,
 		};
 
@@ -27,10 +28,10 @@ namespace NMainFrameToolBars
 			ID_OBJECT_LOAD,
 			ID_MAIN_OBJECT_LOCATE,
 			ID_OBJECT_REF_LOOKUP,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_OBJECT_NEW_FOLDER,
 			ID_OBJECT_NEW,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_OBJECT_CHECK,
 			ID_OBJECT_EXPORT,
 			ID_OBJECT_EXPORT_FORCE,
@@ -51,9 +52,9 @@ namespace NMainFrameToolBars
 			ID_SELECTION_PASTE,
 			ID_SELECTION_CLEAR,
 			ID_SELECTION_RENAME,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_SELECTION_FIND,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_SELECTION_PROPERTIES,
 		};
 
@@ -63,17 +64,17 @@ namespace NMainFrameToolBars
 			ID_PC_EXPAND,
 			ID_PC_COLLAPSE,
 			ID_PC_COLLAPSE_ALL,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_PC_OPTIMAL_WIDTH,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_PC_REFRESH,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_PC_ADD_NODE,
 			ID_PC_DELETE_ALL_NODES,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_PC_INSERT_NODE,
 			ID_PC_DELETE_NODE,
-			ID_SEPARATOR,
+			NMainFrameBar::SEPARATOR,
 			ID_PC_SHOW_HIDDEN,
 		};
 
@@ -104,12 +105,12 @@ namespace NMainFrameToolBars
 
 	const unsigned TOOLBAR_CONTROL_ID[TOOLBARS_COUNT] =
 	{
-		AFX_IDW_TOOLBAR,
-		AFX_IDW_TOOLBAR + 4,
-		AFX_IDW_TOOLBAR + 5,
-		AFX_IDW_TOOLBAR + 6,
-		AFX_IDW_TOOLBAR + 7,
-		AFX_IDW_TOOLBAR + 8,
+		NMainFrameBar::FIRST_TOOLBAR_ID,
+		NMainFrameBar::FIRST_TOOLBAR_ID + 4,
+		NMainFrameBar::FIRST_TOOLBAR_ID + 5,
+		NMainFrameBar::FIRST_TOOLBAR_ID + 6,
+		NMainFrameBar::FIRST_TOOLBAR_ID + 7,
+		NMainFrameBar::FIRST_TOOLBAR_ID + 8,
 	};
 
 	const unsigned TOOLBAR_NAME_ID[TOOLBARS_COUNT] =
@@ -124,12 +125,12 @@ namespace NMainFrameToolBars
 
 	const uint32_t TOOLBAR_STYLE[TOOLBARS_COUNT] =
 	{
-		CBRS_ALIGN_ANY,
-		CBRS_ALIGN_ANY,
-		CBRS_ALIGN_ANY,
-		CBRS_ALIGN_ANY,
-		CBRS_ALIGN_ANY,
-		CBRS_ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
+		NMainFrameBar::ALIGN_ANY,
 	};
 
 	const bool TOOLBAR_SHOW[TOOLBARS_COUNT] =

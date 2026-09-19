@@ -555,7 +555,7 @@ namespace
 		// one, as CMainFrame counts them, and the next position in the toolbar row.
 		NMainFrameWxPanes::CToolBarImages toolBarImages;
 		std::map<unsigned, std::unique_ptr<NMainFrameWxPanes::CToolBar>> toolBars;
-		unsigned nFreeToolBarID = AFX_IDW_TOOLBAR + 9;
+		unsigned nFreeToolBarID = NMainFrameBar::FIRST_TOOLBAR_ID + 9;
 		int nNextToolBarPosition = 0;
 		// The layout the frame has before a saved one is read: what a first run
 		// gets, and what Reset GUI goes back to.
@@ -862,7 +862,7 @@ namespace
 			for ( unsigned nButton = 0; nButton < nButtonCount; ++nButton )
 			{
 				const unsigned nCommandID = pButtonIDMap[nButton];
-				if ( nCommandID == ID_SEPARATOR )
+				if ( nCommandID == NMainFrameBar::SEPARATOR )
 				{
 					pToolBar->AddSeparator();
 					continue;
@@ -885,13 +885,13 @@ namespace
 			info.Name( wxString::Format( "ToolBar%u", *pnID ) ).Caption( wxString::FromUTF8( rszTitle.c_str() ) ).ToolbarPane().Row( 0 ).Position( nNextToolBarPosition );
 			switch ( nStyle )
 			{
-				case AFX_IDW_DOCKBAR_BOTTOM:
+				case NMainFrameBar::DOCK_BOTTOM:
 					info.Bottom();
 					break;
-				case AFX_IDW_DOCKBAR_LEFT:
+				case NMainFrameBar::DOCK_LEFT:
 					info.Left();
 					break;
-				case AFX_IDW_DOCKBAR_RIGHT:
+				case NMainFrameBar::DOCK_RIGHT:
 					info.Right();
 					break;
 				default:
@@ -1251,7 +1251,7 @@ namespace
 				std::string strName = NResources::GetString( NMainFrameToolBars::TOOLBAR_NAME_ID[nToolBar] );
 				unsigned nID = NMainFrameToolBars::TOOLBAR_CONTROL_ID[nToolBar];
 				CreateToolBar( &nID, strName, NMainFrameToolBars::TOOLBAR_ELEMENTS_COUNT[nToolBar],
-											 NMainFrameToolBars::TOOLBAR_ELEMENTS_ID[nToolBar], NMainFrameToolBars::TOOLBAR_STYLE[nToolBar], AFX_IDW_DOCKBAR_TOP,
+											 NMainFrameToolBars::TOOLBAR_ELEMENTS_ID[nToolBar], NMainFrameToolBars::TOOLBAR_STYLE[nToolBar], NMainFrameBar::DOCK_TOP,
 											 true, NMainFrameToolBars::TOOLBAR_SHOW[nToolBar], false );
 			}
 		}

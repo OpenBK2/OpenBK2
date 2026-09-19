@@ -170,16 +170,16 @@ namespace NMainFrameWxPanes
 	{
 		wxAuiPaneInfo info;
 		info.Name( rName ).Caption( wxString::FromUTF8( rszTitle.c_str() ) ).CloseButton( true ).MaximizeButton( false );
-		const bool bAcross = ( nPlace == AFX_IDW_DOCKBAR_TOP ) || ( nPlace == AFX_IDW_DOCKBAR_BOTTOM );
+		const bool bAcross = ( nPlace == NMainFrameBar::DOCK_TOP ) || ( nPlace == NMainFrameBar::DOCK_BOTTOM );
 		switch ( nPlace )
 		{
-			case AFX_IDW_DOCKBAR_RIGHT:
+			case NMainFrameBar::DOCK_RIGHT:
 				info.Right();
 				break;
-			case AFX_IDW_DOCKBAR_TOP:
+			case NMainFrameBar::DOCK_TOP:
 				info.Top();
 				break;
-			case AFX_IDW_DOCKBAR_BOTTOM:
+			case NMainFrameBar::DOCK_BOTTOM:
 				info.Bottom();
 				break;
 			default:
@@ -442,7 +442,7 @@ namespace NMainFrameWxPanes
 		contents.SetView( pView );
 		pPanel->GetSizer()->Add( pWindow, wxSizerFlags( 1 ).Expand() );
 		// MainFrame_Consts.cpp's third docking window.
-		wxAuiPaneInfo info = DockedPaneInfo( "Log", std::string( LoadCaption( IDS_DW_LOG_NAME ).utf8_str() ), AFX_IDW_DOCKBAR_BOTTOM, 1.0f, 265 );
+		wxAuiPaneInfo info = DockedPaneInfo( "Log", std::string( LoadCaption( IDS_DW_LOG_NAME ).utf8_str() ), NMainFrameBar::DOCK_BOTTOM, 1.0f, 265 );
 		pManager->AddPane( pPanel, info );
 		return true;
 	}
@@ -469,7 +469,7 @@ namespace NMainFrameWxPanes
 		pPanel->GetSizer()->Add( pWindow, wxSizerFlags( 1 ).Expand() );
 		// MainFrame_Consts.cpp's second docking window, below every Game Database
 		// pane, which CMainFrame docks first.
-		wxAuiPaneInfo info = DockedPaneInfo( "SelectionProperties", std::string( LoadCaption( IDS_DW_PROPERTY_BROWSE_NAME ).utf8_str() ), AFX_IDW_DOCKBAR_LEFT, 0.5f, 265 );
+		wxAuiPaneInfo info = DockedPaneInfo( "SelectionProperties", std::string( LoadCaption( IDS_DW_PROPERTY_BROWSE_NAME ).utf8_str() ), NMainFrameBar::DOCK_LEFT, 0.5f, 265 );
 		info.Position( ID_VIEW_DW_GDB_BROWSER_LAST - ID_VIEW_DW_GDB_BROWSER_FIRST + 1 );
 		pManager->AddPane( pPanel, info );
 		return true;
@@ -505,7 +505,7 @@ namespace NMainFrameWxPanes
 		std::string strCaption = NResources::GetString( IDS_DW_GDB_BROWSE_NAME );
 		// MainFrame_Consts.cpp's first docking window.
 		wxAuiPaneInfo info = DockedPaneInfo( wxString::Format( "GameDatabase%d", contents.GetID() ),
-																				 fmt::sprintf( strCaption.c_str(), nWindowIndex ), AFX_IDW_DOCKBAR_LEFT, 0.5f, 265 );
+																				 fmt::sprintf( strCaption.c_str(), nWindowIndex ), NMainFrameBar::DOCK_LEFT, 0.5f, 265 );
 		info.Position( nWindowIndex );
 		pManager->AddPane( pPanel, info );
 		contents.Start( pBrowser );

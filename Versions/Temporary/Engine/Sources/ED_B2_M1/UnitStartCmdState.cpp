@@ -1031,7 +1031,8 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 	}
 
 	SUnitStartCmdWindowData data;
-	std::vector<byte> usedCommands;
+	// uint8_t, not Windows' byte, which only the MFC headers brought in here.
+	std::vector<uint8_t> usedCommands;
 	usedCommands.resize( commandsList.commands.size(), 0 );
 
 	for ( int i = 0; i < selection.size(); ++i )

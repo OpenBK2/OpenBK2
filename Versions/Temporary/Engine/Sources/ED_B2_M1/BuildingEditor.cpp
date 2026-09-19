@@ -98,7 +98,7 @@ void CBuildingEditor::CreateControls()
 {
 	unsigned nID = ID_BUILDING_EDITOR_DW;
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->
-		CreateControlBar( &nID, "BuildingEditorShortcutBar", CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 200 ) )
+		CreateControlBar( &nID, "BuildingEditorShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_RIGHT, 0.5f, 200 ) )
 	{
 		nID = ID_BUILDING_EDITOR_SHORTCUT_PANE_0;
 		pShortcutBarView.reset( NShortcutBar::Create() );

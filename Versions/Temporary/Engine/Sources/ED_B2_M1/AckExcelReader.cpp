@@ -1,125 +1,204 @@
 #include "stdafx.h"
-#include <afxdb.h> 
-#include <odbcinst.h> 
 #include "AckExcelReader.h"
 
+#include "MapEditorLib/MainWindow.h"
+
+#include <sql.h>
+#include <sqlext.h>
+#include <odbcinst.h>
+
 #include <cstdint>
+#include <cstdlib>
+
+// The acks table, read from the Excel sheet through ODBC.
+//
+// This was an MFC CRecordset over a CDatabase. It is the plain ODBC API now,
+// asking the same question the recordset did: the same connection string, the
+// five columns RFX_Text bound, in that order, from [ACKS$], forward only and
+// read only. A NULL cell reads as an empty string, as RFX_Text left it, and an
+// ODBC failure is shown in a message box, as CDBException::ReportError did,
+// with whatever was read before it kept.
+//
+// The narrow (A) ODBC calls, as MFC's MBCS build made: the driver converts the
+// sheet's text to the process code page, which is UTF-8 here.
 
 namespace NAcks
 {
 
-// Ack RECORDSET 
-class CAckRecordset : public CRecordset
+namespace
 {
-public:
-	CAckRecordset(CDatabase* pDatabase = NULL): CRecordset(pDatabase)
+	// The first installed driver whose name mentions Excel, as before.
+	bool GetExcelODBCDriverName( std::string *pszResult )
 	{
-		m_szSituationCode = _T("");
-		m_szRecordCode = _T("");
-		m_szFileName = _T("");
-		m_szProbability = _T("");
-		m_szSubsetCode = _T("");
-		m_nFields = 5;
-
-		m_nDefaultType = dynamic;
-	}
-
-	DECLARE_DYNAMIC(CAckRecordset)
-
-	CString m_szSituationCode;
-	CString m_szRecordCode;
-	CString m_szFileName;
-	CString m_szProbability;
-	CString m_szSubsetCode;
-public:
-	virtual CString GetDefaultConnect() { return _T("ODBC;DSN=Excel Files"); }
-	virtual CString GetDefaultSQL() { return _T("[ACKS$]"); }
-
-	virtual void DoFieldExchange(CFieldExchange* pFX)
-	{
-		pFX->SetFieldType( CFieldExchange::outputColumn );
-		RFX_Text(pFX, _T("[Situation code name]"), m_szSituationCode, 0xFFFF, SQL_VARCHAR );
-		RFX_Text(pFX, _T("[RecordCode]"), m_szRecordCode, 0xFFFF, SQL_VARCHAR );
-		RFX_Text(pFX, _T("[FileName]"), m_szFileName, 0xFFFF, SQL_VARCHAR );
-		RFX_Text(pFX, _T("[Probability]"), m_szProbability );
-		RFX_Text(pFX, _T("[SUBSET Code]"), m_szSubsetCode );
-	}
-};
-
-IMPLEMENT_DYNAMIC(CAckRecordset, CRecordset)
-
-static bool GetExcelODBCDriverName( CString *pRes )
-{
-	ASSERT( pRes );
-
-	pRes->Empty();
-	TCHAR szBuf[2001];
-	const uint16_t cbBufMax = 2000;
-	uint16_t cbBufOut;
-	LPTSTR pszBuf = szBuf;
-
-	if ( SQLGetInstalledDrivers( szBuf, cbBufMax, &cbBufOut ) )
-	{
-		do
+		pszResult->clear();
+		char szBuffer[2001] = {};
+		WORD nBufferOut = 0;
+		if ( !::SQLGetInstalledDrivers( szBuffer, 2000, &nBufferOut ) )
 		{
-			if( _tcsstr( pszBuf, _T( "Excel" ) ) != 0 )
+			return false;
+		}
+		// A list of names, each ended by a zero, the list by an empty name.
+		for ( const char *pszName = szBuffer; *pszName != '\0'; pszName += strlen( pszName ) + 1 )
+		{
+			if ( strstr( pszName, "Excel" ) != nullptr )
 			{
-				( *pRes ) = pszBuf;
+				*pszResult = pszName;
 				return true;
 			}
-			pszBuf = _tcschr( pszBuf, '\0' ) + 1;
 		}
-		while( pszBuf[1] != '\0' );
+		return false;
 	}
-	return false;
+
+
+	// The first diagnostic record on hHandle, as ReportError showed it.
+	void ReportError( SQLSMALLINT nHandleType, SQLHANDLE hHandle )
+	{
+		SQLCHAR szState[6] = {};
+		SQLCHAR szMessage[SQL_MAX_MESSAGE_LENGTH] = {};
+		SQLINTEGER nNativeError = 0;
+		SQLSMALLINT nMessageLength = 0;
+		std::string szText = "ODBC error";
+		if ( SQL_SUCCEEDED( ::SQLGetDiagRecA( nHandleType, hHandle, 1, szState, &nNativeError, szMessage,
+																				 sizeof( szMessage ), &nMessageLength ) ) )
+		{
+			szText = reinterpret_cast<const char*>( szMessage );
+		}
+		::MessageBoxA( MainWindowHandle(), szText.c_str(), nullptr, MB_ICONEXCLAMATION | MB_OK );
+	}
+
+
+	// Column nColumn of the current row as text; empty for NULL.
+	bool GetText( SQLHSTMT hStatement, SQLUSMALLINT nColumn, std::string *pszText )
+	{
+		pszText->clear();
+		char buffer[1024];
+		for ( ;; )
+		{
+			SQLLEN nIndicator = 0;
+			const SQLRETURN nResult = ::SQLGetData( hStatement, nColumn, SQL_C_CHAR, buffer, sizeof( buffer ), &nIndicator );
+			if ( nResult == SQL_NO_DATA )
+			{
+				return true;
+			}
+			if ( !SQL_SUCCEEDED( nResult ) )
+			{
+				return false;
+			}
+			if ( nIndicator == SQL_NULL_DATA )
+			{
+				return true;
+			}
+			// Truncated: the buffer is full, less its terminator, and the rest
+			// comes from the next call.
+			if ( nResult == SQL_SUCCESS_WITH_INFO && ( nIndicator == SQL_NO_TOTAL || nIndicator >= SQLLEN( sizeof( buffer ) ) ) )
+			{
+				pszText->append( buffer, sizeof( buffer ) - 1 );
+				continue;
+			}
+			pszText->append( buffer, static_cast<size_t>( nIndicator ) );
+			return true;
+		}
+	}
 }
+
 
 bool LoadAcksTable( std::vector<SAckEntry> *pRes, const std::string &szFileName )
 {
-	CDatabase database;
-	CString strDriver;
-	GetExcelODBCDriverName( &strDriver );
-	CString strDsn;
+	std::string szDriver;
+	GetExcelODBCDriverName( &szDriver );
+	// CDatabase::Open took the "ODBC;" prefix off before connecting.
+	const std::string szConnect = "DRIVER={" + szDriver + "};DSN='';DBQ=" + szFileName + ";MAXSCANROWS=0";
 
-	TRY
+	SQLHENV hEnvironment = SQL_NULL_HENV;
+	SQLHDBC hConnection = SQL_NULL_HDBC;
+	SQLHSTMT hStatement = SQL_NULL_HSTMT;
+	bool bConnected = false;
+	if ( SQL_SUCCEEDED( ::SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnvironment ) ) &&
+			 SQL_SUCCEEDED( ::SQLSetEnvAttr( hEnvironment, SQL_ATTR_ODBC_VERSION, reinterpret_cast<SQLPOINTER>( SQL_OV_ODBC3 ), 0 ) ) &&
+			 SQL_SUCCEEDED( ::SQLAllocHandle( SQL_HANDLE_DBC, hEnvironment, &hConnection ) ) )
 	{
-		strDsn.Format( _T( "ODBC;DRIVER={%s};DSN='';DBQ=%s;MAXSCANROWS=0" ), LPCTSTR( strDriver ), szFileName.c_str() );
-		database.Open( NULL, false, false, strDsn );
-		//
-		CAckRecordset rs( &database );
-		rs.Open( CRecordset::forwardOnly, 0, CRecordset::readOnly );
-		std::string szLastNormalSituationCode;
-		while( !rs.IsEOF() )
+		// Read only, as the recordset was opened.
+		::SQLSetConnectAttr( hConnection, SQL_ATTR_ACCESS_MODE, reinterpret_cast<SQLPOINTER>( SQL_MODE_READ_ONLY ), 0 );
+		bConnected = SQL_SUCCEEDED( ::SQLDriverConnectA( hConnection, nullptr,
+																										 reinterpret_cast<SQLCHAR*>( const_cast<char*>( szConnect.c_str() ) ),
+																										 SQL_NTS, nullptr, 0, nullptr, SQL_DRIVER_NOPROMPT ) );
+		if ( !bConnected )
 		{
-			std::vector<SAckEntry>::iterator pos = pRes->insert( pRes->end(), SAckEntry() );
-			//
-			pos->szSituationCode = (LPCSTR)rs.m_szSituationCode;
-			if ( pos->szSituationCode.empty() )
-				pos->szSituationCode = szLastNormalSituationCode;
-			else
-				szLastNormalSituationCode = pos->szSituationCode;
-			pos->szRecordCode = (LPCSTR)rs.m_szRecordCode;
-			pos->szFileName = (LPCSTR)rs.m_szFileName;
-			pos->fProbability = atof( (LPCSTR)rs.m_szProbability );
-			pos->nSubsetCode = rs.m_szSubsetCode.IsEmpty() ? 0 : atoi( (LPCSTR)rs.m_szSubsetCode );
-			//
-			rs.MoveNext();
+			ReportError( SQL_HANDLE_DBC, hConnection );
 		}
 	}
-	CATCH(CDBException , pEx)
-	{
-		pEx->ReportError();
-	}
-	AND_CATCH(CMemoryException, pEx)
-	{
-		pEx->ReportError();
-	}
-	END_CATCH
-	//
-	database.Close();
 
+	if ( bConnected && SQL_SUCCEEDED( ::SQLAllocHandle( SQL_HANDLE_STMT, hConnection, &hStatement ) ) )
+	{
+		// What CRecordset built from GetDefaultSQL and the RFX_Text columns.
+		static const char SELECT[] =
+			"SELECT [Situation code name],[RecordCode],[FileName],[Probability],[SUBSET Code] FROM [ACKS$]";
+		if ( !SQL_SUCCEEDED( ::SQLExecDirectA( hStatement, reinterpret_cast<SQLCHAR*>( const_cast<char*>( SELECT ) ), SQL_NTS ) ) )
+		{
+			ReportError( SQL_HANDLE_STMT, hStatement );
+		}
+		else
+		{
+			std::string szLastNormalSituationCode;
+			std::string szProbability;
+			std::string szSubsetCode;
+			for ( ;; )
+			{
+				const SQLRETURN nFetch = ::SQLFetch( hStatement );
+				if ( nFetch == SQL_NO_DATA )
+				{
+					break;
+				}
+				if ( !SQL_SUCCEEDED( nFetch ) )
+				{
+					ReportError( SQL_HANDLE_STMT, hStatement );
+					break;
+				}
+				SAckEntry entry;
+				if ( !GetText( hStatement, 1, &entry.szSituationCode ) ||
+						 !GetText( hStatement, 2, &entry.szRecordCode ) ||
+						 !GetText( hStatement, 3, &entry.szFileName ) ||
+						 !GetText( hStatement, 4, &szProbability ) ||
+						 !GetText( hStatement, 5, &szSubsetCode ) )
+				{
+					ReportError( SQL_HANDLE_STMT, hStatement );
+					break;
+				}
+				// A blank situation code continues the one above it.
+				if ( entry.szSituationCode.empty() )
+				{
+					entry.szSituationCode = szLastNormalSituationCode;
+				}
+				else
+				{
+					szLastNormalSituationCode = entry.szSituationCode;
+				}
+				entry.fProbability = static_cast<float>( atof( szProbability.c_str() ) );
+				entry.nSubsetCode = szSubsetCode.empty() ? 0 : atoi( szSubsetCode.c_str() );
+				pRes->push_back( entry );
+			}
+		}
+	}
+
+	if ( hStatement != SQL_NULL_HSTMT )
+	{
+		::SQLFreeHandle( SQL_HANDLE_STMT, hStatement );
+	}
+	if ( hConnection != SQL_NULL_HDBC )
+	{
+		if ( bConnected )
+		{
+			::SQLDisconnect( hConnection );
+		}
+		::SQLFreeHandle( SQL_HANDLE_DBC, hConnection );
+	}
+	if ( hEnvironment != SQL_NULL_HENV )
+	{
+		::SQLFreeHandle( SQL_HANDLE_ENV, hEnvironment );
+	}
+	// True even when nothing could be read, as before; the caller treats an
+	// empty table as the failure.
 	return true;
 }
 
 }
-
