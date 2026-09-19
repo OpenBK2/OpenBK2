@@ -102,7 +102,7 @@ class CEntrenchmentState : public CMapObjectState
 	bool CanBuildEntrenchment();
 	void InsertEntrenchment();
 	///
-	CEntrenchmentState::CEntrenchmentState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
+	CEntrenchmentState( CMapObjectMultiState* _pParentState = 0 ) : CMapObjectState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, fmt::format( "CEntrenchmentState(): pParentState == 0" ) );
 		ClearData();

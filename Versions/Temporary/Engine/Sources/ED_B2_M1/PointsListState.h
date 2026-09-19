@@ -123,7 +123,7 @@ public:
 	{
 		NI_ASSERT( 0, "CSurfacePointsState()" );
 	}
-	CSurfacePointsState::CSurfacePointsState( CBuildingEditor* _pBuildingEditor )
+	CSurfacePointsState( CBuildingEditor* _pBuildingEditor )
 		:	CPointsListState( CHID_BUILDING_SURFACE_POINTS_STATE, 3, _pBuildingEditor )	{}
 	//
 	virtual ~CSurfacePointsState() {}
@@ -142,7 +142,7 @@ public:
 	{
 		NI_ASSERT( 0, "CDamageLevelsState()" );
 	}
-	CDamageLevelsState::CDamageLevelsState( CBuildingEditor* _pBuildingEditor )
+	CDamageLevelsState( CBuildingEditor* _pBuildingEditor )
 		:	CPointsListState( CHID_DAMAGE_LEVELS_STATE, 4, _pBuildingEditor )	{}
 	//
 	virtual ~CDamageLevelsState() {}
