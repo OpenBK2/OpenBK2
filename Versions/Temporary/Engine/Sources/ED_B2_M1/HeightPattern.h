@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Misc/2Darray.h"
+// ValidateRect and IsValidPoint, which ApplyHeightPattern calls.
+#include "Misc/PlaneGeometry.h"
 #include <fmt/format.h>
 #include "MapEditorLib/Tools_Gradient.h"
 
@@ -194,56 +196,6 @@ struct SCalculateAverageHeightFunctional
 
 //применение функционалов для всех элементов SHeightPattern.heights
 template<class TYPE>
-bool ApplyHightPatterns( const CTRect<int> &rRect,
-												 const std::vector<SHeightPattern> &rPatterns,
-												 TYPE &rApplyFunctional,								//функционал
-												 bool isIgnoreInvalidIndices = false )	//пропускать обьекты за краями карты
-{
-	for ( int nPatternIndex = 0; nPatternIndex < rPatterns.size(); ++nPatternIndex )
-	{
-		CTRect<int> indices( rPatterns[nPatternIndex].pos.x,
-												 rPatterns[nPatternIndex].pos.y,
-												 rPatterns[nPatternIndex].pos.x + rPatterns[nPatternIndex].heights.GetSizeX(),
-												 rPatterns[nPatternIndex].pos.y + rPatterns[nPatternIndex].heights.GetSizeY() );
-		const int nResult = ValidateRect( rRect, &indices );
-		//нет ни одного вертекса
-		if ( nResult < 0 )
-		{
-			if ( isIgnoreInvalidIndices )
-			{
-				//скипаем обьект, переходим к следующему
-				continue;
-			}
-			else
-			{
-				//возвращаем ошибку
-				return false;
-			}
-		}
-		//некоторые вертексы лишние
-		if ( ( nResult == 0 ) && !isIgnoreInvalidIndices )
-		{
-			//возвращаем ошибку
-			return false;
-		}
-		//пробегаем по тайлам
-		for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
-		{
-			for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
-			{
-				if ( !rApplyFunctional( nXIndex, nYIndex, rPatterns[nPatternIndex].heights[nYIndex - rPatterns[nPatternIndex].pos.y][nXIndex - rPatterns[nPatternIndex].pos.x] * rPatterns[nPatternIndex].fRatio ) )
-				{
-					return false;
-				}
-			}
-		}
-	}
-	return true;
-}
-
-
-//применение функционалов для всех элементов SHeightPattern.heights
-template<class TYPE>
 bool ApplyHeightPattern( const CTRect<int> &rRect,
 												 const SHeightPattern &rPattern,
 												 TYPE &rApplyFunctional,
@@ -286,78 +238,6 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 		}
 	}
 	//	
-	return true;
-}
-
-
-//Специальнй случай - применение функционала в цепочке точек (не нужно создавать несколько функционалов)
-template<class TYPE>
-bool ApplyHeightPatternInChain( const CTRect<int> &rRect,
-																SHeightPattern *pHeightPattern,
-																std::vector<CTPoint<int> > &rPointChain,
-																TYPE &rApplyFunctional,
-																bool isIgnoreInvalidIndices = false,
-																std::vector<CTRect<int> > *pIgnoreRects = 0 )
-{
-	NI_ASSERT_T( pHeightPattern != 0,
-							 NStr::Format( "Wrong parameter: %x\n", pHeightPattern ) );
-
-	for ( int nPointIndex = 0; nPointIndex < rPointChain.size(); ++nPointIndex )
-	{
-		pHeightPattern->pos = rPointChain[nPointIndex];
-		CTRect<int> indices( pHeightPattern->pos.x,
-												 pHeightPattern->pos.y,
-												 pHeightPattern->pos.x + pHeightPattern->heights.GetSizeX(),
-												 pHeightPattern->pos.y + pHeightPattern->heights.GetSizeY() );
-		const int nResult = ValidateRect( rRect, &indices );
-		//нет ни одного вертекса
-		if ( nResult < 0 )
-		{
-			if ( isIgnoreInvalidIndices )
-			{
-				//скипаем обьект, переходим к следующему
-				continue;
-			}
-			else
-			{
-				//возвращаем ошибку
-				return false;
-			}
-		}
-		//некоторые вертексы лишние
-		if ( ( nResult == 0 ) && !isIgnoreInvalidIndices )
-		{
-			//возвращаем ошибку
-			return false;
-		}
-		//пробегаем по тайлам
-		for ( int nXIndex = indices.minx; nXIndex < indices.maxx; ++nXIndex )
-		{
-			for ( int nYIndex = indices.miny; nYIndex < indices.maxy; ++nYIndex )
-			{
-				bool bOutsideIgnoreRects = true;				
-				if ( pIgnoreRects )
-				{
-					for ( int nRectIndex = 0; nRectIndex < pIgnoreRects->size(); ++nRectIndex )
-					{
-						const CTRect<int> &rIgrnoreRect = ( *pIgnoreRects )[nRectIndex];
-						if ( IsValidPoint( rIgrnoreRect, nXIndex, nYIndex ) )
-						{
-							bOutsideIgnoreRects = false;
-							break;	
-						}
-					}
-				}
-				if ( bOutsideIgnoreRects )
-				{
-					if ( !rApplyFunctional( nXIndex, nYIndex, pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] * pHeightPattern->fRatio ) )
-					{
-						return false;
-					}
-				}
-			}
-		}
-	}
 	return true;
 }
 
