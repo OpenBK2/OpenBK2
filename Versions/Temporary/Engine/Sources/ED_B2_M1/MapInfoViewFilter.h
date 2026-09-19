@@ -23,7 +23,4 @@ namespace NMapInfoViewFilter
 	// implementations send the same command the same way.
 	void Apply();
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
-	bool RunWx( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter );
 }

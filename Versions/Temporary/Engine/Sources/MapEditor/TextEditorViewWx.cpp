@@ -702,9 +702,13 @@ namespace
 
 namespace NTextEditor
 {
-	bool RunScriptWx( IWidget *pParent, const std::string &rszTitle, const std::string &rszText,
+	bool RunScript( IWidget *pParent, const std::string &rszTitle, const std::string &rszText,
 										bool bEnableEdit, std::string *pszNewText )
 	{
+		if ( pszNewText == 0 )
+		{
+			return false;
+		}
 		CScriptEditorWxDialog dialog( rszTitle, rszText, bEnableEdit );
 		if ( !dialog.WasPlaced() )
 		{
@@ -721,9 +725,13 @@ namespace NTextEditor
 	}
 
 
-	bool RunTextWx( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
+	bool RunText( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
 									const std::string &rszText, bool bEnableEdit, std::string *pszNewText )
 	{
+		if ( pszNewText == 0 )
+		{
+			return false;
+		}
 		CTextEditorWxDialog dialog( rszTitle, rszEditor, rszText, bEnableEdit );
 		if ( !dialog.WasPlaced() )
 		{

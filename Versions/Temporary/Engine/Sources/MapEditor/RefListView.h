@@ -46,15 +46,6 @@ namespace NRefList
 	void Run( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 						std::list<std::string> *pReferenceObjects );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunScanMfc( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
-									 std::list<std::string> *pReferenceObjects );
-	void RunMfc( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
-							 std::list<std::string> *pReferenceObjects );
-	bool RunScanWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
-									std::list<std::string> *pReferenceObjects );
-	void RunWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
-							std::list<std::string> *pReferenceObjects );
 
 
 	// ---- the part that is not drawing ----

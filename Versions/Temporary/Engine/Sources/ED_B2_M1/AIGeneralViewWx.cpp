@@ -376,7 +376,7 @@ namespace
 
 namespace NAIGeneralView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CAIGeneralWxWindow *pWindow = pTabWindow->AddNewTab( new CAIGeneralWxWindow() );
 		if ( pWindow == 0 )

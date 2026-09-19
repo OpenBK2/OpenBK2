@@ -55,11 +55,7 @@ namespace NProgressView
 	};
 
 
-	// Which implementation the frame gets: wx, unless OBK2_WX_DIALOGS=0. The caller owns
-	// the result and destroys it with delete.
+	// The frame's progress view. The caller owns the result and destroys it with
+	// delete.
 	IView* Create();
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IView* CreateMfc();
-	IView* CreateWx();
 }

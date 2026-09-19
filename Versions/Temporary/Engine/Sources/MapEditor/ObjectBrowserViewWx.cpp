@@ -2873,7 +2873,7 @@ namespace
 
 namespace NObjectBrowser
 {
-	IObjectBrowser* CreateWx()
+	IObjectBrowser* Create()
 	{
 		return new CWxObjectBrowser();
 	}

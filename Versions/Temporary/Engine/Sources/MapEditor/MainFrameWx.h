@@ -5,8 +5,7 @@
 // Both frames stay in the build while the frame moves across, so the two can
 // be run side by side and compared: how they look, how they behave, and how
 // their code reads. Which one a session gets is chosen once, at startup, by
-// OBK2_WX_FRAME in the environment -- not by OBK2_WX_DIALOGS, which picks the
-// toolkit of the views inside whichever frame is up.
+// OBK2_WX_FRAME in the environment. The views inside either frame are wx's.
 //
 // Nothing here names wx, so CEditorApp can ask without knowing.
 #include "MapEditor_export.h"

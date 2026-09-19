@@ -32,8 +32,4 @@ namespace NMapObjectView
 	// returns it ready to be handed to AddTab with a label. Null if it could not
 	// be created.
 	CWnd* Create( CDefault3DTabWindow *pTabWindow );
-
-	// Named so the factory can reach them; not for anything else to call.
-	CWnd* CreateMfc( CDefault3DTabWindow *pTabWindow );
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow );
 }

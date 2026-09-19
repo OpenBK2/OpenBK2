@@ -143,7 +143,7 @@ namespace
 
 namespace NMenuDropDown
 {
-	IView* CreateWx( IWidget *pParent )
+	IView* Create( IWidget *pParent )
 	{
 		return new CWxMenuDropDown( pParent );
 	}

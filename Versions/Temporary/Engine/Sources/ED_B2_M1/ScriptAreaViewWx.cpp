@@ -283,7 +283,7 @@ namespace
 
 namespace NScriptAreaView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CScriptAreaWxWindow *pWindow = pTabWindow->AddNewTab( new CScriptAreaWxWindow() );
 		if ( pWindow == 0 )

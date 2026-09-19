@@ -51,7 +51,4 @@ namespace NPointListView
 	// rows: "<label>   0", "<label>   1", ... Null if it could not be created.
 	CWnd* Create( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
 
-	// Named so the factory can reach them; not for anything else to call.
-	CWnd* CreateMfc( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel );
 }

@@ -41,7 +41,4 @@ namespace NCreateMod
 	// left to the caller because it is one test on a different field.
 	bool IsFolderNameFree( const std::string &rszFolderName );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, SNewMod *pMod );
-	bool RunWx( IWidget *pParent, SNewMod *pMod );
 }

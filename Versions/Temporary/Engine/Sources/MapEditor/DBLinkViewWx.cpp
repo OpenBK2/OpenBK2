@@ -16,6 +16,7 @@
 #include "MapEditorLib/DefaultView.h"
 #include "MapEditorLib/Interface_View.h"
 #include "MapEditorLib/MfcWidget.h"
+#include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxModal.h"
@@ -31,12 +32,14 @@
 #include <wx/msgdlg.h>
 #include <wx/sizer.h>
 #include <wx/stattext.h>
+#include <wx/stc/stc.h>
 
 #include <memory>
 
 // The link picker in wx: IDD_PC_DB_LINK's controls around the wx database
 // browser's contents, made with trees that pick rather than open, and the wx
-// property grid the Selection Properties pane uses.
+// property grid the Selection Properties pane uses. A property whose link says
+// "editor:true" gets IDD_PC_DB_LINK_EX's text editor under the grid as well.
 //
 // As in CPCDBLinkDialog, the picker is CHID_PC_DB_LINK_DIALOG while it is up
 // and every table's tree is told to hand its selection there; the picker
@@ -77,6 +80,16 @@ namespace
 		wxStaticText *pCurrentSelection = nullptr;
 		wxStaticText *pPreviousSelection = nullptr;
 
+		// IDD_PC_DB_LINK_EX's editor under the grid, CPCMultilineStringEditor:
+		// the selected row's value in full, written back when the editor loses
+		// the focus. Only when the request asks for it ("editor:true").
+		wxStyledTextCtrl *pTextEditor = nullptr;
+		// The row it shows, and the text it was given for it, so an edit is
+		// known by the text differing, as CPCMultilineStringEditor knew it.
+		std::string szTextRow;
+		std::string szTextDefault;
+		bool bTextEditable = false;
+
 		const NDBLink::SRequest request;
 		std::string szCurrentTable;
 		std::string szCurrentObject;
@@ -113,8 +126,36 @@ namespace
 
 			wxBoxSizer *const pRight = new wxBoxSizer( wxVERTICAL );
 			pRight->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Properties:" ), labelFlags );
-			pRight->Add( pGrid->GetWindow(), wxSizerFlags( 1 ).Expand() );
-			pRight->Add( pTreeStatus, wxSizerFlags().Expand().Border( wxTOP, FromDIP( 1 ) ) );
+			if ( request.bTextEditor )
+			{
+				// IDD_PC_DB_LINK_EX: the grid over the editor, sharing the height,
+				// or with a fixed height the grid keeps it and the editor grows.
+				if ( request.nFixedHeight > 0 )
+				{
+					pGrid->GetWindow()->SetMinSize( wxSize( -1, request.nFixedHeight ) );
+					pRight->Add( pGrid->GetWindow(), wxSizerFlags().Expand() );
+				}
+				else
+				{
+					pRight->Add( pGrid->GetWindow(), wxSizerFlags( 1 ).Expand() );
+				}
+				pRight->Add( pTreeStatus, wxSizerFlags().Expand().Border( wxTOP, FromDIP( 1 ) ) );
+				pRight->Add( CreateTextEditor(), wxSizerFlags( 1 ).Expand().Border( wxTOP, nGap ) );
+				// IDC_PC_DBL_EDITOR_STATUSBAR, which CScintillaEditorWindow never
+				// wrote to: an empty sunken line, as in the text editor dialog.
+				pRight->Add( NWx::Child<wxStaticText>( this, wxID_ANY, wxString(), wxDefaultPosition, wxSize( -1, FromDIP( 18 ) ),
+																							 wxST_NO_AUTORESIZE | wxBORDER_SUNKEN ),
+										 wxSizerFlags().Expand().Border( wxTOP, FromDIP( 1 ) ) );
+				pGrid->SetSelectionCallback( [this]( const std::string &rszName ) { LoadTextRow( rszName ); } );
+				// An edit through the grid, the editor's own commit, undo and redo:
+				// the row's value may be new.
+				pGrid->SetChangeCallback( [this]() { LoadTextRow( szTextRow ); } );
+			}
+			else
+			{
+				pRight->Add( pGrid->GetWindow(), wxSizerFlags( 1 ).Expand() );
+				pRight->Add( pTreeStatus, wxSizerFlags().Expand().Border( wxTOP, FromDIP( 1 ) ) );
+			}
 
 			// A fixed width keeps the list that wide as the picker grows, as
 			// CPCDBLinkDialog anchored it; otherwise the two halves share the width.
@@ -261,6 +302,8 @@ namespace
 			placement.Save( this );
 			pBrowser->RemoveAllTables();
 			pGrid->GetView()->RemoveViewManipulator();
+			// Nothing for the editor to write to any more; see CommitText.
+			szTextRow.clear();
 			Unregister();
 		}
 
@@ -353,6 +396,103 @@ namespace
 		}
 
 	private:
+		// CScintillaEditorWindow::CreateEx's settings, as the text editor dialog
+		// has them: no margins, CRLF, word wrap.
+		wxStyledTextCtrl* CreateTextEditor()
+		{
+			pTextEditor = NWx::Child<wxStyledTextCtrl>( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_SUNKEN );
+			pTextEditor->SetMarginWidth( 0, 0 );
+			pTextEditor->SetMarginWidth( 1, 0 );
+			pTextEditor->SetMarginWidth( 2, 0 );
+			pTextEditor->SetEOLMode( wxSTC_EOL_CRLF );
+			pTextEditor->SetWrapMode( wxSTC_WRAP_WORD );
+			pTextEditor->SetReadOnly( true );
+			// CPCMultilineStringEditor::OnKillFocus.
+			pTextEditor->Bind( wxEVT_KILL_FOCUS, [this]( wxFocusEvent &rEvent )
+			{
+				rEvent.Skip();
+				CommitText();
+			} );
+			// Its OnChar and PreTranslateMessage: Escape puts the row's value
+			// back rather than closing the picker.
+			pTextEditor->Bind( wxEVT_CHAR_HOOK, [this]( wxKeyEvent &rEvent )
+			{
+				if ( rEvent.GetKeyCode() == WXK_ESCAPE )
+				{
+					SetEditorText( szTextDefault );
+					return;
+				}
+				rEvent.Skip();
+			} );
+			return pTextEditor;
+		}
+
+		void SetEditorText( const std::string &rszText )
+		{
+			// Writable while the text goes in, with no undo history, and the
+			// read-only state after, as CScintillaEditorWindow::SetText did.
+			pTextEditor->SetReadOnly( false );
+			pTextEditor->ClearAll();
+			pTextEditor->AddText( FromNarrow( rszText ) );
+			pTextEditor->EmptyUndoBuffer();
+			pTextEditor->SetReadOnly( !bTextEditable );
+		}
+
+		// CPCMainTreeControl::UpdateMultilineStringEditor: a leaf's value in full,
+		// editable unless the editor is read-only, the row is, or it is a
+		// pointer; anything else shows nothing.
+		void LoadTextRow( const std::string &rszName )
+		{
+			if ( pTextEditor == nullptr )
+			{
+				return;
+			}
+			szTextRow = rszName;
+			szTextDefault.clear();
+			bTextEditable = false;
+			IManipulator *const pManipulator = pGrid->GetView()->GetViewManipulator();
+			if ( ( pManipulator != 0 ) && !rszName.empty() )
+			{
+				const SPropertyDesc *const pDesc = dynamic_cast<const SPropertyDesc*>( pManipulator->GetDesc( rszName ) );
+				const EPCIEType nType = ( pDesc != 0 ) ? typePCIEMnemonics.Get( pDesc, rszName ) : PCIE_UNKNOWN;
+				if ( ( pDesc != 0 ) && typePCIEMnemonics.IsLeaf( nType ) )
+				{
+					if ( !NPropertyPane::GetValueText( pManipulator, rszName, &szTextDefault, true ) )
+					{
+						szTextDefault.clear();
+					}
+					bTextEditable = request.bEnableEdit && !typePCIEMnemonics.IsPointer( nType ) &&
+													!NPropertyPane::IsReadOnly( pManipulator, rszName );
+				}
+			}
+			SetEditorText( szTextDefault );
+		}
+
+		// UpdateValueFromPCItemEditor for the editor: an edited value goes through
+		// the undo list, which redoes it into the grid and, through the change
+		// callback, back into the editor in its stored form. Text that does not
+		// parse puts the stored value back.
+		void CommitText()
+		{
+			IManipulator *const pManipulator = pGrid->GetView()->GetViewManipulator();
+			if ( ( pTextEditor == nullptr ) || !bTextEditable || szTextRow.empty() || ( pManipulator == 0 ) )
+			{
+				return;
+			}
+			const std::string szText( pTextEditor->GetText().utf8_str() );
+			if ( szText == szTextDefault )
+			{
+				return;
+			}
+			CVariant value;
+			CDefaultView *const pView = dynamic_cast<CDefaultView*>( pGrid->GetView() );
+			if ( !NPropertyPane::ParseValueText( pManipulator, szTextRow, szText, &value ) ||
+					 ( pView == 0 ) || !NPropertyPane::CommitValue( pView, szTextRow, value ) )
+			{
+				SetEditorText( szTextDefault );
+			}
+		}
+
 		void Unregister()
 		{
 			if ( bRegistered )
@@ -404,7 +544,7 @@ namespace
 
 namespace NDBLink
 {
-	bool RunWx( IWidget *pParent, const SRequest &rRequest, SResult *pResult )
+	bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult )
 	{
 		// Property buttons edit the shared database immediately. Give this
 		// picker an isolated history so Cancel restores its in-memory edits,

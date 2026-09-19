@@ -238,7 +238,7 @@ namespace
 
 namespace NBuildData
 {
-	bool RunWx( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
+	bool Run( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
 							const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
 							IBuildDataCallback *pBuildDataCallback )
 	{

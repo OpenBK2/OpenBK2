@@ -113,10 +113,6 @@ namespace NObjectBrowser
 {
 	// Owned by the caller.
 	IObjectBrowser* Create();
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IObjectBrowser* CreateMfc();
-	IObjectBrowser* CreateWx();
 }
 
 

@@ -220,7 +220,7 @@ void CPointListDialog::FollowSeason( NDb::ESeason eSeason )
 
 
 // HandleCommand and UpdateCommand were here, answering for every list at
-// once; they are NPointListView's dispatch now, in PointListViewMfc.cpp.
+// once; they are NPointListView's dispatch now, in PointListView.cpp.
 
 
 

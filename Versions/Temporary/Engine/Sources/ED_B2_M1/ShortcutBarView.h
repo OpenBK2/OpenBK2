@@ -64,10 +64,6 @@ namespace NShortcutBar
 	};
 
 
-	// Owned by the caller. Chosen by OBK2_WX_DIALOGS, like every migrated view.
+	// Owned by the caller.
 	IView* Create();
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IView* CreateMfc();
-	IView* CreateWx();
 }

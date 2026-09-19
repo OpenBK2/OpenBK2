@@ -194,7 +194,7 @@ namespace
 
 namespace NUnitStartCmdView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CUnitStartCmdWxWindow *pWindow = pTabWindow->AddNewTab( new CUnitStartCmdWxWindow() );
 		if ( pWindow == 0 )

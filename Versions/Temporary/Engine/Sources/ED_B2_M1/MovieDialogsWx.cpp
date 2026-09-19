@@ -156,8 +156,12 @@ namespace
 
 namespace NMovieSettings
 {
-	bool RunWx( IWidget *pParent, float *pfLength )
+	bool Run( IWidget *pParent, float *pfLength )
 	{
+		if ( pfLength == 0 )
+		{
+			return false;
+		}
 		CMovieSettingsWxDialog dialog( *pfLength );
 		NWxModal::CentreOver( &dialog, pParent );
 		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
@@ -172,8 +176,12 @@ namespace NMovieSettings
 
 namespace NMovieKeySettings
 {
-	bool RunWx( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName )
+	bool Run( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName )
 	{
+		if ( pKey == 0 )
+		{
+			return false;
+		}
 		CMovieKeySettingsWxDialog dialog( *pKey, rszName );
 		NWxPlacement::CPlacement placement( "CMovEditorKeySettingsDlg" );
 		if ( !placement.Restore( &dialog ) )

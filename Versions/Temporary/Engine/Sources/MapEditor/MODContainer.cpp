@@ -4,8 +4,9 @@
 
 #include "MODContainer.h"
 #include "CreateModView.h"
-#include "OpenMODDialog.h"
 #include "OpenModView.h"
+#include "ResourceDefines.h"
+#include "MapEditorLib/ResourceDefines.h"
 #include "Main/MODs.h"
 #include "libdb/Db.h"
 #include "MapEditorLib/Interface_CommandHandler.h"

@@ -25,8 +25,4 @@ namespace NCameraPositionView
 	//
 	// Which implementation is built is decided here and nowhere else.
 	CWnd* Create( CDefault3DTabWindow *pTabWindow );
-
-	// Named so the factory can reach them; not for anything else to call.
-	CWnd* CreateMfc( CDefault3DTabWindow *pTabWindow );
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow );
 }

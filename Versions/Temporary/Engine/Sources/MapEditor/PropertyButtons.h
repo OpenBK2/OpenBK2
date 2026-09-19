@@ -17,13 +17,11 @@
 // dialog -- the database link picker, a file or folder picker, the colour
 // picker, the bit field or text editor -- starting from the text in the value
 // box, and the answer is the text the box holds afterwards. So that is what
-// lives here, once, and the MFC editors and the wx property grid both call it.
+// lives here, once, and the wx property grid calls it.
 //
-// Which dialog a picker is: the colour picker follows OBK2_WX_DIALOGS, as
-// every migrated dialog does. The database link picker is still CPCDBLinkDialog
-// in both, until it is ported. The file and folder pickers are the system's
-// own in both: wxFileDialog on Windows is the same IFileDialog, and takes its
-// owner from a wx parent this editor does not always have.
+// Which dialog a picker is: the colour picker and the database link picker
+// are wx's. The file and folder pickers are still MFC's CFileDialog and the
+// shell's folder browser.
 namespace NPropertyButton
 {
 	enum EButton
@@ -72,7 +70,4 @@ namespace NPropertyButton
 	// True and the colour in *pnResult on OK.
 	bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool PickColourMfc( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
-	bool PickColourWx( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult );
 }

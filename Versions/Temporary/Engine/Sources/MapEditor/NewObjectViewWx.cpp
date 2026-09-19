@@ -25,8 +25,7 @@
 //
 // The rules it enforces are not here. The postfix the Add Type button
 // maintains, and the three conditions that decide whether OK is available, are
-// in NewObjectViewMfc.cpp with the MFC dialog calling them too; see
-// NewObjectView.h for why those two in particular.
+// in NewObjectView.cpp; see NewObjectView.h for why those two in particular.
 //
 // One thing reads oddly and is deliberate: every edit writes straight into the
 // caller's SBuildDataParams, including the ones the user then cancels. That is
@@ -247,9 +246,13 @@ namespace
 
 namespace NNewObject
 {
-	bool RunWx( IWidget *pParent, const std::vector<std::string> &rObjectTypeNameList,
+	bool Run( IWidget *pParent, const std::vector<std::string> &rObjectTypeNameList,
 							int nObjectTypeNameIndex, SBuildDataParams *pBuildDataParams )
 	{
+		if ( pBuildDataParams == 0 )
+		{
+			return false;
+		}
 		CNewObjectWxDialog dialog( rObjectTypeNameList, nObjectTypeNameIndex, pBuildDataParams );
 		if ( !dialog.WasPlaced() )
 		{

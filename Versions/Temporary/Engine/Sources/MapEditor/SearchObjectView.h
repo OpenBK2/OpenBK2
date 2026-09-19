@@ -22,8 +22,4 @@ namespace NSearchObject
 	// *pszText set to the entered text -- which may be empty, because the
 	// dialog does not require anything and neither did the one it replaces.
 	bool Run( IWidget *pParent, std::string *pszText );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, std::string *pszText );
-	bool RunWx( IWidget *pParent, std::string *pszText );
 }

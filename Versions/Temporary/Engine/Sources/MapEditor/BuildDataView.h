@@ -19,12 +19,12 @@ struct IView;
 // wrong with them, the export check and OK. The fields are edited in place,
 // through the undo list, and the builder reads them after OK.
 //
-// What decides whether OK is available is not drawing, and is shared by both
-// implementations in BuildDataViewMfc.cpp: CanAccept below.
+// What decides whether OK is available is not drawing, and lives in
+// BuildDataView.cpp: CanAccept below.
 //
 // The dialog remembers its size, its position and its three column widths, in
-// Editor/ResizeDialogStyles/CPCBuildDataDialog.xml, which both implementations
-// read and write.
+// Editor/ResizeDialogStyles/CPCBuildDataDialog.xml, the file the MFC dialog
+// kept them in.
 namespace NBuildData
 {
 	// Runs the dialog modally over pParent on the build data object
@@ -35,13 +35,6 @@ namespace NBuildData
 						const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
 						IBuildDataCallback *pBuildDataCallback );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
-							 const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
-							 IBuildDataCallback *pBuildDataCallback );
-	bool RunWx( IWidget *pParent, IManipulator *pManipulator, const SObjectSet &rObjectSet,
-							const std::string &rszTemporaryLabel, SBuildDataParams *pBuildDataParams,
-							IBuildDataCallback *pBuildDataCallback );
 
 	// CPCBuildDataDialog::UpdateOKButton: whether OK should be enabled, and the
 	// reason in *pszErrorMessage when it should not -- empty otherwise. With

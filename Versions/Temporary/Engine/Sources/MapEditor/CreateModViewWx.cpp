@@ -148,7 +148,7 @@ namespace
 
 namespace NCreateMod
 {
-	bool RunWx( IWidget *pParent, SNewMod *pMod )
+	bool Run( IWidget *pParent, SNewMod *pMod )
 	{
 		if ( pMod == 0 )
 		{

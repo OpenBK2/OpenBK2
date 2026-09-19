@@ -460,7 +460,7 @@ namespace
 
 namespace NSceneSurface
 {
-	ISceneSurface* CreateWx()
+	ISceneSurface* Create()
 	{
 		return new CWxSceneSurface();
 	}

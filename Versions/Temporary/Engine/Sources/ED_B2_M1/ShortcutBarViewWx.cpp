@@ -277,7 +277,7 @@ namespace
 
 namespace NShortcutBar
 {
-	IView* CreateWx()
+	IView* Create()
 	{
 		return new CWxShortcutBarView();
 	}

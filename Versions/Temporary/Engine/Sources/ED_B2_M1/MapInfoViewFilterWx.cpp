@@ -259,7 +259,7 @@ namespace
 
 namespace NMapInfoViewFilter
 {
-	bool RunWx( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter )
+	bool Run( IWidget *pParent, CMapInfoEditorSettings::SViewFilterData *pFilter )
 	{
 		if ( pFilter == 0 )
 		{

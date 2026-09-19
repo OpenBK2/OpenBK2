@@ -378,7 +378,7 @@ namespace
 
 namespace NUnitStartCmdDialog
 {
-	IDialog* CreateWx( IWidget *pParent, IListener *pListener )
+	IDialog* Create( IWidget *pParent, IListener *pListener )
 	{
 		CWxUnitStartCmdDialog *pDialog = new CWxUnitStartCmdDialog( pParent, pListener );
 		if ( !pDialog->IsAlive() )

@@ -31,11 +31,6 @@ namespace NReinfPointsTemplates
 	bool Run( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
 						CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
-							 CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
-	bool RunWx( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
-							CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint );
 
 	// The Add button: makes a node, asks the add dialog to fill it in, and takes
 	// the node out again if that dialog is cancelled. True when a template was
@@ -59,8 +54,4 @@ namespace NReinfPointsAddTemplate
 	// in or picked through the database link browser. Both are written through
 	// the manipulator on OK, and nothing is written on Cancel.
 	bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
-	bool RunWx( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor );
 }

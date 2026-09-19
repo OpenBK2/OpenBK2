@@ -61,9 +61,7 @@ namespace NHeightViewV3
 	// call it with the name of the selected tile, which is the one thing they
 	// have to work out for themselves.
 	//
-	// Defined in HeightViewV3Mfc.cpp, which is this palette's always-compiled
-	// translation unit -- the wx half is behind OBK2_WITH_WX and cannot hold
-	// anything the MFC half needs.
+	// Defined in HeightViewV3.cpp.
 	void ShowTileProperties( const std::string &rszTileName );
 
 	// Creates the palette inside pTabWindow, registers it in the tab list, and
@@ -71,7 +69,4 @@ namespace NHeightViewV3
 	// be created.
 	CWnd* Create( CDefault3DTabWindow *pTabWindow );
 
-	// Named so the factory can reach them; not for anything else to call.
-	CWnd* CreateMfc( CDefault3DTabWindow *pTabWindow );
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow );
 }

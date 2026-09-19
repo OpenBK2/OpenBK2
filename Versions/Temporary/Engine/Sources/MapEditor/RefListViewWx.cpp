@@ -23,8 +23,8 @@
 //
 // Almost nothing of what these two do is here. Parsing what the scan returned,
 // finding the fields that point at the target and clearing them are in
-// RefListViewMfc.cpp, called by both dialogs; see RefListView.h for why. What
-// is left is two layouts, a timer and a message box.
+// RefListView.cpp; see RefListView.h for why. What is left is two layouts, a
+// timer and a message box.
 
 namespace
 {
@@ -275,9 +275,13 @@ namespace
 
 namespace NRefList
 {
-	bool RunScanWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
+	bool RunScan( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 									std::list<std::string> *pReferenceObjects )
 	{
+		if ( pReferenceObjects == 0 )
+		{
+			return false;
+		}
 		CRefListWaitWxDialog dialog( rszTypeName, rszName, pReferenceObjects );
 		// A scan that is already finished closes the MFC dialog from its
 		// OnInitDialog, before it is ever seen; this simply never shows it.
@@ -296,9 +300,13 @@ namespace NRefList
 	}
 
 
-	void RunWx( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
+	void Run( IWidget *pParent, const std::string &rszTypeName, const std::string &rszName,
 							std::list<std::string> *pReferenceObjects )
 	{
+		if ( pReferenceObjects == 0 )
+		{
+			return;
+		}
 		CRefListWxDialog dialog( rszTypeName, rszName, pReferenceObjects );
 		if ( !dialog.WasPlaced() )
 		{

@@ -266,7 +266,7 @@ namespace
 
 namespace NPointListView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow, unsigned nInstanceID, const std::string &rszLabel )
 	{
 		// Handed over as a CWnd: AddNewTab<T> also compiles a `new T()` for a null
 		// argument, and this class has no default constructor -- it is nothing

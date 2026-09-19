@@ -330,7 +330,7 @@ namespace
 
 namespace NMiniMapView
 {
-	IView* CreateWx()
+	IView* Create()
 	{
 		return new CWxMiniMapView;
 	}

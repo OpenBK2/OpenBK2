@@ -199,7 +199,7 @@ namespace
 
 namespace NFormationView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CFormationWxWindow *pWindow = pTabWindow->AddNewTab( new CFormationWxWindow() );
 		if ( pWindow == 0 )

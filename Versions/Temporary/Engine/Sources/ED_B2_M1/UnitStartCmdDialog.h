@@ -101,8 +101,4 @@ namespace NUnitStartCmdDialog
 	// result and destroys it with delete, which destroys the window with it.
 	// Null if the window could not be created.
 	IDialog* Create( IWidget *pParent, IListener *pListener );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IDialog* CreateMfc( IWidget *pParent, IListener *pListener );
-	IDialog* CreateWx( IWidget *pParent, IListener *pListener );
 }

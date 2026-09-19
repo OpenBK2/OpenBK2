@@ -778,7 +778,7 @@ namespace
 
 namespace NVSOView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CVSOWxWindow *pWindow = pTabWindow->AddNewTab( new CVSOWxWindow() );
 		if ( pWindow == 0 )

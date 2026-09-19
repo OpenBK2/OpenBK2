@@ -19,10 +19,6 @@ namespace NMovieSettings
 	// *pfLength set on OK; false and *pfLength untouched on Cancel. What does
 	// not parse is 0, as it always was.
 	bool Run( IWidget *pParent, float *pfLength );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, float *pfLength );
-	bool RunWx( IWidget *pParent, float *pfLength );
 }
 
 
@@ -33,8 +29,4 @@ namespace NMovieKeySettings
 	// key's bIsTangentIn, bIsTangentOut and szKeyParam are set; on Cancel it is
 	// untouched.
 	bool Run( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
-	bool RunWx( IWidget *pParent, NDb::SScriptMovieKeyPos *pKey, const std::string &rszName );
 }

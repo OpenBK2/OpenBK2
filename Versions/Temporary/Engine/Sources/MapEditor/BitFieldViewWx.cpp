@@ -14,7 +14,7 @@
 
 // The bit field editor in wx: a check list of the flag names over OK and
 // Cancel. Which names, which are checked and what OK writes are all
-// NBitField's, in BitFieldViewMfc.cpp.
+// NBitField's, in BitFieldView.cpp.
 
 namespace
 {
@@ -95,7 +95,7 @@ namespace
 
 namespace NBitField
 {
-	bool RunWx( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize )
+	bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize )
 	{
 		CBitFieldWxDialog dialog( rszFieldsFile, pData, nSize );
 		if ( !dialog.WasPlaced() )

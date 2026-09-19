@@ -18,10 +18,6 @@ namespace NAIGenMobileDialog
 	// True and *pMobileID set on OK; false and *pMobileID untouched on Cancel.
 	// What does not parse as a number is 0, as it always was.
 	bool Run( IWidget *pParent, int *pMobileID );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, int *pMobileID );
-	bool RunWx( IWidget *pParent, int *pMobileID );
 }
 
 
@@ -30,8 +26,4 @@ namespace NAIGenParcelDialog
 	// Asks for a parcel's type and importance, starting from what is passed in.
 	// True and both set on OK; false and both untouched on Cancel.
 	bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, NDb::EParcelType *pType, float *pImportance );
-	bool RunWx( IWidget *pParent, NDb::EParcelType *pType, float *pImportance );
 }

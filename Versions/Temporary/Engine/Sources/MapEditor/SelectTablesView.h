@@ -35,8 +35,4 @@ namespace NSelectTables
 	bool Run( IWidget *pParent,
 						const std::list<std::string> &rTables,
 						CTableSet *pSelectedTables );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
-	bool RunWx( IWidget *pParent, const std::list<std::string> &rTables, CTableSet *pSelectedTables );
 }

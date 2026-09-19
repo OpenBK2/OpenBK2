@@ -14,7 +14,6 @@ set(SOURCES
     Initialize.cpp
     ParticleExporter.cpp
     RunModeInterfaceBase.cpp
-    SceneSurfaceMfc.cpp
     SceneSurfaceWx.cpp
     stdafx.cpp
     StoreObjectExporter.cpp

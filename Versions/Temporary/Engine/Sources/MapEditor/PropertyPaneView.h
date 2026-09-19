@@ -47,12 +47,9 @@ struct IPropertyPane
 
 namespace NPropertyPane
 {
-	// Owned by the caller. Chosen by OBK2_WX_DIALOGS, like every migrated view.
+	// Owned by the caller.
 	IPropertyPane* Create();
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IPropertyPane* CreateMfc();
-	IPropertyPane* CreateWx();
 
 
 	// ---- the part that is not drawing ----
@@ -149,6 +146,11 @@ namespace NPropertyPane
 		// Called after the object under the grid changes -- an edit, an undo, a
 		// redo -- where the tree sent WM_PC_MANIPULATOR_CHANGE to its dialog.
 		virtual void SetChangeCallback( const std::function<void()> &rCallback ) = 0;
+		// Called with the selected row's full name when the user selects a row,
+		// with an empty one when none is selected, and again once the tree has
+		// been built. What CPCMainTreeControl::UpdateMultilineStringEditor was
+		// driven by, for the link picker's text editor.
+		virtual void SetSelectionCallback( const std::function<void( const std::string& )> &rCallback ) = 0;
 		// The three column widths, for a dialog that keeps them in the file its
 		// placement is in. False until the grid has been laid out.
 		virtual bool GetColumnWidths( int *pnWidths ) const = 0;

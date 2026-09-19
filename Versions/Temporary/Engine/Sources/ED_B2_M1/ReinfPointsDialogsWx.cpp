@@ -292,9 +292,13 @@ namespace
 
 namespace NReinfPointsTemplates
 {
-	bool RunWx( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
+	bool Run( IWidget *pParent, CReinfPointsState::CTypedTemplateType *pTemplates,
 							CMapInfoEditor *pMapInfoEditor, int nPlayer, int nReinfPoint )
 	{
+		if ( pTemplates == 0 || pMapInfoEditor == 0 )
+		{
+			return false;
+		}
 		CReinfPointsTemplatesWxDialog dialog( pTemplates, pMapInfoEditor, nPlayer, nReinfPoint );
 		NWxModal::CentreOver( &dialog, pParent );
 		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
@@ -309,8 +313,12 @@ namespace NReinfPointsTemplates
 
 namespace NReinfPointsAddTemplate
 {
-	bool RunWx( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor )
+	bool Run( IWidget *pParent, const std::string &rszNode, CMapInfoEditor *pMapInfoEditor )
 	{
+		if ( pMapInfoEditor == 0 )
+		{
+			return false;
+		}
 		CAddTemplateWxDialog dialog( rszNode, pMapInfoEditor );
 		NWxModal::CentreOver( &dialog, pParent );
 		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )

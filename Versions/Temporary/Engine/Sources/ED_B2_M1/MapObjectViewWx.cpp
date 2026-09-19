@@ -659,7 +659,7 @@ namespace
 
 namespace NMapObjectView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CMapObjectWxWindow *pWindow = pTabWindow->AddNewTab( new CMapObjectWxWindow() );
 		if ( pWindow == 0 )

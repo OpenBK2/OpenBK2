@@ -19,8 +19,7 @@ namespace NEnterName
 	// an empty one means. False on Cancel or the close box, *pszName untouched.
 	bool Run( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	// *pszName carries the starting text in and the result out.
-	bool RunMfc( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
+	// The dialog itself, for Run; not for anything else to call. *pszName
+	// carries the starting text in and the result out.
 	bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName );
 }

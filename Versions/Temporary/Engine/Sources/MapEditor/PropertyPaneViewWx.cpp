@@ -536,6 +536,8 @@ namespace
 		bool bColumnsClipped = false;
 		// The dialog around the grid, told after undo and redo.
 		std::function<void()> changeCallback;
+		// The dialog around the grid, told which row is selected.
+		std::function<void( const std::string& )> selectionCallback;
 		// CPCMainTreeControl's newElementExpandMode: Expand All and Collapse All
 		// decide for rows added afterwards, until the next full build.
 		EExpandMode eExpandMode = EXPAND_USER_DEFINED;
@@ -558,6 +560,11 @@ namespace
 		void SetChangeCallback( const std::function<void()> &rCallback )
 		{
 			changeCallback = rCallback;
+		}
+
+		void SetSelectionCallback( const std::function<void( const std::string& )> &rCallback )
+		{
+			selectionCallback = rCallback;
 		}
 
 		// First, second and third, as CPCDialog::OnDestroy measured them. False
@@ -632,6 +639,9 @@ namespace
 				SelectByName( CurrentPropertyName() );
 			}
 			bCreateControls = false;
+			// The selection above raised no event the callback hears, so the
+			// dialog is told here what the rebuilt tree has selected.
+			NotifySelection();
 			UpdateStatus();
 		}
 
@@ -2015,6 +2025,17 @@ namespace
 			// right-clicked. Selecting is as good a sign of the user's attention.
 			RegisterAsHandler();
 			UpdateStatus();
+			NotifySelection();
+		}
+
+		void NotifySelection()
+		{
+			if ( !selectionCallback )
+			{
+				return;
+			}
+			const wxPGProperty *const pProperty = ( ( pManager != nullptr ) && ( GetViewManipulator() != 0 ) ) ? pManager->GetSelection() : nullptr;
+			selectionCallback( ( pProperty != nullptr ) ? FullName( pProperty ) : std::string() );
 		}
 
 		void OnExpanded( wxPropertyGridEvent &rEvent )
@@ -2336,6 +2357,11 @@ namespace
 			view.SetChangeCallback( rCallback );
 		}
 
+		virtual void SetSelectionCallback( const std::function<void( const std::string& )> &rCallback )
+		{
+			view.SetSelectionCallback( rCallback );
+		}
+
 		virtual bool GetColumnWidths( int *pnWidths ) const
 		{
 			return view.GetColumnWidths( pnWidths );
@@ -2346,7 +2372,7 @@ namespace
 
 namespace NPropertyPane
 {
-	IPropertyPane* CreateWx()
+	IPropertyPane* Create()
 	{
 		return new CWxPropertyPane();
 	}

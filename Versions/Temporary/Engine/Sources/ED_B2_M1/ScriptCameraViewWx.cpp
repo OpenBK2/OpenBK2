@@ -459,7 +459,7 @@ namespace
 
 namespace NScriptCameraView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CScriptCameraWxWindow *pWindow = pTabWindow->AddNewTab( new CScriptCameraWxWindow() );
 		if ( pWindow == 0 )

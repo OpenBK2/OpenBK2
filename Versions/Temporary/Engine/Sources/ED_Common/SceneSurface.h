@@ -59,9 +59,6 @@ struct ISceneSurface
 
 namespace NSceneSurface
 {
-	// The surface this session uses: the wx one, as for every other migrated
-	// piece, unless OBK2_WX_DIALOGS=0 asks for the MFC one.
+	// The surface this session uses. Owned by the caller.
 	ISceneSurface* Create();
-	ISceneSurface* CreateMfc();
-	ISceneSurface* CreateWx();
 }

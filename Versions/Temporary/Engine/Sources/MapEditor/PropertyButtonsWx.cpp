@@ -9,7 +9,7 @@ namespace NPropertyButton
 {
 	// The picker the model palette already opens: owned by the frame, modal over
 	// it, and keeping the user's custom colours as ChooseColor kept them.
-	bool PickColourWx( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
+	bool PickColour( IWidget *pOwner, uint32_t nStart, uint32_t *pnResult )
 	{
 		if ( pnResult == 0 )
 		{

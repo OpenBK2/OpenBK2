@@ -31,10 +31,6 @@ namespace NModelView
 		virtual IWidget* GetWidget() = 0;
 	};
 
-	// The view for this session: wx, unless OBK2_WX_DIALOGS=0 asks for MFC.
+	// The view for this session. Owned by the caller.
 	IView* Create();
-
-	// Named so the factory can reach them; not for anything else to call.
-	IView* CreateMfc();
-	IView* CreateWx();
 }

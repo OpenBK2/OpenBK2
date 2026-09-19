@@ -21,8 +21,4 @@ namespace NOpenMod
 	// and accepted, with *pMod set to it; false on cancel, or on OK with nothing
 	// valid selected, which the dialog does not allow anyway.
 	bool Run( IWidget *pParent, NMOD::SMOD *pMod );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, NMOD::SMOD *pMod );
-	bool RunWx( IWidget *pParent, NMOD::SMOD *pMod );
 }

@@ -11,8 +11,4 @@
 namespace NAbout
 {
 	void Run( IWidget *pParent );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	void RunMfc( IWidget *pParent );
-	void RunWx( IWidget *pParent );
 }

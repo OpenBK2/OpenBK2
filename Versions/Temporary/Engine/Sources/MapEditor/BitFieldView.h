@@ -29,9 +29,6 @@ namespace NBitField
 	// rewritten from the checks and the answer is true; Cancel leaves them alone.
 	bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
-	bool RunWx( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize );
 
 
 	// ---- the part that is not drawing ----

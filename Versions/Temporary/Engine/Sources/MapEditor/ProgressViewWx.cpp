@@ -218,7 +218,7 @@ namespace
 
 namespace NProgressView
 {
-	IView* CreateWx()
+	IView* Create()
 	{
 		return new CWxProgressView;
 	}

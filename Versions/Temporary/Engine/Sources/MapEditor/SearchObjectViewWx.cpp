@@ -84,7 +84,7 @@ namespace
 
 namespace NSearchObject
 {
-	bool RunWx( IWidget *pParent, std::string *pszText )
+	bool Run( IWidget *pParent, std::string *pszText )
 	{
 		if ( pszText == 0 )
 		{

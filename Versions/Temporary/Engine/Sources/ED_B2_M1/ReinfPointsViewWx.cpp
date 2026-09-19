@@ -305,7 +305,7 @@ namespace
 
 namespace NReinfPointsView
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		CReinfPointsWxWindow *pWindow = pTabWindow->AddNewTab( new CReinfPointsWxWindow() );
 		if ( pWindow == 0 )

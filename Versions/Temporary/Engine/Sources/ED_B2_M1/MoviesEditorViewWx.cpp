@@ -1068,7 +1068,7 @@ namespace
 
 namespace NMoviesEditorView
 {
-	IView* CreateWx()
+	IView* Create()
 	{
 		return new CWxMoviesEditorView;
 	}

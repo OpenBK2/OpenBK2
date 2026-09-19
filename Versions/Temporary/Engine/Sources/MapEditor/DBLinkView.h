@@ -62,8 +62,4 @@ namespace NDBLink
 	// Runs the picker modally over pParent. True on OK or Set Empty, with what
 	// was selected in *pResult.
 	bool Run( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
-
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunMfc( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
-	bool RunWx( IWidget *pParent, const SRequest &rRequest, SResult *pResult );
 }

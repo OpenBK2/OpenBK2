@@ -218,7 +218,7 @@ namespace
 
 namespace NOpenMod
 {
-	bool RunWx( IWidget *pParent, NMOD::SMOD *pMod )
+	bool Run( IWidget *pParent, NMOD::SMOD *pMod )
 	{
 		if ( pMod == 0 )
 		{

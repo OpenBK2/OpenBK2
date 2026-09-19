@@ -39,15 +39,6 @@ namespace NTextEditor
 	bool RunText( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
 								const std::string &rszText, bool bEnableEdit, std::string *pszNewText );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	bool RunScriptMfc( IWidget *pParent, const std::string &rszTitle, const std::string &rszText,
-										 bool bEnableEdit, std::string *pszNewText );
-	bool RunTextMfc( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
-									 const std::string &rszText, bool bEnableEdit, std::string *pszNewText );
-	bool RunScriptWx( IWidget *pParent, const std::string &rszTitle, const std::string &rszText,
-										bool bEnableEdit, std::string *pszNewText );
-	bool RunTextWx( IWidget *pParent, const std::string &rszTitle, const std::string &rszEditor,
-									const std::string &rszText, bool bEnableEdit, std::string *pszNewText );
 
 
 	// ---- the part that is not drawing ----

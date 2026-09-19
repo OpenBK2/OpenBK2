@@ -2,15 +2,11 @@ project(ED_B2_M1)
 set(SOURCES
     AckExcelReader.cpp
     AckSetBuilder.cpp
-    AIGeneralDialogsMfc.cpp
     AIGeneralDialogsWx.cpp
     AIGeneralState.cpp
     AIGeneralTypes.cpp
-    AIGeneralViewMfc.cpp
     AIGeneralViewWx.cpp
     AIGeneralWindow.cpp
-    AIGenMobileIDDlg.cpp
-    AIGenParcelDlg.cpp
     aiObject.cpp
     AnimationBuilder.cpp
     AnimationExporter.cpp
@@ -25,7 +21,6 @@ set(SOURCES
     BuildingRPGStatsExporter.cpp
     BuildingState.cpp
     CameraPositionState.cpp
-    CameraPositionViewMfc.cpp
     CameraPositionViewWx.cpp
     CameraPositionWindow.cpp
     CampaignExporter.cpp
@@ -51,13 +46,11 @@ set(SOURCES
     EditorTestInterface.cpp
     EditorTestState.cpp
     EditorUpdatableWorld.cpp
-    EdUnitStartCmd.cpp
     ED_B2_M1Dll.cpp
     EffectEditor.cpp
     EffectInterface.cpp
     EffectState.cpp
-    EnterNameDialog.cpp
-    EnterNameMfc.cpp
+    EnterName.cpp
     EnterNameWx.cpp
     EntrenchmentExporter.cpp
     EntrenchmentInfoData.cpp
@@ -67,26 +60,22 @@ set(SOURCES
     FenceRPGStatsExporter.cpp
     FenceState.cpp
     FieldState.cpp
-    FieldViewMfc.cpp
     FieldViewWx.cpp
     FieldWindow.cpp
     FormationMnemonics.cpp
     FormationsState.cpp
-    FormationViewMfc.cpp
     FormationViewWx.cpp
-    FormationWindow.cpp
     GameRootExporter.cpp
     GeometryExporter.cpp
     HeightContainer.cpp
     HeightPattern.cpp
     HeightStateV3.cpp
-    HeightViewV3Mfc.cpp
+    HeightViewV3.cpp
     HeightViewV3Wx.cpp
     HeightWindowV3.cpp
     HPObjectRPGStatsExporter.cpp
     IconsCreation.cpp
     InfantryRPGStatsBuilder.cpp
-    KeySettingsDlg.cpp
     LakeState.cpp
     LightExporter.cpp
     MapInfoBuilder.cpp
@@ -103,13 +92,11 @@ set(SOURCES
     MapInfoInterface.cpp
     MapInfoState.cpp
     MapInfoStoreInputState.cpp
-    MapInfoViewFilterDlg.cpp
-    MapInfoViewFilterMfc.cpp
+    MapInfoViewFilter.cpp
     MapInfoViewFilterWx.cpp
     MapObjectDataExtractor.cpp
     MapObjectMultiState.cpp
     MapObjectState.cpp
-    MapObjectViewMfc.cpp
     MapObjectViewWx.cpp
     MapObjectWindow.cpp
     MarkerSet.cpp
@@ -118,25 +105,19 @@ set(SOURCES
     MinimapExporter.cpp
     MinimapImage.cpp
     MinimapMnemonics.cpp
-    MiniMapViewMfc.cpp
+    MiniMapView.cpp
     MiniMapViewWx.cpp
-    MiniMapWindow.cpp
     MiniMap_ImageCreation.cpp
     ModelEditor.cpp
     ModelEditorSettings.cpp
     ModelExporter.cpp
     ModelInterface.cpp
     ModelState.cpp
-    ModelViewMfc.cpp
     ModelViewWx.cpp
     ModelWindow.cpp
-    MovEditorSettingsWindow.cpp
-    MovieDialogsMfc.cpp
     MovieDialogsWx.cpp
     MoviesEditorData.cpp
-    MoviesEditorViewMfc.cpp
     MoviesEditorViewWx.cpp
-    MoviesEditorWindow.cpp
     MusicTrackExporter.cpp
     ObjectBaseRPGStatsExporter.cpp
     ObjectProperties.cpp
@@ -144,34 +125,25 @@ set(SOURCES
     ObjectRPGStatsExporter.cpp
     PassabilityProfile.cpp
     PointListDialog.cpp
-    PointListViewMfc.cpp
+    PointListView.cpp
     PointListViewWx.cpp
     PointsListState.cpp
     PolygonState.cpp
     ReinforcementTypes.cpp
     ReinfPointsDialogs.cpp
-    ReinfPointsDialogsMfc.cpp
     ReinfPointsDialogsWx.cpp
     ReinfPointsState.cpp
-    ReinfPointsTypedDlg.cpp
-    ReinfPointsTypedTemplateAddDlg.cpp
-    ReinfPointsViewMfc.cpp
     ReinfPointsViewWx.cpp
     ReinfPointsWindow.cpp
     RiverState.cpp
     RoadState.cpp
     ScriptAreaState.cpp
-    ScriptAreaViewMfc.cpp
     ScriptAreaViewWx.cpp
-    ScriptAreaWindow.cpp
     ScriptCameraEditorData.cpp
     ScriptCameraState.cpp
     ScriptPathPointsState.cpp
-    ScriptCameraViewMfc.cpp
     ScriptCameraViewWx.cpp
-    ShortcutBarViewMfc.cpp
     ShortcutBarViewWx.cpp
-    ScriptCameraWindow.cpp
     SeasonMnemonics.cpp
     SimpleObjectInfoData.cpp
     SimpleObjectState.cpp
@@ -193,17 +165,14 @@ set(SOURCES
     TerrainState.cpp
     TGNoiseExporter.cpp
     TileDataExtractor.cpp
-    TimeSliderControl.cpp
     Tools_SceneDraw.cpp
     Tools_SceneGeometry.cpp
     TraceModel.cpp
     UIScene.cpp
     UnitAnimationExporter.cpp
     UnitDesignTypes.cpp
-    UnitStartCmdDialogMfc.cpp
     UnitStartCmdDialogWx.cpp
     UnitStartCmdState.cpp
-    UnitStartCmdViewMfc.cpp
     UnitStartCmdViewWx.cpp
     UnitStartCmdWindow.cpp
     VisObjBuilder.cpp
@@ -212,7 +181,6 @@ set(SOURCES
     VSOMultiState.cpp
     VSOState.cpp
     VSOStateEx.cpp
-    VSOViewMfc.cpp
     VSOViewWx.cpp
     VSOWindow.cpp
     WeaponMnemonics.cpp

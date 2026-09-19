@@ -1,18 +1,14 @@
 project(MapEditor)
 set(SOURCES
-    AboutDialog.cpp
-    AboutViewMfc.cpp
     AboutViewWx.cpp
-    BinaryBitFieldDialog.cpp
-    BitFieldViewMfc.cpp
+    BitFieldView.cpp
     BitFieldViewWx.cpp
     BuilderContainer.cpp
     ChildFrameContainer.cpp
     ComboBox_GDBBrowser.cpp
     CommandHandlerContainer.cpp
     ControllerContainer.cpp
-    CreateMODDialog.cpp
-    CreateModViewMfc.cpp
+    CreateModView.cpp
     CreateModViewWx.cpp
     DefaultChildFrame.cpp
     DefaultDockingWindow.cpp
@@ -39,23 +35,19 @@ set(SOURCES
     MainFrame_Consts.cpp
     MapEditorApp.cpp
     MapEditorSingleton.cpp
-    MDDLDialog.cpp
-    MenuDropDownViewMfc.cpp
+    MenuDropDownView.cpp
     MenuDropDownViewWx.cpp
     MODContainer.cpp
     NewObjectDialog.cpp
-    NewObjectViewMfc.cpp
+    NewObjectView.cpp
     NewObjectViewWx.cpp
     ObjectCollector.cpp
-    OpenMODDialog.cpp
-    OpenModViewMfc.cpp
     OpenModViewWx.cpp
     PC_BaseDialog.cpp
     PC_BinaryBitFieldEditor.cpp
     PC_BoolCheckBoxEditor.cpp
     PC_BoolComboEditor.cpp
     PC_BoolSwitcherEditor.cpp
-    PC_BuildDataDialog.cpp
     PC_DBLinkDialog.cpp
     PC_Dialog.cpp
     PC_EditorButton.cpp
@@ -87,36 +79,24 @@ set(SOURCES
     PC_StringSliderEditor.cpp
     PC_TextFileEditor.cpp
     PC_Vec3ColorEditor.cpp
-    ProgressDialog.cpp
-    ProgressViewMfc.cpp
     ProgressViewWx.cpp
-    BuildDataViewMfc.cpp
+    BuildDataView.cpp
     BuildDataViewWx.cpp
-    DBLinkViewMfc.cpp
     DBLinkViewWx.cpp
-    ObjectBrowserViewMfc.cpp
     ObjectBrowserViewWx.cpp
-    PropertyButtonsMfc.cpp
+    PropertyButtons.cpp
     PropertyButtonsWx.cpp
-    PropertyPaneViewMfc.cpp
+    PropertyPaneView.cpp
     PropertyPaneViewWx.cpp
-    RefListDialog.cpp
-    RefListViewMfc.cpp
+    RefListView.cpp
     RefListViewWx.cpp
-    RefListWaitDialog.cpp
     RegisterEditors.cpp
     ReplaceTextDlg.cpp
-    ScriptEditor.cpp
-    SearchObjectDialog.cpp
-    SearchObjectViewMfc.cpp
     SearchObjectViewWx.cpp
-    SelectTablesDialog.cpp
-    SelectTablesViewMfc.cpp
     SelectTablesViewWx.cpp
     SortTreeControl.cpp
     stdafx.cpp
-    TextEditorDialog.cpp
-    TextEditorViewMfc.cpp
+    TextEditorView.cpp
     TextEditorViewWx.cpp
     Tree_GDBBrowser.cpp
     Tree_GDBBrowserBase.cpp

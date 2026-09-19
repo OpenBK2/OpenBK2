@@ -32,9 +32,6 @@ namespace NMenuDropDown
 	// this call. The caller owns the result and deletes it.
 	IView* Create( IWidget *pParent );
 
-	// Named so the dispatcher can reach them; not for anything else to call.
-	IView* CreateMfc( IWidget *pParent );
-	IView* CreateWx( IWidget *pParent );
 
 	// What choosing entry nIndex does, in both: the controller container is
 	// sent nCommandID with the index as its data. A negative index, which is

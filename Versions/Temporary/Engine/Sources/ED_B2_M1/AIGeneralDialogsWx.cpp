@@ -147,7 +147,7 @@ namespace
 
 namespace NAIGenMobileDialog
 {
-	bool RunWx( IWidget *pParent, int *pMobileID )
+	bool Run( IWidget *pParent, int *pMobileID )
 	{
 		if ( pMobileID == 0 )
 		{
@@ -174,7 +174,7 @@ namespace NAIGenMobileDialog
 
 namespace NAIGenParcelDialog
 {
-	bool RunWx( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
+	bool Run( IWidget *pParent, NDb::EParcelType *pType, float *pImportance )
 	{
 		if ( ( pType == 0 ) || ( pImportance == 0 ) )
 		{

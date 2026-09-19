@@ -681,7 +681,7 @@ namespace
 
 namespace NModelView
 {
-	IView* CreateWx()
+	IView* Create()
 	{
 		return new CWxModelView();
 	}

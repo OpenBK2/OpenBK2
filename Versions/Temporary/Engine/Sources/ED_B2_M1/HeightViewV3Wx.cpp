@@ -847,7 +847,7 @@ namespace
 
 namespace NHeightViewV3
 {
-	CWnd* CreateWx( CDefault3DTabWindow *pTabWindow )
+	CWnd* Create( CDefault3DTabWindow *pTabWindow )
 	{
 		// AddNewTab with a pointer rather than a null one: the template only
 		// allocates when handed nothing, and this needs building before it is
