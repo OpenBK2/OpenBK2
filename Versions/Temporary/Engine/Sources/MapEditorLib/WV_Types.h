@@ -51,52 +51,10 @@ namespace NWV
 		}
 		
 		//
-		//доступ к элементам через оператор
-		const TYPE& operator[]( int nElementIndex ) const
-		{ 
-			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-									NStr::Format("Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
-			return elements[nElementIndex];
-		}
-		//
-		TYPE& operator[]( int nElementIndex )
-		{ 
-			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-									NStr::Format("Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
-			return elements[nElementIndex];
-		}
-		
-		//
-		//доступ к элементам через функции
-		const TYPE& Get( int nElementIndex ) const
-		{
-			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-									NStr::Format("Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
-			return elements[nElementIndex];
-		}
-		//
-		void Set( int nElementIndex, const TYPE &rElement )
-		{
-			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-									NStr::Format("Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
-			elements[nElementIndex] = rElement;
-		}
-		//
-		int GetWeight( int nElementIndex ) const
-		{
-			NI_ASSERT_T( ( nElementIndex >=0 ) && ( nElementIndex < elements.size() ),
-									NStr::Format("Index (%d) miss in SWeightVector (%d)", nElementIndex, elements.size() ) );
-			return ( nElementIndex > 0 ) ? ( weights[nElementIndex] - weights[nElementIndex - 1] ) : weights[nElementIndex];
-		}
-		//
-		void SetWeight( int nElementIndex, int nWeight )
-		{
-			int nAdditionalWeight = nWeight - GetWeight( nElementIndex );
-			for ( int nInnerIndex = nElementIndex; nInnerIndex < elements.size(); ++nInnerIndex )
-			{
-				weights[nInnerIndex] += nAdditionalWeight;
-			}
-		}
+		// Indexed access (operator[], Get, Set), per-element weights (GetWeight,
+		// SetWeight) and erase are gone: nothing called them, and they asserted
+		// through NI_ASSERT_T and NStr::Format, which do not exist, so they had
+		// never been instantiated.
 
 		//
 		//методы аналогичные std::vector методам
@@ -111,17 +69,6 @@ namespace NWV
 			{
 				weights.push_back( nWeight );
 			}
-		}
-		//
-		void erase( int nElementIndex )
-		{
-			int nErasedWeight = GetWeight( nElementIndex );
-			for ( int nInnerIndex = nElementIndex + 1; nInnerIndex < weights.size(); ++nInnerIndex )
-			{
-				weights[nInnerIndex] -= nErasedWeight;
-			}
-			elements.erase( elements.begin() + nElementIndex );
-			weights.erase( weights.begin() + nElementIndex );
 		}
 		//
 		inline int size() const { return elements.size(); }
