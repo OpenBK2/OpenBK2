@@ -1,5 +1,10 @@
 #pragma once
 
+// INVALID_NODE_ID, which Insert tests the index against.
+#include "libdb/Manipulator.h"
+// Move is gone: it had no callers, and it compared an nIndex it does not
+// have, so it could never have been instantiated.
+
 template<class TID>
 class CIndexCollector
 {
@@ -87,46 +92,6 @@ public:
 		const unsigned nIndex = posID0->second;
 		posID0->second = posID1->second;
 		posID1->second = nIndex;
-		return true;
-	}
-	//
-	bool Move( const TID &rID, const unsigned nNewIndex, bool bSearchIndices )
-	{
-		if ( ( rID == invalidID ) || ( nIndex == invalidID ) )
-		{
-			return false;
-		}
-		//
-		typename CIDToIndexMap::iterator posID = idToIndexMap.find( rID );
-		if ( posID == idToIndexMap.end() )
-		{
-			return false;
-		}
-		if ( bSearchIndices )
-		{
-			const unsigned nOldIndex = posID->second;
-			if ( nNewIndex < nOldIndex )
-			{
-				for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
-				{
-					if ( ( itID->second >= nNewIndex ) && ( itID->second < nOldIndex ) )
-					{
-						++( itID->second );
-					}
-				}
-			}
-			else if ( nNewIndex > nOldIndex )
-			{
-				for ( typename CIDToIndexMap::iterator itID = idToIndexMap.begin(); itID != idToIndexMap.end(); ++itID )
-				{
-					if ( ( itID->second <= nNewIndex ) && ( itID->second > nOldIndex ) )
-					{
-						--( itID->second );
-					}
-				}
-			}
-		}
-		posID->second = nNewIndex;
 		return true;
 	}
 	// быстрые операции
