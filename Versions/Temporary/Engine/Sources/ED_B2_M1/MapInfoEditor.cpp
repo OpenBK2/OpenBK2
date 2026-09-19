@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
@@ -438,7 +439,7 @@ void CMapInfoEditor::Destroy()
 {
 	if ( Singleton<IMainFrameContainer>() &&
 			 Singleton<IMainFrameContainer>()->Get() &&
-			 MainFrameWnd() )
+			 Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
 		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
@@ -2202,7 +2203,7 @@ void CMapInfoEditor::RunGame()
 		return;
 	// IMainFrameContainer hands out a toolkit-neutral IWidget now, not a Stingray
 	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
-	const HWND hwndOwner = MainFrameWnd()->GetSafeHwnd();
+	const HWND hwndOwner = MainWindowHandle();
 	const auto ReportError = [hwndOwner]( const std::string &message ) {
 		::MessageBox( hwndOwner, message.c_str(), "Start Mission in Game", MB_OK | MB_ICONERROR );
 	};

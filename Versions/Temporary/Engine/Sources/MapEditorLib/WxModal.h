@@ -30,7 +30,7 @@
 
 
 #include "Interface_Widget.h"
-#include "MfcWidget.h"
+#include "WxWidget.h"
 
 #include <wx/dialog.h>
 
@@ -79,8 +79,8 @@ namespace NWxModal
 	// replaced.
 	inline HWND FindOwnerFrame( IWidget *pOwner )
 	{
-		CWnd *const pwndOwner = ToCWnd( pOwner );
-		HWND hwndOwner = pwndOwner != 0 ? pwndOwner->GetSafeHwnd() : 0;
+		wxWindow *const pOwnerWindow = ToWxWindow( pOwner );
+		HWND hwndOwner = ( pOwnerWindow != nullptr ) ? static_cast<HWND>( pOwnerWindow->GetHandle() ) : 0;
 		if ( hwndOwner != 0 )
 		{
 			hwndOwner = ::GetAncestor( hwndOwner, GA_ROOT );

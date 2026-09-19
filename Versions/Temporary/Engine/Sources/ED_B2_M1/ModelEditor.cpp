@@ -201,7 +201,7 @@ void CModelEditor::Destroy()
 {
 	if ( Singleton<IMainFrameContainer>() &&
 			 Singleton<IMainFrameContainer>()->Get() &&
-			 MainFrameWnd() )
+			 Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
 		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );

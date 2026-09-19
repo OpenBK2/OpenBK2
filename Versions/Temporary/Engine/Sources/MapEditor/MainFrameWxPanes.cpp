@@ -8,7 +8,6 @@
 
 
 #include <fmt/printf.h>
-#include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxResourceImages.h"
@@ -325,11 +324,10 @@ namespace NMainFrameWxPanes
 	}
 
 
-	// What an MFC dialog asks for as its owner, the only use left for a
-	// window's CWnd: the main window, as for a view's host.
+	// The panel's handle.
 	void* CFrameWindow::GetNativeWidget()
 	{
-		return MainFrameWnd();
+		return pPanel ? pPanel->GetHandle() : nullptr;
 	}
 
 
@@ -373,7 +371,7 @@ namespace NMainFrameWxPanes
 	// As CFrameWindow's.
 	void* CDockPanel::GetNativeWidget()
 	{
-		return MainFrameWnd();
+		return pPanel ? pPanel->GetHandle() : nullptr;
 	}
 
 

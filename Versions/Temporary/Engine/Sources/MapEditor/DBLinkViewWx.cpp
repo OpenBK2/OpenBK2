@@ -22,7 +22,7 @@
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
-#include "MapEditorLib/WxMfcOwnerDialog.h"
+#include "MapEditorLib/WxOwnerDialog.h"
 #include "libdb/ResourceManager.h"
 
 #include <fmt/format.h>
@@ -46,7 +46,7 @@
 // answers as a CPCBaseDialog, with the grid. A double click on an object is OK.
 //
 // Like the build data dialog, it is the owner of what its grid's buttons and
-// its trees' commands open: a CWxMfcOwnerDialog.
+// its trees' commands open: a CWxOwnerDialog.
 
 namespace
 {
@@ -69,7 +69,7 @@ namespace
 	}
 
 
-	class CDBLinkWxDialog : public CWxMfcOwnerDialog, public CPCBaseDialog, public IObjectBrowser::IListener
+	class CDBLinkWxDialog : public CWxOwnerDialog, public CPCBaseDialog, public IObjectBrowser::IListener
 	{
 		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 		// Members, so both go before the base's owner; and the browser after the
@@ -101,7 +101,7 @@ namespace
 
 	public:
 		explicit CDBLinkWxDialog( const NDBLink::SRequest &rRequest )
-			: CWxMfcOwnerDialog( nullptr, wxID_ANY, "Game Data Base Link", wxDefaultPosition, wxDefaultSize,
+			: CWxOwnerDialog( nullptr, wxID_ANY, "Game Data Base Link", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				request( rRequest ), szCurrentTable( rRequest.szTable ), szCurrentObject( rRequest.szObject )
 		{
@@ -116,9 +116,9 @@ namespace
 			wxStaticText *const pTreeStatus = NWx::Child<wxStaticText>( this, wxID_ANY, wxString(), wxDefaultPosition,
 																																	wxSize( -1, FromDIP( 18 ) ),
 																																	wxST_NO_AUTORESIZE | wxST_ELLIPSIZE_END | wxBORDER_SUNKEN );
-			pGrid.reset( NPropertyPane::CreateGridWx( this, pTreeStatus, GetMfcOwner(), PSZ_STATE_NAME ) );
+			pGrid.reset( NPropertyPane::CreateGridWx( this, pTreeStatus, GetOwnerWidget(), PSZ_STATE_NAME ) );
 			wxWindow *pBrowserWindow = nullptr;
-			pBrowser.reset( NObjectBrowser::CreateWxIn( this, GetMfcOwner(), this, IObjectBrowser::KIND_LINK, &pBrowserWindow ) );
+			pBrowser.reset( NObjectBrowser::CreateWxIn( this, GetOwnerWidget(), this, IObjectBrowser::KIND_LINK, &pBrowserWindow ) );
 
 			wxBoxSizer *const pLeft = new wxBoxSizer( wxVERTICAL );
 			pLeft->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Objects:" ), labelFlags );

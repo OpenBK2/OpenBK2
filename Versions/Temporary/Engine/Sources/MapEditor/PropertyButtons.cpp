@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
@@ -379,7 +380,7 @@ namespace
 			strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
 			CString strMessage;
 			strMessage.Format( strMessagePattern, rszFilePath.c_str() );
-			if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
+			if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
 			{
 				String2File( szNewText, bUnicode, rszFilePath, ::GetACP(), false );
 				NText::Reload( rszFilePath );

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -1074,7 +1075,7 @@ void CVSOState::RemoveSelectedVSO()
 			AfxSetResourceHandle( theEDB2M1Instance );
 			strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 			AfxSetResourceHandle( AfxGetInstanceHandle() );
-			if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+			if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 			{
 				NHPTimer::STime time = 0;
 				NHPTimer::GetTime( &time );

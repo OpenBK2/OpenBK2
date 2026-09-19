@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -407,20 +408,20 @@ void CGDBBrowserContents::OnCheckIn()
 	//
 	if ( bResult )
 	{
-		AfxMessageBox( "Check in completed successfully.\r\n\r\n"
+		::MessageBox( MainWindowHandle(), "Check in completed successfully.\r\n\r\n"
 				"MapEditor will exit now.",
-				MB_OK | MB_ICONINFORMATION
+				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONINFORMATION
 				);
 	}
 	else
 	{
-		AfxMessageBox( "Check in failed.\r\n\r\n"
+		::MessageBox( MainWindowHandle(), "Check in failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database,\r\n"
 				"call to MapEditor's gurus immediately and do not try to start MapEditor again until they come.\r\n\r\n"
 				"MapEditor will exit now.",
-				MB_OK | MB_ICONERROR
+				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONERROR
 				);
 	}
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
@@ -442,19 +443,19 @@ void CGDBBrowserContents::OnGetLatest()
 	catch (...)	{}
 	if ( bResult )
 	{
-		AfxMessageBox( "\"Get latest\" completed successfully\r\n\r\n"
+		::MessageBox( MainWindowHandle(), "\"Get latest\" completed successfully\r\n\r\n"
 				"MapEditor will exit now.",
-				MB_OK | MB_ICONINFORMATION
+				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONINFORMATION
 				);
 	}
 	else
 	{
-		AfxMessageBox( "Game database Get Latest operation has failed.\r\n\r\n"
+		::MessageBox( MainWindowHandle(), "Game database Get Latest operation has failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database, call to MapEditor's gurus immediately and do not try to start MapEditor again until they're come.\r\n\r\n"
 				"MapEditor will exit now.",
-				MB_OK | MB_ICONERROR
+				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONERROR
 				);
 	}
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );

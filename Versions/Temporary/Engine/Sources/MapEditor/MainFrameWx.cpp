@@ -50,11 +50,10 @@
 // MainFrameWxPanes.h), and their layout, kept between sessions and put back
 // by Reset GUI. Customize, Stingray's toolbar editor, has no counterpart.
 //
-// What stays MFC for now, on purpose. The editors and dialogs still want the
-// main window as a CWnd -- AfxGetMainWnd(), MainFrameWnd(), a CDialog's owner --
-// so the frame's handle is attached to one and that is the MFC application's
-// main window. Attached, not subclassed: MFC's handle map knows the window, and
-// its window procedure is still wx's alone.
+// It is the main window as a widget, too (IWidget, IWxWidget): what dialogs are
+// owned by, and MainWindowHandle's answer. It used to have a CWnd attached over
+// its handle, as the MFC application's main window, for the editors and
+// dialogs that wanted one; nothing does any more.
 //
 // Where this differs from CMainFrame in ways that show:
 //
@@ -527,20 +526,8 @@ namespace
 	}
 
 
-	class CWxMainFrame : public wxFrame, public IMainFrame, public ICommandHandler, public IWidget
+	class CWxMainFrame : public wxFrame, public IMainFrame, public ICommandHandler, public IWidget, public IWxWidget
 	{
-		// A CWnd over the frame's handle, for as long as the handle lives.
-		class CMfcWindow : public CWnd
-		{
-		public:
-			virtual ~CMfcWindow()
-			{
-				// Before CWnd's destructor, which would destroy the window.
-				Detach();
-			}
-		};
-
-		CMfcWindow mfcWindow;
 		NMainFrameWxPanes::CAuiManager auiManager;
 		// Every menu bar the application added, by resource id. The frame owns
 		// the attached one while it is attached; this map owns them all.
@@ -584,7 +571,6 @@ namespace
 			: wxFrame( nullptr, wxID_ANY, wxString::FromUTF8( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() ) )
 		{
 			Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
-			mfcWindow.Attach( GetHWND() );
 			Bind( wxEVT_CLOSE_WINDOW, &CWxMainFrame::OnCloseWindow, this );
 			Bind( wxEVT_AUI_PANE_CLOSE, [this]( wxAuiManagerEvent &rEvent )
 			{
@@ -603,14 +589,6 @@ namespace
 		virtual ~CWxMainFrame()
 		{
 			auiManager.UnInit();
-			if ( CWinApp *const pApp = AfxGetApp() )
-			{
-				if ( pApp->m_pMainWnd == &mfcWindow )
-				{
-					pApp->m_pMainWnd = 0;
-				}
-			}
-			mfcWindow.Detach();
 			DetachMenuBar();
 			for ( std::map<unsigned, wxMenuBar*>::iterator itMenuBar = menuBars.begin(); itMenuBar != menuBars.end(); ++itMenuBar )
 			{
@@ -621,14 +599,8 @@ namespace
 			{
 				pCommandHandlerContainer->Remove( CHID_VIEW );
 			}
-			// CMainFrame ends the message loop from OnNcDestroy, which MFC does
-			// for the application's main window. MFC does not own this one.
+			// Ends the message loop, as CMainFrame's OnNcDestroy did.
 			::PostQuitMessage( 0 );
-		}
-
-		CWnd* GetMfcWindow()
-		{
-			return &mfcWindow;
 		}
 
 		virtual wxStatusBar* OnCreateStatusBar( int nNumber, long nStyle, wxWindowID id, const wxString &rName ) override
@@ -723,11 +695,16 @@ namespace
 			Update();
 		}
 
-		// IWidget: what dialogs, message boxes and popup menus are owned by.
-		// The MFC front-end's side of that is a CWnd, so it is the attached one.
+		// IWidget and IWxWidget: what dialogs, message boxes and popup menus are
+		// owned by.
 		virtual void* GetNativeWidget()
 		{
-			return static_cast<CWnd*>( &mfcWindow );
+			return GetHWND();
+		}
+
+		virtual wxWindow* GetWxWindow()
+		{
+			return this;
 		}
 
 		// IMainFrame
@@ -1905,9 +1882,6 @@ namespace NMainFrameWx
 	bool Create()
 	{
 		s_pFrame = NWx::TopLevel<CWxMainFrame>();
-		// Before Build, which is where the editors make their controls and may
-		// already ask for the main window.
-		AfxGetApp()->m_pMainWnd = s_pFrame->GetMfcWindow();
 		s_pFrame->Build();
 		return true;
 	}

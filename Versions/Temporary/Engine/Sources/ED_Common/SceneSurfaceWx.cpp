@@ -35,16 +35,8 @@
 
 namespace
 {
-	// A wx window, as the focus notifications carry the other window. The input
-	// states only pass it on.
-	class CWxWindowWidget : public IWidget
-	{
-		wxWindow *pWindow;
-
-	public:
-		explicit CWxWindowWidget( wxWindow *_pWindow ) : pWindow( _pWindow ) {}
-		virtual void* GetNativeWidget() { return pWindow; }
-	};
+	// A wx window, as the focus notifications carry the other window, is a
+	// CWxWindowWidget (WxWidget.h). The input states only pass it on.
 
 
 	class CUpdateTimer : public wxTimer

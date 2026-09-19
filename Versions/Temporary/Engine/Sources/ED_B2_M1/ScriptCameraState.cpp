@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
@@ -518,7 +519,7 @@ bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage,
+	if ( ::MessageBox( MainWindowHandle(), strMessage,
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -638,7 +639,7 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage,
+	if ( ::MessageBox( MainWindowHandle(), strMessage,
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( !IsCameraPlacementInDB(nCamera) )
@@ -766,7 +767,7 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 
 	CString strMessage;
 	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( bDeleteWholeSequence || (::MessageBox(MainFrameWnd()->GetSafeHwnd(), strMessage,
+	if ( bDeleteWholeSequence || (::MessageBox(MainWindowHandle(), strMessage,
 																						 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) )
 	{
 		//const float fMaxDiff = 0.1f;

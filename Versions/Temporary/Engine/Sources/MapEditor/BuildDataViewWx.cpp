@@ -13,7 +13,7 @@
 #include "MapEditorLib/WxModal.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
-#include "MapEditorLib/WxMfcOwnerDialog.h"
+#include "MapEditorLib/WxOwnerDialog.h"
 
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
@@ -33,7 +33,7 @@
 //     under this dialog. So the dialog's own handle is attached to a CWnd:
 //     attaching only puts it in MFC's handle map, it does not subclass, and
 //     MFC's owner search stops at a window that is not a child. That is
-//     CWxMfcOwnerDialog, which also keeps the frame from disabling the dialog
+//     CWxOwnerDialog, which also keeps the frame from disabling the dialog
 //     in turn.
 //   * **Hear about changes.** CPCMainTreeControl sent WM_PC_MANIPULATOR_CHANGE
 //     to its dialog after every undo and redo, and the dialog checked OK again.
@@ -52,7 +52,7 @@ namespace
 	const int N_COLUMN_COUNT = 3;
 
 
-	class CBuildDataWxDialog : public CWxMfcOwnerDialog, public CPCBaseDialog
+	class CBuildDataWxDialog : public CWxOwnerDialog, public CPCBaseDialog
 	{
 		NWxPlacement::CSizedPlacement placement { PSZ_STATE_NAME };
 		// A member, so it goes before the base's owner: the grid's window is taken
@@ -71,7 +71,7 @@ namespace
 
 	public:
 		CBuildDataWxDialog( SBuildDataParams *_pBuildDataParams, IBuildDataCallback *_pBuildDataCallback )
-			: CWxMfcOwnerDialog( nullptr, wxID_ANY, "Create Game Data Base Object",
+			: CWxOwnerDialog( nullptr, wxID_ANY, "Create Game Data Base Object",
 											 wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				pBuildDataParams( _pBuildDataParams ), pBuildDataCallback( _pBuildDataCallback )
@@ -84,7 +84,7 @@ namespace
 			pName = NWx::Child<wxTextCtrl>( this, wxID_ANY );
 			pNameRow->Add( pName, wxSizerFlags( 1 ).CentreVertical() );
 
-			pGrid.reset( NPropertyPane::CreateGridWx( this, nullptr, GetMfcOwner(), PSZ_STATE_NAME ) );
+			pGrid.reset( NPropertyPane::CreateGridWx( this, nullptr, GetOwnerWidget(), PSZ_STATE_NAME ) );
 			// The tree's status window was never connected; the line under it
 			// shows what is wrong with the fields.
 			pStatus = NWx::Child<wxStaticText>( this, wxID_ANY, wxString(), wxDefaultPosition,

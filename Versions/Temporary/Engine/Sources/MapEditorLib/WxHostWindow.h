@@ -16,7 +16,6 @@
 
 
 #include "Interface_Widget.h"
-#include "MfcWidget.h"
 #include "WxOwnership.h"
 #include "WxWidget.h"
 
@@ -51,11 +50,10 @@ class CWxHostWindow : public IWidget, public IWxWidget
 	}
 
 public:
-	// IWidget. What a view opens its dialogs over. The host has no MFC window,
-	// so the main window answers for it.
+	// IWidget. The panel's handle.
 	virtual void* GetNativeWidget()
 	{
-		return MainFrameWnd();
+		return pPanel ? pPanel->GetHandle() : nullptr;
 	}
 
 	// IWxWidget. The panel, which is what the parent lays out.

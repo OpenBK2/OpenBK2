@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -554,7 +555,7 @@ void CModelState::SaveCamera( bool bDefaultCamera )
 			AfxSetResourceHandle( theEDB2M1Instance );
 			strMessage.LoadString( IDS_MODEL_SAVE_CAMERA_MESSAGE );
 			AfxSetResourceHandle( AfxGetInstanceHandle() );
-			if ( ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+			if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 			{
 				pCameraPlacement = &( pModelEditor->editorSettings.defaultCamera );
 			}
@@ -624,17 +625,19 @@ void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {
 	if ( pModelEditor != 0 )
 	{
-		CMenu mainPopupMenu;
-		AfxSetResourceHandle( theEDB2M1Instance );
-		mainPopupMenu.LoadMenu( IDM_MODEL_CONTEXT_MENU );
-		AfxSetResourceHandle( AfxGetInstanceHandle() );
-		CMenu *pMenu = mainPopupMenu.GetSubMenu( MCM_STATE );
-		if ( pMenu )
+		// The menu from this module's resources, tracked over the main window,
+		// which gets the command chosen as a WM_COMMAND. Win32's calls, where
+		// MFC's CMenu wrapped the same ones.
+		const HMENU hMainPopupMenu = ::LoadMenuW( theEDB2M1Instance, MAKEINTRESOURCEW( IDM_MODEL_CONTEXT_MENU ) );
+		if ( const HMENU hMenu = ( hMainPopupMenu != 0 ) ? ::GetSubMenu( hMainPopupMenu, MCM_STATE ) : 0 )
 		{
-			pMenu->TrackPopupMenu( TPM_LEFTALIGN | TPM_LEFTBUTTON, rMousePoint.x, rMousePoint.y, MainFrameWnd(), 0 );
+			::TrackPopupMenu( hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON, rMousePoint.x, rMousePoint.y, 0, MainWindowHandle(), 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
 		}
-		mainPopupMenu.DestroyMenu();
+		if ( hMainPopupMenu != 0 )
+		{
+			::DestroyMenu( hMainPopupMenu );
+		}
 	}
 }
 

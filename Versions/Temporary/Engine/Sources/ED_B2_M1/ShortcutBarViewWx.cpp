@@ -59,19 +59,6 @@ namespace
 	}
 
 
-	// A notebook page, as the parent a palette's Create is given.
-	class CPageWidget : public IWidget, public IWxWidget
-	{
-		wxWindow *pPage;
-
-	public:
-		explicit CPageWidget( wxWindow *_pPage ) : pPage( _pPage ) {}
-		// What a dialog asks for as its owner.
-		virtual void* GetNativeWidget() { return MainFrameWnd(); }
-		virtual wxWindow* GetWxWindow() { return pPage; }
-	};
-
-
 	class CWxShortcutBarView : public CWxHostWindow, public NShortcutBar::IView
 	{
 		struct SBar
@@ -227,7 +214,8 @@ namespace
 			}
 			wxPanel *const pPage = NWx::Child<wxPanel>( pBar->pTabs, wxID_ANY );
 			pPage->SetSizer( new wxBoxSizer( wxVERTICAL ) );
-			CPageWidget page( pPage );
+			// The page, as the parent a palette's Create is given.
+			CWxWindowWidget page( pPage );
 			IWidget *const pPalette = rFactory( &pBar->owner, &page );
 			CWxHostWindow *const pHost = dynamic_cast<CWxHostWindow*>( pPalette );
 			if ( ( pHost == nullptr ) || ( pHost->Root() == nullptr ) )

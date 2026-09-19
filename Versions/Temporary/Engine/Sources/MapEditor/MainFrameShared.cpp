@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/MainWindow.h"
 
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -187,7 +188,7 @@ namespace NMainFrameShared
 					}
 					CString strMessage;
 					strMessage.Format( strMessagePattern, szName.c_str() );
-					const int nButtonPressed = ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 					if ( nButtonPressed == IDCANCEL )
 					{
 						return false;
@@ -198,7 +199,7 @@ namespace NMainFrameShared
 				{
 					CString strMessagePattern;
 					strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
-					const int nButtonPressed = ::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessagePattern, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessagePattern, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 					if ( nButtonPressed == IDCANCEL )
 					{
 						return false;
@@ -568,7 +569,7 @@ namespace NMainFrameShared
 
 	void RegisterXDB( const std::function<void()> &rReloadData )
 	{
-		const HWND hwndOwner = MainFrameWnd()->GetSafeHwnd();
+		const HWND hwndOwner = MainWindowHandle();
 		const auto ReportError = [hwndOwner]( const std::string &message ) {
 			::MessageBox( hwndOwner, message.c_str(), "Register XDB", MB_OK | MB_ICONERROR );
 		};
@@ -688,7 +689,7 @@ namespace NMainFrameShared
 			CString strMessage;
 			strMessagePattern.LoadString( IDS_NO_HELP_FILE_MESSAGE );
 			strMessage.Format( strMessagePattern, rszHelpFilePath.c_str() );
-			::MessageBox( MainFrameWnd()->GetSafeHwnd(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONERROR | MB_OK );
+			::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONERROR | MB_OK );
 		}
 	}
 
