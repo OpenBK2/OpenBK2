@@ -14,9 +14,6 @@
 #include "SpotDataExtractor.h"
 #include "TileDataExtractor.h"
 #include "VSODataExtractor.h"
-#include "VSOWindow.h"
-#include "HeightWindowV3.h"
-#include "MapObjectWindow.h"
 
 namespace
 {
@@ -103,10 +100,13 @@ void CEditorModuleB2M1::ModuleCreate()
 	// вызывается до создания MainFrame
 	//
 	Singleton<IObjectCollector>()->RegisterDataExtractor( new CMapObjectDataExtractor() );
-	Singleton<IObjectCollector>()->RegisterDataExtractor( CMapObjectWindow::MAPOBJECT_EXTRACTOR_TYPE, new CMapObjectDataExtractor() );
-	Singleton<IObjectCollector>()->RegisterDataExtractor( CMapObjectWindow::SPOT_EXTRACTOR_TYPE, new CSpotDataExtractor() );
-	Singleton<IObjectCollector>()->RegisterDataExtractor( CHeightWindowV3::EXTRACTOR_TYPE, new CTileDataExtractor() );
-	Singleton<IObjectCollector>()->RegisterDataExtractor( CVSOWindow::EXTRACTOR_TYPE, new CVSODataExtractor() );
+	// The extractor types, which the palettes' filters are keyed on too. They
+	// were constants on the MFC palettes (CMapObjectWindow, CHeightWindowV3,
+	// CVSOWindow), which are gone.
+	Singleton<IObjectCollector>()->RegisterDataExtractor( "MAPOBJECT", new CMapObjectDataExtractor() );
+	Singleton<IObjectCollector>()->RegisterDataExtractor( "SPOT", new CSpotDataExtractor() );
+	Singleton<IObjectCollector>()->RegisterDataExtractor( "TILE", new CTileDataExtractor() );
+	Singleton<IObjectCollector>()->RegisterDataExtractor( "VSO", new CVSODataExtractor() );
 	LoadFilters();
 	//
 	Singleton<IBuilderContainer>()->Create( "AnimB2" );

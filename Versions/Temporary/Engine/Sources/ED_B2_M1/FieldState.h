@@ -31,7 +31,6 @@ class CFieldState : public CPolygonState
 	// Friend классы
 	friend class CMultiInputState;
 	friend class CMapInfoState;
-	friend class CFieldWindow;
 
 	// константы
 	static const char FIELD_TYPE_NAME[];

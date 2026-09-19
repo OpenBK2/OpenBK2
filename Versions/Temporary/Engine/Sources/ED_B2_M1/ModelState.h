@@ -38,7 +38,6 @@ class CModelEditor;
 class CModelState : public CDefaultInputState, public ICommandHandler
 {
 	friend class CModelEditor;
-	friend class CModelWindow;
 
 	// Public, as every other state's palette struct is. It was private and
 	// reached through the friend declaration above, which served while there

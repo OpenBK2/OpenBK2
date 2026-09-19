@@ -4,7 +4,7 @@
 #include "MapInfoEditor.h"
 #include "SimpleObjectState.h"
 #include "UnitStartCmdDialog.h"
-#include "UnitStartCmdWindow.h"
+#include "UnitStartCmdData.h"
 
 #include <cstdint>
 

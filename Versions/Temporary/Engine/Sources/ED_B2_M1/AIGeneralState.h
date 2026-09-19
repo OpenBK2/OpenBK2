@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AIGeneralWindow.h"
+#include "AIGeneralData.h"
 
 #include "MapInfoEditor.h"
 

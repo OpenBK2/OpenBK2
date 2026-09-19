@@ -38,7 +38,6 @@ set(SOURCES
     ObjectFilter.cpp
     PCIEMnemonics.cpp
     Progress.cpp
-    ResizeDialog.cpp
     ShellFont.cpp
     stdafx.cpp
     StoreInputState.cpp

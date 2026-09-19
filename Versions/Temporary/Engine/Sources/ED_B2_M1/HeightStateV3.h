@@ -125,7 +125,6 @@ class CHeightStateV3 : public CMultiInputState, public ICommandHandler
 {
 	friend class CMultiInputState;
 	friend class CMapInfoState;
-	friend class CHeightWindowV3;
 	friend class CHeightTileStateV3;
 	friend class CHeightUpStateV3;
 	friend class CHeightDownStateV3;

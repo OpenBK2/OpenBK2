@@ -8,7 +8,7 @@
 #include "DrawToolsDC.h"
 
 #include "ReinfPointsState.h"
-#include "ReinfPointsWindow.h"
+#include "ReinfPointsData.h"
 #include "ReinfPointsDialogs.h"
 
 #include <cstdint>

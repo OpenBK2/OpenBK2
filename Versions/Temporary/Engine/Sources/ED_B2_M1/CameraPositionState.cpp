@@ -13,7 +13,7 @@
 #include "SceneB2/Camera.h"
 
 #include "CameraPositionState.h"
-#include "CameraPositionWindow.h"
+#include "CameraPositionData.h"
 
 #include <cstdint>
 

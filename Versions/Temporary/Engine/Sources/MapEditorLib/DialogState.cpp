@@ -3,8 +3,12 @@
 #include "DialogState.h"
 
 #include "Interface_UserData.h"
-#include "ResizeDialog.h"		// RESIZE_DIALOG_OPTIONS_FILE_NAME
 #include "Tools_Resources.h"
+
+// Where every dialog keeps its placement and parameters. Was defined in
+// ResizeDialog.h, with CResizeDialog, the MFC dialog base that first wrote
+// these files.
+#define RESIZE_DIALOG_OPTIONS_FILE_NAME "Editor\\ResizeDialogStyles\\"
 
 // The chunk names and ids are exactly what CResizeDialog::SOptions used, because
 // they are the on-disk format of every Editor/ResizeDialogStyles/*.xml that

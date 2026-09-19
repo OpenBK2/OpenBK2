@@ -6,7 +6,6 @@ set(SOURCES
     AIGeneralState.cpp
     AIGeneralTypes.cpp
     AIGeneralViewWx.cpp
-    AIGeneralWindow.cpp
     aiObject.cpp
     AnimationBuilder.cpp
     AnimationExporter.cpp
@@ -22,7 +21,6 @@ set(SOURCES
     BuildingState.cpp
     CameraPositionState.cpp
     CameraPositionViewWx.cpp
-    CameraPositionWindow.cpp
     CampaignExporter.cpp
     CFC_SceneB2.cpp
     CF_SceneB2.cpp
@@ -61,7 +59,6 @@ set(SOURCES
     FenceState.cpp
     FieldState.cpp
     FieldViewWx.cpp
-    FieldWindow.cpp
     FormationMnemonics.cpp
     FormationsState.cpp
     FormationViewWx.cpp
@@ -72,7 +69,6 @@ set(SOURCES
     HeightStateV3.cpp
     HeightViewV3.cpp
     HeightViewV3Wx.cpp
-    HeightWindowV3.cpp
     HPObjectRPGStatsExporter.cpp
     IconsCreation.cpp
     InfantryRPGStatsBuilder.cpp
@@ -98,7 +94,6 @@ set(SOURCES
     MapObjectMultiState.cpp
     MapObjectState.cpp
     MapObjectViewWx.cpp
-    MapObjectWindow.cpp
     MarkerSet.cpp
     MechUnitRPGStatsBuilder.cpp
     MechUnitRPGStatsExporter.cpp
@@ -114,7 +109,6 @@ set(SOURCES
     ModelInterface.cpp
     ModelState.cpp
     ModelViewWx.cpp
-    ModelWindow.cpp
     MovieDialogsWx.cpp
     MoviesEditorData.cpp
     MoviesEditorViewWx.cpp
@@ -124,7 +118,6 @@ set(SOURCES
     ObjectRPGStatsBuilder.cpp
     ObjectRPGStatsExporter.cpp
     PassabilityProfile.cpp
-    PointListDialog.cpp
     PointListView.cpp
     PointListViewWx.cpp
     PointsListState.cpp
@@ -134,7 +127,6 @@ set(SOURCES
     ReinfPointsDialogsWx.cpp
     ReinfPointsState.cpp
     ReinfPointsViewWx.cpp
-    ReinfPointsWindow.cpp
     RiverState.cpp
     RoadState.cpp
     ScriptAreaState.cpp
@@ -174,7 +166,6 @@ set(SOURCES
     UnitStartCmdDialogWx.cpp
     UnitStartCmdState.cpp
     UnitStartCmdViewWx.cpp
-    UnitStartCmdWindow.cpp
     VisObjBuilder.cpp
     VSODataExtractor.cpp
     VSOManager.cpp
@@ -182,7 +173,6 @@ set(SOURCES
     VSOState.cpp
     VSOStateEx.cpp
     VSOViewWx.cpp
-    VSOWindow.cpp
     WeaponMnemonics.cpp
     XMLExport.cpp
     XMLExportB2.cpp
