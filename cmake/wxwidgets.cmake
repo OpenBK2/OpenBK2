@@ -56,13 +56,22 @@ endif()
 # wx leaves the suffix off for 32-bit. Both spellings have been built and
 # checked: an x64 and an x86 editor linked against the library found here, with
 # the DLL copied beside them.
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(WX_TOOLCHAIN_TAG vc_x64_dll)
+#
+# Off Windows wx installs the Unix way instead: the libraries straight in lib/,
+# the headers under include/wx-3.3, and setup.h under lib/wx/include/<config>.
+# The tag there is only the toolkit, and it goes into the build id like the
+# MSVC one does.
+if(WIN32)
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(WX_TOOLCHAIN_TAG vc_x64_dll)
+    else()
+        set(WX_TOOLCHAIN_TAG vc_dll)
+    endif()
+    set(WX_LIB_DIR ${WX_INSTALL}/lib/${WX_TOOLCHAIN_TAG})
 else()
-    set(WX_TOOLCHAIN_TAG vc_dll)
+    set(WX_TOOLCHAIN_TAG gtk3)
+    set(WX_LIB_DIR ${WX_INSTALL}/lib)
 endif()
-
-set(WX_LIB_DIR ${WX_INSTALL}/lib/${WX_TOOLCHAIN_TAG})
 
 # Shared, and not static, on purpose. wx keeps process-global state -- the
 # application object, the RTTI and event-table registries, the module list -- and
@@ -79,7 +88,16 @@ else()
     set(WX_LIB_SUFFIX "")
 endif()
 
-set(WX_IMPORT_LIB ${WX_LIB_DIR}/wxmsw33u${WX_LIB_SUFFIX}.lib)
+if(WIN32)
+    set(WX_IMPORT_LIB ${WX_LIB_DIR}/wxmsw33u${WX_LIB_SUFFIX}.lib)
+    # The directory holding the generated setup.h, next to the binaries.
+    set(WX_SETUP_DIR ${WX_LIB_DIR}/mswu)
+else()
+    # The shared object itself: ELF has no import library, the linker takes
+    # the .so. wx's Unix names carry no debug suffix.
+    set(WX_IMPORT_LIB ${WX_LIB_DIR}/libwx_gtk3u-3.3.so)
+    set(WX_SETUP_DIR ${WX_LIB_DIR}/wx/include/gtk3-unicode-3.3)
+endif()
 
 set(WX_GIT_TAG v3.3.3)
 
@@ -122,6 +140,14 @@ set(WX_CMAKE_ARGS
         # that turned it off earlier keeps OFF in the wx sub-build's own cache;
         # set it back there with cmake -DwxUSE_STC=ON <that directory>.
 )
+
+# Off Windows the toolkit is named rather than left to wx's default (also gtk3
+# today), so what the libraries are built on is stated here and in the build
+# id. Appended only there, so the Windows argument list, and with it the
+# Windows build id and every cached install, stays exactly as it was.
+if(NOT WIN32)
+    list(APPEND WX_CMAKE_ARGS -DwxBUILD_TOOLKIT=gtk3)
+endif()
 
 # Identifies what an install was built from: the wx release, the toolchain tag
 # and every argument above. The compiler paths are among those arguments, so an
@@ -184,16 +210,26 @@ endif()
 # does not exist until wxwidgets_external has run, which is legal as long as
 # whatever links it depends on that step -- see wx::wx below.
 add_library(wxwidgets_monolithic SHARED IMPORTED GLOBAL)
+if(WIN32)
+    set(WX_HEADER_DIR ${WX_INSTALL}/include)
+    set_target_properties(wxwidgets_monolithic PROPERTIES
+        IMPORTED_IMPLIB ${WX_IMPORT_LIB})
+else()
+    # Unix installs put the headers one level down, under the version.
+    set(WX_HEADER_DIR ${WX_INSTALL}/include/wx-3.3)
+    # No import library on ELF: the .so is both what is linked and what runs.
+    set_target_properties(wxwidgets_monolithic PROPERTIES
+        IMPORTED_LOCATION ${WX_IMPORT_LIB})
+endif()
 set_target_properties(wxwidgets_monolithic PROPERTIES
-    IMPORTED_IMPLIB ${WX_IMPORT_LIB}
     # Two include directories, not one: the generated setup.h is written into
     # the library directory next to the binaries rather than into include/.
-    INTERFACE_INCLUDE_DIRECTORIES "${WX_INSTALL}/include;${WX_LIB_DIR}/mswu"
+    INTERFACE_INCLUDE_DIRECTORIES "${WX_HEADER_DIR};${WX_SETUP_DIR}"
 )
 
 # CMake refuses an imported target whose include directories do not exist, and
 # wx's build has not run at configure time.
-file(MAKE_DIRECTORY ${WX_INSTALL}/include ${WX_LIB_DIR}/mswu)
+file(MAKE_DIRECTORY ${WX_HEADER_DIR} ${WX_SETUP_DIR})
 
 # What consumers link. The interface library carries the dependency on the
 # external build, so linking wx::wx is enough to get wx built first.
@@ -230,3 +266,14 @@ set_target_properties(wx::wx PROPERTIES
     # compilation mode.
     INTERFACE_COMPILE_DEFINITIONS "WXUSINGDLL"
 )
+
+# Off Windows the headers also have to be told the port, which wx-config
+# passes as __WXGTK__ and __WXGTK3__: on MSW wx works it out from _WIN32, on
+# GTK nothing can. _FILE_OFFSET_BITS=64 is the other define wx-config emits
+# there; it has to match the library, since it changes the size of off_t in
+# wx's own headers. The list is `wx-config --cxxflags` of the 3.3.3 GTK3
+# install, less its two include directories.
+if(NOT WIN32)
+    set_property(TARGET wx::wx APPEND PROPERTY
+        INTERFACE_COMPILE_DEFINITIONS "__WXGTK3__;__WXGTK__;_FILE_OFFSET_BITS=64")
+endif()

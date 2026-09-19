@@ -62,7 +62,15 @@ add_custom_command(TARGET B2_MapEditor POST_BUILD
 # And into the install tree, because the installed editor links wx.
 # A directory glob for the same reason the build-tree copy is one: the DLL
 # name carries wx's version, the compiler and the architecture.
-install(DIRECTORY ${WX_LIB_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "*.dll")
+# Off Windows the same library is libwx_gtk3u-3.3.so plus its versioned names,
+# found at run time through the $ORIGIN rpath. Only the top of lib/ there: its
+# wx/ subdirectory holds headers and the wx-config data, not runtime files.
+if(WIN32)
+    install(DIRECTORY ${WX_LIB_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "*.dll")
+else()
+    install(DIRECTORY ${WX_LIB_DIR}/ DESTINATION bin FILES_MATCHING PATTERN "libwx_*.so*"
+        PATTERN "wx" EXCLUDE PATTERN "cmake" EXCLUDE PATTERN "pkgconfig" EXCLUDE)
+endif()
 
 install(TARGETS B2_MapEditor DESTINATION bin)
 
