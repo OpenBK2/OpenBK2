@@ -33,8 +33,7 @@
 #include "libdb/Db.h"
 
 #include <filesystem>
-#include <atlbase.h>
-#include <msxml6.h>
+#include "XdbValidation.h"
 #include "libdb/EditorDb.h"
 #include "libdb/TypeDef.h"
 #include "MapEditorLib/Interface_MOD.h"
@@ -476,79 +475,24 @@ namespace NMainFrameShared
 	namespace
 	{
 	// The old lightweight XML readers stop at the root header and do not report
-	// malformed documents reliably. Validate the entire selected file with MSXML
-	// before letting the database add its header to index.bin.
+	// malformed documents reliably. Check the entire selected file before letting
+	// the database add its header to index.bin: that it is well-formed UTF-8 XML
+	// (NXdbValidation, wxXmlDocument where this was MSXML through ATL), and that
+	// its root element names a registered resource type.
 	bool ValidateXDB( const std::string &dbPath, std::string *pTypeName, std::string *pError )
 	{
-		struct CComScope
-		{
-			HRESULT result = ::CoInitializeEx( nullptr, COINIT_APARTMENTTHREADED );
-			~CComScope() { if ( SUCCEEDED(result) ) ::CoUninitialize(); }
-		} com;
-		if ( FAILED(com.result) && com.result != RPC_E_CHANGED_MODE )
-		{
-			*pError = "Cannot initialize XML validation.";
-			return false;
-		}
-		ATL::CComPtr<IXMLDOMDocument2> document;
-		if ( FAILED(document.CoCreateInstance(__uuidof(DOMDocument60))) )
-		{
-			*pError = "Cannot create the MSXML 6 XML validator.";
-			return false;
-		}
-		document->put_async( VARIANT_FALSE );
-		document->put_validateOnParse( VARIANT_FALSE );
-		document->put_resolveExternals( VARIANT_FALSE );
-		document->setProperty( ATL::CComBSTR(L"ProhibitDTD"), ATL::CComVariant(true) );
-		// Validate the bytes the engine will read, including the mounted mod's
-		// precedence. XDB strings are UTF-8; MSXML alone would also accept UTF-16.
+		// Check the bytes the engine will read, including the mounted mod's
+		// precedence.
 		CFileStream stream( NVFS::GetMainVFS(), dbPath );
 		if ( !stream.IsOk() || stream.GetSize() == 0 )
 		{
 			*pError = "The XDB is empty or cannot be read from the current database.";
 			return false;
 		}
-		const char *data = reinterpret_cast<const char*>(stream.GetBuffer());
-		int size = stream.GetSize();
-		// loadXML takes Unicode text, so the byte-order mark must be removed before conversion.
-		if ( size >= 3 && memcmp(data, "\xef\xbb\xbf", 3) == 0 )
+		if ( !NXdbValidation::CheckDocument( reinterpret_cast<const char*>( stream.GetBuffer() ), stream.GetSize(), pTypeName, pError ) )
 		{
-			data += 3;
-			size -= 3;
-		}
-		const int length = ::MultiByteToWideChar( CP_UTF8, MB_ERR_INVALID_CHARS, data, size, nullptr, 0 );
-		if ( length == 0 || memchr(data, 0, size) != nullptr )
-		{
-			*pError = "XDB files must use UTF-8 text encoding.";
 			return false;
 		}
-		ATL::CComBSTR xml( length );
-		::MultiByteToWideChar( CP_UTF8, MB_ERR_INVALID_CHARS, data, size, xml.m_str, length );
-		VARIANT_BOOL loaded = VARIANT_FALSE;
-		const HRESULT result = document->loadXML( xml, &loaded );
-		if ( FAILED(result) || loaded != VARIANT_TRUE )
-		{
-			ATL::CComPtr<IXMLDOMParseError> error;
-			ATL::CComBSTR reason;
-			long line = 0;
-			document->get_parseError( &error );
-			if ( error )
-			{
-				error->get_reason( &reason );
-				error->get_line( &line );
-			}
-			*pError = fmt::format("Invalid XDB/XML at line {}: {}", line,
-				reason ? NStr::ToMBCS(std::wstring(reason, reason.Length())) : "Unable to read the document.");
-			return false;
-		}
-		ATL::CComPtr<IXMLDOMElement> root;
-		ATL::CComBSTR name;
-		if ( FAILED(document->get_documentElement(&root)) || !root || FAILED(root->get_tagName(&name)) || !name )
-		{
-			*pError = "The XDB has no resource root element.";
-			return false;
-		}
-		*pTypeName = NStr::ToMBCS( std::wstring(name, name.Length()) );
 		std::vector<NDb::NTypeDef::STypeClass*> types;
 		NDb::GetClassesList( &types );
 		for ( const auto *pType : types )

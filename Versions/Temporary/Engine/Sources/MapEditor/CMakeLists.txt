@@ -53,6 +53,7 @@ set(SOURCES
     TextEditorViewWx.cpp
     UserDataContainer.cpp
     ViewContainer.cpp
+    XdbValidationWx.cpp
 )
 add_library(MapEditor SHARED ${SOURCES})
 add_stdafx_pch(MapEditor)
@@ -63,7 +64,9 @@ target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main
 if(WIN32)
     # comctl32: InitCommonControls and the object collector's image lists,
     # which MFC's headers used to link through #pragma comment.
-    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32)
+    # shlwapi: SHDeleteKey in MapEditorApp.cpp, which came in the same way
+    # through ATL's atlbase.h until XDB validation stopped using ATL.
+    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32 shlwapi)
 endif()
 # The property control, the browsers and the main frame: dialogs, menus,
 # toolbars, string tables and the bitmaps under res/.
