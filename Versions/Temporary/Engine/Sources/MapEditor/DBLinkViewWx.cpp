@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include "DBLinkView.h"
 
@@ -57,9 +58,7 @@ namespace
 
 	std::string LoadResourceString( UINT nID )
 	{
-		CString strText;
-		strText.LoadString( nID );
-		return std::string( strText.GetString() );
+		return NResources::GetString( nID );
 	}
 
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -198,8 +199,7 @@ bool CControllerContainer::Undo( int nCount )
 	if ( nCount >= 0 )
 	{
 		NProgress::Create( true );
-		CString strPM;
-		strPM.LoadString( IDS_PM_UNDO );
+		std::string strPM = NResources::GetString( IDS_PM_UNDO );
 		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, nCount + 1 );
 		//
@@ -231,8 +231,7 @@ bool CControllerContainer::Redo( int nCount )
 	if ( nCount >= 0 )
 	{
 		NProgress::Create( true );
-		CString strPM;
-		strPM.LoadString( IDS_PM_REDO );
+		std::string strPM = NResources::GetString( IDS_PM_REDO );
 		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, nCount + 1 );
 		//

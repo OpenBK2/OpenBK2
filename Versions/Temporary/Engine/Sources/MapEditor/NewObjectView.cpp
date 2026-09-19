@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include <fmt/printf.h>
 
@@ -82,8 +83,7 @@ namespace NNewObject
 		{
 			return std::string();
 		}
-		CString strFormat;
-		strFormat.LoadString( IDS_PC_BD_DIALOG_TITLE );
-		return fmt::sprintf( strFormat.GetString(), pBuildDataParams->szObjectTypeName.c_str() );
+		std::string strFormat = NResources::GetString( IDS_PC_BD_DIALOG_TITLE );
+		return fmt::sprintf( strFormat.c_str(), pBuildDataParams->szObjectTypeName.c_str() );
 	}
 }

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
@@ -517,9 +518,8 @@ bool CScriptCameraState::DeleteSequence( int nSeqIndex )
 {
 	bool bReturn = false;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainWindowHandle(), strMessage,
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(),
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -637,9 +637,8 @@ bool CScriptCameraState::DeleteScriptPlacement( int nCamera )
 	if ( nCamera == -1 )
 		return bReturn;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainWindowHandle(), strMessage,
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(),
 										 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( !IsCameraPlacementInDB(nCamera) )
@@ -765,9 +764,8 @@ bool CScriptCameraState::DeleteKeys( const CArray1Bit &delList, int nSeqIndex, b
 {
 	bool bReturn = false;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( bDeleteWholeSequence || (::MessageBox(MainWindowHandle(), strMessage,
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	if ( bDeleteWholeSequence || (::MessageBox(MainWindowHandle(), strMessage.c_str(),
 																						 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES) )
 	{
 		//const float fMaxDiff = 0.1f;

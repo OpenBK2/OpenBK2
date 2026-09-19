@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
 
@@ -34,7 +35,7 @@
 REGISTER_EDITOR_IN_DLL( BuildingRPGStats, CBuildingEditor )
 
 const int N_POINT_TYPES_NUM = 5;
-CString listLabels[N_POINT_TYPES_NUM];
+std::string listLabels[N_POINT_TYPES_NUM];
 
 CBuildingEditor::CBuildingEditor() : 
 	pBuildingState(0),
@@ -43,11 +44,11 @@ CBuildingEditor::CBuildingEditor() :
 	szCurrSeason( "SEASON_SUMMER" ),
 	bDrawPassability(false)
 {
-	listLabels[0].LoadString( theEDB2M1Instance, IDS_SMOKE_POINTS );
-	listLabels[1].LoadString( theEDB2M1Instance, IDS_FIRE_POINTS );
-	listLabels[2].LoadString( theEDB2M1Instance, IDS_ENTRANCE_POINTS );
-	listLabels[3].LoadString( theEDB2M1Instance, IDS_SURFACE_POINTS );
-	listLabels[4].LoadString( theEDB2M1Instance, IDS_DAMAGE_LEVELS );
+	listLabels[0] = NResources::GetString( IDS_SMOKE_POINTS );
+	listLabels[1] = NResources::GetString( IDS_FIRE_POINTS );
+	listLabels[2] = NResources::GetString( IDS_ENTRANCE_POINTS );
+	listLabels[3] = NResources::GetString( IDS_SURFACE_POINTS );
+	listLabels[4] = NResources::GetString( IDS_DAMAGE_LEVELS );
 }
 
 CBuildingEditor::~CBuildingEditor()
@@ -110,16 +111,15 @@ void CBuildingEditor::CreateControls()
 			const int nBar = pShortcutBarView->BeginBar( CHID_BUILDING_POINTS_STATE, ID_BUILDING_POINTS_CHANGE_STATE );
 			for ( int i = 0; i < N_POINT_TYPES_NUM; ++i )
 			{
-				const std::string szLabel = (const char*)listLabels[i];
+				const std::string szLabel = listLabels[i];
 				pShortcutBarView->AddTab( nBar, szLabel, [i, szLabel]( CPaletteList *pPalettes, IWidget *pPage )
 				{
 					return NPointListView::Create( pPalettes, pPage, i, szLabel );
 				} );
 			}
 			pShortcutBarView->ActivateTab( nBar, 0 );
-			CString strPaneLabel;
-			strPaneLabel.LoadString( IDS_BUILDING_POINTS );
-			pShortcutBarView->EndBar( nBar, std::string( strPaneLabel.GetString() ) );
+			std::string strPaneLabel = NResources::GetString( IDS_BUILDING_POINTS );
+			pShortcutBarView->EndBar( nBar, strPaneLabel );
 			pShortcutBarView->SelectBar( 0 );
 			//
 			Singleton<IMainFrameContainer>()->Get()->SetControlBarWindowContents( pwndShortcutBar, pShortcutBarView->GetWidget() );

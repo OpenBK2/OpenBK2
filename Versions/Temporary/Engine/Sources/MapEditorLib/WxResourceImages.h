@@ -1,4 +1,5 @@
 #pragma once
+#include "Resources.h"
 
 // The editor's icon strips -- tree_types.bmp, pc_types.bmp and their headers --
 // for wx.
@@ -23,7 +24,7 @@ namespace NWxResourceImages
 	inline wxImage LoadStrip( UINT nResourceID )
 	{
 		const LPCTSTR pszResource = MAKEINTRESOURCE( nResourceID );
-		const HBITMAP hBitmap = static_cast<HBITMAP>( ::LoadImage( AfxFindResourceHandle( pszResource, RT_BITMAP ), pszResource,
+		const HBITMAP hBitmap = static_cast<HBITMAP>( ::LoadImage( NResources::FindModule( pszResource, RT_BITMAP ), pszResource,
 																															 IMAGE_BITMAP, 0, 0, 0 ) );
 		if ( hBitmap == 0 )
 		{

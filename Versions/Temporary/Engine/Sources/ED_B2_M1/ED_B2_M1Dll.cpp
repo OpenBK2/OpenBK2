@@ -7,6 +7,8 @@
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/MapEditorModule.h"
+#include "MapEditorLib/Resources.h"
+#include "ED_B2_M1Dll.h"
 #include "MapEditorLib/InteractiveMayaExportTool.h"
 #include "ED_Common/UIScene.h"
 #include "ED_Common/TempAttributesTool.h"
@@ -86,6 +88,9 @@ class CEditorModuleB2M1 : public IEditorModule
 void CEditorModuleB2M1::ModuleStartup()
 {
 	// не существует еще <все> кроме Singleton<IUserDataContainer>()
+	// This module's resources, for NResources to look in after the
+	// executable's; they were found through MFC's resource chain before.
+	NResources::RegisterModule( theEDB2M1Instance );
 }
 
 void CEditorModuleB2M1::ModuleShutdown()

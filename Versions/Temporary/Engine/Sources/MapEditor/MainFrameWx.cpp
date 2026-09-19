@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include "MainFrameWx.h"
 
@@ -275,7 +276,7 @@ namespace
 	// navigation domain of its own, so none of this reaches into one.
 	wxAcceleratorTable AcceleratorsFromResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nResourceID ), RT_ACCELERATOR );
+		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_ACCELERATOR );
 		const HACCEL hAccel = ::LoadAcceleratorsW( hInstance, MAKEINTRESOURCEW( nResourceID ) );
 		if ( hAccel == 0 )
 		{
@@ -321,17 +322,17 @@ namespace
 	// the string with the command's id, up to its newline.
 	wxString CommandPrompt( unsigned nCommandID )
 	{
-		CString strPrompt;
-		if ( ( nCommandID == 0 ) || !strPrompt.LoadString( nCommandID ) )
+		std::string strPrompt;
+		if ( ( nCommandID == 0 ) || !NResources::GetString( nCommandID, &strPrompt ) )
 		{
 			return wxString();
 		}
-		const int nNewLine = strPrompt.Find( '\n' );
-		if ( nNewLine >= 0 )
+		const size_t nNewLine = strPrompt.find( '\n' );
+		if ( nNewLine != std::string::npos )
 		{
-			strPrompt = strPrompt.Left( nNewLine );
+			strPrompt.resize( nNewLine );
 		}
-		return wxString::FromUTF8( strPrompt.GetString() );
+		return wxString::FromUTF8( strPrompt.c_str() );
 	}
 
 
@@ -339,13 +340,13 @@ namespace
 	// MFC's toolbars found it.
 	wxString CommandTooltip( unsigned nCommandID )
 	{
-		CString strPrompt;
-		if ( ( nCommandID == 0 ) || !strPrompt.LoadString( nCommandID ) )
+		std::string strPrompt;
+		if ( ( nCommandID == 0 ) || !NResources::GetString( nCommandID, &strPrompt ) )
 		{
 			return wxString();
 		}
-		const int nNewLine = strPrompt.Find( '\n' );
-		return ( nNewLine >= 0 ) ? wxString::FromUTF8( strPrompt.Mid( nNewLine + 1 ).GetString() ) : wxString();
+		const size_t nNewLine = strPrompt.find( '\n' );
+		return ( nNewLine != std::string::npos ) ? wxString::FromUTF8( strPrompt.c_str() + nNewLine + 1 ) : wxString();
 	}
 
 
@@ -368,9 +369,8 @@ namespace
 	// What CFrameWnd shows in the status bar when nothing is highlighted.
 	wxString IdleMessage()
 	{
-		CString strMessage;
-		strMessage.LoadString( AFX_IDS_IDLEMESSAGE );
-		return wxString::FromUTF8( strMessage.GetString() );
+		std::string strMessage = NResources::GetString( AFX_IDS_IDLEMESSAGE );
+		return wxString::FromUTF8( strMessage.c_str() );
 	}
 
 
@@ -431,7 +431,7 @@ namespace
 	// LoadMenu would find it.
 	wxMenuBar* MenuBarFromResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nResourceID ), RT_MENU );
+		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_MENU );
 		const HMENU hMenu = ::LoadMenuW( hInstance, MAKEINTRESOURCEW( nResourceID ) );
 		if ( hMenu == 0 )
 		{
@@ -503,7 +503,7 @@ namespace
 	wxIconBundle LoadFrameIcons()
 	{
 		wxIconBundle icons;
-		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( IDR_EDITORTYPE ), RT_GROUP_ICON );
+		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( IDR_EDITORTYPE ), RT_GROUP_ICON );
 		for ( const int nMetric : { SM_CXSMICON, SM_CXICON } )
 		{
 			const int nSize = ::GetSystemMetrics( nMetric );
@@ -1079,22 +1079,20 @@ namespace
 		// Where the layout is kept: beside the MFC frame's bar state, in the
 		// application's registry key, but a section of its own, since the two
 		// frames' layouts are nothing alike.
-		static CString LayoutSection()
+		static std::string LayoutSection()
 		{
-			CString strSection;
-			strSection.LoadString( IDS_REGISTRY_KEY_WINDOWBAR );
-			return strSection + "-wx";
+			return NResources::GetString( IDS_REGISTRY_KEY_WINDOWBAR ) + "-wx";
 		}
 
 		void SaveLayout()
 		{
 			auiManager.Update();
-			AfxGetApp()->WriteProfileString( LayoutSection(), "Layout", auiManager.SaveEditorLayout().utf8_str() );
+			AfxGetApp()->WriteProfileString( LayoutSection().c_str(), "Layout", auiManager.SaveEditorLayout().utf8_str() );
 		}
 
 		void LoadLayout()
 		{
-			const CString strLayout = AfxGetApp()->GetProfileString( LayoutSection(), "Layout", "" );
+			const CString strLayout = AfxGetApp()->GetProfileString( LayoutSection().c_str(), "Layout", "" );
 			if ( !strLayout.IsEmpty() )
 			{
 				auiManager.LoadEditorLayout( wxString::FromUTF8( strLayout.GetString() ) );
@@ -1104,7 +1102,7 @@ namespace
 		void ReadNamedLayouts()
 		{
 			namedLayouts.clear();
-			const CString saved = AfxGetApp()->GetProfileString( LayoutSection(), "NamedLayouts", "" );
+			const CString saved = AfxGetApp()->GetProfileString( LayoutSection().c_str(), "NamedLayouts", "" );
 			if ( saved.IsEmpty() )
 			{
 				return;
@@ -1142,7 +1140,7 @@ namespace
 			}
 			wxStringOutputStream output;
 			return document.Save( output ) &&
-				AfxGetApp()->WriteProfileString( LayoutSection(), "NamedLayouts", output.GetString().utf8_str() );
+				AfxGetApp()->WriteProfileString( LayoutSection().c_str(), "NamedLayouts", output.GetString().utf8_str() );
 		}
 
 		void SaveNamedLayout()
@@ -1251,10 +1249,9 @@ namespace
 			toolBarImages.AddIcon( ID_TOOLS_RUN_GAME, IDI_GAME_LAUNCH );
 			for ( int nToolBar = 0; nToolBar < NMainFrameToolBars::TOOLBARS_COUNT; ++nToolBar )
 			{
-				CString strName;
-				strName.LoadString( NMainFrameToolBars::TOOLBAR_NAME_ID[nToolBar] );
+				std::string strName = NResources::GetString( NMainFrameToolBars::TOOLBAR_NAME_ID[nToolBar] );
 				unsigned nID = NMainFrameToolBars::TOOLBAR_CONTROL_ID[nToolBar];
-				CreateToolBar( &nID, std::string( strName.GetString() ), NMainFrameToolBars::TOOLBAR_ELEMENTS_COUNT[nToolBar],
+				CreateToolBar( &nID, strName, NMainFrameToolBars::TOOLBAR_ELEMENTS_COUNT[nToolBar],
 											 NMainFrameToolBars::TOOLBAR_ELEMENTS_ID[nToolBar], NMainFrameToolBars::TOOLBAR_STYLE[nToolBar], AFX_IDW_DOCKBAR_TOP,
 											 true, NMainFrameToolBars::TOOLBAR_SHOW[nToolBar], false );
 			}
@@ -1449,8 +1446,7 @@ namespace
 			SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
 			std::list<int>::iterator itGDBBrowserID = pUserData->gdbBrowserIDList.begin();
 			int nWindowIndex = 0;
-			CString strDWName;
-			strDWName.LoadString( IDS_DW_GDB_BROWSE_NAME );
+			std::string strDWName = NResources::GetString( IDS_DW_GDB_BROWSE_NAME );
 			for ( std::list<std::unique_ptr<NMainFrameWxPanes::CGDBBrowserPane>>::iterator itPane = gdbBrowserPanes.begin(); itPane != gdbBrowserPanes.end(); ++itPane )
 			{
 				if ( ( *itPane )->GetContents().GetID() == pUserData->nFocusedGDBBrowserID )
@@ -1469,7 +1465,7 @@ namespace
 					}
 					for ( ; itPane != gdbBrowserPanes.end(); ++itPane )
 					{
-						auiManager.GetPane( ( *itPane )->GetPanel() ).Caption( wxString::FromUTF8( fmt::sprintf( strDWName.GetString(), nWindowIndex ).c_str() ) );
+						auiManager.GetPane( ( *itPane )->GetPanel() ).Caption( wxString::FromUTF8( fmt::sprintf( strDWName.c_str(), nWindowIndex ).c_str() ) );
 						++nWindowIndex;
 					}
 					SetFocusedGDBBrowserPane( gdbBrowserPanes.front().get() );
@@ -1523,21 +1519,18 @@ namespace
 			{
 				pMenu->Destroy( pMenu->FindItemByPosition( 0 ) );
 			}
-			CString strMenuLabel;
-			CString strMenuLabelShort;
-			strMenuLabel.LoadString( IDS_DW_GDB_BROWSE_MENU_LABEL );
-			strMenuLabelShort.LoadString( IDS_DW_GDB_BROWSE_MENU_LABEL_SHORT );
+			const std::string strMenuLabel = NResources::GetString( IDS_DW_GDB_BROWSE_MENU_LABEL );
+			const std::string strMenuLabelShort = NResources::GetString( IDS_DW_GDB_BROWSE_MENU_LABEL_SHORT );
 			int nWindowIndex = 0;
 			for ( ; nWindowIndex < static_cast<int>( gdbBrowserPanes.size() ); ++nWindowIndex )
 			{
-				const std::string szLabel = fmt::sprintf( ( ( nWindowIndex == 0 ) ? strMenuLabel : strMenuLabelShort ).GetString(), nWindowIndex );
+				const std::string szLabel = fmt::sprintf( ( ( nWindowIndex == 0 ) ? strMenuLabel : strMenuLabelShort ).c_str(), nWindowIndex );
 				InsertCommandItem( pMenu, nWindowIndex, ID_VIEW_DW_GDB_BROWSER_FIRST + nWindowIndex, wxString::FromUTF8( szLabel.c_str() ), wxString() );
 			}
 			if ( nWindowIndex == 0 )
 			{
-				CString strEmptyLabel;
-				strEmptyLabel.LoadString( IDS_DW_GDB_BROWSE_EMPTY_MENU_LABEL );
-				InsertCommandItem( pMenu, 0, ID_VIEW_DW_GDB_BROWSER_FIRST, wxString::FromUTF8( strEmptyLabel.GetString() ), wxString() );
+				std::string strEmptyLabel = NResources::GetString( IDS_DW_GDB_BROWSE_EMPTY_MENU_LABEL );
+				InsertCommandItem( pMenu, 0, ID_VIEW_DW_GDB_BROWSER_FIRST, wxString::FromUTF8( strEmptyLabel.c_str() ), wxString() );
 			}
 		}
 
@@ -1814,7 +1807,7 @@ namespace
 			{
 				return;
 			}
-			const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( IDM_MAIN_CONTEXT_MENU ), RT_MENU );
+			const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( IDM_MAIN_CONTEXT_MENU ), RT_MENU );
 			const HMENU hMenu = ::LoadMenuW( hInstance, MAKEINTRESOURCEW( IDM_MAIN_CONTEXT_MENU ) );
 			if ( hMenu == 0 )
 			{

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
@@ -44,9 +45,7 @@ namespace
 {
 	std::string LoadResourceString( UINT nID )
 	{
-		CString strText;
-		strText.LoadString( nID );
-		return std::string( strText.GetString() );
+		return NResources::GetString( nID );
 	}
 
 
@@ -376,11 +375,9 @@ namespace
 		}
 		if ( bResult && ( szNewText != szText ) )
 		{
-			CString strMessagePattern;
-			strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
-			CString strMessage;
-			strMessage.Format( strMessagePattern, rszFilePath.c_str() );
-			if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
+			std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
+			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszFilePath.c_str() );
+			if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
 			{
 				String2File( szNewText, bUnicode, rszFilePath, ::GetACP(), false );
 				NText::Reload( rszFilePath );

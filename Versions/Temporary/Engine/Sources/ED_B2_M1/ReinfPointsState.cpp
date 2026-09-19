@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
@@ -74,9 +75,8 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 	if ( nSelectedPlayer < 0 || nSelectedPlayer >= n )
 		return false;
 	//
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints", nSelectedPlayer );
 		CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();

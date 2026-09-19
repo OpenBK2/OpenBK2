@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/printf.h>
@@ -229,15 +230,15 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 	{
 		std::list<int> sceneIDList;
 		pScene->PickObjects( sceneIDList, CVec2( rMousePoint.x, rMousePoint.y ) );
-		CString strStatusBarMessage;
+		std::string strStatusBarMessage;
 		if ( sceneIDList.size() > 1 )
 		{
-			strStatusBarMessage.LoadString( IDS_STATUS_STRING_OBJECTS );
-			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.GetString(), sceneIDList.size() ) );
+			strStatusBarMessage = NResources::GetString( IDS_STATUS_STRING_OBJECTS );
+			Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.c_str(), sceneIDList.size() ) );
 		}
 		else if ( sceneIDList.size() > 0 )
 		{
-			strStatusBarMessage.LoadString( IDS_STATUS_STRING_OBJECT );
+			strStatusBarMessage = NResources::GetString( IDS_STATUS_STRING_OBJECT );
 			if ( const NDb::SMapObjectInfo *pMapOnjectInfo = pParentState->GetObjectInfoCollector()->GetObjectStatusBarParams( *( sceneIDList.begin() ) ) )
 			{
 				CDBID dbid;
@@ -245,7 +246,7 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 				{
 					dbid = pMapOnjectInfo->pObject->GetDBID();
 				}
-				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.GetString(),
+				Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 1, fmt::sprintf( strStatusBarMessage.c_str(),
 																																							pMapOnjectInfo->nScriptID,
 																																							dbid.ToString().c_str() ) );
 			}
@@ -1308,11 +1309,8 @@ void CMapObjectState::RemoveSelectionLinks()
 
 void CMapObjectState::RemoveSelection()
 {
-	CString strMessage;
-	AfxSetResourceHandle( theEDB2M1Instance );
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECTS_MESSAGE );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
-	if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECTS_MESSAGE );
+	if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 	{
 		if ( IEditorScene *pScene = EditorScene() )
 		{

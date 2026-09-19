@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include "PropertyPaneView.h"
 
@@ -1199,9 +1200,8 @@ namespace
 		// application's title, No the default as MB_DEFBUTTON2 made it.
 		bool Confirm( UINT nMessageID )
 		{
-			CString strMessage;
-			strMessage.LoadString( nMessageID );
-			wxMessageDialog question( pManager, FromNarrow( std::string( strMessage.GetString() ) ),
+			std::string strMessage = NResources::GetString( nMessageID );
+			wxMessageDialog question( pManager, FromNarrow( strMessage ),
 																FromNarrow( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle ),
 																wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION );
 			return question.ShowModal() == wxID_YES;

@@ -35,6 +35,7 @@ set(SOURCES
     ObjectFilter.cpp
     PCIEMnemonics.cpp
     Progress.cpp
+    Resources.cpp
     ShellFont.cpp
     stdafx.cpp
     StoreInputState.cpp

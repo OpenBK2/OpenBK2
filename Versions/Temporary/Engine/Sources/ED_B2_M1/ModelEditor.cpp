@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MfcWidget.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -84,9 +85,8 @@ void CModelEditor::CreateControls()
 	//
 	// создаем minimap docking window
 	unsigned nID = ID_MODEL_EDITOR_DW;
-	CString strPaneLabel;
-	strPaneLabel.LoadString( theEDB2M1Instance, IDS_MODEL_TOOL_WINDOW_NAME  );
-	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel.GetString(), CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
+	std::string strPaneLabel = NResources::GetString( IDS_MODEL_TOOL_WINDOW_NAME );
+	if ( pwndTool = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, strPaneLabel.c_str(), CBRS_ALIGN_ANY, AFX_IDW_DOCKBAR_RIGHT, 0.5f, 265 ) )
 	{
 		// Which toolkit draws the palette is NModelView's business. The pane is
 		// shown whether or not it could be created, as it always was.
@@ -106,12 +106,10 @@ void CModelEditor::CreateControls()
 		}
 	}
 	//
-	AfxSetResourceHandle( theEDB2M1Instance );
-	CString strToolbarName;
-	strToolbarName.LoadString( IDS_TOOLBAR_MODEL );
+	std::string strToolbarName = NResources::GetString( IDS_TOOLBAR_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MODEL, IDT_MODEL );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nModelToolbarID,
-																													strToolbarName.GetString(),
+																													strToolbarName.c_str(),
 																													TOOLBAR_MODEL_ELEMENTS_COUNT,
 																													TOOLBAR_MODEL_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -119,7 +117,6 @@ void CModelEditor::CreateControls()
 																													true,
 																													false,
 																													false );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
 
@@ -190,9 +187,7 @@ void CModelEditor::Create()
 	{
 		pModelState = new CModelState( this );
 	}
-	AfxSetResourceHandle( theEDB2M1Instance );
 	Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MODEL );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 	//
 }
 
@@ -203,9 +198,7 @@ void CModelEditor::Destroy()
 			 Singleton<IMainFrameContainer>()->Get() &&
 			 Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
-		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
-		AfxSetResourceHandle( AfxGetInstanceHandle() );
 		//
 		Singleton<ICamera>()->SetHandleType( bPreviousCameraHandleType );
 		Singleton<ICamera>()->SetFOV( fFOV );

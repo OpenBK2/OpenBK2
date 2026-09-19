@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 
@@ -551,11 +552,8 @@ void CModelState::SaveCamera( bool bDefaultCamera )
 		CModelEditorSettings::SCameraPlacement *pCameraPlacement = 0;
 		if ( bDefaultCamera )
 		{
-			CString strMessage;
-			AfxSetResourceHandle( theEDB2M1Instance );
-			strMessage.LoadString( IDS_MODEL_SAVE_CAMERA_MESSAGE );
-			AfxSetResourceHandle( AfxGetInstanceHandle() );
-			if ( ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+			std::string strMessage = NResources::GetString( IDS_MODEL_SAVE_CAMERA_MESSAGE );
+			if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
 			{
 				pCameraPlacement = &( pModelEditor->editorSettings.defaultCamera );
 			}

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
@@ -696,10 +697,9 @@ void CAIGeneralPointsState::DeletePoint()
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) || (dialogData.CurrentPoint() < 0) )
 		return;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage, 
+										strMessage.c_str(), 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
 	{
@@ -734,10 +734,9 @@ void CAIGeneralPointsState::DeleteID()
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentID() < 0) )
 		return;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage, 
+										strMessage.c_str(), 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
 	{
@@ -773,10 +772,9 @@ void CAIGeneralPointsState::DeleteParcel()
 	if ( (dialogData.CurrentPlayer() < 0) || (dialogData.CurrentParcel() < 0) )
 		return;
 
-	CString strMessage;
-	strMessage.LoadString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
+	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
 	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage, 
+										strMessage.c_str(), 
 										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
 										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
 	{

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/printf.h>
 
@@ -48,9 +49,8 @@ bool CMODContainer::NewMOD()
 	{
 		const std::string &szMODFolder = newMod.szFolderPath;
 		NProgress::Create( true );
-		CString strPM;
-		strPM.LoadString( IDS_PM_CREATE_MOD );
-		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), szMODFolder.c_str() ) );
+		std::string strPM = NResources::GetString( IDS_PM_CREATE_MOD );
+		NProgress::SetMessage( fmt::sprintf( strPM.c_str(), szMODFolder.c_str() ) );
 		NProgress::SetRange( 0, 2 );
 		//
 		// Создать файлы с именем и описанием
@@ -96,9 +96,8 @@ bool CMODContainer::OpenMOD()
 		if ( NOpenMod::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), &mod ) )
 		{
 			NProgress::Create( true );
-			CString strPM;
-			strPM.LoadString( IDS_PM_OPEN_MOD );
-			NProgress::SetMessage( fmt::sprintf( strPM.GetString(), mod.szFullFolderPath.c_str() ) );
+			std::string strPM = NResources::GetString( IDS_PM_OPEN_MOD );
+			NProgress::SetMessage( fmt::sprintf( strPM.c_str(), mod.szFullFolderPath.c_str() ) );
 			NProgress::SetRange( 0, 2 );
 			//
 			NMOD::InstantAttachMOD( mod.szFullFolderPath, NDb::DATABASE_MODE_EDITOR );
@@ -132,9 +131,8 @@ void CMODContainer::CloseMOD()
 			return;
 		}
 		NProgress::Create( true );
-		CString strPM;
-		strPM.LoadString( IDS_PM_CLOSE_MOD );
-		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
+		std::string strPM = NResources::GetString( IDS_PM_CLOSE_MOD );
+		NProgress::SetMessage( fmt::sprintf( strPM.c_str(), Singleton<IUserDataContainer>()->Get()->szOpenedMODFolder.c_str() ) );
 		NProgress::SetRange( 0, 2 );
 		//
 		NMOD::InstantAttachMOD( "", NDb::DATABASE_MODE_EDITOR );

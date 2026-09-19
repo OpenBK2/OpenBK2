@@ -130,13 +130,11 @@ BOOL CEditorAppSpecific::InitInstance()
 
 void CEditorAppSpecific::CreateMenus( IMainFrame *pMainFrame ) const
 {
-	AfxSetResourceHandle( theEDB2M1Instance );
 	std::vector<unsigned> nIDs;
 	nIDs.push_back( IDM_MAIN );
 	nIDs.push_back( IDM_MAPINFO );
 	nIDs.push_back( IDM_MODEL );
 	pMainFrame->AddMenuResources( nIDs );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
 // CWxHostedApp starts wx before the editor, runs wx's message loop, and shuts

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
@@ -243,8 +244,7 @@ void CGDBBrowserContents::New( const std::string &rszObjectTypeName )
 	{
 		return;
 	}
-	CString strObjectName;
-	strObjectName.LoadString( IDS_TREE_GDB_BROWSE_NEW_MAIN_OBJECT );
+	std::string strObjectName = NResources::GetString( IDS_TREE_GDB_BROWSE_NEW_MAIN_OBJECT );
 	std::string szDefaultFolder;
 	pBuilderContainer->GetDefaultFolder( szObjectTypeName, &szDefaultFolder );
 	std::string szObjectName = szDefaultFolder + std::string( strObjectName );

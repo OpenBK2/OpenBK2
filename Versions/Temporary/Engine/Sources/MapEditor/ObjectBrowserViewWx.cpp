@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include "ObjectBrowserView.h"
 
@@ -1230,9 +1231,7 @@ namespace
 
 		static std::string LoadResourceString( UINT nID )
 		{
-			CString strText;
-			strText.LoadString( nID );
-			return std::string( strText.GetString() );
+			return NResources::GetString( nID );
 		}
 
 		// Where the frame sends a command: the ranges MapEditorApp registers.
@@ -2434,7 +2433,7 @@ namespace
 		static HCURSOR DragCursor( bool bCopy )
 		{
 			const LPCTSTR pszResource = MAKEINTRESOURCE( bCopy ? IDC_DRAG_AND_DROP_COPY : IDC_DRAG_AND_DROP_MOVE );
-			return ::LoadCursor( AfxFindResourceHandle( pszResource, RT_GROUP_CURSOR ), pszResource );
+			return ::LoadCursor( NResources::FindModule( pszResource, RT_GROUP_CURSOR ), pszResource );
 		}
 
 		void BeginDrag( bool bCopy )
@@ -2639,10 +2638,9 @@ namespace
 		// and SaveHeaderWidth did.
 		void CreateHeader()
 		{
-			CString strName;
-			strName.LoadString( IDS_TABGDBB_PROPERTY_THN_0 );
+			std::string strName = NResources::GetString( IDS_TABGDBB_PROPERTY_THN_0 );
 			const int nKeptWidth = HeaderWidths()[0];
-			wxHeaderColumnSimple column( FromNarrow( std::string( strName.GetString() ) ), ( nKeptWidth > 0 ) ? nKeptWidth : 150 );
+			wxHeaderColumnSimple column( FromNarrow( strName ), ( nKeptWidth > 0 ) ? nKeptWidth : 150 );
 			column.SetResizeable( true );
 			const std::vector<wxBitmap> icons = NWxResourceImages::LoadIcons( IDB_TABGDBB_TREE_HEADER_IMAGE_LIST );
 			if ( !icons.empty() )

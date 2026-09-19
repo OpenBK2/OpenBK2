@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -86,15 +87,13 @@ void CEditorApp::CreateUserDataSingleton()
 		//
 		if ( pUserDataContainer->Get()->constUserData.szVersion.empty() )
 		{
-			CString strVersion;
-			strVersion.LoadString( IDS_PROGRAM_VERSION );
+			std::string strVersion = NResources::GetString( IDS_PROGRAM_VERSION );
 			pUserDataContainer->Get()->constUserData.szVersion = strVersion;
 		}
 		//
 		if ( pUserDataContainer->Get()->constUserData.szApplicationTitle.empty() )
 		{
-			CString strApplicationTitle;
-			strApplicationTitle.LoadString( AFX_IDS_APP_TITLE );
+			std::string strApplicationTitle = NResources::GetString( AFX_IDS_APP_TITLE );
 			pUserDataContainer->Get()->constUserData.szApplicationTitle = strApplicationTitle;
 		}
 	}
@@ -315,21 +314,19 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 {
 	const std::string szValidRegistryVersion = "1";
 	std::string szRegistryVersion;
-	CString strKey;
+	std::string strKey;
 
-	CString strPath;
-	strPath.LoadString( IDS_REGISTRY_PATH );
-	CString strTitle;
-	strTitle.LoadString( AFX_IDS_APP_TITLE );
+	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
+	std::string strTitle = NResources::GetString( AFX_IDS_APP_TITLE );
 	const std::string szRegistryKey = fmt::format( "Software\\{}\\{}\\{}",
-																			 LPCTSTR( strPath ),
+																			 strPath.c_str(),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
-																			 LPCTSTR( strTitle ) );
+																			 strTitle.c_str() );
 	//
 	{
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
-		strKey.LoadString( IDS_REGISTRY_KEY_VERSION );
-		registrySection.LoadString( strKey, &szRegistryVersion, "" );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
+		registrySection.LoadString( strKey.c_str(), &szRegistryVersion, "" );
 	}
 	//
 	if ( ( rszCommandLine.find( "-reg" ) != std::string::npos ) || ( szRegistryVersion != szValidRegistryVersion ) )
@@ -350,8 +347,8 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 	//
 	{
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_WRITE, szRegistryKey.c_str() );
-		strKey.LoadString( IDS_REGISTRY_KEY_VERSION );
-		registrySection.SaveString( strKey, szValidRegistryVersion );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
+		registrySection.SaveString( strKey.c_str(), szValidRegistryVersion );
 	}
 	return true;
 }
@@ -405,10 +402,9 @@ BOOL CEditorApp::InitInstance()
 	}
 
 	// Установить рабочий раздел Registry
-	CString strPath;
-	strPath.LoadString( IDS_REGISTRY_PATH );
+	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
 	const std::string szRegistryKey = fmt::format( "{}\\{}",
-																			 LPCTSTR( strPath ),
+																			 strPath.c_str(),
 																			 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str() );
 	SetRegistryKey( szRegistryKey.c_str() );
 	// Создаем все необходимые структуры данных

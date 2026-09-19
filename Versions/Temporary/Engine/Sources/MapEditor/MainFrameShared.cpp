@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
+#include <fmt/printf.h>
 #include "MapEditorLib/BusyCursor.h"
 #include "MapEditorLib/MainWindow.h"
 
@@ -181,15 +183,13 @@ namespace NMainFrameShared
 					SObjectSet objectSet;
 					pEditorContainer->GetActiveEditor()->GetView()->GetObjectSet( &objectSet );
 					//
-					CString strMessagePattern;
-					strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
+					std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
 					std::string szName;
 					{
 						CStringManager::GetRefValueFromTypeAndName( &szName, objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first.ToString(), TYPE_SEPARATOR_CHAR );
 					}
-					CString strMessage;
-					strMessage.Format( strMessagePattern, szName.c_str() );
-					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+					const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), szName.c_str() );
+					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 					if ( nButtonPressed == IDCANCEL )
 					{
 						return false;
@@ -198,9 +198,8 @@ namespace NMainFrameShared
 				}
 				else
 				{
-					CString strMessagePattern;
-					strMessagePattern.LoadString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
-					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessagePattern, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
+					std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
+					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessagePattern.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
 					if ( nButtonPressed == IDCANCEL )
 					{
 						return false;
@@ -212,8 +211,7 @@ namespace NMainFrameShared
 			if ( bModified && bConfirmed )
 			{
 				NProgress::Create( true );
-				CString strPM;
-				strPM.LoadString( IDS_PM_SAVE );
+				std::string strPM = NResources::GetString( IDS_PM_SAVE );
 				NProgress::SetMessage( std::string( strPM ) );
 				NProgress::SetRange( 0, pEditorContainer->GetActiveEditor() ? 2 : 1 );
 			}
@@ -666,9 +664,8 @@ namespace NMainFrameShared
 	{
 		char pBuffer[0xFFF + 1];
 		::GetCurrentDirectory( 0xFFF, pBuffer );
-		CString strHelpFileName;
-		strHelpFileName.LoadString( IDS_HELP_FILE_NAME );
-		return std::string( CString( pBuffer ) + CString( "\\" ) + strHelpFileName );
+		std::string strHelpFileName = NResources::GetString( IDS_HELP_FILE_NAME );
+		return std::string( pBuffer ) + "\\" + strHelpFileName;
 	}
 
 
@@ -686,11 +683,9 @@ namespace NMainFrameShared
 		}
 		else
 		{
-			CString strMessagePattern;
-			CString strMessage;
-			strMessagePattern.LoadString( IDS_NO_HELP_FILE_MESSAGE );
-			strMessage.Format( strMessagePattern, rszHelpFilePath.c_str() );
-			::MessageBox( MainWindowHandle(), strMessage, Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONERROR | MB_OK );
+			const std::string strMessagePattern = NResources::GetString( IDS_NO_HELP_FILE_MESSAGE );
+			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszHelpFilePath.c_str() );
+			::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONERROR | MB_OK );
 		}
 	}
 
@@ -720,8 +715,7 @@ namespace NMainFrameShared
 
 	std::string GetRecentEmptyLabel()
 	{
-		CString strMenuLabel;
-		strMenuLabel.LoadString( IDS_RECENT_EMPTY );
+		std::string strMenuLabel = NResources::GetString( IDS_RECENT_EMPTY );
 		return std::string( strMenuLabel );
 	}
 

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 
 #include "MainFrameWxPanes.h"
 
@@ -24,9 +25,8 @@ namespace NMainFrameWxPanes
 	{
 		wxString LoadCaption( UINT nID )
 		{
-			CString strCaption;
-			strCaption.LoadString( nID );
-			return wxString::FromUTF8( strCaption.GetString() );
+			std::string strCaption = NResources::GetString( nID );
+			return wxString::FromUTF8( strCaption.c_str() );
 		}
 
 
@@ -207,7 +207,7 @@ namespace NMainFrameWxPanes
 	// No wxTAB_TRAVERSAL: nothing in the panel is wx's to navigate between.
 	bool CToolBarImages::AddToolBarResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nResourceID ), RT_TOOLBAR );
+		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_TOOLBAR );
 		// The A form by name: wx's Windows headers make FindResource the wide one.
 		const HRSRC hResource = ::FindResourceA( hInstance, MAKEINTRESOURCEA( nResourceID ), RT_TOOLBAR );
 		if ( hResource == 0 )
@@ -257,7 +257,7 @@ namespace NMainFrameWxPanes
 
 	void CToolBarImages::AddIcon( unsigned nCommandID, unsigned nIconID )
 	{
-		const HINSTANCE hInstance = AfxFindResourceHandle( MAKEINTRESOURCE( nIconID ), RT_GROUP_ICON );
+		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nIconID ), RT_GROUP_ICON );
 		const HICON hIcon = static_cast<HICON>( ::LoadImage( hInstance, MAKEINTRESOURCE( nIconID ), IMAGE_ICON, 16, 16, 0 ) );
 		if ( hIcon == 0 )
 		{
@@ -502,11 +502,10 @@ namespace NMainFrameWxPanes
 		pPanel->GetSizer()->Add( pBrowserWindow, wxSizerFlags( 1 ).Expand() );
 		pPanel->GetSizer()->Add( pEmpty, wxSizerFlags( 1 ).Expand() );
 		//
-		CString strCaption;
-		strCaption.LoadString( IDS_DW_GDB_BROWSE_NAME );
+		std::string strCaption = NResources::GetString( IDS_DW_GDB_BROWSE_NAME );
 		// MainFrame_Consts.cpp's first docking window.
 		wxAuiPaneInfo info = DockedPaneInfo( wxString::Format( "GameDatabase%d", contents.GetID() ),
-																				 fmt::sprintf( strCaption.GetString(), nWindowIndex ), AFX_IDW_DOCKBAR_LEFT, 0.5f, 265 );
+																				 fmt::sprintf( strCaption.c_str(), nWindowIndex ), AFX_IDW_DOCKBAR_LEFT, 0.5f, 265 );
 		info.Position( nWindowIndex );
 		pManager->AddPane( pPanel, info );
 		contents.Start( pBrowser );

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include "MapEditorLib/MfcWidget.h"
 #include <fmt/format.h>
@@ -181,11 +182,11 @@ void CMapInfoEditor::CreateControls()
 			const auto AddStateBar = [this]( auto eState, const std::vector<std::pair<unsigned, NShortcutBar::TPaletteFactory>> &rTabs )
 			{
 				const int nBar = pShortcutBarView->BeginBar( INVALID_COMMAND_HANDLER_ID, INVALID_COMMAND_ID );
-				CString strPaneLabel;
+				std::string strPaneLabel;
 				for ( const std::pair<unsigned, NShortcutBar::TPaletteFactory> &rTab : rTabs )
 				{
-					strPaneLabel.LoadString( theEDB2M1Instance, rTab.first );
-					pShortcutBarView->AddTab( nBar, std::string( strPaneLabel.GetString() ), rTab.second );
+					strPaneLabel = NResources::GetString( rTab.first );
+					pShortcutBarView->AddTab( nBar, strPaneLabel, rTab.second );
 				}
 				//
 				CMapInfoEditorSettings::CActiveStateMap::const_iterator posActiveStateMap = editorSettings.activeStateMap.find( eState );
@@ -200,8 +201,8 @@ void CMapInfoEditor::CreateControls()
 					pShortcutBarView->ActivateTab( nBar, CMapInfoState::DEFAULT_INPUT_SUBSTATE[eState] );
 				}
 				//
-				strPaneLabel.LoadString( theEDB2M1Instance, CMapInfoState::INPUT_STATE_LABEL_ID[eState] );
-				pShortcutBarView->EndBar( nBar, std::string( strPaneLabel.GetString() ) );
+				strPaneLabel = NResources::GetString( CMapInfoState::INPUT_STATE_LABEL_ID[eState] );
+				pShortcutBarView->EndBar( nBar, strPaneLabel );
 			};
 			AddStateBar( CMapInfoState::IS_TERRAIN, {
 				{ CMapInfoState::TERRAIN_INPUT_SUSBSTATE_LABEL_ID[CMapInfoState::TERRAIN_ISS_HEIGHT_V3], &NHeightViewV3::Create },
@@ -252,13 +253,11 @@ void CMapInfoEditor::CreateControls()
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create movies editor window: %g", NHPTimer::GetTimePassed( &time ) );
 
-	AfxSetResourceHandle( theEDB2M1Instance );
 
-	CString strToolbarName;
-	strToolbarName.LoadString( IDS_TOOLBAR_MAPINFO_VIEW );
+	std::string strToolbarName = NResources::GetString( IDS_TOOLBAR_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_VIEW, IDT_MAPINFO_VIEW );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoViewToolbarID,
-																													strToolbarName.GetString(),
+																													strToolbarName.c_str(),
 																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT,
 																													TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -266,10 +265,10 @@ void CMapInfoEditor::CreateControls()
 																													true,
 																													false,
 																													true );
-	strToolbarName.LoadString( IDS_TOOLBAR_MAPINFO_TOOLS );
+	strToolbarName = NResources::GetString( IDS_TOOLBAR_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->AddToolBarResource( IDT_MAPINFO_TOOLS, IDT_MAPINFO_TOOLS );
 	Singleton<IMainFrameContainer>()->Get()->CreateToolBar( &nMapInfoToolsToolbarID,
-																													strToolbarName.GetString(),
+																													strToolbarName.c_str(),
 																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT,
 																													TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID,
  																													CBRS_ALIGN_ANY,
@@ -277,7 +276,6 @@ void CMapInfoEditor::CreateControls()
 																													true,
 																													false,
 																													true );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 //CRAP} PLAIN_TEXT
 
@@ -429,9 +427,7 @@ void CMapInfoEditor::Create()
 	//
 	DebugTrace( "CMapInfoEditor::Create(): Create mapinfo state: %g", NHPTimer::GetTimePassed( &time ) );
 	//
-	AfxSetResourceHandle( theEDB2M1Instance );
 	Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAPINFO );
-	AfxSetResourceHandle( AfxGetInstanceHandle() );
 }
 
 
@@ -441,9 +437,7 @@ void CMapInfoEditor::Destroy()
 			 Singleton<IMainFrameContainer>()->Get() &&
 			 Singleton<IMainFrameContainer>()->GetMainWindow() )
 	{
-		AfxSetResourceHandle( theEDB2M1Instance );
 		Singleton<IMainFrameContainer>()->Get()->ShowMenu( IDM_MAIN );
-		AfxSetResourceHandle( AfxGetInstanceHandle() );
 		//
 		if ( pwndShortcutBar )
 		{

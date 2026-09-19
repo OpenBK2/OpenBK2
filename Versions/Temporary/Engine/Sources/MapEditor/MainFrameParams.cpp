@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "ResourceDefines.h"
 
@@ -16,17 +17,14 @@ SMainFrameParams::SMainFrameParams()
 void SMainFrameParams::GetRegistryKey( std::string *pszRegistryKey )
 {
 	NI_ASSERT( pszRegistryKey != 0, "SMainFrameParams::GetRegistryKey() pszRegistryKey is NULL" );
-	CString strPath;
-	strPath.LoadString( IDS_REGISTRY_PATH );
-	CString strTitle;
-	strTitle.LoadString( AFX_IDS_APP_TITLE );
-	CString strKey;
-	strKey.LoadString( IDS_REGISTRY_KEY );
+	std::string strPath = NResources::GetString( IDS_REGISTRY_PATH );
+	std::string strTitle = NResources::GetString( AFX_IDS_APP_TITLE );
+	std::string strKey = NResources::GetString( IDS_REGISTRY_KEY );
 	( *pszRegistryKey ) = fmt::format( "Software\\{}\\{}\\{}\\{}",
-																LPCTSTR( strPath ),
+																strPath.c_str(),
 																Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(),
-																LPCTSTR( strTitle ),
-																LPCTSTR( strKey ) );
+																strTitle.c_str(),
+																strKey.c_str() );
 }
 
 
@@ -61,30 +59,30 @@ void SMainFrameParams::Load( bool bFromRegistry )
 		GetRegistryKey( &szRegistryKey );
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
 
-		CString strKey;
+		std::string strKey;
 		std::string szFormat;
 		int nValue = 0;
 		std::string szValue;
 
 		nValue = 0;
-		strKey.LoadString( IDS_REGISTRY_KEY_MAXIMIZE );
-		registrySection.LoadNumber( strKey, "%d", &nValue, 0 );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_MAXIMIZE );
+		registrySection.LoadNumber( strKey.c_str(), "%d", &nValue, 0 );
 		bMaximized = ( nValue  > 0 );
 
-		strKey.LoadString( IDS_REGISTRY_KEY_RECT );
-		registrySection.LoadRect( strKey, "%d", &rect, CTRect<int>( 0, 0, 0, 0 ) );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_RECT );
+		registrySection.LoadRect( strKey.c_str(), "%d", &rect, CTRect<int>( 0, 0, 0, 0 ) );
 		
 		/**
 		// recentList
 		{
 			int nRecentCount = 0;
-			strKey.LoadString( IDS_REGISTRY_KEY_RECENT_LIST );
-			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
+			strKey = NResources::GetString( IDS_REGISTRY_KEY_RECENT_LIST );
+			szFormat = fmt::format( "{}s", strKey.c_str() );
 			registrySection.LoadNumber( szFormat.c_str(), "%d", &nRecentCount, 0 );
 			recentList.clear();
 			for ( int nRecentIndex = 0; nRecentIndex < nRecentCount; ++nRecentIndex )
 			{
-				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = fmt::format( "{}{}", strKey.c_str(), nRecentIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				recentList.push_back( szValue );
@@ -93,20 +91,20 @@ void SMainFrameParams::Load( bool bFromRegistry )
 		// tables
 		{
 			int nTablesCount = 0;
-			strKey.LoadString( IDS_REGISTRY_KEY_TABLE );
-			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
+			strKey = NResources::GetString( IDS_REGISTRY_KEY_TABLE );
+			szFormat = fmt::format( "{}s", strKey.c_str() );
 			registrySection.LoadNumber( szFormat.c_str(), "%d", &nTablesCount, 0 );
 			tables.clear();
 			for ( int nTableIndex = 0; nTableIndex < nTablesCount; ++nTableIndex )
 			{
-				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = fmt::format( "{}{}", strKey.c_str(), nTableIndex );
 				szValue.clear();
 				registrySection.LoadString( szFormat.c_str(), &szValue, "" );
 				InsertHashSetElement( &tables, szValue );
 			}
 		}
-		strKey.LoadString( IDS_REGISTRY_CURRENT_TABLE );
-		registrySection.LoadString( strKey, &szCurrentTable, "" );
+		strKey = NResources::GetString( IDS_REGISTRY_CURRENT_TABLE );
+		registrySection.LoadString( strKey.c_str(), &szCurrentTable, "" );
 		/**/
 	}
 	else
@@ -127,26 +125,26 @@ void SMainFrameParams::Save(  bool bToRegistry )
 		::RegDeleteKey( HKEY_CURRENT_USER, szRegistryKey.c_str() );
 		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_WRITE, szRegistryKey.c_str() );
 
-		CString strKey;
+		std::string strKey;
 		std::string szFormat;
 
-		strKey.LoadString( IDS_REGISTRY_KEY_MAXIMIZE );
-		registrySection.SaveNumber( strKey, "%d", bMaximized );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_MAXIMIZE );
+		registrySection.SaveNumber( strKey.c_str(), "%d", bMaximized );
 
-		strKey.LoadString( IDS_REGISTRY_KEY_RECT );
-		registrySection.SaveRect( strKey, "%d", rect );
+		strKey = NResources::GetString( IDS_REGISTRY_KEY_RECT );
+		registrySection.SaveRect( strKey.c_str(), "%d", rect );
 
 		/**
 		// recentList
 		{
 			int nRecentCount = recentList.size();
-			strKey.LoadString( IDS_REGISTRY_KEY_RECENT_LIST );
-			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
+			strKey = NResources::GetString( IDS_REGISTRY_KEY_RECENT_LIST );
+			szFormat = fmt::format( "{}s", strKey.c_str() );
 			registrySection.SaveNumber( szFormat.c_str(), "%d", nRecentCount );
 			int nRecentIndex = 0;
 			for ( std::list<std::string>::const_iterator itRecent = recentList.begin(); itRecent != recentList.end(); ++itRecent )
 			{
-				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nRecentIndex );
+				std::string szFormat = fmt::format( "{}{}", strKey.c_str(), nRecentIndex );
 				registrySection.SaveString( szFormat.c_str(), ( *itRecent ) );
 				++nRecentIndex;
 			}
@@ -155,19 +153,19 @@ void SMainFrameParams::Save(  bool bToRegistry )
 		// tables
 		{
 			int nTablesCount = tables.size();
-			strKey.LoadString( IDS_REGISTRY_KEY_TABLE );
-			szFormat = fmt::format( "{}s", LPCTSTR( strKey ) );
+			strKey = NResources::GetString( IDS_REGISTRY_KEY_TABLE );
+			szFormat = fmt::format( "{}s", strKey.c_str() );
 			registrySection.SaveNumber( szFormat.c_str(), "%d", nTablesCount );
 			int nTableIndex = 0;
 			for ( CTableSet::const_iterator itTable = tables.begin(); itTable != tables.end(); ++itTable )
 			{
-				std::string szFormat = fmt::format( "{}{}", LPCTSTR( strKey ), nTableIndex );
+				std::string szFormat = fmt::format( "{}{}", strKey.c_str(), nTableIndex );
 				registrySection.SaveString( szFormat.c_str(), itTable->first );
 				++nTableIndex;
 			}
 		}
-		strKey.LoadString( IDS_REGISTRY_CURRENT_TABLE );
-		registrySection.SaveString( strKey, szCurrentTable );
+		strKey = NResources::GetString( IDS_REGISTRY_CURRENT_TABLE );
+		registrySection.SaveString( strKey.c_str(), szCurrentTable );
 		/**/
 	}
 	else

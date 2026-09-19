@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Resources.h"
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -192,9 +193,8 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	NProgress::Create( true );
 	if ( !rObjectSet.objectNameSet.empty() )
 	{
-		CString strPM;
-		strPM.LoadString( IDS_PM_CREATE_EDITOR );
-		NProgress::SetMessage( fmt::sprintf( strPM.GetString(), rObjectSet.objectNameSet.begin()->first.ToString().c_str() ) );
+		std::string strPM = NResources::GetString( IDS_PM_CREATE_EDITOR );
+		NProgress::SetMessage( fmt::sprintf( strPM.c_str(), rObjectSet.objectNameSet.begin()->first.ToString().c_str() ) );
 	}
 	NProgress::SetRange( 0, 2 );
 	NProgress::SetPosition( 0 );
@@ -242,8 +242,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 {
 	NProgress::Create( true );
-	CString strPM;
-	strPM.LoadString( IDS_PM_DESTROY_EDITOR );
+	std::string strPM = NResources::GetString( IDS_PM_DESTROY_EDITOR );
 	NProgress::SetMessage( std::string( strPM ) );
 	NProgress::SetRange( 0, 1 );
 	NProgress::SetPosition( 0 );
@@ -258,8 +257,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 	if ( !szActiveTypeName.empty() )
 	{
 		NProgress::Create( true );
-		CString strPM;
-		strPM.LoadString( IDS_PM_RELOAD_EDITOR );
+		std::string strPM = NResources::GetString( IDS_PM_RELOAD_EDITOR );
 		NProgress::SetMessage( std::string( strPM ) );
 		NProgress::SetRange( 0, 1 );
 		NProgress::SetPosition( 0 );
