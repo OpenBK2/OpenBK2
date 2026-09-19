@@ -6,6 +6,7 @@
 #include "ResourceDefines.h"
 #include "PC_Constants.h"
 #include "DBLinkView.h"
+#include "FileDialogs.h"
 
 #include "PropertyButtons.h"
 #include "BitFieldView.h"
@@ -289,53 +290,31 @@ namespace
 		bool bResult = false;
 		{
 			NFile::CCurrDirHolder currDirHolder;
-			std::vector<char> fileBuffer( 0xFFFF, 0 );
-			CFileDialog fileDialog( true, "", "", OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST, szMask.c_str(), ToCWnd( rContext.pOwner ) );
-			fileDialog.m_ofn.lpstrFile = &fileBuffer[0];
-			fileDialog.m_ofn.nMaxFile = 0xFFFF - 1;
-			fileDialog.m_ofn.lpstrInitialDir = szInitialDir.c_str();
-			fileDialog.m_ofn.lpstrTitle = szTitle.c_str();
-			//
-			if ( ( fileDialog.DoModal() == IDOK ) && rContext.bEditable )
+			std::string szFullFilePath;
+			if ( NFileDialog::OpenFile( rContext.pOwner, szTitle, szMask, szInitialDir, &szFullFilePath ) && rContext.bEditable )
 			{
-				POSITION position = fileDialog.GetStartPosition();
-				while ( position )
+				const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) );
+				if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
 				{
-					const std::string szFullFilePath = fileDialog.GetNextPathName( position );
-					const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) );
-					if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
-					{
-						( *pszNewText ) = szFullFilePath.substr( szDataFolder.size() );
-						std::string szObjectNamePrefix;
-						CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
-						rFilePathMap[szMask] = szObjectNamePrefix;
-						bResult = true;
-					}
+					( *pszNewText ) = szFullFilePath.substr( szDataFolder.size() );
+					std::string szObjectNamePrefix;
+					CStringManager::SplitFileName( &szObjectNamePrefix, 0, 0, szFullFilePath );
+					rFilePathMap[szMask] = szObjectNamePrefix;
+					bResult = true;
 				}
 			}
-			fileDialog.m_ofn.lpstrFile = 0;
 		}
 		RemoveSceneInput();
 		return bResult;
 	}
 
 
-	int CALLBACK BrowseForFolderProc( HWND hwnd, unsigned nCode, LPARAM lParam, LPARAM pData )
-	{
-		if ( nCode == BFFM_INITIALIZED )
-		{
-			::SendMessage( hwnd, BFFM_SETSELECTION, (WPARAM)0, pData );
-		}
-		return 0;
-	}
-
-
 	// CPCStringDirRefEditor::OnBrowse: a folder under the property's data
 	// folder, relative to it, with a trailing backslash.
 	//
-	// Kept as it was, including what it does not do: the picker opens only when
-	// the remembered folder parses as a shell path, so with nothing remembered
-	// yet no picker appears.
+	// The picker used to open only when the remembered folder parsed as a
+	// shell path, so with nothing remembered yet no picker appeared at all. It
+	// always opens now, on the remembered folder when there is one.
 	bool BrowseFolder( const NPropertyButton::SContext &rContext, std::string *pszNewText )
 	{
 		const SPropertyDesc *const pDesc = rContext.pDesc;
@@ -344,57 +323,10 @@ namespace
 		const std::string szTitle = fmt::sprintf( LoadResourceString( IDS_BROWSE_FOR_FOLDER_DIALOG_TITLE ), rContext.szName );
 
 		std::string szPath;
-		LPMALLOC pMalloc = 0;
-		HRESULT hResult = ::SHGetMalloc( &pMalloc );
-		ASSERT( SUCCEEDED( hResult ) );
-		if ( SUCCEEDED( hResult ) )
+		if ( NFileDialog::ChooseFolder( rContext.pOwner, szTitle, szInitialDir, &szPath ) &&
+				 ( !szPath.empty() ) && ( szPath[szPath.size() - 1] != '\\' ) )
 		{
-			LPSHELLFOLDER pShellFolder = 0;
-			hResult = ::SHGetDesktopFolder( &pShellFolder );
-			if ( SUCCEEDED( hResult ) )
-			{
-				LPITEMIDLIST pidl = NULL;
-				ULONG dwEaten = 0;
-				ULONG dwAttribs = 0;
-				// no _MAX_PATH buffer to overflow, and no silent truncation of
-				// a longer path either
-				std::wstring wszPath = UTF8ToWide( szInitialDir );
-				hResult = pShellFolder->ParseDisplayName( NULL, NULL, &wszPath[0], &dwEaten, &pidl, &dwAttribs );
-				if ( SUCCEEDED( hResult ) )
-				{
-					TCHAR pBuffer[_MAX_PATH];
-					memset( pBuffer, 0, sizeof( pBuffer ) );
-
-					BROWSEINFO bi;
-					memset( &bi, 0, sizeof( bi ) );
-					bi.hwndOwner = AfxGetMainWnd()->m_hWnd;
-					bi.pidlRoot = 0;
-					bi.pszDisplayName = pBuffer;
-					bi.lpszTitle = szTitle.c_str();
-					bi.ulFlags = BIF_USENEWUI;
-					bi.lpfn = BrowseForFolderProc;
-					bi.lParam = ( LPARAM )pidl;
-
-					LPITEMIDLIST pidlPath = ::SHBrowseForFolder( &bi );
-					if ( pidlPath != NULL )
-					{
-						if ( ::SHGetPathFromIDList( pidlPath, pBuffer ) )
-						{
-							szPath = pBuffer;
-							if ( ( !szPath.empty() ) && ( szPath[szPath.size() - 1] != '\\' ) )
-							{
-								szPath += "\\";
-							}
-						}
-						pMalloc->Free( pidlPath );
-					}
-					pMalloc->Free( pidl );
-				}
-				pShellFolder->Release();
-				pShellFolder = NULL;
-			}
-			pMalloc->Release();
-			pMalloc = NULL;
+			szPath += "\\";
 		}
 		bool bResult = false;
 		if ( rContext.bEditable && !szPath.empty() )

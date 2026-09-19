@@ -11,6 +11,7 @@ set(SOURCES
     CreateModViewWx.cpp
     EditorContainer.cpp
     ExporterContainer.cpp
+    FileDialogsWx.cpp
     FolderCallback.cpp
     GDBBrowserPane.cpp
     LogPane.cpp

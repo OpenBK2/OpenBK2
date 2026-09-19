@@ -20,6 +20,7 @@
 #include "Misc/StrProc.h"
 #include "MapEditorLib/StringManager.h"
 #include "DBLinkView.h"
+#include "FileDialogs.h"
 #include "MapEditorLib/CommonEditorMethods.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/Tools_Resources.h"
@@ -590,14 +591,12 @@ namespace NMainFrameShared
 		// Give the shell a canonical Windows path, without the mixed trailing
 		// separators used internally by the VFS. Always start in the game's Data.
 		const std::string initialFolder = dataRoots.back().string();
-		CFileDialog dialog( TRUE, "xdb", nullptr, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_NOCHANGEDIR,
-			"Game database files (*.xdb)|*.xdb||", MainFrameWnd() );
-		dialog.m_ofn.lpstrInitialDir = initialFolder.c_str();
-		dialog.m_ofn.lpstrTitle = "Register XDB in the current game or mod database";
-		if ( dialog.DoModal() != IDOK )
+		std::string szChosen;
+		if ( !NFileDialog::OpenFile( Singleton<IMainFrameContainer>()->GetMainWindow(), "Register XDB in the current game or mod database",
+																 "Game database files (*.xdb)|*.xdb||", initialFolder, &szChosen ) )
 			return;
 		std::error_code error;
-		const auto filePath = std::filesystem::canonical( std::filesystem::path(dialog.GetPathName().GetString()), error );
+		const auto filePath = std::filesystem::canonical( std::filesystem::u8path( szChosen ), error );
 		if ( error || _wcsicmp(filePath.extension().c_str(), L".xdb") != 0 )
 		{
 			ReportError( "Select an existing .xdb file." );
