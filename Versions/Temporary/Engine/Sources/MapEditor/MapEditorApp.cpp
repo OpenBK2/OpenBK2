@@ -2,7 +2,17 @@
 
 // CoInitialize and CoUninitialize, which came in through Shlwapi.h until the
 // profile stopped needing SHDeleteKey.
+//
+// COM is Windows' own and has no counterpart off it, so the pair is guarded
+// rather than replaced. What still wants it here is worth settling before the
+// guard comes out: the ODBC that drove Excel is gone, which leaves
+// ShellExecuteEx in port/process.h -- itself already Windows-only -- and
+// whatever the shell does inside the common dialogs. wx initialises COM for
+// its own use on MSW, so this may be initialising it a second time for
+// nothing; the reference counting makes that harmless but not free.
+#if BOOST_OS_WINDOWS
 #include <objbase.h>
+#endif
 #include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -137,7 +147,9 @@ bool CEditorApp::CreateSingletons()
 	NHPTimer::STime time = 0;
 	NHPTimer::GetTime( &time );
 	//
+#if BOOST_OS_WINDOWS
 	::CoInitialize( 0 );
+#endif
 	//
 	DebugTrace( "EditorApp() Start: %g", NHPTimer::GetTimePassed( &time ) );
 
@@ -326,7 +338,9 @@ void CEditorApp::DestroySingletons()
 	//
 	NSingleton::DoneSingletons();
 	//
+#if BOOST_OS_WINDOWS
 	::CoUninitialize();
+#endif
 	//
 	DebugTrace( "EditorApp() Finalize: %g", NHPTimer::GetTimePassed( &time ) );
 }
