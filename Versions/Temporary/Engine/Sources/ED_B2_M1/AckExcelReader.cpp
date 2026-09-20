@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AckExcelReader.h"
 
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 
 #include <sql.h>
 #include <sqlext.h>
@@ -63,7 +63,9 @@ namespace
 		{
 			szText = reinterpret_cast<const char*>( szMessage );
 		}
-		::MessageBoxA( MainWindowHandle(), szText.c_str(), nullptr, MB_ICONEXCLAMATION | MB_OK );
+		// Titled with the application name now, where a null title gave the system
+		// default ("Error"); every other box in the editor is titled this way.
+		NMessage::Warning( szText );
 	}
 
 

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -76,7 +76,7 @@ bool CReinfPointsState::DeleteSelectedReinfPoint()
 		return false;
 	//
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2 ) == IDYES )
+	if ( NMessage::AskYesNo( strMessage ) )
 	{
 		const std::string szName = fmt::format( "Players.[{}].ReinforcementPoints", nSelectedPlayer );
 		CPtr<CObjectBaseController> pObjectController = pMapInfoEditor->CreateController();

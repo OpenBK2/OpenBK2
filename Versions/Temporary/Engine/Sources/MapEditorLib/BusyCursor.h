@@ -5,8 +5,8 @@
 // The busy cursor, for as long as one of these lives: what MFC's CWaitCursor
 // was, for a long operation run straight from a command.
 //
-// Toolkit-neutral, because MapEditorLib does not link wx and its users -- the
-// editor states, the builders -- include no toolkit either. The front end says
+// Toolkit-neutral, because its users -- the editor states, the builders --
+// include no toolkit either. The front end says
 // how to show and hide the cursor, once, at startup (the wx frame hands it
 // wxBeginBusyCursor and wxEndBusyCursor). Until then this does nothing. Nests.
 //

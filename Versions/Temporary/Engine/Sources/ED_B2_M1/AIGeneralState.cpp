@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -698,10 +698,7 @@ void CAIGeneralPointsState::DeletePoint()
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage.c_str(), 
-										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
-										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
+	if ( NMessage::AskYesNo( strMessage ) )
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &parcel = dialogData.players[dialogData.CurrentPlayer()].parcels[dialogData.CurrentParcel()];
 		int i = 0;
@@ -735,10 +732,7 @@ void CAIGeneralPointsState::DeleteID()
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage.c_str(), 
-										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
-										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
+	if ( NMessage::AskYesNo( strMessage ) )
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo &player = dialogData.players[dialogData.CurrentPlayer()];
 		int i = 0;
@@ -773,10 +767,7 @@ void CAIGeneralPointsState::DeleteParcel()
 		return;
 
 	std::string strMessage = NResources::GetString( IDS_MIMO_DELETE_OBJECT_MESSAGE );
-	if ( ::MessageBox(MainWindowHandle(), 
-										strMessage.c_str(), 
-										Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), 
-										MB_ICONQUESTION | MB_YESNO | MB_DEFBUTTON2) == IDYES )
+	if ( NMessage::AskYesNo( strMessage ) )
 	{
 		SAIGeneralPointsWindowData::SAIPlayerInfo &player = dialogData.players[dialogData.CurrentPlayer()];
 		int i = 0;

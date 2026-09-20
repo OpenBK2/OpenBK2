@@ -2,7 +2,7 @@
 #include "MapEditorLib/Resources.h"
 #include <fmt/printf.h>
 #include "MapEditorLib/BusyCursor.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -185,22 +185,22 @@ namespace NMainFrameShared
 						CStringManager::GetRefValueFromTypeAndName( &szName, objectSet.szObjectTypeName, objectSet.objectNameSet.begin()->first.ToString(), TYPE_SEPARATOR_CHAR );
 					}
 					const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), szName.c_str() );
-					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
-					if ( nButtonPressed == IDCANCEL )
+					const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessage );
+					if ( eAnswer == NMessage::ANSWER_CANCEL )
 					{
 						return false;
 					}
-					bConfirmed = ( nButtonPressed == IDYES );
+					bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
 				}
 				else
 				{
 					std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_SHORT );
-					const int nButtonPressed = ::MessageBox( MainWindowHandle(), strMessagePattern.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 );
-					if ( nButtonPressed == IDCANCEL )
+					const NMessage::EAnswer eAnswer = NMessage::AskYesNoCancel( strMessagePattern );
+					if ( eAnswer == NMessage::ANSWER_CANCEL )
 					{
 						return false;
 					}
-					bConfirmed = ( nButtonPressed == IDYES );
+					bConfirmed = ( eAnswer == NMessage::ANSWER_YES );
 				}
 			}
 			//
@@ -509,9 +509,8 @@ namespace NMainFrameShared
 
 	void RegisterXDB( const std::function<void()> &rReloadData )
 	{
-		const HWND hwndOwner = MainWindowHandle();
-		const auto ReportError = [hwndOwner]( const std::string &message ) {
-			::MessageBox( hwndOwner, message.c_str(), "Register XDB", MB_OK | MB_ICONERROR );
+		const auto ReportError = []( const std::string &message ) {
+			NMessage::Error( message, "Register XDB" );
 		};
 		// Attaching a mod changes the writable folder, but the base Data folder is
 		// still mounted. Accept both roots and use the same base path as MODs.cpp.
@@ -595,9 +594,9 @@ namespace NMainFrameShared
 			return;
 		}
 		Singleton<IMainFrameContainer>()->Get()->Log( LT_NORMAL, fmt::format("Registered {} ({})\n", dbPath, typeName) );
-		::MessageBox( hwndOwner, fmt::format("{}\nType: {}\n\n{}", dbPath, typeName,
-			bAlreadyRegistered ? "This resource was already registered." : "Registered and saved to the database index.").c_str(),
-			"Register XDB", MB_OK | MB_ICONINFORMATION );
+		NMessage::Information( fmt::format("{}\nType: {}\n\n{}", dbPath, typeName,
+			bAlreadyRegistered ? "This resource was already registered." : "Registered and saved to the database index."),
+			"Register XDB" );
 	}
 
 
@@ -624,7 +623,7 @@ namespace NMainFrameShared
 		{
 			const std::string strMessagePattern = NResources::GetString( IDS_NO_HELP_FILE_MESSAGE );
 			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszHelpFilePath.c_str() );
-			::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONERROR | MB_OK );
+			NMessage::Error( strMessage );
 		}
 	}
 

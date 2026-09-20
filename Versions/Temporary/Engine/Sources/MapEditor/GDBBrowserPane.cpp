@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/BusyCursor.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "ResourceDefines.h"
@@ -408,21 +408,17 @@ void CGDBBrowserContents::OnCheckIn()
 	//
 	if ( bResult )
 	{
-		::MessageBox( MainWindowHandle(), "Check in completed successfully.\r\n\r\n"
-				"MapEditor will exit now.",
-				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONINFORMATION
-				);
+		NMessage::Information( "Check in completed successfully.\r\n\r\n"
+				"MapEditor will exit now." );
 	}
 	else
 	{
-		::MessageBox( MainWindowHandle(), "Check in failed.\r\n\r\n"
+		NMessage::Error( "Check in failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database,\r\n"
 				"call to MapEditor's gurus immediately and do not try to start MapEditor again until they come.\r\n\r\n"
-				"MapEditor will exit now.",
-				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONERROR
-				);
+				"MapEditor will exit now." );
 	}
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }
@@ -443,20 +439,16 @@ void CGDBBrowserContents::OnGetLatest()
 	catch (...)	{}
 	if ( bResult )
 	{
-		::MessageBox( MainWindowHandle(), "\"Get latest\" completed successfully\r\n\r\n"
-				"MapEditor will exit now.",
-				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONINFORMATION
-				);
+		NMessage::Information( "\"Get latest\" completed successfully\r\n\r\n"
+				"MapEditor will exit now." );
 	}
 	else
 	{
-		::MessageBox( MainWindowHandle(), "Game database Get Latest operation has failed.\r\n\r\n"
+		NMessage::Error( "Game database Get Latest operation has failed.\r\n\r\n"
 				"(Detailed error description stored in MapEditor.log file)\r\n\r\n"
 				"This situation is CRITICAL.\r\n"
 				"If you do not want to lose changes you've done in your local database, call to MapEditor's gurus immediately and do not try to start MapEditor again until they're come.\r\n\r\n"
-				"MapEditor will exit now.",
-				Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_OK | MB_ICONERROR
-				);
+				"MapEditor will exit now." );
 	}
 	Singleton<IMainFrameContainer>()->Get()->PostCommand( ID_APP_EXIT );
 }

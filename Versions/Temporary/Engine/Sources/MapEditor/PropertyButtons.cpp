@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 #include "MapEditorLib/ResourceDefines.h"
@@ -376,7 +376,9 @@ namespace
 		{
 			std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
 			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszFilePath.c_str() );
-			if ( ::MessageBox( MainWindowHandle(), strMessage.c_str(), Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2 ) == IDYES )
+			// Three-way as it was, though only Yes is acted on: No and Cancel both
+			// leave the edited text unsaved.
+			if ( NMessage::AskYesNoCancel( strMessage ) == NMessage::ANSWER_YES )
 			{
 				String2File( szNewText, bUnicode, rszFilePath, ::GetACP(), false );
 				NText::Reload( rszFilePath );

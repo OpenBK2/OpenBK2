@@ -2196,6 +2196,14 @@ void CMapInfoEditor::RunGame()
 	// IMainFrameContainer hands out a toolkit-neutral IWidget now, not a Stingray
 	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
 	const HWND hwndOwner = MainWindowHandle();
+	// The one message box still spelled out in Win32, on purpose. NMessage is
+	// declared without naming a toolkit, but this file calls NDb::GetObject, and
+	// the rest of the tree exports NDb::GetObjectA -- so nothing here may ever
+	// pull in a wx header, which would undefine windows.h's A/W macros and break
+	// the link. It costs nothing to leave: RunGame is Win32 the whole way down
+	// (ShellExecuteEx, GetModuleFileName) and is parked with the rest of the
+	// Maya/shell path, so converting the box alone would not move it any closer
+	// to building off Windows.
 	const auto ReportError = [hwndOwner]( const std::string &message ) {
 		::MessageBox( hwndOwner, message.c_str(), "Start Mission in Game", MB_OK | MB_ICONERROR );
 	};

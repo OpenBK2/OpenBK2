@@ -98,6 +98,7 @@
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/ExporterFactory.h"
 #include "MapEditorLib/ManipulatorManager.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "AnimationMnemonics.h"
 #include "ExporterMethods.h"
 #include "MechUnitRPGStatsExporter.h"
@@ -1377,7 +1378,9 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 		std::string error;
 		if ( !ValidateUnitModelSources(pManipulator, rszObjectTypeName, &visited, &error) )
 		{
-			::MessageBoxA(nullptr, error.c_str(), "MechUnit export", MB_OK | MB_ICONERROR);
+			// Owned by the main frame now, where this passed no owner and so could
+			// end up behind the editor.
+			NMessage::Error( error, "MechUnit export" );
 			return ER_BREAK;
 		}
 	}
