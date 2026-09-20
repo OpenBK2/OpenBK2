@@ -355,7 +355,7 @@ namespace
 		}
 		std::string szText;
 		bool bUnicode = true;
-		File2String( &szText, &bUnicode, rszFilePath, ::GetACP(), false );
+		File2String( &szText, &bUnicode, rszFilePath, false );
 		//
 		const std::string szEditor = GetEditorParameter( rContext.pDesc );
 		std::string szNewText;
@@ -380,7 +380,7 @@ namespace
 			// leave the edited text unsaved.
 			if ( NMessage::AskYesNoCancel( strMessage ) == NMessage::ANSWER_YES )
 			{
-				String2File( szNewText, bUnicode, rszFilePath, ::GetACP(), false );
+				String2File( szNewText, bUnicode, rszFilePath, false );
 				NText::Reload( rszFilePath );
 			}
 		}

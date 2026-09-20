@@ -119,9 +119,15 @@ namespace
 		strDetails << "wx (running)  : " << wxGetLibraryVersionInfo().GetVersionString() << "\n";
 		strDetails << "wx port       : " << wxPlatformInfo::Get().GetPortIdName() << ", Unicode " << wxUSE_UNICODE << ", sizeof(wxChar) " << static_cast<int>( sizeof( wxChar ) ) << "\n";
 		strDetails << "OS            : " << wxGetOsDescription() << "\n";
-		// The narrow strings are UTF-8 only where the manifest's code page took
-		// (Windows 10 1903 and later); anywhere else 65001 is missing here.
+#if BOOST_OS_WINDOWS
+		// The one GetACP left in the editor, and the one place it earns its keep:
+		// the narrow strings are UTF-8 only where the manifest's code page took
+		// (Windows 10 1903 and later), so a value other than 65001 here is the
+		// symptom to look for. Windows-only because there is no such thing to
+		// report elsewhere: the conversions say UTF-8 outright and never ask the
+		// locale.
 		strDetails << "ANSI code page: " << static_cast<unsigned>( ::GetACP() ) << "\n";
+#endif
 		strDetails << "Display scale : " << wxString::Format( "%.2f", pWindow->GetDPIScaleFactor() ) << "\n";
 		return strDetails;
 	}

@@ -67,7 +67,7 @@ namespace NMainFrameShared
 				}
 				else
 				{
-					Unicode2MBSC( &szMOD, mod.wszName, ::GetACP() );
+					Unicode2MBSC( &szMOD, mod.wszName );
 				}
 			}
 			if ( currentSWTParams.szMOD != szMOD )

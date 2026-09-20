@@ -342,8 +342,10 @@ bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLin
 
 
 // std::string, not CString, since MFC is on its way out of the editor; the
-// narrow side is UTF-8 either way, and nCodePage was already unused.
-void Unicode2MBSC( std::string *pszText, const std::wstring &rwszText, int nCodePage )
+// narrow side is UTF-8 either way. The code page these used to take was never
+// read: see the note in Tools_Resources.h for why it is gone rather than fixed
+// at 65001.
+void Unicode2MBSC( std::string *pszText, const std::wstring &rwszText )
 {
 	if ( pszText )
 	{
@@ -352,7 +354,7 @@ void Unicode2MBSC( std::string *pszText, const std::wstring &rwszText, int nCode
 }
 
 
-void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText, int nCodePage )
+void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText )
 {
 	if ( pwszText )
 	{
@@ -361,7 +363,7 @@ void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText, int nCode
 }
 
 
-void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, int nCodePage, bool bRemove_0D )
+void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D )
 {
 	if ( pstrText )
 	{
@@ -398,7 +400,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 			{
 				wszText = wszText.substr( 0, nLastIndex + 1 );
 			}
-			Unicode2MBSC( pstrText, wszText, nCodePage );
+			Unicode2MBSC( pstrText, wszText );
 			if ( pbUnicode )
 			{
 				( *pbUnicode ) = true;
@@ -439,7 +441,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 }
 
 
-void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rszTextPath, int nCodePage, bool bRemove_0D )
+void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D )
 {
 	if ( pstrText != 0 )
 	{
@@ -454,7 +456,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rsz
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
-				File2String( pstrText, pbUnicode, fileBuffer, nCodePage, bRemove_0D );
+				File2String( pstrText, pbUnicode, fileBuffer, bRemove_0D );
 			}
 		}
 	}	
@@ -523,7 +525,7 @@ void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool b
 }
 
 
-void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bool bUnicode, int nCodePage, bool bAdd_0D )
+void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bool bUnicode, bool bAdd_0D )
 {
 	if ( pBuffer != 0 )
 	{
@@ -531,7 +533,7 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bo
 		if ( bUnicode )
 		{
 			std::wstring wszText;
-			MBSC2Unicode( &wszText, rstrText, nCodePage );
+			MBSC2Unicode( &wszText, rstrText );
 			if ( !wszText.empty() )
 			{
 				if ( bAdd_0D )
@@ -617,14 +619,14 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bo
 }
 
 
-void String2File( const std::string &rstrText, bool bUnicode, const std::string &rszTextPath, int nCodePage, bool bAdd_0D )
+void String2File( const std::string &rstrText, bool bUnicode, const std::string &rszTextPath, bool bAdd_0D )
 {
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, rszTextPath );
 	if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
 	{
 		std::vector<uint8_t> fileBuffer;
-		String2File( &fileBuffer, rstrText, bUnicode, nCodePage, bAdd_0D );
+		String2File( &fileBuffer, rstrText, bUnicode, bAdd_0D );
 		if ( fileBuffer.size() > 0 )
 		{
 			streamHolder.pStream->Write( &( fileBuffer[0] ), fileBuffer.size() );
