@@ -7,6 +7,7 @@
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPaintContext.h"
 #include "ChildFrameWndBase.h"
+#include "NativeViewport.h"
 // MK_ flags for the input states' nFlags, and VK_ codes for their nChar.
 #include "port/mousekeys.h"
 #include "port/vkcodes.h"
@@ -25,24 +26,21 @@
 // CWxHostWindow made as the document window's AFX_IDW_PANE_FIRST, as the MFC
 // view was, so either frame lays it out the same way.
 //
-// **Why the input is taken as Win32 messages.** The input states' contract is
-// MFC's handlers: MK_ flags, virtual key codes, a key message's repeat count,
-// and the window's default handling done before the handler runs -- which is
-// when a right button's release becomes WM_CONTEXTMENU, so a state hears of
-// the context menu before the release. wx keeps none of those apart: a skipped
-// event gets its default handling after the handler, not before. The viewport
-// is a Direct3D 9 window and exists only on Windows, so its input is taken
-// here as the messages themselves, in MSWHandleMessage, each given its default
-// handling first and then passed on as MFC's message map passed it. Painting,
-// sizing, focus and the timer are wx's own events.
+// **The input.** The states this feeds were written against MFC's handlers and
+// still take what those took: an MK_ mask, a virtual key code, a repeat count,
+// and the context menu before the right button's release rather than after it.
+// None of that needs a window message any more -- wxMouseEvent answers the
+// mask, VirtualKeyFromWx below answers the code, wx raises one event per
+// repeat, and the order of the last is simply written out in OnRightUp. The
+// states could be asked to speak wx directly one day; until then this is the
+// one place that translates, and port/mousekeys.h and port/vkcodes.h carry the
+// constants off Windows.
 //
-// Two of the reasons this used to give are gone, and what is left is worth
-// knowing when the viewport does move: no state ever distinguished
-// WM_SYSKEYDOWN from WM_KEYDOWN, or read WM_CHAR, so those handlers have been
-// deleted. What a portable surface would still have to reproduce is the MK_
-// flags, the repeat count, and the context menu arriving before the button
-// release -- and wx has all three, in wxMouseEvent's modifiers, one event per
-// repeat, and wxEVT_CONTEXT_MENU.
+// **The handle.** The renderer, DirectInput and DirectSound are all given
+// GetHandle(), which is an HWND on Windows and an SDL_Window off it, because
+// that is what DXVK Native means by HWND. CNativeViewport (NativeViewport.h)
+// is the whole of that, and is the only place in the editor that names GTK,
+// X11 or SDL.
 
 namespace
 {
@@ -170,11 +168,15 @@ namespace
 
 		void OnSize( wxSizeEvent & )
 		{
+			const wxSize size = GetClientSize();
+			if ( sizeHook )
+			{
+				sizeHook( size.x, size.y );
+			}
 			if ( pCore->IsSettingUp() )
 			{
 				return;
 			}
-			const wxSize size = GetClientSize();
 			pCore->OnSize( size.x, size.y );
 		}
 
@@ -271,6 +273,12 @@ namespace
 		}
 
 	public:
+		// The surface is told the new size first and unconditionally: off
+		// Windows the handle is an SDL window wrapping this one, and it does not
+		// learn its own size from the toolkit. See NativeViewport::SetSize. The
+		// core's own OnSize keeps the condition it always had.
+		std::function<void( int, int )> sizeHook;
+
 		CSceneWxWindow( wxWindow *pParent, CChildFrameWndBase *_pCore )
 			// wxBORDER_SUNKEN is WS_EX_CLIENTEDGE, the MFC view's edge, which
 			// AlignWndAspect counts on: it sizes the window four pixels larger
@@ -312,6 +320,9 @@ namespace
 	{
 		CChildFrameWndBase *pCore = nullptr;
 		CSceneWxWindow *pWindow = nullptr;
+		// The handle the renderer, DirectInput and DirectSound are given. Made
+		// once the window exists and let go before it is destroyed.
+		CNativeViewport nativeViewport;
 		// Whether the core has the window: from its OnCreate to its OnDestroy.
 		bool bCoreHasWindow = false;
 		CUpdateTimer updateTimer;
@@ -360,6 +371,9 @@ namespace
 				bCoreHasWindow = false;
 				pCore->OnDestroy();
 			}
+			// After the core has let go, since it is the core's renderer that was
+			// given the handle, and while the window is still there.
+			nativeViewport.Detach();
 		}
 
 	public:
@@ -393,6 +407,20 @@ namespace
 			wxBoxSizer *const pSizer = new wxBoxSizer( wxVERTICAL );
 			pSizer->Add( pWindow, wxSizerFlags( 1 ).Expand() );
 			Root()->SetSizer( pSizer );
+			// Before the core's OnCreate, which is where it makes the renderer
+			// and asks for the handle.
+			if ( !nativeViewport.Attach( pWindow ) )
+			{
+				DestroyHost();
+				pWindow = nullptr;
+				return false;
+			}
+			// The window goes before this surface does, so the hook never
+			// outlives it.
+			pWindow->sizeHook = [this]( int nWidth, int nHeight )
+			{
+				nativeViewport.SetSize( nWidth, nHeight );
+			};
 			pWindow->Bind( wxEVT_SCROLLWIN_TOP, &CWxSceneSurface::OnScroll, this );
 			pWindow->Bind( wxEVT_SCROLLWIN_BOTTOM, &CWxSceneSurface::OnScroll, this );
 			pWindow->Bind( wxEVT_SCROLLWIN_LINEUP, &CWxSceneSurface::OnScroll, this );
@@ -425,7 +453,9 @@ namespace
 
 		virtual HWND GetHandle() const
 		{
-			return ( pWindow != nullptr ) ? static_cast<HWND>( pWindow->GetHWND() ) : 0;
+			// An HWND on Windows and an SDL_Window off it, which is what DXVK
+			// means by HWND there. NativeViewport.h has the whole of it.
+			return static_cast<HWND>( nativeViewport.GetHandle() );
 		}
 
 		virtual void Redraw()
