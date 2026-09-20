@@ -543,22 +543,31 @@ namespace NMainFrameShared
 			return;
 		std::error_code error;
 		const auto filePath = std::filesystem::canonical( std::filesystem::u8path( szChosen ), error );
-		if ( error || _wcsicmp(filePath.extension().c_str(), L".xdb") != 0 )
+		// The extension as UTF-8 rather than through path::c_str(), which is
+		// wchar_t* on Windows and char* everywhere else -- which is the only
+		// reason the wide _wcsicmp was here at all.
+		if ( error || !NStr::IEquals( filePath.extension().u8string(), ".xdb" ) )
 		{
 			ReportError( "Select an existing .xdb file." );
 			return;
 		}
 		std::string dbPath;
-		const std::wstring fullPath = filePath.wstring();
+		const std::string fullPath = filePath.u8string();
 		// Try the active mod first; the resulting DBID is relative to its mounted
 		// root, never prefixed with Data/ or Mods/<name>/. Compare whole directories.
 		for ( const auto &rootPath : dataRoots )
 		{
-			std::wstring rootPrefix = rootPath.wstring();
-			if ( rootPrefix.back() != L'\\' )
-				rootPrefix += L'\\';
-			if ( fullPath.size() > rootPrefix.size() &&
-					 _wcsnicmp(fullPath.c_str(), rootPrefix.c_str(), rootPrefix.size()) == 0 )
+			std::string rootPrefix = rootPath.u8string();
+			// canonical() answers in native separators, so accept either rather
+			// than assuming the backslash this used to append.
+			if ( !rootPrefix.empty() && ( rootPrefix.back() != '\\' ) && ( rootPrefix.back() != '/' ) )
+			{
+				rootPrefix += static_cast<char>( std::filesystem::path::preferred_separator );
+			}
+			// Case-insensitively, as _wcsnicmp was: the roots come from the
+			// configuration and the file from a picker, and on Windows those two
+			// need not agree about case.
+			if ( fullPath.size() > rootPrefix.size() && NStr::IStartsWith( fullPath, rootPrefix ) )
 			{
 				dbPath = std::filesystem::path(fullPath.substr(rootPrefix.size())).generic_u8string();
 				break;

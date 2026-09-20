@@ -134,6 +134,26 @@ inline bool IEndsWith( const std::string &szString, const std::string &szSuffix 
 	return ICompare( szString.substr( szString.size() - szSuffix.size() ), szSuffix ) == 0;
 }
 
+
+// The same at the front, which is what _wcsnicmp over a prefix length asked.
+// Compares in place rather than taking a substring, since the strings this is
+// asked about are whole paths.
+inline bool IStartsWith( const std::string &szString, const std::string &szPrefix )
+{
+	if ( szString.size() < szPrefix.size() )
+	{
+		return false;
+	}
+	for ( size_t i = 0; i < szPrefix.size(); ++i )
+	{
+		if ( ToLowerASCII( szString[i] ) != ToLowerASCII( szPrefix[i] ) )
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 template<class T>
 void FastSearch( const char *pszBegin, const int nSize, const std::string &szSample, std::vector<int> *pFoundEntriesPos, T charsComparer );
 
