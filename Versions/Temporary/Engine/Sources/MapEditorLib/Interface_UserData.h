@@ -4,6 +4,7 @@
 #include "Interface_View.h"
 #include "Interface_Builder.h" //CTableSet;
 #include "Tools_Resources.h"
+#include "System/FilePath.h"
 #include "ControlSelection.h"
 #include "System/XmlSaver.h"
 
@@ -328,7 +329,7 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szEditorSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = fmt::format( "Editor\\{}Editor", rszTypeName.c_str() );
+					szSettingsFileName = NFile::JoinPath( "Editor", fmt::format( "{}Editor", rszTypeName.c_str() ) );
 				}
 				break;
 			}
@@ -337,7 +338,7 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szExporterSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = fmt::format( "Editor\\{}Exporter", rszTypeName.c_str() );
+					szSettingsFileName = NFile::JoinPath( "Editor", fmt::format( "{}Exporter", rszTypeName.c_str() ) );
 				}
 				break;
 			}
@@ -346,13 +347,13 @@ struct SUserData
 				szSettingsFileName = constUserData.objectTypeData[rszTypeName].szBuilderSettingsFileName;
 				if ( szSettingsFileName.empty() )
 				{
-					szSettingsFileName = fmt::format( "Editor\\{}Builder", rszTypeName.c_str() );
+					szSettingsFileName = NFile::JoinPath( "Editor", fmt::format( "{}Builder", rszTypeName.c_str() ) );
 				}
 				break;
 			}
 			case PRIVATE_SETTINGS:
 			{
-				szSettingsFileName = fmt::format( "Editor\\{}", rszTypeName.c_str() );
+				szSettingsFileName = NFile::JoinPath( "Editor", rszTypeName );
 				break;
 			}
 			default:
