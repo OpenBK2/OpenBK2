@@ -3,11 +3,11 @@
 #include "NewObjectView.h"
 
 
-#include "MapEditorLib/WxModal.h"
 #include "Misc/StrProc.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/checkbox.h>
 #include <wx/choice.h>
@@ -59,9 +59,9 @@ namespace
 		bool bEnableType = true;
 
 	public:
-		CNewObjectWxDialog( const std::vector<std::string> &rObjectTypeNameList,
+		CNewObjectWxDialog( wxWindow *pParent, const std::vector<std::string> &rObjectTypeNameList,
 												int nObjectTypeNameIndex, SBuildDataParams *_pBuildDataParams )
-			: CWxToolDialog( nullptr, wxID_ANY, "Create Game Data Base Object",
+			: CWxToolDialog( pParent, wxID_ANY, "Create Game Data Base Object",
 											 wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				objectTypeNameList( rObjectTypeNameList ), pBuildDataParams( _pBuildDataParams )
@@ -253,12 +253,12 @@ namespace NNewObject
 		{
 			return false;
 		}
-		CNewObjectWxDialog dialog( rObjectTypeNameList, nObjectTypeNameIndex, pBuildDataParams );
+		CNewObjectWxDialog dialog( ToWxOwnerWindow( pParent ), rObjectTypeNameList, nObjectTypeNameIndex, pBuildDataParams );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		return bAccepted;
 	}

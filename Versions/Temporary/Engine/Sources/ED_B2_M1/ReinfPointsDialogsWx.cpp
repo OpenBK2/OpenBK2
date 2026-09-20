@@ -7,7 +7,7 @@
 
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 #include "ReinforcementTypes.h"
@@ -62,9 +62,9 @@ namespace
 		bool bSettingData = false;
 
 	public:
-		CReinfPointsTemplatesWxDialog( CReinfPointsState::CTypedTemplateType *_pTemplates,
+		CReinfPointsTemplatesWxDialog( wxWindow *pParent, CReinfPointsState::CTypedTemplateType *_pTemplates,
 																	 CMapInfoEditor *_pMapInfoEditor, int _nPlayer, int _nReinfPoint )
-			: CWxToolDialog( nullptr, wxID_ANY, "Typed templates" ),
+			: CWxToolDialog( pParent, wxID_ANY, "Typed templates" ),
 				pTemplates( _pTemplates ), pMapInfoEditor( _pMapInfoEditor ),
 				nPlayer( _nPlayer ), nReinfPoint( _nReinfPoint )
 		{
@@ -197,8 +197,8 @@ namespace
 		std::string szNode;
 
 	public:
-		CAddTemplateWxDialog( const std::string &rszNode, CMapInfoEditor *_pMapInfoEditor )
-			: CWxToolDialog( nullptr, wxID_ANY, "Add Typed Template" ),
+		CAddTemplateWxDialog( wxWindow *pParent, const std::string &rszNode, CMapInfoEditor *_pMapInfoEditor )
+			: CWxToolDialog( pParent, wxID_ANY, "Add Typed Template" ),
 				pMapInfoEditor( _pMapInfoEditor ), szNode( rszNode )
 		{
 			std::string szCurrentType;
@@ -299,9 +299,9 @@ namespace NReinfPointsTemplates
 		{
 			return false;
 		}
-		CReinfPointsTemplatesWxDialog dialog( pTemplates, pMapInfoEditor, nPlayer, nReinfPoint );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CReinfPointsTemplatesWxDialog dialog( ToWxOwnerWindow( pParent ), pTemplates, pMapInfoEditor, nPlayer, nReinfPoint );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}
@@ -319,9 +319,9 @@ namespace NReinfPointsAddTemplate
 		{
 			return false;
 		}
-		CAddTemplateWxDialog dialog( rszNode, pMapInfoEditor );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CAddTemplateWxDialog dialog( ToWxOwnerWindow( pParent ), rszNode, pMapInfoEditor );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}

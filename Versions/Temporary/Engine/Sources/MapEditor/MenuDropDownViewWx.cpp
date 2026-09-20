@@ -3,7 +3,7 @@
 #include "MenuDropDownView.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -25,8 +25,8 @@ namespace
 	public:
 		// IDD_MENU_DROP_DOWN_LIST is a WS_POPUP with DS_MODALFRAME and no
 		// caption, which is the raised dialog frame and nothing else.
-		CMenuDropDownWxWindow()
-			: CWxToolDialog( nullptr, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize, wxBORDER_RAISED )
+		explicit CMenuDropDownWxWindow( wxWindow *pParent )
+			: CWxToolDialog( pParent, wxID_ANY, wxString(), wxDefaultPosition, wxDefaultSize, wxBORDER_RAISED )
 		{
 			// IDC_MDDL_OPERATIONS_LIST: single selection, client edge, 1 dlu in
 			// from the frame. In pixels as MFC lays the template out, measured:
@@ -117,9 +117,8 @@ namespace
 	public:
 		explicit CWxMenuDropDown( IWidget *pParent )
 		{
-			window = NWx::TopLevel<CMenuDropDownWxWindow>();
-			// Owned by the frame, so it stays above it; not modal.
-			NWxModal::SetOwnerFrame( window, pParent );
+			// Parented on the frame, so it stays above it; not modal.
+			window = NWx::TopLevel<CMenuDropDownWxWindow>( ToWxOwnerWindow( pParent ) );
 		}
 
 		virtual ~CWxMenuDropDown()

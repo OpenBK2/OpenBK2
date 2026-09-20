@@ -630,7 +630,7 @@ namespace
 			int b = 128;
 			sscanf( Text( pEdit ).c_str(), "%d,%d,%d", &r, &g, &b );
 			wxColour chosen;
-			if ( NWxColourDialog::Pick( pRoot, this, wxColour( (unsigned char)r, (unsigned char)g, (unsigned char)b ), &chosen ) )
+			if ( NWxColourDialog::Pick( this, wxColour( (unsigned char)r, (unsigned char)g, (unsigned char)b ), &chosen ) )
 			{
 				bCreateControls = true;
 				pEdit->SetValue( fmt::format( "{}, {}, {}", (int)chosen.Red(), (int)chosen.Green(), (int)chosen.Blue() ) );

@@ -19,7 +19,7 @@
 #include "MapEditorLib/PCIEMnemonics.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxOwnerDialog.h"
@@ -98,8 +98,8 @@ namespace
 		bool bRegistered = false;
 
 	public:
-		explicit CDBLinkWxDialog( const NDBLink::SRequest &rRequest )
-			: CWxOwnerDialog( nullptr, wxID_ANY, "Game Data Base Link", wxDefaultPosition, wxDefaultSize,
+		CDBLinkWxDialog( wxWindow *pParent, const NDBLink::SRequest &rRequest )
+			: CWxOwnerDialog( pParent, wxID_ANY, "Game Data Base Link", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				request( rRequest ), szCurrentTable( rRequest.szTable ), szCurrentObject( rRequest.szObject )
 		{
@@ -548,16 +548,16 @@ namespace NDBLink
 		// picker an isolated history so Cancel restores its in-memory edits,
 		// including changes accepted by nested reference pickers.
 		CControllerContainer::CEditSession editSession( checked_cast<CControllerContainer*>( Singleton<IControllerContainer>() ) );
-		CDBLinkWxDialog dialog( rRequest );
+		CDBLinkWxDialog dialog( ToWxOwnerWindow( pParent ), rRequest );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
 		bool bAccepted = false;
 		do
 		{
 			dialog.Open();
-			bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+			bAccepted = ( dialog.ShowModal() == wxID_OK );
 			// Detach the grid before rollback so losing focus or destroying its
 			// editor cannot commit a pending value after the undo has run.
 			dialog.Close();

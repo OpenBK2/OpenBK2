@@ -23,9 +23,9 @@
 //     // this is the function that should be overridden in the derived classes,
 //     // but you will mostly use MSWGetCreateWindowFlags() below
 //
-// so this is an extension point, not a hole. It is the reason there is no
-// ::SetWindowLong here -- the one place that legitimately needs raw Win32 is
-// WxModal.h, and only until the frame is wx.
+// so this is an extension point, not a hole, and it is the only raw Win32 left
+// in the editor's dialogs: everything modality used to need by hand is now
+// wx's, because the frame a dialog is parented on is a wxFrame.
 
 
 #include <wx/dialog.h>

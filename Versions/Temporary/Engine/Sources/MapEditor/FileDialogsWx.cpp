@@ -2,11 +2,10 @@
 
 #include "FileDialogs.h"
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 
 #include <wx/dirdlg.h>
 #include <wx/filedlg.h>
-#include <wx/msw/private.h>
 
 // The pickers in wx. Both are native dialogs, so what makes them modal over the
 // editor is having the frame as their parent: wx gives the system dialog that
@@ -14,14 +13,6 @@
 
 namespace
 {
-	// The wx frame pOwner belongs to, or null.
-	wxWindow* OwnerFrame( IWidget *pOwner )
-	{
-		const HWND hwndFrame = NWxModal::FindOwnerFrame( pOwner );
-		return ( hwndFrame != 0 ) ? wxFindWinFromHandle( hwndFrame ) : nullptr;
-	}
-
-
 	wxString FromUTF8( const std::string &rszText )
 	{
 		return wxString::FromUTF8( rszText.c_str(), rszText.size() );
@@ -50,7 +41,7 @@ namespace NFileDialog
 		{
 			szFilter.pop_back();
 		}
-		wxFileDialog dialog( OwnerFrame( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ), wxString(),
+		wxFileDialog dialog( ToWxOwnerWindow( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ), wxString(),
 												 FromUTF8( szFilter ), wxFD_OPEN | wxFD_FILE_MUST_EXIST );
 		if ( dialog.ShowModal() != wxID_OK )
 		{
@@ -68,7 +59,7 @@ namespace NFileDialog
 		{
 			return false;
 		}
-		wxDirDialog dialog( OwnerFrame( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ),
+		wxDirDialog dialog( ToWxOwnerWindow( pOwner ), FromUTF8( rszTitle ), FromUTF8( rszInitialDir ),
 												wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST );
 		if ( dialog.ShowModal() != wxID_OK )
 		{

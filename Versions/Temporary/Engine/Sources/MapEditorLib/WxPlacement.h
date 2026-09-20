@@ -16,7 +16,7 @@
 // fitted size back would shrink the MFC dialog, whose controls do not move
 // because nothing in these templates is anchored. So the size found there is
 // left as it was, and a dialog that has never been opened is centred over the
-// frame instead (NWxModal::CentreOver).
+// frame instead (wxWindow::CentreOnParent).
 //
 // A resizable dialog is a different case: it restores the size as well, which
 // is CSizedPlacement below.

@@ -3,7 +3,7 @@
 #include "ProgressView.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -21,8 +21,8 @@
 //
 // The two things that are not obvious are in ProgressView.h: the half second
 // before it appears, and why every setter repaints. The second is the reason
-// this file calls NWxModal::RefreshOwnerFrame -- the frame behind it is MFC and
-// will not paint itself while the thread that owns it is busy.
+// this file paints its parent too: the frame behind it will not paint itself
+// while the thread that owns it is busy.
 
 namespace
 {
@@ -31,20 +31,19 @@ namespace
 		wxStaticText *pLabel = nullptr;
 		wxGauge *pBar = nullptr;
 		wxTimer showTimer;
-		// The frame, resolved once. Not the IWidget it came from: that is a
-		// borrowed handle the caller is free to let go of, and this window lives
-		// on through every progress update after Create returns. Keeping the
-		// pointer is what crashed opening an object from the recent list, calling
-		// through a CWndWidget that had left the stack.
-		HWND hwndOwnerFrame = 0;
 
 	public:
 		// START_TIMER_INTERVAL, which is how long the editor may be busy before
 		// the user is told about it.
 		static const int START_TIMER_INTERVAL = 500;
 
-		explicit CProgressWxDialog( IWidget *pOwner )
-			: CWxToolDialog( nullptr, wxID_ANY, "Progress" ), hwndOwnerFrame( NWxModal::FindOwnerFrame( pOwner ) )
+		// The owner is taken as the wx parent rather than kept as a handle of our
+		// own: this window lives on through every progress update after Create
+		// returns, and an IWidget is borrowed -- holding one is what crashed
+		// opening an object from the recent list, through a widget that had left
+		// the stack. wx keeps the parent, and GetParent answers with it.
+		explicit CProgressWxDialog( wxWindow *pOwner )
+			: CWxToolDialog( pOwner, wxID_ANY, "Progress" )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 			// SS_LEFTNOWORDWRAP: one line, clipped rather than wrapped.
@@ -60,8 +59,9 @@ namespace
 			// names this shows.
 			SetSize( wxSize( ConvertDialogToPixels( wxSize( 296, 0 ) ).x, GetSize().y ) );
 			// DS_CENTER: the dialog manager centres this one on the screen, not on
-			// the frame, and that is where the MFC one appears.
-			Centre();
+			// the frame, and that is where the MFC one appears. Spelled out because
+			// Centre() centres on the parent now that this dialog has one.
+			CentreOnScreen();
 
 			showTimer.Bind( wxEVT_TIMER, &CProgressWxDialog::OnShowTimer, this );
 			showTimer.StartOnce( START_TIMER_INTERVAL );
@@ -72,7 +72,10 @@ namespace
 		void UpdateControls()
 		{
 			Update();
-			NWxModal::RefreshOwnerFrame( hwndOwnerFrame );
+			if ( wxWindow *const pOwner = GetParent() )
+			{
+				pOwner->Update();
+			}
 		}
 
 		void SetProgressTitle( const std::string &rszTitle )
@@ -136,18 +139,16 @@ namespace
 			Destroy();
 		}
 
-		// pParent is only used during this call; see hwndOwnerFrame.
+		// pParent is only used during this call: the window it resolves to
+		// outlives it and wx keeps that as the dialog's parent.
 		virtual bool Create( IWidget *pParent )
 		{
 			Destroy();
-			dialog = NWx::TopLevel<CProgressWxDialog>( pParent );
+			dialog = NWx::TopLevel<CProgressWxDialog>( ToWxOwnerWindow( pParent ) );
 			if ( !dialog )
 			{
 				return false;
 			}
-			// Owned by the frame so it stays above it, and not disabling it: the
-			// editor is busy behind this, not waiting on it.
-			NWxModal::SetOwnerFrame( dialog, pParent );
 			return true;
 		}
 

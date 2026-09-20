@@ -5,7 +5,7 @@
 
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/WxImage.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -227,9 +227,9 @@ namespace NAbout
 {
 	void Run( IWidget *pParent )
 	{
-		CAboutWxDialog dialog( nullptr );
-		NWxModal::CentreOver( &dialog, pParent );
-		NWxModal::ShowModalOver( &dialog, pParent );
+		CAboutWxDialog dialog( ToWxOwnerWindow( pParent ) );
+		dialog.CentreOnParent();
+		dialog.ShowModal();
 	}
 }
 

@@ -3,7 +3,7 @@
 #include "MapInfoViewFilter.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -141,8 +141,8 @@ namespace
 		}
 
 	public:
-		CMapInfoViewFilterWxDialog( CMapInfoEditorSettings::SViewFilterData *_pFilter )
-			: CWxToolDialog( nullptr, wxID_ANY, "MapInfo View Filter" ),
+		CMapInfoViewFilterWxDialog( wxWindow *pParent, CMapInfoEditorSettings::SViewFilterData *_pFilter )
+			: CWxToolDialog( pParent, wxID_ANY, "MapInfo View Filter" ),
 			pFilter( _pFilter )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
@@ -267,9 +267,9 @@ namespace NMapInfoViewFilter
 		}
 		// Taken before the dialog touches anything: Cancel puts this back.
 		const CMapInfoEditorSettings::SViewFilterData original = ( *pFilter );
-		CMapInfoViewFilterWxDialog dialog( pFilter );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CMapInfoViewFilterWxDialog dialog( ToWxOwnerWindow( pParent ), pFilter );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			( *pFilter ) = original;
 			Apply();

@@ -7,7 +7,7 @@
 
 #include "AIGeneralTypes.h"
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -153,13 +153,13 @@ namespace NAIGenMobileDialog
 		{
 			return false;
 		}
-		CAIGenMobileWxDialog dialog( nullptr, *pMobileID );
+		CAIGenMobileWxDialog dialog( ToWxOwnerWindow( pParent ), *pMobileID );
 		NWxPlacement::CPlacement placement( "CAIGenMobileDlg" );
 		if ( !placement.Restore( &dialog ) )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const int nResult = NWxModal::ShowModalOver( &dialog, pParent );
+		const int nResult = dialog.ShowModal();
 		// Kept whichever button was used, as CResizeDialog does on destroy.
 		placement.Save( &dialog );
 		if ( nResult != wxID_OK )
@@ -180,13 +180,13 @@ namespace NAIGenParcelDialog
 		{
 			return false;
 		}
-		CAIGenParcelWxDialog dialog( nullptr, *pType, *pImportance );
+		CAIGenParcelWxDialog dialog( ToWxOwnerWindow( pParent ), *pType, *pImportance );
 		NWxPlacement::CPlacement placement( "CAIGenParcelDlg" );
 		if ( !placement.Restore( &dialog ) )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const int nResult = NWxModal::ShowModalOver( &dialog, pParent );
+		const int nResult = dialog.ShowModal();
 		placement.Save( &dialog );
 		if ( nResult != wxID_OK )
 		{

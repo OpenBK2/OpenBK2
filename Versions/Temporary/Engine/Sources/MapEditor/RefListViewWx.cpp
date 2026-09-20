@@ -5,7 +5,7 @@
 
 #include "libdb/ResourceManager.h"
 #include "MapEditorLib/Interface_UserData.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -47,9 +47,9 @@ namespace
 		bool bComplete = false;
 
 	public:
-		CRefListWaitWxDialog( const std::string &rszTypeName, const std::string &rszName,
+		CRefListWaitWxDialog( wxWindow *pParent, const std::string &rszTypeName, const std::string &rszName,
 													std::list<std::string> *_pResultList )
-			: CWxToolDialog( nullptr, wxID_ANY, "Requesting info from XDBWatcher",
+			: CWxToolDialog( pParent, wxID_ANY, "Requesting info from XDBWatcher",
 											 wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				szTargetTypeName( rszTypeName ), szTargetName( rszName ), pResultList( _pResultList )
@@ -124,9 +124,9 @@ namespace
 		long nSelectedItem = -1;
 
 	public:
-		CRefListWxDialog( const std::string &rszTypeName, const std::string &rszName,
+		CRefListWxDialog( wxWindow *pParent, const std::string &rszTypeName, const std::string &rszName,
 											std::list<std::string> *pReferenceObjects )
-			: CWxToolDialog( nullptr, wxID_ANY, "References", wxDefaultPosition, wxDefaultSize,
+			: CWxToolDialog( pParent, wxID_ANY, "References", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				szTargetTypeName( rszTypeName ), szTargetName( rszName )
 		{
@@ -282,7 +282,7 @@ namespace NRefList
 		{
 			return false;
 		}
-		CRefListWaitWxDialog dialog( rszTypeName, rszName, pReferenceObjects );
+		CRefListWaitWxDialog dialog( ToWxOwnerWindow( pParent ), rszTypeName, rszName, pReferenceObjects );
 		// A scan that is already finished closes the MFC dialog from its
 		// OnInitDialog, before it is ever seen; this simply never shows it.
 		if ( dialog.Scan() )
@@ -292,9 +292,9 @@ namespace NRefList
 		dialog.StartPolling();
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		NWxModal::ShowModalOver( &dialog, pParent );
+		dialog.ShowModal();
 		dialog.SaveState();
 		return dialog.IsComplete();
 	}
@@ -307,12 +307,12 @@ namespace NRefList
 		{
 			return;
 		}
-		CRefListWxDialog dialog( rszTypeName, rszName, pReferenceObjects );
+		CRefListWxDialog dialog( ToWxOwnerWindow( pParent ), rszTypeName, rszName, pReferenceObjects );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		NWxModal::ShowModalOver( &dialog, pParent );
+		dialog.ShowModal();
 		dialog.SaveState();
 	}
 }

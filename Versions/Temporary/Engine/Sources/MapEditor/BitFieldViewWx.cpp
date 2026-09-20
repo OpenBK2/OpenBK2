@@ -3,7 +3,7 @@
 #include "BitFieldView.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -25,9 +25,9 @@ namespace
 		std::vector<NBitField::SField> fields;
 
 	public:
-		CBitFieldWxDialog( const std::string &rszFieldsFile, const uint8_t *pData, int nSize )
+		CBitFieldWxDialog( wxWindow *pParent, const std::string &rszFieldsFile, const uint8_t *pData, int nSize )
 			// "name" is IDD_BIT_FIELD's caption, and nothing ever replaces it.
-			: CWxToolDialog( nullptr, wxID_ANY, "name", wxDefaultPosition, wxDefaultSize,
+			: CWxToolDialog( pParent, wxID_ANY, "name", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				placement( "CBinaryBitFieldDialog" )
 		{
@@ -97,12 +97,12 @@ namespace NBitField
 {
 	bool Run( IWidget *pParent, const std::string &rszFieldsFile, uint8_t *pData, int nSize )
 	{
-		CBitFieldWxDialog dialog( rszFieldsFile, pData, nSize );
+		CBitFieldWxDialog dialog( ToWxOwnerWindow( pParent ), rszFieldsFile, pData, nSize );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		if ( bAccepted )
 		{

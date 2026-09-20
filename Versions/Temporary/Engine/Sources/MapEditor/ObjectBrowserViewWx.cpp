@@ -2089,7 +2089,7 @@ namespace
 				CManipulatorManager::GetValue( &nStartColour, GetViewManipulator(), names[0] );
 			}
 			wxColour chosen;
-			if ( NWxColourDialog::Pick( pTree, pOwner, wxColour( static_cast<unsigned long>( nStartColour ) ), &chosen ) )
+			if ( NWxColourDialog::Pick( pOwner, wxColour( static_cast<unsigned long>( nStartColour ) ), &chosen ) )
 			{
 				const int nColour = static_cast<int>( chosen.GetRGB() );
 				for ( size_t nName = 0; nName < names.size(); ++nName )

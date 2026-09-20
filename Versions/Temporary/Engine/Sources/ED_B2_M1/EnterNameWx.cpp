@@ -3,7 +3,7 @@
 #include "EnterName.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -24,7 +24,7 @@
 //   * the frame is resizable, as the template's WS_THICKFRAME makes it, and
 //     placement is not remembered: the MFC class calls CDialog::OnInitDialog
 //     rather than CResizeDialog's and never saves, so it has no state file;
-//   * it opens centred on the frame (NWxModal::CentreOver).
+//   * it opens centred on the frame, which is its wx parent.
 //
 // What is not: in the MFC dialog nothing moves when it is resized -- no control
 // was ever anchored -- so making it wider only adds empty space. Here the edit
@@ -38,8 +38,8 @@ namespace
 		wxTextCtrl *pName = nullptr;
 
 	public:
-		CEnterNameWxDialog( const std::string &rszCaption, const std::string &rszLabel, const std::string &rszName )
-			: CWxToolDialog( nullptr, wxID_ANY, wxString::FromUTF8( rszCaption.c_str() ), wxDefaultPosition,
+		CEnterNameWxDialog( wxWindow *pParent, const std::string &rszCaption, const std::string &rszLabel, const std::string &rszName )
+			: CWxToolDialog( pParent, wxID_ANY, wxString::FromUTF8( rszCaption.c_str() ), wxDefaultPosition,
 											 wxDefaultSize, wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
@@ -76,9 +76,9 @@ namespace NEnterName
 {
 	bool RunWx( IWidget *pParent, const std::string &rszCaption, const std::string &rszLabel, std::string *pszName )
 	{
-		CEnterNameWxDialog dialog( rszCaption, rszLabel, *pszName );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CEnterNameWxDialog dialog( ToWxOwnerWindow( pParent ), rszCaption, rszLabel, *pszName );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}

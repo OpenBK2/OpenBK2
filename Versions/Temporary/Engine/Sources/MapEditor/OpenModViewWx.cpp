@@ -4,7 +4,7 @@
 
 
 #include "MapEditorLib/StringManager.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -227,12 +227,12 @@ namespace NOpenMod
 		std::vector<NMOD::SMOD> modList;
 		NMOD::GetAllMODs( &modList );
 
-		COpenModWxDialog dialog( nullptr, modList );
+		COpenModWxDialog dialog( ToWxOwnerWindow( pParent ), modList );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		return bAccepted && dialog.GetMod( pMod );
 	}

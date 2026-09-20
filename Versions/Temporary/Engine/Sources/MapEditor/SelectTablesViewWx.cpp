@@ -4,7 +4,7 @@
 
 
 #include "MapEditorLib/Tools_HashSet.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -14,14 +14,12 @@
 
 // Select Tables, in wx: the first modal dialog of the migration.
 //
-// What this slice tests is not the dialog. It is whether a wx modal dialog can
-// be run from inside MFC's message loop and behave like one, because about
-// twenty of the editor's dialogs are modal and they all depend on the answer.
-//
-// The Win32 that answer needs is not here. It is in MapEditorLib/WxModal.h,
-// once, because a migrated dialog should be pure wx plus one call -- otherwise
-// twenty dialogs means twenty copies of the same SetWindowLongPtr. That header
-// is scaffolding and is deleted when the frame itself is wx.
+// What this slice tested was not the dialog. It was whether a wx modal dialog
+// could be run from inside MFC's message loop and behave like one, because
+// about twenty of the editor's dialogs are modal and they all depended on the
+// answer. The Win32 that took lived in MapEditorLib/WxModal.h until the frame
+// itself became wx; now the frame is the dialog's wx parent and ShowModal does
+// all of it.
 
 namespace
 {
@@ -128,12 +126,12 @@ namespace NSelectTables
 		{
 			return false;
 		}
-		CSelectTablesWxDialog dialog( nullptr, rTables, *pSelectedTables );
+		CSelectTablesWxDialog dialog( ToWxOwnerWindow( pParent ), rTables, *pSelectedTables );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 
 		if ( bAccepted )

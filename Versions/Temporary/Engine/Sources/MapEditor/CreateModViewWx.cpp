@@ -3,7 +3,7 @@
 #include "CreateModView.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -14,7 +14,7 @@
 
 // Create MOD, in wx. Nothing new in it, which is the point: the fifth dialog
 // and the first assembled entirely out of pieces that were already here --
-// CWxToolDialog for the frame, NWxModal for the modality, NWxPlacement for the
+// CWxToolDialog for the frame, NWxPlacement for the
 // remembered size and position, and the anchor-to-sizer mapping for the layout.
 //
 // The two rules about what makes a creatable MOD are not duplicated here.
@@ -154,12 +154,12 @@ namespace NCreateMod
 		{
 			return false;
 		}
-		CCreateModWxDialog dialog( nullptr );
+		CCreateModWxDialog dialog( ToWxOwnerWindow( pParent ) );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		if ( !bAccepted )
 		{

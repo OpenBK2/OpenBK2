@@ -6,7 +6,7 @@
 #include <fmt/format.h>
 
 #include "EditorMethods.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -34,8 +34,8 @@
 //   * **The close box must not destroy it.** wx closes a dialog by destroying
 //     it, and the state holds this one across uses, so the close box is bound
 //     to the same thing Cancel does: tell the state, and hide.
-//   * **It is owned by the frame without disabling it.** NWxModal::SetOwnerFrame
-//     is that half of ShowModalOver on its own.
+//   * **It is owned by the frame without disabling it.** The frame is its wx
+//     parent, which owns it; only ShowModal would disable anything.
 //
 // The rest is the MFC dialog's behaviour, kept: the title says which of the two
 // jobs it is doing, the type list is sorted, and the parameter box, the clear
@@ -63,8 +63,8 @@ namespace
 		bool bHadPlacement = false;
 
 	public:
-		explicit CUnitStartCmdWxDialog( NUnitStartCmdDialog::IListener *_pListener )
-			: CWxToolDialog( nullptr, wxID_ANY, "Unit Start Command" ),
+		CUnitStartCmdWxDialog( wxWindow *pParent, NUnitStartCmdDialog::IListener *_pListener )
+			: CWxToolDialog( pParent, wxID_ANY, "Unit Start Command" ),
 				pListener( _pListener ), placement( "CEdUnitStartCmd" )
 		{
 			LoadUnitCommandTypesFromXML( &cmdTypes );
@@ -306,11 +306,11 @@ namespace
 
 	public:
 		CWxUnitStartCmdDialog( IWidget *pParent, NUnitStartCmdDialog::IListener *pListener )
-			: dialog( NWx::TopLevel<CUnitStartCmdWxDialog>( pListener ) )
+			: dialog( NWx::TopLevel<CUnitStartCmdWxDialog>( ToWxOwnerWindow( pParent ), pListener ) )
 		{
-			// Above the frame and out of the taskbar, without disabling anything:
-			// this window is modeless.
-			NWxModal::SetOwnerFrame( dialog, pParent );
+			// The frame is its parent, which is what keeps it above the frame and
+			// out of the taskbar without disabling anything: this window is
+			// modeless.
 			// A deliberate difference, and the only one: with nothing saved yet
 			// this opens on the frame's centre, where every other migrated dialog
 			// opens. MFC's lands at the template's own position, which for this
@@ -319,7 +319,7 @@ namespace
 			// not. Once the file exists both read it and agree.
 			if ( dialog && !dialog->HasSavedPlacement() )
 			{
-				NWxModal::CentreOver( dialog, pParent );
+				dialog->CentreOnParent();
 			}
 		}
 

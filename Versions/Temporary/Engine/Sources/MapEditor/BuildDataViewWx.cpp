@@ -9,7 +9,7 @@
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/DefaultView.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxOwnerDialog.h"
@@ -69,8 +69,8 @@ namespace
 		bool bCheckingOk = false;
 
 	public:
-		CBuildDataWxDialog( SBuildDataParams *_pBuildDataParams, IBuildDataCallback *_pBuildDataCallback )
-			: CWxOwnerDialog( nullptr, wxID_ANY, "Create Game Data Base Object",
+		CBuildDataWxDialog( wxWindow *pParent, SBuildDataParams *_pBuildDataParams, IBuildDataCallback *_pBuildDataCallback )
+			: CWxOwnerDialog( pParent, wxID_ANY, "Create Game Data Base Object",
 											 wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				pBuildDataParams( _pBuildDataParams ), pBuildDataCallback( _pBuildDataCallback )
@@ -245,13 +245,13 @@ namespace NBuildData
 		{
 			return false;
 		}
-		CBuildDataWxDialog dialog( pBuildDataParams, pBuildDataCallback );
+		CBuildDataWxDialog dialog( ToWxOwnerWindow( pParent ), pBuildDataParams, pBuildDataCallback );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
 		dialog.Open( pManipulator, rObjectSet, rszTemporaryLabel );
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.Close();
 		return bAccepted;
 	}

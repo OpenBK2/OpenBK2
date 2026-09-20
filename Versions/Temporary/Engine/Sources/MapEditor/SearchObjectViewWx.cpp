@@ -3,7 +3,7 @@
 #include "SearchObjectView.h"
 
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
@@ -90,9 +90,9 @@ namespace NSearchObject
 		{
 			return false;
 		}
-		CSearchObjectWxDialog dialog( nullptr, *pszText );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CSearchObjectWxDialog dialog( ToWxOwnerWindow( pParent ), *pszText );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}

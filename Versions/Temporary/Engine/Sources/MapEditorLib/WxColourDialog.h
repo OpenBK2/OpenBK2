@@ -12,15 +12,14 @@
 //
 // Three things it does that a bare wxColourDialog does not:
 //
-//   * **It is modal over the MFC frame, and owned by it.** wx disables only
-//     wx windows while a dialog is up, so the frame would stay live under it;
-//     NWxModal::ShowModalOver disables the frame, as CDialog::DoModal did.
-//     And wxColourDialog's owner is whatever wx picks as its parent, which is
-//     nothing at all when the palette is not on screen -- measured: the
-//     dialog came up ownerless, free to fall behind the frame. So the frame is
-//     made its owner from MSWOnInitDone, the hook wx calls on WM_INITDIALOG,
-//     before the dialog is shown. That is what CColorDialog's AfxGetMainWnd()
-//     argument did.
+//   * **It is modal over the frame, and owned by it.** The frame is the
+//     dialog's wx parent, so wx hands the system dialog that window as its
+//     owner and ShowModal disables it, as CDialog::DoModal did. The parent is
+//     the frame and not the palette that asked, deliberately: wx refuses a
+//     parent that is not shown on screen, and a palette in a hidden pane is
+//     not one -- measured, the dialog came up ownerless and free to fall
+//     behind the frame. The frame is always shown. That is also what
+//     CColorDialog's AfxGetMainWnd() argument did.
 //
 //   * **Unset slots stay unset.** colorList is resized with 0xFFffFFff for a
 //     slot nobody has filled. ChooseColor shows that as white, and wx both
@@ -40,7 +39,7 @@
 
 
 #include "Interface_UserData.h"
-#include "WxModal.h"
+#include "WxWidget.h"
 
 #include <wx/colordlg.h>
 
@@ -51,39 +50,14 @@ namespace NWxColourDialog
 	// The marker colorList is padded with for a slot nobody has filled.
 	const COLORREF UNSET_CUSTOM_COLOUR = 0xFFffFFff;
 
-	namespace NDetail
-	{
-		// wxColourDialog, owned by a window wx knows nothing about. The owner
-		// is set on WM_INITDIALOG, which is the first moment the dialog has a
-		// window and comes before it is shown -- the same "set it before it is
-		// visible" rule NWxModal::ShowModalOver follows for ordinary dialogs.
-		class COwnedColourDialog : public wxColourDialog
-		{
-			HWND hwndOwner;
-
-		public:
-			COwnedColourDialog( wxWindow *pParent, wxColourData *pData, HWND _hwndOwner )
-				: wxColourDialog( pParent, pData ), hwndOwner( _hwndOwner ) {}
-
-			virtual void MSWOnInitDone( WXHWND hDlg ) override
-			{
-				if ( hwndOwner != 0 )
-				{
-					::SetWindowLongPtr( (HWND)hDlg, GWLP_HWNDPARENT, (LONG_PTR)hwndOwner );
-				}
-				wxColourDialog::MSWOnInitDone( hDlg );
-			}
-		};
-	}
-
 	// Opens the picker full, starting on rStart, over the frame pOwner belongs
 	// to, with the user's custom colours. True and the colour in *pResult on
 	// OK; false, and *pResult untouched, on Cancel or with no user data to
 	// keep the custom colours in.
 	//
-	// pParent is the wx window the dialog belongs to; pOwner is the same
-	// palette as the MFC frame sees it, which is what the frame is found from.
-	inline bool Pick( wxWindow *pParent, IWidget *pOwner, const wxColour &rStart, wxColour *pResult )
+	// pOwner is the palette, tree or button that asked; the dialog is parented
+	// on the top-level window that belongs to.
+	inline bool Pick( IWidget *pOwner, const wxColour &rStart, wxColour *pResult )
 	{
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		if ( ( pUserData == 0 ) || ( pResult == 0 ) )
@@ -109,8 +83,8 @@ namespace NWxColourDialog
 			}
 		}
 
-		NDetail::COwnedColourDialog dialog( pParent, &colourData, NWxModal::FindOwnerFrame( pOwner ) );
-		if ( NWxModal::ShowModalOver( &dialog, pOwner ) != wxID_OK )
+		wxColourDialog dialog( ToWxOwnerWindow( pOwner ), &colourData );
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}

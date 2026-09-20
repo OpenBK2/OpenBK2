@@ -5,7 +5,7 @@
 
 #include <fmt/format.h>
 
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -47,8 +47,8 @@ namespace
 		wxTextCtrl *pLength = nullptr;
 
 	public:
-		explicit CMovieSettingsWxDialog( float fLength )
-			: CWxToolDialog( nullptr, wxID_ANY, "Script movie settings" )
+		CMovieSettingsWxDialog( wxWindow *pParent, float fLength )
+			: CWxToolDialog( pParent, wxID_ANY, "Script movie settings" )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 			wxBoxSizer *pRow = new wxBoxSizer( wxHORIZONTAL );
@@ -106,8 +106,8 @@ namespace
 		}
 
 	public:
-		CMovieKeySettingsWxDialog( const NDb::SScriptMovieKeyPos &rKey, const std::string &rszName )
-			: CWxToolDialog( nullptr, wxID_ANY, "Key settings" )
+		CMovieKeySettingsWxDialog( wxWindow *pParent, const NDb::SScriptMovieKeyPos &rKey, const std::string &rszName )
+			: CWxToolDialog( pParent, wxID_ANY, "Key settings" )
 		{
 			wxBoxSizer *pSizer = new wxBoxSizer( wxVERTICAL );
 
@@ -162,9 +162,9 @@ namespace NMovieSettings
 		{
 			return false;
 		}
-		CMovieSettingsWxDialog dialog( *pfLength );
-		NWxModal::CentreOver( &dialog, pParent );
-		if ( NWxModal::ShowModalOver( &dialog, pParent ) != wxID_OK )
+		CMovieSettingsWxDialog dialog( ToWxOwnerWindow( pParent ), *pfLength );
+		dialog.CentreOnParent();
+		if ( dialog.ShowModal() != wxID_OK )
 		{
 			return false;
 		}
@@ -182,13 +182,13 @@ namespace NMovieKeySettings
 		{
 			return false;
 		}
-		CMovieKeySettingsWxDialog dialog( *pKey, rszName );
+		CMovieKeySettingsWxDialog dialog( ToWxOwnerWindow( pParent ), *pKey, rszName );
 		NWxPlacement::CPlacement placement( "CMovEditorKeySettingsDlg" );
 		if ( !placement.Restore( &dialog ) )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const int nResult = NWxModal::ShowModalOver( &dialog, pParent );
+		const int nResult = dialog.ShowModal();
 		// Kept whichever button was used, which is where CResizeDialog writes it
 		// too: its OnOK and its OnCancel.
 		placement.Save( &dialog );

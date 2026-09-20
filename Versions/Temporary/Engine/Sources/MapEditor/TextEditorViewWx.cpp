@@ -4,7 +4,7 @@
 
 
 #include "MapEditorLib/SimulatedKey.h"
-#include "MapEditorLib/WxModal.h"
+#include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
@@ -233,8 +233,8 @@ namespace
 		bool bLastMatchCase = false;
 
 	public:
-		CScriptEditorWxDialog( const std::string &rszTitle, const std::string &rszText, bool bEnableEdit )
-			: CWxToolDialog( nullptr, wxID_ANY, "Script Editor", wxDefaultPosition, wxDefaultSize,
+		CScriptEditorWxDialog( wxWindow *pParent, const std::string &rszTitle, const std::string &rszText, bool bEnableEdit )
+			: CWxToolDialog( pParent, wxID_ANY, "Script Editor", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 		{
 			// The editor over a fixed-height error box, and OK and Cancel in the
@@ -642,9 +642,9 @@ namespace
 			return std::string( "CTextEditorDialog" ) + ( ( rszEditor == "lua" ) ? "lua" : "" );
 		}
 
-		CTextEditorWxDialog( const std::string &rszTitle, const std::string &rszEditor,
+		CTextEditorWxDialog( wxWindow *pParent, const std::string &rszTitle, const std::string &rszEditor,
 												 const std::string &rszText, bool bEnableEdit )
-			: CWxToolDialog( nullptr, wxID_ANY, "Text Editor", wxDefaultPosition, wxDefaultSize,
+			: CWxToolDialog( pParent, wxID_ANY, "Text Editor", wxDefaultPosition, wxDefaultSize,
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER ),
 				placement( PlacementName( rszEditor ) )
 		{
@@ -711,12 +711,12 @@ namespace NTextEditor
 		{
 			return false;
 		}
-		CScriptEditorWxDialog dialog( rszTitle, rszText, bEnableEdit );
+		CScriptEditorWxDialog dialog( ToWxOwnerWindow( pParent ), rszTitle, rszText, bEnableEdit );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		if ( !bAccepted || !bEnableEdit )
 		{
@@ -734,12 +734,12 @@ namespace NTextEditor
 		{
 			return false;
 		}
-		CTextEditorWxDialog dialog( rszTitle, rszEditor, rszText, bEnableEdit );
+		CTextEditorWxDialog dialog( ToWxOwnerWindow( pParent ), rszTitle, rszEditor, rszText, bEnableEdit );
 		if ( !dialog.WasPlaced() )
 		{
-			NWxModal::CentreOver( &dialog, pParent );
+			dialog.CentreOnParent();
 		}
-		const bool bAccepted = ( NWxModal::ShowModalOver( &dialog, pParent ) == wxID_OK );
+		const bool bAccepted = ( dialog.ShowModal() == wxID_OK );
 		dialog.SaveState();
 		if ( !bAccepted || !bEnableEdit )
 		{

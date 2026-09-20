@@ -18,7 +18,7 @@ namespace NPropertyButton
 		wxColour chosen;
 		// wxColour's unsigned long constructor reads 0x00BBGGRR, and GetRGB
 		// answers in the same order.
-		if ( !NWxColourDialog::Pick( nullptr, pOwner, wxColour( static_cast<unsigned long>( nStart ) ), &chosen ) )
+		if ( !NWxColourDialog::Pick( pOwner, wxColour( static_cast<unsigned long>( nStart ) ), &chosen ) )
 		{
 			return false;
 		}
