@@ -35,9 +35,7 @@
 #define IDT_OBJECT																			11003
 #define IDT_PROPERTY_CONTROL														11004
 #define IDT_VIEW																				11005
-#define IDT_TEXT_EDITOR																	11006
 
-#define IDB_EDITOR_STARTUP															11100
 #define IDB_PC_TYPES_IMAGE_LIST													11101
 #define IDB_PC_HEADER_IMAGE_LIST												11102
 #define IDB_TABGDBB_TREE_TYPES_IMAGE_LIST								11103
