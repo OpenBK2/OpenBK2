@@ -185,6 +185,17 @@ SYSTEM_EXPORT std::string GetTempFileName();
 // dbstruct and TestParsing read it. Without the macro they link only inside the
 // DLL that defines them, which MSVC reports and GCC does not
 SYSTEM_EXPORT std::string GetCurrDir();
+//! This program's own file, as ::GetModuleFileName( 0, ... ) answered.
+//!
+//! Not the working directory and not argv[0]: the working directory is
+//! whatever the caller was started from, and argv[0] is whatever the caller
+//! chose to say. Callers want this to find what ships beside the editor --
+//! Game.exe, the data folders -- which neither of those answers.
+//!
+//! Empty when it cannot be determined, which nothing here expects. /proc/self/exe
+//! off Windows, which Linux always has; a platform without it would need its
+//! own answer here rather than at the call sites.
+SYSTEM_EXPORT std::string GetExecutablePath();
 SYSTEM_EXPORT std::string GetNormalizedCurrDir();
 SYSTEM_EXPORT void SetCurrDir( const std::string &szDir );
 class CCurrDirHolder

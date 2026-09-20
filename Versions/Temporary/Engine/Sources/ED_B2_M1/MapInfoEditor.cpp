@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "System/FileUtils.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include <fmt/format.h>
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -47,7 +47,7 @@
 
 #include <cstdint>
 #include <filesystem>
-#include <shellapi.h>
+#include "port/process.h"
 #include "Main/MODs.h"
 #include "libdb/EditorDb.h"
 
@@ -2194,28 +2194,24 @@ void CMapInfoEditor::RunGame()
 		return;
 	// IMainFrameContainer hands out a toolkit-neutral IWidget now, not a Stingray
 	// workbook pointer; MainFrameWnd() is the MFC front-end's way back to a CWnd.
-	const HWND hwndOwner = MainWindowHandle();
-	// The one message box still spelled out in Win32, on purpose. NMessage is
-	// declared without naming a toolkit, but this file calls NDb::GetObject, and
-	// the rest of the tree exports NDb::GetObjectA -- so nothing here may ever
-	// pull in a wx header, which would undefine windows.h's A/W macros and break
-	// the link. It costs nothing to leave: RunGame is Win32 the whole way down
-	// (ShellExecuteEx, GetModuleFileName) and is parked with the rest of the
-	// Maya/shell path, so converting the box alone would not move it any closer
-	// to building off Windows.
-	const auto ReportError = [hwndOwner]( const std::string &message ) {
-		::MessageBox( hwndOwner, message.c_str(), "Start Mission in Game", MB_OK | MB_ICONERROR );
+	// NMessage, which this file can use after all. It was left as ::MessageBox
+	// when the others were converted because the wrapper was a wx header then,
+	// and this file must never see one: it calls NDb::GetObject, and a
+	// translation unit that loses windows.h's A/W macros stops linking against
+	// NDb::GetObjectA. MessageBoxes.h names no toolkit now, so the objection is
+	// gone with it.
+	const auto ReportError = []( const std::string &message ) {
+		NMessage::Error( message, "Start Mission in Game" );
 	};
 
 	// Resolve Game.exe beside the editor, independent of file-dialog working dirs.
-	std::vector<char> modulePath( 32768 );
-	const DWORD nLength = ::GetModuleFileName( 0, modulePath.data(), static_cast<DWORD>(modulePath.size()) );
-	if ( nLength == 0 || nLength >= modulePath.size() )
+	const std::string szSelf = NFile::GetExecutablePath();
+	if ( szSelf.empty() )
 	{
 		ReportError( "Cannot find the editor's executable directory." );
 		return;
 	}
-	const std::filesystem::path binFolder = std::filesystem::u8path(modulePath.data()).parent_path();
+	const std::filesystem::path binFolder = std::filesystem::u8path( szSelf ).parent_path();
 	const std::string gamePath = (binFolder / "Game.exe").u8string();
 	if ( !NFile::DoesFileExist( gamePath ) )
 	{
@@ -2244,18 +2240,13 @@ void CMapInfoEditor::RunGame()
 	}
 	const std::string arguments = "--editor-map=\"" + mapPath +
 		"\" --editor-mod=\"" + modPath + "\"";
-	SHELLEXECUTEINFO info = {};
-	info.cbSize = sizeof(info);
-	info.fMask = SEE_MASK_FLAG_NO_UI;
-	info.hwnd = hwndOwner;
-	info.lpVerb = "open";
-	info.lpFile = gamePath.c_str();
-	info.lpParameters = arguments.c_str();
-	const std::string workingFolder = binFolder.u8string();
-	info.lpDirectory = workingFolder.c_str();
-	info.nShow = SW_SHOWNORMAL;
-	if ( !::ShellExecuteEx(&info) )
-		ReportError( fmt::format("Could not start Game.exe (Windows error {}).", ::GetLastError()) );
+	// The working directory is not decoration: the game resolves Data, Profiles
+	// and Editor against it, so starting it anywhere else gives it an empty
+	// database. See port/process.h.
+	if ( !LaunchDetachedIn( gamePath, arguments, binFolder.u8string() ) )
+	{
+		ReportError( "Could not start Game.exe." );
+	}
 }
 
 

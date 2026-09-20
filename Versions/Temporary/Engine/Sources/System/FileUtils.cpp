@@ -553,6 +553,42 @@ std::string GetTempFileName()
 	return GetTempPath() + boost::uuids::to_string(guid);
 }
 
+std::string GetExecutablePath()
+{
+#if BOOST_OS_WINDOWS
+	// The loop is the same bug GetCurrDir describes: GetModuleFileName returns
+	// the buffer size it was given when the path does not fit, with no null and
+	// no distinct error, so the only way to tell "it fitted" from "it did not"
+	// is to grow until the answer is shorter than what was offered. 32768 is
+	// what a \\?\ path can reach, so the loop ends.
+	std::vector<char> buffer( MAX_PATH );
+	for ( ;; )
+	{
+		const DWORD nLength = ::GetModuleFileNameA( 0, buffer.data(),
+																								static_cast<DWORD>( buffer.size() ) );
+		if ( nLength == 0 )
+		{
+			return std::string();
+		}
+		if ( nLength < buffer.size() )
+		{
+			return std::string( buffer.data(), nLength );
+		}
+		if ( buffer.size() >= 32768 )
+		{
+			return std::string();
+		}
+		buffer.resize( buffer.size() * 2 );
+	}
+#else
+	// read_symlink rather than readlink: it sizes the answer itself, where
+	// readlink wants a buffer and does not say when it truncated.
+	std::error_code ec;
+	const std::filesystem::path self = std::filesystem::read_symlink( "/proc/self/exe", ec );
+	return ec ? std::string() : self.string();
+#endif
+}
+
 std::string GetCurrDir()
 {
 	// The error_code overload, as in NFile::CreatePath: the throwing one would raise
