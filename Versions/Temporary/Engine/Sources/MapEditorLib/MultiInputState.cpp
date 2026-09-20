@@ -29,7 +29,6 @@ void CMultiInputState::PostDraw( IPaintContext *pPaintDC )
 }
 
 
-
 void CMultiInputState::OnSetFocus( IWidget* pNewWnd )
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
@@ -134,34 +133,6 @@ void CMultiInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 {
 	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
 		inputStateList[nActiveInputState]->OnKeyUp( nChar, nRepCnt, nFlags );
-}
-
-
-void CMultiInputState::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
-		inputStateList[nActiveInputState]->OnChar( nChar, nRepCnt, nFlags );
-}
-
-
-void CMultiInputState::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
-		inputStateList[nActiveInputState]->OnSysKeyDown( nChar, nRepCnt, nFlags );
-}
-
-
-void CMultiInputState::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
-		inputStateList[nActiveInputState]->OnSysKeyUp( nChar, nRepCnt, nFlags );
-}
-
-
-void CMultiInputState::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( ( nActiveInputState >= 0 ) && ( nActiveInputState < inputStateList.size() ) )
-		inputStateList[nActiveInputState]->OnSysChar( nChar, nRepCnt, nFlags );
 }
 
 

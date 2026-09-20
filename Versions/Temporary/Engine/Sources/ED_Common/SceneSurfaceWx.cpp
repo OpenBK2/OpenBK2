@@ -20,18 +20,23 @@
 // view was, so either frame lays it out the same way.
 //
 // **Why the input is taken as Win32 messages.** The input states' contract is
-// MFC's handlers: MK_ flags, virtual key codes, a key message's repeat count
-// and flags, WM_SYSKEYDOWN apart from WM_KEYDOWN, WM_CHAR only for what
-// TranslateMessage makes a character, and the window's default handling done
-// before the handler runs -- which is when a right button's release becomes
-// WM_CONTEXTMENU, so a state hears of the context menu before the release. wx's
-// mouse and key events keep none of those apart: WM_SYSKEYDOWN arrives as an
-// ordinary key down, wx makes up character events for keys Windows gives none,
-// and a skipped event gets its default handling after the handler, not before.
-// The viewport is a Direct3D 9 window and exists only on Windows, so its
-// input is taken here as the messages themselves, in MSWHandleMessage, each
-// given its default handling first and then passed on as MFC's message map
-// passed it. Painting, sizing, focus and the timer are wx's own events.
+// MFC's handlers: MK_ flags, virtual key codes, a key message's repeat count,
+// and the window's default handling done before the handler runs -- which is
+// when a right button's release becomes WM_CONTEXTMENU, so a state hears of
+// the context menu before the release. wx keeps none of those apart: a skipped
+// event gets its default handling after the handler, not before. The viewport
+// is a Direct3D 9 window and exists only on Windows, so its input is taken
+// here as the messages themselves, in MSWHandleMessage, each given its default
+// handling first and then passed on as MFC's message map passed it. Painting,
+// sizing, focus and the timer are wx's own events.
+//
+// Two of the reasons this used to give are gone, and what is left is worth
+// knowing when the viewport does move: no state ever distinguished
+// WM_SYSKEYDOWN from WM_KEYDOWN, or read WM_CHAR, so those handlers have been
+// deleted. What a portable surface would still have to reproduce is the MK_
+// flags, the repeat count, and the context menu arriving before the button
+// release -- and wx has all three, in wxMouseEvent's modifiers, one event per
+// repeat, and wxEVT_CONTEXT_MENU.
 
 namespace
 {
@@ -155,14 +160,16 @@ namespace
 					const unsigned nChar = static_cast<unsigned>( wParam );
 					const unsigned nRepCnt = LOWORD( lParam );
 					const unsigned nKeyFlags = HIWORD( lParam );
+					// The character and system-key messages are still taken and given
+					// their default handling, because that is what decides whether wx
+					// sees them, and taking them is what the MFC message map did. No
+					// input state ever listened to them: OnChar, OnSysKeyDown,
+					// OnSysKeyUp and OnSysChar were carried the whole length of the
+					// chain and overridden by nothing.
 					switch ( nMessage )
 					{
 						case WM_KEYDOWN:		pCore->OnKeyDown( nChar, nRepCnt, nKeyFlags ); break;
 						case WM_KEYUP:			pCore->OnKeyUp( nChar, nRepCnt, nKeyFlags ); break;
-						case WM_CHAR:				pCore->OnChar( nChar, nRepCnt, nKeyFlags ); break;
-						case WM_SYSKEYDOWN:	pCore->OnSysKeyDown( nChar, nRepCnt, nKeyFlags ); break;
-						case WM_SYSKEYUP:		pCore->OnSysKeyUp( nChar, nRepCnt, nKeyFlags ); break;
-						case WM_SYSCHAR:		pCore->OnSysChar( nChar, nRepCnt, nKeyFlags ); break;
 					}
 					return true;
 				}

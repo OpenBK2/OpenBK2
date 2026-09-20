@@ -39,14 +39,10 @@ public:
 
 		ISE_KEYDOWN				= 12,
 		ISE_KEYUP					= 13,
-		ISE_CHAR					= 14,
-		ISE_SYSKEYDOWN		= 15,
-		ISE_SYSKEYUP			= 16,
-		ISE_SYSCHAR				= 17,
 
-		ISE_CONTEXTMENU		= 18,
-		
-		ISE_COUNT					= 19,
+		ISE_CONTEXTMENU		= 14,
+
+		ISE_COUNT					= 15,
 	};
 	//
 	struct SInputStateEventInfo
@@ -111,10 +107,6 @@ public:
 	//
 	virtual void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	virtual void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnChar						( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnSysKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnSysKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	virtual void OnSysChar				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint );
 

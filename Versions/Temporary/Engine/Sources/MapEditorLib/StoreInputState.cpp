@@ -174,62 +174,6 @@ void CStoreInputState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlag
 }
 
 
-void CStoreInputState::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	SInputStateEventInfo inputStateEventInfo;
-	inputStateEventInfo.nType = IST_KEYBOARD;
-	inputStateEventInfo.nEventType = ISE_CHAR;
-	//
-	inputStateEventInfo.nChar = nChar;
-	inputStateEventInfo.nRepCnt = nRepCnt;
-	inputStateEventInfo.nFlags = nFlags;
-	//
-	OnInputStateEvent( inputStateEventInfo );
-}
-
-
-void CStoreInputState::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	SInputStateEventInfo inputStateEventInfo;
-	inputStateEventInfo.nType = IST_KEYBOARD;
-	inputStateEventInfo.nEventType = ISE_SYSKEYDOWN;
-	//
-	inputStateEventInfo.nChar = nChar;
-	inputStateEventInfo.nRepCnt = nRepCnt;
-	inputStateEventInfo.nFlags = nFlags;
-	//
-	OnInputStateEvent( inputStateEventInfo );
-}
-
-
-void CStoreInputState::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	SInputStateEventInfo inputStateEventInfo;
-	inputStateEventInfo.nType = IST_KEYBOARD;
-	inputStateEventInfo.nEventType = ISE_SYSKEYUP;
-	//
-	inputStateEventInfo.nChar = nChar;
-	inputStateEventInfo.nRepCnt = nRepCnt;
-	inputStateEventInfo.nFlags = nFlags;
-	//
-	OnInputStateEvent( inputStateEventInfo );
-}
-
-
-void CStoreInputState::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	SInputStateEventInfo inputStateEventInfo;
-	inputStateEventInfo.nType = IST_KEYBOARD;
-	inputStateEventInfo.nEventType = ISE_SYSCHAR;
-	//
-	inputStateEventInfo.nChar = nChar;
-	inputStateEventInfo.nRepCnt = nRepCnt;
-	inputStateEventInfo.nFlags = nFlags;
-	//
-	OnInputStateEvent( inputStateEventInfo );
-}
-
-
 void CStoreInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {
 	SInputStateEventInfo inputStateEventInfo;

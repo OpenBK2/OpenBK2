@@ -390,65 +390,6 @@ void CChildFrameWndBase::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 }
 
 
-void CChildFrameWndBase::OnChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( bInputEnabled )
-	{
-		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
-		{
-			pActiveInputState->OnChar( nChar, nRepCnt, nFlags );
-		}
-	}
-	if ( bGameInputEnabled || ( bRunModeEnabled && !bRenderEnabled ) )
-	{
-		for ( int nIndex = 0; nIndex < nRepCnt; ++nIndex )
-		{
-			NInput::PostEvent( "win_char", nChar, 0 );
-		}
-	}
-}
-
-
-void CChildFrameWndBase::OnSysKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( bInputEnabled )
-	{
-		if ( pSurface != 0 )
-		{
-			pSurface->Focus();
-		}
-		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
-		{
-			pActiveInputState->OnSysKeyDown( nChar, nRepCnt, nFlags );
-		}
-	}
-}
-
-
-void CChildFrameWndBase::OnSysKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( bInputEnabled )
-	{
-		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
-		{
-			pActiveInputState->OnSysKeyUp( nChar, nRepCnt, nFlags );
-		}
-	}
-}
-
-
-void CChildFrameWndBase::OnSysChar( unsigned nChar, unsigned nRepCnt, unsigned nFlags )
-{
-	if ( bInputEnabled )
-	{
-		if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
-		{
-			pActiveInputState->OnSysChar( nChar, nRepCnt, nFlags );
-		}
-	}
-}
-
-
 void CChildFrameWndBase::OnContextMenu( const CTPoint<int> &rScreenPoint )
 {
 	if ( bInputEnabled )

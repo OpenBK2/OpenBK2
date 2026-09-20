@@ -33,10 +33,6 @@ struct IInputState
 	//
 	virtual void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
 	virtual void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
-	virtual void OnChar						( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
-	virtual void OnSysKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
-	virtual void OnSysKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
-	virtual void OnSysChar				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) = 0;
 	//
 	virtual void OnContextMenu		( const CTPoint<int> &rMousePoint ) = 0;
 	//

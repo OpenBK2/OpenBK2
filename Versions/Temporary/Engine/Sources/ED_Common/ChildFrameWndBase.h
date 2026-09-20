@@ -105,10 +105,6 @@ public:
 	//
 	void OnKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	void OnKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnChar					( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnSysKeyDown		( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnSysKeyUp			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
-	void OnSysChar			( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 	//
 	// rScreenPoint in screen coordinates, or ( -1, -1 ) from the keyboard.
 	void OnContextMenu	( const CTPoint<int> &rScreenPoint );

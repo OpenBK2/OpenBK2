@@ -32,10 +32,6 @@ public:
 	//
 	virtual void OnKeyDown				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
 	virtual void OnKeyUp					( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
-	virtual void OnChar						( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
-	virtual void OnSysKeyDown			( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
-	virtual void OnSysKeyUp				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
-	virtual void OnSysChar				( unsigned nChar, unsigned nRepCnt, unsigned nFlags ) {}
 	//
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint ) {}
 };
