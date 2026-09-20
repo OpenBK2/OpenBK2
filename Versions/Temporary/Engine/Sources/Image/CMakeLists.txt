@@ -20,6 +20,11 @@ if(WIN32)
     # the DDS writer is D3D9/D3DX only and its sole caller is the editor's TextureExporter
     target_sources(Image PRIVATE ImageDDSWrite.cpp)
     target_link_libraries(Image PRIVATE dxsdk::d3d9 dxsdk::d3dx9 winapi) # DDS export can create its own conversion device.
+else()
+    # DXVK implements no d3dx9, so the writer above cannot be built here. The
+    # stub keeps the editor linking and says what is missing; see the TODO at
+    # the top of it for what writing the real one takes.
+    target_sources(Image PRIVATE ImageDDSWriteStub.cpp)
 endif()
 install(TARGETS Image DESTINATION bin)
 add_version_info(Image)
