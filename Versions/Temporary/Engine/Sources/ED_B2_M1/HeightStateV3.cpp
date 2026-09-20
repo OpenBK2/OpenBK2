@@ -5,6 +5,7 @@
 #include "Misc/2Darray.h"
 #include "Image/Targa.h"
 #include "Stats_B2_M1/IconsSet.h"
+#include "System/FilePath.h"
 #include "System/Time.h"
 #include "ResourceDefines.h"
 
@@ -1221,7 +1222,12 @@ void CHeightStateV3::Enter()
 		CTPoint<float>( 0.0f, 1.0f ), CTPoint<float>( 0.0f, 1.0f ) );
 	CArray2D<uint32_t> image;
 	{
-		CFileStream stream( pUserData->constUserData.szStartFolder + "Editor\\profile.tga", CFileStream::WIN_READ_ONLY );
+		// JoinPath, because a separator written into the string is a backslash
+		// here and names nothing off Windows. The brush falls back to the
+		// gradient above when the image will not read, which is why a path that
+		// could never open looked like a deliberate default.
+		CFileStream stream( NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "profile.tga" ),
+												CFileStream::WIN_READ_ONLY );
 		if ( stream.IsOk() )
 		{
 			if ( NImage::LoadTGAImage( image, &stream ) && image.GetSizeX() > 2 && image.GetSizeY() > 1 )
