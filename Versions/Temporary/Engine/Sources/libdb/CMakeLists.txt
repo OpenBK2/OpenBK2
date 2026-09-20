@@ -49,14 +49,21 @@ set(SOURCES
 # the compiler, not the platform, and comdef.h, _com_ptr_t and bstr_t come with it;
 # clang-cl and MinGW would fail here too.
 #
-# Excluding the translation unit is enough because DBWatcherClient.h holds only the
-# interface and one declaration, no COM. The three built users of it - EditorDatabase,
-# RenameNode and Wrapper/ResourceManagerInternal - reach the implementation through
-# Singleton<IDBWatcherClient>() and need the header, never this .cpp. The only caller
-# of RegisterSingleton() is MapEditor, which is Windows-only anyway, so nothing that
-# builds elsewhere is left with an undefined symbol.
+# Excluding the translation unit is nearly enough: DBWatcherClient.h holds only the
+# interface and one declaration, no COM, and the three built users of it -
+# EditorDatabase, RenameNode and Wrapper/ResourceManagerInternal - reach the
+# implementation through Singleton<IDBWatcherClient>() and need the header, never
+# this .cpp.
+#
+# What is left is RegisterSingleton(), whose only caller is MapEditor. This used to
+# say that MapEditor "is Windows-only anyway, so nothing that builds elsewhere is
+# left with an undefined symbol"; MapEditor builds on Linux now, and that was the
+# link error that found it. DBWatcherClientStub.cpp is the other half, and registers
+# nothing, which is what every user of the client already handles.
 if(MSVC)
     list(APPEND SOURCES DBWatcherClient.cpp)
+else()
+    list(APPEND SOURCES DBWatcherClientStub.cpp)
 endif()
 
 add_library(libdb SHARED ${SOURCES})
