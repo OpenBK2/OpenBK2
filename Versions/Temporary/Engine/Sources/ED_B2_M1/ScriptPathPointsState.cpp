@@ -2,6 +2,7 @@
 #include "ScriptPathPointsState.h"
 #include "CommandHandlerDefines.h"
 
+#include "MapEditorLib/Clipboard.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Logger.h"
@@ -99,30 +100,8 @@ bool CScriptPathPointsState::CopyPathToClipboard() const
 		text += fmt::format( "{{{}, {}}}", point.x, point.y );
 	}
 	text += "}";
-	const std::wstring unicodeText( text.begin(), text.end() );
-	const size_t nBytes = ( unicodeText.size() + 1 ) * sizeof( wchar_t );
-	HGLOBAL hText = ::GlobalAlloc( GMEM_MOVEABLE, nBytes );
-	if ( !hText )
-		return false;
-	void *pText = ::GlobalLock( hText );
-	if ( !pText )
-	{
-		::GlobalFree( hText );
-		return false;
-	}
-	memcpy( pText, unicodeText.c_str(), nBytes );
-	::GlobalUnlock( hText );
-
-	// Use a native owner for both editor front ends; the clipboard takes ownership only on success.
-	const HWND hOwner = ::GetActiveWindow();
-	if ( !hOwner || !::OpenClipboard( hOwner ) )
-	{
-		::GlobalFree( hText );
-		return false;
-	}
-	const bool bCopied = ::EmptyClipboard() && ::SetClipboardData( CF_UNICODETEXT, hText ) != 0;
-	::CloseClipboard();
-	if ( !bCopied )
-		::GlobalFree( hText );
-	return bCopied;
+	// The GlobalAlloc, GlobalLock, OpenClipboard, SetClipboardData( CF_UNICODETEXT )
+	// sequence this replaces existed to hand the Win32 clipboard an HGLOBAL it
+	// would then own; wx takes the data object instead. See Clipboard.h.
+	return NClipboard::SetText( text );
 }

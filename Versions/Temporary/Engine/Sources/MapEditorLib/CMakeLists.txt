@@ -6,6 +6,7 @@ set(SOURCES
     BuilderBase.cpp
     BuilderFactory.cpp
     ChildFrameFactory.cpp
+    ClipboardWx.cpp
     CommonEditorMethods.cpp
     CommonExporterMethods.cpp
     ConfigFile.cpp
@@ -55,11 +56,12 @@ add_export_header(MapEditorLib)
 # No mfc: the image lists behind IImageList are Win32 ones
 # (NativeImageList.h), and Tools_Image makes HBITMAPs rather than CBitmaps.
 target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc System fmt::fmt-header-only)
-# MessageBoxesWx.cpp and CursorsWx.cpp are the only translation units here that
-# include a wx header, and the declarations they sit behind (MessageBoxes.h,
-# Cursors.h) name no toolkit on purpose: a caller that includes wx loses
-# windows.h's A/W macros and stops linking against NDb::GetObjectA. See
-# cmake/wxwidgets.cmake for why there are no UNICODE defines.
+# ClipboardWx.cpp, CursorsWx.cpp and MessageBoxesWx.cpp are the only translation
+# units here that include a wx header, and the declarations they sit behind
+# (Clipboard.h, Cursors.h, MessageBoxes.h) name no toolkit on purpose: a caller
+# that includes wx loses windows.h's A/W macros and stops linking against
+# NDb::GetObjectA. See cmake/wxwidgets.cmake for why there are no UNICODE
+# defines.
 target_link_libraries(MapEditorLib PRIVATE wx::wx)
 add_dependencies(MapEditorLib wxwidgets_external)
 if(WIN32)
