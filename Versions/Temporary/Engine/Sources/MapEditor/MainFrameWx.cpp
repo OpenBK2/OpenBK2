@@ -131,7 +131,8 @@ namespace
 			wxClientDC dc( const_cast<CClassicStatusBar*>( this ) );
 			dc.SetFont( GetFont() );
 			const wxFontMetrics metrics = dc.GetFontMetrics();
-			size.y = metrics.height - metrics.internalLeading - 1 + GetBorderY() * 2 + ::GetSystemMetrics( SM_CYBORDER ) * 2 + 2;
+			size.y = metrics.height - metrics.internalLeading - 1 + GetBorderY() * 2 +
+							 wxSystemSettings::GetMetric( wxSYS_BORDER_Y, const_cast<CClassicStatusBar*>( this ) ) * 2 + 2;
 			return size;
 		}
 	};
@@ -380,11 +381,18 @@ namespace
 	wxMenuItem* InsertCommandItem( wxMenu *pMenu, size_t nPosition, unsigned nCommandID, const wxString &rLabel, const wxString &rHelp )
 	{
 		wxMenuItem *const pItem = pMenu->InsertCheckItem( nPosition, ToWxID( nCommandID ), rLabel.BeforeFirst( '\t' ), rHelp );
+#if BOOST_OS_WINDOWS
+		// Putting the shortcut back is display only, and there is no portable way
+		// to do it: wx has one label and reads everything after the tab as an
+		// accelerator to register, which is the whole reason it was given the
+		// text without it. Off Windows the items simply show no shortcut beside
+		// them; the keys themselves still work, since they come from IDA_MAIN.
 		std::wstring wszLabel = rLabel.ToStdWstring();
 		MENUITEMINFOW labelInfo = { sizeof( labelInfo ) };
 		labelInfo.fMask = MIIM_STRING;
 		labelInfo.dwTypeData = &wszLabel[0];
 		::SetMenuItemInfoW( pMenu->GetHMenu(), static_cast<UINT>( nPosition ), TRUE, &labelInfo );
+#endif
 		return pItem;
 	}
 
@@ -533,6 +541,11 @@ namespace
 		// ShowFrame, when the frame has its size: wxAUI limits a dock to a third
 		// of the frame the first time it sizes it, and keeps what it gave.
 		bool bLaidOut = false;
+		// Where the frame sits when it is neither maximised nor minimised, which
+		// is the rectangle the saved layout holds and the one it is restored to.
+		// GetWindowPlacement kept this for us in rcNormalPosition; wx has no
+		// equivalent, so it is remembered as the frame moves and resizes.
+		wxRect normalRect;
 
 	public:
 		CWxMainFrame()
@@ -540,6 +553,12 @@ namespace
 		{
 			Singleton<ICommandHandlerContainer>()->Set( CHID_VIEW, this );
 			Bind( wxEVT_CLOSE_WINDOW, &CWxMainFrame::OnCloseWindow, this );
+			Bind( wxEVT_SIZE, &CWxMainFrame::OnGeometryChanged, this );
+			Bind( wxEVT_MOVE, &CWxMainFrame::OnGeometryChanged, this );
+			// The session ending, which CMainFrame answered as WM_QUERYENDSESSION.
+			// It reaches the application rather than the frame, on every platform
+			// wx has a session manager for.
+			wxTheApp->Bind( wxEVT_QUERY_END_SESSION, &CWxMainFrame::OnQueryEndSession, this );
 			Bind( wxEVT_AUI_PANE_CLOSE, [this]( wxAuiManagerEvent &rEvent )
 			{
 				auiManager.RememberDockSizes();
@@ -568,7 +587,7 @@ namespace
 				pCommandHandlerContainer->Remove( CHID_VIEW );
 			}
 			// Ends the message loop, as CMainFrame's OnNcDestroy did.
-			::PostQuitMessage( 0 );
+			wxTheApp->ExitMainLoop();
 		}
 
 		virtual wxStatusBar* OnCreateStatusBar( int nNumber, long nStyle, wxWindowID id, const wxString &rName ) override
@@ -632,17 +651,12 @@ namespace
 			//
 			if ( ( params.rect.Width() != 0 ) && ( params.rect.Height() != 0 ) )
 			{
-				// The rectangle both frames save is GetWindowPlacement's restored
-				// one, in workspace coordinates rather than screen ones, so it
-				// goes back the same way. Hidden: Show shows it.
-				WINDOWPLACEMENT windowPlacement = { sizeof( windowPlacement ) };
-				::GetWindowPlacement( GetHWND(), &windowPlacement );
-				windowPlacement.rcNormalPosition.left = params.rect.left;
-				windowPlacement.rcNormalPosition.top = params.rect.top;
-				windowPlacement.rcNormalPosition.right = params.rect.right;
-				windowPlacement.rcNormalPosition.bottom = params.rect.bottom;
-				windowPlacement.showCmd = SW_HIDE;
-				::SetWindowPlacement( GetHWND(), &windowPlacement );
+				// The rectangle both frames save is the restored one -- where the
+				// frame sits when it is not maximised -- so it goes back as the
+				// frame's own geometry while it is still hidden, and ShowFrame
+				// maximises over it if it has to.
+				SetSize( params.rect.left, params.rect.top, params.rect.Width(), params.rect.Height() );
+				normalRect = GetRect();
 			}
 			//
 			RegisterObjectStorage();
@@ -673,7 +687,9 @@ namespace
 		// owned by.
 		virtual void* GetNativeWidget()
 		{
-			return GetHWND();
+			// GetHandle rather than GetHWND: the same handle on Windows, and the
+			// spelling that exists everywhere. See WxWidget.h, which says the same.
+			return GetHandle();
 		}
 
 		virtual wxWindow* GetWxWindow()
@@ -1564,13 +1580,10 @@ namespace
 				pApp->GetEditorModules()[nModuleIndex]->ModuleDestroyControls();
 			}
 			//
-			WINDOWPLACEMENT windowPlacement = { sizeof( windowPlacement ) };
-			::GetWindowPlacement( GetHWND(), &windowPlacement );
-			params.bMaximized = ( windowPlacement.showCmd == SW_SHOWMAXIMIZED );
-			params.rect = CTRect<int>( windowPlacement.rcNormalPosition.left,
-																 windowPlacement.rcNormalPosition.top,
-																 windowPlacement.rcNormalPosition.right,
-																 windowPlacement.rcNormalPosition.bottom );
+			params.bMaximized = IsMaximized();
+			params.rect = CTRect<int>( normalRect.x, normalRect.y,
+																 normalRect.x + normalRect.width,
+																 normalRect.y + normalRect.height );
 			params.Save();
 			//
 			// What RemoveMapFile did: stop answering a second instance, and let go
@@ -1837,24 +1850,29 @@ namespace
 			}
 		}
 
-		// The two messages CMainFrame answers that wx has no event for here.
-		virtual WXLRESULT MSWWindowProc( WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam ) override
+		// WM_QUERYENDSESSION, as CMainFrame answered it. WM_COPYDATA went with
+		// CMapEditorSingleton: a second instance reaches this one through wxIPC
+		// now, which needs no message of its own. See EditorInstance.h.
+		void OnQueryEndSession( wxCloseEvent &rEvent )
 		{
-			switch ( nMsg )
+			if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
 			{
-				// WM_COPYDATA is gone with CMapEditorSingleton: a second instance
-				// reaches this one through wxIPC now, which needs no message of its
-				// own. See EditorInstance.h.
-				case WM_QUERYENDSESSION:
-					if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
-					{
-						return FALSE;
-					}
-					break;
-				default:
-					break;
+				// Returning FALSE from WM_QUERYENDSESSION is what this says now.
+				rEvent.Veto();
+				return;
 			}
-			return wxFrame::MSWWindowProc( nMsg, wParam, lParam );
+			rEvent.Skip();
+		}
+
+		// Keeps the rectangle the layout is saved from. A maximised or minimised
+		// frame is not where it would be restored to, so those are not recorded.
+		void OnGeometryChanged( wxEvent &rEvent )
+		{
+			rEvent.Skip();
+			if ( !IsMaximized() && !IsIconized() )
+			{
+				normalRect = GetRect();
+			}
 		}
 	};
 
