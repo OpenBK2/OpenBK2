@@ -27,7 +27,10 @@
 
 #include <wx/accel.h>
 #include <wx/aui/auibar.h>
+#if defined( __WXMSW__ )
+// wxAuiMSWToolBarArt, which is wx's own header but a wxMSW-only one.
 #include <wx/aui/barartmsw.h>
+#endif
 #include <wx/aui/framemanager.h>
 #include <wx/choicdlg.h>
 #include <wx/dcclient.h>
@@ -823,7 +826,13 @@ namespace
 				++nFreeToolBarID;
 			}
 			wxAuiToolBar *const pToolBar = NWx::Child<wxAuiToolBar>( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxAUI_TB_DEFAULT_STYLE );
+#if defined( __WXMSW__ )
+			// Native MSW theming for the AUI toolbars, which is what makes them
+			// look like the original editor's. Cosmetic only: leaving it unset
+			// elsewhere gives wxAuiGenericToolBarArt, wx's own drawing, which is
+			// the right answer on a platform that has no MSW theme to match.
 			pToolBar->SetArtProvider( new wxAuiMSWToolBarArt() );
+#endif
 			pToolBar->SetToolBitmapSize( wxSize( 16, 16 ) );
 			for ( unsigned nButton = 0; nButton < nButtonCount; ++nButton )
 			{
