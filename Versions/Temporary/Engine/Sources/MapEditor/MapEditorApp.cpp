@@ -1,9 +1,5 @@
 #include "stdafx.h"
 
-// InitCommonControls. This came in through NativeImageList.h until the object
-// collector's image lists became wxImageLists.
-#include <commctrl.h>
-
 // CoInitialize and CoUninitialize, which came in through Shlwapi.h until the
 // profile stopped needing SHDeleteKey.
 #include <objbase.h>
@@ -364,9 +360,11 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	NGlobal::LoadConfig( "..\\profiles\\editor.cfg" );
 	//
-	// Possibly redundant now: wxMSW initialises the common controls itself
-	// during wxApp start-up. Left alone rather than removed on that assumption.
-	InitCommonControls();
+	// The InitCommonControls that stood here is gone, and it was redundant
+	// rather than probably redundant: wxApp::Initialize calls it (src/msw/app.cpp),
+	// and that runs inside wxEntryStart, before OnInit -- which is what calls
+	// this. Since wxIMPLEMENT_APP took over WinMain, the common controls have
+	// always been up by the time the editor starts.
 
 	// Получаем командную строку
 	//
