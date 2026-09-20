@@ -68,9 +68,9 @@ if(WIN32)
     # comctl32: InitCommonControls in MapEditorApp, which MFC's headers used to
     # link through #pragma comment. The object collector's image lists wanted it
     # too until they became wxImageLists.
-    # shlwapi: SHDeleteKey in MapEditorApp.cpp, which came in the same way
-    # through ATL's atlbase.h until XDB validation stopped using ATL.
-    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32 shlwapi)
+    # shlwapi went with SHDeleteKey, which wiped the profile key until
+    # wxConfig took the profile over.
+    target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32)
 endif()
 # The property control, the browsers and the main frame: dialogs, menus,
 # toolbars, string tables and the bitmaps under res/.

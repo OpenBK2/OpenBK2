@@ -44,7 +44,6 @@ set(SOURCES
     Tools_Image.cpp
     Tools_IndexCollector.cpp
     Tools_MainFolder.cpp
-    Tools_Registry.cpp
     Tools_Resources.cpp
     Tools_UniqueList.cpp
 )

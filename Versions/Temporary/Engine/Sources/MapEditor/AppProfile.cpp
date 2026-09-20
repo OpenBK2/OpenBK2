@@ -7,57 +7,88 @@
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/Interface_UserData.h"
 
-#include <vector>
+#include <wx/config.h>
 
-namespace NAppProfile
+namespace
 {
-	std::string GetRootKey()
+	wxString FromNarrow( const std::string &rszText )
 	{
-		return "Software\\" + NResources::GetString( IDS_REGISTRY_PATH ) + "\\" +
-					 Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle + "\\" +
-					 NResources::GetString( AFX_IDS_APP_TITLE );
+		return wxString::FromUTF8( rszText.c_str(), rszText.size() );
 	}
 
 
+	// One store for the process.
+	//
+	// wxConfig is wxRegConfig here, which puts the vendor and application names
+	// under HKCU\Software exactly where CWinApp's profile was, and wxFileConfig
+	// elsewhere, which puts them in the user's configuration directory.
+	// wxCONFIG_USE_SUBDIR gives that a directory of its own rather than a
+	// dotfile; it means nothing to the registry.
+	//
+	// Made on first use, because the application title comes from the user data
+	// singleton and the vendor from the string table, and neither exists until
+	// the editor has started.
+	wxConfigBase& Profile()
+	{
+		static wxConfig config( FromNarrow( Singleton<IUserDataContainer>()->Get()->constUserData.szApplicationTitle ),
+														FromNarrow( NResources::GetString( IDS_REGISTRY_PATH ) ),
+														wxEmptyString, wxEmptyString,
+														wxCONFIG_USE_LOCAL_FILE | wxCONFIG_USE_SUBDIR );
+		return config;
+	}
+
+
+	// MFC kept one more level under the application's key, AFX_IDS_APP_TITLE,
+	// with the sections under that. Keeping it is what makes an entry land on
+	// the value an earlier build wrote.
+	wxString ProfileRoot()
+	{
+		return "/" + FromNarrow( NResources::GetString( AFX_IDS_APP_TITLE ) );
+	}
+
+
+	wxString EntryPath( const std::string &rszSection, const std::string &rszEntry )
+	{
+		wxString path = ProfileRoot();
+		if ( !rszSection.empty() )
+		{
+			path += "/" + FromNarrow( rszSection );
+		}
+		return path + "/" + FromNarrow( rszEntry );
+	}
+}
+
+
+namespace NAppProfile
+{
 	std::string GetString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszDefault )
 	{
-		const std::string szKey = GetRootKey() + "\\" + rszSection;
-		HKEY hKey = 0;
-		if ( ::RegOpenKeyExA( HKEY_CURRENT_USER, szKey.c_str(), 0, KEY_READ, &hKey ) != ERROR_SUCCESS )
+		wxString value;
+		if ( !Profile().Read( EntryPath( rszSection, rszEntry ), &value ) )
 		{
 			return rszDefault;
 		}
-		std::string szResult = rszDefault;
-		DWORD nType = 0;
-		DWORD nBytes = 0;
-		if ( ( ::RegQueryValueExA( hKey, rszEntry.c_str(), nullptr, &nType, nullptr, &nBytes ) == ERROR_SUCCESS ) &&
-				 ( nType == REG_SZ ) )
-		{
-			std::vector<char> buffer( nBytes + 1, '\0' );
-			if ( ::RegQueryValueExA( hKey, rszEntry.c_str(), nullptr, &nType, reinterpret_cast<BYTE*>( buffer.data() ), &nBytes ) == ERROR_SUCCESS )
-			{
-				// The stored terminator, if there is one, is not part of the text.
-				szResult.assign( buffer.data() );
-			}
-		}
-		::RegCloseKey( hKey );
-		return szResult;
+		return std::string( value.utf8_str() );
 	}
 
 
 	bool WriteString( const std::string &rszSection, const std::string &rszEntry, const std::string &rszValue )
 	{
-		const std::string szKey = GetRootKey() + "\\" + rszSection;
-		HKEY hKey = 0;
-		if ( ::RegCreateKeyExA( HKEY_CURRENT_USER, szKey.c_str(), 0, nullptr, REG_OPTION_NON_VOLATILE, KEY_WRITE, nullptr,
-													 &hKey, nullptr ) != ERROR_SUCCESS )
+		if ( !Profile().Write( EntryPath( rszSection, rszEntry ), FromNarrow( rszValue ) ) )
 		{
 			return false;
 		}
-		const LONG nResult = ::RegSetValueExA( hKey, rszEntry.c_str(), 0, REG_SZ,
-																					 reinterpret_cast<const BYTE*>( rszValue.c_str() ),
-																					 static_cast<DWORD>( rszValue.size() + 1 ) );
-		::RegCloseKey( hKey );
-		return ( nResult == ERROR_SUCCESS );
+		// wxFileConfig holds the file in memory and writes it when it is
+		// destroyed, which for a static is after the editor has gone. These
+		// writes are rare -- a layout, a window placement, the recent list on
+		// exit -- so each one goes out now rather than being lost to a crash.
+		return Profile().Flush();
+	}
+
+
+	void DeleteAll()
+	{
+		Profile().DeleteGroup( ProfileRoot() );
+		Profile().Flush();
 	}
 }

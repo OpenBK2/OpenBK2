@@ -9,7 +9,7 @@ struct SMainFrameParams
 
 	SMainFrameParams();
 
-	void GetRegistryKey( std::string *pszRegistryKey );
+	static std::string GetSection();
 	void GetXMLFilePath( std::string *pszXMLFilePath );
 
 	// serializing...

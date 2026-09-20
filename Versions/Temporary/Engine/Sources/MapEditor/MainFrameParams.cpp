@@ -3,7 +3,9 @@
 #include <fmt/format.h>
 #include "ResourceDefines.h"
 
-#include "MapEditorLib/Tools_Registry.h"
+#include <fmt/printf.h>
+
+#include <cstdio>
 #include "MapEditorLib/Interface_UserData.h"
 
 #include "MainFrameParams.h"
@@ -15,11 +17,40 @@ SMainFrameParams::SMainFrameParams()
 }
 
 
-void SMainFrameParams::GetRegistryKey( std::string *pszRegistryKey )
+// The section of the application's profile these live in.
+std::string SMainFrameParams::GetSection()
 {
-	NI_ASSERT( pszRegistryKey != 0, "SMainFrameParams::GetRegistryKey() pszRegistryKey is NULL" );
-	// A section of the application's profile.
-	( *pszRegistryKey ) = NAppProfile::GetRootKey() + "\\" + NResources::GetString( IDS_REGISTRY_KEY );
+	return NResources::GetString( IDS_REGISTRY_KEY );
+}
+
+
+namespace
+{
+	// The text CRegistrySection wrote, kept exactly: it stored numbers and
+	// rectangles as strings, so what an earlier build saved still reads back.
+	int ReadNumber( const std::string &rszSection, const std::string &rszEntry, int nDefault )
+	{
+		const std::string szText = NAppProfile::GetString( rszSection, rszEntry, "" );
+		int nValue = nDefault;
+		if ( szText.empty() || ( sscanf( szText.c_str(), "%d", &nValue ) < 1 ) )
+		{
+			return nDefault;
+		}
+		return nValue;
+	}
+
+
+	CTRect<int> ReadRect( const std::string &rszSection, const std::string &rszEntry, const CTRect<int> &rDefault )
+	{
+		const std::string szText = NAppProfile::GetString( rszSection, rszEntry, "" );
+		CTRect<int> rect = rDefault;
+		if ( szText.empty() ||
+				 ( sscanf( szText.c_str(), "%d %d %d %d", &rect.minx, &rect.miny, &rect.maxx, &rect.maxy ) < 4 ) )
+		{
+			return rDefault;
+		}
+		return rect;
+	}
 }
 
 
@@ -50,22 +81,16 @@ void SMainFrameParams::Load( bool bFromRegistry )
 {
 	if ( bFromRegistry )
 	{
-		std::string szRegistryKey;
-		GetRegistryKey( &szRegistryKey );
-		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
-
+		const std::string szSection = GetSection();
 		std::string strKey;
 		std::string szFormat;
-		int nValue = 0;
 		std::string szValue;
 
-		nValue = 0;
 		strKey = NResources::GetString( IDS_REGISTRY_KEY_MAXIMIZE );
-		registrySection.LoadNumber( strKey.c_str(), "%d", &nValue, 0 );
-		bMaximized = ( nValue  > 0 );
+		bMaximized = ( ReadNumber( szSection, strKey, 0 ) > 0 );
 
 		strKey = NResources::GetString( IDS_REGISTRY_KEY_RECT );
-		registrySection.LoadRect( strKey.c_str(), "%d", &rect, CTRect<int>( 0, 0, 0, 0 ) );
+		rect = ReadRect( szSection, strKey, CTRect<int>( 0, 0, 0, 0 ) );
 		
 		/**
 		// recentList
@@ -115,19 +140,16 @@ void SMainFrameParams::Save(  bool bToRegistry )
 {
 	if ( bToRegistry )
 	{
-		std::string szRegistryKey;
-		GetRegistryKey( &szRegistryKey );
-		::RegDeleteKey( HKEY_CURRENT_USER, szRegistryKey.c_str() );
-		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_WRITE, szRegistryKey.c_str() );
-
+		const std::string szSection = GetSection();
 		std::string strKey;
 		std::string szFormat;
 
 		strKey = NResources::GetString( IDS_REGISTRY_KEY_MAXIMIZE );
-		registrySection.SaveNumber( strKey.c_str(), "%d", bMaximized );
+		NAppProfile::WriteString( szSection, strKey, fmt::sprintf( "%d", bMaximized ? 1 : 0 ) );
 
 		strKey = NResources::GetString( IDS_REGISTRY_KEY_RECT );
-		registrySection.SaveRect( strKey.c_str(), "%d", rect );
+		NAppProfile::WriteString( szSection, strKey,
+															fmt::sprintf( "%d %d %d %d", rect.minx, rect.miny, rect.maxx, rect.maxy ) );
 
 		/**
 		// recentList

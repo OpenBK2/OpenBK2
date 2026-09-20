@@ -3,13 +3,16 @@
 // InitCommonControls. This came in through NativeImageList.h until the object
 // collector's image lists became wxImageLists.
 #include <commctrl.h>
+
+// CoInitialize and CoUninitialize, which came in through Shlwapi.h until the
+// profile stopped needing SHDeleteKey.
+#include <objbase.h>
 #include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 
 #include <crtdbg.h>
-#include <Shlwapi.h>
 
 #include "libdb/ResourceManager.h"
 #include "libdb/Logger.h"
@@ -17,7 +20,6 @@
 #include "Misc/HPTimer.h"
 #include "System/FileUtils.h"
 #include "Main/MainLoop.h"
-#include "MapEditorLib/Tools_Registry.h"
 #include "Main/MODs.h"
 
 #include "System/SplashScreen.h"
@@ -330,18 +332,14 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 	std::string szRegistryVersion;
 	std::string strKey;
 
-	// The profile's own key: the one CWinApp's profile calls used.
-	const std::string szRegistryKey = NAppProfile::GetRootKey();
-	//
-	{
-		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_READ, szRegistryKey.c_str() );
-		strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
-		registrySection.LoadString( strKey.c_str(), &szRegistryVersion, "" );
-	}
+	// At the profile's own level rather than in a section, which is where
+	// CWinApp's profile calls put it.
+	strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
+	szRegistryVersion = NAppProfile::GetString( "", strKey, "" );
 	//
 	if ( ( rszCommandLine.find( "-reg" ) != std::string::npos ) || ( szRegistryVersion != szValidRegistryVersion ) )
 	{
-		SHDeleteKey( HKEY_CURRENT_USER, szRegistryKey.c_str() ); 
+		NAppProfile::DeleteAll();
 	}
 	else if ( !rszCommandLine.empty() )
 	{
@@ -355,11 +353,7 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 		NFile::SetCurrDir( szFilePath );
 	}
 	//
-	{
-		CRegistrySection registrySection( HKEY_CURRENT_USER, KEY_WRITE, szRegistryKey.c_str() );
-		strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
-		registrySection.SaveString( strKey.c_str(), szValidRegistryVersion );
-	}
+	NAppProfile::WriteString( "", NResources::GetString( IDS_REGISTRY_KEY_VERSION ), szValidRegistryVersion );
 	return true;
 }
 
