@@ -3,8 +3,8 @@
 // The wx front-end's IPaintContext, drawing on a wxDC: MfcPaintContext.h's
 // counterpart, for the viewport's wx window.
 //
-// Header-only because MapEditorLib does not link wx; the modules that do
-// include this, as they include WxHostWindow.h.
+// Header-only, like the other Wx*.h here; see WxWidget.h for why these stay
+// out of MapEditorLib's own translation units.
 //
 // What it reproduces of the MFC context, because the four input states that
 // draw were written against a fresh Windows DC and never set what they did not

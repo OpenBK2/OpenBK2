@@ -9,7 +9,11 @@
 // what MainWindow.h reads without including wx. (MFC's windows were the
 // other kind, with ToCWnd for the question; they are gone.)
 //
-// Header-only because MapEditorLib does not link wx.
+// Header-only, like the other Wx*.h here: the front ends that include them are
+// where wx belongs. MapEditorLib links wx itself now, but only for the one
+// translation unit behind MessageBoxes.h, and nothing else here includes a wx
+// header -- keeping it that way is what stops windows.h's A/W macros being
+// undefined in a TU that then fails to link against NDb::GetObjectA.
 
 
 #include "Interface_Widget.h"

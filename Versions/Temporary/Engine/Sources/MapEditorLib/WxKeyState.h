@@ -13,8 +13,13 @@
 // than guessed, because a wrong mapping would read as a key that is never
 // down.
 //
-// Header-only because MapEditorLib does not link wx; the modules that use this
-// do.
+// Header-only, like the other Wx*.h here; see WxWidget.h for why these stay
+// out of MapEditorLib's own translation units.
+//
+// wxGetKeyState asks GetAsyncKeyState on MSW, which reads the physical keyboard
+// on the input desktop, so this cannot be exercised from the probe desktop:
+// SendInput is refused there and SetKeyboardState moves GetKeyState, not
+// GetAsyncKeyState. Anything resting on it wants a real keyboard to check.
 
 #include "Misc/Asserts.h"
 #include "port/vkcodes.h"

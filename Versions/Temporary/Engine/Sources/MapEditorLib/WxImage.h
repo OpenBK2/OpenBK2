@@ -12,8 +12,8 @@
 // 32-bit ARGB pixels, and those go straight into a wxImage. Bytes in, pixels
 // out, the same code on every platform, and no ::LoadIcon.
 //
-// Header-only, like the other Wx*.h here, because MapEditorLib does not link wx
-// -- only the front-end targets that include these do.
+// Header-only, like the other Wx*.h here; see WxWidget.h for why these stay
+// out of MapEditorLib's own translation units.
 
 
 #include "System/WinImageFormats.h"

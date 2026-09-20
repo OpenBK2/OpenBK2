@@ -17,8 +17,8 @@
 // the same property LVS_SHAREIMAGELISTS gave them. The collector owns both
 // lists and outlives every palette.
 //
-// Header-only because MapEditorLib does not link wx; the modules that use this
-// do.
+// Header-only, like the other Wx*.h here; see WxWidget.h for why these stay
+// out of MapEditorLib's own translation units.
 
 
 #include "Interface_Widget.h"

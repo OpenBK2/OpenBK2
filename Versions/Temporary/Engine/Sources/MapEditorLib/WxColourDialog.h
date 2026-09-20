@@ -34,8 +34,8 @@
 //     kept anyway. wxColourDialog copies its custom colours back only on OK,
 //     and does not expose them otherwise.
 //
-// Header-only and guarded, like the other Wx*.h here, because MapEditorLib
-// does not link wx.
+// Header-only and guarded, like the other Wx*.h here; see WxWidget.h for why
+// these stay out of MapEditorLib's own translation units.
 
 
 #include "Interface_UserData.h"

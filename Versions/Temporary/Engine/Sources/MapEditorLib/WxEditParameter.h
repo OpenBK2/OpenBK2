@@ -18,8 +18,8 @@
 // agree, and carrying the index anyway costs nothing and means a palette can
 // change its mind about sorting without changing anything else.
 //
-// Header-only and guarded, like the other Wx*.h here, because MapEditorLib
-// does not link wx; only the front ends that include this do.
+// Header-only and guarded, like the other Wx*.h here; see WxWidget.h for why
+// these stay out of MapEditorLib's own translation units.
 
 
 #include <wx/choice.h>
