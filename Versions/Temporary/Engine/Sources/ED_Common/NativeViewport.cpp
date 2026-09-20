@@ -68,6 +68,10 @@ void* CNativeViewport::GetHandle() const
 struct CNativeViewport::SImpl
 {
 	SDL_Window *pSdlWindow = nullptr;
+	// The size SDL was last told, so it is not told again for nothing. See
+	// SetSize for why that matters more than it looks.
+	int nWidth = 0;
+	int nHeight = 0;
 };
 
 
@@ -147,6 +151,9 @@ void CNativeViewport::Detach()
 		pImpl->pSdlWindow = nullptr;
 		SDL_QuitSubSystem( SDL_INIT_VIDEO );
 	}
+	// So a later Attach does not take the previous window's size for its own.
+	pImpl->nWidth = 0;
+	pImpl->nHeight = 0;
 }
 
 
@@ -156,6 +163,22 @@ void CNativeViewport::SetSize( int nWidth, int nHeight )
 	{
 		return;
 	}
+	// Only when it has actually changed, and that is not a micro-optimisation.
+	//
+	// SDL_SetWindowSize on a window wrapping a foreign X11 one goes through
+	// X11_ExternalResizeMoveSync, which waits up to 100 ms for the window
+	// manager to act on the request -- "wait a brief time to see if the window
+	// manager decided to let the move or resize happen", in SDL's own words. It
+	// breaks out early only once the window changes, and this window's size is
+	// GTK's to decide rather than the manager's, so a call that asks for the
+	// size it already has can spend the whole 100 ms. On the thread the editor
+	// lays out and loads on, a handful of those is a visible stall.
+	if ( ( nWidth == pImpl->nWidth ) && ( nHeight == pImpl->nHeight ) )
+	{
+		return;
+	}
+	pImpl->nWidth = nWidth;
+	pImpl->nHeight = nHeight;
 	// The whole reason this method exists; see the header. Without it SDL
 	// answers for this window with uninitialised numbers and reports success.
 	SDL_SetWindowSize( pImpl->pSdlWindow, nWidth, nHeight );
