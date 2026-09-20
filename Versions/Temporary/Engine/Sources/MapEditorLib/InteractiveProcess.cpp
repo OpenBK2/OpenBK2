@@ -3,123 +3,430 @@
 
 #include "InteractiveProcess.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <cstring>
 #include <thread>
+
+#if BOOST_OS_WINDOWS
+#include <windows.h>
+#else
+#include <cerrno>
+#include <fcntl.h>
+#include <poll.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#endif
 
 namespace
 {
 	const int PIPE_BUFSIZE = 4096;
 	const int SLEEP_STEP = 100;
 
-	bool RedirectStdStream( HANDLE *phParentSide, HANDLE *phChildSide, int nStdStream, std::string *pszErrorMessage )
+
+	// The platform layer, and the only part of this file that knows which
+	// system it is on. Everything below it -- writing a script, scanning the
+	// output for the prompt, counting how many prompts are still owed -- is the
+	// same on both, because it is about what Maya says rather than about pipes.
+	//
+	// A pipe end and a child process, spelled for each platform. Windows names
+	// its own HANDLE rather than reusing the one DXVK's windows.h declares off
+	// Windows, which is a type without any of the functions that work on it.
+#if BOOST_OS_WINDOWS
+	typedef HANDLE TPipe;
+	const TPipe NO_PIPE = 0;
+#else
+	typedef int TPipe;
+	const TPipe NO_PIPE = -1;
+#endif
+
+
+	struct SChild
 	{
-		// Set the bInheritHandle flag so pipe handles are inherited. 
-		SECURITY_ATTRIBUTES saAttr;
-		saAttr.nLength = sizeof(SECURITY_ATTRIBUTES); 
-		saAttr.bInheritHandle = TRUE; 
-		saAttr.lpSecurityDescriptor = NULL;
+#if BOOST_OS_WINDOWS
+		HANDLE hProcess = 0;
+		HANDLE hThread = 0;
+#else
+		pid_t nPid = -1;
+		// waitpid() both waits and reaps, so a child asked about is a child
+		// collected; Windows can wait as often as it likes. Remembering that it
+		// has been reaped is what keeps the two behaving alike.
+		bool bReaped = false;
+#endif
 
-		HANDLE hInheritableParentSide = 0;
-		*phChildSide = 0;
-		*phParentSide = 0;
-		pszErrorMessage->clear();
-
-		HANDLE *phInSide;
-		HANDLE *phOutSide;
-		if ( nStdStream == STD_INPUT_HANDLE )
+		bool IsRunning() const
 		{
-			phInSide = phChildSide;
-			phOutSide = &hInheritableParentSide;
+#if BOOST_OS_WINDOWS
+			return hProcess != 0;
+#else
+			return nPid != -1;
+#endif
+		}
+	};
+
+
+	// The system's account of whatever just failed, appended rather than
+	// assigned: every caller has already put its own sentence in the string.
+	void AppendLastError( std::string *pszText )
+	{
+		NI_ASSERT( pszText, "Supplied string pointer is null" );
+#if BOOST_OS_WINDOWS
+		LPVOID lpMsgBuf = 0;
+		const DWORD nErrorID = ::GetLastError();
+		if ( ::FormatMessageA( FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+													 NULL, nErrorID, MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
+													 reinterpret_cast<LPSTR>( &lpMsgBuf ), 0, NULL ) )
+		{
+			*pszText += static_cast<const char*>( lpMsgBuf );
+			::LocalFree( lpMsgBuf );
 		}
 		else
 		{
-			phInSide = &hInheritableParentSide;
-			phOutSide = phChildSide;
+			*pszText += fmt::format( "FormatMessage failed, error {}", nErrorID );
+		}
+#else
+		*pszText += std::strerror( errno );
+#endif
+	}
+
+
+	void ClosePipe( TPipe *pPipe )
+	{
+		if ( *pPipe != NO_PIPE )
+		{
+#if BOOST_OS_WINDOWS
+			::CloseHandle( *pPipe );
+#else
+			::close( *pPipe );
+#endif
+			*pPipe = NO_PIPE;
+		}
+	}
+
+
+	// Start szCommandLine with its three standard streams on pipes back here.
+	//
+	// The Win32 side used to redirect by calling AllocConsole and pointing the
+	// *editor's* own std handles at the pipes for the length of the call, so
+	// that the child inherited them, then putting them back. That is process
+	// wide state changed behind everything else in the editor, and it was never
+	// what the code wanted: STARTF_USESTDHANDLES and the three hStd assignments
+	// were sitting right there, commented out. They are used now, so the child
+	// is told its streams directly, nothing global moves, and the console this
+	// used to allocate and free is not needed at all.
+	bool SpawnWithPipes( const std::string &szCommandLine, SChild *pChild,
+											 TPipe *pParentIn, TPipe *pParentOut, TPipe *pParentErrIn,
+											 std::string *pszErrorMessage )
+	{
+		*pParentIn = NO_PIPE;
+		*pParentOut = NO_PIPE;
+		*pParentErrIn = NO_PIPE;
+
+#if BOOST_OS_WINDOWS
+		SECURITY_ATTRIBUTES saAttr = {};
+		saAttr.nLength = sizeof( saAttr );
+		saAttr.bInheritHandle = TRUE;
+		saAttr.lpSecurityDescriptor = NULL;
+
+		HANDLE hChildIn = 0, hChildOut = 0, hChildErrOut = 0;
+		bool bOk = true;
+
+		// One pipe, keeping the end the child needs inheritable and replacing
+		// this side's end with an uninheritable duplicate: an inheritable read
+		// end here would be handed to the child too, and the pipe would then
+		// never report end of file.
+		const auto MakePipe = [&]( HANDLE *phChildSide, HANDLE *phParentSide, bool bChildWrites )
+		{
+			HANDLE hRead = 0, hWrite = 0;
+			if ( !::CreatePipe( &hRead, &hWrite, &saAttr, PIPE_BUFSIZE ) )
+			{
+				*pszErrorMessage = "Can't create pipe: ";
+				AppendLastError( pszErrorMessage );
+				return false;
+			}
+			HANDLE hInheritableParentSide = bChildWrites ? hRead : hWrite;
+			*phChildSide = bChildWrites ? hWrite : hRead;
+			const BOOL bDuplicated = ::DuplicateHandle( ::GetCurrentProcess(), hInheritableParentSide,
+																									::GetCurrentProcess(), phParentSide,
+																									0, FALSE, DUPLICATE_SAME_ACCESS );
+			::CloseHandle( hInheritableParentSide );
+			if ( !bDuplicated )
+			{
+				*pszErrorMessage = "Can't duplicate handle to make uninheritable one: ";
+				AppendLastError( pszErrorMessage );
+				::CloseHandle( *phChildSide );
+				*phChildSide = 0;
+				return false;
+			}
+			return true;
+		};
+
+		bOk = MakePipe( &hChildOut, pParentIn, true );
+		if ( bOk )
+		{
+			bOk = MakePipe( &hChildIn, pParentOut, false );
+		}
+		if ( bOk )
+		{
+			bOk = MakePipe( &hChildErrOut, pParentErrIn, true );
 		}
 
-		bool bResult = false;
-
-		if ( CreatePipe( phInSide, phOutSide, &saAttr, PIPE_BUFSIZE ) )
+		if ( bOk )
 		{
-			if ( SetStdHandle( nStdStream, *phChildSide ) )
+			STARTUPINFOA startInfo = {};
+			startInfo.cb = sizeof( startInfo );
+			startInfo.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
+			startInfo.wShowWindow = SW_HIDE;
+			startInfo.hStdInput = hChildIn;
+			startInfo.hStdOutput = hChildOut;
+			startInfo.hStdError = hChildErrOut;
+
+			PROCESS_INFORMATION procInfo = {};
+			std::string szCmdLineCopy( szCommandLine );
+			if ( ::CreateProcessA( NULL, &szCmdLineCopy[0], 0, 0, TRUE, CREATE_NO_WINDOW, 0, 0,
+														 &startInfo, &procInfo ) )
 			{
-				if ( DuplicateHandle( GetCurrentProcess(), hInheritableParentSide, GetCurrentProcess(), phParentSide,
-					0, FALSE, DUPLICATE_SAME_ACCESS) )
-				{
-					bResult = true;
-				}
-				else
-				{
-					*pszErrorMessage = "Can't duplicate handle to make uninheritable one";
-				}
+				pChild->hProcess = procInfo.hProcess;
+				pChild->hThread = procInfo.hThread;
 			}
 			else
 			{
-				*pszErrorMessage = "Can't redirect stdout";
+				*pszErrorMessage = "Create process failed: ";
+				AppendLastError( pszErrorMessage );
+				bOk = false;
 			}
+		}
 
-			CloseHandle( hInheritableParentSide );
-			if ( bResult == false )
+		// This side has no use for the child's ends whether it started or not.
+		if ( hChildIn != 0 ) { ::CloseHandle( hChildIn ); }
+		if ( hChildOut != 0 ) { ::CloseHandle( hChildOut ); }
+		if ( hChildErrOut != 0 ) { ::CloseHandle( hChildErrOut ); }
+
+		if ( !bOk )
+		{
+			ClosePipe( pParentIn );
+			ClosePipe( pParentOut );
+			ClosePipe( pParentErrIn );
+		}
+		return bOk;
+#else
+		// stdin, stdout, stderr, each [read, write].
+		int childStdin[2] = { -1, -1 };
+		int childStdout[2] = { -1, -1 };
+		int childStderr[2] = { -1, -1 };
+		if ( ( ::pipe( childStdin ) != 0 ) || ( ::pipe( childStdout ) != 0 ) || ( ::pipe( childStderr ) != 0 ) )
+		{
+			*pszErrorMessage = "Can't create pipe: ";
+			AppendLastError( pszErrorMessage );
+			for ( int *pPair : { childStdin, childStdout, childStderr } )
 			{
-				CloseHandle( *phChildSide );
+				if ( pPair[0] != -1 ) { ::close( pPair[0] ); }
+				if ( pPair[1] != -1 ) { ::close( pPair[1] ); }
+			}
+			return false;
+		}
+
+		const pid_t nPid = ::fork();
+		if ( nPid < 0 )
+		{
+			*pszErrorMessage = "Create process failed: ";
+			AppendLastError( pszErrorMessage );
+			for ( int *pPair : { childStdin, childStdout, childStderr } )
+			{
+				::close( pPair[0] );
+				::close( pPair[1] );
+			}
+			return false;
+		}
+
+		if ( nPid == 0 )
+		{
+			// The child. Only async signal safe calls from here to exec.
+			::dup2( childStdin[0], STDIN_FILENO );
+			::dup2( childStdout[1], STDOUT_FILENO );
+			::dup2( childStderr[1], STDERR_FILENO );
+			::close( childStdin[0] );  ::close( childStdin[1] );
+			::close( childStdout[0] ); ::close( childStdout[1] );
+			::close( childStderr[0] ); ::close( childStderr[1] );
+			// A command line, not a program and arguments: the one caller passes
+			// "mayabatch -prompt", and the shell resolves and splits that the way
+			// CreateProcess's own parsing does on the other side.
+			::execl( "/bin/sh", "sh", "-c", szCommandLine.c_str(), static_cast<char*>( nullptr ) );
+			::_exit( 127 );
+		}
+
+		::close( childStdin[0] );
+		::close( childStdout[1] );
+		::close( childStderr[1] );
+		*pParentOut = childStdin[1];
+		*pParentIn = childStdout[0];
+		*pParentErrIn = childStderr[0];
+		// Read has to be able to answer "nothing yet" without blocking, which is
+		// what PeekNamedPipe gives the other side for free.
+		for ( TPipe pipe : { *pParentIn, *pParentErrIn } )
+		{
+			::fcntl( pipe, F_SETFL, ::fcntl( pipe, F_GETFL, 0 ) | O_NONBLOCK );
+		}
+		pChild->nPid = nPid;
+		pChild->bReaped = false;
+		return true;
+#endif
+	}
+
+
+	// Write all of it, or say which write failed.
+	bool WriteAll( TPipe pipe, const char *pData, size_t nSize )
+	{
+		size_t nWrittenTotal = 0;
+		while ( nWrittenTotal < nSize )
+		{
+#if BOOST_OS_WINDOWS
+			DWORD nWritten = 0;
+			if ( !::WriteFile( pipe, pData + nWrittenTotal, static_cast<DWORD>( nSize - nWrittenTotal ), &nWritten, 0 ) )
+			{
+				return false;
+			}
+#else
+			const ssize_t nWritten = ::write( pipe, pData + nWrittenTotal, nSize - nWrittenTotal );
+			if ( nWritten < 0 )
+			{
+				if ( errno == EINTR )
+				{
+					continue;
+				}
+				return false;
+			}
+#endif
+			if ( nWritten == 0 )
+			{
+				return false;
+			}
+			nWrittenTotal += static_cast<size_t>( nWritten );
+		}
+		return true;
+	}
+
+
+	// What can be read right now, without waiting. Returns the byte count, 0
+	// when the child has simply not said anything yet, and -1 on a broken pipe
+	// or a closed one, which is how a child that has exited shows up here.
+	int ReadAvailable( TPipe pipe, char *pBuffer, int nBufferSize )
+	{
+#if BOOST_OS_WINDOWS
+		DWORD nAvailable = 0;
+		if ( !::PeekNamedPipe( pipe, 0, 0, 0, &nAvailable, 0 ) )
+		{
+			return -1;
+		}
+		if ( nAvailable == 0 )
+		{
+			return 0;
+		}
+		// Clamped: PeekNamedPipe reports everything queued, and CreatePipe's
+		// size is a hint the system may exceed, so the old code could be told
+		// of more bytes than the buffer it was about to read them into.
+		const DWORD nWanted = (std::min)( nAvailable, static_cast<DWORD>( nBufferSize ) );
+		DWORD nRead = 0;
+		if ( !::ReadFile( pipe, pBuffer, nWanted, &nRead, 0 ) )
+		{
+			return -1;
+		}
+		return static_cast<int>( nRead );
+#else
+		const ssize_t nRead = ::read( pipe, pBuffer, static_cast<size_t>( nBufferSize ) );
+		if ( nRead > 0 )
+		{
+			return static_cast<int>( nRead );
+		}
+		if ( nRead == 0 )
+		{
+			// End of file: every write end is shut, so the child is gone.
+			return -1;
+		}
+		if ( ( errno == EAGAIN ) || ( errno == EWOULDBLOCK ) || ( errno == EINTR ) )
+		{
+			return 0;
+		}
+		return -1;
+#endif
+	}
+
+
+	// Whether the child has finished, waiting up to nTimeoutMs for it to.
+	bool HasExited( SChild *pChild, int nTimeoutMs )
+	{
+		if ( !pChild->IsRunning() )
+		{
+			return true;
+		}
+#if BOOST_OS_WINDOWS
+		return ::WaitForSingleObject( pChild->hProcess, static_cast<DWORD>( nTimeoutMs ) ) == WAIT_OBJECT_0;
+#else
+		// waitpid collects the child as well as reporting it, so the answer is
+		// remembered: asking twice would otherwise fail the second time.
+		if ( pChild->bReaped )
+		{
+			return true;
+		}
+		for ( int nWaited = 0; ; nWaited += SLEEP_STEP )
+		{
+			int nStatus = 0;
+			const pid_t nResult = ::waitpid( pChild->nPid, &nStatus, WNOHANG );
+			if ( nResult == pChild->nPid )
+			{
+				pChild->bReaped = true;
+				return true;
+			}
+			if ( ( nResult < 0 ) && ( errno != EINTR ) )
+			{
+				// No such child: someone else reaped it, so it is certainly over.
+				pChild->bReaped = true;
+				return true;
+			}
+			if ( nWaited >= nTimeoutMs )
+			{
+				return false;
+			}
+			std::this_thread::sleep_for( std::chrono::milliseconds( SLEEP_STEP ) );
+		}
+#endif
+	}
+
+
+	// Wait for the child however long it takes, then let go of it.
+	void WaitAndRelease( SChild *pChild )
+	{
+		if ( !pChild->IsRunning() )
+		{
+			return;
+		}
+#if BOOST_OS_WINDOWS
+		::WaitForSingleObject( pChild->hProcess, INFINITE );
+		::CloseHandle( pChild->hThread );
+		::CloseHandle( pChild->hProcess );
+		pChild->hProcess = 0;
+		pChild->hThread = 0;
+#else
+		if ( !pChild->bReaped )
+		{
+			int nStatus = 0;
+			while ( ( ::waitpid( pChild->nPid, &nStatus, 0 ) < 0 ) && ( errno == EINTR ) )
+			{
 			}
 		}
-		else
-		{
-			*pszErrorMessage = "Can't create pipe";
-		}
+		pChild->nPid = -1;
+		pChild->bReaped = false;
+#endif
+	}
 
-		return bResult;
-	}
-	/**
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline bool WriteStream( HANDLE h, const char *pData, int nBytesToWrite, int *pnBytesWritten )
-	{
-	int nBytesWrittenTotal = 0;
-	int nBytesWritten = 0;
-	bool bResult = false;
-	do
-	{
-	bResult = ::WriteFile( h, pData + nBytesWrittenTotal, nBytesToWrite - nBytesWrittenTotal, (LPDWORD)&nBytesWritten, 0 );
-	nBytesWrittenTotal += nBytesWritten;
-	}
-	while( bResult && (nBytesWrittenTotal < nBytesToWrite) );
-
-	*pnBytesWritten = nBytesWrittenTotal;
-	return bResult;
-	}
-	/**/
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	void GetErrorMessage( std::string *pszText, unsigned nErrorID )
-	{
-		NI_ASSERT( pszText, "Supplied string pointer is null" );
-		LPVOID lpMsgBuf;
-		if ( FormatMessage(	FORMAT_MESSAGE_ALLOCATE_BUFFER
-				| FORMAT_MESSAGE_FROM_SYSTEM
-				| FORMAT_MESSAGE_IGNORE_INSERTS,
-				NULL,
-				nErrorID,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-				(LPTSTR) &lpMsgBuf,
-				0,
-				NULL ))
-		{
-			*pszText += (LPCTSTR)lpMsgBuf;
-			LocalFree( lpMsgBuf );
-		}
-		else
-		{
-			*pszText += fmt::format( "::FormatMessage error {}", GetLastError() );
-		}
-	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	int StringCountNL( const std::string &s )
 	{
 		int n = 0;
-		for ( int i = 0; i < s.size(); ++i )
+		for ( size_t i = 0; i < s.size(); ++i )
 		{
 			if ( s[i] == '\n' )
 			{
@@ -156,15 +463,14 @@ namespace
 } // local namespace
 
 
-// Everything the class does, and every Win32 name it needs to do it. The
-// public class below is a forwarder; see InteractiveProcess.h for why the
-// handles are not declared there.
+// Everything the class does. The public class below is a forwarder; see
+// InteractiveProcess.h for why none of this is declared there.
 struct CInteractiveProcess::SImpl
 {
-	HANDLE hParentIn = 0;
-	HANDLE hParentOut = 0;
-	HANDLE hParentErrIn = 0;
-	PROCESS_INFORMATION procInfo = {};
+	TPipe hParentIn = NO_PIPE;
+	TPipe hParentOut = NO_PIPE;
+	TPipe hParentErrIn = NO_PIPE;
+	SChild child;
 	int RESPONSEWAIT_TIMEOUT;
 
 	SImpl( int nResponseWaitTimeout ) : RESPONSEWAIT_TIMEOUT( nResponseWaitTimeout ) {}
@@ -172,7 +478,7 @@ struct CInteractiveProcess::SImpl
 	void CleanupHandles();
 	void InternalStop();
 
-	bool IsStarted() const { return procInfo.hProcess != 0; }
+	bool IsStarted() const { return child.IsRunning(); }
 
 	bool Start( const std::string &szCommandLine, std::string *pszErrorMessage );
 	bool Execute( const std::string &szScript, const std::string &szResponseEndLabel, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage );
@@ -217,35 +523,19 @@ bool CInteractiveProcess::Stop( const std::string &szQuitScript )
 //
 void CInteractiveProcess::SImpl::CleanupHandles()
 {
-	if ( hParentIn )
-	{
-		CloseHandle( hParentIn );
-		hParentIn = 0;
-	}
-	if ( hParentOut )
-	{
-		CloseHandle( hParentOut );
-		hParentOut = 0;
-	}
-	if ( hParentErrIn )
-	{
-		CloseHandle( hParentErrIn );
-		hParentErrIn = 0;
-	}
+	ClosePipe( &hParentIn );
+	ClosePipe( &hParentOut );
+	ClosePipe( &hParentErrIn );
 }
 
 
 void CInteractiveProcess::SImpl::InternalStop()
 {
+	// The pipes go first: closing this side's write end is what tells a child
+	// still reading its input that there will be no more of it, and without
+	// that the wait below would not end.
 	CleanupHandles();
-
-	::WaitForSingleObject( procInfo.hProcess, INFINITE );
-
-	CloseHandle( procInfo.hThread );
-	CloseHandle( procInfo.hProcess );
-	memset( &procInfo, 0, sizeof(PROCESS_INFORMATION) );
-
-	::FreeConsole();
+	WaitAndRelease( &child );
 }
 
 
@@ -255,85 +545,8 @@ bool CInteractiveProcess::SImpl::Start( const std::string &szCommandLine, std::s
 	{
 		return true;
 	}
-
-	HANDLE hSavedStdout = GetStdHandle( STD_OUTPUT_HANDLE );
-	HANDLE hSavedStdin = GetStdHandle( STD_INPUT_HANDLE );
-	HANDLE hSavedStderr = GetStdHandle( STD_ERROR_HANDLE );
-
-	if ( !::AllocConsole() )
-	{
-		*pszErrorMessage = "Can't create console: ";
-		GetErrorMessage( pszErrorMessage, GetLastError() );
-		return false;
-	}
-
-	HANDLE hChildOut = 0;
-	HANDLE hChildIn = 0;
-	HANDLE hChildErrOut = 0;
-
 	pszErrorMessage->clear();
-
-	if ( !RedirectStdStream( &hParentIn, &hChildOut, STD_OUTPUT_HANDLE, pszErrorMessage ) )
-	{
-		return false;
-	}
-	if ( !RedirectStdStream( &hParentOut, &hChildIn, STD_INPUT_HANDLE, pszErrorMessage ) )
-	{
-		CloseHandle( hChildOut );
-		CleanupHandles();
-		return false;
-	}
-	if ( !RedirectStdStream( &hParentErrIn, &hChildErrOut, STD_ERROR_HANDLE, pszErrorMessage ) )
-	{
-		CloseHandle( hChildOut );
-		CloseHandle( hChildIn );
-		CleanupHandles();
-		return false;
-	}
-
-	bool bResult = true;
-
-	{
-		STARTUPINFO startInfo;
-		memset( &startInfo, 0, sizeof(STARTUPINFO) );
-		startInfo.cb = sizeof(STARTUPINFO); 
-		startInfo.dwFlags = STARTF_USESHOWWINDOW;//STARTF_USESTDHANDLES;
-		startInfo.wShowWindow = SW_HIDE;
-		//startInfo.hStdInput = 
-		//startInfo.hStdOutput = 
-		//startInfo.hStdError = 
-
-		memset( &procInfo, 0, sizeof(PROCESS_INFORMATION) );
-
-		std::string szCmdLineCopy( szCommandLine );
-		bResult = CreateProcess( NULL,
-			const_cast<char*>(szCmdLineCopy.c_str()),	// command line
-			0,                      // process security attributes
-			0,                      // primary thread security attributes
-			true,                   // handles are inherited
-			0,                      // creation flags
-			0,                      // use parent's environment
-			0,                      // use parent's current directory
-			&startInfo,             // STARTUPINFO pointer
-			&procInfo               // receives PROCESS_INFORMATION
-			);
-		if ( !bResult )
-		{
-			*pszErrorMessage = "Create process failed: ";
-			GetErrorMessage( pszErrorMessage, GetLastError() );
-			CleanupHandles();
-		}
-	}
-
-	CloseHandle( hChildIn );
-	CloseHandle( hChildOut );
-	CloseHandle( hChildErrOut );
-
-	SetStdHandle( STD_OUTPUT_HANDLE, hSavedStdout );
-	SetStdHandle( STD_INPUT_HANDLE, hSavedStdin );
-	SetStdHandle( STD_ERROR_HANDLE, hSavedStderr );
-
-	return bResult;
+	return SpawnWithPipes( szCommandLine, &child, &hParentIn, &hParentOut, &hParentErrIn, pszErrorMessage );
 }
 
 
@@ -344,16 +557,7 @@ bool CInteractiveProcess::SImpl::Stop( const std::string &szQuitScript )
 		return true;
 	}
 
-	bool bResult = false;
-
-	int nBytesWrittenTotal = 0;
-	int nBytesWritten = 0;
-	do
-	{
-		bResult = ::WriteFile( hParentOut, szQuitScript.data() + nBytesWrittenTotal, szQuitScript.size() - nBytesWrittenTotal, (LPDWORD)&nBytesWritten, 0 );
-		nBytesWrittenTotal += nBytesWritten;
-	}
-	while( bResult && (nBytesWrittenTotal < szQuitScript.size()) );
+	WriteAll( hParentOut, szQuitScript.data(), szQuitScript.size() );
 	// FIXME: what if write operation has failed?
 
 	InternalStop();
@@ -387,52 +591,38 @@ bool CInteractiveProcess::SImpl::Execute( const std::string &szScript, const std
 
 	if ( szScript.size() )
 	{
-		int nBytesWrittenTotal = 0;
-		int nBytesWritten = 0;
-		do
-		{
-			bResult = ::WriteFile( hParentOut, szScript.data() + nBytesWrittenTotal, szScript.size() - nBytesWrittenTotal, (LPDWORD)&nBytesWritten, 0 );
-			nBytesWrittenTotal += nBytesWritten;
-		}
-		while( bResult && (nBytesWrittenTotal < szScript.size()) );
+		bResult = WriteAll( hParentOut, szScript.data(), szScript.size() );
 	}
 
 	int nSleepDuration = 0;
 	if ( bResult )
 	{
+		// Read one byte short of it, so the terminator below always fits.
 		char readBuffer[PIPE_BUFSIZE];
 		bool bReadFurther = true;
 		int nLineCount = StringCountNL( szScript );
 		do
 		{
-			int nBytesAvail = 0;
-			bResult = ::PeekNamedPipe( hParentIn, 0, 0, 0, (LPDWORD)&nBytesAvail, 0 );
-			if ( bResult && nBytesAvail > 0 )
+			const int nBytesRead = ReadAvailable( hParentIn, readBuffer, PIPE_BUFSIZE - 1 );
+			if ( nBytesRead < 0 )
 			{
-				int nBytesReadTotal = 0;
-				int nBytesRead = 0;
-				do
-				{
-					bResult = ::ReadFile( hParentIn, (LPVOID)(readBuffer + nBytesReadTotal), nBytesAvail - nBytesReadTotal, (LPDWORD)&nBytesRead, 0 );
-					nBytesReadTotal += nBytesRead;
-				}
-				while( bResult && (nBytesReadTotal < nBytesAvail) );
-				readBuffer[nBytesReadTotal] = '\0';
+				bResult = false;
+			}
+			else if ( nBytesRead > 0 )
+			{
+				readBuffer[nBytesRead] = '\0';
 				pszOutput->append( readBuffer );
-				if ( bResult )
-				{
-					// маркер может быть разбит на две и более посылок, поэтому искать маркер нужно с захватом
-					// некоторого количества (а именно (szResponseEndMark.size() - 1)) уже прочтённых символов
-					int nMarkCharCount = szResponseEndMark.size();
-					int nStartSearchPos = pszOutput->size() - nBytesReadTotal - (nMarkCharCount - 1);
-					nStartSearchPos = (std::max)(0, nStartSearchPos);
+				// маркер может быть разбит на две и более посылок, поэтому искать маркер нужно с захватом
+				// некоторого количества (а именно (szResponseEndMark.size() - 1)) уже прочтённых символов
+				const int nMarkCharCount = szResponseEndMark.size();
+				int nStartSearchPos = pszOutput->size() - nBytesRead - (nMarkCharCount - 1);
+				nStartSearchPos = (std::max)(0, nStartSearchPos);
 
-					const int nMarkCount = StringCountSubstring( pszOutput->c_str() + nStartSearchPos, szResponseEndMark.c_str(), nMarkCharCount );
-					nLineCount -= nMarkCount;
-					if ( std::string::npos != pszOutput->find( szResponseEndMark, (pszOutput->size() - nMarkCharCount) ) )
-					{
-						bReadFurther = (nLineCount > 0);
-					}
+				const int nMarkCount = StringCountSubstring( pszOutput->c_str() + nStartSearchPos, szResponseEndMark.c_str(), nMarkCharCount );
+				nLineCount -= nMarkCount;
+				if ( std::string::npos != pszOutput->find( szResponseEndMark, (pszOutput->size() - nMarkCharCount) ) )
+				{
+					bReadFurther = (nLineCount > 0);
 				}
 				nSleepDuration = 0;
 			}
@@ -455,21 +645,16 @@ bool CInteractiveProcess::SImpl::Execute( const std::string &szScript, const std
 	if ( bResult == false )
 	{
 		if( pszErrorMessage->empty() )
-			GetErrorMessage( pszErrorMessage, GetLastError() );
-
-		uint32_t nTimeout = 500;
-		switch ( ::WaitForSingleObject( procInfo.hProcess, nTimeout ) )
 		{
-			case WAIT_OBJECT_0: // external process have been already terminated
-			{
-				InternalStop();
-				break;
-			}
+			AppendLastError( pszErrorMessage );
+		}
+
+		if ( HasExited( &child, 500 ) )
+		{
+			// external process have been already terminated
+			InternalStop();
 		}
 	}
 
 	return bResult;
 }
-
-
-
