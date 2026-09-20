@@ -10,10 +10,13 @@
 #include "port/wordpack.h"
 
 #include <wx/dcclient.h>
+#include <wx/event.h>
 #include <wx/sizer.h>
 #include <wx/timer.h>
+#include <wx/toplevel.h>
 #include <wx/window.h>
 
+#include <algorithm>
 #include <functional>
 
 // The viewport's window in wx: a wxWindow the renderer draws in, inside a
@@ -180,26 +183,9 @@ namespace
 					pCore->OnContextMenu( PointFromLParam( lParam ) );
 					return true;
 				}
-				case WM_HSCROLL:
-				case WM_VSCROLL:
-				{
-					// Taken whether or not the viewport scrolls, as the MFC handlers
-					// took them, and given the default handling only when it does.
-					( *pResult ) = 0;
-					if ( pCore->IsScrollEnabled() )
-					{
-						( *pResult ) = MSWDefWindowProc( nMessage, wParam, lParam );
-						if ( nMessage == WM_HSCROLL )
-						{
-							pCore->OnHScroll( LOWORD( wParam ), HIWORD( wParam ) );
-						}
-						else
-						{
-							pCore->OnVScroll( LOWORD( wParam ), HIWORD( wParam ) );
-						}
-					}
-					return true;
-				}
+				// WM_HSCROLL and WM_VSCROLL are gone from here: the scroll bars are
+				// wx's now, and it raises wxEVT_SCROLLWIN_* for them, which the
+				// surface turns into EScrollAction. See CWxSceneSurface::OnScroll.
 			}
 			return wxWindow::MSWHandleMessage( pResult, nMessage, wParam, lParam );
 		}
@@ -235,6 +221,38 @@ namespace
 		// Whether the core has the window: from its OnCreate to its OnDestroy.
 		bool bCoreHasWindow = false;
 		CUpdateTimer updateTimer;
+		// The scroll bars, indexed horizontal then vertical. Win32 kept a minimum
+		// and a maximum in the bar itself and this class read them back out of
+		// it; wx counts from zero with a thumb size, so the three numbers the
+		// interface deals in are kept here and wx is told what follows from them.
+		bool bScrollShown = false;
+		int scrollMin[2] = { 0, 0 };
+		int scrollMax[2] = { 0, 0 };
+		int scrollPos[2] = { 0, 0 };
+
+		static int ScrollIndex( bool bVertical ) { return bVertical ? 1 : 0; }
+
+		void ApplyScrollBar( bool bVertical )
+		{
+			if ( pWindow == nullptr )
+			{
+				return;
+			}
+			const int nIndex = ScrollIndex( bVertical );
+			const int nOrientation = bVertical ? wxVERTICAL : wxHORIZONTAL;
+			if ( !bScrollShown )
+			{
+				// No range is how wx is told there is no scroll bar, which is what
+				// clearing WS_VSCROLL and WS_HSCROLL used to say.
+				pWindow->SetScrollbar( nOrientation, 0, 0, 0 );
+				return;
+			}
+			// SetScrollRange's minimum and maximum are both positions the thumb can
+			// reach and the page size was never set, so the thumb is one unit and
+			// the range is one more than the span.
+			pWindow->SetScrollbar( nOrientation, scrollPos[nIndex] - scrollMin[nIndex], 1,
+														 scrollMax[nIndex] - scrollMin[nIndex] + 1 );
+		}
 
 	protected:
 		// The window's destruction, however it comes: the timer stops and the
@@ -281,9 +299,17 @@ namespace
 			wxBoxSizer *const pSizer = new wxBoxSizer( wxVERTICAL );
 			pSizer->Add( pWindow, wxSizerFlags( 1 ).Expand() );
 			Root()->SetSizer( pSizer );
+			pWindow->Bind( wxEVT_SCROLLWIN_TOP, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_BOTTOM, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_LINEUP, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_LINEDOWN, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_PAGEUP, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_PAGEDOWN, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_THUMBTRACK, &CWxSceneSurface::OnScroll, this );
+			pWindow->Bind( wxEVT_SCROLLWIN_THUMBRELEASE, &CWxSceneSurface::OnScroll, this );
 			if ( pCore->IsScrollEnabled() )
 			{
-				::ShowScrollBar( GetHandle(), SB_BOTH, TRUE );
+				ShowScrollBars( true );
 			}
 			bCoreHasWindow = true;
 			if ( !pCore->OnCreate( this ) )
@@ -343,7 +369,37 @@ namespace
 		{
 			// Visible on screen, every parent shown -- IsWindowVisible, which the
 			// renderer asks the same window before resizing its back buffer.
-			return ( pWindow != nullptr ) && ( ::IsWindowVisible( GetHandle() ) != FALSE );
+			return ( pWindow != nullptr ) && pWindow->IsShownOnScreen();
+		}
+
+		virtual bool IsInActiveWindow() const
+		{
+			if ( pWindow == nullptr )
+			{
+				return false;
+			}
+			// GetActiveWindow against GetAncestor( GA_ROOT ): whether the window
+			// the viewport sits in is the one being worked in.
+			// Not const: wxTopLevelWindow::IsActive is not, since wxMSW asks the
+			// system rather than answering from what it already holds.
+			wxWindow *const pTopLevel = wxGetTopLevelParent( pWindow );
+			return ( pTopLevel != nullptr ) && static_cast<wxTopLevelWindow*>( pTopLevel )->IsActive();
+		}
+
+		virtual void DiscardPendingInput()
+		{
+#if BOOST_OS_WINDOWS
+			// The two PeekMessage calls this replaces, which threw away whatever
+			// the user did to the viewport while a command was running.
+			MSG msg;
+			const HWND hWindow = GetHandle();
+			::PeekMessage( &msg, hWindow, WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE );
+			::PeekMessage( &msg, hWindow, WM_KEYFIRST, WM_KEYLAST, PM_REMOVE );
+#endif
+			// Nothing off Windows: wx has no per window queue to take events out
+			// of, and GTK's is not reachable through it. The editors that ask for
+			// this are guarding against a click landing after a long command, so
+			// the cost of not doing it is that the click is acted on.
 		}
 
 		virtual CTPoint<int> GetClientSize() const
@@ -406,53 +462,79 @@ namespace
 			updateTimer.Stop();
 		}
 
-		// The scroll bars are the window's own, WS_HSCROLL and WS_VSCROLL, driven
-		// as the MFC view drove them; wx manages none of them.
+		// The scroll bars are the window's own, as WS_HSCROLL and WS_VSCROLL made
+		// them, but wx puts them there now rather than the style bits.
+		//
+		// What has gone with them is the trick that followed: the window was
+		// minimised and then maximised, twice redrawing, "необходимо для того
+		// чобы показать изменения сразу" -- because changing a window's style
+		// does not recompute its frame and this was how the view forced it. wx
+		// adds and removes the bar itself, so there is nothing to force.
 		virtual void ShowScrollBars( bool bShow )
 		{
-			const HWND hWindow = GetHandle();
-			if ( hWindow == 0 )
-			{
-				return;
-			}
-			const LONG nStyle = ::GetWindowLong( hWindow, GWL_STYLE );
-			::SetWindowLong( hWindow, GWL_STYLE, bShow ? ( nStyle | WS_VSCROLL | WS_HSCROLL ) : ( nStyle & ~( WS_VSCROLL | WS_HSCROLL ) ) );
-			// CWnd::ModifyStyle( ..., 1 ): SWP_NOSIZE and the rest.
-			::SetWindowPos( hWindow, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE );
-			::ShowScrollBar( hWindow, SB_BOTH, bShow ? TRUE : FALSE );
-			// необходимо для того чобы показать изменения сразу
-			WINDOWPLACEMENT windowPlacement;
-			windowPlacement.length = sizeof( WINDOWPLACEMENT );
-			//
-			::GetWindowPlacement( hWindow, &windowPlacement );
-			windowPlacement.showCmd = SW_SHOWMINIMIZED;
-			::SetWindowPlacement( hWindow, &windowPlacement );
-			Redraw();
-			//
-			windowPlacement.showCmd = SW_SHOWMAXIMIZED;
-			::SetWindowPlacement( hWindow, &windowPlacement );
+			bScrollShown = bShow;
+			ApplyScrollBar( false );
+			ApplyScrollBar( true );
 			Redraw();
 		}
 
 		virtual void SetScrollBarRange( bool bVertical, int nMin, int nMax )
 		{
-			::SetScrollRange( GetHandle(), bVertical ? SB_VERT : SB_HORZ, nMin, nMax, TRUE );
+			const int nIndex = ScrollIndex( bVertical );
+			scrollMin[nIndex] = nMin;
+			scrollMax[nIndex] = (std::max)( nMin, nMax );
+			scrollPos[nIndex] = (std::min)( (std::max)( scrollPos[nIndex], nMin ), scrollMax[nIndex] );
+			ApplyScrollBar( bVertical );
 		}
 
 		virtual void GetScrollBarState( bool bVertical, int *pnMin, int *pnMax, int *pnPos ) const
 		{
-			SCROLLINFO si;
-			si.cbSize = sizeof( si );
-			si.fMask = SIF_ALL;
-			::GetScrollInfo( GetHandle(), bVertical ? SB_VERT : SB_HORZ, &si );
-			( *pnMin ) = si.nMin;
-			( *pnMax ) = si.nMax;
-			( *pnPos ) = si.nPos;
+			const int nIndex = ScrollIndex( bVertical );
+			( *pnMin ) = scrollMin[nIndex];
+			( *pnMax ) = scrollMax[nIndex];
+			( *pnPos ) = scrollPos[nIndex];
 		}
 
 		virtual void SetScrollBarPos( bool bVertical, int nPos )
 		{
-			::SetScrollPos( GetHandle(), bVertical ? SB_VERT : SB_HORZ, nPos, TRUE );
+			const int nIndex = ScrollIndex( bVertical );
+			scrollPos[nIndex] = (std::min)( (std::max)( nPos, scrollMin[nIndex] ), scrollMax[nIndex] );
+			ApplyScrollBar( bVertical );
+		}
+
+		// A scroll bar moved. wx names the same eight things WM_HSCROLL and
+		// WM_VSCROLL named, and says which bar it was, so the core is told in the
+		// terms it already used.
+		void OnScroll( wxScrollWinEvent &rEvent )
+		{
+			if ( ( pCore == nullptr ) || !pCore->IsScrollEnabled() )
+			{
+				rEvent.Skip();
+				return;
+			}
+			const bool bVertical = ( rEvent.GetOrientation() == wxVERTICAL );
+			const wxEventType eType = rEvent.GetEventType();
+			EScrollAction eAction = SCROLL_OTHER;
+			if ( eType == wxEVT_SCROLLWIN_TOP ) { eAction = SCROLL_TO_START; }
+			else if ( eType == wxEVT_SCROLLWIN_BOTTOM ) { eAction = SCROLL_TO_END; }
+			else if ( eType == wxEVT_SCROLLWIN_LINEUP ) { eAction = SCROLL_LINE_BACK; }
+			else if ( eType == wxEVT_SCROLLWIN_LINEDOWN ) { eAction = SCROLL_LINE_FORWARD; }
+			else if ( eType == wxEVT_SCROLLWIN_PAGEUP ) { eAction = SCROLL_PAGE_BACK; }
+			else if ( eType == wxEVT_SCROLLWIN_PAGEDOWN ) { eAction = SCROLL_PAGE_FORWARD; }
+			else if ( ( eType == wxEVT_SCROLLWIN_THUMBTRACK ) || ( eType == wxEVT_SCROLLWIN_THUMBRELEASE ) )
+			{
+				eAction = SCROLL_THUMB;
+			}
+			// wx counts from zero; the core works in the range it set.
+			const unsigned nPos = static_cast<unsigned>( rEvent.GetPosition() + scrollMin[ScrollIndex( bVertical )] );
+			if ( bVertical )
+			{
+				pCore->OnVScroll( eAction, nPos );
+			}
+			else
+			{
+				pCore->OnHScroll( eAction, nPos );
+			}
 		}
 	};
 }

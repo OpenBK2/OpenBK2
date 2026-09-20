@@ -106,7 +106,7 @@ void CChildFrameWndBase::OnTimer()
 			// left, CWinApp::OnIdle had nothing to do: no m_pMainWnd and no frame
 			// windows whose command UI to update, and no temporary CWnd maps to
 			// empty. It went with MFC.
-			NMainLoop::StepApp( ::GetActiveWindow() == ::GetAncestor( pSurface->GetHandle(), GA_ROOT ) );
+			NMainLoop::StepApp( pSurface->IsInActiveWindow() );
 		}
 		else
 		{
@@ -562,9 +562,7 @@ void CChildFrameWndBase::RemoveInput()
 	{
 		return;
 	}
-	MSG msg;
-	PeekMessage( &msg, pSurface->GetHandle(), WM_MOUSEFIRST, WM_MOUSELAST, PM_REMOVE );
-	PeekMessage( &msg, pSurface->GetHandle(), WM_KEYFIRST, WM_KEYLAST, PM_REMOVE );
+	pSurface->DiscardPendingInput();
 }
 
 
@@ -828,7 +826,7 @@ bool CChildFrameWndBase::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 }
 
 
-void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos )
+void CChildFrameWndBase::OnHScroll( EScrollAction eAction, unsigned nPos )
 {
 	if ( bEnableScroll && ( pSurface != 0 ) )
 	{
@@ -841,24 +839,23 @@ void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos )
 		if ( nStep == 0 )
 			nStep = 1;
 
-		switch( nSBCode )
+		switch( eAction )
 		{
-		case SB_RIGHT:
+		case SCROLL_TO_END:
 			nPos = nMax;
 			break;
-		case SB_LEFT:
+		case SCROLL_TO_START:
 			nPos = nMin;
 			break;
-		case SB_PAGERIGHT:
-		case SB_LINERIGHT:
+		case SCROLL_PAGE_FORWARD:
+		case SCROLL_LINE_FORWARD:
 			nPos = nCurrentPos + nStep;
 			break;
-		case SB_PAGELEFT:
-		case SB_LINELEFT:
+		case SCROLL_PAGE_BACK:
+		case SCROLL_LINE_BACK:
 			nPos = nCurrentPos - nStep;
 			break;
-		case SB_THUMBPOSITION:
-		case SB_THUMBTRACK:
+		case SCROLL_THUMB:
 			break;
 		default:
 			return;
@@ -885,7 +882,7 @@ void CChildFrameWndBase::OnHScroll( unsigned nSBCode, unsigned nPos )
 }
 
 
-void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos )
+void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 {
 	if ( bEnableScroll && ( pSurface != 0 ) )
 	{
@@ -898,24 +895,23 @@ void CChildFrameWndBase::OnVScroll( unsigned nSBCode, unsigned nPos )
 		if ( nStep == 0 )
 			nStep = 1;
 
-		switch( nSBCode )
+		switch( eAction )
 		{
-		case SB_BOTTOM:
+		case SCROLL_TO_END:
 			nPos = nMax;
 			break;
-		case SB_TOP:
+		case SCROLL_TO_START:
 			nPos = nMin;
 			break;
-		case SB_PAGEDOWN:
-		case SB_LINEDOWN:
+		case SCROLL_PAGE_FORWARD:
+		case SCROLL_LINE_FORWARD:
 			nPos = nCurrentPos + nStep;
 			break;
-		case SB_PAGEUP:
-		case SB_LINEUP:
+		case SCROLL_PAGE_BACK:
+		case SCROLL_LINE_BACK:
 			nPos = nCurrentPos - nStep;
 			break;
-		case SB_THUMBPOSITION:
-		case SB_THUMBTRACK:
+		case SCROLL_THUMB:
 			break;
 		default:
 			return;

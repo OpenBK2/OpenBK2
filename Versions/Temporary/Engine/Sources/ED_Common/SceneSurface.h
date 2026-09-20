@@ -38,6 +38,13 @@ struct ISceneSurface
 	virtual void RedrawWithoutErase() = 0;
 	virtual bool HasFocus() const = 0;
 	virtual void Focus() = 0;
+	// Whether the window this viewport is in is the active one, which is what
+	// decides whether the game steps as the active application.
+	virtual bool IsInActiveWindow() const = 0;
+	// Throws away mouse and key input already queued for the window, so that
+	// what the user did while a command ran is not acted on after it. The
+	// editors ask for this through ID_SCENE_REMOVE_INPUT.
+	virtual void DiscardPendingInput() = 0;
 	virtual bool IsShown() const = 0;
 	virtual CTPoint<int> GetClientSize() const = 0;
 	// Moves and sizes the window, in its parent's client coordinates.

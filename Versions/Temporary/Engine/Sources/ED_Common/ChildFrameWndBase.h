@@ -9,6 +9,27 @@
 
 struct ISceneSurface;
 
+// What a scroll bar has been asked to do. CChildFrameWndBase reads these where
+// it read WM_HSCROLL's and WM_VSCROLL's SB_ codes; turning the toolkit's scroll
+// notification into one of them is the surface's job, which is what keeps the
+// codes out of everything above it.
+//
+// Back and forward rather than left and up: the horizontal and vertical sets
+// were the same six actions under twelve names, and the frame handled both with
+// the same two switches.
+enum EScrollAction
+{
+	SCROLL_TO_START,			// SB_LEFT, SB_TOP
+	SCROLL_TO_END,				// SB_RIGHT, SB_BOTTOM
+	SCROLL_LINE_BACK,			// SB_LINELEFT, SB_LINEUP
+	SCROLL_LINE_FORWARD,	// SB_LINERIGHT, SB_LINEDOWN
+	SCROLL_PAGE_BACK,			// SB_PAGELEFT, SB_PAGEUP
+	SCROLL_PAGE_FORWARD,	// SB_PAGERIGHT, SB_PAGEDOWN
+	SCROLL_THUMB,					// SB_THUMBPOSITION, SB_THUMBTRACK
+	SCROLL_OTHER,					// anything else, which the frame ignores
+};
+
+
 // The 3D viewport: what goes to the active input state and what to the game,
 // when the scene steps and redraws, and the CHID_SCENE commands.
 //
@@ -118,8 +139,8 @@ public:
 	void Paint( IPaintContext *pPaintContext );
 	//
 	void OnSize( int cx, int cy );
-	void OnHScroll( unsigned nSBCode, unsigned nPos );
-	void OnVScroll( unsigned nSBCode, unsigned nPos );
+	void OnHScroll( EScrollAction eAction, unsigned nPos );
+	void OnVScroll( EScrollAction eAction, unsigned nPos );
 
 	// ICommandHandler
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
