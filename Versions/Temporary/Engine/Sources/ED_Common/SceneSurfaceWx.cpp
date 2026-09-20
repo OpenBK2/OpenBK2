@@ -7,6 +7,7 @@
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPaintContext.h"
 #include "ChildFrameWndBase.h"
+#include "port/wordpack.h"
 
 #include <wx/dcclient.h>
 #include <wx/sizer.h>

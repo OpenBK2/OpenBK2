@@ -14,6 +14,7 @@
 #include "SquadState.h"
 #include "SquadEditor.h"
 #include "FormationsState.h"
+#include "port/wordpack.h"
 
 #include <cstdint>
 

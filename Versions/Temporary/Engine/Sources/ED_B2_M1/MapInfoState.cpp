@@ -35,6 +35,7 @@
 #include "VSOMultiState.h"
 
 #include "libdb/ResourceManager.h"
+#include "port/wordpack.h"
 
 
 const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 

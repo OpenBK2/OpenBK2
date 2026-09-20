@@ -15,6 +15,7 @@
 #include "MapEditorLib/CommonEditorMethods.h"
 
 #include "BuildingState.h"
+#include "port/wordpack.h"
 
 #include <cstdint>
 

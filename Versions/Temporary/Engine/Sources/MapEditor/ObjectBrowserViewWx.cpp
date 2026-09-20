@@ -32,6 +32,7 @@
 #include "MapEditorLib/WxResourceImages.h"
 #include "System/GlobalVars.h"
 #include "port/vkcodes.h"
+#include "port/wordpack.h"
 
 #include <fmt/format.h>
 #include <fmt/printf.h>

@@ -8,6 +8,7 @@
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxWidget.h"
+#include "port/wordpack.h"
 
 #include <wx/notebook.h>
 #include <wx/panel.h>
