@@ -73,6 +73,30 @@ namespace
 	}
 
 
+	// Which compiler built this, for a bug report.
+	//
+	// _MSC_FULL_VER stood here alone, which made the line a statement that this
+	// was built with MSVC as much as a version. It is not, off Windows, and the
+	// answer is worth having there for the same reason it is worth having here.
+	//
+	// Clang is asked about before GCC on purpose: clang defines __GNUC__ as well,
+	// to claim compatibility, so testing for GCC first would name it wrongly.
+	wxString CompilerName()
+	{
+#if defined( __clang__ )
+		return wxString::Format( "clang %d.%d.%d", __clang_major__, __clang_minor__,
+														 __clang_patchlevel__ );
+#elif defined( __GNUC__ )
+		return wxString::Format( "gcc %d.%d.%d", __GNUC__, __GNUC_MINOR__,
+														 __GNUC_PATCHLEVEL__ );
+#elif defined( _MSC_FULL_VER )
+		return wxString::Format( "MSVC %d", _MSC_FULL_VER );
+#else
+		return "unknown";
+#endif
+	}
+
+
 	// The instruction set the compiler was told it may use (-DARCHITECTURE),
 	// highest first.
 	const char* InstructionSetName()
@@ -112,7 +136,7 @@ namespace
 		}
 		strDetails << "\n";
 		strDetails << "Configuration : " << ConfigurationName() << ", " << ( sizeof( void* ) * 8 ) << "-bit, " << InstructionSetName() << "\n";
-		strDetails << "Compiler      : MSVC " << _MSC_FULL_VER << "\n";
+		strDetails << "Compiler      : " << CompilerName() << "\n";
 		strDetails << "MOD           : " << ( pUserData->szOpenedMODFolder.empty() ? wxString( "none" ) : wxString::FromUTF8( pUserData->szOpenedMODFolder.c_str() ) ) << "\n";
 		strDetails << "wx (compiled) : " << wxVERSION_STRING << ", debug level " << wxDEBUG_LEVEL << "\n";
 		// The DLL actually loaded, which is what can differ from the line above.
