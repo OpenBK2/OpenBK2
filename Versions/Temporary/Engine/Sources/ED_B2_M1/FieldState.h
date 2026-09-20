@@ -112,7 +112,22 @@ private:
 
 	typedef std::list<CVec2> CFieldPolygon;
 	typedef std::vector<int> CXPosList;
-	typedef std::unordered_map<LPARAM, float> CFieldDistanceMap;
+	// Keyed by the tile a distance was computed for. These maps only memoize
+	// PolygonDistance per tile and are never iterated, so the key has to be
+	// unique and hashable and nothing more. It used to be an LPARAM packed with
+	// MAKELPARAM, which is a Win32 spelling of the same pair and truncated each
+	// index to 16 bits; nothing here ever unpacked it back into x and y.
+	struct STileDistanceHash
+	{
+		std::size_t operator()( const CTPoint<int> &rTile ) const
+		{
+			// Packed through int64_t rather than size_t, which is 32 bits wide in
+			// the x86 build.
+			const int64_t nKey = ( static_cast<int64_t>( rTile.x ) << 32 ) | static_cast<uint32_t>( rTile.y );
+			return std::hash<int64_t>()( nKey );
+		}
+	};
+	typedef std::unordered_map<CTPoint<int>, float, STileDistanceHash> CFieldDistanceMap;
 	typedef NWV::CWeightVector<int, NWV::SClientRandom> CTileSetWeightVector;
 	typedef	std::vector<CTileSetWeightVector> CTileSetWeightVectorList;
 	typedef NWV::CWeightVector<CDBPtr<NDb::SHPObjectRPGStats>, NWV::SClientRandom> CObjectSetWeightVector;

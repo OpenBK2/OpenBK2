@@ -539,8 +539,8 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 					float fDistance = 0.0f;
 					if ( pDistances )
 					{
-						const LPARAM lParam = MAKELPARAM( nXIndex, nYIndex );
-						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( lParam );
+						const CTPoint<int> tile( nXIndex, nYIndex );
+						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( tile );
 						if ( distanceIterator != pDistances->end() )
 						{
 							fDistance = distanceIterator->second;
@@ -550,7 +550,7 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 							const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
 																			 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 							fDistance = PolygonDistance( rPolygon, vTileCenter, true );
-							( *pDistances )[lParam] = fDistance;
+							( *pDistances )[tile] = fDistance;
 						}
 					}
 					else
@@ -742,8 +742,8 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 					float fDistance = 0.0f;
 					if ( pDistances )
 					{
-						const LPARAM lParam = MAKELPARAM( nXIndex, nYIndex );
-						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( lParam );
+						const CTPoint<int> tile( nXIndex, nYIndex );
+						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( tile );
 						if ( distanceIterator != pDistances->end() )
 						{
 							fDistance = distanceIterator->second;
@@ -753,7 +753,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 							const CVec2	vTileCenter( ( nXIndex * fTileSize ) + ( fTileSize / 2.0f ),
 																			 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 							fDistance = PolygonDistance( rPolygon, vTileCenter, true );
-							( *pDistances )[lParam] = fDistance;
+							( *pDistances )[tile] = fDistance;
 						}
 					}
 					else
@@ -986,8 +986,8 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 					float fDistance = 0.0f;
 					if ( pDistances )
 					{
-						const LPARAM lParam = MAKELPARAM( nXIndex, nYIndex );
-						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( lParam );
+						const CTPoint<int> tile( nXIndex, nYIndex );
+						CFieldDistanceMap::const_iterator distanceIterator = pDistances->find( tile );
 						if ( distanceIterator != pDistances->end() )
 						{
 							fDistance = distanceIterator->second;
@@ -995,7 +995,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 						else
 						{
 							fDistance = PolygonDistance( rPolygon, vTileCenter, true );
-							( *pDistances )[lParam] = fDistance;
+							( *pDistances )[tile] = fDistance;
 						}
 					}
 					else
