@@ -2,6 +2,7 @@
 
 #include "MapEditorLib_export.h"
 
+#include <cstddef>
 #include <string>
 
 // The editor's Win32 resources -- strings, menus, accelerators, icons, cursors,
@@ -27,8 +28,33 @@ namespace NResources
 	// A module to search after the executable.
 	MAPEDITORLIB_EXPORT void RegisterModule( HINSTANCE hModule );
 
-	// The string resource nID, as UTF-8. Empty when there is none, which the
-	// string tables never use for a real string.
+	// One entry of a module's generated string table.
+	//
+	// The strings were a Win32 STRINGTABLE, found with LoadStringW, until the
+	// PE resource section stopped being available on every platform the editor
+	// builds for. They are generated C++ now, one table per module, in that
+	// module's ResourceStrings.cpp.
+	struct SStringEntry
+	{
+		unsigned nID;
+		// UTF-8, like every narrow string in the tree. The .rc files these came
+		// from were pure ASCII, so nothing had to be re-encoded.
+		const char *pszText;
+	};
+
+	// A module's table, made as a namespace-scope object in the generated file
+	// so it registers itself before main runs, as the resource section was
+	// mapped before it. Tables are searched in registration order; the ids of
+	// the editor's two tables do not overlap, so that order does not decide
+	// anything.
+	class CStringTable
+	{
+	public:
+		MAPEDITORLIB_EXPORT CStringTable( const SStringEntry *pEntries, size_t nCount );
+	};
+
+	// The string nID, as UTF-8. Empty when there is none, which the string
+	// tables never use for a real string.
 	MAPEDITORLIB_EXPORT std::string GetString( unsigned nID );
 
 	// The same, answering whether the string exists.

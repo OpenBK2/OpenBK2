@@ -31,6 +31,7 @@ set(SOURCES
     NewObjectView.cpp
     NewObjectViewWx.cpp
     ObjectCollector.cpp
+    ResourceStrings.cpp
     OpenModViewWx.cpp
     PC_BaseDialog.cpp
     ProgressViewWx.cpp

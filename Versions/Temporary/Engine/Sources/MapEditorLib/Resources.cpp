@@ -11,6 +11,21 @@ namespace
 		static std::vector<HINSTANCE> modules;
 		return modules;
 	}
+
+	struct STable
+	{
+		const NResources::SStringEntry *pEntries;
+		size_t nCount;
+	};
+
+	// A function-local static, because the tables register themselves from
+	// namespace-scope objects in other modules and there is no order between
+	// those and a plain global here.
+	std::vector<STable>& Tables()
+	{
+		static std::vector<STable> tables;
+		return tables;
+	}
 }
 
 
@@ -43,6 +58,15 @@ namespace NResources
 	}
 
 
+	CStringTable::CStringTable( const SStringEntry *pEntries, size_t nCount )
+	{
+		if ( ( pEntries != nullptr ) && ( nCount > 0 ) )
+		{
+			Tables().push_back( STable{ pEntries, nCount } );
+		}
+	}
+
+
 	bool GetString( unsigned nID, std::string *pszText )
 	{
 		if ( pszText == nullptr )
@@ -50,31 +74,22 @@ namespace NResources
 			return false;
 		}
 		pszText->clear();
-		// Not FindModule: strings are stored sixteen to a block, and two modules
-		// can both have a block without both having the string, so each module
-		// is asked for the string itself, the executable first.
-		std::vector<HINSTANCE> candidates( 1, ::GetModuleHandleA( nullptr ) );
-		candidates.insert( candidates.end(), Modules().begin(), Modules().end() );
-		// With a zero length, LoadStringW answers a pointer to the string in the
-		// resource itself, which is not terminated, and its length.
-		const wchar_t *pszWide = nullptr;
-		int nLength = 0;
-		for ( const HINSTANCE hModule : candidates )
+		// Linear over a couple of hundred entries. The tables are in the order
+		// the .rc wrote them, which is not id order, so this is a scan; at this
+		// size and called from menu and dialog set-up, that is not worth an
+		// index.
+		for ( const STable &rTable : Tables() )
 		{
-			nLength = ::LoadStringW( hModule, nID, reinterpret_cast<LPWSTR>( &pszWide ), 0 );
-			if ( ( nLength > 0 ) && ( pszWide != nullptr ) )
+			for ( size_t nEntry = 0; nEntry < rTable.nCount; ++nEntry )
 			{
-				break;
+				if ( rTable.pEntries[nEntry].nID == nID )
+				{
+					( *pszText ) = rTable.pEntries[nEntry].pszText;
+					return true;
+				}
 			}
 		}
-		if ( ( nLength <= 0 ) || ( pszWide == nullptr ) )
-		{
-			return false;
-		}
-		const int nBytes = ::WideCharToMultiByte( CP_UTF8, 0, pszWide, nLength, nullptr, 0, nullptr, nullptr );
-		pszText->resize( nBytes );
-		::WideCharToMultiByte( CP_UTF8, 0, pszWide, nLength, &( *pszText )[0], nBytes, nullptr, nullptr );
-		return true;
+		return false;
 	}
 
 
