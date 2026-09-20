@@ -905,6 +905,27 @@ namespace
 			QueueEvent( new wxCommandEvent( wxEVT_MENU, ToWxID( nCommandID ) ) );
 		}
 
+		virtual bool PopupResourceMenu( unsigned nMenuID, size_t nSubMenu, int nScreenX, int nScreenY )
+		{
+			const NResources::SMenuItem *pItems = nullptr;
+			size_t nCount = 0;
+			if ( !NResources::GetMenu( nMenuID, &pItems, &nCount ) )
+			{
+				return false;
+			}
+			if ( ( nSubMenu >= nCount ) || ( pItems[nSubMenu].pSubItems == nullptr ) )
+			{
+				return false;
+			}
+			const std::unique_ptr<wxMenu> pMenu( MenuFromItems( pItems[nSubMenu].pSubItems,
+																												 pItems[nSubMenu].nSubCount ) );
+			// wxWindow::PopupMenu places the menu in this window's client
+			// coordinates; the callers' points come from WM_CONTEXTMENU's lParam,
+			// which is in screen ones, as ::TrackPopupMenu wanted them.
+			PopupMenu( pMenu.get(), ScreenToClient( wxPoint( nScreenX, nScreenY ) ) );
+			return true;
+		}
+
 		// ILogger
 		virtual void Log( ELogOutputType eLogOutputType, const std::string &szText )
 		{

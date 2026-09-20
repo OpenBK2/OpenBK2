@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
-#include "MapEditorLib/MainWindow.h"
+#include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/MessageBoxes.h"
 
 #include "MapEditorLib/ResourceDefines.h"
@@ -625,18 +625,19 @@ void CModelState::OnContextMenu( const CTPoint<int> &rMousePoint )
 {
 	if ( pModelEditor != 0 )
 	{
-		// The menu from this module's resources, tracked over the main window,
-		// which gets the command chosen as a WM_COMMAND. Win32's calls, where
-		// MFC's CMenu wrapped the same ones.
-		const HMENU hMainPopupMenu = ::LoadMenuW( theEDB2M1Instance, MAKEINTRESOURCEW( IDM_MODEL_CONTEXT_MENU ) );
-		if ( const HMENU hMenu = ( hMainPopupMenu != 0 ) ? ::GetSubMenu( hMainPopupMenu, MCM_STATE ) : 0 )
+		// The menu out of the generated tables, popped up over the main window,
+		// which gets the command chosen.
+		//
+		// This was ::LoadMenu from this module's resources and ::TrackPopupMenu
+		// over MainWindowHandle(). ED_B2_M1 has carried no menu resources since
+		// they became C++ tables and ED_B2_M1.rc was deleted, so ::LoadMenu had
+		// been returning NULL and this menu had simply stopped appearing -- on
+		// Windows as much as anywhere. The built DLL holds nothing but VERSION.
+		IMainFrame *const pMainFrame = Singleton<IMainFrameContainer>()->Get();
+		if ( ( pMainFrame != 0 ) &&
+				 pMainFrame->PopupResourceMenu( IDM_MODEL_CONTEXT_MENU, MCM_STATE, rMousePoint.x, rMousePoint.y ) )
 		{
-			::TrackPopupMenu( hMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON, rMousePoint.x, rMousePoint.y, 0, MainWindowHandle(), 0 );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_REMOVE_INPUT, 0 );
-		}
-		if ( hMainPopupMenu != 0 )
-		{
-			::DestroyMenu( hMainPopupMenu );
 		}
 	}
 }

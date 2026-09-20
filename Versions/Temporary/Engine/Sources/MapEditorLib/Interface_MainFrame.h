@@ -103,6 +103,19 @@ struct IMainFrame : public ILogger
 	// Runs a frame command -- a menu item's, ID_APP_EXIT say -- once what is
 	// being done now has returned, as posting WM_COMMAND to the main window did.
 	virtual void PostCommand( unsigned nCommandID ) = 0;
+	// A popup from the generated menu tables, shown over the main window at a
+	// screen position, with the command chosen dispatched as the frame's own.
+	// False when that menu is not in the tables, so a caller can skip whatever
+	// it did only when the menu was shown.
+	//
+	// This is what ::TrackPopupMenu over MainWindowHandle() did with the HMENU
+	// ::LoadMenu returned, back when the menus were resources in each module's
+	// PE. nSubMenu picks the popup inside the menu, as ::GetSubMenu did: a menu
+	// resource's top level is a bar and its items are the popups.
+	//
+	// Named this rather than PopupMenu because the frame implementing it is a
+	// wxFrame, and wxWindow::PopupMenu is already an overload set there.
+	virtual bool PopupResourceMenu( unsigned nMenuID, size_t nSubMenu, int nScreenX, int nScreenY ) = 0;
 	// Работа с DB
 	virtual void SaveObjectStorage( int nGDBBrowserID ) = 0;
 	virtual void RestoreObjectStorage() = 0;
