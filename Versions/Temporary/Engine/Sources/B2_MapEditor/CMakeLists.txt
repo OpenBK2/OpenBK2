@@ -21,15 +21,16 @@ target_link_libraries(B2_MapEditor PRIVATE crashpad_client)
 if(WIN32)
     target_link_libraries(B2_MapEditor PRIVATE winapi)
 endif()
-# b2_res.rc is the executable's aggregate: it includes MapEditor.rc and
-# ED_B2_M1.rc, so the exe carries a second copy of what those two DLLs
-# carry. That is deliberate and is what the retail editor did, because MFC
-# looks resources up in the module that asks for them and both the exe and
-# the DLLs ask. legacy.rc is the main frame menu recovered from the retail
-# binary.
-# Windows only: these are Win32 resource scripts.
+# b2_res.rc includes MapEditor.rc, which is what is left of the editor's
+# resource scripts: the application icons, which the shell reads out of the
+# PE. Everything else is generated C++ tables in the module that owns it.
+#
+# legacy.rc went with it. It carried the main frame menu recovered from the
+# retail binary, which nothing has loaded since MFC's LoadFrame did: the menu
+# bars come from IDM_MAIN, IDM_MAPINFO and IDM_MODEL through AddMenuResources.
+# Windows only: this is a Win32 resource script.
 if(WIN32)
-    target_sources(B2_MapEditor PRIVATE b2_res.rc legacy.rc)
+    target_sources(B2_MapEditor PRIVATE b2_res.rc)
 endif()
 # Visual styles. Without the Common-Controls 6.0 dependency in the manifest
 # every dialog, button and tree in the editor comes up in the Windows 95 theme.
