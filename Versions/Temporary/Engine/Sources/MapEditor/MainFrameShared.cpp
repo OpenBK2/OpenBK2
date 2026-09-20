@@ -14,7 +14,13 @@
 #include "PC_Constants.h"
 
 #include "System/FileUtils.h"
+#if BOOST_OS_WINDOWS
+// ::HtmlHelp, for the .chm that does not exist. See ShowHelpContents.
+//
+// BOOST_OS_WINDOWS and not __WXMSW__: this file is deliberately wx-free, so no
+// wx header defines that here and the guard would be false on Windows too.
 #include <HtmlHelp.h>
+#endif
 
 #include "libdb/ResourceManager.h"
 #include "MainFrameShared.h"
@@ -613,13 +619,30 @@ namespace NMainFrameShared
 	}
 
 
+	// F1. In practice this always takes the second branch, on every platform and
+	// in every build: IDS_HELP_FILE_NAME is "MapEditor.chm" and **no such file
+	// exists** -- not in this repository, not in an install, not in the shipped
+	// game. So what the user gets is the "no help file" message, and the
+	// ::HtmlHelp call below has never run for anyone.
+	//
+	// It is kept, behind BOOST_OS_WINDOWS, only so that the intent is not lost.
+	// Nothing
+	// should be ported here. If the editor ever grows a help system it will not
+	// be this one: CHM is a Microsoft container that Windows itself now opens
+	// grudgingly and that has no answer elsewhere worth depending on. Whatever
+	// replaces it -- HTML opened with wxLaunchDefaultBrowser, a PDF, an embedded
+	// browser -- is a new feature with new content behind it, not a port of one
+	// call. The 137 page Editor_Manual.pdf that ships with the game is the
+	// obvious thing to point at first.
 	void ShowHelpContents( const std::string &rszHelpFilePath )
 	{
+#if BOOST_OS_WINDOWS
 		if ( HasHelpFile( rszHelpFilePath ) )
 		{
 			::HtmlHelp( ::GetDesktopWindow(), rszHelpFilePath.c_str(), HH_DISPLAY_TOPIC, 0 );
 		}
 		else
+#endif
 		{
 			const std::string strMessagePattern = NResources::GetString( IDS_NO_HELP_FILE_MESSAGE );
 			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszHelpFilePath.c_str() );
