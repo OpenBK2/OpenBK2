@@ -38,6 +38,47 @@ namespace
 		static std::vector<SBinaryTable> tables;
 		return tables;
 	}
+
+	// One registry per kind, all the same shape: a module's array of entries,
+	// each entry keyed by the id the .rc gave it.
+	template <class TEntry>
+	struct STableOf
+	{
+		const TEntry *pEntries;
+		size_t nCount;
+	};
+
+	template <class TEntry>
+	std::vector<STableOf<TEntry>>& TablesOf()
+	{
+		static std::vector<STableOf<TEntry>> tables;
+		return tables;
+	}
+
+	template <class TEntry>
+	void Register( const TEntry *pEntries, size_t nCount )
+	{
+		if ( ( pEntries != nullptr ) && ( nCount > 0 ) )
+		{
+			TablesOf<TEntry>().push_back( STableOf<TEntry>{ pEntries, nCount } );
+		}
+	}
+
+	template <class TEntry>
+	const TEntry* Find( unsigned nID )
+	{
+		for ( const STableOf<TEntry> &rTable : TablesOf<TEntry>() )
+		{
+			for ( size_t nEntry = 0; nEntry < rTable.nCount; ++nEntry )
+			{
+				if ( rTable.pEntries[nEntry].nID == nID )
+				{
+					return &( rTable.pEntries[nEntry] );
+				}
+			}
+		}
+		return nullptr;
+	}
 }
 
 
@@ -107,6 +148,56 @@ namespace NResources
 			}
 		}
 		return false;
+	}
+
+
+	CMenuTable::CMenuTable( const SMenuEntry *pEntries, size_t nCount )
+	{
+		Register( pEntries, nCount );
+	}
+
+
+	bool GetMenu( unsigned nID, const SMenuItem **ppItems, size_t *pnCount )
+	{
+		const SMenuEntry *const pEntry = Find<SMenuEntry>( nID );
+		if ( ( pEntry == nullptr ) || ( ppItems == nullptr ) || ( pnCount == nullptr ) )
+		{
+			return false;
+		}
+		( *ppItems ) = pEntry->pItems;
+		( *pnCount ) = pEntry->nCount;
+		return true;
+	}
+
+
+	CAcceleratorTable::CAcceleratorTable( const SAcceleratorTableEntry *pEntries, size_t nCount )
+	{
+		Register( pEntries, nCount );
+	}
+
+
+	bool GetAccelerators( unsigned nID, const SAcceleratorEntry **ppEntries, size_t *pnCount )
+	{
+		const SAcceleratorTableEntry *const pEntry = Find<SAcceleratorTableEntry>( nID );
+		if ( ( pEntry == nullptr ) || ( ppEntries == nullptr ) || ( pnCount == nullptr ) )
+		{
+			return false;
+		}
+		( *ppEntries ) = pEntry->pEntries;
+		( *pnCount ) = pEntry->nCount;
+		return true;
+	}
+
+
+	CToolBarTable::CToolBarTable( const SToolBarEntry *pEntries, size_t nCount )
+	{
+		Register( pEntries, nCount );
+	}
+
+
+	const SToolBarEntry* GetToolBar( unsigned nID )
+	{
+		return Find<SToolBarEntry>( nID );
 	}
 
 

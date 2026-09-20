@@ -207,26 +207,17 @@ namespace NMainFrameWxPanes
 	// No wxTAB_TRAVERSAL: nothing in the panel is wx's to navigate between.
 	bool CToolBarImages::AddToolBarResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_TOOLBAR );
-		// The A form by name: wx's Windows headers make FindResource the wide one.
-		const HRSRC hResource = ::FindResourceA( hInstance, MAKEINTRESOURCEA( nResourceID ), RT_TOOLBAR );
-		if ( hResource == 0 )
+		// This was MFC's CToolBarData, read raw out of a RT_TOOLBAR block:
+		// version, width, height, item count, then a command id per item.
+		const NResources::SToolBarEntry *const pToolBar = NResources::GetToolBar( nResourceID );
+		if ( pToolBar == nullptr )
 		{
 			return false;
 		}
-		const HGLOBAL hData = ::LoadResource( hInstance, hResource );
-		const WORD *const pData = ( hData != 0 ) ? static_cast<const WORD*>( ::LockResource( hData ) ) : nullptr;
-		const DWORD nSize = ::SizeofResource( hInstance, hResource );
-		if ( ( pData == nullptr ) || ( nSize < 4 * sizeof( WORD ) ) )
-		{
-			return false;
-		}
-		// CToolBarData: version, width, height, item count, then the items, a
-		// command id each, 0 for a separator.
-		const int nWidth = pData[1];
-		const int nHeight = pData[2];
-		const int nCount = pData[3];
-		if ( ( nWidth <= 0 ) || ( nHeight <= 0 ) || ( nSize < ( 4 + nCount ) * sizeof( WORD ) ) )
+		const int nWidth = pToolBar->nWidth;
+		const int nHeight = pToolBar->nHeight;
+		const int nCount = static_cast<int>( pToolBar->nCount );
+		if ( ( nWidth <= 0 ) || ( nHeight <= 0 ) )
 		{
 			return false;
 		}
@@ -239,7 +230,7 @@ namespace NMainFrameWxPanes
 		int nImage = 0;
 		for ( int nItem = 0; nItem < nCount; ++nItem )
 		{
-			const unsigned nCommandID = pData[4 + nItem];
+			const unsigned nCommandID = pToolBar->pCommands[nItem];
 			if ( nCommandID == 0 )
 			{
 				continue;

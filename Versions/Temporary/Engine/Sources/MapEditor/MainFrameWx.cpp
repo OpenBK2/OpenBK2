@@ -276,43 +276,36 @@ namespace
 	// navigation domain of its own, so none of this reaches into one.
 	wxAcceleratorTable AcceleratorsFromResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_ACCELERATOR );
-		const HACCEL hAccel = ::LoadAcceleratorsW( hInstance, MAKEINTRESOURCEW( nResourceID ) );
-		if ( hAccel == 0 )
+		const NResources::SAcceleratorEntry *pEntries = nullptr;
+		size_t nCount = 0;
+		if ( !NResources::GetAccelerators( nResourceID, &pEntries, &nCount ) )
 		{
 			return wxAcceleratorTable();
 		}
-		// A loaded accelerator table is a resource, freed with its module.
-		const int nCount = ::CopyAcceleratorTable( hAccel, nullptr, 0 );
-		std::vector<ACCEL> accels( nCount );
-		::CopyAcceleratorTable( hAccel, accels.data(), nCount );
 		std::vector<wxAcceleratorEntry> entries;
-		for ( const ACCEL &rAccel : accels )
+		for ( size_t nEntry = 0; nEntry < nCount; ++nEntry )
 		{
-			if ( ( rAccel.fVirt & FVIRTKEY ) == 0 )
-			{
-				continue;
-			}
-			const int nKeyCode = ToWxKeyCode( rAccel.key );
+			const NResources::SAcceleratorEntry &rEntry = pEntries[nEntry];
+			const int nKeyCode = ToWxKeyCode( rEntry.nKey );
 			if ( nKeyCode == WXK_NONE )
 			{
-				DebugTrace( "wx main frame: accelerator key 0x%X for command %u is not mapped", rAccel.key, rAccel.cmd );
+				DebugTrace( "wx main frame: accelerator key 0x%X for command %u is not mapped", rEntry.nKey, rEntry.nCommandID );
 				continue;
 			}
 			int nFlags = wxACCEL_NORMAL;
-			if ( ( rAccel.fVirt & FCONTROL ) != 0 )
-			{
-				nFlags |= wxACCEL_CTRL;
-			}
-			if ( ( rAccel.fVirt & FSHIFT ) != 0 )
+			if ( ( rEntry.nModifiers & NResources::ACCEL_MOD_SHIFT ) != 0 )
 			{
 				nFlags |= wxACCEL_SHIFT;
 			}
-			if ( ( rAccel.fVirt & FALT ) != 0 )
+			if ( ( rEntry.nModifiers & NResources::ACCEL_MOD_CONTROL ) != 0 )
+			{
+				nFlags |= wxACCEL_CTRL;
+			}
+			if ( ( rEntry.nModifiers & NResources::ACCEL_MOD_ALT ) != 0 )
 			{
 				nFlags |= wxACCEL_ALT;
 			}
-			entries.emplace_back( nFlags, nKeyCode, s_commandIDs.NewWx( rAccel.cmd ) );
+			entries.emplace_back( nFlags, nKeyCode, s_commandIDs.NewWx( rEntry.nCommandID ) );
 		}
 		return wxAcceleratorTable( static_cast<int>( entries.size() ), entries.data() );
 	}
@@ -394,64 +387,51 @@ namespace
 	// A menu resource's popup as a wx menu. Every command is a check item,
 	// because the editor's handlers may check any of them and wx refuses to
 	// check a plain one; unchecked, the two look the same.
-	wxMenu* MenuFromNative( HMENU hMenu )
+	wxMenu* MenuFromItems( const NResources::SMenuItem *pItems, size_t nCount )
 	{
 		wxMenu *const pMenu = new wxMenu();
-		const int nCount = ::GetMenuItemCount( hMenu );
-		for ( int nIndex = 0; nIndex < nCount; ++nIndex )
+		for ( size_t nItem = 0; nItem < nCount; ++nItem )
 		{
-			wchar_t pszLabel[256] = { 0 };
-			MENUITEMINFOW itemInfo = { sizeof( itemInfo ) };
-			itemInfo.fMask = MIIM_FTYPE | MIIM_ID | MIIM_STRING | MIIM_SUBMENU;
-			itemInfo.dwTypeData = pszLabel;
-			itemInfo.cch = 255;
-			if ( !::GetMenuItemInfoW( hMenu, nIndex, TRUE, &itemInfo ) )
-			{
-				continue;
-			}
-			if ( ( itemInfo.fType & MFT_SEPARATOR ) != 0 )
+			const NResources::SMenuItem &rItem = pItems[nItem];
+			if ( rItem.pszText == nullptr )
 			{
 				pMenu->AppendSeparator();
 			}
-			else if ( itemInfo.hSubMenu != 0 )
+			else if ( rItem.pSubItems != nullptr )
 			{
-				pMenu->AppendSubMenu( MenuFromNative( itemInfo.hSubMenu ), wxString( pszLabel ) );
+				pMenu->AppendSubMenu( MenuFromItems( rItem.pSubItems, rItem.nSubCount ),
+															wxString::FromUTF8( rItem.pszText ) );
 			}
 			else
 			{
-				InsertCommandItem( pMenu, pMenu->GetMenuItemCount(), itemInfo.wID, wxString( pszLabel ), CommandPrompt( itemInfo.wID ) );
+				InsertCommandItem( pMenu, pMenu->GetMenuItemCount(), rItem.nCommandID,
+													 wxString::FromUTF8( rItem.pszText ), CommandPrompt( rItem.nCommandID ) );
 			}
 		}
 		return pMenu;
 	}
 
 
-	// The menu resource CEditorAppSpecific::CreateMenus names, read from the
-	// module that has it -- the resource handle the caller set, as MFC's
-	// LoadMenu would find it.
+	// The menu CEditorAppSpecific::CreateMenus names, out of the generated
+	// tables. The top level is the bar, so each of its items is a popup.
 	wxMenuBar* MenuBarFromResource( unsigned nResourceID )
 	{
-		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nResourceID ), RT_MENU );
-		const HMENU hMenu = ::LoadMenuW( hInstance, MAKEINTRESOURCEW( nResourceID ) );
-		if ( hMenu == 0 )
+		const NResources::SMenuItem *pItems = nullptr;
+		size_t nCount = 0;
+		if ( !NResources::GetMenu( nResourceID, &pItems, &nCount ) )
 		{
 			return nullptr;
 		}
 		wxMenuBar *const pMenuBar = new wxMenuBar();
-		const int nCount = ::GetMenuItemCount( hMenu );
-		for ( int nIndex = 0; nIndex < nCount; ++nIndex )
+		for ( size_t nItem = 0; nItem < nCount; ++nItem )
 		{
-			wchar_t pszLabel[256] = { 0 };
-			MENUITEMINFOW itemInfo = { sizeof( itemInfo ) };
-			itemInfo.fMask = MIIM_STRING | MIIM_SUBMENU;
-			itemInfo.dwTypeData = pszLabel;
-			itemInfo.cch = 255;
-			if ( ::GetMenuItemInfoW( hMenu, nIndex, TRUE, &itemInfo ) && ( itemInfo.hSubMenu != 0 ) )
+			const NResources::SMenuItem &rItem = pItems[nItem];
+			if ( ( rItem.pSubItems != nullptr ) && ( rItem.pszText != nullptr ) )
 			{
-				pMenuBar->Append( MenuFromNative( itemInfo.hSubMenu ), wxString( pszLabel ) );
+				pMenuBar->Append( MenuFromItems( rItem.pSubItems, rItem.nSubCount ),
+													wxString::FromUTF8( rItem.pszText ) );
 			}
 		}
-		::DestroyMenu( hMenu );
 		return pMenuBar;
 	}
 
@@ -1807,18 +1787,18 @@ namespace
 			{
 				return;
 			}
-			const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( IDM_MAIN_CONTEXT_MENU ), RT_MENU );
-			const HMENU hMenu = ::LoadMenuW( hInstance, MAKEINTRESOURCEW( IDM_MAIN_CONTEXT_MENU ) );
-			if ( hMenu == 0 )
+			const NResources::SMenuItem *pItems = nullptr;
+			size_t nCount = 0;
+			if ( !NResources::GetMenu( IDM_MAIN_CONTEXT_MENU, &pItems, &nCount ) )
 			{
 				return;
 			}
 			std::unique_ptr<wxMenu> pMenu;
-			if ( const HMENU hSubMenu = ::GetSubMenu( hMenu, MCMN_DW_GDB_BROWSER ) )
+			if ( ( MCMN_DW_GDB_BROWSER < nCount ) && ( pItems[MCMN_DW_GDB_BROWSER].pSubItems != nullptr ) )
 			{
-				pMenu.reset( MenuFromNative( hSubMenu ) );
+				pMenu.reset( MenuFromItems( pItems[MCMN_DW_GDB_BROWSER].pSubItems,
+																		pItems[MCMN_DW_GDB_BROWSER].nSubCount ) );
 			}
-			::DestroyMenu( hMenu );
 			if ( pMenu )
 			{
 				PopupMenu( pMenu.get(), rEvent.GetPosition() );

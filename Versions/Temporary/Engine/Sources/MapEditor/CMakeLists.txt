@@ -32,6 +32,7 @@ set(SOURCES
     NewObjectViewWx.cpp
     ObjectCollector.cpp
     ResourceBitmaps.cpp
+    ResourceMenus.cpp
     ResourceStrings.cpp
     OpenModViewWx.cpp
     PC_BaseDialog.cpp

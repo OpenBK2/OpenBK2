@@ -73,6 +73,87 @@ namespace NResources
 	// no module has it. The bytes outlive the call: they are in the image.
 	MAPEDITORLIB_EXPORT bool GetBinaryResource( unsigned nID, const unsigned char **ppData, size_t *pnSize );
 
+	// A menu item: a command, a separator, or a popup with children.
+	//
+	// The MENUITEM flags the .rc carried are not here. The editor never read
+	// them: every item's enabled and checked state comes from its UPDATE_UI
+	// handler when the menu opens.
+	struct SMenuItem
+	{
+		// UTF-8, null for a separator.
+		const char *pszText;
+		// 0 for a popup or a separator.
+		unsigned nCommandID;
+		const SMenuItem *pSubItems;
+		size_t nSubCount;
+	};
+
+	struct SMenuEntry
+	{
+		unsigned nID;
+		const SMenuItem *pItems;
+		size_t nCount;
+	};
+
+	class CMenuTable
+	{
+	public:
+		MAPEDITORLIB_EXPORT CMenuTable( const SMenuEntry *pEntries, size_t nCount );
+	};
+
+	MAPEDITORLIB_EXPORT bool GetMenu( unsigned nID, const SMenuItem **ppItems, size_t *pnCount );
+
+	// What a VIRTKEY accelerator is held down with. Accelerators that were not
+	// VIRTKEY are not carried over: the editor skipped those already.
+	enum EAcceleratorModifier
+	{
+		ACCEL_MOD_SHIFT = 1,
+		ACCEL_MOD_CONTROL = 2,
+		ACCEL_MOD_ALT = 4,
+	};
+
+	struct SAcceleratorEntry
+	{
+		// A VK_ code, from windows.h or port/vkcodes.h.
+		unsigned nKey;
+		unsigned nModifiers;
+		unsigned nCommandID;
+	};
+
+	struct SAcceleratorTableEntry
+	{
+		unsigned nID;
+		const SAcceleratorEntry *pEntries;
+		size_t nCount;
+	};
+
+	class CAcceleratorTable
+	{
+	public:
+		MAPEDITORLIB_EXPORT CAcceleratorTable( const SAcceleratorTableEntry *pEntries, size_t nCount );
+	};
+
+	MAPEDITORLIB_EXPORT bool GetAccelerators( unsigned nID, const SAcceleratorEntry **ppEntries, size_t *pnCount );
+
+	// A toolbar's button size and the command each button sends, 0 for a
+	// separator. This was MFC's CToolBarData, read out of a RT_TOOLBAR block.
+	struct SToolBarEntry
+	{
+		unsigned nID;
+		int nWidth;
+		int nHeight;
+		const unsigned *pCommands;
+		size_t nCount;
+	};
+
+	class CToolBarTable
+	{
+	public:
+		MAPEDITORLIB_EXPORT CToolBarTable( const SToolBarEntry *pEntries, size_t nCount );
+	};
+
+	MAPEDITORLIB_EXPORT const SToolBarEntry* GetToolBar( unsigned nID );
+
 	// The string nID, as UTF-8. Empty when there is none, which the string
 	// tables never use for a real string.
 	MAPEDITORLIB_EXPORT std::string GetString( unsigned nID );
