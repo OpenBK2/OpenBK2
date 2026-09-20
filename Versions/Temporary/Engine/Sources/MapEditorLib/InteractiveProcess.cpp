@@ -156,9 +156,66 @@ namespace
 } // local namespace
 
 
-// CInteractiveProcess
+// Everything the class does, and every Win32 name it needs to do it. The
+// public class below is a forwarder; see InteractiveProcess.h for why the
+// handles are not declared there.
+struct CInteractiveProcess::SImpl
+{
+	HANDLE hParentIn = 0;
+	HANDLE hParentOut = 0;
+	HANDLE hParentErrIn = 0;
+	PROCESS_INFORMATION procInfo = {};
+	int RESPONSEWAIT_TIMEOUT;
+
+	SImpl( int nResponseWaitTimeout ) : RESPONSEWAIT_TIMEOUT( nResponseWaitTimeout ) {}
+
+	void CleanupHandles();
+	void InternalStop();
+
+	bool IsStarted() const { return procInfo.hProcess != 0; }
+
+	bool Start( const std::string &szCommandLine, std::string *pszErrorMessage );
+	bool Execute( const std::string &szScript, const std::string &szResponseEndLabel, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage );
+	bool Stop( const std::string &szQuitScript );
+};
+
+
+CInteractiveProcess::CInteractiveProcess( int nResponseWaitTimeout )
+	: pImpl( new SImpl( nResponseWaitTimeout ) )
+{
+}
+
+CInteractiveProcess::~CInteractiveProcess() = default;
+
+bool CInteractiveProcess::IsStarted()
+{
+	return pImpl->IsStarted();
+}
+
+void CInteractiveProcess::SetResponseTimeout( int nResponseWaitTimeout )
+{
+	pImpl->RESPONSEWAIT_TIMEOUT = nResponseWaitTimeout;
+}
+
+bool CInteractiveProcess::Start( const std::string &szCommandLine, std::string *pszErrorMessage )
+{
+	return pImpl->Start( szCommandLine, pszErrorMessage );
+}
+
+bool CInteractiveProcess::Execute( const std::string &szScript, const std::string &szResponseEndLabel, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage )
+{
+	return pImpl->Execute( szScript, szResponseEndLabel, pszOutput, pszErrorOutput, pszErrorMessage );
+}
+
+bool CInteractiveProcess::Stop( const std::string &szQuitScript )
+{
+	return pImpl->Stop( szQuitScript );
+}
+
+
+// CInteractiveProcess::SImpl
 //
-void CInteractiveProcess::CleanupHandles()
+void CInteractiveProcess::SImpl::CleanupHandles()
 {
 	if ( hParentIn )
 	{
@@ -178,7 +235,7 @@ void CInteractiveProcess::CleanupHandles()
 }
 
 
-void CInteractiveProcess::InternalStop()
+void CInteractiveProcess::SImpl::InternalStop()
 {
 	CleanupHandles();
 
@@ -192,7 +249,7 @@ void CInteractiveProcess::InternalStop()
 }
 
 
-bool CInteractiveProcess::Start( const std::string &szCommandLine, std::string *pszErrorMessage )
+bool CInteractiveProcess::SImpl::Start( const std::string &szCommandLine, std::string *pszErrorMessage )
 {
 	if ( IsStarted() )
 	{
@@ -280,7 +337,7 @@ bool CInteractiveProcess::Start( const std::string &szCommandLine, std::string *
 }
 
 
-bool CInteractiveProcess::Stop( const std::string &szQuitScript )
+bool CInteractiveProcess::SImpl::Stop( const std::string &szQuitScript )
 {
 	if ( !IsStarted() )
 	{
@@ -317,7 +374,7 @@ bool CInteractiveProcess::Stop( const std::string &szQuitScript )
 //
 // pszErrorOutput can be 0, pszOutput and pszErrorMessage cannot.
 //
-bool CInteractiveProcess::Execute( const std::string &szScript, const std::string &szResponseEndMark, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage )
+bool CInteractiveProcess::SImpl::Execute( const std::string &szScript, const std::string &szResponseEndMark, std::string *pszOutput, std::string *pszErrorOutput, std::string *pszErrorMessage )
 {
 	pszOutput->clear();
 	if ( pszErrorOutput )
