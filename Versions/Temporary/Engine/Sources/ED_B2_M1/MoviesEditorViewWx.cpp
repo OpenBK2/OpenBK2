@@ -69,9 +69,18 @@
 namespace
 {
 	// 0x00BBGGRR, which is what the TSL_* colours are.
+	//
+	// The shifts are written out rather than taken from GetRValue and friends.
+	// DXVK's windows.h carries COLORREF and the RGB macro that builds one, but
+	// not the three macros that take one apart, and this is the only place in
+	// the tree that wants them -- a port/ header for three shifts with one
+	// caller would be more ceremony than the arithmetic. Anyone who needs them
+	// somewhere else should write that header then.
 	wxColour FromColorRef( COLORREF color )
 	{
-		return wxColour( GetRValue( color ), GetGValue( color ), GetBValue( color ) );
+		return wxColour( static_cast<unsigned char>( color ),
+										 static_cast<unsigned char>( color >> 8 ),
+										 static_cast<unsigned char>( color >> 16 ) );
 	}
 
 
