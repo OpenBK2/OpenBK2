@@ -10,6 +10,13 @@ the tooling has to remember, and the tooling forgot twice.
     python rundesktop.py --list                # what is on that desktop now
     python rundesktop.py --kill
     python rundesktop.py --d3d9stub            # with a D3D9 device that draws nothing
+    python rundesktop.py --args "Custom\\Missions\\New Map\\mapinfo.xdb"
+    python rundesktop.py --args -reg           # resets the saved profile, so back it up
+
+--args takes the rest of the line, so it goes last. The editor's whole argument
+vocabulary is one file to open and -reg; -reg deletes the profile under
+HKCU\\Software\\Nival Interactive, which editorstate.py does not cover, so
+export that key before using it.
 
     powershell -File winshot.ps1 -Desktop bk2probe -Out shot.png
     python windump.py --desktop bk2probe
@@ -93,7 +100,21 @@ def open_or_create(name):
     return desk, True
 
 
-def launch(desktop, exe, cwd):
+def command_line(exe, args):
+    """The command line as the CRT and wx will cut it, or None for no arguments.
+
+    argv[0] has to be in it: wx takes the editor's arguments from argv, so
+    leaving the program's name out would make the first real argument look like
+    the program and go missing.
+    """
+    if not args:
+        return None
+    parts = ['"%s"' % exe]
+    parts += ['"%s"' % a if (' ' in a or '\t' in a) else a for a in args]
+    return C.create_unicode_buffer(' '.join(parts))
+
+
+def launch(desktop, exe, cwd, args=()):
     si = STARTUPINFOW()
     si.cb = C.sizeof(si)
     # The one field that matters: the process starts on that desktop and every
@@ -102,8 +123,8 @@ def launch(desktop, exe, cwd):
     si.dwFlags = STARTF_USESHOWWINDOW
     si.wShowWindow = SW_SHOW
     pi = PROCESS_INFORMATION()
-    if not k.CreateProcessW(exe, None, None, None, False, CREATE_NEW_CONSOLE,
-                            None, cwd, C.byref(si), C.byref(pi)):
+    if not k.CreateProcessW(exe, command_line(exe, args), None, None, False,
+                            CREATE_NEW_CONSOLE, None, cwd, C.byref(si), C.byref(pi)):
         raise SystemExit('CreateProcess failed: %d' % C.get_last_error())
     k.CloseHandle(pi.hThread)
     k.CloseHandle(pi.hProcess)
@@ -184,6 +205,8 @@ def main():
     ap.add_argument('--kill', action='store_true')
     ap.add_argument('--d3d9stub', action='store_true',
                     help='run against the stub d3d9.dll, which makes devices that draw nothing')
+    ap.add_argument('--args', nargs=argparse.REMAINDER, default=[],
+                    help='everything after this goes to the editor (last option)')
     args = ap.parse_args()
 
     if args.kill:
@@ -200,8 +223,9 @@ def main():
     desk, made = open_or_create(args.desktop)
     print('desktop %s %s (handle 0x%X)' % (args.desktop,
                                            'created' if made else 'already there', desk))
-    pid = launch(args.desktop, args.exe, args.cwd)
-    print('started %s as pid %d on %s' % (args.exe, pid, args.desktop))
+    pid = launch(args.desktop, args.exe, args.cwd, args.args)
+    print('started %s%s as pid %d on %s'
+          % (args.exe, (' ' + ' '.join(args.args)) if args.args else '', pid, args.desktop))
     print('the interactive desktop is untouched; nothing of this is on screen')
     for _ in range(args.wait):
         time.sleep(1)
