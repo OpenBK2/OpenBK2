@@ -61,7 +61,7 @@ struct IObjectFilterCollector : public CObjectBase
 	//
 	virtual bool IsSeparator( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
 	virtual const IObjectFilter* Get( const std::string &rszFilterType, const int nFilterIndex ) const = 0;
-	// IDOK or IDCANCEL
+	// wxID_OK or wxID_CANCEL
 	virtual int ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
 	virtual int ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex ) = 0;
 };

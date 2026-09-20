@@ -31,9 +31,6 @@
 #include "MapEditorLib/WxColourDialog.h"
 #include "MapEditorLib/WxResourceImages.h"
 #include "System/GlobalVars.h"
-#include "port/vkcodes.h"
-#include "port/wordpack.h"
-#include "port/mousekeys.h"
 
 #include <fmt/format.h>
 #include <fmt/printf.h>
@@ -41,6 +38,7 @@
 #include <wx/choice.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
+#include <wx/dnd.h>
 #include <wx/headerctrl.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
@@ -52,10 +50,13 @@
 #include <wx/time.h>
 #include <wx/treectrl.h>
 
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <list>
 #include <memory>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -158,6 +159,67 @@ namespace
 	}
 
 
+	// The format the dragged rows travel in. Private to the editor: a drop
+	// target accepts a format rather than a window, so this is what keeps the
+	// trees from taking a drop from anywhere else.
+	const char *const ROW_DRAG_FORMAT = "OpenBK2ObjectBrowserRows";
+
+
+	// The tree the rows came from, then one row path per line.
+	//
+	// The tree is in there because the format alone is not enough: the editor
+	// shows several of these browsers at once, each over a different object
+	// type, and rows dragged from one into another would be moved by a
+	// manipulator that knows nothing about them. The MFC tree could not be
+	// reached from outside at all -- it held the mouse for the whole drag --
+	// so refusing the foreign drop is what keeps the behaviour it had.
+	std::string PackDrag( const void *pSourceTree, const std::vector<std::string> &rSources )
+	{
+		std::string szPacked = fmt::format( "{}", reinterpret_cast<uintptr_t>( pSourceTree ) );
+		for ( size_t nSource = 0; nSource < rSources.size(); ++nSource )
+		{
+			szPacked += '\n';
+			szPacked += rSources[nSource];
+		}
+		return szPacked;
+	}
+
+
+	// False unless the rows came from pSourceTree, which is the only tree
+	// allowed to receive them.
+	bool UnpackDrag( const std::string &rszPacked, const void *pSourceTree, std::vector<std::string> *pSources )
+	{
+		pSources->clear();
+		std::istringstream stream( rszPacked );
+		std::string szLine;
+		if ( !std::getline( stream, szLine ) )
+		{
+			return false;
+		}
+		uintptr_t nSourceTree = 0;
+		try
+		{
+			nSourceTree = static_cast<uintptr_t>( std::stoull( szLine ) );
+		}
+		catch ( const std::exception& )
+		{
+			return false;
+		}
+		if ( nSourceTree != reinterpret_cast<uintptr_t>( pSourceTree ) )
+		{
+			return false;
+		}
+		while ( std::getline( stream, szLine ) )
+		{
+			if ( !szLine.empty() )
+			{
+				pSources->push_back( szLine );
+			}
+		}
+		return !pSources->empty();
+	}
+
+
 	class CRowData : public wxTreeItemData
 	{
 	public:
@@ -176,25 +238,9 @@ namespace
 		wxDECLARE_CLASS( CSortedTreeCtrl );
 
 	public:
-		// Sees the tree's window messages before wx does; answering true keeps
-		// them from wx and the native tree. Drag and drop needs the mouse as the
-		// MFC tree had it: wx's multiple-selection tree takes a button release
-		// over a row for itself, changing the selection and raising no
-		// wxEVT_LEFT_UP.
-		std::function<bool( WXUINT, WXWPARAM, WXLPARAM )> messageHook;
-
 		CSortedTreeCtrl( wxWindow *pParent, wxWindowID nID, const wxPoint &rPosition, const wxSize &rSize, long nStyle )
 			: wxTreeCtrl( pParent, nID, rPosition, rSize, nStyle )
 		{
-		}
-
-		virtual WXLRESULT MSWWindowProc( WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam ) override
-		{
-			if ( messageHook && messageHook( nMsg, wParam, lParam ) )
-			{
-				return 0;
-			}
-			return wxTreeCtrl::MSWWindowProc( nMsg, wParam, lParam );
 		}
 
 		virtual int OnCompareItems( const wxTreeItemId &rItem0, const wxTreeItemId &rItem1 ) override
@@ -254,16 +300,12 @@ namespace
 		wxTreeItemId labelEditItem;
 		std::string szLabelBeforeEdit;
 
-		// CTreeGDBBrowserInputState: the row pressed on and where, whether a drag
-		// is on, the folder it would drop into, whether the mouse has left the
-		// tree, whether it copies, and the cursor it replaced.
-		wxTreeItemId dragSource;
-		wxPoint dragSourcePoint;
-		bool bDragging = false;
+		// The folder the dragged rows would drop into, highlighted while it is
+		// the target. All the rest of CTreeGDBBrowserInputState's drag state --
+		// the row pressed on, whether a drag is on, whether it copies, whether
+		// the mouse has left the tree, the cursor it replaced -- belongs to
+		// wxDropSource now, which owns the mouse for the length of the drag.
 		wxTreeItemId dragTarget;
-		bool bDragLeft = false;
-		bool bDragCopy = false;
-		HCURSOR hDragDefaultCursor = 0;
 
 		// The fill in progress: CreateTree's iterator, handed out in batches. A
 		// new fill bumps the generation, which strands a batch still queued.
@@ -297,12 +339,11 @@ namespace
 			CSortedTreeCtrl *const pSortedTree = NWx::Child<CSortedTreeCtrl>( pParent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 																																				wxTR_HAS_BUTTONS | wxTR_LINES_AT_ROOT | wxTR_HIDE_ROOT |
 																																				wxTR_MULTIPLE | wxTR_EDIT_LABELS | wxBORDER_SUNKEN );
-			// The tree goes before this view does, so the hook never outlives it.
-			pSortedTree->messageHook = [this]( WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam )
-			{
-				return OnTreeMessage( nMsg, wParam, lParam );
-			};
 			pTree = pSortedTree;
+			// The tree goes before this view does, so the target never outlives
+			// it; the window owns it and deletes it.
+			pTree->SetDropTarget( new CRowDropTarget( this ) );
+			pTree->Bind( wxEVT_TREE_BEGIN_DRAG, &CWxObjectTree::OnBeginDrag, this );
 			pTree->Bind( wxEVT_TREE_BEGIN_LABEL_EDIT, &CWxObjectTree::OnBeginLabelEdit, this );
 			pTree->Bind( wxEVT_TREE_END_LABEL_EDIT, &CWxObjectTree::OnEndLabelEdit, this );
 			pTree->Bind( wxEVT_TREE_KEY_DOWN, &CWxObjectTree::OnTreeKey, this );
@@ -1013,10 +1054,6 @@ namespace
 			if ( labelEditItem.IsOk() && IsWithin( labelEditItem, rItem ) )
 			{
 				labelEditItem = wxTreeItemId();
-			}
-			if ( dragSource.IsOk() && IsWithin( dragSource, rItem ) )
-			{
-				dragSource = wxTreeItemId();
 			}
 			if ( dragTarget.IsOk() && IsWithin( dragTarget, rItem ) )
 			{
@@ -2310,110 +2347,173 @@ namespace
 			}
 		}
 
-		// CTreeGDBBrowserInputState's drag and drop, which followed the mouse
-		// itself rather than the tree's own drag. Pressed on a row's icon or name
-		// and moved more than four pixels -- or with the right button pressed too
-		// -- the selected rows are dragged, the mouse captured. A folder under the
-		// mouse that is not selected and not inside a selected row becomes the
-		// target, highlighted, and stays it until another does. Releasing moves
-		// the rows into it, or copies them with Ctrl held; Escape ends the drag
-		// without either. The cursor shows move, copy, or no drop outside the
-		// tree.
-		bool OnTreeMessage( WXUINT nMsg, WXWPARAM wParam, WXLPARAM lParam )
+		// The tree's end of a drag: the rows on their way in. Everything it is
+		// asked is answered by the view, which is what holds the rows.
+		class CRowDropTarget : public wxDropTarget
+		{
+			CWxObjectTree *pTreeView;
+
+		public:
+			explicit CRowDropTarget( CWxObjectTree *_pTreeView )
+				: wxDropTarget( new wxCustomDataObject( wxDataFormat( ROW_DRAG_FORMAT ) ) ), pTreeView( _pTreeView )
+			{
+			}
+
+			virtual wxDragResult OnDragOver( wxCoord x, wxCoord y, wxDragResult eDefault ) override
+			{
+				return pTreeView->DragOver( wxPoint( x, y ), eDefault );
+			}
+
+			virtual void OnLeave() override
+			{
+				pTreeView->ClearDropTarget();
+			}
+
+			virtual bool OnDrop( wxCoord, wxCoord ) override
+			{
+				return true;
+			}
+
+			virtual wxDragResult OnData( wxCoord x, wxCoord y, wxDragResult eDefault ) override
+			{
+				if ( !GetData() )
+				{
+					return wxDragNone;
+				}
+				const wxCustomDataObject *const pData = static_cast<wxCustomDataObject*>( GetDataObject() );
+				const char *const pBytes = static_cast<const char*>( pData->GetData() );
+				if ( pBytes == nullptr )
+				{
+					return wxDragNone;
+				}
+				return pTreeView->Drop( std::string( pBytes, pData->GetSize() ), wxPoint( x, y ), eDefault );
+			}
+		};
+
+		// CTreeGDBBrowserInputState's drag and drop, as the toolkit's own drag
+		// rather than the mouse followed by hand.
+		//
+		// The tree raises this once a row has been pressed and the mouse moved
+		// far enough -- wxMSW does it for the multiple selection tree itself,
+		// using the system's drag distance where the MFC tree counted four
+		// pixels, and holding the selection until the button comes up precisely
+		// so that a selection of several rows can be dragged.
+		//
+		// The event is deliberately left vetoed. Allowing it starts wx's own
+		// wxDragImage drag, which would fight the one begun here.
+		void OnBeginDrag( wxTreeEvent & )
+		{
+			if ( ( pTree == nullptr ) || !bEnableEdit || ( NGlobal::GetVar( "enable_drag_and_drop", 0 ) != 1 ) )
+			{
+				return;
+			}
+			// The rows that would move: the selection, less any row already
+			// inside another selected one, which its parent carries.
+			std::vector<std::string> sources;
+			wxArrayTreeItemIds selected;
+			pTree->GetSelections( selected );
+			for ( size_t nRow = 0; nRow < selected.size(); ++nRow )
+			{
+				if ( IsTopSelection( selected[nRow], wxTreeItemId() ) )
+				{
+					sources.push_back( NameOf( selected[nRow] ) );
+				}
+			}
+			if ( sources.empty() )
+			{
+				return;
+			}
+
+			const std::string szPacked = PackDrag( this, sources );
+			// Braced: the parenthesised form declares a function here.
+			wxCustomDataObject data{ wxDataFormat( ROW_DRAG_FORMAT ) };
+			data.SetData( szPacked.size(), szPacked.data() );
+
+			wxDropSource source( data, pTree );
+			// The MFC tree's own move and copy cursors. wxMSW shows them from
+			// the base class's GiveFeedback; wxGTK ignores them and draws the
+			// drag icon a GTK drag is expected to have.
+			source.SetCursor( wxDragMove, DragCursor( false ) );
+			source.SetCursor( wxDragCopy, DragCursor( true ) );
+			// Allowing the move is what makes move the default and copy the
+			// thing Ctrl does, which is how the tree read the modifier before
+			// and what every other drag on the desktop does.
+			source.DoDragDrop( wxDrag_AllowMove );
+			// However it ended -- dropped, cancelled with Escape, or let go
+			// outside -- the highlight is this view's to take back.
+			ClearDropTarget();
+		}
+
+		// CTreeGDBBrowserInputState::ContinueDrag, now only about which folder
+		// the rows would land in: a folder under the mouse that is not itself
+		// being dragged and does not sit inside a row that is, since a folder
+		// cannot move into itself. It stays the target until another folder
+		// takes it, so passing over an object on the way does not lose it.
+		//
+		// wx draws the cursor from what this answers, so unlike the MFC tree --
+		// which showed "move" anywhere inside the tree, including before any
+		// folder had been picked out -- the no-drop cursor now means exactly
+		// that releasing here would do nothing.
+		wxDragResult DragOver( const wxPoint &rAt, wxDragResult eDefault )
 		{
 			if ( pTree == nullptr )
 			{
-				return false;
+				return wxDragNone;
 			}
-			const wxPoint at( static_cast<short>( LOWORD( lParam ) ), static_cast<short>( HIWORD( lParam ) ) );
-			switch ( nMsg )
+			int nFlags = 0;
+			const wxTreeItemId item = pTree->HitTest( rAt, nFlags );
+			if ( item.IsOk() && ( ( nFlags & ( wxTREE_HITTEST_ONITEMICON | wxTREE_HITTEST_ONITEMLABEL ) ) != 0 ) &&
+					 ( item != dragTarget ) && !pTree->IsSelected( item ) && IsTopSelection( item, dragTarget ) &&
+					 ( TypeOf( item ) == GDBO_FOLDER ) )
 			{
-				case WM_LBUTTONDOWN:
-				{
-					int nFlags = 0;
-					dragSource = pTree->HitTest( at, nFlags );
-					if ( dragSource.IsOk() && ( ( nFlags & ( wxTREE_HITTEST_ONITEMICON | wxTREE_HITTEST_ONITEMLABEL ) ) == 0 ) )
-					{
-						dragSource = wxTreeItemId();
-					}
-					dragSourcePoint = at;
-					return false;
-				}
-				case WM_MOUSEMOVE:
-					if ( ( wParam & MK_LBUTTON ) == 0 )
-					{
-						return false;
-					}
-					if ( bDragging )
-					{
-						int nFlags = 0;
-						const wxTreeItemId item = pTree->HitTest( at, nFlags );
-						if ( item.IsOk() && ( ( nFlags & ( wxTREE_HITTEST_ONITEMICON | wxTREE_HITTEST_ONITEMLABEL ) ) != 0 ) &&
-								 ( item != dragTarget ) && !pTree->IsSelected( item ) && IsTopSelection( item, dragTarget ) &&
-								 ( TypeOf( item ) == GDBO_FOLDER ) )
-						{
-							if ( dragTarget.IsOk() )
-							{
-								pTree->SetItemDropHighlight( dragTarget, false );
-							}
-							dragTarget = item;
-							pTree->SetItemDropHighlight( dragTarget, true );
-						}
-						ContinueDrag( at, ( wParam & MK_CONTROL ) != 0 );
-						return true;
-					}
-					if ( dragSource.IsOk() )
-					{
-						const int nDX = dragSourcePoint.x - at.x;
-						const int nDY = dragSourcePoint.y - at.y;
-						if ( nDX * nDX + nDY * nDY > 16 )
-						{
-							BeginDrag( ( wParam & MK_CONTROL ) != 0 );
-						}
-					}
-					return bDragging;
-				case WM_RBUTTONDOWN:
-					if ( !bDragging && ( ( wParam & MK_LBUTTON ) != 0 ) && dragSource.IsOk() )
-					{
-						BeginDrag( ( wParam & MK_CONTROL ) != 0 );
-					}
-					return bDragging;
-				case WM_LBUTTONUP:
-					if ( bDragging )
-					{
-						EndDrag( true );
-						return true;
-					}
-					return false;
-				case WM_KEYDOWN:
-					if ( bDragging && ( wParam == VK_ESCAPE ) )
-					{
-						EndDrag( false );
-						return true;
-					}
-					if ( bDragging && ( wParam == VK_CONTROL ) )
-					{
-						ContinueDrag( pTree->ScreenToClient( wxGetMousePosition() ), true );
-					}
-					return false;
-				case WM_KEYUP:
-					if ( bDragging && ( wParam == VK_CONTROL ) )
-					{
-						ContinueDrag( pTree->ScreenToClient( wxGetMousePosition() ), false );
-					}
-					return false;
-				case WM_CAPTURECHANGED:
-					// Another window took the mouse: nothing is dropped.
-					if ( bDragging && ( reinterpret_cast<HWND>( lParam ) != pTree->GetHWND() ) )
-					{
-						EndDrag( false );
-					}
-					return false;
-				case WM_CONTEXTMENU:
-					return bDragging;
-				default:
-					return false;
+				ClearDropTarget();
+				dragTarget = item;
+				pTree->SetItemDropHighlight( dragTarget, true );
 			}
+			return dragTarget.IsOk() ? eDefault : wxDragNone;
+		}
+
+		void ClearDropTarget()
+		{
+			if ( ( pTree != nullptr ) && dragTarget.IsOk() )
+			{
+				pTree->SetItemDropHighlight( dragTarget, false );
+			}
+			dragTarget = wxTreeItemId();
+		}
+
+		// CTreeGDBBrowserInputState::EndDrag. The target is taken first, since a
+		// builder may ask something on the way and the rows move under it.
+		wxDragResult Drop( const std::string &rszPacked, const wxPoint &rAt, wxDragResult eDefault )
+		{
+			DragOver( rAt, eDefault );
+			const wxTreeItemId target = dragTarget;
+			ClearDropTarget();
+
+			std::vector<std::string> sources;
+			if ( !target.IsOk() || ( GetViewManipulator() == 0 ) || !UnpackDrag( rszPacked, this, &sources ) )
+			{
+				return wxDragNone;
+			}
+			const bool bCopy = ( eDefault == wxDragCopy );
+			const std::string szFolder = NameOf( target );
+			for ( size_t nSource = 0; ( nSource < sources.size() ) && ( pTree != nullptr ); ++nSource )
+			{
+				if ( bCopy )
+				{
+					CopyRow( szFolder, sources[nSource] );
+				}
+				else
+				{
+					MoveRow( szFolder, sources[nSource] );
+				}
+			}
+			if ( pTree != nullptr )
+			{
+				SortLater( std::string() );
+				UpdateSelectionManipulator( true );
+			}
+			return eDefault;
 		}
 
 		// CSortTreeControl::IsTopSelection: no selected folder above the row but
@@ -2432,108 +2532,11 @@ namespace
 		}
 
 		// IDC_DRAG_AND_DROP_MOVE or _COPY, built once from the generated tables.
-		//
-		// The handle rather than the wxCursor, because the drag around it is
-		// still Win32 -- SetCapture, SetCursor and the tree's HWND -- and taking
-		// that apart is a separate job from where the cursor comes from.
-		static HCURSOR DragCursor( bool bCopy )
+		static const wxCursor& DragCursor( bool bCopy )
 		{
 			static const wxCursor moveCursor = NWxResourceImages::LoadCursorResource( IDC_DRAG_AND_DROP_MOVE );
 			static const wxCursor copyCursor = NWxResourceImages::LoadCursorResource( IDC_DRAG_AND_DROP_COPY );
-			const wxCursor &rCursor = bCopy ? copyCursor : moveCursor;
-			return rCursor.IsOk() ? reinterpret_cast<HCURSOR>( rCursor.GetHCURSOR() ) : 0;
-		}
-
-		void BeginDrag( bool bCopy )
-		{
-			if ( ( NGlobal::GetVar( "enable_drag_and_drop", 0 ) != 1 ) || !bEnableEdit )
-			{
-				return;
-			}
-			bDragging = true;
-			bDragLeft = false;
-			bDragCopy = false;
-			::SetCapture( pTree->GetHWND() );
-			hDragDefaultCursor = ::SetCursor( DragCursor( bCopy ) );
-		}
-
-		// CTreeGDBBrowserInputState::ContinueDrag: the cursor for where the mouse
-		// is and whether Ctrl is held.
-		void ContinueDrag( const wxPoint &rAt, bool bCopy )
-		{
-			const wxSize size = pTree->GetClientSize();
-			if ( ( rAt.x < 0 ) || ( rAt.x > size.x ) || ( rAt.y < 0 ) || ( rAt.y > size.y ) )
-			{
-				if ( !bDragLeft )
-				{
-					::SetCursor( ::LoadCursor( 0, IDC_NO ) );
-					bDragLeft = true;
-				}
-			}
-			else if ( bDragLeft || ( bCopy != bDragCopy ) )
-			{
-				::SetCursor( DragCursor( bCopy ) );
-				bDragCopy = bCopy;
-				bDragLeft = false;
-			}
-		}
-
-		// CTreeGDBBrowserInputState::EndDrag. The mouse is let go before the rows
-		// move, since a builder may ask something on the way.
-		void EndDrag( bool bDrop )
-		{
-			if ( !bDragging )
-			{
-				return;
-			}
-			const wxTreeItemId target = dragTarget;
-			const bool bCopy = bDragCopy;
-			bDragging = false;
-			::SetCursor( hDragDefaultCursor );
-			if ( target.IsOk() )
-			{
-				pTree->SetItemDropHighlight( target, false );
-			}
-			if ( ::GetCapture() == pTree->GetHWND() )
-			{
-				::ReleaseCapture();
-			}
-			dragSource = wxTreeItemId();
-			dragTarget = wxTreeItemId();
-			bDragLeft = false;
-			bDragCopy = false;
-			hDragDefaultCursor = 0;
-			if ( !bDrop || !target.IsOk() || ( GetViewManipulator() == 0 ) )
-			{
-				return;
-			}
-			const std::string szFolder = NameOf( target );
-			std::vector<std::string> sources;
-			wxArrayTreeItemIds selected;
-			pTree->GetSelections( selected );
-			for ( size_t nRow = 0; nRow < selected.size(); ++nRow )
-			{
-				if ( ( selected[nRow] != target ) && IsTopSelection( selected[nRow], target ) )
-				{
-					sources.push_back( NameOf( selected[nRow] ) );
-				}
-			}
-			for ( size_t nSource = 0; ( nSource < sources.size() ) && ( pTree != nullptr ); ++nSource )
-			{
-				if ( bCopy )
-				{
-					CopyRow( szFolder, sources[nSource] );
-				}
-				else
-				{
-					MoveRow( szFolder, sources[nSource] );
-				}
-			}
-			if ( pTree != nullptr )
-			{
-				SortLater( std::string() );
-				UpdateSelectionManipulator( true );
-			}
+			return bCopy ? copyCursor : moveCursor;
 		}
 
 		// CTreeGDBBrowserInputState::OnKeyDown: Space or Enter renames the one

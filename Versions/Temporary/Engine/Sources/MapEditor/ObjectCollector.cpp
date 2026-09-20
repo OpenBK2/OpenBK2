@@ -312,13 +312,13 @@ const IObjectFilter* CObjectFilterCollector::Get( const std::string &rszFilterTy
 
 int CObjectFilterCollector::ShowFilterSelectionDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
 {
-	return IDCANCEL;
+	return wxID_CANCEL;
 }
 
 
 int CObjectFilterCollector::ShowFilterCreationDialog( IWidget* pParentWidget, std::string *pszFilterType, int *pnFilterIndex )
 {
-	return IDCANCEL;
+	return wxID_CANCEL;
 }
 
 
