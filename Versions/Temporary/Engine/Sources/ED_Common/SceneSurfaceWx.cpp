@@ -7,7 +7,9 @@
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPaintContext.h"
 #include "ChildFrameWndBase.h"
-#include "port/wordpack.h"
+// MK_ flags for the input states' nFlags, and VK_ codes for their nChar.
+#include "port/mousekeys.h"
+#include "port/vkcodes.h"
 
 #include <wx/dcclient.h>
 #include <wx/event.h>
@@ -58,11 +60,92 @@ namespace
 	};
 
 
-	inline CTPoint<int> PointFromLParam( WXLPARAM lParam )
+	// The MK_ mask a Win32 mouse message carried in its wParam: which buttons
+	// and which modifier keys were down at the moment of the event. wxMouseEvent
+	// answers each of those questions, and answers them the same way -- the
+	// button that has just gone down is in the mask, the one that has just come
+	// up is not.
+	inline unsigned MouseFlags( const wxMouseEvent &rEvent )
 	{
-		// GET_X_LPARAM and GET_Y_LPARAM, without <windowsx.h>, whose macros
-		// rename wx methods.
-		return CTPoint<int>( static_cast<short>( LOWORD( lParam ) ), static_cast<short>( HIWORD( lParam ) ) );
+		unsigned nFlags = 0;
+		if ( rEvent.LeftIsDown() ) { nFlags |= MK_LBUTTON; }
+		if ( rEvent.RightIsDown() ) { nFlags |= MK_RBUTTON; }
+		if ( rEvent.MiddleIsDown() ) { nFlags |= MK_MBUTTON; }
+		if ( rEvent.ShiftDown() ) { nFlags |= MK_SHIFT; }
+		if ( rEvent.ControlDown() ) { nFlags |= MK_CONTROL; }
+		return nFlags;
+	}
+
+
+	inline CTPoint<int> ClientPoint( const wxMouseEvent &rEvent )
+	{
+		const wxPoint at = rEvent.GetPosition();
+		return CTPoint<int>( at.x, at.y );
+	}
+
+
+	// A wx key code as the virtual key code the input states compare against.
+	// The opposite direction of MainFrameWx's ToWxKeyCode, and for the same
+	// reason: the states were written against WM_KEYDOWN's wParam.
+	//
+	// Zero for a key with no virtual code, which is not passed on. Only twenty
+	// virtual keys are tested anywhere in the editor and all of them are here;
+	// the rest are carried because they cost nothing and a state may grow a use
+	// for one.
+	inline unsigned VirtualKeyFromWx( int nKeyCode )
+	{
+		// Letters and digits are their own code in both, and wx reports a letter
+		// key as its upper case character, which is what the virtual code is.
+		if ( ( ( nKeyCode >= 'A' ) && ( nKeyCode <= 'Z' ) ) || ( ( nKeyCode >= '0' ) && ( nKeyCode <= '9' ) ) )
+		{
+			return static_cast<unsigned>( nKeyCode );
+		}
+		if ( ( nKeyCode >= WXK_F1 ) && ( nKeyCode <= WXK_F12 ) )
+		{
+			return static_cast<unsigned>( VK_F1 + ( nKeyCode - WXK_F1 ) );
+		}
+		if ( ( nKeyCode >= WXK_NUMPAD0 ) && ( nKeyCode <= WXK_NUMPAD9 ) )
+		{
+			return static_cast<unsigned>( VK_NUMPAD0 + ( nKeyCode - WXK_NUMPAD0 ) );
+		}
+		switch ( nKeyCode )
+		{
+			case WXK_BACK:						return VK_BACK;
+			case WXK_TAB:							return VK_TAB;
+			case WXK_RETURN:
+			case WXK_NUMPAD_ENTER:		return VK_RETURN;
+			case WXK_ESCAPE:					return VK_ESCAPE;
+			case WXK_SPACE:						return VK_SPACE;
+			case WXK_DELETE:					return VK_DELETE;
+			case WXK_INSERT:					return VK_INSERT;
+			case WXK_HOME:						return VK_HOME;
+			case WXK_END:							return VK_END;
+			case WXK_PAGEUP:					return VK_PRIOR;
+			case WXK_PAGEDOWN:				return VK_NEXT;
+			case WXK_LEFT:						return VK_LEFT;
+			case WXK_RIGHT:						return VK_RIGHT;
+			case WXK_UP:							return VK_UP;
+			case WXK_DOWN:						return VK_DOWN;
+			case WXK_SHIFT:						return VK_SHIFT;
+			case WXK_CONTROL:					return VK_CONTROL;
+			case WXK_ALT:							return VK_MENU;
+			case WXK_NUMPAD_ADD:			return VK_ADD;
+			case WXK_NUMPAD_SUBTRACT:	return VK_SUBTRACT;
+			case WXK_NUMPAD_MULTIPLY:	return VK_MULTIPLY;
+			case WXK_NUMPAD_DIVIDE:		return VK_DIVIDE;
+			case WXK_NUMPAD_DECIMAL:	return VK_DECIMAL;
+			case WXK_NUMPAD_HOME:			return VK_HOME;
+			case WXK_NUMPAD_END:			return VK_END;
+			case WXK_NUMPAD_PAGEUP:		return VK_PRIOR;
+			case WXK_NUMPAD_PAGEDOWN:	return VK_NEXT;
+			case WXK_NUMPAD_LEFT:			return VK_LEFT;
+			case WXK_NUMPAD_RIGHT:		return VK_RIGHT;
+			case WXK_NUMPAD_UP:				return VK_UP;
+			case WXK_NUMPAD_DOWN:			return VK_DOWN;
+			case WXK_NUMPAD_INSERT:		return VK_INSERT;
+			case WXK_NUMPAD_DELETE:		return VK_DELETE;
+			default:									return 0;
+		}
 	}
 
 
@@ -109,85 +192,82 @@ namespace
 			pCore->OnKillFocus( &newWidget );
 		}
 
-	protected:
-		virtual bool MSWHandleMessage( WXLRESULT *pResult, WXUINT nMessage, WXWPARAM wParam, WXLPARAM lParam )
+		// None of the mouse and key handlers skips its event, which is what the
+		// message map did by answering every one of these messages itself.
+
+		void OnMouse( wxMouseEvent &rEvent )
 		{
-			const unsigned nFlags = static_cast<unsigned>( wParam );
-			switch ( nMessage )
+			const unsigned nFlags = MouseFlags( rEvent );
+			const CTPoint<int> point = ClientPoint( rEvent );
+			const wxEventType eType = rEvent.GetEventType();
+			if ( eType == wxEVT_MOTION ) { pCore->OnMouseMove( nFlags, point ); }
+			else if ( eType == wxEVT_LEFT_DOWN ) { pCore->OnLButtonDown( nFlags, point ); }
+			else if ( eType == wxEVT_LEFT_UP ) { pCore->OnLButtonUp( nFlags, point ); }
+			else if ( eType == wxEVT_LEFT_DCLICK ) { pCore->OnLButtonDblClk( nFlags, point ); }
+			else if ( eType == wxEVT_RIGHT_DOWN ) { pCore->OnRButtonDown( nFlags, point ); }
+			else if ( eType == wxEVT_RIGHT_DCLICK ) { pCore->OnRButtonDblClk( nFlags, point ); }
+			else if ( eType == wxEVT_MIDDLE_DOWN ) { pCore->OnMButtonDown( nFlags, point ); }
+			else if ( eType == wxEVT_MIDDLE_UP ) { pCore->OnMButtonUp( nFlags, point ); }
+			else if ( eType == wxEVT_MIDDLE_DCLICK ) { pCore->OnMButtonDblClk( nFlags, point ); }
+		}
+
+		// The right button's release, and with it the context menu.
+		//
+		// The order is the one the message map produced and states depend on: the
+		// default handling of WM_RBUTTONUP is what turned it into WM_CONTEXTMENU,
+		// and it ran *before* the handler, so a state heard of the menu first and
+		// of the release second. Saying both here keeps that, and keeps it the
+		// same on both platforms rather than leaving it to each one's idea of
+		// when a context menu happens.
+		//
+		// The menu key and Shift+F10 no longer raise it. They did through
+		// WM_CONTEXTMENU; no input state distinguishes them from the mouse, and
+		// every one of them puts the menu at the point it is given.
+		void OnRightUp( wxMouseEvent &rEvent )
+		{
+			// Screen coordinates, as WM_CONTEXTMENU carried and the states expect.
+			const wxPoint screenAt = ClientToScreen( rEvent.GetPosition() );
+			pCore->OnContextMenu( CTPoint<int>( screenAt.x, screenAt.y ) );
+			pCore->OnRButtonUp( MouseFlags( rEvent ), ClientPoint( rEvent ) );
+		}
+
+		void OnMouseWheel( wxMouseEvent &rEvent )
+		{
+			// WM_MOUSEWHEEL's point is in screen coordinates.
+			const wxPoint screenAt = ClientToScreen( rEvent.GetPosition() );
+			// The last argument was DefWindowProc's answer, which for a child
+			// window is whatever the parent chain made of the message. There is no
+			// wx equivalent and no use for one: the event reaches this window only
+			// because nothing above it took the wheel, which is what that answer
+			// was standing in for. See the commit that made this change for what
+			// it means if the old value was ever false.
+			pCore->OnMouseWheel( MouseFlags( rEvent ), static_cast<short>( rEvent.GetWheelRotation() ),
+													 CTPoint<int>( screenAt.x, screenAt.y ), true );
+		}
+
+		// wx raises one key event per repeat where Windows counted them into a
+		// single message, so the count is always one and the loop that reads it
+		// runs once per event, which comes to the same thing.
+		//
+		// The key message's flags -- scan code, extended bit, previous state --
+		// are zero. Nothing compares them: the only reader stores them in
+		// CStoreInputState's record of the event and never looks again.
+		void OnKeyDown( wxKeyEvent &rEvent )
+		{
+			const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
+			if ( nChar != 0 )
 			{
-				case WM_MOUSEMOVE:
-				case WM_LBUTTONDOWN:
-				case WM_LBUTTONUP:
-				case WM_LBUTTONDBLCLK:
-				case WM_RBUTTONDOWN:
-				case WM_RBUTTONUP:
-				case WM_RBUTTONDBLCLK:
-				case WM_MBUTTONDOWN:
-				case WM_MBUTTONUP:
-				case WM_MBUTTONDBLCLK:
-				{
-					( *pResult ) = MSWDefWindowProc( nMessage, wParam, lParam );
-					const CTPoint<int> point = PointFromLParam( lParam );
-					switch ( nMessage )
-					{
-						case WM_MOUSEMOVE:			pCore->OnMouseMove( nFlags, point ); break;
-						case WM_LBUTTONDOWN:		pCore->OnLButtonDown( nFlags, point ); break;
-						case WM_LBUTTONUP:			pCore->OnLButtonUp( nFlags, point ); break;
-						case WM_LBUTTONDBLCLK:	pCore->OnLButtonDblClk( nFlags, point ); break;
-						case WM_RBUTTONDOWN:		pCore->OnRButtonDown( nFlags, point ); break;
-						case WM_RBUTTONUP:			pCore->OnRButtonUp( nFlags, point ); break;
-						case WM_RBUTTONDBLCLK:	pCore->OnRButtonDblClk( nFlags, point ); break;
-						case WM_MBUTTONDOWN:		pCore->OnMButtonDown( nFlags, point ); break;
-						case WM_MBUTTONUP:			pCore->OnMButtonUp( nFlags, point ); break;
-						case WM_MBUTTONDBLCLK:	pCore->OnMButtonDblClk( nFlags, point ); break;
-					}
-					return true;
-				}
-				case WM_MOUSEWHEEL:
-				{
-					// What the default handling answers is what decides whether the
-					// input state hears of the wheel at all, as CWnd::OnMouseWheel's
-					// Default() did.
-					const WXLRESULT nDefault = MSWDefWindowProc( nMessage, wParam, lParam );
-					const bool bResult = pCore->OnMouseWheel( LOWORD( wParam ), static_cast<short>( HIWORD( wParam ) ), PointFromLParam( lParam ), nDefault != 0 );
-					( *pResult ) = bResult ? TRUE : FALSE;
-					return true;
-				}
-				case WM_KEYDOWN:
-				case WM_KEYUP:
-				case WM_CHAR:
-				case WM_SYSKEYDOWN:
-				case WM_SYSKEYUP:
-				case WM_SYSCHAR:
-				{
-					( *pResult ) = MSWDefWindowProc( nMessage, wParam, lParam );
-					const unsigned nChar = static_cast<unsigned>( wParam );
-					const unsigned nRepCnt = LOWORD( lParam );
-					const unsigned nKeyFlags = HIWORD( lParam );
-					// The character and system-key messages are still taken and given
-					// their default handling, because that is what decides whether wx
-					// sees them, and taking them is what the MFC message map did. No
-					// input state ever listened to them: OnChar, OnSysKeyDown,
-					// OnSysKeyUp and OnSysChar were carried the whole length of the
-					// chain and overridden by nothing.
-					switch ( nMessage )
-					{
-						case WM_KEYDOWN:		pCore->OnKeyDown( nChar, nRepCnt, nKeyFlags ); break;
-						case WM_KEYUP:			pCore->OnKeyUp( nChar, nRepCnt, nKeyFlags ); break;
-					}
-					return true;
-				}
-				case WM_CONTEXTMENU:
-				{
-					( *pResult ) = MSWDefWindowProc( nMessage, wParam, lParam );
-					pCore->OnContextMenu( PointFromLParam( lParam ) );
-					return true;
-				}
-				// WM_HSCROLL and WM_VSCROLL are gone from here: the scroll bars are
-				// wx's now, and it raises wxEVT_SCROLLWIN_* for them, which the
-				// surface turns into EScrollAction. See CWxSceneSurface::OnScroll.
+				pCore->OnKeyDown( nChar, 1, 0 );
 			}
-			return wxWindow::MSWHandleMessage( pResult, nMessage, wParam, lParam );
+		}
+
+		void OnKeyUp( wxKeyEvent &rEvent )
+		{
+			const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
+			if ( nChar != 0 )
+			{
+				pCore->OnKeyUp( nChar, 1, 0 );
+			}
 		}
 
 	public:
@@ -210,6 +290,20 @@ namespace
 			Bind( wxEVT_KILL_FOCUS, &CSceneWxWindow::OnKillFocus, this );
 			// wx asks that a window which captures the mouse hear of losing it.
 			Bind( wxEVT_MOUSE_CAPTURE_LOST, []( wxMouseCaptureLostEvent & ) {} );
+			// The input, which the message map used to answer as messages.
+			Bind( wxEVT_MOTION, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_LEFT_DOWN, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_LEFT_UP, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_LEFT_DCLICK, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_RIGHT_DOWN, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_RIGHT_DCLICK, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_MIDDLE_DOWN, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_MIDDLE_UP, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_MIDDLE_DCLICK, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_RIGHT_UP, &CSceneWxWindow::OnRightUp, this );
+			Bind( wxEVT_MOUSEWHEEL, &CSceneWxWindow::OnMouseWheel, this );
+			Bind( wxEVT_KEY_DOWN, &CSceneWxWindow::OnKeyDown, this );
+			Bind( wxEVT_KEY_UP, &CSceneWxWindow::OnKeyUp, this );
 		}
 	};
 
