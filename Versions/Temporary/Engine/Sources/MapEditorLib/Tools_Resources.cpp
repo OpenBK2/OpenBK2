@@ -4,6 +4,7 @@
 #include "Tools_Resources.h"
 #include "Misc/StrProc.h"
 #include "System/VFS.h"
+#include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/WinVFS.h"
 #include "System/VFSOperations.h"
@@ -13,11 +14,32 @@
 #include <cstdint>
 #include "port/process.h"
 
+namespace
+{
+	// Whether this names a file on disk rather than an entry in the VFS.
+	//
+	// The test used to be "does it contain a colon", which is a drive letter and
+	// nothing else on Windows: "C:\bk2\Editor\..." is a file, "bin\Textures\17"
+	// is a VFS name. Off Windows an absolute path has no colon in it, so every
+	// one of them came out a VFS name and was then taken as relative to the VFS
+	// root: the editor's icon cache and its dialog states went to
+	// Data/home/<user>/bk2/... instead of to the install, and nothing said so.
+	//
+	// Asking whether the path is absolute says the same thing on Windows, where
+	// only a drive letter or a leading separator makes one, and says it off
+	// Windows too.
+	bool IsFilePath( const std::string &rszPath )
+	{
+		return !rszPath.empty() && !NFile::IsPathRelative( rszPath );
+	}
+}
+
+
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
 	if ( pStreamHolder )
 	{
-		if ( ( rszTextPath.find( ':' ) == std::string::npos ) && NVFS::GetMainVFS() )
+		if ( !IsFilePath( rszTextPath ) && NVFS::GetMainVFS() )
 		{
 			pStreamHolder->pStream = new CFileStream( NVFS::GetMainVFS(), rszTextPath );
 		}
@@ -33,7 +55,7 @@ void CreateStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rs
 {
 	if ( pStreamHolder )
 	{
-		if ( ( rszTextPath.find( ':' ) == std::string::npos ) && NVFS::GetMainFileCreator() )
+		if ( !IsFilePath( rszTextPath ) && NVFS::GetMainFileCreator() )
 		{
 			pStreamHolder->pStream = new CFileStream( NVFS::GetMainFileCreator(), rszTextPath );
 		}
