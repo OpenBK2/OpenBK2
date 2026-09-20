@@ -19,7 +19,7 @@
 #include "MainFrameWxPanes.h"
 #include "MapEditorApp.h"
 #include "AppProfile.h"
-#include "MapEditorSingleton.h"
+#include "EditorInstance.h"
 #include "ResourceDefines.h"
 #include "port/vkcodes.h"
 
@@ -502,7 +502,6 @@ namespace
 		// the attached one while it is attached; this map owns them all.
 		std::map<unsigned, wxMenuBar*> menuBars;
 		std::string szHelpFilePath;
-		CMapEditorSingletonApp mapEditorSingletonApp;
 		SMainFrameParams params;
 		SSWTParams currentSWTParams;
 		NMainFrameShared::CProgressHost progress;
@@ -584,7 +583,13 @@ namespace
 		{
 			CEditorApp *const pApp = CEditorApp::Get();
 			//
-			mapEditorSingletonApp.CreateMapFile( GetHWND() );
+			// Start answering a second instance, which CreateMapFile did by
+			// publishing this frame's HWND in a named shared section. The frame has
+			// to exist first either way: there is nothing to raise before it does.
+			NEditorInstance::StartAnswering( []( const std::string &rszFilePath )
+			{
+				NMainFrameShared::OpenResource( rszFilePath );
+			} );
 			params.Load();
 			ReadNamedLayouts();
 			szHelpFilePath = NMainFrameShared::GetHelpFilePath();
@@ -1568,7 +1573,9 @@ namespace
 																 windowPlacement.rcNormalPosition.bottom );
 			params.Save();
 			//
-			mapEditorSingletonApp.RemoveMapFile();
+			// What RemoveMapFile did: stop answering a second instance, and let go
+			// of the lock, before the frame it would have raised is destroyed.
+			NEditorInstance::Release();
 			Singleton<IMainFrameContainer>()->Set( 0, 0 );
 			DestroyPanes();
 			Destroy();
@@ -1835,18 +1842,9 @@ namespace
 		{
 			switch ( nMsg )
 			{
-				case WM_COPYDATA:
-				{
-					// A second editor started with a file to open: see
-					// CMapEditorSingletonChecker::OpenFileOnApp.
-					const COPYDATASTRUCT *const pCopyData = reinterpret_cast<const COPYDATASTRUCT*>( lParam );
-					if ( ( wParam == 0 ) && ( pCopyData != 0 ) && ( pCopyData->dwData == CMapEditorSingletonBase::OPEN_FILE ) )
-					{
-						NMainFrameShared::OpenResource( std::string( static_cast<const char*>( pCopyData->lpData ) ) );
-						return TRUE;
-					}
-					break;
-				}
+				// WM_COPYDATA is gone with CMapEditorSingleton: a second instance
+				// reaches this one through wxIPC now, which needs no message of its
+				// own. See EditorInstance.h.
 				case WM_QUERYENDSESSION:
 					if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, false ) )
 					{

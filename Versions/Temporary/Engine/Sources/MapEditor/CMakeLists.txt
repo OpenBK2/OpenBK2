@@ -11,6 +11,7 @@ set(SOURCES
     CreateModView.cpp
     CreateModViewWx.cpp
     EditorContainer.cpp
+    EditorInstanceWx.cpp
     ExporterContainer.cpp
     FileDialogsWx.cpp
     FolderCallback.cpp
@@ -24,7 +25,6 @@ set(SOURCES
     MainFrameContainer.cpp
     MainFrameParams.cpp
     MapEditorApp.cpp
-    MapEditorSingleton.cpp
     MenuDropDownView.cpp
     MenuDropDownViewWx.cpp
     MODContainer.cpp

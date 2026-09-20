@@ -42,7 +42,7 @@
 #include "AppProfile.h"
 #include "MainFrameWx.h"
 #include "MainFrameShared.h"
-#include "MapEditorSingleton.h"
+#include "EditorInstance.h"
 #include "libdb/EditorDb.h"
 #include "libdb/DBWatcherClient.h"
 
@@ -387,20 +387,19 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	}
 
 	// проверяем наличие предыдущего редактора
-	CMapEditorSingletonChecker mapEditorSingletonChecker;
-	if ( szFileToOpen.empty() )
+	//
+	// Asked of wxSingleInstanceChecker rather than of a named file mapping, and
+	// asked first: the old code looked for the running editor's window and took
+	// finding one as the answer, so an editor that was still starting and had
+	// not yet published its handle was invisible. The lock exists from the
+	// moment the first instance asks.
+	if ( NEditorInstance::IsAnotherRunning() )
 	{
-		if ( mapEditorSingletonChecker.BringAppOnTop() )
-		{
-			return false;
-		}
-	}
-	else
-	{
-		if ( mapEditorSingletonChecker.OpenFileOnApp( szFileToOpen ) )
-		{
-			return false;
-		}
+		// It may still be starting and not yet answering, in which case there is
+		// nothing useful this instance can do but leave: two editors over one
+		// database is what the exclusion is for.
+		NEditorInstance::AskRunningToOpen( szFileToOpen );
+		return false;
 	}
 
 	const bool bShowSplashScreen = ( !is_debugger_present() ) && ( NGlobal::GetVar( "disable_splash_screen", 0 ) == 0 );
@@ -489,7 +488,7 @@ void CEditorApp::Shutdown()
 
 void CEditorApp::SetMapFileName( const std::string &szMapFileName )
 {
-	CMapEditorSingletonBase::SetMapFileName( szMapFileName );
+	NEditorInstance::SetName( szMapFileName );
 }
 
 void CEditorApp::RegisterEditors()
