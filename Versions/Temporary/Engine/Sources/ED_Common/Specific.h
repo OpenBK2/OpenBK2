@@ -8,8 +8,6 @@
 
 #define CStructureSaver IBinSaver
 
-EXTERNVAR HINSTANCE theEDCommonInstance;
-
 
 
 

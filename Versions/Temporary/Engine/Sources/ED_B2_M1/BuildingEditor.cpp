@@ -20,7 +20,6 @@
 #include "Main/GameTimer.h"
 #include "EditorMethods.h"
 #include "EditorOptions.h"
-#include "ED_B2_M1Dll.h"
 #include "ExporterMethods.h"
 #include "SceneB2/Camera.h"
 

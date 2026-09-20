@@ -15,7 +15,6 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapObjectMultiState.h"
 #include "MapObjectState.h"
-#include "ED_B2_M1Dll.h"
 #include "MapInfoEditor.h"
 #include "port/vkcodes.h"
 #include "port/mousekeys.h"

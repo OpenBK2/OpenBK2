@@ -2,7 +2,6 @@
 
 #include "HeightViewV3.h"
 #include "ObjectProperties.h"
-#include "ED_B2_M1Dll.h"
 
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Tools_HashSet.h"

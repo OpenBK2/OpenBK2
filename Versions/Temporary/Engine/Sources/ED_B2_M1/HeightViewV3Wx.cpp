@@ -6,7 +6,6 @@
 #include "CommandHandlerDefines.h"
 #include "HeightStateV3.h"
 #include "ResourceDefines.h"
-#include "ED_B2_M1Dll.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/WxResourceImages.h"

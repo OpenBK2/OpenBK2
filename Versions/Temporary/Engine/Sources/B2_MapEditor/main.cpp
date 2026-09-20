@@ -3,7 +3,6 @@
 #include "Misc/2Darray.h"
 #include "Stats_B2_M1/IconsSet.h"
 #include "SceneB2/Scene.h"
-#include "ED_B2_M1/ED_B2_M1Dll.h"
 
 #include "ED_B2_M1_export.h"
 #include "ED_B2_export.h"

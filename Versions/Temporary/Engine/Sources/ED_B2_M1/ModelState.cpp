@@ -32,7 +32,6 @@
 #include "ModelEditor.h"
 
 #include "EditorOptions.h"
-#include "ED_B2_M1Dll.h"
 #include "Stats_B2_M1/AnimModes.h"
 #include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/Vis2AI.h"

@@ -7,7 +7,6 @@
 
 #include <fmt/format.h>
 
-#include "ED_B2_M1Dll.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_MainFrame.h"

@@ -5,7 +5,6 @@
 #include "CommandHandlerDefines.h"
 #include "DialogData.h"
 #include "ResourceDefines.h"
-#include "ED_B2_M1Dll.h"
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/Interface_Logger.h"

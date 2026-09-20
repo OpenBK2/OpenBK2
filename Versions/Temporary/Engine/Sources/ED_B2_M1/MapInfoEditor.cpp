@@ -37,7 +37,6 @@
 // Was reached through HeightWindowV3.h, which this no longer includes: the
 // palette is behind NHeightViewV3 now and the editor still loads its own
 // strings and menus out of this module's resources.
-#include "ED_B2_M1Dll.h"
 #include "ReinfPointsView.h"
 #include "ScriptCameraView.h"
 #include "AIGeneralView.h"

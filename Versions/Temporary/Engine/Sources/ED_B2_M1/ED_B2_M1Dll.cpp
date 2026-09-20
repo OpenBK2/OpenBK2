@@ -8,7 +8,6 @@
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/MapEditorModule.h"
 #include "MapEditorLib/Resources.h"
-#include "ED_B2_M1Dll.h"
 #include "MapEditorLib/InteractiveMayaExportTool.h"
 #include "ED_Common/UIScene.h"
 #include "ED_Common/TempAttributesTool.h"
@@ -182,22 +181,10 @@ void CEditorModuleB2M1::ModulePostCreateMainFrame()
 	Singleton<IChildFrameContainer>()->Create( "__CHILD_FRAME_DX_SCENE_LABEL__" );
 }
 
-ED_B2_M1_EXPORT HINSTANCE theEDB2M1Instance;
-#ifdef NIVAL_DLL
-BOOL WINAPI DllMain( HANDLE hInst, ULONG ul_reason_for_call, LPVOID lpReserved )
-{
-  if ( ul_reason_for_call == DLL_PROCESS_ATTACH )
-	{
-		// Для подключения ресурсов из DLL
-		theEDB2M1Instance = (HINSTANCE)hInst;
-	}
-	return true;
-}
-#else
-static struct SInitb2m1dll {
-	SInitb2m1dll() { theEDB2M1Instance = GetModuleHandle( 0 ); }
-} init;
-#endif
+// theEDB2M1Instance and the DllMain that set it are gone, as ED_Common's are.
+// Its comment said it was "для подключения ресурсов из DLL", and the last
+// reader of it was the ::LoadMenu in ModelState that stopped finding anything
+// when this module's resources became generated C++ tables.
 
 static CEditorModuleB2M1 theEDB2Module;
 

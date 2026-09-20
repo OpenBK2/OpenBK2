@@ -16,7 +16,6 @@
 // header in front of the palette has no business carrying them.
 #include "ResourceDefines.h"
 #include "FormationView.h"
-#include "ED_B2_M1Dll.h"
 #include "EditorMethods.h"
 #include "SquadEditor.h"
 #include "Tools_SceneGeometry.h"

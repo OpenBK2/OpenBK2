@@ -6,7 +6,6 @@
 #include "Stats_B2_M1/IconsSet.h"
 #include "CommandHandlerDefines.h"
 
-#include "ED_B2_M1Dll.h"
 #include "Misc/HPTimer.h"
 
 #include "MapEditorLib/EditorFactory.h"
