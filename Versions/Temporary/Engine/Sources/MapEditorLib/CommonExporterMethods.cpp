@@ -20,6 +20,7 @@
 #include <chrono>
 #include <cstdint>
 #include <thread>
+#include "port/process.h"
 
 std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 {
@@ -158,7 +159,6 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 		return false;
 	}
 
-	uint32_t dwResult = ERROR_SUCCESS;
 	if ( bNeedExport )
 	{
 		// Запускаем Maya
@@ -170,19 +170,8 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 																				szScriptFileName.c_str(),
 																				szLogFileName.c_str() );
 		//
-		STARTUPINFO startinfo;
-		PROCESS_INFORMATION procinfo;
-		memset( &startinfo, 0, sizeof( STARTUPINFO ) );
-		memset( &procinfo, 0, sizeof( PROCESS_INFORMATION ) );
-		startinfo.cb = sizeof( startinfo );
-		bResult = ::CreateProcess( 0, const_cast<char*>( szCommandLine.c_str() ), 0, 0, false, 0, 0, 0, &startinfo, &procinfo );
-		if ( bResult )
-		{
-			const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
-			::CloseHandle( procinfo.hProcess );
-			::CloseHandle( procinfo.hThread );
-		}
-	}						
+		bResult = RunAndWait( std::string(), szCommandLine, std::string() );
+	}
 	return bResult;
 }
 
@@ -299,24 +288,6 @@ std::string BuildDestFilePath( IManipulator* pManipulator, const std::string &sz
 	boost::uuids::uuid uid;
 	memcpy( &uid, varUID.GetPtr(), sizeof( uid ) );
 	return szDestFolder + boost::uuids::to_string( uid );
-}
-
-
-void GetMayaInstallPath( std::string *szPath, const std::string &szMayaVersion )
-{
-	DWORD type;
-	const int nMaxSize = 512;
-	DWORD nSize = nMaxSize;
-	uint8_t buffer[nMaxSize];
-	int32_t error = ::RegQueryValueEx( HKEY_LOCAL_MACHINE,
-			fmt::format("SOFTWARE\\Alias|Wavefront\\Maya\\{}\\Setup\\InstallPath\\MAYA_INSTALL_LOCATION", szMayaVersion.c_str()).c_str(),
-			0, &type,
-			buffer, &nSize
-			);
-	if ( error == ERROR_SUCCESS && type == REG_SZ )
-	{
-		*szPath = reinterpret_cast<char*>(buffer);
-	}
 }
 
 

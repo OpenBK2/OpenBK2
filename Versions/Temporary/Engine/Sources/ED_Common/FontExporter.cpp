@@ -14,6 +14,7 @@
 #include "MapEditorLib/CommonExporterMethods.h"
 
 #include <cstdint>
+#include "port/process.h"
 
 REGISTER_EXPORTER_IN_DLL( Font, CFontExporter )
 
@@ -125,22 +126,11 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 														szFaceName.c_str(), szBinFileName.c_str(), szPicFileName.c_str() );
 	}
 	//
-	STARTUPINFO startinfo;
-	PROCESS_INFORMATION procinfo;
-	memset( &startinfo, 0, sizeof( STARTUPINFO ) );
-	memset( &procinfo, 0, sizeof( PROCESS_INFORMATION ) );
-	startinfo.cb = sizeof( startinfo );
-	bResult = ::CreateProcess( 0, const_cast<char*>( szCommandLine.c_str() ), 0, 0, false, 0, 0, 0, &startinfo, &procinfo );
-	if ( bResult )
-	{
-		const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE );
-	}
-	else
+	bResult = RunAndWait( std::string(), szCommandLine, std::string() );
+	if ( !bResult )
 	{
 		pLogger->Log( LT_ERROR, "Can't find font exporter: fontgen.exe\n" );
 	}
-	::CloseHandle( procinfo.hProcess );
-	::CloseHandle( procinfo.hThread );
 
 	return bResult ? ER_SUCCESS : ER_FAIL;
 }

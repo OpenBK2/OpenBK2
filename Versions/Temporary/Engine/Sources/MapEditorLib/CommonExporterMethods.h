@@ -98,8 +98,6 @@ MAPEDITORLIB_EXPORT std::string BuildDestFilePath( IManipulator* pManipulator, c
 MAPEDITORLIB_EXPORT bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced );
 
 // Interactive Maya support routines
-// retrieves Maya install path from registry
-void GetMayaInstallPath( std::string & szPath, const std::string &szMayaVersion );
 // launches interactive maya instance and executes startup script
 MAPEDITORLIB_EXPORT bool StartupMayaProcess( class CInteractiveMaya *pMayaProcess );
 // Wait for file to be accessible

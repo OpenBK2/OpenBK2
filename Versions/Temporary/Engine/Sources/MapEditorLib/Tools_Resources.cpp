@@ -11,6 +11,7 @@
 #include "port/unicode.h"
 
 #include <cstdint>
+#include "port/process.h"
 
 void OpenStreamHolder( SFileStreamHolder *pStreamHolder, const std::string &rszTextPath )
 {
@@ -320,24 +321,14 @@ void EnumFilesInDataStorage( std::vector<SEnumFilesInDataStorageParameter> *pPar
 
 bool ExecuteProcess( const std::string &rszCommand, const std::string &rszCmdLine, const std::string &rszDirectory, bool bWait )
 {
-	char pszCommandLine[2048];
-	strcpy( pszCommandLine, rszCmdLine.c_str() );
-	//
-	STARTUPINFO startinfo;
-	PROCESS_INFORMATION procinfo;
-	Zero( startinfo );
-	Zero( procinfo );
-	startinfo.cb = sizeof( startinfo );
-	BOOL bRetVal = CreateProcess( rszCommand.c_str(), pszCommandLine, 0, 0, FALSE, 0, 0, rszDirectory.c_str(), &startinfo, &procinfo );
-	if ( bRetVal == FALSE ) 
-	{
-		return false;
-	}
+	// The 2048 byte stack buffer and the strcpy into it are gone with the
+	// CreateProcess call that needed a writable command line: a longer command
+	// line used to overrun it.
 	if ( bWait )
 	{
-		WaitForSingleObject( procinfo.hProcess, INFINITE );
+		return RunAndWait( rszCommand, rszCmdLine, rszDirectory );
 	}
-	return true;
+	return LaunchDetachedIn( rszCommand, rszCmdLine, rszDirectory );
 }
 
 

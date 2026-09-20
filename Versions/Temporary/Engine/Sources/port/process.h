@@ -10,9 +10,63 @@
 
 #include <shellapi.h>
 #else
+#include <cerrno>
 #include <spawn.h>
+#include <sys/wait.h>
 
 extern char **environ;
+#endif
+
+
+#if !BOOST_OS_WINDOWS
+// A word the shell will take as it stands. Single quotes stop every expansion
+// sh does; an embedded quote is the one thing they cannot hold, so it is
+// closed, escaped and reopened.
+inline std::string ShellQuote( const std::string &rszText )
+{
+	std::string quoted = "'";
+	for ( const char c : rszText )
+	{
+		if ( c == '\'' )
+		{
+			quoted += "'\\''";
+		}
+		else
+		{
+			quoted += c;
+		}
+	}
+	return quoted + "'";
+}
+
+
+// 'cd <dir> && exec <program> <arguments>', the shell's way of saying what
+// CreateProcess and ShellExecuteEx say with their own arguments. An empty
+// program means szArguments is already a whole command line, which is how
+// CreateProcess reads a null lpApplicationName.
+inline std::string BuildShellCommand( const std::string &szProgram,
+																			const std::string &szArguments,
+																			const std::string &szWorkingDir )
+{
+	std::string command;
+	if ( !szWorkingDir.empty() )
+	{
+		command += "cd " + ShellQuote( szWorkingDir ) + " && ";
+	}
+	// exec so the shell replaces itself with the program rather than waiting
+	// on it, which leaves one process instead of two.
+	command += "exec ";
+	if ( !szProgram.empty() )
+	{
+		command += ShellQuote( szProgram );
+		if ( !szArguments.empty() )
+		{
+			command += " ";
+		}
+	}
+	command += szArguments;
+	return command;
+}
 #endif
 
 // Launch a command and do not wait for it.
@@ -94,38 +148,96 @@ inline bool LaunchDetachedIn( const std::string &szProgram,
 	info.nShow = SW_SHOWNORMAL;
 	return ::ShellExecuteExA( &info ) != FALSE;
 #else
-	// Single quotes so the shell takes the path as it stands; an embedded quote
-	// is closed, escaped and reopened, which is the only thing sh does not do
-	// inside them.
-	const auto Quote = []( const std::string &rszText )
-	{
-		std::string quoted = "'";
-		for ( const char c : rszText )
-		{
-			if ( c == '\'' )
-			{
-				quoted += "'\\''";
-			}
-			else
-			{
-				quoted += c;
-			}
-		}
-		return quoted + "'";
-	};
+	return LaunchDetached( BuildShellCommand( szProgram, szArguments, szWorkingDir ) );
+#endif
+}
 
-	std::string command;
-	if ( !szWorkingDir.empty() )
+
+// Run one program and wait for it to finish, answering whether it started.
+//
+// The editor shells out to small command line tools this way, and waits
+// because what it does next needs their output files: FontGen writes a font's
+// texture and metrics, Maya in batch mode writes an exported model, a zip tool
+// packs a folder into a pak. None of them has its output read back here, so
+// the child keeps this process's own standard streams; CInteractiveProcess is
+// the one that needs pipes, and it has its own.
+//
+// An empty szProgram means szArguments is already a whole command line and
+// names the program in its first word, which is what CreateProcess does with a
+// null lpApplicationName and what most callers here pass.
+//
+// pnExitCode is optional. Note that it is the tool's exit code, which is not
+// what the return value reports: a tool that ran and failed returns true with
+// a non-zero code, exactly as CreateProcess plus WaitForSingleObject did.
+inline bool RunAndWait( const std::string &szProgram,
+												const std::string &szArguments,
+												const std::string &szWorkingDir,
+												int *pnExitCode = nullptr )
+{
+	if ( pnExitCode != nullptr )
 	{
-		command += "cd " + Quote( szWorkingDir ) + " && ";
+		*pnExitCode = -1;
 	}
-	// exec so the shell replaces itself with the game rather than waiting on it,
-	// which leaves one process instead of two.
-	command += "exec " + Quote( szProgram );
-	if ( !szArguments.empty() )
+	if ( szProgram.empty() && szArguments.empty() )
 	{
-		command += " " + szArguments;
+		return false;
 	}
-	return LaunchDetached( command );
+#if BOOST_OS_WINDOWS
+	STARTUPINFOA startInfo = {};
+	startInfo.cb = sizeof( startInfo );
+	PROCESS_INFORMATION procInfo = {};
+	// CreateProcess may write to the command line it is given, so it gets a
+	// buffer of its own rather than the caller's string.
+	std::string szCommandLine( szArguments );
+	if ( !::CreateProcessA( szProgram.empty() ? 0 : szProgram.c_str(),
+													szCommandLine.empty() ? 0 : &szCommandLine[0],
+													0, 0, FALSE, 0, 0,
+													szWorkingDir.empty() ? 0 : szWorkingDir.c_str(),
+													&startInfo, &procInfo ) )
+	{
+		return false;
+	}
+	::WaitForSingleObject( procInfo.hProcess, INFINITE );
+	if ( pnExitCode != nullptr )
+	{
+		DWORD nExitCode = 0;
+		if ( ::GetExitCodeProcess( procInfo.hProcess, &nExitCode ) )
+		{
+			*pnExitCode = static_cast<int>( nExitCode );
+		}
+	}
+	::CloseHandle( procInfo.hThread );
+	::CloseHandle( procInfo.hProcess );
+	return true;
+#else
+	const std::string szCommand = BuildShellCommand( szProgram, szArguments, szWorkingDir );
+	char szShell[] = "/bin/sh";
+	char szFlag[] = "-c";
+	std::vector<char> command( szCommand.begin(), szCommand.end() );
+	command.push_back( '\0' );
+	char *argv[] = { szShell, szFlag, &command[0], 0 };
+	pid_t pid = 0;
+	if ( ::posix_spawn( &pid, szShell, 0, 0, argv, environ ) != 0 )
+	{
+		return false;
+	}
+	int nStatus = 0;
+	while ( ::waitpid( pid, &nStatus, 0 ) < 0 )
+	{
+		if ( errno != EINTR )
+		{
+			return false;
+		}
+	}
+	if ( pnExitCode != nullptr )
+	{
+		// The shell passes the program's own code back, and exec'd itself away
+		// so there is no extra process between. 128 plus the signal for a death
+		// by signal is the shell's convention, and is used here for the same
+		// reason: the caller wants one number.
+		*pnExitCode = WIFEXITED( nStatus ) ? WEXITSTATUS( nStatus )
+																			 : ( WIFSIGNALED( nStatus ) ? ( 128 + WTERMSIG( nStatus ) ) : -1 );
+	}
+	return true;
 #endif
 }
