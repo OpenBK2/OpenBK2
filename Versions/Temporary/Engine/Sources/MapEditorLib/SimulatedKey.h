@@ -24,6 +24,26 @@
 // Registered, not WM_APP + n, so it cannot collide with a message some control
 // already uses, and a probe finds it by name. Needs <windows.h>, which every
 // project here has from its stdafx.h.
+//
+// **Windows only, and not a thing to port.** This is test scaffolding of ours,
+// not the editor's own code, and it exists to work around a problem that only
+// Windows has: the probe desktop. A second Win32 desktop refuses SendInput, so
+// a probe can only post messages, and a posted WM_KEYDOWN says nothing about
+// Ctrl -- hence a message that states the modifiers instead. Nothing off
+// Windows has that shape. A Linux probe would drive the editor some other way
+// and would want its own answer, which may well not be a window message at
+// all, so the right move then is to write that rather than translate this.
+//
+// The one user, TextEditorViewWx.cpp, already guards its MSWWindowProc with
+// __WXMSW__. The body is guarded here too so that the header is safe for
+// anyone who includes it without thinking about the platform; off Windows it
+// is empty and any use of it will not compile, which is the intended answer.
+//
+// BOOST_OS_WINDOWS rather than __WXMSW__ because nothing here includes wx.
+#include <boost/predef.h>
+
+#if BOOST_OS_WINDOWS
+
 namespace NSimulatedKey
 {
 	inline unsigned Message()
@@ -55,3 +75,5 @@ namespace NSimulatedKey
 		return ( ( nLParam >> 16 ) & eModifier ) != 0;
 	}
 }
+
+#endif // BOOST_OS_WINDOWS
