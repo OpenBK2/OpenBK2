@@ -53,6 +53,26 @@ namespace NResources
 		MAPEDITORLIB_EXPORT CStringTable( const SStringEntry *pEntries, size_t nCount );
 	};
 
+	// One entry of a module's generated binary table: a whole .bmp file, as it
+	// sat in the resource section, in initialised read-only data.
+	struct SBinaryEntry
+	{
+		unsigned nID;
+		const unsigned char *pData;
+		size_t nSize;
+	};
+
+	// A module's binary table, registered like CStringTable above.
+	class CBinaryTable
+	{
+	public:
+		MAPEDITORLIB_EXPORT CBinaryTable( const SBinaryEntry *pEntries, size_t nCount );
+	};
+
+	// The bytes of the binary resource nID, or false and nothing written when
+	// no module has it. The bytes outlive the call: they are in the image.
+	MAPEDITORLIB_EXPORT bool GetBinaryResource( unsigned nID, const unsigned char **ppData, size_t *pnSize );
+
 	// The string nID, as UTF-8. Empty when there is none, which the string
 	// tables never use for a real string.
 	MAPEDITORLIB_EXPORT std::string GetString( unsigned nID );

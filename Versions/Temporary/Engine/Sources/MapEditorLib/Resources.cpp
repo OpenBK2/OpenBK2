@@ -26,6 +26,18 @@ namespace
 		static std::vector<STable> tables;
 		return tables;
 	}
+
+	struct SBinaryTable
+	{
+		const NResources::SBinaryEntry *pEntries;
+		size_t nCount;
+	};
+
+	std::vector<SBinaryTable>& BinaryTables()
+	{
+		static std::vector<SBinaryTable> tables;
+		return tables;
+	}
 }
 
 
@@ -64,6 +76,37 @@ namespace NResources
 		{
 			Tables().push_back( STable{ pEntries, nCount } );
 		}
+	}
+
+
+	CBinaryTable::CBinaryTable( const SBinaryEntry *pEntries, size_t nCount )
+	{
+		if ( ( pEntries != nullptr ) && ( nCount > 0 ) )
+		{
+			BinaryTables().push_back( SBinaryTable{ pEntries, nCount } );
+		}
+	}
+
+
+	bool GetBinaryResource( unsigned nID, const unsigned char **ppData, size_t *pnSize )
+	{
+		if ( ( ppData == nullptr ) || ( pnSize == nullptr ) )
+		{
+			return false;
+		}
+		for ( const SBinaryTable &rTable : BinaryTables() )
+		{
+			for ( size_t nEntry = 0; nEntry < rTable.nCount; ++nEntry )
+			{
+				if ( rTable.pEntries[nEntry].nID == nID )
+				{
+					( *ppData ) = rTable.pEntries[nEntry].pData;
+					( *pnSize ) = rTable.pEntries[nEntry].nSize;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 

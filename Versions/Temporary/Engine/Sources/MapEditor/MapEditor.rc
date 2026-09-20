@@ -48,26 +48,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Bitmap
-//
-
-IDT_MAIN                BITMAP                  "..\\MapEditor\\res\\toolbar_main.bmp"
-IDB_EDITOR_STARTUP      BITMAP                  "..\\MapEditor\\res\\startup.bmp"
-IDB_PC_TYPES_IMAGE_LIST BITMAP                  "..\\MapEditor\\res\\pc_types.bmp"
-IDB_PC_HEADER_IMAGE_LIST BITMAP                  "..\\MapEditor\\res\\pc_header.bmp"
-IDT_PROPERTY_CONTROL    BITMAP                  "..\\MapEditor\\res\\toolbar_pc.bmp"
-IDT_VIEW                BITMAP                  "..\\MapEditor\\res\\toolbar_view.bmp"
-IDT_SELECTION           BITMAP                  "..\\MapEditor\\res\\toolbar_selection.bmp"
-IDT_OBJECT              BITMAP                  "..\\MapEditor\\res\\toolbar_object.bmp"
-IDB_TABGDBB_TREE_TYPES_IMAGE_LIST BITMAP                  "..\\MapEditor\\res\\tree_types.bmp"
-IDT_CONTROLLER_CONTAINER BITMAP                  "..\\MapEditor\\res\\toolbar_uo.bmp"
-IDT_TEXT_EDITOR         BITMAP                  "..\\MapEditor\\res\\toolbar_te.bmp"
-IDB_TABGDBB_TREE_HEADER_IMAGE_LIST BITMAP                  "..\\MapEditor\\res\\tree_header.bmp"
-IDB_DEFAULT_SMALL_OBJECT_IMAGE BITMAP                  "..\\mapeditor\\res\\small_object.bmp"
-IDB_DEFAULT_NORMAL_OBJECT_IMAGE BITMAP                  "..\\mapeditor\\res\\normal_object.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Toolbar
 //
 
