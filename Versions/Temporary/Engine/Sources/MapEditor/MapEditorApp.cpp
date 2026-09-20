@@ -8,8 +8,6 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 
-#include <crtdbg.h>
-
 #include "libdb/ResourceManager.h"
 #include "libdb/Logger.h"
 #include "Misc/StrProc.h"
@@ -67,13 +65,16 @@ CEditorApp *CEditorApp::pInstance = nullptr;
 
 CEditorApp::CEditorApp()
 {
-	_CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-	const int nBreakId = -1;
-	_CrtSetBreakAlloc( nBreakId );
+	// The CRT debug heap calls that stood here are gone: _CrtSetDbgFlag with
+	// _CRTDBG_LEAK_CHECK_DF, a _CrtSetBreakAlloc( -1 ) that meant never break,
+	// and a new/delete pair that forced the debug heap to initialise before the
+	// leak tracking started.
 	//
-	int *pInitMem = new int;
-	delete pInitMem;
-
+	// Two of them did nothing in any configuration, and the flag only did
+	// anything in a Debug build, where it dumped the leaks to the debugger at
+	// exit. Nothing was reading that, and every tool worth using for the
+	// question -- ASan, Valgrind, heaptrack -- works on the running program
+	// without the CRT's help and says more when it does.
 	//NGlobal::SetVar( "fixrandom", 1 );
 	pInstance = this;
 }
