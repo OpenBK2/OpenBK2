@@ -1,6 +1,6 @@
 project(ED_B2_M1)
 set(SOURCES
-    AckExcelReader.cpp
+    AckTableReader.cpp
     AckSetBuilder.cpp
     AIGeneralDialogsWx.cpp
     AIGeneralState.cpp
@@ -183,12 +183,13 @@ set(SOURCES
 add_library(ED_B2_M1 SHARED ${SOURCES})
 add_stdafx_pch(ED_B2_M1)
 add_export_header(ED_B2_M1)
-# No mfc: the Excel acks reader, the last MFC user, is plain ODBC.
+# No mfc: the acks reader, the last MFC user, went to plain ODBC and then to a
+# CSV of its own reading, which needs nothing but the standard library.
 target_link_libraries(ED_B2_M1 PRIVATE 3DLib 3Dmotor B2_M1_Terrain B2_M1_World ED_Common Image Input libdb Main MapEditorLib MemoryLib Misc SceneB2 Stats_B2_M1 System UISpecificB2 UI zlib fmt::fmt-header-only granny::granny fastgltf::fastgltf)
 if(WIN32)
-    # odbc32 and odbccp32: AckExcelReader's ODBC calls, which MFC's afxdb.h
-    # used to link through #pragma comment.
-    target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi odbc32 odbccp32)
+    # odbc32 and odbccp32 are gone with the acks reader's ODBC, which was the
+    # only thing here that wanted them.
+    target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi)
 endif()
 # ED_B2_M1.rc is gone: its strings, menus, toolbars and bitmaps are generated
 # C++ tables now, and nothing was left in it but the resource editor's own

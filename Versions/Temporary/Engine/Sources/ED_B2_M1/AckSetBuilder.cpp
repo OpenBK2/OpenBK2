@@ -8,7 +8,7 @@
 #include "CommandHandlerDefines.h"
 #include "ResourceDefines.h"
 
-#include "AckExcelReader.h"
+#include "AckTableReader.h"
 #include "AckSetBuilder.h"
 #include "MapEditorLib/BuilderFactory.h"
 #include "MapEditorLib/Interface_Exporter.h"
@@ -167,7 +167,7 @@ bool UpdateAckSets( const std::string &szExcelFileName, const std::string &szFol
 	std::vector<SAckEntry> entries;
 	if ( LoadAcksTable( &entries, szExcelFileName ) == false || entries.empty() )
 	{
-		NLog::Log( LT_ERROR, "Can't load acks from Excel file \"%s\"", szExcelFileName.c_str() );
+		NLog::Log( LT_ERROR, "Can't load acks from \"%s\"", szExcelFileName.c_str() );
 		return false;
 	}
 	//
