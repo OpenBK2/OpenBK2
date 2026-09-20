@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Cursors.h"
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MessageBoxes.h"
 #include <fmt/printf.h>
@@ -310,7 +311,7 @@ void CMapObjectSelectState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &
 		SObjectSet objectSet;
 		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
-			::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+			NCursor::Set( NCursor::SHAPE_ARROW );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
@@ -373,7 +374,7 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 			SObjectSet objectSet;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
-				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+				NCursor::Set( NCursor::SHAPE_ARROW );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
@@ -484,16 +485,16 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 							if ( bSave )
 							{
 								pParentState->InsertSelectionLink( nLinkToSceneID );
-								::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+								NCursor::Set( NCursor::SHAPE_ARROW );
 							}
 							else
 							{
-								::SetCursor( ::LoadCursor( 0, IDC_UPARROW ) );
+								NCursor::Set( NCursor::SHAPE_UP_ARROW );
 							}
 						}
 						else
 						{
-							::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+							NCursor::Set( NCursor::SHAPE_ARROW );
 						}
 					}
 				}
@@ -548,7 +549,7 @@ void CMapObjectEditState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMou
 	if ( pParentState->CanEdit() )
 	{
 		pParentState->pStoreInputState->OnLButtonUp( nFlags, rMousePoint );
-		::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+		NCursor::Set( NCursor::SHAPE_ARROW );
 		//
 		if ( ( nFlags & MK_RBUTTON ) == 0 )
 		{
@@ -605,7 +606,7 @@ void CMapObjectEditState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rM
 		SObjectSet objectSet;
 		if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 		{
-			::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+			NCursor::Set( NCursor::SHAPE_ARROW );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
@@ -679,7 +680,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 			SObjectSet objectSet;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
-				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+				NCursor::Set( NCursor::SHAPE_ARROW );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
@@ -908,7 +909,7 @@ void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 			SObjectSet objectSet;
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 			{
-				::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+				NCursor::Set( NCursor::SHAPE_ARROW );
 				pParentState->InsertObjectLeave();
 				pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
@@ -1134,7 +1135,7 @@ void CMapObjectState::Enter()
 	ClearSelection();
 	//
 	SetActiveInputState( IS_SELECT, true, false );
-	::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+	NCursor::Set( NCursor::SHAPE_ARROW );
 	//
 	if ( pParentState )
 	{
@@ -1165,7 +1166,7 @@ void CMapObjectState::Leave()
 	ClearSelection();
 	//
 	SetActiveInputState( IS_SELECT, true, false );
-	::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
+	NCursor::Set( NCursor::SHAPE_ARROW );
 
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_MAPINFO_MAPOBJECT_STATE );
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_SELECTION, this );

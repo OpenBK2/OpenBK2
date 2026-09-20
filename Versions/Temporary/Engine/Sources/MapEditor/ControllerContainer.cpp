@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "MapEditorLib/Cursors.h"
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -271,12 +272,11 @@ bool CControllerContainer::RedoArrow()
 
 bool CControllerContainer::ShowOperationList( bool bUndo )
 {
-	POINT mouseCursorPos = {};
-	GetCursorPos( &mouseCursorPos );
+	const CTPoint<int> mouseCursorPos = NCursor::GetPosition();
 
 	const unsigned nButtonID = bUndo ? ID_CC_UNDO : ID_CC_REDO;
 	CTPoint<int> leftBottomPos;
-	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( CTPoint<int>( mouseCursorPos.x, mouseCursorPos.y ), nButtonID, &leftBottomPos ) )
+	if ( Singleton<IMainFrameContainer>()->Get()->GetToolBarButtonLeftBottomPos( mouseCursorPos, nButtonID, &leftBottomPos ) )
 	{
 		CDescriptionList descriptionList;
 		GetDescriptionList( &descriptionList, bUndo );
