@@ -733,7 +733,7 @@ namespace NMainFrameShared
 
 	void CProgressHost::Create( IWidget *pOwner )
 	{
-		hwndPreviousFocus = ::GetFocus();
+		previousFocus.Remember();
 		if ( pView == 0 )
 		{
 			// Which toolkit draws it is NProgressView's business.
@@ -760,10 +760,7 @@ namespace NMainFrameShared
 		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
-		if ( ::IsWindow( hwndPreviousFocus ) )
-		{
-			::SetFocus( hwndPreviousFocus );
-		}
+		previousFocus.Restore();
 	}
 
 

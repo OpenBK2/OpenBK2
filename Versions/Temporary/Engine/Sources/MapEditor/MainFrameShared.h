@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MapEditorLib/FocusMemory.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_Widget.h"
 #include "ProgressView.h"
@@ -67,10 +68,10 @@ namespace NMainFrameShared
 		// Made on first use and owned.
 		NProgressView::IView *pView;
 		// Where the focus goes back to when the dialog closes.
-		HWND hwndPreviousFocus;
+		CFocusMemory previousFocus;
 
 	public:
-		CProgressHost() : pView( 0 ), hwndPreviousFocus( 0 ) {}
+		CProgressHost() : pView( 0 ) {}
 		~CProgressHost();
 
 		// pOwner is the frame, and has to outlive the dialog.
