@@ -49,25 +49,25 @@ CUserDataContainer::~CUserDataContainer()
 void CUserDataContainer::GetXMLFilePath( std::string *pszXMLFilePath )
 {
 	NI_ASSERT( pszXMLFilePath != 0, "CUserDataContainer::GetXMLFilePath() pszXMLFilePath is NULL" );
-	( *pszXMLFilePath ) = "Editor\\UserData";
+	( *pszXMLFilePath ) = NFile::JoinPath( "Editor", "UserData" );
 }
 
 
 void CUserDataContainer::GetConstXMLFilePath( std::string *pszConstXMLFilePath )
 {
 	NI_ASSERT( pszConstXMLFilePath != 0, "CUserDataContainer::GetXMLFilePath() pszXMLFilePath is NULL" );
-	( *pszConstXMLFilePath ) = "Editor\\ConstUserData";
+	( *pszConstXMLFilePath ) = NFile::JoinPath( "Editor", "ConstUserData" );
 }
 
 
 void CUserDataContainer::Load()
 {
 	std::string szStartFolder = NMainLoop::GetBaseDir();
-	if ( ( !szStartFolder.empty() ) &&
-			 ( szStartFolder[ szStartFolder.size() - 1] != '\\' ) )
-	{
-		szStartFolder += '\\';
-	}
+	// AppendSlash rather than the test this used to make, which asked only
+	// whether the last character was a backslash. GetBaseDir ends in a forward
+	// one, so off Windows the answer was no and a backslash went on the end of
+	// an otherwise good path: "/home/sse4/bk2/\".
+	NFile::AppendSlash( &szStartFolder, NFile::PATH_SEPARATOR );
 	std::string szTokenSTART = szStartFolder.substr( 0, szStartFolder.size() - 1 );
 	NFile::NormalizePath( &szTokenSTART );
 	AddToken( "BasePath", szTokenSTART );
@@ -83,15 +83,22 @@ void CUserDataContainer::Load()
 		// Стартовый каталог
 		userData.constUserData.szStartFolder = szStartFolder;
 		// check for tokens in folder pathes
+		//
+		// These used to be folded the other way, to backslashes, which is how
+		// DataStorageFolder came out as "\home\sse4\bk2\\Data\" -- an absolute
+		// path turned into one nonexistent filename. Folding to
+		// PATH_SEPARATOR keeps the normalising, which the XML still needs since
+		// a file written by a Windows editor has backslashes in it, and points
+		// it in the direction FilePath.h says paths go in this tree.
 		ReplaceTokens( &userData.constUserData.szObjectRecordIDsFolder );
-		NStr::ReplaceAllChars( &userData.constUserData.szObjectRecordIDsFolder, '/', '\\' );
+		NStr::ReplaceAllChars( &userData.constUserData.szObjectRecordIDsFolder, '\\', NFile::PATH_SEPARATOR );
 		ReplaceTokens( &userData.constUserData.szExportSourceFolder );
-		NStr::ReplaceAllChars( &userData.constUserData.szExportSourceFolder, '/', '\\' );
+		NStr::ReplaceAllChars( &userData.constUserData.szExportSourceFolder, '\\', NFile::PATH_SEPARATOR );
 		ReplaceTokens( &userData.constUserData.szExportDestinationFolder );
-		NStr::ReplaceAllChars( &userData.constUserData.szExportDestinationFolder, '/', '\\' );
+		NStr::ReplaceAllChars( &userData.constUserData.szExportDestinationFolder, '\\', NFile::PATH_SEPARATOR );
 		// DataStorageFolder must be reconstructed from szStartFolder and "Data" dir
-		userData.constUserData.szDataStorageFolder = szStartFolder + "Data/";
-		NStr::ReplaceAllChars( &userData.constUserData.szDataStorageFolder, '/', '\\' );
+		userData.constUserData.szDataStorageFolder = NFile::JoinPath( szStartFolder, NFile::DIR_DATA );
+		NFile::AppendSlash( &userData.constUserData.szDataStorageFolder, NFile::PATH_SEPARATOR );
 		//
 		ReplaceTokens( &userData.constUserData.mayaExportData.szMayaExportPath );
 		AddToken( "MayaExportPath", userData.constUserData.mayaExportData.szMayaExportPath );

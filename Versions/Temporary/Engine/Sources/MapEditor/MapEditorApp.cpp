@@ -14,6 +14,7 @@
 #include <objbase.h>
 #endif
 #include "MapEditorLib/Resources.h"
+#include "System/FilePath.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
@@ -384,8 +385,13 @@ bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bReset
 bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 {
 	//
-	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
-	NGlobal::LoadConfig( "..\\profiles\\editor.cfg" );
+	// JoinPath and DIR_PROFILES rather than a literal, which is what
+	// Game/main.cpp already does for the same file. There were two bugs in that
+	// one string off Windows: the backslashes make the whole thing a single
+	// nonexistent filename, and "profiles" is the wrong case for the directory
+	// this tree ships. Neither is visible on Windows.
+	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
+	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "editor.cfg" ) );
 	//
 	// The InitCommonControls that stood here is gone, and it was redundant
 	// rather than probably redundant: wxApp::Initialize calls it (src/msw/app.cpp),
@@ -433,7 +439,7 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	CObj<CObjectBase> pSplashScreen;
 	//Показать SplashScreen
 	if ( bShowSplashScreen )
-		pSplashScreen = NSplash::CreateSplashScreen( "..\\splash.bmp", false );
+		pSplashScreen = NSplash::CreateSplashScreen( NFile::JoinPath( "..", "splash.bmp" ), false );
 
 	// Нет такого же приложения, продолжаем инициализацию
 
