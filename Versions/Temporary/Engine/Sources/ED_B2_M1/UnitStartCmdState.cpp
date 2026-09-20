@@ -8,6 +8,7 @@
 #include "UnitStartCmdState.h"
 #include "ED_B2_M1Dll.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 

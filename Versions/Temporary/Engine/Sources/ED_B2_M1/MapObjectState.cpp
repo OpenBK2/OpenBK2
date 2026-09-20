@@ -17,6 +17,7 @@
 #include "ED_B2_M1Dll.h"
 #include "MapInfoEditor.h"
 #include "port/vkcodes.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 

@@ -8,6 +8,7 @@
 #include "DrawToolsDC.h"
 #include "EnterName.h"
 #include "ScriptAreaState.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 

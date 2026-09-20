@@ -19,6 +19,7 @@
 #include "WindowSimpleSharedEditor.h"
 #include "WindowSimpleSharedState.h"
 #include "port/vkcodes.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 

@@ -33,6 +33,7 @@
 #include "System/GlobalVars.h"
 #include "port/vkcodes.h"
 #include "port/wordpack.h"
+#include "port/mousekeys.h"
 
 #include <fmt/format.h>
 #include <fmt/printf.h>

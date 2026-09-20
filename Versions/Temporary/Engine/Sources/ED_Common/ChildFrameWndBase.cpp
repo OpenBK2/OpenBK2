@@ -15,6 +15,7 @@
 
 #include "port/time.h"
 #include "port/vkcodes.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 

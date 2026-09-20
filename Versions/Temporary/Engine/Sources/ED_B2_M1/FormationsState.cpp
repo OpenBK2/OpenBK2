@@ -17,6 +17,7 @@
 #include "FormationMnemonics.h"
 #include "SquadEditor.h"
 #include "FormationsState.h"
+#include "port/mousekeys.h"
 
 #include <zconf.h>
 

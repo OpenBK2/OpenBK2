@@ -17,6 +17,7 @@
 #include "Misc/Win32Helper.h"
 #include "System/VFSOperations.h"
 #include "port/vkcodes.h"
+#include "port/mousekeys.h"
 
 #include <cstdint>
 
