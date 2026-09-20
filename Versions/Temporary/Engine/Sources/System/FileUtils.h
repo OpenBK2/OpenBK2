@@ -106,12 +106,29 @@ SYSTEM_EXPORT std::time_t GetLastWriteTime( const std::string &szFileName );
 // windows.h rewrites the name to DeleteFileA, and a translation unit that has not
 // included it would then look for a symbol nobody defines.
 SYSTEM_EXPORT bool RemoveFile( const std::string &szFileName );
+// The same, saying why it failed.
+//
+// These overloads exist because the reason used to be thrown away here and
+// then asked for again at the call site with ::GetLastError(), which answers
+// for the last Win32 call this thread made -- and std::filesystem's error_code
+// overloads make none. The exporters were logging "Error code: 2" from
+// something entirely unrelated, and had been since the file handling moved off
+// Win32. A caller that reports a failure to a person wants ec.message(), which
+// says "The system cannot find the path specified" rather than a number.
+//
+// std::error_code crosses the module boundary safely: it is an int and a
+// pointer to a category singleton, and the build uses the shared CRT (/MD), so
+// std::system_category() is one object across every module here.
+SYSTEM_EXPORT bool RemoveFile( const std::string &szFileName, std::error_code *pError );
 SYSTEM_EXPORT bool DoesFolderExist( const std::string &szFolderName );
 // is valid win32 file name
 SYSTEM_EXPORT bool IsValidFileName( const std::string &szFileName );
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
 SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
+// The same, saying why it failed. See RemoveFile above for why these exist.
+SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName,
+														 std::error_code *pError );
 // move one file over another, replacing it. Not MoveFile, for the reason
 // RemoveFile is not DeleteFile: windows.h rewrites that name.
 //
@@ -120,6 +137,12 @@ SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &sz
 // std::filesystem::rename refuses to do. The fallback is not atomic; a caller
 // that needs it to be puts its temporary beside the destination instead.
 SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &szDstName );
+// The same, saying why it failed. Where the cross-volume fallback is taken, the
+// error reported is the copy's rather than the rename's, because the rename
+// failing is expected there and says only that the two are on different
+// volumes.
+SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &szDstName,
+															 std::error_code *pError );
 
 SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
 SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );

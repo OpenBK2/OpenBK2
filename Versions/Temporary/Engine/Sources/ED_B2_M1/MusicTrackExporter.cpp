@@ -62,14 +62,18 @@ EXPORT_RESULT CMusicTrackExporter::ExportObject( IManipulator* pManipulator,
 	if ( (szSource == szDestination) || CheckFilesUpdated( szSource, szDestination, bForce ) )
 		return ER_SUCCESS;
 	//
-	if ( NFile::CopyFile( szSource, szDestination ) == false )
+	std::error_code copyError;
+	if ( NFile::CopyFile( szSource, szDestination, &copyError ) == false )
 	{
-		uint32_t dwErrorCode = ::GetLastError();
 		pLogger->Log( LT_ERROR, fmt::format("Can't copy Music Track object\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tMusicTrack: {}\n", rszObjectName.c_str()) );
 		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSource.c_str()) );
 		pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDestination.c_str()) );
-		pLogger->Log( LT_ERROR, fmt::format("\tError code: {}\n", dwErrorCode) );
+		// The copy's own reason. This used to be ::GetLastError(), which answers
+		// for the last Win32 call on this thread and so reported something
+		// unrelated: std::filesystem's error_code overloads set no last error.
+		pLogger->Log( LT_ERROR, fmt::format("\tReason: {} ({})\n",
+																				copyError.message(), copyError.value()) );
 		return ER_FAIL;
 	}
 	//

@@ -230,13 +230,26 @@ std::time_t GetLastWriteTime( const std::string &szFileName )
 	return ec ? 0 : t;
 }
 
-bool RemoveFile( const std::string &szFileName )
+bool RemoveFile( const std::string &szFileName, std::error_code *pError )
 {
 	// remove reports false both for a file that was not there and for one it could
 	// not remove, where DeleteFile returned FALSE for both as well. The one caller
 	// that looks at the result only asserts on it.
+	//
+	// So a false with no error set means the file was already gone, and pError is
+	// cleared rather than left holding whatever the caller passed in.
 	std::error_code ec;
-	return std::filesystem::remove( szFileName, ec );
+	const bool bRemoved = std::filesystem::remove( szFileName, ec );
+	if ( pError != 0 )
+	{
+		( *pError ) = ec;
+	}
+	return bRemoved;
+}
+
+bool RemoveFile( const std::string &szFileName )
+{
+	return RemoveFile( szFileName, 0 );
 }
 
 bool DoesFolderExist( const std::string &szFolderName )
@@ -292,23 +305,39 @@ bool IsValidDirName( const std::string &_szName )
 	return true;
 }
 
-bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
+bool CopyFile( const std::string &szSrcName, const std::string &szDstName,
+							 std::error_code *pError )
 {
 	CreatePath( GetFilePath( szDstName ) );
 	// overwrite_existing because ::CopyFile was called with bFailIfExists false, so
 	// an existing destination was always replaced rather than reported.
 	std::error_code ec;
-	return std::filesystem::copy_file( szSrcName, szDstName,
+	const bool bCopied = std::filesystem::copy_file( szSrcName, szDstName,
 		std::filesystem::copy_options::overwrite_existing, ec );
+	if ( pError != 0 )
+	{
+		( *pError ) = ec;
+	}
+	return bCopied;
 }
 
-bool RenameFile( const std::string &szSrcName, const std::string &szDstName )
+bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
+{
+	return CopyFile( szSrcName, szDstName, 0 );
+}
+
+bool RenameFile( const std::string &szSrcName, const std::string &szDstName,
+								 std::error_code *pError )
 {
 	CreatePath( GetFilePath( szDstName ) );
 	std::error_code ec;
 	std::filesystem::rename( szSrcName, szDstName, ec );
 	if ( !ec )
 	{
+		if ( pError != 0 )
+		{
+			pError->clear();
+		}
 		return true;
 	}
 	// Across volumes rename cannot work and reports it; MoveFileEx was asked
@@ -318,11 +347,26 @@ bool RenameFile( const std::string &szSrcName, const std::string &szDstName )
 	if ( !std::filesystem::copy_file( szSrcName, szDstName,
 			std::filesystem::copy_options::overwrite_existing, copyError ) )
 	{
+		// The copy's reason, not the rename's: the rename failing is what sent us
+		// down here and says only that the two paths are on different volumes.
+		if ( pError != 0 )
+		{
+			( *pError ) = copyError;
+		}
 		return false;
 	}
 	std::error_code removeError;
 	std::filesystem::remove( szSrcName, removeError );
+	if ( pError != 0 )
+	{
+		pError->clear();
+	}
 	return true;
+}
+
+bool RenameFile( const std::string &szSrcName, const std::string &szDstName )
+{
+	return RenameFile( szSrcName, szDstName, 0 );
 }
 
 // What GetFullPathName did: resolve against the working directory and fold away '.'
