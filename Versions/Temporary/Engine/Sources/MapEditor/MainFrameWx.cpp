@@ -581,7 +581,7 @@ namespace
 			CEditorApp *const pApp = CEditorApp::Get();
 			//
 			mapEditorSingletonApp.CreateMapFile( GetHWND() );
-			params.Load( true );
+			params.Load();
 			ReadNamedLayouts();
 			szHelpFilePath = NMainFrameShared::GetHelpFilePath();
 			SetIcons( LoadFrameIcons() );
@@ -1535,7 +1535,7 @@ namespace
 																 windowPlacement.rcNormalPosition.top,
 																 windowPlacement.rcNormalPosition.right,
 																 windowPlacement.rcNormalPosition.bottom );
-			params.Save( true );
+			params.Save();
 			//
 			mapEditorSingletonApp.RemoveMapFile();
 			Singleton<IMainFrameContainer>()->Set( 0, 0 );
