@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/BusyCursor.h"
+#include "MapEditorLib/WxResourceImages.h"
 
 #include "MoviesEditorView.h"
 
@@ -74,33 +75,20 @@ namespace
 	}
 
 
-	// A bitmap compiled into ED_B2_M1.dll, by numeric id.
+	// One of the movie editor's button faces, by numeric id.
 	//
-	// ::LoadImage rather than anything of wx's, for the reason HeightViewV3Wx.cpp
-	// gives: wxBITMAP_TYPE_BMP_RESOURCE takes a resource *name* and looks in the
-	// executable, and these have numeric ids in the editor DLL.
+	// Unmasked: these are drawn as they are, unlike the icon strips LoadStrip
+	// reads.
 	wxBitmap LoadDllBitmap( unsigned nResourceID )
 	{
-		HBITMAP hBitmap = static_cast<HBITMAP>( ::LoadImage( theEDB2M1Instance,
-																												 MAKEINTRESOURCE( nResourceID ),
-																												 IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION ) );
-		if ( hBitmap == 0 )
+		const wxImage image = NWxResourceImages::ReadBitmapResource( nResourceID );
+		if ( !image.IsOk() )
 		{
 			// A blank of the template's button size rather than a null bitmap,
 			// which trips a wx assertion.
 			return wxBitmap( 16, 16 );
 		}
-		BITMAP header = { 0 };
-		if ( ::GetObject( hBitmap, sizeof( header ), &header ) == 0 )
-		{
-			::DeleteObject( hBitmap );
-			return wxBitmap( 16, 16 );
-		}
-		wxBitmap bitmap;
-		// Takes the handle: the wxBitmap deletes it, so hBitmap must not be.
-		bitmap.InitFromHBITMAP( reinterpret_cast<WXHBITMAP>( hBitmap ),
-														header.bmWidth, header.bmHeight, header.bmBitsPixel );
-		return bitmap;
+		return wxBitmap( image );
 	}
 
 

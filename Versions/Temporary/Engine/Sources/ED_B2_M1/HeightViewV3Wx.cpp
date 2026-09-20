@@ -9,6 +9,7 @@
 #include "ED_B2_M1Dll.h"
 
 #include "MapEditorLib/CommandHandlerDefines.h"
+#include "MapEditorLib/WxResourceImages.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
 #include "MapEditorLib/WxImageList.h"
@@ -428,33 +429,17 @@ namespace
 			{
 				icons[nFrame] = wxBitmap( NHeightViewV3::ICON_PIXELS, NHeightViewV3::ICON_PIXELS );
 			}
-			HBITMAP hStrip = static_cast<HBITMAP>( ::LoadImage( theEDB2M1Instance,
-																													MAKEINTRESOURCE( IDB_TMITH_BITMAP ),
-																													IMAGE_BITMAP, 0, 0, LR_CREATEDIBSECTION ) );
-			if ( hStrip == 0 )
-			{
-				return;
-			}
-			BITMAP header = { 0 };
-			if ( ::GetObject( hStrip, sizeof( header ), &header ) == 0 )
-			{
-				::DeleteObject( hStrip );
-				return;
-			}
-			wxBitmap strip;
-			// Takes the handle: the wxBitmap deletes it, so hStrip must not be.
-			strip.InitFromHBITMAP( reinterpret_cast<WXHBITMAP>( hStrip ),
-														 header.bmWidth, header.bmHeight, header.bmBitsPixel );
-			wxImage image = strip.ConvertToImage();
+			// LoadStrip is ReadBitmapResource with the magenta key colour the MFC
+			// palette handed to CImageList::Add, which is how this strip is drawn.
+			wxImage image = NWxResourceImages::LoadStrip( IDB_TMITH_BITMAP );
 			if ( !image.IsOk() ||
 					 image.GetWidth() < TMITH_COUNT * NHeightViewV3::ICON_PIXELS ||
 					 image.GetHeight() < NHeightViewV3::ICON_PIXELS )
 			{
 				return;
 			}
-			// The key colour the MFC palette hands to CImageList::Add. Set on
-			// the whole strip once, and GetSubImage carries it into each frame.
-			image.SetMaskColour( 255, 0, 255 );
+			// The mask is set on the whole strip, and GetSubImage carries it into
+			// each frame.
 			for ( int nFrame = 0; nFrame < TMITH_COUNT; ++nFrame )
 			{
 				const wxRect frame( nFrame * NHeightViewV3::ICON_PIXELS, 0,
