@@ -349,12 +349,15 @@ bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bReset
 	}
 	else if ( !rszFileToOpen.empty() )
 	{
-		char buffer[2048];
-		memset( buffer, 0, 2048 );
-		::GetModuleFileName( 0, buffer, 2048 );
-		std::string szAppName = buffer;
+		// Started with a file to open, which means the working directory is
+		// wherever the shell or the caller happened to be; move to the editor's
+		// own folder so the data resolves as it does for a plain start.
+		//
+		// The 2048 byte buffer and the memset are gone with the call:
+		// NFile::GetExecutablePath sizes its own answer, and the length check
+		// this had none of is its problem rather than the caller's.
 		std::string szFilePath;
-		CStringManager::SplitFileName( &szFilePath, 0, 0, szAppName );
+		CStringManager::SplitFileName( &szFilePath, 0, 0, NFile::GetExecutablePath() );
 		NStr::TrimBoth( szFilePath, "\\/" );
 		NFile::SetCurrDir( szFilePath );
 	}
