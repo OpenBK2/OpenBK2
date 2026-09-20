@@ -16,6 +16,7 @@
 #include "port/time.h"
 #include "port/vkcodes.h"
 #include "port/mousekeys.h"
+#include "MapEditorLib/WxKeyState.h"
 
 #include <cstdint>
 
@@ -341,8 +342,8 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 {
 	if ( nChar == 'Q' )
 	{
-		if ( ( ( GetAsyncKeyState( VK_SHIFT ) & 0x8000 ) > 0 ) &&
-				 ( ( GetAsyncKeyState( VK_CONTROL ) & 0x8000 ) > 0 )	)
+		if ( NWxKey::IsDown( VK_SHIFT ) &&
+				 NWxKey::IsDown( VK_CONTROL )	)
 		{
 			bShowStatistic = !bShowStatistic;
 			Redraw();
@@ -350,8 +351,8 @@ void CChildFrameWndBase::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 	}
 	else if ( nChar == 'W' )
 	{
-		if ( ((GetAsyncKeyState(VK_SHIFT) & 0x8000) > 0) &&
-				 ((GetAsyncKeyState(VK_CONTROL) & 0x8000) > 0)	)
+		if ( NWxKey::IsDown( VK_SHIFT ) &&
+				 NWxKey::IsDown( VK_CONTROL )	)
 		{
 			bShowMovieBorders = !bShowMovieBorders;
 			bWasResized = true;

@@ -18,6 +18,7 @@
 #include "MapInfoEditor.h"
 #include "port/vkcodes.h"
 #include "port/mousekeys.h"
+#include "MapEditorLib/WxKeyState.h"
 
 #include <cstdint>
 
@@ -33,7 +34,7 @@ void CMapObjectSelectState::OnMouseButtonDown( unsigned nFlags, const CTPoint<in
 		if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
 		{
 			bool bModified = false;
-			if ( ( GetAsyncKeyState( VK_MENU ) & 0x8000 ) > 0 )
+			if ( NWxKey::IsDown( VK_MENU ) )
 			{
 				pParentState->GetObjectInfoCollector()->BackupSelectionPosition();
 				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );

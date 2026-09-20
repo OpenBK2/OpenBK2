@@ -27,6 +27,7 @@
 #include "ED_Common/SceneSurface.h"
 #include "System/GResource.h"
 #include "port/vkcodes.h"
+#include "MapEditorLib/WxKeyState.h"
 
 #include <cstdint>
 
@@ -125,7 +126,7 @@ void CCFCSceneB2::OnResizeChildFrameWnd( int cx, int cy )
 
 bool CCFCSceneB2::KeyPressed( unsigned nChar, uintptr_t dwData )
 {
-	return ( ( dwData == nChar ) || ( ( GetAsyncKeyState( nChar ) & 0x8000 ) > 0 ) );
+	return ( ( dwData == nChar ) || NWxKey::IsDown( nChar ) );
 }
 
 

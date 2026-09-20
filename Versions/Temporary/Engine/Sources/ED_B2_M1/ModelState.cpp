@@ -37,6 +37,7 @@
 #include "Stats_B2_M1/Vis2AI.h"
 #include "Stats_B2_M1/DBVisObj.h"
 #include "port/vkcodes.h"
+#include "MapEditorLib/WxKeyState.h"
 
 #include <cstdint>
 
@@ -97,7 +98,7 @@ void CModelState::Enter()
 				pModelEditor->editorSettings.bDrawTerrain = false;
 				pUserData->SerializeSettings( pModelEditor->editorSettings, "UnitStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
 
-				if ( ( GetAsyncKeyState( VK_CONTROL ) & 0x8000 ) <= 0 )
+				if ( !NWxKey::IsDown( VK_CONTROL ) )
 				{
 					pModelEditor->RestoreCameraParametersFromStats();
 				}
