@@ -48,6 +48,7 @@
 #include "System/WinVFS.h"
 
 #include "port/debugging.h"
+#include "port/process.h"
 
 
 EXTERNVAR LIBDB_EXPORT CLogger theLogger;
@@ -113,14 +114,22 @@ void CEditorApp::CreateUserDataSingleton()
 }
 
 
+// Whatever XDBWatcher.exe was.
+//
+// Ported as it stood, not repaired: CreateProcess becomes LaunchDetachedIn so
+// the file compiles off Windows, and the result is still ignored, as the
+// unused BOOL it was assigned to ignored it.
+//
+// **There is no XDBWatcher.exe.** No CMakeLists builds one, it is in no
+// install, and the only trace of it in the tree is XDBWatcherClient.tlh and
+// .tli, the COM wrappers generated from its type library. So this has been
+// failing silently on every start for as long as the CMake build has existed.
+// Worth deciding about rather than keeping: the client half,
+// NDBWatcherClient::RegisterSingleton just below, is live and presumably
+// copes with nothing being there to talk to.
 static void StartDBWatcher()
 {
-	STARTUPINFO startinfo;
-	PROCESS_INFORMATION procinfo;
-	Zero( startinfo );
-	Zero( procinfo );
-	startinfo.cb = sizeof( startinfo );
-	BOOL bRetVal = CreateProcess( "XDBWatcher.exe", 0, 0, 0, FALSE, 0, 0, NULL, &startinfo, &procinfo );
+	LaunchDetachedIn( "XDBWatcher.exe", "", "" );
 }
 
 bool CEditorApp::CreateSingletons()
