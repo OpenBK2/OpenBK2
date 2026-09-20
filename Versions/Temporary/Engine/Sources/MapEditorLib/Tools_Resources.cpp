@@ -73,28 +73,35 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 	NI_ASSERT( pszPath != 0, "NormalizePath() pszPath == 0" );
 	if ( pszPath )
 	{
-		NStr::ReplaceAllChars( pszPath, '/', '\\' );
+		// Every separator in here was a backslash, written out four times: the
+		// fold below, the one appended to the prefix, the one stripped off the
+		// front of the name and the one appended to a directory. The name this
+		// builds is opened as a file, and off Windows a backslash in it is an
+		// ordinary character, so the prefix and the name were joined by one and
+		// the whole thing named nothing: "/home/user/bk2/\Editor\MapInfoEditor".
+		//
+		// Folding towards PATH_SEPARATOR keeps the normalising, which is still
+		// needed because a name can arrive with either separator in it, and
+		// points the result the way FilePath.h says paths go in this tree. The
+		// one caller that turns the result back into a database name rather than
+		// a path is unaffected: CDBID hashes and compares with a backslash and a
+		// forward slash folded together, as does NFile::ComparePathEq.
+		NStr::ReplaceAllChars( pszPath, '\\', NFile::PATH_SEPARATOR );
 		// Проверяем наличие слеша в конце пути
 		std::string szPathPrefix = rszPathPrefix;
-		if ( ( szPathPrefix.size() > 0 ) && ( szPathPrefix[szPathPrefix.size() - 1] != '\\' ) )
-		{
-			szPathPrefix += "\\";
-		}
+		NFile::AppendSlash( &szPathPrefix, NFile::PATH_SEPARATOR );
 		// Проверяем наличие отсутствия слеша в начале имени
 		std::string szPath = ( *pszPath );
-		if ( ( szPath.size() > 0 ) && ( szPath[0] == '\\' ) )
+		if ( ( szPath.size() > 0 ) && NFile::IsFolderSeparator( szPath[0] ) )
 		{
 			szPath = szPath.substr( 1 );
 		}
 		// Если это каталог - необходимо проверить наличие последнего слеша
 		if ( !bFile )
 		{
-			if ( ( szPath.size() > 0 ) && ( szPath[szPath.size() - 1] != '\\' ) )
-			{
-				szPath += "\\";
-			}
+			NFile::AppendSlash( &szPath, NFile::PATH_SEPARATOR );
 		}
-		
+
 		// Расширяем имя файла до полного или отрезаем ненужное
 		std::string szLCPathPrefix = szPathPrefix;
 		std::string szLCPath = szPath;
@@ -161,7 +168,13 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 		//
 		if ( pbAbsolutePath )
 		{
-			( *pbAbsolutePath ) = ( ( szPath.size() > 2 ) && ( szPath[1] == ':' ) && ( szPath[2] == '\\' ) || ( szPath[2] == '\\' ) );
+			// IsPathRelative, which knows both kinds of absolute path: a drive
+			// letter and a leading separator. What stood here tested for a drive
+			// letter and then, through a precedence slip, tested szPath[2] again
+			// on its own - past the end of any path shorter than three
+			// characters, and for a backslash this function no longer produces.
+			// No caller asks for this today; all three pass a null pointer.
+			( *pbAbsolutePath ) = !szPath.empty() && !NFile::IsPathRelative( szPath );
 		}
 	}
 	return bResult;
