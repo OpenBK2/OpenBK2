@@ -112,6 +112,14 @@ SYSTEM_EXPORT bool IsValidFileName( const std::string &szFileName );
 SYSTEM_EXPORT bool IsValidDirName( const std::string &szName );
 // copy file. create dst path before copying
 SYSTEM_EXPORT bool CopyFile( const std::string &szSrcName, const std::string &szDstName );
+// move one file over another, replacing it. Not MoveFile, for the reason
+// RemoveFile is not DeleteFile: windows.h rewrites that name.
+//
+// Falls back to a copy and a remove when the two are on different volumes,
+// which is what MoveFileEx did with MOVEFILE_COPY_ALLOWED and what
+// std::filesystem::rename refuses to do. The fallback is not atomic; a caller
+// that needs it to be puts its temporary beside the destination instead.
+SYSTEM_EXPORT bool RenameFile( const std::string &szSrcName, const std::string &szDstName );
 
 SYSTEM_EXPORT std::string GetFullName( const std::string &szPath );
 SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath );

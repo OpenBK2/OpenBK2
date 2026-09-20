@@ -603,10 +603,8 @@ namespace NMainFrameShared
 
 	std::string GetHelpFilePath()
 	{
-		char pBuffer[0xFFF + 1];
-		::GetCurrentDirectory( 0xFFF, pBuffer );
-		std::string strHelpFileName = NResources::GetString( IDS_HELP_FILE_NAME );
-		return std::string( pBuffer ) + "\\" + strHelpFileName;
+		const std::string szHelpFileName = NResources::GetString( IDS_HELP_FILE_NAME );
+		return NFile::JoinPath( NFile::GetCurrDir(), szHelpFileName );
 	}
 
 

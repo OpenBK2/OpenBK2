@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "System/FileUtils.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 
@@ -217,7 +218,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		{
 			pFolderCallback->RemoveObject( "AnimB2", itAnimationName->first.ToString(),  false );
 			const std::string szFileName = NDb::GetFileName( itAnimationName->first );
-			::DeleteFile( (pUD->constUserData.szDataStorageFolder + szFileName).c_str() );
+			NFile::RemoveFile( (pUD->constUserData.szDataStorageFolder + szFileName).c_str() );
 			//
 			NLog::Log( LT_IMPORTANT, "Removing old animation: %s\n", szFileName.c_str() );
 		}

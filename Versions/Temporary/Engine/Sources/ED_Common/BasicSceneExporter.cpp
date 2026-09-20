@@ -109,13 +109,13 @@ EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator* pManipulator,
 			}
 			else
 			{
-				DeleteFile( szTempDstPath.c_str() );
+				NFile::RemoveFile( szTempDstPath.c_str() );
 				bResult = false;
 			}
 		}
 		catch ( ... )
 		{
-			DeleteFile( szTempDstPath.c_str() );
+			NFile::RemoveFile( szTempDstPath.c_str() );
 			bResult = false;
 			NLog::Log( LT_ERROR, "Export failed\n" );
 			NLog::Log( LT_ERROR, "\tObject type: \"%s\"\n", rszObjectTypeName.c_str() );

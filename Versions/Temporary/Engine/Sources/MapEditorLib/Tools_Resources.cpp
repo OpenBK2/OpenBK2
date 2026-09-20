@@ -4,6 +4,7 @@
 #include "Tools_Resources.h"
 #include "Misc/StrProc.h"
 #include "System/VFS.h"
+#include "System/FileUtils.h"
 #include "System/WinVFS.h"
 #include "System/VFSOperations.h"
 
@@ -116,9 +117,9 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 			{
 				if ( bFile )
 				{
-					uint32_t dwAttributes = GetFileAttributes( szCheckPath.c_str() );
-					if ( ( dwAttributes == INVALID_FILE_ATTRIBUTES ) ||
-							 ( ( dwAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY ) )
+					// A file and not a directory, which is what the attribute test
+					// spelled out: DoesFileExist is is_regular_file.
+					if ( !NFile::DoesFileExist( szCheckPath ) )
 					{
 						bResult = false;
 					}
@@ -126,9 +127,7 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 				else
 				{
 					szCheckPath = szCheckPath.substr( 0, szCheckPath.size() - 1 );
-					uint32_t dwAttributes = GetFileAttributes( szCheckPath.c_str() );
-					if ( ( dwAttributes == INVALID_FILE_ATTRIBUTES ) ||
-							 ( ( dwAttributes & FILE_ATTRIBUTE_DIRECTORY ) != FILE_ATTRIBUTE_DIRECTORY ) )
+					if ( !NFile::DoesFolderExist( szCheckPath ) )
 					{
 						bResult = false;
 					}

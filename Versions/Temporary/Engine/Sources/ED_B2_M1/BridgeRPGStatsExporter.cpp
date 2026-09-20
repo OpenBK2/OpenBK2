@@ -577,9 +577,9 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 		const std::string szCenterDestination = szTempCenterAIGeometryName;
 		const std::string szBorderDestination = szTempBorderAIGeometryName;
 		//
-		::DeleteFile( szMAIDestination.c_str() );
-		::DeleteFile( szCenterDestination.c_str() );
-		::DeleteFile( szBorderDestination.c_str() );
+		NFile::RemoveFile( szMAIDestination.c_str() );
+		NFile::RemoveFile( szCenterDestination.c_str() );
+		NFile::RemoveFile( szBorderDestination.c_str() );
 	}
 	// Удаляем временный каталог ( только если он пустой )
 	{

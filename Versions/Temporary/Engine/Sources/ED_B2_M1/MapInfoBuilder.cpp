@@ -470,7 +470,7 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 		const std::string szMapFileName = NDb::GetFileName( CDBID(rszObjectName) );
 		const std::string szDstFolderPath = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION );
 		const std::string szFilePath = NFile::GetFilePath( szDstFolderPath + szMapFileName );
-		::DeleteFile( (szFilePath + "map.b2m").c_str() );
+		NFile::RemoveFile( (szFilePath + "map.b2m").c_str() );
 	}
 	// remove MapInfo object
 	CBuilderBase::RemoveObject( rszObjectTypeName, rszObjectName );
@@ -492,12 +492,12 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 					std::string szSrcName;
 					if ( CManipulatorManager::GetValue(&szSrcName, pTextureMan, "SrcName") != false && !szSrcName.empty() )
 					{
-						::DeleteFile( (pUserData->constUserData.szExportSourceFolder + szSrcName).c_str() );
+						NFile::RemoveFile( (pUserData->constUserData.szExportSourceFolder + szSrcName).c_str() );
 					}
 					std::string szDstName;
 					if ( CManipulatorManager::GetValue(&szDstName, pTextureMan, "DestName") != false && !szDstName.empty() )
 					{
-						::DeleteFile( (Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDstName).c_str() );
+						NFile::RemoveFile( (Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szDstName).c_str() );
 					}
 				}
 				// remove minimap texture

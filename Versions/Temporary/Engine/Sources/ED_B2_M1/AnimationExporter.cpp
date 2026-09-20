@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "System/FileUtils.h"
 #include <fmt/format.h>
 #include <fmt/printf.h>
 
@@ -156,8 +157,8 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		pLogger->Log( LT_ERROR, fmt::format("\tBase animation file: {}\n", szDstFileName.c_str()) );
 		bResult = false;
 	}
-	::DeleteFile( (szDstFileName + PARAMS_AABBA).c_str() );
-	::DeleteFile( (szDstFileName + PARAMS_AABBD).c_str() );
+	NFile::RemoveFile( (szDstFileName + PARAMS_AABBA).c_str() );
+	NFile::RemoveFile( (szDstFileName + PARAMS_AABBD).c_str() );
 	return bResult;
 }
 

@@ -77,7 +77,7 @@ class CTempAttributesTool : public IExportTool
 			return false;
 		// read granny file
 		pDesc->pFile = GrannyReadEntireFile( szDstFileName.c_str() );
-		::DeleteFile( szDstFileName.c_str() );	// delete temp file
+		NFile::RemoveFile( szDstFileName.c_str() );	// delete temp file
 		if ( pDesc->pFile == 0 )
 			return false;
 		pDesc->pFileInfo = GrannyGetFileInfo( pDesc->pFile );

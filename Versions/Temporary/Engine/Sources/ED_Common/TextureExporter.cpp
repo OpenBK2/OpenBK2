@@ -274,11 +274,13 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 		// copy file from temporary location to real destination
 		// Assign DestName only once a complete DDS is installed successfully.
 		NFile::CreatePath( NFile::GetFilePath(szRealDestination) );
-		if ( !::MoveFileExA(szDestination.c_str(), szRealDestination.c_str(),
-			MOVEFILE_REPLACE_EXISTING | MOVEFILE_COPY_ALLOWED) )
+		// The temporary is in the system temp directory, which may be on another
+		// volume than the data folder, so this is the move that is allowed to fall
+		// back to a copy.
+		if ( !NFile::RenameFile( szDestination, szRealDestination ) )
 		{
-			NLog::Log( LT_ERROR, "Cannot write DDS: %s (Windows error %lu)\n", szRealDestination.c_str(), GetLastError() );
-			::DeleteFileA( szDestination.c_str() );
+			NLog::Log( LT_ERROR, "Cannot write DDS: %s\n", szRealDestination.c_str() );
+			NFile::RemoveFile( szDestination );
 			return ER_FAIL;
 		}
 		CManipulatorManager::SetValue( dbDestination, pManipulator, "DestName" );
@@ -306,7 +308,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 		return ER_SUCCESS;
 	}
 	else
-		DeleteFile( szDestination.c_str() );
+		NFile::RemoveFile( szDestination.c_str() );
 	//
 	// 
 	NLog::Log( LT_ERROR, "Texture export failed (most probable reason - source was not loaded correctly)\n" );

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <fmt/format.h>
+#include <fstream>
 #include <boost/uuid/uuid_io.hpp>
 #include "Interface_CommandHandler.h"
 #include "CommandHandlerDefines.h"
@@ -144,28 +145,13 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 	//
 	bool bResult = true;
 	{
-		HANDLE hFile = ::CreateFile( szScriptFileName.c_str(),
-																 GENERIC_WRITE,
-																 FILE_SHARE_READ,
-																 0,
-																 CREATE_ALWAYS,
-																 FILE_ATTRIBUTE_NORMAL,
-																 0 );
-		if ( hFile != INVALID_HANDLE_VALUE )
-		{
-			DWORD dwBytesWritten = 0;
-			bResult = WriteFile( hFile, rszScriptText.c_str(), rszScriptText.size(), &dwBytesWritten, 0 );
-			if ( bResult )
-			{
-				bResult = ( dwBytesWritten == rszScriptText.size() );
-			}
-			::CloseHandle( hFile );
-			hFile = 0;
-		}
-		else
-		{
-			bResult = false;
-		}
+		// CREATE_ALWAYS and GENERIC_WRITE: truncate or make it. Binary, because
+		// the MEL script is written exactly as it was built and CreateFile did
+		// no translation either.
+		std::ofstream script( szScriptFileName, std::ios::binary | std::ios::trunc );
+		script.write( rszScriptText.c_str(), rszScriptText.size() );
+		script.close();
+		bResult = script.good();
 	}
 	if ( !bResult )
 	{
@@ -460,7 +446,7 @@ void MoveTempFileToDestination( const std::string &szTempFileFullName, const std
 {
 	const bool bAddToRCS = NFile::DoesFileExist( szDstFileFullName ) == false;
 	NFile::CopyFile( szTempFileFullName, szDstFileFullName );
-	DeleteFile( szTempFileFullName.c_str() );
+	NFile::RemoveFile( szTempFileFullName.c_str() );
 }
 
 // basement storage  

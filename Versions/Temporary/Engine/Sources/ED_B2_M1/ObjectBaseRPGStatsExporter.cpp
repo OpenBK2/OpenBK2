@@ -9,6 +9,7 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "MapEditorLib/Interface_MOD.h"
 
 #include "ExporterMethods.h"
@@ -301,7 +302,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 				{
 					if ( !szMaskFileName.empty() && ( szMaskFileName[0] != ' ' ) )
 					{
-						::DeleteFile( ( pUserData->constUserData.szExportSourceFolder + szMaskFileName ).c_str() );
+						NFile::RemoveFile( ( pUserData->constUserData.szExportSourceFolder + szMaskFileName ).c_str() );
 					}					
 				}
 			}

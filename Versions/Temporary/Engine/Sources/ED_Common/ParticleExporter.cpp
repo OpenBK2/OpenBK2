@@ -122,7 +122,7 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 				ImportInfoToDBAfterRefs( "Unknown name", szDstFileName, pManipulator );
 			}
 			else
-				DeleteFile( szTempFileName.c_str() );
+				NFile::RemoveFile( szTempFileName.c_str() );
 		}
 	}
 	exportedFilesMap.clear();

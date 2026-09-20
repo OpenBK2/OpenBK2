@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "System/FileUtils.h"
 #include "MapEditorLib/Resources.h"
 #include "MapEditorLib/MainWindow.h"
 #include <fmt/format.h>
@@ -2209,7 +2210,7 @@ void CMapInfoEditor::RunGame()
 	}
 	const std::filesystem::path binFolder = std::filesystem::u8path(modulePath.data()).parent_path();
 	const std::string gamePath = (binFolder / "Game.exe").u8string();
-	if ( ::GetFileAttributes(gamePath.c_str()) == INVALID_FILE_ATTRIBUTES )
+	if ( !NFile::DoesFileExist( gamePath ) )
 	{
 		ReportError( "Game.exe was not found beside the map editor. Install the game executable in:\n" + binFolder.u8string() );
 		return;

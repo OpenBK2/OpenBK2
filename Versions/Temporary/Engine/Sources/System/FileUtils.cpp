@@ -302,6 +302,29 @@ bool CopyFile( const std::string &szSrcName, const std::string &szDstName )
 		std::filesystem::copy_options::overwrite_existing, ec );
 }
 
+bool RenameFile( const std::string &szSrcName, const std::string &szDstName )
+{
+	CreatePath( GetFilePath( szDstName ) );
+	std::error_code ec;
+	std::filesystem::rename( szSrcName, szDstName, ec );
+	if ( !ec )
+	{
+		return true;
+	}
+	// Across volumes rename cannot work and reports it; MoveFileEx was asked
+	// for MOVEFILE_COPY_ALLOWED and did the copy itself. The source is only
+	// removed once the copy has succeeded.
+	std::error_code copyError;
+	if ( !std::filesystem::copy_file( szSrcName, szDstName,
+			std::filesystem::copy_options::overwrite_existing, copyError ) )
+	{
+		return false;
+	}
+	std::error_code removeError;
+	std::filesystem::remove( szSrcName, removeError );
+	return true;
+}
+
 // What GetFullPathName did: resolve against the working directory and fold away '.'
 // and '..', without requiring the path to exist. absolute does the first and
 // lexically_normal the second, and neither touches the filesystem, so a name that is

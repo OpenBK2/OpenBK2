@@ -149,18 +149,26 @@ std::string CopyPackage( IManipulator *resource, const NGltf::TGltfFilePtr &file
 		}
 		existing.close();
 		// Use an adjacent temporary file so replacement is atomic on this volume.
-		wchar_t temporary[MAX_PATH];
-		if ( !GetTempFileNameW(entry.first.parent_path().c_str(), L"glb", 0, temporary) )
-			throw std::runtime_error("Cannot create temporary GLTF export file");
+		// A sibling name rather than GetTempFileName's: the export is
+		// single-threaded and the point of the temporary is where it sits, not
+		// that the name was handed out by the system.
+		fs::path temporary = entry.first;
+		temporary += ".tmp";
 		try
 		{
-			std::ofstream output(fs::path(temporary), std::ios::binary | std::ios::trunc);
+			std::ofstream output(temporary, std::ios::binary | std::ios::trunc);
 			output.write(reinterpret_cast<const char *>(entry.second.data()), entry.second.size());
 			output.close();
-			if ( !output || !MoveFileExW(temporary, entry.first.c_str(), MOVEFILE_REPLACE_EXISTING) )
+			std::error_code ec;
+			// rename replaces an existing destination, which is what
+			// MoveFileEx was asked for with MOVEFILE_REPLACE_EXISTING.
+			if ( !output )
+				throw std::runtime_error("Cannot write " + entry.first.u8string());
+			fs::rename(temporary, entry.first, ec);
+			if ( ec )
 				throw std::runtime_error("Cannot write " + entry.first.u8string());
 		}
-		catch ( ... ) { DeleteFileW(temporary); throw; }
+		catch ( ... ) { std::error_code ec; fs::remove(temporary, ec); throw; }
 	}
 	return destination.lexically_relative(dataRoot).generic_u8string();
 }

@@ -311,7 +311,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 					NLog::GetLogger()->Log( LT_ERROR, szError );
 					bResult = false;
 				}
-				::DeleteFile( szAnimParamsDestination.c_str() );
+				NFile::RemoveFile( szAnimParamsDestination.c_str() );
 				Singleton<IExporterContainer>()->FinishExport( szAnimationTypeName, FORCE_EXPORT, FINISH_EXPORT_TOOLS, NOT_EXPORT_REFERENCES );
 			}
 			// Удаляем лишние анимации:
