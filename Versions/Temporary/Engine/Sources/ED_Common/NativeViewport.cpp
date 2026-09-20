@@ -124,6 +124,19 @@ bool CNativeViewport::Attach( wxWindow *pWindow )
 	}
 
 	const Window xid = gdk_x11_window_get_xid( pGdkWindow );
+	// The window has to exist on the server, not just in GTK's request buffer,
+	// before anything on another connection names it. GTK holds its requests
+	// until the main loop next flushes, and the SDL window made below is on
+	// SDL's own connection, as is the Vulkan surface DXVK creates from it: the
+	// surface call asks the server about this XID, gets BadWindow for a window
+	// that has not been created yet, and comes back as VK_ERROR_OUT_OF_HOST_MEMORY,
+	// which surfaces as CreateDevice failing with D3DERR_NOTAVAILABLE.
+	//
+	// A sync rather than a flush, since a flush only puts the bytes on the wire
+	// and says nothing about when the server acts on them, and the requests here
+	// come from a different connection than the ones that must already be done.
+	gdk_display_sync( gdk_window_get_display( pGdkWindow ) );
+
 	SDL_PropertiesID props = SDL_CreateProperties();
 	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, static_cast<Sint64>( xid ) );
 	// What DXVK will ask this window for.
