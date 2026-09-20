@@ -63,6 +63,77 @@ void TrimInside( std::string &szString, const char *pszTrim );
 inline void TrimInside( std::string &szString, const char cTrim ) { szString.erase( remove(szString.begin(), szString.end(), cTrim), szString.end() ); }
 inline void TrimInside( std::string &szString ) { TrimInside(szString, " \t\n\r"); }
 
+// Case-insensitive comparison, ASCII only and deliberately so.
+//
+// These replace stricmp and _stricmp, which are Microsoft's spelling of a
+// function POSIX calls strcasecmp and C names not at all. Those folded ASCII
+// and nothing else, because they use the CRT's LC_CTYPE and nothing in this
+// tree calls setlocale, so the locale is "C": every byte from 0x80 up compared
+// raw. That is reproduced here rather than improved on.
+//
+// It is also the only sensible answer now that narrow strings are UTF-8. A
+// byte of a multi-byte sequence is not a character and folding it means
+// nothing; real case folding is a Unicode operation over whole code points and
+// would want ICU, which cmake/boost.cmake disables on purpose. Where these are
+// used -- a file extension, a database row's name -- ASCII is the whole
+// alphabet in play.
+//
+// Written out rather than taken from boost::algorithm: iequals and
+// ilexicographical_compare default to std::locale(), the global one, so
+// matching the old behaviour would mean remembering std::locale::classic() at
+// every call and getting something locale-dependent when it was forgotten.
+// Neither returns the int a sort comparator wants either, and Boost.Algorithm
+// is not among the libraries cmake/boost.cmake builds.
+inline char ToLowerASCII( const char c )
+{
+	return ( c >= 'A' && c <= 'Z' ) ? static_cast<char>( c - 'A' + 'a' ) : c;
+}
+
+// Negative, zero or positive as szLeft orders before, with or after szRight --
+// strcasecmp's answer, for a comparator that has to return an int.
+//
+// Bytes are compared as unsigned, which is what the CRT does and what makes
+// the order the same on a platform whose char is signed: otherwise every byte
+// from 0x80 up, which is every non-ASCII UTF-8 byte, would sort before every
+// ASCII one.
+inline int ICompare( const std::string &szLeft, const std::string &szRight )
+{
+	// Not std::min: windows.h defines min as a macro and reaches this header.
+	const size_t nCommon = ( szLeft.size() < szRight.size() ) ? szLeft.size() : szRight.size();
+	for ( size_t i = 0; i < nCommon; ++i )
+	{
+		const unsigned char cLeft = static_cast<unsigned char>( ToLowerASCII( szLeft[i] ) );
+		const unsigned char cRight = static_cast<unsigned char>( ToLowerASCII( szRight[i] ) );
+		if ( cLeft != cRight )
+		{
+			return ( cLeft < cRight ) ? -1 : 1;
+		}
+	}
+	if ( szLeft.size() == szRight.size() )
+	{
+		return 0;
+	}
+	return ( szLeft.size() < szRight.size() ) ? -1 : 1;
+}
+
+inline bool IEquals( const std::string &szLeft, const std::string &szRight )
+{
+	return ( szLeft.size() == szRight.size() ) && ( ICompare( szLeft, szRight ) == 0 );
+}
+
+// Does szString end with szSuffix, ignoring case? False for a string shorter
+// than the suffix, which is the point: the call this replaced took a fixed
+// number of characters off the end with substr( size() - n, n ), and size() is
+// unsigned, so a shorter string made that a huge position and substr threw.
+inline bool IEndsWith( const std::string &szString, const std::string &szSuffix )
+{
+	if ( szString.size() < szSuffix.size() )
+	{
+		return false;
+	}
+	return ICompare( szString.substr( szString.size() - szSuffix.size() ), szSuffix ) == 0;
+}
+
 template<class T>
 void FastSearch( const char *pszBegin, const int nSize, const std::string &szSample, std::vector<int> *pFoundEntriesPos, T charsComparer );
 

@@ -152,7 +152,9 @@ static bool CopyModel( const std::string &szOldModelName, const std::string &szN
     std::string szFileName;
 		if ( !CManipulatorManager::GetValue( &szFileName, pTexture, "SrcName" ) )
 			return false;
-		if ( stricmp( szFileName.substr( szFileName.length()-5, 5 ).c_str(), "1.tga" ) == 0 )
+		// Was stricmp over substr( length() - 5, 5 ), which threw on a name
+		// shorter than the suffix: length() is unsigned, so that position wrapped.
+		if ( NStr::IEndsWith( szFileName, "1.tga" ) )
 		{
 			//наш файл, смотрим параметр прозрачности
 			if ( !bFound )

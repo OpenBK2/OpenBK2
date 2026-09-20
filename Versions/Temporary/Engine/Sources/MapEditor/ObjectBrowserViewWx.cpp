@@ -154,7 +154,7 @@ namespace
 			}
 			return ( eType0 != GDBO_FOLDER ) ? 1 : -1;
 		}
-		return _stricmp( rszText0.c_str(), rszText1.c_str() );
+		return NStr::ICompare( rszText0, rszText1 );
 	}
 
 
