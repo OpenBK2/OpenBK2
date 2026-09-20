@@ -7,6 +7,7 @@
 
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "PolygonState.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

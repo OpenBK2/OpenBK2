@@ -9,6 +9,7 @@
 #include "UIRunModeState.h"
 #include "UIRunModeInterface.h"
 #include "UIScene.h"
+#include "port/vkcodes.h"
 
 CUIRunModeState::CUIRunModeState( CWindowSimpleSharedEditor *_pEditor, const std::string &rszTypeName, const CDBID &rDBID ) 
 	: pEditor( _pEditor ), szTypeName( rszTypeName ), dbid( rDBID )

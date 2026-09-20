@@ -31,6 +31,7 @@
 #include "MapEditorLib/WxColourDialog.h"
 #include "MapEditorLib/WxResourceImages.h"
 #include "System/GlobalVars.h"
+#include "port/vkcodes.h"
 
 #include <fmt/format.h>
 #include <fmt/printf.h>

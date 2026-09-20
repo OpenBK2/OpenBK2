@@ -17,6 +17,7 @@
 #include "libdb/ResourceManager.h"
 #include "EditorMethods.h"
 #include "SeasonMnemonics.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

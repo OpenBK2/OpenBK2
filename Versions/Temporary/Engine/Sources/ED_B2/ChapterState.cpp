@@ -17,6 +17,7 @@
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "MapEditorLib/MaskManipulator.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

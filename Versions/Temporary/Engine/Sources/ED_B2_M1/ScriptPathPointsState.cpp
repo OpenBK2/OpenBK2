@@ -8,6 +8,7 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "ResourceDefines.h"
 #include "SceneB2/Camera.h"
+#include "port/vkcodes.h"
 
 #include <fmt/format.h>
 

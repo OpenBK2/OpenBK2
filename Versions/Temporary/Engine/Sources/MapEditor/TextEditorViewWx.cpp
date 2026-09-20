@@ -8,6 +8,7 @@
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxPlacement.h"
 #include "MapEditorLib/WxToolDialog.h"
+#include "port/vkcodes.h"
 
 #include <wx/button.h>
 #include <wx/checkbox.h>

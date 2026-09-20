@@ -11,6 +11,7 @@
 #include "ReinfPointsState.h"
 #include "ReinfPointsData.h"
 #include "ReinfPointsDialogs.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

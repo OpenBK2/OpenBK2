@@ -16,6 +16,7 @@
 #include "EditorScene.h"
 #include "Misc/Win32Helper.h"
 #include "System/VFSOperations.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

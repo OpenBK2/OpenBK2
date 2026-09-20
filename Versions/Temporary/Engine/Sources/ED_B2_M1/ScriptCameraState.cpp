@@ -18,6 +18,7 @@
 // DEF_SEL_RAD, which used to arrive through MapInfoEditor.h's include of the
 // movies editor window and now has a header of its own.
 #include "TimeSliderData.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

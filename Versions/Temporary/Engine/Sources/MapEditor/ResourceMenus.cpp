@@ -12,6 +12,7 @@
 
 #include "ResourceDefines.h"
 #include "MapEditorLib/Resources.h"
+#include "port/vkcodes.h"
 
 namespace
 {

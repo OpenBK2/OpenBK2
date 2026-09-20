@@ -14,6 +14,7 @@
 #include "AIGeneralDialogs.h"
 #include "AIGeneralState.h"
 #include "MapEditorLib/Interface_MainFrame.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

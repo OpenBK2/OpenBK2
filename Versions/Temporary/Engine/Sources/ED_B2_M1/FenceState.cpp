@@ -15,6 +15,7 @@
 #include "MapObjectMultiState.h"
 #include "FenceState.h"
 #include "MapInfoEditor.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

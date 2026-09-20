@@ -21,6 +21,7 @@
 #include "AppProfile.h"
 #include "MapEditorSingleton.h"
 #include "ResourceDefines.h"
+#include "port/vkcodes.h"
 
 #include <fmt/printf.h>
 

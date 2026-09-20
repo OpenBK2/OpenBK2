@@ -14,6 +14,7 @@
 #include "VSOMultiState.h"
 #include "VSOState.h"
 #include "ED_B2_M1Dll.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

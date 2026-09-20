@@ -18,6 +18,7 @@
 
 #include "WindowSimpleSharedEditor.h"
 #include "WindowSimpleSharedState.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

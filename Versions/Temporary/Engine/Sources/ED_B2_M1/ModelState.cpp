@@ -36,6 +36,7 @@
 #include "Stats_B2_M1/SceneModes.h"
 #include "Stats_B2_M1/Vis2AI.h"
 #include "Stats_B2_M1/DBVisObj.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

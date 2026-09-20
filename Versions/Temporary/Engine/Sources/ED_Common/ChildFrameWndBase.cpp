@@ -14,6 +14,7 @@
 #include "SceneSurface.h"
 
 #include "port/time.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

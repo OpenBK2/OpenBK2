@@ -17,6 +17,7 @@
 #include "Misc/Win32Random.h"
 #include "EditorMethods.h"
 #include "MapInfoEditor.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

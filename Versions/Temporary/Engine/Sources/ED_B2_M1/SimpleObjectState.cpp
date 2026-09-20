@@ -23,6 +23,7 @@
 #include "EditorMethods.h"
 #include "SeasonMnemonics.h"
 #include "MapInfoEditor.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

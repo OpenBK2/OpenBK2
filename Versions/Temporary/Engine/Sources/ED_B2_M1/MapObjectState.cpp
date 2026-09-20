@@ -16,6 +16,7 @@
 #include "MapObjectState.h"
 #include "ED_B2_M1Dll.h"
 #include "MapInfoEditor.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

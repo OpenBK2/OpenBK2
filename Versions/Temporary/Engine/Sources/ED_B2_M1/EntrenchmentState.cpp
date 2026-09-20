@@ -13,6 +13,7 @@
 #include "MapObjectMultiState.h"
 #include "EntrenchmentState.h"
 #include "MapInfoEditor.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 

@@ -232,6 +232,10 @@ def main():
         '#include "{}"'.format( args.defines ),
     ]
     lines += [ '#include "{}"'.format( h ) for h in args.include ]
+    if accels:
+        # The accelerator entries name VK_ codes, which come from windows.h on
+        # Windows and from here everywhere else.
+        lines.append( '#include "port/vkcodes.h"' )
     lines += [ "", "namespace", "{" ]
 
     for name, items in menus:

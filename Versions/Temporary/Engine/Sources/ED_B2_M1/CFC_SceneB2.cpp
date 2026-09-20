@@ -26,6 +26,7 @@
 #include "DrawToolsDC.h"
 #include "ED_Common/SceneSurface.h"
 #include "System/GResource.h"
+#include "port/vkcodes.h"
 
 #include <cstdint>
 
