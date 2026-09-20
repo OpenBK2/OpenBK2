@@ -342,10 +342,10 @@ void CObjectCollector::CreateImageLists()
 	const wxBitmap defaultNormalObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
 	const wxBitmap defaultSmallObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
 	//
-	// ClearCollection comes back here. The lists are emptied rather than made
-	// again: the palettes' list controls hold these handles, and a new list
-	// would leave them drawing from the old one. (CImageList::Create over a
-	// live list did exactly that, and leaked it.)
+	// The lists are emptied rather than made again: the palettes' list controls
+	// hold these objects, and a new list would leave them drawing from the old
+	// one. (CImageList::Create over a live list did exactly that, and leaked
+	// it.)
 	if ( !normalImageList.IsCreated() )
 	{
 		normalImageList.Create( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y, 10 );
@@ -548,15 +548,6 @@ void CObjectCollector::InsertObject( const std::string &rszObjectTypeName, const
 {
 	if ( InsertObjectToCollection( rszObjectTypeName, rszObjectName, rszDataExtractorType ) )
 	{
-		for ( CObjectCollectorCallbackMap::iterator itObjectCollectorCallback = objectCollectorCallbackMap.begin();
-					itObjectCollectorCallback != objectCollectorCallbackMap.end();
-					++itObjectCollectorCallback )
-		{
-			if ( itObjectCollectorCallback->first != 0 )
-			{
-				itObjectCollectorCallback->first->OnInsertObject( rszObjectTypeName, rszObjectName );
-			}
-		}
 	}
 }
 
@@ -565,15 +556,6 @@ void CObjectCollector::RemoveObject( const std::string &rszObjectTypeName, const
 {
 	if ( RemoveObjectFromCollection( rszObjectTypeName, rszObjectName ) )
 	{
-		for ( CObjectCollectorCallbackMap::iterator itObjectCollectorCallback = objectCollectorCallbackMap.begin();
-					itObjectCollectorCallback != objectCollectorCallbackMap.end();
-					++itObjectCollectorCallback )
-		{
-			if ( itObjectCollectorCallback->first != 0 )
-			{
-				itObjectCollectorCallback->first->OnRemoveObject( rszObjectTypeName, rszObjectName );
-			}
-		}
 	}
 }
 
@@ -627,34 +609,6 @@ void CObjectCollector::RegisterDataExtractor( const std::string &rszDataExtracto
 	}
 	//
 	dataExtractorMap[rszDataExtractorType] = pDataExtractor;
-}
-
-
-void CObjectCollector::InsertCallback( IObjectCollectorCallback *pObjectCollectorCallback )
-{
-	if ( pObjectCollectorCallback != 0 )
-	{
-		objectCollectorCallbackMap[pObjectCollectorCallback] = 0;
-	}
-}
-
-
-void CObjectCollector::RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback )
-{
-	if ( pObjectCollectorCallback != 0 )
-	{
-		CObjectCollectorCallbackMap::iterator posObjectCollectorCallback = objectCollectorCallbackMap.find( pObjectCollectorCallback );
-		if ( posObjectCollectorCallback != objectCollectorCallbackMap.end() )
-		{
-			objectCollectorCallbackMap.erase( posObjectCollectorCallback );
-		}
-	}
-}
-
-
-void CObjectCollector::ClearCallbackList()
-{
-	objectCollectorCallbackMap.clear();
 }
 
 
@@ -748,22 +702,6 @@ IImageList* CObjectCollector::GetImageList( int nImageListType )
 	return ( nImageListType == IObjectCollector::IMAGE_LIST_SMALL ) ? &smallImageList : &normalImageList;
 }
 
-
-void CObjectCollector::ClearCollection()
-{
-	objectCollection.clear();
-	CreateImageLists();
-	//
-	for ( CObjectCollectorCallbackMap::iterator itObjectCollectorCallback = objectCollectorCallbackMap.begin();
-				itObjectCollectorCallback != objectCollectorCallbackMap.end();
-				++itObjectCollectorCallback )
-	{
-		if ( itObjectCollectorCallback->first != 0 )
-		{
-			itObjectCollectorCallback->first->OnClearCollection();
-		}
-	}
-}
 
 // basement storage 
 

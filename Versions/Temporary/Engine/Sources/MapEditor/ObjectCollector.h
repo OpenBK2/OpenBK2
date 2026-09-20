@@ -100,11 +100,9 @@ class CObjectCollector : public IObjectCollector
 	typedef std::vector<std::string> CObjectTypeNameList;
 	typedef std::unordered_map<std::string, CObjectTypeNameList> CDataExtractorTypeMap;
 	//
-	typedef std::unordered_map<IObjectCollectorCallback*, int> CObjectCollectorCallbackMap;
 	typedef std::unordered_map<std::string, CObj<IObjectDataExtractor> > CDataExtractorMap;
 	//
 	CObjectCollection objectCollection;
-	CObjectCollectorCallbackMap objectCollectorCallbackMap;
 	//
 	int nDefaultImageIndex;
 	// Handed out through IObjectCollector as they are; they live and die with
@@ -136,18 +134,12 @@ protected:
 	void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor );
 	void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor );
 	//
-	void InsertCallback( IObjectCollectorCallback *pObjectCollectorCallback );
-	void RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback );
-	void ClearCallbackList();
-	//
 	// возвращает общее количество объектов
 	int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName );
 	int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter );
 	bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	//
 	IImageList* GetImageList( int nImageListType );
-	//
-	void ClearCollection();
 
 public:
 	CObjectCollector()

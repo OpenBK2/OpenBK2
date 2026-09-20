@@ -21,15 +21,6 @@
 #define OCDE_ALL						0xFFFFFFFF
 
 
-struct IObjectCollectorCallback
-{
-	virtual void OnInsertObject( const std::string &szObjectTypeName, const std::string &szObjectName ) = 0;
-	virtual void OnRemoveObject( const std::string &szObjectTypeName, const std::string &szObjectName ) = 0;
-	//
-	virtual void OnClearCollection() = 0;
-};
-
-
 struct IObjectDataExtractor : public CObjectBase
 {
 	// возвращает данные объекта, в качестве возвращаемого значение - битовая маска, что заполнено
@@ -97,9 +88,6 @@ struct IObjectCollector : public CObjectBase
 	virtual void RegisterDataExtractor( IObjectDataExtractor *pDataExtractor ) = 0;
 	virtual void RegisterDataExtractor( const std::string &rszDataExtractorType, IObjectDataExtractor *pDataExtractor ) = 0;
 	//
-	virtual void InsertCallback( IObjectCollectorCallback *pObjectCollectorCallback ) = 0;
-	virtual void RemoveCallback( IObjectCollectorCallback *pObjectCollectorCallback ) = 0;
-	virtual void ClearCallbackList() = 0;
 	//
 	// возвращает количество объектов
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) = 0;
@@ -116,8 +104,6 @@ struct IObjectCollector : public CObjectBase
 		IMAGE_LIST_SMALL = 1,
 	};
 	virtual IImageList* GetImageList( int nImageListType ) = 0;
-	//
-	virtual void ClearCollection() = 0;
 };
 
 
