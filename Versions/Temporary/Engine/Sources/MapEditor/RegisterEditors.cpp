@@ -2,6 +2,7 @@
 #include "RegisterEditors.h"
 
 #include "UserDataContainer.h"
+#include "System/FilePath.h"
 #include "MapEditorLib/EditorFactory.h"
 #include "ED_Common/WindowSimpleSharedEditor.h"
 
@@ -63,7 +64,10 @@ void CRegisterEditorsSemiAutoMagic::Save()
 
 const char* CRegisterEditorsSemiAutoMagic::GetXMLPath() const
 {
-	return "Editor\\Editors";
+	// A path under the start folder, not a database name: JoinPath, or off
+	// Windows the file is written to one name with a backslash in it.
+	static const std::string szPath = NFile::JoinPath( "Editor", "Editors" );
+	return szPath.c_str();
 }
 
 const char* CRegisterEditorsSemiAutoMagic::GetLabel() const
