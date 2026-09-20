@@ -5,10 +5,15 @@
 #include "Interface_UserData.h"
 #include "Tools_Resources.h"
 
+#include "System/FilePath.h"
+
 // Where every dialog keeps its placement and parameters. Was defined in
 // ResizeDialog.h, with CResizeDialog, the MFC dialog base that first wrote
-// these files.
-#define RESIZE_DIALOG_OPTIONS_FILE_NAME "Editor\\ResizeDialogStyles\\"
+// these files. The separators are JoinPath's now, in GetStatePath: written
+// out as backslashes this named one file that does not exist off Windows,
+// and a dialog whose state cannot be read just opens with its defaults, so
+// nothing reported it.
+#define RESIZE_DIALOG_OPTIONS_FOLDER "ResizeDialogStyles"
 
 // The chunk names and ids are exactly what CResizeDialog::SOptions used, because
 // they are the on-disk format of every Editor/ResizeDialogStyles/*.xml that
@@ -52,8 +57,8 @@ namespace
 			// its defaults.
 			return false;
 		}
-		( *pszPath ) = pContainer->Get()->constUserData.szStartFolder +
-									 RESIZE_DIALOG_OPTIONS_FILE_NAME + rszDialogName;
+		( *pszPath ) = NFile::JoinPath( pContainer->Get()->constUserData.szStartFolder,
+																		"Editor", RESIZE_DIALOG_OPTIONS_FOLDER, rszDialogName );
 		return true;
 	}
 }
