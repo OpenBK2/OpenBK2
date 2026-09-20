@@ -11,6 +11,9 @@
 #include "MapEditorLib/InteractiveMayaExportTool.h"
 #include "ED_Common/UIScene.h"
 #include "ED_Common/TempAttributesTool.h"
+#include "System/FilePath.h"
+#include <fmt/format.h>
+
 #include "MapObjectDataExtractor.h"
 #include "SpotDataExtractor.h"
 #include "TileDataExtractor.h"
@@ -48,19 +51,39 @@ namespace
 	{
 		try
 		{
-			const std::string szObjectFilterFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Filters.xml";
+			// JoinPath rather than a concatenation with the separator written out,
+			// which is how "Editor\Filters.xml" got onto the end of an otherwise
+			// good start folder and named one file that does not exist off
+			// Windows. Without the filters every palette keyed on them is built
+			// with an empty filter list, so the object palette offers nothing to
+			// place: no units, no buildings, no terrain objects.
+			const std::string szObjectFilterFileName =
+					NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Filters.xml" );
 			{
 				CFileStream stream( szObjectFilterFileName, CFileStream::WIN_READ_ONLY );
 				if( stream.IsOk() )
 				{
 					Singleton<IObjectFilterCollector>()->Load( &stream );
 				}
+				else
+				{
+					// Said out loud, because a palette with nothing in it is all
+					// the report this used to make.
+					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Can't read the object filters {}\n", szObjectFilterFileName ) );
+				}
 			}
-			const std::string szDataExtractorFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + "Editor\\Extractors.xml";
+			const std::string szDataExtractorFileName =
+					NFile::JoinPath( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor", "Extractors.xml" );
 			{
 				CFileStream stream( szDataExtractorFileName, CFileStream::WIN_READ_ONLY );
 				if( stream.IsOk() )
+				{
 					Singleton<IObjectCollector>()->Load( &stream );
+				}
+				else
+				{
+					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Can't read the data extractors {}\n", szDataExtractorFileName ) );
+				}
 			}
 		}
 		catch ( ... ) 
