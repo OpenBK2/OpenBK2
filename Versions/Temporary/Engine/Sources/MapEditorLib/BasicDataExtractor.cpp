@@ -9,6 +9,7 @@
 #include "Image/Image.h"
 #include "Image/ImageDDS.h"
 #include "Image/ImageScale.h"
+#include "System/FilePath.h"
 #include "System/FileUtils.h"
 #include "System/VFSOperations.h"
 #include "Tools_Resources.h"
@@ -54,13 +55,38 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 }
 
 
+namespace
+{
+	// Where one object's two icons are kept between sessions.
+	//
+	// The object name is a database name, and those separate with a backslash:
+	// "Units\Technics\GB\Aviation\lysander\MechUnitRPGStats.xdb". Here it is
+	// being used as a path, one directory per part, which is what the backslashes
+	// in the format string were for - they are directory separators on Windows
+	// and ordinary characters everywhere else, so off Windows the whole cache
+	// went into single files whose names contained backslashes, under whatever
+	// the VFS took the absolute start folder to be relative to.
+	//
+	// So: the name folded to this tree's separator, and the path built with
+	// JoinPath. The layout on disk is the one Windows has always written.
+	std::string CacheFileName( const SUserData *pUserData, const std::string &rszObjectTypeName,
+														 const std::string &rszObjectName )
+	{
+		std::string szObjectPath = rszObjectName;
+		NFile::NormalizePath( &szObjectPath );
+		return NFile::JoinPath( pUserData->constUserData.szStartFolder, "Editor", "IconCache",
+														rszObjectTypeName, szObjectPath );
+	}
+}
+
+
 bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
 																	 CArray2D<uint32_t> *pSmallImage,
 																							 const std::string &rszObjectTypeName,
 																							 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + fmt::format( "Editor\\IconCache\\{}\\{}", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = CacheFileName( pUserData, rszObjectTypeName, rszObjectName );
 	//
 	if ( NFile::DoesFileExist( szCacheFileName ) )
 	{
@@ -97,7 +123,7 @@ void CBasicDataExtractor::SaveImagesToCache( CArray2D<uint32_t> &rImageSmall,
 																						 const std::string &rszObjectName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	const std::string szCacheFileName = pUserData->constUserData.szStartFolder + fmt::format( "Editor\\IconCache\\{}\\{}", rszObjectTypeName.c_str(), rszObjectName.c_str() );
+	const std::string szCacheFileName = CacheFileName( pUserData, rszObjectTypeName, rszObjectName );
 	//
 	SFileStreamHolder streamHolder;
 	CreateStreamHolder( &streamHolder, szCacheFileName );
