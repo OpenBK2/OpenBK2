@@ -332,7 +332,11 @@ namespace NMainFrameWxPanes
 	{
 		if ( pPanel )
 		{
-			::SetFocus( pPanel->GetHWND() );
+			// wxWindow::SetFocus rather than ::SetFocus on the handle: on MSW it is
+			// that call, and it is the only one that also tells wx, which keeps its
+			// own idea of the focused window for wxEVT_SET_FOCUS and for restoring
+			// focus to a child when a top-level window is activated again.
+			pPanel->SetFocus();
 		}
 	}
 
