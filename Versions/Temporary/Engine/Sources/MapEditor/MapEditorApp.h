@@ -31,7 +31,10 @@ class MAPEDITOR_EXPORT CEditorApp
 	void CreateUserDataSingleton();
 	bool CreateSingletons();
 	void DestroySingletons();
-	bool ParseCommandLine( const std::string &rszCommandLine );
+	// bResetProfile is the -reg switch, which used to be a substring search over
+	// the whole command line: a map whose name happened to contain "-reg" wiped
+	// the profile. It is an exact argument now.
+	bool ParseCommandLine( const std::string &rszFileToOpen, bool bResetProfile );
 
 	void RegisterEditors();
 protected:
@@ -43,11 +46,13 @@ public:
 	// The one application object, or null before it is made.
 	static CEditorApp* Get() { return pInstance; }
 
-	// What InitInstance did. rszCommandLine is the command line after the
-	// program's name, as CWinApp::m_lpCmdLine held it. False when the editor
-	// should not start; Shutdown is still to be called then, as MFC called
-	// ExitInstance after a failed InitInstance.
-	virtual bool Initialize( const std::string &rszCommandLine );
+	// What InitInstance did. rArgs is the command line already split and
+	// unquoted, without the program's name: what wx hands its wxApp. It was the
+	// whole tail of the command line as one string, the way CWinApp::m_lpCmdLine
+	// held it, with the quotes trimmed off by hand afterwards. False when the
+	// editor should not start; Shutdown is still to be called then, as MFC
+	// called ExitInstance after a failed InitInstance.
+	virtual bool Initialize( const std::vector<std::string> &rArgs );
 	// What ExitInstance did, less CWinApp's own.
 	virtual void Shutdown();
 

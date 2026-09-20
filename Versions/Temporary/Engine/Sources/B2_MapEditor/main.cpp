@@ -48,7 +48,7 @@ class CEditorAppSpecific : public CEditorApp
 {
 	std::vector<IEditorModule*> extModules;
 public:
-	bool Initialize( const std::string &rszCommandLine ) override;
+	bool Initialize( const std::vector<std::string> &rArgs ) override;
 
 	void LoadMapEditorModule( const std::string &szModuleName );
 	void UnloadMapEditorModule();
@@ -109,7 +109,7 @@ void CEditorAppSpecific::UnloadMapEditorModule()
 }
 
 
-bool CEditorAppSpecific::Initialize( const std::string &rszCommandLine )
+bool CEditorAppSpecific::Initialize( const std::vector<std::string> &rArgs )
 {
 	// Before anything else, because everything after it is what wants watching.
 	// The editor had no crash handler until now: a fault left a truncated
@@ -124,7 +124,7 @@ bool CEditorAppSpecific::Initialize( const std::string &rszCommandLine )
 	//
 	SetMapFileName( "CMapEditorSingletonBase_B2MapEditor_1.0" );
 	// wx is up by now: this runs from the wxApp's OnInit (WxHost.cpp).
-	return CEditorApp::Initialize( rszCommandLine );
+	return CEditorApp::Initialize( rArgs );
 }
 
 

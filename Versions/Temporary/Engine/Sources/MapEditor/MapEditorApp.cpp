@@ -326,7 +326,7 @@ void CEditorApp::DestroySingletons()
 }
 
 
-bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
+bool CEditorApp::ParseCommandLine( const std::string &rszFileToOpen, bool bResetProfile )
 {
 	const std::string szValidRegistryVersion = "1";
 	std::string szRegistryVersion;
@@ -337,11 +337,11 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 	strKey = NResources::GetString( IDS_REGISTRY_KEY_VERSION );
 	szRegistryVersion = NAppProfile::GetString( "", strKey, "" );
 	//
-	if ( ( rszCommandLine.find( "-reg" ) != std::string::npos ) || ( szRegistryVersion != szValidRegistryVersion ) )
+	if ( bResetProfile || ( szRegistryVersion != szValidRegistryVersion ) )
 	{
 		NAppProfile::DeleteAll();
 	}
-	else if ( !rszCommandLine.empty() )
+	else if ( !rszFileToOpen.empty() )
 	{
 		char buffer[2048];
 		memset( buffer, 0, 2048 );
@@ -358,7 +358,7 @@ bool CEditorApp::ParseCommandLine( const std::string &rszCommandLine )
 }
 
 
-bool CEditorApp::Initialize( const std::string &rszCommandLine )
+bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 {
 	//
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
@@ -369,12 +369,28 @@ bool CEditorApp::Initialize( const std::string &rszCommandLine )
 	InitCommonControls();
 
 	// Получаем командную строку
-	std::string szCommandLine( rszCommandLine );
-	NStr::TrimBoth( szCommandLine, '\"' );
+	//
+	// The whole vocabulary: one file to open, and -reg. This used to be the tail
+	// of the command line as a single string, with the surrounding quotes taken
+	// off by hand; the arguments arrive split and unquoted now, so neither the
+	// trim nor the hand-written program-name skip in WxHost.cpp is needed.
+	std::string szFileToOpen;
+	bool bResetProfile = false;
+	for ( const std::string &rszArg : rArgs )
+	{
+		if ( rszArg == "-reg" )
+		{
+			bResetProfile = true;
+		}
+		else if ( szFileToOpen.empty() )
+		{
+			szFileToOpen = rszArg;
+		}
+	}
 
 	// проверяем наличие предыдущего редактора
 	CMapEditorSingletonChecker mapEditorSingletonChecker;
-	if ( szCommandLine.empty() )
+	if ( szFileToOpen.empty() )
 	{
 		if ( mapEditorSingletonChecker.BringAppOnTop() )
 		{
@@ -383,7 +399,7 @@ bool CEditorApp::Initialize( const std::string &rszCommandLine )
 	}
 	else
 	{
-		if ( mapEditorSingletonChecker.OpenFileOnApp( szCommandLine ) )
+		if ( mapEditorSingletonChecker.OpenFileOnApp( szFileToOpen ) )
 		{
 			return false;
 		}
@@ -401,7 +417,7 @@ bool CEditorApp::Initialize( const std::string &rszCommandLine )
 	CreateUserDataSingleton();
 
 	// Пропарсить все аргументы командной строки
-	if ( !ParseCommandLine( szCommandLine ) )
+	if ( !ParseCommandLine( szFileToOpen, bResetProfile ) )
 	{
 		return false;
 	}
@@ -457,9 +473,11 @@ bool CEditorApp::Initialize( const std::string &rszCommandLine )
 	}
 	/**/
 	NMainFrameWx::Show();
-	if ( !szCommandLine.empty() && ( szCommandLine != "-reg" ) )
+	// The "-reg" this used to exclude by hand is a switch now and never reaches
+	// szFileToOpen, which is the argument that is not one.
+	if ( !szFileToOpen.empty() )
 	{
-		NMainFrameShared::OpenResource( szCommandLine );
+		NMainFrameShared::OpenResource( szFileToOpen );
 	}
 	return true;
 }

@@ -8,37 +8,21 @@
 
 namespace
 {
-	// What CWinApp::m_lpCmdLine held, which is what the editor parses: the
-	// command line after the program's name and the blanks that follow it,
-	// the way the CRT cuts it for WinMain. wx's own argv is not used, because
-	// it splits and unquotes the arguments and the editor never did.
-	std::string CommandLineArguments()
+	// The editor's arguments: wx's argv without the program's name.
+	//
+	// This was GetCommandLineA() with the program name cut off by hand, the way
+	// the CRT cuts it for WinMain, because that is what CWinApp::m_lpCmdLine
+	// held and the editor then trimmed the quotes itself. wx fills argc and argv
+	// in wxEntryStart, before OnInit runs, already split and unquoted, so all of
+	// that was reproducing work wx had done.
+	std::vector<std::string> EditorArguments( const wxApp &rApp )
 	{
-		const char *pszLine = ::GetCommandLineA();
-		if ( *pszLine == '"' )
+		std::vector<std::string> args;
+		for ( int i = 1; i < rApp.argc; ++i )
 		{
-			++pszLine;
-			while ( ( *pszLine != '\0' ) && ( *pszLine != '"' ) )
-			{
-				++pszLine;
-			}
-			if ( *pszLine == '"' )
-			{
-				++pszLine;
-			}
+			args.push_back( std::string( rApp.argv[i].utf8_str() ) );
 		}
-		else
-		{
-			while ( ( *pszLine != '\0' ) && ( *pszLine != ' ' ) && ( *pszLine != '\t' ) )
-			{
-				++pszLine;
-			}
-		}
-		while ( ( *pszLine == ' ' ) || ( *pszLine == '\t' ) )
-		{
-			++pszLine;
-		}
-		return pszLine;
+		return args;
 	}
 
 
@@ -46,7 +30,8 @@ namespace
 	{
 	public:
 		// wxApp::OnInit is deliberately not called: it would parse the command
-		// line as wx's, and reject what it does not know.
+		// line as wx's, and reject what it does not know. argc and argv are set
+		// up regardless -- that happens in wxEntryStart, not here.
 		bool OnInit() override
 		{
 			// Stated rather than left to the default, because the default is the
@@ -56,7 +41,7 @@ namespace
 			// whole editor down. The main frame ends the loop when it goes, and
 			// nothing else gets a vote.
 			SetExitOnFrameDelete( false );
-			if ( !NWxHost::GetEditorApp().Initialize( CommandLineArguments() ) )
+			if ( !NWxHost::GetEditorApp().Initialize( EditorArguments( *this ) ) )
 			{
 				// MFC ran ExitInstance after a failed InitInstance; wx does not
 				// run OnExit after a failed OnInit, so this does.
