@@ -9,6 +9,8 @@
 #include "Misc/HPTimer.h"
 #include "Misc/2Darray.h"
 #include "MapEditorLib/Tools_Image.h"
+#include "MapEditorLib/WxImageList.h"
+#include "MapEditorLib/WxResourceImages.h"
 
 #include "port/unicode.h"
 
@@ -322,42 +324,43 @@ int CObjectFilterCollector::ShowFilterCreationDialog( IWidget* pParentWidget, st
 
 namespace
 {
-	// CBitmap::LoadBitmap without MFC: the bitmap from whichever module has it.
-	HBITMAP LoadResourceBitmap( unsigned nID )
+	// The fallback icon for an object with no picture of its own. This is the
+	// one part of these lists that comes from a resource rather than from the
+	// data extractors, so it is the one part still waiting on the generated
+	// resource tables; NWxResourceImages is where that arrives.
+	wxBitmap LoadResourceBitmap( unsigned nID )
 	{
-		const HINSTANCE hModule = NResources::FindModule( MAKEINTRESOURCEA( nID ), MAKEINTRESOURCEA( 2 ) );	// RT_BITMAP
-		return ::LoadBitmapA( hModule, MAKEINTRESOURCEA( nID ) );
+		return wxBitmap( NWxResourceImages::ReadBitmapResource( nID ) );
 	}
 }
 
 
 void CObjectCollector::CreateImageLists()
 {
-	const COLORREF zeroColor = RGB( 0, 0, 0 );
+	const wxColour zeroColor( 0, 0, 0 );
 	//
-	const HBITMAP hDefaultNormalObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
-	const HBITMAP hDefaultSmallObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
+	const wxBitmap defaultNormalObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_NORMAL_OBJECT_IMAGE );
+	const wxBitmap defaultSmallObjectBitmap = LoadResourceBitmap( IDB_DEFAULT_SMALL_OBJECT_IMAGE );
 	//
 	// ClearCollection comes back here. The lists are emptied rather than made
 	// again: the palettes' list controls hold these handles, and a new list
 	// would leave them drawing from the old one. (CImageList::Create over a
 	// live list did exactly that, and leaked it.)
-	if ( normalImageList.GetHandle() == 0 )
+	if ( !normalImageList.IsCreated() )
 	{
-		normalImageList.Create( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y, ILC_COLOR24, 10 );
+		normalImageList.Create( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y, 10 );
 	}
-	if ( smallImageList.GetHandle() == 0 )
+	if ( !smallImageList.IsCreated() )
 	{
-		smallImageList.Create( SMALL_IMAGE_SIZE_X, SMALL_IMAGE_SIZE_Y, ILC_COLOR24, 10 );
+		smallImageList.Create( SMALL_IMAGE_SIZE_X, SMALL_IMAGE_SIZE_Y, 10 );
 	}
 	normalImageList.RemoveAll();
 	smallImageList.RemoveAll();
 	//
-	const int nDefaultNormalImageIndex = normalImageList.Add( hDefaultNormalObjectBitmap, zeroColor );
-	const int nDefaultSmallImageIndex = smallImageList.Add( hDefaultSmallObjectBitmap, zeroColor );
+	const int nDefaultNormalImageIndex = normalImageList.Add( defaultNormalObjectBitmap, zeroColor );
+	const int nDefaultSmallImageIndex = smallImageList.Add( defaultSmallObjectBitmap, zeroColor );
 	// The lists copied them.
-	::DeleteObject( hDefaultNormalObjectBitmap );
-	::DeleteObject( hDefaultSmallObjectBitmap );
+	// wxBitmap frees itself, and the lists copied what they were given.
 	NI_ASSERT( nDefaultNormalImageIndex == nDefaultSmallImageIndex, fmt::format( "nDefaultNormalImageIndex != nDefaultSmallImageIndex" ) );
 	nDefaultImageIndex = nDefaultNormalImageIndex;
 }
@@ -429,24 +432,13 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 																														rszDataExtractorType );
 			if ( ( nFlags & OCDE_NORMAL_BITMAP ) && ( nFlags & OCDE_SMALL_BITMAP ) )
 			{
-				const COLORREF zeroColor = RGB( 0, 0, 0 );
+				const wxColour zeroColor( 0, 0, 0 );
 				//
 				// The pixels become front-end bitmaps here, which is the only place
 				// in this path that has any business knowing what a bitmap is.
-				const HBITMAP hNormalBitmap = NImage::Load2Bitmap( normalImage );
-				const HBITMAP hSmallBitmap = NImage::Load2Bitmap( smallImage );
-				//
-				const int nNormalImageIndex = normalImageList.Add( hNormalBitmap, zeroColor );
-				const int nSmallImageIndex = smallImageList.Add( hSmallBitmap, zeroColor );
-				// The lists copied them.
-				if ( hNormalBitmap != 0 )
-				{
-					::DeleteObject( hNormalBitmap );
-				}
-				if ( hSmallBitmap != 0 )
-				{
-					::DeleteObject( hSmallBitmap );
-				}
+				// The lists copy them; the temporaries free themselves.
+				const int nNormalImageIndex = normalImageList.Add( wxBitmap( NWxImageList::ToWxImage( normalImage ) ), zeroColor );
+				const int nSmallImageIndex = smallImageList.Add( wxBitmap( NWxImageList::ToWxImage( smallImage ) ), zeroColor );
 				NI_ASSERT( nNormalImageIndex == nSmallImageIndex, fmt::format( "nNormalImageIndex != nSmallImageIndex" ) );
 				//
 				pObjectParams->nIconIndex = nNormalImageIndex;
@@ -753,7 +745,7 @@ bool CObjectCollector::GetObjectParams( SObjectParams* pObjectParams, const std:
 
 IImageList* CObjectCollector::GetImageList( int nImageListType )
 {
-	return ( nImageListType == LVSIL_SMALL ) ? &smallImageList : &normalImageList;
+	return ( nImageListType == IObjectCollector::IMAGE_LIST_SMALL ) ? &smallImageList : &normalImageList;
 }
 
 

@@ -19,9 +19,11 @@
 
 namespace NWxResourceImages
 {
-	// The strip nResourceID names, from whichever module holds it, masked; an
-	// invalid image when it cannot be read.
-	inline wxImage LoadStrip( UINT nResourceID )
+	// The BITMAP resource nResourceID names, from whichever module holds it,
+	// with no mask set; an invalid image when it cannot be read. Every read of
+	// a bitmap resource goes through here, so the generated resource tables
+	// have one place to replace when they arrive.
+	inline wxImage ReadBitmapResource( UINT nResourceID )
 	{
 		const LPCTSTR pszResource = MAKEINTRESOURCE( nResourceID );
 		const HBITMAP hBitmap = static_cast<HBITMAP>( ::LoadImage( NResources::FindModule( pszResource, RT_BITMAP ), pszResource,
@@ -64,7 +66,19 @@ namespace NWxResourceImages
 			pRGB[nPixel * 3 + 1] = pixels[nPixel * 4 + 1];
 			pRGB[nPixel * 3 + 2] = pixels[nPixel * 4 + 0];
 		}
-		strip.SetMaskColour( 255, 0, 255 );
+		return strip;
+	}
+
+
+	// A row of 16 pixel icons, magenta made transparent: the editor's own icon
+	// strips are drawn that way.
+	inline wxImage LoadStrip( UINT nResourceID )
+	{
+		wxImage strip = ReadBitmapResource( nResourceID );
+		if ( strip.IsOk() )
+		{
+			strip.SetMaskColour( 255, 0, 255 );
+		}
 		return strip;
 	}
 

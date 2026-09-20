@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MapEditorLib/NativeImageList.h"
+#include "MapEditorLib/WxImageList.h"
 
 #include "Misc/HashFuncs.h"
 #include "Misc/StrProc.h"
@@ -109,8 +109,8 @@ class CObjectCollector : public IObjectCollector
 	int nDefaultImageIndex;
 	// Handed out through IObjectCollector as they are; they live and die with
 	// this collector.
-	CNativeImageList normalImageList;
-	CNativeImageList smallImageList;
+	CWxImageList normalImageList;
+	CWxImageList smallImageList;
 
 	CDataExtractorTypeMap dataExtractorTypeMap;
 	CDataExtractorMap dataExtractorMap;

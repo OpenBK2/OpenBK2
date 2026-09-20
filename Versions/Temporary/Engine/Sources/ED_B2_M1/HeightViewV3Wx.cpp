@@ -11,7 +11,7 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/NativeImageList.h"
+#include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
 
@@ -19,6 +19,11 @@
 #include <wx/checkbox.h>
 #include <wx/image.h>
 #include <wx/listctrl.h>
+
+#ifdef __WXMSW__
+// ListView_SetIconSpacing, which wxListCtrl has no equivalent for.
+#include <commctrl.h>
+#endif
 #include <wx/menu.h>
 #include <wx/scrolwin.h>
 #include <wx/sizer.h>
@@ -27,7 +32,6 @@
 #include <wx/timer.h>
 #include <wx/utils.h>
 
-#include <commctrl.h>
 
 #include <string>
 #include <vector>
@@ -555,30 +559,25 @@ namespace
 		// The tile icons, borrowed from the object collector rather than built
 		// again.
 		//
-		// The collector lives in MapEditor and keeps its cache as Win32 image
-		// lists (CNativeImageList), and wxImageList cannot be handed an
-		// existing HIMAGELIST. Copying instead would mean decoding a 64x64 and a
-		// 16x16 icon for every terrain tile a second time, into a second cache,
-		// for a list that shows the same pictures.
-		//
-		// So the handle is passed straight to the list control. ListView_SetImageList
-		// is exactly the call wxListCtrl::SetImageList makes, and wx creates its
-		// list controls with LVS_SHAREIMAGELISTS, so nothing here takes ownership
-		// of anything.
+		// The collector keeps the cache, as wxImageLists, and SetImageList does
+		// not take ownership -- the same property LVS_SHAREIMAGELISTS gave the
+		// Win32 lists this replaced. Borrowed rather than built again: copying
+		// would mean decoding a 64x64 and a 16x16 icon for every terrain tile a
+		// second time, into a second cache, for a list showing the same
+		// pictures.
 		void AttachTileIcons()
 		{
-			const HWND hList = static_cast<HWND>( pTiles->GetHandle() );
-			if ( hList == 0 )
+			if ( pTiles == 0 )
 			{
 				return;
 			}
-			if ( const HIMAGELIST hNormal = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
+			if ( wxImageList *const pNormal = ToWxImageList( Singleton<IObjectCollector>()->GetImageList( IObjectCollector::IMAGE_LIST_NORMAL ) ) )
 			{
-				ListView_SetImageList( hList, hNormal, LVSIL_NORMAL );
+				pTiles->SetImageList( pNormal, wxIMAGE_LIST_NORMAL );
 			}
-			if ( const HIMAGELIST hSmall = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
+			if ( wxImageList *const pSmall = ToWxImageList( Singleton<IObjectCollector>()->GetImageList( IObjectCollector::IMAGE_LIST_SMALL ) ) )
 			{
-				ListView_SetImageList( hList, hSmall, LVSIL_SMALL );
+				pTiles->SetImageList( pSmall, wxIMAGE_LIST_SMALL );
 			}
 		}
 
@@ -603,12 +602,16 @@ namespace
 				// wxListCtrl exposes no icon spacing, so this is the raw call.
 				// The numbers are the collector's normal icon size plus the gaps
 				// the palettes have always used.
+				// Elsewhere the icons take wx's own spacing: a difference in how
+				// far apart they sit, not in what is shown.
+#ifdef __WXMSW__
 				const HWND hList = static_cast<HWND>( pTiles->GetHandle() );
 				if ( hList != 0 )
 				{
 					ListView_SetIconSpacing( hList, NORMAL_IMAGE_SIZE_X + NORMAL_IMAGE_SPACE_X,
 																	 NORMAL_IMAGE_SIZE_Y + NORMAL_IMAGE_SPACE_Y );
 				}
+#endif
 			}
 			pTiles->Arrange();
 		}

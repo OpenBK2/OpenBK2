@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+// InitCommonControls. This came in through NativeImageList.h until the object
+// collector's image lists became wxImageLists.
+#include <commctrl.h>
 #include "MapEditorLib/Resources.h"
 #include <fmt/format.h>
 #include "MapEditorLib/CommandHandlerDefines.h"
@@ -366,6 +370,8 @@ bool CEditorApp::Initialize( const std::string &rszCommandLine )
 	NGlobal::LoadConfig( "..\\profiles\\startup.cfg" );
 	NGlobal::LoadConfig( "..\\profiles\\editor.cfg" );
 	//
+	// Possibly redundant now: wxMSW initialises the common controls itself
+	// during wxApp start-up. Left alone rather than removed on that assumption.
 	InitCommonControls();
 
 	// Получаем командную строку

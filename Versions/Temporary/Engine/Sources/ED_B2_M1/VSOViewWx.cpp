@@ -16,7 +16,7 @@
 #include "MapEditorLib/Interface_Controller.h"
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
-#include "MapEditorLib/NativeImageList.h"
+#include "MapEditorLib/WxImageList.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -25,6 +25,11 @@
 
 #include <wx/choice.h>
 #include <wx/listctrl.h>
+
+#ifdef __WXMSW__
+// ListView_SetIconSpacing, which wxListCtrl has no equivalent for.
+#include <commctrl.h>
+#endif
 #include <wx/menu.h>
 #include <wx/radiobut.h>
 #include <wx/scrolwin.h>
@@ -34,7 +39,6 @@
 #include <wx/textctrl.h>
 #include <wx/utils.h>
 
-#include <commctrl.h>
 
 #include <cstdio>
 #include <string>
@@ -562,18 +566,17 @@ namespace
 		// LVS_SHAREIMAGELISTS, so nothing here takes ownership.
 		void AttachObjectIcons()
 		{
-			const HWND hList = static_cast<HWND>( pObjects->GetHandle() );
-			if ( hList == 0 )
+			if ( pObjects == 0 )
 			{
 				return;
 			}
-			if ( const HIMAGELIST hNormal = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_NORMAL ) ) )
+			if ( wxImageList *const pNormal = ToWxImageList( Singleton<IObjectCollector>()->GetImageList( IObjectCollector::IMAGE_LIST_NORMAL ) ) )
 			{
-				ListView_SetImageList( hList, hNormal, LVSIL_NORMAL );
+				pObjects->SetImageList( pNormal, wxIMAGE_LIST_NORMAL );
 			}
-			if ( const HIMAGELIST hSmall = ToHImageList( Singleton<IObjectCollector>()->GetImageList( LVSIL_SMALL ) ) )
+			if ( wxImageList *const pSmall = ToWxImageList( Singleton<IObjectCollector>()->GetImageList( IObjectCollector::IMAGE_LIST_SMALL ) ) )
 			{
-				ListView_SetImageList( hList, hSmall, LVSIL_SMALL );
+				pObjects->SetImageList( pSmall, wxIMAGE_LIST_SMALL );
 			}
 		}
 
@@ -594,12 +597,16 @@ namespace
 			if ( bThumbnails )
 			{
 				// wxListCtrl exposes no icon spacing, so this is the raw call.
+				// Elsewhere the icons take wx's own spacing: a difference in how
+				// far apart they sit, not in what is shown.
+#ifdef __WXMSW__
 				const HWND hList = static_cast<HWND>( pObjects->GetHandle() );
 				if ( hList != 0 )
 				{
 					ListView_SetIconSpacing( hList, NORMAL_IMAGE_SIZE_X + NORMAL_IMAGE_SPACE_X,
 																	 NORMAL_IMAGE_SIZE_Y + NORMAL_IMAGE_SPACE_Y );
 				}
+#endif
 			}
 			pObjects->Arrange();
 		}

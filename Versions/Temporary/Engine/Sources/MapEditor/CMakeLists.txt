@@ -62,8 +62,9 @@ add_export_header(MapEditor)
 # keeps the registry profile CWinApp kept.
 target_link_libraries(MapEditor PRIVATE 3DLib 3Dmotor ED_Common Input libdb Main MapEditorLib MemoryLib Misc Script System fmt::fmt-header-only)
 if(WIN32)
-    # comctl32: InitCommonControls and the object collector's image lists,
-    # which MFC's headers used to link through #pragma comment.
+    # comctl32: InitCommonControls in MapEditorApp, which MFC's headers used to
+    # link through #pragma comment. The object collector's image lists wanted it
+    # too until they became wxImageLists.
     # shlwapi: SHDeleteKey in MapEditorApp.cpp, which came in the same way
     # through ATL's atlbase.h until XDB validation stopped using ATL.
     target_link_libraries(MapEditor PRIVATE Htmlhelp winapi comctl32 shlwapi)

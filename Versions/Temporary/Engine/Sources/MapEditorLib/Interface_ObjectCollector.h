@@ -105,7 +105,16 @@ struct IObjectCollector : public CObjectBase
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const std::string &rszObjectTypeName ) = 0;
 	virtual int ApplyFilter( CObjectCollection *pObjectCollection, const IObjectFilter *pObjectFilter ) = 0;
 	virtual bool GetObjectParams( SObjectParams* pObjectParams, const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
-	//
+	// Which of an object's two icon sizes is wanted. The numbers are
+	// wxIMAGE_LIST_NORMAL and wxIMAGE_LIST_SMALL, which are also the
+	// LVSIL_NORMAL and LVSIL_SMALL the list controls were asked with before the
+	// lists were wx's; named here so the interface layer keeps naming no
+	// toolkit.
+	enum EImageListSize
+	{
+		IMAGE_LIST_NORMAL = 0,
+		IMAGE_LIST_SMALL = 1,
+	};
 	virtual IImageList* GetImageList( int nImageListType ) = 0;
 	//
 	virtual void ClearCollection() = 0;
