@@ -80,14 +80,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// Cursor
-//
-
-IDC_DRAG_AND_DROP_MOVE  CURSOR                  "..\\MapEditor\\res\\DragAndDropMove.cur"
-IDC_DRAG_AND_DROP_COPY  CURSOR                  "..\\MapEditor\\res\\DragAndDropCopy.cur"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // String Table
 //
 

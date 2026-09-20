@@ -45,7 +45,7 @@ set(SOURCES
     EditorTestState.cpp
     EditorUpdatableWorld.cpp
     ED_B2_M1Dll.cpp
-    ResourceBitmaps.cpp
+    ResourceBinary.cpp
     ResourceMenus.cpp
     ResourceStrings.cpp
     EffectEditor.cpp
@@ -190,12 +190,9 @@ if(WIN32)
     # used to link through #pragma comment.
     target_link_libraries(ED_B2_M1 PRIVATE legacy_stdio_definitions winapi odbc32 odbccp32)
 endif()
-# The B2 map editor proper: the largest of these, 48 dialogs and the toolbar
-# and tree bitmaps under res/.
-# Windows only: these are Win32 resource scripts.
-if(WIN32)
-    target_sources(ED_B2_M1 PRIVATE ED_B2_M1.rc)
-endif()
+# ED_B2_M1.rc is gone: its strings, menus, toolbars and bitmaps are generated
+# C++ tables now, and nothing was left in it but the resource editor's own
+# bookkeeping. res/ is still where the bitmaps are authored.
 # The palettes and dialogs are wx. See cmake/wxwidgets.cmake for why there are
 # no UNICODE defines.
 target_link_libraries(ED_B2_M1 PRIVATE wx::wx)

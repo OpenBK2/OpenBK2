@@ -1,11 +1,11 @@
-// Generated from ED_B2_M1.rc by scripts/port/rc2bitmaps.py.
+// Generated from ED_B2_M1.rc by scripts/port/rc2binary.py.
 //
-// The editor's bitmaps, which were Win32 BITMAP resources until the PE
-// resource section stopped being available on every platform the editor
-// builds for. This file is the source now.
+// The editor's bitmaps, icons and cursors, which were Win32 resources until
+// the PE resource section stopped being available on every platform the
+// editor builds for. This file is the source now.
 //
-// Each array is a whole .bmp file rather than the headerless DIB a
-// RT_BITMAP held, so wx's own BMP reader takes it as it stands.
+// Each array is a whole file rather than the shape the resource section
+// held, so wx's own readers take them as they stand.
 
 #include "stdafx.h"
 

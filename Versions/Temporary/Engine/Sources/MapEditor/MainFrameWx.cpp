@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MapEditorLib/Resources.h"
+#include "MapEditorLib/WxResourceImages.h"
 
 #include "MainFrameWx.h"
 
@@ -478,31 +479,14 @@ namespace
 	}
 
 
-	// IDR_EDITORTYPE, the icon CFrameWnd::LoadFrame gives the MFC frame, in
-	// the two sizes the title bar and the taskbar use.
+	// IDR_EDITORTYPE, the icon CFrameWnd::LoadFrame gives the MFC frame.
+	//
+	// Every size in the .ico rather than the two the title bar and taskbar ask
+	// for: wx picks the nearest itself, which is what LoadImage did when it was
+	// given a size, and the bundle is what wxTopLevelWindow wants anyway.
 	wxIconBundle LoadFrameIcons()
 	{
-		wxIconBundle icons;
-		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( IDR_EDITORTYPE ), RT_GROUP_ICON );
-		for ( const int nMetric : { SM_CXSMICON, SM_CXICON } )
-		{
-			const int nSize = ::GetSystemMetrics( nMetric );
-			const HICON hIcon = static_cast<HICON>( ::LoadImage( hInstance, MAKEINTRESOURCE( IDR_EDITORTYPE ), IMAGE_ICON, nSize, nSize, 0 ) );
-			if ( hIcon == 0 )
-			{
-				continue;
-			}
-			wxIcon icon;
-			// The icon takes the handle and destroys it.
-			if ( icon.CreateFromHICON( hIcon ) )
-			{
-				icons.AddIcon( icon );
-			}
-			else
-			{
-				::DestroyIcon( hIcon );
-			}
-		}
+		wxIconBundle icons = NWxResourceImages::LoadIconBundle( IDR_EDITORTYPE );
 		return icons;
 	}
 

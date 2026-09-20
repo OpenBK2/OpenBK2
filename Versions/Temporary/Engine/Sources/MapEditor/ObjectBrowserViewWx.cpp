@@ -2428,11 +2428,17 @@ namespace
 			return true;
 		}
 
-		// IDC_DRAG_AND_DROP_MOVE or _COPY, from the editor's resources.
+		// IDC_DRAG_AND_DROP_MOVE or _COPY, built once from the generated tables.
+		//
+		// The handle rather than the wxCursor, because the drag around it is
+		// still Win32 -- SetCapture, SetCursor and the tree's HWND -- and taking
+		// that apart is a separate job from where the cursor comes from.
 		static HCURSOR DragCursor( bool bCopy )
 		{
-			const LPCTSTR pszResource = MAKEINTRESOURCE( bCopy ? IDC_DRAG_AND_DROP_COPY : IDC_DRAG_AND_DROP_MOVE );
-			return ::LoadCursor( NResources::FindModule( pszResource, RT_GROUP_CURSOR ), pszResource );
+			static const wxCursor moveCursor = NWxResourceImages::LoadCursorResource( IDC_DRAG_AND_DROP_MOVE );
+			static const wxCursor copyCursor = NWxResourceImages::LoadCursorResource( IDC_DRAG_AND_DROP_COPY );
+			const wxCursor &rCursor = bCopy ? copyCursor : moveCursor;
+			return rCursor.IsOk() ? reinterpret_cast<HCURSOR>( rCursor.GetHCURSOR() ) : 0;
 		}
 
 		void BeginDrag( bool bCopy )

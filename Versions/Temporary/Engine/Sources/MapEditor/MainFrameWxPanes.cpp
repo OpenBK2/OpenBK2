@@ -248,21 +248,13 @@ namespace NMainFrameWxPanes
 
 	void CToolBarImages::AddIcon( unsigned nCommandID, unsigned nIconID )
 	{
-		const HINSTANCE hInstance = NResources::FindModule( MAKEINTRESOURCE( nIconID ), RT_GROUP_ICON );
-		const HICON hIcon = static_cast<HICON>( ::LoadImage( hInstance, MAKEINTRESOURCE( nIconID ), IMAGE_ICON, 16, 16, 0 ) );
-		if ( hIcon == 0 )
-		{
-			return;
-		}
-		wxIcon icon;
-		// The icon takes the handle and destroys it.
-		if ( icon.CreateFromHICON( hIcon ) )
+		// 16x16, the size the toolbars draw at; wx takes it from whichever image
+		// in the .ico is nearest.
+		const wxIconBundle icons = NWxResourceImages::LoadIconBundle( nIconID );
+		const wxIcon icon = icons.GetIcon( wxSize( 16, 16 ) );
+		if ( icon.IsOk() )
 		{
 			bitmaps[nCommandID] = wxBitmap( icon );
-		}
-		else
-		{
-			::DestroyIcon( hIcon );
 		}
 	}
 

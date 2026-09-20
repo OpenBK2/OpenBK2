@@ -6,12 +6,6 @@
 
 namespace
 {
-	std::vector<HINSTANCE>& Modules()
-	{
-		static std::vector<HINSTANCE> modules;
-		return modules;
-	}
-
 	struct STable
 	{
 		const NResources::SStringEntry *pEntries;
@@ -84,33 +78,6 @@ namespace
 
 namespace NResources
 {
-	HINSTANCE FindModule( LPCSTR pszName, LPCSTR pszType )
-	{
-		const HINSTANCE hExecutable = ::GetModuleHandleA( nullptr );
-		if ( ::FindResourceA( hExecutable, pszName, pszType ) != 0 )
-		{
-			return hExecutable;
-		}
-		for ( const HINSTANCE hModule : Modules() )
-		{
-			if ( ::FindResourceA( hModule, pszName, pszType ) != 0 )
-			{
-				return hModule;
-			}
-		}
-		return 0;
-	}
-
-
-	void RegisterModule( HINSTANCE hModule )
-	{
-		if ( hModule != 0 )
-		{
-			Modules().push_back( hModule );
-		}
-	}
-
-
 	CStringTable::CStringTable( const SStringEntry *pEntries, size_t nCount )
 	{
 		if ( ( pEntries != nullptr ) && ( nCount > 0 ) )

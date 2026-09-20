@@ -88,9 +88,8 @@ class CEditorModuleB2M1 : public IEditorModule
 void CEditorModuleB2M1::ModuleStartup()
 {
 	// не существует еще <все> кроме Singleton<IUserDataContainer>()
-	// This module's resources, for NResources to look in after the
-	// executable's; they were found through MFC's resource chain before.
-	NResources::RegisterModule( theEDB2M1Instance );
+	// This module's resources register themselves: its generated tables are
+	// namespace-scope objects, constructed when the module loads.
 }
 
 void CEditorModuleB2M1::ModuleShutdown()

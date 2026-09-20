@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 #
-# Turn a Win32 .rc file's BITMAP statements into a C++ byte table.
+# Turn a Win32 .rc file's BITMAP, ICON and CURSOR statements into a C++ byte
+# table.
 #
 # Windows keeps resources in a section of the PE file. ELF has no equivalent,
 # so the editor's bitmaps become arrays in initialised read-only data, which is
@@ -8,23 +9,28 @@
 # conversion: its output is committed as the new source and the BITMAP
 # statements are deleted from the .rc.
 #
-# The whole .bmp file is embedded, header and all, rather than the headerless
-# DIB that RT_BITMAP stores. wx reads a .bmp file directly, so nothing has to
-# reconstruct a BITMAPFILEHEADER to hand it one.
+# The whole file is embedded, header and all, rather than the shape the PE
+# resource section holds (a headerless DIB for RT_BITMAP, a hotspot and a DIB
+# for RT_CURSOR, a directory plus images for RT_GROUP_ICON). wx reads .bmp,
+# .ico and .cur files directly, so nothing has to reconstruct a header to hand
+# it one.
+#
+# The ICON statements stay in the .rc as well as being embedded: the shell
+# reads an executable's icon out of the PE and nothing else can give it one.
 #
 # The ids are not resolved: the generated file includes the same
 # ResourceDefines.h the .rc did and names the macros.
 #
 # Usage:
-#   scripts/port/rc2bitmaps.py <input.rc> <output.cpp> --defines <header>
-#                              [--include <header> ...] [--skip <ID> ...]
+#   scripts/port/rc2binary.py <input.rc> <output.cpp> --defines <header>
+#                             [--include <header> ...] [--skip <ID> ...]
 
 import argparse
 import os
 import re
 import sys
 
-STATEMENT = re.compile( r'^\s*([A-Za-z_]\w*)\s+BITMAP\s+(?:[A-Z]+\s+)*"([^"]+)"\s*$', re.M )
+STATEMENT = re.compile( r'^\s*([A-Za-z_]\w*)\s+(?:BITMAP|ICON|CURSOR)\s+(?:[A-Z]+\s+)*"([^"]+)"\s*$', re.M )
 
 
 def resolve( root, spelling ):
@@ -73,17 +79,17 @@ def main():
         with open( path, "rb" ) as handle:
             entries.append( ( name, os.path.basename( path ), handle.read() ) )
     if not entries:
-        sys.exit( "no BITMAP statements in {}".format( args.source ) )
+        sys.exit( "no BITMAP, ICON or CURSOR statements in {}".format( args.source ) )
 
     lines = [
-        "// Generated from {} by scripts/port/rc2bitmaps.py.".format( os.path.basename( args.source ) ),
+        "// Generated from {} by scripts/port/rc2binary.py.".format( os.path.basename( args.source ) ),
         "//",
-        "// The editor's bitmaps, which were Win32 BITMAP resources until the PE",
-        "// resource section stopped being available on every platform the editor",
-        "// builds for. This file is the source now.",
+        "// The editor's bitmaps, icons and cursors, which were Win32 resources until",
+        "// the PE resource section stopped being available on every platform the",
+        "// editor builds for. This file is the source now.",
         "//",
-        "// Each array is a whole .bmp file rather than the headerless DIB a",
-        "// RT_BITMAP held, so wx's own BMP reader takes it as it stands.",
+        "// Each array is a whole file rather than the shape the resource section",
+        "// held, so wx's own readers take them as they stand.",
         "",
         '#include "stdafx.h"',
         "",
@@ -118,7 +124,7 @@ def main():
     with open( args.output, "w", encoding = "utf-8", newline = "\n" ) as handle:
         handle.write( "\n".join( lines ) )
     total = sum( len( d ) for _, _, d in entries )
-    print( "{} -> {}: {} bitmaps, {} bytes".format( args.source, args.output, len( entries ), total ) )
+    print( "{} -> {}: {} resources, {} bytes".format( args.source, args.output, len( entries ), total ) )
 
 
 if __name__ == "__main__":

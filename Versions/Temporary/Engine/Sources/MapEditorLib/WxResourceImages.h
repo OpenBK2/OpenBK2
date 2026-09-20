@@ -15,7 +15,10 @@
 
 
 #include <wx/bitmap.h>
+#include <wx/cursor.h>
+#include <wx/iconbndl.h>
 #include <wx/image.h>
+#include <wx/imagbmp.h>
 #include <wx/log.h>
 #include <wx/mstream.h>
 
@@ -44,6 +47,68 @@ namespace NWxResourceImages
 			return wxImage();
 		}
 		return image;
+	}
+
+
+	// wx registers the BMP handler itself but not the ICO and CUR ones, and
+	// nothing in this tree calls wxInitAllImageHandlers. Added on first use
+	// rather than at start-up so no module has to remember to do it.
+	inline void EnsureIconHandlers()
+	{
+		static const bool bAdded = []()
+		{
+			if ( wxImage::FindHandler( wxBITMAP_TYPE_ICO ) == nullptr )
+			{
+				wxImage::AddHandler( new wxICOHandler );
+			}
+			if ( wxImage::FindHandler( wxBITMAP_TYPE_CUR ) == nullptr )
+			{
+				wxImage::AddHandler( new wxCURHandler );
+			}
+			return true;
+		}();
+		( void ) bAdded;
+	}
+
+
+	// Every size in the icon nResourceID names. wx picks the nearest of them
+	// for whatever it is asked for, which is what LoadImage did when it was
+	// given a size; an empty bundle when there is no such icon.
+	inline wxIconBundle LoadIconBundle( unsigned nResourceID )
+	{
+		const unsigned char *pData = nullptr;
+		size_t nSize = 0;
+		if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
+		{
+			return wxIconBundle();
+		}
+		EnsureIconHandlers();
+		wxMemoryInputStream stream( pData, nSize );
+		wxLogNull noLog;
+		return wxIconBundle( stream, wxBITMAP_TYPE_ICO );
+	}
+
+
+	// The cursor nResourceID names, hotspot and all: wx reads the hotspot out
+	// of the .cur and sets it on the image. An invalid cursor when there is no
+	// such resource. Not LoadCursor: that is a windows.h macro.
+	inline wxCursor LoadCursorResource( unsigned nResourceID )
+	{
+		const unsigned char *pData = nullptr;
+		size_t nSize = 0;
+		if ( !NResources::GetBinaryResource( nResourceID, &pData, &nSize ) )
+		{
+			return wxCursor();
+		}
+		EnsureIconHandlers();
+		wxMemoryInputStream stream( pData, nSize );
+		wxLogNull noLog;
+		wxImage image;
+		if ( !image.LoadFile( stream, wxBITMAP_TYPE_CUR ) )
+		{
+			return wxCursor();
+		}
+		return wxCursor( image );
 	}
 
 

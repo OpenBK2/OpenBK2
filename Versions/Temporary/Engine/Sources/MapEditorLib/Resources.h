@@ -5,29 +5,23 @@
 #include <cstddef>
 #include <string>
 
-// The editor's Win32 resources -- strings, menus, accelerators, icons, cursors,
-// bitmaps, toolbars -- found without MFC.
+// The editor's resources: strings, menus, accelerators, toolbars, bitmaps,
+// icons and cursors.
 //
-// MFC found them through its resource handle, which callers swapped with
-// AfxSetResourceHandle to point at the DLL whose .rc had the id, and
-// AfxFindResourceHandle, which searched that handle and then MFC's extension
-// DLL chain. None of that is needed: B2_MapEditor.exe's b2_res.rc includes
-// MapEditor.rc and ED_B2_M1.rc, so every resource the editor asks for is in
-// the executable, and a module whose resources are not can register itself.
+// These were Win32 resources in a section of the PE file, found first through
+// MFC's resource handle chain and then, once MFC was gone, through
+// FindResource over the executable and the modules that registered themselves.
+// ELF has no resource section, so they are generated C++ tables now, one set
+// per module in that module's ResourceStrings.cpp, ResourceBinary.cpp and
+// ResourceMenus.cpp, each registering itself as it is constructed.
 //
-// Strings come back as UTF-8, read with LoadStringW, like every narrow string
-// in the tree.
+// What stays in the .rc, on Windows only, is what the shell reads out of the
+// PE and nothing else can provide: VERSIONINFO, the application icon and the
+// manifest. The icons the editor draws itself are in the tables as well.
+//
+// Strings are UTF-8, like every narrow string in the tree.
 namespace NResources
 {
-	// The module whose resources hold pszName of pszType, as the Win32
-	// FindResource calls take them (MAKEINTRESOURCE ids work): the executable
-	// first, then the registered modules in the order they registered. Null
-	// when none has it.
-	MAPEDITORLIB_EXPORT HINSTANCE FindModule( LPCSTR pszName, LPCSTR pszType );
-
-	// A module to search after the executable.
-	MAPEDITORLIB_EXPORT void RegisterModule( HINSTANCE hModule );
-
 	// One entry of a module's generated string table.
 	//
 	// The strings were a Win32 STRINGTABLE, found with LoadStringW, until the
