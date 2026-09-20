@@ -76,6 +76,24 @@ namespace
 			{
 				pOwner->Update();
 			}
+			// **Do not add a YieldFor here.** One was tried, on the belief that
+			// wxGTK's Update() only queues the redraw where MSW's paints it, and
+			// both halves of that were wrong.
+			//
+			// Update() does paint synchronously on GTK. A backtrace of the editor
+			// mid-load goes straight through it -- wxWindow::Update ->
+			// gtk_main_do_event -> draw -> GTKSendPaintEvents -> OnPaint -- so
+			// the dialog was never the thing failing to repaint.
+			//
+			// And YieldFor's category filter does not do off Windows what its
+			// name suggests. wxEVT_CATEGORY_UI is meant to leave timers alone,
+			// but a wxTimer on GTK is a GLib timeout rather than a queued
+			// wxEvent, and DoYieldFor runs gtk_main_iteration, which dispatches
+			// it whatever the filter says. So every IteratePosition during a map
+			// load -- there are eighteen in CMapInfoState::Enter alone -- fired
+			// the scene update timer, which stepped the game and drew the whole
+			// scene, and on a software Vulkan rasteriser each of those takes
+			// most of a second. The load stopped finishing.
 		}
 
 		void SetProgressTitle( const std::string &rszTitle )
@@ -169,6 +187,21 @@ namespace
 		{
 			if ( dialog )
 			{
+				// Hidden before it is destroyed, because wxWindow::Destroy does
+				// not destroy anything: it puts the window on wxPendingDelete and
+				// the event loop deletes it when it next goes idle. That is
+				// normally the same moment, and here it is not.
+				//
+				// The viewport redraws from a repeating timer, which on GTK is a
+				// g_timeout at default priority, and idle sources are below that.
+				// Where a frame costs more than the timer's interval -- a software
+				// rasteriser, which is what a machine with no GPU gets -- the
+				// timeout is ready again as soon as it returns, the loop never
+				// reaches idle, and the dialog stays on screen after the work it
+				// was reporting has finished. It cannot repaint either, since its
+				// paint events are behind the same timer, so what is left on
+				// screen is whatever was under it.
+				dialog->Hide();
 				dialog->Destroy();
 				dialog = nullptr;
 			}
