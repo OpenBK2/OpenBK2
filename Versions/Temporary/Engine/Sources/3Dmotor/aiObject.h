@@ -88,7 +88,12 @@ struct SConvexHull
 	SConvexHull( const std::vector<CVec3> &_points, const CEdgesInfo &_tris, const SHMatrix &_trans,
 		SSourceInfo &_src, int _nUserID )//, const vector<CPtr<CPrecalcSpheres> > &_precalc )
 	: points(_points), tris(_tris), trans(_trans), src(_src), nUserID(_nUserID) {}//, precalc(_precalc) {}
-	int operator&( CStructureSaver &f ) { ASSERT(0&&"This struct could not be serialized!"); }
+	// Present so the struct satisfies the serializable shape, never meant to run:
+	// it holds references and cannot be rebuilt from a stream. The ASSERT says
+	// so and compiles to nothing, because _DO_ASSERT_SLOW is not set in this
+	// tree and ASSERT then does not evaluate its argument, so what was left was
+	// a function returning int that fell off its end.
+	int operator&( CStructureSaver &f ) { ASSERT(0&&"This struct could not be serialized!"); return 0; }
 };
 
 //! group of entities; entity terrain is represented with several SConvexHull
