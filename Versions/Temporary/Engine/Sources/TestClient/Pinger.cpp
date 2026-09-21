@@ -6,6 +6,9 @@
 #include "Client/ServerClient.h"
 #include "Server_Client_Common/LoginPackets.h"
 
+#include <filesystem>
+#include <system_error>
+
 const int MAX_ATTEMPTS = 3;
 
 CPinger::CPinger()
@@ -59,7 +62,12 @@ bool CPinger::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 	}
 	else
 	{
-		DeleteFile( "server_is_down" );
+		// The marker the supervisor watches for. std::filesystem rather than
+		// DeleteFile, and the overload taking an error_code rather than the one
+		// that throws: this is a watchdog, and a marker that is already gone is
+		// the ordinary case rather than a problem.
+		std::error_code removeError;
+		std::filesystem::remove( "server_is_down", removeError );
 		WriteMSG( "Pinger: Server is up!\n" );
 		nAttemptsLeft = MAX_ATTEMPTS;
 	}
