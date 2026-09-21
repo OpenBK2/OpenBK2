@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Server_Client_Common_export.h"
+
 #include "CommandsInterface.h"
 
 enum EServerClientCommands
@@ -64,7 +66,7 @@ enum EServerClientCommands
 	ESC_HELP,
 };
 
-class CCommands : public CCommandsBase
+class SERVER_CLIENT_COMMON_EXPORT CCommands : public CCommandsBase
 {
 	OBJECT_NOCOPY_METHODS( CCommands );
 
