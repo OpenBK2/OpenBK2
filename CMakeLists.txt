@@ -168,6 +168,7 @@ if(BUILD_EDITOR)
     include(cmake/wxwidgets.cmake)
 endif()
 if(BUILD_SERVER)
+    include(cmake/mariadb.cmake)
     include(cmake/sqlite.cmake)
 endif()
 
