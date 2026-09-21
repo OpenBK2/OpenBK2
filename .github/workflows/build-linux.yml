@@ -1,0 +1,111 @@
+name: Build (Linux)
+
+# A gate, not a release job. It proves the tree still builds off Windows and that
+# the unit tests pass there, and it publishes nothing: there is no Linux release
+# to cut, and the install rules still expect game data that is not checked out
+# here.
+#
+# BUILD_EDITOR=ON, so the one job covers everything. The editor configuration is
+# a superset of the game one -- the engine libraries and Game are built either
+# way -- and the editor is what the Linux port is for, so building it without
+# the editor would leave the part most likely to regress unwatched. The cost is
+# wxWidgets, which is built from source and dominates the job until its cache is
+# warm.
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    env:
+      # Both outside out/build, so the cache steps can restore and save them
+      # without reaching into the build tree.
+      DXVK_ROOT: ${{ github.workspace }}/.dxvk
+      WX_ROOT: ${{ github.workspace }}/.wx/Linux-x64-Release
+
+    steps:
+      # Only what the build reads. The full tree is 11 GB and 238k files, almost
+      # all of it game data; see build-windows.yml for the reasoning. Note that
+      # Versions/Current is deliberately absent, so the four DDS tests that read
+      # the shipped textures skip themselves rather than fail.
+      - name: Checkout repository (with submodules)
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          filter: blob:none
+          sparse-checkout: |
+            .github
+            cmake
+            third_party
+            Versions/Temporary/Engine/Sources
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-linux-build
+        with:
+          dxvk-root: ${{ env.DXVK_ROOT }}
+          ccache-key: linux-editor
+          ccache-max-size: 2G
+
+      # cmake/wxwidgets.cmake decides whether an install can be reused by
+      # comparing the build id recorded inside it against what this revision
+      # would build, so the lookup is by prefix and a stale install is harmless.
+      - name: Restore wxWidgets
+        id: wx-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ env.WX_ROOT }}
+          key: wx-Linux-x64-Release
+          restore-keys: wx-Linux-x64-Release-
+
+      - name: Configure with preset
+        run: >
+          cmake --preset Linux-x64-Release
+          -DBUILD_EDITOR=ON
+          "-DWX_ROOT=${{ env.WX_ROOT }}"
+
+      - name: Build with preset
+        run: cmake --build --preset Linux-x64-Release --parallel
+
+      # Saved under the build id, and only when that differs from what was
+      # restored, which is exactly when this job built wx. The id file is written
+      # last, so its presence also means the install finished.
+      - name: Name the wxWidgets install
+        id: wx-id
+        run: |
+          id_file="$WX_ROOT/wx-build-id.txt"
+          if [ -f "$id_file" ]; then
+            echo "key=wx-Linux-x64-Release-$(cat "$id_file")" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Save wxWidgets
+        if: steps.wx-id.outputs.key != '' && steps.wx-id.outputs.key != steps.wx-restore.outputs.cache-matched-key
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ env.WX_ROOT }}
+          key: ${{ steps.wx-id.outputs.key }}
+
+      # The tests are EXCLUDE_FROM_ALL, so the build above does not touch them.
+      # add_unit_test puts each one into this aggregate target, which means a new
+      # test needs no change here. -k 0 goes after --, since it is Ninja's
+      # keep-going flag and not a cmake --build option.
+      - name: Build tests
+        run: cmake --build out/build/Linux-x64-Release --parallel --target unittests -- -k 0
+
+      - name: Run tests
+        run: >
+          ctest --test-dir out/build/Linux-x64-Release
+          -L obk2-test --output-on-failure
+          --output-junit ${{ github.workspace }}/tests-linux.xml
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: tests-linux
+          path: tests-linux.xml

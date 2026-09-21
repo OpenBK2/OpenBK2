@@ -65,12 +65,46 @@
         "value": "host=x86",
         "strategy": "external"
       }
+    },
+    {
+      "name": "base-linux",
+      "hidden": true,
+      "displayName": "Base Linux Ninja Preset",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/${presetName}",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_VERBOSE_MAKEFILE": "ON"
+      }
+    },
+    {
+      "name": "Linux-x64-Debug",
+      "inherits": "base-linux",
+      "displayName": "Linux / x64 / Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "Linux-x64-Release",
+      "inherits": "base-linux",
+      "displayName": "Linux / x64 / Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
     }
   ],
   "buildPresets": [
     { "name": "Windows-x64-Debug", "configurePreset": "Windows-x64-Debug" },
     { "name": "Windows-x64-Release", "configurePreset": "Windows-x64-Release" },
     { "name": "Windows-x86-Debug", "configurePreset": "Windows-x86-Debug" },
-    { "name": "Windows-x86-Release", "configurePreset": "Windows-x86-Release" }
+    { "name": "Windows-x86-Release", "configurePreset": "Windows-x86-Release" },
+    { "name": "Linux-x64-Debug", "configurePreset": "Linux-x64-Debug" },
+    { "name": "Linux-x64-Release", "configurePreset": "Linux-x64-Release" }
   ]
 }

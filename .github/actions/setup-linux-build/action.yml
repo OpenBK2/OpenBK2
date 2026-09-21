@@ -1,0 +1,119 @@
+name: Setup Linux build environment
+description: >
+  The system packages, DXVK Native and ccache that a Linux build needs. Kept in
+  one place for the same reason the Windows action is: the build and any later
+  test workflow have to agree on the environment, and DXVK in particular has to
+  be built from source, which is slow enough to be worth getting right once.
+
+inputs:
+  dxvk-root:
+    description: Where DXVK Native is installed, and what PKG_CONFIG_PATH is pointed at
+    required: true
+  dxvk-commit:
+    description: >
+      Which DXVK to build. Pinned to the revision the port is developed against
+      rather than to a release tag, so CI and a developer's tree disagree about
+      nothing. Named once here because it is both what gets built and what names
+      the cache entry.
+    required: false
+    default: 88bfe4e7e18a18d97fbae2593e9db624484837a2
+  ccache-key:
+    description: >
+      Name of this job's compiler cache. Each job that builds something
+      different needs its own, since a job saves only what it used.
+    required: true
+  ccache-max-size:
+    description: Upper bound on the compiler cache this job saves
+    required: false
+    default: 1500M
+
+runs:
+  using: composite
+  steps:
+    # Not the distribution's. Ubuntu 24.04 ships CMake 3.28, and while the tree
+    # still declares 3.23 as its minimum, it is developed and tested against a
+    # much newer one -- cmake/squish.cmake in particular relies on
+    # FetchContent_MakeAvailable skipping add_subdirectory for a SOURCE_SUBDIR
+    # that holds no CMakeLists.txt. Ninja comes from here too, the way the
+    # Windows job takes it from an action rather than the runner image.
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@latest
+
+    # Grouped by what wants them, because a missing one of these fails a job
+    # fifteen minutes in with an error that names a header rather than a package.
+    #
+    #   the build itself      pkg-config and a compiler; CMake and Ninja come
+    #                         from the step above
+    #   DXVK Native           meson, glslangValidator, the Vulkan headers, and
+    #                         SDL2 for its window system layer (see below)
+    #   wxWidgets             GTK 3, built from source by cmake/wxwidgets.cmake
+    #   crashpad              libcurl
+    #   ffmpeg                taken from the system off Windows, through
+    #                         pkg-config, with version floors in
+    #                         cmake/ffmpeg.cmake
+    #   SDL3 and SDL3_mixer   fetched and built here, and they pick their
+    #                         backends from whatever dev packages are present
+    - name: Install system packages
+      shell: bash
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          build-essential pkg-config \
+          meson glslang-tools libvulkan-dev libsdl2-dev \
+          libgtk-3-dev \
+          libcurl4-openssl-dev zlib1g-dev \
+          libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libswresample-dev \
+          libasound2-dev libpulse-dev libxkbcommon-dev libwayland-dev
+
+    # DXVK Native is what stands in for the DirectX SDK off Windows: it
+    # implements D3D9 over Vulkan and ships the windows.h shim that HWND,
+    # HRESULT and the STDMETHOD macros come from. See cmake/dxvk.cmake.
+    #
+    # There are no prebuilt native binaries -- DXVK's releases are Windows DLLs
+    # -- so it is built here and cached under the commit it was built from.
+    - name: Restore DXVK Native
+      id: dxvk-cache
+      uses: actions/cache@v5
+      with:
+        path: ${{ inputs.dxvk-root }}
+        key: dxvk-native-${{ inputs.dxvk-commit }}-ubuntu24
+
+    - name: Build DXVK Native
+      if: steps.dxvk-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        set -eux
+        git clone https://github.com/doitsujin/dxvk.git "$RUNNER_TEMP/dxvk"
+        cd "$RUNNER_TEMP/dxvk"
+        git checkout "${{ inputs.dxvk-commit }}"
+        git submodule update --init --recursive --depth 1
+        # One of SDL3, SDL2 or GLFW is required: dxvk-native refuses to
+        # configure without a window system layer, even though nothing in this
+        # workflow presents a frame. SDL2 is named explicitly because it is the
+        # one Ubuntu 24.04 packages; a developer's build uses SDL3, which is
+        # also what ED_Common's viewport wraps. That difference is invisible to
+        # everything CI does, and is the one thing this job cannot vouch for.
+        meson setup build.native \
+          --prefix="${{ inputs.dxvk-root }}" \
+          --buildtype=release \
+          -Dnative_sdl2=enabled \
+          -Dnative_sdl3=disabled \
+          -Dnative_glfw=disabled
+        ninja -C build.native install
+
+    # cmake/dxvk.cmake finds DXVK through pkg-config and nothing else, and bakes
+    # the library directory into the rpath so the tests can load it later.
+    - name: Export DXVK to pkg-config
+      shell: bash
+      run: |
+        echo "PKG_CONFIG_PATH=${{ inputs.dxvk-root }}/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH" >> "$GITHUB_ENV"
+
+    # Same arrangement as the Windows action: ccache on PATH, where
+    # cmake/ccache.cmake picks it up at configure time, one cache per job, and
+    # whatever this job did not use dropped before saving.
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+        key: ${{ inputs.ccache-key }}
+        max-size: ${{ inputs.ccache-max-size }}
+        evict-old-files: job
