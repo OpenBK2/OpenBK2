@@ -457,6 +457,172 @@ TEST( DDSWrite, ReEncodingAFlatTextureReproducesTheOriginalBlock )
 	EXPECT_DOUBLE_EQ( 0.0, RMSE( original, again ) );
 }
 
+// The image type aware mip chain, which the D3DX writer did not have.
+//
+// These use A8R8G8B8 so the levels can be read straight out of the file with no
+// compression in the way. Mip 1 of a 16x16 image starts at 128 + 16*16*4.
+
+namespace {
+
+const uint32_t *MipLevel( const std::vector<uint8_t> &bytes, int nSizeX, int nSizeY, int nLevel )
+{
+	size_t nOffset = sizeof(SDDSFileHeader);
+	for ( int i = 0; i < nLevel; ++i )
+	{
+		nOffset += static_cast<size_t>( (std::max)( 1, nSizeX >> i ) ) * (std::max)( 1, nSizeY >> i ) * 4;
+	}
+	return reinterpret_cast<const uint32_t *>( &bytes[nOffset] );
+}
+
+//! Opaque white on the left, fully transparent red on the right. The red is
+//! invisible, so nothing in a correctly filtered mip chain should ever show it.
+CArray2D<uint32_t> MakeCutOut( int nSize )
+{
+	CArray2D<uint32_t> image;
+	image.SetSizes( nSize, nSize );
+	for ( int y = 0; y < nSize; ++y )
+	{
+		for ( int x = 0; x < nSize; ++x )
+			image[y][x] = ( x < nSize / 2 ) ? 0xffffffffu : 0x00ff0000u;
+	}
+	return image;
+}
+
+} // namespace
+
+// IMAGE_TYPE_TRANSPARENT stores the texture premultiplied, which is what the
+// renderer's blend mode expects. Mip 0 is the level where that is exactly
+// checkable: colour scaled by alpha, alpha kept, and so a fully transparent
+// texel reduced to zero whatever colour it had.
+//
+// Note what this deliberately does not claim. Premultiplication happens after
+// each level has been averaged, and GenerateMipLevel averages each channel on
+// its own, so colour from invisible texels does reach the lower levels. That is
+// the original pipeline's behaviour and restoring it faithfully was the point;
+// it is not what this filtering is for.
+TEST( DDSWrite, TransparentIsStoredPremultiplied )
+{
+	const int nSize = 16;
+	const CArray2D<uint32_t> src = MakeCutOut( nSize );
+	const std::filesystem::path path = TempFile( "obk2_dds_cutout.dds" );
+	std::error_code ec;
+	std::filesystem::remove( path, ec );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT,
+		NGfx::CF_A8R8G8B8, 3, false, false, 1024.0f ) );
+	const std::vector<uint8_t> bytes = ReadFile( path );
+	std::filesystem::remove( path, ec );
+	ASSERT_GT( bytes.size(), sizeof(SDDSFileHeader) );
+
+	const uint32_t *pLevel0 = MipLevel( bytes, nSize, nSize, 0 );
+	for ( int y = 0; y < nSize; ++y )
+	{
+		for ( int x = 0; x < nSize; ++x )
+		{
+			const uint32_t nPixel = pLevel0[y * nSize + x];
+			if ( x < nSize / 2 )
+			{
+				// Opaque white stays opaque white.
+				ASSERT_EQ( 0xffffffffu, nPixel ) << "at " << x << "," << y;
+			}
+			else
+			{
+				// Transparent red: the red is multiplied away.
+				ASSERT_EQ( 0u, nPixel ) << "invisible colour survived at " << x << "," << y;
+			}
+		}
+	}
+}
+
+// Additive blending takes its weight from the colour, so alpha is folded into
+// the colour and then zeroed. Every texel of every level must come out with no
+// alpha at all.
+TEST( DDSWrite, TransparentAddZeroesAlpha )
+{
+	const int nSize = 16;
+	const CArray2D<uint32_t> src = MakeImage( nSize, nSize, true );
+	const std::filesystem::path path = TempFile( "obk2_dds_add.dds" );
+	std::error_code ec;
+	std::filesystem::remove( path, ec );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_TRANSPARENT_ADD,
+		NGfx::CF_A8R8G8B8, 2, true, true, 1024.0f ) );
+	const std::vector<uint8_t> bytes = ReadFile( path );
+	std::filesystem::remove( path, ec );
+	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 2 ), bytes.size() );
+
+	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof(SDDSFileHeader)] );
+	const size_t nCount = ( bytes.size() - sizeof(SDDSFileHeader) ) / 4;
+	for ( size_t i = 0; i < nCount; ++i )
+		ASSERT_EQ( 0u, pPixels[i] >> 24 ) << "alpha survived at texel " << i;
+}
+
+// A bump texture is a height field on the way in and normals on the way out, so
+// mip 0 cannot be a copy of the source. Nothing here pins the normals
+// themselves; it pins that the conversion happens at all, which is what
+// silently stopped when the writer moved to D3DX.
+TEST( DDSWrite, BumpIsConvertedToNormals )
+{
+	const int nSize = 16;
+	const CArray2D<uint32_t> src = MakeImage( nSize, nSize, false );
+	const std::filesystem::path path = TempFile( "obk2_dds_bump.dds" );
+	std::error_code ec;
+	std::filesystem::remove( path, ec );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_BUMP,
+		NGfx::CF_A8R8G8B8, 1, true, true, 1024.0f ) );
+	const std::vector<uint8_t> bytes = ReadFile( path );
+	std::filesystem::remove( path, ec );
+	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 1 ), bytes.size() );
+
+	const uint32_t *pPixels = reinterpret_cast<const uint32_t *>( &bytes[sizeof(SDDSFileHeader)] );
+	bool bDiffers = false;
+	for ( int y = 0; y < nSize && !bDiffers; ++y )
+	{
+		for ( int x = 0; x < nSize; ++x )
+		{
+			if ( pPixels[y * nSize + x] != src[y][x] )
+			{
+				bDiffers = true;
+				break;
+			}
+		}
+	}
+	EXPECT_TRUE( bDiffers ) << "bump texture written through unchanged, normals were not generated";
+}
+
+// FASTMIP is the one type that asks for no per-level work, and it still gets
+// none. The tolerance is not slack: Scale's Lanczos3 weights do not sum to
+// exactly one, so resampling a flat colour walks every channel down by about
+// two counts per level. That is pre-existing behaviour of the fast path and is
+// why the other image types do not use it.
+TEST( DDSWrite, FastMipStillProducesAFullChain )
+{
+	const int nSize = 16;
+	CArray2D<uint32_t> src;
+	src.SetSizes( nSize, nSize );
+	for ( int y = 0; y < nSize; ++y )
+	{
+		for ( int x = 0; x < nSize; ++x )
+			src[y][x] = 0xff4080c0u;
+	}
+	const std::filesystem::path path = TempFile( "obk2_dds_fast.dds" );
+	std::error_code ec;
+	std::filesystem::remove( path, ec );
+	ASSERT_TRUE( NImage::ConvertAndSaveAsDDS( path.string(), src, NImage::IMAGE_TYPE_PICTURE_FASTMIP,
+		NGfx::CF_A8R8G8B8, 3, true, true, 1024.0f ) );
+	const std::vector<uint8_t> bytes = ReadFile( path );
+	std::filesystem::remove( path, ec );
+	ASSERT_EQ( sizeof(SDDSFileHeader) + ExpectedSize( nSize, nSize, NGfx::CF_A8R8G8B8, 3 ), bytes.size() );
+	EXPECT_EQ( 3u, HeaderOf( bytes ).dwMipMapCount );
+
+	const uint32_t *pLevel2 = MipLevel( bytes, nSize, nSize, 2 );
+	for ( int nShift = 0; nShift <= 24; nShift += 8 )
+	{
+		const int nWant = ( 0xff4080c0u >> nShift ) & 0xff;
+		const int nGot = ( pLevel2[0] >> nShift ) & 0xff;
+		EXPECT_LE( std::abs( nWant - nGot ), 4 )
+			<< "a flat colour drifted too far, channel at bit " << nShift;
+	}
+}
+
 // The engine's own decoder, against the reference, on the real textures.
 //
 // UnpackDXT had two faults and both are fixed: it widened the 5 and 6 bit

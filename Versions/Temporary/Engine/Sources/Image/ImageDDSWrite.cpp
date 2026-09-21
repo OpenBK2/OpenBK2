@@ -4,6 +4,8 @@
 
 #include "DDS.h"
 #include "ImageInternal.h"		// SPixelConvertInfo
+#include "ImageConvertor.h"	// Convert, between packed ARGB and CVec4
+#include "ImageMip.h"				// GenerateMipLevel, GenerateNormals
 #include "ImageScale.h"
 
 #include "System/FilePath.h"
@@ -201,6 +203,104 @@ static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPix
 		pHdr->dwSurfaceFlags |= DDS_SURFACE_ALPHA;
 }
 
+// ************************************************************************************************************************ //
+// **
+// ** Image type aware mip generation
+// **
+// ** The mip chain is not a plain resize. What a texel means decides how it may
+// ** be averaged, and averaging it wrongly shows up as haloes on cut-outs,
+// ** flattened bumps at distance, and colour bleeding out of transparent
+// ** regions. This is the original pipeline's treatment, restored: it was lost
+// ** when the writer moved to D3DX, which filtered every texture the same way.
+// **
+// ************************************************************************************************************************ //
+
+//! Prepares one level for compression according to what the image represents.
+//!
+//! Called per mip level rather than once on the source, because each of these
+//! is a property of the level being compressed: normals have to come from that
+//! level's own height field, and premultiplication has to happen after the
+//! averaging that produced the level, not before it.
+static void PrepareImageForCompression( CArray2D<CVec4> *pSrc, EImageType eImageType,
+	bool bWrapX, bool bWrapY, float fMappingSize )
+{
+	switch ( eImageType )
+	{
+		case IMAGE_TYPE_PICTURE_FASTMIP:
+		case IMAGE_TYPE_PICTURE:
+			// Plain colour: the average of the texels is the answer.
+			break;
+		case IMAGE_TYPE_BUMP:
+			// The source is a height field, and the normals come from the
+			// heights of the level being written. Deriving them once at full
+			// resolution and averaging those instead shortens every normal and
+			// flattens the surface as it recedes.
+			GenerateNormals( pSrc, CVec4( 1, 0, 0, 0 ), fMappingSize, bWrapX, bWrapY );
+			break;
+		case IMAGE_TYPE_TRANSPARENT:
+			// Stored premultiplied, which is a convention the renderer's blend
+			// mode expects, not a filtering trick: this runs after the level has
+			// already been averaged, and GenerateMipLevel averages each channel
+			// on its own. Colour from fully transparent texels therefore still
+			// reaches the lower levels, as it did in the original pipeline.
+			for ( int y = 0; y < pSrc->GetSizeY(); ++y )
+			{
+				for ( int x = 0; x < pSrc->GetSizeX(); ++x )
+				{
+					CVec4 &v = (*pSrc)[y][x];
+					v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, v.a );
+				}
+			}
+			break;
+		case IMAGE_TYPE_TRANSPARENT_ADD:
+			// Additive blending takes its weight from the colour, so alpha goes
+			// to zero once it has been folded into the colour.
+			for ( int y = 0; y < pSrc->GetSizeY(); ++y )
+			{
+				for ( int x = 0; x < pSrc->GetSizeX(); ++x )
+				{
+					CVec4 &v = (*pSrc)[y][x];
+					v = CVec4( v.x * v.a, v.y * v.a, v.z * v.a, 0 );
+				}
+			}
+			break;
+		default:
+			ASSERT( 0 );
+			break;
+	}
+}
+
+static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels );
+
+//! Builds the whole chain in floating point, preparing each level as it goes.
+//!
+//! Each level is halved from the level above it and not from the original, and
+//! the halving reads the level's *unprepared* pixels: `mip` keeps them while
+//! `src` is the copy PrepareImageForCompression works on. Downsampling the
+//! prepared image instead would premultiply twice and would average normals
+//! rather than heights.
+static void GenerateMipLevelsAndPrepareForCompression( std::vector<CArray2D<uint32_t> > *pMips,
+	const CArray2D<CVec4> &srcImage, EImageType eImageType, NGfx::EPixelFormat ePixelFormat,
+	int _nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
+{
+	const int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
+	pMips->resize( nNumMipLevels );
+
+	CArray2D<CVec4> mip( srcImage ), src( srcImage );
+	for ( int i = 0; i < nNumMipLevels; ++i )
+	{
+		PrepareImageForCompression( &src, eImageType, bWrapX, bWrapY, fMappingSize );
+
+		CArray2D<uint32_t> &dst = (*pMips)[i];
+		dst.SetSizes( src.GetSizeX(), src.GetSizeY() );
+		Convert( &dst, src );
+
+		// Halve the untouched copy, then keep it for the next round.
+		GenerateMipLevel( &src, mip, bWrapX, bWrapY );
+		mip = src;
+	}
+}
+
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
 	// Include the base level and allow the tail down to 1x1, including DXT blocks.
@@ -256,27 +356,38 @@ bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t
 {
 	if ( srcImage.GetSizeX() <= 0 || srcImage.GetSizeY() <= 0 )
 		return false;
-	// eImageType, bWrapX, bWrapY and fMappingSize describe how the mip chain
-	// should be filtered -- bump maps, additive and cut-out transparency and the
-	// wrap edges each want different treatment. The D3DX writer this replaces
-	// ignored all four and filtered every texture the same way, and so does
-	// this; restoring that is a separate job from getting off D3DX.
-	const int nMips = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), nSubFormat, nNumMipLevels );
 
 	std::vector<CArray2D<uint32_t> > mips;
-	mips.resize( nMips );
-	mips[0] = srcImage;
 
-	for ( int nLevel = 1; nLevel < nMips; ++nLevel )
+	if ( eImageType == IMAGE_TYPE_PICTURE_FASTMIP )
 	{
-		const int nSizeX = (std::max)( 1, srcImage.GetSizeX() >> nLevel );
-		const int nSizeY = (std::max)( 1, srcImage.GetSizeY() >> nLevel );
-		CArray2D<uint32_t> &image = mips[ nLevel ];
-		image.SetSizes( nSizeX, nSizeY );
-		// Each level is filtered from the full resolution original rather than
-		// from the level above it, so the error does not accumulate down the chain.
-		Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
+		// What the name says: no per-level work, and every level resampled
+		// straight from the full resolution original rather than from the level
+		// above it, so the error does not accumulate down the chain. This is
+		// the path the D3DX writer took for every texture regardless of type.
+		const int nMips = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), nSubFormat, nNumMipLevels );
+		mips.resize( nMips );
+		mips[0] = srcImage;
+		for ( int nLevel = 1; nLevel < nMips; ++nLevel )
+		{
+			const int nSizeX = (std::max)( 1, srcImage.GetSizeX() >> nLevel );
+			const int nSizeY = (std::max)( 1, srcImage.GetSizeY() >> nLevel );
+			CArray2D<uint32_t> &image = mips[ nLevel ];
+			image.SetSizes( nSizeX, nSizeY );
+			Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
+		}
 	}
+	else
+	{
+		// Everything else goes through the type aware chain, in floating point
+		// so that repeated halving does not quantise at every level.
+		CArray2D<CVec4> trueImage;
+		trueImage.SetSizes( srcImage.GetSizeX(), srcImage.GetSizeY() );
+		Convert( &trueImage, srcImage );
+		GenerateMipLevelsAndPrepareForCompression( &mips, trueImage, eImageType, nSubFormat,
+			nNumMipLevels, bWrapX, bWrapY, fMappingSize );
+	}
+
 	return WriteDDS( szFileName, nSubFormat, mips );
 }
 
