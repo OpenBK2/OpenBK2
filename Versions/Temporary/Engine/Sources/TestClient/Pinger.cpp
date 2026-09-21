@@ -13,7 +13,7 @@ CPinger::CPinger()
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
 }
 
-CPinger::CPinger( const int &nPeriod, const string &_szName, const string &_szPassword, const string &_szIP,
+CPinger::CPinger( const int &nPeriod, const std::string &_szName, const std::string &_szPassword, const std::string &_szIP,
 									const int &_nPort, const int &_nNetVersion )
 	: nConnectPeriod( nPeriod ), szName( _szName ), szPassword( _szPassword ),
 	szIP( _szIP ), nPort( _nPort ), nNetVersion( _nNetVersion ), nAttemptsLeft( MAX_ATTEMPTS ), bConnectNow( false )

@@ -25,11 +25,11 @@ class CTestSpecGameInfo : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CTestSpecGameInfo );
 public:
 	ZDATA
-		string szMapName;
+		std::string szMapName;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szMapName); return 0; }
 
 	CTestSpecGameInfo() { }
-	CTestSpecGameInfo( const string &_szMapName ) : szMapName( _szMapName ) { }
+	CTestSpecGameInfo( const std::string &_szMapName ) : szMapName( _szMapName ) { }
 };
 
 

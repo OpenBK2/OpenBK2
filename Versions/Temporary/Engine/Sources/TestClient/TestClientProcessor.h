@@ -14,18 +14,18 @@ class CTestClientProcessor : public CPacketProcessor
 	int nMyID;
 
 	uint32_t dwClientsVersion;
-	hash_map<int, SCustomLobbyClientInfo> lobbyClients;
+	std::unordered_map<int, SCustomLobbyClientInfo> lobbyClients;
 	
 	int nGameID;
 	uint32_t dwLastGameUpdate;
 	uint32_t dwGamesVersion;
 	uint32_t dwHeartBeatPeriod;
-	hash_map<int, SGameInfo> lobbyGames;
+	std::unordered_map<int, SGameInfo> lobbyGames;
 
-	hash_set<int> gameClients;
+	std::unordered_set<int> gameClients;
 public:
 	CTestClientProcessor() { }
-	CTestClientProcessor( const string &szCfgFile );
+	CTestClientProcessor( const std::string &szCfgFile );
 	void SetServerClient( CServerClient *pServerClient );
 
 	virtual bool Segment();

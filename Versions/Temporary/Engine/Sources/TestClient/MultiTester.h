@@ -2,8 +2,8 @@
 
 struct IMultiTester : virtual public CObjectBase
 {
-	virtual void Init( const string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
-		const string &_szName, const string &_szPassword, const string &_szCDKey, const int _nTestMode ) = 0;
+	virtual void Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,
+		const std::string &_szName, const std::string &_szPassword, const std::string &_szCDKey, const int _nTestMode ) = 0;
 	virtual bool Segment() = 0;
 	virtual bool IsActive() const = 0;
 	virtual bool IsCancelled() const = 0;
