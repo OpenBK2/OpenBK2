@@ -85,11 +85,25 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	connection.szHost = szServerName;
 	connection.szUser = "NivalNET";
 	connection.szDatabase = szDBName;
-	if ( !pDatabase->Connect( connection ) )
+	// Reported, not asserted. NI_ASSERT expands to nothing while _DO_ASSERT_SLOW
+	// is undefined, which is every build that exists, so a failure here was
+	// swallowed and the success message printed regardless. The server then ran
+	// with no database at all, announcing that it had one, and the only sign of
+	// trouble was every query retrying once and failing twice.
+	//
+	// It carries on rather than giving up, because that is what it did before
+	// and because the failure is usually a database that has not been started
+	// yet. Nothing will work until it is: every login, chat and ladder path is
+	// a query.
+	const bool bConnected = pDatabase->Connect( connection );
+	if ( bConnected )
 	{
-		NI_ASSERT( false, fmt::format( "Database connection error: {}", pDatabase->GetLastError() ) );
+		WriteMSG( "Database connection established.\n" );
 	}
-	WriteMSG( "Database connection established. \n" );
+	else
+	{
+		WriteMSG( "Database connection FAILED: %s\n", pDatabase->GetLastError().c_str() );
+	}
 	WriteMSG( "Server = %s, DBName = %s\n", szServerName.c_str(), szDBName.c_str() );
 
 	pClients = new CClients( pDatabase );
