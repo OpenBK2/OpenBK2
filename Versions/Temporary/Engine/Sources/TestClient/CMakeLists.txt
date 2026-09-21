@@ -17,14 +17,14 @@ project(TestClient)
 #   console.cpp, TestClientApp.cpp   a Scintilla editor control in a CWnd, and
 #                                    the CWinApp whose 50 ms Win32 timer is the
 #                                    only main loop. Scintilla has no source in
-#                                    this tree, so console.cpp cannot compile
-#                                    whatever else is done to it.
-#
-# So this target has no entry point yet. That is deliberate: step 1 is
-# "configures", not "compiles". main.cpp arrives with the rest of the port.
+#                                    this tree, so console.cpp could not have
+#                                    compiled whatever else was done to it.
+#                                    main.cpp does both jobs against stdin and
+#                                    stdout instead.
 set(SOURCES
     CommandsInterface.cpp
     InternalPackets.cpp
+    main.cpp
     MultiTester.cpp
     Pinger.cpp
     StdAfx.cpp
