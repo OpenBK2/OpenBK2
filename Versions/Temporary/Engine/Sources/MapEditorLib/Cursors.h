@@ -7,19 +7,17 @@
 // The mouse cursor's shape, for the editor states that change it while they
 // work.
 //
-// This was ::SetCursor( ::LoadCursor( 0, IDC_* ) ), with a null module handle,
-// so every one of them was a stock system cursor rather than a resource. wx's
-// wxSetCursor is the same thing: on MSW it ends in ::SetCursor with the
-// cursor's handle, so Windows behaves exactly as before, and wxGTK has its own
-// implementation. Both set the cursor globally and transiently, which is what
-// Win32 did and what the callers expect -- they set it again on the next mouse
-// move rather than once per window.
+// Cursor changes belong to the scene surface. Unlike Win32's transient
+// ::SetCursor, wxGTK's wxSetCursor installs a persistent application-wide
+// override, preventing docking sashes and other controls from setting theirs.
 //
 // Declared without naming a toolkit, and implemented once in CursorsWx.cpp,
 // for the reason MessageBoxes.h gives: a translation unit that includes a wx
 // header loses windows.h's A/W macros and stops linking against
 // NDb::GetObjectA. MapObjectState, which uses all of this, is one of the files
 // that must never see one.
+struct IWidget;
+
 namespace NCursor
 {
 	enum EShape
@@ -38,6 +36,9 @@ namespace NCursor
 		SHAPE_NO_ENTRY,
 	};
 
+	// The surface registers its window once; the implementation borrows it and
+	// automatically forgets it when wx destroys it. Null removes the target.
+	MAPEDITORLIB_EXPORT void SetTarget( IWidget *pWidget );
 	MAPEDITORLIB_EXPORT void Set( EShape eShape );
 
 	// Where the mouse is now, in screen coordinates: ::GetCursorPos, which is

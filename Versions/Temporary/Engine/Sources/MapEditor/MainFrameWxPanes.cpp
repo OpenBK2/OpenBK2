@@ -2,6 +2,7 @@
 #include "MapEditorLib/Resources.h"
 
 #include "MainFrameWxPanes.h"
+#include "NativeDockHint.h"
 
 #include <set>
 #include <tuple>
@@ -39,6 +40,115 @@ namespace NMainFrameWxPanes
 		}
 	}
 
+
+	CAuiManager::CAuiManager() = default;
+
+	CAuiManager::~CAuiManager()
+	{
+		UnInit();
+	}
+
+	void CAuiManager::SetManagedWindow( wxWindow *pWindow )
+	{
+		UnInit();
+		if ( pWindow == nullptr )
+		{
+			return;
+		}
+		wxAuiManager::SetManagedWindow( pWindow );
+#ifdef __WXGTK3__
+		// wxGTK's X11 overlay paints the frame, below the native 3D viewport.
+		// Use a mouse-transparent popup for both docking and sash previews.
+		// Bind after wxAUI so our sash drawing runs before its frame handlers.
+		pWindow->Bind( wxEVT_MOTION, &CAuiManager::OnHintMotion, this );
+		pWindow->Bind( wxEVT_LEFT_UP, &CAuiManager::OnHintLeftUp, this );
+		pWindow->Bind( wxEVT_DESTROY, &CAuiManager::OnHintDestroy, this );
+#endif
+	}
+
+	void CAuiManager::UnInit()
+	{
+#ifdef __WXGTK3__
+		if ( wxWindow *const pWindow = GetManagedWindow() )
+		{
+			pWindow->Unbind( wxEVT_MOTION, &CAuiManager::OnHintMotion, this );
+			pWindow->Unbind( wxEVT_LEFT_UP, &CAuiManager::OnHintLeftUp, this );
+			pWindow->Unbind( wxEVT_DESTROY, &CAuiManager::OnHintDestroy, this );
+		}
+		pNativeHint.reset();
+#endif
+		wxAuiManager::UnInit();
+	}
+
+#ifdef __WXGTK3__
+	void CAuiManager::ShowHint( const wxRect &rScreenRect )
+	{
+		if ( GetManagedWindow() == nullptr || rScreenRect.IsEmpty() )
+		{
+			HideHint();
+			return;
+		}
+		if ( !pNativeHint )
+		{
+			pNativeHint = std::make_unique<CNativeDockHint>( GetManagedWindow() );
+		}
+		pNativeHint->Show( rScreenRect, false );
+	}
+
+	void CAuiManager::HideHint()
+	{
+		if ( pNativeHint )
+		{
+			pNativeHint->Hide();
+		}
+		wxAuiManager::HideHint();
+	}
+
+	void CAuiManager::OnHintMotion( wxMouseEvent &rEvent )
+	{
+		if ( m_action == actionResize && !HasLiveResize() && m_actionPart != nullptr )
+		{
+			// wxAUI draws sash hints directly into its overlay, bypassing ShowHint.
+			// Keep its sash position calculation and let its release handler apply
+			// the layout; only the temporary drawing uses our native popup.
+			wxPoint pos = m_actionPart->rect.GetPosition();
+			if ( m_actionPart->orientation == wxHORIZONTAL )
+			{
+				pos.y = (std::max)( 0, rEvent.GetY() - m_actionOffset.y );
+			}
+			else
+			{
+				pos.x = (std::max)( 0, rEvent.GetX() - m_actionOffset.x );
+			}
+			m_actionHintRect = wxRect( pos, m_actionPart->rect.GetSize() );
+			if ( !pNativeHint )
+			{
+				pNativeHint = std::make_unique<CNativeDockHint>( GetManagedWindow() );
+			}
+			pNativeHint->Show( wxRect( m_frame->ClientToScreen( pos ), m_actionHintRect.GetSize() ), true );
+			return;
+		}
+		rEvent.Skip();
+	}
+
+	void CAuiManager::OnHintLeftUp( wxMouseEvent &rEvent )
+	{
+		if ( m_action == actionResize )
+		{
+			HideHint();
+		}
+		rEvent.Skip();
+	}
+
+	void CAuiManager::OnHintDestroy( wxWindowDestroyEvent &rEvent )
+	{
+		if ( rEvent.GetEventObject() == GetManagedWindow() )
+		{
+			UnInit();
+		}
+		rEvent.Skip();
+	}
+#endif
 
 	wxWindow* CAuiManager::PaneFrameAt( const wxPoint &rPoint )
 	{

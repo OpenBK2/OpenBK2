@@ -33,7 +33,10 @@
 #include <wx/weakref.h>
 
 #include <map>
+#include <memory>
 #include <string>
+
+class CNativeDockHint;
 
 namespace NMainFrameWxPanes
 {
@@ -44,8 +47,22 @@ namespace NMainFrameWxPanes
 	class CAuiManager : public wxAuiManager
 	{
 		bool bUpdatePending = false;
+#ifdef __WXGTK3__
+		std::unique_ptr<CNativeDockHint> pNativeHint;
+		void OnHintMotion( wxMouseEvent &rEvent );
+		void OnHintLeftUp( wxMouseEvent &rEvent );
+		void OnHintDestroy( wxWindowDestroyEvent &rEvent );
+#endif
 
 	public:
+		CAuiManager();
+		~CAuiManager() override;
+		void SetManagedWindow( wxWindow *pWindow );
+		void UnInit();
+#ifdef __WXGTK3__
+		void ShowHint( const wxRect &rScreenRect ) override;
+		void HideHint() override;
+#endif
 		// Keep dock widths/heights on the panes as well, so hiding the last
 		// pane in a dock does not discard its size when wxAUI removes the dock.
 		void RememberDockSizes();

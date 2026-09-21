@@ -22,6 +22,7 @@ set(SOURCES
     MainFrameToolBars.cpp
     MainFrameWx.cpp
     MainFrameWxPanes.cpp
+    NativeDockHint.cpp
     MainFrameContainer.cpp
     MainFrameParams.cpp
     MapEditorApp.cpp
@@ -60,6 +61,8 @@ set(SOURCES
 )
 add_library(MapEditor SHARED ${SOURCES})
 add_stdafx_pch(MapEditor)
+# Native docking hints use GTK directly, without the editor precompiled header.
+set_source_files_properties(NativeDockHint.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 add_export_header(MapEditor)
 # No mfc: CEditorApp is no longer a CWinApp, and NAppProfile (AppProfile.h)
 # keeps the registry profile CWinApp kept.
@@ -82,6 +85,11 @@ endif()
 # either: see cmake/wxwidgets.cmake.
 target_link_libraries(MapEditor PRIVATE wx::wx)
 add_dependencies(MapEditor wxwidgets_external)
+if(NOT WIN32)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
+    target_link_libraries(MapEditor PRIVATE PkgConfig::GTK3)
+endif()
 
 install(TARGETS MapEditor DESTINATION bin)
 # The application icon as a file, beside the binary that shows it.

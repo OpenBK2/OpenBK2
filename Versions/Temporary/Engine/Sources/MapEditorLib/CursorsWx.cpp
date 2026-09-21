@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Cursors.h"
+#include "WxWidget.h"
 
 // The second translation unit in MapEditorLib that sees a wx header, and safe
 // for the same reason MessageBoxesWx.cpp is: nothing below reaches the game
@@ -11,9 +12,12 @@
 #include <wx/log.h>
 #include <wx/mstream.h>
 #include <wx/utils.h>
+#include <wx/weakref.h>
 
 namespace
 {
+	wxWeakRef<wxWindow> pCursorTarget;
+
 	// res/uparrow.cur, as scripts/port/mkcursor.py emits it. Embedded rather
 	// than registered in a module's binary resource table because it belongs to
 	// this boundary and to nothing else, and because the table lives in
@@ -107,20 +111,33 @@ namespace
 
 namespace NCursor
 {
+	void SetTarget( IWidget *pWidget )
+	{
+		pCursorTarget = ToWxWindow( pWidget );
+		Set( SHAPE_ARROW );
+	}
+
+
 	void Set( EShape eShape )
 	{
+		// Keep tool feedback inside the viewport, including when Enter/Leave
+		// changes the cursor while the mouse is over a menu or docking sash.
+		if ( !pCursorTarget )
+		{
+			return;
+		}
 		switch ( eShape )
 		{
 			case SHAPE_UP_ARROW:
-				wxSetCursor( UpArrow() );
+				pCursorTarget->SetCursor( UpArrow() );
 				return;
 			case SHAPE_NO_ENTRY:
-				wxSetCursor( wxCursor( wxCURSOR_NO_ENTRY ) );
+				pCursorTarget->SetCursor( wxCursor( wxCURSOR_NO_ENTRY ) );
 				return;
 			case SHAPE_ARROW:
 				break;
 		}
-		wxSetCursor( wxCursor( wxCURSOR_ARROW ) );
+		pCursorTarget->SetCursor( wxCursor( wxCURSOR_ARROW ) );
 	}
 
 

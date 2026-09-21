@@ -18,6 +18,7 @@
 #include "Main/MainLoop.h"
 #include "Input/GameMessage.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/Interface_Editor.h"
 #include "3Dmotor/GSceneUtils.h"
 #include "Stats_B2_M1/SceneModes.h"
 #include "SceneB2/TerraGen.h"
@@ -115,6 +116,18 @@ void CCFCSceneB2::OnPreDrawChildFrameWnd()
 
 void CCFCSceneB2::OnDrawChildFrameWnd() 
 {
+	if ( Singleton<IEditorContainer>()->GetActiveEditor() == nullptr )
+	{
+		// File -> Close keeps this surface but stops the map's update loop.
+		// Clearing scene objects does not present a frame: the mission renderer
+		// normally leaves that to the loop. Replace its last frame explicitly.
+		if ( NGScene::Is3DActive() )
+		{
+			NGScene::ClearScreen( CVec3( 0.25f, 0.25f, 0.25f ) );
+			NGScene::Flip();
+		}
+		return;
+	}
 	if ( IsSceneUpdateEnabled() )
 	{
 		EditorScene()->Draw( 0 );

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "SceneSurface.h"
+#include "MapEditorLib/Cursors.h"
 
 
 #include "MapEditorLib/WxHostWindow.h"
@@ -288,6 +289,10 @@ namespace
 			: wxWindow( pParent, wxID_ANY, wxDefaultPosition, wxSize( 0, 0 ), wxBORDER_SUNKEN | wxWANTS_CHARS | wxFULL_REPAINT_ON_RESIZE ),
 				pCore( _pCore )
 		{
+			// Map-tool cursors apply only to this window. The cursor boundary
+			// holds a weak wx reference, so closing the surface clears the target.
+			CWxWindowWidget cursorWidget( this );
+			NCursor::SetTarget( &cursorWidget );
 			// Nothing erases: the renderer covers the client on every paint, as the
 			// MFC view's OnEraseBkgnd said.
 			SetBackgroundStyle( wxBG_STYLE_PAINT );
