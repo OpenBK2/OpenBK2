@@ -17,7 +17,12 @@ static std::mutex csClientSocketReading;
 static std::mutex csClientSocketWriting;
 CObj<CTerminal> pTheTerminal;
 
-static uint32_t WINAPI TheTerminalThreadProc( LPVOID lpParameter )
+// DWORD, not uint32_t: LPTHREAD_START_ROUTINE is spelled in terms of DWORD,
+// which is unsigned long, and uint32_t is unsigned int. Same width, different
+// type, so the conversion to cstdint types that went through this tree left a
+// signature CreateThread will not take. The whole function goes away with
+// CreateThread when this moves onto std::thread.
+static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
 {
 	CTerminal* pTerminal = reinterpret_cast<CTerminal*>(lpParameter);
 	while (1)
@@ -72,7 +77,9 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 		WSACleanup();				// Shutdown Winsock
 		return;			// Return an error value
 	}
-	uint32_t dwThreadId;
+	// DWORD for the same reason as the thread procedure above: CreateThread's
+	// last parameter is LPDWORD, and unsigned int* is not unsigned long*.
+	DWORD dwThreadId;
 
 	hReadingThread = CreateThread( 0, 1024*1024, TheTerminalThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );
 }
