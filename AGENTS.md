@@ -72,7 +72,3 @@ test code:
 - TestClient - test application for headless multiplayer testing
 - TestDB - some tests for database routines (libdb library)
 - TestParsing - some tests for parsing routines (Parser library)
-
-miscellaneous:
-
-- librcs - custom revision control client library, outdated (predates Git and Subversion), not really used

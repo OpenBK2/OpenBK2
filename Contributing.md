@@ -130,9 +130,6 @@ test code (see also the unit tests and benchmarks section below):
 - [TestDB](Versions/Temporary/Engine/Sources/TestDB) - some tests for database routines ([libdb](Versions/Temporary/Engine/Sources/libdb) library)
 - [TestParsing](Versions/Temporary/Engine/Sources/TestDB) - some tests for parsing routines ([Parser](Versions/Temporary/Engine/Sources/Parser) library)
 
-miscellaneous:
-- [librcs](Versions/Temporary/Engine/Sources/librcs) - custom revision control client library, outdated (predates Git and Subversion), not really used
-
 the game engine is referred as "enigma" in various sources, however, this name is not used in source code.
 
 the naming convention (see also [NivalProjectNames.doc](Versions/Temporary/Engine/NivalProjectNames.doc)):
