@@ -124,7 +124,7 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 
 	for ( std::list<int>::iterator iter = updateInfo.added.begin(); iter != updateInfo.added.end(); ++iter )
 	{
-		pOutPacket->added.insert( pOutPacket->added.end() );
+		pOutPacket->added.emplace_back();
 		if ( !GetInfoFunc( *iter, &(pOutPacket->added.back()) ) )
 			pOutPacket->added.pop_back();
 	}
@@ -134,7 +134,7 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 		pOutPacket->removed.splice( pOutPacket->removed.begin(), updateInfo.removed );
 		for ( std::list<int>::iterator iter = updateInfo.changed.begin(); iter != updateInfo.changed.end(); ++iter )
 		{
-			pOutPacket->changed.insert( pOutPacket->changed.end() );
+			pOutPacket->changed.emplace_back();
 			if ( !GetInfoFunc( *iter, &(pOutPacket->changed.back()) ) )
 				pOutPacket->changed.pop_back();
 		}
