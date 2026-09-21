@@ -1196,17 +1196,23 @@ void CAILogic::WriteDetailedChecksumInfo()
 	NRandom::SDebugState randomDebugState;
 	NRandom::GetDebugState( &randomDebugState );
 
-	fprintf(f, "Random state:\n");
-	fprintf(f, "\tCalls: %I64u\n", randomDebugState.randomCalls);
-	fprintf(f, "\tISAAC: randcnt=%u randa=%u randb=%u randc=%u randrsl=%lu randmem=%lu\n",
+	// fmt::print rather than fprintf throughout this function. The call counter
+	// was written with %I64u, an MSVC extension GCC does not accept, so the one
+	// number saying how far apart the two machines had drifted printed as
+	// rubbish on Linux -- in the file whose entire purpose is being compared
+	// against another machine's copy. fmt takes each argument's type from the
+	// argument, so the format and the value cannot disagree again.
+	fmt::print(f, "Random state:\n");
+	fmt::print(f, "\tCalls: {}\n", randomDebugState.randomCalls);
+	fmt::print(f, "\tISAAC: randcnt={} randa={} randb={} randc={} randrsl={} randmem={}\n",
 		randomDebugState.randcnt, randomDebugState.randa, randomDebugState.randb, randomDebugState.randc,
 		randomDebugState.randrslChecksum, randomDebugState.randmemChecksum);
-	fprintf(f, "\n");
-	fprintf(f, "Rng Calls:\n");
+	fmt::print(f, "\n");
+	fmt::print(f, "Rng Calls:\n");
 	NRandom::DumpRecords(f);
-	fprintf(f, "\n");
+	fmt::print(f, "\n");
 
-	fprintf(f, "Unit checksums [UID, checksum]:\n");
+	fmt::print(f, "Unit checksums [UID, checksum]:\n");
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = *iter;
@@ -1226,11 +1232,15 @@ void CAILogic::WriteDetailedChecksumInfo()
 		int isT = pUnit->IsTrain();
 		int isV = pUnit->IsVirtualTankPit();
 		auto checksum = CalculateChecksum(baseChecksum, vCenter.x, vCenter.y, wDir, fHP);
-		fprintf(f, "\tPlayer[%d] Unit[%d]: %lu - { pos: (%f, %f), dir: %hu, hp: %f, AFIMTV: %d%d%d%d%d%d } - %s\n", 
-			(int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP, isA, isF, isI, isM, isT, isV, unitName.c_str()
+		// The positions and hit points were %f, which rounds to six decimals and
+		// can therefore hide exactly the low-bit difference this file exists to
+		// find. {} writes the shortest text that reads back as the same float,
+		// so a divergence cannot round away before anyone sees it.
+		fmt::print(f, "\tPlayer[{}] Unit[{}]: {} - {{ pos: ({}, {}), dir: {}, hp: {}, AFIMTV: {}{}{}{}{}{} }} - {}\n",
+			(int)pUnit->GetPlayer(), pUnit->GetUniqueID(), checksum, vCenter.x, vCenter.y, wDir, fHP, isA, isF, isI, isM, isT, isV, unitName
 		);
 	}
-	fprintf(f, "\n");
+	fmt::print(f, "\n");
 
 	units.WriteSpatialCellDebugInfo(f);
 
@@ -1241,7 +1251,7 @@ void CAILogic::WriteDetailedChecksumInfo()
 
 	theGroupLogic.UpdateDebugChecksums(f);
 
-	fprintf(f, "Time checksum: %lu\n", CalculateChecksum(baseChecksum, curTime));
+	fmt::print(f, "Time checksum: {}\n", CalculateChecksum(baseChecksum, curTime));
 
 	fclose(f);
 }
