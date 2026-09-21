@@ -48,6 +48,13 @@ set(WITH_MSI OFF CACHE BOOL "" FORCE)
 # client_ed25519 and parsec are MariaDB's. That choice does not belong in a
 # build file. A future version adding another dynamic plugin fails configure
 # the same way and gets added here.
+#
+# ZSTD is on this list because of a platform difference rather than a version
+# one: the plugin is only registered when the connector finds libzstd, which it
+# does not on the Windows machine here and does on Linux. So the same tree
+# configured on Linux met a dynamic plugin Windows never saw. That is worth
+# remembering for the rest of this list: what is registered depends on what is
+# installed.
 foreach(plugin
         DIALOG
         CLIENT_ED25519
@@ -55,7 +62,8 @@ foreach(plugin
         SHA256_PASSWORD
         PARSEC
         MYSQL_CLEAR_PASSWORD
-        PVIO_SHMEM)
+        PVIO_SHMEM
+        ZSTD)
     set(CLIENT_PLUGIN_${plugin} STATIC CACHE STRING "" FORCE)
 endforeach()
 
