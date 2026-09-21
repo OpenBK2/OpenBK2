@@ -27,6 +27,11 @@ add_subdirectory("B2_M1_Terrain")
 add_subdirectory("libdb")
 add_subdirectory("Parser")
 
+# The dedicated lobby server. Off by default while it is mid-port.
+if(BUILD_SERVER)
+    add_subdirectory("Server")
+endif()
+
 if(BUILD_EDITOR)
     # A d3d9.dll that draws nothing, so the editor can be driven where D3D9
     # gives it no device. Installed beside bin/, never into it; see its

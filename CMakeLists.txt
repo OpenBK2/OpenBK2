@@ -45,6 +45,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # The editor is drawn with wxWidgets, which it cannot be built without; see
 # cmake/wxwidgets.cmake.
 option(BUILD_EDITOR "build editor" ON)
+# Off by default, unlike the editor: the dedicated server is mid-port and does
+# not compile yet. Turn it on here and in the CI matrix once it does.
+option(BUILD_SERVER "build dedicated server" OFF)
 option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 
@@ -163,6 +166,9 @@ include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
 if(BUILD_EDITOR)
     include(cmake/wxwidgets.cmake)
+endif()
+if(BUILD_SERVER)
+    include(cmake/sqlite.cmake)
 endif()
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
