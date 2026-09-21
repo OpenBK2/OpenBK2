@@ -28,6 +28,7 @@ set(SOURCES
     ControlLobby.cpp
     CustomLobby.cpp
     DatabaseMariaDb.cpp
+    DatabaseSqlite.cpp
     GameLobby.cpp
     HashMapConvertor.cpp
     InternalPackets.cpp

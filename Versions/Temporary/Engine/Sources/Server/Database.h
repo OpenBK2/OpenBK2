@@ -121,3 +121,8 @@ struct IDatabase : public CObjectBase
 
 //! The MariaDB and MySQL backend. Talks to either, being wire compatible.
 IDatabase* CreateMariaDbDatabase();
+
+//! The embedded backend. SDbConnection::szDatabase is the file it opens, and
+//! the rest of that struct describes a daemon and does not apply. It creates
+//! its schema on first open, so a server can be run with nothing installed.
+IDatabase* CreateSqliteDatabase();
