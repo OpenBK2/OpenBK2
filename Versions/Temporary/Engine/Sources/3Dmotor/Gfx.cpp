@@ -207,11 +207,20 @@ static HRESULT ResetDevice()
 		}
 	}
 	bGammaIsSet = false;
-	SetWindowPos(
-		hWnd, 
-		HWND_NOTOPMOST, 
-		nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight, 
-		SWP_SHOWWINDOW );
+#if !BOOST_OS_WINDOWS
+	// The editor's SDL window wraps a GTK child. wx owns its layout and has
+	// already sized it before the back buffer is reset. Moving it to the game
+	// window's origin here makes the viewport flash at (0, 0) until GTK lays
+	// it out again; leave its geometry and visibility to the toolkit.
+	if ( ( SDL_GetWindowFlags( AsSdlWindow( hWnd ) ) & SDL_WINDOW_EXTERNAL ) == 0 )
+#endif
+	{
+		SetWindowPos(
+			hWnd,
+			HWND_NOTOPMOST,
+			nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight,
+			SWP_SHOWWINDOW );
+	}
 	if ( hr == D3D_OK )
 	{
 		hr = InitDXObjects();

@@ -139,6 +139,12 @@ bool CNativeViewport::Attach( wxWindow *pWindow )
 
 	SDL_PropertiesID props = SDL_CreateProperties();
 	SDL_SetNumberProperty( props, SDL_PROP_WINDOW_CREATE_X11_WINDOW_NUMBER, static_cast<Sint64>( xid ) );
+	// GTK owns this child window's position. SDL's non-resizable X11 resize
+	// path also moves and raises the window using SDL's cached coordinates,
+	// which go stale when wx lays out the docking panes. Mark the wrapper as
+	// resizable so SetSize only resizes it, preserving GTK's position and
+	// stacking order instead of jumping back over neighbouring panes.
+	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_RESIZABLE_BOOLEAN, true );
 	// What DXVK will ask this window for.
 	SDL_SetBooleanProperty( props, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true );
 	pImpl->pSdlWindow = SDL_CreateWindowWithProperties( props );
