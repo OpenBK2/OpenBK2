@@ -54,8 +54,31 @@ struct SColor565
 	unsigned nRed	: 5;
 };
 
-inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor8888 *col_1, 
-																 SColor8888 *col_2, SColor8888 *col_3, uint16_t &wrd )
+//! Widens a 5 or 6 bit channel to 8 bits the way the format specifies.
+//!
+//! This used to be a plain left shift, which leaves the low bits zero and so
+//! makes the top of the range unreachable: the largest 5 bit value came out as
+//! 248 rather than 255, and pure white decoded to 248,252,248. Every DXT image
+//! this file produced was slightly dark, and the darkening grew with the
+//! channel value, so it was a contrast error rather than an offset. Replicating
+//! the high bits into the low ones maps 0 to 0 and the maximum to 255, which is
+//! what the hardware and every other decoder do.
+inline uint8_t Widen5( unsigned nValue ) { return static_cast<uint8_t>( ( nValue << 3 ) | ( nValue >> 2 ) ); }
+inline uint8_t Widen6( unsigned nValue ) { return static_cast<uint8_t>( ( nValue << 2 ) | ( nValue >> 4 ) ); }
+
+//! bDxt1 selects the punch-through rule, and only DXT1 has one.
+//!
+//! In DXT1 a block whose first endpoint does not exceed the second switches to
+//! three colours plus transparent black. In DXT2 through DXT5 there is no such
+//! mode: alpha lives in its own block and the colour block always interpolates
+//! all four. Applying the DXT1 rule to them, which this function used to do for
+//! every format, gave index 2 the midpoint instead of the two thirds point and
+//! turned index 3 black. It bit hardest where it looked safest: a flat block
+//! has both endpoints equal, which is "not greater than", so 23% of the blocks
+//! in the shipped DXT3 textures took the wrong branch and any of them using
+//! index 3 decoded to black.
+inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor8888 *col_1,
+																 SColor8888 *col_2, SColor8888 *col_3, uint16_t &wrd, bool bDxt1 )
 {
 	// There are 4 methods to use - see the Time_ functions.
 	// 1st = shift = does normal approach per byte for color comps
@@ -73,24 +96,18 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 	SColor565 *pCol = (SColor565*) &(pBlock->col0);
 
 	col_0->a = 0xff;
-	col_0->r = pCol->nRed;
-	col_0->r <<= 3;				// shift to full precision
-	col_0->g = pCol->nGreen;
-	col_0->g <<= 2;
-	col_0->b = pCol->nBlue;
-	col_0->b <<= 3;
+	col_0->r = Widen5( pCol->nRed );
+	col_0->g = Widen6( pCol->nGreen );
+	col_0->b = Widen5( pCol->nBlue );
 
 	pCol = (SColor565*) & (pBlock->col1 );
 	col_1->a = 0xff;
-	col_1->r = pCol->nRed;
-	col_1->r <<= 3;				// shift to full precision
-	col_1->g = pCol->nGreen;
-	col_1->g <<= 2;
-	col_1->b = pCol->nBlue;
-	col_1->b <<= 3;
+	col_1->r = Widen5( pCol->nRed );
+	col_1->g = Widen6( pCol->nGreen );
+	col_1->b = Widen5( pCol->nBlue );
 
 
-	if ( pBlock->col0 > pBlock->col1 )
+	if ( !bDxt1 || pBlock->col0 > pBlock->col1 )
 	{
 		// Four-color block: derive the other two colors.    
 		// 00 = color_0, 01 = color_1, 10 = color_2, 11 = color_3
@@ -98,8 +115,8 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 		// stored in the 64-bit block.
 
 		wrd = ((uint16_t)col_0->r * 2 + (uint16_t)col_1->r )/3;
-											// no +1 for rounding
-											// as bits have been shifted to 888
+											// truncating, not rounding, which is
+											// what the format specifies
 		col_2->r = (uint8_t)wrd;
 
 		wrd = ((uint16_t)col_0->g * 2 + (uint16_t)col_1->g )/3;
@@ -399,7 +416,7 @@ void DecompressDXT1( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 		{
 
 			// inline func:
-			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd );
+			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd, true );
 
 
 			// now decode the color block into the bitmap bits
@@ -459,7 +476,7 @@ void DecompressDXT3( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 			// inline func:
 			// Get color block & colors
 			pBlock++;
-			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd );
+			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd, false );
 
 			// Decode the color block into the bitmap bits
 			// inline func:
@@ -532,7 +549,7 @@ void DecompressDXT5( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 			// TRACE("pBlock:   0x%.8x\n", pBlock );
 
-			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd );
+			GetColorBlockColors( pBlock, &col_0, &col_1, &col_2, &col_3, wrd, false );
 
 			// Decode the color block into the bitmap bits
 			// inline func:

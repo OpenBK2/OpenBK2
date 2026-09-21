@@ -457,6 +457,106 @@ TEST( DDSWrite, ReEncodingAFlatTextureReproducesTheOriginalBlock )
 	EXPECT_DOUBLE_EQ( 0.0, RMSE( original, again ) );
 }
 
+// The engine's own decoder, against the reference, on the real textures.
+//
+// UnpackDXT had two faults and both are fixed: it widened the 5 and 6 bit
+// endpoints by shifting rather than replicating the high bits, so pure white
+// decoded to 248,252,248 and every DXT image came back short of contrast; and
+// it applied DXT1's punch-through rule to DXT3 and DXT5, which have no such
+// mode, so index 2 got the midpoint instead of the two thirds point and index 3
+// went black. The second one bit flat blocks, where the two endpoints are equal
+// and so "not greater than", which is 23% of the blocks in the shipped DXT3
+// textures.
+//
+// Both decoders now use the same interpolation and the same 4 bit alpha
+// expansion, so agreement is exact rather than approximate, and asserting
+// equality catches a regression in either direction.
+TEST( DDSWrite, UnpackDXTMatchesReference )
+{
+	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
+	if ( !std::filesystem::exists( root ) )
+		GTEST_SKIP() << "no game data at " << root.string();
+
+	int nDxt1 = 0;
+	int nDxt3 = 0;
+	std::error_code ec;
+	for ( std::filesystem::recursive_directory_iterator it( root, ec ), end;
+		it != end && ( nDxt1 < 60 || nDxt3 < 60 ); it.increment( ec ) )
+	{
+		if ( ec || !it->is_regular_file( ec ) )
+			continue;
+		const std::filesystem::path &p = it->path();
+		if ( p.extension() != ".dds" && p.extension() != ".DDS" )
+			continue;
+		const std::vector<uint8_t> bytes = ReadFile( p );
+		if ( bytes.size() < sizeof(SDDSFileHeader) )
+			continue;
+		const SDDSHeader &hdr = HeaderOf( bytes );
+		if ( !( hdr.ddspf.dwFlags & DDS_FOURCC ) || hdr.dwWidth > 256 || hdr.dwHeight > 256 )
+			continue;
+		// UnpackDXT walks whole 4x4 blocks and has no edge handling.
+		if ( ( hdr.dwWidth % 4 ) != 0 || ( hdr.dwHeight % 4 ) != 0 )
+			continue;
+
+		NGfx::EPixelFormat format;
+		if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') && nDxt1 < 60 )
+		{
+			format = NGfx::CF_DXT1;
+			++nDxt1;
+		}
+		else if ( hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','3') && nDxt3 < 60 )
+		{
+			format = NGfx::CF_DXT3;
+			++nDxt3;
+		}
+		else
+		{
+			continue;
+		}
+
+		CArray2D<uint32_t> reference;
+		DecodeLevel0( &reference, bytes, format );
+
+		CArray2D<uint32_t> engine;
+		NImage::UnpackDXT( static_cast<int>( format ), hdr.dwWidth, hdr.dwHeight,
+			&bytes[sizeof(SDDSFileHeader)], &engine );
+
+		ASSERT_EQ( reference.GetSizeX(), engine.GetSizeX() ) << p.string();
+		ASSERT_EQ( reference.GetSizeY(), engine.GetSizeY() ) << p.string();
+		for ( int y = 0; y < reference.GetSizeY(); ++y )
+		{
+			for ( int x = 0; x < reference.GetSizeX(); ++x )
+			{
+				ASSERT_EQ( reference[y][x], engine[y][x] )
+					<< p.string() << " at " << x << "," << y;
+			}
+		}
+	}
+	EXPECT_GT( nDxt1, 0 ) << "no DXT1 files examined";
+	EXPECT_GT( nDxt3, 0 ) << "no DXT3 files examined";
+}
+
+// Pure white is the value the old shift could not reach: 0xffff decoded to
+// 248,252,248 rather than to white. Named separately from the sweep above
+// because it is the one case anyone can check by eye.
+TEST( DDSWrite, UnpackDXTReachesFullWhite )
+{
+	CArray2D<uint32_t> src;
+	src.SetSizes( 4, 4 );
+	for ( int y = 0; y < 4; ++y )
+	{
+		for ( int x = 0; x < 4; ++x )
+			src[y][x] = 0xffffffffu;
+	}
+	const std::vector<uint8_t> bytes = WriteAndRead( "obk2_dds_white.dds", src, NGfx::CF_DXT1, 1 );
+	ASSERT_GE( bytes.size(), sizeof(SDDSFileHeader) + 8u );
+	CArray2D<uint32_t> engine;
+	NImage::UnpackDXT( 1, 4, 4, &bytes[sizeof(SDDSFileHeader)], &engine );
+	EXPECT_EQ( 0xffu, ( engine[0][0] >> 16 ) & 0xff ) << "red short of full range";
+	EXPECT_EQ( 0xffu, ( engine[0][0] >> 8 ) & 0xff ) << "green short of full range";
+	EXPECT_EQ( 0xffu, engine[0][0] & 0xff ) << "blue short of full range";
+}
+
 // The header rule above is taken from the shipped data, so it is checked
 // against the shipped data. Every file whose header is in that dialect --
 // 11642 of 11896 at the time of writing, the rest being a handful written by
