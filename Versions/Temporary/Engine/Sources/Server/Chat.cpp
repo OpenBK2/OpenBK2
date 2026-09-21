@@ -7,9 +7,9 @@
 
 #include <cstdint>
 
-wstring CChatLobby::wszWelcomeText;
+std::wstring CChatLobby::wszWelcomeText;
 
-CChatLobby::CChatLobby( CClients *_pClients, const string& _szCfgFileName ) 
+CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName ) 
 	: pClients( _pClients ), szCfgFile( _szCfgFileName )
 {
 	Initialize();
@@ -57,8 +57,8 @@ bool CChatLobby::Segment()
 
 void CChatLobby::DeleteOfflineClients()
 {
-	list< int > deadClients;
-	for ( hash_map<int, string>::iterator it = clientNicks.begin(); it != clientNicks.end(); ++it )
+	std::list< int > deadClients;
+	for ( std::unordered_map<int, std::string>::iterator it = clientNicks.begin(); it != clientNicks.end(); ++it )
 	{
 		const int nID = it->first;
 		if ( ! pClients->IsOnLine( nID ) )
@@ -67,14 +67,14 @@ void CChatLobby::DeleteOfflineClients()
 		}
 	}
 
-	for ( list<int>::iterator it = deadClients.begin(); it != deadClients.end(); ++it )
+	for ( std::list<int>::iterator it = deadClients.begin(); it != deadClients.end(); ++it )
 	{
 		const int nID = *it;
 		NotifyFriends( nID, OFFLINE, false );
 		if ( clientChannel.find( nID ) != clientChannel.end() )
 		{
-			const string &szChannel = clientChannel[nID];
-			list<int> & channelClientList = channelClients[szChannel];
+			const std::string &szChannel = clientChannel[nID];
+			std::list<int> & channelClientList = channelClients[szChannel];
 			channelClientList.remove( nID );
 			NotifyClientLeaveChannel( nID, szChannel );
 			clientChannel.erase( nID );
@@ -85,19 +85,19 @@ void CChatLobby::DeleteOfflineClients()
 
 void CChatLobby::CloseEmptyChannels()
 {
-	list< string > emptyChannels;
-	for ( hash_map< string, list<int> >::iterator it = channelClients.begin(); it != channelClients.end(); ++it )
+	std::list< std::string > emptyChannels;
+	for ( std::unordered_map< std::string, std::list<int> >::iterator it = channelClients.begin(); it != channelClients.end(); ++it )
 	{
-		const list<int> &channelClientList = it->second;
+		const std::list<int> &channelClientList = it->second;
 		if ( channelClientList.empty() )
 		{
 			emptyChannels.push_back( it->first );
 		}
 	}
 
-	for ( list< string>::iterator it = emptyChannels.begin(); it != emptyChannels.end(); ++it )
+	for ( std::list< std::string>::iterator it = emptyChannels.begin(); it != emptyChannels.end(); ++it )
 	{
-		const string &szChannel = *it;
+		const std::string &szChannel = *it;
 		channelClients.erase( szChannel );
 		NotifyChannelClosed( szChannel );
 	}
@@ -105,7 +105,7 @@ void CChatLobby::CloseEmptyChannels()
 
 bool CChatLobby::ProcessChatPacket( CChatPacket *pPacket )
 {
-	string szFromNick;
+	std::string szFromNick;
 	if ( ! pClients->GetNick( pPacket->nClientID, &szFromNick ) )
 		return true;
 
@@ -120,9 +120,9 @@ bool CChatLobby::ProcessChatPacket( CChatPacket *pPacket )
 	{
 		if ( clientChannel.find( pPacket->nClientID ) == clientChannel.end() )
 			return true;
-		const string &szChannel = clientChannel[pPacket->nClientID];
-		const list<int> &clientsList = channelClients[szChannel];
-		for( list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
+		const std::string &szChannel = clientChannel[pPacket->nClientID];
+		const std::list<int> &clientsList = channelClients[szChannel];
+		for( std::list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
 		{
 			const int nClientID = *it;
 			SendChatPacket( nClientID, pPacket->wszMessage, szFromNick, pPacket->nClientID, true );
@@ -142,12 +142,12 @@ bool CChatLobby::ProcessChatAFKPacket( CChatAFKPacket *pPacket )
 	NotifyFriends( nID, AFK, false );
 	if ( clientChannel.find( nID ) != clientChannel.end() )
 	{
-		const string &szChannel = clientChannel[nID];
-		list<int> & channelClientList = channelClients[szChannel];
+		const std::string &szChannel = clientChannel[nID];
+		std::list<int> & channelClientList = channelClients[szChannel];
 		channelClientList.remove( nID );
 		NotifyClientLeaveChannel( nID, szChannel );
 		clientChannel.erase( nID );
-		string szNick;
+		std::string szNick;
 		pClients->GetNick( nID, &szNick );
 		clientNicks[ nID ] = szNick;
 	}
@@ -157,7 +157,7 @@ bool CChatLobby::ProcessChatAFKPacket( CChatAFKPacket *pPacket )
 bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 {
 	const int nID = pPacket->nClientID;
-	const string &szChannelName = pPacket->szChannelName;
+	const std::string &szChannelName = pPacket->szChannelName;
 	if ( szChannelName == "" ) 
 		return true;
 
@@ -171,7 +171,7 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 	// Leaving current channel
 	if ( clientChannel.find( nID ) != clientChannel.end() )
 	{
-		const string szOldChannelName = clientChannel[nID];
+		const std::string szOldChannelName = clientChannel[nID];
 		if ( szOldChannelName == szChannelName )
 			return true;
 		channelClients[szOldChannelName].remove( nID );
@@ -206,8 +206,8 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 bool CChatLobby::ProcessChatChannelsRequestPacket( CChatChannelsListRequestPacket *pPacket )
 {
 	uint32_t dwVersion = pPacket->dwVersion;
-	list<string> addedChannelsList = channels.GetAddDiff( dwVersion );
-	list<string> removedChannelsList = channels.GetRemoveDiff( dwVersion );
+	std::list<std::string> addedChannelsList = channels.GetAddDiff( dwVersion );
+	std::list<std::string> removedChannelsList = channels.GetRemoveDiff( dwVersion );
 	PushPacket( new CChatChannelsListPacket( pPacket->nClientID, channels.GetVersion(), addedChannelsList,
 		removedChannelsList, channels.NeedFullUpdate( dwVersion ) ) );
 	return true;
@@ -228,7 +228,7 @@ bool CChatLobby::ProcessChatModifyIgnoreFriendListPacket( CChatModifyIgnoreFrien
 	}
 	else if ( pPacket->eChange == CChatModifyIgnoreFriendListPacket::ADD_FRIEND )
 	{
-		list<string> currentFriendList = pClients->GetIgnoreFriendList( pPacket->nClientID, FRIEND_LIST );
+		std::list<std::string> currentFriendList = pClients->GetIgnoreFriendList( pPacket->nClientID, FRIEND_LIST );
 		if ( currentFriendList.size() > nMaxFriends )
 			return true;
 		if ( ! pClients->InIgnoreFriendList( pPacket->nClientID, pPacket->szPlayer, FRIEND_LIST ) )
@@ -266,7 +266,7 @@ bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPack
 	pClients->GetClientID( pPacket->szNick, &nClientID );
 	if ( pClients->IsOnLine( nClientID ) && clientChannel.find( nClientID ) != clientChannel.end() )
 	{
-		const string &szChannel = clientChannel[ nClientID ];
+		const std::string &szChannel = clientChannel[ nClientID ];
     PushPacket( new CChatChannelByNickPacket( pPacket->nClientID, pPacket->szNick, szChannel ) );
 	}
 	else
@@ -274,21 +274,21 @@ bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPack
 	return true;
 }
 
-void CChatLobby::NotifyClientJoinChannel( const int nID, const string &szChannelName ) 
+void CChatLobby::NotifyClientJoinChannel( const int nID, const std::string &szChannelName ) 
 {
-	const list<int> &clientsList = channelClients[szChannelName];
-	list<SIDNickPair> listToSend;
-	string szNick;
+	const std::list<int> &clientsList = channelClients[szChannelName];
+	std::list<SIDNickPair> listToSend;
+	std::string szNick;
 	pClients->GetNick( nID, &szNick );
 	clientNicks[ nID ] = szNick;
-	for ( list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
+	for ( std::list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
 	{
 		const int nClientID = *it;
 
 		if ( pClients->IsOnLine( nClientID ) )
 		{
 			PushPacket( new CChatClientListChangeNotifyPacket( nClientID, nID, szNick, true ) );
-			string szInChannelClientNick = clientNicks[ nClientID ];
+			std::string szInChannelClientNick = clientNicks[ nClientID ];
 			SIDNickPair sendPair;
 			sendPair.nID = nClientID;
 			sendPair.szNick = szInChannelClientNick;
@@ -305,11 +305,11 @@ void CChatLobby::NotifyClientJoinChannel( const int nID, const string &szChannel
 
 }
 
-void CChatLobby::NotifyClientLeaveChannel( const int nID, const string &szChannelName ) 
+void CChatLobby::NotifyClientLeaveChannel( const int nID, const std::string &szChannelName ) 
 {
-	string szNick = clientNicks[ nID ];
+	std::string szNick = clientNicks[ nID ];
 	clientNicks.erase( nID );
-	const list<int> &clientsList = channelClients[szChannelName];
+	const std::list<int> &clientsList = channelClients[szChannelName];
 	if ( clientsList.empty() )
 	{
 		channelClients.erase( szChannelName );
@@ -317,7 +317,7 @@ void CChatLobby::NotifyClientLeaveChannel( const int nID, const string &szChanne
 	}
 	else
 	{
-		for ( list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
+		for ( std::list<int>::const_iterator it = clientsList.begin(); it != clientsList.end(); ++it )
 		{
 			const int nClientID = *it;
 			PushPacket( new CChatClientListChangeNotifyPacket( nClientID, nID, szNick, false ) );
@@ -326,24 +326,24 @@ void CChatLobby::NotifyClientLeaveChannel( const int nID, const string &szChanne
 
 }
 
-void CChatLobby::NotifyChannelOpened( const string &szChannelName )
+void CChatLobby::NotifyChannelOpened( const std::string &szChannelName )
 {
 	channels.Add( szChannelName );
 }
 
-void CChatLobby::NotifyChannelClosed( const string &szChannelName ) 
+void CChatLobby::NotifyChannelClosed( const std::string &szChannelName ) 
 {
 	channels.Remove( szChannelName );
 }
 
-void CChatLobby::SendChatPacket( const int nClientID, const wstring &wszMessage, const string &szFromNick, const int nFromID, bool bIsBroadcast )
+void CChatLobby::SendChatPacket( const int nClientID, const std::wstring &wszMessage, const std::string &szFromNick, const int nFromID, bool bIsBroadcast )
 {
 	if ( !pClients->InIgnoreFriendList( nClientID, szFromNick, IGNORE_LIST ) )
 	{
 		PushPacket( new CChatPacket( nClientID, wszMessage, szFromNick, 0, bIsBroadcast ) );
 		if ( clientChannel.find( nClientID ) == clientChannel.end() )
 		{
-			string szToNick;
+			std::string szToNick;
 			if ( pClients->GetNick( nClientID, &szToNick ) )
 				PushPacket( new CChatAFKResponsePacket( nFromID, szToNick ) );
 		}
@@ -352,15 +352,15 @@ void CChatLobby::SendChatPacket( const int nClientID, const wstring &wszMessage,
 
 void CChatLobby::SendIgnoreFriendList( const int nClientID )
 {
-	const list<string> ignoreList = pClients->GetIgnoreFriendList( nClientID, IGNORE_LIST );
-	const list<string> friendList = pClients->GetIgnoreFriendList( nClientID, FRIEND_LIST );
+	const std::list<std::string> ignoreList = pClients->GetIgnoreFriendList( nClientID, IGNORE_LIST );
+	const std::list<std::string> friendList = pClients->GetIgnoreFriendList( nClientID, FRIEND_LIST );
 	PushPacket( new CChatIgnoreFriendListPacket( nClientID, ignoreList, friendList ) );
 }
 
 void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, const bool bNewClient )
 {
-	const string szMyNick = clientNicks[nClientID];
-	for ( hash_map<int,string>::iterator it = clientNicks.begin(); it != clientNicks.end(); ++it )
+	const std::string szMyNick = clientNicks[nClientID];
+	for ( std::unordered_map<int,std::string>::iterator it = clientNicks.begin(); it != clientNicks.end(); ++it )
 	{
 		const int nNotifierID = it->first;
 		if ( pClients->InIgnoreFriendList( nNotifierID, szMyNick, FRIEND_LIST ) )
@@ -370,10 +370,10 @@ void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, 
 	}
 	if ( bNewClient )
 	{
-		list<string> friendList = pClients->GetIgnoreFriendList( nClientID, FRIEND_LIST );
-		for ( list<string>::iterator it = friendList.begin(); it != friendList.end(); ++it )
+		std::list<std::string> friendList = pClients->GetIgnoreFriendList( nClientID, FRIEND_LIST );
+		for ( std::list<std::string>::iterator it = friendList.begin(); it != friendList.end(); ++it )
 		{
-			const string &szNotifierName = *it;
+			const std::string &szNotifierName = *it;
 			EChatStatus eChatStatus;
 			int nNotifierID;
 			if ( !pClients->GetClientID( szNotifierName, &nNotifierID ) )

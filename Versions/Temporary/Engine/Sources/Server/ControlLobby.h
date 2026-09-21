@@ -10,14 +10,14 @@ class CControlLobby : public CPacketProcessor
 	CPtr<class CClients> pClients;
 	CPtr<class CNet> pNet;
 
-	string szCfgFile;
+	std::string szCfgFile;
 	bool bCheckCDKeyIsValid;
 
-	hash_set<int> connecting;
-	hash_map<int, int64_t> askedNumbers;
+	std::unordered_set<int> connecting;
+	std::unordered_map<int, int64_t> askedNumbers;
 public:
 	CControlLobby() { }
-	CControlLobby( class CClients *pClients, class CNet *pNet, const string &szCfgFile );
+	CControlLobby( class CClients *pClients, class CNet *pNet, const std::string &szCfgFile );
 
 	virtual bool Segment() { return true; }
 	void ReloadConfig();

@@ -13,7 +13,7 @@
 
 #include <cstdint>
 
-CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const string &_szCfgFile )
+CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const std::string &_szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
 	REGISTER_PACKET_PROCESSOR( ProcessCheckConnectAnswer );
@@ -118,7 +118,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 		return true;
 	}
 
-	const string szCDKey = 
+	const std::string szCDKey = 
 		pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_REGISTER ? pPacket->szCDKey : pClients->GetCDKey( pPacket->szNick );
 
 	// already online?
@@ -189,7 +189,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 	// wrong password?
 	if ( pPacket->eConnectType == CCheckConnectAnswerPacket::ECT_LOGIN )
 	{
-		const string szStr = pClients->GetPassword( pPacket->szNick );
+		const std::string szStr = pClients->GetPassword( pPacket->szNick );
 		if ( szStr != pPacket->szPassword )
 		{
 			CConnectServerPacket *pAnswerPacket = 
@@ -229,7 +229,7 @@ bool CControlLobby::ProcessCheckConnectAnswer( CCheckConnectAnswerPacket *pPacke
 
 bool CControlLobby::ProcessRemoveClient( CNetRemoveClient *pNetRemoveClient )
 {
-	string szNick;
+	std::string szNick;
 	if ( pClients->GetNick( pNetRemoveClient->nClientID, &szNick ) )
 	{
 #ifndef CONSOLE_LOG_SILENCE	
@@ -301,7 +301,7 @@ bool CControlLobby::ProcessForgottenPasswordPacket( CForgottenPasswordPacket *pP
 		PushPacket( pAnswerPacket );
 		return true;
 	}
-	string szEmail = pClients->GetEmail( pPacket->szNick );
+	std::string szEmail = pClients->GetEmail( pPacket->szNick );
 
 	if ( pPacket->szEMail != szEmail )
 	{

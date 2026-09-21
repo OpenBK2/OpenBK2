@@ -4,11 +4,11 @@
 namespace NHashMapConvertor
 {
 
-void ConvertNumber( hash_map<string,int> *pHashMap, const string &szName, int *pValue, const bool bRead )
+void ConvertNumber( std::unordered_map<std::string,int> *pHashMap, const std::string &szName, int *pValue, const bool bRead )
 {
 	if ( bRead )
 	{
-		hash_map<string,int>::const_iterator it = pHashMap->find( szName );
+		std::unordered_map<std::string,int>::const_iterator it = pHashMap->find( szName );
 		if ( it != pHashMap->end() )
 			*pValue = it->second;
 		else
@@ -20,16 +20,16 @@ void ConvertNumber( hash_map<string,int> *pHashMap, const string &szName, int *p
 	}
 }
 
-void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vector<int> *pVector, const bool bRead )
+void ConvertVector( std::unordered_map<std::string,int> *pHashMap, const std::string &szPrefix, std::vector<int> *pVector, const bool bRead )
 {
 	if ( bRead )
 	{
 		pVector->clear();
-		string szName;
+		std::string szName;
 		szName.reserve( szPrefix.size() + 3 );
 		szName = szPrefix + "0";
 		int i = 0;
-		hash_map<string,int>::const_iterator it = pHashMap->find( szName );
+		std::unordered_map<std::string,int>::const_iterator it = pHashMap->find( szName );
 		while ( it != pHashMap->end() )
 		{
 			pVector->push_back( it->second );
@@ -41,7 +41,7 @@ void ConvertVector( hash_map<string,int> *pHashMap, const string &szPrefix, vect
 	}
 	else
 	{
-		string szName;
+		std::string szName;
 		szName.reserve( szPrefix.size() + 3 );
 		szName = szPrefix;
 		for ( int i = 0; i < pVector->size(); ++i )

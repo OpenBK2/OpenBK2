@@ -72,7 +72,7 @@ CClients::CClients( MYSQL *_pDB )
 
 	nMaxXP = 0;
 	{
-		const string szQuery = "SELECT MAX(`xp`) FROM gamestats";
+		const std::string szQuery = "SELECT MAX(`xp`) FROM gamestats";
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 		MYSQL_RES *pResult = 0;
 		pResult = mysql_store_result( pMySQL );
@@ -88,13 +88,13 @@ CClients::CClients( MYSQL *_pDB )
 
 }
 
-int CClients::GetDBUserIDbyNick( const string &_szNick )
+int CClients::GetDBUserIDbyNick( const std::string &_szNick )
 {
-	hash_map<string, int>::const_iterator it = DBUserIDByNick.find( _szNick );
+	std::unordered_map<std::string, int>::const_iterator it = DBUserIDByNick.find( _szNick );
 	if ( it != DBUserIDByNick.end() )
 		return it->second;
-	string szNick = EscapeString( _szNick );
-	string szQuery = "SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" +
+	std::string szNick = EscapeString( _szNick );
+	std::string szQuery = "SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" +
 		szNick + "' AND t.name = n.nameID )";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
@@ -103,7 +103,7 @@ int CClients::GetDBUserIDbyNick( const string &_szNick )
 	if ( mysql_num_rows( pResult ) > 0 )
 	{
 		MYSQL_ROW row = mysql_fetch_row( pResult );
-		const string szDBUserID = row[0];
+		const std::string szDBUserID = row[0];
 		mysql_free_result( pResult );
 		return NStr::ToInt( szDBUserID );
 	}
@@ -117,7 +117,7 @@ int CClients::GetDBUserIDbyNick( const string &_szNick )
 void CClients::LoadIgnoreFriendList()
 {
 	{
-		string szQuery = "SELECT recipient, sender FROM ignorelist ";
+		std::string szQuery = "SELECT recipient, sender FROM ignorelist ";
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 		MYSQL_RES *pResult = 0;
 		pResult = mysql_store_result( pMySQL );
@@ -133,7 +133,7 @@ void CClients::LoadIgnoreFriendList()
 	}
 
 	{
-		string szQuery = "SELECT player, notifier FROM friendlist ";
+		std::string szQuery = "SELECT player, notifier FROM friendlist ";
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 		MYSQL_RES *pResult = 0;
 		pResult = mysql_store_result( pMySQL );
@@ -149,11 +149,11 @@ void CClients::LoadIgnoreFriendList()
 	}
 }
 
-void CClients::AddIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
+void CClients::AddIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
 	{
-		string szNick;
+		std::string szNick;
 		GetNick( nRecipient, &szNick );
 		const int nRecipientDBUserID = GetDBUserIDbyNick( szNick );
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
@@ -172,11 +172,11 @@ void CClients::AddIgnoreFriendPair( const int nRecipient, const string &szSender
 	}
 }
 
-void CClients::DeleteIgnoreFriendPair( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
+void CClients::DeleteIgnoreFriendPair( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
 	{
-		string szNick;
+		std::string szNick;
 		GetNick( nRecipient, &szNick );
 		const int nRecipientDBUserID = GetDBUserIDbyNick( szNick );
 		const int nSenderDBUserID = GetDBUserIDbyNick( szSender );
@@ -196,7 +196,7 @@ void CClients::DeleteIgnoreFriendPair( const int nRecipient, const string &szSen
 
 void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
 {
-	string szQuery;
+	std::string szQuery;
 	switch( eList )
 	{
 	case IGNORE_LIST:
@@ -212,7 +212,7 @@ void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int 
 
 void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
 {
-	string szQuery;
+	std::string szQuery;
 	switch( eList )
 	{
 	case IGNORE_LIST:
@@ -226,15 +226,15 @@ void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
 
-bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender, EIgnoreFriendList eList )
+bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nRecipient ) )
 	{
-		hash_map<int,string>::const_iterator it = nickByID.find( nRecipient );
+		std::unordered_map<int,std::string>::const_iterator it = nickByID.find( nRecipient );
 		const int nRecipientDBID = GetDBUserIDbyNick( it->second );
 		const int nSenderDBID = GetDBUserIDbyNick( szSender );
 		{
-      hash_map<int, hash_set<int> >::const_iterator it;
+      std::unordered_map<int, std::unordered_set<int> >::const_iterator it;
 			switch( eList )
 			{
 			case IGNORE_LIST:
@@ -242,7 +242,7 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender,
 					it = ignoreList.find( nRecipientDBID );
 					if ( it == ignoreList.end() )
 						return false;
-					const hash_set<int> &recipientsIgnoreList = it->second;
+					const std::unordered_set<int> &recipientsIgnoreList = it->second;
 					return recipientsIgnoreList.find( nSenderDBID ) != recipientsIgnoreList.end();
 					break;
 				}
@@ -251,7 +251,7 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender,
 					it = friendList.find( nRecipientDBID );
 					if ( it == friendList.end() )
 						return false;
-					const hash_set<int> &recipientsFriendList = it->second;
+					const std::unordered_set<int> &recipientsFriendList = it->second;
 					return recipientsFriendList.find( nSenderDBID ) != recipientsFriendList.end();
 				}
 			}
@@ -262,11 +262,11 @@ bool CClients::InIgnoreFriendList( const int nRecipient, const string &szSender,
     return false;
 }
 
-list<string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList )
+std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList eList )
 {
 	if ( IsOnLine( nClient ) )
 	{
-		string szQuery;
+		std::string szQuery;
 		switch( eList )
 		{
 		case IGNORE_LIST:
@@ -283,7 +283,7 @@ list<string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList
 		pResult = mysql_store_result( pMySQL );
 		MYSQL_CHECK_RESULT
 		int nRows = mysql_num_rows( pResult );
-		list<string> clientsIgnoreFriendList;
+		std::list<std::string> clientsIgnoreFriendList;
 		for ( int i = 0; i < nRows; ++i )
 		{
 			MYSQL_ROW row = mysql_fetch_row( pResult );
@@ -293,12 +293,12 @@ list<string> CClients::GetIgnoreFriendList( const int nClient, EIgnoreFriendList
 		return clientsIgnoreFriendList;
 	}
 	else
-		return list<string>();
+		return std::list<std::string>();
 }
 
-bool CClients::IsCorrectCDKey( const string &szCDKey )
+bool CClients::IsCorrectCDKey( const std::string &szCDKey )
 {
-	const string szQuery = "SELECT cdkey FROM validCDKeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
+	const std::string szQuery = "SELECT cdkey FROM validCDKeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
@@ -307,7 +307,7 @@ bool CClients::IsCorrectCDKey( const string &szCDKey )
 	return bIsValid;
 }
 
-bool CClients::IsBadNick( const string &szNick )
+bool CClients::IsBadNick( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return true;
@@ -317,10 +317,10 @@ bool CClients::IsBadNick( const string &szNick )
 	return	false;
 }
 
-bool CClients::IsBannedNick( const string &szNick )
+bool CClients::IsBannedNick( const std::string &szNick )
 {
 	bool ans = false;
-	string szQuery = "SELECT banned FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
+	std::string szQuery = "SELECT banned FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
 	pResult = mysql_store_result( pMySQL );
@@ -336,10 +336,10 @@ bool CClients::IsBannedNick( const string &szNick )
 	return ans;
 }
 
-bool CClients::IsBannedCDKey( const string &szCDKey )
+bool CClients::IsBannedCDKey( const std::string &szCDKey )
 {
 	bool ans = false;
-	string szQuery = "SELECT banned FROM CDKeys WHERE CDKey = '" + EscapeString( szCDKey ) + "'";
+	std::string szQuery = "SELECT banned FROM CDKeys WHERE CDKey = '" + EscapeString( szCDKey ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
 	pResult = mysql_store_result( pMySQL );
@@ -355,16 +355,16 @@ bool CClients::IsBannedCDKey( const string &szCDKey )
 	return ans;
 }
 
-const string CClients::GetCDKey( const string &szNick )
+const std::string CClients::GetCDKey( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return "";
-	string szQuery = "SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
+	std::string szQuery = "SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
 		EscapeString( szNick ) + "')";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT;
-	string ans = "";
+	std::string ans = "";
 	if ( mysql_num_rows( pResult ) > 0 )
 	{
 		MYSQL_ROW row = mysql_fetch_row( pResult );
@@ -374,17 +374,17 @@ const string CClients::GetCDKey( const string &szNick )
 	return ans;
 }
 
-const string CClients::GetPassword( const string &szNick )
+const std::string CClients::GetPassword( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return "";
 
-	string szQuery = "SELECT users.password FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
+	std::string szQuery = "SELECT users.password FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 		EscapeString( szNick ) + "')";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT;
-	string ans = "";
+	std::string ans = "";
 	if ( mysql_num_rows( pResult ) > 0 )
 	{
 		MYSQL_ROW row = mysql_fetch_row( pResult );
@@ -394,17 +394,17 @@ const string CClients::GetPassword( const string &szNick )
 	return ans;
 }
 
-const string CClients::GetEmail( const string &szNick )
+const std::string CClients::GetEmail( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return "";
 
-	string szQuery = "SELECT users.email FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
+	std::string szQuery = "SELECT users.email FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 		EscapeString( szNick ) + "')";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT;
-	string ans = "";
+	std::string ans = "";
 	if ( mysql_num_rows( pResult ) > 0 )
 	{
 		MYSQL_ROW row = mysql_fetch_row( pResult );
@@ -414,11 +414,11 @@ const string CClients::GetEmail( const string &szNick )
 	return ans;
 }
 
-bool CClients::IsNickRegistered( const string &szNick )
+bool CClients::IsNickRegistered( const std::string &szNick )
 {
 	if ( szNick.empty() )
 		return false;
-	string szQuery = "SELECT nameID FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
+	std::string szQuery = "SELECT nameID FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
 	pResult = mysql_store_result( pMySQL );
@@ -431,22 +431,22 @@ bool CClients::IsNickRegistered( const string &szNick )
 	return false;
 }
 
-void CClients::Register( const string &_szNick, const string &_szPassword, const string &_szCDKey )
+void CClients::Register( const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey )
 {
 	DebugTrace( "Registration without email address!!" );
 	Register( _szNick, _szPassword, _szCDKey, "nobody@nowhere.org" );
 }
 
-void CClients::Register( const string &_szNick, const string &_szPassword, const string &_szCDKey, const string &_szEmail )
+void CClients::Register( const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail )
 {
 	if ( _szNick.empty() )
 		return;
 
-	string szNick = EscapeString( _szNick );
-	string szPassword = EscapeString( _szPassword );
-	string szCDKey = EscapeString( _szCDKey );
-	string szEmail = EscapeString( _szEmail );
-	string szQuery = "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'";
+	std::string szNick = EscapeString( _szNick );
+	std::string szPassword = EscapeString( _szPassword );
+	std::string szCDKey = EscapeString( _szCDKey );
+	std::string szEmail = EscapeString( _szEmail );
+	std::string szQuery = "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
 	pResult = mysql_store_result( pMySQL );
@@ -463,7 +463,7 @@ void CClients::Register( const string &_szNick, const string &_szPassword, const
 		MYSQL_CHECK_RESULT
 	}
 	MYSQL_ROW row = mysql_fetch_row( pResult );
-	string szCDKeyID = row[0];
+	std::string szCDKeyID = row[0];
 	mysql_free_result( pResult );
 
 	szQuery = "INSERT INTO names (Name) VALUES ('" + szNick + "')";
@@ -473,7 +473,7 @@ void CClients::Register( const string &_szNick, const string &_szPassword, const
 	pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
 	row = mysql_fetch_row( pResult );
-	string szNameID = row[0];
+	std::string szNameID = row[0];
 	mysql_free_result( pResult );
 
 	szQuery = "INSERT INTO gamestats (xp) VALUES ('0')";
@@ -483,7 +483,7 @@ void CClients::Register( const string &_szNick, const string &_szPassword, const
 	pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
 	row = mysql_fetch_row( pResult );
-	string szStatsID = row[0];
+	std::string szStatsID = row[0];
 	mysql_free_result( pResult );
 
 	szQuery = "INSERT INTO users (name, cdkey, email, password, gamestats) VALUES ('"+ szNameID + "','" +
@@ -492,12 +492,12 @@ void CClients::Register( const string &_szNick, const string &_szPassword, const
 
 }
 
-SLadderDBInfo* CClients::GetLadderInfoFromDB( const string &szNick )
+SLadderDBInfo* CClients::GetLadderInfoFromDB( const std::string &szNick )
 {
-	hash_map<string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
+	std::unordered_map<std::string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
 	if ( it == ladderInfoCache.end() )
 	{
-		static hash_map<string,int> rawData;
+		static std::unordered_map<std::string,int> rawData;
 		GetRawLadderInfoFromDB( &rawData, szNick );
 		static CPtr<SLadderDBInfo> pInfo;
 		pInfo = new SLadderDBInfo();
@@ -514,29 +514,29 @@ SLadderDBInfo* CClients::GetLadderInfoFromDB( const string &szNick )
 	}
 }
 
-void CClients::PutLadderInfoToDB( const string &szNick )
+void CClients::PutLadderInfoToDB( const std::string &szNick )
 {
-	hash_map< string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
+	std::unordered_map< std::string, CPtr<SLadderDBInfo> >::const_iterator it = ladderInfoCache.find( szNick );
 	if ( it != ladderInfoCache.end() )
 	{
 		SLadderDBInfo* pInfo = it->second;
-		static hash_map<string,int> rawData;
+		static std::unordered_map<std::string,int> rawData;
 		ConvertLadderInfo( pInfo, &rawData, false );
 		PutRawLadderInfoToDB( szNick, rawData );
 		nMaxXP = Max( nMaxXP, pInfo->nXP );
 	}
 }
 
-void CClients::LockLadderInfo( const string &szNick )
+void CClients::LockLadderInfo( const std::string &szNick )
 {
 	if ( ladderInfoCache.find( szNick ) == ladderInfoCache.end() )
 		return;
 	++ladderInfoCacheLockCounter[szNick];
 }
 
-void CClients::UnlockLadderInfo( const string &szNick )
+void CClients::UnlockLadderInfo( const std::string &szNick )
 {
-	hash_map<string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
+	std::unordered_map<std::string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
 	if ( it != ladderInfoCacheLockCounter.end() )
 	{
 		int &nCounter = it->second;
@@ -551,7 +551,7 @@ void CClients::UnlockLadderInfo( const string &szNick )
 	}
 }
 
-void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pHashMap, const bool bReadFromHashMap ) const
+void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, std::unordered_map<std::string,int> *pHashMap, const bool bReadFromHashMap ) const
 {
 #define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(pInfo->var), bReadFromHashMap )
 #define CONVERT_VECTOR( name, var, nSize ) NHashMapConvertor::ConvertVector( pHashMap, name, &(pInfo->var), bReadFromHashMap );\
@@ -583,11 +583,11 @@ void CClients::ConvertLadderInfo( SLadderDBInfo *pInfo, hash_map<string,int> *pH
 #undef CONVERT_VECTOR
 }
 
-void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string &szNick )
+void CClients::GetRawLadderInfoFromDB( std::unordered_map<std::string,int> *pInfo, const std::string &szNick )
 {
 	pInfo->clear();
-	const string szClientDBID = std::to_string(  GetDBUserIDbyNick( szNick ) );
-	const string szQuery = "SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
+	const std::string szClientDBID = std::to_string(  GetDBUserIDbyNick( szNick ) );
+	const std::string szQuery = "SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
   MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
@@ -605,12 +605,12 @@ void CClients::GetRawLadderInfoFromDB( hash_map<string,int> *pInfo, const string
 	mysql_free_result( pResult );
 }
 
-void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string,int> &ladderInfo )
+void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unordered_map<std::string,int> &ladderInfo )
 {
 	const int nClientDBID = GetDBUserIDbyNick( szNick );
-	const string szClientDBID = std::to_string(  nClientDBID );
+	const std::string szClientDBID = std::to_string(  nClientDBID );
 	{
-		hash_map<string,int>::const_iterator statsIDiter = ladderInfo.find( "statsID" );
+		std::unordered_map<std::string,int>::const_iterator statsIDiter = ladderInfo.find( "statsID" );
 		if ( statsIDiter != ladderInfo.end() && statsIDiter->second != nClientDBID )
 		{
 			DebugTrace( "PutLadderInfoToDB: invalid ClientDBID detected!" );
@@ -619,29 +619,29 @@ void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string
 	}
 #ifdef CHECK_TABLE_STRUCTURE
 	{
-		hash_set<string> availableColumns = GetTableColumns( "gamestats" );
-		list<string> columnsToCreate;
-		for ( hash_map<string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
+		std::unordered_set<std::string> availableColumns = GetTableColumns( "gamestats" );
+		std::list<std::string> columnsToCreate;
+		for ( std::unordered_map<std::string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
 		{
-			const string &szStatsName = it->first;
+			const std::string &szStatsName = it->first;
 			if ( availableColumns.find( szStatsName ) == availableColumns.end() )
 				columnsToCreate.push_back( szStatsName );
 		}
 		columnsToCreate.sort();
-		string szQuery = "ALTER TABLE gamestats   ";
-		for ( list<string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
+		std::string szQuery = "ALTER TABLE gamestats   ";
+		for ( std::list<std::string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
-			const string &szColumnName = *it;
+			const std::string &szColumnName = *it;
 			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	}
 #endif
-	string szQuery = "UPDATE gamestats AS g, users AS u SET  ";
-	for ( hash_map<string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
+	std::string szQuery = "UPDATE gamestats AS g, users AS u SET  ";
+	for ( std::unordered_map<std::string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
 	{
-		const string &szStatsName = it->first;
+		const std::string &szStatsName = it->first;
 		const int &nStatsValue = it->second;
 		szQuery += " g." + szStatsName + " = " + StrFmt( "'%d',", nStatsValue );
 	}
@@ -650,13 +650,13 @@ void CClients::PutRawLadderInfoToDB( const string &szNick, const hash_map<string
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 }
 
-hash_set<string> CClients::GetTableColumns( const string &szTableName )
+std::unordered_set<std::string> CClients::GetTableColumns( const std::string &szTableName )
 {
-	const string szQuery = "SHOW COLUMNS FROM " + szTableName;
+	const std::string szQuery = "SHOW COLUMNS FROM " + szTableName;
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
-	hash_set<string> columns;
+	std::unordered_set<std::string> columns;
 	MYSQL_ROW row;
 	while ( row = mysql_fetch_row( pResult ) )
 	{
@@ -666,9 +666,9 @@ hash_set<string> CClients::GetTableColumns( const string &szTableName )
 	return columns;
 }
 
-bool CClients::IsOnLine( const string &szNick ) const
+bool CClients::IsOnLine( const std::string &szNick ) const
 {
-	string szNickLowerCase;
+	std::string szNickLowerCase;
 	NStr::ToLower( &szNickLowerCase, szNick );
 
 	return onLineNicks.find( szNickLowerCase ) != onLineNicks.end();
@@ -679,9 +679,9 @@ bool CClients::IsOnLine( const int nClientID ) const
 	return onLine.find( nClientID ) != onLine.end();
 }
 
-void CClients::SetOnLine( const string &szNick, const int nClientID )
+void CClients::SetOnLine( const std::string &szNick, const int nClientID )
 {
-	string szNickLowerCase;
+	std::string szNickLowerCase;
 	NStr::ToLower( &szNickLowerCase, szNick );
 	onLineNicks.insert( szNickLowerCase );
 	onLine.erase( nClientID );
@@ -703,9 +703,9 @@ void CClients::SetOnLine( const string &szNick, const int nClientID )
 void CClients::SetOffLine( const int nClientID )
 {
 	onLine.erase( nClientID );
-	const string szNick = nickByID[nClientID];
+	const std::string szNick = nickByID[nClientID];
 	
-	string szNickLowerCase;
+	std::string szNickLowerCase;
 	NStr::ToLower( &szNickLowerCase, szNick );
 	onLineNicks.erase( szNickLowerCase );
 
@@ -713,7 +713,7 @@ void CClients::SetOffLine( const int nClientID )
 	idByNick.erase( szNick );
 	DBUserIDByNick.erase( szNick );
 	gameConnections.erase( nClientID );
-	hash_map<string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
+	std::unordered_map<std::string,int>::iterator it = ladderInfoCacheLockCounter.find( szNick );
 	if ( it == ladderInfoCacheLockCounter.end() )
 		ladderInfoCache.erase( szNick );
 
@@ -723,9 +723,9 @@ void CClients::SetOffLine( const int nClientID )
 #endif
 }
 
-const bool CClients::GetNick( const int nClientID, string *pszNick ) const
+const bool CClients::GetNick( const int nClientID, std::string *pszNick ) const
 {
-	hash_map<int, string>::const_iterator iter = nickByID.find( nClientID );
+	std::unordered_map<int, std::string>::const_iterator iter = nickByID.find( nClientID );
 	if ( iter != nickByID.end() )
 	{
 		*pszNick = iter->second;
@@ -735,9 +735,9 @@ const bool CClients::GetNick( const int nClientID, string *pszNick ) const
 		return false;
 }
 
-const bool CClients::GetClientID( const string &szNick, int *pnClientID ) const
+const bool CClients::GetClientID( const std::string &szNick, int *pnClientID ) const
 {
-	hash_map<string, int>::const_iterator iter = idByNick.find( szNick );
+	std::unordered_map<std::string, int>::const_iterator iter = idByNick.find( szNick );
 	if ( iter != idByNick.end() )
 	{
 		*pnClientID = iter->second;
@@ -749,7 +749,7 @@ const bool CClients::GetClientID( const string &szNick, int *pnClientID ) const
 
 const bool CClients::GetCommonClientInfo( const int nClientID, SCommonClientInfo *pCommonClientInfo ) const
 {
-	hash_map<int, SCommonClientInfo>::const_iterator iter = onLine.find( nClientID );
+	std::unordered_map<int, SCommonClientInfo>::const_iterator iter = onLine.find( nClientID );
 	if ( iter == onLine.end() )
 		return false;
 	else
@@ -761,15 +761,15 @@ const bool CClients::GetCommonClientInfo( const int nClientID, SCommonClientInfo
 
 void CClients::SetCommonClientInfo( const int nClientID, const SCommonClientInfo &commonClientInfo )
 {
-	hash_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
+	std::unordered_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
 	if ( iter != onLine.end() )
 		iter->second = commonClientInfo;
 }
 
 void CClients::SetGameConnectInfo( const int nClientID, const int nConnection, 
-																	 const string &szIP, const int nGameConnectPort )
+																	 const std::string &szIP, const int nGameConnectPort )
 {
-	hash_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
+	std::unordered_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
 	if ( iter != onLine.end() )
 	{
 		SGameConnection &conn= gameConnections[nClientID];
@@ -781,12 +781,12 @@ void CClients::SetGameConnectInfo( const int nClientID, const int nConnection,
 
 bool CClients::GetGameConnectInfo( const int nClientID, const int nConnection, SGameConnection::SAddressInfo *pAddressInfo ) const
 {
-	hash_map<int, SGameConnection>::const_iterator iter = gameConnections.find( nClientID );
+	std::unordered_map<int, SGameConnection>::const_iterator iter = gameConnections.find( nClientID );
 	if ( iter == gameConnections.end() )
 		return false;
 
 	const SGameConnection &conn = iter->second;
-	hash_map<int, SGameConnection::SAddressInfo>::const_iterator addr_iter = conn.connections.find( nConnection );
+	std::unordered_map<int, SGameConnection::SAddressInfo>::const_iterator addr_iter = conn.connections.find( nConnection );
 	if ( addr_iter == conn.connections.end() )
 		return false;
 
@@ -794,21 +794,21 @@ bool CClients::GetGameConnectInfo( const int nClientID, const int nConnection, S
 	return true;
 }
 
-void CClients::Log( const int nClientID, const string &szMsg ) const
+void CClients::Log( const int nClientID, const std::string &szMsg ) const
 {
 #if !defined( _FINALRELEASE ) && !defined( _BETARELEASE )
 	//DebugTrace( "%s", szMsg.c_str() );
-	hash_map<int, string>::const_iterator iter = nickByID.find( nClientID );
+	std::unordered_map<int, std::string>::const_iterator iter = nickByID.find( nClientID );
 	if ( iter != nickByID.end() )
 		GetNetLogger()->Log( iter->second, szMsg );
 #endif // _FINALRELEASE
 }
 
-bool CClients::IsCDKeyOnline( const string &szCDKey )
+bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 {
 	if ( szCDKey == "" )
 		return true;
-	string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) + 
+	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) + 
 		"' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
@@ -818,7 +818,7 @@ bool CClients::IsCDKeyOnline( const string &szCDKey )
 	for ( int i = 0; i < nRows; ++i )
 	{
 		MYSQL_ROW row = mysql_fetch_row( pResult );
-		string szNick = row[0];
+		std::string szNick = row[0];
 		if ( IsOnLine( szNick ) )
 		{
 			bResult = true;
@@ -829,21 +829,21 @@ bool CClients::IsCDKeyOnline( const string &szCDKey )
 	return bResult;
 }
 
-string CClients::EscapeString( const string &szString ) const
+std::string CClients::EscapeString( const std::string &szString ) const
 {
 	char *pBuffer = new char[ szString.length() * 2 + 2 ];
 	mysql_real_escape_string( pMySQL, pBuffer, szString.c_str(), szString.length() );
-	const string szOut = pBuffer;
+	const std::string szOut = pBuffer;
 	delete []pBuffer;
 	return szOut;
 }
 
-void CClients::DBLogServerStatistics( const vector<string> &names, const vector<float> &values )
+void CClients::DBLogServerStatistics( const std::vector<std::string> &names, const std::vector<float> &values )
 {
 	NI_VERIFY( names.size() == values.size(), "Invalid data in CClients::DBLogServerStatistics", return );
 #ifdef CHECK_TABLE_STRUCTURE
-	hash_set<string> availableFields = GetTableColumns( "ServerLog" );
-	list<string> columnsToCreate;
+	std::unordered_set<std::string> availableFields = GetTableColumns( "ServerLog" );
+	std::list<std::string> columnsToCreate;
 	for ( int i = 0; i < names.size(); ++i )
 	{
 		if ( availableFields.find( names[i] ) == availableFields.end() )
@@ -853,17 +853,17 @@ void CClients::DBLogServerStatistics( const vector<string> &names, const vector<
 	}
 	if ( !columnsToCreate.empty() )
 	{
-		string szQuery = "ALTER TABLE ServerLog ";
-		for ( list<string>::iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
+		std::string szQuery = "ALTER TABLE ServerLog ";
+		for ( std::list<std::string>::iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
-			const string &szColumnName = *it;
+			const std::string &szColumnName = *it;
 			szQuery += StrFmt( "ADD COLUMN %s FLOAT DEFAULT '-1', ", szColumnName.c_str() );
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	}
 #endif
-	string szQuery = "INSERT INTO ServerLog ( LogTime, ";
+	std::string szQuery = "INSERT INTO ServerLog ( LogTime, ";
 	for ( int i = 0; i < names.size(); ++i )
 	{
 		szQuery += StrFmt( "%s, ", names[i] );

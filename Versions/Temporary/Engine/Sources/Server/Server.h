@@ -15,13 +15,13 @@ class CGameServer : public CObjectBase
 	CObj<class CClients> pClients;
 	CObj<class CTerminal> pTerminal;
 
-	vector< CPtr<CPacketProcessor> > lobbies;
+	std::vector< CPtr<CPacketProcessor> > lobbies;
 	UINT64 nLastStatisticsLogTime;
 	int nServerStatisticsLogPeriod;
 
 	typedef void (CGameServer::*PROCESS_CMD_FUNC)( const SCommand &cmd );
-	hash_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
-	list< CPtr<class CNetPacket> > consoleCommandPackets;
+	std::unordered_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
+	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
 
 	MYSQL *pMySQL;
 	UINT64 nMySQLLastPingTime;
@@ -39,7 +39,7 @@ class CGameServer : public CObjectBase
 	void SendPackets();
 public:
 	CGameServer() { }
-	CGameServer( class CCommands *pCommands, const string &szCfgFile );
+	CGameServer( class CCommands *pCommands, const std::string &szCfgFile );
 	virtual ~CGameServer();
 	class CClients* GetClients() { return pClients; }
 
