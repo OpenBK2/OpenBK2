@@ -145,11 +145,18 @@ void PrintTabs( const int nAmount, FILE *file )
 {
 	if ( nAmount <= 0 )
 		return;
-	char buffer[256];
-	for ( int i = 0; i < nAmount; ++i )
-		buffer[i] = '\t';
-	buffer[nAmount] = 0;
-	fprintf( file, buffer );
+	// Two things were wrong here, and only the smaller one was a warning.
+	//
+	// The buffer was a fixed char[256] filled by a loop bounded only by
+	// nAmount, with buffer[nAmount] written after it, so a nesting depth of 256
+	// or more wrote off the end of a stack array. Nothing checked the depth,
+	// and nothing here bounds how deep the exported XML can nest.
+	//
+	// The warning was the line below it: fprintf( file, buffer ) passes runtime
+	// text as the format string, so a tab is fine but anything carrying a % is
+	// not. Writing the string as an argument settles both questions, and
+	// std::string removes the fixed size.
+	fmt::print( file, "{}", std::string( nAmount, '\t' ) );
 }
 
 void StartLevel( const std::string &szName, const std::string &szType, CLevelsList &levels, FILE *file, int nArraySize, std::list< std::pair<std::string, std::string> > *pAtributes )
