@@ -18,7 +18,6 @@
 
 #include "Statistics.h"
 
-#include <typeinfo.h>
 #include "vendor/MySQL/include/mysql.h"
 
 #include <fmt/format.h>
