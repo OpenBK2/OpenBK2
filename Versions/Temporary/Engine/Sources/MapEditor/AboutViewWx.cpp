@@ -3,25 +3,20 @@
 #include "AboutView.h"
 
 
+#include "MapEditorLib/BuildDetails.h"
 #include "MapEditorLib/Interface_UserData.h"
 #include "MapEditorLib/WxImage.h"
 #include "MapEditorLib/WxWidget.h"
 #include "MapEditorLib/WxOwnership.h"
 #include "MapEditorLib/WxToolDialog.h"
 
-// Generated at build time by cmake/gitrevision.cmake (add_git_revision).
-#include "GitRevision.h"
-
 #include <wx/button.h>
 #include <wx/clipbrd.h>
-#include <wx/platinfo.h>
 #include <wx/settings.h>
 #include <wx/sizer.h>
 #include <wx/statbmp.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
-#include <wx/utils.h>
-#include <wx/version.h>
 
 // About, in wx. The fourth dialog, and the first that needs a picture.
 //
@@ -39,10 +34,14 @@
 //
 // Below the MFC dialog's contents, and not in it, a details box for bug
 // reports: which build this is (revision, CI build number, configuration,
-// architecture), which wx it runs on (what WxEditor's CollectDetails reports),
-// and the session it is (the MOD, the code page, the display scale). Read-only
-// text rather than labels so any of it can be selected, and a Copy button for
-// all of it.
+// architecture), which libraries it runs on (wx, Granny, glTF) and which
+// session it is (the MOD, the code page, the display scale). Read-only text
+// rather than labels so any of it can be selected, and a Copy button for all
+// of it.
+//
+// The block itself is NBuildDetails::Collect (MapEditorLib/BuildDetails.h),
+// which is what the editor also logs at startup. It was collected here, once,
+// and the log window said something else entirely; see that header.
 
 namespace
 {
@@ -59,102 +58,6 @@ namespace
 	// The details box's width in characters: wide enough for the longest line,
 	// the revision with its branch and date. Its height follows its lines.
 	const int N_DETAILS_COLUMNS = 72;
-
-
-	const char* ConfigurationName()
-	{
-#if defined( _FINALRELEASE )
-		return "final release";
-#elif defined( _DEBUG )
-		return "debug";
-#else
-		return "release";
-#endif
-	}
-
-
-	// Which compiler built this, for a bug report.
-	//
-	// _MSC_FULL_VER stood here alone, which made the line a statement that this
-	// was built with MSVC as much as a version. It is not, off Windows, and the
-	// answer is worth having there for the same reason it is worth having here.
-	//
-	// Clang is asked about before GCC on purpose: clang defines __GNUC__ as well,
-	// to claim compatibility, so testing for GCC first would name it wrongly.
-	wxString CompilerName()
-	{
-#if defined( __clang__ )
-		return wxString::Format( "clang %d.%d.%d", __clang_major__, __clang_minor__,
-														 __clang_patchlevel__ );
-#elif defined( __GNUC__ )
-		return wxString::Format( "gcc %d.%d.%d", __GNUC__, __GNUC_MINOR__,
-														 __GNUC_PATCHLEVEL__ );
-#elif defined( _MSC_FULL_VER )
-		return wxString::Format( "MSVC %d", _MSC_FULL_VER );
-#else
-		return "unknown";
-#endif
-	}
-
-
-	// The instruction set the compiler was told it may use (-DARCHITECTURE),
-	// highest first.
-	const char* InstructionSetName()
-	{
-#if defined( __AVX512F__ )
-		return "AVX512";
-#elif defined( __AVX2__ )
-		return "AVX2";
-#elif defined( __AVX__ )
-		return "AVX";
-#elif defined( _M_X64 ) || ( defined( _M_IX86_FP ) && ( _M_IX86_FP >= 2 ) )
-		return "SSE2";
-#else
-		return "default";
-#endif
-	}
-
-
-	// Everything a bug report should say about the editor it came from, one
-	// "name: value" per line.
-	wxString CollectDetails( const wxWindow *pWindow )
-	{
-		const SUserData *const pUserData = Singleton<IUserDataContainer>()->Get();
-		wxString strDetails;
-		strDetails << "Version       : " << wxString::FromUTF8( pUserData->constUserData.szVersion.c_str() ) << "\n";
-		strDetails << "Revision      : " << GIT_REVISION_STR << " (" << GIT_BRANCH_STR << ", " << GIT_COMMIT_DATE_STR << ")\n";
-		// CI numbers its builds and stamps their time; a local build is 0 and
-		// has no stamp (cmake/versioninfo.cmake), so the compile time stands in.
-		strDetails << "Build         : " << REVISION_NUMBER_STR;
-		if ( ( BUILD_DATE_TIME_STR[0] != 0 ) && ( std::string( BUILD_DATE_TIME_STR ) != "1970-01-01 00:00:00" ) )
-		{
-			strDetails << ", built " << BUILD_DATE_TIME_STR;
-		}
-		else
-		{
-			strDetails << ", local build, compiled " << __DATE__ << " " << __TIME__;
-		}
-		strDetails << "\n";
-		strDetails << "Configuration : " << ConfigurationName() << ", " << ( sizeof( void* ) * 8 ) << "-bit, " << InstructionSetName() << "\n";
-		strDetails << "Compiler      : " << CompilerName() << "\n";
-		strDetails << "MOD           : " << ( pUserData->szOpenedMODFolder.empty() ? wxString( "none" ) : wxString::FromUTF8( pUserData->szOpenedMODFolder.c_str() ) ) << "\n";
-		strDetails << "wx (compiled) : " << wxVERSION_STRING << ", debug level " << wxDEBUG_LEVEL << "\n";
-		// The DLL actually loaded, which is what can differ from the line above.
-		strDetails << "wx (running)  : " << wxGetLibraryVersionInfo().GetVersionString() << "\n";
-		strDetails << "wx port       : " << wxPlatformInfo::Get().GetPortIdName() << ", Unicode " << wxUSE_UNICODE << ", sizeof(wxChar) " << static_cast<int>( sizeof( wxChar ) ) << "\n";
-		strDetails << "OS            : " << wxGetOsDescription() << "\n";
-#if BOOST_OS_WINDOWS
-		// The one GetACP left in the editor, and the one place it earns its keep:
-		// the narrow strings are UTF-8 only where the manifest's code page took
-		// (Windows 10 1903 and later), so a value other than 65001 here is the
-		// symptom to look for. Windows-only because there is no such thing to
-		// report elsewhere: the conversions say UTF-8 outright and never ask the
-		// locale.
-		strDetails << "ANSI code page: " << static_cast<unsigned>( ::GetACP() ) << "\n";
-#endif
-		strDetails << "Display scale : " << wxString::Format( "%.2f", pWindow->GetDPIScaleFactor() ) << "\n";
-		return strDetails;
-	}
 
 	class CAboutWxDialog : public CWxToolDialog
 	{
@@ -203,7 +106,8 @@ namespace
 			// The details, in a fixed-width font so the names line up.
 			pSizer->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Details for bug reports:" ),
 									 wxSizerFlags().Border( wxLEFT | wxRIGHT | wxTOP, 10 ) );
-			wxTextCtrl *const pDetails = NWx::Child<wxTextCtrl>( this, wxID_ANY, CollectDetails( this ), wxDefaultPosition, wxDefaultSize,
+			wxTextCtrl *const pDetails = NWx::Child<wxTextCtrl>( this, wxID_ANY,
+																													 wxString::FromUTF8( NBuildDetails::Collect().c_str() ), wxDefaultPosition, wxDefaultSize,
 																													 wxTE_MULTILINE | wxTE_READONLY | wxTE_DONTWRAP | wxHSCROLL );
 			pDetails->SetFont( wxFont( wxFontInfo( GetFont().GetPointSize() ).Family( wxFONTFAMILY_TELETYPE ) ) );
 			// Every line shown without scrolling: the lines' height in the box's

@@ -3,7 +3,7 @@
 #include "ED_B2_M1_export.h"
 
 //
-#include "vendor/granny/include/granny.h"
+#include "MapEditorLib/BuildDetails.h"
 #include "MapEditorLib/Interface_Editor.h"
 #include "MapEditorLib/Interface_ChildFrame.h"
 #include "MapEditorLib/MapEditorModule.h"
@@ -23,29 +23,6 @@ namespace
 {
 	CObj<CInteractiveMayaExportTool> pInteractiveMayaExportTool;
 
-	void PrintGrannyVersions()
-	{
-		ILogger *pLogger = NLog::GetLogger();
-#define STRINGIZE_INNER(x)                    #x
-#define STRINGIZE(x)                          STRINGIZE_INNER(x)
-#define GRANNY_VERSION_STR(number, release)	  number " (" release ")"
-
-		// Print out what version of the .h file we're using
-		pLogger->Log( LT_NORMAL, "Compiled with " );
-		pLogger->Log( LT_IMPORTANT, GRANNY_VERSION_STR(GrannyProductVersion, STRINGIZE(GrannyProductReleaseName)) );
-		pLogger->Log( LT_NORMAL, " granny version (.h).\n" );
-
-		// Print out what version of the .dll we're using
-		pLogger->Log( LT_NORMAL, "Using granny2.dll of version " );
-		pLogger->Log( LT_IMPORTANT, GrannyGetVersionString());
-		pLogger->Log( LT_NORMAL, ".\n" );
-#undef GRANNY_VERSION_STR
-
-		if ( !GrannyVersionsMatch )
-		{
-			pLogger->Log( LT_ERROR, "WARNING: 'compiled with' and 'using' granny version mismatch.\n" );
-		}
-	}
 	//
 	void LoadFilters()
 	{
@@ -183,7 +160,12 @@ void CEditorModuleB2M1::ModulePostCreateControls()
 {
 	// существует уже <все>
 	// вызывается после создания MainFrame, после LoadBarState
-	PrintGrannyVersions();
+	//
+	// The log window exists by now, and this is the first thing written to it.
+	// It used to be two lines about Granny alone, built here; it is now the same
+	// block the About box shows, so that a log pasted into a bug report says
+	// which build it came from. See MapEditorLib/BuildDetails.h.
+	NBuildDetails::Log();
 }
 
 void CEditorModuleB2M1::ModulePreDestroyControls()
