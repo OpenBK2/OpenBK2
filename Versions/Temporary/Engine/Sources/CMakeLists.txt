@@ -27,9 +27,15 @@ add_subdirectory("B2_M1_Terrain")
 add_subdirectory("libdb")
 add_subdirectory("Parser")
 
-# The dedicated lobby server. Off by default while it is mid-port.
+# The dedicated lobby server and the test client that drives it. Off by default
+# while they are mid-port.
+#
+# TestClient is under the same option rather than one of its own: it exists only
+# to exercise the server, the two were deployed and supervised together, and it
+# is how the server gets tested without a full game build.
 if(BUILD_SERVER)
     add_subdirectory("Server")
+    add_subdirectory("TestClient")
 endif()
 
 if(BUILD_EDITOR)
