@@ -4,6 +4,8 @@
 #include "LadderLobby.h"
 #include "vendor/MySQL/include/mysql.h"
 #include "Misc/StrProc.h"
+
+#include <algorithm>
 #include "Statistics.h"
 #include "HashMapConvertor.h"
 #include "LadderStats.h"
@@ -187,10 +189,10 @@ void CClients::DeleteIgnoreFriendPair( const int nRecipient, const std::string &
 		switch( eList )
 		{
 		case IGNORE_LIST:
-			ignoreList[ nRecipientDBUserID ].remove( nSenderDBUserID );
+			ignoreList[ nRecipientDBUserID ].erase( nSenderDBUserID );
 		break;
 		case FRIEND_LIST:
-			friendList[ nRecipientDBUserID ].remove( nSenderDBUserID );
+			friendList[ nRecipientDBUserID ].erase( nSenderDBUserID );
 		}
 		DeleteIgnoreFriendPairFromDB( nRecipientDBUserID, nSenderDBUserID, eList );
 	}
@@ -525,7 +527,7 @@ void CClients::PutLadderInfoToDB( const std::string &szNick )
 		static std::unordered_map<std::string,int> rawData;
 		ConvertLadderInfo( pInfo, &rawData, false );
 		PutRawLadderInfoToDB( szNick, rawData );
-		nMaxXP = Max( nMaxXP, pInfo->nXP );
+		nMaxXP = std::max( nMaxXP, pInfo->nXP );
 	}
 }
 
