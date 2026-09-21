@@ -16,7 +16,7 @@ class CGameServer : public CObjectBase
 	CObj<class CTerminal> pTerminal;
 
 	std::vector< CPtr<CPacketProcessor> > lobbies;
-	UINT64 nLastStatisticsLogTime;
+	uint64_t nLastStatisticsLogTime;
 	int nServerStatisticsLogPeriod;
 
 	typedef void (CGameServer::*PROCESS_CMD_FUNC)( const SCommand &cmd );
@@ -24,7 +24,7 @@ class CGameServer : public CObjectBase
 	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
 
 	MYSQL *pMySQL;
-	UINT64 nMySQLLastPingTime;
+	uint64_t nMySQLLastPingTime;
 	//
 	void CommandClientsList( const SCommand &cmd );
 	void CommandClientState( const SCommand &cmd );

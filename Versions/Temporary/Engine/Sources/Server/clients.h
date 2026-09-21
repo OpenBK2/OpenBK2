@@ -61,7 +61,7 @@ class CClients : public CObjectBase
 	std::unordered_map< int, std::unordered_set<int> > ignoreList; // <recipient, sender>
 	std::unordered_map< int, std::unordered_set<int> > friendList; // <player, list of friends >
 	int nQueries;
-	UINT64 dwQueriesCountTime;
+	uint64_t dwQueriesCountTime;
 	float fQueriesPerSecond;
 	float fPrevQueriesPerSecond;
 

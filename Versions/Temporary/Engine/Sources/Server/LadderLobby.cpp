@@ -139,7 +139,7 @@ void CLadderLobby::ReloadConfig()
 
 bool CLadderLobby::Segment()
 {
-	UINT64 nTime = GetLongTickCount();
+	uint64_t nTime = GetLongTickCount();
 	if ( nTime > nLastStepTime + STEP_LENGTH_TIME )
 	{
 		nLastStepTime = nTime;
@@ -161,7 +161,7 @@ bool CLadderLobby::Segment()
 
 void CLadderLobby::UpdateGames()
 {
-	const UINT64 nTime = GetLongTickCount();
+	const uint64_t nTime = GetLongTickCount();
 	std::list<int> gamesToDel;
 	for ( std::unordered_map< int, SLadderGameInfo >::iterator it = games.begin(); it != games.end(); ++it )
 	{
@@ -645,7 +645,7 @@ void CLadderLobby::CreateLadderGame( const SLadderGameInfo &_gameInfo )
 	std::list<int> players = gameInfo.team1Players;
 	std::list<int> team2players = gameInfo.team2Players;
 	players.splice( players.end(), team2players );
-	const UINT64 nTime = GetLongTickCount();
+	const uint64_t nTime = GetLongTickCount();
 	for ( std::list<int>::iterator it = players.begin(); it != players.end(); ++it )
 	{
 		const int nID = *it;
@@ -876,7 +876,7 @@ bool CLadderClient::CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pC
 		++nErrorLevel;
 	if ( nErrorLevel == 0 )
 		return true;
-	const UINT64 nTime = GetLongTickCount();
+	const uint64_t nTime = GetLongTickCount();
 	if ( nTime > nStartTime + pConsts->nWaitTime1 && nErrorLevel == 1 )
 		return true;
 	if ( nTime > nStartTime + pConsts->nWaitTime2 )

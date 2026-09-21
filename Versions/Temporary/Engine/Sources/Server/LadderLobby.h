@@ -20,7 +20,7 @@ public:
 	//SLadderStatistics dbInfo;
 	std::unordered_set< int > techLevels;
 	std::unordered_set< int > maps;
-	UINT64 nStartTime;
+	uint64_t nStartTime;
 	CLadderClient() {}
 	bool CanPlay( int nMapID, int nTechLevel, const CLadderConsts *pConsts );
 };
@@ -44,8 +44,8 @@ struct SLadderGameInfo
 	int nMapID;
 	int nTechLevel;
 	bool bHistoricity;
-	UINT64 nStartTime;
-	UINT64 nDeathTime;
+	uint64_t nStartTime;
+	uint64_t nDeathTime;
 	bool bIsDead;
 	std::unordered_set<int> winners;
 	std::unordered_map<int,int> playerRaces;
@@ -91,7 +91,7 @@ class CLadderLobby : public CGameLobby
 	std::unordered_map< int, SLadderGameInfo > games;
 	CPtr<CLadderConsts> pConsts;
 	CObj<IStatisticsCollector> pStatisticsCollector;
-	UINT64 nLastStepTime;
+	uint64_t nLastStepTime;
 
 	std::string szCfgFile;
 

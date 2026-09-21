@@ -4,7 +4,7 @@
 
 std::unordered_map< std::string, CObj<IStatisticsData> > CStatisticsCollector::globalData;// name - data
 std::unordered_map< std::string, CObj<CStatisticsCollector> > CStatisticsCollector::collectors;
-UINT64 CStatisticsCollector::nStartTime;
+uint64_t CStatisticsCollector::nStartTime;
 
 std::string CStatisticsCollector::DumpToStringSpecific() const
 {
@@ -103,13 +103,13 @@ void CAverageValuePerTime::Add( const float& fValue )
 
 float CAverageTimeBetweenEvents::GetValue() const
 {
-	const UINT64 nTimeDiff = GetLongTickCount() - nStartTime;
+	const uint64_t nTimeDiff = GetLongTickCount() - nStartTime;
 	return nEvents == 0ULL ? 0.0f : (float)( double( nTimeDiff / 1000 ) / double( nEvents ) );
 }
 
 float CAverageValuePerTime::GetValue() const
 {
-	const UINT64 nTimeDiff = GetLongTickCount() - nStartTime;
+	const uint64_t nTimeDiff = GetLongTickCount() - nStartTime;
 	return nTimeDiff == 0ULL ? 0.0f : ( fEventsSum / nTimeDiff * 1000 );
 }
 

@@ -18,7 +18,7 @@ class CChatLobby : public CPacketProcessor
 
 	std::string szCfgFile;
 	static std::wstring wszWelcomeText;
-	UINT64 nLastRefreshTime;
+	uint64_t nLastRefreshTime;
 	int nRefreshTime; // time interval between refreshes
 	int nMaxFriends;
 

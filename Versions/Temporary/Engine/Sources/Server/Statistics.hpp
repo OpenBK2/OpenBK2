@@ -12,7 +12,7 @@ class CStatisticsCollector : public IStatisticsCollector
 	std::unordered_map< std::string, CObj<IStatisticsData> > specificData;						//	name -> data
 	std::string szSpecificName;																						//	name of collector
 
-	static UINT64 nStartTime;
+	static uint64_t nStartTime;
 
 	std::string DumpToStringSpecific() const;
 	void ResetSpecific();
@@ -46,8 +46,8 @@ public:
 class CAverageTimeBetweenEvents : public IStatisticsData
 {
 	OBJECT_NOCOPY_METHODS( CAverageTimeBetweenEvents )
-	UINT64 nEvents;
-	UINT64 nStartTime;
+	uint64_t nEvents;
+	uint64_t nStartTime;
 public:
 	CAverageTimeBetweenEvents() : nStartTime( 0ULL ), nEvents( 0ULL ) {}
 	virtual float GetValue() const;
@@ -60,7 +60,7 @@ class CAverageValuePerTime : public IStatisticsData
 	OBJECT_NOCOPY_METHODS( CAverageValuePerTime )
 
 	float fEventsSum;
-	UINT64 nStartTime;
+	uint64_t nStartTime;
 public:
 	CAverageValuePerTime() : nStartTime( 0ULL ), fEventsSum( 0 ) {}
 	virtual float GetValue() const;

@@ -21,7 +21,7 @@ class CGameLobby : public CPacketProcessor
 
 	struct SLobbyGameInfo
 	{
-		UINT64 nLastGameHeartBeat;
+		uint64_t nLastGameHeartBeat;
 		std::unordered_set<int> clients;
 		SGameInfo gameInfo;
 		CPtr<class CSpecificGameInfo> pSpecificGameInfo;

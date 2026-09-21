@@ -203,7 +203,7 @@ void CGameServer::Segment()
 	ProcessCommands();
 	pClients->RecalcDBOverload();
 
-	const UINT64 nTime = GetLongTickCount();
+	const uint64_t nTime = GetLongTickCount();
 	if ( nTime > nMySQLLastPingTime + 60000 ) // once per minute
 	{
 		nMySQLLastPingTime = GetLongTickCount();

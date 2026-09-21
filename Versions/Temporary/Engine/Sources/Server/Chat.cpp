@@ -45,7 +45,7 @@ void CChatLobby::Initialize()
 
 bool CChatLobby::Segment()
 {
-	UINT64 nTime = GetLongTickCount();
+	uint64_t nTime = GetLongTickCount();
 	if ( nTime < nLastRefreshTime + nRefreshTime )
 		return true;
 	nLastRefreshTime = nTime;

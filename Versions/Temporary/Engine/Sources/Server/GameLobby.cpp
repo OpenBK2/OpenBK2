@@ -115,7 +115,7 @@ void CGameLobby::GameInfoChanged( const int nID )
 	if ( lobbyGames.find( nID ) != lobbyGames.end() )
 	{
 		gamesVersions.Change( nID );
-		const UINT64 nTime = GetLongTickCount();
+		const uint64_t nTime = GetLongTickCount();
 		if ( lobbyGames[nID].nLastGameHeartBeat < nTime )
 			lobbyGames[nID].nLastGameHeartBeat = nTime;
 		if ( lobbyGames[nID].gameInfo.nPlayers > 0 && lobbyGames[nID].clients.size() == 0 )
@@ -168,7 +168,7 @@ bool CGameLobby::ProcessGameHeartBeatPacket( CGameHeartBeatPacket *pPacket )
 
 	if ( lobbyGames.find( pPacket->nGameID ) != lobbyGames.end() )
 	{
-		const UINT64 nTime = GetLongTickCount();
+		const uint64_t nTime = GetLongTickCount();
 		if ( lobbyGames[pPacket->nGameID].nLastGameHeartBeat < nTime )
 			lobbyGames[pPacket->nGameID].nLastGameHeartBeat = nTime;
 		return true;
@@ -527,7 +527,7 @@ bool CGameLobby::ProcessSpecificGameInfo( CSpecificGameInfo *pPacket )
 
 bool CGameLobby::Segment()
 {
-	const UINT64 nTime = GetLongTickCount();
+	const uint64_t nTime = GetLongTickCount();
 	std::list<int> deadGames;
 	for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
 	{
