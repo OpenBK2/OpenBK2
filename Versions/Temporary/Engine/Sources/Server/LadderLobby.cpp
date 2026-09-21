@@ -101,10 +101,10 @@ BASIC_REGISTER_CLASS( SERVER, CLadderConsts )
 
 void CLadderLobby::Initialize( const std::string &_szCfgFile )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessLadderInfoPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessLadderGameResultPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessLadderStatisticsRequestPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessSurrenderPacket );
+	REGISTER_PACKET_PROCESSOR( &CLadderLobby::ProcessLadderInfoPacket );
+	REGISTER_PACKET_PROCESSOR( &CLadderLobby::ProcessLadderGameResultPacket );
+	REGISTER_PACKET_PROCESSOR( &CLadderLobby::ProcessLadderStatisticsRequestPacket );
+	REGISTER_PACKET_PROCESSOR( &CLadderLobby::ProcessSurrenderPacket );
 
 	szCfgFile = _szCfgFile;
 

@@ -17,15 +17,15 @@
 
 CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const std::string &_szCfgFile )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
-	REGISTER_PACKET_PROCESSOR( ProcessCheckConnectAnswer );
-	REGISTER_PACKET_PROCESSOR( ProcessRemoveClient );
-	REGISTER_PACKET_PROCESSOR( ProcessCommonClientStatePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessNewConnectingClient );
-	REGISTER_PACKET_PROCESSOR( ProcessDirectClientPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessThroughServerGamePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessPingPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessForgottenPasswordPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessNewClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessCheckConnectAnswer );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessRemoveClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessCommonClientStatePacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessNewConnectingClient );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessDirectClientPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessThroughServerGamePacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessPingPacket );
+	REGISTER_PACKET_PROCESSOR( &CControlLobby::ProcessForgottenPasswordPacket );
 	pClients = _pClients;
 	pNet = _pNet;
 	pPrime = new CPrimeNumbers();

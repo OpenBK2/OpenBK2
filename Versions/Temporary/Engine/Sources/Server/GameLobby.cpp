@@ -17,28 +17,28 @@
 CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
 : pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessCommonClientStatePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessGameHeartBeatPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessGameStartLoadingPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessConnectGamePacket );
-	REGISTER_PACKET_PROCESSOR( ProcessLeaveGame );
-	REGISTER_PACKET_PROCESSOR( ProcessWant2Connect2Client );
-	REGISTER_PACKET_PROCESSOR( ProcessKickClient );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessCommonClientStatePacket );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGameHeartBeatPacket );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGameStartLoadingPacket );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessConnectGamePacket );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessLeaveGame );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessWant2Connect2Client );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessKickClient );
 
-	REGISTER_PACKET_PROCESSOR( ProcessEnterLobby );
-	REGISTER_PACKET_PROCESSOR( ProcessLeaveLobby );
-	REGISTER_PACKET_PROCESSOR( ProcessRemoveClient );
-	REGISTER_PACKET_PROCESSOR( ProcessGetLobbyClients );
-	REGISTER_PACKET_PROCESSOR( ProcessCreateGame );
-	REGISTER_PACKET_PROCESSOR( ProcessKillGame );
-	REGISTER_PACKET_PROCESSOR( ProcessGetLobbyGames );
-	REGISTER_PACKET_PROCESSOR( ProcessUpdateGame );
-	REGISTER_PACKET_PROCESSOR( ProcessSpecificGameInfo );
-	REGISTER_PACKET_PROCESSOR( ProcessThroughServerConnection );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessEnterLobby );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessLeaveLobby );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessRemoveClient );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGetLobbyClients );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessCreateGame );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessKillGame );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGetLobbyGames );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessUpdateGame );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessSpecificGameInfo );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessThroughServerConnection );
 
 	// for testing
-	REGISTER_PACKET_PROCESSOR( ProcessGetLobbyClientsListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessShowLobbyGames );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessGetLobbyClientsListPacket );
+	REGISTER_PACKET_PROCESSOR( &CGameLobby::ProcessShowLobbyGames );
 
 	ReloadConfig();
 

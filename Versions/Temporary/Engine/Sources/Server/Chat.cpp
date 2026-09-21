@@ -34,13 +34,13 @@ void CChatLobby::ReloadConfig()
 
 void CChatLobby::Initialize()
 {
-	REGISTER_PACKET_PROCESSOR( ProcessChatPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatAFKPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelsRequestPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatModifyIgnoreFriendListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatGetIgnoreFriendListPacket );
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelByNickPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatAFKPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatChannelPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatChannelsRequestPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatModifyIgnoreFriendListPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatGetIgnoreFriendListPacket );
+	REGISTER_PACKET_PROCESSOR( &CChatLobby::ProcessChatChannelByNickPacket );
 
 	nLastRefreshTime = 0;
 }
