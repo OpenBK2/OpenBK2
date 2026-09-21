@@ -1524,43 +1524,6 @@ void CAILogic::SetNetGame( const bool bNetGame )
 	theDipl.SetNetGame( bNetGame );
 }
 
-bool CAILogic::SubstituteUniqueIDs( const std::vector<int> &vIDs )
-{
-	typedef CObjectBase* LPObjectBase;
-	LPObjectBase *objects = new LPObjectBase[ vIDs.size() ];
-	for ( int i = 0; i < vIDs.size(); ++i )
-		objects[i] = (CObjectBase *)CLinkObject::GetObjectByUniqueIdSafe( vIDs[i] );
-	bool result = SubstituteUniqueIDs( objects, vIDs.size() );
-	delete[] objects;
-	return result;
-}
-
-bool CAILogic::SubstituteUniqueIDs( CObjectBase **pUnitsBuffer, const int nLen )
-{
-	bool bCorrect = true;
-	
-	for ( int i = 0 ; i < nLen; ++i )
-	{
-		if ( pUnitsBuffer[i] == 0 || dynamic_cast<CLinkObject*>(pUnitsBuffer[i]) == 0 )
-		{
-			CONSOLE_BUFFER_LOG2(
-				CONSOLE_STREAM_CONSOLE, 
-				("Wrong object of type \"%s\" - CLinkObject expected", typeid(*pUnitsBuffer[i]).name()),
-				0xffff0000, true );
-
-			pUnitsBuffer[i] = 0;			
-			bCorrect = false;
-		}
-		else
-		{
-			CLinkObject *pObj = checked_cast<CLinkObject*>( pUnitsBuffer[i] );
-			pUnitsBuffer[i] = reinterpret_cast<CObjectBase*>( pObj->GetUniqueId() );
-		}
-	}
-
-	return bCorrect;
-}
-
 bool CAILogic::UpdateAcknowledgment( SAIAcknowledgment &pAck )
 {
 	return theAckManager.UpdateAcknowledgment( pAck );

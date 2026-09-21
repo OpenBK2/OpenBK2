@@ -148,9 +148,6 @@ public:
 	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber );
 	virtual void SetNPlayers( const int nPlayers );
 	virtual void SetNetGame( const bool bNetGame );
-	
-	virtual bool SubstituteUniqueIDs( const std::vector<int> &vIDs );
-	virtual bool SubstituteUniqueIDs( CObjectBase **pUnitsBuffer, const int nLen );
 
 	bool UpdateAcknowledgment( SAIAcknowledgment &pAck );
 	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck );
