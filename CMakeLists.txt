@@ -45,9 +45,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # The editor is drawn with wxWidgets, which it cannot be built without; see
 # cmake/wxwidgets.cmake.
 option(BUILD_EDITOR "build editor" ON)
-# Off by default, unlike the editor: the dedicated server is mid-port and does
-# not compile yet. Turn it on here and in the CI matrix once it does.
-option(BUILD_SERVER "build dedicated server" OFF)
+# The dedicated lobby server and the test client that drives it. On, like the
+# editor: both build and run on Windows and Linux now, so there is no reason
+# for a normal build to skip them and let them rot again, which is how they got
+# into the state they were in.
+#
+# Turning this on means every build fetches the two database backends, MariaDB
+# Connector/C and SQLite, since the server links both. Configure with
+# -DBUILD_SERVER=OFF to skip them.
+option(BUILD_SERVER "build dedicated server" ON)
 option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 
