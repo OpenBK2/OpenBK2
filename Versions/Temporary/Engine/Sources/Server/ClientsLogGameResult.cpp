@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "clients.h"
 #include "LadderLobby.h"
-#include "vendor/MySQL/include/mysql.h"
+#include "Database.h"
 #include "Misc/StrProc.h"
 #include "Statistics.h"
 #include "HashMapConvertor.h"
@@ -15,20 +15,7 @@
 	#define LOG_FULL_GAME_RESULT
 #endif
 
-#define MYSQL_QUERY( a1, a2, a3 ) \
-{	/*DebugTrace( "MySQL: %s", a2 );*/ \
-	if ( mysql_real_query( a1, a2, a3 ) )\
-{ \
-	DebugTrace( "Replaying last MySQL query: %s", a2 ); \
-	if ( const int nMySQLResult = mysql_real_query( a1, a2, a3 ) )\
-{ NI_ASSERT( false, fmt::format( "MySQL query error, query = \"{}\", errorcode = {}", a2, nMySQLResult ) ); }\
-} \
-	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );\
-}
-
-#define MYSQL_CHECK_RESULT \
-	if ( !pResult ) { DebugTrace( "MySQL: Invalid SQL Query !" ); } \
-	NI_ASSERT( pResult, fmt::format( "Invalid SQL Query : {}", szQuery ) );
+// The two query macros are CClients::Query and CClients::Execute now.
 
 struct SPlayerInfoToLog
 {
@@ -106,7 +93,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+		Execute( szQuery );
 	}
 #endif
 
@@ -127,7 +114,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 	szQuery.erase( szQuery.size() - 1, 1 );
 	szQuery += ")";
 
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 #endif
 }
 

@@ -3,8 +3,7 @@
 #include "Server_Client_Common/CommandsInterface.h"
 
 class CPacketProcessor;
-struct st_mysql;
-typedef st_mysql MYSQL;
+struct IDatabase;
 
 class CGameServer : public CObjectBase
 {
@@ -23,8 +22,10 @@ class CGameServer : public CObjectBase
 	std::unordered_map<int, PROCESS_CMD_FUNC> processCmdsFuncs;
 	std::list< CPtr<class CNetPacket> > consoleCommandPackets;
 
-	MYSQL *pMySQL;
-	uint64_t nMySQLLastPingTime;
+	// Owned here and handed to CClients, which is the only thing that queries
+	// it. Kept alive past the lobbies, which hold pointers into CClients.
+	CObj<IDatabase> pDatabase;
+	uint64_t nDatabasePingTime;
 	//
 	void CommandClientsList( const SCommand &cmd );
 	void CommandClientState( const SCommand &cmd );

@@ -18,7 +18,7 @@
 
 #include "Statistics.h"
 
-#include "vendor/MySQL/include/mysql.h"
+#include "Database.h"
 
 #include <fmt/format.h>
 
@@ -42,8 +42,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	REGISTER_CMD_FUNC( ESC_SHOW_STATISTICS, CommandShowStatistics );
 	REGISTER_CMD_FUNC( ESC_BROADCAST, CommandBroadcast );
 
-	pMySQL = new MYSQL();
-	mysql_init( pMySQL );
+	pDatabase = CreateMariaDbDatabase();
 
 	int nNetVersion, nPort;
 	std::string szServerName, szDBName;
@@ -66,30 +65,34 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	std::vector<std::string> emails;
 	if ( bRegisterClosedBetaUsers )
 	{
+		SDbConnection betaConnection;
+		betaConnection.szHost = "127.0.0.1";
+		betaConnection.szUser = "NivalNET";
+		betaConnection.szDatabase = "test";
+		pDatabase->Connect( betaConnection );
 
-		mysql_real_connect( pMySQL, "127.0.0.1", "NivalNET", "", "test", 0, 0, 0 );
-		std::string szQuery = "SELECT name, pwd, email FROM users";
-		mysql_real_query( pMySQL, szQuery.c_str(), szQuery.size() );
-		MYSQL_RES *pResult = 0;
-		pResult = mysql_store_result( pMySQL );
-		for ( int i = 0; i < mysql_num_rows( pResult ); ++i )
+		CDbResult result;
+		pDatabase->Query( "SELECT name, pwd, email FROM users", &result );
+		for ( int i = 0; i < result.GetRowCount(); ++i )
 		{
-			MYSQL_ROW row = mysql_fetch_row( pResult );
-			names.push_back( row[0] );
-			passwords.push_back( row[1] );
-			emails.push_back( row[2] );
+			names.push_back( result.Get( i, 0 ) );
+			passwords.push_back( result.Get( i, 1 ) );
+			emails.push_back( result.Get( i, 2 ) );
 		}
-		mysql_free_result( pResult );
 	}
 
-	if ( !mysql_real_connect( pMySQL, szServerName.c_str(), "NivalNET", "", szDBName.c_str(), 0, 0, 0 ) )
+	SDbConnection connection;
+	connection.szHost = szServerName;
+	connection.szUser = "NivalNET";
+	connection.szDatabase = szDBName;
+	if ( !pDatabase->Connect( connection ) )
 	{
-		NI_ASSERT( false, "MySQL connection error!" );
+		NI_ASSERT( false, fmt::format( "Database connection error: {}", pDatabase->GetLastError() ) );
 	}
-	WriteMSG( "MySQL connection established. \n" );
-	WriteMSG( "MySQLServer = %s, MySQLDBName = %s\n", szServerName.c_str(), szDBName.c_str() );
+	WriteMSG( "Database connection established. \n" );
+	WriteMSG( "Server = %s, DBName = %s\n", szServerName.c_str(), szDBName.c_str() );
 
-	pClients = new CClients( pMySQL );
+	pClients = new CClients( pDatabase );
 	
 	if ( bRegisterClosedBetaUsers )
 	{
@@ -124,7 +127,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 
 	WriteMSG( "Server started, port %d, gameversion %d\n", nPort, nNetVersion );
 	
-	nMySQLLastPingTime = GetLongTickCount();
+	nDatabasePingTime = GetLongTickCount();
 	nLastStatisticsLogTime = GetLongTickCount() - nServerStatisticsLogPeriod;
 	pTerminal = new CTerminal( pCommands, nTerminalPort );
 }
@@ -208,10 +211,16 @@ void CGameServer::Segment()
 	pClients->RecalcDBOverload();
 
 	const uint64_t nTime = GetLongTickCount();
-	if ( nTime > nMySQLLastPingTime + 60000 ) // once per minute
+	if ( nTime > nDatabasePingTime + 60000 ) // once per minute
 	{
-		nMySQLLastPingTime = GetLongTickCount();
-		while( mysql_ping( pMySQL ) );
+		nDatabasePingTime = GetLongTickCount();
+		// Spins until the database answers, which is what the mysql_ping loop
+		// this replaces did. The whole server is this one thread, so a database
+		// that stays down stops everything, including the terminal. Left as it
+		// was rather than changed here; it wants its own commit.
+		while ( !pDatabase->IsAlive() )
+		{
+		}
 	}
 
 	if ( nTime > nLastStatisticsLogTime + nServerStatisticsLogPeriod )
@@ -375,8 +384,8 @@ void CGameServer::CommandBroadcast( const SCommand &cmd )
 
 CGameServer::~CGameServer()
 {
-	mysql_close( pMySQL );
-	delete pMySQL;
+	// CObj closes and releases the database; the lobbies and CClients that
+	// hold it are released before this runs.
 }
 
 #undef REGISTER_CMD_FUNC

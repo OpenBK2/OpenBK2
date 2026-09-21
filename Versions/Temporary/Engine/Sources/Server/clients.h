@@ -4,8 +4,8 @@
 
 #include <cstdint>
 
-struct st_mysql;
-typedef st_mysql MYSQL;
+struct IDatabase;
+class CDbResult;
 struct SLadderStatistics;
 struct IStatisticsCollector;
 struct SLadderDBInfo;
@@ -44,7 +44,7 @@ class CClients : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CClients );
 
-	MYSQL *pMySQL;
+	CPtr<IDatabase> pDatabase;
 	CObj<IStatisticsCollector> pStatisticsCollector;
 	std::unordered_map<int, std::string> nickByID;
 	std::unordered_map<std::string, int> idByNick;
@@ -67,6 +67,14 @@ class CClients : public CObjectBase
 
 	int nMaxXP;
 	std::string EscapeString( const std::string &szString ) const;
+
+	// What the MYSQL_QUERY and MYSQL_CHECK_RESULT macros used to do at every
+	// call site: count the query for the load average, run it, retry once,
+	// and report through the statistics collector. Kept here rather than in
+	// IDatabase because the counting and the retry are this class's policy,
+	// not something a database backend should know about.
+	bool Query( const std::string &szQuery, CDbResult *pResult );
+	bool Execute( const std::string &szStatement );
 	
 	void LoadIgnoreFriendList();
 	void AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList );
@@ -79,7 +87,7 @@ class CClients : public CObjectBase
 	void DBLogRawGameResult( const std::unordered_map<std::string,int> &info );
 public:
 	CClients() { }
-	CClients( MYSQL *pMySQL );
+	CClients( IDatabase *pDatabase );
 
 	bool IsCriticalBusy() const;
 	float GetQPS() const { return fQueriesPerSecond; }

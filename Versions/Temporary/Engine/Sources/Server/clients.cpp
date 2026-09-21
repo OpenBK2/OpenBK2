@@ -2,7 +2,7 @@
 #include "clients.h"
 #include "Server_Client_Common/NetLogger.h"
 #include "LadderLobby.h"
-#include "vendor/MySQL/include/mysql.h"
+#include "Database.h"
 #include "Misc/StrProc.h"
 
 #include <algorithm>
@@ -25,21 +25,37 @@ BASIC_REGISTER_CLASS( SERVER, CClients );
 
 #define CHECK_TABLE_STRUCTURE
 
-#define MYSQL_QUERY( a1, a2, a3 ) \
-	{	/*DebugTrace( "MySQL: %s", a2 );*/ \
-	++nQueries;RecalcDBOverload();\
-	if ( mysql_real_query( a1, a2, a3 ) )\
-	{ \
-		DebugTrace( "Replaying last MySQL query: %s", a2 ); \
-		if ( const int nMySQLResult = mysql_real_query( a1, a2, a3 ) )\
-			{ NI_ASSERT( false, fmt::format( "MySQL query error, query = \"{}\", errorcode = {}", a2, nMySQLResult ) ); }\
-	} \
-	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );\
+// Run a query, counting it against the load average and retrying it once.
+//
+// This is the MYSQL_QUERY macro, which every call site pasted inline, and the
+// MYSQL_CHECK_RESULT that followed it. The retry is the original behaviour: a
+// query that fails is replayed once and only the second failure is reported.
+bool CClients::Query( const std::string &szQuery, CDbResult *pResult )
+{
+	++nQueries;
+	RecalcDBOverload();
+
+	bool bOk = pDatabase->Query( szQuery, pResult );
+	if ( !bOk )
+	{
+		DebugTrace( "Replaying last query: %s", szQuery.c_str() );
+		bOk = pDatabase->Query( szQuery, pResult );
+		if ( !bOk )
+		{
+			NI_ASSERT( false, fmt::format( "Query error, query = \"{}\", error = {}",
+				szQuery, pDatabase->GetLastError() ) );
+		}
 	}
 
-#define MYSQL_CHECK_RESULT \
-	if ( !pResult ) { DebugTrace( "MySQL: Invalid SQL Query !" ); } \
-	NI_ASSERT( pResult, fmt::format( "Invalid SQL Query : {}", szQuery ) );
+	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );
+	return bOk;
+}
+
+bool CClients::Execute( const std::string &szStatement )
+{
+	CDbResult ignored;
+	return Query( szStatement, &ignored );
+}
 
 void CClients::RecalcDBOverload()
 {
@@ -63,9 +79,9 @@ bool CClients::IsCriticalBusy() const
 		return false;
 }
 
-CClients::CClients( MYSQL *_pDB )
+CClients::CClients( IDatabase *_pDatabase )
 {
-	pMySQL = _pDB;
+	pDatabase = _pDatabase;
 	pStatisticsCollector = NStatistics::CreateCollector( "MySQL" );
 	pStatisticsCollector->SetSpecific( "QueriesPerSecond", NStatistics::CreateAverageValuePerTimeCounter() );
 	LoadIgnoreFriendList();
@@ -76,18 +92,15 @@ CClients::CClients( MYSQL *_pDB )
 
 	nMaxXP = 0;
 	{
-		const std::string szQuery = "SELECT MAX(`xp`) FROM gamestats";
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-		MYSQL_RES *pResult = 0;
-		pResult = mysql_store_result( pMySQL );
-		MYSQL_CHECK_RESULT
-		if ( mysql_num_rows( pResult ) > 0 )
+		CDbResult result;
+		// MAX over an empty gamestats is a SQL NULL, which reads back as an
+		// empty string and parses as zero, so the guard the original needed
+		// against a null char pointer is gone.
+		Query( "SELECT MAX(`xp`) FROM gamestats", &result );
+		if ( result.GetRowCount() > 0 )
 		{
-			MYSQL_ROW row = mysql_fetch_row( pResult );
-			if ( row[0] != NULL )
-				nMaxXP = NStr::ToInt( row[0] );
+			nMaxXP = NStr::ToInt( result.Get( 0, 0 ) );
 		}
-		mysql_free_result( pResult );
 	}
 
 }
@@ -100,20 +113,16 @@ int CClients::GetDBUserIDbyNick( const std::string &_szNick )
 	std::string szNick = EscapeString( _szNick );
 	std::string szQuery = "SELECT t.userID FROM users AS t, names AS n WHERE ( n.Name = '" +
 		szNick + "' AND t.name = n.nameID )";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = 0;
-	pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	if ( mysql_num_rows( pResult ) > 0 )
+	CDbResult result;
+	Query( szQuery, &result );
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		const std::string szDBUserID = row[0];
-		mysql_free_result( pResult );
 		return NStr::ToInt( szDBUserID );
 	}
 	else 
 	{
-		mysql_free_result( pResult );
 		return -1;
 	}
 }
@@ -122,33 +131,27 @@ void CClients::LoadIgnoreFriendList()
 {
 	{
 		std::string szQuery = "SELECT recipient, sender FROM ignorelist ";
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-		MYSQL_RES *pResult = 0;
-		pResult = mysql_store_result( pMySQL );
-		MYSQL_CHECK_RESULT
-			int nRows = mysql_num_rows( pResult );
+		CDbResult result;
+		Query( szQuery, &result );
+			int nRows = result.GetRowCount();
 		for ( int i = 0; i < nRows; ++i )
 		{
-			MYSQL_ROW row = mysql_fetch_row( pResult );
+			const CDbRow row = result.Row( 0 );
 			ignoreList[ NStr::ToInt( row[0] ) ].insert( NStr::ToInt( row[1] ) );
 		}
-		mysql_free_result( pResult );
 		WriteMSG( "Server-side ignore list loaded.\n" );
 	}
 
 	{
 		std::string szQuery = "SELECT player, notifier FROM friendlist ";
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-		MYSQL_RES *pResult = 0;
-		pResult = mysql_store_result( pMySQL );
-		MYSQL_CHECK_RESULT
-			int nRows = mysql_num_rows( pResult );
+		CDbResult result;
+		Query( szQuery, &result );
+			int nRows = result.GetRowCount();
 		for ( int i = 0; i < nRows; ++i )
 		{
-			MYSQL_ROW row = mysql_fetch_row( pResult );
+			const CDbRow row = result.Row( 0 );
 			friendList[ NStr::ToInt( row[0] ) ].insert( NStr::ToInt( row[1] ) );
 		}
-		mysql_free_result( pResult );
 		WriteMSG( "Server-side friends list loaded.\n" );
 	}
 }
@@ -211,7 +214,7 @@ void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int 
 		szQuery = fmt::format( "INSERT INTO friendlist (player,notifier) VALUES ( '{}', '{}' )", nRecipientDBUserID,
 			nSenderDBUserID );
 	}
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 }
 
 void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList )
@@ -227,7 +230,7 @@ void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const
 		szQuery = fmt::format( "DELETE FROM friendlist WHERE player = '{}' AND notifier = '{}'", nRecipientDBUserID,
 			nSenderDBUserID );
 	}
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 }
 
 bool CClients::InIgnoreFriendList( const int nRecipient, const std::string &szSender, EIgnoreFriendList eList )
@@ -282,18 +285,15 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 				GetDBUserIDbyNick( nickByID[nClient] ) );
 		}
 			
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-		MYSQL_RES *pResult = 0;
-		pResult = mysql_store_result( pMySQL );
-		MYSQL_CHECK_RESULT
-		int nRows = mysql_num_rows( pResult );
+		CDbResult result;
+		Query( szQuery, &result );
+		int nRows = result.GetRowCount();
 		std::list<std::string> clientsIgnoreFriendList;
 		for ( int i = 0; i < nRows; ++i )
 		{
-			MYSQL_ROW row = mysql_fetch_row( pResult );
+			const CDbRow row = result.Row( 0 );
 			clientsIgnoreFriendList.push_back( row[0] );
 		}
-		mysql_free_result( pResult );		
 		return clientsIgnoreFriendList;
 	}
 	else
@@ -303,11 +303,9 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 bool CClients::IsCorrectCDKey( const std::string &szCDKey )
 {
 	const std::string szQuery = "SELECT cdkey FROM validcdkeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	const bool bIsValid = ( mysql_num_rows( pResult ) > 0 );
-	mysql_free_result( pResult );
+	CDbResult result;
+	Query( szQuery, &result );
+	const bool bIsValid = ( result.GetRowCount() > 0 );
 	return bIsValid;
 }
 
@@ -325,18 +323,15 @@ bool CClients::IsBannedNick( const std::string &szNick )
 {
 	bool ans = false;
 	std::string szQuery = "SELECT banned FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = 0;
-	pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	if ( mysql_num_rows( pResult ) > 0 )
+	CDbResult result;
+	Query( szQuery, &result );
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		if ( row[0] == "1" )
 			ans = true;
 	}
 	
-	mysql_free_result( pResult );
 	return ans;
 }
 
@@ -344,18 +339,15 @@ bool CClients::IsBannedCDKey( const std::string &szCDKey )
 {
 	bool ans = false;
 	std::string szQuery = "SELECT banned FROM cdkeys WHERE CDKey = '" + EscapeString( szCDKey ) + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = 0;
-	pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	if ( mysql_num_rows( pResult ) > 0 )
+	CDbResult result;
+	Query( szQuery, &result );
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		if ( row[0] == "1" )
 			ans = true;
 	}
 
-	mysql_free_result( pResult );
 	return ans;
 }
 
@@ -365,16 +357,14 @@ const std::string CClients::GetCDKey( const std::string &szNick )
 		return "";
 	std::string szQuery = "SELECT cdkeys.CDKey FROM cdkeys, users, names WHERE ( cdkeys.cdkeyID = users.cdkey AND names.nameID = users.name AND names.Name = '" +
 		EscapeString( szNick ) + "')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT;
+	CDbResult result;
+	Query( szQuery, &result );
 	std::string ans = "";
-	if ( mysql_num_rows( pResult ) > 0 )
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		ans = row[0];
 	}
-	mysql_free_result( pResult );
 	return ans;
 }
 
@@ -385,16 +375,14 @@ const std::string CClients::GetPassword( const std::string &szNick )
 
 	std::string szQuery = "SELECT users.password FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 		EscapeString( szNick ) + "')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT;
+	CDbResult result;
+	Query( szQuery, &result );
 	std::string ans = "";
-	if ( mysql_num_rows( pResult ) > 0 )
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		ans = row[0];
 	}
-	mysql_free_result( pResult );
 	return ans;
 }
 
@@ -405,16 +393,14 @@ const std::string CClients::GetEmail( const std::string &szNick )
 
 	std::string szQuery = "SELECT users.email FROM users, names WHERE ( users.name = names.nameID AND names.Name = '" +
 		EscapeString( szNick ) + "')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT;
+	CDbResult result;
+	Query( szQuery, &result );
 	std::string ans = "";
-	if ( mysql_num_rows( pResult ) > 0 )
+	if ( result.GetRowCount() > 0 )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		ans = row[0];
 	}
-	mysql_free_result( pResult );
 	return ans;
 }
 
@@ -423,15 +409,12 @@ bool CClients::IsNickRegistered( const std::string &szNick )
 	if ( szNick.empty() )
 		return false;
 	std::string szQuery = "SELECT nameID FROM names WHERE Name = '" + EscapeString( szNick ) + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = 0;
-	pResult = mysql_store_result( pMySQL );
-	if ( pResult && mysql_num_rows( pResult ) > 0 )
+	CDbResult result;
+	Query( szQuery, &result );
+	if ( result.GetRowCount() > 0 )
 	{
-		mysql_free_result( pResult );
 		return true;	
 	}
-	mysql_free_result( pResult );
 	return false;
 }
 
@@ -450,49 +433,27 @@ void CClients::Register( const std::string &_szNick, const std::string &_szPassw
 	std::string szPassword = EscapeString( _szPassword );
 	std::string szCDKey = EscapeString( _szCDKey );
 	std::string szEmail = EscapeString( _szEmail );
-	std::string szQuery = "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = 0;
-	pResult = mysql_store_result( pMySQL );
+	CDbResult result;
+	Query( "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'", &result );
 
-	if ( mysql_num_rows( pResult ) == 0 ) 
+	if ( result.GetRowCount() == 0 )
 	{
-		mysql_free_result( pResult );
-		szQuery = "INSERT INTO cdkeys (CDKey) VALUES ('" + szCDKey + "')";
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-
-		szQuery = "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'";
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-		pResult = mysql_store_result( pMySQL );
-		MYSQL_CHECK_RESULT
+		Execute( "INSERT INTO cdkeys (CDKey) VALUES ('" + szCDKey + "')" );
+		Query( "SELECT cdkeyID FROM cdkeys WHERE CDKey = '" + szCDKey + "'", &result );
 	}
-	MYSQL_ROW row = mysql_fetch_row( pResult );
-	std::string szCDKeyID = row[0];
-	mysql_free_result( pResult );
+	const std::string szCDKeyID = result.Get( 0, 0 );
 
-	szQuery = "INSERT INTO names (Name) VALUES ('" + szNick + "')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	szQuery = "SELECT MAX(nameID) FROM names";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	row = mysql_fetch_row( pResult );
-	std::string szNameID = row[0];
-	mysql_free_result( pResult );
+	Execute( "INSERT INTO names (Name) VALUES ('" + szNick + "')" );
+	Query( "SELECT MAX(nameID) FROM names", &result );
+	const std::string szNameID = result.Get( 0, 0 );
 
-	szQuery = "INSERT INTO gamestats (xp) VALUES ('0')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	szQuery = "SELECT MAX(statsID) FROM gamestats";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	row = mysql_fetch_row( pResult );
-	std::string szStatsID = row[0];
-	mysql_free_result( pResult );
+	Execute( "INSERT INTO gamestats (xp) VALUES ('0')" );
+	Query( "SELECT MAX(statsID) FROM gamestats", &result );
+	const std::string szStatsID = result.Get( 0, 0 );
 
-	szQuery = "INSERT INTO users (name, cdkey, email, password, gamestats) VALUES ('"+ szNameID + "','" +
+	const std::string szQuery = "INSERT INTO users (name, cdkey, email, password, gamestats) VALUES ('"+ szNameID + "','" +
 		szCDKeyID + "','" + szEmail + "','"	+ szPassword + "','" + szStatsID + "')";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 
 }
 
@@ -592,21 +553,15 @@ void CClients::GetRawLadderInfoFromDB( std::unordered_map<std::string,int> *pInf
 	pInfo->clear();
 	const std::string szClientDBID = std::to_string(  GetDBUserIDbyNick( szNick ) );
 	const std::string szQuery = "SELECT g.* FROM gamestats AS g, users AS u WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
-  MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	if ( mysql_num_rows( pResult ) > 0 )
+  CDbResult result;
+	Query( szQuery, &result );
+	if ( result.GetRowCount() > 0 )
 	{
-		const MYSQL_ROW row = mysql_fetch_row( pResult );
-		int i = 0;
-		MYSQL_FIELD *pField;
-		while ( pField = mysql_fetch_field( pResult ) )
+		for ( int i = 0; i < result.GetColumnCount(); ++i )
 		{
-			(*pInfo)[pField->name] = NStr::ToInt( row[i] );
-			++i;
+			(*pInfo)[result.GetColumnName( i )] = NStr::ToInt( result.Get( 0, i ) );
 		}
 	}
-	mysql_free_result( pResult );
 }
 
 void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unordered_map<std::string,int> &ladderInfo )
@@ -639,7 +594,7 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+		Execute( szQuery );
 	}
 #endif
 	std::string szQuery = "UPDATE gamestats AS g, users AS u SET  ";
@@ -651,23 +606,16 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 	}
 	szQuery.erase( szQuery.length() - 1, 1 );
 	szQuery += " WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 }
 
 std::unordered_set<std::string> CClients::GetTableColumns( const std::string &szTableName )
 {
-	const std::string szQuery = "SHOW COLUMNS FROM " + szTableName;
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT
-	std::unordered_set<std::string> columns;
-	MYSQL_ROW row;
-	while ( row = mysql_fetch_row( pResult ) )
-	{
-		columns.insert( row[0] );
-	}
-	mysql_free_result( pResult );
-	return columns;
+	// Not a query written here: which statement lists a table's columns is the
+	// one thing the backends disagree on most.
+	++nQueries;
+	RecalcDBOverload();
+	return pDatabase->GetColumns( szTableName );
 }
 
 bool CClients::IsOnLine( const std::string &szNick ) const
@@ -814,14 +762,13 @@ bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 		return true;
 	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) + 
 		"' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
-	MYSQL_RES *pResult = mysql_store_result( pMySQL );
-	MYSQL_CHECK_RESULT;
+	CDbResult result;
+	Query( szQuery, &result );
 	bool bResult = false;
-	int nRows = mysql_num_rows( pResult );
+	int nRows = result.GetRowCount();
 	for ( int i = 0; i < nRows; ++i )
 	{
-		MYSQL_ROW row = mysql_fetch_row( pResult );
+		const CDbRow row = result.Row( 0 );
 		std::string szNick = row[0];
 		if ( IsOnLine( szNick ) )
 		{
@@ -829,17 +776,12 @@ bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 			break;
 		}
 	}
-	mysql_free_result( pResult );
 	return bResult;
 }
 
 std::string CClients::EscapeString( const std::string &szString ) const
 {
-	char *pBuffer = new char[ szString.length() * 2 + 2 ];
-	mysql_real_escape_string( pMySQL, pBuffer, szString.c_str(), szString.length() );
-	const std::string szOut = pBuffer;
-	delete []pBuffer;
-	return szOut;
+	return pDatabase->Escape( szString );
 }
 
 void CClients::DBLogServerStatistics( const std::vector<std::string> &names, const std::vector<float> &values )
@@ -864,7 +806,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 			szQuery += fmt::format( "ADD COLUMN {} FLOAT DEFAULT '-1', ", szColumnName );
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
-		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+		Execute( szQuery );
 	}
 #endif
 	std::string szQuery = "INSERT INTO serverlog ( LogTime, ";
@@ -880,9 +822,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 	}
 	szQuery.erase( szQuery.length() - 2, 2 );
 	szQuery += " )";
-	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
+	Execute( szQuery );
 }
 
-#undef MYSQL_QUERY
-#undef MYSQL_CHECK_RESULT
 

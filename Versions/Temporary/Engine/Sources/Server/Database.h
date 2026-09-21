@@ -16,6 +16,19 @@
 // file. See cmake/mariadb.cmake and cmake/sqlite.cmake for why in that
 // order.
 
+//! One row of a result set, indexed by column the way the C API's MYSQL_ROW is.
+//!
+//! A view onto the result that produced it, so it is only valid while that
+//! result is, which matches how every caller here uses one.
+class CDbRow
+{
+	const std::vector<std::string> *pValues;
+public:
+	explicit CDbRow( const std::vector<std::string> &values ) : pValues( &values ) { }
+
+	const std::string& operator[]( const int nColumn ) const { return (*pValues)[nColumn]; }
+};
+
 //! One fully read result set.
 //!
 //! Materialised rather than streamed, because every caller here reads the whole
@@ -53,6 +66,8 @@ public:
 	//! than a value they handled. SELECT MAX(xp) on an empty gamestats is the
 	//! case that reaches it.
 	const std::string& Get( const int nRow, const int nColumn ) const { return rows[nRow][nColumn]; }
+
+	CDbRow Row( const int nRow ) const { return CDbRow( rows[nRow] ); }
 };
 
 //! Where to connect. Ignored by an embedded backend apart from the database
