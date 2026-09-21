@@ -249,7 +249,22 @@ public:
 	CRawColorConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream ) {}
 	SColor24 operator()( const uint32_t input ) const { const SColor24 color = { GetB(input), GetG(input), GetR(input)	}; return color; }
 	SColor24 operator()( const SColor24 input ) const { return input; }
-	SColor24 operator()( const CVec4 &input ) const { const SColor24 color = { MakeComponent(input.z), MakeComponent(input.y), MakeComponent(input.x) }; return color; }
+	// MakeComponent clamps to 0..255 and so always fits a uint8_t, but a braced
+	// initialiser does not take that on trust: narrowing inside one is
+	// ill-formed, and MSVC says so once per channel (C4838). The casts state
+	// what the clamp already guarantees.
+	//
+	// MakeComponent keeps returning uint32_t rather than uint8_t, which would
+	// have removed the need for them: its other caller shifts the result left by
+	// 24, and a uint8_t there would promote to int and overflow on any channel
+	// above 127.
+	SColor24 operator()( const CVec4 &input ) const
+	{
+		const SColor24 color = { static_cast<uint8_t>( MakeComponent(input.z) ),
+		                         static_cast<uint8_t>( MakeComponent(input.y) ),
+		                         static_cast<uint8_t>( MakeComponent(input.x) ) };
+		return color;
+	}
 	bool IsReady() const { return true; }
 };
 template <> class CRawColorConvertor<uint8_t>
