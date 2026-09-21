@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 std::wstring CChatLobby::wszWelcomeText;
 
 CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName ) 
@@ -22,7 +24,7 @@ CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName )
 void CChatLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
-	NI_ASSERT( stream.IsOk(), StrFmt( "Could not open cfg file: %s", szCfgFile ) );
+	NI_ASSERT( stream.IsOk(), fmt::format( "Could not open cfg file: {}", szCfgFile ) );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
 	pSaver->Add( "Welcome", &wszWelcomeText );

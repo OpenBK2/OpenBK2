@@ -8,6 +8,8 @@
 
 #include <zlib.h>
 
+#include <fmt/format.h>
+
 #define CHECK_TABLE_STRUCTURE
 #ifndef _FINALRELEASE
 	#define LOG_FULL_GAME_RESULT
@@ -19,14 +21,14 @@
 { \
 	DebugTrace( "Replaying last MySQL query: %s", a2 ); \
 	if ( const int nMySQLResult = mysql_real_query( a1, a2, a3 ) )\
-{ NI_ASSERT( false, StrFmt( "MySQL query error, query = \"%s\", errorcode = %d", a2, nMySQLResult ) ); }\
+{ NI_ASSERT( false, fmt::format( "MySQL query error, query = \"{}\", errorcode = {}", a2, nMySQLResult ) ); }\
 } \
 	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );\
 }
 
 #define MYSQL_CHECK_RESULT \
 	if ( !pResult ) { DebugTrace( "MySQL: Invalid SQL Query !" ); } \
-	NI_ASSERT( pResult, StrFmt( "Invalid SQL Query : %s", szQuery.c_str()) );
+	NI_ASSERT( pResult, fmt::format( "Invalid SQL Query : {}", szQuery ) );
 
 struct SPlayerInfoToLog
 {

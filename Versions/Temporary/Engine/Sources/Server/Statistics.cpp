@@ -2,6 +2,8 @@
 
 #include "Statistics.hpp"
 
+#include <fmt/format.h>
+
 std::unordered_map< std::string, CObj<IStatisticsData> > CStatisticsCollector::globalData;// name - data
 std::unordered_map< std::string, CObj<CStatisticsCollector> > CStatisticsCollector::collectors;
 uint64_t CStatisticsCollector::nStartTime;
@@ -13,7 +15,7 @@ std::string CStatisticsCollector::DumpToStringSpecific() const
 	{
 		const std::string szName = it->first;
 		IStatisticsData* pData = it->second;
-		szOutString += "  " + szName + StrFmt( ": %f\n", pData->GetValue() );
+		szOutString += "  " + szName + fmt::format( ": {:f}\n", pData->GetValue() );
 	}
 	return szOutString;
 }
@@ -25,7 +27,7 @@ std::string CStatisticsCollector::DumpToString()
 	{
 		const std::string szName = it->first;
 		const IStatisticsData* pData = it->second;
-		szOutString += "  " + szName + StrFmt( ": %f\n", pData->GetValue() );
+		szOutString += "  " + szName + fmt::format( ": {:f}\n", pData->GetValue() );
 	}
 	for ( std::unordered_map<std::string, CObj<CStatisticsCollector> >::const_iterator it = collectors.begin(); it != collectors.end(); ++it )
 	{
@@ -35,7 +37,7 @@ std::string CStatisticsCollector::DumpToString()
 	}
 	long int nUptime = (long int)( ( GetLongTickCount() - nStartTime ) / 1000 );
 	int nUptimeMsec = (int)( ( GetLongTickCount() - nStartTime ) % 1000 );
-	szOutString += StrFmt( "Server is up for %ld.%d sec.\n", nUptime, nUptimeMsec );
+	szOutString += fmt::format( "Server is up for {}.{} sec.\n", nUptime, nUptimeMsec );
 	return szOutString;
 }
 

@@ -5,6 +5,8 @@
 #include "Misc/Time64.h"
 #include "Statistics.h"
 #include "Server_Client_Common/GamePackets.h"
+
+#include <fmt/format.h>
 //#define LADDER_TEST
 
 extern int MAX_NUMBER_OF_REINFORCEMENTS;
@@ -128,7 +130,7 @@ void CLadderLobby::ReloadConfig()
 {
 	{
 		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
-		NI_ASSERT( stream.IsOk(), StrFmt( "Could not open cfg file: %s", szCfgFile ) );
+		NI_ASSERT( stream.IsOk(), fmt::format( "Could not open cfg file: {}", szCfgFile ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 		NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
 		pSaver->Add( "LadderConsts", &( *pConsts ) );
@@ -747,18 +749,18 @@ bool CLadderLobby::ProcessLadderInfoPacket( CLadderInfoPacket *pPacket )
 	waitingList.push_back( pPacket->nClientID );
 
 #ifdef LADDER_TEST
-	std::string szText = StrFmt( "LADDER_TEST: Player %s ladder info received: " , nickByID[ pPacket->nClientID ].c_str() );
+	std::string szText = fmt::format( "LADDER_TEST: Player {} ladder info received: ", nickByID[ pPacket->nClientID ] );
 	szText += "TechLevels";
 	for ( std::list<int>::iterator it = pPacket->techLevels.begin(); it != pPacket->techLevels.end(); ++it )
 	{
-		szText = szText + StrFmt( " %d", *it );
+		szText = szText + fmt::format( " {}", *it );
 	}
 	szText += ", Maps";
 	for ( std::list<int>::iterator it = pPacket->maps.begin(); it != pPacket->maps.end(); ++it )
 	{
-		szText = szText + StrFmt( " %d", *it );
+		szText = szText + fmt::format( " {}", *it );
 	}
-	szText += StrFmt( ", Side %d, Historicity %d", pPacket->nSide, pPacket->bHistoricity ? 1 : 0 );
+	szText += fmt::format( ", Side {}, Historicity {}", pPacket->nSide, pPacket->bHistoricity ? 1 : 0 );
 	DebugTrace( szText.c_str() );
 #endif
 

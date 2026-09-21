@@ -12,6 +12,8 @@
 
 #include <zlib.h>
 
+#include <fmt/format.h>
+
 int NUMBER_OF_RACES_IN_LADDER = 4;
 int MAX_NUMBER_OF_REINFORCEMENTS = 30;
 
@@ -28,14 +30,14 @@ BASIC_REGISTER_CLASS( SERVER, CClients );
 	{ \
 		DebugTrace( "Replaying last MySQL query: %s", a2 ); \
 		if ( const int nMySQLResult = mysql_real_query( a1, a2, a3 ) )\
-			{ NI_ASSERT( false, StrFmt( "MySQL query error, query = \"%s\", errorcode = %d", a2, nMySQLResult ) ); }\
+			{ NI_ASSERT( false, fmt::format( "MySQL query error, query = \"{}\", errorcode = {}", a2, nMySQLResult ) ); }\
 	} \
 	(*pStatisticsCollector)["QueriesPerSecond"]->Add( 1.0f );\
 	}
 
 #define MYSQL_CHECK_RESULT \
 	if ( !pResult ) { DebugTrace( "MySQL: Invalid SQL Query !" ); } \
-	NI_ASSERT( pResult, StrFmt( "Invalid SQL Query : %s", szQuery.c_str()) );
+	NI_ASSERT( pResult, fmt::format( "Invalid SQL Query : {}", szQuery ) );
 
 void CClients::RecalcDBOverload()
 {
@@ -200,11 +202,11 @@ void CClients::AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int 
 	switch( eList )
 	{
 	case IGNORE_LIST:
-		szQuery = StrFmt( "INSERT INTO ignorelist (recipient,sender) VALUES ( '%d', '%d' )", nRecipientDBUserID,
+		szQuery = fmt::format( "INSERT INTO ignorelist (recipient,sender) VALUES ( '{}', '{}' )", nRecipientDBUserID,
 			nSenderDBUserID );
 		break;
 	case FRIEND_LIST:
-		szQuery = StrFmt( "INSERT INTO friendlist (player,notifier) VALUES ( '%d', '%d' )", nRecipientDBUserID,
+		szQuery = fmt::format( "INSERT INTO friendlist (player,notifier) VALUES ( '{}', '{}' )", nRecipientDBUserID,
 			nSenderDBUserID );
 	}
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
@@ -216,11 +218,11 @@ void CClients::DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const
 	switch( eList )
 	{
 	case IGNORE_LIST:
-		szQuery = StrFmt( "DELETE FROM ignorelist WHERE recipient = '%d' AND sender = '%d'", nRecipientDBUserID,
+		szQuery = fmt::format( "DELETE FROM ignorelist WHERE recipient = '{}' AND sender = '{}'", nRecipientDBUserID,
 			nSenderDBUserID );
 		break;
 	case FRIEND_LIST:
-		szQuery = StrFmt( "DELETE FROM friendlist WHERE player = '%d' AND notifier = '%d'", nRecipientDBUserID,
+		szQuery = fmt::format( "DELETE FROM friendlist WHERE player = '{}' AND notifier = '{}'", nRecipientDBUserID,
 			nSenderDBUserID );
 	}
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
@@ -270,11 +272,11 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 		switch( eList )
 		{
 		case IGNORE_LIST:
-			szQuery = StrFmt( "SELECT names.Name FROM ignorelist, users, names WHERE users.userID = ignorelist.sender AND names.nameID = users.name AND ignorelist.recipient = '%d'" ,
+			szQuery = fmt::format( "SELECT names.Name FROM ignorelist, users, names WHERE users.userID = ignorelist.sender AND names.nameID = users.name AND ignorelist.recipient = '{}'",
 				GetDBUserIDbyNick( nickByID[nClient] ) );
 			break;
 		case FRIEND_LIST:
-			szQuery = StrFmt( "SELECT names.Name FROM friendlist, users, names WHERE users.userID = friendlist.notifier AND names.nameID = users.name AND friendlist.player = '%d'" ,
+			szQuery = fmt::format( "SELECT names.Name FROM friendlist, users, names WHERE users.userID = friendlist.notifier AND names.nameID = users.name AND friendlist.player = '{}'",
 				GetDBUserIDbyNick( nickByID[nClient] ) );
 		}
 			
@@ -643,7 +645,7 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 	{
 		const std::string &szStatsName = it->first;
 		const int &nStatsValue = it->second;
-		szQuery += " g." + szStatsName + " = " + StrFmt( "'%d',", nStatsValue );
+		szQuery += " g." + szStatsName + " = " + fmt::format( "'{}',", nStatsValue );
 	}
 	szQuery.erase( szQuery.length() - 1, 1 );
 	szQuery += " WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
@@ -857,7 +859,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 		for ( std::list<std::string>::iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
-			szQuery += StrFmt( "ADD COLUMN %s FLOAT DEFAULT '-1', ", szColumnName.c_str() );
+			szQuery += fmt::format( "ADD COLUMN {} FLOAT DEFAULT '-1', ", szColumnName );
 		}
 		szQuery.erase( szQuery.length() - 2, 2 );
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
@@ -866,13 +868,13 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 	std::string szQuery = "INSERT INTO ServerLog ( LogTime, ";
 	for ( int i = 0; i < names.size(); ++i )
 	{
-		szQuery += StrFmt( "%s, ", names[i] );
+		szQuery += fmt::format( "{}, ", names[i] );
 	}
 	szQuery.erase( szQuery.length() - 2, 2 );
 	szQuery += " ) VALUES ( NOW(), ";
 	for ( int i = 0; i < values.size(); ++i )
 	{
-		szQuery += StrFmt( "'%f', ", values[i] );
+		szQuery += fmt::format( "'{:f}', ", values[i] );
 	}
 	szQuery.erase( szQuery.length() - 2, 2 );
 	szQuery += " )";

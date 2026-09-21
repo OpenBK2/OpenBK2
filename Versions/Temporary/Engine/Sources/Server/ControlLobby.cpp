@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const std::string &_szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessNewClient );
@@ -36,7 +38,7 @@ CControlLobby::CControlLobby( CClients *_pClients, CNet *_pNet, const std::strin
 void CControlLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
-	NI_ASSERT( stream.IsOk(), StrFmt( "Could not open cfg file: %s", szCfgFile ) );
+	NI_ASSERT( stream.IsOk(), fmt::format( "Could not open cfg file: {}", szCfgFile ) );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
 	pSaver->Add( "CheckCDKeyIsValid", &bCheckCDKeyIsValid );

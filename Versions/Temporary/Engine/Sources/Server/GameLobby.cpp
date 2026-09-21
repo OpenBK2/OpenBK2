@@ -12,6 +12,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
 : pClients( _pClients ), nGamesCounter( 0 ), szCfgFile( _szCfgFile )
 {
@@ -49,7 +51,7 @@ CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
 void CGameLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
-	NI_ASSERT( stream.IsOk(), StrFmt( "Could not open cfg file: %s", szCfgFile ) );
+	NI_ASSERT( stream.IsOk(), fmt::format( "Could not open cfg file: {}", szCfgFile ) );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
 	pSaver->Add( "GameTimeout", &dwGameTimeOut );
@@ -151,7 +153,7 @@ bool CGameLobby::ProcessGetLobbyClientsListPacket( CGetLobbyClientsListPacket *p
 		{
 			std::string szNick;
 			if ( !pClients->GetNick( *iter, &szNick ) )
-				szList += StrFmt( "  something wrong with client %d\n", *iter );
+				szList += fmt::format( "  something wrong with client {}\n", *iter );
 			else
 				szList += "  " + szNick + "\n";
 		}
@@ -615,10 +617,10 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 		for ( std::unordered_map<int, SLobbyGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
 		{
 			SGameInfo &info = iter->second.gameInfo;
-			NI_ASSERT( iter->first == info.nID, StrFmt( "wrong ids for game, %d->%d", iter->first, info.nID ) );
-			szStr += StrFmt( "    \"%s\", id %d, max players %d, has_password-%d, password \"%s\"", 
-				info.szName.c_str(), info.nID, 
-				info.nMaxPlayers, (int)info.bHasPassword, info.szPassword.c_str() );
+			NI_ASSERT( iter->first == info.nID, fmt::format( "wrong ids for game, {}->{}", iter->first, info.nID ) );
+			szStr += fmt::format( "    \"{}\", id {}, max players {}, has_password-{}, password \"{}\"", 
+				info.szName, info.nID, 
+				info.nMaxPlayers, (int)info.bHasPassword, info.szPassword );
 			if ( info.bCanConnect )
 				szStr += ", can connect";
 			else
@@ -635,11 +637,11 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 				else
 				{
 					std::unordered_set<int>::iterator iter = clients.begin();
-					szStr += StrFmt( "clients: %d", *iter );
+					szStr += fmt::format( "clients: {}", *iter );
 					++iter;
 					while ( iter != clients.end() )
 					{
-						szStr += StrFmt( ", %d", *iter );
+						szStr += fmt::format( ", {}", *iter );
 						++iter;
 					}
 				}

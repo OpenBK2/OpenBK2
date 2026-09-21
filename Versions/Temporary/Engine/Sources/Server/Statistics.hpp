@@ -2,6 +2,8 @@
 #include "Statistics.h"
 #include "Misc/Time64.h"
 
+#include <fmt/format.h>
+
 
 class CStatisticsCollector : public IStatisticsCollector
 {
@@ -28,13 +30,13 @@ public:
 	virtual IStatisticsData* operator[]( const std::string &szName ) 
 	{
 		NI_ASSERT( specificData.find( szName ) != specificData.end(), 
-			StrFmt( "Statistics counter %s for collector %s is not set", szName.c_str(), szSpecificName.c_str() ) )
+			fmt::format( "Statistics counter {} for collector {} is not set", szName, szSpecificName ) )
 		return specificData[szName]; 
 	}
 	static IStatisticsData* GetGlobal( const std::string &szName )
 	{ 
 		NI_ASSERT( globalData.find( szName ) != globalData.end(), 
-			StrFmt( "Global statistics counter %s is not set", szName.c_str() ) );
+			fmt::format( "Global statistics counter {} is not set", szName ) );
 		return globalData[szName]; 
 	}
 	static void SetGlobal( const std::string &szName, IStatisticsData* pData ) { globalData[szName] = pData; }

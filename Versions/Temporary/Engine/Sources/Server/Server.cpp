@@ -21,6 +21,8 @@
 #include <typeinfo.h>
 #include "vendor/MySQL/include/mysql.h"
 
+#include <fmt/format.h>
+
 
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
 processCmdsFuncs[cmd] = &CGameServer::##FuncName;
@@ -136,7 +138,7 @@ void CGameServer::ProcessCommands()
 	while ( pCommands->GetCommand( &cmd ) )
 	{
 		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
-//		NI_ASSERT( iter != processCmdsFuncs.end(), StrFmt( "Can't process cmd %d", cmd.nCmd ) );
+//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
 			continue;
@@ -170,7 +172,7 @@ void CGameServer::RecievePackets()
 				++i;
 		}
 #ifndef _FINALRELEASE
-		pClients->Log( pPacket->nClientID, StrFmt( "receive %s, %d", GetPacketInfo( pPacket ), i ) );
+		pClients->Log( pPacket->nClientID, fmt::format( "receive {}, {}", GetPacketInfo( pPacket ), i ) );
 #endif
 	}
 }
@@ -183,7 +185,7 @@ void CGameServer::SendPackets()
 		while ( CPtr<CNetPacket> pPacket = lobbies[i]->GetPacket() )
 		{
 #ifndef _FINALRELEASE
-			pClients->Log( pPacket->nClientID, StrFmt( "%d send %s", i, GetPacketInfo( pPacket ) ) );
+			pClients->Log( pPacket->nClientID, fmt::format( "{} send {}", i, GetPacketInfo( pPacket ) ) );
 #endif
 			pNet->SendPacket( pPacket );
 			--nPacketsPerLobbyLeft;
@@ -245,12 +247,12 @@ void CGameServer::CommandClientsList( const SCommand &cmd )
 				{
 					std::string szNick;
 					if ( !pClients->GetNick( iter->first, &szNick ) )
-						szList += StrFmt( "  something wrong with client %d\n", iter->first );
+						szList += fmt::format( "  something wrong with client {}\n", iter->first );
 					else
 						szList += "  " + szNick + "\n";
 				}
 			}
-			szList += StrFmt( "Total clients: %d\n", onLine.size() );
+			szList += fmt::format( "Total clients: {}\n", onLine.size() );
 		}
 
 		WriteMSG( "%s", szList.c_str() );
@@ -290,15 +292,15 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 	
 	int nID;
 	if ( !pClients->GetClientID( cmd.GetStr( 0 ), &nID ) )
-		szStr = StrFmt( "Nick %s isn't online", cmd.GetStr( 0 ).c_str() );
+		szStr = fmt::format( "Nick {} isn't online", cmd.GetStr( 0 ) );
 	else
 	{
 		SCommonClientInfo clientInfo;
 		if ( !pClients->GetCommonClientInfo( nID, &clientInfo ) )
-			szStr = StrFmt( "Something wrong with nick %s", cmd.GetStr( 0 ).c_str() );
+			szStr = fmt::format( "Something wrong with nick {}", cmd.GetStr( 0 ) );
 		else
 		{
-			szStr = StrFmt( "client %s: ", cmd.GetStr( 0 ).c_str() );
+			szStr = fmt::format( "client {}: ", cmd.GetStr( 0 ) );
 			if ( clientInfo.bWant2ReceiveChat )
 				szStr += "chat open, ";
 			else
@@ -326,7 +328,7 @@ void CGameServer::CommandClientState( const SCommand &cmd )
 			if ( clientInfo.nGameID == -1 )
 				szStr += ", not in a game";
 			else
-				szStr += StrFmt( ", in game %d", clientInfo.nGameID );
+				szStr += fmt::format( ", in game {}", clientInfo.nGameID );
 
 			WriteMSG( "%s", (szStr + "\n").c_str() );
 		}
