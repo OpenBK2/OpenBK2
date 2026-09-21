@@ -8,6 +8,7 @@
 #include <atomic>
 #include <chrono>
 #include <csignal>
+#include <cstdio>
 #include <filesystem>
 #include <thread>
 
@@ -71,6 +72,26 @@ int main()
 	std::signal( SIGTERM, &OnStopSignal );
 
 	const std::string szCfgFile = GetBaseDir() + "server.xml";
+
+	// Before anything is built, because everything that follows needs it and
+	// because the failure was previously an access violation with nothing
+	// printed: the reader dereferenced a null saver, and the assert that would
+	// have caught it compiles to nothing. Reported here, where there is still
+	// somewhere to report it to.
+	//
+	// The path is worth printing rather than just the failure. It is derived
+	// from the working directory, so the usual cause is being run from the
+	// wrong one: the server expects to start in bin/ with its configuration in
+	// the directory above.
+	{
+		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
+		if ( !stream.IsOk() )
+		{
+			std::fprintf( stderr, "Cannot open the configuration file: %s\n", szCfgFile.c_str() );
+			std::fprintf( stderr, "The server reads server.xml from the directory above the one it runs in.\n" );
+			return 1;
+		}
+	}
 
 	CObj<CCommands> pCmds = new CCommands( true );
 	CObj<CGameServer> pGameServer = new CGameServer( pCmds, szCfgFile );

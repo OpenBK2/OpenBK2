@@ -44,12 +44,23 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 
 	pDatabase = CreateMariaDbDatabase();
 
-	int nNetVersion, nPort;
+	// Initialised, because a configuration file that opens but does not parse
+	// leaves every one of these untouched, and they were being read anyway.
+	int nNetVersion = 0, nPort = 0;
 	std::string szServerName, szDBName;
-	int nTerminalPort;
+	int nTerminalPort = 0;
 	{
 		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
+		if ( !pSaver )
+		{
+			// This used to dereference the null and take the process with it,
+			// with nothing printed: an access violation before any of the
+			// output below could run. main checks the file before getting
+			// here, so reaching this means it went away in between.
+			WriteMSG( "Cannot read the configuration file: %s\n", szCfgFile.c_str() );
+			return;
+		}
 
 		pSaver->Add( "NetVersion", &nNetVersion );
 		pSaver->Add( "Port", &nPort );

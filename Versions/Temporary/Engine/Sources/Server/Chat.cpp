@@ -24,9 +24,15 @@ CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName )
 void CChatLobby::ReloadConfig()
 {
 	CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
-	NI_ASSERT( stream.IsOk(), fmt::format( "Could not open cfg file: {}", szCfgFile ) );
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
-	NI_ASSERT( pSaver.GetPtr(), "Could not create XML saver" );
+	if ( !pSaver )
+	{
+		// Checked rather than asserted: NI_ASSERT compiles to nothing in every
+		// build that exists, so this went on to dereference the null. Leaving
+		// the previous settings in place is the right answer for a reload.
+		WriteMSG( "Cannot read the configuration file: %s\n", szCfgFile.c_str() );
+		return;
+	}
 	pSaver->Add( "Welcome", &wszWelcomeText );
 	pSaver->Add( "ChatSegmentLength", &nRefreshTime );
 	pSaver->Add( "MaxFriends", &nMaxFriends );
