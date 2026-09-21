@@ -156,6 +156,9 @@ include(cmake/ffmpeg.cmake)
 include(cmake/crashpad.cmake)
 include(cmake/versioninfo.cmake)
 include(cmake/exportheader.cmake)
+# After exportheader.cmake: squish generates its export header into the same
+# build-tree directory and relies on that directory being on the include path.
+include(cmake/squish.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
 if(BUILD_EDITOR)

@@ -4,7 +4,6 @@
 
 #include "Image_export.h"
 
-struct IDirect3DDevice9;
 namespace NGfx
 {
 	enum EPixelFormat : int;
@@ -14,11 +13,12 @@ namespace NImage
 {
 bool RecognizeFormatDDS( CDataStream *pStream );
 IMAGE_EXPORT bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream );
-//! convert to DDS using DX compression function
-//! defined in ImageDDSWrite.cpp on Windows, and off it by the stub in
-//! ImageDDSWriteStub.cpp, which writes nothing and says so
-IMAGE_EXPORT bool ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
-															 EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, 
+//! Compress to one of the DXT or ARGB formats and write a .dds.
+//! Defined in ImageDDSWrite.cpp. Builds the container itself and compresses
+//! through squish, so it needs neither D3DX nor a Direct3D device and builds
+//! everywhere.
+IMAGE_EXPORT bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
+															 EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels,
 															 bool bWrapX, bool bWrapY, float fMappingSize );
 }
 

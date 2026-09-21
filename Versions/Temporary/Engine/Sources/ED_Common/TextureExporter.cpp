@@ -9,7 +9,6 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/CommonExporterMethods.h"
 #include "System/FileUtils.h"
-#include "Misc/Win32Helper.h"
 #include "Misc/StrProc.h"
 #include "Image/DDS.h"
 #include "Image/Targa.h"
@@ -26,12 +25,10 @@
 #include <cstdint>
 #include <filesystem>
 
-#include "3Dmotor_export.h"
-
-namespace NGfx
-{
-  _3DMOTOR_EXPORT EXTERNVAR NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
-}
+// The renderer's device used to be declared here and handed to the DDS writer.
+// Compression is a CPU pass over the pixels now, so this file names no Direct3D
+// at all and the Win32Helper and 3Dmotor_export includes went with the
+// declaration.
 
 namespace
 {
@@ -258,7 +255,8 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 				if ( bFlipY ) 
 					NImage::FlipY( image );
 				szDestination = NFile::GetTempFileName();
-				bResult = NImage::ConvertAndSaveAsDDSWithDX( NGfx::pDevice, szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
+				// No device: compression is a CPU pass over the pixels now.
+				bResult = NImage::ConvertAndSaveAsDDS( szDestination, image, eImageType, ePixelFormat, nMips, bWrapX, bWrapY, fMSize );
 			}
 			else
 			{

@@ -57,7 +57,11 @@ const SDDSPixelFormat DDSPF_DXT5 = { sizeof(SDDSPixelFormat), DDS_FOURCC, MAKEFO
 // ARGB formats
 const SDDSPixelFormat DDSPF_A8R8G8B8 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000 };
 const SDDSPixelFormat DDSPF_A1R5G5B5 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 16, 0x00007c00, 0x000003e0, 0x0000001f, 0x00008000 };
-const SDDSPixelFormat DDSPF_A4R4G4B4 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 16, 0x0000f000, 0x000000f0, 0x0000000f, 0x0000f000 };
+// The red mask here read 0x0000f000, a copy of the alpha mask, so a pixel
+// written through it lost its red channel into the alpha bits and came back
+// with no red at all. Nothing in the shipped data is A4R4G4B4, which is why it
+// went unnoticed, but the texture exporter offers the format as TF_4444.
+const SDDSPixelFormat DDSPF_A4R4G4B4 = { sizeof(SDDSPixelFormat), DDS_ARGB, 0, 16, 0x00000f00, 0x000000f0, 0x0000000f, 0x0000f000 };
 const SDDSPixelFormat DDSPF_R5G6B5   = { sizeof(SDDSPixelFormat), DDS_RGB , 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000 };
 const SDDSPixelFormat DDSPF_R8G8B8   = { sizeof(SDDSPixelFormat), DDS_RGB , 0, 24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000 };
 
@@ -79,6 +83,7 @@ const uint32_t DDS_HEADER_FLAGS_LINEARSIZE = 0x00080000;	// DDSD_LINEARSIZE
 // surface flags
 const uint32_t DDS_SURFACE_FLAGS_TEXTURE		= 0x00001000;	// DDSCAPS_TEXTURE
 const uint32_t DDS_SURFACE_FLAGS_MIPMAP		= 0x00400008;	// DDSCAPS_COMPLEX | DDSCAPS_MIPMAP
+const uint32_t DDS_SURFACE_ALPHA						= 0x00000002;	// DDSCAPS_ALPHA
 const uint32_t DDS_SURFACE_FLAGS_CUBEMAP		= 0x00000008;	// DDSCAPS_COMPLEX
 // cube map flags
 const uint32_t DDS_CUBEMAP_POSITIVEX				= 0x00000600;	// DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_POSITIVEX

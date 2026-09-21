@@ -1,32 +1,23 @@
 #include "stdafx.h"
-#include <d3d9.h>
-#include <d3dx9.h>
 
 #include "ImageDDS.h"
 
-#include "System/FilePath.h"
-#include "3Dmotor/GfxInternal.h" // ePixelFormat->D3DFormat
-#include "3Dmotor/D3DError.h"
+#include "DDS.h"
+#include "ImageInternal.h"		// SPixelConvertInfo
 #include "ImageScale.h"
 
+#include "System/FilePath.h"
+#include "System/Streams.h"
+
+#include "3Dmotor/GPixelFormat.h"
+
+#include <squish/squish.h>
+
 #include <cstdint>
+#include <vector>
 
 #include <fmt/format.h>
 
-
-#if defined( _DO_ASSERT_SLOW )
-#define NI_ASSERTHR( x, user_text )                        \
-{                                                          \
-	if ( ( static_cast<uint32_t>(x) & 0x80000000 ) != 0 )       \
-	{                                                        \
-		char buff[1024];                                       \
-		sprintf( buff, "(0x%X) %s", x, D3DErrorToString( x ) ); \
-		NI_FORCE_ASSERT( 0, buff, user_text );                 \
-	}                                                        \
-}
-#else
-#define NI_ASSERTHR( x, user_text ) ((void)0);
-#endif
 
 using namespace NGfx;
 
@@ -35,11 +26,180 @@ namespace NImage
 
 // ************************************************************************************************************************ //
 // **
-// ** DXT# and ARGB compression using S3TC compressor
+// ** DXT# and ARGB compression
 // **
-// **
+// ** This writer builds the DDS container itself and compresses through squish.
+// ** It replaces one that went through D3DXLoadSurfaceFromMemory and
+// ** D3DXSaveTextureToFile, which pinned texture export to Windows and made the
+// ** editor create a D3DDEVTYPE_NULLREF device -- a device that renders nothing
+// ** -- purely to have something to call CreateTexture on. Nothing here needs a
+// ** GPU: the compressor is a pure function of the pixels and the header is 128
+// ** bytes of it.
 // **
 // ************************************************************************************************************************ //
+
+//! Colour error weights the original pipeline compressed with.
+//! The S3TC path that shipped this game's textures passed exactly these three
+//! numbers to S3TCencode as its colour metric, and squish takes them in the same
+//! role and the same R,G,B order. Keeping them means the encoder carries the
+//! perceptual bias the shipped data was built with instead of squish's own
+//! Rec.709 default. squish takes the metric by non-const pointer, so this cannot
+//! be const.
+static float s_colourMetric[3] = { 0.309f, 0.609f, 0.082f };
+
+static bool IsDXTFormat( NGfx::EPixelFormat format )
+{
+	return format >= CF_DXT1 && format <= CF_DXT5;
+}
+
+static bool GetDDSPixelFormat( NGfx::EPixelFormat format, SDDSPixelFormat *pFormat )
+{
+	switch ( format )
+	{
+		case CF_DXT1:     *pFormat = DDSPF_DXT1;     break;
+		case CF_DXT2:     *pFormat = DDSPF_DXT2;     break;
+		case CF_DXT3:     *pFormat = DDSPF_DXT3;     break;
+		case CF_DXT4:     *pFormat = DDSPF_DXT4;     break;
+		case CF_DXT5:     *pFormat = DDSPF_DXT5;     break;
+		case CF_A8R8G8B8: *pFormat = DDSPF_A8R8G8B8; break;
+		case CF_A4R4G4B4: *pFormat = DDSPF_A4R4G4B4; break;
+		case CF_A1R5G5B5: *pFormat = DDSPF_A1R5G5B5; break;
+		case CF_R5G6B5:   *pFormat = DDSPF_R5G6B5;   break;
+		default:
+			return false;
+	}
+	return true;
+}
+
+//! Compression flags for one of the DXT formats.
+static int GetSquishMethod( NGfx::EPixelFormat format )
+{
+	switch ( format )
+	{
+		case CF_DXT1:
+			return squish::kDxt1;
+		// DXT2 and DXT4 differ from DXT3 and DXT5 only in that the colour is
+		// taken to be premultiplied by alpha. That is a claim the caller makes
+		// about the source pixels, not a different block layout, so they encode
+		// the same way. Premultiplying here would alter pixels the caller did
+		// not ask to have altered, and nothing in the shipped data uses either
+		// format.
+		case CF_DXT2:
+		case CF_DXT3:
+			return squish::kDxt3;
+		case CF_DXT4:
+		case CF_DXT5:
+			return squish::kDxt5;
+		default:
+			return 0;
+	}
+}
+
+//! squish reads pixels as R,G,B,A bytes; CArray2D<uint32_t> holds 0xAARRGGBB,
+//! which is B,G,R,A in memory on a little-endian machine.
+//!
+//! squish has a kSourceBGRA flag for exactly this, and it does not work: its
+//! FixFlags() rebuilds the flag word as method|fit|kWeightColourByAlpha before
+//! CompressImage passes it to CopyRGBA, so the bit is always stripped before
+//! anything reads it. Passing it would silently swap red and blue in every
+//! exported texture. Hence the explicit conversion.
+static void SwizzleToRGBA( std::vector<squish::u8> *pRes, const CArray2D<uint32_t> &image )
+{
+	const int nSizeX = image.GetSizeX();
+	const int nSizeY = image.GetSizeY();
+	pRes->resize( nSizeX * nSizeY * 4 );
+	squish::u8 *pDst = &(*pRes)[0];
+	for ( int y = 0; y < nSizeY; ++y )
+	{
+		const uint32_t *pSrc = &image[y][0];
+		for ( int x = 0; x < nSizeX; ++x, ++pSrc, pDst += 4 )
+		{
+			pDst[0] = static_cast<squish::u8>( ( *pSrc >> 16 ) & 0xff );	// R
+			pDst[1] = static_cast<squish::u8>( ( *pSrc >>  8 ) & 0xff );	// G
+			pDst[2] = static_cast<squish::u8>( ( *pSrc       ) & 0xff );	// B
+			pDst[3] = static_cast<squish::u8>( ( *pSrc >> 24 ) & 0xff );	// A
+		}
+	}
+}
+
+//! One mip level, from ARGB8888 to the destination format.
+static bool CompressLevel( std::vector<uint8_t> *pRes, const CArray2D<uint32_t> &image, NGfx::EPixelFormat format )
+{
+	const int nSizeX = image.GetSizeX();
+	const int nSizeY = image.GetSizeY();
+	if ( nSizeX <= 0 || nSizeY <= 0 )
+		return false;
+
+	if ( IsDXTFormat( format ) )
+	{
+		// kColourClusterFit is squish's default and the quality level the
+		// exporter wants: this runs once per texture from the editor, not per
+		// frame. kWeightColourByAlpha is deliberately not set -- it biases the
+		// fit towards opaque texels, which helps alpha-blended art and hurts
+		// everything else, and the original compressor did not do it.
+		const int nFlags = GetSquishMethod( format ) | squish::kColourClusterFit;
+		std::vector<squish::u8> rgba;
+		SwizzleToRGBA( &rgba, image );
+		pRes->resize( squish::GetStorageRequirements( nSizeX, nSizeY, nFlags ) );
+		squish::CompressImage( &rgba[0], nSizeX, nSizeY, &(*pRes)[0], nFlags, s_colourMetric );
+		return true;
+	}
+
+	if ( format == CF_A8R8G8B8 )
+	{
+		// The in-memory layout is already A8R8G8B8 little-endian, which is what
+		// the pixel format in the header describes.
+		pRes->resize( nSizeX * nSizeY * 4 );
+		memcpy( &(*pRes)[0], &image[0][0], pRes->size() );
+		return true;
+	}
+
+	SDDSPixelFormat ddsformat;
+	if ( !GetDDSPixelFormat( format, &ddsformat ) )
+		return false;
+	// The 16 bit formats quantise by truncation, as the removed S3TC path did.
+	SPixelConvertInfo pci( ddsformat.dwABitMask, ddsformat.dwRBitMask, ddsformat.dwGBitMask, ddsformat.dwBBitMask );
+	pRes->resize( nSizeX * nSizeY * 2 );
+	uint16_t *pDst = reinterpret_cast<uint16_t *>( &(*pRes)[0] );
+	for ( int y = 0; y < nSizeY; ++y )
+	{
+		const uint32_t *pSrc = &image[y][0];
+		for ( int x = 0; x < nSizeX; ++x, ++pSrc, ++pDst )
+			*pDst = static_cast<uint16_t>( pci.ComposeColorSlow( *pSrc ) );
+	}
+	return true;
+}
+
+//! The 128 byte container header.
+//!
+//! The flag and caps combinations here are the ones the shipped textures carry:
+//! of 11896 .dds files under Versions/Current, the mipmapped ones are
+//! dwHeaderFlags 0x00021007 with dwSurfaceFlags 0x00401008 and the single level
+//! ones are 0x00001007 with 0x00001000. dwPitchOrLinearSize is 0 throughout,
+//! and both reserved blocks are zero in every one of them, so there is no tool
+//! watermark to reproduce.
+static void MakeDDSHeader( SDDSHeader *pHdr, int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
+{
+	GetDDSPixelFormat( ePixelFormat, &pHdr->ddspf );
+	pHdr->dwWidth = nWidth;
+	pHdr->dwHeight = nHeight;
+	pHdr->dwHeaderFlags = DDS_HEADER_FLAGS_TEXTURE;
+	pHdr->dwSurfaceFlags = DDS_SURFACE_FLAGS_TEXTURE;
+	// A texture with one level announces no mip chain at all rather than a
+	// chain of length one, which is what the shipped files do.
+	if ( nNumMipLevels > 1 )
+	{
+		pHdr->dwHeaderFlags |= DDS_HEADER_FLAGS_MIPMAP;
+		pHdr->dwSurfaceFlags |= DDS_SURFACE_FLAGS_MIPMAP;
+		pHdr->dwMipMapCount = nNumMipLevels;
+	}
+	// DDSCAPS_ALPHA, a DirectDraw-era flag the shipped uncompressed textures
+	// with an alpha channel carry and the DXT ones do not, alpha or no alpha.
+	// Readers ignore it; it is set so a re-export of an existing texture differs
+	// from it in as few bytes as possible.
+	if ( !IsDXTFormat( ePixelFormat ) && ( pHdr->ddspf.dwFlags & DDS_ARGB ) == DDS_ARGB )
+		pHdr->dwSurfaceFlags |= DDS_SURFACE_ALPHA;
+}
 
 static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelFormat, int nNumMipLevels )
 {
@@ -48,119 +208,76 @@ static int CalcNumMipLevels( int nWidth, int nHeight, NGfx::EPixelFormat ePixelF
 	return nNumMipLevels <= 0 ? nMaxPossible : (std::min)( nNumMipLevels, nMaxPossible );
 }
 
-// ************************************************************************************************************************ //
-// **
-// ** DX compression specific functions
-// **
-// **
-// **
-// ************************************************************************************************************************ //
-
-static bool WriteDDS( IDirect3DDevice9 *pDevice, const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
+static bool WriteDDS( const std::string &szFileName, NGfx::EPixelFormat ePixelFormat,
 	const std::vector<CArray2D<uint32_t> > &mips )
 {
 	ASSERT( !mips.empty() );
 	if ( mips.empty() )
 		return false;
-	D3DFORMAT fmt = NGfx::PixelID2D3DFormat( ePixelFormat );
-	if ( fmt == D3DFMT_A8R8G8B8 && ePixelFormat != NGfx::CF_A8R8G8B8 )
+
+	SDDSPixelFormat ddsformat;
+	if ( !GetDDSPixelFormat( ePixelFormat, &ddsformat ) )
 	{
-		NI_ASSERT( 0, fmt::format("Wrong destination format, DXT conversion failed (\"{}\")", szFileName) );
+		NI_ASSERT( 0, fmt::format( "Unsupported destination format {}, DDS conversion failed (\"{}\")",
+			static_cast<int>( ePixelFormat ), szFileName ) );
 		return false;
 	}
 
-	NWin32Helper::com_ptr<IDirect3DTexture9> pDstTexture;
-	HRESULT hr = pDevice->CreateTexture( mips[0].GetSizeX(), mips[0].GetSizeY(), mips.size(), 0, fmt,
-		                                   D3DPOOL_SYSTEMMEM, pDstTexture.GetAddr(), 0 );
-	if ( FAILED(hr) )
+	// Compress everything before the file is created, so a failure leaves no
+	// truncated .dds behind for the exporter to pick up as a finished one.
+	std::vector<std::vector<uint8_t> > levels( mips.size() );
+	for ( size_t i = 0; i < mips.size(); ++i )
 	{
-		NI_ASSERTHR( hr, fmt::format("Can't create DXT texture \"{}\", DXT conversion failed", szFileName) );
-		return false;
-	}
-
-	for ( int nLevel = 0; nLevel < mips.size(); ++nLevel )
-	{
-		const CArray2D<uint32_t> &image = mips[ nLevel ];
-		RECT rect;
-		const int nSizeX = image.GetSizeX();
-		const int nSizeY = image.GetSizeY();
-
-		rect.left = 0;
-		rect.top = 0;
-		rect.right = image.GetSizeX();
-		rect.bottom = image.GetSizeY();
-
-		NWin32Helper::com_ptr<IDirect3DSurface9> pSurfaceLevel;
-		HRESULT hr = pDstTexture->GetSurfaceLevel( nLevel, pSurfaceLevel.GetAddr() );
-		if ( FAILED(hr) ) 
+		if ( !CompressLevel( &levels[i], mips[i], ePixelFormat ) )
 		{
-			NI_ASSERTHR( hr, fmt::format("Can't get {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
-			return false;
-		}
-		hr = D3DXLoadSurfaceFromMemory( pSurfaceLevel, NULL, NULL, &(image[0][0]), D3DFMT_A8R8G8B8,
-			                                      image.GetSizeX() * sizeof(uint32_t), NULL, &rect, D3DX_FILTER_NONE, 0 );
-		if ( FAILED(hr) ) 
-		{
-			NI_ASSERTHR( hr, fmt::format("Can't load {} level of texture \"{}\", conversion failed", nLevel, szFileName) );
+			NI_ASSERT( 0, fmt::format( "Can't compress level {} of texture \"{}\", DDS conversion failed", i, szFileName ) );
 			return false;
 		}
 	}
 
-	NFile::CreatePath( NFile::GetFilePath(szFileName) );
-	hr = D3DXSaveTextureToFile( szFileName.c_str(), D3DXIFF_DDS, pDstTexture, NULL );
-	if ( FAILED(hr) )
+	SDDSFileHeader hdr;
+	MakeDDSHeader( &hdr.header, mips[0].GetSizeX(), mips[0].GetSizeY(), ePixelFormat, mips.size() );
+
+	NFile::CreatePath( NFile::GetFilePath( szFileName ) );
+	CFileStream stream( szFileName, CFileStream::WIN_CREATE );
+	if ( !stream.IsOk() )
 	{
-		NI_ASSERTHR( hr, fmt::format("Can't write final DXT texture \"{}\", DXT conversion failed", szFileName) );
+		NI_ASSERT( 0, fmt::format( "Can't create DDS file \"{}\"", szFileName ) );
+		return false;
 	}
-	return SUCCEEDED(hr);
+	stream.Write( &hdr, sizeof(hdr) );
+	for ( size_t i = 0; i < levels.size(); ++i )
+		stream.Write( &levels[i][0], levels[i].size() );
+	return stream.IsOk();
 }
 
-static bool SaveAsDDSWithDX( IDirect3DDevice9 *pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
-	NGfx::EPixelFormat ePixelFormat, int _nNumMipLevels )
+bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
+	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
 {
 	if ( srcImage.GetSizeX() <= 0 || srcImage.GetSizeY() <= 0 )
 		return false;
-	int nNumMipLevels = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), ePixelFormat, _nNumMipLevels );
+	// eImageType, bWrapX, bWrapY and fMappingSize describe how the mip chain
+	// should be filtered -- bump maps, additive and cut-out transparency and the
+	// wrap edges each want different treatment. The D3DX writer this replaces
+	// ignored all four and filtered every texture the same way, and so does
+	// this; restoring that is a separate job from getting off D3DX.
+	const int nMips = CalcNumMipLevels( srcImage.GetSizeX(), srcImage.GetSizeY(), nSubFormat, nNumMipLevels );
 
 	std::vector<CArray2D<uint32_t> > mips;
-	mips.resize( nNumMipLevels );
+	mips.resize( nMips );
 	mips[0] = srcImage;
 
-  for ( int nLevel = 1; nLevel < nNumMipLevels; ++nLevel )
-  {
-    const int nSizeX = (std::max)(1, srcImage.GetSizeX() >> nLevel);
-    const int nSizeY = (std::max)(1, srcImage.GetSizeY() >> nLevel);
+	for ( int nLevel = 1; nLevel < nMips; ++nLevel )
+	{
+		const int nSizeX = (std::max)( 1, srcImage.GetSizeX() >> nLevel );
+		const int nSizeY = (std::max)( 1, srcImage.GetSizeY() >> nLevel );
 		CArray2D<uint32_t> &image = mips[ nLevel ];
 		image.SetSizes( nSizeX, nSizeY );
+		// Each level is filtered from the full resolution original rather than
+		// from the level above it, so the error does not accumulate down the chain.
 		Scale( &image, srcImage, IMAGE_SCALE_METHOD_LANCZOS3 );
-  }
-	return WriteDDS( pDevice, szFileName, ePixelFormat, mips );
-}
-
-#define DEF_INV_255 ( 1.0f / 255 )
-bool ConvertAndSaveAsDDSWithDX( IDirect3DDevice9 * pDevice, const std::string &szFileName, const CArray2D<uint32_t> &srcImage,
-	EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels, bool bWrapX, bool bWrapY, float fMappingSize )
-{
-	// Exporting is a CPU surface conversion. A NULLREF device also supports it
-	// before a 3D viewer has created the editor's rendering device.
-	NWin32Helper::com_ptr<IDirect3D9> d3d;
-	NWin32Helper::com_ptr<IDirect3DDevice9> exportDevice;
-	if ( !pDevice )
-	{
-		d3d = Direct3DCreate9( D3D_SDK_VERSION );
-		if ( !d3d )
-			return false;
-		D3DPRESENT_PARAMETERS pp = {};
-		pp.Windowed = TRUE;
-		pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
-		pp.BackBufferWidth = pp.BackBufferHeight = 1;
-		pp.hDeviceWindow = GetDesktopWindow();
-		if ( FAILED(d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_NULLREF, pp.hDeviceWindow,
-			D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, exportDevice.GetAddr())) )
-			return false;
-		pDevice = exportDevice;
 	}
-	return SaveAsDDSWithDX( pDevice, szFileName, srcImage, nSubFormat, nNumMipLevels );
+	return WriteDDS( szFileName, nSubFormat, mips );
 }
 
 }
