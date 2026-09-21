@@ -32,28 +32,28 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 {
 	pTheTerminal = this;
 
-	// Winsock alone needs starting before a socket exists, and nothing does on
-	// POSIX, so this is guarded rather than shimmed.
+	// Winsock alone needs starting before a socket exists. LinksManager does
+	// this for the game's own sockets in a static constructor, but that lives
+	// in another module and is not guaranteed to have run, and asking twice is
+	// harmless: the library counts.
 #if BOOST_OS_WINDOWS
 	WSADATA wsaData;
 	WSAStartup( MAKEWORD( 1, 1 ), &wsaData );
 #endif
 
-	listeningSocket = socket(AF_INET,		// Go over TCP/IP
-		SOCK_STREAM,   	// This is a stream-oriented socket
-		IPPROTO_TCP );		// Use TCP rather than UDP
+	listeningSocket = socket( AF_INET,	// Go over TCP/IP
+		SOCK_STREAM,	// This is a stream-oriented socket
+		IPPROTO_TCP );	// Use TCP rather than UDP
 
-	if ( listeningSocket == INVALID_SOCKET ) 
+	if ( listeningSocket == INVALID_SOCKET )
 	{
-		NI_ASSERT( false, "Cannot create terminal socket!" );
-#if BOOST_OS_WINDOWS
-		WSACleanup();				// Shutdown Winsock
-#endif
-		return;			// Return an error value
+		WriteMSG( "Terminal: cannot create the socket, the remote console will not be available\n" );
+		return;
 	}
 
 	// Use a sockaddr_in struct to fill in address information
 	sockaddr_in serverInfo;
+	memset( &serverInfo, 0, sizeof( serverInfo ) );
 
 	serverInfo.sin_family = AF_INET;
 	serverInfo.sin_addr.s_addr = INADDR_ANY;	// Since this socket is listening for connections,
@@ -61,22 +61,22 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 	serverInfo.sin_port = htons( nPort );		// Convert integer 8888 to network-byte order
 	// and insert into the port field
 
-	if  ( bind( listeningSocket, reinterpret_cast<sockaddr *>( &serverInfo ), sizeof(struct sockaddr) ) < 0 )
+	// sizeof( serverInfo ), not sizeof( sockaddr ): they are the same size for
+	// AF_INET, but the length belongs to the structure being passed.
+	if ( bind( listeningSocket, reinterpret_cast<sockaddr *>( &serverInfo ), sizeof( serverInfo ) ) < 0 )
 	{
-		NI_ASSERT( false, "Cannot bind to terminal socket!" );
-#if BOOST_OS_WINDOWS
-		WSACleanup();				// Shutdown Winsock
-#endif
-		return;			// Return an error value
+		WriteMSG( "Terminal: cannot bind port %d, the remote console will not be available\n", nPort );
+		closesocket( listeningSocket );
+		listeningSocket = INVALID_SOCKET;
+		return;
 	}
 
-	if  ( listen( listeningSocket, 1 ) < 0 )
+	if ( listen( listeningSocket, 1 ) < 0 )
 	{
-		NI_ASSERT( false, "Cannot listen on terminal socket!" );
-#if BOOST_OS_WINDOWS
-		WSACleanup();				// Shutdown Winsock
-#endif
-		return;			// Return an error value
+		WriteMSG( "Terminal: cannot listen on port %d, the remote console will not be available\n", nPort );
+		closesocket( listeningSocket );
+		listeningSocket = INVALID_SOCKET;
+		return;
 	}
 	readingThread = std::thread( &TheTerminalThreadProc, this );
 	readingThread.detach();
@@ -164,6 +164,10 @@ void CTerminal::ReadToCache()
 
 CTerminal::~CTerminal()
 {
+	if ( listeningSocket != INVALID_SOCKET )
+	{
+		closesocket( listeningSocket );
+	}
 #if BOOST_OS_WINDOWS
 	WSACleanup();
 #endif
