@@ -267,10 +267,12 @@ class CRasterizer
 			break;
 		default:
 			// nTemp is a three bit mask and Raster only reaches here for 1 to 7, so the
-			// seven cases above are exhaustive. Boost's spelling of this is __assume(0)
-			// on MSVC and __builtin_unreachable() elsewhere, and carries its own
-			// semicolon; boost/config.hpp is already included at the top of this file.
-			BOOST_UNREACHABLE_RETURN()
+			// seven cases above are exhaustive. The ASSERT at the top of the function
+			// says so in a debug build; this says so to the optimiser, which cannot
+			// see it. BOOST_UNREACHABLE_RETURN stood here and wants the value to
+			// return, which a function returning void has none of, so calling it with
+			// no argument was C4003 every time this header was compiled.
+			NI_UNREACHABLE();
 			break;
 		}
 	}

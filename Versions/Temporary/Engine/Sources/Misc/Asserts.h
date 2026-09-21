@@ -120,6 +120,34 @@ inline TOut checked_cast_ptr( TIn ptr )
 
 // ************************************************************************************************************************ //
 // **
+// ** NI_UNREACHABLE
+// **
+// ** Marks a branch the program never takes, so the optimiser can drop what
+// ** would handle it. A switch's default arm is the usual place, where the cases
+// ** already cover every value a caller can produce.
+// **
+// ** It is a promise and not a check: reaching it is undefined behaviour and
+// ** nothing diagnoses that, so guard the same condition with an ASSERT wherever
+// ** one can be written. The assert says so in a debug build, this says so to
+// ** the optimiser, and they want to agree.
+// **
+// ** Boost spells it BOOST_UNREACHABLE_RETURN, which takes the value to return
+// ** and so reads as intended only in a function that returns one. Invoking that
+// ** with no argument, in a function returning void, is what MSVC reports as
+// ** C4003: not enough arguments for function-like macro invocation.
+// **
+// ************************************************************************************************************************ //
+#if defined( _MSC_VER )
+#define NI_UNREACHABLE() __assume( 0 )
+#elif defined( __GNUC__ ) || defined( __clang__ )
+#define NI_UNREACHABLE() __builtin_unreachable()
+#else
+// No hint available, and none is needed for correctness.
+#define NI_UNREACHABLE() ( (void)0 )
+#endif
+
+// ************************************************************************************************************************ //
+// **
 // ** VERIFY
 // **
 // ** MFC spells it
