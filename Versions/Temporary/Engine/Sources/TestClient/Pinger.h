@@ -5,7 +5,7 @@
 class CPinger : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CPinger )
-	UINT64 nLastConnectTime;
+	uint64_t nLastConnectTime;
 	CObj<class CServerClient> pServerClient;
 	std::string szName;
 	std::string szPassword;
