@@ -53,7 +53,6 @@
 #include "MainFrameShared.h"
 #include "EditorInstance.h"
 #include "libdb/EditorDb.h"
-#include "libdb/DBWatcherClient.h"
 
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
@@ -124,24 +123,6 @@ void CEditorApp::CreateUserDataSingleton()
 	}
 }
 
-
-// Whatever XDBWatcher.exe was.
-//
-// Ported as it stood, not repaired: CreateProcess becomes LaunchDetachedIn so
-// the file compiles off Windows, and the result is still ignored, as the
-// unused BOOL it was assigned to ignored it.
-//
-// **There is no XDBWatcher.exe.** No CMakeLists builds one, it is in no
-// install, and the only trace of it in the tree is XDBWatcherClient.tlh and
-// .tli, the COM wrappers generated from its type library. So this has been
-// failing silently on every start for as long as the CMake build has existed.
-// Worth deciding about rather than keeping: the client half,
-// NDBWatcherClient::RegisterSingleton just below, is live and presumably
-// copes with nothing being there to talk to.
-static void StartDBWatcher()
-{
-	LaunchDetachedIn( "XDBWatcher.exe", "", "" );
-}
 
 bool CEditorApp::CreateSingletons()
 {
@@ -229,8 +210,6 @@ bool CEditorApp::CreateSingletons()
 	LoadMapEditorModule( "" );
 	DebugTrace( "EditorApp() LoadMapEditorModule(): %g", NHPTimer::GetTimePassed( &time ) );
 
-	StartDBWatcher();
-	NDBWatcherClient::RegisterSingleton();
 
 	NSingleton::RegisterSingleton( new CMainFrameContainer(), IMainFrameContainer::tidTypeID );
 	NSingleton::RegisterSingleton( new CCommandHandlerContainer(), ICommandHandlerContainer::tidTypeID );
@@ -298,7 +277,6 @@ void CEditorApp::DestroySingletons()
 	}
 	//
 	NSingleton::UnRegisterSingleton( IMODContainer::tidTypeID );
-	NSingleton::UnRegisterSingleton( NDBWatcherClient::IDBWatcherClient::tidTypeID );
 	NSingleton::UnRegisterSingleton( IFolderCallback::tidTypeID );
 	NSingleton::UnRegisterSingleton( IExporterContainer::tidTypeID );
 	NSingleton::UnRegisterSingleton( IBuilderContainer::tidTypeID );

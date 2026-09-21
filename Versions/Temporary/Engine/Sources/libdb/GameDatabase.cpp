@@ -96,6 +96,8 @@ public:
 	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	bool RemoveObject( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
+	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); return false; }
 	void MarkChanged( const CDBID &dbid ) { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }
 	void SaveChanges();
 	void DropCachedResources() { NI_ASSERT( false, "Editor-specific functionality doesn't work in game mode!" ); }

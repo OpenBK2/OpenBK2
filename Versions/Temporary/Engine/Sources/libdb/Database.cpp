@@ -116,6 +116,16 @@ bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew )
 	return s_pMainDatabase->RenameObject( dbidOld, dbidNew );
 }
 
+bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames )
+{
+	return s_pMainDatabase->RenameObjects( renames );
+}
+
+bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid )
+{
+	return s_pMainDatabase->GetReferencingObjects( pRes, dbid );
+}
+
 void MarkChanged( const CDBID &dbid )
 {
 	s_pMainDatabase->MarkChanged( dbid );

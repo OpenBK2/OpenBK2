@@ -13,7 +13,7 @@
 #include "System/VFS.h"
 #include "System/XMLReader.h"
 #include "Logger.h"
-#include "DBWatcherClient.h"
+#include "DBReferenceScan.h"
 
 #include <fmt/format.h>
 
@@ -89,6 +89,9 @@ class CEditorDatabase : public CBasicDatabase
 	//
 	void RemoveObjectInternal( const CDBID &dbid );
 	void AddNewObjectInternal( const CDBID &_dbid, IObjMan *pObjMan );
+	bool RenameObjectInternal( const CDBID &dbidOld, const CDBID &dbidNew, const std::vector<CDBID> &refObjs );
+	//! answers for every target in a single pass over the database
+	void CollectReferencingObjects( std::vector< std::vector<CDBID> > *pRes, const std::vector<CDBID> &targets );
 	//
 	bool LoadTypesMap();
 	//
@@ -114,6 +117,8 @@ public:
 	bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
 	bool RemoveObject( const CDBID &dbid );
 	bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
+	bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames );
+	bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid );
 	//
 	void MarkChanged( const CDBID &dbid );
 	void SaveChanges();
@@ -523,28 +528,21 @@ bool CEditorDatabase::RemoveObject( const CDBID &_dbid )
 	return true;
 }
 
-bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew )
+//! The rename itself, with the list of objects pointing at dbidOld already in
+//! hand, so a caller renaming many objects pays for one scan rather than one
+//! scan each.
+bool CEditorDatabase::RenameObjectInternal( const CDBID &dbidOld, const CDBID &dbidNew,
+	const std::vector<CDBID> &refObjs )
 {
-	CDBID dbidOld, dbidNew;
-	NormalizeDBID( &dbidOld, _dbidOld );
-	NormalizeDBID( &dbidNew, _dbidNew );
 	if ( IsDBIDValid(dbidNew) == false )
 		return false;
 	// load referenced object
 	CObj<IObjMan> pReferencedObj = GetManipulator( dbidOld );
 	if ( pReferencedObj == 0 )
 		return false;
-	//
-	std::vector<CDBID> refObjs;
-	if ( NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>() )
-	{
-		const std::string szFileName = GetFileName( dbidOld );
-		while ( pClient->GetReferencingObjects( szFileName, &refObjs ) == 
-			NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY ) ;
-	}
-	else
-		return false;
-	// get all changed objects to force load and set them as changed
+	// Every object that points at this one is loaded and marked changed, so that
+	// saving rewrites it with the new name. Without that the rename breaks each
+	// of them.
 	for ( std::vector<CDBID>::const_iterator it = refObjs.begin(); it != refObjs.end(); ++it )
 	{
 		GetManipulator( *it );
@@ -558,6 +556,125 @@ bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew
 	SetIndexChanged();
 	MarkChanged( dbidNew );
 	//
+	return true;
+}
+
+bool CEditorDatabase::RenameObject( const CDBID &_dbidOld, const CDBID &_dbidNew )
+{
+	CDBID dbidOld, dbidNew;
+	NormalizeDBID( &dbidOld, _dbidOld );
+	NormalizeDBID( &dbidNew, _dbidNew );
+	// Finding what points at the object used to mean asking the XDBWatcher, a C#
+	// tray service reached over COM and then .NET Remoting, and spinning in a
+	// `while ( ... == SERVICE_NOT_READY );` loop with no timeout while it
+	// answered. The service has not existed on any machine this port has run on,
+	// so the client reported failure, this function fell to an `else return
+	// false`, and renaming an object in the editor silently did nothing at all.
+	std::vector<CDBID> refObjs;
+	if ( !GetReferencingObjects( &refObjs, dbidOld ) )
+		return false;
+	return RenameObjectInternal( dbidOld, dbidNew, refObjs );
+}
+
+bool CEditorDatabase::RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames )
+{
+	if ( renames.empty() )
+		return true;
+
+	std::vector<CDBID> oldNames( renames.size() );
+	for ( size_t i = 0; i < renames.size(); ++i )
+		NormalizeDBID( &oldNames[i], renames[i].first );
+
+	std::vector< std::vector<CDBID> > refObjs;
+	CollectReferencingObjects( &refObjs, oldNames );
+
+	bool bRes = true;
+	for ( size_t i = 0; i < renames.size(); ++i )
+	{
+		CDBID dbidNew;
+		NormalizeDBID( &dbidNew, renames[i].second );
+		bRes = RenameObjectInternal( oldNames[i], dbidNew, refObjs[i] ) && bRes;
+	}
+	return bRes;
+}
+
+//! Reads every registered object and reports the ones pointing at dbid.
+//!
+//! The reverse reference map this replaces lived in XDBWatcher.exe, a C# tray
+//! application that indexed the whole data directory up front, kept it current
+//! with a FileSystemWatcher, and answered over a TCP socket through .NET
+//! Remoting behind a COM shim. All of that existed so this question could be
+//! answered instantly. It is asked when someone renames an object or opens the
+//! References dialog, so instantly was never needed, and the dialog already
+//! knows how to wait because the service used to answer "not ready" while it
+//! loaded.
+//!
+//! Scanning on demand is slower per question and has nothing to go stale, which
+//! the indexed version did whenever anything changed files behind the watcher:
+//! it skipped .svn directories by name, so an update from version control moved
+//! files it was not watching.
+void CEditorDatabase::CollectReferencingObjects( std::vector< std::vector<CDBID> > *pRes,
+	const std::vector<CDBID> &targets )
+{
+	pRes->clear();
+	pRes->resize( targets.size() );
+	if ( targets.empty() )
+		return;
+
+	// Answering for every target in one pass, because the alternative is
+	// quadratic where it matters most: renaming a folder renames each .xdb in it
+	// one at a time, and a scan per file over a database this size would take
+	// minutes for a directory anyone would think of as small.
+	std::vector<std::string> refs;
+	for ( CElementsMap::const_iterator it = elementsMap.begin(); it != elementsMap.end(); ++it )
+	{
+		const CDBID &dbidCandidate = it->first;
+
+		const std::string szFileName = GetFileName( dbidCandidate );
+		CFileStream stream( GetVFS(), szFileName );
+		if ( !stream.IsOk() )
+		{
+			// The index outlives the files it names, so a missing one is an
+			// ordinary state here and not worth an assert.
+			continue;
+		}
+		const char *pBuffer = reinterpret_cast<const char *>( stream.GetBuffer() );
+		if ( pBuffer == 0 )
+			continue;
+
+		CollectObjectReferences( &refs, pBuffer, pBuffer + stream.GetSize(), szFileName );
+		if ( refs.empty() )
+			continue;
+
+		for ( size_t nTarget = 0; nTarget < targets.size(); ++nTarget )
+		{
+			if ( dbidCandidate == targets[nTarget] )
+				continue;
+			for ( std::vector<std::string>::const_iterator itRef = refs.begin(); itRef != refs.end(); ++itRef )
+			{
+				// CDBID compares case and separator insensitively, so the
+				// reference as written matches however it was spelled.
+				if ( CDBID( *itRef ) == targets[nTarget] )
+				{
+					(*pRes)[nTarget].push_back( dbidCandidate );
+					break;
+				}
+			}
+		}
+	}
+}
+
+bool CEditorDatabase::GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &_dbid )
+{
+	pRes->clear();
+	CDBID dbidTarget;
+	NormalizeDBID( &dbidTarget, _dbid );
+	if ( IsDBIDValid( dbidTarget ) == false )
+		return false;
+
+	std::vector< std::vector<CDBID> > results;
+	CollectReferencingObjects( &results, std::vector<CDBID>( 1, dbidTarget ) );
+	pRes->swap( results[0] );
 	return true;
 }
 

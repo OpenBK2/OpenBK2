@@ -94,6 +94,10 @@ public:
 	virtual bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan ) = 0;
 	virtual bool RemoveObject( const CDBID &dbid ) = 0;
 	virtual bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew ) = 0;
+	// renames several objects, scanning for references once rather than once each
+	virtual bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames ) = 0;
+	// every object in the database that points at this one
+	virtual bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid ) = 0;
 	//
 	virtual void MarkChanged( const CDBID &dbid ) = 0;
 	virtual void SaveChanges() = 0;

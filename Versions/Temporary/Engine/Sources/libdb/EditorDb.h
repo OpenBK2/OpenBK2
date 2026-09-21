@@ -24,6 +24,14 @@ bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pO
 LIBDB_EXPORT bool RemoveObject( const CDBID &dbid );
 //! rename object in database
 bool RenameObject( const CDBID &dbidOld, const CDBID &dbidNew );
+//! rename several objects at once. Scans for references a single time, which a
+//! loop over RenameObject would do once per object.
+bool RenameObjects( const std::vector< std::pair<CDBID, CDBID> > &renames );
+//! every object in the database whose fields point at dbid.
+//! Reads every registered object, so it costs a pass over the database and is
+//! meant for the things a person asks for explicitly: renaming an object, and
+//! the References dialog. NOTE: for editor mode only!
+LIBDB_EXPORT bool GetReferencingObjects( std::vector<CDBID> *pRes, const CDBID &dbid );
 //! mark object as changed to save it
 LIBDB_EXPORT void MarkChanged( const CDBID &dbid );
 // Property-tree dirty labels compare values against the last save, independently

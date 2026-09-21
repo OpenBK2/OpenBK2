@@ -8,7 +8,6 @@
 #include "System/FilePath.h"
 
 #include "EditorDb.h"
-#include "DBWatcherClient.h"
 
 #include "ResourceManagerInternal.h"
 #include "TableManipulator.h"
@@ -151,27 +150,21 @@ void CResourceManagerWrapper::SerializeObjects( const std::string &szFile )
 void CResourceManagerWrapper::FillReferencingObjects( bool *pServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results )
 {
 	results.clear();
-	if ( NDBWatcherClient::IDBWatcherClient *pClient = Singleton<NDBWatcherClient::IDBWatcherClient>() )
+	// The scan runs to completion, so there is no partial answer to report any
+	// more. pServiceIsReady is the caller's "stop polling me" flag, left in
+	// place because the wait dialog above it is built around it: it used to mean
+	// "the XDBWatcher service has finished loading its index", and now means
+	// "the answer is final", which is the only thing the dialog ever did with it.
+	std::vector<CDBID> referencingObjs;
+	NDb::GetReferencingObjects( &referencingObjs, CDBID( szObjectName ) );
+	for ( std::vector<CDBID>::const_iterator it = referencingObjs.begin(); it != referencingObjs.end(); ++it )
 	{
-		std::vector<CDBID> referencingObjs;
-		const NDBWatcherClient::IDBWatcherClient::EResult eClientResult = pClient->GetReferencingObjects( szObjectName, &referencingObjs );
-		if ( eClientResult == NDBWatcherClient::IDBWatcherClient::EResult::COMPLETE )
-		{
-			for ( std::vector<CDBID>::const_iterator it = referencingObjs.begin(); it != referencingObjs.end(); ++it )
-			{
-				std::string szFileName;
-				NFile::NormalizePath( &szFileName, NDb::GetFileName(*it) );
-				results.push_back( szFileName );
-			}
-			if ( pServiceIsReady )
-				*pServiceIsReady = true;
-		}
-		else
-		{
-			if ( pServiceIsReady )
-				*pServiceIsReady = ( eClientResult != NDBWatcherClient::IDBWatcherClient::EResult::SERVICE_NOT_READY );
-		}
+		std::string szFileName;
+		NFile::NormalizePath( &szFileName, NDb::GetFileName(*it) );
+		results.push_back( szFileName );
 	}
+	if ( pServiceIsReady )
+		*pServiceIsReady = true;
 }
 
 // CRAP{ remove it ASAP
