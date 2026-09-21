@@ -35,7 +35,12 @@ struct SVideoModeInfo
 };
 
 NWin32Helper::com_ptr<IDirect3D9> pD3D;
-_3DLIB_EXPORT NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
+// _3DMOTOR_EXPORT, not _3DLIB_EXPORT: this file is 3Dmotor's and so is the
+// variable, which GfxInternal.h already declares with 3Dmotor's macro. Naming
+// 3DLib's here made the definition disagree with the declaration about which
+// DLL owns it, and MSVC said so as C4273. nVCacheSize below is the other way
+// round and is right: that one belongs to 3DLib, and this file only imports it.
+_3DMOTOR_EXPORT NWin32Helper::com_ptr<IDirect3DDevice9> pDevice;
 bool bNoTexture = false;
 SRenderStats renderStats;
 bool bHardwareVP, bHardwarePixelShaders, bHardwarePixelShaders14, bHardwarePixelShaders20, bHardwarePixelShaders20a;
