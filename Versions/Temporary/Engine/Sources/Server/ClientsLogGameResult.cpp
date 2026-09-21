@@ -86,14 +86,13 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 				columnsToCreate.push_back( szStatsName );
 		}
 		columnsToCreate.sort();
-		std::string szQuery = "ALTER TABLE resultslog  ";
+		// One statement per column: a list of ADD COLUMN clauses in a single
+		// ALTER is MySQL's, and SQLite adds one at a time. Both take this.
 		for ( std::list<std::string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
-			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
+			Execute( "ALTER TABLE resultslog ADD COLUMN " + szColumnName + " INTEGER NOT NULL DEFAULT '0'" );
 		}
-		szQuery.erase( szQuery.length() - 2, 2 );
-		Execute( szQuery );
 	}
 #endif
 

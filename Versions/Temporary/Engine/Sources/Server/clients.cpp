@@ -587,25 +587,28 @@ void CClients::PutRawLadderInfoToDB( const std::string &szNick, const std::unord
 				columnsToCreate.push_back( szStatsName );
 		}
 		columnsToCreate.sort();
-		std::string szQuery = "ALTER TABLE gamestats   ";
+		// One statement per column: a list of ADD COLUMN clauses in a single
+		// ALTER is MySQL's, and SQLite adds one at a time. Both take this.
 		for ( std::list<std::string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
-			szQuery += "ADD COLUMN " + szColumnName + " INTEGER UNSIGNED NOT NULL DEFAULT '0', ";
+			Execute( "ALTER TABLE gamestats ADD COLUMN " + szColumnName + " INTEGER NOT NULL DEFAULT '0'" );
 		}
-		szQuery.erase( szQuery.length() - 2, 2 );
-		Execute( szQuery );
 	}
 #endif
-	std::string szQuery = "UPDATE gamestats AS g, users AS u SET  ";
+	// A subquery rather than the multi-table UPDATE this used to be. Naming
+	// two tables in an UPDATE is MySQL's; picking the row with a subquery is
+	// what every backend takes, and it states which row is written rather
+	// than leaving it to the join.
+	std::string szQuery = "UPDATE gamestats SET ";
 	for ( std::unordered_map<std::string,int>::const_iterator it = ladderInfo.begin(); it != ladderInfo.end(); ++it )
 	{
 		const std::string &szStatsName = it->first;
 		const int &nStatsValue = it->second;
-		szQuery += " g." + szStatsName + " = " + fmt::format( "'{}',", nStatsValue );
+		szQuery += szStatsName + " = " + fmt::format( "'{}',", nStatsValue );
 	}
 	szQuery.erase( szQuery.length() - 1, 1 );
-	szQuery += " WHERE u.gamestats = g.statsID AND u.userID = '" + szClientDBID + "'";
+	szQuery += " WHERE statsID = ( SELECT gamestats FROM users WHERE userID = '" + szClientDBID + "' )";
 	Execute( szQuery );
 }
 
@@ -799,14 +802,12 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 	}
 	if ( !columnsToCreate.empty() )
 	{
-		std::string szQuery = "ALTER TABLE serverlog ";
+		// One statement per column, as above.
 		for ( std::list<std::string>::iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
-			szQuery += fmt::format( "ADD COLUMN {} FLOAT DEFAULT '-1', ", szColumnName );
+			Execute( fmt::format( "ALTER TABLE serverlog ADD COLUMN {} FLOAT DEFAULT '-1'", szColumnName ) );
 		}
-		szQuery.erase( szQuery.length() - 2, 2 );
-		Execute( szQuery );
 	}
 #endif
 	std::string szQuery = "INSERT INTO serverlog ( LogTime, ";
@@ -815,7 +816,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 		szQuery += fmt::format( "{}, ", names[i] );
 	}
 	szQuery.erase( szQuery.length() - 2, 2 );
-	szQuery += " ) VALUES ( NOW(), ";
+	szQuery += " ) VALUES ( CURRENT_TIMESTAMP, ";
 	for ( int i = 0; i < values.size(); ++i )
 	{
 		szQuery += fmt::format( "'{:f}', ", values[i] );
