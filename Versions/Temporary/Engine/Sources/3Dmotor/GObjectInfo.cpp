@@ -278,7 +278,20 @@ const char *ConvertWeightsFromGrannyEx(
 		if ( GrannyFindBoneByName( pSkeleton, pszBoneName, &nBone ) )
 		{
 			const float fDefault[4] = { 1, 0, 0, 0 };
-			const char cDefault[4] = { nBone, 0, 0, 0 };
+			// uint8_t, because that is what SVertexWeight::cBoneIndices is and
+			// what the memcpy below writes into. It was `const char`, which made
+			// the initialiser a narrowing conversion from Granny's int and cost
+			// nothing only because a char and a uint8_t hold the same byte for
+			// every index up to 255.
+			//
+			// Past 255 it stops being cosmetic: the index wraps and the mesh
+			// binds to the wrong bone, silently. A skeleton that large has not
+			// turned up in this game's data, so the bound is asserted rather
+			// than handled.
+			NI_ASSERT( nBone >= 0 && nBone <= 0xff,
+				fmt::format( "Bone index {} does not fit a byte, skeleton \"{}\"", nBone,
+					pSkeleton && pSkeleton->Name ? pSkeleton->Name : "?" ) );
+			const uint8_t cDefault[4] = { static_cast<uint8_t>( nBone ), 0, 0, 0 };
 			for ( int i = 0; i < nVertices; ++i ) 
 			{
 				memcpy( (*pWeights)[i].fWeights, fDefault, 4 *sizeof(float) );
