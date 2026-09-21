@@ -40,7 +40,13 @@ class CGameServer : public CObjectBase
 	void SendPackets();
 public:
 	CGameServer() { }
-	CGameServer( class CCommands *pCommands, const std::string &szCfgFile );
+	// szBackend selects the database: "mysql" for a MariaDB or MySQL daemon,
+	// "sqlite" for a file. Empty takes what server.xml says, and what that says
+	// by default is mysql, which is what the shipped configuration expects.
+	// szDatabaseFile overrides the file name the sqlite backend opens.
+	CGameServer( class CCommands *pCommands, const std::string &szCfgFile,
+		const std::string &szBackend = std::string(),
+		const std::string &szDatabaseFile = std::string() );
 	virtual ~CGameServer();
 	class CClients* GetClients() { return pClients; }
 

@@ -9,6 +9,7 @@
 #include <chrono>
 #include <csignal>
 #include <cstdio>
+#include <string>
 #include <filesystem>
 #include <thread>
 
@@ -66,10 +67,51 @@ std::string GetBaseDir()
 
 }
 
-int main()
+int main( int argc, char **argv )
 {
 	std::signal( SIGINT, &OnStopSignal );
 	std::signal( SIGTERM, &OnStopSignal );
+
+	// Two options, both of which override server.xml. The file is where a
+	// server that always runs the same way should say so; these are for
+	// running one the other way without editing the configuration it normally
+	// uses, which is the common case when trying the embedded backend.
+	std::string szBackend;
+	std::string szDatabaseFile;
+	for ( int i = 1; i < argc; ++i )
+	{
+		const std::string szArg = argv[i];
+		const bool bHasValue = ( i + 1 < argc );
+
+		if ( szArg == "--database" && bHasValue )
+		{
+			szBackend = argv[++i];
+		}
+		else if ( szArg == "--database-file" && bHasValue )
+		{
+			szDatabaseFile = argv[++i];
+		}
+		else if ( szArg == "--sqlite" )
+		{
+			// The short way of saying it, since it is the one that needs
+			// nothing installed.
+			szBackend = "sqlite";
+		}
+		else
+		{
+			std::fprintf( stderr, "unrecognised option: %s\n", szArg.c_str() );
+			std::fprintf( stderr,
+				"usage: Server [--database mysql|sqlite] [--database-file PATH] [--sqlite]\n"
+				"  Without either, server.xml decides, and by default that is mysql.\n" );
+			return 1;
+		}
+	}
+
+	if ( !szBackend.empty() && szBackend != "mysql" && szBackend != "sqlite" )
+	{
+		std::fprintf( stderr, "unknown database backend: %s (expected mysql or sqlite)\n", szBackend.c_str() );
+		return 1;
+	}
 
 	const std::string szCfgFile = GetBaseDir() + "server.xml";
 
@@ -94,7 +136,7 @@ int main()
 	}
 
 	CObj<CCommands> pCmds = new CCommands( true );
-	CObj<CGameServer> pGameServer = new CGameServer( pCmds, szCfgFile );
+	CObj<CGameServer> pGameServer = new CGameServer( pCmds, szCfgFile, szBackend, szDatabaseFile );
 
 	// Order matters: CGameServer's constructor has already added the control
 	// lobby and the chat lobby, and lobbies[0] gets first refusal on every

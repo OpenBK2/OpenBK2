@@ -31,7 +31,8 @@ processCmdsFuncs[cmd] = &CGameServer::FuncName;
 
 void ForcePacketRegistration(); // For too smart linker
 
-CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
+CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile,
+	const std::string &szBackendOverride, const std::string &szDatabaseFileOverride )
 : pCommands( _pCommands )
 {
 	REGISTER_CMD_FUNC( ESC_CLIENTS, CommandClientsList );
@@ -42,13 +43,18 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	REGISTER_CMD_FUNC( ESC_SHOW_STATISTICS, CommandShowStatistics );
 	REGISTER_CMD_FUNC( ESC_BROADCAST, CommandBroadcast );
 
-	pDatabase = CreateMariaDbDatabase();
-
 	// Initialised, because a configuration file that opens but does not parse
 	// leaves every one of these untouched, and they were being read anyway.
 	int nNetVersion = 0, nPort = 0;
 	std::string szServerName, szDBName;
 	int nTerminalPort = 0;
+
+	// mysql unless told otherwise, which is what the shipped server.xml
+	// expects. Neither key is in that file, and a key an XML saver does not
+	// find leaves its variable alone, so these defaults are what an untouched
+	// configuration gets.
+	std::string szBackend = "mysql";
+	std::string szDatabaseFile = "nivalnet.db";
 	{
 		CFileStream stream( szCfgFile, CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
@@ -68,7 +74,24 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 		pSaver->Add( "MySQLDBName", &szDBName );
 		pSaver->Add( "ServerLogPeriod", &nServerStatisticsLogPeriod );
 		pSaver->Add( "TerminalPort", &nTerminalPort );
+		pSaver->Add( "DatabaseBackend", &szBackend );
+		pSaver->Add( "DatabaseFile", &szDatabaseFile );
 	}
+
+	// The command line wins over the file, so a server configured for a daemon
+	// can be started against a file without editing the configuration it
+	// normally runs with.
+	if ( !szBackendOverride.empty() )
+	{
+		szBackend = szBackendOverride;
+	}
+	if ( !szDatabaseFileOverride.empty() )
+	{
+		szDatabaseFile = szDatabaseFileOverride;
+	}
+
+	const bool bUseSqlite = ( szBackend == "sqlite" );
+	pDatabase = bUseSqlite ? CreateSqliteDatabase() : CreateMariaDbDatabase();
 
 	const bool bRegisterClosedBetaUsers = false;
 	std::vector<std::string> names;
@@ -93,9 +116,18 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	}
 
 	SDbConnection connection;
-	connection.szHost = szServerName;
-	connection.szUser = "NivalNET";
-	connection.szDatabase = szDBName;
+	if ( bUseSqlite )
+	{
+		// The file is the whole of it; the rest of SDbConnection describes a
+		// daemon there is not one of.
+		connection.szDatabase = szDatabaseFile;
+	}
+	else
+	{
+		connection.szHost = szServerName;
+		connection.szUser = "NivalNET";
+		connection.szDatabase = szDBName;
+	}
 	// Reported, not asserted. NI_ASSERT expands to nothing while _DO_ASSERT_SLOW
 	// is undefined, which is every build that exists, so a failure here was
 	// swallowed and the success message printed regardless. The server then ran
@@ -115,7 +147,14 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile )
 	{
 		WriteMSG( "Database connection FAILED: %s\n", pDatabase->GetLastError().c_str() );
 	}
-	WriteMSG( "Server = %s, DBName = %s\n", szServerName.c_str(), szDBName.c_str() );
+	if ( bUseSqlite )
+	{
+		WriteMSG( "Database: sqlite, file %s\n", szDatabaseFile.c_str() );
+	}
+	else
+	{
+		WriteMSG( "Database: mysql, server %s, name %s\n", szServerName.c_str(), szDBName.c_str() );
+	}
 
 	pClients = new CClients( pDatabase );
 	
