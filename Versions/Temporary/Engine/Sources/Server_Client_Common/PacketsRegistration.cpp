@@ -95,8 +95,14 @@ REGISTER_SAVELOAD_CLASS( SERVER_CLIENT_COMMON, 69, CLadderShortStatisticsPacket 
 REGISTER_SAVELOAD_CLASS( SERVER_CLIENT_COMMON, 70, CLadderSurrenderPacket )
 REGISTER_SAVELOAD_CLASS( SERVER_CLIENT_COMMON, 71, CLadderInvalidStatisticsPacket )
 
-// For too smart linker
-void ForcePacketRegistration()
+// For too smart linker.
+//
+// Exported because it is called from another module: TestClient's constructor
+// calls it so the registrations above are not dropped from a link that would
+// otherwise see nothing referring to this translation unit. Every module here
+// marks what crosses its DLL boundary, and this one was never marked because
+// nothing had called it across one.
+SERVER_CLIENT_COMMON_EXPORT void ForcePacketRegistration()
 {
 	static int nForcePackerRegistration = 0;
 	++nForcePackerRegistration;
