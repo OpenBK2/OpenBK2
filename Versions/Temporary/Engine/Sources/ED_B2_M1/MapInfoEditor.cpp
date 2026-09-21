@@ -1550,7 +1550,13 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					{
 						pPostfix[0] = 0;
 						int nObjectIndex = INVALID_NODE_ID;
-						if ( ( sscanf( szName.c_str(), "Objects.[%d].%s", &nObjectIndex, &pPostfix ) == 2 ) && ( nObjectIndex != INVALID_NODE_ID ) )
+						// pPostfix, not &pPostfix: the address of an array is a
+						// char(*)[0xFFF] where %s wants a char*. It happened to
+						// work because the two addresses are the same, and GCC
+						// reported the type mismatch. The width is there because
+						// %s into a fixed buffer with no bound is how a long
+						// enough property name overruns it.
+						if ( ( sscanf( szName.c_str(), "Objects.[%d].%4094s", &nObjectIndex, pPostfix ) == 2 ) && ( nObjectIndex != INVALID_NODE_ID ) )
 						{
 							szPostfix = pPostfix;
 							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedObjectList, nObjectIndex );
@@ -1629,7 +1635,8 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 					{
 						pPostfix[0] = 0;
 						int nSpotIndex = INVALID_NODE_ID;
-						if ( ( sscanf( szName.c_str(), "Spots.[%d].%s", &nSpotIndex, &pPostfix ) == 2 ) && ( nSpotIndex != INVALID_NODE_ID ) )
+						// Same two corrections as the Objects case above.
+						if ( ( sscanf( szName.c_str(), "Spots.[%d].%4094s", &nSpotIndex, pPostfix ) == 2 ) && ( nSpotIndex != INVALID_NODE_ID ) )
 						{
 							szPostfix = pPostfix;
 							NMapInfoEditor::CControllerChangeInfoList::iterator posControllerChangeInfo = FindIndex<NMapInfoEditor::CControllerChangeInfoList, NMapInfoEditor::CControllerChangeInfoList::iterator>( changedSpotList, nSpotIndex );
