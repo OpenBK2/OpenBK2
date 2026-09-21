@@ -3,6 +3,10 @@
 #include "XmlResource.h"
 
 #include "System_export.h"
+// For NDb::GetObject below, which libdb defines and exports. Both export
+// headers are generated into one directory that every target already has on
+// its include path, so this costs System no dependency on libdb's build.
+#include "libdb_export.h"
 
 #include <cstdint>
 
@@ -143,7 +147,9 @@ namespace NDb
 		virtual void MoveFirst() = 0;
 	};
 	//
-	SYSTEM_EXPORT IDBIterator *CreateDBIterator( int nTypeID );
+	// Same story as GetObject below: defined in libdb, GameDBIterator.cpp. This
+	// one never warned only because no libdb header redeclares it.
+	LIBDB_EXPORT IDBIterator *CreateDBIterator( int nTypeID );
 	// add database resource file
 	void AddResources( const std::string &szFile );
 	// finish adding - resolve all references
@@ -151,8 +157,20 @@ namespace NDb
 	// clear database resources
 	void RemoveAllResources();
 	// get specific entry from DB
-	// conflict with #define GetObject GetObjectA (Windows SDK)
-	SYSTEM_EXPORT CResource *(GetObject)( const CDBID &dbid );
+	//
+	// conflict with #define GetObject GetObjectA (Windows SDK). The parentheses
+	// do not prevent that: the macro is object-like and parentheses only hold
+	// off a function-like one, so in any translation unit that has seen
+	// windows.h this really is GetObjectA. Kept because the name it produces is
+	// what libdb exports and what every caller already links against.
+	//
+	// LIBDB_EXPORT, not SYSTEM_EXPORT: the definition is in libdb
+	// (Database.cpp), System has none, and libdb.dll is what exports the
+	// symbol. Claiming it for System made this header and libdb/Db.h disagree
+	// about one function's linkage, which is C4273. That the export existed at
+	// all was MSVC's fallback for defining a function it had been told was
+	// imported, rather than anything either header asked for.
+	LIBDB_EXPORT CResource *(GetObject)( const CDBID &dbid );
 	//
 	void SetDBMode( EDBMode eMode );
 	inline const std::string &GetFileName( const CDBID &dbid ) { return dbid.ToString(); }

@@ -25,7 +25,9 @@ LIBDB_EXPORT void CloseDatabase();
 //! set new load depth - how many (how deeply) hierarchical objects will be loaded by refs during resource load
 LIBDB_EXPORT void SetLoadDepth( int nLoadDepth );
 //! get object from database
-class CResource *GetObject( const CDBID &dbid );
+//! Declared in System/DB.h too, where NDb::Get<T> calls it; the two have to
+//! agree on the export macro or every module that sees both gets C4273.
+LIBDB_EXPORT class CResource *GetObject( const CDBID &dbid );
 //! does object exist?
 LIBDB_EXPORT bool DoesObjectExist( const CDBID &dbid );
 //! retrieve class type name for requested object
