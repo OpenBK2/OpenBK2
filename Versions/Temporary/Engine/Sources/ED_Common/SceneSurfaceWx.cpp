@@ -155,6 +155,8 @@ namespace
 
 		void OnPaint( wxPaintEvent & )
 		{
+			if ( pumpHook )
+				pumpHook();
 			if ( !pCore->BeginPaint() )
 			{
 				// A nested paint while the window moves itself, or one after the
@@ -183,6 +185,8 @@ namespace
 
 		void OnSetFocus( wxFocusEvent &rEvent )
 		{
+			if ( focusHook )
+				focusHook( true );
 			rEvent.Skip();
 			CWxWindowWidget oldWidget( rEvent.GetWindow() );
 			pCore->OnSetFocus( &oldWidget );
@@ -190,6 +194,8 @@ namespace
 
 		void OnKillFocus( wxFocusEvent &rEvent )
 		{
+			if ( focusHook )
+				focusHook( false );
 			rEvent.Skip();
 			CWxWindowWidget newWidget( rEvent.GetWindow() );
 			pCore->OnKillFocus( &newWidget );
@@ -200,6 +206,8 @@ namespace
 
 		void OnMouse( wxMouseEvent &rEvent )
 		{
+			if ( mouseHook )
+				mouseHook( rEvent );
 			const unsigned nFlags = MouseFlags( rEvent );
 			const CTPoint<int> point = ClientPoint( rEvent );
 			const wxEventType eType = rEvent.GetEventType();
@@ -228,6 +236,8 @@ namespace
 		// every one of them puts the menu at the point it is given.
 		void OnRightUp( wxMouseEvent &rEvent )
 		{
+			if ( mouseHook )
+				mouseHook( rEvent );
 			// Screen coordinates, as WM_CONTEXTMENU carried and the states expect.
 			const wxPoint screenAt = ClientToScreen( rEvent.GetPosition() );
 			pCore->OnContextMenu( CTPoint<int>( screenAt.x, screenAt.y ) );
@@ -236,8 +246,11 @@ namespace
 
 		void OnMouseWheel( wxMouseEvent &rEvent )
 		{
-			// WM_MOUSEWHEEL's point is in screen coordinates.
-			const wxPoint screenAt = ClientToScreen( rEvent.GetPosition() );
+			if ( mouseHook )
+				mouseHook( rEvent );
+			// Terrain picking expects viewport coordinates for every mouse event,
+			// including the wheel; screen coordinates shift the tool by the dock's
+			// offset even when the render size is already correct.
 			// The last argument was DefWindowProc's answer, which for a child
 			// window is whatever the parent chain made of the message. There is no
 			// wx equivalent and no use for one: the event reaches this window only
@@ -245,7 +258,7 @@ namespace
 			// was standing in for. See the commit that made this change for what
 			// it means if the old value was ever false.
 			pCore->OnMouseWheel( MouseFlags( rEvent ), static_cast<short>( rEvent.GetWheelRotation() ),
-													 CTPoint<int>( screenAt.x, screenAt.y ), true );
+													 ClientPoint( rEvent ), true );
 		}
 
 		// wx raises one key event per repeat where Windows counted them into a
@@ -257,6 +270,8 @@ namespace
 		// CStoreInputState's record of the event and never looks again.
 		void OnKeyDown( wxKeyEvent &rEvent )
 		{
+			if ( keyHook )
+				keyHook( rEvent.GetRawKeyFlags(), true );
 			const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
 			if ( nChar != 0 )
 			{
@@ -266,6 +281,8 @@ namespace
 
 		void OnKeyUp( wxKeyEvent &rEvent )
 		{
+			if ( keyHook )
+				keyHook( rEvent.GetRawKeyFlags(), false );
 			const unsigned nChar = VirtualKeyFromWx( rEvent.GetKeyCode() );
 			if ( nChar != 0 )
 			{
@@ -279,6 +296,12 @@ namespace
 		// learn its own size from the toolkit. See NativeViewport::SetSize. The
 		// core's own OnSize keeps the condition it always had.
 		std::function<void( int, int )> sizeHook;
+		// The native bridge feeds camera bindings as well as updating SDL's
+		// window state. Tool selection still goes through pCore's input states.
+		std::function<void()> pumpHook;
+		std::function<void( unsigned, bool )> keyHook;
+		std::function<void( bool )> focusHook;
+		std::function<void( const wxMouseEvent & )> mouseHook;
 
 		CSceneWxWindow( wxWindow *pParent, CChildFrameWndBase *_pCore )
 			// wxBORDER_SUNKEN is WS_EX_CLIENTEDGE, the MFC view's edge, which
@@ -305,6 +328,8 @@ namespace
 			Bind( wxEVT_MOUSE_CAPTURE_LOST, []( wxMouseCaptureLostEvent & ) {} );
 			// The input, which the message map used to answer as messages.
 			Bind( wxEVT_MOTION, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_ENTER_WINDOW, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_LEAVE_WINDOW, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_LEFT_DOWN, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_LEFT_UP, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_LEFT_DCLICK, &CSceneWxWindow::OnMouse, this );
@@ -313,6 +338,12 @@ namespace
 			Bind( wxEVT_MIDDLE_DOWN, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_MIDDLE_UP, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_MIDDLE_DCLICK, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX1_DOWN, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX1_UP, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX1_DCLICK, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX2_DOWN, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX2_UP, &CSceneWxWindow::OnMouse, this );
+			Bind( wxEVT_AUX2_DCLICK, &CSceneWxWindow::OnMouse, this );
 			Bind( wxEVT_RIGHT_UP, &CSceneWxWindow::OnRightUp, this );
 			Bind( wxEVT_MOUSEWHEEL, &CSceneWxWindow::OnMouseWheel, this );
 			Bind( wxEVT_KEY_DOWN, &CSceneWxWindow::OnKeyDown, this );
@@ -387,6 +418,7 @@ namespace
 				{
 					if ( bCoreHasWindow )
 					{
+						nativeViewport.PumpEvents();
 						pCore->OnTimer();
 					}
 				} )
@@ -426,6 +458,10 @@ namespace
 			{
 				nativeViewport.SetSize( nWidth, nHeight );
 			};
+			pWindow->pumpHook = [this]() { nativeViewport.PumpEvents(); };
+			pWindow->keyHook = [this]( unsigned code, bool down ) { nativeViewport.OnKey( code, down ); };
+			pWindow->focusHook = [this]( bool focused ) { nativeViewport.SetFocus( focused ); };
+			pWindow->mouseHook = [this]( const wxMouseEvent &event ) { nativeViewport.OnMouse( event ); };
 			pWindow->Bind( wxEVT_SCROLLWIN_TOP, &CWxSceneSurface::OnScroll, this );
 			pWindow->Bind( wxEVT_SCROLLWIN_BOTTOM, &CWxSceneSurface::OnScroll, this );
 			pWindow->Bind( wxEVT_SCROLLWIN_LINEUP, &CWxSceneSurface::OnScroll, this );

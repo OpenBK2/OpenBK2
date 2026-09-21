@@ -172,7 +172,7 @@ void CChildFrameWndBase::OnMouseMove( unsigned nFlags, const CTPoint<int> &rPoin
 }
 
 
-bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPoint<int> &rScreenPoint, bool bDefaultResult )
+bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPoint<int> &rPoint, bool bDefaultResult )
 {
 	if ( bDefaultResult )
 	{
@@ -185,7 +185,7 @@ bool CChildFrameWndBase::OnMouseWheel( unsigned nFlags, short zDelta, const CTPo
 			if ( IInputState *pActiveInputState = Singleton<IEditorContainer>()->GetActiveInputState() )
 			{
 				// IInputState takes the point by non-const reference.
-				CTPoint<int> point = rScreenPoint;
+				CTPoint<int> point = rPoint;
 				return pActiveInputState->OnMouseWheel( nFlags, zDelta, point );
 			}
 		}

@@ -3,6 +3,7 @@
 #include <memory>
 
 class wxWindow;
+class wxMouseEvent;
 
 // The window handle the renderer is given for the viewport, made out of a wx
 // window.
@@ -64,6 +65,14 @@ public:
 	// creation property does not help; only SDL_SetWindowSize does. Attach
 	// calls this once, and the viewport calls it on every resize.
 	void SetSize( int nWidth, int nHeight );
+
+	// Service the renderer's SDL wrapper even while the viewport lacks focus.
+	// GTK owns the event loop, so the game's SDL window pump never runs here.
+	void PumpEvents();
+	// GTK's hardware key code, as wxKeyEvent::GetRawKeyFlags() supplies it.
+	void OnKey( unsigned nHardwareCode, bool bDown );
+	void OnMouse( const wxMouseEvent &event );
+	void SetFocus( bool bFocused );
 
 	// The handle itself: an HWND on Windows, an SDL_Window* off it, and null
 	// before Attach or after Detach. void* rather than HWND so that this

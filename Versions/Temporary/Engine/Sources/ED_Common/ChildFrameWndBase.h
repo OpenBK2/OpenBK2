@@ -107,10 +107,10 @@ public:
 	void OnKillFocus		( IWidget *pNewWidget );
 
 	void OnMouseMove		( unsigned nFlags, const CTPoint<int> &rPoint );
-	// rScreenPoint in screen coordinates, as WM_MOUSEWHEEL gives it, and
+	// rPoint in viewport coordinates, as the input state's terrain picker expects, and
 	// bDefaultResult what the window's default handling of the wheel answered:
 	// the input state only hears of a wheel the window did something with.
-	bool OnMouseWheel		( unsigned nFlags, short zDelta, const CTPoint<int> &rScreenPoint, bool bDefaultResult );
+	bool OnMouseWheel		( unsigned nFlags, short zDelta, const CTPoint<int> &rPoint, bool bDefaultResult );
 	//
 	void OnLButtonDown	( unsigned nFlags, const CTPoint<int> &rPoint );
 	void OnLButtonUp		( unsigned nFlags, const CTPoint<int> &rPoint );

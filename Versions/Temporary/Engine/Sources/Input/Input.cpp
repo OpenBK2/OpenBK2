@@ -18,6 +18,7 @@
 #include "Misc/Win32Helper.h"
 #else
 #include "System/SdlVideo.h"
+#include "HostedInput.h"
 
 #include "port/window.h"
 
@@ -1340,6 +1341,13 @@ std::vector<SWatchedEvent> watchedEvents;
 uint32_t dwWatchSequence = 0;
 bool bWatchOverflow = false;
 
+// GTK keeps X11 keyboard focus on the editor's top-level window. SDL wraps
+// its child viewport, so its keyboard state/focus cannot describe that view.
+SDL_Window *pHostedWindow = nullptr;
+bool bHostedFocus = false;
+bool hostedKeys[SDL_SCANCODE_COUNT] = {};
+SDL_MouseButtonFlags hostedButtons = 0;
+
 // The mouse axes as DIPROPAXISMODE_ABS reported them: running totals rather than
 // deltas, because FillEventInfo takes the difference between an event's value
 // and the last one it saw. The wheel is one of them, which is why it has to be
@@ -1464,10 +1472,10 @@ void PushEvent( int nDeviceID, uint32_t dwOfs, uint32_t dwData, uint64_t nTimest
 	watchedEvents.push_back( sEvent );
 }
 
-bool SDLCALL EventWatch( void *pUserData, SDL_Event *pEvent )
+// Both SDL and the embedded toolkit feed the same device buffer. The caller
+// holds watchMutex; each input source supplies a transition only once.
+bool BufferDeviceEvent( const SDL_Event *pEvent )
 {
-	std::lock_guard<std::mutex> lock( watchMutex );
-
 	switch ( pEvent->type )
 	{
 	case SDL_EVENT_KEY_DOWN:
@@ -1581,6 +1589,20 @@ bool SDLCALL EventWatch( void *pUserData, SDL_Event *pEvent )
 	// System/WinFrame to poll, which is where the window and the UI's keys come
 	// from; filtering it out here would take those with it.
 	return true;
+}
+
+bool SDLCALL EventWatch( void *, SDL_Event *pEvent )
+{
+	std::lock_guard<std::mutex> lock( watchMutex );
+	if ( pHostedWindow != nullptr && hWindow == pHostedWindow )
+	{
+		// GTK's pointer grab during a drag prevents SDL receiving motion at all.
+		// Use the host for the entire keyboard/mouse sequence, including clicks.
+		if ( !bHostedFocus || pEvent->type == SDL_EVENT_KEY_DOWN || pEvent->type == SDL_EVENT_KEY_UP ||
+			( pEvent->type >= SDL_EVENT_MOUSE_MOTION && pEvent->type <= SDL_EVENT_MOUSE_WHEEL ) )
+			return true;
+	}
+	return BufferDeviceEvent( pEvent );
 }
 
 //! Register the keyboard and the mouse, which SDL reports without a handle.
@@ -1752,7 +1774,50 @@ static bool IsWindowFocused()
 	{
 		return false;
 	}
+	if ( hWindow == pHostedWindow )
+		return bHostedFocus;
 	return ( SDL_GetWindowFlags( AsSdlWindow( hWindow ) ) & SDL_WINDOW_INPUT_FOCUS ) != 0;
+}
+
+void UpdateHostedKeyboard( SDL_Window *pWindow, const bool *pKeys, bool bFocused )
+{
+	const bool bActiveInput = bInitialized && hWindow == pWindow && pWindow != nullptr;
+	const bool bFocusChanged = pHostedWindow != pWindow || bHostedFocus != bFocused;
+	{
+		std::lock_guard<std::mutex> lock( watchMutex );
+		const uint64_t timestamp = SDL_GetTicksNS();
+		for ( int i = 0; i < SDL_SCANCODE_COUNT; ++i )
+		{
+			const bool bDown = bFocused && pKeys != nullptr && pKeys[i];
+			if ( bActiveInput && !bFocusChanged && bDown != hostedKeys[i] )
+			{
+				const int nKey = SdlScancodeToDirectInputKey( static_cast<SDL_Scancode>( i ) );
+				if ( nKey != 0 )
+					PushEvent( nKeyboardDeviceID, nKey, bDown ? 0x80 : 0, timestamp );
+			}
+			hostedKeys[i] = bDown;
+		}
+		pHostedWindow = pWindow;
+		bHostedFocus = bFocused;
+		if ( bFocusChanged )
+			hostedButtons = bFocused ? SDL_GetGlobalMouseState( nullptr, nullptr ) : 0;
+	}
+	// Resync held modifiers on entry, and release keys immediately on leaving.
+	// This also works when losing wx focus stops the viewport's game loop.
+	if ( bActiveInput && bFocusChanged )
+		SetFocus( bFocused );
+}
+
+void ProcessHostedMouse( SDL_Window *pWindow, const SDL_Event &event )
+{
+	std::lock_guard<std::mutex> lock( watchMutex );
+	if ( !bInitialized || !bHostedFocus || pWindow != pHostedWindow || hWindow != pWindow )
+		return;
+	if ( event.type == SDL_EVENT_MOUSE_BUTTON_DOWN )
+		hostedButtons |= SDL_BUTTON_MASK( event.button.button );
+	else if ( event.type == SDL_EVENT_MOUSE_BUTTON_UP )
+		hostedButtons &= ~SDL_BUTTON_MASK( event.button.button );
+	BufferDeviceEvent( &event );
 }
 
 static void PumpDeviceEvents()
@@ -1814,6 +1879,11 @@ static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *
 		// of a resync is to find out what changed while events were not arriving.
 		int nKeys = 0;
 		const bool *pKeys = SDL_GetKeyboardState( &nKeys );
+		if ( hWindow == pHostedWindow && pHostedWindow != nullptr )
+		{
+			pKeys = hostedKeys;
+			nKeys = SDL_SCANCODE_COUNT;
+		}
 		if ( pKeys == 0 )
 		{
 			break;
@@ -1841,7 +1911,8 @@ static void ReadDeviceState( const SInputDevice &sDevice, std::vector<uint8_t> *
 		}
 		// SDL_GetMouseState answers for the five buttons it has a mask for, which
 		// is where SdlMouseButtonToOffset stops being able to ask.
-		const SDL_MouseButtonFlags dwButtons = SDL_GetMouseState( 0, 0 );
+		const SDL_MouseButtonFlags dwButtons = pHostedWindow != nullptr && hWindow == pHostedWindow ?
+			hostedButtons : SDL_GetMouseState( 0, 0 );
 		for ( int nButton = SDL_BUTTON_LEFT; nButton <= SDL_BUTTON_X2; ++nButton )
 		{
 			const int nOfs = SdlMouseButtonToOffset( nButton );
