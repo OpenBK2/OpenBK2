@@ -16,7 +16,7 @@ list(APPEND SOURCES WxHost.cpp)
 add_executable(B2_MapEditor WIN32 ${SOURCES})
 add_stdafx_pch(B2_MapEditor)
 # No mfc, here or in any module the editor loads: wx owns WinMain.
-target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common ED_RTS GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib)
+target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib)
 target_link_libraries(B2_MapEditor PRIVATE crashpad_client)
 if(WIN32)
     target_link_libraries(B2_MapEditor PRIVATE winapi)

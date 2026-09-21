@@ -108,7 +108,6 @@ editor:
 - [ED_B2](Versions/Temporary/Engine/Sources/ED_B2) - chapter editor
 - [ED_B2_M1](Versions/Temporary/Engine/Sources/ED_B2_M1) - main editor implementation
 - [ED_Common](Versions/Temporary/Engine/Sources/ED_Common) - some basic UI controls for editor
-- [ED_RTS](Versions/Temporary/Engine/Sources/ED_RTS) - combines other editor modules together
 - [MapEditor](Versions/Temporary/Engine/Sources/MapEditor) - common dialog windows for editor
 - [MapEditorLib](Versions/Temporary/Engine/Sources/MapEditorLib) - few more dialogs
 

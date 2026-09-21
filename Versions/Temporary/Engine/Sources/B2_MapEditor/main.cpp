@@ -6,7 +6,6 @@
 
 #include "ED_B2_M1_export.h"
 #include "ED_B2_export.h"
-#include "ED_RTS_export.h"
 #include "GameX_export.h"
 
 //
@@ -36,7 +35,6 @@ namespace NGameX
 	bool Initialize();
 	GAMEX_EXPORT void PostStorageInitialize();
 };
-ED_RTS_EXPORT IEditorModule* GetEditorModule0();
 ED_B2_M1_EXPORT IEditorModule* GetEditorModule1();
 ED_B2_EXPORT IEditorModule* GetEditorModule2();
 ED_B2_EXPORT IEditorModule* GetEditorModule3();
@@ -65,8 +63,9 @@ public:
 
 void CEditorAppSpecific::LoadMapEditorModule( const std::string &szModuleName ) // "c:\\b2\\system\\b2.dle"
 {
-	if ( IEditorModule *pModule = GetEditorModule0() )
-		extModules.push_back( pModule );
+	// Module 0 was ED_RTS, whose nine hooks were all empty and which registered
+	// no editor types; the numbering of the rest is left alone because those
+	// names are exported from ED_B2_M1 and ED_B2.
 	if ( IEditorModule *pModule = GetEditorModule1() )
 		extModules.push_back( pModule );
 	if ( IEditorModule *pModule = GetEditorModule2() )
