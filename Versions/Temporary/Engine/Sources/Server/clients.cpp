@@ -300,7 +300,7 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 
 bool CClients::IsCorrectCDKey( const std::string &szCDKey )
 {
-	const std::string szQuery = "SELECT cdkey FROM validCDKeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
+	const std::string szQuery = "SELECT cdkey FROM validcdkeys WHERE cdkey = '" + EscapeString( szCDKey ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = mysql_store_result( pMySQL );
 	MYSQL_CHECK_RESULT
@@ -341,7 +341,7 @@ bool CClients::IsBannedNick( const std::string &szNick )
 bool CClients::IsBannedCDKey( const std::string &szCDKey )
 {
 	bool ans = false;
-	std::string szQuery = "SELECT banned FROM CDKeys WHERE CDKey = '" + EscapeString( szCDKey ) + "'";
+	std::string szQuery = "SELECT banned FROM cdkeys WHERE CDKey = '" + EscapeString( szCDKey ) + "'";
 	MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	MYSQL_RES *pResult = 0;
 	pResult = mysql_store_result( pMySQL );
@@ -844,7 +844,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 {
 	NI_VERIFY( names.size() == values.size(), "Invalid data in CClients::DBLogServerStatistics", return );
 #ifdef CHECK_TABLE_STRUCTURE
-	std::unordered_set<std::string> availableFields = GetTableColumns( "ServerLog" );
+	std::unordered_set<std::string> availableFields = GetTableColumns( "serverlog" );
 	std::list<std::string> columnsToCreate;
 	for ( int i = 0; i < names.size(); ++i )
 	{
@@ -855,7 +855,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 	}
 	if ( !columnsToCreate.empty() )
 	{
-		std::string szQuery = "ALTER TABLE ServerLog ";
+		std::string szQuery = "ALTER TABLE serverlog ";
 		for ( std::list<std::string>::iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
@@ -865,7 +865,7 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 		MYSQL_QUERY( pMySQL, szQuery.c_str(), szQuery.length() );
 	}
 #endif
-	std::string szQuery = "INSERT INTO ServerLog ( LogTime, ";
+	std::string szQuery = "INSERT INTO serverlog ( LogTime, ";
 	for ( int i = 0; i < names.size(); ++i )
 	{
 		szQuery += fmt::format( "{}, ", names[i] );

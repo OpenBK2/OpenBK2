@@ -90,7 +90,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 #ifdef LOG_FULL_GAME_RESULT
 #ifdef CHECK_TABLE_STRUCTURE
 	{
-		std::unordered_set<std::string> availableColumns = GetTableColumns( "ResultsLog" );
+		std::unordered_set<std::string> availableColumns = GetTableColumns( "resultslog" );
 		std::list<std::string> columnsToCreate;
 		for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 		{
@@ -99,7 +99,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 				columnsToCreate.push_back( szStatsName );
 		}
 		columnsToCreate.sort();
-		std::string szQuery = "ALTER TABLE ResultsLog  ";
+		std::string szQuery = "ALTER TABLE resultslog  ";
 		for ( std::list<std::string>::const_iterator it = columnsToCreate.begin(); it != columnsToCreate.end(); ++it )
 		{
 			const std::string &szColumnName = *it;
@@ -110,7 +110,7 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 	}
 #endif
 
-	std::string szQuery = "INSERT INTO `ResultsLog` (  ";
+	std::string szQuery = "INSERT INTO `resultslog` (  ";
 	for ( std::unordered_map<std::string,int>::const_iterator it = info.begin(); it != info.end(); ++it )
 	{
 		const std::string &szColumnName = it->first;
