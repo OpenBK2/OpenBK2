@@ -169,20 +169,35 @@ CTerminal::~CTerminal()
 	WSACleanup();
 }
 
+// Everything the server has to say goes through here.
+//
+// It used to say it only down the terminal socket, and only once CTerminal
+// existed, which is the last thing CGameServer's constructor builds. So every
+// message about starting up was discarded before it could be read: the port it
+// bound, the database it connected to, and "Cannot bind socket to the port"
+// when it did not. Running the server in a console produced no output at all,
+// ever, and the only way to see anything was to connect to the terminal port
+// afterwards and wait for something new to happen.
+//
+// So stdout first and unconditionally, then the terminal if there is one. The
+// remote console keeps working exactly as it did; it is no longer the only
+// reader.
 void WriteMSG( const char* pszFormat, ... )
 {
-	if ( !pTheTerminal ) return;
-	static char buff[1024];
+	char buff[1024];
 
 	va_list va;
 	va_start( va, pszFormat );
 	vsprintf( buff, pszFormat, va );
 	va_end( va );
-#ifndef USE_REMOTE_CONSOLE
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, buff );
-#else
-	pTheTerminal->OutString( buff );
-#endif
+
+	fputs( buff, stdout );
+	fflush( stdout );
+
+	if ( pTheTerminal )
+	{
+		pTheTerminal->OutString( buff );
+	}
 }
 
 
