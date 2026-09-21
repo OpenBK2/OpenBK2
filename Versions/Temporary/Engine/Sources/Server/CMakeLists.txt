@@ -27,6 +27,7 @@ set(SOURCES
     CommandsInterface.cpp
     ControlLobby.cpp
     CustomLobby.cpp
+    DatabaseMariaDb.cpp
     GameLobby.cpp
     HashMapConvertor.cpp
     InternalPackets.cpp
@@ -52,6 +53,7 @@ target_link_libraries(Server PRIVATE
     Net
     Server_Client_Common
     System
+    mariadbclient
     sqlite3
     zlib
     fmt::fmt-header-only)
