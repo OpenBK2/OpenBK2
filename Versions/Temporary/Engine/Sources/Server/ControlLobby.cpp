@@ -12,6 +12,7 @@
 #include "Statistics.h"
 
 #include <cstdint>
+#include <utility>
 
 #include <fmt/format.h>
 
@@ -273,7 +274,7 @@ bool CControlLobby::ProcessNewConnectingClient( CNewGameConnectingClient *pPacke
 
 bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 {
-	swap( pPacket->nClient, pPacket->nClientID );
+	std::swap( pPacket->nClient, pPacket->nClientID );
 	PushPacket( pPacket );
 
 	return true;
@@ -281,7 +282,7 @@ bool CControlLobby::ProcessDirectClientPacket( CDirectPacketToClient *pPacket )
 
 bool CControlLobby::ProcessThroughServerGamePacket( CThroughServerGamePacket *pPacket )
 {
-	swap( pPacket->nClient, pPacket->nClientID );
+	std::swap( pPacket->nClient, pPacket->nClientID );
 	PushPacket( pPacket );
 
 	return true;
