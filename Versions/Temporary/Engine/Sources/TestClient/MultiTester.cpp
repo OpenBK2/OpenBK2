@@ -39,15 +39,15 @@ const int GAME_LENGTH = 200000;
 
 CMultiTester::CMultiTester()
 {
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
-	REGISTER_PACKET_PROCESSOR( ProcessChatChannelClientsListPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessMyIDPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessChatPacket )
-	REGISTER_PACKET_PROCESSOR( ProcessEnteredLobby )
-	REGISTER_PACKET_PROCESSOR( ProcessClientRemoved )
-	REGISTER_PACKET_PROCESSOR( ProcessLadderInvitePacket )
-	REGISTER_PACKET_PROCESSOR( ProcessGameKilled )
-	REGISTER_PACKET_PROCESSOR( ProcessNewGameClient )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessConnectServerResult )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessChatChannelClientsListPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessMyIDPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessChatPacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessEnteredLobby )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessClientRemoved )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessLadderInvitePacket )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessGameKilled )
+	REGISTER_PACKET_PROCESSOR( &CMultiTester::ProcessNewGameClient )
 }
 
 void CMultiTester::Init( const std::string& _szServerAddress, const int _nNetVersion, const int _nServerPort, const int _nTimeOut,

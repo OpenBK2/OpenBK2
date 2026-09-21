@@ -10,7 +10,7 @@ const int MAX_ATTEMPTS = 3;
 
 CPinger::CPinger()
 {
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
+	REGISTER_PACKET_PROCESSOR( &CPinger::ProcessConnectServerResult )
 }
 
 CPinger::CPinger( const int &nPeriod, const std::string &_szName, const std::string &_szPassword, const std::string &_szIP,
@@ -18,7 +18,7 @@ CPinger::CPinger( const int &nPeriod, const std::string &_szName, const std::str
 	: nConnectPeriod( nPeriod ), szName( _szName ), szPassword( _szPassword ),
 	szIP( _szIP ), nPort( _nPort ), nNetVersion( _nNetVersion ), nAttemptsLeft( MAX_ATTEMPTS ), bConnectNow( false )
 {
-	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult )
+	REGISTER_PACKET_PROCESSOR( &CPinger::ProcessConnectServerResult )
 	nLastConnectTime = GetLongTickCount();
 }
 
