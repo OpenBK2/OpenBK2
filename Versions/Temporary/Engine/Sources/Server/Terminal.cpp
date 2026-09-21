@@ -2,7 +2,6 @@
 
 #include "Terminal.h"
 #include "Server_Client_Common/Commands.h"
-#include "Misc/Win32Helper.h"
 
 #include <chrono>
 #include <cstdint>
@@ -17,32 +16,28 @@ static std::mutex csClientSocketReading;
 static std::mutex csClientSocketWriting;
 CObj<CTerminal> pTheTerminal;
 
-// DWORD, not uint32_t: LPTHREAD_START_ROUTINE is spelled in terms of DWORD,
-// which is unsigned long, and uint32_t is unsigned int. Same width, different
-// type, so the conversion to cstdint types that went through this tree left a
-// signature CreateThread will not take. The whole function goes away with
-// CreateThread when this moves onto std::thread.
-static DWORD WINAPI TheTerminalThreadProc( LPVOID lpParameter )
+// An ordinary function now, since std::thread takes one. It also no longer
+// has to be spelled in DWORD and LPVOID to match LPTHREAD_START_ROUTINE, which
+// is what the tree's move to the cstdint types had quietly broken.
+static void TheTerminalThreadProc( CTerminal *pTerminal )
 {
-	CTerminal* pTerminal = reinterpret_cast<CTerminal*>(lpParameter);
-	while (1)
+	for ( ;; )
 	{
 		std::this_thread::sleep_for( std::chrono::milliseconds( 30 ) );
 		pTerminal->MTSegment();
 	}
-	return 0;
 }
 
 CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pCommands ), nPort( _nPort ), bClientIsOK( false )
 {
 	pTheTerminal = this;
-	uint16_t sockVersion;
+
+	// Winsock alone needs starting before a socket exists, and nothing does on
+	// POSIX, so this is guarded rather than shimmed.
+#if BOOST_OS_WINDOWS
 	WSADATA wsaData;
-
-	sockVersion = MAKEWORD(1, 1);			// We'd like Winsock version 1.1
-
-	// We begin by initializing Winsock
-	WSAStartup( sockVersion, &wsaData );
+	WSAStartup( MAKEWORD( 1, 1 ), &wsaData );
+#endif
 
 	listeningSocket = socket(AF_INET,		// Go over TCP/IP
 		SOCK_STREAM,   	// This is a stream-oriented socket
@@ -51,12 +46,14 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 	if ( listeningSocket == INVALID_SOCKET ) 
 	{
 		NI_ASSERT( false, "Cannot create terminal socket!" );
+#if BOOST_OS_WINDOWS
 		WSACleanup();				// Shutdown Winsock
+#endif
 		return;			// Return an error value
 	}
 
-	// Use a SOCKADDR_IN struct to fill in address information
-	SOCKADDR_IN serverInfo;
+	// Use a sockaddr_in struct to fill in address information
+	sockaddr_in serverInfo;
 
 	serverInfo.sin_family = AF_INET;
 	serverInfo.sin_addr.s_addr = INADDR_ANY;	// Since this socket is listening for connections,
@@ -64,24 +61,25 @@ CTerminal::CTerminal( CCommands *_pCommands, const int _nPort ) : pCommands( _pC
 	serverInfo.sin_port = htons( nPort );		// Convert integer 8888 to network-byte order
 	// and insert into the port field
 
-	if  ( bind( listeningSocket, (LPSOCKADDR)&serverInfo, sizeof(struct sockaddr) ) == SOCKET_ERROR )
+	if  ( bind( listeningSocket, reinterpret_cast<sockaddr *>( &serverInfo ), sizeof(struct sockaddr) ) < 0 )
 	{
 		NI_ASSERT( false, "Cannot bind to terminal socket!" );
+#if BOOST_OS_WINDOWS
 		WSACleanup();				// Shutdown Winsock
+#endif
 		return;			// Return an error value
 	}
 
-	if  ( listen( listeningSocket, 1 ) == SOCKET_ERROR )
+	if  ( listen( listeningSocket, 1 ) < 0 )
 	{
 		NI_ASSERT( false, "Cannot listen on terminal socket!" );
+#if BOOST_OS_WINDOWS
 		WSACleanup();				// Shutdown Winsock
+#endif
 		return;			// Return an error value
 	}
-	// DWORD for the same reason as the thread procedure above: CreateThread's
-	// last parameter is LPDWORD, and unsigned int* is not unsigned long*.
-	DWORD dwThreadId;
-
-	hReadingThread = CreateThread( 0, 1024*1024, TheTerminalThreadProc, reinterpret_cast<LPVOID>(this), 0, &dwThreadId );
+	readingThread = std::thread( &TheTerminalThreadProc, this );
+	readingThread.detach();
 }
 
 void CTerminal::Segment()
@@ -106,7 +104,7 @@ void CTerminal::MTSegment()
 	{
 		SOCKET newSocket = accept( listeningSocket, 0, 0 );
 		{
-			if ( newSocket != SOCKET_ERROR )
+			if ( newSocket != INVALID_SOCKET )
 			{
 				{
 					std::lock_guard lock( csClientSocketWriting );
@@ -134,7 +132,7 @@ void CTerminal::OutString( const std::string &szString )
 		{
 			const std::string &szOutString = writeCache.front();
 			int nSent = send( acceptedSocket, szOutString.c_str(), szOutString.size(), 0 );
-			if ( nSent == SOCKET_ERROR )
+			if ( nSent < 0 )
 			{
 				return;
 			}
@@ -166,7 +164,9 @@ void CTerminal::ReadToCache()
 
 CTerminal::~CTerminal()
 {
+#if BOOST_OS_WINDOWS
 	WSACleanup();
+#endif
 }
 
 // Everything the server has to say goes through here.
