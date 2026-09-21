@@ -115,6 +115,10 @@ public:
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &szAnimatedWindow );
+		// Every other serializer in the tree ends this way. Falling off the end
+		// of a function that returns int is undefined behaviour, whatever the
+		// caller does with the value, and nothing here looks at it.
+		return 0;
 	}
 };
 
