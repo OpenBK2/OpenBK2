@@ -10,6 +10,7 @@
 #include "Client/ServerClientInterface.h"
 #include "Misc/StrProc.h"
 #include "Misc/StringConversions.h"
+#include "port/unicode.h"
 #include "MPTransceiver.h"
 #include "ScenarioTracker.h"
 #include "DBMPConsts.h"
@@ -178,7 +179,7 @@ bool CMPManagerMode::OnChatPacket( class CChatPacket *pPacket )
 		if (playerID >= 0)
 		{
 			uint32_t color = scenario->GetPlayerColor(playerID).dwColor;
-			colorStr = L"<color = " + string_conversion::utf8_to_wstring(string_conversion::RGBA_to_hex(color)) + L">";
+			colorStr = L"<color = " + UTF8ToWide(string_conversion::RGBA_to_hex(color)) + L">";
 			colorEndStr = L"<color = FFFFFFFF>";
 		}
 

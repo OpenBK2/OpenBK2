@@ -66,7 +66,7 @@ extern CUnderConstructionObject theUnderConstructionObject;
 #include "PlayerReinforcement.h"
 #include "Common_RTS_AI/Checksums.h"
 #include "Misc/Win32Helper.h"
-#include "Misc/StringConversions.h"
+#include "port/unicode.h"
 #include "Input/Bind.h"
 #include "GlobalWarFog.h"
 #include "SimpleChecksumCalc.h"
@@ -1223,7 +1223,7 @@ void CAILogic::WriteDetailedChecksumInfo()
 		std::string unitName = "<NO_NAME>";
 		auto stats = pUnit->GetStats();
 		if (stats)
-			unitName = string_conversion::wstring_to_utf8(NText::GetText(stats->szLocalizedNameFileRef));
+			unitName = WideToUTF8(NText::GetText(stats->szLocalizedNameFileRef));
 
 		int isA = pUnit->IsAviation();
 		int isF = pUnit->IsFormation();

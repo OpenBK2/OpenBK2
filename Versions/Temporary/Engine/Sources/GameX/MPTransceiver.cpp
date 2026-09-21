@@ -19,7 +19,7 @@
 #include "GameXClassIDs.h"
 #include "MultiplayerCommandManager.h"
 #include "Misc/StrProc.h"
-#include "Misc/StringConversions.h"
+#include "port/unicode.h"
 #include "Main/MainLoop.h"
 #include "Main/MainLoopCommands.h"
 #include "System/GlobalVars.h"
@@ -613,7 +613,7 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 		if (nPlayerIndex >= playerInfos.size())
 			continue;
 
-		std::string playerName = string_conversion::wstring_to_utf8(playerInfos[nPlayerIndex].wszName);
+		std::string playerName = WideToUTF8(playerInfos[nPlayerIndex].wszName);
 		checksumsTxt += fmt::format("{},\t\t{},\t\t{},\t\t{},\t\t{}\n", nPlayerIndex, players[nPlayerIndex].nClientID, playerName.c_str(), players[nPlayerIndex].nTeam, checkSums[nPlayerIndex][segment]);
 	}
 	fprintf(fl, "%s", checksumsTxt.c_str());

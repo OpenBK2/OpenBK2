@@ -10,7 +10,7 @@
 #include "Main/DBNetConsts.h"
 #include "Main/MODs.h"
 #include "AILogic/DBAIConsts.h"
-#include "Misc/StringConversions.h"
+#include "port/unicode.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
 #include <filesystem>
@@ -83,7 +83,7 @@ uint32_t SGameConsts::GetMPDataVersionChecksum() const
 	uint32_t ret = 123321;
 
 	// game.exe version
-	auto gameVersionStr = string_conversion::wstring_to_utf8(NGlobal::GetVar("code_version_number", "0.0.0.0").GetString());
+	auto gameVersionStr = WideToUTF8(NGlobal::GetVar("code_version_number", "0.0.0.0").GetString());
 	int v1 = 0, v2 = 0, v3 = 0, v4 = 0;
 	sscanf(gameVersionStr.c_str(), "%d.%d.%d.%d", &v1, &v2, &v3, &v4);
 	ret = CalculateChecksum(ret, v1 * v1 + v1 + 1, v2 * v2 + v2 + 2, v3 * v3 + v3 + 3, v4 * v4 + v4 + 4);
