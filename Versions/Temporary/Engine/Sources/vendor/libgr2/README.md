@@ -33,11 +33,20 @@ groups and indices, bone bindings, mesh pointer identity, every track group and
 animation, and every curve sampled at nine values of t drawn from its own knots.
 See `scripts/port/gr2diff.py` below.
 
-**The engine links this and not the vendored DLL.** `cmake/granny.cmake` adds
-this directory and points `granny::granny` at it, so a normal build of the tree
-builds and links libgr2. `granny211.h` is still the header every translation unit
-compiles against, because it is the ABI this reproduces; only what answers the
-calls changed.
+**The engine links this and not the vendored DLL, and now compiles against it
+too.** `cmake/granny.cmake` adds this directory and points `granny::granny` at
+it, so a normal build of the tree builds and links libgr2. `granny211.h` used to
+remain the header every translation unit compiled against; `include/gr2/granny.h`
+is that header now. It declares the same ABI -- the same entry points with the
+same signatures and decoration, the same record layouts with the same member
+names, and the same version macros -- and nothing puts RAD's header on the
+include path any more, so a translation unit that still wanted it would fail to
+compile.
+
+The records the engine walks are public here for that reason. `src/Structures.h`
+keeps this library's own copy of those layouts, in its own naming and with the
+reasoning about each field beside it, and asserts the two against each other
+member for member, so a change to either stops the build.
 
 That removes the last Windows-only, non-redistributable dependency from the
 engine's link line. libgr2 builds clean with GCC and runs its full suite on

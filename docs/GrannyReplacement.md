@@ -136,10 +136,13 @@ Verified sizes with `_pack_ = 1` on x64:
 `GrannyGetFileInfo` cannot hand back a pointer into the loaded file. It has to
 convert, because the two ends disagree about what these structures are.
 
-`Versions/Temporary/Engine/Sources/vendor/granny/include/granny.h` is a two-line
-shim that includes `granny211.h`, so the engine reads **2.11** layouts. The files
-were written by a 2.5-era exporter and carry 2.5-era type trees. Dumped from a
-shipped geometry file with `scripts/port/gr2info.py types`:
+`Versions/Temporary/Engine/Sources/vendor/granny/include/granny.h` is a one-line
+shim, so the engine reads **2.11** layouts. It included `granny211.h` while RAD's
+header was still on the include path; it now includes
+`vendor/libgr2/include/gr2/granny.h`, which declares the same records with the
+same member names. The files were written by a 2.5-era exporter and carry 2.5-era
+type trees. Dumped from a shipped geometry file with `scripts/port/gr2info.py
+types`:
 
 | in the file | in `granny211.h` |
 |---|---|
@@ -580,9 +583,12 @@ Unchanged apart from `const` on name pointers: `granny_file_info`, `granny_mesh`
 
 Three consequences:
 
-- **Reproduce 2.11's layouts, not 2.5's.** The engine compiles against
-  `granny211.h`. blendergranny and nwn2mdk remain the sources for the *file* format,
-  which is unchanged, but not for the in-memory structures.
+- **Reproduce 2.11's layouts, not 2.5's.** The engine reads 2.11 structures.
+  (It used to get them from `granny211.h`; it now gets them from
+  `vendor/libgr2/include/gr2/granny.h`, which declares the same ones. That
+  changes where the layouts are written down, not which layouts they are.)
+  blendergranny and nwn2mdk remain the sources for the *file* format, which is
+  unchanged, but not for the in-memory structures.
 - **Going back is not an option for x64.** Granny 2.5 has no 64-bit build at all, so
   there is nothing to fall back to.
 - **The blend layer is documented after all.** Both SDKs carry `granny2.chm`, 2.5 MB
@@ -827,6 +833,17 @@ focused hours.
 | **M4** controls | about 30 entry points. No open source prior art, but all of them are documented in `granny2.chm`, ease curves included. Bounded by what `CSkeletonAnimator` actually does | **5-10 days** | medium |
 | **harness** | golden record and replay, corpus sweep, live A/B shim, malformed-input fuzzing | **5-7 days** | medium-high |
 | **M5** integration | CMake, delete `granny.cmake` and the DLL and the `uesp-esoapps` submodule, x86 and x64 CI green | **2-3 days** | medium |
+
+**M5 update.** The build no longer needs the submodule at all: `granny211.h` is
+off the include path and `gr2/granny.h` declares the ABI in its place, verified
+by comparing all 36 record types member for member against RAD's header and by
+`static_assert`s tying the public layouts to `src/Structures.h`'s in both 32- and
+64-bit. What still needs the submodule is the *verification harness*, not the
+build: `gr2diff.py`, `gr2info.py` and `granny_dll_oracle.py` drive the real
+`granny2.dll` out of it as the reference every claim here was measured against.
+Dropping the submodule therefore means giving those three an out-of-tree path to
+a DLL (only `gr2diff.py` has a `--reference` flag today) and accepting that a
+fresh clone cannot re-run the comparison without supplying one.
 | **tail** | visual bugs found in play | **3-5 days** | low |
 
 **Total: 27 to 44 working days**, roughly 6 to 9 weeks full time, 200 to 350 hours.

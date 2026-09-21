@@ -488,3 +488,81 @@ static_assert( sizeof( SPeriodicLoop ) == 48, "granny_periodic_loop" );
 }
 
 #pragma pack( pop )
+
+// The same layouts, stated twice, and tied together here.
+//
+// include/gr2/granny.h declares these records publicly, with the member names
+// the engine spells, because the engine compiles against that header now rather
+// than against RAD's. The structures above are what this library's own code
+// writes through, in its own naming, with the reasoning about each field beside
+// it. Two descriptions of one ABI is one more than is safe, so every pair is
+// checked against the other: a field added, reordered or widened on either side
+// stops the build here instead of producing a plausible wrong number twenty
+// frames later.
+//
+// Sizes, and the offset of the last member of the two structures that grew a
+// field between 2.5 and 2.11. Equal size with a differing interior is the one
+// way this could still pass, and the last member is where such a difference
+// shows up.
+#include <gr2/granny.h>
+
+#include <cstddef>
+
+namespace NGr2
+{
+
+#define GR2_SAME_LAYOUT( ours, theirs )                                                \
+	static_assert( sizeof( ours ) == sizeof( theirs ), #theirs " size" )
+
+GR2_SAME_LAYOUT( SVariant, granny_variant );
+GR2_SAME_LAYOUT( STransform, granny_transform );
+GR2_SAME_LAYOUT( SDataTypeDefinition, granny_data_type_definition );
+GR2_SAME_LAYOUT( SArtToolInfo, granny_art_tool_info );
+GR2_SAME_LAYOUT( SExporterInfo, granny_exporter_info );
+GR2_SAME_LAYOUT( SBone, granny_bone );
+GR2_SAME_LAYOUT( SSkeleton, granny_skeleton );
+GR2_SAME_LAYOUT( STriMaterialGroup, granny_tri_material_group );
+GR2_SAME_LAYOUT( STriAnnotationSet, granny_tri_annotation_set );
+GR2_SAME_LAYOUT( STriTopology, granny_tri_topology );
+GR2_SAME_LAYOUT( SVertexAnnotationSet, granny_vertex_annotation_set );
+GR2_SAME_LAYOUT( SVertexData, granny_vertex_data );
+GR2_SAME_LAYOUT( SMorphTarget, granny_morph_target );
+GR2_SAME_LAYOUT( SMaterialBinding, granny_material_binding );
+GR2_SAME_LAYOUT( SBoneBinding, granny_bone_binding );
+GR2_SAME_LAYOUT( SMesh, granny_mesh );
+GR2_SAME_LAYOUT( SModelMeshBinding, granny_model_mesh_binding );
+GR2_SAME_LAYOUT( SModel, granny_model );
+GR2_SAME_LAYOUT( SPixelLayout, granny_pixel_layout );
+GR2_SAME_LAYOUT( SMipLevel, granny_texture_mip_level );
+GR2_SAME_LAYOUT( STextureImage, granny_texture_image );
+GR2_SAME_LAYOUT( STexture, granny_texture );
+GR2_SAME_LAYOUT( SMaterialMap, granny_material_map );
+GR2_SAME_LAYOUT( SMaterial, granny_material );
+GR2_SAME_LAYOUT( SCurveDataHeader, granny_curve_data_header );
+GR2_SAME_LAYOUT( SCurveDataDaK32fC32f, granny_curve_data_da_k32f_c32f );
+GR2_SAME_LAYOUT( SCurve2, granny_curve2 );
+GR2_SAME_LAYOUT( SVectorTrack, granny_vector_track );
+GR2_SAME_LAYOUT( STransformTrack, granny_transform_track );
+GR2_SAME_LAYOUT( STextTrackEntry, granny_text_track_entry );
+GR2_SAME_LAYOUT( STextTrack, granny_text_track );
+GR2_SAME_LAYOUT( SPeriodicLoop, granny_periodic_loop );
+GR2_SAME_LAYOUT( STrackGroup, granny_track_group );
+GR2_SAME_LAYOUT( SAnimation, granny_animation );
+GR2_SAME_LAYOUT( SFileInfo, granny_file_info );
+
+#undef GR2_SAME_LAYOUT
+
+static_assert( offsetof( SBone, ExtendedData ) == offsetof( granny_bone, ExtendedData ),
+               "granny_bone interior" );
+static_assert( offsetof( SSkeleton, ExtendedData ) == offsetof( granny_skeleton, ExtendedData ),
+               "granny_skeleton interior" );
+static_assert( offsetof( SMesh, ExtendedData ) == offsetof( granny_mesh, ExtendedData ),
+               "granny_mesh interior" );
+static_assert( offsetof( STrackGroup, ExtendedData ) == offsetof( granny_track_group, ExtendedData ),
+               "granny_track_group interior" );
+static_assert( offsetof( SAnimation, ExtendedData ) == offsetof( granny_animation, ExtendedData ),
+               "granny_animation interior" );
+static_assert( offsetof( SFileInfo, ExtendedData ) == offsetof( granny_file_info, ExtendedData ),
+               "granny_file_info interior" );
+
+}
