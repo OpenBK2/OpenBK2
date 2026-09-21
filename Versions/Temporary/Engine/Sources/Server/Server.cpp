@@ -23,8 +23,11 @@
 #include <fmt/format.h>
 
 
+// The ## was a no-op that only MSVC accepted: FuncName is already a complete
+// token here, and a conforming preprocessor rejects a ## with nothing on its
+// left to paste onto.
 #define REGISTER_CMD_FUNC( cmd, FuncName ) \
-processCmdsFuncs[cmd] = &CGameServer::##FuncName;
+processCmdsFuncs[cmd] = &CGameServer::FuncName;
 
 void ForcePacketRegistration(); // For too smart linker
 
