@@ -20,6 +20,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 #define LADDER_TEST_LOG
 #undef LADDER_TEST_LOG
 
@@ -105,8 +107,8 @@ void CTestClient::CommandLogin( const SCommand &cmd )
 
 	Singleton<IConsoleBuffer>()->WriteASCII(
 		CONSOLE_STREAM_CONSOLE,
-		StrFmt( "logging in server %s, port %d, gameversion %d, nickname %s, password %s...\n",
-						szIP.c_str(), nPort, nNetVersion, cmd.GetStr( 0 ).c_str(), cmd.GetStr( 1 ).c_str() )
+		fmt::format( "logging in server {}, port {}, gameversion {}, nickname {}, password {}...\n",
+						szIP, nPort, nNetVersion, cmd.GetStr( 0 ), cmd.GetStr( 1 ) ).c_str()
 	);
 	pTestClientProcessor->SetServerClient( pServerClient );
 
@@ -121,8 +123,8 @@ void CTestClient::CommandRegister( const SCommand &cmd )
 
 	Singleton<IConsoleBuffer>()->WriteASCII(
 		CONSOLE_STREAM_CONSOLE,
-		StrFmt( "registering to server %s, port %d, gameversion %d, nickname %s, password %s, cdkey %s, email %s...\n",
-		szIP.c_str(), nPort, nNetVersion, cmd.GetStr( 0 ).c_str(), cmd.GetStr( 1 ).c_str(), cmd.GetStr( 2 ).c_str(), cmd.GetStr( 3 ) )
+		fmt::format( "registering to server {}, port {}, gameversion {}, nickname {}, password {}, cdkey {}, email {}...\n",
+		szIP, nPort, nNetVersion, cmd.GetStr( 0 ), cmd.GetStr( 1 ), cmd.GetStr( 2 ), cmd.GetStr( 3 ) ).c_str()
 	);
 
 	pTestClientProcessor->SetServerClient( pServerClient );
@@ -447,7 +449,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 
 #ifdef LADDER_TEST_LOG
 	int nTime = GetCurrentTimeMilliseconds();
-	std::string szFileName = StrFmt( "../ladder_test_request_%d.xml", nTime ); 
+	std::string szFileName = fmt::format( "../ladder_test_request_{}.xml", nTime ); 
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
@@ -496,7 +498,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 
 #ifdef LADDER_TEST_LOG
 	int nTime = GetCurrentTimeMilliseconds();
-	std::string szFileName = StrFmt( "../ladder_test_result_%d.xml", nTime ); 
+	std::string szFileName = fmt::format( "../ladder_test_result_{}.xml", nTime ); 
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
@@ -555,7 +557,7 @@ void CTestClient::ProcessCommands()
 	while ( pCommands->GetCommand( &cmd ) )
 	{
 		std::unordered_map<int, PROCESS_CMD_FUNC>::iterator iter = processCmdsFuncs.find( cmd.nCmd );
-//		NI_ASSERT( iter != processCmdsFuncs.end(), StrFmt( "Can't process cmd %d", cmd.nCmd ) );
+//		NI_ASSERT( iter != processCmdsFuncs.end(), fmt::format( "Can't process cmd {}", cmd.nCmd ) );
 
 		if ( iter == processCmdsFuncs.end() )
 			continue;

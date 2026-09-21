@@ -15,6 +15,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 CTestClientProcessor::CTestClientProcessor( const std::string &szCfgFile )
 {
 	REGISTER_PACKET_PROCESSOR( ProcessConnectServerResult );
@@ -62,7 +64,7 @@ CTestClientProcessor::CTestClientProcessor( const std::string &szCfgFile )
 	CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	pSaver->Add( "GameHeartBeatPeriod", &dwHeartBeatPeriod );
 	pSaver = 0;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "Games heartbeat period is %d\n", dwHeartBeatPeriod ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "Games heartbeat period is {}\n", dwHeartBeatPeriod ).c_str() );
 	nMyID = -1;
 }
 
@@ -149,13 +151,13 @@ bool CTestClientProcessor::ProcessChatPacket( CChatPacket *pPacket )
 	{
 		Singleton<IConsoleBuffer>()->WriteASCII(
 			CONSOLE_STREAM_CONSOLE,
-			StrFmt( "lobby chat message from %s: %s\n", pPacket->szNick.c_str(), NStr::ToMBCS( pPacket->wszMessage.c_str() ) ) );
+			fmt::format( "lobby chat message from {}: {}\n", pPacket->szNick, NStr::ToMBCS( pPacket->wszMessage ) ).c_str() );
 	}
 	else
 	{
 		Singleton<IConsoleBuffer>()->WriteASCII(
 			CONSOLE_STREAM_CONSOLE,
-			StrFmt( "private chat message from %s: %s\n", pPacket->szNick.c_str(), NStr::ToMBCS( pPacket->wszMessage ).c_str() ) );
+			fmt::format( "private chat message from {}: {}\n", pPacket->szNick, NStr::ToMBCS( pPacket->wszMessage ) ).c_str() );
 	}
 
 	return true;
@@ -169,7 +171,7 @@ bool CTestClientProcessor::ProcessChatChannelClientsListPacket( CChatChannelClie
 	for ( std::list<SIDNickPair>::iterator it = pPacket->clientsList.begin(); it != pPacket->clientsList.end(); ++it )
 	{
 		const SIDNickPair &listPair = *it;
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", listPair.szNick ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{}\n", listPair.szNick ).c_str() );
 	}
 	return true;
 }
@@ -179,11 +181,11 @@ bool CTestClientProcessor::ProcessChatClientListChangeNotifyPacket( CChatClientL
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( pPacket->bJoined )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s joined channel\n", pPacket->szNick ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} joined channel\n", pPacket->szNick ).c_str() );
 	}
 	else
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s leaved channel\n", pPacket->szNick ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} leaved channel\n", pPacket->szNick ).c_str() );
 	}
 	return true;
 }
@@ -195,7 +197,7 @@ bool CTestClientProcessor::ProcessChatChannelsListPacket( CChatChannelsListPacke
 	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, "Channel(s):\n" );
 	for ( std::list<std::string>::iterator it = pPacket->added.begin(); it != pPacket->added.end(); ++it )
 	{
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{}\n", *it ).c_str() );
 	}
 	return true;
 }
@@ -208,7 +210,7 @@ bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPac
 	{
 		for ( std::list<std::string>::iterator it = pPacket->ignoreList.begin(); it != pPacket->ignoreList.end(); ++it )
 		{
-			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{}\n", *it ).c_str() );
 		}
 	}
 	else
@@ -221,7 +223,7 @@ bool CTestClientProcessor::ProcessChatIgnoreListPacket( CChatIgnoreFriendListPac
 	{
 		for ( std::list<std::string>::iterator it = pPacket->friendList.begin(); it != pPacket->friendList.end(); ++it )
 		{
-			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", *it ) );
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{}\n", *it ).c_str() );
 		}
 	}
 	else
@@ -238,12 +240,12 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 	CPtr<CNetPacket> pDelete = pPacket;
 	if ( pPacket->szChannel != "" )
 	{
-		std::string szOutString = StrFmt( "User %s is in ", pPacket->szNick ) + pPacket->szChannel + ".\n";
+		std::string szOutString = fmt::format( "User {} is in ", pPacket->szNick ) + pPacket->szChannel + ".\n";
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szOutString.c_str() );
 	}
 	else
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, 
-			StrFmt( "User %s is not in chat.\n", pPacket->szNick ) );
+			fmt::format( "User {} is not in chat.\n", pPacket->szNick ).c_str() );
 	return true;
 }
 
@@ -262,8 +264,8 @@ bool CTestClientProcessor::ProcessChatFriendNotifyPacket( CChatFriendNotifyPacke
 	default:
 		szStatus = "offline";
 	}
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "Notification from friend. %s is now %s.\n", 
-		pPacket->szNick.c_str(), szStatus.c_str() ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "Notification from friend. {} is now {}.\n", 
+		pPacket->szNick, szStatus ).c_str() );
 	return true;
 }
 
@@ -272,14 +274,14 @@ bool CTestClientProcessor::ProcessMyIDPacket( CMyIDPacket *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 
 	nMyID = pPacket->nMyID;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "my id is %d\n", nMyID ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "my id is {}\n", nMyID ).c_str() );
 	return true;
 }
 
 bool CTestClientProcessor::ProcessWelcomePacket( CSystemBroadcastPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s\n", NStr::ToMBCS( pPacket->wszText ) ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{}\n", NStr::ToMBCS( pPacket->wszText ) ).c_str() );
 	return true;
 }
 
@@ -287,9 +289,9 @@ bool CTestClientProcessor::ProcessRemoveClient( CNetRemoveClient *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 
-	NI_ASSERT( pPacket->nClientID == 0, StrFmt( "wrong client %d removed, 0 expected\n", pPacket->nClientID ) );
+	NI_ASSERT( pPacket->nClientID == 0, fmt::format( "wrong client {} removed, 0 expected\n", pPacket->nClientID ) );
 	if ( pPacket->nClientID == 0 )
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "connection with server was lost\n" ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "connection with server was lost\n" ).c_str() );
 
 	return true;
 }
@@ -343,7 +345,7 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 			lobbyClients[info.nID] = info;
 		}
 
-		std::string szStr = StrFmt( "lobby clients received, version %d", dwClientsVersion );
+		std::string szStr = fmt::format( "lobby clients received, version {}", dwClientsVersion );
 		if ( pPacket->bFullUpdate )
 			szStr += ", fullupdate";
 		szStr += ":\n";
@@ -351,7 +353,7 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 		for ( std::unordered_map<int, SCustomLobbyClientInfo>::iterator iter = lobbyClients.begin(); iter != lobbyClients.end(); ++iter )
 		{
 			SCustomLobbyClientInfo &info = iter->second;
-			szStr += StrFmt( "    client %s, ", info.szNick.c_str() );
+			szStr += fmt::format( "    client {}, ", info.szNick );
 
 			if ( info.bWant2ReceiveChat )
 				szStr += "receiving chat, ";
@@ -370,13 +372,13 @@ bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket 
 				szStr += "ingame";
 				break;
 			default:
-				szStr += StrFmt( "unknown state %d", info.eState );
+				szStr += fmt::format( "unknown state {}", static_cast<int>( info.eState ) );
 			}
 
 			if ( info.nGameID == -1 )
 				szStr += ", not in a game";
 			else
-				szStr += StrFmt( ", in game %d", info.nGameID );
+				szStr += fmt::format( ", in game {}", info.nGameID );
 
 			szStr += "\n";
 		}
@@ -479,7 +481,7 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 			lobbyGames[info.nID] = info;
 		}
 
-		std::string szStr = StrFmt( "lobby games received, version %d", dwGamesVersion );
+		std::string szStr = fmt::format( "lobby games received, version {}", dwGamesVersion );
 		if ( pPacket->bFullUpdate )
 			szStr += ", fullupdate";
 		szStr += ":\n";
@@ -487,7 +489,7 @@ bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPa
 		for ( std::unordered_map<int, SGameInfo>::iterator iter = lobbyGames.begin(); iter != lobbyGames.end(); ++iter )
 		{
 			SGameInfo &info = iter->second;
-			szStr += StrFmt( "    \"%s\", id %d, max players %d", info.szName.c_str(), info.nID, info.nMaxPlayers );
+			szStr += fmt::format( "    \"{}\", id {}, max players {}", info.szName, info.nID, info.nMaxPlayers );
 			if ( info.bCanConnect )
 				szStr += ", can connect";
 			else
@@ -552,7 +554,7 @@ bool CTestClientProcessor::ProcessConnectGameFailed( CConnectGameFailed *pPacket
 bool CTestClientProcessor::ProcessGameClientRemoved( CGameClientRemoved *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "connection with game client %d lost\n", pPacket->nClientID ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "connection with game client {} lost\n", pPacket->nClientID ).c_str() );
 
 	gameClients.erase( pPacket->nClientID );
 	return true;
@@ -571,7 +573,7 @@ bool CTestClientProcessor::ProcessNewGameClient( CNewGameClient *pPacket )
 bool CTestClientProcessor::ProcessGameKilled( CGameKilled *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "game %d killed\n", pPacket->nGame ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "game {} killed\n", pPacket->nGame ).c_str() );
 
 	gameClients.clear();
 	nGameID = -1;
@@ -584,7 +586,7 @@ bool CTestClientProcessor::ProcessConnectGame( CConnectGamePacket *pPacket )
 	CPtr<CNetPacket> pDelete = pPacket;
 /*
 	if ( lobbyGames.find( pPacket->nGameID ) == lobbyGames.end() )
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "cant find game %d\n", pPacket->nGameID ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "cant find game {}\n", pPacket->nGameID ).c_str() );
 	else
 */
 	pServerClient->SendPacket( pPacket );
@@ -616,7 +618,7 @@ bool CTestClientProcessor::ProcessGameTestDirectMsg( CGameTestDirectMsg *pPacket
 bool CTestClientProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "connected to game %d\n", pPacket->nGameID ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "connected to game {}\n", pPacket->nGameID ).c_str() );
 	nGameID = pPacket->nGameID;
 
 	return true;
@@ -625,7 +627,7 @@ bool CTestClientProcessor::ProcessConnectedGameID( CConnectedGameID *pPacket )
 bool CTestClientProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "client %d was kicked from the game\n", pPacket->nKicked ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "client {} was kicked from the game\n", pPacket->nKicked ).c_str() );
 
 	gameClients.erase( pPacket->nKicked );
 	return true;
@@ -653,7 +655,7 @@ bool CTestClientProcessor::ProcessGameKickClient( CGameKickClient *pPacket )
 bool CTestClientProcessor::ProcessTestDirectPacket( CTestDirectPacket *pPacket )
 {
 	CPtr<CNetPacket> pDelete = pPacket;
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "direct msg from client %d received\n", pPacket->nClientID ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "direct msg from client {} received\n", pPacket->nClientID ).c_str() );
 	return true;
 }
 
@@ -692,9 +694,9 @@ bool CTestClientProcessor::ProcessShowGameClients( CTestShowGameClients *pPacket
 		WriteMSG( "not in a game now" );
 	else
 	{
-		std::string szStr = StrFmt( "game %d clients: %d", nGameID, nMyID );
+		std::string szStr = fmt::format( "game {} clients: {}", nGameID, nMyID );
 		for ( std::unordered_set<int>::iterator iter = gameClients.begin(); iter != gameClients.end(); ++iter )
-			szStr += StrFmt( ", %d", *iter );
+			szStr += fmt::format( ", {}", *iter );
 		szStr += "\n";
 
 		WriteMSG( szStr.c_str() );
@@ -715,14 +717,14 @@ bool CTestClientProcessor::ProcessLadderInvitePacket( CLadderInvitePacket *pPack
 	szText = "Team 1 : ";
 	for ( std::list<int>::iterator it = ladderGameTeam1.begin(); it != ladderGameTeam1.end(); ++it )
 	{
-		szText += StrFmt( "%d ", *it );
+		szText += fmt::format( "{} ", *it );
 	}
 	szText += "\n";
 	WriteMSG( szText.c_str() );
 	szText = "Team 2 : ";
 	for ( std::list<int>::iterator it = ladderGameTeam2.begin(); it != ladderGameTeam2.end(); ++it )
 	{
-		szText += StrFmt( "%d ", *it );
+		szText += fmt::format( "{} ", *it );
 	}
 	szText += "\n";
 	WriteMSG( szText.c_str() );
@@ -738,24 +740,24 @@ bool CTestClientProcessor::ProcessLadderStatisticsPacket( CLadderStatisticsPacke
 {
 	CPtr<CNetPacket> pDelete = pPacket;
 
-//	string szOut = StrFmt( "Player %s ladder statistics:\n", pPacket->szNick );
-//	szOut += StrFmt( "  Level = %d,\n  XP = %d ( CurrLevel = %d, NextLevel = %d ),\n  Solo wins/loses = %d/%d,\n  Team wins/loses = %d/%d,\n",
+//	string szOut = fmt::format( "Player {} ladder statistics:\n", pPacket->szNick );
+//	szOut += fmt::format( "  Level = {},\n  XP = {} ( CurrLevel = {}, NextLevel = {} ),\n  Solo wins/loses = {}/{},\n  Team wins/loses = {}/{},\n",
 //		pPacket->info.nLevel, pPacket->info.nXP, pPacket->info.nLevelXP, pPacket->info.nNextLevelXP,
 //		pPacket->info.nWinsSolo, pPacket->info.nLosesSolo,
 //		pPacket->info.nWinsTeam, pPacket->info.nLosesTeam );
 //	szOut += " Race wins:\n";
 //	for ( hash_map<int,int>::iterator it = pPacket->info.raceWins.begin(); it != pPacket->info.raceWins.end(); ++it )
 //	{
-//		szOut += StrFmt( "  Race %d: %d\n", it->first, it->second );
+//		szOut += fmt::format( "  Race {}: {}\n", it->first, it->second );
 //	}
 //	szOut += " Race loses:\n";
 //	for ( hash_map<int,int>::iterator it = pPacket->info.raceLoses.begin(); it != pPacket->info.raceLoses.end(); ++it )
 //	{
-//		szOut += StrFmt( "  Race %d: %d\n", it->first, it->second );
+//		szOut += fmt::format( "  Race {}: {}\n", it->first, it->second );
 //	}
-//	szOut += StrFmt( "  MaxXPEarned: %d\n", pPacket->info.nMaxXPEarned );
-//	szOut += StrFmt( "  MaxXPLost: %d\n", pPacket->info.nMaxXPLost );
-//	szOut += StrFmt( "  FavoriteUnit: %d\n", pPacket->info.nFavoriteUnit );
+//	szOut += fmt::format( "  MaxXPEarned: {}\n", pPacket->info.nMaxXPEarned );
+//	szOut += fmt::format( "  MaxXPLost: {}\n", pPacket->info.nMaxXPLost );
+//	szOut += fmt::format( "  FavoriteUnit: {}\n", pPacket->info.nFavoriteUnit );
 //	WriteMSG( szOut.c_str() );
 
 	return true;

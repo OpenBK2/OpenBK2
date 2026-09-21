@@ -14,6 +14,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 enum EMultiTesterStage
 {
 	LOGIN = 0,
@@ -138,10 +140,10 @@ bool CMultiTester::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 	{
 		nStage = ENTER_LOBBY;
 		Activate();
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s logged in\n", szName.c_str() ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} logged in\n", szName ).c_str() );
 		return true;
 	}
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s login failed from client id=%d, reason=%d\n", szName.c_str(), pPacket->nClientID, pPacket->eRejectReason ) );
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} login failed from client id={}, reason={}\n", szName, pPacket->nClientID, static_cast<int>( pPacket->eRejectReason ) ).c_str() );
 	bCancelled = true;
 	return true;
 }
@@ -191,7 +193,7 @@ bool CMultiTester::ProcessClientRemoved( CNetRemoveClient *pPacket )
 {
 	if ( pPacket->nClientID == 0 )
 	{	
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, StrFmt( "%s connection lost\n", szName.c_str() ) );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} connection lost\n", szName ).c_str() );
 		bCancelled = true;
 		pServerClient = 0;
 	}
@@ -219,7 +221,7 @@ void CMultiTester::TestChat()
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime > CHAT_CHANNEL_CHANGE_PERIOD + dwLastChatChannelChangeTime && ( NWin32Random::Random( 0, 10 ) == 0 ) )
 	{
-		std::string szChannelName = StrFmt( "TEST_CHAT_CHANNEL_%d", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
+		std::string szChannelName = fmt::format( "TEST_CHAT_CHANNEL_{}", NWin32Random::Random( 0, CHAT_CHANNELS_NUMBER ) );
 		ChangeChatChannel( szChannelName );
 		return;
 	}
