@@ -72,5 +72,22 @@ endif()
 # given a header of its own.
 target_compile_definitions(Server PRIVATE SERVER_EXPORT=)
 
+# The DLLs this loads at run time, beside the executable in the build tree and
+# in the install. Each engine module builds into its own directory, and Windows
+# looks for a DLL next to the executable or on PATH, never in the working
+# directory, so without this the build tree can only be run after installing
+# it: the loader fails with STATUS_DLL_NOT_FOUND before main() is reached, and
+# the process dies with no message of its own. Game does the same thing for the
+# same reason.
+if(WIN32)
+    install(FILES $<TARGET_RUNTIME_DLLS:Server> DESTINATION bin)
+
+    add_custom_command(TARGET Server POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_RUNTIME_DLLS:Server> $<TARGET_FILE_DIR:Server>
+        COMMAND_EXPAND_LISTS
+        VERBATIM)
+endif()
+
 install(TARGETS Server DESTINATION bin)
 add_version_info(Server)
