@@ -321,7 +321,6 @@ SRegFunction CScripts::pRegList[] =
 	{ "RandomFloat",										CScripts::RandomFloat },
 	{ "RandomInt",											CScripts::RandomInt },
 	{ "ChangeSelection",								CScripts::ChangeSelection },
-	{ "ReturnScriptIDs",								CScripts::ReturnScriptIDs },
 	{ "GetPlayersMask",									CScripts::GetPlayersMask },
 	{ "ObjectGetCoord",									CScripts::ObjectGetCoord },
 	{ "GetScriptAreaParams",						CScripts::GetScriptAreaParams },
@@ -2926,39 +2925,6 @@ int CScripts::ChangeSelection( struct lua_State *pState )
 			updater.AddUpdate( 0, ACTION_NOTIFY_CHANGE_SELECTION, *iter, nParam );
 	}
 
-	return 0;
-}
-
-int CScripts::ReturnScriptIDs( struct lua_State *pState )
-{
-	Script script( pState );
-
-	const int nReturns = script.GetTop();
-	det_set<int> selectedUnits;
-	for ( int i = 1; i <= nReturns; ++i )
-	{
-		NI_ASSERT( script.GetObject( i ).IsNumber(  ), "ReturnScriptIDs: %d parameter isn't a number" );
-		
-		const int nPtr = script.GetObject( i );
-		CObjectBase *pObj = reinterpret_cast<CObjectBase*>( nPtr );
-
-		NI_ASSERT( dynamic_cast<CUpdatableObj*>(pObj) != 0, "Unknown object passed" );
-		CUpdatableObj *pUpdatableObject = dynamic_cast<CUpdatableObj*>(pObj);
-
-		const int nScriptID = pScripts->GetScriptID( pUpdatableObject );
-		if ( nScriptID != -1 )
-			selectedUnits.insert( nScriptID );
-	}
-
-	while ( !selectedUnits.empty() )
-	{
-		const int nScriptID = *selectedUnits.begin();
-		selectedUnits.erase( nScriptID );
-
-		const auto function = fmt::format( "GetSelectedUnitsFeedBack( {} )", nScriptID );
-		pScripts->CallScriptFunction( function.c_str() );
-	}
-						
 	return 0;
 }
 

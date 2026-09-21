@@ -413,8 +413,6 @@ public:
 	
 	static int Password( struct lua_State *pState );
 	//
-	// for internal usage
-	static int ReturnScriptIDs( struct lua_State *pState );
 	
 	//
 	static int SetGameSpeed( struct lua_State *pState );
