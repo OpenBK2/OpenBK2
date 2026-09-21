@@ -7,6 +7,7 @@
 #include "MapEditorLib/CommandHandlerDefines.h"
 
 #include <wx/textctrl.h>
+#include <wx/settings.h>
 
 // The Log Window's contents, drawn by wx: a read-only text control that is
 // appended to, cleared, copied from and selected, in the log's three colours
@@ -26,6 +27,18 @@ namespace
 		// Registered as the selection command handler when the contents take
 		// focus. Borrowed: the pane outlives this view.
 		ICommandHandler *pSelectionHandler = nullptr;
+		struct SStyledRange
+		{
+			long from, to;
+			ELogOutputType type;
+		};
+		std::vector<SStyledRange> styledRanges;
+
+		wxTextAttr Style( ELogOutputType type ) const
+		{
+			const auto colour = NLogView::GetColour( type );
+			return wxTextAttr( wxColour( colour.nRed, colour.nGreen, colour.nBlue ) );
+		}
 
 	public:
 		virtual ~CLogViewWx()
@@ -67,6 +80,7 @@ namespace
 			// The same registration CLogWindow::OnSetFocus does on the MFC side:
 			// focus here means selection commands belong to this pane.
 			pText->Bind( wxEVT_SET_FOCUS, &CLogViewWx::OnSetFocus, this );
+			pText->Bind( wxEVT_SYS_COLOUR_CHANGED, &CLogViewWx::OnThemeChanged, this );
 		}
 
 		virtual void Append( ELogOutputType eLogOutputType, const std::string &rszText )
@@ -75,18 +89,22 @@ namespace
 			{
 				return;
 			}
-			// SetDefaultStyle applies to text appended after it, which is exactly
-			// the shape of a log. The same three colours as the Scintilla view,
-			// from the same place.
-			const NLogView::SLogColour colour = NLogView::GetColour( eLogOutputType );
-			pText->SetDefaultStyle( wxTextAttr( wxColour( colour.nRed, colour.nGreen, colour.nBlue ) ) );
+			// Keep severity ranges so a theme change also recolours existing text.
+			const long from = pText->GetLastPosition();
+			pText->SetDefaultStyle( Style( eLogOutputType ) );
 			// FromUTF8: every narrow string in this tree is UTF-8 and wxString is
 			// wide. This is the boundary, and it is one line.
 			pText->AppendText( wxString::FromUTF8( rszText.c_str() ) );
+			const long to = pText->GetLastPosition();
+			if ( !styledRanges.empty() && styledRanges.back().type == eLogOutputType )
+				styledRanges.back().to = to;
+			else if ( to > from )
+				styledRanges.push_back( { from, to, eLogOutputType } );
 		}
 
 		virtual void Clear()
 		{
+			styledRanges.clear();
 			if ( pText != nullptr )
 			{
 				pText->Clear();
@@ -135,6 +153,18 @@ namespace
 		}
 
 	private:
+		void OnThemeChanged( wxSysColourChangedEvent &event )
+		{
+			event.Skip();
+			if ( pText )
+			{
+				// Style in place: Freeze/Thaw detaches GTK's text buffer and can
+				// reset the selection and scroll position during a theme change.
+				for ( const auto &range : styledRanges )
+					pText->SetStyle( range.from, range.to, Style( range.type ) );
+			}
+		}
+
 		void OnSetFocus( wxFocusEvent &rEvent )
 		{
 			rEvent.Skip();
@@ -149,19 +179,23 @@ namespace
 
 namespace NLogView
 {
-	// The colours the editor has always used for its log, written as components.
-	// Moved here from the Scintilla log view when that went with CMainFrame.
+	// Normal output follows the native text colour. Severity colours need a
+	// lighter palette on dark backgrounds to remain as readable as normal text.
 	SLogColour GetColour( ELogOutputType eLogOutputType )
 	{
+		const bool dark = wxSystemSettings::GetAppearance().IsDark();
 		switch ( eLogOutputType )
 		{
 			case LT_IMPORTANT:
-				return SLogColour{ 0x22, 0x77, 0x22 };	// green
+				return dark ? SLogColour{ 0x86, 0xd9, 0x93 } : SLogColour{ 0x22, 0x77, 0x22 };
 			case LT_ERROR:
-				return SLogColour{ 0xff, 0x33, 0x33 };	// red, and it always was
+				return dark ? SLogColour{ 0xff, 0x8a, 0x80 } : SLogColour{ 0xb7, 0x1c, 0x1c };
 			case LT_NORMAL:
 			default:
-				return SLogColour{ 0x00, 0x00, 0x00 };	// black
+			{
+				const wxColour colour = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
+				return SLogColour{ colour.Red(), colour.Green(), colour.Blue() };
+			}
 		}
 	}
 

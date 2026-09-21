@@ -131,12 +131,19 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 	if ( !pCmdTypes )
 		return false;
 
-	const std::string szFileName = Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + 
-		"editor\\BitFields\\AIActions.xml";
+	// Native paths are case sensitive on Linux. This is the installed Editor
+	// directory, not the lower-case Windows spelling used by the old dialog.
+	const std::string szFileName = NFile::JoinPath(
+		Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder, "Editor/BitFields/AIActions.xml" );
 
 	pCmdTypes->clear();
 
 	CFileStream stream( szFileName.c_str(), CFileStream::WIN_READ_ONLY );
+	if ( !stream.IsOk() )
+	{
+		DebugTrace( "Cannot load unit start command types: %s", szFileName.c_str() );
+		return false;
+	}
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
 	if ( pXS == 0 ) 
 	{

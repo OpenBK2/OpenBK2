@@ -113,7 +113,7 @@ namespace
 		{ ID_MAIN_SAVE,                                "Save all unsaved data\nSave All" },
 		{ ID_MAIN_RELOAD,                              "Refresh active tables\nRefresh Tables" },
 		{ ID_MAIN_REGISTER_XDB,                        "Register an existing XDB in the current game or mod database\nRegister XDB" },
-		{ ID_TOOLS_RUN_GAME,                           "Save and start the open map in Game.exe\nStart Mission in Game" },
+		{ ID_TOOLS_RUN_GAME,                           "Save and start the open map in the game\nStart Mission in Game" },
 		{ ID_MAIN_SELECT,                              "Select active tables\nSelect Tables" },
 		{ ID_MAIN_RECENT_0,                            "Open this map\nOpen" },
 		{ ID_MAIN_RECENT_1,                            "Open this map\nOpen" },

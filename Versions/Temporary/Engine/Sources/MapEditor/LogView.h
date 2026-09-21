@@ -41,14 +41,8 @@ struct ILogView
 
 namespace NLogView
 {
-	// The log's three colours, as components rather than a packed literal.
-	//
-	// They lived as 0x000000, 0x227722 and 0x3333ff passed straight to
-	// SCI_STYLESETFORE, and the last of those is the reason this struct exists:
-	// Scintilla packs colours 0x00BBGGRR, like a Win32 COLORREF and the opposite
-	// way round from an HTML #RRGGBB, so 0x3333ff is **red**, not blue. Scintilla
-	// says so itself in Platform.h -- GetRed() is `co & 0xff`. Anyone reading
-	// those literals as HTML got two of the three wrong.
+	// Native text colour for normal output, with green/red severity colours
+	// adjusted for the current theme. Components are RGB, not Win32 COLORREF.
 	struct SLogColour
 	{
 		unsigned char nRed;

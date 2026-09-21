@@ -74,10 +74,7 @@ namespace
 
 			pGrid->Add( NWx::Child<wxStaticText>( this, wxID_ANY, "Type:" ),
 									wxSizerFlags().CentreVertical() );
-			// CBS_SORT in the template, so the list is in alphabetical order and
-			// not the order the types were read in. It matters twice: the entry
-			// that ends up first is not the first command type, and GetDialogData
-			// indexes the command types by the row's position -- see there.
+			// Display alphabetically; the item data retains each command's ID.
 			pTypes = NWx::Child<wxChoice>( this, wxID_ANY, wxDefaultPosition,
 																		 wxSize( ConvertDialogToPixels( wxSize( 155, 0 ) ).x, -1 ),
 																		 0, nullptr, wxCB_SORT );
@@ -203,19 +200,16 @@ namespace
 			const int nSelected = pTypes->GetSelection();
 			pData_->nSelectedCmdType = ( nSelected != wxNOT_FOUND ) ? SelectedValue() : -1;
 
-			// Indexed by the row's position, in a sorted list, against a vector in
-			// the order the types were read. The MFC dialog does exactly this and
-			// so does this one: the two agree, because the sort is the same native
-			// one. It is what it is -- the answer is the target flag of whichever
-			// type happens to sit at that position -- and it belongs to the
-			// dialogs, not to this port.
-			if ( nSelected >= 0 && nSelected < static_cast<int>( cmdTypes.size() ) )
+			// The sorted row number is not an index into the XML-order vector.
+			// Resolve metadata by ID so "Attack unit" requests a unit target.
+			pData_->bSelectedCmdNeedTargetUnit = false;
+			for ( const auto &type : cmdTypes )
 			{
-				pData_->bSelectedCmdNeedTargetUnit = cmdTypes[nSelected].nNeedTargetUnit != 0;
-			}
-			else
-			{
-				pData_->bSelectedCmdNeedTargetUnit = false;
+				if ( type.nValue == pData_->nSelectedCmdType )
+				{
+					pData_->bSelectedCmdNeedTargetUnit = type.nNeedTargetUnit != 0;
+					break;
+				}
 			}
 
 			pData_->nData = atoi( std::string( pData->GetValue().utf8_str() ).c_str() );

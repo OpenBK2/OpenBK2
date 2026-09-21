@@ -2211,7 +2211,13 @@ void CMapInfoEditor::RunGame()
 		NMessage::Error( message, "Start Mission in Game" );
 	};
 
-	// Resolve Game.exe beside the editor, independent of file-dialog working dirs.
+	// Resolve the platform's game executable beside the editor, independent of
+	// file-dialog working directories.
+#if BOOST_OS_WINDOWS
+	const std::string gameName = "Game.exe";
+#else
+	const std::string gameName = "Game";
+#endif
 	const std::string szSelf = NFile::GetExecutablePath();
 	if ( szSelf.empty() )
 	{
@@ -2219,10 +2225,10 @@ void CMapInfoEditor::RunGame()
 		return;
 	}
 	const std::filesystem::path binFolder = std::filesystem::u8path( szSelf ).parent_path();
-	const std::string gamePath = (binFolder / "Game.exe").u8string();
+	const std::string gamePath = (binFolder / gameName).u8string();
 	if ( !NFile::DoesFileExist( gamePath ) )
 	{
-		ReportError( "Game.exe was not found beside the map editor. Install the game executable in:\n" + binFolder.u8string() );
+		ReportError( gameName + " was not found beside the map editor. Install the game executable in:\n" + binFolder.u8string() );
 		return;
 	}
 
@@ -2245,14 +2251,21 @@ void CMapInfoEditor::RunGame()
 		ReportError( "The map or database index could not be saved. Check the editor log." );
 		return;
 	}
+#if BOOST_OS_WINDOWS
 	const std::string arguments = "--editor-map=\"" + mapPath +
 		"\" --editor-mod=\"" + modPath + "\"";
+#else
+	// LaunchDetachedIn uses a POSIX shell: preserve paths as literal arguments,
+	// including spaces, dollar signs and other shell metacharacters.
+	const std::string arguments = ShellQuote( "--editor-map=" + mapPath ) + " " +
+		ShellQuote( "--editor-mod=" + modPath );
+#endif
 	// The working directory is not decoration: the game resolves Data, Profiles
 	// and Editor against it, so starting it anywhere else gives it an empty
 	// database. See port/process.h.
 	if ( !LaunchDetachedIn( gamePath, arguments, binFolder.u8string() ) )
 	{
-		ReportError( "Could not start Game.exe." );
+		ReportError( "Could not start " + gameName + "." );
 	}
 }
 
