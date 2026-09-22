@@ -27,10 +27,12 @@ add_subdirectory("B2_M1_Terrain")
 add_subdirectory("libdb")
 add_subdirectory("Parser")
 
-# The database index builder, a console tool rather than an engine module. It
+# The database tools, console programs rather than engine modules. dbindex
 # regenerates Data/index.bin after .xdb records change, which the shipped
-# Data/dbindex.bat has always expected to find in bin/.
+# Data/dbindex.bat has always expected to find in bin/; dbstruct migrates the
+# .xdb files themselves when types.xml changes shape.
 add_subdirectory("dbindex")
+add_subdirectory("dbstruct")
 
 # The dedicated lobby server and the test client that drives it. Off by default
 # while they are mid-port.
