@@ -47,14 +47,27 @@ Fonts/common/system.dds each carry two distinct alpha levels, 0 and 255, despite
 `<Antialiased>true</Antialiased>` in their records. Fonts/Header1 has eleven
 levels with everything below roughly 40 percent coverage crushed to zero.
 
-ANTIALIASED_QUALITY makes green a real greyscale ramp and is the one line change
-that tests this. A FreeType based rasteriser fixes it by construction, since
-FreeType hands back an 8 bit coverage bitmap with no channel packing to
-misread.
+This is now fixed, though not the way it first looked. The obvious change is
+ANTIALIASED_QUALITY, and measuring it showed it is the wrong one: at height 16
+GDI declines to antialias at all and grid fits instead, and height 16 is what
+the shipped default face is baked at. Keeping ClearType and averaging the three
+subpixels instead of reading green is better everywhere, because it is a
+downsample of a 3x horizontal supersample rather than a plain greyscale render.
+Distinct alpha levels strictly between 16 and 240, on Arial with -russian:
 
-Two things bound the win. The textures are DXT3, whose alpha is 4 bits, so any
-new atlas is capped at 16 coverage levels until that changes on the data side.
-And a correctly antialiased atlas is still per resolution data.
+    height            16    24    32
+    green only         5     5     5
+    ANTIALIASED       none  12    12
+    averaged          31    35    33
+
+The subpixel data itself is deliberately not kept. Baking it would encode the
+stripe order of the panel it was baked on and be wrong on a BGR or a rotated
+display, with no way to correct it at draw time.
+
+Two things still bound the win. The textures are DXT3, whose alpha is 4 bits, so
+only 16 of those levels survive compression until that changes on the data side;
+the baked TGA carries all of them. And a correctly antialiased atlas is still
+per resolution data.
 
 ## Cause two: one atlas, magnified
 
