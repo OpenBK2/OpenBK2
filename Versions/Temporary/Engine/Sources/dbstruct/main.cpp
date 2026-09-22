@@ -20,7 +20,7 @@ class CDatabaseGuard
 {
 	bool bSuccessfullyOpened;
 public:
-	explicit CDatabaseGuard( const string &szCWD, NDb::EDatabaseMode eDBMode )
+	explicit CDatabaseGuard( const std::string &szCWD, NDb::EDatabaseMode eDBMode )
 	{
 		NVFS::SetMainVFS( NVFS::CreateWinVFS(szCWD) );
 		NVFS::SetMainFileCreator( NVFS::CreateWinFileCreator(szCWD) );
@@ -66,17 +66,17 @@ struct ILoadObjectCallback
 
 int LoadAllObjects( ILoadObjectCallback *pCallback )
 {
-	vector<NDb::NTypeDef::STypeClass*> classes;
+	std::vector<NDb::NTypeDef::STypeClass*> classes;
 	if ( NDb::GetClassesList(&classes) && !classes.empty() )
 	{
 		int nCounter = 0;
-		for ( vector<NDb::NTypeDef::STypeClass*>::const_iterator itClass = classes.begin(); itClass != classes.end(); ++itClass, ++nCounter )
+		for ( std::vector<NDb::NTypeDef::STypeClass*>::const_iterator itClass = classes.begin(); itClass != classes.end(); ++itClass, ++nCounter )
 		{
-			vector<CDBID> objects;
+			std::vector<CDBID> objects;
 			if ( NDb::GetObjectsList(&objects, (*itClass)->szTypeName) && !objects.empty() )
 			{
 				Log( "(%d of %d): Loading objects of type \"%s\" (total %d objects)", nCounter, classes.size(), (*itClass)->szTypeName.c_str(), objects.size() );
-				for ( vector<CDBID>::const_iterator itDBID = objects.begin(); itDBID != objects.end(); ++itDBID )
+				for ( std::vector<CDBID>::const_iterator itDBID = objects.begin(); itDBID != objects.end(); ++itDBID )
 				{
 					NDb::IObjMan *pObjMan = NDb::GetManipulator( *itDBID );
 					if ( pCallback != 0 )
@@ -158,10 +158,10 @@ int MakeBin()
 
 int PORT_CDECL main( int argc, char *argv[] )
 {
-	const string szCWD = NFile::GetNormalizedCurrDir();
+	const std::string szCWD = NFile::GetNormalizedCurrDir();
 	//
 	EDBStructMode eMode = MODE_UNKNOWN;
-	string szDataPath = szCWD;
+	std::string szDataPath = szCWD;
 	NCmdLine::CCmdLine cmdLine( "XML Database structure utility\nWritten by Yuri Blazhevich\n(C) Nival Interactive, 2005\n" );
 	cmdLine.AddOption( "-show-version", &eMode, MODE_SHOW_VERSION, "show current product version" );
 	cmdLine.AddOption( "-update-struct", &eMode, MODE_UPDATE_STRUCT, "update all database objects to new structure in accordance with types" );
