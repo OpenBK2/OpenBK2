@@ -381,18 +381,53 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 	// translate chars to UNICODE and re-map kerns and chars
 	{
 		CHARSETINFO cs;
-		BOOL bRetVal = TranslateCharsetInfo( (uint32_t*)dwCharSet, &cs, TCI_SRCCHARSET );
-		ASSERT( bRetVal == TRUE );
-		// form string
-		std::string szCharacters;
-		szCharacters.resize( chars.size() );
+		Zero( cs );
+		// DWORD*, not uint32_t*: they are the same width but distinct types, and
+		// this is the documented way to call TranslateCharsetInfo with
+		// TCI_SRCCHARSET, where the first argument is a charset value rather than
+		// a pointer at all.
+		// Checked rather than asserted: ASSERT does not evaluate its argument in
+		// this tree, and cs.ciACP is about to be used. An unknown charset would
+		// otherwise reach MultiByteToWideChar as a garbage code page.
+		if ( !TranslateCharsetInfo( (DWORD*)dwCharSet, &cs, TCI_SRCCHARSET ) )
+		{
+			printf( "ERROR: no code page for charset %d, falling back to the system one\n",
+			        static_cast<int>( dwCharSet ) );
+			cs.ciACP = CP_ACP;
+		}
+		// Convert through the code page the requested charset implies, one byte at
+		// a time, rather than NStr::ToUnicode.
+		//
+		// ToUnicode is UTF8ToWide now. These are single code page bytes and not
+		// UTF-8, so every byte above 0x7F failed to convert and the mapping for it
+		// was lost: a -russian bake kept its 96 ASCII characters and silently
+		// dropped all 64 Cyrillic ones. The glyphs were still drawn into the
+		// atlas, since that loop does not consult this table, so the texture
+		// looked correct and only the metrics were missing.
+		//
+		// Taking the code page from TranslateCharsetInfo rather than the process
+		// default also makes a bake depend on the charset asked for instead of on
+		// the locale of the machine it runs on.
+		//
+		// Per byte because one unmappable byte should not lose the rest: CP1251
+		// leaves 0x98 undefined, and a whole-string call with MB_ERR_INVALID_CHARS
+		// would fail on it. A multibyte code page ends up here as a run of lead
+		// bytes that convert to nothing, which is reported rather than guessed at.
+		int nUnmapped = 0;
 		for ( int i = 0; i != chars.size(); ++i )
-			szCharacters[i] = chars[i];
-		std::wstring szUNICODE;
-		NStr::ToUnicode( &szUNICODE, szCharacters );
-		// create re-map table
-		for ( int i = 0; i != chars.size(); ++i )
-			fi.translate[ chars[i] ]= szUNICODE[i];
+		{
+			const char cByte = static_cast<char>( chars[i] );
+			wchar_t wch = 0;
+			if ( ::MultiByteToWideChar( cs.ciACP, MB_ERR_INVALID_CHARS, &cByte, 1, &wch, 1 ) == 1 )
+				fi.translate[ chars[i] ] = wch;
+			else
+				++nUnmapped;
+		}
+		if ( nUnmapped > 0 )
+		{
+			printf( "WARNING: %d of %d characters have no mapping in code page %d\n",
+			        nUnmapped, static_cast<int>( chars.size() ), cs.ciACP );
+		}
 	}
   // select old font
   ::SelectObject( hdc, hOldFont );
@@ -496,6 +531,11 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
 	{
 		uint32_t dwFirst = fi.Translate( fi.kps[i].wFirst );
 		uint32_t dwSecond = fi.Translate( fi.kps[i].wSecond );
+		// A pair naming a character that did not map is dropped rather than
+		// stored under Translate's 0xffff, which would collide every such pair
+		// onto one entry and kern unrelated characters by whatever landed last.
+		if ( dwFirst == 0xffff || dwSecond == 0xffff )
+			continue;
 		format.kerns[(dwFirst << 16) | dwSecond] = fi.kps[i].iKernAmount;
 	}
   // convert this structures to the STFLetterFull array
@@ -512,16 +552,23 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
 		}
 		x += N_LEADING_PIXELS;
 
-		STFCharacter &character = format.chars[unicode];
-		// char ABC parameters in the texture's respective size
-		character.nA = fi.abc[i].abcA;
-		character.nBC = fi.abc[i].abcB + fi.abc[i].abcC;
-		character.nWidth = fi.abc[i].abcB + ( fi.abc[i].abcC > 0 ? fi.abc[i].abcC : 0 );
-		// character rect in the texture's coords
-		character.x1 = x;
-		character.y1 = y * tm.tmHeight;
-		character.x2 = x + character.nWidth;
-		character.y2 = ( y + 1 ) * tm.tmHeight;
+		// Only the entry is skipped when the character did not map, never the
+		// advance below: DrawFont walked the same list and drew a glyph for this
+		// slot either way, so leaving the advance out would shift every later
+		// character's rect off the glyph it describes.
+		if ( unicode != 0xffff )
+		{
+			STFCharacter &character = format.chars[unicode];
+			// char ABC parameters in the texture's respective size
+			character.nA = fi.abc[i].abcA;
+			character.nBC = fi.abc[i].abcB + fi.abc[i].abcC;
+			character.nWidth = fi.abc[i].abcB + ( fi.abc[i].abcC > 0 ? fi.abc[i].abcC : 0 );
+			// character rect in the texture's coords
+			character.x1 = x;
+			character.y1 = y * tm.tmHeight;
+			character.x2 = x + character.nWidth;
+			character.y2 = ( y + 1 ) * tm.tmHeight;
+		}
 		//
 		x += nNextCharShift;
 	}
