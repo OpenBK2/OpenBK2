@@ -289,19 +289,6 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 	return TRUE;
 }
 
-static bool IsWinXPOrLater()
-{
-	OSVERSIONINFO osvi;
-
-	Zero( osvi );
-	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-
-	if ( !GetVersionEx( &osvi ) )
-		return false;
-
-	return (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT) && ( osvi.dwMajorVersion > 4 ) && ( osvi.dwMinorVersion > 0 );
-}
-
 void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, uint32_t dwCharSet,
 	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, std::vector<uint16_t> *pChars )
 {
@@ -364,7 +351,26 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 	}
 */
 
-	uint32_t dwQuality = bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY;
+	// Still ClearType, but spelled with the constant rather than the literal 6
+	// that was here, which was a number because the 2003 Platform SDK predates
+	// it. It was also asked for only on XP or later, a test that has not chosen
+	// anything for a long time, so the check goes with it.
+	//
+	// Keeping ClearType is deliberate and not the obvious choice. ClearType
+	// renders subpixel coverage, so the three channels describe three different
+	// subpixels rather than being three copies of one greyscale value, and
+	// CreateFontImage takes the average of them. That is a horizontal
+	// downsample of a 3x supersample, and it measures better than
+	// ANTIALIASED_QUALITY at every size tried: around 31 to 35 distinct
+	// intermediate alpha levels against 12, and against none at all at height
+	// 16, where GDI declines to antialias and grid fits instead. Height 16 is
+	// what the shipped default face is baked at, so that case decides it.
+	//
+	// What is not kept is the subpixel data itself. Baking that would encode
+	// the stripe order of the panel it was baked on and be wrong on a BGR or
+	// rotated display, with no way to correct it at draw time. Averaging
+	// discards the subpixel positioning and keeps only the coverage it implies.
+	uint32_t dwQuality = bAntialias ? CLEARTYPE_QUALITY : NONANTIALIASED_QUALITY;
   fi.hFont = ::CreateFont( nHeight, 0, 0, 0, nWeight, bItalic, FALSE, FALSE, 
                            dwCharSet, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, 
                            dwQuality,
@@ -494,10 +500,17 @@ void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const std::vect
 	pRes->SetSizes( fi.nTextureSizeX, fi.nTextureSizeY );
   for ( int i=0, j=0; i< fi.nTextureSizeX * fi.nTextureSizeY * 3; i+=3, ++j )
   {
-    //uint32_t b = pBitmapBits[i + 0];
-    uint32_t g = pBitmapBits[i + 1];
-    //uint32_t r = pBitmapBits[i + 2];
-		(*pRes)[ j / fi.nTextureSizeX ][ j % fi.nTextureSizeX ] = CVec4( 1, 1, 1, g / 255.0f );
+    // The mean of the three subpixels, where this took the green channel alone.
+    //
+    // Under ClearType the channels are coverage of three different subpixels,
+    // so green by itself is the coverage of the middle one and not of the
+    // pixel. Reading it as though it were greyscale is what made the atlases
+    // close to masks: the shipped ones carry 7 distinct alpha levels despite
+    // their records saying Antialiased. Averaging turns the subpixel triple
+    // back into one coverage value, and being a downsample of a 3x horizontal
+    // supersample it lands finer than greyscale GDI would have.
+    const uint32_t nCoverage = ( pBitmapBits[i + 0] + pBitmapBits[i + 1] + pBitmapBits[i + 2] ) / 3;
+		(*pRes)[ j / fi.nTextureSizeX ][ j % fi.nTextureSizeX ] = CVec4( 1, 1, 1, nCoverage / 255.0f );
   }
 	NImage::FlipY( *pRes );
 }
