@@ -83,28 +83,16 @@ if(UNIX AND NOT APPLE)
     install(FILES main.ico DESTINATION .)
 endif()
 
-# Ship the third-party DLLs Game loads at runtime. Boost is the reason this is
-# needed: FetchContent builds the whole distribution, so naming the pieces by
-# hand would go stale, while TARGET_RUNTIME_DLLS resolves exactly the ones in
-# Game's link closure. The engine's own modules install themselves and appear
-# here as well, which is harmless.
-if(WIN32)
-    install(FILES $<TARGET_RUNTIME_DLLS:Game> DESTINATION bin)
+# Ship the third-party DLLs Game loads at runtime, and put them beside Game.exe
+# in the build tree. See cmake/runtimedlls.cmake for why both are needed. One
+# thing specific to Game: setting the working directory is not an alternative to
+# the build-tree copy, because that governs where the game looks for its data.
+install_runtime_dlls(Game)
 
-    # Also put them next to Game.exe in the build tree. Each module builds into
-    # its own directory, and Windows looks for a DLL beside the executable or
-    # on PATH, never in the working directory, so without this the build tree
-    # can only be run after installing it. Setting the working directory does
-    # not help: that governs where the game looks for its data.
-    add_custom_command(TARGET Game POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                $<TARGET_RUNTIME_DLLS:Game> $<TARGET_FILE_DIR:Game>
-        COMMAND_EXPAND_LISTS
-        VERBATIM)
-else()
-    # The same problem as the Windows branch above, and for the same reason:
-    # FetchContent builds whole distributions, so naming the pieces by hand goes
-    # stale. Boost is the one that bites today, since System links
+if(NOT WIN32)
+    # The same problem install_runtime_dlls solves on Windows, and for the same
+    # reason: FetchContent builds whole distributions, so naming the pieces by
+    # hand goes stale. Boost is the one that bites today, since System links
     # boost_filesystem and nothing was installing it, but the list is not
     # something to maintain by hand.
     #

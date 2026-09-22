@@ -40,15 +40,7 @@ function(add_unit_test filename)
     add_test(NAME ${target_name} COMMAND ${target_name})
     set_tests_properties(${target_name} PROPERTIES LABELS "obk2-test")
 
-    # Windows resolves a DLL next to the executable or on PATH, never in the
-    # working directory, and every module here builds into its own directory.
-    # TARGET_RUNTIME_DLLS reads the set from the link closure, which covers
-    # googletest and the engine modules without either being named.
-    if(WIN32)
-        add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    $<TARGET_RUNTIME_DLLS:${target_name}> $<TARGET_FILE_DIR:${target_name}>
-            COMMAND_EXPAND_LISTS
-            VERBATIM)
-    endif()
+    # Covers googletest and the engine modules without either being named. See
+    # cmake/runtimedlls.cmake.
+    copy_runtime_dlls(${target_name})
 endfunction()

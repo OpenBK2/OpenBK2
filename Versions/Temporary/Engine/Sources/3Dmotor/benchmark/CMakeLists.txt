@@ -10,14 +10,10 @@ function(add_benchmark_arch filename flag suffix)
     # The whole point of the _avx/_avx2 variants is to compare ISA levels, so the
     # per-variant flag has to reach the compiler.
     target_compile_options(${target_name} PRIVATE ${flag})
-    # Copying only googlebenchmark's DLL left the executable unable to start once it
-    # linked engine modules: it died with 0xC0000135, DLL not found. TARGET_RUNTIME_DLLS
-    # reads the whole link closure, the same way cmake/unittest.cmake does.
-    add_custom_command(TARGET ${target_name} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    $<TARGET_RUNTIME_DLLS:${target_name}> $<TARGET_FILE_DIR:${target_name}>
-            COMMAND_EXPAND_LISTS
-            VERBATIM)
+    # Copying only googlebenchmark's DLL left the executable unable to start once
+    # it linked engine modules: it died with 0xC0000135, DLL not found. See
+    # cmake/runtimedlls.cmake.
+    copy_runtime_dlls(${target_name})
     register_benchmark(${target_name})
 endfunction()
 
@@ -50,12 +46,7 @@ target_link_libraries(LightingKernels_benchmark PRIVATE benchmark::benchmark 3Dm
 set_target_properties(LightingKernels_benchmark PROPERTIES
     FOLDER "benchmark"
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/LightingKernels_benchmark)
-add_custom_command(TARGET LightingKernels_benchmark POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            $<TARGET_RUNTIME_DLLS:LightingKernels_benchmark>
-            $<TARGET_FILE_DIR:LightingKernels_benchmark>
-    COMMAND_EXPAND_LISTS
-    VERBATIM)
+copy_runtime_dlls(LightingKernels_benchmark)
 register_benchmark(LightingKernels_benchmark)
 
 # The MMX reference this one measures against is assembled, not inline, so the

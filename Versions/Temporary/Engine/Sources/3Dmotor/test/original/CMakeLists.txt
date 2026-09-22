@@ -49,9 +49,5 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     target_link_libraries(MMXTransformVectorDivergence PRIVATE Misc glm::glm-header-only)
     set_target_properties(MMXTransformVectorDivergence PROPERTIES FOLDER "unittest")
 
-    add_custom_command(TARGET OriginalMMXSentinel POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                $<TARGET_RUNTIME_DLLS:OriginalMMXSentinel> $<TARGET_FILE_DIR:OriginalMMXSentinel>
-        COMMAND_EXPAND_LISTS
-        VERBATIM)
+    copy_runtime_dlls(OriginalMMXSentinel)
 endif()

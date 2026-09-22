@@ -56,21 +56,8 @@ endif()
 target_compile_definitions(TestClient PRIVATE TESTCLIENT_EXPORT=)
 
 # The DLLs this loads at run time, beside the executable in the build tree and
-# in the install. Each engine module builds into its own directory, and Windows
-# looks for a DLL next to the executable or on PATH, never in the working
-# directory, so without this the build tree can only be run after installing
-# it: the loader fails with STATUS_DLL_NOT_FOUND before main() is reached, and
-# the process dies with no message of its own. Game does the same thing for the
-# same reason.
-if(WIN32)
-    install(FILES $<TARGET_RUNTIME_DLLS:TestClient> DESTINATION bin)
-
-    add_custom_command(TARGET TestClient POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                $<TARGET_RUNTIME_DLLS:TestClient> $<TARGET_FILE_DIR:TestClient>
-        COMMAND_EXPAND_LISTS
-        VERBATIM)
-endif()
+# in the install. See cmake/runtimedlls.cmake.
+install_runtime_dlls(TestClient)
 
 install(TARGETS TestClient DESTINATION bin)
 add_version_info(TestClient)

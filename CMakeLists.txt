@@ -140,6 +140,9 @@ set(SDLMIXER_VENDORED OFF)
 include(cmake/sdl.cmake)
 include(cmake/sdl_mixer.cmake)
 
+# Before unittest.cmake and the subdirectories, all of which call into it.
+include(cmake/runtimedlls.cmake)
+
 include(cmake/googletest.cmake)
 include(cmake/unittest.cmake)
 include(cmake/benchmarks.cmake)
