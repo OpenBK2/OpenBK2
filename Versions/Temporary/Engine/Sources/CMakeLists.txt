@@ -34,6 +34,10 @@ add_subdirectory("Parser")
 add_subdirectory("dbindex")
 add_subdirectory("dbstruct")
 
+# The font baker. Windows only while it still rasterises with GDI; its own
+# CMakeLists returns early elsewhere.
+add_subdirectory("FontGen")
+
 # The dedicated lobby server and the test client that drives it. Off by default
 # while they are mid-port.
 #
