@@ -107,7 +107,8 @@ int PORT_CDECL main( int argc, char *argv[] )
 	printf( "Retrieving files list...\n" );
 	std::vector<std::string> filenames;
 	pMainVFS->GetAllFileNames( &filenames, std::string() );
-	printf( "Processing files (%d files)...\n", filenames.size() );
+	// size() is size_t, so %d was wrong on x64 and read the wrong half of it
+	printf( "Processing files (%zu files)...\n", filenames.size() );
 	for ( std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
 	{
 		const int nSize = it->size();
