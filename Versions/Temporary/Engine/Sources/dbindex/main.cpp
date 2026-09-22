@@ -36,15 +36,13 @@ int PrintUsage()
 
 int PORT_CDECL main( int argc, char *argv[] )
 {
-	std::string szCWD;
-	{
-		char buffer[1024];
-		buffer[0] = 0;
-		GetCurrentDirectory( 1024, buffer );
-		szCWD = buffer;
-		NFile::NormalizePath( &szCWD );
-		NFile::AppendSlash( &szCWD, '/' );
-	}
+	// NFile::GetNormalizedCurrDir is what the rest of the tree uses in place of
+	// GetCurrentDirectory. It already returns forward slashes with one on the
+	// end, so the NormalizePath and AppendSlash that followed are gone with it,
+	// and it fixes the bug the 1024 byte buffer carried: GetCurrentDirectory
+	// wrote nothing and returned the size it wanted when the path did not fit,
+	// leaving uninitialised stack behind.
+	const std::string szCWD = NFile::GetNormalizedCurrDir();
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
@@ -95,7 +93,9 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NHPTimer::GetTime( &hptime );
 	//
 	if ( NFile::DoesFileExist(szIndexFile) )
-		::MoveFile( szIndexFile.c_str(), szIndexFileBackup.c_str() );
+		// NFile::RenameFile, not MoveFile: windows.h rewrites that name, and this
+		// is the tree's portable spelling of the same move.
+		NFile::RenameFile( szIndexFile, szIndexFileBackup );
 	//
 	CObj<NVFS::IVFS> pMainVFS = NVFS::CreateWinVFS( szDataDirectory );
 	CObj<NVFS::IFileCreator> pMainFileCreator = NVFS::CreateWinFileCreator( szCWD );
@@ -136,7 +136,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 		if ( NFile::DoesFileExist(szIndexFileBackup) )
 		{
 			printf( "Restoring previous index\n" );
-			::MoveFile( szIndexFileBackup.c_str(), szIndexFile.c_str() );
+			NFile::RenameFile( szIndexFileBackup, szIndexFile );
 		}
 		return 0xDEAD;
 	}
