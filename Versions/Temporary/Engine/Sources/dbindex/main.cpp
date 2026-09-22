@@ -35,7 +35,7 @@ int PrintUsage()
 
 int PORT_CDECL main( int argc, char *argv[] )
 {
-	string szCWD;
+	std::string szCWD;
 	{
 		char buffer[1024];
 		buffer[0] = 0;
@@ -47,14 +47,14 @@ int PORT_CDECL main( int argc, char *argv[] )
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
-	if ( argc >= 2 && string(argv[1]) == "-show-version"  )
+	if ( argc >= 2 && std::string(argv[1]) == "-show-version"  )
 	{
 		printf( "Version: %s\n", REVISION_NUMBER_STR );
 		printf( "Build date/time: %s\n", BUILD_DATE_TIME_STR );
 		return 0;
 	}
 
-	string szDataDirectory;
+	std::string szDataDirectory;
 	switch ( argc )
 	{
 	case 1:
@@ -85,8 +85,8 @@ int PORT_CDECL main( int argc, char *argv[] )
 		return 0xDEAD;
 	}
 	//
-	string szIndexFile = (szCWD + "index.bin");
-	string szIndexFileBackup = (szCWD + "index.bin.backup");
+	std::string szIndexFile = (szCWD + "index.bin");
+	std::string szIndexFileBackup = (szCWD + "index.bin.backup");
 	printf( "Building index for database root \"%s\"\n", szDataDirectory.c_str() );
 	printf( "Index will be stored as \"%s\"\n", szIndexFile.c_str() );
 	//
@@ -104,10 +104,10 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NDb::OpenDatabase( pMainVFS, pMainFileCreator, NDb::DATABASE_MODE_GAME );
 	//
 	printf( "Retrieving files list...\n" );
-	vector<string> filenames;
-	pMainVFS->GetAllFileNames( &filenames, string() );
+	std::vector<std::string> filenames;
+	pMainVFS->GetAllFileNames( &filenames, std::string() );
 	printf( "Processing files (%d files)...\n", filenames.size() );
-	for ( vector<string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
+	for ( std::vector<std::string>::const_iterator it = filenames.begin(); it != filenames.end(); ++it )
 	{
 		const int nSize = it->size();
 		if ( it->size() < 4 )
