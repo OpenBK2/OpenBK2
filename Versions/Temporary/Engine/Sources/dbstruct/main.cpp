@@ -9,9 +9,8 @@
 #include "System/CmdLine.h"
 
 #include "port/cdecl.h"
-#include "port/stdcall.h"
 
-#include <cstdarg>
+#include <fmt/printf.h>
 
 namespace
 {
@@ -35,19 +34,26 @@ public:
 	bool IsOk() const { return bSuccessfullyOpened; }
 };
 
-void PORT_STDCALL Log( const char *pszFormat, ... )
+// The call sites keep their printf spelling, but fmt::sprintf formats it: the
+// arguments are checked against the format and sized from their own types, so
+// the %d that several of these pass a size_t through is no longer wrong on a
+// 64-bit build.
+//
+// What this replaces had three separate problems. printf( charBuff ) passed
+// formatted text back as a format string, so any percent sign that came out of
+// a type or object name was interpreted a second time. _vsnprintf is the MSVC
+// spelling and does not terminate the buffer when the text does not fit, which
+// the fixed 1024 bytes here made reachable. OutputDebugString is Windows only.
+//
+// The debugger mirror goes rather than moving to DebugTrace, which would be the
+// tree's spelling for it: DbgTrcRaw writes to stderr as well as the debugger
+// pane, so a console would have shown every line of this twice. What it mirrors
+// is this tool's entire output, not debug tracing, and stdout is where that
+// belongs.
+template < typename... TArgs >
+void Log( const char *pszFormat, const TArgs &... args )
 {
-	static const int BUF_SIZE = 1024;
-	static char charBuff[BUF_SIZE];
-	//
-	va_list va;
-	va_start( va, pszFormat );
-	_vsnprintf( charBuff, BUF_SIZE - 1, pszFormat, va );
-	va_end( va );
-	OutputDebugString( charBuff );
-	OutputDebugString( "\n" );
-	printf( charBuff );
-	printf( "\n" );
+	fmt::print( "{}\n", fmt::sprintf( pszFormat, args... ) );
 }
 
 
