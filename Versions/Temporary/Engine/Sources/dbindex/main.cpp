@@ -11,11 +11,12 @@
 
 #include "port/cdecl.h"
 
-namespace NDb
-{
-	void SaveChanges();
-	bool RegisterResourceFile( const string &szFileName );
-}
+// SaveChanges and RegisterResourceFile used to be declared here by hand, which
+// dropped the LIBDB_EXPORT off both and left the linker to find them by name.
+// They are declared in EditorDb.h, despite being the pair this game-mode tool
+// needs: CGameDatabase implements them for real, and only the editor-specific
+// calls around them assert in game mode.
+#include "libdb/EditorDb.h"
 
 static int s_nNumCollectedObjects = 0;
 int PrintUsage()
