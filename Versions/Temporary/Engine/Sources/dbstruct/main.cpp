@@ -6,11 +6,16 @@
 #include "System/WinVFS.h"
 #include "System/FilePath.h"
 #include "System/FileUtils.h"
-#include "System/CmdLine.h"
 
 #include "port/cdecl.h"
 
 #include <fmt/printf.h>
+
+#include <boost/program_options.hpp>
+
+#include <iostream>
+
+namespace po = boost::program_options;
 
 namespace
 {
@@ -166,23 +171,56 @@ int PORT_CDECL main( int argc, char *argv[] )
 {
 	const std::string szCWD = NFile::GetNormalizedCurrDir();
 	//
-	EDBStructMode eMode = MODE_UNKNOWN;
 	std::string szDataPath = szCWD;
-	NCmdLine::CCmdLine cmdLine( "XML Database structure utility\nWritten by Yuri Blazhevich\n(C) Nival Interactive, 2005\n" );
-	cmdLine.AddOption( "-show-version", &eMode, MODE_SHOW_VERSION, "show current product version" );
-	cmdLine.AddOption( "-update-struct", &eMode, MODE_UPDATE_STRUCT, "update all database objects to new structure in accordance with types" );
-	cmdLine.AddOption( "-make-bin", &eMode, MODE_MAKE_BIN, "convert .xdb files to packed binary" );
-	cmdLine.AddOption( "--data-path", &szDataPath, "set data path to operate (default: current dir)" );
+
+	po::options_description options( "Options" );
+	options.add_options()
+		( "show-version",   "show current product version" )
+		( "update-struct",  "update all database objects to new structure in accordance with types" )
+		( "make-bin",       "convert .xdb files to packed binary" )
+		( "data-path",      po::value<std::string>( &szDataPath ),
+		                    "set data path to operate (default: current dir)" )
+		( "help",           "show this message" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
 	//
-	cmdLine.PrintHeader();
-	if ( cmdLine.Process( argc, argv ) != NCmdLine::CCmdLine::PROC_RESULT_OK )
+	printf( "XML Database structure utility\n(C) Nival Interactive, 2005\n\n" );
+
+	po::variables_map args;
+	try
+	{
+		// allow_long_disguise so the single dash spellings this tool has always
+		// taken, -update-struct and the rest, keep working. The double dash forms
+		// parse too, which is what anyone would try first.
+		po::store( po::command_line_parser( argc, argv )
+		               .options( options )
+		               .style( po::command_line_style::default_style
+		                       | po::command_line_style::allow_long_disguise )
+		               .run(),
+		           args );
+		po::notify( args );
+	}
+	catch ( const po::error &err )
+	{
+		// An unknown option or a missing value. Saying which, then the usage,
+		// rather than the bare usage the old parser printed.
+		printf( "ERROR: %s\n\n", err.what() );
+		std::cout << options << std::endl;
 		return 0xDEAD;
+	}
 	//
-	if ( eMode == MODE_UNKNOWN )
-		return cmdLine.PrintUsage( "Usage: dbstruct.exe [options]" );
+	const EDBStructMode eMode = args.count( "update-struct" ) ? MODE_UPDATE_STRUCT
+	                          : args.count( "make-bin" )      ? MODE_MAKE_BIN
+	                          : args.count( "show-version" )  ? MODE_SHOW_VERSION
+	                          :                                 MODE_UNKNOWN;
+	if ( eMode == MODE_UNKNOWN || args.count( "help" ) )
+	{
+		printf( "Usage: dbstruct [options]\n\n" );
+		std::cout << options << std::endl;
+		// Asking for help is not a failure; having picked no mode is.
+		return args.count( "help" ) ? 0 : 0xDEAD;
+	}
 	else if ( eMode == MODE_SHOW_VERSION )
 	{
 		printf( "Version: %s\n", REVISION_NUMBER_STR );

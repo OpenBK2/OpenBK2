@@ -27,6 +27,7 @@ set(BOOST_INCLUDE_LIBRARIES
         interprocess    # System
         math            # Misc
         predef          # MemoryLib
+        program_options # dbstruct
         sort            # 3Dmotor
         stacktrace      # Game: stacktrace_backtrace, stacktrace_from_exception
         uuid            # System, 3Dmotor, GameX, libdb, Main
