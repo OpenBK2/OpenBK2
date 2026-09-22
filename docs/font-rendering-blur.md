@@ -103,11 +103,32 @@ GetLineSpace, which is height plus external leading. Five of the 35 blobs in
 Versions/Current/Data/bin/fonts have leading 1, so fScale comes out as 17/18,
 about 0.944. Those runs are minified even at 1024 x 768.
 
+## A prerequisite that has since been fixed
+
+Rebaking anything was unsafe until recently, and it is worth knowing why, since
+every step below involves rebaking.
+
+FontGen keys its output by codepoint, so it converted the character codes it was
+baking to Unicode through NStr::ToUnicode. That became UTF8ToWide when the tree
+moved to UTF-8, and these are single code page bytes rather than UTF-8, so every
+byte above 0x7F converted to nothing. A -russian bake kept its 96 ASCII
+characters and dropped all 64 Cyrillic ones.
+
+Nothing about that was visible in the tool's output. The glyphs are still drawn
+into the atlas, since that loop does not consult the translation table, so the
+texture was byte for byte correct and only the metrics blob was short. The
+shipped fonts were never affected, because they were baked in 2005 and the game
+rasterises nothing at run time; it would have appeared the first time anyone
+regenerated a font, as Cyrillic replaced by the default character.
+
+It now converts through the code page the requested charset implies. Verified
+against the 2005 x86 binary on the same font and arguments.
+
 ## Plan
 
 1. Fix Float2Int and the GetHeight against GetLineSpace mismatch. Independent of
    everything else, and the second removes a blur source at native resolution.
-2. Build FontGen, which currently has no CMake wiring at all. This makes the
+2. Build FontGen, which had no CMake wiring at all. Done. This makes the
    ANTIALIASED_QUALITY change testable and tells us how much of the blur was
    baking before committing to anything larger.
 3. Replace FontGen's rasteriser with FreeType, keeping the CFontFormatInfo
