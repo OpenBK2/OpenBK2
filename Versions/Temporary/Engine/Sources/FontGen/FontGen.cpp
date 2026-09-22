@@ -130,14 +130,14 @@ struct SFontInfo
 {
   HFONT hFont;                // HFONT used to draw with this font
   TEXTMETRIC tm;              // text metrics, e.g. character height
-	vector<ABC> abc;									// character ABC widths
-	vector<KERNINGPAIR> kps;					// kernging pairs
+	std::vector<ABC> abc;									// character ABC widths
+	std::vector<KERNINGPAIR> kps;					// kernging pairs
 	int nTextureSizeX, nTextureSizeY;			// estimated texture size
-	hash_map<uint16_t, uint16_t> translate;	// ANSI => UNICODE translation table
+	std::unordered_map<uint16_t, uint16_t> translate;	// ANSI => UNICODE translation table
 	//
 	uint16_t Translate( uint16_t code ) const
 	{
-		hash_map<uint16_t, uint16_t>::const_iterator pos = translate.find( code );
+		std::unordered_map<uint16_t, uint16_t>::const_iterator pos = translate.find( code );
 		//ASSERT( pos != translate.end() );
 		if ( pos == translate.end() )
 		{
@@ -188,9 +188,9 @@ struct SKPZeroFunctional
 //      Fills CFontInfo fi (global) with text metrics and char widths
 //      -> hdc: HDC that the font is currently selected into
 //
-void MeasureFont( HDC hdc, SFontInfo *pFI, vector<uint16_t> *pChars )
+void MeasureFont( HDC hdc, SFontInfo *pFI, std::vector<uint16_t> *pChars )
 {
-	vector<uint16_t> &chars = *pChars;
+	std::vector<uint16_t> &chars = *pChars;
 	SFontInfo &fi = *pFI;
   GetTextMetrics( hdc, &fi.tm );
 	sort( chars.begin(), chars.end() );
@@ -256,7 +256,7 @@ void MeasureFont( HDC hdc, SFontInfo *pFI, vector<uint16_t> *pChars )
 
 int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, uint32_t FontType, LPARAM lParam )
 {
-	vector<uint16_t> *pChars = (vector<uint16_t>*)lParam;
+	std::vector<uint16_t> *pChars = (std::vector<uint16_t>*)lParam;
 
 	printf( "\nFont: %S %S %S", lpelfe->elfFullName, lpelfe->elfStyle, lpelfe->elfScript );
 	if ( FontType == TRUETYPE_FONTTYPE )
@@ -303,10 +303,10 @@ static bool IsWinXPOrLater()
 }
 
 void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, uint32_t dwCharSet,
-	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, vector<uint16_t> *pChars )
+	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, std::vector<uint16_t> *pChars )
 {
 	SFontInfo &fi = *pFI;
-	vector<uint16_t> &chars = *pChars;
+	std::vector<uint16_t> &chars = *pChars;
   // invoke ChooseFont common dialog:
   // create an HFONT:
   if ( fi.hFont )
@@ -384,11 +384,11 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		BOOL bRetVal = TranslateCharsetInfo( (uint32_t*)dwCharSet, &cs, TCI_SRCCHARSET );
 		ASSERT( bRetVal == TRUE );
 		// form string
-		string szCharacters;
+		std::string szCharacters;
 		szCharacters.resize( chars.size() );
 		for ( int i = 0; i != chars.size(); ++i )
 			szCharacters[i] = chars[i];
-		wstring szUNICODE;
+		std::wstring szUNICODE;
 		NStr::ToUnicode( &szUNICODE, szCharacters );
 		// create re-map table
 		for ( int i = 0; i != chars.size(); ++i )
@@ -401,7 +401,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 }
 
 // draw font in the DC
-bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<uint16_t> &chars )
+bool DrawFont( HDC hdc, const SFontInfo &fi, const std::vector<uint16_t> &chars )
 {
   // Draw characters:
   int x = 0, y = 0;
@@ -422,7 +422,7 @@ bool DrawFont( HDC hdc, const SFontInfo &fi, const vector<uint16_t> &chars )
   return true;
 }
 
-void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<uint16_t> &chars )
+void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const std::vector<uint16_t> &chars )
 {
   // Create an offscreen bitmap:
   int width = fi.nTextureSizeX;//16 * fi.tm.tmMaxCharWidth;
@@ -472,9 +472,9 @@ void CreateFontImage( const SFontInfo &fi, NImage::CImage *pRes, const vector<ui
 class CFontGen
 {
 public:
-	static void CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<uint16_t> &chars );
+	static void CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const std::vector<uint16_t> &chars );
 };
-void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const vector<uint16_t> &chars )
+void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const std::vector<uint16_t> &chars )
 {
 	const TEXTMETRIC &tm = fi.tm;
 	// textmetric and ABCs must be converted to the next data
@@ -491,7 +491,7 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
   format.cCharSet         = tm.tmCharSet;
 	format.wDefaultChar     = tm.tmDefaultChar;
   // kerning pairs
-  //vector<SKerningPair> kerns( dwNumKerningPairs );
+  //std::vector<SKerningPair> kerns( dwNumKerningPairs );
 	for ( int i=0; i<fi.kps.size(); ++i )
 	{
 		uint32_t dwFirst = fi.Translate( fi.kps[i].wFirst );
@@ -535,7 +535,7 @@ void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, c
 }
 
 void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, uint32_t dwHeight, uint32_t dwWeight, bool bItalic, uint32_t dwCharSet,
-	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, vector<uint16_t> *pChars )
+	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, std::vector<uint16_t> *pChars )
 {
 	SFontInfo fi;
 	LoadFont( GetDesktopWindow(), &fi, dwHeight, dwWeight, bItalic, dwCharSet, bAntialias, dwPitch, pszFaceName, pChars );
@@ -608,7 +608,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
   // prepare command line
-  vector<string> szParams( argc - 1 );
+  std::vector<std::string> szParams( argc - 1 );
   for ( int i=0; i<argc - 1; ++i )
   {
     szParams[i] = argv[i + 1];
@@ -628,7 +628,7 @@ int PORT_CDECL main( int argc, char *argv[] )
     return 0xDEAD;
   }
   // initialize charsets map
-  hash_map<string, uint32_t> charsets;
+  std::unordered_map<std::string, uint32_t> charsets;
   charsets["-ansi"]        = ANSI_CHARSET;
   charsets["-baltic"]      = BALTIC_CHARSET;
   charsets["-chinesebig5"] = CHINESEBIG5_CHARSET;
@@ -648,14 +648,14 @@ int PORT_CDECL main( int argc, char *argv[] )
   charsets["-arabic"]      = ARABIC_CHARSET;
   charsets["-thai"]        = THAI_CHARSET;
   // initialize pitch map
-  hash_map<string, uint32_t> pitches;
+  std::unordered_map<std::string, uint32_t> pitches;
   pitches["-default"]  = DEFAULT_PITCH;
   pitches["-fixed"]    = FIXED_PITCH;
   pitches["-variable"] = VARIABLE_PITCH;
   // read default values
   TCHAR buffer[1024];
   GetModuleFileName( 0, buffer, 1024 );
-  string szString = buffer;
+  std::string szString = buffer;
 //  szString.erase( szString.find_last_of( '\\' ) );
   szString += "\\fontgen.ini";
 
@@ -668,10 +668,10 @@ int PORT_CDECL main( int argc, char *argv[] )
   // charset
   uint32_t dwCharSet = ANSI_CHARSET;//DEFAULT_CHARSET;
   // font face name
-  string szFaceName = "Times New Roman", szDstFile, szDstPngFile, szCharsSrcName;
+  std::string szFaceName = "Times New Roman", szDstFile, szDstPngFile, szCharsSrcName;
 	int nOrdinaryParamCount = 0;
   // -h20 -w400 -it -russian -aa -variable "Times New Roman"
-  for ( vector<string>::const_iterator pos = szParams.begin(); pos != szParams.end(); ++pos )
+  for ( std::vector<std::string>::const_iterator pos = szParams.begin(); pos != szParams.end(); ++pos )
   {
     if ( charsets.find(*pos) != charsets.end() )
       dwCharSet = charsets[*pos];
@@ -714,7 +714,7 @@ int PORT_CDECL main( int argc, char *argv[] )
   hWnd = GetDesktopWindow();
 
 	// пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ uint16_t пїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ MBCS
-	vector<uint16_t> chars;
+	std::vector<uint16_t> chars;
 	if ( !szCharsSrcName.empty() && NFile::DoesFileExist( szCharsSrcName ) )
 	{
 		CFileStream fileStream( szCharsSrcName, CFileStream::WIN_READ_ONLY );

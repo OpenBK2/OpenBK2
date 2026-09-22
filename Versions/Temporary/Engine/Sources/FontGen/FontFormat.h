@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "System/det_map.h"
+
 #include <fmt/format.h>
 
 #pragma pack( 4 )
@@ -18,8 +20,19 @@ struct STFCharacter
 class CFontFormatInfo: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CFontFormatInfo );
-	typedef hash_map<uint16_t, STFCharacter> CCharacterMap;
-	typedef hash_map<uint32_t, int> CKernMap;
+	// det_map rather than the std::unordered_map the engine's copy of this class
+	// uses, because this is the side that writes. FontFormat.cpp serializes both
+	// containers whole, so their iteration order is the byte order of the blob,
+	// and unordered_map does not promise the same order across implementations.
+	// det_map keeps insertion order, so a rebaked font is reproducible.
+	//
+	// Not std::map, which looks like the obvious answer and is not: BinSaver has
+	// Add() overloads for unordered_map and det_map and none for it, so the call
+	// silently resolves elsewhere and writes nothing. BinSaver keeps det_map's
+	// chunk compatible with unordered_map saves, so the engine reads it as it
+	// always has.
+	typedef det_map<uint16_t, STFCharacter> CCharacterMap;
+	typedef det_map<uint32_t, int> CKernMap;
 	//
   CCharacterMap chars;                  // all available characters map
   CKernMap kerns;                       // kerning pairs for the characters in the font.
