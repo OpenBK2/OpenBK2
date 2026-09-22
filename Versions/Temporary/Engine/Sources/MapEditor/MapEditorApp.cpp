@@ -56,6 +56,8 @@
 
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include <filesystem>
 
 #include "port/debugging.h"
 #include "port/process.h"
@@ -139,7 +141,7 @@ bool CEditorApp::CreateSingletons()
 	const std::string &szBaseDir = NMainLoop::GetBaseDir();
 	// Create logging stream
 	{
-		CDataStream *pStream = new CFileStream( szBaseDir + "\\MapEditor.log", CFileStream::WIN_CREATE );
+		CDataStream *pStream = new CFileStream( NFile::JoinPath( szBaseDir, "MapEditor.log" ), CFileStream::WIN_CREATE );
 		if ( pStream->IsOk() )
 			theLogger.SetLogStream( pStream );
 		else
@@ -161,7 +163,30 @@ bool CEditorApp::CreateSingletons()
 		IResourceManager::InitSingleton();
 		DebugTrace( "EditorApp() IResourceManager::InitSingleton(): %g", NHPTimer::GetTimePassed( &time ) );
 
-		NMOD::InstantAttachMOD( pUserDataContainer->Get()->szOpenedMODFolder, NDb::DATABASE_MODE_EDITOR );
+		std::string &modFolder = pUserDataContainer->Get()->szOpenedMODFolder;
+		if ( !modFolder.empty() )
+		{
+			// Settings can come from another OS. Accept either separator, but
+			// never turn an unavailable Windows drive into a relative Linux mod.
+			std::string nativeFolder = modFolder;
+			NStr::ReplaceAllChars( &nativeFolder, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
+			bool foreignDrive = false;
+#if !BOOST_OS_WINDOWS
+			foreignDrive = nativeFolder.size() > 1 && nativeFolder[1] == ':';
+#endif
+			std::error_code ec;
+			if ( foreignDrive || !std::filesystem::is_directory( std::filesystem::u8path( nativeFolder ), ec ) )
+			{
+				szUnavailableMODFolder = modFolder;
+				modFolder.clear();
+			}
+			else
+			{
+				modFolder = std::filesystem::absolute( std::filesystem::u8path( nativeFolder ) ).lexically_normal().u8string();
+				NFile::AppendSlash( &modFolder, NFile::PATH_SEPARATOR );
+			}
+		}
+		NMOD::InstantAttachMOD( modFolder, NDb::DATABASE_MODE_EDITOR );
 
 		//pMainVFS = NVFS::CreateWinVFS( cfg.szDataStorageFolder );
 		//NVFS::SetMainVFS( pMainVFS );
@@ -481,6 +506,12 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	}
 	/**/
 	NMainFrameWx::Show();
+	if ( !szUnavailableMODFolder.empty() )
+	{
+		NMessage::Warning( "The previously opened mod folder is unavailable:\n\n" + szUnavailableMODFolder +
+			"\n\nThe editor has opened the base game Data folder instead. To continue editing your mod, "
+			"use File > Open Mod to select its folder on this computer." );
+	}
 	// The "-reg" this used to exclude by hand is a switch now and never reaches
 	// szFileToOpen, which is the argument that is not one.
 	if ( !szFileToOpen.empty() )

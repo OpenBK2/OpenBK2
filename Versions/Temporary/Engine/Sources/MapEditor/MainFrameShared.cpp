@@ -229,14 +229,32 @@ namespace NMainFrameShared
 				CStringManager::AddToRecentList( szName, bMainObject );
 			}
 			//
+			std::string saveError;
 			if ( bModified && bConfirmed )
 			{
-				if ( pEditorContainer->GetActiveEditor() )
+				try
 				{
-					pEditorContainer->Save( true );
-					NProgress::SetPosition( 1 );
+					if ( IEditor *pEditor = pEditorContainer->GetActiveEditor() )
+					{
+						pEditorContainer->Save( true );
+						NProgress::SetPosition( 1 );
+						saveError = pEditor->GetSaveError();
+					}
+					if ( saveError.empty() )
+					{
+						Singleton<IResourceManager>()->SyncDB();
+						if ( Singleton<IResourceManager>()->CanSyncDB() )
+							saveError = NDb::GetLastSaveError().empty() ? "The database still has unsaved changes." : NDb::GetLastSaveError();
+					}
 				}
-				Singleton<IResourceManager>()->SyncDB();
+				catch ( const std::exception &error )
+				{
+					saveError = error.what();
+				}
+				// Keep Save/retry available, and refuse Close, Reload and Run Game
+				// when any part of a map or database save failed.
+				if ( !saveError.empty() && pEditorContainer->GetActiveEditor() )
+					pEditorContainer->GetActiveEditor()->SetModified( true );
 			}
 			else if ( bModified && !bConfirmed )
 			{
@@ -260,6 +278,13 @@ namespace NMainFrameShared
 				swtParams.dwFlags = SWT_MODIFIED;
 				swtParams.bModified = bModified;
 				Singleton<IMainFrameContainer>()->Get()->SetWindowTitle( swtParams );
+			}
+			if ( !saveError.empty() )
+			{
+				NMessage::Error( "The changes could not be saved:\n\n" + saveError +
+					"\n\nCheck that the game/mod folder is available and writable, and that the disk has free space. "
+					"Your unsaved changes remain open; correct the problem and save again.", "Save failed" );
+				return false;
 			}
 		}
 		return true;

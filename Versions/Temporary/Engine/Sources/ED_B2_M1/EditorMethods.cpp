@@ -56,13 +56,13 @@ namespace NEditor
 		return NScene::LoadTerrain( pTerraManager, pDesc, szMapFilePath );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	bool SaveTerrain( struct ITerraManager *pTerraManager )
+	bool SaveTerrain( struct ITerraManager *pTerraManager, std::string *pError )
 	{
 		if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
 		{
 			const std::string szMapFilePath = MakeMapPath( pDesc->GetDBID() );
 			//
-			return NScene::SaveTerrain( pTerraManager, szMapFilePath );
+			return NScene::SaveTerrain( pTerraManager, szMapFilePath, pError );
 		}
 		return false;
 	}

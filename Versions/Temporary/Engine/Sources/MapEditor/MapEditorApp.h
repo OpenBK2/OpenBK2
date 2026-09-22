@@ -27,6 +27,7 @@ class MAPEDITOR_EXPORT CEditorApp
 	//
 	CObj<NVFS::IVFS> pMainVFS;
 	CObj<NVFS::IFileCreator> pMainFileCreator;
+	std::string szUnavailableMODFolder;
 	//
 	void CreateUserDataSingleton();
 	bool CreateSingletons();

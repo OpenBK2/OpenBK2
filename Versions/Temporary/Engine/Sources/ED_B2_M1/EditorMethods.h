@@ -36,7 +36,7 @@ namespace NEditor
 	std::string GetTerrainBinFileName( const NDb::STerrain *pDesc );
 	void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
 	bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc );
-	bool SaveTerrain( ITerraManager *pTerraManager );
+	bool SaveTerrain( ITerraManager *pTerraManager, std::string *pError = nullptr );
 	void LoadBgMap( const std::string &szDesiredSeason, const std::string &rszMapInfoNameLoaded, CVec2 *pBgMapSize );
 };
 

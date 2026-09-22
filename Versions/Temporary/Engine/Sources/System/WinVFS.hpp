@@ -129,11 +129,12 @@ class CWinFileCreator : public IFileCreator
 {
 	OBJECT_NOCOPY_METHODS( CWinFileCreator )
 
-	const std::string szBasePath;
+	std::string szBasePath;
 
 	CWinFileCreator() { }
 public:
 	CWinFileCreator( const std::string &szBasePath );
+	std::string GetFullPath( const std::string &szPath ) const;
 
 	CDataStream* CreateFile( const std::string &szPath );
 	bool RemoveFile( const std::string &szPath );

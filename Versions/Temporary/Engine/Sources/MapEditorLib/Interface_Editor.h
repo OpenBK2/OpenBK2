@@ -49,6 +49,8 @@ struct IEditor : public CObjectBase
 	virtual void SetModified( bool bModified ) = 0;
 	// Показывать ли прогресс диалог автоматически
 	virtual bool ShowProgress() = 0;
+	// Save keeps the document dirty on failure; callers must not close/reload it.
+	virtual std::string GetSaveError() const { return std::string(); }
 };
 
 

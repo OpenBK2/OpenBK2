@@ -395,9 +395,14 @@ void GetFullName( std::string *pResult, const std::string &szPath )
 	*pResult = MakeFullPathName( szPath );
 }
 
+bool ResolveDataPathCase( std::string *pRes, const std::string &base, const std::string &path )
+{
+	return ResolveDataPathCase( pRes, base, path, false );
+}
+
 #if BOOST_OS_WINDOWS
 
-bool ResolveDataPathCase( std::string *, const std::string &, const std::string & )
+bool ResolveDataPathCase( std::string *, const std::string &, const std::string &, bool )
 {
 	return false;
 }
@@ -434,7 +439,7 @@ std::string FoldName( const std::string &szName )
 // The listing for one directory, read once and then reused until the directory
 // changes. Null when the directory cannot be read at all, which a caller treats
 // the same way as a name that is not in it.
-const SFoldedDir *GetFoldedDir( const std::string &szDirName )
+const SFoldedDir *GetFoldedDir( const std::string &szDirName, bool bRefresh = false )
 {
 	// An empty base directory means the path is relative to the working directory,
 	// which is what a config path that starts with a name rather than a separator
@@ -447,7 +452,7 @@ const SFoldedDir *GetFoldedDir( const std::string &szDirName )
 		return 0;
 	}
 	std::map<std::string, SFoldedDir>::iterator pos = g_FoldedDirs.find( szDir );
-	if ( pos != g_FoldedDirs.end() && pos->second.writeTime == writeTime )
+	if ( !bRefresh && pos != g_FoldedDirs.end() && pos->second.writeTime == writeTime )
 	{
 		return &pos->second;
 	}
@@ -470,7 +475,7 @@ const SFoldedDir *GetFoldedDir( const std::string &szDirName )
 
 }
 
-bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath )
+bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath, bool bAllowMissing )
 {
 	std::lock_guard csLock( g_FoldedDirsMutex );
 	// szReal is the part resolved so far, relative to szBaseDir; szDir is the same
@@ -503,17 +508,19 @@ bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const
 		std::error_code ec;
 		if ( !std::filesystem::exists( szDir + szPart, ec ) || ec )
 		{
-			const SFoldedDir *pDir = GetFoldedDir( szDir );
-			if ( pDir == 0 )
-			{
+			const SFoldedDir *pDir = GetFoldedDir( szDir, bAllowMissing );
+			// A file can be created within the directory timestamp's resolution.
+			// Refresh a miss before deciding it is absent; writers also need fresh
+			// names when updating/removing files they have just created.
+			const std::string key = FoldName( szPart );
+			if ( pDir && !pDir->names.count( key ) && !bAllowMissing )
+				pDir = GetFoldedDir( szDir, true );
+			// Writers must reuse existing directory/file spelling too, but may
+			// append new components below it instead of requiring the whole path.
+			if ( pDir && pDir->names.count( key ) )
+				szFound = pDir->names.at( key );
+			else if ( !bAllowMissing )
 				return false;
-			}
-			const std::map<std::string, std::string>::const_iterator it = pDir->names.find( FoldName( szPart ) );
-			if ( it == pDir->names.end() )
-			{
-				return false;
-			}
-			szFound = it->second;
 		}
 		AppendPathPart( &szReal, szFound );
 		szDir += szFound;

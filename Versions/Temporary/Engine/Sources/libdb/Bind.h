@@ -90,10 +90,9 @@ public:
 	bool LoadXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, const NXml::CXmlNode *pNode ) { bool bRes = bindProcessor.LoadXML( szAddName, pType, pNode, this ); SetLoaded(); return bRes; }
 	bool SaveXML( const std::string &szAddName, NTypeDef::STypeStructBase *pType, NLXML::CXMLNode *pNode )
 	{
-		const bool bSaved = bindProcessor.SaveXML( szAddName, pType, pNode, this );
-		if ( bSaved )
-			ResetChanged();
-		return bSaved;
+		// Building an XML tree is not a disk save. The database clears the dirty
+		// state only after successfully committing the serialized file.
+		return bindProcessor.SaveXML( szAddName, pType, pNode, this );
 	}
 	bool SetDefault( const std::string &szAddName, NTypeDef::STypeStructBase *pType ) { SetChanged(); return bindProcessor.SetDefault( szAddName, pType ); }
 };

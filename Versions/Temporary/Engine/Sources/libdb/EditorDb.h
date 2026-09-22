@@ -40,6 +40,8 @@ LIBDB_EXPORT bool IsPropertyModified( const CDBID &dbid, const std::string &szNa
 LIBDB_EXPORT uint64_t GetPropertyChangeVersion();
 //! save all objects, marked as changed
 LIBDB_EXPORT void SaveChanges();
+//! First failure from the last save, including its destination. Empty on success.
+LIBDB_EXPORT const std::string& GetLastSaveError();
 //! Persist newly registered files without saving unrelated edited resources.
 LIBDB_EXPORT bool SaveChangedIndex();
 //! drop all cached resources

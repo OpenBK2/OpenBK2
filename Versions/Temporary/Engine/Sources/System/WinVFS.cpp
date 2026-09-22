@@ -16,6 +16,10 @@
 #include <filesystem>
 #include <mutex>
 #include <system_error>
+#include <fstream>
+#include <cerrno>
+#include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <boost/filesystem/operations.hpp>
 
@@ -56,8 +60,12 @@ static CDataStream* OpenWinFileRW( const std::string &szPath )
 	return OpenWinFile( szPath, false );
 }
 
-static void PreprocessPath( std::string *pResPath, EStreamPath *pStreamPathType, const std::string &szPath, const std::string &szBasePath )
+static void PreprocessPath( std::string *pResPath, EStreamPath *pStreamPathType, const std::string &_szPath, const std::string &szBasePath )
 {
+	// Normalize before classifying: legacy separators must mean the same path
+	// for reading, writing and file stats, including absolute paths on Linux.
+	std::string szPath = _szPath;
+	NStr::ReplaceAllChars( &szPath, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
 	if ( szBasePath.empty() )
 	{
 		*pStreamPathType = STREAM_PATH_ABSOLUTE;
@@ -68,7 +76,8 @@ static void PreprocessPath( std::string *pResPath, EStreamPath *pStreamPathType,
 		*pStreamPathType = STREAM_PATH_RELATIVE;
 		*pResPath = szPath.c_str() + szBasePath.size();
 	}
-	else if ( szPath.size() > 2 && szPath[1] == ':' && NFile::IsFolderSeparator(szPath[2]) )
+	else if ( std::filesystem::u8path( szPath ).is_absolute() ||
+		( szPath.size() > 2 && szPath[1] == ':' && NFile::IsFolderSeparator(szPath[2]) ) )
 	{
 		*pStreamPathType = STREAM_PATH_ABSOLUTE;
 		*pResPath = szPath;
@@ -267,12 +276,6 @@ CDataStream* CWinVFS::OpenFileDirect( const std::string &_szPath )
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	//
-	// To the platform's own separator, not always to a backslash. The entry map
-	// this then looks the name up in is keyed by what the directory scan found,
-	// and off Windows that scan reports forward slashes, so converting the other
-	// way made every lookup miss.
-	NStr::ReplaceAllChars( &szPath, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
-	//
 	if ( ePath == STREAM_PATH_RELATIVE ) 
 	{
 		if ( CFileEntry *pEntry = UpdateFileEntry(szPath) )
@@ -396,16 +399,42 @@ void CWinVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const std::
 CWinFileCreator::CWinFileCreator( const std::string &_szBasePath )
 : szBasePath( _szBasePath )
 {
+	// The VFS reader accepts old Windows separators on every platform. Its
+	// writer must use the same interpretation, including the storage root.
+	NStr::ReplaceAllChars( &szBasePath, NFile::PATH_SEPARATOR == '/' ? '\\' : '/', NFile::PATH_SEPARATOR );
+	NFile::AppendSlash( &szBasePath, NFile::PATH_SEPARATOR );
 }
 
-CDataStream* CWinFileCreator::CreateFile( const std::string &_szPath )
+std::string CWinFileCreator::GetFullPath( const std::string &_szPath ) const
 {
 	NFile::CFilePath szPath;
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
-	//
-	const std::string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
-	NFile::CreatePath( NFile::GetFilePath(szFullFilePath) );
+	std::string fullPath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
+	const auto path = std::filesystem::u8path( fullPath );
+	std::string realPath;
+	// Resolve existing parents even for a new file, avoiding a second "custom"
+	// beside "Custom" on Linux. Absolute paths must not be appended to the root.
+	if ( NFile::ResolveDataPathCase( &realPath, path.root_path().u8string(), path.relative_path().u8string(), true ) )
+		fullPath = path.root_path().u8string() + realPath;
+	return fullPath;
+}
+
+static bool IsForeignDrivePath( const std::string &path )
+{
+#if BOOST_OS_WINDOWS
+	return false;
+#else
+	// A saved C:\... path is not a relative Linux directory called "C:".
+	return path.size() > 1 && path[1] == ':';
+#endif
+}
+
+CDataStream* CWinFileCreator::CreateFile( const std::string &_szPath )
+{
+	const std::string szFullFilePath = GetFullPath( _szPath );
+	if ( IsForeignDrivePath( szFullFilePath ) || !NFile::CreatePath( NFile::GetFilePath(szFullFilePath) ) )
+		return nullptr;
 	//
 	CDataStream *pRes = OpenWinFileDirect( szFullFilePath, false );
 	if ( !pRes )
@@ -416,15 +445,82 @@ CDataStream* CWinFileCreator::CreateFile( const std::string &_szPath )
 
 bool CWinFileCreator::RemoveFile( const std::string &_szPath )
 {
-	NFile::CFilePath szPath;
-	EStreamPath ePath;
-	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
-	const std::string szFullFilePath = ePath == STREAM_PATH_RELATIVE ? szBasePath + szPath : szPath;
+	const std::string szFullFilePath = GetFullPath( _szPath );
+	if ( IsForeignDrivePath( szFullFilePath ) )
+		return false;
 	//
 	// remove reports false both when the file was not there and when it could not be
 	// removed, which is what DeleteFile returning FALSE meant to this caller.
 	std::error_code ec;
 	return std::filesystem::remove( szFullFilePath, ec );
+}
+
+std::string GetWritePath( IFileCreator *pCreator, const std::string &path )
+{
+	const auto *native = dynamic_cast<CWinFileCreator*>( pCreator );
+	return native ? native->GetFullPath( path ) : path;
+}
+
+bool WriteFile( IFileCreator *pCreator, const std::string &path, const CDataStream &data, std::string *pError )
+{
+	const std::string destination = GetWritePath( pCreator, path );
+	const auto Fail = [&]( const std::string &reason ) {
+		if ( pError ) *pError = destination + "\n" + reason;
+		return false;
+	};
+	if ( pError ) pError->clear();
+	if ( !pCreator || !data.IsOk() )
+		return Fail( "No writable storage or serialization failed." );
+	if ( IsForeignDrivePath( destination ) )
+		return Fail( "This Windows drive path is unavailable on this platform. Reopen the mod from its local folder." );
+	if ( !dynamic_cast<CWinFileCreator*>( pCreator ) )
+	{
+		CFileStream stream( pCreator, path );
+		if ( !stream.IsOk() ) return Fail( "Cannot open the output stream." );
+		stream.Write( data.GetBuffer(), data.GetSize() );
+		stream.Flush();
+		return stream.IsOk() || Fail( "Writing the output stream failed." );
+	}
+	// Serialize before touching the original, then replace it only after the
+	// complete file has been written and closed successfully.
+	std::filesystem::path temporary;
+	try
+	{
+		std::error_code ec;
+		auto target = std::filesystem::u8path( destination );
+		// Preserve the old writer's behaviour for symlinked data files.
+		if ( std::filesystem::is_symlink( target, ec ) ) target = std::filesystem::canonical( target );
+		if ( std::filesystem::exists( target ) )
+		{
+			// Replacement must still respect a read-only destination, just as
+			// opening the original file for writing did before atomic saves.
+			std::fstream writable;
+			writable.exceptions( std::ios::badbit | std::ios::failbit );
+			writable.open( target, std::ios::binary | std::ios::in | std::ios::out );
+			writable.close();
+		}
+		if ( !target.parent_path().empty() ) std::filesystem::create_directories( target.parent_path() );
+		temporary = target;
+		temporary += "." + boost::uuids::to_string( boost::uuids::random_generator()() ) + ".tmp";
+		std::ofstream output;
+		output.exceptions( std::ios::badbit | std::ios::failbit );
+		output.open( temporary, std::ios::binary | std::ios::trunc );
+		if ( data.GetSize() ) output.write( reinterpret_cast<const char*>( data.GetBuffer() ), data.GetSize() );
+		output.flush();
+		output.close();
+		const auto status = std::filesystem::status( target, ec );
+		if ( !ec && std::filesystem::exists( status ) ) std::filesystem::permissions( temporary, status.permissions() );
+		std::filesystem::rename( temporary, target );
+		return true;
+	}
+	catch ( const std::exception &error )
+	{
+		const int code = errno;
+		const std::string reason = std::string( error.what() ) + ( code ? "\n" + std::generic_category().message( code ) : "" );
+		std::error_code ignored;
+		if ( !temporary.empty() ) std::filesystem::remove( temporary, ignored );
+		return Fail( reason );
+	}
 }
 
 IVFS* CreateWinVFS( const std::string &szBasePath )

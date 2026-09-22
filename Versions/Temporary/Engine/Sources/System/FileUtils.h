@@ -176,6 +176,7 @@ SYSTEM_EXPORT void GetFullName( std::string *pResult, const std::string &szPath 
 //! Always false on Windows, where the filesystem has already done this and a
 //! miss means the file is genuinely absent, so scanning would only cost time.
 SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath );
+SYSTEM_EXPORT bool ResolveDataPathCase( std::string *pRes, const std::string &szBaseDir, const std::string &szRelPath, bool bAllowMissing );
 
 SYSTEM_EXPORT std::string GetTempPath();
 SYSTEM_EXPORT std::string GetTempFileName();

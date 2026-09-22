@@ -11,6 +11,7 @@
 #include "System/LightXML.h"
 #include "System/XMLReader.h"
 #include "System/VFS.h"
+#include "System/VFSOperations.h"
 #include "System/XMLReader.h"
 #include "Logger.h"
 #include "DBReferenceScan.h"
@@ -23,6 +24,15 @@ EXTERNVAR LIBDB_EXPORT CLogger theLogger;
 
 namespace NDb
 {
+
+static std::string szLastSaveError;
+const std::string& GetLastSaveError() { return szLastSaveError; }
+
+static void ReportSaveError( const std::string &error )
+{
+	if ( szLastSaveError.empty() ) szLastSaveError = error;
+	theLogger.WriteLog( "Failed to save: " + error );
+}
 
 struct SEditorDbForceLoadGuard
 {
@@ -168,7 +178,7 @@ bool CEditorDatabase::SaveChangedIndex()
 {
 	if ( IsIndexChanged() )
 	{
-		CFileStream stream( GetFileCreator(), INDEX_FILE_NAME );
+		CMemoryStream stream;
 		if ( stream.IsOk() )
 		{
 			if ( CPtr<IBinSaver> pSaver = CreateBinSaver(&stream, SAVER_MODE_WRITE) )
@@ -183,6 +193,15 @@ bool CEditorDatabase::SaveChangedIndex()
 				}
 				//
 				pSaver->Add( 1, &objectsIndex );
+				// Binary savers finish their output on destruction.
+				pSaver = nullptr;
+				std::string error;
+				if ( !NVFS::WriteFile( GetFileCreator(), INDEX_FILE_NAME, stream, &error ) )
+				{
+					ReportSaveError( error );
+					SetDataChanged();
+					return false;
+				}
 				ResetIndexChanged();
 				return true;
 			}
@@ -689,6 +708,7 @@ void CEditorDatabase::MarkChanged( const CDBID &dbid )
 
 void CEditorDatabase::SaveChanges()
 {
+	szLastSaveError.clear();
 	bool bHasFailedElements = false;
 	// save changed elements
 	for ( CElementsMap::iterator itElement = elementsMap.begin(); itElement != elementsMap.end(); ++itElement )
@@ -696,7 +716,7 @@ void CEditorDatabase::SaveChanges()
 		if ( itElement->second.pBind && (itElement->second.pBind->IsChanged() || itElement->second.pBind->IsNew()) )
 		{
 			const std::string szFileName = GetFileName( itElement->first );
-			CFileStream fileStream( GetFileCreator(), szFileName );
+			CMemoryStream fileStream;
 			if ( fileStream.IsOk() )
 			{
 				NLXML::CXMLDocument xmlDocument;
@@ -716,12 +736,27 @@ void CEditorDatabase::SaveChanges()
 				}
 				xmlDocument.AddChild( pBaseNode );
 				// save object to root element
-				NI_VERIFY( itElement->second.pBind->SaveXML( "", itElement->second.pBind->GetMetaInfo()->pStructTypeDef, pBaseNode ) != false,
-					fmt::format("Can't save object \"{}\" to file", itElement->first.ToString()), continue );
-				itElement->second.pBind->SetNew( false );
+				if ( !itElement->second.pBind->SaveXML( "", itElement->second.pBind->GetMetaInfo()->pStructTypeDef, pBaseNode ) )
+				{
+					ReportSaveError( "Cannot serialize " + szFileName );
+					bHasFailedElements = true;
+					continue;
+				}
 				//
-				NLXML_STREAM stream( &fileStream );
-				xmlDocument.Store( stream );
+				{
+					// Flush the XML writer's final buffered bytes before committing.
+					NLXML_STREAM stream( &fileStream );
+					xmlDocument.Store( stream );
+				}
+				std::string error;
+				if ( !NVFS::WriteFile( GetFileCreator(), szFileName, fileStream, &error ) )
+				{
+					ReportSaveError( error );
+					bHasFailedElements = true;
+					continue;
+				}
+				itElement->second.pBind->SetNew( false );
+				itElement->second.pBind->ResetChanged();
 			}
 			else
 			{
@@ -731,12 +766,15 @@ void CEditorDatabase::SaveChanges()
 		}
 	}
 	// save changed index
-	SaveChangedIndex();
+	bHasFailedElements = !SaveChangedIndex() || bHasFailedElements;
 	//
 	if ( !bHasFailedElements )
+	{
 		ResetDataChanged();
-	//
-	ReportSaveAllChanges();
+		ReportSaveAllChanges();
+	}
+	else
+		SetDataChanged();
 }
 
 void CEditorDatabase::DropCachedResources()

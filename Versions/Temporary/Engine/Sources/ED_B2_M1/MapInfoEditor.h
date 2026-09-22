@@ -80,6 +80,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	CHeightContainer heightContainer;
 	const NDb::SMapInfo *pMapInfo;
 	bool bSaveFailed = false;
+	std::string szSaveError;
 	//
 	inline void ClearMapInfoData()
 	{
@@ -128,6 +129,7 @@ public:
 	void Create();
 	void Destroy();
 	void Save( bool bSaveChanges );
+	std::string GetSaveError() const override { return szSaveError; }
 	bool ShowProgress() { return false; }
 
 	void GetChangesFromController( CObjectBaseController *pObjectController, bool bRedo );

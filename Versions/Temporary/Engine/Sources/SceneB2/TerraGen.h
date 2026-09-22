@@ -190,6 +190,7 @@ namespace NScene
 	SCENEB2_EXPORT void CreateTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
 	SCENEB2_EXPORT bool LoadTerrain( ITerraManager *pTerraManager, const NDb::STerrain *pDesc, const std::string &szMapFilePath );
 	SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath );
+	SCENEB2_EXPORT bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError );
 };
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20

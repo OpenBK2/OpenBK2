@@ -38,25 +38,26 @@ namespace NScene
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath )
 	{
+		return SaveTerrain( pTerraManager, szMapFilePath, nullptr );
+	}
+	bool SaveTerrain( ITerraManager *pTerraManager, const std::string &szMapFilePath, std::string *pError )
+	{
 		try
 		{
 			if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() ) 
 			{
 				const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
 				//
-				CFileStream stream( NVFS::GetMainFileCreator(), szTerrainBinFileName );
-				if ( stream.IsOk() )
-				{
-					pTerraManager->Save( &stream );
-					//
-					return true;
-				}
-				//
-				return true;
+				// A failed open used to return true. Finish serialization first,
+				// then report the actual result of replacing the terrain file.
+				CMemoryStream stream;
+				pTerraManager->Save( &stream );
+				return NVFS::WriteFile( NVFS::GetMainFileCreator(), szTerrainBinFileName, stream, pError );
 			}
 		}
-		catch ( ... ) 
+		catch ( const std::exception &error )
 		{
+			if ( pError ) *pError = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME + "\n" + error.what();
 		}
 		//
 		return false;

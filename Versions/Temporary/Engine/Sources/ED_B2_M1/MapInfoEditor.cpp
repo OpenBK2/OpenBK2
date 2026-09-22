@@ -481,12 +481,20 @@ void CMapInfoEditor::Destroy()
 void CMapInfoEditor::Save( bool bSaveChanges )
 {
 	bSaveFailed = false;
+	szSaveError.clear();
+	// Discarding changes must not export terrain or minimap files.
+	if ( !bSaveChanges )
+	{
+		CEditorBase::Save( false );
+		return;
+	}
 	if ( IsModified() && bSaveChanges )
 	{
 		try
 		{
-			if ( !NEditor::SaveTerrain( EditorScene()->GetTerraManager() ) )
+			if ( !NEditor::SaveTerrain( EditorScene()->GetTerraManager(), &szSaveError ) )
 			{
+				if ( szSaveError.empty() ) szSaveError = "Could not serialize the map terrain.";
 				NLog::GetLogger()->Log( LT_ERROR, "Failed to save map\n" );
 				NLog::GetLogger()->Log( LT_ERROR, fmt::format("\tObjectID: {}\n", NDb::GetResName(pMapInfo)) );
 				bSaveFailed = true;
@@ -497,6 +505,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 		{
 			// Preserve the dirty state and prevent launching stale terrain after a save failure.
 			bSaveFailed = true;
+			szSaveError = "Could not serialize the map terrain.";
 			NLog::GetLogger()->Log( LT_ERROR, "Failed to save map terrain.\n" );
 			return;
 		}
@@ -2245,8 +2254,9 @@ void CMapInfoEditor::RunGame()
 
 	// Save the current map and DB before the independent game process reads them.
 	bSaveFailed = false;
-	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand(ID_VIEW_SAVE_CHANGES, false) ||
-		 bSaveFailed || Singleton<IResourceManager>()->CanSyncDB() || !NDb::SaveChangedIndex() )
+	if ( !Singleton<ICommandHandlerContainer>()->HandleCommand(ID_VIEW_SAVE_CHANGES, false) )
+		return; // Save already reported the specific failure and kept the edits open.
+	if ( bSaveFailed || Singleton<IResourceManager>()->CanSyncDB() || !NDb::SaveChangedIndex() )
 	{
 		ReportError( "The map or database index could not be saved. Check the editor log." );
 		return;
