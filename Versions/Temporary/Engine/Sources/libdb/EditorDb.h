@@ -49,7 +49,7 @@ bool HasChangedObjects();
 //! retrieve all terminal classes list
 LIBDB_EXPORT bool GetClassesList( std::vector<NTypeDef::STypeClass*> *pRes );
 //! retrieve all objects by type
-bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
+LIBDB_EXPORT bool GetObjectsList( std::vector<CDBID> *pRes, const std::string &szClassTypeName );
 
 LIBDB_EXPORT bool RegisterResourceFile( const std::string &szFileName );
 LIBDB_EXPORT bool IsFileRegistered( const std::string &szFileName );
