@@ -355,7 +355,8 @@ namespace
 		}
 		std::string szText;
 		bool bUnicode = true;
-		File2String( &szText, &bUnicode, rszFilePath, false );
+		bool bNeedsUnicodeRepair = false;
+		File2String( &szText, &bUnicode, rszFilePath, false, &bNeedsUnicodeRepair );
 		//
 		const std::string szEditor = GetEditorParameter( rContext.pDesc );
 		std::string szNewText;
@@ -372,7 +373,8 @@ namespace
 			bResult = NTextEditor::RunText( rContext.pOwner, fmt::format( "{} - {}", rszFilePath, LoadResourceString( IDS_PC_TXT_EDITOR_TITLE ) ),
 																			szEditor, szText, rContext.bEditable, &szNewText );
 		}
-		if ( bResult && ( szNewText != szText ) )
+		// Accepting a recovered file also offers to repair its encoding.
+		if ( bResult && ( szNewText != szText || bNeedsUnicodeRepair ) )
 		{
 			std::string strMessagePattern = NResources::GetString( IDS_CONFIRM_SAVE_MESSAGE_LONG );
 			const std::string strMessage = fmt::sprintf( strMessagePattern.c_str(), rszFilePath.c_str() );
@@ -380,8 +382,16 @@ namespace
 			// leave the edited text unsaved.
 			if ( NMessage::AskYesNoCancel( strMessage ) == NMessage::ANSWER_YES )
 			{
-				String2File( szNewText, bUnicode, rszFilePath, false );
-				NText::Reload( rszFilePath );
+				std::vector<uint8_t> bytes;
+				String2File( &bytes, szNewText, bUnicode, false );
+				CMemoryStream stream;
+				if ( !bytes.empty() ) stream.Write( bytes.data(), bytes.size() );
+				std::string error;
+				// Preserve the previous text if the actual file cannot be replaced.
+				if ( NVFS::WriteFile( NVFS::GetMainFileCreator(), rszFilePath, stream, &error ) )
+					NText::Reload( rszFilePath );
+				else
+					NMessage::Error( error, "Text file could not be saved" );
 			}
 		}
 		RemoveSceneInput();

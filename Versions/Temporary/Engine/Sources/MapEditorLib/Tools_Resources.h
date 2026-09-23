@@ -214,8 +214,9 @@ MAPEDITORLIB_EXPORT void Unicode2MBSC( std::string *pszText, const std::wstring 
 MAPEDITORLIB_EXPORT void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText );
 
 
-MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
-MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D );
+// The optional repair flag identifies files written by the old Linux UTF-32 bug.
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D, bool *pbNeedsUnicodeRepair = nullptr );
+MAPEDITORLIB_EXPORT void File2String( std::string *pszText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D, bool *pbNeedsUnicodeRepair = nullptr );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, bool bRemove_0D );
 MAPEDITORLIB_EXPORT void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool bRemove_0D );
 

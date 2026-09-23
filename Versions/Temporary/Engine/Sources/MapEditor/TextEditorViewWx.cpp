@@ -13,11 +13,13 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
+#include <wx/settings.h>
 #include <wx/stattext.h>
 #include <wx/stc/stc.h>
 #include <wx/textctrl.h>
 
 #include <cctype>
+#include <cmath>
 
 // The text editors in wx, on wxStyledTextCtrl.
 //
@@ -33,7 +35,7 @@
 //   is lost, silently. So the lexer comes first here, then the words.
 //
 // The rest of what the script editor does that is not drawing -- the Lua syntax
-// check behind the error box, the keyword lists and the colours -- is shared
+// check behind the error box and the keyword lists -- is shared
 // with the MFC editor through TextEditorView.h.
 //
 // Two things the MFC script editor does are deliberately not here, because they
@@ -47,6 +49,66 @@ namespace
 		return wxColour( nColor & 0xFF, ( nColor >> 8 ) & 0xFF, ( nColor >> 16 ) & 0xFF );
 	}
 
+
+	wxColour BlendColour( const wxColour &from, const wxColour &to, double amount )
+	{
+		return wxColour( from.Red() + (to.Red() - from.Red()) * amount,
+			from.Green() + (to.Green() - from.Green()) * amount,
+			from.Blue() + (to.Blue() - from.Blue()) * amount );
+	}
+
+	double Luminance( const wxColour &colour )
+	{
+		auto linear = []( unsigned char channel ) {
+			const double value = channel / 255.0;
+			return value <= 0.04045 ? value / 12.92 : std::pow( (value + 0.055) / 1.055, 2.4 );
+		};
+		return 0.2126 * linear(colour.Red()) + 0.7152 * linear(colour.Green()) + 0.0722 * linear(colour.Blue());
+	}
+
+	wxColour ReadableColour( const wxColour &colour, const wxColour &background, const wxColour &foreground )
+	{
+		// Keep dictionary/syntax hues where readable; move them towards the
+		// theme's text colour until they have sufficient contrast on its paper.
+		const double back = Luminance( background );
+		for ( int step = 0; step <= 20; ++step )
+		{
+			const wxColour candidate = BlendColour( colour, foreground, step / 20.0 );
+			const double light = Luminance( candidate );
+			if ( ((std::max)(light, back) + 0.05) / ((std::min)(light, back) + 0.05) >= 4.5 )
+				return candidate;
+		}
+		return foreground;
+	}
+
+	void ApplyTextAppearance( wxStyledTextCtrl *editor, bool monospace )
+	{
+		const wxColour background = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOW );
+		const wxColour foreground = wxSystemSettings::GetColour( wxSYS_COLOUR_WINDOWTEXT );
+		wxFont font = wxSystemSettings::GetFont( wxSYS_DEFAULT_GUI_FONT );
+		const int points = (std::max)( 12, font.GetPointSize() );
+		if ( monospace ) font = wxFont( wxFontInfo(points).Family(wxFONTFAMILY_TELETYPE) );
+		else font.SetPointSize( points );
+		// Scintilla does not inherit the native control's palette. Clear all
+		// styles from a themed default, including every character background.
+		editor->StyleResetDefault();
+		editor->StyleSetFont( wxSTC_STYLE_DEFAULT, font );
+		editor->StyleSetForeground( wxSTC_STYLE_DEFAULT, foreground );
+		editor->StyleSetBackground( wxSTC_STYLE_DEFAULT, background );
+		editor->StyleClearAll();
+		editor->SetBackgroundColour( background );
+		editor->SetCaretForeground( foreground );
+		editor->SetCaretLineBackground( BlendColour(background, foreground, 0.06) );
+		editor->SetSelForeground( true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHTTEXT) );
+		editor->SetSelBackground( true, wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT) );
+		const wxColour margin = BlendColour( background, foreground, 0.04 );
+		editor->StyleSetBackground( wxSTC_STYLE_LINENUMBER, margin );
+		editor->StyleSetForeground( wxSTC_STYLE_LINENUMBER, ReadableColour(BlendColour(background, foreground, 0.6), margin, foreground) );
+		editor->SetFoldMarginColour( true, margin );
+		editor->SetFoldMarginHiColour( true, margin );
+		editor->StyleSetForeground( wxSTC_STYLE_INDENTGUIDE, BlendColour(background, foreground, 0.3) );
+		editor->SetWhitespaceForeground( true, BlendColour(background, foreground, 0.3) );
+	}
 
 	std::string ToUtf8( const wxString &rText )
 	{
@@ -271,8 +333,11 @@ namespace
 			SetMinSize( wxSize( 400, 300 ) );
 			SetClientSize( FromDIP( wxSize( 651, 562 ) ) );
 
-			SetUpMargins();
 			SetUpLua();
+			Bind( wxEVT_SYS_COLOUR_CHANGED, [this]( wxSysColourChangedEvent &event ) {
+				event.Skip();
+				ApplyLuaAppearance();
+			} );
 			SetText( rszText );
 			CheckSyntax();
 			pEditor->SetReadOnly( !bEnableEdit );
@@ -306,8 +371,7 @@ namespace
 			pEditor->SetMarginWidth( 1, 10 );
 			pEditor->SetMarginSensitive( 1, true );
 			pEditor->MarkerDefine( 0, wxSTC_MARK_CIRCLE );
-			pEditor->MarkerSetForeground( 0, wxColour( 0xff, 0x00, 0x00 ) );
-			pEditor->MarkerSetBackground( 0, wxColour( 0xff, 0x00, 0x00 ) );
+
 			pEditor->MarkerDefine( 1, wxSTC_MARK_ARROW );
 			// CARET_SLOP, which is the value SCI_SETVISIBLEPOLICY's VISIBLE_SLOP has.
 			pEditor->SetVisiblePolicy( 0x01, 1 );
@@ -326,58 +390,47 @@ namespace
 				pEditor->SetKeyWords( it->nSet, wxString::FromUTF8( it->szWords.c_str() ) );
 			}
 
-			// The dictionary colours, which SetKeywordColor gave the WORD styles.
-			// Before the style table, not after, because that is the order the MFC
-			// editor ran them in -- CheckSyntax( true ) calls SetLuaLexer once the
-			// keywords are in -- and the table's WORD2 colour lands on top of set 2's.
-			for ( std::vector<NTextEditor::SKeywordSet>::const_iterator it = keywords.sets.begin();
-						it != keywords.sets.end(); ++it )
-			{
-				if ( it->bHasColor )
-				{
-					pEditor->StyleSetForeground( wxSTC_LUA_WORD2 - 1 + it->nSet, FromColorRef( it->nColor ) );
-				}
-			}
-
 			pEditor->SetIndentationGuides( 1 );
 			pEditor->SetTabWidth( 4 );
 			pEditor->SetUseTabs( true );
 			pEditor->SetEOLMode( wxSTC_EOL_CRLF );
+			ApplyLuaAppearance();
+			pEditor->AutoCompSetCancelAtStart( false );
+			pEditor->AutoCompSetFillUps( " (" );
+		}
 
-			const std::vector<NTextEditor::SLuaStyle> &rStyles = NTextEditor::LuaStyles();
-			for ( std::vector<NTextEditor::SLuaStyle>::const_iterator it = rStyles.begin(); it != rStyles.end(); ++it )
-			{
-				if ( it->pszFace != nullptr )
-				{
-					pEditor->StyleSetFaceName( it->nStyle, it->pszFace );
-				}
-				if ( it->nSize > 0 )
-				{
-					pEditor->StyleSetSize( it->nStyle, it->nSize );
-				}
-				if ( it->nFore >= 0 )
-				{
-					pEditor->StyleSetForeground( it->nStyle, FromColorRef( it->nFore ) );
-				}
-				if ( it->nBack >= 0 )
-				{
-					pEditor->StyleSetBackground( it->nStyle, FromColorRef( it->nBack ) );
-				}
-				if ( it->bEolFilled )
-				{
-					pEditor->StyleSetEOLFilled( it->nStyle, true );
-				}
-			}
+		void ApplyLuaAppearance()
+		{
+			ApplyTextAppearance( pEditor, true );
+			const wxColour background = pEditor->StyleGetBackground( wxSTC_STYLE_DEFAULT );
+			const wxColour foreground = pEditor->StyleGetForeground( wxSTC_STYLE_DEFAULT );
+			for ( const auto &set : keywords.sets )
+				if ( set.bHasColor )
+					pEditor->StyleSetForeground( wxSTC_LUA_WORD2 - 1 + set.nSet,
+						ReadableColour(FromColorRef(set.nColor), background, foreground) );
+			// Keep the existing syntax groups, but inherit the native font and
+			// paper. The old 9-point Courier and per-character fills are unsuitable
+			// for dark themes and override the user's desktop font settings.
+			for ( const auto &style : NTextEditor::LuaStyles() )
+				if ( style.nFore >= 0 && style.nStyle != wxSTC_LUA_DEFAULT )
+					pEditor->StyleSetForeground( style.nStyle, style.nFore == 0 ? foreground :
+						ReadableColour(FromColorRef(style.nFore), background, foreground) );
 			// Lexilla styles a comment that opens with "---" as a doc comment,
 			// style 3. The 2005 lexer never used style 3 and painted the same line
 			// as the line comment, style 2 -- the scripts are full of "-----"
 			// rulers -- so style 3 takes style 2's look and they read the same in
 			// both editors.
-			pEditor->StyleSetFaceName( wxSTC_LUA_COMMENTDOC, pEditor->StyleGetFaceName( wxSTC_LUA_COMMENTLINE ) );
-			pEditor->StyleSetSize( wxSTC_LUA_COMMENTDOC, pEditor->StyleGetSize( wxSTC_LUA_COMMENTLINE ) );
+
 			pEditor->StyleSetForeground( wxSTC_LUA_COMMENTDOC, pEditor->StyleGetForeground( wxSTC_LUA_COMMENTLINE ) );
-			pEditor->AutoCompSetCancelAtStart( false );
-			pEditor->AutoCompSetFillUps( " (" );
+			const wxColour error = ReadableColour( wxColour(200, 40, 40), background, foreground );
+			pEditor->StyleSetForeground( wxSTC_LUA_STRINGEOL, error );
+			pEditor->StyleSetUnderline( wxSTC_LUA_STRINGEOL, true );
+			SetUpMargins();
+			pEditor->MarkerSetForeground( 0, error );
+			pEditor->MarkerSetBackground( 0, error );
+			pEditor->MarkerSetForeground( 1, background );
+			pEditor->MarkerSetBackground( 1, foreground );
+			pEditor->Colourise( 0, -1 );
 		}
 
 		void SetText( const std::string &rszText )
@@ -672,6 +725,12 @@ namespace
 			SetSizer( pSizer );
 			SetMinSize( wxSize( 250, 180 ) );
 			SetClientSize( FromDIP( wxSize( 651, 562 ) ) );
+
+			ApplyTextAppearance( pEditor, false );
+			Bind( wxEVT_SYS_COLOUR_CHANGED, [this]( wxSysColourChangedEvent &event ) {
+				event.Skip();
+				ApplyTextAppearance( pEditor, false );
+			} );
 
 			// CScintillaEditorWindow::CreateEx: every margin hidden, CRLF, word wrap.
 			pEditor->SetMarginWidth( 0, 0 );

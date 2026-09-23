@@ -1,0 +1,1 @@
+add_unit_test(TextResourceEncoding MapEditorLib System Misc)

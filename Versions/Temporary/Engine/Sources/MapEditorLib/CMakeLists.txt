@@ -87,3 +87,5 @@ add_version_info(MapEditorLib)
 # The build details block carries the revision, for bug reports
 # (BuildDetailsWx.cpp).
 add_git_revision(MapEditorLib)
+
+add_subdirectory(test)

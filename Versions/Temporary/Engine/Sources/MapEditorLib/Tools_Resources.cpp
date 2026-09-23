@@ -389,8 +389,49 @@ void MBSC2Unicode( std::wstring *pwszText, const std::string &rszText )
 }
 
 
-void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D )
+namespace
 {
+	std::wstring DecodeUnicodeResource( const std::vector<uint8_t> &buffer, bool *needsRepair = nullptr )
+	{
+		// Early Linux editors wrote a UTF-16 BOM followed by native UTF-32LE.
+		// Recover that specific pattern for editing, but only rewrite it after
+		// the user accepts the editor and confirms saving the file.
+		const size_t size = buffer.size() - 2;
+		bool legacy = size >= 4 && size % 4 == 0;
+		bool hasPadding = false;
+		std::string recovered;
+		auto appendUnit = [&recovered]( uint32_t unit ) {
+			recovered.push_back( char(unit & 0xff) );
+			recovered.push_back( char((unit >> 8) & 0xff) );
+		};
+		for ( size_t i = 2; legacy && i < buffer.size(); i += 4 )
+		{
+			uint32_t code = uint32_t(buffer[i]) | (uint32_t(buffer[i + 1]) << 8) |
+				(uint32_t(buffer[i + 2]) << 16) | (uint32_t(buffer[i + 3]) << 24);
+			if ( code == 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff) )
+			{
+				legacy = false;
+				break;
+			}
+			hasPadding |= code <= 0xffff;
+			if ( code > 0xffff )
+			{
+				code -= 0x10000;
+				appendUnit( 0xd800 + (code >> 10) );
+				appendUnit( 0xdc00 + (code & 0x3ff) );
+			}
+			else appendUnit( code );
+		}
+		legacy &= hasPadding;
+		if ( needsRepair ) *needsRepair = legacy;
+		return legacy ? UTF16LEToWide( recovered.data(), recovered.size() ) :
+			UTF16LEToWide( buffer.data() + 2, size );
+	}
+}
+
+void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint8_t> &rBuffer, bool bRemove_0D, bool *pbNeedsUnicodeRepair )
+{
+	if ( pbNeedsUnicodeRepair ) *pbNeedsUnicodeRepair = false;
 	if ( pstrText )
 	{
 		pstrText->clear();
@@ -399,13 +440,8 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 				 ( rBuffer[0] == 0xFF ) &&
 				 ( rBuffer[1] == 0xFE ) )
 		{
-			if ( rBuffer.size() < 3 )
-			{
-				return;
-			}
-			std::wstring wszText;
-			wszText.resize( ( rBuffer.size() - 2 ) / sizeof( wchar_t ) );
-			memcpy( &( wszText[0] ), &( rBuffer[0] ) + 2, wszText.size() * sizeof( wchar_t ) );
+			// Disk characters are UTF-16LE, regardless of native wchar_t width.
+			std::wstring wszText = DecodeUnicodeResource( rBuffer, pbNeedsUnicodeRepair );
 			if ( bRemove_0D )
 			{
 				wszText.erase( remove( wszText.begin(), wszText.end(), wchar_t( 0x0D ) ), wszText.end() );
@@ -434,9 +470,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 		}
 		else if ( pstrText != 0 )
 		{
-			std::string szText;
-			szText.resize( rBuffer.size() );
-			memcpy( &( szText[0] ), &( rBuffer[0] ), szText.size() );
+			std::string szText( rBuffer.begin(), rBuffer.end() );
 			if ( bRemove_0D )
 			{
 				szText.erase( remove( szText.begin(), szText.end(), 0x0D ), szText.end() );
@@ -467,8 +501,9 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::vector<uint
 }
 
 
-void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D )
+void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rszTextPath, bool bRemove_0D, bool *pbNeedsUnicodeRepair )
 {
+	if ( pbNeedsUnicodeRepair ) *pbNeedsUnicodeRepair = false;
 	if ( pstrText != 0 )
 	{
 		pstrText->clear();
@@ -482,7 +517,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rsz
 				fileBuffer.resize( streamHolder.pStream->GetSize() );
 				streamHolder.pStream->Read( &( fileBuffer[0] ), fileBuffer.size() );
 				//
-				File2String( pstrText, pbUnicode, fileBuffer, bRemove_0D );
+				File2String( pstrText, pbUnicode, fileBuffer, bRemove_0D, pbNeedsUnicodeRepair );
 			}
 		}
 	}	
@@ -498,12 +533,7 @@ void File2String( std::wstring *pwszText, const std::vector<uint8_t> &rBuffer, b
 				 ( rBuffer[0] == 0xFF ) &&
 				 ( rBuffer[1] == 0xFE ) )
 		{
-			if ( rBuffer.size() < 3 )
-			{
-				return;
-			}
-			pwszText->resize( ( rBuffer.size() - 2 ) / sizeof( wchar_t ) );
-			memcpy( &( ( *pwszText )[0] ), &( rBuffer[0] ) + 2, pwszText->size() * sizeof( wchar_t ) );
+			*pwszText = DecodeUnicodeResource( rBuffer );
 			if ( bRemove_0D )
 			{
 				pwszText->erase( remove( pwszText->begin(), pwszText->end(), wchar_t( 0x0D ) ), pwszText->end() );
@@ -533,7 +563,7 @@ void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool b
 {
 	if ( pwszText != 0 )
 	{
-		pwszText->empty();
+		pwszText->clear();
 		SFileStreamHolder streamHolder;
 		OpenStreamHolder( &streamHolder, rszTextPath );
 		if ( streamHolder.pStream && streamHolder.pStream->IsOk() )
@@ -558,47 +588,8 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::string &rstrText, bo
 		pBuffer->clear();
 		if ( bUnicode )
 		{
-			std::wstring wszText;
-			MBSC2Unicode( &wszText, rstrText );
-			if ( !wszText.empty() )
-			{
-				if ( bAdd_0D )
-				{
-					for ( int nIndex = 0; nIndex < wszText.size(); ++nIndex )
-					{
-						if ( wszText[nIndex] == wchar_t( 0x0A ) )
-						{
-							if ( ( nIndex == 0 ) || ( wszText[nIndex - 1] != wchar_t( 0x0D ) ) )
-							{
-								wszText.insert( wszText.begin() + nIndex, wchar_t( 0x0D ) );
-							}
-						}
-					}
-				}
-				int nLastIndex = 0;
-				for ( nLastIndex = ( wszText.size() - 1 ); nLastIndex >= 0; --nLastIndex )
-				{
-					if ( ( wszText[nLastIndex] != wchar_t( 0x0A ) ) && ( wszText[nLastIndex] != wchar_t( 0x0D ) ) )
-					{
-						break;
-					}
-				}
-				if ( nLastIndex < 0 )
-				{
-					wszText.clear();
-				}
-				else if ( nLastIndex < ( wszText.size() - 1 ) )
-				{
-					wszText = wszText.substr( 0, nLastIndex + 1 );
-				}
-				pBuffer->resize( 2 + wszText.size() * sizeof( wchar_t ) );
-				( *pBuffer )[0] = 0xFF;
-				( *pBuffer )[1] = 0xFE;
-				if ( !wszText.empty() )
-				{
-					memcpy( &( ( *pBuffer )[2] ), &( wszText[0] ), wszText.size() * sizeof( wchar_t ) );
-				}
-			}
+			// Share the wide writer so empty files retain their BOM too.
+			String2File( pBuffer, UTF8ToWide( rstrText ), bAdd_0D );
 		}
 		else
 		{
@@ -696,13 +687,10 @@ void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, b
 		{
 			wszText = wszText.substr( 0, nLastIndex + 1 );
 		}
-		pBuffer->resize( 2 + wszText.size() * sizeof( wchar_t ) );
-		( *pBuffer )[0] = 0xFF;
-		( *pBuffer )[1] = 0xFE;
-		if ( !wszText.empty() )
-		{
-			memcpy( &( ( *pBuffer )[2] ), &( wszText[0] ), wszText.size() * sizeof( wchar_t ) );
-		}
+		// Serialize Windows-compatible UTF-16LE, never native wchar_t bytes.
+		const std::string encoded = WideToUTF16LE( wszText );
+		pBuffer->assign( { 0xFF, 0xFE } );
+		pBuffer->insert( pBuffer->end(), encoded.begin(), encoded.end() );
 	}
 }
 
