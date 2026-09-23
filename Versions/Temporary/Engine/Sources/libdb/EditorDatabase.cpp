@@ -6,6 +6,9 @@
 #include "StructMetaInfo.h"
 #include "Bind.h"
 #include "Database.h"
+// For the LIBDB_EXPORT declaration of GetLastSaveError, defined below. Without it
+// the definition is not dllexport and MapEditor fails to link on Windows.
+#include "EditorDb.h"
 #include "Index.h"
 #include "ReportMetaInfo.h"
 #include "System/LightXML.h"
