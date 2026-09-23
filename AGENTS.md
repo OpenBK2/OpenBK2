@@ -2,17 +2,29 @@
 # AGENTS.md
 
 ## Project overview
-In this repo, you'll find the (slightly modified) source code of an old RTS game called "Blitzkrieg 2".
+In this repo, you'll find the modified source code of an old RTS game called "Blitzkrieg 2".
 It was ported from the old C++03 (+ VS 2003) to more modern C++17 (+ cmake) among other things.
+The game is now multiplatform, supporting Windows and Linux. Any new change to the code should be multiplatform compatible, unless it's said otherwise.
 The actual source code is in: `Versions/Temporary/Engine/Sources` folder
 Some additional dependencies are in `third_party/` folder
 Game also has multiplayer mode and replay system, which are based on command syncing + deterministic simulation
+Along with the game, there are Map Editor and Server apps for it.
 
 ## Coding
 Few rules:
 - If you have any questions - ask before coding anything!
 - On Windows, don't try build anything with regular system/CMD/Powershell CMake, this project used Visual Studio CMake and VS Developer Environment. On linux, you can use system CMake.
 - Add some comments when you make or change the code to make it clear what was done
+- Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
+
+### Determinism coding rules
+1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation. 
+2. Do not using client specific functions/variables in simulation code. E.g. `CDiplomacy::GetMyNumber()` or `CCommonUnit::IsSelectable()`
+3. Bugs, uninitialized variables, special rare hacks or undefined behaviour will likely break determinism too
+4. Do not use bad sorting operators that have ties, which have non deterministic effects
+
+While great majority of the code is deterministic by defalt, a single wrong bit is enough to ruin everything. So the aim should be to have gameplay simulation code 100% deterministic, no buts or excuses there.
+Using floating point math is fine for now as cross platform MP isn't done yet, but floating point types will be replaced with deterministic fixed point types andmath in the future.
 
 ### Game code projects
 Projects are just folders in `Sources` directory.
