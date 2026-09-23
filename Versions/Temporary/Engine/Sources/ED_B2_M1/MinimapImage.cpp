@@ -765,11 +765,13 @@ void RenderLake( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, cons
 }
 
 
-void Create( const NDb::SMapInfo *pMapInfo,
+bool Create( const NDb::SMapInfo *pMapInfo,
 						 const STerrainInfo *pTerrainInfo,
 						 const NDb::SMinimap *pMinimap,
-						 const CCreateParameterList &rCreateParameterList )
+						 const CCreateParameterList &rCreateParameterList, std::string *pError )
 {
+	bool bSuccess = true;
+	if ( pError ) pError->clear();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	NI_ASSERT( pUserData != 0, "Wrong parameter: pUserData == 0" );
 	NI_ASSERT( pMapInfo != 0, "Wrong parameter: pMapInfo == 0" );
@@ -1195,9 +1197,17 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			NImage::Scale( &compressedMinimapImage, minimapImage, NImage::IMAGE_SCALE_METHOD_LANCZOS3 );
 			minimapImage = compressedMinimapImage;
 		}
-		CFileStream imageStream( NVFS::GetMainFileCreator(), itCreateParameter->szImageFileName );
+		// Commit the complete TGA to the active data/mod layer. Export must not
+		// read an older mod image while generation writes into base Data.
+		CMemoryStream imageStream;
 		NImage::FlipY( minimapImage );
-		NImage::SaveAsTGA( minimapImage, &imageStream );
+		if ( !NImage::SaveAsTGA( minimapImage, &imageStream ) ) imageStream.SetBroken();
+		std::string error;
+		if ( !NVFS::WriteFile( NVFS::GetMainFileCreator(), itCreateParameter->szImageFileName, imageStream, &error ) )
+		{
+			bSuccess = false;
+			if ( pError && pError->empty() ) *pError = error;
+		}
 		// delete noises
 		{
 			int nIndex = 0;
@@ -1283,6 +1293,7 @@ void Create( const NDb::SMapInfo *pMapInfo,
 			++nIndex;
 		}
 	}
+	return bSuccess;
 }
 
 }

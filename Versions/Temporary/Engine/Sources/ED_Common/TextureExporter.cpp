@@ -269,18 +269,21 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	//
 	if ( bResult && CheckDestination(szDestination, rszObjectName) != false )
 	{
-		// copy file from temporary location to real destination
-		// Assign DestName only once a complete DDS is installed successfully.
-		NFile::CreatePath( NFile::GetFilePath(szRealDestination) );
-		// The temporary is in the system temp directory, which may be on another
-		// volume than the data folder, so this is the move that is allowed to fall
-		// back to a copy.
-		if ( !NFile::RenameFile( szDestination, szRealDestination ) )
+		// Use the same checked replacement as map saves: respect destination
+		// permissions and preserve the previous DDS if committing it fails.
+		std::string error;
+		bool saved = false;
 		{
-			NLog::Log( LT_ERROR, "Cannot write DDS: %s\n", szRealDestination.c_str() );
-			NFile::RemoveFile( szDestination );
+			CFileStream data( szDestination, CFileStream::WIN_READ_ONLY );
+			saved = NVFS::WriteFile( NVFS::GetMainFileCreator(), szRealDestination, data, &error );
+		}
+		NFile::RemoveFile( szDestination );
+		if ( !saved )
+		{
+			NLog::Log( LT_ERROR, "Cannot write DDS: %s\n", error.c_str() );
 			return ER_FAIL;
 		}
+		szRealDestination = NVFS::GetWritePath( NVFS::GetMainFileCreator(), szRealDestination );
 		CManipulatorManager::SetValue( dbDestination, pManipulator, "DestName" );
 		szDestination = szRealDestination;
 		// 

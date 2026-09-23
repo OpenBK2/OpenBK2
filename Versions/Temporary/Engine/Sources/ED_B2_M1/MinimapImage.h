@@ -246,10 +246,10 @@ void RenderOcean( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, con
 void RenderLake( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, const STerrainInfo *pTerrainInfo, ELakeType eLakeType, const CLakeList &rLakeList, uint32_t dwMinAlpha, const NDb::SMinimapLayer *pMinimapLayer );
 
 // Minimap creation
-void Create( const NDb::SMapInfo *pMapInfo,
+bool Create( const NDb::SMapInfo *pMapInfo,
 						 const STerrainInfo *pTerrainInfo,
 						 const NDb::SMinimap *pMinimap,
-						 const CCreateParameterList &rCreateParameterList );
+						 const CCreateParameterList &rCreateParameterList, std::string *pError = nullptr );
 
 }
 

@@ -31,7 +31,7 @@ struct SBindProcessor
 {
 	struct SArrayRequisites
 	{
-		std::vector<uint8_t> *pRawVector;
+		void *pRawVector;
 		NMetaInfo::SStructMetaInfo *pContained;
 		NTypeDef::STypeArray *pTypeArray;
 		UValue *pUValue;

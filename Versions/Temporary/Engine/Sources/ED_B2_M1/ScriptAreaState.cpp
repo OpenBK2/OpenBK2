@@ -7,6 +7,7 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "DrawToolsDC.h"
 #include "EnterName.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "ScriptAreaState.h"
 #include "port/mousekeys.h"
 
@@ -351,18 +352,30 @@ void CScriptAreaState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 
 unsigned CScriptAreaState::InsertPolygon( const CControlPointList &rControlPointList )
 {
-	// The prompt starts with the last name accepted; an empty name places
-	// nothing, as ever. Which toolkit draws it is NEnterName's business.
+	if ( rControlPointList.size() != 2 || !pMapInfoEditor || !pMapInfoEditor->GetViewManipulator() )
+		return INVALID_NODE_ID;
 	std::string szName;
-	if ( NEnterName::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), "Area name", "Area name", &szName ) )
+	while ( NEnterName::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), "Area name", "Area name", &szName ) )
 	{
-		if ( !szName.empty() )
+		if ( szName.empty() )
+			return INVALID_NODE_ID;
+		// Scripts use exact, case-sensitive names as keys; a duplicate would
+		// silently replace another area at mission startup. Read the live DB
+		// so names changed in the property editor are included too.
+		IManipulator *pManipulator = pMapInfoEditor->GetViewManipulator();
+		int count = 0;
+		if ( !CManipulatorManager::GetValue( &count, pManipulator, "ScriptAreas" ) )
+			return INVALID_NODE_ID;
+		bool duplicate = false;
+		for ( int i = 0; i < count; ++i )
 		{
-			if ( rControlPointList.size() == 2 )
-			{
-				return InsertScriptArea( dialogData.eAreaType, szName, rControlPointList.front(), rControlPointList.back() );
-			}
+			std::string existing;
+			CManipulatorManager::GetValue( &existing, pManipulator, fmt::format( "ScriptAreas.[{}].Name", i ) );
+			if ( existing == szName ) { duplicate = true; break; }
 		}
+		if ( !duplicate )
+			return InsertScriptArea( dialogData.eAreaType, szName, rControlPointList.front(), rControlPointList.back() );
+		NMessage::Warning( "A script area named \"" + szName + "\" already exists. Please choose a different name." );
 	}
 	return INVALID_NODE_ID;
 }
@@ -424,14 +437,17 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 		return false;
 	}
 
+	// Each removal refreshes dialogData, so keep the original request stable.
+	const SScriptAreaWindowData changes = dialogData;
+
 	// удаление
-	if ( dialogData.eChangeMask & SScriptAreaWindowData::CHANGE_DEL_SEL )
+	if ( changes.eChangeMask & SScriptAreaWindowData::CHANGE_DEL_SEL )
 	{
-		if ( !dialogData.selectedScriptAreaIDList.empty() )
+		if ( !changes.selectedScriptAreaIDList.empty() )
 		{
-			for ( int nScriptAreIndex = 0; nScriptAreIndex < dialogData.selectedScriptAreaIDList.size(); ++nScriptAreIndex )
+			for ( int nScriptAreIndex = 0; nScriptAreIndex < changes.selectedScriptAreaIDList.size(); ++nScriptAreIndex )
 			{
-				RemoveScriptArea( dialogData.selectedScriptAreaIDList[nScriptAreIndex] );
+				RemoveScriptArea( changes.selectedScriptAreaIDList[nScriptAreIndex] );
 			}
 			//
 			ClearSelection();
@@ -445,16 +461,16 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 	}
 	//
 	// кто поселекчен
-	if ( dialogData.eChangeMask & SScriptAreaWindowData::CHANGE_SELECTION )
+	if ( changes.eChangeMask & SScriptAreaWindowData::CHANGE_SELECTION )
 	{
 		ClearSelection();
-		if ( !dialogData.selectedScriptAreaIDList.empty() )
+		if ( !changes.selectedScriptAreaIDList.empty() )
 		{
 			for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end(); ++itScriptArea )
 			{
-				for ( int nScriptAreIndex = 0; nScriptAreIndex < dialogData.selectedScriptAreaIDList.size(); ++nScriptAreIndex )
+				for ( int nScriptAreIndex = 0; nScriptAreIndex < changes.selectedScriptAreaIDList.size(); ++nScriptAreIndex )
 				{
-					if ( dialogData.selectedScriptAreaIDList[nScriptAreIndex] == itScriptArea->second.nScriptAreaID )
+					if ( changes.selectedScriptAreaIDList[nScriptAreIndex] == itScriptArea->second.nScriptAreaID )
 					{
 						itScriptArea->second.bSelected = true;
 						CVec3 vAnchor = CVec3( itScriptArea->second.GetCenter(), 0.0f );

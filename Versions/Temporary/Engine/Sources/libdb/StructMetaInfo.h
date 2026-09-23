@@ -2,6 +2,7 @@
 
 #include "TypeDef.h"
 #include "OwnValue.h"
+#include "ArrayOperations.h"
 
 #include <cstdint>
 
@@ -103,6 +104,7 @@ public:
 	int nStructSize;
 	int nNumOwnValues;
 	int nNumCodeValues;
+	const SArrayOperations *pArrayOperations = nullptr; // operations on the containing vector, for array elements
 	CPtr<NTypeDef::STypeStructBase> pStructTypeDef;
 	//
 	SStructMetaInfo(): nStructSize(0), nNumOwnValues(0), nNumCodeValues(0) {}

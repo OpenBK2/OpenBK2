@@ -130,11 +130,17 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 			// create empty texture image
 			CArray2D<uint32_t> image( 256, 256 );
 			image.FillEvery( 0xffffffff );
-			const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-			CFileStream stream( pUserData->constUserData.szExportSourceFolder + szFolder + "minimap.tga", CFileStream::WIN_CREATE );
-			NImage::SaveAsTGA( image, &stream );
-			// export new texture
-			Singleton<IExporterContainer>()->ExportObject( pTexMan, TEXTURE_TYPE_NAME, szTextureName, true, false );
+			// New maps need the source in the same mod layer as later saves.
+			CMemoryStream stream;
+			if ( !NImage::SaveAsTGA( image, &stream ) ) stream.SetBroken();
+			std::string error;
+			if ( !NVFS::WriteFile( NVFS::GetMainFileCreator(), szFolder + "minimap.tga", stream, &error ) )
+			{
+				NLog::Log( LT_ERROR, "%s\n", error.c_str() );
+				return false;
+			}
+			if ( Singleton<IExporterContainer>()->ExportObject( pTexMan, TEXTURE_TYPE_NAME, szTextureName, true, false ) != ER_SUCCESS )
+				return false;
 		}
 		// create material
 		const std::string szMaterialName = szFolder + "minimap_material.xdb";

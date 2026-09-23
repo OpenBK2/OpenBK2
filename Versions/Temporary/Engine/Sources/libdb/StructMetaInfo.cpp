@@ -151,7 +151,9 @@ void SStructMetaInfo::SField::DestructBinary( uint8_t *pThis, NBind::UValue *val
 			break;
 
 		case NTypeDef::TYPE_TYPE_ARRAY:
-			data.pArray->Remove( 0, -1, *this, pThis );
+			// The real vector owns its C++ elements; release only reflection's
+			// extra values here, including those in nested arrays.
+			data.pArray->ClearOwnValues( *this, pThis );
 			delete data.pArray;
 			break;
 		}
@@ -272,6 +274,7 @@ void SStructMetaInfo::MakeDeepCopy( SStructMetaInfo *pRes ) const
 	pRes->nStructSize = nStructSize;
 	pRes->nNumOwnValues = nNumOwnValues;
 	pRes->nNumCodeValues = nNumCodeValues;
+	pRes->pArrayOperations = pArrayOperations;
 	pRes->pStructTypeDef = pStructTypeDef;
 	//
 	singleField.MakeDeepCopy( &pRes->singleField );

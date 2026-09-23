@@ -511,8 +511,15 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 		}
 	}
 	//
-	CMapInfoBuilder::EnsureMinimapMaterialAndTexture( GetViewManipulator(), pMapInfo->GetDBID() );
-	CreateMinimapImage();
+	// A failed minimap export is a failed save too; keep the document open
+	// and modified so the common save handler can report the error and retry.
+	if ( !CMapInfoBuilder::EnsureMinimapMaterialAndTexture( GetViewManipulator(), pMapInfo->GetDBID() ) )
+		szSaveError = "Could not create the map's minimap material and texture.";
+	if ( !szSaveError.empty() || !CreateMinimapImage() )
+	{
+		bSaveFailed = true;
+		return;
+	}
 	if ( pMiniMapView != 0 )
 	{
 		pMiniMapView->LoadMap( pMapInfo );
@@ -744,7 +751,11 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		case ID_MIMCO_GENERATE_MINIMAP_IMAGE:
 		{
-			CreateMinimapImage();
+			if ( !CreateMinimapImage() )
+			{
+				NMessage::Error( szSaveError, "Minimap export failed" );
+				return false;
+			}
 			if ( pMiniMapView != 0 )
 			{
 				pMiniMapView->LoadMap( pMapInfo );

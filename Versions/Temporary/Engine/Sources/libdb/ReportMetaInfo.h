@@ -3,6 +3,7 @@
 #include "libdb_export.h"
 
 #include "Type.h"
+#include "ArrayOperations.h"
 
 #include <cstdint>
 
@@ -25,6 +26,8 @@ void AddOnStack( SStructMetaInfo *pInfo );
 LIBDB_EXPORT void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType );
 LIBDB_EXPORT void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType,
 	                   int nContainedSize, NTypeDef::ETypeType eContainedType );
+LIBDB_EXPORT void ReportArrayMetaInfo( const std::string &szName, int nPtrShift, int nSizeof,
+	int nContainedSize, NTypeDef::ETypeType eContainedType, const SArrayOperations *pOperations );
 void DropMetaInfo();
 
 typedef std::unordered_map<std::string, CObj<SStructMetaInfo> > CMetaInfoMap;
@@ -182,8 +185,8 @@ inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, con
 template <class TYPE>
 	inline void ReportStructArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY,
-		                         sizeof(TYPE), NTypeDef::TYPE_TYPE_STRUCT );
+	NMetaInfo::ReportArrayMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField),
+		sizeof(TYPE), NTypeDef::TYPE_TYPE_STRUCT, ArrayOperations<TYPE>() );
 	TYPE temp;
 	ReportStructMetaInfo( "", &temp, (uint8_t*)&temp );
 	FinishMetaInfoReport();
@@ -192,8 +195,8 @@ template <class TYPE>
 template <class TYPE>
 	inline void ReportSimpleArrayMetaInfo( const std::string &szName, const std::vector<TYPE> *pField, uint8_t *pThis )
 {
-	NMetaInfo::ReportMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField), NTypeDef::TYPE_TYPE_ARRAY,
-		sizeof(TYPE), GetSimpleTypeDef( (TYPE*)0 ) );
+	NMetaInfo::ReportArrayMetaInfo( szName, (uint8_t*)pField - pThis, sizeof(*pField),
+		sizeof(TYPE), GetSimpleTypeDef( (TYPE*)0 ), ArrayOperations<TYPE>() );
 }
 
 struct LIBDB_EXPORT STerminalClassReporter

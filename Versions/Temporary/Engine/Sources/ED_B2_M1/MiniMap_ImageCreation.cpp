@@ -22,6 +22,7 @@
 #include "MinimapImage.h"
 #include "SeasonMnemonics.h"
 #include "System/VFSOperations.h"
+#include "System/FilePath.h"
 
 #include <zconf.h>
 
@@ -38,57 +39,43 @@ namespace NImage
 
 bool CMapInfoEditor::CreateMinimapImage()
 {
+	szSaveError.clear();
 	IResourceManager *pRM = Singleton<IResourceManager>();
-	std::string szMiniMapMaterialName;
-	CManipulatorManager::GetValue( &szMiniMapMaterialName, GetViewManipulator(), "MiniMap" );
-	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " ) 
+	std::string materialName, textureName, source;
+	CManipulatorManager::GetValue( &materialName, GetViewManipulator(), "MiniMap" );
+	CPtr<IManipulator> material;
+	if ( !materialName.empty() && materialName != " " )
+		material = pRM->CreateObjectManipulator( "Material", materialName );
+	if ( material ) CManipulatorManager::GetValue( &textureName, material, "Texture" );
+	CPtr<IManipulator> texture;
+	if ( !textureName.empty() && textureName != " " )
+		texture = pRM->CreateObjectManipulator( "Texture", textureName );
+	if ( texture ) CManipulatorManager::GetValue( &source, texture, "SrcName" );
+	if ( !pMapInfo || !texture || source.empty() || source == " " )
 	{
-		if ( CPtr<IManipulator> pMaterialMan = pRM->CreateObjectManipulator("Material", szMiniMapMaterialName) )
-		{
-			std::string szMiniMapTextureName;
-			CManipulatorManager::GetValue( &szMiniMapTextureName, pMaterialMan, "Texture" );
-			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " ) 
-			{
-				// delete texture source and destination
-				if ( CPtr<IManipulator> pTexMan = pRM->CreateObjectManipulator("Texture", szMiniMapTextureName) )
-				{
-					std::string szSrcName;
-					if ( CManipulatorManager::GetValue( &szSrcName, pTexMan, "SrcName" ) != false && !szSrcName.empty() && szSrcName != " " )
-					{
-						const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-						NMinimapImage::CCreateParameterList createParameterList;
-						createParameterList.insert( createParameterList.begin(),
-																				NMinimapImage::SCreateParameter( pUserData->constUserData.szExportSourceFolder + szSrcName, CTPoint<int>( 256, 256 ) ) );
-						//
-						bool bTerrainLoaded = false;
-						const STerrainInfo *pTerrainInfo = Scene()->GetTerraManager()->GetTerraInfo();
-						//const std::string szTerrainInfoFileName = GetTerrainBinFileName( pMapInfo );
-						//if ( !szTerrainInfoFileName.empty() )
-						//{
-						//	CFileStream stream( NVFS::GetMainVFS(), szTerrainInfoFileName );
-						//	if ( stream.IsOk()  )
-						//	{
-						//		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
-						//		NI_ASSERT( pSaver != 0, fmt::format( "Can't open stream \"{}\" to read map", szTerrainInfoFileName.c_str() ) );
-						//		pSaver->Add( 1, &terrainInfo );
-						//		bTerrainLoaded = true;
-						//	}
-						//}
-						//
-						const std::string szMinimapName = NEditorOptions::GetMinimap( typeSeasonMnemonics.GetMnemonic( pMapInfo->eSeason ) );
-						const NDb::SMinimap *pMinimap = NDb::Get<NDb::SMinimap>( CDBID( szMinimapName ) );
-						if ( pMapInfo && pMapInfo->pTerraSet && pMinimap )
-						{
-							NMinimapImage::Create( pMapInfo, pTerrainInfo, pMinimap, createParameterList );  
-							// export new texture
-							Singleton<IExporterContainer>()->ExportObject( pTexMan, "Texture", szMiniMapTextureName, true, false );
-							return true;
-						}
-					}
-				}
-			}
-		}
+		szSaveError = "The map has no valid minimap material, texture or source image path.";
+		return false;
+	}
+	const std::string minimapName = NEditorOptions::GetMinimap( typeSeasonMnemonics.GetMnemonic( pMapInfo->eSeason ) );
+	const NDb::SMinimap *minimap = NDb::Get<NDb::SMinimap>( CDBID( minimapName ) );
+	if ( !pMapInfo->pTerraSet || !minimap )
+	{
+		szSaveError = "The terrain set or minimap settings are missing: " + minimapName;
+		return false;
+	}
+	// SrcName is a database file path, already resolved relative to its XDB.
+	// Use the same mounted mod source that the texture exporter will read.
+	NMinimapImage::CCreateParameterList parameters;
+	parameters.emplace_back( source, CTPoint<int>( 256, 256 ) );
+	if ( !NMinimapImage::Create( pMapInfo, Scene()->GetTerraManager()->GetTerraInfo(), minimap, parameters, &szSaveError ) )
+		return false;
+	const EXPORT_RESULT result = Singleton<IExporterContainer>()->ExportObject( texture, "Texture", textureName, true, false );
+	if ( result != ER_SUCCESS )
+	{
+		szSaveError = "Could not export the minimap DDS:\n" +
+			NVFS::GetWritePath( NVFS::GetMainFileCreator(), NFile::CutFileExt( textureName, "xdb" ) + ".dds" ) +
+			"\nSee the Log window for the texture export error.";
+		return false;
 	}
 	return true;
 }
-

@@ -119,6 +119,14 @@ void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTyp
 // **
 // ************************************************************************************************************************ //
 
+void ReportArrayMetaInfo( const std::string &szName, int nPtrShift, int nSizeof,
+	int nContainedSize, NTypeDef::ETypeType eContainedType, const SArrayOperations *pOperations )
+{
+	SStructMetaInfo *pStruct = s_pMetaInfo->structsStack.back();
+	pStruct->AddField( szName, nPtrShift, nSizeof, NTypeDef::TYPE_TYPE_ARRAY, nContainedSize, eContainedType );
+	pStruct->fields[szName].pContained->pArrayOperations = pOperations;
+}
+
 STerminalClassReporter::STerminalClassReporter( CResource *pRes, IXmlSaver &_saver )
 	: saver( _saver )
 {
