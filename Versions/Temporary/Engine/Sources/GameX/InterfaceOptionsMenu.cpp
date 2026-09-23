@@ -13,6 +13,7 @@
 #include "GetConsts.h"
 #include "System/Text.h"
 #include "System/Commands.h"
+#include "port/messagebox.h"
 
 #include "3Dmotor/GAutoDetect.h"
 #include "3Dmotor/GfxBenchmark.h"
@@ -752,6 +753,17 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 	}
 
 	CDBPtr<NDb::SGameRoot> pGameRoot = NGameX::GetGameRoot();
+	if (!pGameRoot)
+	{
+		MessageBox(
+			nullptr, 
+			"GameRoot.xdb file not found. Are you missing Data folder?",
+			"Error",
+			MB_OK | MB_ICONERROR
+		);
+		return;
+	}
+
 	CDBPtr<NDb::SOptionSystem> pOptionSystem = pGameRoot->pGameOptions;
 
 	const NDb::SOptionSystem::SOptionsCategory::SOptionEntry *pQualityOption = 0;
