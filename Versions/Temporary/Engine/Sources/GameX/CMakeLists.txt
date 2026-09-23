@@ -137,6 +137,8 @@ target_link_libraries(GameX PRIVATE
 )
 if(WIN32)
     target_link_libraries(GameX PRIVATE winapi)
+else()
+    target_link_libraries(GameX PRIVATE SDL3::SDL3-shared)
 endif()
 install(TARGETS GameX DESTINATION bin)
 add_version_info(GameX)
