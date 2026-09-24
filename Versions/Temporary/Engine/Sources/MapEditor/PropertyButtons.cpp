@@ -11,6 +11,7 @@
 #include "FileDialogs.h"
 
 #include "PropertyButtons.h"
+#include "ED_Common/GltfImport.h"
 #include "BitFieldView.h"
 #include "PropertyValues.h"
 #include "TextEditorView.h"
@@ -276,7 +277,7 @@ namespace
 	// OnBrowse of the file reference and both text files: a file under the
 	// property's data folder, as a path relative to it. A file anywhere else is
 	// not taken. The folder it was picked in is where the next picker with the
-	// same mask opens.
+	// same mask opens. Model pickers additionally import external packages.
 	bool BrowseFile( const NPropertyButton::SContext &rContext, std::string *pszNewText )
 	{
 		const SPropertyDesc *const pDesc = rContext.pDesc;
@@ -293,7 +294,21 @@ namespace
 			if ( NFileDialog::OpenFile( rContext.pOwner, szTitle, szMask, szInitialDir, &szFullFilePath ) && rContext.bEditable )
 			{
 				const std::string szDataFolder = Singleton<IMODContainer>()->GetDataFolder( GetPathType( pDesc ) );
-				if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
+				if ( rContext.szName == "ModelFileRef" && rContext.pObjectSet && !rContext.pObjectSet->objectNameSet.empty() )
+				{
+					// The resource already has a destination; import outside files now.
+					std::string error;
+					bResult = NEditorGltf::ImportModelFile(NDb::GetFileName(rContext.pObjectSet->objectNameSet.begin()->first),
+						szFullFilePath, pszNewText, &error);
+					if ( !bResult ) NMessage::Error(error, "Import model");
+				}
+				else if ( rContext.szName == "ModelFileName" )
+				{
+					// The VisObj wizard imports after its destination name is known.
+					*pszNewText = szFullFilePath;
+					bResult = true;
+				}
+				else if ( CStringManager::Compare( szFullFilePath, szDataFolder, true, true, true ) == 0 )
 				{
 					( *pszNewText ) = szFullFilePath.substr( szDataFolder.size() );
 					std::string szObjectNamePrefix;
@@ -301,6 +316,7 @@ namespace
 					rFilePathMap[szMask] = szObjectNamePrefix;
 					bResult = true;
 				}
+				if ( bResult ) rFilePathMap[szMask] = NFile::GetFilePath(szFullFilePath);
 			}
 		}
 		RemoveSceneInput();

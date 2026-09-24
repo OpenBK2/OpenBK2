@@ -19,6 +19,12 @@ namespace NDb
 	struct SPassProfile;
 }
 
+namespace NEditorGltf { struct SMeshData; }
+bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, int smoothRadius );
+bool CreateObjectDynamicDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, float width );
+bool CreateObjectPassability( const NEditorGltf::SMeshData &mesh, CArray2D<uint8_t> *passability, CVec2 *origin );
+bool CreateObjectPassabilityProfile( const NEditorGltf::SMeshData &mesh, float zEpsilon, NDb::SPassProfile *profile );
+
 #define ANIMATIONS_ROOT_JOINT "Animations"
 
 bool CreateObjectStaticDebris( const std::string &rszGrannyFileName, const std::string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius );

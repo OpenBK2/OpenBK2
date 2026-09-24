@@ -17,7 +17,8 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 		SAnimationInfo( const int _nStartTime, const int _nEndTime ) : nStartTime( _nStartTime ), nEndTime( _nEndTime ) {}
 	};
 
-	std::unordered_map<int, std::string> materials;
+	// Include model and source folder so seasonal sections never share the wrong texture.
+	std::unordered_map<std::string, std::string> materials;
 
 	const bool UpdateVisObj( IManipulator* pManipulator, const std::string &szRefName, const std::vector<SAnimationInfo> &frames, const int nStage );
 	const bool CopyModel( const std::string &szOldModelName, const std::string &szNewName, const std::string &szRoot );

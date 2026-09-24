@@ -1317,53 +1317,6 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 	}
 }
 
-namespace
-{
-bool ValidateUnitModelSources( IManipulator *resource, const std::string &type,
-	std::unordered_set<CDBID> *visited, std::string *error )
-{
-	if ( !visited->insert(resource->GetDBID()).second ) return true;
-	if ( type == "Geometry" || type == "AIGeometry" || type == "Skeleton" || type == "AnimB2" )
-	{
-		if ( !NEditorGltf::IsGltf(resource) )
-		{
-			*error = "Maya/Granny source export is no longer supported for MechUnitRPGStats.\n"
-				"Set ModelFileRef (or SrcName) to a GLB/GLTF model first.\n\n" + NDb::GetFileName(resource->GetDBID());
-			return false;
-		}
-		if ( !NEditorGltf::Export(resource, type, false) )
-		{
-			*error = "Cannot export the GLB/GLTF resource below. Check its source file and "
-				"RootMesh, RootJoint or ClipName; details are in the log.\n\n" + NDb::GetFileName(resource->GetDBID());
-			return false;
-		}
-	}
-	CPtr<IManipulatorIterator> it = resource->Iterate(true, ECT_CACHE_GLOBAL);
-	if ( !it ) return true;
-	for ( ; !it->IsEnd(); it->Next() )
-	{
-		std::string name;
-		it->GetName(&name);
-		const auto *desc = dynamic_cast<const SPropertyDesc *>(resource->GetDesc(name));
-		if ( !desc || desc->refTypes.empty() ) continue;
-		std::string refType, refName;
-		if ( !CManipulatorManager::GetParamsFromReference(name, resource, &refType, &refName, nullptr) ||
-			refName.empty() ) continue;
-		// Only the model/animation graph needs source conversion; textures and
-		// gameplay references retain their own exporters and validation.
-		if ( refType != "VisObj" && refType != "Model" && refType != "Geometry" &&
-			refType != "AIGeometry" && refType != "Skeleton" && refType != "AnimB2" ) continue;
-		CPtr<IManipulator> child = CManipulatorManager::CreateManipulatorFromReference(name, resource, 0, 0, 0);
-		if ( !child )
-		{
-			*error = "Cannot load model resource: " + refName;
-			return false;
-		}
-		if ( !ValidateUnitModelSources(child, refType, visited, error) ) return false;
-	}
-	return true;
-}
-}
 
 EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 																											 const std::string &rszObjectTypeName,
@@ -1371,19 +1324,8 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::ExportObject( IManipulator* pManipulato
 																											 bool bForce,
 																											 EXPORT_TYPE exportType )
 {
-	if ( exportType != ET_AFTER_REF )
-	{
-		// Abort before recursive exporters can launch Maya or replace unit data.
-		std::unordered_set<CDBID> visited;
-		std::string error;
-		if ( !ValidateUnitModelSources(pManipulator, rszObjectTypeName, &visited, &error) )
-		{
-			// Owned by the main frame now, where this passed no owner and so could
-			// end up behind the editor.
-			NMessage::Error( error, "MechUnit export" );
-			return ER_BREAK;
-		}
-	}
+	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport(pManipulator, rszObjectTypeName) )
+		return ER_BREAK;
 	const EXPORT_RESULT baseResult = CHPObjectRPGStatsExporter::ExportObject(
 		pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType);
 	if ( baseResult == ER_FAIL || baseResult == ER_BREAK ) return baseResult;

@@ -3,6 +3,7 @@
 
 #include "BasicSceneExporter.h"
 #include "GltfExporter.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_MOD.h"
 
@@ -57,84 +58,14 @@ EXPORT_RESULT CBasicSceneExporter::ExportObject( IManipulator* pManipulator,
                                                  bool bForce,
                                                  EXPORT_TYPE exportType )
 {
-	// GLTF resources already contain engine-readable geometry and animations.
-	if ( NEditorGltf::IsGltf(pManipulator) )
-	{
-		if ( exportType == ET_AFTER_REF ) return ER_SUCCESS;
-		return NEditorGltf::Export(pManipulator, rszObjectTypeName, true) &&
-			ImportGltfInfo(pManipulator) ? ER_SUCCESS : ER_BREAK;
-	}
-	NI_ASSERT( pManipulator != 0, "CBasicSceneExporter::ExportObject() pManipulator == 0 )" );
-	ILogger *pLogger = NLog::GetLogger();
-	//
-	if ( Validate( pManipulator ) == false )
-		return ER_FAIL;
-	//
-	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	// Export this object
-	std::string szSrcScenePath;
-	BuildSrcFilePath( &szSrcScenePath, pManipulator, "SrcName" );
-	if ( NFile::DoesFileExist( szSrcScenePath ) == false )
-	{
-		NLog::Log( LT_ERROR, "Source file does not exists!\n" );
-		NLog::Log( LT_ERROR, "\tFile name: %s\n", szSrcScenePath.c_str() );
-		NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
-		NLog::Log( LT_ERROR, "\tObject type: %s\n", rszObjectTypeName.c_str() );
-		return ER_BREAK;
-	}
-	std::string szDestinationFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + GetAddPath();
-	std::string szDestinationPath = BuildDestFilePath( pManipulator, szDestinationFolder );
-	NFile::NormalizePath( &szDestinationPath );
-	std::string szObjName( rszObjectName );
-	NFile::NormalizePath( &szObjName );
-
-	std::string szTempDstPath = NFile::GetTempFileName() + ".gr2";
-	NFile::NormalizePath( &szTempDstPath );
-
-	if ( exportType == ET_BEFORE_REF || exportType == ET_NO_REF )
-	{
-		// check for source and destination times if not forced mode
-		if ( CheckFilesUpdated( szSrcScenePath, szDestinationPath, bForce ) )
-			return ER_SUCCESS;
-		// export geometry
-		bool bResult = true;
-		try
-		{
-			if ( ExportFromMaya( rszObjectTypeName, szObjName, szTempDstPath, szSrcScenePath, pManipulator ) &&
-				   WaitForFile( szTempDstPath, 10000, true ) && 
-				   CustomCheck( rszObjectTypeName, szObjName, szSrcScenePath, szTempDstPath, pManipulator ) == ER_SUCCESS )
-			{
-				bResult = bResult && ImportInfoToDBBeforeRefs( szObjName, szSrcScenePath, szTempDstPath, pManipulator );
-				MoveTempFileToDestination( szTempDstPath, szDestinationPath );
-			}
-			else
-			{
-				NFile::RemoveFile( szTempDstPath.c_str() );
-				bResult = false;
-			}
-		}
-		catch ( ... )
-		{
-			NFile::RemoveFile( szTempDstPath.c_str() );
-			bResult = false;
-			NLog::Log( LT_ERROR, "Export failed\n" );
-			NLog::Log( LT_ERROR, "\tObject type: \"%s\"\n", rszObjectTypeName.c_str() );
-			NLog::Log( LT_ERROR, "\tObject name: \"%s\"\n", rszObjectName.c_str() );
-			NLog::Log( LT_ERROR, "\tSource file name: \"%s\"\n", szSrcScenePath.c_str() );
-			NLog::Log( LT_ERROR, "\tDestination file name: \"%s\"\n", szDestinationPath.c_str() );
-			return ER_FAIL;
-		}
-		return (bResult ? ER_SUCCESS : ER_FAIL);
-	}
-	if ( exportType == ET_AFTER_REF || exportType == ET_NO_REF )
-	{
-		bool bResult = ImportInfoToDBAfterRefs( szObjName,
-																						szSrcScenePath,
-																						szDestinationPath,
-																						pManipulator );
-		return (bResult ? ER_SUCCESS : ER_FAIL);
-	}
-
+	// Export consumes engine-readable GLB/GLTF packages. Legacy GR2 loading
+	// and checking remain available, but this path never launches Maya.
+	if ( exportType == ET_AFTER_REF ) return ER_SUCCESS;
+	if ( !NEditorGltf::ValidateForExport(pManipulator, rszObjectTypeName) ) return ER_BREAK;
+	if ( NEditorGltf::Export(pManipulator, rszObjectTypeName, true) && ImportGltfInfo(pManipulator) )
+		return ER_SUCCESS;
+	NMessage::Error("Could not export " + rszObjectName +
+		". Check the model source, selectors and destination permissions; details are in the log.", "Model export");
 	return ER_BREAK;
 }
 

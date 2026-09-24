@@ -329,12 +329,14 @@ void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
 		if ( pGeomMan == 0 )
 			return;
-		CManipulatorManager::GetValue( &szTextureFolder, pGeomMan, "SrcName" );
-		if ( szTextureFolder.empty() )
-			return;
-		szTextureFolder = szTextureFolder.substr( 0, szTextureFolder.rfind( '\\' ) + 1 );
-		const std::string szIconTextureFileName = szTextureFolder + "icon.tga";
-		if ( NFile::DoesFileExist( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szIconTextureFileName ) )
+		// GLTF ModelFileRef can live elsewhere; icon.tga stays beside the authored textures.
+		CPtr<IManipulator> material = CManipulatorManager::CreateManipulatorFromReference("Materials.[0]", pModelMan, 0, 0, 0);
+		CPtr<IManipulator> texture = material ? CManipulatorManager::CreateManipulatorFromReference("Texture", material, 0, 0, 0) : nullptr;
+		if ( texture ) CManipulatorManager::GetValue(&szTextureFolder, texture, "SrcName");
+		if ( szTextureFolder.empty() ) CManipulatorManager::GetValue(&szTextureFolder, pGeomMan, "SrcName");
+		if ( szTextureFolder.empty() ) return;
+		const std::string szIconTextureFileName = NFile::JoinPath(NFile::GetFilePath(szTextureFolder), "icon.tga");
+		if ( NFile::DoesFileExist(NFile::JoinPath(Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, szIconTextureFileName)) )
 		{
 			szIconTextureName = szIconTexturePrefix + fmt::format( "{}\\{}", szObjectTypeName.c_str(), szObjectName.c_str() );
 			pFolderCallback->InsertObject( "Texture", szIconTextureName );
@@ -371,6 +373,7 @@ EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulato
 																											EXPORT_TYPE exportType )
 {
 	EXPORT_RESULT result = CBasicExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
+	if ( result != ER_SUCCESS ) return result;
 	if ( exportType == ET_BEFORE_REF )
 	{
 		return ER_SUCCESS;

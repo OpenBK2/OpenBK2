@@ -294,16 +294,26 @@ bool CEditorDatabase::LoadTypesMap()
 			pClass->fields.push_back( added );
 			pField = &pClass->fields.back();
 		}
-		if ( pField->szName == "ModelFileRef" && !pField->HasAttribute("filepath") )
+	}
+	// Upgrade property controls in shipped types.xml too. These attributes
+	// affect the editor picker, not resource serialization or legacy GR2 data.
+	for ( const char *typeName : {"Geometry", "AIGeometry", "Skeleton", "AnimB2", "VisObjBuilder"} )
+	{
+		const auto type = typesMap.find(typeName);
+		if ( type == typesMap.end() ) continue;
+		auto *pClass = dynamic_cast<NTypeDef::STypeClass*>(type->second.GetPtr());
+		if ( !pClass ) continue;
+		for ( auto &field : pClass->fields )
 		{
-			// ModelFileRef is a FilePathRef, serialized as <ModelFileRef href="..."/>.
-			// Without this attribute the editor reads empty element text, falls back
-			// to the GR2 UID, and can erase the GLB reference when saving the resource.
-			// Repair existing incomplete schemas too, preserving their other attributes.
-			pField->pAttributes = pField->pAttributes
-				? new NTypeDef::SAttributes(pField->pAttributes->attributes)
-				: new NTypeDef::SAttributes();
-			pField->pAttributes->attributes["filepath"] = true;
+			if ( field.szName != "ModelFileRef" && field.szName != "ModelFileName" ) continue;
+			field.pAttributes = field.pAttributes
+				? new NTypeDef::SAttributes(field.pAttributes->attributes) : new NTypeDef::SAttributes();
+			auto &attributes = field.pAttributes->attributes;
+			// filepath is also required to read/write <ModelFileRef href="..."/>.
+			attributes["filepath"] = true;
+			attributes["editorControl"] = "string_file_ref";
+			attributes["intParam"] = 1;
+			attributes["stringParam"] = "GLB/GLTF models (*.glb;*.gltf)|*.glb;*.gltf;*.GLB;*.GLTF|All Files (*.*)|*.*||";
 		}
 	}
 	return true;

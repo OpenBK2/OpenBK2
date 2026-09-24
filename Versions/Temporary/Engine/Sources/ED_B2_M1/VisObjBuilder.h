@@ -27,7 +27,6 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 	static const char AIGEOMETRY_TYPE_NAME[];
 	static const char SKELETON_TYPE_NAME[];
 	static const std::string RESOURCE_PREFIX[RT_COUNT];
-	static const char MODEL_FILE_NAME_EXTENTION[];
 	static const char TEXTURE_FILE_NAME_EXTENTION[];
 	static const std::string BUILD_DATA_TYPE_NAME;
 	//

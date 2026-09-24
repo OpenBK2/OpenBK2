@@ -21,7 +21,9 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 																						bool bForce,
 																						EXPORT_TYPE exportType )
 {
-	if ( exportType == ET_BEFORE_REF ) 
+	if ( exportType != ET_AFTER_REF && !NEditorGltf::ValidateForExport(pManipulator, rszObjectTypeName) )
+		return ER_BREAK;
+	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -36,6 +38,8 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
 			return ER_FAIL;
 		}
+		if ( NEditorGltf::IsGltf(pGeomMan) && exportType == ET_NO_REF &&
+			!NEditorGltf::Export(pGeomMan, "Geometry", true) ) return ER_BREAK;
 		int nNumGeometryMeshes = 0;
 		CManipulatorManager::GetValue( &nNumGeometryMeshes, pGeomMan, "NumMeshes" );
 		if ( nNumGeometryMeshes == 0 ) 
@@ -238,3 +242,17 @@ using namespace NModelExporter;
 REGISTER_EXPORTER_IN_DLL( Model, CModelExporter )
 
 
+
+// VisObj has no binary of its own. Validate all seasonal models before the
+// default exporter walks their geometry, materials, skeletons and animations.
+class CVisObjExporter : public CBasicExporter
+{
+	OBJECT_NOCOPY_METHODS(CVisObjExporter);
+public:
+	EXPORT_RESULT ExportObject( IManipulator *resource, const std::string &type,
+		const std::string &, bool, EXPORT_TYPE phase ) override
+	{
+		return phase == ET_AFTER_REF || NEditorGltf::ValidateForExport(resource, type) ? ER_SUCCESS : ER_BREAK;
+	}
+};
+REGISTER_EXPORTER_IN_DLL( VisObj, CVisObjExporter )

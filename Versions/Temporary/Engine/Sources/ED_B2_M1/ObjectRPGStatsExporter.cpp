@@ -9,6 +9,7 @@
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "ExporterMethods.h"
+#include "ED_Common/GltfExporter.h"
 
 #include <zconf.h>
 
@@ -21,7 +22,8 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 																										bool bExport,
 																										EXPORT_TYPE exportType )
 {
-	CObjectBaseRPGStatsExporter::CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, exportType );
+	const auto result = CObjectBaseRPGStatsExporter::CheckObject(pManipulator, rszObjectTypeName, rszObjectName, bExport, exportType);
+	if ( result != ER_SUCCESS ) return result;
 	//
 	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
@@ -39,34 +41,27 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 				std::string szSkeletonName;
 				if ( CManipulatorManager::GetParamsFromReference( "Skeleton", pModelMan, 0, &szSkeletonName, 0 ) && !szSkeletonName.empty() )
 				{
-					//const std::string szSkeletonFileName = pUserData->szExportDestinationFolder + fmt::format( "bin\\skeletons\\{}", nSkeletonID );
-					const std::string szSkeletonFolder = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + "bin\\skeletons\\";
-					CDBPtr<NDb::SSkeleton> pDBSkeleton = NDb::Get<NDb::SSkeleton>( CDBID( szSkeletonName ) );
-					std::string szSkeletonFileName = NBinResources::GetBinaryFileName( szSkeletonFolder, pDBSkeleton->GetRecordID(), pDBSkeleton->uid ); // uid
-					bool bFileExist = WaitForFile( szSkeletonFileName, 10000 );
-					if ( !bFileExist )
+					CPtr<IManipulator> skeletonResource = CManipulatorManager::CreateManipulatorFromReference("Skeleton", pModelMan, 0, 0, 0);
+					// Validate joints directly in the GLTF hierarchy; no generated GR2 file exists.
+					if ( !skeletonResource || !NEditorGltf::IsGltf(skeletonResource) ) return ER_FAIL;
+					std::string root;
+					CManipulatorManager::GetValue(&root, skeletonResource, "RootJoint");
+					NGltf::SSkeletonDefinition skeleton;
+					if ( !NGltf::BuildSkeleton(NEditorGltf::Load(skeletonResource), root, 0, &skeleton) ) return ER_FAIL;
 					{
-						szSkeletonFileName = szSkeletonFolder + std::to_string(  pDBSkeleton->GetRecordID() );
-						bFileExist =  WaitForFile( szSkeletonFileName, 10000 );
-					}
-					if ( bFileExist )
-					{
-						std::unordered_map<std::string, int> bonesMap;
-						CGrannyFileInfoGuard pInfo( szSkeletonFileName );
-						for ( int i = 0; i < pInfo->Skeletons[0]->BoneCount; ++i ) 
-							bonesMap[pInfo->Skeletons[0]->Bones[i].Name] = 1;
 						//
 						for ( int i = 0; i < nNumSpecificJoints; ++i ) 
 						{
 							std::string szJointName;
 							if ( CManipulatorManager::GetValue( &szJointName, pManipulator, fmt::format("SpecificJoints.[{}]", i) ) && !szJointName.empty() )
 							{
-								if ( bonesMap.find( szJointName ) == bonesMap.end() )
+								if ( skeleton.FindBone(szJointName) < 0 )
 								{
 									pLogger->Log( LT_ERROR, "Specific joint doesn't exist in object's skeleton\n" );
 									pLogger->Log( LT_ERROR, fmt::format("\tObject: {}\n", rszObjectName.c_str()) );
 									pLogger->Log( LT_ERROR, fmt::format("\tSpecific joint name: {}\n", szJointName.c_str()) );
 									pLogger->Log( LT_ERROR, fmt::format("\tSpecific joint index: {}\n", i) );
+									return ER_FAIL;
 								}
 							}
 						}

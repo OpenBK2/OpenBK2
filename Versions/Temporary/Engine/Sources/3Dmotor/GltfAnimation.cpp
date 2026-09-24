@@ -378,14 +378,14 @@ bool CGltfSkeletonAnimator::GetSourceDuration( const NGltf::TGltfFilePtr &file,
 	CGltfSkeletonAnimator animator;
 	animator.pSkeletonFile = file;
 	SAnimationHolder holder;
-	if ( !animator.SelectAnimationRange(&holder, file, clipName, firstFrame, lastFrame) )
+	if ( !animator.SelectAnimationRange(&holder, file, clipName, firstFrame, lastFrame, false) )
 		return false;
 	*seconds = holder.fDuration;
 	return true;
 }
 
 bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
-	const NGltf::TGltfFilePtr &file, const std::string &clipName, int firstFrame, int lastFrame )
+	const NGltf::TGltfFilePtr &file, const std::string &clipName, int firstFrame, int lastFrame, bool allowRangeFallback )
 {
 	pHolder->pFile = file;
 	pHolder->animationIndices.clear();
@@ -533,9 +533,11 @@ bool CGltfSkeletonAnimator::SelectAnimationRange( SAnimationHolder *pHolder,
 			DebugTrace( "glTF: cannot infer a baked frame timeline in %s; export with animation sampling enabled or use ClipName",
 				pHolder->pFile->sourcePath.c_str() );
 		else
-			DebugTrace( "glTF: invalid frame range %d..%d for the inferred %d..%d Blender timeline in %s; using the full selected animation",
+			DebugTrace( "glTF: invalid frame range %d..%d for the inferred %d..%d Blender timeline in %s; %s",
 				firstFrame, lastFrame, timelineFirstFrame, timelineLastFrame,
-				pHolder->pFile->sourcePath.c_str() );
+				pHolder->pFile->sourcePath.c_str(), allowRangeFallback ? "using the full selected animation" : "export rejected" );
+		// Preserve runtime fallback for legacy metadata; newly exported stages must be valid.
+		if ( !allowRangeFallback ) return false;
 	}
 	return true;
 }

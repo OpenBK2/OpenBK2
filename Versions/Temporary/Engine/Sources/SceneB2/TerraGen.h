@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SceneB2_export.h"
+#include "Misc/ModelTriangle.h"
 
 #include "VersionInfo.h"
 
@@ -28,6 +29,10 @@ namespace NDebrisBuilder
 {
 	enum EMaskSmoothType { MASK_SMOOTH_SHARP, MASK_SMOOTH_MEDIUM, MASK_SMOOTH_BLUR };
 	enum EMaskType { MASK_STATIC, MASK_DYNAMIC, MASK_AI_PASSABILITY };
+	// Offline exporters share the existing mask algorithm with decoded GLTF meshes.
+	SCENEB2_EXPORT bool CreateMask( const std::vector<CVec3> &vertices, const std::vector<SModelTriangle> &triangles,
+		const CVec3 &minimum, const CVec3 &maximum, CArray2D<uint8_t> *image, CVec2 *origin,
+		EMaskType type, int smoothRadius );
 };
 namespace NTerraBrush
 {

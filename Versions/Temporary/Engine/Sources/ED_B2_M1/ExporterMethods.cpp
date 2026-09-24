@@ -135,6 +135,36 @@ bool NormalizePassabilityArray( CArray2D<uint8_t> *pDestination, CVec2 *pvOrigin
 }
 
 
+// The mask algorithms are unchanged; GLTF provides their engine-space triangles directly.
+bool CreateObjectStaticDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, int smoothRadius )
+{
+	CArray2D<uint8_t> image;
+	if ( !NDebrisBuilder::CreateMask(mesh.vertices, mesh.triangles, mesh.minimum, mesh.maximum,
+		&image, origin, NDebrisBuilder::MASK_STATIC, smoothRadius) ) return false;
+	CFileStream stream(NVFS::GetMainFileCreator(), imageName);
+	return stream.IsOk() && NImage::SaveAsTGA<uint8_t>(image, &stream);
+}
+
+bool CreateObjectDynamicDebris( const NEditorGltf::SMeshData &mesh, const std::string &imageName, CVec2 *origin, float width )
+{
+	CArray2D<uint8_t> image;
+	if ( !NDebrisBuilder::CreateMask(mesh.vertices, mesh.triangles, mesh.minimum, mesh.maximum,
+		&image, origin, NDebrisBuilder::MASK_DYNAMIC, static_cast<int>(width)) ) return false;
+	CArray2D<uint32_t> rgba;
+	rgba.SetSizes(image.GetSizeY(), image.GetSizeX());
+	for ( int x = 0; x < image.GetSizeX(); ++x )
+		for ( int y = 0; y < image.GetSizeY(); ++y )
+			rgba[x][y] = uint32_t(image[y][x]) * 0x01010101u;
+	CFileStream stream(NVFS::GetMainFileCreator(), imageName);
+	return stream.IsOk() && NImage::SaveAsTGA(rgba, &stream);
+}
+
+bool CreateObjectPassability( const NEditorGltf::SMeshData &mesh, CArray2D<uint8_t> *passability, CVec2 *origin )
+{
+	return NDebrisBuilder::CreateMask(mesh.vertices, mesh.triangles, mesh.minimum, mesh.maximum,
+		passability, origin, NDebrisBuilder::MASK_AI_PASSABILITY, DEF_DEBRIS_SMOOTH_RADIUS);
+}
+
 bool CreateObjectStaticDebris( const std::string &rszGrannyFileName, const std::string &rszImageFileName, CVec2 *pvOrigin, const int nSmoothRadius )
 {
 	NI_ASSERT( pvOrigin != 0, "CreateObjectPassability() pvOrigin = 0" );

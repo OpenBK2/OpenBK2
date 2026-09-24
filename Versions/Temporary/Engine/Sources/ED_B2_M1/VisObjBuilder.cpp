@@ -7,6 +7,10 @@
 #include "ResourceDefines.h"
 
 #include "VisObjBuilder.h"
+#include "ED_Common/GltfExporter.h"
+#include "ED_Common/GltfImport.h"
+#include "MapEditorLib/MessageBoxes.h"
+#include "System/FilePath.h"
 #include "SeasonMnemonics.h"
 #include "MapEditorLib/Tools_HashSet.h"
 #include "MapEditorLib/BuilderFactory.h"
@@ -20,6 +24,20 @@
 
 #include <zconf.h>
 
+namespace
+{
+std::string BuilderSourcePath( const std::string &source )
+{
+	// File pickers normally return source-folder-relative names, but typed
+	// absolute paths and either platform's separators must work as well.
+	std::string path = NFile::IsPathRelative(source)
+		? NFile::JoinPath(Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source)
+		: source;
+	NFile::NormalizePath(&path);
+	return path;
+}
+}
+
 REGISTER_BUILDER_IN_DLL( VisObj, CVisObjBuilder )
 
 const char CVisObjBuilder::VISOBJ_TYPE_NAME[]							= "VisObj";
@@ -29,7 +47,6 @@ const char CVisObjBuilder::TEXTURE_TYPE_NAME[]						= "Texture";
 const char CVisObjBuilder::GEOMETRY_TYPE_NAME[]						= "Geometry";
 const char CVisObjBuilder::AIGEOMETRY_TYPE_NAME[]					= "AIGeometry";
 const char CVisObjBuilder::SKELETON_TYPE_NAME[]						= "Skeleton";
-const char CVisObjBuilder::MODEL_FILE_NAME_EXTENTION[]		= ".mb";
 const char CVisObjBuilder::TEXTURE_FILE_NAME_EXTENTION[]	= ".tga";
 const std::string CVisObjBuilder::BUILD_DATA_TYPE_NAME					= "VisObjBuilder";
 const std::string CVisObjBuilder::RESOURCE_PREFIX[RT_COUNT] =
@@ -136,7 +153,6 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	}
 	//
 	const std::string szSeasonName = typeSeasonMnemonics.GetMnemonic( eSeason );
-	const std::string szExportSourceFolder = Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder;
 	//
 	std::string szMBSeasonedFileName;
 	std::string szTGASeasonedFileName;
@@ -148,7 +164,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	std::string szTGASeasonedFullFileName = szTGAFullFileName;
 	{
 		GetSeasonedFileName( &szMBSeasonedFullFileName, eSeason );
-		bMBSeasonedFileExists = NFile::DoesFileExist( szExportSourceFolder + szMBSeasonedFullFileName );
+		bMBSeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath(szMBSeasonedFullFileName) );
 		if ( bMBSeasonedFileExists )
 		{
 			GetSeasonedFileName( &szMBSeasonedFileName, eSeason );
@@ -161,7 +177,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		}
 		//
 		GetSeasonedFileName( &szTGASeasonedFullFileName, eSeason );
-		bTGASeasonedFileExists = NFile::DoesFileExist( szExportSourceFolder + szTGASeasonedFullFileName );
+		bTGASeasonedFileExists = NFile::DoesFileExist( BuilderSourcePath(szTGASeasonedFullFileName) );
 		if( bTGASeasonedFileExists )
 		{
 			GetSeasonedFileName( &szTGASeasonedFileName, eSeason );
@@ -216,6 +232,15 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 	std::string szModelName = szMBSeasonedFileName + "_" + szTGASeasonedFileName;
 	GetResourceFileName( &szModelName, RT_MODEL, rszUniqueObjectName );
 	//
+	// Import the complete package even if "export after creation" is off, so
+	// the new VisObj never depends on a model outside the data/mod folder.
+	std::string modelReference, importError;
+	if ( !NEditorGltf::ImportModelFile(rszUniqueObjectName, BuilderSourcePath(szMBSeasonedFullFileName),
+		&modelReference, &importError) )
+	{
+		NMessage::Error(importError, "Create VisObj");
+		return false;
+	}
 	// добавляем модель
 	bool bResult = true;
 	if ( pFolderCallback->IsUniqueName( MODEL_TYPE_NAME, szModelName ) )
@@ -237,7 +262,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 				{
 					bResult = bResult && CManipulatorManager::SetValue( szTGASeasonedFullFileName, pTextureManipulator, "SrcName", false );
 					bResult = bResult && CManipulatorManager::SetValue( "CONVERT_ORDINARY", pTextureManipulator, "ConversionType", false );
-					if ( szTextureType == "A_OPAQUE" )
+					if ( szTextureType == "AM_OPAQUE" )
 					{
 						bResult = bResult && CManipulatorManager::SetValue( "CONVERT_ORDINARY", pTextureManipulator, "ConversionType", false );
 						bResult = bResult && CManipulatorManager::SetValue( "TF_DXT1", pTextureManipulator, "Format", false );
@@ -260,6 +285,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 			}
 		}
 	}
+	// Model sources go into the runtime GLTF reference, never the legacy Maya SrcName.
 	// добавляем геометрию
 	if ( pFolderCallback->IsUniqueName( GEOMETRY_TYPE_NAME, szGeometryName ) )
 	{
@@ -273,7 +299,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 			{
 				if ( CPtr<IManipulator> pAIGeometryManipulator = pResourceManager->CreateObjectManipulator( AIGEOMETRY_TYPE_NAME, szAIGeometryName ) )
 				{
-					bResult = bResult && CManipulatorManager::SetValue( szMBSeasonedFullFileName, pAIGeometryManipulator, "SrcName", false );
+					bResult = bResult && CManipulatorManager::SetValue( modelReference, pAIGeometryManipulator, "ModelFileRef", false );
 					bResult = bResult && CManipulatorManager::SetValue( szAIRootMesh, pAIGeometryManipulator, "RootMesh", false );
 					// check for single-skin mode (szRootJoint != szRootMesh) and lbodypart model (szRootJoint == szRootMesh)
 					if ( szRootJoint == szRootMesh ) 
@@ -292,7 +318,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		{
 			if ( CPtr<IManipulator> pGeometryManipulator = pResourceManager->CreateObjectManipulator( GEOMETRY_TYPE_NAME, szGeometryName ) )
 			{
-				bResult = bResult && CManipulatorManager::SetValue( szMBSeasonedFullFileName, pGeometryManipulator, "SrcName", false );
+				bResult = bResult && CManipulatorManager::SetValue( modelReference, pGeometryManipulator, "ModelFileRef", false );
 				bResult = bResult && CManipulatorManager::SetValue( szRootMesh, pGeometryManipulator, "RootMesh", false );
 				bResult = bResult && CManipulatorManager::SetValue( szRootJoint, pGeometryManipulator, "RootJoint", false );
 				bResult = bResult && CManipulatorManager::SetValue( szAIGeometryName, pGeometryManipulator, "AIGeometry", true );
@@ -308,7 +334,7 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		{
 			if ( CPtr<IManipulator> pSkeletonManipulator = pResourceManager->CreateObjectManipulator( SKELETON_TYPE_NAME, szSkeletonName ) )
 			{
-				bResult = bResult && CManipulatorManager::SetValue( szMBSeasonedFullFileName, pSkeletonManipulator, "SrcName", false );
+				bResult = bResult && CManipulatorManager::SetValue( modelReference, pSkeletonManipulator, "ModelFileRef", false );
 				bResult = bResult && CManipulatorManager::SetValue( szRootJoint, pSkeletonManipulator, "RootJoint", false );
 			}
 		}
@@ -359,7 +385,12 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std:
 		( *pszDescription ) = "<ModelFileName> must be filled.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szMBFullFileName ) ) )
+	if ( !NEditorGltf::IsGltfFileName(szMBFullFileName) )
+	{
+		*pszDescription = "<ModelFileName> must be a .glb or .gltf file. Maya source export is no longer supported.";
+		return false;
+	}
+	if ( !NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
 	{
 		( *pszDescription ) = "<ModelFileName> is invalid file name. Can't find file.";
 		return false;
@@ -370,7 +401,7 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std:
 		( *pszDescription ) = "<TextureFileName> must be filled.";
 		return false;
 	}
-	if ( !NFile::DoesFileExist( ( Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder + szTGAFullFileName ) ) )
+	if ( !NFile::DoesFileExist( BuilderSourcePath(szTGAFullFileName) ) )
 	{
 		( *pszDescription ) = "<TextureFileName> is invalid file name. Can't find file.";
 		return false;
@@ -440,7 +471,6 @@ bool CVisObjBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 
 bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 {
-	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	//
@@ -470,6 +500,9 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			std::string szTGAFileFolder;
 			CManipulatorManager::GetValue( &szMBFileFolder, pBuildDataManipulator, "ModelFileName" );
 			CManipulatorManager::GetValue( &szTGAFileFolder, pBuildDataManipulator, "TextureFileName" );
+			// Keep the existing 1/2/3 and seasonal naming convention in the
+			// selected GLB or GLTF format, including case on Linux.
+			const std::string modelExtension = NFile::GetFileExt(szMBFileFolder);
 			CStringManager::CutFileName( &szMBFileFolder );
 			CStringManager::CutFileName( &szTGAFileFolder );
 			//
@@ -478,11 +511,11 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			//определяем количество mb и tga файлов
 			int nMBFileCount = 0;
 			int nTGAFileCount = 0;
-			while ( NFile::DoesFileExist( fmt::format( "{}{}.mb", ( pUserData->constUserData.szExportSourceFolder + szMBFileFolder ).c_str(), nMBFileCount + 1 ) ) )
+			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}{}", szMBFileFolder, nMBFileCount + 1, modelExtension)) ) )
 			{
 				++nMBFileCount;
 			}	
-			while ( NFile::DoesFileExist( fmt::format( "{}{}.tga", ( pUserData->constUserData.szExportSourceFolder + szTGAFileFolder ).c_str(), nTGAFileCount + 1 ) ) )
+			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}.tga", szTGAFileFolder, nTGAFileCount + 1)) ) )
 			{
 				++nTGAFileCount;
 			}	
@@ -491,7 +524,7 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			if (  bResult )
 			{
 				const std::string szVisObjName = szVisObjFolder + "whole.xdb";
-				const std::string szMBFullFileName = szMBFileFolder + "1.mb";
+				const std::string szMBFullFileName = szMBFileFolder + "1" + modelExtension;
 				const std::string szTGAFullFileName = szTGAFileFolder + "1.tga";
 				if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
 				{
@@ -514,10 +547,10 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			if (  bResult && ( nTGAFileCount > 1 ) )
 			{
 				const std::string szVisObjName = szVisObjFolder + "destroyed.xdb";
-				std::string szMBFullFileName = szMBFileFolder + "2.mb";
-				if ( !NFile::DoesFileExist( ( pUserData->constUserData.szExportSourceFolder + szMBFullFileName ) ) )
+				std::string szMBFullFileName = szMBFileFolder + "2" + modelExtension;
+				if ( !NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
 				{
-					szMBFullFileName = szMBFileFolder + "1.mb";
+					szMBFullFileName = szMBFileFolder + "1" + modelExtension;
 				}
 				const std::string szTGAFullFileName = szTGAFileFolder + "2.tga";
 				//
@@ -544,7 +577,7 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 				for ( int nTGAFileIndex = 3; nTGAFileIndex <= nTGAFileCount; ++nTGAFileIndex )
 				{
 					const std::string szVisObjName = szVisObjFolder + fmt::format( "damaged{}.xdb", nTGAFileIndex - 2 );
-					const std::string szMBFullFileName = szMBFileFolder + "1.mb";
+					const std::string szMBFullFileName = szMBFileFolder + "1" + modelExtension;
 					const std::string szTGAFullFileName = szTGAFileFolder + fmt::format( "{}.tga", nTGAFileIndex );
 					//
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
@@ -568,9 +601,9 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			//anim
 			if (  bResult )
 			{
-				const std::string szMBFullFileName = szMBFileFolder + "2.mb";
+				const std::string szMBFullFileName = szMBFileFolder + "2" + modelExtension;
 				const std::string szTGAFullFileName = szTGAFileFolder + "1.tga";
-				if ( NFile::DoesFileExist( ( pUserData->constUserData.szExportSourceFolder + szMBFullFileName ) ) )
+				if ( NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
 				{
 					const std::string szVisObjName = szVisObjFolder + "anim.xdb";
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
@@ -594,9 +627,9 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			//transp
 			if (  bResult )
 			{
-				const std::string szMBFullFileName = szMBFileFolder + "3.mb";
+				const std::string szMBFullFileName = szMBFileFolder + "3" + modelExtension;
 				const std::string szTGAFullFileName = szTGAFileFolder + "1.tga";
-				if ( NFile::DoesFileExist( ( pUserData->constUserData.szExportSourceFolder + szMBFullFileName ) ) )
+				if ( NFile::DoesFileExist( BuilderSourcePath(szMBFullFileName) ) )
 				{
 					const std::string szVisObjName = szVisObjFolder + "transp.xdb";
 					if ( pFolderCallback->IsUniqueName( VISOBJ_TYPE_NAME, szVisObjName ) )
@@ -638,7 +671,8 @@ bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			if ( bResult )
 			{
 				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
-				bResult = bResult && ( szObjectName )[szObjectName.size() - 1] == PATH_SEPARATOR_CHAR;
+				// Folder selections can use either platform's separator.
+				bResult = !szObjectName.empty() && NFile::IsFolderSeparator(szObjectName.back());
 				bResult = bResult && CreateVisObj( szObjectName );
 			}
 			return bResult;
@@ -667,7 +701,8 @@ bool CVisObjBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 			if ( bResult )
 			{
 				const std::string szObjectName = selectionSet.objectNameList.front().ToString();
-				bResult = bResult && ( szObjectName )[szObjectName.size() - 1] == PATH_SEPARATOR_CHAR;
+				// Folder selections can use either platform's separator.
+				bResult = !szObjectName.empty() && NFile::IsFolderSeparator(szObjectName.back());
 				( *pbEnable ) = bResult;
 				( *pbCheck ) = false;
 			}

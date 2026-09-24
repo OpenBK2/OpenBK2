@@ -3,6 +3,7 @@
 #include <fmt/printf.h>
 
 #include "libdb/Manipulator.h"
+#include "ED_Common/GltfExporter.h"
 #include "SceneB2/TerraTools.h"
 #include "Stats_B2_M1/DBPassProfile.h"
 #include "Stats_B2_M1/Vis2AI.h"
@@ -122,7 +123,7 @@ class CPassabilityProfileCreator
 	std::list<SPolygon> cover;
 
 	//
-	void GenerateStartSegments( const std::string &szFileName, const float fZEps );
+	void GenerateStartSegments( const NEditorGltf::SMeshData &mesh, const float fZEps );
 	void GenerateAllSegments();
 	void MakeConnections();
 	void DelNotBreaks();
@@ -132,16 +133,15 @@ class CPassabilityProfileCreator
 	const int FindNumberForPoint( const CVec2 &vPoint );
 	void AddEdge( const int n1, const int n2 );
 public:
-	CPassabilityProfileCreator(const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile );
+	CPassabilityProfileCreator(const NEditorGltf::SMeshData &mesh, const float fZEps, NDb::SPassProfile *pPassProfile );
 };
 
-void CPassabilityProfileCreator::GenerateStartSegments( const std::string &szFileName, const float fZEps )
+void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMeshData &mesh, const float fZEps )
 {
-	std::vector<CVec3> verts;
-	std::vector<STriangle> trgs;
-	CVec3 vMin, vMax;
-
-	LoadGrannyModel( szFileName, &verts, &trgs, &vMin, &vMax );
+	const auto &verts = mesh.vertices;
+	const auto &trgs = mesh.triangles;
+	const auto &vMin = mesh.minimum;
+	const auto &vMax = mesh.maximum;
 	fInfinity = 1000.0f * fabs( vMax - vMin );
 
 #ifdef _DEBUG_GENERATION		
@@ -151,7 +151,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const std::string &szFil
 	const float fMaxZ = vMin.z + fZEps;
 
 	segments.clear();
-	for ( std::vector<STriangle>::iterator it = trgs.begin(); it != trgs.end(); ++it )
+	for ( auto it = trgs.begin(); it != trgs.end(); ++it )
 	{
 		std::vector<CVec3> points( 4 );
 		points[0] = verts[it->i1];
@@ -731,10 +731,10 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 	}
 }
 
-CPassabilityProfileCreator::CPassabilityProfileCreator(const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
+CPassabilityProfileCreator::CPassabilityProfileCreator(const NEditorGltf::SMeshData &mesh, const float fZEps, NDb::SPassProfile *pPassProfile )
 : fInfinity( 0.0f )
 {
-	GenerateStartSegments( szGrannyFileName, fZEps );
+	GenerateStartSegments( mesh, fZEps );
 	GenerateAllSegments();
 	if ( !segments.empty() )
 	{
@@ -778,7 +778,11 @@ CPassabilityProfileCreator::CPassabilityProfileCreator(const std::string &szGran
 
 bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const float fZEps, NDb::SPassProfile *pPassProfile )
 {
-	CPassabilityProfileCreator profileCreator( szGrannyFileName, fZEps, pPassProfile );
+	NEditorGltf::SMeshData mesh;
+	std::vector<STriangle> legacyTriangles;
+	LoadGrannyModel(szGrannyFileName, &mesh.vertices, &legacyTriangles, &mesh.minimum, &mesh.maximum);
+	for ( const auto &triangle : legacyTriangles ) mesh.triangles.emplace_back(triangle.i1, triangle.i2, triangle.i3);
+	CPassabilityProfileCreator profileCreator( mesh, fZEps, pPassProfile );
 
 #ifdef _DEBUG_GENERATION
 	mask.Clear();
@@ -794,6 +798,13 @@ bool CreateObjectPassabilityProfile( const std::string &szGrannyFileName, const 
 	mask.SaveImage( szImageName + "_2.tga" );
 #endif //_DEBUG_GENERATION
 
+	return true;
+}
+
+bool CreateObjectPassabilityProfile( const NEditorGltf::SMeshData &mesh, float zEpsilon, NDb::SPassProfile *profile )
+{
+	if ( mesh.vertices.empty() || mesh.triangles.empty() ) return false;
+	CPassabilityProfileCreator creator(mesh, zEpsilon, profile);
 	return true;
 }
 

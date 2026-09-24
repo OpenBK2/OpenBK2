@@ -1,14 +1,17 @@
 #include "stdafx.h"
 #include "GltfExporter.h"
+#include "GltfImport.h"
 #include "3Dmotor/GltfAnimation.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "MapEditorLib/Interface_MOD.h"
 #include "MapEditorLib/Interface_Logger.h"
+#include "MapEditorLib/MessageBoxes.h"
 #include "libdb/ObjMan.h"
 #include "System/VFSOperations.h"
 #include "System/FileUtils.h"
 #include "Misc/StrProc.h"
 #include <fastgltf/core.hpp>
+#include <fastgltf/tools.hpp>
 #include <simdjson.h>
 #include <filesystem>
 #include <fstream>
@@ -30,9 +33,9 @@ std::string Source( IManipulator *resource )
 {
 	const auto *owner = resource->GetObjMan()->GetObject();
 	const std::string ref = Value(resource, "ModelFileRef");
-	if ( !ref.empty() )
-		return NGltf::ResolveModelFilePath(owner, ref);
-	const std::string source = Value(resource, "SrcName");
+	// A newly selected model can still live in the configured source folder.
+	// Never fall back to SrcName when an explicit ModelFileRef was supplied.
+	const std::string source = ref.empty() ? Value(resource, "SrcName") : ref;
 	for ( const std::string &path : {
 		std::string(NGltf::ResolveModelFilePath(owner, source)),
 		NFile::JoinPath(Singleton<IUserDataContainer>()->Get()->constUserData.szExportSourceFolder, source) } )
@@ -94,7 +97,7 @@ bool Below( const fs::path &path, const fs::path &root )
 	const auto relative = path.lexically_relative(root);
 	return !relative.empty() && !relative.is_absolute() && *relative.begin() != "..";
 }
-std::string CopyPackage( IManipulator *resource, const NGltf::TGltfFilePtr &file )
+std::string CopyPackage( const std::string &objectName, const NGltf::TGltfFilePtr &file )
 {
 	const std::string source = file->sourcePath;
 	const auto bytes = Read(source);
@@ -108,7 +111,7 @@ std::string CopyPackage( IManipulator *resource, const NGltf::TGltfFilePtr &file
 		if ( Below(sourcePath, dataRoot) )
 			relative = sourcePath.lexically_relative(dataRoot);
 		else
-			relative = fs::u8path(NDb::GetFileName(resource->GetDBID())).parent_path() / sourcePath.filename();
+			relative = fs::u8path(objectName).parent_path() / sourcePath.filename();
 	}
 	const fs::path destination = (dataRoot / relative).lexically_normal();
 	if ( !Below(destination, dataRoot) )
@@ -174,13 +177,38 @@ std::string CopyPackage( IManipulator *resource, const NGltf::TGltfFilePtr &file
 }
 }
 
+bool ImportModelFile( const std::string &objectName, const std::string &source,
+	std::string *reference, std::string *error )
+{
+	try
+	{
+		if ( !IsGltfFileName(source) ) throw std::runtime_error("Select a .glb or .gltf model.");
+		const auto file = NGltf::LoadFile(nullptr, source);
+		if ( !file ) throw std::runtime_error("Cannot load GLB/GLTF model: " + source);
+		std::string normalizedName = objectName;
+		NFile::NormalizePath(&normalizedName);
+		*reference = CopyPackage(normalizedName, file);
+		return true;
+	}
+	catch ( const std::exception &failure )
+	{
+		*error = failure.what();
+		NLog::Log(LT_ERROR, "Model import failed: %s\n", error->c_str());
+		return false;
+	}
+}
+
+bool IsGltfFileName( const std::string &path )
+{
+	std::string extension = NFile::GetFileExt(path);
+	NStr::ToLowerASCII(&extension);
+	return extension == ".glb" || extension == ".gltf";
+}
 bool IsGltf( IManipulator *resource )
 {
 	if ( !resource ) return false;
 	const std::string ref = Value(resource, "ModelFileRef");
-	std::string extension = fs::u8path(ref.empty() ? Value(resource, "SrcName") : ref).extension().string();
-	NStr::ToLowerASCII(&extension);
-	return extension == ".glb" || extension == ".gltf";
+	return IsGltfFileName(ref.empty() ? Value(resource, "SrcName") : ref);
 }
 NGltf::TGltfFilePtr Load( IManipulator *resource )
 {
@@ -221,7 +249,7 @@ bool Export( IManipulator *resource, const std::string &type, bool write )
 		else throw std::runtime_error("Unsupported GLTF resource type: " + type);
 
 		if ( !write ) return true;
-		const std::string destination = CopyPackage(resource, file);
+		const std::string destination = CopyPackage(NDb::GetFileName(resource->GetDBID()), file);
 		// Publish the portable reference only after all validation and file writes succeed.
 		if ( !CManipulatorManager::SetValue(destination, resource, "ModelFileRef") )
 			return false;
@@ -253,7 +281,133 @@ bool Export( IManipulator *resource, const std::string &type, bool write )
 	}
 }
 
-bool ReadAttributes( IManipulator *resource, CGrannyBoneAttributesList *attributes )
+namespace
+{
+bool ValidateModelSources( IManipulator *resource, const std::string &type,
+	std::unordered_set<CDBID> *visited, std::string *error )
+{
+	if ( !visited->insert(resource->GetDBID()).second ) return true;
+	if ( type == "Geometry" || type == "AIGeometry" || type == "Skeleton" || type == "AnimB2" )
+	{
+		if ( !NEditorGltf::IsGltf(resource) )
+		{
+			*error = "Model export accepts GLB/GLTF sources only. Existing GR2 assets can still be loaded.\n"
+				"Set ModelFileRef to a .glb or .gltf file before exporting.\n\n" + NDb::GetFileName(resource->GetDBID());
+			return false;
+		}
+		if ( !NEditorGltf::Export(resource, type, false) )
+		{
+			*error = "Cannot export the GLB/GLTF resource below. Check its source file and "
+				"RootMesh, RootJoint or ClipName; details are in the log.\n\n" + NDb::GetFileName(resource->GetDBID());
+			return false;
+		}
+	}
+	CPtr<IManipulatorIterator> it = resource->Iterate(true, ECT_CACHE_GLOBAL);
+	if ( !it ) return true;
+	for ( ; !it->IsEnd(); it->Next() )
+	{
+		std::string name;
+		it->GetName(&name);
+		const auto *desc = dynamic_cast<const SPropertyDesc *>(resource->GetDesc(name));
+		if ( !desc || desc->refTypes.empty() ) continue;
+		std::string refType, refName;
+		if ( !CManipulatorManager::GetParamsFromReference(name, resource, &refType, &refName, nullptr) ||
+			refName.empty() ) continue;
+		// Only the model/animation graph needs source conversion; textures and
+		// gameplay references retain their own exporters and validation.
+		if ( refType != "VisObj" && refType != "Model" && refType != "Geometry" &&
+			refType != "AIGeometry" && refType != "Skeleton" && refType != "AnimB2" ) continue;
+		CPtr<IManipulator> child = CManipulatorManager::CreateManipulatorFromReference(name, resource, 0, 0, 0);
+		if ( !child )
+		{
+			*error = "Cannot load model resource: " + refName;
+			return false;
+		}
+		if ( !ValidateModelSources(child, refType, visited, error) ) return false;
+	}
+	return true;
+}
+}
+
+bool ValidateForExport( IManipulator *resource, const std::string &type )
+{
+	std::unordered_set<CDBID> visited;
+	std::string error;
+	if ( ValidateModelSources(resource, type, &visited, &error) ) return true;
+	NLog::Log(LT_ERROR, "%s\n", error.c_str());
+	NMessage::Error(error, "Model export");
+	return false;
+}
+
+bool LoadGeometry( IManipulator *resource, SMeshData *mesh )
+{
+	try
+	{
+		const auto file = Load(resource);
+		std::vector<size_t> nodes;
+		SMeshData result;
+		if ( !NGltf::GetMeshNodes(file, Value(resource, "RootMesh"), &nodes) ||
+			!NGltf::GetMeshBoundingBox(file, Value(resource, "RootMesh"), false, &result.minimum, &result.maximum) )
+			return false;
+		for ( size_t index : nodes )
+		{
+			const auto &node = file->asset.nodes[index];
+			for ( const auto &primitive : file->asset.meshes[*node.meshIndex].primitives )
+			{
+				const auto position = primitive.findAttribute("POSITION");
+				if ( position == primitive.attributes.end() ) return false;
+				const auto &positions = file->Vec3Accessor(position->accessorIndex);
+				const size_t offset = result.vertices.size();
+				for ( const auto &value : positions )
+				{
+					CVec3 point = NGltf::ConvertPosition(value);
+					if ( !node.skinIndex ) file->nodeWorldTransforms[index].RotateHVector(&point, point);
+					result.vertices.push_back(point);
+				}
+				std::vector<uint32_t> indices;
+				if ( primitive.indicesAccessor )
+					fastgltf::iterateAccessor<uint32_t>(file->asset, file->asset.accessors[*primitive.indicesAccessor],
+						[&](uint32_t vertex) { indices.push_back(vertex); });
+				else
+					for ( size_t i = 0; i < positions.size(); ++i ) indices.push_back(static_cast<uint32_t>(i));
+				auto triangle = [&](uint32_t a, uint32_t b, uint32_t c)
+				{
+					if ( a >= positions.size() || b >= positions.size() || c >= positions.size() ) return false;
+					// Match the renderer's winding after the Y/Z coordinate swap.
+					if ( a != b && b != c && a != c ) result.triangles.emplace_back(offset + a, offset + c, offset + b);
+					return true;
+				};
+				if ( primitive.type == fastgltf::PrimitiveType::Triangles )
+				{
+					if ( indices.size() % 3 ) return false;
+					for ( size_t i = 0; i + 2 < indices.size(); i += 3 )
+						if ( !triangle(indices[i], indices[i+1], indices[i+2]) ) return false;
+				}
+				else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
+				{
+					for ( size_t i = 2; i < indices.size(); ++i )
+						if ( !triangle(indices[i-2+(i%2)], indices[i-1-(i%2)], indices[i]) ) return false;
+				}
+				else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
+				{
+					for ( size_t i = 2; i < indices.size(); ++i )
+						if ( !triangle(indices[0], indices[i-1], indices[i]) ) return false;
+				}
+				else return false;
+			}
+		}
+		if ( result.triangles.empty() ) return false;
+		*mesh = std::move(result);
+		return true;
+	}
+	catch ( const std::exception &error )
+	{
+		NLog::Log(LT_ERROR, "Cannot read GLTF triangles: %s\n", error.what());
+		return false;
+	}
+}
+
+bool ReadAttributes( IManipulator *resource, CGrannyBoneAttributesList *attributes, const std::string &rootNode )
 {
 	try
 	{
@@ -262,8 +416,22 @@ bool ReadAttributes( IManipulator *resource, CGrannyBoneAttributesList *attribut
 		TExtras extras;
 		Parse(Read(file->sourcePath), &extras);
 		attributes->clear();
+		int root = -1;
+		if ( !rootNode.empty() )
+		{
+			for ( size_t i = 0; i < file->asset.nodes.size(); ++i )
+				if ( std::string(file->asset.nodes[i].name) == rootNode ) { root = static_cast<int>(i); break; }
+			if ( root < 0 ) return false;
+		}
 		for ( size_t i = 0; i < file->asset.nodes.size(); ++i )
 		{
+			// Section stage locators belong to this subtree, not every section in the file.
+			if ( root >= 0 )
+			{
+				int ancestor = static_cast<int>(i);
+				while ( ancestor >= 0 && ancestor != root ) ancestor = file->nodeParents[ancestor];
+				if ( ancestor < 0 ) continue;
+			}
 			SGrannyBoneAttributes entry;
 			entry.szRealName = std::string(file->asset.nodes[i].name);
 			entry.szBoneName = entry.szRealName;

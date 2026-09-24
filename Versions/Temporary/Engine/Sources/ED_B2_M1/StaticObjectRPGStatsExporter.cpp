@@ -8,9 +8,8 @@ EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipu
 																													bool bForce,
 																													EXPORT_TYPE exportType )
 {
-	CHPObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
-	//
-	return ER_SUCCESS;
+	// Preserve failures from the shared object exporter.
+	return CHPObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 }
 
 

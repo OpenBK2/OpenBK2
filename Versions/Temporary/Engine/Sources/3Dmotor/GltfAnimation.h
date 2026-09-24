@@ -71,7 +71,7 @@ class CGltfSkeletonAnimator : public ISkeletonAnimator, public IGetBone
 	bool BindAnimation( SAnimationHolder *pHolder );
 	bool SelectAnimationRange( SAnimationHolder *pHolder );
 	bool SelectAnimationRange( SAnimationHolder *pHolder, const NGltf::TGltfFilePtr &file,
-		const std::string &clipName, int firstFrame, int lastFrame );
+		const std::string &clipName, int firstFrame, int lastFrame, bool allowRangeFallback = true );
 	void ResolveBoundChannels( SAnimationHolder *pHolder );
 	float GetEffectiveWeight( const SAnimationHolder &holder, STime time ) const;
 	float GetLocalTime( const SAnimationHolder &holder, STime time, bool *pActive ) const;
@@ -87,7 +87,7 @@ protected:
 	void Recalc() override;
 
 public:
-	// Export metadata must use the same clip/frame selection as playback.
+	// Export uses the playback timeline, but rejects invalid ranges instead of silently using the full clip.
 	_3DMOTOR_EXPORT static bool GetSourceDuration( const NGltf::TGltfFilePtr &file,
 		const std::string &clipName, int firstFrame, int lastFrame, float *seconds );
 	CGltfSkeletonAnimator();

@@ -33,7 +33,7 @@ class SAnimB2 : public SAnimBase
 	// movement speed (for movement animations) to calculate animation coeff
 	float _MoveSpeed = 0.07;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
-	FilePathRef _ModelFileRef;
+	GltfFileRef _ModelFileRef;
 	// GLB-only range in the first sampled animation timeline. Length remains gameplay metadata.
 	int _FirstFrame;
 	int _LastFrame;

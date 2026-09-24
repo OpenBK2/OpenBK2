@@ -35,7 +35,7 @@ forward class SMechUnitRPGStats;
 		AM_TRANSPARENT,
 	};
 
-	SceneFileRef _ModelFileName;
+	GltfFileRef _ModelFileName;
 	TGAFileRef _TextureFileName;
 	ETextureType _TextureType;
 	string _RootMesh;

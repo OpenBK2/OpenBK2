@@ -90,6 +90,10 @@ typedef FilePathRef PictureDstFileRef;
 [editorControl = "string_file_ref"; intParam = 1; stringParam = "MB files (*.mb)|*.mb|All Files (*.*)|*.*||"]
 typedef FilePathRef SceneFileRef;
 
+// Engine-readable model sources; keep SceneFileRef for legacy Maya metadata.
+[editorControl = "string_file_ref"; intParam = 1; stringParam = "GLB/GLTF models (*.glb;*.gltf)|*.glb;*.gltf;*.GLB;*.GLTF|All Files (*.*)|*.*||"]
+typedef FilePathRef GltfFileRef;
+
 [editorControl = "string_file_ref"; intParam = 1; stringParam = "TGA files (*.tga)|*.tga|All Files (*.*)|*.*||"]
 typedef FilePathRef TGAFileRef;
 
