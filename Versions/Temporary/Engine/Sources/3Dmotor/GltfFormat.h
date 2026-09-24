@@ -64,7 +64,7 @@ struct SSkeletonDefinition
 	std::vector<SHMatrix> inverseBindMatrices;
 	std::unordered_map<std::string, int> boneByName;
 
-	int FindBone( const std::string &name ) const;
+	_3DMOTOR_EXPORT int FindBone( const std::string &name ) const;
 };
 
 // ModelFileRef first searches beside its owning DB resource. If that candidate
