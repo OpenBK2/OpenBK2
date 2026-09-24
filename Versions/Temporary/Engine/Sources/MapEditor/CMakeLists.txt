@@ -108,3 +108,5 @@ install(FILES res/main_frame.ico DESTINATION bin)
 add_version_info(MapEditor)
 # The wx About box shows the revision, for bug reports (AboutViewWx.cpp).
 add_git_revision(MapEditor)
+
+add_subdirectory(test)

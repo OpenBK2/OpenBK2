@@ -432,13 +432,12 @@ void CObjectCollector::FillObjectParams( SObjectParams *pObjectParams, const std
 																														rszDataExtractorType );
 			if ( ( nFlags & OCDE_NORMAL_BITMAP ) && ( nFlags & OCDE_SMALL_BITMAP ) )
 			{
-				const wxColour zeroColor( 0, 0, 0 );
 				//
 				// The pixels become front-end bitmaps here, which is the only place
 				// in this path that has any business knowing what a bitmap is.
 				// The lists copy them; the temporaries free themselves.
-				const int nNormalImageIndex = normalImageList.Add( wxBitmap( NWxImageList::ToWxImage( normalImage ) ), zeroColor );
-				const int nSmallImageIndex = smallImageList.Add( wxBitmap( NWxImageList::ToWxImage( smallImage ) ), zeroColor );
+				const int nNormalImageIndex = normalImageList.Add( wxBitmap( NWxImageList::ToWxImage( normalImage ) ) );
+				const int nSmallImageIndex = smallImageList.Add( wxBitmap( NWxImageList::ToWxImage( smallImage ) ) );
 				NI_ASSERT( nNormalImageIndex == nSmallImageIndex, fmt::format( "nNormalImageIndex != nSmallImageIndex" ) );
 				//
 				pObjectParams->nIconIndex = nNormalImageIndex;

@@ -50,6 +50,7 @@ set(SOURCES
     Tools_IndexCollector.cpp
     Tools_MainFolder.cpp
     Tools_Resources.cpp
+    WxThumbnailList.cpp
     Tools_UniqueList.cpp
 )
 add_library(MapEditorLib SHARED ${SOURCES})
@@ -67,6 +68,13 @@ target_link_libraries(MapEditorLib PRIVATE Image libdb MemoryLib Misc System fmt
 # defines.
 target_link_libraries(MapEditorLib PRIVATE wx::wx)
 add_dependencies(MapEditorLib wxwidgets_external)
+# The wrapping icon palette uses GtkIconView on Linux; Windows keeps wxListCtrl.
+set_source_files_properties(WxThumbnailList.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+if(NOT WIN32)
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(THUMBNAIL_GTK3 REQUIRED IMPORTED_TARGET gtk+-3.0)
+    target_link_libraries(MapEditorLib PRIVATE PkgConfig::THUMBNAIL_GTK3)
+endif()
 if(WIN32)
     target_link_libraries(MapEditorLib PRIVATE winapi)
 endif()

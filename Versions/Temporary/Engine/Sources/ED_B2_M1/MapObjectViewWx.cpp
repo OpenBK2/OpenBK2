@@ -17,6 +17,7 @@
 #include "MapEditorLib/Interface_MainFrame.h"
 #include "MapEditorLib/Interface_ObjectCollector.h"
 #include "MapEditorLib/WxImageList.h"
+#include "MapEditorLib/WxThumbnailList.h"
 #include "MapEditorLib/WxEditParameter.h"
 #include "MapEditorLib/WxHostWindow.h"
 #include "MapEditorLib/WxOwnership.h"
@@ -101,7 +102,7 @@ namespace
 		wxRadioButton *pDirectionFixed = nullptr;
 		wxTextCtrl *pDirection = nullptr;
 		wxChoice *pFilters = nullptr;
-		wxListCtrl *pObjects = nullptr;
+		CWxThumbnailList *pObjects = nullptr;
 
 		// True from construction until the controls are filled, as in the MFC
 		// palette, and raised again around anything that fills them.
@@ -196,7 +197,7 @@ namespace
 			// LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING |
 			// LVS_SHAREIMAGELISTS from the template. wx adds the last two of
 			// those to every list control it makes; the sort is asked for here.
-			pObjects = NWx::Child<wxListCtrl>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+			pObjects = NWx::Child<CWxThumbnailList>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize,
 																				 wxLC_ICON | wxLC_SINGLE_SEL | wxLC_SORT_ASCENDING |
 																				 wxBORDER_SUNKEN );
 			pObjects->SetMinSize( wxSize( -1, 160 ) );

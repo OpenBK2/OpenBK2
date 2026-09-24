@@ -35,10 +35,9 @@ namespace NWxImageList
 {
 	// A block of pixels as a wxImage.
 	//
-	// The pixels are what SetDIBits was handed as a 32 bit BI_RGB DIB, so in
-	// memory each one is B, G, R and an unused byte -- 0x00RRGGBB read as a
-	// uint32_t. wxImage wants three bytes in RGB order. That is the same
-	// conversion WxResourceImages makes on the way out of GetDIBits.
+	// DDS decoding and the icon cache carry 0xAARRGGBB pixels. Preserve the
+	// alpha channel: masking black instead punches holes in opaque details
+	// and exposes the grey RGB stored behind transparent pixels.
 	inline wxImage ToWxImage( const CArray2D<uint32_t> &rPixels )
 	{
 		const int nWidth = rPixels.GetSizeX();
@@ -48,7 +47,9 @@ namespace NWxImageList
 			return wxImage();
 		}
 		wxImage image( nWidth, nHeight, false );
+		image.InitAlpha();
 		unsigned char *const pRGB = image.GetData();
+		unsigned char *const pAlpha = image.GetAlpha();
 		for ( int nY = 0; nY < nHeight; ++nY )
 		{
 			for ( int nX = 0; nX < nWidth; ++nX )
@@ -58,6 +59,7 @@ namespace NWxImageList
 				pTexel[0] = static_cast<unsigned char>( ( nPixel >> 16 ) & 0xFF );
 				pTexel[1] = static_cast<unsigned char>( ( nPixel >> 8 ) & 0xFF );
 				pTexel[2] = static_cast<unsigned char>( nPixel & 0xFF );
+				pAlpha[static_cast<size_t>(nY) * nWidth + nX] = static_cast<unsigned char>( nPixel >> 24 );
 			}
 		}
 		return image;
@@ -91,6 +93,12 @@ public:
 	int Add( const wxBitmap &rBitmap, const wxColour &rMask )
 	{
 		return ( bCreated && rBitmap.IsOk() ) ? imageList.Add( rBitmap, rMask ) : -1;
+	}
+
+	// DDS thumbnails already have alpha; a colour mask would discard it.
+	int Add( const wxBitmap &bitmap )
+	{
+		return ( bCreated && bitmap.IsOk() ) ? imageList.Add( bitmap ) : -1;
 	}
 
 	void RemoveAll()

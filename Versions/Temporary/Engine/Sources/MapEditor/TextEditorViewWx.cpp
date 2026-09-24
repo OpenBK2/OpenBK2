@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "TextEditorView.h"
+#include "LuaKeywords.h"
 
 
 #include "MapEditorLib/SimulatedKey.h"
@@ -287,6 +288,7 @@ namespace
 		wxStyledTextCtrl *pEditor = nullptr;
 		wxTextCtrl *pErrors = nullptr;
 		NTextEditor::SLuaKeywords keywords;
+		std::string szFileKeywords, szLocalFunctions;
 
 		// Made on first use and owned by this dialog, as CLuaEditor owns its two.
 		CFindWxDialog *pFindDialog = nullptr;
@@ -388,6 +390,7 @@ namespace
 						it != keywords.sets.end(); ++it )
 			{
 				pEditor->SetKeyWords( it->nSet, wxString::FromUTF8( it->szWords.c_str() ) );
+				if ( it->nSet == 1 ) szFileKeywords = it->szWords;
 			}
 
 			pEditor->SetIndentationGuides( 1 );
@@ -442,7 +445,16 @@ namespace
 		// CScriptEditor::CheckSyntax, on every change.
 		void CheckSyntax()
 		{
-			pErrors->ChangeValue( wxString::FromUTF8( NTextEditor::CheckLuaSyntax( GetEditorText() ).c_str() ) );
+			const std::string text = GetEditorText();
+			pErrors->ChangeValue( wxString::FromUTF8( NTextEditor::CheckLuaSyntax(text).c_str() ) );
+			const std::string functions = NTextEditor::JoinLuaKeywords( NTextEditor::FindLuaFunctions(text) );
+			if ( functions != szLocalFunctions )
+			{
+				// Share the function style without using up a dictionary keyword slot.
+				szLocalFunctions = functions;
+				pEditor->SetKeyWords( 1, wxString::FromUTF8(szFileKeywords + " " + functions) );
+				pEditor->Colourise( 0, -1 );
+			}
 		}
 
 		void OnTextChanged( wxStyledTextEvent &rEvent )

@@ -1,6 +1,9 @@
 #include "stdafx.h"
 
 #include "TextEditorView.h"
+#include "LuaKeywords.h"
+#include "System/FilePath.h"
+#include "System/FileUtils.h"
 #include "ScriptDictionary.hpp"
 
 #include "MapEditorLib/Interface_UserData.h"
@@ -9,6 +12,7 @@
 #include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <filesystem>
 
 // The part of the script editor that is not drawing: the syntax check, the
 // keywords and the styles, which the editors (TextEditorViewWx.cpp) use.
@@ -76,28 +80,23 @@ namespace NTextEditor
 			std::string szKeyWordsFile;
 			if ( CPtr<IUserDataContainer> pUserData = Singleton<IUserDataContainer>() )
 			{
-				szKeyWordsFile = pUserData->Get()->constUserData.szStartFolder +
-												 pUserData->Get()->constUserData.propertyControlData.szLUAKeyWordsFileName;
+				szKeyWordsFile = pUserData->Get()->constUserData.propertyControlData.szLUAKeyWordsFileName;
+				if ( NFile::IsPathRelative(szKeyWordsFile) )
+					szKeyWordsFile = NFile::JoinPath( pUserData->Get()->constUserData.szStartFolder, szKeyWordsFile );
 			}
-			std::ifstream fKeywords( szKeyWordsFile.c_str() );
-
-			std::string szKeywords;
-			while ( !fKeywords.bad() && !fKeywords.eof() && !fKeywords.fail() )
+			// Legacy configuration spells this editor\luakeywords.txt, while
+			// the installed directory is Editor on case-sensitive filesystems.
+			NFile::NormalizePath( &szKeyWordsFile );
+			std::ifstream fKeywords( std::filesystem::u8path(szKeyWordsFile) );
+			if ( !fKeywords.is_open() && !szKeyWordsFile.empty() )
 			{
-				char buf[512], *realStr = buf;
-				fKeywords.getline( buf, sizeof( buf ) );
-				while ( *realStr && isspace( static_cast<unsigned char>( *realStr ) ) )
-				{
-					++realStr;
-				}
-				if ( *realStr )
-				{
-					szKeywords += realStr;
-					szKeywords += ' ';
-					// The whole line, leading blanks and all, as the MFC editor kept it.
-					pKeywords->completionWords.push_back( buf );
-				}
+				const auto full = std::filesystem::absolute( std::filesystem::u8path(szKeyWordsFile) );
+				std::string relative;
+				if ( NFile::ResolveDataPathCase( &relative, full.root_path().u8string(), full.relative_path().u8string() ) )
+					fKeywords.open( std::filesystem::u8path( NFile::JoinPath(full.root_path().u8string(), relative) ) );
 			}
+			pKeywords->completionWords = ReadLuaKeywordList( fKeywords );
+			std::string szKeywords = JoinLuaKeywords( pKeywords->completionWords );
 
 			// Set 1: the keywords file, in the lexer's own colour.
 			SKeywordSet fileSet;
@@ -138,20 +137,13 @@ namespace NTextEditor
 					dictionarySet.nColor = pDictionary->GetKeywordsColor( i );
 					pKeywords->sets.push_back( dictionarySet );
 
-					szKeywords += szKeywordSet;
-					szKeywords += ' ';
 				}
 			}
 
-			// The trailing space goes. Guarded, where the MFC editor was not: with
-			// no file and no dictionary it erased before the start of an empty
-			// string.
-			if ( !szKeywords.empty() )
-			{
-				szKeywords.erase( szKeywords.size() - 1 );
-			}
+			// Scintilla's completion list must be sorted, including dictionary words.
 			std::sort( pKeywords->completionWords.begin(), pKeywords->completionWords.end() );
-			pKeywords->szCompletionList = szKeywords;
+			pKeywords->completionWords.erase( std::unique(pKeywords->completionWords.begin(), pKeywords->completionWords.end()), pKeywords->completionWords.end() );
+			pKeywords->szCompletionList = JoinLuaKeywords( pKeywords->completionWords );
 		}
 		catch ( ... )
 		{
