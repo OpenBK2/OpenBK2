@@ -16,6 +16,8 @@ Few rules:
 - On Windows, don't try build anything with regular system/CMD/Powershell CMake, this project used Visual Studio CMake and VS Developer Environment. On linux, you can use system CMake.
 - Add some comments when you make or change the code to make it clear what was done
 - Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
+- Linux exports every function by default, but windows does not! So make sure to mark function for exporting in appropriate header file
+- Legacy .cll generator files are no longer used at all, instead, write changes directly to their result files
 
 ### Determinism coding rules
 1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation. 
