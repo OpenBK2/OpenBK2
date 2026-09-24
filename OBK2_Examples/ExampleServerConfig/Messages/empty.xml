@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Optional: "broadcast empty.xml" clears the welcome text in memory.
+     To keep it empty across reloads and restarts, also empty Welcome in server.xml. -->
+<Base>
+	<Text></Text>
+</Base>

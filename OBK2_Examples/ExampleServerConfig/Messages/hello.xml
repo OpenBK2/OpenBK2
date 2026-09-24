@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Optional: send with "broadcast hello.xml" over the TCP administration console.
+     This also replaces the welcome text in memory until a reload or restart. -->
+<Base>
+	<Text>Welcome to the OpenBK2 example server!</Text>
+</Base>

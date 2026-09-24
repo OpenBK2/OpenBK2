@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- OpenBK2 lobby server example. See README.md before deployment.
+     Run Server from a bin/ directory whose parent contains this file.
+     The filename must be lowercase server.xml on case-sensitive filesystems. -->
+<Base>
+	<!-- Protocol identifier: match the clients' NetGameVersion. -->
+	<NetVersion>3</NetVersion>
+	<!-- IPv4 UDP lobby/relay port, bound on all local interfaces. -->
+	<Port>4200</Port>
+
+	<!-- Embedded SQLite creates its own database and schema on first start.
+	     Paths are relative to the PROCESS WORKING DIRECTORY (normally bin/).
+	     This path therefore stores the database beside server.xml. -->
+	<DatabaseBackend>sqlite</DatabaseBackend>
+	<DatabaseFile>../nivalnet.db</DatabaseFile>
+	<!-- Only used with DatabaseBackend=mysql. That backend requires an existing
+	     schema and uses the fixed user NivalNET with an empty password.
+	     There are no XML keys for database username, password or port. -->
+	<MySQLServer>127.0.0.1</MySQLServer>
+	<MySQLDBName>nivalnet</MySQLDBName>
+
+	<!-- Milliseconds without game heartbeats before a lobby game is removed.
+	     These are not network ping timeouts. -->
+	<GameTimeout>30000</GameTimeout>
+	<!-- Additional grace period on loading: the heartbeat timestamp is moved
+	     300000 ms into the future, giving 330000 ms total with GameTimeout above. -->
+	<GameLoadingTimeout>300000</GameLoadingTimeout>
+	<!-- Chat cleanup interval in milliseconds. -->
+	<ChatSegmentLength>500</ChatSegmentLength>
+	<!-- Friend-list limit; the current pre-insertion check uses greater-than,
+	     so a configured value of 20 actually permits a 21st entry. -->
+	<MaxFriends>20</MaxFriends>
+	<!-- Server statistics are written to the database every 15 minutes. -->
+	<ServerLogPeriod>900000</ServerLogPeriod>
+	<!-- UTF-8 text shown on joining a chat channel; an empty element suppresses it. -->
+	<Welcome>Welcome to the OpenBK2 example server!</Welcome>
+	<!-- 0 skips the validcdkeys allowlist check during registration.
+	     Accounts still require a non-empty CD key; use distinct keys for players.
+	     1 requires populating the database's validcdkeys table first. -->
+	<CheckCDKeyIsValid>0</CheckCDKeyIsValid>
+
+	<!-- IPv4 TCP administration port. NO authentication; binds all interfaces.
+	     Restrict access with a firewall/private network. 0 does NOT disable it.
+	     4210 avoids the privileged ports used by the historical examples. -->
+	<TerminalPort>4210</TerminalPort>
+
+	<!-- Keep this entire block: the ladder lobby is always initialized.
+	     Values and XP tables are preserved from Versions/Server/nivalnet/server.xml. -->
+	<LadderConsts>
+		<!-- Maximum difference between average team levels. Candidate filtering uses twice this value.
+		     If increased, extend both Experience/Win and Experience/Lose key ranges too. -->
+		<LevelDelta>5</LevelDelta>
+		<!-- Milliseconds before accepting one unmet map/tech-level preference, then both. -->
+		<WaitTime1>20000</WaitTime1>
+		<WaitTime2>40000</WaitTime2>
+		<!-- Upper team-size bound when a player requests any team size (0). -->
+		<MaxTeamSize>4</MaxTeamSize>
+		<!-- Maximum matchmaking attempts per 200 ms ladder tick; stops on the first created match. -->
+		<PlayersPerStep>5</PlayersPerStep>
+		<!-- Race count used for ladder statistics; keep consistent with clients and stored data. -->
+		<NumberOfRaces>4</NumberOfRaces>
+		<!-- Maximum reported reinforcement-vector length; the server also has a hardcoded limit of 30. -->
+		<MaxUnitTypes>30</MaxUnitTypes>
+		<!-- Team-assignment retry multiplier, multiplied by the candidate-player count. -->
+		<MistakesPerStep>10</MistakesPerStep>
+		<!-- Three medal tiers: lifetime kills must be strictly greater than each threshold. -->
+		<KilledMedals>
+			<Item>200</Item>
+			<Item>1000</Item>
+			<Item>3000</Item>
+		</KilledMedals>
+		<!-- Three medal tiers: last-match kills must exceed threshold times last-match losses. -->
+		<KilledLostMedals>
+			<Item>1.5</Item>
+			<Item>3</Item>
+			<Item>5</Item>
+		</KilledLostMedals>
+		<!-- Three medal tiers: consecutive wins must be at least each threshold. -->
+		<WinsInSeriesMedals>
+			<Item>3</Item>
+			<Item>5</Item>
+			<Item>10</Item>
+		</WinsInSeriesMedals>
+		<!-- Minimum level for the medal awarded to a player matching or exceeding the highest XP. -->
+		<FirstPlaceMedalLevel>20</FirstPlaceMedalLevel>
+		<!-- Retain complete maps and an ascending Levels list. Missing map keys yield zero. -->
+		<Experience>
+			<!-- Players up to and including this level receive the LossFactor multiplier on XP losses. -->
+			<NewbieLevel>10</NewbieLevel>
+			<!-- Key = player level; Data = multiplier on XP lost. -->
+			<LossFactor>
+				<Item>
+					<Key>1</Key>
+					<Data>0.1</Data>
+				</Item>
+				<Item>
+					<Key>2</Key>
+					<Data>0.1</Data>
+				</Item>
+				<Item>
+					<Key>3</Key>
+					<Data>0.1</Data>
+				</Item>
+				<Item>
+					<Key>4</Key>
+					<Data>0.25</Data>
+				</Item>
+				<Item>
+					<Key>5</Key>
+					<Data>0.25</Data>
+				</Item>
+				<Item>
+					<Key>6</Key>
+					<Data>0.5</Data>
+				</Item>
+				<Item>
+					<Key>7</Key>
+					<Data>0.5</Data>
+				</Item>
+				<Item>
+					<Key>8</Key>
+					<Data>0.75</Data>
+				</Item>
+				<Item>
+					<Key>9</Key>
+					<Data>0.75</Data>
+				</Item>
+				<Item>
+					<Key>10</Key>
+					<Data>1</Data>
+				</Item>
+			</LossFactor>
+			<!-- Key = opponent average level minus own average level (integer); Data = base XP gained. -->
+			<Win>
+				<Item>
+					<Key>-5</Key>
+					<Data>75</Data>
+				</Item>
+				<Item>
+					<Key>-4</Key>
+					<Data>80</Data>
+				</Item>
+				<Item>
+					<Key>-3</Key>
+					<Data>85</Data>
+				</Item>
+				<Item>
+					<Key>-2</Key>
+					<Data>90</Data>
+				</Item>
+				<Item>
+					<Key>-1</Key>
+					<Data>95</Data>
+				</Item>
+				<Item>
+					<Key>0</Key>
+					<Data>100</Data>
+				</Item>
+				<Item>
+					<Key>1</Key>
+					<Data>115</Data>
+				</Item>
+				<Item>
+					<Key>2</Key>
+					<Data>130</Data>
+				</Item>
+				<Item>
+					<Key>3</Key>
+					<Data>145</Data>
+				</Item>
+				<Item>
+					<Key>4</Key>
+					<Data>155</Data>
+				</Item>
+				<Item>
+					<Key>5</Key>
+					<Data>165</Data>
+				</Item>
+			</Win>
+			<!-- Same level-difference keys as Win; Data = positive base XP to subtract after a loss. -->
+			<Lose>
+				<Item>
+					<Key>5</Key>
+					<Data>35</Data>
+				</Item>
+				<Item>
+					<Key>4</Key>
+					<Data>45</Data>
+				</Item>
+				<Item>
+					<Key>3</Key>
+					<Data>55</Data>
+				</Item>
+				<Item>
+					<Key>2</Key>
+					<Data>70</Data>
+				</Item>
+				<Item>
+					<Key>1</Key>
+					<Data>85</Data>
+				</Item>
+				<Item>
+					<Key>0</Key>
+					<Data>100</Data>
+				</Item>
+				<Item>
+					<Key>-1</Key>
+					<Data>105</Data>
+				</Item>
+				<Item>
+					<Key>-2</Key>
+					<Data>110</Data>
+				</Item>
+				<Item>
+					<Key>-3</Key>
+					<Data>115</Data>
+				</Item>
+				<Item>
+					<Key>-4</Key>
+					<Data>120</Data>
+				</Item>
+				<Item>
+					<Key>-5</Key>
+					<Data>130</Data>
+				</Item>
+			</Lose>
+			<!-- Cumulative XP thresholds for levels 1 through 100; the first Item is level 1. -->
+			<Levels>
+				<Item>0</Item>
+				<Item>100</Item>
+				<Item>300</Item>
+				<Item>600</Item>
+				<Item>1000</Item>
+				<Item>1500</Item>
+				<Item>2000</Item>
+				<Item>2500</Item>
+				<Item>3000</Item>
+				<Item>3500</Item>
+				<Item>4000</Item>
+				<Item>4500</Item>
+				<Item>5000</Item>
+				<Item>5500</Item>
+				<Item>6000</Item>
+				<Item>6500</Item>
+				<Item>7000</Item>
+				<Item>7500</Item>
+				<Item>8000</Item>
+				<Item>8600</Item>
+				<Item>9200</Item>
+				<Item>9800</Item>
+				<Item>10400</Item>
+				<Item>11000</Item>
+				<Item>11600</Item>
+				<Item>12200</Item>
+				<Item>12800</Item>
+				<Item>13400</Item>
+				<Item>14000</Item>
+				<Item>14600</Item>
+				<Item>15200</Item>
+				<Item>15800</Item>
+				<Item>16400</Item>
+				<Item>17000</Item>
+				<Item>17600</Item>
+				<Item>18200</Item>
+				<Item>18800</Item>
+				<Item>19400</Item>
+				<Item>20000</Item>
+				<Item>20600</Item>
+				<Item>21300</Item>
+				<Item>22000</Item>
+				<Item>22700</Item>
+				<Item>23400</Item>
+				<Item>24100</Item>
+				<Item>24800</Item>
+				<Item>25500</Item>
+				<Item>26200</Item>
+				<Item>26900</Item>
+				<Item>27600</Item>
+				<Item>28300</Item>
+				<Item>29000</Item>
+				<Item>29700</Item>
+				<Item>30400</Item>
+				<Item>31100</Item>
+				<Item>31800</Item>
+				<Item>32500</Item>
+				<Item>33200</Item>
+				<Item>33900</Item>
+				<Item>34600</Item>
+				<Item>35400</Item>
+				<Item>36200</Item>
+				<Item>37000</Item>
+				<Item>37800</Item>
+				<Item>38600</Item>
+				<Item>39400</Item>
+				<Item>40200</Item>
+				<Item>41000</Item>
+				<Item>41800</Item>
+				<Item>42600</Item>
+				<Item>43400</Item>
+				<Item>44200</Item>
+				<Item>45000</Item>
+				<Item>45800</Item>
+				<Item>46600</Item>
+				<Item>47400</Item>
+				<Item>48200</Item>
+				<Item>49000</Item>
+				<Item>49800</Item>
+				<Item>50600</Item>
+				<Item>51600</Item>
+				<Item>52600</Item>
+				<Item>53600</Item>
+				<Item>54600</Item>
+				<Item>55600</Item>
+				<Item>56600</Item>
+				<Item>57600</Item>
+				<Item>58600</Item>
+				<Item>59600</Item>
+				<Item>60600</Item>
+				<Item>62100</Item>
+				<Item>63600</Item>
+				<Item>65100</Item>
+				<Item>66600</Item>
+				<Item>68100</Item>
+				<Item>69600</Item>
+				<Item>71100</Item>
+				<Item>72600</Item>
+				<Item>74100</Item>
+				<Item>77100</Item>
+			</Levels>
+		</Experience>
+	</LadderConsts>
+</Base>
