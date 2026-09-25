@@ -2316,6 +2316,10 @@ void CFormationParaDropState::Segment()
 			for ( int i = 0; i < pFormation->Size(); ++i )
 			{
 				IUnitState  *pState = (*pFormation)[i]->GetState();
+				// Slow helicopter drops can outlast the first soldier's descent. Wait for
+				// members still aboard, including a released soldier awaiting its parachute command.
+				if ( (*pFormation)[i]->IsInTransport() || pState->GetName() == EUSN_REST_ON_BOARD )
+					return;
 				if ( EUSN_PARTROOP == pState->GetName() )
 				{
 					//кто-то еще не долетел
