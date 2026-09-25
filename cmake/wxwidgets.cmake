@@ -107,9 +107,9 @@ set(WX_GIT_TAG v3.3.3)
 set(WX_CMAKE_ARGS
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
         # Has to match the rest of the build, which uses the shared CRT
-        # (CMake's default, /MD); a wx built against the static CRT would put
+        # (CMake's default, /MD or /MDd); a static CRT would put
         # two heaps in one process.
-        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDLL
+        -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
         -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         -DwxBUILD_SHARED=ON
@@ -141,6 +141,24 @@ set(WX_CMAKE_ARGS
         # set it back there with cmake -DwxUSE_STC=ON <that directory>.
 )
 
+if(WIN32 AND USE_MIMALLOC)
+    # wx owns objects and STL buffers created by editor code and vice versa.
+    # Give wxmono the same module-local new/delete without touching the CRT.
+    list(APPEND WX_CMAKE_ARGS
+        -DCMAKE_PROJECT_wxWidgets_INCLUDE=${CMAKE_SOURCE_DIR}/cmake/wx_mimalloc.cmake
+        -DOBK2_MIMALLOC_OBJECT=$<TARGET_OBJECTS:obk2_mimalloc_new_delete>
+        -DOBK2_MIMALLOC_LIBRARY=$<TARGET_LINKER_FILE:mimalloc>)
+    # An installed wx DLL embeds the override object. Changes to it or the
+    # allocator version must invalidate the cached install as well as ON/OFF.
+    file(SHA256 ${CMAKE_SOURCE_DIR}/Versions/Temporary/Engine/Sources/MemoryLib/MimallocNewDelete.cpp WX_ALLOCATOR_SOURCE_ID)
+    file(SHA256 ${CMAKE_SOURCE_DIR}/cmake/wx_mimalloc.cmake WX_ALLOCATOR_HOOK_ID)
+    get_target_property(WX_ALLOCATOR_VERSION mimalloc VERSION)
+    set(WX_ALLOCATOR_ID "${WX_ALLOCATOR_SOURCE_ID};${WX_ALLOCATOR_HOOK_ID};${WX_ALLOCATOR_VERSION}")
+else()
+    # Clear the hook when reconfiguring with USE_MIMALLOC=OFF or ENABLE_ASAN.
+    list(APPEND WX_CMAKE_ARGS -DCMAKE_PROJECT_wxWidgets_INCLUDE=)
+endif()
+
 # Off Windows the toolkit is named rather than left to wx's default (also gtk3
 # today), so what the libraries are built on is stated here and in the build
 # id. Appended only there, so the Windows argument list, and with it the
@@ -154,7 +172,7 @@ endif()
 # MSVC update changes the id too, which is deliberately conservative. The
 # install prefix is left out so that an install can be restored to a different
 # path and still match.
-string(SHA256 WX_BUILD_ID "${WX_GIT_TAG};${WX_TOOLCHAIN_TAG};${WX_CMAKE_ARGS}")
+string(SHA256 WX_BUILD_ID "${WX_GIT_TAG};${WX_TOOLCHAIN_TAG};${WX_CMAKE_ARGS};${WX_ALLOCATOR_ID}")
 set(WX_BUILD_ID_FILE ${WX_INSTALL}/wx-build-id.txt)
 
 # Also written into the build directory, where CI reads it to name the cache
@@ -266,6 +284,12 @@ set_target_properties(wx::wx PROPERTIES
     # compilation mode.
     INTERFACE_COMPILE_DEFINITIONS "WXUSINGDLL"
 )
+
+if(WIN32 AND USE_MIMALLOC)
+    add_dependencies(wxwidgets_external obk2_mimalloc_new_delete mimalloc)
+    # Keep the allocator in consumers' runtime dependency closure as well.
+    set_property(TARGET wx::wx APPEND PROPERTY INTERFACE_LINK_LIBRARIES mimalloc)
+endif()
 
 # Off Windows the headers also have to be told the port, which wx-config
 # passes as __WXGTK__ and __WXGTK3__: on MSW wx works it out from _WIN32, on

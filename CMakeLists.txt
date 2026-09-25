@@ -54,7 +54,7 @@ option(BUILD_EDITOR "build editor" ON)
 # Connector/C and SQLite, since the server links both. Configure with
 # -DBUILD_SERVER=OFF to skip them.
 option(BUILD_SERVER "build dedicated server" ON)
-option(USE_MIMALLOC "replace the process allocator with mimalloc" ON)
+option(USE_MIMALLOC "use mimalloc for project C++ allocations (process override on non-Windows)" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 
 # AddressSanitizer installs its own allocator to see every allocation and
@@ -63,7 +63,7 @@ option(ENABLE_ASAN "build with AddressSanitizer" OFF)
 # that builds and then reports nothing useful.
 if(ENABLE_ASAN AND USE_MIMALLOC)
     message(STATUS "ENABLE_ASAN: mimalloc switched off, AddressSanitizer replaces the allocator")
-    set(USE_MIMALLOC OFF CACHE BOOL "replace the process allocator with mimalloc" FORCE)
+    set(USE_MIMALLOC OFF CACHE BOOL "use mimalloc for project C++ allocations (process override on non-Windows)" FORCE)
 endif()
 
 if(ENABLE_ASAN)
@@ -182,5 +182,11 @@ if(BUILD_SERVER)
 endif()
 
 add_subdirectory("Versions/Temporary/Engine/Sources")
+
+if(WIN32 AND USE_MIMALLOC)
+    # Apply after target creation, including tools/tests that exchange objects
+    # with engine DLLs. External C/OS DLLs keep their own allocation functions.
+    enable_project_mimalloc()
+endif()
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT Game)

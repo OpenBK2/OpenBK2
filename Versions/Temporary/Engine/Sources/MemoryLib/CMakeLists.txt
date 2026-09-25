@@ -18,3 +18,7 @@ endif()
 add_export_header(MemoryLib)
 install(TARGETS MemoryLib DESTINATION bin)
 add_version_info(MemoryLib)
+
+if(WIN32 AND USE_MIMALLOC)
+    add_subdirectory(test)
+endif()

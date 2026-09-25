@@ -11,6 +11,14 @@ add_executable(WxEditor main.cpp)
 target_link_libraries(WxEditor PRIVATE wx::wx)
 add_dependencies(WxEditor wxwidgets_external)
 
+if(WIN32 AND USE_MIMALLOC)
+    # This standalone wx consumer has its own runtime deployment step.
+    add_custom_command(TARGET WxEditor POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_FILE:mimalloc> $<TARGET_FILE_DIR:WxEditor>
+        VERBATIM)
+endif()
+
 # wx's DLL has to sit beside the executable. Done through a script that globs
 # rather than by name, because the name carries wx's version, the compiler and
 # the architecture -- see cmake/copy_wx_runtime.cmake.

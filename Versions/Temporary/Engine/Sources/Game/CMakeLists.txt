@@ -9,10 +9,9 @@ set(SOURCES
 )
 add_executable(Game WIN32 ${SOURCES})
 add_stdafx_pch(Game)
-# Keep mimalloc first so its Windows redirect is loaded before other runtime
-# users. With USE_MIMALLOC off - which ENABLE_ASAN forces - the game uses the
-# system allocator and main.cpp drops the header that overrides new and delete.
-if(USE_MIMALLOC)
+# Windows attaches module-local overrides centrally after all targets exist.
+# Other platforms retain the original executable-level interposition.
+if(USE_MIMALLOC AND NOT WIN32)
     target_link_libraries(Game PRIVATE mimalloc)
     target_compile_definitions(Game PRIVATE USE_MIMALLOC=1)
 endif()

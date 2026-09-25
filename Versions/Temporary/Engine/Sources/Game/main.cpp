@@ -6,8 +6,8 @@
 #include "GameX_export.h"
 
 #if USE_MIMALLOC
-// Overrides operator new and delete for this translation unit, which is what
-// puts mimalloc in front of the process allocator.
+// Non-Windows executable-level overrides. Windows links a separate override
+// object into each participating module without redirecting the process CRT.
 #include <mimalloc-new-delete.h>
 #endif
 #include "resource.h"
@@ -248,8 +248,7 @@ int main( int argc, char *argv[] )
 static int RunGame( const std::vector<std::string> &arguments )
 {
 #if USE_MIMALLOC
-    // Keep mimalloc in the executable's import table so its redirect DLL can
-    // replace the CRT allocator for every game module before initialization.
+    // Retain the non-Windows allocator dependency even with link-time pruning.
     (void)mi_version();
 #endif
 
