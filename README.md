@@ -19,7 +19,7 @@ NOTE: all proprietary libraries that the old game binaries depended on were repl
 
 - **Game engine**: Custom 3D "Enigma" engine, mostly written in C++
 - **Scripting language**: Lua
-- **Animation**: Granny Animation (RAD Game Tools) - from our custom `libgr2` implementation, in the future, game will support modern GLTF 3D format too
+- **Animation**: Granny Animation (RAD Game Tools) - from our custom `libgr2` implementation, game also now supports modern GLTF 3D format, keeping Granny as a legacy lib for backwards compatibility
 - **Audio**: FLESSD sound system - Open source version of FMOD (based on [SDL3](https://wiki.libsdl.org/SDL3/FrontPage))
 - **Video**: [FFMPEG](https://www.ffmpeg.org/) video library
 
