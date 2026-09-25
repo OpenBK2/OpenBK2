@@ -5,6 +5,8 @@
 #include "AIClassesID.h"
 #include "Commands.h"
 #include "CommonStates.h"
+#include "Formation.h"
+#include "Soldier.h"
 #include "Guns.h"
 #include "GroupLogic.h"
 #include "LinkObject.h"
@@ -14,6 +16,7 @@
 #include "Shell.h"
 #include "AILogicInternal.h"
 #include "AIMap.h"
+#include "Common_RTS_AI/AIMap.h"
 #include "Common_RTS_AI/StaticMapHeights.h"
 
 REGISTER_SAVELOAD_CLASS( 0x1919A2C2, CHelicopterStatesFactory );
@@ -23,6 +26,7 @@ REGISTER_SAVELOAD_CLASS( 0x1919A2C5, CHelicopterRotateState );
 REGISTER_SAVELOAD_CLASS( 0x1919A2C6, CHelicopterAttackUnitState );
 REGISTER_SAVELOAD_CLASS( 0x1919A2C7, CHelicopterLeaveState );
 REGISTER_SAVELOAD_CLASS( 0x1919A2C8, CHelicopterFlyDeadState );
+REGISTER_SAVELOAD_CLASS( 0x1919A2C9, CHelicopterUnloadState );
 
 CPtr<CHelicopterStatesFactory> CHelicopterStatesFactory::pFactory = 0;
 
@@ -50,6 +54,7 @@ bool CHelicopterStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		cmdType == ACTION_COMMAND_STAND_GROUND ||
 		cmdType == ACTION_COMMAND_GUARD ||
 		cmdType == ACTION_COMMAND_PATROL ||
+		cmdType == ACTION_COMMAND_UNLOAD ||
 		cmdType == ACTION_COMMAND_ATTACK_UNIT ||
 		cmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||
 		cmdType == ACTION_MOVE_PLANE_LEAVE ||
@@ -104,6 +109,19 @@ IUnitState* CHelicopterStatesFactory::ProduceState( CQueueUnit *pObj, CAICommand
 			}
 			pHelicopter->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, !pCommand->IsFromAI() );
 			return 0;
+		}
+	case ACTION_COMMAND_UNLOAD:
+		{
+			// Passenger slots specify a squad and no destination; ground clicks unload all.
+			CFormation *pSquad = dynamic_cast<CFormation*>( GetObjectByCmd( cmd ) );
+			if ( cmd.nObjectID != 0 && !IsValidObj( pSquad ) )
+			{
+				pHelicopter->SendAcknowledgement( pCommand, ACK_INVALID_TARGET, !pCommand->IsFromAI() );
+				return 0;
+			}
+			const CVec2 vTarget = int( cmd.fNumber ) == ALP_POSITION_INVALID ?
+				pHelicopter->GetCenterPlain() : pCommand->GetMoveTarget( pHelicopter );
+			return new CHelicopterUnloadState( pHelicopter, vTarget, pSquad );
 		}
 	case ACTION_MOVE_PLANE_LEAVE:
 		return new CHelicopterLeaveState( pHelicopter, pHelicopter->GetLeavePoint(), false );
@@ -205,6 +223,141 @@ void CHelicopterMoveState::Segment()
 		pHelicopter->BeginHover();
 		Finish();
 	}
+}
+
+CHelicopterUnloadState::CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload )
+: CHelicopterBaseState( pUnit ), vTarget( _vTarget ), pUnload( _pUnload ),
+	bUnloadOneSquad( _pUnload != 0 ), timeNextDrop( 0 )
+{
+}
+
+CFormation* CHelicopterUnloadState::GetNextSquad() const
+{
+	// Search this helicopter's manifest, never another transport's members of a squad.
+	for ( int i = 0; i < pHelicopter->GetNPassengers(); ++i )
+	{
+		CSoldier *pSoldier = pHelicopter->GetPassenger( i );
+		if ( IsValidObj( pSoldier ) && pSoldier->IsAlive() && pSoldier->IsInTransport() &&
+			pSoldier->GetTransportUnit() == pHelicopter )
+		{
+			CFormation *pSquad = pSoldier->GetFormation();
+			if ( IsValidObj( pSquad ) && ( !bUnloadOneSquad || pSquad == pUnload ) )
+				return pSquad;
+		}
+	}
+	return 0;
+}
+
+bool CHelicopterUnloadState::FindDropPoint( const CVec2 &vPreferred, CVec3 *pDropPoint ) const
+{
+	STerrainModeSetter terrainMode( ELM_ALL, GetTerrain() );
+	const SVector centerTile = AICellsTiles::GetTile( vPreferred );
+	const float fDropZ = pHelicopter->GetCenter().z;
+	auto TryPoint = [&]( const CVec2 &vPoint )
+	{
+		const SVector tile = AICellsTiles::GetTile( vPoint );
+		// The parachute path divides by its fall time, so require positive altitude too.
+		if ( vPoint.x < 0.0f || vPoint.y < 0.0f ||
+			!GetAIMap()->IsTileInside( tile ) || GetTerrain()->IsLocked( tile, EAC_HUMAN ) ||
+			fDropZ - GetHeights()->GetZ( vPoint ) < 1.0f )
+			return false;
+		*pDropPoint = CVec3( vPoint, fDropZ );
+		return true;
+	};
+	if ( TryPoint( vPreferred ) )
+		return true;
+	// Match the parachute path's bounded search, using a fixed order for multiplayer/replays.
+	for ( int x = centerTile.x - SConsts::PARADROP_SPRED; x < centerTile.x + SConsts::PARADROP_SPRED; ++x )
+		for ( int y = centerTile.y - SConsts::PARADROP_SPRED; y < centerTile.y + SConsts::PARADROP_SPRED; ++y )
+			if ( TryPoint( AICellsTiles::GetPointByTile( SVector( x, y ) ) ) )
+				return true;
+	return false;
+}
+
+void CHelicopterUnloadState::Segment()
+{
+	if ( ShouldLeaveMap() )
+	{
+		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PLANE_LEAVE ), pHelicopter, false );
+		return;
+	}
+	CFormation *pSquad = GetNextSquad();
+	if ( !pSquad || vTarget.x < 0.0f || vTarget.y < 0.0f ||
+		!GetAIMap()->IsTileInside( AICellsTiles::GetTile( vTarget ) ) )
+	{
+		pHelicopter->Stop();
+		pHelicopter->SendAcknowledgement( ACK_NEGATIVE );
+		Finish();
+		return;
+	}
+	if ( !pHelicopter->IsNearTarget( vTarget, 0.25f * SConsts::TILE_SIZE ) )
+	{
+		pHelicopter->BeginMoveTo( vTarget );
+		pHelicopter->DecFuel( false );
+		return;
+	}
+	pHelicopter->Stop();
+	pHelicopter->DecFuel( true );
+	if ( curTime < timeNextDrop )
+		return;
+
+	// The shared formation parachute state controls every member, so only start a
+	// complete squad. A partially boarded squad must finish boarding before unloading.
+	for ( int i = 0; i < pSquad->Size(); ++i )
+	{
+		CSoldier *pSoldier = (*pSquad)[i];
+		if ( IsValidObj( pSoldier ) && pSoldier->IsAlive() &&
+			( !pSoldier->IsInTransport() || pSoldier->GetTransportUnit() != pHelicopter ) )
+		{
+			pHelicopter->SendAcknowledgement( ACK_NEGATIVE );
+			Finish();
+			return;
+		}
+	}
+
+	std::vector<CPtr<CSoldier> > passengers;
+	std::vector<CVec3> dropPoints;
+	for ( int i = 0; i < pHelicopter->GetNPassengers(); ++i )
+	{
+		CSoldier *pSoldier = pHelicopter->GetPassenger( i );
+		if ( !IsValidObj( pSoldier ) || !pSoldier->IsAlive() || pSoldier->GetFormation() != pSquad ||
+			!pSoldier->IsInTransport() || pSoldier->GetTransportUnit() != pHelicopter )
+			continue;
+
+		// Spread a hovering squad around the helicopter instead of relying on forward flight.
+		const int nPassenger = passengers.size();
+		const CVec2 vOffset = GetVectorByDirection( WORD( pHelicopter->GetFrontDirection() + nPassenger * 8192 ) ) *
+			( ( 1 + nPassenger / 8 ) * SConsts::TILE_SIZE );
+		CVec3 vDropPoint;
+		if ( !FindDropPoint( pHelicopter->GetCenterPlain() + vOffset, &vDropPoint ) )
+		{
+			// Validate the entire squad before changing passenger or formation state.
+			pHelicopter->SendAcknowledgement( ACK_NEGATIVE );
+			Finish();
+			return;
+		}
+		passengers.push_back( pSoldier );
+		dropPoints.push_back( vDropPoint );
+	}
+
+	// Reuse the plane's soldier/formation parachute states and their normal landing updates.
+	// A whole squad starts in one simulation segment, allowing immediate, safe cancellation.
+	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PARACHUTE ), pSquad, false );
+	for ( int i = 0; i < passengers.size(); ++i )
+	{
+		CSoldier *pSoldier = passengers[i];
+		pSoldier->SetFree();
+		pSoldier->SetCenter( dropPoints[i], false );
+		pSoldier->SetSelectable( false, true );
+		pHelicopter->DelPassenger( pSoldier );
+		pSoldier->GetState()->TryInterruptState( 0 );
+		theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PARACHUTE, pHelicopter->GetUniqueID() ), pSoldier, false );
+		pSoldier->SetCenter( dropPoints[i] );
+	}
+	// Use simulation time: distance-based plane drop intervals never elapse while hovering.
+	timeNextDrop = curTime + 1000;
+	if ( bUnloadOneSquad || !GetNextSquad() )
+		Finish();
 }
 
 CHelicopterRotateState::CHelicopterRotateState( CHelicopter *pUnit, const CVec2 &_vTarget )
