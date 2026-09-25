@@ -6,6 +6,7 @@
 
 class CHelicopter;
 class CBasicGun;
+class CFormation;
 
 class CHelicopterStatesFactory : public IStatesFactory
 {
@@ -70,6 +71,26 @@ public:
 	virtual void Segment();
 	virtual const CVec2 GetPurposePoint() const { return vTarget; }
 	virtual EUnitStateNames GetName() { return bScanTargets ? EUSN_SWARM : EUSN_MOVE; }
+};
+
+// Drop complete squads while hovering, so interruption never leaves a squad half aboard.
+class CHelicopterUnloadState : public CHelicopterBaseState
+{
+	OBJECT_BASIC_METHODS( CHelicopterUnloadState );
+	ZDATA_(CHelicopterBaseState)
+	CVec2 vTarget;
+	CPtr<CFormation> pUnload;
+	bool bUnloadOneSquad;
+	NTimer::STime timeNextDrop;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&pUnload); f.Add(4,&bUnloadOneSquad); f.Add(5,&timeNextDrop); return 0; }
+	CFormation* GetNextSquad() const;
+	bool FindDropPoint( const CVec2 &vPreferred, CVec3 *pDropPoint ) const;
+public:
+	CHelicopterUnloadState() : vTarget( VNULL2 ), pUnload( 0 ), bUnloadOneSquad( false ), timeNextDrop( 0 ) { }
+	CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload );
+	virtual void Segment();
+	virtual const CVec2 GetPurposePoint() const { return vTarget; }
+	virtual EUnitStateNames GetName() { return EUSN_LAND; }
 };
 
 class CHelicopterRotateState : public CHelicopterBaseState
