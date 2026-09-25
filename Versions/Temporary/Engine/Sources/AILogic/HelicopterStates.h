@@ -7,6 +7,7 @@
 class CHelicopter;
 class CBasicGun;
 class CFormation;
+class CSoldier;
 
 class CHelicopterStatesFactory : public IStatesFactory
 {
@@ -73,7 +74,7 @@ public:
 	virtual EUnitStateNames GetName() { return bScanTargets ? EUSN_SWARM : EUSN_MOVE; }
 };
 
-// Drop complete squads while hovering, so interruption never leaves a squad half aboard.
+// Release one soldier at a time; finish the active squad before obeying a new order.
 class CHelicopterUnloadState : public CHelicopterBaseState
 {
 	OBJECT_BASIC_METHODS( CHelicopterUnloadState );
@@ -82,13 +83,21 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 	CPtr<CFormation> pUnload;
 	bool bUnloadOneSquad;
 	NTimer::STime timeNextDrop;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&pUnload); f.Add(4,&bUnloadOneSquad); f.Add(5,&timeNextDrop); return 0; }
+	std::vector<CPtr<CSoldier> > dropPassengers;
+	std::vector<CVec3> dropPoints;
+	int nNextPassenger;
+	bool bFinishAfterSquad;
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&pUnload); f.Add(4,&bUnloadOneSquad); f.Add(5,&timeNextDrop); f.Add(6,&dropPassengers); f.Add(7,&dropPoints); f.Add(8,&nNextPassenger); f.Add(9,&bFinishAfterSquad); return 0; }
+	bool IsPassengerAboard( CSoldier *pSoldier ) const;
 	CFormation* GetNextSquad() const;
 	bool FindDropPoint( const CVec2 &vPreferred, CVec3 *pDropPoint ) const;
+	bool PrepareSquad( CFormation *pSquad );
 public:
-	CHelicopterUnloadState() : vTarget( VNULL2 ), pUnload( 0 ), bUnloadOneSquad( false ), timeNextDrop( 0 ) { }
+	CHelicopterUnloadState() : vTarget( VNULL2 ), pUnload( 0 ), bUnloadOneSquad( false ), timeNextDrop( 0 ),
+		nNextPassenger( 0 ), bFinishAfterSquad( false ) { }
 	CHelicopterUnloadState( CHelicopter *pUnit, const CVec2 &_vTarget, CFormation *_pUnload );
 	virtual void Segment();
+	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual const CVec2 GetPurposePoint() const { return vTarget; }
 	virtual EUnitStateNames GetName() { return EUSN_LAND; }
 };
