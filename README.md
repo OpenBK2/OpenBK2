@@ -22,6 +22,7 @@ NOTE: all proprietary libraries that the old game binaries depended on were repl
 - **Animation**: Granny Animation (RAD Game Tools) - from our custom `libgr2` implementation, game also now supports modern GLTF 3D format, keeping Granny as a legacy lib for backwards compatibility
 - **Audio**: FLESSD sound system - Open source version of FMOD (based on [SDL3](https://wiki.libsdl.org/SDL3/FrontPage))
 - **Video**: [FFMPEG](https://www.ffmpeg.org/) video library
+- **Text**: [FreeType](https://freetype.org) renders the UI fonts at the exact size they are drawn at, from open fonts shipped with the game
 
 ## New changes
 
@@ -93,5 +94,7 @@ This project is released under a **special non-commercial license** from NIVAL I
 
 ### 📋 Third-party licenses:
 - ~~**zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlib License~~ replaced by [zlib-ng](https://github.com/zlib-ng/zlib-ng)
+- **FreeType** - FreeType License. Portions of this software are copyright © 2026 The FreeType Project (https://freetype.org). All rights reserved.
+- **Fonts** in `Versions/Current/Data/Fonts/Files` - SIL Open Font License 1.1, each with its license file beside it: PT Sans (ParaType), Oswald (The Oswald Project Authors), Liberation Sans (Red Hat)
 
 Please review the complete [license agreement](LICENSE.md) before using this code.
