@@ -172,6 +172,8 @@ include(cmake/exportheader.cmake)
 # build-tree directory and relies on that directory being on the include path.
 include(cmake/squish.cmake)
 include(cmake/freetype.cmake)
+# game data rather than code: the open fonts as a patch archive for Data
+include(cmake/fontpak.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
 if(BUILD_EDITOR)
