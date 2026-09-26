@@ -1,0 +1,5017 @@
+# Every shader in 3Dmotor/GfxShaders.txt, as the assembly text ShaderCompiler
+# hands to its assembler after expanding the vertex shader macros and the
+# [PS_PROC] substitutions, and the tokens D3DXAssembleShader made of it.
+#
+# The tokens are from the DirectX SDK of June 2010 (d3dx9_43.dll), assembling
+# with no flags, so without D3DXSHADER_DEBUG and its comment blocks. They are
+# the same instruction stream as the arrays GfxShaders.cpp held when it was
+# still assembled with D3DXSHADER_DEBUG, once those blocks are taken out.
+#
+# Each entry is "@@@ shader <kind> <name>", the source, "@@@ expect", the
+# tokens in hex, and "@@@ end". Lines outside an entry are ignored.
+
+@@@ shader pixel G3WriteZ
+ps.2.0
+dcl t0.xy
+dcl t1.x
+dcl_2d s0
+
+texld r1, t0, s0
+
+sub r0, t1.x, c29.x
+//max r1, r0, c29.w
+//mul r1, r1, c29.y
+//max r2, -r0, c29.w
+//mul r2, r2, c29.z
+//add_sat r0, r1, r2
+abs r0, r0
+mul_sat r0, r0, c29.y
+
+//sub r0, c30.x, r0
+//mul r0, r0, r0
+//sub r0, c30.x, r0
+
+mov r0.a, r1.a
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 80000000 b0030000 200001f 80000000 b0010001 200001f
+90000000 a00f0800 3000042 800f0001 b0e40000 a0e40800 3000002 800f0000
+b0000001 a100001d 2000023 800f0000 80e40000 3000005 801f0000 80e40000
+a055001d 2000001 80080000 80ff0001 2000001 800f0800 80e40000 ffff
+@@@ end
+@@@ shader pixel G3DepthOfField
+ps.2.0
+dcl t0.xy
+dcl_2d s0
+dcl_2d s1
+
+//texld r0, t0, s1
+//mov oC0, r0
+
+// Fetch middle sample
+texld r0, t0, s0
+texld r1, t0, s1
+
+// Compute CoC size based on blurriness
+mul r1.w, r1.y, c26.x
+
+// Texture coords
+mad r3.xy, c0, r1.w, t0
+mad r5.xy, c1, r1.w, t0
+mad r7.xy, c2, r1.w, t0
+mad r9.xy, c3, r1.w, t0
+mad r11.xy, c4, r1.w, t0
+
+// Sample 1 fetch
+texld r2, r3, s0
+texld r3, r3, s1
+
+// Sample 2 fetch
+texld r4, r5, s0
+texld r5, r5, s1
+
+// Sample 3 fetch
+texld r6, r7, s0
+texld r7, r7, s1
+
+// Sample 4 fetch
+texld r8, r9, s0
+texld r9, r9, s1
+
+// Sample 5 fetch
+texld r10, r11, s0
+texld r11, r11, s1
+
+// Sample 1 contribution
+sub r3.w, r3.x, r1.x
+cmp r3.x, r3.w, c26.z, r3.y
+mad r0.rgb, r2, r3.x, r0
+add r1.z, c26.z, r3.x
+
+// Sample 2 contribution
+sub r5.w, r5.x, r1.x
+cmp r5.x, r5.w, c26.z, r5.y
+mad r0.rgb, r4, r5.x, r0
+add r1.z, r1.z, r5.x
+
+// Sample 3 contribution
+sub r7.w, r7.x, r1.x
+cmp r7.x, r7.w, c26.z, r7.y
+mad r0.rgb, r6, r7.x, r0
+add r1.z, r1.z, r7.x
+
+// Sample 4 contribution
+sub r9.w, r9.x, r1.x
+cmp r9.x, r9.w, c26.z, r9.y
+mad r0.rgb, r8, r9.x, r0
+add r1.z, r1.z, r9.x
+
+// Sample 5 contribution
+sub r11.w, r11.x, r1.x
+cmp r11.x, r11.w, c26.z, r11.y
+mad r0.rgb, r10, r11.x, r0
+add r1.z, r1.z, r11.x
+
+// Texture coords
+mad r3.xy, c5, r1.w, t0
+mad r5.xy, c6, r1.w, t0
+mad r7.xy, c7, r1.w, t0
+mad r9.xy, c8, r1.w, t0
+mad r11.xy, c9, r1.w, t0
+
+// Sample 6 fetch
+texld r2, r3, s0
+texld r3, r3, s1
+
+// Sample 7 fetch
+texld r4, r5, s0
+texld r5, r5, s1
+
+// Sample 8 fetch
+texld r6, r7, s0
+texld r7, r7, s1
+
+// Sample 9 fetch
+texld r8, r9, s0
+texld r9, r9, s1
+
+// Sample 10 fetch
+texld r10, r11, s0
+texld r11, r11, s1
+
+// Sample 6 contribution
+sub r3.w, r3.x, r1.x
+cmp r3.x, r3.w, c26.z, r3.y
+mad r0.rgb, r2, r3.x, r0
+add r1.z, r1.z, r3.x
+
+// Sample 7 contribution
+sub r5.w, r5.x, r1.x
+cmp r5.x, r5.w, c26.z, r5.y
+mad r0.rgb, r4, r5.x, r0
+add r1.z, r1.z, r5.x
+
+// Sample 8 contribution
+sub r7.w, r7.x, r1.x
+cmp r7.x, r7.w, c26.z, r7.y
+mad r0.rgb, r6, r7.x, r0
+add r1.z, r1.z, r7.x
+
+// Sample 9 contribution
+sub r9.w, r9.x, r1.x
+cmp r9.x, r9.w, c26.z, r9.y
+mad r0.rgb, r8, r9.x, r0
+add r1.z, r1.z, r9.x
+
+// Sample 10 contribution
+sub r11.w, r11.x, r1.x
+cmp r11.x, r11.w, c26.z, r11.y
+mad r0.rgb, r10, r11.x, r0
+add r1.z, r1.z, r11.x
+
+// Texture coords
+mad r3.xy, c10, r1.w, t0
+mad r5.xy, c11, r1.w, t0
+
+// Sample 11 fetch
+texld r2, r3, s0
+texld r3, r3, s1
+
+// Sample 12 fetch
+texld r4, r5, s0
+texld r5, r5, s1
+
+// Sample 11 contribution
+sub r3.w, r3.x, r1.x
+cmp r3.x, r3.w, c26.z, r3.y
+mad r0.rgb, r2, r3.x, r0
+add r1.z, r1.z, r3.x
+
+// Sample 12 contribution
+sub r5.w, r5.x, r1.x
+cmp r5.x, r5.w, c26.z, r5.y
+mad r0.rgb, r4, r5.x, r0
+add r1.z, r1.z, r5.x
+
+// Scale sample sum
+rcp r1.w, r1.z
+mul r0.rgb, r0, r1.w
+
+// Output color
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 80000000 b0030000 200001f 90000000 a00f0800 200001f
+90000000 a00f0801 3000042 800f0000 b0e40000 a0e40800 3000042 800f0001
+b0e40000 a0e40801 3000005 80080001 80550001 a000001a 4000004 80030003
+a0e40000 80ff0001 b0e40000 4000004 80030005 a0e40001 80ff0001 b0e40000
+4000004 80030007 a0e40002 80ff0001 b0e40000 4000004 80030009 a0e40003
+80ff0001 b0e40000 4000004 8003000b a0e40004 80ff0001 b0e40000 3000042
+800f0002 80e40003 a0e40800 3000042 800f0003 80e40003 a0e40801 3000042
+800f0004 80e40005 a0e40800 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40007 a0e40800 3000042 800f0007 80e40007 a0e40801 3000042
+800f0008 80e40009 a0e40800 3000042 800f0009 80e40009 a0e40801 3000042
+800f000a 80e4000b a0e40800 3000042 800f000b 80e4000b a0e40801 3000002
+80080003 80000003 81000001 4000058 80010003 80ff0003 a0aa001a 80550003
+4000004 80070000 80e40002 80000003 80e40000 3000002 80040001 a0aa001a
+80000003 3000002 80080005 80000005 81000001 4000058 80010005 80ff0005
+a0aa001a 80550005 4000004 80070000 80e40004 80000005 80e40000 3000002
+80040001 80aa0001 80000005 3000002 80080007 80000007 81000001 4000058
+80010007 80ff0007 a0aa001a 80550007 4000004 80070000 80e40006 80000007
+80e40000 3000002 80040001 80aa0001 80000007 3000002 80080009 80000009
+81000001 4000058 80010009 80ff0009 a0aa001a 80550009 4000004 80070000
+80e40008 80000009 80e40000 3000002 80040001 80aa0001 80000009 3000002
+8008000b 8000000b 81000001 4000058 8001000b 80ff000b a0aa001a 8055000b
+4000004 80070000 80e4000a 8000000b 80e40000 3000002 80040001 80aa0001
+8000000b 4000004 80030003 a0e40005 80ff0001 b0e40000 4000004 80030005
+a0e40006 80ff0001 b0e40000 4000004 80030007 a0e40007 80ff0001 b0e40000
+4000004 80030009 a0e40008 80ff0001 b0e40000 4000004 8003000b a0e40009
+80ff0001 b0e40000 3000042 800f0002 80e40003 a0e40800 3000042 800f0003
+80e40003 a0e40801 3000042 800f0004 80e40005 a0e40800 3000042 800f0005
+80e40005 a0e40801 3000042 800f0006 80e40007 a0e40800 3000042 800f0007
+80e40007 a0e40801 3000042 800f0008 80e40009 a0e40800 3000042 800f0009
+80e40009 a0e40801 3000042 800f000a 80e4000b a0e40800 3000042 800f000b
+80e4000b a0e40801 3000002 80080003 80000003 81000001 4000058 80010003
+80ff0003 a0aa001a 80550003 4000004 80070000 80e40002 80000003 80e40000
+3000002 80040001 80aa0001 80000003 3000002 80080005 80000005 81000001
+4000058 80010005 80ff0005 a0aa001a 80550005 4000004 80070000 80e40004
+80000005 80e40000 3000002 80040001 80aa0001 80000005 3000002 80080007
+80000007 81000001 4000058 80010007 80ff0007 a0aa001a 80550007 4000004
+80070000 80e40006 80000007 80e40000 3000002 80040001 80aa0001 80000007
+3000002 80080009 80000009 81000001 4000058 80010009 80ff0009 a0aa001a
+80550009 4000004 80070000 80e40008 80000009 80e40000 3000002 80040001
+80aa0001 80000009 3000002 8008000b 8000000b 81000001 4000058 8001000b
+80ff000b a0aa001a 8055000b 4000004 80070000 80e4000a 8000000b 80e40000
+3000002 80040001 80aa0001 8000000b 4000004 80030003 a0e4000a 80ff0001
+b0e40000 4000004 80030005 a0e4000b 80ff0001 b0e40000 3000042 800f0002
+80e40003 a0e40800 3000042 800f0003 80e40003 a0e40801 3000042 800f0004
+80e40005 a0e40800 3000042 800f0005 80e40005 a0e40801 3000002 80080003
+80000003 81000001 4000058 80010003 80ff0003 a0aa001a 80550003 4000004
+80070000 80e40002 80000003 80e40000 3000002 80040001 80aa0001 80000003
+3000002 80080005 80000005 81000001 4000058 80010005 80ff0005 a0aa001a
+80550005 4000004 80070000 80e40004 80000005 80e40000 3000002 80040001
+80aa0001 80000005 2000006 80080001 80aa0001 3000005 80070000 80e40000
+80ff0001 2000001 800f0800 80e40000 ffff
+@@@ end
+@@@ shader pixel Dp3
+ps.1.1
+tex t0
+dp3 r0, t0, c0
+add r0.rgb, r0, 1-r0
+@@@ expect
+ffff0101 42 b00f0000 8 800f0000 b0e40000 a0e40000 2
+80070000 80e40000 86e40000 ffff
+@@@ end
+@@@ shader pixel AlphaTestTexturePerVertexTransp
+ps.1.1
+tex t0
+mov r0.rgb, t0
+mul r0.a, t0.a, v0.a
+@@@ expect
+ffff0101 42 b00f0000 1 80070000 b0e40000 5 80080000
+b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTex
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexNoAlpha
+ps.1.1
+tex t0
+tex t1
+mul_x4_sat r0.rgb, v0, t0
+mul_x4_sat r1.rgb, v1, t0
+lrp r0.rgb, t1, r1, r0
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 82170000 90e40000
+b0e40000 5 82170001 90e40001 b0e40000 12 80070000 b0e40001
+80e40001 80e40000 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexNoShadows
+ps.1.1
+tex t0
+mul_x4_sat r0.rgb, v1, t0
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 5 82170000 90e40001 b0e40000 40000005
+80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3TransparentGeomNoLM
+ps.1.1
+tex t0
+mul_x4_sat r0.rgb, v1, t0
++mul r0.a, t0.a, v0.a
+@@@ expect
+ffff0101 42 b00f0000 5 82170000 90e40001 b0e40000 40000005
+80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3TransparentGeom
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+//texcoord t3
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexMirror
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel14 G3DiffuseTexMirror
+ps.1.4
+texld r0, t0
+texld r1, t1
+texcrd r2.rgb, t2.xyw
+texld r3, t3
+texld r4, t4
+mul_x4_sat r5.rgb, v0, r0
++add_x4_sat r5.a, r1, -r2.b
+mul_x4_sat r2.rgb, v1, r0
++add r5.a, c4, r5
+lrp r2.rgb, r1, r2, r5
+cnd r5.rgb, r5.a, r5, r2
++mul r5.a, r0.a, c0
+mov r2.rgb, r3
++mul r2.a, v0.a, r3.a
+mul r2, r2, r4
+; r5 = diffuse color   r2 = reflection color
+lrp r0.rgb, r2.a, r2, r5
++mad r0.a, r2.a, 1-r5.a, r5.a
+@@@ expect
+ffff0104 42 800f0000 b0e40000 42 800f0001 b0e40001 40
+80070002 b0f40002 42 800f0003 b0e40003 42 800f0004 b0e40004
+5 82170005 90e40000 80e40000 40000002 82180005 80e40001 81aa0002
+5 82170002 90e40001 80e40000 40000002 80080005 a0e40004 80e40005
+12 80070002 80e40001 80e40002 80e40005 50 80070005 80ff0005
+80e40005 80e40002 40000005 80080005 80ff0000 a0e40000 1 80070002
+80e40003 40000005 80080002 90ff0000 80ff0003 5 800f0002 80e40002
+80e40004 12 80070000 80ff0002 80e40002 80e40005 40000004 80080000
+80ff0002 86ff0005 80ff0005 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexDetail
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+tex t3
+mul_x4 r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4 r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+mul_x2 r0, r0, t3
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 42
+b00f0003 5 82070000 90e40000 b0e40000 40000002 82180000 b0e40001
+b1aa0002 5 82070001 90e40001 b0e40000 40000002 80080000 a0e40004
+80e40000 12 80070001 b0e40001 80e40001 80e40000 50 80070000
+80ff0000 80e40000 80e40001 40000005 80080000 b0ff0000 90ff0000 5
+810f0000 80e40000 b0e40003 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTex2
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+tex t3
+mul r0.rgb, v0, t0
+mul r1.rgb, v1, t0
+mul_x4_sat r0.rgb, r0, t3
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, r1, t3
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+mul r0.a, r0.a, t3
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 42
+b00f0003 5 80070000 90e40000 b0e40000 5 80070001 90e40001
+b0e40000 5 82170000 80e40000 b0e40003 40000002 82180000 b0e40001
+b1aa0002 5 82170001 80e40001 b0e40003 40000002 80080000 a0e40004
+80e40000 12 80070001 b0e40001 80e40001 80e40000 50 80070000
+80ff0000 80e40000 80e40001 40000005 80080000 b0ff0000 90ff0000 5
+80080000 80ff0000 b0e40003 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexLM
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+tex t3
+mul r0.rgb, t3, c2
+add r0.rgb, r0, c1
+add r1.rgb, v1, r0
+add r0.rgb, v0, r0
+mul_x4_sat r0.rgb, r0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, r1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 42
+b00f0003 5 80070000 b0e40003 a0e40002 2 80070000 80e40000
+a0e40001 2 80070001 90e40001 80e40000 2 80070000 90e40000
+80e40000 5 82170000 80e40000 b0e40000 40000002 82180000 b0e40001
+b1aa0002 5 82170001 80e40001 b0e40000 40000002 80080000 a0e40004
+80e40000 12 80070001 b0e40001 80e40001 80e40000 50 80070000
+80ff0000 80e40000 80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexLMNoShadows
+ps.1.1
+tex t0
+tex t1
+mul_x4 r0, t1, t0;
+
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 820f0000 b0e40001
+b0e40000 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexDetailLM
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+tex t3
+mul r0.rgb, t3, c2
+add r0.rgb, r0, c1
+add r1.rgb, v1, r0
+add r0.rgb, v0, r0
+mul_x4_sat r0.rgb, r0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, r1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 42
+b00f0003 5 80070000 b0e40003 a0e40002 2 80070000 80e40000
+a0e40001 2 80070001 90e40001 80e40000 2 80070000 90e40000
+80e40000 5 82170000 80e40000 b0e40000 40000002 82180000 b0e40001
+b1aa0002 5 82170001 80e40001 b0e40000 40000002 80080000 a0e40004
+80e40000 12 80070001 b0e40001 80e40001 80e40000 50 80070000
+80ff0000 80e40000 80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel14 G3DiffuseTexDetailLM
+ps.1.4
+texld r0, t0
+texld r1, t1
+texcrd r2.rgb, t2.xyw
+texld r3, t3
+texld r4, t4
+mad r5.rgb, r3, c2, c1
++add_x4_sat r5.a, r1, -r2.b
+add r2.rgb, v1, r5
+add r5.rgb, v0, r5
+mul_x4 r5.rgb, r5, r0
+mul_x4 r2.rgb, r2, r0
++add r5.a, c4, r5
+lrp r2.rgb, r1, r2, r5
+cnd r5.rgb, r5.a, r5, r2
++mul r5.a, r0.a, v0.a
+mul_x2 r5, r5, r4
+@@@ expect
+ffff0104 42 800f0000 b0e40000 42 800f0001 b0e40001 40
+80070002 b0f40002 42 800f0003 b0e40003 42 800f0004 b0e40004
+4 80070005 80e40003 a0e40002 a0e40001 40000002 82180005 80e40001
+81aa0002 2 80070002 90e40001 80e40005 2 80070005 90e40000
+80e40005 5 82070005 80e40005 80e40000 5 82070002 80e40002
+80e40000 40000002 80080005 a0e40004 80e40005 12 80070002 80e40001
+80e40002 80e40005 50 80070005 80ff0005 80e40005 80e40002 40000005
+80080005 80ff0000 90ff0000 5 810f0005 80e40005 80e40004 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexTerrain
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++add r0.a, t0, v0_bx2
+add_x4 r0.a, r0.a, c3.a
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000002 80080000 b0e40000 94e40000 2 82080000 80ff0000
+a0ff0003 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTex2Terrain
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+tex t3
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++add r0.a, t0, v0_bx2
+add_x4 r0.a, r0.a, c3.a
+mul r0, r0, t3
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 42
+b00f0003 5 82170000 90e40000 b0e40000 40000002 82180000 b0e40001
+b1aa0002 5 82170001 90e40001 b0e40000 40000002 80080000 a0e40004
+80e40000 12 80070001 b0e40001 80e40001 80e40000 50 80070000
+80ff0000 80e40000 80e40001 40000002 80080000 b0e40000 94e40000 2
+82080000 80ff0000 a0ff0003 5 800f0000 80e40000 b0e40003 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexSpec
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel14 G3DiffuseTexSpec
+ps.1.4
+texld r3, t3.xyz
+texld r4, t4.xyz
+mul r5.rgb, r4.a, r4.a
++mul r5.a, r4.a, c0
+mul r5.rgb, r5, r5
++mad r5.a, r5.b, c1, r5.a
+mul r5.rgb, r3, c5
++mad r5.a, r5.b, c2, r5.a
+mul r3.rgb, r5.a, r5
+phase
+texld r0, t0.xyz
+texld r1, t1.xyz
+texcrd r2.rgb, t2.xyw
+mul_x4_sat r5.rgb, v1, r0
++add_x4_sat r5.a, r1, -r2.b
+add r5.rgb, r3, r5
+mul_x4_sat r2.rgb, v0, r0
++add r5.a, c6, r5
+lrp r2.rgb, r1, r2, r5
+cnd r0.rgb, r5.a, r2, r5
++mul r0.a, r0.a, v0.a
+dp3_x4_sat r1.a, v0, c5.w
+mul r0.rgb, r0, r1.a
+@@@ expect
+ffff0104 42 800f0003 b0a40003 42 800f0004 b0a40004 5
+80070005 80ff0004 80ff0004 40000005 80080005 80ff0004 a0e40000 5
+80070005 80e40005 80e40005 40000004 80080005 80aa0005 a0e40001 80ff0005
+5 80070005 80e40003 a0e40005 40000004 80080005 80aa0005 a0e40002
+80ff0005 5 80070003 80ff0005 80e40005 fffd 42 800f0000
+b0a40000 42 800f0001 b0a40001 40 80070002 b0f40002 5
+82170005 90e40001 80e40000 40000002 82180005 80e40001 81aa0002 2
+80070005 80e40003 80e40005 5 82170002 90e40000 80e40000 40000002
+80080005 a0e40006 80e40005 12 80070002 80e40001 80e40002 80e40005
+50 80070000 80ff0005 80e40002 80e40005 40000005 80080000 80ff0000
+90ff0000 8 82180001 90e40000 a0ff0005 5 80070000 80e40000
+80ff0001 ffff
+@@@ end
+@@@ shader pixel G3DiffuseTexSpecLM
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v0, t0
++add_x4_sat r0.a, t1, -t2.z
+mul_x4_sat r1.rgb, v1, t0
++add r0.a, c4, r0
+lrp r1.rgb, t1, r1, r0
+cnd r0.rgb, r0.a, r0, r1
++mul r0.a, t0.a, v0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40000 b0e40000 40000002 82180000 b0e40001 b1aa0002 5
+82170001 90e40001 b0e40000 40000002 80080000 a0e40004 80e40000 12
+80070001 b0e40001 80e40001 80e40000 50 80070000 80ff0000 80e40000
+80e40001 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel14 G3DiffuseTexSpecLM
+ps.1.4
+texld r3, t3.xyz
+texld r4, t4.xyz
+mul r5.rgb, r4.a, r4.a
++mul r5.a, r4.a, c0
+mul r5.rgb, r5, r5
++mad r5.a, r5.b, c1, r5.a
+mul r5.rgb, r3, c5
++mad r5.a, r5.b, c2, r5.a
+mul r3.rgb, r5.a, r5
+phase
+texld r0, t0.xyz
+texld r1, t1.xyz
+texcrd r2.rgb, t2.xyw
+texld r5, t5.xyz
+mad r5.rgb, r5, c3, c4
+add r4.rgb, v0, r5
+add r5.rgb, v1, r5
+mul_x4_sat r5.rgb, r5, r0
++add_x4_sat r5.a, r1, -r2.b
+add r5.rgb, r3, r5
+mul_x4_sat r4.rgb, r4, r0
++add r5.a, c6, r5
+lrp r4.rgb, r1, r4, r5
+cnd r0.rgb, r5.a, r4, r5
++mul r0.a, r0.a, v0.a
+@@@ expect
+ffff0104 42 800f0003 b0a40003 42 800f0004 b0a40004 5
+80070005 80ff0004 80ff0004 40000005 80080005 80ff0004 a0e40000 5
+80070005 80e40005 80e40005 40000004 80080005 80aa0005 a0e40001 80ff0005
+5 80070005 80e40003 a0e40005 40000004 80080005 80aa0005 a0e40002
+80ff0005 5 80070003 80ff0005 80e40005 fffd 42 800f0000
+b0a40000 42 800f0001 b0a40001 40 80070002 b0f40002 42
+800f0005 b0a40005 4 80070005 80e40005 a0e40003 a0e40004 2
+80070004 90e40000 80e40005 2 80070005 90e40001 80e40005 5
+82170005 80e40005 80e40000 40000002 82180005 80e40001 81aa0002 2
+80070005 80e40003 80e40005 5 82170004 80e40004 80e40000 40000002
+80080005 a0e40006 80e40005 12 80070004 80e40001 80e40004 80e40005
+50 80070000 80ff0005 80e40004 80e40005 40000005 80080000 80ff0000
+90ff0000 ffff
+@@@ end
+@@@ shader pixel TFactor
+ps.1.1
+mov r0, c0
+@@@ expect
+ffff0101 1 800f0000 a0e40000 ffff
+@@@ end
+@@@ shader pixel TextureCopyAlpha
+ps.1.1
+tex t0
+mov r0, t0
+@@@ expect
+ffff0101 42 b00f0000 1 800f0000 b0e40000 ffff
+@@@ end
+@@@ shader pixel TextureAlpha
+ps.1.1
+tex t0
+mov r0, t0.a
+@@@ expect
+ffff0101 42 b00f0000 1 800f0000 b0ff0000 ffff
+@@@ end
+@@@ shader pixel TextureTFactor
+ps.1.1
+tex t0
+mul r0, t0, c0
+@@@ expect
+ffff0101 42 b00f0000 5 800f0000 b0e40000 a0e40000 ffff
+@@@ end
+@@@ shader pixel Clouds
+ps.1.1
+tex t0
+//texcoord t1
+mul r0, t0, c0
+mul r0.rgb, r0, v0
+//mul r1.rgb, t1, r0.a
+//+mul r1.a, r0.a, v0.w
+//lrp r0, v0.w, r0, r1
+@@@ expect
+ffff0101 42 b00f0000 5 800f0000 b0e40000 a0e40000 5
+80070000 80e40000 90e40000 ffff
+@@@ end
+@@@ shader pixel DiffuseTexture
+ps.1.1
+tex t0
+mul r0, t0, v0
+@@@ expect
+ffff0101 42 b00f0000 5 800f0000 b0e40000 90e40000 ffff
+@@@ end
+@@@ shader pixel TexturePlusDiffuse
+ps.1.1
+tex t0
+add r0, t0, v0
+@@@ expect
+ffff0101 42 b00f0000 2 800f0000 b0e40000 90e40000 ffff
+@@@ end
+@@@ shader pixel TnLLitTexture
+ps.1.1
+tex t0
+mul_x4 r0.rgb, t0, v0
++mul r0.a, t0, v0
+@@@ expect
+ffff0101 42 b00f0000 5 82070000 b0e40000 90e40000 40000005
+80080000 b0e40000 90e40000 ffff
+@@@ end
+@@@ shader pixel TnLLitTexture2
+ps.1.1
+tex t0
+tex t1
+mul r0, t0, v0
+mul_x4 r0.rgb, r0, t1
++mul r0.a, r0, t1
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 800f0000 b0e40000
+90e40000 5 82070000 80e40000 b0e40001 40000005 80080000 80e40000
+b0e40001 ffff
+@@@ end
+@@@ shader pixel TnLLitTextureTerrain
+ps.1.1
+tex t0
+mul_x4 r0.rgb, t0, v0
++add r0.a, t0, v0
+@@@ expect
+ffff0101 42 b00f0000 5 82070000 b0e40000 90e40000 40000002
+80080000 b0e40000 90e40000 ffff
+@@@ end
+@@@ shader pixel TnLLitTexture2Terrain
+ps.1.1
+tex t0
+tex t1
+mul_x4 r0.rgb, t0, v0
++add r0.a, t0, v0
+mul r0, r0, t1
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 82070000 b0e40000
+90e40000 40000002 80080000 b0e40000 90e40000 5 800f0000 80e40000
+b0e40001 ffff
+@@@ end
+@@@ shader pixel SoftShadowTest
+ps.1.1
+tex t0
+add_sat r0.a, t0, -v0
+lrp r0.rgb, t0, c1, c2
++add_x4_sat r0.a, r0, r0
+mov_x2 r0.a, 1-r0
+@@@ expect
+ffff0101 42 b00f0000 2 80180000 b0e40000 91e40000 12
+80070000 b0e40000 a0e40001 a0e40002 40000002 82180000 80e40000 80e40000
+1 81080000 86e40000 ffff
+@@@ end
+@@@ shader pixel DepthATTexture
+ps.1.1
+tex t0
+add r0.rgb, t0, 1-t0
++mov r0.a, t0
+cnd r0.a, r0.a, v0, c0
+@@@ expect
+ffff0101 42 b00f0000 2 80070000 b0e40000 b6e40000 40000001
+80080000 b0e40000 50 80080000 80ff0000 90e40000 a0e40000 ffff
+@@@ end
+@@@ shader pixel CloudShadows
+ps.1.1
+tex t0
+tex t1
+mul r0.rgb, t1, t0
++mov r0.a, t0.a
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 80070000 b0e40001
+b0e40000 40000001 80080000 b0ff0000 ffff
+@@@ end
+@@@ shader pixel Depth16ATTexture
+ps.1.1
+tex t0
+tex t1
+mov r0.a, t1
+cnd r0, r0.a, t0, c0
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 1 80080000 b0e40001
+50 800f0000 80ff0000 b0e40000 a0e40000 ffff
+@@@ end
+@@@ shader pixel Constant
+ps.1.1
+tex t0
+mul r0, t0, c0
+@@@ expect
+ffff0101 42 b00f0000 5 800f0000 b0e40000 a0e40000 ffff
+@@@ end
+@@@ shader pixel Diffuse
+ps.1.1
+mov r0, v0
+@@@ expect
+ffff0101 1 800f0000 90e40000 ffff
+@@@ end
+@@@ shader pixel DiffuseAlpha
+ps.1.1
+mov r0, v0.a
+@@@ expect
+ffff0101 1 800f0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel TransparentDifTex4
+ps.1.1
+tex t0
+mul_x4 r0.rgb, t0, v0
++mul r0.a, t0.a, v0.a
+@@@ expect
+ffff0101 42 b00f0000 5 82070000 b0e40000 90e40000 40000005
+80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3Particles
+ps.1.1
+tex t0
+tex t1
+mul r0.rgb, t0, v0
++mul r0.a, t0.a, v0.a
+mul_x4 r0.rgb, r0, t1
+mul r1.rgb, v1, r0.a
++mul r1.a, r0.a, v1.w
+lrp r0, v1.w, r0, r1
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 5 80070000 b0e40000
+90e40000 40000005 80080000 b0ff0000 90ff0000 5 82070000 80e40000
+b0e40001 5 80070001 90e40001 80ff0000 40000005 80080001 80ff0000
+90ff0001 12 800f0000 90ff0001 80e40000 80e40001 ffff
+@@@ end
+@@@ shader pixel G3SimpleParticles
+ps.1.1
+tex t0
+mul r0.rgb, t0, v0
++mul r0.a, t0.a, v0.a
+mul r1.rgb, v1, r0.a
++mul r1.a, r0.a, v1.w
+lrp r0, v1.w, r0, r1
+@@@ expect
+ffff0101 42 b00f0000 5 80070000 b0e40000 90e40000 40000005
+80080000 b0ff0000 90ff0000 5 80070001 90e40001 80ff0000 40000005
+80080001 80ff0000 90ff0001 12 800f0000 90ff0001 80e40000 80e40001
+ffff
+@@@ end
+@@@ shader pixel GlossedMirror
+ps.1.1
+tex t0
+tex t1
+mov r0.rgb, t0
++mul r0.a, v0.a, t0.a
+mul r0, r0, t1
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 1 80070000 b0e40000
+40000005 80080000 90ff0000 b0ff0000 5 800f0000 80e40000 b0e40001
+ffff
+@@@ end
+@@@ shader pixel Blend2TexColor
+ps.1.1
+
+tex t0
+tex t1
+texcoord t2
+mul r1.rgb, t0, v0
++mul r1.a, v0.a, t1.a
+lrp r0.rgb, r1.a, t1, r1
+mul r0.rgb, r0, v1
++mul r0.a, t2.z, t0.a
+//+mul r0.a, v1.a, t0.a
+
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+80070001 b0e40000 90e40000 40000005 80080001 90ff0000 b0ff0001 12
+80070000 80ff0001 b0e40001 80e40001 5 80070000 80e40000 90e40001
+40000005 80080000 b0aa0002 b0ff0000 ffff
+@@@ end
+@@@ shader pixel ReflectionWaterCube
+    ps_1_1
+    tex t0
+    texm3x3pad t1, t0_bx2
+    texm3x3pad t2, t0_bx2
+    texm3x3vspec t3, t0_bx2
+    mov r0.rgb, t3
+    +mul r0.a, v0.a, t3.a
+
+
+
+@@@ expect
+ffff0101 42 b00f0000 49 b00f0001 b4e40000 49 b00f0002
+b4e40000 4d b00f0003 b4e40000 1 80070000 b0e40003 40000005
+80080000 90ff0000 b0ff0003 ffff
+@@@ end
+@@@ shader pixel ReflectionWater
+ps.1.1
+tex t0
+texm3x2pad t1, t0_bx2
+texm3x2tex t2, t0_bx2  
+tex t3
+//tex t1
+lrp r0.rgb, t3.a, t2, t3
++mov r0.a, v0.a
+
+
+//[PS14]
+//ps.1.4
+//texld r0, t0
+//texld r1, t1_dw.xyw
+
+//lrp r0.rgb, v1.a, r1, r0
+//+lrp r0.a, v1.a, v1.a, r0.a
+//mul r0.a, v0.a, r0.a
+
+@@@ expect
+ffff0101 42 b00f0000 47 b00f0001 b4e40000 48 b00f0002
+b4e40000 42 b00f0003 12 80070000 b0ff0003 b0e40002 b0e40003
+40000001 80080000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3AnimWater
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+texcoord t3
+mul_x4_sat r0.rgb, v0, t0
++add r0.a, c4, -t2.z
+mul r1.a, t1.a, t3.z
+lrp r0.rgb, r1.a, t1, r0
++mul r0.a, t0.a, v0.a
+
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 40
+b00f0003 5 82170000 90e40000 b0e40000 40000002 80080000 a0e40004
+b1aa0002 5 80080001 b0ff0001 b0aa0003 12 80070000 80ff0001
+b0e40001 80e40000 40000005 80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel G3AnimWaterWithoutHorse
+ps.1.1
+tex t0
+tex t1
+texcoord t2
+mul_x4_sat r0.rgb, v1, t0
++add r0.a, c4, -t2.z
+mul r0.a, t0.a, v0.a
+@@@ expect
+ffff0101 42 b00f0000 42 b00f0001 40 b00f0002 5
+82170000 90e40001 b0e40000 40000002 80080000 a0e40004 b1aa0002 5
+80080000 b0ff0000 90ff0000 ffff
+@@@ end
+@@@ shader pixel CLSkyLight3
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_cube s2
+dcl t0.xy
+dcl t1.xy
+dcl t2.xy
+dcl t3
+dcl t4
+dcl v0
+;    depth check
+texld r0, t0, s0
+texld r1, t1, s0
+texld r2, t2, s0
+add_sat r0.rgb, r0, -v0
+add_sat r1.rgb, r1, -v0
+add_sat r2.rgb, r2, -v0
+mad r0.rgb, r0, c0, c0.a
+mad r0.rgb, r1, c1, r0
+mad r0.rgb, r2, c2, r0
+;   calc light
+texld r4, t4, s2
+mad r4, r4, c9.x, c9.y
+dp3_sat r3.r, r4, c6
+dp3_sat r3.g, r4, c7
+dp3_sat r3.b, r4, c8
+;   add to prev
+cmp r0.rgb, r0, c3, r3
+dp3 r0.rgb, r0, c4
+texldp r1, t3, s1
+mad r0.rgb, r0, c5, r1
+mov r0.a, c4
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+98000000 a00f0802 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b0030002 200001f 80000000 b00f0003 200001f 80000000
+b00f0004 200001f 80000000 900f0000 3000042 800f0000 b0e40000 a0e40800
+3000042 800f0001 b0e40001 a0e40800 3000042 800f0002 b0e40002 a0e40800
+3000002 80170000 80e40000 91e40000 3000002 80170001 80e40001 91e40000
+3000002 80170002 80e40002 91e40000 4000004 80070000 80e40000 a0e40000
+a0ff0000 4000004 80070000 80e40001 a0e40001 80e40000 4000004 80070000
+80e40002 a0e40002 80e40000 3000042 800f0004 b0e40004 a0e40802 4000004
+800f0004 80e40004 a0000009 a0550009 3000008 80110003 80e40004 a0e40006
+3000008 80120003 80e40004 a0e40007 3000008 80140003 80e40004 a0e40008
+4000058 80070000 80e40000 a0e40003 80e40003 3000008 80070000 80e40000
+a0e40004 3010042 800f0001 b0e40003 a0e40801 4000004 80070000 80e40000
+a0e40005 80e40001 2000001 80080000 a0e40004 2000001 800f0800 80e40000
+ffff
+@@@ end
+@@@ shader pixel CLSkyLight3Translucent
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_cube s2
+dcl t0.xy
+dcl t1.xy
+dcl t2.xy
+dcl t3
+dcl t4
+dcl v0
+;    depth check
+texld r0, t0, s0
+texld r1, t1, s0
+texld r2, t2, s0
+add_sat r0.rgb, r0, -v0
+add_sat r1.rgb, r1, -v0
+add_sat r2.rgb, r2, -v0
+mad r0.rgb, r0, c0, c0.a
+mad r0.rgb, r1, c1, r0
+mad r0.rgb, r2, c2, r0
+;   calc light
+texld r4, t4, s2
+mad r4, r4, c9.x, c9.y
+dp3_sat r3.r, r4, c6
+dp3_sat r3.g, r4, c7
+dp3_sat r3.b, r4, c8
+dp3_sat r5.r, -r4, c6
+dp3_sat r5.g, -r4, c7
+dp3_sat r5.b, -r4, c8
+;   add to prev
+cmp r5.rgb, r0, c3, r5
+cmp r0.rgb, r0, c3, r3
+dp3 r0.rgb, r0, c4
+dp3 r5.rgb, r5, c4
+mad r0.rgb, r5, c10, r0
+texldp r1, t3, s1
+mad r0.rgb, r0, c5, r1
+mov r0.a, c4
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+98000000 a00f0802 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b0030002 200001f 80000000 b00f0003 200001f 80000000
+b00f0004 200001f 80000000 900f0000 3000042 800f0000 b0e40000 a0e40800
+3000042 800f0001 b0e40001 a0e40800 3000042 800f0002 b0e40002 a0e40800
+3000002 80170000 80e40000 91e40000 3000002 80170001 80e40001 91e40000
+3000002 80170002 80e40002 91e40000 4000004 80070000 80e40000 a0e40000
+a0ff0000 4000004 80070000 80e40001 a0e40001 80e40000 4000004 80070000
+80e40002 a0e40002 80e40000 3000042 800f0004 b0e40004 a0e40802 4000004
+800f0004 80e40004 a0000009 a0550009 3000008 80110003 80e40004 a0e40006
+3000008 80120003 80e40004 a0e40007 3000008 80140003 80e40004 a0e40008
+3000008 80110005 81e40004 a0e40006 3000008 80120005 81e40004 a0e40007
+3000008 80140005 81e40004 a0e40008 4000058 80070005 80e40000 a0e40003
+80e40005 4000058 80070000 80e40000 a0e40003 80e40003 3000008 80070000
+80e40000 a0e40004 3000008 80070005 80e40005 a0e40004 4000004 80070000
+80e40005 a0e4000a 80e40000 3010042 800f0001 b0e40003 a0e40801 4000004
+80070000 80e40000 a0e40005 80e40001 2000001 80080000 a0e40004 2000001
+800f0800 80e40000 ffff
+@@@ end
+@@@ shader pixel LinearToGamma
+ps.2.0
+dcl_2d s0
+dcl t0.xy
+texld r0, t0, s0
+pow r0.r, r0.r, c0.r
+pow r0.g, r0.g, c0.r
+pow r0.b, r0.b, c0.r
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 80000000 b0030000 3000042
+800f0000 b0e40000 a0e40800 3000020 80010000 80000000 a0000000 3000020
+80020000 80550000 a0000000 3000020 80040000 80aa0000 a0000000 2000001
+800f0800 80e40000 ffff
+@@@ end
+@@@ shader pixel PointCubeMapDepth
+ps.2.0
+dcl t0.xyz
+dp3_sat r0, t0, t0
+rsq r1.w, r0.w
+mul r0, r1.w, r0.w
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 80000000 b0070000 3000008 801f0000 b0e40000 b0e40000
+2000007 80080001 80ff0000 3000005 800f0000 80ff0001 80ff0000 2000001
+800f0800 80e40000 ffff
+@@@ end
+@@@ shader pixel CLPointLightShadowed
+ps.2.0
+dcl_cube s0 ; depth map
+dcl_2d s1 ; previous data
+dcl_cube s2 ; normalisation map
+dcl t0.xyz  ; vLight
+dcl t1      ; prev mapping
+dcl t2.xyz  ; vNormal
+dp3_sat r0.w, t0, t0 ; r0.w = distance to point light, relative to radius (1 - on radius)
+;   calc attenuation alpha
+add r2.w, -r0.w, -c0.y
+max r2.w, r2.w, c0.z  ; r2.w = fCut
+mad r1.w, r0.w, c4.x, c4.y
+rcp r1.w, r1.w
+mul r1.w, r1.w, r2.w ; attenuation
+;   calc (N dot L)
+rsq r4.w, r0.w
+mul r3.xyz, t0, r4.w ; vLight
+texld r2, t2, s2
+mad r2, r2, c0.x, c0.y
+dp3_sat r3, r3, -r2
+dp3_sat r2, r3, r2
+mad r3, r2, c5, r3
+;   account attenuation & light color
+mul r1, r1.w, c3
+mul r3, r3, r1
+;   account shadow
+mul r0.w, r4.w, r0.w
+texld r2, t0, s0
+add r0.w, r2, -r0
+add r0.w, r0.w, c2.w
+cmp r0, r0.w, r3, c1
+;   add to previous
+texldp r1, t1, s1
+add r0, r0, r1
+mov oC0, r0
+@@@ expect
+ffff0200 200001f 98000000 a00f0800 200001f 90000000 a00f0801 200001f
+98000000 a00f0802 200001f 80000000 b0070000 200001f 80000000 b00f0001
+200001f 80000000 b0070002 3000008 80180000 b0e40000 b0e40000 3000002
+80080002 81ff0000 a1550000 300000b 80080002 80ff0002 a0aa0000 4000004
+80080001 80ff0000 a0000004 a0550004 2000006 80080001 80ff0001 3000005
+80080001 80ff0001 80ff0002 2000007 80080004 80ff0000 3000005 80070003
+b0e40000 80ff0004 3000042 800f0002 b0e40002 a0e40802 4000004 800f0002
+80e40002 a0000000 a0550000 3000008 801f0003 80e40003 81e40002 3000008
+801f0002 80e40003 80e40002 4000004 800f0003 80e40002 a0e40005 80e40003
+3000005 800f0001 80ff0001 a0e40003 3000005 800f0003 80e40003 80e40001
+3000005 80080000 80ff0004 80ff0000 3000042 800f0002 b0e40000 a0e40800
+3000002 80080000 80e40002 81e40000 3000002 80080000 80ff0000 a0ff0002
+4000058 800f0000 80ff0000 80e40003 a0e40001 3010042 800f0001 b0e40001
+a0e40801 3000002 800f0000 80e40000 80e40001 2000001 800f0800 80e40000
+ffff
+@@@ end
+@@@ shader pixel G5DiffuseTex
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+80000000 b0030000 200001f 80000000 b0030001 200001f 80000000 b00f0002
+200001f 80000000 900f0000 200001f 80000000 90070001 3000042 800f0002
+b0e40000 a0e40800 3000005 800f0003 90e40000 80e40002 3000005 801f0000
+80e40003 a0000007 3000005 80070001 90e40001 80e40002 3000005 80170001
+80e40001 a0000007 3000042 800f0004 b0e40001 a0e40801 4000012 80070001
+80e40004 80e40001 80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070003 80e40004 80e40000
+80e40001 3000002 80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b
+b0e40001 3000002 80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000002 80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f
+b0e40001 3000002 80030006 a0e40010 b0e40001 3000002 80030007 a0e40011
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000005 80070003 80e40003 a0000008 2000001 800f0800 80e40003
+ffff
+@@@ end
+@@@ shader pixel G5TransparentGeom
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+80000000 b0030000 200001f 80000000 b0030001 200001f 80000000 b00f0002
+200001f 80000000 900f0000 200001f 80000000 90070001 3000042 800f0002
+b0e40000 a0e40800 3000005 800f0003 90e40000 80e40002 3000005 801f0000
+80e40003 a0000007 3000005 80070001 90e40001 80e40002 3000005 80170001
+80e40001 a0000007 3000042 800f0004 b0e40001 a0e40801 4000012 80070001
+80e40004 80e40001 80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070003 80e40004 80e40000
+80e40001 3000002 80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b
+b0e40001 3000002 80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000002 80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f
+b0e40001 3000002 80030006 a0e40010 b0e40001 3000002 80030007 a0e40011
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000005 80070003 80e40003 a0000008 2000001 800f0800 80e40003
+ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexMirror
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_cube s3
+dcl_2d s4
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xyz
+dcl t4.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mul r3.a, r2.a, c0
+texld r1, t3, s3
+mul r1.a, v0.a, r1.a
+texld r0, t4, s4
+mul r1, r1, r0
+; r3 - diffuse color, r1 - reflection color
+lrp r4.rgb, r1.a, r1, r3
+add r4.a, c7.z, -r3.a
+mad r4.a, r1.a, r4.a, r3.a
+
+mov oC0, r4
+
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+98000000 a00f0803 200001f 90000000 a00f0804 200001f 80000000 b0030000
+200001f 80000000 b0030001 200001f 80000000 b00f0002 200001f 80000000
+b0070003 200001f 80000000 b0030004 200001f 80000000 900f0000 200001f
+80000000 90070001 3000042 800f0002 b0e40000 a0e40800 3000005 800f0003
+90e40000 80e40002 3000005 801f0000 80e40003 a0000007 3000005 80070001
+90e40001 80e40002 3000005 80170001 80e40001 a0000007 3000042 800f0004
+b0e40001 a0e40801 4000012 80070001 80e40004 80e40001 80e40000 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070003 80e40004 80e40000 80e40001 3000002 80030004 a0e4000a
+b0e40001 3000002 80030005 a0e4000b b0e40001 3000002 80030006 a0e4000c
+b0e40001 3000002 80030007 a0e4000d b0e40001 3000042 800f0004 80e40004
+a0e40801 3000042 800f0005 80e40005 a0e40801 3000042 800f0006 80e40006
+a0e40801 3000042 800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004
+b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070004
+80e40004 80e40000 80e40001 3000002 80070003 80e40003 80e40004 3000002
+800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007
+4000058 80070005 80e40005 80e40000 80e40001 3000002 80070003 80e40003
+80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006
+a0000007 a1ff0007 4000058 80070006 80e40006 80e40000 80e40001 3000002
+80070003 80e40003 80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004
+800f0007 80e40007 a0000007 a1ff0007 4000058 80070007 80e40007 80e40000
+80e40001 3000002 80070003 80e40003 80e40007 3000002 80030004 a0e4000e
+b0e40001 3000002 80030005 a0e4000f b0e40001 3000002 80030006 a0e40010
+b0e40001 3000002 80030007 a0e40011 b0e40001 3000042 800f0004 80e40004
+a0e40801 3000042 800f0005 80e40005 a0e40801 3000042 800f0006 80e40006
+a0e40801 3000042 800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004
+b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070004
+80e40004 80e40000 80e40001 3000002 80070003 80e40003 80e40004 3000002
+800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007
+4000058 80070005 80e40005 80e40000 80e40001 3000002 80070003 80e40003
+80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006
+a0000007 a1ff0007 4000058 80070006 80e40006 80e40000 80e40001 3000002
+80070003 80e40003 80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004
+800f0007 80e40007 a0000007 a1ff0007 4000058 80070007 80e40007 80e40000
+80e40001 3000002 80070003 80e40003 80e40007 3000005 80070003 80e40003
+a0000008 3000005 80080003 80ff0002 a0e40000 3000042 800f0001 b0e40003
+a0e40803 3000005 80080001 90ff0000 80ff0001 3000042 800f0000 b0e40004
+a0e40804 3000005 800f0001 80e40001 80e40000 4000012 80070004 80ff0001
+80e40001 80e40003 3000002 80080004 a0aa0007 81ff0003 4000004 80080004
+80ff0001 80ff0004 80ff0003 2000001 800f0800 80e40004 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexDetail
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r0, t3, s3
+mul r3, r3, r0
+mul r3, r3, c7.y
+
+mov oC0, r3
+
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b00f0002 200001f 80000000 b0030003 200001f 80000000
+900f0000 200001f 80000000 90070001 3000042 800f0002 b0e40000 a0e40800
+3000005 800f0003 90e40000 80e40002 3000005 801f0000 80e40003 a0000007
+3000005 80070001 90e40001 80e40002 3000005 80170001 80e40001 a0000007
+3000042 800f0004 b0e40001 a0e40801 4000012 80070001 80e40004 80e40001
+80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070003 80e40004 80e40000 80e40001 3000002
+80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b b0e40001 3000002
+80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000002
+80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f b0e40001 3000002
+80030006 a0e40010 b0e40001 3000002 80030007 a0e40011 b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000005
+80070003 80e40003 a0000008 3000042 800f0000 b0e40003 a0e40803 3000005
+800f0003 80e40003 80e40000 3000005 800f0003 80e40003 a0550007 2000001
+800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTex2
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r0, t3, s3
+mul r3, r3, r0
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b00f0002 200001f 80000000 b0030003 200001f 80000000
+900f0000 200001f 80000000 90070001 3000042 800f0002 b0e40000 a0e40800
+3000005 800f0003 90e40000 80e40002 3000005 801f0000 80e40003 a0000007
+3000005 80070001 90e40001 80e40002 3000005 80170001 80e40001 a0000007
+3000042 800f0004 b0e40001 a0e40801 4000012 80070001 80e40004 80e40001
+80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070003 80e40004 80e40000 80e40001 3000002
+80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b b0e40001 3000002
+80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000002
+80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f b0e40001 3000002
+80030006 a0e40010 b0e40001 3000002 80030007 a0e40011 b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000005
+80070003 80e40003 a0000008 3000042 800f0000 b0e40003 a0e40803 3000005
+800f0003 80e40003 80e40000 2000001 800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexLM
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r0, t3, s3
+mul r0.rgb, r0, c2
+add r0.rgb, r0, c1
+add r1.rgb, v1, r0
+add r0.rgb, v0, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r2, t0, s0
+mul r3, r0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, r1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b00f0002 200001f 80000000 b0030003 200001f 80000000
+900f0000 200001f 80000000 90070001 3000042 800f0000 b0e40003 a0e40803
+3000005 80070000 80e40000 a0e40002 3000002 80070000 80e40000 a0e40001
+3000002 80070001 90e40001 80e40000 3000002 80070000 90e40000 80e40000
+3000042 800f0002 b0e40000 a0e40800 3000005 800f0003 80e40000 80e40002
+3000005 801f0000 80e40003 a0000007 3000005 80070001 80e40001 80e40002
+3000005 80170001 80e40001 a0000007 3000042 800f0004 b0e40001 a0e40801
+4000012 80070001 80e40004 80e40001 80e40000 3000002 800f0004 80ff0004
+b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070003
+80e40004 80e40000 80e40001 3000002 80030004 a0e4000a b0e40001 3000002
+80030005 a0e4000b b0e40001 3000002 80030006 a0e4000c b0e40001 3000002
+80030007 a0e4000d b0e40001 3000042 800f0004 80e40004 a0e40801 3000042
+800f0005 80e40005 a0e40801 3000042 800f0006 80e40006 a0e40801 3000042
+800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070004 80e40004 80e40000
+80e40001 3000002 80070003 80e40003 80e40004 3000002 800f0005 80ff0005
+b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007 4000058 80070005
+80e40005 80e40000 80e40001 3000002 80070003 80e40003 80e40005 3000002
+800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007
+4000058 80070006 80e40006 80e40000 80e40001 3000002 80070003 80e40003
+80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007
+a0000007 a1ff0007 4000058 80070007 80e40007 80e40000 80e40001 3000002
+80070003 80e40003 80e40007 3000002 80030004 a0e4000e b0e40001 3000002
+80030005 a0e4000f b0e40001 3000002 80030006 a0e40010 b0e40001 3000002
+80030007 a0e40011 b0e40001 3000042 800f0004 80e40004 a0e40801 3000042
+800f0005 80e40005 a0e40801 3000042 800f0006 80e40006 a0e40801 3000042
+800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070004 80e40004 80e40000
+80e40001 3000002 80070003 80e40003 80e40004 3000002 800f0005 80ff0005
+b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007 4000058 80070005
+80e40005 80e40000 80e40001 3000002 80070003 80e40003 80e40005 3000002
+800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007
+4000058 80070006 80e40006 80e40000 80e40001 3000002 80070003 80e40003
+80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007
+a0000007 a1ff0007 4000058 80070007 80e40007 80e40000 80e40001 3000002
+80070003 80e40003 80e40007 3000005 80070003 80e40003 a0000008 2000001
+800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexDetailLM
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl_2d s4
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl t4.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r0, t3, s3
+mul r0.rgb, r0, c2
+add r0.rgb, r0, c1
+add r1.rgb, v1, r0
+add r0.rgb, v0, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r2, t0, s0
+mul r3, r0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, r1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r0, t4, s4
+mul r3, r3, r0
+mul r3, r3, c7.y
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 90000000 a00f0804 200001f 80000000 b0030000
+200001f 80000000 b0030001 200001f 80000000 b00f0002 200001f 80000000
+b0030003 200001f 80000000 b0030004 200001f 80000000 900f0000 200001f
+80000000 90070001 3000042 800f0000 b0e40003 a0e40803 3000005 80070000
+80e40000 a0e40002 3000002 80070000 80e40000 a0e40001 3000002 80070001
+90e40001 80e40000 3000002 80070000 90e40000 80e40000 3000042 800f0002
+b0e40000 a0e40800 3000005 800f0003 80e40000 80e40002 3000005 801f0000
+80e40003 a0000007 3000005 80070001 80e40001 80e40002 3000005 80170001
+80e40001 a0000007 3000042 800f0004 b0e40001 a0e40801 4000012 80070001
+80e40004 80e40001 80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070003 80e40004 80e40000
+80e40001 3000002 80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b
+b0e40001 3000002 80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000002 80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f
+b0e40001 3000002 80030006 a0e40010 b0e40001 3000002 80030007 a0e40011
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000005 80070003 80e40003 a0000008 3000042 800f0000 b0e40004
+a0e40804 3000005 800f0003 80e40003 80e40000 3000005 800f0003 80e40003
+a0550007 2000001 800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexSpec
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl_cube s4
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl t4.xyz
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r0, t0, s0
+texld r1, t1, s1
+texld r3, t3, s3
+texld r4, t4, s4
+mul r5.rgb, v1, r0
+mul_sat r5.rgb, r5, c7.x
+mul r2.rgb, r4.a, r4.a
+mul r2.a, r4.a, c0
+mad r2.a, r2.b, c1, r2.a
+mul r2.rgb, r2, r2
+mad r2.a, r2.b, c2, r2.a
+mul r2.rgb, r3, c5
+mad r5.rgb, r2.a, r2, r5
+mul r3, v0, r0
+mul_sat r3.rgb, r3, c7.x
+lrp r3.rgb, r1, r3, r5
+mov r0.rgb, r3
+mov r1.rgb, r5
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+dp3 r1.a, v0, c5.w
+mul_sat r1.a, r1, c7.x
+mul r3.rgb, r3, r1.a
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 98000000 a00f0804 200001f 80000000 b0030000
+200001f 80000000 b0030001 200001f 80000000 b00f0002 200001f 80000000
+b0030003 200001f 80000000 b0070004 200001f 80000000 900f0000 200001f
+80000000 90070001 3000042 800f0000 b0e40000 a0e40800 3000042 800f0001
+b0e40001 a0e40801 3000042 800f0003 b0e40003 a0e40803 3000042 800f0004
+b0e40004 a0e40804 3000005 80070005 90e40001 80e40000 3000005 80170005
+80e40005 a0000007 3000005 80070002 80ff0004 80ff0004 3000005 80080002
+80ff0004 a0e40000 4000004 80080002 80aa0002 a0e40001 80ff0002 3000005
+80070002 80e40002 80e40002 4000004 80080002 80aa0002 a0e40002 80ff0002
+3000005 80070002 80e40003 a0e40005 4000004 80070005 80ff0002 80e40002
+80e40005 3000005 800f0003 90e40000 80e40000 3000005 80170003 80e40003
+a0000007 4000012 80070003 80e40001 80e40003 80e40005 2000001 80070000
+80e40003 2000001 80070001 80e40005 3000002 800f0004 80ff0004 b1ff0002
+4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070003 80e40004
+80e40000 80e40001 3000002 80030004 a0e4000a b0e40001 3000002 80030005
+a0e4000b b0e40001 3000002 80030006 a0e4000c b0e40001 3000002 80030007
+a0e4000d b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005
+80e40005 a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007
+80e40007 a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004
+80e40004 a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001
+3000002 80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002
+4000004 800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005
+80e40000 80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006
+80ff0006 b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058
+80070006 80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006
+3000002 800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007
+a1ff0007 4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003
+80e40003 80e40007 3000002 80030004 a0e4000e b0e40001 3000002 80030005
+a0e4000f b0e40001 3000002 80030006 a0e40010 b0e40001 3000002 80030007
+a0e40011 b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005
+80e40005 a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007
+80e40007 a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004
+80e40004 a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001
+3000002 80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002
+4000004 800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005
+80e40000 80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006
+80ff0006 b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058
+80070006 80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006
+3000002 800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007
+a1ff0007 4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003
+80e40003 80e40007 3000005 80070003 80e40003 a0000008 3000008 80080001
+90e40000 a0ff0005 3000005 80180001 80e40001 a0000007 3000005 80070003
+80e40003 80ff0001 2000001 800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexSpecLM
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl_cube s4
+dcl_2d s5
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl t4.xyz
+dcl t5.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t3, s3
+texld r3, t4, s4
+mul r0.rgb, r3.a, r3.a
+mul r0.a, r3.a, c0
+
+mad r0.a, r0.b, c1, r0.a
+mul r0.rgb, r0, r0
+
+mad r0.a, r0.b, c2, r0.a
+mul r0.rgb, r2, c5
+mul r2.rgb, r0.a, r0
+
+texld r3, t0, s0
+texld r4, t1, s1
+texld r1, t5, s5
+
+;mad r1.rgb, r1, c3, c4
+mul r1.rgb, r1, c3
+add r1.rgb, r1, c4
+
+add r0.rgb, v0, r1
+add r1.rgb, v1, r1
+mul r1.rgb, r1, r3
+mul_sat r1.rgb, r1, c7.x
+add r1.rgb, r2, r1
+mul r0.rgb, r0, r3
+mul_sat r0.rgb, r0, c7.x
+
+lrp r0.rgb, r4, r0, r1
+mul r3.a, r3.a, v0.a
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 98000000 a00f0804 200001f 90000000 a00f0805
+200001f 80000000 b0030000 200001f 80000000 b0030001 200001f 80000000
+b00f0002 200001f 80000000 b0030003 200001f 80000000 b0070004 200001f
+80000000 b0030005 200001f 80000000 900f0000 200001f 80000000 90070001
+3000042 800f0002 b0e40003 a0e40803 3000042 800f0003 b0e40004 a0e40804
+3000005 80070000 80ff0003 80ff0003 3000005 80080000 80ff0003 a0e40000
+4000004 80080000 80aa0000 a0e40001 80ff0000 3000005 80070000 80e40000
+80e40000 4000004 80080000 80aa0000 a0e40002 80ff0000 3000005 80070000
+80e40002 a0e40005 3000005 80070002 80ff0000 80e40000 3000042 800f0003
+b0e40000 a0e40800 3000042 800f0004 b0e40001 a0e40801 3000042 800f0001
+b0e40005 a0e40805 3000005 80070001 80e40001 a0e40003 3000002 80070001
+80e40001 a0e40004 3000002 80070000 90e40000 80e40001 3000002 80070001
+90e40001 80e40001 3000005 80070001 80e40001 80e40003 3000005 80170001
+80e40001 a0000007 3000002 80070001 80e40002 80e40001 3000005 80070000
+80e40000 80e40003 3000005 80170000 80e40000 a0000007 4000012 80070000
+80e40004 80e40000 80e40001 3000005 80080003 80ff0003 90ff0000 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070003 80e40004 80e40000 80e40001 3000002 80030004 a0e4000a
+b0e40001 3000002 80030005 a0e4000b b0e40001 3000002 80030006 a0e4000c
+b0e40001 3000002 80030007 a0e4000d b0e40001 3000042 800f0004 80e40004
+a0e40801 3000042 800f0005 80e40005 a0e40801 3000042 800f0006 80e40006
+a0e40801 3000042 800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004
+b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070004
+80e40004 80e40000 80e40001 3000002 80070003 80e40003 80e40004 3000002
+800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007
+4000058 80070005 80e40005 80e40000 80e40001 3000002 80070003 80e40003
+80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006
+a0000007 a1ff0007 4000058 80070006 80e40006 80e40000 80e40001 3000002
+80070003 80e40003 80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004
+800f0007 80e40007 a0000007 a1ff0007 4000058 80070007 80e40007 80e40000
+80e40001 3000002 80070003 80e40003 80e40007 3000002 80030004 a0e4000e
+b0e40001 3000002 80030005 a0e4000f b0e40001 3000002 80030006 a0e40010
+b0e40001 3000002 80030007 a0e40011 b0e40001 3000042 800f0004 80e40004
+a0e40801 3000042 800f0005 80e40005 a0e40801 3000042 800f0006 80e40006
+a0e40801 3000042 800f0007 80e40007 a0e40801 3000002 800f0004 80ff0004
+b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007 4000058 80070004
+80e40004 80e40000 80e40001 3000002 80070003 80e40003 80e40004 3000002
+800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005 a0000007 a1ff0007
+4000058 80070005 80e40005 80e40000 80e40001 3000002 80070003 80e40003
+80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004 800f0006 80e40006
+a0000007 a1ff0007 4000058 80070006 80e40006 80e40000 80e40001 3000002
+80070003 80e40003 80e40006 3000002 800f0007 80ff0007 b1ff0002 4000004
+800f0007 80e40007 a0000007 a1ff0007 4000058 80070007 80e40007 80e40000
+80e40001 3000002 80070003 80e40003 80e40007 3000005 80070003 80e40003
+a0000008 2000001 800f0800 80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTexTerrain
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mad r1, v0.w, c7.y, -c7.z
+add_sat r3.a, r2, r1
+add r3.a, r3.a, c3.a
+mul r3.a, r3.a, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+80000000 b0030000 200001f 80000000 b0030001 200001f 80000000 b00f0002
+200001f 80000000 900f0000 200001f 80000000 90070001 3000042 800f0002
+b0e40000 a0e40800 3000005 800f0003 90e40000 80e40002 3000005 801f0000
+80e40003 a0000007 3000005 80070001 90e40001 80e40002 3000005 80170001
+80e40001 a0000007 3000042 800f0004 b0e40001 a0e40801 4000012 80070001
+80e40004 80e40001 80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004
+800f0004 80e40004 a0000007 a1ff0007 4000058 80070003 80e40004 80e40000
+80e40001 3000002 80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b
+b0e40001 3000002 80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000002 80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f
+b0e40001 3000002 80030006 a0e40010 b0e40001 3000002 80030007 a0e40011
+b0e40001 3000042 800f0004 80e40004 a0e40801 3000042 800f0005 80e40005
+a0e40801 3000042 800f0006 80e40006 a0e40801 3000042 800f0007 80e40007
+a0e40801 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070004 80e40004 80e40000 80e40001 3000002
+80070003 80e40003 80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004
+800f0005 80e40005 a0000007 a1ff0007 4000058 80070005 80e40005 80e40000
+80e40001 3000002 80070003 80e40003 80e40005 3000002 800f0006 80ff0006
+b1ff0002 4000004 800f0006 80e40006 a0000007 a1ff0007 4000058 80070006
+80e40006 80e40000 80e40001 3000002 80070003 80e40003 80e40006 3000002
+800f0007 80ff0007 b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007
+4000058 80070007 80e40007 80e40000 80e40001 3000002 80070003 80e40003
+80e40007 3000005 80070003 80e40003 a0000008 4000004 800f0001 90ff0000
+a0550007 a1aa0007 3000002 80180003 80e40002 80e40001 3000002 80080003
+80ff0003 a0ff0003 3000005 80080003 80ff0003 a0000007 2000001 800f0800
+80e40003 ffff
+@@@ end
+@@@ shader pixel G5DiffuseTex2Terrain
+ps.2.0
+dcl_2d s0
+dcl_2d s1
+dcl_2d s3
+dcl t0.xy
+dcl t1.xy
+dcl t2.xyzw
+dcl t3.xy
+dcl v0.xyzw
+dcl v1.xyz
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+texld r2, t0, s0
+mul r3, v0, r2
+mul_sat r0, r3, c7.x
+mul r1.rgb, v1, r2
+mul_sat r1.rgb, r1, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+texld r4, t1, s1
+lrp r1.rgb, r4, r1, r0
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r3.rgb, r4, r0, r1
+
+// samples
+add r4.xy, c10, t1
+add r5.xy, c11, t1
+add r6.xy, c12, t1
+add r7.xy, c13, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// more samples
+add r4.xy, c14, t1
+add r5.xy, c15, t1
+add r6.xy, c16, t1
+add r7.xy, c17, t1
+
+texld r4, r4, s1
+texld r5, r5, s1
+texld r6, r6, s1
+texld r7, r7, s1
+
+// sample 1
+add r4, r4.a, -t2.w
+mad r4, r4, c7.x, -c7.w
+cmp r4.rgb, r4, r0, r1
+add r3.rgb, r3, r4
+
+// sample 2
+add r5, r5.a, -t2.w
+mad r5, r5, c7.x, -c7.w
+cmp r5.rgb, r5, r0, r1
+add r3.rgb, r3, r5
+
+// sample 3
+add r6, r6.a, -t2.w
+mad r6, r6, c7.x, -c7.w
+cmp r6.rgb, r6, r0, r1
+add r3.rgb, r3, r6
+
+// sample 4
+add r7, r7.a, -t2.w
+mad r7, r7, c7.x, -c7.w
+cmp r7.rgb, r7, r0, r1
+add r3.rgb, r3, r7
+
+// normalize color
+mul r3.rgb, r3, c8.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+mad r1, v0.w, c7.y, -c7.z
+add_sat r3.a, r2, r1
+add r3.a, r3.a, c3.a
+mul r3.a, r3.a, c7.x
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// apply second texture
+texld r2, t3, s3
+mul r3, r3, r2
+
+mov oC0, r3
+@@@ expect
+ffff0200 200001f 90000000 a00f0800 200001f 90000000 a00f0801 200001f
+90000000 a00f0803 200001f 80000000 b0030000 200001f 80000000 b0030001
+200001f 80000000 b00f0002 200001f 80000000 b0030003 200001f 80000000
+900f0000 200001f 80000000 90070001 3000042 800f0002 b0e40000 a0e40800
+3000005 800f0003 90e40000 80e40002 3000005 801f0000 80e40003 a0000007
+3000005 80070001 90e40001 80e40002 3000005 80170001 80e40001 a0000007
+3000042 800f0004 b0e40001 a0e40801 4000012 80070001 80e40004 80e40001
+80e40000 3000002 800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004
+a0000007 a1ff0007 4000058 80070003 80e40004 80e40000 80e40001 3000002
+80030004 a0e4000a b0e40001 3000002 80030005 a0e4000b b0e40001 3000002
+80030006 a0e4000c b0e40001 3000002 80030007 a0e4000d b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000002
+80030004 a0e4000e b0e40001 3000002 80030005 a0e4000f b0e40001 3000002
+80030006 a0e40010 b0e40001 3000002 80030007 a0e40011 b0e40001 3000042
+800f0004 80e40004 a0e40801 3000042 800f0005 80e40005 a0e40801 3000042
+800f0006 80e40006 a0e40801 3000042 800f0007 80e40007 a0e40801 3000002
+800f0004 80ff0004 b1ff0002 4000004 800f0004 80e40004 a0000007 a1ff0007
+4000058 80070004 80e40004 80e40000 80e40001 3000002 80070003 80e40003
+80e40004 3000002 800f0005 80ff0005 b1ff0002 4000004 800f0005 80e40005
+a0000007 a1ff0007 4000058 80070005 80e40005 80e40000 80e40001 3000002
+80070003 80e40003 80e40005 3000002 800f0006 80ff0006 b1ff0002 4000004
+800f0006 80e40006 a0000007 a1ff0007 4000058 80070006 80e40006 80e40000
+80e40001 3000002 80070003 80e40003 80e40006 3000002 800f0007 80ff0007
+b1ff0002 4000004 800f0007 80e40007 a0000007 a1ff0007 4000058 80070007
+80e40007 80e40000 80e40001 3000002 80070003 80e40003 80e40007 3000005
+80070003 80e40003 a0000008 4000004 800f0001 90ff0000 a0550007 a1aa0007
+3000002 80180003 80e40002 80e40001 3000002 80080003 80ff0003 a0ff0003
+3000005 80080003 80ff0003 a0000007 3000042 800f0002 b0e40003 a0e40803
+3000005 800f0003 80e40003 80e40002 2000001 800f0800 80e40003 ffff
+@@@ end
+@@@ shader vertex PureGeometry
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a ffff
+@@@ end
+@@@ shader vertex ConstLight
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v0, c10
+mov oPos, r0
+mad r1.x, r0.w, c19.x, c19.y
+mad r1.y, v0.z, c19.z, c19.w
+min oFog, r1.x, r1.y
+mov oD0, c16
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40000 a0e4000a 1
+c00f0000 80e40000 4 80010001 80ff0000 a0000013 a0550013 4
+80020001 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000001 80550001
+1 d00f0000 a0e40010 ffff
+@@@ end
+@@@ shader vertex Render2D
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+mul oT0.xy, v3, c16
+mov oD0, v4
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a 5
+e0030000 90e40003 a0e40010 1 d00f0000 90e40004 ffff
+@@@ end
+@@@ shader vertex Render2DClouds
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+mul r0.xy, v3, c16
+mov oT0.xy, r0
+mad oT1.xy, c17.xy, r0.xy, c17.zw
+mov oD0, v4
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a 5
+80030000 90e40003 a0e40010 1 e0030000 80e40000 4 e0030001
+a0540011 80540000 a0fe0011 1 d00f0000 90e40004 ffff
+@@@ end
+@@@ shader vertex DrawTexU
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+mov oD0, v4
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a 1
+d00f0000 90e40004 ffff
+@@@ end
+@@@ shader vertex Texture
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v0, c10
+mov oPos, r0
+mad r1.x, r0.w, c19.x, c19.y
+mad r1.y, v0.z, c19.z, c19.w
+min oFog, r1.x, r1.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40000 a0e4000a 1
+c00f0000 80e40000 4 80010001 80ff0000 a0000013 a0550013 4
+80020001 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000001 80550001
+5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex SimpleSky
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r0, c10
+mul r0, r0, c30
+mov r1, c11
+mul r1, r1, c31
+dp4 oPos.x, v0, r0
+dp4 oPos.y, v0, r1
+dp4 oPos.z, v0, c12
+dp4 oPos.w, v0, c13
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0000 a0e4000a 5 800f0000
+80e40000 a0e4001e 1 800f0001 a0e4000b 5 800f0001 80e40001
+a0e4001f 9 c0010000 90e40000 80e40000 9 c0020000 90e40000
+80e40001 9 c0040000 90e40000 a0e4000c 9 c0080000 90e40000
+a0e4000d 5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex TexturePerVertexTransp
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v0, c10
+mov oPos, r0
+mad r1.x, r0.w, c19.x, c19.y
+mad r1.y, v0.z, c19.z, c19.w
+min oFog, r1.x, r1.y
+mul oT0.xy, v3, c6.xx
+mul oD0.a, v1.w, c16.x
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40000 a0e4000a 1
+c00f0000 80e40000 4 80010001 80ff0000 a0000013 a0550013 4
+80020001 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000001 80550001
+5 e0030000 90e40003 a0000006 5 d0080000 90ff0001 a0000010
+ffff
+@@@ end
+@@@ shader vertex Depth
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oD0.w, v0, c24
+mov oD0.xyz, c1
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 c0030000 80540000 a054001b a0fe001b 9 c0040000 90e40000
+a0e40011 1 c0080000 a0e40001 9 d0080000 90e40000 a0e40018
+1 d0070000 a0e40001 ffff
+@@@ end
+@@@ shader vertex DepthLP
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.y, v0, c25
+dp4 r0.x, v0, c26
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oD0.w, v0, c24
+mov oD0.xyz, c1
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80020000 90e40000 a0e40019 9
+80010000 90e40000 a0e4001a 4 c0030000 80540000 a054001b a0fe001b
+9 c0040000 90e40000 a0e40011 1 c0080000 a0e40001 9
+d0080000 90e40000 a0e40018 1 d0070000 a0e40001 ffff
+@@@ end
+@@@ shader vertex DepthATTextureLP
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.y, v0, c25
+dp4 r0.x, v0, c26
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oD0.w, v0, c24
+mov oD0.xyz, c1
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80020000 90e40000 a0e40019 9
+80010000 90e40000 a0e4001a 4 c0030000 80540000 a054001b a0fe001b
+9 c0040000 90e40000 a0e40011 1 c0080000 a0e40001 9
+d0080000 90e40000 a0e40018 1 d0070000 a0e40001 5 e0030000
+90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex DepthATTexture
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oD0.w, v0, c24
+mov oD0.xyz, c1
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 c0030000 80540000 a054001b a0fe001b 9 c0040000 90e40000
+a0e40011 1 c0080000 a0e40001 9 d0080000 90e40000 a0e40018
+1 d0070000 a0e40001 5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex LinearDepth16
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.y, v0, c25
+dp4 r0.x, v0, c26
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oT0.x, v0, c24
+mov oT0.y, c0
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80020000 90e40000 a0e40019 9
+80010000 90e40000 a0e4001a 4 c0030000 80540000 a054001b a0fe001b
+9 c0040000 90e40000 a0e40011 1 c0080000 a0e40001 9
+e0010000 90e40000 a0e40018 1 e0020000 a0e40000 ffff
+@@@ end
+@@@ shader vertex Depth16
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oT0.x, v0, c24
+mov oT0.y, c0
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 c0030000 80540000 a054001b a0fe001b 9 c0040000 90e40000
+a0e40011 1 c0080000 a0e40001 9 e0010000 90e40000 a0e40018
+1 e0020000 a0e40000 ffff
+@@@ end
+@@@ shader vertex LinearDepth16ATTexture
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.y, v0, c25
+dp4 r0.x, v0, c26
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oT0.x, v0, c24
+mov oT0.y, c0
+mul oT1.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80020000 90e40000 a0e40019 9
+80010000 90e40000 a0e4001a 4 c0030000 80540000 a054001b a0fe001b
+9 c0040000 90e40000 a0e40011 1 c0080000 a0e40001 9
+e0010000 90e40000 a0e40018 1 e0020000 a0e40000 5 e0030001
+90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex Depth16ATTexture
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+dp4 oT0.x, v0, c24
+mov oT0.y, c0
+mul oT1.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 c0030000 80540000 a054001b a0fe001b 9 c0040000 90e40000
+a0e40011 1 c0080000 a0e40001 9 e0010000 90e40000 a0e40018
+1 e0020000 a0e40000 5 e0030001 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex LPDepth
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+dp4 oD0, v0, c24
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a 9
+d00f0000 90e40000 a0e40018 ffff
+@@@ end
+@@@ shader vertex TexturePerVertexTranspNLP
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oPos.xy, r0.xy, c27.xy, c27.zw
+dp4 oPos.z, v0, c17
+mov oPos.w, c1
+mul oT0.xy, v3, c6.xx
+mul oD0.a, v1.w, c18.x
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 c0030000 80540000 a054001b a0fe001b 9 c0040000 90e40000
+a0e40011 1 c0080000 a0e40001 5 e0030000 90e40003 a0000006
+5 d0080000 90ff0001 a0000012 ffff
+@@@ end
+@@@ shader vertex ParticleLMDirectionalTest
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v6, c10
+dp4 oD0, v0, c24
+dp4 r0.x, v0, c25
+dp4 r0.y, v0, c26
+mad r1.xy, r0.xy, r0.xy, c3.z
+logp r2, r1.x
+mul r0.x, r0.x, r2.z
+logp r2, r1.y
+mul r0.y, r0.y, r2.z
+rsq r1.x, r1.x
+rsq r1.y, r1.y
+mul r0.xy, r0.xy, r1.xy
+mad oT0.xy, r0.xy, c27.xy, c27.zw
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40006 a0e4000a 9
+d00f0000 90e40000 a0e40018 9 80010000 90e40000 a0e40019 9
+80020000 90e40000 a0e4001a 4 80030001 80540000 80540000 a0aa0003
+4f 800f0002 80000001 5 80010000 80000000 80aa0002 4f
+800f0002 80550001 5 80020000 80550000 80aa0002 7 80010001
+80000001 7 80020001 80550001 5 80030000 80540000 80540001
+4 e0030000 80540000 a054001b a0fe001b ffff
+@@@ end
+@@@ shader vertex RenderClouds
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r0, c30
+mad r0, c31, v0.x, r0
+mad r0, c32, v0.y, r0
+dp4 r1.x, r0, c25
+dp4 r1.y, r0, c26
+mad r2.xy, r1.xy, r1.xy, c3.z
+logp r3, r2.x
+mul r1.x, r1.x, r3.z
+logp r3, r2.y
+mul r1.y, r1.y, r3.z
+rsq r2.x, r2.x
+rsq r2.y, r2.y
+mul r1.xy, r1.xy, r2.xy
+mad oPos.xy, r1.xy, c27.xy, c27.zw
+mov oPos.zw, c2.xy
+dp4 oT0.x, r0, c28
+dp4 oT0.y, r0, c29
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0000 a0e4001e 4 800f0000
+a0e4001f 90000000 80e40000 4 800f0000 a0e40020 90550000 80e40000
+9 80010001 80e40000 a0e40019 9 80020001 80e40000 a0e4001a
+4 80030002 80540001 80540001 a0aa0003 4f 800f0003 80000002
+5 80010001 80000001 80aa0003 4f 800f0003 80550002 5
+80020001 80550001 80aa0003 7 80010002 80000002 7 80020002
+80550002 5 80030001 80540001 80540002 4 c0030000 80540001
+a054001b a0fe001b 1 c00c0000 a0540002 9 e0010000 80e40000
+a0e4001c 9 e0020000 80e40000 a0e4001d ffff
+@@@ end
+@@@ shader vertex G3DiffuseTex
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexLP
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r2.y, v0, c25
+dp4 r2.x, v0, c26
+mad oT1.xy, r2.xy, c27.xy, c27.zw
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+dp4 oT2, v0, c23
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80020002
+90e40000 a0e40019 9 80010002 90e40000 a0e4001a 4 e0030001
+80540002 a054001b a0fe001b 5 80070001 80ff0001 a0e4001d 5
+d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d 5
+d0070001 90e40005 80e40001 9 e00f0002 90e40000 a0e40017 5
+e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexEXT
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r2, v0
+mad r2.xy, v6.xy, c31.xy, r2.xy
+mad r2.xy, v6.xy, c31.zw, r2.xy
+m4x4 r1, r2, c10
+mov oPos, r1
+mad r3.x, r1.w, c19.x, c19.y
+mad r3.y, v0.z, c19.z, c19.w
+min oFog, r3.x, r3.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0002 90e40000 4 80030002
+90540006 a054001f 80540002 4 80030002 90540006 a0fe001f 80540002
+14 800f0001 80e40002 a0e4000a 1 c00f0000 80e40001 4
+80010003 80ff0001 a0000013 a0550013 4 80020003 90aa0000 a0aa0013
+a0ff0013 a c00f0001 80000003 80550003 4 80070000 90e40001
+a0000003 a0550003 5 80080001 90ff0004 a055001e 4 80080001
+90ff0005 a000001e 80ff0001 9 80010005 90e40000 a0e40019 9
+80020005 90e40000 a0e4001a 4 80030006 80540005 80540005 a0aa0003
+4f 800f0007 80000006 5 80010005 80000005 80aa0007 4f
+800f0007 80550006 5 80020005 80550005 80aa0007 7 80010006
+80000006 7 80020006 80550006 5 80030005 80540005 80540006
+4 e0030001 80540005 a054001b a0fe001b 8 80010002 80e40000
+a0e40023 5 80070001 80ff0001 a0e4001d 5 d0070000 90e40004
+80e40001 5 d0080000 90ff0001 a0ff001d 5 d0070001 90e40005
+80e40001 d 80020004 81000002 a0ff0023 9 80010004 90e40000
+a0e40018 2 e00f0002 80000004 80550004 5 e0030000 90e40003
+a0000006 ffff
+@@@ end
+@@@ shader vertex G3TransparentGeom
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r2, v0, c10
+mov oPos, r2
+mad r3.x, r2.w, c19.x, c19.y
+mad r3.y, v0.z, c19.z, c19.w
+min oFog, r3.x, r3.y
+mul r0.xyz, v1.w, c29
+mad r1.xyz, v1, c3.xxx, c3.yyy
+mul r2.w, v4.w, c30.y
+mad r2.w, v5.w, c30.x, r2.w
+dp4 r6.x, v0, c25
+dp4 r6.y, v0, c26
+mad r7.xy, r6.xy, r6.xy, c3.z
+logp r8, r7.x
+mul r6.x, r6.x, r8.z
+logp r8, r7.y
+mul r6.y, r6.y, r8.z
+rsq r7.x, r7.x
+rsq r7.y, r7.y
+mul r6.xy, r6.xy, r7.xy
+mad oT1.xy, r6.xy, c27.xy, c27.zw
+dp3 r3.x, r1, c35
+mul r2.xyz, r2.w, r0
+mul oD0.xyz, v4, r2
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r2
+sge r5.y, -r3.x, c35.w
+dp4 r5.x, v0, c24
+add oT2, r5.x, r5.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0002 90e40000 a0e4000a 1
+c00f0000 80e40002 4 80010003 80ff0002 a0000013 a0550013 4
+80020003 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000003 80550003
+5 80070000 90ff0001 a0e4001d 4 80070001 90e40001 a0000003
+a0550003 5 80080002 90ff0004 a055001e 4 80080002 90ff0005
+a000001e 80ff0002 9 80010006 90e40000 a0e40019 9 80020006
+90e40000 a0e4001a 4 80030007 80540006 80540006 a0aa0003 4f
+800f0008 80000007 5 80010006 80000006 80aa0008 4f 800f0008
+80550007 5 80020006 80550006 80aa0008 7 80010007 80000007
+7 80020007 80550007 5 80030006 80540006 80540007 4
+e0030001 80540006 a054001b a0fe001b 8 80010003 80e40001 a0e40023
+5 80070002 80ff0002 80e40000 5 d0070000 90e40004 80e40002
+5 d0080000 90ff0001 a0ff001d 5 d0070001 90e40005 80e40002
+d 80020005 81000003 a0ff0023 9 80010005 90e40000 a0e40018
+2 e00f0002 80000005 80550005 5 e0030000 90e40003 a0000006
+ffff
+@@@ end
+@@@ shader vertex G3TransparentGeomEXT
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r3, v0
+mad r3.xy, v6.xy, c31.xy, r3.xy
+mad r3.xy, v6.xy, c31.zw, r3.xy
+m4x4 r2, r3, c10
+mov oPos, r2
+mad r4.x, r2.w, c19.x, c19.y
+mad r4.y, v0.z, c19.z, c19.w
+min oFog, r4.x, r4.y
+mul r0.xyz, v1.w, c29
+mad r1.xyz, v1, c3.xxx, c3.yyy
+mul r2.w, v4.w, c30.y
+mad r2.w, v5.w, c30.x, r2.w
+dp4 r6.x, v0, c25
+dp4 r6.y, v0, c26
+mad r7.xy, r6.xy, r6.xy, c3.z
+logp r8, r7.x
+mul r6.x, r6.x, r8.z
+logp r8, r7.y
+mul r6.y, r6.y, r8.z
+rsq r7.x, r7.x
+rsq r7.y, r7.y
+mul r6.xy, r6.xy, r7.xy
+mad oT1.xy, r6.xy, c27.xy, c27.zw
+dp3 r3.x, r1, c35
+mul r2.xyz, r2.w, r0
+mul oD0.xyz, v4, r2
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r2
+sge r5.y, -r3.x, c35.w
+dp4 r5.x, v0, c24
+add oT2, r5.x, r5.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0003 90e40000 4 80030003
+90540006 a054001f 80540003 4 80030003 90540006 a0fe001f 80540003
+14 800f0002 80e40003 a0e4000a 1 c00f0000 80e40002 4
+80010004 80ff0002 a0000013 a0550013 4 80020004 90aa0000 a0aa0013
+a0ff0013 a c00f0001 80000004 80550004 5 80070000 90ff0001
+a0e4001d 4 80070001 90e40001 a0000003 a0550003 5 80080002
+90ff0004 a055001e 4 80080002 90ff0005 a000001e 80ff0002 9
+80010006 90e40000 a0e40019 9 80020006 90e40000 a0e4001a 4
+80030007 80540006 80540006 a0aa0003 4f 800f0008 80000007 5
+80010006 80000006 80aa0008 4f 800f0008 80550007 5 80020006
+80550006 80aa0008 7 80010007 80000007 7 80020007 80550007
+5 80030006 80540006 80540007 4 e0030001 80540006 a054001b
+a0fe001b 8 80010003 80e40001 a0e40023 5 80070002 80ff0002
+80e40000 5 d0070000 90e40004 80e40002 5 d0080000 90ff0001
+a0ff001d 5 d0070001 90e40005 80e40002 d 80020005 81000003
+a0ff0023 9 80010005 90e40000 a0e40018 2 e00f0002 80000005
+80550005 5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTex2
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mad oT3.xy, v6, c31.xx, c31.yy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 4 e0030003 90e40006 a000001f
+a055001f ffff
+@@@ end
+@@@ shader vertex G3DiffuseTex2NoShadows
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mad oT1.xy, v6, c31.xx, c31.yy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 4 e0030001 90e40006 a000001f
+a055001f ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexDetail
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mul oT3.xy, v3, c32.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 5 e0030003 90e40003 a0000020
+ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexDetailLM
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mad oT3.xy, v6, c31.xx, c31.yy
+mul oT4.xy, v3, c32.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 4 e0030003 90e40006 a000001f
+a055001f 5 e0030004 90e40003 a0000020 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexTerrain
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTex2Terrain
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mul oT3.xy, v6, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 5 e0030003 90e40006 a0000006
+ffff
+@@@ end
+@@@ shader vertex ShowLM
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 oPos, v0, c10
+mad oT0.xy, v6, c16.xx, c16.yy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 c00f0000 90e40000 a0e4000a 4
+e0030000 90e40006 a0000010 a0550010 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexSpec
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mul oT3.xy, v3, c6.xx
+mul r1.xyz, r0.yxz, c31
+mul r2.xyz, r0.yzx, r1.zxy
+mad r2.xyz, r0.zxy, -r1.yzx, r2
+dp3 r1.w, r1, r1
+rsq r6.w, r1.w
+mul r1.xyz, r1.xyz, r6.w
+dp3 r2.w, r2, r2
+rsq r6.w, r2.w
+mul r2.xyz, r2.xyz, r6.w
+mad r3.xyz, c9.w, -v0, c9.xyz
+dp3 r3.w, r3, r3
+rsq r6.w, r3.w
+mul r3.xyz, r3.xyz, r6.w
+mad r4.xyz, -v0.xyz, c15.www, c15.xyz
+dp3 r4.w, r4, r4
+rsq r6.w, r4.w
+mul r4.xyz, r4.xyz, r6.w
+add r5.xyz, r3.xyz, r4.xyz
+dp3 oT4.x, r1, r5
+dp3 oT4.y, r2, r5
+dp3 oT4.z, r0, r5
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 5 e0030003 90e40003 a0000006
+5 80070001 80a10000 a0e4001f 5 80070002 80090000 80520001
+4 80070002 80520000 81090001 80e40002 8 80080001 80e40001
+80e40001 7 80080006 80ff0001 5 80070001 80a40001 80ff0006
+8 80080002 80e40002 80e40002 7 80080006 80ff0002 5
+80070002 80a40002 80ff0006 4 80070003 a0ff0009 91e40000 a0a40009
+8 80080003 80e40003 80e40003 7 80080006 80ff0003 5
+80070003 80a40003 80ff0006 4 80070004 91a40000 a0ff000f a0a4000f
+8 80080004 80e40004 80e40004 7 80080006 80ff0004 5
+80070004 80a40004 80ff0006 2 80070005 80a40003 80a40004 8
+e0010004 80e40001 80e40005 8 e0020004 80e40002 80e40005 8
+e0040004 80e40000 80e40005 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexSpecLM
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mul oT3.xy, v3, c6.xx
+mul r1.xyz, r0.yxz, c31
+mul r2.xyz, r0.yzx, r1.zxy
+mad r2.xyz, r0.zxy, -r1.yzx, r2
+dp3 r1.w, r1, r1
+rsq r6.w, r1.w
+mul r1.xyz, r1.xyz, r6.w
+dp3 r2.w, r2, r2
+rsq r6.w, r2.w
+mul r2.xyz, r2.xyz, r6.w
+mad r3.xyz, c9.w, -v0, c9.xyz
+dp3 r3.w, r3, r3
+rsq r6.w, r3.w
+mul r3.xyz, r3.xyz, r6.w
+mad r4.xyz, -v0.xyz, c15.www, c15.xyz
+dp3 r4.w, r4, r4
+rsq r6.w, r4.w
+mul r4.xyz, r4.xyz, r6.w
+add r5.xyz, r3.xyz, r4.xyz
+dp3 oT4.x, r1, r5
+dp3 oT4.y, r2, r5
+dp3 oT4.z, r0, r5
+mad oT5.xy, v6, c31.xx, c31.yy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 5 e0030003 90e40003 a0000006
+5 80070001 80a10000 a0e4001f 5 80070002 80090000 80520001
+4 80070002 80520000 81090001 80e40002 8 80080001 80e40001
+80e40001 7 80080006 80ff0001 5 80070001 80a40001 80ff0006
+8 80080002 80e40002 80e40002 7 80080006 80ff0002 5
+80070002 80a40002 80ff0006 4 80070003 a0ff0009 91e40000 a0a40009
+8 80080003 80e40003 80e40003 7 80080006 80ff0003 5
+80070003 80a40003 80ff0006 4 80070004 91a40000 a0ff000f a0a4000f
+8 80080004 80e40004 80e40004 7 80080006 80ff0004 5
+80070004 80a40004 80ff0006 2 80070005 80a40003 80a40004 8
+e0010004 80e40001 80e40005 8 e0020004 80e40002 80e40005 8
+e0040004 80e40000 80e40005 4 e0030005 90e40006 a000001f a055001f
+ffff
+@@@ end
+@@@ shader vertex Blend2TexColor
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mul r0.w, v4.w, c30.y
+mad oD1.rgb, v5.w, c30.x, r0.w
+mov oT2, v1.w
+mov oD0.rgb, v4
+mov oD0.w, v5.x
+mul oT0.xy, v3, c6.xx
+mul oT1.xy, v6, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+5 80080000 90ff0004 a055001e 4 d0070001 90ff0005 a000001e
+80ff0000 1 e00f0002 90ff0001 1 d0070000 90e40004 1
+d0080000 90000005 5 e0030000 90e40003 a0000006 5 e0030001
+90e40006 a0000006 ffff
+@@@ end
+@@@ shader vertex ReflectionWater
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r4, v0, c10
+mov oPos, r4
+mad r5.x, r4.w, c19.x, c19.y
+mad r5.y, v0.z, c19.z, c19.w
+min oFog, r5.x, r5.y
+m4x4 r0, v0, c10
+mov oPos, r0
+mul r1.xy, v3, c6.xx
+mul r1.xy, r1, c32.xy
+add oT0.xy, r1.xy, c31.xy
+add oT3.xy, r1.xy, c31.xy
+rcp r2.w, r0.w
+mul r0.xyzw, r0.xyzw, r2.w
+mad r0.xy, c2.xx, r0.xy, c2.xx
+mul oT1.xyzw, r0.xxxw, c35
+mul oT2.xyzw, r0.yyyw, c36
+mul oD0.w, v1.w, c34.z
+mad r3.xyz, c9.w, -v0, c9.xyz
+dp3 r3.w, r3, r3
+rsq r4.w, r3.w
+mul r3.xyz, r3.xyz, r4.w
+add r3.w, c1.x, -r3.z
+mul r3.w, r3.w, r3.w
+mul r3.w, r3.w, r3.w
+mad r3.w, r3.w, c34.z, c34.w
+mul oD1.w, r3.w, v1.w
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0004 90e40000 a0e4000a 1
+c00f0000 80e40004 4 80010005 80ff0004 a0000013 a0550013 4
+80020005 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000005 80550005
+14 800f0000 90e40000 a0e4000a 1 c00f0000 80e40000 5
+80030001 90e40003 a0000006 5 80030001 80e40001 a0540020 2
+e0030000 80540001 a054001f 2 e0030003 80540001 a054001f 6
+80080002 80ff0000 5 800f0000 80e40000 80ff0002 4 80030000
+a0000002 80540000 a0000002 5 e00f0001 80c00000 a0e40023 5
+e00f0002 80d50000 a0e40024 5 d0080000 90ff0001 a0aa0022 4
+80070003 a0ff0009 91e40000 a0a40009 8 80080003 80e40003 80e40003
+7 80080004 80ff0003 5 80070003 80a40003 80ff0004 2
+80080003 a0000001 81aa0003 5 80080003 80ff0003 80ff0003 5
+80080003 80ff0003 80ff0003 4 80080003 80ff0003 a0aa0022 a0ff0022
+5 d0080001 80ff0003 90ff0001 ffff
+@@@ end
+@@@ shader vertex ReflectionWaterCube
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r3, v0, c10
+mov oPos, r3
+mad r4.x, r3.w, c19.x, c19.y
+mad r4.y, v0.z, c19.z, c19.w
+min oFog, r4.x, r4.y
+m4x4 r0, v0, c10
+mov oPos, r0
+mul r1.xy, v3, c6.xx
+mul r1.xy, r1, c32.xy
+add oT0.xy, r1.xy, c31.xy
+mov oT1.xyz, c35
+mov oT2.xyz, c36
+mov oT3.xyz, c37
+mad r2.xyz, c9.w, -v0, c9.xyz
+dp3 r2.w, r2, r2
+rsq r3.w, r2.w
+mul r2.xyz, r2.xyz, r3.w
+mov oT1.w, r2.x
+mov oT2.w, r2.y
+mul oT3.w, r2.z, c38.w
+mov oD0.w, c34.z
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0003 90e40000 a0e4000a 1
+c00f0000 80e40003 4 80010004 80ff0003 a0000013 a0550013 4
+80020004 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000004 80550004
+14 800f0000 90e40000 a0e4000a 1 c00f0000 80e40000 5
+80030001 90e40003 a0000006 5 80030001 80e40001 a0540020 2
+e0030000 80540001 a054001f 1 e0070001 a0e40023 1 e0070002
+a0e40024 1 e0070003 a0e40025 4 80070002 a0ff0009 91e40000
+a0a40009 8 80080002 80e40002 80e40002 7 80080003 80ff0002
+5 80070002 80a40002 80ff0003 1 e0080001 80000002 1
+e0080002 80550002 5 e0080003 80aa0002 a0ff0026 1 d0080000
+a0aa0022 ffff
+@@@ end
+@@@ shader vertex G3Particles
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min r0, r2.x, r2.y
+mul oD1.rgb, r0, c20
+mov oD1.w, r0
+mov oD0.w, v4
+mul oD0.xyz, v4.xyz, v4.w
+mul oT0.xy, v3, c6.xx
+mad oT1.xy, v6, c6.yy, c6.zz
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a 800f0000 80000002 80550002
+5 d0070001 80e40000 a0e40014 1 d0080001 80e40000 1
+d0080000 90e40004 5 d0070000 90a40004 90ff0004 5 e0030000
+90e40003 a0000006 4 e0030001 90e40006 a0550006 a0aa0006 ffff
+@@@ end
+@@@ shader vertex GlossedMirror
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r2, v0, c10
+mov oPos, r2
+mad r3.x, r2.w, c19.x, c19.y
+mad r3.y, v0.z, c19.z, c19.w
+min oFog, r3.x, r3.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+mad r2.xyz, c9.w, -v0, c9.xyz
+dp3 r2.w, r2, r2
+rsq r4.w, r2.w
+mul r2.xyz, r2.xyz, r4.w
+dp3 r2.w, r2, r0
+add r3.w, c1.x, -r2.w
+mul r3.w, r3.w, r3.w
+mul r3.w, r3.w, r3.w
+mul r2.w, r2.w, c2.z
+mad r3.w, r3.w, c34.z, c34.w
+mul oD0.w, r3.w, r1.w
+mad oT0.xyz, r2.w, r0, -r2.xyz
+mul oT1.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0002 90e40000 a0e4000a 1
+c00f0000 80e40002 4 80010003 80ff0002 a0000013 a0550013 4
+80020003 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000003 80550003
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 4 80070002
+a0ff0009 91e40000 a0a40009 8 80080002 80e40002 80e40002 7
+80080004 80ff0002 5 80070002 80a40002 80ff0004 8 80080002
+80e40002 80e40000 2 80080003 a0000001 81ff0002 5 80080003
+80ff0003 80ff0003 5 80080003 80ff0003 80ff0003 5 80080002
+80ff0002 a0aa0002 4 80080003 80ff0003 a0aa0022 a0ff0022 5
+d0080000 80ff0003 80ff0001 4 e0070000 80ff0002 80e40000 81a40002
+5 e0030001 90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex G3DiffuseTexMirror
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r2, v0, c10
+mov oPos, r2
+mad r3.x, r2.w, c19.x, c19.y
+mad r3.y, v0.z, c19.z, c19.w
+min oFog, r3.x, r3.y
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r1.w, v4.w, c30.y
+mad r1.w, v5.w, c30.x, r1.w
+dp4 r5.x, v0, c25
+dp4 r5.y, v0, c26
+mad r6.xy, r5.xy, r5.xy, c3.z
+logp r7, r6.x
+mul r5.x, r5.x, r7.z
+logp r7, r6.y
+mul r5.y, r5.y, r7.z
+rsq r6.x, r6.x
+rsq r6.y, r6.y
+mul r5.xy, r5.xy, r6.xy
+mad oT1.xy, r5.xy, c27.xy, c27.zw
+dp3 r2.x, r0, c35
+mul r1.xyz, r1.w, c29
+mul oD0.xyz, v4, r1
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r1
+sge r4.y, -r2.x, c35.w
+dp4 r4.x, v0, c24
+add oT2, r4.x, r4.y
+mul oT0.xy, v3, c6.xx
+mad r2.xyz, c9.w, -v0, c9.xyz
+dp3 r2.w, r2, r2
+rsq r4.w, r2.w
+mul r2.xyz, r2.xyz, r4.w
+dp3 r2.w, r2, r0
+add r3.w, c1.x, -r2.w
+mul r3.w, r3.w, r3.w
+mul r3.w, r3.w, r3.w
+mul r2.w, r2.w, c2.z
+mad r3.w, r3.w, c34.z, c34.w
+mul oD0.w, r3.w, r1.w
+mad oT3.xyz, r2.w, r0, -r2.xyz
+mul oT4.xy, v3, c6.xx
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0002 90e40000 a0e4000a 1
+c00f0000 80e40002 4 80010003 80ff0002 a0000013 a0550013 4
+80020003 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000003 80550003
+4 80070000 90e40001 a0000003 a0550003 5 80080001 90ff0004
+a055001e 4 80080001 90ff0005 a000001e 80ff0001 9 80010005
+90e40000 a0e40019 9 80020005 90e40000 a0e4001a 4 80030006
+80540005 80540005 a0aa0003 4f 800f0007 80000006 5 80010005
+80000005 80aa0007 4f 800f0007 80550006 5 80020005 80550005
+80aa0007 7 80010006 80000006 7 80020006 80550006 5
+80030005 80540005 80540006 4 e0030001 80540005 a054001b a0fe001b
+8 80010002 80e40000 a0e40023 5 80070001 80ff0001 a0e4001d
+5 d0070000 90e40004 80e40001 5 d0080000 90ff0001 a0ff001d
+5 d0070001 90e40005 80e40001 d 80020004 81000002 a0ff0023
+9 80010004 90e40000 a0e40018 2 e00f0002 80000004 80550004
+5 e0030000 90e40003 a0000006 4 80070002 a0ff0009 91e40000
+a0a40009 8 80080002 80e40002 80e40002 7 80080004 80ff0002
+5 80070002 80a40002 80ff0004 8 80080002 80e40002 80e40000
+2 80080003 a0000001 81ff0002 5 80080003 80ff0003 80ff0003
+5 80080003 80ff0003 80ff0003 5 80080002 80ff0002 a0aa0002
+4 80080003 80ff0003 a0aa0022 a0ff0022 5 d0080000 80ff0003
+80ff0001 4 e0070003 80ff0002 80e40000 81a40002 5 e0030004
+90e40003 a0000006 ffff
+@@@ end
+@@@ shader vertex Tracks
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v0, c10
+mov oPos, r0
+mad r1.x, r0.w, c19.x, c19.y
+mad r1.y, v0.z, c19.z, c19.w
+min oFog, r1.x, r1.y
+mul oT0.xy, v3, c6.xx
+mov oD0.xyz, v4
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40000 a0e4000a 1
+c00f0000 80e40000 4 80010001 80ff0000 a0000013 a0550013 4
+80020001 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000001 80550001
+5 e0030000 90e40003 a0000006 1 d0070000 90e40004 ffff
+@@@ end
+@@@ shader vertex CLSkyLight3
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v6, c10
+mov oPos, r0
+mov r2, r0
+mad oFog, r2.w, c19.x, c19.y
+mul r1.xy, c34.zw, r0.w
+mad r0.xy, r0.xy, c34.xy, r1.xy
+mov oT3.xyzw, r0.xyww
+mad oT4.xyz, v1, c3.xxx, c3.yyy
+dp4 oD0.x, v0, c16
+dp4 oT0.x, v0, c17
+dp4 oT0.y, v0, c18
+dp4 oD0.y, v0, c25
+dp4 oT1.x, v0, c26
+dp4 oT1.y, v0, c27
+dp4 oD0.z, v0, c28
+dp4 oT2.x, v0, c29
+dp4 oT2.y, v0, c30
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40006 a0e4000a 1
+c00f0000 80e40000 1 800f0002 80e40000 4 c00f0001 80ff0002
+a0000013 a0550013 5 80030001 a0fe0022 80ff0000 4 80030000
+80540000 a0540022 80540001 1 e00f0003 80f40000 4 e0070004
+90e40001 a0000003 a0550003 9 d0010000 90e40000 a0e40010 9
+e0010000 90e40000 a0e40011 9 e0020000 90e40000 a0e40012 9
+d0020000 90e40000 a0e40019 9 e0010001 90e40000 a0e4001a 9
+e0020001 90e40000 a0e4001b 9 d0040000 90e40000 a0e4001c 9
+e0010002 90e40000 a0e4001d 9 e0020002 90e40000 a0e4001e ffff
+@@@ end
+@@@ shader vertex PointCubeMapDepth
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+add r0, v0, -c15
+mul oT0.xyz, r0, c16.x
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+2 800f0000 90e40000 a1e4000f 5 e0070000 80e40000 a0000010
+ffff
+@@@ end
+@@@ shader vertex CLPointLightShadowed
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v6, c10
+mov oPos, r0
+mov r2, r0
+mad oFog, r2.w, c19.x, c19.y
+mul r1.xy, c17.zw, r0.w
+mad r0.xy, r0.xy, c17.xy, r1.xy
+mov oT1.xyzw, r0.xyww
+add r3, v0, -c15
+mul oT0.xyz, r3, c16.x
+mad oT2.xyz, v1, c3.xxx, c3.yyy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40006 a0e4000a 1
+c00f0000 80e40000 1 800f0002 80e40000 4 c00f0001 80ff0002
+a0000013 a0550013 5 80030001 a0fe0011 80ff0000 4 80030000
+80540000 a0540011 80540001 1 e00f0001 80f40000 2 800f0003
+90e40000 a1e4000f 5 e0070000 80e40003 a0000010 4 e0070002
+90e40001 a0000003 a0550003 ffff
+@@@ end
+@@@ shader vertex Clouds
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r1, v0, c10
+mov oPos, r1
+mad r2.x, r1.w, c19.x, c19.y
+mad r2.y, v0.z, c19.z, c19.w
+min oFog, r2.x, r2.y
+mul r0.w, v4.w, c30.y
+mad r0.w, v5.w, c30.x, r0.w
+mov oD0, r0.w
+mad oT0.xy, v3, c25.zz, c25
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0001 90e40000 a0e4000a 1
+c00f0000 80e40001 4 80010002 80ff0001 a0000013 a0550013 4
+80020002 90aa0000 a0aa0013 a0ff0013 a c00f0001 80000002 80550002
+5 80080000 90ff0004 a055001e 4 80080000 90ff0005 a000001e
+80ff0000 1 d00f0000 80ff0000 4 e0030000 90e40003 a0aa0019
+a0e40019 ffff
+@@@ end
+@@@ shader vertex G3AnimWaterWithoutHorse
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r3, v0
+mad r1.xy, v6, c36.xx, c36.yy
+mad r1.x, r1.y, c33.x, r1.x
+frc r1.xy, r1.x
+sge r1.z, r1.x, c34.z
+mad r1.x, r1.z, -c34.z, r1.x
+mad r1.x, r1.x, c37.x, c37.y
+mad r1.z, r1.z, -c34.x, -c34.y
+mul r1.x, r1.x, r1.z
+mad r3.x, r1.x, c34.w, r3.x
+mad r1.x, r1.x, r1.x, c34.y
+mul r1.x, r1.x, r1.z
+mad r3.y, r1.x, c34.w, r3.y
+m4x4 r2, r3, c10
+mov oPos, r2
+mad r5.x, r2.w, c19.x, c19.y
+mad r5.y, r3.z, c19.z, c19.w
+min oFog, r5.x, r5.y
+mad r4.xyz, v1, c3.xxx, c3.yyy
+mul r5.w, v4.w, c30.y
+mad r5.w, v5.w, c30.x, r5.w
+dp4 r9.x, v0, c25
+dp4 r9.y, v0, c26
+mad r10.xy, r9.xy, r9.xy, c3.z
+logp r11, r10.x
+mul r9.x, r9.x, r11.z
+logp r11, r10.y
+mul r9.y, r9.y, r11.z
+rsq r10.x, r10.x
+rsq r10.y, r10.y
+mul r9.xy, r9.xy, r10.xy
+mad oT1.xy, r9.xy, c27.xy, c27.zw
+dp3 r6.x, r4, c35
+mul r5.xyz, r5.w, c29
+mul oD0.xyz, v4, r5
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r5
+sge r8.y, -r6.x, c35.w
+dp4 r8.x, v0, c24
+add oT2, r8.x, r8.y
+mul r0.xy, v3, c6.xx
+add oT0.xy, r0.xy, c31.xy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0003 90e40000 4 80030001
+90e40006 a0000024 a0550024 4 80010001 80550001 a0000021 80000001
+13 80030001 80000001 d 80040001 80000001 a0aa0022 4
+80010001 80aa0001 a1aa0022 80000001 4 80010001 80000001 a0000025
+a0550025 4 80040001 80aa0001 a1000022 a1550022 5 80010001
+80000001 80aa0001 4 80010003 80000001 a0ff0022 80000003 4
+80010001 80000001 80000001 a0550022 5 80010001 80000001 80aa0001
+4 80020003 80000001 a0ff0022 80550003 14 800f0002 80e40003
+a0e4000a 1 c00f0000 80e40002 4 80010005 80ff0002 a0000013
+a0550013 4 80020005 80aa0003 a0aa0013 a0ff0013 a c00f0001
+80000005 80550005 4 80070004 90e40001 a0000003 a0550003 5
+80080005 90ff0004 a055001e 4 80080005 90ff0005 a000001e 80ff0005
+9 80010009 90e40000 a0e40019 9 80020009 90e40000 a0e4001a
+4 8003000a 80540009 80540009 a0aa0003 4f 800f000b 8000000a
+5 80010009 80000009 80aa000b 4f 800f000b 8055000a 5
+80020009 80550009 80aa000b 7 8001000a 8000000a 7 8002000a
+8055000a 5 80030009 80540009 8054000a 4 e0030001 80540009
+a054001b a0fe001b 8 80010006 80e40004 a0e40023 5 80070005
+80ff0005 a0e4001d 5 d0070000 90e40004 80e40005 5 d0080000
+90ff0001 a0ff001d 5 d0070001 90e40005 80e40005 d 80020008
+81000006 a0ff0023 9 80010008 90e40000 a0e40018 2 e00f0002
+80000008 80550008 5 80030000 90e40003 a0000006 2 e0030000
+80540000 a054001f ffff
+@@@ end
+@@@ shader vertex G3AnimWater
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r3, v0
+mad r1.xy, v6, c36.xx, c36.yy
+mad r1.x, r1.y, c33.x, r1.x
+frc r1.xy, r1.x
+sge r1.z, r1.x, c34.z
+mad r1.x, r1.z, -c34.z, r1.x
+mad r1.x, r1.x, c37.x, c37.y
+mad r1.z, r1.z, -c34.x, -c34.y
+mul r1.x, r1.x, r1.z
+mad r3.x, r1.x, c34.w, r3.x
+mad r1.x, r1.x, r1.x, c34.y
+mul r1.x, r1.x, r1.z
+mad r3.y, r1.x, c34.w, r3.y
+m4x4 r2, r3, c10
+mov oPos, r2
+mad r5.x, r2.w, c19.x, c19.y
+mad r5.y, r3.z, c19.z, c19.w
+min oFog, r5.x, r5.y
+mad r4.xyz, v1, c3.xxx, c3.yyy
+mul r5.w, v4.w, c30.y
+mad r5.w, v5.w, c30.x, r5.w
+dp4 r9.x, v0, c25
+dp4 r9.y, v0, c26
+mad r10.xy, r9.xy, r9.xy, c3.z
+logp r11, r10.x
+mul r9.x, r9.x, r11.z
+logp r11, r10.y
+mul r9.y, r9.y, r11.z
+rsq r10.x, r10.x
+rsq r10.y, r10.y
+mul r9.xy, r9.xy, r10.xy
+mad oT1.xy, r9.xy, c27.xy, c27.zw
+dp3 r6.x, r4, c35
+mul r5.xyz, r5.w, c29
+mul oD0.xyz, v4, r5
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r5
+sge r8.y, -r6.x, c35.w
+dp4 r8.x, v0, c24
+add oT2, r8.x, r8.y
+mul r0.xy, v3, c6.xx
+add oT0.xy, r0.xy, c31.xy
+add oT1.xy, r0, c31.zw
+add r0.xyz, v1.xyz, c38.xxx
+sge r1.xyz, r0, c1
+add r0.xyz, r0, -r1.xyz
+add r0.xyz, r0.xyz, -c2.xxx
+mul r1.xyz, r0, r0
+mul r0.xyz, r1, r1
+mul r0.xyz, r0, r1
+mul r0.xyz, r0, v5.xyz
+dp3 r0.w, r0, c38.yyy
+mad r0.w, r0.w, c38.z, c38.w
+max r0.w, r0.w, c0
+min r0.w, r0.w, c1
+add r0.w, c1, -r0.w
+mad r0.w, r0.w, -r0.w, c1
+mul oT3, r0.w, r0.w
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0003 90e40000 4 80030001
+90e40006 a0000024 a0550024 4 80010001 80550001 a0000021 80000001
+13 80030001 80000001 d 80040001 80000001 a0aa0022 4
+80010001 80aa0001 a1aa0022 80000001 4 80010001 80000001 a0000025
+a0550025 4 80040001 80aa0001 a1000022 a1550022 5 80010001
+80000001 80aa0001 4 80010003 80000001 a0ff0022 80000003 4
+80010001 80000001 80000001 a0550022 5 80010001 80000001 80aa0001
+4 80020003 80000001 a0ff0022 80550003 14 800f0002 80e40003
+a0e4000a 1 c00f0000 80e40002 4 80010005 80ff0002 a0000013
+a0550013 4 80020005 80aa0003 a0aa0013 a0ff0013 a c00f0001
+80000005 80550005 4 80070004 90e40001 a0000003 a0550003 5
+80080005 90ff0004 a055001e 4 80080005 90ff0005 a000001e 80ff0005
+9 80010009 90e40000 a0e40019 9 80020009 90e40000 a0e4001a
+4 8003000a 80540009 80540009 a0aa0003 4f 800f000b 8000000a
+5 80010009 80000009 80aa000b 4f 800f000b 8055000a 5
+80020009 80550009 80aa000b 7 8001000a 8000000a 7 8002000a
+8055000a 5 80030009 80540009 8054000a 4 e0030001 80540009
+a054001b a0fe001b 8 80010006 80e40004 a0e40023 5 80070005
+80ff0005 a0e4001d 5 d0070000 90e40004 80e40005 5 d0080000
+90ff0001 a0ff001d 5 d0070001 90e40005 80e40005 d 80020008
+81000006 a0ff0023 9 80010008 90e40000 a0e40018 2 e00f0002
+80000008 80550008 5 80030000 90e40003 a0000006 2 e0030000
+80540000 a054001f 2 e0030001 80e40000 a0fe001f 2 80070000
+90a40001 a0000026 d 80070001 80e40000 a0e40001 2 80070000
+80e40000 81a40001 2 80070000 80a40000 a1000002 5 80070001
+80e40000 80e40000 5 80070000 80e40001 80e40001 5 80070000
+80e40000 80e40001 5 80070000 80e40000 90a40005 8 80080000
+80e40000 a0550026 4 80080000 80ff0000 a0aa0026 a0ff0026 b
+80080000 80ff0000 a0e40000 a 80080000 80ff0000 a0e40001 2
+80080000 a0e40001 81ff0000 4 80080000 80ff0000 81ff0000 a0e40001
+5 e00f0003 80ff0000 80ff0000 ffff
+@@@ end
+@@@ shader vertex G3AnimWaterOld
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mov r0, v0
+mad r1.xy, v6, c36.xx, c36.yy
+mad r1.x, r1.y, c33.x, r1.x
+frc r1.xy, r1.x
+sge r1.z, r1.x, c34.z
+mad r1.x, r1.z, -c34.z, r1.x
+mad r1.x, r1.x, c37.x, c37.y
+mad r1.z, r1.z, -c34.x, -c34.y
+mul r1.x, r1.x, r1.z
+mad r0.x, r1.x, c34.w, r0.x
+mad r1.x, r1.x, r1.x, c34.y
+mul r1.x, r1.x, r1.z
+mad r0.y, r1.x, c34.w, r0.y
+add r0.x, r0.x, c37.z
+m4x4 r2, r0, c10
+mov oPos, r2
+mad oFog, r2.w, c19.x, c19.y
+mad r3.xyz, v1, c3.xxx, c3.yyy
+mul r5.w, v4.w, c30.y
+mad r5.w, v5.w, c30.x, r5.w
+dp4 r9.x, v0, c25
+dp4 r9.y, v0, c26
+mad r10.xy, r9.xy, r9.xy, c3.z
+logp r11, r10.x
+mul r9.x, r9.x, r11.z
+logp r11, r10.y
+mul r9.y, r9.y, r11.z
+rsq r10.x, r10.x
+rsq r10.y, r10.y
+mul r9.xy, r9.xy, r10.xy
+mad oT1.xy, r9.xy, c27.xy, c27.zw
+dp3 r6.x, r3, c35
+mul r5.xyz, r5.w, c29
+mul oD0.xyz, v4, r5
+mul oD0.w, v1.w, c29.w
+mul oD1.xyz, v5, r5
+sge r8.y, -r6.x, c35.w
+dp4 r8.x, v0, c24
+add oT2, r8.x, r8.y
+mul r4.xy, v3, c6.xx
+mul r4.xy, r4, c32.xy
+add oT0.xy, r4.xy, c31.xy
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 1 800f0000 90e40000 4 80030001
+90e40006 a0000024 a0550024 4 80010001 80550001 a0000021 80000001
+13 80030001 80000001 d 80040001 80000001 a0aa0022 4
+80010001 80aa0001 a1aa0022 80000001 4 80010001 80000001 a0000025
+a0550025 4 80040001 80aa0001 a1000022 a1550022 5 80010001
+80000001 80aa0001 4 80010000 80000001 a0ff0022 80000000 4
+80010001 80000001 80000001 a0550022 5 80010001 80000001 80aa0001
+4 80020000 80000001 a0ff0022 80550000 2 80010000 80000000
+a0aa0025 14 800f0002 80e40000 a0e4000a 1 c00f0000 80e40002
+4 c00f0001 80ff0002 a0000013 a0550013 4 80070003 90e40001
+a0000003 a0550003 5 80080005 90ff0004 a055001e 4 80080005
+90ff0005 a000001e 80ff0005 9 80010009 90e40000 a0e40019 9
+80020009 90e40000 a0e4001a 4 8003000a 80540009 80540009 a0aa0003
+4f 800f000b 8000000a 5 80010009 80000009 80aa000b 4f
+800f000b 8055000a 5 80020009 80550009 80aa000b 7 8001000a
+8000000a 7 8002000a 8055000a 5 80030009 80540009 8054000a
+4 e0030001 80540009 a054001b a0fe001b 8 80010006 80e40003
+a0e40023 5 80070005 80ff0005 a0e4001d 5 d0070000 90e40004
+80e40005 5 d0080000 90ff0001 a0ff001d 5 d0070001 90e40005
+80e40005 d 80020008 81000006 a0ff0023 9 80010008 90e40000
+a0e40018 2 e00f0002 80000008 80550008 5 80030004 90e40003
+a0000006 5 80030004 80e40004 a0540020 2 e0030000 80540004
+a054001f ffff
+@@@ end
+@@@ shader vertex G3Surf
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+mad r0.xyz, v1, c3.xxx, c3.yyy
+mul r2.xy, v3, c6.xx
+frc r1.xy, r2.x
+sub r2.x, r2.x, r1.x
+mul oT0.x, r1.x, c33.x
+sge oT0.y, r2.x, c33.w
+mov r1, v0
+mad r5.xy, v6, c31.xx, c31.yy
+mov r7.xy, r5.xy
+sge r2.z, r2.y, c33.y
+mul r5.xy, r5.xy, r2.zz
+add r2.x, r2.y, c32.x
+frc r2.xy, r2.x
+sge r2.z, r2.x, c33.z
+mad r2.x, r2.z, -c33.z, r2.x
+mul r2.x, r2.x, c33.x
+add r2.w, -r2.z, c33.y
+mad r7.z, r2.z, c33.x, -c33.y
+mad r2.x, r2.x, r7.z, r2.w
+mul r2.x, r2.x, r2.x
+mad r2.x, r2.x, r7.z, r2.w
+mul r6.xy, r2.xx, r5.xy
+mul r6.xy, r6.xy, r2.ww
+mad r6.xy, r5.xy, r2.zz, r6.xy
+add r1.xy, r6.xy, r1.xy
+mul r7.xy, r7.xy, r2.xx
+mul r7.xy, r7.xy, -r2.zz
+mad r1.xy, r7.xy, c32.w, r1.xy
+m4x4 r3, r1, c10
+mov oPos, r3
+mad oFog, r3.w, c19.x, c19.y
+mul r2.y, r2.x, r2.w
+add r2.x, c33.y, -r2.x
+mad r2.y, r2.x, r2.z, r2.y
+mul r4.w, r2.y, c29.w
+mul r5.w, v4.w, c30.y
+mad r5.w, v5.w, c30.x, r5.w
+dp4 r9.x, v0, c25
+dp4 r9.y, v0, c26
+mad r10.xy, r9.xy, r9.xy, c3.z
+logp r11, r10.x
+mul r9.x, r9.x, r11.z
+logp r11, r10.y
+mul r9.y, r9.y, r11.z
+rsq r10.x, r10.x
+rsq r10.y, r10.y
+mul r9.xy, r9.xy, r10.xy
+mad oT1.xy, r9.xy, c27.xy, c27.zw
+dp3 r6.x, r0, c35
+mul r5.xyz, r5.w, c29
+mul oD0.xyz, v4, r5
+mul oD0.w, v1.w, r4.w
+mul oD1.xyz, v5, r5
+sge r8.y, -r6.x, c35.w
+dp4 r8.x, v0, c24
+add oT2, r8.x, r8.y
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 4 80070000 90e40001 a0000003 a0550003
+5 80030002 90e40003 a0000006 13 80030001 80000002 2
+80010002 80000002 81000001 5 e0010000 80000001 a0000021 d
+e0020000 80000002 a0ff0021 1 800f0001 90e40000 4 80030005
+90e40006 a000001f a055001f 1 80030007 80540005 d 80040002
+80550002 a0550021 5 80030005 80540005 80aa0002 2 80010002
+80550002 a0000020 13 80030002 80000002 d 80040002 80000002
+a0aa0021 4 80010002 80aa0002 a1aa0021 80000002 5 80010002
+80000002 a0000021 2 80080002 81aa0002 a0550021 4 80040007
+80aa0002 a0000021 a1550021 4 80010002 80000002 80aa0007 80ff0002
+5 80010002 80000002 80000002 4 80010002 80000002 80aa0007
+80ff0002 5 80030006 80000002 80540005 5 80030006 80540006
+80ff0002 4 80030006 80540005 80aa0002 80540006 2 80030001
+80540006 80540001 5 80030007 80540007 80000002 5 80030007
+80540007 81aa0002 4 80030001 80540007 a0ff0020 80540001 14
+800f0003 80e40001 a0e4000a 1 c00f0000 80e40003 4 c00f0001
+80ff0003 a0000013 a0550013 5 80020002 80000002 80ff0002 2
+80010002 a0550021 81000002 4 80020002 80000002 80aa0002 80550002
+5 80080004 80550002 a0ff001d 5 80080005 90ff0004 a055001e
+4 80080005 90ff0005 a000001e 80ff0005 9 80010009 90e40000
+a0e40019 9 80020009 90e40000 a0e4001a 4 8003000a 80540009
+80540009 a0aa0003 4f 800f000b 8000000a 5 80010009 80000009
+80aa000b 4f 800f000b 8055000a 5 80020009 80550009 80aa000b
+7 8001000a 8000000a 7 8002000a 8055000a 5 80030009
+80540009 8054000a 4 e0030001 80540009 a054001b a0fe001b 8
+80010006 80e40000 a0e40023 5 80070005 80ff0005 a0e4001d 5
+d0070000 90e40004 80e40005 5 d0080000 90ff0001 80ff0004 5
+d0070001 90e40005 80e40005 d 80020008 81000006 a0ff0023 9
+80010008 90e40000 a0e40018 2 e00f0002 80000008 80550008 ffff
+@@@ end
+@@@ shader vertex G3WriteZ
+vs.1.1
+dcl_position v0;
+dcl_normal v1;
+dcl_texcoord0 v3;
+dcl_tangent0 v4;
+dcl_tangent1 v5;
+dcl_texcoord1 v6;
+m4x4 r0, v0, c10
+mov oPos, r0
+mul oT0.xy, v3, c6.xx
+mov oT1, r0.z
+@@@ expect
+fffe0101 1f 80000000 900f0000 1f 80000003 900f0001 1f
+80000005 900f0003 1f 80000006 900f0004 1f 80010006 900f0005
+1f 80010005 900f0006 14 800f0000 90e40000 a0e4000a 1
+c00f0000 80e40000 5 e0030000 90e40003 a0000006 1 e00f0001
+80aa0000 ffff
+@@@ end
