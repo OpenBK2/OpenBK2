@@ -12,7 +12,7 @@ namespace NVFS
 //! file stats descriptor.
 struct SFileStats
 {
-	//! file name
+	//! for a file inside an archive, the archive's path; null for a loose file
 	const char *pszName;
 	//! file size
 	int nSize;

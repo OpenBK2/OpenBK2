@@ -41,6 +41,8 @@ public:
 	CZipFile( const char *pszName );
 
 	bool IsOk() const { return !papDir.empty(); }
+	//! the path this archive was opened from, for reporting where a file came from
+	const std::string &GetArchiveName() const { return mmf.GetFileName(); }
 	int GetNumFiles() const { return papDir.size(); }
 	//
 	void GetFileName( int nIndex, std::string *pString ) const;

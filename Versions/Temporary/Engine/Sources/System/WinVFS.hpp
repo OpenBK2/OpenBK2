@@ -63,7 +63,11 @@ class CWinVFS : public IVFS
 					return false;
 				pStats->nSize = zipfile.GetFileLen( nIndex );
 				pStats->mtime = zipfile.GetModDateTime( nIndex );
-				pStats->pszName = 0;
+				// Which archive supplied the file. Several .pak files can carry the
+				// same path and the entry with the newest timestamp wins, so this is
+				// the only way to tell whether a patch actually overrode anything.
+				// The string lives as long as the archive, which is as long as the VFS.
+				pStats->pszName = zipfile.GetArchiveName().c_str();
 				return true;
 			}
 	};
