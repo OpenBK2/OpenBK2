@@ -4,6 +4,7 @@
 #include "parser.h"
 
 #include <cstdint>
+#include <filesystem>
 
 static void WriteRS( ofstream &f, const SStates &s, const char *pszName, const char *pszPrefix )
 {
@@ -134,9 +135,9 @@ void WriteResult( const char *pszOutput )
 		// Check file for changes
 		if ( AreFilesDifferent( szTempFileName, szDestFileName ) )
 		{
-			CopyFile( szTempFileName.c_str(), szDestFileName.c_str(), false );							
+			std::filesystem::copy_file( szTempFileName, szDestFileName, std::filesystem::copy_options::overwrite_existing );
 		}
-		DeleteFile( szTempFileName.c_str() );
+		std::filesystem::remove( szTempFileName );
 	}
 
 	// write .cpp file
@@ -207,9 +208,9 @@ void WriteResult( const char *pszOutput )
 		// Check file for changes
 		if ( AreFilesDifferent( szTempFileName, szDestFileName ) )
 		{
-			CopyFile( szTempFileName.c_str(), szDestFileName.c_str(), false );							
+			std::filesystem::copy_file( szTempFileName, szDestFileName, std::filesystem::copy_options::overwrite_existing );
 		}
-		DeleteFile( szTempFileName.c_str() );
+		std::filesystem::remove( szTempFileName );
 	}
 }
 

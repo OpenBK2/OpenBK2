@@ -120,7 +120,8 @@ other small utilities:
 - [dbstruct](Versions/Temporary/Engine/Sources/dbstruct) - database structure utility (converts `xcb` files into packaged binary format)
 - [ELK_A7](Versions/Temporary/Engine/Sources/ELK_A7) - used for translation and spell-checking
 - [FontGen](Versions/Temporary/Engine/Sources/FontGen) - font generator (in the format game understands)
-- [ShaderCompiler](Versions/Temporary/Engine/Sources/ShaderCompiler) - compiles shaders from custom format, shaders are in [GfxShaders.txt](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.txt), compiled shaders are in [GfxShaders.cpp](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.cpp)
+- [ShaderCompiler](Versions/Temporary/Engine/Sources/ShaderCompiler) - compiles shaders from custom format, shaders are in [GfxShaders.txt](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.txt), compiled shaders are in [GfxShaders.cpp](Versions/Temporary/Engine/Sources/3Dmotor/GfxShaders.cpp); run the `regenerate-gfxshaders` target
+- [ShaderAsm](Versions/Temporary/Engine/Sources/ShaderAsm) - D3D9 shader assembler (vs.1.1, ps.1.1, ps.1.4, ps.2.0) that ShaderCompiler uses in place of D3DX; matches `D3DXAssembleShader` token for token
 
 test code (see also the unit tests and benchmarks section below):
 - [3Dmotor/test](Versions/Temporary/Engine/Sources/3Dmotor/test) - unit tests for the ported SIMD and MMX routines, checked against the original assembly

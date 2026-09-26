@@ -1,14 +1,18 @@
 #include "stdafx.h"
 //#include "Optimizer.h"
-#include "Streams.h"
 #include "parser.h"
 #include "Data.h"
 #include "output.h"
+#include "ShaderAsm.h"
+
+#if SHADERCOMPILER_WITH_D3DX
 #include <d3dx9.h>
+#endif
 
 #include "port/cdecl.h"
 
 #include <cstdint>
+#include <iterator>
 
 struct SCommand
 {
@@ -309,31 +313,93 @@ enum EState
 	PS_PROC
 };
 
+// Set when a shader fails to assemble, so that nothing is written: a failed
+// shader would otherwise go out as a null array and the game would draw with
+// whichever fallback GfxRender picks.
+static bool bAssemblyFailed = false;
+
+#if SHADERCOMPILER_WITH_D3DX
+typedef HRESULT ( WINAPI *TD3DXAssembleShader )( LPCSTR, UINT, CONST D3DXMACRO *, LPD3DXINCLUDE, DWORD, LPD3DXBUFFER *, LPD3DXBUFFER * );
+
+// D3DXAssembleShader from d3dx9_43.dll, loaded rather than linked so that the
+// tool still runs where the DirectX runtime is not installed, without the
+// check. Null there, and said so once.
+static TD3DXAssembleShader GetD3DXAssembleShader()
+{
+	static const HMODULE hD3DX = LoadLibraryA( "d3dx9_43.dll" );
+	static bool bWarned = false;
+	if ( !hD3DX && !bWarned )
+	{
+		cout << "d3dx9_43.dll is not installed: shaders are not checked against D3DX" << endl;
+		bWarned = true;
+	}
+	return hD3DX ? (TD3DXAssembleShader)GetProcAddress( hD3DX, "D3DXAssembleShader" ) : 0;
+}
+
+// D3DXAssembleShader's tokens for a shader, without D3DXSHADER_DEBUG, so with
+// no comment blocks, which is what ShaderAsm matches. False and the message in
+// *pszError if D3DX refuses the shader.
+static bool AssembleWithD3DX( TD3DXAssembleShader pAssemble, const string &s, vector<uint32_t> *pRes, string *pszError )
+{
+	LPD3DXBUFFER pCode = 0, pError = 0;
+	const HRESULT hr = pAssemble( s.c_str(), (UINT)s.length(), 0, 0, 0, &pCode, &pError );
+	if ( pError )
+	{
+		*pszError = (const char*)pError->GetBufferPointer();
+		pError->Release();
+	}
+	if ( FAILED( hr ) || !pCode )
+	{
+		return false;
+	}
+	const uint32_t *p = (const uint32_t*)pCode->GetBufferPointer();
+	pRes->assign( p, p + pCode->GetBufferSize() / 4 );
+	pCode->Release();
+	return true;
+}
+#endif
+
+// Assembles one shader with ShaderAsm.
+//
+// On Windows, where d3dx9_43.dll is installed, the shader is assembled a second
+// time with D3DXAssembleShader and any difference fails it. ShaderAsm checks syntax and
+// no more, while D3DX validates the program too: a read of a register nothing
+// wrote, or a ps.1.1 shader over its instruction count, is an error there and
+// silently assembled here. So an edited GfxShaders.txt wants a Windows build to
+// regenerate it, or at least to check it once.
 static void CompileShader( const string &s, const string &name, const char *pszType, vector<uint32_t> *pRes )
 {
 	pRes->clear();
-	HRESULT hr;
-	LPD3DXBUFFER pCode, pError;
 	if ( s == "" )
-		return;
-	hr = D3DXAssembleShader( s.c_str(), s.length(), 0, 0, D3DXSHADER_DEBUG, &pCode, &pError );
-	const char *pszError = pError ? (const char*)pError->GetBufferPointer() : 0;
-	if ( hr != D3D_OK && pError )
 	{
-		cout << pszType << " shader " << name << " has an error " << (const char*)pError->GetBufferPointer() << endl;
-		if ( pCode )
-			pCode->Release();
-		pError->Release();
 		return;
 	}
-	else
-		ASSERT( hr == D3D_OK );
-	if ( pError )
-		pError->Release();
-	int nSize = pCode->GetBufferSize();
-	pRes->resize( nSize / 4, 0 );
-	memcpy( &(*pRes)[0], pCode->GetBufferPointer(), nSize );
-	pCode->Release();
+	string szError;
+	if ( !NShaderAsm::Assemble( s, pRes, &szError ) )
+	{
+		cout << pszType << " shader " << name << " has an error " << szError << endl;
+		bAssemblyFailed = true;
+		return;
+	}
+#if SHADERCOMPILER_WITH_D3DX
+	const TD3DXAssembleShader pAssemble = GetD3DXAssembleShader();
+	if ( !pAssemble )
+	{
+		return;
+	}
+	vector<uint32_t> d3dx;
+	string szD3DXError;
+	if ( !AssembleWithD3DX( pAssemble, s, &d3dx, &szD3DXError ) )
+	{
+		cout << pszType << " shader " << name << " is refused by D3DX: " << szD3DXError << endl;
+		bAssemblyFailed = true;
+	}
+	else if ( d3dx != *pRes )
+	{
+		cout << pszType << " shader " << name << " assembles differently with D3DX; ShaderAsm needs fixing" << endl;
+		bAssemblyFailed = true;
+	}
+#endif
 }
 
 EState parseState;
@@ -574,9 +640,11 @@ static void ParseFile( char *pszFile )
 			CompileShader( szShader.c_str(), v.szName, "vertex", &v.vsShader11 );
 
 			vertexShaders.push_back( v );
+#if BOOST_OS_WINDOWS
 			OutputDebugString( v.szName.c_str() );
 			OutputDebugString( "\n" );
 			OutputDebugString( szShader.c_str() );
+#endif
 		}
 	}
 }
@@ -589,30 +657,27 @@ int PORT_CDECL main( int argc, char* argv[] )
 		return 2;
 	}
 	cout << "Compiling " << argv[1] << " into " << argv[2] << endl;
-	CMemoryStream m;
-	try
+	// the parser works in place on a zero terminated copy of the file
+	std::ifstream file( argv[1], std::ios::binary );
+	if ( !file )
 	{
-		CFileStream s;
-		s.OpenRead( argv[1] );
-		m.WriteFrom( s );
-		char cZero = 0;
-		m.Write( &cZero, 1 );
-		ParseFile( (char*) m.GetBufferForWrite() );
-		if ( szError != "" )
-		{
-			cout << argv[1] << " has an error (0): error X5328: "  << "at line " << nLine << ": " << szError << endl << endl;
-			return 1;
-		}
-		else
-		{
-			WriteResult( argv[2] );
-		}
-	}
-	catch(...)
-	{
-		cout << "failed" << endl;
+		cout << "failed to open " << argv[1] << endl;
 		return 1;
 	}
+	vector<char> source( ( std::istreambuf_iterator<char>( file ) ), std::istreambuf_iterator<char>() );
+	source.push_back( 0 );
+	ParseFile( source.data() );
+	if ( szError != "" )
+	{
+		cout << argv[1] << " has an error (0): error X5328: "  << "at line " << nLine << ": " << szError << endl << endl;
+		return 1;
+	}
+	if ( bAssemblyFailed )
+	{
+		cout << argv[2] << " not written" << endl;
+		return 1;
+	}
+	WriteResult( argv[2] );
 	return 0;
 }
 

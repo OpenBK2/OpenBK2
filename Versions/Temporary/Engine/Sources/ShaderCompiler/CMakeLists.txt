@@ -12,9 +12,11 @@ project(ShaderCompiler)
 # files are committed and the game build never needs this. It is here so that
 # a change to GfxShaders.txt can be turned into bytecode again.
 #
-# Windows only: the assembling is D3DXAssembleShader, and there is no D3DX
-# anywhere else. The bytecode it produces is platform neutral, and on Linux DXVK
-# consumes the committed arrays. It also compiled HLSL once, for an [HLSL]
+# The assembling is ShaderAsm's, which matches D3DXAssembleShader token for
+# token, so the tool builds and runs everywhere. On Windows, where the DirectX
+# runtime is installed, it also assembles every shader with D3DX and fails on
+# any difference or on anything D3DX refuses, because D3DX validates the
+# program and ShaderAsm does not. It also compiled HLSL once, for an [HLSL]
 # section with no consumer; that support went with the section.
 #
 # A plain executable, not the SHARED library with an export header that every
@@ -24,15 +26,21 @@ set(SOURCES
     output.cpp
     parser.cpp
     ShaderCompiler.cpp
-    Streams.cpp
     stdafx.cpp
 )
 add_executable(ShaderCompiler ${SOURCES})
 add_stdafx_pch(ShaderCompiler)
 
-# Self-contained: none of the engine's libraries, only D3DX and the portability
-# headers under port/, which need Boost.Predef.
-target_link_libraries(ShaderCompiler PRIVATE dxsdk::d3dx9 dxsdk::d3d9 Boost::predef)
+# Self-contained: none of the engine's libraries, only ShaderAsm and the
+# portability headers under port/, which need Boost.Predef.
+target_link_libraries(ShaderCompiler PRIVATE ShaderAsm Boost::predef)
+
+# The D3DX check loads d3dx9_43.dll at run time, so only the SDK's headers are
+# needed here and the tool runs without the DirectX runtime, unchecked.
+if(WIN32)
+    target_include_directories(ShaderCompiler PRIVATE ${DXSDK_INCLUDE})
+    target_compile_definitions(ShaderCompiler PRIVATE SHADERCOMPILER_WITH_D3DX=1)
+endif()
 
 # The CRT allocator rather than the project-wide mimalloc. No heap object ever
 # crosses into an engine module, since it links none, and without mimalloc.dll
@@ -44,7 +52,7 @@ install(TARGETS ShaderCompiler DESTINATION bin)
 
 # Regenerates the committed 3Dmotor/GfxShaders.cpp and GfxShaders.h in the
 # source tree. Never part of ALL: run it by hand after editing GfxShaders.txt,
-# and review the diff.
+# and review the diff. Run it on Windows where possible, for the D3DX check.
 #
 # It runs in 3Dmotor/ because the tool resolves its input and output names
 # against the working directory, and the output name is also what the generated
