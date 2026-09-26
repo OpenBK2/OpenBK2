@@ -38,8 +38,7 @@ add_subdirectory("dbstruct")
 # FontGen to bake atlases and meant for the game to render text with later.
 add_subdirectory("FontRaster")
 
-# The font baker. Windows only while it still rasterises with GDI; its own
-# CMakeLists returns early elsewhere.
+# The font baker, which rasterises with FontRaster.
 add_subdirectory("FontGen")
 
 # The dedicated lobby server and the test client that drives it. Off by default

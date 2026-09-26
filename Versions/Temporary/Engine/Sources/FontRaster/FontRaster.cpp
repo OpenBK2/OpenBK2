@@ -294,8 +294,11 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 		*pszError = DescribeError( ( "FT_New_Face on \"" + options.szFontFile + "\"" ).c_str(), nError );
 		return false;
 	}
+	// A symbol font has no Unicode cmap, only the Microsoft symbol one, whose
+	// codes are U+F000 + byte; FontGen translates SYMBOL_CHARSET to exactly
+	// those, so the same code points work through either.
 	nError = FT_Select_Charmap( face.pFace, FT_ENCODING_UNICODE );
-	if ( nError != 0 )
+	if ( nError != 0 && FT_Select_Charmap( face.pFace, FT_ENCODING_MS_SYMBOL ) != 0 )
 	{
 		*pszError = DescribeError( "FT_Select_Charmap( FT_ENCODING_UNICODE )", nError );
 		return false;

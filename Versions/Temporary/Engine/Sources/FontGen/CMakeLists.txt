@@ -10,18 +10,15 @@ project(FontGen)
 # an x64 editor could not run it. ED_Common/FontExporter.cpp starts FontGen.exe
 # by name, which means the editor's font export has been dead in this port.
 #
-# Two rasterisers. The original is CreateFont and TextOut into a DIB; -ft
-# selects FontRaster, which is FreeType and bakes at an exact cell height. The
-# tool stays Windows only while the GDI path and the code page translation it
-# shares with -ft use Windows calls.
+# The rasteriser is FontRaster, which is FreeType, and the code page tables
+# are Windows' own answers recorded in CodePageTables.inc, so nothing here
+# calls Windows and the tool builds and runs on Linux as well. It rasterised
+# with GDI until that path was replaced.
 #
 # A plain executable, not the SHARED library with an export header that every
 # engine subsystem is: nothing links a tool, so it exports nothing.
-if(NOT WIN32)
-    return()
-endif()
-
 set(SOURCES
+    CodePages.cpp
     FontGen.cpp
     FontFormat.cpp
     stdafx.cpp
@@ -38,7 +35,9 @@ target_compile_definitions(FontGen PRIVATE FONTGEN_EXPORT=)
 # Image and Misc are header-only here: Targa.h, ImageConvertor.h and 2Darray.h
 # are templates, which is why the original project linked neither.
 target_link_libraries(FontGen PRIVATE Misc System zlib fmt::fmt-header-only FontRaster)
-target_link_libraries(FontGen PRIVATE winapi)
+if(WIN32)
+    target_link_libraries(FontGen PRIVATE winapi)
+endif()
 
 install_runtime_dlls(FontGen)
 
