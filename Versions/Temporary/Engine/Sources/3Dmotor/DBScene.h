@@ -682,6 +682,14 @@ namespace NDb
 		std::string szFaceName;
 		std::string szName;
 		NFile::CFilePath szCharactersFile;
+		// A font file in the game data to rasterise this font from at run time,
+		// at exactly the size the UI asks for; empty keeps the baked Texture and
+		// its metrics. Thickness and Italic pick the face within it, a variable
+		// font's named instance included.
+		NFile::CFilePath szFontFile;
+		// tried in order for characters szFontFile does not have, before the
+		// fonts installed on the system
+		std::vector< NFile::CFilePath > fallbackFontFiles;
 
 		SFont() :
 			nHeight( 20 ),

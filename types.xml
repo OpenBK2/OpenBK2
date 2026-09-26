@@ -14689,6 +14689,82 @@
 						<Type>00000000</Type>
 					</ComplexDefaultValue>
 				</Item>
+				<Item>
+					<Type>4037cd10</Type>
+					<Name>FontFile</Name>
+					<ChunkID>13</ChunkID>
+					<Description>font file in the game data that the game rasterises this font from at run time, at exactly the size the UI asks for; empty uses the baked Texture and metrics</Description>
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>stringParam</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>Font files (*.ttf, *.otf, *.ttc)|*.ttf; *.otf; *.ttc|All Files (*.*)|*.*||</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>filepath</Key>
+									<Data>
+										<Type>04000000</Type>
+										<Data>true</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>editorControl</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>string_file_ref</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>no_checksum</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+								<Item>
+									<Key>typeRename</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data>NFile::CFilePath</Data>
+									</Data>
+								</Item>
+								<Item>
+									<Key>intParam</Key>
+									<Data>
+										<Type>01000000</Type>
+										<Data>2</Data>
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>00f0fa12</Type>
+					<Name>FallbackFontFiles</Name>
+					<ChunkID>14</ChunkID>
+					<Description>font files tried in order for characters FontFile does not have, before the fonts installed on the system</Description>
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
 			</Fields>
 			<TypeID>302422916</TypeID>
 		</Item>
@@ -65014,6 +65090,73 @@
 			<__ServerPtr>8829ce11</__ServerPtr>
 			<MinElements>10</MinElements>
 			<MaxElements>10</MaxElements>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082827</__ClassTypeID>
+			<__ServerPtr>00f0fa12</__ServerPtr>
+			<Type>TYPE_TYPE_ARRAY</Type>
+			<Field>
+				<Type>4037cd10</Type>
+				<Name />
+				<ChunkID>-1</ChunkID>
+				<Description />
+				<Constraints />
+				<Attributes>
+					<__ClassTypeID>270064327</__ClassTypeID>
+					<__ObjectData>
+						<Attributes>
+							<Item>
+								<Key>stringParam</Key>
+								<Data>
+									<Type>03000000</Type>
+									<Data>Font files (*.ttf, *.otf, *.ttc)|*.ttf; *.otf; *.ttc|All Files (*.*)|*.*||</Data>
+								</Data>
+							</Item>
+							<Item>
+								<Key>filepath</Key>
+								<Data>
+									<Type>04000000</Type>
+									<Data>true</Data>
+								</Data>
+							</Item>
+							<Item>
+								<Key>editorControl</Key>
+								<Data>
+									<Type>03000000</Type>
+									<Data>string_file_ref</Data>
+								</Data>
+							</Item>
+							<Item>
+								<Key>no_checksum</Key>
+								<Data>
+									<Type>03000000</Type>
+									<Data />
+								</Data>
+							</Item>
+							<Item>
+								<Key>typeRename</Key>
+								<Data>
+									<Type>03000000</Type>
+									<Data>NFile::CFilePath</Data>
+								</Data>
+							</Item>
+							<Item>
+								<Key>intParam</Key>
+								<Data>
+									<Type>01000000</Type>
+									<Data>2</Data>
+								</Data>
+							</Item>
+						</Attributes>
+					</__ObjectData>
+				</Attributes>
+				<DefaultValue>
+					<Type>00000000</Type>
+				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
+			</Field>
 		</Item>
 	</SharedClasses>
 </Base>

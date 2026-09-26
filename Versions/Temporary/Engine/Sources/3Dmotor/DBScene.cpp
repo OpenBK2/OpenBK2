@@ -1194,6 +1194,8 @@ void SFont::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "FaceName", (uint8_t*)&szFaceName - pThis, sizeof(szFaceName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "CharactersFile", (uint8_t*)&szCharactersFile - pThis, sizeof(szCharactersFile), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportMetaInfo( "FontFile", (uint8_t*)&szFontFile - pThis, sizeof(szFontFile), NTypeDef::TYPE_TYPE_STRING );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "FallbackFontFiles", &fallbackFontFiles, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1211,6 +1213,8 @@ int SFont::operator&( IXmlSaver &saver )
 	saver.Add( "FaceName", &szFaceName );
 	saver.Add( "Name", &szName );
 	saver.Add( "CharactersFile", &szCharactersFile );
+	saver.Add( "FontFile", &szFontFile );
+	saver.Add( "FallbackFontFiles", &fallbackFontFiles );
 
 	return 0;
 }
@@ -1228,6 +1232,8 @@ int SFont::operator&( IBinSaver &saver )
 	saver.Add( 10, &szFaceName );
 	saver.Add( 11, &szName );
 	saver.Add( 12, &szCharactersFile );
+	saver.Add( 13, &szFontFile );
+	saver.Add( 14, &fallbackFontFiles );
 
 	return 0;
 }
