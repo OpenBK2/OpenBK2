@@ -156,7 +156,9 @@ if(WIN32 AND USE_MIMALLOC)
     set(WX_ALLOCATOR_ID "${WX_ALLOCATOR_SOURCE_ID};${WX_ALLOCATOR_HOOK_ID};${WX_ALLOCATOR_VERSION}")
 else()
     # Clear the hook when reconfiguring with USE_MIMALLOC=OFF or ENABLE_ASAN.
-    list(APPEND WX_CMAKE_ARGS -DCMAKE_PROJECT_wxWidgets_INCLUDE=)
+    # Remove the cache entry: older CMake versions try to include even an empty
+    # value and fail with "project requested file is a directory" on Linux.
+    list(APPEND WX_CMAKE_ARGS -UCMAKE_PROJECT_wxWidgets_INCLUDE)
 endif()
 
 # Off Windows the toolkit is named rather than left to wx's default (also gtk3
