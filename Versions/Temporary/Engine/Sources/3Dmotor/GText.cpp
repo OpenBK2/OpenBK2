@@ -596,8 +596,12 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 	const CVec2 &vScreen = pScreenRect->GetValue();
 
 	sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
+	sSearch.nWidth = 0;
 	if ( sFont.nSize & FONT_SIZE_POINTS )
+	{
 		sSearch.nSize = FontPointsToPixels( sFont.nSize & FONT_SIZE_MASK, vScreen.y );
+		sSearch.nWidth = FontPointsToPixelWidth( sFont.nSize & FONT_SIZE_MASK, vScreen.x );
+	}
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	else
@@ -609,9 +613,11 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 	pFontInfo->pFont = pFont;
 	pFontInfo->pInfo = pInfo->GetValue();
 
-	float fScale = (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
-	pFontInfo->scale.x = fScale;
-	pFontInfo->scale.y = fScale;
+	// Runtime glyphs already contain both screen scales. Resizing their
+	// enlarged accent cells back to the requested line height shrinks the text.
+	const bool bRasterized = pFont->IsRasterized();
+	pFontInfo->scale.x = bRasterized ? 1.0f : (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
+	pFontInfo->scale.y = bRasterized ? 1.0f : (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
 
 	return;
 }

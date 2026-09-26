@@ -61,7 +61,8 @@ public:
 	// Sizes the face so that its cell is exactly options.nCellHeight pixels,
 	// measured the way options.eCellMetrics says. For CELL_INK, sizingCodePoints
 	// are the characters whose ink the cell must hold, and they are rasterised
-	// here to place the baseline. Rendering options (hinting, antialiasing,
+	// here to place the baseline. With nCapHeight, letter height is fixed and
+	// GetMetrics().nCellHeight may grow to retain all that ink. Rendering options (hinting, antialiasing,
 	// gamma) are taken from options too. Must be called before any glyph is.
 	bool Fit( const SOptions &options, const std::vector<uint32_t> &sizingCodePoints, std::string *pszError );
 	const SFaceMetrics &GetMetrics() const;

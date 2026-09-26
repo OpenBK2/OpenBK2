@@ -102,7 +102,7 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 		const bool bShapeMatters = ( nPass == 0 );
 		for ( int nWidth = 64; nWidth <= nMaxAtlas; nWidth <<= 1 )
 		{
-			const int nUsed = PackRows( rendered, options.nCellHeight, options.nPadding, nWidth, nullptr );
+			const int nUsed = PackRows( rendered, metrics.nCellHeight, options.nPadding, nWidth, nullptr );
 			if ( nUsed < 0 )
 			{
 				continue;
@@ -129,7 +129,7 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 	pResult->nAtlasWidth = nBestWidth;
 	pResult->nAtlasHeight = nBestHeight;
 	pResult->glyphs.resize( rendered.size() );
-	PackRows( rendered, options.nCellHeight, options.nPadding, nBestWidth, &pResult->glyphs );
+	PackRows( rendered, metrics.nCellHeight, options.nPadding, nBestWidth, &pResult->glyphs );
 
 	// Copy each glyph's ink into its cell, with the baseline nAscent rows down.
 	// Ink above the ascent line or below the descent line has nowhere to go, the
@@ -145,7 +145,7 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 		for ( int y = 0; y < glyph.nRows; ++y )
 		{
 			const int nCellRow = nFirstRow + y;
-			if ( nCellRow < 0 || nCellRow >= options.nCellHeight )
+			if ( nCellRow < 0 || nCellRow >= metrics.nCellHeight )
 			{
 				bClipped = true;
 				continue;

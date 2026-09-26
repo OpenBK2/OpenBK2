@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#include <tuple>
 
 namespace NDb
 {
@@ -27,7 +28,10 @@ struct SFont
 	ZDATA
 	int nSize;
 	std::string szName;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); return 0; }
+	// Horizontal cell size in screen pixels; zero means the same as nSize.
+	// Runtime fonts rasterise both axes, preserving the original UI proportions.
+	int nWidth = 0;
+	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); f.Add(4,&nWidth); return 0; }
 
 	SFont() {}
 	SFont( int _nSize, const std::string &_szName ): nSize( _nSize ), szName( _szName ) {}
@@ -56,6 +60,8 @@ public:
 	// looked up. A baked font has every glyph it will ever have; a runtime font
 	// (GRuntimeFont.h) rasterises the ones it lacks here.
 	virtual void PrepareGlyphs( const std::wstring &wsText ) {}
+	// A runtime font is already rasterised at the requested screen dimensions.
+	virtual bool IsRasterized() const { return false; }
 };
 
 //! Локаль
@@ -74,7 +80,7 @@ private:
 	// the fonts made so far by name and pixel size, a null entry marking one
 	// whose font file could not be used, so the baked font answers from then on.
 	std::unordered_map<std::string, const NDb::SFont*> runtimeRecords;
-	std::map<std::pair<std::string, int>, CObj<CFontInfo>> runtimeFonts;
+	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts;
 	CFontInfo* GetRuntimeFont( const SFont &sFont );
 
 protected:
@@ -92,21 +98,17 @@ public:
 	virtual CFontInfo* GetFont( const SFont &sFont );
 };
 
-// Converts a font size in points to the pixel size to search for and draw at.
-//
-// Points are defined against the 1024x768 virtual screen the UI is laid out on,
-// which the screen stretches with independent X and Y factors. This used to take
-// the X factor and correct only scale.y for aspect, so on anything wider than
-// 4:3 every glyph came out stretched horizontally: at 2560x1600, 2.5 across and
-// 2.08 down. Taking the Y factor instead, and scaling both axes by the same
-// amount, keeps glyphs in proportion; a wider screen gives text more room across
-// rather than wider letters. The vertical size is what it was before.
-//
-// Truncates to whole pixels, as before, because the font search is by integer
-// height and an atlas can only be drawn texel for pixel at an integer size.
+// Font sizes follow the original 1024x768 UI coordinate system. Keep both
+// dimensions: runtime fonts rasterise this aspect ratio into their atlas, so
+// restoring the old widescreen width does not reintroduce bitmap filtering.
 inline int FontPointsToPixels( const int nPoints, const float fScreenHeight )
 {
 	return (float)nPoints * fScreenHeight / 768.0f;
+}
+
+inline int FontPointsToPixelWidth( const int nPoints, const float fScreenWidth )
+{
+	return (float)nPoints * fScreenWidth / 1024.0f;
 }
 
 }; // namespace 

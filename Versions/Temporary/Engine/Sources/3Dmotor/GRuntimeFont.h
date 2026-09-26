@@ -44,6 +44,10 @@ class CGlyphAtlas : public CPtrFuncBase<NGfx::CTexture>
 	// what a save game keeps, and all a load needs to rebuild
 	const NDb::SFont *pRecord;
 	int nCellHeight;
+	int nCellWidth = 0;
+	// Absent in older saves: rebuild those atlases with their original sizing,
+	// since saved text already holds their glyph coordinates.
+	bool bMatchBakedSize = false;
 	std::vector<uint16_t> order;					// characters in the order they were placed
 
 	bool Rebuild();
@@ -55,9 +59,10 @@ public:
 	CGlyphAtlas();
 	~CGlyphAtlas();
 
-	// Opens and fits the record's font at nCellHeight. False when the font file
-	// cannot be read or is not a font, in which case the baked font is used.
-	bool Init( const NDb::SFont *pRecord, int nCellHeight );
+	// Matches the baked font's visible dimensions at the requested pixel size;
+	// the raster cell can be taller to retain the replacement's accents.
+	// False when the font file cannot be used, so the baked font answers.
+	bool Init( const NDb::SFont *pRecord, int nCellHeight, int nCellWidth = 0, bool bMatchBakedSize = true );
 	// Makes sure every character of wsText has a glyph, and every adjacent pair
 	// its kerning, before text is laid out with them
 	void Prepare( const std::wstring &wsText );
@@ -90,6 +95,7 @@ public:
 	CRuntimeFontInfo() {}
 	CRuntimeFontInfo( const SFont &sFont, CGlyphAtlas *pAtlas );
 	void PrepareGlyphs( const std::wstring &wsText ) override;
+	bool IsRasterized() const override { return true; }
 };
 
 }

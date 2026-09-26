@@ -92,11 +92,12 @@ screen that UI/UI.cpp maps to the real one with independent X and Y factors.
 Points were converted with the X factor and only scale.y was corrected for
 aspect, so glyphs were drawn 2.5 across and 2.08 down, 20 percent too wide.
 
-Fixed: NGScene::FontPointsToPixels in 3Dmotor/GLocale.h converts with the Y
-factor, and scale.x equals scale.y, in all three copies of the conversion
-(UIML.cpp, mlVisObjects.cpp, GText.cpp). Vertical size is unchanged; letters
-keep their proportions and wide windows get more room beside the text. Images
-and window layout still stretch.
+The first fix made both axes follow the Y factor. This also made labels
+noticeably narrower than the original UI on widescreen. The renderer now keeps
+both pixel dimensions from the 1024x768 virtual screen, including the original
+horizontal stretching. FreeType rasterises at that width directly; the UI draws
+the result at scale 1 instead of stretching a small bitmap. Baked fallback
+fonts and outlines follow the same two scales.
 
 That leaves the magnification. At 2560x1600 the four fonts are requested at 33
 (body 16pt), 41 (h2 20pt), 79 and 100 (h1 38pt and 48pt) and 29 (numeric 14pt)
@@ -201,15 +202,23 @@ instead, which puts every font tried at 0.60 to 0.68.
 ## Runtime fonts
 
 A font record with a FontFile is rendered by the game itself (3Dmotor/
-GRuntimeFont.h). Each pixel size the UI asks for gets its own CGlyphAtlas: the
-font file is read from the game data through the VFS, fitted with FontRaster to
-that exact cell height by the ink of the European code pages' characters (the
-same for every record, so one set of records looks the same over every
-language edition), and each character
-is rasterised the first time some text uses it, from CMLTextObject::Generate
-through CFontInfo::PrepareGlyphs. The cell carries no external leading, so the
-line space is the size asked for and every request draws at scale 1; at
-2560x1600 that is body 33, h2 41, h1 79 and 100, numeric 29, all exact.
+GRuntimeFont.h). Each requested pair of pixel dimensions gets its own
+CGlyphAtlas. The font file and the original baked metrics/texture are read
+through the VFS. The capital H in the original atlas supplies the visible
+capital-height ratio; the total advance of A-Z, a-z and 0-9 supplies the width
+ratio. The replacement is fitted to those dimensions, so changing font families
+does not silently change the apparent UI text size. No GUI font sizes change.
+If no usable reference is available, the previous ink fitting is used.
+
+The first runtime version fitted the tallest ink across six European code
+pages into the requested line height. Oswald's accents and low marks then
+reduced its capitals to about 56% of the cell, versus 65% in the shipped h2
+atlas. Matching cap height fixes this; the raster cell grows when necessary to
+retain accents and descenders. Text layout uses that full cell at scale 1, so
+labels account for the extra ink instead of clipping it or shrinking it again.
+Each character is rasterised on first use, through CFontInfo::PrepareGlyphs.
+The horizontal correction is applied by FreeType to outlines, advances and
+kerning before rasterisation, preserving sharpness at widescreen dimensions.
 
 - Characters the font lacks come from the record's FallbackFontFiles, then from
   a list of well-covered fonts installed on the system (Segoe UI, Microsoft
@@ -219,9 +228,9 @@ line space is the size asked for and every request draws at scale 1; at
 - Laid out text keeps the atlas coordinates of its glyphs, so a glyph never
   moves once placed. An atlas that fills up gives further characters the
   default box.
-- A save game holds the atlases its text uses, as the record, the size and the
-  characters in the order they were added. Placement depends on nothing else,
-  so rebuilding on load puts every glyph back where the saved layouts expect.
+- A save game holds the record, both requested dimensions, the sizing mode and
+  the characters in placement order. Saves made before reference sizing keep
+  their original ink fitting, preserving coordinates in already saved layouts.
 - A record without a FontFile, or whose file cannot be used, is drawn from its
   baked atlas as before.
 

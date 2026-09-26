@@ -46,8 +46,12 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	VirtualToScreen( src0, &dst0 );
 
 	sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
+	sSearch.nWidth = 0;
 	if ( sFont.nSize & FONT_SIZE_POINTS )
+	{
 		sSearch.nSize = NGScene::FontPointsToPixels( sFont.nSize & FONT_SIZE_MASK, dst.y - dst0.y );
+		sSearch.nWidth = NGScene::FontPointsToPixelWidth( sFont.nSize & FONT_SIZE_MASK, dst.x - dst0.x );
+	}
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	else
@@ -65,10 +69,11 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	pFontInfo->pFont = pFont;
 	pFontInfo->pInfo = pInfo->GetValue();
 
-	float fScale = (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
-	// the same on both axes, see FontPointsToPixels
-	pFontInfo->scale.x = fScale;
-	pFontInfo->scale.y = fScale;
+	// Runtime glyphs already contain both screen scales. Resizing their
+	// enlarged accent cells back to the requested line height shrinks the text.
+	const bool bRasterized = pFont->IsRasterized();
+	pFontInfo->scale.x = bRasterized ? 1.0f : (float)( sSearch.nWidth > 0 ? sSearch.nWidth : sSearch.nSize ) / pFontInfo->pInfo->GetLineSpace();
+	pFontInfo->scale.y = bRasterized ? 1.0f : (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
 }
 
 // CMLStream
@@ -177,9 +182,9 @@ void CMLTextObject::Generate(  )
 	{
 		wchar_t wcChar = pStream->GetChar();
 
-		// the outline belongs to the glyph, so it scales uniformly with it (see
-		// FontPointsToPixels) rather than with the stretched layout
-		float fS = sState.nOutlineBorder * vScreenRect.y / 768;
+		// The outline follows the same original UI proportions as the glyphs.
+		float fS = sState.nOutlineBorder * vScreenRect.x / 1024;
+		float fSY = sState.nOutlineBorder * vScreenRect.y / 768;
 
 		if ( wcChar != L'\t' )
 		{
@@ -195,14 +200,14 @@ void CMLTextObject::Generate(  )
 
  			if ( sState.nOutlineBorder )
 			{
-				sOutline.AddRect( fX, +fS, fCX, fCY, sCharRect, sState.sOutlineColor );
-				sOutline.AddRect( fX, -fS, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX, +fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX, -fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
 				sOutline.AddRect( fX + fS, 0, fCX, fCY, sCharRect, sState.sOutlineColor );
 				sOutline.AddRect( fX - fS, 0, fCX, fCY, sCharRect, sState.sOutlineColor );
-				sOutline.AddRect( fX + fS, +fS, fCX, fCY, sCharRect, sState.sOutlineColor );
-				sOutline.AddRect( fX + fS, -fS, fCX, fCY, sCharRect, sState.sOutlineColor );
-				sOutline.AddRect( fX - fS, +fS, fCX, fCY, sCharRect, sState.sOutlineColor );
-				sOutline.AddRect( fX - fS, -fS, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX + fS, +fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX + fS, -fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX - fS, +fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
+				sOutline.AddRect( fX - fS, -fSY, fCX, fCY, sCharRect, sState.sOutlineColor );
 			}
 
 			fX += sCharacter.nBC * sFontInfo.scale.x;

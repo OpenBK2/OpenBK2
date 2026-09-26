@@ -68,16 +68,15 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 	std::unordered_map<std::string, const NDb::SFont*>::const_iterator record = runtimeRecords.find( sFont.szName );
 	if ( record == runtimeRecords.end() )
 		return 0;
-	const std::pair<std::string, int> key( sFont.szName, sFont.nSize );
-	std::map<std::pair<std::string, int>, CObj<CFontInfo>>::iterator made = runtimeFonts.find( key );
+	const std::tuple<std::string, int, int> key( sFont.szName, sFont.nSize, sFont.nWidth );
+	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>>::iterator made = runtimeFonts.find( key );
 	if ( made == runtimeFonts.end() )
 	{
-		// A font is registered under its exact size, so SearchFont-style nearest
-		// matching never applies to it, and it draws at scale 1: its cell, and
-		// with no external leading its line space, is the size asked for.
+		// Cache both dimensions. The reference atlas determines visible letter
+		// size; extra room for the replacement's accents must not scale it down.
 		CObj<CFontInfo> pFont;
 		CObj<CGlyphAtlas> pAtlas = new CGlyphAtlas();
-		if ( pAtlas->Init( record->second, sFont.nSize ) )
+		if ( pAtlas->Init( record->second, sFont.nSize, sFont.nWidth ) )
 			pFont = new CRuntimeFontInfo( sFont, pAtlas );
 		else
 			DebugTrace( "runtime font \"%s\" %d px could not be made, the baked font is used", sFont.szName.c_str(), sFont.nSize );

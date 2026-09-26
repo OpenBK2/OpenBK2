@@ -66,6 +66,12 @@ struct SOptions
 	int nFaceIndex = 0;
 	ECellMetrics eCellMetrics = CELL_WIN;
 	int nCellHeight = 16;				// ascent + descent in pixels, exactly
+	// Match a baked font's visible capital height. The cell may grow to hold
+	// the replacement's accents and descenders without shrinking its letters.
+	int nCapHeight = 0;
+	// Rasterise at the final width, including advances and kerning, so restoring
+	// legacy UI proportions never stretches an already rasterised bitmap.
+	double fWidthScale = 1.0;
 	EHinting eHinting = HINTING_LIGHT;
 	bool bAntialias = true;			// false renders one bit per pixel
 	// Applied to coverage as alpha = coverage ^ (1 / fGamma). 1 leaves FreeType's

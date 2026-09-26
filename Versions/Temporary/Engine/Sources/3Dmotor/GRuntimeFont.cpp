@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "GRuntimeFont.h"
 #include "DBScene.h"
+#include "GFont.h"
+#include "System/BasicShare.h"
+#include "Image/Image.h"
+#include "Image/ImageDDS.h"
 #include "Misc/StrProc.h"
+#include "Misc/2Darray.h"
 #include "System/VFSOperations.h"
 
 #include "CodePages.h"
@@ -16,6 +21,8 @@
 
 namespace NGScene
 {
+
+extern CBasicShare<SIntResKey, CFileFont> shareFonts;
 
 namespace
 {
@@ -57,7 +64,7 @@ int ToWindowsCharset( const NDb::SFont::ECharset eCharset )
 	}
 }
 
-// The characters every runtime font's cell is fitted to, whatever charset its
+// The characters every runtime font reserves room for, whatever charset its
 // record names: the printable half of each European code page, together.
 //
 // The charset is a baking instruction; text reaches the engine as UTF-16 and
@@ -85,6 +92,61 @@ const std::vector<uint32_t> &GetSizingCodePoints()
 		codePoints.erase( std::unique( codePoints.begin(), codePoints.end() ), codePoints.end() );
 	}
 	return codePoints;
+}
+
+// Measure the old atlas rather than guessing a scale factor for a replacement
+// family. H supplies the visible height; a fixed Latin/digit sample supplies
+// the width. Neither measurement depends on the current text or language.
+const char REFERENCE_CHARACTERS[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+struct SReferenceSize
+{
+	double fCapHeight = 0;
+	double fAdvance = 0;
+};
+
+SReferenceSize ReadReferenceSize( const NDb::SFont *pRecord )
+{
+	SReferenceSize result;
+	CDGPtr<CPtrFuncBase<CFontFormatInfo>> baked( shareFonts.Get( SResKey<int>( pRecord->uid, pRecord->GetRecordID() ) ) );
+	baked.Refresh();
+	const CFontFormatInfo *pFormat = baked->GetValue();
+	if ( pFormat == nullptr || pFormat->GetLineSpace() <= 0 || !pFormat->HasChar( 'H' ) || pRecord->pTexture == nullptr )
+		return result;
+	CFileStream stream( NVFS::GetMainVFS(), pRecord->pTexture->szDestName );
+	CArray2D<uint32_t> pixels;
+	if ( !stream.IsOk() || !NImage::LoadImageDDS( &pixels, &stream ) )
+		return result;
+	const STFCharacter &capital = pFormat->GetChar( 'H' );
+	if ( capital.x1 < 0 || capital.y1 < 0 || capital.x2 > pixels.GetSizeX() || capital.y2 > pixels.GetSizeY() )
+		return result;
+	int nTop = capital.y2, nBottom = capital.y1;
+	for ( int y = capital.y1; y < capital.y2; ++y )
+	{
+		for ( int x = capital.x1; x < capital.x2; ++x )
+		{
+			if ( ( pixels[y][x] >> 24 ) != 0 )
+			{
+				nTop = (std::min)( nTop, y );
+				nBottom = (std::max)( nBottom, y + 1 );
+			}
+		}
+	}
+	if ( nBottom <= nTop )
+		return result;
+	int nAdvance = 0;
+	for ( const char c : REFERENCE_CHARACTERS )
+	{
+		if ( c == 0 )
+			break;
+		if ( !pFormat->HasChar( c ) )
+			return result;
+		const STFCharacter &glyph = pFormat->GetChar( c );
+		nAdvance += glyph.nA + glyph.nBC;
+	}
+	result.fCapHeight = static_cast<double>( nBottom - nTop ) / pFormat->GetLineSpace();
+	result.fAdvance = static_cast<double>( nAdvance ) / pFormat->GetLineSpace();
+	return result;
 }
 
 // A font file from the game data, read once and shared by every size of every
@@ -140,6 +202,7 @@ struct CGlyphAtlas::SState
 	bool bSystemFacesAdded = false;
 	NFontRaster::SOptions options;
 	std::vector<uint32_t> sizing;						// what every face's cell is fitted to
+	int nRasterHeight = 0;						// full cell, including the replacement's accents
 	int nAscent = 0;												// the baseline every glyph sits on, the first face's
 	CObj<CFontFormatInfo> pFormat;
 	// which face each placed character came from, for kerning, which only
@@ -169,13 +232,16 @@ static bool FitFallback( NFontRaster::CFace *pFace, const NFontRaster::SOptions 
 		return true;
 	NFontRaster::SOptions winOptions = options;
 	winOptions.eCellMetrics = NFontRaster::CELL_WIN;
+	winOptions.nCapHeight = 0; // a fallback without Latin H cannot match cap height
 	return pFace->Fit( winOptions, sizing, &szError );
 }
 
-bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight )
+bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight, const int _nCellWidth, const bool _bMatchBakedSize )
 {
 	pRecord = _pRecord;
 	nCellHeight = _nCellHeight;
+	nCellWidth = _nCellWidth;
+	bMatchBakedSize = _bMatchBakedSize;
 	order.clear();
 	pState.reset( new SState );
 	pValue = 0;
@@ -198,17 +264,47 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight )
 	state.options.nPadding = N_PADDING;
 	const int nCharset = ToWindowsCharset( pRecord->eCharset );
 	state.sizing = GetSizingCodePoints();
+	const SReferenceSize reference = bMatchBakedSize ? ReadReferenceSize( pRecord ) : SReferenceSize();
+	const int nWidth = nCellWidth > 0 ? nCellWidth : nCellHeight;
+	state.options.fWidthScale = static_cast<double>( nWidth ) / nCellHeight;
+	if ( reference.fCapHeight > 0 && pFace != nullptr && pFace->HasGlyph( 'H' ) )
+		state.options.nCapHeight = (std::max)( 1, static_cast<int>( std::lround( reference.fCapHeight * nCellHeight ) ) );
 	if ( pFace == nullptr || !pFace->Fit( state.options, state.sizing, &szError ) )
 	{
 		DebugTrace( "runtime font: \"%s\" for font \"%s\": %s", pRecord->szFontFile.c_str(), pRecord->szName.c_str(), szError.c_str() );
 		return false;
 	}
+	// Match the old text's average advance as well as its visible height.
+	// FreeType then draws directly at that width, including on widescreen.
+	if ( state.options.nCapHeight > 0 && reference.fAdvance > 0 )
+	{
+		int nAdvance = 0;
+		for ( const char c : REFERENCE_CHARACTERS )
+		{
+			if ( c == 0 )
+				break;
+			NFontRaster::SGlyphBitmap glyph;
+			if ( !pFace->HasGlyph( c ) || !pFace->RenderGlyph( c, &glyph, &szError ) )
+			{
+				nAdvance = 0;
+				break;
+			}
+			nAdvance += glyph.nA + glyph.nB + glyph.nC;
+		}
+		if ( nAdvance > 0 )
+		{
+			state.options.fWidthScale *= reference.fAdvance * nWidth / nAdvance;
+			if ( !pFace->Fit( state.options, state.sizing, &szError ) )
+				return false;
+		}
+	}
 	const NFontRaster::SFaceMetrics &metrics = pFace->GetMetrics();
+	state.nRasterHeight = metrics.nCellHeight;
 	state.nAscent = metrics.nAscent;
 	state.pFormat = new CFontFormatInfo;
-	// No external leading: the cell is the line, so the line space is the size
-	// the font was asked for and the UI draws it at scale 1
-	state.pFormat->SetMetrics( nCellHeight, 0, metrics.nAveCharWidth, metrics.nMaxCharWidth, static_cast<uint8_t>( nCharset ), W_DEFAULT_CHAR );
+	// The replacement may need more vertical room for accents. Its visible
+	// letters already match the old size, so the UI must keep drawing at 1:1.
+	state.pFormat->SetMetrics( state.nRasterHeight, 0, metrics.nAveCharWidth, metrics.nMaxCharWidth, static_cast<uint8_t>( nCharset ), W_DEFAULT_CHAR );
 	state.faces.push_back( std::move( pFace ) );
 	for ( const NFile::CFilePath &szFallback : pRecord->fallbackFontFiles )
 	{
@@ -224,7 +320,7 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight )
 	}
 	// Square and a power of two, sized from the cell: the average glyph is
 	// taken as six tenths of the cell wide
-	const double fGlyphArea = ( nCellHeight + N_PADDING ) * ( nCellHeight * 0.6 + N_PADDING );
+	const double fGlyphArea = ( state.nRasterHeight + N_PADDING ) * ( nWidth * 0.6 + N_PADDING );
 	const int nWanted = static_cast<int>( std::sqrt( N_GLYPHS_PLANNED * fGlyphArea ) );
 	state.nSize = N_MIN_ATLAS;
 	while ( state.nSize < nWanted && state.nSize < N_MAX_ATLAS )
@@ -296,9 +392,9 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	if ( state.nPenX + nWidth + N_PADDING > state.nSize )
 	{
 		state.nPenX = N_PADDING;
-		state.nPenY += nCellHeight + N_PADDING;
+		state.nPenY += state.nRasterHeight + N_PADDING;
 	}
-	if ( state.nPenY + nCellHeight + N_PADDING > state.nSize )
+	if ( state.nPenY + state.nRasterHeight + N_PADDING > state.nSize )
 	{
 		state.bFull = true;
 		DebugTrace( "runtime font \"%s\" %d px: atlas full at %d characters", pRecord->szName.c_str(), nCellHeight, static_cast<int>( order.size() ) );
@@ -311,7 +407,7 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	for ( int y = 0; y < glyph.nRows; ++y )
 	{
 		const int nCellRow = nFirstRow + y;
-		if ( nCellRow < 0 || nCellRow >= nCellHeight )
+		if ( nCellRow < 0 || nCellRow >= state.nRasterHeight )
 			continue;
 		uint8_t *pDst = &state.coverage[static_cast<size_t>( state.nPenY + nCellRow ) * state.nSize + state.nPenX];
 		std::copy_n( &glyph.coverage[static_cast<size_t>( y ) * glyph.nB], glyph.nB, pDst );
@@ -320,7 +416,7 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	character.x1 = state.nPenX;
 	character.y1 = state.nPenY;
 	character.x2 = state.nPenX + nWidth;
-	character.y2 = state.nPenY + nCellHeight;
+	character.y2 = state.nPenY + state.nRasterHeight;
 	character.nA = glyph.nA;
 	character.nBC = glyph.nB + glyph.nC;
 	character.nWidth = nWidth;
@@ -330,11 +426,11 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	if ( !state.bDirty )
 	{
 		state.nDirtyTop = state.nPenY;
-		state.nDirtyBottom = state.nPenY + nCellHeight;
+		state.nDirtyBottom = state.nPenY + state.nRasterHeight;
 		state.bDirty = true;
 	}
 	state.nDirtyTop = (std::min)( state.nDirtyTop, state.nPenY );
-	state.nDirtyBottom = (std::max)( state.nDirtyBottom, state.nPenY + nCellHeight );
+	state.nDirtyBottom = (std::max)( state.nDirtyBottom, state.nPenY + state.nRasterHeight );
 	state.nPenX += nWidth + N_PADDING;
 	return true;
 }
@@ -381,7 +477,7 @@ bool CGlyphAtlas::Rebuild()
 	// of every saved order, and the rest go back in the same order to the same
 	// places, since placement depends on nothing else
 	const std::vector<uint16_t> saved = order;
-	if ( !Init( pRecord, nCellHeight ) )
+	if ( !Init( pRecord, nCellHeight, nCellWidth, bMatchBakedSize ) )
 		return false;
 	for ( size_t i = 1; i < saved.size(); ++i )
 	{
@@ -456,6 +552,8 @@ int CGlyphAtlas::operator&( IBinSaver &saver )
 	saver.Add( 1, &pSavedRecord );
 	saver.Add( 2, &nCellHeight );
 	saver.Add( 3, &order );
+	saver.Add( 4, &nCellWidth );
+	saver.Add( 5, &bMatchBakedSize );
 	if ( saver.IsReading() )
 	{
 		pRecord = pSavedRecord;

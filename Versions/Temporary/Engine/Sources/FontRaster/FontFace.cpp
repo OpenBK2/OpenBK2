@@ -276,6 +276,15 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 	// fonts whose head table asks for integer ppem, which all of Windows' do:
 	// measured on Impact, 64.769 asked for and 64.766 applied.
 	double fPixelsPerUnit = static_cast<double>( options.nCellHeight ) / ( design.nWinAscent + design.nWinDescent );
+	if ( options.nCapHeight > 0 )
+	{
+		// H measures cap height without the overshoot of rounded capitals.
+		SDesignMetrics cap;
+		if ( !MeasureInk( impl.pFace, { 'H' }, &cap, pszError ) )
+			return false;
+		fPixelsPerUnit = static_cast<double>( options.nCapHeight ) / ( cap.nWinAscent + cap.nWinDescent );
+	}
+	const double fWidthScale = options.fWidthScale > 0 ? options.fWidthScale : 1.0;
 	impl.metrics.nCellHeight = options.nCellHeight;
 	impl.bFitted = true;
 
@@ -288,7 +297,9 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 	for ( int nAttempt = 0; ; ++nAttempt )
 	{
 		const double fPixelsPerEm = fPixelsPerUnit * design.nUnitsPerEm;
-		const FT_Error nError = FT_Set_Char_Size( impl.pFace, 0, static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ), 72, 72 );
+		const FT_Error nError = FT_Set_Char_Size( impl.pFace,
+			static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * fWidthScale * 64.0 ) ),
+			static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ), 72, 72 );
 		if ( nError != 0 )
 		{
 			*pszError = DescribeError( "FT_Set_Char_Size", nError );
@@ -299,7 +310,7 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 		// sum to the cell exactly
 		impl.metrics.nAscent = static_cast<int>( std::lround( design.nWinAscent * fPixelsPerUnit ) );
 		// the sizing set is rendered only when something needs it
-		const bool bNeedRendered = options.eCellMetrics == CELL_INK || design.nAveCharWidth <= 0;
+		const bool bNeedRendered = options.nCapHeight > 0 || options.eCellMetrics == CELL_INK || design.nAveCharWidth <= 0;
 		if ( !bNeedRendered )
 		{
 			break;
@@ -312,7 +323,7 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 				return false;
 			}
 		}
-		if ( options.eCellMetrics != CELL_INK )
+		if ( options.eCellMetrics != CELL_INK && options.nCapHeight == 0 )
 		{
 			break;
 		}
@@ -326,6 +337,14 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 				nBelow = std::max( nBelow, glyph.nRows - glyph.nTop );
 			}
 		}
+		if ( options.nCapHeight > 0 )
+		{
+			// Reserve the full ink extent instead of reducing every letter to fit
+			// the replacement face's tallest accents into the old cell.
+			impl.metrics.nCellHeight = std::max( options.nCellHeight, nAbove + nBelow );
+			impl.metrics.nAscent = std::clamp( impl.metrics.nAscent, nAbove, impl.metrics.nCellHeight - nBelow );
+			break;
+		}
 		if ( nAbove + nBelow <= options.nCellHeight )
 		{
 			impl.metrics.nAscent = std::clamp( impl.metrics.nAscent, nAbove, options.nCellHeight - nBelow );
@@ -338,14 +357,14 @@ bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCod
 		}
 		fPixelsPerUnit *= static_cast<double>( options.nCellHeight ) / ( nAbove + nBelow );
 	}
-	impl.metrics.nDescent = options.nCellHeight - impl.metrics.nAscent;
+	impl.metrics.nDescent = impl.metrics.nCellHeight - impl.metrics.nAscent;
 	impl.metrics.nExternalLeading = static_cast<int>( std::lround( design.nExternalLeading * fPixelsPerUnit ) );
-	impl.metrics.nMaxCharWidth = static_cast<int>( std::lround( design.nMaxAdvance * fPixelsPerUnit ) );
+	impl.metrics.nMaxCharWidth = static_cast<int>( std::lround( design.nMaxAdvance * fPixelsPerUnit * fWidthScale ) );
 	// Without xAvgCharWidth, the mean advance of the sizing set is as close as
 	// GDI's own fallback gets
 	if ( design.nAveCharWidth > 0 )
 	{
-		impl.metrics.nAveCharWidth = static_cast<int>( std::lround( design.nAveCharWidth * fPixelsPerUnit ) );
+		impl.metrics.nAveCharWidth = static_cast<int>( std::lround( design.nAveCharWidth * fPixelsPerUnit * fWidthScale ) );
 	}
 	else if ( !sizing.empty() )
 	{
