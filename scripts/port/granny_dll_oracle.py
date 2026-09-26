@@ -18,8 +18,12 @@ Two things bite when doing this by hand, and both are handled below.
 
 Usage:
 
-    python granny_dll_oracle.py hash <file.gr2> ...
-    python granny_dll_oracle.py pose <file.gr2> <t0> <t1> ...
+    python granny_dll_oracle.py [--dll <path>] hash <file.gr2> ...
+    python granny_dll_oracle.py [--dll <path>] pose <file.gr2> <t0> <t1> ...
+
+The DLL is RAD's granny2_x64.dll 2.11.8.0, which this tree does not carry. Pass
+it with --dll or the GRANNY2_DLL environment variable; one copy is
+common/granny/win64/granny2_x64.dll in https://github.com/uesp/uesp-esoapps.
 
 `hash` prints the SHA-256 of every decompressed section, concatenated, which is
 what a decoder under test has to reproduce byte for byte. `pose` dumps local
@@ -37,14 +41,15 @@ import struct
 import sys
 from ctypes import POINTER, c_bool, c_char_p, c_float, c_int32, c_uint32, c_void_p
 
-DLL_PATH = os.environ.get(
-    "GRANNY2_DLL",
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..",
-                 "third_party", "uesp-esoapps", "common", "granny",
-                 "win64", "granny2_x64.dll"),
-)
+# The real DLL is not in this tree: RAD's license does not let us carry it. It
+# used to come from the third_party/uesp-esoapps submodule, and that repository
+# is still where to get it, as common/granny/win64/granny2_x64.dll.
+DLL_HINT = ("pass --dll or set GRANNY2_DLL to RAD's granny2_x64.dll (2.11.8.0); "
+            "one copy is common/granny/win64/granny2_x64.dll in "
+            "https://github.com/uesp/uesp-esoapps")
 
-g = C.CDLL(os.path.abspath(DLL_PATH))
+# Bound by load(), which main calls once it knows the path.
+g = None
 
 
 # --- structures ------------------------------------------------------------
@@ -140,10 +145,17 @@ _SIGNATURES = {
     "GrannyGetWorldPose4x4": ([c_void_p, c_int32], POINTER(c_float)),
     "GrannyGetWorldPoseComposite4x4": ([c_void_p, c_int32], POINTER(c_float)),
 }
-for _name, (_argtypes, _restype) in _SIGNATURES.items():
-    _fn = getattr(g, _name)
-    _fn.argtypes = _argtypes
-    _fn.restype = _restype
+
+
+def load(path):
+    """Load the DLL at `path` into `g` and bind the signatures above."""
+    global g
+    g = C.CDLL(os.path.abspath(path))
+    for name, (argtypes, restype) in _SIGNATURES.items():
+        fn = getattr(g, name)
+        fn.argtypes = argtypes
+        fn.restype = restype
+
 
 IDENTITY_4X4 = (c_float * 16)(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1)
 
@@ -251,9 +263,19 @@ def pose(path, times):
 
 
 def main(argv):
+    # --dll <path> may lead the arguments; otherwise GRANNY2_DLL names the DLL
+    argv = list(argv)
+    dll_path = os.environ.get("GRANNY2_DLL")
+    if len(argv) >= 3 and argv[1] == "--dll":
+        dll_path = argv[2]
+        del argv[1:3]
     if len(argv) < 3 or argv[1] not in ("hash", "pose"):
         print(__doc__)
         return 1
+    if not dll_path or not os.path.exists(dll_path):
+        sys.stderr.write(f"granny_dll_oracle: no granny2 DLL at {dll_path!r}; {DLL_HINT}\n")
+        return 2
+    load(dll_path)
     if argv[1] == "hash":
         for path in argv[2:]:
             print(f"{path} {file_hash(path)}")

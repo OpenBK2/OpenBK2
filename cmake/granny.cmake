@@ -1,7 +1,8 @@
 # Granny comes from libgr2, this tree's own replacement for RAD Game Tools'
-# proprietary granny2.dll, rather than from the DLL vendored under
-# third_party/uesp-esoapps. That DLL is Windows only and non-redistributable,
-# and it was the last thing keeping the engine off other platforms.
+# proprietary granny2.dll, rather than from the DLL that used to be vendored
+# under the third_party/uesp-esoapps submodule. That DLL is Windows only and
+# non-redistributable, and it was the last thing keeping the engine off other
+# platforms.
 #
 # The engine now also *compiles* against libgr2 rather than against RAD's
 # header. granny211.h used to be on the include path here and used to be what
@@ -22,10 +23,11 @@
 # the same file name the engine loads by, granny2.dll on x86 and granny2_x64.dll
 # on x64. Off Windows both sides are plain C linkage with default visibility.
 #
-# What third_party/uesp-esoapps is still needed for is the verification harness,
-# not the build: scripts/port/gr2diff.py, gr2info.py and granny_dll_oracle.py
-# drive the real granny2.dll out of that submodule as the reference every claim
-# about libgr2 was measured against. See docs/GrannyReplacement.md.
+# The submodule is gone. The real granny2.dll is now needed only by the
+# verification harness, never the build: scripts/port/gr2diff.py, gr2info.py and
+# granny_dll_oracle.py take it by option or GRANNY2_DLL and drive it as the
+# reference every claim about libgr2 was measured against. Each one's help says
+# where to get it. See docs/GrannyReplacement.md.
 
 # libgr2 is a standalone project, so it configures and builds on its own as well
 # as from here. As a subdirectory its tests stay off and it reuses this tree's

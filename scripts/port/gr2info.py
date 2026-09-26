@@ -428,9 +428,13 @@ class Gr2File(object):
 
 # --- the DLL, for decompression only ---------------------------------------
 
-DEFAULT_DLL = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), '..', '..',
-    'third_party', 'uesp-esoapps', 'common', 'granny', 'win64', 'granny2_x64.dll')
+# RAD's own DLL; libgr2 exports only what the engine calls, which leaves out
+# the two decompression entry points bound below. It is not in this tree, since
+# its license does not let us carry it; it used to come from the
+# third_party/uesp-esoapps submodule, and that repository is still where to get it.
+DEFAULT_DLL = os.environ.get('GRANNY2_DLL')
+DLL_HINT = ("RAD's granny2_x64.dll (2.11.8.0), from --dll or GRANNY2_DLL; one copy "
+            "is common/granny/win64/granny2_x64.dll in https://github.com/uesp/uesp-esoapps")
 
 
 def load_dll(path):
@@ -600,7 +604,8 @@ def main(argv):
     parser.add_argument('file')
     parser.add_argument('--json', action='store_true', help='machine readable output')
     parser.add_argument('--dll', default=DEFAULT_DLL,
-                        help='the granny2 that decompresses; header needs none')
+                        help='the granny2 that decompresses; header needs none. '
+                             'Needs ' + DLL_HINT)
     parser.add_argument('--depth', type=int, default=3,
                         help='how far objects follows references (default 3)')
     parser.add_argument('--name', default=None,
@@ -617,6 +622,10 @@ def main(argv):
 
     needs_dll = any(s['compression'] != 0 and s['expanded_size']
                     for s in gr2.sections)
+    if needs_dll and not (args.dll and os.path.exists(args.dll)):
+        sys.stderr.write('gr2info: %s has compressed sections and no DLL at %r; needs %s\n'
+                         % (args.file, args.dll, DLL_HINT))
+        return 2
     dll = load_dll(args.dll) if needs_dll else None
     gr2.decompress(dll)
 

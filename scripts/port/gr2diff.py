@@ -12,9 +12,11 @@ granny211.h's, which is the contract both have to meet.
     python gr2diff.py --jobs 8               spread over processes
     python gr2diff.py --report out.json      the differences, in full
 
-By default the reference is the vendored granny2_x64.dll and the candidate is
-whatever libgr2 last built into out/build/libgr2-x64; --reference and --candidate
-override either. A 64-bit Python is required, since those are 64-bit DLLs.
+The reference is RAD's granny2_x64.dll 2.11.8.0, which this tree does not carry:
+pass it with --reference or the GRANNY2_DLL environment variable. One copy is
+common/granny/win64/granny2_x64.dll in https://github.com/uesp/uesp-esoapps. The
+candidate defaults to whatever libgr2 last built into out/build/libgr2-x64, and
+--candidate overrides it. A 64-bit Python is required, since those are 64-bit DLLs.
 
 Files the candidate refuses but the reference reads are counted separately from
 files the two read differently, because during a port most of them are one
@@ -52,8 +54,13 @@ MAGIC = bytes.fromhex('b867b0caf86db10f84728c7e5e19001e')
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..'))
 
-DEFAULT_REFERENCE = os.path.join(REPO, 'third_party', 'uesp-esoapps', 'common',
-                                 'granny', 'win64', 'granny2_x64.dll')
+# RAD's own DLL is not in this tree, since its license does not let us carry it.
+# It used to come from the third_party/uesp-esoapps submodule, and that
+# repository is still where to get it.
+DEFAULT_REFERENCE = os.environ.get('GRANNY2_DLL')
+REFERENCE_HINT = ("RAD's granny2_x64.dll (2.11.8.0), from --reference or GRANNY2_DLL; "
+                  "one copy is common/granny/win64/granny2_x64.dll in "
+                  "https://github.com/uesp/uesp-esoapps")
 DEFAULT_CANDIDATE = os.path.join(REPO, 'out', 'build', 'libgr2-x64', 'granny2_x64.dll')
 
 # The three installs the corpus was surveyed over. Missing ones are skipped, so
@@ -1140,7 +1147,7 @@ def main(argv):
         epilog=__doc__.split('\n\n', 1)[1])
     parser.add_argument('roots', nargs='*', default=None,
                         help='directories, .pak archives or .gr2 files')
-    parser.add_argument('--reference', default=DEFAULT_REFERENCE)
+    parser.add_argument('--reference', default=DEFAULT_REFERENCE, help=REFERENCE_HINT)
     parser.add_argument('--candidate', default=DEFAULT_CANDIDATE)
     parser.add_argument('--limit', type=int, default=0, help='stop after this many')
     parser.add_argument('--jobs', type=int, default=1,
@@ -1157,6 +1164,9 @@ def main(argv):
 
     if struct.calcsize('P') != 8:
         sys.stderr.write('gr2diff: needs a 64-bit Python for these DLLs\n')
+        return 2
+    if not args.reference:
+        sys.stderr.write('gr2diff: no reference DLL; needs %s\n' % REFERENCE_HINT)
         return 2
     for path in (args.reference, args.candidate):
         if not os.path.exists(path):

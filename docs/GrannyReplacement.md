@@ -840,10 +840,16 @@ by comparing all 36 record types member for member against RAD's header and by
 `static_assert`s tying the public layouts to `src/Structures.h`'s in both 32- and
 64-bit. What still needs the submodule is the *verification harness*, not the
 build: `gr2diff.py`, `gr2info.py` and `granny_dll_oracle.py` drive the real
-`granny2.dll` out of it as the reference every claim here was measured against.
-Dropping the submodule therefore means giving those three an out-of-tree path to
-a DLL (only `gr2diff.py` has a `--reference` flag today) and accepting that a
-fresh clone cannot re-run the comparison without supplying one.
+`granny2.dll` as the reference every claim here was measured against.
+
+**The submodule is now gone.** Those three take the DLL from an option
+(`--reference` for `gr2diff.py`, `--dll` for the other two) or from the
+`GRANNY2_DLL` environment variable, and say where to find it when neither is
+given: `common/granny/win64/granny2_x64.dll` in
+https://github.com/uesp/uesp-esoapps. A fresh clone therefore cannot re-run the
+comparison without fetching that DLL first. `gen-granny-stub.py` went with the
+submodule, since both its input, `granny211.h`, and its output, `GrannyStub.cpp`,
+were already gone.
 | **tail** | visual bugs found in play | **3-5 days** | low |
 
 **Total: 27 to 44 working days**, roughly 6 to 9 weeks full time, 200 to 350 hours.
