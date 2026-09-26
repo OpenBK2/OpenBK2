@@ -27,6 +27,8 @@ jobs:
     steps:
       # Engine sources only, not the 11 GB of game data; see build-windows.yml.
       # Nothing the tests read at run time lives outside these directories.
+      # Except the fonts: GposKerning_test reads one, and the build packs
+      # obk2_fonts.pak from them. 3 MB.
       - uses: actions/checkout@v6
         with:
           submodules: recursive
@@ -36,6 +38,7 @@ jobs:
             cmake
             third_party
             Versions/Temporary/Engine/Sources
+            Versions/Current/Data/Fonts
 
       # MSVC, Ninja, the DirectX SDK and ccache. 3Dmotor links dxsdk::d3d9, and the
       # tests link 3Dmotor, so they need the SDK exactly as the game build does.
@@ -78,6 +81,7 @@ jobs:
             cmake
             third_party
             Versions/Temporary/Engine/Sources
+            Versions/Current/Data/Fonts
 
       # Its own ccache key, not the build workflow's Windows-x64-Release one: this job
       # builds only the benchmarks, and saving what it used would evict the rest.

@@ -66,10 +66,18 @@ const SPair PAIRS[] =
 	{ "av", 218, 416, -3 }, { "rv", 373, 416, 0 }, { "f.", 284, 705, -13 },
 };
 
+// The font is game data, which a checkout of the sources alone does not have;
+// the test then skips, as the DDS tests do without the shipped textures
+bool HaveOswald()
+{
+	return !ReadFile( OSWALD_TTF ).empty();
+}
+
 TEST( GposKerning, MatchesHarfBuzzOnOswald )
 {
+	if ( !HaveOswald() )
+		GTEST_SKIP() << "no font at " << OSWALD_TTF;
 	const std::vector<uint8_t> font = ReadFile( OSWALD_TTF );
-	ASSERT_FALSE( font.empty() ) << OSWALD_TTF;
 	const NFontRaster::CGposKerning kerning( ReadTable( font, "GPOS" ) );
 	ASSERT_FALSE( kerning.IsEmpty() );
 	for ( const SPair &pair : PAIRS )
@@ -81,6 +89,8 @@ TEST( GposKerning, MatchesHarfBuzzOnOswald )
 TEST( GposKerning, DamagedTablesGiveNothing )
 {
 	EXPECT_TRUE( NFontRaster::CGposKerning( std::vector<uint8_t>() ).IsEmpty() );
+	if ( !HaveOswald() )
+		GTEST_SKIP() << "no font at " << OSWALD_TTF;
 	// every prefix of a real table must parse without reading past its end;
 	// what the prefix still covers may kern, and nothing may crash
 	const std::vector<uint8_t> gpos = ReadTable( ReadFile( OSWALD_TTF ), "GPOS" );
@@ -96,6 +106,8 @@ TEST( GposKerning, FaceWithoutKernTableIsKerned )
 {
 	// The same pair through CFace, in pixels: A V narrows at a 41 pixel cell,
 	// which the kern table path alone would have left at 0
+	if ( !HaveOswald() )
+		GTEST_SKIP() << "no font at " << OSWALD_TTF;
 	std::string szError;
 	std::unique_ptr<NFontRaster::CFace> pFace = NFontRaster::CFace::OpenFile( OSWALD_TTF, 0, &szError );
 	ASSERT_TRUE( pFace != nullptr ) << szError;

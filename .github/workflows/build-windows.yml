@@ -30,6 +30,9 @@ jobs:
       # took about four minutes a job. Files at the root come with cone mode, so
       # CMakeLists.txt and CMakePresets.json need no entry. blob:none leaves the
       # contents of everything outside these directories undownloaded.
+      # Versions/Current/Data/Fonts is the one piece of game data the build reads:
+      # obk2_fonts.pak is packed from it, and GposKerning_test reads a font from it.
+      # It is 3 MB.
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -40,6 +43,7 @@ jobs:
             cmake
             third_party
             Versions/Temporary/Engine/Sources
+            Versions/Current/Data/Fonts
 
       # Same steps as before, moved to a composite action so the test workflow uses
       # exactly this environment rather than its own approximation of it.

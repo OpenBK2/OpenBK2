@@ -43,6 +43,16 @@ set(OBK2_FONT_PAK_FILES
 )
 list(TRANSFORM OBK2_FONT_PAK_FILES PREPEND "${OBK2_FONT_DATA}/" OUTPUT_VARIABLE OBK2_FONT_PAK_DEPENDS)
 
+# A checkout without the game data, a sparse one as CI's used to be, cannot
+# make the archive. Better a build without it, said out loud, than no build:
+# the engine itself does not need it, and draws baked fonts where it is absent.
+foreach(OBK2_FONT_PAK_INPUT IN LISTS OBK2_FONT_PAK_DEPENDS)
+    if(NOT EXISTS "${OBK2_FONT_PAK_INPUT}")
+        message(WARNING "obk2_fonts.pak is not built: ${OBK2_FONT_PAK_INPUT} is missing from this checkout")
+        return()
+    endif()
+endforeach()
+
 # Paths inside the archive are relative to Data, which is what the VFS looks
 # them up by, hence the working directory.
 add_custom_command(

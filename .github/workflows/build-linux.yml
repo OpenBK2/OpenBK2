@@ -31,9 +31,12 @@ jobs:
 
     steps:
       # Only what the build reads. The full tree is 11 GB and 238k files, almost
-      # all of it game data; see build-windows.yml for the reasoning. Note that
-      # Versions/Current is deliberately absent, so the four DDS tests that read
-      # the shipped textures skip themselves rather than fail.
+      # all of it game data; see build-windows.yml for the reasoning. Note that of
+      # Versions/Current only the fonts are checked out, so the four DDS tests that
+      # read the shipped textures skip themselves rather than fail.
+      # Versions/Current/Data/Fonts is the one piece of game data the build reads:
+      # obk2_fonts.pak is packed from it, and GposKerning_test reads a font from it.
+      # It is 3 MB.
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -44,6 +47,7 @@ jobs:
             cmake
             third_party
             Versions/Temporary/Engine/Sources
+            Versions/Current/Data/Fonts
 
       - name: Setup build environment
         uses: ./.github/actions/setup-linux-build
