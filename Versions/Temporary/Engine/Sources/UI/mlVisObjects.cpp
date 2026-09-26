@@ -31,7 +31,7 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 
 	search.nSize = font.nSize & FONT_SIZE_MASK;
 	if ( font.nSize & FONT_SIZE_POINTS )
-		search.nSize = (float)( font.nSize & FONT_SIZE_MASK ) * screenSize.x / 1024.0f;
+		search.nSize = NGScene::FontPointsToPixels( font.nSize & FONT_SIZE_MASK, screenSize.y );
 	else if ( font.nSize & FONT_SIZE_PIXELS )
 		search.nSize = font.nSize & FONT_SIZE_MASK;
 	else
@@ -46,8 +46,9 @@ static void GetFontFormatInfo( const NGScene::SFont &font, int nMinSize, SFontIn
 	pFontInfo->pInfo = pInfo->GetValue();
 
 	float fScale = (float)search.nSize / pFontInfo->pInfo->GetLineSpace();
+	// the same on both axes, see FontPointsToPixels
 	pFontInfo->scale.x = fScale;
-	pFontInfo->scale.y = fScale * 4.0f * screenSize.y / screenSize.x / 3.0f;
+	pFontInfo->scale.y = fScale;
 }
 
 // CTextObject
@@ -112,7 +113,9 @@ void CTextObject::Update( IReflowState *pState )
 	{
 		wchar_t nChar = pStream->GetChar();
 
-		float fSX = state.nOutlineBorder * screenSize.x / 1024;
+		// the outline belongs to the glyph, so it scales uniformly with it (see
+		// FontPointsToPixels) rather than with the stretched layout
+		float fSX = state.nOutlineBorder * screenSize.y / 768;
 		float fSY = state.nOutlineBorder * screenSize.y / 768;
 		const STFCharacter &charInfo = fontInfo.pInfo->GetChar( nChar );
 

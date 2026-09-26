@@ -597,7 +597,7 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 
 	sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	if ( sFont.nSize & FONT_SIZE_POINTS )
-		sSearch.nSize = (float)( sFont.nSize & FONT_SIZE_MASK ) * vScreen.x / 1024.0f;
+		sSearch.nSize = FontPointsToPixels( sFont.nSize & FONT_SIZE_MASK, vScreen.y );
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	else

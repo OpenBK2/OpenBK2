@@ -3,6 +3,8 @@
 #include "3Dmotor/G2DView.h"
 #include "3Dmotor/DBScene.h"
 #include "3Dmotor/Locale.h"
+// FontPointsToPixels
+#include "3Dmotor/GLocale.h"
 
 #include "UIML.h"
 #include "UIMLHandlers.h"
@@ -34,7 +36,6 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 {
 	int nx, ny;
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->GetResolution( &nx, &ny );
-	CVec2 vScreen( nx, ny );
 
 	NGScene::SFont sSearch( sFont );
 	CTPoint<float> src( 1024, 768 );
@@ -46,7 +47,7 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 
 	sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	if ( sFont.nSize & FONT_SIZE_POINTS )
-		sSearch.nSize = (float)( sFont.nSize & FONT_SIZE_MASK ) * (dst.x - dst0.x) / 1024.0f;
+		sSearch.nSize = NGScene::FontPointsToPixels( sFont.nSize & FONT_SIZE_MASK, dst.y - dst0.y );
 	else if ( sFont.nSize & FONT_SIZE_PIXELS )
 		sSearch.nSize = sFont.nSize & FONT_SIZE_MASK;
 	else
@@ -65,8 +66,9 @@ static void GetFontFormatInfo(  const NGScene::SFont &sFont, int nMinSize, SFont
 	pFontInfo->pInfo = pInfo->GetValue();
 
 	float fScale = (float)sSearch.nSize / pFontInfo->pInfo->GetLineSpace();
+	// the same on both axes, see FontPointsToPixels
 	pFontInfo->scale.x = fScale;
-	pFontInfo->scale.y = fScale * 4.0f * vScreen.y / vScreen.x / 3.0f;
+	pFontInfo->scale.y = fScale;
 }
 
 // CMLStream
@@ -167,7 +169,9 @@ void CMLTextObject::Generate(  )
 	{
 		wchar_t wcChar = pStream->GetChar();
 
-		float fS = sState.nOutlineBorder * vScreenRect.x / 1024;
+		// the outline belongs to the glyph, so it scales uniformly with it (see
+		// FontPointsToPixels) rather than with the stretched layout
+		float fS = sState.nOutlineBorder * vScreenRect.y / 768;
 
 		if ( wcChar != L'\t' )
 		{

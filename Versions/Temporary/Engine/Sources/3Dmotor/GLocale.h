@@ -74,6 +74,23 @@ public:
 	virtual CFontInfo* GetFont( const SFont &sFont );
 };
 
+// Converts a font size in points to the pixel size to search for and draw at.
+//
+// Points are defined against the 1024x768 virtual screen the UI is laid out on,
+// which the screen stretches with independent X and Y factors. This used to take
+// the X factor and correct only scale.y for aspect, so on anything wider than
+// 4:3 every glyph came out stretched horizontally: at 2560x1600, 2.5 across and
+// 2.08 down. Taking the Y factor instead, and scaling both axes by the same
+// amount, keeps glyphs in proportion; a wider screen gives text more room across
+// rather than wider letters. The vertical size is what it was before.
+//
+// Truncates to whole pixels, as before, because the font search is by integer
+// height and an atlas can only be drawn texel for pixel at an integer size.
+inline int FontPointsToPixels( const int nPoints, const float fScreenHeight )
+{
+	return (float)nPoints * fScreenHeight / 768.0f;
+}
+
 }; // namespace 
 
 
