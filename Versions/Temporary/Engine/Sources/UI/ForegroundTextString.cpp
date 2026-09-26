@@ -10,6 +10,28 @@ REGISTER_SAVELOAD_CLASS(UI, 0x11075B43, CForegroundTextString)
 REGISTER_SAVELOAD_CLASS(UI, 0x1715A340, CPlacedText)
 extern CVec2 vScreenRect;
 
+// The size of generated text in virtual units, kept fractional.
+//
+// This used to go through the CTPoint<int> overload of ScreenToVirtual, which
+// truncates to whole virtual units. At 1024x768 a virtual unit is one pixel and
+// nothing is lost, but at 2560x1600 it is 2.5 pixels across and 2.08 down, and
+// the rect built from the result is also the clip window VisitUIText draws
+// through. So up to 2.5 px came off the right of the last letter and 2 px off
+// the bottom of the descenders, on every resolution but the original one.
+static CVec2 GetVirtualTextSize( IML *pGfxText )
+{
+	const CTPoint<int> &size = pGfxText->GetSize();
+	return ScreenToVirtual( CVec2( size.x, size.y ) ) - ScreenToVirtual( VNULL2 );
+}
+
+// The same, rounded up to whole virtual units for callers that size a window
+// from it, so the window is never narrower than the text it has to hold
+static CTPoint<int> GetVirtualTextSizeCeil( IML *pGfxText )
+{
+	const CVec2 vSize = GetVirtualTextSize( pGfxText );
+	return CTPoint<int>( static_cast<int>( ceilf( vSize.x ) ), static_cast<int>( ceilf( vSize.y ) ) );
+}
+
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SForegroundTextString *pDesc ( checked_cast<const NDb::SForegroundTextString*>( _pDesc ) );
@@ -27,9 +49,9 @@ void CForegroundTextString::InitText()
 	pGfxText->Generate( VirtualToScreenX( rcParent.GetSizeX() ) );
 }
 
-int CForegroundTextString::GetOptimalWidth() const 
-{ 
-	return ScreenToVirtualX( pGfxText->GetSize().x );
+int CForegroundTextString::GetOptimalWidth() const
+{
+	return GetVirtualTextSizeCeil( pGfxText ).x;
 }
 
 const std::wstring& CForegroundTextString::GetDBInstanceText() const
@@ -74,8 +96,7 @@ void CForegroundTextString::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText ) 
 	{
-		CTPoint<int> size ;
-		ScreenToVirtual( pGfxText->GetSize(), &size );
+		const CVec2 size = GetVirtualTextSize( pGfxText );
 		CTRect<float> place( rcParent.x1, rcParent.y1, rcParent.x1 + size.x, rcParent.y1 + size.y );
 		if ( pInstance->pShared )
 			NUITools::ApplyPlacement( pInstance->pShared->position, rcParent, &place );
@@ -119,14 +140,10 @@ void CPlacedText::Init()
 
 void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 {
-	static CTPoint<int> ptEmpty( 0, 0 );
 	if ( pGfxText )
 	{
-		CTPoint<int> size;
-		ScreenToVirtual( pGfxText->GetSize(), &size );
-		CTPoint<int> size0;
-		ScreenToVirtual( ptEmpty, &size0 );
-		CTRect<float> place( rcParent.x1, rcParent.y1, rcParent.x1 + size.x - size0.x, rcParent.y1 + size.y - size0.y );
+		const CVec2 size = GetVirtualTextSize( pGfxText );
+		CTRect<float> place( rcParent.x1, rcParent.y1, rcParent.x1 + size.x, rcParent.y1 + size.y );
 		NUITools::ApplyPlacement( placement, rcParent, &place );
 
 		CTRect<float> tmp;
@@ -165,23 +182,16 @@ void CPlacedText::InitGfxText()
 
 CTPoint<int> CPlacedText::GetSize() const
 {
-	static CTPoint<int> ptEmpty( 0, 0 );
-	
 	if ( !pGfxText )
-		return ptEmpty;
-	
-	CTPoint<int> point;
-	ScreenToVirtual( pGfxText->GetSize(), &point );
-	CTPoint<int> point0;
-	ScreenToVirtual( ptEmpty, &point0 );
-	return point - point0;
+		return CTPoint<int>( 0, 0 );
+	return GetVirtualTextSizeCeil( pGfxText );
 }
 
 int CPlacedText::GetOptimalWidth() const
 {
 	if ( !pGfxText )
 		return 0;
-	return ScreenToVirtualX( pGfxText->GetSize().x ) - ScreenToVirtualX( 0 );
+	return GetVirtualTextSizeCeil( pGfxText ).x;
 }
 
 void CPlacedText::Reposition( const CTRect<float> &parentRect )
