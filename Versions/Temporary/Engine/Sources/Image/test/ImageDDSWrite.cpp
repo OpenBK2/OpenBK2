@@ -81,6 +81,18 @@ CArray2D<uint32_t> MakeImage( int nSizeX, int nSizeY, bool bWithAlpha )
 	return image;
 }
 
+// Whether the shipped game data is checked out under root, for the tests that
+// examine it. The directory existing is not enough: CI checks out
+// Versions/Current/Data/Fonts alone, for the font pak, and sparse cone mode
+// brings the files directly in Data with it, so Data exists with none of the
+// textures these tests look for. Units is a directory only a full checkout of
+// the data has.
+bool HaveShippedData( const std::filesystem::path &root )
+{
+	std::error_code ec;
+	return std::filesystem::is_directory( root / "Units", ec );
+}
+
 std::vector<uint8_t> ReadFile( const std::filesystem::path &path )
 {
 	std::vector<uint8_t> res;
@@ -378,7 +390,7 @@ TEST( DDSWrite, Dxt1PunchThroughAlpha )
 TEST( DDSWrite, ReEncodingShippedIsNearLossless )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
-	if ( !std::filesystem::exists( root ) )
+	if ( !HaveShippedData( root ) )
 		GTEST_SKIP() << "no game data at " << root.string();
 
 	int nChecked = 0;
@@ -640,7 +652,7 @@ TEST( DDSWrite, FastMipStillProducesAFullChain )
 TEST( DDSWrite, UnpackDXTMatchesReference )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
-	if ( !std::filesystem::exists( root ) )
+	if ( !HaveShippedData( root ) )
 		GTEST_SKIP() << "no game data at " << root.string();
 
 	int nDxt1 = 0;
@@ -731,7 +743,7 @@ TEST( DDSWrite, UnpackDXTReachesFullWhite )
 TEST( DDSWrite, ShippedHeadersMatch )
 {
 	const std::filesystem::path root = std::filesystem::path( OBK2_DATA_DIR );
-	if ( !std::filesystem::exists( root ) )
+	if ( !HaveShippedData( root ) )
 		GTEST_SKIP() << "no game data at " << root.string();
 
 	int nChecked = 0;
