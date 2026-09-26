@@ -5,10 +5,12 @@
 	<Height>14</Height>
 	<Thickness>400</Thickness>
 	<Italic>false</Italic>
-	<Antialiased>false</Antialiased>
+	<Antialiased>true</Antialiased>
 	<Pitch>DEFAULT</Pitch>
 	<Charset>ANSI</Charset>
 	<FaceName>Arial</FaceName>
 	<Name>numeric</Name>
 	<CharactersFile href="" />
+	<FontFile href="/Fonts/Files/LiberationSans-Regular.ttf" />
+	<FallbackFontFiles />
 </Font>

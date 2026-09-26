@@ -11,4 +11,6 @@
 	<FaceName>System</FaceName>
 	<Name>body</Name>
 	<CharactersFile href="" />
+	<FontFile href="/Fonts/Files/PTSans-Regular.ttf" />
+	<FallbackFontFiles />
 </Font>
