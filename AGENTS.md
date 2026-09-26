@@ -12,7 +12,7 @@ Along with the game, there are Map Editor and Server apps for it.
 
 ## Coding
 Few rules:
-- If you have any questions - ask before coding anything!
+- If you have any questions or if anything is ambiguous - ask before coding anything!
 - On Windows, don't try build anything with regular system/CMD/Powershell CMake, this project used Visual Studio CMake and VS Developer Environment. On linux, you can use system CMake.
 - Add some comments when you make or change the code to make it clear what was done
 - Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
