@@ -10,6 +10,8 @@
 
 #include <cstdint>
 
+#include <fmt/format.h>
+
 const int N_LEADING_PIXELS = 2;
 
 namespace NImage
@@ -258,7 +260,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 {
 	std::vector<uint16_t> *pChars = (std::vector<uint16_t>*)lParam;
 
-	printf( "\nFont: %S %S %S", lpelfe->elfFullName, lpelfe->elfStyle, lpelfe->elfScript );
+	fmt::print( "\nFont: {} {} {}", reinterpret_cast<const char*>( lpelfe->elfFullName ), reinterpret_cast<const char*>( lpelfe->elfStyle ), reinterpret_cast<const char*>( lpelfe->elfScript ) );
 	if ( FontType == TRUETYPE_FONTTYPE )
 	{
 		for ( int nTemp = 0; nTemp < 126; nTemp++ )
@@ -274,7 +276,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 					if ( sCharRanges[nRange].nBit != nTemp )
 						continue;
 
-					printf( "\n\tFound %s [%d-%d]", sCharRanges[nRange].szName, sCharRanges[nRange].nRangeBegin, sCharRanges[nRange].nRangeEnd );
+					fmt::print( "\n\tFound {} [{}-{}]", sCharRanges[nRange].szName, sCharRanges[nRange].nRangeBegin, sCharRanges[nRange].nRangeEnd );
 					for ( int nTemp = sCharRanges[nRange].nRangeBegin; nTemp < sCharRanges[nRange].nRangeEnd; nTemp++ )
 						pChars->push_back( nTemp );
 				}
@@ -283,7 +285,7 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 	}
 	else
 	{
-		printf( "\nRaster" );
+		fmt::print( "\nRaster" );
 	}
 
 	return TRUE;
@@ -305,14 +307,14 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 /*
 	wstring wsUnicodeName( NStr::ToUnicode( szFaceName ) );
 
-	printf( "\n=============================================================" );
+	fmt::print( "\n=============================================================" );
 
 	uint32_t dwTemp = dwCharSet;
 	CHARSETINFO sCharSetInfo;
 	memset( &sCharSetInfo, 0, sizeof( CHARSETINFO ) );
 	if ( TranslateCharsetInfo( (uint32_t*)dwTemp, &sCharSetInfo, TCI_SRCCHARSET ) )
 	{
-		printf( "\nCS %d CP %d === %x %x %x %x", sCharSetInfo.ciCharset, sCharSetInfo.ciACP, sCharSetInfo.fs.fsUsb[0], sCharSetInfo.fs.fsUsb[1], sCharSetInfo.fs.fsUsb[2], sCharSetInfo.fs.fsUsb[3] );
+		fmt::print( "\nCS {} CP {} === {:x} {:x} {:x} {:x}", sCharSetInfo.ciCharset, sCharSetInfo.ciACP, sCharSetInfo.fs.fsUsb[0], sCharSetInfo.fs.fsUsb[1], sCharSetInfo.fs.fsUsb[2], sCharSetInfo.fs.fsUsb[3] );
 		for ( int nTemp = 0; nTemp < 126; nTemp++ )
 		{
 			int nIndex = nTemp / 32;
@@ -326,7 +328,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 					if ( sCharRanges[nRange].nBit != nTemp )
 						continue;
 
-					printf( "\n\tFound %s [%d-%d]", sCharRanges[nRange].szName, sCharRanges[nRange].nRangeBegin, sCharRanges[nRange].nRangeEnd );
+					fmt::print( "\n\tFound {} [{}-{}]", sCharRanges[nRange].szName, sCharRanges[nRange].nRangeBegin, sCharRanges[nRange].nRangeEnd );
 					for ( int nTemp = sCharRanges[nRange].nRangeBegin; nTemp < sCharRanges[nRange].nRangeEnd; nTemp++ )
 						pChars->push_back( nTemp );
 				}
@@ -334,9 +336,9 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		}
 	}
 	else
-		printf( "\n ERROR: %d", GetLastError() );
+		fmt::print( "\n ERROR: {}", GetLastError() );
 
-	printf( "\n=============================================================" );
+	fmt::print( "\n=============================================================" );
 
 	LOGFONT sLogFont;
 	memset( &sLogFont, 0, sizeof( LOGFONT ) );
@@ -397,7 +399,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		// otherwise reach MultiByteToWideChar as a garbage code page.
 		if ( !TranslateCharsetInfo( (DWORD*)dwCharSet, &cs, TCI_SRCCHARSET ) )
 		{
-			printf( "ERROR: no code page for charset %d, falling back to the system one\n",
+			fmt::print( "ERROR: no code page for charset {}, falling back to the system one\n",
 			        static_cast<int>( dwCharSet ) );
 			cs.ciACP = CP_ACP;
 		}
@@ -431,7 +433,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		}
 		if ( nUnmapped > 0 )
 		{
-			printf( "WARNING: %d of %d characters have no mapping in code page %d\n",
+			fmt::print( "WARNING: {} of {} characters have no mapping in code page {}\n",
 			        nUnmapped, static_cast<int>( chars.size() ), cs.ciACP );
 		}
 	}
@@ -610,9 +612,9 @@ void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, uint32_t dwHeight, uint3
 		NImage::SaveAsTGA( image2, &stream );
 	}
 
-	printf( "font data...\n" );
+	fmt::print( "font data...\n" );
 	CFontGen::CreateFontFormat( pszDstFile, fi, *pChars );
-	printf( "well done\n" );
+	fmt::print( "well done\n" );
 }
 
 // params:
@@ -648,18 +650,18 @@ void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, uint32_t dwHeight, uint3
 
 static void ShowUsage()
 {
-	printf( "FontGenerator utility\n(C) Nival Interactive, 2000\n" );
-	printf( "Usage: FontGen.exe [options] <\"Font Face Name\"> <BinDstName> <PicDstName> [<CharsSrcName>]\n" );
-	printf( "   -h# \t\t font height (in pixels)\n" );
-	printf( "   -w# \t\t font weight (400 = normal. 100 <= w <= 900)\n" );
-	printf( "   -it \t\t italic\n" );
-	printf( "   -aa \t\t antialiased quality\n" );
-	printf( "   -pitch \t font pitch (default, fixed, variable)\n" );
-	printf( "   -<charset>\t second character set\n" );
-	printf( "    charsets: ansi, baltic, chinesebig5, default, easteurope, gb2312,\n" );
-	printf( "              greek, hangul, mac, oem, russian, shiftjis, symbol,\n" );
-	printf( "              turkish, hebrew, arabic, thai\n" );
-	printf( "   [<CharsSrcName>] chars in MBCS formart, all in doublebytes (words)\n" );
+	fmt::print( "FontGenerator utility\n(C) Nival Interactive, 2000\n" );
+	fmt::print( "Usage: FontGen.exe [options] <\"Font Face Name\"> <BinDstName> <PicDstName> [<CharsSrcName>]\n" );
+	fmt::print( "   -h# \t\t font height (in pixels)\n" );
+	fmt::print( "   -w# \t\t font weight (400 = normal. 100 <= w <= 900)\n" );
+	fmt::print( "   -it \t\t italic\n" );
+	fmt::print( "   -aa \t\t antialiased quality\n" );
+	fmt::print( "   -pitch \t font pitch (default, fixed, variable)\n" );
+	fmt::print( "   -<charset>\t second character set\n" );
+	fmt::print( "    charsets: ansi, baltic, chinesebig5, default, easteurope, gb2312,\n" );
+	fmt::print( "              greek, hangul, mac, oem, russian, shiftjis, symbol,\n" );
+	fmt::print( "              turkish, hebrew, arabic, thai\n" );
+	fmt::print( "   [<CharsSrcName>] chars in MBCS formart, all in doublebytes (words)\n" );
 	
 }
 
@@ -676,8 +678,8 @@ int PORT_CDECL main( int argc, char *argv[] )
 		//
 		if ( szParams[i] == "-show-version" )
 		{
-			printf( "Version: %s\n", REVISION_NUMBER_STR );
-			printf( "Build date/time: %s\n", BUILD_DATE_TIME_STR );
+			fmt::print( "Version: {}\n", REVISION_NUMBER_STR );
+			fmt::print( "Build date/time: {}\n", BUILD_DATE_TIME_STR );
 			return 0;
 		}
   }
@@ -768,8 +770,8 @@ int PORT_CDECL main( int argc, char *argv[] )
   NStr::TrimInside( szDstPngFile, '"' );
   NStr::TrimInside( szCharsSrcName, '"' );
   //
-  printf( "generating font \"%s\" (%d:%d:%d:%d)\n", szFaceName.c_str(), dwHeight, dwWeight, bItalic, bAntialias );
-  printf( "image...\n" );
+  fmt::print( "generating font \"{}\" ({}:{}:{:d}:{:d})\n", szFaceName, dwHeight, dwWeight, bItalic, bAntialias );
+  fmt::print( "image...\n" );
   //
   hWnd = GetDesktopWindow();
 
