@@ -45,8 +45,17 @@ private:
 	// or serves as a sign that some object has been already stored - during storing
 	typedef std::unordered_map<void*,CPtr<CObjectBase>> CObjectsHash;
 	CObjectsHash objects;
-	typedef std::unordered_map<void*,bool> CPObjectsHash;
+	// During storing, the ID each object is written under. It used to be the
+	// object's address, which made every save differ from run to run, and in the
+	// 32-bit compatible modes kept only the low half of an x64 address, so two
+	// objects could collide. IDs are now handed out 1, 2, 3... in the order
+	// objects are first reached, which the serialization order fixes. A reader
+	// only ever uses them as keys to match references to objects, so files
+	// written either way load either way.
+	typedef std::unordered_map<void*,uintptr_t> CPObjectsHash;
 	CPObjectsHash storedObjects;
+	uintptr_t nNextObjectID = 1;			// 0 is the null pointer
+	uintptr_t GetStoredObjectID( CObjectBase *pObject, bool *pbNew );
 	typedef std::unordered_map<int,CObjectBase*> CExternalHash;
 	CExternalHash externalObjects;
 	std::list<CObjectBase*> toStore;

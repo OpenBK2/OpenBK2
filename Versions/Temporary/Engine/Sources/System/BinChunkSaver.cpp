@@ -6,6 +6,7 @@
 
 #include "port/debugging.h"
 
+#include <algorithm>
 #include <cstdint>
 
 #include <zlib.h>
@@ -369,12 +370,16 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 	{
 		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
 	}	
-	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
+	// the object's ID rather than its address, see storedObjects
+	void *pID = 0;
+	if ( pObject != 0 )
 	{
-		toStore.push_back( pObject );
-		storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+		bool bNew = false;
+		pID = reinterpret_cast<void*>( GetStoredObjectID( pObject, &bNew ) );
+		if ( bNew )
+			toStore.push_back( pObject );
 	}
-	RawData( &pObject, bMode64 ? sizeof(void*) : 4 );
+	RawData( &pID, bMode64 ? sizeof(void*) : 4 );
 
 #ifndef _FINALRELEASE
 	for ( int i = 0; i < checkers.size(); ++i )
@@ -407,6 +412,19 @@ CObjectBase* CStructureSaver::LoadObject()
 	return 0;
 }
 
+// The ID pObject is written under, assigning the next one on first sight and
+// saying so through *pbNew
+uintptr_t CStructureSaver::GetStoredObjectID( CObjectBase *pObject, bool *pbNew )
+{
+	CPObjectsHash::iterator pos = storedObjects.find( pObject );
+	*pbNew = ( pos == storedObjects.end() );
+	if ( !*pbNew )
+		return pos->second;
+	const uintptr_t nID = nNextObjectID++;
+	storedObjects[pObject] = nID;
+	return nID;
+}
+
 void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 {
 	if ( IsReading() )
@@ -419,7 +437,11 @@ void CStructureSaver::RegisterExternalObject( CObjectBase *pObject, int nID )
 	{
 		if ( pObject != 0 )
 		{
-			storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+			// An ID like any stored object's, so references to it write the same
+			// value the external chunk records for it. Not queued for storing:
+			// the reader supplies external objects itself.
+			bool bNew = false;
+			GetStoredObjectID( pObject, &bNew );
 			externalObjects[ nID ] = pObject;
 		}
 	}
@@ -661,13 +683,15 @@ void CStructureSaver::Finish()
 				f.Write( psz, strlen(psz) );
 				continue;
 			}
+			// the ID StoreObject assigned, not the address, see storedObjects
+			void *pID = reinterpret_cast<void*>( storedObjects[pObject] );
 			obj.Write( &nTypeID, 4 );
-			obj.Write( &pObject, bMode64 ? sizeof(void*) : 4 );
+			obj.Write( &pID, bMode64 ? sizeof(void*) : 4 );
 			obj.Write( &bValid, 1 );
 			// save object data
 			const bool bStartChunkResult = StartChunk( (chunk_id) 1, nObject );
 			ASSERT( bStartChunkResult );
-			DataChunk( 0, &pObject, bMode64 ? sizeof(void*) : 4, 1 );
+			DataChunk( 0, &pID, bMode64 ? sizeof(void*) : 4, 1 );
 			//
 			if ( StartChunk( 1, 1 ) )
 			{
@@ -691,11 +715,18 @@ void CStructureSaver::Finish()
 			WriteShortChunkSave( res, 3, compressVersion, false );
 		}
 		{
+			// In nID order, since a hash map's iteration order is not something
+			// to put in a file, and with each object's ID where its address was
 			CMemoryStream external;
+			std::vector<int> externalIDs;
+			externalIDs.reserve( externalObjects.size() );
 			for ( CExternalHash::iterator i = externalObjects.begin(); i != externalObjects.end(); ++i )
+				externalIDs.push_back( i->first );
+			std::sort( externalIDs.begin(), externalIDs.end() );
+			for ( int k = 0; k < externalIDs.size(); ++k )
 			{
-				int nID = i->first;
-				CObjectBase *p = i->second;
+				int nID = externalIDs[k];
+				CObjectBase *p = reinterpret_cast<CObjectBase*>( storedObjects[externalObjects[nID]] );
 				external.Write( &nID, sizeof(nID) );
 				external.Write( &p, sizeof(p) );
 			}
@@ -707,6 +738,7 @@ void CStructureSaver::Finish()
 	data.Clear();
 	objects.clear();
 	storedObjects.clear();
+	nNextObjectID = 1;
 	toStore.clear();
 	chunks.clear();
 }
