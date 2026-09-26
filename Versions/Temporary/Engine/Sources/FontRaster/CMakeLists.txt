@@ -19,8 +19,13 @@ add_library(FontRaster STATIC
     FontFinder.h
     FontRaster.cpp
     FontRaster.h
+    GposKerning.cpp
+    GposKerning.h
 )
 target_include_directories(FontRaster PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # PRIVATE: no FreeType type appears in FontRaster.h
 target_link_libraries(FontRaster PRIVATE freetype)
 set_target_properties(FontRaster PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+# unit tests, built on request: GposKerning_test
+add_subdirectory(test)

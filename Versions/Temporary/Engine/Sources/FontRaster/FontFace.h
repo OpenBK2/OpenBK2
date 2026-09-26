@@ -70,7 +70,8 @@ public:
 	bool HasGlyph( uint32_t nCodePoint ) const;
 	// Rasterises one character at the fitted size
 	bool RenderGlyph( uint32_t nCodePoint, SGlyphBitmap *pGlyph, std::string *pszError );
-	// Pixels to add to the pen between two characters, from the kern table;
+	// Pixels to add to the pen between two characters, from the kern table, or
+	// from GPOS pair kerning for a face without one (GposKerning.h);
 	// 0 when either is missing or the pair is not kerned
 	int GetKerning( uint32_t nLeft, uint32_t nRight ) const;
 	bool HasKerning() const;

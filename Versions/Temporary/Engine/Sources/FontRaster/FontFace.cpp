@@ -1,9 +1,11 @@
 #include "FontFace.h"
+#include "GposKerning.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
+#include FT_TRUETYPE_TAGS_H
 
 #include <algorithm>
 #include <cmath>
@@ -143,6 +145,8 @@ struct CFace::SImpl
 	SFaceMetrics metrics;
 	std::vector<uint8_t> gammaTable;
 	bool bFitted = false;
+	// GPOS pair kerning, read only for a face with no legacy kern table
+	std::unique_ptr<CGposKerning> pGpos;
 
 	~SImpl()
 	{
@@ -169,6 +173,24 @@ struct CFace::SImpl
 		}
 		return true;
 	}
+
+	// Reads the GPOS kerning of a face that has no kern table. The kern table,
+	// where there is one, stays the only source, as it was for GDI, so that a
+	// face FontGen baked before bakes the same.
+	void ReadGpos()
+	{
+		if ( FT_HAS_KERNING( pFace ) )
+			return;
+		FT_ULong nLength = 0;
+		if ( FT_Load_Sfnt_Table( pFace, TTAG_GPOS, 0, nullptr, &nLength ) != 0 || nLength == 0 )
+			return;
+		std::vector<uint8_t> table( nLength );
+		if ( FT_Load_Sfnt_Table( pFace, TTAG_GPOS, 0, table.data(), &nLength ) != 0 )
+			return;
+		std::unique_ptr<CGposKerning> pKerning( new CGposKerning( std::move( table ) ) );
+		if ( !pKerning->IsEmpty() )
+			pGpos = std::move( pKerning );
+	}
 };
 
 CFace::CFace() : pImpl( new SImpl ) {}
@@ -189,7 +211,10 @@ std::unique_ptr<CFace> CFace::OpenFile( const std::string &szFile, int nFaceInde
 		*pszError = DescribeError( ( "FT_New_Face on \"" + szFile + "\"" ).c_str(), nError );
 		return nullptr;
 	}
-	return pFace->pImpl->SelectCharmap( pszError ) ? std::move( pFace ) : nullptr;
+	if ( !pFace->pImpl->SelectCharmap( pszError ) )
+		return nullptr;
+	pFace->pImpl->ReadGpos();
+	return pFace;
 }
 
 std::unique_ptr<CFace> CFace::OpenMemory( std::shared_ptr<const std::vector<uint8_t>> data, int nFaceIndex, std::string *pszError )
@@ -214,7 +239,10 @@ std::unique_ptr<CFace> CFace::OpenMemory( std::shared_ptr<const std::vector<uint
 		*pszError = DescribeError( "FT_New_Memory_Face", nError );
 		return nullptr;
 	}
-	return pFace->pImpl->SelectCharmap( pszError ) ? std::move( pFace ) : nullptr;
+	if ( !pFace->pImpl->SelectCharmap( pszError ) )
+		return nullptr;
+	pFace->pImpl->ReadGpos();
+	return pFace;
 }
 
 bool CFace::Fit( const SOptions &options, const std::vector<uint32_t> &sizingCodePoints, std::string *pszError )
@@ -413,24 +441,33 @@ bool CFace::RenderGlyph( uint32_t nCodePoint, SGlyphBitmap *pGlyph, std::string 
 
 bool CFace::HasKerning() const
 {
-	return FT_HAS_KERNING( pImpl->pFace );
+	return FT_HAS_KERNING( pImpl->pFace ) || pImpl->pGpos != nullptr;
 }
 
 int CFace::GetKerning( uint32_t nLeft, uint32_t nRight ) const
 {
-	// Kerning from the font's kern table, which is also all GDI's
-	// GetKerningPairs reads; pairs defined only in GPOS are not seen by either.
-	// Grid fitted to whole pixels when hinting, as GDI's are.
-	if ( !FT_HAS_KERNING( pImpl->pFace ) )
-	{
-		return 0;
-	}
 	const FT_UInt nLeftIndex = FT_Get_Char_Index( pImpl->pFace, nLeft );
 	const FT_UInt nRightIndex = FT_Get_Char_Index( pImpl->pFace, nRight );
 	if ( nLeftIndex == 0 || nRightIndex == 0 )
 	{
 		return 0;
 	}
+	// Without a kern table, the pair kerning in GPOS, which FreeType does not
+	// read: font units scaled to pixels at the fitted size and rounded to whole
+	// pixels, as FreeType rounds its own
+	if ( !FT_HAS_KERNING( pImpl->pFace ) )
+	{
+		if ( pImpl->pGpos == nullptr || nLeftIndex > 0xFFFF || nRightIndex > 0xFFFF )
+		{
+			return 0;
+		}
+		const int nUnits = pImpl->pGpos->GetAdjustment( static_cast<uint16_t>( nLeftIndex ), static_cast<uint16_t>( nRightIndex ) );
+		const FT_Pos nScaled = FT_MulFix( nUnits, pImpl->pFace->size->metrics.x_scale );
+		return static_cast<int>( std::lround( nScaled / 64.0 ) );
+	}
+	// Kerning from the font's kern table, which is also all GDI's
+	// GetKerningPairs reads. Grid fitted to whole pixels when hinting, as GDI's
+	// are.
 	const FT_UInt nMode = pImpl->options.eHinting == HINTING_NONE ? FT_KERNING_UNFITTED : FT_KERNING_DEFAULT;
 	FT_Vector delta = { 0, 0 };
 	if ( FT_Get_Kerning( pImpl->pFace, nLeftIndex, nRightIndex, nMode, &delta ) != 0 )
