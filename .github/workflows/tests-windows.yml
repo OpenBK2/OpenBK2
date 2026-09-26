@@ -25,10 +25,10 @@ jobs:
             arch: x64
 
     steps:
-      # Engine sources only, not the 11 GB of game data; see build-windows.yml.
-      # Nothing the tests read at run time lives outside these directories.
-      # Except the fonts: GposKerning_test reads one, and the build packs
-      # obk2_fonts.pak from them. 3 MB.
+      # Engine sources and font fixtures, not the 11 GB of game data.
+      # Fonts supplies the font files/textures for the tests and obk2_fonts.pak
+      # (3 MB). bin/fonts supplies the baked glyph metrics TextVerticalAlignment
+      # reads by resource UUID; the textures alone are not enough (308 KB).
       - uses: actions/checkout@v6
         with:
           submodules: recursive
@@ -39,6 +39,7 @@ jobs:
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
+            Versions/Current/Data/bin/fonts
 
       # MSVC, Ninja, the DirectX SDK and ccache. 3Dmotor links dxsdk::d3d9, and the
       # tests link 3Dmotor, so they need the SDK exactly as the game build does.

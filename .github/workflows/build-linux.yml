@@ -34,9 +34,9 @@ jobs:
       # all of it game data; see build-windows.yml for the reasoning. Note that of
       # Versions/Current only the fonts are checked out, so the four DDS tests that
       # read the shipped textures skip themselves rather than fail.
-      # Versions/Current/Data/Fonts is the one piece of game data the build reads:
-      # obk2_fonts.pak is packed from it, and GposKerning_test reads a font from it.
-      # It is 3 MB.
+      # Fonts supplies the font files/textures for the tests and obk2_fonts.pak
+      # (3 MB). bin/fonts supplies the baked glyph metrics TextVerticalAlignment
+      # reads by resource UUID; the textures alone are not enough (308 KB).
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -48,6 +48,7 @@ jobs:
             third_party
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
+            Versions/Current/Data/bin/fonts
 
       - name: Setup build environment
         uses: ./.github/actions/setup-linux-build
