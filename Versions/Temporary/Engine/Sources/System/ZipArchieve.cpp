@@ -257,30 +257,40 @@ CDataStream *CZipFile::OpenFile( const SFileHeader &ghdr )
 	// Skip extra fields
 	int nBeginPos = ghdr.dwHdrOffset + hdr.wFileNameLen + hdr.wExtraLen + sizeof( hdr );
 
+	// The sizes come from the central directory entry, ghdr, not from this
+	// local header. A zip written as a stream sets bit 3 of the flags and
+	// leaves the local header's sizes zero, the real ones following the data
+	// in a descriptor; the central directory always has them. libarchive, and
+	// so cmake -E tar, writes zips that way, and so do other modern tools a
+	// mod's pak might be made with: read through the local sizes, every file in
+	// such an archive opened empty.
+	const uint32_t dwCSize = ghdr.dwCSize;
+	const uint32_t dwUSize = ghdr.dwUSize;
+
 	// in the STORE case we can create range adaptor for direct read
-	if ( hdr.wCompression == SZipLocalFileHeader::COMP_STORE ) 
+	if ( hdr.wCompression == SZipLocalFileHeader::COMP_STORE )
 	{
-		if ( nBeginPos + hdr.dwCSize > nTotalSize )
+		if ( nBeginPos + dwCSize > nTotalSize )
 			return 0;
-		return new CMemoryMappedFileFragment( &mmf, nBeginPos, hdr.dwCSize );
+		return new CMemoryMappedFileFragment( &mmf, nBeginPos, dwCSize );
 	}
 	// create new memory stream and setup stats
 	CMemoryStream *pDstStream = new CMemoryStream;
-	pDstStream->SetSizeDiscard( hdr.dwUSize );
+	pDstStream->SetSizeDiscard( dwUSize );
 	const void *pBuf = pDstStream->GetBuffer();
 	// proceed with DEFLAT unpacking
 	NI_ASSERT( hdr.wCompression == SZipLocalFileHeader::COMP_DEFLAT, "Can support only STORE and DEFLAT cpmpression methods" );
 
 	// Alloc compressed data buffer and read the whole stream
-	CMemoryMappedFileFragment cprData( &mmf, nBeginPos, hdr.dwCSize );
-	const unsigned char *pcData = cprData.GetBuffer();//new char[hdr.dwCSize];
+	CMemoryMappedFileFragment cprData( &mmf, nBeginPos, dwCSize );
+	const unsigned char *pcData = cprData.GetBuffer();//new char[dwCSize];
 
 	// Setup the inflate stream.
 	z_stream stream;
 	stream.next_in = (Bytef*)pcData;
-	stream.avail_in = (uInt)hdr.dwCSize;
+	stream.avail_in = (uInt)dwCSize;
 	stream.next_out = (Bytef*)pBuf;
-	stream.avail_out = hdr.dwUSize;
+	stream.avail_out = dwUSize;
 	stream.zalloc = (alloc_func)0;
 	stream.zfree = (free_func)0;
 
