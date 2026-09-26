@@ -239,7 +239,9 @@ look-alike, has no Cyrillic, and no open face matched Impact's weight.
   their own glyphs but unjoined and unordered. HarfBuzz and a bidi algorithm
   per line would fix it; the atlas takes characters one at a time, and would
   need to take glyph indices for that.
-- Noto Sans and Oswald keep their kerning only in GPOS, which FT_Get_Kerning
-  does not read, so they are not kerned.
+- Kerning comes from a font's kern table, or from its GPOS pair adjustments
+  when it has none (FontRaster/GposKerning.h), which is how Oswald and Noto
+  Sans are kerned. Contextual kerning and a variable font's per-instance
+  kerning deltas are not read, so Oswald Bold is kerned as the Regular is.
 - The first character that needs a system font costs a scan of the installed
   fonts, up to about a second over Windows' own.
