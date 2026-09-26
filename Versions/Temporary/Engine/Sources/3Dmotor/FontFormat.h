@@ -56,6 +56,24 @@ public:
 	int GetAveCharWidth() const { return nAveCharWidth; }
 	int GetMaxCharWidth() const { return nMaxCharWidth; }
 	//
+	// For runtime fonts (GRuntimeFont.h), which start empty and gain a character
+	// the first time some text uses it. A baked font is loaded whole and never
+	// calls these. References GetChar handed out stay valid as characters are
+	// added, the map being node based.
+	void SetMetrics( int _nHeight, int _nExternalLeading, int _nAveCharWidth, int _nMaxCharWidth, uint8_t _cCharSet, uint16_t _wDefaultChar )
+	{
+		nHeight = _nHeight;
+		nExternalLeading = _nExternalLeading;
+		nAveCharWidth = _nAveCharWidth;
+		nMaxCharWidth = _nMaxCharWidth;
+		cCharSet = _cCharSet;
+		wDefaultChar = _wDefaultChar;
+	}
+	bool HasChar( const uint16_t c ) const { return chars.find( c ) != chars.end(); }
+	void SetChar( const uint16_t c, const STFCharacter &character ) { chars[c] = character; }
+	bool HasKern( uint16_t wChar, uint16_t wLastChar ) const { return kerns.find( (uint32_t(wLastChar) << 16) | uint32_t(wChar) ) != kerns.end(); }
+	void SetKern( uint16_t wChar, uint16_t wLastChar, int nKern ) { kerns[(uint32_t(wLastChar) << 16) | uint32_t(wChar)] = nKern; }
+	//
 	int operator&( CStructureSaver &f );
 };
 

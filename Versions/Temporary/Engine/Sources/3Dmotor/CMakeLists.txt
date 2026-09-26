@@ -53,6 +53,7 @@ set(SOURCES
     GLightPerVertexSSE2.cpp
     GLMLightState.cpp
     GLocale.cpp
+    GRuntimeFont.cpp
     GMaterial.cpp
     GMatShare.cpp
     GMesh.cpp
@@ -125,6 +126,8 @@ target_link_libraries(3Dmotor PRIVATE
     fastgltf::fastgltf
     Boost::sort
     Boost::uuid
+    # FreeType, for the fonts the game rasterises itself; see GRuntimeFont.h
+    FontRaster
 )
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only fmt::fmt-header-only)
 if(WIN32)

@@ -4,9 +4,11 @@
 #include "GTexture.h"
 #include "System/BasicShare.h"
 #include "DBScene.h"
+#include "GRuntimeFont.h"
 
 namespace NGScene
 {
+
 extern CBasicShare<SIntResKey, CFileFont> shareFonts;
 extern CBasicShare<STextureKey, CFileTexture, STextureKeyHash> shareTextures;
 
@@ -36,8 +38,52 @@ void CTextLocaleInfo::AddFont( const NDb::SFont *pFont )
 		return;
 	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pFormatInfo( shareFonts.Get( SResKey<int>(pFont->uid, pFont->GetRecordID()) ) );
 	pFormatInfo.Refresh();
-	if ( const CFontFormatInfo *pInfo = pFormatInfo->GetValue() )
+	const CFontFormatInfo *pInfo = pFormatInfo->GetValue();
+	// The baked font is registered even when the record names a font file, so
+	// that it still answers should that file turn out to be unusable
+	if ( pInfo != nullptr )
 		fonts.push_back( new CFontInfo( SFont( pInfo->GetHeight(), pFont->szName ), shareTextures.Get( STextureKey( pFont->pTexture ) ), pFormatInfo ) );
+	if ( !pFont->szFontFile.empty() )
+		runtimeRecords[pFont->szName] = pFont;
+}
+
+void CTextLocaleInfo::ClearAllFonts()
+{
+	fonts.clear();
+	// the records go with the MOD that is being detached, and fonts made from
+	// them with the records
+	runtimeRecords.clear();
+	runtimeFonts.clear();
+}
+
+// Runtime fonts below this cell height are not made. The UI asks for them only
+// in passing, such as while a window is still being created at a few pixels
+// tall, and a font fitted to them would be unreadable and waste an atlas.
+const int N_MIN_RUNTIME_FONT_SIZE = 6;
+
+CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
+{
+	if ( sFont.nSize < N_MIN_RUNTIME_FONT_SIZE )
+		return 0;
+	std::unordered_map<std::string, const NDb::SFont*>::const_iterator record = runtimeRecords.find( sFont.szName );
+	if ( record == runtimeRecords.end() )
+		return 0;
+	const std::pair<std::string, int> key( sFont.szName, sFont.nSize );
+	std::map<std::pair<std::string, int>, CObj<CFontInfo>>::iterator made = runtimeFonts.find( key );
+	if ( made == runtimeFonts.end() )
+	{
+		// A font is registered under its exact size, so SearchFont-style nearest
+		// matching never applies to it, and it draws at scale 1: its cell, and
+		// with no external leading its line space, is the size asked for.
+		CObj<CFontInfo> pFont;
+		CObj<CGlyphAtlas> pAtlas = new CGlyphAtlas();
+		if ( pAtlas->Init( record->second, sFont.nSize ) )
+			pFont = new CRuntimeFontInfo( sFont, pAtlas );
+		else
+			DebugTrace( "runtime font \"%s\" %d px could not be made, the baked font is used", sFont.szName.c_str(), sFont.nSize );
+		made = runtimeFonts.insert( std::make_pair( key, pFont ) ).first;
+	}
+	return made->second;
 }
 
 void CTextLocaleInfo::Setup( const CVec2 &_vScreenRect )
@@ -80,7 +126,9 @@ CFontInfo* CTextLocaleInfo::SearchFont( const SFont &sFont )
 
 CFontInfo* CTextLocaleInfo::GetFont( const SFont &sFont )
 {
-	CPtr<CFontInfo> pResFontInfo = 0;
+	CPtr<CFontInfo> pResFontInfo = GetRuntimeFont( sFont );
+	if ( pResFontInfo )
+		return pResFontInfo;
 
 	pResFontInfo = SearchFont( sFont );
 	if ( !pResFontInfo )

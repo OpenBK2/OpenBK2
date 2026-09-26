@@ -162,6 +162,14 @@ void CMLTextObject::Generate(  )
 	sSize.y = sFontInfo.pInfo->GetLineSpace() * sFontInfo.scale.y;
 	pTexture = sFontInfo.pFont->GetTexture();
 
+	// A runtime font rasterises whatever characters of this text it has not
+	// drawn yet, so that GetChar below finds them; a baked font does nothing
+	{
+		std::wstring wsText;
+		pStream->GetString( nStrStart, nStrSize, &wsText );
+		sFontInfo.pFont->PrepareGlyphs( wsText );
+	}
+
 	float fX = 0;
 	wchar_t wcLastChar = 0;
 	pStream->Seek( nStrStart );
