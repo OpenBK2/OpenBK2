@@ -5,6 +5,7 @@
 #include "Misc/StrProc.h"
 #include <algorithm>
 #include "System/FileUtils.h"
+#include "FontRaster.h"
 
 #include "port/cdecl.h"
 
@@ -291,6 +292,8 @@ int CALLBACK EnumFontFamExProc( ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, 
 	return TRUE;
 }
 
+void BuildTranslation( uint32_t dwCharSet, const std::vector<uint16_t> &chars, std::unordered_map<uint16_t, uint16_t> *pTranslate );
+
 void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic, uint32_t dwCharSet,
 	bool bAntialias, uint32_t dwPitch, LPCTSTR pszFaceName, std::vector<uint16_t> *pChars )
 {
@@ -387,6 +390,18 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
   // get text metrics and char widths:
   MeasureFont( hdc, &fi, &chars );
 	// translate chars to UNICODE and re-map kerns and chars
+	BuildTranslation( dwCharSet, chars, &fi.translate );
+  // select old font
+  ::SelectObject( hdc, hOldFont );
+  // release HDC:
+  ReleaseDC( hWnd, hdc );
+}
+
+// Maps each character code FontGen bakes, a single byte in the code page that
+// dwCharSet implies, to the Unicode code point the engine looks glyphs up by.
+// Used by both rasterisers; a byte with no mapping is left out of *pTranslate.
+void BuildTranslation( uint32_t dwCharSet, const std::vector<uint16_t> &chars, std::unordered_map<uint16_t, uint16_t> *pTranslate )
+{
 	{
 		CHARSETINFO cs;
 		Zero( cs );
@@ -397,7 +412,9 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 		// Checked rather than asserted: ASSERT does not evaluate its argument in
 		// this tree, and cs.ciACP is about to be used. An unknown charset would
 		// otherwise reach MultiByteToWideChar as a garbage code page.
-		if ( !TranslateCharsetInfo( (DWORD*)dwCharSet, &cs, TCI_SRCCHARSET ) )
+		// Widened through uintptr_t first, since on x64 a pointer is wider than
+		// the charset value it carries.
+		if ( !TranslateCharsetInfo( reinterpret_cast<DWORD*>( static_cast<uintptr_t>( dwCharSet ) ), &cs, TCI_SRCCHARSET ) )
 		{
 			fmt::print( "ERROR: no code page for charset {}, falling back to the system one\n",
 			        static_cast<int>( dwCharSet ) );
@@ -427,7 +444,7 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 			const char cByte = static_cast<char>( chars[i] );
 			wchar_t wch = 0;
 			if ( ::MultiByteToWideChar( cs.ciACP, MB_ERR_INVALID_CHARS, &cByte, 1, &wch, 1 ) == 1 )
-				fi.translate[ chars[i] ] = wch;
+				( *pTranslate )[ chars[i] ] = wch;
 			else
 				++nUnmapped;
 		}
@@ -437,10 +454,6 @@ void LoadFont( HWND hWnd, SFontInfo *pFI, int nHeight, int nWeight, bool bItalic
 			        nUnmapped, static_cast<int>( chars.size() ), cs.ciACP );
 		}
 	}
-  // select old font
-  ::SelectObject( hdc, hOldFont );
-  // release HDC:
-  ReleaseDC( hWnd, hdc );
 }
 
 // draw font in the DC
@@ -523,7 +536,45 @@ class CFontGen
 {
 public:
 	static void CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const std::vector<uint16_t> &chars );
+	static void CreateFontFormat( const char *pszDestFile, const NFontRaster::SFont &font, uint8_t cCharSet, uint16_t wDefaultChar );
 };
+
+// The FreeType counterpart of the GDI CreateFontFormat below. FontRaster
+// already works in GDI's conventions, cell, ABC widths and all, so this is a
+// field for field copy; the characters are keyed by code point, which is what
+// the GDI path arrives at after translating.
+void CFontGen::CreateFontFormat( const char *pszDestFile, const NFontRaster::SFont &font, uint8_t cCharSet, uint16_t wDefaultChar )
+{
+	CObj<CFontFormatInfo> pFormat( new CFontFormatInfo );
+	CFontFormatInfo &format = *pFormat;
+	format.nHeight = font.nCellHeight;
+	format.nExternalLeading = font.nExternalLeading;
+	format.nAveCharWidth = font.nAveCharWidth;
+	format.nMaxCharWidth = font.nMaxCharWidth;
+	format.cCharSet = cCharSet;
+	format.wDefaultChar = wDefaultChar;
+	for ( const NFontRaster::SKerningPair &pair : font.kerns )
+	{
+		format.kerns[( pair.nLeft << 16 ) | pair.nRight] = pair.nAmount;
+	}
+	for ( const NFontRaster::SGlyph &glyph : font.glyphs )
+	{
+		STFCharacter &character = format.chars[static_cast<uint16_t>( glyph.nCodePoint )];
+		character.x1 = glyph.x1;
+		character.y1 = glyph.y1;
+		character.x2 = glyph.x2;
+		character.y2 = glyph.y2;
+		character.nA = glyph.nA;
+		character.nBC = glyph.nBC;
+		character.nWidth = glyph.nWidth;
+	}
+	CFileStream file( pszDestFile, CFileStream::WIN_CREATE );
+	if ( file.IsOk() )
+	{
+		CPtr<IBinSaver> pSaver = CreateBinSaver( &file, SAVER_MODE_WRITE );
+		pSaver->Add( 1, &pFormat );
+	}
+}
 void CFontGen::CreateFontFormat( const char *pszDestFile, const SFontInfo &fi, const std::vector<uint16_t> &chars )
 {
 	const TEXTMETRIC &tm = fi.tm;
@@ -617,6 +668,80 @@ void Generate( LPCSTR pszDstPngFile, LPCSTR pszDstFile, uint32_t dwHeight, uint3
 	fmt::print( "well done\n" );
 }
 
+// GDI's tmDefaultChar for every TrueType face measured (Tahoma, Impact and
+// Arial, RUSSIAN_CHARSET), and the code the GDI path therefore stores the
+// default glyph under. No font maps it, so it gets .notdef, the box GDI draws.
+const uint16_t W_DEFAULT_CHAR = 0x1F;
+
+// Generate with FreeType instead of GDI: the same character set, blob and TGA,
+// but rasterised from szFontFile at exactly nCellHeight pixels. Returns false
+// when the font cannot be rasterised.
+bool GenerateWithFreeType( const char *pszDstPngFile, const char *pszDstFile, const NFontRaster::SOptions &options,
+	uint32_t dwCharSet, std::vector<uint16_t> *pChars )
+{
+	std::vector<uint16_t> &chars = *pChars;
+	if ( find( chars.begin(), chars.end(), W_DEFAULT_CHAR ) == chars.end() )
+		chars.push_back( W_DEFAULT_CHAR );
+	sort( chars.begin(), chars.end() );
+	// The engine looks glyphs up by code point, so the code page bytes are
+	// translated first, exactly as the GDI path does; a byte with no mapping
+	// has no code point to be stored under and is left out.
+	std::unordered_map<uint16_t, uint16_t> translate;
+	BuildTranslation( dwCharSet, chars, &translate );
+	std::vector<uint32_t> codePoints;
+	codePoints.reserve( chars.size() );
+	for ( int i = 0; i != chars.size(); ++i )
+	{
+		std::unordered_map<uint16_t, uint16_t>::const_iterator pos = translate.find( chars[i] );
+		if ( pos != translate.end() )
+			codePoints.push_back( pos->second );
+	}
+
+	NFontRaster::SFont font;
+	std::string szError;
+	if ( !NFontRaster::Rasterise( options, codePoints, &font, &szError ) )
+	{
+		fmt::print( "ERROR: {}\n", szError );
+		return false;
+	}
+	fmt::print( "cell {} = ascent {} + descent {}, external leading {}, average width {}, max width {}, {:.3f} px per em\n",
+	        font.nCellHeight, font.nAscent, font.nDescent, font.nExternalLeading, font.nAveCharWidth, font.nMaxCharWidth,
+	        font.fPixelsPerEm );
+	fmt::print( "{} glyphs, {} kerning pairs, atlas {}x{}\n", static_cast<int>( font.glyphs.size() ),
+	        static_cast<int>( font.kerns.size() ), font.nAtlasWidth, font.nAtlasHeight );
+	// .notdef for the default character is expected; anything more is a
+	// character set the font does not cover
+	for ( const uint32_t nCodePoint : font.missing )
+	{
+		if ( nCodePoint != W_DEFAULT_CHAR )
+			fmt::print( "WARNING: U+{:04X} is not in the font and got its .notdef glyph\n", static_cast<unsigned>( nCodePoint ) );
+	}
+	for ( const uint32_t nCodePoint : font.clipped )
+		fmt::print( "WARNING: U+{:04X} reaches outside its cell and was clipped to it\n", static_cast<unsigned>( nCodePoint ) );
+
+	fmt::print( "image...\n" );
+	// White, with the coverage as alpha, which is what the GDI path produces
+	NImage::CImage image;
+	image.SetSizes( font.nAtlasWidth, font.nAtlasHeight );
+	for ( int y = 0; y < font.nAtlasHeight; ++y )
+	{
+		for ( int x = 0; x < font.nAtlasWidth; ++x )
+			image[y][x] = CVec4( 1, 1, 1, font.atlas[static_cast<size_t>( y ) * font.nAtlasWidth + x] / 255.0f );
+	}
+	CFileStream stream( pszDstPngFile, CFileStream::WIN_CREATE );
+	if ( stream.IsOk() )
+	{
+		CArray2D<uint32_t> image2( image.GetSizeX(), image.GetSizeY() );
+		NImage::Convert( &image2, image );
+		NImage::SaveAsTGA( image2, &stream );
+	}
+
+	fmt::print( "font data...\n" );
+	CFontGen::CreateFontFormat( pszDstFile, font, static_cast<uint8_t>( dwCharSet ), W_DEFAULT_CHAR );
+	fmt::print( "well done\n" );
+	return true;
+}
+
 // params:
 //   height (in pixels)
 //   weight (100-900. normal == 400, bold == 700)
@@ -662,7 +787,15 @@ static void ShowUsage()
 	fmt::print( "              greek, hangul, mac, oem, russian, shiftjis, symbol,\n" );
 	fmt::print( "              turkish, hebrew, arabic, thai\n" );
 	fmt::print( "   [<CharsSrcName>] chars in MBCS formart, all in doublebytes (words)\n" );
-	
+	fmt::print( "\n" );
+	fmt::print( "   -ft \t\t rasterise with FreeType instead of GDI. The face name is then\n" );
+	fmt::print( "       \t\t the font file, e.g. C:\\Windows\\Fonts\\tahoma.ttf, and -h is the\n" );
+	fmt::print( "       \t\t exact cell height, which GDI can only approximate. -w, -it and\n" );
+	fmt::print( "       \t\t -pitch do not apply: pick the bold or italic file instead\n" );
+	fmt::print( "   -hint=<mode>\t FreeType hinting: none, light (default) or normal\n" );
+	fmt::print( "   -gamma=<g>\t FreeType coverage gamma, default 1; above 1 thickens edges\n" );
+	fmt::print( "   -pad=<n>\t FreeType blank pixels between atlas cells, default 2\n" );
+
 }
 
 int PORT_CDECL main( int argc, char *argv[] )
@@ -732,9 +865,45 @@ int PORT_CDECL main( int argc, char *argv[] )
   // font face name
   std::string szFaceName = "Times New Roman", szDstFile, szDstPngFile, szCharsSrcName;
 	int nOrdinaryParamCount = 0;
+	// FreeType settings; the defaults are FontRaster's own
+	bool bFreeType = false;
+	NFontRaster::SOptions ftOptions;
   // -h20 -w400 -it -russian -aa -variable "Times New Roman"
   for ( std::vector<std::string>::const_iterator pos = szParams.begin(); pos != szParams.end(); ++pos )
   {
+		// Before the -h test below, which would otherwise take -hint=... for a
+		// height. The parameters are already lower case.
+		if ( *pos == "-ft" )
+		{
+			bFreeType = true;
+			continue;
+		}
+		if ( pos->find( "-hint=" ) == 0 )
+		{
+			const std::string szMode = pos->substr( 6 );
+			if ( szMode == "none" )
+				ftOptions.eHinting = NFontRaster::HINTING_NONE;
+			else if ( szMode == "light" )
+				ftOptions.eHinting = NFontRaster::HINTING_LIGHT;
+			else if ( szMode == "normal" )
+				ftOptions.eHinting = NFontRaster::HINTING_NORMAL;
+			else
+			{
+				fmt::print( "ERROR: unknown hinting mode \"{}\"\n", szMode );
+				return 0xDEAD;
+			}
+			continue;
+		}
+		if ( pos->find( "-gamma=" ) == 0 )
+		{
+			ftOptions.fGamma = static_cast<float>( atof( pos->c_str() + 7 ) );
+			continue;
+		}
+		if ( pos->find( "-pad=" ) == 0 )
+		{
+			ftOptions.nPadding = atoi( pos->c_str() + 5 );
+			continue;
+		}
     if ( charsets.find(*pos) != charsets.end() )
       dwCharSet = charsets[*pos];
     else if ( pitches.find(*pos) != pitches.end() )
@@ -802,7 +971,14 @@ int PORT_CDECL main( int argc, char *argv[] )
 			chars.push_back( i );
 		}
 	}
-	Generate( szDstPngFile.c_str(), szDstFile.c_str(), dwHeight, dwWeight, bItalic, dwCharSet, 
+	if ( bFreeType )
+	{
+		ftOptions.szFontFile = szFaceName;
+		ftOptions.nCellHeight = static_cast<int>( dwHeight );
+		ftOptions.bAntialias = bAntialias;
+		return GenerateWithFreeType( szDstPngFile.c_str(), szDstFile.c_str(), ftOptions, dwCharSet, &chars ) ? 0 : 1;
+	}
+	Generate( szDstPngFile.c_str(), szDstFile.c_str(), dwHeight, dwWeight, bItalic, dwCharSet,
 		bAntialias, dwPitch, szFaceName.c_str(), &chars );
 
 	return 0;

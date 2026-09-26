@@ -34,6 +34,10 @@ add_subdirectory("Parser")
 add_subdirectory("dbindex")
 add_subdirectory("dbstruct")
 
+# FreeType glyph rasterisation behind a small interface of its own, used by
+# FontGen to bake atlases and meant for the game to render text with later.
+add_subdirectory("FontRaster")
+
 # The font baker. Windows only while it still rasterises with GDI; its own
 # CMakeLists returns early elsewhere.
 add_subdirectory("FontGen")
