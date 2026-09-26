@@ -6,6 +6,9 @@
 #include "DBScene.h"
 #include "GRuntimeFont.h"
 
+#include <algorithm>
+#include <cmath>
+
 namespace NGScene
 {
 
@@ -61,6 +64,11 @@ void CTextLocaleInfo::ClearAllFonts()
 // tall, and a font fitted to them would be unreadable and waste an atlas.
 const int N_MIN_RUNTIME_FONT_SIZE = 6;
 
+// User-adjustable size of the sharp runtime fonts: 1.0 is the original size,
+// 1.2 is 20% larger in both dimensions. Apply it before rasterising, so the
+// extra size adds real pixels instead of magnifying the atlas and blurring it.
+constexpr float F_RUNTIME_FONT_SCALE = 1.2f;
+
 CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 {
 	if ( sFont.nSize < N_MIN_RUNTIME_FONT_SIZE )
@@ -76,7 +84,12 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 		// size; extra room for the replacement's accents must not scale it down.
 		CObj<CFontInfo> pFont;
 		CObj<CGlyphAtlas> pAtlas = new CGlyphAtlas();
-		if ( pAtlas->Init( record->second, sFont.nSize, sFont.nWidth ) )
+		const int nRasterHeight = (std::max)( 1, static_cast<int>( std::lround( sFont.nSize * F_RUNTIME_FONT_SCALE ) ) );
+		const int nRasterWidth = sFont.nWidth > 0 ?
+			(std::max)( 1, static_cast<int>( std::lround( sFont.nWidth * F_RUNTIME_FONT_SCALE ) ) ) : 0;
+		// The atlas saves these final dimensions, so loading a save never applies
+		// the multiplier a second time to its already laid out text.
+		if ( pAtlas->Init( record->second, nRasterHeight, nRasterWidth ) )
 			pFont = new CRuntimeFontInfo( sFont, pAtlas );
 		else
 			DebugTrace( "runtime font \"%s\" %d px could not be made, the baked font is used", sFont.szName.c_str(), sFont.nSize );

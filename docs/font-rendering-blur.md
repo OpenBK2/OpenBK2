@@ -210,6 +210,12 @@ ratio. The replacement is fitted to those dimensions, so changing font families
 does not silently change the apparent UI text size. No GUI font sizes change.
 If no usable reference is available, the previous ink fitting is used.
 
+`F_RUNTIME_FONT_SCALE` in `3Dmotor/GLocale.cpp` adjusts all runtime font sizes.
+It defaults to `1.2f` (20% larger in both dimensions); `1.0f` restores the
+original reference size. Change it and rebuild to tune the size. The multiplier
+is applied before rasterisation, retaining sharpness, and saved atlases store
+the final dimensions so loading a save does not scale its text again.
+
 The first runtime version fitted the tallest ink across six European code
 pages into the requested line height. Oswald's accents and low marks then
 reduced its capitals to about 56% of the cell, versus 65% in the shipped h2
