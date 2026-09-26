@@ -11,14 +11,13 @@ project(FontGen)
 # by name, which means the editor's font export has been dead in this port.
 #
 # The rasteriser is FontRaster, which is FreeType, and the code page tables
-# are Windows' own answers recorded in CodePageTables.inc, so nothing here
+# are Windows' own answers recorded in FontRaster/CodePageTables.inc, so nothing here
 # calls Windows and the tool builds and runs on Linux as well. It rasterised
 # with GDI until that path was replaced.
 #
 # A plain executable, not the SHARED library with an export header that every
 # engine subsystem is: nothing links a tool, so it exports nothing.
 set(SOURCES
-    CodePages.cpp
     FontGen.cpp
     FontFormat.cpp
     stdafx.cpp

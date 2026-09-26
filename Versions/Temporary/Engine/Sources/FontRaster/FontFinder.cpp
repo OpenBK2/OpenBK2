@@ -50,13 +50,14 @@ int WeightFromStyleName( const std::string &szStyle, int nDefault )
 	return nDefault;
 }
 
-// Describes the face at nFaceIndex in szFile, or returns false if FreeType
-// cannot open it
-bool DescribeFace( const FT_Library pLibrary, const std::string &szFile, const int nFaceIndex, SFontMatch *pFace,
-	int *pnNamedInstances, int *pnFaces )
+// Describes the face at nFaceIndex in a font FreeType opens through args, a
+// file or bytes in memory, or returns false if FreeType cannot open it. szFile
+// is only recorded in the result.
+bool DescribeFace( const FT_Library pLibrary, const FT_Open_Args &args, const std::string &szFile, const int nFaceIndex,
+	SFontMatch *pFace, int *pnNamedInstances, int *pnFaces )
 {
 	FT_Face pOpened = nullptr;
-	if ( FT_New_Face( pLibrary, szFile.c_str(), nFaceIndex, &pOpened ) != 0 )
+	if ( FT_Open_Face( pLibrary, &args, nFaceIndex, &pOpened ) != 0 )
 	{
 		return false;
 	}
@@ -114,8 +115,7 @@ std::vector<std::string> GetSystemFontDirectories()
 	return directories;
 }
 
-bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std::vector<std::string> &directories,
-	SFontMatch *pMatch )
+CFontCatalog::CFontCatalog( const std::vector<std::string> &directories )
 {
 	std::vector<std::string> files;
 	for ( const std::string &szDirectory : directories )
@@ -138,55 +138,120 @@ bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std
 	FT_Library pLibrary = nullptr;
 	if ( FT_Init_FreeType( &pLibrary ) != 0 )
 	{
-		return false;
+		return;
 	}
-	const std::string szWanted = ToLower( szFamily );
-	bool bFound = false;
-	int nBestScore = 0;
 	for ( const std::string &szFile : files )
 	{
+		FT_Open_Args args = {};
+		args.flags = FT_OPEN_PATHNAME;
+		args.pathname = const_cast<FT_String*>( szFile.c_str() );
 		SFontMatch first;
 		int nInstances = 0, nFaces = 0;
-		if ( !DescribeFace( pLibrary, szFile, 0, &first, &nInstances, &nFaces ) )
+		if ( !DescribeFace( pLibrary, args, szFile, 0, &first, &nInstances, &nFaces ) )
 		{
 			continue;
 		}
 		for ( int nFace = 0; nFace < nFaces; ++nFace )
 		{
 			SFontMatch face = first;
-			if ( nFace != 0 && !DescribeFace( pLibrary, szFile, nFace, &face, &nInstances, &nFaces ) )
-			{
-				continue;
-			}
-			if ( ToLower( face.szFamily ) != szWanted )
+			if ( nFace != 0 && !DescribeFace( pLibrary, args, szFile, nFace, &face, &nInstances, &nFaces ) )
 			{
 				continue;
 			}
 			// the face itself, then each named instance of a variable one
-			for ( int nInstance = 0; nInstance <= nInstances; ++nInstance )
+			faces.push_back( face );
+			for ( int nInstance = 1; nInstance <= nInstances; ++nInstance )
 			{
-				SFontMatch candidate = face;
+				SFontMatch instance;
 				int nIgnoredInstances = 0, nIgnoredFaces = 0;
-				if ( nInstance != 0 && !DescribeFace( pLibrary, szFile, ( nInstance << 16 ) | nFace, &candidate, &nIgnoredInstances, &nIgnoredFaces ) )
+				if ( DescribeFace( pLibrary, args, szFile, ( nInstance << 16 ) | nFace, &instance, &nIgnoredInstances, &nIgnoredFaces ) )
 				{
-					continue;
-				}
-				// weights differ by at most 800, so a width class step, at 1000,
-				// always outweighs them, and a slant mismatch outweighs the width
-				// classes' whole range
-				const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) + std::abs( candidate.nWidthClass - 5 ) * 1000 +
-					std::abs( candidate.nWeight - nWeight );
-				if ( !bFound || nScore < nBestScore )
-				{
-					*pMatch = candidate;
-					nBestScore = nScore;
-					bFound = true;
+					faces.push_back( instance );
 				}
 			}
 		}
 	}
 	FT_Done_FreeType( pLibrary );
+}
+
+bool CFontCatalog::Find( const std::string &szFamily, int nWeight, bool bItalic, SFontMatch *pMatch ) const
+{
+	const std::string szWanted = ToLower( szFamily );
+	bool bFound = false;
+	int nBestScore = 0;
+	for ( const SFontMatch &candidate : faces )
+	{
+		if ( ToLower( candidate.szFamily ) != szWanted )
+		{
+			continue;
+		}
+		// weights differ by at most 800, so a width class step, at 1000, always
+		// outweighs them, and a slant mismatch outweighs the width classes'
+		// whole range
+		const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) + std::abs( candidate.nWidthClass - 5 ) * 1000 +
+			std::abs( candidate.nWeight - nWeight );
+		if ( !bFound || nScore < nBestScore )
+		{
+			*pMatch = candidate;
+			nBestScore = nScore;
+			bFound = true;
+		}
+	}
 	return bFound;
+}
+
+bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std::vector<std::string> &directories,
+	SFontMatch *pMatch )
+{
+	return CFontCatalog( directories ).Find( szFamily, nWeight, bItalic, pMatch );
+}
+
+int SelectFace( const std::vector<uint8_t> &data, int nWeight, bool bItalic )
+{
+	FT_Library pLibrary = nullptr;
+	if ( data.empty() || FT_Init_FreeType( &pLibrary ) != 0 )
+	{
+		return 0;
+	}
+	FT_Open_Args args = {};
+	args.flags = FT_OPEN_MEMORY;
+	args.memory_base = data.data();
+	args.memory_size = static_cast<FT_Long>( data.size() );
+	// the same walk and the same scoring as the catalog, over one font's faces,
+	// the family being given already
+	int nBestIndex = 0, nBestScore = -1;
+	SFontMatch first;
+	int nInstances = 0, nFaces = 0;
+	if ( DescribeFace( pLibrary, args, std::string(), 0, &first, &nInstances, &nFaces ) )
+	{
+		for ( int nFace = 0; nFace < nFaces; ++nFace )
+		{
+			SFontMatch face = first;
+			if ( nFace != 0 && !DescribeFace( pLibrary, args, std::string(), nFace, &face, &nInstances, &nFaces ) )
+			{
+				continue;
+			}
+			for ( int nInstance = 0; nInstance <= nInstances; ++nInstance )
+			{
+				SFontMatch candidate = face;
+				int nIgnoredInstances = 0, nIgnoredFaces = 0;
+				if ( nInstance != 0 && !DescribeFace( pLibrary, args, std::string(), ( nInstance << 16 ) | nFace, &candidate,
+					&nIgnoredInstances, &nIgnoredFaces ) )
+				{
+					continue;
+				}
+				const int nScore = ( candidate.bItalic != bItalic ? 100000 : 0 ) + std::abs( candidate.nWidthClass - 5 ) * 1000 +
+					std::abs( candidate.nWeight - nWeight );
+				if ( nBestScore < 0 || nScore < nBestScore )
+				{
+					nBestIndex = candidate.nFaceIndex;
+					nBestScore = nScore;
+				}
+			}
+		}
+	}
+	FT_Done_FreeType( pLibrary );
+	return nBestIndex;
 }
 
 }

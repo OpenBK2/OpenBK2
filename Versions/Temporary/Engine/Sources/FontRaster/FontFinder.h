@@ -8,6 +8,7 @@
 // The game's font records, and the editor's font export, name faces the GDI
 // way ("Tahoma", weight 400), while FreeType wants a file. This bridges the two.
 
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -30,6 +31,21 @@ struct SFontMatch
 // ~/.local/share/fonts and ~/.fonts elsewhere. Only those that exist.
 std::vector<std::string> GetSystemFontDirectories();
 
+// Every face in every TrueType and OpenType file under a set of directories,
+// recursively, read once. Opening each file is what makes a search slow (half a
+// second over Windows' own fonts), so a program that searches more than once,
+// as the game's glyph fallback does, keeps a catalog and searches that.
+class CFontCatalog
+{
+	std::vector<SFontMatch> faces;
+public:
+	explicit CFontCatalog( const std::vector<std::string> &directories );
+	// as FindFont below
+	bool Find( const std::string &szFamily, int nWeight, bool bItalic, SFontMatch *pMatch ) const;
+	// every face, variable fonts' named instances included, files in sorted order
+	const std::vector<SFontMatch> &GetFaces() const { return faces; }
+};
+
 // Searches every TrueType and OpenType file under directories, recursively,
 // for a face whose family name matches szFamily ignoring case, and picks the
 // closest to nWeight and bItalic at normal width. A slant mismatch counts for
@@ -40,5 +56,11 @@ std::vector<std::string> GetSystemFontDirectories();
 // files are visited in sorted order and ties go to the first.
 bool FindFont( const std::string &szFamily, int nWeight, bool bItalic, const std::vector<std::string> &directories,
 	SFontMatch *pMatch );
+
+// The face index, named instance included, in a font already in memory that
+// is closest to nWeight and bItalic, scored as FindFont scores: how a game font
+// record's Thickness and Italic pick Bold out of a variable font in the paks.
+// 0 when the data is not a font.
+int SelectFace( const std::vector<uint8_t> &data, int nWeight, bool bItalic );
 
 }

@@ -11,6 +11,7 @@
 // any platform.
 
 #include <cstdint>
+#include <vector>
 
 namespace NCodePages
 {
@@ -45,5 +46,10 @@ int GetCodePage( int nCharset );
 // the code page does not define, which FontGen then leaves out, as it did when
 // MultiByteToWideChar refused it.
 bool Translate( int nCharset, uint8_t nByte, uint32_t *pnCodePoint );
+
+// The code points of bytes 32..255 in nCharset that it defines, in byte order:
+// the character set FontGen bakes by default, and what the game's runtime fonts
+// size their cell by
+std::vector<uint32_t> GetPrintableCodePoints( int nCharset );
 
 }

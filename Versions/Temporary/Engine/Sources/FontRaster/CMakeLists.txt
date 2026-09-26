@@ -10,6 +10,9 @@ project(FontRaster)
 # static library links into a tool and a DLL alike without an export macro on
 # every declaration.
 add_library(FontRaster STATIC
+    CodePages.cpp
+    CodePages.h
+    CodePageTables.inc
     FontFace.cpp
     FontFace.h
     FontFinder.cpp

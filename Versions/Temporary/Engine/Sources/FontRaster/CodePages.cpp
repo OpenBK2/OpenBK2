@@ -80,4 +80,18 @@ bool Translate( int nCharset, uint8_t nByte, uint32_t *pnCodePoint )
 	return true;
 }
 
+std::vector<uint32_t> GetPrintableCodePoints( int nCharset )
+{
+	std::vector<uint32_t> codePoints;
+	for ( int nByte = 32; nByte < 256; ++nByte )
+	{
+		uint32_t nCodePoint = 0;
+		if ( Translate( nCharset, static_cast<uint8_t>( nByte ), &nCodePoint ) )
+		{
+			codePoints.push_back( nCodePoint );
+		}
+	}
+	return codePoints;
+}
+
 }
