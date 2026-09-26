@@ -25,6 +25,9 @@ class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 	std::wstring wszCustomText;
 	CVec2 vScreenRect;
 	int nIDForMLHandler;
+	// Track control sizing separately: GetSize can refresh the markup before
+	// Visit has updated a ResizeOnTextSet window's height.
+	float fFontScale = 0;
 private:	
 	bool InitText();
 	//{ overrided

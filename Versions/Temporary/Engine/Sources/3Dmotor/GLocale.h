@@ -81,6 +81,7 @@ private:
 	// whose font file could not be used, so the baked font answers from then on.
 	std::unordered_map<std::string, const NDb::SFont*> runtimeRecords;
 	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts;
+	float fCachedRuntimeFontScale = 0;
 	CFontInfo* GetRuntimeFont( const SFont &sFont );
 
 protected:
@@ -97,6 +98,9 @@ public:
 
 	virtual CFontInfo* GetFont( const SFont &sFont );
 };
+
+// Effective NGlobal ui_font_scale, shared by rasterisation and layout caches.
+_3DMOTOR_EXPORT float GetRuntimeFontScale();
 
 // Font sizes follow the original 1024x768 UI coordinate system. Keep both
 // dimensions: runtime fonts rasterise this aspect ratio into their atlas, so

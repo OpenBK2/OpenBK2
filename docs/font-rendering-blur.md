@@ -210,11 +210,19 @@ ratio. The replacement is fitted to those dimensions, so changing font families
 does not silently change the apparent UI text size. No GUI font sizes change.
 If no usable reference is available, the previous ink fitting is used.
 
-`F_RUNTIME_FONT_SCALE` in `3Dmotor/GLocale.cpp` adjusts all runtime font sizes.
-It defaults to `1.2f` (20% larger in both dimensions); `1.0f` restores the
-original reference size. Change it and rebuild to tune the size. The multiplier
-is applied before rasterisation, retaining sharpness, and saved atlases store
-the final dimensions so loading a save does not scale its text again.
+The NGlobal user setting `ui_font_scale` adjusts all runtime font sizes and
+is saved with the user configuration. It defaults to `1.2` (20% larger in both
+dimensions); `1.0` restores the original reference size. Enter
+`ui_font_scale 1.4` in the console, or use
+`NGlobal::SetVar( "ui_font_scale", 1.4f )` from code. Read it with
+`NGlobal::GetVar( "ui_font_scale", 1.2f ).GetFloat()`.
+
+Changes refresh existing text layouts and their font cache without a restart
+or rebuild. Rasterisation and layout use the same effective scale, limited to
+0.25 through 4.0; zero, negative and non-finite values use the default. The
+multiplier is applied before rasterisation, retaining sharpness. Saved atlases
+store final pixel dimensions, so loading a save never multiplies them again;
+newly saved layouts also keep their wrapping width and scale for live refresh.
 
 The first runtime version fitted the tallest ink across six European code
 pages into the requested line height. Oswald's accents and low marks then

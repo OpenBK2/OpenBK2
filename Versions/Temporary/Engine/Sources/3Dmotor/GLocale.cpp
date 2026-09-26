@@ -64,10 +64,21 @@ void CTextLocaleInfo::ClearAllFonts()
 // tall, and a font fitted to them would be unreadable and waste an atlas.
 const int N_MIN_RUNTIME_FONT_SIZE = 6;
 
-// User-adjustable size of the sharp runtime fonts: 1.0 is the original size,
-// 1.2 is 20% larger in both dimensions. Apply it before rasterising, so the
-// extra size adds real pixels instead of magnifying the atlas and blurring it.
-constexpr float F_RUNTIME_FONT_SCALE = 1.2f;
+const float F_DEFAULT_RUNTIME_FONT_SCALE = 1.2f;
+
+float GetRuntimeFontScale()
+{
+	const float fScale = NGlobal::GetVar( "ui_font_scale", F_DEFAULT_RUNTIME_FONT_SCALE ).GetFloat();
+	// Console/config values must stay finite and bounded before they become
+	// integer pixel sizes and atlas allocations. Invalid input uses the default.
+	if ( !std::isfinite( fScale ) || fScale <= 0 )
+		return F_DEFAULT_RUNTIME_FONT_SCALE;
+	return std::clamp( fScale, 0.25f, 4.0f );
+}
+
+START_REGISTER( RuntimeFontScale )
+	REGISTER_VAR( "ui_font_scale", 0, F_DEFAULT_RUNTIME_FONT_SCALE, STORAGE_USER )
+FINISH_REGISTER
 
 CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 {
@@ -76,6 +87,15 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 	std::unordered_map<std::string, const NDb::SFont*>::const_iterator record = runtimeRecords.find( sFont.szName );
 	if ( record == runtimeRecords.end() )
 		return 0;
+	const float fScale = GetRuntimeFontScale();
+	if ( fCachedRuntimeFontScale != fScale )
+	{
+		// Existing layouts own their atlases; new layouts must get the new size.
+		// Drop obsolete cache entries so repeated console edits do not retain
+		// an ever-growing collection of unused font textures.
+		runtimeFonts.clear();
+		fCachedRuntimeFontScale = fScale;
+	}
 	const std::tuple<std::string, int, int> key( sFont.szName, sFont.nSize, sFont.nWidth );
 	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>>::iterator made = runtimeFonts.find( key );
 	if ( made == runtimeFonts.end() )
@@ -84,9 +104,9 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 		// size; extra room for the replacement's accents must not scale it down.
 		CObj<CFontInfo> pFont;
 		CObj<CGlyphAtlas> pAtlas = new CGlyphAtlas();
-		const int nRasterHeight = (std::max)( 1, static_cast<int>( std::lround( sFont.nSize * F_RUNTIME_FONT_SCALE ) ) );
+		const int nRasterHeight = (std::max)( 1, static_cast<int>( std::lround( sFont.nSize * fScale ) ) );
 		const int nRasterWidth = sFont.nWidth > 0 ?
-			(std::max)( 1, static_cast<int>( std::lround( sFont.nWidth * F_RUNTIME_FONT_SCALE ) ) ) : 0;
+			(std::max)( 1, static_cast<int>( std::lround( sFont.nWidth * fScale ) ) ) : 0;
 		// The atlas saves these final dimensions, so loading a save never applies
 		// the multiplier a second time to its already laid out text.
 		if ( pAtlas->Init( record->second, nRasterHeight, nRasterWidth ) )

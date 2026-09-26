@@ -65,3 +65,13 @@ if(HAVE_MASM)
     add_unit_test(CalcDirectionalLighting 3Dmotor Misc OriginalMMX SOURCES ${LIGHTING_KERNEL_SOURCES})
     add_unit_test(MMXTransformVector 3Dmotor Misc OriginalMMX)
 endif()
+
+# The user-editable scale must invalidate cached runtime fonts, not just affect
+# newly requested font sizes. No graphics device is needed to build the atlas.
+add_unit_test(RuntimeFontScale 3Dmotor System Misc gr2)
+target_compile_definitions(RuntimeFontScale_test PRIVATE
+    FONT_DATA_DIR="${CMAKE_SOURCE_DIR}/Versions/Current/Data/Fonts/Files")
+if(WIN32)
+    set_property(TARGET RuntimeFontScale_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()

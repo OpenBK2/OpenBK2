@@ -7,6 +7,7 @@
 #include "System/Text.h"
 
 #include "UIML.h"
+#include "3Dmotor/GLocale.h"
 
 #include <cstdint>
 
@@ -70,6 +71,7 @@ void CWindowTextView::Reposition( const CTRect<float> &parentRect )
 
 bool CWindowTextView::InitText()
 {
+	fFontScale = NGScene::GetRuntimeFontScale();
 	if ( wszCustomText.empty() || GetWindowRect().Width() <= 0 )
 	{
 		pGfxText = 0;
@@ -123,6 +125,9 @@ int CWindowTextView::operator&( IBinSaver &saver )
 
 void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 {
+	// Resizable labels must update their control bounds along with the glyphs.
+	if ( fFontScale != NGScene::GetRuntimeFontScale() )
+		InitText();
 	CWindow::Visit( pVisitor );
 	
 	if ( pGfxText ) 

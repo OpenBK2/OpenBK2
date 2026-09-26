@@ -119,8 +119,13 @@ protected:
 	void TagColor( const std::wstring &wsTag );
 	void ProcessTAG( const std::wstring &wsTag );
 
+	float fFontScale = 0;
 	void Recalc();
-	bool NeedUpdate() { return pText.Refresh() | pSize.Refresh() | pScreenRect.Refresh(); }
+	bool NeedUpdate()
+	{
+		// A scale edit changes metrics even when the text and window are unchanged.
+		return pText.Refresh() | pSize.Refresh() | pScreenRect.Refresh() | ( fFontScale != GetRuntimeFontScale() );
+	}
 
 public:
 	CTextFormater() {}
@@ -142,6 +147,7 @@ CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *
 
 void CTextFormater::Recalc()
 {
+	fFontScale = GetRuntimeFontScale();
 	value.sSize.x = 0;
 	value.sSize.y = 0;
 	value.charsSet.clear();

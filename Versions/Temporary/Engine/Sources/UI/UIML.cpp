@@ -863,6 +863,11 @@ private:
 	std::unordered_map<std::wstring,CObj<IMLHandler> > tagsMap;
 	int nIDForHandler;
 	CObj<SFadeValue> sFadeValue;
+	// Keep the wrapping constraint, not the resulting text width, when a
+	// console font-scale change regenerates an existing label.
+	int nLayoutWidth = -1;
+	float fFontScale = 0;
+	void UpdateFontScale();
 public:
 	CML();
 
@@ -938,8 +943,15 @@ void CML::SetFade( float fFade )
 	sFadeValue->fFadeValue = fFade;
 }
 
+void CML::UpdateFontScale()
+{
+	if ( nLayoutWidth >= 0 && fFontScale != NGScene::GetRuntimeFontScale() )
+		Generate( nLayoutWidth );
+}
+
 const CTPoint<int>& CML::GetSize()
 {
+	UpdateFontScale();
 	const CTPoint<float> &sFPSize = pLayout->GetSize();
 	sSize.x = Float2Int( sFPSize.x + 0.5f );
 	sSize.y = Float2Int( sFPSize.y + 0.5f );
@@ -948,6 +960,8 @@ const CTPoint<int>& CML::GetSize()
 
 void CML::Generate( int nWidth )
 {
+	nLayoutWidth = nWidth;
+	fFontScale = NGScene::GetRuntimeFontScale();
 	enum ECharType
 	{
 		CHAR_NULL,
@@ -1045,11 +1059,13 @@ void CML::Generate( int nWidth )
 
 void CML::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
+	UpdateFontScale();
 	pLayout->Render( pRender, sPosition, sWindow );
 }
 
 void CML::Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
+	UpdateFontScale();
 	pLayout->Render( pView, sPosition, sWindow );
 }
 
@@ -1061,6 +1077,8 @@ int CML::operator&( IBinSaver &saver )
 	saver.Add( 4, &pStream );
 	saver.Add( 5, &tagsMap );
 	saver.Add( 6, &nIDForHandler );
+	saver.Add( 7, &nLayoutWidth );
+	saver.Add( 8, &fFontScale );
 	return 0;
 }
 
