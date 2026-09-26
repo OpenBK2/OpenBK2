@@ -349,7 +349,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// 
 	pSplashScreen = 0;
 	// setup video mode
-	if ( !Scene()->SetupMode(SCENE_MODE_FULLSCREEN, false) )
+	if ( !Scene()->SetupMode(SCENE_MODE_WINDOWED, false) )
 	{
 		MessageBox( 0, "Can't setup scene mode from config", "Error", MB_OK );
 		return 0xDEAD;

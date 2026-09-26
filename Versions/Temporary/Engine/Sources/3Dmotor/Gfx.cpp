@@ -9,6 +9,8 @@
 #include <d3d9.h>
 #include "Misc/2Darray.h"
 #include "System/Commands.h"
+#include "System/WinFrame.h"
+#include "System/WindowViewport.h"
 #include "Gfx.h"
 #include "GfxInternal.h"
 #include "D3DError.h"
@@ -69,6 +71,79 @@ static DWORD nFSAA, nMaxFSAA;
 static int nWinXPos = 0;
 static int nAdapterToUse = D3DADAPTER_DEFAULT;
 
+// Keep the original back buffer (and all UI/camera coordinates) at game
+// resolution. A separate, non-MSAA swap chain covers the desktop and receives
+// the aspect-fitted image plus black bars immediately before presentation.
+static NWin32Helper::com_ptr<IDirect3DSwapChain9> pWindowSwapChain;
+static NWin32Helper::com_ptr<IDirect3DSurface9> pResolvedScreen;
+static int nPresentWidth = 0, nPresentHeight = 0;
+
+static bool IsBorderlessGame()
+{
+	return pp.Windowed && NWinFrame::IsGameWindow( hWnd );
+}
+
+static HRESULT UpdateWindowSwapChain()
+{
+	RECT client = {};
+	if ( !GetClientRect( hWnd, &client ) || client.right <= 0 || client.bottom <= 0 )
+		return D3DERR_DEVICELOST;
+	if ( pWindowSwapChain && nPresentWidth == client.right && nPresentHeight == client.bottom )
+		return D3D_OK;
+
+	pWindowSwapChain = 0;
+	D3DPRESENT_PARAMETERS windowPP = pp;
+	windowPP.BackBufferWidth = client.right;
+	windowPP.BackBufferHeight = client.bottom;
+	windowPP.MultiSampleType = D3DMULTISAMPLE_NONE;
+	windowPP.MultiSampleQuality = 0;
+	windowPP.EnableAutoDepthStencil = FALSE;
+	windowPP.AutoDepthStencilFormat = D3DFMT_UNKNOWN;
+	HRESULT hr = pDevice->CreateAdditionalSwapChain( &windowPP, pWindowSwapChain.GetAddr() );
+	if ( SUCCEEDED( hr ) )
+	{
+		nPresentWidth = client.right;
+		nPresentHeight = client.bottom;
+	}
+	return hr;
+}
+
+static HRESULT PresentWindow()
+{
+	HRESULT hr = UpdateWindowSwapChain();
+	if ( FAILED( hr ) )
+		return hr;
+	NWin32Helper::com_ptr<IDirect3DSurface9> pSource, pDestination;
+	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pSource.GetAddr() );
+	if ( FAILED( hr ) )
+		return hr;
+	hr = pWindowSwapChain->GetBackBuffer( 0, D3DBACKBUFFER_TYPE_MONO, pDestination.GetAddr() );
+	if ( FAILED( hr ) )
+		return hr;
+	if ( pResolvedScreen )
+	{
+		// D3D9 MSAA resolve must precede resizing: resolve at game resolution,
+		// then stretch the non-multisampled image to the presentation rectangle.
+		hr = pDevice->StretchRect( pSource, 0, pResolvedScreen, 0, D3DTEXF_NONE );
+		if ( FAILED( hr ) )
+			return hr;
+		pSource = pResolvedScreen;
+	}
+	hr = pDevice->ColorFill( pDestination, 0, D3DCOLOR_XRGB( 0, 0, 0 ) );
+	if ( FAILED( hr ) )
+		return hr;
+	const auto viewport = NWinFrame::SWindowViewport::Fit(
+		pp.BackBufferWidth, pp.BackBufferHeight, nPresentWidth, nPresentHeight );
+	const RECT dest = { viewport.x, viewport.y, viewport.x + viewport.width, viewport.y + viewport.height };
+	const DWORD linearCaps = D3DPTFILTERCAPS_MINFLINEAR | D3DPTFILTERCAPS_MAGFLINEAR;
+	const D3DTEXTUREFILTERTYPE filter = ( devCaps.StretchRectFilterCaps & linearCaps ) == linearCaps
+		? D3DTEXF_LINEAR : D3DTEXF_NONE;
+	hr = pDevice->StretchRect( pSource, 0, pDestination, &dest, filter );
+	if ( FAILED( hr ) )
+		return hr;
+	return pWindowSwapChain->Present( 0, 0, hWnd, 0, 0 );
+}
+
 HWND GetHWND() { return hWnd; }
 
 // forward declarations
@@ -79,6 +154,10 @@ static void DestroyLostableDXObjects()
 	DoneRender();
 	DestroyLostableBuffers();
 	DoneZBuffer();
+	// Default-pool surfaces and additional swap chains must be released before Reset.
+	pResolvedScreen = 0;
+	pWindowSwapChain = 0;
+	nPresentWidth = nPresentHeight = 0;
 }
 static void DestroyManagedDXObjects()
 {
@@ -93,6 +172,19 @@ static HRESULT InitDXObjects()
 		bInitOk = false;
 	InitBuffers();
 	InitRender();
+	if ( IsBorderlessGame() )
+	{
+		HRESULT hr = UpdateWindowSwapChain();
+		if ( FAILED( hr ) )
+			return hr;
+		if ( pp.MultiSampleType != D3DMULTISAMPLE_NONE )
+		{
+			hr = pDevice->CreateRenderTarget( pp.BackBufferWidth, pp.BackBufferHeight,
+				pp.BackBufferFormat, D3DMULTISAMPLE_NONE, 0, FALSE, pResolvedScreen.GetAddr(), 0 );
+			if ( FAILED( hr ) )
+				return hr;
+		}
+	}
 	return bInitOk ? D3D_OK : D3DERR_NOTAVAILABLE;
 }
 int GetDeviceCreationID()
@@ -191,6 +283,10 @@ static HRESULT ResetDevice()
 		hr = pDevice->Reset( &pp );
 		D3DASSERT( hr, "Device reset failed." );
 	}
+	// Device creation/reset can fail during an alt-tab or display-mode change.
+	// Do not query a missing/lost device or recreate presentation resources yet.
+	if ( FAILED( hr ) )
+		return hr;
 	{
 		D3DDEVINFO_VCACHE vcache;
 		Zero( vcache );
@@ -207,6 +303,11 @@ static HRESULT ResetDevice()
 		}
 	}
 	bGammaIsSet = false;
+	if ( IsBorderlessGame() )
+	{
+		NWinFrame::FitGameWindowToMonitor();
+	}
+	else
 #if !BOOST_OS_WINDOWS
 	// The editor's SDL window wraps a GTK child. wx owns its layout and has
 	// already sized it before the back buffer is reset. Moving it to the game
@@ -221,6 +322,8 @@ static HRESULT ResetDevice()
 			nWinXPos, 0, pp.BackBufferWidth, pp.BackBufferHeight,
 			SWP_SHOWWINDOW );
 	}
+	if ( NWinFrame::IsGameWindow( hWnd ) )
+		NWinFrame::SetRenderSize( pp.BackBufferWidth, pp.BackBufferHeight );
 	if ( hr == D3D_OK )
 	{
 		hr = InitDXObjects();
@@ -352,6 +455,8 @@ static D3DFORMAT GetZBufferFormat( D3DFORMAT rTarget )
 // to track rescaling
 static void GetBackBufferSize()
 {
+	if ( IsBorderlessGame() )
+		return; // Desktop resizing must not overwrite the chosen game resolution.
   RECT windowPos;
   GetClientRect( pp.hDeviceWindow, &windowPos );
   pp.BackBufferWidth = windowPos.right;
@@ -360,6 +465,8 @@ static void GetBackBufferSize()
 
 void CheckBackBufferSize()
 {
+	if ( IsBorderlessGame() )
+		return; // PresentWindow resizes only the presentation swap chain.
 	RECT windowPos;
 	GetClientRect( pp.hDeviceWindow, &windowPos );
 
@@ -752,6 +859,13 @@ static void CorrectGamma( CArray2D<SPixel8888> *pRes )
 
 void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 {
+	if ( IsBorderlessGame() )
+	{
+		// The desktop may be smaller than the game image. Read the rendering
+		// buffer instead of cropping (or overreading) a desktop-sized capture.
+		MakeFast32BitScreenShot( pRes, bCorrectGamma );
+		return;
+	}
 	HRESULT hr;
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
 	if ( pp.BackBufferWidth == 0 || pp.BackBufferHeight == 0 )
@@ -782,7 +896,7 @@ void MakeScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 
 void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 {
-	if ( !bCanDoFastScreenshot )
+	if ( !bCanDoFastScreenshot && !IsBorderlessGame() )
 	{
 		MakeScreenShot( pRes, bCorrectGamma );
 		return;
@@ -795,23 +909,54 @@ void MakeFast32BitScreenShot( CArray2D<SPixel8888> *pRes, bool bCorrectGamma )
 		return;
 	}
 	hr = pDevice->CreateOffscreenPlainSurface( pp.BackBufferWidth, pp.BackBufferHeight, pp.BackBufferFormat, D3DPOOL_SYSTEMMEM, pSurface.GetAddr(), 0 );
-	ASSERT( D3D_OK == hr );
+	if ( FAILED( hr ) )
+		return;
 	hr = pDevice->GetBackBuffer( 0, 0, D3DBACKBUFFER_TYPE_MONO, pBackBuffer.GetAddr() );
-	ASSERT( D3D_OK == hr );
+	if ( FAILED( hr ) )
+		return;
+	if ( pResolvedScreen )
+	{
+		// Screenshots can be requested between frames while BeginScene is active.
+		pDevice->EndScene();
+		hr = pDevice->StretchRect( pBackBuffer, 0, pResolvedScreen, 0, D3DTEXF_NONE );
+		pDevice->BeginScene();
+		if ( FAILED( hr ) )
+			return;
+		pBackBuffer = pResolvedScreen;
+	}
 	hr = pDevice->GetRenderTargetData( pBackBuffer, pSurface );
-	ASSERT( D3D_OK == hr );
+	if ( FAILED( hr ) )
+		return;
 	D3DLOCKED_RECT lr;
 	hr = pSurface->LockRect( &lr, 0, D3DLOCK_READONLY );
-	ASSERT( D3D_OK == hr );
+	if ( FAILED( hr ) )
+		return;
 	pRes->SetSizes( pp.BackBufferWidth, pp.BackBufferHeight );
 	const char *pSrc = (const char*) lr.pBits;
 	for ( int y = 0; y < pRes->GetSizeY(); ++y )
 	{
-		memcpy( &((*pRes)[y][0]), pSrc, 4 * pRes->GetSizeX() );
+		if ( GetBpp( pp.BackBufferFormat ) == 16 )
+		{
+			const uint16_t *pixels = reinterpret_cast<const uint16_t *>( pSrc );
+			for ( int x = 0; x < pRes->GetSizeX(); ++x )
+			{
+				const unsigned pixel = pixels[x];
+				const bool b565 = pp.BackBufferFormat == D3DFMT_R5G6B5;
+				const unsigned r = ( pixel >> ( b565 ? 11 : 10 ) ) & 31;
+				const unsigned g = ( pixel >> 5 ) & ( b565 ? 63 : 31 );
+				const unsigned b = pixel & 31;
+				(*pRes)[y][x] = SPixel8888( ( r << 3 ) | ( r >> 2 ),
+					b565 ? ( g << 2 ) | ( g >> 4 ) : ( g << 3 ) | ( g >> 2 ),
+					( b << 3 ) | ( b >> 2 ) );
+			}
+		}
+		else
+			memcpy( &((*pRes)[y][0]), pSrc, 4 * pRes->GetSizeX() );
 		pSrc += lr.Pitch;
 	}
 	hr = pSurface->UnlockRect();
-	ASSERT( D3D_OK == hr );
+	if ( FAILED( hr ) )
+		return;
 	if ( bCorrectGamma )
 		CorrectGamma( pRes );
 }
@@ -831,7 +976,9 @@ void Flip()
 	HRESULT hr = pDevice->EndScene();
 	ASSERT( hr == D3D_OK );
 	//
-	hr = pDevice->Present( 0, 0, hWnd, 0 );
+	hr = IsBorderlessGame() ? PresentWindow() : pDevice->Present( 0, 0, hWnd, 0 );
+	if ( FAILED( hr ) && hr != D3DERR_DEVICELOST )
+		D3DASSERT( hr, "Present failed" );
 	//
 	double fFrameTime = NHPTimer::GetTimePassed( &timeFrameStart );
 	++nTotalFrames;

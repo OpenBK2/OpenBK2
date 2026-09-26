@@ -1,16 +1,5 @@
 #include "stdafx.h"
 
-#include <boost/predef.h>
-
-#if BOOST_OS_WINDOWS
-#include <wtypes.h>
-#include <winuser.h>
-#else
-#include "port/window.h"
-
-#include <SDL3/SDL.h>
-#endif
-
 #include "CursorInternal.h"
 #include "System/VFSOperations.h"
 #include "System/WinFrame.h"
@@ -156,52 +145,8 @@ void CCursor::SetBounds( const int x1, const int y1, const int x2, const int y2 
 
 void CCursor::AcquireLocal()
 {
-#if BOOST_OS_WINDOWS
-	if ( bAcquired ) 
-		::ClipCursor( (const RECT*)&rcClip );
-	else
-		::ClipCursor( 0 );
-#else
-	// SDL confines the pointer to a rectangle inside a window rather than to one
-	// on the screen, and takes a width and a height where Win32 takes a second
-	// corner. The game window is borderless and covers the display, so the two
-	// coordinate systems coincide.
-	//
-	// The camera uses a one-pixel box to hold the cursor still while dragging.
-	// Normal SDL motion is clamped to that box and quickly becomes zero, unlike
-	// the DirectInput deltas the Windows build receives. Relative mode preserves
-	// continuous physical deltas; the mouse rectangle keeps SDL's logical cursor
-	// at the original position so disabling relative mode restores it there.
-	SDL_Window *pWindow = AsSdlWindow( NWinFrame::GetWnd() );
-	if ( pWindow == 0 )
-		return;
-	if ( bAcquired )
-	{
-		const SDL_Rect rect = { static_cast<int>( rcClip.left ), static_cast<int>( rcClip.top ),
-			static_cast<int>( rcClip.right - rcClip.left ), static_cast<int>( rcClip.bottom - rcClip.top ) };
-		const bool bCameraDrag = rect.w == 1 && rect.h == 1;
-		if ( bCameraDrag )
-		{
-			SDL_SetWindowMouseRect( pWindow, &rect );
-			// The Windows path leaves the cursor visible during a camera drag.
-			SDL_SetHint( SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1" );
-			if ( !SDL_SetWindowRelativeMouseMode( pWindow, true ) )
-				DebugTrace( "INPUT: Cannot enable relative mouse mode: %s\n", SDL_GetError() );
-		}
-		else
-		{
-			// Disable while the old one-pixel rectangle is still installed, so
-			// SDL restores the pointer to the position at which the drag began.
-			SDL_SetWindowRelativeMouseMode( pWindow, false );
-			SDL_SetWindowMouseRect( pWindow, &rect );
-		}
-	}
-	else
-	{
-		SDL_SetWindowRelativeMouseMode( pWindow, false );
-		SDL_SetWindowMouseRect( pWindow, 0 );
-	}
-#endif
+	// WinFrame transforms logical bounds and reapplies them after activation.
+	NWinFrame::SetMouseBounds( rcClip.left, rcClip.top, rcClip.right, rcClip.bottom, bAcquired );
 }
 
 void CCursor::Acquire( const bool bAcquire )
@@ -212,31 +157,14 @@ void CCursor::Acquire( const bool bAcquire )
 
 void CCursor::SetPos( const int nX, const int nY )
 {
-#if BOOST_OS_WINDOWS
-	::SetCursorPos( nX, nY );
-#else
-	// Warped within the window rather than globally. A Wayland compositor does
-	// not let a client place the pointer on the screen, and it does not have to:
-	// the callers work in the coordinates of a window that covers the display.
-	SDL_Window *pWindow = AsSdlWindow( NWinFrame::GetWnd() );
-	if ( pWindow != 0 )
-		SDL_WarpMouseInWindow( pWindow, static_cast<float>( nX ), static_cast<float>( nY ) );
-#endif
+	NWinFrame::SetMousePos( float( nX ), float( nY ) );
 }
 
 const CVec2 CCursor::GetPos() const
 {
-#if BOOST_OS_WINDOWS
-	POINT point;
-	::GetCursorPos( &point );
-	return CVec2( point.x, point.y );
-#else
-	// Window relative for the same reason SetPos warps that way, and because the
-	// global position is not something every backend will answer.
-	float fX = 0, fY = 0;
-	SDL_GetMouseState( &fX, &fY );
-	return CVec2( fX, fY );
-#endif
+	float x = 0, y = 0;
+	NWinFrame::GetMousePos( &x, &y );
+	return CVec2( x, y );
 }
 
 int CCursor::operator&( IBinSaver &saver )

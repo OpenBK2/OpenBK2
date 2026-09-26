@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "WinFrame.h"
 #include "Commands.h"
+#include "WindowViewport.h"
+#include "port/window.h"
+
+#include <cmath>
 
 #include "port/virtualkey.h"
 
@@ -14,8 +18,6 @@
 #else
 #include "SdlVideo.h"
 #include "WinImageFormats.h"
-
-#include "port/window.h"
 
 #include <SDL3/SDL.h>
 
@@ -33,6 +35,178 @@ static std::mutex msgs;
 static std::list< SWindowsMsg > msgList;
 static NWinCursor::TFrame hCursor;
 static bool bManageCursor = true;
+static bool bGameWindow = false;
+static int nRenderWidth = 0, nRenderHeight = 0;
+static RECT mouseBounds = {};
+static bool bMouseAcquired = false;
+
+static void ApplyMouseBounds();
+
+// SDL mouse coordinates use window units, while D3D and the presentation
+// rectangle use pixels. Windows is per-monitor DPI aware and already uses pixels.
+static NWinFrame::SWindowViewport GetMouseViewport( float *pScaleX, float *pScaleY )
+{
+	*pScaleX = *pScaleY = 1;
+	RECT client = {};
+	if ( !hWnd || !GetClientRect( hWnd, &client ) || client.right <= 0 || client.bottom <= 0 )
+		return {};
+#if !BOOST_OS_WINDOWS
+	int width = 0, height = 0;
+	if ( SDL_GetWindowSize( AsSdlWindow( hWnd ), &width, &height ) && width > 0 && height > 0 )
+	{
+		*pScaleX = float( client.right ) / width;
+		*pScaleY = float( client.bottom ) / height;
+	}
+#endif
+	return NWinFrame::SWindowViewport::Fit( nRenderWidth, nRenderHeight, client.right, client.bottom );
+}
+
+static void ClientToGame( float *px, float *py )
+{
+	if ( nRenderWidth <= 0 || nRenderHeight <= 0 )
+		return;
+	float scaleX, scaleY;
+	const auto viewport = GetMouseViewport( &scaleX, &scaleY );
+	*px *= scaleX;
+	*py *= scaleY;
+	viewport.ClientToGame( px, py );
+}
+
+static void GameToClient( float *px, float *py )
+{
+	if ( nRenderWidth <= 0 || nRenderHeight <= 0 )
+		return;
+	float scaleX, scaleY;
+	const auto viewport = GetMouseViewport( &scaleX, &scaleY );
+	viewport.GameToClient( px, py );
+	*px /= scaleX;
+	*py /= scaleY;
+}
+
+bool NWinFrame::IsGameWindow( HWND hWindow )
+{
+	return bGameWindow && hWindow != 0 && hWindow == hWnd;
+}
+
+void NWinFrame::SetRenderSize( int width, int height )
+{
+	nRenderWidth = width;
+	nRenderHeight = height;
+	ApplyMouseBounds();
+}
+
+void NWinFrame::SetMouseBounds( int left, int top, int right, int bottom, bool bAcquire )
+{
+	mouseBounds = { left, top, right, bottom };
+	bMouseAcquired = bAcquire;
+	ApplyMouseBounds();
+}
+
+void NWinFrame::GetMousePos( float *px, float *py )
+{
+#if BOOST_OS_WINDOWS
+	POINT point = {};
+	::GetCursorPos( &point );
+	if ( IsGameWindow( hWnd ) )
+		::ScreenToClient( hWnd, &point );
+	*px = float( point.x );
+	*py = float( point.y );
+#else
+	SDL_GetMouseState( px, py );
+#endif
+	ClientToGame( px, py );
+}
+
+void NWinFrame::SetMousePos( float x, float y )
+{
+	GameToClient( &x, &y );
+#if BOOST_OS_WINDOWS
+	POINT point = { LONG( std::lround( x ) ), LONG( std::lround( y ) ) };
+	if ( IsGameWindow( hWnd ) )
+		::ClientToScreen( hWnd, &point );
+	::SetCursorPos( point.x, point.y );
+#else
+	if ( hWnd )
+		SDL_WarpMouseInWindow( AsSdlWindow( hWnd ), x, y );
+#endif
+}
+
+static void ApplyMouseBounds()
+{
+	if ( !hWnd )
+		return;
+	float left = float( mouseBounds.left ), top = float( mouseBounds.top );
+	float right = float( mouseBounds.right ), bottom = float( mouseBounds.bottom );
+	const bool bCameraDrag = right - left == 1 && bottom - top == 1;
+	GameToClient( &left, &top );
+	GameToClient( &right, &bottom );
+	// Round inward so the pointer cannot enter a black bar. Camera dragging
+	// still locks to one physical pixel even when a game pixel is scaled up.
+	RECT rect = { LONG( std::ceil( left ) ), LONG( std::ceil( top ) ),
+		LONG( std::floor( right ) ), LONG( std::floor( bottom ) ) };
+	rect.right = bCameraDrag ? rect.left + 1 : (std::max)( rect.left + 1, rect.right );
+	rect.bottom = bCameraDrag ? rect.top + 1 : (std::max)( rect.top + 1, rect.bottom );
+#if BOOST_OS_WINDOWS
+	// A resize/reset while alt-tabbed must never recapture another app's mouse.
+	if ( !bMouseAcquired || GetForegroundWindow() != hWnd || IsIconic( hWnd ) )
+	{
+		::ClipCursor( 0 );
+		return;
+	}
+	POINT origin = {};
+	if ( NWinFrame::IsGameWindow( hWnd ) )
+		::ClientToScreen( hWnd, &origin );
+	OffsetRect( &rect, origin.x, origin.y );
+	::ClipCursor( &rect );
+#else
+	SDL_Window *pWindow = AsSdlWindow( hWnd );
+	if ( bMouseAcquired )
+	{
+		const SDL_Rect sdlRect = { int( rect.left ), int( rect.top ),
+			int( rect.right - rect.left ), int( rect.bottom - rect.top ) };
+		if ( bCameraDrag )
+		{
+			SDL_SetWindowMouseRect( pWindow, &sdlRect );
+			SDL_SetHint( SDL_HINT_MOUSE_RELATIVE_CURSOR_VISIBLE, "1" );
+			if ( !SDL_SetWindowRelativeMouseMode( pWindow, true ) )
+				DebugTrace( "INPUT: Cannot enable relative mouse mode: %s\n", SDL_GetError() );
+		}
+		else
+		{
+			// Restore the pointer while its old one-pixel drag rectangle exists.
+			SDL_SetWindowRelativeMouseMode( pWindow, false );
+			SDL_SetWindowMouseRect( pWindow, &sdlRect );
+		}
+	}
+	else
+	{
+		SDL_SetWindowRelativeMouseMode( pWindow, false );
+		SDL_SetWindowMouseRect( pWindow, 0 );
+	}
+#endif
+}
+
+void NWinFrame::FitGameWindowToMonitor()
+{
+	if ( !IsGameWindow( hWnd ) )
+		return;
+#if BOOST_OS_WINDOWS
+	MONITORINFO monitor = {};
+	monitor.cbSize = sizeof( monitor );
+	if ( GetMonitorInfo( MonitorFromWindow( hWnd, MONITOR_DEFAULTTONEAREST ), &monitor ) )
+	{
+		const RECT &rect = monitor.rcMonitor;
+		SetWindowPos( hWnd, HWND_NOTOPMOST, rect.left, rect.top,
+			rect.right - rect.left, rect.bottom - rect.top, SWP_NOACTIVATE | SWP_SHOWWINDOW );
+	}
+#else
+	// Desktop fullscreen keeps the desktop mode and also works on Wayland,
+	// where a client cannot position a borderless window itself.
+	SDL_SetWindowFullscreenMode( AsSdlWindow( hWnd ), 0 );
+	SDL_SetWindowFullscreen( AsSdlWindow( hWnd ), true );
+	SDL_SyncWindow( AsSdlWindow( hWnd ) );
+#endif
+}
 
 #if BOOST_OS_WINDOWS
 using namespace NWin32Helper;
@@ -97,6 +271,15 @@ HWND NWinFrame::GetWnd()
 
 static void AddMsg( SWindowsMsg::EMsg msg, int x, int y, uint32_t dwFlags )
 {
+	// Translate all absolute mouse events, including button releases, through
+	// the same mapping used by cursor polling and warping.
+	if ( msg >= SWindowsMsg::MOUSE_WHEEL && msg <= SWindowsMsg::LB_DBLCLK )
+	{
+		float mouseX = float( x ), mouseY = float( y );
+		ClientToGame( &mouseX, &mouseY );
+		x = int( mouseX );
+		y = int( mouseY );
+	}
 	NHPTimer::STime time;
 	NHPTimer::GetTime( &time );
 	std::lock_guard lock( msgs );
@@ -157,6 +340,8 @@ namespace NWinFrame
 void SetEditorWnd( HWND _hWnd )
 {
 	hWnd = _hWnd;
+	bGameWindow = false;
+	nRenderWidth = nRenderHeight = 0;
 }
 }
 
@@ -193,6 +378,7 @@ bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned d
 		//ThrowException( "Can't create main app window\n" );
 		return false;
 	}
+  bGameWindow = true;
   // show & update window
   ShowWindow( hWnd, SW_SHOW );
   UpdateWindow( hWnd );
@@ -200,22 +386,6 @@ bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned d
 	::SetCursor( hCursor );
 
   return true;
-}
-
-static void SetClipCursorRect( HWND _hWnd )
-{
-	RECT r;
-	if ( !GetWindowRect( _hWnd, &r ) )
-		return;
-	if ( r.left < -100 )
-		ClipCursor(0);
-	else
-	{
-		ClipCursor( &r );
-		POINT p;
-		GetCursorPos( &p );
-		SetCursorPos( p.x, p.y );
-	}
 }
 
 static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
@@ -298,13 +468,14 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			}
 			SetActive( wParam != 0 );
 			break;
+		case WM_MOVE:
 		case WM_SIZE:
 		{
 			WINDOWINFO info;
 			memset( &info, 0, sizeof( WINDOWINFO ) );
 			info.cbSize = sizeof( WINDOWINFO );
 			if ( hWnd && GetWindowInfo( hWnd, &info ) && info.dwWindowStatus == WS_ACTIVECAPTION )
-				SetClipCursorRect( hWnd );
+				ApplyMouseBounds();
 			break;
 		}
 		case WM_ACTIVATE:
@@ -317,14 +488,15 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 						if ( (HIWORD(wParam)) == 0 )
 						{
 							if ( hWnd )
-								SetClipCursorRect( hWnd );
+								ApplyMouseBounds();
 						}
 						break;
 					case WA_INACTIVE:						// deactivate window
+						// Keeping simulation active must not trap the desktop pointer.
+						ClipCursor(0);
 						if (always_active.GetFloat() != 0)
 							break;
 						SetActive( false );
-						ClipCursor(0);
 						//Report( "WndProc::WM_activate, WA_INACTIVE ", wParam );
 						break;
 				}
@@ -332,29 +504,34 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			break;
 
 		case WM_MOUSEMOVE:
-			AddMsg( SWindowsMsg::MOUSE_MOVE, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::MOUSE_MOVE, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_RBUTTONDOWN:
-			AddMsg( SWindowsMsg::RB_DOWN, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::RB_DOWN, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_RBUTTONUP:
-			AddMsg( SWindowsMsg::RB_UP, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::RB_UP, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_RBUTTONDBLCLK:
-			AddMsg( SWindowsMsg::RB_DBLCLK, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::RB_DBLCLK, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_LBUTTONDOWN:
-			AddMsg( SWindowsMsg::LB_DOWN, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::LB_DOWN, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_LBUTTONUP:
-			AddMsg( SWindowsMsg::LB_UP, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::LB_UP, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_LBUTTONDBLCLK:
-			AddMsg( SWindowsMsg::LB_DBLCLK, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+			AddMsg( SWindowsMsg::LB_DBLCLK, short( LOWORD( lParam ) ), short( HIWORD( lParam ) ), wParam );
 			break;
 		case WM_MOUSEWHEEL:
-			AddMsg( SWindowsMsg::MOUSE_WHEEL, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF, wParam );
+		{
+			// Unlike button messages, WM_MOUSEWHEEL supplies screen coordinates.
+			POINT point = { short( LOWORD( lParam ) ), short( HIWORD( lParam ) ) };
+			ScreenToClient( hWnd, &point );
+			AddMsg( SWindowsMsg::MOUSE_WHEEL, point.x, point.y, wParam );
 			break;
+		}
 		case WM_KEYDOWN:
 			AddMsg( SWindowsMsg::KEY_DOWN, wParam, lParam & 0xFFFF, (lParam >> 16) & 0xFFFF );
 			break;
@@ -519,6 +696,7 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPC
 		return false;
 	}
 	hWnd = pWindow;
+	bGameWindow = true;
 	// text arrives only while this is on, and the console and the edit line want it
 	SDL_StartTextInput( pWindow );
 	return true;
@@ -660,12 +838,8 @@ void NWinFrame::PumpMessages()
 			break;
 
 		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-			// This has no counterpart on Windows, where a window is the size it
-			// was told to be. A compositor may answer a size request with a
-			// different size, leaving the back buffer no longer matching the
-			// window. Gfx::CheckBackBufferSize already watches for exactly that,
-			// so all this has to do is not treat it as impossible the way
-			// WM_ENTERSIZEMOVE does.
+		case SDL_EVENT_WINDOW_FOCUS_GAINED:
+			ApplyMouseBounds();
 			break;
 
 		default:
