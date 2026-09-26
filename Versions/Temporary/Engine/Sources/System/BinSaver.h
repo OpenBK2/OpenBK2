@@ -228,8 +228,15 @@ private:
 		}
 		else
 		{
+			// The element count where unordered_map saves write bucket_count().
+			// A det_map's reader ignores the value, and an unordered_map reading
+			// the chunk, which is how the engine loads FontGen's blobs, only
+			// rehashes by it, so any sensible hint loads the same. bucket_count()
+			// is the standard library's own business, though: libstdc++ grows
+			// through primes and MSVC through powers of two, so writing it made a
+			// file differ by platform, 257 against 512 for the same 225 glyphs.
 			int nSize = data.size();
-			int nBuckets = data.bucket_count();
+			int nBuckets = nSize;
 			Add( 3, &nSize );
 			Add( 4, &nBuckets );
 

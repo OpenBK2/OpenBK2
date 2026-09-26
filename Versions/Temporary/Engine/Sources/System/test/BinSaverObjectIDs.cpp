@@ -28,6 +28,7 @@
 #include "System/Basic.h"
 #include "System/Streams.h"
 #include "System/BinSaver.h"
+#include "System/det_map.h"
 
 #include <gtest/gtest.h>
 
@@ -136,6 +137,29 @@ TEST( BinSaverObjectIDs, SharedAndCyclicReferencesLoadBack )
 TEST( BinSaverObjectIDs, SharedAndCyclicReferencesLoadBack64 )
 {
 	CheckLoadedGraph( SaveGraph( SAVER_MODE_WRITE_64 ), SAVER_MODE_READ_64 );
+}
+
+// A det_map's bytes must not depend on its hash table's bucket count, which is
+// the standard library's to choose and differs between libstdc++ and MSVC for
+// the same contents. Two maps with the same insertions and very different
+// bucket counts stand in for the two platforms.
+std::vector<char> SaveDetMap( size_t nReserve )
+{
+	det_map<uint16_t, int> map;
+	map.reserve( nReserve );
+	for ( int i = 0; i < 25; ++i )
+		map[static_cast<uint16_t>( 1000 - i * 7 )] = i;
+	CMemoryStream stream;
+	{
+		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
+		pSaver->Add( 1, &map );
+	}
+	return std::vector<char>( stream.GetBuffer(), stream.GetBuffer() + stream.GetSize() );
+}
+
+TEST( BinSaverObjectIDs, DetMapBytesDoNotDependOnBucketCount )
+{
+	EXPECT_EQ( SaveDetMap( 0 ), SaveDetMap( 5000 ) );
 }
 
 }
