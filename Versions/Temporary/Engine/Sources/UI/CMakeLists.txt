@@ -82,3 +82,5 @@ if(WIN32)
 endif()
 install(TARGETS UI DESTINATION bin)
 add_version_info(UI)
+
+add_subdirectory(test)

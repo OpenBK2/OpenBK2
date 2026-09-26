@@ -224,6 +224,14 @@ multiplier is applied before rasterisation, retaining sharpness. Saved atlases
 store final pixel dimensions, so loading a save never multiplies them again;
 newly saved layouts also keep their wrapping width and scale for live refresh.
 
+Scrollable descriptions also retain their full content extent when a parent
+window moves or resizes. Previously, repositioning reset the inner clipping
+window to the viewport height, even while the description and scrollbar still
+reserved space for the entire text. This cut off later lines in campaign
+panels after those panels were moved into the outer campaign list. The scroll
+container now remeasures its children and restores the content extent and
+scroll range after repositioning.
+
 The first runtime version fitted the tallest ink across six European code
 pages into the requested line height. Oswald's accents and low marks then
 reduced its capitals to about 56% of the cell, versus 65% in the shipped h2

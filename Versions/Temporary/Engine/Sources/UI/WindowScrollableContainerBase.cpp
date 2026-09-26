@@ -111,7 +111,10 @@ void CWindowScrollableContainerBase::Reposition( const CTRect<float> &parentRect
 		pContainer->AddChild( pPreSelection, true );
 	}
 
-
+	// Repositioning may rewrap text, and the temporary viewport-sized content
+	// window above must not clip the rest of a long description. Restore its
+	// full extent and scrollbar range after the children have their new widths.
+	Update();
 }
 
 CWindowScrollableContainerBase::CElements::iterator CWindowScrollableContainerBase::GetAfter( IWindow *pElement )
