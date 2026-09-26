@@ -14,6 +14,11 @@
 
 #include <boost/config.hpp>
 #include <boost/core/bit.hpp>
+#include <boost/predef/architecture.h>
+// cvtss2si, for Float2Int
+#if BOOST_ARCH_X86
+#include <xmmintrin.h>
+#endif
 #include <boost/math/special_functions/sign.hpp>
 #include <fmt/printf.h>
 
@@ -181,9 +186,35 @@ inline float SignumNormalizeAngleInRadian( const float angle )
 // ** float-to-int преобразование с текущим состоянием процессора
 // ************************************************************************************************************************ //
 // very fast float-to-int conversion. WARNING: uses current FPU rounding state (!)
+//
+// The original was fld/fistp, which rounds by the current rounding mode, not by
+// truncation, and callers depend on both halves of that: most run under the
+// default round-to-nearest-even (GroupLogic::Segment asserts it), while the DB
+// load and the console SetVar paths switch to RCM_CHOP on purpose, and
+// VarIntHandler reaches Float2Int from inside the latter. A plain static_cast
+// always truncates and so broke the first group; a mode-independent round
+// (boost::math::iround, glm::round, glm::roundEven) would break the second.
+//
+// Rounding a float to an integer is an exact IEEE operation, so honouring the
+// mode is bit exact on every platform provided the mode itself is the same,
+// which CRoundingControl sees to. On x86 cvtss2si is the SSE equivalent of
+// fistp, reading MXCSR (which fesetround sets alongside the x87 control word)
+// and returning the integer indefinite 0x80000000 for NaN and for anything out
+// of int range, as fistp does. Elsewhere nearbyint does the rounding and the
+// out of range case is made explicit so the result matches x86.
 BOOST_FORCEINLINE int Float2Int( const float fVal )
 {
-	return static_cast<int>(fVal);
+#if BOOST_ARCH_X86
+	return _mm_cvt_ss2si( _mm_set_ss( fVal ) );
+#else
+	const float fRounded = std::nearbyint( fVal );
+	// written so that NaN fails the test too
+	if ( !( fRounded >= -2147483648.0f && fRounded < 2147483648.0f ) )
+	{
+		return INT32_MIN;
+	}
+	return static_cast<int>( fRounded );
+#endif
 }
 
 // clamp - обрезать число с двух сторон (min/max)
