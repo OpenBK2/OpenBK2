@@ -4,7 +4,6 @@
 #include "parser.h"
 #include "Data.h"
 #include "output.h"
-#include "hlsl.h"
 #include <d3dx9.h>
 
 #include "port/cdecl.h"
@@ -307,7 +306,6 @@ enum EState
 	PSHADER14,
 	PSHADER_RS,
 	PSHADER_TSS,
-	HLSL,
 	PS_PROC
 };
 
@@ -341,7 +339,6 @@ static void CompileShader( const string &s, const string &name, const char *pszT
 EState parseState;
 string szError, szName;
 SStates rs, tss;
-SHLSLSrcInfo hlslSrc;
 int nLine;
 char *pszShader, *pszShader14;
 
@@ -400,9 +397,6 @@ static void FinishState( char *pszFinish )
 				p.shader = tss;
 				pixelShaders.push_back( p );
 			}
-			break;
-		case HLSL:
-			Compile( hlslSrc );
 			break;
 		case PS_PROC:
 			psProcHash[szName] = pszShader;
@@ -522,16 +516,14 @@ static void ParseFile( char *pszFile )
 				parseState = PSHADER_TSS;
 				continue;
 			}
+			// [HLSL] sections compiled HLSL through D3DXCompileShaderFromFile.
+			// The one there was had no consumer and is gone, and so is the
+			// support. Refuse one rather than read its lines as part of the
+			// section before it.
 			if ( strncmp( pszParse, "[HLSL]", 6 ) == 0 )
 			{
-				pszParse[0] = 0;
-				FinishState( pszParse );
-				parseState = HLSL;
-				pNextLine[-1] = 0;
-				szName = Filter( pszParse + 6 );
-				hlslSrc = SHLSLSrcInfo();
-				hlslSrc.szName = szName;
-				continue;
+				szError = "[HLSL] sections are no longer supported";
+				return;
 			}
 		}
 		if ( pszParse[0] == ';' || (pszParse[0] == '/' && pszParse[1] == '/' ) )
@@ -559,11 +551,6 @@ static void ParseFile( char *pszFile )
 				if ( pNextLine[0] )
 					pNextLine[-1] = 0;
 				AddRS( &tss, pszParse );
-				break;
-			case HLSL:
-				if ( pNextLine[0] )
-					pNextLine[-1] = 0;
-				Parse( &hlslSrc, pszParse );
 				break;
 			case PS_PROC:
 				break;

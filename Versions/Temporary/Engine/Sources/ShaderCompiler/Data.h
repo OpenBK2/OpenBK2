@@ -35,22 +35,6 @@ struct SPShader
 	vector<uint32_t> psShader11, psShader14, psShader20, psShader20a;
 };
 
-struct SHLSLShader
-{
-	int nVertexShaderNumber, nPixelShaderNumber;
-
-	SHLSLShader() : nVertexShaderNumber(-1), nPixelShaderNumber(-1) {}
-};
-
-struct SHLSLShaderGroup
-{
-	string szName;
-	vector<string> defines;
-	vector<int> defineIDs;
-	vector<SHLSLShader> shaders;
-};
-
 extern vector<SVShader> vertexShaders;
 extern vector<SPShader> pixelShaders;
-extern vector<SHLSLShaderGroup> hlslShaders;
 

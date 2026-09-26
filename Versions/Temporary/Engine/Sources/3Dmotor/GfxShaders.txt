@@ -2328,20 +2328,3 @@ D3DRS_ALPHAFUNC D3DCMP_GREATEREQUAL
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 // } G5 Shaders
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-[HLSL] Main
-vs GfxMainVS.fx
-ps GfxMainPS.fx
-
-feature_switch ASDF EPRST
-//feature FOG
-//feature MIRROR
-
-vsoutput float4 ShadowColor COLOR
-vsoutput float4 LightColor COLOR
-vsoutput float2 TexDiffuse TEXCOORD
-vsoutput float2 TexShadow TEXCOORD
-
-vsparam float4 Color c16
-//texture xz xz

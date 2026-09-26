@@ -1171,21 +1171,6 @@ void CRenderContext::SetVertexShader( ETnLVS shader )
 	nVertexShader = shader;
 }
 
-bool CRenderContext::SetShader( const SHLSLShader &pShader )
-{
-	ASSERT( pOutstandingStream == 0 );
-	ASSERT( !IsTnLDevice() );
-	ASSERT( pShader.nPSShaderID > 0 && pShader.nPSShaderID <= std::size(psAllShaders) );
-	ASSERT( pShader.nVSShaderID > 0 && pShader.nVSShaderID <= std::size(vsAllShaders) );
-	if ( pixelShaders[ pShader.nPSShaderID - 1 ] == 0 )
-		return false;
-	if ( vertexShaders[ pShader.nVSShaderID - 1 ] == 0 )
-		return false;
-	nVertexShader = pShader.nVSShaderID;
-	pPixelShader = psAllShaders[ pShader.nPSShaderID - 1 ];
-	return true;
-}
-
 void CRenderContext::SetVSConst( int nReg, const CVec4 *pData, int nSize ) const
 {
 	ASSERT( pOutstandingStream == 0 );

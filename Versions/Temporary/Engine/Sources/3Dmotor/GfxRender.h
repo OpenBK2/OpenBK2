@@ -10,7 +10,6 @@
 
 struct SPShader;
 struct SVShader;
-struct SHLSLShader;
 //
 namespace NGfx
 {
@@ -218,7 +217,6 @@ public:
 
 
 	void SetVertexShader( ETnLVS shader );
-	bool SetShader( const SHLSLShader &pShader );
 	void SetVSConst( int nReg, const CVec4 *pData, int nSize ) const;
 	void SetVSConst( int nReg, const CVec3 &a ) const;
 	void SetVSConst( int nReg, const CVec4 &a ) const { SetVSConst( nReg, &a, 1 ); }

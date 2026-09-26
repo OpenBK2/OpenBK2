@@ -1,9 +1,6 @@
 #pragma once
 struct SVShader;
 struct SPShader;
-struct SHLSLShader;
-extern SVShader vsHLSLMain0;
-extern SVShader vsHLSLMain1;
 extern SVShader vsPureGeometry;
 extern SVShader vsConstLight;
 extern SVShader vsRender2D;
@@ -55,7 +52,7 @@ extern SVShader vsG3AnimWaterOld;
 extern SVShader vsG3Surf;
 extern SVShader vsG3WriteZ;
 
-extern SVShader *vsAllShaders[52];
+extern SVShader *vsAllShaders[50];
 
 extern SPShader psG3WriteZ;
 extern SPShader psG3DepthOfField;
@@ -119,16 +116,6 @@ extern SPShader psG5DiffuseTexSpec;
 extern SPShader psG5DiffuseTexSpecLM;
 extern SPShader psG5DiffuseTexTerrain;
 extern SPShader psG5DiffuseTex2Terrain;
-extern SPShader psHLSLMain0;
-extern SPShader psHLSLMain1;
 
-extern SPShader *psAllShaders[64];
-
-extern SHLSLShader hlslMain[2];
-namespace NShader
-{
-  const int ASDF = 0;
-  const int EPRST = 1;
-}
-
+extern SPShader *psAllShaders[62];
 

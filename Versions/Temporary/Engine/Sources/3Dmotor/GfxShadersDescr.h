@@ -42,16 +42,5 @@ struct SPShader
 		pStateRS(_pStateRS), pStateTSS(_pStateTSS) {}
 };
 
-struct SHLSLShader
-{
-	int nVSShaderID, nPSShaderID;
-	//int nID;
-	//uint32_t *pVShader11, *pVShader20, *pPShader11, *pPShader14, *pPShader20, *pPShader20a;
-	
-	//SHLSLShader( int _nID,
-	//	uint32_t *_pVShader11, uint32_t *_pVShader20, uint32_t *_pPShader11, uint32_t *_pPShader14, uint32_t *_pPShader20, uint32_t *_pPShader20a )
-	//	: nID(_nID), pVShader11(_pVShader11), pVShader20(_pVShader20), pPShader11(_pPShader11), pPShader14(_pPShader14),
-	//	pPShader20(_pPShader20), pPShader20a(_pPShader20a) {}
-};
 
 

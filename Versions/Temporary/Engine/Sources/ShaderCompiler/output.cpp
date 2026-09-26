@@ -116,7 +116,6 @@ void WriteResult( const char *pszOutput )
 		//fh << "{" << endl;
 		fh << "struct SVShader;" << endl;
 		fh << "struct SPShader;" << endl;
-		fh << "struct SHLSLShader;" << endl;
 		for ( int k = 0; k < vertexShaders.size(); ++k )
 		{
 			fh << "extern SVShader vs" << vertexShaders[k].szName << ";" << endl;
@@ -129,16 +128,6 @@ void WriteResult( const char *pszOutput )
 		}
 		fh << endl << "extern SPShader *psAllShaders[" << pixelShaders.size() << "];" << endl;
 		fh << endl;
-
-		for ( int k = 0; k < hlslShaders.size(); ++k )
-		{
-			const SHLSLShaderGroup &g = hlslShaders[k];
-			fh << "extern SHLSLShader hlsl" << g.szName << "[" << g.shaders.size() << "];" << endl;
-			fh << "namespace NShader" << endl << "{" << endl;
-			for ( int k = 0; k < g.defines.size(); ++k )
-				fh << "  const int " << g.defines[k] << " = " << g.defineIDs[k] << ";" << endl;
-			fh << "}" << endl << endl;
-		}
 		//fh << "}" << endl;
 		fh.close();
 
@@ -212,23 +201,6 @@ void WriteResult( const char *pszOutput )
 				f << ", ";
 		}
 		f << " };" << endl;
-
-		f << endl;
-		for ( int k = 0; k < hlslShaders.size(); ++k )
-		{
-			const SHLSLShaderGroup &g = hlslShaders[k];
-			string szTotal = "{";
-			for ( int i = 0; i < g.shaders.size(); ++i )
-			{
-				const SHLSLShader &h = g.shaders[i];
-				if ( szTotal[ szTotal.size() - 1 ] != '{' )
-					szTotal += ",";
-				szTotal += "{" + GetNumber( h.nVertexShaderNumber + 1 ) + "," + GetNumber( h.nPixelShaderNumber + 1 ) + "}";
-			}
-			szTotal += "}";
-			f << endl;
-			f << "SHLSLShader hlsl" << g.szName << "[" << g.shaders.size() << "] = " << szTotal << ";" << endl << endl;
-		}
 		//f << "}" << endl;
 		f.close();
 
