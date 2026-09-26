@@ -203,7 +203,9 @@ instead, which puts every font tried at 0.60 to 0.68.
 A font record with a FontFile is rendered by the game itself (3Dmotor/
 GRuntimeFont.h). Each pixel size the UI asks for gets its own CGlyphAtlas: the
 font file is read from the game data through the VFS, fitted with FontRaster to
-that exact cell height by the ink of the record's charset, and each character
+that exact cell height by the ink of the European code pages' characters (the
+same for every record, so one set of records looks the same over every
+language edition), and each character
 is rasterised the first time some text uses it, from CMLTextObject::Generate
 through CFontInfo::PrepareGlyphs. The cell carries no external leading, so the
 line space is the size asked for and every request draws at scale 1; at

@@ -57,6 +57,36 @@ int ToWindowsCharset( const NDb::SFont::ECharset eCharset )
 	}
 }
 
+// The characters every runtime font's cell is fitted to, whatever charset its
+// record names: the printable half of each European code page, together.
+//
+// The charset is a baking instruction; text reaches the engine as UTF-16 and
+// glyphs are looked up by code point, so a runtime font draws any character
+// its file has whatever the record says. Fitting by the record's own charset
+// would size the same font differently in each language edition, since each
+// edition's texts.pak carries its own records (the Russian edition's say
+// RUSSIAN, the repository's ANSI), and one set of records shipped over any
+// edition should look the same in all of them. The tallest of these, the accented
+// capitals of Latin-1 and Latin Extended and Cyrillic's Й and Ё, are what the
+// cell has to hold anyway for names and chat to fit.
+const std::vector<uint32_t> &GetSizingCodePoints()
+{
+	static std::vector<uint32_t> codePoints;
+	if ( codePoints.empty() )
+	{
+		const int CHARSETS[] = { NCodePages::CHARSET_ANSI, NCodePages::CHARSET_EASTEUROPE, NCodePages::CHARSET_RUSSIAN,
+			NCodePages::CHARSET_GREEK, NCodePages::CHARSET_TURKISH, NCodePages::CHARSET_BALTIC };
+		for ( const int nCharset : CHARSETS )
+		{
+			for ( const uint32_t nCodePoint : NCodePages::GetPrintableCodePoints( nCharset ) )
+				codePoints.push_back( nCodePoint );
+		}
+		std::sort( codePoints.begin(), codePoints.end() );
+		codePoints.erase( std::unique( codePoints.begin(), codePoints.end() ), codePoints.end() );
+	}
+	return codePoints;
+}
+
 // A font file from the game data, read once and shared by every size of every
 // font that uses it; FreeType reads from these bytes for as long as a face is
 // open on them
@@ -167,7 +197,7 @@ bool CGlyphAtlas::Init( const NDb::SFont *_pRecord, const int _nCellHeight )
 	state.options.bAntialias = pRecord->bAntialiased;
 	state.options.nPadding = N_PADDING;
 	const int nCharset = ToWindowsCharset( pRecord->eCharset );
-	state.sizing = NCodePages::GetPrintableCodePoints( nCharset );
+	state.sizing = GetSizingCodePoints();
 	if ( pFace == nullptr || !pFace->Fit( state.options, state.sizing, &szError ) )
 	{
 		DebugTrace( "runtime font: \"%s\" for font \"%s\": %s", pRecord->szFontFile.c_str(), pRecord->szName.c_str(), szError.c_str() );
