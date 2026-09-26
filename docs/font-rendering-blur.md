@@ -232,6 +232,13 @@ panels after those panels were moved into the outer campaign list. The scroll
 container now remeasures its children and restores the content extent and
 scroll range after repositioning.
 
+Fixed-height text fields, such as the selected unit's weapon statistics,
+vertically center a single line when its font cell exceeds the field height.
+This distributes the cell's accent/descender padding across both edges instead
+of cutting off the digits below it. The draw origin snaps to screen pixels to
+preserve sharpness. Wrapped/multiline and automatically sized descriptions
+keep their original top alignment.
+
 The first runtime version fitted the tallest ink across six European code
 pages into the requested line height. Oswald's accents and low marks then
 reduced its capitals to about 56% of the cell, versus 65% in the shipped h2

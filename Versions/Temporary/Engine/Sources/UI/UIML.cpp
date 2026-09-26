@@ -531,6 +531,7 @@ private:
 	CTPoint<float> sSize;
 	std::list<SCmdPair> itemsList;
 	std::list<SState> states;
+	int nLineCount = 0;
 
 protected:
 	void CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock );
@@ -551,6 +552,7 @@ public:
 	void PushState();
 	void PopState();
 
+	bool IsSingleLine() const { return nLineCount == 1; }
 	void Generate(  float fWidth );
 
 	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
@@ -615,6 +617,7 @@ void CMLLayout::PopState()
 
 void CMLLayout::Generate(  float fWidth )
 {
+	nLineCount = 0;
 	for( std::list<SCmdPair>::iterator iTemp = itemsList.begin(); iTemp != itemsList.end(); iTemp++ )
 	{
 		CPtr<IMLObject> pObject = iTemp->pObject;
@@ -712,6 +715,10 @@ void CMLLayout::CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock )
 {
 	AssembleLine( pInfo, bEndBlock );
 
+	// An over-wide first word can request an empty wrap before any line exists.
+	// Only count lines that actually consume vertical space.
+	if ( pInfo->fLineHeight != 0 || pInfo->fLastLineHeight != 0 )
+		++nLineCount;
 	pInfo->line.clear();
 
 	if ( pInfo->fLineHeight != 0 )
@@ -847,6 +854,7 @@ int CMLLayout::operator&( IBinSaver &saver )
 	saver.Add( 6, &sSize );
 	saver.Add( 7, &itemsList );
 	saver.Add( 8, &states );
+	saver.Add( 9, &nLineCount );
 	return 0;
 }
 
@@ -879,6 +887,7 @@ public:
 
 	CMLStream* GetStream() { return pStream; }
 	const CTPoint<int>& GetSize();
+	bool IsSingleLine();
 
 	void Generate( int nWidth );
 
@@ -947,6 +956,12 @@ void CML::UpdateFontScale()
 {
 	if ( nLayoutWidth >= 0 && fFontScale != NGScene::GetRuntimeFontScale() )
 		Generate( nLayoutWidth );
+}
+
+bool CML::IsSingleLine()
+{
+	UpdateFontScale();
+	return pLayout->IsSingleLine();
 }
 
 const CTPoint<int>& CML::GetSize()

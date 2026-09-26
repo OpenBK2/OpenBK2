@@ -209,6 +209,8 @@ struct IML: public CObjectBase
 
 	virtual CMLStream* GetStream() = 0;
 	virtual const CTPoint<int>& GetSize() = 0;
+	// Count laid-out lines, including automatic wrapping, not source newlines.
+	virtual bool IsSingleLine() = 0;
 
 	virtual void Generate(  int nWidth ) = 0;
 	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;

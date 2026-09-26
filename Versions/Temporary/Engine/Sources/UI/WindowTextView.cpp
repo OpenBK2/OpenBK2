@@ -9,6 +9,7 @@
 #include "UIML.h"
 #include "3Dmotor/GLocale.h"
 
+#include <cmath>
 #include <cstdint>
 
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B8C, CWindowTextView)
@@ -135,7 +136,17 @@ void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 		CTRect<float> textRC;
 		FillWindowRect( &textRC );
 		VirtualToScreen( textRC, &textRC );
-		pVisitor->VisitUIText( pGfxText, textRC.GetLeftTop(), textRC );
+		CTPoint<float> textPos = textRC.GetLeftTop();
+		const int nTextHeight = pGfxText->GetSize().y;
+		if ( !pInstance->bResizeOnTextSet && nTextHeight > textRC.Height() && pGfxText->IsSingleLine() )
+		{
+			// Fixed HUD fields can be shorter than the font's accent/descender
+			// cell even when the visible digits fit. Center that cell instead of
+			// clipping all its excess from the bottom; retain the window's clip
+			// and snap the draw origin to pixels so runtime glyphs stay sharp.
+			textPos.y = std::floor( textRC.y1 + ( textRC.Height() - nTextHeight ) * 0.5f + 0.5f );
+		}
+		pVisitor->VisitUIText( pGfxText, textPos, textRC );
 	}
 }
 
