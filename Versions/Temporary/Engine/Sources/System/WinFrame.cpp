@@ -551,8 +551,10 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 
 bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *pszWndName, LPCSTR nIcon )
 {
-	int nXSize = 10000;
-	int nYSize = 10000;
+	// Start inside the primary monitor at (0, 0). An oversized window can
+	// overlap another monitor more and make FitGameWindowToMonitor choose it.
+	const int nXSize = GetSystemMetrics( SM_CXSCREEN );
+	const int nYSize = GetSystemMetrics( SM_CYSCREEN );
 	// The module handle of the executable, which is what WinMain was handed back
 	// when it was the only entry point this game had.
 	::hInstance = GetModuleHandle( 0 );
@@ -671,12 +673,11 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPC
 	{
 		return false;
 	}
-	// Sized to the desktop rather than to the 10000 by 10000 the Windows path
-	// asks for. The size is provisional either way, since Gfx resizes the window
-	// to the back buffer on the first SetMode, and a window larger than every
-	// monitor is a Win32 way of saying borderless that SDL says directly.
+	// Use the primary display for both the initial size and placement. It need
+	// not be at desktop coordinate (0, 0), or under the mouse when we launch.
+	const SDL_DisplayID nDisplay = SDL_GetPrimaryDisplay();
 	int nWidth = 1024, nHeight = 768;
-	const SDL_DisplayMode *pDesktop = SDL_GetDesktopDisplayMode( SDL_GetPrimaryDisplay() );
+	const SDL_DisplayMode *pDesktop = SDL_GetDesktopDisplayMode( nDisplay );
 	if ( pDesktop != 0 )
 	{
 		nWidth = pDesktop->w;
@@ -688,8 +689,26 @@ bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *, LPC
 	// for a window created without the flag, and DXVK reports the refusal as
 	// VK_ERROR_OUT_OF_HOST_MEMORY, so CreateDevice fails with a message that
 	// points at memory rather than at the window.
-	SDL_Window *pWindow = SDL_CreateWindow( pszAppName != 0 ? pszAppName : "", nWidth, nHeight,
-	                                        SDL_WINDOW_BORDERLESS | SDL_WINDOW_VULKAN );
+	const SDL_PropertiesID properties = SDL_CreateProperties();
+	if ( properties == 0 )
+	{
+		csSystem << CC_RED << "Cannot create game window properties: " << SDL_GetError() << endl;
+		return false;
+	}
+	// Request desktop fullscreen on the primary display before showing the
+	// window. Some window managers relocate a desktop-sized borderless window
+	// even with an explicit position if it is not already marked fullscreen.
+	const int nPosition = SDL_WINDOWPOS_CENTERED_DISPLAY( nDisplay );
+	SDL_SetStringProperty( properties, SDL_PROP_WINDOW_CREATE_TITLE_STRING, pszAppName != 0 ? pszAppName : "" );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, nWidth );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, nHeight );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_X_NUMBER, nPosition );
+	SDL_SetNumberProperty( properties, SDL_PROP_WINDOW_CREATE_Y_NUMBER, nPosition );
+	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_BORDERLESS_BOOLEAN, true );
+	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_FULLSCREEN_BOOLEAN, true );
+	SDL_SetBooleanProperty( properties, SDL_PROP_WINDOW_CREATE_VULKAN_BOOLEAN, true );
+	SDL_Window *pWindow = SDL_CreateWindowWithProperties( properties );
+	SDL_DestroyProperties( properties );
 	if ( pWindow == 0 )
 	{
 		csSystem << CC_RED << "Cannot create the game window: " << SDL_GetError() << endl;
