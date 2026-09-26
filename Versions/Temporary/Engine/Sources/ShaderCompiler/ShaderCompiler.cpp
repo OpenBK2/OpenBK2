@@ -345,7 +345,7 @@ SHLSLSrcInfo hlslSrc;
 int nLine;
 char *pszShader, *pszShader14;
 
-typedef hash_map<string, string> CPSProcHash;
+typedef std::unordered_map<string, string> CPSProcHash;
 CPSProcHash psProcHash;
 
 static char parsedWord[256];
@@ -594,12 +594,12 @@ static void ParseFile( char *pszFile )
 	}
 }
 
-void PORT_CDECL main( int argc, char* argv[] )
+int PORT_CDECL main( int argc, char* argv[] )
 {
 	if ( argc != 3 )
 	{
 		cout << "Usage: ShaderCompiler srcFile dstFile\n";
-		return;
+		return 2;
 	}
 	cout << "Compiling " << argv[1] << " into " << argv[2] << endl;
 	CMemoryStream m;
@@ -614,6 +614,7 @@ void PORT_CDECL main( int argc, char* argv[] )
 		if ( szError != "" )
 		{
 			cout << argv[1] << " has an error (0): error X5328: "  << "at line " << nLine << ": " << szError << endl << endl;
+			return 1;
 		}
 		else
 		{
@@ -623,7 +624,9 @@ void PORT_CDECL main( int argc, char* argv[] )
 	catch(...)
 	{
 		cout << "failed" << endl;
+		return 1;
 	}
+	return 0;
 }
 
 

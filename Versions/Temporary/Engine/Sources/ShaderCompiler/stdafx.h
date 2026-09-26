@@ -39,6 +39,13 @@
 #include <iostream>
 #include <fstream>
 
+// The sources were written against an STL that put these in the global
+// namespace. Using-declarations rather than `using namespace std`, because the
+// latter makes std::byte collide with the Windows SDK's byte in rpcndr.h.
+using std::string;
+using std::vector;
+using std::list;
+
 inline std::ostream &operator<<( std::ostream &a, const string &sz ) { return a << sz.c_str(); }
 //inline std::ostream &operator<<( std::ostream &a, const char *psz ) { return a << psz; }
 

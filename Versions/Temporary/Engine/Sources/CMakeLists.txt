@@ -41,6 +41,13 @@ add_subdirectory("FontRaster")
 # The font baker, which rasterises with FontRaster.
 add_subdirectory("FontGen")
 
+# The shader compiler, which turns 3Dmotor/GfxShaders.txt into the committed
+# GfxShaders.cpp. Windows only, because it assembles and compiles through
+# D3DX; the bytecode it writes is what DXVK consumes on Linux.
+if(WIN32)
+    add_subdirectory("ShaderCompiler")
+endif()
+
 # The dedicated lobby server and the test client that drives it. Off by default
 # while they are mid-port.
 #

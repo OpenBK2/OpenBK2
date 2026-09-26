@@ -40,11 +40,11 @@ void Parse( SHLSLSrcInfo *pRes, const char *psz )
 
 static void AssignIndices( vector<SHLSLParam> *pRes )
 {
-	hash_map<string,int> lastIndices;
+	std::unordered_map<string,int> lastIndices;
 	for ( int k = 0; k < pRes->size(); ++k )
 	{
 		SHLSLParam &p = (*pRes)[k];
-		hash_map<string,int>::iterator i = lastIndices.find( p.szBinding );
+		std::unordered_map<string,int>::iterator i = lastIndices.find( p.szBinding );
 		if ( i == lastIndices.end() )
 		{
 			lastIndices[ p.szBinding ] = 0;

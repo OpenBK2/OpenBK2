@@ -36,7 +36,10 @@ static void WriteShader( ofstream &f, const string &szName, const vector<uint32_
 		*pszDeclaration += "0";
 		return;
 	}
-	f << "static uint32_t " << szName << "[] =";
+	// DWORD rather than uint32_t, because that is what SVShader and SPShader in
+	// 3Dmotor/GfxShadersDescr.h take, and what IDirect3DDevice9::Create*Shader
+	// is declared with.
+	f << "static DWORD " << szName << "[] =";
 	WriteShader( f, &shader[0] );
 	*pszDeclaration += szName;
 }
@@ -104,9 +107,10 @@ void WriteResult( const char *pszOutput )
 		const string szTempFileName( string(pszOutput) + ".tmp" );
 		const string szDestFileName( string(pszOutput) + ".h" );
 
-		ofstream fh( szTempFileName.c_str() );
-		fh << "#ifndef __" << pszOutput << "_H__" << endl;
-		fh << "#define __" << pszOutput << "_H__" << endl;
+		// Binary, so the output has LF line endings on every platform rather than
+		// CRLF on Windows only, the same as the committed file.
+		ofstream fh( szTempFileName.c_str(), std::ios::binary );
+		fh << "#pragma once" << endl;
 		//fh << "#include \"GfxShadersDescr.h\"" << endl;
 		//fh << "namespace NGfx" << endl;
 		//fh << "{" << endl;
@@ -136,7 +140,6 @@ void WriteResult( const char *pszOutput )
 			fh << "}" << endl << endl;
 		}
 		//fh << "}" << endl;
-		fh << "#endif" << endl;
 		fh.close();
 
 		// Check file for changes
@@ -152,11 +155,16 @@ void WriteResult( const char *pszOutput )
 		const string szTempFileName( string(pszOutput) + ".tmp" );
 		const string szDestFileName( string(pszOutput) + ".cpp" );
 
-		ofstream f( szTempFileName.c_str() );
+		ofstream f( szTempFileName.c_str(), std::ios::binary );
 
-		f << "#include \"StdAfx.h\"" << endl;
+		// The spelling the tree uses after its include-case normalisation, which
+		// matters on case-sensitive file systems.
+		f << "#include \"stdafx.h\"" << endl;
 		f << "#include \"GfxShadersDescr.h\"" << endl;
 		f << "#include \"" << pszOutput << ".h\"" << endl;
+		f << endl;
+		f << "#include <cstdint>" << endl;
+		f << endl;
 		//f << "namespace NGfx" << endl;
 		//f << "{" << endl;
 		for ( int k = 0; k < vertexShaders.size(); ++k )

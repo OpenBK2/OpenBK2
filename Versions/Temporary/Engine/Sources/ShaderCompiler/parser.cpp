@@ -95,9 +95,7 @@ string StripAfterDot( const char *p, string *pSuffix, string *pPrefix )
 
 string GetNumber( int n )
 {
-	char szBuf[8] = {0,0,0,0,0,0,0,0};
-	itoa( n, szBuf, 10 );
-	return szBuf;
+	return std::to_string( n );
 }
 
 bool IsOneOf( const char **pList, const char *p )
