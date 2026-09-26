@@ -795,6 +795,10 @@ static void ShowUsage()
 	fmt::print( "   -hint=<mode>\t FreeType hinting: none, light (default) or normal\n" );
 	fmt::print( "   -gamma=<g>\t FreeType coverage gamma, default 1; above 1 thickens edges\n" );
 	fmt::print( "   -pad=<n>\t FreeType blank pixels between atlas cells, default 2\n" );
+	fmt::print( "   -cell=<m>\t what -h is fitted to: win (default), usWinAscent + usWinDescent\n" );
+	fmt::print( "       \t\t as GDI does, or ink, the tallest and deepest of the characters\n" );
+	fmt::print( "       \t\t baked, which sizes fonts made for many scripts comparably\n" );
+	fmt::print( "   -instance=<n>\t a variable font's named instance, counted from 1\n" );
 
 }
 
@@ -902,6 +906,27 @@ int PORT_CDECL main( int argc, char *argv[] )
 		if ( pos->find( "-pad=" ) == 0 )
 		{
 			ftOptions.nPadding = atoi( pos->c_str() + 5 );
+			continue;
+		}
+		if ( pos->find( "-cell=" ) == 0 )
+		{
+			const std::string szMode = pos->substr( 6 );
+			if ( szMode == "win" )
+				ftOptions.eCellMetrics = NFontRaster::CELL_WIN;
+			else if ( szMode == "ink" )
+				ftOptions.eCellMetrics = NFontRaster::CELL_INK;
+			else
+			{
+				fmt::print( "ERROR: unknown cell metrics \"{}\"\n", szMode );
+				return 0xDEAD;
+			}
+			continue;
+		}
+		if ( pos->find( "-instance=" ) == 0 )
+		{
+			// a variable font's named instance, counted from 1, in the high half
+			// of the face index as FreeType takes it
+			ftOptions.nFaceIndex = ( ftOptions.nFaceIndex & 0xFFFF ) | ( atoi( pos->c_str() + 10 ) << 16 );
 			continue;
 		}
     if ( charsets.find(*pos) != charsets.end() )

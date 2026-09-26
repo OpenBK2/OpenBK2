@@ -21,7 +21,8 @@
 //   metrics     ascent and descent from the OS/2 table's usWinAscent and
 //               usWinDescent, external leading from GDI's own formula over the
 //               hhea table, average width from xAvgCharWidth and maximum width
-//               from advanceWidthMax, all scaled and rounded
+//               from advanceWidthMax, all scaled and rounded; CELL_INK below
+//               departs from this on purpose
 
 #include <cstdint>
 #include <string>
@@ -43,10 +44,27 @@ enum EHinting
 	HINTING_NORMAL,
 };
 
+// What the cell height is fitted to
+enum ECellMetrics
+{
+	// usWinAscent + usWinDescent, as GDI does, so a Windows font bakes the way
+	// FontGen always baked it. Fonts made for many scripts set these to cover
+	// stacked accents and tall scripts the game never bakes, and then come out
+	// small: Noto Sans's capitals fill 0.47 of the cell against Tahoma's 0.60.
+	CELL_WIN,
+	// the ink of the characters actually being rasterised, highest point to
+	// lowest, so the cell holds exactly what is baked and any two fonts fill it
+	// alike; capitals land at 0.60 to 0.68 of the cell across the fonts tried
+	CELL_INK,
+};
+
 struct SOptions
 {
 	std::string szFontFile;			// a TrueType or OpenType file
-	int nFaceIndex = 0;					// which face, for a collection (.ttc)
+	// which face: the index in a collection (.ttc) in the low 16 bits, and for a
+	// variable font a named instance, counted from 1, in the high 16 bits
+	int nFaceIndex = 0;
+	ECellMetrics eCellMetrics = CELL_WIN;
 	int nCellHeight = 16;				// ascent + descent in pixels, exactly
 	EHinting eHinting = HINTING_LIGHT;
 	bool bAntialias = true;			// false renders one bit per pixel

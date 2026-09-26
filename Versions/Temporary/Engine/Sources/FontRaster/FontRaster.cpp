@@ -2,6 +2,7 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
+#include FT_OUTLINE_H
 #include FT_TRUETYPE_TABLES_H
 
 #include <algorithm>
@@ -80,6 +81,47 @@ bool ReadDesignMetrics( const FT_Face pFace, SDesignMetrics *pMetrics, std::stri
 		*pszError = "the font reports no vertical extent";
 		return false;
 	}
+	return true;
+}
+
+// CELL_INK's extent: the highest and lowest point of any of codePoints'
+// outlines, in font units. Replaces the win ascent and descent, and zeroes the
+// external leading, which is defined against the win extent and means nothing
+// once the cell no longer is. A code point with no glyph adds nothing, since
+// what it gets is .notdef, which fits any font's own metrics.
+bool MeasureInk( const FT_Face pFace, const std::vector<uint32_t> &codePoints, SDesignMetrics *pMetrics, std::string *pszError )
+{
+	FT_Pos nTop = 0, nBottom = 0;
+	for ( const uint32_t nCodePoint : codePoints )
+	{
+		const FT_UInt nGlyphIndex = FT_Get_Char_Index( pFace, nCodePoint );
+		if ( nGlyphIndex == 0 )
+		{
+			continue;
+		}
+		const FT_Error nError = FT_Load_Glyph( pFace, nGlyphIndex, FT_LOAD_NO_SCALE );
+		if ( nError != 0 )
+		{
+			*pszError = DescribeError( "FT_Load_Glyph( FT_LOAD_NO_SCALE )", nError );
+			return false;
+		}
+		if ( pFace->glyph->format != FT_GLYPH_FORMAT_OUTLINE || pFace->glyph->outline.n_points == 0 )
+		{
+			continue;
+		}
+		FT_BBox box;
+		FT_Outline_Get_CBox( &pFace->glyph->outline, &box );
+		nTop = std::max( nTop, box.yMax );
+		nBottom = std::min( nBottom, box.yMin );
+	}
+	if ( nTop - nBottom <= 0 )
+	{
+		*pszError = "none of the characters has any ink to size the cell by";
+		return false;
+	}
+	pMetrics->nWinAscent = static_cast<int>( nTop );
+	pMetrics->nWinDescent = static_cast<int>( -nBottom );
+	pMetrics->nExternalLeading = 0;
 	return true;
 }
 
@@ -263,27 +305,17 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 	{
 		return false;
 	}
+	if ( options.eCellMetrics == CELL_INK && !MeasureInk( face.pFace, codePoints, &design, pszError ) )
+	{
+		return false;
+	}
 	// The em size that makes the win extent exactly nCellHeight pixels. GDI has
 	// to round this to a whole pixel, which is why it cannot produce every cell
 	// height; FreeType takes it in 26.6 fixed point. That is honoured even for
 	// fonts whose head table asks for integer ppem, which all of Windows' do:
 	// measured on Impact, 64.769 asked for and 64.766 applied.
-	const double fPixelsPerUnit = static_cast<double>( options.nCellHeight ) / ( design.nWinAscent + design.nWinDescent );
-	const double fPixelsPerEm = fPixelsPerUnit * design.nUnitsPerEm;
-	nError = FT_Set_Char_Size( face.pFace, 0, static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ), 72, 72 );
-	if ( nError != 0 )
-	{
-		*pszError = DescribeError( "FT_Set_Char_Size", nError );
-		return false;
-	}
-	pResult->fPixelsPerEm = fPixelsPerEm;
+	double fPixelsPerUnit = static_cast<double>( options.nCellHeight ) / ( design.nWinAscent + design.nWinDescent );
 	pResult->nCellHeight = options.nCellHeight;
-	// Ascent rounds on its own and descent takes the rest, so the two always sum
-	// to the cell exactly
-	pResult->nAscent = static_cast<int>( std::lround( design.nWinAscent * fPixelsPerUnit ) );
-	pResult->nDescent = options.nCellHeight - pResult->nAscent;
-	pResult->nExternalLeading = static_cast<int>( std::lround( design.nExternalLeading * fPixelsPerUnit ) );
-	pResult->nMaxCharWidth = static_cast<int>( std::lround( design.nMaxAdvance * fPixelsPerUnit ) );
 
 	std::vector<uint8_t> gammaTable( 256 );
 	for ( int i = 0; i < 256; ++i )
@@ -292,19 +324,67 @@ bool Rasterise( const SOptions &options, const std::vector<uint32_t> &codePoints
 		gammaTable[i] = static_cast<uint8_t>( std::lround( 255.0 * std::pow( i / 255.0, 1.0 / fGamma ) ) );
 	}
 
+	// Rasterised once for CELL_WIN. For CELL_INK the rendered ink decides where
+	// the baseline goes: hinting moves outlines by up to a pixel, so ink sized to
+	// fit in font units can still come out a row too tall. The baseline then
+	// moves as little as fits it, and only when the rendered ink is taller than
+	// the cell itself is the em shrunk to match and everything rendered again.
 	std::vector<SRendered> rendered( codePoints.size() );
-	for ( size_t i = 0; i < codePoints.size(); ++i )
+	for ( int nAttempt = 0; ; ++nAttempt )
 	{
-		bool bMissing = false;
-		if ( !RenderGlyph( face.pFace, options, codePoints[i], gammaTable, &rendered[i], &bMissing, pszError ) )
+		const double fPixelsPerEm = fPixelsPerUnit * design.nUnitsPerEm;
+		nError = FT_Set_Char_Size( face.pFace, 0, static_cast<FT_F26Dot6>( std::lround( fPixelsPerEm * 64.0 ) ), 72, 72 );
+		if ( nError != 0 )
 		{
+			*pszError = DescribeError( "FT_Set_Char_Size", nError );
 			return false;
 		}
-		if ( bMissing )
+		pResult->fPixelsPerEm = fPixelsPerEm;
+		// Ascent rounds on its own and descent takes the rest, so the two always
+		// sum to the cell exactly
+		pResult->nAscent = static_cast<int>( std::lround( design.nWinAscent * fPixelsPerUnit ) );
+		pResult->missing.clear();
+		for ( size_t i = 0; i < codePoints.size(); ++i )
 		{
-			pResult->missing.push_back( codePoints[i] );
+			bool bMissing = false;
+			if ( !RenderGlyph( face.pFace, options, codePoints[i], gammaTable, &rendered[i], &bMissing, pszError ) )
+			{
+				return false;
+			}
+			if ( bMissing )
+			{
+				pResult->missing.push_back( codePoints[i] );
+			}
 		}
+		if ( options.eCellMetrics != CELL_INK )
+		{
+			break;
+		}
+		// rows above the baseline and below it that the ink really uses
+		int nAbove = 0, nBelow = 0;
+		for ( const SRendered &glyph : rendered )
+		{
+			if ( glyph.nRows > 0 )
+			{
+				nAbove = std::max( nAbove, glyph.nTop );
+				nBelow = std::max( nBelow, glyph.nRows - glyph.nTop );
+			}
+		}
+		if ( nAbove + nBelow <= options.nCellHeight )
+		{
+			pResult->nAscent = std::clamp( pResult->nAscent, nAbove, options.nCellHeight - nBelow );
+			break;
+		}
+		if ( nAttempt == 3 )
+		{
+			// what still does not fit is clipped and reported below
+			break;
+		}
+		fPixelsPerUnit *= static_cast<double>( options.nCellHeight ) / ( nAbove + nBelow );
 	}
+	pResult->nDescent = options.nCellHeight - pResult->nAscent;
+	pResult->nExternalLeading = static_cast<int>( std::lround( design.nExternalLeading * fPixelsPerUnit ) );
+	pResult->nMaxCharWidth = static_cast<int>( std::lround( design.nMaxAdvance * fPixelsPerUnit ) );
 	// Without xAvgCharWidth, the mean advance of what was rendered is as close
 	// as GDI's own fallback gets
 	if ( design.nAveCharWidth > 0 )
