@@ -171,7 +171,7 @@ fetched dependencies register roughly 150 tests of their own.
 | configure dies in `cmake/dxvk.cmake`, `dxvk-d3d9` not found | `PKG_CONFIG_PATH` not exported, or DXVK not installed. Step 1. |
 | `DXVK_WSI_DRIVER environment variable unset` | step 5, it has no default |
 | splash or config "missing, empty, or unreadable" | data is in the wrong place, or `Game` was not launched from `<prefix>/bin`. Step 4. |
-| link errors naming `D3DXCreateEffect` and friends | d3dx9 is headers-only under DXVK and has no implementation. `3Dmotor/GShaderFX.cpp` is Windows-only for this reason. |
+| link errors naming `D3DXCreateEffect` and friends | d3dx9 is headers-only under DXVK and has no implementation. No game code uses D3DX any more, so a new include of `d3dx9.h` is the cause; ShaderCompiler, the one D3DX user, is Windows-only for this reason. |
 | `dlsym` failures out of DXVK at startup | the SDL3 this build pins is older than the one DXVK was compiled against. Keep the pin in `cmake/sdl.cmake` ahead of the distro's. |
 | configure hangs or fails on first run | `FetchContent` needs network |
 

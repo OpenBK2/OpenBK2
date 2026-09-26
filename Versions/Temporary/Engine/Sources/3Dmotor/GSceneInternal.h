@@ -132,9 +132,10 @@ class CGScene: public IGScene, public IDecalQuery
 	STime sSunFlareTime;
 	float fSunFlareCoeff;
 	CVec3 sunFlareDir;
-	bool bIsTwilight;
 	CObj<CCVec3> pParticlesLightColor;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&trackers); f.Add(3,&pVolume); f.Add(4,&lines); f.Add(5,&renderMode); f.Add(6,&pCamera); f.Add(7,&mHoldTransform); f.Add(8,&nCurrentIgnoreMark); f.Add(9,&nIgnoreListWasCalced); f.Add(10,&holdMask); f.Add(11,&pAmbient); f.Add(12,&pTransparentMaterial); f.Add(13,&pFakeParticleLM); f.Add(14,&nFrameCounter); f.Add(15,&postprocessors); f.Add(16,&toBeLoaded); f.Add(17,&pDecalsManager); f.Add(18,&pAmbientAnimator); f.Add(19,&pLightState); f.Add(20,&toBeLoadedAnimated); f.Add(21,&pSunFlares); f.Add(22,&pSunFlaresTime); f.Add(23,&sSunFlareTime); f.Add(24,&fSunFlareCoeff); f.Add(25,&sunFlareDir); f.Add(26,&bIsTwilight); f.Add(27,&pParticlesLightColor); return 0; }
+	// Chunk 26 was bIsTwilight, the switch for a post effect that never ran.
+	// Saves written before its removal still carry it, so the id stays retired.
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&trackers); f.Add(3,&pVolume); f.Add(4,&lines); f.Add(5,&renderMode); f.Add(6,&pCamera); f.Add(7,&mHoldTransform); f.Add(8,&nCurrentIgnoreMark); f.Add(9,&nIgnoreListWasCalced); f.Add(10,&holdMask); f.Add(11,&pAmbient); f.Add(12,&pTransparentMaterial); f.Add(13,&pFakeParticleLM); f.Add(14,&nFrameCounter); f.Add(15,&postprocessors); f.Add(16,&toBeLoaded); f.Add(17,&pDecalsManager); f.Add(18,&pAmbientAnimator); f.Add(19,&pLightState); f.Add(20,&toBeLoadedAnimated); f.Add(21,&pSunFlares); f.Add(22,&pSunFlaresTime); f.Add(23,&sSunFlareTime); f.Add(24,&fSunFlareCoeff); f.Add(25,&sunFlareDir); f.Add(27,&pParticlesLightColor); return 0; }
 	int nSlowVolumeWalk;
 	SParticleLMRenderTargetInfo particleLM;
 	SGroupSelect lastMask;
@@ -239,7 +240,6 @@ public:
 	virtual void WaitForLoad( bool bWait = true ) { bWaitForLoad = bWait; }
 	CFuncBase<SPerVertexLightState> *GetLightState() const;
 	void GetNotLoaded( std::vector<IPart*> *pRes );
-	virtual void SetTwilight( bool _bIsTwilight ) { bIsTwilight = _bIsTwilight; }
 	virtual CFuncBase<CVec3> *GetParticlesLightColor() { return pParticlesLightColor; }
 	virtual void CollectAllParts( std::vector<CObjectBase*> *pRes );
 	CTransparentRenderer *CreateTransparentRenderer( CTransformStack *pTS, bool bLitParticles );

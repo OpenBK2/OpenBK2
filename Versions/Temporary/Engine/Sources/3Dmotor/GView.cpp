@@ -251,8 +251,9 @@ class CGameView: public IGameView
 	CObj<SDepthOfField> pDepthOfField;
 	CObj<ISkyDome> pSkyDome;
 	CArray2D<NGfx::SPixel8888> fogColors;
-	bool bIsTwilight;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScene); f.Add(3,&nodes); f.Add(5,&pMaterials); f.Add(6,&colorMaterials); f.Add(7,&transparentMaterials); f.Add(8,&nCutFloor); f.Add(11,&hsrMode); f.Add(13,&vDefaultClearColor); f.Add(14,&trMode); f.Add(15,&pIdentityTransform); f.Add(16,&pPrevLight); f.Add(17,&pHaze); f.Add(19,&renderMode); f.Add(20,&bForceFastest); f.Add(22,&precacheObjects); f.Add(23,&pPrevLightTime); f.Add(24,&faders); f.Add(25,&pRain); f.Add(26,&pDepthOfField); f.Add(27,&pSkyDome); f.Add(28,&fogColors); f.Add(29,&bIsTwilight); return 0; }
+	// Chunk 29 was bIsTwilight, the switch for a post effect that never ran.
+	// Saves written before its removal still carry it, so the id stays retired.
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScene); f.Add(3,&nodes); f.Add(5,&pMaterials); f.Add(6,&colorMaterials); f.Add(7,&transparentMaterials); f.Add(8,&nCutFloor); f.Add(11,&hsrMode); f.Add(13,&vDefaultClearColor); f.Add(14,&trMode); f.Add(15,&pIdentityTransform); f.Add(16,&pPrevLight); f.Add(17,&pHaze); f.Add(19,&renderMode); f.Add(20,&bForceFastest); f.Add(22,&precacheObjects); f.Add(23,&pPrevLightTime); f.Add(24,&faders); f.Add(25,&pRain); f.Add(26,&pDepthOfField); f.Add(27,&pSkyDome); f.Add(28,&fogColors); return 0; }
 
 	bool bWaitLoading;
 	CObj<ILoadingCounter> pWaitLoading, pCalcTerrain;
@@ -327,7 +328,6 @@ public:
 	EHSRMode GetHSRMode() const { return hsrMode; }
 	void SetTransparentMode( ETransparentMode m ) { trMode = m; }
 	ETransparentMode GetTransparentMode() const { return trMode; }
-	virtual void SetTwilight(bool _bIsTwilight ) { bIsTwilight = _bIsTwilight;}
 	virtual void SetFreezeMode( bool mode ){ NGScene::bFreeze = mode; };
 };
 
@@ -372,7 +372,6 @@ CGameView::CGameView()
 	pPrevLight = 0;
 	bForceFastest = false;
 	bWaitLoading = true;
-	bIsTwilight = false;
 }
 
 IMaterial* CGameView::CreateMaterialShared( const NDb::SMaterial *p )
@@ -1224,8 +1223,6 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 		}				
 	}
 	pRC->SetFogParams( fogParams );
-	//pScene->SetTwilight(rand()&1);
-	pScene->SetTwilight( bIsTwilight );
 	pScene->Draw( pTS, pClipTS, pRC, mask, rp, rtClear, hsrMode, trMode, pSky, pDepthOfField, nLightOptions );
 }
 

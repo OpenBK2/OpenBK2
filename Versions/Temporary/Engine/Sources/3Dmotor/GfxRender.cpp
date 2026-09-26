@@ -7,7 +7,6 @@
 #include "GfxShaders.h"
 #include "GfxShadersDescr.h"
 #include "System/Commands.h"
-#include "GShaderFX.h"
 
 #include "pciids/vendors.h"
 #include "pciids/gpus.h"
@@ -93,11 +92,6 @@ static bool bDoesSupportOcclusionQueries = false, bDoesSupportEventQueries = fal
 static std::deque<CObj<IQuery> > lagQueries;
 static int nMaxLag = 1;
 static float fRegisterResolution = 1;
-
-typedef std::unordered_map<std::string, CObj<CPixelShader> > TPixelShaders;
-typedef std::unordered_map<std::string, CObj<CVertexShader> > TVertexShaders;
-static TPixelShaders hlslPixelShaders;
-static TVertexShaders hlslVertexShaders;
 
 EVideoCard GetVideoCard()
 {
@@ -1142,27 +1136,8 @@ void CRenderContext::SetPixelShader( const SPShader &s )
 {
 	ASSERT( pOutstandingStream == 0 );
 
-	pPShader = 0;
 	pPixelShader = &s;
 	pCurrentPixelShader = 0;
-}
-
-void CRenderContext::SetPixelShader( const std::string &szName )
-{
-	ASSERT( pOutstandingStream == 0 );
-
-	pPShader = 0;
-	pPixelShader = 0;
-	pCurrentPixelShader = 0;
-
-	TPixelShaders::const_iterator iFindRes = hlslPixelShaders.find( szName );
-	if ( iFindRes == hlslPixelShaders.end() )
-	{
-		pPShader = CreatePixelShader( szName );
-		hlslPixelShaders[szName] = pPShader;
-	}
-	else
-		pPShader = iFindRes->second;
 }
 
 void CRenderContext::SetVertexShader( const SVShader &s )
@@ -1171,28 +1146,7 @@ void CRenderContext::SetVertexShader( const SVShader &s )
 	ASSERT( pOutstandingStream == 0 );
 	ASSERT( !IsTnLDevice() );
 
-	pVShader = 0;
 	nVertexShader = s.nID;
-}
-
-
-void CRenderContext::SetVertexShader( const std::string &szName )
-{
-	ASSERT( !bTnLDevice );
-	ASSERT( pOutstandingStream == 0 );
-	ASSERT( !IsTnLDevice() );
-
-	pVShader = 0;
-	nVertexShader = 0;
-
-	TVertexShaders::const_iterator iFindRes = hlslVertexShaders.find( szName );
-	if ( iFindRes == hlslVertexShaders.end() )
-	{
-		pVShader = CreateVertexShader( szName );
-		hlslVertexShaders[szName] = pVShader;
-	}
-	else
-		pVShader = iFindRes->second;
 }
 
 //void CRenderContext::SetVSConst( int nReg, const CVec4 *pData, int nSize )
@@ -1334,32 +1288,6 @@ static void DoValidateDevice( int nPID, int nVID )
 }
 
 
-static void SetVertexShader( CGeometry *pVB, CVertexShader *pVShader )
-{
-	int nFormatID = pVB->GetGeometryFormatID();
-	if ( bTnLDevice )
-	{
-		if ( nFormatID == nLastUsedVDeclaration )
-			return;
-
-		nLastUsedVDeclaration = nFormatID;
-		uint32_t dwFVF = geometryFormatInfo[nFormatID].dwFVF;
-		pDevice->SetFVF( dwFVF );
-		pDevice->SetRenderState( D3DRS_LIGHTING, (dwFVF & D3DFVF_DIFFUSE) ? FALSE : TRUE );
-		return;
-	}
-
-	if ( nFormatID != nLastUsedVDeclaration )
-	{
-		nLastUsedVDeclaration = nFormatID;
-		HRESULT hRes = pDevice->SetVertexDeclaration( vertexDeclarations[ nFormatID ] );
-		ASSERT( hRes == D3D_OK );
-	}
-
-	nLastUsedVShader = -1;
-	pVShader->Use();
-}
-
 void CRenderContext::StartStream( CGeometry *pGeom )
 {
 	ASSERT( pOutstandingStream == 0 );
@@ -1367,18 +1295,12 @@ void CRenderContext::StartStream( CGeometry *pGeom )
 	//	ASSERT( pPixelShader );
 	//	ASSERT( pVertexShader );
 
-	if ( pPShader )
-		pPShader->Begin();
-	else
-		NGfx::SetPixelShader( *pPixelShader );
+	NGfx::SetPixelShader( *pPixelShader );
 
 	pGeom->SetVertexStream();
 	pOutstandingStream = pGeom->GetVertexStream();
 
-	if ( pVShader )
-		NGfx::SetVertexShader( pGeom, pVShader );
-	else
-		NGfx::SetVertexShader( pGeom, nVertexShader);
+	NGfx::SetVertexShader( pGeom, nVertexShader);
 
 	if ( bDoValidateDevice )
 		DoValidateDevice( pPixelShader->nID, nVertexShader );
@@ -1437,9 +1359,6 @@ void CRenderContext::Flush()
 {
 	FlushPrimitive();
 	pOutstandingStream = 0;
-
-	if ( pPShader )
-			pPShader->End();
 }
 
 void CRenderContext::AddLineStrip( CGeometry *pGeom, const unsigned short *pIndices, int nLines )
@@ -1761,8 +1680,6 @@ void InitRender()
 
 void DoneEffects()
 {
-	hlslPixelShaders.clear();
-	hlslVertexShaders.clear();
 	ZERO_ARRAY( pixelShaders );
 	ZERO_ARRAY( vertexShaders );
 	ZERO_ARRAY( vertexDeclarations );
@@ -1780,7 +1697,6 @@ void DoneRender()
 	D3DASSERT( hr, "EndScene failed" );
 	pScreenColor = 0;
 	pScreenDepth = 0;
-	DoneShaderFX();
 	DoneEffects();
 	pDevice->SetVertexShader( 0 );
 	pDevice->SetPixelShader( 0 );

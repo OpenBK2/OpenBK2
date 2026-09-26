@@ -216,7 +216,6 @@ public:
 	virtual void MakeHQShot( const SDrawInfo &drawInfo, CArray2D<NGfx::SPixel8888> *pRes ) = 0;
 	virtual void SetLoadingCounter( ILoadingCounter *pWaitLoad, ILoadingCounter *pCalcTerrain, ILoadingCounter *pCounter ) = 0;
 	virtual void WaitForLoad( bool bWait = true ) = 0;
-	virtual void SetTwilight(bool _bIsTwilight ) = 0;
 	virtual void SetFreezeMode( bool mode ) = 0;
 
 	SMeshInfo MakeMeshInfo( CPtrFuncBase<CObjectInfo> *pGeom, const NDb::SMaterial *pMat )

@@ -141,8 +141,6 @@ class CCubeTexture;
 class CGeometry;
 class CTriList;
 struct S3DTriangle;
-class CPixelShader;
-class CVertexShader;
 
 enum EFace : int;
 
@@ -181,8 +179,6 @@ class _3DMOTOR_EXPORT CRenderContext
 	int nVertexShader;
 	void *pOutstandingStream; // 0 if no geometry is in fly
 
-	CObj<CPixelShader> pPShader;
-	CObj<CVertexShader> pVShader;
 
 
 
@@ -217,9 +213,7 @@ public:
 	//
 	bool HasRegisters() const { return targetMode == RTM_REGISTERS; }
 	// functions to be used in effect initialisation
-	void SetPixelShader( const std::string &szName );
 	void SetPixelShader( const SPShader &pShader );
-	void SetVertexShader( const std::string &szName );
 	void SetVertexShader( const SVShader &pShader );
 
 

@@ -23,12 +23,13 @@
 #include "GPartParticles.h"
 #include "GPostProcessors.h"
 #include "GRenderPathPolycount.h"
+// Gfx textures, CRenderContext and the 2D effects; this came in through
+// GPostEffects.h until the post effects were removed.
+#include "GfxUtils.h"
 #include "System/Commands.h"
 #include <algorithm>
 #include <d3d9.h>
 
-#include "GShaderFX.h"
-#include "GPostEffects.h"
 
 #include <cstdint>
 
@@ -39,7 +40,6 @@ namespace NGScene
 static SRenderStats lastFrameStats;
 static bool bWireframe;
 static bool bShow2DTextureCache = false, bShowTranspTextureCache = false, bShowParticleLMCache = false;
-static bool bTwilight = false;
 //static bool bUseHWHSR = false;
 static int nTotalParts, nTotalElements;
 static float s_fLODSwitchDistance = 300;
@@ -186,14 +186,13 @@ void CFakeParticleLMTexture::Recalc()
 // CGScene
 
 CGScene::CGScene() : holdMask(0,0), nFrameCounter(100), lastMask(0,0), bWaitForLoad( true ),
-	nReuseIgnoreList(0), nGfxDeviceCreationID(-1), nIgnoreListWasCalced(0), bIsTwilight(false)
+	nReuseIgnoreList(0), nGfxDeviceCreationID(-1), nIgnoreListWasCalced(0)
 {
 	Identity( &mHoldTransform );
 }
 
 CGScene::CGScene( int ) : holdMask(0,0), nFrameCounter(100), lastMask(0,0), nReuseIgnoreList(0),
-	nGfxDeviceCreationID(-1), nIgnoreListWasCalced(0), fSunFlareCoeff( 0 ), sSunFlareTime( 0 ),
-	bIsTwilight(false)
+	nGfxDeviceCreationID(-1), nIgnoreListWasCalced(0), fSunFlareCoeff( 0 ), sSunFlareTime( 0 )
 {
 	Identity( &mHoldTransform );
 	pVolume = new CVolumeNode;
@@ -1787,23 +1786,12 @@ void CGScene::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 		if ( trMode != TRM_NONE )
 			pParticleLight = bUseFakeParticleLM ? pFakeParticleLM->GetValue() : particleLM.pParticleLMs.GetPtr();
 
-		//static bool bTwilight = true;
-
-
-
 		switch ( renderPath )
 		{
 		case RP_TNL:
 			RenderTnL( pTS, pClipTS, pRC, &renderWrapper, geom, pTransp, trMode, pSky );
 			break;
 		case RP_GF3_FAST:
-
-			if ( bIsTwilight )
-			{
-				pRC->SetVirtualRT();
-				pRC->SetRegister( 0 );
-			}
-
 			RenderGf3Fast( pTS, pClipTS, pRC, &renderWrapper, geom, useParticleTarget, rtClear,
 				pLightState->GetDirectional(), pLightState->GetValue().GetWarFogBlend(), nLightOptions,
 				pTransp, trMode, pParticleLight, pSky );
@@ -1833,40 +1821,6 @@ void CGScene::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 			break;
 		}
 
-		// draw twilight
-		if ( bIsTwilight )
-		{
-			NGfx::CRenderContext rc;
-
-			CTRect<float> rectReg;
-			NGfx::GetRegisterSize( &rectReg );
-			const int nWidth = rectReg.Width();
-			const int nHeight = rectReg.Height();
-			CTRect<float> rectRegDS( 0, 0, nWidth, nHeight );
-			CTRect<float> rectSmall( 0, 0, 255, 255 );
-
-			std::vector<CPtr<NGfx::I2DEffect> > filters;
-			NGfx::InitShaderFX();
-
-			static CObj<NGfx::CTexture> pRandomTexture;
-			if ( !IsValid( pRandomTexture ) )
-			{
-				pRandomTexture = NGfx::MakeTexture( 128, 128, 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::WRAP );
-				NGfx::CTextureLock<NGfx::SPixel8888> lock( pRandomTexture, 0, NGfx::INPLACE );
-				for ( int x = 0; x < 128; ++x )
-				{
-					for ( int y = 0; y < 128; ++y )
-					{
-						uint8_t v1 = (rand()&127);
-						lock[y][x] = NGfx::SPixel8888( v1+10, v1+50, v1+100, 0);
-					}
-				}
-			}
-
-			filters.push_back(new  NGfx::CTwilightEffect( 0.8f, 0.02f, pRandomTexture, 0, 0 ));
-			CTRect<float> rectSrc( rectReg ), rectDst( rectRegDS );
-			NGfx::CopyTexture( rc, CVec2( rectReg.Width(), rectReg.Height() ), rectDst, NGfx::GetRegisterTexture( 0 ), rectSrc, CVec4( 0, 0, 0, 0.0f ), filters[0] );
-		}
 		//CPtr< SDepthOfField > ef=new SDepthOfField(0.1f,1.0f);
 		//ProcessDepthOfField( ef , &geom, pTS, &renderWrapper);
 		//ProcessDepthOfField( pDOF, &geom, pTS, &renderWrapper );
@@ -2203,13 +2157,6 @@ static void VarSwitchTranspLMCache( const std::string &szID, const NGlobal::CVal
 		bShowParticleLMCache = true;
 }
 
-static void VarSwitchTwilight( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
-{
-	bTwilight = false;
-	if ( sValue.GetFloat() != 0 )
-		bTwilight = true;
-}
-
 static void VarSwitchLinearCache( const std::string &szID, const NGlobal::CValue &sValue, void *pContext )
 {
 	showLinearCache = SLC_NONE;
@@ -2227,7 +2174,6 @@ START_REGISTER(GSceneInternal)
 	REGISTER_VAR( "gfx_showcache_transp", VarSwitchTranspCache, 0.0f, STORAGE_NONE )
 	REGISTER_VAR( "gfx_showcache_transplm", VarSwitchTranspLMCache, 0.0f, STORAGE_NONE )
 	REGISTER_VAR( "gfx_showcache_linear", VarSwitchLinearCache, 0.0f, STORAGE_NONE )
-	REGISTER_VAR( "gfx_twilight", VarSwitchTwilight, 0.0f, STORAGE_NONE )
 	REGISTER_VAR_EX( "gfx_pc_low", NGlobal::VarFloatHandler, &fPCLow, 0.15f, STORAGE_NONE )
 	REGISTER_VAR_EX( "gfx_pc_high", NGlobal::VarFloatHandler, &fPCHigh, 5.0f, STORAGE_NONE )
 	REGISTER_VAR_EX( "gfx_lod_switch_distance", NGlobal::VarFloatHandler, &s_fLODSwitchDistance, 300, STORAGE_USER )

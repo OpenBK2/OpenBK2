@@ -190,7 +190,6 @@ public:
 	virtual SGroupSelect GetLastMask() = 0;
 	virtual int PrecacheMaterials( ILoadingCounter *pCounter ) = 0;
 	virtual void WaitForLoad( bool bWait = true ) = 0;
-	virtual void SetTwilight( bool _bIsTwilight ) = 0;
 	virtual CFuncBase<CVec3> *GetParticlesLightColor() = 0;
 	virtual void CollectAllParts( std::vector<CObjectBase*> *pRes ) = 0;
 

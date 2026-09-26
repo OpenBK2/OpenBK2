@@ -8,8 +8,8 @@
 #
 # There is no dxvk::d3dx9 and there will not be. DXVK ships the d3dx9 headers by
 # way of its mingw-directx-headers submodule but implements none of them, so code
-# including d3dx9.h compiles and then fails to link. 3Dmotor/GShaderFX.cpp is the
-# only live user.
+# including d3dx9.h compiles and then fails to link. Nothing the game builds uses
+# D3DX any more; the one user left is ShaderCompiler, which is Windows only.
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(DXVK_D3D9 REQUIRED IMPORTED_TARGET dxvk-d3d9)
 

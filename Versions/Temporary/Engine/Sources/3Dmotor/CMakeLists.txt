@@ -67,7 +67,6 @@ set(SOURCES
     GParts.cpp
     GPointLightGlow.cpp
     GPolyline.cpp
-    GPostEffects.cpp
     GPostProcessors.cpp
     GrannyMemoryMap.cpp
     GRects.cpp
@@ -131,23 +130,15 @@ target_link_libraries(3Dmotor PRIVATE
 )
 target_link_libraries(3Dmotor PUBLIC glm::glm-header-only fmt::fmt-header-only)
 if(WIN32)
-    # GShaderFX is built on the D3DX Effects framework, which DXVK does not
-    # implement: it ships the d3dx9 headers through mingw-directx-headers and no
-    # library, and those headers do not compile off Windows either, wanting GDI
-    # types its windows.h shim has no reason to carry.
-    target_sources(3Dmotor PRIVATE GShaderFX.cpp)
+    # No D3DX: the shaders are precompiled bytecode in GfxShaders.cpp, see
+    # ShaderCompiler.
     target_link_libraries(3Dmotor PRIVATE
         dxsdk::d3d9
-        dxsdk::d3dx9
         dxsdk::dxguid
         winapi
     )
 else()
-    # GShaderFX.cpp above is all D3DX, which DXVK does not supply, so its nine
-    # entry points come from a stub instead. GShaderFXStub.cpp records why that
-    # loses nothing: the path it serves is unreachable on Windows too.
-    target_sources(3Dmotor PRIVATE GShaderFXStub.cpp)
-    # d3d9.h and the windows.h shim; there is no d3dx9 to link against.
+    # d3d9.h and the windows.h shim.
     # SDL because port/window.h reaches the window Gfx sizes, HWND being
     # SDL_Window* under DXVK Native.
     target_link_libraries(3Dmotor PRIVATE dxvk::d3d9 SDL3::SDL3-shared)
