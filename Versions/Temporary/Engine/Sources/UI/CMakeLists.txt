@@ -76,7 +76,9 @@ set_source_files_properties(
     UIML.cpp
     PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 add_export_header(UI)
-target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script System zlib ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
+# UI serializes SComplexSoundDesc through CDBPtr, whose RTTI is defined in Sound.
+# Link it here so standalone UI consumers (including tests) resolve that type.
+target_link_libraries(UI PRIVATE 3DLib 3Dmotor Input libdb MemoryLib Misc Script Sound System zlib ffmpeg::avcodec ffmpeg::avformat ffmpeg::avutil ffmpeg::swscale ffmpeg::swresample SDL3_mixer::SDL3_mixer-shared SDL3::SDL3-shared fmt::fmt-header-only)
 if(WIN32)
     target_link_libraries(UI PRIVATE winapi)
 endif()
