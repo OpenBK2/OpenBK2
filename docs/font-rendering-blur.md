@@ -2,14 +2,14 @@
 
 Text in the game UI is soft at anything above the resolutions Nival shipped
 atlases for. There are two independent causes, and neither one alone accounts
-for it. The asset pipeline throws away the antialiasing it asks GDI to compute,
-and the runtime magnifies a single small atlas rather than selecting one that
-matches the size being drawn.
+for it. The asset pipeline threw away the antialiasing it asked GDI to compute,
+and the runtime magnifies a single small atlas rather than drawing one that
+matches the size on screen.
 
-Fixing only the first gives correctly antialiased glyphs that are still
-magnified. Fixing only the second gives crisply sized glyphs that are still
-1 bit masks. The order below does the cheap independent fixes first, then the
-baking, then the magnification, because each step is separately verifiable.
+Both are now understood and the second has been demonstrated fixed: with
+atlases baked at the drawn size, text at 2560x1600 draws texel for pixel and is
+sharp. What remains is making that hold at every resolution, which is the
+FreeType work at the end of this document.
 
 ## How text reaches the screen
 
@@ -17,43 +17,57 @@ FontGen rasterises a character set into a glyph atlas and a binary blob of
 metrics. The blob is one CFontFormatInfo, the same class the engine carries in
 3Dmotor/FontFormat.h under the same class id, so the tool and the runtime agree
 on the format by sharing it. CTextLocaleInfo::AddAllAvailableFonts in
-3Dmotor/GLocale.cpp opens the blobs through the database, GText.cpp lays glyphs
-out from the metrics, and Direct3D draws textured quads. No glyph rasterisation
-happens at run time, on any platform.
+3Dmotor/GLocale.cpp opens the blobs through the database, UI/UIML.cpp and
+UI/mlVisObjects.cpp lay glyphs out from the metrics, and Direct3D draws
+textured quads. No glyph rasterisation happens at run time, on any platform.
 
 That is worth stating plainly because it disposes of a whole category of
 suspicion: there is no ClearType, no CoreText, no FreeType and no subpixel
 rendering in the running game to go wrong. Whatever the atlas contains is what
 the screen gets, resampled.
 
+## What the game actually loads
+
+Measured with a temporary log in AddFont (see "Diagnostics" below), the
+database holds exactly four font records, all in Data/texts.pak dated
+2005-12-06:
+
+    record          name     face    baked  cell  texture
+    Fonts/Body      body     System  18     16    256x256 DXT3
+    Fonts/Header1   h1       Impact  38     37    512x512 DXT3
+    Fonts/Header2   h2       Impact  20     20    256x256 DXT3
+    Fonts/Numeric   numeric  Arial   14     14    256x128 DXT3, not antialiased
+
+Their metrics files are bin/Fonts/<uid>. A few consequences:
+
+- There is one atlas per name. CTextLocaleInfo::SearchFont picks the nearest
+  height among records with the requested name, so with one candidate it
+  returns the same atlas for every size. h1 is used at both 38pt and 48pt.
+- The "System" default face in UIML.cpp names no record; nothing registers
+  under it. Earlier notes assumed a System atlas and a set of 800x600 and
+  1024x768 records; none of those is reachable at run time.
+- The body face is the Windows "System" bitmap font. GDI cannot antialias a
+  bitmap font and can only scale it by whole multiples, which is why
+  Fonts/Body has two alpha levels, 0 and 255.
+- Line space equals height for all four, so the height against line space
+  mismatch noted earlier (five of 35 blobs in bin/fonts) does not affect any
+  font the game draws.
+
 ## Cause one: the atlas is a 1 bit mask
 
-FontGen asks GDI for ClearType and then reads the result as if it were
-greyscale.
+FontGen asked GDI for ClearType and then read the result as if it were
+greyscale: it kept only the green channel as alpha. Under ClearType the three
+channels are coverage of three different subpixels, and ClearType grid fits
+hard on top of that, so the green channel alone is close to on or off. The
+shipped atlases measure out accordingly: Body, Header2 and Numeric carry two
+alpha levels; Header1 has eleven, with everything below roughly 40 percent
+coverage crushed to zero. That crush is also why Impact's already short
+descenders lost a row in the shipped Header2.
 
-FontGen/FontGen.cpp:367 computes the quality argument for CreateFont as
-`bAntialias ? (IsWinXPOrLater() ? 6 : ANTIALIASED_QUALITY) : NONANTIALIASED_QUALITY`.
-The literal 6 is CLEARTYPE_QUALITY, written as a number because the 2003
-Platform SDK predates the named constant. Every machine that has run this tool
-since is XP or later, so the branch is always taken.
-
-FontGen.cpp:468 then walks the 24 bit bitmap and keeps only the green channel as
-alpha, with the blue and red reads commented out beside it. Under ClearType the
-three channels are coverage of three different subpixels rather than three
-copies of one greyscale value, and ClearType grid fits hard on top of that, so
-the green channel alone is close to on or off. The shipped atlases measure out
-accordingly: Fonts/Body, Fonts/Header2, Fonts/Numeric and
-Fonts/common/system.dds each carry two distinct alpha levels, 0 and 255, despite
-`<Antialiased>true</Antialiased>` in their records. Fonts/Header1 has eleven
-levels with everything below roughly 40 percent coverage crushed to zero.
-
-This is now fixed, though not the way it first looked. The obvious change is
-ANTIALIASED_QUALITY, and measuring it showed it is the wrong one: at height 16
-GDI declines to antialias at all and grid fits instead, and height 16 is what
-the shipped default face is baked at. Keeping ClearType and averaging the three
-subpixels instead of reading green is better everywhere, because it is a
-downsample of a 3x horizontal supersample rather than a plain greyscale render.
-Distinct alpha levels strictly between 16 and 240, on Arial with -russian:
+This is fixed. FontGen keeps ClearType and averages the three subpixels, which
+is a downsample of a 3x horizontal supersample and measures better than
+ANTIALIASED_QUALITY everywhere. Distinct alpha levels strictly between 16 and
+240, on Arial with -russian:
 
     height            16    24    32
     green only         5     5     5
@@ -64,113 +78,121 @@ The subpixel data itself is deliberately not kept. Baking it would encode the
 stripe order of the panel it was baked on and be wrong on a BGR or a rotated
 display, with no way to correct it at draw time.
 
-Two things still bound the win. The textures are DXT3, whose alpha is 4 bits, so
-only 16 of those levels survive compression until that changes on the data side;
-the baked TGA carries all of them. And a correctly antialiased atlas is still
-per resolution data.
+DXT3 alpha is 4 bits, so the shipped texture format keeps only 16 levels. The
+test bakes below use uncompressed A8R8G8B8 instead.
 
 ## Cause two: one atlas, magnified
 
-UI/UIML.cpp:16 makes System the default face, and only one System atlas ships,
-at height 16. CTextLocaleInfo::SearchFont in 3Dmotor/GLocale.cpp:51 picks the
-nearest height among the fonts registered under a given name, so with one
-candidate it returns the 16 pixel atlas for every requested size. The engine
-scales an atlas; it does not select one.
+The sizing path converts a size in points to pixels, and fScale is the ratio of
+that to the atlas's line space. At 2560x1600, before any fix, a size=16 run
+asked for 40 pixels from a 16 pixel atlas: 2.5x magnification, drawn with
+FILTER_LINEAR (GfxUtils.cpp). That is the blur.
 
-The scale follows from the sizing path. UI/mlHandlers.cpp:120 treats an
-unsuffixed `size=N` as points, UI/UIML.cpp:48 converts points to pixels as
-`N * screenWidth / 1024`, and UI/UIML.cpp:67 forms `fScale = nSize /
-GetLineSpace()`. GText.cpp:332 and :613 do the same. At 1920 x 1080 a `size=16`
-run asks for 30 pixels from a 16 pixel atlas, so fScale is about 1.875, and
-GfxUtils.cpp:332 binds the font texture FILTER_LINEAR. That is the blur.
+It also stretched text sideways. The UI is laid out on a 1024x768 virtual
+screen that UI/UI.cpp maps to the real one with independent X and Y factors.
+Points were converted with the X factor and only scale.y was corrected for
+aspect, so glyphs were drawn 2.5 across and 2.08 down, 20 percent too wide.
 
-Nival shipped Fonts/1024x768 and Fonts/800x600 and stopped, which is where this
-approach runs out: baking covers the resolutions somebody baked.
+Fixed: NGScene::FontPointsToPixels in 3Dmotor/GLocale.h converts with the Y
+factor, and scale.x equals scale.y, in all three copies of the conversion
+(UIML.cpp, mlVisObjects.cpp, GText.cpp). Vertical size is unchanged; letters
+keep their proportions and wide windows get more room beside the text. Images
+and window layout still stretch.
 
-UI/UI.cpp:7-20 maps a virtual 1024 x 768 layout onto the viewport with
-independent X and Y factors and no letterboxing, and UIML.cpp:69 aspect corrects
-scale.y only, so in non 4:3 modes the two axes resample differently even when
-the atlas size is right.
+That leaves the magnification. At 2560x1600 the four fonts are requested at 33
+(body 16pt), 41 (h2 20pt), 79 and 100 (h1 38pt and 48pt) and 29 (numeric 14pt)
+pixels, against atlases of 16, 20, 37 and 14.
+
+## Magnification also trims the edge rows
+
+C2DQuadsRenderer::AddRect in GfxUtils.cpp shrinks the sampled source rect by
+half a texel at each edge whenever a quad is magnified, so that linear
+filtering does not pick up the neighbouring cell; FontGen packs glyph rows with
+no padding between them. The side effect is that the first and last texel row
+of every cell get half the screen height of the others. Descenders end on the
+last row, so they come out short. At scale 1.0 the code path is skipped.
+
+## Clipped label edges
+
+CForegroundTextString and CPlacedText converted the pixel size of their text to
+virtual units through the integer overload of ScreenToVirtual, which truncates,
+and used the result as the clip window. A virtual unit is one pixel at
+1024x768, so nothing was lost there, but at 2560x1600 it is 2.5 pixels across:
+the last letter of a label lost up to 2.5 px on the right and the line up to
+2 px at the bottom. Fixed; the size is kept fractional for clipping and rounded
+up where a control is sized from it.
+
+## Demonstrated: baking at the drawn size
+
+With the fixes above, a patch pak holding atlases baked at 2560x1600's sizes
+draws body, h2 and h1 at 48pt at exactly scale 1.0000, and the result is sharp.
+The reference set is kept outside the tree in
+C:\Games\bk2\fontpaks_reference\gdi_2560x1600, with a README giving the exact
+FontGen arguments and the command that rebuilds the pak.
+
+How a patch overrides retail data, from System/WinVFS.cpp: every .pak in Data
+is opened, and for each path the entry with the newer timestamp *inside its
+archive* wins; on a tie the first archive enumerated keeps it. The .pak file's
+own date does not matter. A font override needs only two files per record,
+bin/Fonts/<uid> and <record>/Texture.dds, because the texture loader takes size
+and pixel format from the DDS header, so no .xdb changes. Uncompressed
+A8R8G8B8 with one mip level loads fine.
+
+What the bake could not do:
+
+- Body is Tahoma rather than System. GDI renders System at 33 only by doubling
+  it to 32, still 1 bit.
+- GDI cannot produce every cell height. It rounds to a whole-pixel em, so
+  Impact gives 76 or 80 but not 79, and Arial 28 or 31 but not 29.
+- h1 is one atlas for two sizes. Baked at 100, 48pt is exact and 38pt draws at
+  0.79, minified without mipmaps.
+- The bake is per resolution. At any other resolution the text is resampled
+  again.
+
+Impact's short descenders are the face, not a bug: it has a very tall x-height,
+and "p" drops about 0.1 em, 3 px at a 41 px cell.
 
 ## Ruled out
 
-Half texel alignment is correct already and is not worth investigating again.
-FillRect in 3Dmotor/GfxUtils.cpp:209-219 subtracts 0.5 from x on every vertex,
-AddRect snaps to integers at :247, and there is a magnification source rect
-inset at :255-263.
+Half texel alignment is correct already. FillRect in 3Dmotor/GfxUtils.cpp
+subtracts 0.5 from every vertex and AddRect snaps to integers.
 
-## Two independent bugs found alongside
+FontGen does not clip glyphs: every bake measured leaves the descenders inside
+the cell, Tahoma with a blank row below them.
 
-Both are small, neither depends on the decisions above, and the second causes
-blur at native resolution.
+## Fixed alongside
 
-Float2Int no longer rounds. Misc/Tools.h:184 is a plain static_cast<int>, which
-truncates, after a port commit replaced the fld and fistp pair that rounded to
-nearest. There are around 225 call sites, including the UI quad snapping at
-GfxUtils.cpp:247-250 and the UV quantisation at :184-185.
-`_mm_cvt_ss2si( _mm_set_ss( fVal ) )` restores the original behaviour.
+Float2Int truncated after a port commit replaced the fld and fistp pair; it
+rounds by the current rounding mode again, via cvtss2si, which callers depend
+on (the simulation rounds to nearest, DB loading and console SetVar truncate on
+purpose). It did not affect the blur.
 
-Fonts are registered by height and scaled by line space. GLocale.cpp:39
-registers under GetHeight, while UIML.cpp:67 and GText.cpp:613 divide by
-GetLineSpace, which is height plus external leading. Five of the 35 blobs in
-Versions/Current/Data/bin/fonts have leading 1, so fScale comes out as 17/18,
-about 0.944. Those runs are minified even at 1024 x 768.
+FontGen converted the character codes it was baking to Unicode as if they were
+UTF-8. They are single code page bytes, so a -russian bake silently lost all 64
+Cyrillic characters from its metrics while the texture stayed correct. It now
+converts through the code page the charset implies; verified against the 2005
+x86 binary.
 
-## A prerequisite that has since been fixed
+## Diagnostics
 
-Rebaking anything was unsafe until recently, and it is worth knowing why, since
-every step below involves rebaking.
+3Dmotor/GLocale.cpp and the GetFontFormatInfo functions in UIML.cpp and
+GText.cpp carry temporary logging, marked TEMPORARY and not committed, that
+writes fontdiag.log in the game's working directory: every font record with
+the archive its files came from, and every distinct size request with the font
+chosen and the resulting scale. The VFS side is permanent: SFileStats::pszName
+now names the archive a file was served from.
 
-FontGen keys its output by codepoint, so it converted the character codes it was
-baking to Unicode through NStr::ToUnicode. That became UTF8ToWide when the tree
-moved to UTF-8, and these are single code page bytes rather than UTF-8, so every
-byte above 0x7F converted to nothing. A -russian bake kept its 96 ASCII
-characters and dropped all 64 Cyrillic ones.
+## Plan from here
 
-Nothing about that was visible in the tool's output. The glyphs are still drawn
-into the atlas, since that loop does not consult the translation table, so the
-texture was byte for byte correct and only the metrics blob was short. The
-shipped fonts were never affected, because they were baked in 2005 and the game
-rasterises nothing at run time; it would have appeared the first time anyone
-regenerated a font, as Cyrillic replaced by the default character.
-
-It now converts through the code page the requested charset implies. Verified
-against the 2005 x86 binary on the same font and arguments.
-
-## Plan
-
-1. Fix Float2Int and the GetHeight against GetLineSpace mismatch. Independent of
-   everything else, and the second removes a blur source at native resolution.
-2. Build FontGen, which had no CMake wiring at all. Done. This makes the
-   ANTIALIASED_QUALITY change testable and tells us how much of the blur was
-   baking before committing to anything larger.
-3. Replace FontGen's rasteriser with FreeType, keeping the CFontFormatInfo
-   output format unchanged so no engine code and no .xdb records move. FreeType
-   is a software rasteriser in fixed point arithmetic, so the same version and
-   font file produce the same bytes on every platform, which makes the output
-   golden hashable in CI the way the unit tests already work.
-4. If the magnification still dominates, reuse the same FreeType layer at run
-   time as a glyph cache keyed by face and pixel size, so fScale is always 1 and
-   every resolution is native. Kept behind CFontFormatInfo's existing GetChar,
-   GetKern and GetLineSpace, this leaves UIML and GText untouched. It does make
-   FreeType a runtime dependency of the shipped game rather than a build tool,
-   which brings its attribution requirement with it.
-
-Steps 3 and 4 are the same FreeType integration used twice, which is why the
-rasteriser should be written as a layer behind that interface rather than as
-part of a tool.
-
-## Not yet verified
-
-None of this has been confirmed visually. No screenshot, no running game, and
-no before and after comparison at a known resolution.
-
-Before baking anything, measure one glyph's on screen pixel size against its
-texel size in both axes, since the per axis UI scaling means those can disagree.
-
-The alpha histograms were taken from five atlases. The roughly 21 records under
-Other/Font/800x600 and Other/Font/1024x768 were not decoded, and whether they
-are reachable at run time was not established.
-
-Whether moving the font textures from DXT3 to uncompressed A8 helps is a data
-side change that has not been tried.
+1. Replace FontGen's rasteriser with FreeType, written as a library that
+   produces a CFontFormatInfo and an atlas, so that the game can use the same
+   code later. Bake the same four Windows faces at the same sizes and compare
+   against the GDI reference through the same pak pipeline, so that any
+   difference is the rasteriser. FreeType takes fractional em sizes, so every
+   cell height is reachable, and the atlas gets padding between cells.
+2. Reuse that library at run time as a glyph cache keyed by face and pixel
+   size, behind CFontFormatInfo's GetChar, GetKern and GetLineSpace, so every
+   size at every resolution is native and h1's two sizes stop sharing an
+   atlas. This needs font files the game may ship, which the Windows faces are
+   not; open faces with full Cyrillic (PT Sans, Liberation Sans, a condensed
+   display face for Impact) are to be compared against the Windows ones first.
