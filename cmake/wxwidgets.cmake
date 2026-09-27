@@ -305,3 +305,23 @@ if(NOT WIN32)
     set_property(TARGET wx::wx APPEND PROPERTY
         INTERFACE_COMPILE_DEFINITIONS "__WXGTK3__;__WXGTK__;_FILE_OFFSET_BITS=64")
 endif()
+
+# Copy the wx DLL beside <target> after it links.
+#
+# copy_runtime_dlls cannot do this: wxwidgets_monolithic has only an
+# IMPORTED_IMPLIB on Windows, because the DLL name is not known at configure
+# time (see copy_wx_runtime.cmake), so $<TARGET_RUNTIME_DLLS> never lists it.
+# Anything that loads wx from the build tree, directly or through MapEditorLib,
+# needs this as well. Without it the process never reaches main(): the loader
+# fails with 0xC0000135, and on a CI runner its "DLL was not found" message box
+# waits for a click that never comes, so the test hangs instead of failing.
+function(copy_wx_runtime target)
+    if(WIN32)
+        add_custom_command(TARGET ${target} POST_BUILD
+            COMMAND ${CMAKE_COMMAND}
+                    -DWX_LIB_DIR=${WX_LIB_DIR}
+                    -DWX_DESTINATION=$<TARGET_FILE_DIR:${target}>
+                    -P ${CMAKE_SOURCE_DIR}/cmake/copy_wx_runtime.cmake
+            VERBATIM)
+    endif()
+endfunction()
