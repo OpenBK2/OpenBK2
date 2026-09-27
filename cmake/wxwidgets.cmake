@@ -90,8 +90,10 @@ endif()
 
 if(WIN32)
     set(WX_IMPORT_LIB ${WX_LIB_DIR}/wxmsw33u${WX_LIB_SUFFIX}.lib)
-    # The directory holding the generated setup.h, next to the binaries.
-    set(WX_SETUP_DIR ${WX_LIB_DIR}/mswu)
+    # The directory holding the generated setup.h, next to the binaries. It
+    # carries the debug suffix too: a Debug wx writes mswud/wx/setup.h, and
+    # without the suffix Debug builds of the editor fail on wx/setup.h.
+    set(WX_SETUP_DIR ${WX_LIB_DIR}/mswu${WX_LIB_SUFFIX})
 else()
     # The shared object itself: ELF has no import library, the linker takes
     # the .so. wx's Unix names carry no debug suffix.
