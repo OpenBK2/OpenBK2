@@ -59,9 +59,12 @@ jobs:
         run: cmake --build out/build/${{ matrix.preset }} --parallel --target unittests -- -k 0
 
       - name: Run tests
+        # --timeout turns a hung test into a named failure. Without it a test blocked
+        # on a message box (a missing DLL, a debug CRT assert) holds the job for the
+        # runner's six hours and the log never says which one.
         run: >
           ctest --test-dir out/build/${{ matrix.preset }}
-          -L obk2-test --output-on-failure
+          -L obk2-test --output-on-failure --timeout 600
           --output-junit ${{ github.workspace }}/tests-${{ matrix.arch }}.xml
 
       - uses: actions/upload-artifact@v4
