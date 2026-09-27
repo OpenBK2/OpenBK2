@@ -5,17 +5,17 @@
 	<RootMesh>Basis</RootMesh>
 	<RootJoint>Basis</RootJoint>
 	<Size>
-		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<x>2.37600017</x>
+		<y>4.7656908</y>
+		<z>2.4000001</z>
 	</Size>
 	<Center>
 		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<y>0.428695083</y>
+		<z>1.20000005</z>
 	</Center>
 	<AIGeometry href="1_AIGeometry.xdb#xpointer(/AIGeometry)" />
-	<NumMeshes>0</NumMeshes>
+	<NumMeshes>6</NumMeshes>
 	<MaterialQuantities />
 	<MeshNames />
 	<MeshAnimated />

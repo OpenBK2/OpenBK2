@@ -20,6 +20,8 @@ Seasonal suffixes remain `w`, `s`, no suffix, `u`, `a`, and `i`. Missing seasona
 
 Exporting VisObj, Model, Geometry, AIGeometry, Skeleton, or AnimB2 uses the GLTF path. Export refreshes geometry bounds and animation lengths; named clips matching the existing animation types (such as `idle` or `walk`) can populate an empty Skeleton animation list. Other clips can be assigned manually using AnimB2's `ClipName` and `Type` fields. Existing GR2 resources remain loadable, but Maya/GR2 source export is no longer supported.
 
+Export Geometry and AIGeometry after changing the model or `RootMesh`, and save the resulting XDB records before using them in the game. Export writes Geometry's `Center`/`Size` and AIGeometry's `AABBCenter`/`AABBHalfSize`. The game and editor load these stored bounds, just as for GR2; they no longer calculate missing or zero bounds from the model at load time. Re-export older glTF resources that relied on that calculation (exporting the parent with references updates both resources). This keeps AI hull bounds identical across clients.
+
 ## Object and building export
 
 `ObjectRPGStats` and `BuildingRPGStats` export from GLB/GLTF only. Set the visual object's Geometry and Skeleton `ModelFileRef` fields, then export the stats resource with references. Existing GR2 assets remain loadable. Object height, surface points, debris masks and passability are generated from the selected GLTF mesh in engine coordinates; these exporters no longer wait for GR2 binaries or invoke Maya.

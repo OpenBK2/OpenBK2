@@ -7,13 +7,13 @@
 	<SolidPart>0</SolidPart>
 	<AABBCenter>
 		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<y>-0.204136372</y>
+		<z>2.34162164</z>
 	</AABBCenter>
 	<AABBHalfSize>
-		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<x>1.50789869</x>
+		<y>5.29721069</y>
+		<z>2.35253215</z>
 	</AABBHalfSize>
 	<uid>B2EB808D-F185-4A7A-B95A-E16AE4AD5DFB</uid>
 	<ModelFileRef href="/trex_split.glb" />

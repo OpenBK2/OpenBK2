@@ -7,13 +7,13 @@
 	<SolidPart>0</SolidPart>
 	<AABBCenter>
 		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<y>0.124216378</y>
+		<z>1.20000005</z>
 	</AABBCenter>
 	<AABBHalfSize>
-		<x>0</x>
-		<y>0</y>
-		<z>0</z>
+		<x>1.1693002</x>
+		<y>2.08849144</y>
+		<z>1.20000005</z>
 	</AABBHalfSize>
 	<uid>12B92FF6-6CE7-4914-B607-85F20FFB8D77</uid>
 	<ModelFileRef href="/model.glb" />

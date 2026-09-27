@@ -75,3 +75,12 @@ if(WIN32)
     set_property(TARGET RuntimeFontScale_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
 endif()
+
+# glTF bounds belong to exported records, not client-local model loading.
+add_unit_test(GltfBounds 3Dmotor libdb System Misc gr2 fastgltf::fastgltf)
+target_compile_definitions(GltfBounds_test PRIVATE NOMINMAX
+    GLTF_EXAMPLE_DIR="${CMAKE_SOURCE_DIR}/OBK2_Examples/GLB_format_usage")
+if(WIN32)
+    set_property(TARGET GltfBounds_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()

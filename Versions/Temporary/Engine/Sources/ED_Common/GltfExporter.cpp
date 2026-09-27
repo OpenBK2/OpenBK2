@@ -226,6 +226,8 @@ bool Export( IManipulator *resource, const std::string &type, bool write )
 		float duration = 0;
 		if ( type == "Geometry" || type == "AIGeometry" )
 		{
+			// Bake the selected meshes in the same space as their loader: AI applies
+			// all node transforms, while render skins retain bind-pose mesh space.
 			const std::string root = Value(resource, "RootMesh");
 			if ( !NGltf::GetMeshNodes(file, root, &meshes) || meshes.empty() ||
 				!NGltf::GetMeshBoundingBox(file, root, type == "AIGeometry", &minimum, &maximum) )
@@ -253,13 +255,19 @@ bool Export( IManipulator *resource, const std::string &type, bool write )
 		// Publish the portable reference only after all validation and file writes succeed.
 		if ( !CManipulatorManager::SetValue(destination, resource, "ModelFileRef") )
 			return false;
-		if ( type == "Geometry" )
-			return CManipulatorManager::SetValue(static_cast<int>(meshes.size()), resource, "NumMeshes") &&
-				CManipulatorManager::SetVec3((minimum + maximum) * 0.5f, resource, "Center") &&
-				CManipulatorManager::SetVec3(maximum - minimum, resource, "Size");
-		if ( type == "AIGeometry" )
-			return CManipulatorManager::SetVec3((minimum + maximum) * 0.5f, resource, "AABBCenter") &&
-				CManipulatorManager::SetVec3((maximum - minimum) * 0.5f, resource, "AABBHalfSize");
+		if ( type == "Geometry" || type == "AIGeometry" )
+		{
+			// These XDB fields are authoritative in both the game and editor, just
+			// like GR2. All clients must use the exported bounds without recalculating.
+			const CVec3 center = (minimum + maximum) * 0.5f;
+			const CVec3 size = maximum - minimum;
+			if ( type == "Geometry" )
+				return CManipulatorManager::SetValue(static_cast<int>(meshes.size()), resource, "NumMeshes") &&
+					CManipulatorManager::SetVec3(center, resource, "Center") &&
+					CManipulatorManager::SetVec3(size, resource, "Size");
+			return CManipulatorManager::SetVec3(center, resource, "AABBCenter") &&
+				CManipulatorManager::SetVec3(size * 0.5f, resource, "AABBHalfSize");
+		}
 		if ( type == "AnimB2" )
 		{
 			const int milliseconds = static_cast<int>(duration * 1000.0f + 0.5f);

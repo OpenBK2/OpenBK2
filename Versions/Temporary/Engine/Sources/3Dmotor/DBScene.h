@@ -717,6 +717,8 @@ namespace NDb
 		enum { typeID = 0x1007EC80 };
 		float fVolume;
 		float fSolidPart;
+		// Exported bounds for both GR2 and glTF. Loading must preserve these values
+		// because client-local floating-point calculations can desync AI hulls.
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
 		boost::uuids::uuid uid;
@@ -733,8 +735,6 @@ namespace NDb
 		int GetTypeID() const { return typeID; }
 		//
 		void ReportMetaInfo() const;
-		// Editor bindings bypass the XML serializer that initializes GLB bounds.
-		_3DMOTOR_EXPORT void PostLoad( bool bInEditor ) override;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
@@ -747,6 +747,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B85 };
 		boost::uuids::uuid uid;
+		// Persisted by the geometry exporter; never recompute from ModelFileRef on load.
 		CVec3 vSize;
 		CVec3 vCenter;
 		CDBPtr< SAIGeometry > pAIGeometry;
@@ -767,8 +768,6 @@ namespace NDb
 		int GetTypeID() const { return typeID; }
 		//
 		void ReportMetaInfo() const;
-		// Editor bindings bypass the XML serializer that initializes GLB bounds.
-		_3DMOTOR_EXPORT void PostLoad( bool bInEditor ) override;
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
