@@ -72,7 +72,7 @@ void CWindowTextView::Reposition( const CTRect<float> &parentRect )
 
 bool CWindowTextView::InitText()
 {
-	fFontScale = NGScene::GetRuntimeFontScale();
+	fFontScale = NGScene::GetRuntimeFontScale( UsesHudFontScale() );
 	if ( wszCustomText.empty() || GetWindowRect().Width() <= 0 )
 	{
 		pGfxText = 0;
@@ -84,7 +84,7 @@ bool CWindowTextView::InitText()
 		return false;
 	}
 	
-	pGfxText = CreateML();
+	pGfxText = CreateML( this );
 	if ( nIDForMLHandler >= 0 )
 		pGfxText->SetIDForHandler( nIDForMLHandler );
 	CUIFactory::RegisterMLHandlers( pGfxText );
@@ -127,7 +127,7 @@ int CWindowTextView::operator&( IBinSaver &saver )
 void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 {
 	// Resizable labels must update their control bounds along with the glyphs.
-	if ( fFontScale != NGScene::GetRuntimeFontScale() )
+	if ( fFontScale != NGScene::GetRuntimeFontScale( UsesHudFontScale() ) )
 		InitText();
 	CWindow::Visit( pVisitor );
 	

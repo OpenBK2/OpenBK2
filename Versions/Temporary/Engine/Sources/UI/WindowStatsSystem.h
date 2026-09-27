@@ -31,6 +31,8 @@ class CWindowStatsSystem : public CWindow, public IStatsSystemWindow
 public:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 
+	// Debug statistics share the console's GUI scale.
+	bool UsesHudFontScale() const override { return false; }
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	void UpdateEntry( const std::wstring &szEntry, const std::wstring &szValue, const uint32_t dwColor );
 	void Visit( struct IUIVisitor *pVisitor );

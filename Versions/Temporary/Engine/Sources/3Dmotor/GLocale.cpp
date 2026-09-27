@@ -56,7 +56,8 @@ void CTextLocaleInfo::ClearAllFonts()
 	// the records go with the MOD that is being detached, and fonts made from
 	// them with the records
 	runtimeRecords.clear();
-	runtimeFonts.clear();
+	runtimeFonts[0].clear();
+	runtimeFonts[1].clear();
 }
 
 // Runtime fonts below this cell height are not made. The UI asks for them only
@@ -65,19 +66,22 @@ void CTextLocaleInfo::ClearAllFonts()
 const int N_MIN_RUNTIME_FONT_SIZE = 6;
 
 const float F_DEFAULT_RUNTIME_FONT_SCALE = 1.2f;
+const float F_DEFAULT_HUD_FONT_SCALE = 1.0f;
 
-float GetRuntimeFontScale()
+float GetRuntimeFontScale( bool bHud )
 {
-	const float fScale = NGlobal::GetVar( "ui_font_scale", F_DEFAULT_RUNTIME_FONT_SCALE ).GetFloat();
+	const float fDefault = bHud ? F_DEFAULT_HUD_FONT_SCALE : F_DEFAULT_RUNTIME_FONT_SCALE;
+	const float fScale = NGlobal::GetVar( bHud ? "hud_font_scale" : "ui_font_scale", fDefault ).GetFloat();
 	// Console/config values must stay finite and bounded before they become
 	// integer pixel sizes and atlas allocations. Invalid input uses the default.
 	if ( !std::isfinite( fScale ) || fScale <= 0 )
-		return F_DEFAULT_RUNTIME_FONT_SCALE;
+		return fDefault;
 	return std::clamp( fScale, 0.25f, 4.0f );
 }
 
 START_REGISTER( RuntimeFontScale )
 	REGISTER_VAR( "ui_font_scale", 0, F_DEFAULT_RUNTIME_FONT_SCALE, STORAGE_USER )
+	REGISTER_VAR( "hud_font_scale", 0, F_DEFAULT_HUD_FONT_SCALE, STORAGE_USER )
 FINISH_REGISTER
 
 CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
@@ -87,18 +91,20 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 	std::unordered_map<std::string, const NDb::SFont*>::const_iterator record = runtimeRecords.find( sFont.szName );
 	if ( record == runtimeRecords.end() )
 		return 0;
-	const float fScale = GetRuntimeFontScale();
-	if ( fCachedRuntimeFontScale != fScale )
+	const float fScale = GetRuntimeFontScale( sFont.bHud );
+	auto &cache = runtimeFonts[sFont.bHud ? 1 : 0];
+	float &fCachedScale = fCachedRuntimeFontScale[sFont.bHud ? 1 : 0];
+	if ( fCachedScale != fScale )
 	{
 		// Existing layouts own their atlases; new layouts must get the new size.
 		// Drop obsolete cache entries so repeated console edits do not retain
 		// an ever-growing collection of unused font textures.
-		runtimeFonts.clear();
-		fCachedRuntimeFontScale = fScale;
+		cache.clear();
+		fCachedScale = fScale;
 	}
 	const std::tuple<std::string, int, int> key( sFont.szName, sFont.nSize, sFont.nWidth );
-	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>>::iterator made = runtimeFonts.find( key );
-	if ( made == runtimeFonts.end() )
+	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>>::iterator made = cache.find( key );
+	if ( made == cache.end() )
 	{
 		// Cache both dimensions. The reference atlas determines visible letter
 		// size; extra room for the replacement's accents must not scale it down.
@@ -113,7 +119,7 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 			pFont = new CRuntimeFontInfo( sFont, pAtlas );
 		else
 			DebugTrace( "runtime font \"%s\" %d px could not be made, the baked font is used", sFont.szName.c_str(), sFont.nSize );
-		made = runtimeFonts.insert( std::make_pair( key, pFont ) ).first;
+		made = cache.insert( std::make_pair( key, pFont ) ).first;
 	}
 	return made->second;
 }

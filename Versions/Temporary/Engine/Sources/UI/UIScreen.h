@@ -56,6 +56,7 @@ class CWindowScreen : public CWindow, public IScreen
 
 	// Screen focus - flag that mean that screen(root window) is active. Another words: interface which contain this screen is top.
 	bool bIsScreenFocused;
+	bool bHudFontScale = false;
 
 	NInput::CBind bindShift;
 	NInput::CBind bindCtrl;
@@ -115,6 +116,8 @@ private:
 	bool ActivateNextInTabOrder(); // returns true if activated, otherwise returns false 
 public:
 	CWindowScreen();
+	void SetHudFontScale( bool bHud ) override { bHudFontScale = bHud; }
+	bool UsesHudFontScale() const override { return bHudFontScale; }
 
 	static NGScene::I2DGameView * Get2DGameView() { return p2DGameView; }
 

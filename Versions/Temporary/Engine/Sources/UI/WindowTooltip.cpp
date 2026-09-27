@@ -32,6 +32,8 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 	if ( pText && pScreen )
 	{
 		bInitializedByText = true;
+		// Attach before measuring so a HUD tooltip uses the HUD font metrics.
+		pScreen->AddChild( this, false );
 
 		pText->SetIDForMLHandler( nIDForMLHandler );
 		pChild->SetPlacement( 0, 0, nTooltipWidth, 0, EWPF_SIZE_X );
@@ -42,7 +44,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 
 		int nSizeX, nSizeY;
 		pChild->GetPlacement( 0, 0, &nSizeX, &nSizeY );
-		pScreen->AddChild( this, true );
+		pScreen->RepositionChildren( this );
 		
 		const int nW = nSizeX + pShared->vLowerBorder.x + pShared->vHigherBorder.x;
 		const int nH = nSizeY + pShared->vLowerBorder.y + pShared->vHigherBorder.y;

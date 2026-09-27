@@ -875,9 +875,12 @@ private:
 	// console font-scale change regenerates an existing label.
 	int nLayoutWidth = -1;
 	float fFontScale = 0;
+	CPtr<IWindow> pFontScaleWindow;
+	bool UsesHudFontScale() const { return pFontScaleWindow && pFontScaleWindow->UsesHudFontScale(); }
 	void UpdateFontScale();
 public:
 	CML();
+	void SetFontScaleWindow( IWindow *pWindow ) override { pFontScaleWindow = pWindow; }
 
 	void SetText( const std::wstring &wsText, int nFlags );
 	void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler );
@@ -954,7 +957,7 @@ void CML::SetFade( float fFade )
 
 void CML::UpdateFontScale()
 {
-	if ( nLayoutWidth >= 0 && fFontScale != NGScene::GetRuntimeFontScale() )
+	if ( nLayoutWidth >= 0 && fFontScale != NGScene::GetRuntimeFontScale( UsesHudFontScale() ) )
 		Generate( nLayoutWidth );
 }
 
@@ -976,7 +979,7 @@ const CTPoint<int>& CML::GetSize()
 void CML::Generate( int nWidth )
 {
 	nLayoutWidth = nWidth;
-	fFontScale = NGScene::GetRuntimeFontScale();
+	fFontScale = NGScene::GetRuntimeFontScale( UsesHudFontScale() );
 	enum ECharType
 	{
 		CHAR_NULL,
@@ -991,6 +994,10 @@ void CML::Generate( int nWidth )
 	};
 
 	pLayout = new CMLLayout();
+	// Mark every font request, including markup changes and wrapped lines.
+	SState state = pLayout->GetState();
+	state.sFont.bHud = UsesHudFontScale();
+	pLayout->SetState( state );
 	pStream = new CMLStream();
 	pStream->Seek( 0 );
 	pStream->InsertString( wsText );
@@ -1094,14 +1101,17 @@ int CML::operator&( IBinSaver &saver )
 	saver.Add( 6, &nIDForHandler );
 	saver.Add( 7, &nLayoutWidth );
 	saver.Add( 8, &fFontScale );
+	saver.Add( 9, &pFontScaleWindow );
 	return 0;
 }
 
 // CreateML
 
-IML* CreateML()
+IML* CreateML( IWindow *pFontScaleWindow )
 {
-	return new CML;
+	CML *pText = new CML;
+	pText->SetFontScaleWindow( pFontScaleWindow );
+	return pText;
 }
 
 START_REGISTER(MLText)

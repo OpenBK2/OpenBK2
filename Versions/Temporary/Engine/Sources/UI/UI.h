@@ -242,6 +242,8 @@ struct IWindow : virtual public CObjectBase
 	virtual CTRect<float> GetWindowRect() const = 0;
 	virtual IWindow* GetParentWindow() const = 0;
 	virtual struct IScreen* GetScreen() = 0;
+	// Text follows its owning screen even while another screen has focus.
+	virtual bool UsesHudFontScale() const { return false; }
 	virtual const struct NDb::SWindowShared * GetSharedDesc() const = 0;
 	virtual void RemoveChild( IWindow *_pChild ) = 0;
 	virtual IWindow* GetChild( const int _nTypeID, const int _nID, const bool bRecursive = false ) = 0;
@@ -374,6 +376,7 @@ struct IProgrammedReactionsAndChecks : virtual public CObjectBase
 // specific screen funcitonality
 struct IScreen : virtual public IWindow
 {
+	virtual void SetHudFontScale( bool bHud ) = 0;
 	virtual void OnGetFocus( const bool bFocus ) = 0;
 	virtual void SetGView( NGScene::I2DGameView *_p2DGameView ) = 0;
 	virtual void Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactionsAndChecks *pReactionsAndChecks ) = 0;
@@ -504,6 +507,7 @@ struct IUIEffector : public CObjectBase
 // window part, such as background, foreground.
 struct IWindowPart : public CObjectBase
 {
+	virtual void SetFontScaleWindow( IWindow *pWindow ) {}
 	virtual void Visit( struct IUIVisitor *pVisitor ) = 0;
 
 	// notify background about window position and size change

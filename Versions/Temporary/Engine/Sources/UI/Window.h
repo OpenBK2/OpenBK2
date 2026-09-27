@@ -174,6 +174,7 @@ public:
 	virtual void SetPlacement( const CTRect<int> &rc, const uint32_t flags );
 
 	struct IScreen* GetScreen();
+	bool UsesHudFontScale() const override;
 	// is point (in screen coordinates) inside control
 	bool IsInside( const CVec2 &vPos ) const;
 	// Gives or removes focus from the current window

@@ -210,19 +210,34 @@ ratio. The replacement is fitted to those dimensions, so changing font families
 does not silently change the apparent UI text size. No GUI font sizes change.
 If no usable reference is available, the previous ink fitting is used.
 
-The NGlobal user setting `ui_font_scale` adjusts all runtime font sizes and
-is saved with the user configuration. It defaults to `1.2` (20% larger in both
-dimensions); `1.0` restores the original reference size. Enter
-`ui_font_scale 1.4` in the console, or use
-`NGlobal::SetVar( "ui_font_scale", 1.4f )` from code. Read it with
-`NGlobal::GetVar( "ui_font_scale", 1.2f ).GetFloat()`.
+Two NGlobal user settings control runtime font sizes and are saved with the
+user configuration:
 
-Changes refresh existing text layouts and their font cache without a restart
-or rebuild. Rasterisation and layout use the same effective scale, limited to
-0.25 through 4.0; zero, negative and non-finite values use the default. The
-multiplier is applied before rasterisation, retaining sharpness. Saved atlases
-store final pixel dimensions, so loading a save never multiplies them again;
-newly saved layouts also keep their wrapping width and scale for live refresh.
+- `ui_font_scale`, default `1.2`: menus and other GUI screens.
+- `hud_font_scale`, default `1.0`: the mission HUD, including its captions,
+  chat and tooltips. The mission movie border uses the same setting.
+
+A value of `1.0` uses the original reference size; `1.2` enlarges both dimensions
+by 20%. Enter `hud_font_scale 1.1` in the console, or use
+`NGlobal::SetVar( "hud_font_scale", 1.1f )` from code. Read it with
+`NGlobal::GetVar( "hud_font_scale", 1.0f ).GetFloat()`. The corresponding
+`ui_font_scale` commands work the same way.
+
+Font selection follows the owning screen, including during initial layout,
+rather than the currently focused interface. Escape/options menus and other
+separate menu screens retain the GUI scale over a mission; the HUD underneath
+retains its own scale. The developer console and debug statistics use the GUI
+scale. Windows created later inherit their screen through their parent, and
+tooltips attach to the screen before measuring their text.
+
+Changes refresh the affected text layouts and font cache without a restart or
+rebuild. GUI and HUD keep separate caches, so drawing both does not repeatedly
+rebuild their atlases. Rasterisation and layout use the same effective scale,
+limited to 0.25 through 4.0; zero, negative and non-finite values use the
+setting's default. The multiplier is applied before rasterisation, retaining
+sharpness. Saved atlases store final pixel dimensions, so loading a save never
+multiplies them again. Layouts retain their owner and wrapping width for live
+refresh; older saves acquire HUD ownership when the mission UI is restored.
 
 Scrollable descriptions also retain their full content extent when a parent
 window moves or resizes. Previously, repositioning reset the inner clipping

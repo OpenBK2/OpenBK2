@@ -41,9 +41,16 @@ void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	Init();
 }
 
+void CForegroundTextString::SetFontScaleWindow( IWindow *pWindow )
+{
+	pFontScaleWindow = pWindow;
+	if ( pGfxText )
+		pGfxText->SetFontScaleWindow( pWindow );
+}
+
 void CForegroundTextString::InitText()
 {
-	pGfxText = CreateML();
+	pGfxText = CreateML( pFontScaleWindow );
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( GetText(), 0 );
 	pGfxText->Generate( VirtualToScreenX( rcParent.GetSizeX() ) );
@@ -166,6 +173,13 @@ void CPlacedText::SetPlacement( const struct NDb::SWindowPlacement &_placement )
 	placement = _placement;
 }
 
+void CPlacedText::SetFontScaleWindow( IWindow *pWindow )
+{
+	pFontScaleWindow = pWindow;
+	if ( pGfxText )
+		pGfxText->SetFontScaleWindow( pWindow );
+}
+
 void CPlacedText::InitGfxText()
 {
 	if ( rcParent.GetSizeX() <= 0 || GetText().empty() )
@@ -173,7 +187,7 @@ void CPlacedText::InitGfxText()
 		pGfxText = 0;
 		return;
 	}
-	pGfxText = CreateML();
+	pGfxText = CreateML( pFontScaleWindow );
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( GetText(), 0 );
 	pGfxText->SetFade( fFadeValue );

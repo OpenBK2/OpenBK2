@@ -13,12 +13,14 @@ namespace
 {
 class RuntimeFontScale : public testing::Test
 {
+	NGlobal::CValue savedHudScale = NGlobal::GetVar( "hud_font_scale", 1.0f );
 	NGlobal::CValue savedScale = NGlobal::GetVar( "ui_font_scale", 1.2f );
 	CObj<NVFS::IVFS> savedVFS = NVFS::GetMainVFS();
 protected:
 	void TearDown() override
 	{
 		NGlobal::SetVar( "ui_font_scale", savedScale );
+		NGlobal::SetVar( "hud_font_scale", savedHudScale );
 		NVFS::SetMainVFS( savedVFS );
 	}
 };
@@ -46,6 +48,19 @@ TEST_F( RuntimeFontScale, ConsoleAndSetVarChangeTheUserSetting )
 		[]( const auto &entry ) { return entry.first == "ui_font_scale"; } );
 	ASSERT_NE( setting, userVariables.end() );
 	EXPECT_FLOAT_EQ( setting->second.GetFloat(), 1.0f );
+
+	EXPECT_FLOAT_EQ( NGlobal::GetVar( "hud_font_scale" ).GetFloat(), 1.0f );
+	NGlobal::ProcessCommand( L"hud_font_scale 1.3" );
+	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 1.3f );
+	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale(), 1.0f );
+	NGlobal::SetVar( "hud_font_scale", 0.9f );
+	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 0.9f );
+	userVariables.clear();
+	NGlobal::GetVarsByClass( &userVariables, STORAGE_USER );
+	const auto hudSetting = std::find_if( userVariables.begin(), userVariables.end(),
+		[]( const auto &entry ) { return entry.first == "hud_font_scale"; } );
+	ASSERT_NE( hudSetting, userVariables.end() );
+	EXPECT_FLOAT_EQ( hudSetting->second.GetFloat(), 0.9f );
 }
 
 TEST_F( RuntimeFontScale, InvalidInputCannotBecomeAnAtlasAllocation )
@@ -54,11 +69,17 @@ TEST_F( RuntimeFontScale, InvalidInputCannotBecomeAnAtlasAllocation )
 	{
 		NGlobal::SetVar( "ui_font_scale", value );
 		EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale(), 1.2f );
+		NGlobal::SetVar( "hud_font_scale", value );
+		EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 1.0f );
 	}
 	NGlobal::SetVar( "ui_font_scale", 1000000.0f );
 	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale(), 4.0f );
 	NGlobal::SetVar( "ui_font_scale", 0.001f );
 	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale(), 0.25f );
+	NGlobal::SetVar( "hud_font_scale", 1000000.0f );
+	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 4.0f );
+	NGlobal::SetVar( "hud_font_scale", 0.001f );
+	EXPECT_FLOAT_EQ( NGScene::GetRuntimeFontScale( true ), 0.25f );
 }
 
 TEST_F( RuntimeFontScale, ChangingScaleReplacesCachedFontsWithoutResizingOldAtlases )
@@ -83,12 +104,32 @@ TEST_F( RuntimeFontScale, ChangingScaleReplacesCachedFontsWithoutResizingOldAtla
 	EXPECT_EQ( CellHeight( original ), 20 );
 	EXPECT_EQ( original.GetPtr(), locale->GetFont( request ) );
 
+	NGScene::SFont hudRequest = request;
+	hudRequest.bHud = true;
+	NGlobal::SetVar( "hud_font_scale", 1.0f );
+	CObj<NGScene::CFontInfo> hud = locale->GetFont( hudRequest );
+	ASSERT_TRUE( hud );
+	EXPECT_EQ( CellHeight( hud ), 20 );
+	// Alternating visible HUD/menu labels must reuse both atlases.
+	for ( int i = 0; i < 3; ++i )
+	{
+		EXPECT_EQ( original.GetPtr(), locale->GetFont( request ) );
+		EXPECT_EQ( hud.GetPtr(), locale->GetFont( hudRequest ) );
+	}
+
 	NGlobal::SetVar( "ui_font_scale", 1.5f );
 	CObj<NGScene::CFontInfo> larger = locale->GetFont( request );
 	ASSERT_TRUE( larger );
 	EXPECT_NE( original.GetPtr(), larger.GetPtr() );
 	EXPECT_EQ( CellHeight( larger ), 30 );
 	EXPECT_EQ( CellHeight( original ), 20 );
+	EXPECT_EQ( larger.GetPtr(), locale->GetFont( request ) );
+	EXPECT_EQ( hud.GetPtr(), locale->GetFont( hudRequest ) );
+	NGlobal::SetVar( "hud_font_scale", 1.25f );
+	CObj<NGScene::CFontInfo> largerHud = locale->GetFont( hudRequest );
+	ASSERT_TRUE( largerHud );
+	EXPECT_EQ( CellHeight( largerHud ), 25 );
+	EXPECT_EQ( CellHeight( hud ), 20 );
 	EXPECT_EQ( larger.GetPtr(), locale->GetFont( request ) );
 
 	NGlobal::SetVar( "ui_font_scale", 1.0f );

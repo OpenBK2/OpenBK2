@@ -23,11 +23,11 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 	return 0;
 }
 
-CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
+CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow )
 : szString( pszStr ), dwColor( col ) 
 {  
 	const std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
-	pGfxText = CreateML();
+	pGfxText = CreateML( pFontScaleWindow );
 	CUIFactory::RegisterMLHandlers( pGfxText );
 	pGfxText->SetText( szText, 0 );
 	pGfxText->Generate( VirtualToScreenX( nWidth ) );
@@ -40,7 +40,16 @@ int CWindowConsoleOutput::operator&( IBinSaver &saver )
 	saver.Add( 3, &pInstance );
 	saver.Add( 4, &pUpperSign );
 	saver.Add( 5, &vectorOfStrings );
-	saver.Add( 6, &nBeginString );	
+	saver.Add( 6, &nBeginString );
+	if ( saver.IsReading() )
+	{
+		// Chat rows in older saves have no font-scale owner yet.
+		if ( pUpperSign )
+			pUpperSign->SetFontScaleWindow( this );
+		for ( auto &line : vectorOfStrings )
+			if ( line.pGfxText )
+				line.pGfxText->SetFontScaleWindow( this );
+	}
 	return 0;
 }
 
@@ -48,7 +57,7 @@ void CWindowConsoleOutput::AddString( const std::wstring &szString, const uint32
 {
 	int nSizeX;
 	GetPlacement( 0, 0, &nSizeX, 0 );
-	vectorOfStrings.push_back( SColorString(szString.c_str(), color, nSizeX) );
+	vectorOfStrings.push_back( SColorString(szString.c_str(), color, nSizeX, this) );
 }
 
 void CWindowConsoleOutput::Scroll( const int bUp )
@@ -97,7 +106,7 @@ void CWindowConsoleOutput::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	CWindow::InitByDesc( _pDesc );
 
 	pShared = checked_cast_ptr<const NDb::SWindowConsoleOutputShared *>( pDesc->pShared );
-	pUpperSign = CreateML();
+	pUpperSign = CreateML( this );
 	CUIFactory::RegisterMLHandlers( pUpperSign );
 	pUpperSign->SetText( L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
 }

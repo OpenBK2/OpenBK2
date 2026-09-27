@@ -595,6 +595,7 @@ int CWindowScreen::operator&( struct IBinSaver &saver )
 	//saver.Add( 16, &p2DGameView );
 	saver.Add( 17, &finishedAnimations );
 	saver.Add( 18, &tabOrder );
+	saver.Add( 19, &bHudFontScale );
 	return 0;
 }
 

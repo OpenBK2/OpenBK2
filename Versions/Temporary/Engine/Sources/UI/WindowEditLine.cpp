@@ -689,7 +689,7 @@ void CWindowEditLine::CreateText()
 {
 	if ( !pGfxText )
 	{
-		pGfxText = CreateML();
+		pGfxText = CreateML( this );
 		CUIFactory::RegisterMLHandlers( pGfxText );
 		SetTextToGfx( L"" );
 		CTRect<float> rc;
@@ -721,6 +721,8 @@ int CWindowEditLine::operator&( IBinSaver &saver )
 
 void CWindowEditLine::AfterLoad()
 {
+	if ( pGfxText )
+		pGfxText->SetFontScaleWindow( this );
 	InitLocal();
 	CWindow::AfterLoad();
 }

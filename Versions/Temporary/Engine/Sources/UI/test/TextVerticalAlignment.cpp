@@ -42,6 +42,7 @@ struct TextVisitor : IUIVisitor
 
 class TextVerticalAlignment : public testing::Test
 {
+	NGlobal::CValue oldHudScale = NGlobal::GetVar( "hud_font_scale", 1.0f );
 	NGlobal::CValue oldScale = NGlobal::GetVar( "ui_font_scale", 1.2f );
 	CObj<NVFS::IVFS> oldVFS = NVFS::GetMainVFS();
 	CObj<NDb::SFont> numeric;
@@ -84,6 +85,7 @@ protected:
 			capRatio = double( bottom - top ) / bakedFormat->GetValue()->GetLineSpace();
 		}
 		NGlobal::SetVar( "ui_font_scale", 1.2f );
+		NGlobal::SetVar( "hud_font_scale", 1.0f );
 	}
 	void TearDown() override
 	{
@@ -91,7 +93,25 @@ protected:
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
 		NSingleton::UnRegisterSingleton( IUIInitialization::tidTypeID );
 		NGlobal::SetVar( "ui_font_scale", oldScale );
+		NGlobal::SetVar( "hud_font_scale", oldHudScale );
 		NVFS::SetMainVFS( oldVFS );
+	}
+	IScreen *MakeScreen( bool hud )
+	{
+		CPtr<NDb::SWindowScreenShared> shared = MakeObject<NDb::SWindowScreenShared>( NDb::SWindowScreenShared::typeID );
+		CPtr<NDb::SWindowScreen> desc = MakeObject<NDb::SWindowScreen>( NDb::SWindowScreen::typeID );
+		desc->nClassTypeID = 0x11075B80;
+		desc->pShared = shared;
+		desc->bVisible = true;
+		desc->placement.position = VNULL2;
+		desc->placement.size = CVec2( 1024, 768 );
+		desc->placement.horAllign = NDb::EPA_LOW_END;
+		desc->placement.verAllign = NDb::EPA_LOW_END;
+		desc->placement.lowerMargin = VNULL2;
+		desc->placement.upperMargin = VNULL2;
+		IScreen *screen = dynamic_cast<IScreen*>( CUIFactory::MakeWindow( desc ) );
+		screen->SetHudFontScale( hud );
+		return screen;
 	}
 	CWindowTextView *MakeLabel( float width, float height, bool resize = false )
 	{
@@ -197,4 +217,85 @@ TEST_F( TextVerticalAlignment, FittingAndAutosizedSingleLinesKeepTheirTopOrigin 
 		ASSERT_EQ( visitor.calls, 1 );
 		EXPECT_FLOAT_EQ( visitor.position.y, visitor.clip.y1 );
 	}
+}
+
+TEST_F( TextVerticalAlignment, HudAndMenuLabelsRefreshIndependently )
+{
+	CObj<IScreen> hud = MakeScreen( true );
+	CObj<IScreen> menu = MakeScreen( false );
+	CObj<CWindowTextView> hudLabel = MakeLabel( 200, 12, true );
+	CObj<CWindowTextView> menuLabel = MakeLabel( 200, 12, true );
+	hud->AddChild( hudLabel, false );
+	menu->AddChild( menuLabel, false );
+	hudLabel->SetText( L"<font face=numeric size=14>84/84" );
+	menuLabel->SetText( hudLabel->GetText() );
+	TextVisitor hudBefore, menuBefore;
+	hudLabel->Visit( &hudBefore );
+	menuLabel->Visit( &menuBefore );
+	ASSERT_GT( menuBefore.size.y, hudBefore.size.y );
+	ASSERT_GT( menuBefore.size.x, hudBefore.size.x );
+
+	NGlobal::SetVar( "hud_font_scale", 1.5f );
+	TextVisitor hudAfter, menuAfter;
+	menuLabel->Visit( &menuAfter );
+	hudLabel->Visit( &hudAfter );
+	EXPECT_EQ( menuAfter.size, menuBefore.size );
+	EXPECT_GT( hudAfter.size.y, hudBefore.size.y );
+	EXPECT_EQ( hudLabel->GetWindowRect().Height(), hudAfter.size.y );
+
+	NGlobal::SetVar( "ui_font_scale", 1.0f );
+	TextVisitor hudFinal, menuFinal;
+	hudLabel->Visit( &hudFinal );
+	menuLabel->Visit( &menuFinal );
+	EXPECT_EQ( hudFinal.size, hudAfter.size );
+	EXPECT_EQ( menuFinal.size, hudBefore.size );
+}
+
+TEST_F( TextVerticalAlignment, TextFollowsItsWindowWhenMovedBetweenScreens )
+{
+	CObj<IScreen> hud = MakeScreen( true );
+	CObj<IScreen> menu = MakeScreen( false );
+	CObj<CWindowTextView> label = MakeLabel( 200, 12, true );
+	label->SetText( L"<font face=numeric size=14>3750/3750" );
+	const auto guiSize = label->GetSize();
+	hud->AddChild( label, false );
+	TextVisitor smaller;
+	label->Visit( &smaller );
+	EXPECT_LT( smaller.size.y, guiSize.y );
+	menu->AddChild( label, false );
+	TextVisitor restored;
+	label->Visit( &restored );
+	EXPECT_EQ( restored.size, guiSize );
+}
+
+TEST_F( TextVerticalAlignment, ScreenScaleAppliesBeforeChildrenAreAttached )
+{
+	CObj<IScreen> hud = MakeScreen( true );
+	CObj<CWindowTextView> label = MakeLabel( 200, 12, true );
+	// Screen loading lays out children before AddChild supplies their parent.
+	CUIFactory::SetScreenDuringLoad( hud );
+	label->SetText( L"<font face=numeric size=14>84/84" );
+	const auto initialSize = label->GetSize();
+	CUIFactory::SetScreenDuringLoad( nullptr );
+	hud->AddChild( label, false );
+	EXPECT_EQ( label->GetSize(), initialSize );
+	CObj<CWindowTextView> menuLabel = MakeLabel( 200, 12, true );
+	menuLabel->SetText( label->GetText() );
+	EXPECT_GT( menuLabel->GetSize().y, initialSize.y );
+}
+
+TEST_F( TextVerticalAlignment, PlacedCaptionsUseTheirOwningScreen )
+{
+	CObj<IScreen> hud = MakeScreen( true );
+	CObj<IScreen> menu = MakeScreen( false );
+	CObj<CWindowTextView> hudLabel = MakeLabel( 200, 30 );
+	CObj<CWindowTextView> menuLabel = MakeLabel( 200, 30 );
+	hud->AddChild( hudLabel, false );
+	menu->AddChild( menuLabel, false );
+	// Button-style captions use CPlacedText rather than the TextView layout.
+	hudLabel->CWindow::SetTextString( L"<font face=numeric size=14>84/84" );
+	menuLabel->CWindow::SetTextString( L"<font face=numeric size=14>84/84" );
+	EXPECT_GT( menuLabel->GetOptimalWidth(), hudLabel->GetOptimalWidth() );
+	NGlobal::SetVar( "hud_font_scale", 1.2f );
+	EXPECT_EQ( menuLabel->GetOptimalWidth(), hudLabel->GetOptimalWidth() );
 }

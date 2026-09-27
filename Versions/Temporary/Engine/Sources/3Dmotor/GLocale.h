@@ -31,7 +31,9 @@ struct SFont
 	// Horizontal cell size in screen pixels; zero means the same as nSize.
 	// Runtime fonts rasterise both axes, preserving the original UI proportions.
 	int nWidth = 0;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); f.Add(4,&nWidth); return 0; }
+	// Screen ownership selects the user setting, independently of input focus.
+	bool bHud = false;
+	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); f.Add(4,&nWidth); f.Add(5,&bHud); return 0; }
 
 	SFont() {}
 	SFont( int _nSize, const std::string &_szName ): nSize( _nSize ), szName( _szName ) {}
@@ -80,8 +82,9 @@ private:
 	// the fonts made so far by name and pixel size, a null entry marking one
 	// whose font file could not be used, so the baked font answers from then on.
 	std::unordered_map<std::string, const NDb::SFont*> runtimeRecords;
-	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts;
-	float fCachedRuntimeFontScale = 0;
+	// Menus and HUD can be visible together; edits invalidate only their own cache.
+	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts[2];
+	float fCachedRuntimeFontScale[2] = { 0, 0 };
 	CFontInfo* GetRuntimeFont( const SFont &sFont );
 
 protected:
@@ -99,8 +102,9 @@ public:
 	virtual CFontInfo* GetFont( const SFont &sFont );
 };
 
-// Effective NGlobal ui_font_scale, shared by rasterisation and layout caches.
-_3DMOTOR_EXPORT float GetRuntimeFontScale();
+// Effective NGlobal ui_font_scale or hud_font_scale, shared by rasterisation
+// and layout caches. Standalone text defaults to the GUI setting.
+_3DMOTOR_EXPORT float GetRuntimeFontScale( bool bHud = false );
 
 // Font sizes follow the original 1024x768 UI coordinate system. Keep both
 // dimensions: runtime fonts rasterise this aspect ratio into their atlas, so

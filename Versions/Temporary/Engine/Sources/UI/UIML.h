@@ -202,6 +202,7 @@ struct UI_EXPORT IMLHandler: public CObjectBase
 struct IML: public CObjectBase
 {
 	virtual void SetText( const std::wstring &wsText, int nFlags ) = 0;
+	virtual void SetFontScaleWindow( struct IWindow *pWindow ) = 0;
 	virtual void SetFade( float fFade ) = 0;
 	virtual void SetHandler( const std::wstring &wsTAG, IMLHandler *pHandler ) = 0;
 	virtual void SetIDForHandler( int nID ) = 0;
@@ -217,6 +218,6 @@ struct IML: public CObjectBase
 	virtual void Render( NGScene::ILayoutFakeView *pView, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
-IML* CreateML();
+UI_EXPORT IML* CreateML( struct IWindow *pFontScaleWindow = nullptr );
 
 

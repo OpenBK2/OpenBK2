@@ -56,6 +56,8 @@ protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
 
 public:
+	// The developer console stays at the GUI scale when moved between screens.
+	bool UsesHudFontScale() const override { return false; }
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 
 	CWindowConsole();// : currTime( 0 ), nBeginCommand( 0 ), nBeginString( 0 ) {  }

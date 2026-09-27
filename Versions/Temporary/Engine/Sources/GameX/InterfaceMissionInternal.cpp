@@ -3469,6 +3469,11 @@ void CInterfaceMission::CloseChatInput()
 
 void CInterfaceMission::AfterLoad()
 {
+	// Older saves predate per-screen font scaling. Restore it before UI reflow.
+	if ( pScreen )
+		pScreen->SetHudFontScale( true );
+	if ( pMovieBorder )
+		pMovieBorder->SetHudFontScale( true );
 	if ( pMission == 0 )
 	{
 		NGlobal::ProcessCommand( L"main_menu" );

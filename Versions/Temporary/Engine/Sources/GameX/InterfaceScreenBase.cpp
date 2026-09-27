@@ -38,6 +38,9 @@ bool AddUIScreen( IScreen *pWindowScreen, const std::string &szScreenEntryName, 
 	if ( dbidScreen.IsEmpty() )
 		return false;
 	//
+	// Classify the screen before Load measures any of its text. Menus layered
+	// over the mission remain GUI screens, regardless of the interface stack.
+	pScr->SetHudFontScale( szScreenEntryName == "Mission" || szScreenEntryName == "MissionMovieBorder" );
 	pScr->SetGView( Scene()->GetG2DView() );
 	pScr->Load( NDb::Get<NDb::SWindowScreen>(dbidScreen), pReactions );
 	Singleton<IScene>()->AddScreen( pScr );

@@ -11,7 +11,8 @@ class CForegroundTextString : public IWindowPart
 	CTRect<float> rcParent;
 	CPtr<NDb::SForegroundTextString> pInstance;
 	CObj<IML> pGfxText;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszCustomText); f.Add(3,&rcParent); f.Add(4,&pInstance); f.Add(5,&pGfxText); return 0; }
+	CPtr<IWindow> pFontScaleWindow;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszCustomText); f.Add(3,&rcParent); f.Add(4,&pInstance); f.Add(5,&pGfxText); f.Add(6,&pFontScaleWindow); return 0; }
 private:
 	void InitText();
 public:
@@ -19,6 +20,7 @@ public:
 	CForegroundTextString() {}
 
 	virtual void Init();
+	void SetFontScaleWindow( IWindow *pWindow ) override;
 	void SetText( const std::wstring &_szText );
 	int GetOptimalWidth() const;
 	const std::wstring &GetText() const;
@@ -45,15 +47,17 @@ class CPlacedText : public CObjectBase
 	NDb::SWindowPlacement placement;
 	CTRect<float> rcParent;
 	CObj<IML> pGfxText;
+	CPtr<IWindow> pFontScaleWindow;
 	CVec2 vScreenRect;
 	float fFadeValue;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); f.Add(3,&placement); f.Add(4,&rcParent); f.Add(5,&pGfxText); f.Add(6,&vScreenRect); f.Add(7,&fFadeValue); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); f.Add(3,&placement); f.Add(4,&rcParent); f.Add(5,&pGfxText); f.Add(6,&vScreenRect); f.Add(7,&fFadeValue); f.Add(8,&pFontScaleWindow); return 0; }
 private:
 	void InitGfxText();
 public:
 	CPlacedText();
 	
 	void Init();
+	void SetFontScaleWindow( IWindow *pWindow );
 
 	void Visit( struct IUIVisitor *pVisitor );
 	

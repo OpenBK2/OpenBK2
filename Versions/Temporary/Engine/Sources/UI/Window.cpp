@@ -91,6 +91,13 @@ int CWindow::operator&( IBinSaver &saver )
 
 void CWindow::AfterLoad()
 {
+	// Rebind parts from older saves, which did not store a font-scale owner.
+	if ( pPlacedText )
+		pPlacedText->SetFontScaleWindow( this );
+	if ( pForeground )
+		pForeground->SetFontScaleWindow( this );
+	if ( pBackground )
+		pBackground->SetFontScaleWindow( this );
 	for ( int i = 0; i < drawOrder.Size(); ++i )
 		drawOrder[i]->AfterLoad();
 }
@@ -183,14 +190,20 @@ void CWindow::SetBackground( IWindowPart *_pBackground )
 {	
 	pBackground = _pBackground; 
 	if ( pBackground )
+	{
+		pBackground->SetFontScaleWindow( this );
 		pBackground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
+	}
 }
 
 void CWindow::SetForeground( IWindowPart *_pForeground )
 {
 	pForeground = _pForeground;
 	if ( pForeground )
+	{
+		pForeground->SetFontScaleWindow( this );
 		pForeground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
+	}
 }
 
 const std::wstring& CWindow::GetDBFormatText() const
@@ -238,6 +251,15 @@ void CWindow::SetTextPlacement( const struct NDb::SWindowPlacement &placement )
 {
 	if ( pPlacedText )
 		pPlacedText->SetPlacement( placement );
+}
+
+bool CWindow::UsesHudFontScale() const
+{
+	if ( pParent )
+		return pParent->UsesHudFontScale();
+	// During creation, children are measured before they are attached.
+	const IScreen *pLoading = CUIFactory::GetScreenDuringLoad();
+	return pLoading && pLoading != static_cast<const IWindow*>( this ) && pLoading->UsesHudFontScale();
 }
 
 struct IScreen* CWindow::GetScreen()
@@ -423,15 +445,20 @@ void CWindow::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 			AddChild( pWindow, false );
 		}
 		pBackground = CUIFactory::MakeWindowPart( pShared->pBackground );
+		if ( pBackground )
+			pBackground->SetFontScaleWindow( this );
 
 	//	if ( GetInstance()->pTextString )
 	//		pTextString =	static_cast<CForegroundTextString*>( CUIFactory::MakeWindowPart( GetInstance()->pTextString ) );
 		pPlacedText = new CPlacedText(); // always presents
+		pPlacedText->SetFontScaleWindow( this );
 		SetTextString( GetDBText() );
 		if ( const NDb::SWindowPlacement *pPlacement = GetDBTextPlacement() )
 			SetTextPlacement( *pPlacement );
 
-		pForeground =	CUIFactory::MakeWindowPart( pShared->pForeground );
+		pForeground = CUIFactory::MakeWindowPart( pShared->pForeground );
+		if ( pForeground )
+			pForeground->SetFontScaleWindow( this );
 
 		GetInstance()->placement.position.Merge( pShared->placement.position.Get() );
 		GetInstance()->placement.lowerMargin.Merge( pShared->placement.lowerMargin.Get() );
@@ -575,13 +602,19 @@ void CWindow::SetPlacement( const float x, const float y, const float sizeX, con
 		GetInstance()->placement.size.first.y = sizeY;
 
 	if ( pBackground )
+	{
+		pBackground->SetFontScaleWindow( this );
 		pBackground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
+	}
 //	if ( pTextString )
 //		pTextString->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
 	if ( pPlacedText )
 		pPlacedText->Reposition( GetWindowRect() );
 	if ( pForeground )
+	{
+		pForeground->SetFontScaleWindow( this );
 		pForeground->SetPos( vScreenPos, GetInstance()->placement.size.Get() );
+	}
 	
 	RepositionChildren();
 }
