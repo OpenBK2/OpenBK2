@@ -218,9 +218,6 @@ replaces, on x86, where both forms can run side by side.
 
 there are few branches where main development takes its place:
 - [port](https://github.com/OpenBK2/OpenBK2/tree/port) - the main development branch where all major work is done. it includes porting to modern compiler, fixing game bugs (like crashes and asyncs), performance optimizations, etc.
-- [editor](https://github.com/OpenBK2/OpenBK2/tree/editor) - work in progress to restore Map Editor executable build
-- [linux](https://github.com/OpenBK2/OpenBK2/tree/linux) - work in progress to port game code to Linux, rewriting Windows-specific code to portable alternatives
-- [server](https://github.com/OpenBK2/OpenBK2/tree/server) - work in progress to restore Server executable build
 - [main](https://github.com/OpenBK2/OpenBK2/tree/main) - an original source code the way it was released, as is, no modifications
 
 # reporting crashes
