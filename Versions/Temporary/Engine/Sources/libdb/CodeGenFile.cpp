@@ -46,21 +46,20 @@ static const std::string GetIncludeRefName( const std::vector<std::string> &spli
 
 CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
-	// The output path, from the file's path on disk rather than its lowercased
-	// name, so generated files land in Stats_B2_M1/ and not stats_b2_m1/, which
-	// is a different directory where the filesystem minds case.
+	// The output path, and the includes of other generated headers below, come
+	// from the files' paths on disk rather than their lowercased names, so the
+	// generated files land in Stats_B2_M1/ and include "../Stats_B2_M1/RPGStats.h",
+	// both of which only resolve as lowercase where the filesystem ignores case.
+	// The directories and the include paths have to change together: they are
+	// compared to find the directories the two files share.
 	szName = CutRootDir( pFileNode->GetPathOnDisk(), szRootDir );
 	szName = szName.substr( 0, szName.size() - NFile::GetFileExt( szName ).size() );
-	// The includes below are still worked out from the lowercased name: they
-	// are compared with the includes' names, which are lowercased too.
-	std::string szLowerName = CutRootDir( pFileNode->GetName(), szRootDir );
-	szLowerName = szLowerName.substr( 0, szLowerName.size() - NFile::GetFileExt( szLowerName ).size() );
 	std::vector<std::string> dirs;
-	NStr::SplitString( szLowerName, &dirs, '/' );
+	NStr::SplitString( szName, &dirs, '/' );
 	dirs.pop_back();
 	for ( NLang::CFileNode::TIncludesIter iter = pFileNode->BeginIncludes(); iter != pFileNode->EndIncludes(); ++iter )
 	{
-		std::string szIncludeRefName = GetIncludeRefName( dirs, szRootDir, iter->first );
+		std::string szIncludeRefName = GetIncludeRefName( dirs, szRootDir, iter->second->GetPathOnDisk() );
 		const std::string szExt = NFile::GetFileExt( szIncludeRefName );
 		if ( szExt == ".cll" )
 			szIncludeRefName = szIncludeRefName.substr( 0, szIncludeRefName.size() - szExt.size() ) + ".h";
@@ -68,7 +67,15 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 			includes.push_back( szIncludeRefName );
 	}
 
-	includes.sort();
+	// Ignoring case, the order they had when they were all lowercase and the
+	// order the tree's DB headers list them in.
+	includes.sort( []( const std::string &a, const std::string &b )
+	{
+		std::string szA( a ), szB( b );
+		NStr::ToLowerASCII( &szA );
+		NStr::ToLowerASCII( &szB );
+		return szA < szB;
+	} );
 
 	hExternalIncludes = pFileNode->GetHExternalIncludes();
 	cppExternalIncludes = pFileNode->GetCPPExternalIncludes();
