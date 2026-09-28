@@ -72,6 +72,28 @@ jobs:
       - name: Build with preset
         run: cmake --build --preset ${{ matrix.preset }} --parallel
 
+      # The DB*.h/.cpp sources and Versions/Current/Data/types.xml are committed
+      # dbcodegen output. Regenerating must change nothing; a diff means a
+      # generated file was edited by hand or a .cll change was committed without
+      # regenerating (Contributing.md, "adding things to the game database").
+      # types.xml is outside the sparse checkout, so it is written fresh and
+      # compared with the committed blob instead of through git status.
+      - name: Check generated database sources
+        shell: bash
+        run: |
+          cmake --build out/build/${{ matrix.preset }} --target regenerate-db
+          changed=$(git status --porcelain --untracked-files=all -- Versions/Temporary/Engine/Sources)
+          if [ -n "$changed" ]; then
+            echo "::error::regenerate-db changed generated sources; regenerate them from the .cll and commit"
+            echo "$changed"
+            git diff -- Versions/Temporary/Engine/Sources | head -200
+            exit 1
+          fi
+          if ! git show HEAD:Versions/Current/Data/types.xml | cmp - Versions/Current/Data/types.xml; then
+            echo "::error::regenerate-db changed Versions/Current/Data/types.xml; regenerate it from the .cll and commit"
+            exit 1
+          fi
+
       # Saved under the build id, and only when that differs from what was restored,
       # which is exactly when this job built wx. The id file inside the install is
       # written last, so its presence also means the install is complete.
