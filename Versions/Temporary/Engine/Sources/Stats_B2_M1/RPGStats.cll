@@ -1961,7 +1961,7 @@ class SUnitStatsModifier
 
 		#include "include_UnitStatsModifier_ParameterModifier.h"
 	};
-	// HP (*) – Resistance, damage must be reduced
+	// HP (*) â€“ Resistance, damage must be reduced
 	SParameterModifier _Durability;
 	SParameterModifier _SmallAABBCoeff;
 	SParameterModifier _Camouflage;

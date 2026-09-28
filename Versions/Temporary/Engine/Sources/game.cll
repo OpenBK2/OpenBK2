@@ -31,7 +31,7 @@
 	float _w = 1;
 };
 
-// сферические координаты
+// СЃС„РµСЂРёС‡РµСЃРєРёРµ РєРѕРѕСЂРґРёРЅР°С‚С‹
 [typeRename = "CVecPolar"; typePrefix = "v"]
 [noHeader] struct SVecPolar
 {
