@@ -12,6 +12,7 @@
 #include "libdb_export.h"
 
 #include <cstdint>
+#include <cstdlib>
 
 #include <fmt/format.h>
 
@@ -39,6 +40,25 @@ static std::string GetExportMacro( ICode::SCodeStreams *pCode, NDb::NTypeDef::ST
 static std::string FormatTypeID( const int nTypeID )
 {
 	return fmt::format( "0x{:X}", static_cast<uint32_t>( nTypeID ) );
+}
+
+// A float default value as the generated constructor spells it. Four decimals,
+// 0.0700f, as the generator always wrote them, as long as that reads back as
+// the same float; otherwise the shortest spelling that does, so a default such
+// as 0.872664626 is not rounded to 0.8727.
+static std::string FormatFloatDefault( const float fValue )
+{
+	const std::string szFixed = fmt::format( "{:.4f}", fValue );
+	if ( std::strtof( szFixed.c_str(), 0 ) == fValue )
+	{
+		return szFixed + "f";
+	}
+	std::string szExact = fmt::format( "{}", fValue );
+	if ( szExact.find_first_of( ".e" ) == std::string::npos )
+	{
+		szExact += ".0";
+	}
+	return szExact + "f";
 }
 
 CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
@@ -495,6 +515,10 @@ static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTyp
 				{
 					NStr::ToMBCS( &szValue, value.GetWStr() );
 					szValue = "L\"" + szValue + "\"";
+				}
+				else if ( value.GetType() == CVariant::VT_FLOAT )
+				{
+					szValue = FormatFloatDefault( value );
 				}
 				else
 					value.ToText( &szValue );
