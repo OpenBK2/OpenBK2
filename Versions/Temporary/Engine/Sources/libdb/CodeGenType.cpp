@@ -31,6 +31,16 @@ static std::string GetExportMacro( ICode::SCodeStreams *pCode, NDb::NTypeDef::ST
 	return "";
 }
 
+// A class's type id as the generated code spells it, 0x12069B88. The id is
+// held in an int, and the ones with the top bit set are negative there; it was
+// formatted with printf's %X, which takes the bits as unsigned, until the
+// move to fmt, whose {:X} prints the sign of an int: 0x-4BBF9E90 for
+// SSunFlares' 0xB4406170. Format the bits.
+static std::string FormatTypeID( const int nTypeID )
+{
+	return fmt::format( "0x{:X}", static_cast<uint32_t>( nTypeID ) );
+}
+
 CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pComplexTypeNode );
@@ -592,7 +602,7 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 		pCode->h << szTabs << tab << "OBJECT_BASIC_METHODS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 	pCode->h << szTabs << "public:" << endl;
 	if ( bTerminal )
-		pCode->h << szTabs << tab << "enum { typeID = " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << " };" << endl;
+		pCode->h << szTabs << tab << "enum { typeID = " << FormatTypeID( pClass->nClassTypeID ) << " };" << endl;
 
 	const bool bNoCheckSum = IsNoCheckSum( pClass );
 	if ( !bNoCheckSum )
@@ -635,7 +645,7 @@ static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass
 	// declare the class's cross-module casts with that module's export macro.
 	if ( bTerminal )
 	{
-		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << pCode->GetModuleMacroName() << ", " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
+		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << pCode->GetModuleMacroName() << ", " << FormatTypeID( pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
 	}
 	else
 	{
