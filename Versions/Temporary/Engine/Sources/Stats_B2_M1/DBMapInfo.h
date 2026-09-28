@@ -630,7 +630,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum ESuperWeaponType
+	enum ESuperWeaponType : int
 	{
 		SUPER_WEAPON_BOMBER = 0,
 		SUPER_WEAPON_ROCKET = 1,
@@ -822,7 +822,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EBonusType
+	enum EBonusType : int
 	{
 		BT_REPLACE_REINFORCEMENT = 0,
 		BT_ENABLE_REINFORCEMENT = 1,

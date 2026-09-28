@@ -65,7 +65,7 @@ namespace NDb
 	public:
 		enum { typeID = 0x10084341 };
 
-		enum EWaterType
+		enum EWaterType : int
 		{
 			WT_OCEAN = 0,
 			WT_LAKE = 1,

@@ -16,7 +16,7 @@ namespace NDb
 	struct SSpeedRange;
 	enum EManuverID : int;
 
-	enum ESpeedRelation
+	enum ESpeedRelation : int
 	{
 		ESR_NEAR_STALL = 0,
 		ESR_SMALL = 1,

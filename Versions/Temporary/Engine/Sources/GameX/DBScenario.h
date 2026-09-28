@@ -209,7 +209,7 @@ namespace NDb
 		MET_CHAPTER_START_END = 3,
 	};
 
-	enum EMissionType
+	enum EMissionType : int
 	{
 		EMT_FINAL = 0,
 		EMT_AIR_COVER = 1,
@@ -220,7 +220,7 @@ namespace NDb
 		EMT_CONVOY_DESTROY = 6,
 	};
 
-	enum EMissionWeather
+	enum EMissionWeather : int
 	{
 		EMW_SUN = 0,
 		EMW_RAIN = 1,
@@ -228,7 +228,7 @@ namespace NDb
 		EMW_SANDSTORM = 3,
 	};
 
-	enum EMissionDayTime
+	enum EMissionDayTime : int
 	{
 		EMDT_DAY = 0,
 		EMDT_DUSK = 1,
@@ -236,7 +236,7 @@ namespace NDb
 		EMDT_DAWN = 3,
 	};
 
-	enum EMissionDifficulty
+	enum EMissionDifficulty : int
 	{
 		EMD_EASY = 0,
 		EMD_MEDIUM = 1,

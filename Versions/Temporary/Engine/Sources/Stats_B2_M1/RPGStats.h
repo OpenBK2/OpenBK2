@@ -196,7 +196,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EArmorDirection
+	enum EArmorDirection : int
 	{
 		RPG_FRONT = 0,
 		RPG_LEFT = 1,
@@ -753,7 +753,7 @@ namespace NDb
 			mutable uint32_t __dwCheckSum;
 		public:
 
-			enum ETrajectoryType
+			enum ETrajectoryType : int
 			{
 				TRAJECTORY_LINE = 0,
 				TRAJECTORY_HOWITZER = 1,
@@ -769,7 +769,7 @@ namespace NDb
 				TRAJECTORY_SAM = 11,
 			};
 
-			enum EShellDamageType
+			enum EShellDamageType : int
 			{
 				DAMAGE_HEALTH = 0,
 				DAMAGE_MORALE = 1,
@@ -836,7 +836,7 @@ namespace NDb
 			uint32_t CalcCheckSum() const;
 		};
 
-		enum EWeaponType
+		enum EWeaponType : int
 		{
 			WEAPON_PISTOL = 0,
 			WEAPON_MACHINEGUN = 1,
@@ -1405,7 +1405,7 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		enum EDirection
+		enum EDirection : int
 		{
 			VERTICAL = 0,
 			HORIZONTAL = 1,
@@ -1417,7 +1417,7 @@ namespace NDb
 			mutable uint32_t __dwCheckSum;
 		public:
 
-			enum ESegmentType
+			enum ESegmentType : int
 			{
 				SLAB = 0,
 				GIRDER = 1,
@@ -1697,7 +1697,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EFenceDirection
+	enum EFenceDirection : int
 	{
 		FENCE_DIRECTION_0 = 0,
 		FENCE_DIRECTION_1 = 1,
@@ -1705,7 +1705,7 @@ namespace NDb
 		FENCE_DIRECTION_3 = 3,
 	};
 
-	enum EFenceDamageType
+	enum EFenceDamageType : int
 	{
 		FENCE_TYPE_NORMAL = 0,
 		FENCE_TYPE_LDAMAGE = 1,
@@ -1722,7 +1722,7 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		enum EFencePlacementMode
+		enum EFencePlacementMode : int
 		{
 			FENCE_PLACE_ON_TERRAIN = 0,
 			FENCE_PLACE_STAGGERED = 1,
@@ -2753,12 +2753,12 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
-	enum EEvent
+	enum EEvent : int
 	{
 		HIT_NEAR = 0,
 	};
 
-	enum EDesignSquadType
+	enum EDesignSquadType : int
 	{
 		SQUAD_TYPE_UNKNOWN = 0,
 		Main_Squad = 1,
@@ -2778,7 +2778,7 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		enum ESquadType
+		enum ESquadType : int
 		{
 			RIFLEMANS = 0,
 			INFANTRY = 1,
@@ -2820,7 +2820,7 @@ namespace NDb
 				uint32_t CalcCheckSum() const;
 			};
 
-			enum EFormationMoveType
+			enum EFormationMoveType : int
 			{
 				DEFAULT = 0,
 				MOVEMENT = 1,

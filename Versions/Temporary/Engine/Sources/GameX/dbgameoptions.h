@@ -49,7 +49,7 @@ namespace NDb
 					uint32_t CalcCheckSum() const;
 				};
 
-				enum EOptionEditorType
+				enum EOptionEditorType : int
 				{
 					OPTION_EDITOR_EDITLINE = 0,
 					OPTION_EDITOR_CHECKBOX = 1,

@@ -70,13 +70,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B8E };
 
-		enum EType
+		enum EType : int
 		{
 			REGULAR = 0,
 			TEXTURE_2D = 1,
 		};
 
-		enum EAddrType
+		enum EAddrType : int
 		{
 			CLAMP = 0,
 			WRAP = 1,
@@ -84,7 +84,7 @@ namespace NDb
 			WRAP_Y = 3,
 		};
 
-		enum EFormat
+		enum EFormat : int
 		{
 			TF_DXT1 = 0,
 			TF_DXT3 = 1,
@@ -496,13 +496,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x1206A2C0 };
 
-		enum ELight
+		enum ELight : int
 		{
 			L_NORMAL = 0,
 			L_LIT = 1,
 		};
 
-		enum EStatic
+		enum EStatic : int
 		{
 			P_STATIC = 0,
 			P_DYNAMIC = 1,
@@ -648,12 +648,12 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B84 };
 
-		enum EPitch
+		enum EPitch : int
 		{
 			DEFAULT = 0,
 		};
 
-		enum ECharset
+		enum ECharset : int
 		{
 			ANSI = 0,
 			BALTIC = 1,
@@ -774,7 +774,7 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
-	enum EAddressMode
+	enum EAddressMode : int
 	{
 		AM_WRAP = 0,
 		AM_CLAMP = 1,
@@ -786,13 +786,13 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B87 };
 
-		enum ELightingMode
+		enum ELightingMode : int
 		{
 			L_NORMAL = 0,
 			L_SELFILLUM = 1,
 		};
 
-		enum EEffect
+		enum EEffect : int
 		{
 			M_GENERIC = 0,
 			M_WATER = 1,
@@ -805,7 +805,7 @@ namespace NDb
 			M_REFLECT_WATER = 8,
 		};
 
-		enum EAlphaMode
+		enum EAlphaMode : int
 		{
 			AM_OPAQUE = 0,
 			AM_OVERLAY = 1,
@@ -815,7 +815,7 @@ namespace NDb
 			AM_DECAL = 5,
 		};
 
-		enum EDynamicMode
+		enum EDynamicMode : int
 		{
 			DM_DONT_CARE = 0,
 			DM_FORCE_STATIC = 1,

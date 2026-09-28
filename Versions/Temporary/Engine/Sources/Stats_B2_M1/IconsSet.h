@@ -23,7 +23,7 @@ namespace NDb
 			mutable uint32_t __dwCheckSum;
 		public:
 
-			enum EIconTypeEnum
+			enum EIconTypeEnum : int
 			{
 				ICONTYPE_NONE = 0,
 				ICONTYPE_HPBAR = 1,
@@ -81,7 +81,7 @@ namespace NDb
 			mutable uint32_t __dwCheckSum;
 		public:
 
-			enum EVisObjIconType
+			enum EVisObjIconType : int
 			{
 				VOIT_NONE = 0,
 				VOIT_GROUP00 = 1,

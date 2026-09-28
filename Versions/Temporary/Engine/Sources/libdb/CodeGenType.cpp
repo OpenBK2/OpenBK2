@@ -43,7 +43,10 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 {
 	pCode->h << endl;
 
-	pCode->h << szTabs << "enum " << NHungarian::GetTypeNameInCode( pEnum, 0 ) << endl;
+	// Every generated enum has int for its underlying type, so any of them can be
+	// forward declared, which a C++ enum without a fixed one cannot. The
+	// forward declarations in CodeGenForward.cpp say ": int" to match.
+	pCode->h << szTabs << "enum " << NHungarian::GetTypeNameInCode( pEnum, 0 ) << " : int" << endl;
 	pCode->h << szTabs << "{" << endl;
 	for ( int i = 0; i < pEnum->entries.size(); ++i )
 	{

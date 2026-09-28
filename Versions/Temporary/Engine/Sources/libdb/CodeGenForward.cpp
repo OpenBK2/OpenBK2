@@ -25,13 +25,17 @@ void CForwardDefinition::GenerateCode( SCodeStreams *pCode, const std::string &s
 	if ( IsNoCode( pType->GetAttributes() ) )
 		return;
 
+	// An enum can only be forward declared with its underlying type, which is int
+	// for every generated one (see GenerateEnum in CodeGenType.cpp).
 	pCode->h << szTabs;
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
-		pCode->h << "enum ";
+	{
+		pCode->h << "enum " << NHungarian::GetTypeNameInCode( pType, 0 ) << " : int;" << endl;
+	}
 	else
-		pCode->h << "struct ";
-
-	pCode->h << NHungarian::GetTypeNameInCode( pType, 0 ) << ";" << endl;
+	{
+		pCode->h << "struct " << NHungarian::GetTypeNameInCode( pType, 0 ) << ";" << endl;
+	}
 }
 
 }
