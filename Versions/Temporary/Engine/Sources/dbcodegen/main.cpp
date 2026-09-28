@@ -3,7 +3,6 @@
 #include "Config.h"
 #include "Errors.h"
 #include "SolutionAnalyzer.h"
-#include "System/CmdLine.h"
 #include "Misc/StrProc.h"
 #include "System/FileUtils.h"
 #include "System/FilePath.h"
@@ -12,7 +11,12 @@
 
 #include <fmt/format.h>
 
+#include <boost/program_options.hpp>
+
 #include <algorithm>
+#include <iostream>
+
+namespace po = boost::program_options;
 
 //
 using namespace NDb::NCodeGenTool;
@@ -56,29 +60,72 @@ int PORT_CDECL main( int argc, char *argv[] )
 {
 	const std::string szCurrDir = NFile::GetNormalizedCurrDir();
 	//
-	ECodeGenOpts eCodeGenOpts = CODE_GEN_UNKNOWN;
 	std::string szConfigFileName = "dbconfig.xml";
 	std::string szTypesPath = szCurrDir;
 	std::string szSourcesPath = szCurrDir;
 
-	NCmdLine::CCmdLine cmdLine( "XML Database code generation utility\nWritten by [REDACTED]\n(C) [REDACTED], 2004\n" );
-	cmdLine.AddOption( "-show-version", &eCodeGenOpts, CODE_GEN_SHOW_VERSION, "show product version" );
-	cmdLine.AddOption( "-all", &eCodeGenOpts, CODE_GEN_NORMAL, "generate types.xml and sources" );
-	cmdLine.AddOption( "-nocopy", &eCodeGenOpts, CODE_GEN_NOCOPY, "only generate new source files (and don't copy to version)" );
-	cmdLine.AddOption( "-types", &eCodeGenOpts, CODE_GEN_TYPES, "only generate new types.xml" );
-	cmdLine.AddOption( "--config-file", &szConfigFileName, fmt::format("set name for config file (default: \"{}\")", szConfigFileName) );
-	cmdLine.AddOption( "--types-path", &szTypesPath, "set path to store types.xml (default: current dir)" );
-	cmdLine.AddOption( "--sources-path", &szSourcesPath, "set path to get .cll sources from (default: current dir)" );
+	// Boost::program_options replaced System/CmdLine.h, which the port deleted as
+	// unused by the game. The options and their meaning are the original ones.
+	po::options_description options( "Options" );
+	options.add_options()
+		( "show-version",   "show product version" )
+		( "all",            "generate types.xml and sources" )
+		( "nocopy",         "only generate new source files (and don't copy to version)" )
+		( "types",          "only generate new types.xml" )
+		( "config-file",    po::value<std::string>( &szConfigFileName ),
+		                    fmt::format( "set name for config file (default: \"{}\")", szConfigFileName ).c_str() )
+		( "types-path",     po::value<std::string>( &szTypesPath ),
+		                    "set path to store types.xml (default: current dir)" )
+		( "sources-path",   po::value<std::string>( &szSourcesPath ),
+		                    "set path to get .cll sources from (default: current dir)" )
+		( "help",           "show this message" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
 	//
-	cmdLine.PrintHeader();
-	if ( cmdLine.Process( argc, argv ) != NCmdLine::CCmdLine::PROC_RESULT_OK )
+	printf( "XML Database code generation utility\nWritten by [REDACTED]\n(C) [REDACTED], 2004\n\n" );
+
+	po::variables_map args;
+	try
+	{
+		// allow_long_disguise so the single dash spellings this tool has always
+		// taken, -all, -nocopy and -types, keep working alongside --config-file
+		// and the other double dash ones.
+		po::store( po::command_line_parser( argc, argv )
+		               .options( options )
+		               .style( po::command_line_style::default_style
+		                       | po::command_line_style::allow_long_disguise )
+		               .run(),
+		           args );
+		po::notify( args );
+	}
+	catch ( const po::error &err )
+	{
+		printf( "ERROR: %s\n\n", err.what() );
+		std::cout << options << std::endl;
 		return 0xDEAD;
-	//
-	if ( eCodeGenOpts == CODE_GEN_UNKNOWN )
-		return cmdLine.PrintUsage( "Usage: dbcodegen.exe [options] [other_config_name]" );
+	}
+	// The modes are exclusive; the old parser refused a second one as
+	// ambiguous rather than picking either, so this does too.
+	const int nModes = int( args.count( "all" ) + args.count( "nocopy" ) + args.count( "types" ) + args.count( "show-version" ) );
+	if ( nModes > 1 )
+	{
+		printf( "ERROR: -all, -nocopy, -types and -show-version are exclusive\n\n" );
+		std::cout << options << std::endl;
+		return 0xDEAD;
+	}
+	const ECodeGenOpts eCodeGenOpts = args.count( "all" )          ? CODE_GEN_NORMAL
+	                                : args.count( "nocopy" )       ? CODE_GEN_NOCOPY
+	                                : args.count( "types" )        ? CODE_GEN_TYPES
+	                                : args.count( "show-version" ) ? CODE_GEN_SHOW_VERSION
+	                                :                                CODE_GEN_UNKNOWN;
+	if ( eCodeGenOpts == CODE_GEN_UNKNOWN || args.count( "help" ) )
+	{
+		printf( "Usage: dbcodegen [options]\n\n" );
+		std::cout << options << std::endl;
+		// Asking for help is not a failure; having picked no mode is.
+		return args.count( "help" ) ? 0 : 0xDEAD;
+	}
 	else if ( eCodeGenOpts == CODE_GEN_SHOW_VERSION )
 	{
 		printf( "Version: %s\n", REVISION_NUMBER_STR );
@@ -160,5 +207,3 @@ int PORT_CDECL main( int argc, char *argv[] )
 	//
 	return 0;
 }
-
-
