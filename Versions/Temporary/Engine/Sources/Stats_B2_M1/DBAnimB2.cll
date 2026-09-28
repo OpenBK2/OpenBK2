@@ -35,8 +35,8 @@ class SAnimB2 : public SAnimBase
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	GltfFileRef _ModelFileRef;
 	// GLB-only range in the first sampled animation timeline. Length remains gameplay metadata.
-	// These GLB settings are appended after the legacy fields, so the chunk ids of those stay as
-	// they were; they only affect GLB animation binding.
+	/* These GLB settings are appended after the legacy fields, so the chunk ids of those stay as
+	   they were; they only affect GLB animation binding. */
 	int _FirstFrame;
 	int _LastFrame;
 	// A case-sensitive GLTF animation name. When set, it takes precedence over the frame range.

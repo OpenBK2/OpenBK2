@@ -609,7 +609,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 	float _AimingTime;
 	// ammo per burst
 	int _AmmoPerBurst;
-	// added after the fields below had their chunk ids, which they keep
+	/* added after the fields below had their chunk ids, which they keep */
 	[chunkID = 15]
 	bool _ForcePlayAllBurstEffects = false;
 	// max range
@@ -1300,7 +1300,7 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	float _SightPower = 1;
 	// (km/h) speed on the road
 	float _Speed;
-	// added after the fields below had their chunk ids, which they keep
+	/* added after the fields below had their chunk ids, which they keep */
 	[chunkID = 35]
 	float _ReverseSpeedModifier = 1;
 	// (degree/sec) rotation speed
@@ -1447,7 +1447,7 @@ class SHelicopterStats
 	float _SpiralRadius = 11;
 	float _SpiralSteps = 2.5;
 	float _SpiralDownAcceleration = 15;
-	// added after the fields below had their chunk ids, which they keep
+	/* added after the fields below had their chunk ids, which they keep */
 	[chunkID = 17]
 	float _SpiralDownRandCoeff = 0.1;
 	float _DeathSelfPointRotationSpeedRad = 2.1;
@@ -1664,8 +1664,8 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	// fuel amount in liters. (for planes)
 	float _Fuel = 1000;
 	EManuverID _AllowedPlaneManuvers[];
+	/* Artillery and trucks should use this for (primarly death) animations */
 	// animated model (for artillery and trucks)
-	// Artillery and trucks should use this for (primarly death) animations
 	[unsafe] SVisObj *_AnimableModel;
 	// transportable model (for artillery)
 	[unsafe] SVisObj *_TransportableModel;
@@ -1677,14 +1677,14 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	// camera placement for icon shot
 	[hidden; noCode] SCameraPlacement _CameraPlacementIconShot;
 	SAmphibianStats *_AmphibianStats;
-	// Temporarily applied only while firing at aviation targets.
+	// Temporarily applied while firing at aviation targets
 	SUnitStatsModifier *_AntiAviationModifier;
 	SHelicopterStats *_HelicopterStats;
 
 	#include "include_MechUnitRPGStats.h"
 };
 
-// 0x7DA669 is the prefix the amphibian work took for the type ids of its new resource types
+/* 0x7DA669 is the prefix the amphibian work took for the type ids of its new resource types */
 [typeID = 0x7DA66901]
 class SAmphibianStats
 {

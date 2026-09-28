@@ -220,7 +220,7 @@ class SSkeleton
 	[readonly] GUID _uid;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	GltfFileRef _ModelFileRef;
-	// The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were.
+	/* The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were. */
 	// GLB-only root joint or skinned mesh selector. Empty selects the first skin.
 	string _RootJoint;
 };
@@ -408,8 +408,8 @@ class SFont
 	string _Name;
 	// file with characters, to be generated
 	TextFileRef _CharactersFile;
-	// font file in the game data that the game rasterises this font from at run time, at exactly the size the UI asks for; empty uses the baked Texture and metrics.
-	// Thickness and Italic pick the face within it, a variable font's named instance included.
+	/* Thickness and Italic pick the face within it, a variable font's named instance included. */
+	// font file in the game data that the game rasterises this font from at run time, at exactly the size the UI asks for; empty uses the baked Texture and metrics
 	FontFileRef _FontFile;
 	// font files tried in order for characters FontFile does not have, before the fonts installed on the system
 	FontFileRef _FallbackFontFiles[];
@@ -425,15 +425,15 @@ class SAIGeometry
 	[noCode] string _RootJoint;
 	[hidden] float _Volume;
 	[hidden] float _SolidPart;
-	// Exported bounds for both GR2 and glTF. Loading must preserve these values
-	// because client-local floating-point calculations can desync AI hulls.
+	/* Exported bounds for both GR2 and glTF. Loading must preserve these values
+	   because client-local floating-point calculations can desync AI hulls. */
 	[readonly] CVec3 _AABBCenter;
 	[readonly] CVec3 _AABBHalfSize;
 	//[typeRename = "GUID"; numBytes = 16; editorControl = "guid"]
 	[readonly] GUID _uid;
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	GltfFileRef _ModelFileRef;
-	// The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were.
+	/* The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were. */
 	// GLB-only root node; its mesh and mesh-bearing descendants form the AI geometry.
 	string _RootMesh;
 };
@@ -446,7 +446,7 @@ class SGeometry
 	[readonly] GUID _uid;
 	// Root joint (single-skin) or root mesh (bodyparts) to export. In the case of bodyparts this must be equal to 'RootMesh'
 	[noCode] string _RootJoint;
-	// Persisted by the geometry exporter; never recompute from ModelFileRef on load.
+	/* Persisted by the geometry exporter; never recompute from ModelFileRef on load. */
 	[readonly] CVec3 _Size;
 	[readonly] CVec3 _Center;
 	[unsafe] SAIGeometry *_AIGeometry;
@@ -457,7 +457,7 @@ class SGeometry
 	[hidden] int _MeshWindAffected[];
 	// Optional GLTF/GLB source. Empty keeps the legacy UID-backed GR2 resource.
 	GltfFileRef _ModelFileRef;
-	// The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were.
+	/* The GLB selector below is appended after the legacy fields, so their chunk ids stay as they were. */
 	// GLB-only root node; its mesh and mesh-bearing descendants are loaded.
 	string _RootMesh;
 };

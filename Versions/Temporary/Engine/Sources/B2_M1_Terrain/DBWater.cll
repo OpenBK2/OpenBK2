@@ -60,9 +60,9 @@ class SWater
 	float _HorDeformMinRadius = 0.0;
 	float _HorDeformMaxRadius = 0.5;
 	float _HorDeformRadiusSpeed = 0.0005;
-	// These two were 0.000875 and 0.002625 here, but the code generator rounded
-	// defaults to four decimals, so 0.0009 and 0.0026 are what the game has
-	// always used. It no longer rounds; the values say what they are.
+	/* These two were 0.000875 and 0.002625 here, but the code generator rounded
+	   defaults to four decimals, so 0.0009 and 0.0026 are what the game has
+	   always used. It no longer rounds; the values say what they are. */
 	float _HorDeformRotationSpeedMin = 0.0009;
 	float _HorDeformRotationSpeedVariation = 0.0026;
 	EWaterType eWaterType = WT_OTHER;
