@@ -187,7 +187,7 @@ cd Versions/Temporary/Engine/Sources
     --types-path ../../../Current/Data
 ```
 
-`-all` rewrites the generated sources that changed and writes `types.xml`. dbcodegen writes it with CRLF line ends, while the repository keeps it with LF, so convert it back before committing. `-nocopy` writes the sources to the temp directory instead and leaves the tree alone. `git diff` should show only what the `.cll` change asked for. `python scripts/check_db_schema.py` then confirms that `types.xml` and the generated sources agree.
+`-all` rewrites the generated sources that changed and writes `types.xml`. `-nocopy` writes the sources to the temp directory instead and leaves the tree alone. `git diff` should show only what the `.cll` change asked for. `python scripts/check_db_schema.py` then confirms that `types.xml` and the generated sources agree.
 
 ## the data side
 

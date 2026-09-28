@@ -7,7 +7,10 @@
 namespace NLXML
 {
 
-static const char *szEndOfLine = "\x0D\n";
+// LF, not the original CRLF: the .xdb files and types.xml are kept with LF in the
+// repository, so a file the editor or dbcodegen writes diffs only where its content
+// changed. The parser takes either, as CR is whitespace to it.
+static const char *szEndOfLine = "\n";
 static const char *szTab = "\t";
 
 // ************************************************************************************************************************ //
