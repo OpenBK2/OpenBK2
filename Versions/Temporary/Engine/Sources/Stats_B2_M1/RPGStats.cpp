@@ -146,12 +146,12 @@ std::string EnumToString( NDb::EUnitSpecialAbility eValue )
 		return "ABILITY_TANK_HUNTER";
 	case NDb::ABILITY_RADIO_CONTROLLED_MODE:
 		return "ABILITY_RADIO_CONTROLLED_MODE";
-	case NDb::_ABILITY_COUNT:
-		return "_ABILITY_COUNT";
 	case NDb::ABILITY_FIRE_ROCKETS:
 		return "ABILITY_FIRE_ROCKETS";
 	case NDb::ABILITY_USE_FLAMETHROWER:
 		return "ABILITY_USE_FLAMETHROWER";
+	case NDb::_ABILITY_COUNT:
+		return "_ABILITY_COUNT";
 	default:
 		return "ABILITY_NOT_ABILITY";
 	}
@@ -281,12 +281,12 @@ NDb::EUnitSpecialAbility StringToEnum_NDb_EUnitSpecialAbility( const std::string
 		return NDb::ABILITY_TANK_HUNTER;
 	if ( szValue == "ABILITY_RADIO_CONTROLLED_MODE" )
 		return NDb::ABILITY_RADIO_CONTROLLED_MODE;
-	if ( szValue == "_ABILITY_COUNT" )
-		return NDb::_ABILITY_COUNT;
 	if ( szValue == "ABILITY_FIRE_ROCKETS" )
 		return NDb::ABILITY_FIRE_ROCKETS;
-	if (szValue == "ABILITY_USE_FLAMETHROWER" )
+	if ( szValue == "ABILITY_USE_FLAMETHROWER" )
 		return NDb::ABILITY_USE_FLAMETHROWER;
+	if ( szValue == "_ABILITY_COUNT" )
+		return NDb::_ABILITY_COUNT;
 	return NDb::ABILITY_NOT_ABILITY;
 }
 
@@ -1425,6 +1425,7 @@ int SProjectile::operator&( IBinSaver &saver )
 }
 
 
+
 void SMissleParams::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "MissleParams", typeID, sizeof(*this) );
@@ -1466,9 +1467,17 @@ int SMissleParams::operator&( IBinSaver &saver )
 
 uint32_t SMissleParams::CalcCheckSum() const
 {
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
 	CCheckSum checkSum;
 	checkSum << vVisProjectileRotationRad << fStrayModeTime << fTurnRateRad << bAimsForTop << fTopTargetingHeight << fProximityRadius;
-	return checkSum.GetCheckSum();
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
 }
 
 
@@ -4274,6 +4283,7 @@ void SUnitBaseRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Sight", (uint8_t*)&fSight - pThis, sizeof(fSight), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "SightPower", (uint8_t*)&fSightPower - pThis, sizeof(fSightPower), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Speed", (uint8_t*)&fSpeed - pThis, sizeof(fSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "ReverseSpeedModifier", (uint8_t*)&fReverseSpeedModifier - pThis, sizeof(fReverseSpeedModifier), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "RotateSpeed", (uint8_t*)&fRotateSpeed - pThis, sizeof(fRotateSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Passability", (uint8_t*)&fPassability - pThis, sizeof(fPassability), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
@@ -4353,6 +4363,7 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 11, &fSight );
 	saver.Add( 12, &fSightPower );
 	saver.Add( 13, &fSpeed );
+	saver.Add( 35, &fReverseSpeedModifier );
 	saver.Add( 14, &fRotateSpeed );
 	saver.Add( 15, &fPassability );
 	saver.Add( 16, &nPriority );
@@ -4374,7 +4385,6 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 32, &fUninstallRotate );
 	saver.Add( 33, &pArmorPattern );
 	saver.Add( 34, &fExpPrice );
-	saver.Add( 35, &fReverseSpeedModifier );
 
 	return 0;
 }
@@ -4386,7 +4396,7 @@ uint32_t SUnitBaseRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice;
+	checkSum << SHPObjectRPGStats::CalcCheckSum() << eDBtype << pM1UnitTargetType << pM1UnitSpecific << pM1UnitActions << ePoliticalSide << eEncyclopediaFilterUnitType << nAIPassabilityClass << acksNames << fSight << fSightPower << fSpeed << fReverseSpeedModifier << fRotateSpeed << fPassability << nPriority << fCamouflage << nMaxArmor << nMinArmor << nBoundTileRadius << fWeight << fPrice << vAABBCenter << vAABBHalfSize << boundCircle << aabb_as << aabb_ds << animdescs << fSmallAABBCoeff << pActions << fUninstallTransport << fUninstallRotate << fExpPrice;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -4778,6 +4788,143 @@ NDb::EDesignUnitType StringToEnum_NDb_EDesignUnitType( const std::string &szValu
 }
 
 
+void SHelicopterStats::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "HelicopterStats", typeID, sizeof(*this) );
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "MovmentAngleDownRadians", (uint8_t*)&fMovmentAngleDownRadians - pThis, sizeof(fMovmentAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MovementAngleDownSpeedRPS", (uint8_t*)&fMovementAngleDownSpeedRPS - pThis, sizeof(fMovementAngleDownSpeedRPS), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRad", (uint8_t*)&fSideRotatingAngleRad - pThis, sizeof(fSideRotatingAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRPS", (uint8_t*)&fSideRotatingAngleRPS - pThis, sizeof(fSideRotatingAngleRPS), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingDeviationRadius", (uint8_t*)&fStandingDeviationRadius - pThis, sizeof(fStandingDeviationRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingDeviationSpeed", (uint8_t*)&fStandingDeviationSpeed - pThis, sizeof(fStandingDeviationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralRadius", (uint8_t*)&fSpiralRadius - pThis, sizeof(fSpiralRadius), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralSteps", (uint8_t*)&fSpiralSteps - pThis, sizeof(fSpiralSteps), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralDownAcceleration", (uint8_t*)&fSpiralDownAcceleration - pThis, sizeof(fSpiralDownAcceleration), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "SpiralDownRandCoeff", (uint8_t*)&fSpiralDownRandCoeff - pThis, sizeof(fSpiralDownRandCoeff), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DeathSelfPointRotationSpeedRad", (uint8_t*)&fDeathSelfPointRotationSpeedRad - pThis, sizeof(fDeathSelfPointRotationSpeedRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "DeathSpiralDownwardsAngleRad", (uint8_t*)&fDeathSpiralDownwardsAngleRad - pThis, sizeof(fDeathSpiralDownwardsAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (uint8_t*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "MaxAttackAngleDownRadians", (uint8_t*)&fMaxAttackAngleDownRadians - pThis, sizeof(fMaxAttackAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "PropellerObjects", &propellerObjects, pThis );
+	NMetaInfo::ReportStructArrayMetaInfo( "PropellerSpeedsRad", &propellerSpeedsRad, pThis );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SHelicopterStats::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.Add( "MovmentAngleDownRadians", &fMovmentAngleDownRadians );
+	saver.Add( "MovementAngleDownSpeedRPS", &fMovementAngleDownSpeedRPS );
+	saver.Add( "SideRotatingAngleRad", &fSideRotatingAngleRad );
+	saver.Add( "SideRotatingAngleRPS", &fSideRotatingAngleRPS );
+	saver.Add( "StandingDeviationRadius", &fStandingDeviationRadius );
+	saver.Add( "StandingDeviationSpeed", &fStandingDeviationSpeed );
+	saver.Add( "SpiralRadius", &fSpiralRadius );
+	saver.Add( "SpiralSteps", &fSpiralSteps );
+	saver.Add( "SpiralDownAcceleration", &fSpiralDownAcceleration );
+	saver.Add( "SpiralDownRandCoeff", &fSpiralDownRandCoeff );
+	saver.Add( "DeathSelfPointRotationSpeedRad", &fDeathSelfPointRotationSpeedRad );
+	saver.Add( "DeathSpiralDownwardsAngleRad", &fDeathSpiralDownwardsAngleRad );
+	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
+	saver.Add( "MaxAttackAngleDownRadians", &fMaxAttackAngleDownRadians );
+	saver.Add( "PropellerObjects", &propellerObjects );
+	saver.Add( "PropellerSpeedsRad", &propellerSpeedsRad );
+
+	return 0;
+}
+
+int SHelicopterStats::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &fMovmentAngleDownRadians );
+	saver.Add( 3, &fMovementAngleDownSpeedRPS );
+	saver.Add( 4, &fSideRotatingAngleRad );
+	saver.Add( 5, &fSideRotatingAngleRPS );
+	saver.Add( 6, &fStandingDeviationRadius );
+	saver.Add( 7, &fStandingDeviationSpeed );
+	saver.Add( 8, &fSpiralRadius );
+	saver.Add( 9, &fSpiralSteps );
+	saver.Add( 10, &fSpiralDownAcceleration );
+	saver.Add( 17, &fSpiralDownRandCoeff );
+	saver.Add( 11, &fDeathSelfPointRotationSpeedRad );
+	saver.Add( 14, &fDeathSpiralDownwardsAngleRad );
+	saver.Add( 12, &fStandingFuelDrainModifier );
+	saver.Add( 13, &fMaxAttackAngleDownRadians );
+	saver.Add( 15, &propellerObjects );
+	saver.Add( 16, &propellerSpeedsRad );
+
+	return 0;
+}
+
+uint32_t SHelicopterStats::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownAcceleration << fSpiralDownRandCoeff << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SJoggingParams::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportMetaInfo( szAddName + "Period1", (uint8_t*)&fPeriod1 - pThis, sizeof(fPeriod1), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Period2", (uint8_t*)&fPeriod2 - pThis, sizeof(fPeriod2), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Amp1", (uint8_t*)&fAmp1 - pThis, sizeof(fAmp1), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Amp2", (uint8_t*)&fAmp2 - pThis, sizeof(fAmp2), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Phaze1", (uint8_t*)&fPhaze1 - pThis, sizeof(fPhaze1), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( szAddName + "Phaze2", (uint8_t*)&fPhaze2 - pThis, sizeof(fPhaze2), NTypeDef::TYPE_TYPE_FLOAT );
+}
+
+int SJoggingParams::operator&( IXmlSaver &saver )
+{
+	saver.Add( "Period1", &fPeriod1 );
+	saver.Add( "Period2", &fPeriod2 );
+	saver.Add( "Amp1", &fAmp1 );
+	saver.Add( "Amp2", &fAmp2 );
+	saver.Add( "Phaze1", &fPhaze1 );
+	saver.Add( "Phaze2", &fPhaze2 );
+
+	return 0;
+}
+
+int SJoggingParams::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &fPeriod1 );
+	saver.Add( 3, &fPeriod2 );
+	saver.Add( 4, &fAmp1 );
+	saver.Add( 5, &fAmp2 );
+	saver.Add( 6, &fPhaze1 );
+	saver.Add( 7, &fPhaze2 );
+
+	return 0;
+}
+
+uint32_t SJoggingParams::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fPeriod1 << fPeriod2 << fAmp1 << fAmp2 << fPhaze1 << fPhaze2;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
 void SMechUnitRPGStats::SMechUnitGun::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	SBaseGunRPGStats::ReportMetaInfo( szAddName, pThis );
@@ -4995,57 +5142,6 @@ uint32_t SMechUnitRPGStats::SArmor::CalcCheckSum() const
 
 
 
-void SMechUnitRPGStats::SJoggingParams::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
-{
-	NMetaInfo::ReportMetaInfo( szAddName + "Period1", (uint8_t*)&fPeriod1 - pThis, sizeof(fPeriod1), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Period2", (uint8_t*)&fPeriod2 - pThis, sizeof(fPeriod2), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Amp1", (uint8_t*)&fAmp1 - pThis, sizeof(fAmp1), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Amp2", (uint8_t*)&fAmp2 - pThis, sizeof(fAmp2), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Phaze1", (uint8_t*)&fPhaze1 - pThis, sizeof(fPhaze1), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( szAddName + "Phaze2", (uint8_t*)&fPhaze2 - pThis, sizeof(fPhaze2), NTypeDef::TYPE_TYPE_FLOAT );
-}
-
-int SMechUnitRPGStats::SJoggingParams::operator&( IXmlSaver &saver )
-{
-	saver.Add( "Period1", &fPeriod1 );
-	saver.Add( "Period2", &fPeriod2 );
-	saver.Add( "Amp1", &fAmp1 );
-	saver.Add( "Amp2", &fAmp2 );
-	saver.Add( "Phaze1", &fPhaze1 );
-	saver.Add( "Phaze2", &fPhaze2 );
-
-	return 0;
-}
-
-int SMechUnitRPGStats::SJoggingParams::operator&( IBinSaver &saver )
-{
-	saver.Add( 2, &fPeriod1 );
-	saver.Add( 3, &fPeriod2 );
-	saver.Add( 4, &fAmp1 );
-	saver.Add( 5, &fAmp2 );
-	saver.Add( 6, &fPhaze1 );
-	saver.Add( 7, &fPhaze2 );
-
-	return 0;
-}
-
-uint32_t SMechUnitRPGStats::SJoggingParams::CalcCheckSum() const
-{
-	if ( __dwCheckSum != 0 )
-		return __dwCheckSum;
-	__dwCheckSum = 1;
-
-	CCheckSum checkSum;
-	checkSum << fPeriod1 << fPeriod2 << fAmp1 << fAmp2 << fPhaze1 << fPhaze2;
-	__dwCheckSum = checkSum.GetCheckSum();
-	if ( __dwCheckSum == 0 )
-		__dwCheckSum = 1;
-
-	return __dwCheckSum;
-}
-
-
-
 void SMechUnitRPGStats::SSlotInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "AttachedLocator", (uint8_t*)&szAttachedLocator - pThis, sizeof(szAttachedLocator), NTypeDef::TYPE_TYPE_STRING );
@@ -5219,183 +5315,6 @@ uint32_t SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 }
 
 
-void SHelicopterStats::ReportMetaInfo() const
-{
-	NMetaInfo::StartMetaInfoReport( "HelicopterStats", typeID, sizeof(*this) );
-
-	uint8_t *pThis = (uint8_t*)this;
-
-	NMetaInfo::ReportMetaInfo( "MovmentAngleDownRadians", (uint8_t*)&fMovmentAngleDownRadians - pThis, sizeof(fMovmentAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MovementAngleDownSpeedRPS", (uint8_t*)&fMovementAngleDownSpeedRPS - pThis, sizeof(fMovementAngleDownSpeedRPS), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRad", (uint8_t*)&fSideRotatingAngleRad - pThis, sizeof(fSideRotatingAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SideRotatingAngleRPS", (uint8_t*)&fSideRotatingAngleRPS - pThis, sizeof(fSideRotatingAngleRPS), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "StandingDeviationRadius", (uint8_t*)&fStandingDeviationRadius - pThis, sizeof(fStandingDeviationRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "StandingDeviationSpeed", (uint8_t*)&fStandingDeviationSpeed - pThis, sizeof(fStandingDeviationSpeed), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SpiralRadius", (uint8_t*)&fSpiralRadius - pThis, sizeof(fSpiralRadius), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SpiralSteps", (uint8_t*)&fSpiralSteps - pThis, sizeof(fSpiralSteps), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SpiralDownAcceleration", (uint8_t*)&fSpiralDownAcceleration - pThis, sizeof(fSpiralDownAcceleration), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "SpiralDownRandCoeff", (uint8_t*)&fSpiralDownRandCoeff - pThis, sizeof(fSpiralDownRandCoeff), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DeathSelfPointRotationSpeedRad", (uint8_t*)&fDeathSelfPointRotationSpeedRad - pThis, sizeof(fDeathSelfPointRotationSpeedRad), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "DeathSpiralDownwardsAngleRad", (uint8_t*)&fDeathSpiralDownwardsAngleRad - pThis, sizeof(fDeathSpiralDownwardsAngleRad), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "StandingFuelDrainModifier", (uint8_t*)&fStandingFuelDrainModifier - pThis, sizeof(fStandingFuelDrainModifier), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "MaxAttackAngleDownRadians", (uint8_t*)&fMaxAttackAngleDownRadians - pThis, sizeof(fMaxAttackAngleDownRadians), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportSimpleArrayMetaInfo( "PropellerObjects", &propellerObjects, pThis );
-	NMetaInfo::ReportStructArrayMetaInfo( "PropellerSpeedsRad", &propellerSpeedsRad, pThis );
-
-	NMetaInfo::FinishMetaInfoReport();
-}
-
-int SHelicopterStats::operator&( IXmlSaver &saver )
-{
-	NMetaInfo::STerminalClassReporter reporter( this, saver );
-
-	saver.Add( "MovmentAngleDownRadians", &fMovmentAngleDownRadians );
-	saver.Add( "MovementAngleDownSpeedRPS", &fMovementAngleDownSpeedRPS );
-	saver.Add( "SideRotatingAngleRad", &fSideRotatingAngleRad );
-	saver.Add( "SideRotatingAngleRPS", &fSideRotatingAngleRPS );
-	saver.Add( "StandingDeviationRadius", &fStandingDeviationRadius );
-	saver.Add( "StandingDeviationSpeed", &fStandingDeviationSpeed );
-	saver.Add( "SpiralRadius", &fSpiralRadius );
-	saver.Add( "SpiralSteps", &fSpiralSteps );
-	saver.Add( "SpiralDownAcceleration", &fSpiralDownAcceleration );
-	saver.Add( "SpiralDownRandCoeff", &fSpiralDownRandCoeff );
-	saver.Add( "DeathSelfPointRotationSpeedRad", &fDeathSelfPointRotationSpeedRad );
-	saver.Add( "DeathSpiralDownwardsAngleRad", &fDeathSpiralDownwardsAngleRad );
-	saver.Add( "StandingFuelDrainModifier", &fStandingFuelDrainModifier );
-	saver.Add( "MaxAttackAngleDownRadians", &fMaxAttackAngleDownRadians );
-	saver.Add( "PropellerObjects", &propellerObjects );
-	saver.Add( "PropellerSpeedsRad", &propellerSpeedsRad );
-
-	return 0;
-}
-
-int SHelicopterStats::operator&( IBinSaver &saver )
-{
-	saver.Add( 2, &fMovmentAngleDownRadians );
-	saver.Add( 3, &fMovementAngleDownSpeedRPS );
-	saver.Add( 4, &fSideRotatingAngleRad );
-	saver.Add( 5, &fSideRotatingAngleRPS );
-	saver.Add( 6, &fStandingDeviationRadius );
-	saver.Add( 7, &fStandingDeviationSpeed );
-	saver.Add( 8, &fSpiralRadius );
-	saver.Add( 9, &fSpiralSteps );
-	saver.Add( 10, &fSpiralDownAcceleration );
-	saver.Add( 17, &fSpiralDownRandCoeff );
-	saver.Add( 11, &fDeathSelfPointRotationSpeedRad );
-	saver.Add( 14, &fDeathSpiralDownwardsAngleRad );
-	saver.Add( 12, &fStandingFuelDrainModifier );
-	saver.Add( 13, &fMaxAttackAngleDownRadians );
-	saver.Add( 15, &propellerObjects );
-	saver.Add( 16, &propellerSpeedsRad );
-
-	return 0;
-}
-
-uint32_t SHelicopterStats::CalcCheckSum() const
-{
-	if ( __dwCheckSum != 0 )
-		return __dwCheckSum;
-	__dwCheckSum = 1;
-
-	CCheckSum checkSum;
-	checkSum << fMovmentAngleDownRadians << fMovementAngleDownSpeedRPS << fSideRotatingAngleRad << fSideRotatingAngleRPS << fStandingDeviationRadius << fStandingDeviationSpeed << fSpiralRadius << fSpiralSteps << fSpiralDownAcceleration << fSpiralDownRandCoeff << fDeathSelfPointRotationSpeedRad << fDeathSpiralDownwardsAngleRad << fStandingFuelDrainModifier << fMaxAttackAngleDownRadians << propellerObjects << propellerSpeedsRad;
-	__dwCheckSum = checkSum.GetCheckSum();
-	if ( __dwCheckSum == 0 )
-		__dwCheckSum = 1;
-
-	return __dwCheckSum;
-}
-
-
-
-void SAmphibianStats::ReportMetaInfo() const
-{
-	NMetaInfo::StartMetaInfoReport( "AmphibianStats", typeID, sizeof(*this) );
-
-	uint8_t *pThis = (uint8_t*)this;
-
-	NMetaInfo::ReportMetaInfo( "WaterZOffset", (uint8_t*)&waterZOffset - pThis, sizeof(waterZOffset), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "WaterOffsetBlendTiles", (uint8_t*)&waterOffsetBlendTiles - pThis, sizeof(waterOffsetBlendTiles), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "WaterStatsModifier", (uint8_t*)&waterStatsModifier - pThis, sizeof(waterStatsModifier), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "PrepareToWaterTime", (uint8_t*)&prepareToWaterTime - pThis, sizeof(prepareToWaterTime), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "PrepareToLandTime", (uint8_t*)&prepareToLandTime - pThis, sizeof(prepareToLandTime), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportMetaInfo( "EnterWaterEffect", (uint8_t*)&enterWaterEffect - pThis, sizeof(enterWaterEffect), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "ExitWaterEffect", (uint8_t*)&exitWaterEffect - pThis, sizeof(exitWaterEffect), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "WaterMoveEffect", (uint8_t*)&waterMoveEffect - pThis, sizeof(waterMoveEffect), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterMoveLocators", &waterMoveLocators, pThis );
-	NMetaInfo::ReportMetaInfo( "WaterIdleEffect", (uint8_t*)&waterIdleEffect - pThis, sizeof(waterIdleEffect), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterIdleLocators", &waterIdleLocators, pThis );
-	NMetaInfo::ReportStructMetaInfo( "WaterMoveJx", &waterMoveJx, pThis );
-	NMetaInfo::ReportStructMetaInfo( "WaterMoveJy", &waterMoveJy, pThis );
-	NMetaInfo::ReportStructMetaInfo( "WaterIdleJx", &waterIdleJx, pThis );
-	NMetaInfo::ReportStructMetaInfo( "WaterIdleJy", &waterIdleJy, pThis );
-	NMetaInfo::ReportMetaInfo( "RemoveCorpseInWater", (uint8_t*)&removeCorpseInWater - pThis, sizeof(removeCorpseInWater), NTypeDef::TYPE_TYPE_BOOL );
-
-	NMetaInfo::FinishMetaInfoReport();
-}
-
-int SAmphibianStats::operator&( IBinSaver &saver )
-{
-	saver.Add( 2, &waterZOffset );
-	saver.Add( 3, &waterOffsetBlendTiles );
-	saver.Add( 4, &waterStatsModifier );
-	saver.Add( 5, &prepareToWaterTime );
-	saver.Add( 6, &prepareToLandTime );
-	saver.Add( 7, &enterWaterEffect );
-	saver.Add( 8, &exitWaterEffect );
-	saver.Add( 9, &waterMoveEffect );
-	saver.Add( 10, &waterMoveLocators );
-	saver.Add( 11, &waterIdleEffect );
-	saver.Add( 12, &waterIdleLocators );
-	saver.Add( 13, &waterMoveJx );
-	saver.Add( 14, &waterMoveJy );
-	saver.Add( 15, &waterIdleJx );
-	saver.Add( 16, &waterIdleJy );
-	saver.Add( 17, &removeCorpseInWater );
-
-	return 0;
-}
-
-int SAmphibianStats::operator&( IXmlSaver &saver )
-{
-	NMetaInfo::STerminalClassReporter reporter( this, saver );
-
-	saver.Add( "WaterZOffset", &waterZOffset );
-	saver.Add( "WaterOffsetBlendTiles", &waterOffsetBlendTiles );
-	saver.Add( "WaterStatsModifier", &waterStatsModifier );
-	saver.Add( "PrepareToWaterTime", &prepareToWaterTime );
-	saver.Add( "PrepareToLandTime", &prepareToLandTime );
-	saver.Add( "EnterWaterEffect", &enterWaterEffect );
-	saver.Add( "ExitWaterEffect", &exitWaterEffect );
-	saver.Add( "WaterMoveEffect", &waterMoveEffect );
-	saver.Add( "WaterMoveLocators", &waterMoveLocators );
-	saver.Add( "WaterIdleEffect", &waterIdleEffect );
-	saver.Add( "WaterIdleLocators", &waterIdleLocators );
-	saver.Add( "WaterMoveJx", &waterMoveJx );
-	saver.Add( "WaterMoveJy", &waterMoveJy );
-	saver.Add( "WaterIdleJx", &waterIdleJx );
-	saver.Add( "WaterIdleJy", &waterIdleJy );
-	saver.Add( "RemoveCorpseInWater", &removeCorpseInWater );
-
-	return 0;
-}
-
-uint32_t SAmphibianStats::CalcCheckSum() const
-{
-	if ( __dwCheckSum != 0 )
-		return __dwCheckSum;
-	__dwCheckSum = 1;
-
-	CCheckSum checkSum;
-	checkSum << waterZOffset << waterOffsetBlendTiles << waterStatsModifier << prepareToWaterTime << prepareToLandTime << enterWaterEffect << exitWaterEffect << waterMoveEffect << waterMoveLocators << waterIdleEffect << waterIdleLocators << waterMoveJx << waterMoveJy << waterIdleJx << waterIdleJy << removeCorpseInWater;
-	__dwCheckSum = checkSum.GetCheckSum();
-	if ( __dwCheckSum == 0 )
-		__dwCheckSum = 1;
-
-	return __dwCheckSum;
-}
-
-
 
 void SMechUnitRPGStats::ReportMetaInfo() const
 {
@@ -5467,9 +5386,9 @@ void SMechUnitRPGStats::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "BoardedMechUnitPosition", &boardedMechUnitPosition, pThis );
 	NMetaInfo::ReportMetaInfo( "DestructableCorpse", (uint8_t*)&bDestructableCorpse - pThis, sizeof(bDestructableCorpse), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "InnerUnitBonus", (uint8_t*)&pInnerUnitBonus - pThis, sizeof(pInnerUnitBonus), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "AmphibianStats", (uint8_t*)&amphibianStats - pThis, sizeof(amphibianStats), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportMetaInfo( "HelicopterStats", (uint8_t*)&pHelicopterStats - pThis, sizeof(pHelicopterStats), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "AmphibianStats", (uint8_t*)&pAmphibianStats - pThis, sizeof(pAmphibianStats), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "AntiAviationModifier", (uint8_t*)&pAntiAviationModifier - pThis, sizeof(pAntiAviationModifier), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "HelicopterStats", (uint8_t*)&pHelicopterStats - pThis, sizeof(pHelicopterStats), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -5541,7 +5460,7 @@ int SMechUnitRPGStats::operator&( IXmlSaver &saver )
 	saver.Add( "BoardedMechUnitPosition", &boardedMechUnitPosition );
 	saver.Add( "DestructableCorpse", &bDestructableCorpse );
 	saver.Add( "InnerUnitBonus", &pInnerUnitBonus );
-	saver.Add( "AmphibianStats", &amphibianStats );
+	saver.Add( "AmphibianStats", &pAmphibianStats );
 	saver.Add( "AntiAviationModifier", &pAntiAviationModifier );
 	saver.Add( "HelicopterStats", &pHelicopterStats );
 
@@ -5615,7 +5534,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 	saver.Add( 63, &boardedMechUnitPosition );
 	saver.Add( 64, &bDestructableCorpse );
 	saver.Add( 65, &pInnerUnitBonus );
-	saver.Add( 66, &amphibianStats );
+	saver.Add( 66, &pAmphibianStats );
 	saver.Add( 67, &pAntiAviationModifier );
 	saver.Add( 68, &pHelicopterStats );
 
@@ -5629,7 +5548,93 @@ uint32_t SMechUnitRPGStats::CalcCheckSum() const
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
-	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << amphibianStats << pAntiAviationModifier << pHelicopterStats;
+	checkSum << SUnitBaseRPGStats::CalcCheckSum() << eUnitType << platforms << slots << armors << fTowingForce << nCrew << nPassangers << fTurnRadius << exhaustPoints << damagePoints << peoplePointIndices << szFatalitySmokePoint << szShootDustPoint << vTowPoint << vEntrancePoint << peoplePoints << vAmmoPoint << gunners << vHookPoint << vFrontWheel << vBackWheel << smokeTrails << jx << jy << jz << bLeavesTracks << fTrackWidth << fTrackOffset << fTrackStart << fTrackEnd << fTrackIntensity << nTrackLifetime << fTrackFrequency << fMaxHeight << fDivingAngle << fClimbAngle << fTiltAngle << fTiltRatio << fTiltAcceleration << fTiltSpeed << pGAPAirAttackModifier << fReinforcementPrice << fFuel << allowedPlaneManuvers << shipEffects << boardedMechUnitPosition << bDestructableCorpse << pInnerUnitBonus << pAmphibianStats << pAntiAviationModifier << pHelicopterStats;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SAmphibianStats::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "AmphibianStats", typeID, sizeof(*this) );
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportMetaInfo( "WaterZOffset", (uint8_t*)&fWaterZOffset - pThis, sizeof(fWaterZOffset), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WaterOffsetBlendTiles", (uint8_t*)&fWaterOffsetBlendTiles - pThis, sizeof(fWaterOffsetBlendTiles), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "WaterStatsModifier", (uint8_t*)&pWaterStatsModifier - pThis, sizeof(pWaterStatsModifier), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "PrepareToWaterTime", (uint8_t*)&fPrepareToWaterTime - pThis, sizeof(fPrepareToWaterTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "PrepareToLandTime", (uint8_t*)&fPrepareToLandTime - pThis, sizeof(fPrepareToLandTime), NTypeDef::TYPE_TYPE_FLOAT );
+	NMetaInfo::ReportMetaInfo( "EnterWaterEffect", (uint8_t*)&pEnterWaterEffect - pThis, sizeof(pEnterWaterEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "ExitWaterEffect", (uint8_t*)&pExitWaterEffect - pThis, sizeof(pExitWaterEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "WaterMoveEffect", (uint8_t*)&pWaterMoveEffect - pThis, sizeof(pWaterMoveEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterMoveLocators", &waterMoveLocators, pThis );
+	NMetaInfo::ReportMetaInfo( "WaterIdleEffect", (uint8_t*)&pWaterIdleEffect - pThis, sizeof(pWaterIdleEffect), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportSimpleArrayMetaInfo( "WaterIdleLocators", &waterIdleLocators, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterMoveJx", &waterMoveJx, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterMoveJy", &waterMoveJy, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterIdleJx", &waterIdleJx, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WaterIdleJy", &waterIdleJy, pThis );
+	NMetaInfo::ReportMetaInfo( "RemoveCorpseInWater", (uint8_t*)&bRemoveCorpseInWater - pThis, sizeof(bRemoveCorpseInWater), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SAmphibianStats::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.Add( "WaterZOffset", &fWaterZOffset );
+	saver.Add( "WaterOffsetBlendTiles", &fWaterOffsetBlendTiles );
+	saver.Add( "WaterStatsModifier", &pWaterStatsModifier );
+	saver.Add( "PrepareToWaterTime", &fPrepareToWaterTime );
+	saver.Add( "PrepareToLandTime", &fPrepareToLandTime );
+	saver.Add( "EnterWaterEffect", &pEnterWaterEffect );
+	saver.Add( "ExitWaterEffect", &pExitWaterEffect );
+	saver.Add( "WaterMoveEffect", &pWaterMoveEffect );
+	saver.Add( "WaterMoveLocators", &waterMoveLocators );
+	saver.Add( "WaterIdleEffect", &pWaterIdleEffect );
+	saver.Add( "WaterIdleLocators", &waterIdleLocators );
+	saver.Add( "WaterMoveJx", &waterMoveJx );
+	saver.Add( "WaterMoveJy", &waterMoveJy );
+	saver.Add( "WaterIdleJx", &waterIdleJx );
+	saver.Add( "WaterIdleJy", &waterIdleJy );
+	saver.Add( "RemoveCorpseInWater", &bRemoveCorpseInWater );
+
+	return 0;
+}
+
+int SAmphibianStats::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &fWaterZOffset );
+	saver.Add( 3, &fWaterOffsetBlendTiles );
+	saver.Add( 4, &pWaterStatsModifier );
+	saver.Add( 5, &fPrepareToWaterTime );
+	saver.Add( 6, &fPrepareToLandTime );
+	saver.Add( 7, &pEnterWaterEffect );
+	saver.Add( 8, &pExitWaterEffect );
+	saver.Add( 9, &pWaterMoveEffect );
+	saver.Add( 10, &waterMoveLocators );
+	saver.Add( 11, &pWaterIdleEffect );
+	saver.Add( 12, &waterIdleLocators );
+	saver.Add( 13, &waterMoveJx );
+	saver.Add( 14, &waterMoveJy );
+	saver.Add( 15, &waterIdleJx );
+	saver.Add( 16, &waterIdleJy );
+	saver.Add( 17, &bRemoveCorpseInWater );
+
+	return 0;
+}
+
+uint32_t SAmphibianStats::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << fWaterZOffset << fWaterOffsetBlendTiles << pWaterStatsModifier << fPrepareToWaterTime << fPrepareToLandTime << waterMoveLocators << waterIdleLocators << waterMoveJx << waterMoveJy << waterIdleJx << waterIdleJy << bRemoveCorpseInWater;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -6008,7 +6013,7 @@ std::string EnumToString( NDb::EReinforcementType eValue )
 	case NDb::RT_SUPER_WEAPON:
 		return "RT_SUPER_WEAPON";
 	case NDb::RT_EXTRA_GROUND_1:
-    	return "RT_EXTRA_GROUND_1";
+		return "RT_EXTRA_GROUND_1";
 	case NDb::RT_EXTRA_GROUND_2:
 		return "RT_EXTRA_GROUND_2";
 	case NDb::RT_EXTRA_GROUND_3:
@@ -6129,7 +6134,7 @@ NDb::EReinforcementType StringToEnum_NDb_EReinforcementType( const std::string &
 	if ( szValue == "RT_SUPER_WEAPON" )
 		return NDb::RT_SUPER_WEAPON;
 	if ( szValue == "RT_EXTRA_GROUND_1" )
-    	return NDb::RT_EXTRA_GROUND_1;
+		return NDb::RT_EXTRA_GROUND_1;
 	if ( szValue == "RT_EXTRA_GROUND_2" )
 		return NDb::RT_EXTRA_GROUND_2;
 	if ( szValue == "RT_EXTRA_GROUND_3" )

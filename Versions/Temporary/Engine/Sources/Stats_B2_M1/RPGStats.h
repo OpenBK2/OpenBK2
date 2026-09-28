@@ -180,11 +180,7 @@ namespace NDb
 			eGroupID( ABILITY_GROUP_NOGROUP ),
 			nDisableGroupTime( 0 ),
 			fParameter( 0 ),
-			bStopCurrentAction( false ),
-			pAbilityIconTextureNormal( 0 ),
-			pAbilityIconTextureDisabled( 0 ),
-			pAbilityIconTextureForegroundNormal( 0 ),
-			pAbilityIconTextureForegroundDisabled( 0 )
+			bStopCurrentAction( false )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
@@ -707,12 +703,14 @@ namespace NDb
 		uint32_t CalcCheckSum() const { return 0; }
 	};
 
-	// Guidance and presentation settings used by guided missile shells.
 	struct SMissleParams : public CResource
 	{
 		OBJECT_BASIC_METHODS( SMissleParams )
 	public:
 		enum { typeID = 0x300C3B81 };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
 		CVec3 vVisProjectileRotationRad;
 		float fStrayModeTime;
 		float fTurnRateRad;
@@ -721,12 +719,13 @@ namespace NDb
 		float fProximityRadius;
 
 		SMissleParams() :
+			__dwCheckSum( 0 ),
 			vVisProjectileRotationRad( VNULL3 ),
-			fStrayModeTime( 1.0f ),
-			fTurnRateRad( 1.048f ),
+			fStrayModeTime( 1 ),
+			fTurnRateRad( 1.0480f ),
 			bAimsForTop( false ),
-			fTopTargetingHeight( 0.0f ),
-			fProximityRadius( 0.0f )
+			fTopTargetingHeight( 0 ),
+			fProximityRadius( 0 )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
@@ -2103,7 +2102,7 @@ namespace NDb
 			fSight( 20 ),
 			fSightPower( 1 ),
 			fSpeed( 0.0f ),
-			fReverseSpeedModifier( 1.0f ),
+			fReverseSpeedModifier( 1 ),
 			fRotateSpeed( 0.0f ),
 			fPassability( 0.0f ),
 			nPriority( 0 ),
@@ -2295,7 +2294,7 @@ namespace NDb
 		Train = 27,
 		Super = 28,
 		Strategic_Bomber = 29,
-		Helicopter_Unit = 30
+		Helicopter_Unit = 30,
 	};
 
 	struct SHelicopterStats : public CResource
@@ -2320,25 +2319,25 @@ namespace NDb
 		float fDeathSpiralDownwardsAngleRad;
 		float fStandingFuelDrainModifier;
 		float fMaxAttackAngleDownRadians;
-		std::vector<std::string> propellerObjects;
-		std::vector<CVec3> propellerSpeedsRad;
+		std::vector< std::string > propellerObjects;
+		std::vector< CVec3 > propellerSpeedsRad;
 
 		SHelicopterStats() :
 			__dwCheckSum( 0 ),
-			fMovmentAngleDownRadians( 0.5f ),
-			fMovementAngleDownSpeedRPS( 1.5f ),
-			fSideRotatingAngleRad( 0.4f ),
-			fSideRotatingAngleRPS( 1.1f ),
-			fStandingDeviationRadius( 0.2f ),
-			fStandingDeviationSpeed( 0.5f ),
-			fSpiralRadius( 11.0f ),
-			fSpiralSteps( 2.5f ),
-			fSpiralDownAcceleration( 15.0f ),
-			fSpiralDownRandCoeff( 0.1f ),
-			fDeathSelfPointRotationSpeedRad( 2.1f ),
-			fDeathSpiralDownwardsAngleRad( 0.1f ),
-			fStandingFuelDrainModifier( 0.5f ),
-			fMaxAttackAngleDownRadians( 0.872664626f )
+			fMovmentAngleDownRadians( 0.5000f ),
+			fMovementAngleDownSpeedRPS( 1.5000f ),
+			fSideRotatingAngleRad( 0.4000f ),
+			fSideRotatingAngleRPS( 1.1000f ),
+			fStandingDeviationRadius( 0.2000f ),
+			fStandingDeviationSpeed( 0.5000f ),
+			fSpiralRadius( 11 ),
+			fSpiralSteps( 2.5000f ),
+			fSpiralDownAcceleration( 15 ),
+			fSpiralDownRandCoeff( 0.1000f ),
+			fDeathSelfPointRotationSpeedRad( 2.1000f ),
+			fDeathSpiralDownwardsAngleRad( 0.1000f ),
+			fStandingFuelDrainModifier( 0.5000f ),
+			fMaxAttackAngleDownRadians( 0.87266463f )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
@@ -2350,9 +2349,39 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 
+	struct SJoggingParams
+	{
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		float fPeriod1;
+		float fPeriod2;
+		float fAmp1;
+		float fAmp2;
+		float fPhaze1;
+		float fPhaze2;
+
+		SJoggingParams() :
+			__dwCheckSum( 0 ),
+			fPeriod1( 0.0f ),
+			fPeriod2( 0.0f ),
+			fAmp1( 0.0f ),
+			fAmp2( 0.0f ),
+			fPhaze1( 0.0f ),
+			fPhaze2( 0.0f )
+		{ }
+		//
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
 	struct SAmphibianStats;
+
 	struct SMechUnitRPGStats : public SUnitBaseRPGStats
 	{
+		typedef NDb::SJoggingParams SJoggingParams;
 		OBJECT_BASIC_METHODS( SMechUnitRPGStats )
 	public:
 		enum { typeID = 0x11069B80 };
@@ -2470,35 +2499,6 @@ namespace NDb
 				__dwCheckSum( 0 ),
 				fMin( 100 ),
 				fMax( 120 )
-			{ }
-			//
-			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
-			//
-			int operator&( IBinSaver &saver );
-			int operator&( IXmlSaver &saver );
-			uint32_t CalcCheckSum() const;
-		};
-
-		struct SJoggingParams
-		{
-		private:
-			mutable uint32_t __dwCheckSum;
-		public:
-			float fPeriod1;
-			float fPeriod2;
-			float fAmp1;
-			float fAmp2;
-			float fPhaze1;
-			float fPhaze2;
-
-			SJoggingParams() :
-				__dwCheckSum( 0 ),
-				fPeriod1( 0.0f ),
-				fPeriod2( 0.0f ),
-				fAmp1( 0.0f ),
-				fAmp2( 0.0f ),
-				fPhaze1( 0.0f ),
-				fPhaze2( 0.0f )
 			{ }
 			//
 			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
@@ -2653,14 +2653,14 @@ namespace NDb
 		float fReinforcementPrice;
 		float fFuel;
 		std::vector< EManuverID > allowedPlaneManuvers;
-		CDBPtr< SVisObj > pAnimableModel;					// Artillery and trucks should use this for (primarly death) animations
+		CDBPtr< SVisObj > pAnimableModel;
 		CDBPtr< SVisObj > pTransportableModel;
 		SShipEffects shipEffects;
 		std::vector< SBoardedMechUnitPosition > boardedMechUnitPosition;
 		bool bDestructableCorpse;
 		CDBPtr< SUnitStatsModifier > pInnerUnitBonus;
-		CDBPtr< SAmphibianStats > amphibianStats;
-		CDBPtr< SUnitStatsModifier > pAntiAviationModifier; // Temporarily applied only while firing at aviation targets.
+		CDBPtr< SAmphibianStats > pAmphibianStats;
+		CDBPtr< SUnitStatsModifier > pAntiAviationModifier;
 		CDBPtr< SHelicopterStats > pHelicopterStats;
 
 		#include "include_MechUnitRPGStats.h"
@@ -2706,46 +2706,43 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const;
 	};
+
 	struct SAmphibianStats : public CResource
 	{
 		OBJECT_BASIC_METHODS( SAmphibianStats )
+	public:
+		enum { typeID = 0x7DA66901 };
 	private:
 		mutable uint32_t __dwCheckSum;
-
 	public:
-		enum { typeID = 0x7DA66901 };	// madeup random number, imma use 7DA669 as a prefix for my new resource types
-		int GetTypeID() const { return typeID; }
-
-		float waterZOffset;
-		float waterOffsetBlendTiles;
-		CDBPtr< SUnitStatsModifier > waterStatsModifier;
-
-		float prepareToWaterTime;
-		float prepareToLandTime;
-
-		CDBPtr< SComplexEffect > enterWaterEffect;
-		CDBPtr< SComplexEffect > exitWaterEffect;
-		CDBPtr< SComplexEffect > waterMoveEffect;
+		float fWaterZOffset;
+		float fWaterOffsetBlendTiles;
+		CDBPtr< SUnitStatsModifier > pWaterStatsModifier;
+		float fPrepareToWaterTime;
+		float fPrepareToLandTime;
+		CDBPtr< SComplexEffect > pEnterWaterEffect;
+		CDBPtr< SComplexEffect > pExitWaterEffect;
+		CDBPtr< SComplexEffect > pWaterMoveEffect;
 		std::vector< std::string > waterMoveLocators;
-		CDBPtr< SComplexEffect > waterIdleEffect;
+		CDBPtr< SComplexEffect > pWaterIdleEffect;
 		std::vector< std::string > waterIdleLocators;
-
-		SMechUnitRPGStats::SJoggingParams waterMoveJx;
-		SMechUnitRPGStats::SJoggingParams waterMoveJy;
-		SMechUnitRPGStats::SJoggingParams waterIdleJx;
-		SMechUnitRPGStats::SJoggingParams waterIdleJy;
-
-		bool removeCorpseInWater;
+		SJoggingParams waterMoveJx;
+		SJoggingParams waterMoveJy;
+		SJoggingParams waterIdleJx;
+		SJoggingParams waterIdleJy;
+		bool bRemoveCorpseInWater;
 
 		SAmphibianStats() :
 			__dwCheckSum( 0 ),
-			waterZOffset( 0.0f ),
-			waterOffsetBlendTiles( 0.0f ),
-			prepareToWaterTime( 0.0f ),
-			prepareToLandTime( 0.0f ),
-			removeCorpseInWater( true )
+			fWaterZOffset( 0 ),
+			fWaterOffsetBlendTiles( 0 ),
+			fPrepareToWaterTime( 0 ),
+			fPrepareToLandTime( 0 ),
+			bRemoveCorpseInWater( true )
 		{ }
-
+		//
+		int GetTypeID() const { return typeID; }
+		//
 		void ReportMetaInfo() const;
 		//
 		int operator&( IBinSaver &saver );

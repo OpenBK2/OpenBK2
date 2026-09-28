@@ -428,10 +428,10 @@ const NDb::SAmphibianStats* CAIUnit::GetAmphibianStats() const
 		return 0;
 
 	const SMechUnitRPGStats *pMechStats = checked_cast<const SMechUnitRPGStats*>( pStats );
-	if ( !pMechStats->IsAmphibious() || !pMechStats->amphibianStats )
+	if ( !pMechStats->IsAmphibious() || !pMechStats->pAmphibianStats )
 		return 0;
 
-	return pMechStats->amphibianStats;
+	return pMechStats->pAmphibianStats;
 }
 
 bool CAIUnit::IsAmphibianWaterTile( const SVector &tile ) const
@@ -468,7 +468,7 @@ const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
 	if ( !pAmphibianStats || !IsAmphibianWaterPoint( point ) )
 		return 0.0f;
 
-	const float fBlendTiles = pAmphibianStats->waterOffsetBlendTiles;
+	const float fBlendTiles = pAmphibianStats->fWaterOffsetBlendTiles;
 	if ( fBlendTiles <= 0.0f )
 		return 1.0f;
 
@@ -501,14 +501,14 @@ const float CAIUnit::GetAmphibianWaterCoeff( const CVec2 &point ) const
 void CAIUnit::UpdateAmphibianWaterModifier()
 {
 	const NDb::SAmphibianStats *pAmphibianStats = GetAmphibianStats();
-	if ( !pAmphibianStats || !pAmphibianStats->waterStatsModifier )
+	if ( !pAmphibianStats || !pAmphibianStats->pWaterStatsModifier )
 		return;
 
 	const bool bNeedModifier = IsInWater();
 	if ( bNeedModifier == bAmphibianWaterModifierApplied )
 		return;
 
-	ApplyStatsModifier( pAmphibianStats->waterStatsModifier, bNeedModifier );
+	ApplyStatsModifier( pAmphibianStats->pWaterStatsModifier, bNeedModifier );
 	bAmphibianWaterModifierApplied = bNeedModifier;
 
 	// Water modifiers can change speed, so immediately keep movement caps coherent.

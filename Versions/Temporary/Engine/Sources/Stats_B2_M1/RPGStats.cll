@@ -12,6 +12,7 @@
 [hExternal] #include "prefix_RPGStats.h"
 [hExternal] #include "UnitTypes.h"
 [hExternal] #include "System/FilePath.h"
+[hExternal] #include "Common_RTS_AI/AIClasses.h"
 [cppExternal] #include "AnimationType.h"
 [cppExternal] #include "DBAnimB2.h"
 [cppExternal] #include "DBVisObj.h"
@@ -61,6 +62,7 @@ forward class SComplexSeasonedEffect;
 forward enum EReinforcementType;
 forward enum EUserAction;
 forward class SPartyDependentInfo;
+forward class SHelicopterStats;
 forward class SMechUnitRPGStats;
 forward class SInfantryRPGStats;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -477,6 +479,18 @@ class SProjectile
 	string _AttachedEffectLocator;
 };
 
+// Guidance and presentation settings used by guided missile shells.
+[typeID = 0x300C3B81]
+class SMissleParams
+{
+	CVec3 _VisProjectileRotationRad;
+	float _StrayModeTime = 1;
+	float _TurnRateRad = 1.048;
+	bool _AimsForTop = false;
+	float _TopTargetingHeight = 0;
+	float _ProximityRadius = 0;
+};
+
 [typeID = 0x11069B82]
 class SWeaponRPGStats : public SCommonRPGStats
 {
@@ -563,6 +577,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 		float _RelaxTime;
 		// projectile model
 		SProjectile *_visProjectile;
+		SMissleParams *_MissleParams;
 
 		#include "include_WeaponRPGStats_Shell.h"
 	};
@@ -594,6 +609,9 @@ class SWeaponRPGStats : public SCommonRPGStats
 	float _AimingTime;
 	// ammo per burst
 	int _AmmoPerBurst;
+	// added after the fields below had their chunk ids, which they keep
+	[chunkID = 15]
+	bool _ForcePlayAllBurstEffects = false;
 	// max range
 	float _RangeMax;
 	// min range
@@ -1282,6 +1300,9 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	float _SightPower = 1;
 	// (km/h) speed on the road
 	float _Speed;
+	// added after the fields below had their chunk ids, which they keep
+	[chunkID = 35]
+	float _ReverseSpeedModifier = 1;
 	// (degree/sec) rotation speed
 	float _RotateSpeed;
 	// passability
@@ -1414,7 +1435,45 @@ enum EDesignUnitType
 	Helicopter_Unit,
 };
 
-[typeID = 0x11069B80]
+[typeID = 0x1919A2C0]
+class SHelicopterStats
+{
+	float _MovmentAngleDownRadians = 0.5;
+	float _MovementAngleDownSpeedRPS = 1.5;
+	float _SideRotatingAngleRad = 0.4;
+	float _SideRotatingAngleRPS = 1.1;
+	float _StandingDeviationRadius = 0.2;
+	float _StandingDeviationSpeed = 0.5;
+	float _SpiralRadius = 11;
+	float _SpiralSteps = 2.5;
+	float _SpiralDownAcceleration = 15;
+	// added after the fields below had their chunk ids, which they keep
+	[chunkID = 17]
+	float _SpiralDownRandCoeff = 0.1;
+	float _DeathSelfPointRotationSpeedRad = 2.1;
+	[chunkID = 14]
+	float _DeathSpiralDownwardsAngleRad = 0.1;
+	float _StandingFuelDrainModifier = 0.5;
+	float _MaxAttackAngleDownRadians = 0.872664626;
+	[chunkID = 15]
+	string _PropellerObjects[];
+	[chunkID = 16]
+	CVec3 _PropellerSpeedsRad[];
+};
+
+struct SJoggingParams
+{
+	float _Period1;
+	float _Period2;
+	float _Amp1;
+	float _Amp2;
+	float _Phaze1;
+	float _Phaze2;
+};
+
+forward class SAmphibianStats;
+
+[typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]
 class SMechUnitRPGStats : public SUnitBaseRPGStats
 {
 	struct SMechUnitGun : public SBaseGunRPGStats
@@ -1475,15 +1534,6 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 		float _Max = 120;
 
 		#include "include_MechUnitRPGStats_Armor.h"
-	};
-	struct SJoggingParams
-	{
-		float _Period1;
-		float _Period2;
-		float _Amp1;
-		float _Amp2;
-		float _Phaze1;
-		float _Phaze2;
 	};
 	struct SSlotInfo
 	{
@@ -1615,6 +1665,7 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	float _Fuel = 1000;
 	EManuverID _AllowedPlaneManuvers[];
 	// animated model (for artillery and trucks)
+	// Artillery and trucks should use this for (primarly death) animations
 	[unsafe] SVisObj *_AnimableModel;
 	// transportable model (for artillery)
 	[unsafe] SVisObj *_TransportableModel;
@@ -1625,8 +1676,34 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	SUnitStatsModifier *_InnerUnitBonus;
 	// camera placement for icon shot
 	[hidden; noCode] SCameraPlacement _CameraPlacementIconShot;
+	SAmphibianStats *_AmphibianStats;
+	// Temporarily applied only while firing at aviation targets.
+	SUnitStatsModifier *_AntiAviationModifier;
+	SHelicopterStats *_HelicopterStats;
 
 	#include "include_MechUnitRPGStats.h"
+};
+
+// 0x7DA669 is the prefix the amphibian work took for the type ids of its new resource types
+[typeID = 0x7DA66901]
+class SAmphibianStats
+{
+	float _WaterZOffset = 0;
+	float _WaterOffsetBlendTiles = 0;
+	SUnitStatsModifier *_WaterStatsModifier;
+	float _PrepareToWaterTime = 0;
+	float _PrepareToLandTime = 0;
+	SComplexEffect *_EnterWaterEffect;
+	SComplexEffect *_ExitWaterEffect;
+	SComplexEffect *_WaterMoveEffect;
+	string _WaterMoveLocators[];
+	SComplexEffect *_WaterIdleEffect;
+	string _WaterIdleLocators[];
+	SJoggingParams _WaterMoveJx;
+	SJoggingParams _WaterMoveJy;
+	SJoggingParams _WaterIdleJx;
+	SJoggingParams _WaterIdleJy;
+	bool _RemoveCorpseInWater = true;
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

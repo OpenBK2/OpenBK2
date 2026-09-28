@@ -138,9 +138,9 @@ void CMOUnitMechanical::SetJoggingMode( const int nMode, const bool bPlay )
 		const NDb::SMechUnitRPGStats::SJoggingParams *pJx = &pStats->jx;
 		const NDb::SMechUnitRPGStats::SJoggingParams *pJy = &pStats->jy;
 
-		if ( pStats->IsAmphibious() && pStats->amphibianStats )
+		if ( pStats->IsAmphibious() && pStats->pAmphibianStats )
 		{
-			const NDb::SAmphibianStats *pAmphibianStats = pStats->amphibianStats;
+			const NDb::SAmphibianStats *pAmphibianStats = pStats->pAmphibianStats;
 			if ( nMode == EJM_WATER_MOVE )
 			{
 				pJx = &pAmphibianStats->waterMoveJx;
@@ -173,7 +173,7 @@ void CMOUnitMechanical::UpdateAmphibianJogging( const bool bMoving )
 	}
 
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
-	const bool bUseWaterJogging = bAmphibianInWater && pStats->IsAmphibious() && pStats->amphibianStats;
+	const bool bUseWaterJogging = bAmphibianInWater && pStats->IsAmphibious() && pStats->pAmphibianStats;
 
 	if ( bMoving )
 		SetJoggingMode( bUseWaterJogging ? EJM_WATER_MOVE : EJM_LAND_MOVE, true );
@@ -195,14 +195,14 @@ void CMOUnitMechanical::AttachComplexEffectToLocators( IScene *pScene, const std
 void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placement, IScene *pScene )
 {
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
-	if ( !bAmphibianWaterEffectsActive || !pStats->IsAmphibious() || !pStats->amphibianStats || placement.fSpeed <= 0.0f )
+	if ( !bAmphibianWaterEffectsActive || !pStats->IsAmphibious() || !pStats->pAmphibianStats || placement.fSpeed <= 0.0f )
 	{
 		nLastWaterMoveEffectTime = -1;
 		return;
 	}
 
-	const NDb::SAmphibianStats *pAmphibianStats = pStats->amphibianStats;
-	if ( pAmphibianStats->waterMoveLocators.empty() || !pAmphibianStats->waterMoveEffect || !IsVisible() )
+	const NDb::SAmphibianStats *pAmphibianStats = pStats->pAmphibianStats;
+	if ( pAmphibianStats->waterMoveLocators.empty() || !pAmphibianStats->pWaterMoveEffect || !IsVisible() )
 		return;
 
 	const NTimer::STime time = GameTimer()->GetGameTime();
@@ -215,7 +215,7 @@ void CMOUnitMechanical::UpdateWaterMoveEffects( const SAINotifyPlacement &placem
 		return;
 
 	// Moving water effects are pulsed like track/dust effects to avoid piling up attaches every placement packet.
-	AttachComplexEffectToLocators( pScene, pAmphibianStats->waterMoveLocators, pAmphibianStats->waterMoveEffect, time );
+	AttachComplexEffectToLocators( pScene, pAmphibianStats->waterMoveLocators, pAmphibianStats->pWaterMoveEffect, time );
 	nLastWaterMoveEffectTime = time;
 	vLastWaterMoveEffectPos = vPlacement;
 }
@@ -226,12 +226,12 @@ IClientUpdatableProcess *CMOUnitMechanical::CreateIdleEffectProcess() const
 		return 0;
 
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
-	if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->amphibianStats &&
-		 pStats->amphibianStats->waterIdleEffect != 0 && pStats->amphibianStats->waterIdleEffect->GetSceneEffect() &&
-		 !pStats->amphibianStats->waterIdleLocators.empty() )
+	if ( bAmphibianWaterEffectsActive && pStats->IsAmphibious() && pStats->pAmphibianStats &&
+		 pStats->pAmphibianStats->pWaterIdleEffect != 0 && pStats->pAmphibianStats->pWaterIdleEffect->GetSceneEffect() &&
+		 !pStats->pAmphibianStats->waterIdleLocators.empty() )
 	{
 		// Use the per-locator scheduler so every configured water-idle locator can emit effects.
-		return new CIdleMechProcess( GetID(), pStats->amphibianStats->waterIdleLocators, pStats->amphibianStats->waterIdleEffect );
+		return new CIdleMechProcess( GetID(), pStats->pAmphibianStats->waterIdleLocators, pStats->pAmphibianStats->pWaterIdleEffect );
 	}
 
 	if ( pStats->shipEffects.pBoardSideEffect != 0 && !pStats->shipEffects.boardSideLocators.empty() )
@@ -299,7 +299,7 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 	const bool bResult = CMOUnit::Create( nUniqueID, _pUpdate, eSeason, eDayTime, bInEditor );
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats *>( GetStats() );
 	const SAINewUnitUpdate *pUpdate = checked_cast<const SAINewUnitUpdate *>( _pUpdate );
-	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->amphibianStats;
+	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->pAmphibianStats;
 	const float fAdjustedWaterCoeff = bHasAmphibianStats ? GetAdjustedAmphibianWaterCoeff( pUpdate->info.fWaterCoeff ) : 0.0f;
 	bAmphibianInWater = bHasAmphibianStats && pUpdate->info.fWaterCoeff > 0.0f;
 	bAmphibianWaterEffectsActive = bHasAmphibianStats && fAdjustedWaterCoeff >= AMPHIBIAN_WATER_EFFECTS_MIN_COEFF;
@@ -721,7 +721,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 		return;
 	
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
-	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->amphibianStats;
+	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->pAmphibianStats;
 	const bool bWaterEffectsWereActive = bAmphibianWaterEffectsActive;
 	const float fAdjustedWaterCoeff = bHasAmphibianStats ? GetAdjustedAmphibianWaterCoeff( placement.fWaterCoeff ) : 0.0f;
 	bAmphibianInWater = !pTransport && bHasAmphibianStats && placement.fWaterCoeff > 0.0f;
@@ -731,13 +731,13 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	SAINotifyPlacement visualPlacement( placement );
 	if ( bHasAmphibianStats )
 	{
-		auto ampStats = pStats->amphibianStats;
+		auto ampStats = pStats->pAmphibianStats;
 
 		// Drag curve kinda sucks so skip it for now..
 		//float draggedWaterCoeff = DragCurve(fAdjustedWaterCoeff, 0.8f, -6.0f);
 
 		// fWaterCoeff always starts at ~0.11, not 0.0, so adjust a little bit to it
-		const float fWaterOffset = ampStats->waterZOffset * fAdjustedWaterCoeff;
+		const float fWaterOffset = ampStats->fWaterZOffset * fAdjustedWaterCoeff;
 
 		// AI computes the shore/water coefficient; the visual unit only applies the offset.
 		visualPlacement.vPlacement.z += fWaterOffset;

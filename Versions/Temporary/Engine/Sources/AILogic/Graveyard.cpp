@@ -69,7 +69,7 @@ void CGraveyard::Segment()
 			{
 				GetTerrain()->RemoveStaticObjectTiles( pKilled->lockedTiles );
 				const SMechUnitRPGStats *pMechStats = dynamic_cast<const SMechUnitRPGStats*>( pKilled->pUnit->GetStats() );
-				const bool bIsAmphibian = pMechStats && pMechStats->IsAmphibious() && pMechStats->amphibianStats;
+				const bool bIsAmphibian = pMechStats && pMechStats->IsAmphibious() && pMechStats->pAmphibianStats;
 				const bool bIsShip = ( pKilled->pUnit->GetAIPassabilityClass() & EAC_WATER ) && !bIsAmphibian;
 				if ( !bIsShip && !pKilled->bRemoveCorpseAfterAnimation )
 					CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( pKilled->pUnit, pKilled->lockedTiles, pKilled->pUnit->IsTrampled() );
@@ -138,8 +138,8 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
 	const SMechUnitRPGStats* mech = dynamic_cast<const SMechUnitRPGStats*>(pStats);
 	std::vector<const NDb::SAnimB2*> animable_anims;
-	const NDb::SAmphibianStats *pAmphibianStats = mech && mech->IsAmphibious() ? mech->amphibianStats : 0;
-	const bool bRemoveAmphCorpseInWater = pAmphibianStats && pAmphibianStats->removeCorpseInWater && pUnit->IsInWater();
+	const NDb::SAmphibianStats *pAmphibianStats = mech && mech->IsAmphibious() ? mech->pAmphibianStats : 0;
+	const bool bRemoveAmphCorpseInWater = pAmphibianStats && pAmphibianStats->bRemoveCorpseInWater && pUnit->IsInWater();
 	// играем fatality
 	if ( nFatality > -1 )
 	{
