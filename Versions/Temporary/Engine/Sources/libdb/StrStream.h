@@ -20,9 +20,12 @@ public:
 };
 
 inline CStrStream& endl( CStrStream& sStream ) { sStream << "\r\n"; return sStream; }
+// Between the blocks of generated code: an empty line. It used to be a line of
+// 126 slashes, which the port removed from the sources as comments that carry
+// no information, leaving the empty line this writes.
 inline CStrStream& separator( CStrStream& sStream )
-{ 
-	sStream << "//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
+{
+	sStream << endl;
 	return sStream;
 }
 
