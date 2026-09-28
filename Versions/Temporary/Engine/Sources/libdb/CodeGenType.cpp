@@ -80,8 +80,8 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	pCode->hEOF << separator;
 	pCode->hEOF << "namespace NDb" << endl;
 	pCode->hEOF << "{" << endl;
-	pCode->hEOF << tab << "string EnumToString( " << szFullQualifiedName << " eValue );" << endl;
-	pCode->hEOF << tab << szQualifiedNameWithoutNDB << " " << szUnderlinedNameWithoutNDB << "( const string &szValue );" << endl;
+	pCode->hEOF << tab << "std::string EnumToString( " << szFullQualifiedName << " eValue );" << endl;
+	pCode->hEOF << tab << szQualifiedNameWithoutNDB << " " << szUnderlinedNameWithoutNDB << "( const std::string &szValue );" << endl;
 	pCode->hEOF << "}" << endl;
 
 	pCode->hEOF << separator;
@@ -89,12 +89,12 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	pCode->hEOF << "struct SKnownEnum<" << szFullQualifiedName << ">" << endl;
 	pCode->hEOF << "{" << endl;
 	pCode->hEOF << tab << "enum { isKnown = 1 };" << endl;
-	pCode->hEOF << tab << "static string ToString( " << szFullQualifiedName << " eValue ) { return NDb::EnumToString( eValue ); }" << endl;
-	pCode->hEOF << tab << "static " << szFullQualifiedName << " ToEnum( const string &szValue ) { return " << szUnderlinedName << "( szValue ); }" << endl;
+	pCode->hEOF << tab << "static std::string ToString( " << szFullQualifiedName << " eValue ) { return NDb::EnumToString( eValue ); }" << endl;
+	pCode->hEOF << tab << "static " << szFullQualifiedName << " ToEnum( const std::string &szValue ) { return " << szUnderlinedName << "( szValue ); }" << endl;
 	pCode->hEOF << "};" << endl;
 
 	pCode->cpp << separator;
-	pCode->cpp << "string EnumToString( " << szFullQualifiedName << " eValue )" << endl;
+	pCode->cpp << "std::string EnumToString( " << szFullQualifiedName << " eValue )" << endl;
 	pCode->cpp << "{" << endl;
 	pCode->cpp << tab << "switch ( eValue )" << endl;
 	pCode->cpp << tab << "{" << endl;
@@ -114,7 +114,7 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	// inside namespace NDb, and a declarator cannot name the scope it is already in.
 	// The qualified spelling is still right at the two places it is used above, both
 	// of which sit outside the namespace.
-	pCode->cpp << szFullQualifiedName << " " << szUnderlinedNameWithoutNDB << "( const string &szValue )" << endl;
+	pCode->cpp << szFullQualifiedName << " " << szUnderlinedNameWithoutNDB << "( const std::string &szValue )" << endl;
 	pCode->cpp << "{" << endl;
 	for ( int i = 0; i < pEnum->entries.size(); ++i )
 	{
@@ -140,7 +140,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 	if ( eType != EST_STRUCT )
 		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo() const" << endl;
 	else
-		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const" << endl;
+		pCode->cpp << "void " << szQualifiedName << "::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const" << endl;
 
 	pCode->cpp << "{" << endl;
 	bool bPrintEndL = false;
@@ -536,7 +536,7 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 	pCode->h << endl;
 	GenerateStructBaseConstructor( pCode, pStruct, szTabs );
 	pCode->h << szTabs << tab << "//" << endl;
-	pCode->h << szTabs << tab << "void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;" << endl;
+	pCode->h << szTabs << tab << "void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;" << endl;
 	pCode->h << szTabs << tab << "//" << endl;
 	pCode->h << szTabs << tab << "int operator&( IBinSaver &saver );" << endl;
 	pCode->h << szTabs << tab << "int operator&( IXmlSaver &saver );" << endl;

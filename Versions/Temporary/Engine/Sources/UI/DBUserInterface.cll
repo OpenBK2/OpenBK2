@@ -25,7 +25,7 @@ class SUIDesc
 };
 
 // string parameter
-[typeRename = "CParam{string}"]
+[typeRename = "CParam{std::string}"]
 [noHeader] struct SUIParam_string
 {
 	string _First;

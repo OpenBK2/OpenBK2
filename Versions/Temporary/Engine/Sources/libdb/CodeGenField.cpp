@@ -51,7 +51,7 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 	int nBrackets = 0;
 	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ARRAY )
 	{
-		pCode->h << "vector< ";
+		pCode->h << "std::vector< ";
 		++nBrackets;
 		pVarType = dynamic_cast<NDb::NTypeDef::STypeArray*>( pVarType )->field.pType;
 	}
