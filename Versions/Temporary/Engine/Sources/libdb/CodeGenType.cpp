@@ -284,7 +284,16 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 			continue;
 
 		const std::string szCodeFieldName = NHungarian::GetFieldNameInCode( field );
-		pCode->cpp << tab << "saver.Add( " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+		// a GUID field is a boost::uuids::uuid, whose bytes AddUuidChunk
+		// (System/UuidChunk.h) writes in the GUID order the chunk always held
+		if ( field.pType->eType == NDb::NTypeDef::TYPE_TYPE_GUID )
+		{
+			pCode->cpp << tab << "AddUuidChunk( saver, " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+		}
+		else
+		{
+			pCode->cpp << tab << "saver.Add( " << field.nChunkID << ", &" << szCodeFieldName << " );" << endl;
+		}
 	}
 
 	pCode->cpp << endl;

@@ -129,6 +129,10 @@ void CFile::GenerateCode( const std::string &szRootDir )
 			( szHFile.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos ||
 			  szEOF.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos );
 		const bool bCppUsesExport = !code.szModule.empty() && szCPPEOF.find( "REGISTER_DATABASE_CLASS(" ) != std::string::npos;
+		// GUID fields: the uuid type in the header, AddUuidChunk in the .cpp
+		const bool bHUsesUuid = szHFile.find( "boost::uuids::uuid" ) != std::string::npos ||
+			szEOF.find( "boost::uuids::uuid" ) != std::string::npos;
+		const bool bCppUsesUuid = szCPPFile.find( "AddUuidChunk(" ) != std::string::npos;
 
 		// The include blocks, laid out as the tree's DB sources lay them out:
 		// the export header, then the other quoted includes, then <cstdint>,
@@ -152,6 +156,10 @@ void CFile::GenerateCode( const std::string &szRootDir )
 			h << endl;
 		}
 		h << "#include <cstdint>" << endl;
+		if ( bHUsesUuid )
+		{
+			h << endl << "#include <boost/uuid/uuid.hpp>" << endl;
+		}
 		h << separator;
 		h << "struct IXmlSaver;" << endl;
 		h << separator;
@@ -169,6 +177,10 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		cpp << "#include " << qcomma << "libdb/Checksum.h" << qcomma << endl;
 		cpp << "#include " << qcomma << "System/XmlSaver.h" << qcomma << endl;
 		cpp << "#include " << qcomma << szShortHFileName << qcomma << endl;
+		if ( bCppUsesUuid )
+		{
+			cpp << "#include " << qcomma << "System/UuidChunk.h" << qcomma << endl;
+		}
 		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
 			cpp << "#include " << qcomma << *iter << qcomma << endl;
 		cpp << endl;

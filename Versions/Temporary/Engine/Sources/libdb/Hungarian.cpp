@@ -135,6 +135,13 @@ const std::string GetTypeNameInCode( NDb::NTypeDef::STypeDef *pRawType, const ND
 	else if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_ENUM )
 		return fmt::format( "E{}", pType->GetTypeName() );
 
+	// base.cll's GUID is a boost::uuids::uuid in code, since the port took the
+	// Win32 GUID out; the generated serializer writes it with AddUuidChunk,
+	// which keeps the bytes on disk in the GUID order they always had.
+	if ( pType->eType == NDb::NTypeDef::TYPE_TYPE_GUID )
+	{
+		return "boost::uuids::uuid";
+	}
 	// base.cll's string types are the standard library's, which the generated
 	// code names in full: nothing it includes has a using directive for them.
 	if ( pType->GetTypeName() == "string" || pType->GetTypeName() == "wstring" )
