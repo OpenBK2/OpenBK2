@@ -66,8 +66,11 @@ if ( !(x) )                                                           \
 				case BSU_CONTINUE: break;                                     \
 				case BSU_DEBUG: breakpoint(); break;                          \
 				case BSU_IGNORE: break;                                       \
+				/* Abort: stop in a debugger if one is attached, else end the */ \
+				/* process. That is what Win32's FatalExit did, which this    */ \
+				/* called and which no other platform has.                     */ \
 				case BSU_ABORT:                                               \
-					FatalExit( 0xDEAD );                                        \
+					breakpoint();                                               \
 					break;																									  	\
 			}                                                               \
 		}                                                                 \
