@@ -48,19 +48,40 @@ bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, con
 	return false;
 }
 
+bool ReadFile( std::vector<uint8_t> &data, const std::string &szFileName );
+
+// Saved to memory first and written only when the content differs from the
+// file already there, as CopySourceCode does for the sources. A run that
+// changes nothing then leaves types.xml's timestamp alone.
 bool GenerateTypes( const std::string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo )
 {
-	CFileStream stream( szTypesFilePath, CFileStream::WIN_CREATE );
-	if ( stream.IsOk() )
+	CMemoryStream memStream;
 	{
-		if ( CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE ) )
+		// the saver writes its document into the stream when it is released
+		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &memStream, SAVER_MODE_WRITE );
+		if ( !pSaver )
 		{
-			pSaver->Add( "Types", &pTypesInfo->types );
-			return true;
+			NI_ASSERT( false, fmt::format("Can't save compiled types to \"{}\"", szTypesFilePath) );
+			return false;
 		}
+		pSaver->Add( "Types", &pTypesInfo->types );
 	}
-	NI_ASSERT( false, fmt::format("Can't save compiled types to \"{}\"", szTypesFilePath) );
-	return false;
+	const unsigned char *pNew = memStream.GetBuffer();
+	const std::vector<uint8_t> newFile( pNew, pNew + memStream.GetSize() );
+	std::vector<uint8_t> oldFile;
+	if ( ReadFile( oldFile, szTypesFilePath ) && oldFile == newFile )
+	{
+		return true;
+	}
+	printf( "Writing changed file: %s\n", szTypesFilePath.c_str() );
+	CFileStream stream( szTypesFilePath, CFileStream::WIN_CREATE );
+	if ( !stream.IsOk() )
+	{
+		NI_ASSERT( false, fmt::format("Can't save compiled types to \"{}\"", szTypesFilePath) );
+		return false;
+	}
+	stream.Write( newFile.data(), static_cast<int>( newFile.size() ) );
+	return true;
 }
 
 bool GenerateCode( std::list<std::string> *pFileTitles, const std::string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo )
