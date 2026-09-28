@@ -33,6 +33,8 @@ namespace NDb
 		CDBPtr< SSceneConsts > pScene;
 		CDBPtr< SMultiplayerConsts > pMultiplayer;
 
+		#include "include_GameConsts.h"
+
 		SGameConsts() :
 			__dwCheckSum( 0 )
 		{ }
@@ -44,7 +46,5 @@ namespace NDb
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const;
-		uint32_t GetMPDataVersionChecksum() const;
-		uint32_t GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
 	};
 }
