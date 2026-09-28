@@ -60,10 +60,13 @@ void CFileNode::AddInclude( CFileNode *pNode )
 		pNode->SetIncludedInOtherFile();
 }
 
+// The external includes go into the generated code as written, apart from the
+// separators. They used to be lowercased as well, which only a compiler on a
+// filesystem that ignores case can follow; the .cll files spell them as the
+// headers are spelled.
 void CFileNode::AddHExternal( const std::string &szIncludeName )
 {
 	std::string szResult( szIncludeName );
-	NStr::ToLowerASCII( &szResult );
 	NStr::ReplaceAllChars( &szResult, '\\', '/' );
 	hExternalIncludes.push_back( szResult );
 }
@@ -71,8 +74,7 @@ void CFileNode::AddHExternal( const std::string &szIncludeName )
 void CFileNode::AddCPPExternal( const std::string &szIncludeName )
 {
 	std::string szResult( szIncludeName );
-	NStr::ToLowerASCII( &szResult );
-	NStr::ReplaceAllChars( &szResult, '\\', '/' );	
+	NStr::ReplaceAllChars( &szResult, '\\', '/' );
 	cppExternalIncludes.push_back( szResult );
 }
 
