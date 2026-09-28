@@ -30,10 +30,13 @@ void CCodeStructure::GenerateCode( const std::string &szRootDir )
 
 
 
+// Both of these used to lowercase the root directory as well as turn '\' into
+// '/'. Here it is only cut off the front of each .cll's path by length, but
+// in GenerateCode it is where the files are written, and a lowercased
+// /home/User/... is another directory where the filesystem minds case.
 CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRawRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
-	std::string szRootDir;
-	NStr::ToLower( &szRootDir, szRawRootDir );
+	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
 	if ( szRootDir[szRootDir.size()-1] != '/' )
 		szRootDir += "/";
@@ -42,8 +45,7 @@ CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2T
 
 void GenerateCode( CCodeStructure *pCodeStructure, const std::string &szRawRootDir )
 {
-	std::string szRootDir;
-	NStr::ToLower( &szRootDir, szRawRootDir );
+	std::string szRootDir( szRawRootDir );
 	NStr::ReplaceAllChars( &szRootDir, '\\', '/' );
 	if ( szRootDir[szRootDir.size()-1] != '/' )
 		szRootDir += "/";
