@@ -12,17 +12,17 @@ namespace NSlnAnalyzer
 
 struct SXMLValue
 {
-	string szName, szValue;
+	std::string szName, szValue;
 
 	SXMLValue() {}
 	SXMLValue( const char *_szName, const char *_szValue ) : szName(_szName), szValue(_szValue) {}
-	SXMLValue( const string &_szName, const string &_szValue ) : szName(_szName), szValue(_szValue) {}
+	SXMLValue( const std::string &_szName, const std::string &_szValue ) : szName(_szName), szValue(_szValue) {}
 };
 struct SXMLSection
 {
-	string szName;
-	vector<SXMLValue> values;
-	vector<SXMLSection> children;
+	std::string szName;
+	std::vector<SXMLValue> values;
+	std::vector<SXMLSection> children;
 
 	SXMLSection() {}
 	SXMLSection( const char *_szName ) : szName(_szName) {}
@@ -73,15 +73,15 @@ inline SXMLSection operator+( const SXMLSection &a, const SXMLValue &b )
 
 struct SSection
 {
-	string szName, szParam;
-	vector<string> values;
-	vector<SSection> children;
+	std::string szName, szParam;
+	std::vector<std::string> values;
+	std::vector<SSection> children;
 	bool bHasEndMark;
 
 	SSection() : bHasEndMark(false) {}
 };
 
-static const char *LoadSection( const char *pszData, vector<SSection> *pRes, int _nShift )
+static const char *LoadSection( const char *pszData, std::vector<SSection> *pRes, int _nShift )
 {
 	for(;*pszData;)
 	{
@@ -92,7 +92,7 @@ static const char *LoadSection( const char *pszData, vector<SSection> *pRes, int
 			return pszLine;
 		SSection s;
 		//form s
-		string szLine;
+		std::string szLine;
 		// read line
 		for ( ;*pszData && *pszData != 0xd; ++pszData )
 			szLine += *pszData;
@@ -107,7 +107,7 @@ static const char *LoadSection( const char *pszData, vector<SSection> *pRes, int
 			Val,
 			ValQuot
 		} state = Start;
-		string szVal;
+		std::string szVal;
 		for ( int k = 0; k < szLine.size(); ++k )
 		{
 			switch ( state )//szLine[k] )
@@ -175,7 +175,7 @@ static const char *LoadSection( const char *pszData, vector<SSection> *pRes, int
 }
 
 const char *pszSlnHeader = "Microsoft Visual Studio Solution File, Format Version 8.00\r\n";
-static void LoadSln( const char *pszData, vector<SSection> *pRes, const string &szSlnFile )
+static void LoadSln( const char *pszData, std::vector<SSection> *pRes, const std::string &szSlnFile )
 {
 	pRes->resize(0);
 	int nHdrSize = strlen( pszSlnHeader );
@@ -189,10 +189,10 @@ static void LoadSln( const char *pszData, vector<SSection> *pRes, const string &
 
 struct SProject
 {
-	string szName, szGUID;
-	vector<string> depends; // guids
+	std::string szName, szGUID;
+	std::vector<std::string> depends; // guids
 };
-static void CollectProjects( const vector<SSection> &sln, vector<SProject> *pRes )
+static void CollectProjects( const std::vector<SSection> &sln, std::vector<SProject> *pRes )
 {
 	for ( int k = 0; k < sln.size(); ++k )
 	{
@@ -218,9 +218,9 @@ static void CollectProjects( const vector<SSection> &sln, vector<SProject> *pRes
 	}
 }
 
-static void CollectProjects( const string &szSlnName, const string &szBasePath, vector<SProject> *pProjects )
+static void CollectProjects( const std::string &szSlnName, const std::string &szBasePath, std::vector<SProject> *pProjects )
 {
-	const string szSlnFile = szBasePath + szSlnName + ".sln";
+	const std::string szSlnFile = szBasePath + szSlnName + ".sln";
 
 	CMemoryStream ms;
 	{
@@ -232,15 +232,15 @@ static void CollectProjects( const string &szSlnName, const string &szBasePath, 
 		ms.Write( &cZero, 1 );
 	}
 
-	vector<SSection> sections;
+	std::vector<SSection> sections;
 	LoadSln( (const char*)ms.GetBuffer(), &sections, szSlnFile );
 
 	CollectProjects( sections, pProjects );
 }
 
-void GetProjectsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pProjects )
+void GetProjectsOfSln( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pProjects )
 {
-	vector<SProject> projects;
+	std::vector<SProject> projects;
 	CollectProjects( szSlnName, szBasePath, &projects );
 
 	pProjects->resize( projects.size() );
@@ -254,7 +254,7 @@ static const char *SkipSpaces( const char *p )
 		++p;
 	return p;
 }
-static const char *ReadName( const char *p, string *pRes )
+static const char *ReadName( const char *p, std::string *pRes )
 {
 	*pRes = "";
 	if ( *p == '"' )
@@ -308,14 +308,14 @@ static const char *LoadXMLStatement( SXMLSection *pRes, const char *pszData )
 	}
 	if ( bIsFinal )
 	{
-		pRes->szName = string("/") + pRes->szName;
+		pRes->szName = std::string("/") + pRes->szName;
 		return pszData;
 	}
 	while ( *pszData )
 	{
 		SXMLSection s;
 		pszData = LoadXMLStatement( &s, pszData );
-		if ( s.szName == string( "/" ) + pRes->szName )
+		if ( s.szName == std::string( "/" ) + pRes->szName )
 			return pszData;
 		pRes->children.push_back( s );
 	}
@@ -340,7 +340,7 @@ static bool LoadXML( SXMLSection *pRes, const char *pszData )
 	return true;
 }
 
-static void CollectFiles( SXMLSection *pRes, vector<string> *pFiles )
+static void CollectFiles( SXMLSection *pRes, std::vector<std::string> *pFiles )
 {
 	if ( !pRes )
 		return;
@@ -358,14 +358,14 @@ static void CollectFiles( SXMLSection *pRes, vector<string> *pFiles )
 
 struct SFilesAdder
 {
-	vector<string> *pFiles;
+	std::vector<std::string> *pFiles;
 
-	SFilesAdder( vector<string> *_pFiles ) : pFiles( _pFiles ) { }
+	SFilesAdder( std::vector<std::string> *_pFiles ) : pFiles( _pFiles ) { }
 	void operator()( const NFile::CFileIterator &iter ) const
 	{
 		if ( !iter.IsDirectory() )
 		{
-			string szFileName = iter.GetFullName();
+			std::string szFileName = iter.GetFullName();
 			NFile::NormalizePath( &szFileName );
 			NStr::ToLowerASCII( &szFileName );
 			pFiles->push_back( szFileName );
@@ -373,18 +373,18 @@ struct SFilesAdder
 	}
 };
 
-static void GetAllFilesOfDescProj( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
+static void GetAllFilesOfDescProj( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pFiles )
 {
-	vector<string> projects;
+	std::vector<std::string> projects;
 	GetProjectsOfSln( szSlnName, szBasePath, &projects );
 
 	for ( int i = 0; i < projects.size(); ++i )
 	{
-		const string vcProjName = projects[i];
+		const std::string vcProjName = projects[i];
 
 		CMemoryStream ms;
 		{
-			const string szProjName = szBasePath + vcProjName + "/" + vcProjName + ".vcproj";
+			const std::string szProjName = szBasePath + vcProjName + "/" + vcProjName + ".vcproj";
 			CFileStream stream( szProjName, CFileStream::WIN_READ_ONLY );
 			ms.SetSize( stream.GetSize() );
 			stream.Read( ms.GetBufferForWrite(), ms.GetSize() );
@@ -398,14 +398,14 @@ static void GetAllFilesOfDescProj( const string &szSlnName, const string &szBase
 			return;
 		SXMLSection *pProj = proj.GetSection( "VisualStudioProject" );
 
-		vector<string> files;
+		std::vector<std::string> files;
 		CollectFiles( pProj->GetSection( "Files" ), &files );
 		for ( int i = 0; i < files.size(); ++i )
 		{
 			if ( NFile::GetFileExt( files[i] ) == ".cll" )
 			{
-				string szRelPath = files[i];
-				string szFullPath = szBasePath + vcProjName + "/" + szRelPath.substr( 2, string::npos );
+				std::string szRelPath = files[i];
+				std::string szFullPath = szBasePath + vcProjName + "/" + szRelPath.substr( 2, std::string::npos );
 				NFile::NormalizePath( &szFullPath );
 				NStr::ToLowerASCII( &szFullPath );
 				pFiles->push_back( szFullPath );
@@ -414,30 +414,30 @@ static void GetAllFilesOfDescProj( const string &szSlnName, const string &szBase
 	}
 }
 
-static void GetAllSlnFilesFromDisc( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
+static void GetAllSlnFilesFromDisc( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pFiles )
 {
-	vector<string> projects;
+	std::vector<std::string> projects;
 	GetProjectsOfSln( szSlnName, szBasePath, &projects );
 
-	string szBaseFilesPathWND( szBasePath );
+	std::string szBaseFilesPathWND( szBasePath );
 	NStr::ReplaceAllChars( &szBaseFilesPathWND, '/', '\\' );
 	for ( int i = 0; i < projects.size(); ++i )
 	{
-		string szPath = szBaseFilesPathWND + projects[i] + "\\";
+		std::string szPath = szBaseFilesPathWND + projects[i] + "\\";
 		NFile::EnumerateFiles( szPath, "*.cll", SFilesAdder( pFiles ), true );
 	}
 }
 
-void GetTypesDescriptorsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pFiles )
+void GetTypesDescriptorsOfSln( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pFiles )
 {
-	vector<string> allDBFiles;
+	std::vector<std::string> allDBFiles;
 	GetAllFilesOfDescProj( szSlnName, szBasePath, &allDBFiles );
 
-	vector<string> neededFiles;
+	std::vector<std::string> neededFiles;
 	GetAllSlnFilesFromDisc( szSlnName, szBasePath, &neededFiles );
 
-	sort( allDBFiles.begin(), allDBFiles.end() );
-	sort( neededFiles.begin(), neededFiles.end() );
+	std::sort( allDBFiles.begin(), allDBFiles.end() );
+	std::sort( neededFiles.begin(), neededFiles.end() );
 
 	int nAll = 0;
 	int nNeed = 0;

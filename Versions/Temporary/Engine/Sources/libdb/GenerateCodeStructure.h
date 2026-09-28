@@ -11,7 +11,7 @@ namespace NCodeGen
 {
 	struct SCodeStructure;
 	CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs,
-																			const string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
+																			const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 }
 
 

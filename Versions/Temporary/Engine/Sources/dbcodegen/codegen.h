@@ -18,15 +18,15 @@ enum ECodeGenOpts
 
 struct SCompiledTypesInfo
 {
-	vector< CObj<NDb::NTypeDef::STypeDef> > types;
+	std::vector< CObj<NDb::NTypeDef::STypeDef> > types;
 	CObj<CXmlResource> pCodeStructure;
 	CNodes2TypeDefs nodes2TypeDefs;
 };
 
-bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const vector<string> &files, const string &szDescriptorsPath );
-bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo );
-bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo );
-bool CopySourceCode( const list<string> &filetitles, const string &szSrcPath, const string &szDstPath );
+bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const std::vector<std::string> &files, const std::string &szDescriptorsPath );
+bool GenerateTypes( const std::string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo );
+bool GenerateCode( std::list<std::string> *pFileTitles, const std::string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo );
+bool CopySourceCode( const std::list<std::string> &filetitles, const std::string &szSrcPath, const std::string &szDstPath );
 
 }
 }

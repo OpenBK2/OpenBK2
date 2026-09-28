@@ -12,18 +12,20 @@
 
 #include <fmt/format.h>
 
+#include <algorithm>
+
 //
 using namespace NDb::NCodeGenTool;
 
 namespace
 {
 
-void ThrowOutEqual( vector<string> *pArray )
+void ThrowOutEqual( std::vector<std::string> *pArray )
 {
 	if ( pArray->empty() )
 		return;
 
-	sort( pArray->begin(), pArray->end() );
+	std::sort( pArray->begin(), pArray->end() );
 
 	int k = 0;
 	for ( int i = 1; i < pArray->size(); ++i )
@@ -34,7 +36,7 @@ void ThrowOutEqual( vector<string> *pArray )
 	pArray->resize( k + 1 );
 }
 
-bool ReadConfigFile( SConfig *pConfig, const string &szConfigFile )
+bool ReadConfigFile( SConfig *pConfig, const std::string &szConfigFile )
 {
 	CFileStream stream( szConfigFile, CFileStream::WIN_READ_ONLY );
 	if ( stream.IsOk() )
@@ -52,12 +54,12 @@ bool ReadConfigFile( SConfig *pConfig, const string &szConfigFile )
 
 int PORT_CDECL main( int argc, char *argv[] )
 {
-	const string szCurrDir = NFile::GetNormalizedCurrDir();
+	const std::string szCurrDir = NFile::GetNormalizedCurrDir();
 	//
 	ECodeGenOpts eCodeGenOpts = CODE_GEN_UNKNOWN;
-	string szConfigFileName = "dbconfig.xml";
-	string szTypesPath = szCurrDir;
-	string szSourcesPath = szCurrDir;
+	std::string szConfigFileName = "dbconfig.xml";
+	std::string szTypesPath = szCurrDir;
+	std::string szSourcesPath = szCurrDir;
 
 	NCmdLine::CCmdLine cmdLine( "XML Database code generation utility\nWritten by [REDACTED]\n(C) [REDACTED], 2004\n" );
 	cmdLine.AddOption( "-show-version", &eCodeGenOpts, CODE_GEN_SHOW_VERSION, "show product version" );
@@ -87,8 +89,8 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NFile::AppendSlash( &szTypesPath );
 	NFile::AppendSlash( &szSourcesPath );
 	//
-	const string szBasePath = szSourcesPath;
-	const string szConfigFilePath = szBasePath + szConfigFileName;
+	const std::string szBasePath = szSourcesPath;
+	const std::string szConfigFilePath = szBasePath + szConfigFileName;
 	//
 	SConfig config;
 	{
@@ -106,7 +108,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 
 	try
 	{
-		vector<string> filesToCompile;
+		std::vector<std::string> filesToCompile;
 		for ( int i = 0; i < config.slns.size(); ++i )
 			NSlnAnalyzer::GetTypesDescriptorsOfSln( config.slns[i], szBasePath, &filesToCompile );
 		ThrowOutEqual( &filesToCompile );
@@ -120,7 +122,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 		// generate types
 		if ( eCodeGenOpts != CODE_GEN_NOCOPY )
 		{
-			const string szTypeCollectionFile = szTypesPath + "types.xml";
+			const std::string szTypeCollectionFile = szTypesPath + "types.xml";
 			printf( "Generate types file (%s)\n", szTypeCollectionFile.c_str() );
 			if ( GenerateTypes( szTypeCollectionFile, &compiledTypesInfo ) == false )
 			{
@@ -131,12 +133,12 @@ int PORT_CDECL main( int argc, char *argv[] )
 
 		if ( eCodeGenOpts != CODE_GEN_TYPES )
 		{
-			string szSourceCodePath = NFile::GetTempPath() + "dbcode/";
+			std::string szSourceCodePath = NFile::GetTempPath() + "dbcode/";
 			NFile::NormalizePath( &szSourceCodePath );
-			const string szProjectSourcePath = szBasePath;
+			const std::string szProjectSourcePath = szBasePath;
 
 			printf( "Generate source files (in %s)\n", szSourceCodePath.c_str() );
-			list<string> filenames;
+			std::list<std::string> filenames;
 			bool bRes = GenerateCode( &filenames, szSourceCodePath, &compiledTypesInfo );
 			NI_VERIFY( bRes != false, "Failed to generate source code files", return 0xDEAD );
 			if ( eCodeGenOpts != CODE_GEN_NOCOPY )

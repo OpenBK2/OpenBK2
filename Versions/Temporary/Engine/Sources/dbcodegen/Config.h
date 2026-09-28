@@ -6,7 +6,7 @@ namespace NCodeGenTool
 
 struct SConfig
 {
-	vector<string> slns;
+	std::vector<std::string> slns;
 	//
 	int operator&( IXmlSaver &saver )
 	{

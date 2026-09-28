@@ -2,8 +2,8 @@
 
 namespace NSlnAnalyzer
 {
-	void GetProjectsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pProjects );
-	void GetTypesDescriptorsOfSln( const string &szSlnName, const string &szBasePath, vector<string> *pFiles );
+	void GetProjectsOfSln( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pProjects );
+	void GetTypesDescriptorsOfSln( const std::string &szSlnName, const std::string &szBasePath, std::vector<std::string> *pFiles );
 }
 
 

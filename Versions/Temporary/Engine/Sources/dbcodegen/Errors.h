@@ -2,12 +2,12 @@
 
 class CCodeGenException
 {
-	string szDescription;
+	std::string szDescription;
 public:
-	CCodeGenException( const string &_szDescription )
+	CCodeGenException( const std::string &_szDescription )
 		: szDescription( _szDescription ) { }
 
-	const string& GetDesc() const { return szDescription; }
+	const std::string& GetDesc() const { return szDescription; }
 };
 
 

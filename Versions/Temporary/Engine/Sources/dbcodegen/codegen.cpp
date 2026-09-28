@@ -30,7 +30,7 @@ struct STypesSort
 	}
 };
 
-bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const vector<string> &files, const string &szDescriptorsPath )
+bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, const std::vector<std::string> &files, const std::string &szDescriptorsPath )
 {
 	bool bParse = NLang::Parse( files, szDescriptorsPath + "base.cll" );
 	NI_VERIFY( bParse != false, fmt::format("Can't parse type definitions from \"{}\"", szDescriptorsPath), return false );
@@ -41,7 +41,7 @@ bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, con
 		const bool bCompiled = NCompileCLike::Compile( &pRes->types, pTermTypesDesc, &pRes->nodes2TypeDefs, NLang::GetRootFile()->GetNamespace() );
 		NI_VERIFY( bCompiled != false, "can't compile types", return false );
 		STypesSort typesSort;
-		sort( pRes->types.begin(), pRes->types.end(), typesSort );
+		std::sort( pRes->types.begin(), pRes->types.end(), typesSort );
 		if ( bGenerateCodeStructure )
 			pRes->pCodeStructure = NCodeGen::GenerateCodeStructure( NLang::GetRootFile(), pRes->nodes2TypeDefs, szDescriptorsPath, pTermTypesDesc );
 		return true;
@@ -49,7 +49,7 @@ bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, con
 	return false;
 }
 
-bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo )
+bool GenerateTypes( const std::string &szTypesFilePath, SCompiledTypesInfo *pTypesInfo )
 {
 	CFileStream stream( szTypesFilePath, CFileStream::WIN_CREATE );
 	if ( stream.IsOk() )
@@ -64,17 +64,17 @@ bool GenerateTypes( const string &szTypesFilePath, SCompiledTypesInfo *pTypesInf
 	return false;
 }
 
-bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo )
+bool GenerateCode( std::list<std::string> *pFileTitles, const std::string &szSourceCodePath, SCompiledTypesInfo *pTypesInfo )
 {
 	if ( NCodeGen::CCodeStructure *pCodeStructure = dynamic_cast_ptr<NCodeGen::CCodeStructure *>( pTypesInfo->pCodeStructure ) )
 	{
 		NCodeGen::GenerateCode( pCodeStructure, szSourceCodePath );
 		if ( pFileTitles )
 		{
-			const list< CObj<NCodeGen::CFile> > &files = pCodeStructure->GetFiles();
-			for ( list< CObj<NCodeGen::CFile> >::const_iterator it = files.begin(); it != files.end(); ++it )
+			const std::list< CObj<NCodeGen::CFile> > &files = pCodeStructure->GetFiles();
+			for ( std::list< CObj<NCodeGen::CFile> >::const_iterator it = files.begin(); it != files.end(); ++it )
 			{
-				const string &szFileTitle = (*it)->GetName();
+				const std::string &szFileTitle = (*it)->GetName();
 				pFileTitles->push_back( szFileTitle );
 			}
 		}
@@ -87,7 +87,7 @@ bool GenerateCode( list<string> *pFileTitles, const string &szSourceCodePath, SC
 	}
 }
 
-bool ReadFile( vector<uint8_t> &data, const string &szFileName )
+bool ReadFile( std::vector<uint8_t> &data, const std::string &szFileName )
 {
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
 	if ( !stream.IsOk() ) 
@@ -100,14 +100,14 @@ bool ReadFile( vector<uint8_t> &data, const string &szFileName )
 	return true;
 }
 
-bool ProcessFile( const string &szSrcFileName, const string &szDstFileName )
+bool ProcessFile( const std::string &szSrcFileName, const std::string &szDstFileName )
 {
 	// check for changed
 	{
-		vector<uint8_t> newFile;
+		std::vector<uint8_t> newFile;
 		if ( ReadFile(newFile, szSrcFileName) == false )
 			return false;
-		vector<uint8_t> oldFile;
+		std::vector<uint8_t> oldFile;
 		if ( ReadFile(oldFile, szDstFileName) != false )
 		{
 			if ( newFile == oldFile )
@@ -121,14 +121,14 @@ bool ProcessFile( const string &szSrcFileName, const string &szDstFileName )
 	return NFile::CopyFile( szSrcFileName, szDstFileName );
 }
 
-bool CopySourceCode( const list<string> &filetitles, const string &szSrcPath, const string &szDstPath )
+bool CopySourceCode( const std::list<std::string> &filetitles, const std::string &szSrcPath, const std::string &szDstPath )
 {
-	for ( list<string>::const_iterator it = filetitles.begin(); it != filetitles.end(); ++it )
+	for ( std::list<std::string>::const_iterator it = filetitles.begin(); it != filetitles.end(); ++it )
 	{
 		if ( (*it) == "game" || (*it) == "base" )
 			continue;
 		//
-		string szFileName = (*it) + ".h";
+		std::string szFileName = (*it) + ".h";
 		if ( ProcessFile( szSrcPath + szFileName, szDstPath + szFileName ) != false )
 			::DeleteFile( (szSrcPath + szFileName).c_str() );
 		//
