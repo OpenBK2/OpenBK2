@@ -130,7 +130,8 @@ void CXMLChunkSaver::Finish()
 				if ( StartChunk("Item", nCounter) != false )
 				{
 					Add( "__ClassTypeID", &nClassTypeID );
-					void *pServerPtr = pElement.GetPtr();
+					// the ID StoreObject assigned, not the address, see storedObjects
+					void *pServerPtr = reinterpret_cast<void*>( storedObjects[pElement.GetPtr()] );
 					DataChunk( "__ServerPtr", &pServerPtr, 4, 0 );
 					//
 					pElement->operator&( *this );
@@ -689,12 +690,18 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
 	}	
 
-	if ( pObject != 0 && storedObjects.find( pObject ) == storedObjects.end() )
+	// the object's ID rather than its address, see storedObjects
+	void *pServerPtr = 0;
+	if ( pObject != 0 )
 	{
-		toStore.push_back( checked_cast<CXmlResource*>(pObject) );
-		storedObjects[pObject] = true; // важно присвоить хоть что-нибудь
+		CPObjectsHash::iterator pos = storedObjects.find( pObject );
+		if ( pos == storedObjects.end() )
+		{
+			toStore.push_back( checked_cast<CXmlResource*>(pObject) );
+			pos = storedObjects.emplace( pObject, nNextObjectID++ ).first;
+		}
+		pServerPtr = reinterpret_cast<void*>( pos->second );
 	}
-	void *pServerPtr = pObject;
 	DataChunk( 0, &pServerPtr, 4, 0 );
 }
 

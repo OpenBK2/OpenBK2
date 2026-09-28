@@ -5,6 +5,8 @@
 #include "Misc/HashFuncs.h"
 #include "XmlSaver.h"
 
+#include <cstdint>
+
 namespace NXml
 {
 	class CXmlReader;
@@ -33,8 +35,15 @@ class CXMLChunkSaver : public IXmlSaver
 	//
 	typedef std::unordered_map<void*,CPtr<CXmlResource>> CObjectsHash;
 	CObjectsHash objects;
-	typedef std::unordered_map<void*,bool> CPObjectsHash;
+	// The ID each stored object is written under, in its references and as its
+	// __ServerPtr in SharedClasses. It used to be the object's address, cut to
+	// 4 bytes, so a file differed from run to run and on x64 two objects could
+	// collide. IDs are handed out 1, 2, 3... in the order objects are first
+	// reached, as CStructureSaver does. A reader only matches references to
+	// objects by them, so files written either way load either way.
+	typedef std::unordered_map<void*,uintptr_t> CPObjectsHash;
 	CPObjectsHash storedObjects;
+	uintptr_t nNextObjectID = 1;			// 0 is the null pointer
 	std::list< CPtr<CXmlResource> > toStore;
 	//
 	void PushReadChunkLevel( const NXml::CXmlNode *pNode );
