@@ -127,13 +127,21 @@ bool CopySourceCode( const std::list<std::string> &filetitles, const std::string
 		if ( (*it) == "game" || (*it) == "base" )
 			continue;
 		//
+		// Once a generated file is in the tree, or found unchanged there, its temp
+		// copy goes. RemoveFile is std::filesystem::remove behind System's
+		// wrapper, in place of Win32's DeleteFile; as before, a failure to remove
+		// the temp copy is not an error.
 		std::string szFileName = (*it) + ".h";
 		if ( ProcessFile( szSrcPath + szFileName, szDstPath + szFileName ) != false )
-			::DeleteFile( (szSrcPath + szFileName).c_str() );
+		{
+			NFile::RemoveFile( szSrcPath + szFileName );
+		}
 		//
 		szFileName = (*it) + ".cpp";
 		if ( ProcessFile( szSrcPath + szFileName, szDstPath + szFileName ) != false )
-			::DeleteFile( (szSrcPath + szFileName).c_str() );
+		{
+			NFile::RemoveFile( szSrcPath + szFileName );
+		}
 	}
 	//
 	return true;
