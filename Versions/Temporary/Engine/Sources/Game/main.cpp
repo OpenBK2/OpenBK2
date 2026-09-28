@@ -481,7 +481,7 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		if ( nFirstQuotePos != std::string::npos )
 		{
 			const int nLastQuotePos = szString.rfind( '\"' );
-			NI_ASSERT( nLastQuotePos != string::npos, fmt::format("Can't read string from cmd line string entry \"{}\"", szString) );
+			NI_ASSERT( nLastQuotePos != std::string::npos, fmt::format("Can't read string from cmd line string entry \"{}\"", szString) );
 			const std::string szVarName = szString.substr( 0, nFirstQuotePos );
 			const std::string szValue = szString.substr( nFirstQuotePos + 1, nLastQuotePos - nFirstQuotePos );
 			NGlobal::SetVar( szVarName, szValue );

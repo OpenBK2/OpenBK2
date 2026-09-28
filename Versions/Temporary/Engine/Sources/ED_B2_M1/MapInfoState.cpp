@@ -113,18 +113,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_TERRAIN, fmt::format( "CMapInfoState(): Wrong state number IS_TERRAIN: {} ({})", nStateIndex, IS_TERRAIN ) );
+		NI_ASSERT( nStateIndex == IS_TERRAIN, fmt::format( "CMapInfoState(): Wrong state number IS_TERRAIN: {} ({})", nStateIndex, static_cast<int>( IS_TERRAIN ) ) );
 		// TERRAIN_ISS_HEIGHT_V3
 		{
 			CHeightStateV3 *pHeightStateV3 = new CHeightStateV3( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pHeightStateV3 );
-			NI_ASSERT( nStateIndex == TERRAIN_ISS_HEIGHT_V3, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_HEIGHT_V3: {}, ({})", nStateIndex, TERRAIN_ISS_HEIGHT_V3 ) );
+			NI_ASSERT( nStateIndex == TERRAIN_ISS_HEIGHT_V3, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_HEIGHT_V3: {}, ({})", nStateIndex, static_cast<int>( TERRAIN_ISS_HEIGHT_V3 ) ) );
 		}
 		// TERRAIN_ISS_FIELD
 		{
 			CFieldState *pFieldState = new CFieldState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pFieldState );
-			NI_ASSERT( nStateIndex == TERRAIN_ISS_FIELD, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_FIELD: {}, ({})", nStateIndex, TERRAIN_ISS_FIELD ) );
+			NI_ASSERT( nStateIndex == TERRAIN_ISS_FIELD, fmt::format( "CMapInfoMainState(): Wrong state number TERRAIN_ISS_FIELD: {}, ({})", nStateIndex, static_cast<int>( TERRAIN_ISS_FIELD ) ) );
 		}
 	}
 
@@ -133,18 +133,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_OBJECT, fmt::format( "CMapInfoState(): Wrong state number IS_OBJECT: {} ({})", nStateIndex, IS_OBJECT ) );
+		NI_ASSERT( nStateIndex == IS_OBJECT, fmt::format( "CMapInfoState(): Wrong state number IS_OBJECT: {} ({})", nStateIndex, static_cast<int>( IS_OBJECT ) ) );
 		// OBJECT_ISS_MAP_OBJECT
 		{
 			CMapObjectMultiState *pMapObjectMultiState = new CMapObjectMultiState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pMapObjectMultiState );
-			NI_ASSERT( nStateIndex == OBJECT_ISS_MAP_OBJECT, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_MAP_OBJECT: {}, ({})", nStateIndex, OBJECT_ISS_MAP_OBJECT ) );
+			NI_ASSERT( nStateIndex == OBJECT_ISS_MAP_OBJECT, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_MAP_OBJECT: {}, ({})", nStateIndex, static_cast<int>( OBJECT_ISS_MAP_OBJECT ) ) );
 		}
 		// OBJECT_ISS_VSO
 		{
 			CVSOMultiState *pVSOMultiState = new CVSOMultiState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pVSOMultiState );
-			NI_ASSERT( nStateIndex == OBJECT_ISS_VSO, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_VSO: {}, ({})", nStateIndex, OBJECT_ISS_VSO ) );
+			NI_ASSERT( nStateIndex == OBJECT_ISS_VSO, fmt::format( "CMapInfoMainState(): Wrong state number OBJECT_ISS_VSO: {}, ({})", nStateIndex, static_cast<int>( OBJECT_ISS_VSO ) ) );
 		}
 	}
 
@@ -153,30 +153,30 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_GAMEPLAY, fmt::format( "CMapInfoState(): Wrong state number IS_GAMEPLAY: {} ({})", nStateIndex, IS_GAMEPLAY ) );
+		NI_ASSERT( nStateIndex == IS_GAMEPLAY, fmt::format( "CMapInfoState(): Wrong state number IS_GAMEPLAY: {} ({})", nStateIndex, static_cast<int>( IS_GAMEPLAY ) ) );
 		// GAMEPLAY_ISS_REINF_POINTS
 		{
 			CReinfPointsState *pState = new CReinfPointsState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_REINF_POINTS, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_REINF_POINTS: {}, ({})", nStateIndex, GAMEPLAY_ISS_REINF_POINTS ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_REINF_POINTS, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_REINF_POINTS: {}, ({})", nStateIndex, static_cast<int>( GAMEPLAY_ISS_REINF_POINTS ) ) );
 		}
 		// GAMEPLAY_ISS_START_CAMERA
 		{
 			CCameraPositionState *pState = new CCameraPositionState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_START_CAMERA, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_START_CAMERA: {}, ({})", nStateIndex, GAMEPLAY_ISS_START_CAMERA ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_START_CAMERA, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_START_CAMERA: {}, ({})", nStateIndex, static_cast<int>( GAMEPLAY_ISS_START_CAMERA ) ) );
 		}
 		// GAMEPLAY_ISS_AIGENERAL
 		{
 			CAIGeneralPointsState *pState = new CAIGeneralPointsState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_AIGENERAL, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_AIGENERAL: {}, ({})", nStateIndex, GAMEPLAY_ISS_AIGENERAL ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_AIGENERAL, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_AIGENERAL: {}, ({})", nStateIndex, static_cast<int>( GAMEPLAY_ISS_AIGENERAL ) ) );
 		}
 		// GAMEPLAY_ISS_UNIT_START_CMD
 		{
 			CUnitStartCmdState *pState = new CUnitStartCmdState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_UNIT_START_CMD, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_UNIT_START_CMD: {}, ({})", nStateIndex, GAMEPLAY_ISS_UNIT_START_CMD ) );
+			NI_ASSERT( nStateIndex == GAMEPLAY_ISS_UNIT_START_CMD, fmt::format( "CMapInfoMainState(): Wrong state number GAMEPLAY_ISS_UNIT_START_CMD: {}, ({})", nStateIndex, static_cast<int>( GAMEPLAY_ISS_UNIT_START_CMD ) ) );
 		}
 	}
 
@@ -185,18 +185,18 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_SCRIPT, fmt::format( "CMapInfoState(): Wrong state number IS_SCRIPT: {} ({})", nStateIndex, IS_SCRIPT ) );
+		NI_ASSERT( nStateIndex == IS_SCRIPT, fmt::format( "CMapInfoState(): Wrong state number IS_SCRIPT: {} ({})", nStateIndex, static_cast<int>( IS_SCRIPT ) ) );
 		// SCRIPT_ISS_SCRIPT_AREAS		
 		{
 			CScriptAreaState *pScriptAreaState = new CScriptAreaState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pScriptAreaState );
-			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_AREAS, fmt::format( "CMapInfoMainState(): Wrong state number SCRIPT_ISS_SCRIPT_AREAS: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_AREAS ) );
+			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_AREAS, fmt::format( "CMapInfoMainState(): Wrong state number SCRIPT_ISS_SCRIPT_AREAS: {}, ({})", nStateIndex, static_cast<int>( SCRIPT_ISS_SCRIPT_AREAS ) ) );
 		}
 		// SCRIPT_ISS_SCRIPT_MOVIES
 		{
 			CScriptCameraState *pState = new CScriptCameraState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, fmt::format( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: {}, ({})", nStateIndex, SCRIPT_ISS_SCRIPT_MOVIES ) );
+			NI_ASSERT( nStateIndex == SCRIPT_ISS_SCRIPT_MOVIES, fmt::format( "CMapInfoState(): Wrong state number SCRIPT_ISS_SCRIPT_MOVIES: {}, ({})", nStateIndex, static_cast<int>( SCRIPT_ISS_SCRIPT_MOVIES ) ) );
 		}
 	}
 	// Keep temporary tools outside IS_COUNT so palette indices and saved settings stay stable.

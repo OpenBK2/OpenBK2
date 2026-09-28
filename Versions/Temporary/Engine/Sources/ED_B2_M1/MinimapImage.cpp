@@ -842,7 +842,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_TERRAIN;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -863,7 +863,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_OCEAN;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -877,7 +877,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_LAKE;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -891,7 +891,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_SWAMP;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -905,7 +905,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_GRAG;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -919,7 +919,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_FLORA;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -933,7 +933,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_ROAD;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -947,7 +947,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_RAILOAD;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -961,7 +961,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_RIVER;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -975,7 +975,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_BUILDING;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{
@@ -989,7 +989,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	{
 		ELayerType eLayerType = LAYER_BRIDGE;
 		{
-			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", eLayerType ) );
+			NI_ASSERT( ( eLayerType >= 0 ) && ( eLayerType < LAYER_COUNT ), fmt::format( "Invalid layer index: {}", static_cast<int>( eLayerType ) ) );
 			const NDb::SMinimapLayer *pMinimapLayer = GetMinimapLayer( eLayerType, pMinimap );
 			if ( pMinimapLayer != 0 )
 			{

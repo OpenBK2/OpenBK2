@@ -281,15 +281,15 @@ public:
 		
 		CVSOSelectState *pVSOSelectState = new CVSOSelectState( this );
 		nStateIndex = AddInputState( pVSOSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, IS_SELECT ) );
+		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
 
 		CVSOEditState *pVSOEditState = new CVSOEditState( this );
 		nStateIndex = AddInputState( pVSOEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, IS_EDIT ) );
+		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
 		
 		CVSOAddState *pVSOAddState = new CVSOAddState( this );
 		nStateIndex = AddInputState( pVSOAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, IS_ADD ) );
+		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

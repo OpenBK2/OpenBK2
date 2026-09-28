@@ -175,7 +175,7 @@ namespace NPropertyValues
 		}
 		else
 		{
-			NI_ASSERT( false, fmt::format("Can't convert type {} to bitfield", rValue.GetType()) );
+			NI_ASSERT( false, fmt::format("Can't convert type {} to bitfield", static_cast<int>( rValue.GetType() )) );
 		}
 		return true;
 	}

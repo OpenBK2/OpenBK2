@@ -42,12 +42,12 @@ CSquadState::CSquadState(  CSquadEditor *_pSquadEditor ) :
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_FORMATION, fmt::format( "CSquadState(): Wrong state number IS_FORMATION: {} ({})", nStateIndex, IS_FORMATION ) );
+		NI_ASSERT( nStateIndex == IS_FORMATION, fmt::format( "CSquadState(): Wrong state number IS_FORMATION: {} ({})", nStateIndex, static_cast<int>( IS_FORMATION ) ) );
 		// IS_FORMATION_ISS_FORMATION
 		{
 			CFormationsState *pObjectState = new CFormationsState( pSquadEditor );
 			nStateIndex = pMultiInputState->AddInputState( pObjectState );
-			NI_ASSERT( nStateIndex == FORMATION_ISS_FORMATION, fmt::format( "CSquadState(): Wrong state number FORMATION_ISS_FORMATION: {}, ({})", nStateIndex, FORMATION_ISS_FORMATION ) );
+			NI_ASSERT( nStateIndex == FORMATION_ISS_FORMATION, fmt::format( "CSquadState(): Wrong state number FORMATION_ISS_FORMATION: {}, ({})", nStateIndex, static_cast<int>( FORMATION_ISS_FORMATION ) ) );
 		}
 	}
 }

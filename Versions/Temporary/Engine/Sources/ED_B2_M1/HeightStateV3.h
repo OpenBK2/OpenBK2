@@ -265,23 +265,23 @@ public:
 		//	
 		CHeightTileStateV3 *pHeightTileState = new CHeightTileStateV3( this );
 		nStateIndex = AddInputState( pHeightTileState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_TILE, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_TILE ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_TILE, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_TILE ) ) );
 		//
 		CHeightUpStateV3 *pHeightUpState = new CHeightUpStateV3( this );
 		nStateIndex = AddInputState( pHeightUpState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_UP, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_UP ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_UP, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_UP ) ) );
 		//
 		CHeightDownStateV3 *pHeightDownState = new CHeightDownStateV3( this );
 		nStateIndex = AddInputState( pHeightDownState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_DOWN, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_DOWN ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_DOWN, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_DOWN ) ) );
 		//
 		CHeightRoundStateV3 *pHeightRoundState = new CHeightRoundStateV3( this );
 		nStateIndex = AddInputState( pHeightRoundState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_ROUND, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_ROUND ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_ROUND, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_ROUND ) ) );
 		//
 		CHeightPlatoStateV3 *pHeightPlatoState = new CHeightPlatoStateV3( this );
 		nStateIndex = AddInputState( pHeightPlatoState );
-		NI_ASSERT( nStateIndex == SEditParameters::B_PLATO, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, SEditParameters::B_PLATO ) );
+		NI_ASSERT( nStateIndex == SEditParameters::B_PLATO, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_PLATO ) ) );
 		//
 		SetActiveInputState( SEditParameters::B_UP, true, false );
 	}

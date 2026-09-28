@@ -97,23 +97,23 @@ public:
 		
 		CSimpleObjectState *pSimpleObjectState = new CSimpleObjectState( this );
 		nStateIndex = AddInputState( pSimpleObjectState );
-		NI_ASSERT( nStateIndex == IS_SIMPLE_OBJECT, fmt::format( "CMapObjectMultiState(): Wrong state number: {} ({})", nStateIndex, IS_SIMPLE_OBJECT ) );
+		NI_ASSERT( nStateIndex == IS_SIMPLE_OBJECT, fmt::format( "CMapObjectMultiState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SIMPLE_OBJECT ) ) );
 
 		CBridgeState *pBridgeState = new CBridgeState( this );
 		nStateIndex = AddInputState( pBridgeState );
-		NI_ASSERT( nStateIndex == IS_BRIDGE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_BRIDGE ) );
+		NI_ASSERT( nStateIndex == IS_BRIDGE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_BRIDGE ) ) );
 
 		CSpotState *pSpotState = new CSpotState( this );
 		nStateIndex = AddInputState( pSpotState );
-		NI_ASSERT( nStateIndex == IS_SPOT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_SPOT ) );
+		NI_ASSERT( nStateIndex == IS_SPOT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_SPOT ) ) );
 
 		CFenceState *pFenceState = new CFenceState( this );
 		nStateIndex = AddInputState( pFenceState );
-		NI_ASSERT( nStateIndex == IS_FENCE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_FENCE ) );
+		NI_ASSERT( nStateIndex == IS_FENCE, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_FENCE ) ) );
 
 		CEntrenchmentState *pEntrenchmentState = new CEntrenchmentState( this );
 		nStateIndex = AddInputState( pEntrenchmentState );
-		NI_ASSERT( nStateIndex == IS_ENTRENCHMENT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_ENTRENCHMENT ) );
+		NI_ASSERT( nStateIndex == IS_ENTRENCHMENT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ENTRENCHMENT ) ) );
 		
 		SetActiveInputState( IS_SIMPLE_OBJECT, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, this );

@@ -36,36 +36,36 @@ CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) :
 	{
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
-		NI_ASSERT( nStateIndex == IS_POINTS, fmt::format( "CBuildingState(): Wrong state number IS_POINTS: {} ({})", nStateIndex, IS_POINTS ) );
+		NI_ASSERT( nStateIndex == IS_POINTS, fmt::format( "CBuildingState(): Wrong state number IS_POINTS: {} ({})", nStateIndex, static_cast<int>( IS_POINTS ) ) );
 		// POINTS_ISS_SMOKE_POINTS
 		{
 			CSmokePointsState *pState = new CSmokePointsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == POINTS_ISS_SMOKE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SMOKE_POINTS: {}, ({})", nStateIndex, POINTS_ISS_SMOKE_POINTS ) );
+			NI_ASSERT( nStateIndex == POINTS_ISS_SMOKE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SMOKE_POINTS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_SMOKE_POINTS ) ) );
 		}
 		// POINTS_ISS_SLOTS 
 		{
 			CSlotPointsState *pState = new CSlotPointsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == POINTS_ISS_SLOTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SLOTS: {}, ({})", nStateIndex, POINTS_ISS_SLOTS ) );
+			NI_ASSERT( nStateIndex == POINTS_ISS_SLOTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SLOTS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_SLOTS ) ) );
 		}
 		// POINTS_ISS_ENTRANCE_POINTS
 		{
 			CEntrancePointsState *pState = new CEntrancePointsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == POINTS_ISS_ENTRANCE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_ENTRANCE_POINTS: {}, ({})", nStateIndex, POINTS_ISS_ENTRANCE_POINTS ) );
+			NI_ASSERT( nStateIndex == POINTS_ISS_ENTRANCE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_ENTRANCE_POINTS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_ENTRANCE_POINTS ) ) );
 		}
 		// POINTS_ISS_SURFACE_POINTS
 		{
 			CSurfacePointsState *pState = new CSurfacePointsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == POINTS_ISS_SURFACE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SURFACE_POINTS: {}, ({})", nStateIndex, POINTS_ISS_SURFACE_POINTS ) );
+			NI_ASSERT( nStateIndex == POINTS_ISS_SURFACE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SURFACE_POINTS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_SURFACE_POINTS ) ) );
 		}
 		// POINTS_ISS_DAMAGE_LEVELS
 		{
 			CDamageLevelsState *pState = new CDamageLevelsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
-			NI_ASSERT( nStateIndex == POINTS_ISS_DAMAGE_LEVELS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_DAMAGE_LEVELS: {}, ({})", nStateIndex, POINTS_ISS_DAMAGE_LEVELS ) );
+			NI_ASSERT( nStateIndex == POINTS_ISS_DAMAGE_LEVELS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_DAMAGE_LEVELS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_DAMAGE_LEVELS ) ) );
 		}
 	}
 }

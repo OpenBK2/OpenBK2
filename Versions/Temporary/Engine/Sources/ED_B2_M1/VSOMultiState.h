@@ -107,23 +107,23 @@ public:
 		
 		CRoadState *pRoadState = new CRoadState( this );
 		nStateIndex = AddInputState( pRoadState );
-		NI_ASSERT( nStateIndex == IS_ROAD, fmt::format( "CVSOMultiState(): Wrong state number: {} ({})", nStateIndex, IS_ROAD ) );
+		NI_ASSERT( nStateIndex == IS_ROAD, fmt::format( "CVSOMultiState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_ROAD ) ) );
 
 		CRiverState *pRiverState = new CRiverState( this );
 		nStateIndex = AddInputState( pRiverState );
-		NI_ASSERT( nStateIndex == IS_RIVER, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_RIVER ) );
+		NI_ASSERT( nStateIndex == IS_RIVER, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_RIVER ) ) );
 
 		CCragState *pCragState = new CCragState( this );
 		nStateIndex = AddInputState( pCragState );
-		NI_ASSERT( nStateIndex == IS_CRAG, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_CRAG ) );
+		NI_ASSERT( nStateIndex == IS_CRAG, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_CRAG ) ) );
 
 		CLakeState *pLakeState = new CLakeState( this );
 		nStateIndex = AddInputState( pLakeState );
-		NI_ASSERT( nStateIndex == IS_LAKE, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_LAKE ) );
+		NI_ASSERT( nStateIndex == IS_LAKE, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_LAKE ) ) );
 		
 		CCoastState *pCoastState = new CCoastState( this );
 		nStateIndex = AddInputState( pCoastState );
-		NI_ASSERT( nStateIndex == IS_COAST, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, IS_COAST ) );
+		NI_ASSERT( nStateIndex == IS_COAST, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_COAST ) ) );
 
 		SetActiveInputState( IS_ROAD, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_VSO_MULTI_STATE, this );

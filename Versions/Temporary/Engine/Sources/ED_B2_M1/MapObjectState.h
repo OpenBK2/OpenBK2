@@ -271,19 +271,19 @@ public:
 		
 		CMapObjectSelectState *pMapObjectSelectState = new CMapObjectSelectState( this );
 		nStateIndex = AddInputState( pMapObjectSelectState );
-		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, IS_SELECT ) );
+		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
 
 		CMapObjectEditState *pMapObjectEditState = new CMapObjectEditState( this );
 		nStateIndex = AddInputState( pMapObjectEditState );
-		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, IS_EDIT ) );
+		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
 		
 		CMapObjectAddState *pMapObjectAddState = new CMapObjectAddState( this );
 		nStateIndex = AddInputState( pMapObjectAddState );
-		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, IS_ADD ) );
+		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
 
 		CMapObjectPasteState *pMapObjectPasteState = new CMapObjectPasteState( this );
 		nStateIndex = AddInputState( pMapObjectPasteState );
-		NI_ASSERT( nStateIndex == IS_PASTE, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, IS_PASTE ) );
+		NI_ASSERT( nStateIndex == IS_PASTE, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_PASTE ) ) );
 
 		SetActiveInputState( IS_SELECT, true, false );
 	}

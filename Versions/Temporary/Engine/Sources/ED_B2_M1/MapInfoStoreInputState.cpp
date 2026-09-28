@@ -10,8 +10,8 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 {
 	NI_ASSERT( ( rInputStateEventInfo.nEventType >= 0 ) && ( rInputStateEventInfo.nEventType < ISE_COUNT ),
 							fmt::format( "CMapInfoStoreInputState::OnInputStateEvent(): Invalid rInputStateEventInfo.nEventType: {} [0, {})\n",
-											rInputStateEventInfo.nEventType,
-											ISE_COUNT ) );
+											static_cast<int>( rInputStateEventInfo.nEventType ),
+											static_cast<int>( ISE_COUNT ) ) );
 	//
 	eventInfoList[rInputStateEventInfo.nEventType] = rInputStateEventInfo;
 	if ( rInputStateEventInfo.nType == IST_MOUSE )

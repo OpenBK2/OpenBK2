@@ -137,7 +137,7 @@ void VariantToString( std::string *pString, const CVariant &variant, EPCIEType e
 		break;
 
 	default:
-		NI_ASSERT( false, fmt::format("Can't convert type {} to string", variant.GetType()) );
+		NI_ASSERT( false, fmt::format("Can't convert type {} to string", static_cast<int>( variant.GetType() )) );
 	}
 }
 
@@ -375,7 +375,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 									// convert type-rename int and uint32_t to int value before saving
 									if ( pDesc->szTypeRename == "int" || pDesc->szTypeRename == "uint32_t" )
 									{
-										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, fmt::format("Can't convert type {} to {}", value.GetType(), pDesc->szTypeRename.c_str()) );
+										NI_ASSERT( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4, fmt::format("Can't convert type {} to {}", static_cast<int>( value.GetType() ), pDesc->szTypeRename.c_str()) );
 										if ( value.GetType() == CVariant::VT_POINTER && value.GetBlobSize() == 4 )
 										{
 											int nIntValue = *( (int*)value.GetPtr() );
