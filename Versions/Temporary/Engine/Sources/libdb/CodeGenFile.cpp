@@ -28,13 +28,16 @@ static const std::string GetIncludeRefName( const std::vector<std::string> &spli
 	{
 		inclDirs.pop_back();
 
+		// A header in the including file's own directory is named bare, any other
+		// by its path from the root of the sources, which every module has on its
+		// include path: "Stats_B2_M1/RPGStats.h", not "../Stats_B2_M1/RPGStats.h".
+		// That is how the tree's DB sources, and the rest of the port, spell them.
+		if ( inclDirs == splittedFileDirs )
+		{
+			return szInclFileName;
+		}
 		std::string szRefIncludeName = "";
-		int nFirstNotEqualDir = 0;
-		while ( nFirstNotEqualDir < splittedFileDirs.size() && nFirstNotEqualDir < inclDirs.size() && splittedFileDirs[nFirstNotEqualDir] == inclDirs[nFirstNotEqualDir] )
-			++nFirstNotEqualDir;
-		for ( int i = nFirstNotEqualDir; i < splittedFileDirs.size(); ++i )
-			szRefIncludeName += "../";
-		for ( int i = nFirstNotEqualDir; i < inclDirs.size(); ++i )
+		for ( int i = 0; i < inclDirs.size(); ++i )
 			szRefIncludeName += inclDirs[i] + "/";
 		szRefIncludeName += szInclFileName;
 
@@ -48,7 +51,7 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 {
 	// The output path, and the includes of other generated headers below, come
 	// from the files' paths on disk rather than their lowercased names, so the
-	// generated files land in Stats_B2_M1/ and include "../Stats_B2_M1/RPGStats.h",
+	// generated files land in Stats_B2_M1/ and include "Stats_B2_M1/RPGStats.h",
 	// both of which only resolve as lowercase where the filesystem ignores case.
 	// The directories and the include paths have to change together: they are
 	// compared to find the directories the two files share.
@@ -63,7 +66,9 @@ CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs
 		const std::string szExt = NFile::GetFileExt( szIncludeRefName );
 		if ( szExt == ".cll" )
 			szIncludeRefName = szIncludeRefName.substr( 0, szIncludeRefName.size() - szExt.size() ) + ".h";
-		if ( !szIncludeRefName.empty() && szIncludeRefName != "../base.h" && szIncludeRefName != "../game.h" )
+		// base.cll and game.cll, at the root, generate nothing to include; from a
+		// module directory their paths are now the bare root-relative names
+		if ( !szIncludeRefName.empty() && szIncludeRefName != "base.h" && szIncludeRefName != "game.h" )
 			includes.push_back( szIncludeRefName );
 	}
 
@@ -123,9 +128,9 @@ void CFile::GenerateCode( const std::string &szRootDir )
 		}
 		code.cpp << "// automatically generated file, don't change manually!" << endl << endl;
 		code.cpp << "#include " << qcomma << "stdafx.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "../libdb/ReportMetaInfo.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "../libdb/Checksum.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "../System/XmlSaver.h" << qcomma << endl;
+		code.cpp << "#include " << qcomma << "libdb/ReportMetaInfo.h" << qcomma << endl;
+		code.cpp << "#include " << qcomma << "libdb/Checksum.h" << qcomma << endl;
+		code.cpp << "#include " << qcomma << "System/XmlSaver.h" << qcomma << endl;
 		code.cpp << "#include " << qcomma << szShortHFileName << qcomma << endl;
 		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
 			code.cpp << "#include " << qcomma << *iter << qcomma << endl;

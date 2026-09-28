@@ -3,7 +3,7 @@
 #include "../Stats_B2_M1/UserActions.cll"
 #include "../Stats_B2_M1/AckTypes.cll"
 #include "../Stats_B2_M1/RPGStats.cll"
-[hExternal] #include "../System/FilePath.h"
+[hExternal] #include "System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 forward class SVisObj;
 forward class SCameraLimits;
