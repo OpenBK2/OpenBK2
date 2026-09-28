@@ -46,10 +46,17 @@ static const std::string GetIncludeRefName( const std::vector<std::string> &spli
 
 CFile::CFile( NLang::CFileNode *pFileNode, const CNodes2TypeDefs &nodes2TypeDefs, const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
-	szName = CutRootDir( pFileNode->GetName(), szRootDir );
+	// The output path, from the file's path on disk rather than its lowercased
+	// name, so generated files land in Stats_B2_M1/ and not stats_b2_m1/, which
+	// is a different directory where the filesystem minds case.
+	szName = CutRootDir( pFileNode->GetPathOnDisk(), szRootDir );
 	szName = szName.substr( 0, szName.size() - NFile::GetFileExt( szName ).size() );
+	// The includes below are still worked out from the lowercased name: they
+	// are compared with the includes' names, which are lowercased too.
+	std::string szLowerName = CutRootDir( pFileNode->GetName(), szRootDir );
+	szLowerName = szLowerName.substr( 0, szLowerName.size() - NFile::GetFileExt( szLowerName ).size() );
 	std::vector<std::string> dirs;
-	NStr::SplitString( szName, &dirs, '/' );
+	NStr::SplitString( szLowerName, &dirs, '/' );
 	dirs.pop_back();
 	for ( NLang::CFileNode::TIncludesIter iter = pFileNode->BeginIncludes(); iter != pFileNode->EndIncludes(); ++iter )
 	{
