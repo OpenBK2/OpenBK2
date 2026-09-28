@@ -6,6 +6,8 @@
 #include "Stats_B2_M1/UIEntries.h"
 #include "System/FilePath.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb

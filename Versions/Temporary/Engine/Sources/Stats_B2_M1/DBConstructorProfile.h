@@ -1,8 +1,8 @@
 #pragma once
 
-#include <cstdint>
-
 // automatically generated file, don't change manually!
+
+#include <cstdint>
 
 struct IXmlSaver;
 

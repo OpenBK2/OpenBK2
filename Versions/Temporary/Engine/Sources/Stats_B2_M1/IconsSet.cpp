@@ -6,9 +6,9 @@
 #include "System/XmlSaver.h"
 #include "IconsSet.h"
 
-#include <cstdint>
-
 #include "Stats_B2_M1_export.h"
+
+#include <cstdint>
 
 namespace NDb
 {

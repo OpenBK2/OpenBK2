@@ -5,6 +5,8 @@
 #include "Stats_B2_M1/RPGStats.h"
 #include "Stats_B2_M1/Season.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb

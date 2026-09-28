@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "Season.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 

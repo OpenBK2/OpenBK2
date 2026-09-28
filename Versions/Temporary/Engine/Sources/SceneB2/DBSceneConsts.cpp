@@ -6,9 +6,9 @@
 #include "System/XmlSaver.h"
 #include "DBSceneConsts.h"
 
-#include <cstdint>
-
 #include "SceneB2_export.h"
+
+#include <cstdint>
 
 namespace NDb
 {

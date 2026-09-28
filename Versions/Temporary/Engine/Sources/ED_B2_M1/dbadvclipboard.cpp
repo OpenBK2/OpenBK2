@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "dbadvclipboard.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 

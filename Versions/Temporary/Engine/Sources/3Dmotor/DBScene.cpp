@@ -5,7 +5,6 @@
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
 #include "DBScene.h"
-
 #include "System/UuidChunk.h"
 
 #include "3Dmotor_export.h"

@@ -5,7 +5,6 @@
 #include "libdb/Checksum.h"
 #include "System/XmlSaver.h"
 #include "DBTerrain.h"
-
 #include "System/UuidChunk.h"
 
 #include "B2_M1_Terrain_export.h"

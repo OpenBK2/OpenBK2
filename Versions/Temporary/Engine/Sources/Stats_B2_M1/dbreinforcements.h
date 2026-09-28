@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Stats_B2_M1_export.h"
-
 // automatically generated file, don't change manually!
+
+#include "Stats_B2_M1_export.h"
 
 #include "RPGStats.h"
 

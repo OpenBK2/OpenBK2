@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "UserActions.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 

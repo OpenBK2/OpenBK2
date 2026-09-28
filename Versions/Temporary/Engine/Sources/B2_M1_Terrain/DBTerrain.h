@@ -2,11 +2,11 @@
 
 // automatically generated file, don't change manually!
 
+#include "B2_M1_Terrain_export.h"
+
 #include "DBTerrainSpot.h"
 #include "DBVSO.h"
 #include "System/FilePath.h"
-
-#include "B2_M1_Terrain_export.h"
 
 #include <cstdint>
 

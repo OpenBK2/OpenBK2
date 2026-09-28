@@ -1,11 +1,10 @@
 #pragma once
 
+// automatically generated file, don't change manually!
+
 #include "B2_M1_Terrain_export.h"
 
 #include <cstdint>
-
-// automatically generated file, don't change manually!
-
 
 struct IXmlSaver;
 

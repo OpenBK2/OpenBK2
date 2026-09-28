@@ -13,11 +13,11 @@
 #include "port/unicode.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
-#include <filesystem>
-
 #include "GameX_export.h"
 
 #include <cstdint>
+
+#include <filesystem>
 
 namespace NDb
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "UI_export.h"
-
 // automatically generated file, don't change manually!
+
+#include "UI_export.h"
 
 #include "CommandParam.h"
 #include "System/FilePath.h"

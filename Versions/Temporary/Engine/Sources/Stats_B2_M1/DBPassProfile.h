@@ -1,10 +1,10 @@
 #pragma once
 
+// automatically generated file, don't change manually!
+
 #include "Stats_B2_M1_export.h"
 
 #include <cstdint>
-
-// automatically generated file, don't change manually!
 
 struct IXmlSaver;
 

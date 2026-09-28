@@ -107,34 +107,7 @@ void CFile::GenerateCode( const std::string &szRootDir )
 			code.szModule = szName.substr( 0, nSlash );
 		}
 
-		code.h << "#pragma once" << endl;
-		code.h << separator;
-		code.h << "// automatically generated file, don't change manually!" << endl << endl;
-
-		for ( std::list<std::string>::iterator iter = includes.begin(); iter != includes.end(); ++iter )
-			code.h <<  "#include " << qcomma << *iter << qcomma << endl;
-		for ( std::list<std::string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
-			code.h << "#include " << qcomma << *iter << qcomma << endl;
-		code.h << separator;
-		code.h << "struct IXmlSaver;" << endl;
-		code.h << separator;
-
-		int i = szFullHFileName.size() - 1;
-		std::string szShortHFileName = "";
-		while ( szFullHFileName[i] != '/' && i >= 0 )
-		{
-			szShortHFileName = szFullHFileName[i] + szShortHFileName;
-			--i;
-		}
-		code.cpp << "// automatically generated file, don't change manually!" << endl << endl;
-		code.cpp << "#include " << qcomma << "stdafx.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "libdb/ReportMetaInfo.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "libdb/Checksum.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << "System/XmlSaver.h" << qcomma << endl;
-		code.cpp << "#include " << qcomma << szShortHFileName << qcomma << endl;
-		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
-			code.cpp << "#include " << qcomma << *iter << qcomma << endl;
-		code.cpp << separator;
+		// The bodies first: which includes the files need depends on them.
 		code.cpp << "namespace NDb" << endl;
 		code.cpp << "{" << endl;
 		code.cpp << separator;
@@ -148,8 +121,68 @@ void CFile::GenerateCode( const std::string &szRootDir )
 
 		code.cpp << "}" << endl;
 
+		// The module's export header, where its export macro is used: by a type
+		// or enum marked [export] in the header, and in the .cpp by the
+		// registration macros, which expand to it.
+		const std::string szExportHeader = code.szModule + "_export.h";
+		const bool bHUsesExport = !code.szModule.empty() &&
+			( szHFile.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos ||
+			  szEOF.find( code.GetModuleMacroName() + "_EXPORT" ) != std::string::npos );
+		const bool bCppUsesExport = !code.szModule.empty() && szCPPEOF.find( "REGISTER_DATABASE_CLASS(" ) != std::string::npos;
+
+		// The include blocks, laid out as the tree's DB sources lay them out:
+		// the export header, then the other quoted includes, then <cstdint>,
+		// which the generated code uses throughout, each block followed by an
+		// empty line.
+		std::string szHHead, szCppHead;
+		CStrStream h( &szHHead ), cpp( &szCppHead );
+		h << "#pragma once" << endl;
+		h << separator;
+		h << "// automatically generated file, don't change manually!" << endl << endl;
+		if ( bHUsesExport )
+		{
+			h << "#include " << qcomma << szExportHeader << qcomma << endl << endl;
+		}
+		if ( !includes.empty() || !hExternalIncludes.empty() )
+		{
+			for ( std::list<std::string>::iterator iter = includes.begin(); iter != includes.end(); ++iter )
+				h << "#include " << qcomma << *iter << qcomma << endl;
+			for ( std::list<std::string>::iterator iter = hExternalIncludes.begin(); iter != hExternalIncludes.end(); ++iter )
+				h << "#include " << qcomma << *iter << qcomma << endl;
+			h << endl;
+		}
+		h << "#include <cstdint>" << endl;
+		h << separator;
+		h << "struct IXmlSaver;" << endl;
+		h << separator;
+
+		int i = szFullHFileName.size() - 1;
+		std::string szShortHFileName = "";
+		while ( szFullHFileName[i] != '/' && i >= 0 )
+		{
+			szShortHFileName = szFullHFileName[i] + szShortHFileName;
+			--i;
+		}
+		cpp << "// automatically generated file, don't change manually!" << endl << endl;
+		cpp << "#include " << qcomma << "stdafx.h" << qcomma << endl;
+		cpp << "#include " << qcomma << "libdb/ReportMetaInfo.h" << qcomma << endl;
+		cpp << "#include " << qcomma << "libdb/Checksum.h" << qcomma << endl;
+		cpp << "#include " << qcomma << "System/XmlSaver.h" << qcomma << endl;
+		cpp << "#include " << qcomma << szShortHFileName << qcomma << endl;
+		for ( std::list<std::string>::iterator iter = cppExternalIncludes.begin(); iter != cppExternalIncludes.end(); ++iter )
+			cpp << "#include " << qcomma << *iter << qcomma << endl;
+		cpp << endl;
+		if ( bCppUsesExport )
+		{
+			cpp << "#include " << qcomma << szExportHeader << qcomma << endl << endl;
+		}
+		cpp << "#include <cstdint>" << endl;
+		cpp << separator;
+
+		hStream.Write( szHHead.c_str(), szHHead.size() );
 		hStream.Write( szHFile.c_str(), szHFile.size() );
 		hStream.Write( szEOF.c_str(), szEOF.size() );
+		cppStream.Write( szCppHead.c_str(), szCppHead.size() );
 		cppStream.Write( szCPPFile.c_str(), szCPPFile.size() );
 		cppStream.Write( szCPPEOF.c_str(), szCPPEOF.size() );
 	}

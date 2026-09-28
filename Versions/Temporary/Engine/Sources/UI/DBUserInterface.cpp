@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "DBUserInterface.h"
 
+#include "UI_export.h"
+
 #include <cstdint>
 
 namespace NDb

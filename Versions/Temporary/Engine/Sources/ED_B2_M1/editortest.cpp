@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "editortest.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 

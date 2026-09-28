@@ -6,6 +6,8 @@
 #include "System/XmlSaver.h"
 #include "AnimationType.h"
 
+#include <cstdint>
+
 namespace NDb
 {
 

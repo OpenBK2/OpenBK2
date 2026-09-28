@@ -7,6 +7,8 @@
 #include "Stats_B2_M1/DBMapInfo.h"
 #include "Stats_B2_M1/RPGStats.h"
 
+#include <cstdint>
+
 struct IXmlSaver;
 
 namespace NDb
