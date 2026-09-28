@@ -2,9 +2,9 @@
 
 // automatically generated file, don't change manually!
 
+#include "DBScenario.h"
 #include "Stats_B2_M1/RPGStats.h"
 #include "Stats_B2_M1/UIEntries.h"
-#include "DBScenario.h"
 #include "UI/DBUserInterface.h"
 #include "System/FilePath.h"
 
