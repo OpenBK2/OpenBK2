@@ -50,6 +50,33 @@ bool PrecompileTypes( SCompiledTypesInfo *pRes, bool bGenerateCodeStructure, con
 
 bool ReadFile( std::vector<uint8_t> &data, const std::string &szFileName );
 
+// Whether a generated file and the one already on disk hold the same text,
+// ignoring a CR before each LF. dbcodegen writes LF, but Git for Windows checks
+// text out with CRLF by default (core.autocrlf=true, as on the CI runners), and
+// a byte comparison then took every file as changed, rewrote all of them and
+// made the build recompile their modules for nothing.
+static void StripCROfCRLF( std::vector<uint8_t> *pData )
+{
+	std::vector<uint8_t> &data = *pData;
+	size_t nOut = 0;
+	for ( size_t i = 0; i < data.size(); ++i )
+	{
+		if ( data[i] == '\r' && i + 1 < data.size() && data[i + 1] == '\n' )
+		{
+			continue;
+		}
+		data[nOut++] = data[i];
+	}
+	data.resize( nOut );
+}
+
+static bool SameText( std::vector<uint8_t> newFile, std::vector<uint8_t> oldFile )
+{
+	StripCROfCRLF( &newFile );
+	StripCROfCRLF( &oldFile );
+	return newFile == oldFile;
+}
+
 // Saved to memory first and written only when the content differs from the
 // file already there, as CopySourceCode does for the sources. A run that
 // changes nothing then leaves types.xml's timestamp alone.
@@ -69,7 +96,7 @@ bool GenerateTypes( const std::string &szTypesFilePath, SCompiledTypesInfo *pTyp
 	const unsigned char *pNew = memStream.GetBuffer();
 	const std::vector<uint8_t> newFile( pNew, pNew + memStream.GetSize() );
 	std::vector<uint8_t> oldFile;
-	if ( ReadFile( oldFile, szTypesFilePath ) && oldFile == newFile )
+	if ( ReadFile( oldFile, szTypesFilePath ) && SameText( newFile, oldFile ) )
 	{
 		return true;
 	}
@@ -130,7 +157,7 @@ bool ProcessFile( const std::string &szSrcFileName, const std::string &szDstFile
 		std::vector<uint8_t> oldFile;
 		if ( ReadFile(oldFile, szDstFileName) != false )
 		{
-			if ( newFile == oldFile )
+			if ( SameText( newFile, oldFile ) )
 				return true;
 		}
 	}
