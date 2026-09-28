@@ -94,6 +94,13 @@ void CFile::GenerateCode( const std::string &szRootDir )
 	{
 		std::string szHFile, szCPPFile, szEOF, szCPPEOF;
 		ICode::SCodeStreams code( &szHFile, &szCPPFile, &szEOF, &szCPPEOF );
+		// the module is the first directory of the file's path under the root;
+		// base.cll and game.cll, at the root itself, belong to none
+		const std::string::size_type nSlash = szName.find( '/' );
+		if ( nSlash != std::string::npos )
+		{
+			code.szModule = szName.substr( 0, nSlash );
+		}
 
 		code.h << "#pragma once" << endl;
 		code.h << separator;

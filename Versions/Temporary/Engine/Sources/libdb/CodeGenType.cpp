@@ -613,10 +613,16 @@ static void GenerateClass( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeClass
 	GenerateClassHFileAndNestedTypes( pCode, pClass, szTabs, pNamespace, bTerminal, szNewQualifiedName );
 	GenerateBaseStructCPPFile( pCode, pClass, bTerminal ? EST_CLASS_TERMINAL : EST_CLASS_NOT_TERMINAL, szNewQualifiedName );
 
+	// Both registration macros take the module first, which they need to
+	// declare the class's cross-module casts with that module's export macro.
 	if ( bTerminal )
-		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " ) " << endl;
+	{
+		pCode->cppEOF << "REGISTER_DATABASE_CLASS( " << pCode->GetModuleMacroName() << ", " << fmt::format( "0x{:X}", pClass->nClassTypeID ) << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
+	}
 	else
-		pCode->cppEOF << "BASIC_REGISTER_DATABASE_CLASS( " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
+	{
+		pCode->cppEOF << "BASIC_REGISTER_DATABASE_CLASS( " << pCode->GetModuleMacroName() << ", " << NHungarian::GetTypeNameInCode( pClass, 0 ) << " )" << endl;
+	}
 }
 
 void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName )
