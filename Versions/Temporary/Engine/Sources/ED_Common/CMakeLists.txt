@@ -4,6 +4,7 @@ set(SOURCES
     BaseUIBuilder.cpp
     BasicExporter.cpp
     BasicSceneExporter.cpp
+    dbbulder.cll
     GltfExporter.cpp
     ChildFrameBase.cpp
     ChildFrameWndBase.cpp

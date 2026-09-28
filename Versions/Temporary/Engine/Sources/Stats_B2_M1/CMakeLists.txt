@@ -1,39 +1,61 @@
 project(Stats_B2_M1)
 set(SOURCES
     AbilityActions.cpp
+    acktypes.cll
     AckTypes.cpp
     ActionsRemap.cpp
     AIUpdates.cpp
+    animationtype.cll
     AnimationType.cpp
     Commands_Actions.cpp
     ConstructorInfo.cpp
+    dbanimb2.cll
     DBAnimB2.cpp
+    dbattachedmodelvisobj.cll
     DBAttachedModelVisObj.cpp
+    dbcameraconsts.cll
     DBCameraConsts.cpp
+    dbclientconsts.cll
     DBClientConsts.cpp
+    dbconstructorprofile.cll
     DBConstructorProfile.cpp
+    dbmapinfo.cll
     DBMapInfo.cpp
+    dbnotifications.cll
     DBNotifications.cpp
+    dbpassprofile.cll
     DBPassProfile.cpp
+    dbplanemanuvers.cll
     DBPlaneManuvers.cpp
+    dbreinforcements.cll
     dbreinforcements.cpp
+    dbvisobj.cll
     DBVisObj.cpp
     FeedBackUpdates.cpp
+    iconsset.cll
     IconsSet.cpp
+    m1actions.cll
     M1Actions.cpp
+    m1unitactions.cll
     M1UnitActions.cpp
+    m1unitspecific.cll
     M1UnitSpecific.cpp
+    m1unittype.cll
     M1UnitType.cpp
     ReinfUpdates.cpp
+    rpgstats.cll
     RPGStats.cpp
     RPGStatsAddIn.cpp
     RPGStatsAutomagic.cpp
+    season.cll
     Season.cpp
     StatusUpdates.cpp
     StdAfx.cpp
     SuperWeaponUpdates.cpp
+    uientries.cll
     UIEntries.cpp
     UnitTypes.cpp
+    useractions.cll
     UserActions.cpp
 )
 add_library(Stats_B2_M1 SHARED ${SOURCES})

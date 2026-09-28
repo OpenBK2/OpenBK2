@@ -1,8 +1,11 @@
 project(Sound)
 set(SOURCES
     CellsConglomerateContainer.cpp
+    dbmusicsystem.cll
     DBMusicSystem.cpp
+    dbsound.cll
     DBSound.cpp
+    dbsounddesc.cll
     DBSoundDesc.cpp
     Fade.cpp
     MapSounds.cpp

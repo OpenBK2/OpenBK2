@@ -10,10 +10,15 @@ set(SOURCES
     CommandsSender.cpp
     CommonCommands.cpp
     CustomMissions.cpp
+    dbconsts.cll
     DBConsts.cpp
+    dbgameoptions.cll
     dbgameoptions.cpp
+    dbgameroot.cll
     DBGameRoot.cpp
+    dbmpconsts.cll
     DBMPConsts.cpp
+    dbscenario.cll
     DBScenario.cpp
     DBWrapReinf.cpp
     DummyInterface.cpp

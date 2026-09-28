@@ -28,10 +28,15 @@ set(SOURCES
     ClientGameConstsExporter.cpp
     CoastState.cpp
     CragState.cpp
+    dbadvclipboard.cll
     dbadvclipboard.cpp
+    dbbuildersb2.cll
     dbbuildersb2.cpp
+    dbeditoroptionsb2.cll
     dbeditoroptionsb2.cpp
+    dbfield.cll
     DBField.cpp
+    dbminimap.cll
     DBMinimap.cpp
     DrawToolsDC.cpp
     DynamicDebrisSetBuilder.cpp
@@ -39,6 +44,7 @@ set(SOURCES
     EditorMethods.cpp
     EditorOptions.cpp
     EditorScene.cpp
+    editortest.cll
     editortest.cpp
     EditorTestEditor.cpp
     EditorTestInterface.cpp
