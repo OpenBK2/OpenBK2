@@ -245,7 +245,7 @@ CResource *CGameDatabase::GetRawObject( const CDBID &dbid )
 			CName2TypeIDMap::const_iterator posTypeID = name2typeIDmap.find( posElement->second.typeHeader.szClassTypeName );
 			NI_VERIFY( posTypeID != name2typeIDmap.end(), fmt::format("Can't find class typeID for \"{}\"", posElement->second.typeHeader.szClassTypeName), return 0 );
 			posElement->second.pObj = MakeObject<CResource>( posTypeID->second );
-			NI_VERIFY( posElement->second.pObj != 0, fmt::format("Can't create object of type 0x{:08x}", posTypeID->second), return 0 );
+			NI_VERIFY( posElement->second.pObj != 0, fmt::format("Can't create object of type 0x{:08x}", static_cast<uint32_t>( posTypeID->second )), return 0 );
 			CResourceHelper::SetDBID( posElement->second.pObj, dbid );
 			return posElement->second.pObj;
 		}
@@ -334,7 +334,7 @@ bool CGameDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClassTy
 			break;
 		}
 	}
-	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", nClassTypeID), return false );
+	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", static_cast<uint32_t>( nClassTypeID )), return false );
 	// get objects list by class type name
 	pRes->resize( 0 );
 	pRes->reserve( 512 );

@@ -259,7 +259,7 @@ bool SEnumFolderStructureParameter::IsFolderRelative( const CEnumFolderMap &rEnu
 
 void SEnumFolderStructureParameter::SetRelativeFolder( CEnumFolderMap *pEnumFolderMap, const std::string &rszFolder, const std::string &rszRelativeFolder )
 {
-	NI_ASSERT( pEnumFolderMap != 0, fmt::format( "Wrong parameter: {:x}\n", pEnumFolderMap ) );
+	NI_ASSERT( pEnumFolderMap != 0, fmt::format( "Wrong parameter: {}\n", fmt::ptr( pEnumFolderMap ) ) );
 	if ( pEnumFolderMap )
 	{
 		( *pEnumFolderMap )[rszFolder][rszRelativeFolder] = 0;

@@ -94,7 +94,7 @@ void CScene::SetLight( const NDb::SAmbientLight *pLight )
 int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
 	const int nObjectID = GetID( nID );	
-	NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", nObjectID) );
+	NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID )) );
 
 	if ( CObjectBase *pObj = data[eScene]->GetGScene()->AddPointLight( ptColor, ptOrigin, fR ) )
 	{

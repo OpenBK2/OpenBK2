@@ -554,7 +554,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 			obj.Read( &pServer, bMode64 ? sizeof(void*) : 4);
 			obj.Read( &bValid,1 );
 			CObjectBase *pObject = NObjectFactory::MakeObject( nTypeID );
-			NI_ASSERT( pObject, fmt::format("Can't create object of type 0x{:08x}", nTypeID) );
+			NI_ASSERT( pObject, fmt::format("Can't create object of type 0x{:08x}", static_cast<uint32_t>( nTypeID )) );
 			if ( !pObject )
 			{
 				breakpoint_if_debugging();

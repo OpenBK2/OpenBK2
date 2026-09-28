@@ -854,7 +854,7 @@ bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const int nClass
 			}
 		}
 	}
-	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", nClassTypeID), return false );
+	NI_VERIFY( !szClassTypeName.empty(), fmt::format("Can't find class type name for 0x{:08x}", static_cast<uint32_t>( nClassTypeID )), return false );
 	// get objects list by class type name
 	return GetObjectsList( pRes, szClassTypeName );
 }

@@ -33,7 +33,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	else
 	{
 		const int nObjectID = GetID( nID );
-		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", nObjectID) );
+		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID )) );
 		pVOD->nID = nObjectID;
 		data[eScene]->visObjects[nObjectID] = pVOD;
 		return nObjectID;
@@ -64,7 +64,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	else
 	{
 		const int nObjectID = GetID( nID );
-		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", nObjectID) );
+		NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID )) );
 		pVOD->nID = nObjectID;
 		data[eScene]->visObjects[nObjectID] = pVOD;
 		return nObjectID;
