@@ -1,8 +1,8 @@
 #include "../game.cll"
-#include "../Stats_B2_M1/M1Actions.cll"
-#include "../Stats_B2_M1/UserActions.cll"
-#include "../Stats_B2_M1/AckTypes.cll"
-#include "../Stats_B2_M1/RPGStats.cll"
+#include "../Stats_B2_M1/m1actions.cll"
+#include "../Stats_B2_M1/useractions.cll"
+#include "../Stats_B2_M1/acktypes.cll"
+#include "../Stats_B2_M1/rpgstats.cll"
 [hExternal] #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 forward class SVisObj;
