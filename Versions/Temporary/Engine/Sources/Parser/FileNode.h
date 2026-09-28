@@ -78,7 +78,8 @@ public:
 	const std::list<std::string>& GetCPPExternalIncludes() const { return cppExternalIncludes; }
 };
 
-CFileNode* GetRootFile();
+// exported for dbcodegen, which walks the parsed tree from here
+PARSER_EXPORT CFileNode* GetRootFile();
 
 void AddInclude( const std::string &szFileName );
 void AddHExternal( const std::string &szIncludeName );

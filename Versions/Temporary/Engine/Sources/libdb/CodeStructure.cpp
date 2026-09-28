@@ -2,6 +2,9 @@
 
 #include "CodeGenFile.h"
 #include "CodeStructure.h"
+// the declarations carry LIBDB_EXPORT, which the definitions below pick up
+#include "GenerateCode.h"
+#include "GenerateCodeStructure.h"
 #include "Misc/StrProc.h"
 #include "Parser/FileNode.h"
 

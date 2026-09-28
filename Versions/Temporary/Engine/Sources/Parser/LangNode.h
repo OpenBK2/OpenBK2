@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include "Parser_export.h"
+
 namespace NLang
 {
 	struct IVisitor;
@@ -81,7 +83,8 @@ namespace NLang
 	bool IsTypesEqual( ESimpleType eType1, ESimpleType eType2 );
 
 	bool Parse( const std::string &szRootDir, const std::string &szFileMask, bool bInTestMode );
-	bool Parse( const std::vector<std::string> &files, const std::string &szBaseFileName );
+	// exported for dbcodegen, which parses the .cll files through it
+	PARSER_EXPORT bool Parse( const std::vector<std::string> &files, const std::string &szBaseFileName );
 }
 
 
