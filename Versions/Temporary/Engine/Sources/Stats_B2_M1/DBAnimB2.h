@@ -52,6 +52,8 @@ namespace NDb
 		int nLastFrame;
 		std::string szClipName;
 
+		#include "include_AnimB2.h"
+
 		SAnimB2() :
 			eType( ANIMATION_UNKNOWN ),
 			nAction( 0 ),
@@ -64,10 +66,6 @@ namespace NDb
 		{ }
 		//
 		int GetTypeID() const { return typeID; }
-		const NFile::CFilePath &GetModelFileRef() const override { return szModelFileRef; }
-		const std::string &GetClipName() const override { return szClipName; }
-		int GetFirstFrame() const override { return nFirstFrame; }
-		int GetLastFrame() const override { return nLastFrame; }
 		//
 		void ReportMetaInfo() const;
 		//

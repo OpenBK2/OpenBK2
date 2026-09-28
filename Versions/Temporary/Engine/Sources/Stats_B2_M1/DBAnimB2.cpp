@@ -107,7 +107,6 @@ int SAnimB2::operator&( IBinSaver &saver )
 	saver.Add( 9, &aabb_d );
 	saver.Add( 10, &fMoveSpeed );
 	saver.Add( 11, &szModelFileRef );
-	// Keep the legacy chunks stable; these settings only affect GLB animation binding.
 	saver.Add( 12, &nFirstFrame );
 	saver.Add( 13, &nLastFrame );
 	saver.Add( 14, &szClipName );
