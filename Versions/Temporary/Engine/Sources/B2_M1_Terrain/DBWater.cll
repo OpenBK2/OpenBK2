@@ -14,7 +14,7 @@ struct SAnimatedTexture
 	// How many frames to use in animated sequence (0 - all)
 	int _UseFrames;
 
-	#include "include_animatedtexture.h"
+	#include "include_AnimatedTexture.h"
 };
 
 [typeID = 0x10084340; no_checksum]
@@ -48,7 +48,7 @@ class SWater
 		float _DeepWaveNumber = 0.1;
 		[hidden] float _PhaseOffset;
 
-		#include "include_waterwavetype.h"
+		#include "include_WaterWaveType.h"
 	};
 	SWaterWaveType _Waves[1..];
 	SWaterSet *_WaterSet;
@@ -64,6 +64,6 @@ class SWater
 	float _HorDeformRotationSpeedVariation = 0.002625;
 	EWaterType eWaterType = WT_OTHER;
 
-	#include "include_water.h"
+	#include "include_Water.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

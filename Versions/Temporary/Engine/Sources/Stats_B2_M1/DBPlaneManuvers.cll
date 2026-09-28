@@ -102,6 +102,6 @@ class SManuverDescriptor
 	EManuverDestination _Destination;
 	EPlanesAttitude _Attitude;
 
-	#include "include_manuverdescriptor.h"
+	#include "include_ManuverDescriptor.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

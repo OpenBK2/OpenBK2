@@ -5,19 +5,19 @@
 #include "DBPlaneManuvers.cll"
 #include "Season.cll"
 #include "UserActions.cll"
-[hExternal] #include "../3dmotor/dbscene.h"
-[hExternal] #include "commands_actions.h"
-[hExternal] #include "constructorinfo.h"
-[hExternal] #include "iconsset.h"
-[hExternal] #include "prefix_rpgstats.h"
-[hExternal] #include "unittypes.h"
+[hExternal] #include "../3Dmotor/DBScene.h"
+[hExternal] #include "Commands_Actions.h"
+[hExternal] #include "ConstructorInfo.h"
+[hExternal] #include "IconsSet.h"
+[hExternal] #include "prefix_RPGStats.h"
+[hExternal] #include "UnitTypes.h"
 [hExternal] #include "../System/FilePath.h"
 [cppExternal] #include "AnimationType.h"
 [cppExternal] #include "DBAnimB2.h"
 [cppExternal] #include "DBVisObj.h"
-[cppExternal] #include "include_infantryrpgstats_cpp.h"
-[cppExternal] #include "include_mechunitrpgstats_cpp.h"
-[cppExternal] #include "include_unitbaserpgstats_cpp.h"
+[cppExternal] #include "include_InfantryRPGStats_cpp.h"
+[cppExternal] #include "include_MechUnitRPGStats_cpp.h"
+[cppExternal] #include "include_UnitBaseRPGStats_cpp.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 forward enum EUnitSpecialAbility;
@@ -176,7 +176,7 @@ class SUnitSpecialAblityDesc
 	[no_checksum] STexture *_AbilityIconTextureForegroundDisabled;
 
 
-	#include "include_unitspecialablitydesc.h"
+	#include "include_UnitSpecialAblityDesc.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ class SCommonRPGStats
 	// General-purpose comment
 	[noCode] wstring _Comments;
 
-	#include "include_commonrpgstats.h"
+	#include "include_CommonRPGStats.h"
 };
 
 [typeRename = "CUserCommands"; numBytes = 16; editorControl = "bit_field"; stringParam = "editor\\BitFields\\AIActions.xml"]
@@ -257,7 +257,7 @@ class SComplexEffect
 	// sound effect to play with particles
 	[unsafe] SComplexSoundDesc *_SoundEffect;
 
-	#include "include_complexeffect.h"
+	#include "include_ComplexEffect.h"
 };
 
 struct SSeasonEffect
@@ -282,7 +282,7 @@ class SAckSetRPGStats : public SCommonRPGStats
 	// actor voice number
 	int _VoiceNumber;
 
-	#include "include_acksetrpgstats.h"
+	#include "include_AckSetRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -402,7 +402,7 @@ class SHPObjectRPGStats : public SCommonRPGStats
 	[no_checksum] SIconsSet *_IconsSet;
 	[no_checksum] SIconsSetParams _IconsSetParams;
 
-	#include "include_hpobjectrpgstats.h"
+	#include "include_HPObjectRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -434,7 +434,7 @@ class SStaticObjectRPGStats : public SHPObjectRPGStats
 	// does this object explodes then squished?
 	SBurningFuel *_ShootOnDestruction;
 
-	#include "include_staticobjectrpgstats.h"
+	#include "include_StaticObjectRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +560,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 		// projectile model
 		SProjectile *_visProjectile;
 
-		#include "include_weaponrpgstats_shell.h"
+		#include "include_WeaponRPGStats_Shell.h"
 	};
 
 	enum EWeaponType
@@ -607,7 +607,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 	// weapon name
 	TextFileRef _LocalizedNameFileRef;
 
-	#include "include_weaponrpgstats.h"
+	#include "include_WeaponRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -635,7 +635,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 	// independent mounted AA gun. must me mounted to ground unit turret
 	bool _TargetAAOnly = false;
 
-	#include "include_basegunrpgstats.h"
+	#include "include_BaseGunRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -730,7 +730,7 @@ class SObjectBaseRPGStats : public SStaticObjectRPGStats
 	// Seasoned version of falling effect, if it is setted, simple fall effect is ignored
 	SComplexSeasonedEffect *_SeasonedFallEffect;
 
-	#include "include_objectbaserpgstats.h"
+	#include "include_ObjectBaseRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -745,13 +745,13 @@ class STerraObjSetRPGStats : public SStaticObjectRPGStats
 		SByteArray2 _visibility;
 		CVec2 _VisOrigin;
 
-		#include "include_terraobjsetrpgstats_segment.h"
+		#include "include_TerraObjSetRPGStats_Segment.h"
 	};
 	SSegment _segments[];
 	int _fronts[];
 	int _backs[];
 
-	#include "include_terraobjsetrpgstats.h"
+	#include "include_TerraObjSetRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -813,7 +813,7 @@ class SBuildingRPGStats : public SObjectBaseRPGStats
 		bool _Stormable;
 		int _Dir;
 
-		#include "include_buildingrpgstats_entrance.h"
+		#include "include_BuildingRPGStats_Entrance.h"
 	};
 	struct SSlot
 	{
@@ -841,7 +841,7 @@ class SBuildingRPGStats : public SObjectBaseRPGStats
 		// sight multiplier
 		float _SightMultiplier = 1;
 
-		#include "include_buildingrpgstats_slot.h"
+		#include "include_BuildingRPGStats_Slot.h"
 	};
 	struct SFirePoint
 	{
@@ -856,7 +856,7 @@ class SBuildingRPGStats : public SObjectBaseRPGStats
 		// 2D picture position
 		CVec2 _PicturePosition;
 
-		#include "include_buildingrpgstats_firepoint.h"
+		#include "include_BuildingRPGStats_FirePoint.h"
 	};
 	struct SDirectionExplosion
 	{
@@ -866,7 +866,7 @@ class SBuildingRPGStats : public SObjectBaseRPGStats
 		float _VerticalAngle;
 		CVec2 _PicturePosition;
 
-		#include "include_buildingrpgstats_directionexplosion.h"
+		#include "include_BuildingRPGStats_DirectionExplosion.h"
 	};
 	// type of this building (see enum above for possible types)
 	EBuildingType _type;
@@ -894,7 +894,7 @@ class SBuildingRPGStats : public SObjectBaseRPGStats
 	SArmorPattern *_ArmorPattern;
 	Percent1 _DamageCoeff;
 
-	#include "include_buildingrpgstats.h"
+	#include "include_BuildingRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -928,7 +928,7 @@ class SBridgeRPGStats : public SStaticObjectRPGStats
 		SVisObj *_VisObj;
 		[hidden] int _FrameIndex;
 
-		#include "include_bridgerpgstats_segmentrpgstats.h"
+		#include "include_BridgeRPGStats_SegmentRPGStats.h"
 	};
 	struct SSpan
 	{
@@ -968,7 +968,7 @@ class SBridgeRPGStats : public SStaticObjectRPGStats
 		// 2D picture position
 		CVec2 _PicturePosition;
 
-		#include "include_bridgerpgstats_firepoint.h"
+		#include "include_BridgeRPGStats_FirePoint.h"
 	};
 	// direction explosion description
 	struct SBridgeDirectionExplosion
@@ -984,7 +984,7 @@ class SBridgeRPGStats : public SStaticObjectRPGStats
 		// 2D picture position
 		CVec2 _PicturePosition;
 
-		#include "include_bridgerpgstats_directionexplosion.h"
+		#include "include_BridgeRPGStats_DirectionExplosion.h"
 	};
 	struct SElementRPGStats
 	{
@@ -1016,7 +1016,7 @@ class SBridgeRPGStats : public SStaticObjectRPGStats
 	[minInclusive = 0]
 	float _SightMultiplier = 1;
 
-	#include "include_bridgerpgstats.h"
+	#include "include_BridgeRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1041,7 +1041,7 @@ class SEntrenchmentRPGStats : public SHPObjectRPGStats
 		CVec2 _fireplaces[];
 		EEntrenchSegmType _Type;
 
-		#include "include_entrenchmentrpgstats_segmentrpgstats.h"
+		#include "include_EntrenchmentRPGStats_SegmentRPGStats.h"
 	};
 	SEntrenchSegmentRPGStats _segments[1..];
 	int _lines[];
@@ -1050,7 +1050,7 @@ class SEntrenchmentRPGStats : public SHPObjectRPGStats
 	int _arcs[];
 	SUnitStatsModifier *_InnerUnitBonus;
 
-	#include "include_entrenchmentrpgstats.h"
+	#include "include_EntrenchmentRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1090,7 +1090,7 @@ class SFenceRPGStats : public SStaticObjectRPGStats
 		CVec2 _VisOrigin;
 		int _SpriteIndex;
 
-		#include "include_fencerpgstats_segmentrpgstats.h"
+		#include "include_FenceRPGStats_SegmentRPGStats.h"
 	};
 	struct SDir
 	{
@@ -1117,7 +1117,7 @@ class SFenceRPGStats : public SStaticObjectRPGStats
 	// fence hight (AI points), used to calculate visibility
 	float _FenceHeight = 100;
 
-	#include "include_fencerpgstats.h"
+	#include "include_FenceRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1172,7 +1172,7 @@ class SUnitActions
 	[hidden] SUserActions _availUserExposures;
 	SUnitSpecialAblityDesc *_SpecialAbilities[4];
 
-	#include "include_unitbaserpgstats_actions.h"
+	#include "include_UnitBaseRPGStats_Actions.h"
 };
 
 enum EDBUnitRPGType
@@ -1256,7 +1256,7 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 		CVec2 _Center;
 		CVec2 _HalfSize;
 
-		#include "include_unitbaserpgstats_aabbdesc.h"
+		#include "include_UnitBaseRPGStats_AABBDesc.h"
 	};
 	EDBUnitRPGType _DBtype;
 	[unsafe; hidden] SM1UnitType *_M1UnitTargetType;
@@ -1310,7 +1310,7 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	// exp to receive, then kill this unit
 	float _ExpPrice = 1;
 
-	#include "include_unitbaserpgstats.h"
+	#include "include_UnitBaseRPGStats.h"
 };
 
 [typeID = 0x1711A341; no_checksum]
@@ -1353,7 +1353,7 @@ class SInfantryRPGStats : public SUnitBaseRPGStats
 	// Bone to place rifle to
 	string _GunBoneName;
 
-	#include "include_infantryrpgstats.h"
+	#include "include_InfantryRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1433,7 +1433,7 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 		float _Min;
 		float _Max;
 
-		#include "include_mechunitrpgstats_constraint.h"
+		#include "include_MechUnitRPGStats_Constraint.h"
 	};
 	struct SPlatform
 	{
@@ -1458,14 +1458,14 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 		// this platform guns list
 		[private] SMechUnitGun _guns[];
 
-		#include "include_mechunitrpgstats_platform.h"
+		#include "include_MechUnitRPGStats_Platform.h"
 	};
 	struct SArmor
 	{
 		float _Min = 100;
 		float _Max = 120;
 
-		#include "include_mechunitrpgstats_armor.h"
+		#include "include_MechUnitRPGStats_Armor.h"
 	};
 	struct SJoggingParams
 	{
@@ -1617,7 +1617,7 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	// camera placement for icon shot
 	[hidden; noCode] SCameraPlacement _CameraPlacementIconShot;
 
-	#include "include_mechunitrpgstats.h"
+	#include "include_MechUnitRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1662,7 +1662,7 @@ class SSquadRPGStats : public SHPObjectRPGStats
 			CVec2 _Pos;
 			float _Dir;
 
-			#include "include_squadrpgstats_formation_entry.h"
+			#include "include_SquadRPGStats_Formation_Entry.h"
 		};
 
 		enum EFormationMoveType
@@ -1689,7 +1689,7 @@ class SSquadRPGStats : public SHPObjectRPGStats
 		float _CoverBonus = 1;
 		float _VisibleBonus = 1;
 
-		#include "include_squadrpgstats_formation.h"
+		#include "include_SquadRPGStats_Formation.h"
 	};
 	EDesignSquadType _SquadType = SQUAD_TYPE_UNKNOWN;
 	[hidden] string _Icon;
@@ -1707,7 +1707,7 @@ class SSquadRPGStats : public SHPObjectRPGStats
 	// Cover in entrenchment
 	float _EntrenchCover = 0.5;
 
-	#include "include_squadrpgstats.h"
+	#include "include_SquadRPGStats.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1823,7 +1823,7 @@ class SAIExpLevel
 	EReinforcementType _DBType;
 	SLevel _levels[4..4];
 
-	#include "include_aiexplevel.h"
+	#include "include_AIExpLevel.h"
 };
 
 [typeID = 0x19126C00]
@@ -1835,7 +1835,7 @@ class SUnitStatsModifier
 		float _MultBonus = 1;
 		int _ZeroCount = 0;
 
-		#include "include_unitstatsmodifier_parametermodifier.h"
+		#include "include_UnitStatsModifier_ParameterModifier.h"
 	};
 	// HP (*) – Resistance, damage must be reduced
 	SParameterModifier _Durability;
@@ -1856,7 +1856,7 @@ class SUnitStatsModifier
 	SParameterModifier _WeaponArea2;
 	SParameterModifier _Cover;
 
-	#include "include_unitstatsmodifier.h"
+	#include "include_UnitStatsModifier.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 #include "../game.cll"
-[hExternal] #include "commandparam.h"
+[hExternal] #include "CommandParam.h"
 [hExternal] #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ class SUISMoveTo : public SUIStateBase
 	SUIParam_float _fMoveTime;
 	SUIParam_string _szElementToMove;
 
-	#include "include_uismoveto.h"
+	#include "include_UISMoveTo.h"
 };
 
 [typeID = 0x11075C05; no_checksum]
@@ -129,7 +129,7 @@ class SUISRunReaction : public SUIStateBase
 	SUIParam_string _szReactionForward;
 	SUIParam_string _szReactionBack;
 
-	#include "include_uisrunreaction.h"
+	#include "include_UISRunReaction.h"
 };
 
 [typeID = 0x11075C07; no_checksum]
@@ -140,7 +140,7 @@ class SUISSendUIMessage : public SUIStateBase
 	SUIParam_int _nForwardParam;
 	SUIParam_int _nBackParam;
 
-	#include "include_uissenduimessage.h"
+	#include "include_UISSendUIMessage.h"
 };
 
 [typeID = 0x110953C1; no_checksum]
@@ -148,7 +148,7 @@ class SUIConsoleCommand : public SUIStateBase
 {
 	string _EditBoxName;
 
-	#include "include_uiconsolecommand.h"
+	#include "include_UIConsoleCommand.h"
 };
 
 [typeID = 0x210C5480; no_checksum]
@@ -157,7 +157,7 @@ class SUISDirectRunReaction : public SUIStateBase
 	SUIDesc *_ReactionForward;
 	SUIDesc *_ReactionBackward;
 
-	#include "include_uisdirectrunreaction.h"
+	#include "include_UISDirectRunReaction.h"
 };
 
 // UIScreen recieve command sequience
@@ -185,7 +185,7 @@ class SBackgroundSimpleScallingTexture : public SBackground
 	// Real size of texture (mainly for n^2-aligned textures)
 	CVec2 _Size;
 
-	#include "include_backgroundsimplescallingtexture.h"
+	#include "include_BackgroundSimpleScallingTexture.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,7 +198,7 @@ class SBackgroundSimpleTexture : public SBackground
 	EPositionAllign _TextureX;
 	EPositionAllign _TextureY;
 
-	#include "include_backgroundsimpletexture.h"
+	#include "include_BackgroundSimpleTexture.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +228,7 @@ class SBackgroundTiledTexture : public SBackground
 	// Inner fill
 	SSubRect _rF;
 
-	#include "include_backgroundtiledtexture.h"
+	#include "include_BackgroundTiledTexture.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -324,7 +324,7 @@ class SForegroundTextString : public SUIDesc
 	SForegroundTextStringShared *_Shared;
 	TextFileRef _TextStringFileRef;
 	
-	#include "include_foregroundtextstring.h"
+	#include "include_ForegroundTextString.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,7 +335,7 @@ class STextFormat : public SUIDesc
 	SWindowPlacement _Placement;
 	TextFileRef _FormatStringFileRef;
 
-	#include "include_textformat.h"
+	#include "include_TextFormat.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,7 +349,7 @@ class SWindowSimpleShared : public SWindowShared
 class SWindowSimple : public SWindow
 {
 
-	#include "include_windowsimple.h"
+	#include "include_WindowSimple.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -372,7 +372,7 @@ class SCheckRunScript : public MessageCheckBase
 {
 	string _ScriptFunction;
 
-	#include "include_checkrunscript.h"
+	#include "include_CheckRunScript.h"
 };
 
 [typeID = 0x1106BC42; no_checksum]
@@ -381,7 +381,7 @@ class SCheckPreprogrammed : public MessageCheckBase
 	// Name of preprogrammed check
 	string _CheckName;
 
-	#include "include_checkpreprogrammed.h"
+	#include "include_CheckPreprogrammed.h"
 };
 
 [typeID = 0x15083380; no_checksum]
@@ -390,7 +390,7 @@ class SCheckIsWindowEnabled : public MessageCheckBase
 	string _WindowName;
 	string _ParentWindowName;
 
-	#include "include_checkiswindowenabled.h"
+	#include "include_CheckIsWindowEnabled.h"
 };
 
 [typeID = 0x110B3400; no_checksum]
@@ -399,7 +399,7 @@ class SCheckIsWindowVisible : public MessageCheckBase
 	string _WindowName;
 	string _ParentWindowName;
 
-	#include "include_checkiswindowvisible.h"
+	#include "include_CheckIsWindowVisible.h"
 };
 
 [typeID = 0x170B6300; no_checksum]
@@ -408,7 +408,7 @@ class SCheckIsTabActive : public MessageCheckBase
 	string _TabControlName;
 	int _Tab;
 
-	#include "include_checkistabactive.h"
+	#include "include_CheckIsTabActive.h"
 };
 
 [typeID = 0x1106BC43; no_checksum]
@@ -423,7 +423,7 @@ class SMessageReactionComplex : public SUIDesc
 	// always run and after any branch
 	SMessageSequence _commonAfter;
 
-	#include "include_messagereactioncomplex.h"
+	#include "include_MessageReactionComplex.h"
 };
 
 [typeID = 0x1106BC44; no_checksum]
@@ -432,7 +432,7 @@ class SARSetGlobalVar : public SUIDesc
 	string _VarName;
 	string _VarValue;
 
-	#include "include_arsetglobalvar.h"
+	#include "include_ARSetGlobalVar.h"
 };
 
 [typeID = 0x1106BC45; no_checksum]
@@ -440,7 +440,7 @@ class SARRemoveGlobalVar : public SUIDesc
 {
 	string _VarName;
 
-	#include "include_arremoveglobalvar.h"
+	#include "include_ARRemoveGlobalVar.h"
 };
 
 [typeID = 0x1106BC46; no_checksum]
@@ -450,7 +450,7 @@ class SARSendUIMessage : public SUIDesc
 	string _StringParam;
 	int _IntParam;
 
-	#include "include_arsenduimessage.h"
+	#include "include_ARSendUIMessage.h"
 };
 
 [typeID = 0x15084340; no_checksum]
@@ -459,7 +459,7 @@ class SARSendGameMessage : public SUIDesc
 	string _EventName;
 	int _IntParam;
 
-	#include "include_arsendgamemessage.h"
+	#include "include_ARSendGameMessage.h"
 };
 
 [typeID = 0x15083384; no_checksum]
@@ -468,7 +468,7 @@ class SARSwitchTab : public SUIDesc
 	string _TabControlName;
 	int _Tab;
 
-	#include "include_arswitchtab.h"
+	#include "include_ARSwitchTab.h"
 };
 
 struct SReactionSequenceEntry
@@ -513,7 +513,7 @@ class SWindowScreen : public SWindow
 	// Misc. texts used in the screen
 	SScreenTextEntry _RelatedTexts[];
 
-	#include "include_screen.h"
+	#include "include_Screen.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,7 +536,7 @@ class SWindowProgressBar : public SWindow
 {
 	float _Progress;
 
-	#include "include_windowprogressbar.h"
+	#include "include_WindowProgressBar.h"
 };
 
 struct SProgressBarTextureInfo
@@ -564,7 +564,7 @@ class SWindowMultiTextureProgressBar : public SWindow
 	bool _Solid = true;
 	float _PieceSize;
 
-	#include "include_windowmultitextureprogressbar.h"
+	#include "include_WindowMultiTextureProgressBar.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -588,7 +588,7 @@ class SWindowTextView : public SWindow
 	bool _ResizeOnTextSet = true;
 	STextFormat *_TextFormat;
 
-	#include "include_windowtextview.h"
+	#include "include_WindowTextView.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -604,7 +604,7 @@ class SWindowTooltipShared : public SWindowShared
 class SWindowTooltip : public SWindow
 {
 
-	#include "include_windowtooltip.h"
+	#include "include_WindowTooltip.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -620,7 +620,7 @@ class SWindowPlayer : public SWindow
 	string _SequenceName;
 	bool _MaintainAspectRatio = true;
 
-	#include "include_windowplayer.h"
+	#include "include_WindowPlayer.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -665,7 +665,7 @@ class SWindowEditLine : public SWindow
 	int _TabOrder = -1;
 	SUIStateSequence _SequienceOnFocusLost;
 
-	#include "include_windoweditline.h"
+	#include "include_WindowEditLine.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -680,7 +680,7 @@ class SWindowConsoleOutputShared : public SWindowShared
 class SWindowConsoleOutput : public SWindow
 {
 
-	#include "include_windowconsoleoutput.h"
+	#include "include_WindowConsoleOutput.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -694,7 +694,7 @@ class SWindowStatsSystemShared : public SWindowShared
 class SWindowStatsSystem : public SWindow
 {
 
-	#include "include_windowstatssystem.h"
+	#include "include_WindowStatsSystem.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -711,7 +711,7 @@ class SWindowConsoleShared : public SWindowShared
 class SWindowConsole : public SWindow
 {
 
-	#include "include_windowconsole.h"
+	#include "include_WindowConsole.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -747,7 +747,7 @@ class SWindowScrollableContainerShared : public SWindowScrollableContainerBaseSh
 class SWindowScrollableContainer : public SWindowScrollableContainerBase
 {
 
-	#include "include_windowscrollablecontainer.h"
+	#include "include_WindowScrollableContainer.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -763,7 +763,7 @@ class SWindow1LvlTreeControlShared : public SWindowScrollableContainerBaseShared
 class SWindow1LvlTreeControl : public SWindowScrollableContainerBase
 {
 
-	#include "include_window1lvltreecontrol.h"
+	#include "include_Window1LvlTreeControl.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -783,7 +783,7 @@ class SWindowListHeaderShared : public SWindowShared
 class SWindowListHeader : public SWindow
 {
 
-	#include "include_windowlistheader.h"
+	#include "include_WindowListHeader.h"
 };
 
 [typeID = 0x170CC480; no_checksum]
@@ -796,7 +796,7 @@ class SWindowListItemShared : public SWindowShared
 class SWindowListItem : public SWindow
 {
 
-	#include "include_windowlistitem.h"
+	#include "include_WindowListItem.h"
 };
 
 [typeID = 0x1106C301; no_checksum]
@@ -810,7 +810,7 @@ class SWindowListSharedData : public SWindowScrollableContainerBaseShared
 class SWindowListCtrl : public SWindowScrollableContainerBase
 {
 
-	#include "include_windowlistctrl.h"
+	#include "include_WindowListCtrl.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -835,7 +835,7 @@ class SWindowTabControl : public SWindow
 	};
 	STab _tabs[];
 
-	#include "include_windowtabcontrol.h"
+	#include "include_WindowTabControl.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -864,7 +864,7 @@ class SWindowComboBox : public SWindow
 	// Whenever a new selection is made
 	SUIStateSequence _OnSelection;
 
-	#include "include_windowcombobox.h"
+	#include "include_WindowComboBox.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -943,7 +943,7 @@ class SWindowMSButton : public SWindow
 	TextFileRef _TextFileRef;
 	STextFormat *_TextFormat;
 
-	#include "include_windowmsbutton.h"
+	#include "include_WindowMSButton.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -965,7 +965,7 @@ class SWindowSlider : public SWindow
 	// number of special positions. if !=0 then slider will stop on the nearest
 	int _SpecialPositions = 0;
 
-	#include "include_windowslider.h"
+	#include "include_WindowSlider.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -987,7 +987,7 @@ class SWindowScrollBar : public SWindow
 {
 	SUIStateSequence _Effects;
 
-	#include "include_windowscrollbar.h"
+	#include "include_WindowScrollBar.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1001,6 +1001,6 @@ class SUISButtonSubstate : public SUIStateBase
 	float _WaitTime;
 	SUIParam_string _szButton;
 
-	#include "include_uisbuttonsubstate.h"
+	#include "include_UISButtonSubstate.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

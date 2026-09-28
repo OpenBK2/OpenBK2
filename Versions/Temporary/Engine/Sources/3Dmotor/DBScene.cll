@@ -1,5 +1,5 @@
 #include "../game.cll"
-[hExternal] #include "../Misc/geom.h"
+[hExternal] #include "../Misc/Geom.h"
 [hExternal] #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,7 +177,7 @@ class SAmbientLight
 	// dynamic light multiplayer
 	VecColor _DymanicLightsModifications;
 
-	#include "include_ambientlight.h"
+	#include "include_AmbientLight.h"
 };
 
 [typeID = 0x1318BB40; no_checksum]

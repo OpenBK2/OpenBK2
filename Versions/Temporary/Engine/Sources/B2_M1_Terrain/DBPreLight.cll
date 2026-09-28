@@ -11,7 +11,7 @@ class SPreLight
 	bool _Whitening = true;
 	float _Pitch;
 
-	#include "include_prelight.h"
+	#include "include_PreLight.h"
 };
 
 [typeID = 0x10087440; no_checksum]
@@ -25,6 +25,6 @@ class STwoSidedLight
 	float _Pitch;
 	float _Yaw;
 
-	#include "include_twosidedlight.h"
+	#include "include_TwoSidedLight.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

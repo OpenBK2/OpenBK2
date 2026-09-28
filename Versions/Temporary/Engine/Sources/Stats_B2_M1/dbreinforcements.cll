@@ -17,7 +17,7 @@ struct SReinforcementGroupInfo
 {
 	SReinforcementGroupInfoEntry _infos[1..];
 
-	#include "include_reinforcementgroupinfo.h"
+	#include "include_ReinforcementGroupInfo.h"
 };
 
 struct SReinforcementMaskEntry

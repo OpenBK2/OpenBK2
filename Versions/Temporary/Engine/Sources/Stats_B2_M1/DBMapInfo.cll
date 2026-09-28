@@ -5,7 +5,7 @@
 #include "Season.cll"
 #include "dbreinforcements.cll"
 
-[hExternal] #include "prefix_dbmapinfo.h"
+[hExternal] #include "prefix_DBMapInfo.h"
 [hExternal] #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -101,7 +101,7 @@ struct SScriptMovieSequence
 	SScriptMovieKeyPos _posKeys[];
 	SScriptMovieKeyFollow _followKeys[];
 
-	#include "include_scriptmoviesequence.h"
+	#include "include_ScriptMovieSequence.h"
 };
 
 // the movie struct
@@ -110,7 +110,7 @@ struct SScriptMovies
 	SScriptCameraPlacement _ScriptCameraPlacements[];
 	SScriptMovieSequence _ScriptMovieSequences[];
 
-	#include "include_scriptmovies.h"
+	#include "include_ScriptMovies.h"
 };
 
 [typeID = 0x11074C80]
@@ -202,7 +202,7 @@ struct SAIStartCommand
 	bool _FromExplosion;
 	float _Number;
 
-	#include "include_aistartcommand.h"
+	#include "include_AIStartCommand.h"
 };
 
 struct SBattlePosition
@@ -236,7 +236,7 @@ struct SReinforcePoint
 	CVec2 _Center;
 	float _Direction;
 
-	#include "include_reinforcepoint.h"
+	#include "include_ReinforcePoint.h"
 };
 
 struct SAIGeneralParcel
@@ -251,7 +251,7 @@ struct SAIGeneralParcel
 	// minimal number of units for this point reinforcement
 	int _MinUnitsToReinforce = 3;
 
-	#include "include_aigeneralparcelinfo.h"
+	#include "include_AIGeneralParcelInfo.h"
 };
 
 struct SAIGeneralSide
@@ -393,7 +393,7 @@ class SMapInfo : public STerrain
 	// custom mission difficulty levels
 	SDifficultyLevel *_CustomDifficultyLevels[];
 
-	#include "include_mapinfo.h"
+	#include "include_MapInfo.h"
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
