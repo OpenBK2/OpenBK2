@@ -30,6 +30,13 @@ std::vector<SEntry> ReadCorpus( const std::string &szPath )
 	std::string szLine;
 	while ( std::getline( file, szLine ) )
 	{
+		// A Windows checkout with core.autocrlf (the CI runners' default) gives the
+		// corpus CRLF endings, and getline keeps the '\r'. Left in, "@@@ end" and
+		// "@@@ expect" never match and the markers are assembled as source.
+		if ( !szLine.empty() && szLine.back() == '\r' )
+		{
+			szLine.pop_back();
+		}
 		if ( szLine.compare( 0, 11, "@@@ shader " ) == 0 )
 		{
 			entries.push_back( SEntry() );
