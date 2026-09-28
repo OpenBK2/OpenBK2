@@ -396,6 +396,13 @@ static void GetAllFilesOfDescProj( const std::string &szSlnName, const std::stri
 		{
 			const std::string szProjName = szBasePath + vcProjName + "/" + vcProjName + ".vcproj";
 			CFileStream stream( szProjName, CFileStream::WIN_READ_ONLY );
+			// The solutions still name projects the port deleted (zlib, Scintilla,
+			// ED_RTS), none of which had .cll files. Skip them: the LoadXML failure
+			// below would otherwise return early and drop every project after them.
+			if ( !stream.IsOk() )
+			{
+				continue;
+			}
 			ms.SetSize( stream.GetSize() );
 			stream.Read( ms.GetBufferForWrite(), ms.GetSize() );
 			ms.Seek( ms.GetSize() );
