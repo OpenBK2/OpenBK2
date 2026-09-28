@@ -9,6 +9,7 @@
 [hExternal] #include "System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[export]
 enum EMPGameType
 {
 	MP_GT_STANDARD,
@@ -47,6 +48,7 @@ forward class SReinforcement;
 forward class SMissionBonus;
 forward class SDifficultyLevel;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[export]
 struct SCameraPlacement
 {
 	CVec3 _Anchor;
@@ -57,6 +59,7 @@ struct SCameraPlacement
 	bool _UseAnchorOnly = true;
 };
 
+[export]
 struct SScriptCameraPlacement
 {
 	string _Name;
@@ -105,6 +108,7 @@ struct SScriptMovieSequence
 };
 
 // the movie struct
+[export]
 struct SScriptMovies
 {
 	SScriptCameraPlacement _ScriptCameraPlacements[];
@@ -154,6 +158,7 @@ class SMissionObjective
 	#include "include_MissionObjective.h"
 };
 
+[export]
 struct SMapObjectInfo
 {
 	struct SLinkInfo
@@ -184,6 +189,7 @@ enum EScriptAreaTypes
 	EAT_CIRCLE,
 };
 
+[export]
 struct SScriptArea
 {
 	EScriptAreaTypes _Type;
@@ -193,6 +199,7 @@ struct SScriptArea
 	float _R;
 };
 
+[export]
 struct SAIStartCommand
 {
 	int _CmdType;
@@ -205,6 +212,7 @@ struct SAIStartCommand
 	#include "include_AIStartCommand.h"
 };
 
+[export]
 struct SBattlePosition
 {
 	int _ArtilleryLinkID;
@@ -239,6 +247,7 @@ struct SReinforcePoint
 	#include "include_ReinforcePoint.h"
 };
 
+[export]
 struct SAIGeneralParcel
 {
 	SReinforcePoint _reinforcePoints[];
@@ -274,6 +283,7 @@ struct SBuildingBonuses
 	[hidden; noCode] SPlayerReinforcementEnable _Reinforcements[];
 };
 
+[export]
 struct SPlayerBonusData
 {
 	int _LinkID;

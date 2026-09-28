@@ -110,6 +110,7 @@ class SWeatherDesc
 	SComplexSoundDesc *_RandomSounds[1..];
 };
 
+[export]
 class STerrain
 {
 	[readonly] int _NumPatchesX;

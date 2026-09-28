@@ -41,12 +41,14 @@ struct SReinforcementDefinition
 	SReinforcement *_Reinforcement;
 };
 
+[export]
 struct STypedDeployTemplate
 {
 	EReinforcementType _Type;
 	SDeployTemplate *_Template;
 };
 
+[export]
 struct SReinforcementPosition
 {
 	// Deploy positoin for ground units

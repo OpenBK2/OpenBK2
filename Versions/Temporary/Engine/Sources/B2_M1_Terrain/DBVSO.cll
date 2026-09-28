@@ -66,6 +66,7 @@ class SVSODesc
 	SComplexSoundDesc *_CycledSound;
 };
 
+[export]
 struct SVSOPoint
 {
 	CVec3 _Pos;

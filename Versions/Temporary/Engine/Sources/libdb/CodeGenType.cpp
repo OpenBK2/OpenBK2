@@ -18,6 +18,19 @@
 namespace NCodeGen
 {
 
+// The export macro, with its trailing space, to put in front of what a type
+// marked [export] in its .cll makes visible to other modules; empty for any
+// other type. See the export attribute in base.cll.
+static std::string GetExportMacro( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeDef *pType )
+{
+	NDb::NTypeDef::SAttributes *pAttr = pType->GetAttributes();
+	if ( pAttr && pAttr->attributes.find( "export" ) != pAttr->attributes.end() )
+	{
+		return pCode->GetModuleMacroName() + "_EXPORT ";
+	}
+	return "";
+}
+
 CTypeDefinition::CTypeDefinition( NLang::CComplexTypeNode *pComplexTypeNode, const CNodes2TypeDefs &nodes2TypeDefs, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc )
 {
 	CNodes2TypeDefs::const_iterator iter = nodes2TypeDefs.find( pComplexTypeNode );
@@ -83,8 +96,10 @@ static void GenerateEnum( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeEnum *
 	pCode->hEOF << separator;
 	pCode->hEOF << "namespace NDb" << endl;
 	pCode->hEOF << "{" << endl;
-	pCode->hEOF << tab << "std::string EnumToString( " << szFullQualifiedName << " eValue );" << endl;
-	pCode->hEOF << tab << szQualifiedNameWithoutNDB << " " << szUnderlinedNameWithoutNDB << "( const std::string &szValue );" << endl;
+	// an [export] enum's conversions are called from other modules
+	const std::string szExport = GetExportMacro( pCode, pEnum );
+	pCode->hEOF << tab << szExport << "std::string EnumToString( " << szFullQualifiedName << " eValue );" << endl;
+	pCode->hEOF << tab << szExport << szQualifiedNameWithoutNDB << " " << szUnderlinedNameWithoutNDB << "( const std::string &szValue );" << endl;
 	pCode->hEOF << "}" << endl;
 
 	pCode->hEOF << separator;
@@ -518,7 +533,7 @@ static void GenerateStructHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::
 {
 	pCode->h << endl;
 
-	pCode->h << szTabs << "struct " << NHungarian::GetTypeNameInCode( pStruct, 0 );
+	pCode->h << szTabs << "struct " << GetExportMacro( pCode, pStruct ) << NHungarian::GetTypeNameInCode( pStruct, 0 );
 	if ( pStruct->pBaseType != 0 )
 		pCode->h << " : public " << NHungarian::GetTypeNameInCode( pStruct->pBaseType, 0 );
 	pCode->h << endl;
@@ -562,7 +577,7 @@ static void GenerateClassHFileAndNestedTypes( ICode::SCodeStreams *pCode, NDb::N
 {
 	pCode->h << endl;
 
-	pCode->h << szTabs << "struct " << NHungarian::GetTypeNameInCode( pClass, 0 );
+	pCode->h << szTabs << "struct " << GetExportMacro( pCode, pClass ) << NHungarian::GetTypeNameInCode( pClass, 0 );
 	if ( pClass->pBaseType != 0 )
 		pCode->h << " : public " << NHungarian::GetTypeNameInCode( pClass->pBaseType, 0 );
 	else

@@ -34,3 +34,4 @@ attribute filepath( bool );
 attribute no_prefix();
 attribute type_defs( string );
 attribute no_checksum();
+attribute export();

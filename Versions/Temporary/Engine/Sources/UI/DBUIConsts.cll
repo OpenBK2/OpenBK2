@@ -23,6 +23,7 @@ class STooltipContext
 	float _HorisontalToVerticalRatio;
 };
 
+[export]
 class SUIGameConsts
 {
 	STooltipContext *_Contexts[1..];

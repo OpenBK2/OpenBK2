@@ -297,6 +297,7 @@ enum ESelectionType
 };
 
 
+[export]
 struct SAttachedLightEffect
 {
 	// locator name to attach effect
@@ -1175,6 +1176,7 @@ class SUnitActions
 	#include "include_UnitBaseRPGStats_Actions.h"
 };
 
+[export]
 enum EDBUnitRPGType
 {
 	DB_RPG_TYPE_SOLDIER,
@@ -1249,6 +1251,7 @@ struct SBoundCircle
 	bool _IsRound;
 };
 
+[export]
 class SUnitBaseRPGStats : public SHPObjectRPGStats
 {
 	struct SAABBDesc
@@ -1371,6 +1374,7 @@ struct SGunnersVector
 	CVec2 _gunners[1..];
 };
 
+[export]
 enum EDesignUnitType
 {
 	UNIT_TYPE_UNKNOWN,
@@ -1712,6 +1716,7 @@ class SSquadRPGStats : public SHPObjectRPGStats
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[export]
 enum EReinforcementType
 {
 	RT_MAIN_INFANTRY,
@@ -1827,8 +1832,10 @@ class SAIExpLevel
 };
 
 [typeID = 0x19126C00]
+[export]
 class SUnitStatsModifier
 {
+	[export]
 	struct SParameterModifier
 	{
 		float _AddBonus = 0;

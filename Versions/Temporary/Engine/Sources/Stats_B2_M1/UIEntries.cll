@@ -5,6 +5,7 @@
 forward class SWindowScreen;
 forward class STexture;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[export]
 struct SUIScreenEntry
 {
 	SWindowScreen *_Screen;
@@ -26,6 +27,7 @@ struct SUITextEntry
 	#include "include_UITextEntry.h"
 };
 
+[export]
 struct SUITextureEntry
 {
 	string _TextID;
