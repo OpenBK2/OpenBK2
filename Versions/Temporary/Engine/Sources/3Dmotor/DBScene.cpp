@@ -15,6 +15,7 @@ namespace NDb
 {
 
 
+
 void SModel::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Model", typeID, sizeof(*this) );
@@ -638,7 +639,6 @@ int SSkeleton::operator&( IBinSaver &saver )
 	saver.Add( 3, &animations );
 	AddUuidChunk( saver, 4, &uid );
 	saver.Add( 5, &szModelFileRef );
-	// Keep the legacy chunks stable; GLB-only selectors are appended.
 	saver.Add( 6, &szRootJoint );
 
 	return 0;
@@ -1238,7 +1238,6 @@ int SAIGeometry::operator&( IBinSaver &saver )
 	saver.Add( 6, &vAABBHalfSize );
 	AddUuidChunk( saver, 7, &uid );
 	saver.Add( 8, &szModelFileRef );
-	// Keep the legacy chunks stable; GLB-only selectors are appended.
 	saver.Add( 9, &szRootMesh );
 
 	return 0;
@@ -1295,7 +1294,6 @@ int SGeometry::operator&( IBinSaver &saver )
 	saver.Add( 10, &meshAnimated );
 	saver.Add( 11, &meshWindAffected );
 	saver.Add( 12, &szModelFileRef );
-	// Keep the legacy chunks stable; GLB-only selectors are appended.
 	saver.Add( 13, &szRootMesh );
 
 	return 0;

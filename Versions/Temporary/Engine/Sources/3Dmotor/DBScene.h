@@ -682,13 +682,7 @@ namespace NDb
 		std::string szFaceName;
 		std::string szName;
 		NFile::CFilePath szCharactersFile;
-		// A font file in the game data to rasterise this font from at run time,
-		// at exactly the size the UI asks for; empty keeps the baked Texture and
-		// its metrics. Thickness and Italic pick the face within it, a variable
-		// font's named instance included.
 		NFile::CFilePath szFontFile;
-		// tried in order for characters szFontFile does not have, before the
-		// fonts installed on the system
 		std::vector< NFile::CFilePath > fallbackFontFiles;
 
 		SFont() :
@@ -717,8 +711,6 @@ namespace NDb
 		enum { typeID = 0x1007EC80 };
 		float fVolume;
 		float fSolidPart;
-		// Exported bounds for both GR2 and glTF. Loading must preserve these values
-		// because client-local floating-point calculations can desync AI hulls.
 		CVec3 vAABBCenter;
 		CVec3 vAABBHalfSize;
 		boost::uuids::uuid uid;
@@ -747,7 +739,6 @@ namespace NDb
 	public:
 		enum { typeID = 0x12069B85 };
 		boost::uuids::uuid uid;
-		// Persisted by the geometry exporter; never recompute from ModelFileRef on load.
 		CVec3 vSize;
 		CVec3 vCenter;
 		CDBPtr< SAIGeometry > pAIGeometry;

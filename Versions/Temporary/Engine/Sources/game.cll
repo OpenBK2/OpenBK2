@@ -115,6 +115,9 @@ typedef FilePathRef TextFileRef;
 [editorControl = "string_file_ref"; intParam = 2; stringParam = "Sound files (*.wav, *.ogg, *.mp3)|*.wav;*.ogg;*.mp3|All Files (*.*)|*.*||"]
 typedef FilePathRef SoundFileRef;
 
+[editorControl = "string_file_ref"; intParam = 2; stringParam = "Font files (*.ttf, *.otf, *.ttc)|*.ttf; *.otf; *.ttc|All Files (*.*)|*.*||"]
+typedef FilePathRef FontFileRef;
+
 [editorControl = "string_file_ref"; intParam = 1; stringParam = "Excel files (*.xls)|*.xls|All Files (*.*)|*.*||"]
 typedef FilePathRef ExcelFileRef;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
