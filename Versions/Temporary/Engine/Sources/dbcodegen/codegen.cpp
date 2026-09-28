@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "codegen.h"
-#include "SolutionAnalyzer.h"
 #include "libdb/CodeStructure.h"
 #include "libdb/CompileCLike.h"
 #include "libdb/GenerateCode.h"

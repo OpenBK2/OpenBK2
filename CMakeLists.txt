@@ -176,6 +176,8 @@ include(cmake/freetype.cmake)
 include(cmake/fontpak.cmake)
 include(cmake/pch.cmake)
 include(cmake/ccache.cmake)
+# the .cll list dbcodegen compiles, gathered from the modules' SOURCES
+include(cmake/dbcodegen.cmake)
 if(BUILD_EDITOR)
     include(cmake/wxwidgets.cmake)
 endif()

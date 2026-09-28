@@ -6,9 +6,10 @@ project(dbcodegen)
 # libdb (CompileCLike*, CodeGen*) and the .cll grammar in Parser; this is only
 # the driver around them.
 #
-# It finds the .cll files through the solutions named in its config file (the
-# tree has dbcodegen.xml, so pass --config-file dbcodegen.xml) and the .vcproj
-# files those list, which is why those otherwise dead files are still here.
+# The .cll files it compiles are the ones the modules list in their SOURCES.
+# The build gathers them into type-descriptions.txt beside the executable (see
+# cmake/dbcodegen.cmake), and dbcodegen reads that with --file-list. Run it
+# from the root of the sources, or pass --sources-path.
 #
 # Built but not installed, and not run by the build: -all rewrites types.xml
 # and the generated sources in place, and those have been edited by hand since
@@ -17,7 +18,6 @@ project(dbcodegen)
 set(SOURCES
     codegen.cpp
     main.cpp
-    SolutionAnalyzer.cpp
     stdafx.cpp
 )
 add_executable(dbcodegen ${SOURCES})

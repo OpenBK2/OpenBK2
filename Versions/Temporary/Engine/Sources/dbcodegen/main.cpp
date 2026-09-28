@@ -1,19 +1,15 @@
 #include "stdafx.h"
 #include "codegen.h"
-#include "Config.h"
-#include "Errors.h"
-#include "SolutionAnalyzer.h"
 #include "Misc/StrProc.h"
 #include "System/FileUtils.h"
 #include "System/FilePath.h"
 
 #include "port/cdecl.h"
 
-#include <fmt/format.h>
-
 #include <boost/program_options.hpp>
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 
 namespace po = boost::program_options;
@@ -40,18 +36,37 @@ void ThrowOutEqual( std::vector<std::string> *pArray )
 	pArray->resize( k + 1 );
 }
 
-bool ReadConfigFile( SConfig *pConfig, const std::string &szConfigFile )
+// Reads the .cll files to compile, one path per line, as CMake writes them to
+// type-descriptions.txt (see cmake/dbcodegen.cmake). The build owns this list:
+// it replaced walking the projects of Game.sln and B2_MapEditor.sln, which had
+// drifted from what CMake builds.
+//
+// Each path is normalized and lowercased as the solution walk did, so the files
+// sort, and so reach the parser, in the order they always have. The parser
+// lowercases the names it keys files by on its own.
+bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileList )
 {
-	CFileStream stream( szConfigFile, CFileStream::WIN_READ_ONLY );
-	if ( stream.IsOk() )
+	std::ifstream stream( szFileList );
+	if ( !stream )
 	{
-		if ( CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ) )
-		{
-			pSaver->AddTypedSuper( pConfig );
-			return true;
-		}
+		return false;
 	}
-	return false;
+	std::string szLine;
+	while ( std::getline( stream, szLine ) )
+	{
+		while ( !szLine.empty() && (szLine.back() == '\r' || szLine.back() == ' ') )
+		{
+			szLine.pop_back();
+		}
+		if ( szLine.empty() )
+		{
+			continue;
+		}
+		NFile::NormalizePath( &szLine );
+		NStr::ToLowerASCII( &szLine );
+		pFiles->push_back( szLine );
+	}
+	return true;
 }
 }
 
@@ -60,24 +75,27 @@ int PORT_CDECL main( int argc, char *argv[] )
 {
 	const std::string szCurrDir = NFile::GetNormalizedCurrDir();
 	//
-	std::string szConfigFileName = "dbconfig.xml";
+	std::string szFileList;
 	std::string szTypesPath = szCurrDir;
 	std::string szSourcesPath = szCurrDir;
 
 	// Boost::program_options replaced System/CmdLine.h, which the port deleted as
-	// unused by the game. The options and their meaning are the original ones.
+	// unused by the game. The options are the original ones, except that
+	// --file-list replaced --config-file.
 	po::options_description options( "Options" );
 	options.add_options()
 		( "show-version",   "show product version" )
 		( "all",            "generate types.xml and sources" )
 		( "nocopy",         "only generate new source files (and don't copy to version)" )
 		( "types",          "only generate new types.xml" )
-		( "config-file",    po::value<std::string>( &szConfigFileName ),
-		                    fmt::format( "set name for config file (default: \"{}\")", szConfigFileName ).c_str() )
+		( "file-list",      po::value<std::string>( &szFileList ),
+		                    "file listing the .cll files to compile, one per line; the build writes "
+		                    "type-descriptions.txt beside dbcodegen" )
 		( "types-path",     po::value<std::string>( &szTypesPath ),
 		                    "set path to store types.xml (default: current dir)" )
 		( "sources-path",   po::value<std::string>( &szSourcesPath ),
-		                    "set path to get .cll sources from (default: current dir)" )
+		                    "set the root of the sources, where base.cll and game.cll are and "
+		                    "generated files go (default: current dir)" )
 		( "help",           "show this message" );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
@@ -89,7 +107,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 	try
 	{
 		// allow_long_disguise so the single dash spellings this tool has always
-		// taken, -all, -nocopy and -types, keep working alongside --config-file
+		// taken, -all, -nocopy and -types, keep working alongside --file-list
 		// and the other double dash ones.
 		po::store( po::command_line_parser( argc, argv )
 		               .options( options )
@@ -137,69 +155,64 @@ int PORT_CDECL main( int argc, char *argv[] )
 	NFile::AppendSlash( &szSourcesPath );
 	//
 	const std::string szBasePath = szSourcesPath;
-	const std::string szConfigFilePath = szBasePath + szConfigFileName;
 	//
-	SConfig config;
+	if ( szFileList.empty() )
 	{
-		if ( ReadConfigFile(&config, szConfigFilePath) == false )
-		{
-			printf( "ERROR: Can't read config file \"%s\"\n", szConfigFilePath.c_str() );
-			return 0xDEAD;
-		}
+		printf( "ERROR: --file-list is required\n" );
+		return 0xDEAD;
 	}
+	std::vector<std::string> filesToCompile;
+	if ( ReadFileList( &filesToCompile, szFileList ) == false )
+	{
+		printf( "ERROR: Can't read file list \"%s\"\n", szFileList.c_str() );
+		return 0xDEAD;
+	}
+	// base.cll and game.cll sit at the root of the sources rather than in a
+	// module, and every run needs them, so they are added here as the solution
+	// walk added them rather than listed by the build.
+	filesToCompile.push_back( szBasePath + "base.cll" );
+	filesToCompile.push_back( szBasePath + "game.cll" );
+	ThrowOutEqual( &filesToCompile );
 	// start work
 	printf( "XML Database code generation utility\n" );
-	printf( "Using config file \"%s\"\n", szConfigFilePath.c_str() );
+	printf( "Using file list \"%s\"\n", szFileList.c_str() );
 	// pre-compile descriptors
 	printf( "Pre-compile type descriptors\n" );
 
-	try
+	SCompiledTypesInfo compiledTypesInfo;
+	if ( PrecompileTypes( &compiledTypesInfo, eCodeGenOpts != CODE_GEN_TYPES, filesToCompile, szBasePath ) == false )
 	{
-		std::vector<std::string> filesToCompile;
-		for ( int i = 0; i < config.slns.size(); ++i )
-			NSlnAnalyzer::GetTypesDescriptorsOfSln( config.slns[i], szBasePath, &filesToCompile );
-		ThrowOutEqual( &filesToCompile );
-
-		SCompiledTypesInfo compiledTypesInfo;
-		if ( PrecompileTypes( &compiledTypesInfo, eCodeGenOpts != CODE_GEN_TYPES, filesToCompile, szBasePath ) == false )
+		printf( "ERROR: can't precompile types!\n" );
+		return 0xDEAD;
+	}
+	// generate types
+	if ( eCodeGenOpts != CODE_GEN_NOCOPY )
+	{
+		const std::string szTypeCollectionFile = szTypesPath + "types.xml";
+		printf( "Generate types file (%s)\n", szTypeCollectionFile.c_str() );
+		if ( GenerateTypes( szTypeCollectionFile, &compiledTypesInfo ) == false )
 		{
-			printf( "ERROR: can't precompile types!\n" );
+			printf( "ERROR: can't generate types!\n" );
 			return 0xDEAD;
 		}
-		// generate types
+	}
+
+	if ( eCodeGenOpts != CODE_GEN_TYPES )
+	{
+		std::string szSourceCodePath = NFile::GetTempPath() + "dbcode/";
+		NFile::NormalizePath( &szSourceCodePath );
+		const std::string szProjectSourcePath = szBasePath;
+
+		printf( "Generate source files (in %s)\n", szSourceCodePath.c_str() );
+		std::list<std::string> filenames;
+		bool bRes = GenerateCode( &filenames, szSourceCodePath, &compiledTypesInfo );
+		NI_VERIFY( bRes != false, "Failed to generate source code files", return 0xDEAD );
 		if ( eCodeGenOpts != CODE_GEN_NOCOPY )
 		{
-			const std::string szTypeCollectionFile = szTypesPath + "types.xml";
-			printf( "Generate types file (%s)\n", szTypeCollectionFile.c_str() );
-			if ( GenerateTypes( szTypeCollectionFile, &compiledTypesInfo ) == false )
-			{
-				printf( "ERROR: can't generate types!\n" );
-				return 0xDEAD;
-			}
+			printf( "(Copy to %s)\n", szProjectSourcePath.c_str() );
+			bRes = CopySourceCode( filenames, szSourceCodePath, szProjectSourcePath );
+			NI_VERIFY( bRes != false, "Failed to copy source code files to project", return 0xDEAD );
 		}
-
-		if ( eCodeGenOpts != CODE_GEN_TYPES )
-		{
-			std::string szSourceCodePath = NFile::GetTempPath() + "dbcode/";
-			NFile::NormalizePath( &szSourceCodePath );
-			const std::string szProjectSourcePath = szBasePath;
-
-			printf( "Generate source files (in %s)\n", szSourceCodePath.c_str() );
-			std::list<std::string> filenames;
-			bool bRes = GenerateCode( &filenames, szSourceCodePath, &compiledTypesInfo );
-			NI_VERIFY( bRes != false, "Failed to generate source code files", return 0xDEAD );
-			if ( eCodeGenOpts != CODE_GEN_NOCOPY )
-			{
-				printf( "(Copy to %s)\n", szProjectSourcePath.c_str() );
-				bRes = CopySourceCode( filenames, szSourceCodePath, szProjectSourcePath );
-				NI_VERIFY( bRes != false, "Failed to copy source code files to project", return 0xDEAD );
-			}
-		}
-	}
-	catch ( CCodeGenException &exc )
-	{
-		printf( "ERROR: %s", exc.GetDesc().c_str() );
-		return 0xDEAD;
 	}
 
 	//
