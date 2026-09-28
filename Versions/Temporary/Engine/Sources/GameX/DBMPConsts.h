@@ -56,7 +56,7 @@ namespace NDb
 
 		STechLevelReinfSet() :
 			__dwCheckSum( 0 ),
-			bDisabled(false)	// Make levels are enabled by default
+			bDisabled( false )
 		{ }
 		//
 		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;

@@ -33423,7 +33423,7 @@
 				<Item>
 					<Type>f02acd10</Type>
 					<Name>Disabled</Name>
-					<ChunkID>2</ChunkID>
+					<ChunkID>4</ChunkID>
 					<Description>is this nation disabld in this tech level?</Description>
 					<Constraints />
 					<Attributes />

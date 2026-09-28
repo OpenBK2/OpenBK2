@@ -29,6 +29,10 @@ struct STechLevelReinfSet
 {
 	// tech level reinforcements set; it is better to set all possible reinforcement types
 	SReinforcement *_Reinforcements[];
+	// whether this tech level is disabled for the nation; levels are enabled by default.
+	// Added after StartingUnits had chunk id 3, so it takes a new one rather than moving it.
+	[chunkID = 4]
+	bool _Disabled = false;
 	// start forces
 	SReinforcement *_StartingUnits;
 };

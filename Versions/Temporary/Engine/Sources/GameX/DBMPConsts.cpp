@@ -76,6 +76,7 @@ uint32_t SMultiplayerTechLevel::CalcCheckSum() const
 void STechLevelReinfSet::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
+	NMetaInfo::ReportMetaInfo( szAddName + "Disabled", (uint8_t*)&bDisabled - pThis, sizeof(bDisabled), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (uint8_t*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
 }
 
@@ -91,8 +92,8 @@ int STechLevelReinfSet::operator&( IXmlSaver &saver )
 int STechLevelReinfSet::operator&( IBinSaver &saver )
 {
 	saver.Add( 2, &reinforcements );
-	saver.Add( 3, &bDisabled );
-	saver.Add( 4, &pStartingUnits );
+	saver.Add( 4, &bDisabled );
+	saver.Add( 3, &pStartingUnits );
 
 	return 0;
 }
