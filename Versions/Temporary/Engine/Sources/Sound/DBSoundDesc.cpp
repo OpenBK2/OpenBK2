@@ -42,4 +42,3 @@ int SSoundDesc::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( SOUND, 0x1107BAC0, SSoundDesc )
-

@@ -57,4 +57,3 @@ struct SKnownEnum<NDb::EDayNight>
 	static std::string ToString( NDb::EDayNight eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EDayNight ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EDayNight( szValue ); }
 };
-

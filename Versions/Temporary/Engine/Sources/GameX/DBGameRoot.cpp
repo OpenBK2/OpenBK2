@@ -186,7 +186,7 @@ void SGameRoot::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Sounds", &sounds, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Textures", &textures, pThis );
 	NMetaInfo::ReportMetaInfo( "GameOptions", (uint8_t*)&pGameOptions - pThis, sizeof(pGameOptions), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "MainMenuBackground", &mainMenuBackground, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "MainMenuBackground", &mainMenuBackground, pThis );
 	NMetaInfo::ReportMetaInfo( "InterfacesBackground", (uint8_t*)&pInterfacesBackground - pThis, sizeof(pInterfacesBackground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Notifications", &notifications, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "NotificationEvents", &notificationEvents, pThis );
@@ -273,4 +273,3 @@ uint32_t SGameRoot::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( GAMEX, 0x1007B4C1, SGameRoot )
-

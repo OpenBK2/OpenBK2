@@ -46,4 +46,3 @@ struct SKnownEnum<NDb::EM1Action>
 	static std::string ToString( NDb::EM1Action eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EM1Action ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EM1Action( szValue ); }
 };
-

@@ -20,10 +20,10 @@ void SPreLight::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "PreLight", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis );
 	NMetaInfo::ReportMetaInfo( "Whitening", (uint8_t*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
@@ -61,10 +61,10 @@ void STwoSidedLight::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "TwoSidedLight", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "LightColor", &vLightColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "AmbientColor", &vAmbientColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "ShadeColor", &vShadeColor, pThis );
+	NMetaInfo::ReportStructMetaInfo( "ShadeAmbientColor", &vShadeAmbientColor, pThis );
 	NMetaInfo::ReportMetaInfo( "Whitening", (uint8_t*)&bWhitening - pThis, sizeof(bWhitening), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "Yaw", (uint8_t*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
@@ -102,4 +102,3 @@ int STwoSidedLight::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10082C80, SPreLight )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10087440, STwoSidedLight )
-

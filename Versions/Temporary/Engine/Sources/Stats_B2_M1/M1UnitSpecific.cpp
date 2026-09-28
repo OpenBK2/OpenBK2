@@ -158,4 +158,3 @@ uint32_t SM1UnitHelicopter::CalcCheckSum() const
 using namespace NDb;
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SM1UnitSpecific )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x31197340, SM1UnitHelicopter )
-

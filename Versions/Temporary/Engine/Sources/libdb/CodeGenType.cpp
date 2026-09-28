@@ -208,7 +208,7 @@ static void GenerateMetaInfoFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 			break;
 
 		case NDb::NTypeDef::TYPE_TYPE_STRUCT:
-			pCode->cpp << tab << "NMetaInfo::ReportStructMetaInfo( " << szParamsPrefix << qcomma << field.szName << qcomma << ", &" << szCodeFieldName << ", pThis ); " << endl;
+			pCode->cpp << tab << "NMetaInfo::ReportStructMetaInfo( " << szParamsPrefix << qcomma << field.szName << qcomma << ", &" << szCodeFieldName << ", pThis );" << endl;
 			break;
 		default:
 			const std::string szEnumTypeName =

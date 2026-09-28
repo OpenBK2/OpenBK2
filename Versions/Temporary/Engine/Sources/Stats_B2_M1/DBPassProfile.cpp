@@ -88,4 +88,3 @@ uint32_t SPassProfile::CalcCheckSum() const
 
 }
 using namespace NDb;
-

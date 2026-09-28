@@ -171,4 +171,3 @@ int STextEntry::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x171AE380, STextEntry )
-

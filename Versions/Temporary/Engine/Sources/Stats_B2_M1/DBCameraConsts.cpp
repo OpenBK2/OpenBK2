@@ -71,9 +71,9 @@ void SCameraLimits::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "CameraLimits", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "DistanceLimit", &distanceLimit, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "PitchLimit", &pitchLimit, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "YawLimit", &yawLimit, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "DistanceLimit", &distanceLimit, pThis );
+	NMetaInfo::ReportStructMetaInfo( "PitchLimit", &pitchLimit, pThis );
+	NMetaInfo::ReportStructMetaInfo( "YawLimit", &yawLimit, pThis );
 	NMetaInfo::ReportMetaInfo( "FOV", (uint8_t*)&fFOV - pThis, sizeof(fFOV), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -117,4 +117,3 @@ uint32_t SCameraLimits::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1007B4C0, SCameraLimits )
-

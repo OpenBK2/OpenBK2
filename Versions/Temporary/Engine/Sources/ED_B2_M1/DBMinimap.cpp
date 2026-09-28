@@ -209,8 +209,8 @@ void SMinimapLayer::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis
 	NMetaInfo::ReportMetaInfo( szAddName + "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "BorderColor", (uint8_t*)&nBorderColor - pThis, sizeof(nBorderColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "BorderWidth", (uint8_t*)&nBorderWidth - pThis, sizeof(nBorderWidth), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "ShadowPoint", &shadowPoint, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "EmbossPoint", &embossPoint, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "ShadowPoint", &shadowPoint, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "EmbossPoint", &embossPoint, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "NoiseImage", (uint8_t*)&szNoiseImage - pThis, sizeof(szNoiseImage), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "ScaleMethod", (uint8_t*)&eScaleMethod - pThis, sizeof(eScaleMethod), NTypeDef::TYPE_TYPE_ENUM );
 }
@@ -305,5 +305,4 @@ int SMinimap::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( ED_B2_M1, 0x1414DB40, SMinimap ) 
-
+REGISTER_DATABASE_CLASS( ED_B2_M1, 0x1414DB40, SMinimap )

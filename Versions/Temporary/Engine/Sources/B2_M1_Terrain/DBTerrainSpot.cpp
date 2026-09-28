@@ -93,4 +93,3 @@ uint32_t STerrainSpotInstance::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x100AC382, STerrainSpotDesc )
-

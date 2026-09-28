@@ -453,4 +453,3 @@ NDb::ESpecialAbilityParam StringToEnum_NDb_ESpecialAbilityParam( const std::stri
 }
 }
 using namespace NDb;
-

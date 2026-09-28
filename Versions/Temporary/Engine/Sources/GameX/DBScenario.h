@@ -556,4 +556,3 @@ struct SKnownEnum<NDb::EChapterBonusType>
 	static std::string ToString( NDb::EChapterBonusType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EChapterBonusType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EChapterBonusType( szValue ); }
 };
-

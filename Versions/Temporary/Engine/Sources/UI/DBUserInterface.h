@@ -2147,4 +2147,3 @@ struct SKnownEnum<NDb::EButtonChangeStateType>
 	static std::string ToString( NDb::EButtonChangeStateType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EButtonChangeStateType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EButtonChangeStateType( szValue ); }
 };
-

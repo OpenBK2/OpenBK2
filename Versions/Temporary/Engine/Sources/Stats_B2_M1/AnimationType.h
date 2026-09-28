@@ -72,4 +72,3 @@ struct SKnownEnum<NDb::EAnimationType>
 	static std::string ToString( NDb::EAnimationType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EAnimationType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EAnimationType( szValue ); }
 };
-

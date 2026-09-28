@@ -48,7 +48,7 @@ void STGTerraType::ReportMetaInfo() const
 
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "Material", (uint8_t*)&pMaterial - pThis, sizeof(pMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis );
 	NMetaInfo::ReportMetaInfo( "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "PeakMaterial", (uint8_t*)&pPeakMaterial - pThis, sizeof(pPeakMaterial), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "ScaleCoeff", (uint8_t*)&fScaleCoeff - pThis, sizeof(fScaleCoeff), NTypeDef::TYPE_TYPE_FLOAT );
@@ -353,7 +353,7 @@ void STerrain::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "MapFilesPath", (uint8_t*)&szMapFilesPath - pThis, sizeof(szMapFilesPath), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "Light", (uint8_t*)&pLight - pThis, sizeof(pLight), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "PreLight", (uint8_t*)&pPreLight - pThis, sizeof(pPreLight), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "Weather", &weather, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Weather", &weather, pThis );
 	NMetaInfo::ReportMetaInfo( "OceanWater", (uint8_t*)&pOceanWater - pThis, sizeof(pOceanWater), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "Roads", &roads, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Rivers", &rivers, pThis );
@@ -361,8 +361,8 @@ void STerrain::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Spots", &spots, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Lakes", &lakes, pThis );
 	NMetaInfo::ReportMetaInfo( "HasCoast", (uint8_t*)&bHasCoast - pThis, sizeof(bHasCoast), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( "Coast", &coast, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "CoastMidPoint", &vCoastMidPoint, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Coast", &coast, pThis );
+	NMetaInfo::ReportStructMetaInfo( "CoastMidPoint", &vCoastMidPoint, pThis );
 	NMetaInfo::ReportMetaInfo( "uid", (uint8_t*)&uid - pThis, sizeof(uid), NTypeDef::TYPE_TYPE_GUID );
 }
 
@@ -434,4 +434,3 @@ REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x13121B41, STGTerraType )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x13121B01, STGTerraSet )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x1918BBC0, SWeatherDesc )
 BASIC_REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, STerrain )
-

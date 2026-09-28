@@ -156,7 +156,7 @@ void SComposition::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "FadeIn", (uint8_t*)&pFadeIn - pThis, sizeof(pFadeIn), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "FadeOut", (uint8_t*)&pFadeOut - pThis, sizeof(pFadeOut), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "PlayTime", (uint8_t*)&pPlayTime - pThis, sizeof(pPlayTime), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "PlayPauseAfter", &playPauseAfter, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "PlayPauseAfter", &playPauseAfter, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -333,4 +333,3 @@ REGISTER_DATABASE_CLASS( SOUND, 0x11181302, SComposition )
 REGISTER_DATABASE_CLASS( SOUND, 0x11181380, SVoice )
 REGISTER_DATABASE_CLASS( SOUND, 0x11181303, SPlayList )
 REGISTER_DATABASE_CLASS( SOUND, 0x11181305, SMapMusic )
-

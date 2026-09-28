@@ -65,8 +65,8 @@ void SWaterSet::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "WaterSet", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Water", &water, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WhiteHorses", &whiteHorses, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Water", &water, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WhiteHorses", &whiteHorses, pThis );
 	NMetaInfo::ReportMetaInfo( "Surf", (uint8_t*)&pSurf - pThis, sizeof(pSurf), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -241,4 +241,3 @@ int SWater::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10084340, SWaterSet )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10084341, SWater )
-

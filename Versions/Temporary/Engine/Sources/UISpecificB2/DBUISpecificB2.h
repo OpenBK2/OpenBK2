@@ -837,4 +837,3 @@ struct SKnownEnum<NDb::EActionButtonPanel>
 	static std::string ToString( NDb::EActionButtonPanel eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EActionButtonPanel ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EActionButtonPanel( szValue ); }
 };
-

@@ -251,15 +251,15 @@ void SSceneConsts::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "SceneConsts", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "SelectionMaterials", &selectionMaterials, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "TrackMaterials", &trackMaterials, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "SelectionMaterials", &selectionMaterials, pThis );
+	NMetaInfo::ReportStructMetaInfo( "TrackMaterials", &trackMaterials, pThis );
 	NMetaInfo::ReportMetaInfo( "ShotTraceMaterial", (uint8_t*)&pShotTraceMaterial - pThis, sizeof(pShotTraceMaterial), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "TerraGenConsts", &terraGenConsts, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "IconAIGeometry", &iconAIGeometry, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "TerraGenConsts", &terraGenConsts, pThis );
+	NMetaInfo::ReportStructMetaInfo( "IconAIGeometry", &iconAIGeometry, pThis );
 	NMetaInfo::ReportMetaInfo( "VisObjIconsSet", (uint8_t*)&pVisObjIconsSet - pThis, sizeof(pVisObjIconsSet), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "LightFX", &lightFX, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "LightFX", &lightFX, pThis );
 	NMetaInfo::ReportMetaInfo( "InterfaceLight", (uint8_t*)&pInterfaceLight - pThis, sizeof(pInterfaceLight), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "DebugMaterials", &debugMaterials, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "DebugMaterials", &debugMaterials, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -297,4 +297,3 @@ int SSceneConsts::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( SCENEB2, 0x100AC381, SSceneConsts )
-

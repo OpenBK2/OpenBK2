@@ -208,7 +208,7 @@ void SVSODesc::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "Type", (uint8_t*)&nType - pThis, sizeof(nType), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "AIProperty", &aIProperty, pThis );
 	NMetaInfo::ReportMetaInfo( "MiniMapCenterColor", (uint8_t*)&nMiniMapCenterColor - pThis, sizeof(nMiniMapCenterColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "MiniMapBorderColor", (uint8_t*)&nMiniMapBorderColor - pThis, sizeof(nMiniMapBorderColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "MiniMapCenterWidth", (uint8_t*)&nMiniMapCenterWidth - pThis, sizeof(nMiniMapCenterWidth), NTypeDef::TYPE_TYPE_INT );
@@ -263,8 +263,8 @@ uint32_t SVSODesc::CalcCheckSum() const
 
 void SVSOPoint::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Norm", &vNorm, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Norm", &vNorm, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Width", (uint8_t*)&fWidth - pThis, sizeof(fWidth), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Opacity", (uint8_t*)&fOpacity - pThis, sizeof(fOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "KeyPoint", (uint8_t*)&bKeyPoint - pThis, sizeof(bKeyPoint), NTypeDef::TYPE_TYPE_BOOL );
@@ -375,9 +375,9 @@ void SRoadDesc::ReportMetaInfo() const
 	SVSODesc::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "LeftBorder", &leftBorder, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "RightBorder", &rightBorder, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Center", &center, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "LeftBorder", &leftBorder, pThis );
+	NMetaInfo::ReportStructMetaInfo( "RightBorder", &rightBorder, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Center", &center, pThis );
 	NMetaInfo::ReportMetaInfo( "DefaultOpacity", (uint8_t*)&fDefaultOpacity - pThis, sizeof(fDefaultOpacity), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -679,4 +679,3 @@ REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x1308AC00, SCragDesc )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x10094B80, SRiverDesc )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x140C9400, SCoastDesc )
 REGISTER_DATABASE_CLASS( B2_M1_TERRAIN, 0x100C8300, SLakeDesc )
-

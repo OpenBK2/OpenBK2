@@ -536,7 +536,7 @@ NDb::EMissionDifficulty StringToEnum_NDb_EMissionDifficulty( const std::string &
 void SMissionEnableInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Map", (uint8_t*)&pMap - pThis, sizeof(pMap), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "PlaceOnChapterMap", &vPlaceOnChapterMap, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "PlaceOnChapterMap", &vPlaceOnChapterMap, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "MissionsToEnable", (uint8_t*)&nMissionsToEnable - pThis, sizeof(nMissionsToEnable), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "MissionEnableType", (uint8_t*)&eMissionEnableType - pThis, sizeof(eMissionEnableType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reward", &reward, pThis );
@@ -550,7 +550,7 @@ void SMissionEnableInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *
 	NMetaInfo::ReportMetaInfo( szAddName + "Weather", (uint8_t*)&eWeather - pThis, sizeof(eWeather), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "ShowPotentialComplete", (uint8_t*)&bShowPotentialComplete - pThis, sizeof(bShowPotentialComplete), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "RecommendedOrder", (uint8_t*)&nRecommendedOrder - pThis, sizeof(nRecommendedOrder), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "EndOffset", &vEndOffset, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "EndOffset", &vEndOffset, pThis );
 }
 
 int SMissionEnableInfo::operator&( IXmlSaver &saver )
@@ -841,7 +841,7 @@ void SChapter::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "DetailsMap", (uint8_t*)&pDetailsMap - pThis, sizeof(pDetailsMap), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ArrowTextures", &arrowTextures, pThis );
 	NMetaInfo::ReportMetaInfo( "IntroMovie", (uint8_t*)&szIntroMovie - pThis, sizeof(szIntroMovie), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "General", &general, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "General", &general, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -968,4 +968,3 @@ REGISTER_DATABASE_CLASS( GAMEX, 0x10083400, SCampaign )
 REGISTER_DATABASE_CLASS( GAMEX, 0x1917A440, SChapterBonus )
 REGISTER_DATABASE_CLASS( GAMEX, 0x10083401, SChapter )
 REGISTER_DATABASE_CLASS( GAMEX, 0x170C9480, SMedal )
-

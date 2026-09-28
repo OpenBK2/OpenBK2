@@ -21,4 +21,3 @@ namespace NDb
 	struct SPartyDependentInfo;
 	struct SMechUnitRPGStats;
 }
-

@@ -87,4 +87,3 @@ uint32_t SM1UnitType::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x33193B01, SM1UnitType )
-

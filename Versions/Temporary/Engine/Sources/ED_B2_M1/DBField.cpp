@@ -226,7 +226,7 @@ void SField::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "ObjectShells", &objectShells, pThis );
 	NMetaInfo::ReportMetaInfo( "ProfileFileName", (uint8_t*)&szProfileFileName - pThis, sizeof(szProfileFileName), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "Height", (uint8_t*)&fHeight - pThis, sizeof(fHeight), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( "PatternSize", &patternSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "PatternSize", &patternSize, pThis );
 	NMetaInfo::ReportMetaInfo( "PositiveRatio", (uint8_t*)&fPositiveRatio - pThis, sizeof(fPositiveRatio), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -260,5 +260,4 @@ int SField::operator&( IBinSaver &saver )
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( ED_B2_M1, 0x14130C40, SField ) 
-
+REGISTER_DATABASE_CLASS( ED_B2_M1, 0x14130C40, SField )

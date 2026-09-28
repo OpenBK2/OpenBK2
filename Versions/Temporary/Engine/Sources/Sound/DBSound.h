@@ -81,4 +81,3 @@ struct SKnownEnum<NDb::ESoundType>
 	static std::string ToString( NDb::ESoundType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::ESoundType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_ESoundType( szValue ); }
 };
-

@@ -228,8 +228,8 @@ uint32_t SM1ParameterModifier::CalcCheckSum() const
 
 void SShellStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "damage", &damage, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "piercing", &piercing, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "damage", &damage, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "piercing", &piercing, pThis );
 }
 
 int SShellStatsModifier::operator&( IXmlSaver &saver )
@@ -267,7 +267,7 @@ uint32_t SShellStatsModifier::CalcCheckSum() const
 
 void SWeaponStatsModifier::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "range", &range, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "range", &range, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "shells", &shells, pThis );
 }
 
@@ -381,10 +381,10 @@ void SM1UnitStatsModifier::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "M1UnitStatsModifier", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "weapons", &weapons, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "sightRange", &sightRange, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "speed", &speed, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rotateSpeed", &rotateSpeed, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "weapons", &weapons, pThis );
+	NMetaInfo::ReportStructMetaInfo( "sightRange", &sightRange, pThis );
+	NMetaInfo::ReportStructMetaInfo( "speed", &speed, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rotateSpeed", &rotateSpeed, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -431,4 +431,3 @@ REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x33196B41, SM1UnitActions )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x331ADBC0, SM1UnitActionBuild )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x331BEB41, SM1UnitActionTransform )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x3016A480, SM1UnitStatsModifier )
-

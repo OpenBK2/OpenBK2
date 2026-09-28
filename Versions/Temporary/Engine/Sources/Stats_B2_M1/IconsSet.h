@@ -170,4 +170,3 @@ struct SKnownEnum<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType>
 	static std::string ToString( NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SVisObjIconsSet_SVisObjIcon_EVisObjIconType( szValue ); }
 };
-

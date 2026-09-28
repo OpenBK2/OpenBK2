@@ -182,4 +182,3 @@ struct SKnownEnum<NDb::EHistoricalSide>
 	static std::string ToString( NDb::EHistoricalSide eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EHistoricalSide ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EHistoricalSide( szValue ); }
 };
-

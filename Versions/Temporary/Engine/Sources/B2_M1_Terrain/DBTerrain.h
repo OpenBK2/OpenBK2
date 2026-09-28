@@ -253,4 +253,3 @@ struct SKnownEnum<NDb::EWeatherType>
 	static std::string ToString( NDb::EWeatherType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EWeatherType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EWeatherType( szValue ); }
 };
-

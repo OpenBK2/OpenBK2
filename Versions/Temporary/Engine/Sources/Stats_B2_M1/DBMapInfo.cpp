@@ -75,7 +75,7 @@ uint32_t SMPMapInfo::CalcCheckSum() const
 
 void SCameraPlacement::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Anchor", &vAnchor, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Yaw", (uint8_t*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dist", (uint8_t*)&fDist - pThis, sizeof(fDist), NTypeDef::TYPE_TYPE_FLOAT );
@@ -124,7 +124,7 @@ uint32_t SCameraPlacement::CalcCheckSum() const
 void SScriptCameraPlacement::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Yaw", (uint8_t*)&fYaw - pThis, sizeof(fYaw), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Pitch", (uint8_t*)&fPitch - pThis, sizeof(fPitch), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "FOV", (uint8_t*)&fFOV - pThis, sizeof(fFOV), NTypeDef::TYPE_TYPE_FLOAT );
@@ -534,13 +534,13 @@ uint32_t SMapObjectInfo::SLinkInfo::CalcCheckSum() const
 
 void SMapObjectInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Dir", (uint8_t*)&nDir - pThis, sizeof(nDir), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Player", (uint8_t*)&nPlayer - pThis, sizeof(nPlayer), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ScriptID", (uint8_t*)&nScriptID - pThis, sizeof(nScriptID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "HP", (uint8_t*)&fHP - pThis, sizeof(fHP), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "FrameIndex", (uint8_t*)&nFrameIndex - pThis, sizeof(nFrameIndex), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Link", &link, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Link", &link, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Object", (uint8_t*)&pObject - pThis, sizeof(pObject), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "ConstructorProfile", (uint8_t*)&pConstructorProfile - pThis, sizeof(pConstructorProfile), NTypeDef::TYPE_TYPE_REF );
 }
@@ -654,8 +654,8 @@ void SScriptArea::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis )
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBHalfSize", &vAABBHalfSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AABBHalfSize", &vAABBHalfSize, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "R", (uint8_t*)&fR - pThis, sizeof(fR), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
@@ -703,7 +703,7 @@ void SAIStartCommand::ReportMetaInfo( const std::string &szAddName, uint8_t *pTh
 	NMetaInfo::ReportMetaInfo( szAddName + "CmdType", (uint8_t*)&nCmdType - pThis, sizeof(nCmdType), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "unitLinkIDs", &unitLinkIDs, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "LinkID", (uint8_t*)&nLinkID - pThis, sizeof(nLinkID), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "FromExplosion", (uint8_t*)&bFromExplosion - pThis, sizeof(bFromExplosion), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Number", (uint8_t*)&fNumber - pThis, sizeof(fNumber), NTypeDef::TYPE_TYPE_FLOAT );
 }
@@ -753,7 +753,7 @@ void SBattlePosition::ReportMetaInfo( const std::string &szAddName, uint8_t *pTh
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "ArtilleryLinkID", (uint8_t*)&nArtilleryLinkID - pThis, sizeof(nArtilleryLinkID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "TruckLinkID", (uint8_t*)&nTruckLinkID - pThis, sizeof(nTruckLinkID), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 }
 
 int SBattlePosition::operator&( IXmlSaver &saver )
@@ -794,7 +794,7 @@ uint32_t SBattlePosition::CalcCheckSum() const
 void SMapSoundInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "sound", (uint8_t*)&psound - pThis, sizeof(psound), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pos", &vPos, pThis );
 }
 
 int SMapSoundInfo::operator&( IXmlSaver &saver )
@@ -897,7 +897,7 @@ NDb::EParcelType StringToEnum_NDb_EParcelType( const std::string &szValue )
 
 void SReinforcePoint::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&fDirection - pThis, sizeof(fDirection), NTypeDef::TYPE_TYPE_FLOAT );
 }
 
@@ -938,7 +938,7 @@ void SAIGeneralParcel::ReportMetaInfo( const std::string &szAddName, uint8_t *pT
 {
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "reinforcePoints", &reinforcePoints, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Radius", (uint8_t*)&fRadius - pThis, sizeof(fRadius), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Importance", (uint8_t*)&fImportance - pThis, sizeof(fImportance), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "DefenceDirection", (uint8_t*)&fDefenceDirection - pThis, sizeof(fDefenceDirection), NTypeDef::TYPE_TYPE_FLOAT );
@@ -1172,7 +1172,7 @@ NDb::ESuperWeaponType StringToEnum_NDb_ESuperWeaponType( const std::string &szVa
 
 void SMapPlayerInfo::SDeployPosition::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 }
 
@@ -1256,8 +1256,8 @@ uint32_t SMapPlayerInfo::SSuperWeaponInfo::CalcCheckSum() const
 
 void SMapPlayerInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Camera", &camera, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "general", &general, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Camera", &camera, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "general", &general, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "PartyInfo", (uint8_t*)&pPartyInfo - pThis, sizeof(pPartyInfo), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ReinforcementPoints", &reinforcementPoints, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "ReinforcementTypes", &reinforcementTypes, pThis );
@@ -1266,10 +1266,10 @@ void SMapPlayerInfo::ReportMetaInfo( const std::string &szAddName, uint8_t *pThi
 	NMetaInfo::ReportMetaInfo( szAddName + "RecycleTimeCoefficient", (uint8_t*)&fRecycleTimeCoefficient - pThis, sizeof(fRecycleTimeCoefficient), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementCalls", (uint8_t*)&nReinforcementCalls - pThis, sizeof(nReinforcementCalls), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "LocalizedPlayerNameFileRef", (uint8_t*)&szLocalizedPlayerNameFileRef - pThis, sizeof(szLocalizedPlayerNameFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "MPStartPos", &vMPStartPos, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "MPStartPos", &vMPStartPos, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "ScriptReinforcements", &scriptReinforcements, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "ScriptReinforcementsTextID", &scriptReinforcementsTextID, pThis );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "SuperWeapon", &superWeapon, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "SuperWeapon", &superWeapon, pThis );
 }
 
 int SMapPlayerInfo::operator&( IXmlSaver &saver )
@@ -1336,7 +1336,7 @@ void SMapInfo::ReportMetaInfo() const
 
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "MapDesignerFileRef", (uint8_t*)&szMapDesignerFileRef - pThis, sizeof(szMapDesignerFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "NorthPoint", &vNorthPoint, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "NorthPoint", &vNorthPoint, pThis );
 	NMetaInfo::ReportMetaInfo( "NortType", (uint8_t*)&nNortType - pThis, sizeof(nNortType), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( "Players", &players, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Objects", &objects, pThis );
@@ -1346,7 +1346,7 @@ void SMapInfo::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "Entrenchments", &entrenchments, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "Bridges", &bridges, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ScenarioObjects", &scenarioObjects, pThis );
-	NMetaInfo::ReportStructMetaInfo( "Reinforcements", &reinforcements, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Reinforcements", &reinforcements, pThis );
 	NMetaInfo::ReportMetaInfo( "ScriptFileRef", (uint8_t*)&szScriptFileRef - pThis, sizeof(szScriptFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportStructArrayMetaInfo( "ScriptAreas", &scriptAreas, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "startCommandsList", &startCommandsList, pThis );
@@ -1364,13 +1364,13 @@ void SMapInfo::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "LoadingDescriptionFileRef", (uint8_t*)&szLoadingDescriptionFileRef - pThis, sizeof(szLoadingDescriptionFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "LoadingPicture", (uint8_t*)&pLoadingPicture - pThis, sizeof(pLoadingPicture), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "CameraPositions", &cameraPositions, pThis );
-	NMetaInfo::ReportStructMetaInfo( "ScriptMovies", &scriptMovies, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "ScriptMovies", &scriptMovies, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "FinalPositions", &finalPositions, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Objectives", &objectives, pThis );
 	NMetaInfo::ReportMetaInfo( "Music", (uint8_t*)&pMusic - pThis, sizeof(pMusic), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "MusicWin", (uint8_t*)&pMusicWin - pThis, sizeof(pMusicWin), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "MusicLost", (uint8_t*)&pMusicLost - pThis, sizeof(pMusicLost), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "MPInfo", &mPInfo, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "MPInfo", &mPInfo, pThis );
 	NMetaInfo::ReportMetaInfo( "BorderLockSize", (uint8_t*)&nBorderLockSize - pThis, sizeof(nBorderLockSize), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "BorderCameraSize", (uint8_t*)&nBorderCameraSize - pThis, sizeof(nBorderCameraSize), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "ScriptEffects", &scriptEffects, pThis );
@@ -1886,4 +1886,3 @@ REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110BC481, SReinforcementEnable )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110BC4C0, SReinforcementDisable )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11163C00, SAddReinforcementCalls )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1712D2C0, SDifficultyLevel )
-

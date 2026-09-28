@@ -63,7 +63,7 @@ void SUIGameConsts::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Console", (uint8_t*)&pConsole - pThis, sizeof(pConsole), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "DebugInfo", (uint8_t*)&pDebugInfo - pThis, sizeof(pDebugInfo), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "StatsWindow", (uint8_t*)&pStatsWindow - pThis, sizeof(pStatsWindow), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "ButtonClickSound", &buttonClickSound, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "ButtonClickSound", &buttonClickSound, pThis );
 }
 
 int SUIGameConsts::operator&( IXmlSaver &saver )
@@ -107,4 +107,3 @@ uint32_t SUIGameConsts::CalcCheckSum() const
 using namespace NDb;
 REGISTER_DATABASE_CLASS( UI, 0x15087B80, STooltipContext )
 BASIC_REGISTER_DATABASE_CLASS( UI, SUIGameConsts )
-

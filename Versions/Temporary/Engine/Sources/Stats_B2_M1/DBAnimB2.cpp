@@ -17,8 +17,8 @@ namespace NDb
 
 void SAnimAABB::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Center", &vCenter, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "HalfSize", &vHalfSize, pThis );
 }
 
 int SAnimAABB::operator&( IXmlSaver &saver )
@@ -65,8 +65,8 @@ void SAnimB2::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Length", (uint8_t*)&nLength - pThis, sizeof(nLength), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "Looped", (uint8_t*)&bLooped - pThis, sizeof(bLooped), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "WeaponsToUseWith", (uint8_t*)&nWeaponsToUseWith - pThis, sizeof(nWeaponsToUseWith), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( "aabb_a", &aabb_a, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "aabb_d", &aabb_d, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "aabb_a", &aabb_a, pThis );
+	NMetaInfo::ReportStructMetaInfo( "aabb_d", &aabb_d, pThis );
 	NMetaInfo::ReportMetaInfo( "MoveSpeed", (uint8_t*)&fMoveSpeed - pThis, sizeof(fMoveSpeed), NTypeDef::TYPE_TYPE_FLOAT );
 	NMetaInfo::ReportMetaInfo( "ModelFileRef", (uint8_t*)&szModelFileRef - pThis, sizeof(szModelFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "FirstFrame", (uint8_t*)&nFirstFrame - pThis, sizeof(nFirstFrame), NTypeDef::TYPE_TYPE_INT );
@@ -118,4 +118,3 @@ int SAnimB2::operator&( IBinSaver &saver )
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x10093480, SAnimB2 )
-

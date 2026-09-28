@@ -9,4 +9,3 @@ struct IXmlSaver;
 namespace NDb
 {
 }
-

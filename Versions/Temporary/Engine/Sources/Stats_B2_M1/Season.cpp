@@ -81,4 +81,3 @@ NDb::EDayNight StringToEnum_NDb_EDayNight( const std::string &szValue )
 }
 }
 using namespace NDb;
-

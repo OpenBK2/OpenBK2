@@ -84,10 +84,10 @@ uint32_t SUIDesc::CalcCheckSum() const
 
 void SUICommandBase::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam1", &szParam1, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam2", &szParam2, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "vParam1", &vParam1, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "nParam1", &nParam1, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam1", &szParam1, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "szParam2", &szParam2, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "vParam1", &vParam1, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "nParam1", &nParam1, pThis );
 }
 
 int SUICommandBase::operator&( IXmlSaver &saver )
@@ -247,9 +247,9 @@ void SUISMoveTo::ReportMetaInfo() const
 	SUIStateBase::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "vOffset", &vOffset, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "fMoveTime", &fMoveTime, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "szElementToMove", &szElementToMove, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "vOffset", &vOffset, pThis );
+	NMetaInfo::ReportStructMetaInfo( "fMoveTime", &fMoveTime, pThis );
+	NMetaInfo::ReportStructMetaInfo( "szElementToMove", &szElementToMove, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -282,8 +282,8 @@ void SUISRunReaction::ReportMetaInfo() const
 	SUIStateBase::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "szReactionForward", &szReactionForward, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "szReactionBack", &szReactionBack, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "szReactionForward", &szReactionForward, pThis );
+	NMetaInfo::ReportStructMetaInfo( "szReactionBack", &szReactionBack, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -314,10 +314,10 @@ void SUISSendUIMessage::ReportMetaInfo() const
 	SUIStateBase::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "szMessageID", &szMessageID, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "szParam", &szParam, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "nForwardParam", &nForwardParam, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "nBackParam", &nBackParam, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "szMessageID", &szMessageID, pThis );
+	NMetaInfo::ReportStructMetaInfo( "szParam", &szParam, pThis );
+	NMetaInfo::ReportStructMetaInfo( "nForwardParam", &nForwardParam, pThis );
+	NMetaInfo::ReportStructMetaInfo( "nBackParam", &nBackParam, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -496,7 +496,7 @@ void SBackgroundSimpleScallingTexture::ReportMetaInfo() const
 	SBackground::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Size", &vSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Size", &vSize, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -553,9 +553,9 @@ int SBackgroundSimpleTexture::operator&( IBinSaver &saver )
 
 void SSubRect::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &ptSize, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Maps", &rcMaps, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &ptSize, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Maps", &rcMaps, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Rotate", (uint8_t*)&nRotate - pThis, sizeof(nRotate), NTypeDef::TYPE_TYPE_INT );
 }
 
@@ -602,15 +602,15 @@ void SBackgroundTiledTexture::ReportMetaInfo() const
 	SBackground::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "rLT", &rLT, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rRT", &rRT, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rLB", &rLB, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rRB", &rRB, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rT", &rT, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rL", &rL, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rR", &rR, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rB", &rB, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "rF", &rF, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "rLT", &rLT, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rRT", &rRT, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rLB", &rLB, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rRB", &rRB, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rT", &rT, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rL", &rL, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rR", &rR, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rB", &rB, pThis );
+	NMetaInfo::ReportStructMetaInfo( "rF", &rF, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -725,7 +725,7 @@ void SGameMessageReaction::ReportMetaInfo( const std::string &szAddName, uint8_t
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "GameMessage", (uint8_t*)&szGameMessage - pThis, sizeof(szGameMessage), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( szAddName + "LogicalReaction", (uint8_t*)&szLogicalReaction - pThis, sizeof(szLogicalReaction), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VisualReaction", &visualReaction, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VisualReaction", &visualReaction, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "WaitVisual", (uint8_t*)&bWaitVisual - pThis, sizeof(bWaitVisual), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Forward", (uint8_t*)&bForward - pThis, sizeof(bForward), NTypeDef::TYPE_TYPE_BOOL );
 }
@@ -771,12 +771,12 @@ uint32_t SGameMessageReaction::CalcCheckSum() const
 
 void SWindowPlacement::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &position, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VerAllign", &verAllign, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "HorAllign", &horAllign, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &size, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "LowerMargin", &lowerMargin, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "UpperMargin", &upperMargin, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &position, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VerAllign", &verAllign, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "HorAllign", &horAllign, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Size", &size, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "LowerMargin", &lowerMargin, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "UpperMargin", &upperMargin, pThis );
 }
 
 int SWindowPlacement::operator&( IXmlSaver &saver )
@@ -864,8 +864,8 @@ void SWindowShared::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "Children", &children, pThis );
 	NMetaInfo::ReportMetaInfo( "Background", (uint8_t*)&pBackground - pThis, sizeof(pBackground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "Foreground", (uint8_t*)&pForeground - pThis, sizeof(pForeground), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "Flags", &flags, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Flags", &flags, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ActiveArea", &activeArea, pThis );
 	NMetaInfo::ReportMetaInfo( "IgnoreDblClick", (uint8_t*)&bIgnoreDblClick - pThis, sizeof(bIgnoreDblClick), NTypeDef::TYPE_TYPE_BOOL );
 }
@@ -925,7 +925,7 @@ void SWindow::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Visible", (uint8_t*)&bVisible - pThis, sizeof(bVisible), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( "GameMessageReactions", &gameMessageReactions, pThis );
-	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis );
 	NMetaInfo::ReportMetaInfo( "Enabled", (uint8_t*)&bEnabled - pThis, sizeof(bEnabled), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "TextString", (uint8_t*)&pTextString - pThis, sizeof(pTextString), NTypeDef::TYPE_TYPE_REF );
 }
@@ -983,7 +983,7 @@ void SForegroundTextStringShared::ReportMetaInfo() const
 
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "TextStringFileRef", (uint8_t*)&szTextStringFileRef - pThis, sizeof(szTextStringFileRef), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "Position", &position, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Position", &position, pThis );
 	NMetaInfo::ReportMetaInfo( "FormatStringFileRef", (uint8_t*)&szFormatStringFileRef - pThis, sizeof(szFormatStringFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -1047,7 +1047,7 @@ void STextFormat::ReportMetaInfo() const
 	SUIDesc::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Placement", &placement, pThis );
 	NMetaInfo::ReportMetaInfo( "FormatStringFileRef", (uint8_t*)&szFormatStringFileRef - pThis, sizeof(szFormatStringFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
 }
@@ -1164,7 +1164,7 @@ uint32_t SMessageSequence::CalcCheckSum() const
 void SMessageSequienceEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "CustomCheckReturn", (uint8_t*)&nCustomCheckReturn - pThis, sizeof(nCustomCheckReturn), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequience", &sequience, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequience", &sequience, pThis );
 }
 
 int SMessageSequienceEntry::operator&( IXmlSaver &saver )
@@ -1362,8 +1362,8 @@ void SMessageReactionComplex::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportStructArrayMetaInfo( "branches", &branches, pThis );
 	NMetaInfo::ReportMetaInfo( "ConditionCheck", (uint8_t*)&pConditionCheck - pThis, sizeof(pConditionCheck), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "commonBefore", &commonBefore, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "commonAfter", &commonAfter, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "commonBefore", &commonBefore, pThis );
+	NMetaInfo::ReportStructMetaInfo( "commonAfter", &commonAfter, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -1633,7 +1633,7 @@ uint32_t SMessageReactionsDesc::CalcCheckSum() const
 void SCommandSequienceEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequence", &sequence, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Sequence", &sequence, pThis );
 }
 
 int SCommandSequienceEntry::operator&( IXmlSaver &saver )
@@ -1740,7 +1740,7 @@ void SWindowScreen::ReportMetaInfo() const
 	SWindow::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "MessageReactions", &messageReactions, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "MessageReactions", &messageReactions, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "CommandSequiences", &commandSequiences, pThis );
 	NMetaInfo::ReportMetaInfo( "TooltipContext", (uint8_t*)&nTooltipContext - pThis, sizeof(nTooltipContext), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportStructArrayMetaInfo( "RelatedTexts", &relatedTexts, pThis );
@@ -1782,7 +1782,7 @@ void SWindowProgressBarShared::ReportMetaInfo() const
 	NMetaInfo::ReportMetaInfo( "Backward", (uint8_t*)&pBackward - pThis, sizeof(pBackward), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "Glow", (uint8_t*)&pGlow - pThis, sizeof(pGlow), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "StepSize", (uint8_t*)&fStepSize - pThis, sizeof(fStepSize), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( "GlowSize", &vGlowSize, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "GlowSize", &vGlowSize, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -2063,8 +2063,8 @@ void SWindowTooltipShared::ReportMetaInfo() const
 	SWindowShared::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "LowerBorder", &vLowerBorder, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "HigherBorder", &vHigherBorder, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "LowerBorder", &vLowerBorder, pThis );
+	NMetaInfo::ReportStructMetaInfo( "HigherBorder", &vHigherBorder, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -2261,17 +2261,17 @@ void SWindowEditLine::ReportMetaInfo() const
 
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "OnReturn", (uint8_t*)&szOnReturn - pThis, sizeof(szOnReturn), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "SequienceOnReturn", &sequienceOnReturn, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "SequienceOnReturn", &sequienceOnReturn, pThis );
 	NMetaInfo::ReportMetaInfo( "OnEscape", (uint8_t*)&szOnEscape - pThis, sizeof(szOnEscape), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( "SequienceOnEscape", &sequienceOnEscape, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "SequienceOnEscape", &sequienceOnEscape, pThis );
 	NMetaInfo::ReportMetaInfo( "MaxLength", (uint8_t*)&nMaxLength - pThis, sizeof(nMaxLength), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "TextScroll", (uint8_t*)&bTextScroll - pThis, sizeof(bTextScroll), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( "TextEntryType", (uint8_t*)&eTextEntryType - pThis, sizeof(eTextEntryType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "Password", (uint8_t*)&bPassword - pThis, sizeof(bPassword), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( "SequienceOnTextChanged", &sequienceOnTextChanged, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "SequienceOnTextChanged", &sequienceOnTextChanged, pThis );
 	NMetaInfo::ReportMetaInfo( "OnTextChanged", (uint8_t*)&szOnTextChanged - pThis, sizeof(szOnTextChanged), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "TabOrder", (uint8_t*)&nTabOrder - pThis, sizeof(nTabOrder), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( "SequienceOnFocusLost", &sequienceOnFocusLost, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "SequienceOnFocusLost", &sequienceOnFocusLost, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -2431,7 +2431,7 @@ void SWindowConsoleShared::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "Color", (uint8_t*)&nColor - pThis, sizeof(nColor), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "EditLine", (uint8_t*)&pEditLine - pThis, sizeof(pEditLine), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( "MakeVisible", &makeVisible, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "MakeVisible", &makeVisible, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -2545,8 +2545,8 @@ void SWindowScrollableContainerBase::ReportMetaInfo() const
 	SWindow::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "OnSelection", &onSelection, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "OnDoubleClick", &onDoubleClick, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "OnSelection", &onSelection, pThis );
+	NMetaInfo::ReportStructMetaInfo( "OnDoubleClick", &onDoubleClick, pThis );
 }
 
 int SWindowScrollableContainerBase::operator&( IXmlSaver &saver )
@@ -3014,7 +3014,7 @@ void SWindowComboBox::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "ListPriority", (uint8_t*)&nListPriority - pThis, sizeof(nListPriority), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "MaxVisibleRows", (uint8_t*)&nMaxVisibleRows - pThis, sizeof(nMaxVisibleRows), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( "OnSelection", &onSelection, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "OnSelection", &onSelection, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -3102,7 +3102,7 @@ void SButtonVisualSubState::ReportMetaInfo( const std::string &szAddName, uint8_
 	NMetaInfo::ReportMetaInfo( szAddName + "Background", (uint8_t*)&pBackground - pThis, sizeof(pBackground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "Foreground", (uint8_t*)&pForeground - pThis, sizeof(pForeground), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextString", (uint8_t*)&pTextString - pThis, sizeof(pTextString), NTypeDef::TYPE_TYPE_REF );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "OnEnterSubState", &onEnterSubState, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "OnEnterSubState", &onEnterSubState, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "TextFormat", (uint8_t*)&pTextFormat - pThis, sizeof(pTextFormat), NTypeDef::TYPE_TYPE_REF );
 }
 
@@ -3147,13 +3147,13 @@ uint32_t SButtonVisualSubState::CalcCheckSum() const
 
 void SButtonVisualState::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Normal", &normal, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "MouseOver", &mouseOver, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Pushed", &pushed, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Disabled", &disabled, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "RightButtonDown", &rightButtonDown, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Normal", &normal, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "MouseOver", &mouseOver, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Pushed", &pushed, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Disabled", &disabled, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "RightButtonDown", &rightButtonDown, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "DefaultSubState", (uint8_t*)&eDefaultSubState - pThis, sizeof(eDefaultSubState), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "VisualOnEnterState", &visualOnEnterState, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "VisualOnEnterState", &visualOnEnterState, pThis );
 }
 
 int SButtonVisualState::operator&( IXmlSaver &saver )
@@ -3202,9 +3202,9 @@ uint32_t SButtonVisualState::CalcCheckSum() const
 void SButtonLogicalState::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "MessageOnEnterState", (uint8_t*)&szMessageOnEnterState - pThis, sizeof(szMessageOnEnterState), NTypeDef::TYPE_TYPE_STRING );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "CommandsOnEnterState", &commandsOnEnterState, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "CommandsOnRightClick", &commandsOnRightClick, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "commandsOnLDblKlick", &commandsOnLDblKlick, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "CommandsOnEnterState", &commandsOnEnterState, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "CommandsOnRightClick", &commandsOnRightClick, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "commandsOnLDblKlick", &commandsOnLDblKlick, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "WaitVisual", (uint8_t*)&bWaitVisual - pThis, sizeof(bWaitVisual), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "ReverseCommands", (uint8_t*)&bReverseCommands - pThis, sizeof(bReverseCommands), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "Name", (uint8_t*)&szName - pThis, sizeof(szName), NTypeDef::TYPE_TYPE_STRING );
@@ -3294,7 +3294,7 @@ void SWindowMSButton::ReportMetaInfo() const
 	NMetaInfo::ReportStructArrayMetaInfo( "ButtonStates", &buttonStates, pThis );
 	NMetaInfo::ReportMetaInfo( "ButtonGroupID", (uint8_t*)&nButtonGroupID - pThis, sizeof(nButtonGroupID), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "AutoChangeState", (uint8_t*)&bAutoChangeState - pThis, sizeof(bAutoChangeState), NTypeDef::TYPE_TYPE_BOOL );
-	NMetaInfo::ReportStructMetaInfo( "PushEffect", &pushEffect, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "PushEffect", &pushEffect, pThis );
 	NMetaInfo::ReportMetaInfo( "State", (uint8_t*)&nState - pThis, sizeof(nState), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "TextFileRef", (uint8_t*)&szTextFileRef - pThis, sizeof(szTextFileRef), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::ReportMetaInfo( "TextFormat", (uint8_t*)&pTextFormat - pThis, sizeof(pTextFormat), NTypeDef::TYPE_TYPE_REF );
@@ -3443,7 +3443,7 @@ void SWindowScrollBar::ReportMetaInfo() const
 	SWindow::ReportMetaInfo();
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Effects", &effects, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Effects", &effects, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -3474,7 +3474,7 @@ void SUISButtonSubstate::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "Substate", (uint8_t*)&eSubstate - pThis, sizeof(eSubstate), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "WaitTime", (uint8_t*)&fWaitTime - pThis, sizeof(fWaitTime), NTypeDef::TYPE_TYPE_FLOAT );
-	NMetaInfo::ReportStructMetaInfo( "szButton", &szButton, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "szButton", &szButton, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -3576,4 +3576,3 @@ REGISTER_DATABASE_CLASS( UI, 0x1106C400, SWindowSlider )
 REGISTER_DATABASE_CLASS( UI, 0x1106C383, SWindowScrollBarShared )
 REGISTER_DATABASE_CLASS( UI, 0x1106C384, SWindowScrollBar )
 REGISTER_DATABASE_CLASS( UI, 0x170AE340, SUISButtonSubstate )
-

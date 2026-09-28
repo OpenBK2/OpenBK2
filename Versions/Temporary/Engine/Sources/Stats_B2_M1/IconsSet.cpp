@@ -88,7 +88,7 @@ NDb::SIconsSet::SIconType::EIconTypeEnum StringToEnum_NDb_SIconsSet_SIconType_EI
 void SIconsSet::SIconType::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Rect", &rcRect, pThis );
 }
 
 int SIconsSet::SIconType::operator&( IXmlSaver &saver )
@@ -274,7 +274,7 @@ void SVisObjIconsSet::SVisObjIcon::ReportMetaInfo( const std::string &szAddName,
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Type", (uint8_t*)&eType - pThis, sizeof(eType), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "Priority", (uint8_t*)&nPriority - pThis, sizeof(nPriority), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "texCoords", &rctexCoords, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "texCoords", &rctexCoords, pThis );
 }
 
 int SVisObjIconsSet::SVisObjIcon::operator&( IXmlSaver &saver )
@@ -352,4 +352,3 @@ int SVisObjIconsSet::operator&( IBinSaver &saver )
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1311B302, SIconsSet )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1313C400, SVisObjIconsSet )
-

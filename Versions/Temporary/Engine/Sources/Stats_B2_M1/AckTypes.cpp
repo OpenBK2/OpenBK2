@@ -402,4 +402,3 @@ uint32_t SAckType::CalcCheckSum() const
 
 }
 using namespace NDb;
-

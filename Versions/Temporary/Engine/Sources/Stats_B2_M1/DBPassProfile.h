@@ -49,4 +49,3 @@ namespace NDb
 		uint32_t CalcCheckSum() const;
 	};
 }
-

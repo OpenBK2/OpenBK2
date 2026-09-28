@@ -260,7 +260,7 @@ void SMultiplayerConsts::ReportMetaInfo() const
 	NMetaInfo::ReportSimpleArrayMetaInfo( "DiplomacyInfo", &diplomacyInfo, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "expLevels", &expLevels, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "PlayerColorInfos", &playerColorInfos, pThis );
-	NMetaInfo::ReportStructMetaInfo( "ReinfCounterRecycle", &vReinfCounterRecycle, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "ReinfCounterRecycle", &vReinfCounterRecycle, pThis );
 	NMetaInfo::ReportMetaInfo( "TimeUserMPPause", (uint8_t*)&nTimeUserMPPause - pThis, sizeof(nTimeUserMPPause), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( "TimeUserMPLag", (uint8_t*)&nTimeUserMPLag - pThis, sizeof(nTimeUserMPLag), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::FinishMetaInfoReport();
@@ -315,4 +315,3 @@ uint32_t SMultiplayerConsts::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( GAMEX, 0x191B2300, SMultiplayerConsts )
-

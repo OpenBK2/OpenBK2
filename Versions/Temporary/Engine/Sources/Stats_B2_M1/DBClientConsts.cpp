@@ -460,16 +460,16 @@ void SClientGameConsts::ReportMetaInfo() const
 	uint8_t *pThis = (uint8_t*)this;
 	NMetaInfo::ReportMetaInfo( "Camera", (uint8_t*)&pCamera - pThis, sizeof(pCamera), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( "Cursors", &cursors, pThis );
-	NMetaInfo::ReportStructMetaInfo( "ActionsPriority", &actionsPriority, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "M1ActionsPriority", &m1ActionsPriority, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "ActionsPriority", &actionsPriority, pThis );
+	NMetaInfo::ReportStructMetaInfo( "M1ActionsPriority", &m1ActionsPriority, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "AcksParameters", &acksParameters, pThis );
-	NMetaInfo::ReportStructMetaInfo( "AckConsts", &ackConsts, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "AckConsts", &ackConsts, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "MechUnitIconsSets", &mechUnitIconsSets, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "SquadIconsSets", &squadIconsSets, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "BuildingIconsSets", &buildingIconsSets, pThis );
-	NMetaInfo::ReportStructMetaInfo( "PassengerIconsSet", &passengerIconsSet, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "MapCommandAck", &mapCommandAck, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "MapCommandAckDir", &mapCommandAckDir, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "PassengerIconsSet", &passengerIconsSet, pThis );
+	NMetaInfo::ReportStructMetaInfo( "MapCommandAck", &mapCommandAck, pThis );
+	NMetaInfo::ReportStructMetaInfo( "MapCommandAckDir", &mapCommandAckDir, pThis );
 	NMetaInfo::ReportMetaInfo( "MapPointer", (uint8_t*)&pMapPointer - pThis, sizeof(pMapPointer), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportMetaInfo( "Noises", (uint8_t*)&szNoises - pThis, sizeof(szNoises), NTypeDef::TYPE_TYPE_STRING );
 	NMetaInfo::FinishMetaInfoReport();
@@ -534,4 +534,3 @@ uint32_t SClientGameConsts::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1007BA80, SClientGameConsts )
-

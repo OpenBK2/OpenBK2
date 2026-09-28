@@ -52,7 +52,7 @@ uint32_t SIntArray::CalcCheckSum() const
 void SReinforcementGroupInfoEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "GroupID", (uint8_t*)&nGroupID - pThis, sizeof(nGroupID), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "GroupsVector", &groupsVector, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "GroupsVector", &groupsVector, pThis );
 }
 
 int SReinforcementGroupInfoEntry::operator&( IXmlSaver &saver )
@@ -127,7 +127,7 @@ uint32_t SReinforcementGroupInfo::CalcCheckSum() const
 void SReinforcementMaskEntry::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis );
 }
 
 int SReinforcementMaskEntry::operator&( IXmlSaver &saver )
@@ -291,8 +291,8 @@ uint32_t STypedDeployTemplate::CalcCheckSum() const
 
 void SReinforcementPosition::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( szAddName + "AviationPosition", &vAviationPosition, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "Position", &vPosition, pThis );
+	NMetaInfo::ReportStructMetaInfo( szAddName + "AviationPosition", &vAviationPosition, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "Direction", (uint8_t*)&nDirection - pThis, sizeof(nDirection), NTypeDef::TYPE_TYPE_INT );
 	NMetaInfo::ReportMetaInfo( szAddName + "Template", (uint8_t*)&pTemplate - pThis, sizeof(pTemplate), NTypeDef::TYPE_TYPE_REF );
 	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "TypedTemplates", &typedTemplates, pThis );
@@ -393,7 +393,7 @@ uint32_t SScriptReinforcementEntry::CalcCheckSum() const
 
 void SPlayerReinforcementEnable::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
 {
-	NMetaInfo::ReportStructMetaInfo( szAddName + "NewPointOnEnable", &newPointOnEnable, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( szAddName + "NewPointOnEnable", &newPointOnEnable, pThis );
 	NMetaInfo::ReportMetaInfo( szAddName + "ReinforcementToEnable", (uint8_t*)&eReinforcementToEnable - pThis, sizeof(eReinforcementToEnable), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( szAddName + "SetPoint", (uint8_t*)&bSetPoint - pThis, sizeof(bSetPoint), NTypeDef::TYPE_TYPE_BOOL );
 	NMetaInfo::ReportMetaInfo( szAddName + "GivenReinforcementPointID", (uint8_t*)&nGivenReinforcementPointID - pThis, sizeof(nGivenReinforcementPointID), NTypeDef::TYPE_TYPE_INT );
@@ -436,4 +436,3 @@ uint32_t SPlayerReinforcementEnable::CalcCheckSum() const
 
 }
 using namespace NDb;
-

@@ -48,4 +48,3 @@ namespace NDb
 		uint32_t GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const;
 	};
 }
-

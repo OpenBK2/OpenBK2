@@ -5352,7 +5352,7 @@ int SAmphibianStats::operator&( IBinSaver &saver )
 	saver.Add( 15, &waterIdleJx );
 	saver.Add( 16, &waterIdleJy );
 	saver.Add( 17, &removeCorpseInWater );
-	
+
 	return 0;
 }
 
@@ -6663,23 +6663,23 @@ void SUnitStatsModifier::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "UnitStatsModifier", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Durability", &durability, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "SmallAABBCoeff", &smallAABBCoeff, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Camouflage", &camouflage, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "SightPower", &sightPower, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "SightRange", &sightRange, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Speed", &speed, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "RotateSpeed", &rotateSpeed, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponDispersion", &weaponDispersion, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponDamage", &weaponDamage, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponPiercing", &weaponPiercing, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponTrackDamageProb", &weaponTrackDamageProb, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponRelaxTime", &weaponRelaxTime, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponAimTime", &weaponAimTime, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponShellSpeed", &weaponShellSpeed, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponArea", &weaponArea, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "WeaponArea2", &weaponArea2, pThis ); 
-	NMetaInfo::ReportStructMetaInfo( "Cover", &cover, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Durability", &durability, pThis );
+	NMetaInfo::ReportStructMetaInfo( "SmallAABBCoeff", &smallAABBCoeff, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Camouflage", &camouflage, pThis );
+	NMetaInfo::ReportStructMetaInfo( "SightPower", &sightPower, pThis );
+	NMetaInfo::ReportStructMetaInfo( "SightRange", &sightRange, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Speed", &speed, pThis );
+	NMetaInfo::ReportStructMetaInfo( "RotateSpeed", &rotateSpeed, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponDispersion", &weaponDispersion, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponDamage", &weaponDamage, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponPiercing", &weaponPiercing, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponTrackDamageProb", &weaponTrackDamageProb, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponRelaxTime", &weaponRelaxTime, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponAimTime", &weaponAimTime, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponShellSpeed", &weaponShellSpeed, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponArea", &weaponArea, pThis );
+	NMetaInfo::ReportStructMetaInfo( "WeaponArea2", &weaponArea2, pThis );
+	NMetaInfo::ReportStructMetaInfo( "Cover", &cover, pThis );
 	NMetaInfo::FinishMetaInfoReport();
 }
 
@@ -6747,40 +6747,39 @@ uint32_t SUnitStatsModifier::CalcCheckSum() const
 
 }
 using namespace NDb;
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110832C0, SUnitSpecialAblityDesc ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110832C0, SUnitSpecialAblityDesc )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SCommonRPGStats )
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x15096402, SComplexEffect ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110CEC40, SComplexSeasonedEffect ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1106AC40, SAckSetRPGStats ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x15096402, SComplexEffect )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x110CEC40, SComplexSeasonedEffect )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1106AC40, SAckSetRPGStats )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SHPObjectRPGStats )
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x111C33C0, SBurningFuel ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x111C33C0, SBurningFuel )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SStaticObjectRPGStats )
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120AEBC0, SCraterSet ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B80, SProjectile ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B81, SMissleParams ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B82, SWeaponRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x140BAB41, SDynamicDebrisSet ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120AEBC0, SCraterSet )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B80, SProjectile )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x300C3B81, SMissleParams )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B82, SWeaponRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x140BAB41, SDynamicDebrisSet )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SObjectBaseRPGStats )
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC1, STerraObjSetRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC4, SObjectRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC9, SBuildingRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BCA, SBridgeRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC8, SEntrenchmentRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC7, SFenceRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC5, SMineRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11141380, SUnitActions ) 
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC1, STerraObjSetRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC4, SObjectRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC9, SBuildingRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BCA, SBridgeRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC8, SEntrenchmentRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC7, SFenceRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC5, SMineRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11141380, SUnitActions )
 BASIC_REGISTER_DATABASE_CLASS( STATS_B2_M1, SUnitBaseRPGStats )
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1711A341, SArmorPatternPlacement ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1711A340, SArmorPattern ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B81, SInfantryRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1919A2C0, SHelicopterStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B80, SMechUnitRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x7DA66901, SAmphibianStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC2, SSquadRPGStats ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120C4CC0, SDeployTemplate ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120A6B80, SReinforcement ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120C5B00, SPlayerRank ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x17146480, SReinforcementTypes ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BCC, SAIExpLevel ) 
-REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x19126C00, SUnitStatsModifier ) 
-
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1711A341, SArmorPatternPlacement )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1711A340, SArmorPattern )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B81, SInfantryRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1919A2C0, SHelicopterStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069B80, SMechUnitRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x7DA66901, SAmphibianStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BC2, SSquadRPGStats )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120C4CC0, SDeployTemplate )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120A6B80, SReinforcement )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x120C5B00, SPlayerRank )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x17146480, SReinforcementTypes )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x11069BCC, SAIExpLevel )
+REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x19126C00, SUnitStatsModifier )

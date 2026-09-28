@@ -383,11 +383,11 @@ void SAIGameConsts::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "AIGameConsts", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "TankPits", &tankPits, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "TankPits", &tankPits, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "FoxHoles", &foxHoles, pThis );
-	NMetaInfo::ReportStructMetaInfo( "Common", &common, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Common", &common, pThis );
 	NMetaInfo::ReportSimpleArrayMetaInfo( "PlaneManuvers", &planeManuvers, pThis );
-	NMetaInfo::ReportStructMetaInfo( "WarFog", &warFog, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "WarFog", &warFog, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "CommonScriptFileRefs", &commonScriptFileRefs, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ReinforcementTypes", &reinforcementTypes, pThis );
 	NMetaInfo::ReportStructArrayMetaInfo( "ReinfExpediency", &reinfExpediency, pThis );
@@ -465,4 +465,3 @@ uint32_t SAIGameConsts::CalcCheckSum() const
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( AILOGIC, 0x11074CC0, SAIGameConsts )
-

@@ -1066,4 +1066,3 @@ struct SKnownEnum<NDb::EBonusType>
 	static std::string ToString( NDb::EBonusType eValue ) { return NDb::EnumToString( eValue ); }
 	static NDb::EBonusType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_EBonusType( szValue ); }
 };
-

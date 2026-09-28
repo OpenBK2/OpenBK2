@@ -109,7 +109,7 @@ uint32_t SGameConsts::GetMPDataVersionChecksum() const
 	if (!mod_folder_name.empty())
 	{
 		int gummy = 0x123456AF;
-		for (size_t i = 0; i < mod_folder_name.size(); i++) 
+		for (size_t i = 0; i < mod_folder_name.size(); i++)
 			gummy += mod_folder_name[i] * gummy + i * gummy + 0xFED321;
 		ret = CalculateChecksum(ret, gummy);
 	}
@@ -120,7 +120,7 @@ uint32_t SGameConsts::GetMPDataVersionChecksum() const
 uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
 {
 	uint32_t ret = GetMPDataVersionChecksum();
-	
+
 	ret = CalculateChecksum(ret, map->CalcCheckSum());
 
 	return ret;
@@ -129,4 +129,3 @@ uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMa
 }
 using namespace NDb;
 REGISTER_DATABASE_CLASS( GAMEX, 0x11074CC1, SGameConsts )
-

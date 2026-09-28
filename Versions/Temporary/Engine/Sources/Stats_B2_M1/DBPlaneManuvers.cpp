@@ -353,7 +353,7 @@ void SManuverDescriptor::ReportMetaInfo() const
 	NMetaInfo::StartMetaInfoReport( "ManuverDescriptor", typeID, sizeof(*this) );
 
 	uint8_t *pThis = (uint8_t*)this;
-	NMetaInfo::ReportStructMetaInfo( "Conditions", &conditions, pThis ); 
+	NMetaInfo::ReportStructMetaInfo( "Conditions", &conditions, pThis );
 	NMetaInfo::ReportMetaInfo( "ManuverID", (uint8_t*)&eManuverID - pThis, sizeof(eManuverID), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "Destination", (uint8_t*)&eDestination - pThis, sizeof(eDestination), NTypeDef::TYPE_TYPE_ENUM );
 	NMetaInfo::ReportMetaInfo( "Attitude", (uint8_t*)&eAttitude - pThis, sizeof(eAttitude), NTypeDef::TYPE_TYPE_ENUM );
@@ -403,4 +403,3 @@ REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB81, SSpeedRange )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB82, SDistanceRange )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB83, SHeightRange )
 REGISTER_DATABASE_CLASS( STATS_B2_M1, 0x1108EB84, SManuverDescriptor )
-
