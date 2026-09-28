@@ -20,18 +20,32 @@ using namespace NDb::NCodeGenTool;
 namespace
 {
 
+std::string LowerCaseKey( std::string szPath )
+{
+	NStr::ToLowerASCII( &szPath );
+	return szPath;
+}
+
+// Sorts the files and drops repeats, both ignoring case. The paths keep their
+// spelling for opening, but they used to be lowercased here and sorted as such,
+// and the order they reach the parser in is kept as it was.
 void ThrowOutEqual( std::vector<std::string> *pArray )
 {
 	if ( pArray->empty() )
+	{
 		return;
+	}
 
-	std::sort( pArray->begin(), pArray->end() );
+	std::sort( pArray->begin(), pArray->end(),
+		[]( const std::string &a, const std::string &b ) { return LowerCaseKey( a ) < LowerCaseKey( b ); } );
 
 	int k = 0;
 	for ( int i = 1; i < pArray->size(); ++i )
 	{
-		if ( (*pArray)[k] != (*pArray)[i] )
+		if ( LowerCaseKey( (*pArray)[k] ) != LowerCaseKey( (*pArray)[i] ) )
+		{
 			(*pArray)[++k] = (*pArray)[i];
+		}
 	}
 	pArray->resize( k + 1 );
 }
@@ -41,9 +55,9 @@ void ThrowOutEqual( std::vector<std::string> *pArray )
 // it replaced walking the projects of Game.sln and B2_MapEditor.sln, which had
 // drifted from what CMake builds.
 //
-// Each path is normalized and lowercased as the solution walk did, so the files
-// sort, and so reach the parser, in the order they always have. The parser
-// lowercases the names it keys files by on its own.
+// Each path is normalized but keeps its case: the parser opens it as spelled,
+// which is what lets this run where the filesystem minds case, and lowercases
+// only the name it keys the file by.
 bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileList )
 {
 	std::ifstream stream( szFileList );
@@ -63,7 +77,6 @@ bool ReadFileList( std::vector<std::string> *pFiles, const std::string &szFileLi
 			continue;
 		}
 		NFile::NormalizePath( &szLine );
-		NStr::ToLowerASCII( &szLine );
 		pFiles->push_back( szLine );
 	}
 	return true;
