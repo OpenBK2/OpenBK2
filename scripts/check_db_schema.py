@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Check that types.xml and the generated DB sources still describe the same records.
 
-Adding a field to the game database takes five coordinated edits: the <Item> in types.xml,
-the C++ member, ReportMetaInfo(), operator&( IXmlSaver& ) and operator&( IBinSaver& ). The
-sources carry an "automatically generated, don't change manually" banner but are edited by
-hand, so it is easy to land four of the five. Nothing catches that at build time, because
-each half compiles and loads perfectly well on its own; what breaks is the editor and the
-runtime disagreeing about which chunk id a field lives in, or about the order of a field
-list that is positional.
+dbcodegen generates both types.xml (Versions/Current/Data/types.xml) and the DB*.h/.cpp
+sources from the .cll type descriptions, so regenerating keeps them in step. A hand edit to
+only one of the two does not. Nothing catches that at build time, because each half
+compiles and loads perfectly well on its own; what breaks is the editor and the runtime
+disagreeing about which chunk id a field lives in, or about the order of a field list that
+is positional.
 
 This reads types.xml and every struct that declares a `typeID`, and checks three things:
 
@@ -31,15 +30,11 @@ import os
 import re
 import sys
 
-# Records that already disagreed before this check existed. Each is a field present in the
-# C++ and missing from types.xml, from a feature that landed without the types.xml edit.
-# This is a record of existing drift, not approval of it: fix one and drop it from the list.
-KNOWN_STALE = {
-    'SAnimLight': 'uid (chunk 4) is serialized but has no types.xml <Item>',
-    'SGameRoot': 'Fonts (chunk 8) is serialized but has no types.xml <Item>',
-    'SReinforcement': 'TemplateOverride (chunk 9) is serialized but has no types.xml <Item>',
-    'SWeatherDesc': 'PartMaterials (chunk 4) is serialized but has no types.xml <Item>',
-}
+# Records allowed to disagree, each mapped to the reason. The four this list started with
+# (SAnimLight, SGameRoot, SReinforcement, SWeatherDesc) were fields in the C++ and missing
+# from a hand-edited types.xml; a generated types.xml has them. Keep it empty: a record that
+# disagrees now is a hand edit to fix in the .cll, not drift to live with.
+KNOWN_STALE = {}
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -175,7 +170,7 @@ def check(schema, structs, sources):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument('--types', default=os.path.join(REPO, 'types.xml'))
+    parser.add_argument('--types', default=os.path.join(REPO, 'Versions', 'Current', 'Data', 'types.xml'))
     parser.add_argument('--root',
                         default=os.path.join(REPO, 'Versions', 'Temporary', 'Engine', 'Sources'))
     parser.add_argument('--strict', action='store_true',
