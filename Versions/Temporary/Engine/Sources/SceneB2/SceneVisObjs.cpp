@@ -146,7 +146,11 @@ bool CScene::CheckObjExist( int nObjectID ) const
 #if !defined(_BETARELEASE) && !defined(_FINALRELEASE)
 	if ( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end() )
 		return false;
-	const auto message = fmt::format( "Object 0x{:.8x} already exist", nObjectID );
+	// %.8x, as this was written before fmt, pads to eight digits; fmt's {:.8x}
+	// is a precision, which fmt refuses on an integer and throws format_error
+	// for, so a duplicate id threw here instead of being traced. {:08x} pads,
+	// and the id is formatted as the unsigned bits %x read.
+	const auto message = fmt::format( "Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID ) );
 	DebugTrace( "%s", message.c_str() );
 	return true;
 #else

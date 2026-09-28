@@ -245,7 +245,9 @@ static bool ProcessInterfaceCmds()
 		}
 		if ( IsCommandTraceEnabled() )
 		{
-			csSystem << "icmd: " << fmt::format( "{:#010x}", NObjectFactory::GetObjectTypeID( pCmd ) ).c_str()
+			// the type id is an int, and fmt writes one with its top bit set as
+			// -0x...; format its bits
+			csSystem << "icmd: " << fmt::format( "{:#010x}", static_cast<uint32_t>( NObjectFactory::GetObjectTypeID( pCmd ) ) ).c_str()
 			         << " " << typeid( *pCmd ).name() << endl;
 		}
 		pCmd->Exec();
