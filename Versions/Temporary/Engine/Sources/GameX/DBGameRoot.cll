@@ -1,7 +1,7 @@
 #include "../game.cll"
-#include "../Stats_B2_M1/rpgstats.cll"
-#include "../Stats_B2_M1/uientries.cll"
-#include "dbscenario.cll"
+#include "../Stats_B2_M1/RPGStats.cll"
+#include "../Stats_B2_M1/UIEntries.cll"
+#include "DBScenario.cll"
 [hExternal] #include "../ui/dbuserinterface.h"
 [hExternal] #include "../System/FilePath.h"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

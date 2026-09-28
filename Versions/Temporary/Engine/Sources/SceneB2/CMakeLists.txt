@@ -12,7 +12,7 @@ set(SOURCES
     CameraScriptMutators.cpp
     CragsBuilder.cpp
     CursorInternal.cpp
-    dbsceneconsts.cll
+    DBSceneConsts.cll
     DBSceneConsts.cpp
     DebrisBuilder.cpp
     DebugInfoManagerInternal.cpp

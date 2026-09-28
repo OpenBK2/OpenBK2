@@ -3,7 +3,7 @@ set(SOURCES
     AtomicReactions.cpp
     BackgroundFrameSequence.cpp
     Components.cpp
-    dbuispecificb2.cll
+    DBUISpecificB2.cll
     DBUISpecificB2.cpp
     EffectorB2Move.cpp
     EffectorPlaySound.cpp

@@ -1,8 +1,8 @@
-#include "../B2_M1_Terrain/dbterrainspot.cll"
-#include "../B2_M1_Terrain/dbvso.cll"
+#include "../B2_M1_Terrain/DBTerrainSpot.cll"
+#include "../B2_M1_Terrain/DBVSO.cll"
 #include "../game.cll"
-#include "../Stats_B2_M1/dbmapinfo.cll"
-#include "../Stats_B2_M1/rpgstats.cll"
+#include "../Stats_B2_M1/DBMapInfo.cll"
+#include "../Stats_B2_M1/RPGStats.cll"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 forward enum EEntrenchSegmType;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

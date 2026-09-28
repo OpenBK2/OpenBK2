@@ -9,9 +9,9 @@ set(SOURCES
     Bitmap.cpp
     ButtonGroup.cpp
     CustomCheck.cpp
-    dbuiconsts.cll
+    DBUIConsts.cll
     DBUIConsts.cpp
-    dbuserinterface.cll
+    DBUserInterface.cll
     DBUserInterface.cpp
     EffectorButtonState.cpp
     EffectorConsoleBufferCommand.cpp

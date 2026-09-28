@@ -1,22 +1,24 @@
-#include "../3Dmotor/dbscene.cll"
 #include "../game.cll"
-#include "season.cll"
+#include "RPGStats.cll"
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-forward class SModel;
-forward enum ESeason;
+forward class SVisObj;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// visual object with all possible seasons
-[typeID = 0x11073C40; no_checksum]
-class SVisObj
+[typeID = 0x3013FC00; no_checksum]
+class SAttachedModelVisObj
 {
-	struct SSingleObj
+	struct SSDamageLevel
 	{
-		SModel *_Model;
-		SModel *_LowLevelModel;
-		ESeason _Season = SEASON_SUMMER;
+		SVisObj *_VisObj;
 	};
-	bool _ForceAnimated = false;
-	SSingleObj _Models[];
+	// normal model
+	SVisObj *_visualObject;
+	// damaged models
+	SSDamageLevel _DamageLevels[];
+	// normal <=> transportable state transition model
+	SVisObj *_AnimableModel;
+	// transportable model
+	SVisObj *_TransportableModel;
+	[hidden] Svector_AnimDescs _animdescs[];
 };
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

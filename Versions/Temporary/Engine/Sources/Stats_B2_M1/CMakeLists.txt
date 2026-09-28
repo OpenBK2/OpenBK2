@@ -1,61 +1,61 @@
 project(Stats_B2_M1)
 set(SOURCES
     AbilityActions.cpp
-    acktypes.cll
+    AckTypes.cll
     AckTypes.cpp
     ActionsRemap.cpp
     AIUpdates.cpp
-    animationtype.cll
+    AnimationType.cll
     AnimationType.cpp
     Commands_Actions.cpp
     ConstructorInfo.cpp
-    dbanimb2.cll
+    DBAnimB2.cll
     DBAnimB2.cpp
-    dbattachedmodelvisobj.cll
+    DBAttachedModelVisObj.cll
     DBAttachedModelVisObj.cpp
-    dbcameraconsts.cll
+    DBCameraConsts.cll
     DBCameraConsts.cpp
-    dbclientconsts.cll
+    DBClientConsts.cll
     DBClientConsts.cpp
-    dbconstructorprofile.cll
+    DBConstructorProfile.cll
     DBConstructorProfile.cpp
-    dbmapinfo.cll
+    DBMapInfo.cll
     DBMapInfo.cpp
-    dbnotifications.cll
+    DBNotifications.cll
     DBNotifications.cpp
-    dbpassprofile.cll
+    DBPassProfile.cll
     DBPassProfile.cpp
-    dbplanemanuvers.cll
+    DBPlaneManuvers.cll
     DBPlaneManuvers.cpp
     dbreinforcements.cll
     dbreinforcements.cpp
-    dbvisobj.cll
+    DBVisObj.cll
     DBVisObj.cpp
     FeedBackUpdates.cpp
-    iconsset.cll
+    IconsSet.cll
     IconsSet.cpp
-    m1actions.cll
+    M1Actions.cll
     M1Actions.cpp
-    m1unitactions.cll
+    M1UnitActions.cll
     M1UnitActions.cpp
-    m1unitspecific.cll
+    M1UnitSpecific.cll
     M1UnitSpecific.cpp
-    m1unittype.cll
+    M1UnitType.cll
     M1UnitType.cpp
     ReinfUpdates.cpp
-    rpgstats.cll
+    RPGStats.cll
     RPGStats.cpp
     RPGStatsAddIn.cpp
     RPGStatsAutomagic.cpp
-    season.cll
+    Season.cll
     Season.cpp
     StatusUpdates.cpp
     StdAfx.cpp
     SuperWeaponUpdates.cpp
-    uientries.cll
+    UIEntries.cll
     UIEntries.cpp
     UnitTypes.cpp
-    useractions.cll
+    UserActions.cll
     UserActions.cpp
 )
 add_library(Stats_B2_M1 SHARED ${SOURCES})

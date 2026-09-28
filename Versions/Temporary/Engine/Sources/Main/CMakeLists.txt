@@ -2,7 +2,7 @@ project(Main)
 set(SOURCES
     AICmdsAutoMagicInterface.cpp
     CommonAI.cpp
-    dbnetconsts.cll
+    DBNetConsts.cll
     DBNetConsts.cpp
     GameTimerInternal.cpp
     Initialization.cpp

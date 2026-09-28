@@ -1,8 +1,8 @@
-#include "../B2_M1_Terrain/dbterrain.cll"
+#include "../B2_M1_Terrain/DBTerrain.cll"
 #include "../game.cll"
-#include "dbconstructorprofile.cll"
-#include "rpgstats.cll"
-#include "season.cll"
+#include "DBConstructorProfile.cll"
+#include "RPGStats.cll"
+#include "Season.cll"
 #include "dbreinforcements.cll"
 
 [hExternal] #include "prefix_dbmapinfo.h"

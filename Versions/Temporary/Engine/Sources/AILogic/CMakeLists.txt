@@ -32,7 +32,7 @@ set(SOURCES
     ArtilleryStates.cpp
     ArtRocketStates.cpp
     Aviation.cpp
-    dbaiconsts.cll
+    DBAIConsts.cll
     Helicopter.cpp
     HelicopterStates.cpp
     B2AI.cpp

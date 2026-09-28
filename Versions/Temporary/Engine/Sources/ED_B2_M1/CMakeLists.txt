@@ -34,9 +34,9 @@ set(SOURCES
     dbbuildersb2.cpp
     dbeditoroptionsb2.cll
     dbeditoroptionsb2.cpp
-    dbfield.cll
+    DBField.cll
     DBField.cpp
-    dbminimap.cll
+    DBMinimap.cll
     DBMinimap.cpp
     DrawToolsDC.cpp
     DynamicDebrisSetBuilder.cpp

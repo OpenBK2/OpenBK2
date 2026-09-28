@@ -1,14 +1,14 @@
 project(B2_M1_Terrain)
 set(SOURCES
-    dbprelight.cll
+    DBPreLight.cll
     DBPreLight.cpp
-    dbterrain.cll
+    DBTerrain.cll
     DBTerrain.cpp
-    dbterrainspot.cll
+    DBTerrainSpot.cll
     DBTerrainSpot.cpp
-    dbvso.cll
+    DBVSO.cll
     DBVSO.cpp
-    dbwater.cll
+    DBWater.cll
     DBWater.cpp
     fmtVSO.cpp
     stdafx.cpp
