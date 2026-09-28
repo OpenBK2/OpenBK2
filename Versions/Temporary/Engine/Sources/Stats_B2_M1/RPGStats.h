@@ -721,11 +721,11 @@ namespace NDb
 		SMissleParams() :
 			__dwCheckSum( 0 ),
 			vVisProjectileRotationRad( VNULL3 ),
-			fStrayModeTime( 1 ),
+			fStrayModeTime( 1.0000f ),
 			fTurnRateRad( 1.0480f ),
 			bAimsForTop( false ),
-			fTopTargetingHeight( 0 ),
-			fProximityRadius( 0 )
+			fTopTargetingHeight( 0.0000f ),
+			fProximityRadius( 0.0000f )
 		{ }
 		//
 		int GetTypeID() const { return typeID; }

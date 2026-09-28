@@ -171,10 +171,14 @@ class SUnitSpecialAblityDesc
 	bool _StopCurrentAction = false;
 	TextFileRef _LocalizedNameFileRef;
 	TextFileRef _LocalizedDescFileRef;
-	// Optional per-ability UI icons; action-button icons remain the fallback.
+	/* Optional per-ability UI icons; action-button icons remain the fallback. */
+	// Optional normal icon override for this concrete ability.
 	[no_checksum] STexture *_AbilityIconTextureNormal;
+	// Optional disabled icon override for this concrete ability.
 	[no_checksum] STexture *_AbilityIconTextureDisabled;
+	// Optional normal foreground icon override for this concrete ability.
 	[no_checksum] STexture *_AbilityIconTextureForegroundNormal;
+	// Optional disabled foreground icon override for this concrete ability.
 	[no_checksum] STexture *_AbilityIconTextureForegroundDisabled;
 
 
@@ -483,12 +487,18 @@ class SProjectile
 [typeID = 0x300C3B81]
 class SMissleParams
 {
+	// local Euler rotation speed of the visible projectile, in radians per second
 	CVec3 _VisProjectileRotationRad;
-	float _StrayModeTime = 1;
+	// seconds before a missile explodes after losing its target
+	float _StrayModeTime = 1.0;
+	// maximum missile turn rate, in radians per second
 	float _TurnRateRad = 1.048;
+	// aim the top-attack missile above the target instead of at its center
 	bool _AimsForTop = false;
-	float _TopTargetingHeight = 0;
-	float _ProximityRadius = 0;
+	// visual height offset above the target top for top-attack missiles
+	float _TopTargetingHeight = 0.0;
+	// SAM proximity-fuze radius in range units; zero disables the fuze
+	float _ProximityRadius = 0.0;
 };
 
 [typeID = 0x11069B82]
@@ -577,6 +587,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 		float _RelaxTime;
 		// projectile model
 		SProjectile *_visProjectile;
+		// optional guided missile parameters
 		SMissleParams *_MissleParams;
 
 		#include "include_WeaponRPGStats_Shell.h"
@@ -610,6 +621,7 @@ class SWeaponRPGStats : public SCommonRPGStats
 	// ammo per burst
 	int _AmmoPerBurst;
 	/* added after the fields below had their chunk ids, which they keep */
+	// play the weapon fire effect for every shot in a burst, regardless of owner unit type
 	[chunkID = 15]
 	bool _ForcePlayAllBurstEffects = false;
 	// max range
@@ -1301,6 +1313,7 @@ class SUnitBaseRPGStats : public SHPObjectRPGStats
 	// (km/h) speed on the road
 	float _Speed;
 	/* added after the fields below had their chunk ids, which they keep */
+	// Should the unit use different speed in reverse?
 	[chunkID = 35]
 	float _ReverseSpeedModifier = 1;
 	// (degree/sec) rotation speed
@@ -1446,17 +1459,23 @@ class SHelicopterStats
 	float _StandingDeviationSpeed = 0.5;
 	float _SpiralRadius = 11;
 	float _SpiralSteps = 2.5;
+	// downward death-spiral acceleration in world units per second squared
 	float _SpiralDownAcceleration = 15;
 	/* added after the fields below had their chunk ids, which they keep */
+	// independent random variation applied to spiral radius, steps, and downward acceleration
 	[chunkID = 17]
 	float _SpiralDownRandCoeff = 0.1;
 	float _DeathSelfPointRotationSpeedRad = 2.1;
+	// visual nose-down angle during the death spiral
 	[chunkID = 14]
 	float _DeathSpiralDownwardsAngleRad = 0.1;
 	float _StandingFuelDrainModifier = 0.5;
+	// maximum visual nose-down angle while attacking
 	float _MaxAttackAngleDownRadians = 0.872664626;
+	// model parts rotated as helicopter propellers
 	[chunkID = 15]
 	string _PropellerObjects[];
+	// local X/Y/Z Euler rotation speeds in radians per second
 	[chunkID = 16]
 	CVec3 _PropellerSpeedsRad[];
 };
@@ -1676,9 +1695,11 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	SUnitStatsModifier *_InnerUnitBonus;
 	// camera placement for icon shot
 	[hidden; noCode] SCameraPlacement _CameraPlacementIconShot;
+	// Stats for amphibian units
 	SAmphibianStats *_AmphibianStats;
 	// Temporarily applied while firing at aviation targets
 	SUnitStatsModifier *_AntiAviationModifier;
+	// helicopter-specific movement and crash parameters
 	SHelicopterStats *_HelicopterStats;
 
 	#include "include_MechUnitRPGStats.h"

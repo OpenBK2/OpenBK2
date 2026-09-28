@@ -148,7 +148,7 @@ class SMissionObjective
 	TextFileRef _BriefingFileRef;
 	// objective full description
 	TextFileRef _DescriptionFileRef;
-	bool _IsPrimary = true;
+	[hidden] bool _IsPrimary = true;
 	// objective marker position on minimap
 	CVec2 _MapPositions[];
 	// objective complete exp

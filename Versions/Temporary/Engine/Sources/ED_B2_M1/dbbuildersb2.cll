@@ -16,9 +16,9 @@ forward class SMechUnitRPGStats;
 [typeID = 0x10091381]
 [noKey; hidden; noCode] class SMapInfoBuilder
 {
-	[editorControl = "int_combo"; stringParam = "values:1#20; step:1"]
+	[editorControl = "int_combo"; stringParam = "values:1#32; step:1"]
 	int _SizeX = 10;
-	[editorControl = "int_combo"; stringParam = "values:1#20; step:1"]
+	[editorControl = "int_combo"; stringParam = "values:1#32; step:1"]
 	int _SizeY = 10;
 	ESeason _Season = SEASON_SUMMER;
 	EDayNight _DayTime = DAY_DAY;
