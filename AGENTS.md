@@ -73,7 +73,7 @@ server:
 
 other small utilities:
 
-- dbcodegen - utility to generate XML databases (types.xml)
+- dbcodegen - compiles the .cll type descriptions into types.xml and the DB*.h/.cpp sources (structs, serializers, meta info, checksums); built but never run by the build, because -all overwrites sources that have since been edited by hand; -nocopy writes to the temp directory only
 - dbindex - database index utility (generates index.bin file)
 - dbstruct - database structure utility (converts xcb files into packaged binary format)
 - ELK_A7 - used for translation and spell-checking

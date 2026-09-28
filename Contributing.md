@@ -115,7 +115,7 @@ server:
 - [Server](Versions/Temporary/Engine/Sources/Server) - Server main executable
 
 other small utilities:
-- [dbcodegen](Versions/Temporary/Engine/Sources/dbcodegen) - utility to generate XML databases (`types.xml`)
+- [dbcodegen](Versions/Temporary/Engine/Sources/dbcodegen) - compiles the `.cll` type descriptions into `types.xml` and the `DB*.h/.cpp` sources (structs, serializers, meta info, checksums); built but never run by the build, because `-all` overwrites sources that have since been edited by hand; `-nocopy` writes to the temp directory only
 - [dbindex](Versions/Temporary/Engine/Sources/dbindex) - database index utility (generates `index.bin` file)
 - [dbstruct](Versions/Temporary/Engine/Sources/dbstruct) - database structure utility (converts `xcb` files into packaged binary format)
 - [ELK_A7](Versions/Temporary/Engine/Sources/ELK_A7) - used for translation and spell-checking
