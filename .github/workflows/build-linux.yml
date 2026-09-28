@@ -37,6 +37,7 @@ jobs:
       # Fonts supplies the font files/textures for the tests and obk2_fonts.pak
       # (3 MB). bin/fonts supplies the baked glyph metrics TextVerticalAlignment
       # reads by resource UUID; the textures alone are not enough (308 KB).
+      # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
       - name: Checkout repository (with submodules)
         uses: actions/checkout@v6
         with:
@@ -49,6 +50,7 @@ jobs:
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
             Versions/Current/Data/bin/fonts
+            OBK2_Examples/GLB_format_usage
 
       - name: Setup build environment
         uses: ./.github/actions/setup-linux-build
