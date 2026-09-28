@@ -177,17 +177,15 @@ float _TurnRateRad = 1.048;
 
 ## regenerating
 
-configure with `-DBUILD_EDITOR=ON`. `types.xml` collects the types of every module, the editor's included. the build writes the list of `.cll` files to `type-descriptions.txt` beside `dbcodegen.exe`. then, from the sources directory:
+the build never runs dbcodegen: the generated files are committed, and a dedicated target rewrites them.
 
 ```powershell
-cmake --build out/build/Windows-x64-Release --target dbcodegen
-cd Versions/Temporary/Engine/Sources
-../../../../out/build/Windows-x64-Release/Versions/Temporary/Engine/Sources/dbcodegen/dbcodegen.exe -all `
-    --file-list ../../../../out/build/Windows-x64-Release/Versions/Temporary/Engine/Sources/dbcodegen/type-descriptions.txt `
-    --types-path ../../../Current/Data
+cmake --build out/build/Windows-x64-Release --target regenerate-db
 ```
 
-`-all` rewrites the generated sources that changed and writes `types.xml`. `-nocopy` writes the sources to the temp directory instead and leaves the tree alone. `git diff` should show only what the `.cll` change asked for. `python scripts/check_db_schema.py` then confirms that `types.xml` and the generated sources agree.
+it needs `BUILD_EDITOR`, which is on by default, because `types.xml` collects the types of every module, the editor's included. it rewrites only the files whose content changed, so a run that changes nothing touches nothing and triggers no rebuild. `git diff` should show only what the `.cll` change asked for. `python scripts/check_db_schema.py` then confirms that `types.xml` and the generated sources agree.
+
+CI runs the same target after the build and fails when it changes anything, so a hand edit to a generated file, or a `.cll` change committed without regenerating, does not get in.
 
 ## the data side
 

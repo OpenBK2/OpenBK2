@@ -11,12 +11,12 @@ project(dbcodegen)
 # cmake/dbcodegen.cmake), and dbcodegen reads that with --file-list. Run it
 # from the root of the sources, or pass --sources-path.
 #
-# Built but not installed, and run by hand after a .cll change, not by the
-# build (Contributing.md, "adding things to the game database", has the
-# command). -all rewrites the generated sources that changed and writes
-# types.xml to --types-path, which is Versions/Current/Data. The generated
-# sources in the tree are exactly its output, so a regeneration diffs to
-# nothing but the .cll change. -nocopy writes to the temp directory only.
+# Built but not installed, and run after a .cll change through the
+# regenerate-db target (cmake/dbcodegen.cmake), never by the build itself.
+# -all rewrites the generated sources and types.xml, each only if its content
+# changed; types.xml goes to --types-path, which is Versions/Current/Data. The
+# generated files in the tree are exactly its output, so a regeneration diffs
+# to nothing but the .cll change. -nocopy writes to the temp directory only.
 set(SOURCES
     codegen.cpp
     main.cpp

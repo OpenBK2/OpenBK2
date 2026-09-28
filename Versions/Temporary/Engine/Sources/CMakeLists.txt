@@ -90,8 +90,10 @@ endif()
 
 # Every module is added by now, so the .cll files they list can be gathered
 # into the list dbcodegen reads with --file-list, written beside dbcodegen.
-# See cmake/dbcodegen.cmake.
+# See cmake/dbcodegen.cmake, which also defines regenerate-db, the target that
+# runs dbcodegen over that list.
 write_type_descriptions_list("$<TARGET_FILE_DIR:dbcodegen>/type-descriptions.txt")
+add_regenerate_db_target("$<TARGET_FILE_DIR:dbcodegen>/type-descriptions.txt")
 
 # Both aggregates exist by now, so the "run everything of ours" targets can be
 # defined. See cmake/benchmarks.cmake.
