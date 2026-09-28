@@ -18,6 +18,23 @@
 namespace NCompileCLike
 {
 
+// The chunk id a field is pinned to with [chunkID = N] in its .cll, if it is.
+static bool GetPinnedChunkID( const NDb::NTypeDef::STypeStructBase::SField &field, int *pChunkID )
+{
+	if ( !field.pAttributes )
+	{
+		return false;
+	}
+	const std::unordered_map<std::string, CVariant> &attr = field.pAttributes->attributes;
+	const std::unordered_map<std::string, CVariant>::const_iterator it = attr.find( "chunkID" );
+	if ( it == attr.end() )
+	{
+		return false;
+	}
+	*pChunkID = it->second;
+	return true;
+}
+
 struct SSimpleType
 {
 	ObjectFactoryNewFunc pfnFunc;
@@ -469,14 +486,56 @@ void CVisitor::NamespaceNodeVisited( NLang::CLangNode *pNode, NDb::NTypeDef::STy
 		pUpperType->nestedTypes.push_back( pCreatedType.GetPtr() );
 	else if ( CDynamicCast<NLang::CVariable> pVariableNode = pNode )
 	{
-		// FIX ME! crapped chunkids generation
-		if ( pUpperType->fields.empty() )
-			field.nChunkID = 2;
+		// Binary chunk ids. A field marked [chunkID = N] gets N, which is how a
+		// field added in the middle of a struct keeps the ids of the fields after
+		// it where they were. Any other field numbers on from the last field
+		// before it that is not pinned: the first gets 2, each next one more,
+		// and a noCode field, which is not serialized, the same as the one
+		// before it. A pinned field does not move that count, so pinning one
+		// renumbers nothing else.
+		int nPinned = 0;
+		if ( GetPinnedChunkID( field, &nPinned ) )
+		{
+			field.nChunkID = nPinned;
+		}
 		else
 		{
-			field.nChunkID = pUpperType->fields.back().nChunkID;
-			if ( !NCodeGen::IsNoCode( field ) )
-				++field.nChunkID;
+			const NDb::NTypeDef::STypeStructBase::SField *pPrev = 0;
+			for ( int i = int( pUpperType->fields.size() ) - 1; i >= 0 && pPrev == 0; --i )
+			{
+				int nUnused = 0;
+				if ( !GetPinnedChunkID( pUpperType->fields[i], &nUnused ) )
+				{
+					pPrev = &pUpperType->fields[i];
+				}
+			}
+			if ( pPrev == 0 )
+			{
+				field.nChunkID = 2;
+			}
+			else
+			{
+				field.nChunkID = pPrev->nChunkID;
+				if ( !NCodeGen::IsNoCode( field ) )
+				{
+					++field.nChunkID;
+				}
+			}
+		}
+
+		// Two serialized fields of one struct with one id would read each
+		// other's data. With ids pinned by hand that can happen, so refuse it.
+		if ( !NCodeGen::IsNoCode( field ) )
+		{
+			for ( const NDb::NTypeDef::STypeStructBase::SField &other : pUpperType->fields )
+			{
+				if ( !NCodeGen::IsNoCode( other ) && other.nChunkID == field.nChunkID )
+				{
+					NErrors::ShowErrorNoLine( fmt::format( "fields {} and {} of {} both have chunk id {}",
+						other.szName, field.szName, pUpperType->szTypeName, field.nChunkID ) );
+					bFailed = true;
+				}
+			}
 		}
 
 		pUpperType->fields.push_back( field );

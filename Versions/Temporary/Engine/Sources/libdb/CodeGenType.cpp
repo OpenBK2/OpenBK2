@@ -263,14 +263,6 @@ static void GenerateXMLSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 	pCode->cpp << "}" << endl;
 }
 
-struct SFieldSort
-{
-	bool operator()( const NDb::NTypeDef::STypeClass::SField &field1, NDb::NTypeDef::STypeClass::SField &field2 ) const
-	{
-		return field1.nChunkID < field2.nChunkID;
-	}
-};
-
 static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szFullQualifiedName )
 {
 	const std::string szQualifiedName = szFullQualifiedName.substr( 5, szFullQualifiedName.size() );
@@ -280,10 +272,12 @@ static void GenerateBinSaveFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STyp
 	if ( pStructBase->pBaseType != 0 )
 		pCode->cpp << tab << "saver.Add( 1, (" << NHungarian::GetTypeNameInCode( pStructBase->pBaseType, 0 ) << "*)this );" << endl;
 
-	NDb::NTypeDef::STypeClass::CFieldsList sortedFields( pStructBase->fields );
-	SFieldSort fieldSort;
-	sort( sortedFields.begin(), sortedFields.end(), fieldSort );
-	for ( NDb::NTypeDef::STypeClass::CFieldsList::iterator iter = sortedFields.begin(); iter != sortedFields.end(); ++iter )
+	// In the order the fields are declared, which is also id order for every
+	// field numbered automatically; a field pinned with [chunkID] stays where it
+	// is declared, as the hand-written serializers put it. The order does not
+	// change what reads back: a chunk not found ahead is looked for from the
+	// start (CStructureSaver::GetShortChunk).
+	for ( NDb::NTypeDef::STypeClass::CFieldsList::iterator iter = pStructBase->fields.begin(); iter != pStructBase->fields.end(); ++iter )
 	{
 		NDb::NTypeDef::STypeClass::SField &field = *iter;
 		if ( IsNoCode( field ) )
