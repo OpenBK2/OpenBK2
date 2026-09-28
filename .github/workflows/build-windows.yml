@@ -76,21 +76,20 @@ jobs:
       # dbcodegen output. Regenerating must change nothing; a diff means a
       # generated file was edited by hand or a .cll change was committed without
       # regenerating (Contributing.md, "adding things to the game database").
-      # types.xml is outside the sparse checkout, so it is written fresh and
-      # compared with the committed blob instead of through git status.
+      # types.xml is checked out too, although the sparse checkout names only
+      # Data/Fonts: cone mode includes the files directly inside every parent
+      # directory. git status, not a byte comparison, because the runner checks
+      # text out with CRLF and dbcodegen writes LF.
       - name: Check generated database sources
         shell: bash
         run: |
           cmake --build out/build/${{ matrix.preset }} --target regenerate-db
-          changed=$(git status --porcelain --untracked-files=all -- Versions/Temporary/Engine/Sources)
+          paths="Versions/Temporary/Engine/Sources Versions/Current/Data/types.xml"
+          changed=$(git status --porcelain --untracked-files=all -- $paths)
           if [ -n "$changed" ]; then
-            echo "::error::regenerate-db changed generated sources; regenerate them from the .cll and commit"
+            echo "::error::regenerate-db changed generated files; regenerate them from the .cll and commit"
             echo "$changed"
-            git diff -- Versions/Temporary/Engine/Sources | head -200
-            exit 1
-          fi
-          if ! git show HEAD:Versions/Current/Data/types.xml | cmp - Versions/Current/Data/types.xml; then
-            echo "::error::regenerate-db changed Versions/Current/Data/types.xml; regenerate it from the .cll and commit"
+            git diff -- $paths | head -200
             exit 1
           fi
 
