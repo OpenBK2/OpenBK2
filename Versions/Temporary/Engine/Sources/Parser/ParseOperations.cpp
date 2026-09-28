@@ -111,8 +111,9 @@ bool Parse( const std::vector<std::string> &files, const std::string &_szBaseFil
 		std::string szFile = files[i];
 
 		nyyLineNumber = 1;
+		// Not lowercased: OpenFile opens the path as given and lowercases only the
+		// name it keys the file by.
 		NStr::ReplaceAllChars( &szFile, '\\', '/' );
-		NStr::ToLower( &szFile );
 
 		if ( !NLang::OpenFile( szFile ) )
 			NErrors::ShowErrorNoLine( fmt::format( "can't open file {}", szFile ) );

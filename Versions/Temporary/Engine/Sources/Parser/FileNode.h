@@ -18,7 +18,13 @@ class PARSER_EXPORT CFileNode : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CFileNode );
 	
+	// The file's name as the parser knows it: its full path, lowercased. It keys
+	// the includes maps and is what the rest of the pipeline sees.
 	std::string szFullFileName;
+	// The same path spelled as on disk, with '/' separators, which is what the
+	// file is opened by. Kept apart from the name because only a filesystem
+	// that ignores case can open the lowercased one.
+	std::string szPathOnDisk;
 	std::unordered_map< std::string, CObj<CFileNode> > includes;
 	std::list<std::string> cppExternalIncludes;
 	std::list<std::string> hExternalIncludes;
@@ -47,6 +53,10 @@ public:
 
 	const std::string& GetName() const { return szFullFileName; }
 	void SetFullName( const std::string &_szFullName );
+	// Falls back to the name for a node nothing has recorded a path for.
+	const std::string& GetPathOnDisk() const { return szPathOnDisk.empty() ? szFullFileName : szPathOnDisk; }
+	void SetPathOnDisk( const std::string &_szPathOnDisk ) { szPathOnDisk = _szPathOnDisk; }
+	bool HasPathOnDisk() const { return !szPathOnDisk.empty(); }
 
 	void AddInclude( std::string szFileName );
 	void AddInclude( CFileNode *pNode );

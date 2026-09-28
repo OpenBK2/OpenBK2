@@ -147,7 +147,8 @@ void CFileNode::Parse()
 	else
 	{
 		OpenNewNamespace( 0 );
-		VERIFY_NOLINE( NLang::OpenFile( GetName() ), fmt::format( "file {} not found", GetName() ), { eParseState = EPS_PARSED; return; } );
+		// by the path on disk; OpenFile lowercases it back into GetName() as the key
+		VERIFY_NOLINE( NLang::OpenFile( GetPathOnDisk() ), fmt::format( "file {} not found", GetPathOnDisk() ), { eParseState = EPS_PARSED; return; } );
 		
 		nyyLineNumber = 1;
 		yyparse();
@@ -174,7 +175,10 @@ CFileNode* GetCurFileNode()
 void AddInclude( const std::string &szFileName )
 {
 	CFileNode *pNode = GetCurFileNode();
-	std::string szCurFileName = pNode->GetName();
+	// Resolved against the including file's path on disk rather than its
+	// lowercased name, so the result is a path that opens where case matters,
+	// as long as the #include itself is spelled as the file is.
+	std::string szCurFileName = pNode->GetPathOnDisk();
 	szCurFileName = NFile::GetFilePath( szCurFileName );
 
 	std::string szPartialName( NFile::GetFilePath( szFileName ) );
@@ -212,10 +216,17 @@ void AddInclude( const std::string &szFileName )
 		szResult += szFullPath[i] + '/';
 	szResult.pop_back();
 
-	NStr::ToLowerASCII( &szResult );
+	std::string szName = szResult;
+	NStr::ToLowerASCII( &szName );
 
-	GetRootFile()->AddInclude( szResult );
-	pNode->AddInclude( GetRootFile()->GetInclude( szResult ) );
+	GetRootFile()->AddInclude( szName );
+	CFileNode *pIncluded = GetRootFile()->GetInclude( szName );
+	// A file already opened keeps the path it was opened by.
+	if ( !pIncluded->HasPathOnDisk() )
+	{
+		pIncluded->SetPathOnDisk( szResult );
+	}
+	pNode->AddInclude( pIncluded );
 }
 
 void AddHExternal( const std::string &szIncludeName )

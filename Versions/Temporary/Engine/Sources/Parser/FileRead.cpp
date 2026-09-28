@@ -29,8 +29,12 @@ bool OpenFile( const std::string &_szFileName )
 {
 	szFileName = _szFileName;
 
+	// Opened as spelled, with '/' separators, which every platform accepts. It
+	// used to be turned into '\' and opened by its lowercased name, which only a
+	// Windows filesystem finds. The lowercased form is still the file's name to
+	// the parser, the key it is looked up by.
 	std::string szStreamFileName = szFileName;
-	NStr::ReplaceAllChars( &szStreamFileName, '/', '\\' );
+	NStr::ReplaceAllChars( &szStreamFileName, '\\', '/' );
 
 	NStr::ToLowerASCII( &szFileName );
 
@@ -42,7 +46,9 @@ bool OpenFile( const std::string &_szFileName )
 	{
 		CFileNode *pRootFile = GetRootFile();
 		pRootFile->AddInclude( szFileName );
-		pRootFile->GetInclude( szFileName )->SetExist();
+		CFileNode *pNode = pRootFile->GetInclude( szFileName );
+		pNode->SetExist();
+		pNode->SetPathOnDisk( szStreamFileName );
 	}
 
 	return pStream->IsOk();
