@@ -35,7 +35,8 @@ add_subdirectory("dbindex")
 add_subdirectory("dbstruct")
 
 # The code generator that turns the .cll type descriptions into types.xml and
-# the DB*.h/.cpp sources. Built so it keeps compiling; nothing runs it.
+# the DB*.h/.cpp sources. Run by hand after a .cll change; the build does not
+# run it.
 add_subdirectory("dbcodegen")
 
 # FreeType glyph rasterisation behind a small interface of its own, used by

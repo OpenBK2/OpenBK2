@@ -17,7 +17,7 @@ Few rules:
 - Add some comments when you make or change the code to make it clear what was done
 - Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
 - Linux exports every function by default, but windows does not! So make sure to mark function for exporting in appropriate header file
-- Legacy .cll generator files are no longer used at all, instead, write changes directly to their result files
+- The game database schema and its C++ structs are generated from the .cll files by dbcodegen: change the .cll and regenerate, never the generated DB*.h/.cpp or types.xml. See "adding things to the game database" in Contributing.md
 
 ### Determinism coding rules
 1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation. 
@@ -73,7 +73,7 @@ server:
 
 other small utilities:
 
-- dbcodegen - compiles the .cll type descriptions into types.xml and the DB*.h/.cpp sources (structs, serializers, meta info, checksums); built but never run by the build, because -all overwrites sources that have since been edited by hand; -nocopy writes to the temp directory only
+- dbcodegen - compiles the .cll type descriptions into types.xml and the DB*.h/.cpp sources (structs, serializers, meta info, checksums); run by hand after a .cll change (see "adding things to the game database" in Contributing.md); -nocopy writes to the temp directory only
 - dbindex - database index utility (generates index.bin file)
 - dbstruct - database structure utility (converts xcb files into packaged binary format)
 - ELK_A7 - used for translation and spell-checking
