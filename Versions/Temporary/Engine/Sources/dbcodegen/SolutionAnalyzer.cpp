@@ -93,9 +93,12 @@ static const char *LoadSection( const char *pszData, std::vector<SSection> *pRes
 		SSection s;
 		//form s
 		std::string szLine;
-		// read line
-		for ( ;*pszData && *pszData != 0xd; ++pszData )
+		// read line; stop at LF too, the checkout may have converted the CRLF
+		// the original only expected
+		for ( ;*pszData && *pszData != 0xd && *pszData != 0xa; ++pszData )
+		{
 			szLine += *pszData;
+		}
 		while ( *pszData == 0xd || *pszData == 0xa )
 			++pszData;
 
@@ -174,7 +177,10 @@ static const char *LoadSection( const char *pszData, std::vector<SSection> *pRes
 	return pszData;
 }
 
-const char *pszSlnHeader = "Microsoft Visual Studio Solution File, Format Version 8.00\r\n";
+// The header is matched without its line ending, then either CRLF or LF is
+// skipped: git checks the .sln files out with LF, and the original compared
+// against "...8.00\r\n" and so rejected every solution in the tree.
+const char *pszSlnHeader = "Microsoft Visual Studio Solution File, Format Version 8.00";
 static void LoadSln( const char *pszData, std::vector<SSection> *pRes, const std::string &szSlnFile )
 {
 	pRes->resize(0);
@@ -183,6 +189,10 @@ static void LoadSln( const char *pszData, std::vector<SSection> *pRes, const std
 		throw CCodeGenException( fmt::format( "unknown solution format, file {}", szSlnFile ) );
 
 	pszData += nHdrSize;
+	while ( *pszData == 0xd || *pszData == 0xa )
+	{
+		++pszData;
+	}
 	while ( *pszData )
 		pszData = LoadSection( pszData, pRes, 0 );
 }
