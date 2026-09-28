@@ -18,16 +18,12 @@ class SComplexSoundDesc
 	struct SSoundStats
 	{
 		SSoundDesc *_PathName;
-		[chunkID = 2]
 		float _MinDist = 10;
-		[chunkID = 3]
 		float _MaxDist = 15;
-		[chunkID = 4]
 		float _Probability = 10;
 		ESoundType _soundType;
 	};
 	SSoundStats _sounds[1..];
-	[chunkID = 2]
 	bool _Looped;
 
 	#include "include_ComplexSoundDesc.h"
