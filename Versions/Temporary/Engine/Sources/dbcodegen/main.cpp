@@ -164,8 +164,11 @@ int PORT_CDECL main( int argc, char *argv[] )
 		return 0;
 	}
 	//
-	NFile::AppendSlash( &szTypesPath );
-	NFile::AppendSlash( &szSourcesPath );
+	// '/', which every platform takes. AppendSlash defaults to '\', and off
+	// Windows that made "<types-path>\types.xml" one file name beside the
+	// directory rather than a file in it.
+	NFile::AppendSlash( &szTypesPath, '/' );
+	NFile::AppendSlash( &szSourcesPath, '/' );
 	//
 	const std::string szBasePath = szSourcesPath;
 	//
