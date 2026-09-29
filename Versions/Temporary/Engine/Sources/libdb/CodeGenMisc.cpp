@@ -13,7 +13,7 @@ bool IsNoCode( const NDb::NTypeDef::SAttributes *pAttributes )
 {
 	if ( pAttributes )
 	{
-		const std::unordered_map<std::string, CVariant> &attributes = pAttributes->attributes;
+		const std::map<std::string, CVariant> &attributes = pAttributes->attributes;
 		return attributes.find( "noCode" ) != attributes.end();
 	}
 

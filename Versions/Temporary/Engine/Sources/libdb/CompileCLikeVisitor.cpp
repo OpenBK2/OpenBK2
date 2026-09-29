@@ -25,8 +25,8 @@ static bool GetPinnedChunkID( const NDb::NTypeDef::STypeStructBase::SField &fiel
 	{
 		return false;
 	}
-	const std::unordered_map<std::string, CVariant> &attr = field.pAttributes->attributes;
-	const std::unordered_map<std::string, CVariant>::const_iterator it = attr.find( "chunkID" );
+	const std::map<std::string, CVariant> &attr = field.pAttributes->attributes;
+	const std::map<std::string, CVariant>::const_iterator it = attr.find( "chunkID" );
 	if ( it == attr.end() )
 	{
 		return false;
@@ -104,7 +104,7 @@ void CVisitor::ParseImportantStructBaseAttr( NDb::NTypeDef::STypeStructBase *pSt
 	CDynamicCast<NDb::NTypeDef::STypeClass> pClass = pStruct;
 	if ( pStruct->pAttributes )
 	{
-		std::unordered_map<std::string, CVariant> &attr = pStruct->pAttributes->attributes;
+		std::map<std::string, CVariant> &attr = pStruct->pAttributes->attributes;
 		if ( attr.find( "typeID" ) != attr.end() )
 		{
 			const int nTypeID = attr["typeID"];
@@ -284,7 +284,7 @@ void CVisitor::Visit( NLang::CTypeDefNode *pTypeDefNode )
 
 			if ( pBinaryType->pAttributes != 0 )
 			{
-				std::unordered_map<std::string, CVariant> &attr = pTypedef->pAttributes->attributes;
+				std::map<std::string, CVariant> &attr = pTypedef->pAttributes->attributes;
 				if ( attr.find( "numBytes" ) != attr.end() )
 					pBinaryType->nBinaryObjectSize = attr["numBytes"];
 
@@ -355,7 +355,7 @@ static void ParseImportantFieldAttr( NDb::NTypeDef::STypeStructBase::SField *pFi
 {
 	if ( pField->pAttributes != 0 )
 	{
-		std::unordered_map<std::string, CVariant> &attr = pField->pAttributes->attributes;
+		std::map<std::string, CVariant> &attr = pField->pAttributes->attributes;
 		if ( attr.find( "comments" ) != attr.end() )
 		{
 			const std::string szDesc = attr["comments"].GetStr();

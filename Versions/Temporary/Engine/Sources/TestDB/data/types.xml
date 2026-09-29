@@ -675,17 +675,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CTPoint{float}</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>pt</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CTPoint{float}</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -743,17 +743,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CQuat</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>q</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CQuat</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -841,17 +841,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CTRect{float}</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>rc</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CTRect{float}</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -939,17 +939,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CVec2</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>v</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVec2</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -1007,17 +1007,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CVec3</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>v</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVec3</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -1090,17 +1090,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CVec4</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>v</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVec4</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -1195,17 +1195,17 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CVecPolar</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>typePrefix</Key>
 							<Data>
 								<Type>03000000</Type>
 								<Data>v</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVecPolar</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -1802,13 +1802,6 @@
 				<__ObjectData>
 					<Attributes>
 						<Item>
-							<Key>typeRename</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>CBinaryFlags</Data>
-							</Data>
-						</Item>
-						<Item>
 							<Key>noHeader</Key>
 							<Data>
 								<Type>03000000</Type>
@@ -1820,6 +1813,13 @@
 							<Data>
 								<Type>01000000</Type>
 								<Data>8</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CBinaryFlags</Data>
 							</Data>
 						</Item>
 					</Attributes>

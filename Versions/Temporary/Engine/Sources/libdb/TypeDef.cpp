@@ -303,7 +303,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName
 	// check field's attribs
 	if ( pAttributes )
 	{
-		std::unordered_map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
+		std::map<std::string, CVariant>::const_iterator pos = pAttributes->attributes.find( szName );
 		if ( pos != pAttributes->attributes.end() )
 			return &( pos->second );
 	}
@@ -313,7 +313,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName
 		const STypeBinary *pTypeBinary = checked_cast_ptr<const STypeBinary *>( pType );
 		if ( pTypeBinary->pAttributes )
 		{
-			std::unordered_map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
+			std::map<std::string, CVariant>::const_iterator pos = pTypeBinary->pAttributes->attributes.find( szName );
 			if ( pos != pTypeBinary->pAttributes->attributes.end() )
 				return &( pos->second );
 		}
@@ -323,7 +323,7 @@ const CVariant *STypeStructBase::SField::GetAttribute( const std::string &szName
 		const STypeStructBase *pTypeStruct = checked_cast_ptr<const STypeStructBase *>( pType );
 		if ( pTypeStruct->pAttributes )
 		{
-			std::unordered_map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
+			std::map<std::string, CVariant>::const_iterator pos = pTypeStruct->pAttributes->attributes.find( szName );
 			if ( pos != pTypeStruct->pAttributes->attributes.end() )
 				return &( pos->second );
 		}

@@ -6,6 +6,8 @@
 #include "Misc/StrProc.h"
 #include "System/XmlSaver.h"
 
+#include <map>
+
 #include <boost/uuid/uuid.hpp>
 
 //
@@ -34,10 +36,14 @@ struct SAttributes : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( SAttributes );
 public:
-	std::unordered_map<std::string, CVariant> attributes;
+	// Ordered by name, so types.xml lists a type's attributes in the same order
+	// whichever standard library wrote it. As an unordered_map the order was the
+	// library's hash order, and a regenerate on Linux reordered every attribute
+	// list MSVC had written.
+	std::map<std::string, CVariant> attributes;
 
 	SAttributes() { }
-	SAttributes( const std::unordered_map<std::string, CVariant> &_attributes ) : attributes( _attributes ) { }
+	SAttributes( const std::map<std::string, CVariant> &_attributes ) : attributes( _attributes ) { }
 	//
 	bool HashAttribute( const std::string &szName ) const { return attributes.find( szName ) != attributes.end(); }
 	//

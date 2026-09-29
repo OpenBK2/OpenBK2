@@ -13,7 +13,7 @@ const std::string GetTypePrefix( const NDb::NTypeDef::ETypeType eType, NDb::NTyp
 {
 	if ( pTypeAttributes )
 	{
-		const std::unordered_map<std::string, CVariant>::const_iterator iter = pTypeAttributes->attributes.find( "typePrefix" );
+		const std::map<std::string, CVariant>::const_iterator iter = pTypeAttributes->attributes.find( "typePrefix" );
 		if ( iter != pTypeAttributes->attributes.end() )
 		{
 			const CVariant &res = iter->second;
@@ -82,7 +82,7 @@ static bool FindRenameInAttributes( std::string *pszResult, NDb::NTypeDef::SAttr
 {
 	if ( pAttributes )
 	{
-		std::unordered_map<std::string, CVariant> &attributes = pAttributes->attributes;
+		std::map<std::string, CVariant> &attributes = pAttributes->attributes;
 		if ( attributes.find( "typeRename" ) != attributes.end() )
 		{
 			std::string szTypeName = attributes["typeRename"].GetStr();

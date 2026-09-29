@@ -554,8 +554,8 @@ static void GenereateTypeDefs( ICode::SCodeStreams *pCode, NDb::NTypeDef::SAttri
 	if ( pAttr == 0 )
 		return;
 
-	std::unordered_map<std::string, CVariant> &attr = pAttr->attributes;
-	std::unordered_map<std::string, CVariant>::iterator iter = attr.find( "type_defs" );
+	std::map<std::string, CVariant> &attr = pAttr->attributes;
+	std::map<std::string, CVariant>::iterator iter = attr.find( "type_defs" );
 	if ( iter == attr.end() )
 		return;
 

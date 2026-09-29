@@ -11,6 +11,8 @@
 
 #include "port/cdecl.h"
 
+#include <map>
+
 #include <boost/uuid/uuid.hpp>
 
 template <class T> class CArray2D;
@@ -44,6 +46,8 @@ private:
 		int PORT_CDECL TestDataPath( std::list<T1>* ) { return 0; }
 	template<class T1, class T2, class T3>
 		int PORT_CDECL TestDataPath( std::unordered_map<T1, T2, T3>* ) { return 0; }
+	template<class T1, class T2, class T3, class T4>
+		int PORT_CDECL TestDataPath( std::map<T1, T2, T3, T4>* ) { return 0; }
 	// add boolean built-in type
 	template <class TYPE>
 		void AddBoolData( chunk_id idChunk, TYPE *pData, int nChunkNumber ) 
@@ -183,6 +187,14 @@ private:
 			if ( !StartChunk(idChunk, nChunkNumber) )
 				return;
 			DoHashMap( *pHash );
+			FinishChunk();
+		}
+	template<class T, class T1, class T2, class T3, class T4>
+		void PORT_CDECL AddInternal( const chunk_id idChunk, int nChunkNumber, T *p, std::map<T1, T2, T3, T4> *pMap )
+		{
+			if ( !StartChunk(idChunk, nChunkNumber) )
+				return;
+			DoMap( *pMap );
 			FinishChunk();
 		}
 	template<class T,class T1, class T2>
@@ -382,8 +394,44 @@ private:
 				}
 			}
 		}
+	// std::map: the same Item/Key/Data layout as a hash map, so either container
+	// reads what the other wrote, but written in key order. A hash map is written
+	// in its iteration order, which differs between standard libraries.
+	template <class T1, class T2, class T3, class T4>
+		void DoMap( std::map<T1, T2, T3, T4> &data )
+		{
+			if ( IsReading() )
+			{
+				data.clear();
+				const int nSize = CountChunks();
+				for ( int i = 0; i < nSize; ++i )
+				{
+					if ( StartChunk("Item", i + 1) )
+					{
+						T1 key = T1();
+						Add( "Key", &key );
+						Add( "Data", &data[key] );
+						FinishChunk();
+					}
+				}
+			}
+			else
+			{
+				int i = 1;
+				for ( typename std::map<T1, T2, T3, T4>::iterator pos = data.begin(); pos != data.end(); ++pos, ++i )
+				{
+					if ( StartChunk("Item", i) )
+					{
+						T1 key = pos->first;
+						Add( "Key", &key );
+						Add( "Data", &pos->second );
+						FinishChunk();
+					}
+				}
+			}
+		}
 	// 2D Array
-	template <class T> 
+	template <class T>
 		void Do2DArray( CArray2D<T> &a )
 		{
 			int nSizeX = a.GetSizeX(), nSizeY = a.GetSizeX();
