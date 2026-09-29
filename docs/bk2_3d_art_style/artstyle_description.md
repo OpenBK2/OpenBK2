@@ -9,7 +9,7 @@ The 3D models in the game only have one color texture on them at a time, there i
 
 ## The task scope
 
-You're be given reference pictures or maybe sometimes 3D which you can use for getting the 3D shapes properly. Your task is to make the 3D model (split into multiple shapes, e.g. chasis, turret, main_barrel, tracks, wheels, etc..), configure the UV map and make the textures for it (at least one regular and one destroyed texture, depending on the task). It is necessary that you can do all of that, as base 3D model is useless without a texture. In fact, the hardest part is probably making a good texture that matches the original artstyle, and that's what's needed.
+You're be given reference pictures or maybe sometimes identical 3D models which you can use for getting the 3D shapes properly. Your task is to make the 3D model (split into multiple shapes, e.g. chasis, turret, main_barrel, tracks, wheels, etc..), configure the UV map and make the textures for it (at least one regular and one destroyed texture, depending on the task). It is necessary that you can do all of that, as base 3D model is useless without a texture. In fact, the hardest part is probably making a good texture that matches the original artstyle, and that's what's needed.
 
 This is aimed to be a long term project, so it'd be ideal if you can develop the "special BK2 art pipeline" or whatever it's called, basically a collection of custom brushes and preconfigured layers or such stuff for painting. So that you can easily make texture camo changes and new textures faster in a more convenient way, instead of making every texture from scratch.
 
