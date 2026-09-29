@@ -83,5 +83,5 @@ other small utilities:
 test code:
 
 - TestClient - test application for headless multiplayer testing
-- TestDB - some tests for database routines (libdb library)
+- TestDB - the database schema (TestType.cll) and records libdb/test runs the editor database against; its types build into a test-only library
 - Parser/test - the Parser library (the .cll grammar) against a corpus of cases that must parse or must be rejected; formerly TestParsing

@@ -126,7 +126,7 @@ test code (see also the unit tests and benchmarks section below):
 - [3Dmotor/test](Versions/Temporary/Engine/Sources/3Dmotor/test) - unit tests for the ported SIMD and MMX routines, checked against the original assembly
 - [3Dmotor/benchmark](Versions/Temporary/Engine/Sources/3Dmotor/benchmark) - benchmarks for the same routines
 - [TestClient](Versions/Temporary/Engine/Sources/TestClient) - test application for headless multiplayer testing
-- [TestDB](Versions/Temporary/Engine/Sources/TestDB) - some tests for database routines ([libdb](Versions/Temporary/Engine/Sources/libdb) library)
+- [TestDB](Versions/Temporary/Engine/Sources/TestDB) - the schema and records that [libdb/test](Versions/Temporary/Engine/Sources/libdb/test) runs the editor database against; regenerate-db rebuilds its sources from TestType.cll
 - [Parser/test](Versions/Temporary/Engine/Sources/Parser/test) - the [Parser](Versions/Temporary/Engine/Sources/Parser) library (the .cll grammar) against a corpus of cases that must parse or must be rejected; formerly TestParsing
 
 the game engine is referred as "enigma" in various sources, however, this name is not used in source code.

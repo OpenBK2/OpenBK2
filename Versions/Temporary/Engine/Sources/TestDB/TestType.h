@@ -2,9 +2,13 @@
 
 // automatically generated file, don't change manually!
 
-#include "BinaryFlags.h"
+#include "TestDB/BinaryFlags.h"
 
 #include <cstdint>
+
+#include <boost/uuid/uuid.hpp>
+
+struct IXmlSaver;
 
 namespace NDb
 {
@@ -14,9 +18,13 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SWeapon )
 	public:
 		enum { typeID = 0x1019230D };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
 		int nAmmoPerBurst;
 
 		SWeapon() :
+			__dwCheckSum( 0 ),
 			nAmmoPerBurst( 0 )
 		{ }
 		//
@@ -26,18 +34,23 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SHPObject : public CResource
 	{
 	public:
-		wstring wszName;
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		std::wstring wszName;
 		float fHP;
 		bool bHasPassability;
 		CBinaryFlags flags;
-		string szDesignerName;
+		std::string szDesignerName;
 
 		SHPObject() :
+			__dwCheckSum( 0 ),
 			fHP( 0.0f ),
 			bHasPassability( false )
 		{ }
@@ -46,13 +59,17 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SUnitBase : public SHPObject
 	{
 	public:
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
 
-		enum EUnitType
+		enum EUnitType : int
 		{
 			UNIT_TYPE_UNKNOWN = 0,
 			UNIT_TYPE_INFANTRY_SNIPER = 1,
@@ -68,6 +85,7 @@ namespace NDb
 		int nBoundTileRadius;
 
 		SUnitBase() :
+			__dwCheckSum( 0 ),
 			eUnitType( UNIT_TYPE_UNKNOWN ),
 			fSight( 0.0f ),
 			fSpeed( 0.0f ),
@@ -78,6 +96,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMechUnit : public SUnitBase
@@ -85,39 +104,51 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SMechUnit )
 	public:
 		enum { typeID = 0x1019230E };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
 
 		struct SJogging
 		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
 			float fAmplitude;
 			float fPhase;
 			float fShift;
 			CVec3 vTremble;
 
 			SJogging() :
+				__dwCheckSum( 0 ),
 				fAmplitude( 0.0f ),
 				fPhase( 0.0f ),
 				fShift( 0.0f ),
 				vTremble( VNULL3 )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SStruct1
 		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
 			int nTypeInt;
 			float fTypeFloat;
 			bool bTypeBool;
-			GUID typeGUID;
-			string szTypeString;
-			wstring wszTypeWString;
+			boost::uuids::uuid typeGUID;
+			std::string szTypeString;
+			std::wstring wszTypeWString;
 			EUnitType eTypeEnumUnitType;
 			CBinaryFlags typeBinaryFlags;
 
 			SStruct1() :
+				__dwCheckSum( 0 ),
 				nTypeInt( 0 ),
 				fTypeFloat( 0.0f ),
 				bTypeBool( false ),
@@ -125,40 +156,49 @@ namespace NDb
 				eTypeEnumUnitType( UNIT_TYPE_UNKNOWN )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
 		};
 
 		struct SStruct2
 		{
-			vector< SStruct1 > structs;
-			vector< GUID > guids;
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			std::vector< SStruct1 > structs;
+			std::vector< boost::uuids::uuid > guids;
 
-			SStruct2() { }
+			SStruct2() :
+				__dwCheckSum( 0 )
+			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
 		};
 		SJogging jx;
 		SJogging jy;
-		GUID guid;
-		vector< int > simpleArrayInt;
-		vector< float > simpleArrayFloat;
-		vector< GUID > simpleArrayGUID;
-		vector< CBinaryFlags > simpleArrayBinaryFlags;
-		vector< EUnitType > simpleArrayEnumUnitType;
-		vector< string > simpleArrayString;
-		vector< wstring > simpleArrayWString;
-		vector< SStruct1 > complexArrayStruct1;
-		vector< SStruct2 > complexArrayStruct2;
+		boost::uuids::uuid guid;
+		std::vector< int > simpleArrayInt;
+		std::vector< float > simpleArrayFloat;
+		std::vector< boost::uuids::uuid > simpleArrayGUID;
+		std::vector< CBinaryFlags > simpleArrayBinaryFlags;
+		std::vector< EUnitType > simpleArrayEnumUnitType;
+		std::vector< std::string > simpleArrayString;
+		std::vector< std::wstring > simpleArrayWString;
+		std::vector< SStruct1 > complexArrayStruct1;
+		std::vector< SStruct2 > complexArrayStruct2;
 		CDBPtr< SWeapon > pWeapon;
-		vector< CDBPtr< SWeapon > > weapons;
+		std::vector< CDBPtr< SWeapon > > weapons;
 
-		SMechUnit() { }
+		SMechUnit() :
+			__dwCheckSum( 0 )
+		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		//
@@ -166,6 +206,7 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
 	};
 
 	struct SMapInfo2 : public CResource
@@ -173,30 +214,40 @@ namespace NDb
 		OBJECT_BASIC_METHODS( SMapInfo2 )
 	public:
 		enum { typeID = 0x101A6C80 };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
 
 		struct SMapObject
 		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
 			float fHP;
 			CVec3 vPos;
 			CQuat qRot;
-			GUID linkID;
-			GUID linkWith;
+			boost::uuids::uuid linkID;
+			boost::uuids::uuid linkWith;
 			CDBPtr< SHPObject > pObject;
 
 			SMapObject() :
+				__dwCheckSum( 0 ),
 				fHP( 1 ),
 				vPos( VNULL3 ),
 				qRot( QNULL )
 			{ }
 			//
-			void ReportMetaInfo( const string &szAddName, uint8_t *pThis ) const;
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 			//
 			int operator&( IBinSaver &saver );
 			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
 		};
-		vector< SMapObject > objects;
+		std::vector< SMapObject > objects;
 
-		SMapInfo2() { }
+		SMapInfo2() :
+			__dwCheckSum( 0 )
+		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		//
@@ -204,20 +255,20 @@ namespace NDb
 		//
 		int operator&( IBinSaver &saver );
 		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
 	};
 }
 
 namespace NDb
 {
-	string EnumToString( NDb::SUnitBase::EUnitType eValue );
-	SUnitBase::EUnitType StringToEnum_NDb_SUnitBase_EUnitType( const string &szValue );
+	std::string EnumToString( NDb::SUnitBase::EUnitType eValue );
+	SUnitBase::EUnitType StringToEnum_NDb_SUnitBase_EUnitType( const std::string &szValue );
 }
 
 template <>
 struct SKnownEnum<NDb::SUnitBase::EUnitType>
 {
 	enum { isKnown = 1 };
-	static string ToString( NDb::SUnitBase::EUnitType eValue ) { return NDb::EnumToString( eValue ); }
-	static NDb::SUnitBase::EUnitType ToEnum( const string &szValue ) { return NDb::StringToEnum_NDb_SUnitBase_EUnitType( szValue ); }
+	static std::string ToString( NDb::SUnitBase::EUnitType eValue ) { return NDb::EnumToString( eValue ); }
+	static NDb::SUnitBase::EUnitType ToEnum( const std::string &szValue ) { return NDb::StringToEnum_NDb_SUnitBase_EUnitType( szValue ); }
 };
-

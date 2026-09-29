@@ -26,6 +26,9 @@ add_subdirectory("DebugTools")
 add_subdirectory("B2_M1_Terrain")
 add_subdirectory("libdb")
 add_subdirectory("Parser")
+# The database types and records libdb/test opens the editor database with.
+# Nothing in ALL depends on it.
+add_subdirectory("TestDB")
 
 # The database tools, console programs rather than engine modules. dbindex
 # regenerates Data/index.bin after .xdb records change, which the shipped

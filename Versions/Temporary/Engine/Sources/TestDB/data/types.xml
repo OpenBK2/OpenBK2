@@ -1,55 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Base>
 	<Types>
-		<Item>380cfe00</Item>
-		<Item>8069fb00</Item>
-		<Item>f0fdfd00</Item>
-		<Item>c8d9fb00</Item>
-		<Item>e85efb00</Item>
-		<Item>60dffb00</Item>
+		<Item>01000000</Item>
+		<Item>02000000</Item>
+		<Item>03000000</Item>
+		<Item>04000000</Item>
+		<Item>05000000</Item>
+		<Item>06000000</Item>
+		<Item>07000000</Item>
+		<Item>08000000</Item>
+		<Item>09000000</Item>
+		<Item>0a000000</Item>
 	</Types>
 	<SharedClasses>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
-			<__ServerPtr>380cfe00</__ServerPtr>
+			<__ServerPtr>01000000</__ServerPtr>
 			<Type>TYPE_TYPE_CLASS</Type>
 			<TypeName>MapInfo2</TypeName>
 			<Attributes />
 			<BaseType>00000000</BaseType>
 			<NestedTypes>
-				<Item>080dfe00</Item>
+				<Item>0b000000</Item>
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>d815fe00</Type>
+					<Type>0c000000</Type>
 					<Name>Objects</Name>
 					<ChunkID>2</ChunkID>
-					<Description>Список всех объектов на карте
-</Description>
+					<Description>Every object on the map</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 			<TypeID>270167168</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
-			<__ServerPtr>8069fb00</__ServerPtr>
+			<__ServerPtr>02000000</__ServerPtr>
 			<Type>TYPE_TYPE_CLASS</Type>
 			<TypeName>MechUnit</TypeName>
 			<Attributes />
-			<BaseType>506afb00</BaseType>
+			<BaseType>0d000000</BaseType>
 			<NestedTypes>
-				<Item>f07ffd00</Item>
-				<Item>e883fd00</Item>
-				<Item>f89bfd00</Item>
+				<Item>0e000000</Item>
+				<Item>0f000000</Item>
+				<Item>10000000</Item>
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>f07ffd00</Type>
+					<Type>0e000000</Type>
 					<Name>Jx</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -58,9 +64,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f07ffd00</Type>
+					<Type>0e000000</Type>
 					<Name>Jy</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -69,9 +78,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>687bfd00</Type>
+					<Type>11000000</Type>
 					<Name>guid</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -80,257 +92,229 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>8054fb00</Type>
+					<Type>12000000</Type>
 					<Name>nocodeInt</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>f097fa00</Type>
-					<Name>nocodeFloat</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>607dfd00</Type>
-					<Name>nocodeBool</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>a07ffd00</Type>
-					<Name>nocodeString</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>c096fa00</Type>
-					<Name>nocodeWString</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>687bfd00</Type>
-					<Name>nocodeGUID</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>506efb00</Type>
-					<Name>nocodeEnumUnitType</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>70defb00</Type>
-					<Name>nocodeBinaryFlags</Name>
-					<ChunkID>-1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes>
-						<__ClassTypeID>270064327</__ClassTypeID>
-						<__ObjectData>
-							<Attributes>
-								<Item>
-									<Key>noCode</Key>
-									<Data>
-										<Type>03000000</Type>
-										<Data />
-									</Data>
-								</Item>
-							</Attributes>
-						</__ObjectData>
-					</Attributes>
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>08b1fd00</Type>
-					<Name>SimpleArrayInt</Name>
-					<ChunkID>0</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes />
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>e8c5fd00</Type>
-					<Name>SimpleArrayFloat</Name>
-					<ChunkID>1</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes />
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>40c8fd00</Type>
-					<Name>SimpleArrayGUID</Name>
-					<ChunkID>2</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes />
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>98cafd00</Type>
-					<Name>SimpleArrayBinaryFlags</Name>
-					<ChunkID>3</ChunkID>
-					<Description />
-					<Constraints />
-					<Attributes />
-					<DefaultValue>
-						<Type>00000000</Type>
-					</DefaultValue>
-				</Item>
-				<Item>
-					<Type>d8ccfd00</Type>
-					<Name>SimpleArrayEnumUnitType</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
 					<Constraints />
-					<Attributes />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>18cffd00</Type>
-					<Name>SimpleArrayString</Name>
+					<Type>13000000</Type>
+					<Name>nocodeFloat</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>14000000</Type>
+					<Name>nocodeBool</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>15000000</Type>
+					<Name>nocodeString</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>16000000</Type>
+					<Name>nocodeWString</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>11000000</Type>
+					<Name>nocodeGUID</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>17000000</Type>
+					<Name>nocodeEnumUnitType</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>18000000</Type>
+					<Name>nocodeBinaryFlags</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes>
+						<__ClassTypeID>270064327</__ClassTypeID>
+						<__ObjectData>
+							<Attributes>
+								<Item>
+									<Key>noCode</Key>
+									<Data>
+										<Type>03000000</Type>
+										<Data />
+									</Data>
+								</Item>
+							</Attributes>
+						</__ObjectData>
+					</Attributes>
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>19000000</Type>
+					<Name>SimpleArrayInt</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
 					<Constraints />
@@ -338,10 +322,13 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>e8affd00</Type>
-					<Name>SimpleArrayWString</Name>
+					<Type>1a000000</Type>
+					<Name>SimpleArrayFloat</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
 					<Constraints />
@@ -349,11 +336,84 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>40cefd00</Type>
+					<Type>1b000000</Type>
+					<Name>SimpleArrayGUID</Name>
+					<ChunkID>7</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>1c000000</Type>
+					<Name>SimpleArrayBinaryFlags</Name>
+					<ChunkID>8</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>1d000000</Type>
+					<Name>SimpleArrayEnumUnitType</Name>
+					<ChunkID>9</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>1e000000</Type>
+					<Name>SimpleArrayString</Name>
+					<ChunkID>10</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>1f000000</Type>
+					<Name>SimpleArrayWString</Name>
+					<ChunkID>11</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>20000000</Type>
 					<Name>SimpleArrayIntNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -373,11 +433,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>30befd00</Type>
+					<Type>21000000</Type>
 					<Name>SimpleArrayFloatNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -397,11 +460,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>68c2fd00</Type>
+					<Type>22000000</Type>
 					<Name>SimpleArrayGUIDNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -421,11 +487,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>38e6fd00</Type>
+					<Type>23000000</Type>
 					<Name>SimpleArrayBinaryFlagsNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -445,11 +514,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>78eafd00</Type>
+					<Type>24000000</Type>
 					<Name>SimpleArrayEnumUnitTypeNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -469,11 +541,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>40bafd00</Type>
+					<Type>25000000</Type>
 					<Name>SimpleArrayStringNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -493,11 +568,14 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>e0f2fd00</Type>
+					<Type>26000000</Type>
 					<Name>SimpleArrayWStringNocode</Name>
-					<ChunkID>-1</ChunkID>
+					<ChunkID>11</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes>
@@ -517,57 +595,140 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>48f5fd00</Type>
+					<Type>27000000</Type>
 					<Name>ComplexArrayStruct1</Name>
-					<ChunkID>0</ChunkID>
+					<ChunkID>12</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>80f7fd00</Type>
+					<Type>28000000</Type>
 					<Name>ComplexArrayStruct2</Name>
-					<ChunkID>1</ChunkID>
+					<ChunkID>13</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>b8f9fd00</Type>
+					<Type>29000000</Type>
 					<Name>Weapon</Name>
-					<ChunkID>2</ChunkID>
+					<ChunkID>14</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>60fbfd00</Type>
+					<Type>2a000000</Type>
 					<Name>Weapons</Name>
-					<ChunkID>3</ChunkID>
+					<ChunkID>15</ChunkID>
 					<Description />
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 			<TypeID>270082830</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>f0fdfd00</__ServerPtr>
+			<__ServerPtr>03000000</__ServerPtr>
+			<Type>TYPE_TYPE_STRUCT</Type>
+			<TypeName>Point</TypeName>
+			<Attributes>
+				<__ClassTypeID>270064327</__ClassTypeID>
+				<__ObjectData>
+					<Attributes>
+						<Item>
+							<Key>noHeader</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data />
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CTPoint{float}</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typePrefix</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>pt</Data>
+							</Data>
+						</Item>
+					</Attributes>
+				</__ObjectData>
+			</Attributes>
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item>
+					<Type>13000000</Type>
+					<Name>x</Name>
+					<ChunkID>2</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>y</Name>
+					<ChunkID>3</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+			</Fields>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082825</__ClassTypeID>
+			<__ServerPtr>04000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Quat</TypeName>
 			<Attributes>
@@ -595,14 +756,6 @@
 								<Data>q</Data>
 							</Data>
 						</Item>
-						<Item>
-							<Key>comments</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>quaternion
-</Data>
-							</Data>
-						</Item>
 					</Attributes>
 				</__ObjectData>
 			</Attributes>
@@ -610,7 +763,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -620,9 +773,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -632,9 +788,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>z</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -644,9 +803,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>w</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -656,12 +818,113 @@
 						<Type>01000000</Type>
 						<Data>1</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>c8d9fb00</__ServerPtr>
+			<__ServerPtr>05000000</__ServerPtr>
+			<Type>TYPE_TYPE_STRUCT</Type>
+			<TypeName>Rect</TypeName>
+			<Attributes>
+				<__ClassTypeID>270064327</__ClassTypeID>
+				<__ObjectData>
+					<Attributes>
+						<Item>
+							<Key>noHeader</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data />
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CTRect{float}</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typePrefix</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>rc</Data>
+							</Data>
+						</Item>
+					</Attributes>
+				</__ObjectData>
+			</Attributes>
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item>
+					<Type>13000000</Type>
+					<Name>x1</Name>
+					<ChunkID>2</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>y1</Name>
+					<ChunkID>3</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>x2</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>y2</Name>
+					<ChunkID>5</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+			</Fields>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082825</__ClassTypeID>
+			<__ServerPtr>06000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Vec2</TypeName>
 			<Attributes>
@@ -689,14 +952,6 @@
 								<Data>v</Data>
 							</Data>
 						</Item>
-						<Item>
-							<Key>comments</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>2D vector
-</Data>
-							</Data>
-						</Item>
 					</Attributes>
 				</__ObjectData>
 			</Attributes>
@@ -704,7 +959,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -714,9 +969,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -726,12 +984,15 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>e85efb00</__ServerPtr>
+			<__ServerPtr>07000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Vec3</TypeName>
 			<Attributes>
@@ -759,14 +1020,6 @@
 								<Data>v</Data>
 							</Data>
 						</Item>
-						<Item>
-							<Key>comments</Key>
-							<Data>
-								<Type>03000000</Type>
-								<Data>3D vector
-</Data>
-							</Data>
-						</Item>
 					</Attributes>
 				</__ObjectData>
 			</Attributes>
@@ -774,7 +1027,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>x</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -784,9 +1037,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>y</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -796,9 +1052,12 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>z</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -808,12 +1067,186 @@
 						<Type>01000000</Type>
 						<Data>0</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+			</Fields>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082825</__ClassTypeID>
+			<__ServerPtr>08000000</__ServerPtr>
+			<Type>TYPE_TYPE_STRUCT</Type>
+			<TypeName>Vec4</TypeName>
+			<Attributes>
+				<__ClassTypeID>270064327</__ClassTypeID>
+				<__ObjectData>
+					<Attributes>
+						<Item>
+							<Key>noHeader</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data />
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVec4</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typePrefix</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>v</Data>
+							</Data>
+						</Item>
+					</Attributes>
+				</__ObjectData>
+			</Attributes>
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item>
+					<Type>13000000</Type>
+					<Name>x</Name>
+					<ChunkID>2</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>y</Name>
+					<ChunkID>3</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>z</Name>
+					<ChunkID>4</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>w</Name>
+					<ChunkID>5</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>01000000</Type>
+						<Data>0</Data>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+			</Fields>
+		</Item>
+		<Item>
+			<__ClassTypeID>270082825</__ClassTypeID>
+			<__ServerPtr>09000000</__ServerPtr>
+			<Type>TYPE_TYPE_STRUCT</Type>
+			<TypeName>VecPolar</TypeName>
+			<Attributes>
+				<__ClassTypeID>270064327</__ClassTypeID>
+				<__ObjectData>
+					<Attributes>
+						<Item>
+							<Key>comments</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>сферические координаты</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>noHeader</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data />
+							</Data>
+						</Item>
+						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CVecPolar</Data>
+							</Data>
+						</Item>
+						<Item>
+							<Key>typePrefix</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>v</Data>
+							</Data>
+						</Item>
+					</Attributes>
+				</__ObjectData>
+			</Attributes>
+			<BaseType>00000000</BaseType>
+			<NestedTypes />
+			<Fields>
+				<Item>
+					<Type>13000000</Type>
+					<Name>Lat</Name>
+					<ChunkID>2</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
+				</Item>
+				<Item>
+					<Type>13000000</Type>
+					<Name>Long</Name>
+					<ChunkID>3</ChunkID>
+					<Description />
+					<Constraints />
+					<Attributes />
+					<DefaultValue>
+						<Type>00000000</Type>
+					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
-			<__ServerPtr>60dffb00</__ServerPtr>
+			<__ServerPtr>0a000000</__ServerPtr>
 			<Type>TYPE_TYPE_CLASS</Type>
 			<TypeName>Weapon</TypeName>
 			<Attributes />
@@ -821,23 +1254,25 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>8054fb00</Type>
+					<Type>12000000</Type>
 					<Name>AmmoPerBurst</Name>
 					<ChunkID>2</ChunkID>
-					<Description>&quot;How many bullets are shooted during one burst&quot;
-</Description>
+					<Description>How many bullets are fired in one burst</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 			<TypeID>270082829</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>080dfe00</__ServerPtr>
+			<__ServerPtr>0b000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>MapObject</TypeName>
 			<Attributes />
@@ -845,86 +1280,98 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>HP</Name>
 					<ChunkID>2</ChunkID>
-					<Description>(проценты от 0 до 1) Жизнь
-</Description>
+					<Description>(0 to 1) Health</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>01000000</Type>
 						<Data>1</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>e85efb00</Type>
+					<Type>07000000</Type>
 					<Name>Pos</Name>
 					<ChunkID>3</ChunkID>
-					<Description>(метры) Положение на карте
-</Description>
+					<Description>(meters) Position on the map</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f0fdfd00</Type>
+					<Type>04000000</Type>
 					<Name>Rot</Name>
 					<ChunkID>4</ChunkID>
-					<Description>(кватернион) Ориентация объекта в пространстве
-</Description>
+					<Description>(quaternion) Orientation</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>687bfd00</Type>
+					<Type>11000000</Type>
 					<Name>LinkID</Name>
 					<ChunkID>5</ChunkID>
-					<Description>Уникальный идентификатор объекта на карте
-</Description>
+					<Description>The object&apos;s unique id on the map</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>687bfd00</Type>
+					<Type>11000000</Type>
 					<Name>LinkWith</Name>
 					<ChunkID>6</ChunkID>
-					<Description>С кем объект слинкован
-</Description>
+					<Description>The object it is linked with</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f818fe00</Type>
+					<Type>2b000000</Type>
 					<Name>Object</Name>
 					<ChunkID>7</ChunkID>
-					<Description>Ссылка на описатель статсов объекта
-</Description>
+					<Description>The object&apos;s stats</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>d815fe00</__ServerPtr>
+			<__ServerPtr>0c000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>080dfe00</Type>
+				<Type>0b000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -933,73 +1380,84 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
-			<__ServerPtr>506afb00</__ServerPtr>
+			<__ServerPtr>0d000000</__ServerPtr>
 			<Type>TYPE_TYPE_CLASS</Type>
 			<TypeName>UnitBase</TypeName>
 			<Attributes />
-			<BaseType>007cfd00</BaseType>
+			<BaseType>2c000000</BaseType>
 			<NestedTypes>
-				<Item>506efb00</Item>
+				<Item>17000000</Item>
 			</NestedTypes>
 			<Fields>
 				<Item>
-					<Type>506efb00</Type>
+					<Type>17000000</Type>
 					<Name>UnitType</Name>
 					<ChunkID>2</ChunkID>
-					<Description>Unit type (for designers)
-</Description>
+					<Description>Unit type (for designers)</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>Sight</Name>
 					<ChunkID>3</ChunkID>
-					<Description>(meters) Sight radius
-</Description>
+					<Description>(meters) Sight radius</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>Speed</Name>
 					<ChunkID>4</ChunkID>
-					<Description>(meters per second) Maximum speed
-</Description>
+					<Description>(meters per second) Maximum speed</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>8054fb00</Type>
+					<Type>12000000</Type>
 					<Name>BoundTileRadius</Name>
 					<ChunkID>5</ChunkID>
-					<Description>(meters) Radius for passability calculations
-</Description>
+					<Description>(meters) Radius for passability calculations</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 			<TypeID>-1</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>f07ffd00</__ServerPtr>
+			<__ServerPtr>0e000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Jogging</TypeName>
 			<Attributes />
@@ -1007,58 +1465,66 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>Amplitude</Name>
 					<ChunkID>2</ChunkID>
-					<Description>Cosine amplitude
-</Description>
+					<Description>Cosine amplitude</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>Phase</Name>
 					<ChunkID>3</ChunkID>
-					<Description>Cosine phase
-</Description>
+					<Description>Cosine phase</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>Shift</Name>
 					<ChunkID>4</ChunkID>
-					<Description>Cosine phase shift
-</Description>
+					<Description>Cosine phase shift</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>e85efb00</Type>
+					<Type>07000000</Type>
 					<Name>Tremble</Name>
 					<ChunkID>5</ChunkID>
-					<Description>Uniform tremble along all 3 axises
-</Description>
+					<Description>Uniform tremble along all 3 axes</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>e883fd00</__ServerPtr>
+			<__ServerPtr>0f000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Struct1</TypeName>
 			<Attributes />
@@ -1066,7 +1532,7 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>8054fb00</Type>
+					<Type>12000000</Type>
 					<Name>TypeInt</Name>
 					<ChunkID>2</ChunkID>
 					<Description />
@@ -1075,9 +1541,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>TypeFloat</Name>
 					<ChunkID>3</ChunkID>
 					<Description />
@@ -1099,9 +1568,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>607dfd00</Type>
+					<Type>14000000</Type>
 					<Name>TypeBool</Name>
 					<ChunkID>4</ChunkID>
 					<Description />
@@ -1110,9 +1582,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>687bfd00</Type>
+					<Type>11000000</Type>
 					<Name>TypeGUID</Name>
 					<ChunkID>5</ChunkID>
 					<Description />
@@ -1134,9 +1609,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>a07ffd00</Type>
+					<Type>15000000</Type>
 					<Name>TypeString</Name>
 					<ChunkID>6</ChunkID>
 					<Description />
@@ -1158,9 +1636,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>c096fa00</Type>
+					<Type>16000000</Type>
 					<Name>TypeWString</Name>
 					<ChunkID>7</ChunkID>
 					<Description />
@@ -1170,9 +1651,12 @@
 						<Type>06000000</Type>
 						<Data>Очень клёвое default value</Data>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>506efb00</Type>
+					<Type>17000000</Type>
 					<Name>TypeEnumUnitType</Name>
 					<ChunkID>8</ChunkID>
 					<Description />
@@ -1181,9 +1665,12 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>70defb00</Type>
+					<Type>18000000</Type>
 					<Name>TypeBinaryFlags</Name>
 					<ChunkID>9</ChunkID>
 					<Description />
@@ -1192,12 +1679,15 @@
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082825</__ClassTypeID>
-			<__ServerPtr>f89bfd00</__ServerPtr>
+			<__ServerPtr>10000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRUCT</Type>
 			<TypeName>Struct2</TypeName>
 			<Attributes />
@@ -1205,64 +1695,68 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>009dfd00</Type>
+					<Type>2d000000</Type>
 					<Name>Structs</Name>
 					<ChunkID>2</ChunkID>
-					<Description>array of complex struct (for array-in-array testing)
-</Description>
+					<Description>array of complex struct (for array-in-array testing)</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f89ffd00</Type>
+					<Type>2e000000</Type>
 					<Name>guids</Name>
 					<ChunkID>3</ChunkID>
-					<Description>array of GUIDs (for array-in-array testing)
-</Description>
+					<Description>array of GUIDs (for array-in-array testing)</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082821</__ClassTypeID>
-			<__ServerPtr>687bfd00</__ServerPtr>
+			<__ServerPtr>11000000</__ServerPtr>
 			<Type>TYPE_TYPE_GUID</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082816</__ClassTypeID>
-			<__ServerPtr>8054fb00</__ServerPtr>
+			<__ServerPtr>12000000</__ServerPtr>
 			<Type>TYPE_TYPE_INT</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082817</__ClassTypeID>
-			<__ServerPtr>f097fa00</__ServerPtr>
+			<__ServerPtr>13000000</__ServerPtr>
 			<Type>TYPE_TYPE_FLOAT</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082818</__ClassTypeID>
-			<__ServerPtr>607dfd00</__ServerPtr>
+			<__ServerPtr>14000000</__ServerPtr>
 			<Type>TYPE_TYPE_BOOL</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082819</__ClassTypeID>
-			<__ServerPtr>a07ffd00</__ServerPtr>
+			<__ServerPtr>15000000</__ServerPtr>
 			<Type>TYPE_TYPE_STRING</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082820</__ClassTypeID>
-			<__ServerPtr>c096fa00</__ServerPtr>
+			<__ServerPtr>16000000</__ServerPtr>
 			<Type>TYPE_TYPE_WSTRING</Type>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082824</__ClassTypeID>
-			<__ServerPtr>506efb00</__ServerPtr>
+			<__ServerPtr>17000000</__ServerPtr>
 			<Type>TYPE_TYPE_ENUM</Type>
 			<TypeName>UnitType</TypeName>
 			<Entries>
@@ -1299,7 +1793,7 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270082823</__ClassTypeID>
-			<__ServerPtr>70defb00</__ServerPtr>
+			<__ServerPtr>18000000</__ServerPtr>
 			<Type>TYPE_TYPE_BINARY</Type>
 			<TypeName>Flags</TypeName>
 			<BinaryObjectSize>8</BinaryObjectSize>
@@ -1308,6 +1802,13 @@
 				<__ObjectData>
 					<Attributes>
 						<Item>
+							<Key>typeRename</Key>
+							<Data>
+								<Type>03000000</Type>
+								<Data>CBinaryFlags</Data>
+							</Data>
+						</Item>
+						<Item>
 							<Key>noHeader</Key>
 							<Data>
 								<Type>03000000</Type>
@@ -1315,10 +1816,10 @@
 							</Data>
 						</Item>
 						<Item>
-							<Key>typeRename</Key>
+							<Key>numBytes</Key>
 							<Data>
-								<Type>03000000</Type>
-								<Data>CBinaryFlags</Data>
+								<Type>01000000</Type>
+								<Data>8</Data>
 							</Data>
 						</Item>
 					</Attributes>
@@ -1327,10 +1828,10 @@
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>08b1fd00</__ServerPtr>
+			<__ServerPtr>19000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>8054fb00</Type>
+				<Type>12000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1339,14 +1840,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>e8c5fd00</__ServerPtr>
+			<__ServerPtr>1a000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>f097fa00</Type>
+				<Type>13000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1355,14 +1859,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>40c8fd00</__ServerPtr>
+			<__ServerPtr>1b000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>687bfd00</Type>
+				<Type>11000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1371,14 +1878,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>98cafd00</__ServerPtr>
+			<__ServerPtr>1c000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>70defb00</Type>
+				<Type>18000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1387,14 +1897,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>d8ccfd00</__ServerPtr>
+			<__ServerPtr>1d000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>506efb00</Type>
+				<Type>17000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1403,14 +1916,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>18cffd00</__ServerPtr>
+			<__ServerPtr>1e000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>a07ffd00</Type>
+				<Type>15000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1419,14 +1935,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>e8affd00</__ServerPtr>
+			<__ServerPtr>1f000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>c096fa00</Type>
+				<Type>16000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1435,14 +1954,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>40cefd00</__ServerPtr>
+			<__ServerPtr>20000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>8054fb00</Type>
+				<Type>12000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1451,14 +1973,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>30befd00</__ServerPtr>
+			<__ServerPtr>21000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>f097fa00</Type>
+				<Type>13000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1467,14 +1992,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>68c2fd00</__ServerPtr>
+			<__ServerPtr>22000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>687bfd00</Type>
+				<Type>11000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1483,14 +2011,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>38e6fd00</__ServerPtr>
+			<__ServerPtr>23000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>70defb00</Type>
+				<Type>18000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1499,14 +2030,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>78eafd00</__ServerPtr>
+			<__ServerPtr>24000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>506efb00</Type>
+				<Type>17000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1515,14 +2049,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>40bafd00</__ServerPtr>
+			<__ServerPtr>25000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>a07ffd00</Type>
+				<Type>15000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1531,14 +2068,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>e0f2fd00</__ServerPtr>
+			<__ServerPtr>26000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>c096fa00</Type>
+				<Type>16000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1547,14 +2087,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>48f5fd00</__ServerPtr>
+			<__ServerPtr>27000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>e883fd00</Type>
+				<Type>0f000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1563,14 +2106,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>80f7fd00</__ServerPtr>
+			<__ServerPtr>28000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>f89bfd00</Type>
+				<Type>10000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1579,20 +2125,23 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082828</__ClassTypeID>
-			<__ServerPtr>b8f9fd00</__ServerPtr>
+			<__ServerPtr>29000000</__ServerPtr>
 			<Type>TYPE_TYPE_REF</Type>
-			<RefType>60dffb00</RefType>
+			<RefType>0a000000</RefType>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>60fbfd00</__ServerPtr>
+			<__ServerPtr>2a000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>b8f9fd00</Type>
+				<Type>29000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1601,17 +2150,20 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082828</__ClassTypeID>
-			<__ServerPtr>f818fe00</__ServerPtr>
+			<__ServerPtr>2b000000</__ServerPtr>
 			<Type>TYPE_TYPE_REF</Type>
-			<RefType>007cfd00</RefType>
+			<RefType>2c000000</RefType>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082826</__ClassTypeID>
-			<__ServerPtr>007cfd00</__ServerPtr>
+			<__ServerPtr>2c000000</__ServerPtr>
 			<Type>TYPE_TYPE_CLASS</Type>
 			<TypeName>HPObject</TypeName>
 			<Attributes />
@@ -1619,74 +2171,84 @@
 			<NestedTypes />
 			<Fields>
 				<Item>
-					<Type>c096fa00</Type>
+					<Type>16000000</Type>
 					<Name>Name</Name>
 					<ChunkID>2</ChunkID>
-					<Description>Object&apos;s internal name
-</Description>
+					<Description>Object&apos;s internal name</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>f097fa00</Type>
+					<Type>13000000</Type>
 					<Name>HP</Name>
 					<ChunkID>3</ChunkID>
-					<Description>Object&apos;s hit points (health)
-</Description>
+					<Description>Object&apos;s hit points (health)</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>607dfd00</Type>
+					<Type>14000000</Type>
 					<Name>HasPassability</Name>
 					<ChunkID>4</ChunkID>
-					<Description>Does this object have passability?
-</Description>
+					<Description>Does this object have passability?</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>70defb00</Type>
+					<Type>18000000</Type>
 					<Name>Flags</Name>
 					<ChunkID>5</ChunkID>
-					<Description>General-purpose flags
-</Description>
+					<Description>General-purpose flags</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 				<Item>
-					<Type>a07ffd00</Type>
+					<Type>15000000</Type>
 					<Name>DesignerName</Name>
 					<ChunkID>6</ChunkID>
-					<Description>Designer, who created this object
-</Description>
+					<Description>Designer, who created this object</Description>
 					<Constraints />
 					<Attributes />
 					<DefaultValue>
 						<Type>00000000</Type>
 					</DefaultValue>
+					<ComplexDefaultValue>
+						<Type>00000000</Type>
+					</ComplexDefaultValue>
 				</Item>
 			</Fields>
 			<TypeID>-1</TypeID>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>009dfd00</__ServerPtr>
+			<__ServerPtr>2d000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>e883fd00</Type>
+				<Type>0f000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1695,14 +2257,17 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 		<Item>
 			<__ClassTypeID>270082827</__ClassTypeID>
-			<__ServerPtr>f89ffd00</__ServerPtr>
+			<__ServerPtr>2e000000</__ServerPtr>
 			<Type>TYPE_TYPE_ARRAY</Type>
 			<Field>
-				<Type>687bfd00</Type>
+				<Type>11000000</Type>
 				<Name />
 				<ChunkID>-1</ChunkID>
 				<Description />
@@ -1711,6 +2276,9 @@
 				<DefaultValue>
 					<Type>00000000</Type>
 				</DefaultValue>
+				<ComplexDefaultValue>
+					<Type>00000000</Type>
+				</ComplexDefaultValue>
 			</Field>
 		</Item>
 	</SharedClasses>

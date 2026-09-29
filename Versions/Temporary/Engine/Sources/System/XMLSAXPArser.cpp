@@ -146,6 +146,33 @@ bool ReadName( std::string *pszName, CBufferedStream &stream )
 // "gt;"		'>'
 // "quot;"	'\"'
 // "apos;"	'\''
+// Appends code point nCode to *pszText encoded as UTF-8.
+static void AppendUTF8( std::string *pszText, uint32_t nCode )
+{
+	if ( nCode < 0x80 )
+	{
+		*pszText += char( nCode );
+	}
+	else if ( nCode < 0x800 )
+	{
+		*pszText += char( 0xC0 | (nCode >> 6) );
+		*pszText += char( 0x80 | (nCode & 0x3F) );
+	}
+	else if ( nCode < 0x10000 )
+	{
+		*pszText += char( 0xE0 | (nCode >> 12) );
+		*pszText += char( 0x80 | ((nCode >> 6) & 0x3F) );
+		*pszText += char( 0x80 | (nCode & 0x3F) );
+	}
+	else
+	{
+		*pszText += char( 0xF0 | ((nCode >> 18) & 0x07) );
+		*pszText += char( 0x80 | ((nCode >> 12) & 0x3F) );
+		*pszText += char( 0x80 | ((nCode >> 6) & 0x3F) );
+		*pszText += char( 0x80 | (nCode & 0x3F) );
+	}
+}
+
 char ReadSysChar( std::string *pszBuff, CBufferedStream &stream )
 {
 	char chr = 0;
@@ -317,17 +344,25 @@ char ReadSysChar( std::string *pszBuff, CBufferedStream &stream )
 			return char( 0xff );
 		}
 		stream.Next();
-		while ( !stream.IsEnd() && stream.GetChar() != ';' )
 		{
-			chr = (chr << 4) | NStr::HexSymbolToHalfByte( stream.GetChar() );
+			// The reference names a code point, which has to reach the text as
+			// UTF-8, the encoding of every narrow string. It used to be returned as
+			// its low byte, so &#xA9; became a lone 0xA9, which is not UTF-8. The
+			// encoding goes out through pszBuff, the way the caller already takes
+			// an unrecognised entity back.
+			uint32_t nCode = 0;
+			while ( !stream.IsEnd() && stream.GetChar() != ';' )
+			{
+				nCode = (nCode << 4) | NStr::HexSymbolToHalfByte( stream.GetChar() );
+				stream.Next();
+			}
+			if ( stream.IsEnd() || stream.GetChar() != ';' )
+			{
+				return char( 0xff );
+			}
 			stream.Next();
-		}
-		if ( stream.IsEnd() || stream.GetChar() != ';' )
+			AppendUTF8( pszBuff, nCode );
 			return char( 0xff );
-		else
-		{
-			stream.Next();
-			return chr;
 		}
 	// non-tag
 	default:

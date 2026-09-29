@@ -1,14 +1,25 @@
-#include "game.h"
-[hExternal] #include "BinaryFlags.h"
+#include "../game.cll"
+[hExternal] #include "TestDB/BinaryFlags.h"
+/*
+The schema libdb/test runs the editor database against: one type of every kind
+the database handles, simple fields, nested structs, arrays of each, fields
+with no code behind them, and references to other objects. dbcodegen makes
+TestType.h/.cpp and TestDB/data/types.xml from it; the regenerate-db target
+reruns it, so change this file and regenerate rather than editing the output.
 
-//
-[typeRename = "CBinaryFlags"; numBytes = 8 ]
+Nival's TestDB/dbdesc/TestDB/TestType.h, with the types, fields and chunk order
+unchanged. The include is spelled the way the other .cll files spell it, the
+field _NocodeInt is _nocodeInt as the records and Nival's own types.xml have
+it, and the Russian tooltips of CMapInfo2 are in English.
+*/
+
+[typeRename = "CBinaryFlags"; numBytes = 8]
 [noHeader] typedef hexbinary Flags;
 
 [typeID = 0x1019230D]
 class CWeapon
 {
-	// "How many bullets are shooted during one burst"
+	// How many bullets are fired in one burst
 	int _AmmoPerBurst;
 };
 
@@ -59,10 +70,10 @@ class CMechUnit : public CUnitBase
 		float _Phase;
 		// Cosine phase shift
 		float _Shift;
-		// Uniform tremble along all 3 axises
+		// Uniform tremble along all 3 axes
 		CVec3 _Tremble;
 	};
-	//
+
 	struct SStruct1
 	{
 		int _TypeInt;
@@ -74,7 +85,7 @@ class CMechUnit : public CUnitBase
 		EUnitType _TypeEnumUnitType;
 		Flags _TypeBinaryFlags;
 	};
-	//
+
 	struct SStruct2
 	{
 		// array of complex struct (for array-in-array testing)
@@ -82,12 +93,12 @@ class CMechUnit : public CUnitBase
 		// array of GUIDs (for array-in-array testing)
 		GUID _guids[];
 	};
-	//
+
 	SJogging _Jx;
 	SJogging _Jy;
 	GUID _guid;
-	//
-	[noCode] int _NocodeInt;
+
+	[noCode] int _nocodeInt;
 	[noCode] float _nocodeFloat;
 	[noCode] bool _nocodeBool;
 	[noCode] string _nocodeString;
@@ -95,7 +106,7 @@ class CMechUnit : public CUnitBase
 	[noCode] GUID _nocodeGUID;
 	[noCode] EUnitType _nocodeEnumUnitType;
 	[noCode] Flags _nocodeBinaryFlags;
-	//
+
 	int _SimpleArrayInt[];
 	float _SimpleArrayFloat[];
 	GUID _SimpleArrayGUID[];
@@ -103,7 +114,7 @@ class CMechUnit : public CUnitBase
 	EUnitType _SimpleArrayEnumUnitType[];
 	string _SimpleArrayString[];
 	wstring _SimpleArrayWString[];
-	//
+
 	[noCode] int _SimpleArrayIntNocode[];
 	[noCode] float _SimpleArrayFloatNocode[];
 	[noCode] GUID _SimpleArrayGUIDNocode[];
@@ -111,10 +122,10 @@ class CMechUnit : public CUnitBase
 	[noCode] EUnitType _SimpleArrayEnumUnitTypeNocode[];
 	[noCode] string _SimpleArrayStringNocode[];
 	[noCode] wstring _SimpleArrayWStringNocode[];
-	//
+
 	SStruct1 _ComplexArrayStruct1[];
 	SStruct2 _ComplexArrayStruct2[];
-	//
+
 	CWeapon *_Weapon;
 	CWeapon *_Weapons[];
 };
@@ -124,21 +135,19 @@ class CMapInfo2
 {
 	struct SMapObject
 	{
-		// (проценты от 0 до 1) Жизнь
+		// (0 to 1) Health
 		float _HP = 1;
-		// (метры) Положение на карте
+		// (meters) Position on the map
 		CVec3 _Pos;
-		// (кватернион) Ориентация объекта в пространстве
+		// (quaternion) Orientation
 		CQuat _Rot;
-		// Уникальный идентификатор объекта на карте
+		// The object's unique id on the map
 		GUID _LinkID;
-		// С кем объект слинкован
+		// The object it is linked with
 		GUID _LinkWith;
-		// Ссылка на описатель статсов объекта
+		// The object's stats
 		CHPObject *_Object;
 	};
-	// Список всех объектов на карте
+	// Every object on the map
 	SMapObject _Objects[];
 };
-
-

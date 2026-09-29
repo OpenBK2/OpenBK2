@@ -17,9 +17,9 @@ namespace NTypeDef
 //! get object manipulator for given object. NOTE: for editor mode only!
 LIBDB_EXPORT IObjMan *GetManipulator( const CDBID &dbid );
 //! create new object for further edit. NOTE: for editor mode only!
-IObjMan *CreateNewObject( const std::string &szClassTypeName );
+LIBDB_EXPORT IObjMan *CreateNewObject( const std::string &szClassTypeName );
 //! register new object, created with CreateNewObject() function, in database
-bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
+LIBDB_EXPORT bool AddNewObject( const std::string &szFilePath, const CDBID &dbid, IObjMan *pObjMan );
 //! remove object from database
 LIBDB_EXPORT bool RemoveObject( const CDBID &dbid );
 //! rename object in database
