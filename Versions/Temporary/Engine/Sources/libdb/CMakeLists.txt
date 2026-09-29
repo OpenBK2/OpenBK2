@@ -27,7 +27,6 @@ set(SOURCES
     stdafx.cpp
     StructMetaInfo.cpp
     StructMetaInfoSetGet.cpp
-    TestType.cpp
     Type.cpp
     TypeDef.cpp
     TypeDefType.cpp

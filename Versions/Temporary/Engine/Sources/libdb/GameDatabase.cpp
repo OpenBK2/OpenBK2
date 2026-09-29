@@ -14,11 +14,6 @@
 
 #include <fmt/format.h>
 
-namespace NTest
-{
-	void CreateTestTypes( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTopLevelTypes );
-}
-
 namespace NDb
 {
 
@@ -133,7 +128,6 @@ void CGameDatabase::RegisterObject( const SFullTypeHeader &hdr )
 bool CGameDatabase::LoadTypesMap()
 {
 	std::vector< CObj<NDb::NTypeDef::STypeDef> > topLevelTypes;
-//	NTest::CreateTestTypes( &topLevelTypes );
 	CFileStream stream( GetVFS(), TYPES_FILE_NAME );
 	if ( stream.IsOk() )
 	{
