@@ -182,8 +182,8 @@ SYSTEM_EXPORT std::string GetTempPath();
 SYSTEM_EXPORT std::string GetTempFileName();
 
 // exported because every caller of these three is outside System: Game reads the
-// normalized one for its log paths, MapEditor sets the directory, and dbcodegen,
-// dbstruct and TestParsing read it. Without the macro they link only inside the
+// normalized one for its log paths, MapEditor sets the directory, and dbcodegen
+// and dbstruct read it. Without the macro they link only inside the
 // DLL that defines them, which MSVC reports and GCC does not
 SYSTEM_EXPORT std::string GetCurrDir();
 //! This program's own file, as ::GetModuleFileName( 0, ... ) answered.

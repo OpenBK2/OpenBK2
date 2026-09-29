@@ -23,3 +23,5 @@ add_version_info(Parser)
 
 set_source_files_properties(lex.yy.c PROPERTIES LANGUAGE CXX)
 set_source_files_properties(lang.tab.c PROPERTIES LANGUAGE CXX)
+
+add_subdirectory(test)

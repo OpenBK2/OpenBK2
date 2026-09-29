@@ -2103,3 +2103,14 @@ int main()
 
 //string  \"[^\n\"]+\"
 
+
+// Called by NLang::OpenFile before each file is scanned. A parse that stops on
+// an error leaves the rest of that file in the scanner's buffer, and a file that
+// ends inside a comment or a string leaves the scanner in that start condition;
+// either way the next file would be scanned as a continuation of the last one.
+// yyrestart drops the buffered input and BEGIN puts the start condition back.
+void yyResetLexer()
+{
+	yyrestart( yyin );
+	BEGIN(INITIAL);
+}

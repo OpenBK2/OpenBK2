@@ -1,0 +1,2 @@
+Was 082.success. In the grammar Nival shipped a type name cannot be reused as a member name
+(class C, then a member called C), so this is a parse error. The corpus predates that rule.

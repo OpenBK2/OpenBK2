@@ -52,11 +52,24 @@ const std::string GetBaseFileName()
 	return szBaseFileName;
 }
 
+// The parse lives in process globals: the root file node that collects every
+// file, the step counter and the success flag. Both entry points start from
+// here so that a second Parse in the same process does not merge its files into
+// the first one's tree (Parser/test runs one parse per case). The scanner is
+// reset per file, in OpenFile.
+static void ResetParseState()
+{
+	NLang::ResetRootFile();
+	NLang::NullStep();
+	byySuccess = true;
+	bNoTrace = false;
+}
+
 bool Parse( const std::string &_szDir, const std::string &szFileMask, bool _bInTestMode )
 {
+	ResetParseState();
 	bInTestMode = _bInTestMode;
 	std::string szDir = _szDir;
-	NLang::NullStep();
 
 	if ( szDir[szDir.size() - 1] != '/' && szDir[szDir.size() - 1] != '\\' )
 		szBaseFileName = szDir + "/base.cll";
@@ -99,10 +112,11 @@ bool Parse( const std::string &_szDir, const std::string &szFileMask, bool _bInT
 
 bool Parse( const std::vector<std::string> &files, const std::string &_szBaseFileName )
 {
-	NLang::NullStep();
+	ResetParseState();
+	// the directory form sets this; left over from a test-mode parse it would
+	// silence every error of this one
+	bInTestMode = false;
 	yydebug = 0;
-	byySuccess = true;
-	bNoTrace = false;
 	szBaseFileName = _szBaseFileName;
 	NStr::ReplaceAllChars( &szBaseFileName, '\\', '/' );
 	NStr::ToLower( &szBaseFileName );

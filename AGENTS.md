@@ -84,4 +84,4 @@ test code:
 
 - TestClient - test application for headless multiplayer testing
 - TestDB - some tests for database routines (libdb library)
-- TestParsing - some tests for parsing routines (Parser library)
+- Parser/test - the Parser library (the .cll grammar) against a corpus of cases that must parse or must be rejected; formerly TestParsing

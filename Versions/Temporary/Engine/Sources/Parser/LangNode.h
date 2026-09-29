@@ -82,7 +82,9 @@ namespace NLang
 	ESimpleType GetType( const std::string &szTypeName );
 	bool IsTypesEqual( ESimpleType eType1, ESimpleType eType2 );
 
-	bool Parse( const std::string &szRootDir, const std::string &szFileMask, bool bInTestMode );
+	// Parses every file matching szFileMask under szRootDir, recursively. Exported
+	// for Parser/test; bInTestMode silences the progress and error output.
+	PARSER_EXPORT bool Parse( const std::string &szRootDir, const std::string &szFileMask, bool bInTestMode );
 	// exported for dbcodegen, which parses the .cll files through it
 	PARSER_EXPORT bool Parse( const std::vector<std::string> &files, const std::string &szBaseFileName );
 }

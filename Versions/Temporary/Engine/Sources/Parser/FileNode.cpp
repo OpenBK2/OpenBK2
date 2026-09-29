@@ -29,6 +29,11 @@ CFileNode* GetRootFile()
 	return pRootFile;
 }
 
+void ResetRootFile()
+{
+	pRootFile = new CFileNode( "", true );
+}
+
 //*******************************************************************
 //*                     CFileNode                                   *
 //*******************************************************************

@@ -90,6 +90,8 @@ public:
 
 // exported for dbcodegen, which walks the parsed tree from here
 PARSER_EXPORT CFileNode* GetRootFile();
+// Replaces the root with an empty one, dropping every file parsed so far.
+void ResetRootFile();
 
 void AddInclude( const std::string &szFileName );
 void AddHExternal( const std::string &szIncludeName );

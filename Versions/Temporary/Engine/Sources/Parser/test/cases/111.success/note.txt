@@ -1,0 +1,2 @@
+Was 111.fail. The same enum entry name in two enums of different files is a warning, not an
+error, in the parser Nival shipped (CNamespace::MergeFiles, WARNING_NOLINE), so this parses.

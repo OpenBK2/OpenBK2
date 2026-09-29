@@ -1,0 +1,2 @@
+Was 040.success. The grammar Nival shipped takes one parent only (parents_list is a single
+parent_declaration in lang.y), so a list of three is a parse error. The corpus predates that rule.

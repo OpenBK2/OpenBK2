@@ -1,0 +1,2 @@
+Was 028.success. The grammar Nival shipped has no empty enum: enum_entries needs at least one
+entry (lang.y), so "enum e {};" is a parse error. The corpus predates that rule.

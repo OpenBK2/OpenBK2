@@ -4,6 +4,9 @@
 #include "FileNode.h"
 #include "Misc/StrProc.h"
 
+// lang.l; see the comment there
+void yyResetLexer();
+
 namespace NLang
 {
 
@@ -40,6 +43,10 @@ bool OpenFile( const std::string &_szFileName )
 
 	if ( pStream )
 		delete pStream;
+
+	// Every caller runs yyparse right after this, so this is where the scanner
+	// has to forget the previous file.
+	yyResetLexer();
 
 	pStream = new CFileStream( szStreamFileName, CFileStream::WIN_READ_ONLY );
 	if ( pStream->IsOk() )
