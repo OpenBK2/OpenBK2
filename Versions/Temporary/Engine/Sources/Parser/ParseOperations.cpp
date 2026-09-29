@@ -81,9 +81,14 @@ bool Parse( const std::string &_szDir, const std::string &szFileMask, bool _bInT
 	if ( !bInTestMode )
 		printf( "lexer...\n" );
 
-	NFile::ConvertSlashes( &szDir, '/', '\\' );
-	if ( szDir[szDir.size() - 1] != '\\' )
-		szDir += '\\';
+	// '/' separators, which every platform takes. This used to turn them all into
+	// '\', and off Windows that is an ordinary character in a file name, so the
+	// directory was not found and nothing was parsed.
+	NStr::ReplaceAllChars( &szDir, '\\', '/' );
+	if ( szDir[szDir.size() - 1] != '/' )
+	{
+		szDir += '/';
+	}
 
 	yydebug = 0;
 	byySuccess = true;
