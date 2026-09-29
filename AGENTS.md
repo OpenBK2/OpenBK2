@@ -76,7 +76,6 @@ other small utilities:
 - dbcodegen - compiles the .cll type descriptions into types.xml and the DB*.h/.cpp sources (structs, serializers, meta info, checksums); run by hand after a .cll change (see "adding things to the game database" in Contributing.md); -nocopy writes to the temp directory only
 - dbindex - database index utility (generates index.bin file)
 - dbstruct - database structure utility (converts xcb files into packaged binary format)
-- ELK_A7 - used for translation and spell-checking
 - FontGen - font generator (in the format game understands)
 - ShaderCompiler - compiles shaders from custom format, shaders are in GfxShaders.txt, compiled shaders are in GfxShaders.cpp; run the regenerate-gfxshaders target
 - ShaderAsm - D3D9 shader assembler (vs.1.1, ps.1.1, ps.1.4, ps.2.0) that ShaderCompiler uses in place of D3DX; matches D3DXAssembleShader token for token
