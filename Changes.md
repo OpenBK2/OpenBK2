@@ -1,6 +1,7 @@
 
 # Changes to the game
 
+- Added optional smooth mouse-wheel camera zoom: `setvar smooth_mouse_zoom = 1` enables it (integer, default `0`). `setvar smooth_zoom_speed = 1.0` controls how quickly zoom settles: higher values are faster, lower positive values are smoother, and non-positive or non-finite values use the default `1.0`. Zoom distance per wheel step is unchanged. Both settings are saved in the user profile.
 - Game was ported to x64 architecture
 - Fixed bugs from the given BK2 1.0 ~beta version:
 	- Reinf time text not showing was fixed

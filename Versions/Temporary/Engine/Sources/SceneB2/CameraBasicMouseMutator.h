@@ -129,9 +129,10 @@ namespace NCamera
 		void SetYaw( const float _fYaw ) { fYaw = _fYaw; }
 		void SetPitch( const float _fPitch ) { fPitch = _fPitch; }
 		void SetFOV( float _fFOV ) { fFOV = _fFOV; }
-		void SetPlacement( const float _fDist, const float _fPitch, const float _fYaw ) { fDistance = _fDist; fPitch = _fPitch; fYaw = _fYaw; }
+		void SetPlacement( const float _fDist, const float _fPitch, const float _fYaw ) { SetDistance( _fDist ); fPitch = _fPitch; fYaw = _fYaw; }
 		void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw ) { *pfDist = fDistance; *pfPitch = fPitch; *pfYaw = fYaw; }
-		void SetDistance( const float _fDist ) { fDistance = _fDist; }
+		// Derived cameras can cancel pending mouse zoom on an external placement.
+		virtual void SetDistance( const float _fDist ) { fDistance = _fDist; }
 		float GetDistance() const { return fDistance; }
 		//
 		bool WasUpdated() const { return bWasUpdated; }

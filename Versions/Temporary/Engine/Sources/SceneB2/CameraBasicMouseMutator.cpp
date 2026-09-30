@@ -75,7 +75,7 @@ CCameraBasicMouseMutator::CCameraBasicMouseMutator()
 
 void CCameraBasicMouseMutator::ResetToDefault()
 {
-	fDistance = distanceLimit.fAve;
+	SetDistance( distanceLimit.fAve );
 	fPitch = pitchLimit.fAve + ToRadian( 180.0f );
 	fYaw = yawLimit.fAve;
 }
@@ -116,7 +116,7 @@ void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType
 															limits.fAutoSpeed,
 															limits.fManualSpeed,
 															limits.bCyclic );
-			fDistance = distanceLimit.fAve;
+			SetDistance( distanceLimit.fAve );
 			break;
 		}
 		//
