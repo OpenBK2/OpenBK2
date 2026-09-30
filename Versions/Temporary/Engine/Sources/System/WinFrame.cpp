@@ -160,7 +160,11 @@ static void ApplyMouseBounds()
 	::ClipCursor( &rect );
 #else
 	SDL_Window *pWindow = AsSdlWindow( hWnd );
-	if ( bMouseAcquired )
+	const SDL_WindowFlags flags = SDL_GetWindowFlags( pWindow );
+	// The simulation can stay active while alt-tabbed, but cursor confinement
+	// must follow actual window focus, including bounds updates during a reset.
+	if ( bMouseAcquired && (flags & SDL_WINDOW_INPUT_FOCUS) != 0 &&
+		(flags & (SDL_WINDOW_MINIMIZED | SDL_WINDOW_HIDDEN)) == 0 )
 	{
 		const SDL_Rect sdlRect = { int( rect.left ), int( rect.top ),
 			int( rect.right - rect.left ), int( rect.bottom - rect.top ) };
@@ -177,11 +181,17 @@ static void ApplyMouseBounds()
 			SDL_SetWindowRelativeMouseMode( pWindow, false );
 			SDL_SetWindowMouseRect( pWindow, &sdlRect );
 		}
+		// A mouse rectangle alone does not grab the pointer. Keep a native window
+		// grab as well, so it cannot escape to another monitor. Leave keyboard
+		// shortcuts available to the desktop (Alt+Tab, workspace switching, etc.).
+		if ( !SDL_SetWindowMouseGrab( pWindow, true ) )
+			DebugTrace( "INPUT: Cannot confine mouse to game window: %s\n", SDL_GetError() );
 	}
 	else
 	{
 		SDL_SetWindowRelativeMouseMode( pWindow, false );
 		SDL_SetWindowMouseRect( pWindow, 0 );
+		SDL_SetWindowMouseGrab( pWindow, false );
 	}
 #endif
 }
@@ -856,9 +866,18 @@ void NWinFrame::PumpMessages()
 			AddText( event.text.text );
 			break;
 
+		case SDL_EVENT_WINDOW_MOVED:
+		case SDL_EVENT_WINDOW_RESIZED:
 		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+		case SDL_EVENT_WINDOW_SHOWN:
+		case SDL_EVENT_WINDOW_HIDDEN:
+		case SDL_EVENT_WINDOW_MINIMIZED:
+		case SDL_EVENT_WINDOW_RESTORED:
 		case SDL_EVENT_WINDOW_FOCUS_GAINED:
-			ApplyMouseBounds();
+		case SDL_EVENT_WINDOW_FOCUS_LOST:
+			// Release on focus loss and restore the requested bounds on return.
+			if ( hWnd && event.window.windowID == SDL_GetWindowID( AsSdlWindow( hWnd ) ) )
+				ApplyMouseBounds();
 			break;
 
 		default:
