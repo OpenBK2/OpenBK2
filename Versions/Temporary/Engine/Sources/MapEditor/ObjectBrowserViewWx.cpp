@@ -2,6 +2,7 @@
 #include "MapEditorLib/Resources.h"
 
 #include "ObjectBrowserView.h"
+#include "ED_Common/GrannyModelExport.h"
 
 
 #include "ResourceDefines.h"
@@ -36,10 +37,14 @@
 #include <fmt/printf.h>
 
 #include <wx/choice.h>
+#include <wx/checkbox.h>
+#include <wx/dialog.h>
 #include <wx/clipbrd.h>
 #include <wx/dataobj.h>
 #include <wx/dnd.h>
 #include <wx/headerctrl.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
 #include <wx/imaglist.h>
 #include <wx/menu.h>
 #include <wx/msgdlg.h>
@@ -1658,6 +1663,56 @@ namespace
 									 nCommandID );
 		}
 
+		void ExportGrannyModel( const std::string &name )
+		{
+			CPtr<IManipulator> resource = Singleton<IResourceManager>()->CreateObjectManipulator("Model", name);
+			if ( !resource )
+			{
+				wxMessageBox("Cannot load the selected Model.", "Export Granny3D to GLB", wxOK | wxICON_ERROR, pTree);
+				return;
+			}
+			NEditorGltf::SGrannyExportOptions options;
+			wxDialog settings(pTree, wxID_ANY, "Export Granny3D to GLB");
+			auto *separate = NWx::Child<wxCheckBox>(&settings, wxID_ANY, "Export textures as separate files");
+			auto *tga = NWx::Child<wxCheckBox>(&settings, wxID_ANY, "Convert textures to TGA");
+			auto *mirror = NWx::Child<wxCheckBox>(&settings, wxID_ANY, "Mirror along X axis");
+			separate->SetValue(options.separateTextures);
+			tga->SetValue(options.convertTexturesToTga);
+			mirror->SetValue(options.mirrorX);
+			tga->SetToolTip("Available when exporting textures as separate files.");
+			separate->Bind(wxEVT_CHECKBOX, [separate, tga](wxCommandEvent &) { tga->Enable(separate->GetValue()); });
+			auto *layout = new wxBoxSizer(wxVERTICAL);
+			const int padding = settings.FromDIP(12);
+			for ( auto *option : {separate, tga, mirror} ) layout->Add(option, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxTOP, padding));
+			layout->Add(settings.CreateStdDialogButtonSizer(wxOK | wxCANCEL), wxSizerFlags().Right().Border(wxALL, padding));
+			settings.FindWindow(wxID_OK)->SetLabel("Export");
+			settings.SetSizerAndFit(layout);
+			settings.CentreOnParent();
+			// Keep the options open if the save dialog is cancelled or export fails,
+			// so the user can adjust them and retry without revisiting the tree.
+			settings.Bind(wxEVT_BUTTON, [&](wxCommandEvent &)
+			{
+				const size_t separator = name.find_last_of("/\\");
+				wxFileName suggested(FromNarrow(separator == std::string::npos ? name : name.substr(separator + 1)));
+				suggested.SetExt("glb");
+				wxFileDialog dialog(&settings, "Export Granny3D to GLB", wxEmptyString, suggested.GetFullName(),
+					"glTF Binary (*.glb)|*.glb", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+				if ( dialog.ShowModal() != wxID_OK ) return;
+				options.separateTextures = separate->GetValue();
+				options.convertTexturesToTga = tga->GetValue();
+				options.mirrorX = mirror->GetValue();
+				std::string error;
+				bool success;
+				{
+					wxBusyCursor busy;
+					success = NEditorGltf::ExportGrannyModel(resource, dialog.GetPath().ToStdString(wxConvUTF8), options, &error);
+				}
+				if ( success ) settings.EndModal(wxID_OK);
+				else wxMessageBox(wxString::FromUTF8(error.c_str()), "Export Granny3D to GLB", wxOK | wxICON_ERROR, &settings);
+			}, wxID_OK);
+			settings.ShowModal();
+		}
+
 		// IDM_MAIN_CONTEXT_MENU's TREE_GDB_BROWSER popup, its first entry named
 		// for what loading does in this kind of tree.
 		void ShowContextMenu()
@@ -1689,6 +1744,16 @@ namespace
 			AppendCommand( pHierarchical, ID_OBJECT_EXPORT, "&Export" );
 			AppendCommand( pHierarchical, ID_OBJECT_EXPORT_FORCE, "Force E&xport" );
 			menu.AppendSubMenu( pHierarchical, "Hierarchical Export" );
+			// This is a file export of one Model, independent of the database's
+			// ordinary recursive exporters. Capture the row before showing dialogs.
+			wxArrayTreeItemIds selected;
+			if ( eKind == IObjectBrowser::KIND_BROWSER && GetObjectSet().szObjectTypeName == "Model" &&
+				pTree->GetSelections(selected) == 1 && TypeOf(selected[0]) == GDBO_OBJECT )
+			{
+				const std::string name = NameOf(selected[0]);
+				wxMenuItem *item = menu.Append(wxID_ANY, "Export Granny3D to GLB");
+				menu.Bind(wxEVT_MENU, [this, name](wxCommandEvent &) { ExportGrannyModel(name); }, item->GetId());
+			}
 			menu.AppendSeparator();
 			AppendCommand( &menu, ID_SELECTION_FIND, "&Find..." );
 			pTree->PopupMenu( &menu );

@@ -71,6 +71,22 @@ copying will take a while - there are **MANY** small files.
 
 the game executable is `bin\Game.exe`. therefore, if game was installed into `C:\Games\bk2`, then `C:\Games\bk2\bin\Game.exe` should be launched.
 
+# exporting Granny3D models from the editor
+
+In the object browser's `<Model>` tree, right-click a model file and choose **Export Granny3D to GLB**. The options window offers **Export textures as separate files**, **Convert textures to TGA**, and **Mirror along X axis**, all checked by default. Click **Export** to select a destination in the save dialog. Cancelling that dialog or encountering an export error returns to the options. The command reads the mounted game/mod resources without changing the database.
+
+The default GLB scene contains `Geometry` and its skeleton. A separate, non-default `AIGeometry (hidden)` scene contains the collision meshes and their own rigs, keeping them out of the default view. The export uses the Model's separate Skeleton when present, otherwise Geometry's embedded skeleton, and remaps skin bindings by bone name.
+
+X mirroring applies to geometry, normals, triangle winding, skeleton bind transforms, and every animation key, including the AI rig. Uncheck it to retain the original export orientation.
+
+Skeletal animations are sampled at 30 fps into one `AllAnimations` clip: `Model.Animations` in order, then additional unique `Skeleton.Animations`. Each original clip keeps its endpoints, with a one-frame boundary before the next clip. Scene and animation extras record clip names, zero-based first/last frames, start/end seconds, and the frame rate. Set Blender's scene frame rate to 30 fps before importing to match these frame numbers. Game-controlled movement and procedural effects are not baked into the animation.
+
+By default, textures are converted to TGA and written into a `<GLB name>_textures` folder beside the GLB, which references those files directly. Special characters in folder/file names are escaped for portable relative paths. Keep the GLB and its texture folder together when moving the export. TGA references target Blender's image loader and are outside standard glTF image support. Unchecking TGA conversion writes original DDS files with PNG fallbacks instead. Unchecking separate files disables TGA conversion and embeds original DDS bytes through `MSFT_texture_dds`, plus PNG fallbacks, as before.
+
+Diffuse textures are connected to materials; legacy bump, gloss, mirror, and detail textures are retained with their roles in material extras because their channels do not directly match glTF PBR inputs. Unsupported DDS encodings and bone shear produce an export error. Mixed GLTF/Granny resource references are also rejected.
+
+The `GrannyGltf_test`, `GrannyGltfTexture_test`, and `GrannyModelExport_test` targets cover the conversion and complete database export path. Tests using the optional game-data corpus skip when it is absent. The full export test writes sample GLBs under the build directory's `granny-export-validation` folder.
+
 # looking around the code
 
 all the code is within [Versions/Temporary/Engine/Sources](Versions/Temporary/Engine/Sources) directory

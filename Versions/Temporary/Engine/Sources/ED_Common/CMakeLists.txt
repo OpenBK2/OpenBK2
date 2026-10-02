@@ -6,6 +6,9 @@ set(SOURCES
     BasicSceneExporter.cpp
     dbbulder.cll
     GltfExporter.cpp
+    GrannyGltf.cpp
+    GrannyGltfTexture.cpp
+    GrannyModelExport.cpp
     ChildFrameBase.cpp
     ChildFrameWndBase.cpp
     dbbulder.cpp
@@ -41,6 +44,7 @@ add_stdafx_pch(ED_Common)
 # and the prelude every other file shares has no business meeting them. It
 # needs nothing from stdafx.h in return.
 set_source_files_properties(NativeViewport.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
+set_source_files_properties(GrannyGltf.cpp GrannyGltfTexture.cpp PROPERTIES SKIP_PRECOMPILE_HEADERS ON)
 add_export_header(ED_Common)
 # No mfc: the viewport's CWinApp::OnIdle call was the last use.
 target_link_libraries(ED_Common PRIVATE 3DLib 3Dmotor Image Input libdb Main MapEditorLib MemoryLib Misc System fmt::fmt-header-only granny::granny fastgltf::fastgltf)
@@ -49,7 +53,7 @@ if(WIN32)
 endif()
 # The viewport's window is wx. See cmake/wxwidgets.cmake for why there are no
 # UNICODE defines.
-target_link_libraries(ED_Common PRIVATE wx::wx)
+target_link_libraries(ED_Common PRIVATE wx::wx squish)
 add_dependencies(ED_Common wxwidgets_external)
 if(NOT WIN32)
     # NativeViewport.cpp, and only it, reaches past wx to the toolkit under it:
@@ -71,3 +75,4 @@ endif()
 # add_version_info below, not from a .rc of this module's own.
 install(TARGETS ED_Common DESTINATION bin)
 add_version_info(ED_Common)
+add_subdirectory(test)
