@@ -10,7 +10,7 @@ void CWindowSimple::Visit( struct IUIVisitor *pVisitor )
 	CTRect<float> rc;
 	FillWindowRect( &rc );
 	VirtualToScreen( rc, &rc );
-	CClipStore s( pVisitor, rc );
+	CClipStore s( pVisitor, rc, bScrollViewport );
 	CWindow::Visit( pVisitor );
 }
 

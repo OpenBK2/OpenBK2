@@ -20,6 +20,19 @@ namespace NDb
 
 struct IUIVisitor
 {
+	// Layout clips follow ordinary panels. A scrolling viewport starts a new
+	// content space so partially scrolled text does not change font size.
+private:
+	CTRect<float> textClip = CTRect<float>( 0, 0, 0, 0 );
+	bool bTextClipApplied = false;
+public:
+	CTRect<float> GetTextClip( const CTRect<float> &box ) const
+	{
+		CTRect<float> clip = box;
+		if ( bTextClipApplied )
+			clip.Intersect( textClip );
+		return clip;
+	}
 	virtual void ClipSet( const CTRect<float> &rClip ) = 0;
 	virtual void ClipRestore() = 0;
 	//
@@ -41,13 +54,28 @@ struct IUIVisitor
 class CClipStore
 {
 	IUIVisitor *pVisitor;
+	CTRect<float> previousTextClip;
+	bool bPreviousTextClipApplied;
 public:
-	CClipStore( IUIVisitor * _pVisitor, const CTRect<float> &rNewClip ) 
-		: pVisitor( _pVisitor ) 
+	CClipStore( IUIVisitor * _pVisitor, const CTRect<float> &rNewClip, bool bScrollViewport = false )
+		: pVisitor( _pVisitor ), previousTextClip( _pVisitor->textClip ),
+		bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
 	{ 
+		if ( bScrollViewport )
+			pVisitor->bTextClipApplied = false;
+		else
+		{
+			pVisitor->textClip = pVisitor->GetTextClip( rNewClip );
+			pVisitor->bTextClipApplied = true;
+		}
 		pVisitor->ClipSet( rNewClip ); 
 	}
-	~CClipStore() { pVisitor->ClipRestore(); }
+	~CClipStore()
+	{
+		pVisitor->textClip = previousTextClip;
+		pVisitor->bTextClipApplied = bPreviousTextClipApplied;
+		pVisitor->ClipRestore();
+	}
 };
 
 

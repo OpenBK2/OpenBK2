@@ -151,6 +151,8 @@ public:
 
 struct IMLObject: public CObjectBase
 {
+	// Images/tabs have no text ink. Text objects exclude transparent padding.
+	virtual CTRect<float> GetInkBounds( bool bIncludeOutline = true ) const { return CTRect<float>( 0, 0, 0, 0 ); }
 	virtual void Generate(  ) = 0;
 	virtual void DynamicGenerate(  const SReflowInfo &sInfo ) = 0;
 
@@ -210,8 +212,16 @@ struct IML: public CObjectBase
 
 	virtual CMLStream* GetStream() = 0;
 	virtual const CTPoint<int>& GetSize() = 0;
+	// Used to place a caption at the user's scale before deciding on fallback.
+	virtual CTPoint<int> GetPreferredSize() = 0;
 	// Count laid-out lines, including automatic wrapping, not source newlines.
 	virtual bool IsSingleLine() = 0;
+	// Coordinates are screen pixels. Align in sBox and fit against pClip when
+	// ordinary parents clip it further; omit scrolling viewport clips. Outline
+	// overhang alone must not shrink readable text. Returns the new draw origin.
+	virtual CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine = false, const CTRect<float> *pClip = nullptr ) = 0;
+	// Diagnostic includes visible outlines by default; false checks only letters.
+	virtual bool HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline = true ) = 0;
 
 	virtual void Generate(  int nWidth ) = 0;
 	virtual void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;

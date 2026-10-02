@@ -254,6 +254,35 @@ of cutting off the digits below it. The draw origin snaps to screen pixels to
 preserve sharpness. Wrapped/multiline and automatically sized descriptions
 keep their original top alignment.
 
+Text labels and placed captions detect visible text extending beyond their box
+or an ordinary parent panel's clip. An enlarged label that clips is regenerated
+at scale `1.0`, including
+wrapping and alignment; the GUI/HUD settings and other labels keep their chosen
+scale. Automatic fallback checks the letters' nonzero glyph coverage, excluding
+spaces, transparent text, empty font-cell padding and decorative outline overhang.
+The heading/button style uses `forcefontsize` to leave its one-pixel outline
+outside the measured text size; clipping that border alone must not shrink an
+otherwise readable caption or loading-screen advice. The clipping diagnostic
+still reports visible outlines, separately from the fallback decision.
+Scrolling viewports reset the layout clip for their content, excluding their
+own clip and ancestors above them. Panels inside the content still constrain
+text, while moving the viewport does not trigger fallback. Editable
+text and scrolling console/chat rows retain their existing scrolling behavior.
+
+The preferred layout's ink bounds are cached, so a label can return to the chosen
+scale when its box grows without repeatedly rebuilding or alternating sizes.
+Changing the text, wrapping width or font-scale setting refreshes those bounds.
+The fallback only undoes enlargement: it never increases a scale below `1.0` or
+shrinks below `1.0` when the original-sized text still cannot fit.
+
+The loading screen illustrates why parent clips matter: its advice label starts
+38 reference pixels into a 100-pixel panel but claims a 65-pixel height. Only 62
+are actually visible. Whole-pixel font metrics can put a quote's last line inside
+that limit at 1920x1080 and outside it at 2560x1440 despite the matching aspect
+ratio. Fallback tests the intersected clip while keeping alignment relative to
+the original label box. Regression tests cover the shipped quotes in that full
+panel layout, as well as intentional clipping in real scrolling containers.
+
 The first runtime version fitted the tallest ink across six European code
 pages into the requested line height. Oswald's accents and low marks then
 reduced its capitals to about 56% of the cell, versus 65% in the shipped h2

@@ -27,6 +27,9 @@ int CWindowScrollableContainerBase::operator&( IBinSaver &saver )
 void CWindowScrollableContainerBase::AfterLoad()
 {
 	CWindow::AfterLoad();
+	// Older saves predate the distinction between layout and viewport clips.
+	if ( pBorder )
+		pBorder->SetScrollViewport();
 	if ( pScrollBar )
 		pScrollBar->SetNotifySink( this );
 }
@@ -55,6 +58,8 @@ void CWindowScrollableContainerBase::InitByDesc( const struct NDb::SUIDesc *_pDe
 	pBorder = dynamic_cast<CWindowSimple*>( CUIFactory::MakeWindow( pShared->pBorder ) );
 	AddChild( pBorder, false );
 	NI_ASSERT( pBorder, "Border not found" );
+	if ( pBorder )
+		pBorder->SetScrollViewport();
 
 	// optional field  
 	pSelection = checked_cast<CWindow*>( CUIFactory::MakeWindow( pShared->pSelection ) );

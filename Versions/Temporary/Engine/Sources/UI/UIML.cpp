@@ -11,6 +11,7 @@
 #include "System/Commands.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <fmt/format.h>
 
@@ -114,10 +115,13 @@ private:
 	CRectLayout sNormal;
 	CRectLayout sOutline;
 	CObj<CPtrFuncBase<NGfx::CTexture> > pTexture;
+	CTRect<float> sInkBounds = CTRect<float>( 0, 0, 0, 0 );
+	CTRect<float> sLetterBounds = CTRect<float>( 0, 0, 0, 0 );
 
 public:
 	CMLTextObject() : sPosition( 0.0f, 0.0f ) {}
 	CMLTextObject( CMLStream *pStream, int nStart, int nSize );
+	CTRect<float> GetInkBounds( bool bIncludeOutline ) const override { return bIncludeOutline ? sInkBounds : sLetterBounds; }
 
 	void Generate(  );
 	void DynamicGenerate(  const SReflowInfo &sInfo ) {}
@@ -149,6 +153,8 @@ CMLTextObject::CMLTextObject( CMLStream *_pStream, int _nStart, int _nSize ):
 
 void CMLTextObject::Generate(  )
 {
+	sInkBounds.SetEmpty();
+	sLetterBounds.SetEmpty();
 	int nx, ny;
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->GetResolution( &nx, &ny );
 	CVec2 vScreenRect( nx, ny );
@@ -158,7 +164,8 @@ void CMLTextObject::Generate(  )
 
 	if ( !sFontInfo.pInfo )
 	{
-		NGScene::SFont font( sState.sFont.nSize, "h2" );
+		NGScene::SFont font = sState.sFont;
+		font.szName = "h2";
 		GetFontFormatInfo( font, sState.nMinFontSize, &sFontInfo );
 		if ( !sFontInfo.pInfo )
 			return;
@@ -197,6 +204,27 @@ void CMLTextObject::Generate(  )
 			float fCY = sCharRect.Height() * sFontInfo.scale.y;
 
 			sNormal.AddRect( fX, 0, fCX, fCY, sCharRect, sState.sColor );
+
+			const CTRect<int> *pInk = sFontInfo.pInfo->GetInkBounds( wcChar );
+			if ( pInk && !pInk->IsEmpty() )
+			{
+				CTRect<float> ink( fX + pInk->x1 * sFontInfo.scale.x, pInk->y1 * sFontInfo.scale.y,
+					fX + pInk->x2 * sFontInfo.scale.x, pInk->y2 * sFontInfo.scale.y );
+				// forcefontsize deliberately leaves no room for a decorative
+				// border. Losing that border must not shrink otherwise readable
+				// headings, buttons or loading advice. Outline-only text still
+				// has a letter shape; completely transparent text has none.
+				if ( sState.sColor.a || ( sState.nOutlineBorder && sState.sOutlineColor.a ) )
+					sLetterBounds.Union( ink );
+				if ( sState.sColor.a )
+					sInkBounds.Union( ink );
+				// The eight outline copies extend visible coverage on both axes.
+				if ( sState.nOutlineBorder && sState.sOutlineColor.a )
+				{
+					ink.Inflate( std::abs( fS ), std::abs( fSY ) );
+					sInkBounds.Union( ink );
+				}
+			}
 
  			if ( sState.nOutlineBorder )
 			{
@@ -294,6 +322,8 @@ int CMLTextObject::operator&( IBinSaver &saver )
 	saver.Add( 8, &sNormal );
 	saver.Add( 9, &sOutline );
 	saver.Add( 10, &pTexture );
+	saver.Add( 11, &sInkBounds );
+	saver.Add( 12, &sLetterBounds );
 	return 0;
 }
 
@@ -532,6 +562,8 @@ private:
 	std::list<SCmdPair> itemsList;
 	std::list<SState> states;
 	int nLineCount = 0;
+	CTRect<float> sInkBounds = CTRect<float>( 0, 0, 0, 0 );
+	CTRect<float> sLetterBounds = CTRect<float>( 0, 0, 0, 0 );
 
 protected:
 	void CreateLine( SReflowInfo *pInfo, float fWidth, bool bEndBlock );
@@ -553,6 +585,7 @@ public:
 	void PopState();
 
 	bool IsSingleLine() const { return nLineCount == 1; }
+	const CTRect<float>& GetInkBounds( bool bIncludeOutline = true ) const { return bIncludeOutline ? sInkBounds : sLetterBounds; }
 	void Generate(  float fWidth );
 
 	void Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
@@ -687,6 +720,26 @@ void CMLLayout::Generate(  float fWidth )
 
 	sSize.x = sInfo.fMaxX;
 	sSize.y = sInfo.fY;
+	// Reflow has now positioned every word. Cache the union so clipping
+	// detection is constant-time per label, even for long descriptions.
+	sInkBounds.SetEmpty();
+	sLetterBounds.SetEmpty();
+	for ( const auto &item : itemsList )
+		if ( item.pObject )
+		{
+			CTRect<float> ink = item.pObject->GetInkBounds();
+			if ( !ink.IsEmpty() )
+			{
+				ink.Move( item.pObject->GetPosition() );
+				sInkBounds.Union( ink );
+			}
+			CTRect<float> letters = item.pObject->GetInkBounds( false );
+			if ( !letters.IsEmpty() )
+			{
+				letters.Move( item.pObject->GetPosition() );
+				sLetterBounds.Union( letters );
+			}
+		}
 }
 
 void CMLLayout::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
@@ -855,6 +908,8 @@ int CMLLayout::operator&( IBinSaver &saver )
 	saver.Add( 7, &itemsList );
 	saver.Add( 8, &states );
 	saver.Add( 9, &nLineCount );
+	saver.Add( 10, &sInkBounds );
+	saver.Add( 11, &sLetterBounds );
 	return 0;
 }
 
@@ -876,8 +931,15 @@ private:
 	int nLayoutWidth = -1;
 	float fFontScale = 0;
 	CPtr<IWindow> pFontScaleWindow;
+	bool bOriginalScale = false;
+	// Keep the preferred layout's measurements while drawing at 1.0. Testing
+	// those measurements avoids alternating sizes on consecutive frames.
+	CTRect<float> sPreferredInk = CTRect<float>( 0, 0, 0, 0 );
+	CTPoint<int> sPreferredSize = CTPoint<int>( 0, 0 );
+	bool bPreferredSingleLine = false;
 	bool UsesHudFontScale() const { return pFontScaleWindow && pFontScaleWindow->UsesHudFontScale(); }
 	void UpdateFontScale();
+	void GenerateLayout();
 public:
 	CML();
 	void SetFontScaleWindow( IWindow *pWindow ) override { pFontScaleWindow = pWindow; }
@@ -890,7 +952,10 @@ public:
 
 	CMLStream* GetStream() { return pStream; }
 	const CTPoint<int>& GetSize();
+	CTPoint<int> GetPreferredSize() override { UpdateFontScale(); return sPreferredSize; }
 	bool IsSingleLine();
+	CTPoint<float> FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip ) override;
+	bool HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline ) override;
 
 	void Generate( int nWidth );
 
@@ -976,10 +1041,66 @@ const CTPoint<int>& CML::GetSize()
 	return sSize;
 }
 
+static CTPoint<float> TextOrigin( const CTRect<float> &box, int nHeight, bool bCenter )
+{
+	CTPoint<float> origin = box.GetLeftTop();
+	// Center overflowing single-line cells, matching the existing HUD fields.
+	if ( bCenter && nHeight > box.Height() )
+		origin.y = std::floor( box.y1 + ( box.Height() - nHeight ) * 0.5f + 0.5f );
+	return origin;
+}
+
+static bool InkOutside( CTRect<float> ink, const CTPoint<float> &position, const CTRect<float> &box )
+{
+	if ( ink.IsEmpty() )
+		return false;
+	ink.Move( position );
+	// Coordinate conversions can differ by a small floating-point rounding
+	// error. Do not confuse that with losing a visible pixel at the boundary.
+	const float epsilon = 0.01f;
+	return ink.x1 < box.x1 - epsilon || ink.y1 < box.y1 - epsilon ||
+		ink.x2 > box.x2 + epsilon || ink.y2 > box.y2 + epsilon;
+}
+
+bool CML::HasVisibleTextOutside( const CTPoint<float> &sPosition, const CTRect<float> &sBox, bool bIncludeOutline )
+{
+	UpdateFontScale();
+	return InkOutside( pLayout->GetInkBounds( bIncludeOutline ), sPosition, sBox );
+}
+
+CTPoint<float> CML::FitToBox( const CTRect<float> &sBox, bool bCenterSingleLine, const CTRect<float> *pClip )
+{
+	UpdateFontScale();
+	const CTPoint<float> preferredOrigin = TextOrigin( sBox, sPreferredSize.y, bCenterSingleLine && bPreferredSingleLine );
+	// Alignment belongs to the label's box; clipping may be tighter because
+	// an ordinary parent panel also clips its children at draw time.
+	CTRect<float> clip = sBox;
+	if ( pClip )
+		clip.Intersect( *pClip );
+	// Only undo enlargement, never grow a user's smaller font or loop trying
+	// to fix a box that cannot fit even at 1.0. The global settings stay intact.
+	const bool bFallback = fFontScale > 1.0f && !clip.IsEmpty() &&
+		InkOutside( sPreferredInk, preferredOrigin, clip );
+	if ( bFallback != bOriginalScale )
+	{
+		bOriginalScale = bFallback;
+		GenerateLayout();
+	}
+	// The fallback can change both wrapping and line height. Align the final
+	// layout before drawing, rather than keeping the larger font's origin.
+	return TextOrigin( sBox, GetSize().y, bCenterSingleLine && pLayout->IsSingleLine() );
+}
+
 void CML::Generate( int nWidth )
 {
 	nLayoutWidth = nWidth;
 	fFontScale = NGScene::GetRuntimeFontScale( UsesHudFontScale() );
+	bOriginalScale = false;
+	GenerateLayout();
+}
+
+void CML::GenerateLayout()
+{
 	enum ECharType
 	{
 		CHAR_NULL,
@@ -997,6 +1118,7 @@ void CML::Generate( int nWidth )
 	// Mark every font request, including markup changes and wrapped lines.
 	SState state = pLayout->GetState();
 	state.sFont.bHud = UsesHudFontScale();
+	state.sFont.bOriginalScale = bOriginalScale;
 	pLayout->SetState( state );
 	pStream = new CMLStream();
 	pStream->Seek( 0 );
@@ -1076,7 +1198,15 @@ void CML::Generate( int nWidth )
 	};
 
 	pLayout->AddCommand( CMD_BREAKLINE );
-	pLayout->Generate( nWidth );
+	pLayout->Generate( nLayoutWidth );
+	if ( !bOriginalScale )
+	{
+		// Size fallback protects letters, not decorative border overhang.
+		sPreferredInk = pLayout->GetInkBounds( false );
+		sPreferredSize.x = Float2Int( pLayout->GetSize().x + 0.5f );
+		sPreferredSize.y = Float2Int( pLayout->GetSize().y + 0.5f );
+		bPreferredSingleLine = pLayout->IsSingleLine();
+	}
 }
 
 void CML::Render( std::list<CTRect<float> > *pRender, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
@@ -1102,6 +1232,10 @@ int CML::operator&( IBinSaver &saver )
 	saver.Add( 7, &nLayoutWidth );
 	saver.Add( 8, &fFontScale );
 	saver.Add( 9, &pFontScaleWindow );
+	// Rebuild transient clipping decisions (and ink data absent in old saves)
+	// from the saved text and wrapping width on first use.
+	if ( saver.IsReading() )
+		fFontScale = 0;
 	return 0;
 }
 

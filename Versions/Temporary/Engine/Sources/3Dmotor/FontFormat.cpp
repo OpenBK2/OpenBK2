@@ -14,6 +14,7 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	f.Add( 15, &wDefaultChar );
 	f.Add( 1, &chars );
 	f.Add( 2, &kerns );
+	f.Add( 3, &inkBounds );
 	return 0;	
 }
 

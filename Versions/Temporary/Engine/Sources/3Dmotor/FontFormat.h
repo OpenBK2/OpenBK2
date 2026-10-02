@@ -21,6 +21,9 @@ class CFontFormatInfo: public CObjectBase
 	//
   CCharacterMap chars;                  // all available characters map
   CKernMap kerns;                       // kerning pairs for the characters in the font.
+	// Runtime ink, relative to the glyph cell. Keep STFCharacter unchanged:
+	// its full-cell rectangle is also the legacy baked font file format.
+	std::unordered_map<uint16_t, CTRect<int>> inkBounds;
 	//
 	int nHeight;													// native height of this font (in native pixels!)
 	int nExternalLeading;									// extra leading (space) that the application adds between rows
@@ -71,6 +74,15 @@ public:
 	}
 	bool HasChar( const uint16_t c ) const { return chars.find( c ) != chars.end(); }
 	void SetChar( const uint16_t c, const STFCharacter &character ) { chars[c] = character; }
+	void SetInkBounds( uint16_t c, const CTRect<int> &bounds ) { inkBounds[c] = bounds; }
+	const CTRect<int>* GetInkBounds( uint16_t c ) const
+	{
+		// Match GetChar's replacement glyph when a character is unavailable.
+		if ( !HasChar( c ) )
+			c = HasChar( wDefaultChar ) ? wDefaultChar : ( chars.empty() ? c : chars.begin()->first );
+		const auto found = inkBounds.find( c );
+		return found == inkBounds.end() ? nullptr : &found->second;
+	}
 	bool HasKern( uint16_t wChar, uint16_t wLastChar ) const { return kerns.find( (uint32_t(wLastChar) << 16) | uint32_t(wChar) ) != kerns.end(); }
 	void SetKern( uint16_t wChar, uint16_t wLastChar, int nKern ) { kerns[(uint32_t(wLastChar) << 16) | uint32_t(wChar)] = nKern; }
 	//

@@ -136,16 +136,10 @@ void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 		CTRect<float> textRC;
 		FillWindowRect( &textRC );
 		VirtualToScreen( textRC, &textRC );
-		CTPoint<float> textPos = textRC.GetLeftTop();
-		const int nTextHeight = pGfxText->GetSize().y;
-		if ( !pInstance->bResizeOnTextSet && nTextHeight > textRC.Height() && pGfxText->IsSingleLine() )
-		{
-			// Fixed HUD fields can be shorter than the font's accent/descender
-			// cell even when the visible digits fit. Center that cell instead of
-			// clipping all its excess from the bottom; retain the window's clip
-			// and snap the draw origin to pixels so runtime glyphs stay sharp.
-			textPos.y = std::floor( textRC.y1 + ( textRC.Height() - nTextHeight ) * 0.5f + 0.5f );
-		}
+		// Include ordinary parent clips, but not intentional scrolling. Keep
+		// alignment relative to this label rather than the intersected clip.
+		const CTRect<float> clip = pVisitor->GetTextClip( textRC );
+		const CTPoint<float> textPos = pGfxText->FitToBox( textRC, !pInstance->bResizeOnTextSet, &clip );
 		pVisitor->VisitUIText( pGfxText, textPos, textRC );
 	}
 }

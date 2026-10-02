@@ -33,7 +33,9 @@ struct SFont
 	int nWidth = 0;
 	// Screen ownership selects the user setting, independently of input focus.
 	bool bHud = false;
-	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); f.Add(4,&nWidth); f.Add(5,&bHud); return 0; }
+	// A clipped label can use the original size without changing user settings.
+	bool bOriginalScale = false;
+	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nSize); f.Add(3,&szName); f.Add(4,&nWidth); f.Add(5,&bHud); f.Add(6,&bOriginalScale); return 0; }
 
 	SFont() {}
 	SFont( int _nSize, const std::string &_szName ): nSize( _nSize ), szName( _szName ) {}
@@ -83,8 +85,9 @@ private:
 	// whose font file could not be used, so the baked font answers from then on.
 	std::unordered_map<std::string, const NDb::SFont*> runtimeRecords;
 	// Menus and HUD can be visible together; edits invalidate only their own cache.
-	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts[2];
-	float fCachedRuntimeFontScale[2] = { 0, 0 };
+	// The third cache holds scale 1.0 for individual labels that would clip.
+	std::map<std::tuple<std::string, int, int>, CObj<CFontInfo>> runtimeFonts[3];
+	float fCachedRuntimeFontScale[3] = { 0, 0, 0 };
 	CFontInfo* GetRuntimeFont( const SFont &sFont );
 
 protected:

@@ -58,6 +58,7 @@ void CTextLocaleInfo::ClearAllFonts()
 	runtimeRecords.clear();
 	runtimeFonts[0].clear();
 	runtimeFonts[1].clear();
+	runtimeFonts[2].clear();
 }
 
 // Runtime fonts below this cell height are not made. The UI asks for them only
@@ -91,9 +92,10 @@ CFontInfo* CTextLocaleInfo::GetRuntimeFont( const SFont &sFont )
 	std::unordered_map<std::string, const NDb::SFont*>::const_iterator record = runtimeRecords.find( sFont.szName );
 	if ( record == runtimeRecords.end() )
 		return 0;
-	const float fScale = GetRuntimeFontScale( sFont.bHud );
-	auto &cache = runtimeFonts[sFont.bHud ? 1 : 0];
-	float &fCachedScale = fCachedRuntimeFontScale[sFont.bHud ? 1 : 0];
+	const float fScale = sFont.bOriginalScale ? 1.0f : GetRuntimeFontScale( sFont.bHud );
+	const int nCache = sFont.bOriginalScale ? 2 : ( sFont.bHud ? 1 : 0 );
+	auto &cache = runtimeFonts[nCache];
+	float &fCachedScale = fCachedRuntimeFontScale[nCache];
 	if ( fCachedScale != fScale )
 	{
 		// Existing layouts own their atlases; new layouts must get the new size.

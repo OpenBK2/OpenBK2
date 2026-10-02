@@ -32,6 +32,30 @@ static CTPoint<int> GetVirtualTextSizeCeil( IML *pGfxText )
 	return CTPoint<int>( static_cast<int>( ceilf( vSize.x ) ), static_cast<int>( ceilf( vSize.y ) ) );
 }
 
+static CTRect<float> PlaceText( const CTPoint<int> &pixelSize, const CTRect<float> &parent, const NDb::SWindowPlacement *pPlacement )
+{
+	const CVec2 size = ScreenToVirtual( CVec2( pixelSize.x, pixelSize.y ) ) - ScreenToVirtual( VNULL2 );
+	CTRect<float> place( parent.x1, parent.y1, parent.x1 + size.x, parent.y1 + size.y );
+	if ( pPlacement )
+		NUITools::ApplyPlacement( *pPlacement, parent, &place );
+	CTRect<float> result;
+	VirtualToScreen( place, &result );
+	return result;
+}
+
+static void VisitPlacedText( IUIVisitor *pVisitor, IML *pText, const CTRect<float> &parent, const NDb::SWindowPlacement *pPlacement )
+{
+	// Always test the preferred size/placement, even while drawing at 1.0;
+	// otherwise a smaller centered caption can make fallback stick forever.
+	CTRect<float> box = PlaceText( pText->GetPreferredSize(), parent, pPlacement );
+	const CTRect<float> clip = pVisitor->GetTextClip( box );
+	pText->FitToBox( box, false, &clip );
+	// Placement can center/right-align a caption using its measured size.
+	// Recalculate it after fallback so the smaller caption keeps that alignment.
+	box = PlaceText( pText->GetSize(), parent, pPlacement );
+	pVisitor->VisitUIText( pText, box.GetLeftTop(), box );
+}
+
 void CForegroundTextString::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	const NDb::SForegroundTextString *pDesc ( checked_cast<const NDb::SForegroundTextString*>( _pDesc ) );
@@ -102,16 +126,7 @@ const NDb::SWindowPlacement* CForegroundTextString::GetPlacement() const
 void CForegroundTextString::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText ) 
-	{
-		const CVec2 size = GetVirtualTextSize( pGfxText );
-		CTRect<float> place( rcParent.x1, rcParent.y1, rcParent.x1 + size.x, rcParent.y1 + size.y );
-		if ( pInstance->pShared )
-			NUITools::ApplyPlacement( pInstance->pShared->position, rcParent, &place );
-
-		CTRect<float> tmp;
-		VirtualToScreen( place, &tmp );
-		pVisitor->VisitUIText( pGfxText, tmp.GetLeftTop(), tmp );
-	}
+		VisitPlacedText( pVisitor, pGfxText, rcParent, GetPlacement() );
 }
 
 void CForegroundTextString::Init()
@@ -148,15 +163,7 @@ void CPlacedText::Init()
 void CPlacedText::Visit( struct IUIVisitor *pVisitor )
 {
 	if ( pGfxText )
-	{
-		const CVec2 size = GetVirtualTextSize( pGfxText );
-		CTRect<float> place( rcParent.x1, rcParent.y1, rcParent.x1 + size.x, rcParent.y1 + size.y );
-		NUITools::ApplyPlacement( placement, rcParent, &place );
-
-		CTRect<float> tmp;
-		VirtualToScreen( place, &tmp );
-		pVisitor->VisitUIText( pGfxText, tmp.GetLeftTop(), tmp );
-	}
+		VisitPlacedText( pVisitor, pGfxText, rcParent, &placement );
 }
 
 void CPlacedText::SetText( const std::wstring &_wszText )

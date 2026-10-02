@@ -132,6 +132,29 @@ TEST_F( RuntimeFontScale, ChangingScaleReplacesCachedFontsWithoutResizingOldAtla
 	EXPECT_EQ( CellHeight( hud ), 20 );
 	EXPECT_EQ( larger.GetPtr(), locale->GetFont( request ) );
 
+	// A clipped label's 1.0 atlas must coexist with both configured caches.
+	NGScene::SFont fallbackRequest = request;
+	fallbackRequest.bOriginalScale = true;
+	CObj<NGScene::CFontInfo> fallback = locale->GetFont( fallbackRequest );
+	ASSERT_TRUE( fallback );
+	EXPECT_EQ( CellHeight( fallback ), 20 );
+	fallbackRequest.bHud = true;
+	EXPECT_EQ( fallback.GetPtr(), locale->GetFont( fallbackRequest ) );
+	EXPECT_EQ( larger.GetPtr(), locale->GetFont( request ) );
+	EXPECT_EQ( largerHud.GetPtr(), locale->GetFont( hudRequest ) );
+
+	fallback->PrepareGlyphs( L"H g " );
+	CDGPtr<CPtrFuncBase<CFontFormatInfo>> format( fallback->GetFormatInfo() );
+	format.Refresh();
+	const CTRect<int> *space = format->GetValue()->GetInkBounds( ' ' );
+	const CTRect<int> *capital = format->GetValue()->GetInkBounds( 'H' );
+	ASSERT_NE( space, nullptr );
+	ASSERT_NE( capital, nullptr );
+	EXPECT_TRUE( space->IsEmpty() );
+	EXPECT_FALSE( capital->IsEmpty() );
+	EXPECT_LT( capital->Height(), CellHeight( fallback ) );
+
 	NGlobal::SetVar( "ui_font_scale", 1.0f );
 	EXPECT_EQ( CellHeight( locale->GetFont( request ) ), 20 );
+	EXPECT_EQ( fallback.GetPtr(), locale->GetFont( fallbackRequest ) );
 }

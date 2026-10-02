@@ -404,6 +404,7 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	// every face's glyphs on the first face's baseline; ink beyond the cell,
 	// which fitting keeps to fallbacks' rare characters, is cut off
 	const int nFirstRow = state.nAscent - glyph.nTop;
+	CTRect<int> inkBounds( 0, 0, 0, 0 );
 	for ( int y = 0; y < glyph.nRows; ++y )
 	{
 		const int nCellRow = nFirstRow + y;
@@ -411,6 +412,11 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 			continue;
 		uint8_t *pDst = &state.coverage[static_cast<size_t>( state.nPenY + nCellRow ) * state.nSize + state.nPenX];
 		std::copy_n( &glyph.coverage[static_cast<size_t>( y ) * glyph.nB], glyph.nB, pDst );
+		// Measure actual coverage once, while rasterising. Spaces and the
+		// accent/descender padding must not count as clipped visible text.
+		for ( int x = 0; x < glyph.nB; ++x )
+			if ( pDst[x] != 0 )
+				inkBounds.Union( CTRect<int>( x, nCellRow, x + 1, nCellRow + 1 ) );
 	}
 	STFCharacter character;
 	character.x1 = state.nPenX;
@@ -421,6 +427,7 @@ bool CGlyphAtlas::AddGlyph( const uint16_t wChar )
 	character.nBC = glyph.nB + glyph.nC;
 	character.nWidth = nWidth;
 	state.pFormat->SetChar( wChar, character );
+	state.pFormat->SetInkBounds( wChar, inkBounds );
 	state.glyphFace[wChar] = nFace;
 	order.push_back( wChar );
 	if ( !state.bDirty )
