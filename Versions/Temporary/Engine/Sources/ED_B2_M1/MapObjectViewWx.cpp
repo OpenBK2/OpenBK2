@@ -38,6 +38,7 @@
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/utils.h>
+#include <wx/wupdlock.h>
 
 
 #include <cstdio>
@@ -194,13 +195,7 @@ namespace
 			pFilterRow->Add( pFilters, wxSizerFlags( 1 ).Centre().Border( wxLEFT, 4 ) );
 			pSizer->Add( pFilterRow, wxSizerFlags().Expand() );
 
-			// LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_SORTASCENDING |
-			// LVS_SHAREIMAGELISTS from the template. wx adds the last two of
-			// those to every list control it makes; the sort is asked for here.
-			pObjects = NWx::Child<CWxThumbnailList>( pRoot, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-																				 wxLC_ICON | wxLC_SINGLE_SEL | wxLC_SORT_ASCENDING |
-																				 wxBORDER_SUNKEN );
-			pObjects->SetMinSize( wxSize( -1, 160 ) );
+			pObjects = CreateObjectList( pRoot );
 			pSizer->Add( pObjects, wxSizerFlags( 1 ).Expand().Border( wxTOP, 4 ) );
 			AttachObjectIcons();
 
@@ -211,10 +206,6 @@ namespace
 			pDirectionRandom->Bind( wxEVT_RADIOBUTTON, &CMapObjectWxWindow::OnDirectionType, this );
 			pDirectionFixed->Bind( wxEVT_RADIOBUTTON, &CMapObjectWxWindow::OnDirectionType, this );
 			pDirection->Bind( wxEVT_TEXT, &CMapObjectWxWindow::OnDirectionChanged, this );
-			pObjects->Bind( wxEVT_LIST_ITEM_SELECTED, &CMapObjectWxWindow::OnObjectSelected, this );
-			pObjects->Bind( wxEVT_CONTEXT_MENU, &CMapObjectWxWindow::OnObjectContextMenu, this );
-			// UpdateObjectsListStyle(), which the MFC palette runs from OnSize.
-			pObjects->Bind( wxEVT_SIZE, &CMapObjectWxWindow::OnObjectListSize, this );
 
 			// OnInitDialog's order: the list style first, then the filters, then
 			// what the chosen filter selects.
@@ -430,6 +421,20 @@ namespace
 		// the object list
 		// ------------------------------------------------------------------
 
+		CWxThumbnailList* CreateObjectList( wxWindow *pParent )
+		{
+			// wx adds the native shared-image-list and persistent-selection styles.
+			CWxThumbnailList *pList = NWx::Child<CWxThumbnailList>( pParent, wxID_ANY,
+					wxDefaultPosition, wxDefaultSize,
+					wxLC_SINGLE_SEL | wxLC_SORT_ASCENDING | wxBORDER_SUNKEN |
+					( bThumbnails ? wxLC_ICON : wxLC_LIST ) );
+			pList->SetMinSize( wxSize( -1, 160 ) );
+			pList->Bind( wxEVT_LIST_ITEM_SELECTED, &CMapObjectWxWindow::OnObjectSelected, this );
+			pList->Bind( wxEVT_CONTEXT_MENU, &CMapObjectWxWindow::OnObjectContextMenu, this );
+			pList->Bind( wxEVT_SIZE, &CMapObjectWxWindow::OnObjectListSize, this );
+			return pList;
+		}
+
 		// Borrowed from the object collector rather than copied;
 		// see the note in HeightViewV3Wx.cpp, which does the same thing for the
 		// same reason. wx creates its list controls with LVS_SHAREIMAGELISTS, so
@@ -501,26 +506,42 @@ namespace
 			}
 			const bool bWasCreating = bCreateControls;
 			bCreateControls = true;
-			pObjects->DeleteAllItems();
-			objectListElementMap.clear();
 			IObjectCollector::CObjectCollection objectCollection;
 			Singleton<IObjectCollector>()->ApplyFilter( &objectCollection, pObjectFilter );
-			unsigned nObjectsCount = 0;
-			for ( IObjectCollector::CObjectCollection::const_iterator itObjectCollection = objectCollection.begin(); itObjectCollection != objectCollection.end(); ++itObjectCollection )
+			// Recreate the control so native icon positions, scrolling and
+			// hit-testing state cannot carry over from the previous filter.
+			// Load the icons first, then replace the list while its parent is frozen.
+			wxWindow *const pParent = pObjects->GetParent();
 			{
-				for ( IObjectCollector::CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin(); itObjectNameCollection != itObjectCollection->second.end(); ++itObjectNameCollection )
+				wxWindowUpdateLocker updateLock( pParent );
+				CWxThumbnailList *const pPrevious = pObjects;
+				pObjects = CreateObjectList( pParent );
+				pObjects->Hide();
+				pPrevious->GetContainingSizer()->Replace( pPrevious, pObjects );
+				pPrevious->Destroy();
+				AttachObjectIcons();
+				ApplyListStyle();
+				objectListElementMap.clear();
+				unsigned nObjectsCount = 0;
+				for ( IObjectCollector::CObjectCollection::const_iterator itObjectCollection = objectCollection.begin(); itObjectCollection != objectCollection.end(); ++itObjectCollection )
 				{
-					SObjectListElement objectListElement;
-					objectListElement.szObjectTypeName = itObjectCollection->first;
-					objectListElement.objectDBID = itObjectNameCollection->first;
-					//
-					const long nItem = pObjects->InsertItem( nObjectsCount,
-																									wxString::FromUTF8( itObjectNameCollection->second.szLabel.c_str() ),
-																									itObjectNameCollection->second.nIconIndex );
-					pObjects->SetItemData( nItem, static_cast<long>( nObjectsCount ) );
-					objectListElementMap[nObjectsCount] = objectListElement;
-					++nObjectsCount;
+					for ( IObjectCollector::CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin(); itObjectNameCollection != itObjectCollection->second.end(); ++itObjectNameCollection )
+					{
+						SObjectListElement objectListElement;
+						objectListElement.szObjectTypeName = itObjectCollection->first;
+						objectListElement.objectDBID = itObjectNameCollection->first;
+						//
+						const long nItem = pObjects->InsertItem( nObjectsCount,
+																										wxString::FromUTF8( itObjectNameCollection->second.szLabel.c_str() ),
+																										itObjectNameCollection->second.nIconIndex );
+						pObjects->SetItemData( nItem, static_cast<long>( nObjectsCount ) );
+						objectListElementMap[nObjectsCount] = objectListElement;
+						++nObjectsCount;
+					}
 				}
+				pObjects->Show();
+				pParent->Layout();
+				pObjects->Arrange();
 			}
 			bCreateControls = bWasCreating;
 		}
@@ -619,7 +640,11 @@ namespace
 		void OnObjectListSize( wxSizeEvent &rEvent )
 		{
 			rEvent.Skip();
-			pObjects->Arrange();
+			// A filter rebuild arranges the completed list once, after layout.
+			if ( !bCreateControls )
+			{
+				pObjects->Arrange();
+			}
 		}
 
 		void OnObjectContextMenu( wxContextMenuEvent &rEvent )
