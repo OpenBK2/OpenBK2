@@ -569,11 +569,12 @@ TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 		for ( int i = 1; i <= 28; ++i )
 		{
 			SCOPED_TRACE( std::to_string( resolution.y ) + " citation " + std::to_string( i ) );
+			// Only these shipped placeholders are empty; missing fixtures must fail.
+			if ( i == 23 || i == 28 )
+				continue;
 			const std::string path = "Citations/" + std::string( i < 10 ? "0" : "" ) + std::to_string( i ) + ".txt";
 			const std::wstring advice = NText::GetText( path );
-			// The shipped citation list includes unused empty files (23, 28).
-			if ( advice.empty() )
-				continue;
+			ASSERT_FALSE( advice.empty() ) << path;
 			CObj<CWindowTextView> label = MakeLabel( 948, 65 );
 			CTRect<float> box;
 			VirtualToScreen( label->GetWindowRect(), &box );
@@ -595,7 +596,8 @@ TEST_F( TextVerticalAlignment, LoadingAdviceKeepsItsScaleWhenTheLettersFit )
 TEST_F( TextVerticalAlignment, MenuButtonHeadingsDoNotShrinkForTheirBorder )
 {
 	AddHeaderFont();
-	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" ) + L"<center>";
+	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
+	ASSERT_FALSE( style.empty() );
 	for ( auto resolution : { CTPoint<int>( 1024, 768 ), CTPoint<int>( 1920, 1080 ), CTPoint<int>( 2560, 1440 ) } )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( resolution.x, resolution.y );
@@ -603,7 +605,7 @@ TEST_F( TextVerticalAlignment, MenuButtonHeadingsDoNotShrinkForTheirBorder )
 		{
 			SCOPED_TRACE( std::to_string( resolution.y ) + " " + std::string( caption.begin(), caption.end() ) );
 			CObj<CWindowTextView> label = MakeLabel( 250, 40 );
-			label->CWindow::SetTextString( style + caption );
+			label->CWindow::SetTextString( style + L"<center>" + caption );
 			const int before = label->GetOptimalWidth();
 			TextVisitor visitor;
 			label->Visit( &visitor );
@@ -616,6 +618,7 @@ TEST_F( TextVerticalAlignment, OutlinedAdviceStillFallsBackWhenLettersAreCutOff 
 {
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
+	ASSERT_FALSE( style.empty() );
 	const std::wstring advice = NText::GetText( "Citations/02.txt" );
 	ASSERT_FALSE( advice.empty() );
 	CObj<IScreen> hud = MakeScreen( true );
@@ -639,6 +642,7 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 {
 	AddHeaderFont();
 	const std::wstring style = NText::GetText( "Consts/Game/Tags/h2_Text.txt" );
+	ASSERT_FALSE( style.empty() );
 	struct ClippedVisitor : TextVisitor
 	{
 		std::vector<CTRect<float>> clips;
@@ -667,10 +671,12 @@ TEST_F( TextVerticalAlignment, LoadingAdviceFitsItsActualParentClipAtEveryResolu
 		for ( int i = 1; i <= 28; ++i )
 		{
 			SCOPED_TRACE( std::to_string( resolution.y ) + " citation " + std::to_string( i ) );
+			// Only these shipped placeholders are empty; missing fixtures must fail.
+			if ( i == 23 || i == 28 )
+				continue;
 			const std::string path = "Citations/" + std::string( i < 10 ? "0" : "" ) + std::to_string( i ) + ".txt";
 			const std::wstring advice = NText::GetText( path );
-			if ( advice.empty() )
-				continue;
+			ASSERT_FALSE( advice.empty() ) << path;
 			label->SetText( style + advice );
 			ClippedVisitor visitor;
 			panel->Visit( &visitor );

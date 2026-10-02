@@ -25,10 +25,12 @@ jobs:
             arch: x64
 
     steps:
-      # Engine sources and font fixtures, not the 11 GB of game data.
+      # Engine sources and font/text fixtures, not the 11 GB of game data.
       # Fonts supplies the font files/textures for the tests and obk2_fonts.pak
       # (3 MB). bin/fonts supplies the baked glyph metrics TextVerticalAlignment
       # reads by resource UUID; the textures alone are not enough (308 KB).
+      # Tags and Citations supply the heading styles and advice text used by
+      # TextVerticalAlignment's clipping regression tests.
       # GLB_format_usage is the example glTF units GltfBounds_test loads (4 MB).
       - uses: actions/checkout@v6
         with:
@@ -41,6 +43,8 @@ jobs:
             Versions/Temporary/Engine/Sources
             Versions/Current/Data/Fonts
             Versions/Current/Data/bin/fonts
+            Versions/Current/Data/Consts/Game/Tags
+            Versions/Current/Data/Citations
             OBK2_Examples/GLB_format_usage
 
       # MSVC, Ninja, the DirectX SDK and ccache. 3Dmotor links dxsdk::d3d9, and the
