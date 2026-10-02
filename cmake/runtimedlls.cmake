@@ -24,9 +24,13 @@
 function(copy_runtime_dlls target)
     if(WIN32)
         add_custom_command(TARGET ${target} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                    $<TARGET_RUNTIME_DLLS:${target}> $<TARGET_FILE_DIR:${target}>
-            COMMAND_EXPAND_LISTS
+            # Several tests share an output directory. Parallel copies of the
+            # same DLL can race even with copy_if_different, so lock that
+            # directory for the copy rather than serializing the test builds.
+            COMMAND ${CMAKE_COMMAND}
+                    "-DRUNTIME_DLLS=$<TARGET_RUNTIME_DLLS:${target}>"
+                    "-DRUNTIME_DESTINATION=$<TARGET_FILE_DIR:${target}>"
+                    -P ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/copy_runtime_dlls.cmake
             VERBATIM)
     endif()
 endfunction()

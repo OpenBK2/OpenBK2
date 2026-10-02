@@ -10,16 +10,28 @@
 #include <simdjson.h>
 #include <filesystem>
 #include <fstream>
+#include <cstdlib>
 #include <set>
 #include <gtest/gtest.h>
 
 TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChangingResources )
 {
-	if ( !std::filesystem::exists(OBK2_DATA_DIR "/index.bin") ) GTEST_SKIP() << "Optional game data is unavailable";
+	// Allow the sparse CI checkout to be reproduced without moving game data.
+	const char *overrideRoot = std::getenv("OBK2_GRANNY_TEST_DATA_DIR");
+	const auto dataRoot = std::filesystem::u8path(overrideRoot ? overrideRoot : OBK2_DATA_DIR);
+	const char *modelPaths[] = {"Mines/All/MineUniversal/Model.xdb",
+		"Units/Technics/USSR/Tanks/T_60/1_1_Model.xdb",
+		"Units/Infantry/Japan/Japan_soldier/1_1_Model.xdb"};
+	// Cone-mode sparse checkouts keep Data/index.bin and types.xml even when
+	// Mines and Units are omitted. Check the actual fixtures before opening
+	// the database; a missing model is otherwise a failure (or a Debug assert).
+	for ( const char *path : {"index.bin", "types.xml", modelPaths[0], modelPaths[1], modelPaths[2]} )
+		if ( !std::filesystem::is_regular_file(dataRoot / path) )
+			GTEST_SKIP() << "Optional Granny model fixture is unavailable: " << path;
 	// Force the stats module to load, so AnimB2 is registered just as in the editor.
 	EXPECT_EQ(GetCommandByAction(NDb::USER_ACTION_MOVE), ACTION_COMMAND_MOVE_TO);
 	CObj<NVFS::IVFS> saved = NVFS::GetMainVFS();
-	NVFS::SetMainVFS(NVFS::CreateWinVFS(OBK2_DATA_DIR "/"));
+	NVFS::SetMainVFS(NVFS::CreateWinVFS(dataRoot.generic_u8string() + "/"));
 	struct SCleanup
 	{
 		NVFS::IVFS *saved;
@@ -28,9 +40,7 @@ TEST( GrannyModelExport, ExportsRepositoryModelsInAllTextureModesWithoutChanging
 	ASSERT_TRUE(NDb::OpenDatabase(NVFS::GetMainVFS(), nullptr, NDb::DATABASE_MODE_EDITOR));
 	std::filesystem::create_directories(GRANNY_EXPORT_OUTPUT_DIR);
 	int number = 0;
-	for ( const char *path : {"Mines/All/MineUniversal/Model.xdb",
-		"Units/Technics/USSR/Tanks/T_60/1_1_Model.xdb",
-		"Units/Infantry/Japan/Japan_soldier/1_1_Model.xdb"} )
+	for ( const char *path : modelPaths )
 	{
 		SCOPED_TRACE(path);
 		CDBPtr<NDb::SModel> model = NDb::Get<NDb::SModel>(CDBID(path));

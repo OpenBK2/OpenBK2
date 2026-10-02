@@ -85,7 +85,7 @@ By default, textures are converted to TGA and written into a `<GLB name>_texture
 
 Diffuse textures are connected to materials; legacy bump, gloss, mirror, and detail textures are retained with their roles in material extras because their channels do not directly match glTF PBR inputs. Unsupported DDS encodings and bone shear produce an export error. Mixed GLTF/Granny resource references are also rejected.
 
-The `GrannyGltf_test`, `GrannyGltfTexture_test`, and `GrannyModelExport_test` targets cover the conversion and complete database export path. Tests using the optional game-data corpus skip when it is absent. The full export test writes sample GLBs under the build directory's `granny-export-validation` folder.
+The `GrannyGltf_test`, `GrannyGltfTexture_test`, and `GrannyModelExport_test` targets cover the conversion and complete database export path. Tests using the optional game-data corpus skip when it is absent. The full export test checks for its model fixtures as well as the database index, since CI's sparse checkout contains the index without those models. Set `OBK2_GRANNY_TEST_DATA_DIR` to test against a different data directory. The full export test writes sample GLBs under the build directory's `granny-export-validation` folder.
 
 # looking around the code
 

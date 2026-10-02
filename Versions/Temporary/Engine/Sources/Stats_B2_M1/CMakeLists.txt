@@ -59,6 +59,12 @@ set(SOURCES
     UserActions.cpp
 )
 add_library(Stats_B2_M1 SHARED ${SOURCES})
+# The generated serializers exceed COFF's section limit in x64 Debug, now
+# also built by the editor's database export integration test. Leave the
+# generated source alone and enable MSVC's larger object format for it.
+if(MSVC)
+    set_property(SOURCE RPGStats.cpp APPEND PROPERTY COMPILE_OPTIONS /bigobj)
+endif()
 add_stdafx_pch(Stats_B2_M1)
 add_export_header(Stats_B2_M1)
 target_link_libraries(Stats_B2_M1 PRIVATE 3Dmotor B2_M1_Terrain libdb MemoryLib Misc Sound System UI zlib fmt::fmt-header-only)

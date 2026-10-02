@@ -23,6 +23,9 @@ if(NOT WX_RUNTIME_FILES)
     return()
 endif()
 
+# Share the runtime-copy lock with ordinary DLLs: multiple editor tests can
+# finish linking together and all need the same wx DLL beside them.
+file(LOCK "${WX_DESTINATION}/.runtime-dlls.lock" GUARD PROCESS TIMEOUT 120)
 foreach(WX_RUNTIME_FILE IN LISTS WX_RUNTIME_FILES)
     file(COPY "${WX_RUNTIME_FILE}" DESTINATION "${WX_DESTINATION}")
 endforeach()
