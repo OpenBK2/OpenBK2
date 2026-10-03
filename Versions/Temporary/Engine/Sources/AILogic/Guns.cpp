@@ -1956,9 +1956,9 @@ const NTimer::STime CTurretGun::GetTimeToShootToPoint( const CVec3 &vPoint ) con
 	const float zDiff = vPoint.z - vUnitCenter.z;
 
 	const NTimer::STime timeHorTurn = 
-		1.0f * ( DirsDifference( wCurHorAngle, GetDirectionByVector( xDiff,yDiff ) )) / fHorRotSpeed;
+		1.0f * ( DirsDifference( wCurHorAngle, GetDirectionByVector( xDiff,yDiff ) )) / std::max(0.0001f, fHorRotSpeed);
 	const NTimer::STime timeVerTurn = 
-		1.0f * ( DirsDifference( GetDirectionByVector( fabs(xDiff,yDiff), zDiff ), wCurVerAngle ) ) / fVertRotSpeed;
+		1.0f * ( DirsDifference( GetDirectionByVector( fabs(xDiff,yDiff), zDiff ), wCurVerAngle ) ) / std::max(0.0001f, fVertRotSpeed);
 	const NTimer::STime timeToTurn = (std::max)( timeVerTurn, timeHorTurn );
 
 	const float fTime = 
