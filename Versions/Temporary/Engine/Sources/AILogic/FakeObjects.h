@@ -14,13 +14,14 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 		EStaticObjType eType;
 		CPtr<CObjectProfile> pPassProfile;
 		bool bDestructByTracks;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&tilesToLock); f.Add(3,&pDeadObj); f.Add(4,&eType); f.Add(5,&pPassProfile); return 0; }
+	// Track-crushability affects pathfinding and must survive save/load.
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&tilesToLock); f.Add(3,&pDeadObj); f.Add(4,&eType); f.Add(5,&pPassProfile); f.Add(6,&bDestructByTracks); return 0; }
 
 	//
 	CFakeCorpseStaticObject( const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex,
 													 const std::list<SObjTileInfo> &tiles, const bool bDestructByTracks,
 													 CUpdatableObj* pDeadObj, CObjectProfile *pPassProfile );
-	CFakeCorpseStaticObject() { }
+	CFakeCorpseStaticObject() : bDestructByTracks( false ) { }
 public:
 	static void CreateFakeCorpseStaticObject( class CExistingObject *pObj );
 	static void CreateFakeCorpseStaticObject( class CAIUnit *pUnit, const std::list<SObjTileInfo> &tiles, const bool bCantCrushForSomeTime );
