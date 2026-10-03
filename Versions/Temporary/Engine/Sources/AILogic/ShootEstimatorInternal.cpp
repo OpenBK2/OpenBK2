@@ -97,7 +97,10 @@ const float FindTimeToTurnToPoint( const CVec2 &vPoint, class CCommonUnit *pOwne
 	{
 		int nTimeVerticalAim = 0;
 		CTurret * pTurret = pGun->GetTurret();
-		if ( pGun->IsBallisticTrajectory() )
+		// zero saftey check
+		if ( std::abs(pTurret->GetVerRotationSpeed()) <= 1e-9f )
+			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() );
+		else if ( pGun->IsBallisticTrajectory() )
 			nTimeVerticalAim = DirsDifference( pGun->GetVerTurnConstraint(), pTurret->GetVerCurAngle() ) / pTurret->GetVerRotationSpeed();
 
 		const uint16_t wGunDir = pTurret->GetHorCurAngle() + pGun->GetGun().wDirection + wUnitDir;
