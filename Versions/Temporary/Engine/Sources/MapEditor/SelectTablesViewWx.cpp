@@ -59,11 +59,12 @@ namespace
 											 wxDefaultPosition, wxSize( 260, 300 ),
 											 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER )
 		{
-			pTablesList = NWx::Child<wxCheckListBox>( this, wxID_ANY );
+			pTablesList = NWx::Child<wxCheckListBox>( this, wxID_ANY,
+				wxDefaultPosition, wxDefaultSize, 0, nullptr, wxLB_SORT );
 
-			// Order matters: the MFC one adds in the order of `tables` and the
-			// downstream CreateTabs walks the set, so keeping the order keeps the
-			// two comparable line for line.
+			// Database enumeration order is arbitrary. Let wx sort the names;
+			// Append returns the sorted insertion index, so each check stays
+			// attached to its object type as later names are inserted.
 			for ( std::list<std::string>::const_iterator itTable = rTables.begin();
 						itTable != rTables.end(); ++itTable )
 			{
