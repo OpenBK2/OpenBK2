@@ -176,7 +176,11 @@ uint16_t CTurret::GetCurAngle( const SRotating &rotateInfo ) const
 		if ( curTime >= rotateInfo.endTime )
 			return rotateInfo.wFinalAngle;
 		else
-			return rotateInfo.wCurAngle + rotateInfo.sign * rotateInfo.wRotationSpeed * ( curTime - rotateInfo.startTime );
+		{
+			const float fAngle = rotateInfo.wCurAngle + rotateInfo.sign * rotateInfo.wRotationSpeed * ( curTime - rotateInfo.startTime );
+			// A turn can cross zero; truncate in signed range before the defined uint16_t wrap.
+			return static_cast<uint16_t>( static_cast<int32_t>( fAngle ) );
+		}
 	}
 }
 
