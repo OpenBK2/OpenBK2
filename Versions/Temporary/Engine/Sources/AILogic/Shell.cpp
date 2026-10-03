@@ -1025,7 +1025,7 @@ void CShellsStore::UpdateCheckSum( uLong *pCheckSum )
 		CopyToBuf( &checkSumBuf, nOrder );
 	}
 
-	adler32( *pCheckSum, &(checkSumBuf.buf[0]), checkSumBuf.nCnt );
+	*pCheckSum = adler32( *pCheckSum, &(checkSumBuf.buf[0]), checkSumBuf.nCnt );
 }
 
 void CShellsStore::UpdateDebugChecksums(FILE* f)
