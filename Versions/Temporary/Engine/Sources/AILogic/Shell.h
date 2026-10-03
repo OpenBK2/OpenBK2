@@ -361,7 +361,9 @@ class CFlameThrowerExpl : public CExplosion
 	CVec3 vTargetPos;
 	ZEND
 public:
-	CFlameThrowerExpl() { }
+	// Loading older saves must not leave the flame path dependent on heap contents.
+	CFlameThrowerExpl() : vShooterPos( VNULL3 ), vTargetPos( VNULL3 ) { }
+	int operator&( IBinSaver &saver );
 	CFlameThrowerExpl( CAIUnit *pUnit, const class CBasicGun *pGun,
 										 const CVec3 &explCoord, const CVec3 &attackerPos, 
 										 const uint8_t nShellType, const bool bRandomize = true );
