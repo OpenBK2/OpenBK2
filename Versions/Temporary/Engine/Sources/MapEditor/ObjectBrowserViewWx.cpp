@@ -53,6 +53,7 @@
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/time.h>
+#include <wx/timer.h>
 #include <wx/treectrl.h>
 
 #include <cstdint>
@@ -312,10 +313,10 @@ namespace
 		// wxDropSource now, which owns the mouse for the length of the drag.
 		wxTreeItemId dragTarget;
 
-		// The fill in progress: CreateTree's iterator, handed out in batches. A
-		// new fill bumps the generation, which strands a batch still queued.
+		// A one-shot timer yields to native input/paint events between batches.
+		// Stop it before rebuilding or destroying the tree.
 		CPtr<IManipulatorIterator> pBuildIterator;
-		unsigned nBuildGeneration = 0;
+		wxTimer buildTimer;
 		bool bBuildSelectionChanged = false;
 		std::string szBuildFirstObject;
 
@@ -323,6 +324,7 @@ namespace
 		CWxObjectTree( IObjectBrowser::EKind _eKind, IObjectBrowser::IListener *_pListener, IWidget *_pOwner, int _nGDBBrowserID )
 			: eKind( _eKind ), pListener( _pListener ), pOwner( _pOwner ), nGDBBrowserID( _nGDBBrowserID )
 		{
+			buildTimer.Bind( wxEVT_TIMER, [this]( wxTimerEvent & ) { BuildBatch(); } );
 		}
 
 		virtual ~CWxObjectTree()
@@ -436,7 +438,7 @@ namespace
 			}
 			else
 			{
-				BuildBatch( nBuildGeneration );
+				BuildBatch();
 			}
 		}
 
@@ -1136,7 +1138,7 @@ namespace
 
 		void StopBuild()
 		{
-			++nBuildGeneration;
+			buildTimer.Stop();
 			pBuildIterator = 0;
 		}
 
@@ -1161,24 +1163,24 @@ namespace
 
 		void ScheduleBuild()
 		{
-			const unsigned nGeneration = nBuildGeneration;
-			pTree->CallAfter( [this, nGeneration]()
-			{
-				BuildBatch( nGeneration );
-			} );
+			// Chaining CallAfter keeps wx's pending-event loop busy until the
+			// entire table is built, starving native input and paint messages.
+			buildTimer.StartOnce( 1 );
 		}
 
 		// CTreeGDBBrowserBase::OnCreateTreeTimer.
-		void BuildBatch( unsigned nGeneration )
+		void BuildBatch()
 		{
-			if ( ( nGeneration != nBuildGeneration ) || ( pTree == nullptr ) || !pBuildIterator )
+			if ( ( pTree == nullptr ) || !pBuildIterator )
 			{
 				return;
 			}
 			const wxLongLong nStart = wxGetLocalTimeMillis();
 			int nCount = 0;
 			const std::string szSkipped = Lowered( szBuildFirstObject );
-			pTree->Freeze();
+			// Do not Freeze/Thaw this tree: wxMSW toggles TVS_NOSCROLL and
+			// restoring it can hang in comctl32 during scrollbar recalculation.
+			// The short batches already defer painting until we return to wx.
 			while ( !pBuildIterator->IsEnd() && ( ( nCount == 0 ) || ( wxGetLocalTimeMillis() - nStart < 16 ) ) )
 			{
 				std::string szName;
@@ -1196,7 +1198,6 @@ namespace
 				pBuildIterator->Next();
 				++nCount;
 			}
-			pTree->Thaw();
 			if ( !pBuildIterator->IsEnd() )
 			{
 				ScheduleBuild();
