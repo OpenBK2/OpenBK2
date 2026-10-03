@@ -212,7 +212,10 @@ bool CExistingObject::ProcessCumulativeExpl( CExplosion *pExpl, const int nArmor
 		SRect targetRect; 
 		GetBoundRect( &targetRect );
 
-		if ( pExpl->GetRandomPiercing() >= GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir() ) || theCheats.GetFirstShoot( pExpl->GetPlayerOfShoot() ) == 1 )
+		// Sequence RNG draws explicitly, preserving the existing release build's armor-first order.
+		const int nRandArmor = GetRandArmorByDir( nArmorDir, pExpl->GetAttackDir() );
+		const int nRandPiercing = pExpl->GetRandomPiercing();
+		if ( nRandPiercing >= nRandArmor || theCheats.GetFirstShoot( pExpl->GetPlayerOfShoot() ) == 1 )
 		{
 			TakeDamage( pExpl->GetRandomDamage(), bFromExpl, pExpl->GetPlayerOfShoot(), pExpl->GetWhoFire() );
 			pExpl->AddHitToSend( new CHitInfo( pExpl, this, SAINotifyHitInfo::EHT_HIT, vExpl ) );
