@@ -1,5 +1,6 @@
-int nRelaxTime;
-int nFireRate;
+// Generated constructors initialize the source floats, but not these tick values.
+int nRelaxTime = 0;
+int nFireRate = 0;
 
 float GetRandomDamage() const { return GetPositiveRandom( fDamagePower, nDamageRandom ); }
 int GetRandomPiercing() const { return GetPositiveRandom( nPiercing, nPiercingRandom ); }

@@ -11,9 +11,10 @@ class CCommonMountedGun
 	public: int operator&( IBinSaver &saver ); private:
 	
 	CDBPtr<SBuildingRPGStats> pBuildingStats;
-	class CBuilding *pBuilding;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	class CBuilding *pBuilding = {};
 	CPtr<CMountedTurret> pTurret;
-	int nSlot;
+	int nSlot = {};
 public:
 	CCommonMountedGun() { }
 	CCommonMountedGun( class CBuilding *pObject, class CMountedTurret *pTurret, const int nSlot );
@@ -76,9 +77,9 @@ int CMountedToBaseGun::operator&( IBinSaver &saver )
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CMountedGunsFactory : public IGunsFactory
 {
-	class CBuilding *pBuilding;
-	class CMountedTurret *pMountedTurret;
-	const int nCommonGun;
+	class CBuilding *pBuilding = {};
+	class CMountedTurret *pMountedTurret = {};
+	const int nCommonGun = {};
 public:
 	CMountedGunsFactory( class CBuilding *_pBuilding, class CMountedTurret *_pMountedTurret, const int _nCommonGun )
 		: pBuilding( _pBuilding ), pMountedTurret( _pMountedTurret ), nCommonGun( _nCommonGun ) { }

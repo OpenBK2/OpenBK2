@@ -4,6 +4,8 @@
 
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 template <class TYPE, class TStorageType = CPtr<TYPE>, class TPosition = CVec3, class TCoeffType = float>
 class CAreaMap : public CArray2D< std::list<TStorageType> >
 {
@@ -14,11 +16,11 @@ public:
 	typedef std::list<TStorageType> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 private:
-	const TCoeffType tCellSize;								// area map cell size
+	const TCoeffType tCellSize{};								// area map cell size
 	// service functional
 	class CObjEqualFunctional
 	{
-		const TYPE *pObj;
+		const TYPE *pObj = nullptr;
 	public:
 		explicit CObjEqualFunctional( const TYPE *_pObj ) : pObj( _pObj ) {  }
 		bool operator()( const TStorageType &ptr ) const { return ptr == pObj; }
@@ -125,7 +127,7 @@ public:
 	typedef std::list<TYPE> CDataList;
 	typedef CArray2D<CDataList> CBaseArea;
 private:
-	const TCoeffType tCellSize;								// area map cell size
+	const TCoeffType tCellSize{};								// area map cell size
 	// add object to the (nX, nY) cell
 	void AddTo( int nX, int nY, const TYPE &obj )
 	{

@@ -30,7 +30,8 @@ class CSoldierRestInBuildingState : public IUnitState, public CStandartBehaviour
 	
 	ZDATA_(CStandartBehaviour)
 	CPtr<CSoldier> pSoldier;
-	NTimer::STime startTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime startTime = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pSoldier); f.Add(3,&startTime); return 0; }
 
 public:
@@ -64,10 +65,10 @@ class CSoldierAttackInBuildingState : public IUnitAttackingState
 
 	CPtr<CBasicGun> pGun;
 	// стрельба окончена
-	bool bFinish;
+	bool bFinish = {};
 	// обязательно нужно прицелиться
-	bool bAim;
-	int nEnemyParty;
+	bool bAim = {};
+	int nEnemyParty = {};
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&pEnemy); f.Add(4,&pGun); f.Add(5,&bFinish); f.Add(6,&bAim); f.Add(7,&nEnemyParty); f.Add(8,&damageToEnemyUpdater); return 0; }

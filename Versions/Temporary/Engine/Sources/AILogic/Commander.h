@@ -33,8 +33,9 @@ class CCommander : public ICommander
 	};
 	struct SCalcRatingPredicate
 	{
-		IWorkerEnumerator *pEn;
-		EForceType eType;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		IWorkerEnumerator *pEn = {};
+		EForceType eType = {};
 		SCalcRatingPredicate( IWorkerEnumerator *_pEn, EForceType _eType ) : pEn( _pEn ), eType( _eType ) {  }
 		void operator()( std::pair<float, CPtr<CCommonUnit> > &value )
 			{ value.first = pEn->EvaluateWorkerRating( value.second, eType ); }
@@ -47,8 +48,8 @@ class CCommander : public ICommander
 	//
 	struct STaskCalcSeverityPredicate
 	{
-		int nNumberPositive, nNumberNegative;
-		float fSeverityPositive, fSeverityNegative;
+		int nNumberPositive = {}, nNumberNegative = {};
+		float fSeverityPositive = {}, fSeverityNegative = {};
 		void operator()( const IGeneralTask *pT ) 
 		{ 
 			const float fSeverity = pT->GetSeverity(); 
@@ -77,7 +78,7 @@ protected:
 
 	typedef std::vector< CObj<IGeneralTask> > Tasks;
 	Tasks tasks;			// all tasks of this colonel. 
-	float fMeanSeverity;
+	float fMeanSeverity = {};
 
 	void EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits );
 public:

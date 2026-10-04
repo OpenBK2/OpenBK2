@@ -6,8 +6,9 @@
 struct SSpecialAbilityInfo : public SSuspendedUpdate
 {
 	ZDATA_( SSuspendedUpdate )
-		int nAbilityType;							// ability type (NDb::EUnitSpecialAbility)
-	float fCurValue;							// value for ability with progress bar
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nAbilityType = {};							// ability type (NDb::EUnitSpecialAbility)
+	float fCurValue = {};							// value for ability with progress bar
 	SAbilitySwitchState state;    // new state for ability
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&nAbilityType); f.Add(3,&fCurValue); f.Add(4,&state); return 0; }
 public:

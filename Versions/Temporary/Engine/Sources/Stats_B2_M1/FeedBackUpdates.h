@@ -81,7 +81,8 @@ struct SFeedBackObjectiveState : public CObjectBase
 {
 	OBJECT_BASIC_METHODS( SFeedBackObjectiveState )
 		CVec2 vPos;
-	int nState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nState = {};
 public:
 	SFeedBackObjectiveState() {  }
 	SFeedBackObjectiveState( int _nState, const CVec2 &_vPos ) : nState( _nState ), vPos( _vPos ) {  }
@@ -93,9 +94,9 @@ struct SFeedBackUnitsArray : public CObjectBase
 public:
 	ZDATA
 		std::vector<int> unitIDs;
-	int nUpdateID;
+	int nUpdateID = {};
 	CVec2 vCenterCamera;
-	int nParam;
+	int nParam = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitIDs); f.Add(3,&nUpdateID); f.Add(4,&vCenterCamera); f.Add( 5, &nParam);return 0; }
 
 	SFeedBackUnitsArray() : nParam( -1 ) { }
@@ -104,8 +105,8 @@ public:
 struct SAIFeedBack
 {
 	ZDATA
-		EFeedBack feedBackType;
-	uint32_t nParam;
+		EFeedBack feedBackType = {};
+	uint32_t nParam = {};
 	CPtr<CObjectBase> pParam;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&feedBackType); f.Add(3,&nParam); f.Add(4,&pParam); return 0; }
 public:

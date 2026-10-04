@@ -455,7 +455,8 @@ struct SSetDefaultValues
 static void GenerateStructBaseConstructor( ICode::SCodeStreams *pCode, NDb::NTypeDef::STypeStructBase *pStructBase, const std::string &szTabs )
 {
 	pCode->h << szTabs << tab << NHungarian::GetTypeNameInCode( pStructBase, 0 ) << "() ";
-	if ( pStructBase->fields.empty() )
+	// Empty schema records still own a checksum cache that must start uncached.
+	if ( pStructBase->fields.empty() && IsNoCheckSum( pStructBase ) )
 		pCode->h << "{ }" << endl;
 	else
 	{

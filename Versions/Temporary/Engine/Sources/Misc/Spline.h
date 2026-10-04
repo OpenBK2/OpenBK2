@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Misc_export.h"
 
 
@@ -13,7 +15,7 @@
 
 class CAnalyticBSpline
 {
-	float a3, a2, a1, a0;
+	float a3 = 0.0f, a2 = 0.0f, a1 = 0.0f, a0 = 0.0f;
 public:
 	CAnalyticBSpline() {  }
 	CAnalyticBSpline( const float p0, const float p1, const float p2, const float p3 ) { Setup(p0, p1, p2, p3); }
@@ -172,11 +174,11 @@ public:
 class MISC_EXPORT CBetaSpline3D
 {
 	// can be stored as raw binary data
-	float fBeta1, fBeta2;
-	float invdelta;
-	float fBeta1_3;
-	float fBeta1_2;
-	float fVolCoeffs[16];
+	float fBeta1 = 0.0f, fBeta2 = 0.0f;
+	float invdelta = 0.0f;
+	float fBeta1_3 = 0.0f;
+	float fBeta1_2 = 0.0f;
+	float fVolCoeffs[16]{};
 
 	float b_2( const float t[3] ) const;
 	float b_1( const float t[3] ) const;

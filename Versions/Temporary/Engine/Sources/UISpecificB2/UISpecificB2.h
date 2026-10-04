@@ -18,11 +18,12 @@ UISPECIFICB2_EXPORT IWindow* AddWindowCopy( IWindow *pParent, const IWindow *pSa
 
 struct SMiniMapUnitInfo
 {
-	uint16_t x;
-	uint16_t y;
-	float z;
-	uint8_t player;
-	uint8_t radius; // tiles
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t x = {};
+	uint16_t y = {};
+	float z = {};
+	uint8_t player = {};
+	uint8_t radius = {}; // tiles
 
 	SMiniMapUnitInfo() : radius( 0 )  { }
 	SMiniMapUnitInfo( const uint16_t _x, const uint16_t _y, const float _z, const uint8_t _player, uint8_t _radius )
@@ -43,10 +44,10 @@ struct IMiniMap : virtual public IWindow
 	struct SFigure
 	{
 		ZDATA
-		NDb::EMinimapFigureType eType;
+		NDb::EMinimapFigureType eType = {};
 		CVec2 vPos;
-		float fSize;
-		float fAngle;
+		float fSize = {};
+		float fAngle = {};
 		NGfx::SPixel8888 color;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&vPos); f.Add(4,&fSize); f.Add(5,&fAngle); f.Add(6,&color); return 0; }
 	};
@@ -105,7 +106,7 @@ struct IWindow3DControl : virtual public IWindow
 	struct SObject
 	{
 		ZDATA
-		int nID;
+		int nID = {};
 		CDBPtr<NDb::SModel> pModel;
 		CVec2 vPos;
 		CVec2 vSize;

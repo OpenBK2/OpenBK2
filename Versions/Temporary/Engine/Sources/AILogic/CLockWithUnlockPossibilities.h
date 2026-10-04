@@ -16,8 +16,9 @@ class CLockWithUnlockPossibilities
 	std::vector<uint8_t> formerTilesType;
 	std::list<SVector> pathTiles;
 
-	bool bLocked;
-	uint8_t bAIClass; //
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bLocked = {};
+	uint8_t bAIClass = {}; //
 protected:
 	SRect bigRect; // весь этот Rect будет пройден танком.
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&formerTilesType); f.Add(3,&pathTiles); f.Add(4,&bLocked); f.Add(5,&bAIClass); f.Add(6,&bigRect); return 0; }

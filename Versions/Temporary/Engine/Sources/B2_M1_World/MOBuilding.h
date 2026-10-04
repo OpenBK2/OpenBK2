@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 
 #include <cstdint>
@@ -17,20 +19,20 @@ class B2_M1_WORLD_EXPORT CMOBuilding : public IMOContainer
 	typedef std::list< std::pair< int, int > > CAttachedObjIDs;
 	std::vector< CAttachedObjIDs > attachedObjects;
 	std::vector< float > attachedObjectsHP;
-	float fMaxDistance;
-	float fBuildingHP;
-	uint16_t wAmbientSound;
-	uint16_t wCycledSound;
+	float fMaxDistance = 0.0f;
+	float fBuildingHP = 0.0f;
+	uint16_t wAmbientSound = 0;
+	uint16_t wCycledSound = 0;
 	//uint16_t wAmbientSoundTimed;
-	uint16_t wCycledSoundTimed;
-	bool bStorage;
+	uint16_t wCycledSoundTimed = 0;
+	bool bStorage = false;
 
 	std::unordered_set<int> projectilesAlreadyHit;
-	int nOldModelStage;
-	int nCurrentAmmo;
-	float fCapturingProgress;
-	int nCapturingColorIndex;
-	bool bCanEnter;
+	int nOldModelStage = 0;
+	int nCurrentAmmo = 0;
+	float fCapturingProgress = 0.0f;
+	int nCapturingColorIndex = 0;
+	bool bCanEnter = false;
 private:
 	bool IsInside( const int nID );
 	const NDb::SBuildingRPGStats* GetStats() const;

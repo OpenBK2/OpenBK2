@@ -7,17 +7,18 @@ class CAIUnitInfoForGeneral : public CAIObjectBase
 
 	ZDATA
 	CPtr<CAIUnit> pOwner;
-	NTimer::STime lastVisibleTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime lastVisibleTime = {};
 	CVec2 vLastVisiblePosition;
 
-	NTimer::STime lastVisibleAntiArtTime;
+	NTimer::STime lastVisibleAntiArtTime = {};
 	CVec2 vLastVisibleAntiArtCenter;
-	float fDistToLastVisibleAntiArt;
+	float fDistToLastVisibleAntiArt = {};
 
 	// когда в следующий раз говорить об изменении в состоянии генералу
-	NTimer::STime nextTimeToReportGeneral;
+	NTimer::STime nextTimeToReportGeneral = {};
 
-	float fWeight;
+	float fWeight = {};
 	CVec2 vLastRegisteredGeneralPos;
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&lastVisibleTime); f.Add(4,&vLastVisiblePosition); f.Add(5,&lastVisibleAntiArtTime); f.Add(6,&vLastVisibleAntiArtCenter); f.Add(7,&fDistToLastVisibleAntiArt); f.Add(8,&nextTimeToReportGeneral); f.Add(9,&fWeight); f.Add(10,&vLastRegisteredGeneralPos); return 0; }

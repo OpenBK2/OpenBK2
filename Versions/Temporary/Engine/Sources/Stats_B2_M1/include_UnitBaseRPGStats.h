@@ -1,9 +1,10 @@
-int nUninstallRotate;
-int nUninstallTransport;
-int nAmmos[2];
-int nPrimaryGun;
-int nPrimaryPlatform;	// platform with primary gun
-EUnitRPGType etype;
+// Handwritten derived fields are not initialized by the generated constructor.
+int nUninstallRotate = 0;
+int nUninstallTransport = 0;
+int nAmmos[2]{};
+int nPrimaryGun = 0;
+int nPrimaryPlatform = 0;	// platform with primary gun
+EUnitRPGType etype{};
 std::vector<NDb::EUnitSpecialAbility> abilities;
 
 inline void AddValue( CUserCommands &array, int nBit ) { array.SetData( nBit ); }

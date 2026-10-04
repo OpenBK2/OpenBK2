@@ -7,14 +7,15 @@ class CParatrooperPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CParatrooperPath );
 	ZDATA
-	NTimer::STime lastPathUpdateTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime lastPathUpdateTime = {};
 
 	CVec3 vStartPoint;
 	CVec3 vFinishPoint;
 	CVec2 vFinishPoint2D;
 
 	CVec3 vCurPoint;
-	float fSpeedLen;
+	float fSpeedLen = {};
 	
 	CVec3 vHorSpeed;//horisontal speed of parachute
 	CPtr<CAIUnit> pUnit;

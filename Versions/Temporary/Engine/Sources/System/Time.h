@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Dg.h"
 #include "time.hpp"
 
@@ -8,7 +10,7 @@ DEFINE_DG_CONSTANT_NODE( CCTime, STime );
 
 class SYSTEM_EXPORT CTimeCounter
 {
-	STime prevTime;
+	STime prevTime = 0;
 	ZDATA
 	CObj<CCTime> pTime;
 public:

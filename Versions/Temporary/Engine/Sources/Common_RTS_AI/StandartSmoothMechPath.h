@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "StandartSmoothPath.h"
 
 #include <cstdint>
@@ -17,12 +19,12 @@ class CStandartSmoothMechPath : public CStandartSmoothPathBasis
 
 		std::list<CCirclePath> circles;
 
-		bool bSmoothTurn;
-		bool bSkipNextSegment;
+		bool bSmoothTurn = false;
+		bool bSkipNextSegment = false;
 
-		bool bCanGoForward, bCanGoBackward;
-		bool bForceGoBackward;
-		NTimer::STime lastCheckToRightTurn;
+		bool bCanGoForward = false, bCanGoBackward = false;
+		bool bForceGoBackward = false;
+		NTimer::STime lastCheckToRightTurn = 0;
 		SVector vLastStopPosition;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartSmoothPathBasis*)this); f.Add(2,&vLastValidatedPoint); f.Add(3,&circles); f.Add(4,&bSmoothTurn); f.Add(5,&bSkipNextSegment); f.Add(6,&bCanGoForward); f.Add(7,&bCanGoBackward); f.Add(8,&lastCheckToRightTurn); f.Add(9,&vLastStopPosition); f.Add(10,&bForceGoBackward); return 0; }
 	//

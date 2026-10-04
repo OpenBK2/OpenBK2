@@ -15,9 +15,10 @@ class CTurretGun : public CBasicGun
 	
 	ZDATA_(CBasicGun)
 	SAIAngle wBestWayDir;
-	bool bTurnByBestWay;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bTurnByBestWay = {};
 	CPtr<CTurret> pTurret;
-	bool bCircularAttack;
+	bool bCircularAttack = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasicGun*)this); f.Add(2,&wBestWayDir); f.Add(3,&bTurnByBestWay); f.Add(4,&pTurret); f.Add(5,&bCircularAttack); return 0; }
 
 	//
@@ -107,9 +108,9 @@ public:
 
 class CUnitsGunsFactory : public IGunsFactory
 {
-	class CAIUnit *pUnit;
-	const int nCommonGun;
-	int nTurret;
+	class CAIUnit *pUnit = {};
+	const int nCommonGun = {};
+	int nTurret = {};
 public:
 	CUnitsGunsFactory( class CAIUnit *_pUnit, const int _nCommonGun, const int _nTurret )
 		: pUnit( _pUnit ), nCommonGun( _nCommonGun ), nTurret( _nTurret ) { }

@@ -23,7 +23,8 @@ struct SWin32Time
 			uint16_t wTime;
 			uint16_t wDate;
 		};
-		uint32_t dwFulltime;
+		// One full-width default also initializes the overlapping date/time bitfields.
+		uint32_t dwFulltime = 0;
 	};
 	//
 	SWin32Time() {  }
@@ -78,7 +79,7 @@ inline time_t UnpackFileTime( const uint32_t _w32time )
 				uint32_t month   : 4;								// month(1..12)
 				uint32_t year    : 7;								// year (0..119 relative to 1980)
 			};
-			uint32_t dwFullTime;
+			uint32_t dwFullTime = 0;
 		};
 	};
 	SConvert w32time;

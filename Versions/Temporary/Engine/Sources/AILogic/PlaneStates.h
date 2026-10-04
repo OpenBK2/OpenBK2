@@ -39,7 +39,8 @@ class CPlaneDeffensiveFire
 {
 	ZDATA
 	CPtr<CAviation> pOwner;
-	NTimer::STime timeLastBSUUpdate;			// для поведения бортовых стрелковых установок
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime timeLastBSUUpdate = {};			// для поведения бортовых стрелковых установок
 
 	CObj<CPlaneDeffensiveFireShootEstimator> pDefShootEstimator;
 	CDamageToEnemyUpdater damageUpdater;
@@ -61,10 +62,10 @@ public:
 		ZDATA
 		CPtr<CAIUnit> pOwner;
 
-		float fTakenDamage;
+		float fTakenDamage = {};
 		CPtr<CAIUnit> pEnemy;
 		CPtr<CBuilding> pBuilding;
-		bool bModifApplied;
+		bool bModifApplied = {};
 	public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&fTakenDamage); f.Add(4,&pEnemy); f.Add(5,&pBuilding); f.Add(6,&bModifApplied); return 0; }
 		CAIUnit *GetEnemy() { return pEnemy; }
@@ -98,9 +99,9 @@ protected:
 	CEnemyContainer enemie;								// enemie that we attack (ground target)
 
   std::vector<CVec2> vPatrolPoints;				// набор точек патрулирования
-	int	 nCurPointIndex;								// текущая точка патрулирования
-	bool bEconomyMode;									// if plane use smaller amount of fuel
-	NTimer::STime timeNextScan;
+	int	 nCurPointIndex = {};								// текущая точка патрулирования
+	bool bEconomyMode = {};									// if plane use smaller amount of fuel
+	NTimer::STime timeNextScan = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPlane); f.Add(3,&pShootEstimator); f.Add(4,&enemie); f.Add(5,&vPatrolPoints); f.Add(6,&nCurPointIndex); f.Add(7,&bEconomyMode); f.Add(8,&timeNextScan); return 0; }
 protected:
@@ -174,8 +175,8 @@ class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 		ZPARENT(CPlaneDeffensiveFire)
 	// Retained for save compatibility; actual scans use the defensive-fire base timer.
 	NTimer::STime timeNextScan = 0;
-	EPlaneSwarmToState eState;
-	bool bScanForTarget;
+	EPlaneSwarmToState eState = {};
+	bool bScanForTarget = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&timeNextScan); f.Add(4,&eState); f.Add(5,&bScanForTarget); return 0; }
 
 public:
@@ -210,12 +211,12 @@ class CPlaneBombState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	};
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
-	ECurBombState eState;
+	ECurBombState eState = {};
 
-	float fInitialHeight ;
-	float fStartAttackDist;
-	bool bHaveBombs;
-	bool bSingleSalvo;
+	float fInitialHeight = {} ;
+	float fStartAttackDist = {};
+	bool bHaveBombs = {};
+	bool bSingleSalvo = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); f.Add(4,&fInitialHeight); f.Add(5,&fStartAttackDist); f.Add(6,&bHaveBombs); f.Add(7,&bSingleSalvo); return 0; }
 	
 	float RecalcStartAttack() const;
@@ -246,11 +247,11 @@ class CPlaneParaDropState : public CPlanePatrolState, public CPlaneDeffensiveFir
 	};
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
-	EPlaneParaDropState eState;
+	EPlaneParaDropState eState = {};
 
-	bool bDrop1Squad;
+	bool bDrop1Squad = {};
 	CPtr<CFormation> pSquad; // взвод паращютистов
-	int nDroppingSoldier;									// current soldier to drop
+	int nDroppingSoldier = {};									// current soldier to drop
 
 	CVec2 vLastDrop;// точка, в которой выброшен последний парашютист
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); f.Add(4,&bDrop1Squad); f.Add(5,&pSquad); f.Add(6,&nDroppingSoldier); f.Add(7,&vLastDrop); return 0; }
@@ -293,16 +294,16 @@ class CPlaneFighterPatrolState : public CPlanePatrolState, public CPlaneDeffensi
 	};
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
-	ECurFighterOnEnemieState eState;
+	ECurFighterOnEnemieState eState = {};
 
-	float fPartolRadius;									// patrol radius of this state
+	float fPartolRadius = {};									// patrol radius of this state
 	ZSKIP
 	CPtr<CAviation> pEnemie;							//enemie that we attack (plane)
 
-	NTimer::STime timeOfLastPathUpdate;		//last update of path
-	NTimer::STime timeLastCheck;					// последняя проверка на наличие патронов
-	bool bAmmoRemains;
-	NTimer::STime nextPathUpdate;
+	NTimer::STime timeOfLastPathUpdate = {};		//last update of path
+	NTimer::STime timeLastCheck = {};					// последняя проверка на наличие патронов
+	bool bAmmoRemains = {};
+	NTimer::STime nextPathUpdate = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); f.Add(4,&fPartolRadius); f.Add(6,&pEnemie); f.Add(7,&timeOfLastPathUpdate); f.Add(8,&timeLastCheck); f.Add(9,&bAmmoRemains); f.Add(10,&nextPathUpdate); return 0; }
 	void TryInitPathToEnemie( const bool bNewEnemy );
 
@@ -358,23 +359,23 @@ private:
 	ZDATA_(CPlanePatrolState)
 	ZPARENT(CPlaneDeffensiveFire)
 	CPtr<CAviation> pPlane;
-	EPlaneShturmovikPatrolState eState;
+	EPlaneShturmovikPatrolState eState = {};
 	CVec2 vCurTargetPoint;								// точка, куда направляется самолет
 
 	ZSKIP
 	
-	NTimer::STime timeOfLastPathUpdate;		// last update of path
-	NTimer::STime timeLastCheck ;					// проверка на наличие патронов
+	NTimer::STime timeOfLastPathUpdate = {};		// last update of path
+	NTimer::STime timeLastCheck = {} ;					// проверка на наличие патронов
 
-	float fStartAttackDist;								// дистанция для начала пикирования
-	float fFinishAttckDist;								// дистанция выхода из атаки
-	float fTurnRadius;										// радиус поворота штурмовика
-	bool bAmmoRemains;
-	bool bMustDrop1Bomb;
-	bool bBombsDropped;
-	bool bShootedToEnemie;								// performed any shooting during dive
-	bool bFirstApproach;
-	bool bDiveInProgress;
+	float fStartAttackDist = {};								// дистанция для начала пикирования
+	float fFinishAttckDist = {};								// дистанция выхода из атаки
+	float fTurnRadius = {};										// радиус поворота штурмовика
+	bool bAmmoRemains = {};
+	bool bMustDrop1Bomb = {};
+	bool bBombsDropped = {};
+	bool bShootedToEnemie = {};								// performed any shooting during dive
+	bool bFirstApproach = {};
+	bool bDiveInProgress = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&pPlane); f.Add(4,&eState); f.Add(5,&vCurTargetPoint); f.Add(7,&timeOfLastPathUpdate); f.Add(8,&timeLastCheck); f.Add(9,&fStartAttackDist); f.Add(10,&fFinishAttckDist); f.Add(11,&fTurnRadius); f.Add(12,&bAmmoRemains); f.Add(13,&bMustDrop1Bomb); f.Add(14,&bBombsDropped); f.Add(15,&bShootedToEnemie); f.Add(16,&bFirstApproach); f.Add( 17, &bDiveInProgress ); return 0; }
 	void TryInitPathToEnemie( const bool bForceNewPath );
 	void TryInitPathToPoint( const CVec3 &vPos, const bool bNewPoint, const bool bToHorisontal );
@@ -417,7 +418,7 @@ class CPlaneScoutState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	};
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
-	EPlaneScoutState eState;
+	EPlaneScoutState eState = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&eState); return 0; }
 public:
 	CPlaneScoutState () { }
@@ -442,7 +443,7 @@ class CPlaneLeaveState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
 	CPtr<IUnitState> pMoveToExitPoint; 
-	EPlaneLeaveState eState;
+	EPlaneLeaveState eState = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&pMoveToExitPoint); f.Add(4,&eState); return 0; }
 
 
@@ -476,8 +477,8 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 
 	class CDeadZone
 	{
-		float fMaxX, fMinX;
-		float fMinY, fMaxY;
+		float fMaxX = {}, fMinX = {};
+		float fMinY = {}, fMaxY = {};
 	public:
 		CDeadZone() : fMaxX( 0.0f ), fMinX( 0.0f ), fMaxY( 0.0f ), fMinY( 0.0f ) { }
 		void Init();
@@ -486,14 +487,14 @@ class CPlaneFlyDeadState : public CPlanePatrolState
 	};
 
 	ZDATA_(CPlanePatrolState)
-	EPlaneDeadState eState;
+	EPlaneDeadState eState = {};
 	CDeadZone deadZone;											// вне зтого rect умирают самолеты
 
-	float fHeight;
-	bool bFatality;
-	bool bExplodeInstantly;									// if false plane will explode after finish dive.
-	NTimer::STime timeStart;								// start death time
-	bool bGroundCrash;
+	float fHeight = {};
+	bool bFatality = {};
+	bool bExplodeInstantly = {};									// if false plane will explode after finish dive.
+	NTimer::STime timeStart = {};								// start death time
+	bool bGroundCrash = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,&eState); f.Add(3,&deadZone); f.Add(4,&fHeight); f.Add(5,&bFatality); f.Add(6,&bExplodeInstantly); f.Add(7,&timeStart); f.Add(8,&bGroundCrash); return 0; }
 	void InitPathToNearestPoint();
 	float CalcPath( const uint16_t wCurDir, const uint8_t nDesiredDir, const bool bRight, const float fTurnRadius, CVec2 *vDestPoint );
@@ -522,10 +523,10 @@ class CPlaneSuicideState : public IUnitState
 	};
 	ZDATA
 		CPtr<CAviation> pPlane;
-		EPlaneSuicideState eState;
+		EPlaneSuicideState eState = {};
 		CVec2 vTarget;
 		CDBPtr<SWeaponRPGStats> pWeapon;
-		float fDistToDive2;
+		float fDistToDive2 = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPlane); f.Add(3,&eState); f.Add(4,&vTarget); f.Add(5,&pWeapon); f.Add(6,&fDistToDive2); return 0; }
 private:

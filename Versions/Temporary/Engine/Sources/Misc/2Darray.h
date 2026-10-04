@@ -1,9 +1,11 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 template < class T > 
 struct CBoundCheck
 {
-	T *data;
-	int nSize;
+	T *data = nullptr;
+	int nSize = 0;
 	CBoundCheck( T *d, int nS ) 
 	{ 
 		data = d; 
@@ -26,9 +28,9 @@ template < class T >
 class CArray2D
 {
 	typedef T *PT;
-	T *data;
-	T **pData;
-	int nXSize, nYSize;
+	T *data = nullptr;
+	T **pData = nullptr;
+	int nXSize = 0, nYSize = 0;
 	void Copy( const CArray2D &a ) 
 	{ 
 		if ( !( a.IsEmpty() ) )
@@ -135,7 +137,7 @@ template<class T> class CArray3D;
 template<class T> 
 class CArray3DFetcher
 {
-	T *pData;
+	T *pData = nullptr;
 	CArray3D<T> &a;
 public:
 	CArray3DFetcher( T *_pData, CArray3D<T> &_a ): pData(_pData), a(_a) {}
@@ -157,7 +159,7 @@ class CArray3D
 {
 	ZDATA
 		std::vector<T> data;
-	int nXSize, nYSize, nZSize, nXYSize;
+	int nXSize = 0, nYSize = 0, nZSize = 0, nXYSize = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&data); f.Add(3,&nXSize); f.Add(4,&nYSize); f.Add(5,&nZSize); f.Add(6,&nXYSize); return 0; }
 	CArray3D(): nXSize(0), nYSize(0), nZSize(0), nXYSize(0){}

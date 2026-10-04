@@ -9,10 +9,11 @@ class CPredictedAntiAviationFire
 {
 	class SPredict
 	{
-		uint16_t wHor, wVer;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		uint16_t wHor = {}, wVer = {};
 		CVec3 vPt;
-		float fRange;
-		NTimer::STime timeToFire;
+		float fRange = {};
+		NTimer::STime timeToFire = {};
 	public:
 		SPredict() {  }
 		SPredict( const CVec3 &pt, const float _fRange, const NTimer::STime _timeToFire, CAIUnit *pOwner );
@@ -39,20 +40,20 @@ class CPredictedAntiAviationFire
 		SAAS_WAIT_FOR_END_OF_BURST,
 		SAAS_FINISHED_TASK,
 	};
-	class CAIUnit *pUnit;
+	class CAIUnit *pUnit = {};
 	typedef std::list<int> Guns;
 
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
-	ESoldierAttackAviationState eState;
+	ESoldierAttackAviationState eState = {};
 
 	CPtr<CAviation> pPlane;
-	bool bAttacking;											// true when desided to aim and shoot
+	bool bAttacking = {};											// true when desided to aim and shoot
 
 	SPredict aimPoint;		// точка прицеливания при стрельбе заградительным огнем
-	NTimer::STime timeOfStartBurst;
-	NTimer::STime timeLastAimUpdate;
+	NTimer::STime timeOfStartBurst = {};
+	NTimer::STime timeLastAimUpdate = {};
 	Guns nGuns;
 public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&eState); f.Add(4,&pPlane); f.Add(5,&bAttacking); f.Add(6,&aimPoint); f.Add(7,&timeOfStartBurst); f.Add(8,&timeLastAimUpdate); f.Add(9,&nGuns); return 0; }

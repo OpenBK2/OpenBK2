@@ -1,8 +1,9 @@
 #include <cstdint>
 
-uint16_t wDivingAngle;
-uint16_t wClimbingAngle;
-uint16_t wTiltAngle;
+// Keep derived angles deterministic until PostLoad converts the database values.
+uint16_t wDivingAngle = 0;
+uint16_t wClimbingAngle = 0;
+uint16_t wTiltAngle = 0;
 std::unordered_map</*enum EManuverID*/int, bool> manuverMap;
 
 virtual void ToAIUnits( bool bInEditor );

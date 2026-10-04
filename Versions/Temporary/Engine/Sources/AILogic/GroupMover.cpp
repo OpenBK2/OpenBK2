@@ -28,7 +28,8 @@ static const NTimer::STime PATH_LIFE_TIME = 500;
 
 struct SForce
 {
-	int nUnitID;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nUnitID = {};
 	CVec2 vForce;
 	CVec2 vPosition;
 

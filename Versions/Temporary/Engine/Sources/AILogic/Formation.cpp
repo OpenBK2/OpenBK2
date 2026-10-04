@@ -687,9 +687,10 @@ bool CFormation::IsAllowedStandUp() const
 
 struct SEdge
 {
-	CFormation *pFormation;
-	CAICommand *pCmd;
-	float fDist;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CFormation *pFormation = {};
+	CAICommand *pCmd = {};
+	float fDist = {};
 
 	SEdge() : pFormation( 0 ), pCmd( 0 ), fDist( 0.0f ) { }
 

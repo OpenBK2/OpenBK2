@@ -9,7 +9,8 @@ class CStatistics
 {
 	public: int operator&( IBinSaver &saver ); private:;
 
-	bool bEnablePlayerExp;										// can we add player exp? (false in tutorial mode - initialized in the Init())
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bEnablePlayerExp = {};										// can we add player exp? (false in tutorial mode - initialized in the Init())
 
 public:
 	CStatistics() : bEnablePlayerExp( false ) {  }

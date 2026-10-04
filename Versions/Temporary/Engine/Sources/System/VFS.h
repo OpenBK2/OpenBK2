@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include "FileTime.h"
@@ -13,11 +15,11 @@ namespace NVFS
 struct SFileStats
 {
 	//! for a file inside an archive, the archive's path; null for a loose file
-	const char *pszName;
+	const char *pszName = nullptr;
 	//! file size
-	int nSize;
+	int nSize = 0;
 	//! права доступа (на чтение (1) или на запись (2))
-	uint32_t dwAccess;
+	uint32_t dwAccess = 0;
 	//! modification time, packed as in FileTime.h so that a file on disk and
 	//! an entry in an archive can be compared directly
 	SWin32Time mtime;

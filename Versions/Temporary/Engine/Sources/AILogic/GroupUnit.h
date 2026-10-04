@@ -6,17 +6,18 @@ class CGroupUnit
 	public: int operator&( IBinSaver &saver ); private:;
 	
 	// номер группы
-	int nGroup;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nGroup = {};
 	// позиция в списке юнитов группы
-	int nPos;
+	int nPos = {};
 	// номер подгруппы ( для ходьбы с сохранением относительной позиции ); -1 - сам по себе
-	int nSubGroup;
+	int nSubGroup = {};
 	// смещение относительно центра группы
 	CVec2 vShift;
 	
 	// номер AI группы ( н-р, для ambush )
-	int nSpecialGroup;
-	int nSpecialPos;
+	int nSpecialGroup = {};
+	int nSpecialPos = {};
 
 public:
 	CGroupUnit() : nGroup( 0 ), nPos( 0 ), nSubGroup( -1 ), vShift( VNULL2 ), nSpecialGroup( 0 ), nSpecialPos( -1 ) { }

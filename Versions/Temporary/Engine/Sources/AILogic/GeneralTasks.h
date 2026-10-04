@@ -17,22 +17,23 @@ class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator,
 	CPtr<CGeneral> pOwner;
 
 	NDb::SAIGeneralParcel patchInfo;
-	int nCurReinforcePoint;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nCurReinforcePoint = {};
 			
-	float fSeverity;										// current severity of this task
-	float fEnemyForce, fFriendlyForce, fFriendlyMobileForce;	// 
-	float fMaxSeverity;
+	float fSeverity = {};										// current severity of this task
+	float fEnemyForce = {}, fFriendlyForce = {}, fFriendlyMobileForce = {};	//
+	float fMaxSeverity = {};
 
-	bool bFinished;
-	bool bWaitForFinish;								// wait for finish the task
-	NTimer::STime timeLastUpdate;				
+	bool bFinished = {};
+	bool bWaitForFinish = {};								// wait for finish the task
+	NTimer::STime timeLastUpdate = {};
 
 	CommonUnits infantryInTrenches;				// списки юнитов по типам
 	CommonUnits infantryFree;
 	CommonUnits tanksMobile;
 	CommonUnits stationaryUnits;
 	CommonUnits enemyForces;
-	bool bResistanceRemoved;
+	bool bResistanceRemoved = {};
 	
 	CommonUnits newTanks;									// to take tanks not 1 by 1
 	
@@ -75,8 +76,8 @@ class CGeneralTaskToHoldReinforcement : public IGeneralTask, public IWorkerEnume
 	NDb::SAIGeneralParcel patchInfo;
 	UnitsPositions unitsPositions;
 
-	float fSeverity;										// current severity of this task
-	int nCurReinforcePoint;	
+	float fSeverity = {};										// current severity of this task
+	int nCurReinforcePoint = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&tanksFree); f.Add(3,&patchInfo); f.Add(4,&unitsPositions); f.Add(5,&fSeverity); f.Add(6,&nCurReinforcePoint); return 0; }
 public:
 	CGeneralTaskToHoldReinforcement();
@@ -107,9 +108,9 @@ class CGeneralTaskRecaptureStorage : public IGeneralTask, public IWorkerEnumerat
 	ZDATA
 	CommonUnits tanksFree;
 	CVec2 vReinforcePoint;
-	float fSeverity;										// current severity of this task
+	float fSeverity = {};										// current severity of this task
 
-	bool bFinished;
+	bool bFinished = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&tanksFree); f.Add(3,&vReinforcePoint); f.Add(4,&fSeverity); f.Add(5,&bFinished); return 0; }
 public:
 	CGeneralTaskRecaptureStorage() {  }
@@ -142,25 +143,25 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 	typedef std::vector< CPtr<CCommonUnit> > CTanks;
 
 	ZDATA
-	ESwarmState eState;
+	ESwarmState eState = {};
 	CVec2 vPrepearCenter;
 
 	SResistance curResistanceToAttack;
-	float fSeverity;											// severity of this task
-	float fMaxSeverity;
-	float fMinSeverity;
-	int nAdditionalIterations;						// number of additional iterations to try swarm to
-	bool bFinished;
-	bool bReleaseWorkers;									// this task does not always release workers
-	NTimer::STime timeNextCheck;
+	float fSeverity = {};											// severity of this task
+	float fMaxSeverity = {};
+	float fMinSeverity = {};
+	int nAdditionalIterations = {};						// number of additional iterations to try swarm to
+	bool bFinished = {};
+	bool bReleaseWorkers = {};									// this task does not always release workers
+	NTimer::STime timeNextCheck = {};
 
 	CPtr<CGeneral> pOwner;
 
 	CTanks swarmingTanks;
-	bool bResistanesBusyByUs;
+	bool bResistanesBusyByUs = {};
 	
 	CVec2 vTanksPosition;									// center of tanks formation
-	float fCurDistance;										// distance to nearest resistansce ( during enumeration )
+	float fCurDistance = {};										// distance to nearest resistansce ( during enumeration )
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&vPrepearCenter); f.Add(4,&curResistanceToAttack); f.Add(5,&fSeverity); f.Add(6,&fMaxSeverity); f.Add(7,&fMinSeverity); f.Add(8,&nAdditionalIterations); f.Add(9,&bFinished); f.Add(10,&bReleaseWorkers); f.Add(11,&timeNextCheck); f.Add(12,&pOwner); f.Add(13,&swarmingTanks); f.Add(14,&bResistanesBusyByUs); f.Add(15,&vTanksPosition); f.Add(16,&fCurDistance); return 0; }
 
 	void ClearResistanceToAcceptNewTask();

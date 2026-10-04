@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "AIClasses.h"
@@ -16,11 +18,11 @@ class COMMON_RTS_AI_EXPORT CStandartPath2 : public IPath
 	ZDATA
 		CPtr<CCommonPathFinder> pPathFinder;
 		CPtr<CAIMap> pAIMap;
-		int nBoundTileRadius;
-		EAIClasses aiClass;
+		int nBoundTileRadius = 0;
+		EAIClasses aiClass{};
 
 		CPtr<CCommonStaticPath> pStaticPath;
-		int nCurStaticPathTile;
+		int nCurStaticPathTile = 0;
 		
 		CVec2 vStartPoint;
 		CVec2 vFinishPoint;
@@ -29,13 +31,13 @@ class COMMON_RTS_AI_EXPORT CStandartPath2 : public IPath
 		SVector vShiftTile;
 
 		std::vector<SVector> insTiles;
-		int nCurInsTile;
+		int nCurInsTile = 0;
 
 		std::vector<SVector> pathTiles;
-		int nCurPathTile;
-		int nLastPathTile;
+		int nCurPathTile = 0;
+		int nLastPathTile = 0;
 
-		int nUnitID;
+		int nUnitID = 0;
 
 		CPtr<IStaticPath> pPathHistory1; //for debug purpose only
 		CPtr<IStaticPath> pPathHistory2; //for debug purpose only

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MOUnitMechanical.h"
 
 namespace NDb
@@ -20,9 +22,9 @@ class CMOUnitHelicopter : public CMOUnitMechanical
 		CVec3 vStandingDeviationBasePlacement;
 		CVec3 vStandingDeviationOffset;
 		CVec3 vStandingDeviationTarget;
-		NTimer::STime timeStandingDeviationLastUpdate;
-		uint32_t dwStandingDeviationRandomState;
-		bool bStandingDeviationActive;
+		NTimer::STime timeStandingDeviationLastUpdate = 0;
+		uint32_t dwStandingDeviationRandomState = 0;
+		bool bStandingDeviationActive = false;
 	public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnitMechanical *)this); f.Add(2,&vStandingDeviationBasePlacement); f.Add(3,&vStandingDeviationOffset); f.Add(4,&vStandingDeviationTarget); f.Add(5,&timeStandingDeviationLastUpdate); f.Add(6,&dwStandingDeviationRandomState); f.Add(7,&bStandingDeviationActive); return 0; }
 

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MOUnit.h"
 
 class CMOUnitInfantry: public CMOUnit
@@ -9,8 +11,8 @@ class CMOUnitInfantry: public CMOUnit
 	ZDATA_(CMOUnit)
 		CPtr<IMOSquad> pSquad;
 		CPtr<IMOContainer> pTransport;
-		int nParachuteID;
-		bool bEntrenched;
+		int nParachuteID = 0;
+		bool bEntrenched = false;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMOUnit*)this); f.Add(2,&pSquad); f.Add(3,&pTransport); f.Add(4,&nParachuteID); f.Add(5,&bEntrenched); return 0; }
 private:
 	const NDb::SInfantryRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SInfantryRPGStats*>( GetStats() ); }

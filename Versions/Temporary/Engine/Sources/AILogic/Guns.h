@@ -21,11 +21,12 @@ struct SCommonGunInfo : public CAIObjectBase
 	OBJECT_BASIC_METHODS( SCommonGunInfo );
 public:
 	ZDATA
-	bool bFiring;
-	int nAmmo;
-	NTimer::STime lastShoot;
-	int nGun;
-	int nPlatform;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bFiring = {};
+	int nAmmo = {};
+	NTimer::STime lastShoot = {};
+	int nGun = {};
+	int nPlatform = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bFiring); f.Add(3,&nAmmo); f.Add(4,&lastShoot); f.Add(5,&nGun); f.Add(6,&nPlatform); return 0; }
 public:
 
@@ -65,27 +66,27 @@ private:
 protected:
 	ZSKIP//	CDBPtr<SWeaponRPGStats> pWeapon;
 private:
-	EShootState shootState;
+	EShootState shootState = {};
 
-	bool bWaitForReload; //specific for artillery
+	bool bWaitForReload = {}; //specific for artillery
 
 	// можно ли производить выстрел
-	bool bCanShoot;
+	bool bCanShoot = {};
 	// сколько ещё осталось в очереди
-	int nShotsLast;
+	int nShotsLast = {};
 
 
-	IGunsFactory::EGunTypes eType;
-	EUnitAckType eRejectReason;
+	IGunsFactory::EGunTypes eType = {};
+	EUnitAckType eRejectReason = {};
 
 	CVec3 vLastShotPoint;
 
-	float fRandom4Aim, fRandom4Relax;
+	float fRandom4Aim = {}, fRandom4Relax = {};
 	//
 protected:	
-	uint8_t nShellType;
+	uint8_t nShellType = {};
 	CPtr<CAIUnit> pOwner;
-	int nOwnerParty;
+	int nOwnerParty = {};
 	CPtr<SCommonGunInfo> pCommonGunInfo;
 
 	// юнит, по которому стреляем ( в случае стрельбы по юниту )
@@ -95,23 +96,23 @@ protected:
 	// куда стрелять
 	CVec2 target;
 	// время начала прицеливания или начала отдыха, в зависимости от состояния
-	NTimer::STime lastCheck;
+	NTimer::STime lastCheck = {};
 	CVec2 lastEnemyPos;
-	bool bAngleLocked;
+	bool bAngleLocked = {};
 
 	// нужно ли прицеливаться
-	bool bAim;
-	bool bGrenade;
+	bool bAim = {};
+	bool bGrenade = {};
 	// высота точки, в которую направлена стрельба
-	float z;
+	float z = {};
 
 	CParallelGuns parallelGuns;
-	bool bParallelGun;
-	NTimer::STime lastCheckTurnTime;
-	bool bIgnoreObstacles;
+	bool bParallelGun = {};
+	NTimer::STime lastCheckTurnTime = {};
+	bool bIgnoreObstacles = {};
 private:
 	CPtr<CAIUnit> pCanShootCachedEnemy;
-	bool bCanShootToUnitWOMove;
+	bool bCanShootToUnitWOMove = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasicGunCRAPSaver*)this); f.Add(3,&shootState); f.Add(4,&bWaitForReload); f.Add(5,&bCanShoot); f.Add(6,&nShotsLast); f.Add(7,&eType); f.Add(8,&eRejectReason); f.Add(9,&vLastShotPoint); f.Add(10,&fRandom4Aim); f.Add(11,&fRandom4Relax); f.Add(12,&nShellType); f.Add(13,&pOwner); f.Add(14,&nOwnerParty); f.Add(15,&pCommonGunInfo); f.Add(16,&pEnemy); f.Add(17,&target); f.Add(18,&lastCheck); f.Add(19,&lastEnemyPos); f.Add(20,&bAngleLocked); f.Add(21,&bAim); f.Add(22,&bGrenade); f.Add(23,&z); f.Add(24,&parallelGuns); f.Add(25,&bParallelGun); f.Add(26,&lastCheckTurnTime); f.Add(27,&bIgnoreObstacles); f.Add(28,&pCanShootCachedEnemy); f.Add(29,&bCanShootToUnitWOMove); f.Add(30,&pAntiAviationTarget); return 0; }
 

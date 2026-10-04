@@ -29,7 +29,8 @@ public:
 		float m[2];
   };
 public:
-  CVec2() {  }
+  // Initialize one union storage arm; the overlapping aliases stay plain fields.
+  CVec2() : m{} {  }
   CVec2( const float _x, const float _y ) : x( _x ), y( _y ) {  }
   // setup
   void Set( const float _x, const float _y ) { x = _x; y = _y; }
@@ -94,7 +95,7 @@ public:
 		float m[3];
   };
 public:
-  CVec3() {  }
+  CVec3() : m{} {  }
   CVec3( const float _x, const float _y, const float _z ) : x( _x ), y( _y ), z( _z ) {  }
   //CVec3( const float _x, const float _y, const float _z = 0.0f ) : x( _x ), y( _y ), z( _z ) {  }
   CVec3( const CVec2 &v2, const float _z ) : x( v2.x ), y( v2.y ), z( _z ) {  }
@@ -166,7 +167,7 @@ public:
 		float m[4];
   };
 public:
-  CVec4() {  }
+  CVec4() : m{} {  }
   CVec4( const float _x, const float _y, const float _z, const float _w ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
   //CVec4( const float _x, const float _y, const float _z = 0.0f, const float _w = 0.0f ) : x( _x ), y( _y ), z( _z ), w( _w ) {  }
   CVec4( const CVec2 &v2, const float _z, const float _w ) : x( v2.x ), y( v2.y ), z( _z ), w( _w ) {  }
@@ -218,7 +219,7 @@ inline bool Normalize( CVec4 *pVec ) { return Normalize(pVec->x, pVec->y, pVec->
 class CVecPolar
 {
 public:	
-	float fLat, fLong;
+	float fLat = 0.0f, fLong = 0.0f;
 
 	CVecPolar() { }
 	CVecPolar( const float _fLat, const float _fLong ) : fLat( _fLat ), fLong( _fLong ) { }
@@ -240,7 +241,7 @@ const CVecPolar VNULLPOLAR = CVecPolar( 0.0f, 0.0f );
 
 struct SVector
 {
-	int x, y;
+	int x = 0, y = 0;
 	//
 	SVector() {  }
 	SVector( const int _x, const int _y ) : x( _x ), y( _y ) {  }
@@ -392,10 +393,10 @@ class CLine2
 	union
 	{
 		bool bNormalized;
-		int dummy;
+		int dummy = 0;
 	};
 public:
-	float a, b, c;
+	float a = 0.0f, b = 0.0f, c = 0.0f;
 //
 	CLine2() { }
 	CLine2( const float _a, const float _b, const float _c ) : a( _a ), b( _b ), c( _c ), dummy( 0 ) { }
@@ -446,7 +447,7 @@ class CCircle
 {
 public:
 	CVec2 center;
-	float r;
+	float r = 0.0f;
 	//
 	CCircle() { }
 	CCircle( const CVec2 &_center, const float _r ) 
@@ -490,7 +491,7 @@ public:
   // reads or writes n and d, so they stay plain members and stay assignable.
   // the CVec4 form is needed in only a few places, so that is the computed one.
   CVec3 n;
-  float d;
+  float d = 0.0f;
   CVec4 vec4() const noexcept { return CVec4( n.x, n.y, n.z, d ); }
   SPlane() {  }
   SPlane( const CVec3 &vNormale, const float fDist ) : n( vNormale ), d( fDist ) {  }
@@ -558,7 +559,8 @@ public :
 	CVec3 z3() const noexcept { return CVec3{zx, zy, zz}; }
 	CVec3 w3() const noexcept { return CVec3{wx, wy, wz}; }
 public :
-	SHMatrix() {  }
+	// Zero storage is the default; callers requesting identity still use Identity.
+	SHMatrix() : m{} {  }
 	SHMatrix( float __11, float __12, float __13, float __14,
 		        float __21, float __22, float __23, float __24,
 		        float __31, float __32, float __33, float __34,
@@ -711,7 +713,8 @@ public:
 		struct { TYPE min, max; };
 	};
 	//
-	CTPoint() {  }
+	// Constructor initialization avoids nontrivial fields in anonymous structs.
+	CTPoint() : x{}, y{} {  }
 	CTPoint( TYPE _x, TYPE _y ) : x( _x ), y( _y ) {  }
 	CTPoint( const TPoint &pt ) : x( pt.x ), y( pt.y ) {  }
 	//
@@ -762,7 +765,7 @@ public:
 		struct { TYPE minx, miny, maxx, maxy; };
 	};
 	//
-	CTRect() {  }
+	CTRect() : minx{}, miny{}, maxx{}, maxy{} {  }
 	CTRect( const TYPE _minx, const TYPE _miny, const TYPE _maxx, const TYPE _maxy ) 
 		: minx( _minx ), miny( _miny ), maxx( _maxx ), maxy( _maxy ) {  }
 	CTRect( const TPoint &vLT, const TPoint &vRB ) 
@@ -849,7 +852,7 @@ public:
 // triangle
 struct STriangle
 {
-	uint16_t i1, i2, i3;
+	uint16_t i1 = 0, i2 = 0, i3 = 0;
 	//
 	STriangle() {}
 	STriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
@@ -875,7 +878,7 @@ public:
 struct SSphere
 {
 	CVec3 ptCenter;
-	float fRadius;
+	float fRadius = 0.0f;
 
 	SSphere() {}
 	SSphere( const CVec3 &_ptCenter, float _fRadius ): ptCenter(_ptCenter), fRadius(_fRadius) {}
@@ -884,8 +887,8 @@ struct SSphere
 struct SMassSphere
 {
 	CVec3 ptCenter;
-	float fRadius;
-	float fMass;
+	float fRadius = 0.0f;
+	float fMass = 0.0f;
 
 	SMassSphere() {}
 	SMassSphere( const CVec3 &_ptCenter, float _fRadius, float _fMass ):
@@ -1904,7 +1907,7 @@ struct MISC_EXPORT SRect
 	const CVec2 & v3() const noexcept { return v[2]; }
 	const CVec2 & v4() const noexcept { return v[3]; }
 	CVec2 dir, dirPerp, center;
-	float lengthAhead, lengthBack, width;
+	float lengthAhead = 0.0f, lengthBack = 0.0f, width = 0.0f;
 
 	bool IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v3, const CVec2 &v4, const CVec2 &dir, const float min, const float max ) const;
 

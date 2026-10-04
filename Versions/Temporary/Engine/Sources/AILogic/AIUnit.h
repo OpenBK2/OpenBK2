@@ -26,70 +26,71 @@ enum EActionNotify : unsigned int;
 
 class CAIUnit: public CCommonUnit
 {
-	uint8_t player;
-	bool bTrampled;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint8_t player = {};
+	bool bTrampled = {};
 
 	// половина угла обзора
 	SAIAngle wVisionAngle;
 	
 	//RPG stats
-	float fHitPoints;
+	float fHitPoints = {};
 
 	CObj<CAntiArtillery> pAntiArtillery;
 	CObj<struct IAnimUnit> pAnimUnit;
 
 	//окоп, в котором этот юнит тусуется
 	CObj<CExistingObject> pTankPit; 
-	bool bVirtualTankPit;									// unit cannot move like it is in tankpit, but don't have bonuses
-	bool bIsInTankPit;
-	NTimer::STime camouflateTime;
+	bool bVirtualTankPit = {};									// unit cannot move like it is in tankpit, but don't have bonuses
+	bool bIsInTankPit = {};
+	NTimer::STime camouflateTime = {};
 
 	SAIAngle wWisibility;											// informatin about visibility for every player
-	NTimer::STime lastAckTime;
+	NTimer::STime lastAckTime = {};
 	std::vector<int> visible4Party;
 	std::vector<NTimer::STime> lastTimeOfVis;
 	std::vector<int> bCountToDissapear;
 
-	float fTakenDamagePower;
-	int nGrenades;
-	NTimer::STime targetScanRandom;
+	float fTakenDamagePower = {};
+	int nGrenades = {};
+	NTimer::STime targetScanRandom = {};
 
-	bool bFreeEnemySearch;
-	NTimer::STime creationTime;
+	bool bFreeEnemySearch = {};
+	NTimer::STime creationTime = {};
 	
-	bool bAlwaysVisible;
+	bool bAlwaysVisible = {};
 	
-	bool bRevealed;
-	bool bQueredToReveal;
-	NTimer::STime nextRevealCheck;
+	bool bRevealed = {};
+	bool bQueredToReveal = {};
+	NTimer::STime nextRevealCheck = {};
 	CVec2 vPlaceOfReveal;
-	NTimer::STime timeOfReveal;
-	int nVisIndexInUnits;
-	float fCamoflage;
+	NTimer::STime timeOfReveal = {};
+	int nVisIndexInUnits = {};
+	float fCamoflage = {};
 	
-	uint32_t dwForbiddenGuns;									// some guns will be excluded from auto attack
+	uint32_t dwForbiddenGuns = {};									// some guns will be excluded from auto attack
 	
-	bool bHoldingSector;
-	bool bTargetingTrack;
-	NDb::EReinforcementType eReinforcementType;
-	bool bRestInside; // mech unit inside mech unit
+	bool bHoldingSector = {};
+	bool bTargetingTrack = {};
+	NDb::EReinforcementType eReinforcementType = {};
+	bool bRestInside = {}; // mech unit inside mech unit
 	SUnitProfile unitProfile;
 	std::list< CPtr<CAIUnit> > targetsCache;
-	NTimer::STime realScanDuration;
-	NTimer::STime lastScanTime;
-	bool bAmphibianWaterModifierApplied;
+	NTimer::STime realScanDuration = {};
+	NTimer::STime lastScanTime = {};
+	bool bAmphibianWaterModifierApplied = {};
 protected:
-	CObjectBase *pObjInside;
+	CObjectBase *pObjInside = {};
 private:
 
 	CPtr<NDb::SUnitStatsModifier> pStatsModifiers;
 
 	CPtr<CExecutorUnitBonus> pShootInMovementExecutor;
-	bool bIgnoreAABBCoeff;
+	bool bIgnoreAABBCoeff = {};
 
-	int nMultipleShots;					// Number of shells used in one shot (default=1). Used by LinkedGrenades ability
-	NTimer::STime timeLastAttackedAck;
-	NTimer::STime timeLastAttacked;
+	int nMultipleShots = {};					// Number of shells used in one shot (default=1). Used by LinkedGrenades ability
+	NTimer::STime timeLastAttackedAck = {};
+	NTimer::STime timeLastAttacked = {};
 
 	//int nAbilityLevel;
 	//
@@ -112,7 +113,7 @@ private:
 	void SetTargetScanRandom();
 	const bool AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget );
 protected:
-	NTimer::STime timeToDeath;
+	NTimer::STime timeToDeath = {};
 
 	CObj<CAIUnitInfoForGeneral> pUnitInfoForGeneral;
 

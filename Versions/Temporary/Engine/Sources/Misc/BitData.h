@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "2Darray.h"
 #include "System/XmlSaver.h"
 
@@ -9,7 +11,7 @@ template<class T> class CBitArray2DRLEWrapper;
 
 class CArray1Bit
 {
-	int xSize;
+	int xSize = 0;
 	std::vector<uint8_t> array;
 
 	const uint8_t GetByteMask( int nIndex ) const { return ( nIndex == 0 ) ? 0xFF : 0xFF >> ( 8 - nIndex ); }
@@ -180,7 +182,7 @@ public:
 
 class CArray4Bit
 {
-	int nSize;
+	int nSize = 0;
 	std::vector<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &array ); saver.Add( 2, &nSize ); return 0; }
@@ -226,7 +228,7 @@ public:
 
 class CArray2D4Bit
 {
-	int xSize;
+	int xSize = 0;
 	CArray2D<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }
@@ -270,7 +272,7 @@ public:
 
 class CArray2D1Bit
 {
-	int xSize;
+	int xSize = 0;
 	CArray2D<uint8_t> array;
 public:
 	int operator&( struct IBinSaver &saver ) {  saver.Add( 1, &xSize ); saver.Add( 2, &array ); return 0; }

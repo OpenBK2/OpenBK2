@@ -37,7 +37,8 @@ class CWeatherVisual : public CFuncBase<bool>
 		OBJECT_NOCOPY_METHODS( CWeatherPart )
 
 		CDGPtr<CWeatherVisual> pWeather;
-		int nNumPart;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nNumPart = {};
 
 	public:
 		CWeatherPart() : nNumPart(-1) {}
@@ -47,27 +48,27 @@ class CWeatherVisual : public CFuncBase<bool>
 		void Recalc();
 	};
 
-	NTimer::STime timeStart;
-	NTimer::STime timeLength;
+	NTimer::STime timeStart = {};
+	NTimer::STime timeLength = {};
 	CDGPtr< CFuncBase<STime> > pTimer;
 	CDGPtr<CFuncBase<STime>, CPtr<CFuncBase<STime> > > pAbsTimer;
 	CDBPtr<NDb::SWeatherDesc> pDesc;
-	bool bActive;
+	bool bActive = {};
 	//bool bExistLightning;
 	//bool bThunder;
-	NDb::EWeatherState eState;
+	NDb::EWeatherState eState = {};
 
 	CVec2 vBBMin, vBBMax;
 	CVec2 vWindOffset;
 	std::vector<CVec3> parts;
 	std::vector<uint8_t> partsPresent;
 	CVec3 vCameraAnchor, vCameraEye, vViewNormal, vViewNormal3;
-	NTimer::STime timeLightStop;
-	NTimer::STime timeThunder;
-	NTimer::STime timeLastRecalc;
-	NTimer::STime timeNextAmbientSound;
+	NTimer::STime timeLightStop = {};
+	NTimer::STime timeThunder = {};
+	NTimer::STime timeLastRecalc = {};
+	NTimer::STime timeNextAmbientSound = {};
 
-	float fFadeCoeff;
+	float fFadeCoeff = {};
 
 	std::vector< CDGPtr<CPtrFuncBase<NGScene::CAnimLightInfo> > > lightningLoaders;
 	CDGPtr<CPtrFuncBase<NGScene::CAnimLight> > pLightningAnimator;
@@ -79,7 +80,7 @@ class CWeatherVisual : public CFuncBase<bool>
 
 	CObj<NDb::SAmbientLight> pCurrentWeatherLight;
 
-	int nVisualParts;
+	int nVisualParts = {};
 	std::vector<NGScene::CObjectInfo::SData> visualData;
 
 	void UpdateAmbientSound();

@@ -16,15 +16,16 @@ public:
 	};
 
 protected:
-	unsigned char *pCurrent;
-	unsigned char *pBitPtr;         // for bit writing
-	unsigned int nBits;
-	unsigned char nBitsCount; // bits and bit counter
+	// ReadBits accumulates into nBits on its first call, so it must start at zero.
+	unsigned char *pCurrent = nullptr;
+	unsigned char *pBitPtr = nullptr;         // for bit writing
+	unsigned int nBits = 0;
+	unsigned char nBitsCount = 0; // bits and bit counter
 	static unsigned int nBitsMask[32];
 
 #ifdef _DEBUG
-	Mode mode;
-	unsigned char *pReservedEnd;
+	Mode mode{};
+	unsigned char *pReservedEnd = nullptr;
 	void CheckCurrentR() { ASSERT( pCurrent <= pReservedEnd ); ASSERT( mode == read ); }
 	void CheckCurrentW() { ASSERT( pCurrent <= pReservedEnd ); ASSERT( mode == write ); }
 #else
@@ -66,8 +67,8 @@ template<> SYSTEM_EXPORT inline void CBitStream::Read<std::string>( std::string 
 class CDataStream;
 class SYSTEM_EXPORT CBitLocker: public CBitStream
 {
-	CDataStream *pData;
-	unsigned char *pBuffer;
+	CDataStream *pData = nullptr;
+	unsigned char *pBuffer = nullptr;
 public:
 	CBitLocker(): CBitStream( 0, read, 0 ) { pData = 0; }
 	~CBitLocker();

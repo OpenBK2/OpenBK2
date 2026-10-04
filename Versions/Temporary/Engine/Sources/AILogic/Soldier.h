@@ -23,7 +23,8 @@ class CSoldier : public CAIUnit
 	ZDATA_(CAIUnit)
 	ZSKIP
 	ZONSERIALIZE
-	EObjectInsideOf eInsideType;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EObjectInsideOf eInsideType = {};
 
 	CDBPtr<NDb::SInfantryRPGStats> pStats;
 	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats; // for paratroopers
@@ -34,33 +35,33 @@ class CSoldier : public CAIUnit
 	SStaticObjectSlotInfo slotInfo;
 
 	SAIAngle wMinAngle, wMaxAngle;
-	float fOwnSightRadius;
+	float fOwnSightRadius = {};
 
-	bool bInFirePlace, bInSolidPlace;
+	bool bInFirePlace = {}, bInSolidPlace = {};
 
-	NTimer::STime lastHit, lastCheck;
-	NTimer::STime lastMineCheck; // последняя проверка мин (для инженеров)
-	NTimer::STime lastDirUpdate;
-	bool bLying;
+	NTimer::STime lastHit = {}, lastCheck = {};
+	NTimer::STime lastMineCheck = {}; // последняя проверка мин (для инженеров)
+	NTimer::STime lastDirUpdate = {};
+	bool bLying = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CFormation> pMemorizedFormation;
 	CPtr<CFormation> pVirtualFormation;
 //	uint8_t cFormSlot;
-	bool bWait2Form;
+	bool bWait2Form = {};
 
-	bool bAllowLieDown; // может ли солдат ложиться под обстрелом (или стоит как оловянный one.)
-	NTimer::STime nextSegmTime;
-	NTimer::STime timeBWSegments;
-	NTimer::STime nextPathSegmTime;
-	NTimer::STime nextLogicSegmTime;
+	bool bAllowLieDown = {}; // может ли солдат ложиться под обстрелом (или стоит как оловянный one.)
+	NTimer::STime nextSegmTime = {};
+	NTimer::STime timeBWSegments = {};
+	NTimer::STime nextPathSegmTime = {};
+	NTimer::STime nextLogicSegmTime = {};
 	
 	std::list< CPtr<CMineStaticObject> > detonatableCharges;
 	std::pair<int,int> numControlledCharges;
 	std::pair<int,int> numBlastingCharges;
 	std::pair<int,int> numLandMines;
 
-	bool bBeingHealed;
+	bool bBeingHealed = {};
 	public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAIUnit*)this); OnSerialize( f ); f.Add(3,&eInsideType); f.Add(4,&pStats); f.Add(5,&pRememberedStats); f.Add(6,&pGuns); f.Add(7,&slotInfo); f.Add(8,&wMinAngle); f.Add(9,&wMaxAngle); f.Add(10,&fOwnSightRadius); f.Add(11,&bInFirePlace); f.Add(12,&bInSolidPlace); f.Add(13,&lastHit); f.Add(14,&lastCheck); f.Add(15,&lastMineCheck); f.Add(16,&lastDirUpdate); f.Add(17,&bLying); f.Add(18,&pFormation); f.Add(19,&pMemorizedFormation); f.Add(20,&pVirtualFormation); f.Add(21,&bWait2Form); f.Add(22,&bAllowLieDown); f.Add(23,&nextSegmTime); f.Add(24,&timeBWSegments); f.Add(25,&nextPathSegmTime); f.Add(26,&nextLogicSegmTime); f.Add(27,&detonatableCharges); f.Add(28,&numControlledCharges); f.Add(29,&numBlastingCharges); f.Add(30,&numLandMines); f.Add(31,&bBeingHealed); return 0; }
 	void OnSerialize( IBinSaver &f );
@@ -292,13 +293,13 @@ class CSniper : public CSoldier
 	OBJECT_BASIC_METHODS( CSniper );
 
 	ZDATA_(CSoldier)
-	NTimer::STime lastVisibilityCheck;
+	NTimer::STime lastVisibilityCheck = {};
 	// виден ли для противоположной party
-	bool bVisible;
+	bool bVisible = {};
 	// находится ли в sneak mode
-	bool bSneak;
+	bool bSneak = {};
 	// вероятность снять камуфляж при выстреле, если находимся в sneak mode
-	float fCamouflageRemoveWhenShootProbability;
+	float fCamouflageRemoveWhenShootProbability = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CSoldier*)this); f.Add(2,&lastVisibilityCheck); f.Add(3,&bVisible); f.Add(4,&bSneak); f.Add(5,&fCamouflageRemoveWhenShootProbability); return 0; }
 protected:
 	virtual bool CalculateUnitVisibility4Party( const uint8_t cParty ) ;

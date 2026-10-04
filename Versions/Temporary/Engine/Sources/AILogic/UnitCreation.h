@@ -52,7 +52,8 @@ public:
 // для создания тяжелых самолетов
 class CHeavyPlaneCreation : public CPlaneCreation
 {
-	bool bNeedFormation;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bNeedFormation = {};
 public:
 	CHeavyPlaneCreation( const CVec2 &vDestPoint, const bool _bNeedFormation = false )
 		: CPlaneCreation( vDestPoint ), bNeedFormation( _bNeedFormation ) {  }
@@ -82,7 +83,7 @@ class CUnitCreation
 public: 
 	struct SFeedBack
 	{
-		int eEnable, eDisable;		
+		int eEnable = {}, eDisable = {};
 		SFeedBack( const int eEnable, const int eDisable )
 			: eEnable( eEnable ), eDisable( eDisable ) {  }
 	};
@@ -90,7 +91,7 @@ public:
 
 private:
 	ZDATA
-	bool bInit;														// for delaying initialization untill segment
+	bool bInit = {};														// for delaying initialization untill segment
 	CPtr<ICollisionsCollector> pCollisionsCollector;
 
 	std::vector<SLocalInGameUnitCreationInfo> inGameUnits;

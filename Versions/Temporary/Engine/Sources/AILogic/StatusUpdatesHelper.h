@@ -8,10 +8,11 @@ class CStatusUpdatesHelper
 {
 	ZDATA
 private:
-		EUnitStatus __eStatus;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		EUnitStatus __eStatus = {};
 		CPtr<CUpdatableObj> __pUnit;
-		float __fRadius;
-		bool __bInited;
+		float __fRadius = {};
+		bool __bInited = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&__eStatus); f.Add(3,&__pUnit); f.Add(4,&__fRadius); f.Add(5,&__bInited); return 0; }
 protected:

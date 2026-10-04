@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "DebugTools_export.h"
 
 
@@ -23,8 +25,8 @@ namespace NDebugInfo
 	struct SArrowHead 
 	{
 		CVec3 vPosition;
-		float fWidth;
-		float fHeight;
+		float fWidth = 0.0f;
+		float fHeight = 0.0f;
 
 		SArrowHead() : vPosition( VNULL3 ), fWidth( 0.0f ), fHeight( 0.0f ) {}
 		SArrowHead( const CVec3 &_vPosition ) : vPosition( _vPosition ), fWidth( 0.0f ), fHeight( 0.0f ) {}

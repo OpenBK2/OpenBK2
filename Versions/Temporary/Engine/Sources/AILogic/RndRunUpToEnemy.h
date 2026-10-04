@@ -6,17 +6,18 @@ class CAIUnit;
 class CRndRunUpToEnemy
 {
 
-	CSoldier *pOwner;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CSoldier *pOwner = {};
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
 	CPtr<CAIUnit> pEnemy;
 
 	CVec2 vLastOwnerPos;
-	NTimer::STime checkTime;
-	bool bRunningToEnemy;
-	bool bForceStaying;
-	bool bCheck;
+	NTimer::STime checkTime = {};
+	bool bRunningToEnemy = {};
+	bool bForceStaying = {};
+	bool bCheck = {};
 	public: ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&pEnemy); f.Add(4,&vLastOwnerPos); f.Add(5,&checkTime); f.Add(6,&bRunningToEnemy); f.Add(7,&bForceStaying); f.Add(8,&bCheck); return 0; }
 	void OnSerialize( IBinSaver &saver );
 	//

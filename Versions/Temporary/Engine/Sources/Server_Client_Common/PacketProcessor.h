@@ -20,8 +20,9 @@ class CPacketProcessorFun : public IPacketProcessorFun
 	OBJECT_NOCOPY_METHODS( CPacketProcessorFun );
 
 	typedef bool (TObj::*ProcessFun)( TPacket *pPacket );
-	ProcessFun pfnProcessFun;
-	TObj *pObj;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ProcessFun pfnProcessFun = {};
+	TObj *pObj = {};
 public:
 	CPacketProcessorFun() { }
 	CPacketProcessorFun( TObj *_pObj, ProcessFun _pfnProcessFun )

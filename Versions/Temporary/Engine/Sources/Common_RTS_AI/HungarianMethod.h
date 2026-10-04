@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 
@@ -10,7 +12,7 @@
 //послать этот юнит.
 class COMMON_RTS_AI_EXPORT CHungarianMethod
 {
-	int nSize;
+	int nSize = 0;
 	CArray2D<float> matrix;
 	std::vector<int> result;
 

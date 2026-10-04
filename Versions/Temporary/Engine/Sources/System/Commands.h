@@ -1,4 +1,6 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 #include "System_export.h"
 
 
@@ -15,10 +17,10 @@ SYSTEM_EXPORT void VarStrHandler( const std::string &szID, const NGlobal::CValue
 // helper class for temporary command registration
 class CCmd
 {
-	void *pContext;
+	void *pContext = nullptr;
 	std::string szID;
-	CmdHandler pHandler;
-	int nID;
+	CmdHandler pHandler = nullptr;
+	int nID = 0;
 
 public:
 	CCmd( const std::string &szID, CmdHandler pHandler, void *pContext );

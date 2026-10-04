@@ -8,9 +8,10 @@
 //
 struct SLuaParams
 {
-	int n;
-	float f;
-	bool b;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int n = {};
+	float f = {};
+	bool b = {};
 	std::string s;
 	CPtr<CObjectBase> p;
 };
@@ -23,7 +24,7 @@ extern Script* pCurrentScript;
 
 class SCRIPT_EXPORT Script
 {
-	int nPushCount;
+	int nPushCount = {};
 public:
 	
 	typedef int TableIterator;
@@ -40,8 +41,8 @@ public:
 	class Object
 	{
 	private:
-		Script *m_parent;	// The parent script of this object.
-		int m_stackIndex;	// The stack index representing this object.
+		Script *m_parent = {};	// The parent script of this object.
+		int m_stackIndex = {};	// The stack index representing this object.
 
 	public:
 		Object( Script *pParent, int index ) : m_parent(pParent), m_stackIndex(index) {}
@@ -185,7 +186,7 @@ public:
 		const AutoBlock& operator=(const AutoBlock& src); // Not implemented
 
 		Script& m_script;
-		int m_stackTop;
+		int m_stackTop = {};
 	};
 
 	///////////////////////////////////////////////////////////////////////////
@@ -305,8 +306,8 @@ public:
 public:
 	friend class Object;
 
-	lua_State* m_state;
-	bool m_ownState;
+	lua_State* m_state = {};
+	bool m_ownState = {};
 	int operator&( IBinSaver &f );
 };
 

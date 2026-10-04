@@ -146,7 +146,8 @@ CBuilding* CTransportLoadRuState::FindNearestSource()
 	class CFindNearestConnected : public CStaticObjects::IEnumStoragesPredicate 
 	{
 		CPtr<CBuilding> pNearest;
-		float fPathLength;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fPathLength = {};
 	public:
 		CFindNearestConnected() : fPathLength( 0 ) {  }
 		virtual bool OnlyConnected() const { return true; }

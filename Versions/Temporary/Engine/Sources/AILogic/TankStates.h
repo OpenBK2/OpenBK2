@@ -36,16 +36,17 @@ class CMechUnitSupportFireState : public IUnitAttackingState, public CStatusUpda
 
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
-	ESupportFireStates eState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ESupportFireStates eState = {};
 
 	CPtr<CAIUnit> pFriend;
 	CPtr<CAIUnit> pEnemy;
 	CPtr<CStaticObject> pObj;
 	CPtr<CBasicGun> pGun;
 
-	NTimer::STime lastCheck;
-	float fSearchRadius;
-	bool bFinish;
+	NTimer::STime lastCheck = {};
+	float fSearchRadius = {};
+	bool bFinish = {};
 	CPtr<CFormation> pFriendFormation;
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pFriend); f.Add(5,&pEnemy); f.Add(6,&pObj); f.Add(7,&pGun); f.Add(8,&lastCheck); f.Add(9,&fSearchRadius); f.Add(10,&bFinish); f.Add(11,&pFriendFormation); return 0; }

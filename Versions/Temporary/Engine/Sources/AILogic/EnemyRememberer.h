@@ -8,8 +8,9 @@ class CEnemyRememberer : public CAIObjectBase
 
 	ZDATA
 	CVec2 vPosition;
-	NTimer::STime timeLastSeen;
-	int timeBeforeForget;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime timeLastSeen = {};
+	int timeBeforeForget = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPosition); f.Add(3,&timeLastSeen); f.Add(4,&timeBeforeForget); return 0; }
 public:
 	CEnemyRememberer() {  }

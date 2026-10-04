@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 
@@ -13,7 +15,7 @@ class COMMON_RTS_AI_EXPORT CStandartDirPath : public IPath
 		CVec2 dir;
 		CVec2 startPoint, finishPoint;
 		CVec2 curPoint;
-		int nTileSize;
+		int nTileSize = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dir); f.Add(3,&startPoint); f.Add(4,&finishPoint); f.Add(5,&curPoint); f.Add(6,&nTileSize); return 0; }
 private:

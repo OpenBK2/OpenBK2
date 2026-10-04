@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include <cstdint>
@@ -10,7 +12,8 @@ struct COMMON_RTS_AI_EXPORT SAIAngle
 	union
 	{
 		uint16_t wAngle;
-		int allign;
+		// Initialize the full union storage, including the angle's unused upper bytes.
+		int allign = 0;
 	};
 
 	SAIAngle() 

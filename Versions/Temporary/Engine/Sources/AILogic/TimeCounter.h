@@ -14,11 +14,12 @@ class CTimeCounter
 	det_map<std::string, double> szCounters;
 	det_map<std::string, NHPTimer::STime> szStartTimes;
 
-	NTimer::STime printTime;
-	int nMaxIndex;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime printTime = {};
+	int nMaxIndex = {};
 
 	std::vector<float> variables;
-	int nMaxVar;
+	int nMaxVar = {};
 public:
 	CTimeCounter();
 

@@ -33,12 +33,13 @@ class CArtRocketAttackGroundState : public IUnitAttackingState
 	
 	ZDATA
 	CPtr<CArtillery> pArtillery;
-	EAttackGroundState eState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EAttackGroundState eState = {};
 	CVec2 point;
-	bool bFired;
-	bool bFinished;
-	uint16_t wDirToRotate;
-	bool bSaidNoAmmo;
+	bool bFired = {};
+	bool bFinished = {};
+	uint16_t wDirToRotate = {};
+	bool bSaidNoAmmo = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pArtillery); f.Add(3,&eState); f.Add(4,&point); f.Add(5,&bFired); f.Add(6,&bFinished); f.Add(7,&wDirToRotate); f.Add(8,&bSaidNoAmmo); return 0; }
 

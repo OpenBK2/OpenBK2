@@ -15,17 +15,18 @@ class CTurret : public CLinkObject
 	struct SRotating
 	{
 		// скорость вращения в горизонтальной плоскости
-		float wRotationSpeed;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float wRotationSpeed = {};
 		// угол относ. юнита в момент начала поворота, желательный угол
 		SAIAngle wCurAngle, wFinalAngle;
 		// в какую сторону поворачивается - + или -
-		signed char sign;
+		signed char sign = {};
 
 		// время, когда начался и закончится процесс поворачивания
-		NTimer::STime startTime, endTime;
+		NTimer::STime startTime = {}, endTime = {};
 		
 		// поворот закончен
-		bool bFinished;
+		bool bFinished = {};
 
 		// Finished turrets are serialized before their first turn, too.
 		SRotating() : wRotationSpeed( 0 ), wCurAngle( 0 ), wFinalAngle( 0 ),
@@ -39,16 +40,16 @@ class CTurret : public CLinkObject
 	SRotating ver;
 
 	// можно ли вернуть башню к default углу поворота
-	bool bCanReturn;
+	bool bCanReturn = {};
 
 	// наводится ли по вертикали
-	bool bVerAiming;
+	bool bVerAiming = {};
 
 	CPtr<CAIUnit> pTracedUnit;
 	CPtr<CBasicGun> pLockingGun;
 
 	SAIAngle wDefaultHorAngle;
-	bool bReturnToNULLVerAngle;
+	bool bReturnToNULLVerAngle = {};
 public:
 	ZEND int operator&( IBinSaver &f );
 private:
@@ -147,14 +148,14 @@ class CUnitTurret : public CTurret
 	ZDATA_(CTurret)
 	CPtr<CAIUnit> pOwner;
 //	int nModelPart;
-	int nPlatform;
+	int nPlatform = {};
 //	uint32_t nGunCarriageParts;
 	SAIAngle wHorConstraint; 
 	SAIAngle wVerConstraint;
 	SAIAngle wOldHorConstraint;
 
-	bool bCanRotateTurret;
-	bool bBuckGunsDirection;
+	bool bCanRotateTurret = {};
+	bool bBuckGunsDirection = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTurret*)this); f.Add(2,&pOwner); f.Add(3,&nPlatform); f.Add(4,&wHorConstraint); f.Add(5,&wVerConstraint); f.Add(6,&wOldHorConstraint); f.Add(7,&bCanRotateTurret); f.Add(8,&bBuckGunsDirection); return 0; }
 private:

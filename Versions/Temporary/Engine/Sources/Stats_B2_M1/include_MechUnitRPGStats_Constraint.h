@@ -1,7 +1,8 @@
 #include <cstdint>
 
-uint16_t wMin;
-uint16_t wMax;
+// Converted limits are not covered by the generated constructor.
+uint16_t wMin = 0;
+uint16_t wMax = 0;
 
 bool ToAIUnits( bool bInEditor )
 {

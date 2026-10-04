@@ -7,9 +7,10 @@
 struct SResistance
 {
 ZDATA
-	int nCellNumber;
-	int nWeight;
-	int nWeightExceed;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nCellNumber = {};
+	int nWeight = {};
+	int nWeightExceed = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCellNumber); f.Add(3,&nWeight); f.Add( 4, &nWeightExceed);return 0; }
 public:
 	SResistance() { Clear(); }
@@ -49,9 +50,9 @@ class CResistancesContainer
 {
 	struct SSellInfo
 	{
-		float fCellWeight;									// net weight for this cell
-		bool bInUse;												// this cell is being attacked
-		bool bAllowShoot;										// shooting to the cell is allowed
+		float fCellWeight = {};									// net weight for this cell
+		bool bInUse = {};												// this cell is being attacked
+		bool bAllowShoot = {};										// shooting to the cell is allowed
 
 		SSellInfo() : fCellWeight( 0.0f ), bInUse( false ), bAllowShoot( true ) { }
 		SSellInfo( const float _fCellWeight, const bool _bInUse, const bool _bAllowShoot ) : fCellWeight( _fCellWeight ), bInUse( _bInUse ), bAllowShoot( _bAllowShoot ) { }
@@ -71,7 +72,7 @@ class CResistancesContainer
 	class CIter
 	{
 		CResistance::iterator iter;
-		CResistancesContainer *pContainter;
+		CResistancesContainer *pContainter = {};
 
 		CIter() { }
 		void IterateToNotInUse();

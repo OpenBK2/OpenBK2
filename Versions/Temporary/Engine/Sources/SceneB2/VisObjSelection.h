@@ -29,8 +29,9 @@ class CVisObjSelectionInfo : public CPtrFuncBase<NGScene::CObjectInfo>
 
 	CPtr<CTerrainManager> pTerraManager;
 	SSelectionInfo info;
-	bool bUpdate;
-	NDb::ESelectionType eSelType;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bUpdate = {};
+	NDb::ESelectionType eSelType = {};
 protected:
 	void Recalc();
 	bool NeedUpdate() { return bUpdate; }
@@ -62,9 +63,9 @@ struct SVisObjSelection
 {
 	CObj<CCSFBTransform> pTransform;
 	CObj<CCSBound> pBound;
-	float fSelScale;
-	float fSelSize;
-	NDb::ESelectionType eSelType;
+	float fSelScale = {};
+	float fSelSize = {};
+	NDb::ESelectionType eSelType = {};
 	CVisObjSelectionHolder selHolder;
 	CVec3 vSelCenter;
 	//
@@ -95,15 +96,15 @@ public:
 	};
 
 	ZDATA
-	int nID;
-	EState eState;
+	int nID = {};
+	EState eState = {};
 	SVisObjSelection visObjSelection;
 	CVec3 vPos;
-	float fScale;
-	NDb::ESelectionType eSelType;
-	NTimer::STime timeStart;
-	int nFadeIn; // msec
-	int nFadeOut; // msec
+	float fScale = {};
+	NDb::ESelectionType eSelType = {};
+	NTimer::STime timeStart = {};
+	int nFadeIn = {}; // msec
+	int nFadeOut = {}; // msec
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&eState); f.Add(4,&visObjSelection); f.Add(5,&vPos); f.Add(6,&fScale); f.Add(7,&eSelType); f.Add(8,&timeStart); f.Add(9,&nFadeIn); f.Add(10,&nFadeOut); return 0; }
 };
 

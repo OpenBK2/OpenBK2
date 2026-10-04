@@ -1,4 +1,6 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 #include "3DLib_export.h"
 
 
@@ -9,7 +11,7 @@ class _3DLIB_EXPORT CMemObject: public CObjectBase
 	std::vector<CVec3> resPoints;
 	std::vector<CVec3> resNormals;
 	std::vector<STriangle> resTris;
-	bool bPolyLine;
+	bool bPolyLine = false;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&resPoints); f.Add(3,&resNormals); f.Add(4,&resTris); f.Add(5,&bPolyLine); return 0; }
 public:
 	CMemObject(): bPolyLine(false) {}

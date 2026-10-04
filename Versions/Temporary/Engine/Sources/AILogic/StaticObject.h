@@ -42,7 +42,8 @@ class CStaticObject : public CLinkObject
 {
 	// if this flag is set, then static object will terminate all executors
 	ZDATA_(CLinkObject)
-	bool bTerminateSegmentFlag;			
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bTerminateSegmentFlag = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&bTerminateSegmentFlag); return 0; }
 public:
@@ -125,14 +126,14 @@ class CExistingObject : public CStaticObject
 {
 	typedef unsigned long ulong;
 	ZDATA_( CStaticObject )
-	ulong mark;
+	ulong mark = {};
 
-	NTimer::STime burningEnd;
-	bool bTrampled;
-	int nFrameIndex;
+	NTimer::STime burningEnd = {};
+	bool bTrampled = {};
+	int nFrameIndex = {};
 protected:
 
-	float fHP;
+	float fHP = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStaticObject *)this); f.Add(2,&mark); f.Add(3,&burningEnd); f.Add(4,&bTrampled); f.Add(5,&nFrameIndex); f.Add(6,&fHP); return 0; }
 	static unsigned long globalMark;
@@ -231,7 +232,7 @@ class CGivenPassabilityStObject : public CExistingObject
 		CVec3 center;
 		SRect boundRect;
 		CArray2D<uint8_t> lockInfo;
-		bool bTransparencySet;
+		bool bTransparencySet = {};
 		SAIAngle wDir;
 		CPtr<CObjectProfile> pPassProfile;
 		CPtr<CObjectProfile> pVisProfile;
@@ -292,8 +293,8 @@ class CCommonStaticObject : public CGivenPassabilityStObject
 {
 
 	ZDATA_(CGivenPassabilityStObject)
-	EStaticObjType eType;
-	bool bFallen;
+	EStaticObjType eType = {};
+	bool bFallen = {};
 	public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&eType); f.Add(3,&bFallen); return 0; }
 public:
@@ -325,8 +326,8 @@ class CSimpleStaticObject : public CCommonStaticObject
 	OBJECT_BASIC_METHODS( CSimpleStaticObject );
 	ZDATA_(CCommonStaticObject)
 	CDBPtr<SStaticObjectRPGStats> pStats;
-	int nPlayer;
-	bool bDelayedUpdate;									// if true then update for new object is delayed
+	int nPlayer = {};
+	bool bDelayedUpdate = {};									// if true then update for new object is delayed
 	SAIAngle wDir;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonStaticObject*)this); f.Add(2,&pStats); f.Add(3,&nPlayer); f.Add(4,&bDelayedUpdate); f.Add(5,&wDir); return 0; }
 public:

@@ -15,7 +15,8 @@ class CPlayerReinforcement
 	struct SCallReinforcementCommand
 	{
 		ZDATA
-		NDb::EReinforcementType eType;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NDb::EReinforcementType eType = {};
 		CVec2 vPoint;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&vPoint); return 0; }
 		SCallReinforcementCommand() { }
@@ -36,32 +37,32 @@ class CPlayerReinforcement
 		
 		// reinforcement info by type
 		CInfos reinforcementInfos;
-		NTimer::STime timeReinfButtonEnable;
-		int nPlayer;
+		NTimer::STime timeReinfButtonEnable = {};
+		int nPlayer = {};
 
 		CRecycleTimes recycleTimes;
-		bool bReinfButtonEnabled;
+		bool bReinfButtonEnabled = {};
 
 		ZSKIP // for `unitAvailability'
 		ZONSERIALIZE
-		int nMapReinforcementBonus;
-		float fRecycleTimeCoeff;
+		int nMapReinforcementBonus = {};
+		float fRecycleTimeCoeff = {};
 		std::vector<SCallReinforcementCommand> commands;
-		NTimer::STime timeToCall;		// current full recycle time without coeff
-		float fStoredProgress;			// for the case when progress stops and restarts
-		NTimer::STime timeReinfIncrease;
+		NTimer::STime timeToCall = {};		// current full recycle time without coeff
+		float fStoredProgress = {};			// for the case when progress stops and restarts
+		NTimer::STime timeReinfIncrease = {};
 
 		// for super weapon
-		NDb::ESuperWeaponType superWeaponType;
-		int nSuperWeaponShots;
-		NTimer::STime timeSuperWeaponRecycleTime;
-		NTimer::STime timeSuperWeaponFlyTime;
+		NDb::ESuperWeaponType superWeaponType = {};
+		int nSuperWeaponShots = {};
+		NTimer::STime timeSuperWeaponRecycleTime = {};
+		NTimer::STime timeSuperWeaponFlyTime = {};
 
-		ESuperWeaponState superWeaponState;
-		NTimer::STime timeSuperWeaponFire;
+		ESuperWeaponState superWeaponState = {};
+		NTimer::STime timeSuperWeaponFire = {};
 		CVec2 vSuperWeaponCallPoint;
 		CPtr<CCommonUnit> pSuperWeaponShell;
-		int nSuperWeaponShotsLeft;
+		int nSuperWeaponShotsLeft = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&positions); f.Add(3,&reinforcementInfos); f.Add(4,&timeReinfButtonEnable); f.Add(5,&nPlayer); f.Add(6,&recycleTimes); f.Add(7,&bReinfButtonEnabled); OnSerialize( f ); f.Add(9,&nMapReinforcementBonus); f.Add(10,&fRecycleTimeCoeff); f.Add(11,&commands); f.Add(12,&timeToCall); f.Add(13,&fStoredProgress); f.Add(14,&timeReinfIncrease); f.Add(15,&superWeaponType); f.Add(16,&nSuperWeaponShots); f.Add(17,&timeSuperWeaponRecycleTime); f.Add(18,&timeSuperWeaponFlyTime); f.Add(19,&superWeaponState); f.Add(20,&timeSuperWeaponFire); f.Add(21,&vSuperWeaponCallPoint); f.Add(22,&pSuperWeaponShell); f.Add(23,&nSuperWeaponShotsLeft); return 0; }

@@ -38,14 +38,15 @@ class CArtilleryMoveToState : public IUnitState
 	enum EArtilleryMoveToState { EAMTS_UNINSTALLING, EAMTS_START_MOVING, EAMTS_MOVING, EAMTS_WAIT_FOR_PATH };
 
 	ZDATA
-	EArtilleryMoveToState eState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EArtilleryMoveToState eState = {};
 
-	bool bToFinish;
+	bool bToFinish = {};
 	CPtr<CArtillery> pArtillery;
 
-	NTimer::STime startTime;
+	NTimer::STime startTime = {};
 	CPtr<IStaticPath> pStaticPath;
-	bool bForceReverse;
+	bool bForceReverse = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bToFinish); f.Add(4,&pArtillery); f.Add(5,&startTime); f.Add(6,&pStaticPath); f.Add(7,&bForceReverse); return 0; }
 
 	void SetReversePathMode( const bool bEnable );
@@ -69,13 +70,13 @@ class CArtilleryTurnToPointState : public IUnitState, public CStatusUpdatesHelpe
 
 	enum EArtilleryTurnToPointStates { EATRS_ESTIMATING, EATPS_UNINSTALLING, EATPS_TURNING };
 	ZDATA_( CStatusUpdatesHelper )
-	EArtilleryTurnToPointStates eState;
+	EArtilleryTurnToPointStates eState = {};
 
 	CPtr<CArtillery> pArtillery;
 
-	NTimer::STime lastCheck;
+	NTimer::STime lastCheck = {};
 	CVec2 targCenter;
-	NTimer::STime timeStart;
+	NTimer::STime timeStart = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pArtillery); f.Add(4,&lastCheck); f.Add(5,&targCenter); f.Add(6,&timeStart); return 0; }
 public:
 	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &targCenter );
@@ -99,13 +100,13 @@ class CArtilleryBombardmentState : public IUnitAttackingState, public CStatusUpd
 	enum EArtilleryBombarmentStates { EABS_START, EABS_TURNING, EABS_FIRING };
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
-	EArtilleryBombarmentStates eState;
+	EArtilleryBombarmentStates eState = {};
 	CVec2 point;
-	bool bStop;
-	bool bSaidNoAmmo;
-	int nShotCount;
-	bool bFlamethrowerOnly;
-	bool bBurstStarted;
+	bool bStop = {};
+	bool bSaidNoAmmo = {};
+	int nShotCount = {};
+	bool bFlamethrowerOnly = {};
+	bool bBurstStarted = {};
 
 	class CBasicGun* ChoosePointFireGun( bool *pCanShootWOMove, bool *pNeedTurn ) const;
 	bool IsFlamethrowerGun( const class CBasicGun *pGun ) const;
@@ -143,17 +144,17 @@ class CArtilleryRangeAreaState : public IUnitAttackingState, public CStatusUpdat
 
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
-	ERangeAreaStates eState;
+	ERangeAreaStates eState = {};
 	CPtr<CAIUnit> pEnemy;
 	CPtr<CStaticObject> pObj;
 	CPtr<CBasicGun> pGun;
 
 	CVec2 point;
-	int nShootsLast;
-	NTimer::STime lastCheck;
-	float fSearchRadius;
-	bool bFinish;
-	bool bFired;
+	int nShootsLast = {};
+	NTimer::STime lastCheck = {};
+	float fSearchRadius = {};
+	bool bFinish = {};
+	bool bFired = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pEnemy); f.Add(5,&pObj); f.Add(6,&pGun); f.Add(7,&point); f.Add(8,&nShootsLast); f.Add(9,&lastCheck); f.Add(10,&fSearchRadius); f.Add(11,&bFinish); f.Add(12,&bFired); return 0; }
 	//
 	void CheckArea();
@@ -189,7 +190,7 @@ class CArtilleryInstallTransportState : public IUnitState
 	};
 
 	ZDATA
-	EArtilleryInstallTransportState eState;
+	EArtilleryInstallTransportState eState = {};
 
 	CPtr<CArtillery> pArtillery;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pArtillery); return 0; }
@@ -219,7 +220,7 @@ class CArtilleryUninstallTransportState : public IUnitState
 	};
 
 	ZDATA
-	EArtilleryUninstallTransportState eState;
+	EArtilleryUninstallTransportState eState = {};
 	CPtr<CArtillery> pArtillery;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pArtillery); return 0; }
 public:
@@ -249,9 +250,9 @@ class CArtilleryBeingTowedState: public IUnitState
 	SAIAngle wLastTagDir;
 	CVec2 vLastTagCenter;
 
-	bool bInterrupted;
+	bool bInterrupted = {};
 	CPtr<CArtilleryBeingTowedPath> pPath;
-	NTimer::STime timeLastUpdate;
+	NTimer::STime timeLastUpdate = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pArtillery); f.Add(3,&pTransport); f.Add(4,&wLastTagDir); f.Add(5,&vLastTagCenter); f.Add(6,&bInterrupted); f.Add(7,&pPath); f.Add(8,&timeLastUpdate); return 0; }
 public:
 	static IUnitState* Instance( class CArtillery *pArtillery, class CAITransportUnit * pTransport );
@@ -276,18 +277,18 @@ class CArtilleryAttackState : public IUnitAttackingState, public CFreeFireManage
 
 	ZDATA_(CFreeFireManager)
 	CPtr<CArtillery> pArtillery;
-	EAttackStates eState;
+	EAttackStates eState = {};
 	SAIAngle wDirToRotate;
 	
 	CPtr<CAIUnit> pEnemy;
-	bool bAim;
-	bool bFinish;
+	bool bAim = {};
+	bool bFinish = {};
 
 	CPtr<CBasicGun> pGun;
-	bool bSwarmAttack;
+	bool bSwarmAttack = {};
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
-	int nEnemyParty;
+	int nEnemyParty = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&pArtillery); f.Add(3,&eState); f.Add(4,&wDirToRotate); f.Add(5,&pEnemy); f.Add(6,&bAim); f.Add(7,&bFinish); f.Add(8,&pGun); f.Add(9,&bSwarmAttack); f.Add(10,&damageToEnemyUpdater); f.Add(11,&nEnemyParty); return 0; }
 	//
 	void FinishState();
@@ -319,11 +320,11 @@ class CArtilleryAttackCommonStatObjState : public IUnitAttackingState, public CF
 	CPtr<CStaticObject> pObj;
 	CPtr<CBasicGun> pGun;
 
-	EAttackStates eState;
+	EAttackStates eState = {};
 	SAIAngle wDirToRotate;
 
-	bool bAim;
-	bool bFinish;
+	bool bAim = {};
+	bool bFinish = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CFreeFireManager *)this); f.Add(2,&pArtillery); f.Add(3,&pObj); f.Add(4,&pGun); f.Add(5,&eState); f.Add(6,&wDirToRotate); f.Add(7,&bAim); f.Add(8,&bFinish); return 0; }
 	//
 	void FinishState();

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "3DLib_export.h"
 
 
@@ -29,7 +31,7 @@ class CBaseMatrixStack
 {
 protected:
 	TElement matrices[nMaxNumMatrices];
-	int nCurrentMatrix;
+	int nCurrentMatrix = 0;
 public :
 	CBaseMatrixStack() : nCurrentMatrix( -1 ) {}
 	//
@@ -93,9 +95,9 @@ class _3DLIB_EXPORT CTransformStack : public CFBMatrixStack<8>
 {
 	typedef int TFlags;
 	CVec4 viewFrustrum[32];
-	int nClipPlanes;
-	int nClipFlags[32];
-	int nClipFlagsPtr;
+	int nClipPlanes = 0;
+	int nClipFlags[32]{};
+	int nClipFlagsPtr = 0;
 	//
 	void PrepareClipPlanes();
 	bool CheckSphere( const CVec4 &ptCenter, float fRadius, bool *pRes );

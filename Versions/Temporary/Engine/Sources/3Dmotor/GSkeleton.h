@@ -30,10 +30,11 @@ struct SBoneTransform
 		HAS_SCALE_SHEAR = 4
 	};
 
-	unsigned int Flags;
-	float Position[3];
-	float Orientation[4];
-	float ScaleShear[3][3];
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	unsigned int Flags = {};
+	float Position[3] = {};
+	float Orientation[4] = {};
+	float ScaleShear[3][3] = {};
 
 	SBoneTransform() :
 		Flags( HAS_POSITION | HAS_ORIENTATION | HAS_SCALE_SHEAR )
@@ -49,7 +50,7 @@ struct SBoneTransform
 struct SSkeletonPose
 {
 	// Kept as Granny-compatible column-major storage to preserve saved games.
-	float poseGlobal[16];
+	float poseGlobal[16] = {};
 	std::vector<SBoneTransform> localPose;
 	NGScene::SSkeletonMatrices worldPose;
 	NGScene::SSkeletonMatrices compositePose;
@@ -74,7 +75,7 @@ struct SSkeletonHandle
 {
 	ZDATA
 	CDBPtr<NDb::SSkeleton> pSkeleton;
-	int nModelInFile;
+	int nModelInFile = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSkeleton); f.Add(3,&nModelInFile); return 0; }
 
 	SSkeletonHandle() : nModelInFile(0) {}

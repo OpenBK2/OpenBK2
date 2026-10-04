@@ -19,14 +19,15 @@ class CFenceCreation : public CLongObjectCreation
 	ZDATA_(CLongObjectCreation)
 	std::vector< CObj<CFence> > fenceSegements;	// сегменты
 	std::vector<CVec2> vPoints;					// позиции
-	bool bTmpNonCheatPath; // if skipped 1 or more objects - move to another without cheat path
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bTmpNonCheatPath = {}; // if skipped 1 or more objects - move to another without cheat path
 
-	int nCurIndex;
+	int nCurIndex = {};
 	std::list<SVector> tilesUnder;
 	SAIAngle wAngle;
 	CLine2 line;
-	bool bCannot;
-	bool bSayAck;
+	bool bCannot = {};
+	bool bSayAck = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&fenceSegements); f.Add(3,&vPoints); f.Add(4,&bTmpNonCheatPath); f.Add(5,&nCurIndex); f.Add(6,&tilesUnder); f.Add(7,&wAngle); f.Add(8,&line); f.Add(9,&bCannot); f.Add(10,&bSayAck); return 0; }
 private:

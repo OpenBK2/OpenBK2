@@ -21,10 +21,11 @@ class CFeedBackSystem
 	{
 		ZDATA
 		ZSKIP
-		NTimer::STime timeNextTalk;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime timeNextTalk = {};
 		CVec2 vCenter;
-		int nClientID;				// id to remove feedback from client
-		NTimer::STime timeToForget;
+		int nClientID = {};				// id to remove feedback from client
+		NTimer::STime timeToForget = {};
 		std::vector<CIDAndParam> objectIDs;
 		ZEND int operator&( IBinSaver &f ) { f.Add(3,&timeNextTalk); f.Add(4,&vCenter); f.Add(5,&nClientID); f.Add(6,&timeToForget); f.Add(7,&objectIDs); return 0; }
 	public:

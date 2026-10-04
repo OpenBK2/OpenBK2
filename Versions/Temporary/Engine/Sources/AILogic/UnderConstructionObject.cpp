@@ -30,7 +30,8 @@ class CSimpleChecksumLog : public ICheckSumLog
 { 
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );
 	det_map<int, unsigned long> entries1;
-	bool bEntries2;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bEntries2 = {};
 public:
 	CSimpleChecksumLog() : bEntries2( false ) {  }
 	void SetEntries2()

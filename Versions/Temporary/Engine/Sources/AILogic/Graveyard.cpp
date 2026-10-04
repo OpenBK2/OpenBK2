@@ -35,11 +35,12 @@ public:
 	ZDATA
 		CObj<CAIUnit> pUnit;
 
-		NTimer::STime endFogTime; 
-		NTimer::STime timeToEndDieAnimation;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime endFogTime = {};
+		NTimer::STime timeToEndDieAnimation = {};
 		// кончилсась анимация смерти и проинициализировались и endFogTime
-		bool bAnimFinished;
-		bool bRemoveCorpseAfterAnimation;
+		bool bAnimFinished = {};
+		bool bRemoveCorpseAfterAnimation = {};
 
 		std::list<SObjTileInfo> lockedTiles; // залоканные тайлы
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&endFogTime); f.Add(4,&timeToEndDieAnimation); f.Add(5,&bAnimFinished); f.Add(6,&lockedTiles); f.Add(7,&bRemoveCorpseAfterAnimation); return 0; }

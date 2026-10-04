@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 EXTERNVAR SYSTEM_EXPORT int nDGCurrentFrame;
@@ -11,8 +13,8 @@ EXTERNVAR SYSTEM_EXPORT int nDGCurrentFrame;
 class CVersioningBase: public CObjectBase
 {
 	OBJECT_BASIC_METHODS( CVersioningBase );
-	int nFrameCalced;     // mark of last update frame, used to cut recalc time
-	int nVersion;         // current version number, used to determine if setParam needed
+	int nFrameCalced = 0;     // mark of last update frame, used to cut recalc time
+	int nVersion = 0;         // current version number, used to determine if setParam needed
 	//
 	void DoUpdate() 
 	{
@@ -43,7 +45,7 @@ template <class TResult>
 class CFuncBase: public CVersioningBase
 {
 protected:
-	TResult value;
+	TResult value{};
 public:
 	CFuncBase() {}
 	CFuncBase( const TResult &_t ): value(_t) {}
@@ -66,7 +68,7 @@ SYSTEM_EXPORT void ClearHoldQueue();
 template <class TResult>
 class CHoldedPtrFuncBase: public CPtrFuncBase<TResult>
 {
-	int nDeleteFrame;
+	int nDeleteFrame = 0;
 protected:
 	void Touch()
 	{
@@ -81,7 +83,7 @@ public:
 template <class TResult>
 class CHoldedFuncBase: public CFuncBase<TResult>
 {
-	int nDeleteFrame;
+	int nDeleteFrame = 0;
 protected:
 	void Touch()
 	{
@@ -120,7 +122,7 @@ template <class TFunc, typename CPtrType = CObj<TFunc> >
 class CDGPtr
 {
 	CPtrType pNode;
-	int nVersion;
+	int nVersion = 0;
 public:
 	CDGPtr() { nVersion = 0; }
 	CDGPtr( const CDGPtr<TFunc,CPtrType> &a ): pNode( a.pNode ) { nVersion = 0; }
@@ -158,8 +160,8 @@ enum EDGNodeChange
 class CChangeTrackPtr
 {
 	CPtr<CVersioningBase> p;
-	int nVersion;
-	int nFrame;
+	int nVersion = 0;
+	int nFrame = 0;
 public:
 	CChangeTrackPtr() : nVersion(0), nFrame(0) {}
 	CChangeTrackPtr( const CChangeTrackPtr &a ) : p(a.p), nVersion(0), nFrame(0) {}

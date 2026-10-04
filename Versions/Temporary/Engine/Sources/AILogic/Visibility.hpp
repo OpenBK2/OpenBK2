@@ -3,7 +3,8 @@
 // CWarFogVisibility
 class CWarFogVisibility : public CObjectBase
 {
-	CGlobalWarFog *pWarFog;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CGlobalWarFog *pWarFog = {};
 protected:
 	const bool IsTileInside( const SVector &vTile ) const { return pWarFog->IsTileInside( vTile ); }
 	const CArray1Bit &GetVisibleInfoForTile( const SVector &vTile ) const { return pWarFog->GetVisibleInfoForTile( vTile ); }
@@ -29,12 +30,13 @@ public:
 // CVisForGroundUnitBasis
 class CVisForGroundUnitBasis : public CWarFogVisibility
 {
-	const CArray1Bit &visibleInfo;
+	// Default construction has no visibility data; never retain a reference to a temporary array.
+	const CArray1Bit *pVisibleInfo = nullptr;
 public:
-	CVisForGroundUnitBasis() : CWarFogVisibility(), visibleInfo( CArray1Bit( 0 ) ) {}
-	CVisForGroundUnitBasis( CGlobalWarFog *pWarFog, const SVector &vTile ) : CWarFogVisibility( pWarFog ), visibleInfo( GetVisibleInfoForTile( vTile ) ) {}
+	CVisForGroundUnitBasis() : CWarFogVisibility() {}
+	CVisForGroundUnitBasis( CGlobalWarFog *pWarFog, const SVector &vTile ) : CWarFogVisibility( pWarFog ), pVisibleInfo( &GetVisibleInfoForTile( vTile ) ) {}
 
-	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const { return visibleInfo.GetData( nSpiralIndex ) > 0; }
+	virtual const bool IsVisible( const SVector &vTile, const int nSpiralIndex ) const { return pVisibleInfo && pVisibleInfo->GetData( nSpiralIndex ) > 0; }
 };
 
 // CVisForGroundUnit

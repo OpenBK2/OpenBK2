@@ -4,9 +4,10 @@
 
 class LIBDB_EXPORT CLogger
 {
-	bool bCheckReferences;
+	// Runtime defaults also cover construction before a log stream is installed.
+	bool bCheckReferences = false;
 	std::list<std::string> stkTrace;
-	CDataStream *pStream;
+	CDataStream *pStream = nullptr;
 	CMemoryStream memoryStream;
 	
 	std::string GetStackTrace() const;

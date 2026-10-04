@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include <zconf.h>
 
 
@@ -12,17 +14,17 @@ class CCheckSumSaver : 	public IBinSaver
 
 	typedef std::unordered_map<CPtr<CObjectBase>, bool, SPtrHash> CAddedObjects;
 	CAddedObjects addedObjects;
-	int nAddedObjects; 
+	int nAddedObjects = 0;
 
-	uLong *checkSumData;
-	uLong *checkSumString;
-	uLong *checkSumObjects;
+	uLong *checkSumData = nullptr;
+	uLong *checkSumString = nullptr;
+	uLong *checkSumObjects = nullptr;
 
-	bool bLog;
-	bool bDissalowStoreObjects;
+	bool bLog = false;
+	bool bDissalowStoreObjects = false;
 	CPtr<ICheckSumLog> pCommandsHistory;
-	int nCount;
-	NTimer::STime nSegment;
+	int nCount = 0;
+	NTimer::STime nSegment = 0;
 
 	virtual bool StartChunk( const chunk_id idChunk, int nChunkNumber ) { return true; }
 	virtual void FinishChunk() {}

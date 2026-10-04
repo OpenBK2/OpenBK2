@@ -6,7 +6,8 @@
 
 class CWarFogTracer
 {
-	CGlobalWarFog *pWarFog;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CGlobalWarFog *pWarFog = {};
 protected:
 	const bool IsTileInside( const SVector &vTile ) const { return pWarFog->IsTileInside( vTile ); }
 	const int GetStaticObjectAtTile( const SVector &vTile ) { return pWarFog->GetStaticObjectAtTile( vTile ); }

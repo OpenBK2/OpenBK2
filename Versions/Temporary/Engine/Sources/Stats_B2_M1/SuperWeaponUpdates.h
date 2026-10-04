@@ -13,11 +13,12 @@ struct SSuperWeaponControl : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SSuperWeaponControl )
 public:
 	ZDATA_( SAIBasicUpdate )
-		int nPlayer;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nPlayer = {};
 
-		int nUnitID; // -1 - no superweapon unit on map
+		int nUnitID = {}; // -1 - no superweapon unit on map
 		CDBPtr<NDb::SHPObjectRPGStats> pUnit; // use this unit for superweapon stats
-		bool bEnabled; // this player has super weapon, show button (if its me)
+		bool bEnabled = {}; // this player has super weapon, show button (if its me)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&nPlayer); f.Add(3,&nUnitID); f.Add(4,&pUnit); f.Add(5,&bEnabled); return 0; }
 
 	SSuperWeaponControl() : nPlayer( -1 ), nUnitID( -1 ), pUnit( 0 ), bEnabled( false ) {}
@@ -31,8 +32,8 @@ struct SSuperWeaponRecycle : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SSuperWeaponRecycle )
 public:
 	ZDATA_( SAIBasicUpdate )
-		int nPlayer;
-		float fPartComplete; // for recycle time, from 0.0 to 1.0
+		int nPlayer = {};
+		float fPartComplete = {}; // for recycle time, from 0.0 to 1.0
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&nPlayer); f.Add(3,&fPartComplete); return 0; }
 
 	SSuperWeaponRecycle() : nPlayer( -1 ), fPartComplete( 0.0f ) {}

@@ -64,7 +64,8 @@ class CHelicopterMoveState : public CHelicopterBaseState
 	OBJECT_BASIC_METHODS( CHelicopterMoveState );
 	ZDATA_(CHelicopterBaseState)
 	CVec2 vTarget;
-	bool bScanTargets;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bScanTargets = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&bScanTargets); return 0; }
 public:
 	CHelicopterMoveState() : vTarget( VNULL2 ), bScanTargets( false ) { }
@@ -81,12 +82,12 @@ class CHelicopterUnloadState : public CHelicopterBaseState
 	ZDATA_(CHelicopterBaseState)
 	CVec2 vTarget;
 	CPtr<CFormation> pUnload;
-	bool bUnloadOneSquad;
-	NTimer::STime timeNextDrop;
+	bool bUnloadOneSquad = {};
+	NTimer::STime timeNextDrop = {};
 	std::vector<CPtr<CSoldier> > dropPassengers;
 	std::vector<CVec3> dropPoints;
-	int nNextPassenger;
-	bool bFinishAfterSquad;
+	int nNextPassenger = {};
+	bool bFinishAfterSquad = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&pUnload); f.Add(4,&bUnloadOneSquad); f.Add(5,&timeNextDrop); f.Add(6,&dropPassengers); f.Add(7,&dropPoints); f.Add(8,&nNextPassenger); f.Add(9,&bFinishAfterSquad); return 0; }
 	bool IsPassengerAboard( CSoldier *pSoldier ) const;
 	CFormation* GetNextSquad() const;
@@ -122,8 +123,8 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 	ZDATA_(CHelicopterBaseState)
 	CPtr<CAIUnit> pTarget;
 	CPtr<CBasicGun> pGun;
-	bool bSwarmAttack;
-	bool bAirModifierApplied;
+	bool bSwarmAttack = {};
+	bool bAirModifierApplied = {};
 	CDamageToEnemyUpdater damageUpdater;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&pTarget); f.Add(3,&pGun); f.Add(4,&bSwarmAttack); f.Add(5,&bAirModifierApplied); f.Add(6,&damageUpdater); return 0; }
 	void ApplyAirModifier( const bool bApply );
@@ -152,7 +153,7 @@ class CHelicopterLeaveState : public CHelicopterBaseState
 	OBJECT_BASIC_METHODS( CHelicopterLeaveState );
 	ZDATA_(CHelicopterBaseState)
 	CVec2 vTarget;
-	bool bScanTargets;
+	bool bScanTargets = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&vTarget); f.Add(3,&bScanTargets); return 0; }
 public:
 	CHelicopterLeaveState() : vTarget( VNULL2 ), bScanTargets( false ) { }
@@ -167,7 +168,7 @@ class CHelicopterFlyDeadState : public CHelicopterBaseState
 {
 	OBJECT_BASIC_METHODS( CHelicopterFlyDeadState );
 	ZDATA_(CHelicopterBaseState)
-	bool bStarted;
+	bool bStarted = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CHelicopterBaseState*)this); f.Add(2,&bStarted); return 0; }
 public:
 	CHelicopterFlyDeadState() : bStarted( false ) { }

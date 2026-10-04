@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "B2_M1_World_export.h"
 
 #include "Misc/2Darray.h"
@@ -65,13 +67,13 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	{
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pWeaponID;
-		int nCount;
-		bool bPrimary;
+		int nCount = 0;
+		bool bPrimary = false;
 		std::wstring szLocalizedName;
-		int nDamage;
-		int nPenetration;
-		int nAmmo;
-		int nMaxAmmo;
+		int nDamage = 0;
+		int nPenetration = 0;
+		int nAmmo = 0;
+		int nMaxAmmo = 0;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeaponID); f.Add(3,&nCount); f.Add(4,&bPrimary); f.Add(5,&szLocalizedName); f.Add(6,&nDamage); f.Add(7,&nPenetration); f.Add(8,&nAmmo); f.Add(9,&nMaxAmmo); return 0; }
 		
 		bool operator==( const SWeapon &weapon ) const
@@ -83,10 +85,10 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	ZDATA
 	std::wstring szLocalizedName;
 
-	int nHP;
-	int nMaxHP;
+	int nHP = 0;
+	int nMaxHP = 0;
 	
-	int nSupply;
+	int nSupply = 0;
 	ZSKIP //int nSecondaryAmmo;
 	
 	ZSKIP //int nPrimaryGunCount;
@@ -97,10 +99,10 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 
 	CDBPtr< NDb::SArmorPattern > pArmorPattern;
 	
-	bool bIsTransport;
+	bool bIsTransport = false;
 	ZSKIP //bool bIsResourcesCarrier;
 	
-	float fFuel;
+	float fFuel = 0.0f;
 	
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szLocalizedName); f.Add(3,&nHP); f.Add(4,&nMaxHP); f.Add(5,&nSupply); f.Add(9,&armors); f.Add(10,&weapons); f.Add(11,&pArmorPattern); f.Add(12,&bIsTransport); f.Add(14,&fFuel); return 0; }
 	
@@ -113,8 +115,8 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 struct SIconsSetInfo
 {
 	ZDATA
-		float fRaising;
-		float fHPBarLen;
+		float fRaising = 0.0f;
+		float fHPBarLen = 0.0f;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fRaising); f.Add(3,&fHPBarLen); return 0; }
 	
 	SIconsSetInfo() {}
@@ -125,7 +127,7 @@ struct SIconsSetInfo
 struct SAbilityInfo 
 {
 	SAbilitySwitchState	abilityState;
-	float	fParam;
+	float fParam = 0.0f;
 	SAbilityInfo():
 	abilityState( EASS_READY_TO_ON ), fParam( 0.0f ) {}
 	SAbilityInfo( SAbilitySwitchState _abilityState, float	_fParam ):
@@ -191,28 +193,28 @@ class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 	CVec3 vPos;
 	CQuat qRot;
 	CVec3 vScale;
-	float fHP;
-	int nID;
-	bool bVisible;
+	float fHP = 0.0f;
+	int nID = 0;
+	bool bVisible = false;
 	//int nObjectID;
-	EDiplomacyInfo eDiplomacy;
-	bool bLoopedAnimation;
-	bool bIsSilentlyDead;
+	EDiplomacyInfo eDiplomacy{};
+	bool bLoopedAnimation = false;
+	bool bIsSilentlyDead = false;
 
 	std::vector<uint16_t> attachedSounds;
 	//
-	bool bHasMoveAnimation;
-	float fAnimationSpeed;
+	bool bHasMoveAnimation = false;
+	float fAnimationSpeed = 0.0f;
 	
-	int nKeyObjectPlayer;
-	int nParentID;
-	int nPlayer;
-	int nColorIndex;
+	int nKeyObjectPlayer = 0;
+	int nParentID = 0;
+	int nPlayer = 0;
+	int nColorIndex = 0;
 	//
 protected:
 
-	NDb::ESeason eSeason;
-	bool bIsNight;
+	NDb::ESeason eSeason{};
+	bool bIsNight = false;
 
 	enum EAttachedSoundType
 	{
@@ -371,17 +373,17 @@ public:
 
 class B2_M1_WORLD_EXPORT CMOSelectable : public CMapObj
 {
-	bool bSelected;
-	bool bCanSelect;
-	int nSelectionGroup;
-	bool bIconHitbar;
-  NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconGroup;
+	bool bSelected = false;
+	bool bCanSelect = false;
+	int nSelectionGroup = 0;
+	bool bIconHitbar = false;
+  NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconGroup{};
 	SIconsSetInfo iconsSetInfo;
-	bool bDisableIcons;
-	bool bIsMousePicked;
-	bool bHighlighted;
-	uint32_t dwVisualStatus;
-	float fVisualRadius;
+	bool bDisableIcons = false;
+	bool bIsMousePicked = false;
+	bool bHighlighted = false;
+	uint32_t dwVisualStatus = 0;
+	float fVisualRadius = 0.0f;
 private:
 	bool HasVisualGroup( enum EUnitStatus eGroup ) const;
 	void SetVisualGroup( enum EUnitStatus eGroup );

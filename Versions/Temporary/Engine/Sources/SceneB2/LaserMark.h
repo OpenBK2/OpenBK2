@@ -14,8 +14,9 @@ class SCENEB2_EXPORT CLaserMarkTrace :	public CPtrFuncBase<NGScene::CObjectInfo>
 		CVec3 vEnd;
 		CVec3 vNorm;
 		CVec3 vNorm2;
-		bool bNeedUpdate;
-		NTimer::STime timeStart;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bNeedUpdate = {};
+		NTimer::STime timeStart = {};
 		CDGPtr< CFuncBase<STime> > pTimer;
 
 public:

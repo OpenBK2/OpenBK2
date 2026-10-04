@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 #include "SmokeTrailEffect.h"
 
@@ -9,8 +11,8 @@ class CMOProjectile : public CMapObj
 
 	ZDATA_( CMapObj )
 		CVec3 vPosDiff;
-		NTimer::STime timeToEqualizePos;
-		NTimer::STime startTime;
+		NTimer::STime timeToEqualizePos = 0;
+		NTimer::STime startTime = 0;
 
 		ZSKIP
 		ZSKIP
@@ -19,12 +21,12 @@ class CMOProjectile : public CMapObj
 		ZSKIP
 		CDBPtr<NDb::SProjectile> pProjectile;
 		CPtr<CMapObj> pTarget;
-		float fDamage;
-		bool bModelExists;
-		bool bHitTarget;
+		float fDamage = 0.0f;
+		bool bModelExists = false;
+		bool bHitTarget = false;
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;
-		int nShell;
-		bool bTraceTargetIntersection;
+		int nShell = 0;
+		bool bTraceTargetIntersection = false;
 		CObj<CSmokeTrailEffect> pTrailEffect;
 		CDBPtr<NDb::SComplexEffect> pTrajectoryEffect;
 		CVec3 vRotationSpeedRad;

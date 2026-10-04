@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "Common_RTS_AI/Terrain.h"
@@ -52,8 +54,8 @@ struct SIterateUnitsCallback
 //! CBasePathUnit. Также предоставляет необходимую статическую информации о юните для функций поиска пути.
 class COMMON_RTS_AI_EXPORT CBasePathUnit
 {
-	CBasePathUnit *pLastPushUnit;
-	CBasePathUnit *pLastPusherUnit;
+	CBasePathUnit *pLastPushUnit = nullptr;
+	CBasePathUnit *pLastPusherUnit = nullptr;
 	CPtr<CCommonPathFinder> pPathFinder;
 
 	ZDATA
@@ -64,24 +66,24 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 		SAIAngle wFrontDirection;			//! направление переда
 
 		SAIAngle wLastDirection;			//! предыдущее направление
-		bool bGoForward;					//! едем передом
+		bool bGoForward = false;					//! едем передом
 
-		bool bTurning;						//! поворачиваем
-		bool bTurnCalled;					//! на этом сегменте поворачивались
+		bool bTurning = false;						//! поворачиваем
+		bool bTurnCalled = false;					//! на этом сегменте поворачивались
 
 		CVec3 vCenter;						//! положение юнита (с учетом высоты)
 		SVector vTile;						//! положение юнита на плоскости карты в AI тайлах
 		SVector vLastKnownGoodTile;
 
-		float fSpeed;							//! скорость юнита
-		float fDesiredSpeed;			//! желаемая скорость движения
+		float fSpeed = 0.0f;							//! скорость юнита
+		float fDesiredSpeed = 0.0f;			//! желаемая скорость движения
 
-		bool bLocking;						//! юнит залокал тайлы под собой
-		bool bOnLockedTiles;			//! юнит на залоканых тайлах
-		bool bIdle;								//! нет пути по которому нужно ехать
-		bool bFixUnlocking;				
+		bool bLocking = false;						//! юнит залокал тайлы под собой
+		bool bOnLockedTiles = false;			//! юнит на залоканых тайлах
+		bool bIdle = false;								//! нет пути по которому нужно ехать
+		bool bFixUnlocking = false;
 
-		int nCollisionsCount;
+		int nCollisionsCount = 0;
 
 		CPtr<ISmoothPath> pSmoothPath;
 		CPtr<ISmoothPath> pDefaultPath;
@@ -90,30 +92,30 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 
 		CPtr<ICollision>  pCurrentCollision;
 		CPtr<ICollision>  pInterruptedCollision;
-		bool bNoCollision;
+		bool bNoCollision = false;
 
-		NTimer::STime stayTime;
-		NTimer::STime collStayTime;
-		NTimer::STime nextSecondPathSegmTime;
-		NTimer::STime checkOnLockedTime;
+		NTimer::STime stayTime = 0;
+		NTimer::STime collStayTime = 0;
+		NTimer::STime nextSecondPathSegmTime = 0;
+		NTimer::STime checkOnLockedTime = 0;
 
-		bool bMaxSlowed, bMinSlowed, bNotified;
+		bool bMaxSlowed = false, bMinSlowed = false, bNotified = false;
 
-		bool bTurningToDirContinuesly;
+		bool bTurningToDirContinuesly = false;
 		SAIAngle wDirToContinueslyTurn;
 
-		EMovementPlane eMovementPlane;
+		EMovementPlane eMovementPlane{};
 		CPtr<CAIMap> pAIMap;
 		CPtr<CStaticMapHeights> pHeights;
 		CPtr<ICollisionsCollector> pCollisionsCollector;
 
 		CPtr<ISmoothPath> pInterruptedPath;
 		ZSKIP
-		bool bPlacementUpdated;
-		bool bStoppedSent;
+		bool bPlacementUpdated = false;
+		bool bStoppedSent = false;
 		ZSKIP
 		CVec3 vOldPlacement;
-		uint16_t wOldDirection;
+		uint16_t wOldDirection = 0;
 	public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&wDirection); f.Add(4,&wFrontDirection); f.Add(5,&wLastDirection); f.Add(6,&bGoForward); f.Add(7,&bTurning); f.Add(8,&bTurnCalled); f.Add(9,&vCenter); f.Add(10,&vTile); f.Add(11,&vLastKnownGoodTile); f.Add(12,&fSpeed); f.Add(13,&fDesiredSpeed); f.Add(14,&bLocking); f.Add(15,&bOnLockedTiles); f.Add(16,&bIdle); f.Add(17,&bFixUnlocking); f.Add(18,&nCollisionsCount); f.Add(19,&pSmoothPath); f.Add(20,&pDefaultPath); f.Add(21,&pPathMemento); f.Add(22,&pCurrentCollision); f.Add(23,&pInterruptedCollision); f.Add(24,&bNoCollision); f.Add(25,&stayTime); f.Add(26,&collStayTime); f.Add(27,&nextSecondPathSegmTime); f.Add(28,&checkOnLockedTime); f.Add(29,&bMaxSlowed); f.Add(30,&bMinSlowed); f.Add(31,&bNotified); f.Add(32,&bTurningToDirContinuesly); f.Add(33,&wDirToContinueslyTurn); f.Add(34,&eMovementPlane); f.Add(35,&pAIMap); f.Add(36,&pHeights); f.Add(37,&pCollisionsCollector); f.Add(38,&pInterruptedPath); f.Add(40,&bPlacementUpdated); f.Add(41,&bStoppedSent); f.Add(43,&vOldPlacement); f.Add(44,&wOldDirection); return 0; }
 	private:

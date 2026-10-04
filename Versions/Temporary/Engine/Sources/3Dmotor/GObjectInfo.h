@@ -29,11 +29,12 @@ struct SPartAndSkeletonKey
 {
 	ZDATA
 	CDBPtr<NDb::SGeometry> pGeometry; 
-	int nGeometryPart;
-	int nMaterialPart;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nGeometryPart = {};
+	int nMaterialPart = {};
 	CDBPtr<NDb::SSkeleton> pSkeleton;
-	int nSkeletonPart;
-	int nLightMapped;
+	int nSkeletonPart = {};
+	int nLightMapped = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeometry); f.Add(3,&nGeometryPart); f.Add(4,&nMaterialPart); f.Add(5,&pSkeleton); f.Add(6,&nSkeletonPart); f.Add(7,&nLightMapped); return 0; }
 	//
 	SPartAndSkeletonKey() {}
@@ -56,7 +57,7 @@ class CGrannyFile : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CGrannyFile)
 public:
-	granny_file *pFile;
+	granny_file *pFile = {};
 	//
 	CGrannyFile() : pFile(0) {}
 	~CGrannyFile();
@@ -66,8 +67,8 @@ struct SGrannyFileLoaderInfo
 {
 	ZDATA
 	std::string szResName;
-	int nID;
-	bool bAllowDelayedLoad;
+	int nID = {};
+	bool bAllowDelayedLoad = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szResName); f.Add(3,&nID); f.Add(4,&bAllowDelayedLoad); return 0; }
 	//
 	SGrannyFileLoaderInfo() : nID(-1), bAllowDelayedLoad(false) {}
@@ -120,7 +121,7 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	SPartAndSkeletonKey key;
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pSkeletonFileInfo;
 	std::string sLightMapped;
-	bool   bLightMapped;
+	bool   bLightMapped = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGrannyFile); f.Add(3,&key); f.Add(4,&pSkeletonFileInfo); f.Add(5,&sLightMapped); f.Add(6,&bLightMapped); return 0; }
 protected:
 	bool NeedUpdate();

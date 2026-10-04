@@ -18,7 +18,8 @@ public:
 	struct SUnitPlatform
 	{
 		ZDATA 
-			int nPlatformIndex;
+			// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+			int nPlatformIndex = {};
 			std::vector<int> gunIndexes;
 
 			SUnitPlatform() : nPlatformIndex( -1 ) { }

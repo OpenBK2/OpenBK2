@@ -14,16 +14,17 @@ class CUnitsIter
 	CVec2 vDownLeft;
 	CVec2 vUpRight;
 
-	int nDownX, nDownY, nUpX, nUpY;
-	uint8_t cStartDipl;
-	uint8_t cCurDipl;
-	uint8_t cDiplEnd;
-	uint8_t cCurMech;
-	uint8_t cMechEnd;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nDownX = {}, nDownY = {}, nUpX = {}, nUpY = {};
+	uint8_t cStartDipl = {};
+	uint8_t cCurDipl = {};
+	uint8_t cDiplEnd = {};
+	uint8_t cCurMech = {};
+	uint8_t cMechEnd = {};
 
-	uint8_t cCurVis;
+	uint8_t cCurVis = {};
 
-	int nXCell, nYCell;
+	int nXCell = {}, nYCell = {};
 
 	CUnitsIter<1, NSize-1> iter;
 
@@ -184,16 +185,16 @@ class CUnitsIter<1, 0>
 	CVec2 vDownLeft;
 	CVec2 vUpRight;
 
-	int nDownX, nDownY, nUpX, nUpY;
-	uint8_t cStartDipl;
-	uint8_t cCurDipl;
-	uint8_t cDiplEnd;
-	uint8_t cCurMech;
-	uint8_t cMechEnd;
-	uint8_t cCurVis;
+	int nDownX = {}, nDownY = {}, nUpX = {}, nUpY = {};
+	uint8_t cStartDipl = {};
+	uint8_t cCurDipl = {};
+	uint8_t cDiplEnd = {};
+	uint8_t cCurMech = {};
+	uint8_t cMechEnd = {};
+	uint8_t cCurVis = {};
 
-	int nXCell, nYCell;
-	int nIter;
+	int nXCell = {}, nYCell = {};
+	int nIter = {};
 
 	//
 	void IterateByCells()
@@ -351,16 +352,16 @@ class CUnitsIter<0, 0>
 	CVec2 vDownLeft;
 	CVec2 vUpRight;
 
-	int nDownX, nDownY, nUpX, nUpY;
-	uint8_t cStartDipl;
-	uint8_t cCurDipl;
-	uint8_t cDiplEnd;
-	uint8_t cCurMech;
-	uint8_t cMechEnd;
-	uint8_t cCurVis;
+	int nDownX = {}, nDownY = {}, nUpX = {}, nUpY = {};
+	uint8_t cStartDipl = {};
+	uint8_t cCurDipl = {};
+	uint8_t cDiplEnd = {};
+	uint8_t cCurMech = {};
+	uint8_t cMechEnd = {};
+	uint8_t cCurVis = {};
 
-	int nXCell, nYCell;
-	int nIter;
+	int nXCell = {}, nYCell = {};
+	int nIter = {};
 
 	//
 	void IterateByCells()

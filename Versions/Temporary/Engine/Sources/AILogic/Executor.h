@@ -85,9 +85,10 @@ enum EExecutorEventID
 struct SExecutorEventParam
 {
 	ZDATA
-	EExecutorEventID eEventID;							// what event 
-	int nExecutorID;												// for executor generated event
-	int nUnitID;														// for unit generated event (legacy)
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EExecutorEventID eEventID = {};							// what event
+	int nExecutorID = {};												// for executor generated event
+	int nUnitID = {};														// for unit generated event (legacy)
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eEventID); f.Add(3,&nExecutorID); f.Add(4,&nUnitID); return 0; }
 	SExecutorEventParam() : eEventID( (EExecutorEventID)0 ), nExecutorID( 0 ), nUnitID( 0 ) { }
@@ -126,7 +127,7 @@ public:
 // all objects around this object will set their transparency again.
 class CExecutorEventAddToRestoreTransparencyQueue : public CExecutorEvent
 {
-	int nID;
+	int nID = {};
 public:
 	CExecutorEventAddToRestoreTransparencyQueue( const SExecutorEventParam &_param, const int _nID ) 
 		: nID( _nID ), CExecutorEvent( _param )
@@ -146,7 +147,7 @@ public:
 class CExecutorEventSpecialAbility : public CExecutorEvent
 {
 	ZDATA_(CExecutorEvent)
-	NDb::EUnitSpecialAbility eAbility;
+	NDb::EUnitSpecialAbility eAbility = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&eAbility); return 0; }
 
@@ -223,9 +224,9 @@ public:
 class CExecutorEventSuperWeaponControl : public CExecutorEvent
 {
 	ZDATA_( CExecutorEvent )
-		int nPlayer;
-		int nUnitID;
-		bool bEnabled;
+		int nPlayer = {};
+		int nUnitID = {};
+		bool bEnabled = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutorEvent *)this); f.Add(2,&nPlayer); f.Add(3,&nUnitID); f.Add(4,&bEnabled); return 0; }
 
@@ -241,7 +242,7 @@ public:
 class CExecutorEventSuperWeaponUse : public CExecutorEvent
 {
 	ZDATA_( CExecutorEvent )
-		int nPlayer;
+		int nPlayer = {};
 		CVec2 vTarget;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutorEvent *)this); f.Add(2,&nPlayer); f.Add(3,&vTarget); return 0; }
@@ -274,11 +275,11 @@ struct IExecutor :	public CAIObjectBase
 class CExecutor : public IExecutor
 {
 	ZDATA
-	EExecutorTypeID eTypeID;
-	bool bActive;
-	int nUniqueID;
-	int nNextTime;													// when this executor will be called after segment
-	int nID;
+	EExecutorTypeID eTypeID = {};
+	bool bActive = {};
+	int nUniqueID = {};
+	int nNextTime = {};													// when this executor will be called after segment
+	int nID = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eTypeID); f.Add(3,&bActive); f.Add(4,&nUniqueID); f.Add(5,&nNextTime); f.Add(6,&nID); return 0; }
 protected:

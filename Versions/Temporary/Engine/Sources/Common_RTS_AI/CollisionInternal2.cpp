@@ -125,7 +125,8 @@ inline const SRect GetSpeedRect( const CBasePathUnit *pUnit, const float fAhead 
 struct SCheckRect : public SIterateUnitsCallback
 {
 	SRect unitRect;
-	int nSkipID;
+	// Defensive defaults preserve explicit constructor values below.
+	int nSkipID = 0;
 	SCheckRect() : nSkipID( -1 ) { unitRect.InitRect( VNULL2, VNULL2, VNULL2, VNULL2 ); }
 	SCheckRect( const SRect &_unitRect, const int _nSkipID ) : nSkipID( _nSkipID ),  unitRect( _unitRect ) {}
 	bool Iterate( CBasePathUnit *pCand ) const
@@ -224,9 +225,10 @@ const NCollision::ECollideType GetCollideType( const CBasePathUnit *pUnit, const
 
 struct SFindCandidates : public SIterateUnitsCallback
 {
-	CBasePathUnit *pUnit;
+	// Callbacks have defined pointers even before their parameters are supplied.
+	CBasePathUnit *pUnit = nullptr;
 	SRect unitRect;
-	ICollisionsCollector *pCollisionsCollector;
+	ICollisionsCollector *pCollisionsCollector = nullptr;
 
 	SFindCandidates() : pUnit( 0 ), pCollisionsCollector( 0 ) {}
 	SFindCandidates( CBasePathUnit *_pUnit, ICollisionsCollector *_pCollisionsCollector )

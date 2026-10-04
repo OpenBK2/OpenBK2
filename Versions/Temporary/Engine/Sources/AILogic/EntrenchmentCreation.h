@@ -20,7 +20,8 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	bool CanBuildNextInnerSlow( const int _nIndex ) const;
 
 	ZDATA_(CLongObjectCreation)
-	int nStartIndex;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nStartIndex = {};
 	CDBPtr<SEntrenchmentRPGStats> pEntrenchmentStats;
 	CObj<CEntrenchment> pFullEntrenchment;
 	CParts parts;
@@ -31,16 +32,16 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	
 	std::vector<CVec2> vPoints;						// центры окопов
 	//
-	int nCurIndex;
+	int nCurIndex = {};
 	SAIAngle wAngle;
 	CLine2 line;
-	bool bCannot;
-	bool bSayAck;
+	bool bCannot = {};
+	bool bSayAck = {};
 
 	std::list<SVector> tilesUnder;									// ТАйлы под следующим сегментом
 
 	//consts
-	int nTermInd;
+	int nTermInd = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&nStartIndex); f.Add(3,&pEntrenchmentStats); f.Add(4,&pFullEntrenchment); f.Add(5,&parts); f.Add(6,&pBeginTerminator); f.Add(7,&pEndTerminator); f.Add(8,&pNewEndTerminator); f.Add(9,&vPoints); f.Add(10,&nCurIndex); f.Add(11,&wAngle); f.Add(12,&line); f.Add(13,&bCannot); f.Add(14,&bSayAck); f.Add(15,&tilesUnder); f.Add(16,&nTermInd); return 0; }
 	void OnSerialize( IBinSaver &saver );
 	//

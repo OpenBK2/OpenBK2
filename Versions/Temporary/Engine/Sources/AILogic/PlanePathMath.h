@@ -85,7 +85,8 @@ public:
 // circle with preferred direction
 struct CDirectedCircle : public CCircle
 {
-	int nDir;												// direction of circle rotation
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nDir = {};												// direction of circle rotation
 
 	CDirectedCircle() : nDir( 0 ) {  }
 	CDirectedCircle ( const CVec2 &_center, const float _r, const int _nDir )

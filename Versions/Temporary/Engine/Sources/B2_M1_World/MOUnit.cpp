@@ -465,7 +465,8 @@ struct SChooseAttachedToDamaged : public CMOUnit::IChooseAttached
 {
 	OBJECT_NOCOPY_METHODS( SChooseAttachedToDamaged );
 public:
-	const int nDamageLevel;
+	// Keep a defined fallback without changing constructor-selected damage levels.
+	const int nDamageLevel = 0;
 
 	SChooseAttachedToDamaged() : nDamageLevel( 0 ) { }
 	SChooseAttachedToDamaged( const int _nDamageLevel ) : nDamageLevel( _nDamageLevel ) { }

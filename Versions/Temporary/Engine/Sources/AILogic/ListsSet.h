@@ -14,8 +14,9 @@ struct SElInfo
 	public: 
 		public: int operator&( IBinSaver &saver ); private:
 
-	int id; 
-	T value;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int id = {};
+	T value = {};
 
 	SElInfo() { }	
 	SElInfo( const int _id, const T &_value ) : id( _id ), value( _value ) { }
@@ -33,7 +34,7 @@ class CListsSet
 	std::vector<int> fronts;
 	std::vector<int> sizes;
 
-	int freePtr;
+	int freePtr = {};
 
 	//
 	int GetFreePos();

@@ -1,8 +1,10 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 class CLine
 {
-	int a, b, c;
+	int a = 0, b = 0, c = 0;
 	SVector p1, p2;
 public:
 	CLine() : a( 0 ), b( 0 ), c( 0 ), p1( -1, -1 ), p2( -1, -1 ) {};

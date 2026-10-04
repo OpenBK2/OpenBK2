@@ -19,7 +19,8 @@ class CAckManager
 	CAckTypeBoredPrecence bored;
 
 	typedef std::vector<SAIAcknowledgment> CAcknowledgments;
-	int ackIndex;													// for giving acks to client - counter
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int ackIndex = {};													// for giving acks to client - counter
 	CAcknowledgments acknowledgements;		// накапливает Acknolegments идущие от AI
 
 	void AddAcknowledgment( const SAIAcknowledgment &ack );

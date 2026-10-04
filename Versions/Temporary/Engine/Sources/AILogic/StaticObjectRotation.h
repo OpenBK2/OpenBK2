@@ -11,7 +11,8 @@ template <class TCont, class TArray2D>
 class CRotatedArray2D
 {
 	TArray2D &array;
-	int nRotation;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nRotation = {};
 
 	int operator&( IBinSaver & saver ) { return 0; } // dissalow serialize
 public:
@@ -128,13 +129,13 @@ typedef CRotatedArray2D<uint8_t, CArray2D<uint8_t> > CRotatedArray2DBYTE;
 template <class TCont, class TArray2D>
 class CSmoothRotatedArray2D
 {
-	TArray2D *array;						// passability array
+	TArray2D *array = {};						// passability array
 	SAIAngle wAngle;								// object rotation ange
 	CVec2 vCenter;							// object center (int AI world coordinates)
 	CVec2 vOrigin;							// passability origin
 	CVec2 vRotationVector, vRotationVectorBack;
-	int nMinX, nMinY, nMaxX, nMaxY;
-	float fSin, fCos;
+	int nMinX = {}, nMinY = {}, nMaxX = {}, nMaxY = {};
+	float fSin = {}, fCos = {};
 public:
 	// array - passability/visibility
 	CSmoothRotatedArray2D() { }

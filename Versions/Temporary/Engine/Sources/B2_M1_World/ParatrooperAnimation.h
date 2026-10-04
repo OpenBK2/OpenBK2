@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "UpdatableProcess.h"
 #include "Stats_B2_M1/Season.h"
 
@@ -16,9 +18,9 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 	//
 	ZDATA
 		CPtr<CMapObj> pInfantry;
-		NTimer::STime timeToChange;
+		NTimer::STime timeToChange = 0;
 		ZSKIP
-		int nParachuteID;
+		int nParachuteID = 0;
 		ZSKIP
 		CDBPtr<NDb::SAnimB2> pUnitAnim;
 		CDBPtr<NDb::SAnimB2> pParaAnim;
@@ -39,9 +41,9 @@ class CParachuteFinishProcess : public IClientUpdatableProcess
 	//
 	ZDATA
 		CPtr<CMOUnitInfantry> pInfantry;
-		NTimer::STime timeToChange;
+		NTimer::STime timeToChange = 0;
 		ZSKIP
-		NDb::ESeason eSeason;
+		NDb::ESeason eSeason{};
 		CDBPtr<NDb::SAnimB2> pIdleAnim;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pInfantry); f.Add(3,&timeToChange); f.Add(5,&eSeason); f.Add(6,&pIdleAnim); return 0; }
 	//

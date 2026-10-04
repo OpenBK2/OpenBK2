@@ -15,13 +15,14 @@ class SCENEB2_EXPORT CWindController : public CObjectBase
 
 	CPtr<IGameTimer> pTimer;
 	//Stored wind parameters
-	float fWindDirection;
-	float fWindIntensity;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fWindDirection = {};
+	float fWindIntensity = {};
 
 	//Computed
-	int nCycleLength;
-	float fSpeedCoeff;
-	float fCoeffX, fCoeffY;		//For turning
+	int nCycleLength = {};
+	float fSpeedCoeff = {};
+	float fCoeffX = {}, fCoeffY = {};		//For turning
 
 	float CoeffFunc( int nParam );			//Has positive values (up to 1.0) in [0, 1000], zero elsewhere.
 public:

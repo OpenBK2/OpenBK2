@@ -7,7 +7,8 @@ namespace NDb
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CScanLimiter
 {
-	int nScannedUnits;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nScannedUnits = {};
 public:
 	CScanLimiter() : nScannedUnits( 0 ) { }
 

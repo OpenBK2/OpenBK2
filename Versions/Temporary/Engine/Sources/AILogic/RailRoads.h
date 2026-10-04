@@ -8,7 +8,8 @@ struct SRailRoadSystem
 		ZDATA
 		CDBPtr<SVSODesc>	pDescriptor;
 		std::vector<SVSOPoint> points;
-		float							fPointLength;					// Length between two points
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float							fPointLength = {};					// Length between two points
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pDescriptor); f.Add(3,&points); f.Add(4,&fPointLength); return 0; }
 
 		void Decompose( const float fPos, int *pPoint, float *pFraction ) const;

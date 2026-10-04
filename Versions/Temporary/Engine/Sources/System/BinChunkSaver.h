@@ -21,14 +21,15 @@ public:
 	typedef std::string stdString;
 	typedef std::wstring stdWString;
 private:
-	CDataStream *pRes;
-	bool bDestroy;
+	// Defensive member defaults; explicit constructor/mode values take precedence.
+	CDataStream *pRes = nullptr;
+	bool bDestroy = false;
 
 	struct SChunkLevel
 	{
-		chunk_id idChunk, idLastChunk;
-		int nStart, nLength;
-		int nLastPos, nLastNumber;
+		chunk_id idChunk = 0, idLastChunk = 0;
+		int nStart = 0, nLength = 0;
+		int nLastPos = 0, nLastNumber = 0;
 		
 		void ClearCache();
 		void Clear();
@@ -40,7 +41,7 @@ private:
 	CMemoryStream data;
 	std::list<SChunkLevel> chunks;
 	typedef std::list<SChunkLevel>::iterator CChunkLevelIterator;
-	bool bIsReading, bPackResult, bMode64;
+	bool bIsReading = false, bPackResult = false, bMode64 = false;
 	// maps objects addresses during save(first) to addresses during load(second) - during loading
 	// or serves as a sign that some object has been already stored - during storing
 	typedef std::unordered_map<void*,CPtr<CObjectBase>> CObjectsHash;
@@ -59,7 +60,7 @@ private:
 	typedef std::unordered_map<int,CObjectBase*> CExternalHash;
 	CExternalHash externalObjects;
 	std::list<CObjectBase*> toStore;
-	int nVersion;
+	int nVersion = 0;
 	std::vector< CPtr<IDebugSaveCheckObj> > checkers;
 
 	bool ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &res );

@@ -20,7 +20,8 @@ struct SAnimHandle
 {
 	ZDATA
 	CDBPtr<NDb::SAnimBase> pAnimFile;
-	int nAnimNumber;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nAnimNumber = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimFile); f.Add(3,&nAnimNumber); return 0; }
 	SAnimHandle() : nAnimNumber(-1) {}
 	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : 
@@ -70,7 +71,7 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 	// mutators
 	struct SDesiredBoneMove
 	{
-		const STime tDuration;
+		const STime tDuration = {};
 		const CQuat finalRot;
 		const CVec3 finalPos;
 		SDesiredBoneMove( const STime &_tDuration = 0, const CQuat &_finalRot = QNULL, const CVec3 &_finalPos = VNULL3 )

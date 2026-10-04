@@ -22,13 +22,14 @@ class CTankShootEstimator : public IShootEstimator
 
 	CPtr<CAIUnit> pBestUnit;
 	CPtr<CBasicGun> pBestGun;
-	int nBestGun;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nBestGun = {};
 	CPtr<CAIUnit> pCurTarget;
-	bool bDamageToCurTargetUpdated;
+	bool bDamageToCurTargetUpdated = {};
 
-	float fBestRating;
-	uint32_t dwForbidden;
-	uint32_t dwDefaultForbidden;
+	float fBestRating = {};
+	uint32_t dwForbidden = {};
+	uint32_t dwDefaultForbidden = {};
 	
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 
@@ -61,19 +62,19 @@ class CSoldierShootEstimator : public IShootEstimator
 	CPtr<CAIUnit> pOwner;
 	CPtr<CAIUnit> pBestUnit;
 	CPtr<CBasicGun> pBestGun;
-	int nBestGun;
+	int nBestGun = {};
 	CPtr<CAIUnit> pCurTarget;
-	bool bDamageToCurTargetUpdated;
+	bool bDamageToCurTargetUpdated = {};
 
-	float fBestRating;
+	float fBestRating = {};
 
-	bool bHasGrenades;
+	bool bHasGrenades = {};
 	// бросаем гранату, не учитываю общую функцию выбора цели по рейтингу
-	bool bThrowGrenade;
-	bool bUseGrenadeFixed;
-	bool bUseGrenadeAutocast;
+	bool bThrowGrenade = {};
+	bool bUseGrenadeFixed = {};
+	bool bUseGrenadeAutocast = {};
 
-	uint32_t dwForbidden;
+	uint32_t dwForbidden = {};
 
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestUnit); f.Add(4,&pBestGun); f.Add(5,&nBestGun); f.Add(6,&pCurTarget); f.Add(7,&bDamageToCurTargetUpdated); f.Add(8,&fBestRating); f.Add(9,&bHasGrenades); f.Add(10,&bThrowGrenade); f.Add(11,&bUseGrenadeFixed); f.Add(12,&bUseGrenadeAutocast); f.Add(13,&dwForbidden); f.Add(14,&pMosinStats); return 0; }
@@ -106,8 +107,8 @@ class CPlaneDeffensiveFireShootEstimator : public IShootEstimator
 	CPtr<CAIUnit> pBestUnit;
 	CPtr<CAIUnit> pCurTarget;
 	CPtr<CBasicGun> pGun;
-	bool bDamageToCurTargetUpdated;
-	float fBestRating;
+	bool bDamageToCurTargetUpdated = {};
+	float fBestRating = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestUnit); f.Add(4,&pCurTarget); f.Add(5,&pGun); f.Add(6,&bDamageToCurTargetUpdated); f.Add(7,&fBestRating); return 0; }
 		void OnSerialize( IBinSaver &f );
 	const float CalcTimeToOpenFire( class CAIUnit *pEnemy, CBasicGun *pGun ) const; // время для открытия огня (учитывая поворот оружия и скорость сближения с врагом)
@@ -137,11 +138,11 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	public:
 		ZDATA
 		CPtr<CAIUnit> pTarget;
-		bool bCanTargetShootToPlanes;
-		bool bCanAttackerBreakTarget;
+		bool bCanTargetShootToPlanes = {};
+		bool bCanAttackerBreakTarget = {};
 		SAIAngle wSpeedDiff;
 		SAIAngle wDirToTarget;
-		float fRating;
+		float fRating = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTarget); f.Add(3,&bCanTargetShootToPlanes); f.Add(4,&bCanAttackerBreakTarget); f.Add(5,&wSpeedDiff); f.Add(6,&wDirToTarget); f.Add(7,&fRating); return 0; }
 	public:
 		//
@@ -195,7 +196,7 @@ class CShootEstimatorForObstacles : public IObstacleEnumerator
 {
 	ZDATA
 	CPtr<CCommonUnit> pOwner;
-	float fCurRating;
+	float fCurRating = {};
 	CPtr<IObstacle> pBest;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&fCurRating); f.Add(4,&pBest); return 0; }
 public:
@@ -212,9 +213,9 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 		ZDATA
 	CPtr<CAIUnit> pOwner;
 	CPtr<CAIUnit> pBestTarget; 
-	uint32_t dwForbidden;
-	float fBestRating;
-	bool bDamageToCurTargetUpdated ;
+	uint32_t dwForbidden = {};
+	float fBestRating = {};
+	bool bDamageToCurTargetUpdated = {} ;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestTarget); f.Add(4,&dwForbidden); f.Add(5,&fBestRating); f.Add(6,&bDamageToCurTargetUpdated); return 0; }
 	const float CalcRating( CAIUnit *pEnemy, CBasicGun *pGun ) const;
 public:

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include <cstdint>
@@ -21,11 +23,11 @@ struct IConsoleBuffer : public CObjectBase
 	struct SConsoleLine
 	{
 		ZDATA
-		int nStream;
-		int nSequenceID;
-		bool bPersistent;
+		int nStream = 0;
+		int nSequenceID = 0;
+		bool bPersistent = false;
 		std::wstring szText;
-		uint32_t dwColor;
+		uint32_t dwColor = 0;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nStream); f.Add(3,&nSequenceID); f.Add(4,&bPersistent); f.Add(5,&szText); f.Add(6,&dwColor); return 0; }
 	};
 	// write string to console's stream

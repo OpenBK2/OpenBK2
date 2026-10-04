@@ -1,14 +1,16 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Path.h"
 
 class CStandartDirectPath : public IPath
 {
 	OBJECT_NOCOPY_METHODS( CStandartDirectPath )
 	ZDATA
-		int nCurrentTile;
+		int nCurrentTile = 0;
 		std::vector<SVector> tiles;
-		float fTileSize;
+		float fTileSize = 0.0f;
 		CVec2 vStartPoint;
 		CVec2 vFinishPoint;
 public:

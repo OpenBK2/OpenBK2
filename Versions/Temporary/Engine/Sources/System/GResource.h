@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include "Dg.h"
@@ -17,7 +19,7 @@ template<class TKey>
 struct SResKey
 {
 	boost::uuids::uuid uidKey;
-	TKey tKey;
+	TKey tKey{};
 
 	SResKey() {}
 	SResKey( const boost::uuids::uuid &uid, const TKey &key ): uidKey(uid), tKey(key) {}
@@ -132,10 +134,10 @@ public:
 class SYSTEM_EXPORT CFileRequest : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS(CFileRequest);
-	const char *pszResName;
-	int  nID;
+	const char *pszResName = nullptr;
+	int  nID = 0;
 	boost::uuids::uuid uid;
-	bool bIsReady, bDelayedLoad;
+	bool bIsReady = false, bDelayedLoad = false;
 	CMemoryStream data;
 public:
 	CFileRequest() : pszResName(0), nID(0), bIsReady(true), bDelayedLoad(true) {}

@@ -1,4 +1,6 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 #include "System_export.h"
 
 #include <charconv>
@@ -18,8 +20,8 @@ class SYSTEM_EXPORT CDataStream
 {
 	struct SYSTEM_EXPORT SData
 	{
-		unsigned char *pBuffer, *pBufferEnd, *pFileEnd, *pCurrent;
-		int nFlags;
+		unsigned char *pBuffer = nullptr, *pBufferEnd = nullptr, *pFileEnd = nullptr, *pCurrent = nullptr;
+		int nFlags = 0;
 
 		SData() : pBuffer( 0 ), pBufferEnd( 0 ), pFileEnd( 0 ), pCurrent( 0 ) { }
 	};
@@ -158,7 +160,7 @@ class SYSTEM_EXPORT CFileStream : public CDataStream
 public:
 	enum EWinMode { WIN_READ_ONLY, WIN_CREATE };
 private:
-	CDataStream *pStream;
+	CDataStream *pStream = nullptr;
 
 	//
 	CFileStream( const CFileStream &stream );
@@ -209,7 +211,7 @@ inline CTextStream& endl( CTextStream& sStream ) { sStream << "\n"; return sStre
 
 class CStreamHolder
 {
-	CDataStream *pStream;
+	CDataStream *pStream = nullptr;
 
 	CStreamHolder( const CStreamHolder &a ) {ASSERT(0);}
 	void operator=( const CStreamHolder &a ) {ASSERT(0);}

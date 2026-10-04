@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include <chrono>
 #include <cstdint>
 #include <ctime>
@@ -68,14 +70,14 @@ inline bool GetLocalTime( std::tm *pResult, std::time_t t )
 // replace the struct with a time_t.
 struct SSystemTime
 {
-	uint16_t wYear;
-	uint16_t wMonth;
-	uint16_t wDayOfWeek;
-	uint16_t wDay;
-	uint16_t wHour;
-	uint16_t wMinute;
-	uint16_t wSecond;
-	uint16_t wMilliseconds;
+	uint16_t wYear = 0;
+	uint16_t wMonth = 0;
+	uint16_t wDayOfWeek = 0;
+	uint16_t wDay = 0;
+	uint16_t wHour = 0;
+	uint16_t wMinute = 0;
+	uint16_t wSecond = 0;
+	uint16_t wMilliseconds = 0;
 };
 
 static_assert( sizeof( SSystemTime ) == 16,

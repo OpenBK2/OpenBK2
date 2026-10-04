@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "XmlResource.h"
 
 #include "System_export.h"
@@ -18,7 +20,7 @@ class CDBID
 	ZDATA
 		std::string szKeyName;
 		ZSKIP;
-		uint32_t dwHashKey;
+		uint32_t dwHashKey = 0;
 public:
 	ZONSERIALIZE
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szKeyName); f.Add(4,&dwHashKey); OnSerialize( f ); return 0; }
@@ -119,7 +121,7 @@ namespace NDb
 		friend class CResourceSaver;
 		friend class CResourceHelper;
 		CDBID dbid;
-		bool bLoaded;
+		bool bLoaded = false;
 		// disable assign operator
 		CResource& operator=( const CResource &res ) = delete;
 	protected:
@@ -217,7 +219,7 @@ template <class TUserObj, typename TPtr = CPtr<TUserObj> >
 class CDBPtr
 {
 	TPtr pObj;
-	mutable bool bLoaded;
+	mutable bool bLoaded = false;
 	//
 	BOOST_FORCEINLINE void LoadObject() const
 	{

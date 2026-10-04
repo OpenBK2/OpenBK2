@@ -8,8 +8,9 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CControlSumCheckCommand );
 
-	int nPlayer;
-	unsigned long ulCheckSum;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nPlayer = {};
+	unsigned long ulCheckSum = {};
 
 	// не сэйвится!
 	static std::vector< std::list<unsigned long> > checkSums;
@@ -36,9 +37,9 @@ class CControlSumHistoryCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CControlSumHistoryCommand );
 
 public:	
-	int nPlayer;
-	unsigned long ulCheckSum;
-	int nSegment;
+	int nPlayer = {};
+	unsigned long ulCheckSum = {};
+	int nSegment = {};
 
 	// не сэйвится!
 	static CArray2D<unsigned long> checkSums;
@@ -68,7 +69,7 @@ class CDropPlayerCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CDropPlayerCommand );
 
 	ZDATA
-		int nPlayerToDrop;
+		int nPlayerToDrop = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nPlayerToDrop); return 0; }
 public:
 	CDropPlayerCommand() : nPlayerToDrop( -1 ) { }

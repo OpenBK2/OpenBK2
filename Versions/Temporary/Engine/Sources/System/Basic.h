@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include <cstdint>
@@ -50,10 +52,10 @@ private:
 	static void DestroyDelayed();
 protected:
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
-	char szObjectName[12];
+	char szObjectName[12]{};
 #endif
-	int nObjData;
-	int nRefData;
+	int nObjData = 0;
+	int nRefData = 0;
 	// function should clear contents of object, easy to implement via consequent calls to
 	// destructor and constructor, this function should not be called directly, use Clear()
 	virtual void DestroyContents() = 0;
@@ -184,7 +186,7 @@ template< class TUserObj, class TRef>
 class CPtrBase
 {
 private:
-	TUserObj *ptr;
+	TUserObj *ptr = nullptr;
 	//
 	void AddRef( TUserObj *_ptr ) { TRef p; if ( _ptr ) p.AddRef( CastToObjectBase(_ptr) ); }
 	void DecRef( TUserObj *_ptr ) { TRef p; if ( _ptr ) p.DecRef( CastToObjectBase(_ptr) ); }
@@ -254,7 +256,7 @@ template<class T> inline bool IsValid( CMObj<T> *p ) { return p->YouHaveMadeMist
 // functor for STL tests
 struct SPtrTest
 {
-	CObjectBase *pTest;
+	CObjectBase *pTest = nullptr;
 	SPtrTest( CObjectBase *_pTest ): pTest(_pTest) {}
 	template <class T,class T1> 
 		bool operator()( const CPtrBase<T,T1> &a ) const { return a == pTest; }
@@ -287,7 +289,7 @@ inline bool EraseInvalidRefs( TContainer *pData )
 // class for convinient handling of framework`s contexts
 class CFWContext
 {
-	void **pFrameworkPtr;
+	void **pFrameworkPtr = nullptr;
 public:
 	template<class T>
 		CFWContext( T **pF, T *pData ): pFrameworkPtr((void**)pF) { *pF = pData; }
@@ -298,7 +300,7 @@ public:
 template<class T>
 class CDynamicCast
 {
-	T *ptr;
+	T *ptr = nullptr;
 public:
 	template<class TT>
 		CDynamicCast( TT *_ptr ) { ptr = dynamic_cast<T*>( CastToObjectBase( _ptr ) ); }

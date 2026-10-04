@@ -1,11 +1,13 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 #include "MapObj.h"
 
 
 class CMOFence : public CMapObj
 {
 	OBJECT_NOCOPY_METHODS( CMOFence );
-	int nSceneID;	// object ID in scene
+	int nSceneID = 0;	// object ID in scene
 	//
 	const NDb::SFenceRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SFenceRPGStats*>( GetStats() ); }
 public:

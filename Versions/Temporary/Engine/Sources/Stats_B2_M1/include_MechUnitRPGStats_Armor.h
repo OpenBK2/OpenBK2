@@ -1,5 +1,6 @@
-int nMin;
-int nMax;
+// Converted armor values need defaults before ToAIUnits runs.
+int nMin = 0;
+int nMax = 0;
 
 
 bool ToAIUnits( bool bInEditor )

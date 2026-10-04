@@ -13,8 +13,9 @@ LIBDB_EXPORT uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t
 
 class CCheckSum
 {
-	uint32_t dwCheckSum;
-	IBinSaver *p;
+	// The constructor retains the checksum seed; the type-probe pointer stays null.
+	uint32_t dwCheckSum = 0;
+	IBinSaver *p = nullptr;
 	
 	char PORT_CDECL TestType(...) { return 0; }
 	template<class T1>

@@ -7,8 +7,9 @@ class CCombatEstimator
 {
 	struct SShellInfo
 	{
-		NTimer::STime time;
-		float fDamage;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime time = {};
+		float fDamage = {};
 		//
 		SShellInfo() {}
 		SShellInfo( NTimer::STime time, float fDamage )
@@ -18,7 +19,7 @@ class CCombatEstimator
 	typedef det_set<int> CRegisteredUnits;
 	typedef std::list<SShellInfo> CShellTimes;
 ZDATA
-	float fDamage;
+	float fDamage = {};
 	CRegisteredUnits registeredMechUnits;			// вражескте юниты (не пехота)с ненулевой текущей скоростью
 	CRegisteredUnits registeredInfantry;			// вражескте юниты (пехота)с ненулевой текущей скоростью
 

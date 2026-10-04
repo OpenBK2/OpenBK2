@@ -28,9 +28,10 @@ class CFormation : public CCommonUnit
 	class CCarryedMortar
 	{
 		ZDATA
-		bool bHasMortar;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bHasMortar = {};
 		CDBPtr<SUnitBaseRPGStats> pStats;
-		float fHP;
+		float fHP = {};
 		std::vector<int> ammo;
 	public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&bHasMortar); f.Add(3,&pStats); f.Add(4,&fHP); f.Add(5,&ammo); return 0; }
@@ -43,8 +44,8 @@ class CFormation : public CCommonUnit
 
 	struct SGunInfo
 	{
-		int nUnit;
-		int nUnitGun;
+		int nUnit = {};
+		int nUnitGun = {};
 
 		SGunInfo() : nUnit( -1 ), nUnitGun( -1 ) { }
 		SGunInfo( const int _nUnit, const int _nUnitGun ) : nUnit( _nUnit ), nUnitGun( _nUnitGun ) { }
@@ -56,56 +57,56 @@ class CFormation : public CCommonUnit
 	{
 		ZDATA
 		CPtr<CSoldier> pSoldier;
-		int nSlotInStats;
+		int nSlotInStats = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&nSlotInStats); return 0; }
 		SVirtualUnit() : pSoldier( 0 ) { }
 
 	};
 
 	ZDATA_( CCommonUnit )
-	float fPass;
+	float fPass = {};
 
-	NTimer::STime timeToCamouflage;
+	NTimer::STime timeToCamouflage = {};
 
 	CArray1Bit availCommands;
 	//
-	uint8_t cPlayer;
+	uint8_t cPlayer = {};
 
 	std::vector<SGunInfo> guns;
 
-	bool bWaiting;
+	bool bWaiting = {};
 	CDBPtr<NDb::SSquadRPGStats> pStats;
 
-	bool bDisabled;
+	bool bDisabled = {};
 
-	EObjectInsideOf eInsideType;
+	EObjectInsideOf eInsideType = {};
 	CPtr<CObjectBase> pObjInside;
 
-	float fMaxFireRange;
+	float fMaxFireRange = {};
 
 	std::vector<SVirtualUnit> virtualUnits;
-	int nVirtualUnits;
-	bool bCanBeResupplied;
+	int nVirtualUnits = {};
+	bool bCanBeResupplied = {};
 
 	CCarryedMortar mortar;
-	bool bBoredInMoveFormationSent;
-	NTimer::STime lastBoredInMoveFormationCheck;
+	bool bBoredInMoveFormationSent = {};
+	NTimer::STime lastBoredInMoveFormationCheck = {};
 
-	bool bWithMoraleOfficer;
+	bool bWithMoraleOfficer = {};
 
-	bool bUsedCharge;
+	bool bUsedCharge = {};
 	CPtr<CMineStaticObject> pCharge;
-	int nInUnitsID;
+	int nInUnitsID = {};
 
 	CPtr<CGroupSmoothPath> pGroupSmoothPath;
 	std::vector< CPtr<CSoldier> > soldiers;
-	float fMaxSpeed;
-	float fSpeedCoeff;
+	float fMaxSpeed = {};
+	float fSpeedCoeff = {};
 	CVec2 vAABBHalfSize;
-	int nBoundTileRadius;
+	int nBoundTileRadius = {};
 
-	NTimer::STime timeLastCatchArt;
-	uint32_t dwCatchArtFlag;
+	NTimer::STime timeLastCatchArt = {};
+	uint32_t dwCatchArtFlag = {};
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonUnit *)this); f.Add(2,&fPass); f.Add(3,&timeToCamouflage); f.Add(4,&availCommands); f.Add(5,&cPlayer); f.Add(6,&guns); f.Add(7,&bWaiting); f.Add(8,&pStats); f.Add(9,&bDisabled); f.Add(10,&eInsideType); f.Add(11,&pObjInside); f.Add(12,&fMaxFireRange); f.Add(13,&virtualUnits); f.Add(14,&nVirtualUnits); f.Add(15,&bCanBeResupplied); f.Add(16,&mortar); f.Add(17,&bBoredInMoveFormationSent); f.Add(18,&lastBoredInMoveFormationCheck); f.Add(19,&bWithMoraleOfficer); f.Add(20,&bUsedCharge); f.Add(21,&pCharge); f.Add(22,&nInUnitsID); f.Add(23,&pGroupSmoothPath); f.Add(24,&soldiers); f.Add(25,&fMaxSpeed); f.Add(26,&fSpeedCoeff); f.Add(27,&vAABBHalfSize); f.Add(28,&nBoundTileRadius); f.Add(29,&timeLastCatchArt); f.Add(30,&dwCatchArtFlag); return 0; }
 	//

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 
 #include <cstdint>
@@ -16,18 +18,18 @@ class CMOEntrenchmentPart : public CMOSelectable
 	{
 		//Indentifying parameters
 		CVec3			vPos;
-		uint16_t			wDir;
+		uint16_t wDir = 0;
 		//Derived parameters
 		CQuat			qRot;
 		SHMatrix	mPlace;
 		//Terrain hole params
 		CVec2			vHoleStart;
 		CVec2			vHoleEnd;
-		float			fHoleWidth;
+		float fHoleWidth = 0.0f;
 	};
 
 	SCachedInfo cached;
-	int nFrameIndex;
+	int nFrameIndex = 0;
 
 	void DeriveTransform( const CVec3 &_vPos, const uint16_t _wDir );
 public:

@@ -16,8 +16,9 @@ enum EActionNotify : unsigned int;
 class CUpdatableObj : public CAIObjectBase
 {
 	ZDATA
-		bool bIsAlive;
-		bool bIsAliveSet;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bIsAlive = {};
+		bool bIsAliveSet = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bIsAlive); f.Add(3,&bIsAliveSet); return 0; }
 protected:

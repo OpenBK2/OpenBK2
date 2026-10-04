@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "AIClasses.h"
@@ -21,10 +23,10 @@ class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CAIMap );
 	
 	ZDATA
-		int nSizeX, nSizeY;
-		int nTileSize;
-		int nMaxUnitTileRadius;
-		int nMaxMapSize;
+		int nSizeX = 0, nSizeY = 0;
+		int nTileSize = 0;
+		int nMaxUnitTileRadius = 0;
+		int nMaxMapSize = 0;
     ZONSERIALIZE
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSizeX); f.Add(3,&nSizeY); f.Add(4,&nTileSize); f.Add(5,&nMaxUnitTileRadius); f.Add(6,&nMaxMapSize); OnSerialize( f ); return 0; } private:
 	// don't serialize, restore after load

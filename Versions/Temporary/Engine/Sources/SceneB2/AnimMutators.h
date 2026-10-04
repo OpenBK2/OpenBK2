@@ -24,9 +24,10 @@ struct IMechUnitJoggingMutator : public IAnimMutator
 	//
 	struct SJoggingParams
 	{
-		float fPeriod1, fPeriod2;
-		float fAmp1, fAmp2;
-		float fPhaze1, fPhaze2;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fPeriod1 = {}, fPeriod2 = {};
+		float fAmp1 = {}, fAmp2 = {};
+		float fPhaze1 = {}, fPhaze2 = {};
 	};
 	//
 	virtual void Setup( const int nBasisBoneIndex, const SJoggingParams &_joggingX, const SJoggingParams &_joggingY ) = 0;

@@ -570,7 +570,8 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 struct SUpDownFinder
 {
 	SVector &downTile, &upTile;
-	CAIMap *pAIMap;
+	// Constructor binding takes precedence over the defensive pointer default.
+	CAIMap *pAIMap = nullptr;
 
 	SUpDownFinder( SVector &_downTile, SVector &_upTile, CAIMap *_pAIMap )
 		: downTile( _downTile ), upTile( _upTile ), pAIMap( _pAIMap )

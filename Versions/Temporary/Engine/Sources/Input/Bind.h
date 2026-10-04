@@ -21,8 +21,9 @@ struct SGameMessage
 	// general-purpose params
 	struct  
 	{
-		int nParam1;//union { int nParam1; uint32_t dwParam1; float fParam1; };
-		int nParam2; //union { int nParam2; uint32_t dwParam2; float fParam2; };
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nParam1 = {};//union { int nParam1; uint32_t dwParam1; float fParam1; };
+		int nParam2 = {}; //union { int nParam2; uint32_t dwParam2; float fParam2; };
 	};
 	SGameMessage() : nParam1(0), nParam2(0) {}
 };
@@ -42,13 +43,13 @@ enum EMappingType
 struct SBind
 {
 	std::string szSection;
-	EMappingType eType;
+	EMappingType eType = {};
 	std::vector<std::string> controlsSet;
 };
 class INPUT_EXPORT CBind
 {
-	float fDelta;
-	SCommand* pBindCommand;
+	float fDelta = {};
+	SCommand* pBindCommand = {};
 #ifndef _FINALRELEASE
 	std::string szBindName;
 #endif

@@ -9,8 +9,9 @@ class CExecutorPlaceCharge : public CExecutor
 
 	ZDATA_(CExecutor)
 	CPtr<CSoldier> pSoldier;  
-	EAbilitySwitchState eState;
-	NDb::EUnitSpecialAbility eAbility;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EAbilitySwitchState eState = {};
+	NDb::EUnitSpecialAbility eAbility = {};
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pSoldier); f.Add(3,&eState); f.Add(4,&eAbility); return 0; }
 	void UpdateState( const EAbilitySwitchState eState );

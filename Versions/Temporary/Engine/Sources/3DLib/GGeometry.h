@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "3DLib_export.h"
 
 #include "3Dmotor/GPixelFormat.h"
@@ -26,16 +28,16 @@ struct SUVInfo
 
 struct SVertexWeight
 {
-	float fWeights[4];
-	uint8_t cBoneIndices[4];
+	float fWeights[4]{};
+	uint8_t cBoneIndices[4]{};
 	bool operator==( const SVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
 
 struct SRealVertexWeight
 {
-	float fWeights[4];
-	uint8_t nWeights[4];
-	uint8_t cBoneIndices[4];
+	float fWeights[4]{};
+	uint8_t nWeights[4]{};
+	uint8_t cBoneIndices[4]{};
 	bool operator==( const SRealVertexWeight &v ) const { return memcmp( this, &v, sizeof(*this) ) == 0; }
 };
 
@@ -55,7 +57,7 @@ public:
 	struct SStream
 	{
 		ZDATA
-		int nID;
+		int nID = 0;
 		std::vector<uint32_t> data;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&data); return 0; }
 	};
@@ -79,9 +81,9 @@ public:
 		std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 		std::vector<STriangle> geometry;
 		std::vector<SStream> attributes;
-		int nTris;
-		float fAverageTriArea;
-		bool bIsLightmappable;
+		int nTris = 0;
+		float fAverageTriArea = 0.0f;
+		bool bIsLightmappable = false;
 		ZEND int operator&( IBinSaver &f ) { 
 			f.Add(2,&positions); 
 			f.Add(3,&verts); 
@@ -103,9 +105,9 @@ public:
 	std::vector<uint16_t> vertRefPositions; // number of first position encounter for each vertex
 	std::vector<STriangle> geometry;
 	std::vector<SStream> attributes;
-	int nTris;
-	float fAverageTriArea;
-	bool bIsLightmappable;
+	int nTris = 0;
+	float fAverageTriArea = 0.0f;
+	bool bIsLightmappable = false;
 	
 private:
 	void EstablishRefs();

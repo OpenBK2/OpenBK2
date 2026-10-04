@@ -30,8 +30,9 @@ class CAILogic : public IAILogic
 	public: int operator&( IBinSaver &saver ); private:;
 
 	CDBPtr<NDb::SAIGameConsts> pConsts;
-	bool bSuspended;
-	bool bFirstTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bSuspended = {};
+	bool bFirstTime = {};
 	
 	// мосты
 	typedef std::list< std::list<CPtr<CBridgeSpan> > > Bridges;
@@ -43,17 +44,17 @@ class CAILogic : public IAILogic
 
 	// скрипты
 	CScripts scripts;
-	bool bMissionLoaded;
+	bool bMissionLoaded = {};
 	
 	std::vector< SAIStartCommand > startCmds;
 	std::vector< SBattlePosition > reservePositions;
 
-	NTimer::STime nextCheckSumTime;
-	NTimer::STime periodToCheckSum;
-	uLong checkSum;
+	NTimer::STime nextCheckSumTime = {};
+	NTimer::STime periodToCheckSum = {};
+	uLong checkSum = {};
 
-	bool bSegment;
-	bool bNetGameStarted;
+	bool bSegment = {};
+	bool bNetGameStarted = {};
 
 	CPtr<ICheckSumLog> pCheckSumLog;
 	
@@ -67,11 +68,11 @@ class CAILogic : public IAILogic
 	CObj<ICollisionsCollector> pCollisionsCollector;
 	CPtr<IAIScenarioTracker> pScenarioTracker;
 
-	NTimer::STime timeLocalPlayerUnitCheck;
-	bool bLocalPlayerUnitsPresent;
+	NTimer::STime timeLocalPlayerUnitCheck = {};
+	bool bLocalPlayerUnitsPresent = {};
 
-	NTimer::STime timeLastMiniMapUpdateUnits;
-	bool bNeedNewGroupNumber;
+	NTimer::STime timeLastMiniMapUpdateUnits = {};
+	bool bNeedNewGroupNumber = {};
 	
 	// проверить, не является ли object грузовиком, подцеплённым к сценарийной артиллерии
 	// если да, ищет подходящий к артиллерии грузовик (в pNewStats) и возвращает true, если артиллерия не найдена - возвращает false

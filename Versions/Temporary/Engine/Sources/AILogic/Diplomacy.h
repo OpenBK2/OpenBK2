@@ -11,11 +11,12 @@ class CDiplomacy
 	
 	// 0, 1 - игровые стороны, 2 - нейтралы
 	std::vector<int> playerParty;
-	int nMyNumber;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nMyNumber = {};
 
 	std::vector<int> isPlayerExist;
 
-	bool bNetGame;
+	bool bNetGame = {};
 public:
 	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) { }
 	

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include <cstdint>
@@ -12,7 +14,7 @@ namespace NCheckSums
 	struct SCheckSumBufferStorage
 	{
 		std::vector<uint8_t> buf;
-		int nCnt;
+		int nCnt = 0;
 		//
 		SCheckSumBufferStorage() : buf( 10 ), nCnt( 0 ) {  }
 		SCheckSumBufferStorage( const int nBufSize ) : buf( nBufSize ), nCnt( 0 ) {  }

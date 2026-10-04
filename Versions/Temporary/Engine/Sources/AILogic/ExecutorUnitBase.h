@@ -10,12 +10,13 @@ class CCommonUnit;
 class CExecutorUnitBase :	public CExecutor
 {
 	ZDATA_(CExecutor)
-	EUnitSpecialAbility eAbility;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EUnitSpecialAbility eAbility = {};
 
-	NTimer::STime									timeLastUpdate;
-	float													fSpeedCoeff;							//Time multiplier (e.g. for MobileFortress ability)
+	NTimer::STime									timeLastUpdate = {};
+	float													fSpeedCoeff = {};							//Time multiplier (e.g. for MobileFortress ability)
 	SSpecialAbilityInfo						lastSent;
-	NTimer::STime									timeDisableGroup;					// this executor may be disabled by group run
+	NTimer::STime									timeDisableGroup = {};					// this executor may be disabled by group run
 	CPtr<SAISpecialAbilityUpdate> pUpdate;
 
 	CDBPtr<NDb::SUnitSpecialAblityDesc> pAbilityDesc;
@@ -23,7 +24,7 @@ class CExecutorUnitBase :	public CExecutor
 	SAbilitySwitchState stateBeforeDisable;									// to switch to that state after disable
 	SAbilitySwitchState state;
 
-	float fOldProgress;
+	float fOldProgress = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&eAbility); f.Add(3,&timeLastUpdate); f.Add(4,&fSpeedCoeff); f.Add(5,&lastSent); f.Add(6,&timeDisableGroup); f.Add(7,&pUpdate); f.Add(8,&pAbilityDesc); f.Add(9,&stateBeforeDisable); f.Add(10,&state); f.Add(11,&fOldProgress); return 0; }
 private:

@@ -12,19 +12,20 @@ class CMineStaticObject : public CGivenPassabilityStObject
 {
 	OBJECT_BASIC_METHODS( CMineStaticObject );
 
-	bool bIfRegisteredInCWorld;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bIfRegisteredInCWorld = {};
 	ZDATA_(CGivenPassabilityStObject)
 	CDBPtr<SMineRPGStats> pStats;
-	int	player;
+	int	player = {};
 
-	uint32_t mVisibleStatus;
-	NTimer::STime nextSegmTime;
+	uint32_t mVisibleStatus = {};
+	NTimer::STime nextSegmTime = {};
 
-	bool bIfWillBeDeleted; // кто-то из солдат направляется к этой мине
+	bool bIfWillBeDeleted = {}; // кто-то из солдат направляется к этой мине
 	ZONSERIALIZE 
 	ZSKIP		//bool bIfRegisteredInCWorld; // мина видима
 
-	bool bAlive;
+	bool bAlive = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pStats); f.Add(3,&player); f.Add(4,&mVisibleStatus); f.Add(5,&nextSegmTime); f.Add(6,&bIfWillBeDeleted); OnSerialize( f ); f.Add(8,&bAlive); return 0; }
 	//

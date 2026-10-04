@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "BasePathUnit.h"
 #include "Collision.h"
 
@@ -11,7 +13,7 @@ struct IPath;
 class CBasePathUnitHolder : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CBasePathUnitHolder )
-	CBasePathUnit *pUnit;
+	CBasePathUnit *pUnit = nullptr;
 public:
 	CBasePathUnitHolder() : pUnit( 0 ) {};
 	CBasePathUnitHolder( CBasePathUnit *_pUnit ) : pUnit( _pUnit ) {}
@@ -29,8 +31,8 @@ class CCollisionsCollector : public ICollisionsCollector
 	{
 		ZDATA
 			CPtr<CBasePathUnitHolder> pUnit;
-			float fDistance;
-			NCollision::ECollideType eCollideType;
+			float fDistance = 0.0f;
+			NCollision::ECollideType eCollideType{};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&fDistance); f.Add(4,&eCollideType); return 0; }
 		SPusherInfo() : pUnit( 0 ), fDistance( 0.0f ), eCollideType( NCollision::ECT_NONE ) {}
 		SPusherInfo( CBasePathUnit *_pUnit, const float _fDistance, const NCollision::ECollideType _eCollideType )
@@ -70,13 +72,13 @@ public:
 
 class CCollisionBase : public ICollision
 {
-	CBasePathUnit *pUnit;
-	CBasePathUnit *pPushUnit;
+	CBasePathUnit *pUnit = nullptr;
+	CBasePathUnit *pPushUnit = nullptr;
 	ZDATA
 		ZONSERIALIZE
 		ZSKIP // for pUnit
 		ZSKIP // for pPushUnit
-		int nPriority; // legacy for old pathfinding, not using so far
+		int nPriority = 0; // legacy for old pathfinding, not using so far
 		CPtr<IPath> pPath;
 public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(4,&nPriority); f.Add(5,&pPath); return 0; }
@@ -113,8 +115,8 @@ class CWaitingCollision : public CCollisionBase
 {
 	OBJECT_NOCOPY_METHODS( CWaitingCollision )
 	ZDATA_( CCollisionBase )
-		bool bIsSolved;
-		NTimer::STime timeToWait;
+		bool bIsSolved = false;
+		NTimer::STime timeToWait = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCollisionBase *)this); f.Add(2,&bIsSolved); f.Add(3,&timeToWait); return 0; }
 	CWaitingCollision() : CCollisionBase(), bIsSolved( false ) {}
@@ -140,7 +142,7 @@ class CStopCollision : public CCollisionBase
 {
 	OBJECT_NOCOPY_METHODS( CStopCollision )
 	ZDATA_( CCollisionBase )
-		NTimer::STime timeLeft;
+		NTimer::STime timeLeft = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCollisionBase *)this); f.Add(2,&timeLeft); return 0; }
 	CStopCollision() : CCollisionBase(), timeLeft( 0 ) {}

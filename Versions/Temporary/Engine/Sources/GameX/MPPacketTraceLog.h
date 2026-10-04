@@ -7,10 +7,11 @@ namespace NGameX
 {
 struct SMatchPacketTraceSlot
 {
-	int nSlot;
-	int nClientID;
-	int nTeam;
-	bool bPresent;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSlot = {};
+	int nClientID = {};
+	int nTeam = {};
+	bool bPresent = {};
 	SMatchPacketTraceSlot() : nSlot( -1 ), nClientID( -1 ), nTeam( -1 ), bPresent( false ) {}
 };
 

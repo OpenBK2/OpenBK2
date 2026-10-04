@@ -25,7 +25,8 @@ class CManuverBuilder
 	struct SGRoundAttackTarget
 	{
 		ZDATA
-		int nMaxAttakers;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nMaxAttakers = {};
 		SAIAngle wStartAngle;
 		std::vector<int> attackers;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nMaxAttakers); f.Add(3,&wStartAngle); f.Add(4,&attackers); return 0; }

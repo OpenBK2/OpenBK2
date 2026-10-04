@@ -1,7 +1,8 @@
 #include <cstdint>
 
-uint16_t wDeltaAngle;
-int nAimingTime;
+// Derived weapon values need defaults before their PostLoad conversion.
+uint16_t wDeltaAngle = 0;
+int nAimingTime = 0;
 
 virtual void ToAIUnits( bool bInEditor )
 { 

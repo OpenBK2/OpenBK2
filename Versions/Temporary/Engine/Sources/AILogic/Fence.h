@@ -11,11 +11,12 @@ class CFence : public CCommonStaticObject
 	ZDATA_( CCommonStaticObject )
 		CDBPtr<SFenceRPGStats> pStats;
 		SVector leftTile, rightTile;
-		NDb::SFenceRPGStats::ETypesOfLife eLifeType;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NDb::SFenceRPGStats::ETypesOfLife eLifeType = {};
 		// соседние заборы
 		std::list< CPtr<CFence> > neighFences;
-		int nCreator;													// diplomacy of creator
-		bool bSuspendAppear;
+		int nCreator = {};													// diplomacy of creator
+		bool bSuspendAppear = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&pStats); f.Add(3,&leftTile); f.Add(4,&rightTile); f.Add(5,&eLifeType); f.Add(6,&neighFences); f.Add(7,&nCreator); f.Add(8,&bSuspendAppear); return 0; }
 
 	//

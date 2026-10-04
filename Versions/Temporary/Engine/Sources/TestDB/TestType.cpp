@@ -16,6 +16,36 @@ namespace NDb
 
 
 
+void SEmptyChecksumRecord::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+}
+
+int SEmptyChecksumRecord::operator&( IXmlSaver &saver )
+{
+
+	return 0;
+}
+
+int SEmptyChecksumRecord::operator&( IBinSaver &saver )
+{
+
+	return 0;
+}
+
+uint32_t SEmptyChecksumRecord::CalcCheckSum() const
+{
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
 void SWeapon::ReportMetaInfo() const
 {
 	NMetaInfo::StartMetaInfoReport( "Weapon", typeID, sizeof(*this) );

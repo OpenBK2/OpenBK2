@@ -202,7 +202,8 @@ struct IScene : public CObjectBase
 
 	struct SPickObjInfo
 	{
-		int nObjID;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nObjID = {};
 		CVec3 vPickPoint;
 		CVec3 vNormal;
 	};

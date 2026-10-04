@@ -13,8 +13,9 @@ enum EUpdateWarFogUnitInfoFlag
 
 struct SUpdateUnitInfo
 {
-	EUpdateWarFogUnitInfoFlag updateFlag;
-	float fDist;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EUpdateWarFogUnitInfoFlag updateFlag = {};
+	float fDist = {};
 
 	SUpdateUnitInfo() : updateFlag(), fDist( 0.0f ) {}
 	SUpdateUnitInfo( const EUpdateWarFogUnitInfoFlag _updateFlag, const float _fDist )
@@ -29,7 +30,7 @@ class CUpdateUnitContainer : public CAIObjectBase
 	OBJECT_NOCOPY_METHODS( CUpdateUnitContainer );
 
 	std::vector<CUpdateUnitList> updateLists;
-	float f2MaxRadius, fMaxRadius2;
+	float f2MaxRadius = {}, fMaxRadius2 = {};
 
 public:
 	CUpdateUnitContainer() : f2MaxRadius( 0.0f ), fMaxRadius2( 0.0f ) { }

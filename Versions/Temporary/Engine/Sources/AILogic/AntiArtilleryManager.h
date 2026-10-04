@@ -23,8 +23,9 @@ public:
 	// не сэйвится!
 	class CIterator
 	{
-		int nIterParty;
-		int nCurParty;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nIterParty = {};
+		int nCurParty = {};
 		CAntiArtilleries::iterator curIter;
 
 		public:

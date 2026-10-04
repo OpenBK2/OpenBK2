@@ -1,4 +1,6 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 template<class T> class CSyncSrc;
 template<class T> class CSyncDst;
 template<class T>
@@ -8,7 +10,7 @@ class CSyncSrcBind
 	CSyncSrcBind& operator=( const CSyncSrcBind &a ) { ASSERT( 0 ); return *this; }
 	ZDATA
 	CPtr<CSyncSrc<T> > pSync;
-	int nID;
+	int nID = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSync); f.Add(3,&nID); return 0; }
 	CSyncSrcBind() {}
@@ -25,7 +27,7 @@ class CSyncSrc: public CObjectBase
 	{
 		ZDATA
 		CPtr<T> pObject;
-		int nNext, nPrev, nVersion;
+		int nNext = 0, nPrev = 0, nVersion = 0;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pObject); f.Add(3,&nNext); f.Add(4,&nPrev); f.Add(5,&nVersion); return 0; }
 
 		SObject(): nNext(0), nPrev(0), nVersion(0) {}
@@ -34,7 +36,7 @@ class CSyncSrc: public CObjectBase
 	ZDATA
 	std::vector<int> freeIDs;
 	std::vector<SObject> objects;
-	int nVersion;
+	int nVersion = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&freeIDs); f.Add(3,&objects); f.Add(4,&nVersion); return 0; }
 private:
@@ -103,7 +105,7 @@ class CSyncDst
 {
 	ZDATA
 	CObj<CSyncSrc<T> > pSource;
-	int nVersion;
+	int nVersion = 0;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSource); f.Add(3,&nVersion); return 0; }
 protected:
@@ -130,8 +132,8 @@ public:
 
 class IVisitorBase
 {
-	std::vector<CObj<CObjectBase> > *pStuff;
-	CObjectBase *pCurrentObject;
+	std::vector<CObj<CObjectBase> > *pStuff = nullptr;
+	CObjectBase *pCurrentObject = nullptr;
 
 	void RegisterBase( CObjectBase *p ) { ASSERT( pStuff ); pStuff->push_back( p ); }
 	void StartNewObject( std::vector<CObj<CObjectBase> > *_pStuff, CObjectBase *_pCurrentObject )
@@ -236,7 +238,7 @@ class CBoolSyncDstUtil: public CSyncDst<T>
 	typedef CSyncDst<T> TParent;
 	ZDATA_(TParent)
 	CPtr<TUplink> pRes; // uplink
-	int nMask;
+	int nMask = 0;
 	std::vector<CPtr<T> > track;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); f.Add(2,&pRes); f.Add(3,&nMask); f.Add(4,&track); return 0; }
@@ -272,8 +274,8 @@ class CBoolSyncSrc: public CSyncSrc<T>
 	typedef CBoolSyncSrc<T,TFunc> TThis;
 	struct SObjectInfo
 	{
-		int nMask;
-		int nTrackID;
+		int nMask = 0;
+		int nTrackID = 0;
 	};
 	typedef std::unordered_map<CPtr<T>, SObjectInfo, SPtrHash> CObjectsHash;
 	typedef CSyncSrc<T> TParent;

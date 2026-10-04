@@ -10,14 +10,15 @@ namespace NLock
 struct SEntranceData
 {
 	CVec2 vPos;
-	uint16_t wDir;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t wDir = {};
 };
 
 struct SStaticObjectLockInfo
 {
-	bool bNewLockingWay;
+	bool bNewLockingWay = {};
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > oldLock;
-	const std::vector<SVector> *pNewLock;
+	const std::vector<SVector> *pNewLock = {};
 	CArray2D<uint8_t> &lockInfo;
 	std::list<SObjTileInfo> &lockedTiles;
 

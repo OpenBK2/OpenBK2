@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 
 #include <cstdint>
@@ -7,11 +9,11 @@
 class CMOObject : public CMapObj
 {
 	OBJECT_NOCOPY_METHODS( CMOObject );
-	bool bAnimateOnDeath;
-	uint16_t wAmbientSound;
-	uint16_t wCycledSound;
+	bool bAnimateOnDeath = false;
+	uint16_t wAmbientSound = 0;
+	uint16_t wCycledSound = 0;
 	//uint16_t wAmbientSoundTimed;
-	uint16_t wCycledSoundTimed;
+	uint16_t wCycledSoundTimed = 0;
 	//
 	const NDb::SObjectRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SObjectRPGStats*>( GetStats() ); }
 public:

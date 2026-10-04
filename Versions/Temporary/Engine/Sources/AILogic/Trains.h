@@ -77,15 +77,16 @@ class CTrainLocomotive : public CMilitaryCar
 	ZDATA_(CMilitaryCar)
 	CCarList cars;
 
-	int		nTrack;
-	bool	bBackward;				// Front of the unit faces point 0 of the VSO
-	float fTrackPos;
-	float fTrackLimit;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int		nTrack = {};
+	bool	bBackward = {};				// Front of the unit faces point 0 of the VSO
+	float fTrackPos = {};
+	float fTrackLimit = {};
 
-	float fFrontOffset;
-	float fBackOffset;
-	float fTrainLength;
-	float fBackLink;
+	float fFrontOffset = {};
+	float fBackOffset = {};
+	float fTrainLength = {};
+	float fBackLink = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&cars); f.Add(3,&nTrack); f.Add(4,&bBackward); f.Add(5,&fTrackPos); f.Add(6,&fTrackLimit); f.Add(7,&fFrontOffset); f.Add(8,&fBackOffset); f.Add(9,&fTrainLength); f.Add(10,&fBackLink); return 0; }
 
@@ -136,15 +137,15 @@ class CTrainCar : public CMilitaryCar
 	CPtr<CTrainLocomotive> pLocomotive;
 	CPtr<CTrainCar> pLinkFront;
 	CPtr<CTrainCar> pLinkBack;
-	int		nTrack;
-	bool	bBackward;				// Front of the unit faces point 0 of the VSO
-	float fTrackPos;
-	float fTrackLimit;
+	int		nTrack = {};
+	bool	bBackward = {};				// Front of the unit faces point 0 of the VSO
+	float fTrackPos = {};
+	float fTrackLimit = {};
 
-	float fFrontOffset;
-	float fBackOffset;
-	float fFrontLink;
-	float fBackLink;
+	float fFrontOffset = {};
+	float fBackOffset = {};
+	float fFrontLink = {};
+	float fBackLink = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&pLocomotive); f.Add(3,&pLinkFront); f.Add(4,&pLinkBack); f.Add(5,&nTrack); f.Add(6,&bBackward); f.Add(7,&fTrackPos); f.Add(8,&fTrackLimit); f.Add(9,&fFrontOffset); f.Add(10,&fBackOffset); f.Add(11,&fFrontLink); f.Add(12,&fBackLink); return 0; }
 private:
@@ -195,9 +196,9 @@ class CLocomotivePath : public ISmoothPath
 
 	ZDATA
 	CVec2 vEndPoint;
-	float fCurPos;
-	float fEndPos;
-	bool bFinished;
+	float fCurPos = {};
+	float fEndPos = {};
+	bool bFinished = {};
 	CPtr<CTrainLocomotive> pUnit;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vEndPoint); f.Add(3,&fCurPos); f.Add(4,&fEndPos); f.Add(5,&bFinished); f.Add(6,&pUnit); return 0; }
@@ -260,8 +261,8 @@ struct SLocomotivePathMemento : public IMemento
 
 public:
 	ZDATA
-	float fCurPos;
-	float fEndPos;
+	float fCurPos = {};
+	float fEndPos = {};
 	CVec2 vEndPoint;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fCurPos); f.Add(3,&fEndPos); f.Add(4,&vEndPoint); return 0; }
 
@@ -299,9 +300,9 @@ class CLocomotiveMoveState : public IUnitState, public CFreeFireManager
 	OBJECT_BASIC_METHODS( CLocomotiveMoveState );
 
 	ZDATA_(CFreeFireManager)
-	NTimer::STime startTime;
+	NTimer::STime startTime = {};
 	CPtr<CTrainLocomotive> pUnit;
-	bool bWaiting;
+	bool bWaiting = {};
 	CVec2 point;
 	CPtr<CLocomotivePath> pPath;
 public:
@@ -335,7 +336,7 @@ class CLocomotiveAttackUnitState : public IUnitAttackingState
 	ZDATA
 	CPtr<CTrainLocomotive> pUnit;
 	CPtr<CAIUnit> pTarget;
-	EAttackStates eState;
+	EAttackStates eState = {};
 	CPtr<CLocomotivePath> pPath;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&eState); f.Add(5,&pPath); return 0; }
@@ -375,7 +376,7 @@ class CLocomotiveAttackObjState : public IUnitAttackingState
 	ZDATA
 	CPtr<CTrainLocomotive> pUnit;
 	CPtr<CStaticObject> pTarget;
-	EAttackStates eState;
+	EAttackStates eState = {};
 	CPtr<CLocomotivePath> pPath;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&eState); f.Add(5,&pPath); return 0; }
@@ -412,7 +413,7 @@ class CTrainCarMoveToState : public IUnitState, public CFreeFireManager
 
 	ZDATA_(CFreeFireManager)
 	CPtr<CTrainCar> pUnit;
-	bool bWaiting;
+	bool bWaiting = {};
 	CPtr<CTrainCarPath> pPath;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&pUnit); f.Add(3,&bWaiting); f.Add(4,&pPath); return 0; }
@@ -440,7 +441,7 @@ class CTrainCarAttackUnitState : public IUnitState
 
 	ZDATA
 	CPtr<CTrainCar> pUnit;
-	EAttackStates eState;
+	EAttackStates eState = {};
 	CPtr<CTrainCarPath> pPath;
 	CPtr<CAIUnit> pTarget;
 public:
@@ -474,7 +475,7 @@ class CTrainCarAttackObjectState : public IUnitState
 
 	ZDATA
 		CPtr<CTrainCar> pUnit;
-	EAttackStates eState;
+	EAttackStates eState = {};
 	CPtr<CTrainCarPath> pPath;
 	CPtr<CStaticObject> pTarget;
 public:

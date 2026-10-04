@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include <cstdint>
 
 namespace NTimer
@@ -64,8 +66,8 @@ struct IVisualNotifications : public CObjectBase
 	struct SEventParams
 	{
 		ZDATA
-		int nID;
-		NDb::ENotificationEventType eEventType;
+		int nID = 0;
+		NDb::ENotificationEventType eEventType{};
 		std::vector<CVec2> positions;
 		std::vector<int> ids; // misc info
 		std::vector< CPtr<CMapObj> > objects;

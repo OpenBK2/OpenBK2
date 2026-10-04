@@ -32,7 +32,8 @@ class CGeneral : public CCommander, public IEnemyContainer
 	ZDATA_(CCommander)
 		ZONSERIALIZE
 	CFreeIds requestIDs;
-	int nParty;													// general is for this player
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nParty = {};													// general is for this player
 
 	CEnemyVisibility enemys;
 	CEnemyVisibility antiAviation;
@@ -43,12 +44,12 @@ class CGeneral : public CCommander, public IEnemyContainer
 	CommonUnits stationaryTanks;
 	CommonUnits transportsFree;
 
-	NTimer::STime timeNextUpdate;					// next update of this general
+	NTimer::STime timeNextUpdate = {};					// next update of this general
 	det_set<int> mobileReinforcementGroupIDs;
 
 	//Distribution of availability of own units in reinforcements.
 	std::vector<float>	enemyByRType;					// Current balance of forces (enemy's distribution of reinfs minus own forces)
-	int						nAirReinfTurnCounter;		// counter to give reinforcement to AirGeneral every n-th turn
+	int						nAirReinfTurnCounter = {};		// counter to give reinforcement to AirGeneral every n-th turn
 
 	CObj<CGeneralAirForce> pAirForce;
 	CObj<CGeneralArtillery> pGeneralArtillery;
@@ -58,11 +59,11 @@ class CGeneral : public CCommander, public IEnemyContainer
 	
 	CResistancesContainer resContainer;
 
-	NTimer::STime lastBombardmentCheck;
+	NTimer::STime lastBombardmentCheck = {};
 	// 0 - артиллерия, 1 - бомберы
-	uint8_t cBombardmentType;
-	bool bSendReserves;										// send tanks to swarm
-	int nMaxAllowedMobileTanks;
+	uint8_t cBombardmentType = {};
+	bool bSendReserves = {};										// send tanks to swarm
+	int nMaxAllowedMobileTanks = {};
 
 	public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); OnSerialize( f ); f.Add(2,&requestIDs); f.Add(3,&nParty); f.Add(4,&enemys); f.Add(5,&antiAviation); f.Add(6,&infantryInTrenches); f.Add(7,&infantryFree); f.Add(8,&tanksFree); f.Add(9,&stationaryTanks); f.Add(10,&transportsFree); f.Add(11,&timeNextUpdate); f.Add(12,&mobileReinforcementGroupIDs); f.Add(13,&enemyByRType); f.Add(14,&nAirReinfTurnCounter); f.Add(15,&pAirForce); f.Add(16,&pGeneralArtillery); f.Add(17,&pIntendant); f.Add(18,&requestedTasks); f.Add(19,&resContainer); f.Add(20,&lastBombardmentCheck); f.Add(21,&cBombardmentType); f.Add(22,&bSendReserves); f.Add(23,&nMaxAllowedMobileTanks); return 0; }

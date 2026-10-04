@@ -19,7 +19,8 @@ class CBridgeCreation : public CLongObjectCreation
 	std::vector< CObj<CBridgeSpan> > spans;
 	CVec2 vStartPoint;
 	CLine2 line;
-	int nCurIndex;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nCurIndex = {};
 	SAIAngle wDir;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&pFullBridge); f.Add(3,&spans); f.Add(4,&vStartPoint); f.Add(5,&line); f.Add(6,&nCurIndex); f.Add(7,&wDir); return 0; }
 	void UnlockTiles();

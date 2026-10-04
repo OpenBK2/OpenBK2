@@ -36,15 +36,16 @@ struct SSaveInfo
 	ZSKIP
 	//}
 	
-	bool bCustomMission;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bCustomMission = {};
 	ZSKIP//	CDBPtr<NDb::SCampaign> pCampaignDB;
 	ZSKIP//	CDBPtr<NDb::SChapter> pChapterDB;
 	ZSKIP//	CDBPtr<NDb::SMapInfo> pMapInfoDB;
 	CDBPtr<NDb::STexture> pFlagTexture;
-	bool bQuickSave;
-	bool bFromChapter; // save from chaper screen
+	bool bQuickSave = {};
+	bool bFromChapter = {}; // save from chaper screen
 	ZSKIP //string szSaveName;
-	bool bAutoSave;
+	bool bAutoSave = {};
 	std::wstring wszSaveName;
 
 	ZSKIP// CDBPtr< NDb::SText > pCampaignName;
@@ -98,7 +99,7 @@ struct SSavegameEntry
 	SSystemTime			time;
 	CPtr< IWindow >	pWindow;
 	SSaveInfo				info;
-	int nID;
+	int nID = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&szFileName); f.Add(4,&szInfoFileName); f.Add(5,&szFileTitle); f.Add(6,&time); f.Add(7,&pWindow); f.Add(8,&info); f.Add(9,&nID); return 0; }
 };
 
@@ -109,7 +110,7 @@ struct SWaitLoadData
 	ZDATA
 	ZSKIP //CDBPtr<NDb::STexture> pMinimap;
 	std::wstring wszDesc;
-	bool bChapter;
+	bool bChapter = {};
 	CDBID dbidMinimap;
 	ZEND int operator&( IBinSaver &f ) { f.Add(3,&wszDesc); f.Add(4,&bChapter); f.Add(5,&dbidMinimap); return 0; }
 	

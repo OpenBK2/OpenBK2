@@ -29,13 +29,14 @@ enum EControlType
 
 struct SMessage
 {
-	int nAction;
-	EPOVAxis ePOVAxis;
-	EControlType cType;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nAction = {};
+	EPOVAxis ePOVAxis = {};
+	EControlType cType = {};
 
-	int nParam;
-	bool bState;
-	STime tTime;
+	int nParam = {};
+	bool bState = {};
+	STime tTime = {};
 
 	SMessage() {}
 	SMessage( int _nAction, EPOVAxis _ePOVAxis, EControlType _cType, int _nParam, bool _bState, STime _tTime )

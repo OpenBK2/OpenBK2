@@ -19,27 +19,28 @@ struct SLadderStatistics
 
 	ZDATA
 // From database
-	int nLevel;
-	int nXP;
-	int nMaxXPEarned;
-	int nMaxXPLost;
-	int nUnitsKilled;
-	int nUnitsLost;
-	int nUnitEff;
-	int nKeyPointEff;
-	int nFavouriteReinforcement;
-	int nStrongestAgainst;
-	int nWeakestAgainst;
-	int nTotalPlayTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nLevel = {};
+	int nXP = {};
+	int nMaxXPEarned = {};
+	int nMaxXPLost = {};
+	int nUnitsKilled = {};
+	int nUnitsLost = {};
+	int nUnitEff = {};
+	int nKeyPointEff = {};
+	int nFavouriteReinforcement = {};
+	int nStrongestAgainst = {};
+	int nWeakestAgainst = {};
+	int nTotalPlayTime = {};
 	std::vector<int> raceWinsSolo;
 	std::vector<int> raceLossesSolo;
 	std::vector<int> raceWinsTeam;
 	std::vector<int> raceLossesTeam;
 	std::vector<int> medals;
-	int nRace;
+	int nRace = {};
 // From constants
-	int nLevelXP;
-	int nNextLevelXP;
+	int nLevelXP = {};
+	int nNextLevelXP = {};
 
 	std::vector<int> techsPlayed;
 	std::vector<int> mapsPlayed;

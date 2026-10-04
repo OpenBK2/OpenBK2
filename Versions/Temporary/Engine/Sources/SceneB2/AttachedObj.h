@@ -72,9 +72,10 @@ class CConstantOffsetTransform : public CFuncBase<SFBTransform>
 	OBJECT_NOCOPY_METHODS( CConstantOffsetTransform )
 	ZDATA
 		CDGPtr< CFuncBase<SFBTransform> > pBaseTransform;
-		int nTargetID;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nTargetID = {};
 		std::string szBoneName;
-		bool bNeedCalcMatrix;
+		bool bNeedCalcMatrix = {};
 		SHMatrix mMultiplier;
 		CDGPtr< CConstantOffsetTransform > pParentTransform;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseTransform); f.Add(3,&nTargetID); f.Add(4,&szBoneName); f.Add(5,&bNeedCalcMatrix); f.Add(6,&mMultiplier); f.Add(7,&pParentTransform); return 0; }
@@ -95,7 +96,7 @@ class CCenterOffsetTransform : public CFuncBase<SFBTransform>
 	OBJECT_NOCOPY_METHODS( CCenterOffsetTransform )
 	ZDATA
 		CDGPtr< CFuncBase<SFBTransform> > pBaseTransform;
-		int nTargetID;
+		int nTargetID = {};
 		SHMatrix mMultiplier;
 		SHMatrix mMultiplierInv;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseTransform); f.Add(3,&nTargetID); f.Add(4,&mMultiplier); f.Add(5,&mMultiplierInv); return 0; }

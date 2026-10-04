@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "AIClasses.h"
@@ -30,7 +32,7 @@ enum EFreeTileInfo : int
 struct SObjTileInfo
 {
 	SVector tile;
-	EAIClasses lockInfo;
+	EAIClasses lockInfo{};
 
 	SObjTileInfo() : tile( 0, 0 ), lockInfo( EAC_ANY ) { }
 	SObjTileInfo( const SVector &_tile ) : tile( _tile ), lockInfo( EAC_ANY ) { }
@@ -42,7 +44,7 @@ class CAIMap;
 
 struct SUnitProfile
 {
-	bool bRect;
+	bool bRect = false;
 	SRect rect;
 	CCircle circle;
 	//
@@ -89,9 +91,9 @@ struct SUnitProfile
 
 struct STerrainLockInfo
 {
-	int nCount;
-	int nUnitID;
-	int bLock;
+	int nCount = 0;
+	int nUnitID = 0;
+	int bLock = 0;
 	SUnitProfile profile;
 
 	STerrainLockInfo() : nCount( -1 ), nUnitID( -1 ), bLock( false ), profile() {}
@@ -100,7 +102,7 @@ struct STerrainLockInfo
 struct SUnitTileInfo
 {
 	SUnitProfile profile;
-	bool bWater;
+	bool bWater = false;
 
 	SUnitTileInfo() : bWater(), profile() {}
 	SUnitTileInfo( const SRect _rect, const bool _bWater ) :  profile( _rect ), bWater( _bWater ) {}
@@ -116,8 +118,8 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	struct STmpLockInfo
 	{ 
 		SVector tile; 
-		int nUnitsBuf;
-		EAIClasses aiClass;
+		int nUnitsBuf = 0;
+		EAIClasses aiClass{};
 		
 		STmpLockInfo() : tile( -1, -1 ), nUnitsBuf( -1 ), aiClass( EAC_FORCE_DWORD ) {}
 		STmpLockInfo( const SVector &_tile, const int _nUnitsBuf, const EAIClasses _aiClass )
@@ -127,7 +129,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	struct STmpLockInfo2
 	{ 
 		SVector tile; 
-		EAIClasses aiClass;
+		EAIClasses aiClass{};
 
 		STmpLockInfo2() : tile( 0, 0 ), aiClass( EAC_NONE ) {}
 		STmpLockInfo2( const SVector &_tile, const EAIClasses _aiClass )
@@ -141,7 +143,7 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	CArray2D<uint8_t> passTypes;
 	std::vector<float> passabilities;
 	// 0 - статич. объекты, 0xff - статич. и динамич. объекты
-	ELockMode eMode;
+	ELockMode eMode{};
 	CArray2D<EAIClasses> buf;
 	CArray2D4Bit terrainTypes;
 	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > > tmpUnlockUnitsMap;
@@ -156,9 +158,9 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	std::vector<uint8_t> tileDigImpossible;
 	std::vector<uint8_t> soilParams;
 	CArray2D<CArray2D4Bit> maxes;
-	bool bInitMode;
+	bool bInitMode = false;
 	std::unordered_map< int, CTmpLockInfoBuf2 > tmpLockUnitsMap;
-	int nTmpLockUnitID;
+	int nTmpLockUnitID = 0;
 
 	CPtr<CAIMap> pAIMap;
 	std::vector<int> classIndices;
@@ -168,8 +170,8 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	//
 #ifndef _FINALRELEASE
 	std::vector<STerrainLockInfo> debugLockInfo;
-	int nDebugLockInfoCount;
-	int nDebugLockInfoPos;
+	int nDebugLockInfoCount = 0;
+	int nDebugLockInfoPos = 0;
 #endif
 	//
 	void LoadPassabilities( const struct STerrainDesc* pTerrainDesc );
@@ -332,9 +334,9 @@ public:
 
 class CTemporaryUnitProfileUnlocker
 {
-	bool bLocking;
-	int nID;
-	CTerrain *pTerrain;
+	bool bLocking = false;
+	int nID = 0;
+	CTerrain *pTerrain = nullptr;
 public:
 	CTemporaryUnitProfileUnlocker( const int nUnitID, const SUnitProfile &profile, const int nDecrease, const bool bWater, CTerrain *pTerrain );
 	~CTemporaryUnitProfileUnlocker();
@@ -342,8 +344,8 @@ public:
 
 class CTemporaryUnitProfileLocker
 {
-	int nLockID;
-	CTerrain *pTerrain;
+	int nLockID = 0;
+	CTerrain *pTerrain = nullptr;
 public:
 	CTemporaryUnitProfileLocker( const SUnitProfile &profile, const EAIClasses aiClass, CTerrain *pTerrain );
 	~CTemporaryUnitProfileLocker();
@@ -351,8 +353,8 @@ public:
 
 struct COMMON_RTS_AI_EXPORT STerrainModeSetter
 {
-	ELockMode eMemMode;
-	CTerrain *pTerrain;
+	ELockMode eMemMode{};
+	CTerrain *pTerrain = nullptr;
 
 	explicit STerrainModeSetter( const ELockMode &eMode, CTerrain *pTerrain );
 	~STerrainModeSetter();

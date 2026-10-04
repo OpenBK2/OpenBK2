@@ -426,13 +426,14 @@ public:
 	struct SRevealInfo
 	{
 		// вероятность раскрытия юнита, когда он кого-то обстреливает (бросается раз в определённое время, 1-2 секунд)
-		float fRevealByQuery;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fRevealByQuery = {};
 		// вероятность исчезновения раскрытия по прошествию некоторого время без обстрела
-		float fRevealByMovingOff;
+		float fRevealByMovingOff = {};
 		// расстояние, на котором раскрытие сбрасывается при удалении от точки обстрела
-		float fForgetRevealDistance;
+		float fForgetRevealDistance = {};
 		// время, через которое раскрытие сбрасывается без обстрела
-		int nTimeOfReveal;
+		int nTimeOfReveal = {};
 
 		SRevealInfo() : fRevealByQuery( 0.0f ), fRevealByMovingOff( 0.0f ), fForgetRevealDistance( 0.0f ), nTimeOfReveal( 0 ) { }
 	};

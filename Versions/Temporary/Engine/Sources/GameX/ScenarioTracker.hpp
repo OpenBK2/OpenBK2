@@ -37,8 +37,9 @@ class CScenarioTracker : public IScenarioTracker
 	struct SFavoriteReinf
 	{
 		ZDATA
-		int nTotalCount;
-		int nCurrentCount;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nTotalCount = {};
+		int nCurrentCount = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTotalCount); f.Add(3,&nCurrentCount); return 0; }
 		
 		SFavoriteReinf() : nTotalCount( 0 ), nCurrentCount( 0 ) {}
@@ -49,9 +50,9 @@ class CScenarioTracker : public IScenarioTracker
 	// reinforcements, that was given when chapter started
 	CReinforcementTypes playerChapter;								
 	CReinforcementTypes enemyChapter;
-	int nReinforcementCallsLeftInChapter;
-	int nReinforcementCallsUsed;
-	int nMainEnemy;
+	int nReinforcementCallsLeftInChapter = {};
+	int nReinforcementCallsUsed = {};
+	int nMainEnemy = {};
 
 	// current status
 	CDBPtr<NDb::SCampaign> pCampaign;
@@ -61,8 +62,8 @@ class CScenarioTracker : public IScenarioTracker
 
 	CReinforcementTypes playerMission;				// reinforcements given to current mission
 	CReinforcementTypes enemyMission;
-	bool bCampaignFinished;
-	bool bChapterFinished;
+	bool bCampaignFinished = {};
+	bool bChapterFinished = {};
 
 
 	std::vector<EMissionObjectiveState> objectives;
@@ -71,19 +72,19 @@ class CScenarioTracker : public IScenarioTracker
 	CWonMissions wonMissions;
 
 	ZSKIP //CReinforcementXPs playerReinfXPs;
-		int nMainEnemyMissionCalls;
+		int nMainEnemyMissionCalls = {};
 
 	CReinforcementEnableStates playerReinfPotential;
 
-	bool bMissionWon;
+	bool bMissionWon = {};
 
 	CArray2D<int> kills;
 	ZSKIP //CReinforcementXPs playerXPAdds;
 		ZSKIP //CReinforcementXPs playerXPLevels;
 		ZSKIP //int nPlayerXP;
 		CDBPtr<NDb::SAIGameConsts> pAIConsts;
-	int nDifficulty;
-	int nEnemyReinfCallsLeft;
+	int nDifficulty = {};
+	int nEnemyReinfCallsLeft = {};
 
 	CDBPtr<NDb::SMapInfo> pLastMission;
 
@@ -101,11 +102,11 @@ class CScenarioTracker : public IScenarioTracker
 	ZSKIP //CReinforcementXPs playerReinfXPs;
 	ZSKIP //CReinforcementXPs playerXPAdds;
 	ZSKIP //CReinforcementXPs playerXPLevels;
-	float fPlayerXP;
-	float fPlayerXPAdds;
+	float fPlayerXP = {};
+	float fPlayerXPAdds = {};
 	CArray2D<float> priceKills;
-	int nReinforcementCallsLeftOld;
-	int nAvailablePromotions;
+	int nReinforcementCallsLeftOld = {};
+	int nAvailablePromotions = {};
 	ZSKIP //vector<int> leaderFirstNames;
 	ZSKIP //vector<int> leaderLastNames;
 	ZSKIP //vector<int> leaderPictures;
@@ -115,18 +116,18 @@ class CScenarioTracker : public IScenarioTracker
 	SPlayerColor playerColorFriend;
 	SPlayerColor playerColorEnemy;
 	SPlayerColor playerColorNeutral;
-	int nReinforcementCallsLeftInMission;
-	bool bIsTutorial;
+	int nReinforcementCallsLeftInMission = {};
+	bool bIsTutorial = {};
 	CObjectivesObjects objectivesObjects;
-	int nMedalKillsGiven;
-	int nMedalTacticsGiven;
-	int nMedalEconomyGiven;
-	int nMedalMunchkinGiven;
+	int nMedalKillsGiven = {};
+	int nMedalTacticsGiven = {};
+	int nMedalEconomyGiven = {};
+	int nMedalMunchkinGiven = {};
 	std::vector<int> freeLeaders;
 	std::vector<SFavoriteReinf> favoriteReinfs;
-	float fLastVisiblePlayerStatsExpCareer;
-	float fLastVisiblePlayerStatsExpNextRank;
-	bool bIsCustomCampaign;
+	float fLastVisiblePlayerStatsExpCareer = {};
+	float fLastVisiblePlayerStatsExpNextRank = {};
+	bool bIsCustomCampaign = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&playerChapter); f.Add(3,&enemyChapter); f.Add(4,&nReinforcementCallsLeftInChapter); f.Add(5,&nReinforcementCallsUsed); f.Add(6,&nMainEnemy); f.Add(7,&pCampaign); f.Add(8,&pChapter); f.Add(9,&pMission); f.Add(10,&playerMission); f.Add(11,&enemyMission); f.Add(12,&bCampaignFinished); f.Add(13,&bChapterFinished); f.Add(14,&objectives); f.Add(15,&known_objectives); f.Add(16,&wonMissions); f.Add(18,&nMainEnemyMissionCalls); f.Add(19,&playerReinfPotential); f.Add(20,&bMissionWon); f.Add(21,&kills); f.Add(25,&pAIConsts); f.Add(26,&nDifficulty); f.Add(27,&nEnemyReinfCallsLeft); f.Add(28,&pLastMission); f.Add(29,&missionsStats); f.Add(30,&statistic); f.Add(33,&leaders); f.Add(34,&knownReinfs); f.Add(38,&fPlayerXP); f.Add(39,&fPlayerXPAdds); f.Add(40,&priceKills); f.Add(41,&nReinforcementCallsLeftOld); f.Add(42,&nAvailablePromotions); f.Add(47,&chapterCurrentReinfs); f.Add(48,&playerColorUser); f.Add(49,&playerColorFriend); f.Add(50,&playerColorEnemy); f.Add(51,&playerColorNeutral); f.Add(52,&nReinforcementCallsLeftInMission); f.Add(53,&bIsTutorial); f.Add(54,&objectivesObjects); f.Add(55,&nMedalKillsGiven); f.Add(56,&nMedalTacticsGiven); f.Add(57,&nMedalEconomyGiven); f.Add(58,&nMedalMunchkinGiven); f.Add(59,&freeLeaders); f.Add(60,&favoriteReinfs); f.Add(61,&fLastVisiblePlayerStatsExpCareer); f.Add(62,&fLastVisiblePlayerStatsExpNextRank); f.Add(63,&bIsCustomCampaign); return 0; }
 private:
@@ -298,11 +299,11 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 	{
 		ZDATA
 		CReinforcementTypes reinforcementTypes;
-		int nReinforcementCallsLeft;
-		bool bPresent;			// Not all players may exist in a particular game
-		NTimer::STime timeKeyPointsOwned;
-		int nMultiplayerSide;		// Index in MPConsts
-		int nDiplomacySide;
+		int nReinforcementCallsLeft = {};
+		bool bPresent = {};			// Not all players may exist in a particular game
+		NTimer::STime timeKeyPointsOwned = {};
+		int nMultiplayerSide = {};		// Index in MPConsts
+		int nDiplomacySide = {};
 		ZSKIP //CVec3 vColour;
 		CReinforcementXPs experience;
 		CReinforcementLevels reinfLevels;
@@ -310,7 +311,7 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		ZSKIP //uint32_t dwColor;
 		ZSKIP //CDBPtr<NDb::SBackground> pUnitFullInfoColor;
 		SPlayerColor playerColor;
-		int nReinforcementCallsUsed;
+		int nReinforcementCallsUsed = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&reinforcementTypes); f.Add(3,&nReinforcementCallsLeft); f.Add(4,&bPresent); f.Add(5,&timeKeyPointsOwned); f.Add(6,&nMultiplayerSide); f.Add(7,&nDiplomacySide); f.Add(9,&experience); f.Add(10,&reinfLevels); f.Add(11,&leaderLevels); f.Add(14,&playerColor); f.Add(15,&nReinforcementCallsUsed); return 0; }
 
 		SPlayerInfo() : nReinforcementCallsLeft( 0 ), nReinforcementCallsUsed( 0 ), bPresent( false ) { }
@@ -324,31 +325,31 @@ class CScenarioTrackerMultiplayer : public IScenarioTracker
 		ZONSERIALIZE
 
 		std::unordered_map<int, int> flags;
-	bool bNoKeyBuildings;			// No key buildings to fight for, fight to death, limited number of calls
+	bool bNoKeyBuildings = {};			// No key buildings to fight for, fight to death, limited number of calls
 
 	std::vector< std::vector<int> > statistic;
-	int nPlayerXPAdds;
+	int nPlayerXPAdds = {};
 
 	CArray2D<float> kills;
 	CArray2D<int> priceKills;
 
 	CDBPtr<NDb::SAIGameConsts> pAIConsts;
-	int nTechLevel;
+	int nTechLevel = {};
 	std::unordered_map<int, NTimer::STime> flagTimes;
-	int nNeutralPlayer;
+	int nNeutralPlayer = {};
 	SMultiplayerInfo multiplayerInfo;
 	ZSKIP //int nLocalPlayer; in OnSerialize()
 		CDBPtr<NDb::SMapInfo> pLastMission;
 	CDBPtr<NDb::SMultiplayerConsts> pMPConsts;
-	EGameType eType;
+	EGameType eType = {};
 	SPlayerColor playerColorNeutral;
-	NTimer::STime timeMissionStart;
+	NTimer::STime timeMissionStart = {};
 	CArray2D<int> reinfCallsByType;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMission); f.Add(3,&players); OnSerialize( f ); f.Add(5,&flags); f.Add(6,&bNoKeyBuildings); f.Add(7,&statistic); f.Add(8,&nPlayerXPAdds); f.Add(9,&kills); f.Add(10,&priceKills); f.Add(11,&pAIConsts); f.Add(12,&nTechLevel); f.Add(13,&flagTimes); f.Add(14,&nNeutralPlayer); f.Add(15,&multiplayerInfo); f.Add(17,&pLastMission); f.Add(18,&pMPConsts); f.Add(19,&eType); f.Add(20,&playerColorNeutral); f.Add(21,&timeMissionStart); f.Add(22,&reinfCallsByType); return 0; }
 
-	int nLocalPlayer;
-	bool bMissionWon; // special serialization
-	int nSecondsToReinf;
+	int nLocalPlayer = {};
+	bool bMissionWon = {}; // special serialization
+	int nSecondsToReinf = {};
 private:
 	void OnSerialize( IBinSaver &f )
 	{

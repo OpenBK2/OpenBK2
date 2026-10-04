@@ -15,8 +15,9 @@ class CDifficultyLevel
 	};
 	ZDATA
 		ZONSERIALIZE
-	int nLevel;
-	int nCheatLevel;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nLevel = {};
+	int nCheatLevel = {};
 
 
 

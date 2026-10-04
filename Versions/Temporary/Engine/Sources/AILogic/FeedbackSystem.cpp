@@ -70,7 +70,8 @@ void CFeedBackSystem::MoveFeedback( int nID, const CVec2 &vCenter, EFeedBack eFe
 
 struct SEqualTo
 {
-	int nID;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nID = {};
 	SEqualTo( int _nID ) : nID( _nID ) {  }
 	bool operator()( CIDAndParam _nTry ) const
 	{

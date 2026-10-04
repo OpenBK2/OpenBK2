@@ -48,14 +48,15 @@ inline int GetBPP( EPixelFormat format )
 struct SPixelFloat
 {
 	enum { ID = CF_R32F, XSize = 1, YSize = 1 };
-	float r;
+	// Defaults initialize the complete pixel storage before filling or loading it.
+	float r = {};
 	SPixelFloat() {}
 	SPixelFloat( float _r ) : r( _r ) {}
 };
 struct SPixelFFFF
 {
 	enum { ID = CF_A32R32G32B32, XSize = 1, YSize = 1 };
-	float b, g, r, a;
+	float b = {}, g = {}, r = {}, a = {};
 	SPixelFFFF() {}
 	SPixelFFFF( float _r, float _g, float _b, float _a ) : r(_r), g(_g), b(_b), a(_a) {}
 };
@@ -73,7 +74,8 @@ struct SPixel8888
 			uint32_t a : 8;
 		};
 	};
-	SPixel8888() {}
+	// Zero one full union arm, leaving the overlapping component fields plain.
+	SPixel8888() : dwColor( 0 ) {}
 	SPixel8888( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xFF )
 		: b( _b ), g( _g ), r( _r ), a( _a ) {}
 	SPixel8888( uint32_t _dwColor ) : dwColor(_dwColor ){}
@@ -94,7 +96,7 @@ struct SPixel1555
 			uint16_t a : 1;
 		};
 	};
-	SPixel1555() {}
+	SPixel1555() : wColor( 0 ) {}
 	SPixel1555( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 1 )
 		: b( _b ), g( _g ), r( _r ), a( _a ) {}
 };
@@ -111,7 +113,7 @@ struct SPixel565
 			uint16_t r : 5;
 		};
 	};
-	SPixel565() {}
+	SPixel565() : wColor( 0 ) {}
 	SPixel565( unsigned char _r, unsigned char _g, unsigned char _b )
 		: b( _b ), g( _g ), r( _r ) {}
 };
@@ -129,35 +131,35 @@ struct SPixel4444
 			uint16_t a : 4;
 		};
 	};
-	SPixel4444() {}
+	SPixel4444() : wColor( 0 ) {}
 	SPixel4444( unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a = 0xF )
 		: b( _b ), g( _g ), r( _r ), a( _a ) {}
 };
 struct SPixelDXT1
 {
 	enum { ID = CF_DXT1, XSize = 4, YSize = 4 };
-	uint16_t color1, color2;
-	uint32_t colors;
+	uint16_t color1 = {}, color2 = {};
+	uint32_t colors = {};
 };
 struct SPixelDXT2
 {
 	enum { ID = CF_DXT2, XSize = 4, YSize = 4 };
-	uint32_t colors1, colors2, colors3, colors4;
+	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
 struct SPixelDXT3
 {
 	enum { ID = CF_DXT3, XSize = 4, YSize = 4 };
-	uint32_t colors1, colors2, colors3, colors4;
+	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
 struct SPixelDXT4
 {
 	enum { ID = CF_DXT4, XSize = 4, YSize = 4 };
-	uint32_t colors1, colors2, colors3, colors4;
+	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
 struct SPixelDXT5
 {
 	enum { ID = CF_DXT5, XSize = 4, YSize = 4 };
-	uint32_t colors1, colors2, colors3, colors4;
+	uint32_t colors1 = {}, colors2 = {}, colors3 = {}, colors4 = {};
 };
 
 struct SShortTextureUV
@@ -165,7 +167,7 @@ struct SShortTextureUV
 	union
 	{
 		struct { short nU, nV; };
-		uint32_t dw;
+		uint32_t dw = 0;
 	};
 };
 
@@ -175,7 +177,7 @@ struct SCompactVector
 	union
 	{
 		struct { unsigned char z, y, x, w; };
-		uint32_t dw;
+		uint32_t dw = 0;
 	};
 };
 
@@ -225,10 +227,10 @@ struct CInterpolateColor
 
 struct STriangleList
 {
-	const STriangle *pTri;
-	int nTris;
-	int nBaseIndex;
-	int nOffset;
+	const STriangle *pTri = nullptr;
+	int nTris = 0;
+	int nBaseIndex = 0;
+	int nOffset = 0;
 
 	STriangleList() : pTri(0), nTris(0), nBaseIndex(0), nOffset(0) {}
 	STriangleList( const std::vector<STriangle> &t ) : pTri( &t[0] ), nTris( t.size() ), nBaseIndex(0), nOffset(0) {}
@@ -237,7 +239,7 @@ struct STriangleList
 
 struct SMMXWord
 {
-	short nZ, nY, nX, nW;
+	short nZ = 0, nY = 0, nX = 0, nW = 0;
 };
 struct SCompactTransformer
 {

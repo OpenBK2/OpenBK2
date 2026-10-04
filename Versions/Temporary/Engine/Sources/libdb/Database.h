@@ -62,7 +62,8 @@ class CBasicDatabase : public CObjectBase, public CDbObserverContainer
 {
 	CPtr<NVFS::IVFS> pVFS;
 	CPtr<NVFS::IFileCreator> pFileCreator;
-	bool bDataChanged;
+	// Keep a defined declaration default alongside the runtime constructor state.
+	bool bDataChanged = false;
 protected:
 	NVFS::IFileCreator *GetFileCreator() const { return pFileCreator; }
 	NVFS::IVFS *GetVFS() const { return pVFS; }

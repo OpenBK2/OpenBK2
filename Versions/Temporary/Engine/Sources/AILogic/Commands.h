@@ -16,9 +16,10 @@ struct SGroupPathInfo
 	ZDATA
 	CPtr<IStaticPath> pPath;
 	CPtr<IStaticPathFinder> pPathFinder;
-	int nSubGroup;
-	uint8_t cTileSize;
-	EAIClasses aiClass;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSubGroup = {};
+	uint8_t cTileSize = {};
+	EAIClasses aiClass = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPath); f.Add(3,&pPathFinder); f.Add(4,&nSubGroup); f.Add(5,&cTileSize); f.Add(6,&aiClass); return 0; }
 public:
 	SGroupPathInfo() : nSubGroup( -1 ), cTileSize( 0 ), aiClass( EAC_NONE ) { }
@@ -33,8 +34,8 @@ class CAICommand : public CObjectBase
 
 	ZDATA
 		SAIUnitCmd unitCmd;
-		int id;
-		int nFlag;
+		int id = {};
+		int nFlag = {};
 		CObj<CGroupMover> pMover;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitCmd); f.Add(3,&id); f.Add(4,&nFlag); f.Add(5,&pMover); return 0; }

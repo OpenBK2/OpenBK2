@@ -28,7 +28,8 @@ public:
 private:
 	struct SInitializedWord
 	{
-		int nValue;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nValue = {};
 		SInitializedWord() : nValue ( 0 ) {}
 		SInitializedWord( int _nValue ) : nValue ( _nValue ) {}
 	};
@@ -43,7 +44,7 @@ private:
 	std::list< CObj<CAviation> > planes;
 	// все операции проводятся с большими ячейками
 
-	int nBigCellsSizeX, nBigCellsSizeY;
+	int nBigCellsSizeX = {}, nBigCellsSizeY = {};
 
 	// количество юнитов в ячейке
 	CArray2D<uint16_t> nUnitsCell;
@@ -54,7 +55,7 @@ private:
 	// позиция юнита в ячейках
 	struct SUnitPosition
 	{
-		int nCellID; int nUnitPos; SVector cell;
+		int nCellID = {}; int nUnitPos = {}; SVector cell;
 		SUnitPosition() : nCellID(0), nUnitPos(0), cell( 0, 0 ) { }
 	};
 	std::vector<SUnitPosition> posUnitInCell;

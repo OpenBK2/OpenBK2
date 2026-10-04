@@ -13,8 +13,9 @@ class CAnimUnitMech : public IAnimUnit
 	public:
 		enum EMovingState { EMS_STOPPED, EMS_MOVING, EMS_STOPPED_TO_MOVING, EMS_MOVING_TO_STOPPED };
 		ZDATA
-		EMovingState state;
-		NTimer::STime timeOfIntentionStart;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		EMovingState state = {};
+		NTimer::STime timeOfIntentionStart = {};
 	public: 
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&timeOfIntentionStart); return 0; }
 

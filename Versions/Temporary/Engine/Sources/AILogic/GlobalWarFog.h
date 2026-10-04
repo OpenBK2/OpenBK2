@@ -33,7 +33,8 @@ struct SSpiralPoint
 {
 	ZDATA
 		SVector vOffset;
-		int nRadius;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nRadius = {};
 		SSector sector;
 		SAIAngle wAngle;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vOffset); f.Add(3,&nRadius); f.Add(4,&sector); f.Add(5,&wAngle); return 0; }
@@ -47,8 +48,8 @@ struct SWarFogUnitInfo
 	ZDATA
 		SVector vPos;
 		SSector sector;
-		int nRadius;
-		bool bPlane;
+		int nRadius = {};
+		bool bPlane = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&sector); f.Add(4,&nRadius); f.Add(5,&bPlane); return 0; }
 
 	SWarFogUnitInfo() : vPos( 0, 0 ) , sector(), nRadius( 0 ), bPlane( false ) {}
@@ -62,10 +63,10 @@ class CGlobalWarFog : public CAIObjectBase
 	{
 		ZDATA_( SWarFogUnitInfo )
 			SVector vOldPos;
-			int nOldRadius;
-			int nParty;	// warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
+			int nOldRadius = {};
+			int nParty = {};	// warfog works only with two parties, so if updateFlag is UPD_CHANGE_PARTY new party is 1 - nParty ;-)
 			CArray1Bit visValues;
-			EUpdateWarFogUnitInfoFlag updateFlag;
+			EUpdateWarFogUnitInfoFlag updateFlag = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,( SWarFogUnitInfo *)this); f.Add(2,&vOldPos); f.Add(3,&nOldRadius); f.Add(4,&nParty); f.Add(5,&visValues); f.Add(6,&updateFlag); return 0; }
 
 		SWarForFullUnitInfo() : SWarFogUnitInfo(), vOldPos( 0, 0 ), nOldRadius( 0 ), nParty( 0 ), updateFlag( UPD_UPDATED ) {}
@@ -81,8 +82,8 @@ class CGlobalWarFog : public CAIObjectBase
 
 	struct SWarFogTileInfo
 	{
-		int nVisible;
-		int nCloseVisible;
+		int nVisible = {};
+		int nCloseVisible = {};
 		SWarFogTileInfo() : nVisible( 0 ), nCloseVisible( 0 ) {}
 	};
 
@@ -95,16 +96,16 @@ class CGlobalWarFog : public CAIObjectBase
 	CArray2D<CArray1Bit> areas;					// calculated spirals for every point
 	CArray2D1Bit valid;									// valid tiles on map
 	CArray2D1Bit calced;								// tiles that sometimes calced
-	int nAreasCalced;
+	int nAreasCalced = {};
 	CArray2D<int> heights;							// heights
-	bool bInitialization;
-	bool bHasInvalidTile;
+	bool bInitialization = {};
+	bool bHasInvalidTile = {};
 
 	CArray2D<uint8_t> miniMapWarFog;
-	bool bNeedFullCalc;
-	NTimer::STime nLastFogCalcTime;
+	bool bNeedFullCalc = {};
+	NTimer::STime nLastFogCalcTime = {};
 	std::vector<uint8_t> miniMapSums;
-	int nMiniMapY;
+	int nMiniMapY = {};
 
 
 	/*
@@ -118,10 +119,10 @@ class CGlobalWarFog : public CAIObjectBase
 	CArray2D<int> spiralCoords;    // MaxRadius * MaxRadius
 	std::vector<int> lengths;           // MaxRadius * sizeof( int )
 	ZDATA
-		int nSizeX;
-		int nSizeY;
-		int nMaxRadius;
-		int nUnitHeight;
+		int nSizeX = {};
+		int nSizeY = {};
+		int nMaxRadius = {};
+		int nUnitHeight = {};
 
 		std::vector<TWarFog> warFog;
 

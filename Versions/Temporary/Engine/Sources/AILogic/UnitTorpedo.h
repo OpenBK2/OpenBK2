@@ -40,8 +40,9 @@ class CUnitTorpedo : public CAIUnit
 	ZDATA_(CAIUnit)
 	CDBPtr<SWeaponRPGStats> pShooterStats;
 	CDBPtr<SMechUnitRPGStats> pTorpedoStats;
-	float fSpeed;
-	NTimer::STime timeLaunched;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fSpeed = {};
+	NTimer::STime timeLaunched = {};
 	CPtr<CAIUnit> pOwner;
 	CVec2 vContactPoint;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CAIUnit*)this); f.Add(2,&pShooterStats); f.Add(3,&pTorpedoStats); f.Add(4,&fSpeed); f.Add(5,&timeLaunched); f.Add(6,&pOwner); f.Add(7,&vContactPoint); return 0; }
@@ -95,7 +96,7 @@ class CTorpedoPath : public ISmoothPath
 	CVec2 vEndPoint;
 	CVec2 vSpeed;
 
-	CBasePathUnit *pUnit;
+	CBasePathUnit *pUnit = {};
 public:
 	CTorpedoPath() { }
 	bool Init( CBasePathUnit *_pUnit, const class CVec2 &_vCurPoint, const CVec2 &_vEndPoint, const float fSpeed );

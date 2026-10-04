@@ -20,7 +20,8 @@ class CExecutorContainer :	public IExecutorContainer
 	struct SExID
 	{
 		ZDATA
-		int nID;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nID = {};
 		CPtr<CExecutor> pEx;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&pEx); return 0; }
 	public:
@@ -42,7 +43,7 @@ class CExecutorContainer :	public IExecutorContainer
 	CSleepingExecutors::iterator checkIter;				// not all invalid sleeping checked every segment
 
 	CExecutors executors;
-	int nCurTime;
+	int nCurTime = {};
 	CFreeIds executorIDs;
 
 	// sleeping executors

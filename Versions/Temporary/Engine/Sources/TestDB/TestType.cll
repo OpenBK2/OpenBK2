@@ -16,6 +16,12 @@ it, and the Russian tooltips of CMapInfo2 are in English.
 [typeRename = "CBinaryFlags"; numBytes = 8]
 [noHeader] typedef hexbinary Flags;
 
+// Empty records also need their generated checksum cache initialized.
+[export]
+struct SEmptyChecksumRecord
+{
+};
+
 [typeID = 0x1019230D]
 class CWeapon
 {

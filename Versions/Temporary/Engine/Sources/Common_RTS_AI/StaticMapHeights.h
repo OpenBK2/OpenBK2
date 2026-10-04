@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "Misc/Spline.h"
@@ -13,7 +15,7 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 	
 	struct SOldHeights
 	{
-		int nX1, nY1;
+		int nX1 = 0, nY1 = 0;
 		CArray2D<float> heights;
 
 		SOldHeights() : nX1( -1 ), nY1( -1 ) {}
@@ -27,11 +29,11 @@ class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 	CBetaSpline3D betaSpline3D;
 	// высоты по центрам AI тайлов
 	CArray2D<float> tileHeights;
-	int nStaticMapSizeX;
-	int nStaticMapSizeY;
+	int nStaticMapSizeX = 0;
+	int nStaticMapSizeY = 0;
 	CHeightsMap oldHeightsMap;
-	int nLastHeightsID;
-	int nTileSize;
+	int nLastHeightsID = 0;
+	int nTileSize = 0;
 	void GetPoint4Spline( const CVec2 &vPoint, float *pu, float *pv, float ptCtrls[] ) const;
 	void Init( const int nSizeXInTiles, const int nSizeYInTiles, const int nTileSize );
 	const float GetHeight( const int x, const int y ) const;

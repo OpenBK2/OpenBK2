@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "AIMap.h"
 // AIMap.h only forward declares CArray2D1Bit, which is all its own declarations
 // need. The bodies below construct one and call GetData and SetData on it, so
@@ -362,8 +364,8 @@ template<typename TContainter>
 class CTilesCollector
 {
 public:
-	TContainter *pTiles;
-	CAIMap *pAIMap;
+	TContainter *pTiles = nullptr;
+	CAIMap *pAIMap = nullptr;
 	CTilesCollector( TContainter* _pTiles, CAIMap *_pAIMap ) : pTiles( _pTiles ), pAIMap( _pAIMap ) { }
 
 	bool operator()( float x, float y ) 

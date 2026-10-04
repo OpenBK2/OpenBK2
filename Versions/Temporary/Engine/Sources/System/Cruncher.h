@@ -7,15 +7,16 @@ const int N_COMPRESS_HISTORY = 1024;
 
 class CNetCompressor
 {
-	unsigned char cBuffer[ N_COMPRESS_HISTORY * 2 ];//+ N_COMPRESS_MAX_BLOCK ];
-	unsigned int nNext[ N_COMPRESS_HISTORY ];  // list of same pairs
-	unsigned int nHashTable[ 1024 ];//8192 ];
+	// Defensive storage defaults; the constructor keeps its compression sentinels.
+	unsigned char cBuffer[ N_COMPRESS_HISTORY * 2 ]{};//+ N_COMPRESS_MAX_BLOCK ];
+	unsigned int nNext[ N_COMPRESS_HISTORY ]{};  // list of same pairs
+	unsigned int nHashTable[ 1024 ]{};//8192 ];
 	CBitLocker data;
-	int nCurrent;       // позиция на место которой должна быть записана текущая буква
-	int nBlockStart;    // позиция начала блока повторения
-	int nBlockLength;   // длина текущего блока повторения
+	int nCurrent = 0;       // позиция на место которой должна быть записана текущая буква
+	int nBlockStart = 0;    // позиция начала блока повторения
+	int nBlockLength = 0;   // длина текущего блока повторения
 	//unsigned char cPrevLetter;
-	unsigned int cPrevLetter;
+	unsigned int cPrevLetter = 0;
 	//
 	static int nLengthBits[34], nLengthBitsNum[34];
 	static int nShiftBits[34], nShiftBitsNum[34];

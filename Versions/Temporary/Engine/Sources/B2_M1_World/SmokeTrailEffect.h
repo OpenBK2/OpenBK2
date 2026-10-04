@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 namespace NDb
 {
 	struct SComplexEffect;
@@ -15,9 +17,9 @@ class CSmokeTrailEffect : public CObjectBase
 	//
 	ZDATA
 	CDBPtr<NDb::SComplexEffect> pEffect;
-	float fInterval;
+	float fInterval = 0.0f;
 	SHMatrix mLocalPos;
-	float fTimeLastUpdate;
+	float fTimeLastUpdate = 0.0f;
 	CVec3 vLastVisPos;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pEffect); f.Add(3,&fInterval); f.Add(4,&mLocalPos); f.Add(5,&fTimeLastUpdate); f.Add(6,&vLastVisPos); return 0; }
 	//

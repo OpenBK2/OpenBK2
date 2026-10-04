@@ -113,9 +113,10 @@ static const std::string Convert2Param( const Script::Object &object )
 
 class CUnitsInScriptAreaEnumerator : public IScriptAreaEnumerator
 {
-	Script *pScript;
-	const NDb::SScriptArea *pArea;
-	int nUnits;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	Script *pScript = {};
+	const NDb::SScriptArea *pArea = {};
+	int nUnits = {};
 	det_map<int, bool> squads;
 
 public:
@@ -150,9 +151,9 @@ public:
 
 class CIsSomeUnitInScriptAreaEnumerator : public IScriptAreaEnumerator
 {
-	Script *pScript;
-	const NDb::SScriptArea *pArea;
-	bool bPresent;
+	Script *pScript = {};
+	const NDb::SScriptArea *pArea = {};
+	bool bPresent = {};
 
 public:
 	CIsSomeUnitInScriptAreaEnumerator( Script *_pScript, const NDb::SScriptArea *_pArea ) 
@@ -1670,8 +1671,8 @@ int CScripts::ShowActiveScripts( struct lua_State *state )
 
 class CUnitsEnumerator : public IEnumerator
 {
-	Script *pScript;
-	int nResult;
+	Script *pScript = {};
+	int nResult = {};
 	det_set<int> squads;
 public:
 	CUnitsEnumerator( Script *_pScript ) : pScript( _pScript ), nResult( 0 ) {}

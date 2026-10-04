@@ -13,11 +13,12 @@ namespace NTimer
 
 class CScaleTimer
 {
-	NTimer::STime prevTime;						// current dependent time
-	NTimer::STime currTime;						// current independent time
-	float fScale;											// time scaling
-	float fError;											// time rounding error (for scaling)
-	bool bPaused;											// is this timer paused
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime prevTime = {};						// current dependent time
+	NTimer::STime currTime = {};						// current independent time
+	float fScale = {};											// time scaling
+	float fError = {};											// time rounding error (for scaling)
+	bool bPaused = {};											// is this timer paused
 public:
 	CScaleTimer() : prevTime( 0 ), currTime( 0 ), fScale( 1 ), fError( 0 ), bPaused( false ) {  }
 	// scale

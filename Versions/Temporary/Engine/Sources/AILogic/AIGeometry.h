@@ -43,7 +43,8 @@ inline float DoubleTrSquare( const CVec2 &side1, const CVec2 &side2 )
 
 struct SLine
 {
-	int a, b, c;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int a = {}, b = {}, c = {};
 
 	SLine() {  };
 	SLine( int _a, int _b, int _c ) : a( _a ), b( _b ), c( _c ) {  }
@@ -69,14 +70,14 @@ struct SLine
 
 class CBresZ
 {
-	int xerr, yerr;
-	int xlen, ylen, len;
-	int xinc, yinc, zinc, rinc;
+	int xerr = {}, yerr = {};
+	int xlen = {}, ylen = {}, len = {};
+	int xinc = {}, yinc = {}, zinc = {}, rinc = {};
 
-	int intPart, dxy;
+	int intPart = {}, dxy = {};
 	
 	SVector dir;
-	int z, r;
+	int z = {}, r = {};
 
 public:
 	void InitXY( const SVector &start, const SVector &finish )

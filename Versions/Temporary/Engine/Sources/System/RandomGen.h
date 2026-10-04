@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include <boost/config.hpp>
@@ -22,21 +24,21 @@ namespace NRandom
 {
 	struct SDebugState
 	{
-		unsigned int randcnt;
-		unsigned int randa;
-		unsigned int randb;
-		unsigned int randc;
-		unsigned long randrslChecksum;
-		unsigned long randmemChecksum;
-		uint64_t randomCalls;
+		unsigned int randcnt = 0;
+		unsigned int randa = 0;
+		unsigned int randb = 0;
+		unsigned int randc = 0;
+		unsigned long randrslChecksum = 0;
+		unsigned long randmemChecksum = 0;
+		uint64_t randomCalls = 0;
 	};
 
 	struct RngCall
 	{
 		int callNumber = 0;
-		const char* file;
-		int line;
-		const char* function;
+		const char* file = nullptr;
+		int line = 0;
+		const char* function = nullptr;
 	};
 
 	// Keep raw macro pointers here: wrapping __FILE__/__func__ in temporary strings leaves dangling c_str() pointers in the ring buffer.

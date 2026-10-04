@@ -23,7 +23,8 @@ static int s_nForceLoadCounter = 0;
 static bool s_bForceLoad = true;
 struct SGameDbForceLoadGuard
 {
-	bool bOpened;
+	// Defaults also cover runtime-only helpers; constructor assignments retain their meaning.
+	bool bOpened = false;
 	SGameDbForceLoadGuard()
 	{
 		s_bForceLoad = s_nCurrLoadDepth < s_nMaxLoadDepth;
@@ -56,7 +57,7 @@ class CGameDatabase : public CBasicDatabase
 	CElementsMap elementsMap;
 	typedef std::unordered_map<std::string, int> CName2TypeIDMap;
 	CName2TypeIDMap name2typeIDmap;
-	bool bIndexChanged;
+	bool bIndexChanged = false;
 	//
 	const SElement *GetElement( const CDBID &_dbid )
 	{
@@ -253,7 +254,7 @@ static int nObjLoaded = 0;
 class CProfiler
 {
 	const std::string szObjName;
-	const uint32_t dwStartTime;
+	const uint32_t dwStartTime = 0;
 public:
 	CProfiler( const CDBID &dbID ) : szObjName( dbID.ToString() ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
 	~CProfiler()

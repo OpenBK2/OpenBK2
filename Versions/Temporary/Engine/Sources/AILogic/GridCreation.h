@@ -4,7 +4,8 @@
 class CSortedGridUnits
 {
 	std::vector<class CCommonUnit*> units;
-	int nUnits;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nUnits = {};
 
 	CVec2 vAverageDir;
 
@@ -17,7 +18,7 @@ class CSortedGridUnits
 	std::vector<int> sortedUnitsNums;
 	std::vector<CVec2> rotatedUnitsCoord;
 
-	bool bSorted;
+	bool bSorted = {};
 public:
 	CSortedGridUnits();
 	void AddUnit( class CCommonUnit* pUnit );
@@ -53,7 +54,7 @@ class CGrid
 	CVec2 vCenter;
 
 	std::vector<CVec2> newCenters;
-	float fMaxWidth;
+	float fMaxWidth = {};
 
 	CSortedGridUnits sortedUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&sortedColumns); f.Add(3,&columns); f.Add(4,&vCenter); f.Add(5,&newCenters); f.Add(6,&fMaxWidth); f.Add(7,&sortedUnits); return 0; }

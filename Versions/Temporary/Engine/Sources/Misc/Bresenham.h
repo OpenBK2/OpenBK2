@@ -1,12 +1,14 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 class CBresenham2
 {
-	int x1, y1;
-	int x2, y2;
-	int xlen, ylen, len;
-	int xinc, yinc;
-	int xerr, yerr;
+	int x1 = 0, y1 = 0;
+	int x2 = 0, y2 = 0;
+	int xlen = 0, ylen = 0, len = 0;
+	int xinc = 0, yinc = 0;
+	int xerr = 0, yerr = 0;
 public:
 	CBresenham2( int _x1, int _y1, int _x2, int _y2 )
 		: x1( _x1 ), y1( _y1 ), x2( _x2 ), y2( _y2 ),
@@ -66,9 +68,9 @@ void ScanLine2( int x1, int y1, int x2, int y2, TFunctional &func )
 
 class CBres
 {
-	int xerr, yerr;
-	int xlen, ylen, len;
-	int xinc, yinc;
+	int xerr = 0, yerr = 0;
+	int xlen = 0, ylen = 0, len = 0;
+	int xinc = 0, yinc = 0;
 
 	SVector dir;
 	//

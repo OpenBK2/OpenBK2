@@ -218,10 +218,11 @@ struct SLUAError
 {
 	struct SLUAStackTrace
 	{
-		int nDepth;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nDepth = {};
 		std::string szSource;
 		std::string szFunctionName;
-		int nDefinedAtLine;
+		int nDefinedAtLine = {};
 	};
 	std::string szError;
 	std::vector< SLUAStackTrace > stack;

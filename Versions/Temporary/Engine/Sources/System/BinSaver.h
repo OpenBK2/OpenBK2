@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include <queue>
 
 #include "System_export.h"
@@ -553,8 +555,8 @@ int CPtrBase<TUserObj,TRef>::operator&( IBinSaver &f )
 // nID is used to restore pointers on such objects after load
 struct SBinSaverExternalObject
 {
-	int nID;
-	CObjectBase *pObj;
+	int nID = 0;
+	CObjectBase *pObj = nullptr;
 
 	SBinSaverExternalObject() {}
 	SBinSaverExternalObject( int _nID, CObjectBase *_pObj ) : nID(_nID), pObj(_pObj) {}

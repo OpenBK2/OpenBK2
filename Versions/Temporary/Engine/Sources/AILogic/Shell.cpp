@@ -61,14 +61,15 @@ namespace NAsyncExplosionDebug
 
 	struct SAreaDamageContext
 	{
-		bool bValid;
-		const CExplosion *pExpl;
-		CAIUnit *pTarget;
-		int nRawIndex;
-		int nSortedIndex;
-		int nDuplicateCount;
-		int nRawCount;
-		int nUniqueCount;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bValid = {};
+		const CExplosion *pExpl = {};
+		CAIUnit *pTarget = {};
+		int nRawIndex = {};
+		int nSortedIndex = {};
+		int nDuplicateCount = {};
+		int nRawCount = {};
+		int nUniqueCount = {};
 
 		SAreaDamageContext() : bValid( false ), pExpl( 0 ), pTarget( 0 ), nRawIndex( -1 ), nSortedIndex( -1 ),
 			nDuplicateCount( 0 ), nRawCount( 0 ), nUniqueCount( 0 ) { }
@@ -76,41 +77,41 @@ namespace NAsyncExplosionDebug
 
 	struct SAreaDamageRecord
 	{
-		unsigned int nSeq;
-		NTimer::STime nTime;
-		const char *szStage;
+		unsigned int nSeq = {};
+		NTimer::STime nTime = {};
+		const char *szStage = {};
 
-		int nShooterUID;
-		int nShooterPlayer;
-		int nShellType;
-		int nTrajectory;
+		int nShooterUID = {};
+		int nShooterPlayer = {};
+		int nShellType = {};
+		int nTrajectory = {};
 		CVec3 vExpl;
-		float fRadius;
-		float fSmallRadius;
+		float fRadius = {};
+		float fSmallRadius = {};
 
-		int nTargetUID;
-		int nTargetPlayer;
-		int nTargetParty;
+		int nTargetUID = {};
+		int nTargetPlayer = {};
+		int nTargetParty = {};
 		CVec2 vTarget;
-		float fTargetZ;
+		float fTargetZ = {};
 
-		int nRawIndex;
-		int nSortedIndex;
-		int nDuplicateCount;
-		int nRawCount;
-		int nUniqueCount;
+		int nRawIndex = {};
+		int nSortedIndex = {};
+		int nDuplicateCount = {};
+		int nRawCount = {};
+		int nUniqueCount = {};
 
-		int nArmorDir;
-		float fDist2;
-		float fZDiff;
-		bool bPreconditionsPassed;
-		bool bCoverCalled;
-		bool bSavedByCover;
-		bool bCircleHit;
-		bool bArmorPassed;
-		bool bDamageApplied;
-		uint64_t nRngBefore;
-		uint64_t nRngAfter;
+		int nArmorDir = {};
+		float fDist2 = {};
+		float fZDiff = {};
+		bool bPreconditionsPassed = {};
+		bool bCoverCalled = {};
+		bool bSavedByCover = {};
+		bool bCircleHit = {};
+		bool bArmorPassed = {};
+		bool bDamageApplied = {};
+		uint64_t nRngBefore = {};
+		uint64_t nRngAfter = {};
 
 		SAreaDamageRecord() : nSeq( 0 ), nTime( 0 ), szStage( "" ), nShooterUID( 0 ), nShooterPlayer( -1 ),
 			nShellType( -1 ), nTrajectory( -1 ), vExpl( VNULL3 ), fRadius( 0 ), fSmallRadius( 0 ),

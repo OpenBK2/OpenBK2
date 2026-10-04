@@ -13,10 +13,11 @@ struct SPrevPathParams
 
 	CVec3 vSpeed;									// speed vector at vCur
 	CVec3 vNormale;								// normale (top plane's direction) at vCur
-	float fSplineProgress;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fSplineProgress = {};
 	
-	float fDistToGo;	// distance that have to be gone on new path
-	float fCurTiltSpeed;
+	float fDistToGo = {};	// distance that have to be gone on new path
+	float fCurTiltSpeed = {};
 	SPrevPathParams( struct IPlane *pPlane );
 };
 

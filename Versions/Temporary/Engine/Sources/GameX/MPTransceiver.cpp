@@ -48,8 +48,9 @@ class CAISegmentFinishedPacket : public CNetPacket
 public:
 	typedef unsigned long ulong;
 	ZDATA
-	int nSegment;
-	ulong ulCheckSum;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSegment = {};
+	ulong ulCheckSum = {};
 	std::list<CMPTransceiver::SRawCommand> aiCommands;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSegment); f.Add(3,&ulCheckSum); f.Add(4,&aiCommands); return 0; }
 
@@ -66,7 +67,7 @@ public:
 	};
 
 	ZDATA
-		EType eType;
+		EType eType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); return 0; }
 
 	CTransciverCommonPacket() {}

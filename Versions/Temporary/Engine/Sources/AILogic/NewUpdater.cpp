@@ -575,8 +575,9 @@ SAIBasicUpdate* CEventUpdater::GetUpdate()
 
 struct SUpdateInfo
 {
-	int nValidCount;
-	int nInvalidCount;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nValidCount = {};
+	int nInvalidCount = {};
 
 	SUpdateInfo() : nValidCount( 0 ), nInvalidCount( 0 ) {}
 };

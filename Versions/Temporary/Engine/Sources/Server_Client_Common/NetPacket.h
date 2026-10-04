@@ -3,7 +3,8 @@
 class CNetPacket : public CObjectBase
 {
 public:	
-	int nClientID;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nClientID = {};
 
 	CNetPacket() { }
 	CNetPacket( const int _nClientID ) : nClientID( _nClientID ) { }

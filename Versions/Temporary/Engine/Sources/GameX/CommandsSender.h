@@ -10,14 +10,15 @@ class CCommandsSender : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CCommandsSender );
 
 	ZDATA
-		bool bHistoryPlaying;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bHistoryPlaying = {};
 		CPtr<ITransceiver> pTransciver;
 		std::vector<int> lastGroup;
-		int nLastGroupID;
+		int nLastGroupID = {};
 		SAIUnitCmd lastCommand;
-		NTimer::STime lastCommandTime;
-		bool bGroupChanged;
-		bool bLastCommandSkipped;
+		NTimer::STime lastCommandTime = {};
+		bool bGroupChanged = {};
+		bool bLastCommandSkipped = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bHistoryPlaying); f.Add(3,&pTransciver); f.Add(4,&lastGroup); f.Add(5,&nLastGroupID); f.Add(6,&lastCommand); f.Add(7,&lastCommandTime); f.Add(8,&bGroupChanged); f.Add(9,&bLastCommandSkipped); return 0; }
 public:
 	CCommandsSender() : bHistoryPlaying(false), nLastGroupID( -1 ), lastCommandTime( 0 ), bGroupChanged( false ), bLastCommandSkipped( false ) {}

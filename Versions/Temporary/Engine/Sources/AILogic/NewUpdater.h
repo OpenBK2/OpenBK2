@@ -228,16 +228,17 @@ public:
 		CUpdateData() {}
 	public:
 		//update time
-		NTimer::STime nUpdateTime;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime nUpdateTime = {};
 		//incoming order
-		int nOrder;
+		int nOrder = {};
 		//update data
-		EActionNotify eUpdateType;
+		EActionNotify eUpdateType = {};
 		CPtr<SAIBasicUpdate> pData;
 		CObj<CUpdatableObj> pObj;
-		int nParam;
+		int nParam = {};
 		//for removing sent updates
-		bool bValid;
+		bool bValid = {};
 		
 		CUpdateData( const NTimer::STime &nTime, int nCounter, EActionNotify eType, CUpdatableObj *_pObj, int _nParam ) :
 			nUpdateTime( nTime ),
@@ -287,22 +288,22 @@ private:
 	typedef det_map< CPtr<CUpdatableObj>, CUpdateList > CUpdateMap;
 	CUpdateMap updatesHash;
 	//current segment time
-	NTimer::STime nTime;
+	NTimer::STime nTime = {};
 	//current game time
-	NTimer::STime nReturnTime;
+	NTimer::STime nReturnTime = {};
 	//incoming update counter
-	int nCounter;
+	int nCounter = {};
 	//player's party
-	int nMyParty;
+	int nMyParty = {};
 	//visible tiles registrator
 	det_set<SVector, STilesHash> visibleTiles;
 	//legacy
-	bool bShowAreas;
-	EActionNotify eAreaType;
+	bool bShowAreas = {};
+	EActionNotify eAreaType = {};
 	std::list< CPtr<CUpdatableObj> > shootGroupUnits;
 
 	det_set<int> updatedPlacements;
-	NTimer::STime lastTimeUpTo;
+	NTimer::STime lastTimeUpTo = {};
 
 	void DestroyContents();	
 	

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MOUnit.h"
 #include "SceneB2/AnimMutators.h"
 #include "SmokeTrailEffect.h"
@@ -22,24 +24,24 @@ class CMOUnitMechanical : public CMOUnit
 	CObj<IClientUpdatableProcess> pIdleProcess;
 	ZDATA_( CMOUnit )
 		ZONSERIALIZE
-		bool bArtilleryHooked;
+		bool bArtilleryHooked = false;
 		std::vector< CPtr<CMOSelectable> > vPassangers;
 		CPtr<IMechUnitJoggingMutator> pJoggingMutator;
-		bool bAmphibianInWater;
-		bool bAmphibianWaterEffectsActive;
-		int nJoggingBasisBoneIndex;
-		int nJoggingMode;
-		int nLastWaterMoveEffectTime;
+		bool bAmphibianInWater = false;
+		bool bAmphibianWaterEffectsActive = false;
+		int nJoggingBasisBoneIndex = 0;
+		int nJoggingMode = 0;
+		int nLastWaterMoveEffectTime = 0;
 		CVec2 vLastWaterMoveEffectPos;
-		bool bMoved;
+		bool bMoved = false;
 		std::vector<CVec3> lastTrackPoints;
 		std::vector<CVec3> trackPoints;
-		float fTrackWidth;
-		uint16_t wLastTrackDir;
-		int nLastTrackTime;
-		bool bForwardMoving;
+		float fTrackWidth = 0.0f;
+		uint16_t wLastTrackDir = 0;
+		int nLastTrackTime = 0;
+		bool bForwardMoving = false;
 		CPtr<IMOContainer> pTransport;
-		bool bTrackBroken;
+		bool bTrackBroken = false;
 		std::vector< CObj<CSmokeTrailEffect> > smokeTrails;
 		CPtr<IMOUnit> pOneFromCrew;
 public:

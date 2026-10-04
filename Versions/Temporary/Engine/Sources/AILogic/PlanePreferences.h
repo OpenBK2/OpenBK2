@@ -21,7 +21,8 @@ class CPlanePreferences
 {
 	ZDATA
 	CDBPtr<SMechUnitRPGStats> pStats;
-	bool bCanViolateHeghtLimits;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bCanViolateHeghtLimits = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&bCanViolateHeghtLimits); return 0; }
 

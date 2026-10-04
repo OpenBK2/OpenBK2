@@ -15,11 +15,12 @@ class CScriptMovieMutator : public NCamera::CCameraPlacement
 protected:
 	NCamera::CCameraPlacement placementStart;
 	NCamera::CCameraPlacement placementFinish;
-	NTimer::STime timeStart;
-	NTimer::STime timeFinish;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime timeStart = {};
+	NTimer::STime timeFinish = {};
 	//NTimer::STime timeCurrent;
 	CDGPtr< CFuncBase<STime> > pTimer;
-	bool bSmoothEnd;
+	bool bSmoothEnd = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&placementStart); f.Add(3,&placementFinish); f.Add(4,&timeStart); f.Add(5,&timeFinish); f.Add(6,&pTimer); f.Add(7,&bSmoothEnd); return 0; }
@@ -41,7 +42,7 @@ class CSCamDMoveFlightMutator : public CScriptMovieMutator
 	//
 	ZDATA
 	CVec3 vAnchorStart, vAnchorDir;
-	float fLengStart, fLengFinish;
+	float fLengStart = {}, fLengFinish = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vAnchorStart); f.Add(3,&vAnchorDir); f.Add(4,&fLengStart); f.Add(5,&fLengFinish); return 0; }
@@ -89,7 +90,7 @@ class CSCamDFollowFlightMutator : public CScriptMovieMutator
 	//
 	ZDATA
 	CDGPtr<NCamera::CCameraPlacement> pBaseFlight;
-	int nTargetID;
+	int nTargetID = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseFlight); f.Add(3,&nTargetID); return 0; }
@@ -123,7 +124,7 @@ class CSCamDRotateFlightMutator : public CScriptMovieMutator
 	//
 	ZDATA
 	CDGPtr<NCamera::CCameraPlacement> pBaseFlight;
-	float fAngle, fStartYaw;
+	float fAngle = {}, fStartYaw = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseFlight); f.Add(3,&fAngle); f.Add(4,&fStartYaw); return 0; }
@@ -157,7 +158,7 @@ class CSCamSplineMutator : public CScriptMovieMutator
 	ZDATA
 	CVec3 vAnchorStart, vAnchorFinish, vAnchorDir;
 	CVec3 vStartDir, vFinishDir;
-	float fLengStart, fLengFinish;
+	float fLengStart = {}, fLengFinish = {};
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vAnchorStart); f.Add(3,&vAnchorFinish); f.Add(4,&vAnchorDir); f.Add(5,&vStartDir); f.Add(6,&vFinishDir); f.Add(7,&fLengStart); f.Add(8,&fLengFinish); return 0; }
@@ -218,23 +219,23 @@ class SCENEB2_EXPORT CScriptMoviesMutatorHolder : public CVersioningBase
 private:
 	ZDATA
 	NDb::SScriptMovies moviesData;
-	int nMovieIndex;
+	int nMovieIndex = {};
 
-	NTimer::STime movieStartTime;
-	float fCurrTime;
+	NTimer::STime movieStartTime = {};
+	float fCurrTime = {};
 	CVec3 vAnchorStart, vAnchorDir;
-	float fLengStart, fLengFinish;
+	float fLengStart = {}, fLengFinish = {};
 
-	bool bLoopPlayback;
-	float fSpeedCoeff;
+	bool bLoopPlayback = {};
+	float fSpeedCoeff = {};
 	CDGPtr< CFuncBase<STime> > pTimer;
 	NCamera::CCameraPlacement placement;
 	std::vector<CQuat> cameraQuats;
 	std::vector<CVec3> cameraAnchors;
 	std::vector<float> cameraDists;
 
-	EPlaybackMode eMode;
-	int nLastKeyID;
+	EPlaybackMode eMode = {};
+	int nLastKeyID = {};
 	std::string szCallbackFuncName;
 
 public:

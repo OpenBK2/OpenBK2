@@ -1,7 +1,8 @@
 #include <cstdint>
 
-uint16_t wVerticalRotationSpeed;
-uint16_t wHorizontalRotationSpeed;
+// Also initialize paths where editor conversion leaves a zero-speed axis alone.
+uint16_t wVerticalRotationSpeed = 0;
+uint16_t wHorizontalRotationSpeed = 0;
 
 bool ToAIUnits( bool bInEditor )
 {

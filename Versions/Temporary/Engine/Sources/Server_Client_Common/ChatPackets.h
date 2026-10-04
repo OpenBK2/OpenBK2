@@ -12,8 +12,9 @@ public:
 	//  To/From Nick 
 	std::string szNick;
 	//  To ID 
-	int nID;
-	bool bIsBroadcast;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nID = {};
+	bool bIsBroadcast = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszMessage); f.Add(3,&szNick); f.Add(4,&nID); f.Add(5,&bIsBroadcast); return 0; }
 
 	CChatPacket() { }
@@ -64,7 +65,7 @@ public:
 struct SIDNickPair
 {
 	ZDATA
-		int nID;
+		int nID = {};
 		std::string szNick;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&szNick); return 0; }
 };
@@ -88,9 +89,9 @@ class CChatClientListChangeNotifyPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatClientListChangeNotifyPacket )
 public:
 	ZDATA
-		int nID;
+		int nID = {};
 		std::string szNick;
-		bool bJoined; // true for joining clients, false for leaving
+		bool bJoined = {}; // true for joining clients, false for leaving
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&szNick); f.Add(4,&bJoined); return 0; }
 
 	CChatClientListChangeNotifyPacket() {}
@@ -103,7 +104,7 @@ class CChatChannelsListRequestPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatChannelsListRequestPacket )
 public:
 	ZDATA
-		uint32_t dwVersion;
+		uint32_t dwVersion = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); return 0; }
 
 	CChatChannelsListRequestPacket() {}
@@ -116,10 +117,10 @@ class CChatChannelsListPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CChatChannelsListPacket )
 public:
 	ZDATA
-		uint32_t dwVersion;
+		uint32_t dwVersion = {};
 		std::list<std::string> added;
 		std::list<std::string> removed;
-		bool bIsFullUpdate;
+		bool bIsFullUpdate = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwVersion); f.Add(3,&added); f.Add(4,&removed); f.Add(5,&bIsFullUpdate); return 0; }
 
 	CChatChannelsListPacket() {}
@@ -142,7 +143,7 @@ public:
 	};
 	ZDATA
 		std::string szPlayer;
-		EFriendIgnore eChange;
+		EFriendIgnore eChange = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szPlayer); f.Add(3,&eChange); return 0; }
 
 	CChatModifyIgnoreFriendListPacket() {}
@@ -188,7 +189,7 @@ class CChatFriendNotifyPacket : public CNetPacket
 public:
 	ZDATA
 		std::string szNick;
-		char cChatStatus; // см. EChatStatus
+		char cChatStatus = {}; // см. EChatStatus
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szNick); f.Add(3,&cChatStatus); return 0; }
 
 	CChatFriendNotifyPacket() {}

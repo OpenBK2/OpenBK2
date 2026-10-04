@@ -14,7 +14,8 @@ enum EActionNotify : unsigned int;
 
 class CFreeGroupIDs
 {
-	int nMaxID;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nMaxID = {};
 public:
 	int operator&( IBinSaver &f ) { return 0; }
 	CFreeGroupIDs() : nMaxID( 1 ) {}
@@ -40,14 +41,14 @@ CFreeGroupIDs groupIds;
 	NSegmObjs::CContainer< CPtr<CAIUnit> > firstPathUnits;
 	NSegmObjs::CContainer< CPtr<CAIUnit> > secondPathUnits;
 
-	NTimer::STime lastSegmTime;
+	NTimer::STime lastSegmTime = {};
 	
 	struct SAmbushInfo
 	{
-		int nUniqueId;
+		int nUniqueId = {};
 		CVec2 vAmbushCenter;
 		SAIAngle wAmbushDir;
-		bool bGivenCommandToRestore;
+		bool bGivenCommandToRestore = {};
 
 		SAmbushInfo() : nUniqueId( -1 ), vAmbushCenter( VNULL2 ), wAmbushDir( 0 ), bGivenCommandToRestore( false ) { }
 		SAmbushInfo( const int _nUniqueId )
@@ -56,7 +57,7 @@ CFreeGroupIDs groupIds;
 	typedef std::list< std::list<SAmbushInfo> > CAmbushGroups;
 	CAmbushGroups ambushGroups;
 	det_set<int> ambushUnits;
-	NTimer::STime lastAmbushCheck;
+	NTimer::STime lastAmbushCheck = {};
 	CPtr<ICollisionsCollector> pCollisionsCollector;
 
 	//

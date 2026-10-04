@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI/AIMap.h"
 #include "System/FastMath.h"
 
@@ -17,8 +19,8 @@ public: int operator&( IBinSaver &saver ); private:;
 				CVec2 a, b, c, d;
 				CVec2 x, dx, d2x, d3x;
 				CVec2 fw_dx, fw_d2x, fw_d3x;
-				float t, tForward;
-				uint8_t cntToForward;
+				float t = 0.0f, tForward = 0.0f;
+				uint8_t cntToForward = 0;
 public:
 	CBSpline() : a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ), 
 		x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ), 
@@ -42,7 +44,7 @@ public:
 
 		struct SForwardIter
 		{
-			float t;
+			float t = 0.0f;
 			CVec2 x;
 			CVec2 fw_dx, fw_d2x, fw_d3x;
 		};
@@ -57,16 +59,16 @@ public:
 // путь по окружности
 class CCirclePath
 {
-	float fStartDir, fDirDiff;
+	float fStartDir = 0.0f, fDirDiff = 0.0f;
 	CVec2 vCenter;
-	float fRadius;
-	bool bClockWise;
+	float fRadius = 0.0f;
+	bool bClockWise = false;
 
-	float fCurrentDelta;    // текущее приращение
+	float fCurrentDelta = 0.0f;    // текущее приращение
 	CVec2 vX, vDX;				  // координата точки и направление касательной в этой точке
 	CVec2 vLastX, vLastDX;  // координата последние точки и направление в этой точке
 
-	bool bForwardDir;				// едем вперед или нет
+	bool bForwardDir = false;				// едем вперед или нет
 
 public:
 	CCirclePath()

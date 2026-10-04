@@ -5,7 +5,8 @@ namespace NDb
 struct STypeObjectHeader
 {
 	std::string szClassTypeName;								// Object's class type name
-	int nObjectID;												// legacy - ObjectID from database - remove it ASAP
+	// The constructor retains the legacy -1 sentinel.
+	int nObjectID = 0;										// legacy - ObjectID from database - remove it ASAP
 	//
 	STypeObjectHeader(): nObjectID(-1) {}
 	//

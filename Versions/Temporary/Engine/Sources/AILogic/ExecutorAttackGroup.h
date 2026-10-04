@@ -15,12 +15,13 @@ class CExecutorAttackGroup :	public CExecutor
 	typedef std::list<CPtr<CCommonUnit> > CAttackGroupUnits;
 	OBJECT_BASIC_METHODS( CExecutorAttackGroup );
 	ZDATA_(CExecutor)
-	int nGroupID;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nGroupID = {};
 	CAttackGroupUnits units;
 	CAttackGroupUnits unitsGoingToRadius;
 	CVec2 vPoint;
-	float fRadius;
-	EAttackGroupState eState;
+	float fRadius = {};
+	EAttackGroupState eState = {};
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&nGroupID); f.Add(3,&units); f.Add(4,&vPoint); f.Add(5,&fRadius); f.Add(6,&eState); return 0; }
 

@@ -1,6 +1,7 @@
 #include <cstdint>
 
-uint16_t nDir;
+// Give the converted direction a default before PostLoad.
+uint16_t nDir = 0;
 bool ToAIUnits( bool bInEditor )
 {
 	//Vis2AI( &vPos, vPos );

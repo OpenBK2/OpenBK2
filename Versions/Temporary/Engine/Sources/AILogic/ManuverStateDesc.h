@@ -8,16 +8,17 @@ namespace NDb
 
 class CManuverStateDesc
 {
-	float enemyDirection;
-	float selfDirection;
-	float speedAngle;
-	float distance;
-	float selfHeight;
-	float heightDifference;
-	float selfSpeed;
-	float enemySpeed;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float enemyDirection = {};
+	float selfDirection = {};
+	float speedAngle = {};
+	float distance = {};
+	float selfHeight = {};
+	float heightDifference = {};
+	float selfSpeed = {};
+	float enemySpeed = {};
 
-	NDb::EPlanesAttitude att;
+	NDb::EPlanesAttitude att = {};
 
 	template<class TParam>
 		bool IsParamSuitable( const float fVal, const CDBPtr<TParam> pRange ) const

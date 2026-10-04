@@ -29,11 +29,12 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	struct SSideInfo
 	{
 		// количество fireSlots на стороне
-		int nFireSlots;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nFireSlots = {};
 		// количество observation points на стороне
-		int nObservationPoints;
+		int nObservationPoints = {};
 		// количество солдат в observation points стороны
-		int nSoldiersInObservationPoints;
+		int nSoldiersInObservationPoints = {};
 
 		SSideInfo() : nFireSlots( 0 ), nObservationPoints( 0 ), nSoldiersInObservationPoints( 0 ) { }
 	};
@@ -42,30 +43,30 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	ZPARENT(CStormableObject)
 	SAIAngle wDir;
 	
-	bool bKeyBuilding;
+	bool bKeyBuilding = {};
 	//
 
 	// начало состояния, когда все в стрелк. ячейках отдыхают
-	NTimer::STime startOfRest;
+	NTimer::STime startOfRest = {};
 	// тревога
-	bool bAlarm;
+	bool bAlarm = {};
 
 
 	CHeap< CPtr<CSoldier>, SHealthySort, SSwapAction > medical;
 	CHeap< CPtr<CSoldier>, SIllSort, SSwapAction > fire;
 	CHeap< CPtr<CSoldier>, SIllSort, SSwapAction > rest;
-	int nOveralPlaces;
+	int nOveralPlaces = {};
 
-	int nIterator;
+	int nIterator = {};
 
 	CPtr<CCommonUnit> pLockingUnit;
 
-	NTimer::STime nextSegmTime;
+	NTimer::STime nextSegmTime = {};
 	
 	std::vector< CObj<CTurret> > turrets;
 	std::vector< CPtr<CUnitGuns> > guns;
 
-	NTimer::STime lastDistibution;
+	NTimer::STime lastDistibution = {};
 
 	// для каждой из сторон 3 наблюдательных fireplace
 	CArray2D<int> observationPlaces;
@@ -75,25 +76,25 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	std::vector<int> firePlace2Observation;
 	// по fireplace - солдат в нём
 	std::vector< CPtr<CSoldier> > firePlace2Soldier;
-	int nLastFreeFireSoldierChoice;
+	int nLastFreeFireSoldierChoice = {};
 
 	// player последнего из защитников, побывавшего в здании
-	int nLastPlayer;
+	int nLastPlayer = {};
 
-	int nScriptID;
+	int nScriptID = {};
 	
 	// должны ли юниты убегать из здания, когда у него останется мало здоровья
-	bool bShouldEscape;
+	bool bShouldEscape = {};
 	// units escaped
-	bool bEscaped;
-	NTimer::STime timeOfDeath;
+	bool bEscaped = {};
+	NTimer::STime timeOfDeath = {};
 	
 	std::vector<NTimer::STime> lastLeave;
 protected:
-	int nLinkID;
+	int nLinkID = {};
 	CDBPtr<SBuildingRPGStats> pStats;
 private:
-	bool bNewtralInfantryInside;
+	bool bNewtralInfantryInside = {};
 
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,(CStormableObject*)this); f.Add(3,&wDir); f.Add(4,&bKeyBuilding); f.Add(5,&startOfRest); f.Add(6,&bAlarm); f.Add(7,&medical); f.Add(8,&fire); f.Add(9,&rest); f.Add(10,&nOveralPlaces); f.Add(11,&nIterator); f.Add(12,&pLockingUnit); f.Add(13,&nextSegmTime); f.Add(14,&turrets); f.Add(15,&guns); f.Add(16,&lastDistibution); f.Add(17,&observationPlaces); f.Add(18,&sides); f.Add(19,&firePlace2Observation); f.Add(20,&firePlace2Soldier); f.Add(21,&nLastFreeFireSoldierChoice); f.Add(22,&nLastPlayer); f.Add(23,&nScriptID); f.Add(24,&bShouldEscape); f.Add(25,&bEscaped); f.Add(26,&timeOfDeath); f.Add(27,&lastLeave); f.Add(28,&nLinkID); f.Add(29,&pStats); f.Add( 30, &bNewtralInfantryInside ); return 0; }
@@ -253,12 +254,12 @@ class CBuildingSimple : public CBuilding
 {
 	OBJECT_BASIC_METHODS( CBuildingSimple );
 	ZDATA_(CBuilding)
-	int nPlayer;
-	NTimer::STime timeToChangeOwner;
+	int nPlayer = {};
+	NTimer::STime timeToChangeOwner = {};
 	CPtr<CExistingObject> pKeyBuildingFlag;
 	CPtr<CExistingObject> pNeutralKeyBuildingFlag;
-	int nSideToCapture;
-	NTimer::STime timeToChangeOwnerTotal;
+	int nSideToCapture = {};
+	NTimer::STime timeToChangeOwnerTotal = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBuilding*)this); f.Add(2,&nPlayer); f.Add(3,&timeToChangeOwner); f.Add(4,&pKeyBuildingFlag); f.Add(5,&pNeutralKeyBuildingFlag); f.Add(6,&nSideToCapture); f.Add(7,&timeToChangeOwnerTotal); return 0; }
 	
 	void RaisePlayerFlag( int nNewPlayer );

@@ -5,10 +5,11 @@
 
 class CAddPointFunctional
 {
-	std::vector<SSpiralPoint> *pPoints;
-	CArray2D1Bit *pMask;
-	int nRadius;
-	int nOffset;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	std::vector<SSpiralPoint> *pPoints = {};
+	CArray2D1Bit *pMask = {};
+	int nRadius = {};
+	int nOffset = {};
 
 protected:
 	void SetPoint( int x, int y )

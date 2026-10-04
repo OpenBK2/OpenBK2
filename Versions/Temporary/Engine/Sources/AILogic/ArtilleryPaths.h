@@ -8,7 +8,8 @@ class CArtilleryCrewPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CArtilleryCrewPath );
 
-	CBasePathUnit *pUnit;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CBasePathUnit *pUnit = {};
 
 	ZDATA
 		ZSKIP
@@ -16,9 +17,9 @@ class CArtilleryCrewPath : public ISmoothPath
 
 	CVec2 vCurPoint;
 	CVec2 vEndPoint;
-	float fSpeedLen;
-	bool bSelfSpeed;
-	bool bNotInitialized;
+	float fSpeedLen = {};
+	bool bSelfSpeed = {};
+	bool bNotInitialized = {};
 	CVec3 vSpeed3;
 	public: ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&vCurPoint); f.Add(4,&vEndPoint); f.Add(5,&fSpeedLen); f.Add(6,&bSelfSpeed); f.Add(7,&bNotInitialized); f.Add(8,&vSpeed3); return 0; }
 		void OnSerialize( IBinSaver &f );
@@ -59,7 +60,7 @@ class CArtilleryBeingTowedPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CArtilleryBeingTowedPath );
 	ZDATA
-	float fSpeedLen;
+	float fSpeedLen = {};
 	CVec3 vCurPoint;
 	CVec2 vCurPoint2D;
 	CVec2 vSpeed;

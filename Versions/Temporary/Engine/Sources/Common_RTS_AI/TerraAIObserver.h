@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "Stats_B2_M1/TerraAIObserver.h"
@@ -14,9 +16,9 @@
 
 struct SSingleSide
 {
-	bool bSingleSide;
-	float fOffset1;
-	float fOffset2;
+	bool bSingleSide = false;
+	float fOffset1 = 0.0f;
+	float fOffset2 = 0.0f;
 
 	SSingleSide() : bSingleSide( false ) {}
 	SSingleSide( const bool _bSingleSide, const float _fOffset1, const float _fOffset2 )
@@ -41,7 +43,7 @@ protected:
 	CObj<CStaticMapHeights> pHeights;
 
 	CObj<CPassMarkersDraw> pMarkers;
-	bool bShowPassability;
+	bool bShowPassability = false;
 public:
 	ZEND int operator&( IBinSaver &f );
 

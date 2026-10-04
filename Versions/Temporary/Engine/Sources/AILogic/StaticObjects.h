@@ -93,12 +93,13 @@ private:
 
 	StaticObjectsAreaMap areaMap;
 	StaticObjectsAreaMap containersAreaMap;
-	int nObjs;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nObjs = {};
 	std::list<CPtr<CBridgeSpan> > bridges;
 	std::list<CObj<CObjectBase> > entrenchments;
 
 	// for iterators
-	bool bIterCreated;
+	bool bIterCreated = {};
 	CStoragesContainer storagesContainer;
 
 	CObjectsHashSet terraObjs;

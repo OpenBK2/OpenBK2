@@ -17,8 +17,9 @@ class CPlaneInFormationSmoothPath : public CBasePlaneSmoothPath
 	OBJECT_BASIC_METHODS( CPlaneInFormationSmoothPath );
 	public: int operator&( IBinSaver &saver ); private:;
 
-	CPlanesFormation * pFormation;
-	class CAviation *pOwner;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CPlanesFormation * pFormation = {};
+	class CAviation *pOwner = {};
 	
 public:
 	CPlaneInFormationSmoothPath() : pOwner( 0 ) {  } 

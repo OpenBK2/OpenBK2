@@ -20,7 +20,8 @@ public:
 	{
 		OBJECT_NOCOPY_METHODS(CTextureData);
 
-		bool bNeedUpdate;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		bool bNeedUpdate = {};
 	protected:
 		void Recalc();
 		bool NeedUpdate() { return bNeedUpdate; }

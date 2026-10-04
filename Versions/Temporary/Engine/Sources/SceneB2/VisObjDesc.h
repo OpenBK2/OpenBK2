@@ -19,8 +19,9 @@ class CCSTime;
 struct SVisObjDescBase : public IVisObj
 {
 	ZDATA
-		int nID;
-		bool bHidden;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nID = {};
+		bool bHidden = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&bHidden); return 0; }
 	CObj<CObjectBase> pObj;
 	//
@@ -60,8 +61,8 @@ struct SModelVisObjDesc : public SVisObjDescBase
 	ZDATA_( SVisObjDescBase )
 		CDBPtr<NDb::SModel> pModel;
 		SVisObjSelection selection;
-		bool bSelected;
-		float fFade;
+		bool bSelected = {};
+		float fFade = {};
 		CAttaches attachedObjects;
 		ZSKIP;
 		CDBPtr<NDb::SModel> pLowLevelModel;
@@ -180,7 +181,7 @@ struct SEffectVisObjBase :	public SVisObjDescBase
 {
 	ZDATA_( SVisObjDescBase )
 		CDBPtr<NDb::SEffect> pEffect;
-		NTimer::STime timeStart;
+		NTimer::STime timeStart = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SVisObjDescBase *)this); f.Add(2,&pEffect); f.Add(3,&timeStart); return 0; }
 };
 

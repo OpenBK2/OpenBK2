@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "B2_M1_World_export.h"
 
 #include "MapObj.h"
@@ -25,9 +27,9 @@ class CCombatMusic
 		ESSS_TO_IDLE,
 	};
 	ZDATA
-	NTimer::STime timeLastCombatNotify;
-	ECombatMusicState eState;
-	NTimer::STime combatPlayWONotify;
+	NTimer::STime timeLastCombatNotify = 0;
+	ECombatMusicState eState{};
+	NTimer::STime combatPlayWONotify = 0;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&timeLastCombatNotify); f.Add(3,&eState); f.Add(4,&combatPlayWONotify); return 0; }
 public: 
 	CCombatMusic();
@@ -40,10 +42,10 @@ class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IU
 	CNewFuncsMap newFuncs;
 	typedef std::unordered_map<int, CObj<CMapObj> > CMapObjMap;
 	CMapObjMap objects;
-	NDb::ESeason eSeason;
-	NDb::EDayNight eDayTime;					// needed to determine if headlights are on
+	NDb::ESeason eSeason{};
+	NDb::EDayNight eDayTime{};					// needed to determine if headlights are on
 	
-	NTimer::STime currTime;
+	NTimer::STime currTime = 0;
 
 	// every segment update functions
 	typedef void (CUpdatableWorld::*EVERY_SEGMENT_UPDATE)();
@@ -63,7 +65,7 @@ private:
 	// for animations testing
 	CPtr<CAllAnimationsPlayer> pAllAnimationsPlayer;
 	
-	int nLastRangeAreasTime;
+	int nLastRangeAreasTime = 0;
 
 	typedef std::unordered_map<int /*UnitID*/, NTimer::STime> CWaitingCorpses;
 
@@ -75,11 +77,11 @@ private:
 	// reinforcements
 	CReinforcementPositions reinforcementPositions;
 	CEnabledReinforcements enabledReinforcements;
-	bool bReinfEnabled;
-	NTimer::STime reinfTimeRecycleStart; // момент времени, с которого ждать разрешения на следующий вызов подкреплений
-	NTimer::STime reinfTimeRecycleEnd; // промежуток времени, через который будут разрешены подкрепления
-	float fReinfRecycleProgress;
-	int nReinfCallsLeft;
+	bool bReinfEnabled = false;
+	NTimer::STime reinfTimeRecycleStart = 0; // момент времени, с которого ждать разрешения на следующий вызов подкреплений
+	NTimer::STime reinfTimeRecycleEnd = 0; // промежуток времени, через который будут разрешены подкрепления
+	float fReinfRecycleProgress = 0.0f;
+	int nReinfCallsLeft = 0;
 	CKeyBuildings keyBuildings;
 	CCombatMusic combatMusic;
 
@@ -238,7 +240,7 @@ protected:
 	CUpdatableWorld( IVisualNotifications *pNotifications, ICommonB2M1AI *pAI );
 	~CUpdatableWorld();
 public:
-	bool bEditor;
+	bool bEditor = false;
 	void SetSeason( const NDb::ESeason _eSeason, const NDb::EDayNight _eDayTime ) { eSeason = _eSeason; eDayTime = _eDayTime; }
 	void AfterLoad();
 	

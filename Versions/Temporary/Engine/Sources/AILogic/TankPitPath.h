@@ -13,9 +13,10 @@ class CTankPitPath : public ISmoothPath
 
 	CVec2 vCurPoint;
 	CVec2 vEndPoint;
-	float fSpeedLen;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fSpeedLen = {};
 
-	CBasePathUnit *pUnit;
+	CBasePathUnit *pUnit = {};
 public:
 	CTankPitPath() : pUnit( 0 ) { }
 	CTankPitPath( CBasePathUnit *pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint );

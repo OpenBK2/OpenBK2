@@ -9,7 +9,8 @@ class CExecutorCamouflage : public CExecutorUnitCombatBonus
 	OBJECT_BASIC_METHODS( CExecutorCamouflage );
 
 	ZDATA_(CExecutorUnitCombatBonus)
-		NTimer::STime nextCheckTime;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime nextCheckTime = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitCombatBonus*)this); f.Add(2,&nextCheckTime); return 0; }
 

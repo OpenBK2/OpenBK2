@@ -11,8 +11,9 @@ class CAllowFakeObjToCrushExecutor : public CExecutor
 
 	ZDATA_( CExecutor )
 		CPtr<CFakeCorpseStaticObject> pObject;
-		NTimer::STime changeTypeTime;
-		EStaticObjType eNewType;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime changeTypeTime = {};
+		EStaticObjType eNewType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutor *)this); f.Add(2,&pObject); f.Add(3,&changeTypeTime); f.Add(4,&eNewType); return 0; }
 public:
 	CAllowFakeObjToCrushExecutor();

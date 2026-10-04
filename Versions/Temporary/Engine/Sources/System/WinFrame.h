@@ -33,14 +33,17 @@ namespace NWinFrame
 			TIME,
 			CLOSE,
 		};
-		NHPTimer::STime time;
-		EMsg msg;
+		NHPTimer::STime time = 0;
+		EMsg msg{};
 		union
 		{
 			struct { int x,y; };         // mouse
 			struct { int nKey, nRep; };  // key
 		};
-		uint32_t dwFlags;
+		uint32_t dwFlags = 0;
+
+		// Initialize one anonymous-struct union arm; the key fields alias this storage.
+		SWindowsMsg() : x( 0 ), y( 0 ) {}
 	};
 	// WinFrame interface
 	SYSTEM_EXPORT bool (GetMessage)( SWindowsMsg *pRes );

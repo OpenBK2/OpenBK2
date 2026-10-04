@@ -24,27 +24,28 @@ class CGeneralAirForce : public CCommander
 
 	typedef det_map< int, CPtr<CEnemyRememberer> > AntiAviation;
 
-	struct IEnemyContainer *pEnemyContainer;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	struct IEnemyContainer *pEnemyContainer = {};
 
 	struct SSupportInfo
 	{
 		CVec2 vPoint;												// куда вызвали
-		int nResistanceCellNumber;					// если вызвали пробомбить точку сопротивления, то > 0
+		int nResistanceCellNumber = {};					// если вызвали пробомбить точку сопротивления, то > 0
 
 		SSupportInfo() : vPoint( VNULL2 ), nResistanceCellNumber( -1 ) { }
 	};
 
 	ZDATA_(CCommander)
-	int nParty;
+	int nParty = {};
 	std::vector<int> players;							// номера игроков, которые находятся под управлением
 	CFreeIds requestsID;
 
 	AntiAviation antiAviation;
 
 	std::vector<CPtr<CAIUnit> > createdAviation;
-	NTimer::STime timeWaitForReinforceSystem;
-	EForceType nCurrentRequest;									// current aviation, that general is wating for
-	bool bOurTurn;
+	NTimer::STime timeWaitForReinforceSystem = {};
+	EForceType nCurrentRequest = {};									// current aviation, that general is wating for
+	bool bOurTurn = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); f.Add(2,&nParty); f.Add(3,&players); f.Add(4,&requestsID); f.Add(5,&antiAviation); f.Add(6,&createdAviation); f.Add(7,&timeWaitForReinforceSystem); f.Add(8,&nCurrentRequest); f.Add(9,&bOurTurn); return 0; }
 public:
 	typedef det_map< int /*request ID*/, SSupportInfo > Requests;

@@ -10,13 +10,14 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SLimit
 	{
-		float fMin;
-		float fMax;
-		float fAve;
-		float fAutoSpeed;
-		float fManualSpeed;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fMin = {};
+		float fMax = {};
+		float fAve = {};
+		float fAutoSpeed = {};
+		float fManualSpeed = {};
 		//
-		bool bCyclic;
+		bool bCyclic = {};
 		//
 		void SetLimit( float _fMin, float _fMax, float _fAve, float _fAuto, float _fMan, bool _bCyclic )
 		{ 
@@ -42,13 +43,13 @@ namespace NCamera
 	{
 		// placement
 		CVec3 vAnchor;									// camera's anchor point
-		float fDistance;								// distance from camera to anchor point
+		float fDistance = {};								// distance from camera to anchor point
 		// limits. NOTE: all limits (except anchor limit) are taken from consts
 		CTRect<float> rcAnchorLimit;		// anchor movement limit (rect)
 		SLimit distanceLimit;						// distance limit (min/max)
 		SLimit pitchLimit;							// pitch limit (min/max)
 		SLimit yawLimit;								// yaw (rotation) limit (min/max)
-		uint32_t timeLastUpdate;
+		uint32_t timeLastUpdate = {};
 		//
 		// input sliders. NOTE: don't store it - acquire in Init()
 		NInput::CBind sliderFwd;				// forward/backward moving slider (parrallel ground)
@@ -61,13 +62,13 @@ namespace NCamera
 		NInput::CBind sliderMouseZoom;	// camera yaw from mouse
 		NInput::CBind sliderMouseForward;
 		NInput::CBind sliderMouseStrafe;
-		float fScrollSpeedX;						// border scrolling
-		float fScrollSpeedY;
-		bool bAutoPositioning;								// allow camera automatically return to bounds
+		float fScrollSpeedX = {};						// border scrolling
+		float fScrollSpeedY = {};
+		bool bAutoPositioning = {};								// allow camera automatically return to bounds
 		std::unordered_map<std::string, bool> manualLockers;	// allow reaction on manual scrolling
-		bool bWasUpdated;								// camera was updated from input
-		bool bWasUpdatedExternally;			// camera was updated from external
-		float fYawSpeed;
+		bool bWasUpdated = {};								// camera was updated from input
+		bool bWasUpdatedExternally = {};			// camera was updated from external
+		float fYawSpeed = {};
 
 	protected:
 		float GetPitchMouseDelta() { return sliderMousePitch.GetDelta(); }

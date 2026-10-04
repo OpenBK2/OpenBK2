@@ -15,7 +15,8 @@ struct SProfileInfo
 {
 	NDb::SPassProfile profile;
 	CVec2 vCenter;
-	uint16_t wDir;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t wDir = {};
 
 	SProfileInfo() { }
 	SProfileInfo( const CVec2 &_vCenter, const uint16_t _wDir, const NDb::SPassProfile &_profile )

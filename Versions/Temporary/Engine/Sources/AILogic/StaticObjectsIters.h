@@ -14,8 +14,9 @@ extern CStaticObjects theStatObjs;
 template<bool bOnlyContainers>
 class CStObjIter
 {
-	int y, x;
-	int downX, downY, upX, upY;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int y = {}, x = {};
+	int downX = {}, downY = {}, upX = {}, upY = {};
 
 	CStaticObjects::StaticObjectsAreaMap::CDataList::iterator iter;
 
@@ -72,8 +73,8 @@ public:
 //CRAP }
 class CMinesIter : protected CStObjCircleIter<false>
 {
-	int nParty;
-	const bool bAllMines;
+	int nParty = {};
+	const bool bAllMines = {};
 	
 	void IterateToNextMine();
 public:

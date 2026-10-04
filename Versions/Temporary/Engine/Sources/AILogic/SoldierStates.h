@@ -44,8 +44,9 @@ class CSoldierRestState : public IUnitState
 	ZDATA
 	CPtr<CAIUnit> pUnit;
 
-	NTimer::STime nextMove;
-	bool bScanned;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime nextMove = {};
+	bool bScanned = {};
 	CVec2 guardPoint;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nextMove); f.Add(4,&bScanned); f.Add(5,&guardPoint); return 0; }
 	//float fDistToGuardPoint; // не используется
@@ -81,9 +82,9 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 
 	ZDATA_(CStandartBehaviour)
 	CPtr<CAIUnit> pUnit;
-	ESoldierAttackStates state;	
+	ESoldierAttackStates state = {};
 
-	NTimer::STime nextShootCheck;
+	NTimer::STime nextShootCheck = {};
 	SVector lastEnemyTile;
 	SAIAngle wLastEnemyDir;
 
@@ -92,11 +93,11 @@ class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviou
 	CPtr<CAIUnit> pEnemy;
 
 	CPtr<CBasicGun> pGun;
-	bool bAim;
-	bool bFinish;
-	bool bSwarmAttack;
-	bool bPreferGrenade;
-	int nEnemyParty;
+	bool bAim = {};
+	bool bFinish = {};
+	bool bSwarmAttack = {};
+	bool bPreferGrenade = {};
+	int nEnemyParty = {};
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 	CRndRunUpToEnemy runUpToEnemy;
@@ -146,12 +147,12 @@ class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 	ZDATA_(CFreeFireManager)
 	CPtr<CAIUnit> pUnit;
 
-	NTimer::STime startTime;
-	bool bWaiting;
+	NTimer::STime startTime = {};
+	bool bWaiting = {};
 	CVec2 point;
 	SAIAngle wDirToPoint;
-	bool bLongMove;
-	bool bForceReverse;
+	bool bLongMove = {};
+	bool bForceReverse = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&pUnit); f.Add(3,&startTime); f.Add(4,&bWaiting); f.Add(5,&point); f.Add(6,&wDirToPoint); f.Add(7,&bLongMove); f.Add(8,&bForceReverse); return 0; }
 	void SetReversePathMode( const bool bEnable );
 public:
@@ -176,9 +177,9 @@ class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
 
-	NTimer::STime lastCheck;
+	NTimer::STime lastCheck = {};
 	CVec2 targCenter;
-	NTimer::STime timeStart;
+	NTimer::STime timeStart = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&lastCheck); f.Add(4,&targCenter); f.Add(5,&timeStart); return 0; }
 
 public:
@@ -227,13 +228,13 @@ class CSoldierEnterState : public IUnitState
 
 	enum EEnterStates { EES_START, EES_RUN_UP };
 	ZDATA
-	EEnterStates state;
+	EEnterStates state = {};
 
 	CPtr<CAIUnit> pUnit;
 
-	int nEntrance;
+	int nEntrance = {};
 	CPtr<CBuilding> pBuilding;
-	int nEfforts;
+	int nEfforts = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&pUnit); f.Add(4,&nEntrance); f.Add(5,&pBuilding); f.Add(6,&nEfforts); return 0; }
 
 	//
@@ -258,11 +259,11 @@ class CSoldierEnterEntrenchmentState : public IUnitState
 	
 	enum EEnterState { EES_START, EES_RUN, EES_FINISHED };
 	ZDATA
-	EEnterState state;
+	EEnterState state = {};
 
 	CPtr<CAIUnit> pUnit;
 	CPtr<CEntrenchment> pEntrenchment;
-	int nTries;
+	int nTries = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&pUnit); f.Add(4,&pEntrenchment); f.Add(5,&nTries); return 0; }
 	//
 	bool SetPathForRunIn();
@@ -286,7 +287,7 @@ class CSoldierAttackCommonStatObjState : public CCommonAttackCommonStatObjState
 	OBJECT_BASIC_METHODS( CSoldierAttackCommonStatObjState );
 	ZDATA_(CCommonAttackCommonStatObjState)
 	CPtr<CAIUnit> pUnit;
-	bool bFinishAfterInsidersDead;
+	bool bFinishAfterInsidersDead = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonAttackCommonStatObjState*)this); f.Add(2,&pUnit); f.Add(3,&bFinishAfterInsidersDead); return 0; }
 
 protected:
@@ -335,8 +336,8 @@ class CSoldierPlaceMineNowState : public IUnitState
 	CPtr<CAIUnit> pUnit;
 
 	CVec2 point;
-	int nType;
-	NTimer::STime beginAnimTime; 
+	int nType = {};
+	NTimer::STime beginAnimTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&point); f.Add(4,&nType); f.Add(5,&beginAnimTime); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit, const CVec2 &point, const EMineType nType );
@@ -357,13 +358,13 @@ class CSoldierClearMineRadiusState : public IUnitState
 	
 	enum EPutMineStates { EPM_START, EPM_MOVE,	EPM_WAITING };
 	ZDATA
-	EPutMineStates eState;
+	EPutMineStates eState = {};
 
 	CPtr<CAIUnit> pUnit;
 	CPtr<CMineStaticObject> pMine;
 
 	CVec2 clearCenter;
-	NTimer::STime beginAnimTime;
+	NTimer::STime beginAnimTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pUnit); f.Add(4,&pMine); f.Add(5,&clearCenter); f.Add(6,&beginAnimTime); return 0; }
 	//
 	bool FindMineToClear();
@@ -385,7 +386,7 @@ class CSoldierAttackUnitInBuildingState : public CCommonAttackUnitInBuildingStat
 	OBJECT_BASIC_METHODS( CSoldierAttackUnitInBuildingState );
 	ZDATA_(CCommonAttackUnitInBuildingState)
 	CPtr<CAIUnit> pUnit;
-	bool bTriedToShootBuilding;
+	bool bTriedToShootBuilding = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonAttackUnitInBuildingState*)this); f.Add(2,&pUnit); f.Add(3,&bTriedToShootBuilding); return 0; }
 protected:	
 	virtual class CAIUnit* GetUnit() const;
@@ -411,12 +412,12 @@ class CSoldierEnterTransportNowState : public IUnitState
 
 	enum EEnterTransportStates { EETS_START, EETS_MOVING, EETS_FINISHED };
 	ZDATA
-	EEnterTransportStates eState;
+	EEnterTransportStates eState = {};
 
 	CPtr<CAIUnit> pUnit;
 	CPtr<CMilitaryCar> pTransport;
 	// последний апдейт траектории (нужно для движущегося транспорта)
-	NTimer::STime timeLastTrajectoryUpdate;
+	NTimer::STime timeLastTrajectoryUpdate = {};
 	CVec2 vLastTransportCenter;
 	SAIAngle wLastTransportDir;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pUnit); f.Add(4,&pTransport); f.Add(5,&timeLastTrajectoryUpdate); f.Add(6,&vLastTransportCenter); f.Add(7,&wLastTransportDir); return 0; }
@@ -448,12 +449,12 @@ class CSoldierParaDroppingState : public IUnitState
 		ESPDS_WATING_FOR_ALL,
 	};
 	ZDATA
-	ESoldierParaDroppingState eState;
-	ESoldierParaDroppingState eStateToSwitch;
+	ESoldierParaDroppingState eState = {};
+	ESoldierParaDroppingState eStateToSwitch = {};
 	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats;
 	
 	
-	NTimer::STime timeToCloseParashute, timeToFallWithParashute ;
+	NTimer::STime timeToCloseParashute = {}, timeToFallWithParashute = {} ;
 	
 	CPtr<CSoldier> pUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&eStateToSwitch); f.Add(4,&pRememberedStats); f.Add(5,&timeToCloseParashute); f.Add(6,&timeToFallWithParashute); f.Add(7,&pUnit); return 0; }
@@ -504,7 +505,7 @@ class CSoldierAttackFormationState: public IUnitAttackingState
 	ZDATA
 	CPtr<CAIUnit> pUnit;
 	CPtr<CFormation> pTarget;
-	bool bSwarmAttack;
+	bool bSwarmAttack = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&bSwarmAttack); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
@@ -576,7 +577,7 @@ class CSoldierFireMoraleShellState : public IUnitState
 
 	ZDATA
 	CPtr<CAIUnit> pUnit;
-	int nMoraleGun;
+	int nMoraleGun = {};
 	CVec2 vTarget;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nMoraleGun); f.Add(4,&vTarget); return 0; }
 public:
@@ -597,7 +598,7 @@ class CSoldierUseState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierUseState );
 
 	ZDATA
-	EActionNotify eState;
+	EActionNotify eState = {};
 	CPtr<CAIUnit> pUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pUnit); return 0; }
 
@@ -620,9 +621,9 @@ class CSoldierEntrenchSelfState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierEntrenchSelfState )
 		ZDATA
 	CPtr<CSoldier> pSoldier;
-	NTimer::STime timePlaceEntrench;
-	NTimer::STime timeStartEntrench;
-	float fOldProgress; 
+	NTimer::STime timePlaceEntrench = {};
+	NTimer::STime timeStartEntrench = {};
+	float fOldProgress = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&timePlaceEntrench); f.Add(4,&timeStartEntrench); f.Add(5,&fOldProgress); return 0; }
 public:

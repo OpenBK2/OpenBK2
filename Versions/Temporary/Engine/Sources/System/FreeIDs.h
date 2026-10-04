@@ -1,6 +1,8 @@
 
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 
 #include "System_export.h"
 
@@ -16,7 +18,7 @@ class SYSTEM_EXPORT CFreeIds
 	CGivenIDMap givenIDs;
 	
 	std::vector<int> nexts;
-	int firstEl;
+	int firstEl = 0;
 public:
 	CFreeIds( const int nElements = NUM_OF_ELEMENTS ) { Init( nElements ); }
 

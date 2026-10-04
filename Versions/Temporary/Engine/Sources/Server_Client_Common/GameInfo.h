@@ -9,17 +9,18 @@ struct SGameInfo : public CNetPacket
 	OBJECT_NOCOPY_METHODS( SGameInfo )
 public:
 	ZDATA
-		int nID;																 
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nID = {};
 		std::string szName;
 		std::string szMapName;
-		uchar nMapSizeX;
-		uchar nMapSizeY;
-		uchar nPlayers;
-		uchar nMaxPlayers;
-		uchar nGameType;
-		uchar nTechLevel;
-		bool bCanConnect;
-		bool bHasPassword;
+		uchar nMapSizeX = {};
+		uchar nMapSizeY = {};
+		uchar nPlayers = {};
+		uchar nMaxPlayers = {};
+		uchar nGameType = {};
+		uchar nTechLevel = {};
+		bool bCanConnect = {};
+		bool bHasPassword = {};
 		/** empty when this packet came from server */
 		std::string szPassword;
 //		/** some specific information */

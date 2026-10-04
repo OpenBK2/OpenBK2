@@ -1,6 +1,7 @@
 #include <cstdint>
 
-uint16_t wDirection;
+// Derived fields must also be initialized before ToAIUnits runs.
+uint16_t wDirection = 0;
 void ToAIUnits( bool bInEditor )
 {
 	wDirection = fDirection;

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 #include <charconv>
@@ -30,7 +32,7 @@ namespace NGlobal
 class CValue
 {
 	ZDATA
-	float fVal;
+	float fVal = 0.0f;
 	std::wstring szVal;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fVal); f.Add(3,&szVal); return 0; }

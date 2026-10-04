@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 
 namespace NDb
@@ -15,13 +17,13 @@ class CMOUnit : public IMOUnit
 	{
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pWeapon;
-		int nWeaponCount;
-		int nAmmo;
+		int nWeaponCount = 0;
+		int nAmmo = 0;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&nWeaponCount); f.Add(4,&nAmmo); return 0; }
 	};
 	struct SAmmoCompare
 	{
-		const NDb::SWeaponRPGStats *pWeapon;
+		const NDb::SWeaponRPGStats *pWeapon = nullptr;
 
 		SAmmoCompare( const NDb::SWeaponRPGStats *_pWeapon ) { pWeapon = _pWeapon; }
 		bool operator()( const SAmmo &ammo )
@@ -32,18 +34,18 @@ class CMOUnit : public IMOUnit
 	
 	CAbilityInfo abilityMap;
 	std::vector<SShootAreas> oldAreas;
-	int nOldAreasTime;
-	bool bOpen;
-	int nLevel;
+	int nOldAreasTime = 0;
+	bool bOpen = false;
+	int nLevel = 0;
 	std::vector<SAmmo> ammos;
-	int nSupply;
-	int nMaxAmmo;
-	int nCurAmmo;
-	bool bNewAbility;
-	NDb::EReinforcementType eReinfType;
-	float fFuel;
-	bool bPointer;
-	bool bShowUnitRank;
+	int nSupply = 0;
+	int nMaxAmmo = 0;
+	int nCurAmmo = 0;
+	bool bNewAbility = false;
+	NDb::EReinforcementType eReinfType{};
+	float fFuel = 0.0f;
+	bool bPointer = false;
+	bool bShowUnitRank = false;
 
 private:
 	//

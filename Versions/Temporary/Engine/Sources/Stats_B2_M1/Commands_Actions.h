@@ -14,7 +14,8 @@
 
 class CUserCommands
 {
-	uint8_t actions[16];
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint8_t actions[16] = {};
 public:
 	int GetSize() const {  return std::size(actions) * 8; }
 	void Clear() { memset( actions, 0, std::size(actions) ); }
@@ -50,7 +51,7 @@ public:
 
 class CUserActions
 {
-	uint32_t actions[4];
+	uint32_t actions[4] = {};
 public:
 	CUserActions() { Clear(); }
 	CUserActions( const uint32_t _actions[4] ) { actions[0] = _actions[0]; actions[1] = _actions[1]; actions[2] = _actions[2]; actions[3] = _actions[3]; }

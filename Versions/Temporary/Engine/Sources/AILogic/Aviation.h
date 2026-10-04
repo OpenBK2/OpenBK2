@@ -21,11 +21,12 @@ protected:
 	// для формации самолетов
 	CObj<CPlanesFormation> pFormation;
 	CVec3 vPlanesShift;										// shift in formation
-	float fFuel;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fFuel = {};
 	CVec3 vSpeed;
 	CVec3 vPos;
 	CVec3 vNormale;
-	bool bBombsAutocast;
+	bool bBombsAutocast = {};
 
 	CVec2 vInitialPoint;										// plane will leave to appear point
 	// Preserve the RNG scan schedule across saves; old saves read the new chunk as zero.

@@ -7,11 +7,12 @@ struct SUnitListInfo
 {
 	ZDATA
 	CPtr<CCommonUnit> pUnit;
-	int nCell;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nCell = {};
 
-	bool bCanGo;		// юнит может двигаться
-	bool bGoAway;		// юнит должен свалить (пропустить задних)
-	bool bAtPlace;	// притопал на место, первая часть построения для юнита закончена
+	bool bCanGo = {};		// юнит может двигаться
+	bool bGoAway = {};		// юнит должен свалить (пропустить задних)
+	bool bAtPlace = {};	// притопал на место, первая часть построения для юнита закончена
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nCell); f.Add(4,&bCanGo); f.Add(5,&bGoAway); f.Add(6,&bAtPlace); return 0; }
 public:
 	SUnitListInfo() : pUnit( 0 ), bCanGo( false ), bGoAway( false ), bAtPlace( false ), nCell( -1 ) {}
@@ -21,7 +22,7 @@ public:
 struct SPriorityGroupPosition
 {
 	ZDATA
-	int nCount;
+	int nCount = {};
 	CVec2 vUnitSize;
 	std::vector<CVec2> vCells;
 	std::vector< CPtr<CCommonUnit> > vUnits;
@@ -39,7 +40,7 @@ typedef det_map< int, std::vector<CVec2> > CCellsMap;
 class CGroupMoveExecutorEvent : public CExecutorEvent
 {
 	ZDATA_(CExecutorEvent)
-	int nUnitID;
+	int nUnitID = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&nUnitID); return 0; }
 
 public:
@@ -66,16 +67,16 @@ class CGroupMoveExecutor : public CExecutor
 	CVec2 vCurrentFinishPoint;
 	CUnitsList units;
 	CVec2 vGroupCenter;
-	int nUnitsCount;
+	int nUnitsCount = {};
 
-	EExecutorState eExecutorState;
+	EExecutorState eExecutorState = {};
 
-	int nAtPlaceCount;
+	int nAtPlaceCount = {};
 
 	CVec2 vFinishPathDirection;
 	CVec2 vStartPathDirection;
 
-	float fMaxGroupSpeed;
+	float fMaxGroupSpeed = {};
 
 	CCellsMap cells;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutor *)this); f.Add(2,&vFinishPoint); f.Add(3,&vCurrentFinishPoint); f.Add(4,&units); f.Add(5,&vGroupCenter); f.Add(6,&nUnitsCount); f.Add(7,&eExecutorState); f.Add(8,&nAtPlaceCount); f.Add(9,&vFinishPathDirection); f.Add(10,&vStartPathDirection); f.Add(11,&fMaxGroupSpeed); f.Add(12,&cells); return 0; }

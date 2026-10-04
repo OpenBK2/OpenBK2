@@ -35,10 +35,11 @@ enum EActiveControl
 
 struct SSlotPosition
 {
-	int x;
-	int y;
-	int sizeX;
-	int sizeY;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int x = {};
+	int y = {};
+	int sizeX = {};
+	int sizeY = {};
 };
 
 typedef std::pair< NDb::EUserAction, CPtr<IWindow> > CActionButton;
@@ -48,7 +49,7 @@ struct SChatMessage
 {
 	ZDATA
 	CPtr< IWindow > pWnd;
-	NTimer::STime nVisibleTime;
+	NTimer::STime nVisibleTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&nVisibleTime); return 0; }
 };
 
@@ -80,11 +81,11 @@ private:
 	{
 		ZDATA
 		CDBPtr<NDb::SWeaponRPGStats> pWeaponID;
-		int nCount;
-		bool bPrimary;
+		int nCount = {};
+		bool bPrimary = {};
 		std::wstring szLocalizedName;
-		int nAmmo;
-		int nMaxAmmo;
+		int nAmmo = {};
+		int nMaxAmmo = {};
 		CPtr<IWindow> pName;
 		CPtr<IWindow> pAmmo;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeaponID); f.Add(3,&nCount); f.Add(4,&bPrimary); f.Add(5,&szLocalizedName); f.Add(6,&nAmmo); f.Add(7,&nMaxAmmo); f.Add(8,&pName); f.Add(9,&pAmmo); return 0; }
@@ -94,10 +95,10 @@ private:
 	{
 		ZDATA
 		CPtr<IButton> pBtn;
-		bool bAbility;
-		NDb::EActionButtonPanel ePanel;
-		NDb::EActionButtonPanel eTargetPanel;
-		bool bPressEffect;
+		bool bAbility = {};
+		NDb::EActionButtonPanel ePanel = {};
+		NDb::EActionButtonPanel eTargetPanel = {};
+		bool bPressEffect = {};
 		CDBPtr< NDb::STexture > pIcon;
 		CDBPtr< NDb::STexture > pForegroundIcon;
 		CDBPtr< NDb::STexture > pIconDisabled;
@@ -110,21 +111,21 @@ private:
 		CPtr< IWindow > pStaticBorderWnd;
 		CPtr< IWindow > pActiveBorderWnd;
 		
-		bool bAutocast;
-		bool bPassive;
+		bool bAutocast = {};
+		bool bPassive = {};
 		
 		SAbilitySwitchState curState;
-		int nSlot;
+		int nSlot = {};
 
 		CPtr< IWindow > pIconBgDisabledWnd;
 		CPtr< IWindow > pIconFgDisabledWnd;
 		
-		bool bCurPresent; // присутствует на одной из панелей
+		bool bCurPresent = {}; // присутствует на одной из панелей
 
 		CPtr< IWindow > pAutocastBorderWnd;
 		std::string szHotkeyCmd;
 		std::wstring wszTooltip;
-		bool bEnabled;
+		bool bEnabled = {};
 		CPtr<IWindow> pBlinkWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&bAbility); f.Add(4,&ePanel); f.Add(5,&eTargetPanel); f.Add(6,&bPressEffect); f.Add(7,&pIcon); f.Add(8,&pForegroundIcon); f.Add(9,&pIconDisabled); f.Add(10,&pForegroundIconDisabled); f.Add(12,&pIconFgWnd); f.Add(13,&pClockWnd); f.Add(14,&pAutocastWnd); f.Add(15,&pStaticBorderWnd); f.Add(16,&pActiveBorderWnd); f.Add(17,&bAutocast); f.Add(18,&bPassive); f.Add(19,&curState); f.Add(20,&nSlot); f.Add(21,&pIconBgDisabledWnd); f.Add(22,&pIconFgDisabledWnd); f.Add(23,&bCurPresent); f.Add(24,&pAutocastBorderWnd); f.Add(25,&szHotkeyCmd); f.Add(26,&wszTooltip); f.Add(27,&bEnabled); f.Add(28,&pBlinkWnd); return 0; }
 		
@@ -161,21 +162,21 @@ private:
 		ESMS_FADING_IN,
 		ESMS_DONE,
 	};
-	ESkipMovieState eSkipState;
-	NTimer::STime timeSkipProgress;
-	float fInitialBrightness;
+	ESkipMovieState eSkipState = {};
+	NTimer::STime timeSkipProgress = {};
+	float fInitialBrightness = {};
 
 	//
 	CObj<CReactions> pReactions;
 	CPtr<CWorldClient> pWorld;
 
-	EActiveControl eActiveControl;
-	bool bIsActiveScreen;
-	NDb::EUserAction eForcedAction;
+	EActiveControl eActiveControl = {};
+	bool bIsActiveScreen = {};
+	NDb::EUserAction eForcedAction = {};
 	std::vector<SSlotPosition> vAbilitySlots;
 	CActionButtons lActiveAbilities;
 	CActionButtons actionButtons;
-	int nCurrentSlot;
+	int nCurrentSlot = {};
 	//vector< CPtr<IWindow> > vIconSlots;
 	std::vector< SIconSlot > iconSlots;
 	CPtr< IMiniMap > pMiniMap;
@@ -186,38 +187,38 @@ private:
 	CPtr< ITabControl > pActionTab;
 	CPtr< ITabControl > pAppearanceTab;
 
-	int nCurrentIconSlot;
-	int nCurrentReinfPoint;
+	int nCurrentIconSlot = {};
+	int nCurrentReinfPoint = {};
 
-	bool bScreenLoaded;
-	bool bNeedWarFogRecalc;
+	bool bScreenLoaded = {};
+	bool bNeedWarFogRecalc = {};
 
-	NTimer::STime nLastStepTime;
+	NTimer::STime nLastStepTime = {};
 
-	bool bShowWarFog;
+	bool bShowWarFog = {};
 	//SInterfaceMissionWarFogInfo warFogInfo;
-	NTimer::STime timeLastWarFogUpdate;
+	NTimer::STime timeLastWarFogUpdate = {};
 
-	float fBorderScrollX;
-	float fBorderScrollY;
-	bool bAllowBorderScroll;
+	float fBorderScrollX = {};
+	float fBorderScrollY = {};
+	bool bAllowBorderScroll = {};
 
 	CDBPtr<NDb::SMapInfo> pMission;
-	bool bFrozen;
+	bool bFrozen = {};
 	
-	bool bMultiSelectSubMode;
-	bool bPreSelectSubMode; // don't save
+	bool bMultiSelectSubMode = {};
+	bool bPreSelectSubMode = {}; // don't save
 	
 	CObj<IVisualNotifications> pNotifications;
 	
-	NTimer::STime nChatTime;
+	NTimer::STime nChatTime = {};
 	
 	CPtr<IWindow> pShowObjectives;
 	CPtr<IWindow> pPause;
 	CPtr<ITransceiver> pTransceiver;
 	
-	bool bEscMenuPressed; // DEBUG - чтобы не показывать несколько Esc-menu при отладке
-	int nGameSpeed;													// game speed before script movie
+	bool bEscMenuPressed = {}; // DEBUG - чтобы не показывать несколько Esc-menu при отладке
+	int nGameSpeed = {};													// game speed before script movie
 	
 	CObj<CMissionReinf> pReinf;
 	
@@ -227,45 +228,45 @@ private:
 	CPtr<IButton> pFlareBtn;
 	CPtr<IButton> pMinimizeBtn;
 	CPtr<IWindow> pMultifunctionWnd;
-	bool bMultifunctionPanelMinimized;
+	bool bMultifunctionPanelMinimized = {};
 	CObj<class CMissionUnitFullInfo> pUnitFullInfo;
 	std::vector< CPtr<IButton> > specialSelectBtns;
 	
 	CNewActionButtons newActionButtons;
-	NDb::EActionButtonPanel eActivePanel;
-	NDb::EUserAction eActiveAction;
+	NDb::EActionButtonPanel eActivePanel = {};
+	NDb::EUserAction eActiveAction = {};
 	std::vector<CVec2> newActionButtonSlots;
 
 	CVec3 vPrevCameraLine; // don't save
 	
-	float fViewportBottom;
+	float fViewportBottom = {};
 	
 //	int nMissionTime; // at seconds
-	int64_t nMissionTimeMSec;
-	NTimer::STime timeMissionLastCheck; // don't save
+	int64_t nMissionTimeMSec = {};
+	NTimer::STime timeMissionLastCheck = {}; // don't save
 	
 	CPtr<IScenarioTracker> pScenarioTracker;
 
-	uint8_t nFrameTransition;
+	uint8_t nFrameTransition = {};
 	CVec2 vFrameTransitionTo;
 
-	EUIState eUIState; // don't save
+	EUIState eUIState = {}; // don't save
 	
-	NTimer::STime timeAbsLast; // don't save
+	NTimer::STime timeAbsLast = {}; // don't save
 	CObj<IScreen> pMovieBorder;
 	NInput::CGMORegContainer scriptMovieMessageProcessor;
-	bool bScriptMoivie;
-	float fFormerVolume;
-	bool bCheckShowHelpScreen;
-	bool bMovieMode;
+	bool bScriptMoivie = {};
+	float fFormerVolume = {};
+	bool bCheckShowHelpScreen = {};
+	bool bMovieMode = {};
 	
 	CObj<CMissionSuperWeapon> pSuperWeapon;
 	std::wstring wszTooltipSlot;
 	std::wstring wszTooltipSlotUnit;
 
-	float fEndGameRestTime; // don't save
+	float fEndGameRestTime = {}; // don't save
 
-	bool bTryExitWindows;
+	bool bTryExitWindows = {};
 
 	struct SChatInput
 	{
@@ -275,12 +276,12 @@ private:
 		CPtr<IEditLine> pEdit;
 		std::wstring wszAll;
 		std::wstring wszTeam;
-		float fEditBaseX;
-		float fEditBaseWidth;
-		bool bTeamByDefault;
+		float fEditBaseX = {};
+		float fEditBaseWidth = {};
+		bool bTeamByDefault = {};
 		ZSKIP //bool bCrapIgnoreMessage;
-		bool bMultifunctionPanelMinimized;
-		bool bTeam;
+		bool bMultifunctionPanelMinimized = {};
+		bool bTeam = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPanel); f.Add(3,&pView); f.Add(4,&pEdit); f.Add(5,&wszAll); f.Add(6,&wszTeam); f.Add(7,&fEditBaseX); f.Add(8,&fEditBaseWidth); f.Add(9,&bTeamByDefault); f.Add(11,&bMultifunctionPanelMinimized); f.Add(12,&bTeam); return 0; }
 	};
 	
@@ -478,11 +479,11 @@ class CICMission : public CInterfaceCommandBase<CInterfaceMission>
 	//
 public:
 	CDBPtr<NDb::SMapInfo> pMap;
-	bool bReplay;
+	bool bReplay = {};
 	std::string szReplayFileName;
-	bool bFromInterface;
+	bool bFromInterface = {};
 	CPtr<ITransceiver> pTrans;
-	int nPlayerForWarFog;
+	int nPlayerForWarFog = {};
 	//
 	void PreCreate();
 	void PostCreate( IInterface *pInterface );

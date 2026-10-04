@@ -11,9 +11,10 @@ class CFakeCorpseStaticObject : public CCommonStaticObject
 	ZDATA_( CCommonStaticObject )
 		std::list<SObjTileInfo> tilesToLock;
 		CObj<CUpdatableObj> pDeadObj;
-		EStaticObjType eType;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		EStaticObjType eType = {};
 		CPtr<CObjectProfile> pPassProfile;
-		bool bDestructByTracks;
+		bool bDestructByTracks = {};
 	// Track-crushability affects pathfinding and must survive save/load.
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonStaticObject *)this); f.Add(2,&tilesToLock); f.Add(3,&pDeadObj); f.Add(4,&eType); f.Add(5,&pPassProfile); f.Add(6,&bDestructByTracks); return 0; }
 

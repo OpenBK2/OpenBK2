@@ -16,13 +16,14 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 
 	ZDATA
 	CPtr<CAIUnit> pUnit;
-	EBombardmentState eState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EBombardmentState eState = {};
 
 	CVec2 vPos;
-	bool bToReservePosition;
-	bool bFinished;
-	NTimer::STime timeOfFinish;
-	NTimer::STime startTime;
+	bool bToReservePosition = {};
+	bool bFinished = {};
+	NTimer::STime timeOfFinish = {};
+	NTimer::STime startTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&vPos); f.Add(5,&bToReservePosition); f.Add(6,&bFinished); f.Add(7,&timeOfFinish); f.Add(8,&startTime); return 0; }
 	// 
 	void StartState();
@@ -62,21 +63,21 @@ class CGeneralArtilleryTask
 	ZDATA
 	CPtr<CGeneralArtillery> pOwner;
 
-	bool bBombardmentFinished;
+	bool bBombardmentFinished = {};
 
 	CVec2 vBombardmentCenter;
-	float fBombardmentRadius;
-	NTimer::STime timeToFinishBombardment;
-	NTimer::STime timeToSendAntiArtilleryAck;
+	float fBombardmentRadius = {};
+	NTimer::STime timeToFinishBombardment = {};
+	NTimer::STime timeToSendAntiArtilleryAck = {};
 	CVec2 vAntiArtilleryAckCenter;
-	bool bIsAntiArtilleryFight;
-	NTimer::STime startRotatingTime;
+	bool bIsAntiArtilleryFight = {};
+	NTimer::STime startRotatingTime = {};
 
-	EBombardmentState eState;
+	EBombardmentState eState = {};
 
 	std::list<SBombardmentUnitState> bombardmentUnits;
 
-	int nCellNumber;
+	int nCellNumber = {};
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&bBombardmentFinished); f.Add(4,&vBombardmentCenter); f.Add(5,&fBombardmentRadius); f.Add(6,&timeToFinishBombardment); f.Add(7,&timeToSendAntiArtilleryAck); f.Add(8,&vAntiArtilleryAckCenter); f.Add(9,&bIsAntiArtilleryFight); f.Add(10,&startRotatingTime); f.Add(11,&eState); f.Add(12,&bombardmentUnits); f.Add(13,&nCellNumber); return 0; }
 

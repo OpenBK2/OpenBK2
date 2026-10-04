@@ -94,8 +94,9 @@ public:
 // is no alignment arithmetic here.
 class SYSTEM_EXPORT CMemoryMappedFileFragment : public CMappedStream
 {
-	CMMFile *pFile;
-	int nOffset, nSize;
+	// Defensive defaults; the fragment constructor supplies the actual window.
+	CMMFile *pFile = nullptr;
+	int nOffset = 0, nSize = 0;
 
 	boost::interprocess::mapped_region region;
 	//! Set when the file is not mapped and the window was read into memory

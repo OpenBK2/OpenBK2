@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "AIClasses.h"
@@ -20,30 +22,30 @@ public:
 private:
 	CPtr<IPointChecking> pChecking;
 
-	int nBoundTileRadius;
-	EAIClasses aiClass;
+	int nBoundTileRadius = 0;
+	EAIClasses aiClass{};
 
-	int upperLimit;
-	bool longPath;
+	int upperLimit = 0;
+	bool longPath = false;
 	SVector startPoint, finishPoint;
 	SVector lastKnownGoodTile;
 
 	CVec2 vStartPoint, vFinishPoint;
 
-	int nLength, nStart;
+	int nLength = 0, nStart = 0;
 
-	int minDistance, minPointNum;
+	int minDistance = 0, minPointNum = 0;
 	// нашли точку
-	bool bFinished;
-	int nCyclePoints;
+	bool bFinished = false;
+	int nCyclePoints = 0;
 
 	std::vector<SVector> stopPoints, addPoints;
-	int mapBufIndex;
+	int mapBufIndex = 0;
 	CArray2D<uint8_t> mapBuf;
 	std::vector<int> cyclePoints, segmBegin;
-	bool bPathFound;
+	bool bPathFound = false;
 
-	int nBestDist;
+	int nBestDist = 0;
 	SVector vBestPoint;
 	CPtr<CAIMap> pAIMap;
 	CPtr<CTerrain> pTerrain;
@@ -87,7 +89,7 @@ private:
 	void NextMapBufIndex();
 
 	//DEBUG{
-	int nRedMarker, nGreenMarker, nBlueMarker;
+	int nRedMarker = 0, nGreenMarker = 0, nBlueMarker = 0;
 	//DEBUG}
 public:
 	CCommonPathFinder();

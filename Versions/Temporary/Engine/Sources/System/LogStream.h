@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "System_export.h"
 
 
@@ -20,7 +22,7 @@ enum EConsoleColor
 class SYSTEM_EXPORT CLogStream
 {
 	std::wstring wsStreamBuffer;
-	const int nStream;
+	const int nStream = 0;
 public:
 	CLogStream( const int _nStream ): nStream( _nStream )	{}
 
@@ -40,10 +42,10 @@ public:
 
 struct SConsoleLine
 {
-	int nID;
-	const int nStream;
+	int nID = 0;
+	const int nStream = 0;
 
-	bool bCommand;
+	bool bCommand = false;
 	std::wstring szText;
 	
 	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const std::wstring &_szText )

@@ -18,7 +18,8 @@ class CArtillery : public CAIUnit
 	
 	CDBPtr<SMechUnitRPGStats> pStats;
 
-	int nInitialPlayer;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nInitialPlayer = {};
 
 	// орудийные стволы
 	CPtr<CMechUnitGuns> pGuns;
@@ -26,13 +27,13 @@ class CArtillery : public CAIUnit
 	// вращающаяся пушка
 	std::vector< CObj<CTurret> > turrets;
 
-	EActionNotify eCurInstallAction, eNextInstallAction;
+	EActionNotify eCurInstallAction = {}, eNextInstallAction = {};
 	// в каком из install/uninstall мы сейчас находимся
-	EActionNotify eCurrentStateOfInstall;
+	EActionNotify eCurrentStateOfInstall = {};
 
-	bool bInstalled;
-	NTimer::STime installActionTime;
-	bool bInstallActionInstant;						// для того, чтобы артиллерию можно было создать в непроинсталлированном состоянии
+	bool bInstalled = {};
+	NTimer::STime installActionTime = {};
+	bool bInstallActionInstant = {};						// для того, чтобы артиллерию можно было создать в непроинсталлированном состоянии
 
 	CPtr<IStaticPath> pStaticPathToSend;
 	CVec2 vShift;
@@ -40,16 +41,16 @@ class CArtillery : public CAIUnit
 
 	CPtr<CFormation> pCapturingUnit;			// взвод, который бежит захватывать пушку.
 	CPtr<CFormation> pCrew;								// взвод, который пушку обслуживает
-	float fOperable; // часть команды, которая обслуживает пушку
+	float fOperable = {}; // часть команды, которая обслуживает пушку
 
 	CPtr<CAIUnit> pSlaveTransport; // транспорт, который работает на эту пушку
 	CPtr<CAIUnit> pHookingTransport;	// transport, that is hooking this artillery.
 	
 	CObj<CArtilleryBulletStorage> pBulletStorage;
-	bool bBulletStorageVisible;
-	NTimer::STime lastCheckToInstall;
+	bool bBulletStorageVisible = {};
+	NTimer::STime lastCheckToInstall = {};
 
-	NTimer::STime behUpdateDuration;
+	NTimer::STime behUpdateDuration = {};
 	// создаёт ammo box для AI, но не посылает его на визуализацию
 	void CreateAmmoBox();
 

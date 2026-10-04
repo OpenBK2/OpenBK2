@@ -23,8 +23,9 @@ enum EDiplomacyInfo
 struct SSegment2Trench
 {
 	ZDATA
-		int nSegmentID;													// маленький кусочек 
-		int nEntrenchID;												// весь окоп
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nSegmentID = {};													// маленький кусочек
+		int nEntrenchID = {};												// весь окоп
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSegmentID); f.Add(3,&nEntrenchID); return 0; } private:
 public:
 	SSegment2Trench() : nSegmentID( 0 ), nEntrenchID( 0 ) { }
@@ -34,8 +35,8 @@ public:
 struct SSoldier2Formation
 {
 	ZDATA
-		int nSoldierID;
-		int nFormationID;
+		int nSoldierID = {};
+		int nFormationID = {};
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(2,&nSoldierID); f.Add(3,&nFormationID); return 0; } private:
 public:
 	SSoldier2Formation() : nSoldierID( 0 ), nFormationID( 0 ) { }
@@ -52,14 +53,14 @@ struct SShootArea
 		ESAT_RANGE_AREA = 3,
 	};
 
-	EShootAreaType eType;
+	EShootAreaType eType = {};
 	
 	CVec3 vCenter3D;
-	float fMinR, fMaxR;
+	float fMinR = {}, fMaxR = {};
 
 	// углы задают конус стрельбы - против часовой стрелки
-	uint16_t wStartAngle;
-	uint16_t wFinishAngle;
+	uint16_t wStartAngle = {};
+	uint16_t wFinishAngle = {};
 	
 	//
 	SShootArea()

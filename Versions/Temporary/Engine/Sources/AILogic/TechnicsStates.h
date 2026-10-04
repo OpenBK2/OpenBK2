@@ -22,9 +22,10 @@ class CTankPitLeaveState : public IUnitState
 		TLTPS_MOVING,
 	};
 	ZDATA
-	ETankLeaveTankPitState eState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ETankLeaveTankPitState eState = {};
 	CPtr<CAIUnit> pUnit;
-	NTimer::STime timeStartLeave;
+	NTimer::STime timeStartLeave = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pUnit); f.Add(4,&timeStartLeave); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit *pTank );
@@ -58,13 +59,13 @@ class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelpe
 	std::list<SObjTileInfo> tiles;											// locked tiles under tank pit that being built
 	CVec2 vHalfSize;											// half size of tank pit
 	CDBPtr<SMechUnitRPGStats> pStats;		// stats of tank pit
-	int nDBIndex;													// db index of tank pit
+	int nDBIndex = {};													// db index of tank pit
 
-	ESoldierHullDownState eState;
-	NTimer::STime timeEndBuild;
+	ESoldierHullDownState eState = {};
+	NTimer::STime timeEndBuild = {};
 	CVec2 vTankPitCenter;
-	NTimer::STime timeStartBuild;
-	float fOldProgress;
+	NTimer::STime timeStartBuild = {};
+	float fOldProgress = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&tiles); f.Add(4,&vHalfSize); f.Add(5,&pStats); f.Add(6,&nDBIndex); f.Add(7,&eState); f.Add(8,&timeEndBuild); f.Add(9,&vTankPitCenter); f.Add(10,&timeStartBuild); f.Add(11,&fOldProgress); return 0; }
 private:
@@ -90,7 +91,7 @@ class CSoldierEnterHoldSectorState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierEnterHoldSectorState );
 	ZDATA
 	CPtr<CAIUnit> pUnit;
-	NTimer::STime nTimeStart;
+	NTimer::STime nTimeStart = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nTimeStart); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit * pUnit );
@@ -118,17 +119,17 @@ class CMechUnitInsideMechUnitState : public IUnitState
 		EMEM_EXITTING,
 		CHECK_PERIOID = 500,
 	};
-	class CAIUnit * pUnit;
+	class CAIUnit * pUnit = {};
 
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
-	EMechUnitEnterMechUnitState eState;
+	EMechUnitEnterMechUnitState eState = {};
 	CPtr<CMilitaryCar> pTransport;
 	CPtr<CAIUnit> pEnemy;
 	CVec2 vEntrancePoint;
 	CPtr<CMechUnitRestOnBoardPath> pPath;
-	NTimer::STime timeNextCheck;
+	NTimer::STime timeNextCheck = {};
 	CVec2 vDestination;						// Final destination to send the unit to, after leaving transport
 public: 
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&eState); f.Add(4,&pTransport); f.Add(5,&pEnemy); f.Add(6,&vEntrancePoint); f.Add(7,&pPath); f.Add(8,&timeNextCheck); f.Add(9,&vDestination); return 0; }

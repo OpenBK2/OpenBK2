@@ -11,9 +11,10 @@ extern CDiplomacy theDipl;
 class CGlobalIter
 {
 ZDATA	
-	int iter;
-	int nCurParty;
-	int nParties;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int iter = {};
+	int nCurParty = {};
+	int nParties = {};
 	std::vector<uint8_t> parties;
 	det_set<int> visitedUnits;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&iter); f.Add(3,&nCurParty); f.Add(4,&nParties); f.Add(5,&parties); f.Add(6,&visitedUnits); return 0; }

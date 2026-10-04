@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "B2_M1_Terrain_export.h"
 
 
@@ -15,14 +17,14 @@ class CTrackObjInfo : public CPtrFuncBase<NGScene::CObjectInfo>
   //
   CDGPtr< CFuncBase<STime> > pTimer;
   CPtr<CTracksManager> pTrackManager;
-  int nID;
+  int nID = 0;
   NGScene::CObjectInfo::SData data;
   std::vector<NMeshData::SMeshData> tracksBuf;
   std::vector<int> startTimes;
-  int nStartInd, nFinalInd;
-  float fFadingSpeed;
-  bool bNeedUpdate;
-  bool bFirstUpdate;
+  int nStartInd = 0, nFinalInd = 0;
+  float fFadingSpeed = 0.0f;
+  bool bNeedUpdate = false;
+  bool bFirstUpdate = false;
 protected:
   void Recalc();
   bool NeedUpdate() { if ( bNeedUpdate ) return pTimer.Refresh(); pTimer.Refresh(); return false; }

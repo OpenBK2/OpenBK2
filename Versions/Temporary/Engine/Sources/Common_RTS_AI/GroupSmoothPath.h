@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 
@@ -11,7 +13,7 @@
 struct SGeometryCellInfo
 {
 	CVec2 vCellPosition;
-	int nPriority;
+	int nPriority = 0;
 
 	SGeometryCellInfo() : vCellPosition( VNULL2 ), nPriority( -1 ) {}
 	SGeometryCellInfo( const CVec2 &_vCellPosition, const int _nPriority ) : vCellPosition( _vCellPosition ), nPriority( _nPriority ) {}
@@ -26,7 +28,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		//! поворот от направления формации к юниту
 		CVec2 vUnitShift;
 		//! проекция смещения юнита относительно центра формации на направление формации
-		float fUnitProjShift;
+		float fUnitProjShift = 0.0f;
 		SCellInfo() : vUnitShift( VNULL2 ), fUnitProjShift( 0.0f ) {}
 		SCellInfo( const CVec2 &vUnitPosition )
 		{
@@ -49,8 +51,8 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	struct SGeometry
 	{
 		CPriorityCells geometry;
-    float fMaxProjection;
-		float fRadius;
+    float fMaxProjection = 0.0f;
+		float fRadius = 0.0f;
 		
 		SGeometry() : fMaxProjection( 0.0f ), fRadius( 0.0f ) {}
 		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius ) : geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius ) {}
@@ -67,9 +69,9 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	//
 	struct SUnitInfo 
 	{
-		CBasePathUnit *pUnit;
-		int nCell;
-		int nPriority;
+		CBasePathUnit *pUnit = nullptr;
+		int nCell = 0;
+		int nPriority = 0;
 
 		SUnitInfo(): pUnit( 0 ), nCell( -1 ), nPriority( -1 ) {}
 		SUnitInfo( CBasePathUnit *_pUnit, const int _nPriority ): pUnit( _pUnit ), nCell( -1 ), nPriority( _nPriority ) {}
@@ -99,11 +101,11 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	ZDATA_( CStandartSmoothPathBasis )
 		std::vector<SGeometry> geometries;
 		CUnitsMap units;
-		int nCurrentGeometry;
-		int nUnitsCount;
-		int nCellsCount;
-		float fMaxPathShift;
-		float fSpeedCoeff;
+		int nCurrentGeometry = 0;
+		int nUnitsCount = 0;
+		int nCellsCount = 0;
+		float fMaxPathShift = 0.0f;
+		float fSpeedCoeff = 0.0f;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStandartSmoothPathBasis *)this); f.Add(2,&geometries); f.Add(3,&units); f.Add(4,&nCurrentGeometry); f.Add(5,&nUnitsCount); f.Add(6,&nCellsCount); f.Add(7,&fMaxPathShift); f.Add(8,&fSpeedCoeff); return 0; }
 protected:
 	const CVec2 GetDirection() const { return GetUnit()->GetDirectionVector(); }

@@ -14,14 +14,15 @@ class CDeadUnit : public CLinkObject
 	OBJECT_BASIC_METHODS( CDeadUnit );
 	ZDATA_(CLinkObject)
 	CPtr<CCommonUnit> pDieObj;
-	NTimer::STime dieTime;
-	EActionNotify dieAction;
-	int nFatality;
-	int nDeathAnimType;
-	bool bPutMud;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime dieTime = {};
+	EActionNotify dieAction = {};
+	int nFatality = {};
+	int nDeathAnimType = {};
+	bool bPutMud = {};
 
 	SVector tileCenter;
-	bool bVisibleWhenDie;
+	bool bVisibleWhenDie = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pDieObj); f.Add(3,&dieTime); f.Add(4,&dieAction); f.Add(5,&nFatality); f.Add(6,&bPutMud); f.Add(7,&tileCenter); f.Add(8,&bVisibleWhenDie); f.Add(9,&nDeathAnimType); return 0; }
 
 public:

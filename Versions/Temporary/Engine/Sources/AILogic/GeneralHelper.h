@@ -29,7 +29,8 @@ struct SGeneralHelper
 
 	struct SSeverityCountPredicate
 	{
-		float fCount;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fCount = {};
 		SSeverityCountPredicate() : fCount( 0 ) {  }
 		void operator()( const CCommonUnit *pUnit );
 	};
@@ -37,17 +38,17 @@ struct SGeneralHelper
 	// 
 	struct SFindByEnumeratorPredicate
 	{
-		IWorkerEnumerator * pEn;
-		enum EForceType eType;
+		IWorkerEnumerator * pEn = {};
+		enum EForceType eType = {};
 		SFindByEnumeratorPredicate( struct IWorkerEnumerator * pEnumerator, const enum EForceType eType ) : pEn( pEnumerator ), eType( eType ) {  }
 		bool operator()( class CCommonUnit *pU1 );
 	};
 	//
 	struct SFindBestByEnumeratorPredicate
 	{
-		IWorkerEnumerator * pEn;
-		enum EForceType eType;
-		float fRating;
+		IWorkerEnumerator * pEn = {};
+		enum EForceType eType = {};
+		float fRating = {};
 		CPtr<CCommonUnit> pBest;
 		SFindBestByEnumeratorPredicate( struct IWorkerEnumerator * pEn, const enum EForceType eType ) : pEn ( pEn ), eType( eType ) {  }
 		void operator()( class CCommonUnit *pU1 );
@@ -55,7 +56,7 @@ struct SGeneralHelper
 	//
 	struct SCountPredicate
 	{
-		int nCount;
+		int nCount = {};
 		SCountPredicate() : nCount( 0 ) {  }
 		void operator() ( void * ) { ++nCount; }
 	};
@@ -67,7 +68,7 @@ struct SGeneralHelper
 	};
 	struct SInactiveUnitPredicate
 	{
-		int nParty;
+		int nParty = {};
 		SInactiveUnitPredicate( int _nParty ) : nParty( _nParty ) {  }
 		bool operator() ( class CCommonUnit * pUnit );
 	};

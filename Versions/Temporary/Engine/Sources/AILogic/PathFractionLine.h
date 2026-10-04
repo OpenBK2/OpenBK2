@@ -11,7 +11,8 @@ class CPathFractionLine : public IPathFraction
 	ZDATA
 	CVec3 x0, x1;
 	CVec3 v0;
-	float fLength;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fLength = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&x0); f.Add(3,&x1); f.Add(4,&v0); f.Add(5,&fLength); return 0; }
 public:
 	CPathFractionLine() : fLength( 0 ) {  }

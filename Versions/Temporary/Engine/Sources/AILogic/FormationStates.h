@@ -82,12 +82,13 @@ class CFormationMoveToState : public IUnitState
 	enum EMoveToStates { EMTS_FORMATION_MOVING, EMTS_UNITS_MOVING_TO_FORMATION_POINTS };
 
 	ZDATA
-	EMoveToStates eMoveToState;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EMoveToStates eMoveToState = {};
 
 	CPtr<CFormation> pFormation;
 
-	NTimer::STime startTime;
-	bool bWaiting;
+	NTimer::STime startTime = {};
+	bool bWaiting = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eMoveToState); f.Add(3,&pFormation); f.Add(4,&startTime); f.Add(5,&bWaiting); return 0; }
 	//
 	void FormationMovingState();
@@ -116,7 +117,7 @@ class CFormationParaDropState : public IUnitState
 		EPS_WAIT_FOR_PARADROP_END,
 	};
 	ZDATA
-	EParadropState eState;
+	EParadropState eState = {};
 	CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pFormation); return 0; }
 public:
@@ -139,12 +140,12 @@ class CFormationEnterBuildingState : public IUnitState, public CStatusUpdatesHel
 
 	enum EEnterBuildingStates { EES_START, EES_RUN_UP, EES_FINISHED, EES_WAIT_FOR_UNLOCK, EES_WAITINIG_TO_ENTER };
 	ZDATA_( CStatusUpdatesHelper )
-	EEnterBuildingStates state;
+	EEnterBuildingStates state = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CBuilding> pBuilding;
-	int nEntrance;
-	NTimer::STime timeSent;
+	int nEntrance = {};
+	NTimer::STime timeSent = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&state); f.Add(3,&pFormation); f.Add(4,&pBuilding); f.Add(5,&nEntrance); f.Add(6,&timeSent); return 0; }
 	//
 	bool SetPathForRunUp();
@@ -171,11 +172,11 @@ class CFormationEnterEntrenchmentState : public IUnitState, public CStatusUpdate
 	
 	enum EEnterState { EES_START, EES_RUN, EES_WAIT_TO_ENTER, EES_FINISHED };
 	ZDATA_( CStatusUpdatesHelper )
-	EEnterState state;
+	EEnterState state = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CEntrenchment> pEntrenchment;
-	NTimer::STime timeToWait;
+	NTimer::STime timeToWait = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&state); f.Add(3,&pFormation); f.Add(4,&pEntrenchment); f.Add(5,&timeToWait); return 0; }
 	//
 	bool IsAnyPartCloseToEntrenchment() const;
@@ -303,13 +304,13 @@ class CFormationPlaceMine : public IEngineerFormationState
 		EPM_WAITING 
 	};
 	ZDATA
-	EPlaceMineStates eState;
+	EPlaceMineStates eState = {};
 	CPtr<CAITransportUnit> pHomeTransport;
 
 	CPtr<CFormation> pFormation;
 
 	CVec2 point;
-	int eType;
+	int eType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pHomeTransport); f.Add(4,&pFormation); f.Add(5,&point); f.Add(6,&eType); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pFormation, const CVec2 &point, const EMineType nType );
@@ -332,7 +333,7 @@ class CFormationClearMine : public IUnitState
 
 	enum EClearMineStates { EPM_START, EPM_MOVE, EPM_WAIT };
 	ZDATA
-	EClearMineStates eState;
+	EClearMineStates eState = {};
 	CPtr<CFormation> pFormation;
 	CVec2 point;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pFormation); f.Add(4,&point); return 0; }
@@ -357,12 +358,12 @@ class CFormationAttackUnitState : public IUnitAttackingState
 	
 	enum EAttackUnitStates { EPM_MOVING, EPM_WAITING };
 	ZDATA
-	EAttackUnitStates eState;
+	EAttackUnitStates eState = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CAIUnit> pEnemy;
-	bool bSwarmAttack;
-	int nEnemyParty;
+	bool bSwarmAttack = {};
+	int nEnemyParty = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pFormation); f.Add(4,&pEnemy); f.Add(5,&bSwarmAttack); f.Add(6,&nEnemyParty); return 0; }
 
 	//
@@ -392,7 +393,7 @@ class CFormationAttackCommonStatObjState : public IUnitAttackingState
 	
 	enum EAttackUnitStates { EPM_START, EPM_MOVING, EPM_WAITING };
 	ZDATA
-	EAttackUnitStates eState;
+	EAttackUnitStates eState = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CStaticObject> pObj;
@@ -445,11 +446,11 @@ class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHe
 	enum { CHECK_PERIOD = 500 };
 	enum EEnterTransportStates { EETS_START, EETS_MOVING, EETS_WAIT_FOR_TURRETS_RETURN, EETS_WAITING, EETS_FINISHED, EETS_WAIT_TO_UNLOCK_TRANSPORT };
 	ZDATA_( CStatusUpdatesHelper )
-	EEnterTransportStates eState;
+	EEnterTransportStates eState = {};
 
 	CPtr<CFormation> pFormation;
 	CPtr<CMilitaryCar> pTransport;
-	NTimer::STime lastCheck;
+	NTimer::STime lastCheck = {};
 	CVec2 lastTransportPos;
 	SAIAngle lastTransportDir;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pFormation); f.Add(4,&pTransport); f.Add(5,&lastCheck); f.Add(6,&lastTransportPos); f.Add(7,&lastTransportDir); return 0; }
@@ -554,7 +555,7 @@ public:
 	class CFindFirstUnitPredicate : public CFindUnitPredicate
 	{
 		CPtr<CAIUnit> pUnit;
-		bool bNotEnoughtRu;
+		bool bNotEnoughtRu = {};
 	public:
 		CFindFirstUnitPredicate() : bNotEnoughtRu( false ) { }
 		virtual bool HasUnit(){ return pUnit; }
@@ -567,8 +568,8 @@ public:
 	class CFindBestUnitPredicate : public CFindUnitPredicate
 	{
 		CPtr<CAIUnit> pUnit;
-		bool bNotEnoughtRu;
-		float fCurWeight;
+		bool bNotEnoughtRu = {};
+		float fCurWeight = {};
 	public:
 		CFindBestUnitPredicate() : bNotEnoughtRu( false ), fCurWeight( 0.0f ) { }
 		virtual bool HasUnit(){ return pUnit; }
@@ -600,10 +601,10 @@ protected:
 		EFRUS_WAIT_FOR_UNIT_TO_SERVE,
 	};
 	ZDATA
-	EFormationServiceUnitState eState;
+	EFormationServiceUnitState eState = {};
 	CPtr<CAITransportUnit> pHomeTransport; //транспорт у которого берутся ресурсы на починку
-	float fWorkAccumulator;								//накопление работы в сегментах
-	float fWorkLeft;											// столько ресурсов взяли с собой солдаты
+	float fWorkAccumulator = {};								//накопление работы в сегментах
+	float fWorkLeft = {};											// столько ресурсов взяли с собой солдаты
 	CPtr<CAIUnit> pPreferredUnit;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pHomeTransport); f.Add(4,&fWorkAccumulator); f.Add(5,&fWorkLeft); f.Add(6,&pPreferredUnit); return 0; }
@@ -631,9 +632,9 @@ class CFormationRepairUnitState : public CFormationServeUnitState
 	CPtr<CTank> pTank;
 	CVec2 vPointInQuestion;							//где стоит юнит
 
-	NTimer::STime lastRepearTime;
-	float fRepCost;
-	bool bNearTruck;
+	NTimer::STime lastRepearTime = {};
+	float fRepCost = {};
+	bool bNearTruck = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFormationServeUnitState*)this); f.Add(2,&pUnit); f.Add(3,&pUnitInQuiestion); f.Add(4,&pTank); f.Add(5,&vPointInQuestion); f.Add(6,&lastRepearTime); f.Add(7,&fRepCost); f.Add(8,&bNearTruck); return 0; }
 
 	void Interrupt();
@@ -643,9 +644,9 @@ public:
 	// первое попавшееся наше хранилище для починки
 	class CFindFirstStorageToRepearPredicate : public CStaticObjects::IEnumStoragesPredicate
 	{
-		bool bHasStor;
-		bool bNotEnoughRu;
-		const float fMaxRu;									// такой запас ресурсов
+		bool bHasStor = {};
+		bool bNotEnoughRu = {};
+		const float fMaxRu = {};									// такой запас ресурсов
 	public:
 		CFindFirstStorageToRepearPredicate( const float fMaxRu ) : fMaxRu( fMaxRu ), bNotEnoughRu( false ), bHasStor( false ) { }
 		virtual bool OnlyConnected() const { return false; }
@@ -681,12 +682,12 @@ class CFormationResupplyUnitState : public CFormationServeUnitState
 	CPtr<CFormation> pUnit;
 	CPtr<CAIUnit> pUnitInQuiestion;			//юнит, который нужно обслужить
 	CVec2 vPointInQuestion;							//где стоит юнит
-	NTimer::STime lastResupplyTime;
+	NTimer::STime lastResupplyTime = {};
 
 	CPtr<CFormation> pSquadInQuestion; // если юнит, который нужно обслужить - формация, то это она
-	int iCurUnitInFormation; // в данный момент обслуживаем этого солдата
-	bool bSayAck;							// unit being resupplied must say ack when being resupplied
-	bool bNearTruck;
+	int iCurUnitInFormation = {}; // в данный момент обслуживаем этого солдата
+	bool bSayAck = {};							// unit being resupplied must say ack when being resupplied
+	bool bNearTruck = {};
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFormationServeUnitState*)this); f.Add(2,&pUnit); f.Add(3,&pUnitInQuiestion); f.Add(4,&vPointInQuestion); f.Add(5,&lastResupplyTime); f.Add(6,&pSquadInQuestion); f.Add(7,&iCurUnitInFormation); f.Add(8,&bSayAck); f.Add(9,&bNearTruck); return 0; }
 	void Interrupt();
@@ -719,8 +720,8 @@ class CFormationLoadRuState: public CFormationServeUnitState
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
 	CPtr<CBuilding> pStorage;			//из этого хранилища берем ресурсы
-	NTimer::STime lastResupplyTime;
-	int nEntrance;
+	NTimer::STime lastResupplyTime = {};
+	int nEntrance = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFormationServeUnitState*)this); f.Add(2,&pUnit); f.Add(3,&pStorage); f.Add(4,&lastResupplyTime); f.Add(5,&nEntrance); return 0; }
 	void Interrupt();
 public:
@@ -752,10 +753,10 @@ class CFormationCatchTransportState : public IUnitState
 
 	std::list< CPtr<CSoldier> > deleted; // это не сериализовать, заполняется и чистится на 1 сегменте.
 
-	NTimer::STime timeLastUpdate;
+	NTimer::STime timeLastUpdate = {};
 	CVec2 vEnterPoint;
-	float fResursPerSoldier;							// солдаты, забегая в транспорт могут принести ресурсы
-	ECatchState eState;
+	float fResursPerSoldier = {};							// солдаты, забегая в транспорт могут принести ресурсы
+	ECatchState eState = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTransportToCatch); f.Add(4,&deleted); f.Add(5,&timeLastUpdate); f.Add(6,&vEnterPoint); f.Add(7,&fResursPerSoldier); f.Add(8,&eState); return 0; }
 	void UpdatePath( CSoldier * pSold, const bool bForce = false );
 	void Interrupt();
@@ -790,13 +791,13 @@ class CFormationPlaceAntitankState : public IEngineerFormationState
 
 	ZDATA
 	CPtr<CFormation> pUnit;
-	EFormationPlaceAntitankState eState;
+	EFormationPlaceAntitankState eState = {};
 
 	CPtr<CCommonStaticObject> pAntitank;
 	CPtr<CAITransportUnit> pHomeTransport;
 	CVec2 vDesiredPoint; //here antitank is going to be built
-	float fWorkAccumulator;
-	NTimer::STime timeBuild;
+	float fWorkAccumulator = {};
+	NTimer::STime timeBuild = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pAntitank); f.Add(5,&pHomeTransport); f.Add(6,&vDesiredPoint); f.Add(7,&fWorkAccumulator); f.Add(8,&timeBuild); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pUnit, const CVec2 &vDesiredPoint );
@@ -837,16 +838,16 @@ class CFormationBuildLongObjectState : public IEngineerFormationState
 
 	ZDATA
 	CPtr<CFormation> pUnit;
-	EFormationBuildEntrenchState eState;
+	EFormationBuildEntrenchState eState = {};
 
-	NTimer::STime lastTime;
+	NTimer::STime lastTime = {};
 	std::list<CPtr<CAIUnit> > unitsPreventing;
-	float fWorkLeft;
+	float fWorkLeft = {};
 	CPtr<CAITransportUnit> pHomeTransport;
 				
 	CPtr<CLongObjectCreation> pCreation;
-	float fCompletion;										// степень готовности данного сегмента
-	int nCurrentSegment;
+	float fCompletion = {};										// степень готовности данного сегмента
+	int nCurrentSegment = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&lastTime); f.Add(5,&unitsPreventing); f.Add(6,&fWorkLeft); f.Add(7,&pHomeTransport); f.Add(8,&pCreation); f.Add(9,&fCompletion); f.Add(10,&nCurrentSegment); return 0; }
 	void SendUnitsAway( std::list<CPtr<CAIUnit> > *pUnitsPreventing );
 
@@ -884,18 +885,18 @@ class CFormationBuildEntrenchmentState : public IUnitState
 	ZDATA
 	
 	CPtr<CFormation> pFormation;
-	EFormationBuildEntrenchmentState eState;
+	EFormationBuildEntrenchmentState eState = {};
 
-	NTimer::STime lastTime;
-	float fWorkLeft;
+	NTimer::STime lastTime = {};
+	float fWorkLeft = {};
 
 	CObj<CEntrenchmentCreation> pCreation;
-	bool bEndPointSelected;
-	float fCompletion;										// степень готовности
+	bool bEndPointSelected = {};
+	float fCompletion = {};										// степень готовности
 	det_map<int,CVec2> targetPoints;
 	CVec2 vStartPoint;
 	CVec2 vEndPoint;
-	int nMaxIndex;
+	int nMaxIndex = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&eState); f.Add(4,&lastTime); f.Add(5,&fWorkLeft); f.Add(6,&pCreation); f.Add(7,&bEndPointSelected); f.Add(8,&fCompletion); f.Add(9,&targetPoints); f.Add(10,&vStartPoint); f.Add(11,&vEndPoint); f.Add(12,&nMaxIndex); return 0; }
 	void SendUnitsAway( std::list<CPtr<CAIUnit> > *pUnitsPreventing );
 
@@ -927,7 +928,7 @@ class CFormationCaptureArtilleryState : public IUnitState, public CStatusUpdates
 		FCAS_EXITTTING,
 	};
 	ZDATA_( CStatusUpdatesHelper )
-	EFormationCaptureArtilleryState eState;
+	EFormationCaptureArtilleryState eState = {};
 
 	CPtr<CFormation> pUnit;
 	CPtr<CArtillery> pArtillery;
@@ -955,7 +956,7 @@ class CFormationGunCrewState : public IUnitState
 
 	struct SCrewAnimation
 	{
-		EActionNotify eAction;
+		EActionNotify eAction = {};
 		SAIAngle wDirection;
 		//
 		SCrewAnimation() : eAction( ACTION_NOTIFY_NONE ), wDirection( 0 ) {  }
@@ -968,11 +969,11 @@ class CFormationGunCrewState : public IUnitState
 	struct SUnit
 	{
 		ZDATA
-		EActionNotify eAction;
-		EActionNotify eNewAction;
-		bool bForce;
+		EActionNotify eAction = {};
+		EActionNotify eNewAction = {};
+		bool bForce = {};
 		SAIAngle wDirection;
-		NTimer::STime timeNextUpdate;
+		NTimer::STime timeNextUpdate = {};
 	public:
 		CPtr<CSoldier> pUnit;
 		CVec2 vServePoint;
@@ -990,7 +991,7 @@ class CFormationGunCrewState : public IUnitState
 	{
 		ZDATA_(SUnit)
 	public:
-		bool bOnPlace;
+		bool bOnPlace = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,(SUnit*)this); f.Add(2,&bOnPlace); return 0; }
 		
 		SCrewMember();
@@ -1017,14 +1018,14 @@ class CFormationGunCrewState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pUnit;
 
-	int nReloadPhaze;											// перезагрузка разделена на несколько фаз
-	bool b360DegreesRotate;							// gun has no horisontal constraints
+	int nReloadPhaze = {};											// перезагрузка разделена на несколько фаз
+	bool b360DegreesRotate = {};							// gun has no horisontal constraints
 
 	// состояние пушки ( а также инжекс в массиве vGunners статов у пушки)
-	EGunServeState eGunState;
+	EGunServeState eGunState = {};
 	
 	// подсостояния пушки в режиме Operate
-	EGunOperateSubState eGunOperateSubState;
+	EGunOperateSubState eGunOperateSubState = {};
 
 	std::vector< SCrewMember > crew; // места с меньшим номером более приоритетны
 
@@ -1032,19 +1033,19 @@ class CFormationGunCrewState : public IUnitState
 	CDBPtr<SMechUnitRPGStats> pStats;
 
 	CFreeUnits freeUnits;
-	NTimer::STime startTime;
-	NTimer::STime timeLastUpdate;
+	NTimer::STime startTime = {};
+	NTimer::STime timeLastUpdate = {};
 
-	bool bReloadInProgress;
+	bool bReloadInProgress = {};
 
-	float fReloadPrice; // цена одной перезарядки
-	float fReloadProgress;	// текущее состояние перезарядки
+	float fReloadPrice = {}; // цена одной перезарядки
+	float fReloadProgress = {};	// текущее состояние перезарядки
 
 	SAIAngle wGunTurretDir ; 
 	SAIAngle wGunBaseDir;
 	SAIAngle wTurretHorDir; //  предыдущее направление ствола
 	SAIAngle wTurretVerDir; //  предыдущее направление ствола
-	int nFormationSize;
+	int nFormationSize = {};
 	CVec2 vGunPos;
 	
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nReloadPhaze); f.Add(4,&b360DegreesRotate); f.Add(5,&eGunState); f.Add(6,&eGunOperateSubState); f.Add(7,&crew); f.Add(8,&pArtillery); f.Add(9,&pStats); f.Add(10,&freeUnits); f.Add(11,&startTime); f.Add(12,&timeLastUpdate); f.Add(13,&bReloadInProgress); f.Add(14,&fReloadPrice); f.Add(15,&fReloadProgress); f.Add(16,&wGunTurretDir); f.Add(17,&wGunBaseDir); f.Add(18,&wTurretHorDir); f.Add(19,&wTurretVerDir); f.Add(20,&nFormationSize); f.Add(21,&vGunPos); return 0; }
@@ -1091,9 +1092,9 @@ class CFormationInstallMortarState : public IUnitState
 	OBJECT_BASIC_METHODS( CFormationInstallMortarState );
 	ZDATA
 	CPtr<CFormation> pUnit;
-	NTimer::STime timeInstall;
+	NTimer::STime timeInstall = {};
 	CPtr<CArtillery> pArt;
-	int nStage;
+	int nStage = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&timeInstall); f.Add(4,&pArt); f.Add(5,&nStage); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pUnit );
@@ -1133,8 +1134,8 @@ class CFormationAttackFormationState : public IUnitAttackingState
 	ZDATA	
 	CPtr<CFormation> pUnit;
 	CPtr<CFormation> pTarget;
-	bool bSwarmAttack;
-	int nEnemyParty;
+	bool bSwarmAttack = {};
+	int nEnemyParty = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&bSwarmAttack); f.Add(5,&nEnemyParty); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
@@ -1158,7 +1159,7 @@ class CFormationParadeState : public IUnitState
 
 	ZDATA
 	CPtr<CFormation> pFormation;
-	NTimer::STime startTime;
+	NTimer::STime startTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&startTime); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pFormation, const int nType );
@@ -1220,8 +1221,8 @@ class CFormationWaitToFormState : public IUnitState
 	CPtr<CFormation> pFormation;
 	CPtr<CFormation> pFormFormation;
 	CPtr<CSoldier> pMainSoldier;
-	bool bMain;
-	NTimer::STime startTime;
+	bool bMain = {};
+	NTimer::STime startTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&pFormFormation); f.Add(4,&pMainSoldier); f.Add(5,&bMain); f.Add(6,&startTime); return 0; }
 
 	//
@@ -1250,7 +1251,7 @@ class CCatchFormationState : public IUnitState
 	ZDATA
 	CPtr<CFormation> pCatchingFormation;
 
-	ECatchFormationState eState;
+	ECatchFormationState eState = {};
 
 	CVec2 lastFormationPos;
 	CPtr<CObjectBase> pLastFormationObject;
@@ -1258,7 +1259,7 @@ class CCatchFormationState : public IUnitState
 	// формация, которую ловят
 	CPtr<CFormation> pFormation;
 	// время для периодических проверок состояния формации
-	NTimer::STime lastUpdateTime;
+	NTimer::STime lastUpdateTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCatchingFormation); f.Add(3,&eState); f.Add(4,&lastFormationPos); f.Add(5,&pLastFormationObject); f.Add(6,&pFormation); f.Add(7,&lastUpdateTime); return 0; }
 	//
 	void LeaveCurStaticObject();
@@ -1290,13 +1291,13 @@ class CFormationSwarmState : public IUnitAttackingState
 	enum { TIME_OF_WAITING = 200 };
 	enum EFormationSwarmStates { EFSS_START, EFSS_WAIT, EFSS_MOVING };
 	ZDATA
-	EFormationSwarmStates state;
+	EFormationSwarmStates state = {};
 
 	CPtr<CFormation> pFormation;
 
 	CVec2 point;
-	NTimer::STime startTime;
-	bool bContinue;
+	NTimer::STime startTime = {};
+	bool bContinue = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&pFormation); f.Add(4,&point); f.Add(5,&startTime); f.Add(6,&bContinue); return 0; }
 
 	//
@@ -1336,14 +1337,14 @@ class CFormationRepairBridgeState : public IEngineerFormationState
 
 	ZDATA
 	CPtr<CFormation> pUnit;
-	EFormationRepearBridgeState eState;
+	EFormationRepearBridgeState eState = {};
 	CPtr<CFullBridge> pBridgeToRepair;
 	CPtr<CAITransportUnit> pHomeTransport ;
 	std::vector< CObj<CBridgeSpan> > bridgeSpans;
 	
-	float fWorkLeft;											// RU that engineers have with them
-	float fWorkDone;
-	NTimer::STime timeLastCheck;
+	float fWorkLeft = {};											// RU that engineers have with them
+	float fWorkDone = {};
+	NTimer::STime timeLastCheck = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pBridgeToRepair); f.Add(5,&pHomeTransport); f.Add(6,&bridgeSpans); f.Add(7,&fWorkLeft); f.Add(8,&fWorkDone); f.Add(9,&timeLastCheck); return 0; }
 
 public:
@@ -1378,14 +1379,14 @@ class CFormationRepairBuildingState : public IEngineerFormationState
 
 	ZDATA
 	CPtr<CFormation> pUnit;
-	EFormationRepairBuildingState eState;
+	EFormationRepairBuildingState eState = {};
 
 	CPtr<CAITransportUnit> pHomeTransport;
 	CPtr<CBuilding> pBuilding;
 
-	float fWorkAccumulator;
-	float fWorkLeft;
-	NTimer::STime lastRepearTime;
+	float fWorkAccumulator = {};
+	float fWorkLeft = {};
+	NTimer::STime lastRepearTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pHomeTransport); f.Add(5,&pBuilding); f.Add(6,&fWorkAccumulator); f.Add(7,&fWorkLeft); f.Add(8,&lastRepearTime); return 0; }
 
 	void Interrupt();
@@ -1463,10 +1464,10 @@ class CFormationPlaceChargeState : public IUnitState, public CStatusUpdatesHelpe
 	CPtr<CSoldier> pSapper;
 
 	CVec2 vTarget;
-	int nOffset;
-	EPlaceChargeState eState;
-	int nBeginAnimTime;
-	NDb::EUnitSpecialAbility eChargeType;
+	int nOffset = {};
+	EPlaceChargeState eState = {};
+	int nBeginAnimTime = {};
+	NDb::EUnitSpecialAbility eChargeType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pFormation); f.Add(3,&pSapper); f.Add(4,&vTarget); f.Add(5,&nOffset); f.Add(6,&eState); f.Add(7,&nBeginAnimTime); f.Add(8,&eChargeType); return 0; }
 	void ReturnSapper();
 	
@@ -1490,7 +1491,7 @@ class CFormationDetonateChargeState : public IUnitState
 	ZDATA
 	CPtr<CFormation>pFormation;
 	std::list< CPtr<CSoldier> > sappers;
-	int nBeginAnimTime;
+	int nBeginAnimTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&sappers); f.Add(4,&nBeginAnimTime); return 0; }
 
 public:
@@ -1514,7 +1515,7 @@ class CFormationThrowGrenadeState : public IUnitState
 	{
 		ZDATA
 		CPtr<CSoldier> pSoilder;
-		bool bPassSegment;
+		bool bPassSegment = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoilder); f.Add(3,&bPassSegment); return 0; }
 	public:
 		SThrowInfo() : bPassSegment( true ), pSoilder( 0 ) {}
@@ -1547,8 +1548,8 @@ class CFormationEntrenchSelfState : public IUnitState, public CStatusUpdatesHelp
 	OBJECT_BASIC_METHODS( CFormationEntrenchSelfState )
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CFormation> pFormation;
-	NTimer::STime timeStart;
-	bool bWaitForSoldiers;
+	NTimer::STime timeStart = {};
+	bool bWaitForSoldiers = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pFormation); f.Add(3,&timeStart); f.Add(4,&bWaitForSoldiers); return 0; }
 public:
@@ -1566,7 +1567,7 @@ class CFormationLeaveSelfEntrenchState : public IUnitState
 	OBJECT_BASIC_METHODS( CFormationLeaveSelfEntrenchState );
 	ZDATA
 	CPtr<CFormation> pFormation;
-	NTimer::STime timeStart;
+	NTimer::STime timeStart = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&timeStart); return 0; }
 public:
 	CFormationLeaveSelfEntrenchState() : pFormation( 0 ) { }
@@ -1594,8 +1595,8 @@ class CFormationFirstAidState : public IUnitState
 		ZDATA
 		CPtr<CSoldier> pPatient;
 		CPtr<CSoldier> pDoctor;
-		NTimer::STime timeHealed;
-		EPairState  eState;										// doc is near patient
+		NTimer::STime timeHealed = {};
+		EPairState  eState = {};										// doc is near patient
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPatient); f.Add(3,&pDoctor); f.Add(4,&timeHealed); f.Add(5,&eState); return 0; }
 	public:
 		~SHealingPair();
@@ -1609,7 +1610,7 @@ class CFormationFirstAidState : public IUnitState
 	CPtr<CFormation> pFormation;								// current formation
 	CPtr<CFormation> pHealeadFormation;		// heal only this formation
 	std::vector<SHealingPair> healingPairs;
-	NTimer::STime timeNextCheck;
+	NTimer::STime timeNextCheck = {};
 	CVec2 vStartPoint;										// point to heal around
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&pHealeadFormation); f.Add(4,&healingPairs); f.Add(5,&timeNextCheck); f.Add(6,&vStartPoint); return 0; }

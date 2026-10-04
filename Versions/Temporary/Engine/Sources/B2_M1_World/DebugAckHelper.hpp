@@ -1,11 +1,13 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Stats_B2_M1/AckTypes.h"
 
 struct SAckDebugHelper
 {
-	NDb::EUnitAckType eAckType;
-	const char* pszName;
+	NDb::EUnitAckType eAckType{};
+	const char* pszName = nullptr;
 };
 
 static SAckDebugHelper debugAckNames[] = 

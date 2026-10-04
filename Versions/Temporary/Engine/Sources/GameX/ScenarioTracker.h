@@ -58,7 +58,8 @@ struct IScenarioTracker : public IAIScenarioTracker
 		struct SOldReinf
 		{
 			ZDATA
-			EReinforcementState eState;
+			// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+			EReinforcementState eState = {};
 			CDBPtr<NDb::SReinforcement> pDBReinf;
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pDBReinf); return 0; }
 		};
@@ -84,13 +85,13 @@ struct IScenarioTracker : public IAIScenarioTracker
 		{
 			ZDATA
 			std::wstring wszName;
-			int nTeam; // diplomacy side
+			int nTeam = {}; // diplomacy side
 			ZSKIP//int nSide; // player slot index in MapInfo
-			int nLevel;
+			int nLevel = {};
 			std::wstring wszRank;
-			int nParty; 
-			int nIndex;
-			int nCountry;
+			int nParty = {};
+			int nIndex = {};
+			int nCountry = {};
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&nTeam); f.Add(5,&nLevel); f.Add(6,&wszRank); f.Add(7,&nParty); f.Add(8,&nIndex); f.Add(9,&nCountry); return 0; }
 		};
 		
@@ -106,10 +107,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 		struct SMessage
 		{
 			ZDATA
-			EMessageType eType;
+			EMessageType eType = {};
 			std::wstring wszRank;
-			int nLevel;
-			int nXP;
+			int nLevel = {};
+			int nXP = {};
 			CDBPtr<NDb::STexture> pMedal;
 			std::wstring wszMedalName;
 			std::wstring wszMedalDesc;
@@ -119,7 +120,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		ZDATA
 		std::vector<SPlayer> players;
 		std::wstring wszGameType;
-		ENetMode eNetMode;
+		ENetMode eNetMode = {};
 		std::vector<SMessage> messages;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&players); f.Add(3,&wszGameType); f.Add(4,&eNetMode); f.Add(5,&messages); return 0; }
 	};
@@ -131,11 +132,11 @@ struct IScenarioTracker : public IAIScenarioTracker
 		struct SLeaderStatSet
 		{
 			ZDATA
-			int nRank;
-			float fExp;
-			int nUnitsKilled;
-			int nUnitsLost;
-			float fExpDebt;
+			int nRank = {};
+			float fExp = {};
+			int nUnitsKilled = {};
+			int nUnitsLost = {};
+			float fExpDebt = {};
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&nRank); f.Add(3,&fExp); f.Add(4,&nUnitsKilled); f.Add(5,&nUnitsLost); f.Add(6,&fExpDebt); return 0; }
 			
 			SLeaderStatSet() : fExpDebt( 0.0f ) {}
@@ -167,7 +168,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		ZSKIP //int nFirstNameID;
 		ZSKIP //int nLastNameID;
 		ZSKIP //int nPictureID;
-		int nID;
+		int nID = {};
 
 		// db info
 		std::wstring wszName;
@@ -181,31 +182,31 @@ struct IScenarioTracker : public IAIScenarioTracker
 	struct SUndoLeaderInfo
 	{
 		ZDATA
-		NDb::EReinforcementType eReinf;
+		NDb::EReinforcementType eReinf = {};
 
 		ZSKIP //int nFirstNameValue;
 		ZSKIP //int nLastNameValue;
 		ZSKIP //int nPictureValue;
 
-		int nValue;
+		int nValue = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eReinf); f.Add(6,&nValue); return 0; }
 	};
 	
 	struct SChapterReinf
 	{
 		ZDATA
-		EReinforcementState eState;
+		EReinforcementState eState = {};
 		CDBPtr<NDb::SReinforcement> pDBReinf;
-		bool bFromPrevChapter;
+		bool bFromPrevChapter = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pDBReinf); f.Add(4,&bFromPrevChapter); return 0; }
 	};
 	
 	struct SPlayerColor
 	{
 		ZDATA
-		uint32_t dwColor;
+		uint32_t dwColor = {};
 		CDBPtr<NDb::SBackground> pUnitFullInfo;
-		int nColorIndex; // индекс цвета хитбара над юнитами на карте
+		int nColorIndex = {}; // индекс цвета хитбара над юнитами на карте
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwColor); f.Add(3,&pUnitFullInfo); f.Add(4,&nColorIndex); return 0; }
 		
 		SPlayerColor() : dwColor( 0 ), nColorIndex( 0 ) {}

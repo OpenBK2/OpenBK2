@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "MapObj.h"
 
 class CMOBridge : public CMapObj
@@ -7,9 +9,9 @@ class CMOBridge : public CMapObj
 	OBJECT_NOCOPY_METHODS( CMOBridge );
 	
 	CDBPtr<NDb::SBridgeRPGStats> pStats;
-	int nFrameIndex;
-	int nRandomSpan;
-	bool bDestroyed;			// once destroyed, bridge is not repeared untill full HP
+	int nFrameIndex = 0;
+	int nRandomSpan = 0;
+	bool bDestroyed = false;			// once destroyed, bridge is not repeared untill full HP
 	const NDb::SBridgeRPGStats::SElementRPGStats& GetElement() const;
 	int GetDamagedState( float fHP ) const;
 	const NDb::SVisObj* GetVisObjForHP( float fHP, int *pnDamagedState );

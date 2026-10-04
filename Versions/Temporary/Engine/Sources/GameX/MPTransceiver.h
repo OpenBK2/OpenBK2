@@ -23,17 +23,18 @@ struct SB2StartGameParams
 	struct SClient
 	{
 		ZDATA
-		int nClientID;
-		int nPlayer; // logic player
-		int nTeam; // 0 or 1
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nClientID = {};
+		int nPlayer = {}; // logic player
+		int nTeam = {}; // 0 or 1
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nClientID); f.Add(3,&nPlayer); f.Add(4,&nTeam); return 0; }
 	};
 
 	ZDATA
 	std::vector< SClient > clients;
 	CDBPtr<NDb::SMapInfo> pMapInfo;
-	int nGameID;
-	int nSpeedAdjustment;
+	int nGameID = {};
+	int nSpeedAdjustment = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&clients); f.Add(3,&pMapInfo); f.Add(4,&nGameID); f.Add(5,&nSpeedAdjustment); return 0; }
 };
 
@@ -44,23 +45,23 @@ class CMPTransceiver : public ITransceiver, public CPacketProcessorBase
 	CPtr<IServerClient> pClient;
 	CPtr<IAICmdsAutoMagic> pCmdsSerializer;
 	CPtr<ICommandsHistory> pCmdsHistory;
-	bool bIsGameRunning;
-	bool bIsGameEnded;
+	bool bIsGameRunning = {};
+	bool bIsGameEnded = {};
 
 #ifdef CHECKSUM_LIST_DEBUG
 	std::vector<int> myHistoryHashes;
 #endif
 
-	int nLatency;
-	int nSegmentsPackSize;
+	int nLatency = {};
+	int nSegmentsPackSize = {};
 
-	int nSegment;													// номер текущего сегмента
-	long nCommonSegment;
-	int nMyLogicID;												// номер "нашего" игрока
-	bool bCommandsFromHistory;
+	int nSegment = {};													// номер текущего сегмента
+	long nCommonSegment = {};
+	int nMyLogicID = {};												// номер "нашего" игрока
+	bool bCommandsFromHistory = {};
 	std::vector<uint16_t> segmFinished;
-	uint16_t wMask;
-	uint16_t wWaitMask;
+	uint16_t wMask = {};
+	uint16_t wWaitMask = {};
 	typedef std::list< CPtr<IAILogicCommandB2> > CAILogicCommandsList;		// команды для каждого игрока ( [i][j] i - номер сегмента, j - номер игрока )
 	CArray2D<CAILogicCommandsList> cmds;
 
@@ -72,7 +73,7 @@ public:
 	struct SRawCommand
 	{
 		ZDATA
-		int nTypeID;
+		int nTypeID = {};
 		CMemoryStream cmd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTypeID); f.Add(3,&cmd); return 0; }
 	};
@@ -81,23 +82,23 @@ private:
 
 	struct SPlayer
 	{
-		int nClientID;
-		int nTeam;
-		bool bLoaded;
+		int nClientID = {};
+		int nTeam = {};
+		bool bLoaded = {};
 		SPlayer() : nClientID( -1 ), bLoaded( false ) {}
 	};
 	typedef std::vector<SPlayer> CPlayersList;
 	CPlayersList players;
 
 	CDBPtr<NDb::SMapInfo> pMapInfo;
-	int nGameID;
-	bool bWaiting;
-	NTimer::STime timeStartWaiting;
+	int nGameID = {};
+	bool bWaiting = {};
+	NTimer::STime timeStartWaiting = {};
 
 	CArray2D<unsigned long> checkSums;
-	int nGameSpeed;
+	int nGameSpeed = {};
 
-	int nFinalSegment;
+	int nFinalSegment = {};
 	std::vector<int> playerRemovalSegments;
 private:
 	bool Segment() { return false; }

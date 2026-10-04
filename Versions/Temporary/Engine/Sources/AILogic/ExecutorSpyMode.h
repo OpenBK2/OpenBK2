@@ -9,7 +9,8 @@ class CExecutorSpyMode : public CExecutorUnitCombatBonus
 	OBJECT_BASIC_METHODS( CExecutorSpyMode );
 
 	CDBPtr<NDb::SHPObjectRPGStats> pEnemyStats;
-	bool bMasked;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bMasked = {};
 
 	void SwitchModel( const NDb::SHPObjectRPGStats *pStats );
 

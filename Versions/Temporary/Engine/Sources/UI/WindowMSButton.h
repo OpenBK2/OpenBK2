@@ -134,9 +134,10 @@ class CWindowMSButton : public CWindow, public IButton
 	// group that this button in
 	CObj<CButtonGroup> pButtonGroup;
 	//
-	bool bEffect;
-	NDb::EButtonSubstateType eEffectSubState;
-	NDb::EButtonSubstateType eOrigSubState;
+	// InitByDesc may reject a descriptor before setting up the button visuals.
+	bool bEffect = false;
+	NDb::EButtonSubstateType eEffectSubState = NDb::BST_NORMAL;
+	NDb::EButtonSubstateType eOrigSubState = NDb::BST_NORMAL;
 
 //	CObj<class CPlacedText> pPlacedText;
 	std::wstring wszCustomText;

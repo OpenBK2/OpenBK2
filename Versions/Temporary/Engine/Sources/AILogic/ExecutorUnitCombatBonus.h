@@ -13,7 +13,8 @@
 
 class CExecutorUnitCombatBonus : public CExecutorUnitBonus
 {
-	uint16_t modeFlags;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t modeFlags = {};
 
 protected:
 	//Callbacks

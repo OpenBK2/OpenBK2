@@ -1,4 +1,6 @@
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 #include "Misc_export.h"
 
 #include "port/unicode.h"
@@ -284,7 +286,7 @@ void ReplaceAllChars( std::basic_string<TChar> *pString, const TChar tFrom, cons
 template <typename TChar>
 class CCharSeparator
 {
-	const TChar tChr;
+	const TChar tChr{};
 public:
 	CCharSeparator( const TChar chr )
 		: tChr( chr ) {  }
@@ -363,7 +365,7 @@ struct SBracketsQuoteTest
 template <class TChar, class TBrackets = SBracketsTest<TChar> >
 class CBracketSeparator
 {
-	const TChar cSeparator;								// separator char
+	const TChar cSeparator{};								// separator char
 	std::vector<TChar> stc;										// close brackets stack
 public:
 	CBracketSeparator( const TChar _chr )
@@ -392,8 +394,8 @@ template <class TChar, class TStorage = std::basic_string<TChar>, class TSeparat
 class CStringIterator
 {
 	TStorage szInput;											// input string
-	int nPrevPos;													// previous found position
-	int nCurrPos;													// current found position
+	int nPrevPos = 0;													// previous found position
+	int nCurrPos = 0;													// current found position
 	TSeparator separator;									// separator functional
 public:
 	CStringIterator( const TChar *pszString, const TChar cSeparator )
@@ -442,8 +444,8 @@ namespace NImplementation
 {
 	struct SSearchStr
 	{
-		const char *pszBegin;
-		const int nLength;
+		const char *pszBegin = nullptr;
+		const int nLength = 0;
 		const std::string &szSample;
 
 		SSearchStr( const char *_pszBegin, const int _nLength, const std::string &_szSample )
@@ -463,7 +465,7 @@ namespace NImplementation
 
 	struct SPrefixesArray
 	{
-		const int nSampleSize;
+		const int nSampleSize = 0;
 		std::vector<int> sizes;
 
 		SPrefixesArray( const int _nSampleSize ) : nSampleSize( _nSampleSize ), sizes( nSampleSize + 2, 0 ) { }

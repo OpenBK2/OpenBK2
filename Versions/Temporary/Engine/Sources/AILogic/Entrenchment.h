@@ -23,7 +23,8 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 		CVec2 center;
 		CPtr<CSoldier> pUnit;
 		// номер сегмента, опис. данный fireplace в статах
-		int nFrameIndex;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nFrameIndex = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&center); f.Add(3,&pUnit); f.Add(4,&nFrameIndex); return 0; }
 	public:
 		SFireplaceInfo() : nFrameIndex( -1 ) { }
@@ -35,7 +36,7 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 		ZDATA
 		CPtr<CSoldier> pUnit;
 		// -1, если в резерве
-		int nFireplace;
+		int nFireplace = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nFireplace); return 0; }
 	public:
 		SInsiderInfo() { }
@@ -49,9 +50,9 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 		ZPARENT(CStormableObject)
 		ZPARENT(CRotatingFireplacesObject)
 	SRect rect;
-	int z;
+	int z = {};
 
-	int nBusyFireplaces;
+	int nBusyFireplaces = {};
 	std::vector<SFireplaceInfo> fireplaces;
 	
 	std::list<SInsiderInfo> insiders;
@@ -59,7 +60,7 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 
 	CDBPtr<SEntrenchmentRPGStats> pStats;
 
-	NTimer::STime nextSegmTime;
+	NTimer::STime nextSegmTime = {};
 
 	CSegmentList segments;			// List of segments in this section
 public:
@@ -144,16 +145,16 @@ class CEntrenchmentPart : public CExistingObject
 
 	SRect boundRect;
 
-	bool bVisible;
-	bool bOwnerChanged;			// client-dependent, for sending creation update
-	bool bDigBySegment;
+	bool bVisible = {};
+	bool bOwnerChanged = {};			// client-dependent, for sending creation update
+	bool bDigBySegment = {};
 
 	std::list<SVector> coveredTiles;
 	CObj<CFullEntrenchment> pFullEntrenchment;
 
-	NTimer::STime nextSegmTime;
-	bool bSuspendedAppear;	// client-dependent
-	bool bPlayerCreates;
+	NTimer::STime nextSegmTime = {};
+	bool bSuspendedAppear = {};	// client-dependent
+	bool bPlayerCreates = {};
 	int operator&( IBinSaver &f ) 
 	{ 
 		f.Add(1,( CExistingObject*)this); 

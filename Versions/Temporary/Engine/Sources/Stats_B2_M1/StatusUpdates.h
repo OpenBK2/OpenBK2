@@ -73,10 +73,11 @@ struct SUnitStatusUpdate : public SAIBasicUpdate
 	OBJECT_NOCOPY_METHODS( SUnitStatusUpdate )
 public:
 	ZDATA_( SAIBasicUpdate )
-		EUnitStatus eStatus;
-		int nUnitID; // sets in CUpdateStatusTransformer
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		EUnitStatus eStatus = {};
+		int nUnitID = {}; // sets in CUpdateStatusTransformer
 		ZSKIP //float fTimeToWait; // sets in constructor
-		float fRadius;
+		float fRadius = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&eStatus); f.Add(3,&nUnitID); f.Add(5,&fRadius); return 0; }
 	SUnitStatusUpdate() : eStatus( EUS_UNDEFINED ), nUnitID( -1 ), fRadius( 0.0f ) {}
 	SUnitStatusUpdate( const EUnitStatus eStatus, const bool bEnabled, const float fRadius );

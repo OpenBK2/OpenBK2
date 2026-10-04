@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "UpdatableProcess.h"
 #include "Stats_B2_M1/RPGStats.h"
 
@@ -8,11 +10,11 @@ class CIdleMechProcess : public IClientUpdatableProcess
 	OBJECT_BASIC_METHODS( CIdleMechProcess )
 
 	ZDATA
-	int nID;
+	int nID = 0;
 	std::vector<std::string> bones;
 	std::vector<int> times;
 	CDBPtr<NDb::SEffect> pEffect;
-	bool bRandomLocator;
+	bool bRandomLocator = false;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&bones); f.Add(4,&times); f.Add(5,&pEffect); f.Add(6,&bRandomLocator); return 0; }
 private:

@@ -22,18 +22,19 @@ class CQueueUnit
 	// состояние
 	CObj<IUnitState> pState;
 
-	bool bCmdFinished; // состояние само завершилось
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bCmdFinished = {}; // состояние само завершилось
 
 	CObj<CAICommand> pCmdCurrent; // текущая команда, выполняемая этим юнитом
 
-	NTimer::STime lastChangeStateTime;
+	NTimer::STime lastChangeStateTime = {};
 	
 	// some abilities must interrupt current state. But some of them will and new command to
 	// units queue during NotifyAbilityRun. This variable will guard command queue from
 	// erasing by initial command, when new command was added.
-	bool bCommandAdded;
+	bool bCommandAdded = {};
 	// sets to true when SWARM commands interrupts due attack
-	bool bDoNotDeleteMeFromCommand;
+	bool bDoNotDeleteMeFromCommand = {};
 
 	//
 	void PopCmd( const int nID );

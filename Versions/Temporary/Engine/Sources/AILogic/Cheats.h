@@ -7,22 +7,23 @@ struct SCheats
 	public: int operator&( IBinSaver &saver ); private:;
 private:
 	// просчитывать ли туман bWarFog
-	bool bWarFog;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bWarFog = {};
 	// для кого просчитывать туман
-	int nPartyForWarFog;
+	int nPartyForWarFog = {};
 
 	// загружать статич. объекты и реки или нет
-	bool bLoadObjects;
+	bool bLoadObjects = {};
 	
-	bool bTurnOffWarFog;
-	bool bHistoryPlaying;
+	bool bTurnOffWarFog = {};
+	bool bHistoryPlaying = {};
 	//
 	// убиваема или нет данная сторона
 	std::vector<uint8_t> immortals;
 	// убивает ли данная сторона с первого раза
 	std::vector<uint8_t> firstShoot;
 
-	bool bPasswordOK;
+	bool bPasswordOK = {};
 public:
 	SCheats();
 

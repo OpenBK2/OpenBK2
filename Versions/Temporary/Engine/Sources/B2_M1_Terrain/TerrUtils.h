@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "B2_M1_Terrain_export.h"
 
 #include <cmath>
@@ -16,7 +18,7 @@ const float invCoeffs[] = { 0.0f, 1.0f, 0.5f, 0.3333333f, 0.25f, 0.2f };
 class CVec2i
 {
 public:
-	int x, y;
+	int x = 0, y = 0;
 	//
 	CVec2i() {}
 	CVec2i( const int _x, const int _y ) : x( _x ), y( _y ) {}
@@ -52,8 +54,8 @@ inline bool IsInsideBB( const CVec2 &v, const CVec2 &vMin, const CVec2 &vMax )
 template<class TReal> class CVec3Ex // CRAP {not properly connected yet} CRAP
 {
 public:
-	TReal x, y, z;
-	uint8_t flag;
+	TReal x{}, y{}, z{};
+	uint8_t flag = 0;
 	//
 	CVec3Ex() {}
 	CVec3Ex( const TReal _x, const TReal _y, const TReal _z, const uint8_t _flag ) : x( _x) , y( _y ), z( _z ), flag( _flag ) {}
@@ -86,8 +88,8 @@ class CVec3dEx;
 class CVec3fEx
 {
 public:
-	float x, y, z;
-	uint8_t flag;
+	float x = 0.0f, y = 0.0f, z = 0.0f;
+	uint8_t flag = 0;
 	//
 	CVec3fEx() {}
 	//
@@ -124,8 +126,8 @@ public:
 class CVec3dEx
 {
 public:
-	double x, y, z;
-	uint8_t flag;
+	double x = 0.0, y = 0.0, z = 0.0;
+	uint8_t flag = 0;
 	//
 	CVec3dEx() {}
 	//
@@ -162,7 +164,7 @@ public:
 struct SIntersectPoint
 {
 	CVec3 vPoint;
-	float fDist;
+	float fDist = 0.0f;
 	//
 	SIntersectPoint() {}
 	SIntersectPoint( const SIntersectPoint &p ) : vPoint(p.vPoint), fDist(p.fDist) {}

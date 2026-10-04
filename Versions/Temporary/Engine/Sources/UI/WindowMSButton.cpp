@@ -108,8 +108,10 @@ int CWindowMSButton::operator&( IBinSaver &saver )
 
 void CWindowMSButton::AfterLoad()
 {
-//	SetState( pInstance->nState );
-	SwitchSubState( states[pInstance->nState].eSubState );
+	// Invalid button descriptors can leave states empty; saves retain these windows.
+	if ( pInstance && pInstance->nState >= 0 && pInstance->nState < states.size() )
+		SwitchSubState( states[pInstance->nState].eSubState );
+	// Children and font bindings still need restoration when no state can be applied.
 	CWindow::AfterLoad();
 }
 

@@ -22,8 +22,9 @@ enum EFS
 
 struct SVideoMode
 {
-	int nXSize, nYSize, nBpp, nRefreshRate;
-	EFS fullScreen;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nXSize = {}, nYSize = {}, nBpp = {}, nRefreshRate = {};
+	EFS fullScreen = {};
 	SVideoMode() { nXSize = 800, nYSize = 600; nBpp = 32; nRefreshRate = 0; fullScreen = WINDOWED; }
 	SVideoMode( int _nXSize, int _nYSize, int _nBpp, EFS _fullScreen, int _nRefreshRate = 0 )
 		:nXSize(_nXSize), nYSize(_nYSize), nBpp(_nBpp), nRefreshRate(_nRefreshRate), fullScreen(_fullScreen) {}
@@ -31,13 +32,13 @@ struct SVideoMode
 
 struct SSystemInfo
 {
-	int nDesktopWidth;
-	int nDesktopHeight;
+	int nDesktopWidth = {};
+	int nDesktopHeight = {};
 };
 
 struct SRenderTargetDesc
 {
-	int nResolution, nFormatID;
+	int nResolution = {}, nFormatID = {};
 
 	SRenderTargetDesc() : nResolution(-1), nFormatID(-1) {}
 	SRenderTargetDesc( int _nResolution, int _nFormatID ) : nResolution(_nResolution), nFormatID(_nFormatID) {}
@@ -52,8 +53,8 @@ struct SRenderTargetsInfo
 	typedef std::unordered_map<SRenderTargetDesc,int,SRTDescHash> CRTHash;
 	CRTHash targets; // resolution to number
 	CRTHash cubeTargets; // resolution to number
-	int nRegisters;
-	int nFloatRegisters;
+	int nRegisters = {};
+	int nFloatRegisters = {};
 	SRenderTargetsInfo() : nRegisters(0), nFloatRegisters(0) {}
 
 	void Clear() { targets.clear(); cubeTargets.clear(); nRegisters = 0; nFloatRegisters = 0; }
@@ -121,7 +122,7 @@ void D3DASSERT( HRESULT hRes, fmt::string_view fmtStr, const TArgs &... args )
 
 struct SRenderStats
 {
-	int nVertices, nTris, nDIPs;
+	int nVertices = {}, nTris = {}, nDIPs = {};
 	SRenderStats(): nVertices(0), nTris(0), nDIPs(0) {}
 	void Clear() { nVertices = 0; nTris = 0; nDIPs = 0;}
 };

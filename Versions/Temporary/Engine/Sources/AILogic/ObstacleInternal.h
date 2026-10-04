@@ -5,7 +5,8 @@
 class CObstacle : public IObstacle
 {
 	ZDATA
-	float fFirePower;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fFirePower = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fFirePower); return 0; }
 public:
 	CObstacle() : fFirePower( 0 ) {  }

@@ -93,7 +93,8 @@ struct SRTClearParams
 		CT_ZBUFFER_ONLY,
 		CT_FULL
 	};
-	EClearType ct;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EClearType ct = {};
 	CVec4 vColor;
 	
 	SRTClearParams() : ct(CT_FULL), vColor(0,0,0,1) {}

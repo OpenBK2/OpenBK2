@@ -8,8 +8,9 @@ class CLinkObject : public CUpdatableObj
 {
 public: 
 	ZDATA_( CUpdatableObj )
-		int nLink;
-		int nUniqueID;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nLink = {};
+		int nUniqueID = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CUpdatableObj *)this); f.Add(2,&nLink); f.Add(3,&nUniqueID); return 0; }
 public:
@@ -61,7 +62,7 @@ struct SLinkObjData
 	std::list<int> deletedUniqueObjects;
 
 	det_map< int, CObj<CLinkObject> > unitsID2object;
-	int nCurUniqueID;
+	int nCurUniqueID = {};
 	SLinkObjData() : nCurUniqueID( 0 ) {  }
 };
 

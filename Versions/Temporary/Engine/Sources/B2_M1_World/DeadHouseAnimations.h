@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "UpdatableProcess.h"
 #include "Stats_B2_M1/DBAnimB2.h"
 
@@ -7,8 +9,8 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 {
 	struct SAnimationInfo
 	{
-		int nID;
-		NTimer::STime nEndTime;
+		int nID = 0;
+		NTimer::STime nEndTime = 0;
 
 		SAnimationInfo() : nID( -1 ), nEndTime( 0 ) {}
 		SAnimationInfo( const int _nID, const NTimer::STime _nEndTime ) : nID( _nID ), nEndTime( _nEndTime ) {}

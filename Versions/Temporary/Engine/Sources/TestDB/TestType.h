@@ -2,6 +2,8 @@
 
 // automatically generated file, don't change manually!
 
+#include "TestDB_export.h"
+
 #include "TestDB/BinaryFlags.h"
 
 #include <cstdint>
@@ -12,6 +14,23 @@ struct IXmlSaver;
 
 namespace NDb
 {
+
+	struct TESTDB_EXPORT SEmptyChecksumRecord
+	{
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+
+		SEmptyChecksumRecord() :
+			__dwCheckSum( 0 )
+		{ }
+		//
+		void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
 
 	struct SWeapon : public CResource
 	{

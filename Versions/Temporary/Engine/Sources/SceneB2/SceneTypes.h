@@ -5,27 +5,28 @@ struct SSceneObjIconInfo
 {
 	struct SHitbar
 	{
-		float fValue;
-		int nColorIndex;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fValue = {};
+		int nColorIndex = {};
 	};
 	
-	int nID;
-	int nHPBarBaseLength;
-	int nHPBarPassengerLength;
-	float fAddHeight;
-	float fAlpha;
+	int nID = {};
+	int nHPBarBaseLength = {};
+	int nHPBarPassengerLength = {};
+	float fAddHeight = {};
+	float fAlpha = {};
 
-	bool bIsMainHitbar;
-	float fHPBarValue;
-	int nHPBarColorIndex;
-	float fHPBarAdditionalValue; // 2-color main hitbar
-	int nHPBarAdditionalColorIndex;
+	bool bIsMainHitbar = {};
+	float fHPBarValue = {};
+	int nHPBarColorIndex = {};
+	float fHPBarAdditionalValue = {}; // 2-color main hitbar
+	int nHPBarAdditionalColorIndex = {};
 	
 	std::vector<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType> icons;
 	std::vector<SHitbar> smallHitbars;
-	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconGroup;
-	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconLevelup;
-	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconDamagedBuilding;
+	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconGroup = {};
+	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconLevelup = {};
+	NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconDamagedBuilding = {};
 	
 	bool IsEmpty() const
 	{

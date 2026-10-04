@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 
@@ -28,18 +30,18 @@ public:
 //! гладкий путь для движения юнита внутри группы. При инициализации пути необходимо указать CGroupSmoothPath
 class COMMON_RTS_AI_EXPORT CInGroupPathBasis : public ISmoothPath
 {
-	CBasePathUnit *pUnit;
-	CBasePathUnit *pFormation;
+	CBasePathUnit *pUnit = nullptr;
+	CBasePathUnit *pFormation = nullptr;
 	ZDATA
 		ZONSERIALIZE
 		ZSKIP
 		ZSKIP
 		CPtr<CGroupSmoothPath> pSmoothGroupPath;
 		CPtr<ISmoothPath> pUnitOwnPath;
-		NTimer::STime timeToSearchPathToBack;
+		NTimer::STime timeToSearchPathToBack = 0;
 
-		bool bFinished;
-		bool bGoByOwnPath;
+		bool bFinished = false;
+		bool bGoByOwnPath = false;
 		CPtr<CAIMap> pAIMap;
 		public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(4,&pSmoothGroupPath); f.Add(5,&pUnitOwnPath); f.Add(6,&timeToSearchPathToBack); f.Add(7,&bFinished); f.Add(8,&bGoByOwnPath); f.Add(9,&pAIMap); return 0; }

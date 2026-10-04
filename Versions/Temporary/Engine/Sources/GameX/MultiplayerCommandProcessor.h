@@ -19,8 +19,9 @@ class CMPUIMessageHandler : public IMPUIMessageHandler
 {
 	OBJECT_NOCOPY_METHODS( CMPUIMessageHandler );
 	
-	TObj *pObj;
-	TMFn pMFn;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	TObj *pObj = {};
+	TMFn pMFn = {};
 public:
 	CMPUIMessageHandler() {}
 	CMPUIMessageHandler( TObj *_pObj, TMFn _pMFn ) : 

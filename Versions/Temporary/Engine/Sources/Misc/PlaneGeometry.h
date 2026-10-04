@@ -46,7 +46,8 @@ inline const CVec3 GetPointType<CVec3>( const CVec3 &vec, CVec3 *pVec3 )
 template <class TElement>
 struct SInRangeFunctional
 {
-	float fRange;
+	// Defaults cover these geometry helpers; explicit constructor values take precedence.
+	float fRange = 0.0f;
 	SInRangeFunctional() : fRange( 0 ) {}
 	SInRangeFunctional( float _fRange ) : fRange( _fRange ) {}
 
@@ -1731,7 +1732,7 @@ template<class TArray, class TElement>
 struct SModifyTilesFunctional
 {
 	TElement value;
-	TArray *pLockArray;
+	TArray *pLockArray = nullptr;
 
 	SModifyTilesFunctional( const TElement &rValue, TArray *_pLockArray )
 		: value( rValue ), pLockArray( _pLockArray )
@@ -1751,8 +1752,8 @@ template<class TArray, class TElement>
 struct SCheckTilesFunctional
 {
 	TElement value;
-	const TArray *pLockArray;
-	bool isPresent;
+	const TArray *pLockArray = nullptr;
+	bool isPresent = false;
 
 	SCheckTilesFunctional( const TElement &rValue, TArray *_pLockArray )
 		: value( rValue ), pLockArray( _pLockArray ), isPresent( false )

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "StaticPath.h"
 #include "DebugTools/DebugInfoManager.h"
 
@@ -12,7 +14,7 @@ class CCommonStaticPath : public IStaticPath
 
 	ZDATA
 		std::vector<SVector> path;
-		int nLen;
+		int nLen = 0;
 		// в тайловых координатах
 		SVector startTile, finishTile;
 		CVec2 finishPoint;

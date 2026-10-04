@@ -12,7 +12,8 @@ class CExecutorTransportReinforcement : public CExecutor
 	{
 		ZDATA
 		CPtr<CAIUnit> pUnit;
-		ETransportStates eState;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		ETransportStates eState = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); return 0; }
 	};
 	typedef std::vector< STransportInfo > CTransportList;

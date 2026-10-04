@@ -14,7 +14,8 @@ template <typename TObj, typename TMsg>
 class CGMMemFunBoolObserver : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunBoolObserver );
-	bool (TObj::*pfnMemFun)( const TMsg &msg );
+	// Empty observers start without callbacks; bound constructors retain their supplied values.
+	bool (TObj::*pfnMemFun)( const TMsg &msg ) = nullptr;
 public:
 	CGMMemFunBoolObserver() {  }
 	CGMMemFunBoolObserver( bool (TObj::*_pfnMemFun)( const TMsg &_msg ) ) 
@@ -31,8 +32,8 @@ template <typename TObj, typename TMsg, typename T1>
 class CGMMemFunBoolObserver1 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunBoolObserver1 );
-	bool (TObj::*pfnMemFun)( const TMsg &msg, T1 p1 );
-	T1 p1;
+	bool (TObj::*pfnMemFun)( const TMsg &msg, T1 p1 ) = nullptr;
+	T1 p1 = {};
 public:
 	CGMMemFunBoolObserver1() {}
 	CGMMemFunBoolObserver1( bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
@@ -49,9 +50,9 @@ template <typename TObj, typename TMsg, typename T1, typename T2>
 class CGMMemFunBoolObserver2 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunBoolObserver2 );
-	bool (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 );
-	T1 p1;
-	T2 p2;
+	bool (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ) = nullptr;
+	T1 p1 = {};
+	T2 p2 = {};
 public:
 	CGMMemFunBoolObserver2() {}
 	CGMMemFunBoolObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
@@ -70,7 +71,7 @@ template <typename TObj, typename TMsg>
 class CGMMemFunObserver : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunObserver );
-	void (TObj::*pfnMemFun)( const TMsg &msg );
+	void (TObj::*pfnMemFun)( const TMsg &msg ) = nullptr;
 public:
 	CGMMemFunObserver() {  }
 	CGMMemFunObserver( void (TObj::*_pfnMemFun)( const TMsg &msg ) ) : pfnMemFun( _pfnMemFun ) {}
@@ -89,8 +90,8 @@ template <typename TObj, typename TMsg, typename T1>
 class CGMMemFunObserver1 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunObserver1 );
-	void (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1 );
-	T1 p1;
+	void (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1 ) = nullptr;
+	T1 p1 = {};
 public:
 	CGMMemFunObserver1() {}
 	CGMMemFunObserver1( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
@@ -110,9 +111,9 @@ template <typename TObj, typename TMsg, typename T1, typename T2>
 class CGMMemFunObserver2 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMMemFunObserver2 );
-	void (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 );
-	T1 p1;
-	T2 p2;
+	void (TObj::*pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ) = nullptr;
+	T1 p1 = {};
+	T2 p2 = {};
 public:
 	CGMMemFunObserver2() {}
 	CGMMemFunObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
@@ -134,7 +135,7 @@ template <typename TMsg>
 class CGMFunBoolObserver : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunBoolObserver );
-	bool (*pfnFun)( const TMsg &_msg );
+	bool (*pfnFun)( const TMsg &_msg ) = nullptr;
 public:
 	CGMFunBoolObserver() {  }
 	CGMFunBoolObserver( bool (*_pfnFun)( const TMsg &_msg ) ) 
@@ -146,8 +147,8 @@ template <typename TMsg, typename T1>
 class CGMFunBoolObserver1 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunBoolObserver1 );
-	bool (*pfnFun)( const TMsg &_msg, T1 _p1 );
-	T1 p1;
+	bool (*pfnFun)( const TMsg &_msg, T1 _p1 ) = nullptr;
+	T1 p1 = {};
 public:
 	CGMFunBoolObserver1() {  }
 	CGMFunBoolObserver1( bool (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
@@ -159,9 +160,9 @@ template <typename TMsg, typename T1, typename T2>
 class CGMFunBoolObserver2 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunBoolObserver2 );
-	bool (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 );
-	T1 p1;
-	T2 p2;
+	bool (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ) = nullptr;
+	T1 p1 = {};
+	T2 p2 = {};
 public:
 	CGMFunBoolObserver2() {  }
 	CGMFunBoolObserver2( bool (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
@@ -175,7 +176,7 @@ template <typename TMsg>
 class CGMFunObserver : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunObserver );
-	void (*pfnFun)( const TMsg &_msg );
+	void (*pfnFun)( const TMsg &_msg ) = nullptr;
 public:
 	CGMFunObserver() {  }
 	CGMFunObserver( void (*_pfnFun)( const TMsg &_msg ) ) 
@@ -187,8 +188,8 @@ template <typename TMsg, typename T1>
 class CGMFunObserver1 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunObserver1 );
-	void (*pfnFun)( const TMsg &_msg, T1 _p1 );
-	T1 p1;
+	void (*pfnFun)( const TMsg &_msg, T1 _p1 ) = nullptr;
+	T1 p1 = {};
 public:
 	CGMFunObserver1() {  }
 	CGMFunObserver1( void (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
@@ -200,9 +201,9 @@ template <typename TMsg, typename T1, typename T2>
 class CGMFunObserver2 : public IGMObserver
 {
 	OBJECT_NOCOPY_METHODS( CGMFunObserver2 );
-	void (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 );
-	T1 p1;
-	T2 p2;
+	void (*pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ) = nullptr;
+	T1 p1 = {};
+	T2 p2 = {};
 public:
 	CGMFunObserver2() {  }
 	CGMFunObserver2( void (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 

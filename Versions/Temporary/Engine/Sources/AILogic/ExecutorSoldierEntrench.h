@@ -10,7 +10,8 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 
 	ZDATA_(CExecutorUnitBase)
 	CPtr<CAIUnit> pUnit;  
-	float					fEntrenchTimeCoeff;					//Used for Mobile Fortress ability
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float					fEntrenchTimeCoeff = {};					//Used for Mobile Fortress ability
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitBase*)this); f.Add(2,&pUnit); f.Add(3,&fEntrenchTimeCoeff); return 0; }
 	// if 0 then ability must be switched off
 	float OnAbilityActive();

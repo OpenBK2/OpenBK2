@@ -1,5 +1,7 @@
 
 #pragma once
+
+// Defensive member defaults; explicit constructor values still take precedence.
 template <class T, class TCmp>
 class CSortedVector
 {
@@ -58,7 +60,7 @@ class CHeap
 	
 	// нумерация элементов от 1!
 	std::vector<T> heap;
-	int nEl;
+	int nEl = 0;
 
 	// перебалансирует, начиная с эл. k и вверх
 	int Balance( int k );

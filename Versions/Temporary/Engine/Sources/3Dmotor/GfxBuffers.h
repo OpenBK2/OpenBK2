@@ -54,7 +54,8 @@ namespace NGfx
 struct S3DTriangle
 {
 	enum { ID = 100 };
-	uint16_t i1, i2, i3;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t i1 = {}, i2 = {}, i3 = {};
 
 	S3DTriangle() {}
 	S3DTriangle( uint16_t _i1, uint16_t _i2, uint16_t _i3 ): i1(_i1), i2(_i2), i3(_i3) {}
@@ -135,7 +136,7 @@ template<class TElement>
 class CBufferLock
 {
 	CPtr<ILinearBuffer> pObj;
-	TElement *pStart;
+	TElement *pStart = {};
 	typedef TElement Element;
 public:
 	template<class T>
@@ -195,10 +196,10 @@ public:
 template<class TPixel>
 class CTextureLock
 {
-	I2DBufferLock *pLock;
-	NGfx::EAccess access;
+	I2DBufferLock *pLock = {};
+	NGfx::EAccess access = {};
 	std::vector<void*> raws;
-	int nXSize, nYSize, nStride;
+	int nXSize = {}, nYSize = {}, nStride = {};
 	typedef TPixel Element;
 	
 	CTextureLock( const CTextureLock &a ) { ASSERT( 0 ); }

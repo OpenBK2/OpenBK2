@@ -25,14 +25,15 @@ struct IAIScenarioTracker : public CObjectBase
 
 	struct SKillInfo
 	{
-		int nPlayer;
-		NDb::EDBUnitRPGType eUnitType;
-		NDb::EReinforcementType eReinfType;
-		int nKilledUnitPlayer;
-		NDb::EDBUnitRPGType eKilledUnitType;
-		NDb::EReinforcementType eKilledReinfType;
-		float fExpPrice;
-		bool bInfantryKill;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		int nPlayer = {};
+		NDb::EDBUnitRPGType eUnitType = {};
+		NDb::EReinforcementType eReinfType = {};
+		int nKilledUnitPlayer = {};
+		NDb::EDBUnitRPGType eKilledUnitType = {};
+		NDb::EReinforcementType eKilledReinfType = {};
+		float fExpPrice = {};
+		bool bInfantryKill = {};
 	};
 
 	//virtual bool IsSingleplayer() const { return true; }

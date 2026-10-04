@@ -30,23 +30,24 @@ class CBridgeSpan : public CGivenPassabilityStObject
 
 	ZSKIP//CArray2D<uint8_t> unlockTypes;	// разлоканные типы террэйна, 0 - если нечего было разлокивать
 	CObj<CFullBridge> pFullBridge;
-	bool bNewBuilt;												// этот мост построили во время тгры
-	bool bLocked;													// залочены ли тайл
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bNewBuilt = {};												// этот мост построили во время тгры
+	bool bLocked = {};													// залочены ли тайл
 
 	std::list<SObjTileInfo> oldTilesInfo;      // информация о залоканых тайлах, где теперь стоит мост
-	int nOldHeightsID;										// информация о высотах, где теперь стоит мост
+	int nOldHeightsID = {};										// информация о высотах, где теперь стоит мост
 
 	// умирает данный сегмент, начинает удалять все вокруг.
-	bool bDeletingAround;
+	bool bDeletingAround = {};
 
-	int nScriptID;
+	int nScriptID = {};
 
 	//DEBUG{
 	std::vector<CPtr<CObjectBase> > segments;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,&pStats); f.Add(4,&pFullBridge); f.Add(5,&bNewBuilt); f.Add(6,&bLocked); f.Add(7,&oldTilesInfo); f.Add(8,&nOldHeightsID); f.Add(9,&bDeletingAround); f.Add(10,&nScriptID); f.Add(11,&segments); return 0; }
 #ifndef _FINALRELEASE
-	int nTilesMarkerID;
+	int nTilesMarkerID = {};
 
 	void DisplayBridgeTiles();
 #endif
@@ -109,7 +110,7 @@ class CFullBridge : public CLinkObject
 	std::list<CBridgeSpan*> spans;					// построенные части моста
 	std::list<CBridgeSpan*> projectedSpans;	// части моста, которые находятся в проекте
 
-	bool bGivingDamage;
+	bool bGivingDamage = {};
 public:
 	struct SSpanLock : public CAIObjectBase
 	{
@@ -117,7 +118,7 @@ public:
 public: int operator&( IBinSaver &saver ); private:
 		std::list<SVector> tiles;
 		std::list<EAIClasses> formerTiles;
-		CBridgeSpan * pSpan;
+		CBridgeSpan * pSpan = {};
 	public:
 		//
 		SSpanLock(): pSpan( 0 ) {  }
@@ -128,8 +129,8 @@ public: int operator&( IBinSaver &saver ); private:
 private:
 	typedef std::list< CPtr<SSpanLock> > LockedSpans;
 	LockedSpans lockedSpans;
-	int nSpans;														//full number of bridge spans
-	bool bLockingBridge;
+	int nSpans = {};														//full number of bridge spans
+	bool bLockingBridge = {};
 
 public:
 	CFullBridge()	: bGivingDamage( false ), nSpans( 0 ), bLockingBridge( true ) { SetUniqueIdForObjects(); }

@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 
@@ -29,7 +31,7 @@ public:
 class COMMON_RTS_AI_EXPORT CStandartSmoothPathBasis : public ISmoothPath
 {
 	// владелец пути
-	CBasePathUnit *pUnit;
+	CBasePathUnit *pUnit = nullptr;
 	ZDATA
 		ZONSERIALIZE
 		ZSKIP
@@ -37,12 +39,12 @@ class COMMON_RTS_AI_EXPORT CStandartSmoothPathBasis : public ISmoothPath
 		CPtr<IPath> pPath;
 		CBSpline spline;
 
-		bool bFinished, bStopped;
+		bool bFinished = false, bStopped = false;
 
 		CVec2 p0, p1, p2, p3;
 		CVec2 predPoint;
-		int nIter;
-		int nPoints;
+		int nIter = 0;
+		int nPoints = 0;
 		CPtr<CAIMap> pAIMap;
 		public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&pPath); f.Add(4,&spline); f.Add(5,&bFinished); f.Add(6,&bStopped); f.Add(7,&p0); f.Add(8,&p1); f.Add(9,&p2); f.Add(10,&p3); f.Add(11,&predPoint); f.Add(12,&nIter); f.Add(13,&nPoints); f.Add(14,&pAIMap); return 0; }

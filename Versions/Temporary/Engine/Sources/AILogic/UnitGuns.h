@@ -14,21 +14,22 @@ class CUnitGuns : public CAIObjectBase
 {
 	struct SWeaponPathInfo
 	{
-		float fRadius;
-		NTimer::STime time;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fRadius = {};
+		NTimer::STime time = {};
 		CPtr<IStaticPath> pStaticPath;
 	};
 
 	ZDATA
-	float fMaxFireRange;
-	bool bCanShootToPlanes;
+	float fMaxFireRange = {};
+	bool bCanShootToPlanes = {};
 
 	std::vector< CPtr<SCommonGunInfo> > commonGunsInfo;
 	std::vector< CObj<CBasicGun> > guns;
 	std::vector<int> gunsBegins;
-	int nCommonGuns;
+	int nCommonGuns = {};
 	// с priority 0
-	int nMainGun;
+	int nMainGun = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fMaxFireRange); f.Add(3,&bCanShootToPlanes); f.Add(4,&commonGunsInfo); f.Add(5,&guns); f.Add(6,&gunsBegins); f.Add(7,&nCommonGuns); f.Add(8,&nMainGun); return 0; }
 
 	//
@@ -81,7 +82,7 @@ class CMechUnitGuns : public CUnitGuns
 	OBJECT_BASIC_METHODS( CMechUnitGuns );	
 
 	ZDATA_(CUnitGuns)
-	int nFirstArtGun;
+	int nFirstArtGun = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CUnitGuns*)this); f.Add(2,&nFirstArtGun); return 0; }
 public:
 	CMechUnitGuns() : nFirstArtGun( -1 ) { }

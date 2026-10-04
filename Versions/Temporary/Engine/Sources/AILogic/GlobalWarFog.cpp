@@ -44,7 +44,8 @@ static CArray2D1Bit visit;
 
 struct SMaskVisitor
 {
-	int nMaxRadius;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nMaxRadius = {};
 	SMaskVisitor() : nMaxRadius( theWarFog.GetMaxRadius() ) {}
 	
 	bool operator()( const SVector &vOffset, const bool bVisible )
@@ -65,7 +66,7 @@ struct SMaskVisitor
 
 struct SGetLastVisitor
 {
-	bool bLastVisit;
+	bool bLastVisit = {};
 	SGetLastVisitor() : bLastVisit( false ) {}
 
 	bool operator()( const SVector &vOffset, const bool bVisible )

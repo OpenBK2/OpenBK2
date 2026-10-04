@@ -499,7 +499,8 @@ struct SOnlyDirNeed
 class CTilesColl
 {
 public:
-	std::list<SVector> *pTiles;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	std::list<SVector> *pTiles = {};
 	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) { }
 
 	void operator()( const int x, const int y )

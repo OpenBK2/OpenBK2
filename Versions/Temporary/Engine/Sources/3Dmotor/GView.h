@@ -59,10 +59,11 @@ struct SRoomInfo
 {
 	typedef unsigned short ushort;
 	ZDATA
-	ushort nLightFlags;
-	short nFloor;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ushort nLightFlags = {};
+	short nFloor = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLightFlags); f.Add(3,&nFloor); return 0; }
-	short nLODFlags;
+	short nLODFlags = {};
 	//
 	SRoomInfo(): nLightFlags(0), nFloor(0), nLODFlags(0) {}
 	SRoomInfo( int _nLightFlags, int _nFloor, int _nLODFlags = 0 ): nLightFlags(_nLightFlags), nFloor(_nFloor), nLODFlags(_nLODFlags) {}
@@ -74,7 +75,7 @@ struct SFullRoomInfo
 	ZDATA
 	SRoomInfo room;
 	CPtr<CObjectBase> pUser;
-	int nUserID; // top 8 bits are used for material number
+	int nUserID = {}; // top 8 bits are used for material number
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&room); f.Add(3,&pUser); f.Add(4,&nUserID); return 0; }
 	//
 	SFullRoomInfo() : nUserID(0) {}
@@ -125,9 +126,9 @@ public:
 
 class CMeshAnimStuff
 {
-	const NDb::SModel *pModel;
-	CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation;
-	std::vector<CPtr<CFuncBase<float> > > *pTransparencyAnimations;
+	const NDb::SModel *pModel = {};
+	CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation = {};
+	std::vector<CPtr<CFuncBase<float> > > *pTransparencyAnimations = {};
 public:
 	CMeshAnimStuff( const NDb::SModel *pM, CFuncBase<NAnimation::SGrannySkeletonPose> *pA, std::vector<CPtr<CFuncBase<float> > > *pTA = 0 ) :
 		pModel(pM), pAnimation(pA), pTransparencyAnimations(pTA) {}
@@ -142,11 +143,11 @@ class IGameView : public CObjectBase
 public:
 	struct SDrawInfo
 	{
-		CTransformStack *pTS; // pTS на весь экран
-		NGfx::CTexture *pTarget; // render to texture if not 0
+		CTransformStack *pTS = {}; // pTS на весь экран
+		NGfx::CTexture *pTarget = {}; // render to texture if not 0
 		CVec2 vOrigin, vSize; // in [0,1] diapason
 		SRTClearParams rtClear;
-		bool bUseDefaultClearColor, bShadows;
+		bool bUseDefaultClearColor = {}, bShadows = {};
 
 		SDrawInfo() : pTS(0), vOrigin(0,0), vSize(1,1), bUseDefaultClearColor(true), pTarget(0), bShadows(true) {}
 	};
@@ -155,9 +156,9 @@ public:
 		ZDATA
 		CObj<CPtrFuncBase<CObjectInfo> > pGeometry;
 		CObj<IMaterial> pMaterial;
-		int nOrigMeshIndex;
-		bool bAnimated;
-		bool bWindAffected;
+		int nOrigMeshIndex = {};
+		bool bAnimated = {};
+		bool bWindAffected = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGeometry); f.Add(3,&pMaterial); f.Add(4,&nOrigMeshIndex); f.Add(5,&bAnimated); f.Add(6,&bWindAffected); return 0; }
 		SPartInfo() : nOrigMeshIndex(-1), bAnimated(true), bWindAffected(false) {}
 		SPartInfo( CPtrFuncBase<CObjectInfo> *_pGeom, IMaterial *_pMat, int _nOrigMeshIndex = (-1) )

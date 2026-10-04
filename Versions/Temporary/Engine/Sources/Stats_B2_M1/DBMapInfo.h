@@ -888,7 +888,9 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		SReinforcementEnable() { }
+		SReinforcementEnable() :
+			__dwCheckSum( 0 )
+		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		//
@@ -908,7 +910,9 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		SReinforcementDisable() { }
+		SReinforcementDisable() :
+			__dwCheckSum( 0 )
+		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		//

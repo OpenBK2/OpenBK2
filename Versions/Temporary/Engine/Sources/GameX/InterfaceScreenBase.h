@@ -16,15 +16,16 @@ class CInterfaceScreenBase : public IInterfaceBase, protected NInput::CGMORegCon
 	const std::string szInterfaceType;		// interface type - "InterMission", "Mission", etc.
 	const std::string szBindSection;			// this interface bind section
 	//
-	NTimer::STime nTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime nTime = {};
 	CObj<class CWindowTextView> pVersionWindow;
-	bool bInFocus;
+	bool bInFocus = {};
 	CVec2 vLastScreenSize;
-	bool bShowScreenOnGetFocus;
+	bool bShowScreenOnGetFocus = {};
 	std::unordered_map<int,bool> registeredIDsForMLHandler;
 
 	// Is interface transparent and we should draw under it
-	bool bIsTransparent;
+	bool bIsTransparent = {};
 
 private:
 	bool MsgLButtonDown( const SGameMessage &msg );

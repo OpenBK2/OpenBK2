@@ -13,7 +13,8 @@ class CRegisterGroupCommand : public IAILogicCommandB2
 	//
 	ZDATA
 		std::vector<int> unitsIDs;					// IDs of all obejcts in group
-	uint16_t nID;														// ID of the group
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t nID = {};														// ID of the group
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&unitsIDs); f.Add(3,&nID); return 0; }
 public:
 	CRegisterGroupCommand() { }
@@ -41,7 +42,7 @@ class CUnregisterGroupCommand : public IAILogicCommandB2
 	OBJECT_BASIC_METHODS( CUnregisterGroupCommand );
 	//
 	ZDATA
-		int nGroup;
+		int nGroup = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nGroup); return 0; }
 public:
 	CUnregisterGroupCommand() { }
@@ -65,8 +66,8 @@ class CB2GroupCommand : public IAILogicCommandB2
 	//
 	ZDATA
 		SAIUnitCmd command;									// command itself
-	uint16_t wGroup;												// group ID, this command for
-	bool bPlaceInQueue;									// do we need place this command in the group's queue
+	uint16_t wGroup = {};												// group ID, this command for
+	bool bPlaceInQueue = {};									// do we need place this command in the group's queue
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wGroup); f.Add(4,&bPlaceInQueue); return 0; }
 public:
 	CB2GroupCommand() { }
@@ -91,8 +92,8 @@ class CUnitCommand : public IAILogicCommandB2
 	//
 	ZDATA
 		SAIUnitCmd command;									// command itself
-	uint16_t wID;														// group ID - result of this command :)
-	int nPlayer;												// player number
+	uint16_t wID = {};														// group ID - result of this command :)
+	int nPlayer = {};												// player number
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&command); f.Add(3,&wID); f.Add(4,&nPlayer); return 0; }
 public:
 	CUnitCommand() { }

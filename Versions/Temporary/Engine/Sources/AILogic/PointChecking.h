@@ -9,9 +9,10 @@ class CAttackPointChecking : public IPointChecking
 	OBJECT_BASIC_METHODS( CAttackPointChecking );
 
 	ZDATA
-	float fRangeMin, fRangeMax;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fRangeMin = {}, fRangeMax = {};
 	SVector targetTile;
-	bool bIgnoreObstacles;
+	bool bIgnoreObstacles = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fRangeMin); f.Add(3,&fRangeMax); f.Add(4,&targetTile); f.Add(5,&bIgnoreObstacles); return 0; }
 public:
 	CAttackPointChecking() { }
@@ -27,9 +28,9 @@ class CAttackSideChecking : public IPointChecking
 
 	ZDATA
 	SAIAngle wAttackDir, wHalfAngle;
-	float fRangeMin, fRangeMax;
+	float fRangeMin = {}, fRangeMax = {};
 	SVector targetTile;
-	bool bIgnoreObstacles;
+	bool bIgnoreObstacles = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&wAttackDir); f.Add(3,&wHalfAngle); f.Add(4,&fRangeMin); f.Add(5,&fRangeMax); f.Add(6,&targetTile); f.Add(7,&bIgnoreObstacles); return 0; }
 public:
 	CAttackSideChecking() { }
@@ -43,7 +44,7 @@ class CGoToDistance : public IPointChecking
 {
 	OBJECT_BASIC_METHODS( CGoToDistance );
 
-	float tileDistance2;
+	float tileDistance2 = {};
 	SVector targetTile;
 
 public:
@@ -61,9 +62,9 @@ class CAttackStObjectChecking : public IPointChecking
 	OBJECT_BASIC_METHODS( CAttackStObjectChecking );
 
 	ZDATA
-	float fRangeMin, fRangeMax;
+	float fRangeMin = {}, fRangeMax = {};
 	CPtr<CStaticObject> pObj;
-	bool bIgnoreObstacles;
+	bool bIgnoreObstacles = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&fRangeMin); f.Add(3,&fRangeMax); f.Add(4,&pObj); f.Add(5,&bIgnoreObstacles); return 0; }
 public:
 	CAttackStObjectChecking() { }

@@ -41,8 +41,9 @@ struct SBehaviour
 
 public:
 	ZDATA
-	EMoving moving;
-	EFire fire;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	EMoving moving = {};
+	EFire fire = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&moving); f.Add(3,&fire); return 0; }
 public:
 
@@ -57,31 +58,31 @@ class CAIUnit;
 class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit, public CQueueUnit
 {
 	SBehaviour beh;
-	NTimer::STime lastBehTime;
+	NTimer::STime lastBehTime = {};
 
 	CPtr<CBasicGun> pLockingGun;
 	CVec2 vBattlePos;
 	SAIAngle wReserveDir;
 	CPtr<CAIUnit> pTruck;
 
-	bool bSelectable;
+	bool bSelectable = {};
 
-	float fDesirableSpeed;
+	float fDesirableSpeed = {};
 	CPtr<CCommonUnit> pFollowedUnit;
 	// минимальная желательная скорость из-за того, что за нами кто-то следует
-	float fMinFollowingSpeed;
+	float fMinFollowingSpeed = {};
 	CVec2 vFollowShift;
 
 	CObj<IShootEstimator> pShootEstimator;
 	
-	bool bCanBeFrozenByState;
-	bool bCanBeFrozenByScan;
-	NTimer::STime nextFreezeScan;
-	float fPrice;
+	bool bCanBeFrozenByState = {};
+	bool bCanBeFrozenByScan = {};
+	NTimer::STime nextFreezeScan = {};
+	float fPrice = {};
 	CVec3 vOldPlacement;
 	CQuat qStart;
 	CQuat qFinish;
-	int nCommandLeft;
+	int nCommandLeft = {};
 protected:
 	IShootEstimator* GetShootEstimator() { return pShootEstimator; }
 	virtual void NullSegmTime() {};

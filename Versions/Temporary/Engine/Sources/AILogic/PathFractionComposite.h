@@ -10,9 +10,10 @@ class CPathFractionComposite : public CPathFractionComplexBase
 ZDATA_(CPathFractionComplexBase)
 	std::vector<CVec3> points;
 	std::vector<CVec3> normales;
-	int nIndex;															// point index
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nIndex = {};															// point index
 	
-	float fSplineProgress;									// move by spline (0..1)
+	float fSplineProgress = {};									// move by spline (0..1)
 	CVec3 p0, p1, p2, p3;										// points to init spline
 	ZSKIP	
 	CAnalyticBSpline3 spline;
@@ -21,9 +22,9 @@ ZDATA_(CPathFractionComplexBase)
 	CVec3 vSpeed;
 	CVec3 vNormale;
 	
-	float fPathLenght;											// 
+	float fPathLenght = {};											//
 	CPtr<IPathFraction> pInitialPath;
-	bool bFinished;
+	bool bFinished = {};
 
 	CVec3 vPosLastPoint;					
 	CVec3 vSpeedLastPoint;

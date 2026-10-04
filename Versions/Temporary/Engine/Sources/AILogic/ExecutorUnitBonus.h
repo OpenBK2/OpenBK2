@@ -21,9 +21,10 @@ protected:
 	CPtr<CAIUnit>										pUnit;
 private:
 	CDBPtr<NDb::SUnitStatsModifier> pModifier;
-	NTimer::STime										timeLastUpdate;
-	bool														bBonusApplied;
-	EUnitStatus											eStatus;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime										timeLastUpdate = {};
+	bool														bBonusApplied = {};
+	EUnitStatus											eStatus = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitBase*)this); f.Add(2,&pUnit); f.Add(3,&pModifier); f.Add(4,&timeLastUpdate); f.Add(5,&bBonusApplied); f.Add(6,&eStatus); return 0; }
 protected:

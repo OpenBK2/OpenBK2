@@ -34,13 +34,14 @@ namespace NCamera
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SCameraLimits
 	{
-		float fMin;
-		float fMax;
-		float fAve;
-		float fAutoSpeed;
-		float fManualSpeed;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fMin = {};
+		float fMax = {};
+		float fAve = {};
+		float fAutoSpeed = {};
+		float fManualSpeed = {};
 
-		bool bCyclic;
+		bool bCyclic = {};
 
 		SCameraLimits() 
 			: fMin( 0.0f ), fMax( 0.0f ), fAve( 0.0f ), fAutoSpeed( 0.0f ), fManualSpeed( 0.0f ), bCyclic( false )
@@ -65,7 +66,7 @@ namespace NCamera
 		//	fPitch - in Degrees
 		//	fFOV - in Degrees
 		//
-		float fRoll;
+		float fRoll = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,( NDb::SScriptCameraPlacement *)this); f.Add(2,&fRoll); return 0; }
 
 		CCameraPlacement()

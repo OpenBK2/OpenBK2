@@ -28,14 +28,15 @@ class CAntiArtillery : public CLinkObject
 {
 	OBJECT_BASIC_METHODS( CAntiArtillery );
 	
-	float fMaxRadius;
-	int nParty;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fMaxRadius = {};
+	int nParty = {};
 
-	NTimer::STime lastScan;
+	NTimer::STime lastScan = {};
 	// время последнего услышанного выстрела и последнего посланного круга из этой артиллерии для каждой из сторон
 	std::vector<NTimer::STime> lastShotTime;
 	std::vector<NTimer::STime> lastRevealCircleTime;
-	bool bIsAA;		// is the gun an Anti-Aircraft Gun?
+	bool bIsAA = {};		// is the gun an Anti-Aircraft Gun?
 
 	// расстояние до ближайшего врага ( считается только для врагов )
 	std::vector<float> closestEnemyDist2;

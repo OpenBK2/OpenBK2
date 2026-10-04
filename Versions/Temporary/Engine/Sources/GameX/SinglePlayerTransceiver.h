@@ -14,13 +14,14 @@ class CSinglePlayerTransceiver : public ITransceiver
 		// история команд
 		CPtr<ICommandsHistory> pCmdsHistory;
 	// общий номер сегмента - для истории команд
-	long nCommonSegment;
-	bool bCommandsFromHistory;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	long nCommonSegment = {};
+	bool bCommandsFromHistory = {};
 	CPtr<IAILogic> pAI;
-	int nAdjustedGameSpeed;
-	int nGameSpeed;
-	NTimer::STime nStartCountingTime;
-	int nFrames;
+	int nAdjustedGameSpeed = {};
+	int nGameSpeed = {};
+	NTimer::STime nStartCountingTime = {};
+	int nFrames = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCmdsHistory); f.Add(3,&nCommonSegment); f.Add(4,&bCommandsFromHistory); f.Add(5,&pAI); f.Add(6,&nAdjustedGameSpeed); f.Add(7,&nGameSpeed); f.Add(8,&nStartCountingTime); f.Add(9,&nFrames); return 0; }
 	void AdjustGameSpeed( const int nDelta );
 public:

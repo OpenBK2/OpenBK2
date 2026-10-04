@@ -34,7 +34,8 @@ struct ITransceiver : public CObjectBase
 
 struct SReplayInfo
 {
-	bool bDoReplay;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bDoReplay = {};
 	std::string szReplayName;
 	SReplayInfo() : bDoReplay(false) {}
 	SReplayInfo( const std::string &_sz ) : bDoReplay(true), szReplayName(_sz) {}

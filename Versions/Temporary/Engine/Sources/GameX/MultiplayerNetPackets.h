@@ -10,7 +10,8 @@ class CB2SlotInfoPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2SlotInfoPacket );
 public:
 	ZDATA
-	int nSlot;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSlot = {};
 	SMPSlot info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlot); f.Add(3,&info); return 0; }
 
@@ -36,8 +37,8 @@ public:
 	struct SShortSlotInfo
 	{
 		ZDATA
-		uint8_t nCountry;
-		uint8_t nTeam;
+		uint8_t nCountry = {};
+		uint8_t nTeam = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCountry); f.Add(3,&nTeam); return 0; }
 	};
 	ZDATA
@@ -54,7 +55,7 @@ class CB2SuggestKickPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2SuggestKickPacket );
 public:
 	ZDATA
-	uint8_t nSlotToKick;
+	uint8_t nSlotToKick = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlotToKick); return 0; }
 
 	CB2SuggestKickPacket() {}
@@ -66,8 +67,8 @@ class CB2LagTimeUpdatePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2LagTimeUpdatePacket );
 public:
 	ZDATA
-	int nPlayer;
-	int nTimeLeft;
+	int nPlayer = {};
+	int nTimeLeft = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nPlayer); f.Add(3,&nTimeLeft); return 0; }
 
 	CB2LagTimeUpdatePacket() {}
@@ -79,7 +80,7 @@ class CB2UserPausePacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2UserPausePacket );
 public:
 	ZDATA
-	bool bPaused;
+	bool bPaused = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bPaused); return 0; }
 
 	CB2UserPausePacket() : bPaused( false ) {}
@@ -95,8 +96,8 @@ class CB2DropPlayerAtSegmentPacket : public CNetPacket
 	OBJECT_NOCOPY_METHODS( CB2DropPlayerAtSegmentPacket );
 public:
 	ZDATA
-		uint8_t nSlotToDrop;
-		int nSegment;
+		uint8_t nSlotToDrop = {};
+		int nSegment = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSlotToDrop); f.Add(3,&nSegment); return 0; }
 
 	CB2DropPlayerAtSegmentPacket() : nSlotToDrop( 0 ), nSegment( 0 ) {}

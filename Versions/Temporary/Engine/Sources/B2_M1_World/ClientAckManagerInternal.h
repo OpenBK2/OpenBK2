@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "ClientAckManager.h"
 #include "Misc/HashFuncs.h"
 
@@ -28,8 +30,8 @@ class CClientAckManager : public IClientAckManager
 	{
 		typedef std::unordered_map<CPtr<IMOUnit>, bool, SPtrHash> CBoredUnits;
 		CBoredUnits boredUnits;							
-		int nCounter;												// для оптимизации - размер boredUnits
-		NTimer::STime timeLastBored;				// time for last bored sound
+		int nCounter = 0;												// для оптимизации - размер boredUnits
+		NTimer::STime timeLastBored = 0;				// time for last bored sound
 		void Copy( const CBoredUnitsContainer &cp );
 	public:
 		int operator&( IBinSaver &save );
@@ -53,9 +55,9 @@ class CClientAckManager : public IClientAckManager
 	// 
 	struct SAck
 	{
-		NDb::EUnitAckType eAck;
+		NDb::EUnitAckType eAck{};
 		CDBPtr<NDb::SComplexSoundDesc> pSound;
-		enum ESoundMixType eMixType;
+		enum ESoundMixType eMixType{};
 
 		int operator&( IBinSaver &saver );
 		bool operator==( const SAck & ack ) const { return eAck == ack.eAck; }
@@ -66,9 +68,9 @@ class CClientAckManager : public IClientAckManager
 	{
 		int operator&( IBinSaver &saver );
 		CAcks acks;													// очередь Ack, которые еще проигрывать
-		uint16_t wSoundID;											// этот звук играет
-		int /*EUnitAckType*/ eCurrentAck;		// этот  Ack сейчас играет
-		NTimer::STime timeRun;							// время когда можно проиграть AckPisitive
+		uint16_t wSoundID = 0;											// этот звук играет
+		int /*EUnitAckType*/ eCurrentAck = 0;		// этот  Ack сейчас играет
+		NTimer::STime timeRun = 0;							// время когда можно проиграть AckPisitive
 		SUnitAck()
 			:wSoundID( 0 ), eCurrentAck( -1 ), timeRun( 0 ) { }
 	};
@@ -78,7 +80,7 @@ class CClientAckManager : public IClientAckManager
 		int operator&( IBinSaver &saver );
 		CDBPtr<NDb::SComplexSoundDesc> pSound;
 		CVec3 vPos;
-		NTimer::STime timeSinceStart; 
+		NTimer::STime timeSinceStart = 0;
 		SDeathAck() {  }
 		SDeathAck( const CVec3 &_vPos, const NDb::SComplexSoundDesc *_pSound, const unsigned int nTimeSinceStart )
 			: vPos( _vPos ), pSound( _pSound ), timeSinceStart( nTimeSinceStart ) {  }
@@ -91,21 +93,21 @@ class CClientAckManager : public IClientAckManager
 	//для выбора заданного типа асков
 	class CAckPredicate
 	{
-		const NDb::EAckClass eType;
+		const NDb::EAckClass eType{};
 		const CUnitAcksInfo &acksInfo;
-		const NDb::SClientGameConsts * pConsts;
+		const NDb::SClientGameConsts *pConsts = nullptr;
 	public:
 		CAckPredicate( const NDb::EAckClass _eType, const CUnitAcksInfo &_acksInfo, const NDb::SClientGameConsts * _pConsts ) 
 			: acksInfo( _acksInfo ), eType( _eType ), pConsts( _pConsts ) {  }
 		bool operator()( const SAck & a );
 	};
 
-	IConsoleBuffer *pConsoleBuffer;
-	struct IGameTimer *pGameTimer;
+	IConsoleBuffer *pConsoleBuffer = nullptr;
+	struct IGameTimer *pGameTimer = nullptr;
 	static CDBPtr<NDb::SClientGameConsts> pConsts;
 
 	CPtr<IMOUnit> pLastSelected;
-	int nSelectionCounter;
+	int nSelectionCounter = 0;
 
 	// тут инфо о юнитах, зарегистрированных в bored состояниях
 	typedef std::unordered_map<int, CBoredUnitsContainer> BoredUnits;
@@ -114,16 +116,16 @@ class CClientAckManager : public IClientAckManager
 	CUnitAcksPresence acksPresence;				// наличие в даный момент в звучании данного Ack'а 
 	CUnitsAcks				unitAcks;						// для хранения всех текущих Ack'ов
 	CDeathAcks				deathAcks;					// for death acknowledgements;
-	NTimer::STime timeLastDeath;
+	NTimer::STime timeLastDeath = 0;
 
 	// не сериалайзится.
 	CUnitAcksInfo			acksInfo;						// данные об Ack'ах
 	std::unordered_map<std::string,int> loadHelper;
 	// константы
-	int TIME_ACK_WAIT;
-	int NUM_SELECTIONS_BEFORE_F_OFF;
-	int ACK_BORED_INTERVAL;
-	int ACK_BORED_INTERVAL_RANDOM;
+	int TIME_ACK_WAIT = 0;
+	int NUM_SELECTIONS_BEFORE_F_OFF = 0;
+	int ACK_BORED_INTERVAL = 0;
+	int ACK_BORED_INTERVAL_RANDOM = 0;
 
 	void InitConsts();
 

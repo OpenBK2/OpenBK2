@@ -16,7 +16,8 @@ class CExecutorTrackTargetting : public CExecutor
 	OBJECT_BASIC_METHODS( CExecutorTrackTargetting );
 
 	ZDATA_(CExecutor)
-	NTimer::STime									timeLastUpdate;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime									timeLastUpdate = {};
 	SAbilitySwitchState						state;
 	SSpecialAbilityInfo						lastSent;
 	CPtr<SAISpecialAbilityUpdate> pUpdate;

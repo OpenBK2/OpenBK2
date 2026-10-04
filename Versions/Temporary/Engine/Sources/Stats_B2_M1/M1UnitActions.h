@@ -70,7 +70,9 @@ namespace NDb
 		mutable uint32_t __dwCheckSum;
 	public:
 
-		SM1UnitActionBuild() { }
+		SM1UnitActionBuild() :
+			__dwCheckSum( 0 )
+		{ }
 		//
 		int GetTypeID() const { return typeID; }
 		//

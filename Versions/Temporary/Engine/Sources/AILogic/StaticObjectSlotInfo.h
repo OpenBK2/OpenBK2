@@ -2,9 +2,10 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SStaticObjectSlotInfo
 {
-	int nSlot;
-	int nType;
-	int nIndex;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nSlot = {};
+	int nType = {};
+	int nIndex = {};
 
 	SStaticObjectSlotInfo() : nSlot( -1 ), nType( -1 ), nIndex( -1 ) { }
 };

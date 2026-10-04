@@ -9,8 +9,9 @@ namespace NDb
 class CBalanceTest
 {
 	CDBPtr<NDb::SMapInfo> pBalanceMapInfo;
-	NTimer::STime timeBalanceStart;
-	bool bTest;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime timeBalanceStart = {};
+	bool bTest = {};
 	std::vector<int> shoot;
 
 	void PrintBalanceTestData();

@@ -12,8 +12,9 @@ class CPathFractionArc : public CPathFractionComplexBase
 	ZDATA_(CPathFractionComplexBase)
 	CDirectedCircle circle;								// initial circle
 	CVec2 x0, x1;												// from point 1 to 2
-	float fLength;
-	float fZ;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fLength = {};
+	float fZ = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPathFractionComplexBase*)this); f.Add(2,&circle); f.Add(3,&x0); f.Add(4,&x1); f.Add(5,&fLength); f.Add(6,&fZ); return 0; }
 
 public:

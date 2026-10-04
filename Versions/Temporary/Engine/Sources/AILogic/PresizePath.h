@@ -20,19 +20,20 @@ class CPresizePath : public ISmoothPath
 		EPPS_FINISHED,
 	};
 
-	CBasePathUnit *pUnit;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	CBasePathUnit *pUnit = {};
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
-	EPresizePathState eState;
+	EPresizePathState eState = {};
 	CVec2 vEndPoint;
 	CVec2 vEndDir;
-	uint16_t wDesiredDir;
+	uint16_t wDesiredDir = {};
 
 	CPtr<ISmoothPath> pPathStandart; 
 	CPtr<ISmoothPath> pPathCheat;
 
-	float fSpeedLen;
+	float fSpeedLen = {};
 	public: ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&eState); f.Add(4,&vEndPoint); f.Add(5,&vEndDir); f.Add(6,&wDesiredDir); f.Add(7,&pPathStandart); f.Add(8,&pPathCheat); f.Add(9,&fSpeedLen); return 0; }
 		void OnSerialize( IBinSaver &f );
 public:
@@ -62,13 +63,13 @@ class CMilitaryCar;
 class CMechUnitRestOnBoardPath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CMechUnitRestOnBoardPath );
-	CBasePathUnit *pUnit;
+	CBasePathUnit *pUnit = {};
 
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
 	CPtr<CMilitaryCar> pTransport;
-	float fSpeedLen;
+	float fSpeedLen = {};
 	CVec3 vFormerPlacement;
 	CVec3 vCurrentPlacement;
 	public: ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&pTransport); f.Add(4,&fSpeedLen); f.Add(5,&vFormerPlacement); f.Add(6,&vCurrentPlacement); return 0; }

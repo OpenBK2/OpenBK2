@@ -55,8 +55,9 @@ namespace
 {
 	class CScopedStatsModifier
 	{
-		CAIUnit *pUnit;
-		const NDb::SUnitStatsModifier *pModifier;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		CAIUnit *pUnit = {};
+		const NDb::SUnitStatsModifier *pModifier = {};
 
 	public:
 		CScopedStatsModifier( CAIUnit *_pUnit, const NDb::SUnitStatsModifier *_pModifier )

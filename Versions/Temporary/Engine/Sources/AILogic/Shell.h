@@ -21,13 +21,14 @@ public:
 	ZDATA_(CLinkObject)
 		
 	CDBPtr<SWeaponRPGStats> pWeapon;
-	uint16_t wShell;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint16_t wShell = {};
 	SAIAngle wDir;
 
 	CPtr<CObjectBase> pVictim;  // для попадания по юниту
 	CVec3 explCoord;					// для попадания по земле
 
-	SAINotifyHitInfo::EHitType eHitType;
+	SAINotifyHitInfo::EHitType eHitType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&pVictim); f.Add(6,&explCoord); f.Add(7,&eHitType); return 0; }
 	
 	CHitInfo() { }
@@ -76,7 +77,7 @@ class CBallisticTraj: public IBallisticTraj
 	ZDATA
 	CVec3 vStart3D;
 	// скорости
-	float fVx, fVy;
+	float fVx = {}, fVy = {};
 	// ускорения свободного падения
 
 	SAIAngle wAngle; //вертикальнй угол
@@ -84,11 +85,11 @@ class CBallisticTraj: public IBallisticTraj
 	SAIAngle wDir;
 	CVec2 vDir;
 
-	float fG; // для данной траектории ускорение свободного падения
+	float fG = {}; // для данной траектории ускорение свободного падения
 
-	NTimer::STime startTime, explTime;
+	NTimer::STime startTime = {}, explTime = {};
 
-	NDb::SWeaponRPGStats::SShell::ETrajectoryType eType;
+	NDb::SWeaponRPGStats::SShell::ETrajectoryType eType = {};
 	public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&fVx); f.Add(4,&fVy); f.Add(5,&wAngle); f.Add(6,&wDir); f.Add(7,&vDir); f.Add(8,&fG); f.Add(9,&startTime); f.Add(10,&explTime); f.Add(11,&eType); return 0; }
 public:
@@ -112,11 +113,11 @@ class CFakeBallisticTraj : public IBallisticTraj
 	OBJECT_BASIC_METHODS( CFakeBallisticTraj );
 	ZDATA
 
-	NTimer::STime startTime, explTime;
+	NTimer::STime startTime = {}, explTime = {};
 
 	CVec3 point;
 	CVec3 v;
-	float A1, A2;
+	float A1 = {}, A2 = {};
 	SAIAngle wDir;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&startTime); f.Add(3,&explTime); f.Add(4,&point); f.Add(5,&v); f.Add(6,&A1); f.Add(7,&A2); f.Add(8,&wDir); return 0; }
 public:
@@ -144,7 +145,7 @@ class CBombBallisticTraj : public IBallisticTraj
 	CVec3 v;
 	CVec2 vRandAcc;
 	SAIAngle wDir;
-	NTimer::STime startTime, explTime;
+	NTimer::STime startTime = {}, explTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&point); f.Add(3,&v); f.Add(4,&vRandAcc); f.Add(5,&wDir); f.Add(6,&startTime); f.Add(7,&explTime); return 0; }
 
 public:
@@ -175,7 +176,7 @@ class CAARocketTraj: public IBallisticTraj
 	SAIAngle wDir;
 	CVec3 vSpeed;
 
-	NTimer::STime startTime, explTime;
+	NTimer::STime startTime = {}, explTime = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&wDir); f.Add(4,&vSpeed); f.Add(5,&startTime); f.Add(6,&explTime); return 0; }
 public:
@@ -203,21 +204,21 @@ class CATGMTraj : public IBallisticTraj
 	CVec3 vFixedTarget;
 	CPtr<CAIUnit> pShooter;
 	CPtr<CAIUnit> pTarget;
-	int nShooterParty;
-	NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType;
-	float fSpeed;
-	float fTurnRateRad;
-	float fStrayModeTime;
-	float fTopTargetingHeight;
-	float fProximityRadius;
-	NTimer::STime startTime;
-	NTimer::STime lastUpdateTime;
-	NTimer::STime explTime;
+	int nShooterParty = {};
+	NDb::SWeaponRPGStats::SShell::ETrajectoryType eTrajectoryType = {};
+	float fSpeed = {};
+	float fTurnRateRad = {};
+	float fStrayModeTime = {};
+	float fTopTargetingHeight = {};
+	float fProximityRadius = {};
+	NTimer::STime startTime = {};
+	NTimer::STime lastUpdateTime = {};
+	NTimer::STime explTime = {};
 	SAIAngle wStartDir;
-	bool bAimsForTop;
-	bool bStrayMode;
-	bool bFinished;
-	bool bAirBurst;
+	bool bAimsForTop = {};
+	bool bStrayMode = {};
+	bool bFinished = {};
+	bool bAirBurst = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&vCenter); f.Add(4,&vVelocity); f.Add(5,&vFixedTarget); f.Add(6,&pTarget); f.Add(7,&nShooterParty); f.Add(8,&fSpeed); f.Add(9,&fTurnRateRad); f.Add(10,&fStrayModeTime); f.Add(11,&startTime); f.Add(12,&lastUpdateTime); f.Add(13,&explTime); f.Add(14,&wStartDir); f.Add(15,&bStrayMode); f.Add(16,&bFinished); f.Add(17,&pShooter); f.Add(18,&bAirBurst); f.Add(19,&eTrajectoryType); f.Add(20,&bAimsForTop); f.Add(21,&fTopTargetingHeight); f.Add(22,&fProximityRadius); return 0; }
 
 	bool IsAimingForTargetTop() const;
@@ -249,20 +250,20 @@ class CExplosion : public CAIObjectBase
 {
 protected:
 	ZDATA
-	uint8_t nShellType;
+	uint8_t nShellType = {};
 	CDBPtr<SWeaponRPGStats> pWeapon;
 	CPtr<CAIUnit> pUnit;
 	
 	CVec3 explCoord;
 	SAIAngle attackDir;
-	int nPlayerOfShoot;
+	int nPlayerOfShoot = {};
 
 	CPtr<CHitInfo> pHitToSend;
 	NDb::SUnitStatsModifier::SParameterModifier weaponDamageModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponPiercingModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponAreaModifier;
 	NDb::SUnitStatsModifier::SParameterModifier weaponArea2Modifier;
-	bool bForceAirEffect;
+	bool bForceAirEffect = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nShellType); f.Add(3,&pWeapon); f.Add(4,&pUnit); f.Add(5,&explCoord); f.Add(6,&attackDir); f.Add(7,&nPlayerOfShoot); f.Add(8,&pHitToSend); f.Add(9,&weaponDamageModifier); f.Add(10,&weaponPiercingModifier); f.Add(11,&weaponAreaModifier); f.Add(12,&weaponArea2Modifier); f.Add(13,&bForceAirEffect); return 0; }
 protected:
@@ -325,8 +326,8 @@ class CBurstExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CBurstExpl );
 	ZDATA_(CExplosion)
-	int nArmorDir;
-	bool bShowEffect;
+	int nArmorDir = {};
+	bool bShowEffect = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExplosion*)this); f.Add(2,&nArmorDir); f.Add(3,&bShowEffect); return 0; }
 public:
 	CBurstExpl() { }
@@ -344,7 +345,7 @@ class CCumulativeExpl : public CExplosion
 {
 	OBJECT_BASIC_METHODS( CCumulativeExpl );
 	ZDATA_(CExplosion)
-	int nArmorDir;
+	int nArmorDir = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExplosion*)this); f.Add(2,&nArmorDir); return 0; }
 public:
 	CCumulativeExpl() { }
@@ -395,11 +396,11 @@ class CShell
 {
 
 	ZDATA
-	NTimer::STime explTime;
+	NTimer::STime explTime = {};
 	CPtr<CExplosion> expl;
-	int nGun;
+	int nGun = {};
 
-	float vStartVisZ, vFinishVisZ;
+	float vStartVisZ = {}, vFinishVisZ = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&explTime); f.Add(3,&expl); f.Add(4,&nGun); f.Add(5,&vStartVisZ); f.Add(6,&vFinishVisZ); return 0; }
 
@@ -430,7 +431,7 @@ class CInvisShell : public CAIObjectBase, public CShell
 {
 	OBJECT_BASIC_METHODS( CInvisShell );
 	ZDATA_(CShell)
-	int nOrder;
+	int nOrder = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CShell*)this); f.Add(2,&nOrder); return 0; }
 public:
 	CInvisShell() : nOrder( 0 ) { }
@@ -449,9 +450,9 @@ public: int operator&( IBinSaver &saver ); private:
 	CPtr<IBallisticTraj> pTraj;
 	CVec3 center;
 	CVec3 speed;
-	bool bVisible;
-	int nPlatform;
-	int nOrder;
+	bool bVisible = {};
+	int nPlatform = {};
+	int nOrder = {};
 	
 	void CalcVisibility();
 public:
@@ -535,8 +536,8 @@ class CShellsStore
 	CInvisShells invisShells;
 	// все видимые снаряды
 	CVisShellList visShells;
-	int nNextInvisShellOrder;
-	int nNextVisShellOrder;
+	int nNextInvisShellOrder = {};
+	int nNextVisShellOrder = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&invisShells); f.Add(3,&visShells); f.Add(4,&nNextInvisShellOrder); f.Add(5,&nNextVisShellOrder); return 0; }
 

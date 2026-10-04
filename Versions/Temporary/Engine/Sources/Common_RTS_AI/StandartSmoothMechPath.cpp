@@ -14,7 +14,8 @@ const uint16_t  DIR_DIFF_TO_SMOOTH_TURNING = 2000;		//! при какой раз
 
 class CPushTileFunctional
 {
-	std::list<SVector> *pTiles;
+	// Defensive pointer defaults retain each callback's explicit constructor binding.
+	std::list<SVector> *pTiles = nullptr;
 public:
 	CPushTileFunctional( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) {}
 
@@ -27,8 +28,8 @@ public:
 
 class CCheckTileFunctional
 {
-	CBasePathUnit *pUnit;
-	CTerrain *pTerrain;
+	CBasePathUnit *pUnit = nullptr;
+	CTerrain *pTerrain = nullptr;
 public:
 	CCheckTileFunctional( CBasePathUnit *_pUnit, CTerrain *_pTerrain ) : pUnit( _pUnit ), pTerrain( _pTerrain ) {}
 
@@ -41,9 +42,9 @@ public:
 
 class CCheckTileFunctionalWithMark
 {
-	CBasePathUnit *pUnit;
-	std::vector<SVector> *pTiles;
-	CTerrain *pTerrain;
+	CBasePathUnit *pUnit = nullptr;
+	std::vector<SVector> *pTiles = nullptr;
+	CTerrain *pTerrain = nullptr;
 public:
 	CCheckTileFunctionalWithMark( CBasePathUnit *_pUnit, std::vector<SVector> *_pTiles, CTerrain *_pTerrain )
 		: pUnit( _pUnit ), pTiles( _pTiles ), pTerrain( _pTerrain ) {}

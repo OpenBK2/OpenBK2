@@ -11,12 +11,13 @@ class CSmokeScreen : public CExistingObject
 	ZDATA_(CExistingObject)
 	CVec3 vCenter;
 	SVector tileCenter;
-	float fRadius;
-	int nTransparency;
-	NTimer::STime timeOfDissapear;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fRadius = {};
+	int nTransparency = {};
+	NTimer::STime timeOfDissapear = {};
 
-	NTimer::STime nextSegmTime;
-	bool bTransparencySet;
+	NTimer::STime nextSegmTime = {};
+	bool bTransparencySet = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExistingObject*)this); f.Add(2,&vCenter); f.Add(3,&tileCenter); f.Add(4,&fRadius); f.Add(5,&nTransparency); f.Add(6,&timeOfDissapear); f.Add(7,&nextSegmTime); f.Add(8,&bTransparencySet); return 0; }
 
 	//

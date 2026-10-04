@@ -15,7 +15,8 @@ ZDATA
 	CVec3 vSpeed;
 	CVec3 vNormal;
 
-	NTimer::STime lastMoveTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime lastMoveTime = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&vWorldPosition); f.Add(3,&vSpeed); f.Add(4,&vNormal); f.Add(5,&lastMoveTime); return 0; }
 public:
 	SFormationMemberInfo() 

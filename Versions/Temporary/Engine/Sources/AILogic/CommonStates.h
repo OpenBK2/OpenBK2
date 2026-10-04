@@ -24,22 +24,23 @@ class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager
 
 	ZDATA_(CFreeFireManager)
 	ZPARENT( CStandartBehaviour )
-	ESoldierAttackStates state;	
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ESoldierAttackStates state = {};
 
-	NTimer::STime lastShootCheck;
+	NTimer::STime lastShootCheck = {};
 	SVector lastEnemyTile;
 	SAIAngle wLastEnemyDir;
 
 	std::vector<float> fProb;
-	EAttackType eAttackType;
-	uint8_t nBestSide;
+	EAttackType eAttackType = {};
+	uint8_t nBestSide = {};
 	
-	bool bTurningToBest;
-	int nBestAngle;
+	bool bTurningToBest = {};
+	int nBestAngle = {};
 	CVec2 lastEnemyCenter;
-	bool bSwarmAttack;
+	bool bSwarmAttack = {};
 	CPtr<CAIUnit> pUnit;
-	int nEnemyParty;
+	int nEnemyParty = {};
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 
@@ -49,9 +50,9 @@ protected:
 	CPtr<CAIUnit> pEnemy;
 
 	CPtr<CBasicGun> pGun;
-	bool bAim;
-	bool bFinish;
-	bool bAllowMove;
+	bool bAim = {};
+	bool bFinish = {};
+	bool bAllowMove = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,( CStandartBehaviour *)this); f.Add(3,&state); f.Add(4,&lastShootCheck); f.Add(5,&lastEnemyTile); f.Add(6,&wLastEnemyDir); f.Add(7,&fProb); f.Add(8,&eAttackType); f.Add(9,&nBestSide); f.Add(10,&bTurningToBest); f.Add(11,&nBestAngle); f.Add(12,&lastEnemyCenter); f.Add(13,&bSwarmAttack); f.Add(14,&pUnit); f.Add(15,&nEnemyParty); f.Add(16,&damageToEnemyUpdater); f.Add(17,&vEnemyCenter); f.Add(18,&wEnemyDir); f.Add(19,&pEnemy); f.Add(20,&pGun); f.Add(21,&bAim); f.Add(22,&bFinish); f.Add( 23, &bAllowMove ); return 0; }
 	void OnSerialize( IBinSaver &f );
 	//
@@ -104,20 +105,20 @@ class CCommonAttackUnitInBuildingState : public IUnitAttackingState, public CFre
 {
 	enum EAttackUnitInBuildingStates { EAUBS_START, EAUBS_MOVING_SECTOR, EAUBS_MOVING_UNIT };
 	ZDATA_(CFreeFireManager)
-	EAttackUnitInBuildingStates eState;
+	EAttackUnitInBuildingStates eState = {};
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 	CRndRunUpToEnemy runUpToEnemy;
 	
-	int nSlot;
+	int nSlot = {};
 
 	//
 protected:
 	CPtr<CSoldier> pTarget;
 	CVec2 targetCenter;
 	CPtr<CBasicGun> pGun;
-	bool bAim;
-	bool bSwarmAttack;
+	bool bAim = {};
+	bool bSwarmAttack = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&eState); f.Add(3,&damageToEnemyUpdater); f.Add(4,&runUpToEnemy); f.Add(5,&nSlot); f.Add(6,&pTarget); f.Add(7,&targetCenter); f.Add(8,&pGun); f.Add(9,&bAim); f.Add(10,&bSwarmAttack); return 0; }
 protected:
@@ -154,14 +155,14 @@ class CCommonAttackCommonStatObjState : public IUnitAttackingState, public CFree
 	void AnalyzeShootingObj();
 
 	ZDATA_(CFreeFireManager)
-	int nStartObjParty;
+	int nStartObjParty = {};
 protected:
 	CPtr<CStaticObject> pObj;
 	CPtr<CBasicGun> pGun;
 
-	bool bAim;
-	bool bFinish;
-	bool bSwarmAttack;
+	bool bAim = {};
+	bool bFinish = {};
+	bool bSwarmAttack = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFreeFireManager*)this); f.Add(2,&nStartObjParty); f.Add(3,&pObj); f.Add(4,&pGun); f.Add(5,&bAim); f.Add(6,&bFinish); f.Add(7,&bSwarmAttack); return 0; }
 protected:
@@ -195,13 +196,13 @@ class CCommonRestState : public IUnitState, public CStandartBehaviour
 	CPtr<CCommonUnit> pUnit;
 	CVec2 guardPoint;
 	SAIAngle wDir;
-	NTimer::STime nextMove;
-	NTimer::STime startMoveTime;
+	NTimer::STime nextMove = {};
+	NTimer::STime startMoveTime = {};
 
-	bool bScanned;
+	bool bScanned = {};
 	
-	bool bWait;
-	NTimer::STime timeToFinishState;
+	bool bWait = {};
+	NTimer::STime timeToFinishState = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pUnit); f.Add(3,&guardPoint); f.Add(4,&wDir); f.Add(5,&nextMove); f.Add(6,&startMoveTime); f.Add(7,&bScanned); f.Add(8,&bWait); f.Add(9,&timeToFinishState); return 0; }
 public:
@@ -230,7 +231,7 @@ class CMechUnitRestState : public CCommonRestState
 	ZDATA_(CCommonRestState)
 	CPtr<CAIUnit> pUnit;
 
-	bool bFinishWhenCanMove;
+	bool bFinishWhenCanMove = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonRestState*)this); f.Add(2,&pUnit); f.Add(3,&bFinishWhenCanMove); return 0; }
 	void OnSerialize( IBinSaver &saver );
@@ -257,11 +258,11 @@ class CCommonAmbushState : public IUnitState, public CStandartBehaviour
 protected:
 	CPtr<CCommonUnit> pUnit;
 private:
-	EAmbushStates eState;
+	EAmbushStates eState = {};
 	
-	NTimer::STime startTime;
-	NTimer::STime lastCheckTime;
-	NTimer::STime lastVisibleCheck;
+	NTimer::STime startTime = {};
+	NTimer::STime lastCheckTime = {};
+	NTimer::STime lastVisibleCheck = {};
 
 	CPtr<CBasicGun> pGun;
 	CPtr<CAIUnit> pTarget;
@@ -296,7 +297,7 @@ class CFollowState : public IUnitState, public CStandartBehaviour
 	CPtr<CCommonUnit> pUnit;
 	CPtr<CCommonUnit> pHeadUnit;
 	CVec2 lastHeadUnitPos;
-	NTimer::STime lastCheck;
+	NTimer::STime lastCheck = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pUnit); f.Add(3,&pHeadUnit); f.Add(4,&lastHeadUnitPos); f.Add(5,&lastCheck); return 0; }
 public:
 	static IUnitState* Instance( class CCommonUnit *pUnit, class CCommonUnit *pHeadUnit );
@@ -323,13 +324,13 @@ class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
 		ESS_WAIT_UNTIL_TRACK_REPAIR,
 	};
 	ZDATA_( CStatusUpdatesHelper )
-	ECommonSwarmStates state;
+	ECommonSwarmStates state = {};
 
 	CPtr<CAIUnit> pUnit;
 
 	CVec2 point;
-	NTimer::STime startTime;
-	bool bContinue;
+	NTimer::STime startTime = {};
+	bool bContinue = {};
 	SAIAngle wDirToPoint;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&state); f.Add(3,&pUnit); f.Add(4,&point); f.Add(5,&startTime); f.Add(6,&bContinue); f.Add(7,&wDirToPoint); return 0; }
 public:
@@ -360,9 +361,9 @@ class CCommonMoveToGridState : public IUnitState
 	CPtr<CCommonUnit> pUnit;
 	CVec2 vPoint;
 	CVec2 vDir;
-	NTimer::STime startMoveTime;
+	NTimer::STime startMoveTime = {};
 
-	EStates eState;
+	EStates eState = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&vPoint); f.Add(4,&vDir); f.Add(5,&startMoveTime); f.Add(6,&eState); return 0; }
 public:
 	static IUnitState* Instance( class CCommonUnit *pUnit, const CVec2 &vPoint, const CVec2 &vDir );
@@ -385,8 +386,8 @@ class CMoveByFormationState : public IUnitState
 
 	ZDATA
 	CPtr<CCommonUnit> pUnit;
-	int nExecutorID;
-	bool bNeedIdleNotification;
+	int nExecutorID = {};
+	bool bNeedIdleNotification = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nExecutorID); f.Add(4,&bNeedIdleNotification); return 0; }
 public:
 	static IUnitState *Instance( CCommonUnit *pUnit, const int nExecutorID );

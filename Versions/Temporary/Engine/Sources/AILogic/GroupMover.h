@@ -24,10 +24,11 @@ class CGroupMover : public CAIObjectBase
 		{
 			ZDATA
 				CPtr<IStaticPath> pStaticPath;
-				NTimer::STime timeCalced;
+				// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+				NTimer::STime timeCalced = {};
 				CVec2 vStartPoint;
 				CVec2 vFinishPoint;
-				int nBoundTileRadius;
+				int nBoundTileRadius = {};
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStaticPath); f.Add(3,&timeCalced); f.Add(4,&vStartPoint); f.Add(5,&vFinishPoint); f.Add(6,&nBoundTileRadius); return 0; }
 			SSubGroupPathInfo() : timeCalced( 0 ), vStartPoint( VNULL2 ), vFinishPoint( VNULL2 ), nBoundTileRadius( 0 ) {}
 			IStaticPath* CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vPoint );
@@ -53,7 +54,7 @@ class CGroupMover : public CAIObjectBase
 		CVec2 vPosition;
 		TGroup group;					// собственно юниты которых надо двигать
 		TSubGroups subGroups;	// подгруппы по котором строятся пути, необходимо чтобы одинаковые (aiClass, nBoundTileRadius) ехали по одному пути
-		bool bNeedCalcPositions;
+		bool bNeedCalcPositions = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPosition); f.Add(3,&group); f.Add(4,&subGroups); f.Add(5,&bNeedCalcPositions); return 0; }
 private:

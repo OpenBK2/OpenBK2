@@ -33,14 +33,15 @@ class CMilitaryCar : public CAIUnit
 	std::list<CPtr<CSoldier> > pass;
 	
 	CPtr<CFormation> pLockingUnit;
-	float fDispersionBonus;
-	NTimer::STime timeLastHeal;						// последнее время лечения
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fDispersionBonus = {};
+	NTimer::STime timeLastHeal = {};						// последнее время лечения
 	
 	// mech units, currently On The Way to board
 	det_map<int, CPtr<CAIUnit> > boarding;
 	std::vector<CPtr<CAIUnit> > onBoard;
 	CBoardOrder boardOrder;
-	bool bCanUnload;								// if entrance point is locked - disable unload 
+	bool bCanUnload = {};								// if entrance point is locked - disable unload
 
 	CSupportAAGuns supportAAGuns;
 public:
@@ -161,16 +162,16 @@ class CTank : public CMilitaryCar
 	OBJECT_BASIC_METHODS( CTank );
 	
 	ZDATA_(CMilitaryCar)
-	bool bTrackDamaged; // true если у танка перебита гусеница
+	bool bTrackDamaged = {}; // true если у танка перебита гусеница
 	
 	SAIAngle wDangerousDir;
-	bool bDangerousDirSet;
-	bool bDangerousDirSetInertia;
-	NTimer::STime nextTimeOfDangerousDirScan;
-	NTimer::STime lastTimeOfDangerousDirChanged;
+	bool bDangerousDirSet = {};
+	bool bDangerousDirSetInertia = {};
+	NTimer::STime nextTimeOfDangerousDirScan = {};
+	NTimer::STime lastTimeOfDangerousDirChanged = {};
 
 	SAIAngle wDangerousDirUnderFire;
-	float fDangerousDamageUnderFire;
+	float fDangerousDamageUnderFire = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&bTrackDamaged); f.Add(3,&wDangerousDir); f.Add(4,&bDangerousDirSet); f.Add(5,&bDangerousDirSetInertia); f.Add(6,&nextTimeOfDangerousDirScan); f.Add(7,&lastTimeOfDangerousDirChanged); f.Add(8,&wDangerousDirUnderFire); f.Add(9,&fDangerousDamageUnderFire); return 0; }
 	//
 	void ScanForDangerousDir();
@@ -215,7 +216,7 @@ class CAITransportUnit : public CMilitaryCar
 	typedef std::list< CPtr<CFormation> > CExternLoaders;
 
 	ZDATA_(CMilitaryCar)
-	float fResursUnits; // количество RU, которые есть у грузовичка
+	float fResursUnits = {}; // количество RU, которые есть у грузовичка
 	CPtr<CArtillery> pTowedArtillery;
 	CPtr<CAIUnit> pMustTow;			// artillery, that this truck must tow (for general intendant)
 	CExternLoaders externLoaders; // дошоняющие гранспорт грузчики

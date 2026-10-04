@@ -11,8 +11,9 @@ class CChunklessSerializer : public IBinSaver
 {
 	OBJECT_NOCOPY_METHODS(CChunklessSerializer);
 	CPtr<IPointerSerialization> pTracker;
-	CMemoryStream *pRes;
-	ESaverMode mode;
+	// Defensive defaults also cover the factory/default construction path.
+	CMemoryStream *pRes = nullptr;
+	ESaverMode mode{};
 
 	void CheckChunk( const chunk_id idChunk, int nChunkNumber )
 	{

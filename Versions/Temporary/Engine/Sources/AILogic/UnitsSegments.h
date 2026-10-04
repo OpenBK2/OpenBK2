@@ -6,7 +6,8 @@ class CAIUnit;
 
 class CFreezeSegments
 {
-	class CCommonUnit *pUnit;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	class CCommonUnit *pUnit = {};
 public:
 	typedef CCommonUnit* TObjType;
 
@@ -21,10 +22,10 @@ public:
 
 class CStateSegments
 {
-	class CCommonUnit *pUnit;
+	class CCommonUnit *pUnit = {};
 
-	bool bCheck;
-	bool bIsValid;
+	bool bCheck = {};
+	bool bIsValid = {};
 public:
 	typedef CCommonUnit* TObjType;
 
@@ -39,7 +40,7 @@ public:
 
 class CFirstPathSegments
 {
-	class CAIUnit *pUnit;
+	class CAIUnit *pUnit = {};
 public:
 	typedef CAIUnit* TObjType;
 
@@ -54,7 +55,7 @@ public:
 
 class CSecondPathSegments
 {
-	class CAIUnit *pUnit;
+	class CAIUnit *pUnit = {};
 public:
 	typedef CAIUnit* TObjType;
 
@@ -69,7 +70,7 @@ public:
 
 class CStayTimeSegments
 {
-	class CAIUnit *pUnit;
+	class CAIUnit *pUnit = {};
 public:
 	typedef CAIUnit* TObjType;
 

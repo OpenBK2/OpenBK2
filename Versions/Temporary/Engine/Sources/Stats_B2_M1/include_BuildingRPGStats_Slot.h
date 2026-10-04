@@ -1,9 +1,10 @@
 #include <cstdint>
 
 SHMatrix matDirection;
-uint16_t wDirection;
-uint16_t wAngle;
-uint16_t wRotationSpeed;
+// Generated constructors do not initialize these derived aiming values.
+uint16_t wDirection = 0;
+uint16_t wAngle = 0;
+uint16_t wRotationSpeed = 0;
 
 bool ToAIUnits( bool bInEditor )
 {

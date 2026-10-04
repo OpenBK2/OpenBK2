@@ -10,8 +10,9 @@ class CObjectHeaderXmlSaxVisitor : public NLXML::IXmlSaxVisitor
 {
 	OBJECT_BASIC_METHODS( CObjectHeaderXmlSaxVisitor );
 	//
-	bool bNeedMoreChunks;
-	STypeObjectHeader *pHeader;
+	// Constructors still enable parsing and select the supplied destination header.
+	bool bNeedMoreChunks = false;
+	STypeObjectHeader *pHeader = nullptr;
 public:
 	CObjectHeaderXmlSaxVisitor(): bNeedMoreChunks( true ), pHeader( 0 ) {}
 	CObjectHeaderXmlSaxVisitor( STypeObjectHeader *_pHeader ): bNeedMoreChunks( true ), pHeader( _pHeader ) {}

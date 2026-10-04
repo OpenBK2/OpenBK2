@@ -33,19 +33,20 @@ class CManuver : public IManuver
 	CObj<IPathFraction> pPath;
 	CPathList simplePaths;
 
-	float fProgress;															// path progress
-	float fSpeed;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fProgress = {};															// path progress
+	float fSpeed = {};
 	
 	CVec3 vCenter;
 	CVec3 vSpeed;
 	CVec3 vNormal;			
 
-	bool bUsed;
+	bool bUsed = {};
 
 	// nomrale acceleration
-	float fCurTiltSpeed;
-	float fDistToGo;							// distance that other path must go to ensure smoothness.
-	bool bToHorisontal;
+	float fCurTiltSpeed = {};
+	float fDistToGo = {};							// distance that other path must go to ensure smoothness.
+	bool bToHorisontal = {};
 
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pPlane); f.Add(3,&pPath); f.Add(4,&simplePaths); f.Add(5,&fProgress); f.Add(6,&fSpeed); f.Add(7,&vCenter); f.Add(8,&vSpeed); f.Add(9,&vNormal); f.Add(10,&bUsed); f.Add(11,&fCurTiltSpeed); f.Add(12,&fDistToGo); f.Add(13,&bToHorisontal); return 0; }
 	void InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pPlane, const float fSpeed, const CVec3 &vNormale, const bool _bToHorisontal );

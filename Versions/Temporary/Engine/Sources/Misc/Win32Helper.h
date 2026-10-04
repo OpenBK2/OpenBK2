@@ -1,6 +1,8 @@
 
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include <boost/predef.h>
 
 #include <cfenv>
@@ -13,7 +15,7 @@ namespace NWin32Helper
 template <class T>
 class com_ptr
 {
-	T *pData;
+	T *pData = nullptr;
 	void Assign( T *_pData ) { if ( _pData ) { _pData->AddRef(); } pData = _pData; }
 	void Free() { if ( pData ) pData->Release(); }
 public:

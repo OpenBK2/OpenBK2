@@ -18,6 +18,7 @@
 #include <cstring>
 #include <filesystem>
 #include <list>
+#include <new>
 #include <set>
 #include <string>
 #include <typeinfo>
@@ -52,6 +53,20 @@
 #include <gtest/gtest.h>
 
 namespace {
+
+TEST( DatabaseDefaults, EmptyRecordChecksumIgnoresPreviousStorageContents )
+{
+	for ( const unsigned char nPattern : { 0, 0x5a, 0xa5 } )
+	{
+		alignas( NDb::SEmptyChecksumRecord ) unsigned char storage[sizeof( NDb::SEmptyChecksumRecord )];
+		std::memset( storage, nPattern, sizeof( storage ) );
+		// Default-initialize rather than value-initialize: the constructor must reset the cache.
+		auto *pRecord = new ( storage ) NDb::SEmptyChecksumRecord;
+		EXPECT_EQ( pRecord->CalcCheckSum(), uint32_t( 1 ) );
+		EXPECT_EQ( pRecord->CalcCheckSum(), uint32_t( 1 ) );
+		pRecord->~SEmptyChecksumRecord();
+	}
+}
 
 boost::uuids::uuid Uuid( const char *pszText )
 {

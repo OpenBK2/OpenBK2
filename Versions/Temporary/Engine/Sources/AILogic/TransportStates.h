@@ -77,7 +77,8 @@ class CTransportLandState : public IUnitState, public CStatusUpdatesHelper
 	};
 
 	ZDATA_( CStatusUpdatesHelper )
-	ELandStates state;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	ELandStates state = {};
 
 	CPtr<CMilitaryCar> pTransport;
 
@@ -117,13 +118,13 @@ class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 	};
 
 	ZDATA_( CStatusUpdatesHelper )
-	ETransportLoadRuState eState;
+	ETransportLoadRuState eState = {};
 
 	CPtr<CBuilding> pStorage;
 	CPtr<CFormation> pLoaderSquad; // толпа грузчиков
 	CPtr<CAITransportUnit> pTransport;
-	int nEntrance;
-	bool bSubState;												// является ли этот стейт сабстейтом
+	int nEntrance = {};
+	bool bSubState = {};												// является ли этот стейт сабстейтом
 public: 
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pStorage); f.Add(4,&pLoaderSquad); f.Add(5,&pTransport); f.Add(6,&nEntrance); f.Add(7,&bSubState); return 0; }
 private:
@@ -167,19 +168,19 @@ class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
 	void CreateSquad();
 
 	ZDATA_( CStatusUpdatesHelper )
-	ETransportServeState eState;
+	ETransportServeState eState = {};
 	CVec2 vServePoint; //senter of serving circle
 	CPtr<CAIUnit> pResupplyUnit;	//юнит, который перезаряжают
-	NTimer::STime timeLastUpdate ;//время последнего апдейта поведения.
+	NTimer::STime timeLastUpdate = {} ;//время последнего апдейта поведения.
 
 	CPtr<IStaticPath> pStaticPath ;
-	bool bWaitForPath;
+	bool bWaitForPath = {};
 protected:
-	bool bUpdatedActionsBegin;
+	bool bUpdatedActionsBegin = {};
 	CPtr<CFormation> pLoaderSquad; // толпа грузчиков
 	CPtr<CAIUnit> pPreferredUnit;			// unit that is served first
 	CPtr<CAITransportUnit> pTransport;
-	bool bSendFinishFeedback;
+	bool bSendFinishFeedback = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&vServePoint); f.Add(4,&pResupplyUnit); f.Add(5,&timeLastUpdate); f.Add(6,&pStaticPath); f.Add(7,&bWaitForPath); f.Add(8,&bUpdatedActionsBegin); f.Add(9,&pLoaderSquad); f.Add(10,&pPreferredUnit); f.Add(11,&pTransport); f.Add(12,&bSendFinishFeedback); return 0; }
 	virtual bool FindUnitToServe( bool *pIsNotEnoughRU ) = 0;
@@ -267,12 +268,12 @@ class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHel
 
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAITransportUnit> pTransport;
-	ETransportTakeGunState eState;
+	ETransportTakeGunState eState = {};
 
 	CPtr<CArtillery> pArtillery;
 	CVec2 vArtilleryPoint;
 	
-	NTimer::STime timeLast;
+	NTimer::STime timeLast = {};
 
 	SAIAngle wDesiredTransportDir; // куда бдет направлен транспорт при погрузке
 public:
@@ -317,12 +318,12 @@ class CTransportUnhookArtilleryState : public IUnitState, public CStatusUpdatesH
 		TUAS_START_UNHOOK,
 	};
 	ZDATA_( CStatusUpdatesHelper )
-	ETransportUnhookGunState eState;
+	ETransportUnhookGunState eState = {};
 	CPtr<CAITransportUnit> pTransport;
 	CVec2 vDestPoint;
-	int nAttempt; // количество попыток поставить артиллерию
-	bool bInterrupted;
-	bool bNow;														// unhook gun right at the current place
+	int nAttempt = {}; // количество попыток поставить артиллерию
+	bool bInterrupted = {};
+	bool bNow = {};														// unhook gun right at the current place
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pTransport); f.Add(4,&vDestPoint); f.Add(5,&nAttempt); f.Add(6,&bInterrupted); f.Add(7,&bNow); return 0; }
 private:
@@ -364,7 +365,7 @@ class CTransportBuildState : public IUnitState, public CStatusUpdatesHelper
 	ZDATA_( CStatusUpdatesHelper )
 protected:
 	CPtr<CAITransportUnit> pUnit;
-	ETransportBuildState eState;
+	ETransportBuildState eState = {};
 	CPtr<CTransportLoadRuState> pLoadRuSubState;
 	ZSKIP
 protected:
@@ -464,8 +465,8 @@ class CTransportClearMineState : public CTransportBuildState
 	OBJECT_BASIC_METHODS( CTransportClearMineState );
 
 	ZDATA_(CTransportBuildState)
-	NTimer::STime timeCheckPeriod, timeNextCheck;
-	bool bWorkDone;
+	NTimer::STime timeCheckPeriod = {}, timeNextCheck = {};
+	bool bWorkDone = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&timeCheckPeriod); f.Add(3,&timeNextCheck); f.Add(4,&bWorkDone); return 0; }
 protected:	
@@ -490,12 +491,12 @@ class CTransportPlaceMineState : public CTransportBuildState
 	OBJECT_BASIC_METHODS( CTransportPlaceMineState );
 
 	ZDATA_(CTransportBuildState)
-	bool bWorkDone;
-	bool bTransportSent;
-	NDb::EMineType eCurrType;
-	int nSqI, nSqJ;
+	bool bWorkDone = {};
+	bool bTransportSent = {};
+	NDb::EMineType eCurrType = {};
+	int nSqI = {}, nSqJ = {};
 	CVec2 vCorner;
-	int nSquareSize;
+	int nSquareSize = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&bWorkDone); f.Add(3,&bTransportSent); f.Add(4,&eCurrType); f.Add(5,&nSqI); f.Add(6,&nSqJ); f.Add(7,&vCorner); f.Add(8,&nSquareSize); return 0; }
 protected:	
@@ -521,8 +522,8 @@ class CTransportPlaceAntitankState : public CTransportBuildState
 	OBJECT_BASIC_METHODS( CTransportPlaceAntitankState );
 
 	ZDATA_(CTransportBuildState)
-	bool bWorkFinished;
-	bool bSent;
+	bool bWorkFinished = {};
+	bool bSent = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&bWorkFinished); f.Add(3,&bSent); return 0; }
 protected:	
@@ -551,7 +552,7 @@ class CTransportRepairBridgeState : public CTransportBuildState
 	ZDATA_(CTransportBuildState)
 	ZSKIP
 	CPtr<CBridgeSpan> pBridgeToRepair;
-	bool bSentToBuildPoint;
+	bool bSentToBuildPoint = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(3,&pBridgeToRepair); f.Add(4,&bSentToBuildPoint); return 0; }
 private:
@@ -580,7 +581,7 @@ class CTransportBuildBridgeState : public CTransportBuildState
 	ZDATA_(CTransportBuildState)
 	CPtr<CFullBridge> pFullBridge;
 	CPtr<CBridgeCreation> pCreation;
-	bool bTransportSent;									// transport saw sent to build point
+	bool bTransportSent = {};									// transport saw sent to build point
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&pFullBridge); f.Add(3,&pCreation); f.Add(4,&bTransportSent); return 0; }
 private:
@@ -608,7 +609,7 @@ class CTransportRepairBuildingState : public CTransportBuildState
 
 	ZDATA_(CTransportBuildState)
 	CPtr<CBuilding> pBuilding;
-	bool bSentToBuildPoint;
+	bool bSentToBuildPoint = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&pBuilding); f.Add(3,&bSentToBuildPoint); return 0; }
 private:
@@ -637,7 +638,7 @@ class CMoveToPointNotPresize : public IUnitState
 	ZDATA
 	CPtr<CAIUnit> pTransport;
 	CVec2 vPurposePoint;
-	float fRadius;
+	float fRadius = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTransport); f.Add(3,&vPurposePoint); f.Add(4,&fRadius); return 0; }
 private:

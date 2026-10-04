@@ -41,9 +41,10 @@ class CScripts
 	struct SScriptInfo
 	{
 		ZDATA
-		NTimer::STime period;
-		NTimer::STime lastUpdate;
-		int nRepetitions;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime period = {};
+		NTimer::STime lastUpdate = {};
+		int nRepetitions = {};
 
 		std::string szName;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&period); f.Add(3,&lastUpdate); f.Add(4,&nRepetitions); f.Add(5,&szName); return 0; }
@@ -74,7 +75,7 @@ class CScripts
 	// отложенные (некуда поставить) подкрепления
 	CReinfList suspendedReinforcs;
 	CReinfList::iterator reinforcsIter;
-	NTimer::STime lastTimeToCheckSuspendedReinforcs;
+	NTimer::STime lastTimeToCheckSuspendedReinforcs = {};
 
 	det_map<int, int> reservePositions;
 
@@ -87,7 +88,7 @@ class CScripts
 	det_map<std::string, NDb::SScriptArea> areas;
 
 	CPtr<IConsoleBuffer> pConsole;
-	bool bShowErrors;
+	bool bShowErrors = {};
 	static CDBPtr<NDb::SMapInfo> pMapInfo;
 	static CAttackGroup attackGroups;
 	static std::list<CObj<CAIUnit> > rememberedUnits;

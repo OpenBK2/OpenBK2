@@ -15,10 +15,11 @@ class CComplexObstacleCreation : public CLongObjectCreation
 	ZDATA_(CLongObjectCreation)
 		std::vector< CObj<CCommonStaticObject> > antitanks;
 	CPtr<CFenceCreation> pFenceCreation;
-	int nCurIndex;
-	bool bCannot;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	int nCurIndex = {};
+	bool bCannot = {};
 	std::list<SVector> tilesUnder;
-	bool bTmpNonCheatPath; // if skipped 1 or more objects - move to another without cheat path
+	bool bTmpNonCheatPath = {}; // if skipped 1 or more objects - move to another without cheat path
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLongObjectCreation*)this); f.Add(2,&antitanks); f.Add(3,&pFenceCreation); f.Add(4,&nCurIndex); f.Add(5,&bCannot); f.Add(6,&tilesUnder); f.Add(7,&bTmpNonCheatPath); return 0; }
 	const bool IsAntitank( const int _nIndex ) const
 	{

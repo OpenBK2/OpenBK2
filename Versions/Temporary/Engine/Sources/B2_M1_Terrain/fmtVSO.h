@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Image/Image.h"
 
 #include <cstdint>
@@ -9,10 +11,10 @@ struct SVectorStripeObjectPoint
 {
 	CVec3 vPos;														// point position
 	CVec3 vNorm;													// normale at this point
-	float fRadius;												// curvature radius
-	float fWidth;													// width at this point
-	bool	bKeyPoint;											// key point of the sampling
-	float fOpacity;												// прозрачность ( 0..1 ) только для key point
+	float fRadius = 0.0f;												// curvature radius
+	float fWidth = 0.0f;													// width at this point
+	bool bKeyPoint = false;											// key point of the sampling
+	float fOpacity = 0.0f;												// прозрачность ( 0..1 ) только для key point
 
 	//----------------------------------------------------------------------------------------------------
 	SVectorStripeObjectPoint()
@@ -36,15 +38,15 @@ struct SVectorStripeObjectDesc
 	//----------------------------------------------------------------------------------------------------
 	struct SLayer
 	{
-		uint8_t opacityCenter;									// прозрачность в центре потока
-		uint8_t opacityBorder;									// прозрачность по краям
-		float fStreamSpeed;									// условная скорость потока
-		float fTextureStep;									// шаг текстурирования по тайлам
-		int nNumCells;											// ширина потока в ячейках (в тайлах)
-		bool bAnimated;											// animated layer
+		uint8_t opacityCenter = 0;									// прозрачность в центре потока
+		uint8_t opacityBorder = 0;									// прозрачность по краям
+		float fStreamSpeed = 0.0f;									// условная скорость потока
+		float fTextureStep = 0.0f;									// шаг текстурирования по тайлам
+		int nNumCells = 0;											// ширина потока в ячейках (в тайлах)
+		bool bAnimated = false;											// animated layer
 		std::string szTexture;							// текстура потока (или директория, если это анимированная текстура)
-		float fDisturbance;									// mesh disturbance
-		float fRelWidth;										// relative width
+		float fDisturbance = 0.0f;									// mesh disturbance
+		float fRelWidth = 0.0f;										// relative width
 
 		SLayer()
 			: opacityCenter( 0xff ), opacityBorder( 0x80 ), fStreamSpeed( 0.1f ), fTextureStep( 0.1f ),	fDisturbance( 0.3f ), fRelWidth( 1 ), nNumCells( 4 ), bAnimated( false ) {}
@@ -54,10 +56,10 @@ struct SVectorStripeObjectDesc
 	};
 	
 	//----------------------------------------------------------------------------------------------------
-	int	eType;														// type
-	int nPriority;												// priority
-	float fPassability;										// passability
-	uint32_t dwAIClasses;										// AI классы, которые не могут ходить по этой дороге
+	int eType = 0;														// type
+	int nPriority = 0;												// priority
+	float fPassability = 0.0f;										// passability
+	uint32_t dwAIClasses = 0;										// AI классы, которые не могут ходить по этой дороге
 
 	enum ESoilParams
 	{ 
@@ -66,7 +68,7 @@ struct SVectorStripeObjectDesc
 		ESP_RAIL	= 0x20,
 		ESP_SPLASH = 0x40,
 	};
-	uint8_t cSoilParams;											// параметры почвы - следы, пыль и т.д.
+	uint8_t cSoilParams = 0;											// параметры почвы - следы, пыль и т.д.
 	
 	//----------------------------------------------------------------------------------------------------
 	// layers
@@ -102,7 +104,7 @@ struct SVectorStripeObject : SVectorStripeObjectDesc
 
 	//----------------------------------------------------------------------------------------------------
 	// object's ID
-	int nID;															// ID
+	int nID = 0;															// ID
 
 	//----------------------------------------------------------------------------------------------------
 

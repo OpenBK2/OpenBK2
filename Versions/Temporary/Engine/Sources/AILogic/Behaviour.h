@@ -12,15 +12,16 @@ class CBasicGun;
 class CShootEstimatorLighAA
 {
 	ZDATA
-	uint8_t party;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	uint8_t party = {};
 	
 	CPtr<CCommonUnit> pUnit;
 	CPtr<CAIUnit> pResult;
 	CPtr<CBasicGun> pGun;
-	float fWorstDamage;
-	NTimer::STime bestTime;
-	float fMinDistance;
-	bool bCanShootNow;
+	float fWorstDamage = {};
+	NTimer::STime bestTime = {};
+	float fMinDistance = {};
+	bool bCanShootNow = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&party); f.Add(3,&pUnit); f.Add(4,&pResult); f.Add(5,&pGun); f.Add(6,&fWorstDamage); f.Add(7,&bestTime); f.Add(8,&fMinDistance); f.Add(9,&bCanShootNow); return 0; }
 public:
 	CShootEstimatorLighAA() 
@@ -43,12 +44,12 @@ class CStandartBehaviour
 	class CAIUnit* LookForTargetInFireRange( class CCommonUnit *pUnit );
 
 	ZDATA
-	NTimer::STime camouflateTime;
+	NTimer::STime camouflateTime = {};
 
-	NTimer::STime underFireAnalyzeTime;
-	NTimer::STime lastTimeOfRotate;
-	NTimer::STime fleeTraceEnemyTime;
-	int nLastSign;
+	NTimer::STime underFireAnalyzeTime = {};
+	NTimer::STime lastTimeOfRotate = {};
+	NTimer::STime fleeTraceEnemyTime = {};
+	int nLastSign = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&camouflateTime); f.Add(3,&underFireAnalyzeTime); f.Add(4,&lastTimeOfRotate); f.Add(5,&fleeTraceEnemyTime); f.Add(6,&nLastSign); return 0; }
 	// отслеживать врага, если нет никого, в кого возможно стрелять и нельзя двигаться, и есть turret
 	bool TryToTraceEnemy( class CAIUnit *pUnit );

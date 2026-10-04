@@ -19,7 +19,8 @@ UI_EXPORT uint32_t FadeColor( uint32_t dwColor, float fFade );
 
 class UI_EXPORT CBackground : public IWindowPart
 {
-	float fFadeValue;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fFadeValue = {};
 protected:
 	CTRect<float> pos;
 protected:

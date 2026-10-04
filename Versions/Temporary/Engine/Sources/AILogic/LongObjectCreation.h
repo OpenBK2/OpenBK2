@@ -10,9 +10,10 @@ struct SAIObjectsUnderConstructionUpdate;
 class CLongObjectCreation : public CLinkObject
 {
 	ZDATA_(CLinkObject)
-	float fWorkAccumulated;
-	int nPlayer;
-	bool bAllowAIModification;						// if false, then class must not change anything in AI.
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fWorkAccumulated = {};
+	int nPlayer = {};
+	bool bAllowAIModification = {};						// if false, then class must not change anything in AI.
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&fWorkAccumulated); f.Add(3,&nPlayer); f.Add(4,&bAllowAIModification); return 0; }
 protected:

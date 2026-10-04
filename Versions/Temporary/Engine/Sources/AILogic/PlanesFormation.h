@@ -15,7 +15,8 @@ class CPlaneManuverHistory
 	std::list<CObj<IManuver> > pathHistory;
 	CMemberCache memberCache;
 	SFormationMemberInfo curPos;
-	bool bFinished;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	bool bFinished = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pathHistory); f.Add(3,&memberCache); f.Add(4,&curPos); f.Add(5,&bFinished); return 0; }
 public:
 	bool IsEmpty() const { return pathHistory.empty(); }
@@ -48,11 +49,11 @@ class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUn
 	CVec3 vNewNormal;
 	
 	// for member counting
-	int nProcessed;
-	int nAlive;
+	int nProcessed = {};
+	int nAlive = {};
 
-	float fBombPointOffset;
-	int nID;
+	float fBombPointOffset = {};
+	int nID = {};
 	public: ZEND int operator&( IBinSaver &f );
 protected:
 	virtual void NullSegmTime() {}

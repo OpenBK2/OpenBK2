@@ -15,10 +15,11 @@ class CResupplyCellInfo : public CAIObjectBase
 	ZDATA
 	CResupplyInfo resupplyInfo;
 	std::vector<float> resupplyCount;
-	float fCount;													// whole weight
-	uint8_t cMarkedUnderSupply;							// indicates that this cell is under supply
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	float fCount = {};													// whole weight
+	uint8_t cMarkedUnderSupply = {};							// indicates that this cell is under supply
 	SVector vCell;												// coordinates of the cell ( in GetGeneralCell )
-	NTimer::STime timeLastDanger;					// time when last truck was killed near this cell
+	NTimer::STime timeLastDanger = {};					// time when last truck was killed near this cell
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&resupplyInfo); f.Add(3,&resupplyCount); f.Add(4,&fCount); f.Add(5,&cMarkedUnderSupply); f.Add(6,&vCell); f.Add(7,&timeLastDanger); return 0; }
 	void RemoveUnitResupplyInternal( class CCommonUnit *pUnit, const enum EResupplyType eType );
 public:
@@ -52,7 +53,7 @@ public:
 
 	struct SSortByResupplyMaskPredicate
 	{
-		uint8_t cMask;
+		uint8_t cMask = {};
 		SSortByResupplyMaskPredicate( const uint8_t cMask ) : cMask( cMask ) {  }
 		bool operator()( const CPtr<CResupplyCellInfo> &s1, const CPtr<CResupplyCellInfo> &s2 ) const
 		{
@@ -93,7 +94,7 @@ public:
 	ZDATA
 		CPtr<CGeneralTaskToDefendStorage> pMainTask;
 		CPtr<CBuilding> pStorage;
-		int nParty;
+		int nParty = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMainTask); f.Add(3,&pStorage); f.Add(4,&nParty); return 0; }
 	public:
 		CWaitForChangePlayer() {  }
@@ -113,10 +114,10 @@ private:
 		TS_FINISHED,
 	};
 	ZDATA
-	ETaskState eState;
+	ETaskState eState = {};
 
-	float fSeverity;
-	int nParty;
+	float fSeverity = {};
+	int nParty = {};
 	CPtr<CBuilding> pStorage;
 	CPtr<CCommonUnit> pRepairTransport;
 	SAIAngle wRequestID;
@@ -149,19 +150,19 @@ public:
 class CGeneralTaskToResupplyCell : public IGeneralTask, public IWorkerEnumerator
 {
 	OBJECT_BASIC_METHODS(CGeneralTaskToResupplyCell);
-	class CGeneralIntendant *pCells;
+	class CGeneralIntendant *pCells = {};
 
 	ZDATA
 		ZSKIP
 		ZONSERIALIZE
 		CPtr<CResupplyCellInfo> pCell;
 		CVec2 vResupplyCenter;
-		int nParty;
+		int nParty = {};
 		CPtr<CCommonUnit> pResupplyTransport;
-		bool bFinished;
-		float fSeverity;
-		NTimer::STime timeNextCheck;
-		EResupplyType eResupplyType;
+		bool bFinished = {};
+		float fSeverity = {};
+		NTimer::STime timeNextCheck = {};
+		EResupplyType eResupplyType = {};
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&pCell); f.Add(4,&vResupplyCenter); f.Add(5,&nParty); f.Add(6,&pResupplyTransport); f.Add(7,&bFinished); f.Add(8,&fSeverity); f.Add(9,&timeNextCheck); f.Add(10,&eResupplyType); return 0; }
 	void OnSerialize( IBinSaver &saver );
 public:
@@ -192,7 +193,7 @@ class CGeneralTaskCheckCellDanger : public IGeneralDelayedTask
 	CPtr<IGeneralTask> pTask;
 	CPtr<CResupplyCellInfo> pCell;
 	CPtr<ICommander> pCommander;
-	EResupplyType eResupplyType;
+	EResupplyType eResupplyType = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTask); f.Add(3,&pCell); f.Add(4,&pCommander); f.Add(5,&eResupplyType); return 0; }
 public:
@@ -231,7 +232,7 @@ class CFreeArtilleryHolder : public CAIObjectBase
 	typedef det_map<int, SArtilleryInfo> TArtilleries;
 	OBJECT_NOCOPY_METHODS( CFreeArtilleryHolder );
 	TArtilleries::iterator itCurrent;
-	NTimer::STime timeFromReset;
+	NTimer::STime timeFromReset = {};
 	ZDATA
 		TArtilleries artilleries;
 		ZONSERIALIZE
@@ -285,10 +286,10 @@ private:
 	// storages (tasks to defend storages)
 	CommonUnits resupplyTrucks;
 	std::vector<CPosition> vPositions;
-	int nCurPosition;
-	bool bInitedByParcel;
+	int nCurPosition = {};
+	bool bInitedByParcel = {};
 
-	int nParty;
+	int nParty = {};
 	CFreeArtilleryHolder freeArtilleryHolder;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); f.Add(2,&pGeneral); f.Add(3,&cells); f.Add(4,&cellsWithRequests); f.Add(6,&resupplyTrucks); f.Add(7,&vPositions); f.Add(8,&nCurPosition); f.Add(9,&bInitedByParcel); f.Add(10,&nParty); f.Add(11,&freeArtilleryHolder); return 0; }
 

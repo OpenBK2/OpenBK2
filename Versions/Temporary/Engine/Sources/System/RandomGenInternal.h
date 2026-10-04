@@ -9,12 +9,13 @@ const int RANDSIZ = 1 << RANDSIZL;
 
 struct SRandData
 {
-	uint32_t randcnt;
-	uint32_t randrsl[RANDSIZ];
-	uint32_t randmem[RANDSIZ];
-	uint32_t randa;
-	uint32_t randb;
-	uint32_t randc;
+	// Seed initialization and restoration overwrite these defensive defaults.
+	uint32_t randcnt = 0;
+	uint32_t randrsl[RANDSIZ]{};
+	uint32_t randmem[RANDSIZ]{};
+	uint32_t randa = 0;
+	uint32_t randb = 0;
+	uint32_t randc = 0;
 };
 
 class CRandomGenSeed : public IRandomSeed

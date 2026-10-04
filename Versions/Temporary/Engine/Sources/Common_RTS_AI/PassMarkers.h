@@ -1,5 +1,7 @@
 #pragma once
 
+// Defensive member defaults; explicit constructor values still take precedence.
+
 #include "Common_RTS_AI_export.h"
 
 #include "DebugTools/DebugInfoManager.h"
@@ -19,15 +21,15 @@ class COMMON_RTS_AI_EXPORT CPassMarkersDraw : public CObjectBase
 	CPtr<CAIMap> pAIMap;
 
 	// markers variables
-	int markers_id[MARKERS_COLORS_COUNT];
-	int markers_radiuses[MARKERS_COLORS_COUNT];
-	EAIClasses markers_aiClasses[MARKERS_COLORS_COUNT];
-	EFreeTileInfo markers_freeClass[MARKERS_COLORS_COUNT];
-	NDebugInfo::EColor markers_colors[MARKERS_COLORS_COUNT];
-	int nWaterMarker;
-	bool bDrawMarkers;
+	int markers_id[MARKERS_COLORS_COUNT]{};
+	int markers_radiuses[MARKERS_COLORS_COUNT]{};
+	EAIClasses markers_aiClasses[MARKERS_COLORS_COUNT]{};
+	EFreeTileInfo markers_freeClass[MARKERS_COLORS_COUNT]{};
+	NDebugInfo::EColor markers_colors[MARKERS_COLORS_COUNT]{};
+	int nWaterMarker = 0;
+	bool bDrawMarkers = false;
 
-	NTimer::STime lastPassabilityUpdate;
+	NTimer::STime lastPassabilityUpdate = 0;
 
 	void DrawPassabilities1();
 	void Reset();

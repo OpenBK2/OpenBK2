@@ -10,7 +10,8 @@ class CKillCorpseExecutor : public CExecutor
 
 	ZDATA_( CExecutor )
 		CPtr<CFakeCorpseStaticObject> pObject;
-		NTimer::STime killTime;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		NTimer::STime killTime = {};
 	// Keep the original expiry time when resuming a saved simulation.
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutor *)this); f.Add(2,&pObject); f.Add(3,&killTime); return 0; }
 public:

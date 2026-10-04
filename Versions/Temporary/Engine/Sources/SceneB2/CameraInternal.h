@@ -10,10 +10,11 @@ namespace NCamera
 {
 	struct SEarthQuake
 	{
-		float fAmplitude;
-		float fAttenuation;
-		float fDuration;
-		float fTime;
+		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+		float fAmplitude = {};
+		float fAttenuation = {};
+		float fDuration = {};
+		float fTime = {};
 		//
 		SEarthQuake() {	}
 		SEarthQuake( float _fAmplitude, float _fAttenuation, float _fDuration )
@@ -25,13 +26,13 @@ class CCamera : public ICamera, protected NInput::CGMORegContainer
 {
 	OBJECT_NOCOPY_METHODS( CCamera )
 
-	bool bMayaHandleType;
+	bool bMayaHandleType = {};
 	// projection transform params
-	float fScreenWidth;
-	float fScreenHeight;
-	float fNearClipPlane;
-	float fFarClipPlane;
-	bool bPerspectiveTransform;
+	float fScreenWidth = {};
+	float fScreenHeight = {};
+	float fNearClipPlane = {};
+	float fFarClipPlane = {};
+	bool bPerspectiveTransform = {};
 	// transform matrices, built from data above
 	SHMatrix matView;											// view matrix
 	SHMatrix matProj;											// projective matrix
@@ -40,13 +41,13 @@ class CCamera : public ICamera, protected NInput::CGMORegContainer
 	//CDGPtr<NCamera::CCameraPlacement> pScriptMutator;
 	CDGPtr<NCamera::CCameraBasicMouseMutator> pMouseMutator;
 	CDGPtr<CScriptMoviesMutatorHolder> pScriptMutatorsHolder;
-	bool bUseMovieMutator;
-	bool bWasUpdated;						// camera was updated from input
-	bool bWasUpdatedExternally; // camera was updated from external
-	bool bIsMovieFinished;			// the movie segment has reached it`s finish
-	bool bIsPlayingFinal;				// the current movie segment is the final one
+	bool bUseMovieMutator = {};
+	bool bWasUpdated = {};						// camera was updated from input
+	bool bWasUpdatedExternally = {}; // camera was updated from external
+	bool bIsMovieFinished = {};			// the movie segment has reached it`s finish
+	bool bIsPlayingFinal = {};				// the current movie segment is the final one
 	std::list<NCamera::SEarthQuake> earthquakes;
-	NTimer::STime timeLastUpdate;
+	NTimer::STime timeLastUpdate = {};
 	//
 	void MsgMouseRotation( const SGameMessage &msg, bool bBegin );
 	void SetupDefaultMouseMutator();

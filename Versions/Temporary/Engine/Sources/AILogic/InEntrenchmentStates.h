@@ -32,7 +32,8 @@ class CSoldierRestInEntrenchmentState : public IUnitState, public CStandartBehav
 
 	ZDATA_(CStandartBehaviour)
 	CPtr<CSoldier> pSoldier;	
-	NTimer::STime startTime;
+	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
+	NTimer::STime startTime = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pSoldier); f.Add(3,&startTime); return 0; }
 public:
 	static IUnitState* Instance( class CSoldier *pSoldier, class CEntrenchment *pEntrenchment );
@@ -63,10 +64,10 @@ class CSoldierAttackInEtrenchState : public IUnitAttackingState
 	CPtr<CAIUnit> pEnemy;
 
 	CPtr<CBasicGun> pGun;
-	bool bFinish;
-	bool bAim;
-	bool bSwarmAttack;
-	int nEnemyParty;
+	bool bFinish = {};
+	bool bAim = {};
+	bool bSwarmAttack = {};
+	int nEnemyParty = {};
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); f.Add(3,&pEnemy); f.Add(4,&pGun); f.Add(5,&bFinish); f.Add(6,&bAim); f.Add(7,&bSwarmAttack); f.Add(8,&nEnemyParty); f.Add(9,&damageToEnemyUpdater); return 0; }
