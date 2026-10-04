@@ -40,6 +40,34 @@ public:
 public:
     det_set() = default;
 
+    det_set(const det_set& other)
+        : items_(other.items_),
+          index_(other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq()) {
+        // Rebuild lookup iterators for the copied nodes; source iterators cannot
+        // be used to erase from this list or survive destruction of the source.
+        index_.max_load_factor(other.index_.max_load_factor());
+        for (auto it = items_.begin(); it != items_.end(); ++it) {
+            index_.emplace(*it, it);
+        }
+    }
+
+    det_set& operator=(const det_set& other) {
+        if (this != &other) {
+            det_set copy(other);
+            swap(copy);
+        }
+        return *this;
+    }
+
+    // Moving the list transfers its nodes, so the transferred index remains valid.
+    det_set(det_set&&) = default;
+    det_set& operator=(det_set&&) = default;
+
+    void swap(det_set& other) noexcept(noexcept(items_.swap(other.items_)) && noexcept(index_.swap(other.index_))) {
+        items_.swap(other.items_);
+        index_.swap(other.index_);
+    }
+
     det_set(std::initializer_list<T> init) {
         reserve(init.size());
         for (const auto& value : init) {

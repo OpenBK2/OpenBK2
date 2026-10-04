@@ -106,6 +106,10 @@ bool CLongObjectCreation::CanBuildOnRect( SRect r1, const std::list<SVector> &ti
 
 void CLongObjectCreation::UnlockPreventingUnits( std::list<CPtr<CAIUnit> > &preventing ) const
 {
+	// Placement previews are local to one client and must not alter pathfinding locks.
+	if ( !IsAIModificationAllowed() )
+		return;
+
 	for ( std::list<CPtr<CAIUnit> >::iterator it = preventing.begin(); it != preventing.end(); ++it )
 	{
 		CAIUnit * pUnit = *it;

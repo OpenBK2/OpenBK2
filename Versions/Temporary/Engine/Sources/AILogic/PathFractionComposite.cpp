@@ -110,7 +110,8 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 	float fDistRemain;
 	vPosLastPoint = vPos;					
 	vSpeedLastPoint = vSpeed;
-	vNormaleLastPoint = vNormaleLastPoint;
+	// Initialize the saved previous normal from the actual path, not stale memory.
+	vNormaleLastPoint = vNormale;
 
 	Iterate( param.fDistToGo, &fDistRemain );
 	// draw path points

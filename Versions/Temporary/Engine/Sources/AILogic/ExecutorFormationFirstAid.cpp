@@ -67,7 +67,7 @@ bool CExecutorFormationFirstAid::NotifyEvent( const CExecutorEvent &event )
 	if ( pFormation->GetUniqueId() != event.GetParam().nUnitID )
 		return false;
 
-	const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
+	const CExecutorEventSpecialAbility *pEv( static_cast<const CExecutorEventSpecialAbility *>( &event ) );
 	if ( pEv->GetAbility() == GetAbility() )
 	{
 		return CExecutorUnitBase::NotifyEvent( event );

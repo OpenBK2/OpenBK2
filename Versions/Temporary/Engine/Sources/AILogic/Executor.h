@@ -141,58 +141,58 @@ public:
 	}
 };
 
-class CExecutorEventSpecialAbilityActivate : public CExecutorEvent
-{
-	ZDATA_(CExecutorEvent)
-	NDb::EUnitSpecialAbility eAbility;
-	CDBPtr<NDb::SUnitSpecialAblityDesc> pDesc;
-	CPtr<CAICommand> pCommand;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&eAbility); f.Add(3,&pDesc); f.Add(4,&pCommand); return 0; }
-public:
-
-	const CAICommand * GetCommand() const { return pCommand; }
-	const NDb::SUnitSpecialAblityDesc * GetDesc() const { return pDesc; }
-	const NDb::EUnitSpecialAbility GetAbility() const { return eAbility; }
-
-	CExecutorEventSpecialAbilityActivate() {  }
-	CExecutorEventSpecialAbilityActivate( const SExecutorEventParam &_param, 
-																				const NDb::EUnitSpecialAbility _eAbility,
-																				class CAICommand *_pCommand,
-																				const NDb::SUnitSpecialAblityDesc *_pDesc )
-		: CExecutorEvent( _param ), pDesc( _pDesc ), eAbility( _eAbility ), pCommand( _pCommand )
-	{
-	}
-};
-
-class CExecutorEventSpecialAbilityDeactivate : public CExecutorEvent
-{
-	ZDATA_(CExecutorEvent)
-	NDb::EUnitSpecialAbility eAbility;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&eAbility); return 0; }
-public:
-	const NDb::EUnitSpecialAbility GetAbility() const { return eAbility; }
-
-	CExecutorEventSpecialAbilityDeactivate() {  }
-	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param, 
-		const NDb::EUnitSpecialAbility _eAbility )
-		: CExecutorEvent( param ), eAbility( _eAbility )
-	{
-	}
-};
-
+// All ability payloads share this base, so handlers can safely inspect the ability
+// without treating activation and deactivation events as unrelated sibling types.
 class CExecutorEventSpecialAbility : public CExecutorEvent
 {
 	ZDATA_(CExecutorEvent)
 	NDb::EUnitSpecialAbility eAbility;
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorEvent*)this); f.Add(2,&eAbility); return 0; }
-public:
+
 	const NDb::EUnitSpecialAbility GetAbility() const { return eAbility; }
 
 	CExecutorEventSpecialAbility() {  }
-	CExecutorEventSpecialAbility( const SExecutorEventParam &param, 
+	CExecutorEventSpecialAbility( const SExecutorEventParam &param,
 		const NDb::EUnitSpecialAbility _eAbility )
 		: CExecutorEvent( param ), eAbility( _eAbility )
+	{
+	}
+};
+
+class CExecutorEventSpecialAbilityActivate : public CExecutorEventSpecialAbility
+{
+	ZDATA_(CExecutorEventSpecialAbility)
+	CDBPtr<NDb::SUnitSpecialAblityDesc> pDesc;
+	CPtr<CAICommand> pCommand;
+	// Keep the legacy flat chunks: event=1, ability=2, description=3, command=4.
+	ZEND int operator&( IBinSaver &f ) { CExecutorEventSpecialAbility::operator&( f ); f.Add(3,&pDesc); f.Add(4,&pCommand); return 0; }
+public:
+
+	const CAICommand * GetCommand() const { return pCommand; }
+	const NDb::SUnitSpecialAblityDesc * GetDesc() const { return pDesc; }
+
+	CExecutorEventSpecialAbilityActivate() {  }
+	CExecutorEventSpecialAbilityActivate( const SExecutorEventParam &_param, 
+																				const NDb::EUnitSpecialAbility _eAbility,
+																				class CAICommand *_pCommand,
+																				const NDb::SUnitSpecialAblityDesc *_pDesc )
+		: CExecutorEventSpecialAbility( _param, _eAbility ), pDesc( _pDesc ), pCommand( _pCommand )
+	{
+	}
+};
+
+class CExecutorEventSpecialAbilityDeactivate : public CExecutorEventSpecialAbility
+{
+	ZDATA_(CExecutorEventSpecialAbility)
+	// Deactivation retains the same flat event and ability chunks as older saves.
+	ZEND int operator&( IBinSaver &f ) { return CExecutorEventSpecialAbility::operator&( f ); }
+public:
+
+	CExecutorEventSpecialAbilityDeactivate() {  }
+	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param, 
+		const NDb::EUnitSpecialAbility _eAbility )
+		: CExecutorEventSpecialAbility( param, _eAbility )
 	{
 	}
 

@@ -26,6 +26,10 @@ class CTurret : public CLinkObject
 		
 		// поворот закончен
 		bool bFinished;
+
+		// Finished turrets are serialized before their first turn, too.
+		SRotating() : wRotationSpeed( 0 ), wCurAngle( 0 ), wFinalAngle( 0 ),
+			sign( 0 ), startTime( 0 ), endTime( 0 ), bFinished( true ) { }
 	};
 
 	ZDATA_(CLinkObject)
@@ -46,8 +50,9 @@ class CTurret : public CLinkObject
 	SAIAngle wDefaultHorAngle;
 	bool bReturnToNULLVerAngle;
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&hor); f.Add(3,&ver); f.Add(4,&bCanReturn); f.Add(5,&bVerAiming); f.Add(6,&pTracedUnit); f.Add(7,&pLockingGun); f.Add(8,&wDefaultHorAngle); f.Add(9,&bReturnToNULLVerAngle); return 0; }
+	ZEND int operator&( IBinSaver &f );
 private:
+	static void SerializeRotation( IBinSaver &saver, const int nChunk, SRotating &rotation );
 	//
 	uint16_t GetCurAngle( const SRotating &rotateInfo ) const;
 	void SetTurnParameters( SRotating *pRotateInfo, const uint16_t wAngle, const bool bInstantly );

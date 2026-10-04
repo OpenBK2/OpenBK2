@@ -28,8 +28,9 @@ protected:
 	bool bBombsAutocast;
 
 	CVec2 vInitialPoint;										// plane will leave to appear point
-	NTimer::STime timeNextGroundScan;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&pStats); f.Add(3,&pFormation); f.Add(4,&vPlanesShift); f.Add(5,&fFuel); f.Add(6,&vSpeed); f.Add(7,&vPos); f.Add(8,&vNormale); f.Add(9,&bBombsAutocast); f.Add(10,&vInitialPoint); return 0; }
+	// Preserve the RNG scan schedule across saves; old saves read the new chunk as zero.
+	NTimer::STime timeNextGroundScan = 0;
+	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&pStats); f.Add(3,&pFormation); f.Add(4,&vPlanesShift); f.Add(5,&fFuel); f.Add(6,&vSpeed); f.Add(7,&vPos); f.Add(8,&vNormale); f.Add(9,&bBombsAutocast); f.Add(10,&vInitialPoint); f.Add(11,&timeNextGroundScan); return 0; }
 public:
 	CAviation() : bBombsAutocast( false ), fFuel( 0.0f ), vPlanesShift( VNULL3 ), vSpeed( VNULL3 ), vPos( VNULL3 ),
 		vNormale( VNULL3 ), vInitialPoint( VNULL2 ) {  }

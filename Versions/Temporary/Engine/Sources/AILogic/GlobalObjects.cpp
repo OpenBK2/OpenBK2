@@ -159,6 +159,7 @@ int CGlobalSerializer::operator&( IBinSaver &saver )
 	saver.Add( 36, &theRailRoadSystem );
 	saver.Add( 37, &theFeedBackSystem );
 	saver.Add( 38, &theCommandTrackerForScript );
+	CPlanesFormation::SerializeIDs( 39, saver );
 	return 0;
 }
 

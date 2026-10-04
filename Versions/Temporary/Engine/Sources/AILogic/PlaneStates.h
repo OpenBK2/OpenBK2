@@ -172,7 +172,8 @@ class CPlaneSwarmToState : public CPlanePatrolState, public CPlaneDeffensiveFire
 	};
 	ZDATA_(CPlanePatrolState)
 		ZPARENT(CPlaneDeffensiveFire)
-	NTimer::STime timeNextScan;
+	// Retained for save compatibility; actual scans use the defensive-fire base timer.
+	NTimer::STime timeNextScan = 0;
 	EPlaneSwarmToState eState;
 	bool bScanForTarget;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPlanePatrolState*)this); f.Add(2,(CPlaneDeffensiveFire*)this); f.Add(3,&timeNextScan); f.Add(4,&eState); f.Add(5,&bScanForTarget); return 0; }

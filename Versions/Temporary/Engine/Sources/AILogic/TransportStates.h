@@ -276,11 +276,12 @@ class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHel
 
 	SAIAngle wDesiredTransportDir; // куда бдет направлен транспорт при погрузке
 public:
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pTransport); f.Add(3,&eState); f.Add(4,&pArtillery); f.Add(5,&vArtilleryPoint); f.Add(6,&timeLast); f.Add(7,&wDesiredTransportDir); return 0; }
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pTransport); f.Add(3,&eState); f.Add(4,&pArtillery); f.Add(5,&vArtilleryPoint); f.Add(6,&timeLast); f.Add(7,&wDesiredTransportDir); f.Add(8,&bInterrupted); return 0; }
 private:
 	void OnSerialize( IBinSaver &saver );
 
-	bool bInterrupted;
+	// Old saves lack this chunk and deterministically resume as not interrupted.
+	bool bInterrupted = false;
 	bool CanInterrupt();
 	void InterruptBecauseOfPath();
 public:

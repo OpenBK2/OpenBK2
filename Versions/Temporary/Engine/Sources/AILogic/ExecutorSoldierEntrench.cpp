@@ -8,11 +8,12 @@
 extern CGroupLogic theGroupLogic;
 
 CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
-: pUnit( _pUnit ), 
+: pUnit( _pUnit ), fEntrenchTimeCoeff( 1.0f ),
 	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION, 
 	NDb::ABILITY_ENTRENCH_SELF )
 {
 	RecordRandomCall();
+	// The legacy coefficient is still serialized, even though the base handles speed.
 	for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
@@ -107,9 +108,16 @@ bool CExecutorSoldierEntrench::NotifyEvent( const CExecutorEvent &event )
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
 		return false;
 
-	const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
-	if ( pEv->GetAbility() == GetAbility() )
+	// Commands and the internal enable/disable notifications have no ability payload.
+	if ( event.GetParam().eEventID == EID_NEW_COMMAND_RECIEVED ||
+		event.GetParam().eEventID == EID_ABILITY_ENABLE || event.GetParam().eEventID == EID_ABILITY_DISABLE )
 		return CExecutorUnitBase::NotifyEvent( event );
+	if ( event.GetParam().eEventID == EID_ABILITY_ACTIVATE || event.GetParam().eEventID == EID_ABILITY_DEACTIVATE )
+	{
+		const CExecutorEventSpecialAbility &abilityEvent = static_cast<const CExecutorEventSpecialAbility &>( event );
+		if ( abilityEvent.GetAbility() == GetAbility() )
+			return CExecutorUnitBase::NotifyEvent( event );
+	}
 	
 	return false;
 }

@@ -23,6 +23,11 @@ int CKillCorpseExecutor::Segment()
 {
 	if ( IsExecutorValid() )
 	{
+		// Legacy saves omitted the deadline. Start a deterministic lifetime here,
+		// after the simulation clock has been restored, rather than deleting at load.
+		if ( killTime == 0 )
+			killTime = curTime + SConsts::TIME_TO_DISAPPEAR;
+
 		if ( curTime >= killTime )
 		{
 			pObject->Die( pObject->GetHitPoints() + 1 );

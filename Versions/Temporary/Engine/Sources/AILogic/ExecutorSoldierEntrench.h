@@ -31,7 +31,7 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 	const bool IsValidInternal() const;
 public:
 	CExecutorSoldierEntrench( CAIUnit *_pUnit );
-	CExecutorSoldierEntrench() {  }
+	CExecutorSoldierEntrench() : fEntrenchTimeCoeff( 1.0f ) { }
 	~CExecutorSoldierEntrench();
 
 	int Segment();

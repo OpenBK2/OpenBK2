@@ -26,7 +26,12 @@ bool ToAIUnits( bool bInEditor )
 		fBrokeTrackProbability *= 0.01f;
 	}
 	// пули/минуту <=> ticks между вылетами пуль в очереди
-	nFireRate = int( 60000.0f / fFireRate );
+	float fr = fFireRate;
+	// Keep the minimum rate finite before converting the interval to integer ticks.
+	// The comparison also sends NaN through the same fallback as zero/negative rates.
+	if ( !( fr >= 0.0001f ) )
+		fr = 0.0001f;
+	nFireRate = int( 60000.0f / fr );
 	// секунды <=> ticks
 	nRelaxTime = int( fRelaxTime * 1000.0f );
 	return true;

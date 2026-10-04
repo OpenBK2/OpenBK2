@@ -60,7 +60,12 @@ bool CSortedGridUnits::SUnitsCompare::operator()( const int a, const int b ) con
 		const int nARow = fmod( vACenter.y, STANDART_HEIGHT );
 		const int nBRow = fmod( vBCenter.y, STANDART_HEIGHT );
 		
-		return nARow > nBRow || nARow == nBRow && vACenter.x > vBCenter.x;
+		if ( nARow != nBRow )
+			return nARow > nBRow;
+		if ( vACenter.x != vBCenter.x )
+			return vACenter.x > vBCenter.x;
+		// Overlapping units still need a stable order when assigning grid slots.
+		return pSortedUnits->units[a]->GetUniqueId() < pSortedUnits->units[b]->GetUniqueId();
 	}
 }
 

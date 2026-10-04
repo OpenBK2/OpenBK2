@@ -10,6 +10,53 @@ extern NTimer::STime curTime;
 int CPlanesFormation::nIDSoFar = 1;
 det_map<int, bool> CPlanesFormation::existence;
 
+int CPlanesFormation::operator&( IBinSaver &saver )
+{
+	saver.Add( 1, static_cast<CBasePathUnit*>(this) );
+	saver.Add( 2, &pathHistory );
+	saver.Add( 3, &preferences );
+	saver.Add( 4, &vPos );
+	saver.Add( 5, &vSpeed );
+	saver.Add( 6, &vNormal );
+	saver.Add( 7, &vNewPos );
+	saver.Add( 8, &vNewSpeed );
+	saver.Add( 9, &vNewNormal );
+	saver.Add( 10, &nProcessed );
+	saver.Add( 11, &nAlive );
+	saver.Add( 12, &fBombPointOffset );
+	saver.Add( 13, &nID );
+	if ( saver.IsReading() && IsRefValid() )
+	{
+		// Invalid objects retained by weak references must not occupy attack slots.
+		// Old saves omitted IDs. Assign them in serialized object order; new saves
+		// keep the IDs used by the maneuver builder's saved attack allocations.
+		if ( nID <= 0 )
+			nID = nIDSoFar++;
+		else
+			nIDSoFar = (std::max)( nIDSoFar, nID + 1 );
+		existence[nID] = true;
+	}
+	return 0;
+}
+
+void CPlanesFormation::SerializeIDs( const int nChunk, IBinSaver &saver )
+{
+	int nNextID = nIDSoFar;
+	saver.Add( nChunk, &nNextID );
+	if ( saver.IsReading() )
+	{
+		// Keep IDs already registered while loading and preserve the counter beyond
+		// IDs of dead formations, not just the highest live one.
+		nIDSoFar = (std::max)( nIDSoFar, nNextID );
+		if ( nNextID == 0 )
+		{
+			// Legacy attack caches refer to IDs that were never saved on formations.
+			// Rebuild these allocations instead of attaching them to unrelated planes.
+			theManuverBuilder.Clear();
+		}
+	}
+}
+
 //*******************************************************************
 //*														CPlaneManuverHistory*
 //*******************************************************************

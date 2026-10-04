@@ -39,6 +39,34 @@ public:
 public:
     det_map() = default;
 
+    det_map(const det_map& other)
+        : items_(other.items_),
+          index_(other.index_.bucket_count(), other.index_.hash_function(), other.index_.key_eq()) {
+        // Copied list nodes have new addresses. Never copy the source's iterators
+        // into our index, or lookups and erases would still access the source.
+        index_.max_load_factor(other.index_.max_load_factor());
+        for (auto it = items_.begin(); it != items_.end(); ++it) {
+            index_.emplace(it->first, it);
+        }
+    }
+
+    det_map& operator=(const det_map& other) {
+        if (this != &other) {
+            det_map copy(other);
+            swap(copy);
+        }
+        return *this;
+    }
+
+    // Moving the list transfers its nodes, so the transferred index remains valid.
+    det_map(det_map&&) = default;
+    det_map& operator=(det_map&&) = default;
+
+    void swap(det_map& other) noexcept(noexcept(items_.swap(other.items_)) && noexcept(index_.swap(other.index_))) {
+        items_.swap(other.items_);
+        index_.swap(other.index_);
+    }
+
     det_map(std::initializer_list<value_type> init) {
         reserve(init.size());
         for (const auto& item : init) {

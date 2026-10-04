@@ -234,13 +234,8 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
 		return false;
 
-	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
-	if ( pEv == 0 )
-		return false;
-
-	if ( pEv->GetAbility() != eAbilityType )
-		return false;
-
+	// Fire, movement and command events contain only their event parameters.
+	// Inspect an ability payload only in the branches that receive one.
 	const EExecutorEventID eCurID = event.GetParam().eEventID;
 	switch( eCurID )
 	{
@@ -252,62 +247,32 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 		return true;
 	case EID_START_IDLE:
 		// mark as if unit is camoflating
-		if ( pEv->GetAbility() != eAbilityType )
-			return false;
 		bMoving = false;
 
 		break;
 	case EID_START_MOVE:
-		if ( pEv->GetAbility() != eAbilityType )
-			return false;
-		
 		bMoving = true;
 
 		return true;
 	case EID_ABILITY_DEACTIVATE:
-	case EID_NEW_COMMAND_RECIEVED:
-		if ( EID_ABILITY_DEACTIVATE == eCurID && pEv->GetAbility() != eAbilityType )
+		if ( static_cast<const CExecutorEventSpecialAbility &>( event ).GetAbility() != eAbilityType )
 			return false;
+		[[fallthrough]];
+	case EID_NEW_COMMAND_RECIEVED:
 		if ( EID_NEW_COMMAND_RECIEVED == eCurID && eState != EASS_SWITCHING_ON )
 			return false;
-		{
-			const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
-
-			// the parent unit notified executor about ability start.
-			if ( pEv->GetParam().nUnitID == pUnit->GetUniqueId() ) 
-			{
-				// this ablity finished
-				timeLastUpdate = curTime;
-				UnCamoUnit();
-				eState = EASS_SWITCHING_OFF;
-			}
-		}
+		timeLastUpdate = curTime;
+		UnCamoUnit();
+		eState = EASS_SWITCHING_OFF;
 
 		return true;
 	case EID_ABILITY_ACTIVATE:
 		{
-			if ( pEv->GetAbility() != eAbilityType )
+			const CExecutorEventSpecialAbility &abilityEvent = static_cast<const CExecutorEventSpecialAbility &>( event );
+			if ( abilityEvent.GetAbility() != eAbilityType )
 				return false;
-			const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
-			// the parent unit notified executor about ability start.
-			if ( pEv->GetParam().nUnitID == pUnit->GetUniqueId() )
-			{
-				if ( eAbilityType == pEv->GetAbility() ) // this ablity started
-				{
-					timeLastUpdate = curTime;
-					eState = EASS_SWITCHING_ON;
-				}
-				else if ( pUnit->GetUnitAbilityDesc( eAbilityType ) && pUnit->GetUnitAbilityDesc( eAbilityType )->eGroupID == pEv->GetDesc()->eGroupID ) // ability from this group started
-				{
-					if ( EASS_DISABLE != eState )
-						eStateBeforeDisable = eState;
-					eState = EASS_DISABLE;
-					//CRAP{ 
-					//UnCamoUnit();
-					//CRAP}
-					timeDisableGroup = pEv->GetDesc()->nDisableGroupTime;
-				}
-			}
+			timeLastUpdate = curTime;
+			eState = EASS_SWITCHING_ON;
 		}
 		return true;
 	}

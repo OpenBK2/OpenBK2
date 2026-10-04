@@ -63,7 +63,7 @@ bool CExecutorPlaneDropBombsObject::NotifyEvent( const CExecutorEvent &event )
 	if ( pUnit->GetUniqueId() != event.GetParam().nUnitID )
 		return false;
 
-	const CExecutorEventSpecialAbilityActivate *pEv( static_cast<const CExecutorEventSpecialAbilityActivate *>( &event ) );
+	const CExecutorEventSpecialAbility *pEv( static_cast<const CExecutorEventSpecialAbility *>( &event ) );
 
 	const EExecutorEventID eCurID = event.GetParam().eEventID;
 

@@ -53,7 +53,7 @@ class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUn
 
 	float fBombPointOffset;
 	int nID;
-	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBasePathUnit*)this); f.Add(2,&pathHistory); f.Add(3,&preferences); f.Add(4,&vPos); f.Add(5,&vSpeed); f.Add(6,&vNormal); f.Add(7,&vNewPos); f.Add(8,&vNewSpeed); f.Add(9,&vNewNormal); f.Add(10,&nProcessed); f.Add(11,&nAlive); f.Add(12,&fBombPointOffset); return 0; }
+	public: ZEND int operator&( IBinSaver &f );
 protected:
 	virtual void NullSegmTime() {}
 	virtual void CheckForDestroyedObjects( const CVec2 &vCenter ) const {}
@@ -70,6 +70,7 @@ public:
 		existence.erase( nID );
 	}
 	static void Clear();
+	static void SerializeIDs( const int nChunk, IBinSaver &saver );
 	static bool IsFormaionExists( int nID );
 	int GetFormationID() const { return nID; }
 	//{ PlaneFormation interface

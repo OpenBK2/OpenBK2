@@ -11,7 +11,8 @@ class CKillCorpseExecutor : public CExecutor
 	ZDATA_( CExecutor )
 		CPtr<CFakeCorpseStaticObject> pObject;
 		NTimer::STime killTime;
-	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutor *)this); f.Add(2,&pObject); return 0; }
+	// Keep the original expiry time when resuming a saved simulation.
+	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CExecutor *)this); f.Add(2,&pObject); f.Add(3,&killTime); return 0; }
 public:
 	CKillCorpseExecutor() : killTime( 0 ) {}
 	CKillCorpseExecutor( CFakeCorpseStaticObject *pObject );
