@@ -10,7 +10,9 @@ if(WIN32)
 endif()
 
 # Restore saved buttons and descendants without graphics resources or game data.
-add_unit_test(WindowAfterLoad UI System Misc gr2)
+# The derived window fixture instantiates Input observer code from headers.
+# Link Input directly so ELF linkers can resolve its CBind symbols.
+add_unit_test(WindowAfterLoad UI Input System Misc gr2)
 if(WIN32)
     set_tests_properties(WindowAfterLoad_test PROPERTIES
         ENVIRONMENT_MODIFICATION "PATH=path_list_append:${FFMPEG_BIN}")
