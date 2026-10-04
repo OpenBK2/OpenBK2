@@ -290,7 +290,12 @@ void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )
 
 	// Defer both lockstep and manager-side removal to the same segment boundary.
 	if ( IsValid( pTransceiver ) )
+	{
+		// A removed local player must not retain a pause whose ownership bit was cleared above.
+		if ( nSlot == nOwnSlot )
+			pTransceiver->CommandTimeOut( false );
 		pTransceiver->SchedulePlayerRemoval( nSlot, nSegment );
+	}
 }
 
 void CMPManagerMode::ApplyScheduledSlotDrops()
@@ -307,8 +312,8 @@ void CMPManagerMode::ApplyScheduledSlotDrops()
 		if ( nDropSegment < 0 || nDropSegment > nCommonSegment )
 			continue;
 
-		// Match the transceiver drop moment so game-control checks see consistent membership.
-		scheduledDropSegmentBySlot[i] = -1;
+		// Retain the authoritative boundary after applying it: duplicate removals
+		// stay idempotent and surviving teammates use it for the same match-end tick.
 		if ( IsPlayerPresent( i ) )
 		{
 			const uint32_t dwPrePresentMask = GetPresentMask();

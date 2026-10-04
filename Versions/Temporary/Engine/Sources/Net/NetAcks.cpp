@@ -213,7 +213,9 @@ void CAckTracker::ReceivePktAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bi
 		nShift -= CS_PACKET_ID_RANGE;
 	if ( nShift <= 0 )
 	{
-		if ( nShift < -32 )
+		// A whole bitmap has moved out of range; shifting uint32_t by 32 is
+		// undefined and can suppress valid ACKs after packet reordering.
+		if ( nShift <= -32 )
 			dwAckedBits = 0;
 		else
 			dwAckedBits >>= -nShift;

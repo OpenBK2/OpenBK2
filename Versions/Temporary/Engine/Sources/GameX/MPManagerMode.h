@@ -130,6 +130,7 @@ private:
 	bool OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg );
 	bool OnLagMessage( SMPUILagMessage *pMsg );
 	bool OnPauseMessage( SMPUIMessage *pMsg );
+	void SetUserPause( bool bPauseOn );
 	bool OnInGameChatMessage( SMPUIInGameChatMessage *pMsg );
 	//}
 

@@ -172,17 +172,21 @@ void CMPTransceiver::DoSegments()
 	}
 	pTimer->BeginSegments();			//???this line does nothing.
 
-	if ( bWaiting || bIsGameEnded )
+	if ( bIsGameEnded )
 		return;
 
-	// Apply simulation-side player drops before segment processing.
-	// Waiting for network packets is stopped as soon as the drop is scheduled.
+	// Apply removals on their simulation boundary, including the final tick.
 	ApplyScheduledPlayerRemovals();
 
-	if ( nFinalSegment > 0 && nCommonSegment >= nFinalSegment )
+	// A final boundary already reached must finish even while a local user pause
+	// is active. Never enter another packet wait after reaching that boundary.
+	if ( nFinalSegment >= 0 && nCommonSegment >= nFinalSegment )
 	{
 		EndGame();
+		return;
 	}
+	if ( bWaiting )
+		return;
 
 	while ( pTimer->CanStartNextSegment() )
 	{
@@ -218,6 +222,15 @@ void CMPTransceiver::DoSegments()
 		}
 		else
 			AdvanceToNextSegment();
+
+		// Catch-up can execute several segments in one frame. Stop on the agreed
+		// tick, before asking an already-finished peer for another segment packet.
+		if ( nFinalSegment >= 0 && nCommonSegment >= nFinalSegment )
+		{
+			ApplyScheduledPlayerRemovals();
+			EndGame();
+			return;
+		}
 	}
 }
 
@@ -488,6 +501,10 @@ void CMPTransceiver::EndGame()
 	if ( bIsGameEnded )
 		return;
 	bIsGameEnded = true;
+	CommandTimeOut( false );
+	SetLagState( 0, false );
+	NGameX::MatchPacketTrace_Log( nCommonSegment, "STATE", "TransceiverEndGame",
+		players[nMyLogicID].nClientID, fmt::format( "final_segment={}", nFinalSegment ) );
 }
 
 void CMPTransceiver::LeaveOutOfSync()
@@ -686,10 +703,18 @@ bool CMPTransceiver::IsAsyncDetected( int nSegment )
 
 int CMPTransceiver::ScheduleGameEnd( const int _nSegment )
 {
-	const int nFinishOnSegment = ( _nSegment > 0 ) ? _nSegment : nCommonSegment;
-	nFinalSegment = ( nFinishOnSegment - nFinishOnSegment % nSegmentsPackSize ) + nLatency;
+	// Negative means a local decision; zero is a valid segment received from a peer.
+	const int nFinishOnSegment = ( _nSegment >= 0 ) ? _nSegment : nCommonSegment;
+	const int nRequestedFinalSegment = ( nFinishOnSegment - nFinishOnSegment % nSegmentsPackSize ) + nLatency;
+	// Several teammates can detect the same loss on different frames. A later
+	// announcement must never extend the wait beyond a peer's earlier finish.
+	if ( nFinalSegment < 0 || nRequestedFinalSegment < nFinalSegment )
+		nFinalSegment = nRequestedFinalSegment;
+	NGameX::MatchPacketTrace_Log( nCommonSegment, "DECISION", "ScheduleGameEnd",
+		players[nMyLogicID].nClientID,
+		fmt::format( "requested_segment={} final_segment={}", nFinishOnSegment, nFinalSegment ) );
 
-	return nFinishOnSegment;
+	return nFinalSegment - nLatency;
 }
 
 CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, const SB2StartGameParams &params, int nMySlot )

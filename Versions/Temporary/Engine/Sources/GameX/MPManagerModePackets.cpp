@@ -262,7 +262,21 @@ bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPac
 	SLagInfo &lag = lags[pPacket->nPlayer];
 	//DebugTrace( "*** LAG UPDATE player %d, time %d --> %d", pPacket->nPlayer, lag.nLagLeft, pPacket->nTimeLeft );
 	const int nPreLagLeft = lag.nLagLeft;
-	lag.nLagLeft = (std::min)( pPacket->nTimeLeft, int( lag.nLagLeft ) );
+	// The packet contains a remaining budget, while an active local timer stores
+	// its budget at timeStartLag. Charge elapsed time once before comparing them;
+	// otherwise every peer's resume report charges the same pause again.
+	const uint32_t dwPlayerBit = 1UL << pPacket->nPlayer;
+	const bool bTimerRunning = pPacket->nPlayer == nOwnSlot
+		? ( dwUserPausedPlayers & dwPlayerBit ) != 0
+		: ( dwLaggersOld & dwPlayerBit ) != 0;
+	if ( bTimerRunning )
+	{
+		const NTimer::STime curTime = GameTimer()->GetAbsTime();
+		const int nTimeLeft = lag.nLagLeft - ( curTime - lag.timeStartLag );
+		lag.nLagLeft = (std::max)( nTimeLeft, 0 );
+		lag.timeStartLag = curTime;
+	}
+	lag.nLagLeft = (std::min)( (std::max)( pPacket->nTimeLeft, 0 ), lag.nLagLeft );
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 		"RX",
@@ -310,11 +324,6 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 		pPacket->nClientID,
 		fmt::format( "slot={} target_seg={} host_id={}", int( pPacket->nSlotToDrop ), pPacket->nSegment, nHostClientID ) );
 
-	const int nSlotToDrop = pPacket->nSlotToDrop;
-	const bool bDropsCurrentHost =
-		nSlotToDrop >= 0 && nSlotToDrop < slots.size() &&
-		GetSlotClientID( nSlotToDrop ) == nHostClientID;
-
 	if ( !IsAuthoritativeDropPacket( pPacket ) )
 	{
 		NGameX::MatchPacketTrace_Log(
@@ -326,25 +335,15 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 		return true;
 	}
 
-	int nDropSegment = pPacket->nSegment;
-	if ( bDropsCurrentHost && IsValid( pTransceiver ) && nDropSegment > pTransceiver->GetCurrentCommonSegment() )
-	{
-		nDropSegment = pTransceiver->GetCurrentCommonSegment();
-		NGameX::MatchPacketTrace_Log(
-			nDropSegment,
-			"DECISION",
-			"ClampHostDropToLocalSegment",
-			GetOwnClientID(),
-			fmt::format( "slot={} packet_seg={} local_seg={}", nSlotToDrop, pPacket->nSegment, nDropSegment ) );
-	}
-
-	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, nDropSegment );
+	// Waiting is stopped immediately by SchedulePlayerRemoval. Keep the host's
+	// simulation boundary unchanged even if this client is currently behind it.
+	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
 	return true;
 }
 
 bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 {
-	if ( !IsGameRunning() || bOutcomeKnown || pPacket->nGameID != nGameID )
+	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pPacket->nGameID != nGameID || pPacket->nSegment < 0 )
 		return true;
 
 	NGameX::MatchPacketTrace_Log(
@@ -362,10 +361,16 @@ bool CMPManagerMode::OnB2GameLostPacket( class CB2GameLostPacket *pPacket )
 
 		if ( slots[i].nClientID == pPacket->nClientID )
 		{
+			const bool bPacketWinsGame = ( slots[nOwnSlot].nTeam != slots[i].nTeam );
+			// Teammates may announce the same outcome at different local ticks.
+			// Reconcile their finish boundary even after deciding our own result,
+			// otherwise a later finisher waits for packets from an ended client.
+			if ( bOutcomeKnown && bWinOnGameEnd != bPacketWinsGame )
+				return true;
 			pTransceiver->ScheduleGameEnd( pPacket->nSegment );
 			//DebugTrace( "+++ Game Lost for team %d (from slot %d) scheduled", slots[i].nTeam, i );
 			bOutcomeKnown = true;
-			bWinOnGameEnd = ( slots[nOwnSlot].nTeam != slots[i].nTeam );
+			bWinOnGameEnd = bPacketWinsGame;
 			break;
 		}
 	}

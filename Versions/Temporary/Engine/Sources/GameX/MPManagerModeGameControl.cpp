@@ -186,7 +186,16 @@ void CMPManagerMode::ScheduleWinGame()
 		"ScheduleWinGame",
 		GetOwnClientID(),
 		fmt::format( "game_id={}", nGameID ) );
-	pTransceiver->ScheduleGameEnd( 0 );
+	// All-left victories must use the announced drop boundary, not the local
+	// frame that noticed it. Surviving teammates can be several ticks apart.
+	int nLastOpponentDrop = -1;
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		if ( ( dwInitialPlayers & ( 1UL << i ) ) != 0 && slots[i].nTeam != slots[nOwnSlot].nTeam &&
+			i < scheduledDropSegmentBySlot.size() )
+			nLastOpponentDrop = (std::max)( nLastOpponentDrop, scheduledDropSegmentBySlot[i] );
+	}
+	pTransceiver->ScheduleGameEnd( nLastOpponentDrop );
 	bWinOnGameEnd = true;
 	bOutcomeKnown = true;
 }
@@ -199,7 +208,7 @@ void CMPManagerMode::ScheduleLoseGame()
 		"CB2GameLostPacket",
 		GetOwnClientID(),
 		fmt::format( "game_id={}", nGameID ) );
-	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( 0 ) );
+	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( -1 ) );
 	pClient->SendGamePacket( pPkt, true );
 	bWinOnGameEnd = false;
 	bOutcomeKnown = true;
@@ -225,6 +234,13 @@ std::string GenerateDateTimeReplayFilename() {
 
 void CMPManagerMode::EndGame()
 {
+	// No lag report can close this menu once the transceiver has been released.
+	// Clear it explicitly, including the empty list left by the final slot drop.
+	dwLaggers = 0;
+	dwLaggersOld = 0;
+	dwUserPausedPlayers = 0;
+	bInitialLoadInProgress = false;
+	ShowWaitWindow( false );
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 		"STATE",
@@ -428,8 +444,6 @@ void CMPManagerMode::AnalyzeLaggers()
 {
 	NTimer::STime curTime = GameTimer()->GetAbsTime();
 
-	// TODO: inspect!
-
 	if ( bInitialLoadInProgress )
 	{
 		if ( lagsUpdate.CheckNeedUpdate() )
@@ -437,20 +451,15 @@ void CMPManagerMode::AnalyzeLaggers()
 		return;
 	}
 
-	// Analyze my lag, if any
-	// This should only happen if I set the pause myself
-	if ( IsPlayerLagging( nOwnSlot ) )
+	// Reserve the configured network-lag allowance when a user pause expires.
+	// Both the budget and elapsed time are milliseconds; the setting is seconds.
+	if ( ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0 )
 	{
 		SLagInfo &lagInfo = lags[nOwnSlot];
 		int nTimeLeft = lagInfo.nLagLeft - ( curTime - lagInfo.timeStartLag );
 
-		if ( nTimeLeft < NGameX::GetMPConsts()->nTimeUserMPLag )			// Too little time left, remove pause
-		{
-			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
-			pTransceiver->CommandTimeOut( false );
-			dwLaggers &= ~( 1UL << nOwnSlot );
-			ShowWaitWindow( false );
-		}
+		if ( nTimeLeft <= NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
+			SetUserPause( false );
 	}
 
 	uint32_t dwPlayers = 0;
@@ -468,50 +477,13 @@ void CMPManagerMode::AnalyzeLaggers()
 
 		SLagInfo &lagInfo = lags[i];
 		const bool bLaggingGameControlHost = ( GetSlotClientID( i ) == nHostClientID );
-		const bool bUserPaused = ( dwUserPausedPlayers & ( 1UL << i ) ) != 0;
 
 		if ( HasPlayerStartedLagging( i ) )
 		{
 			lagInfo.timeStartLag = curTime;
-			//DebugTrace( "*** LAG START for player %d at time %d", i, curTime );
-			if ( bLaggingGameControlHost && !bUserPaused && IsValid( pTransceiver ) &&
-				i >= 0 && i < scheduledDropSegmentBySlot.size() &&
-				scheduledDropSegmentBySlot[i] < 0 )
-			{
-				const int nReplacementHostClientID = GetReplacementHostClientID( nHostClientID );
-				if ( nReplacementHostClientID >= 0 && GetOwnClientID() == nReplacementHostClientID )
-				{
-					const int nOldHostClientID = nHostClientID;
-					PromoteGameControlHostAfterRemoval( nOldHostClientID );
-					const int nDropSegment = pTransceiver->GetCurrentCommonSegment();
-					NGameX::MatchPacketTrace_Log(
-						nDropSegment,
-						"DECISION",
-						"HostLagDropAuthorityAssumed",
-						GetOwnClientID(),
-						fmt::format( "slot={} old_host={} new_host={}", i, nOldHostClientID, nHostClientID ) );
-					ScheduleSynchronizedPlayerDrop( i, nDropSegment );
-					BroadcastSynchronizedPlayerDrop( i, nDropSegment, "host_lag_timeout" );
-				}
-				else
-				{
-					NGameX::MatchPacketTrace_Log(
-						pTransceiver->GetCurrentCommonSegment(),
-						"DECISION",
-						"HostLagAwaitingReplacementAuthority",
-						GetOwnClientID(),
-						fmt::format( "slot={} replacement={}", i, nReplacementHostClientID ) );
-				}
-			}
-			else if ( bLaggingGameControlHost && bUserPaused )
-			{
-				NGameX::MatchPacketTrace_Log(
-					IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-					"DECISION",
-					"HostLagUserPauseObserved",
-					GetOwnClientID(),
-					fmt::format( "slot={} user_pause_mask={:08X}", i, dwUserPausedPlayers ) );
-			}
+			// A missing segment is not a disconnect: the host may be minimized,
+			// paused, or waiting for another peer. Host migration follows the same
+			// expired-budget/consensus path below as every other lagging player.
 		}
 		else if ( HasPlayerStoppedLagging( i ) )
 		{
@@ -519,7 +491,6 @@ void CMPManagerMode::AnalyzeLaggers()
 			lagInfo.nLagLeft = (std::max)( nTimeLeft, 0 );
 			lagInfo.dwHatedBy = 0;
 			lagInfo.timeStartLag = 0;
-			dwUserPausedPlayers &= ~( 1UL << i );
 			CPtr<CB2LagTimeUpdatePacket> pPkt = new CB2LagTimeUpdatePacket( 0, i, lagInfo.nLagLeft );
 			NGameX::MatchPacketTrace_Log(
 				IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,

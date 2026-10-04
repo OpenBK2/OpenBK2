@@ -169,30 +169,40 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 
 bool CMPManagerMode::OnLagMessage( SMPUILagMessage *pMsg )
 {
+	// A queued report must not reopen the wait screen after ending the match.
+	if ( !IsGameRunning() || !IsValid( pTransceiver ) || pTransceiver->IsGameEnded() )
+		return true;
+
 	const uint32_t dwLaggersBefore = dwLaggers;
+	// Lockstep reports are queued independently of UI pause requests. A report
+	// from before Ctrl+P must not clear the local pause or hide its Resume button.
+	const uint32_t dwOwnPause = nOwnSlot >= 0 && nOwnSlot < slots.size()
+		? dwUserPausedPlayers & ( 1UL << nOwnSlot ) : 0;
+	// Drops can be processed before an older UI lag report. Only retain players
+	// that are still present and actually required by the lockstep transceiver.
+	const uint32_t dwReportedLaggers = ( pMsg->dwLaggingPlayers | dwOwnPause ) &
+		GetPresentMask() & pTransceiver->GetPlayerMask();
 	if ( bInitialLoadInProgress && !pMsg->bInitialWait )
 	{
 		dwLaggersOld = 0;
 		bInitialLoadInProgress = false;
 	}
-	else if ( dwLaggers == pMsg->dwLaggingPlayers )
+	else if ( dwLaggers == dwReportedLaggers )
 	{
-		if ( pMsg->dwLaggingPlayers == 0 )
+		if ( dwReportedLaggers == 0 )
 			ShowWaitWindow( false );
 		return true;
 	}
 
-	dwLaggers = pMsg->dwLaggingPlayers;
+	dwLaggers = dwReportedLaggers;
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
 		"STATE",
 		"OnLagMessage",
 		GetOwnClientID(),
 		fmt::format( "initial={} pre_laggers={:08X} post_laggers={:08X}", pMsg->bInitialWait ? 1 : 0, dwLaggersBefore, dwLaggers ) );
-	if ( pMsg->dwLaggingPlayers == 0 )								// Turning it off
-		ShowWaitWindow( false );
-	else if ( dwLaggersOld == 0 )											// Turning it on
-		ShowWaitWindow( true );
+	// Several reports may arrive before AnalyzeLaggers updates dwLaggersOld.
+	ShowWaitWindow( dwLaggers != 0 );
 
 	//DebugTrace( "*** LAG STATUS: %x ", pMsg->dwLaggingPlayers );
 
@@ -231,32 +241,37 @@ bool CMPManagerMode::OnInterruptMessage( SMPUIMessage *pMsg )
 
 bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 {
-	if ( !IsGameRunning() )
+	if ( !IsGameRunning() || nOwnSlot < 0 || nOwnSlot >= slots.size() )
 		return true;
 
-	bool bPausedNow = IsPlayerLagging( nOwnSlot );
-	NTimer::STime curTime = GameTimer()->GetAbsTime();
+	// Only an explicit local pause controls CommandTimeOut; lag reports can
+	// change independently while delayed segment packets are being processed.
+	const bool bPausedNow = ( dwUserPausedPlayers & ( 1UL << nOwnSlot ) ) != 0;
 	if ( !bPausedNow && lags[nOwnSlot].nLagLeft < NGameX::GetMPConsts()->nTimeUserMPLag * 1000 )
 		return true;
 
-	const bool bPauseOn = !bPausedNow;
-	if ( nOwnSlot >= 0 && nOwnSlot < slots.size() )
-	{
-		if ( bPauseOn )
-			dwUserPausedPlayers |= ( 1UL << nOwnSlot );
-		else
-			dwUserPausedPlayers &= ~( 1UL << nOwnSlot );
-		pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
-		NGameX::MatchPacketTrace_Log(
-			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
-			"TX",
-			"CB2UserPausePacket",
-			GetOwnClientID(),
-			fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
-	}
+	SetUserPause( !bPausedNow );
+	return true;
+}
+
+void CMPManagerMode::SetUserPause( bool bPauseOn )
+{
+	const NTimer::STime curTime = GameTimer()->GetAbsTime();
+	if ( bPauseOn )
+		dwUserPausedPlayers |= ( 1UL << nOwnSlot );
+	else
+		dwUserPausedPlayers &= ~( 1UL << nOwnSlot );
+	// Automatic pause expiry must publish the same state change as Resume.
+	pClient->SendGamePacket( new CB2UserPausePacket( 0, bPauseOn ), true );
+	NGameX::MatchPacketTrace_Log(
+		pTransceiver->GetCurrentCommonSegment(),
+		"TX",
+		"CB2UserPausePacket",
+		GetOwnClientID(),
+		fmt::format( "slot={} paused={} user_pause_mask={:08X}", nOwnSlot, bPauseOn ? 1 : 0, dwUserPausedPlayers ) );
 
 	pTransceiver->CommandTimeOut( bPauseOn );
-	if ( bPausedNow )							// Pause off
+	if ( !bPauseOn )							// Pause off
 	{
 		dwLaggers &= ~( 1UL << nOwnSlot );
 		int nTimeLeft = lags[nOwnSlot].nLagLeft - ( curTime - lags[nOwnSlot].timeStartLag );
@@ -270,8 +285,7 @@ bool CMPManagerMode::OnPauseMessage( SMPUIMessage *pMsg )
 		lags[nOwnSlot].timeStartLag = curTime;
 	}
 
-	ShowWaitWindow( !bPausedNow );
-	return true;
+	ShowWaitWindow( dwLaggers != 0 );
 }
 
 bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )

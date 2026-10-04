@@ -21,6 +21,7 @@ namespace NNet
 class CNetDriver : public IDriver
 {
 	OBJECT_NOCOPY_METHODS( CNetDriver );
+	friend struct CNetDriverTestAccess;
 public:
 	struct SServer
 	{
@@ -86,6 +87,7 @@ private:
 	void RemoveClient( CP2PTracker::UCID nID );
 	void StepInactive();
 	void StepConnecting();
+	void StepPeerTimers( float fDeltaTime );
 	void StepActive( float fDeltaTime );
 
 	void ProcessIncomingMessages();

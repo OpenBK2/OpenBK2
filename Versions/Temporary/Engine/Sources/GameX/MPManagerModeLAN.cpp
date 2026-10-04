@@ -261,6 +261,12 @@ bool CMPManagerModeLAN::OnGameClientWasKicked( class CGameClientWasKicked *pPack
 		PushMessage( new SMPUIGameRoomInitMessage( SMPUIGameRoomInitMessage::ERR_KICKED ) );
 		OnLeaveGame();
 	}
+	else if ( IsGameRunning() && ( pPacket->nKicked == -1 || pPacket->nKicked == GetOwnClientID() ) )
+	{
+		// A transport kick has already destroyed all peer connections. Continuing
+		// lockstep here would leave this client waiting for packets forever.
+		LoseGame();
+	}
 
 	return true;
 }

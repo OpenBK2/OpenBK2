@@ -91,14 +91,17 @@ bool CSendPacket::bLastPacket;
 
 static bool CanReadPacket( CRingBuffer<N_STREAM_BUFFER> &buf )
 {
-	if ( buf.GetSize() < 4 )
+	if ( buf.GetSize() < 1 )
 		return false;
-	int nSize;
-	buf.Peek( &nSize, 4 );
-	if ( nSize & 1 )
-		nSize &= 0xff;
+	int nSize = 0;
+	buf.Peek( &nSize, 1 );
+	// Short frames have only a one-byte header, including the final segment marker.
+	const int nHeaderSize = ( nSize & 1 ) ? 1 : 4;
+	if ( buf.GetSize() < nHeaderSize )
+		return false;
+	buf.Peek( &nSize, nHeaderSize );
 	nSize >>= 1;
-	if ( buf.GetSize() >= nSize + (nSize >= 128 ? 4 : 1) )
+	if ( nSize >= 0 && nSize <= buf.GetSize() - nHeaderSize )
 		return true;
 	return false;
 }
@@ -209,14 +212,15 @@ CNetDriver::~CNetDriver()
 				if ( ( !bIsClient ) || ( bIsBroadcast ) )
 					for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 					{
-						CSendPacket p( i->second.currentAddr, LOGOUT, i->second.clientID, pLinks );
+						// LOGOUT identifies the departing client, never the recipient.
+						CSendPacket p( i->second.currentAddr, LOGOUT, login.GetSelfClientID(), pLinks );
 					}
 				else
 					//sends message to server only
 					for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 					{
 						if ( i->second.clientID == 0 ) 
-							CSendPacket p( i->second.currentAddr, LOGOUT, i->second.clientID, pLinks );
+							CSendPacket p( i->second.currentAddr, LOGOUT, login.GetSelfClientID(), pLinks );
 					}
 					break;
 			}
@@ -540,7 +544,8 @@ void CNetDriver::ProcessIncomingMessages()
 				{
 					CP2PTracker::UCID clientID = -1;
 					bits.Read( &clientID, sizeof( clientID ) );
-					p2p.KickClient( clientID, bIsBroadcast );
+					// Older clients wrote the recipient ID here. Resolve the departing
+					// connection by its address so another peer cannot be removed as well.
 					SPeer *pPeer = GetClientByAddr( addr );
 					if ( pPeer )
 						p2p.KickClient( pPeer->clientID, bIsBroadcast );
@@ -651,6 +656,8 @@ void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from,
 	{
 		SMessage &res = msgQueue.emplace_back();
 		res.msg = msg;
+		// This is a local connection event, without a remote packet sender.
+		res.nClientID = -1;
 		return;
 	}
 	SPeer *pPeer = GetClient( _from );
@@ -673,7 +680,8 @@ void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from,
 void CNetDriver::PollMessages( SPeer *pPeer )
 {
 	// seek for packets through incoming traffic
-	if ( CanReadPacket( pPeer->data.channelInBuf ) )
+	// Drain complete frames before a following LOGOUT can retire this connection.
+	while ( CanReadPacket( pPeer->data.channelInBuf ) )
 	{
 		CMemoryStream pkt;
 		ReadPacket( pPeer->data.channelInBuf, &pkt );
@@ -720,7 +728,7 @@ void CNetDriver::ProcessP2PMessages()
 	}
 }
 
-void CNetDriver::StepActive( float fDeltaTime )
+void CNetDriver::StepPeerTimers( float fDeltaTime )
 {
 	// rollback outdated packets
 	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
@@ -729,8 +737,13 @@ void CNetDriver::StepActive( float fDeltaTime )
 		i->second.acks.Step( &rolled, &erased, fDeltaTime, consts.fServerListTimeout );
 		i->second.data.Rollback( rolled );
 		i->second.data.Erase( erased );
-		PollMessages( &(i->second) );
 	}
+}
+
+void CNetDriver::StepActive( float fDeltaTime )
+{
+	for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
+		PollMessages( &(i->second) );
 
 	// give out kicks
 	for ( int k = 0; k < p2p.kicks.size(); ++k )
@@ -865,6 +878,10 @@ void CNetDriver::Step()
 		float fSeconds = NHPTimer::GetTimePassed( &lastTime );
 		serverInfo.Step( fSeconds );
 		login.Step( fSeconds );
+		// Age existing peers before incoming packets reset their receive timers.
+		// Otherwise returning from a stalled frame can time out a peer just heard from.
+		if ( state == ACTIVE )
+			StepPeerTimers( fSeconds );
 		ProcessIncomingMessages();
 		//
 		switch ( state )

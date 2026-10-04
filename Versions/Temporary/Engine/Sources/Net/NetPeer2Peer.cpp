@@ -626,10 +626,11 @@ void CP2PTracker::ProcessPacket( const UCID addr, CMemoryStream &pkt, bool bIsBr
 		case PKT_ACK:
 			{
 				int nID;
-				PEER_ID addr;
+				PEER_ID peerID;
 				pkt >> nID;
-				pkt >> addr;
-				ReceiveAck( addr, nID, addr );
+				pkt >> peerID;
+				// The sender's connection ID and its ID for the broadcast peer are distinct.
+				ReceiveAck( addr, nID, peerID );
 			}
 			break;
 		default:

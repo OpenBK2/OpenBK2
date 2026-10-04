@@ -98,15 +98,8 @@ bool CMPManagerMode::Segment()
 		pClient->SendGamePacket( new CPingPacket( 0, nOwnSlot, GameTimer()->GetAbsTime() ), true );
 	}
 
-	if ( IsGameRunning() )
-	{
-		// Keep manager-side slot visibility in sync with transceiver drop segment processing.
-		ApplyScheduledSlotDrops();
-		AnalyzeLaggers();
-		CheckEndGameConditions();
-	}
-
-	// Process packets
+	// Process queued pause, removal and outcome packets before making timeout or
+	// end-game decisions; those packets may invalidate the previous frame's state.
 	while ( CPtr<CNetPacket> pPacket = pClient->GetPacket() )
 	{
 		if ( IsGameRunning() )
@@ -122,6 +115,17 @@ bool CMPManagerMode::Segment()
 
 		bool bResult = ProcessPacket( pPacket );
 		//NI_ASSERT( bResult, "PRG: Unhandled general packet" );
+	}
+
+	if ( IsGameRunning() )
+	{
+		// Keep manager-side slot visibility in sync with transceiver drop segment processing.
+		ApplyScheduledSlotDrops();
+		AnalyzeLaggers();
+		// A start-game packet can queue mission loading during this same call.
+		// Do not inspect simulation victory conditions until lockstep has started.
+		if ( pTransceiver->IsGameRunning() )
+			CheckEndGameConditions();
 	}
 
 	return true;
