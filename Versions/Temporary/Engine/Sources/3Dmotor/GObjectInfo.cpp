@@ -646,7 +646,8 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 			tangent = NGltf::ConvertDirection(
 				fastgltf::math::fvec3(tangents[i][0], tangents[i][1], tangents[i][2]) );
 			Normalize( &tangent );
-			binormal = (normal ^ tangent) * -tangents[i][3];
+			// X mirroring cancels the Y/Z swap's handedness change.
+			binormal = (normal ^ tangent) * tangents[i][3];
 			Normalize( &binormal );
 		}
 		else
@@ -684,10 +685,10 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 		for ( std::size_t i = 0; i + 2 < indices.size(); i += 3 )
 		{
 			STriangle &triangle = pData->geometry.emplace_back();
-			// Coordinate conversion changes handedness, so reverse winding.
+			// The (-X, Z, Y) conversion preserves the source winding.
 			triangle.i1 = static_cast<int>(vertexOffset + indices[i]);
-			triangle.i2 = static_cast<int>(vertexOffset + indices[i + 2]);
-			triangle.i3 = static_cast<int>(vertexOffset + indices[i + 1]);
+			triangle.i2 = static_cast<int>(vertexOffset + indices[i + 1]);
+			triangle.i3 = static_cast<int>(vertexOffset + indices[i + 2]);
 		}
 	}
 	else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
@@ -700,11 +701,10 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 			if ( a == b || b == c || a == c )
 				continue;
 			STriangle &triangle = pData->geometry.emplace_back();
-			// A strip alternates its source winding. Reverse each source triangle
-			// explicitly because the coordinate conversion changes handedness.
+			// A strip alternates its source winding; preserve each source triangle.
 			triangle.i1 = static_cast<int>(vertexOffset + (i & 1 ? b : a));
-			triangle.i2 = static_cast<int>(vertexOffset + c);
-			triangle.i3 = static_cast<int>(vertexOffset + (i & 1 ? a : b));
+			triangle.i2 = static_cast<int>(vertexOffset + (i & 1 ? a : b));
+			triangle.i3 = static_cast<int>(vertexOffset + c);
 		}
 	}
 	else
@@ -713,8 +713,8 @@ void AppendGltfPrimitive( const NGltf::TGltfFilePtr &file, std::size_t nodeIndex
 		{
 			STriangle &triangle = pData->geometry.emplace_back();
 			triangle.i1 = static_cast<int>(vertexOffset + indices[0]);
-			triangle.i2 = static_cast<int>(vertexOffset + indices[i]);
-			triangle.i3 = static_cast<int>(vertexOffset + indices[i - 1]);
+			triangle.i2 = static_cast<int>(vertexOffset + indices[i - 1]);
+			triangle.i3 = static_cast<int>(vertexOffset + indices[i]);
 		}
 	}
 

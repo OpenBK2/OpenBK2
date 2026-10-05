@@ -41,8 +41,8 @@ std::string Number( double value )
 	return text.str();
 }
 
-// Inverse of NGltf::ConvertPosition/ConvertRotation: engine Z-up, left-handed
-// to glTF Y-up, right-handed, with an optional additional X reflection.
+// Swap engine Z-up to glTF Y-up, with optional X mirroring. With mirrorX enabled
+// this is the inverse of the runtime's NGltf::ConvertPosition/ConvertRotation.
 V3 Vector( const float *value, bool mirrorX )
 {
 	return {Finite(value[0]) * (mirrorX ? -1.f : 1.f), Finite(value[2]), Finite(value[1])};

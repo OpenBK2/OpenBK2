@@ -84,3 +84,11 @@ if(WIN32)
     set_property(TARGET GltfBounds_test APPEND PROPERTY
         LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
 endif()
+
+# Mirroring must preserve skin deformation and rigid animation in both file formats.
+add_unit_test(GltfMirror 3Dmotor 3DLib System Misc gr2 fastgltf::fastgltf)
+target_compile_definitions(GltfMirror_test PRIVATE NOMINMAX)
+if(WIN32)
+    set_property(TARGET GltfMirror_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()

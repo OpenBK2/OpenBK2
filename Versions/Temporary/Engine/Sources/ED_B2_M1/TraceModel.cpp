@@ -354,8 +354,8 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 					if ( a == b || b == c || a == c ) return true;
 					STriangleForTrace result;
 					result.szBodyPart = std::string(node.name);
-					// The Y/Z basis swap reverses winding, just as in the renderer.
-					const uint32_t vertices[] = {a, c, b};
+					// X mirroring plus the Y/Z swap preserves winding, as in rendering.
+					const uint32_t vertices[] = {a, b, c};
 					for ( int v = 0; v < 3; ++v )
 					{
 						const CVec3 point = NGltf::ConvertPosition(positions[vertices[v]]);

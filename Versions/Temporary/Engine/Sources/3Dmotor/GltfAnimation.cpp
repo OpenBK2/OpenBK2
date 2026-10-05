@@ -138,13 +138,10 @@ fastgltf::math::fvec3 SampleVector( const std::vector<fastgltf::math::fvec3> &va
 	return first * (1.0f - key.factor) + second * key.factor;
 }
 
-CQuat RawQuaternion( const fastgltf::math::fvec4 &value, bool normalize )
+CQuat ConvertQuaternion( const fastgltf::math::fvec4 &value )
 {
-	CQuat result;
-	result.FromComponents( -value[0], -value[2], -value[1], value[3] );
-	if ( normalize )
-		result.Normalize();
-	return result;
+	// Rest poses and every interpolation mode must use the same mirrored basis.
+	return NGltf::ConvertRotation( fastgltf::math::fquat(value[0], value[1], value[2], value[3]) );
 }
 
 CQuat SampleQuaternion( const std::vector<fastgltf::math::fvec4> &values,
@@ -157,17 +154,17 @@ CQuat SampleQuaternion( const std::vector<fastgltf::math::fvec4> &values,
 		const std::size_t first = key.first * 3;
 		const std::size_t second = key.second * 3;
 		if ( second + 1 >= values.size() )
-			return RawQuaternion( values[(std::min)(first + 1, values.size() - 1)], true );
+			return ConvertQuaternion( values[(std::min)(first + 1, values.size() - 1)] );
 		fastgltf::math::fvec4 result;
 		for ( int i = 0; i < 4; ++i )
 			result[i] = Hermite( values[first + 1][i], values[first + 2][i],
 				values[second + 1][i], values[second][i], key.factor, key.delta );
-		return RawQuaternion( result, true );
+		return ConvertQuaternion( result );
 	}
-	const CQuat first = RawQuaternion( values[(std::min)(key.first, values.size() - 1)], true );
+	const CQuat first = ConvertQuaternion( values[(std::min)(key.first, values.size() - 1)] );
 	if ( interpolation == fastgltf::AnimationInterpolation::Step || key.first == key.second )
 		return first;
-	const CQuat second = RawQuaternion( values[(std::min)(key.second, values.size() - 1)], true );
+	const CQuat second = ConvertQuaternion( values[(std::min)(key.second, values.size() - 1)] );
 	CQuat result;
 	result.Interpolate( first, second, key.factor );
 	result.Normalize();

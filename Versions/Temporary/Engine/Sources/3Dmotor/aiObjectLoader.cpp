@@ -51,12 +51,13 @@ void AppendTriangles( const fastgltf::Asset &asset, const fastgltf::Primitive &p
 		return;
 	const std::vector<std::uint32_t> indices =
 		ReadGltfAccessor<std::uint32_t>( asset, *primitive.indicesAccessor );
+	// As in rendering, (-X, Z, Y) preserves source winding for collision faces.
 	if ( primitive.type == fastgltf::PrimitiveType::Triangles )
 	{
 		for ( std::size_t i = 0; i + 2 < indices.size(); i += 3 )
 			pResult->push_back( STriangle(static_cast<int>(vertexOffset + indices[i]),
-				static_cast<int>(vertexOffset + indices[i + 2]),
-				static_cast<int>(vertexOffset + indices[i + 1])) );
+				static_cast<int>(vertexOffset + indices[i + 1]),
+				static_cast<int>(vertexOffset + indices[i + 2])) );
 	}
 	else if ( primitive.type == fastgltf::PrimitiveType::TriangleStrip )
 	{
@@ -67,19 +68,18 @@ void AppendTriangles( const fastgltf::Asset &asset, const fastgltf::Primitive &p
 			const std::uint32_t c = indices[i];
 			if ( a == b || b == c || a == c )
 				continue;
-			// Strip triangles alternate their source winding; reverse both cases
-			// after converting from glTF's handedness.
+			// Strip triangles alternate their source winding.
 			pResult->push_back( STriangle(static_cast<int>(vertexOffset + (i & 1 ? b : a)),
-				static_cast<int>(vertexOffset + c),
-				static_cast<int>(vertexOffset + (i & 1 ? a : b))) );
+				static_cast<int>(vertexOffset + (i & 1 ? a : b)),
+				static_cast<int>(vertexOffset + c)) );
 		}
 	}
 	else if ( primitive.type == fastgltf::PrimitiveType::TriangleFan )
 	{
 		for ( std::size_t i = 2; i < indices.size(); ++i )
 			pResult->push_back( STriangle(static_cast<int>(vertexOffset + indices[0]),
-				static_cast<int>(vertexOffset + indices[i]),
-				static_cast<int>(vertexOffset + indices[i - 1])) );
+				static_cast<int>(vertexOffset + indices[i - 1]),
+				static_cast<int>(vertexOffset + indices[i])) );
 	}
 }
 

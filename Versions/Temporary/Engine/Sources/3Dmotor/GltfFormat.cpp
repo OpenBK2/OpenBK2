@@ -562,8 +562,9 @@ int GetMeshCount( const NDb::CResource *pOwner, const NFile::CFilePath &modelFil
 
 CVec3 ConvertPosition( const fastgltf::math::fvec3 &value )
 {
-	// glTF: right-handed, Y up. Engine: left-handed, Z up.
-	return CVec3( value[0], value[2], value[1] );
+	// Swap Y/Z for engine Z-up and mirror X to match the game's model orientation.
+	// The two reflections together preserve winding and tangent handedness.
+	return CVec3( -value[0], value[2], value[1] );
 }
 
 CVec3 ConvertDirection( const fastgltf::math::fvec3 &value )
@@ -574,13 +575,15 @@ CVec3 ConvertDirection( const fastgltf::math::fvec3 &value )
 CQuat ConvertRotation( const fastgltf::math::fquat &value )
 {
 	CQuat result;
-	result.FromComponents( -value[0], -value[2], -value[1], value[3] );
+	// Conjugate rotations by the same (-X, Z, Y) basis as positions.
+	result.FromComponents( -value[0], value[2], value[1], value[3] );
 	result.Normalize();
 	return result;
 }
 
 CVec3 ConvertScale( const fastgltf::math::fvec3 &value )
 {
+	// Reflection changes the basis, not the authored scale of a bone.
 	return CVec3( value[0], value[2], value[1] );
 }
 
@@ -593,6 +596,8 @@ SHMatrix ConvertMatrix( const fastgltf::math::fmat4x4 &value )
 		value[0][2], value[1][2], value[2][2], value[3][2],
 		value[0][3], value[1][3], value[2][3], value[3][3] );
 	SHMatrix basis = IdentityMatrix();
+	// Apply the same basis on both sides, including inverse bind matrices.
+	basis._11 = -1.0f;
 	basis._22 = basis._33 = 0.0f;
 	basis._23 = basis._32 = 1.0f;
 	return basis * source * basis;

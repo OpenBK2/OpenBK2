@@ -4,6 +4,8 @@ In `ExampleDinosaurUnit` folder, you'll find the animated dinosuar model and its
 
 The engine and editor accept `.glb` and `.gltf` models. Rendering still uses the game's XDB materials and textures; embedded glTF materials do not replace them.
 
+Loading converts glTF coordinates to engine coordinates as `(-X, Z, Y)`: X is mirrored along with the Y/Z up-axis swap. Geometry, collision meshes, skeletons, locators, and animations all use this conversion. This matches the editor's default **Mirror along X axis** option when exporting Granny3D to GLB. Re-export existing GLTF Geometry/AIGeometry and dependent stats resources with references so stored bounds and generated surface points/masks match the mirrored orientation.
+
 Geometry and AIGeometry select mesh nodes through `RootMesh`; Skeleton uses `RootJoint`. You can store both the collision mesh and the visible model in one file: for example, use `Basis` for Geometry.RootMesh and Skeleton.RootJoint, and `AABB` for AIGeometry.RootMesh.
 
 When doing animation clip splitting, either have all animations in one big clip in GLB (that's when you use FirstFrame and LastFrame properties), or have all of them in their own separate clips (aka actions in Blender) - that's when you use ClipName property. Setting both at once is not supported: a non-empty ClipName selects the whole clip and the frame range is ignored. That combination is reported in the log, along with the two other ways frame slicing can fail, a GLB exported without animation sampling and a range outside the timeline the exporter baked. This is still an improvement from the old maya where all clips had to be in one sequence and then exported to separate GR2 files. 
