@@ -4,8 +4,10 @@
 # MapEditorLib.dll (0xC0000135). RuntimeFontScale_test does the same.
 add_unit_test(TextResourceEncoding MapEditorLib System Misc gr2)
 add_unit_test(ThumbnailAlpha MapEditorLib System Misc wx::wx)
+add_unit_test(MultiManipulator MapEditorLib libdb System Misc gr2)
 
-# Both load wx, the first only through MapEditorLib, and copy_runtime_dlls does
+# These tests load wx through MapEditorLib, but copy_runtime_dlls does
 # not see wx's DLL. See copy_wx_runtime in cmake/wxwidgets.cmake.
 copy_wx_runtime(TextResourceEncoding_test)
 copy_wx_runtime(ThumbnailAlpha_test)
+copy_wx_runtime(MultiManipulator_test)

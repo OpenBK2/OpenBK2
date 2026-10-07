@@ -690,7 +690,8 @@ CMultiManipulatorIterator::CMultiManipulatorIterator( CMultiManipulator *_pMulti
 	else
 	{
 		CMultiManipulator::CManipulatorMap::iterator posManipulator = pMultiManipulator->manipulatorMap.begin();
-		if ( posManipulator->second )
+		// All selected resources may be missing, leaving no manipulators to iterate.
+		if ( posManipulator != pMultiManipulator->manipulatorMap.end() && posManipulator->second )
 		{
 			pManipulatorIterator = posManipulator->second->Iterate( bShowHidden, eCache );
 		}
