@@ -681,8 +681,13 @@ void CNetDriver::PollMessages( SPeer *pPeer )
 {
 	// seek for packets through incoming traffic
 	// Drain complete frames before a following LOGOUT can retire this connection.
-	while ( CanReadPacket( pPeer->data.channelInBuf ) )
+	for (;;)
 	{
+		// Closing an out-of-order gap can fill the ring before all acknowledged
+		// blocks fit. Each consumed frame makes room for the remaining blocks.
+		pPeer->data.PumpIncoming();
+		if ( !CanReadPacket( pPeer->data.channelInBuf ) )
+			break;
 		CMemoryStream pkt;
 		ReadPacket( pPeer->data.channelInBuf, &pkt );
 #ifdef LOG

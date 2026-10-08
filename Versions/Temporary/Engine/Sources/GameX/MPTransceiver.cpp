@@ -295,8 +295,8 @@ bool CMPTransceiver::IsSegmentPackFinished()
 
 void CMPTransceiver::SetSegmentFinished( int nPlayer, int nSegment, unsigned long ulCheckSum )
 {
-	if ( segmFinished[nSegment] & ( 1UL << nPlayer ) )
-		segmFinished[nSegment] = 0;
+	// Repeated receipt of one player's data must never erase other players' bits.
+	// Consumed ring slots are cleared explicitly by DoSegments.
 	segmFinished[nSegment] |= ( 1UL << nPlayer );
 	checkSums[nPlayer][nSegment] = ulCheckSum;
 	//DebugTrace( "+++ Player %d segment %d checksum %d", nPlayer, nSegment, ulCheckSum );
@@ -357,6 +357,18 @@ bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *
 	const int nPlayer = GetPlayerByClient( pPacket->nClientID );
 	if ( nPlayer < 0 || !IsPlayerPresent( nPlayer ) )
 		return true;
+	SPlayer &player = players[nPlayer];
+	// Deduplicate before both receipt accounting and command deserialization.
+	// Otherwise an old packet can reset another peer's receipt or execute twice.
+	if ( pPacket->nSegment < 0 || pPacket->nSegment <= player.nLastReceivedSegment )
+	{
+		NGameX::MatchPacketTrace_Log( nCommonSegment, "RX", "AISegmentFinishedIgnored", pPacket->nClientID,
+			fmt::format( "slot={} segment={} last_received={}",
+				nPlayer, pPacket->nSegment, player.nLastReceivedSegment ) );
+		return true;
+	}
+	// StartMission must not discard packets already received during loading.
+	player.nLastReceivedSegment = pPacket->nSegment;
 	NGameX::MatchPacketTrace_Log(
 		nCommonSegment,
 		"RX",
@@ -555,6 +567,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 		SPlayer &player = players[client.nPlayer];
 		player.nClientID = client.nClientID;
 		player.nTeam = client.nTeam;
+		player.nLastReceivedSegment = -1;
 		wMask |= (1UL << client.nPlayer);
 		wWaitMask |= (1UL << client.nPlayer);
 		DebugTrace( "+++ MPT: %d - plr %d, CID %d, team %d", i, client.nPlayer, client.nClientID, client.nTeam );

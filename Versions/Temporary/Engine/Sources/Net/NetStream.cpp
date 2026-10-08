@@ -47,9 +47,8 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 		}
 		else
 		{
-			SChannelBlock *pMSVCSuck = 0;
-			int nMaxSize = nSizeLimit - pMSVCSuck->GetHeaderSize();
-			nMaxSize = (std::min)( nMaxSize, 255 );
+			int nMaxSize = nSizeLimit - SChannelBlock::GetHeaderSize();
+			nMaxSize = (std::min)( nMaxSize, N_MAX_STREAM_BLOCK_SIZE );
 			int nSize = (std::min)( nMaxSize, channelOutBuf.GetSize() );
 			
 			SChannelBlock &block = channelOutFlyList.emplace_back();
@@ -109,6 +108,13 @@ void CStreamTracker::ReadMsg( CBitStream &bits )
 		return;
 	}
 	channelInList.push_back( block );
+	PumpIncoming();
+}
+//
+void CStreamTracker::PumpIncoming()
+{
+	// Received blocks have already been acknowledged. Resume assembly whenever
+	// the consumer frees ring space; another datagram may never arrive.
 	// gather input blocks into stream
 	for(;;)
 	{

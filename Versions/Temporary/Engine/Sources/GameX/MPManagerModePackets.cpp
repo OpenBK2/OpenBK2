@@ -256,7 +256,18 @@ bool CMPManagerMode::OnB2SuggestKickPacket( class CB2SuggestKickPacket *pPacket 
 
 bool CMPManagerMode::OnB2LagTimeUpdatePacket( class CB2LagTimeUpdatePacket *pPacket )
 {
-	if ( !IsGameRunning() || !IsPlayerPresent( pPacket->nPlayer ) )
+	if ( !IsGameRunning() )
+		return true;
+	const int nSenderSlot = GetSlotByClientID( pPacket->nClientID );
+	const int nPlayer = pPacket->nPlayer;
+	if ( nSenderSlot < 0 || nSenderSlot >= slots.size() ||
+		nPlayer < 0 || nPlayer >= slots.size() || nPlayer >= lags.size() )
+		return true;
+	// Queued reports from departing clients must not consume survivors' budgets.
+	// A scheduled drop already ends participation before the visible slot clears.
+	if ( !IsPlayerPresent( nSenderSlot ) || !IsPlayerPresent( nPlayer ) ||
+		( nSenderSlot < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nSenderSlot] >= 0 ) ||
+		( nPlayer < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[nPlayer] >= 0 ) )
 		return true;
 
 	SLagInfo &lag = lags[pPacket->nPlayer];

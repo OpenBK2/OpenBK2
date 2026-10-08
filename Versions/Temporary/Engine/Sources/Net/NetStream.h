@@ -61,6 +61,7 @@ public:
 const int N_STREAM_BUFFER = 32768;
 //const int N_STREAM_BUFFER = 128000;
 const int N_MAX_PACKET_SIZE = 1024; // low level packet size
+const int N_MAX_STREAM_BLOCK_SIZE = 255; // one-byte length in SChannelBlock
 class CStreamTracker
 {
 public:
@@ -70,9 +71,11 @@ public:
 	
 	CStreamTracker();
 	bool HasOutData() { return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty(); }
-	bool CanReadMsg() const { return channelInBuf.GetBufSize() > N_MAX_PACKET_SIZE; }
+	// A datagram carries at most 255 stream bytes, even with a larger UDP limit.
+	bool CanReadMsg() const { return channelInBuf.GetBufSize() >= N_MAX_STREAM_BLOCK_SIZE; }
 	void WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit );
 	void ReadMsg( CBitStream &bits );
+	void PumpIncoming();
 	void Rollback( const std::vector<PACKET_ID> &pkts );
 	void Erase( const std::vector<PACKET_ID> &pkts );
 	void Commit( const std::vector<PACKET_ID> &pkts );
@@ -88,7 +91,7 @@ private:
 		PACKET_ID nPkt;
 		
 		int GetSendSize() const { return sizeof(nOffset) + sizeof(nLength) + nLength; }
-		int GetHeaderSize() { return sizeof(nOffset) + sizeof(nLength); }
+		static int GetHeaderSize() { return sizeof(CHANNEL_DATA_OFFSET) + sizeof(unsigned char); }
 	};
 #pragma pack(pop)
 	

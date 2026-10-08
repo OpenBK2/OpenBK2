@@ -85,6 +85,8 @@ private:
 		int nClientID = {};
 		int nTeam = {};
 		bool bLoaded = {};
+		// Reliable peer streams are ordered; keep absolute ticks across ring reuse.
+		int nLastReceivedSegment = -1;
 		SPlayer() : nClientID( -1 ), bLoaded( false ) {}
 	};
 	typedef std::vector<SPlayer> CPlayersList;
