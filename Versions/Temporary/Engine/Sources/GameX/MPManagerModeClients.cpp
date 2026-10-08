@@ -183,7 +183,10 @@ int CMPManagerMode::GetReplacementHostClientID( int nRemovedClientID )
 	{
 		const SMPSlot &slot = slots[i];
 		const int nClientID = GetSlotClientID( i );
-		if ( slot.bPresent && nClientID >= 0 && nClientID != nRemovedClientID )
+		// A received drop stops lockstep waiting immediately, but the slot can
+		// remain visible until its announced segment. Never elect that leaver.
+		const bool bDropScheduled = i < scheduledDropSegmentBySlot.size() && scheduledDropSegmentBySlot[i] >= 0;
+		if ( slot.bPresent && !bDropScheduled && nClientID >= 0 && nClientID != nRemovedClientID )
 			return nClientID;
 	}
 	return -1;
@@ -253,7 +256,7 @@ void CMPManagerMode::BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, c
 		"CB2DropPlayerAtSegmentPacket",
 		GetOwnClientID(),
 		fmt::format( "slot={} target_seg={} reason={}", nSlot, nSegment, szReason ? szReason : "" ) );
-	pClient->SendGamePacket( new CB2DropPlayerAtSegmentPacket( 0, nSlot, nSegment ), true );
+	BroadcastGameControlPacket( new CB2DropPlayerAtSegmentPacket( 0, nSlot, nSegment ) );
 }
 
 void CMPManagerMode::ScheduleSynchronizedPlayerDrop( int nSlot, int nSegment )

@@ -55,6 +55,7 @@ class CMPManagerModeNivalNet : public CMPManagerMode
 	virtual void EndGame();
 	virtual void KickPlayerFromSlot( const int nSlot );
 	virtual void OnSurrender();
+	void BroadcastGameControlPacket( CNetPacket *pPacket ) override;
 	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID );
 
 	void CheckJoinGameConditions();

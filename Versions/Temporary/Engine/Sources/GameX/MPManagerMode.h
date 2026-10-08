@@ -176,6 +176,7 @@ protected:
 	void PromoteGameControlHostAfterRemoval( int nRemovedClientID );
 	virtual void OnGameControlHostChanged( int nOldHostClientID, int nNewHostClientID, int nRemovedClientID ) {}
 	bool IsAuthoritativeDropPacket( const class CB2DropPlayerAtSegmentPacket *pPacket );
+	virtual void BroadcastGameControlPacket( CNetPacket *pPacket );
 	void BroadcastSynchronizedPlayerDrop( int nSlot, int nSegment, const char *szReason );
 	void SendStartGamePacket();
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );

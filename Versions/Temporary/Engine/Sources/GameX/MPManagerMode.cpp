@@ -82,6 +82,13 @@ CMPManagerMode::~CMPManagerMode()
 {
 }
 
+void CMPManagerMode::BroadcastGameControlPacket( CNetPacket *pPacket )
+{
+	// LAN uses its peer channel; online play overrides this for announcements
+	// that must survive the immediate teardown of the match's peer connections.
+	pClient->SendGamePacket( pPacket, true );
+}
+
 bool CMPManagerMode::Segment()
 {
 	if ( !pMPConsts )

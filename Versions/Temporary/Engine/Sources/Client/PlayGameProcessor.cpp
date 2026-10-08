@@ -173,11 +173,13 @@ void CPlayGameProcessor::ProcessAcceptingGamersPackets()
 	}
 
 	for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
-	{
-		IConnection *pConnection = iter->second;
-		while ( CPtr<CNetPacket> pPacket = pConnection->GetPacket() )
-			PushPacket( pPacket );
-	}
+		DrainConnectionPackets( iter->second );
+}
+
+void CPlayGameProcessor::DrainConnectionPackets( IConnection *pConnection )
+{
+	while ( CPtr<CNetPacket> pPacket = pConnection->GetPacket() )
+		PushPacket( pPacket );
 }
 
 void CPlayGameProcessor::ProcessEfforts()
@@ -310,8 +312,15 @@ bool CPlayGameProcessor::ProcessGameConnectingClientAccepted( CGameConnectingCli
 
 bool CPlayGameProcessor::ProcessClientWasKicked( CGameClientWasKicked *pPacket )
 {
+	TConnections::iterator iter = connections.find( pPacket->nKicked );
+	if ( iter != connections.end() )
+	{
+		// Server notifications can follow forwarded game packets in the same
+		// receive batch. Deliver those packets before destroying their queue.
+		DrainConnectionPackets( iter->second );
+		connections.erase( iter );
+	}
 	PushPacket( pPacket );
-	connections.erase( pPacket->nKicked );
 	connectionEfforts.erase( pPacket->nKicked );
 
 	return true;
@@ -383,6 +392,10 @@ bool CPlayGameProcessor::ProcessGameKilled( CGameKilled *pPacket )
 {
 	if ( nOurGameID == pPacket->nGame )
 	{
+		// As with a single-client departure, the server can kill the room in
+		// the same batch that delivered its final relayed game packets.
+		for ( TConnections::iterator iter = connections.begin(); iter != connections.end(); ++iter )
+			DrainConnectionPackets( iter->second );
 		Clear();
 		PushPacket( pPacket );
 	}
@@ -403,6 +416,9 @@ bool CPlayGameProcessor::ProcessGameClientDead( CGameClientDead *pPacket )
 	TConnections::iterator iter = connections.find( pPacket->nDeadClient );
 	if ( iter != connections.end() )
 	{
+		// A relay may already hold the departing host's final drop or outcome
+		// packet. Preserve its order before publishing the removal notification.
+		DrainConnectionPackets( iter->second );
 		PushPacket( new CGameClientRemoved( pPacket->nDeadClient ) );
 		connections.erase( iter );
 		return true;

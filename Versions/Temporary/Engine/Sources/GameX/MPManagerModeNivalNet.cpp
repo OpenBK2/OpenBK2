@@ -299,6 +299,27 @@ void CMPManagerModeNivalNet::StartGame()
 	CMPManagerMode::StartGame();
 }
 
+void CMPManagerModeNivalNet::BroadcastGameControlPacket( CNetPacket *pPacket )
+{
+	CPtr<CNetPacket> pKeepPacket = pPacket;
+	// CLeaveGamePacket immediately clears the match's direct/relayed connections.
+	// Use the persistent lobby connection so the server forwards each announcement
+	// before processing our leave, and can retransmit it after the match ends.
+	// Explicit wrappers keep the recipient separate from the shared inner packet.
+	for ( int i = 0; i < slots.size(); ++i )
+	{
+		const int nRecipient = GetSlotClientID( i );
+		if ( !IsPlayerPresent( i ) || nRecipient <= 0 || nRecipient == GetOwnClientID() )
+			continue;
+		NGameX::MatchPacketTrace_Log(
+			IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
+			"TX", "GameControlViaServer", GetOwnClientID(),
+			fmt::format( "game_id={} to_slot={} to_client={} packet_type={}",
+				nGameID, i, nRecipient, pPacket->GetTypeName() ) );
+		pClient->SendPacket( new CDirectPacketToClient( 0, nRecipient, pPacket ) );
+	}
+}
+
 void CMPManagerModeNivalNet::EndGame()
 {
 	if ( eState == EGS_GAME_STARTED )

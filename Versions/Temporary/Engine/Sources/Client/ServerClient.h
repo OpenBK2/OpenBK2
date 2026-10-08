@@ -8,6 +8,7 @@
 class CLIENT_EXPORT CServerClient : public IServerClient
 {
 	OBJECT_NOCOPY_METHODS( CServerClient )
+	friend struct CPlayGameProcessorTestAccess;
 
 	CPtr<class CNet> pNet;
 

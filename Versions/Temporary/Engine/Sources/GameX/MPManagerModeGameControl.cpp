@@ -209,7 +209,7 @@ void CMPManagerMode::ScheduleLoseGame()
 		GetOwnClientID(),
 		fmt::format( "game_id={}", nGameID ) );
 	CB2GameLostPacket *pPkt = new CB2GameLostPacket( 0, nGameID, pTransceiver->ScheduleGameEnd( -1 ) );
-	pClient->SendGamePacket( pPkt, true );
+	BroadcastGameControlPacket( pPkt );
 	bWinOnGameEnd = false;
 	bOutcomeKnown = true;
 }

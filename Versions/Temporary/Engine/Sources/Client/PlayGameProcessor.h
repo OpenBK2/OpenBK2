@@ -14,6 +14,7 @@ class CConnectServerProcessor;
 class CPlayGameProcessor : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CPlayGameProcessor )
+	friend struct CPlayGameProcessorTestAccess;
 
 	CPtr<CNet> pNet;
 	CPtr<CNet> pAcceptGamersNet;
@@ -53,6 +54,7 @@ class CPlayGameProcessor : public CPacketProcessor
 	void StartServerConnect();
 	void ProcessConnectServerProcessor();
 	void ProcessAcceptingGamersPackets();
+	void DrainConnectionPackets( IConnection *pConnection );
 	void ProcessEfforts();
 	void Clear();
 	bool CreateConnectionEffort( CConnectionEffort *pEffort );

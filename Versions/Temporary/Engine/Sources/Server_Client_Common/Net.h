@@ -16,6 +16,7 @@ namespace NNet
 class SERVER_CLIENT_COMMON_EXPORT CNet : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CNet );
+	friend struct CPlayGameProcessorTestAccess;
 
 	CPtr<NNet::IDriver> pNetDriver;
 	int nApplicationID;

@@ -39,6 +39,7 @@ public:
 class CThroughServerConnection : public IConnection
 {
 	OBJECT_NOCOPY_METHODS( CThroughServerConnection );
+	friend struct CPlayGameProcessorTestAccess;
 
 	int nClientServerID;
 	CPtr<CNet> pNet;

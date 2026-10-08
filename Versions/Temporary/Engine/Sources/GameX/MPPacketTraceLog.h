@@ -16,6 +16,7 @@ struct SMatchPacketTraceSlot
 };
 
 void MatchPacketTrace_Reset();
+// Starts an incremental last_match_packets.txt journal for interrupted matches.
 void MatchPacketTrace_SetHeader(
 	int nGameID,
 	const std::string &szSessionName,
@@ -39,6 +40,7 @@ void MatchPacketTrace_Log(
 void MatchPacketTrace_RecordDropScheduled( int nSlot, int nSegment );
 void MatchPacketTrace_RecordDropApplied( int nSlot, int nSegment );
 void MatchPacketTrace_SetFinalState( unsigned long dwPresentMask, unsigned long dwLaggersMask, unsigned long dwTransceiverMask );
+// Replaces the active journal with the completed trace; failed writes can retry.
 void MatchPacketTrace_Flush( const char *szReason );
 }
 

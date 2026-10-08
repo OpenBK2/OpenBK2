@@ -143,6 +143,12 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 			new CDirectPacketToClient( 0, pPacket->nClientID, pPacket );
 		pNet->SendPacket( pPacket2Server );
 	}
+	else if ( dynamic_cast<CDirectPacketToClient*>( pPacket.GetPtr() ) )
+	{
+		// An explicit relay envelope is outgoing. Passing it through the receive
+		// converter would unwrap it locally instead of delivering it to the server.
+		pNet->SendPacket( pPacket );
+	}
 	// packet to server
 	else
 	{

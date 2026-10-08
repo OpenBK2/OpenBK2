@@ -316,6 +316,7 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 {
 	if ( !IsGameRunning() )
 		return true;
+	const int nPreviousHostClientID = nHostClientID;
 
 	NGameX::MatchPacketTrace_Log(
 		IsValid( pTransceiver ) ? pTransceiver->GetCurrentCommonSegment() : -1,
@@ -338,6 +339,14 @@ bool CMPManagerMode::OnB2DropPlayerAtSegmentPacket( class CB2DropPlayerAtSegment
 	// Waiting is stopped immediately by SchedulePlayerRemoval. Keep the host's
 	// simulation boundary unchanged even if this client is currently behind it.
 	ScheduleSynchronizedPlayerDrop( pPacket->nSlotToDrop, pPacket->nSegment );
+	if ( nHostClientID != nPreviousHostClientID && IsGameControlHost() )
+	{
+		// The departing host may have reached only some peers before disconnecting.
+		// Its successor relays the same accepted boundary before it can finish too.
+		// Only a newly assumed authority relays, so duplicates cannot loop.
+		BroadcastSynchronizedPlayerDrop( pPacket->nSlotToDrop,
+			scheduledDropSegmentBySlot[pPacket->nSlotToDrop], "host_handoff" );
+	}
 	return true;
 }
 
