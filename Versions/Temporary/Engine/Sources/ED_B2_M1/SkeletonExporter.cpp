@@ -5,6 +5,10 @@
 
 #include "SkeletonExporter.h"
 #include "ED_Common/GltfExporter.h"
+#include "3Dmotor/GltfAnimation.h"
+#include "libdb/ObjMan.h"
+#include "System/VFSOperations.h"
+#include <limits>
 #include <set>
 #include "MapEditorLib/ExporterFactory.h"
 #include "libdb/ResourceManager.h"
@@ -267,12 +271,192 @@ EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
 
 
 
-// Named glTF clips use the same animation mnemonics as the old source scenes.
-// Existing AnimB2 references retain their authored action times, speeds and types.
+namespace
+{
+struct SGltfAnimationMarker
+{
+	std::string name, type, attackBox, defenceBox;
+	int first = 0, last = 0, action = 0;
+	bool looped = false;
+	float speed = 1.0f;
+};
+
+bool GetFrame( const SGrannyBoneAttributes &attributes, const char *key, int *frame )
+{
+	float value;
+	if ( !attributes.GetAttribute(key, &value) || !std::isfinite(value) || value < 0 ||
+		static_cast<double>(value) > (std::numeric_limits<int>::max)() || std::floor(value) != value )
+		return false;
+	*frame = static_cast<int>(value);
+	return true;
+}
+
+CPtr<IManipulator> PrepareAnimation( const std::string &name )
+{
+	IFolderCallback *folder = Singleton<IFolderCallback>();
+	IResourceManager *manager = Singleton<IResourceManager>();
+	if ( !folder->IsUniqueName("AnimB2", name) )
+	{
+		CPtr<IManipulator> animation = manager->CreateObjectManipulator("AnimB2", name);
+		// DB/VFS existence lookups can retain deleted files, so check their backing stats.
+		NVFS::SFileStats stats;
+		const bool exists = NVFS::GetMainVFS()->GetFileStats(&stats, NDb::GetFileName(CDBID(name)));
+		if ( animation )
+		{
+			if ( !exists ) animation->GetObjMan()->SetChanged();
+			return animation;
+		}
+		if ( exists || !folder->RemoveObject("AnimB2", name, false) ) return nullptr;
+	}
+	if ( !folder->InsertObject("AnimB2", name) ) return nullptr;
+	return manager->CreateObjectManipulator("AnimB2", name);
+}
+
+bool ImportGltfMarkers( IManipulator *resource, const NGltf::TGltfFilePtr &file, size_t markerRoot )
+{
+	CGrannyBoneAttributesList attributes;
+	// Without a root filter, ReadAttributes preserves the document's node indices.
+	if ( !NEditorGltf::ReadAttributes(resource, &attributes) || attributes.size() != file->asset.nodes.size() )
+		return false;
+	std::string prefix = NFile::CutFileExt(NDb::GetFileName(resource->GetDBID()), 0);
+	std::string lowerPrefix = prefix;
+	NStr::ToLowerASCII(&lowerPrefix);
+	const std::string suffix = "_skeleton";
+	if ( lowerPrefix.size() >= suffix.size() && lowerPrefix.compare(lowerPrefix.size() - suffix.size(), suffix.size(), suffix) == 0 )
+		prefix.resize(prefix.size() - suffix.size());
+	prefix += "_";
+
+	std::vector<SGltfAnimationMarker> markers;
+	std::set<std::string> names;
+	// Validate every marker before creating files or changing existing references.
+	// These empty objects describe slices across all the object's Blender actions.
+	for ( size_t index : file->asset.nodes[markerRoot].children )
+	{
+		const auto &entry = attributes[index];
+		std::string mnemonic = entry.szRealName;
+		NStr::ToUpper(&mnemonic);
+		unsigned number = INVALID_NODE_ID;
+		const auto type = typeMayaAnimationMnemonics.Get(mnemonic, nullptr, &number);
+		if ( type == NDb::ANIMATION_UNKNOWN )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation marker '%s' has an unknown animation type.\n", entry.szRealName.c_str());
+			return false;
+		}
+		SGltfAnimationMarker marker;
+		if ( !GetFrame(entry, "starttime", &marker.first) || !GetFrame(entry, "endtime", &marker.last) )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation marker '%s' needs integer StartTime and EndTime custom properties. Include custom properties when exporting the GLB/GLTF.\n", entry.szRealName.c_str());
+			return false;
+		}
+		float duration = 0;
+		if ( marker.last <= marker.first || !NAnimation::CGltfSkeletonAnimator::GetSourceDuration(file, "", marker.first, marker.last, &duration) )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation marker '%s' has an invalid frame range %d..%d; use increasing frames within the sampled timeline.\n", entry.szRealName.c_str(), marker.first, marker.last);
+			return false;
+		}
+		mnemonic = typeMayaAnimationMnemonics.GetMnemonic(type);
+		NStr::ToLowerASCII(&mnemonic);
+		marker.name = prefix + mnemonic;
+		if ( number != INVALID_NODE_ID ) marker.name += fmt::format("_{:02d}", number);
+		marker.name += "_animb2.xdb";
+		if ( !names.insert(marker.name).second )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation markers resolve to the same resource '%s'.\n", marker.name.c_str());
+			return false;
+		}
+		marker.type = typeAnimationMnemonics.GetMnemonic(type);
+		int actionTime = 0, boxIndex = 0;
+		if ( entry.attributeMap.count("actiontime") && !GetFrame(entry, "actiontime", &actionTime) )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation marker '%s' has an invalid ActionTime.\n", entry.szRealName.c_str());
+			return false;
+		}
+		marker.action = (std::max)(0, actionTime - marker.first);
+		entry.GetAttribute("looped", &marker.looped);
+		entry.GetAttribute("speed", &marker.speed);
+		if ( !std::isfinite(marker.speed) || marker.speed <= 0 )
+		{
+			NLog::Log(LT_ERROR, "GLTF animation marker '%s' needs a positive Speed.\n", entry.szRealName.c_str());
+			return false;
+		}
+		if ( entry.attributeMap.count("aabbindex") )
+		{
+			if ( !GetFrame(entry, "aabbindex", &boxIndex) )
+			{
+				NLog::Log(LT_ERROR, "GLTF animation marker '%s' has an invalid AABBIndex.\n", entry.szRealName.c_str());
+				return false;
+			}
+			marker.attackBox = fmt::format("AABB_A{:02d}", boxIndex);
+			marker.defenceBox = fmt::format("AABB_D{:02d}", boxIndex);
+		}
+		markers.push_back(std::move(marker));
+	}
+
+	std::string reference, root;
+	CManipulatorManager::GetValue(&reference, resource, "ModelFileRef");
+	CManipulatorManager::GetValue(&root, resource, "RootJoint");
+	int count = 0;
+	if ( !CManipulatorManager::GetValue(&count, resource, "Animations") ) return false;
+	std::set<CDBID> linked;
+	for ( int i = 0; i < count; ++i )
+	{
+		std::string name;
+		CManipulatorManager::GetValue(&name, resource, fmt::format("Animations.[{}]", i));
+		if ( !name.empty() ) linked.insert(CDBID(name));
+	}
+	for ( const auto &marker : markers )
+	{
+		CPtr<IManipulator> animation = PrepareAnimation(marker.name);
+		if ( !animation )
+		{
+			NLog::Log(LT_ERROR, "Cannot create GLTF animation resource '%s'.\n", marker.name.c_str());
+			return false;
+		}
+		// A nonempty ClipName would override frame slicing and select just one action.
+		if ( !animation->SetValue("ModelFileRef", reference) || !animation->SetValue("RootJoint", root) ||
+			!animation->SetValue("ClipName", "") || !animation->SetValue("Type", marker.type) ||
+			!animation->SetValue("FirstFrame", marker.first) || !animation->SetValue("LastFrame", marker.last) ||
+			!animation->SetValue("ActionFrame", marker.action) || !animation->SetValue("Looped", marker.looped) ||
+			!animation->SetValue("MoveSpeed", marker.speed) || !animation->SetValue("AABBAName", marker.attackBox) ||
+			!animation->SetValue("AABBDName", marker.defenceBox) || !NEditorGltf::Export(animation, "AnimB2", true) ) return false;
+		// Keep manually assigned animations and make repeated exports idempotent.
+		if ( linked.insert(CDBID(marker.name)).second )
+		{
+			if ( !resource->InsertNode("Animations") || !resource->SetValue(fmt::format("Animations.[{}]", count), marker.name) ) return false;
+			++count;
+		}
+		NLog::Log(LT_IMPORTANT, "Imported GLTF animation '%s' (frames %d..%d).\n", marker.name.c_str(), marker.first, marker.last);
+	}
+	return true;
+}
+}
+
+// Marker objects retain the Maya frame-slice convention. Without an Animations
+// node, named glTF clips use the same animation mnemonics as the old source scenes.
+// The named-clip fallback preserves an already populated AnimB2 list.
 bool CSkeletonExporter::ImportGltfInfo( IManipulator *resource )
 {
 	const auto file = NEditorGltf::Load(resource);
 	if ( !file ) return false;
+	int markerRoot = -1;
+	for ( size_t i = 0; i < file->asset.nodes.size(); ++i )
+	{
+		if ( std::string(file->asset.nodes[i].name) != ANIMATIONS_ROOT_JOINT ) continue;
+		if ( markerRoot >= 0 )
+		{
+			NLog::Log(LT_ERROR, "GLTF has more than one Animations node.\n");
+			return false;
+		}
+		markerRoot = static_cast<int>(i);
+	}
+	if ( markerRoot >= 0 )
+	{
+		std::string root;
+		CManipulatorManager::GetValue(&root, resource, "RootJoint");
+		// Building sections keep their separately generated damage-stage animations.
+		if ( PatMat(root.c_str(), "*section??") ) return true;
+		return ImportGltfMarkers(resource, file, markerRoot);
+	}
 	int count = 0;
 	CManipulatorManager::GetValue(&count, resource, "Animations");
 	// A populated list may deliberately use frame slices rather than named clips.
