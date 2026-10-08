@@ -18,7 +18,11 @@
 #include "MapEditorLib/StringManager.h"
 #include "MapEditorLib/ManipulatorManager.h"
 #include "libdb/ResourceManager.h"
+#include "libdb/Db.h"
+#include "libdb/ObjMan.h"
 #include "System/FileUtils.h"
+#include "System/VFSOperations.h"
+#include "MapEditorLib/Interface_Logger.h"
 
 #include <cstdint>
 
@@ -35,6 +39,49 @@ std::string BuilderSourcePath( const std::string &source )
 		: source;
 	NFile::NormalizePath(&path);
 	return path;
+}
+
+bool PrepareResource( const std::string &type, const std::string &name,
+	CPtr<IManipulator> *resource, bool *created )
+{
+	IResourceManager *manager = Singleton<IResourceManager>();
+	IFolderCallback *folders = Singleton<IFolderCallback>();
+	*created = false;
+	if ( !folders->IsUniqueName(type, name) )
+	{
+		*resource = manager->CreateObjectManipulator(type, name);
+		// DoesFileExist also trusts cached VFS entries; stats checks the backing file.
+		NVFS::SFileStats stats;
+		const bool fileExists = NVFS::GetMainVFS()->GetFileStats(&stats, NDb::GetFileName(CDBID(name)));
+		if ( *resource )
+		{
+			// Reuse unsaved resources and restore cached resources deleted on disk.
+			if ( !fileExists )
+				(*resource)->GetObjMan()->SetChanged();
+			return true;
+		}
+		// The index can retain a resource after its XDB was deleted. Remove that
+		// stale entry before recreating it, keeping its name so references survive.
+		if ( fileExists || !folders->RemoveObject(type, name, false) )
+		{
+			NLog::Log(LT_ERROR, "Create VisObj: cannot recreate %s '%s'.\n", type.c_str(), name.c_str());
+			return false;
+		}
+	}
+	if ( folders->InsertObject(type, name) )
+		*resource = manager->CreateObjectManipulator(type, name);
+	*created = (*resource != nullptr);
+	if ( !*created )
+		NLog::Log(LT_ERROR, "Create VisObj: cannot create %s '%s'.\n", type.c_str(), name.c_str());
+	return *created;
+}
+
+bool EnsureResourceReference( IManipulator *parent, const std::string &field, const std::string &name )
+{
+	// Loading a parent while its child is missing can clear the reference.
+	// Repair that link after recreation, preserving any valid custom reference.
+	CPtr<IManipulator> child = CManipulatorManager::CreateManipulatorFromReference(field, parent, nullptr, nullptr, nullptr);
+	return child || CManipulatorManager::SetValue(name, parent, field, true);
 }
 }
 
@@ -131,7 +178,6 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CTerrainBuilder::AddVisObjEntry() pBuildDataManipulator == 0" );
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
-	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 	// Считываем данные
 	std::string szMBFullFileName;
 	if ( rszMBFullFileName.empty() )
@@ -242,120 +288,57 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 		return false;
 	}
 	// добавляем модель
+	CPtr<IManipulator> model, material, texture, geometry, aiGeometry, skeleton;
+	bool modelCreated, materialCreated, textureCreated, geometryCreated, aiGeometryCreated, skeletonCreated;
+	// Check every dependency independently: an existing Material or Geometry
+	// can still refer to a Texture or AIGeometry whose file was deleted.
+	if ( !PrepareResource(MODEL_TYPE_NAME, szModelName, &model, &modelCreated) ||
+		!PrepareResource(MATERIAL_TYPE_NAME, szMaterialName, &material, &materialCreated) ||
+		!PrepareResource(TEXTURE_TYPE_NAME, szTextureName, &texture, &textureCreated) ||
+		!PrepareResource(GEOMETRY_TYPE_NAME, szGeometryName, &geometry, &geometryCreated) ||
+		!PrepareResource(AIGEOMETRY_TYPE_NAME, szAIGeometryName, &aiGeometry, &aiGeometryCreated) ||
+		!PrepareResource(SKELETON_TYPE_NAME, szSkeletonName, &skeleton, &skeletonCreated) )
+		return false;
+
 	bool bResult = true;
-	if ( pFolderCallback->IsUniqueName( MODEL_TYPE_NAME, szModelName ) )
+	if ( textureCreated )
 	{
-		bResult = bResult && pFolderCallback->InsertObject( MODEL_TYPE_NAME, szModelName );
+		bResult = CManipulatorManager::SetValue(szTGASeasonedFullFileName, texture, "SrcName", false);
+		const bool opaque = szTextureType == "AM_OPAQUE";
+		bResult = bResult && CManipulatorManager::SetValue(opaque ? "CONVERT_ORDINARY" : "CONVERT_TRANSPARENT", texture, "ConversionType", false);
+		bResult = bResult && CManipulatorManager::SetValue(opaque ? "TF_DXT1" : "TF_DXT3", texture, "Format", false);
 	}
-	// добавляем материал
-	if ( pFolderCallback->IsUniqueName( MATERIAL_TYPE_NAME, szMaterialName ) )
+	if ( materialCreated )
 	{
-		bResult = bResult && pFolderCallback->InsertObject( MATERIAL_TYPE_NAME, szMaterialName );
-		//добавляем текстуру
-		if ( pFolderCallback->IsUniqueName( TEXTURE_TYPE_NAME, szTextureName ) )
-		{
-			bResult = bResult && pFolderCallback->InsertObject( TEXTURE_TYPE_NAME, szTextureName );
-			//Устанавливаем имя файла текстуры
-			if ( bResult )
-			{
-				if ( CPtr<IManipulator> pTextureManipulator = pResourceManager->CreateObjectManipulator( TEXTURE_TYPE_NAME, szTextureName ) )
-				{
-					bResult = bResult && CManipulatorManager::SetValue( szTGASeasonedFullFileName, pTextureManipulator, "SrcName", false );
-					bResult = bResult && CManipulatorManager::SetValue( "CONVERT_ORDINARY", pTextureManipulator, "ConversionType", false );
-					if ( szTextureType == "AM_OPAQUE" )
-					{
-						bResult = bResult && CManipulatorManager::SetValue( "CONVERT_ORDINARY", pTextureManipulator, "ConversionType", false );
-						bResult = bResult && CManipulatorManager::SetValue( "TF_DXT1", pTextureManipulator, "Format", false );
-					}
-					else
-					{
-						bResult = bResult && CManipulatorManager::SetValue( "CONVERT_TRANSPARENT", pTextureManipulator, "ConversionType", false );
-						bResult = bResult && CManipulatorManager::SetValue( "TF_DXT3", pTextureManipulator, "Format", false );
-					}
-				}
-			}
-		}
-		// устанавливаем текстуру и ее параметры
-		if ( bResult )
-		{
-			if ( CPtr<IManipulator> pMaterialManipulator = pResourceManager->CreateObjectManipulator( MATERIAL_TYPE_NAME, szMaterialName ) )
-			{
-				bResult = bResult && CManipulatorManager::SetValue( szTextureName, pMaterialManipulator, "Texture", true );
-				bResult = bResult && CManipulatorManager::SetValue( szTextureType, pMaterialManipulator, "AlphaMode", false );
-			}
-		}
+		bResult = bResult && CManipulatorManager::SetValue(szTextureType, material, "AlphaMode", false);
 	}
-	// Model sources go into the runtime GLTF reference, never the legacy Maya SrcName.
-	// добавляем геометрию
-	if ( pFolderCallback->IsUniqueName( GEOMETRY_TYPE_NAME, szGeometryName ) )
+	bResult = bResult && EnsureResourceReference(material, "Texture", szTextureName);
+	if ( aiGeometryCreated )
 	{
-		bResult = bResult && pFolderCallback->InsertObject( GEOMETRY_TYPE_NAME, szGeometryName );
-		//добавляем аигеометрию
-		if ( pFolderCallback->IsUniqueName( AIGEOMETRY_TYPE_NAME, szAIGeometryName ) )
-		{
-			bResult = bResult && pFolderCallback->InsertObject( AIGEOMETRY_TYPE_NAME, szAIGeometryName );
-			//Устанавливаем имя модели для аигеометрии
-			if ( bResult )
-			{
-				if ( CPtr<IManipulator> pAIGeometryManipulator = pResourceManager->CreateObjectManipulator( AIGEOMETRY_TYPE_NAME, szAIGeometryName ) )
-				{
-					bResult = bResult && CManipulatorManager::SetValue( modelReference, pAIGeometryManipulator, "ModelFileRef", false );
-					bResult = bResult && CManipulatorManager::SetValue( szAIRootMesh, pAIGeometryManipulator, "RootMesh", false );
-					// check for single-skin mode (szRootJoint != szRootMesh) and lbodypart model (szRootJoint == szRootMesh)
-					if ( szRootJoint == szRootMesh ) 
-					{
-						bResult = bResult && CManipulatorManager::SetValue( szAIRootMesh, pAIGeometryManipulator, "RootJoint", false );
-					}
-					else
-					{
-						bResult = bResult && CManipulatorManager::SetValue( szRootJoint, pAIGeometryManipulator, "RootJoint", false );
-					}
-				}
-			}
-		}
-		// устанавливаем имя файла модели для геометрии и аигеометрию
-		if ( bResult )
-		{
-			if ( CPtr<IManipulator> pGeometryManipulator = pResourceManager->CreateObjectManipulator( GEOMETRY_TYPE_NAME, szGeometryName ) )
-			{
-				bResult = bResult && CManipulatorManager::SetValue( modelReference, pGeometryManipulator, "ModelFileRef", false );
-				bResult = bResult && CManipulatorManager::SetValue( szRootMesh, pGeometryManipulator, "RootMesh", false );
-				bResult = bResult && CManipulatorManager::SetValue( szRootJoint, pGeometryManipulator, "RootJoint", false );
-				bResult = bResult && CManipulatorManager::SetValue( szAIGeometryName, pGeometryManipulator, "AIGeometry", true );
-			}
-		}
+		bResult = bResult && CManipulatorManager::SetValue(modelReference, aiGeometry, "ModelFileRef", false);
+		bResult = bResult && CManipulatorManager::SetValue(szAIRootMesh, aiGeometry, "RootMesh", false);
+		bResult = bResult && CManipulatorManager::SetValue(szRootJoint == szRootMesh ? szAIRootMesh : szRootJoint, aiGeometry, "RootJoint", false);
 	}
-	// добавляем скелет
-	if ( pFolderCallback->IsUniqueName( SKELETON_TYPE_NAME, szSkeletonName ) )
+	if ( geometryCreated )
 	{
-		bResult = bResult && pFolderCallback->InsertObject( SKELETON_TYPE_NAME, szSkeletonName );
-		// устанавливаем имя файла модели для скелета
-		if ( bResult )
-		{
-			if ( CPtr<IManipulator> pSkeletonManipulator = pResourceManager->CreateObjectManipulator( SKELETON_TYPE_NAME, szSkeletonName ) )
-			{
-				bResult = bResult && CManipulatorManager::SetValue( modelReference, pSkeletonManipulator, "ModelFileRef", false );
-				bResult = bResult && CManipulatorManager::SetValue( szRootJoint, pSkeletonManipulator, "RootJoint", false );
-			}
-		}
+		bResult = bResult && CManipulatorManager::SetValue(modelReference, geometry, "ModelFileRef", false);
+		bResult = bResult && CManipulatorManager::SetValue(szRootMesh, geometry, "RootMesh", false);
+		bResult = bResult && CManipulatorManager::SetValue(szRootJoint, geometry, "RootJoint", false);
 	}
-	// устанавливаем материал, геометрию и скелет
-	if ( bResult )
+	bResult = bResult && EnsureResourceReference(geometry, "AIGeometry", szAIGeometryName);
+	if ( skeletonCreated )
 	{
-		if ( CPtr<IManipulator> pModelManipulator = pResourceManager->CreateObjectManipulator( MODEL_TYPE_NAME, szModelName ) )
-		{
-			int nMaterialCount = 0;
-			bResult = bResult && CManipulatorManager::GetValue( &nMaterialCount, pModelManipulator, "Materials" );
-			if ( bResult && ( nMaterialCount == 0 ) )
-			{
-				bResult = bResult && pModelManipulator->InsertNode( "Materials" );
-			}
-			bResult = bResult && pModelManipulator->SetValue( "Materials.[0]", szMaterialName );
-			bResult = bResult && pModelManipulator->SetValue( "Geometry", szGeometryName );
-			bResult = bResult && pModelManipulator->SetValue( "Skeleton", szSkeletonName );
-		}
+		bResult = bResult && CManipulatorManager::SetValue(modelReference, skeleton, "ModelFileRef", false);
+		bResult = bResult && CManipulatorManager::SetValue(szRootJoint, skeleton, "RootJoint", false);
 	}
-	// устанавливаем модель
+	int nMaterialCount = 0;
+	bResult = bResult && CManipulatorManager::GetValue(&nMaterialCount, model, "Materials");
+	if ( bResult && nMaterialCount == 0 )
+		bResult = model->InsertNode("Materials");
+	bResult = bResult && model->SetValue("Materials.[0]", szMaterialName);
+	bResult = bResult && model->SetValue("Geometry", szGeometryName);
+	bResult = bResult && model->SetValue("Skeleton", szSkeletonName);
+	// Add a seasonal entry only after its complete resource graph is available.
 	bResult = bResult && pVisObjManipulator->InsertNode( "Models" );
 	if ( bResult )
 	{
@@ -368,6 +351,8 @@ bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
 			bResult = bResult && pVisObjManipulator->SetValue( szVisObjeEntryName + "Season", szSeasonName );
 		}
 	}
+	if ( !bResult )
+		NLog::Log(LT_ERROR, "Create VisObj: cannot initialize resources for '%s' (%s).\n", rszUniqueObjectName.c_str(), szSeasonName.c_str());
 	return bResult;
 }
 

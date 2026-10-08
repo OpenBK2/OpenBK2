@@ -207,3 +207,5 @@ add_dependencies(ED_B2_M1 wxwidgets_external)
 
 install(TARGETS ED_B2_M1 DESTINATION bin)
 add_version_info(ED_B2_M1)
+
+add_subdirectory(test)

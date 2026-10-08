@@ -252,6 +252,9 @@ namespace
 																											 &bNeedExport,
 																											 &bNeedEdit ) )
 		{
+			// Builders may fail after inserting some resources; match the database
+			// tree's New action so a failed property creation leaves no empty object.
+			Singleton<IFolderCallback>()->UndoChanges();
 			return false;
 		}
 		if ( bNeedExport )
