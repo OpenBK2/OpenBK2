@@ -4,7 +4,7 @@
 ## Project overview
 In this repo, you'll find the modified source code of an old RTS game called "Blitzkrieg 2".
 It was ported from the old C++03 (+ VS 2003) to more modern C++17 (+ cmake) among other things.
-The game is now multiplatform, supporting Windows and Linux. Any new change to the code should be multiplatform compatible, unless it's said otherwise.
+The game is now multiplatform, supporting Windows and Linux. Any new change to the code should be multiplatform compatible (tests too), unless it's said otherwise.
 The actual source code is in: `Versions/Temporary/Engine/Sources` folder
 Some additional dependencies are in `third_party/` folder
 Game also has multiplayer mode and replay system, which are based on command syncing + deterministic simulation

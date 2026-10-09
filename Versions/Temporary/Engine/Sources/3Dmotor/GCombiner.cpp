@@ -231,7 +231,8 @@ static void TransformPosition( const std::vector<CVec3> &srcPos, CVec3 *pRes, co
 			else
 			{
 				CVec3 vPos( VNULL3 ), p;
-				for ( int j = 0; pWeight->nWeights[j] && j < 4; ++j )
+				// Four nonzero influences must stop before reading a fifth weight.
+				for ( int j = 0; j < 4 && pWeight->nWeights[j]; ++j )
 				{
 					const SHMatrix &blend = blends[ pWeight->cBoneIndices[j] ];
 					float fW = pWeight->fWeights[j];

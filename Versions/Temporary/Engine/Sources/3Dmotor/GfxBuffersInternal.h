@@ -3,9 +3,19 @@
 #include "Gfx.h"
 
 #include <cstdint>
+#include <stdexcept>
+
+#include <fmt/format.h>
 
 namespace NGfx
 {
+
+// Buffer users write immediately after locking. Stop at the failed operation
+// instead of returning an invalid pointer and corrupting memory in release builds.
+[[noreturn]] inline void ThrowD3DBufferError( const char *pszOperation, HRESULT hr )
+{
+	throw std::runtime_error( fmt::format( "{} failed (HRESULT 0x{:08X})", pszOperation, static_cast<uint32_t>( hr ) ) );
+}
 
 enum ETrueBufferUsage
 {
@@ -64,14 +74,19 @@ public:
 	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( nLockCount == 0 || dwFlags == 0 || dwFlags == D3DLOCK_NOOVERWRITE );
-		++nLockCount;
 		if ( !pLocked )
 		{
-			//HRESULT hr = obj.obj->Lock( nOffset, nSize, &obj.pLocked, dwFlags );
-			HRESULT hr = obj->Lock( 0, 0, (void**)&pLocked, dwFlags );
-			ASSERT( hr == D3D_OK );
+			if ( !obj )
+				ThrowD3DBufferError( "Vertex buffer Lock: buffer unavailable", E_POINTER );
+			void *pData = 0;
+			const HRESULT hr = obj->Lock( 0, 0, &pData, dwFlags );
+			if ( FAILED( hr ) )
+				ThrowD3DBufferError( "Vertex buffer Lock", hr );
+			pLocked = static_cast<unsigned char *>( pData );
 			bWasLinearBufferLock = true;
 		}
+		// A failed lock must not leave a count that later cleanup tries to release.
+		++nLockCount;
 	}
 	void Unlock()
 	{
@@ -157,8 +172,13 @@ public:
 	void Lock( uint32_t dwFlags )
 	{
 		ASSERT( !pLocked );
-		HRESULT hr = obj->Lock( 0, 0, (void**)&pLocked, dwFlags );
-		ASSERT( hr == D3D_OK );
+		if ( !obj )
+			ThrowD3DBufferError( "Index buffer Lock: buffer unavailable", E_POINTER );
+		void *pData = 0;
+		const HRESULT hr = obj->Lock( 0, 0, &pData, dwFlags );
+		if ( FAILED( hr ) )
+			ThrowD3DBufferError( "Index buffer Lock", hr );
+		pLocked = static_cast<unsigned char *>( pData );
 	}
 	void Unlock()
 	{

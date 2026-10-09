@@ -47,6 +47,14 @@ add_unit_test(MMXhelpers 3Dmotor Misc)
 add_unit_test(LightingKernels 3Dmotor Misc SOURCES ${LIGHTING_KERNEL_SOURCES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../GLightPerVertex.cpp)
 add_unit_test(BitOps Misc)
+# Failed GPU locks must stop before exposing writable pointers to callers.
+add_unit_test(GfxBufferLocks 3Dmotor System Misc gr2)
+# Compact Granny weight arrays must not read absent influences or binding indices.
+add_unit_test(GrannyWeights 3Dmotor 3DLib System Misc gr2)
+if(WIN32)
+    set_property(TARGET GrannyWeights_test APPEND PROPERTY
+        LINK_DEPENDS $<TARGET_FILE:3Dmotor>)
+endif()
 # Spatial bounds must remain valid for camera and shadow selection on large maps.
 add_unit_test(OcTree 3DLib System Misc)
 # Picking uses the collision map and its software selection grid.

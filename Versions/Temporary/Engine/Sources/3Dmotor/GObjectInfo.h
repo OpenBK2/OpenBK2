@@ -155,7 +155,7 @@ void ConvertWeightsFromGranny( const granny_skeleton *pSkeleton, granny_mesh *pM
 granny_model *FindFirstAppropriateModel( granny_file_info *pData, granny_mesh *pMesh );
 
 
-const char * ConvertWeightsFromGrannyEx(
+_3DMOTOR_EXPORT const char * ConvertWeightsFromGrannyEx(
 							  const granny_skeleton *pSkeleton, granny_mesh *pMesh, int nMaterialIndex,
 							  std::vector<SVertexWeight> *pWeights, int nVertices );
 

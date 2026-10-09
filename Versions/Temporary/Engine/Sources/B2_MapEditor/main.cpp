@@ -109,13 +109,9 @@ void CEditorAppSpecific::UnloadMapEditorModule()
 
 bool CEditorAppSpecific::Initialize( const std::vector<std::string> &rArgs )
 {
-	// Before anything else, because everything after it is what wants watching.
-	// The editor had no crash handler until now: a fault left a truncated
-	// stingray trace and nothing to read, which is not enough to tell a crash
-	// from a close. Ignore the result deliberately -- an editor with no handler
-	// behind it is still an editor, and refusing to start would be a worse
-	// answer than starting unwatched. Dumps land in bin/crashpad_db/reports.
-	InitCrashpad();
+	// Failure remains nonfatal, with the reason and report path recorded in
+	// crashpad-status.txt even before the editor's own logging is ready.
+	InitCrashpad( "OpenBK2 Editor", REVISION_NUMBER_STR " " BUILD_DATE_TIME_STR );
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );

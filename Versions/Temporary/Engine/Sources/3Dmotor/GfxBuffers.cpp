@@ -281,8 +281,10 @@ public:
 	virtual int GetBufSize() const { return nBufSize; }
 	virtual void* Lock()
 	{
+		unsigned char *pData = pBuffer->Lock();
+		// Match the lower-level lock only after it succeeds, including during unwind.
 		++nLocked;
-		return pBuffer->Lock() + pBuffer->GetStride() * nStart;
+		return pData + pBuffer->GetStride() * nStart;
 	}
 	virtual void Unlock() { if ( nLocked == 0 ) return; --nLocked; pBuffer->Unlock(); }
 };
@@ -502,9 +504,11 @@ public:
 			D3DPOOL_SYSTEMMEM,
 			pTexture.GetAddr(),
 			0 );
-		ASSERT( D3D_OK == hRes ); // if this fails no need to run further
+		if ( FAILED( hRes ) )
+			ThrowD3DBufferError( "CreateTexture for staging buffer", hRes );
 		hRes = pTexture->GetSurfaceLevel( 0, pSurface.GetAddr() );
-		ASSERT( D3D_OK == hRes );
+		if ( FAILED( hRes ) )
+			ThrowD3DBufferError( "GetSurfaceLevel for staging buffer", hRes );
 	}
 	void MarkBusy() { bBusy = true; }
 	void Free() { bBusy = false; }
@@ -554,7 +558,7 @@ class CTextureLocker: public I2DBufferLock
 	NWin32Helper::com_ptr<IDirect3DSurface9> pObj;
 	EAccess access;
 	CPtr<CSysTexture> pLocker;
-	D3DLOCKED_RECT buf;
+	D3DLOCKED_RECT buf = {};
 	CTRect<int> rect;
 	NWin32Helper::com_ptr<IDirect3DTexture9> pTexture;
 public:
@@ -575,8 +579,8 @@ static CFormatRingMap sysTextures;
 CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_rect, EAccess _access, D3DFORMAT format, IDirect3DTexture9 *_pTexture )
 : pObj(_pObj), rect(_rect), access( _access ), pTexture(_pTexture)
 {
-	static int nTroubleBuffer[1024];
-	HRESULT hr;
+	if ( !pObj )
+		ThrowD3DBufferError( "Texture LockRect: surface unavailable", E_POINTER );
 	NWin32Helper::com_ptr<IDirect3DSurface9> pTempBuf;
 	//
 	uint32_t dwLockFlags = 0;//D3DLOCK_NO_DIRTY_UPDATE;
@@ -585,9 +589,9 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_re
 	{
 		lockRect.SetRect( 0, 0, rect.Width(), rect.Height() );
 		CFormatRingMap::iterator i = sysTextures.find( format );
-		ASSERT( i != sysTextures.end() );
+		if ( i == sysTextures.end() )
+			ThrowD3DBufferError( "Texture LockRect: staging format unavailable", E_INVALIDARG );
 		pLocker = i->second->GetTexture();
-		pLocker->MarkBusy();
 		ASSERT( rect.Width() <= N_SYSMEM_TEXTURE_SIZE );
 		ASSERT( rect.Height() <= N_SYSMEM_TEXTURE_SIZE );
 		//
@@ -609,17 +613,15 @@ CTextureLocker::CTextureLocker( IDirect3DSurface9 *_pObj, const CTRect<int> &_re
 		pTempBuf = pObj;
 		lockRect = rect;
 	}
-	if ( pTempBuf )
-	{
-		hr = pTempBuf->LockRect( &buf, (RECT*)&lockRect, dwLockFlags );
-		ASSERT( D3D_OK == hr );
-	}
-	else
-	{
-		ASSERT(0); // texture to be locked is unavailable
-		buf.pBits = nTroubleBuffer;
-		buf.Pitch = 0;
-	}
+	if ( !pTempBuf )
+		ThrowD3DBufferError( "Texture LockRect: staging surface unavailable", E_POINTER );
+	const HRESULT hr = pTempBuf->LockRect( &buf, (RECT*)&lockRect, dwLockFlags );
+	if ( FAILED( hr ) )
+		ThrowD3DBufferError( "Texture LockRect", hr );
+	// Reserve a staging surface only after locking succeeds: a throwing constructor
+	// has no destructor to release it. Never substitute a fixed-size scratch buffer.
+	if ( pLocker )
+		pLocker->MarkBusy();
 }
 
 CTextureLocker::~CTextureLocker()
@@ -699,8 +701,12 @@ public:
 
 I2DBufferLock* CTexture::Lock( int nLevel, EAccess access ) 
 {
+	if ( !IsValid( pTB ) || !pTB->obj )
+		ThrowD3DBufferError( "Texture Lock: texture unavailable", E_POINTER );
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
-	pTB->obj->GetSurfaceLevel( nLevel, pSurface.GetAddr() );
+	const HRESULT hr = pTB->obj->GetSurfaceLevel( nLevel, pSurface.GetAddr() );
+	if ( FAILED( hr ) )
+		ThrowD3DBufferError( "GetSurfaceLevel for texture Lock", hr );
 	CTRect<int> rect = region;
 	rect.x1 >>= nLevel;
 	rect.y1 >>= nLevel;
@@ -801,8 +807,12 @@ inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
 
 I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access ) 
 {
+	if ( !IsValid( pTB ) || !pTB->obj )
+		ThrowD3DBufferError( "Cube texture Lock: texture unavailable", E_POINTER );
 	NWin32Helper::com_ptr<IDirect3DSurface9> pSurface;
-	pTB->obj->GetCubeMapSurface( GetD3DFace( face ), nLevel, pSurface.GetAddr() );
+	const HRESULT hr = pTB->obj->GetCubeMapSurface( GetD3DFace( face ), nLevel, pSurface.GetAddr() );
+	if ( FAILED( hr ) )
+		ThrowD3DBufferError( "GetCubeMapSurface for texture Lock", hr );
 	int nSize = pTB->GetSize();
 	CTRect<int> rect( 0, 0, nSize >> nLevel, nSize >> nLevel );
 	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), 0 ); 

@@ -98,6 +98,9 @@ endif()
 write_type_descriptions_list("$<TARGET_FILE_DIR:dbcodegen>/type-descriptions.txt")
 add_regenerate_db_target("$<TARGET_FILE_DIR:dbcodegen>/type-descriptions.txt")
 
+# Explicitly built crash probes verify real dumps without launching the game.
+add_subdirectory("port/test")
+
 # Both aggregates exist by now, so the "run everything of ours" targets can be
 # defined. See cmake/benchmarks.cmake.
 if(TARGET unittests)

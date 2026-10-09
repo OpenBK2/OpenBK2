@@ -71,6 +71,40 @@ copying will take a while - there are **MANY** small files.
 
 the game executable is `bin\Game.exe`. therefore, if game was installed into `C:\Games\bk2`, then `C:\Games\bk2\bin\Game.exe` should be launched.
 
+# collecting crash reports
+
+The game and editor start `crashpad_handler` from beside their executable. The
+build and install targets place it there automatically. Startup writes
+`crashpad-status.txt` beside the executable and inside the selected report
+database; the game also copies the status into `log.txt`. Check this file after
+launch: it records whether initialization succeeded, the absolute handler path,
+the database path, and the reason if capture could not start.
+
+Reports normally live in `bin/crashpad_db`. If that directory cannot be created
+or initialized, Windows uses `%LOCALAPPDATA%/OpenBK2/crashpad_db`; Linux uses
+`$XDG_STATE_HOME/OpenBK2/crashpad_db`, or
+`$HOME/.local/state/OpenBK2/crashpad_db` when `XDG_STATE_HOME` is unset. The status
+file gives the actual location. Uploads are disabled; reports stay local.
+
+After a crash, collect the newest `.dmp` from that database (Windows stores it
+under `reports`), `crashpad-status.txt`, and `log.txt` before launching again.
+Include the exact build, map/mod, OS, GPU and what happened just before the
+failure. Retain the matching executables, DLLs and PDBs from that build for
+debugging; PDBs from a different rebuild do not match the dump.
+
+Capture is best effort. Startup status confirms initialization, not that the
+handler survived the entire session. Process kills, raw Windows fast-fail,
+failures before the entry point and unavailable disk space can still leave no
+dump. Windows fast-fail bypasses ordinary exception handlers; covering it via
+Crashpad's WER module requires separate installation/registry integration. The
+pinned Crashpad also does not restart a dead handler on Windows/Linux, and its
+Windows `DumpWithoutCrash` call can wait indefinitely if that handler dies.
+Fatal C++ exceptions caught by the game's entry point request such a dump before
+logging/displaying the error; their dump stack is the catch site, not the
+already-unwound throw site.
+
+For automated checks, see the [Crashpad integration tests](Versions/Temporary/Engine/Sources/port/test/README.md).
+
 # exporting Granny3D models from the editor
 
 In the object browser's `<Model>` tree, right-click a model file and choose **Export Granny3D to GLB**. The options window offers **Export textures as separate files**, **Convert textures to TGA**, and **Mirror along X axis**, all checked by default. Click **Export** to select a destination in the save dialog. Cancelling that dialog or encountering an export error returns to the options. The command reads the mounted game/mod resources without changing the database.

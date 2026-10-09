@@ -188,10 +188,12 @@ static int RunGameGuarded( const std::vector<std::string> &arguments )
 	}
 	catch ( const std::exception &e )
 	{
+		DumpCrashpadWithoutCrash();
 		ReportFatalError( fmt::format( "{}: {}", CurrentExceptionTypeName(), e.what() ) );
 	}
 	catch ( ... )
 	{
+		DumpCrashpadWithoutCrash();
 		// Where DXVK lands. There is no message to be had, only the type.
 		ReportFatalError( fmt::format( "unhandled exception of type {}", CurrentExceptionTypeName() ) );
 	}
@@ -232,6 +234,8 @@ static std::vector<std::string> SplitCommandLine( LPSTR lpCmdLine )
 // is now asked for by the one place that wants it.
 int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
 {
+	// Cover command-line/configuration work as well as the main game loop.
+	InitCrashpad( "OpenBK2 Game", REVISION_NUMBER_STR " " BUILD_DATE_TIME_STR );
 	return RunGameGuarded( SplitCommandLine( lpCmdLine ) );
 }
 
@@ -239,6 +243,7 @@ int WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR lpCmdLine, int )
 
 int main( int argc, char *argv[] )
 {
+	InitCrashpad( "OpenBK2 Game", REVISION_NUMBER_STR " " BUILD_DATE_TIME_STR );
 	// argv[0] is the program itself, which WinMain is not given either
 	return RunGameGuarded( std::vector<std::string>( argv + 1, argv + argc ) );
 }
@@ -254,8 +259,6 @@ static int RunGame( const std::vector<std::string> &arguments )
 
 	NGlobal::LoadConfig( NFile::JoinPath( "..", NFile::DIR_PROFILES, "startup.cfg" ) );
 	StoreBuildInfo();
-	// crashpad will generate a crash report and write minidump
-	InitCrashpad();
 
 	// Suppress the shell's own error boxes for a missing DLL or an unreadable
 	// drive, so the failure goes to the calling process instead. Windows only:
@@ -286,6 +289,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	{
 		pConsole->SetLogfile( szLogFileName.c_str() );
 		SetupPipeDumpToConsole( PIPE_CHAT, CONSOLE_STREAM_CONSOLE );
+		csSystem << GetCrashpadStatus().c_str() << endl;
 	}
 
 	NGScene::SFLB3_RunResourceLoadingThread();

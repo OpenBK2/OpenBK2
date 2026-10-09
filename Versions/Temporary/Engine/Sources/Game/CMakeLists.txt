@@ -16,7 +16,7 @@ if(USE_MIMALLOC AND NOT WIN32)
     target_compile_definitions(Game PRIVATE USE_MIMALLOC=1)
 endif()
 target_link_libraries(Game PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools GameX Image Input libdb Main MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib fmt::fmt-header-only)
-target_link_libraries(Game PRIVATE crashpad_client)
+configure_crashpad(Game)
 if(WIN32)
     target_link_libraries(Game PRIVATE winapi)
 else()
@@ -45,15 +45,6 @@ else()
     target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_BACKTRACE)
 endif()
 install(TARGETS Game DESTINATION bin)
-
-# The crash handler is a separate executable that the game starts at run time,
-# by the relative name main.cpp passes to CrashpadClient::StartHandler. Nothing
-# was installing it: the copy in an existing Windows install tree got there by
-# hand, and a fresh install of either platform had none, so the handler never
-# started and crashes went unreported.
-if(TARGET crashpad_handler)
-    install(PROGRAMS $<TARGET_FILE:crashpad_handler> DESTINATION bin)
-endif()
 
 # A desktop entry, so the game has a name and a launcher entry rather than being
 # an anonymous binary. It also matters for the window icon: a Wayland compositor

@@ -17,7 +17,7 @@ add_executable(B2_MapEditor WIN32 ${SOURCES})
 add_stdafx_pch(B2_MapEditor)
 # No mfc, here or in any module the editor loads: wx owns WinMain.
 target_link_libraries(B2_MapEditor PRIVATE 3DLib 3Dmotor AILogic B2_M1_Terrain B2_M1_World Client Common_RTS_AI DebugTools ED_B2 ED_B2_M1 ED_Common GameX Image Input libdb Main MapEditorLib MapEditor MemoryLib Misc Net Parser SceneB2 Script Server_Client_Common Sound Stats_B2_M1 System UISpecificB2 UI zlib)
-target_link_libraries(B2_MapEditor PRIVATE crashpad_client)
+configure_crashpad(B2_MapEditor)
 if(WIN32)
     target_link_libraries(B2_MapEditor PRIVATE winapi)
 endif()
@@ -75,13 +75,4 @@ endif()
 
 install(TARGETS B2_MapEditor DESTINATION bin)
 
-# The crash handler is a separate executable that main.cpp starts at run time
-# by the relative name it passes to CrashpadClient::StartHandler, so it has to
-# be beside the editor. Game installs it too; installing the same file twice
-# into the same place is harmless, and asking for it here is what makes an
-# editor-only install tree complete rather than one that silently never starts
-# a handler.
-if(TARGET crashpad_handler)
-    install(PROGRAMS $<TARGET_FILE:crashpad_handler> DESTINATION bin)
-endif()
 add_version_info(B2_MapEditor)

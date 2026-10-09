@@ -269,7 +269,9 @@ const char *ConvertWeightsFromGrannyEx(
 	if ( pMesh->BoneBindingCount <= 0 ) 
 		return "Error";
 
-	pWeights->resize( nVertices );
+	// A vertex may carry fewer than four influences. Clear unused slots even when
+	// reusing an existing output vector, since render and collision skinning read them.
+	pWeights->assign( nVertices, SVertexWeight{} );
 
 	if ( GrannyMeshIsRigid( pMesh ) )
 	{
@@ -323,7 +325,7 @@ const char *ConvertWeightsFromGrannyEx(
 		ASSERT( nWeightsCount == nIndicesCount );
 		ASSERT( nIndicesCount <= 4 && nWeightsCount <= 4 && "Unsupported number of vertice-to-bone bindings in mesh!" );
 		ASSERT( nIndicesCount > 0 && nWeightsCount > 0 && "Unsupported number of vertice-to-bone bindings in mesh!" );
-		if ( nWeightsCount == 0 || nIndicesCount == 0 || nIndicesCount != nWeightsCount )
+		if ( nWeightsCount <= 0 || nIndicesCount <= 0 || nIndicesCount != nWeightsCount )
 			return "Error";
 		nWeightsCount = (std::min)( 4, nWeightsCount );
 		nIndicesCount = (std::min)( 4, nIndicesCount );
@@ -378,19 +380,25 @@ const char *ConvertWeightsFromGrannyEx(
 		for ( int k = 0; k < pMesh->PrimaryVertexData->VertexCount; ++k )
 		{
 			char *pVertex = pUntypedVertices + k * nSize;
-			granny_uint8 weights[4];
-			granny_uint8 indices[4];
+			granny_uint8 weights[4] = {};
+			granny_uint8 indices[4] = {};
 			memcpy( weights, pVertex + nWeightsOffset, nWeightsCount * sizeof(granny_uint8) );
 			memcpy( indices, pVertex + nIndicesOffset, nIndicesCount * sizeof(granny_uint8) );
 			SVertexWeight &wData = (*pWeights)[k];
-			wData.cBoneIndices[0] = index2bone[ indices[0] ];
-			wData.cBoneIndices[1] = index2bone[ indices[1] ];
-			wData.cBoneIndices[2] = index2bone[ indices[2] ];
-			wData.cBoneIndices[3] = index2bone[ indices[3] ];
-			wData.fWeights[0] = weights[0] / 255.0f;
-			wData.fWeights[1] = nWeightsCount > 0 ? weights[1] / 255.0f : 0.0f;
-			wData.fWeights[2] = nWeightsCount > 1 ? weights[2] / 255.0f : 0.0f;
-			wData.fWeights[3] = nWeightsCount > 2 ? weights[3] / 255.0f : 0.0f;
+			for ( int j = 0; j < nWeightsCount; ++j )
+			{
+				// Unused bindings can contain an exporter sentinel. Do not look them
+				// up, or read uninitialized indices beyond the declared array width.
+				if ( weights[j] == 0 )
+					continue;
+				if ( indices[j] >= index2bone.size() )
+					return "Vertex bone binding index is out of range";
+				const int nBone = index2bone[indices[j]];
+				if ( !pSkeleton || nBone < 0 || nBone >= pSkeleton->BoneCount || nBone > 0xff )
+					return "Vertex skeleton bone index is out of range";
+				wData.cBoneIndices[j] = static_cast<uint8_t>( nBone );
+				wData.fWeights[j] = weights[j] / 255.0f;
+			}
 		}
 		/**/
 	}
