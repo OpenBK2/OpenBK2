@@ -33,6 +33,10 @@ endif()
 
 # Send Unicode window input through the real edit control in the C locale.
 add_unit_test(UnicodeInput UI Input libdb 3Dmotor System Misc gr2)
+if(NOT WIN32)
+    # port/virtualkey.h includes SDL3; UI and Input keep that dependency private.
+    target_link_libraries(UnicodeInput_test PRIVATE SDL3::SDL3-shared)
+endif()
 target_compile_definitions(UnicodeInput_test PRIVATE
     GAME_DATA_DIR="${CMAKE_SOURCE_DIR}/Versions/Current/Data")
 if(WIN32)
