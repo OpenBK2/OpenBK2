@@ -38,6 +38,7 @@ namespace NWinFrame
 		union
 		{
 			struct { int x,y; };         // mouse
+			// CHAR carries a UTF-16 unit on Windows, a Unicode code point on SDL.
 			struct { int nKey, nRep; };  // key
 		};
 		uint32_t dwFlags = 0;

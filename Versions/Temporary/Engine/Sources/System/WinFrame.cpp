@@ -3,6 +3,7 @@
 #include "Commands.h"
 #include "WindowViewport.h"
 #include "port/window.h"
+#include "port/unicode.h"
 
 #include <cmath>
 
@@ -327,9 +328,10 @@ void NWinFrame::PumpMessages()
 {
   // Now we are ready to recieve and process Windows messages.
   MSG msg;
-	while ( PeekMessage( &msg, 0, 0, 0, PM_NOREMOVE ) )
+	// Keep character messages Unicode throughout retrieval and dispatch.
+	while ( PeekMessageW( &msg, 0, 0, 0, PM_NOREMOVE ) )
 	{
-		if ( ::GetMessage( &msg, 0, 0, 0 ) )
+		if ( ::GetMessageW( &msg, 0, 0, 0 ) )
 		{
 			if ( msg.message == WM_ACTIVATEAPP )
 			{
@@ -337,7 +339,7 @@ void NWinFrame::PumpMessages()
 				//Report( "MainMsgProcess::WM_activateapp ", msg.wParam );
 			}
 			TranslateMessage( &msg );
-			DispatchMessage( &msg );
+			DispatchMessageW( &msg );
 			//Report( "...finish msg process", msg.message );
 		}
 		else
@@ -366,19 +368,23 @@ bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned d
 {
   // create and register class style
         // Register the windows class
-  WNDCLASS wndClass = { 0, WndProc, 0, 0, hInstance,
-                        LoadIcon( hInstance, nIcon ),
+  // An ANSI window delivers encoded bytes, which cannot be converted one
+  // WM_CHAR at a time when the process code page is UTF-8.
+  const std::wstring wszApp = UTF8ToWide( pszApp );
+  const std::wstring wszWnd = UTF8ToWide( pszWnd );
+  WNDCLASSW wndClass = { 0, WndProc, 0, 0, hInstance,
+                        LoadIconA( hInstance, nIcon ),
                         0,//LoadCursor( NULL, IDC_ARROW ), 
                         (HBRUSH)GetStockObject(NULL_BRUSH), // NULL_BRUSH // WHITE_BRUSH
-                        NULL, pszWnd };
+                        NULL, wszWnd.c_str() };
 	wndClass.style |= CS_DBLCLKS;
- atomWndClassName = RegisterClass( &wndClass );
+ atomWndClassName = RegisterClassW( &wndClass );
 
   // Set the window's initial style
   uint32_t dwWinStyle = WS_POPUP|WS_SYSMENU|WS_VISIBLE;//WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_THICKFRAME|WS_MINIMIZEBOX|WS_VISIBLE;
 
   // Create the render window
-  hWnd = CreateWindow( pszWnd, pszApp, dwWinStyle,
+  hWnd = CreateWindowW( wszWnd.c_str(), wszApp.c_str(), dwWinStyle,
                          0, 0, dwWidth, dwHeight, 0L,
                          0,//LoadMenu( hInstance, MAKEINTRESOURCE(IDR_MENU) ), 
                          hInstance, 0L );
@@ -556,7 +562,7 @@ static LRESULT CALLBACK WndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM
 			return 0;
 
 	}
-	return DefWindowProc( hWnd, uMsg, wParam, lParam );
+	return DefWindowProcW( hWnd, uMsg, wParam, lParam );
 }
 
 bool NWinFrame::SFLB1_InitApplication( const char *pszAppName, const char *pszWndName, LPCSTR nIcon )

@@ -612,9 +612,11 @@ bool CWindowEditLine::OnChar( const SGameMessage &msg )
 
 	const wchar_t chr = msg.nParam1;//.wCharCode;
 
-	if ( !iswprint( msg.nParam1 ) )
-		return false;
-	if ( msg.nParam1 < 32 )
+	// Text input is Unicode; CRT iswprint depends on the process locale and
+	// rejects non-ASCII text in the C locale on some platforms. Only exclude
+	// control characters and line separators here; field rules live in AddChar.
+	if ( msg.nParam1 < 32 || ( msg.nParam1 >= 0x7f && msg.nParam1 <= 0x9f ) ||
+		msg.nParam1 == 0x2028 || msg.nParam1 == 0x2029 )
 		return false;
 
 	//Если печатный символ, то просто выводим его

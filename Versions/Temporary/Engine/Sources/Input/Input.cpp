@@ -2007,16 +2007,12 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszG
 	//
 	if ( rWindowMsg.msg == NWinFrame::SWindowsMsg::CHAR )
 	{
-		const std::string szCharBuffer = std::string() + (char)( rWindowMsg.nKey );
-		std::wstring wszCharBuffer;
-		NStr::ToUnicode( &wszCharBuffer, szCharBuffer );
-		if ( wszCharBuffer.size() == 1 )
-		{
-			( *pszGameMessage ) = "win_char";
-			( *pnParam1 ) = wszCharBuffer[0];
-			( *pnParam2 ) = 0;
-			( *pnCount ) = rWindowMsg.nRep;
-		}
+		// WinFrame already supplies Unicode: UTF-16 units on Windows and
+		// decoded code points from SDL. Narrowing to a UTF-8 byte loses text.
+		( *pszGameMessage ) = "win_char";
+		( *pnParam1 ) = rWindowMsg.nKey;
+		( *pnParam2 ) = 0;
+		( *pnCount ) = rWindowMsg.nRep;
 		return true;
 	}
 	if ( rWindowMsg.msg == NWinFrame::SWindowsMsg::KEY_DOWN )
