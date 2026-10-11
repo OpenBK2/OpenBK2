@@ -39,6 +39,7 @@ int SUISoundEntry::operator&( IBinSaver &saver )
 
 uint32_t SUISoundEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -78,6 +79,7 @@ int SMainMenuBackground::operator&( IBinSaver &saver )
 
 uint32_t SMainMenuBackground::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -117,6 +119,7 @@ int SHallOfFameRecord::operator&( IBinSaver &saver )
 
 uint32_t SHallOfFameRecord::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -156,6 +159,7 @@ int SGameRoot::STutorialMap::operator&( IBinSaver &saver )
 
 uint32_t SGameRoot::STutorialMap::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -257,6 +261,7 @@ int SGameRoot::operator&( IBinSaver &saver )
 
 uint32_t SGameRoot::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

@@ -67,6 +67,7 @@ int SUIDesc::operator&( IBinSaver &saver )
 
 uint32_t SUIDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -112,6 +113,7 @@ int SUICommandBase::operator&( IBinSaver &saver )
 
 uint32_t SUICommandBase::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -154,6 +156,7 @@ int SBUIMessage::operator&( IBinSaver &saver )
 
 uint32_t SBUIMessage::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -188,6 +191,7 @@ int SUIStateBaseShared::operator&( IBinSaver &saver )
 
 uint32_t SUIStateBaseShared::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -226,6 +230,7 @@ int SUIStateBase::operator&( IBinSaver &saver )
 
 uint32_t SUIStateBase::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -431,6 +436,7 @@ int SUIStateSequence::operator&( IBinSaver &saver )
 
 uint32_t SUIStateSequence::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -475,6 +481,7 @@ int SBackground::operator&( IBinSaver &saver )
 
 uint32_t SBackground::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -581,6 +588,7 @@ int SSubRect::operator&( IBinSaver &saver )
 
 uint32_t SSubRect::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -668,6 +676,7 @@ int SWindowBaseShared::operator&( IBinSaver &saver )
 
 uint32_t SWindowBaseShared::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -706,6 +715,7 @@ int SWindowBaseDesc::operator&( IBinSaver &saver )
 
 uint32_t SWindowBaseDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -754,6 +764,7 @@ int SGameMessageReaction::operator&( IBinSaver &saver )
 
 uint32_t SGameMessageReaction::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -805,6 +816,7 @@ int SWindowPlacement::operator&( IBinSaver &saver )
 
 uint32_t SWindowPlacement::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -841,6 +853,7 @@ int SWindowFlags::operator&( IBinSaver &saver )
 
 uint32_t SWindowFlags::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -900,6 +913,7 @@ int SWindowShared::operator&( IBinSaver &saver )
 
 uint32_t SWindowShared::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -962,6 +976,7 @@ int SWindow::operator&( IBinSaver &saver )
 
 uint32_t SWindow::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1146,6 +1161,7 @@ int SMessageSequence::operator&( IBinSaver &saver )
 
 uint32_t SMessageSequence::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1185,6 +1201,7 @@ int SMessageSequienceEntry::operator&( IBinSaver &saver )
 
 uint32_t SMessageSequienceEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1576,6 +1593,7 @@ int SReactionSequenceEntry::operator&( IBinSaver &saver )
 
 uint32_t SReactionSequenceEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1615,6 +1633,7 @@ int SMessageReactionsDesc::operator&( IBinSaver &saver )
 
 uint32_t SMessageReactionsDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1654,6 +1673,7 @@ int SCommandSequienceEntry::operator&( IBinSaver &saver )
 
 uint32_t SCommandSequienceEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1693,6 +1713,7 @@ int SScreenTextEntry::operator&( IBinSaver &saver )
 
 uint32_t SScreenTextEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1866,6 +1887,7 @@ int SProgressBarTextureInfo::operator&( IBinSaver &saver )
 
 uint32_t SProgressBarTextureInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1905,6 +1927,7 @@ int SMultiTextureProgressBarSharedState::operator&( IBinSaver &saver )
 
 uint32_t SMultiTextureProgressBarSharedState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2525,6 +2548,7 @@ int SWindowScrollableContainerBaseShared::operator&( IBinSaver &saver )
 
 uint32_t SWindowScrollableContainerBaseShared::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2569,6 +2593,7 @@ int SWindowScrollableContainerBase::operator&( IBinSaver &saver )
 
 uint32_t SWindowScrollableContainerBase::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2927,6 +2952,7 @@ int SWindowTabControl::STab::operator&( IBinSaver &saver )
 
 uint32_t SWindowTabControl::STab::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3130,6 +3156,7 @@ int SButtonVisualSubState::operator&( IBinSaver &saver )
 
 uint32_t SButtonVisualSubState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3184,6 +3211,7 @@ int SButtonVisualState::operator&( IBinSaver &saver )
 
 uint32_t SButtonVisualState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3238,6 +3266,7 @@ int SButtonLogicalState::operator&( IBinSaver &saver )
 
 uint32_t SButtonLogicalState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

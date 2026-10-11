@@ -61,6 +61,7 @@ int SMultiplayerTechLevel::operator&( IBinSaver &saver )
 
 uint32_t SMultiplayerTechLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -100,6 +101,7 @@ int STechLevelReinfSet::operator&( IBinSaver &saver )
 
 uint32_t STechLevelReinfSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -142,6 +144,7 @@ int SLadderRank::operator&( IBinSaver &saver )
 
 uint32_t SLadderRank::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -196,6 +199,7 @@ int SMultiplayerSide::operator&( IBinSaver &saver )
 
 uint32_t SMultiplayerSide::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -235,6 +239,7 @@ int SMultiplayerConsts::SPlayerColor::operator&( IBinSaver &saver )
 
 uint32_t SMultiplayerConsts::SPlayerColor::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -300,6 +305,7 @@ int SMultiplayerConsts::operator&( IBinSaver &saver )
 
 uint32_t SMultiplayerConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

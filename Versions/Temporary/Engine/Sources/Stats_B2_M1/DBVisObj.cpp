@@ -42,6 +42,7 @@ int SVisObj::SSingleObj::operator&( IBinSaver &saver )
 
 uint32_t SVisObj::SSingleObj::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

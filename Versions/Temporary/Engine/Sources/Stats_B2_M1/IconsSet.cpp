@@ -109,6 +109,7 @@ int SIconsSet::SIconType::operator&( IBinSaver &saver )
 
 uint32_t SIconsSet::SIconType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -297,6 +298,7 @@ int SVisObjIconsSet::SVisObjIcon::operator&( IBinSaver &saver )
 
 uint32_t SVisObjIconsSet::SVisObjIcon::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

@@ -36,6 +36,7 @@ int SAttachedModelVisObj::SSDamageLevel::operator&( IBinSaver &saver )
 
 uint32_t SAttachedModelVisObj::SSDamageLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

@@ -157,3 +157,24 @@ class CMapInfo2
 	// Every object on the map
 	SMapObject _Objects[];
 };
+
+/* Mirrors the MP nesting with existing map/unit test records; Next exercises
+   cyclic resource graphs without depending on the full game modules. */
+forward class CChecksumGraph;
+[typeID = 0x101A6C81]
+class CChecksumGraph
+{
+	struct STechLevel
+	{
+		CMapInfo2 *_Reinforcements[];
+		bool _Disabled = false;
+		CMapInfo2 *_StartingUnits;
+	};
+	struct SSide
+	{
+		STechLevel _TechLevels[];
+	};
+	SSide _Sides[];
+	CChecksumGraph *_Next;
+	[no_checksum] int _Cosmetic;
+};

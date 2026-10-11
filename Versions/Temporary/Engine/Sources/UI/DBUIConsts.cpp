@@ -90,6 +90,7 @@ int SUIGameConsts::operator&( IBinSaver &saver )
 
 uint32_t SUIGameConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

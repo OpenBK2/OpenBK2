@@ -11,6 +11,17 @@ namespace NDb
 LIBDB_EXPORT uint32_t GetDefaultCheckSum();
 LIBDB_EXPORT uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t *pBuf, const int nLen );
 
+// Generated records share cached results only during one root calculation.
+// Keep the cycle guard, but discard every visited cache before the next call.
+class LIBDB_EXPORT CCheckSumScope
+{
+public:
+	explicit CCheckSumScope( uint32_t &cache );
+	~CCheckSumScope();
+	CCheckSumScope( const CCheckSumScope & ) = delete;
+	CCheckSumScope &operator=( const CCheckSumScope & ) = delete;
+};
+
 class CCheckSum
 {
 	// The constructor retains the checksum seed; the type-probe pointer stays null.
@@ -18,10 +29,12 @@ class CCheckSum
 	IBinSaver *p = nullptr;
 	
 	char PORT_CDECL TestType(...) { return 0; }
+	// Vector elements are const here; recognize strings/nested vectors instead
+	// of hashing their implementation storage (including allocation addresses).
 	template<class T1>
-		int PORT_CDECL TestType( std::vector<T1>* ) { return 0; }
-	int PORT_CDECL TestType( std::string* ) { return 0; }
-	int PORT_CDECL TestType( std::wstring* ) { return 0; }
+		int PORT_CDECL TestType( const std::vector<T1>* ) { return 0; }
+	int PORT_CDECL TestType( const std::string* ) { return 0; }
+	int PORT_CDECL TestType( const std::wstring* ) { return 0; }
 
 	template<class T>
 	void DataCheckSum( T *p, const int nLen )
@@ -39,7 +52,8 @@ class CCheckSum
 	void PORT_CDECL SeparateCheckSum( const T &data, SInt2Type<4> *pp )
 	{
 		uint32_t dataCheckSum = data.CalcCheckSum();
-		dataCheckSum = CalcCheckSum( dwCheckSum, (const uint8_t*)&dataCheckSum, sizeof(uint32_t) );
+		// Nested records and DB pointers must contribute to the parent accumulator.
+		DataCheckSum( &dataCheckSum, sizeof( dataCheckSum ) );
 	}
 public:
 	CCheckSum() : dwCheckSum( GetDefaultCheckSum() ) { }

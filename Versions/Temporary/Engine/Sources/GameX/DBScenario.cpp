@@ -42,6 +42,7 @@ int SRankExperience::operator&( IBinSaver &saver )
 
 uint32_t SRankExperience::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -84,6 +85,7 @@ int SLeaderExpLevel::operator&( IBinSaver &saver )
 
 uint32_t SLeaderExpLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -126,6 +128,7 @@ int SMedalConditions::operator&( IBinSaver &saver )
 
 uint32_t SMedalConditions::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -165,6 +168,7 @@ int SCampaign::SLeader::operator&( IBinSaver &saver )
 
 uint32_t SCampaign::SLeader::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -281,6 +285,7 @@ int SCampaign::operator&( IBinSaver &saver )
 
 uint32_t SCampaign::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -317,6 +322,7 @@ int SUnitClassEntry::operator&( IBinSaver &saver )
 
 uint32_t SUnitClassEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -356,6 +362,7 @@ int SEnemyEntry::operator&( IBinSaver &saver )
 
 uint32_t SEnemyEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -599,6 +606,7 @@ int SMissionEnableInfo::operator&( IBinSaver &saver )
 
 uint32_t SMissionEnableInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -641,6 +649,7 @@ int SScenarioUnitModifier::operator&( IBinSaver &saver )
 
 uint32_t SScenarioUnitModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -677,6 +686,7 @@ int SBaseReinforcements::operator&( IBinSaver &saver )
 
 uint32_t SBaseReinforcements::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -748,6 +758,7 @@ int SChapterGeneralInfo::operator&( IBinSaver &saver )
 
 uint32_t SChapterGeneralInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -801,6 +812,7 @@ int SChapterBonus::operator&( IBinSaver &saver )
 
 uint32_t SChapterBonus::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -902,6 +914,7 @@ int SChapter::operator&( IBinSaver &saver )
 
 uint32_t SChapter::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -952,6 +965,7 @@ int SMedal::operator&( IBinSaver &saver )
 
 uint32_t SMedal::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

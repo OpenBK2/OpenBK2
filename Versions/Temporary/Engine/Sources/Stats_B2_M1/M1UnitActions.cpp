@@ -37,6 +37,7 @@ int SM1UnitSpecAction::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitSpecAction::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -84,6 +85,7 @@ int SM1UnitActions::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitActions::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -125,6 +127,7 @@ int SM1UnitActionBuild::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitActionBuild::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -172,6 +175,7 @@ int SM1UnitActionTransform::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitActionTransform::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -211,6 +215,7 @@ int SM1ParameterModifier::operator&( IBinSaver &saver )
 
 uint32_t SM1ParameterModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -250,6 +255,7 @@ int SShellStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SShellStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -289,6 +295,7 @@ int SWeaponStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SWeaponStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -325,6 +332,7 @@ int SPlatformWeaponsStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SPlatformWeaponsStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -361,6 +369,7 @@ int SWeaponsStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SWeaponsStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -411,6 +420,7 @@ int SM1UnitStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

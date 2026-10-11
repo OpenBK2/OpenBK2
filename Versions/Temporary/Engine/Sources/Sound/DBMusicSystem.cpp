@@ -74,6 +74,7 @@ int SPlayPause::operator&( IBinSaver &saver )
 
 uint32_t SPlayPause::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -250,6 +251,7 @@ int SCompositionDesc::operator&( IBinSaver &saver )
 
 uint32_t SCompositionDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

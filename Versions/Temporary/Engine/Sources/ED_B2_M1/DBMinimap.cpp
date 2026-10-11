@@ -147,6 +147,7 @@ int SShadowPoint::operator&( IBinSaver &saver )
 
 uint32_t SShadowPoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -186,6 +187,7 @@ int SEmbossPoint::operator&( IBinSaver &saver )
 
 uint32_t SEmbossPoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -249,6 +251,7 @@ int SMinimapLayer::operator&( IBinSaver &saver )
 
 uint32_t SMinimapLayer::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

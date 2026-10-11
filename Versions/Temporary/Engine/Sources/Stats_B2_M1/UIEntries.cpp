@@ -48,6 +48,7 @@ int SUIScreenEntry::operator&( IBinSaver &saver )
 
 uint32_t SUIScreenEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -87,6 +88,7 @@ int SUITextEntry::operator&( IBinSaver &saver )
 
 uint32_t SUITextEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -126,6 +128,7 @@ int SUITextureEntry::operator&( IBinSaver &saver )
 
 uint32_t SUITextureEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

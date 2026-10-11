@@ -34,6 +34,7 @@ int SEmptyChecksumRecord::operator&( IBinSaver &saver )
 
 uint32_t SEmptyChecksumRecord::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -72,6 +73,7 @@ int SWeapon::operator&( IBinSaver &saver )
 
 uint32_t SWeapon::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -121,6 +123,7 @@ int SHPObject::operator&( IBinSaver &saver )
 
 uint32_t SHPObject::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -213,6 +216,7 @@ int SUnitBase::operator&( IBinSaver &saver )
 
 uint32_t SUnitBase::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -258,6 +262,7 @@ int SMechUnit::SJogging::operator&( IBinSaver &saver )
 
 uint32_t SMechUnit::SJogging::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -315,6 +320,7 @@ int SMechUnit::SStruct1::operator&( IBinSaver &saver )
 
 uint32_t SMechUnit::SStruct1::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -354,6 +360,7 @@ int SMechUnit::SStruct2::operator&( IBinSaver &saver )
 
 uint32_t SMechUnit::SStruct2::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -437,6 +444,7 @@ int SMechUnit::operator&( IBinSaver &saver )
 
 uint32_t SMechUnit::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -488,6 +496,7 @@ int SMapInfo2::SMapObject::operator&( IBinSaver &saver )
 
 uint32_t SMapInfo2::SMapObject::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -529,12 +538,141 @@ int SMapInfo2::operator&( IBinSaver &saver )
 
 uint32_t SMapInfo2::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
 
 	CCheckSum checkSum;
 	checkSum << objects;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SChecksumGraph::STechLevel::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportSimpleArrayMetaInfo( szAddName + "Reinforcements", &reinforcements, pThis );
+	NMetaInfo::ReportMetaInfo( szAddName + "Disabled", (uint8_t*)&bDisabled - pThis, sizeof(bDisabled), NTypeDef::TYPE_TYPE_BOOL );
+	NMetaInfo::ReportMetaInfo( szAddName + "StartingUnits", (uint8_t*)&pStartingUnits - pThis, sizeof(pStartingUnits), NTypeDef::TYPE_TYPE_REF );
+}
+
+int SChecksumGraph::STechLevel::operator&( IXmlSaver &saver )
+{
+	saver.Add( "Reinforcements", &reinforcements );
+	saver.Add( "Disabled", &bDisabled );
+	saver.Add( "StartingUnits", &pStartingUnits );
+
+	return 0;
+}
+
+int SChecksumGraph::STechLevel::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &reinforcements );
+	saver.Add( 3, &bDisabled );
+	saver.Add( 4, &pStartingUnits );
+
+	return 0;
+}
+
+uint32_t SChecksumGraph::STechLevel::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << reinforcements << bDisabled << pStartingUnits;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SChecksumGraph::SSide::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const
+{
+	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "TechLevels", &techLevels, pThis );
+}
+
+int SChecksumGraph::SSide::operator&( IXmlSaver &saver )
+{
+	saver.Add( "TechLevels", &techLevels );
+
+	return 0;
+}
+
+int SChecksumGraph::SSide::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &techLevels );
+
+	return 0;
+}
+
+uint32_t SChecksumGraph::SSide::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << techLevels;
+	__dwCheckSum = checkSum.GetCheckSum();
+	if ( __dwCheckSum == 0 )
+		__dwCheckSum = 1;
+
+	return __dwCheckSum;
+}
+
+
+
+void SChecksumGraph::ReportMetaInfo() const
+{
+	NMetaInfo::StartMetaInfoReport( "ChecksumGraph", typeID, sizeof(*this) );
+
+	uint8_t *pThis = (uint8_t*)this;
+	NMetaInfo::ReportStructArrayMetaInfo( "Sides", &sides, pThis );
+	NMetaInfo::ReportMetaInfo( "Next", (uint8_t*)&pNext - pThis, sizeof(pNext), NTypeDef::TYPE_TYPE_REF );
+	NMetaInfo::ReportMetaInfo( "Cosmetic", (uint8_t*)&nCosmetic - pThis, sizeof(nCosmetic), NTypeDef::TYPE_TYPE_INT );
+	NMetaInfo::FinishMetaInfoReport();
+}
+
+int SChecksumGraph::operator&( IXmlSaver &saver )
+{
+	NMetaInfo::STerminalClassReporter reporter( this, saver );
+	saver.Add( "Sides", &sides );
+	saver.Add( "Next", &pNext );
+	saver.Add( "Cosmetic", &nCosmetic );
+
+	return 0;
+}
+
+int SChecksumGraph::operator&( IBinSaver &saver )
+{
+	saver.Add( 2, &sides );
+	saver.Add( 3, &pNext );
+	saver.Add( 4, &nCosmetic );
+
+	return 0;
+}
+
+uint32_t SChecksumGraph::CalcCheckSum() const
+{
+	CCheckSumScope scope( __dwCheckSum );
+	if ( __dwCheckSum != 0 )
+		return __dwCheckSum;
+	__dwCheckSum = 1;
+
+	CCheckSum checkSum;
+	checkSum << sides << pNext;
 	__dwCheckSum = checkSum.GetCheckSum();
 	if ( __dwCheckSum == 0 )
 		__dwCheckSum = 1;
@@ -549,3 +687,4 @@ BASIC_REGISTER_DATABASE_CLASS( TESTDB, SHPObject )
 BASIC_REGISTER_DATABASE_CLASS( TESTDB, SUnitBase )
 REGISTER_DATABASE_CLASS( TESTDB, 0x1019230E, SMechUnit )
 REGISTER_DATABASE_CLASS( TESTDB, 0x101A6C80, SMapInfo2 )
+REGISTER_DATABASE_CLASS( TESTDB, 0x101A6C81, SChecksumGraph )

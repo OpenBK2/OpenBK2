@@ -39,6 +39,7 @@ int SFieldTileDesc::operator&( IBinSaver &saver )
 
 uint32_t SFieldTileDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -78,6 +79,7 @@ int SFieldObjectDesc::operator&( IBinSaver &saver )
 
 uint32_t SFieldObjectDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -117,6 +119,7 @@ int SFieldPatternSize::operator&( IBinSaver &saver )
 
 uint32_t SFieldPatternSize::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -156,6 +159,7 @@ int SFieldTileShell::operator&( IBinSaver &saver )
 
 uint32_t SFieldTileShell::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -201,6 +205,7 @@ int SFieldObjectShell::operator&( IBinSaver &saver )
 
 uint32_t SFieldObjectShell::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

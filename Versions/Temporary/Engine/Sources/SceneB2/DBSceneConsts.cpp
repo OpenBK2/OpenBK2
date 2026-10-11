@@ -42,6 +42,7 @@ int SLightEffectConsts::operator&( IBinSaver &saver )
 
 uint32_t SLightEffectConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -84,6 +85,7 @@ int SSceneConsts::SSelectionMaterials::operator&( IBinSaver &saver )
 
 uint32_t SSceneConsts::SSelectionMaterials::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -117,6 +119,7 @@ int SSceneConsts::STrackMaterials::operator&( IBinSaver &saver )
 
 uint32_t SSceneConsts::STrackMaterials::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -150,6 +153,7 @@ int SSceneConsts::SIconAIGeometry::operator&( IBinSaver &saver )
 
 uint32_t SSceneConsts::SIconAIGeometry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -189,6 +193,7 @@ int SSceneConsts::STerraGenConsts::operator&( IBinSaver &saver )
 
 uint32_t SSceneConsts::STerraGenConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -234,6 +239,7 @@ int SSceneConsts::SDebugMaterials::operator&( IBinSaver &saver )
 
 uint32_t SSceneConsts::SDebugMaterials::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

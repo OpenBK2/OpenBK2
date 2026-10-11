@@ -58,6 +58,7 @@ int SMPMapInfo::operator&( IBinSaver &saver )
 
 uint32_t SMPMapInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -106,6 +107,7 @@ int SCameraPlacement::operator&( IBinSaver &saver )
 
 uint32_t SCameraPlacement::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -154,6 +156,7 @@ int SScriptCameraPlacement::operator&( IBinSaver &saver )
 
 uint32_t SScriptCameraPlacement::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -199,6 +202,7 @@ int SScriptMovieKey::operator&( IBinSaver &saver )
 
 uint32_t SScriptMovieKey::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -239,6 +243,7 @@ int SScriptMovieKeyPos::operator&( IBinSaver &saver )
 
 uint32_t SScriptMovieKeyPos::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -279,6 +284,7 @@ int SScriptMovieKeyFollow::operator&( IBinSaver &saver )
 
 uint32_t SScriptMovieKeyFollow::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -318,6 +324,7 @@ int SScriptMovieSequence::operator&( IBinSaver &saver )
 
 uint32_t SScriptMovieSequence::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -357,6 +364,7 @@ int SScriptMovies::operator&( IBinSaver &saver )
 
 uint32_t SScriptMovies::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -434,6 +442,7 @@ int SPartyDependentInfo::operator&( IBinSaver &saver )
 
 uint32_t SPartyDependentInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -517,6 +526,7 @@ int SMapObjectInfo::SLinkInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapObjectInfo::SLinkInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -577,6 +587,7 @@ int SMapObjectInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapObjectInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -613,6 +624,7 @@ int SEntrenchmentInfo::operator&( IBinSaver &saver )
 
 uint32_t SEntrenchmentInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -683,6 +695,7 @@ int SScriptArea::operator&( IBinSaver &saver )
 
 uint32_t SScriptArea::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -734,6 +747,7 @@ int SAIStartCommand::operator&( IBinSaver &saver )
 
 uint32_t SAIStartCommand::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -776,6 +790,7 @@ int SBattlePosition::operator&( IBinSaver &saver )
 
 uint32_t SBattlePosition::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -815,6 +830,7 @@ int SMapSoundInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapSoundInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -854,6 +870,7 @@ int SEditAreaInfo::operator&( IBinSaver &saver )
 
 uint32_t SEditAreaInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -919,6 +936,7 @@ int SReinforcePoint::operator&( IBinSaver &saver )
 
 uint32_t SReinforcePoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -973,6 +991,7 @@ int SAIGeneralParcel::operator&( IBinSaver &saver )
 
 uint32_t SAIGeneralParcel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1015,6 +1034,7 @@ int SAIGeneralSide::operator&( IBinSaver &saver )
 
 uint32_t SAIGeneralSide::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1051,6 +1071,7 @@ int SBonusInstance::operator&( IBinSaver &saver )
 
 uint32_t SBonusInstance::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1087,6 +1108,7 @@ int SBuildingBonuses::operator&( IBinSaver &saver )
 
 uint32_t SBuildingBonuses::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1129,6 +1151,7 @@ int SPlayerBonusData::operator&( IBinSaver &saver )
 
 uint32_t SPlayerBonusData::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1194,6 +1217,7 @@ int SMapPlayerInfo::SDeployPosition::operator&( IBinSaver &saver )
 
 uint32_t SMapPlayerInfo::SDeployPosition::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1239,6 +1263,7 @@ int SMapPlayerInfo::SSuperWeaponInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapPlayerInfo::SSuperWeaponInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1314,6 +1339,7 @@ int SMapPlayerInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapPlayerInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1475,6 +1501,7 @@ int SMapInfo::operator&( IBinSaver &saver )
 
 uint32_t SMapInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1528,6 +1555,7 @@ int SMultiplayerMap::operator&( IBinSaver &saver )
 
 uint32_t SMultiplayerMap::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1599,6 +1627,7 @@ int SMissionBonus::operator&( IBinSaver &saver )
 
 uint32_t SMissionBonus::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1643,6 +1672,7 @@ int SReinforcementChange::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementChange::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1684,6 +1714,7 @@ int SReinforcementEnable::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementEnable::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1725,6 +1756,7 @@ int SReinforcementDisable::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementDisable::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1769,6 +1801,7 @@ int SAddReinforcementCalls::operator&( IBinSaver &saver )
 
 uint32_t SAddReinforcementCalls::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1808,6 +1841,7 @@ int SStartUnisAvalabiltyEntry::operator&( IBinSaver &saver )
 
 uint32_t SStartUnisAvalabiltyEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1861,6 +1895,7 @@ int SDifficultyLevel::operator&( IBinSaver &saver )
 
 uint32_t SDifficultyLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

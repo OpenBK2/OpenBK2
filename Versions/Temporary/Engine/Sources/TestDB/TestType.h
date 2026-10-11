@@ -276,6 +276,72 @@ namespace NDb
 		int operator&( IXmlSaver &saver );
 		uint32_t CalcCheckSum() const;
 	};
+	struct SChecksumGraph;
+
+	struct SChecksumGraph : public CResource
+	{
+		OBJECT_BASIC_METHODS( SChecksumGraph )
+	public:
+		enum { typeID = 0x101A6C81 };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+
+		struct STechLevel
+		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			std::vector< CDBPtr< SMapInfo2 > > reinforcements;
+			bool bDisabled;
+			CDBPtr< SMapInfo2 > pStartingUnits;
+
+			STechLevel() :
+				__dwCheckSum( 0 ),
+				bDisabled( false )
+			{ }
+			//
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+			//
+			int operator&( IBinSaver &saver );
+			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
+		};
+
+		struct SSide
+		{
+		private:
+			mutable uint32_t __dwCheckSum;
+		public:
+			std::vector< STechLevel > techLevels;
+
+			SSide() :
+				__dwCheckSum( 0 )
+			{ }
+			//
+			void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
+			//
+			int operator&( IBinSaver &saver );
+			int operator&( IXmlSaver &saver );
+			uint32_t CalcCheckSum() const;
+		};
+		std::vector< SSide > sides;
+		CDBPtr< SChecksumGraph > pNext;
+		int nCosmetic;
+
+		SChecksumGraph() :
+			__dwCheckSum( 0 ),
+			nCosmetic( 0 )
+		{ }
+		//
+		int GetTypeID() const { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
 }
 
 namespace NDb

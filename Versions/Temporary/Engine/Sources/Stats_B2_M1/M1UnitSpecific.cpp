@@ -34,6 +34,7 @@ int SM1UnitSpecific::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitSpecific::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -79,6 +80,7 @@ int SM1UnitHelicopter::SHelicopterAxis::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitHelicopter::SHelicopterAxis::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -141,6 +143,7 @@ int SM1UnitHelicopter::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitHelicopter::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

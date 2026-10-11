@@ -40,6 +40,7 @@
 #include "System/VFSOperations.h"
 #include "System/WinVFS.h"
 #include "libdb/Db.h"
+#include "libdb/Checksum.h"
 #include "libdb/EditorDb.h"
 #include "libdb/ObjMan.h"
 #include "libdb/ObjManIterator.h"
@@ -709,6 +710,128 @@ TEST_F( CEditorDatabase, NewObjectIsSaved )
 	CObj<NDb::IObjMan> pSaved = NDb::GetManipulator( CDBID( "object3.xdb" ) );
 	ASSERT_NE( pSaved, nullptr );
 	EXPECT_EQ( pSaved->GetAttribute( "MOD" ), L"Мой любимый MOD" );
+}
+
+template<class T>
+uint32_t Checksum( const T &value )
+{
+	NDb::CCheckSum sum;
+	sum << value;
+	return sum.GetCheckSum();
+}
+
+TEST( DatabaseChecksum, StringAndNestedVectorsUseContentsNotAllocationAddresses )
+{
+	const std::vector<std::string> strings{ std::string( 100, 'a' ), "second" };
+	auto stringsCopy = strings;
+	stringsCopy.reserve( 20 );
+	EXPECT_EQ( Checksum( strings ), Checksum( stringsCopy ) );
+	stringsCopy[0][50] = 'b';
+	EXPECT_NE( Checksum( strings ), Checksum( stringsCopy ) );
+
+	const std::vector<std::wstring> wideStrings{ std::wstring( 100, L'a' ) };
+	auto wideCopy = wideStrings;
+	EXPECT_EQ( Checksum( wideStrings ), Checksum( wideCopy ) );
+	wideCopy[0][50] = L'b';
+	EXPECT_NE( Checksum( wideStrings ), Checksum( wideCopy ) );
+
+	const std::vector<std::vector<int>> nested{ { 1, 2 }, {}, { 3, 4 } };
+	auto nestedCopy = nested;
+	nestedCopy[0].reserve( 20 );
+	EXPECT_EQ( Checksum( nested ), Checksum( nestedCopy ) );
+	nestedCopy[2][0] = 5;
+	EXPECT_NE( Checksum( nested ), Checksum( nestedCopy ) );
+	EXPECT_NE( Checksum( nested ), Checksum( std::vector<std::vector<int>>{ { 1 }, { 2 }, { 3, 4 } } ) );
+}
+
+TEST_F( CEditorDatabase, ChecksumTracksInheritedHPAfterAnEarlierCalculation )
+{
+	pUnit->fHP = 100;
+	const uint32_t before = pUnit->CalcCheckSum();
+	pUnit->fHP = 101;
+	EXPECT_NE( before, pUnit->CalcCheckSum() );
+	pUnit->fHP = 100;
+	EXPECT_EQ( before, pUnit->CalcCheckSum() );
+
+	// Editor writes must be reflected just like direct writes to loaded records.
+	ASSERT_TRUE( pMan->SetValue( "HP", 102.0f ) );
+	EXPECT_NE( before, pUnit->CalcCheckSum() );
+}
+
+TEST_F( CEditorDatabase, ChecksumReachesUnitsThroughSidesTechLevelsAndReinforcements )
+{
+	CObj<NDb::IObjMan> pGraphMan = NDb::CreateNewObject( "ChecksumGraph" );
+	CObj<NDb::IObjMan> pMapMan = NDb::CreateNewObject( "MapInfo2" );
+	CObj<NDb::IObjMan> pOtherMapMan = NDb::CreateNewObject( "MapInfo2" );
+	ASSERT_NE( pGraphMan, nullptr );
+	ASSERT_NE( pMapMan, nullptr );
+	ASSERT_NE( pOtherMapMan, nullptr );
+	auto *pGraph = dynamic_cast<NDb::SChecksumGraph *>( pGraphMan->GetObject() );
+	auto *pMap = dynamic_cast<NDb::SMapInfo2 *>( pMapMan->GetObject() );
+	auto *pOtherMap = dynamic_cast<NDb::SMapInfo2 *>( pOtherMapMan->GetObject() );
+	ASSERT_NE( pGraph, nullptr );
+	ASSERT_NE( pMap, nullptr );
+	ASSERT_NE( pOtherMap, nullptr );
+
+	pUnit->fHP = 100;
+	pMap->objects.resize( 1 );
+	pMap->objects[0].pObject = pUnit;
+	pGraph->sides.resize( 1 );
+	pGraph->sides[0].techLevels.resize( 1 );
+	auto &level = pGraph->sides[0].techLevels[0];
+	// The shared map is reached by both reinforcement and starting-unit paths.
+	level.reinforcements.push_back( pMap );
+	level.pStartingUnits = pMap;
+
+	auto expectChange = [&]( auto change, auto restore )
+	{
+		const uint32_t before = pGraph->CalcCheckSum();
+		change();
+		EXPECT_NE( before, pGraph->CalcCheckSum() );
+		restore();
+		EXPECT_EQ( before, pGraph->CalcCheckSum() );
+	};
+	expectChange( [&] { pUnit->fHP = 101; }, [&] { pUnit->fHP = 100; } );
+	expectChange( [&] { level.bDisabled = true; }, [&] { level.bDisabled = false; } );
+	expectChange( [&] { level.reinforcements[0] = pOtherMap; }, [&] { level.reinforcements[0] = pMap; } );
+	expectChange( [&] { level.reinforcements.push_back( pMap ); }, [&] { level.reinforcements.pop_back(); } );
+	expectChange( [&] { level.pStartingUnits = pOtherMap; }, [&] { level.pStartingUnits = pMap; } );
+	expectChange( [&] { level.pStartingUnits = nullptr; }, [&] { level.pStartingUnits = pMap; } );
+	expectChange( [&] { pMap->objects[0].vPos.x = 10; }, [&] { pMap->objects[0].vPos.x = 0; } );
+
+	const uint32_t before = pGraph->CalcCheckSum();
+	pGraph->nCosmetic = 123;
+	EXPECT_EQ( before, pGraph->CalcCheckSum() ); // no_checksum remains intentional.
+	// Independently visiting a descendant must not affect the next root checksum.
+	pMap->CalcCheckSum();
+	pUnit->CalcCheckSum();
+	EXPECT_EQ( before, pGraph->CalcCheckSum() );
+}
+
+TEST( DatabaseChecksum, CyclesTerminateAndDoNotRetainResultsFromAnotherRoot )
+{
+	CObj<NDb::IObjMan> pFirstMan = NDb::CreateNewObject( "ChecksumGraph" );
+	CObj<NDb::IObjMan> pSecondMan = NDb::CreateNewObject( "ChecksumGraph" );
+	ASSERT_NE( pFirstMan, nullptr );
+	ASSERT_NE( pSecondMan, nullptr );
+	auto *pFirst = dynamic_cast<NDb::SChecksumGraph *>( pFirstMan->GetObject() );
+	auto *pSecond = dynamic_cast<NDb::SChecksumGraph *>( pSecondMan->GetObject() );
+	ASSERT_NE( pFirst, nullptr );
+	ASSERT_NE( pSecond, nullptr );
+	pFirst->sides.resize( 1 );
+	pFirst->pNext = pSecond;
+	pSecond->pNext = pFirst;
+	const uint32_t first = pFirst->CalcCheckSum();
+	const uint32_t second = pSecond->CalcCheckSum();
+	EXPECT_EQ( first, pFirst->CalcCheckSum() );
+	EXPECT_EQ( second, pSecond->CalcCheckSum() );
+	pSecond->sides.resize( 2 );
+	EXPECT_NE( first, pFirst->CalcCheckSum() );
+	pSecond->sides.clear();
+	EXPECT_EQ( first, pFirst->CalcCheckSum() );
+	// Break intrusive-pointer cycles before releasing the records.
+	pFirst->pNext = nullptr;
+	pSecond->pNext = nullptr;
 }
 
 } // namespace

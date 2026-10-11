@@ -387,6 +387,7 @@ int SAckType::operator&( IBinSaver &saver )
 
 uint32_t SAckType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

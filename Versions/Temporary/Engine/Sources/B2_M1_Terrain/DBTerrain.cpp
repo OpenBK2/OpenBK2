@@ -86,6 +86,7 @@ int STGTerraType::operator&( IBinSaver &saver )
 
 uint32_t STGTerraType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -130,6 +131,7 @@ int STGTerraSet::operator&( IBinSaver &saver )
 
 uint32_t STGTerraSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -204,6 +206,7 @@ int SWeather::operator&( IBinSaver &saver )
 
 uint32_t SWeather::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -243,6 +246,7 @@ int SWeatherDesc::SAmbientSoundDescr::operator&( IBinSaver &saver )
 
 uint32_t SWeatherDesc::SAmbientSoundDescr::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -329,6 +333,7 @@ int SWeatherDesc::operator&( IBinSaver &saver )
 
 uint32_t SWeatherDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -414,6 +419,7 @@ int STerrain::operator&( IBinSaver &saver )
 
 uint32_t STerrain::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

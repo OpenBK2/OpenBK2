@@ -45,6 +45,7 @@ int SAnimatedTexture::operator&( IBinSaver &saver )
 
 uint32_t SAnimatedTexture::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -162,6 +163,7 @@ int SWater::SWaterWaveType::operator&( IBinSaver &saver )
 
 uint32_t SWater::SWaterWaveType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

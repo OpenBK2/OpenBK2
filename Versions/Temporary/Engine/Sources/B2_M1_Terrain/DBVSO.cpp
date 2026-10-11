@@ -48,6 +48,7 @@ int STerrainAIProperties::operator&( IBinSaver &saver )
 
 uint32_t STerrainAIProperties::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -87,6 +88,7 @@ int SVSOLayerBaseDesc::operator&( IBinSaver &saver )
 
 uint32_t SVSOLayerBaseDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -133,6 +135,7 @@ int SVSOLayerBorderDesc::operator&( IBinSaver &saver )
 
 uint32_t SVSOLayerBorderDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -188,6 +191,7 @@ int SVSOLayerCenterDesc::operator&( IBinSaver &saver )
 
 uint32_t SVSOLayerCenterDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -246,6 +250,7 @@ int SVSODesc::operator&( IBinSaver &saver )
 
 uint32_t SVSODesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -300,6 +305,7 @@ int SVSOPoint::operator&( IBinSaver &saver )
 
 uint32_t SVSOPoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -354,6 +360,7 @@ int SVSOInstance::operator&( IBinSaver &saver )
 
 uint32_t SVSOInstance::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -407,6 +414,7 @@ int SRoadDesc::operator&( IBinSaver &saver )
 
 uint32_t SRoadDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -478,6 +486,7 @@ int SCragDesc::operator&( IBinSaver &saver )
 
 uint32_t SCragDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -561,6 +570,7 @@ int SRiverDesc::operator&( IBinSaver &saver )
 
 uint32_t SRiverDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -608,6 +618,7 @@ int SCoastDesc::operator&( IBinSaver &saver )
 
 uint32_t SCoastDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -658,6 +669,7 @@ int SLakeDesc::operator&( IBinSaver &saver )
 
 uint32_t SLakeDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

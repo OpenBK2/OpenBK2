@@ -144,6 +144,7 @@ int SDirectionRange::operator&( IBinSaver &saver )
 
 uint32_t SDirectionRange::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -188,6 +189,7 @@ int SSpeedRange::operator&( IBinSaver &saver )
 
 uint32_t SSpeedRange::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -232,6 +234,7 @@ int SDistanceRange::operator&( IBinSaver &saver )
 
 uint32_t SDistanceRange::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -276,6 +279,7 @@ int SHeightRange::operator&( IBinSaver &saver )
 
 uint32_t SHeightRange::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -333,6 +337,7 @@ int SManuverConditions::operator&( IBinSaver &saver )
 
 uint32_t SManuverConditions::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -383,6 +388,7 @@ int SManuverDescriptor::operator&( IBinSaver &saver )
 
 uint32_t SManuverDescriptor::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

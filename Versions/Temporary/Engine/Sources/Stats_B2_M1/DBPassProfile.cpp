@@ -37,6 +37,7 @@ int SPolygon2D::operator&( IBinSaver &saver )
 
 uint32_t SPolygon2D::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -73,6 +74,7 @@ int SPassProfile::operator&( IBinSaver &saver )
 
 uint32_t SPassProfile::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

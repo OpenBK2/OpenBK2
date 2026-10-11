@@ -36,6 +36,7 @@ int SDBGunsProfile::operator&( IBinSaver &saver )
 
 uint32_t SDBGunsProfile::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -75,6 +76,7 @@ int SDBPlatformsProfile::operator&( IBinSaver &saver )
 
 uint32_t SDBPlatformsProfile::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -119,6 +121,7 @@ int SDBConstructorProfile::operator&( IBinSaver &saver )
 
 uint32_t SDBConstructorProfile::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

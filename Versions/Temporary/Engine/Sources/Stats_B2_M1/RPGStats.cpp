@@ -384,6 +384,7 @@ int SUnitSpecialAblityDesc::operator&( IBinSaver &saver )
 
 uint32_t SUnitSpecialAblityDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -587,6 +588,7 @@ int SCommonRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SCommonRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -658,6 +660,7 @@ int SSeasonEffect::operator&( IBinSaver &saver )
 
 uint32_t SSeasonEffect::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -831,6 +834,7 @@ int SAttachedLightEffect::operator&( IBinSaver &saver )
 
 uint32_t SAttachedLightEffect::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -873,6 +877,7 @@ int SIconsSetParams::operator&( IBinSaver &saver )
 
 uint32_t SIconsSetParams::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -909,6 +914,7 @@ int SHPObjectRPGStats::SByteArray2::SByteArray1::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::SByteArray2::SByteArray1::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -945,6 +951,7 @@ int SHPObjectRPGStats::SByteArray2::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::SByteArray2::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -987,6 +994,7 @@ int SHPObjectRPGStats::SDefenseRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::SDefenseRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1032,6 +1040,7 @@ int SHPObjectRPGStats::SDamageLevel::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::SDamageLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1071,6 +1080,7 @@ int SHPObjectRPGStats::SModelSurfacePoint::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::SModelSurfacePoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1154,6 +1164,7 @@ int SHPObjectRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SHPObjectRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1201,6 +1212,7 @@ int SBurningFuel::operator&( IBinSaver &saver )
 
 uint32_t SBurningFuel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1263,6 +1275,7 @@ int SStaticObjectRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SStaticObjectRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1302,6 +1315,7 @@ int SCraterSet::SSingleSeasonCraters::SCraterDesc::operator&( IBinSaver &saver )
 
 uint32_t SCraterSet::SSingleSeasonCraters::SCraterDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1341,6 +1355,7 @@ int SCraterSet::SSingleSeasonCraters::operator&( IBinSaver &saver )
 
 uint32_t SCraterSet::SSingleSeasonCraters::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1467,6 +1482,7 @@ int SMissleParams::operator&( IBinSaver &saver )
 
 uint32_t SMissleParams::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1678,6 +1694,7 @@ int SWeaponRPGStats::SShell::operator&( IBinSaver &saver )
 
 uint32_t SWeaponRPGStats::SShell::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1839,6 +1856,7 @@ int SWeaponRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SWeaponRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1905,6 +1923,7 @@ int SBaseGunRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SBaseGunRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -1947,6 +1966,7 @@ int SDynamicDebrisSet::SDynamicDebrisDesc::operator&( IBinSaver &saver )
 
 uint32_t SDynamicDebrisSet::SDynamicDebrisDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2021,6 +2041,7 @@ int SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::operator&( IBinSaver 
 
 uint32_t SObjectBaseRPGStats::SDynamicDebris::SDynamicMaskDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2060,6 +2081,7 @@ int SObjectBaseRPGStats::SDynamicDebris::operator&( IBinSaver &saver )
 
 uint32_t SObjectBaseRPGStats::SDynamicDebris::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2102,6 +2124,7 @@ int SObjectBaseRPGStats::SAmbientSound::operator&( IBinSaver &saver )
 
 uint32_t SObjectBaseRPGStats::SAmbientSound::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2197,6 +2220,7 @@ int SObjectBaseRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SObjectBaseRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2242,6 +2266,7 @@ int STerraObjSetRPGStats::SSegment::operator&( IBinSaver &saver )
 
 uint32_t STerraObjSetRPGStats::SSegment::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2292,6 +2317,7 @@ int STerraObjSetRPGStats::operator&( IBinSaver &saver )
 
 uint32_t STerraObjSetRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2339,6 +2365,7 @@ int SObjectRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SObjectRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2441,6 +2468,7 @@ int SSlotDamageLevel::operator&( IBinSaver &saver )
 
 uint32_t SSlotDamageLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2495,6 +2523,7 @@ int SWindowInfo::operator&( IBinSaver &saver )
 
 uint32_t SWindowInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2537,6 +2566,7 @@ int SBuildingRPGStats::SEntrance::operator&( IBinSaver &saver )
 
 uint32_t SBuildingRPGStats::SEntrance::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2612,6 +2642,7 @@ int SBuildingRPGStats::SSlot::operator&( IBinSaver &saver )
 
 uint32_t SBuildingRPGStats::SSlot::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2663,6 +2694,7 @@ int SBuildingRPGStats::SFirePoint::operator&( IBinSaver &saver )
 
 uint32_t SBuildingRPGStats::SFirePoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2708,6 +2740,7 @@ int SBuildingRPGStats::SDirectionExplosion::operator&( IBinSaver &saver )
 
 uint32_t SBuildingRPGStats::SDirectionExplosion::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2794,6 +2827,7 @@ int SBuildingRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SBuildingRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2898,6 +2932,7 @@ int SBridgeRPGStats::SSegmentRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SSegmentRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2946,6 +2981,7 @@ int SBridgeRPGStats::SSpan::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SSpan::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -2991,6 +3027,7 @@ int SBridgeRPGStats::SDamageState::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SDamageState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3039,6 +3076,7 @@ int SBridgeRPGStats::SBridgeFirePoint::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SBridgeFirePoint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3087,6 +3125,7 @@ int SBridgeRPGStats::SBridgeDirectionExplosion::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SBridgeDirectionExplosion::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3129,6 +3168,7 @@ int SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::operator&( IBinSaver 
 
 uint32_t SBridgeRPGStats::SElementRPGStats::SBridgeDamageState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3177,6 +3217,7 @@ int SBridgeRPGStats::SElementRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::SElementRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3254,6 +3295,7 @@ int SBridgeRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SBridgeRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3335,6 +3377,7 @@ int SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::operator&( IBinSaver &saver
 
 uint32_t SEntrenchmentRPGStats::SEntrenchSegmentRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3394,6 +3437,7 @@ int SEntrenchmentRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SEntrenchmentRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3524,6 +3568,7 @@ int SFenceRPGStats::SFenceSegmentRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SFenceRPGStats::SFenceSegmentRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3569,6 +3614,7 @@ int SFenceRPGStats::SDir::operator&( IBinSaver &saver )
 
 uint32_t SFenceRPGStats::SDir::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3617,6 +3663,7 @@ int SFenceRPGStats::SSegments::operator&( IBinSaver &saver )
 
 uint32_t SFenceRPGStats::SSegments::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3682,6 +3729,7 @@ int SFenceRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SFenceRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3775,6 +3823,7 @@ int SMineRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SMineRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3826,6 +3875,7 @@ int SAnimDesc::operator&( IBinSaver &saver )
 
 uint32_t SAnimDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3862,6 +3912,7 @@ int Svector_AnimDescs::operator&( IBinSaver &saver )
 
 uint32_t Svector_AnimDescs::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -3915,6 +3966,7 @@ int SUnitActions::operator&( IBinSaver &saver )
 
 uint32_t SUnitActions::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4212,6 +4264,7 @@ int SBoundCircle::operator&( IBinSaver &saver )
 
 uint32_t SBoundCircle::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4251,6 +4304,7 @@ int SUnitBaseRPGStats::SAABBDesc::operator&( IBinSaver &saver )
 
 uint32_t SUnitBaseRPGStats::SAABBDesc::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4391,6 +4445,7 @@ int SUnitBaseRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SUnitBaseRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4495,6 +4550,7 @@ int SInfantryRPGStats::SInfantryGun::operator&( IBinSaver &saver )
 
 uint32_t SInfantryRPGStats::SInfantryGun::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4560,6 +4616,7 @@ int SInfantryRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SInfantryRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4599,6 +4656,7 @@ int SBoardedMechUnitPosition::operator&( IBinSaver &saver )
 
 uint32_t SBoardedMechUnitPosition::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4635,6 +4693,7 @@ int SGunnersVector::operator&( IBinSaver &saver )
 
 uint32_t SGunnersVector::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4859,6 +4918,7 @@ int SHelicopterStats::operator&( IBinSaver &saver )
 
 uint32_t SHelicopterStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4910,6 +4970,7 @@ int SJoggingParams::operator&( IBinSaver &saver )
 
 uint32_t SJoggingParams::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -4977,6 +5038,7 @@ int SMechUnitRPGStats::SMechUnitGun::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SMechUnitGun::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5016,6 +5078,7 @@ int SMechUnitRPGStats::SConstraint::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SConstraint::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5088,6 +5151,7 @@ int SMechUnitRPGStats::SPlatform::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SPlatform::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5127,6 +5191,7 @@ int SMechUnitRPGStats::SArmor::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SArmor::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5166,6 +5231,7 @@ int SMechUnitRPGStats::SSlotInfo::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SSlotInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5211,6 +5277,7 @@ int SMechUnitRPGStats::SShipEffects::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SShipEffects::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5253,6 +5320,7 @@ int SMechUnitRPGStats::SSmokeTrailEffect::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SSmokeTrailEffect::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5301,6 +5369,7 @@ int SMechUnitRPGStats::SCameraPlacement::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::SCameraPlacement::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5543,6 +5612,7 @@ int SMechUnitRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SMechUnitRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5629,6 +5699,7 @@ int SAmphibianStats::operator&( IBinSaver &saver )
 
 uint32_t SAmphibianStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5778,6 +5849,7 @@ int SSquadRPGStats::SFormation::SEntry::operator&( IBinSaver &saver )
 
 uint32_t SSquadRPGStats::SFormation::SEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5878,6 +5950,7 @@ int SSquadRPGStats::SFormation::operator&( IBinSaver &saver )
 
 uint32_t SSquadRPGStats::SFormation::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -5952,6 +6025,7 @@ int SSquadRPGStats::operator&( IBinSaver &saver )
 
 uint32_t SSquadRPGStats::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6239,6 +6313,7 @@ int SReinforcementEntry::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6278,6 +6353,7 @@ int SDeployTemplate::SDeployTemplateEntry::operator&( IBinSaver &saver )
 
 uint32_t SDeployTemplate::SDeployTemplateEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6325,6 +6401,7 @@ int SDeployTemplate::operator&( IBinSaver &saver )
 
 uint32_t SDeployTemplate::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6390,6 +6467,7 @@ int SReinforcement::operator&( IBinSaver &saver )
 
 uint32_t SReinforcement::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6437,6 +6515,7 @@ int SPlayerRank::operator&( IBinSaver &saver )
 
 uint32_t SPlayerRank::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6479,6 +6558,7 @@ int SReinforcementTypeInfo::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementTypeInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6520,6 +6600,7 @@ int SReinforcementTypes::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementTypes::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6559,6 +6640,7 @@ int SAIExpLevel::SLevel::operator&( IBinSaver &saver )
 
 uint32_t SAIExpLevel::SLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6606,6 +6688,7 @@ int SAIExpLevel::operator&( IBinSaver &saver )
 
 uint32_t SAIExpLevel::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6648,6 +6731,7 @@ int SUnitStatsModifier::SParameterModifier::operator&( IBinSaver &saver )
 
 uint32_t SUnitStatsModifier::SParameterModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -6737,6 +6821,7 @@ int SUnitStatsModifier::operator&( IBinSaver &saver )
 
 uint32_t SUnitStatsModifier::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

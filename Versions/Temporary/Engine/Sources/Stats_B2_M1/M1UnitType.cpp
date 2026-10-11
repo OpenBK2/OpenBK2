@@ -71,6 +71,7 @@ int SM1UnitType::operator&( IBinSaver &saver )
 
 uint32_t SM1UnitType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

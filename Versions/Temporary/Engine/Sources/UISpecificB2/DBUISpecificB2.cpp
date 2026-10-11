@@ -173,6 +173,7 @@ int SActionButton::operator&( IBinSaver &saver )
 
 uint32_t SActionButton::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -254,6 +255,7 @@ int SM1ActionButton::operator&( IBinSaver &saver )
 
 uint32_t SM1ActionButton::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -361,6 +363,7 @@ int SPlayersColors::SPlayer::operator&( IBinSaver &saver )
 
 uint32_t SPlayersColors::SPlayer::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -406,6 +409,7 @@ int SPlayersColors::SUnitFullInfo::operator&( IBinSaver &saver )
 
 uint32_t SPlayersColors::SUnitFullInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -466,6 +470,7 @@ int SPlayersColors::operator&( IBinSaver &saver )
 
 uint32_t SPlayersColors::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -514,6 +519,7 @@ int SReinfButton::operator&( IBinSaver &saver )
 
 uint32_t SReinfButton::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -553,6 +559,7 @@ int SSeasonColor::operator&( IBinSaver &saver )
 
 uint32_t SSeasonColor::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -592,6 +599,7 @@ int SMLTag::operator&( IBinSaver &saver )
 
 uint32_t SMLTag::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -631,6 +639,7 @@ int SMPLocalizedGameType::operator&( IBinSaver &saver )
 
 uint32_t SMPLocalizedGameType::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -670,6 +679,7 @@ int SUIConstsB2::SSeasonName::operator&( IBinSaver &saver )
 
 uint32_t SUIConstsB2::SSeasonName::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -966,6 +976,7 @@ int SWindow3DControlShared::SObjectParams::operator&( IBinSaver &saver )
 
 uint32_t SWindow3DControlShared::SObjectParams::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

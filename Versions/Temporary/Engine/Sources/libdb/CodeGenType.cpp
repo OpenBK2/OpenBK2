@@ -358,6 +358,8 @@ static void GenerateCheckSumFunc( ICode::SCodeStreams *pCode, NDb::NTypeDef::STy
 	pCode->cpp << "uint32_t " << szQualifiedName <<"::CalcCheckSum() const" << endl;
 	pCode->cpp << "{" << endl;
 
+	// Scope caches to this traversal, retaining shared-child reuse and cycle guards.
+	pCode->cpp << tab << "CCheckSumScope scope( __dwCheckSum );" << endl;
 	pCode->cpp << tab << "if ( __dwCheckSum != 0 )" << endl;
 	pCode->cpp << tab << tab << "return __dwCheckSum;" << endl;
 	pCode->cpp << tab << "__dwCheckSum = 1;" << endl << endl;

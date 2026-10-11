@@ -45,6 +45,7 @@ int SWCActionsPriority::operator&( IBinSaver &saver )
 
 uint32_t SWCActionsPriority::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -90,6 +91,7 @@ int SM1WCActionsPriority::operator&( IBinSaver &saver )
 
 uint32_t SM1WCActionsPriority::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -132,6 +134,7 @@ int SCursor::operator&( IBinSaver &saver )
 
 uint32_t SCursor::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -180,6 +183,7 @@ int SAckParameter::operator&( IBinSaver &saver )
 
 uint32_t SAckParameter::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -225,6 +229,7 @@ int SAckManagerConsts::operator&( IBinSaver &saver )
 
 uint32_t SAckManagerConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -264,6 +269,7 @@ int SMapCommandAck::operator&( IBinSaver &saver )
 
 uint32_t SMapCommandAck::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -309,6 +315,7 @@ int SClientGameConsts::SMechUnitIconsSet::operator&( IBinSaver &saver )
 
 uint32_t SClientGameConsts::SMechUnitIconsSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -354,6 +361,7 @@ int SClientGameConsts::SSquadIconsSet::operator&( IBinSaver &saver )
 
 uint32_t SClientGameConsts::SSquadIconsSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -399,6 +407,7 @@ int SClientGameConsts::SBuildingIconsSet::operator&( IBinSaver &saver )
 
 uint32_t SClientGameConsts::SBuildingIconsSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -438,6 +447,7 @@ int SClientGameConsts::SPassengerIconsSet::operator&( IBinSaver &saver )
 
 uint32_t SClientGameConsts::SPassengerIconsSet::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -518,6 +528,7 @@ int SClientGameConsts::operator&( IBinSaver &saver )
 
 uint32_t SClientGameConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

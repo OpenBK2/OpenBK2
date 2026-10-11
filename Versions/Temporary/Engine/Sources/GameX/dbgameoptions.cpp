@@ -42,6 +42,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::operator&(
 
 uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::SOptionEntryState::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -115,6 +116,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::operator&
 
 uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::SSliderSingleValue::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -172,6 +174,7 @@ int SOptionSystem::SOptionsCategory::SOptionEntry::operator&( IBinSaver &saver )
 
 uint32_t SOptionSystem::SOptionsCategory::SOptionEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -214,6 +217,7 @@ int SOptionSystem::SOptionsCategory::operator&( IBinSaver &saver )
 
 uint32_t SOptionSystem::SOptionsCategory::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

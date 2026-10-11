@@ -34,6 +34,7 @@ int SIntArray::operator&( IBinSaver &saver )
 
 uint32_t SIntArray::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -73,6 +74,7 @@ int SReinforcementGroupInfoEntry::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementGroupInfoEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -109,6 +111,7 @@ int SReinforcementGroupInfo::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementGroupInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -148,6 +151,7 @@ int SReinforcementMaskEntry::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementMaskEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -184,6 +188,7 @@ int SReinforcementMask::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementMask::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -235,6 +240,7 @@ int SReinforcementDefinition::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementDefinition::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -274,6 +280,7 @@ int STypedDeployTemplate::operator&( IBinSaver &saver )
 
 uint32_t STypedDeployTemplate::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -337,6 +344,7 @@ int SReinforcementPosition::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementPosition::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -376,6 +384,7 @@ int SScriptReinforcementEntry::operator&( IBinSaver &saver )
 
 uint32_t SScriptReinforcementEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -421,6 +430,7 @@ int SPlayerReinforcementEnable::operator&( IBinSaver &saver )
 
 uint32_t SPlayerReinforcementEnable::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

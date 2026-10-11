@@ -310,6 +310,7 @@ int SSunFlare::operator&( IBinSaver &saver )
 
 uint32_t SSunFlare::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -668,6 +669,7 @@ int SAnimBase::operator&( IBinSaver &saver )
 
 uint32_t SAnimBase::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;

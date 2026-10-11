@@ -39,6 +39,7 @@ int STankPitInfo::operator&( IBinSaver &saver )
 
 uint32_t STankPitInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -132,6 +133,7 @@ int SCommonInfo::operator&( IBinSaver &saver )
 
 uint32_t SCommonInfo::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -177,6 +179,7 @@ int SWarFogConsts::operator&( IBinSaver &saver )
 
 uint32_t SWarFogConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -216,6 +219,7 @@ int SReinforcementRemap::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementRemap::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -252,6 +256,7 @@ int SReinforcementExpediency::operator&( IBinSaver &saver )
 
 uint32_t SReinforcementExpediency::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -291,6 +296,7 @@ int SUnitTypePriority::operator&( IBinSaver &saver )
 
 uint32_t SUnitTypePriority::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -330,6 +336,7 @@ int SReinfRecycleTime::operator&( IBinSaver &saver )
 
 uint32_t SReinfRecycleTime::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -366,6 +373,7 @@ int SAIGameConsts::SCommonScriptEntry::operator&( IBinSaver &saver )
 
 uint32_t SAIGameConsts::SCommonScriptEntry::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
@@ -449,6 +457,7 @@ int SAIGameConsts::operator&( IBinSaver &saver )
 
 uint32_t SAIGameConsts::CalcCheckSum() const
 {
+	CCheckSumScope scope( __dwCheckSum );
 	if ( __dwCheckSum != 0 )
 		return __dwCheckSum;
 	__dwCheckSum = 1;
