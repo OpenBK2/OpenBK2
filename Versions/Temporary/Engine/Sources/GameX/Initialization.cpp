@@ -46,6 +46,17 @@ void ReferenceCheatForReleaseLinkerUISpecificB2()
 namespace NGameX
 {
 
+// Startup attaches vanilla and possibly a mod before loading the final config
+// and version. Defer the first checksum until that sequence has completed.
+static bool bMPDataVersionChecksumInitialized = false;
+
+void InitializeMPDataVersionChecksum()
+{
+	if ( const NDb::SGameConsts *pConsts = GetGameConsts() )
+		pConsts->RecalculateMPDataVersionChecksum();
+	bMPDataVersionChecksumInitialized = true;
+}
+
 void InitDataDependentSingletons()
 {
 	NSingleton::RegisterSingleton( CreateDebugSingleton(), IDebugSingleton::tidTypeID );
@@ -131,6 +142,9 @@ void InitConsts()
 GAMEX_EXPORT void PostStorageInitialize()
 {
 	InitConsts();
+	// This common hook also handles campaign/tutorial selection detaching a mod.
+	if ( bMPDataVersionChecksumInitialized )
+		InitializeMPDataVersionChecksum();
 }
 
 // ************************************************************************************************************************ //

@@ -83,9 +83,11 @@ bool CInterfaceMainMenu::Init()
 #ifndef _FINALRELEASE
 	ITextView *pVersionView = GetChildChecked<ITextView>( GetScreen(), "VersionNumber", true );
 	std::wstring wszVersion = NGlobal::GetVar("code_version_number", L"0.0.0.0");
-	auto versionShort = L"OpenBK2 " + wszVersion + L" " + NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
+	// Both UI strings use the same cached snapshot, including on menu re-entry.
+	const std::wstring wszChecksum = NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
+	auto versionShort = L"OpenBK2 " + wszVersion + L" " + wszChecksum;
 	wszVersion =	L"<font size = 16pt outlinesize = 1 outlinecolor = black forcefontsize = 1><right>OpenBK2 " + wszVersion + L" " +
-					NStr::ToUnicode(NStr::ToHex(NGameX::GetGameConsts()->GetMPDataVersionChecksum()));
+					wszChecksum;
 	if ( pVersionView )
 	{
 		pVersionView->SetText(wszVersion);

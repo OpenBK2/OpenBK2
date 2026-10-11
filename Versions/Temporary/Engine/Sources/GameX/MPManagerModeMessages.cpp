@@ -49,6 +49,8 @@ bool CMPManagerMode::OnCreateGameMessage( SMPUICreateGameMessage *pMsg )
 
 	bGameRoomInit = false;
 
+	// Start a new compatibility snapshot for each hosting attempt.
+	NGameX::GetGameConsts()->RecalculateMPDataVersionChecksum();
 	ulGameCheckSum = NGameX::GetGameConsts()->GetMPDataVersionChecksumWithMap( gameDesc.pMPMap );
 	ulHostCheckSum = ulGameCheckSum;
 
@@ -82,6 +84,8 @@ bool CMPManagerMode::OnJoinGameMessage( SMPUIJoinGameMessage *pMsg )
 
 			ulGameCheckSum = 0;
 
+			// Refresh once now; repeated LAN/online handshake checks reuse this data.
+			NGameX::GetGameConsts()->RecalculateMPDataVersionChecksum();
 			TryToJoinGame( game );
 
 			//games.clear();

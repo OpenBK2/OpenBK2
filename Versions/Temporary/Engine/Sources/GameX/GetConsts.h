@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameX_export.h"
+
 namespace NDb
 {
 
@@ -16,6 +18,9 @@ struct SMultiplayerConsts;
 
 namespace NGameX
 {
+
+// Call once after startup configs and the executable version have been set.
+GAMEX_EXPORT void InitializeMPDataVersionChecksum();
 
 const NDb::SGameRoot *GetGameRoot();
 const NDb::SGameConsts *GetGameConsts();

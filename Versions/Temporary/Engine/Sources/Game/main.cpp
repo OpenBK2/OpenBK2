@@ -4,6 +4,7 @@
 #include <chrono>
 
 #include "GameX_export.h"
+#include "GameX/GetConsts.h"
 
 #if USE_MIMALLOC
 // Non-Windows executable-level overrides. Windows links a separate override
@@ -350,6 +351,8 @@ static int RunGame( const std::vector<std::string> &arguments )
 	//
 	NGlobal::SetVar( "code_version_number", REVISION_NUMBER_STR );
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
+	// Hash the final startup data once, after profile/mod configs and the version.
+	NGameX::InitializeMPDataVersionChecksum();
 	// 
 	pSplashScreen = 0;
 	// setup video mode

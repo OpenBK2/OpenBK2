@@ -1012,6 +1012,8 @@ bool CMPManagerModeNivalNet::OnLadderInvitePacket( class CLadderInvitePacket *pP
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_VERIFY( pGameRoot, "Could not get GameRoot", return true );
 	NI_VERIFY( pPacket->nMapID < pGameRoot->multiplayerMaps.size(), "NNet Ladder Invite: Map Index exceeds bounds", return true );
+	// Matchmaking bypasses OnJoinGameMessage, but is also a new MP attempt.
+	NGameX::GetGameConsts()->RecalculateMPDataVersionChecksum();
 	nGameID = pPacket->nGameID;
 	int nTeam1Size = pPacket->team1.size();
 	int nTeam2Size = pPacket->team2.size();

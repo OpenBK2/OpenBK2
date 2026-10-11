@@ -2,6 +2,7 @@
 
 // automatically generated file, don't change manually!
 
+#include "GameX_export.h"
 #include "SceneB2/DBSceneConsts.h"
 
 #include <cstdint>

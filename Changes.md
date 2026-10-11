@@ -1,6 +1,7 @@
 
 # Changes to the game
 
+- Multiplayer compatibility checksums are now cached between startup, mod load/unload (including returning to vanilla for campaigns/tutorials), and MP host/join attempts. Main-menu re-entry and repeated join checks reuse the snapshot; changing the MP map refreshes its checksum.
 - Fixed multiplayer compatibility checksums ignoring nested tech-level, reinforcement, unit-stat and map data. Checksum calculations now refresh cached record values on each call, so changes to loaded data are detected too. String arrays and nested arrays now hash their contents instead of allocation storage.
 - Added optional smooth mouse-wheel camera zoom: `setvar smooth_mouse_zoom = 1` enables it (integer, default `0`). `setvar smooth_zoom_speed = 1.0` controls how quickly zoom settles: higher values are faster, lower positive values are smoother, and non-positive or non-finite values use the default `1.0`. Zoom distance per wheel step is unchanged. Both settings are saved in the user profile.
 - Game was ported to x64 architecture

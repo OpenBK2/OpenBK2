@@ -18,6 +18,17 @@ namespace NDb
 
 uint32_t SGameConsts::GetMPDataVersionChecksum() const
 {
+	if ( !bMPDataVersionChecksumValid )
+		return RecalculateMPDataVersionChecksum();
+	return nMPDataVersionChecksum;
+}
+
+uint32_t SGameConsts::RecalculateMPDataVersionChecksum() const
+{
+	// Invalidate the map snapshot too: a new attempt must inspect its data again.
+	bMPDataVersionChecksumValid = false;
+	bMPMapChecksumValid = false;
+	pMPChecksumMap = nullptr;
 	uint32_t ret = 123321;
 
 	// game.exe version
@@ -52,16 +63,23 @@ uint32_t SGameConsts::GetMPDataVersionChecksum() const
 		ret = CalculateChecksum(ret, gummy);
 	}
 
-	return ret;
+	nMPDataVersionChecksum = ret;
+	bMPDataVersionChecksumValid = true;
+	return nMPDataVersionChecksum;
 }
 
 uint32_t SGameConsts::GetMPDataVersionChecksumWithMap(CDBPtr<NDb::SMultiplayerMap> map) const
 {
-	uint32_t ret = GetMPDataVersionChecksum();
-
-	ret = CalculateChecksum(ret, map->CalcCheckSum());
-
-	return ret;
+	const uint32_t base = GetMPDataVersionChecksum();
+	// Join-condition checks can repeat while peers connect. Hash this map once
+	// per attempt; selecting another map also requires a fresh map checksum.
+	if ( !bMPMapChecksumValid || pMPChecksumMap != map )
+	{
+		nMPDataVersionChecksumWithMap = CalculateChecksum( base, map->CalcCheckSum() );
+		pMPChecksumMap = map;
+		bMPMapChecksumValid = true;
+	}
+	return nMPDataVersionChecksumWithMap;
 }
 
 }
