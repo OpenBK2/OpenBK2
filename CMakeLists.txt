@@ -56,25 +56,58 @@ option(BUILD_EDITOR "build editor" ON)
 option(BUILD_SERVER "build dedicated server" ON)
 option(USE_MIMALLOC "use mimalloc for project C++ allocations (process override on non-Windows)" ON)
 option(ENABLE_ASAN "build with AddressSanitizer" OFF)
+# One option per sanitizer rather than one string naming them, because each has
+# its own interaction with the allocator and with the others, and a single
+# string invites the combinations that build and then report nothing.
+option(ENABLE_TSAN "build with ThreadSanitizer" OFF)
+option(ENABLE_UBSAN "build with UndefinedBehaviorSanitizer" OFF)
+
+# ASan and TSan both map shadow memory over the whole address space, and they
+# want the same regions, so a binary carrying both aborts as it starts. Said
+# here rather than discovered then.
+if(ENABLE_ASAN AND ENABLE_TSAN)
+    message(FATAL_ERROR "ENABLE_ASAN and ENABLE_TSAN cannot both be on: the two runtimes claim the same shadow memory. Configure a separate build directory for each")
+endif()
+
+# MSVC implements only /fsanitize=address.
+if(MSVC AND (ENABLE_TSAN OR ENABLE_UBSAN))
+    message(FATAL_ERROR "ENABLE_TSAN and ENABLE_UBSAN need GCC or Clang: MSVC has no thread or undefined-behaviour sanitizer")
+endif()
 
 # AddressSanitizer installs its own allocator to see every allocation and
 # free, so it cannot share a process with mimalloc, which replaces the same
 # thing. Turning one on turns the other off rather than leaving a combination
-# that builds and then reports nothing useful.
-if(ENABLE_ASAN AND USE_MIMALLOC)
-    message(STATUS "ENABLE_ASAN: mimalloc switched off, AddressSanitizer replaces the allocator")
+# that builds and then reports nothing useful. TSan intercepts the allocator
+# too, to know which thread owns a block; UBSan does not and leaves mimalloc
+# alone.
+if((ENABLE_ASAN OR ENABLE_TSAN) AND USE_MIMALLOC)
+    message(STATUS "sanitizer build: mimalloc switched off, the sanitizer runtime replaces the allocator")
     set(USE_MIMALLOC OFF CACHE BOOL "use mimalloc for project C++ allocations (process override on non-Windows)" FORCE)
 endif()
 
-if(ENABLE_ASAN)
-    # -g because a sanitizer report without symbols names an address and
-    # nothing else, and no-omit-frame-pointer because the stack it prints is
-    # walked rather than read from debug info.
+# -g because a sanitizer report without symbols names an address and nothing
+# else, and no-omit-frame-pointer because the stack it prints is walked rather
+# than read from debug info. True of all three, hence the shared block.
+if(ENABLE_ASAN OR ENABLE_TSAN OR ENABLE_UBSAN)
     if(MSVC)
         add_compile_options(/fsanitize=address /Zi)
     else()
-        add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g)
-        add_link_options(-fsanitize=address)
+        set(OBK2_SANITIZERS "")
+        if(ENABLE_ASAN)
+            list(APPEND OBK2_SANITIZERS address)
+        endif()
+        if(ENABLE_TSAN)
+            list(APPEND OBK2_SANITIZERS thread)
+        endif()
+        if(ENABLE_UBSAN)
+            list(APPEND OBK2_SANITIZERS undefined)
+        endif()
+        list(JOIN OBK2_SANITIZERS "," OBK2_SANITIZE_ARG)
+        # The flag goes on the link line as well as the compile line: it is
+        # what pulls in the runtime, and every engine module is a shared
+        # library that has to carry it.
+        add_compile_options(-fsanitize=${OBK2_SANITIZE_ARG} -fno-omit-frame-pointer -g)
+        add_link_options(-fsanitize=${OBK2_SANITIZE_ARG})
     endif()
 endif()
 
