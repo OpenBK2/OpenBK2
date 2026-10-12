@@ -80,6 +80,10 @@ public:
 
 		void AddStorage( class CBuilding *pNewStorage, const int nPlayer, int nLinkID );
 		void RemoveStorage( class CBuilding * pNewStorage );
+		// By identity rather than by pointer, for a caller holding a static object
+		// that may or may not be a building. The lookup only ever needed the
+		// unique id and the player, both of which the base class provides.
+		void RemoveStorage( const int nID, const int nPlayer );
 		void StorageChangedDiplomacy( class CBuilding *pNewStorage, const int nNewPlayer );
 		void Clear();
 	};

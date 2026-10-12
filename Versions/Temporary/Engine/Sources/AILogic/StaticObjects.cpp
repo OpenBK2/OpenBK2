@@ -76,11 +76,15 @@ void CStaticObjects::CStoragesContainer::AddStorage( class CBuilding *pNewStorag
 
 void CStaticObjects::CStoragesContainer::RemoveStorage( class CBuilding *pNewStorage )
 {
-	const int nID = pNewStorage->GetUniqueId();
+	RemoveStorage( pNewStorage->GetUniqueId(), pNewStorage->GetPlayer() );
+}
+
+void CStaticObjects::CStoragesContainer::RemoveStorage( const int nID, const int nPlayer )
+{
 	if ( storages.find( nID ) != storages.end() ) // this static object is storage
 	{
-		const int nParty = theDipl.GetNParty(pNewStorage->GetPlayer());
-		if ( nParty >= 2 ) 
+		const int nParty = theDipl.GetNParty( nPlayer );
+		if ( nParty >= 2 )
 			return;
 		storages.erase( nID );
 	}
@@ -500,7 +504,15 @@ void CStaticObjects::Segment()
 		if ( !pObj->HasFallen() && !pObj->IsTrampled() )
 			updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, pObj, -1 );
 
-		storagesContainer.RemoveStorage( static_cast<CBuilding*>(pObj) );
+		// Every deleted static object came through here cast to CBuilding, and
+		// most of them are not one. CBuilding inherits from three bases, so the
+		// cast adjusts the pointer, and the result addressed unrelated memory: the
+		// unique id and the player read out of it were whatever happened to be
+		// there. A garbage id usually misses the storage map and so looked
+		// harmless, but one colliding with a real storage erases that storage out
+		// of the simulation. Asked by identity instead, which is all the lookup
+		// ever used and is the same value for an object that really is a building.
+		storagesContainer.RemoveStorage( pObj->GetUniqueId(), pObj->GetPlayer() );
 		
 		if ( obstacleObjects.end() != obstacleObjects.find( pObj->GetUniqueId() ) )
 			RemoveObstacle( obstacleObjects[pObj->GetUniqueId()] );
