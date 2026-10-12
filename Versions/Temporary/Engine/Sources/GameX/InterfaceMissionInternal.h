@@ -457,6 +457,9 @@ public:
 	void StartInterface();
 	//
 	void NewMission( const NDb::SMapInfo *_pMap, struct ITransceiver *pTransceiver, IScenarioTracker *pScenarioTracker, int nPlayer );
+	// Write the commands recorded so far as a replay. Every mission records
+	// them, single player included, so this works outside multiplayer too.
+	bool SaveReplay( const std::string &szFileName );
 	//
 	void SetWarForVisibility( const bool bShowWarFog );
 	//

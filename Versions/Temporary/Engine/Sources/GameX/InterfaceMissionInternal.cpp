@@ -22,6 +22,9 @@
 
 #include "AILogic/B2AI.h"
 #include "Transceiver.h"
+// CCommandsHistory, for save_replay: the cast to it needs the complete type,
+// and SaveReplay is on the concrete class rather than on ICommandsHistory.
+#include "CommandsHistory.h"
 #include "SceneB2/Cursor.h"
 #include "Sound/SoundScene.h"
 #include "Sound/MusicSystem.h"
@@ -4235,6 +4238,53 @@ void BalanceTest( const std::string &szID, const std::vector<std::wstring> &para
 	StartNewMap( szID, paramsSet, pContext );
 }
 
+bool CInterfaceMission::SaveReplay( const std::string &szFileName )
+{
+	if ( !IsValid( pTransceiver ) )
+		return false;
+
+	// Both transceivers hand their commands history out as the checksum logger,
+	// and SaveReplay is on the concrete class rather than on ICommandsHistory.
+	CCommandsHistory *pHistory = dynamic_cast<CCommandsHistory*>( pTransceiver->GetCheckSumLogger() );
+	if ( pHistory == 0 )
+		return false;
+
+	// Lobby metadata a single-player mission does not have. SaveReplay only
+	// reads the tech level, the capture time and the unit-experience flag out of
+	// it, and playback needs the map, the start seed and the commands, so
+	// defaults here cost nothing. The winning side is unknown mid-mission.
+	const SB2GameSpecificData gameDesc;
+	const std::vector<SMPSlot> slots;
+	return pHistory->SaveReplay( szFileName, gameDesc, slots, -1 );
+}
+
+// Save the running mission's recorded commands. The mission interface owns the
+// transceiver, so the stack is walked to find it rather than reaching for a
+// global that does not exist.
+void CmdSaveReplay( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
+{
+	IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>();
+	if ( paramsSet.empty() )
+	{
+		pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, "usage: save_replay <name>" );
+		return;
+	}
+	const std::string szName = NStr::ToMBCS( paramsSet[0] );
+
+	for ( IInterfaceBase *pI = NMainLoop::GetTopInterface(); pI != 0; pI = NMainLoop::GetPrevInterface( pI ) )
+	{
+		if ( CInterfaceMission *pMission = dynamic_cast<CInterfaceMission*>( pI ) )
+		{
+			const auto message = pMission->SaveReplay( szName )
+				? fmt::format( "replay saved as \"{}\"", szName )
+				: fmt::format( "could not save replay \"{}\"", szName );
+			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
+			return;
+		}
+	}
+	pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, "save_replay: no mission is running" );
+}
+
 void ReplayHistory( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 	if ( paramsSet.empty() )
@@ -4381,6 +4431,7 @@ REGISTER_CMD( "map", StartNewMap );
 REGISTER_CMD( "balance_test", BalanceTest );
 
 REGISTER_CMD( "replay", ReplayHistory );
+REGISTER_CMD( "save_replay", CmdSaveReplay );
 REGISTER_CMD( "demo_exit", DemoExit );
 
 #ifndef _FINALRELEASE
