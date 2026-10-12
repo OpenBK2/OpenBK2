@@ -4096,6 +4096,24 @@ void CICMission::PostCreate( CICMission::IInterface *pInterface )
 
 		if ( bReplay )
 			pMap = pTrans->GetMap();
+
+		// A replay that did not load leaves the history empty, so there is no
+		// map, and everything below this dereferences one. CreateCommandsHistory
+		// reports the failure with NI_ASSERT, which does not evaluate its
+		// argument in this build and so says nothing, and then hands back the
+		// empty history anyway. Naming a replay that is not there was a crash.
+		if ( bReplay && !pMap )
+		{
+			const auto message = fmt::format( "replay \"{}\" could not be loaded", szReplayFileName );
+			fmt::print( "{}\n", message );
+			fflush( stdout );
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str(), 0xffffffff, true );
+			// Leaves Replay.Result at the failure the flag set, so a
+			// verification run reports this rather than looking like a pass.
+			if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+				NMainLoop::Command( CreateICExitGame() );
+			return;
+		}
 	}
 
 	if ( nPlayerForWarFog < 0 )
