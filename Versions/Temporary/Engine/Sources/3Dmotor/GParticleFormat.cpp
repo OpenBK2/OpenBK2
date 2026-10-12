@@ -84,6 +84,24 @@ CFileRequest* CParticlesLoader::CreateRequest()
 	return CreateFileRequiest( "Effects", GetKey() );
 }
 
+//! Reads one field out of the particle resource blob and advances the cursor.
+//!
+//! The records are packed: three shorts then a four byte offset, then a short
+//! and an offset four times over. So every offset lands two bytes into a record,
+//! and casting the cursor to int32_t and loading through it was a load at an
+//! address that type does not permit, which is what UBSan reports once per
+//! offset. Copying the bytes is defined wherever the cursor happens to sit, and
+//! it also stops each of these reads from aliasing the byte buffer as another
+//! type, which the shorts and floats were doing too without being reported.
+template <class T>
+inline T ReadBlobField( char *&p )
+{
+	T value;
+	memcpy( &value, p, sizeof( value ) );
+	p += sizeof( value );
+	return value;
+}
+
 void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 {
 	pValue = new CParticlesInfo;
@@ -96,61 +114,39 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 	//file->Read( &pValue->nBytes, sizeof(int) );
 	//pValue->pData.resize( pValue->nBytes );
 	char *pData = (char*)pFileData->GetBufferForWrite();
-	pValue->nBytes = *(int*)pData;
-	pData += 4;
+	pValue->nBytes = ReadBlobField<int>( pData );
 	//file->Read( pData, pValue->nBytes );
 
 	char *p = pData;
-	pValue->fTEnd = *reinterpret_cast<float *>(p);
-	p += sizeof(float);
-	pValue->fFrameRate = *reinterpret_cast<float *>(p);
-	p += sizeof(float);
-	pValue->nParticles = *reinterpret_cast<int *>(p);
-	p += sizeof(int);
+	pValue->fTEnd = ReadBlobField<float>( p );
+	pValue->fFrameRate = ReadBlobField<float>( p );
+	pValue->nParticles = ReadBlobField<int>( p );
 	pValue->particles.resize(pValue->nParticles);
 
 	for ( int nP = 0; nP < pValue->nParticles; ++nP )
 	{
 		SParticle &particle = pValue->particles[nP];
-		particle.nTStart = *reinterpret_cast<short *>(p);
-		p += sizeof(short);
+		particle.nTStart = ReadBlobField<short>( p );
+		particle.nTEnd = ReadBlobField<short>( p );
 
-		particle.nTEnd = *reinterpret_cast<short*>(p);
-		p += sizeof(short);
-
-		particle.pos.nKeys = *reinterpret_cast<short *>(p);
-		p += sizeof(short);
-
-		int32_t offset = *reinterpret_cast<int32_t *>(p);
-		p += sizeof(int32_t);
+		particle.pos.nKeys = ReadBlobField<short>( p );
+		int32_t offset = ReadBlobField<int32_t>( p );
 		particle.pos.keys = reinterpret_cast<TKey<CVec3> *>(pData + offset);
 
-		particle.rot.nKeys = *reinterpret_cast<short*>(p);
-		p += sizeof(short);
-
-		offset = *reinterpret_cast<int32_t*>(p);
-		p += sizeof(int32_t);
+		particle.rot.nKeys = ReadBlobField<short>( p );
+		offset = ReadBlobField<int32_t>( p );
 		particle.rot.keys = reinterpret_cast<TKey<float> *>(pData + offset);
 
-		particle.scale.nKeys = *reinterpret_cast<short*>(p);
-		p += sizeof(short);
-
-		offset = *reinterpret_cast<int32_t*>(p);
-		p += sizeof(int32_t);
+		particle.scale.nKeys = ReadBlobField<short>( p );
+		offset = ReadBlobField<int32_t>( p );
 		particle.scale.keys = reinterpret_cast<TKey<CVec2> *>(pData + offset);
 
-		particle.color.nKeys = *reinterpret_cast<short*>(p);
-		p += sizeof(short);
-
-		offset = *reinterpret_cast<int32_t*>(p);
-		p += sizeof(int32_t);
+		particle.color.nKeys = ReadBlobField<short>( p );
+		offset = ReadBlobField<int32_t>( p );
 		particle.color.keys = reinterpret_cast<TKey<uint32_t> *>(pData + offset);
 
-		particle.sprite.nKeys = *reinterpret_cast<short*>(p);
-		p += sizeof(short);
-
-		offset = *reinterpret_cast<int32_t*>(p);
-		p += sizeof(int32_t);
+		particle.sprite.nKeys = ReadBlobField<short>( p );
+		offset = ReadBlobField<int32_t>( p );
 		particle.sprite.keys = reinterpret_cast<TKey<short> *>(pData + offset);
 	}
 }
