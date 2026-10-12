@@ -406,6 +406,11 @@ static int RunGame( const std::vector<std::string> &arguments )
 			std::this_thread::sleep_for( std::chrono::milliseconds( 40 ) );
 	}
 	//
+	// Read before the singletons go, since that is where the variable lives.
+	// Zero unless a --replay-verify run set it, so an ordinary run is
+	// unaffected.
+	const int nExitCode = NGlobal::GetVar( "Replay.Result", 0 );
+	//
 	NMainLoop::ResetStack();
 
 	ClearHoldQueue();
@@ -420,7 +425,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	NDb::SaveChanges();
 	NDb::CloseDatabase();
 	NSingleton::DoneSingletons();
-	return 0;
+	return nExitCode;
 }
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments )
@@ -455,6 +460,17 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// that the interface already registers. The semicolon is excluded along
 		// with the quotes and newlines because ReplayHistory joins its arguments
 		// into a semicolon-separated string.
+		// Play the replay out and leave, reporting through the exit status
+		// instead of the dialog a watching player would dismiss. Separate from
+		// --replay= so a replay can still be watched from the command line.
+		if ( szString == "--replay-verify" )
+		{
+			NGlobal::SetVar( "Replay.ExitWhenFinished", 1 );
+			// Failure until the replay actually plays out, so quitting, a
+			// handled crash or ending up in a menu all report it.
+			NGlobal::SetVar( "Replay.Result", 1 );
+			continue;
+		}
 		const std::string replayPrefix = "--replay=";
 		if ( szString.compare(0, replayPrefix.size(), replayPrefix) == 0 )
 		{

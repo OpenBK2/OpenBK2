@@ -61,6 +61,9 @@ usage()
 	      --list-data        list the data trees found, and exit
 	  -r, --replay FILE      play a recorded replay instead of showing the menus,
 	                         by passing --replay= to the game
+	      --verify           play the replay out and exit, reporting through the
+	                         exit status: 0 if the final checksum matched the
+	                         recorded one, 1 if it diverged. Implies --replay.
 	      --software-vk      force the lavapipe software Vulkan device, so a run
 	                         needs no GPU. Quietens the DXVK log too.
 	  -e, --editor           run B2_MapEditor instead of Game
@@ -128,6 +131,7 @@ TREE=
 USE_GDB=no
 SHOW_ENV=no
 REPLAY=
+VERIFY=no
 SOFTWARE_VK=no
 # The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
 # it without an architecture suffix.
@@ -150,6 +154,7 @@ while [ $# -gt 0 ]; do
 		--list-data)  printf 'data trees found:\n'; list_trees; exit 0 ;;
 		-r|--replay)  [ $# -ge 2 ] || die "$1 needs a replay file"
 		              REPLAY="$2"; shift 2 ;;
+		--verify)     VERIFY=yes; shift ;;
 		--software-vk) SOFTWARE_VK=yes; shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
@@ -158,6 +163,8 @@ while [ $# -gt 0 ]; do
 		*)            die "unknown option '$1'. ./launch.sh --help" ;;
 	esac
 done
+
+[ "$VERIFY" = yes ] && [ -z "$REPLAY" ] && die "--verify needs --replay FILE"
 
 PRESET="$(resolve_preset "$CONFIG")" ||
 	die "unknown configuration '$CONFIG'. One of: $CONFIG_NAMES"
@@ -294,6 +301,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
+	[ "$VERIFY" = yes ] && printf 'args=--replay-verify\n'
 	exit 0
 fi
 
@@ -302,6 +310,7 @@ declare -a CMD=(env "${ENV_ARGS[@]}")
 CMD+=("./$EXE")
 # Before the caller's own arguments, so an explicit --replay= after -- wins.
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
+[ "$VERIFY" = yes ] && CMD+=("--replay-verify")
 CMD+=("$@")
 
 # exec from the run directory: everything the game opens is resolved relative to

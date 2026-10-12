@@ -556,7 +556,16 @@ bool CInterfaceLoadingSingleFinished::Init()
 bool CInterfaceLoadingSingleFinished::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
+	// Loading ends on this screen waiting for a key, which a verification run
+	// has nobody to press. Take the path a key press takes instead of blinking
+	// the prompt forever.
+	if ( eUIState == EUIS_NORMAL && NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+	{
+		MoveOutInfoPanel();
+		return bResult;
+	}
+
 	NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 	if ( timeAbs == 0 )
 		timeAbs = timeAbsCur;

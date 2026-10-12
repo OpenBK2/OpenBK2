@@ -6,6 +6,8 @@
 #include "AILogic/AILogicCommand.h"
 #include "Misc/StrProc.h"
 #include "Main/Profiles.h"
+// CreateICExitGame, for ending a verification run once the replay is played out.
+#include "Main/MainLoopCommands.h"
 #include "GameX/ScenarioTracker.h"
 #include "GameX/InterfaceState.h"
 #include "System/GlobalVars.h"
@@ -204,10 +206,29 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 			if ( nSegment >= replayInfo.nLastGameSegment )
 			{
 //				WriteToPipe( PIPE_CHAT, "Replay finished: Last game segment executed", 0xFF00FF00, true );
-				Singleton<IGameTimer>()->Pause( true, PAUSE_TYPE_USER_PAUSE );
-				NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-					CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
-					InterfaceState()->GetTextEntry( "T_REPLAY_FINISHED" ) ).c_str() );
+				const auto szResult = fmt::format( "replay played out at segment {}", nSegment );
+				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szResult.c_str() );
+
+				// A verification run has nobody to dismiss a dialog, so it
+				// reports through the exit status instead. Reaching the last
+				// recorded segment is the whole of what it can claim: nothing
+				// compares simulation state yet, because a replay stores no
+				// checksum and none is computed during playback. So this is a
+				// crash and hang oracle, not a divergence one. The result
+				// starts nonzero and is cleared only here, so any other way of
+				// leaving reports failure. docs/TestHarness.md has the rest.
+				if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+				{
+					NGlobal::SetVar( "Replay.Result", 0 );
+					NMainLoop::Command( CreateICExitGame() );
+				}
+				else
+				{
+					Singleton<IGameTimer>()->Pause( true, PAUSE_TYPE_USER_PAUSE );
+					NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+						CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
+						InterfaceState()->GetTextEntry( "T_REPLAY_FINISHED" ) ).c_str() );
+				}
 
 				bGameFinished = true;
 			}
