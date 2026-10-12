@@ -62,8 +62,12 @@ usage()
 	  -r, --replay FILE      play a recorded replay instead of showing the menus,
 	                         by passing --replay= to the game
 	      --verify           play the replay out and exit, reporting through the
-	                         exit status: 0 if the final checksum matched the
-	                         recorded one, 1 if it diverged. Implies --replay.
+	                         exit status: 0 if it reached the last recorded
+	                         segment, 1 for anything else. Needs --replay.
+	                         Nothing compares simulation state yet, so this is a
+	                         crash and hang check. See docs/TestHarness.md.
+	      --setvar N=V       set a game variable after the configs load, so it
+	                         overrides them. Repeatable.
 	      --software-vk      force the lavapipe software Vulkan device, so a run
 	                         needs no GPU. Quietens the DXVK log too.
 	  -e, --editor           run B2_MapEditor instead of Game
@@ -132,6 +136,7 @@ USE_GDB=no
 SHOW_ENV=no
 REPLAY=
 VERIFY=no
+declare -a SETVARS=()
 SOFTWARE_VK=no
 # The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
 # it without an architecture suffix.
@@ -155,6 +160,9 @@ while [ $# -gt 0 ]; do
 		-r|--replay)  [ $# -ge 2 ] || die "$1 needs a replay file"
 		              REPLAY="$2"; shift 2 ;;
 		--verify)     VERIFY=yes; shift ;;
+		--setvar)     [ $# -ge 2 ] || die "$1 needs NAME=VALUE"
+		              case "$2" in *=*) ;; *) die "--setvar wants NAME=VALUE, got '$2'" ;; esac
+		              SETVARS+=("--setvar=$2"); shift 2 ;;
 		--software-vk) SOFTWARE_VK=yes; shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
@@ -302,6 +310,7 @@ if [ "$SHOW_ENV" = yes ]; then
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
 	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
 	[ "$VERIFY" = yes ] && printf 'args=--replay-verify\n'
+	[ ${#SETVARS[@]} -gt 0 ] && printf 'args=%s\n' "${SETVARS[@]}"
 	exit 0
 fi
 
@@ -311,6 +320,7 @@ CMD+=("./$EXE")
 # Before the caller's own arguments, so an explicit --replay= after -- wins.
 [ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
 [ "$VERIFY" = yes ] && CMD+=("--replay-verify")
+[ ${#SETVARS[@]} -gt 0 ] && CMD+=("${SETVARS[@]}")
 CMD+=("$@")
 
 # exec from the run directory: everything the game opens is resolved relative to

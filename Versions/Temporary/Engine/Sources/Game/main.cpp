@@ -84,6 +84,11 @@ static std::string szEditorMap;
 static std::string szEditorMod;
 // --replay=, kept here for the same reason.
 static std::string szReplayFile;
+// --replay-verify and --setvar. Recorded rather than applied while parsing,
+// because arguments are read long before autoexec.cfg and game.cfg are, and
+// anything set here would be overwritten by them.
+static bool bReplayVerify = false;
+static std::vector< std::pair<std::string, std::string> > commandLineVars;
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
@@ -363,6 +368,25 @@ static int RunGame( const std::vector<std::string> &arguments )
 		MessageBox( 0, "Can't setup scene mode from config", "Error", MB_OK );
 		return 0xDEAD;
 	}
+	// After the configs, so these win rather than being overwritten by them.
+	if ( bReplayVerify )
+	{
+		NGlobal::SetVar( "Replay.ExitWhenFinished", 1 );
+		// Failure until the replay actually plays out, so quitting, a handled
+		// crash or ending up in a menu all report it.
+		NGlobal::SetVar( "Replay.Result", 1 );
+		// Verification compares nothing without this, and a run with no console
+		// has no other way to switch it on.
+		NGlobal::SetVar( "checksum_verify", 1 );
+	}
+	// Last, so an explicit --setvar overrides the defaults above as well. Routed
+	// through the console rather than SetVar so a value is typed exactly as the
+	// same line in a .cfg would be.
+	for ( size_t i = 0; i < commandLineVars.size(); ++i )
+	{
+		NGlobal::ProcessCommand( L"setvar " + UTF8ToWide( commandLineVars[i].first ) +
+			L" = " + UTF8ToWide( commandLineVars[i].second ) );
+	}
 	// Run the normal mission command only after the game, profile and mod DB
 	// are initialized. Quoting preserves map folders and filenames with spaces.
 	if ( !szEditorMap.empty() )
@@ -465,10 +489,26 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 		// --replay= so a replay can still be watched from the command line.
 		if ( szString == "--replay-verify" )
 		{
-			NGlobal::SetVar( "Replay.ExitWhenFinished", 1 );
-			// Failure until the replay actually plays out, so quitting, a
-			// handled crash or ending up in a menu all report it.
-			NGlobal::SetVar( "Replay.Result", 1 );
+			bReplayVerify = true;
+			continue;
+		}
+		// --setvar name=value, repeatable. Applied after the configs, so it
+		// overrides them, which is the only way to reach a variable in a run
+		// that never shows a console.
+		const std::string varPrefix = "--setvar";
+		if ( szString.compare(0, varPrefix.size(), varPrefix) == 0 &&
+			 szString.size() > varPrefix.size() + 1 )
+		{
+			std::string value = szString.substr( varPrefix.size() + 1 );
+			NStr::TrimBoth( value, '"' );
+			const std::string::size_type nEq = value.find( '=' );
+			if ( nEq == std::string::npos || nEq == 0 ||
+				 value.find_first_of("\"\r\n;") != std::string::npos )
+			{
+				MessageBox( 0, "Invalid --setvar argument, expected name=value.", "Set variable", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			commandLineVars.push_back( std::make_pair( value.substr( 0, nEq ), value.substr( nEq + 1 ) ) );
 			continue;
 		}
 		const std::string replayPrefix = "--replay=";
