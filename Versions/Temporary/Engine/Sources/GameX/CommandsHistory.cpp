@@ -143,8 +143,19 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		Singleton<IAIScenarioTracker>()->SetLocalPlayer( 0 );
 		IScenarioTracker *pSingleTracker = Singleton<IScenarioTracker>();
 		pSingleTracker->Clear();
-		const int nDifficulty = 0;
-		pSingleTracker->CustomMissionStart( replayInfo.pMap, nDifficulty, false );
+		// The difficulty and the tutorial flag come from the recording now
+		// rather than being hard-coded, because both reach the simulation: the
+		// difficulty through unit statistics and the AI, which is what nearly
+		// every random draw in a run is spent on.
+		//
+		// A campaign recording also needs the script variables cleared, which is
+		// what MissionStart does and CustomMissionStart does not. The campaign
+		// and the chapter stay unset either way: a replay does not carry them,
+		// and whether anything in the simulation asks for them is a question the
+		// verification itself will now answer.
+		pSingleTracker->CustomMissionStart( replayInfo.pMap, replayInfo.nDifficulty, replayInfo.bIsTutorial );
+		if ( replayInfo.nStartKind == 1 )
+			pSingleTracker->ClearMissionScriptVars();
 
 		NGlobal::SetVar( "History.Playing", 1 );
 		return true;
@@ -197,8 +208,16 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameS
 	// property of what was recorded. A single-player replay has no lobby slots,
 	// so without this LoadHistory would take the multiplayer path and register
 	// no players at all.
-	replayInfo.bSinglePlayer =
-		Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE;
+	IScenarioTracker *pTracker = Singleton<IScenarioTracker>();
+	replayInfo.bSinglePlayer = pTracker->GetGameType() == IAIScenarioTracker::EGT_SINGLE;
+	// A campaign mission is entered through MissionStart, which leaves the
+	// campaign, the chapter and the difficulty as the campaign set them, where a
+	// custom mission goes through CustomMissionStart and sets them itself. The
+	// playback has to take the matching path, and a campaign is recognised by
+	// the tracker having one.
+	replayInfo.nStartKind = pTracker->GetCurrentCampaign() != 0 ? 1 : 0;
+	replayInfo.nDifficulty = pTracker->GetDifficultyLevel();
+	replayInfo.bIsTutorial = pTracker->IsTutorialMission();
 
 	if ( !SerializeHistory( szFileName, false ) )
 		return false;

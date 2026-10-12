@@ -87,8 +87,24 @@ struct SMultiplayerReplayInfo
 		// instead would read as EGT_SINGLE, which is zero, and silently
 		// misclassify every existing replay.
 		bool bSinglePlayer = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); f.Add(11,&bSinglePlayer); return 0; }
-	SMultiplayerReplayInfo() : nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ), nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ) {}
+		// Which start path a playback has to take, and the two arguments it
+		// cannot otherwise know. Deliberately the decision rather than the
+		// engine's EGameType: this is a file format, so the numbering is ours to
+		// choose, and choosing it means zero can mean what replays recorded
+		// before these fields should mean. Storing EGameType would have put
+		// EGT_SINGLE, which is zero, on every old replay. The alternative, a
+		// bias or a flag bit so that zero is never valid, is only needed when
+		// the values are fixed elsewhere and cannot be renumbered.
+		//
+		//   0  as before: bSinglePlayer picks multiplayer or a custom mission
+		//   1  campaign
+		int nStartKind = {};
+		// Both default to what the playback path used to hard-code, so an older
+		// replay behaves exactly as it did.
+		int nDifficulty = {};
+		bool bIsTutorial = {};
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); f.Add(11,&bSinglePlayer); f.Add(12,&nStartKind); f.Add(13,&nDifficulty); f.Add(14,&bIsTutorial); return 0; }
+	SMultiplayerReplayInfo() : nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ), nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ), nStartKind( 0 ), nDifficulty( 0 ), bIsTutorial( false ) {}
 	SMultiplayerReplayInfo &operator=( const SMultiplayerReplayInfo &src )
 	{
 		pMap = src.pMap;
@@ -101,6 +117,9 @@ struct SMultiplayerReplayInfo
 		nLastGameSegment = src.nLastGameSegment;
 		nWinningSide = src.nWinningSide;
 		bSinglePlayer = src.bSinglePlayer;
+		nStartKind = src.nStartKind;
+		nDifficulty = src.nDifficulty;
+		bIsTutorial = src.bIsTutorial;
 		return *this;
 	}
 };
