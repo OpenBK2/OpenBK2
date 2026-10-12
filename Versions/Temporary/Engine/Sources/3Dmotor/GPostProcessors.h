@@ -8,7 +8,18 @@ namespace NGScene
 {
 struct SVec4Hash
 {
-	int operator()( const CVec4 &a ) const { const int *p = (const int*)&a; return p[0] ^ ( p[1] * 3 ) ^ ( p[2] * 9 ) ^ ( p[3] + 918237461 ); }
+	// Hashing the bit patterns is what a hash keyed on an exact vector wants, but
+	// reading the floats through an int pointer aliased one type as another and
+	// then mixed them with signed arithmetic, so an ordinary component like 1.0f,
+	// whose bits are 0x3F800000, overflowed on the multiply. Copying the bits out
+	// and mixing them unsigned is defined and scrambles them just as well.
+	size_t operator()( const CVec4 &a ) const
+	{
+		static_assert( sizeof( a ) == 4 * sizeof( uint32_t ), "CVec4 is four 32 bit components" );
+		uint32_t p[4] = {};
+		memcpy( p, &a, sizeof( p ) );
+		return p[0] ^ ( p[1] * 3u ) ^ ( p[2] * 9u ) ^ ( p[3] + 918237461u );
+	}
 };
 struct SPostProcessData
 {
