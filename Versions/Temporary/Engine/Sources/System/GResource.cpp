@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BinaryResources.h"
+#include "GlobalVars.h"
 #include "GResource.h"
 #include "VFSOperations.h"
 
@@ -179,7 +180,14 @@ void AddFileRequest( NGScene::CFileRequest *pReq )
 {
 	if ( pReq->IsReady() )
 		return;
-	if ( !pReq->IsDelayedLoad() )
+	// resource_sync_load reads every request on the calling thread, so that
+	// whether a resource is ready stops being a question about how fast the
+	// machine is. Two runs of the same binary on the same replay do not agree,
+	// and the earliest thing they differ at is exactly that question, so this is
+	// the switch that says whether the rest follows from it. Read once: it is set
+	// before anything requests a resource, and this is called often.
+	static const bool bForceSyncLoad = NGlobal::GetVar( "resource_sync_load", 0 ) != 0;
+	if ( bForceSyncLoad || !pReq->IsDelayedLoad() )
 	{
 		pReq->Read();
 		return;
