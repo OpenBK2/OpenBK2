@@ -44,6 +44,7 @@
 extern CUnderConstructionObject theUnderConstructionObject;
 #include "ExecutorRestoreTransparencyQueue.h"
 //#include "../Common_RTS_AI/CollisionInternal.h"
+#include "System/AsyncTrace.h"
 #include "System/CheckSumLog.h"
 #include "System/RandomGen.h"
 #include "System/Text.h"
@@ -1281,6 +1282,10 @@ void CAILogic::Segment()
 		updater.UpdateTime( curTime );
 
 		theGroupLogic.Segment();
+		// Before the executors run, so that everything they and anything after
+		// them trace is stamped with the segment it happened in. Resource events
+		// come from another module and have no other way to know the game time.
+		NAsyncTrace::SetGameTime( curTime );
 		theExecutorContainer.Segment();
 
 		if ( theCheats.GetWarFog() )

@@ -2,6 +2,8 @@
 #include "ExecutorContainer.h"
 #include "ExecutorSimpleEvent.h"
 
+#include "System/AsyncTrace.h"
+
 #include "AILogic_export.h"
 
 CExecutorContainer theExecutorContainer;
@@ -44,6 +46,15 @@ void CExecutorContainer::AddSleeping( CExecutor *pExecutor )
 
 void CExecutorContainer::Add( CExecutor *pExecutor )
 {
+	// Which bucket of the wheel it lands in, since the wheel is what two runs
+	// were found to disagree about and the bucket is a function of the segment it
+	// was scheduled from.
+	if ( NAsyncTrace::IsEnabled() )
+	{
+		NAsyncTrace::Write( "exec", fmt::format( "scheduled uid={} id={} next={} bucket={}",
+			pExecutor->GetInstanceID(), pExecutor->GetID(), pExecutor->GetNextTime(),
+			MakeIndex( pExecutor->GetNextTime() ) ) );
+	}
 	executors[MakeIndex(pExecutor->GetNextTime())].push_back( SExID(pExecutor->GetID(), pExecutor) );
 }
 

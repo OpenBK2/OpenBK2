@@ -1,5 +1,6 @@
 project(System)
 set(SOURCES
+    AsyncTrace.cpp
     Basic.cpp
     BasicShare.cpp
     BinaryResources.cpp

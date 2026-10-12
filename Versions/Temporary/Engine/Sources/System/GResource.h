@@ -4,6 +4,7 @@
 
 #include "System_export.h"
 
+#include "AsyncTrace.h"
 #include "Dg.h"
 
 #include <boost/uuid/uuid.hpp>
@@ -149,6 +150,9 @@ public:
 	void Read();
 	bool IsReady() const { return bIsReady; }
 	bool IsDelayedLoad() const { return bDelayedLoad; }
+	// For tracing only, so that an event can name what it was waiting for.
+	const char *GetResName() const { return pszResName; }
+	int GetResID() const { return nID; }
 };
 inline CFileRequest* CreateFileRequiest( const char *pszResName, int nID, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, nID, bDelayedLoad ); }
 inline CFileRequest* CreateFileRequiest( const char *pszResName, const SResKey<int> &key, bool bDelayedLoad = true ) { return new CFileRequest( pszResName, key, bDelayedLoad ); }
@@ -185,7 +189,16 @@ protected:
 		if ( IsValid(pRequest) )
 		{
 			if ( !pRequest->IsReady() )
+			{
+				// The segment a resource is still being waited on in is the whole
+				// question: the loader runs on its own thread, so this answer is
+				// about how fast the machine is and not about anything simulated.
+				if ( NAsyncTrace::IsEnabled() )
+					NAsyncTrace::WriteResource( "waiting", pRequest->GetResName(), pRequest->GetResID() );
 				return;
+			}
+			if ( NAsyncTrace::IsEnabled() )
+				NAsyncTrace::WriteResource( "ready", pRequest->GetResName(), pRequest->GetResID() );
 			RecalcValue( pRequest );
 			pRequest = 0;
 			ReleaseFileRequestHolder();
@@ -194,7 +207,11 @@ protected:
 		{
 			pRequest = CreateRequest();
 			if ( pRequest )
+			{
+				if ( NAsyncTrace::IsEnabled() )
+					NAsyncTrace::WriteResource( "queued", pRequest->GetResName(), pRequest->GetResID() );
 				AddFileRequest( pRequest );
+			}
 		}
 	}
 	bool NeedUpdate() { TParent::NeedUpdate(); if ( !IsValid(this->pValue) && IsValid(pRequest) && pRequest->IsReady() ) return true; return false; }
