@@ -158,7 +158,11 @@ class CVBCombiner: public IVBCombiner
 	CDGPtr<CVersioningBase> pAnimation;
 	CDGPtr<CFuncBase<SPerVertexLightState> > pLightState;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IVBCombiner*)this); f.Add(2,&pCombiner); f.Add(3,&ct); f.Add(4,&pAnimation); f.Add(5,&pLightState); return 0; }
-	bool bNeedXForm, bNeedRecalc, bDroppedXForm;
+	// NeedXForm reads bNeedXForm to or a fresh result into it, and the default
+	// constructor set none of the three, so the first call read whatever the
+	// allocation held: UBSan reports a bool loaded as 190, which is the fill an
+	// ASan allocation arrives with.
+	bool bNeedXForm = false, bNeedRecalc = false, bDroppedXForm = false;
 	template<class TTrans>
 		void SimpleTransform( TTrans *p );
 protected:
