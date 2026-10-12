@@ -1068,7 +1068,8 @@ void CTransportHookArtilleryState::Segment()
 				{
 					const bool trTurn = pTransport->TurnToDirection( wDesiredTransportDir, false, true );
 					// Front-towed artillery faces the truck; keep the legacy rear-towing angle otherwise.
-					const uint16_t wArtilleryDir = pArtillery->IsForwardTowed() ? wDesiredTransportDir : wDesiredTransportDir - 65535/2;
+					// Convert before the conditional arithmetic: SAIAngle and int convert both ways.
+					const uint16_t wArtilleryDir = static_cast<int>( wDesiredTransportDir ) - ( pArtillery->IsForwardTowed() ? 0 : 65535/2 );
 					const bool arTurn = pArtillery->TurnToDirection( wArtilleryDir, false, true );
 
 					if ( trTurn && arTurn )
