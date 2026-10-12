@@ -14,6 +14,45 @@ typedef uLong CLogType;
 typedef std::unordered_map<int/*#entry*/,CLogType> ChecksumLog;
 typedef std::unordered_map<int/*#segment*/, std::pair<CLogType,ChecksumLog> > CSegmentChecksum;
 
+// The state checksums a recording sampled, so a playback can be checked against
+// them rather than only against reaching the end.
+//
+// Not a map: IBinSaver serializes vector, pair, set, list and unordered_map but
+// not map, and an unordered_map would make the file bytes depend on hash
+// iteration order.
+//
+// Two parallel vectors rather than one vector of pairs, because the vector
+// overload sends a type with no operator& through DoDataVector, which is a
+// single bulk copy of the whole array, while a pair has its own overload and so
+// would cost chunk framing per sample. At tick resolution that is the
+// difference between one copy and tens of thousands of small chunks. They are
+// only ever appended together, so they stay the same length and in increasing
+// game time, which lets a playback walk them with a cursor.
+//
+// uint32_t and not uLong for the values. uLong is unsigned long, 4 bytes on
+// Windows and 8 on Linux, and the whole point of these is being compared
+// between the two. adler32 fits in 32 bits.
+struct SReplayCheckSums
+{
+	ZDATA
+		// What produced the values, so a recording sampled one way is not
+		// compared against a run sampling another way and reported as diverged.
+		int nLightMode = {};
+		int nPeriod = {};
+		std::vector<int> times;
+		std::vector<uint32_t> values;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLightMode); f.Add(3,&nPeriod); f.Add(4,&times); f.Add(5,&values); return 0; }
+
+	void Add( const int nGameTime, const uint32_t uValue )
+	{
+		times.push_back( nGameTime );
+		values.push_back( uValue );
+	}
+	// A file could carry mismatched lengths; everything reading these should
+	// treat that as no samples rather than index past the shorter one.
+	size_t Size() const { return times.size() == values.size() ? times.size() : 0; }
+};
+
 struct SMultiplayerReplayInfo
 {
 	ZDATA
@@ -70,7 +109,10 @@ class CCommandsHistory : public ICommandsHistory
 		CPtr<IRandomSeed> pStartSeed;
 		SMultiplayerReplayInfo replayInfo;
 		uint32_t dwLastCheckSum = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&loadedHistory); f.Add(3,&bFinishedHistory); f.Add(4,&bGameFinished); f.Add(5,&bLoadedHistory); f.Add(6,&bCanAddCommand); f.Add(7,&pStartSeed); f.Add(8,&replayInfo); f.Add(9,&dwLastCheckSum); return 0; }
+		// Also in the save game, so a mission saved and reloaded does not lose
+		// the samples taken before the save and write a truncated replay.
+		SReplayCheckSums recordedCheckSums;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&loadedHistory); f.Add(3,&bFinishedHistory); f.Add(4,&bGameFinished); f.Add(5,&bLoadedHistory); f.Add(6,&bCanAddCommand); f.Add(7,&pStartSeed); f.Add(8,&replayInfo); f.Add(9,&dwLastCheckSum); f.Add(10,&recordedCheckSums); return 0; }
 
 	bool IsFinished( const CSegmentChecksum &_segmentChecksum, const int nGameTime ) const;
 	bool IsSegmentLogDiffer( const int nGameTime, const int nEntry, const unsigned long ulChecksum, const CSegmentChecksum &_segmentChecksum );

@@ -46,6 +46,12 @@ void CCommandsHistory::StartNewGame( const NDb::SMapInfo *_pMap )
 		replayInfo.pMap = _pMap;
 		replayInfo.nLastCommandSegment = 0;
 		replayInfo.nLastGameSegment = 0;
+		// Captured at mission start rather than when the replay is written,
+		// because these can be changed from the console mid-game and what
+		// matters is what produced the samples.
+		recordedCheckSums = SReplayCheckSums();
+		recordedCheckSums.nLightMode = NGlobal::GetVar( "light_checksum_count", 0 );
+		recordedCheckSums.nPeriod = NGlobal::GetVar( "checksumperiod", 1000 );
 	}
 }
 
@@ -61,6 +67,10 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 		pSaverMain->Add( 3, &loadedHistory );
 	else
 		pSaverMain->Add( 3, &savingHistory );
+	// Chunk 4 is new. A replay written before it carries no such chunk, and
+	// CallObjectSerialize leaves the target alone when StartChunk finds none, so
+	// an older replay reads back with no samples and simply cannot be verified.
+	pSaverMain->Add( 4, &recordedCheckSums );
 
   if ( !bRead )
 		return NSaveLoad::SerializeReplayInfo( &replayInfo, szFileName, bRead );
@@ -156,7 +166,12 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameS
 bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry )
 {
 	if ( !bLoadedHistory && nEntry == 0 )
+	{
 		dwLastCheckSum = ulChecksum;
+		// Entry zero is the whole-state value. nGameTime is game time, not a
+		// segment number, whatever the CSegmentChecksum typedef above calls it.
+		recordedCheckSums.Add( nGameTime, static_cast<uint32_t>( ulChecksum ) );
+	}
 
 	// Only entry 0, which is the whole-state value; the rest are the running
 	// total partway through the walk and there are thousands of them per sample.
