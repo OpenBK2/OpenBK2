@@ -286,6 +286,42 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 			bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum ) );
 	}
 
+	// Every entry of one chosen sample, which is the one thing nothing else can
+	// say. Entry zero is the whole state and tells us only that two runs differ;
+	// the entries after it are the running total taken field by field through the
+	// walk, so the first entry at which two of these files disagree names the
+	// field. Set checksum_entry_dump_time to a sample time on both the run that
+	// records and the run that plays back, and compare the two files.
+	//
+	// The entry number also feeds break_count and break_segment in the checksum
+	// saver, which stop in the debugger at exactly that field.
+	const int nEntryDumpTime = NGlobal::GetVar( "checksum_entry_dump_time", -1 );
+	if ( nEntryDumpTime >= 0 && nGameTime == nEntryDumpTime )
+	{
+		// Opened once and left to the process exit to close. Thousands of entries
+		// arrive per sample and reopening per line would dominate the run.
+		if ( pEntryDumpFile == 0 )
+		{
+			const char *szName = bLoadedHistory ? "checksum_entries_playback.txt" : "checksum_entries_record.txt";
+			pEntryDumpFile = fopen( szName, "w" );
+			if ( pEntryDumpFile )
+			{
+				ReportReplayLine( fmt::format( "checksum entries for t={} going to {}", nGameTime, szName ) );
+			}
+		}
+		if ( pEntryDumpFile )
+			fmt::print( pEntryDumpFile, "{} {:#010x}\n", nEntry, ulChecksum );
+	}
+	else if ( pEntryDumpFile != 0 )
+	{
+		// Closed as soon as a later sample arrives, rather than left to the
+		// process exit. The run that records one of these is a person playing and
+		// then quitting, and a quarter of a million buffered lines are worth
+		// nothing if that quit is not a clean one.
+		fclose( pEntryDumpFile );
+		pEntryDumpFile = 0;
+	}
+
 	return true;
 }
 

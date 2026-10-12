@@ -143,6 +143,9 @@ class CCommandsHistory : public ICommandsHistory
 	// entropy the constructor installs. Without it the playback runs a different
 	// random stream and divergence says nothing, so there is nothing to verify.
 	bool bSeedFromReplay = false;
+	// Diagnostic only, not serialized. Held open across a sample because the
+	// entries arrive in the thousands.
+	FILE *pEntryDumpFile = 0;
 	ZDATA
 		CHistory loadedHistory;
 		bool bFinishedHistory = {};
