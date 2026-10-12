@@ -64,13 +64,6 @@ namespace NCheckSums
 		return pStorage->GetCRC();
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	inline const uLong GetCRC( const uLong newCheckSum, const uLong oldCheckSum )
-	{
-		static union { uLong checkSum; uint8_t array[ sizeof(uLong) ]; };
-		checkSum = oldCheckSum;
-		return crc32( newCheckSum, array, sizeof(uLong) );
-	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const uint32_t segmentTime );
 
