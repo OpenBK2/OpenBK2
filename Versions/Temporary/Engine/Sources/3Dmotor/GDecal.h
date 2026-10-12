@@ -20,7 +20,11 @@ struct SDecalTargetPart
 struct SDecalTargetPartHash
 {
 	std::size_t operator()( const SDecalTargetPart &p ) const {
-		std::size_t seed;
+		// Zero, which hash_combine needs: it reads the seed as well as writing it,
+		// so an uninitialized one makes the same key hash differently depending on
+		// what occupied that stack slot, and a lookup then misses an entry that is
+		// there. The same mistake in the executor event hash was dropping events.
+		std::size_t seed = 0;
 		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pUser.GetPtr()));
 		boost::hash_combine(seed, p.nUserID);
 		return seed;
@@ -41,7 +45,8 @@ struct SSrcPosInfo
 struct SSrcPosInfoHash
 {
 	std::size_t operator()( const SSrcPosInfo &p ) const {
-		std::size_t seed;
+		// Zero, as above.
+		std::size_t seed = 0;
 		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pUser.GetPtr()));
 		boost::hash_combine(seed, p.nUserID);
 		boost::hash_combine(seed, reinterpret_cast<std::uintptr_t>(p.pSource.GetPtr()));

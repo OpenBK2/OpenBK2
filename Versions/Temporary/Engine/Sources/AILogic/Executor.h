@@ -313,8 +313,22 @@ public:
 struct SExecutorEventParamHash
 {
 	std::size_t operator()( const SExecutorEventParam &e ) const
-	{ 
-		std::size_t seed;
+	{
+		// Zero, which hash_combine needs and did not have. It reads the seed as
+		// well as writing it, so an uninitialized one made the hash of a key
+		// depend on whatever occupied that stack slot. The same key then hashed
+		// one way when an executor registered for an event and another way when
+		// the event was raised, events.find missed, and the event was dropped
+		// without a word.
+		//
+		// A run that always reached this through the same call path saw the same
+		// slot contents and worked; anything that moved the stack around did not.
+		// Measured under ASan, which varies it: thirty two events raised and
+		// eighteen delivered, where the same replay in a release build delivered
+		// all thirty. What goes undelivered here is an executor not being
+		// scheduled, so two clients that dropped different events would disagree
+		// about the simulation, which is an ASYNC and not a cosmetic fault.
+		std::size_t seed = 0;
 		boost::hash_combine(seed, static_cast<size_t>(e.eEventID));
 		boost::hash_combine(seed, e.nExecutorID);
 		boost::hash_combine(seed, e.nUnitID);
