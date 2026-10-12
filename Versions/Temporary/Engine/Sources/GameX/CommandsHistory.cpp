@@ -158,6 +158,15 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	if ( !bLoadedHistory && nEntry == 0 )
 		dwLastCheckSum = ulChecksum;
 
+	// Only entry 0, which is the whole-state value; the rest are the running
+	// total partway through the walk and there are thousands of them per sample.
+	if ( nEntry == 0 && NGlobal::GetVar( "checksum_trace", 0 ) != 0 )
+	{
+		const auto szLine = fmt::format( "checksum {} t={} {:#010x}",
+			bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+	}
+
 	return true;
 }
 

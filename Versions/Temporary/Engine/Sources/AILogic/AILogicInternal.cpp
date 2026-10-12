@@ -966,15 +966,12 @@ void CAILogic::CommonInit( const NDb::STerrain *pTerrainInfo )
 	theWeather.Init();
 
 	checkSum = adler32( 0L, Z_NULL, 0 );	
-	if ( theDipl.IsNetGame() )
-	{
-		periodToCheckSum = NGlobal::GetVar( "checksumperiod", 1000 );
-		nextCheckSumTime = periodToCheckSum;
-	}
-	else
-	{
-		periodToCheckSum = nextCheckSumTime = 0;
-	}
+	// Set unconditionally. Whether anything is computed is decided per segment
+	// by NeedWriteCheckSum and NeedVerifyCheckSum; zeroing the period here as
+	// well only gave two places to disagree, and it froze the decision at Init
+	// from a condition that can change afterwards.
+	periodToCheckSum = NGlobal::GetVar( "checksumperiod", 1000 );
+	nextCheckSumTime = periodToCheckSum;
 
 	theDifficultyLevel.Init();
 
@@ -1130,6 +1127,21 @@ void CAILogic::PostMapLoad()
 	bSuspended = bOldSuspended;
 	pCheckSumLog = pTmpChecksum;
 	bMissionLoaded = true;
+}
+
+bool CAILogic::NeedWriteCheckSum() const
+{
+	// Not while a replay is playing: then the recorded values are what we
+	// compare against, and recomputing over them would compare a run with
+	// itself.
+	return NGlobal::GetVar( "count_checksum", 0 ) != 0
+		&& NGlobal::GetVar( "History.Playing", 0 ) == 0;
+}
+
+bool CAILogic::NeedVerifyCheckSum() const
+{
+	return NGlobal::GetVar( "checksum_verify", 0 ) != 0
+		&& NGlobal::GetVar( "History.Playing", 0 ) != 0;
 }
 
 void CAILogic::UpdateCheckSum( bool bSend )
@@ -1289,16 +1301,23 @@ void CAILogic::Segment()
 		theCombatEstimator.Segment();
 		theSupremeBeing.Segment();
 		theFeedBackSystem.Segment();
-		if ( theDipl.IsNetGame() )
+		//DebugTrace( "======== AILogic Segment time %d", curTime );
+		// A net game is no longer the condition. It was one reason to want
+		// checksums rather than the definition of wanting them, and it kept a
+		// single-player run from producing any, which is what a replay has to
+		// be verified against.
+		if ( NeedWriteCheckSum() || NeedVerifyCheckSum() )
 		{
-			//DebugTrace( "======== AILogic Segment time %d", curTime );
-			if ( NGlobal::GetVar( "count_checksum", 0 ) && NGlobal::GetVar( "History.Playing", 0 ) == 0 )
+			if ( curTime >= nextCheckSumTime )
 			{
-				if ( curTime >= nextCheckSumTime )
-				{
-					UpdateCheckSum( true );
-					nextCheckSumTime = curTime + periodToCheckSum;
-				}
+				UpdateCheckSum( true );
+				// A save game written while the period was still zeroed for
+				// anything but a net game restores that zero, which would
+				// sample every segment for the rest of the game rather than
+				// once per period. Chunks 14 and 15 carry both values.
+				if ( periodToCheckSum <= 0 )
+					periodToCheckSum = NGlobal::GetVar( "checksumperiod", 1000 );
+				nextCheckSumTime = curTime + periodToCheckSum;
 			}
 		}
 		bFirstTime = false;

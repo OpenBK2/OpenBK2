@@ -92,6 +92,22 @@ class CAILogic : public IAILogic
 	// bFullAI - count all AI data or only object placement
 	void UpdateCheckSum( bool bSend );
 
+	// Whether this run computes state checksums, and why. Named rather than
+	// spelled out at the use site, because the conditions were a mix of things
+	// that are not the question being asked: a lockstep net game is one reason
+	// to want checksums, not the definition of wanting them, and "a replay is
+	// playing" was being used to mean "do not send them to peers" while also
+	// suppressing the computation.
+	//
+	// Recording. Computes them so they can be compared later, or sent to peers
+	// in a net game. count_checksum stays the master switch and still defaults
+	// off, so a game that did not compute them before does not start now; what
+	// changes is that a single-player game honours it too.
+	bool NeedWriteCheckSum() const;
+	// Verifying. Computes them while a replay plays back so they can be checked
+	// against what the replay recorded.
+	bool NeedVerifyCheckSum() const;
+
 	bool CanShowVisibilities() const;
 
 	void LinkArtilleryWithTransport( class CArtillery * pArtillery, class CAITransportUnit *pTransport );
