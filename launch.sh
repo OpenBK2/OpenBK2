@@ -63,9 +63,11 @@ usage()
 	                         by passing --replay= to the game
 	      --verify           play the replay out and exit, reporting through the
 	                         exit status: 0 if it reached the last recorded
-	                         segment, 1 for anything else. Needs --replay.
-	                         Nothing compares simulation state yet, so this is a
-	                         crash and hang check. See docs/TestHarness.md.
+	                         segment and every recorded checksum matched, 1 for
+	                         anything else. Needs --replay. Sampling comes from
+	                         the replay, so record with a smaller
+	                         checksumperiod to compare more finely.
+	                         See docs/TestHarness.md.
 	      --setvar N=V       set a game variable after the configs load, so it
 	                         overrides them. Repeatable.
 	      --software-vk      force the lavapipe software Vulkan device, so a run

@@ -125,6 +125,30 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	bGameFinished = false;
 	savingHistory.clear();
 
+	// Sample the playback exactly where the recording sampled, by taking the
+	// parameters from the replay rather than from whatever this run was started
+	// with. A sample is not an independent snapshot of the state: the value is a
+	// running adler32 carried across the whole run, so one taken after ten walks
+	// of the state cannot be compared with one taken after a single walk. Asking
+	// whoever verifies a replay to remember which variables were set when it was
+	// recorded only produces divergences that are a difference of sampling.
+	//
+	// Changing the period is therefore a property of the recording, not of the
+	// verification: to compare at a finer resolution the replay has to be
+	// recorded at that resolution.
+	if ( recordedCheckSums.nPeriod > 0 )
+	{
+		NGlobal::SetVar( "checksumperiod", recordedCheckSums.nPeriod );
+		NGlobal::SetVar( "light_checksum_count", recordedCheckSums.nLightMode );
+		if ( NGlobal::GetVar( "checksum_verify", 0 ) != 0 )
+		{
+			ReportReplayLine( fmt::format(
+				"replay verify: {} samples recorded every {} ms, {} state",
+				recordedCheckSums.Size(), recordedCheckSums.nPeriod,
+				recordedCheckSums.nLightMode != 0 ? "per unit" : "full" ) );
+		}
+	}
+
 	// Before the mission is brought up, which is where the first draws happen.
 	// For a game that is not single player InitAfterMapLoad replaces this with a
 	// zero seed anyway, which is equally deterministic, so doing it here is
@@ -290,19 +314,23 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		return true;
 	}
 
-	// The values are only comparable if they were produced the same way, and
-	// light_checksum_count selects between a per-unit summary and a full walk
-	// of the state. Comparing across the two would report a divergence that is
-	// only a difference of method.
+	// The values are only comparable if they were produced the same way.
+	// light_checksum_count selects between a per-unit summary and a full walk of
+	// the state, and the period decides how many of those walks a value has
+	// accumulated, since it is a running total and not a snapshot. LoadHistory
+	// sets both from the replay, so reaching this is either a replay written
+	// before the period was recorded or a console change mid-run, and in both
+	// cases the difference would be reported as a divergence it is not.
 	const int nMode = NGlobal::GetVar( "light_checksum_count", 0 );
-	if ( nMode != recordedCheckSums.nLightMode )
+	const int nPeriod = NGlobal::GetVar( "checksumperiod", 1000 );
+	if ( nMode != recordedCheckSums.nLightMode || nPeriod != recordedCheckSums.nPeriod )
 	{
 		if ( !bCheckSumModeReported )
 		{
 			bCheckSumModeReported = true;
 			ReportReplayLine( fmt::format(
-				"replay verify: recorded with light_checksum_count={} but running with {}, not comparable",
-				recordedCheckSums.nLightMode, nMode ) );
+				"replay verify: recorded with light_checksum_count={} every {} ms but running with {} every {} ms, not comparable",
+				recordedCheckSums.nLightMode, recordedCheckSums.nPeriod, nMode, nPeriod ) );
 		}
 		return true;
 	}
