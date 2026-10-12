@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "System/AsyncTrace.h"
 #include "System/Time.h"
 #include "Misc/Bresenham.h"
 #include "StaticObject.h"
@@ -465,6 +466,11 @@ void CGivenPassabilityStObject::SetTransparenciesInt( const int nUniqueID )
 	}
 	
 	bTransparencySet = true;
+	// Paired with the remove below. The restore queue is populated by the remove
+	// and drained by an executor that draws from the shared generator, so the
+	// count of these two is what two runs were found to disagree about.
+	if ( NAsyncTrace::IsEnabled() )
+		NAsyncTrace::Write( "transp", fmt::format( "set uid={}", nUniqueID ) );
 }
 
 void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
@@ -497,6 +503,8 @@ void CGivenPassabilityStObject::RemoveTransparenciesInt( const int nUniqueID )
 	const CVec3 vCenter( GetCenter() );
 	SExecutorEventParam param( EID_ADD_TO_RESTORE_TRANSPARENCY_QUEUE, 0, 0 );
 	CExecutorEventAddToRestoreTransparencyQueue event( param, GetUniqueId() );
+	if ( NAsyncTrace::IsEnabled() )
+		NAsyncTrace::Write( "transp", fmt::format( "remove uid={}", nUniqueID ) );
 	theExecutorContainer.RaiseEvent( event );
 }
 

@@ -4,6 +4,10 @@
 #include "ExecutorContainer.h"
 #include "StaticObjectsIters.h"
 
+#include "System/AsyncTrace.h"
+
+#include <fmt/format.h>
+
 #include "AILogic_export.h"
 
 EXTERNVAR CExecutorContainer theExecutorContainer;
@@ -36,6 +40,15 @@ int CExecutorRestoreTransparencyQueue::Segment()
 		}
 	}
 	objectsToAskAround.clear();
+
+	// Whether this queue is empty decides whether this executor draws from the
+	// shared generator, so two runs that disagree about it disagree about the
+	// random stream from there on. That is the divergence this was traced for.
+	if ( NAsyncTrace::IsEnabled() )
+	{
+		NAsyncTrace::Write( "transp", fmt::format( "queue size={} toRestore={}",
+			objectQueue.size(), objectsToRestore.size() ) );
+	}
 
 	if ( !objectQueue.empty() )
 	{
@@ -78,6 +91,15 @@ bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_even
 	const CExecutorEventAddToRestoreTransparencyQueue *event = static_cast<const CExecutorEventAddToRestoreTransparencyQueue *>( &_event );
 
 	const int nID = event->GetID();
+	// Returning false here means RaiseEvent does not schedule this executor, so
+	// the queue is never looked at and the draw at the end of Segment never
+	// happens. Two runs were found to disagree about exactly that, so both the id
+	// and the lookup it turns on are traced.
+	if ( NAsyncTrace::IsEnabled() )
+	{
+		NAsyncTrace::Write( "transp", fmt::format( "notify id={} exists={}",
+			nID, nID != 0 && CLinkObject::IsLinkObjectExists( nID ) ? 1 : 0 ) );
+	}
 	if ( nID != 0 )
 	{
 		// add this object to queue, wake up
