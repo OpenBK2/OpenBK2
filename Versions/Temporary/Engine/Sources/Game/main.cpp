@@ -82,6 +82,8 @@ namespace NGameX
 // profile cannot replace the map or mod selected in the editor.
 static std::string szEditorMap;
 static std::string szEditorMod;
+// --replay=, kept here for the same reason.
+static std::string szReplayFile;
 
 static bool ProcessCommandLine( const std::vector<std::string> &arguments );
 static int RunGame( const std::vector<std::string> &arguments );
@@ -365,6 +367,11 @@ static int RunGame( const std::vector<std::string> &arguments )
 	// are initialized. Quoting preserves map folders and filenames with spaces.
 	if ( !szEditorMap.empty() )
 		NGlobal::ProcessCommand( L"map \"" + UTF8ToWide(szEditorMap) + L"\"" );
+	// Same point in startup for the same reason: the replay command reaches
+	// CICMission, which needs the database loaded. The file name is resolved by
+	// ReplayHistory, so this passes it through unchanged.
+	else if ( !szReplayFile.empty() )
+		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide(szReplayFile) + L"\"" );
 	// start
 	Cursor()->Acquire( true );
 	while ( 1 ) 
@@ -441,6 +448,24 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 				return false;
 			}
 			(bMap ? szEditorMap : szEditorMod) = value;
+			continue;
+		}
+		// Play back a recorded replay without going through the menus, the same
+		// way --editor-map= starts a mission: both turn into the console command
+		// that the interface already registers. The semicolon is excluded along
+		// with the quotes and newlines because ReplayHistory joins its arguments
+		// into a semicolon-separated string.
+		const std::string replayPrefix = "--replay=";
+		if ( szString.compare(0, replayPrefix.size(), replayPrefix) == 0 )
+		{
+			std::string value = szString.substr( replayPrefix.size() );
+			NStr::TrimBoth( value, '"' );
+			if ( value.empty() || value.find_first_of("\"\r\n;") != std::string::npos )
+			{
+				MessageBox( 0, "Invalid --replay argument.", "Replay", MB_OK | MB_ICONERROR );
+				return false;
+			}
+			szReplayFile = value;
 			continue;
 		}
 		// check for '-' at the begining

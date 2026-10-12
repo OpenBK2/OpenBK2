@@ -59,6 +59,10 @@ usage()
 	                         prefix's own Data. A name means ~/bk2-NAME; a path
 	                         with a slash is taken as is.
 	      --list-data        list the data trees found, and exit
+	  -r, --replay FILE      play a recorded replay instead of showing the menus,
+	                         by passing --replay= to the game
+	      --software-vk      force the lavapipe software Vulkan device, so a run
+	                         needs no GPU. Quietens the DXVK log too.
 	  -e, --editor           run B2_MapEditor instead of Game
 	  -g, --gdb              run under gdb
 	      --env              print the environment that would be used, and exit
@@ -123,6 +127,11 @@ EXE=Game
 TREE=
 USE_GDB=no
 SHOW_ENV=no
+REPLAY=
+SOFTWARE_VK=no
+# The lavapipe ICD, which is what makes a run possible with no GPU. Debian names
+# it without an architecture suffix.
+readonly LVP_ICD=/usr/share/vulkan/icd.d/lvp_icd.json
 
 if [ $# -gt 0 ] && [ "${1#-}" = "$1" ]; then
 	CONFIG="$1"
@@ -139,6 +148,9 @@ while [ $# -gt 0 ]; do
 		              esac
 		              shift 2 ;;
 		--list-data)  printf 'data trees found:\n'; list_trees; exit 0 ;;
+		-r|--replay)  [ $# -ge 2 ] || die "$1 needs a replay file"
+		              REPLAY="$2"; shift 2 ;;
+		--software-vk) SOFTWARE_VK=yes; shift ;;
 		-e|--editor)  EXE=B2_MapEditor; shift ;;
 		-g|--gdb)     USE_GDB=yes; shift ;;
 		--env)        SHOW_ENV=yes; shift ;;
@@ -248,11 +260,23 @@ fi
 #
 # DXVK_WSI_DRIVER has no default and the build wants SDL3. LD_LIBRARY_PATH is
 # the run directory, which for a tree is its farm of symlinks.
+#
+# A software-device run is usually a batch one, so it defaults the DXVK log
+# quiet instead of the debug level an interactive run wants.
 declare -a ENV_ARGS=(
 	"DXVK_WSI_DRIVER=${DXVK_WSI_DRIVER:-SDL3}"
-	"DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-debug}"
+	"DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-$( [ "$SOFTWARE_VK" = yes ] && echo none || echo debug )}"
 	"LD_LIBRARY_PATH=$RUNDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 )
+if [ "$SOFTWARE_VK" = yes ]; then
+	[ -e "$LVP_ICD" ] || die "no lavapipe ICD at $LVP_ICD; install mesa-vulkan-drivers"
+	# Both names: the loader took VK_ICD_FILENAMES before it took VK_DRIVER_FILES,
+	# and which one is honoured depends on the loader version rather than ours.
+	ENV_ARGS+=(
+		"VK_DRIVER_FILES=$LVP_ICD"
+		"VK_ICD_FILENAMES=$LVP_ICD"
+	)
+fi
 case "$PREFIX" in
 	*-asan)
 		ENV_ARGS+=(
@@ -269,12 +293,16 @@ esac
 if [ "$SHOW_ENV" = yes ]; then
 	printf '%s\n' "${ENV_ARGS[@]}"
 	printf 'rundir=%s\nexe=%s\n' "$RUNDIR" "$EXE"
+	[ -n "$REPLAY" ] && printf 'args=--replay=%s\n' "$REPLAY"
 	exit 0
 fi
 
 declare -a CMD=(env "${ENV_ARGS[@]}")
 [ "$USE_GDB" = yes ] && CMD+=(gdb --args)
-CMD+=("./$EXE" "$@")
+CMD+=("./$EXE")
+# Before the caller's own arguments, so an explicit --replay= after -- wins.
+[ -n "$REPLAY" ] && CMD+=("--replay=$REPLAY")
+CMD+=("$@")
 
 # exec from the run directory: everything the game opens is resolved relative to
 # it, which is the point of the cd, and exec makes the exit status the game's.
