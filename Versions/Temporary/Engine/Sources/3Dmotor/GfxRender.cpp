@@ -76,7 +76,10 @@ static CDepthHash sharedZBuffers;
 static CMObj<CTexture> pRegisters[N_MAX_REGISTERS];
 static CMObj<CTexture> pDepthRegister;
 static CTPoint<int> ptRegisterBufferSize, ptScreenSize;
-static EFilterMode TSFilterMode[8];
+// Unset rather than zero initialized, which would read as FILTER_POINT and make
+// the first genuine request for point filtering look like a redundant one.
+static EFilterMode TSFilterMode[8] = { FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET,
+	FILTER_UNSET, FILTER_UNSET, FILTER_UNSET, FILTER_UNSET };
 static EWrap lastUsedAddressMode[8];
 static NWin32Helper::com_ptr<IDirect3DPixelShader9> pixelShaders[ N_MAX_SHADERS_COUNT ];
 static NWin32Helper::com_ptr<IDirect3DVertexShader9> vertexShaders[ N_MAX_SHADERS_COUNT ];
@@ -828,7 +831,7 @@ static void SetTextureFilter( int n, EFilterMode filter )
 void ForceTextureFilterSetup()
 {
 	for ( int i = 0; i < std::size( TSFilterMode ); ++i )
-		TSFilterMode[i] = (EFilterMode)-1;
+		TSFilterMode[i] = FILTER_UNSET;
 }
 
 static NWin32Helper::com_ptr<IDirect3DSurface9> pCurrentRTTB, pCurrentRTZB;

@@ -102,7 +102,13 @@ enum EFogMode
 };
 enum EFilterMode
 {
-	FILTER_POINT,
+	// The cached per stage filter is reset to minus one to mean "nothing set
+	// yet, so the next request cannot be skipped as redundant". That was being
+	// cast in, which made every later read of the cache a load of a value
+	// outside the enumeration, so it gets a name and a place in the range.
+	// The named modes keep the values they had.
+	FILTER_UNSET = -1,
+	FILTER_POINT = 0,
 	FILTER_LINEAR,
 	FILTER_BUMP,
 	FILTER_BEST
