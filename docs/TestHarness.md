@@ -396,10 +396,52 @@ built on machinery that exists and is already exercised each tick. Cost is
 O(state) per check, so it belongs in debug and fuzz builds, run once per segment
 rather than once per death.
 
+## Where replay verification stands
+
+Built and working. A single-player custom mission records and verifies end to
+end: a full-state checksum every segment, 116 of 116 samples matching, the same
+result on repeated runs. The replay carries the ISAAC seed it started from, the
+checksum samples with the random draw count at each one, and enough of the
+starting state to reproduce it.
+
+```
+./launch.sh debug --data fotr --setvar checksumperiod=1 --setvar checksum_trace=1
+# play, then in the console: save_replay NAME
+./launch.sh debug --data fotr --replay NAME --verify --software-vk
+# exit status 0 only if it played out and every recorded sample matched
+```
+
+### Sampling is a property of the recording
+
+A sample is not a snapshot. `CAILogic::checkSum` is a member and
+`UpdateCheckSum` folds each walk of the state into it with `adler32`, so a value
+depends on every sample before it. Two runs are only comparable if they sampled
+at the same points, which is why the playback takes `checksumperiod` and
+`light_checksum_count` out of the replay rather than from the run doing the
+verifying. To compare more finely, record more finely.
+
+Getting this wrong costs real time, because the failure wears a convincing
+disguise. Verifying a replay at a period other than the one it was recorded at
+reports a divergence on the first compared sample, nothing matching after it,
+and the random draw counts agreeing exactly, since those do not depend on
+sampling. That is indistinguishable by eye from a simulation whose starting
+state differs, and it was read as exactly that twice before the cause was found.
+
+### What is verified and what is not
+
+- **Custom mission, single player.** Verified, as above.
+- **Campaign mission.** Not yet. The start kind, difficulty and tutorial flag
+  are recorded now, but the campaign and the chapter are not, and a replay
+  recorded before those fields existed reads them back as zero, which selects
+  the custom path. Needs a fresh campaign recording to say whether restoring
+  the three is enough.
+- **Multiplayer.** The path that always worked, but unverified by checksum
+  comparison, since it predates the samples being stored.
+
 ## Next steps
 
-1. Add `--replay` and a no-UI mode to `Game`, with lavapipe for the device.
-   Additive, no simulation code touched.
+1. Re-record a campaign replay and verify it, which is the one case the
+   recorded start state was written for and the only one still open.
 2. Three assertion commands in Lua.
 3. The terrain dump oracle, which unblocks option B independently.
 4. `-fsanitize=integer` plus deliberate extreme-value scenarios.
