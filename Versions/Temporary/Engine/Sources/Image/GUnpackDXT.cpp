@@ -47,11 +47,30 @@ struct SColor8888
 	uint8_t a;
 };
 
+//! Splits a packed 16 bit 565 colour into its channels.
+//!
+//! This was a bitfield struct that the two colour fields of a block were cast
+//! to. Its members are declared unsigned, which makes it four bytes wide and
+//! four byte aligned, so the cast aliased one type as another, read it at an
+//! address aligned for the wrong one, and spanned four bytes of a field that is
+//! two: it reached into the colour that follows and read it as padding. UBSan
+//! reports the misalignment on every block decoded.
+//!
+//! The shifts say what the bitfield allocation said on every target this has
+//! run on, and say it without resting on the order a compiler chooses to lay
+//! bitfields out in, which the standard does not fix.
 struct SColor565
 {
-	unsigned nBlue  : 5;		// order of names changes
-	unsigned nGreen : 6;		// byte order of output to 32 bit
-	unsigned nRed	: 5;
+	unsigned nBlue;
+	unsigned nGreen;
+	unsigned nRed;
+
+	explicit SColor565( const uint16_t uPacked )
+		: nBlue( uPacked & 0x1f )
+		, nGreen( ( uPacked >> 5 ) & 0x3f )
+		, nRed( ( uPacked >> 11 ) & 0x1f )
+	{
+	}
 };
 
 //! Widens a 5 or 6 bit channel to 8 bits the way the format specifies.
@@ -93,18 +112,17 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 	// normal math
 	// This method is fastest
 
-	SColor565 *pCol = (SColor565*) &(pBlock->col0);
-
+	const SColor565 col0( pBlock->col0 );
 	col_0->a = 0xff;
-	col_0->r = Widen5( pCol->nRed );
-	col_0->g = Widen6( pCol->nGreen );
-	col_0->b = Widen5( pCol->nBlue );
+	col_0->r = Widen5( col0.nRed );
+	col_0->g = Widen6( col0.nGreen );
+	col_0->b = Widen5( col0.nBlue );
 
-	pCol = (SColor565*) & (pBlock->col1 );
+	const SColor565 col1( pBlock->col1 );
 	col_1->a = 0xff;
-	col_1->r = Widen5( pCol->nRed );
-	col_1->g = Widen6( pCol->nGreen );
-	col_1->b = Widen5( pCol->nBlue );
+	col_1->r = Widen5( col1.nRed );
+	col_1->g = Widen6( col1.nGreen );
+	col_1->b = Widen5( col1.nBlue );
 
 
 	if ( !bDxt1 || pBlock->col0 > pBlock->col1 )
