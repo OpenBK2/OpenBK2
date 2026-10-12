@@ -55,41 +55,47 @@ class CMissionReinf : public CObjectBase
 	CPtr<ITextView> pName;
 	CNameToTypes nameToTypes;
 	CReinfInfos reinfInfos;
-	NDb::EReinforcementType eSelected;
-	bool bTrackMousePos;
+	// Defensive member defaults; explicit constructor values still take
+	// precedence. The constructor sets some of these and not others, and the ones
+	// it leaves were read before anything assigned them: SetBlink compares bBlink
+	// and bBlinkFullTime against its arguments to decide whether anything
+	// changed, so on the first call it compared against whatever the allocation
+	// happened to hold and could take either branch.
+	NDb::EReinforcementType eSelected = NDb::_RT_NONE;
+	bool bTrackMousePos = false;
 	CVec2 vMousePos;
-	bool bAvailNotified;
+	bool bAvailNotified = false;
 	ZSKIP//bool bAvailNotifyRepeat;
 	std::vector<SUnitInfo> units;
-	bool bFullInfoMode;
+	bool bFullInfoMode = false;
 	CPtr<IWindow> pCommonInfo;
 	CPtr<IWindow> pFullInfoWnd;
 	CObj<class CMissionUnitFullInfo> pUnitFullInfo;
 	CPtr<ITextView> pNoInfoView;
-	bool bBadWeather;
+	bool bBadWeather = false;
 	CPtr<struct IWindowRoundProgressBar> pRoundProgress;
-	NDb::ESeason eSeason;
+	NDb::ESeason eSeason = {};
 	CPtr<IWindow> pRoundProgressMask;
-	int nCalls;
-	bool bDisabledByInterface;
+	int nCalls = 0;
+	bool bDisabledByInterface = false;
 	ZSKIP//CPtr<IButton> pCloseReinfBtn;
 	CPtr<IWindow> pReinfCountPanel;
 	CPtr<IPlayer> pRoller1;
 	CPtr<IPlayer> pRoller2;
-	int nPrevReinfCount;
-	bool bIsOpen;
-	bool bIsLight;
+	int nPrevReinfCount = 0;
+	bool bIsOpen = false;
+	bool bIsLight = false;
 	std::vector< CDBPtr<NDb::STexture> > textures;
 	CPtr<IButton> pToggleReinfBtn;
 
-	bool bBlink;
-	bool bBlinkFullTime;
-	float fBlinkStep;
-	float fBlinkDuration;
-	float fBlinkPeriod;
+	bool bBlink = false;
+	bool bBlinkFullTime = false;
+	float fBlinkStep = 0.0f;
+	float fBlinkDuration = 0.0f;
+	float fBlinkPeriod = 0.0f;
 	CPtr<IButton> pCallReinfModeBtn;
 	CPtr<IButton> pAutoShowReinfBtn;
-	bool bWasEnabled;
+	bool bWasEnabled = false;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWorld); f.Add(3,&pNotifications); f.Add(4,&pReinfPanel); f.Add(6,&pProgress); f.Add(7,&pCount); f.Add(8,&pName); f.Add(9,&nameToTypes); f.Add(10,&reinfInfos); f.Add(11,&eSelected); f.Add(12,&bTrackMousePos); f.Add(13,&vMousePos); f.Add(14,&bAvailNotified); f.Add(16,&units); f.Add(17,&bFullInfoMode); f.Add(18,&pCommonInfo); f.Add(19,&pFullInfoWnd); f.Add(20,&pUnitFullInfo); f.Add(21,&pNoInfoView); f.Add(22,&bBadWeather); f.Add(23,&pRoundProgress); f.Add(24,&eSeason); f.Add(25,&pRoundProgressMask); f.Add(26,&nCalls); f.Add(27,&bDisabledByInterface); f.Add(29,&pReinfCountPanel); f.Add(30,&pRoller1); f.Add(31,&pRoller2); f.Add(32,&nPrevReinfCount); f.Add(33,&bIsOpen); f.Add(34,&bIsLight); f.Add(35,&textures); f.Add(36,&pToggleReinfBtn); f.Add(37,&bBlink); f.Add(38,&bBlinkFullTime); f.Add(39,&fBlinkStep); f.Add(40,&fBlinkDuration); f.Add(41,&fBlinkPeriod); f.Add(42,&pCallReinfModeBtn); f.Add(43,&pAutoShowReinfBtn); f.Add(44,&bWasEnabled); return 0; }
 	
 	NDb::EReinforcementType ePreSelected;
