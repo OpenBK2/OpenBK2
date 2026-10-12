@@ -151,9 +151,14 @@ static void ReadPtrData( const unsigned char *pData, void *pDst, int &nPos, int 
 	nPos += nSize;
 }
 // should copy data from start
+// memmove, not memcpy: WriteShortChunk is called with a source inside the very
+// buffer being written, so a chunk whose header turns out to fit the one byte
+// length form shifts its body back over itself by three bytes. The caller
+// guards against the source and the destination being equal, which is not the
+// same as them not overlapping, and ASan reports the partial overlap.
 static void WritePtrData( unsigned char *pDst, const void *pSrc, int *nPos, int nSize )
 {
-	memcpy( pDst + *nPos, pSrc, nSize );
+	memmove( pDst + *nPos, pSrc, nSize );
 	*nPos += nSize;
 }
 
@@ -204,7 +209,9 @@ bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID,
 	}
 	else
 		WritePtrData( pDst, &dwLeng, &dst.nLength, 1 );
-	// prevent copying to itself
+	// prevent copying to itself. Only an exact match is skipped; a source that
+	// overlaps the destination without being equal to it still goes through, and
+	// WritePtrData handles that.
 	if ( pDst + dst.nLength != pData )
 		WritePtrData( pDst, pData, &dst.nLength, nLength );
 	else
