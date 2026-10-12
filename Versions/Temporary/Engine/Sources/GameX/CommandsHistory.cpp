@@ -87,6 +87,27 @@ const bool CCommandsHistory::SerializeHistory( const std::string &szFileName, co
 	// CallObjectSerialize leaves the target alone when StartChunk finds none, so
 	// an older replay reads back with no samples and simply cannot be verified.
 	pSaverMain->Add( 4, &recordedCheckSums );
+	// The ISAAC state the recording started from. Without it a playback runs the
+	// fresh entropy this object's constructor installs, which is a different
+	// random stream, and the simulation parts company at the first draw that
+	// matters. Multiplayer never needed it recorded because InitAfterMapLoad
+	// replaces the seed with a zero one for any game that is not single player,
+	// which is deterministic by itself; single player keeps the entropy.
+	if ( bRead )
+	{
+		// Distinguish "no such chunk" from a seed that loaded, because the
+		// pointer is already populated and Add would leave it alone either way.
+		CPtr<IRandomSeed> pConstructed = pStartSeed;
+		pStartSeed = 0;
+		pSaverMain->Add( 5, &pStartSeed );
+		bSeedFromReplay = IsValid( pStartSeed );
+		if ( !bSeedFromReplay )
+			pStartSeed = pConstructed;
+	}
+	else
+	{
+		pSaverMain->Add( 5, &pStartSeed );
+	}
 
   if ( !bRead )
 		return NSaveLoad::SerializeReplayInfo( &replayInfo, szFileName, bRead );
@@ -103,6 +124,13 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	bFinishedHistory = false;
 	bGameFinished = false;
 	savingHistory.clear();
+
+	// Before the mission is brought up, which is where the first draws happen.
+	// For a game that is not single player InitAfterMapLoad replaces this with a
+	// zero seed anyway, which is equally deterministic, so doing it here is
+	// right for both.
+	if ( bSeedFromReplay )
+		NRandom::SetRandomSeed( pStartSeed );
 
 	// A single-player replay has to start the way StartNewMap starts one, not
 	// the way a multiplayer game does: the tracker is already EGT_SINGLE, so
@@ -214,6 +242,19 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	const size_t nRecorded = recordedCheckSums.Size();
 	if ( nRecorded == 0 )
 		return true;
+
+	// A replay with no recorded seed replays the commands against a different
+	// random stream, so it would diverge whatever the code did. Say that rather
+	// than report it as a divergence.
+	if ( !bSeedFromReplay )
+	{
+		if ( !bCheckSumModeReported )
+		{
+			bCheckSumModeReported = true;
+			ReportReplayLine( "replay verify: this replay records no start seed, nothing to compare" );
+		}
+		return true;
+	}
 
 	// The values are only comparable if they were produced the same way, and
 	// light_checksum_count selects between a per-unit summary and a full walk

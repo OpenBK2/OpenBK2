@@ -107,6 +107,10 @@ class CCommandsHistory : public ICommandsHistory
 	int nCheckSumsMatched = 0;
 	bool bCheckSumMismatch = false;
 	bool bCheckSumModeReported = false;
+	// Whether the start seed came out of the replay rather than being the fresh
+	// entropy the constructor installs. Without it the playback runs a different
+	// random stream and divergence says nothing, so there is nothing to verify.
+	bool bSeedFromReplay = false;
 	ZDATA
 		CHistory loadedHistory;
 		bool bFinishedHistory = {};
