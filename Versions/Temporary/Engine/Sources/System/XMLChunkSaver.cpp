@@ -248,15 +248,27 @@ static const int ReadInt( const char *p, const int nSize )
 	return n;
 */
 	const char *pEnd = p + nSize;
-	int n = 0;
-	int nSign = 1;
+	// Accumulated unsigned. A hexadecimal value with the high bit set does not fit
+	// a signed int, and the databases are full of them in colours, so n * 16 + nDst
+	// overflowed on ordinary data rather than on malformed data; a decimal value
+	// with more digits than an int holds overflowed the same way, and negating a
+	// result that came out as INT_MIN overflowed once more. Unsigned arithmetic
+	// wraps by definition and produces the same bits the signed version already
+	// produced on every target this has run on, so a value that parsed one way
+	// before parses that way still.
+	uint32_t n = 0;
+	bool bNegative = false;
+
+	// *p was read before anything established there was a character to read.
+	if ( p >= pEnd )
+		return 0;
 
 	if ( nSize >= 2 && *p == '0' && *(p+1) == 'x' )
 	{
 		p += 2;
 		while ( p < pEnd )
 		{
-			int nDst = 0;
+			uint32_t nDst = 0;
 			if ( *p >= '0' && *p <= '9' )
 				nDst = *p - '0';
 			else if ( *p >= 'a' && *p <= 'f' )
@@ -265,7 +277,7 @@ static const int ReadInt( const char *p, const int nSize )
 				nDst = *p - 'A' + 10;
 			else break;
 
-			n = n * 16 + nDst;
+			n = n * 16u + nDst;
 			++p;
 		}
 	}
@@ -273,18 +285,27 @@ static const int ReadInt( const char *p, const int nSize )
 	{
 		if ( *p == '-' )
 		{
-			nSign = -1;
+			bNegative = true;
 			++p;
 		}
 
 		while ( p < pEnd && *p >= '0' && *p <= '9' )
 		{
-			n = n*10 + *p - '0';
+			n = n * 10u + static_cast<uint32_t>( *p - '0' );
 			++p;
 		}
 	}
 
-	return n * nSign;
+	if ( bNegative )
+		n = 0u - n;
+
+	// Not a cast: converting an unsigned value that does not fit back to int is
+	// implementation defined rather than undefined, which is still something an
+	// integer sanitizer reports and still something two compilers may disagree
+	// about. Every bit pattern is a valid int, so copying the bits is defined.
+	int nResult = 0;
+	memcpy( &nResult, &n, sizeof( nResult ) );
+	return nResult;
 }
 
 static const float ReadFloat( const char *p, const int nSize )
