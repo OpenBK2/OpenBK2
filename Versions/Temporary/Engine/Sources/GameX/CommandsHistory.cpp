@@ -76,6 +76,24 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 	bGameFinished = false;
 	savingHistory.clear();
 
+	// A single-player replay has to start the way StartNewMap starts one, not
+	// the way a multiplayer game does: the tracker is already EGT_SINGLE, so
+	// SetGameType would assert, and there are no lobby slots to register
+	// players from. The block this mirrors carries a comment asking for the two
+	// to be changed together.
+	if ( replayInfo.bSinglePlayer )
+	{
+		InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
+		Singleton<IAIScenarioTracker>()->SetLocalPlayer( 0 );
+		IScenarioTracker *pSingleTracker = Singleton<IScenarioTracker>();
+		pSingleTracker->Clear();
+		const int nDifficulty = 0;
+		pSingleTracker->CustomMissionStart( replayInfo.pMap, nDifficulty, false );
+
+		NGlobal::SetVar( "History.Playing", 1 );
+		return true;
+	}
+
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_MULTI );
 	IScenarioTracker *pScenarioTracker = Singleton<IScenarioTracker>();
 	pScenarioTracker->SetGameType( IAIScenarioTracker::EGT_MULTI_FLAG_CONTROL );
@@ -119,6 +137,12 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameS
 	replayInfo.bUnitExperience = gameDesc.bUnitExp;
 	replayInfo.nWinningSide = nWinningSide;
 	replayInfo.slots = slots;
+	// Taken from the running game rather than from the caller, because it is a
+	// property of what was recorded. A single-player replay has no lobby slots,
+	// so without this LoadHistory would take the multiplayer path and register
+	// no players at all.
+	replayInfo.bSinglePlayer =
+		Singleton<IScenarioTracker>()->GetGameType() == IAIScenarioTracker::EGT_SINGLE;
 
 	if ( !SerializeHistory( szFileName, false ) )
 		return false;

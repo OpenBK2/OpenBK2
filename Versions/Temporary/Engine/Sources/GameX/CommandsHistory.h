@@ -27,8 +27,17 @@ struct SMultiplayerReplayInfo
 		int nLastCommandSegment = {};
 		int nLastGameSegment = {};
 		int nWinningSide = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); return 0; }
-	SMultiplayerReplayInfo() : nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ), nLastGameSegment( -1 ), nWinningSide( -1 ) {}
+		// Which start path LoadHistory has to take. Recorded as "is it single
+		// player" rather than as the game type, and chunk 11 is the newest
+		// field, because CStructureSaver::DataChunk memsets a POD chunk to zero
+		// when the file does not carry it. A replay written before this field
+		// existed therefore reads false here, which selects the multiplayer path
+		// that was previously taken unconditionally. Storing the EGameType
+		// instead would read as EGT_SINGLE, which is zero, and silently
+		// misclassify every existing replay.
+		bool bSinglePlayer = {};
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); f.Add(11,&bSinglePlayer); return 0; }
+	SMultiplayerReplayInfo() : nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ), nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ) {}
 	SMultiplayerReplayInfo &operator=( const SMultiplayerReplayInfo &src )
 	{
 		pMap = src.pMap;
@@ -40,6 +49,7 @@ struct SMultiplayerReplayInfo
 		nLastCommandSegment = src.nLastCommandSegment;
 		nLastGameSegment = src.nLastGameSegment;
 		nWinningSide = src.nWinningSide;
+		bSinglePlayer = src.bSinglePlayer;
 		return *this;
 	}
 };
