@@ -360,6 +360,13 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 			ReportReplayLine( fmt::format(
 				"replay verify: random draw count parts company at t={} ms, recorded {} but made {}",
 				nGameTime, uRecordedCalls, uCalls ) );
+			// Said every time, because it is the explanation that costs the least
+			// to rule out and the one that looks most like a real divergence when
+			// it is not: a replay carries no record of what built it, so one
+			// recorded before a change to the simulation diverges against a build
+			// that has the change, and does so identically on every run, which is
+			// exactly how a reproducible bug presents.
+			ReportReplayLine( "replay verify: if this replay was recorded by a different build, re-record it before reading anything into that" );
 			// Dumped here rather than only where the state difference shows up,
 			// because this is the earlier moment and the call sites are kept in a
 			// 512 entry ring: by the time the state differs the ring has rolled
