@@ -30,6 +30,19 @@ START_REGISTER(CommandHistory)
 REGISTER_VAR_EX( "checksum_overwrite",	NGlobal::VarBoolHandler, &g_nSaveToSameSpace, false, STORAGE_NONE );
 FINISH_REGISTER
 
+// Verification output has to reach a run that shows no window and never opens
+// the in-game console, so it goes to stdout as well, the way -show-version
+// already prints. The console line is marked persistent because
+// CConsoleBuffer::DumpLog only writes those to log.txt, and the default is not
+// persistent, which is why these were going nowhere visible.
+static void ReportReplayLine( const std::string &szLine )
+{
+	fmt::print( "{}\n", szLine );
+	fflush( stdout );
+	if ( IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>() )
+		pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str(), 0xffffffff, true );
+}
+
 // CCommandsHistory
 
 CCommandsHistory::CCommandsHistory() : bFinishedHistory( false ), bGameFinished( true ), bLoadedHistory( false ),
@@ -183,9 +196,8 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	// total partway through the walk and there are thousands of them per sample.
 	if ( nEntry == 0 && NGlobal::GetVar( "checksum_trace", 0 ) != 0 )
 	{
-		const auto szLine = fmt::format( "checksum {} t={} {:#010x}",
-			bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum );
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+		ReportReplayLine( fmt::format( "checksum {} t={} {:#010x}",
+			bLoadedHistory ? "playback" : "record", nGameTime, ulChecksum ) );
 	}
 
 	return true;
@@ -193,8 +205,6 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 
 bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValue )
 {
-	IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>();
-
 	// Once one sample differs every later one does too: the value is a running
 	// adler32 carried across the whole run, not an independent snapshot. So the
 	// first difference is the divergence and the rest say nothing.
@@ -215,10 +225,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		if ( !bCheckSumModeReported )
 		{
 			bCheckSumModeReported = true;
-			const auto szLine = fmt::format(
+			ReportReplayLine( fmt::format(
 				"replay verify: recorded with light_checksum_count={} but running with {}, not comparable",
-				recordedCheckSums.nLightMode, nMode );
-			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+				recordedCheckSums.nLightMode, nMode ) );
 		}
 		return true;
 	}
@@ -243,10 +252,9 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	}
 
 	bCheckSumMismatch = true;
-	const auto szLine = fmt::format(
+	ReportReplayLine( fmt::format(
 		"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it)",
-		nGameTime, uRecorded, uValue, nCheckSumsMatched );
-	pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+		nGameTime, uRecorded, uValue, nCheckSumsMatched ) );
 
 	// The same bundle the multiplayer ASYNC path writes, which is the state
 	// worth having at the moment the two runs parted: the RNG counters and
@@ -316,7 +324,7 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 						: nCheckSumsMatched > 0
 							? fmt::format( "{} checksums matched", nCheckSumsMatched )
 							: std::string( "nothing to compare, no recorded checksums" ) );
-				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szResult.c_str() );
+				ReportReplayLine( szResult );
 
 				if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
 				{
