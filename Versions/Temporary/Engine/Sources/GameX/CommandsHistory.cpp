@@ -148,14 +148,28 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		// difficulty through unit statistics and the AI, which is what nearly
 		// every random draw in a run is spent on.
 		//
-		// A campaign recording also needs the script variables cleared, which is
-		// what MissionStart does and CustomMissionStart does not. The campaign
-		// and the chapter stay unset either way: a replay does not carry them,
+		// The campaign and the chapter stay unset: a replay does not carry them,
 		// and whether anything in the simulation asks for them is a question the
 		// verification itself will now answer.
 		pSingleTracker->CustomMissionStart( replayInfo.pMap, replayInfo.nDifficulty, replayInfo.bIsTutorial );
-		if ( replayInfo.nStartKind == 1 )
-			pSingleTracker->ClearMissionScriptVars();
+		// Unconditionally, not only for a campaign. CustomMissionStart leaves
+		// the temp. globals alone, so without this a playback inherits whatever
+		// the process did beforehand and stops being a function of the replay.
+		// Nothing is restored in their place: they are ordinary globals sharing
+		// a namespace with settings like the resolution and the sound volume,
+		// so picking out the ones a mission script owns is not something a
+		// replay should be trying to do, and a simulation that depended on the
+		// rest would be broken in a much worse way. Clearing is also what the
+		// campaign path does, so it is the behaviour being reproduced.
+		pSingleTracker->ClearMissionScriptVars();
+
+		// Said out loud during a verification run, because it is the one known
+		// difference left between a campaign recording and its playback, and so
+		// the first thing to suspect if such a replay diverges.
+		if ( replayInfo.nStartKind == 1 && NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
+		{
+			ReportReplayLine( "replay: recorded in a campaign mission, whose campaign and chapter are not restored" );
+		}
 
 		NGlobal::SetVar( "History.Playing", 1 );
 		return true;
