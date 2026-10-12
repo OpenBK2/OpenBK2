@@ -41,16 +41,28 @@ struct SReplayCheckSums
 		int nPeriod = {};
 		std::vector<int> times;
 		std::vector<uint32_t> values;
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLightMode); f.Add(3,&nPeriod); f.Add(4,&times); f.Add(5,&values); return 0; }
+		// How many random numbers had been drawn by each sample. Almost every
+		// draw is routine per-unit AI, so the count is a function of how many
+		// units exist and the order they are walked in. If it parts company
+		// before the state checksum does, the divergence is in what consumed
+		// the generator rather than in the arithmetic, which are very different
+		// things to go looking for. Wrapping is harmless: both sides wrap alike
+		// and only equality is asked.
+		std::vector<uint32_t> rngCalls;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLightMode); f.Add(3,&nPeriod); f.Add(4,&times); f.Add(5,&values); f.Add(6,&rngCalls); return 0; }
 
-	void Add( const int nGameTime, const uint32_t uValue )
+	void Add( const int nGameTime, const uint32_t uValue, const uint32_t uRngCalls )
 	{
 		times.push_back( nGameTime );
 		values.push_back( uValue );
+		rngCalls.push_back( uRngCalls );
 	}
 	// A file could carry mismatched lengths; everything reading these should
 	// treat that as no samples rather than index past the shorter one.
 	size_t Size() const { return times.size() == values.size() ? times.size() : 0; }
+	// Separately, because a replay written before chunk 6 has the samples but
+	// not the counts.
+	bool HasRngCalls() const { return rngCalls.size() == Size() && Size() > 0; }
 };
 
 struct SMultiplayerReplayInfo
@@ -107,6 +119,7 @@ class CCommandsHistory : public ICommandsHistory
 	int nCheckSumsMatched = 0;
 	bool bCheckSumMismatch = false;
 	bool bCheckSumModeReported = false;
+	bool bRngCallsMismatch = false;
 	// Whether the start seed came out of the replay rather than being the fresh
 	// entropy the constructor installs. Without it the playback runs a different
 	// random stream and divergence says nothing, so there is nothing to verify.

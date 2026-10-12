@@ -214,7 +214,8 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 		dwLastCheckSum = ulChecksum;
 		// Entry zero is the whole-state value. nGameTime is game time, not a
 		// segment number, whatever the CSegmentChecksum typedef above calls it.
-		recordedCheckSums.Add( nGameTime, static_cast<uint32_t>( ulChecksum ) );
+		recordedCheckSums.Add( nGameTime, static_cast<uint32_t>( ulChecksum ),
+			static_cast<uint32_t>( NRandom::GetRandomCallsCounter() ) );
 	}
 
 	if ( bLoadedHistory && nEntry == 0 )
@@ -284,6 +285,23 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		return true;
 
 	const uint32_t uRecorded = recordedCheckSums.values[nCheckSumCursor];
+
+	// Checked before the state, and reported once, because the count parting
+	// company earlier than the state says the divergence is in what consumed
+	// the generator rather than in the arithmetic.
+	if ( !bRngCallsMismatch && recordedCheckSums.HasRngCalls() )
+	{
+		const uint32_t uRecordedCalls = recordedCheckSums.rngCalls[nCheckSumCursor];
+		const uint32_t uCalls = static_cast<uint32_t>( NRandom::GetRandomCallsCounter() );
+		if ( uRecordedCalls != uCalls )
+		{
+			bRngCallsMismatch = true;
+			ReportReplayLine( fmt::format(
+				"replay verify: random draw count parts company at t={} ms, recorded {} but made {}",
+				nGameTime, uRecordedCalls, uCalls ) );
+		}
+	}
+
 	++nCheckSumCursor;
 
 	if ( uRecorded == uValue )
@@ -294,8 +312,10 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 
 	bCheckSumMismatch = true;
 	ReportReplayLine( fmt::format(
-		"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it)",
-		nGameTime, uRecorded, uValue, nCheckSumsMatched ) );
+		"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it, random draw count {})",
+		nGameTime, uRecorded, uValue, nCheckSumsMatched,
+		!recordedCheckSums.HasRngCalls() ? "not recorded"
+			: bRngCallsMismatch ? "already differed" : "still agrees" ) );
 
 	// The same bundle the multiplayer ASYNC path writes, which is the state
 	// worth having at the moment the two runs parted: the RNG counters and
@@ -337,8 +357,21 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 			bCanAddCommand = false;
 			if ( loadedHistory.find( nSegment ) != loadedHistory.end() )
 			{
+				// replay_trace puts the segment, the game time and each command
+				// on stdout as it is fed in, which is what narrows a divergence
+				// to the commands that ran inside the window it appeared in.
+				// The same type name and description the dump file uses.
+				const bool bTrace = NGlobal::GetVar( "replay_trace", 0 ) != 0;
 				for ( std::list< CPtr<IAILogicCommandB2> >::iterator iter = loadedHistory[nSegment].begin(); iter != loadedHistory[nSegment].end(); ++iter )
+				{
+					if ( bTrace )
+					{
+						IAILogicCommandB2 *pCmd = *iter;
+						ReportReplayLine( fmt::format( "replay segment {}: {} {{{}}}",
+							nSegment, pCmd->GetFullTypeName(), pCmd->GetDebugInfo() ) );
+					}
 					pTranceiver->SendCommand( *iter );
+				}
 			}
 			bCanAddCommand = true;
 			if ( nSegment >= replayInfo.nLastCommandSegment )
