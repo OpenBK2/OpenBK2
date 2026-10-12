@@ -33,8 +33,21 @@ int CAILogic::operator&( IBinSaver &saver )
 	}
 	saver.Add( 19, &reservePositions );
 	saver.Add( 20, &pConsts );
-	saver.Add( 21, &pCheckSumLog );
-	saver.Add( 22, &pProgress );
+	// Kept out of the checksum, like the bookkeeping above and the map below.
+	// pCheckSumLog is the commands history, so hashing it made the checksum of
+	// the simulation depend on the thing recording the simulation: a run that
+	// records a replay has an empty loaded history where a run that plays one
+	// back has a full one, and both feed the checksums they have already taken
+	// back in through dwLastCheckSum and recordedCheckSums. A replay recorded and
+	// played back by the same binary therefore could not agree with itself, and
+	// the difference was in the measurement rather than in anything simulated.
+	// pProgress is the loading progress hook, which is interface state and has no
+	// place in a simulation checksum either.
+	if ( !saver.IsChecksum() )
+	{
+		saver.Add( 21, &pCheckSumLog );
+		saver.Add( 22, &pProgress );
+	}
 	if ( saver.IsReading() && pConsts )
 	{
 		NReinforcement::InitReinforcementTypes( pConsts );
