@@ -28,8 +28,11 @@ namespace NRandom
 		unsigned int randa = 0;
 		unsigned int randb = 0;
 		unsigned int randc = 0;
-		unsigned long randrslChecksum = 0;
-		unsigned long randmemChecksum = 0;
+		// Fixed width, not unsigned long: these are compared between a Windows and
+		// a Linux client, and unsigned long is 32 bits on one and 64 on the other,
+		// which made the same state hash to two different values.
+		uint32_t randrslChecksum = 0;
+		uint32_t randmemChecksum = 0;
 		uint64_t randomCalls = 0;
 	};
 

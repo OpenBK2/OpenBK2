@@ -62,9 +62,13 @@ namespace NRandom
 		return rnd.randrsl[rnd.randcnt];
 	}
 
-	static unsigned long CalcDebugChecksum( const uint32_t *pValues, const int nCount )
+	// FNV-1a over the ISAAC state, for the RNG dump that gets compared against
+	// another machine's copy. The accumulator has to be fixed width: as unsigned
+	// long it wrapped modulo 2^32 on Windows and carried into the upper 32 bits
+	// on Linux, so the two platforms never agreed on the same state.
+	static uint32_t CalcDebugChecksum( const uint32_t *pValues, const int nCount )
 	{
-		unsigned long nChecksum = 2166136261u;
+		uint32_t nChecksum = 2166136261u;
 		for ( int i = 0; i < nCount; ++i )
 		{
 			nChecksum ^= pValues[i];
