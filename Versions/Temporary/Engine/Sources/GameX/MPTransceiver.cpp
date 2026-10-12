@@ -650,7 +650,7 @@ void CMPTransceiver::ReportAsnycToFile(int segment)
 	fprintf(fl, "%s", checksumsTxt.c_str());
 	fclose(fl);
 
-	pAI->WriteDetailedChecksumInfo();
+	pAI->WriteDetailedChecksumInfo( "last_async_detailed_debug.txt" );
 	pCmdsHistory->WriteCommandsHistoryToFile("last_async_cmds.txt");
 
 	#ifdef CHECKSUM_LIST_DEBUG

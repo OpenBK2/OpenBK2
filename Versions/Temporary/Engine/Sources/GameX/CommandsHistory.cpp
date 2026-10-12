@@ -360,6 +360,16 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 			ReportReplayLine( fmt::format(
 				"replay verify: random draw count parts company at t={} ms, recorded {} but made {}",
 				nGameTime, uRecordedCalls, uCalls ) );
+			// Dumped here rather than only where the state difference shows up,
+			// because this is the earlier moment and the call sites are kept in a
+			// 512 entry ring: by the time the state differs the ring has rolled
+			// past the draw that caused it, and the dump names call sites that
+			// are only consequences. A count that differs by a few says a branch
+			// consuming the generator was taken on one side and not the other,
+			// and the window is the one period before this sample, which is what
+			// the ring still holds at this point.
+			if ( IAILogic *pAI = Singleton<IAILogic>() )
+				pAI->WriteDetailedChecksumInfo( "last_async_rng_debug.txt" );
 		}
 	}
 
@@ -382,7 +392,7 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 	// worth having at the moment the two runs parted: the RNG counters and
 	// ISAAC state, and the commands that were replayed.
 	if ( IAILogic *pAI = Singleton<IAILogic>() )
-		pAI->WriteDetailedChecksumInfo();
+		pAI->WriteDetailedChecksumInfo( "last_async_detailed_debug.txt" );
 	WriteCommandsHistoryToFile( "last_async_cmds.txt" );
 
 	return false;

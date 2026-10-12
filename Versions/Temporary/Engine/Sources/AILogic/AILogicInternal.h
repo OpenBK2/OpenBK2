@@ -51,6 +51,10 @@ class CAILogic : public IAILogic
 
 	NTimer::STime nextCheckSumTime = {};
 	NTimer::STime periodToCheckSum = {};
+	// Diagnostic only, so deliberately not serialized: a save game reloaded
+	// should take the dump again rather than remember that a previous process
+	// already did.
+	bool bAsyncDumpWritten = false;
 	uLong checkSum = {};
 
 	bool bSegment = {};
@@ -120,7 +124,7 @@ public:
 
 	IAIScenarioTracker *GetScenarioTracker() { return pScenarioTracker; }
 
-	virtual void WriteDetailedChecksumInfo();
+	virtual void WriteDetailedChecksumInfo( const char *szFileName );
 
 	void ToGarbage( class CCommonUnit *pUnit );
 	virtual void Suspend();

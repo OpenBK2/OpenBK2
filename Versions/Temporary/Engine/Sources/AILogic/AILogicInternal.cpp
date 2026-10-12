@@ -1197,9 +1197,9 @@ void CAILogic::UpdateCheckSum( bool bSend )
 	}
 }
 
-void CAILogic::WriteDetailedChecksumInfo()
+void CAILogic::WriteDetailedChecksumInfo( const char *szFileName )
 {
-	FILE* f = fopen("last_async_detailed_debug.txt", "w");
+	FILE* f = fopen(szFileName, "w");
 
 	if (!f)
 		return;
@@ -1318,6 +1318,20 @@ void CAILogic::Segment()
 				if ( periodToCheckSum <= 0 )
 					periodToCheckSum = NGlobal::GetVar( "checksumperiod", 1000 );
 				nextCheckSumTime = curTime + periodToCheckSum;
+			}
+		}
+		// The same bundle a divergence writes, taken on demand at a chosen game
+		// time. A verification that diverges dumps itself, but a run that agrees
+		// has nothing to report and so writes nothing, which leaves the dump with
+		// nothing to be compared against. Pointing this at the time a divergence
+		// was reported, in a configuration that passes, produces the other half.
+		if ( !bAsyncDumpWritten )
+		{
+			const int nDumpTime = NGlobal::GetVar( "async_dump_time", 0 );
+			if ( nDumpTime > 0 && curTime >= nDumpTime )
+			{
+				bAsyncDumpWritten = true;
+				WriteDetailedChecksumInfo( "async_dump_at_time.txt" );
 			}
 		}
 		bFirstTime = false;

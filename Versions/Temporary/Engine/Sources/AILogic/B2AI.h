@@ -83,7 +83,9 @@ struct IAILogic : public ICommonB2M1AI
 	virtual void NetGameStarted() = 0;
 	virtual bool IsNetGameStarted() const = 0;
 
-	virtual void WriteDetailedChecksumInfo() = 0;
+	// Named by the caller: the state worth dumping is wanted at more than one
+	// moment now, and the earliest is not the one that reports a divergence.
+	virtual void WriteDetailedChecksumInfo( const char *szFileName ) = 0;
 
 	virtual void SetMyDiplomacyInfo( const int nParty, const int nNumber ) = 0;
 	virtual void SetNPlayers( const int nPlayers ) = 0;
