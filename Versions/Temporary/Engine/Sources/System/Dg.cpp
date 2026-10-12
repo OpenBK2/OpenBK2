@@ -9,7 +9,12 @@
 #else
 	const int N_HOLD_TIME = 256; // must be power of 2
 #endif
-int nDGCurrentFrame = 100, nDGIncFrameRnd = 1234567;
+int nDGCurrentFrame = 100;
+// Unsigned, because the line below is a small multiply and add generator whose
+// whole point is to wrap, and wrapping a signed int is undefined. Only the low
+// six bits are ever read out of it, and those are the bits the signed version
+// already produced, so the sequence of delays is the same one.
+uint32_t nDGIncFrameRnd = 1234567;
 
 static CPool<CObj<CObjectBase>, 64 > holdQueue[N_HOLD_TIME];
 void SetToHoldQueue( CObjectBase *p, int *pnFrame )
@@ -18,8 +23,8 @@ void SetToHoldQueue( CObjectBase *p, int *pnFrame )
 	//	holdQueue[ (*pnFrame) & (N_HOLD_TIME-1) ].remove( p );
 	*pnFrame = nDGCurrentFrame;
 	*holdQueue[ (*pnFrame) & (N_HOLD_TIME-1) ].Alloc() = p;
-	nDGIncFrameRnd = nDGIncFrameRnd * 13 + 2457823;
-	*pnFrame += ( nDGIncFrameRnd & 63 ) + 64;
+	nDGIncFrameRnd = nDGIncFrameRnd * 13u + 2457823u;
+	*pnFrame += static_cast<int>( nDGIncFrameRnd & 63u ) + 64;
 }
 
 void ClearHoldQueue()
