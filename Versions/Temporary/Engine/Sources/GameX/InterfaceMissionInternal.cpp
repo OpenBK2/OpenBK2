@@ -4117,16 +4117,35 @@ void CICMission::Configure( const char *pszConfig )
 		it.Get( &szString );
 		szStrings.push_back( szString );
 	}
-	if ( szStrings.size() == 0 || szStrings.size() > 2 )
-		NI_ASSERT( szStrings.size() >= 1, "Illegal usage of \"map\" command (i.e. map <map_id>|\"replay\";<file_name>;" );
+	// Three forms are legitimate here: "<map_id>", "<map_id>;<from_interface>"
+	// and "replay;<file_name>;<player_for_war_fog>", so one, two and three
+	// fields all occur. The bound this replaces rejected three while the replay
+	// branch read the third field unconditionally, and the assertion it guarded
+	// with tested a condition that holds for any non-empty input, so it could
+	// not fire on the case it screened for. Every index below is now covered by
+	// a size check.
+	if ( szStrings.empty() )
+	{
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
+			"empty \"map\" command, expected <map_id> or replay;<file_name>;<player>" );
+		return;
+	}
 
 	nPlayerForWarFog = -1;
 	if ( szStrings[0] == "replay" )
 	{
+		if ( szStrings.size() < 2 )
+		{
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
+				"\"replay\" needs a file name (replay;<file_name>;<player>)" );
+			return;
+		}
 		pMap = 0;
 		bReplay = true;
 		szReplayFileName = szStrings[1];
-		nPlayerForWarFog = NStr::ToInt( szStrings[2] );
+		// Omitted by a caller that did not name a player. ReplayHistory passes
+		// "0" in that case, so default to the same value.
+		nPlayerForWarFog = szStrings.size() > 2 ? NStr::ToInt( szStrings[2] ) : 0;
 	}
 	else
 	{
