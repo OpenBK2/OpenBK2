@@ -4,6 +4,9 @@
 #include "Transceiver.h"
 
 #include "AILogic/AILogicCommand.h"
+// IAILogic, for the checksum dump written when a playback diverges. Transceiver.h
+// only forward declares it.
+#include "AILogic/B2AI.h"
 #include "Misc/StrProc.h"
 #include "Main/Profiles.h"
 // CreateICExitGame, for ending a verification run once the replay is played out.
@@ -173,6 +176,9 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 		recordedCheckSums.Add( nGameTime, static_cast<uint32_t>( ulChecksum ) );
 	}
 
+	if ( bLoadedHistory && nEntry == 0 )
+		VerifyCheckSum( nGameTime, static_cast<uint32_t>( ulChecksum ) );
+
 	// Only entry 0, which is the whole-state value; the rest are the running
 	// total partway through the walk and there are thousands of them per sample.
 	if ( nEntry == 0 && NGlobal::GetVar( "checksum_trace", 0 ) != 0 )
@@ -183,6 +189,73 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 	}
 
 	return true;
+}
+
+bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValue )
+{
+	IConsoleBuffer *pConsole = Singleton<IConsoleBuffer>();
+
+	// Once one sample differs every later one does too: the value is a running
+	// adler32 carried across the whole run, not an independent snapshot. So the
+	// first difference is the divergence and the rest say nothing.
+	if ( bCheckSumMismatch )
+		return false;
+
+	const size_t nRecorded = recordedCheckSums.Size();
+	if ( nRecorded == 0 )
+		return true;
+
+	// The values are only comparable if they were produced the same way, and
+	// light_checksum_count selects between a per-unit summary and a full walk
+	// of the state. Comparing across the two would report a divergence that is
+	// only a difference of method.
+	const int nMode = NGlobal::GetVar( "light_checksum_count", 0 );
+	if ( nMode != recordedCheckSums.nLightMode )
+	{
+		if ( !bCheckSumModeReported )
+		{
+			bCheckSumModeReported = true;
+			const auto szLine = fmt::format(
+				"replay verify: recorded with light_checksum_count={} but running with {}, not comparable",
+				recordedCheckSums.nLightMode, nMode );
+			pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+		}
+		return true;
+	}
+
+	// Both sides advance in increasing game time, so step the cursor rather
+	// than search. A recorded time this run never reached is skipped instead of
+	// being treated as a difference: a shorter run is caught by the count of
+	// matches, not by pretending the missing samples differed.
+	while ( nCheckSumCursor < nRecorded && recordedCheckSums.times[nCheckSumCursor] < nGameTime )
+		++nCheckSumCursor;
+
+	if ( nCheckSumCursor >= nRecorded || recordedCheckSums.times[nCheckSumCursor] != nGameTime )
+		return true;
+
+	const uint32_t uRecorded = recordedCheckSums.values[nCheckSumCursor];
+	++nCheckSumCursor;
+
+	if ( uRecorded == uValue )
+	{
+		++nCheckSumsMatched;
+		return true;
+	}
+
+	bCheckSumMismatch = true;
+	const auto szLine = fmt::format(
+		"replay verify: DIVERGED at t={} ms, recorded {:#010x} but got {:#010x} ({} samples matched before it)",
+		nGameTime, uRecorded, uValue, nCheckSumsMatched );
+	pConsole->WriteASCII( CONSOLE_STREAM_CONSOLE, szLine.c_str() );
+
+	// The same bundle the multiplayer ASYNC path writes, which is the state
+	// worth having at the moment the two runs parted: the RNG counters and
+	// ISAAC state, and the commands that were replayed.
+	if ( IAILogic *pAI = Singleton<IAILogic>() )
+		pAI->WriteDetailedChecksumInfo();
+	WriteCommandsHistoryToFile( "last_async_cmds.txt" );
+
+	return false;
 }
 
 CHistory CCommandsHistory::GetCommandsHistory() const
@@ -230,20 +303,25 @@ void CCommandsHistory::ExecuteSegmentCommands( const int nSegment, ITransceiver 
 			if ( nSegment >= replayInfo.nLastGameSegment )
 			{
 //				WriteToPipe( PIPE_CHAT, "Replay finished: Last game segment executed", 0xFF00FF00, true );
-				const auto szResult = fmt::format( "replay played out at segment {}", nSegment );
+				// Reaching the end is necessary but not sufficient: a run that
+				// played out while diverging, or one that compared nothing at
+				// all because the replay carries no samples, has not verified
+				// anything. Replay.Result starts nonzero and is cleared only
+				// when there is something to claim, so every other outcome
+				// reports failure.
+				const bool bVerified = !bCheckSumMismatch && nCheckSumsMatched > 0;
+				const auto szResult = fmt::format(
+					"replay played out at segment {}: {}", nSegment,
+					bCheckSumMismatch ? "DIVERGED"
+						: nCheckSumsMatched > 0
+							? fmt::format( "{} checksums matched", nCheckSumsMatched )
+							: std::string( "nothing to compare, no recorded checksums" ) );
 				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szResult.c_str() );
 
-				// A verification run has nobody to dismiss a dialog, so it
-				// reports through the exit status instead. Reaching the last
-				// recorded segment is the whole of what it can claim: nothing
-				// compares simulation state yet, because a replay stores no
-				// checksum and none is computed during playback. So this is a
-				// crash and hang oracle, not a divergence one. The result
-				// starts nonzero and is cleared only here, so any other way of
-				// leaving reports failure. docs/TestHarness.md has the rest.
 				if ( NGlobal::GetVar( "Replay.ExitWhenFinished", 0 ) != 0 )
 				{
-					NGlobal::SetVar( "Replay.Result", 0 );
+					if ( bVerified )
+						NGlobal::SetVar( "Replay.Result", 0 );
 					NMainLoop::Command( CreateICExitGame() );
 				}
 				else

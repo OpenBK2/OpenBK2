@@ -100,6 +100,13 @@ class CCommandsHistory : public ICommandsHistory
 	OBJECT_NOCOPY_METHODS( CCommandsHistory );
 
 	CHistory savingHistory;
+	// Playback verification state. Not serialized: it describes this run rather
+	// than the replay. The cursor walks recordedCheckSums, which is in
+	// increasing game time, so matching is a scan and not a lookup.
+	size_t nCheckSumCursor = 0;
+	int nCheckSumsMatched = 0;
+	bool bCheckSumMismatch = false;
+	bool bCheckSumModeReported = false;
 	ZDATA
 		CHistory loadedHistory;
 		bool bFinishedHistory = {};
@@ -131,6 +138,13 @@ public:
 	void ExecuteSegmentCommands( const int nSegment, struct ITransceiver *pTranceiver );
 
 	bool AddChecksumLog( const int nGameTime, const unsigned long ulChecksum, const int nEntry );
+	// Compare one playback sample against what the replay recorded for the same
+	// game time. Returns false once a divergence has been reported, which is
+	// what ICheckSumLog uses to mean "differs from the loaded one".
+	bool VerifyCheckSum( const int nGameTime, const uint32_t uValue );
+	// Whether a verification run can claim anything, and what.
+	bool HasCheckSumMismatch() const { return bCheckSumMismatch; }
+	int GetCheckSumsMatched() const { return nCheckSumsMatched; }
 	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }
 	CHistory GetCommandsHistory() const;
 };
