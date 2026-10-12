@@ -22,6 +22,13 @@ namespace NGScene
 {
 extern bool bLowRAM;
 
+// Stands in for the MMX transformer list on the path that has none. It used to
+// be a null pointer dereferenced into a reference, which is undefined whether or
+// not the callee ever looks at it, and licenses an optimizer that notices to
+// treat the branch doing it as unreachable. A real empty vector costs one static
+// object and the callee sees the same emptiness it saw before.
+static const std::vector<NGfx::SCompactTransformer> noMMXTransformers;
+
 // IPart
 
 IPart::IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner )
@@ -401,7 +408,7 @@ struct SPartTransformer : public T
 			else
 				this->SingleSkinTransform( pObjInfo, transformed, &srcVerts[0], srcVerts.size(),
 					&p->cacheLighting, bv,
-					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), *(std::vector<NGfx::SCompactTransformer>*)0, pRes );
+					&(pObjInfo->GetWeights()[0]), p->GetAnimation(), noMMXTransformers, pRes );
 			break;
 		default:
 			ASSERT(0);
