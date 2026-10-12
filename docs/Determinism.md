@@ -77,8 +77,13 @@ is polled rather than waited on (`GResource.h:200`, `NeedUpdate` returns true
 only once `pRequest->IsReady()`), so "has this loaded yet" has a different
 answer on a fast machine and a slow one. Nothing detects this, no flag fixes it,
 and unlike every other class on this list it does not reproduce: the same binary
-on the same input gives a different answer twice. See the ASan nondeterminism
-entry under sites found.
+on the same input gives a different answer twice.
+
+The one instance chased to the end turned out not to be this class at all: an
+uninitialised hash seed was dropping events, and it was the stack contents
+rather than the clock that varied. The class is still real, but a run that does
+not reproduce is not on its own evidence of it, and reading it that way cost
+several hours. Check for an unwritten variable first.
 
 ## Detection, in four tiers
 
@@ -406,45 +411,64 @@ save, replay or segment checksum changed. The ISAAC core itself was already
 clean, using `uint32_t` for `randrsl`, `randmem` and `randa/b/c`, so this was
 the only width problem left in the generator.
 
-### The simulation is not reproducible under ASan
+### An uninitialised hash seed was dropping executor events (fixed)
 
-Found by replaying one recording in both configurations, and the most serious
-thing on this list, because it is a live divergence rather than a hazard.
+The most serious defect found so far, and the one that says most about how to
+look for the rest.
 
-Release is bit-reproducible: a full-state checksum every segment, 229 of 229
-samples matching its own recording, and byte-identical across repeated runs with
-ASLR on. ASan is not. Three runs of the same binary on the same replay gave
-three different checksums. So this is not a difference between two
-configurations, which would at least be deterministic and bisectable. **The same
-binary does not agree with itself.**
+`boost::hash_combine` reads the seed as well as writing it. All three seeds in
+the tree were uninitialised, so the hash of a key depended on whatever occupied
+that stack slot. The same key hashed one way when an executor registered for an
+event and another way when the event was raised, `events.find` missed an entry
+that was present, and the event was dropped silently.
 
-Narrowed with `checksum_entry_dump_time` and then `break_count`, the first field
-that differs is `CExecutorContainer::executors[6]`, an `SExID::nID` in the
-executor scheduling wheel, and ASan's walk of the state visits sixteen more
-fields than Release's, so it has more executors scheduled. It already differs at
-the first sample, which puts the cause in mission bring-up rather than in
-gameplay.
+An undelivered event there is an executor that never gets scheduled, so its
+queue is never drained, so a draw from the shared generator never happens, and
+the random stream parts company from that point on. Two clients whose stacks
+differ at that call drop different events. This is an ASYNC in ordinary
+multiplayer, not a sanitizer artefact.
 
-What is nondeterministic:
+**Why it hid for so long.** A run that reaches the hash through the same call
+path every time sees the same slot contents and works. A release build delivered
+all thirty events it raised. Under ASan, which moves the stack around, the same
+replay raised thirty two and delivered eighteen, and differed from itself on
+every run.
 
-- Not addresses. Release is reproducible with ASLR on, and `MALLOC_PERTURB_` set
-  to different values changes nothing, so neither pointer values nor fresh
-  uninitialised heap reach the state.
-- Not the wall clock read directly. Nothing in `AILogic` or `Common_RTS_AI`
-  calls a real-time source; the only hit is a deliberate sleep in a Lua command.
-- **Resource load readiness.** It is the one genuinely asynchronous thing in the
-  engine, it is polled rather than waited on, and ASan changes the ratio between
-  the loader thread and the main thread by about an order of magnitude. See
-  hazard class 5.
+**One cause, four symptoms.** All of these turned out to be the same bug, and
+each was chased separately first: a full state checksum differing two tenths of
+a second in; the random draw count differing by one a second and a half later;
+the executor scheduling wheel holding different entries; and the walk of the
+state visiting sixteen more fields. With the seed initialised, a full state
+checksum every segment agrees between a release build and an ASan build over a
+whole replay, and an ASan build agrees with itself. Neither was true before.
 
-Why it matters beyond the harness: two clients on different hardware load at
-different speeds. If readiness reaches simulation state then that is an ASYNC
-source in ordinary multiplayer, not merely under a sanitizer, and it would
-present exactly as the desyncs that are hardest to reproduce.
+**What detects it.** Nothing that was running. A garbage `size_t` has no invalid
+values for UBSan to report and the arithmetic is well defined; only the read of
+an unwritten variable is undefined, and no sanitizer in use here reports that.
+Measured afterwards on the exact pattern:
 
-Open. The next step is to diff two ASan runs against each other rather than
-against Release, which removes the configuration axis and isolates the
-nondeterminism to its first field.
+| tool | reports it |
+| --- | --- |
+| `g++ -Wall -Wextra -O0` | no |
+| `g++ -Wall -Wextra -O1` or better | **yes**, `-Wuninitialized` |
+| `clang++ -Wall -Wextra`, any `-O` | no |
+| clang static analyzer | **yes**, with the full value trace |
+
+So it was a free find for a flag this build does not pass, and the lesson is an
+ordering one: static analysis before sanitizers, and sanitizers before anything
+exotic. It also inverts a habit, since GCC needs optimisation to see through the
+inlined `hash_combine` and a Debug-only warning build reports nothing. And a
+second compiler would not have helped: on the clang side the value is the
+analyzer, not the warnings.
+
+**Wrong turns, recorded because they were expensive.** A particle resource load
+race, which `resource_sync_load` disproved and which the simulation cannot
+observe anyway. Allocator garbage, which `MALLOC_PERTURB_` appeared to rule out
+except that ASan replaces the allocator, so the test said nothing about the
+configuration that was failing. Padding in the checksum walk, which there never
+was. And the verification stopping at the first differing checksum, which hid
+the draw count, the one oracle that distinguishes a simulation that diverged
+from bytes that merely differ.
 
 ### A blind spot in the detector itself
 
