@@ -327,12 +327,6 @@ bool CCommandsHistory::AddChecksumLog( const int nGameTime, const unsigned long 
 
 bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValue )
 {
-	// Once one sample differs every later one does too: the value is a running
-	// adler32 carried across the whole run, not an independent snapshot. So the
-	// first difference is the divergence and the rest say nothing.
-	if ( bCheckSumMismatch )
-		return false;
-
 	const size_t nRecorded = recordedCheckSums.Size();
 	if ( nRecorded == 0 )
 		return true;
@@ -423,6 +417,16 @@ bool CCommandsHistory::VerifyCheckSum( const int nGameTime, const uint32_t uValu
 		++nCheckSumsMatched;
 		return true;
 	}
+
+	// Once one sample differs every later one does too, the value being a running
+	// adler32 carried across the whole run rather than an independent snapshot,
+	// so there is nothing to say about the state after this point. The draw count
+	// is not like that: it is an absolute count and keeps meaning something, and
+	// it is the count rather than the checksum that says whether the simulation
+	// itself parted company or whether only the bytes being hashed did. So the
+	// walk above still runs and only the reporting stops here.
+	if ( bCheckSumMismatch )
+		return false;
 
 	bCheckSumMismatch = true;
 	ReportReplayLine( fmt::format(
