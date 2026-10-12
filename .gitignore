@@ -79,9 +79,16 @@ cmake-build-*
 # CMake
 *_export.h
 
-# build folders
+# build folders. The presets put theirs under out/build, already ignored above.
 build/
-linux-build/
+linux-build*/
+
+# Per-machine preset overrides. CMakePresets.json is the source of truth and is
+# committed; this file exists only to override something for one machine.
+CMakeUserPresets.json
+
+# Captured build and run logs
+.out*
 
 # gr2whois.py's index of the installed games, tens of megabytes and derived
 scripts/port/.gr2cache/

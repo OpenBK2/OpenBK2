@@ -77,9 +77,23 @@
         "lhs": "${hostSystemName}",
         "rhs": "Linux"
       },
+      "environment": {
+        "PKG_CONFIG_PATH": "$env{HOME}/opt/dxvk/lib/x86_64-linux-gnu/pkgconfig:$penv{PKG_CONFIG_PATH}"
+      },
       "cacheVariables": {
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_VERBOSE_MAKEFILE": "ON"
+        "CMAKE_VERBOSE_MAKEFILE": "ON",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2"
+      }
+    },
+    {
+      "name": "base-linux-clang",
+      "hidden": true,
+      "inherits": "base-linux",
+      "description": "The secondary compiler, for its warnings and for clang-tidy. Deliberately stays on libstdc++: swapping in libc++ would change unordered-container iteration order, which is an ASYNC risk in simulation code.",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++"
       }
     },
     {
@@ -97,6 +111,47 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "RelWithDebInfo"
       }
+    },
+    {
+      "name": "Linux-x64-ASan+UBSan",
+      "inherits": "base-linux",
+      "displayName": "Linux / x64 / ASan + UBSan",
+      "description": "One tree for both: UBSan has no shadow memory and no allocator of its own, so it composes with ASan for free. RelWithDebInfo because the sanitizers carry their own -g and the engine at -O0 under ASan is too slow to reach much. ENABLE_ASAN turns USE_MIMALLOC off by itself. See docs/Sanitizers.md.",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2-asan",
+        "ENABLE_ASAN": "ON",
+        "ENABLE_UBSAN": "ON"
+      }
+    },
+    {
+      "name": "Linux-x64-TSan",
+      "inherits": "base-linux",
+      "displayName": "Linux / x64 / TSan",
+      "description": "Must be its own tree: TSan and ASan both map shadow memory over the whole address space and CMakeLists.txt refuses the combination. Build with BUILD_EDITOR=OFF to drop the wxWidgets and GTK threads out of the reports.",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2-tsan",
+        "ENABLE_TSAN": "ON"
+      }
+    },
+    {
+      "name": "Linux-x64-Clang-Debug",
+      "inherits": "base-linux-clang",
+      "displayName": "Linux / x64 / clang / Debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2-clang"
+      }
+    },
+    {
+      "name": "Linux-x64-Clang-Release",
+      "inherits": "base-linux-clang",
+      "displayName": "Linux / x64 / clang / Release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_INSTALL_PREFIX": "$env{HOME}/bk2-clang"
+      }
     }
   ],
   "buildPresets": [
@@ -104,7 +159,48 @@
     { "name": "Windows-x64-Release", "configurePreset": "Windows-x64-Release" },
     { "name": "Windows-x86-Debug", "configurePreset": "Windows-x86-Debug" },
     { "name": "Windows-x86-Release", "configurePreset": "Windows-x86-Release" },
-    { "name": "Linux-x64-Debug", "configurePreset": "Linux-x64-Debug" },
-    { "name": "Linux-x64-Release", "configurePreset": "Linux-x64-Release" }
+    { "name": "Linux-x64-Debug", "configurePreset": "Linux-x64-Debug", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-Release", "configurePreset": "Linux-x64-Release", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-ASan+UBSan", "configurePreset": "Linux-x64-ASan+UBSan", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-TSan", "configurePreset": "Linux-x64-TSan", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-Clang-Debug", "configurePreset": "Linux-x64-Clang-Debug", "nativeToolOptions": ["-k", "0"] },
+    { "name": "Linux-x64-Clang-Release", "configurePreset": "Linux-x64-Clang-Release", "nativeToolOptions": ["-k", "0"] }
+  ],
+  "testPresets": [
+    {
+      "name": "base-test",
+      "hidden": true,
+      "description": "obk2-test and not obk2: the dependencies register around 150 tests of their own and cmake/benchmarks.cmake registers the benchmarks under a label sharing the obk2 prefix. noTestsAction=error because every test target is EXCLUDE_FROM_ALL, so an empty run means the unittests target was never built rather than that there is nothing to run.",
+      "filter": { "include": { "label": "obk2-test" } },
+      "output": { "outputOnFailure": true },
+      "execution": { "noTestsAction": "error", "stopOnFailure": false }
+    },
+    { "name": "Windows-x64-Debug", "inherits": "base-test", "configurePreset": "Windows-x64-Debug" },
+    { "name": "Windows-x64-Release", "inherits": "base-test", "configurePreset": "Windows-x64-Release" },
+    { "name": "Windows-x86-Debug", "inherits": "base-test", "configurePreset": "Windows-x86-Debug" },
+    { "name": "Windows-x86-Release", "inherits": "base-test", "configurePreset": "Windows-x86-Release" },
+    { "name": "Linux-x64-Debug", "inherits": "base-test", "configurePreset": "Linux-x64-Debug" },
+    { "name": "Linux-x64-Release", "inherits": "base-test", "configurePreset": "Linux-x64-Release" },
+    {
+      "name": "Linux-x64-ASan+UBSan",
+      "inherits": "base-test",
+      "configurePreset": "Linux-x64-ASan+UBSan",
+      "description": "detect_leaks=0 to start with: the object model frees on refcount and a clean exit is not one of its guarantees, so the shutdown leak report buries everything found while running. print_stacktrace is not a UBSan default and a report without it names a source line with no path to it.",
+      "environment": {
+        "ASAN_OPTIONS": "detect_leaks=0:abort_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1"
+      }
+    },
+    {
+      "name": "Linux-x64-TSan",
+      "inherits": "base-test",
+      "configurePreset": "Linux-x64-TSan",
+      "description": "history_size raises the chance the other thread's stack is still recorded, at the cost of memory. Add suppressions=... once that file exists; TSan errors out if it is named and missing.",
+      "environment": {
+        "TSAN_OPTIONS": "history_size=4"
+      }
+    },
+    { "name": "Linux-x64-Clang-Debug", "inherits": "base-test", "configurePreset": "Linux-x64-Clang-Debug" },
+    { "name": "Linux-x64-Clang-Release", "inherits": "base-test", "configurePreset": "Linux-x64-Clang-Release" }
   ]
 }
