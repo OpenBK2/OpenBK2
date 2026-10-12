@@ -70,6 +70,16 @@ different between them. No sanitizer detects it either.
 precision are explicitly allowed to change results. This is the one tier that is
 fully fixable by flags.
 
+**5. Timing.** None of the above, and worse than all of them: the simulation
+reads something whose value is a question about when, not about what. Resource
+loading runs on a background thread (`System/GResource.cpp:150`) and readiness
+is polled rather than waited on (`GResource.h:200`, `NeedUpdate` returns true
+only once `pRequest->IsReady()`), so "has this loaded yet" has a different
+answer on a fast machine and a slow one. Nothing detects this, no flag fixes it,
+and unlike every other class on this list it does not reproduce: the same binary
+on the same input gives a different answer twice. See the ASan nondeterminism
+entry under sites found.
+
 ## Detection, in four tiers
 
 Detection capability is not uniform, and knowing which tier a hazard falls into
@@ -395,6 +405,46 @@ without the harness because nothing in the simulation reads these values, so no
 save, replay or segment checksum changed. The ISAAC core itself was already
 clean, using `uint32_t` for `randrsl`, `randmem` and `randa/b/c`, so this was
 the only width problem left in the generator.
+
+### The simulation is not reproducible under ASan
+
+Found by replaying one recording in both configurations, and the most serious
+thing on this list, because it is a live divergence rather than a hazard.
+
+Release is bit-reproducible: a full-state checksum every segment, 229 of 229
+samples matching its own recording, and byte-identical across repeated runs with
+ASLR on. ASan is not. Three runs of the same binary on the same replay gave
+three different checksums. So this is not a difference between two
+configurations, which would at least be deterministic and bisectable. **The same
+binary does not agree with itself.**
+
+Narrowed with `checksum_entry_dump_time` and then `break_count`, the first field
+that differs is `CExecutorContainer::executors[6]`, an `SExID::nID` in the
+executor scheduling wheel, and ASan's walk of the state visits sixteen more
+fields than Release's, so it has more executors scheduled. It already differs at
+the first sample, which puts the cause in mission bring-up rather than in
+gameplay.
+
+What is nondeterministic:
+
+- Not addresses. Release is reproducible with ASLR on, and `MALLOC_PERTURB_` set
+  to different values changes nothing, so neither pointer values nor fresh
+  uninitialised heap reach the state.
+- Not the wall clock read directly. Nothing in `AILogic` or `Common_RTS_AI`
+  calls a real-time source; the only hit is a deliberate sleep in a Lua command.
+- **Resource load readiness.** It is the one genuinely asynchronous thing in the
+  engine, it is polled rather than waited on, and ASan changes the ratio between
+  the loader thread and the main thread by about an order of magnitude. See
+  hazard class 5.
+
+Why it matters beyond the harness: two clients on different hardware load at
+different speeds. If readiness reaches simulation state then that is an ASYNC
+source in ordinary multiplayer, not merely under a sanitizer, and it would
+present exactly as the desyncs that are hardest to reproduce.
+
+Open. The next step is to diff two ASan runs against each other rather than
+against Release, which removes the configuration axis and isolates the
+nondeterminism to its first field.
 
 ### A blind spot in the detector itself
 
