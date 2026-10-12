@@ -173,6 +173,8 @@ public:
 
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;
+	// The artillery's authored towing point determines the attachment position.
+	bool IsForwardTowed() const { return pStats->pExtendedStats && pStats->pExtendedStats->bForwardTowed; }
 	
 	EActionNotify GetCurUninstallAction() const { return eCurrentStateOfInstall; }
 

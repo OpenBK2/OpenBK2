@@ -16,13 +16,14 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123400, CMechUnitRestOnBoardPath);
 //*												CPresizePath															*
 //*******************************************************************
 
-CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir )
+CPresizePath::CPresizePath( CBasePathUnit *_pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir, ISmoothPath *pApproachPath )
 :	vEndPoint( vEndPoint ), vEndDir( vEndDir ), eState( EPPS_APPROACH_BY_STANDART ), fSpeedLen( 0.0f ),
-	pUnit( _pUnit )
+	pUnit( _pUnit ), pPathStandart( pApproachPath )
 {
 	wDesiredDir = GetDirectionByVector(vEndDir);
 
-	pPathStandart = new CStandartSmoothPath();
+	// Continue the truck's initialized approach before the final precision movement and turn.
+	NI_ASSERT( pPathStandart != 0, "Precision approach requires an initialized path" );
 /*
 
 	if ( pUnit->GetTurnSpeed() == 0.0f )
@@ -91,9 +92,15 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 			break;
 		case EPPS_TURN_TO_DESIRED_POINT:
 			{
-				uint16_t dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
-				dir = !pUnit->IsGoForward() ? dir : dir+65535/2;
-				if ( pUnit->TurnToDirection( dir, true, true ) )
+				if ( vEndPoint == pUnit->GetCenterPlain() )
+				{
+					eState = EPPS_TURN_TO_DESIRED_DIR;
+					break;
+				}
+				// TurnToDirection takes a travel direction. Keep it stable while backing
+				// up; deriving it from IsGoForward can flip the goal as that flag changes.
+				const uint16_t dir = GetDirectionByVector( vEndPoint - pUnit->GetCenterPlain() );
+				if ( pUnit->TurnToDirection( dir, true, false ) )
 				{
 					pPathCheat = new CTankPitPath( pUnit, pUnit->GetCenterPlain(), vEndPoint );
 					eState = EPPS_APPROACH_DESIRED_POINT;
@@ -111,7 +118,8 @@ void CPresizePath::Segment( const NTimer::STime timeDiff )
 
 			break;
 		case EPPS_TURN_TO_DESIRED_DIR:
-			if ( pUnit->TurnToDirection( wDesiredDir, true, true ) )
+			// This is the truck's final facing, not an interchangeable forward/reverse heading.
+			if ( pUnit->TurnToDirection( wDesiredDir, false, true ) )
 				eState = EPPS_FINISHED;
 
 			break;

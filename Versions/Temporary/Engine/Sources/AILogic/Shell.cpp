@@ -1134,7 +1134,7 @@ const NDb::SWeaponRPGStats::SShell::ETrajectoryType CFakeBallisticTraj::GetTrajT
 //*													CBallisticTraj													*
 //*******************************************************************
 
-CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType _eType, uint16_t wMaxAngle, float fMaxRange )
+CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType _eType, uint16_t wMaxAngle, float fMaxRange, float fVerticalOffsetAngleRad )
 : startTime( curTime ), vStart3D( _vStart ), eType( _eType )
 {
 	if ( eType == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE )
@@ -1181,13 +1181,41 @@ CBallisticTraj::CBallisticTraj( const CVec3 &_vStart, const CVec3 &vFinish, floa
 		wAngle = GetDirectionByVector( fVx, fVy );
 	}
 
-	
-	explTime = startTime + x0 / fVx;
+	float fFlightTime = x0 / fVx;
+	if ( fVerticalOffsetAngleRad != 0.0f && std::isfinite( fVerticalOffsetAngleRad ) )
+	{
+		// Rotate the launch direction, then solve speed for the original target distance.
+		// Keep gravity fixed so the offset changes the arc without shifting the impact.
+		const float fCos = cos( fVerticalOffsetAngleRad );
+		const float fSin = sin( fVerticalOffsetAngleRad );
+		const float fRotatedVx = fVx * fCos - fVy * fSin;
+		const float fRotatedVy = fVx * fSin + fVy * fCos;
+		// These trajectories are relative to interpolated terrain height. Only a
+		// forward, upward launch can return to that plane at a positive distance.
+		// An impossible offset retains the original solution rather than firing off-map.
+		if ( x0 > 0.0f && fG > 0.0f && fRotatedVx > 0.0f && fRotatedVy > 0.0f )
+		{
+			const float fSpeedScale = sqrt( fG * x0 / ( 2.0f * fRotatedVx * fRotatedVy ) );
+			if ( std::isfinite( fSpeedScale ) && fSpeedScale > 0.0f )
+			{
+				fVx = fRotatedVx * fSpeedScale;
+				fVy = fRotatedVy * fSpeedScale;
+				wAngle = GetDirectionByVector( fVx, fVy );
+				fFlightTime = x0 / fVx;
+			}
+		}
+	}
+	explTime = startTime + fFlightTime;
 }
 
 const CVec3 CBallisticTraj::GetCoordinates() const
 {
-	const float fT = curTime - startTime;
+	return GetCoordinatesAtTime( curTime );
+}
+
+const CVec3 CBallisticTraj::GetCoordinatesAtTime( NTimer::STime time ) const
+{
+	const float fT = time - startTime;
 	const CVec3 vRet = vStart3D + CVec3( vDir * fVx * fT, fVy * fT - fG * sqr( fT ) / 2 );
 	return vRet;
 }

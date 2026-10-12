@@ -3,6 +3,7 @@
 #include "LinkObject.h"
 #include "Stats_B2_M1/Actions.h"
 #include "Stats_B2_M1/RPGStats.h"
+#include "AILogic_export.h"
 
 #include <cstdint>
 #include <queue>
@@ -71,7 +72,7 @@ public:
 	virtual const NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajType() const = 0;
 };
 
-class CBallisticTraj: public IBallisticTraj
+class AILOGIC_EXPORT CBallisticTraj: public IBallisticTraj
 {
 	OBJECT_BASIC_METHODS( CBallisticTraj	);
 	ZDATA
@@ -94,7 +95,7 @@ class CBallisticTraj: public IBallisticTraj
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vStart3D); f.Add(3,&fVx); f.Add(4,&fVy); f.Add(5,&wAngle); f.Add(6,&wDir); f.Add(7,&vDir); f.Add(8,&fG); f.Add(9,&startTime); f.Add(10,&explTime); f.Add(11,&eType); return 0; }
 public:
 	CBallisticTraj() { }
-	CBallisticTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange );
+	CBallisticTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange, float fVerticalOffsetAngleRad = 0.0f );
 	
 	virtual const NTimer::STime& GetExplTime() const { return explTime; }
 	virtual const NTimer::STime& GetStartTime() const { return startTime; }
@@ -102,6 +103,8 @@ public:
 	virtual const uint16_t GetStart2DDir() const { return wDir; }
 
 	virtual const CVec3 GetCoordinates() const;
+	const CVec3 GetCoordinatesAtTime( NTimer::STime time ) const;
+	const CVec3 GetInitialVelocity() const { return CVec3( vDir * fVx, fVy ); }
 
 	static uint16_t GetTrajectoryZAngle( const CVec3 &vToAim, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange );
 

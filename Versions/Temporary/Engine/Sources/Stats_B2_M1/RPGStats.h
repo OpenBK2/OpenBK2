@@ -2379,6 +2379,32 @@ namespace NDb
 	};
 	struct SAmphibianStats;
 
+	struct STATS_B2_M1_EXPORT SExtendedStats : public CResource
+	{
+		OBJECT_BASIC_METHODS( SExtendedStats )
+	public:
+		enum { typeID = 0x1919A2D0 };
+	private:
+		mutable uint32_t __dwCheckSum;
+	public:
+		bool bForwardTowed;
+		float fVerticalOffsetAngleRad;
+
+		SExtendedStats() :
+			__dwCheckSum( 0 ),
+			bForwardTowed( false ),
+			fVerticalOffsetAngleRad( 0.0000f )
+		{ }
+		//
+		int GetTypeID() const { return typeID; }
+		//
+		void ReportMetaInfo() const;
+		//
+		int operator&( IBinSaver &saver );
+		int operator&( IXmlSaver &saver );
+		uint32_t CalcCheckSum() const;
+	};
+
 	struct SMechUnitRPGStats : public SUnitBaseRPGStats
 	{
 		typedef NDb::SJoggingParams SJoggingParams;
@@ -2662,6 +2688,7 @@ namespace NDb
 		CDBPtr< SAmphibianStats > pAmphibianStats;
 		CDBPtr< SUnitStatsModifier > pAntiAviationModifier;
 		CDBPtr< SHelicopterStats > pHelicopterStats;
+		CDBPtr< SExtendedStats > pExtendedStats;
 
 		#include "include_MechUnitRPGStats.h"
 

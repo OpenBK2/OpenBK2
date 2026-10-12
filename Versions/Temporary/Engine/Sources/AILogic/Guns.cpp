@@ -1447,8 +1447,11 @@ IBallisticTraj* CBasicGun::CreateTraj( const CVec3 &vTarget ) const
 
 		case IGunsFactory::VIS_CML_BALLIST_GUN:
 		case IGunsFactory::VIS_BURST_BALLIST_GUN:
-			return new CBallisticTraj( GetHeights()->Get3DPoint( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ), vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pWeapon->shells[nShellType].etrajectory, GetVerTurnConstraint(), GetFireRange(z) );
-			break;
+		{
+			const NDb::SMechUnitRPGStats *pMechStats = dynamic_cast<const NDb::SMechUnitRPGStats *>( pOwner->GetStats() );
+			const float fOffset = pMechStats && pMechStats->pExtendedStats ? pMechStats->pExtendedStats->fVerticalOffsetAngleRad : 0.0f;
+			return new CBallisticTraj( GetHeights()->Get3DPoint( pOwner->GetGunCenter( pCommonGunInfo->nGun, pCommonGunInfo->nPlatform ) ), vTarget, pOwner->GetStatsModifier()->weaponShellSpeed.Get( GetShell().fSpeed ), pWeapon->shells[nShellType].etrajectory, GetVerTurnConstraint(), GetFireRange(z), fOffset );
+		}
 		case IGunsFactory::PLANE_GUN:
 			NI_ASSERT( false, "wrong call " );
 			break;

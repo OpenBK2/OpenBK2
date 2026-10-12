@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "AIMap.h"
 #include "Common_RTS_AI/AIMap.h"
 
 static CAIMap* pAIMap;

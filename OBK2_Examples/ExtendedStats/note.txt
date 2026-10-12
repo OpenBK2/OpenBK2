@@ -1,0 +1,40 @@
+Optional mechanical-unit settings
+
+Copy ExtendedStats.xdb into the same data/mod directory as the artillery's
+MechUnitRPGStats.xdb, then add this reference inside <MechUnitRPGStats>:
+
+    <ExtendedStats href="ExtendedStats.xdb" />
+
+Both settings belong to the artillery (or other mechanical unit), not its truck.
+An absent reference keeps the original behavior. Each field can be omitted to use
+its default: ForwardTowed=false and VerticalOffsetAngleRad=0.0.
+
+ForwardTowed=true makes the artillery face in the truck's direction during hookup
+and towing. Author LTowingPoint at the front of the artillery model and re-export
+its stats so TowPoint contains that front position. The code uses this authored
+point unchanged; it does not mirror a rear locator. The truck still attaches at
+its rear. ForwardTowed=false expects the original rear artillery towing point.
+In exported TowPoint coordinates, positive y is in front and negative y is behind.
+Enabling ForwardTowed while retaining a negative y prevents the points meeting,
+so attachment and crew boarding cannot start. Re-export the stats after moving
+LTowingPoint, or set the intended front TowPoint explicitly in the unit stats.
+
+VerticalOffsetAngleRad is added to the computed ballistic launch elevation,
+in radians. Positive raises the shot; negative lowers it. The example adds 0.2
+radians (about 11.46 degrees). Shell speed adjusts to reach the original target
+with the new elevation and unchanged gravity. The arc and flight time change;
+weapon range, normal dispersion and the intended explosion point are preserved.
+Gun model rotation is unchanged.
+The setting applies to the unit's ballistic shells (including cannon, howitzer
+and grenade arcs); instant shots, guided missiles, bombs and other non-ballistic
+trajectories retain their existing behavior. The existing interpolation between
+launch and impact terrain heights is retained. Offsets that would launch downward
+or backward cannot reach the target; those retain the original trajectory.
+
+Suggested in-game checks with your authored model:
+- Hook up, drive straight, turn in both directions, stop and deploy the artillery.
+  The front towing point should remain attached to the truck's rear, also on hills.
+- Repeat with a rear-towed unit without ExtendedStats to check legacy behavior.
+- Fire at targets at several ranges with positive, negative and zero offsets;
+  check the changed arc and speed, and that impacts remain near the selected target.
+- Save/load while towing and while aiming, and check the same sequence in replay.

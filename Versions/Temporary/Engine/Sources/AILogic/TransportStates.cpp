@@ -991,13 +991,16 @@ void CTransportHookArtilleryState::Segment()
 					const float dist2 = fabs( pArtillery->GetCenterPlain() - pArtillery->GetHookPoint() ) +
 															fabs( pTransport->GetCenterPlain() - pTransport->GetHookPoint() );
 
-					CVec2 vDestPoint( pArtillery->GetCenterPlain() - pArtillery->GetDirectionVector()*dist2 );
-					pTransport->SetSmoothPath( new CPresizePath( pTransport, vDestPoint, -pArtillery->GetDirectionVector() ) );
+					// Approach the end carrying the authored towing point, with the truck's rear toward it.
+					const CVec2 vTowDir = pArtillery->IsForwardTowed() ? pArtillery->GetFrontDirectionVector() : -pArtillery->GetFrontDirectionVector();
+					CVec2 vDestPoint( pArtillery->GetCenterPlain() + vTowDir * dist2 );
 
 					pTransport->SetGoForward( false );
 					CPtr<IStaticPath> pPath = CreateStaticPathToPoint( vDestPoint, VNULL2, pTransport, true, GetAIMap() );
-					if ( pPath )
+					if ( pPath && pTransport->SendAlongPath( pPath, VNULL2, true ) )
 					{
+						// Wrap the initialized approach; constructing a static path alone never starts it.
+						pTransport->SetSmoothPath( new CPresizePath( pTransport, vDestPoint, vTowDir, pTransport->GetSmoothPath() ) );
 						eState = TTGS_APPROACH_BY_CHEAT_PATH;
 					}
 					else
@@ -1009,7 +1012,8 @@ void CTransportHookArtilleryState::Segment()
 			}
 			break;
 		case TTGS_APPROACH_BY_CHEAT_PATH:
-			if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() )< SConsts::GUN_CREW_TELEPORT_RADIUS )
+			// Use the final hookup tolerance: the crew radius can stop this path too early forever.
+			if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) <= SConsts::TILE_SIZE )
 			{
 				pTransport->RestoreSmoothPath();
 				///eState = TTGS_APPROACHING;
@@ -1063,13 +1067,16 @@ void CTransportHookArtilleryState::Segment()
 				else 
 				{
 					const bool trTurn = pTransport->TurnToDirection( wDesiredTransportDir, false, true );
-					const bool arTurn = pArtillery->TurnToDirection( wDesiredTransportDir - 65535/2, false, true );
+					// Front-towed artillery faces the truck; keep the legacy rear-towing angle otherwise.
+					const uint16_t wArtilleryDir = pArtillery->IsForwardTowed() ? wDesiredTransportDir : wDesiredTransportDir - 65535/2;
+					const bool arTurn = pArtillery->TurnToDirection( wArtilleryDir, false, true );
 
 					if ( trTurn && arTurn )
 					{
 						if ( fabs( pTransport->GetHookPoint() - pArtillery->GetHookPoint() ) > SConsts::TILE_SIZE )
 						{
-							eState = TTGS_APPROACH_BY_CHEAT_PATH;
+							// Turning moves both locators. Build a fresh approach to their aligned positions.
+							eState = TTGS_START_APPROACH_BY_CHEAT_PATH;
 						}
 						else if ( pArtillery->HasServeCrew() )
 						{

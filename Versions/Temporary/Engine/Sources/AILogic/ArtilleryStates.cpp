@@ -1359,7 +1359,8 @@ CArtilleryBeingTowedState::CArtilleryBeingTowedState( CArtillery *pArtillery, CA
 	pPath = new CArtilleryBeingTowedPath( 0.0f, pArtillery->GetCenterPlain(), VNULL2 );
 	pPath->Init( 0.0f, pArtillery->GetCenterPlain(), VNULL2 );
 	pArtillery->SetSmoothPath( pPath );
-	pArtillery->SetGoForward( false );
+	// SetDirectionVec below is the travel direction; this selects which end faces the truck.
+	pArtillery->SetGoForward( pArtillery->IsForwardTowed() );
 
 	updater.AddUpdate( 0, ACTION_NOTIFY_PLACEMENT, pArtillery, -1 );
 }

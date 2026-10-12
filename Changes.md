@@ -1,6 +1,9 @@
 
 # Changes to the game
 
+- Fixed the editor crash when loading or assigning `ExtendedStats`, and failure to create new records: its resource type ID collided with the helicopter simulation type. The regenerated schema and updated binaries must be used together.
+- Mechanical units can reference optional `ExtendedStats`: `ForwardTowed` lets artillery face forward while towed, using a front `LTowingPoint` authored in its model (positive exported `TowPoint.y`); `VerticalOffsetAngleRad` adds a signed offset to ballistic projectile launch elevation in radians and adjusts speed to preserve the intended impact point and weapon range. Defaults are `false` and `0.0`, and units without extended stats keep their original behavior.
+- Fixed artillery hookup repeatedly turning or retrying after alignment: the precision approach now uses an initialized path, matches the final hookup tolerance, and rebuilds its path if the towing points are still apart.
 - Multiplayer compatibility checksums are now cached between startup, mod load/unload (including returning to vanilla for campaigns/tutorials), and MP host/join attempts. Main-menu re-entry and repeated join checks reuse the snapshot; changing the MP map refreshes its checksum.
 - Fixed multiplayer compatibility checksums ignoring nested tech-level, reinforcement, unit-stat and map data. Checksum calculations now refresh cached record values on each call, so changes to loaded data are detected too. String arrays and nested arrays now hash their contents instead of allocation storage.
 - Added optional smooth mouse-wheel camera zoom: `setvar smooth_mouse_zoom = 1` enables it (integer, default `0`). `setvar smooth_zoom_speed = 1.0` controls how quickly zoom settles: higher values are faster, lower positive values are smoother, and non-positive or non-finite values use the default `1.0`. Zoom distance per wheel step is unchanged. Both settings are saved in the user profile.

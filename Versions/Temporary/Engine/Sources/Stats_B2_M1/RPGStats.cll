@@ -1492,6 +1492,16 @@ struct SJoggingParams
 
 forward class SAmphibianStats;
 
+/* Resource IDs share the object factory with AI save/load classes; 0x1919A2C1 is AI_HELICOPTER. */
+[typeID = 0x1919A2D0; export]
+class SExtendedStats
+{
+	// Tow artillery facing forward, using a front LTowingPoint authored in the model
+	bool _ForwardTowed = false;
+	// Radians added to ballistic launch elevation; speed adjusts to reach the target, positive raises the arc
+	float _VerticalOffsetAngleRad = 0.0;
+};
+
 [typeID = 0x11069B80; type_defs = "NDb::SJoggingParams;SJoggingParams"]
 class SMechUnitRPGStats : public SUnitBaseRPGStats
 {
@@ -1701,6 +1711,8 @@ class SMechUnitRPGStats : public SUnitBaseRPGStats
 	SUnitStatsModifier *_AntiAviationModifier;
 	// helicopter-specific movement and crash parameters
 	SHelicopterStats *_HelicopterStats;
+	// Optional towing and visual gun elevation settings; absent records keep the original behavior
+	SExtendedStats *_ExtendedStats;
 
 	#include "include_MechUnitRPGStats.h"
 };

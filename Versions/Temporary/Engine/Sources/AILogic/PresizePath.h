@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Common_RTS_AI/Path.h"
+#include "AILogic_export.h"
 
 #include <cstdint>
 
 struct IPath;
 
-class CPresizePath : public ISmoothPath
+class AILOGIC_EXPORT CPresizePath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CPresizePath );
 	
@@ -38,7 +39,7 @@ class CPresizePath : public ISmoothPath
 		void OnSerialize( IBinSaver &f );
 public:
 	CPresizePath() : pUnit( 0 ), fSpeedLen( 0.0f ), wDesiredDir( 0 ), vEndDir( VNULL2 ), vEndPoint( VNULL2 ), eState( EPPS_WAIT_FOR_INIT ) { }
-	CPresizePath( CBasePathUnit *pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir );
+	CPresizePath( CBasePathUnit *pUnit, const class CVec2 &vEndPoint, const class CVec2 &vEndDir, ISmoothPath *pApproachPath );
 	virtual const CVec2& GetFinishPoint() const { return vEndPoint; }
 
 	virtual bool IsFinished() const;

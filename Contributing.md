@@ -220,7 +220,7 @@ float _TurnRateRad = 1.048;
 - write float defaults with a decimal point (`1.0`, not `1`), or `types.xml` records the default as an int.
 - binary chunk ids are numbered from field order, and saves, replays and packed data depend on them. append new fields at the end of the class. a field that has to go elsewhere gets `[chunkID = N]` with an id no field of that class has used. a pinned field does not use up a number, so the fields after it keep theirs.
 - enum values are stored as numbers too. add new ones at the end, before the `_COUNT`-style last entry.
-- a new class needs a `[typeID = 0x...]` that no other `.cll` uses. add `[export]` when another DLL uses it.
+- a new class needs a `[typeID = 0x...]` that is unused across all source files, including C++ save/load registrations and their enum constants (such as `AILogic/AIClassesID.h`). Database resources and simulation objects share the same object factory; checking only `.cll` files misses collisions. add `[export]` when another DLL uses it.
 - anything the generator cannot express, such as a method on a struct, goes in a hatch. an `#include "include_X.h"` inside a class is pasted into the generated struct. `[cppExternal] #include "include_X_cpp.h"` adds definitions to the generated `.cpp`, and `[hExternal]` adds an include to the generated header. `RPGStats.cll` and `GameX/DBConsts.cll` show all three.
 - a new `.cll` file has to be added to its module's `SOURCES` by hand, like a `.cpp`.
 
