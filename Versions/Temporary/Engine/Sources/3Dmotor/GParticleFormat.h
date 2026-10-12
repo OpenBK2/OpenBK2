@@ -3,6 +3,8 @@
 #include "System/GResource.h"
 
 #include <cstdint>
+#include <cstring>
+#include <cstddef>
 
 #include <boost/config.hpp>
 
@@ -35,8 +37,45 @@ class TKey
 {
 public:
 	short nT;
-	TValue value;
+	// Held as bytes rather than as a TValue. These are packed to two bytes and
+	// the arrays are read straight out of a resource blob, so the value lands two
+	// bytes into the key while a CVec3 or a float wants four: declaring it TValue
+	// made every read of it bind a reference to an object at an address its own
+	// type does not permit, which is undefined, and is what UBSan reports both
+	// here and through all the vector arithmetic downstream of it.
+	//
+	// The size and the offset are the ones the member had, so the layout is
+	// untouched, which matters twice over: these arrays are reinterpreted in
+	// place out of a file, and TKeyVector serializes a vector of them as one
+	// block of bytes because TKey has no operator& of its own.
+	unsigned char valueBytes[sizeof(TValue)];
+
+	TValue GetValue() const
+	{
+		TValue value;
+		memcpy( &value, valueBytes, sizeof( value ) );
+		return value;
+	}
+	void SetValue( const TValue &value ) { memcpy( valueBytes, &value, sizeof( value ) ); }
 };
+
+// The key arrays are reinterpreted in place out of a resource blob and a vector
+// of keys is serialized as one block of bytes, so this layout is part of two
+// file formats. Stated rather than assumed, so that a change to it stops the
+// build instead of quietly reading old data as something else.
+template <class TValue>
+struct SKeyLayoutCheck
+{
+	static_assert( sizeof( TKey<TValue> ) == sizeof( short ) + sizeof( TValue ),
+		"TKey is the time followed by the value with nothing padding it" );
+	static_assert( offsetof( TKey<TValue>, valueBytes ) == sizeof( short ),
+		"the value follows the time immediately" );
+};
+template struct SKeyLayoutCheck<CVec3>;
+template struct SKeyLayoutCheck<CVec2>;
+template struct SKeyLayoutCheck<float>;
+template struct SKeyLayoutCheck<uint32_t>;
+template struct SKeyLayoutCheck<short>;
 
 // could use coherence between fetches to make key retrieve faster
 template <class TValue>
@@ -50,7 +89,7 @@ public:
 	{
 		if ( nKeys == 1 )
 		{
-			*pRes = keys[0].value;
+			*pRes = keys[0].GetValue();
 			return;
 		}
 		GetValueBinSearch( fT, 1, pRes );
@@ -59,7 +98,7 @@ public:
 	{
 		if ( nKeys == 1 )
 		{
-			Scale( keys[0].value, fScale, pRes );
+			Scale( keys[0].GetValue(), fScale, pRes );
 			return;
 		}
 		GetValueBinSearch( fT, fScale, pRes );
@@ -80,7 +119,7 @@ private:
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];
 		float fAlpha = fScale * Clamp( (fT - start.nT) / (end.nT - start.nT), 0.0f, 1.0f );
-		Interpolate( start.value, end.value, fScale - fAlpha, fAlpha, pRes );
+		Interpolate( start.GetValue(), end.GetValue(), fScale - fAlpha, fAlpha, pRes );
 	}
 };
 

@@ -27,13 +27,13 @@ void CParticlesInfo::CalcBound( SBound *pRes )
 				continue;
 			for ( int i = 0; i < part.pos.nKeys; ++i )
 			{
-				CVec3 pos = part.pos.keys[i].value;
+				CVec3 pos = part.pos.keys[i].GetValue();
 				ptMin.Minimize( pos );
 				ptMax.Maximize( pos );
 			}
 			for ( int i = 0; i < part.scale.nKeys; ++i )
 			{
-				CVec2 scale = part.scale.keys[i].value;
+				CVec2 scale = part.scale.keys[i].GetValue();
 				fMaxSize = (std::max)( static_cast<float>(fabs(scale.x)), fMaxSize );
 				fMaxSize = (std::max)( static_cast<float>(fabs(scale.y)), fMaxSize );
 			}

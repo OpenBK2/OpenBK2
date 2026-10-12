@@ -25,7 +25,7 @@ public:
 		int nKeys = keys.size();
 		if ( nKeys == 1 )
 		{
-			*pRes = keys[0].value;
+			*pRes = keys[0].GetValue();
 			return;
 		}
 		int s = 0, e = nKeys - 1;
@@ -40,7 +40,7 @@ public:
 		const TKey<TValue> &start = keys[s];
 		const TKey<TValue> &end = keys[e];
 		float fAlpha = (fT - start.nT) / (end.nT - start.nT);
-		Interpolate( start.value, end.value, 1 - fAlpha, fAlpha, pRes );
+		Interpolate( start.GetValue(), end.GetValue(), 1 - fAlpha, fAlpha, pRes );
 	}
 };
 
