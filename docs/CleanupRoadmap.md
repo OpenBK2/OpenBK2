@@ -38,18 +38,22 @@ shipping bug and not just a test-harness limitation. **Open question: is
 cross-platform MP a goal, or is Windows/Linux agreement only wanted as a test
 oracle?** The answer decides whether this is a fix or a documented limitation.
 
-**3. The headless verification harness is mostly already built.**
-`AILogic` does not link `3Dmotor`, `3DLib`, `SceneB2`, `Sound`, `UI` or
-`Image` - the renderer lives one layer up in `GameX`, so the simulation is
-already architecturally separable and **a d3d9 stub DLL is the wrong layer and
-unnecessary.** `ITransceiver` (`GameX/Transceiver.h`) is an eight-method seam
-with `DoSegments()` as the tick pump, and `CreateSinglePlayerTransceiver` already
-replays from a recorded history. `CCommandsHistory` already stores the start RNG
-seed, per-segment commands, and a per-segment and per-entry checksum log whose
-`AddChecksumLog()` returns false on divergence. `CCheckSumSaver`
-(`Common_RTS_AI`) is an `IBinSaver` that CRC32s the whole serializable
-simulation state. The "hash of the game state" is implemented and already wired
-into lockstep; what is missing is an entry point.
+**3. Most of the harness machinery already exists, but not an entry point.**
+`CCommandsHistory` already stores the start RNG seed, per-segment commands, and a
+per-segment and per-entry checksum log whose `AddChecksumLog()` returns false on
+divergence. `CCheckSumSaver` (`Common_RTS_AI`) is an `IBinSaver` that CRC32s the
+whole serializable simulation state. `ITransceiver` (`GameX/Transceiver.h`) is an
+eight-method seam with `DoSegments()` as the tick pump, and
+`CreateSinglePlayerTransceiver` already replays from a recorded history. The
+"hash of the game state" is implemented and already wired into lockstep.
+
+**Corrected by the Track G spike.** An earlier version of this finding said the
+simulation was cleanly separable from the renderer because `AILogic` links
+neither `3Dmotor` nor `SceneB2`, and concluded that a d3d9 stub was "the wrong
+layer and unnecessary". The link graph is right but the conclusion was wrong:
+mission bring-up feeds the simulation its terrain through `SceneB2`, so running
+the real engine headless with a software device is in fact the cheap option and a
+renderer-free binary is the expensive one. See `docs/TestHarness.md`.
 
 **4. `.gitattributes` is tracked and zero bytes.** No `.editorconfig`, no
 `core.autocrlf`, no `core.eol`. Git has never normalized anything, so the repo
@@ -67,7 +71,7 @@ test directories. Fix the file.
 
 ## Track A - local build and test ergonomics
 
-Status: **done, uncommitted.**
+Status: **done and committed.**
 
 `CMakePresets.json` is the single source of truth. The IDE, ctest, CI and the
 three scripts all read it; nothing about a configuration is defined anywhere
@@ -108,15 +112,13 @@ Two things found while doing it, both worth remembering:
   `$penv{PKG_CONFIG_PATH}` appended, so CI's own value - exported through
   `GITHUB_ENV` by `.github/actions/setup-linux-build` - still survives.
 
-Remaining in this track:
+Done since: `ccache max_size` raised from 5 GiB to 100 GB, which it needed with
+8800 cleanups recorded against a 28% hit rate across six configurations; the
+`.gitignore` entries for `linux-build*`, `CMakeUserPresets.json` and `.out*`; and
+the local trees wiped so the layout starts from the presets.
 
-- `ccache max_size` is 5 GiB with 8800 cleanups recorded and a 28% hit rate: it
-  is thrashing, far too small for six configurations of this tree. `ccache -M
-  100G` or similar.
-- `.gitignore` covers `linux-build/` and `out/build` but not `linux-build-*`,
-  `build-linux/`, `.out*`. Add them, or just rely on the wipe.
-- The old `build-*.sh`, `editor.sh` and `launch-tree.sh` are untracked and now
-  redundant.
+Remaining in this track: the old `build-*.sh`, `editor.sh` and `launch-tree.sh`
+are untracked and now redundant.
 
 ## Track B - `ENABLE_COVERAGE`
 
@@ -332,56 +334,63 @@ have non-ASCII inside literals and need triage first:
 
 ## Track G - headless verification harness
 
-See finding 3: this is an entry point, not a new system.
+**The spike is done. `docs/TestHarness.md` has the result, the options, the
+control design, the fuzzing plan and the invariant work.** This is the ordering
+and the conclusions that changed the plan.
 
-Before quoting it, **spike one question**: how entangled is mission bring-up
-with the interface layer? `GameX/InterfaceMissionInternal.cpp` is 4380 lines and
-the real `StartMission( pMap, Singleton<IAILogic>() )` is at line 4102. If the
-simulation can be brought up from map plus slots without a
-`CInterfaceMissionInternal` alive, this is days; if the interface owns
-simulation-relevant state, it needs an extraction first.
+The question the spike asked was whether mission bring-up is entangled with the
+interface layer. **It is not.** `CreateAI()` is already exported, `IAILogic` is a
+complete simulation API, the tick pump is ten lines, and the whole init sequence
+lives in a 146-line file rather than in the 4380-line
+`InterfaceMissionInternal.cpp`. A replay even carries its own map, so there is no
+menu navigation to simulate.
 
-Oracles split into two kinds, and the distinction matters:
+**The blocker is terrain.** The simulation's height and passability data are
+populated as a side effect of the renderer loading terrain, pushed through
+`ITerraAIObserver` by `SceneB2`, and the AI's terrain is derived rather than
+parsed: rivers carve the heights the AI reads. `CTerraGen` is about 10,936 lines
+across 26 files, not the 703 an earlier estimate claimed, so extracting it is
+weeks rather than days.
 
-- **Relational** - compare two runs against each other: run-twice determinism,
-  Windows vs Linux, before-cleanup vs after-cleanup. No golden file, so it never
-  rots, and it answers the actual question ("did my change alter behaviour?").
-- **Absolute** - compare against a recorded expected value. Needed for
-  correctness, but every intentional gameplay change invalidates every golden
-  file.
+So the cost is not where the earlier roadmap put it. "Days if the interface is
+clean, weeks if not" was the wrong axis entirely.
 
-Prefer relational. Then, in order:
+**The plan is therefore a flag on the real game, not a new binary.** Run `Game`
+headless with a software Vulkan device (lavapipe is installed) driven by
+`--replay`, which is purely additive: no simulation code is modified, so there is
+no ASYNC risk to carry. The terrain extraction becomes a later optimisation,
+triggered by fuzzing throughput rather than by correctness.
 
-1. `ReplayRunner`: links `AILogic`, `Common_RTS_AI`, `libdb`, `Script`,
-   `Stats_B2_M1`, `B2_M1_World`/`Terrain`, `System`. `--replay X`, pump
-   `DoSegments()` to exhaustion, print per-segment checksums, exit nonzero on
-   the first mismatch. Requires relocating `CSinglePlayerTransceiver` (a ~50-line
-   self-contained class) out of `GameX`.
-2. A golden replay corpus recorded once per product, which is what turns the
-   manual testing from per-change into one-time.
-3. The corpus under ASan and UBSan. Highest bug yield available: a 20-minute
-   replay of real gameplay reaches far more code than any unit test.
-4. Lua-authored test scenarios - the right answer to the coverage problem, and
-   better than simulated input. A tiny map plus a script that spawns unit X,
-   orders the ability, asserts the outcome. Authorable, diffable, one ctest case
-   each, and it does not rot when the UI changes. Needs assertion commands
-   (`Test.Assert`, `Test.ExpectDestroyed`, `Test.Finish`) registered at the
-   existing site in `Script/Script.cpp`.
-5. Headless multiplayer: two `ReplayRunner`s over `MPTransceiver` on loopback,
-   asserting checksum agreement. Note `TestClient` is already headless but is a
-   *lobby* load generator talking to the server through `CServerClient`, so it
-   gives no simulation coverage as it stands.
-6. Cross-platform differential fuzzing: random command streams, no golden file,
-   oracle is "both platforms agreed, nothing crashed, no sanitizer report".
-   Blocked on Track C finding 2.
+That also resolves the apparent chicken-and-egg problem, which was an artefact of
+insisting the harness be a lean renderer-free binary. And the extraction itself
+does not need the harness: its oracle is a byte comparison of the data crossing
+`ITerraAIObserver`, which is exhaustive where a replay only samples.
 
-Explicitly **not** doing: a d3d9 stub DLL (wrong layer, see finding 3);
-simulated keyboard and mouse input (most fragile possible layer, and the replay
-system already records at the command level); a manual coverage matrix in a
-spreadsheet (that is the labour being eliminated - use coverage data instead).
-Valgrind and heaptrack are low priority next to ASan, which catches a superset
-of the memory errors far faster; heaptrack is worth one footprint audit, not a
-per-change gate.
+Oracles, in the order they are worth building:
+
+1. **Relational, no golden file, never rots.** Run twice, Windows against Linux,
+   libstdc++ against libc++, one compiler at two optimisation levels,
+   before-change against after-change. These answer the question the cleanup
+   actually asks.
+2. **Crash, hang and sanitizer reports** over a recorded corpus. Highest bug
+   yield available, since a replay of real gameplay reaches far more code than
+   any unit test.
+3. **Lua scenario tests** for coverage of units and abilities no playthrough
+   reached. 152 script commands already exist including orders, damage and
+   observation; only three assertion commands are missing.
+4. **Invariant checks**, starting from the eleven postconditions already
+   enumerated by `CAIUnit::PrepareToDelete`, and generalised by an `IBinSaver`
+   walk that detects any dangling reference to a reaped unit.
+5. **Differential fuzzing**, with the randomness outside the simulation so each
+   failing case is itself a replay file and therefore a regression test.
+
+Explicitly not doing: simulated keyboard and mouse input, Python or ctypes
+driving the live simulation, a parallel headless terrain reader, or a manual
+coverage matrix. `docs/TestHarness.md` gives the reasons.
+
+One correction to Track A's earlier assumption: a headless real engine makes the
+`aarch64`-under-qemu and Fil-C ideas harder, since both assumed a renderer-free
+binary. They need the terrain extraction first.
 
 ## Track H - the actual code cleanup
 
