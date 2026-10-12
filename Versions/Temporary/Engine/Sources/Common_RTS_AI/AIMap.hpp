@@ -8,6 +8,14 @@
 // they need the definition.
 #include "Misc/BitData.h"
 #include "Misc/Bresenham.h"
+// Likewise CTerrain, which AIMap.h only forward declares even though the member
+// GetTerrain returns one. ProcessCircleTiles and ProcessQuadrangleTiles call
+// IsLocked through it, and that compiled only because the branch is discarded
+// whenever the template argument makes it dead: GCC warns about the incomplete
+// type instead of rejecting it. An instantiation that keeps the branch needs the
+// definition, and got it only from whatever else the translation unit happened
+// to include.
+#include "Terrain.h"
 
 inline bool operator < ( const SVector &cell1, const SVector &cell2 );
 
