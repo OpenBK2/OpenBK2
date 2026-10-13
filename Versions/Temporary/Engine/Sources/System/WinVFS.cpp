@@ -11,6 +11,7 @@
 
 #include "port/time.h"
 
+#include <atomic>
 #include <cstdint>
 #include <ctime>
 #include <filesystem>
@@ -293,8 +294,13 @@ CDataStream* CWinVFS::OpenFile( const std::string &szPath )
 }
 
 static uint32_t dwLastProfilerSegment = 0;
-static float fBigTimeForLoad = 0.0f;
-static int nCallsNumber = 0;
+// DoesFileExist is called from the resource loading thread as well as the main
+// one, so these two accumulate on one thread and are printed and reset on the
+// other. Atomic counters, and milliseconds rather than seconds, because there
+// is no atomic += for float before C++20 and the division can wait until the
+// one place that prints them. Diagnostics only: nothing reads them back.
+static std::atomic<uint32_t> dwBigTimeForLoadMs{ 0 };
+static std::atomic<int> nCallsNumber{ 0 };
 
 class CProfiler
 {
@@ -309,12 +315,12 @@ public:
 	CProfiler( const std::string &_szPath ) : szPath( _szPath ), dwStartTime( GetCurrentTimeMilliseconds() ) { }
 	~CProfiler()
 	{
-		const float fLoadTime = float(GetCurrentTimeMilliseconds() - dwStartTime)/1000.0f;
-		//		if ( fLoadTime > 0.1 )
-		//			DbgTrc( "load: %s loaded in %f sec", szPath.c_str(), fLoadTime );
+		const uint32_t dwLoadTimeMs = GetCurrentTimeMilliseconds() - dwStartTime;
+		//		if ( dwLoadTimeMs > 100 )
+		//			DbgTrc( "load: %s loaded in %d ms", szPath.c_str(), dwLoadTimeMs );
 
-		fBigTimeForLoad += fLoadTime;
-		++nCallsNumber;
+		dwBigTimeForLoadMs.fetch_add( dwLoadTimeMs, std::memory_order_relaxed );
+		nCallsNumber.fetch_add( 1, std::memory_order_relaxed );
 	}
 };
 
@@ -323,12 +329,14 @@ void VFSSegmentProfiler()
 	uint32_t dwTime = GetCurrentTimeMilliseconds();
 	if ( dwTime - dwLastProfilerSegment > 1000 )
 	{
-		if ( fBigTimeForLoad != 0.0f )
-			DbgTrc( "DoesFileExist: %f sec in segment, %d calls", fBigTimeForLoad, nCallsNumber );
+		// Exchange rather than read-then-zero, so a call that lands between the
+		// two does not have its time dropped from both segments.
+		const uint32_t dwSegmentMs = dwBigTimeForLoadMs.exchange( 0, std::memory_order_relaxed );
+		const int nSegmentCalls = nCallsNumber.exchange( 0, std::memory_order_relaxed );
+		if ( dwSegmentMs != 0 )
+			DbgTrc( "DoesFileExist: %f sec in segment, %d calls", float(dwSegmentMs)/1000.0f, nSegmentCalls );
 
 		dwLastProfilerSegment = dwTime;
-		fBigTimeForLoad = 0.0f;
-		nCallsNumber = 0;
 	}
 }
 
