@@ -490,6 +490,10 @@ trailers this history does not use:
 cp scripts/git-hooks/commit-msg .git/hooks/commit-msg
 ```
 
+copy it rather than pointing `core.hooksPath` at `scripts/git-hooks`: pre-commit refuses
+to install at all while that is set ("cowardly refusing to install hooks with
+`core.hooksPath` set"), and both hooks have to live in the same place.
+
 ## formatting
 
 [.clang-format](.clang-format) is the style the tree is already written in: allman braces,
