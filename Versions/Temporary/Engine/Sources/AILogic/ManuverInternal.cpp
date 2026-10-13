@@ -18,7 +18,9 @@
 
 #include <fmt/format.h>
 
-extern float g = 0.0000983f;
+// Definition of the gravity constant declared extern in Manuver.h. The
+// "extern" was redundant here, and with an initializer GCC warns about it.
+float g = 0.0000983f;
 extern NTimer::STime curTime;
 
 //	SPlanesConsts
