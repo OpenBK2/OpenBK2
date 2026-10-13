@@ -43,7 +43,7 @@ namespace NImageTools
 		{
 			err = deflate( &stream, Z_FINISH );
 			deflateEnd( &stream );
-			//CRAP{ яюўхьє-Єю шэюуфр яЁш Ёрёяръютъх тючтЁр•рхЄё  "buffer error" тёхёЄю "stream end"...
+			//CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
 			if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
 				err = Z_OK;
 			// CRAP}
@@ -93,7 +93,7 @@ namespace NImageTools
 		{
 			err = inflate( &stream, Z_FINISH );
 			inflateEnd( &stream );
-			// CRAP{ яюўхьє-Єю шэюуфр яЁш Ёрёяръютъх тючтЁр•рхЄё  "buffer error" тёхёЄю "stream end"...
+			// CRAP{ почему-то иногда при распаковке возвращается "buffer error" всесто "stream end"...
 			if ( (err == Z_STREAM_END) || (err == Z_BUF_ERROR) )
 				err = Z_OK;
 			// CRAP}

@@ -375,7 +375,7 @@ struct FFmpeg
         // Query mixer output format
         SDL_AudioSpec out_spec;
         if (!MIX_GetMixerFormat(mixer_.get(), &out_spec)) {
-            // Can't get mixer format — abort
+            // Can't get mixer format, abort
             return;
         }
 

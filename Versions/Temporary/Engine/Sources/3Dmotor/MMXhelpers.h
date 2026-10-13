@@ -33,10 +33,10 @@ namespace mmx {
 	// Multiply Packed Signed Integers and Store High Result
 	/*
 	PMULHW (With 64-bit Operands)
-	TEMP0[31:0] := DEST[15:0] ∗ SRC[15:0]; (* Signed multiplication *)
-	TEMP1[31:0] := DEST[31:16] ∗ SRC[31:16];
-	TEMP2[31:0] := DEST[47:32] ∗ SRC[47:32];
-	TEMP3[31:0] := DEST[63:48] ∗ SRC[63:48];
+	TEMP0[31:0] := DEST[15:0] * SRC[15:0]; (* Signed multiplication *)
+	TEMP1[31:0] := DEST[31:16] * SRC[31:16];
+	TEMP2[31:0] := DEST[47:32] * SRC[47:32];
+	TEMP3[31:0] := DEST[63:48] * SRC[63:48];
 	DEST[15:0] := TEMP0[31:16];
 	DEST[31:16] := TEMP1[31:16];
 	DEST[47:32] := TEMP2[31:16];
@@ -56,10 +56,10 @@ namespace mmx {
 	// Multiply Packed Signed Integers and Store Low Result
 	/*
 	PMULLW (With 64-bit Operands)
-	TEMP0[31:0] := DEST[15:0] ∗ SRC[15:0]; (* Signed multiplication *)
-	TEMP1[31:0] := DEST[31:16] ∗ SRC[31:16];
-	TEMP2[31:0] := DEST[47:32] ∗ SRC[47:32];
-	TEMP3[31:0] := DEST[63:48] ∗ SRC[63:48];
+	TEMP0[31:0] := DEST[15:0] * SRC[15:0]; (* Signed multiplication *)
+	TEMP1[31:0] := DEST[31:16] * SRC[31:16];
+	TEMP2[31:0] := DEST[47:32] * SRC[47:32];
+	TEMP3[31:0] := DEST[63:48] * SRC[63:48];
 	DEST[15:0] := TEMP0[15:0];
 	DEST[31:16] := TEMP1[15:0];
 	DEST[47:32] := TEMP2[15:0];
@@ -78,8 +78,8 @@ namespace mmx {
 	// Multiply and Add Packed Integers
 	/*
 	PMADDWD (With 64-bit Operands)
-	DEST[31:0] := (DEST[15:0] ∗ SRC[15:0]) + (DEST[31:16] ∗ SRC[31:16]);
-	DEST[63:32] := (DEST[47:32] ∗ SRC[47:32]) + (DEST[63:48] ∗ SRC[63:48]);
+	DEST[31:0] := (DEST[15:0] * SRC[15:0]) + (DEST[31:16] * SRC[31:16]);
+	DEST[63:32] := (DEST[47:32] * SRC[47:32]) + (DEST[63:48] * SRC[63:48]);
 	*/
 	inline uint64_t pmaddwd(uint64_t dest, uint64_t src) {
 		short d[4], s[4];
@@ -165,8 +165,8 @@ namespace mmx {
 	DEST[15:0] := SaturateToSignedWord(DEST[15:0] + SRC[15:0] );
 	(* Repeat add operation for 2nd and 7th words *)
 	DEST[63:48] := SaturateToSignedWord(DEST[63:48] + SRC[63:48] );
-	SaturateToSignedWord — Represents the result of an operation as a signed 16-bit value.
-	If the result is less than –32768, it is represented by the saturated value –32768 (8000H);
+	SaturateToSignedWord - Represents the result of an operation as a signed 16-bit value.
+	If the result is less than -32768, it is represented by the saturated value -32768 (8000H);
 	if it is greater than 32767, it is represented by the saturated value 32767 (7FFFH).
 	*/
 	inline uint64_t paddsw(uint64_t a, uint64_t b) {
@@ -203,9 +203,9 @@ namespace mmx {
 	// Subtract Packed Integers
 	/*
 	PSUBW (With 64-bit Operands)
-	DEST[15:0] := DEST[15:0] − SRC[15:0];
+	DEST[15:0] := DEST[15:0] - SRC[15:0];
 	(* Repeat subtract operation for 2nd and 3rd word *)
-	DEST[63:48] := DEST[63:48] − SRC[63:48];
+	DEST[63:48] := DEST[63:48] - SRC[63:48];
 	*/
 	inline uint64_t psubw(uint64_t a, uint64_t b) {
 		short wa[4], wb[4], wr[4];
@@ -317,7 +317,7 @@ namespace mmx {
 	DEST[47:40] := SaturateSignedWordToUnsignedByte SRC[31:16];
 	DEST[55:48] := SaturateSignedWordToUnsignedByte SRC[47:32];
 	DEST[63:56] := SaturateSignedWordToUnsignedByte SRC[63:48];
-	SaturateSignedWordToUnsignedByte — Converts a signed 16-bit value to an unsigned 8-bit value.
+	SaturateSignedWordToUnsignedByte - Converts a signed 16-bit value to an unsigned 8-bit value.
     If the signed 16-bit value is less than zero, it is represented by the saturated value zero (00H);
     if it is greater than 255, it is represented by the saturated value 255 (FFH).
 	*/
