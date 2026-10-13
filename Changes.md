@@ -1,6 +1,8 @@
 
 # Changes to the game
 
+- Fixed a desync (ASYNC) in multiplayer and replays when the AI launched free air reconnaissance: the scouting waypoints were shuffled with a per-process random generator, so each client sent its scouts in a different order. They are shuffled again with the shared seeded generator, as before the port, which restores the original AI behavior. Replays recorded before this change that contain AI air scouting will no longer verify.
+
 - Fixed the editor crash when loading or assigning `ExtendedStats`, and failure to create new records: its resource type ID collided with the helicopter simulation type. The regenerated schema and updated binaries must be used together.
 - Mechanical units can reference optional `ExtendedStats`: `ForwardTowed` lets artillery face forward while towed, using a front `LTowingPoint` authored in its model (positive exported `TowPoint.y`); `VerticalOffsetAngleRad` adds a signed offset to ballistic projectile launch elevation in radians and adjusts speed to preserve the intended impact point and weapon range. Defaults are `false` and `0.0`, and units without extended stats keep their original behavior.
 - Fixed artillery hookup repeatedly turning or retrying after alignment: the precision approach now uses an initialized path, matches the final hookup tolerance, and rebuilds its path if the towing points are still apart.

@@ -17,8 +17,9 @@
 
 #include "AILogic_export.h"
 
+// No <random> here on purpose: simulation randomness comes from
+// System/RandomGen.h through SGeneralHelper::SRandomFunctor.
 #include <algorithm>
-#include <random>
 
 extern CPlayerReinforcementArray theReinfArray;
 // time to wait for reinforcement system to process aviation call 
@@ -325,10 +326,17 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 				points.push_back( CVec2( x, y ) );
 		}
 	}
-	std::random_device rd;
-	std::mt19937 g(rd());
-
-	std::shuffle( points.begin(), points.end(), g );
+	// These points turn into GroupCommand()s below, so their order is simulation
+	// state and every client has to arrive at the same one. The pre-port code
+	// shuffled with random_shuffle() over SRandomFunctor, i.e. the shared seeded
+	// generator; 515090eb6 replaced it with std::mt19937 seeded from
+	// std::random_device while removing the vendored STL, which made the order
+	// per-process and so an ASYNC. The loop below is the shuffle random_shuffle()
+	// itself performed -- swap element i with a draw from [0, i] -- so the
+	// sequence of NRandom draws is the one the original engine made.
+	SGeneralHelper::SRandomFunctor pr;
+	for ( size_t i = 1; i < points.size(); ++i )
+		std::iter_swap( points.begin() + i, points.begin() + pr( static_cast<int>( i ) + 1 ) );
 	if ( points.empty() )
 	{
 		bOurTurn = false;

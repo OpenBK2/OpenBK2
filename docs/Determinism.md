@@ -378,6 +378,57 @@ The other places TySan is likely to earn its keep are `IBinSaver`'s
 `CastToObjectBase` and `CastToUserObject` machinery, and `3Dmotor`'s MMX and SIMD
 reinterpretation, though the last is presentation and outside lockstep.
 
+### A per-process RNG in AI air scouting (fixed)
+
+`AILogic/GeneralAirForce.cpp`, `CGeneralAirForce::LaunchScoutFree`, built the
+list of unseen tiles to scout and shuffled it with
+
+```cpp
+std::random_device rd;
+std::mt19937 g(rd());
+std::shuffle( points.begin(), points.end(), g );
+```
+
+then issued a `GroupCommand` per point. The order of those commands is
+simulation state, and `std::random_device` makes it per-process, so two clients
+sent their scouts to the same tiles in a different order: an ASYNC on any map
+where the AI calls air reconnaissance, in multiplayer and in replays alike.
+
+This is a **port regression**, not an original defect. `515090eb6` ("get rid of
+vendored copy of Hewlett-Packard C++ standard library from 1999") replaced
+`random_shuffle( points.begin(), points.end(), pr )` over
+`SGeneralHelper::SRandomFunctor` -- which draws from the shared seeded generator
+and calls `RecordRandomCall()` -- with the standard engine, because C++17
+removed `std::random_shuffle` and `std::shuffle` takes a URBG rather than the
+old `operator()( int N )` functor. The functor was left in place at
+`AILogic/GeneralHelper.h:21` and is what the fix uses again.
+
+Fixed by writing out the shuffle the vendored `random_shuffle` performed, so the
+draw sequence is the one the original engine made:
+
+```cpp
+SGeneralHelper::SRandomFunctor pr;
+for ( size_t i = 1; i < points.size(); ++i )
+    std::iter_swap( points.begin() + i, points.begin() + pr( static_cast<int>( i ) + 1 ) );
+```
+
+Two things generalise from it.
+
+**The whole tree was swept for the same substitution and this was the only
+simulation site.** The other `std::random_device` uses are seed sources and
+legitimate: `System/RandomGenInternal.cpp:273` seeds ISAAC at the start of a
+game, which is recorded in the replay, and `3Dmotor/RandomGen.cpp:162` is the
+presentation generator.
+
+**No instrument from "Detection" would have caught it.** It is not a
+divergence between two builds of the same binary, so the replay harness only
+sees it if the two runs are different *processes* and the AI actually calls a
+scout. The detector is a grep, and the rule it enforces -- `<random>` has no
+place in a simulation translation unit -- is now a comment at the top of that
+file. It belongs in "Rules for new and modernised code" and in whatever lint
+eventually encodes them: **C++17 removing an algorithm is a determinism event**,
+because the mechanical replacement is nondeterministic by default.
+
 ### The RNG debug checksums cannot match across platforms (fixed)
 
 `System/RandomGenInternal.cpp`, `CalcDebugChecksum`, is FNV-1a with an
@@ -821,10 +872,20 @@ above.
   observable to the simulation, because elision may remove them.
 - Changing an accumulator's initial value type, `0` against `0.0f` against
   `0.0`, changes precision without touching a loop.
+- `std::random_device`, `std::mt19937` and the `<random>` distributions, in any
+  simulation translation unit. Simulation randomness has exactly one source,
+  `NRandom` through `System/RandomGen.h`. This is not hypothetical: it is how the
+  air-scouting ASYNC above was introduced, by the obvious replacement for an
+  algorithm C++17 removed. **A removed or deprecated standard facility is a
+  determinism event**, because the mechanical substitute is seeded from entropy
+  by default -- so re-check the replacement for `std::random_shuffle`,
+  `std::bind1st`/`bind2nd` wrapping an impure functor, and anything whose
+  replacement takes a callable the old form did not.
 
 Enforcement should be mechanism rather than discipline. There is no `.clang-tidy`
 in the tree yet, so it is greenfield: a permissive root config enabling the safe
 modernisations, a stricter one in the simulation directories, and a CI grep over
 those directories for `#include <execution>`, `std::execution`, `std::reduce`,
-`std::transform_reduce`, `tbb::` and `rxcpp`, none of which have a legitimate use
-there.
+`std::transform_reduce`, `tbb::`, `rxcpp` and `<random>`, none of which have a
+legitimate use there. That last one would have caught a live ASYNC, which makes
+the grep worth writing before the clang-tidy configs.
