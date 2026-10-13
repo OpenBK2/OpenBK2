@@ -246,7 +246,14 @@ void CFileTexture::CreateChecker()
 static NGfx::CTexture* MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage eUsage, NGfx::EWrap eWrap, int nCutMips )
 {
 	NGfx::EPixelFormat ePixelFormat = GetPixelFormat( hdr );
-	if ( eUsage == NDb::STexture::TEXTURE_2D && ePixelFormat != NGfx::CF_A8R8G8B8 )
+	// NGfx::TEXTURE_2D, not NDb::STexture::TEXTURE_2D. Both names exist and the
+	// wrong one compiles, being an unrelated enum worth 1, which as an
+	// ETextureUsage is TARGET -- a usage this function is never passed, so the
+	// guard could not fire. It has to: NGfx::MakeTexture serves a TEXTURE_2D
+	// request from the 2D texture cache, which asserts the pixel format is
+	// A8R8G8B8 (A4R4G4B4 in 16 bit mode), so a 2D texture whose file is DXT or
+	// 16 bit has to be built as a regular texture instead.
+	if ( eUsage == NGfx::TEXTURE_2D && ePixelFormat != NGfx::CF_A8R8G8B8 )
 		eUsage = NGfx::REGULAR;
 	return NGfx::MakeTexture( hdr.dwWidth >> nCutMips, hdr.dwHeight >> nCutMips, hdr.dwMipMapCount - nCutMips, 
 		ePixelFormat, eUsage, eWrap );
