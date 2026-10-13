@@ -378,6 +378,102 @@ The other places TySan is likely to earn its keep are `IBinSaver`'s
 `CastToObjectBase` and `CastToUserObject` machinery, and `3Dmotor`'s MMX and SIMD
 reinterpretation, though the last is presentation and outside lockstep.
 
+### The resource loader published its buffer with a plain bool (fixed)
+
+The first TSan run over a replay,
+
+```sh
+./launch.sh tsan --data fotr --replay fotr6 --verify     # TSAN_OPTIONS=history_size=4
+```
+
+produced 87 reports. They are five root causes, and the ratio is the point:
+
+| reports | cause | ours |
+| --- | --- | --- |
+| 51 | the resource loader handoff, below | yes |
+| 20 | Mesa's Vulkan driver, between two DXVK shader threads | no |
+| 12 | SDL3_mixer 3.4.0 and SDL's PulseAudio backend | no |
+| 2 | the VFS `DoesFileExist` profiler counters | yes |
+| 2 | device teardown against DXVK's window-context table | one side |
+
+**Count root causes, not reports.** 51 of the 87 are one line.
+`NGScene::CFileRequest::bIsReady` was a plain `bool`: the loader thread filled
+`data` and set it under `readResource`, and the main thread polled `IsReady()`
+holding nothing. A plain bool carries no happens-before edge, so there was
+nothing to make the loader's writes into the buffer visible to the main thread's
+parse of it, and TSan therefore flagged **every** subsequent access to the
+loaded bytes -- 44 reports across `CDataStream::Read`, `GetSize`,
+`GetBufferForWrite`, `SetBuffer`, `Seek`, `CMemoryStream::~CMemoryStream`, and
+`ReadBlobField<short|int|float>` in the particle format reader. Reading the
+report list as 44 problems would have been a week of work on 44 symptoms.
+`std::atomic<bool>` with a release store at the end of `Read()` and an acquire
+load in `IsReady()` is the edge the design always assumed, and it publishes the
+buffer as a side effect.
+
+Three smaller things in the same handoff, all found by reading it rather than by
+the report count:
+
+- `bIsFileReading` was written under `readResource` and read by
+  `HasFileRequestsInFly()` under `reqQueue`. Two mutexes is no mutex. Atomic.
+- `ReleaseFileRequestHolder()` cleared `holdRequests` whenever `requests` was
+  empty, but the request being read has already been popped, so an empty queue
+  does not mean nothing is in flight. `holdRequests` holds the reference that
+  keeps a request alive once its owner has let go, so the clear could free the
+  object the loader thread was still writing into. It now tests the same "in
+  flight" predicate `HasFileRequestsInFly()` answers with.
+- `LoaderThread` called `IsValid(pRes)`, which reads the object's refcount word.
+  `System/Basic.h` opens with "single thread version" and means it: that read
+  races with every `CPtr` and `CObj` assignment the main thread makes to the same
+  request, which is the one `CObjectBase::AddObj` report in the list. The test
+  moved to `AddFileRequest`, on the thread that owns those refcounts.
+
+**Still open in this subsystem.** A request can be invalidated by its owner
+*while* the loader thread is inside `Read()` -- the owning `CObj` releases,
+`DestroyContents()` resets the `CMemoryStream` under the loader's feet, and the
+`IsValid` test never closed that window either, since validity could change the
+instant after it was read. Closing it needs the owner to cancel the request
+rather than simply drop it, which is a change to `CLazyResourceLoader`'s
+lifetime, not to the queue.
+
+**Not a determinism bug.** Nothing here feeds the simulation: resource readiness
+is invisible to `AILogic`, which is the finding recorded under "A blind spot in
+the detector itself". It is a correctness bug of the ordinary kind, and the
+reason it is in this file is that the replay harness is what exercised it and
+the handoff is what `resource_sync_load` exists to take out of the picture.
+
+**The rest went into a suppressions file, `tsan.supp`,** wired into `launch.sh`
+for any `*-tsan` prefix. The line it draws is **instrumented or not**, which is
+narrower than "ours or not": Mesa's driver and DXVK are prebuilt binaries whose
+accesses symbolise to a module and an offset, and nothing can be done with
+those. SDL3 and SDL3_mixer are built from source here by FetchContent, so TSan
+sees them properly and their 12 reports stay visible as the upstream bugs they
+are. The two device-teardown reports keep a frame of ours, `Gfx.cpp:339`, so
+they stay visible and unexplained as well. After the fixes and the file, the
+same replay verifies with 2 reports instead of 87.
+
+Two things about the tooling cost more time than the fixes:
+
+**`called_from_lib` cannot name a Vulkan ICD, and the failure is fatal rather
+than noisy.** The entry type `build-tsan.sh` recommends registers a filter when
+the library loads, and TSan aborts the process if that library is later
+unloaded. The Vulkan loader `dlopen`s every ICD on the machine to enumerate
+devices and closes the ones it does not use, so the abort is the normal path:
+the run died during instance creation, before the replay started, printing
+"library ... that was matched against called_from_lib suppression ... is
+unloaded" and nothing else. `race:` matched against a module pattern is the
+replacement; it is tested per report with nothing registered in advance.
+
+**The replay then deadlocked at exit, and the stacks said where.** The main
+thread sat in `SDL_SYS_WaitThread`, joining SDL's playback thread, which waited
+on a condition variable `libpulse` owns, on the same futex word as SDL's
+`PulseHotplug` thread. The loader thread was idle in `newRequest.wait` with the
+mutex released, which is its designed resting state, and no frame of ours
+appears anywhere in it. Worth recording for two reasons: a process that never
+exits prints no "reported N warnings" line and yields no exit status, so a
+shutdown deadlock reads exactly like a hung or crashed instrument; and the one
+SDL report that points at that backend is the report a tidier suppressions file
+would have thrown away.
+
 ### A per-process RNG in AI air scouting (fixed)
 
 `AILogic/GeneralAirForce.cpp`, `CGeneralAirForce::LaunchScoutFree`, built the

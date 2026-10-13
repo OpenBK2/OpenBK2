@@ -1,0 +1,58 @@
+# ThreadSanitizer suppressions.
+#
+# Used by launch.sh for any *-tsan prefix, and by anything else that sets
+# TSAN_OPTIONS=suppressions=<this file>. Every entry here is code the build does
+# not compile, so TSan sees its memory accesses without seeing its
+# synchronisation and reports correct code as racy. Nothing of ours belongs in
+# this file: a race with one of our frames in it is a race to fix or to record
+# in docs/Determinism.md, not to hide.
+#
+# TSAN_OPTIONS=print_suppressions=1 lists which of these actually matched, which
+# is how to tell a stale entry from a load-bearing one.
+
+# The Vulkan driver, between two of DXVK's shader compiler threads. Mesa's
+# drivers are distro binaries and the accesses symbolise to nothing but the
+# module and an offset, so matching the module is the only entry there is to
+# write. All of the matching reports are malloc/free pairs inside the driver's
+# own allocator, raised only because our InitRender() is what created the
+# threads.
+#
+# race: and not called_from_lib:, which looks like the fitting tool and kills
+# the process. called_from_lib registers a filter when the library loads and
+# TSan aborts outright if it is later unloaded ("library ... that was matched
+# against called_from_lib suppression ... is unloaded"). The Vulkan loader
+# dlopens every ICD on the machine to enumerate devices and closes the ones it
+# does not use, so for an ICD that abort is the normal path: the run died during
+# instance creation, before the replay began. race: is matched per report
+# against each frame's function, file and module, with nothing registered up
+# front, so an unload cannot reach it.
+race:*libvulkan_nouveau.so*
+race:*libvulkan_intel.so*
+race:*libvulkan_radeon.so*
+race:*libvulkan_lvp.so*
+
+# DXVK is a prebuilt .so, so the same applies to its internals, including the
+# lock-order-inversion its pipeline compiler and allocator report against each
+# other. This does not cover a race between our code and DXVK's: those keep a
+# frame of ours and stay visible.
+deadlock:*libdxvk_d3d9.so*
+
+# SDL3 and SDL3_mixer are deliberately NOT suppressed, though they are not ours
+# either. FetchContent builds them from source in this tree, so TSan instruments
+# them and their reports are true findings in code we compile and could fix or
+# send upstream, which is a different thing from a binary it cannot see into.
+# Two are known and were left visible on purpose:
+#
+#   - SDL3_mixer 3.4.0 reads per-track fields in its mixer callback holding only
+#     the mixer's lock, while the public MIX_SetTrack* setters write them under
+#     that track's lock. 12 reports, ours only as the caller of the setters.
+#   - SDL's PulseAudio backend races its write callback against its device
+#     buffer accessor, and that backend is where this replay deadlocked on exit:
+#     the main thread joining the SDL playback thread, which waits forever on a
+#     condition variable libpulse owns. Suppressing the race would have hidden
+#     the one report pointing at it.
+#
+# Uncomment these two if the noise outweighs the signal, but do it knowing what
+# goes quiet:
+#race:*sdl_mixer-src*
+#race:*sdl-src/src/audio*

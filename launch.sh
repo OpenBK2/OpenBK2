@@ -301,10 +301,14 @@ case "$PREFIX" in
 			"UBSAN_OPTIONS=${UBSAN_OPTIONS:-print_stacktrace=1}"
 		) ;;
 	*-tsan)
-		# Add suppressions=<file> once one exists; TSan errors out if it is
-		# named and missing. DXVK, the graphics driver and SDL3 are prebuilt, so
-		# TSan reports their internal synchronisation as races.
-		ENV_ARGS+=( "TSAN_OPTIONS=${TSAN_OPTIONS:-history_size=4}" ) ;;
+		# DXVK, the graphics driver and SDL3 are prebuilt, so TSan reports their
+		# internal synchronisation as races; tsan.supp is what drops those and
+		# only those. Named conditionally because TSan errors out if a
+		# suppressions file is named and missing, and an explicit TSAN_OPTIONS
+		# wins outright, so pass suppressions= yourself if you set it.
+		TSAN_SUPP=""
+		[ -f "$SRCDIR/tsan.supp" ] && TSAN_SUPP="suppressions=$SRCDIR/tsan.supp:"
+		ENV_ARGS+=( "TSAN_OPTIONS=${TSAN_OPTIONS:-${TSAN_SUPP}history_size=4}" ) ;;
 esac
 
 if [ "$SHOW_ENV" = yes ]; then
