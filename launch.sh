@@ -285,6 +285,20 @@ declare -a ENV_ARGS=(
 	"DXVK_LOG_LEVEL=${DXVK_LOG_LEVEL:-$( [ "$SOFTWARE_VK" = yes ] && echo none || echo debug )}"
 	"LD_LIBRARY_PATH=$RUNDIR${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 )
+# A verifying run compares checksums and nobody listens to it, so it takes SDL's
+# dummy audio backend. That is not only tidiness: SDL's PulseAudio backend
+# deadlocks on exit when the device is idle, which a finished replay always is.
+# ClosePhysicalAudioDevice sets device->shutdown and joins the audio thread,
+# while the only thing that signals the Pulse mainloop a parked thread is
+# waiting on sits in PULSEAUDIO_CloseDevice, which runs after that join. The
+# process then never exits, so the run yields no exit status and no sanitizer
+# summary, and reads as a hung instrument. Unfixed in SDL 3.4.18 and on main.
+# Set SDL_AUDIO_DRIVER yourself to hear a verifying run anyway.
+if [ "$VERIFY" = yes ]; then
+	ENV_ARGS+=( "SDL_AUDIO_DRIVER=${SDL_AUDIO_DRIVER:-dummy}" )
+elif [ -n "${SDL_AUDIO_DRIVER:-}" ]; then
+	ENV_ARGS+=( "SDL_AUDIO_DRIVER=$SDL_AUDIO_DRIVER" )
+fi
 if [ "$SOFTWARE_VK" = yes ]; then
 	[ -e "$LVP_ICD" ] || die "no lavapipe ICD at $LVP_ICD; install mesa-vulkan-drivers"
 	# Both names: the loader took VK_ICD_FILENAMES before it took VK_DRIVER_FILES,
@@ -306,6 +320,13 @@ case "$PREFIX" in
 		# only those. Named conditionally because TSan errors out if a
 		# suppressions file is named and missing, and an explicit TSAN_OPTIONS
 		# wins outright, so pass suppressions= yourself if you set it.
+		#
+		# Mind the exit status of a verifying run here: TSan replaces it with
+		# 66 whenever it reported anything, whatever the program returned, so
+		# under this prefix the status no longer tells a diverged replay from a
+		# race that was found. Read the "checksums matched" line, or add
+		# exitcode=0 to let the program's own status through and lose the race
+		# signal instead.
 		TSAN_SUPP=""
 		[ -f "$SRCDIR/tsan.supp" ] && TSAN_SUPP="suppressions=$SRCDIR/tsan.supp:"
 		ENV_ARGS+=( "TSAN_OPTIONS=${TSAN_OPTIONS:-${TSAN_SUPP}history_size=4}" ) ;;
