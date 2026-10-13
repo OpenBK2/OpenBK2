@@ -316,6 +316,141 @@ and unlike MASM it builds on every compiler and every platform that targets x86.
 `test/original/sentinel` exists to prove such a replacement matches the assembly it
 replaces, on x86, where both forms can run side by side.
 
+# determinism, checksums and replays
+
+multiplayer and replays are lockstep: only player commands travel, so every client has
+to run the same simulation tick for tick, and any divergence is an ASYNC. the engine can
+checksum its own state as it goes, record a game as the commands that produced it, and
+play that recording back comparing the checksums it took the first time. all of it is
+driven by global variables, which is why this section exists: several are named nothing
+like what they do, and two are dead.
+
+## setting a variable
+
+three ways, each overriding the one before it:
+
+```
+setvar count_checksum = 1               # a line in Versions/Current/Profiles/game.cfg
+setvar count_checksum = 1               # typed in the in-game console, tilde key
+--setvar count_checksum=1               # on the command line, repeatable
+```
+
+the command line form is applied after the config files and after the defaults that
+`--replay-verify` sets, so it always wins. it takes no spaces around the `=`, where the
+console and the config files want them.
+
+a variable needs no declaration in the code to be settable. most of the ones below are
+read with `NGlobal::GetVar( "name", default )` and nothing else, so a typo in the name is
+silently the default.
+
+## recording a replay
+
+`game.cfg` already turns checksumming on, so an ordinary game is sampling its state.
+what it is not doing is sampling finely: the shipped `checksumperiod = 1000` takes one
+sample per second of game time, and `light_checksum_count = 1` walks only each unit's
+position, facing and hit points.
+
+record with both widened, play for as long as the thing being chased needs, then save:
+
+```
+./launch.sh release --data fotr --setvar light_checksum_count=0 --setvar checksumperiod=1
+# play, then in the console:
+save_replay my_replay
+```
+
+**the sampling is a property of the recording, not of the playback.** a checksum value is
+a running adler32 carried across the whole run, so a sample taken after ten walks of the
+state cannot be compared against one taken after a single walk. a playback therefore
+takes the period and the depth out of the replay file and ignores whatever this run was
+started with. to compare more finely, record more finely.
+
+`setvar replay_autosave = 1` writes a replay by itself whenever a mission is won or lost,
+named for the map, the outcome and the time. a losing run makes a short recording, which
+is usually the useful kind.
+
+## verifying a replay
+
+```
+./launch.sh release --data fotr --replay my_replay --verify
+```
+
+underneath that is `Game --replay=my_replay --replay-verify`, which turns on
+`checksum_verify`, plays the recording out and leaves. it prints how the recording was
+sampled, then one line at the end:
+
+```
+replay verify: 230 samples recorded every 1 ms, full state
+replay played out at segment 229: 229 checksums matched
+```
+
+the exit status is 0 only when the replay played out, nothing diverged **and at least one
+sample was compared**, so a replay carrying no checksums at all reports failure rather
+than success. that makes it usable from a script, with one caveat: a sanitizer build
+**replaces the exit status with 66** whenever the sanitizer reported anything, so under
+`*-asan` or `*-tsan` read the "checksums matched" line instead of the status.
+
+verify a replay against the build that recorded it before comparing anything else.
+only then is a difference between two configurations meaningful:
+
+```
+for c in release debug asan; do
+  ./launch.sh $c --data fotr --replay my_replay --verify; echo "$c -> $?"
+done
+```
+
+a replay records what built it, so a playback says so when the simulation modules have
+been rebuilt or the map has been edited since. the line is deliberately not a verdict:
+build ids differ between a release build and a sanitizer build of identical sources, and
+comparing those two is the ordinary case, so the report names the configurations and
+leaves the conclusion to whoever knows which comparison they meant.
+
+## the variables
+
+| variable | default | what it does |
+| --- | --- | --- |
+| `count_checksum` | 1, from game.cfg | take state checksums as the game runs. ignored while a replay plays, so it cannot fight the recorded values |
+| `checksumperiod` | 1000, from game.cfg | milliseconds of game time between samples. 1 samples every tick |
+| `light_checksum_count` | 1, from game.cfg | 1 walks position, facing and hit points per unit. **0 walks the full simulation state**, which is slower and catches far more |
+| `checksum_verify` | 0, set by `--replay-verify` | compare each playback sample against the recording. acts only while a replay plays |
+| `checksum_trace` | 0 | print every sample as it is taken, recording or playback, with its game time and value |
+| `checksum_entry_dump_time` | -1 | at that game time, write every field of one sample's walk to a file. set it on both runs and diff the two files to find which field differs |
+| `start_replay_time` | 0 | seconds of game time to wait before checksumming at all |
+| `start_count` | -1 | leave entries at or below this count out of the checksum |
+| `break_count` + `break_segment` | -1 | stop in the debugger at one field of one sample, by the entry number the dump above gives and the segment |
+| `replay_trace` | 0 | print each segment, game time and command as a playback feeds them in |
+| `async_dump_time` | 0 | at that game time in milliseconds, write the whole async bundle to `async_dump_at_time.txt`, including the ring of recent RNG call sites. point it at the time a failing run reported, in a configuration that passes, to get the other half of the diff |
+| `trace_async_events` | 0 | write resource readiness, executor create, schedule and destroy, and the transparency queue to `async_events_trace.txt` |
+| `resource_sync_load` | 0 | read every resource on the calling thread, which takes the loader thread and the machine's speed out of the picture |
+| `replay_autosave` | 0 | save a replay when a mission is won or lost |
+| `save_on_async` | 1, from game.cfg | in multiplayer, write a savegame and a checksum report when clients disagree. clears itself after firing once |
+| `pause_on_async` | 1, from game.cfg | in multiplayer, pause instead of dropping the diverged client |
+| `mp_replays_enabled` | 0 | show the save replay button on the multiplayer statistics screen |
+
+these are engine state rather than switches, and setting them by hand only confuses the
+thing that reads them: `History.Playing`, `Replay.ExitWhenFinished`, `Replay.Result`,
+`MP_async`, `Current.Mission`.
+
+## traps
+
+**`break_segment` and `segment_break` are different variables.** both live in
+`Common_RTS_AI/ChecksumSaver.cpp` and both pair with `break_count`, but the first stops
+at a field inside a chunk and the second stops at an object. setting one and expecting
+the other's breakpoint is a wasted run.
+
+**`one_sum_per_segment` does nothing.** `game.cfg` sets it and no code reads it.
+
+**`checksum_overwrite` does nothing.** it is registered and bound to a variable that
+nothing reads. `game.cfg` has it commented out, which is as much effect as uncommenting
+it would have.
+
+**a divergence found with a replay recorded by an older build is not news.** it will
+reproduce perfectly every time, which is exactly what a real defect looks like. this is
+what the recorded build stamp is for; read the first lines a playback prints before
+believing the last one.
+
+the longer-lived findings, the hazards this is all pointed at and the sites that still
+carry them, are in `docs/Determinism.md`.
+
 # branches
 
 there are few branches where main development takes its place:
