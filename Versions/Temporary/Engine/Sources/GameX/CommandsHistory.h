@@ -103,7 +103,32 @@ struct SMultiplayerReplayInfo
 		// replay behaves exactly as it did.
 		int nDifficulty = {};
 		bool bIsTutorial = {};
-	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); f.Add(11,&bSinglePlayer); f.Add(12,&nStartKind); f.Add(13,&nDifficulty); f.Add(14,&bIsTutorial); return 0; }
+		// What recorded this, so that a playback can say "a different build made
+		// this" instead of reporting a divergence. A recording is only
+		// comparable against the build and the data it was made with: change the
+		// simulation and it diverges on every run, identically, which is exactly
+		// how a reproducible defect presents and is why two sessions were spent
+		// chasing one that was not there.
+		//
+		// Empty and zero both mean "not recorded", which covers every replay
+		// written before these chunks as well as a stripped build that has no
+		// identity to give. Neither is ever reported as a mismatch.
+		//
+		// The two cover different halves and neither implies the other. The
+		// image id is a digest over the build ids of the simulation modules, so
+		// it changes when any of them is relinked, including for a comment, and
+		// over-reports; the map checksum covers the authored content a playback
+		// re-reads and is blind to a unit statistic or a game constant edited
+		// elsewhere in the database, so it under-reports. Together they catch
+		// the two things that actually invalidate a recording in practice.
+		std::string szImageId;
+		uint32_t uMapCheckSum = {};
+		// The configuration that recorded it, so that the commonest reason two
+		// image ids differ can be named. A release recording verified under a
+		// sanitizer build is the main thing the harness does, and those two ids
+		// never match however identical the sources are.
+		std::string szConfiguration;
+	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMap); f.Add(3,&slots); f.Add(4,&nTechLevel); f.Add(5,&nTimeLimit); f.Add(6,&nCaptureTime); f.Add(7,&bUnitExperience); f.Add(8,&nLastCommandSegment); f.Add(9,&nLastGameSegment); f.Add(10,&nWinningSide); f.Add(11,&bSinglePlayer); f.Add(12,&nStartKind); f.Add(13,&nDifficulty); f.Add(14,&bIsTutorial); f.Add(15,&szImageId); f.Add(16,&uMapCheckSum); f.Add(17,&szConfiguration); return 0; }
 	SMultiplayerReplayInfo() : nTechLevel( -1 ), nTimeLimit( -1 ), nCaptureTime( -1 ), bUnitExperience( false ), nLastCommandSegment( -1 ), nLastGameSegment( -1 ), nWinningSide( -1 ), bSinglePlayer( false ), nStartKind( 0 ), nDifficulty( 0 ), bIsTutorial( false ) {}
 	SMultiplayerReplayInfo &operator=( const SMultiplayerReplayInfo &src )
 	{
@@ -120,6 +145,9 @@ struct SMultiplayerReplayInfo
 		nStartKind = src.nStartKind;
 		nDifficulty = src.nDifficulty;
 		bIsTutorial = src.bIsTutorial;
+		szImageId = src.szImageId;
+		uMapCheckSum = src.uMapCheckSum;
+		szConfiguration = src.szConfiguration;
 		return *this;
 	}
 };

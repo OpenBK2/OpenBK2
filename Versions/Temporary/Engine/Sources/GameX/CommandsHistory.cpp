@@ -13,6 +13,7 @@
 #include "Main/MainLoopCommands.h"
 #include "GameX/ScenarioTracker.h"
 #include "GameX/InterfaceState.h"
+#include "System/BuildStamp.h"
 #include "System/GlobalVars.h"
 #include "MultiplayerCommandManager.h"
 #include "Input/Bind.h"
@@ -149,6 +150,57 @@ bool CCommandsHistory::LoadHistory( const std::string &szFileName )
 		}
 	}
 
+	// Said before anything is played, because it decides what a divergence later
+	// in this run means. A replay recorded by another build, or against map data
+	// since edited, diverges identically on every attempt, which is exactly how
+	// a reproducible defect presents and cannot be told apart from one by
+	// looking at the divergence.
+	//
+	// Facts rather than a verdict, deliberately. No build identifier available
+	// here separates "the simulation changed" from "the same sources were built
+	// differently": the image id differs between a release build and a sanitizer
+	// build of identical code, and comparing exactly those two is the main thing
+	// this harness does, so a line claiming a change would fire on nearly every
+	// verification run. What the configurations do is name the likely reason, and
+	// the reader knows which comparison they intended.
+	//
+	// Reported whatever the run is for, not only under checksum_verify, since a
+	// mismatch makes the playback untrustworthy and not merely unverifiable.
+	// Silent when everything agrees, and silent when the replay carries no
+	// stamp, which every replay recorded before these chunks does.
+	{
+		const std::string &szImageId = NBuildStamp::GetSimulationImageId();
+		const std::string &szConfiguration = NBuildStamp::GetBuildConfiguration();
+		const uint32_t uMapCheckSum = replayInfo.pMap != 0 ? replayInfo.pMap->CalcCheckSum() : 0;
+		if ( !replayInfo.szImageId.empty() && !szImageId.empty() && replayInfo.szImageId != szImageId )
+		{
+			// Named so the two cases read differently at a glance. Same
+			// configuration and a different id means something in the
+			// simulation modules was rebuilt, which is the case worth
+			// suspecting. A different configuration explains the difference by
+			// itself and says nothing about the sources either way.
+			const std::string szRecordedCfg = !replayInfo.szConfiguration.empty() ? replayInfo.szConfiguration : "unrecorded";
+			if ( replayInfo.szConfiguration == szConfiguration )
+			{
+				ReportReplayLine( fmt::format(
+					"replay: recorded by {} build {}, this is {} build {}. Same configuration, so the simulation modules were rebuilt since: a divergence may be that change rather than a defect",
+					szRecordedCfg, replayInfo.szImageId, szConfiguration, szImageId ) );
+			}
+			else
+			{
+				ReportReplayLine( fmt::format(
+					"replay: recorded by {} build {}, this is {} build {}. Build ids always differ between configurations, so this says nothing about whether the sources did",
+					szRecordedCfg, replayInfo.szImageId, szConfiguration, szImageId ) );
+			}
+		}
+		if ( replayInfo.uMapCheckSum != 0 && uMapCheckSum != 0 && replayInfo.uMapCheckSum != uMapCheckSum )
+		{
+			ReportReplayLine( fmt::format(
+				"replay: recorded against map checksum {:#x}, this map is {:#x}. The map has been edited since",
+				replayInfo.uMapCheckSum, uMapCheckSum ) );
+		}
+	}
+
 	// Before the mission is brought up, which is where the first draws happen.
 	// For a game that is not single player InitAfterMapLoad replaces this with a
 	// zero seed anyway, which is equally deterministic, so doing it here is
@@ -256,6 +308,14 @@ bool CCommandsHistory::SaveReplay( const std::string &szFileName, const SB2GameS
 	replayInfo.nStartKind = pTracker->GetCurrentCampaign() != 0 ? 1 : 0;
 	replayInfo.nDifficulty = pTracker->GetDifficultyLevel();
 	replayInfo.bIsTutorial = pTracker->IsTutorialMission();
+	// What made this recording, so a playback against a later build reports that
+	// instead of a divergence. Written at save time rather than at record time:
+	// neither can change while a mission runs, and a replay saved out of a
+	// loaded savegame would otherwise carry the identity of whatever recorded
+	// the save.
+	replayInfo.szImageId = NBuildStamp::GetSimulationImageId();
+	replayInfo.szConfiguration = NBuildStamp::GetBuildConfiguration();
+	replayInfo.uMapCheckSum = replayInfo.pMap != 0 ? replayInfo.pMap->CalcCheckSum() : 0;
 
 	if ( !SerializeHistory( szFileName, false ) )
 		return false;
