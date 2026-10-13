@@ -1,0 +1,85 @@
+# What an editor should do to a file in this tree, in the one format Visual
+# Studio, CLion, VS Code and Rider all read without a plugin. The same rules are
+# enforced mechanically by .pre-commit-config.yaml and the hygiene CI job; this
+# file is what keeps an editor from reintroducing what they strip. See "file
+# hygiene" in Contributing.md.
+root = true
+
+# The defaults, and the only settings that apply to the C++ sources, the CMake
+# files and the resource scripts.
+#
+# A tab is two columns here. That is not a preference, it is what the tree
+# measures: of the places where a tab-indented line sits next to a
+# space-indented line at the same depth, 658 imply a two-column tab against 104
+# implying four. dbcodegen indents its generated sources with tabs as well, so
+# tabs also keep the generated files and the hand-written ones consistent.
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 2
+tab_width = 2
+
+# PEP 8, which is what the existing scripts already follow (2987 four-space
+# indents against none with tabs).
+[*.py]
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml,json}]
+indent_style = space
+indent_size = 2
+
+# Game data, not source. Localised text is UTF-16LE with a BOM from end to end
+# (4589 of the 4665 entries in texts.pak), and the records are written by the
+# editor and the database tools rather than by hand. Nothing here is this pass's
+# business, so claim nothing about it.
+[{Versions/Current/**,Versions/Multiplayer/**,Complete/**,Design/**,OBK2_Examples/**}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+# The parser's own fixture corpus. Every byte is deliberate input to NLang::Parse,
+# including the endings and the missing final newlines, so an editor must not
+# tidy one.
+[Versions/Temporary/Engine/Sources/Parser/test/cases/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+# Third-party drops, kept comparable with upstream.
+[{Versions/Temporary/Engine/Sources/vendor/**,third_party/**,Soft/SDK/STL docs/**}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+tab_width = unset
+
+# The .cll type descriptions are source, but dbcodegen copies a tooltip comment
+# into types.xml verbatim, trailing space included. Trimming one is a game data
+# change, so it is not done silently on save.
+[*.cll]
+trim_trailing_whitespace = false
+
+# Markdown reads the same wherever it sits, including the few files inside the
+# data and example trees above, so this comes last and wins over them. Two
+# trailing spaces are a hard line break in Markdown, so trimming them edits the
+# prose; the trailing-whitespace hook is told the same with
+# --markdown-linebreak-ext=md.
+[*.md]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = false

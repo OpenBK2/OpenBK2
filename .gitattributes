@@ -1,0 +1,54 @@
+# Line endings, declared per path rather than globally.
+#
+# The point of the eol=lf rules is that a checkout of the sources is LF on every
+# platform. A default Git for Windows install, and the GitHub Windows runners,
+# check text out with core.autocrlf=true; this clone does not. That divergence
+# is invisible until something compares generated output against the tree, which
+# then passes locally and fails in CI (dbcodegen's changed-file check did
+# exactly that). With these rules both see the bytes that are committed.
+#
+# There is deliberately no "* text=auto" line. A global rule would also claim
+# the 124k game data records and the UTF-16LE localised text, where the bytes
+# are written by the editor and the database tools and are not this file's
+# business; leaving those paths out keeps git's own content detection in charge
+# of them, which is what has been in charge of them until now.
+
+# The engine sources and the resource scripts beside them. All 12 .rc are plain
+# ASCII; none is UTF-16, so none needs an exception.
+Versions/Temporary/Engine/Sources/**/*.c      text eol=lf
+Versions/Temporary/Engine/Sources/**/*.cc     text eol=lf
+Versions/Temporary/Engine/Sources/**/*.cpp    text eol=lf
+Versions/Temporary/Engine/Sources/**/*.cxx    text eol=lf
+Versions/Temporary/Engine/Sources/**/*.h      text eol=lf
+Versions/Temporary/Engine/Sources/**/*.hpp    text eol=lf
+Versions/Temporary/Engine/Sources/**/*.hxx    text eol=lf
+Versions/Temporary/Engine/Sources/**/*.inl    text eol=lf
+Versions/Temporary/Engine/Sources/**/*.rc     text eol=lf
+Versions/Temporary/Engine/Sources/**/*.rc2    text eol=lf
+
+# The .cll type descriptions dbcodegen reads. Their content is not touched by
+# the hygiene hooks, because a tooltip comment reaches types.xml verbatim, but
+# they still have to read the same on both platforms.
+*.cll                                         text eol=lf
+
+# The build system, the CI definitions, the scripts and the prose.
+CMakeLists.txt                                text eol=lf
+*.cmake                                       text eol=lf
+CMakePresets.json                             text eol=lf
+.github/**/*.yml                              text eol=lf
+.github/**/*.yaml                             text eol=lf
+scripts/**/*.py                               text eol=lf
+scripts/**/*.sh                               text eol=lf
+*.md                                          text eol=lf
+
+# The parser's fixture corpus: every byte is input to NLang::Parse, including
+# the mixed endings and the missing final newlines. -text means git converts
+# nothing in either direction, so every platform parses what was committed. The
+# !eol goes with it: eol only takes effect on a path git is treating as text,
+# and leaving it set behind a -text is a trap for the next reader.
+Versions/Temporary/Engine/Sources/Parser/test/cases/** -text !eol
+
+# Third-party drops, kept comparable with upstream. The pattern with a space in
+# it has to be quoted, or git reads the second word as an attribute name.
+Versions/Temporary/Engine/Sources/vendor/**   -text !eol
+"Soft/SDK/STL docs/**"                        -text !eol
