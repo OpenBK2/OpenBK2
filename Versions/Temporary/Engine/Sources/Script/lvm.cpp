@@ -34,11 +34,11 @@
 
 
 
-int luaV_tonumber ( TObject *obj ) 
+int luaV_tonumber ( TObject *obj )
 {
 	if ( obj->GetType() != LUA_TSTRING )
 		return 1;
-	else 
+	else
 	{
 		Number n;
     if ( !luaO_str2d( obj->GetS()->c_str(), &n ) )
@@ -49,12 +49,12 @@ int luaV_tonumber ( TObject *obj )
 }
 
 
-int luaV_tostring ( lua_State *L, TObject *obj ) 
+int luaV_tostring ( lua_State *L, TObject *obj )
 {
 	/* LUA_NUMBER */
   if ( obj->GetType() != LUA_TNUMBER )
     return 1;
-  else 
+  else
 	{
     char s[32];  /* 16 digits, sign, point and \0  (+ some extra...) */
     lua_number2str( s, obj->GetN() );  /* convert `s' to number */
@@ -102,10 +102,10 @@ const TObject *luaV_gettable (lua_State *L, StkId t) {
 	{
 		int nHash = LObj(L, t)->GetH();
 		tg = L->tables[nHash]->htag;
-		bDefaultTag = ( tg == LUA_TTABLE || luaT_gettm(L, tg, TM_GETTABLE) == NULL );	
+		bDefaultTag = ( tg == LUA_TTABLE || luaT_gettm(L, tg, TM_GETTABLE) == NULL );
 	}
-  if ( bIsTable && bDefaultTag ) 
-	{ 
+  if ( bIsTable && bDefaultTag )
+	{
     // do a primitive get
     const TObject *h = L->GetHash( t )->GetObj( LObj(L, L->pCT->top-1) );
     // result is no nil or there is no `index' tag method?
@@ -116,7 +116,7 @@ const TObject *luaV_gettable (lua_State *L, StkId t) {
   else {  // try a `gettable' tag method
     tm = luaT_gettmindex(L, LObj(L, t), TM_GETTABLE);
   }
-  if (tm != STK_NULL) 
+  if (tm != STK_NULL)
 	{  // is there a tag method?
     luaD_checkstack(L, 2);
     *LObj(L, L->pCT->top+1) = *LObj(L, L->pCT->top-1);  /* key */
@@ -126,7 +126,7 @@ const TObject *luaV_gettable (lua_State *L, StkId t) {
     luaD_call(L, L->pCT->top - 3, 1);
     return LObj(L, L->pCT->top - 1);  // call result
   }
-  else 
+  else
 	{  // no tag method
     luaG_typeerror(L, LObj(L, t), "index");
     //return NULL;  // to avoid warnings
@@ -144,12 +144,12 @@ void luaV_settable (lua_State *L, StkId t, StkId key) {
       ( ( tg = L->GetHash(t)->htag ) == LUA_TTABLE ||  /* with default tag? */
         luaT_gettm(L, tg, TM_SETTABLE) == NULL) ) /* or no TM? */
 		*( L->GetHash(t)->SetObj( LObj(L, key) ) ) = *LObj(L, L->pCT->top-1);  /* do a primitive set */
-  else 
+  else
 	{  /* try a `settable' tag method */
 		TObject *tObj = LObj(L, t);
 		ASSERT( tObj->GetType() < 1000 && tObj->GetType() > -1000 );
     int tm = luaT_gettmindex(L, tObj, TM_SETTABLE);
-    if (tm != STK_NULL) 
+    if (tm != STK_NULL)
 		{
       luaD_checkstack(L, 3);
       *LObj(L, L->pCT->top+2) = *LObj(L, L->pCT->top-1);
@@ -175,7 +175,7 @@ const TObject *luaV_getglobal (lua_State *L, TString *s) {
   int tm = luaT_gettmindex(L, value, TM_GETGLOBAL);
   if (tm == STK_NULL)  /* is there a tag method? */
     return value;  /* default behavior */
-  else 
+  else
 	{  /* tag method */
     luaD_checkstack(L, 3);
     LObj(L, L->pCT->top)->SetCL( tm );
@@ -197,7 +197,7 @@ void luaV_setglobal (lua_State *L, TString *s) {
       /* cast to remove `const' is OK, because `oldvalue' != luaO_nilobject */
       *(TObject *)oldvalue = *LObj(L, L->pCT->top - 1);
     }
-    else 
+    else
 		{
       TObject key;
 			key.SetS( s );
@@ -205,7 +205,7 @@ void luaV_setglobal (lua_State *L, TString *s) {
 			*gt->SetObj( &key ) = *LObj(L, L->pCT->top - 1);
     }
   }
-  else 
+  else
 	{
     luaD_checkstack(L, 3);
     *LObj(L, L->pCT->top + 2) = *LObj(L, L->pCT->top-1);  /* new value */
@@ -242,21 +242,21 @@ static void call_arith (lua_State *L, StkId top, TMS event) {
 }
 
 
-static int luaV_strcomp (const TString *ls, const TString *rs) 
+static int luaV_strcomp (const TString *ls, const TString *rs)
 {
 	return strcmp( ls->c_str(), rs->c_str() );
 }
 
 
-int luaV_lessthan (lua_State *L, StkId stL, StkId stR, StkId top) 
+int luaV_lessthan (lua_State *L, StkId stL, StkId stR, StkId top)
 {
 	TObject *l = LObj( L, stL ), *r = LObj( L, stR );
   if ( l->GetType() == LUA_TNUMBER && r->GetType() == LUA_TNUMBER )
     return l->GetN() < r->GetN();
   else if ( l->GetType() == LUA_TSTRING && r->GetType() == LUA_TSTRING )
     return luaV_strcomp( l->GetS(), r->GetS() ) < 0;
-  else 
-	{  
+  else
+	{
 		/* call TM */
     luaD_checkstack(L, 2);
     *LObj(L, top++) = *l;
@@ -276,12 +276,12 @@ void luaV_strconc (lua_State *L, int total, StkId top) {
       if (!call_binTM(L, top, TM_CONCAT))
         luaG_binerror(L, LObj(L, top-2), LUA_TSTRING, "concat");
     }
-    else if ( !LObj(L, top-1)->GetS()->empty() ) 
-		{  
+    else if ( !LObj(L, top-1)->GetS()->empty() )
+		{
 			std::string str;
-      while (n < total && !tostring(L, LObj(L, top-n-1))) 
+      while (n < total && !tostring(L, LObj(L, top-n-1)))
         n++;
-      for ( int i = n; i > 0; i-- ) 
+      for ( int i = n; i > 0; i-- )
 				str += LObj(L, top-i)->GetS()->c_str();
 			LObj(L, top-n)->SetS( luaS_newlstr( L, str.c_str() ) );
     }
@@ -379,7 +379,7 @@ void luaV_stepExecute( lua_State *L )
   StkId &top = L->pCT->top;  /* first free slot in the stack */
   StkId stack = 0;  /* stack base */
 
-	while ( 
+	while (
 		!L->pCT->bErrorInThread &&
 		( L->nNoWait > 0 || L->pCT->thisThreadIsSleeping <= 0 ) &&
 		!L->pCT->executedCalls.empty() )
@@ -549,7 +549,7 @@ void luaV_stepExecute( lua_State *L )
 				break;
 			}
 			case OP_ADDI: {
-				if (tonumber( LObj(L, top-1) )) 
+				if (tonumber( LObj(L, top-1) ))
 				{
 					LObj(L, top)->SetN( (Number)GETARG_S(i) );
 					call_arith(L, top+1, TM_ADD);
@@ -644,26 +644,26 @@ void luaV_stepExecute( lua_State *L )
 				break;
 			}
 			case OP_JMPT: {
-				if ( LObj(L, --top)->GetType() != LUA_TNIL ) 
+				if ( LObj(L, --top)->GetType() != LUA_TNIL )
 					dojump(state.currPC, i);
 				break;
 			}
 			case OP_JMPF: {
-				if ( LObj(L, --top)->GetType() == LUA_TNIL ) 
+				if ( LObj(L, --top)->GetType() == LUA_TNIL )
 					dojump(state.currPC, i);
 				break;
 			}
 			case OP_JMPONT: {
-				if ( LObj(L, top-1)->GetType() == LUA_TNIL) 
+				if ( LObj(L, top-1)->GetType() == LUA_TNIL)
 					top--;
-				else 
+				else
 					dojump(state.currPC, i);
 				break;
 			}
 			case OP_JMPONF: {
-				if ( LObj(L, top-1)->GetType() != LUA_TNIL) 
+				if ( LObj(L, top-1)->GetType() != LUA_TNIL)
 					top--;
-				else 
+				else
 					dojump(state.currPC, i);
 				break;
 			}
@@ -729,7 +729,7 @@ void luaV_stepExecute( lua_State *L )
 				}
 				break;
 			}
-			case OP_LFORLOOP: 
+			case OP_LFORLOOP:
 			{
 				Hash::Node node;
 				LUA_ASSERT( LObj(L, top-3)->GetType() == LUA_TTABLE, "invalid table" );
@@ -769,18 +769,18 @@ void luaV_stepExecute( lua_State *L )
 */
 /*StkId luaV_execute (lua_State *L, const Closure *cl, StkId base) {
   const Proto *const tf = cl->f.l;
-  StkId top;  // keep top local, for performance 
+  StkId top;  // keep top local, for performance
   const Instruction *pc = tf->code;
   const vector<TString*> &strings = tf->strings;
   const lua_Hook linehook = L->linehook;
   base[-1].GetCI()->proto = const_cast<Proto*>( tf );
   luaD_checkstack(L, tf->maxstacksize+EXTRA_STACK);
-  if (tf->is_vararg)  // varargs? 
+  if (tf->is_vararg)  // varargs?
     adjust_varargs(L, base, tf->numparams);
   else
     luaD_adjusttop(L, base, tf->numparams);
   top = L->pCT->top;
-  // main loop of interpreter 
+  // main loop of interpreter
   for (;;) {
     const Instruction i = *pc++;
     if (linehook)

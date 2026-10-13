@@ -14,7 +14,7 @@ private:
 
 	// загружать статич. объекты и реки или нет
 	bool bLoadObjects = {};
-	
+
 	bool bTurnOffWarFog = {};
 	bool bHistoryPlaying = {};
 	//
@@ -47,13 +47,13 @@ public:
 
 	void SetFirstShoot( const int nPlayer, const uint8_t cValue );
 	uint8_t GetFirstShoot( const int nPlayer ) const { return firstShoot[nPlayer]; }
-	
+
 	void SetHistoryPlaying( bool _bHistoryPlaying ) { bHistoryPlaying = _bHistoryPlaying; }
 	bool IsHistoryPlaying() const { return bHistoryPlaying; }
-	
+
 	const unsigned long MakeCheckSum( const std::string &szPassword );
 	void CheckPassword( const std::string &szPassword );
-	
+
 	bool IsPasswordOk() const { return bPasswordOK; }
 };
 

@@ -23,14 +23,14 @@
 
 #include <cstdint>
 
-namespace 
+namespace
 {
 	const char WINDOW_SIMPLE_SHARED_TYPE_NAME[] = "WindowSimpleShared";
-	const struct 
+	const struct
 	{
 		const char * szInstanceName;
 		const char * szSharedName;
-	} tblChildTypes[] = 
+	} tblChildTypes[] =
 	{
 		"WindowSimple",				"WindowSimpleShared",
 		"WindowMSButton",			"WindowMSButtonShared",
@@ -54,7 +54,7 @@ namespace
 };
 
 
-CWindowSimpleSharedState::CWindowSimpleSharedState( CWindowSimpleSharedEditor *_pEditor ) 
+CWindowSimpleSharedState::CWindowSimpleSharedState( CWindowSimpleSharedEditor *_pEditor )
 	: pEditor( _pEditor ), pScreen( 0 ), pMainWindow( 0 ), pPickedWindow( 0 ), bDragging( false )
 {
 }
@@ -73,7 +73,7 @@ void CWindowSimpleSharedState::Enter()
 	Singleton<IUIScene>()->Create();
 
 	LoadWindow();
-	
+
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_SCROLLBARS, 1 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 
@@ -92,7 +92,7 @@ void CWindowSimpleSharedState::Leave()
 
 	pScreen = 0;
 	pMainWindow = 0;
-	
+
 	// clear the scene
 	Singleton<IUIScene>()->Clear();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_SCROLLBARS, 0 );
@@ -117,11 +117,11 @@ void CWindowSimpleSharedState::LoadWindow()
 	// get pointer to selected element
 	const NDb::CResource *pSelected = NDb::Get<NDb::CResource>( editorDBID );
 	NI_ASSERT( pSelected != 0, "CWindowSimpleSharedEditor::LoadWindow: pSelected == 0" );
-	
+
 	if ( const NDb::SWindowScreenShared *pShared = dynamic_cast<const NDb::SWindowScreenShared*>( pSelected ) )
 	{
 		// handle WindowScreenShared
-		
+
 		// get pointer to WindowScreen template
 		CDBPtr<NDb::SWindowScreen> pTemplate = NDb::Get<NDb::SWindowScreen>( pEditor->editorSettings.templateScreenDBID );
 		NI_ASSERT( pTemplate != 0, "CWindowSimpleSharedEditor::LoadWindow: pTemplate == 0" );
@@ -174,7 +174,7 @@ void CWindowSimpleSharedState::MakeUIScreenWithElement( const struct NDb::SUIDes
 {
 	if ( pElement == 0 )
 		return;
-		
+
 	if ( dynamic_cast<const NDb::SWindowScreen*>( pElement ) )
 	{
 		// create custom screen
@@ -198,7 +198,7 @@ void CWindowSimpleSharedState::MakeUIScreenWithElement( const struct NDb::SUIDes
 
 		// avoid fitting UI to viewport size
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
-		
+
 		// create UI window based on WindowSimple template
 		pMainWindow = Singleton<IUIInitialization>()->CreateWindowFromDesc( pElement );
 		NI_ASSERT( pMainWindow != 0, "CWindowSimpleSharedEditor::LoadWindow: pMainWindow == 0" );
@@ -731,7 +731,7 @@ IWindow * CWindowSimpleSharedState::InsertChildInstanceToUI( const std::string &
 		// add created child to the main window
 		pMainWindow->AddChild( pChildWindow, true );
 	}
-	
+
 	//BUGFIX{ : reset db cache to properly flush result of GetResource
 	//Singleton<IResourceManager>()->ResetCache();
 	//BUGFIX}

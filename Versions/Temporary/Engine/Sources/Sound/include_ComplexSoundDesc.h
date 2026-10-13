@@ -7,11 +7,11 @@ const SSoundStats * GetRandomSound() const
 	for ( int i = 0; i < sounds.size(); ++i )
 	{
 		fSum += sounds[i].fProbability;
-		if ( fSum > fRand ) 
+		if ( fSum > fRand )
 			return &sounds[i];
 	}
 	return 0;
-} 
+}
 virtual void PostLoad( bool bInEditor )
 {
 	if ( bInEditor )

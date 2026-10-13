@@ -54,13 +54,13 @@ public:
 	}
 	const CDataHash& GetAll() { return data; }
 	int operator&( IBinSaver &f )
-	{ 
+	{
 		if ( !bKeepData )
 			return 0;
 		if ( f.IsReading() )
 		{
 			CDataHash keeper( data );
-			f.Add( GetID(), &data ); 
+			f.Add( GetID(), &data );
 			for ( typename CDataHash::const_iterator i = keeper.begin(); i != keeper.end(); ++i )
 			{
 				typename CDataHash::iterator r = data.find( i->first );
@@ -74,10 +74,10 @@ public:
 			for ( typename CDataHash::const_iterator i = data.begin(); i != data.end(); ++i )
 			{
 				if ( IsValid( i->second ) )
-					saveData.insert( *i ); 
+					saveData.insert( *i );
 			}
 
-			f.Add( GetID(), &saveData ); 
+			f.Add( GetID(), &saveData );
 		}
 		return 0;
 	}

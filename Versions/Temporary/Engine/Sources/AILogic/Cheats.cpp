@@ -79,7 +79,7 @@ void SCheats::SetTurnOffWarFog( bool _bTurnOffWarFog )
 }
 
 bool SCheats::GetTurnOffWarFog() const
-{ 
+{
 #ifdef _FINALRELEASE
 	return bTurnOffWarFog;
 #else

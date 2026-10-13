@@ -26,7 +26,7 @@ enum EVisualNotification
 	EVNT_FAIL_OBJECTIVE,
 	EVNT_REMOVE_OBJECTIVE,
 	EVNT_SELECT_OBJECTIVE,
-	
+
 	EVNT_CHECK_OBJECTIVES,
 	EVNT_SHOW_OBJECTIVES,
 	EVNT_HIDE_OBJECTIVES,
@@ -34,7 +34,7 @@ enum EVisualNotification
 
 	EVNT_ENEMY_ARTILLERY_SEEN,
 	EVNT_ENEMY_AA_SEEN,
-	
+
 	EVNT_REINFORCEMENT_AVAILABLE,
 	EVNT_REINFORCEMENT_AVAILABLE_REPEAT,
 	EVNT_REINFORCEMENT_ARRIVED,
@@ -62,7 +62,7 @@ struct IVisualNotifications : public CObjectBase
 		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszHeader); f.Add(3,&wszDesc); return 0; }
 	};
-	
+
 	struct SEventParams
 	{
 		ZDATA
@@ -77,9 +77,9 @@ struct IVisualNotifications : public CObjectBase
 	virtual bool Notify( EVisualNotification eType, int nID, const CVec2 &vPos ) = 0;
 	virtual bool Notify( EVisualNotification eType, class CMapObj *pMO ) { return false; }
 	virtual void Step( const NTimer::STime nDeltaTime, bool bAppActive ) = 0;
-	
+
 	virtual void OnBtn( const std::string &szSender, bool bRightBtn ) {}
-	
+
 	virtual void OnEvent( const SEventParams &params ) {}
 	virtual void OnRemoveEvent( NDb::ENotificationEventType eEventType, int nID ) {}
 

@@ -18,12 +18,12 @@ public:
 	virtual CVec3 GetNormalB2() const = 0;
 
 	virtual const struct IManuver * GetManuver() const = 0;
-	
+
 	// next calculated position
 	virtual CVec3 GetPosNext() const = 0;
 	virtual CVec3 GetSpeedNext() const = 0;
 	virtual CVec3 GetNormalNext() const = 0;
-	
+
 	virtual void SetB2( const CVec3 &vPos, const CVec3 &vSpeed, const CVec3 &vNormal ) = 0;
 
 	/** текущий самолет уже находится под атакой. */

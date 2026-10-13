@@ -32,7 +32,7 @@ bool CAttackPointChecking::IsGoodTile( const SVector &curTile ) const
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	return 
+	return
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }
@@ -58,11 +58,11 @@ bool CAttackSideChecking::IsGoodTile( const SVector &curTile ) const
 	const uint16_t wCurDir = GetDirectionByVector( (curTile - targetTile).ToCVec2() );
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	const bool bRet =	
+	const bool bRet =
 		DirsDifference( wCurDir, wAttackDir ) <= wHalfAngle &&
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
-	
+
 	return bRet;
 }
 
@@ -86,7 +86,7 @@ bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 
 	const float fDist = SquareOfDistance( curTile, targetTile );
 
-	return 
+	return
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }

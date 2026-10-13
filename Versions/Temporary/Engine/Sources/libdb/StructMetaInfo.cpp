@@ -451,7 +451,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 			//
 			if ( pTypeArray->field.pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 			{
-				posField->second.pContained->LinkWithTypeDef( "", 
+				posField->second.pContained->LinkWithTypeDef( "",
 					checked_cast_ptr<NTypeDef::STypeStruct*>(pTypeArray->field.pType) );
 //				NI_ASSERT( false, "Still not realized!" );
 			}
@@ -470,7 +470,7 @@ void SStructMetaInfo::LinkField( const std::string &szAddName, const std::string
 			if ( posField->second.contained.type == NTypeDef::TYPE_TYPE_STRUCT )
 			{
 				// array of complex structs
-				posField->second.pContained->LinkWithTypeDef( "", 
+				posField->second.pContained->LinkWithTypeDef( "",
 					checked_cast_ptr<NTypeDef::STypeStruct*>(pTypeArray->field.pType) );
 			}
 			else

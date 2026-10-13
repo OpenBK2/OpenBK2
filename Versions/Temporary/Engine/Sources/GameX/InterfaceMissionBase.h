@@ -17,7 +17,7 @@ private:
 	void NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_pTransceiver, IScenarioTracker *pScenarioTracker );
 protected:
 	CObj<CWorldClient> pWorld;
-	
+
 	CDBPtr<NDb::SMapInfo> pMap;
 	bool bFrozen;
 	CPtr<ITransceiver> pTransceiver;
@@ -26,7 +26,7 @@ protected:
 	void Unload();
 
 	~CInterfaceMissionBase();
-public:	
+public:
 	CInterfaceMissionBase( const std::string &szInterfaceType, const std::string &szBindSection );
 
 	void OnGetFocus( bool bFocus );

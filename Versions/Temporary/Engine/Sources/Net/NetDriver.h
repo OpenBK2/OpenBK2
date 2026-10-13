@@ -76,15 +76,15 @@ struct IDriver : public CObjectBase
 		EServerGameMode eGameMode;
 
 		bool bPasswordRequired;
-		
+
 		std::string szModName;
 		std::string szModVersion;
-		
+
 		CMemoryStream gameSettings;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszServerName); f.Add(3,&nHostPort); f.Add(4,&wszMapName); f.Add(5,&szGameType); f.Add(6,&nCurPlayers); f.Add(7,&nMaxPlayers); f.Add(8,&eGameMode); f.Add(9,&bPasswordRequired); f.Add(10,&szModName); f.Add(11,&szModVersion); f.Add(12,&gameSettings); return 0; }
 
-		SGameInfo() 
-			: wszServerName( L"" ), nHostPort( 0 ), wszMapName( L"" ), szGameType( "" ), 
+		SGameInfo()
+			: wszServerName( L"" ), nHostPort( 0 ), wszMapName( L"" ), szGameType( "" ),
 				nCurPlayers( 0 ), nMaxPlayers( 0 ), eGameMode( ESGM_SETTINGS ), bPasswordRequired( false ),
 				szModName( "" ), szModVersion( "" ) { }
 	};

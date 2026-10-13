@@ -34,7 +34,7 @@ IAttachedObject* IAttachedObject::CreateAnimatedObj( const NDb::SModel *pModel, 
 		if ( pAnimator )
 			return new CAnimatedAttachedObj( pModel, pTransform, pAnimator, nBoneIndex, pBound );
 	}
-	
+
 	return 0;
 }
 
@@ -77,16 +77,16 @@ void CAttachedObject::Clear( const NTimer::STime time )
 
 void CStaticAttachedObj::Visit( IAIVisitor *pAIVisitor )
 {
-	if ( pModel && pModel->pGeometry->pAIGeometry ) 
+	if ( pModel && pModel->pGeometry->pAIGeometry )
 	{
-		RefreshTransform();		
+		RefreshTransform();
 		pAIVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetTransform()->GetValue().forward, 0, 0, 1 );
 	}
 }
 
 const NDb::SModel* CStaticAttachedObj::GetModel() const
-{ 
-	return pModel; 
+{
+	return pModel;
 }
 
 void CStaticAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
@@ -111,7 +111,7 @@ void CStaticAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer 
 
 void CAnimatedAttachedObj::Visit( IAIVisitor *pAIVisitor )
 {
-	if ( pModel && pModel->pGeometry->pAIGeometry ) 
+	if ( pModel && pModel->pGeometry->pAIGeometry )
 	{
 		RefreshTransform();
 		pAIVisitor->AddHull( pModel->pGeometry->pAIGeometry, GetTransform()->GetValue().forward, 0, 0, 1 );
@@ -119,8 +119,8 @@ void CAnimatedAttachedObj::Visit( IAIVisitor *pAIVisitor )
 }
 
 const NDb::SModel* CAnimatedAttachedObj::GetModel() const
-{ 
-	return pModel; 
+{
+	return pModel;
 }
 
 void CAnimatedAttachedObj::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer )
@@ -176,9 +176,9 @@ CAttachedEffect::~CAttachedEffect()
 
 // CAlwaysVerticalTransform
 
-CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical ) 
+CAlwaysVerticalTransform::CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical )
 : pBaseTransform(_pBaseTransform), bKeepVertical(_bKeepVertical)
-{ 
+{
 }
 
 void CAlwaysVerticalTransform::Recalc()
@@ -206,9 +206,9 @@ void CAlwaysVerticalTransform::Recalc()
 
 // CAttachedLightEffectTransform
 
-CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier ) 
+CAttachedLightEffectTransform::CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier )
 : pBaseTransform(_pBaseTransform), mMultiplier(_mMultiplier)
-{ 
+{
 	pvTranslatePart = new CCCVec3();
 }
 
@@ -332,7 +332,7 @@ CAttachedLightEffect::CAttachedLightEffect( const NDb::SAttachedLightEffect *_pE
 
 void CAttachedLightEffect::OnSerialize( IBinSaver &saver )
 {
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
 		bNeedRecalc = true;
 	}
@@ -343,7 +343,7 @@ void CAttachedLightEffect::RegeneratePositions()
 	const float fDummyConeSize = lightEffect.fConeSize ? lightEffect.fConeSize : 1.0f;
 	const float fDummyConeLength = lightEffect.fConeLength ? lightEffect.fConeLength : 1.0f;
 	SHMatrix mScale( fDummyConeSize, 0, 0, 0,
-									 0, fDummyConeSize, 0, 0, 
+									 0, fDummyConeSize, 0, 0,
 									 0, 0, fDummyConeLength, 0,
 									 0, 0, 0, 1 );
 	pConeTransform = new CAttachedLightEffectTransform( GetTransform(), mScale );
@@ -351,7 +351,7 @@ void CAttachedLightEffect::RegeneratePositions()
 	SHMatrix mIdentity;
 	Identity( &mIdentity );
 
-	pParticleTransform = new CAttachedLightEffectTransform( GetTransform(), mIdentity );	
+	pParticleTransform = new CAttachedLightEffectTransform( GetTransform(), mIdentity );
 
 	const SHMatrix mFlareOffset( lightEffect.vFlarePos, QNULL );
 	pFlarePos = new CAttachedLightEffectPos( GetTransform(), mFlareOffset );
@@ -376,11 +376,11 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f /*&& !pFlareHolder*/ )
 	{
-		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture 
+		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture
 			: pSceneConsts->lightFX.pFlareTexture;
 
 		pFlareHolder = pGScene->AddFlare( pFlarePos, Scene()->GetAbsTimer(), 0,
-				lightEffect.fFlareSize, pTexture, pSceneConsts->lightFX.fFlareAppearTime, 
+				lightEffect.fFlareSize, pTexture, pSceneConsts->lightFX.fFlareAppearTime,
 				pSceneConsts->lightFX.fFlareAppearTime );
 	}
 	//																				Point light
@@ -397,7 +397,7 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 		if ( !pTexture )
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
 		////
-		pDirFlareHolder = pGScene->AddDirFlare( pFlarePos/*new CAttachedLightEffectPos( GetTransform(), mDummy )*/, 
+		pDirFlareHolder = pGScene->AddDirFlare( pFlarePos/*new CAttachedLightEffectPos( GetTransform(), mDummy )*/,
 			new CAttachedLightEffectDir( GetTransform() ), CVec2( lightEffect.fConeLength, lightEffect.fConeSize ), pTexture, 0 );
 	}
 	//																				Additional (particle) effect
@@ -413,7 +413,7 @@ void CAttachedLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime *pTime
 	{
 		AddSound( lightEffect.pAdditionalEffect->pSoundEffect );
 	}
-	
+
 }
 
 void CAttachedLightEffect::AddSound( const NDb::SComplexSoundDesc *pSound )
@@ -448,7 +448,7 @@ void CAttachedLightEffect::Destroy( const NTimer::STime time )
 		pDirFlareHolder = 0;
 
 	// Destroy additional effect
-	if ( !bInEditor && lightEffect.pAdditionalEffect && GetHolder() ) 
+	if ( !bInEditor && lightEffect.pAdditionalEffect && GetHolder() )
 	{
 		NGScene::StopParticlesGeneration( GetHolder(), time );
 		NGScene::StopDynamicLighting( GetHolder() );
@@ -456,7 +456,7 @@ void CAttachedLightEffect::Destroy( const NTimer::STime time )
 	}
 
 	// Destroy sound
-	if ( !bInEditor && lightEffect.pAdditionalEffect && lightEffect.pAdditionalEffect->pSoundEffect ) 
+	if ( !bInEditor && lightEffect.pAdditionalEffect && lightEffect.pAdditionalEffect->pSoundEffect )
 	{
 		RemoveSound();
 	}
@@ -487,7 +487,7 @@ CAttachedStaticLightEffect::CAttachedStaticLightEffect( const NDb::SAttachedLigh
 
 void CAttachedStaticLightEffect::OnSerialize( IBinSaver &saver )
 {
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
 		bNeedRecalc = true;
 	}
@@ -499,7 +499,7 @@ void CAttachedStaticLightEffect::RegeneratePositions()
 	const float fDummyConeSize = lightEffect.fConeSize ? lightEffect.fConeSize : 1.0f;
 	const float fDummyConeLength = lightEffect.fConeLength ? lightEffect.fConeLength : 1.0f;
 	SHMatrix mScale(	fDummyConeSize, 0, 0, 0,
-		0, fDummyConeSize, 0, 0, 
+		0, fDummyConeSize, 0, 0,
 		0, 0, fDummyConeLength, 0,
 		0, 0, 0, 1 );
 
@@ -541,11 +541,11 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 	//																				Flare
 	if ( !bInEditor && lightEffect.fFlareSize > 0.0f )
 	{
-		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture 
+		const NDb::STexture *pTexture = ( lightEffect.pFlareTexture ) ? lightEffect.pFlareTexture
 			: pSceneConsts->lightFX.pFlareTexture;
 
 		pFlareHolder = pGScene->AddFlare( pvFlarePlace, Scene()->GetAbsTimer(), 0,
-			lightEffect.fFlareSize, pTexture, 
+			lightEffect.fFlareSize, pTexture,
 			pSceneConsts->lightFX.fFlareAppearTime, pSceneConsts->lightFX.fFlareAppearTime );
 	}
 	//																				Point light
@@ -564,11 +564,11 @@ void CAttachedStaticLightEffect::ReCreate( NGScene::IGameView *pGScene, CCSTime 
 		if ( !pTexture )
 			pTexture = pSceneConsts->lightFX.pLightConeTexture;
 		////
-		pDirFlareHolder = pGScene->AddDirFlare( new CAttachedLightEffectPos( pConeTransform, mDummy ), 
+		pDirFlareHolder = pGScene->AddDirFlare( new CAttachedLightEffectPos( pConeTransform, mDummy ),
 			new CAttachedLightEffectDir( pConeTransform ), CVec2( lightEffect.fConeLength, lightEffect.fConeSize ), pTexture, 0 );
 	}
 	//																				Particle effect
-	if ( !bInEditor && lightEffect.pAdditionalEffect && lightEffect.pAdditionalEffect->pSceneEffect ) 
+	if ( !bInEditor && lightEffect.pAdditionalEffect && lightEffect.pAdditionalEffect->pSceneEffect )
 	{
 		const NDb::SEffect *pEffect =  lightEffect.pAdditionalEffect->GetSceneEffect();
 		if ( pEffect )
@@ -594,14 +594,14 @@ void CAttachedStaticLightEffect::Destroy( const NTimer::STime time )
 	if ( !bInEditor && lightEffect.fConeSize > 0.0f )
 		pDirFlareHolder = 0;
 
-	if ( !bInEditor && lightEffect.pAdditionalEffect ) 
+	if ( !bInEditor && lightEffect.pAdditionalEffect )
 	{
 		NGScene::StopParticlesGeneration( GetHolder(), time );
 		NGScene::StopDynamicLighting( GetHolder() );
 		SetToSceneHoldQueue( this, true );
 	}
 
-	//CAttachedObject::Destroy( time );			
+	//CAttachedObject::Destroy( time );
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3013D340, CStaticAttachedObj );

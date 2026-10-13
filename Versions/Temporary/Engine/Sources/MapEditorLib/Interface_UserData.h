@@ -14,13 +14,13 @@ struct SUserData
 {
 	enum ESerializeType
 	{
-		ST_LOAD	= 0,						
+		ST_LOAD	= 0,
 		ST_SAVE = 1,
 	};
 
 	enum ESettingsType
 	{
-		EDITOR_SETTINGS	= 0,						
+		EDITOR_SETTINGS	= 0,
 		EXPORTER_SETINGS = 1,
 		BUILDER_SETTINGS = 2,
 		PRIVATE_SETTINGS = 3,

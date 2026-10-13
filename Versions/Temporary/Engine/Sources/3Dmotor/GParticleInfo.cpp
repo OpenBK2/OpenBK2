@@ -118,7 +118,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		return;
 
 	if ( bLeaveParticlesWhereStarted  )
-	{		
+	{
 		if ( transforms.size() < frames.size() )
 		{
 			transforms.resize( frames.size() );
@@ -140,7 +140,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 					std::swap( particlesFrames[iFrame], particlesFrames[iTransformedFrame] );
 					bFound = true;;
 					break;
-				}				
+				}
 			}
 			isFrameCached[iFrame] = bFound;
 		}
@@ -160,7 +160,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 	const SParticleOrientationInfo &orientation = pRender->GetOrientationInfo();
 	std::vector<STransparentTexturePlace> texturePlaces( textures.size() );
 	InitTexturePlaces( &texturePlaces, textures );
-	
+
 	bool bDoWrap = vWrap.x != 0;
 	CVec3 vWrapCenter;
 	if ( bDoWrap )
@@ -191,7 +191,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 		{
 			const SParticle &part = pParticles->particles[n];
 			if ( frame.fT >= part.nTStart && frame.fT < part.nTEnd &&
-				(frame.bLastCycle || part.nTStart <= fCycleEnd) && 
+				(frame.bLastCycle || part.nTStart <= fCycleEnd) &&
 				( fTStopGeneration < 0 || (!frame.bLastCycle) || part.nTStart < fTStopGeneration )
 				)
 			{
@@ -270,7 +270,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			pWarFog = &fOne;
 			nWarFogStepMask = 0;
 		}
-		else 
+		else
 			pWarFog = &warfog[0];
 
 		nDst = 0;
@@ -282,7 +282,7 @@ void CStandardParticleEffect::AddParticles( IParticleOutput *pRender )
 			++nDst;
 			const SParticleFrame &frame = frames[ nFrame ];
 
-			float rot;	
+			float rot;
 			CVec2 scale;
 			short sprite;
 			unsigned int nSprite;

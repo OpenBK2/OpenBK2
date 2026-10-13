@@ -113,7 +113,7 @@ void CFormationPlaceMine::Segment()
 				pFormation->SendAcknowledgement( ACK_NEGATIVE );
 				pFormation->SetCommandFinished();
 			}
-	
+
 			break;
 		case EPM_MOVE:
 			{
@@ -260,7 +260,7 @@ IUnitState* CFormationRepairUnitState::Instance( class CFormation *_pUnit, CAIUn
 }
 
 CFormationRepairUnitState::CFormationRepairUnitState( class CFormation *pUnit, CAIUnit *_pPreferredUnit )
-: CFormationServeUnitState( _pPreferredUnit ), pUnit( pUnit ), 
+: CFormationServeUnitState( _pPreferredUnit ), pUnit( pUnit ),
 	lastRepearTime( curTime ), vPointInQuestion( VNULL2 ), fRepCost( 0 ),	bNearTruck( true )
 {
 }
@@ -272,7 +272,7 @@ bool CFormationRepairUnitState::CheckUnit( CAIUnit *pU, CFormationServeUnitState
 	{
 		const EUnitRPGType type = pU->GetStats()->etype;
 		const SHPObjectRPGStats * pStats = pU->GetStats();
-		
+
 		bool bCannotReachUnit = false; // до юнита нельзя дойти
 		float fTrackHP = 0;
 
@@ -305,7 +305,7 @@ bool CFormationRepairUnitState::CheckUnit( CAIUnit *pU, CFormationServeUnitState
 			}
 		}
 
-		if ( (::IsArmor(type) || ::IsArtillery(type) || ::IsTrain(type) || ::IsTransport(type) || ::IsSPG(type) ) && 
+		if ( (::IsArmor(type) || ::IsArtillery(type) || ::IsTrain(type) || ::IsTransport(type) || ::IsSPG(type) ) &&
 				pU->IsIdle() )
 		{
 			//CRAP{ OTKAZALSA OT PUTI, TORMOZILO
@@ -337,10 +337,10 @@ bool CFormationRepairUnitState::CheckUnit( CAIUnit *pU, CFormationServeUnitState
 	return false;
 }
 
-void CFormationRepairUnitState::FindUnitToServe( const CVec2 &vCenter, 
-																									int nPlayer, 
-																									const float fResurs, 
-																									CCommonUnit * pLoaderSquad, 
+void CFormationRepairUnitState::FindUnitToServe( const CVec2 &vCenter,
+																									int nPlayer,
+																									const float fResurs,
+																									CCommonUnit * pLoaderSquad,
 																									CFormationServeUnitState::CFindUnitPredicate * pPred,
 																									CAIUnit *_pPreferredUnit )
 {
@@ -354,7 +354,7 @@ void CFormationRepairUnitState::FindUnitToServe( const CVec2 &vCenter,
 	{
 		if ( CheckUnit( (*iter), pPred, fResurs, vCenter ) )
 			return;
-		
+
 		iter.Iterate();
 	}
 }
@@ -386,7 +386,7 @@ void CFormationRepairUnitState::Segment()
 	{
 	case EFRUS_WAIT_FOR_HOME_TRANSPORT:
 		if ( pUnit->GetNextCommand() )
-			pUnit->SetCommandFinished();		
+			pUnit->SetCommandFinished();
 
 		break;
 	case EFRUS_WAIT_FOR_UNIT_TO_SERVE:
@@ -433,7 +433,7 @@ void CFormationRepairUnitState::Segment()
 			else
 			{
 				SRect unitRect = pUnitInQuiestion->GetUnitRect();
-				
+
 				for ( int i = 0; i < pUnit->Size(); ++i )
 				{
 					CVec2 vPoint;
@@ -470,7 +470,7 @@ void CFormationRepairUnitState::Segment()
 	case EFRUS_SERVICING:
 		if ( curTime - lastRepearTime > SConsts::TIME_QUANT )
 		{
-			fWorkAccumulator += pUnit->Size() * 
+			fWorkAccumulator += pUnit->Size() *
 													SConsts::RU_PER_QUANT *
 													( curTime - lastRepearTime ) / SConsts::TIME_QUANT;
 
@@ -478,7 +478,7 @@ void CFormationRepairUnitState::Segment()
 
 			// гусеницу - в первую очередь
 			if ( pTank && pTank->IsTrackDamaged() && // если повреждена и достаточно ресурсов
-					fWorkLeft >= fRepCost * SConsts::TANK_TRACK_HIT_POINTS ) 
+					fWorkLeft >= fRepCost * SConsts::TANK_TRACK_HIT_POINTS )
 			{
 				if ( fRepCost * SConsts::TANK_TRACK_HIT_POINTS <= fWorkAccumulator )
 				{
@@ -493,7 +493,7 @@ void CFormationRepairUnitState::Segment()
 				const float maxHP = pUnitInQuiestion->GetStats()->fMaxHP;
 				const float curHP = pUnitInQuiestion->GetHitPoints();
 				const float fRepCost = pUnitInQuiestion->GetStats()->fRepairCost * SConsts::REPAIR_COST_ADJUST;
-			
+
 				const float fNewHP = Heal( maxHP, curHP, fRepCost, &fWorkAccumulator, &fWorkLeft, pHomeTransport );
 				pUnitInQuiestion->IncreaseHitPoints( fNewHP - curHP );
 				if ( pUnitInQuiestion->GetStats()->fMaxHP == pUnitInQuiestion->GetHitPoints() )//починили
@@ -574,19 +574,19 @@ void CFormationResupplyUnitState::Segment()
 	{
 		if ( !IsValidObj( pUnitInQuiestion ) ||//реакция на смерть юнита
 					vPointInQuestion != pUnitInQuiestion->GetCenterPlain() // да пошел! еще бегать за ним.
-				) 
+				)
 		{
 			eState = EFRUS_FIND_UNIT_TO_SERVE;
 		}
 		if ( !IsValidObj( pHomeTransport ) )
 			TryInterruptState( 0 );
 	}
-	
+
 	switch ( eState )
 	{
 	case EFRUS_WAIT_FOR_HOME_TRANSPORT:
 		if ( pUnit->GetNextCommand() )
-			pUnit->SetCommandFinished();		
+			pUnit->SetCommandFinished();
 
 		break;
 	case EFRUS_WAIT_FOR_UNIT_TO_SERVE:
@@ -719,8 +719,8 @@ void CFormationResupplyUnitState::Segment()
 		if ( curTime - lastResupplyTime > SConsts::TIME_QUANT )
 		{
 			//такую работу произвели инженеры
-			fWorkAccumulator += pUnit->Size() * 
-													SConsts::RU_PER_QUANT * 
+			fWorkAccumulator += pUnit->Size() *
+													SConsts::RU_PER_QUANT *
 													(curTime - lastResupplyTime) / SConsts::TIME_QUANT;
 			fWorkAccumulator = (std::min)( fWorkAccumulator, fWorkLeft );
 			lastResupplyTime = curTime ;
@@ -780,7 +780,7 @@ void CFormationResupplyUnitState::Segment()
 bool CFormationResupplyUnitState::CheckUnit( CAIUnit *pU, CFormationServeUnitState::CFindUnitPredicate * pPred, const float fResurs, const CVec2 &vCenter )
 {
 	if ( pU && pU->IsRefValid() && pU->IsAlive() &&
-			/*pU->GetPlayer() == pU->GetPlayer() &&*/ 
+			/*pU->GetPlayer() == pU->GetPlayer() &&*/
 			pU->IsIdle() && pU->IsFree() &&
 			fabs2( pU->GetCenterPlain() - vCenter ) < sqr( SConsts::RESUPPLY_RADIUS ) )
 	{
@@ -818,16 +818,16 @@ bool CFormationResupplyUnitState::CheckUnit( CAIUnit *pU, CFormationServeUnitSta
 				else if ( pPred->SetUnit( pU, curAmmo, fabs( pU->GetCenterPlain() - vCenter ) ) )
 					return true;
 			}
-		}			
+		}
 	}
 	return false;
 }
 
-void CFormationResupplyUnitState::FindUnitToServe( const CVec2 &vCenter, 
-																												int nPlayer, 
-																												const float fResurs, 
-																												CCommonUnit * pLoaderSquad,  
-																												CFormationServeUnitState::CFindUnitPredicate * pPred, 
+void CFormationResupplyUnitState::FindUnitToServe( const CVec2 &vCenter,
+																												int nPlayer,
+																												const float fResurs,
+																												CCommonUnit * pLoaderSquad,
+																												CFormationServeUnitState::CFindUnitPredicate * pPred,
 																												CAIUnit *_pPreferredUnit )
 {
 	// first - check prefered unit
@@ -864,7 +864,7 @@ ETryStateInterruptResult CFormationResupplyUnitState::TryInterruptState( class C
 		Interrupt();
 		return TSIR_YES_IMMIDIATELY;
 	}
-	else if ( 
+	else if (
 				pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_SET_HOME_TRANSPORT ||
 				pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_LOAD )
 	{
@@ -902,7 +902,7 @@ void CFormationLoadRuState::Segment()
 	{
 	case EFRUS_WAIT_FOR_HOME_TRANSPORT:
 		if ( pUnit->GetNextCommand() )
-			pUnit->SetCommandFinished();		
+			pUnit->SetCommandFinished();
 
 		break;
 	case EFRUS_FIND_UNIT_TO_SERVE:
@@ -968,11 +968,11 @@ void CFormationLoadRuState::Segment()
 		if ( curTime - lastResupplyTime > SConsts::TIME_QUANT )
 		{
 			//такую работу произвели инженеры
-			fWorkAccumulator += pUnit->Size() * 
-													SConsts::RU_PER_QUANT * 
+			fWorkAccumulator += pUnit->Size() *
+													SConsts::RU_PER_QUANT *
 													(curTime - lastResupplyTime)/SConsts::TIME_QUANT;
 			lastResupplyTime = curTime ;
-			
+
 			if ( fWorkAccumulator > SConsts::ENGINEER_RU_CARRY_WEIGHT )
 				Interrupt();
 		}
@@ -1172,9 +1172,9 @@ IUnitState * CFormationBuildLongObjectState::Instance( class CFormation *pUnit, 
 }
 
 CFormationBuildLongObjectState::CFormationBuildLongObjectState( class CFormation *pUnit, class CLongObjectCreation *pCreation )
-: pUnit(pUnit), 
-	eState(ETBS_WAITING_FOR_HOMETRANSPORT), 
-	lastTime(curTime), 
+: pUnit(pUnit),
+	eState(ETBS_WAITING_FOR_HOMETRANSPORT),
+	lastTime(curTime),
 	pCreation( pCreation ),
 	fCompletion( 0 )
 {
@@ -1240,7 +1240,7 @@ void CFormationBuildLongObjectState::Segment()
 				TryInterruptState( 0 );
 			}
 		}
-		
+
 		break;
 	case FBFS_APPROACHING_STARTPOINT:
 		if ( pUnit->IsIdle() )
@@ -1276,7 +1276,7 @@ void CFormationBuildLongObjectState::Segment()
 				pCreation->BuildNext();
 				eState = FBFS_NEXT_SEGMENT;
 			}
-			else 
+			else
 				pCreation->AddWork( fAddWork );
 
 			pHomeTransport->DecResursUnitsLeft( fDecResource );
@@ -1382,7 +1382,7 @@ void CFormationBuildLongObjectState::Segment()
 					break;
 				}
 			}
-			if ( bEveryIsOnPlace ) 
+			if ( bEveryIsOnPlace )
 			{
 				eState = FBFS_BUILD_SEGMENT;
 				nCurrentSegment = pCreation->GetCurIndex();
@@ -1410,7 +1410,7 @@ void CFormationBuildLongObjectState::SendUnitsAway( std::list<CPtr<CAIUnit> > *p
 		CAIUnit * pUnit = *it;
 		int nSign = - line.GetSign( pUnit->GetCenterPlain() );
 		nSign = nSign != 0 ? nSign : 1;
-		const CVec2 vTo = pUnit->GetCenterPlain() + 
+		const CVec2 vTo = pUnit->GetCenterPlain() +
 					pUnit->GetBoundTileRadius() * 10 * SConsts::TILE_SIZE * nSign * vAway;
 		theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_MOVE_TO, vTo ), pUnit );
 	}
@@ -1429,7 +1429,7 @@ IUnitState * CFormationBuildEntrenchmentState::Instance( CFormation *pUnit, CLon
 
 CFormationBuildEntrenchmentState::CFormationBuildEntrenchmentState( CFormation *pUnit, CLongObjectCreation *_pCreation, const CVec2 &_vStartPoint )
 : pFormation( pUnit ), eState( EBES_START_APPROACHING ), lastTime( curTime ), fCompletion( 0.0f ), bEndPointSelected( false ),
-vStartPoint( _vStartPoint ) 
+vStartPoint( _vStartPoint )
 {
 	DebugTrace( ">>>> CFormationBuildEntrenchmentState::CFormationBuildEntrenchmentState( %d, ..., %2.3f x %2.3f )", pUnit->GetUniqueID(), _vStartPoint.x, _vStartPoint.y );
 	pCreation = checked_cast<CEntrenchmentCreation*>( _pCreation );
@@ -1499,9 +1499,9 @@ void CFormationBuildEntrenchmentState::Segment()
 				const int nIndex = ( ( i / nBuildersPerSegment + pCreation->GetCurIndex() ) >= nMaxIndex ) ?
 					( nMaxIndex - 1 ) : ( i / nBuildersPerSegment + pCreation->GetCurIndex() );
 				const bool bIsLastSegment = nIndex == nMaxIndex - 1;
-				int nBuilders = bIsLastSegment ? 
+				int nBuilders = bIsLastSegment ?
 					( nSize - nBuildersPerSegment * ( nMaxIndex - 1 - pCreation->GetCurIndex() ) ) : nBuildersPerSegment;
-				const int nMyNumber = bIsLastSegment ? 
+				const int nMyNumber = bIsLastSegment ?
 					( i - nBuildersPerSegment * ( nMaxIndex - 1 - pCreation->GetCurIndex() ) ) : ( i % nBuildersPerSegment );
 				NI_VERIFY( nBuilders != 0, "Error in formula for number of builders", nBuilders = nBuildersPerSegment );
 				const CVec2 vTargetPoint = pCreation->GetBuildPointForIndex( nMyNumber, nBuilders, nIndex );
@@ -1581,7 +1581,7 @@ void CFormationBuildEntrenchmentState::SendUnitsAway( std::list<CPtr<CAIUnit> > 
 		CAIUnit * pUnit = *it;
 		int nSign = line.GetSign( pUnit->GetCenterPlain() );
 		nSign = nSign != 0 ? nSign : 1;
-		const CVec2 vTo = pUnit->GetCenterPlain() + 
+		const CVec2 vTo = pUnit->GetCenterPlain() +
 			pUnit->GetBoundTileRadius() * 3 * SConsts::TILE_SIZE * nSign * vAway;
 		if ( pUnit->IsIdle() )
 			pUnit->UnitCommand( new CAICommand( SAIUnitCmd( ACTION_COMMAND_MOVE_TO, vTo ) ), false, false );
@@ -1633,7 +1633,7 @@ void CFormationGunCrewState::SUnit::SetAction( const CFormationGunCrewState::SCr
 	bForce |= force;
 }
 
-bool CFormationGunCrewState::SUnit::IsAlive() const 
+bool CFormationGunCrewState::SUnit::IsAlive() const
 {
 	return IsValidObj( pUnit );
 }
@@ -1684,7 +1684,7 @@ CFormationGunCrewState::CFormationGunCrewState( class CFormation *_pUnit, CArtil
 	b360DegreesRotate = pStats->GetPlatform( pArtillery->GetUniqueId(), 1 ).constraint.wMax >= 65535;
 	ClearState();
 	updater.AddUpdate( 0, ACTION_NOTIFY_SERVED_ARTILLERY, pUnit, pArtillery->GetUniqueId() );
-	
+
 	//capturnig enemy artillery.
 	if ( EDI_ENEMY == theDipl.GetDiplStatus( pArtillery->GetInitialPlayer(), pUnit->GetPlayer() ) )
 	{
@@ -1726,7 +1726,7 @@ bool CFormationGunCrewState::ClearState()
 		pArtillery->SetOffTankPit();
 		pArtillery->Disappear();
 		pUnit->SetCommandFinished();
-		
+
 		return true;
 	}
 	else
@@ -1747,7 +1747,7 @@ void CFormationGunCrewState::Segment()
 {
 	if ( !IsValidObj( pArtillery ) )
 	{
-		pArtillery->DelCrew();	
+		pArtillery->DelCrew();
 		TryInterruptState( 0 );
 		return;
 	}
@@ -1756,10 +1756,10 @@ void CFormationGunCrewState::Segment()
 	const uint16_t wCurTurretVerDir = pTurret->GetVerCurAngle();
 
 	const bool bNoAnimation = EGSS_MOVE != eGunState && b360DegreesRotate;
-	
+
 	const uint16_t wCurTuttetDir = pArtillery->GetFrontDirection() + wCurTurretHorDir;
 	const CVec2 vTurretDir = GetVectorByDirection( wGunTurretDir );
-	
+
 	const bool bReloaderRotatesWithTurret = b360DegreesRotate && pStats->etype != RPG_TYPE_ART_AAGUN;
 
 	const CVec2 vGunDir =  bReloaderRotatesWithTurret ? vTurretDir : GetVectorByDirection( pArtillery->GetFrontDirection() );
@@ -1770,7 +1770,7 @@ void CFormationGunCrewState::Segment()
 	vGunPos = vCurGunPos;
 	wGunTurretDir = wCurTuttetDir;
 	wGunBaseDir = wCurBaseDir;
-	
+
 	EGunServeState eDesiredState = EGSS_OPERATE;
 	if ( pArtillery->GetState()->GetName() == EUSN_MOVE && pArtillery->IsUninstalled() )
 		eDesiredState = EGSS_MOVE;
@@ -1795,7 +1795,7 @@ void CFormationGunCrewState::Segment()
 	RefillCrew();
 	const int iUnitsOnPlace = CheckThatAreOnPlace();
 	SendThatAreNotOnPlace( bNoAnimation );
-	
+
 	// работа с пушкой
 	switch ( eGunState )
 	{
@@ -1859,7 +1859,7 @@ void CFormationGunCrewState::Segment()
 	}
 
 	UpdateAnimations();
-	
+
 	pArtillery->SetOperable( 1.0f );
 
 	startTime = curTime ;
@@ -1922,12 +1922,12 @@ void CFormationGunCrewState::RecountPoints( const CVec2 &vGunDir, const CVec2 &v
 	int i = 0;
 	for ( std::list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
 	{
-		const CVec2 freePoint( -pStats->vAABBHalfSize.y + pStats->vAABBCenter.y - SConsts::TILE_SIZE, i * SConsts::TILE_SIZE/2 );	
+		const CVec2 freePoint( -pStats->vAABBHalfSize.y + pStats->vAABBCenter.y - SConsts::TILE_SIZE, i * SConsts::TILE_SIZE/2 );
 		const CVec2 vServePoint = vCenter + ( freePoint ^ vGunDir );
 		(*it).vServePoint = vServePoint;
 		++i;
 	}
-}				
+}
 
 uint16_t CFormationGunCrewState::CalcDirToAmmoBox( int nCrewNumber ) const
 {
@@ -1951,7 +1951,7 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcAniamtionForM
 	animation.wDirection = wGunTurretDir;
 	switch( iUnitNumber )
 	{
-		case 0: 
+		case 0:
 
 			if ( EGSS_OPERATE == eGunState && IsGunAttacking() )
 				animation.eAction = ACTION_NOTIFY_USE_UP;
@@ -1961,23 +1961,23 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcAniamtionForM
 				animation.eAction = ACTION_NOTIFY_USE_DOWN;
 
 			break;
-		case 1: 
-			animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+		case 1:
+			animation.eAction = ACTION_NOTIFY_USE_DOWN;
 			break;
 		default:
-			animation.eAction = ACTION_NOTIFY_NONE; 
+			animation.eAction = ACTION_NOTIFY_NONE;
 			break;
 	}
 
 	return animation;
 }
 
-bool CFormationGunCrewState::IsGunAttacking() const 
+bool CFormationGunCrewState::IsGunAttacking() const
 {
 	return 	pArtillery->IsInstalled() &&
 					pArtillery->GetState() &&
-					( 
-						pArtillery->GetState()->IsAttackingState() || 
+					(
+						pArtillery->GetState()->IsAttackingState() ||
 						(b360DegreesRotate ? false : pArtillery->GetTurret( 0 )->GetHorCurAngle() != 0 )
 					) &&
 					0 != pArtillery->GetGun( 0 )->GetNAmmo();
@@ -2030,9 +2030,9 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 					animation.wDirection = wGunTurretDir;
 					break;
 				}
-				
+
 				break;
-			
+
 			case EGOSS_RELOAD:
 				{
 					switch( nReloadPhaze )
@@ -2040,30 +2040,30 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 					case 0: // достать из ящика патрон
 						switch ( iUnitNumber )
 						{
-						case 0: 
-							animation.wDirection = wGunTurretDir; 
-							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
-							else
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
-							break;
-						case 2: 
-							animation.wDirection = wGunTurretDir; 
+						case 0:
+							animation.wDirection = wGunTurretDir;
 							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
 								animation.eAction = ACTION_NOTIFY_USE_DOWN;
-							else 
-								animation.eAction = ACTION_NOTIFY_IDLE; 
+							else
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
+							break;
+						case 2:
+							animation.wDirection = wGunTurretDir;
+							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
+							else
+								animation.eAction = ACTION_NOTIFY_IDLE;
 
 							break;
-						case 1: 
+						case 1:
 							animation.wDirection = CalcDirToAmmoBox( 1 );
-							animation.eAction = ACTION_NOTIFY_USE_DOWN; 
-							
+							animation.eAction = ACTION_NOTIFY_USE_DOWN;
+
 							break;
-						default: 
-							animation.eAction = ACTION_NOTIFY_IDLE; 
-							animation.wDirection = wGunTurretDir; 
-							
+						default:
+							animation.eAction = ACTION_NOTIFY_IDLE;
+							animation.wDirection = wGunTurretDir;
+
 							break;
 						}
 
@@ -2071,13 +2071,13 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 					case 1:	// передать заряжающему
 						switch ( iUnitNumber )
 						{
-						case 0: 
+						case 0:
 							animation.wDirection = wGunTurretDir;
 							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
 							else
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
-							
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
+
 							break;
 						case 2: // заряжаюший
 							animation.wDirection = CalcDirFromTo( 2, 1 );
@@ -2092,13 +2092,13 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) // у миномета передают патрон сидя
 								animation.eAction = ACTION_NOTIFY_USE_DOWN;
 							else
-								animation.eAction = ACTION_NOTIFY_USE_UP; 
+								animation.eAction = ACTION_NOTIFY_USE_UP;
 
 							break;
-						default: 
-							animation.wDirection = wGunTurretDir; 
-							animation.eAction = ACTION_NOTIFY_IDLE; 
-							
+						default:
+							animation.wDirection = wGunTurretDir;
+							animation.eAction = ACTION_NOTIFY_IDLE;
+
 							break;
 						}
 
@@ -2108,33 +2108,33 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 						switch ( iUnitNumber )
 						{
 						case 0: // при зарядке миномета встать
-							animation.wDirection = wGunTurretDir; 
-							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) 
+							animation.wDirection = wGunTurretDir;
+							if ( pStats->etype == RPG_TYPE_ART_MORTAR )
 								animation.eAction = ACTION_NOTIFY_USE_UP;
 							else
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
 
 							break;
 						case 1: // подающий у миномета сидит
-							animation.wDirection = CalcDirToAmmoBox( 1 ); 
-							animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+							animation.wDirection = CalcDirToAmmoBox( 1 );
+							animation.eAction = ACTION_NOTIFY_USE_DOWN;
 
 							break;
-						case 2: 
-							animation.wDirection = wGunTurretDir; 
-							if ( pStats->etype == RPG_TYPE_ART_MORTAR ) 
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+						case 2:
+							animation.wDirection = wGunTurretDir;
+							if ( pStats->etype == RPG_TYPE_ART_MORTAR )
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
 							else
-								animation.eAction = ACTION_NOTIFY_USE_UP; 
+								animation.eAction = ACTION_NOTIFY_USE_UP;
 
 							break;
-						default: 
-							animation.wDirection = wGunTurretDir; 
-							animation.eAction = ACTION_NOTIFY_IDLE; 
-	
+						default:
+							animation.wDirection = wGunTurretDir;
+							animation.eAction = ACTION_NOTIFY_IDLE;
+
 							break;
 						}
-						
+
 						break;
 					}
 				}
@@ -2153,35 +2153,35 @@ CFormationGunCrewState::SCrewAnimation CFormationGunCrewState::CalcNeededAnimati
 						animation.eAction = ACTION_NOTIFY_IDLE;
 					else
 					{
-						if ( pStats->etype == RPG_TYPE_ART_MORTAR && iUnitNumber >= 0 && iUnitNumber < 3  )  
+						if ( pStats->etype == RPG_TYPE_ART_MORTAR && iUnitNumber >= 0 && iUnitNumber < 3  )
 							animation.eAction = ACTION_NOTIFY_USE_DOWN; // у миномета рассчет сидит во время боя
 						else
 						{
 							switch ( iUnitNumber )
 							{
-							case 0: 
+							case 0:
 								animation.wDirection = wGunTurretDir;
-								if ( pStats->etype == RPG_TYPE_ART_MORTAR ) 
+								if ( pStats->etype == RPG_TYPE_ART_MORTAR )
 									animation.eAction = ACTION_NOTIFY_USE_UP;
 								else
-									animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+									animation.eAction = ACTION_NOTIFY_USE_DOWN;
 								break;
-							case 1: 
+							case 1:
 								animation.wDirection = CalcDirToAmmoBox( 1 );
-								animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+								animation.eAction = ACTION_NOTIFY_USE_DOWN;
 
 								break;
-							case 2: 
-								animation.wDirection = wGunTurretDir; 
-								if ( pStats->etype == RPG_TYPE_ART_MORTAR ) 
-									animation.eAction = ACTION_NOTIFY_USE_DOWN; 
+							case 2:
+								animation.wDirection = wGunTurretDir;
+								if ( pStats->etype == RPG_TYPE_ART_MORTAR )
+									animation.eAction = ACTION_NOTIFY_USE_DOWN;
 								else
-									animation.eAction = ACTION_NOTIFY_IDLE; 
+									animation.eAction = ACTION_NOTIFY_IDLE;
 
 								break;
-							default: 
-								animation.wDirection = wGunTurretDir; 
-								animation.eAction = ACTION_NOTIFY_IDLE; 
+							default:
+								animation.wDirection = wGunTurretDir;
+								animation.eAction = ACTION_NOTIFY_IDLE;
 
 								break;
 							}
@@ -2231,7 +2231,7 @@ int CFormationGunCrewState::CheckThatAreOnPlace()
 				++iOnPlace;
 				crewMember.SetAction( CalcNeededAnimation( i ) );
 			}
-			else 
+			else
 			{
 				++iOnPlace;
 				crewMember.bOnPlace = true;
@@ -2282,7 +2282,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 				{
 					CArtilleryCrewPath* pPath = checked_cast<CArtilleryCrewPath*>( crewMember.pUnit->GetSmoothPath() );
 					const float fSpeed = pArtillery->GetSpeed();
-					
+
 					// to cure not smooth moving
 					// const float fCurrentSpeed = Max( fSpeed, crewMember.pUnit->GetMaxPossibleSpeed() );
 					pPath->SetParams( crewMember.vServePoint, 0 );//fCurrentSpeed );
@@ -2318,7 +2318,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 					crewMember.pUnit->SetDirectionVec( vDiff );
 					continue;
 				}
-				
+
 				if ( fDiff2 < 0.01f ) // near to desired place
 				{
 					NI_ASSERT( dynamic_cast<CArtilleryCrewPath*>(crewMember.pUnit->GetSmoothPath()) != 0, "wrong path" );
@@ -2344,7 +2344,7 @@ void CFormationGunCrewState::SendThatAreNotOnPlace( const bool bNoAnimation )
 				crewMember.SetAction( CalcNeededAnimation( i ) );
 		}
 	}
-	
+
 	// послать свободных по обычному пути
 	for ( std::list< SUnit >::iterator it = freeUnits.begin(); it != freeUnits.end(); ++it )
 	{
@@ -2389,7 +2389,7 @@ void CFormationGunCrewState::SetAllAnimation( EActionNotify action, bool force )
 {
 	for ( int i=0; i< crew.size(); ++i )
 		crew[i].SetAction( SCrewAnimation(action, crew[i].pUnit->GetDirection()), force );
-}				
+}
 
 void CFormationGunCrewState::Interrupt()
 {
@@ -2410,18 +2410,18 @@ void CFormationGunCrewState::Interrupt()
 	pUnit->SetCommandFinished();
 	pArtillery->SetOperable( false );
 	pArtillery->DelCrew();
-	
+
 	updater.AddUpdate( 0, ACTION_NOTIFY_SERVED_ARTILLERY, pUnit, -1 );
 }
 
-bool CFormationGunCrewState::CanInterrupt() 
+bool CFormationGunCrewState::CanInterrupt()
 {
 	return false;
 }
 
 ETryStateInterruptResult CFormationGunCrewState::TryInterruptState( class CAICommand *pCommand )
 {
-	if ( !pCommand || 
+	if ( !pCommand ||
 				pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_CATCH_TRANSPORT ||
 				pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_LEAVE ||
 				pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_LOAD_NOW ||
@@ -2509,7 +2509,7 @@ IUnitState* CFormationUseSpyglassState::Instance( CFormation *pFormation, const 
 {
 	return new CFormationUseSpyglassState( pFormation, point );
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CFormationUseSpyglassState::CFormationUseSpyglassState( CFormation *_pFormation, const CVec2 &point )
 : pFormation( _pFormation )
 {
@@ -2528,7 +2528,7 @@ CFormationUseSpyglassState::CFormationUseSpyglassState( CFormation *_pFormation,
 
 	if ( bHoldPos )
 	{
-		pFormation->Stop();	
+		pFormation->Stop();
 		pFormation->SetBehaviourMoving( SBehaviour::EMHoldPos );
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
@@ -2606,13 +2606,13 @@ CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormati
 
 			// do not use officer if possible.
 			std::vector< CPtr<CSoldier> > soldiersToUse;
-			
+
 			for ( int i = 0; i < pUnit->Size(); ++i )
 			{
 				if ( bUseOfficer || RPG_TYPE_OFFICER != (*pUnit)[i]->GetStats()->etype )
 					soldiersToUse.push_back( (*pUnit)[i] );
 			}
-			
+
 			// place soldier from crew on their place
 //			const int nSize = pCrew->Size();
 			std::vector< CPtr<CSoldier> > soldiersToDelete;
@@ -2636,7 +2636,7 @@ CFormationCaptureArtilleryState::CFormationCaptureArtilleryState( class CFormati
 					usedSoldiers.push_back( pOldSoldier );
 				}
 			}
-			
+
 			for ( int nSold = 0; nSold < soldiersToDelete.size(); ++nSold ) // crew has more memebers that is needed
 				soldiersToDelete[nSold]->Disappear();
 		}
@@ -2655,7 +2655,7 @@ void CFormationCaptureArtilleryState::Segment()
 		pUnit->SetSelectable( pUnit->GetPlayer() == theDipl.GetMyNumber(), true );
 		return;
 	}
-	
+
 	switch ( eState )
 	{
 	case FCAS_EXITTTING:
@@ -2672,7 +2672,7 @@ void CFormationCaptureArtilleryState::Segment()
 				pUnit->SetCommandFinished();
 				return;
 			}
-			
+
 			InitStatus();
 			CPtr<IStaticPath> pPath = CreateStaticPathToPoint( pArtillery->GetCenterPlain(), VNULL2, pUnit, true, GetAIMap() );
 			if ( pPath )
@@ -2680,7 +2680,7 @@ void CFormationCaptureArtilleryState::Segment()
 				pUnit->SendAlongPath( pPath, VNULL2, true );
 				eState = FCAS_APPROACHING;
 			}
-			else 
+			else
 			{
 				pUnit->SendAcknowledgement( ACK_NEGATIVE );
 				pUnit->SetCommandFinished();
@@ -2695,7 +2695,7 @@ void CFormationCaptureArtilleryState::Segment()
 			pArtillery->SetCrew( pUnit ); // отдались
 			pArtillery->InstallBack( false );
 		}
-		
+
 		break;
 	}
 }
@@ -2742,11 +2742,11 @@ void CFormationRepairBridgeState::Segment()
 	case FRBS_WAIT_FOR_HOMETRANSPORT:
 		if ( pUnit->GetNextCommand() )
 			pUnit->SetCommandFinished();
-		
+
 		break;
 	case FRBS_START_APPROACH:
 		{
-			if ( bridgeSpans.empty() ) 
+			if ( bridgeSpans.empty() )
 				pUnit->SetCommandFinished();
 			else
 			{
@@ -2756,7 +2756,7 @@ void CFormationRepairBridgeState::Segment()
 				eState = FRBS_APPROACH;
 			}
 		}
-		
+
 		//find first damaged segment
 		break;
 	case FRBS_APPROACH:
@@ -2809,10 +2809,10 @@ void CFormationRepairBridgeState::Segment()
 					const SHPObjectRPGStats * pStats = bridgeSpans[i]->GetStats();
 					bridgeSpans[i]->SetHitPoints( bridgeSpans[i]->GetHitPoints() + fWorkPerSpan / (pStats->fRepairCost * SConsts::REPAIR_COST_ADJUST));
 					fWorkLeft -= fWorkPerSpan;
-					pHomeTransport->DecResursUnitsLeft( fWorkPerSpan );	
+					pHomeTransport->DecResursUnitsLeft( fWorkPerSpan );
 				}
 			}
-			
+
 			fWorkDone = 0;
 			if ( 1.0f >= fWorkLeft )
 				pUnit->SetCommandFinished();
@@ -2896,7 +2896,7 @@ void CFormationRepairBuildingState::Segment()
 	{
 	case EFRBS_WAIT_FOR_HOME_TRANSPORT:
 		if ( pUnit->GetNextCommand() )
-			pUnit->SetCommandFinished();		
+			pUnit->SetCommandFinished();
 
 		break;
 	case EFRBS_START_APPROACH:
@@ -2938,7 +2938,7 @@ void CFormationRepairBuildingState::Segment()
 			const float maxHP = pBuilding->GetStats()->fMaxHP;
 			const float curHP = pBuilding->GetHitPoints();
 			const float fRepCost = pBuilding->GetStats()->fRepairCost * SConsts::REPAIR_COST_ADJUST;
-			
+
 			const float fNewHP = Heal( maxHP, curHP, fRepCost, &fWorkAccumulator, &fWorkLeft, pHomeTransport );
 			pBuilding->SetHitPoints( fNewHP );
 			if ( pBuilding->GetStats()->fMaxHP == pBuilding->GetHitPoints() ||  //починили

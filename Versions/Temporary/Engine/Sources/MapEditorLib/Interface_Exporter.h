@@ -6,7 +6,7 @@
 struct IReportCollector : public CObjectBase
 {
 	virtual void AddReport( const std::string &szObjectType,
-													const std::string &szObjectName, 
+													const std::string &szObjectName,
 		                      const int nObjectID,
 													const std::string &szUserReport ) = 0;
 };
@@ -22,21 +22,21 @@ struct IReportCollector : public CObjectBase
 
 // При создании конвертера
 // Constructor()
-// StartExport 
+// StartExport
 // Export()
 // ...
 // Export()
-// FinishExport 
+// FinishExport
 
 // При разрушении конвертера
 // Destructor()
 
 // При переключении конвертеров ( не удаляется и не создается )
-// StartExport 
+// StartExport
 // Export()
 // ...
 // Export()
-// FinishExport 
+// FinishExport
 
 // Первый параметр
 #define FORCE_EXPORT true
@@ -74,11 +74,11 @@ struct IManipulator;
 struct IExporter : public CObjectBase
 {
 	// bForce - безусловный экспорт объектов (различные пункты меню)
-	// rszObjectTypeName используется при написании экспортеров для нескольких объектов 
+	// rszObjectTypeName используется при написании экспортеров для нескольких объектов
 	// (на каждый тип по своему экземпляру экпортера)
 	// Вызывается перед конвертацией данных
 	// true - все нормально
-	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта 
+	// false - для всех объектов этого типа экспорт не вызывается, опрос результата экспорта
 	// возвращает ER_FAIL, FinishExport не вызывается
 	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce ) = 0;
 	// Вызывается после конвертации данных
@@ -140,13 +140,13 @@ struct IExporterContainer : public CObjectBase
 	virtual void UnRegisterExportTool( IExportTool *pExportTool ) = 0;
 	//
 	// Методы для экпорта по умолчанию, так запускается иерархический экспорт
-	virtual bool StartExport( const std::string &rszObjectTypeName, 
-														bool bForce, 
-														bool bStartTools, 
+	virtual bool StartExport( const std::string &rszObjectTypeName,
+														bool bForce,
+														bool bStartTools,
 														bool bExportReferences ) = 0;
-	virtual void FinishExport( const std::string &rszObjectTypeName, 
-														bool bForce, 
-														bool bFinishTools, 
+	virtual void FinishExport( const std::string &rszObjectTypeName,
+														bool bForce,
+														bool bFinishTools,
 														bool bExportReferences ) = 0;
 	virtual EXPORT_RESULT ExportObject( IManipulator* pManipulator,
 																			const std::string &rszObjectTypeName,
@@ -154,11 +154,11 @@ struct IExporterContainer : public CObjectBase
 																			bool bForce,
 																			bool bExportReferences ) = 0;
 	// Методы для проверки по умолчанию, так запускается иерархическая проверка
-	virtual bool StartCheck( const std::string &rszObjectTypeName, 
-													bool bStartTools, 
+	virtual bool StartCheck( const std::string &rszObjectTypeName,
+													bool bStartTools,
 													bool bCheckReferences ) = 0;
-	virtual void FinishCheck( const std::string &rszObjectTypeName, 
-														bool bFinishTools, 
+	virtual void FinishCheck( const std::string &rszObjectTypeName,
+														bool bFinishTools,
 														bool bCheckReferences ) = 0;
 	virtual EXPORT_RESULT CheckObject( IManipulator* pManipulator,
 																		 const std::string &rszObjectTypeName,

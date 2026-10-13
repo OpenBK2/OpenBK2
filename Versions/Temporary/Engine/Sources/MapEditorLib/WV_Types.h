@@ -49,7 +49,7 @@ namespace NWV
 			}
 			return *this;
 		}
-		
+
 		//
 		// Indexed access (operator[], Get, Set), per-element weights (GetWeight,
 		// SetWeight) and erase are gone: nothing called them, and they asserted
@@ -86,7 +86,7 @@ namespace NWV
 			{
 				return ( -1 );
 			}
-			
+
 			int nWeight = TRandom::GetRandom( weights[ weights.size() - 1 ] );
 			int nMinIndex = 0;
 			int nMaxIndex = weights.size() - 1;

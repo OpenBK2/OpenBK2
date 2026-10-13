@@ -1102,7 +1102,7 @@ YY_RULE_SETUP
 {
 				*pszStringBuf = 0;
 				yylval.psz = szStringBuf;
-			
+
 				BEGIN(INITIAL);
 				return WSTRING;
 		}
@@ -1155,7 +1155,7 @@ YY_RULE_SETUP
 {
 			*pszStringBuf = 0;
 			yylval.psz = szStringBuf;
-			
+
 			BEGIN(INITIAL);
 			return STRING;
 		}
@@ -1208,7 +1208,7 @@ YY_RULE_SETUP
 {
 			*pszStringBuf = 0;
 			yylval.psz = szStringBuf;
-				
+
 			BEGIN(INITIAL);
 			return DEFAULT_VALUE;
 		}

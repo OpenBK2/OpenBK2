@@ -66,7 +66,7 @@ void RenderClouds( NGfx::CRenderContext *pRC, const SPerspDirectionalDepthInfo &
 	rc.SetVSConst( 27, renderInfo.nlp.vShift );
 	rc.SetVSConst( 28, proj.x() );
 	rc.SetVSConst( 29, proj.y() );
-	
+
 	const SNLProjectionInfo &nlp = depthInfo.nlp;
 	float fDet = 1 / ( nlp.vTexU.x * nlp.vTexV.y - nlp.vTexU.y * nlp.vTexV.x );
 	float fCx = -( + nlp.vTexV.y * nlp.vTexU.w - nlp.vTexU.y * nlp.vTexV.w ) * fDet;

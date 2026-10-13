@@ -30,18 +30,18 @@ IStatesFactory* CInTransportStatesFactory::Instance()
 bool CInTransportStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return 
+	return
 		(	cmdType == ACTION_COMMAND_DIE ||
 			cmdType == ACTION_COMMAND_DISAPPEAR );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IUnitState* CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CAICommand *pCommand )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );		
-	
+	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
+
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	IUnitState* pResult = 0;
-	
+
 	switch ( cmd.nCmdType )
 	{
 		case ACTION_COMMAND_DIE:
@@ -57,7 +57,7 @@ IUnitState* CInTransportStatesFactory::ProduceState( class CQueueUnit *pUnit, CA
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 IUnitState* CInTransportStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );		
+	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
 	return CSoldierRestOnBoardState::Instance( checked_cast<CSoldier*>(pUnit), 0 );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +81,7 @@ CSoldierRestOnBoardState::CSoldierRestOnBoardState( CSoldier *_pSoldier, CMilita
 			pSoldier->SetInTransport( pTransport );
 			pTransport->AddPassenger( pSoldier );
 		}
-		else 
+		else
 			pSoldier->SetCommandFinished();
 	}
 	else
@@ -93,14 +93,14 @@ void CSoldierRestOnBoardState::Segment()
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ETryStateInterruptResult CSoldierRestOnBoardState::TryInterruptState( class CAICommand *pCommand )
-{ 
+{
 	pSoldier->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const CVec2 CSoldierRestOnBoardState::GetPurposePoint() const
 {
-	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )	
+	if ( pSoldier && pSoldier->IsRefValid() && pSoldier->IsAlive() )
 		return pSoldier->GetCenterPlain();
 	else
 		return CVec2( -1.0f, -1.0f );

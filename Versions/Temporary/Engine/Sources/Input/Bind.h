@@ -19,7 +19,7 @@ struct SGameMessage
 	std::string szEventName;
 #endif
 	// general-purpose params
-	struct  
+	struct
 	{
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nParam1 = {};//union { int nParam1; uint32_t dwParam1; float fParam1; };

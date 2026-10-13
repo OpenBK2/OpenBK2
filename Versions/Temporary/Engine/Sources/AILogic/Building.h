@@ -42,7 +42,7 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	ZDATA_(CGivenPassabilityStObject)
 	ZPARENT(CStormableObject)
 	SAIAngle wDir;
-	
+
 	bool bKeyBuilding = {};
 	//
 
@@ -62,7 +62,7 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	CPtr<CCommonUnit> pLockingUnit;
 
 	NTimer::STime nextSegmTime = {};
-	
+
 	std::vector< CObj<CTurret> > turrets;
 	std::vector< CPtr<CUnitGuns> > guns;
 
@@ -82,13 +82,13 @@ class CBuilding : public CGivenPassabilityStObject, public ILoadableObject, publ
 	int nLastPlayer = {};
 
 	int nScriptID = {};
-	
+
 	// должны ли юниты убегать из здания, когда у него останется мало здоровья
 	bool bShouldEscape = {};
 	// units escaped
 	bool bEscaped = {};
 	NTimer::STime timeOfDeath = {};
-	
+
 	std::vector<NTimer::STime> lastLeave;
 protected:
 	int nLinkID = {};
@@ -96,7 +96,7 @@ protected:
 private:
 	bool bNewtralInfantryInside = {};
 
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CGivenPassabilityStObject*)this); f.Add(2,(CStormableObject*)this); f.Add(3,&wDir); f.Add(4,&bKeyBuilding); f.Add(5,&startOfRest); f.Add(6,&bAlarm); f.Add(7,&medical); f.Add(8,&fire); f.Add(9,&rest); f.Add(10,&nOveralPlaces); f.Add(11,&nIterator); f.Add(12,&pLockingUnit); f.Add(13,&nextSegmTime); f.Add(14,&turrets); f.Add(15,&guns); f.Add(16,&lastDistibution); f.Add(17,&observationPlaces); f.Add(18,&sides); f.Add(19,&firePlace2Observation); f.Add(20,&firePlace2Soldier); f.Add(21,&nLastFreeFireSoldierChoice); f.Add(22,&nLastPlayer); f.Add(23,&nScriptID); f.Add(24,&bShouldEscape); f.Add(25,&bEscaped); f.Add(26,&timeOfDeath); f.Add(27,&lastLeave); f.Add(28,&nLinkID); f.Add(29,&pStats); f.Add( 30, &bNewtralInfantryInside ); return 0; }
 
 	//
@@ -198,7 +198,7 @@ public:
 
 	virtual void Segment();
 	virtual const NTimer::STime GetNextSegmentTime() const { return nextSegmTime; }
-	
+
 	virtual EStaticObjType GetObjectType() const { return ESOT_BUILDING; }
 
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
@@ -213,25 +213,25 @@ public:
 	virtual const int GetNDefenders() const;
 	virtual class CSoldier* GetUnit( const int n ) const;
 	virtual const uint8_t GetPlayer() const;
-	
+
 	void Lock( class CCommonUnit *pUnit );
 	bool IsLocked( const int nPlayer ) const;
 	void Unlock( class CCommonUnit *pUnit );
 
 	void Alarm();
-	
+
 	const int GetNGunsInFireSlot( const int nSlot );
 	CBasicGun* GetGunInFireSlot( const int nSlot, const int nGun );
 	CTurret* GetTurretInFireSlot( const int nSlot );
 	float GetMaxFireRangeInSlot( const int nSlot ) const;
-	
+
 	bool IsSoldierVisible( const int nParty, const CVec2 &center, bool bCamouflated, const float fCamouflage ) const;
-	
+
 	virtual bool IsSelectable() const;
 	virtual const bool IsVisibleForDiplomacyUpdate();
-	
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
-	
+
 	// можно ли менять слот у этого слодата
 	virtual bool CanRotateSoldier( class CSoldier *pSoldier ) const;
 	// поставить солдата в place вместо сидящего там
@@ -240,7 +240,7 @@ public:
 	const int GetNFirePlaces() const;
 	// солдат, сидящий в fireplace, если fireplace пуст, то возвращает 0
 	class CSoldier* GetSoldierInFireplace( const int nFireplace) const;
-	
+
 	virtual void SetScriptID( const int _nScriptID ) { nScriptID = _nScriptID; }
 
 	const NTimer::STime& GetLastLeaveTime( const int nPlayer ) const { return lastLeave[nPlayer]; }
@@ -261,14 +261,14 @@ class CBuildingSimple : public CBuilding
 	int nSideToCapture = {};
 	NTimer::STime timeToChangeOwnerTotal = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CBuilding*)this); f.Add(2,&nPlayer); f.Add(3,&timeToChangeOwner); f.Add(4,&pKeyBuildingFlag); f.Add(5,&pNeutralKeyBuildingFlag); f.Add(6,&nSideToCapture); f.Add(7,&timeToChangeOwnerTotal); return 0; }
-	
+
 	void RaisePlayerFlag( int nNewPlayer );
 protected:
 	virtual void AddSoldier( CSoldier *pUnit );
 public:
 	CBuildingSimple() { }
 	CBuildingSimple( const SBuildingRPGStats *pStats, const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex, int nPlayerIndex, int nLinkID );
-	
+
 	virtual void Segment();
 	virtual const uint8_t GetPlayer() const;
 	void ChangePlayer( const int nPlayer );

@@ -34,7 +34,7 @@ REGISTER_EDITOR_IN_DLL( SquadRPGStats, CSquadEditor )
 //
 //
 
-CSquadEditor::CSquadEditor() : 
+CSquadEditor::CSquadEditor() :
 	pSquadState(0),
 	pMarkers(0),
 	pwndShortcutBar(0),
@@ -83,7 +83,7 @@ void CSquadEditor::Destroy()
 	}
 
 	HideAxis();
-	
+
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
@@ -115,13 +115,13 @@ int CSquadEditor::AddModel( const NDb::SModel *pModel, const CVec3 &rvPosition, 
 	IEditorScene *pScene = EditorScene();
 
 	CVec3 cp = GetSquadCenterPos();
-	
+
 	CVec3 vHumanPos = cp + rvPosition;
 
 	vHumanPos.z = GetTerrainHeight( vHumanPos.x, vHumanPos.y );
-				
+
 	int nRes = pScene->AddObject( OBJECT_ID_GENERATE, pModel, vHumanPos, CQuat( 0.0f, V3_AXIS_Z ), CVec3(1,1,1), OBJ_ANIM_MODE_DEFAULT, 0 );
-		
+
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nRes;
 	inf.pos = vHumanPos;
@@ -135,7 +135,7 @@ int CSquadEditor::AddModel( const NDb::SModel *pModel, const CVec3 &rvPosition, 
 
 bool CSquadEditor::RemoveModel( int nID )
 {
-	EditorScene()->RemoveObject( nID ); 
+	EditorScene()->RemoveObject( nID );
 
 	SSquadMemberInfo inf;
 	inf.nSceneObjectID = nID;
@@ -222,9 +222,9 @@ IManipulator* CSquadEditor::CreateSquadManipulator()
 {
 	IManipulator* pSquadManip = Singleton<IResourceManager>()->
 		CreateObjectManipulator
-		( 
-			GetObjectSet().szObjectTypeName, 
-			GetObjectSet().objectNameSet.begin()->first 
+		(
+			GetObjectSet().szObjectTypeName,
+			GetObjectSet().objectNameSet.begin()->first
 		);
 	return pSquadManip;
 }

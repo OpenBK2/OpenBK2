@@ -42,7 +42,7 @@ bool CCragState::CanInsertVSO()
 /**/
 
 NMapInfoEditor::CVSOInstanceList* CCragState::GetVSOList()
-{ 
+{
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.cragList );
 }
@@ -172,7 +172,7 @@ void CCragState::UpdateVSOInTerrain( int nVSOID )
 }
 
 
-// basement storage  
+// basement storage
 
 
 

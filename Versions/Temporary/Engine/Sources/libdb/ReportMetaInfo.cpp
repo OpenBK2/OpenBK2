@@ -105,7 +105,7 @@ void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTyp
 void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTypeDef::ETypeType eType,
 										int nContainedSize, NTypeDef::ETypeType eContainedType )
 {
-	//	DebugTrace( "\tArray-Field \"%s\" of type %d (contained type %d of size %d) with shift %d and size %d", 
+	//	DebugTrace( "\tArray-Field \"%s\" of type %d (contained type %d of size %d) with shift %d and size %d",
 	//		          szName.c_str(), eType, eContainedType, nContainedSize, nPtrShift, nSizeof );
 	SStructMetaInfo *pStruct = s_pMetaInfo->structsStack.back();
 	pStruct->AddField( szName, nPtrShift, nSizeof, eType, nContainedSize, eContainedType );
@@ -113,7 +113,7 @@ void ReportMetaInfo( const std::string &szName, int nPtrShift, int nSizeof, NTyp
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **

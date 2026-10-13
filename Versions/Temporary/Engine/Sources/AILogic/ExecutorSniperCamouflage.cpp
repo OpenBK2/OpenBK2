@@ -13,12 +13,12 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11082300, CExecutorSniperCamouflage )
 
 
 CExecutorSniperCamouflage::CExecutorSniperCamouflage( CAIUnit *_pUnit, bool _bAdvanced )
-	: CExecutor(TID_SNIPER_CAMOUFLAGE, 1000/SConsts::AI_SEGMENT_DURATION), 
+	: CExecutor(TID_SNIPER_CAMOUFLAGE, 1000/SConsts::AI_SEGMENT_DURATION),
 	pUnit( _pUnit ), nEnemysAround( 0 ), bWasSomeAction( false ), fCamoflage( 0.0f ),
 	eState( EASS_OFF ), timeLastUpdate( 0 ), timeDisableGroup( 0 ), eStateBeforeDisable( EASS_OFF ), bMoving( false ),
 	bAdvanced( _bAdvanced ), nBeginActionTime( curTime ), nLastActionTime( curTime ), bInAction( false ), bStartCounting( false ),
-	eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE ) 
-{ 
+	eAbilityType( _bAdvanced ? NDb::ABILITY_ADAVNCED_CAMOFLAGE_MODE : NDb::ABILITY_CAMOFLAGE_MODE )
+{
 }
 
 bool CExecutorSniperCamouflage::IsExecutorValidInternal() const
@@ -138,7 +138,7 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 				eState = eStateBeforeDisable;
 			else
 				UpdateState( EASS_DISABLE, float(nTimePassed) / float(nTimeNeeded) );
-		}	
+		}
 
 		break;
 	case EASS_OFF:
@@ -152,7 +152,7 @@ int CExecutorSniperCamouflage::UpdateCamoflage( const EUnitSpecialAbility eAbili
 			{
 				UpdateState( EASS_OFF, fCamoflage );
 			}
-		}	
+		}
 
 		break;
 	case EASS_SWITCHING_ON:
@@ -243,7 +243,7 @@ bool CExecutorSniperCamouflage::NotifyEvent( const CExecutorEvent &event )
 		bWasSomeAction = true;
 		if ( !bAdvanced || bStartCounting )
 			fCamoflage = (std::max)( 0.0f, fCamoflage - nEnemysAround * SConsts::SCamouflage::SNEAK_DECREASE_PER_SHOT );
-		
+
 		return true;
 	case EID_START_IDLE:
 		// mark as if unit is camoflating

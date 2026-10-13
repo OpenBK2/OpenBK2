@@ -47,7 +47,7 @@ void CAnimUnitMech::Segment()
 		{
 			if ( movingState.timeOfIntentionStart + 200 < curTime )
 			{
-				movingState.state = 
+				movingState.state =
 					movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ? SMovingState::EMS_MOVING : SMovingState::EMS_STOPPED;
 
 				if ( movingState.state == SMovingState::EMS_STOPPED )

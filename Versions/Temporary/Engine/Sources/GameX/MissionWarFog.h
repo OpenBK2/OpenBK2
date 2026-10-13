@@ -32,7 +32,7 @@
 	void Update( NTimer::STime nGameTime );
 	//
 	SInterfaceMissionWarFogInfo();
-private:	
+private:
 	void GetWarFog( CArray2D<float> *pWarFog, NTimer::STime time );
 	// возвращает переходный шум между опорными, генерирует опорные шумы при необходимости
 	void GetNoise( CArray2D<float> *pNoise, NTimer::STime time );

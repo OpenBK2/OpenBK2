@@ -392,8 +392,8 @@ void CSimpleObjectState::InsertObjectEnter()
 									pUpdate->info.nExpLevel = 0;
 									//
 									GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-								}		
-								
+								}
+
 								if ( CPtr<SAIActionUpdate> pUpdate = new SAIActionUpdate( nSceneID, ACTION_NOTIFY_ANIMATION_CHANGED, NDb::ANIMATION_IDLE, Singleton<IGameTimer>()->GetGameTime() ) )
  								{
 									GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
@@ -444,7 +444,7 @@ void CSimpleObjectState::InsertObjectEnter()
 					pUpdate->info.nExpLevel = 0;
 					//
 					GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-				}		
+				}
 				CSceneObjectList::iterator itSceneObject = sceneObjectlist.insert( sceneObjectlist.end(), SSceneObject() );
 				itSceneObject->nID = nSceneID;
 				itSceneObject->vPosition = VNULL3;
@@ -485,7 +485,7 @@ void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 			const float fDirection = fPlacementDirection;
 			fPlacementDirection += FP_PI2;
 			if ( fPlacementDirection > FP_2PI )
-			{ 
+			{
 				fPlacementDirection -= FP_2PI;
 			}
 			CVec2 vDirection = CreateFromPolarCoord( NMapInfoEditor::PLACEMENT_DIRECTION_RADIUS, fPlacementDirection );
@@ -495,7 +495,7 @@ void CSimpleObjectState::InsertObjectDraw( IPaintContext *pPaintDC )
 	}
 }
 
-// basement storage  
+// basement storage
 
 
 /**

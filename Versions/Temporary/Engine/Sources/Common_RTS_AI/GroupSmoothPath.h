@@ -53,7 +53,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		CPriorityCells geometry;
     float fMaxProjection = 0.0f;
 		float fRadius = 0.0f;
-		
+
 		SGeometry() : fMaxProjection( 0.0f ), fRadius( 0.0f ) {}
 		SGeometry( const CPriorityCells &_geometry, const float _fMaxProjection, const float _fRadius ) : geometry( _geometry ), fMaxProjection( _fMaxProjection ), fRadius( _fRadius ) {}
 
@@ -67,7 +67,7 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 		}
 	};
 	//
-	struct SUnitInfo 
+	struct SUnitInfo
 	{
 		CBasePathUnit *pUnit = nullptr;
 		int nCell = 0;
@@ -87,8 +87,8 @@ class COMMON_RTS_AI_EXPORT CGroupSmoothPath : public CStandartSmoothPathBasis
 	//
 	struct SUnitsInfoSortByPriority
 	{
-		bool operator()( const SUnitInfo unitInfo1, const SUnitInfo unitInfo2 ) const 
-		{ 
+		bool operator()( const SUnitInfo unitInfo1, const SUnitInfo unitInfo2 ) const
+		{
 			if ( unitInfo1.nPriority == unitInfo2.nPriority )
 				return unitInfo1.pUnit->GetUniqueID() > unitInfo2.pUnit->GetUniqueID();
 			else
@@ -122,7 +122,7 @@ protected:
 
 public:
 	CGroupSmoothPath() : nCurrentGeometry( 0 ), nUnitsCount( 0 ), nCellsCount( 0 ), fMaxPathShift( 0.0f ), fSpeedCoeff( 1.0f ) {}
-	
+
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 
 	void ChangeGeometry( const int nGeometry ) { nCurrentGeometry = nGeometry; }

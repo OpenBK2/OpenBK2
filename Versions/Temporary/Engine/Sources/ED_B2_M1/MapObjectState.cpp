@@ -168,7 +168,7 @@ void CMapObjectSelectState::UpdateSelectionBySelector( bool bShiftPressed )
 		{
 			if ( bShiftPressed )
 			{
-				pParentState->GetObjectInfoCollector()->InsertToSelection( pParentState->selector.vTerrainPos0, 
+				pParentState->GetObjectInfoCollector()->InsertToSelection( pParentState->selector.vTerrainPos0,
 																											 pParentState->selector.vTerrainPos1,
 																											 false );
 			}
@@ -253,7 +253,7 @@ void CMapObjectSelectState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 																																							dbid.ToString().c_str() ) );
 			}
 		}
-	}	
+	}
 }
 
 
@@ -313,7 +313,7 @@ void CMapObjectSelectState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &
 			NCursor::Set( NCursor::SHAPE_ARROW );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 		}
 	}
 }
@@ -334,7 +334,7 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 		else if ( nChar == VK_SPACE )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->SetSelectionHeightsToZero( true );
 				pParentState->GetObjectInfoCollector()->PickSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos );
 			}
@@ -342,28 +342,28 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 		else if ( nChar == VK_RETURN )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator( pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
 			}
 		}
 		else if ( nChar == VK_DELETE )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelection();
 			}
 		}
 		else if ( nChar == VK_HOME )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelectionLinkTo();
 			}
 		}
 		else if ( nChar == VK_END )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelectionLinks();
 			}
 		}
@@ -376,13 +376,13 @@ void CMapObjectSelectState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigne
 				NCursor::Set( NCursor::SHAPE_ARROW );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 			}
 		}
 		/**/
 		else if ( nChar == 'Q' )
 		{
-			pParentState->GetObjectInfoCollector()->Trace();			
+			pParentState->GetObjectInfoCollector()->Trace();
 		}
 	}
 }
@@ -455,7 +455,7 @@ void CMapObjectEditState::OperateSelection( unsigned nFlags, const CTPoint<int> 
 			{
 				pParentState->MoveSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, false, bSave );
 			}
-			else if ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION ) 
+			else if ( pParentState->GetObjectInfoCollector()->GetSelectionType() == NMapInfoEditor::SObjectSelection::ST_DIRECTION )
 			{
 				pParentState->RotateSelection( pParentState->pStoreInputState->lastEventInfo.vTerrainPos, false, false, bSave );
 			}
@@ -608,7 +608,7 @@ void CMapObjectEditState::OnMButtonDown( unsigned nFlags, const CTPoint<int> &rM
 			NCursor::Set( NCursor::SHAPE_ARROW );
 			ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
-			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
+			pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 		}
 	}
 }
@@ -638,7 +638,7 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 		else if ( nChar == VK_SPACE )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				// для правильной работы поднимания / опускания юнитов.
 				pParentState->pStoreInputState->OnRButtonDown( pParentState->pStoreInputState->lastEventInfo.nFlags, pParentState->pStoreInputState->lastEventInfo.point );
 				pParentState->SetSelectionHeightsToZero( false );
@@ -648,28 +648,28 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 		else if ( nChar == VK_RETURN )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->GetObjectInfoCollector()->ShowSelectionPropertyManipulator( pParentState->GetMapInfoEditor()->GetViewManipulator(), pParentState->GetMapInfoEditor()->GetObjectSet() );
 			}
 		}
-		else if ( nChar == VK_DELETE ) 
+		else if ( nChar == VK_DELETE )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelection();
 			}
 		}
 		else if ( nChar == VK_HOME )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelectionLinkTo();
 			}
 		}
 		else if ( nChar == VK_END )
 		{
 			if ( !pParentState->GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				pParentState->RemoveSelectionLinks();
 			}
 		}
@@ -682,13 +682,13 @@ void CMapObjectEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned 
 				NCursor::Set( NCursor::SHAPE_ARROW );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 			}
 		}
 		/**/
 		else if ( nChar == 'Q' )
 		{
-			pParentState->GetObjectInfoCollector()->Trace();			
+			pParentState->GetObjectInfoCollector()->Trace();
 		}
 	}
 }
@@ -913,14 +913,14 @@ void CMapObjectAddState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned n
 				pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 				ICommandHandlerContainer* pCommandHandlerContainer = Singleton<ICommandHandlerContainer>();
 				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, ID_MIMO_SWITCH_MULTI_STATE, reinterpret_cast<uintptr_t>( &( objectSet.szObjectTypeName ) ) );
-				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );	
+				pCommandHandlerContainer->HandleCommand( CHID_MAPINFO_MAPOBJECT_STATE, ID_MIMO_SWITCH_ADD_STATE, 0 );
 				return;
 			}
 		}
 		/**/
 		if ( nChar == 'Q' )
 		{
-			pParentState->GetObjectInfoCollector()->Trace();			
+			pParentState->GetObjectInfoCollector()->Trace();
 			return;
 		}
 		if ( pParentState->InsertObjectKeyDown( nChar, nFlags, pParentState->pStoreInputState->lastEventInfo.vTerrainPos ) )
@@ -941,12 +941,12 @@ void CMapObjectAddState::OnKeyUp( unsigned nChar, unsigned nRepCnt, unsigned nFl
 		/**
 		if ( nChar == VK_INSERT )
 		{
-			return;	
+			return;
 		}
 		/**/
 		if ( nChar == 'Q' )
 		{
-			return;	
+			return;
 		}
 		//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 		pParentState->pStoreInputState->OnKeyUp( nChar, nRepCnt, nFlags );
@@ -977,10 +977,10 @@ void CMapObjectPasteState::Enter()
 																														 false,
 																														 false,
 																														 pScene,
-																														 pParentState->GetMapInfoEditor()->GetViewManipulator() ); 
+																														 pParentState->GetMapInfoEditor()->GetViewManipulator() );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
-	}	
+	}
 }
 
 
@@ -1014,7 +1014,7 @@ void CMapObjectPasteState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMo
 																														 false,
 																														 false,
 																														 pScene,
-																														 pParentState->GetMapInfoEditor()->GetViewManipulator() ); 
+																														 pParentState->GetMapInfoEditor()->GetViewManipulator() );
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 		}
 	}
@@ -1043,7 +1043,7 @@ void CMapObjectPasteState::OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMo
 				pObjectController->Redo( false, true, pParentState->GetMapInfoEditor() );
 				Singleton<IControllerContainer>()->Add( pObjectController );
 			}
-		}			
+		}
 		pParentState->SetActiveInputState( CMapObjectState::IS_SELECT, true, false );
 	}
 }
@@ -1105,13 +1105,13 @@ void CMapObjectState::ClearSelection()
 
 
 NMapInfoEditor::SObjectInfoCollector* CMapObjectState::GetObjectInfoCollector()
-{ 
+{
 	return &( pParentState->pMapInfoEditor->objectInfoCollector );
 }
 
 
 CMapInfoEditor* CMapObjectState::GetMapInfoEditor()
-{ 
+{
 	return pParentState->pMapInfoEditor;
 }
 
@@ -1244,7 +1244,7 @@ void CMapObjectState::PostDraw( IPaintContext *pPaintDC )
 }
 
 
-bool CMapObjectState::CanEdit() 
+bool CMapObjectState::CanEdit()
 {
 	return ( ( GetObjectInfoCollector() != 0 ) && ( GetMapInfoEditor()->GetViewManipulator() != 0 ) && GetParentState()->GetEditParameters() );
 }
@@ -1375,7 +1375,7 @@ void CMapObjectState::RotateSelection( const CVec3 &rvPosition, bool bExactDirec
 		}
 		float fSelectionDirection = GetPolarAngle( rvPosition - GetObjectInfoCollector()->GetSelectionPosition() ) - FP_PI2;
 		if ( fSelectionDirection < 0.0f )
-		{ 
+		{
 			fSelectionDirection += FP_2PI;
 		}
 		GetObjectInfoCollector()->RotateSelection( &objectEditInfo, fSelectionDirection, bExactDirection, bIgnoreDifference,
@@ -1405,7 +1405,7 @@ bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 		case ID_MIMO_SWITCH_ADD_STATE:
-		{	
+		{
 			SwitchToAddState();
 			return true;
 		}
@@ -1425,7 +1425,7 @@ bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_SELECTION_CLEAR:
 		{
 			if ( !GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				RemoveSelection();
 			}
 			return true;
@@ -1433,7 +1433,7 @@ bool CMapObjectState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_SELECTION_PROPERTIES:
 		{
 			if ( !GetObjectInfoCollector()->IsSelectionEmpty() )
-			{	
+			{
 				GetObjectInfoCollector()->ShowSelectionPropertyManipulator( GetMapInfoEditor()->GetViewManipulator(), GetMapInfoEditor()->GetObjectSet() );
 			}
 			return true;
@@ -1488,6 +1488,6 @@ bool CMapObjectState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *
 	return false;
 }
 
-// basement storage  
+// basement storage
 
 

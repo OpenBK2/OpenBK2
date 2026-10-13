@@ -20,7 +20,7 @@ void ParseLine( vector<SLexem> *pRes, const char *p, const char *pFinish )
 		return;
 	// check for comments
 	if ( p[0] == ';' )
-		return; 
+		return;
 	const char *pStart = p;
 	for ( ; p < pFinish; ++p )
 	{

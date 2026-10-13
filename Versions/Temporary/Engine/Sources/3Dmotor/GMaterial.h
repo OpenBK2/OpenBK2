@@ -250,7 +250,7 @@ class CReflectWaterMaterial : public IMaterial
 	float fReflectionZ;
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTex); f.Add(3,&nPriority); f.Add(4,&bApplyFog); f.Add(5,&bAddPlaced); f.Add(6,&fDielMirror); f.Add(7,&fMetalMirror); f.Add(8,&pBump); f.Add(9,&pSky);f.Add(10,&fReflectionZ);  return 0; }
-	
+
 	bool SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 );
 public:
 	CReflectWaterMaterial() {}

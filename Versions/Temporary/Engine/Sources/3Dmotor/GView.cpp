@@ -98,8 +98,8 @@ protected:
 	virtual void Recalc();
 
 public:
-	void SetKey( const CDBPtr<NDb::STexture> &key ) 
-	{ 
+	void SetKey( const CDBPtr<NDb::STexture> &key )
+	{
 		const NDb::STexture *pTex = key;
 		if ( !pTex )
 			return;
@@ -133,7 +133,7 @@ void CParticleTexture::Recalc()
 	pSWTexture.Refresh();
 	if ( !pSWTexture->IsReady() && !IsValid(pValue) )
 	{
-		if ( NGfx::Is16BitTextures() )	
+		if ( NGfx::Is16BitTextures() )
 		{
 			pValue = NGfx::MakeTexture( 1, 1, -1, NGfx::SPixel4444::ID, NGfx::TRANSPARENT_TEXTURE, NGfx::CLAMP );
 			NGfx::CTextureLock<NGfx::SPixel4444> sLock( pValue, 0, NGfx::INPLACE );
@@ -150,10 +150,10 @@ void CParticleTexture::Recalc()
 	}
 
 	bFakeTexture = false;
-		
+
 	CSWTextureData * pTextureData = pSWTexture->GetValue();
 
-	if ( NGfx::Is16BitTextures() )	
+	if ( NGfx::Is16BitTextures() )
 		pValue = NGfx::MakeTexture( pTextureData->GetSizeX(), pTextureData->GetSizeY(), -1, NGfx::SPixel4444::ID, NGfx::TRANSPARENT_TEXTURE, NGfx::CLAMP );
 	else
 		pValue = NGfx::MakeTexture( pTextureData->GetSizeX(), pTextureData->GetSizeY(), -1, NGfx::SPixel8888::ID, NGfx::TRANSPARENT_TEXTURE, NGfx::CLAMP );
@@ -207,7 +207,7 @@ void CParticleTexture::Recalc()
 				{
 					NGfx::SPixel8888 &sDst = sLock[nY][nX];
 					const NGfx::SPixel8888 &sSrc = pTextureData->mips[nLevel][nY][nX];
-					
+
 					sDst.r = sSrc.r*vColor.x;
 					sDst.g = sSrc.g*vColor.y;
 					sDst.b = sSrc.b*vColor.z;
@@ -258,8 +258,8 @@ class CGameView: public IGameView
 	bool bWaitLoading;
 	CObj<ILoadingCounter> pWaitLoading, pCalcTerrain;
 
-	/*void AddSkinModelPart( CRenderNode *pRes, int nPart, const NDb::SGeometry *pGeometry, 
-		const NDb::SMaterial *pMaterial, CFuncBase<SSkeletonMatrices> *pAnimation, 
+	/*void AddSkinModelPart( CRenderNode *pRes, int nPart, const NDb::SGeometry *pGeometry,
+		const NDb::SMaterial *pMaterial, CFuncBase<SSkeletonMatrices> *pAnimation,
 		CFuncBase<vector<NGfx::SCompactTransformer> > *pMMXAnimation, const SFullRoomInfo &_r );*/
 	CRenderNode* NewRenderNode();
 
@@ -279,7 +279,7 @@ class CGameView: public IGameView
 
 public:
 	CGameView();
-	
+
 	IGScene* GetGScene() const { return pScene; }
 	virtual IMaterial *CreateMaterial( const NDb::SMaterial *pMaterial ) { return CreateMaterialShared( pMaterial ); }
 	virtual IMaterial *CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow );
@@ -397,11 +397,11 @@ CRenderNode* CGameView::NewRenderNode()
 	return pRes;
 }
 
-IMaterial *CGameView::CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow ) 
-{ 
+IMaterial *CGameView::CreateMaterial( const CVec4 &vColor, bool bDoesCastShadow )
+{
 	if ( vColor.a == 1 )
 		return colorMaterials.CreateMaterial( CVec3( vColor.x, vColor.y, vColor.z ) );
-	return transparentMaterials.CreateMaterial( vColor, bDoesCastShadow ); 
+	return transparentMaterials.CreateMaterial( vColor, bDoesCastShadow );
 }
 
 void CGameView::CreateMeshInfo( const NDb::SModel *pModel, SMeshInfo *pRes, bool bWholeAnimated, int nPlayer, bool bIsLightMapped )
@@ -661,9 +661,9 @@ CObjectBase* CGameView::CreateMesh( const SMeshInfo &meshInfo, const CCreateMesh
 			if ( meshTransform.GetTransformer() )
 			{
 				if ( meshBound.GetBounder() )
-					pPart = pScene->CreateGeometry( pGeom, p.pMaterial, meshTransform.GetTransformer(), meshBound.GetBounder(), _meshBound.GetHintBV(), GetGroupInfo(_g, k) );				
+					pPart = pScene->CreateGeometry( pGeom, p.pMaterial, meshTransform.GetTransformer(), meshBound.GetBounder(), _meshBound.GetHintBV(), GetGroupInfo(_g, k) );
 				else
-					pPart = pScene->CreateGeometry( pGeom, p.pMaterial, meshTransform.GetTransformer(), _meshBound.GetHintBV(), GetGroupInfo(_g, k) );				
+					pPart = pScene->CreateGeometry( pGeom, p.pMaterial, meshTransform.GetTransformer(), _meshBound.GetHintBV(), GetGroupInfo(_g, k) );
 			}
 			else
 			{
@@ -691,7 +691,7 @@ CObjectBase* CGameView::CreateMesh( const SMeshInfo &meshInfo, const CCreateMesh
 	return pRes;
 }
 
-CObjectBase* CGameView::CreateParticles( bool bIsDynamic, int nPFlags, bool bCastShadows, bool bCrown, CPtrFuncBase<CParticleEffect> *pEffect, 
+CObjectBase* CGameView::CreateParticles( bool bIsDynamic, int nPFlags, bool bCastShadows, bool bCrown, CPtrFuncBase<CParticleEffect> *pEffect,
 	CFuncBase<SFBTransform> *pPlacement, const SBound &bound, const SRoomInfo &_r, IFader *pFader )
 {
 	SBound hintBV = MakeLargeHintBound();
@@ -725,7 +725,7 @@ static void InitParticleTextures( T *pAnimator, const NDb::SParticleInstance *pI
 	pAnimator->textureIDs.resize( nLast + 1 );
 }
 
-CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffect *pEffect, STime stBeginTime, 
+CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffect *pEffect, STime stBeginTime,
 	CFuncBase<STime> *pTime, CFuncBase<SFBTransform> *pPlacement, const SRoomInfo &_g, IFader *pFader,
 	CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim, NAnimation::SGrannySkeletonHandle *pSkeletonH, IParticleFilter *pFilter )
 {
@@ -943,14 +943,14 @@ CObjectBase* CGameView::TrueCreateParticles( bool _bIsDynamic, const NDb::SEffec
 	return pRes;
 }
 
-CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, 
+CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime,
 	CFuncBase<STime> *pTime, CFuncBase<SFBTransform> *pPlacement, const SRoomInfo &_r, IFader *pFader,
 	CFuncBase<NAnimation::SGrannySkeletonPose> *pScAnim, NAnimation::SGrannySkeletonHandle *pSkeletonH, IParticleFilter *pFilter )
 {
 	return TrueCreateParticles( true, pEffect, stBeginTime, pTime, pPlacement, _r, pFader, pScAnim, pSkeletonH, pFilter );
 }
 
-CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime, 
+CObjectBase* CGameView::CreateParticles( const NDb::SEffect *pEffect, STime stBeginTime, CFuncBase<STime> *pTime,
 	const SFBTransform &place, const SRoomInfo &_g, IFader *pFader, IParticleFilter *pFilter )
 {
 	return TrueCreateParticles( false, pEffect, stBeginTime, pTime, new CCFBTransform( place ), _g, pFader, 0, 0, pFilter );
@@ -1092,12 +1092,12 @@ public:
 		if ( pForward )
 			pForward->Step();
 	}
-	void Forward( ILoadingCounter *_pForward ) 
-	{ 
-		nTotal = nTerrains; 
-		nTerrains = 0; 
-		pForward = _pForward; 
-		pForward->SetTotalCount( nTotal ); 
+	void Forward( ILoadingCounter *_pForward )
+	{
+		nTotal = nTerrains;
+		nTerrains = 0;
+		pForward = _pForward;
+		pForward->SetTotalCount( nTotal );
 	}
 };
 void CGameView::LoadEverythingInt()
@@ -1129,8 +1129,8 @@ void CGameView::LoadEverythingInt()
 
 void CGameView::LoadFogColors( const NDb::SAmbientLight *pAmbientLight )
 {
-	if ( pAmbientLight && 
-			 pAmbientLight->pDistanceFog && 
+	if ( pAmbientLight &&
+			 pAmbientLight->pDistanceFog &&
 		   pAmbientLight->pDistanceFog->pColorTexture &&
 			 pAmbientLight->pDistanceFog->pColorTexture->eFormat == NDb::STexture::TF_8888
 			 )
@@ -1145,7 +1145,7 @@ void CGameView::LoadFogColors( const NDb::SAmbientLight *pAmbientLight )
 
 }
 
-void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, const SRTClearParams &rtClear, 
+void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, const SRTClearParams &rtClear,
 	ERenderPath rp, int nLightOptions )
 {
 	LoadEverythingInt();
@@ -1186,7 +1186,7 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 		fogParams.fMinZDis = p->fMinZDis;
 
 		fogParams.vColor = p->vColor;
-		
+
 		// Fog color should be setted from texture
 		if ( fogColors.GetSizeX() > 0 )
 		{
@@ -1220,7 +1220,7 @@ void CGameView::Draw( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRen
 
 			vColor = vColor*(1.0f-fX)*(1.0f-fY) + vColorX*fX*(1.0f-fY) + vColorY*fY*(1.0f-fX)+vColorXY*fX*fY;
 			fogParams.vColor = vColor;
-		}				
+		}
 	}
 	pRC->SetFogParams( fogParams );
 	pScene->Draw( pTS, pClipTS, pRC, mask, rp, rtClear, hsrMode, trMode, pSky, pDepthOfField, nLightOptions );
@@ -1230,9 +1230,9 @@ void CGameView::MakeTargetRect( CTRect<float> *pRes, const SDrawInfo &drawInfo )
 {
 	CTRect<float> &rFullScreen = *pRes;
 	CVec2 vSize = pScene->GetScreenRect();
-	rFullScreen.x1 = vSize.x * drawInfo.vOrigin.x; 
+	rFullScreen.x1 = vSize.x * drawInfo.vOrigin.x;
 	rFullScreen.x2 = rFullScreen.x1 + vSize.x * drawInfo.vSize.x;
-	rFullScreen.y1 = vSize.y * drawInfo.vOrigin.y; 
+	rFullScreen.y1 = vSize.y * drawInfo.vOrigin.y;
 	rFullScreen.y2 = rFullScreen.y1 + vSize.y * drawInfo.vSize.y;
 }
 
@@ -1330,11 +1330,11 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 	NGfx::CRenderContext rc;
 	if ( drawInfo.pTarget )
 		rc.SetTextureRT( drawInfo.pTarget );
-	
+
 	SRTClearParams rtClear = drawInfo.rtClear;
 	if ( drawInfo.bUseDefaultClearColor )
 		rtClear.vColor = CVec4( vDefaultClearColor, 1 );
-	
+
 	int nLightOptions = drawInfo.bShadows ? 0 : LO_NOSHADOWS;
 
 	CTransformStack tsClip;
@@ -1351,7 +1351,7 @@ void CGameView::Draw( const SDrawInfo &drawInfo )
 void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel8888> *pRes )
 {
 	ERenderPath renderPath = GetRenderPath();
-	
+
 
 	CArray2D<NGfx::SPixel8888> &shot = *pRes;
 	CTRect<float> rSize;
@@ -1384,21 +1384,21 @@ void CGameView::MakeHQShot( const SDrawInfo &_drawInfo, CArray2D<NGfx::SPixel888
 				else
 					NGScene::Clear( &rc, drawInfo.vClearColor );*/
 				CTransformStack tsClip;
-				
+
 				MakeClipTS( &tsClip, *drawInfo.pTS, drawInfo.vOrigin, drawInfo.vSize );
 				SRTClearParams rtClear = drawInfo.rtClear;
 				if ( drawInfo.bUseDefaultClearColor )
 					rtClear.vColor = CVec4( vDefaultClearColor, 1 );
 
-				Draw( &tsClip, drawInfo.pTS, &rc, rtClear, GetRenderPath(),  drawInfo.bShadows ? 0 : LO_NOSHADOWS );			
-			
-			
+				Draw( &tsClip, drawInfo.pTS, &rc, rtClear, GetRenderPath(),  drawInfo.bShadows ? 0 : LO_NOSHADOWS );
+
+
 			}
 			CArray2D<NGfx::SPixel8888> rt;
 
 			NGfx::CTexture *pTex=NGfx::GetRegisterTexture( 0 );
-			NGfx::GetRenderTargetData( &rt, pTex );	
-			
+			NGfx::GetRenderTargetData( &rt, pTex );
+
 			for ( int y = 0; y < nYSize; ++y )
 			{
 				for ( int x = 0; x < nXSize; ++x )
@@ -1462,16 +1462,16 @@ CObjectBase* CGameView::AddFlare( CFuncBase<CVec3> *pOrigin, CFuncBase<STime> *p
 	SBound bound;
 	bound.SphereInit( CVec3(0,0,0), fFlareRadius );
 	return CreateParticles( true,
-		PF_DYNAMIC | PF_SELF_ILLUM, false, false, 
-		new CPointGlowAnimator( 
+		PF_DYNAMIC | PF_SELF_ILLUM, false, false,
+		new CPointGlowAnimator(
 			pScene,
-			pTime, 
+			pTime,
 			pOrigin,
 			shareTextures.Get( STextureKey( pFlareTexture, STextureKey::TK_TRANSPARENT ) ),
 			fFlareRadius,
 			fOnTime,
 			fOffTime ),
-		new CMNode( pIdentityTransform, pOrigin ), bound, 
+		new CMNode( pIdentityTransform, pOrigin ), bound,
 		SRoomInfo( 0, nFloor, 0 ), 0 );
 }
 
@@ -1490,14 +1490,14 @@ CObjectBase* CGameView::AddDirFlare( CFuncBase<CVec3> *pPos, CFuncBase<CVec3> *p
 	sBound.SphereInit( CVec3( 0, 0, 0 ), fabs( vMaxSize ) );
 	////
 	return CreateParticles( true,
-		PF_DYNAMIC | PF_SELF_ILLUM, false, false, 
-		new CSpriteAnimator( 
+		PF_DYNAMIC | PF_SELF_ILLUM, false, false,
+		new CSpriteAnimator(
 			pScene,
 			pPos,
 			pDir,
 			shareTextures.Get( STextureKey( pTexture, STextureKey::TK_TRANSPARENT ) ),
 			pSize ),
-		new CMNode( pIdentityTransform, pPos ), sBound, 
+		new CMNode( pIdentityTransform, pPos ), sBound,
 		SRoomInfo( 0, nFloor, 0 ), 0 );
 }
 
@@ -1532,7 +1532,7 @@ CObjectBase* CGameView::AddPostFilter( const std::vector<CObjectBase*> &target, 
 	return pRes;
 }
 
-CObjectBase* CGameView::AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, 
+CObjectBase* CGameView::AddSpotLight( const CVec3 &ptColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV,
 	float fRadius, const NDb::STexture *pMask, bool bLightmapOnly )
 {
 	if ( pMask )
@@ -1558,8 +1558,8 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 	pPrevLightTime = pTime;
 	if ( pLight == 0 )
 	{
-		pScene->SetDirectionalLight( 
-			new CCVec3( CVec3(0.25,0.25,0.25 ) ), new CCVec3( CVec3(1,1,1) ), 
+		pScene->SetDirectionalLight(
+			new CCVec3( CVec3(0.25,0.25,0.25 ) ), new CCVec3( CVec3(1,1,1) ),
 			CVec3(0.707f, 0, -0.707f), CVec3(0.707f, 0, -0.707f), 20, 10, 1,
 			new CCVec3( CVec3(0.25,0.25,0.25) ), new CCVec3( CVec3(0,0,0) ), new CCVec3( CVec3(0,0,0) ), CVec3(1.0f, 1.0f, 1.0f),
 			0, 0, CVec3( 1, 1, 1) );
@@ -1581,7 +1581,7 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 
 
 	// set shadows
-	if ( !IsUsingShadows( GetRenderPath() ) && pLight->pGForce2Light && !bSelectGF2 )//NGfx::GetHardwareLevel() < NGfx::HL_GFORCE3 
+	if ( !IsUsingShadows( GetRenderPath() ) && pLight->pGForce2Light && !bSelectGF2 )//NGfx::GetHardwareLevel() < NGfx::HL_GFORCE3
 	{
 		SetAmbient( pLight->pGForce2Light, true, pTime );
 		pPrevLight = pLight;
@@ -1612,8 +1612,8 @@ void CGameView::SetAmbient( const NDb::SAmbientLight *pLight, bool bSelectGF2, C
 		pCloudsPos = new CCloudMover( pTime, pLight->vCloudSize, pLight->fCloudDir, pLight->fCloudSpeed );
 
 	float fMaxShadowHeight = pLight->fMaxShadowHeight == 0 ? 20 : pLight->fMaxShadowHeight;
-	pScene->SetDirectionalLight( 
-		new CCVec3( vLightColor ), new CCVec3( pLight->vGlossColor ), 
+	pScene->SetDirectionalLight(
+		new CCVec3( vLightColor ), new CCVec3( pLight->vGlossColor ),
 		vLightDir, vShadowsLightDir, fMaxShadowHeight, pLight->fShadowsMaxDetailLength, pLight->fBlurStrength,
 		new CCVec3( vAmbientColor ), new CCVec3( vShadeColor ), new CCVec3( vIncidentShadeColor ), pLight->vParticlesColor,
 		pCloudsTexture, pCloudsPos, pLight->vDymanicLightsModifications );
@@ -1717,7 +1717,7 @@ static void PerPartFunc( CObjectBase *_p, T f )
 }
 
 struct SSetFade
-{ 
+{
 	float f;
 	SSetFade( float _f ) : f(_f) {}
 	void operator()( CObjectBase *p ) const { SetPartFade( p, f ); }
@@ -1743,8 +1743,8 @@ struct SStopParticlesGeneration
 {
 	STime tTime;
 	SStopParticlesGeneration( STime _t ) : tTime(_t) {}
-	void operator()( CObjectBase *_p ) const 
-	{ 
+	void operator()( CObjectBase *_p ) const
+	{
 		CPtrFuncBase<CParticleEffect> *p = GetParticleAnimator( _p );
 		if ( !p )
 			return;
@@ -1759,14 +1759,14 @@ void StopParticlesGeneration( CObjectBase *_p, STime tStop )
 
 struct SStopDynamicLighting
 {
-	void operator()( CObjectBase *_p ) const 
-	{ 
+	void operator()( CObjectBase *_p ) const
+	{
 		if ( CDynamicCast<CDynamicPointLight> pLight = _p )
 		{
 			pLight->SwitchLight( false );
 		}
 	}
-};	
+};
 void StopDynamicLighting( CObjectBase *_p )
 {
 	PerPartFunc( _p, SStopDynamicLighting() );
@@ -1779,7 +1779,7 @@ static void SetShadowsMode( IGameView *p, T take )
 	for(;;)
 	{
 		r = (ESceneRenderMode) (r + 1);
-		if ( r == SRM_LAST ) 
+		if ( r == SRM_LAST )
 			r = SRM_SHOWOVERDRAW;
 		if ( take( r ) )
 			break;
@@ -1805,7 +1805,7 @@ void SetNextTranspRenderMode( IGameView *p )
 void SetNextHSRMode( IGameView *p )
 {
 	EHSRMode r = (EHSRMode) (p->GetHSRMode() + 1);
-	if ( r == HSR_LAST ) 
+	if ( r == HSR_LAST )
 		r = HSR_NONE;
 	p->SetHSRMode( r );
 }

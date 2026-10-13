@@ -24,7 +24,7 @@ struct SAnimHandle
 	int nAnimNumber = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAnimFile); f.Add(3,&nAnimNumber); return 0; }
 	SAnimHandle() : nAnimNumber(-1) {}
-	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) : 
+	SAnimHandle( const NDb::SAnimBase *pAnim, int _nAnimNumber ) :
 		pAnimFile( pAnim ), nAnimNumber( _nAnimNumber ) {}
 };
 
@@ -39,7 +39,7 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 	typedef int SAnimID; // Warning! SAnimID may become invalid after any recalc! Never remember SAnimID anywhere for long time
 
 	// animation control:
-	virtual SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h, 
+	virtual SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h,
 		bool bLoop, float fSpeed = 1.0f, float fWeight = 1.0f, STime tEndTime = -1 ) = 0;
 
 	virtual void ClearAllAnimations() = 0;
@@ -77,12 +77,12 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 		SDesiredBoneMove( const STime &_tDuration = 0, const CQuat &_finalRot = QNULL, const CVec3 &_finalPos = VNULL3 )
 			: tDuration(_tDuration), finalRot(_finalRot), finalPos(_finalPos) {}
 	};
-	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart, 
+	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart,
 		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
-	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart, 
+	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart,
 		const std::vector<SDesiredBoneMove> &boneMutation ) = 0;
 	virtual void SetSpecialMutator( IAnimMutator *pMutator ) = 0;
-	
+
 	virtual CFuncBase<SFBTransform>* CreateTransform( const std::string &szBoneName ) = 0;
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex ) = 0;
 };

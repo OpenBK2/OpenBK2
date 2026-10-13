@@ -215,7 +215,7 @@ void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 
 	AddPlayers( pWnd, ( nWinTeam == 0 ), 0, info );
 	pPlayerList->PushBack( pWnd, true );
-	if ( nWinTeam == 0 ) 
+	if ( nWinTeam == 0 )
 		pPlayerList->Select( pWnd );
 
 	// Losers
@@ -225,7 +225,7 @@ void CInterfaceReplaySaveLoad::MakeTeams( const SMultiplayerReplayInfo &info )
 
 	AddPlayers( pWnd, ( nWinTeam == 1 ), 1, info );
 	pPlayerList->PushBack( pWnd, true );
-	if ( nWinTeam == 1 ) 
+	if ( nWinTeam == 1 )
 		pPlayerList->Select( pWnd );
 }
 
@@ -339,14 +339,14 @@ void CInterfaceReplaySaveLoad::DoSaveReplay()
 	if ( pNameEdit )
 		szNewName = NStr::ToMBCS( pNameEdit->GetText() );
 
-	if ( szNewName.length() == 0 ) 
+	if ( szNewName.length() == 0 )
 		szNewName = "Unnamed";
 
 	bool bResult = Singleton<IMPToUIManager>()->SaveReplay( szNewName );
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	std::string szErrorCode = bResult ? "T_SAVE_SUCCESSFUL" : "T_SAVE_FAILED";
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", GetScreen()->GetTextEntry( szErrorCode ) ).c_str() );
 
 }
@@ -357,7 +357,7 @@ bool CInterfaceReplaySaveLoad::OnSave()
 	if ( pNameEdit )
 		szNewName = NStr::ToMBCS( pNameEdit->GetText() );
 
-	if ( szNewName.length() == 0 ) 
+	if ( szNewName.length() == 0 )
 		szNewName = "Unnamed";
 
 	for ( int i = 0; i < replays.size(); ++i )
@@ -365,8 +365,8 @@ bool CInterfaceReplaySaveLoad::OnSave()
 		if ( replays[i].szName == szNewName )
 		{
 			eQuestion = EQM_OVERWRITE;
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 				GetScreen()->GetTextEntry( "T_OVERWRITE_QUESTION" ) ).c_str() );
 			return true;
 		}
@@ -406,8 +406,8 @@ bool CInterfaceReplaySaveLoad::OnDelete()
 		return true;
 
 	eQuestion = EQM_DELETE;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 		GetScreen()->GetTextEntry( "T_DELETE_QUESTION" ) ).c_str() );
 	return true;
 }

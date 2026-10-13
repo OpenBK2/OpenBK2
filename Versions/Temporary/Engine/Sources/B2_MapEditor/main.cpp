@@ -51,9 +51,9 @@ public:
 	void UnloadMapEditorModule();
 	const std::vector<IEditorModule*>& GetEditorModules();
 	bool GameXInitialize() { return NGameX::Initialize(); }
-	void GameXPostStorageInitialize() 
-	{ 
-		NGameX::PostStorageInitialize(); 
+	void GameXPostStorageInitialize()
+	{
+		NGameX::PostStorageInitialize();
 		if ( NGlobal::GetVar("delete_removed_object", 0) != 0 )
 			NDb::AddDbObserver( NDb::CreateVFSDbObserver() );
 	}

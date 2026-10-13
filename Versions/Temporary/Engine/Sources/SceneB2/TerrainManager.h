@@ -122,7 +122,7 @@ public:
 	virtual bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual bool GetIntersectionWithTerrainForEditor( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
 	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
-	//	
+	//
 	void SetRainyWaters( CDBPtr<NDb::SWater> pRainyWater );
 	//
 	virtual int GetTilesCountX() const { return pTerraGen->GetTilesCountX(); }

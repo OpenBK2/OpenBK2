@@ -33,7 +33,7 @@ bool RemoveVSO( const int nID, std::vector<TYPE> &vsos )
 {
 	for ( typename std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
-		if ( it->GetID() == nID ) 
+		if ( it->GetID() == nID )
 		{
 			vsos.erase( it );
 			return true;
@@ -47,7 +47,7 @@ bool UpdateVSO( const int nVSOID, std::vector<TYPE> &vsos, NGScene::IGameView *p
 {
 	for ( typename std::vector<TYPE>::iterator it = vsos.begin(); it != vsos.end(); ++it )
 	{
-		if ( it->GetID() == nVSOID ) 
+		if ( it->GetID() == nVSOID )
 		{
 			it->CreatePatches( pGameView );
 			return true;
@@ -133,7 +133,7 @@ void CSceneTerrain::RemoveAllPrecipices()
 
 void CSceneTerrain::AddRoad( SRoadGFXInfo *pGfxInfo )
 {
-	if ( HasVSO(pGfxInfo->nID, pDBDesc->roads) ) 
+	if ( HasVSO(pGfxInfo->nID, pDBDesc->roads) )
 	{
 		roads.push_back( CRoad(pGfxInfo, pGfxInfo->nID) );
 		roads.back().CreatePatches( pGameView );
@@ -145,7 +145,7 @@ bool CSceneTerrain::UpdateRoad( const int nVSOID )
 	bool bResult = false;
 	for ( std::vector<CRoad>::iterator it = roads.begin(); it != roads.end(); ++it )
 	{
-		if ( it->GetID() == nVSOID ) 
+		if ( it->GetID() == nVSOID )
 		{
 			it->CreatePatches( pGameView );
 			bResult = true;
@@ -182,7 +182,7 @@ bool CSceneTerrain::UpdatePeak( const int nVSOID )
 {
 	for ( std::vector<CPeak>::iterator it = peaks.begin(); it != peaks.end(); ++it )
 	{
-		if ( it->GetID() == nVSOID ) 
+		if ( it->GetID() == nVSOID )
 		{
 			it->CreatePatches( pGameView, pDBDesc );
 			return true;
@@ -219,7 +219,7 @@ bool CSceneTerrain::UpdateFoot( const int nVSOID )
 	bool bFlag = false;
 	for ( std::vector<CFoot>::iterator it = foots.begin(); it != foots.end(); ++it )
 	{
-		if ( it->GetID() == nVSOID ) 
+		if ( it->GetID() == nVSOID )
 		{
 			it->CreatePatches( pGameView, pDBDesc );
 			bFlag = true;
@@ -246,9 +246,9 @@ void CSceneTerrain::RemoveAllFoots()
 
 void CSceneTerrain::AddRiver( const SRiverGFXInfo *pGfxInfo )
 {
-	if ( !bDisableRivers ) 
+	if ( !bDisableRivers )
 	{
-		if ( HasVSO(pGfxInfo->nID, pDBDesc->rivers) ) 
+		if ( HasVSO(pGfxInfo->nID, pDBDesc->rivers) )
 		{
 			rivers.push_back( CRiver(pGfxInfo, pGfxInfo->nID, pAbsTimer.GetPtr()) );
 			rivers.back().CreatePatches( pGameView );
@@ -273,7 +273,7 @@ void CSceneTerrain::RemoveAllRivers()
 
 void CSceneTerrain::AddTerraSpot( STerraSpotGFXInfo *pGfxInfo )
 {
-	if ( HasSpotVSO(pGfxInfo->nID, pDBDesc->spots) ) 
+	if ( HasSpotVSO(pGfxInfo->nID, pDBDesc->spots) )
 	{
 		terraspots.push_back( CTerraSpot( pGfxInfo, pGfxInfo->nID ) );
 		terraspots.back().CreatePatches( pGameView );

@@ -64,14 +64,14 @@ public:
 		CVariant newValue;
 		CArrayDataList arrayList;
 		CValueDataList valueList;
-		
+
 		void FillLists( const std::string &szStartNodeName, IManipulator *pObjectManipulator );
 		bool Undo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 		MAPEDITORLIB_EXPORT bool Redo( IManipulator *pObjectManipulator, const IManipulator::CNameMap *pNameMap ) const;
 	};
 	//
 	typedef std::list<SUndoData> CUndoDataList;
-	
+
 	// список данных подвергнутых изменениям
 	CUndoDataList undoDataList;
 
@@ -94,7 +94,7 @@ public:
 	bool AddExpandOperation( const std::string &rszPropertyName, bool bExpand, IManipulator *pObjectManipulator );
 	bool AddChangeOperation( const std::string &rszPropertyName, const CVariant &rValue, IManipulator *pObjectManipulator );
 	//
-	template<class TValue> 
+	template<class TValue>
 	bool AddChangeValueOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeValueOperation() pObjectManipulator == 0" );
@@ -113,7 +113,7 @@ public:
 		return posNewUndoData->Redo( pObjectManipulator, 0 );
 	}
 	//
-	template<class TValue, class TFieldType>  
+	template<class TValue, class TFieldType>
 	bool AddChangeVec2Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec2Operation() pObjectManipulator == 0" );
@@ -150,7 +150,7 @@ public:
 		return true;
 	}
 	//
-	template<class TValue, class TFieldType>  
+	template<class TValue, class TFieldType>
 	bool AddChangeVec3Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec3Operation() pObjectManipulator == 0" );
@@ -199,7 +199,7 @@ public:
 		return true;
 	}
 	//
-	template<class TValue, class TFieldType>  
+	template<class TValue, class TFieldType>
 	bool AddChangeVec4Operation( const std::string &rszPropertyName, const TValue &rvNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeVec4Operation() pObjectManipulator == 0" );
@@ -261,7 +261,7 @@ public:
 	}
 	//
 	//
-	template<class TValue, class TElementType> 
+	template<class TValue, class TElementType>
 	bool AddChangeArrayOperation( const std::string &rszPropertyName, const TValue &rNewData, IManipulator *pObjectManipulator )
 	{
 		NI_ASSERT( pObjectManipulator != 0, "CObjectBaseController::AddChangeArrayOperation() pObjectManipulator == 0" );
@@ -308,7 +308,7 @@ public:
 			}
 			++nElementIndex;
 		}
-		// Удаляем лишние элементы 
+		// Удаляем лишние элементы
 		const std::string szElementName = fmt::format( "{}{:c}{:c}{}{:c}", rszPropertyName.c_str(), LEVEL_SEPARATOR_CHAR, ARRAY_NODE_START_CHAR, nElementIndex, ARRAY_NODE_END_CHAR );
 		for ( ;nElementIndex < nExistingElementCount; --nExistingElementCount )
 		{
@@ -330,7 +330,7 @@ public:
 			{
 				posNewUndoData->oldValue = nElementIndex;
 			}
-			SUndoData::CValueDataList::iterator posValueData = posNewUndoData->valueList.insert( posNewUndoData->valueList.end(), SUndoData::SValueData() );		
+			SUndoData::CValueDataList::iterator posValueData = posNewUndoData->valueList.insert( posNewUndoData->valueList.end(), SUndoData::SValueData() );
 			posValueData->szName = szElementName;
 			posValueData->value = oldData;
 			if ( !posNewUndoData->Redo( pObjectManipulator, 0 ) )
@@ -340,12 +340,12 @@ public:
 		}
 		return true;
 	}
-	template <class TValue> 
+	template <class TValue>
 		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::vector<TValue> &rNewData, IManipulator *pObjectManipulator )
 	{
 		return AddChangeArrayOperation<std::vector<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );
 	}
-	template <class TValue> 
+	template <class TValue>
 		bool AddChangeValueOperation( const std::string &rszPropertyName, const std::list<TValue> &rNewData, IManipulator *pObjectManipulator )
 	{
 		return AddChangeArrayOperation<std::list<TValue>, TValue>( rszPropertyName, rNewData, pObjectManipulator );

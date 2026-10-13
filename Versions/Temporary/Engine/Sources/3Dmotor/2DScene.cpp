@@ -25,7 +25,7 @@ class C2DScene: public I2DScene
 public:
 	C2DScene() : pLastQR(0) {}
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow );
-	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, 
+	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture );
 	void CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow );
 
@@ -47,7 +47,7 @@ void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const
 		RenderRectLayoutClipped( pQR, 0, sLayout, sPosition, sWindow, fZ, LRM_NORMAL );
 }
 
-void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, 
+void C2DScene::CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 {
 	NGfx::C2DQuadsRenderer *pQR = GetQR( false );
@@ -70,7 +70,7 @@ void C2DScene::CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoin
 void C2DScene::StartNewFrame( NGfx::CTexture *pTarget, const CVec2 &vSize, EAlphaMode2D _AlphaMode2D )
 {
 	NGfx::CRenderContext rc;
-	if ( pTarget ) 
+	if ( pTarget )
 		rc.SetTextureRT( pTarget, 0 );
 	if ( _AlphaMode2D == AM2D_NORMAL )
 		rc.SetAlphaCombine( NGfx::COMBINE_ALPHA );

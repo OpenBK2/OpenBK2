@@ -29,7 +29,7 @@
 */
 /*Node *luaH_mainposition (const Hash *t, const TObject *key) {
   unsigned long h;
-  switch ( key->GetType() ) 
+  switch ( key->GetType() )
 	{
     case LUA_TNUMBER:
       h = (unsigned long)(long)( key->GetN() );
@@ -48,7 +48,7 @@
       break;
     default:
 			ASSERT( 0 );
-      return NULL;  // invalid key 
+      return NULL;  // invalid key
   }
   LUA_ASSERT(h%(unsigned int)t->size == (h&((unsigned int)t->size-1)),
             "a&(x-1) == a%x, for x power of 2");

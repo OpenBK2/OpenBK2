@@ -58,8 +58,8 @@ struct SRenderTargetsInfo
 	SRenderTargetsInfo() : nRegisters(0), nFloatRegisters(0) {}
 
 	void Clear() { targets.clear(); cubeTargets.clear(); nRegisters = 0; nFloatRegisters = 0; }
-	static void Add( CRTHash *pRes, int nResolution, int nFormatID, int nTargets ) 
-	{ 
+	static void Add( CRTHash *pRes, int nResolution, int nFormatID, int nTargets )
+	{
 		SRenderTargetDesc desc( nResolution, nFormatID );
 		if ( pRes->find( desc ) == pRes->end() )
 			(*pRes)[ desc ] = nTargets;

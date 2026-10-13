@@ -44,7 +44,7 @@ void CAIUnitInfoForGeneral::Segment()
 			theSupremeBeing.UpdateEnemyUnitInfo(
 				this,
 				curTime - lastVisibleTime, vLastVisiblePosition,
-				curTime - lastVisibleAntiArtTime, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt 
+				curTime - lastVisibleAntiArtTime, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt
 			);
 		}
 	}

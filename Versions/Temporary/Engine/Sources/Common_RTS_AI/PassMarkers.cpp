@@ -120,7 +120,7 @@ void CPassMarkersDraw::DrawPassabilities()
 			for ( int y = 0; y < pAIMap->GetSizeY(); ++y )
 			{
 				const SVector tile( x, y );
-				if ( pTerrain->GetTerrainType( x, y ) == ETT_WATER_TERRAIN )  
+				if ( pTerrain->GetTerrainType( x, y ) == ETT_WATER_TERRAIN )
 					water.push_back( tile );
 			}
 		}
@@ -140,7 +140,7 @@ void CPassMarkersDraw::DrawPassabilities()
 
 	//		if ( (soil & SVectorStripeObject::ESP_DUST) && (soil & SVectorStripeObject::ESP_TRACE) )
 	//			redTiles.push_back( tile );
-	//		else if ( soil & SVectorStripeObject::ESP_DUST )  
+	//		else if ( soil & SVectorStripeObject::ESP_DUST )
 	//			blueTiles.push_back( tile );
 	//		else if ( soil & SVectorStripeObject::ESP_TRACE )
 	//			greenTiles.push_back( tile );

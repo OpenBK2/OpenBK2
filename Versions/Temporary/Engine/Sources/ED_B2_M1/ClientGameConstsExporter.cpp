@@ -29,10 +29,10 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulato
 	if ( CManipulatorManager::GetValue( &nNumCursors, pManipulator, "Cursors" ) != false )
 	{
 		std::string szFileName;
-		for ( int i = 0; i < nNumCursors; ++i ) 
+		for ( int i = 0; i < nNumCursors; ++i )
 		{
 			const std::string szName = fmt::format( "Cursors.[{}].FileName", i );
-			if ( CManipulatorManager::GetValue( &szFileName, pManipulator, szName ) ) 
+			if ( CManipulatorManager::GetValue( &szFileName, pManipulator, szName ) )
 			{
 				const std::string szSrcFileName = pUserData->constUserData.szExportSourceFolder + szFileName;
 				const std::string szDstFileName = Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFileName;

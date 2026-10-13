@@ -8,8 +8,8 @@ extern CShellsStore theShellsStore;
 extern NTimer::STime curTime;
 
 CExecutorBurningFuel::CExecutorBurningFuel( const CVec3 &_vPos, const NDb::SBurningFuel *_pStats )
-: CExecutor( TID_BURNING_FUEL, 20 ), vPos( _vPos ), pStats( _pStats ), timeBurn( curTime + _pStats->nBurnTime ) 
-{ 
+: CExecutor( TID_BURNING_FUEL, 20 ), vPos( _vPos ), pStats( _pStats ), timeBurn( curTime + _pStats->nBurnTime )
+{
 	if ( pStats->pWeaponFireOnDesctruction )
 	theShellsStore.AddShell
 		( new CInvisShell( curTime, new CBurstExpl( 0, pStats->pWeaponFireOnDesctruction, vPos, VNULL3, 0, false, 1, true ), 0 ) );

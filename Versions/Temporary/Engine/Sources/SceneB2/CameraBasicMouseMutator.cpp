@@ -13,7 +13,7 @@ static inline float CyclicClamp( const float fValue, const float fMin, const flo
 		return fMax + fmod( fValue - fMin, fMax - fMin );
 	else
 		return fMin + fmod( fValue - fMin, fMax - fMin );
-} 
+}
 
 float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera )
 {
@@ -22,14 +22,14 @@ float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float f
 	if ( fAdd != 0 ) // manual
 	{
 		fResult = fCurrValue + fAdd * limit.fManualSpeed;
-		if ( limit.fMax > limit.fMin && !bFreeCamera ) 
+		if ( limit.fMax > limit.fMin && !bFreeCamera )
 			return limit.bCyclic ? CyclicClamp( fResult, limit.fMin, limit.fMax ) : Clamp( fResult, limit.fMin, limit.fMax );
 		else
 			return fResult;
 	}
 	else if ( bAutoPositioning && !bFreeCamera && limit.fMax > limit.fMin ) // automatic
 	{
-		if ( fCurrValue > limit.fAve ) 
+		if ( fCurrValue > limit.fAve )
 		{
 			fResult = fCurrValue - fTimeDiff * limit.fAutoSpeed;
 			return limit.bCyclic ? CyclicClamp( fResult, limit.fAve, limit.fMax ) : Clamp( fResult, limit.fAve, limit.fMax );
@@ -82,7 +82,7 @@ void CCameraBasicMouseMutator::ResetToDefault()
 
 void CCameraBasicMouseMutator::SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits )
 {
-	switch ( eLimitsType ) 
+	switch ( eLimitsType )
 	{
 		case NCamera::CAMERA_LIMITS_YAW:
 		{
@@ -175,9 +175,9 @@ void CCameraBasicMouseMutator::SetAnchorLimits( const CTRect<float> &vLimits )
 }
 
 void CCameraBasicMouseMutator::SwitchAutoPositioning( const bool bAllowAutoPositioning )
-{ 
+{
 	if ( NGlobal::GetVar( "disable_auto_camera", 0 ) == 0 )
-		bAutoPositioning = bAllowAutoPositioning; 
+		bAutoPositioning = bAllowAutoPositioning;
 }
 
 void CCameraBasicMouseMutator::SwitchManualScrolling( const std::string &szLocker, const bool bManualOn )

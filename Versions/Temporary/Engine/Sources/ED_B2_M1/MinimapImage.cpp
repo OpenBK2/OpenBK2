@@ -37,7 +37,7 @@ struct SSetColorFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		( *pDestImage )[nYIndex][nXIndex] = dwColor;
 	}
 };
@@ -55,7 +55,7 @@ struct SBooleanSetColorFunctional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		( *pDestImage )[nYIndex][nXIndex] = dwColor;
 		return true;
 	}
@@ -78,7 +78,7 @@ struct SWBCSetColorFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( ( nXIndex >= 0 ) &&
 				 ( nYIndex >= 0 ) &&
 				 ( nXIndex < size.x ) &&
@@ -618,7 +618,7 @@ void RenderOcean( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, con
 	}
 	uint32_t dwCenterColor = 0;
 	uint32_t dwBorderColor = 0;
-	GetLakeColors( &dwCenterColor, 
+	GetLakeColors( &dwCenterColor,
 								 &dwBorderColor,
 								 pCoastDescriptor->nMiniMapCenterColor,
 								 pCoastDescriptor->nMiniMapBorderColor,
@@ -720,7 +720,7 @@ void RenderLake( CArray2D<uint32_t>* pImage, const NDb::SMapInfo *pMapInfo, cons
 						{
 							uint32_t dwCenterColor = 0;
 							uint32_t dwBorderColor = 0;
-							GetLakeColors( &dwCenterColor, 
+							GetLakeColors( &dwCenterColor,
 														&dwBorderColor,
 														itLake->pDescriptor->nMiniMapCenterColor,
 														itLake->pDescriptor->nMiniMapBorderColor,
@@ -797,7 +797,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 	for ( int nLakeIndex = 0; nLakeIndex < pMapInfo->lakes.size(); ++nLakeIndex )
 	{
 		const NDb::SLakeDesc *pLakeDescriptor = dynamic_cast<const NDb::SLakeDesc*>( &( *pMapInfo->lakes[nLakeIndex].pDescriptor ) );
-		if ( pLakeDescriptor != 0 ) 
+		if ( pLakeDescriptor != 0 )
 		{
 			if ( pLakeDescriptor->bIsLake )
 			{
@@ -1124,7 +1124,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 					}
 				}
 			}
-		}		
+		}
 		//Compose image
 		//for each layer:
 		//* add layer
@@ -1155,7 +1155,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 							 ( pAlphaEmbossLayer->GetSizeY() != imageSize.y ) )
 					{
 						CArray2D<uint32_t> alphaEmboss( imageSize.x, imageSize.y );
-						NImage::Scale( &alphaEmboss, ( *pAlphaEmbossLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) ); 
+						NImage::Scale( &alphaEmboss, ( *pAlphaEmbossLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 						NImage::Noise( &minimapImage, alphaEmboss, true, pMinimap->nMinAlpha );
 					}
 					else
@@ -1171,7 +1171,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 							 ( pShadowLayer->GetSizeY() != imageSize.y ) )
 					{
 						CArray2D<uint32_t> shadow( imageSize.x, imageSize.y );
-						NImage::Scale( &shadow, ( *pShadowLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) ); 
+						NImage::Scale( &shadow, ( *pShadowLayer ), typeScaleType.GetImageScaleMethod( pMinimapLayer->eScaleMethod ) );
 						NImage::Noise( &minimapImage, shadow, true, pMinimap->nMinAlpha );
 					}
 					else
@@ -1298,7 +1298,7 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 
 }
 
-// basement storage  
+// basement storage
 
 /**
 // rotate image

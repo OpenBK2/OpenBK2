@@ -19,7 +19,7 @@ bool CWindowSimpleSharedBuilder::IsValidBuildData( IManipulator *pBuildDataManip
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CWindowSimpleSharedBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
@@ -78,7 +78,7 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 	const std::string szTexObjectName = szBuilderGenPrefix;
 	const std::string szBSTObjectName = szBuilderGenPrefix;
 	const std::string szWSSObjectName = *pszUniqueObjectName;
-	
+
 	if ( !szTextureFileName.empty() )
 	{
 		const std::string szTextureFilePath = pUserData->constUserData.szExportSourceFolder + szTextureFileName;
@@ -143,6 +143,6 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 }
 
 
-// basement storage  
+// basement storage
 
 

@@ -16,7 +16,7 @@ class CParatrooperPath : public ISmoothPath
 
 	CVec3 vCurPoint;
 	float fSpeedLen = {};
-	
+
 	CVec3 vHorSpeed;//horisontal speed of parachute
 	CPtr<CAIUnit> pUnit;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&lastPathUpdateTime); f.Add(3,&vStartPoint); f.Add(4,&vFinishPoint); f.Add(5,&vFinishPoint2D); f.Add(6,&vCurPoint); f.Add(7,&fSpeedLen); f.Add(8,&vHorSpeed); f.Add(9,&pUnit); return 0; }

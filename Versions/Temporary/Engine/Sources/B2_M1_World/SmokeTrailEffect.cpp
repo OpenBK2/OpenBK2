@@ -55,7 +55,7 @@ void CSmokeTrailEffect::UpdatePlacement( const CVec3 &vPos, const CQuat &qRot, N
 		fTime += fTimeInterval;
 		CreateEffect( vLastVisPos + vDir, qRot, NTimer::STime(fTime), bVisible );
 		fDist -= fInterval;
-	} 
+	}
 	while ( fDist >= fInterval );
 	//
 	fTimeLastUpdate = fTime;

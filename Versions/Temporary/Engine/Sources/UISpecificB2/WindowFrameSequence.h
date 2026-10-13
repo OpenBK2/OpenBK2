@@ -15,7 +15,7 @@
 class CWindowFrameSequence : public CWindow, public IWindowFrameSequence
 {
 	OBJECT_NOCOPY_METHODS( CWindowFrameSequence );
-	
+
 	ZDATA_(CWindow)
 	CPtr<NDb::SWindowFrameSequence> pInstance;
 	CDBPtr<NDb::SWindowFrameSequenceShared> pShared;

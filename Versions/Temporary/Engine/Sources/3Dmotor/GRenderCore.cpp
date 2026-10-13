@@ -12,7 +12,7 @@ namespace NGScene
 
 // CSceneFragments
 
-CSceneFragments::CSceneFragments() : nSceneTris(0), bNeedHSR(false)//, pRejected(0), nRejectedUsed(0) 
+CSceneFragments::CSceneFragments() : nSceneTris(0), bNeedHSR(false)//, pRejected(0), nRejectedUsed(0)
 {
 	fragments.push_back( fragmentInfos.Alloc() );
 	ASSERT( fragments.size() == 1 );
@@ -32,7 +32,7 @@ int CSceneFragments::AddGeometry( CObjectBase *pHandle, SRenderGeometryInfo *pGe
 	return geometries.size() - 1;
 }
 
-void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts, 
+void CSceneFragments::AddElement( int _nGeometryIndex, const CPartFlags &_parts,
 	IMaterial *pMaterial, const SPerPartVariables &_vars )
 {
 	if ( _parts.IsEmpty() )
@@ -154,12 +154,12 @@ inline EFragmentsSplit GetIntersectLevel( const SBound &bound, const SBound &tes
 	if ( fDif2 > sqr( bound.s.fRadius + test.s.fRadius ) )
 		return FST_REJECT;
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
-	float fRDif = bound.s.fRadius - test.s.fRadius; 
+	float fRDif = bound.s.fRadius - test.s.fRadius;
 	if ( fDif2 < fRDif * fabs( fRDif ) )
 		return FST_ACCEPT;
-	if ( 
-		fabs(ptDif.x) + test.ptHalfBox.x < bound.ptHalfBox.x && 
-		fabs(ptDif.y) + test.ptHalfBox.y < bound.ptHalfBox.y && 
+	if (
+		fabs(ptDif.x) + test.ptHalfBox.x < bound.ptHalfBox.x &&
+		fabs(ptDif.y) + test.ptHalfBox.y < bound.ptHalfBox.y &&
 		fabs(ptDif.z) + test.ptHalfBox.z < bound.ptHalfBox.z )
 		return FST_ACCEPT;
 	return FST_SPLIT;
@@ -173,7 +173,7 @@ inline EFragmentsSplit GetIntersectLevel( const SSphere &bound, const SSphere &t
 	if ( fDif2 > sqr( bound.fRadius + test.fRadius ) )
 		return FST_REJECT;
 	// fast inside, fDif + test.s.fRadius < bound.s.fRadius
-	float fRDif = bound.fRadius - test.fRadius; 
+	float fRDif = bound.fRadius - test.fRadius;
 	if ( fDif2 < fRDif * fabs( fRDif ) )
 		return FST_ACCEPT;
 	return FST_SPLIT;
@@ -322,7 +322,7 @@ EFragmentsSplit SIgnoredSphereFilter::operator()( SRenderStaticInfo *pStatic, SR
 }
 
 
-void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade, 
+void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade,
 	SPerspDirectionalDepthInfo *pDepthInfo, unsigned char op,
 	CRenderCmdList::UParameter _p1,
 	CRenderCmdList::UParameter _p2,
@@ -337,8 +337,8 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 		const SRenderFragmentInfo &f = *fragments[k];
 		if ( f.vars.fFade < fMinFade )
 			continue;
-		
-		COpGenContext fi( &pRes->ops, &f );		
+
+		COpGenContext fi( &pRes->ops, &f );
 		if ( f.pMaterial )
 		{
 			f.pMaterial->AddATOperations( &fi, pDepthInfo );
@@ -351,7 +351,7 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 			extern bool bNewShadows;
 			if( !bNewShadows )
 			{
-		
+
 			if ( f.pMaterial->DoesBackFaceCastShadow() )
 				fi.AddOperation( op, 100, nStencilOp|SHADOW_CULL_CCW, 0, _p1, _p2, _p3 );
 			else
@@ -359,7 +359,7 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 
 			continue;
 			}
-		}	
+		}
 
 		fi.AddOperation( op, 100, nStencilOp, 0, _p1, _p2, _p3 );
 	}

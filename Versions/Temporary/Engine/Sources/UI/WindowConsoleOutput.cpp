@@ -24,8 +24,8 @@ int CWindowConsoleOutput::SColorString::operator&( IBinSaver &saver )
 }
 
 CWindowConsoleOutput::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow )
-: szString( pszStr ), dwColor( col ) 
-{  
+: szString( pszStr ), dwColor( col )
+{
 	const std::wstring szText = NStr::ToUnicode( fmt::format( "<color={:08X}>", col ) ) + pszStr;
 	pGfxText = CreateML( pFontScaleWindow );
 	CUIFactory::RegisterMLHandlers( pGfxText );
@@ -144,7 +144,7 @@ void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
 		else
 			nCurrentY -= TEXT_VERTICAL_SIZE;
 
-		// отобразим строчки 
+		// отобразим строчки
 		int nSize = vectorOfStrings.size();
 		for ( int i = nBeginString; i < nSize; ++i )
 		{

@@ -37,7 +37,7 @@ public:
 
 	bool IsEmpty() const { return t1_t2.empty() || t2_t1.empty(); }
 	void Clear() { t1_t2.clear(); t2_t1.clear(); }
-	
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &t1_t2 );

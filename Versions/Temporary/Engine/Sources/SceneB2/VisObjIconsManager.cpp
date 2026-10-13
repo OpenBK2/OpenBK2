@@ -55,7 +55,7 @@ void CVisObjIconsManager::Init( const NDb::SVisObjIconsSet *pIconsSet )
 			hpBarTexCoords[i].y2 = pIconsSet->hpBarColors[0].y2 + rcDelta.y2 * (i - DEF_HPBAR_PARTS_NUM );
 		}
 	}
-	
+
 	hpBarRanges = pIconsSet->hpBarRanges;
 
 	// initialize icons
@@ -113,7 +113,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 
 		const float fScrOffsetX = icon.nScrOffsetX;
 		const float fScrOffsetY = icon.nScrOffsetY;
-		const float fHPBarLength = (hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1) + 
+		const float fHPBarLength = (hpBarTexCoords[0].x2 - hpBarTexCoords[0].x1) +
 			icon.nHPBarBaseLength + (hpBarTexCoords[2].x2 - hpBarTexCoords[2].x1);
 		const float fIconsAboveOffsetY = fScrOffsetY - DEF_ICONS_ABOVE_Y;
 		const float fIconsBelowOffsetY = fScrOffsetY + (hpBarTexCoords[0].y2 - hpBarTexCoords[0].y1) + DEF_ICONS_BELOW_Y;
@@ -145,7 +145,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 				fIconsOffsetX -= rect.fSizeX + DEF_ICONS_GAP_X;
 			}
 		}
-		
+
 		// group icon
 		if ( icon.nIconGroup >= 0 )
 		{
@@ -157,7 +157,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			rect.sTex.rcTexRect = baseIcon.texCoords;
 			rectLayout.rects.push_back( rect );
 		}
-		
+
 		// levelup icon
 		if ( icon.nIconLevelup >= 0 )
 		{
@@ -169,7 +169,7 @@ inline void CVisObjIconsManager::RegenerateIconRects( CVisObjIconsManager::SObjI
 			rect.sTex.rcTexRect = baseIcon.texCoords;
 			rectLayout.rects.push_back( rect );
 		}
-		
+
 		// damaged building icon
 		if ( icon.nIconDamagedBuilding >= 0 )
 		{
@@ -324,7 +324,7 @@ void CVisObjIconsManager::SetIcon( const SSceneObjIconInfo &iconInfo, const CVec
 	{
 		const NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType eIconType = iconInfo.icons[i];
 		if ( eIconType != NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NONE )
-		{ 
+		{
 			const int nIconType = type2VectorHash[eIconType];
 			icon.icons.push_back( nIconType );
 		}

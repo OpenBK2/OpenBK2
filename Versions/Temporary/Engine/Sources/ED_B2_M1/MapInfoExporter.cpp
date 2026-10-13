@@ -221,7 +221,7 @@ bool CMapInfoExporter::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 		case ID_TOOLS_REGEN_GEOMETRY:
-		{	
+		{
 			if ( !Singleton<ICommandHandlerContainer>()->HandleCommand( ID_VIEW_SAVE_CHANGES, true ) )
 			{
 				return false;
@@ -242,7 +242,7 @@ bool CMapInfoExporter::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		}
 	}
 	/*
-	if ( bResult ) 
+	if ( bResult )
 	{
 		Singleton<IEditorContainer>()->ReloadActiveEditor( true );
 	}

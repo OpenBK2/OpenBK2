@@ -48,7 +48,7 @@ void CInterfaceMPStatistics::MakeInterior()
 
 	pHeaderWinView = GetChildChecked<ITextView>( pMain, "HeaderWin", true );
 	pHeaderLostView = GetChildChecked<ITextView>( pMain, "HeaderLose", true );
-	
+
 	pNextBtn = GetChildChecked<IButton>( pMain, "NextBtn", true );
 	pSaveReplayBtn = GetChildChecked<IButton>( pMain, "SaveReplayBtn", true );
 	if ( pSaveReplayBtn && NGlobal::GetVar( "mp_replays_enabled", 0 ) )

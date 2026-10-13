@@ -41,11 +41,11 @@ public:
 	CFuncBase<SBound>* GetBounder() const { return pBounder; }
 
 	// remove this object from scene
-	virtual void Destroy( const NTimer::STime time );	
+	virtual void Destroy( const NTimer::STime time );
 	virtual void Clear( const NTimer::STime time );
 	// create object at scene
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer ) = 0;
-	
+
 	// get bone to which attached
 	virtual const int GetBoneIndex() const { return nBoneIndex; }
 };
@@ -127,7 +127,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseTransform); f.Add(3,&bKeepVertical); return 0; }
 
 	CAlwaysVerticalTransform() : pBaseTransform(0) {}
-	CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical = false ); 
+	CAlwaysVerticalTransform( CFuncBase<SFBTransform> *_pBaseTransform, const bool _bKeepVertical = false );
 };
 
 // CAttachedLightEffectPos
@@ -213,7 +213,7 @@ struct CAttachedLightEffect : public CAttachedObject
 	void AddSound( const NDb::SComplexSoundDesc *pSound );
 	void RemoveSound();
 
-	void RegeneratePositions();	
+	void RegeneratePositions();
 public:
 	CAttachedLightEffect() : nPointLightID(OBJECT_ID_GENERATE), bNeedRecalc(false), nSoundID(-1) { }
 	CAttachedLightEffect( const NDb::SAttachedLightEffect *_pEffect, CFuncBase<SFBTransform> *pTransform, const NTimer::STime _nStartTime, const int nBoneIndex, const bool _bInEditor = false );

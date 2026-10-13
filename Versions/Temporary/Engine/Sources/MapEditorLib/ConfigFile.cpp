@@ -17,7 +17,7 @@ void SConfigFile::SConfigEntry::Load( const std::string &rszLine )
 	if ( !rszLine.empty() )
 	{
 	  if ( ( szLine.substr( 0, 1 ).compare( ";" ) != 0 ) &&
-				 ( szLine.substr( 0, 2 ).compare( "//" ) != 0 ) )  
+				 ( szLine.substr( 0, 2 ).compare( "//" ) != 0 ) )
 		{
 			std::string szLocalLine = szLine;
 			NStr::TrimBoth( szLocalLine, DIVIDERS );
@@ -90,7 +90,7 @@ bool SConfigFile::GetParams( CParamsList *pParamsList, const std::string &rszKey
 		}
 		if ( szConfigEntryKeyword == szKeyword )
 		{
-			bFound = true;	
+			bFound = true;
 			if ( pParamsList != 0 )
 			{
 				pParamsList->push_back( itConfigEntry->szParams );
@@ -151,6 +151,6 @@ int SConfigFile::RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase 
 }
 
 
-// basement storage  
+// basement storage
 
 

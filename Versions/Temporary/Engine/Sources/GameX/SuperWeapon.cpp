@@ -48,7 +48,7 @@ void CMissionSuperWeapon::Init( IWindow *pScr, CWorldClient *_pWorld, NDb::ESeas
 	fProgress = 0.3f;
 	bActive = false;*/
 	//}
-	
+
 	UpdateVisual();
 }
 
@@ -62,7 +62,7 @@ void CMissionSuperWeapon::OnUpdateSuperWeaponControl( CMapObj *_pMO, const NDb::
 		pUnitFullInfo->SetObject( pMO );
 	else if ( pDBUnit )
 		pUnitFullInfo->SetReinfUnit( pDBUnit );
-	
+
 	bDisabledByInterface = false;
 
 	UpdateVisual();
@@ -84,7 +84,7 @@ void CMissionSuperWeapon::Call( const CVec2 &vPos )
 	cmd.nCmdType = ACTION_COMMAND_USE_SUPER_WEAPON;
 	cmd.vPos = vPos;
 	pWorld->GetCommandsSender()->CommandUnitCommand( &cmd );
-	
+
 	bDisabledByInterface = true;
 
 	Deactivate();

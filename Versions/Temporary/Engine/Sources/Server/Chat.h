@@ -9,7 +9,7 @@ class CClients;
 class CChatLobby : public CPacketProcessor
 {
 	OBJECT_NOCOPY_METHODS( CChatLobby );
-	
+
 	CPtr<CClients> pClients;
 	std::unordered_map<int, std::string> clientChannel;
 	std::unordered_map<std::string, std::list<int> > channelClients;
@@ -34,7 +34,7 @@ protected:
 	void NotifyFriends( const int nClientID, const EChatStatus eStatus, const bool bNewClient );
 public:
 	bool Segment();
-	
+
 	bool ProcessChatPacket( class CChatPacket *pPacket );
 	bool ProcessChatAFKPacket( class CChatAFKPacket *pPacket );
 	bool ProcessChatChannelPacket( class CChatChannelPacket *pPacket );
@@ -43,7 +43,7 @@ public:
 	bool ProcessChatGetIgnoreFriendListPacket( class CChatGetIgnoreFriendListPacket *pPacket );
 	bool ProcessChatChannelByNickPacket( class CChatChannelByNickPacket *pPacket );
 
-	void Initialize();	
+	void Initialize();
 	void ReloadConfig();
 	CChatLobby() { Initialize(); }
 	CChatLobby( CClients *_pClients, const std::string& szCfgFileName );

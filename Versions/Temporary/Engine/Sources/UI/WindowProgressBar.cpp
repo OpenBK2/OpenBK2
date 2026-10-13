@@ -6,8 +6,8 @@
 REGISTER_SAVELOAD_CLASS(UI, 0x11075B88, CWindowProgressBar)
 REGISTER_SAVELOAD_CLASS(UI, 0x170A53C0, CWindowMultiTextureProgressBar)
 
-int CWindowProgressBar::operator&( IBinSaver &saver ) 
-{ 
+int CWindowProgressBar::operator&( IBinSaver &saver )
+{
 	saver.Add( 1, static_cast<CWindow*>( this ) );
 	saver.Add( 2, &pForward );
 	saver.Add( 3, &pBackward );
@@ -15,7 +15,7 @@ int CWindowProgressBar::operator&( IBinSaver &saver )
 	saver.Add( 5, &pShared );
 	saver.Add( 6, &fStepSize );
 	saver.Add( 7, &bShowFirstElement );
-	return 0; 
+	return 0;
 }
 
 void CWindowProgressBar::Reposition( const CTRect<float> &parentRect )
@@ -50,8 +50,8 @@ void CWindowProgressBar::Visit( struct IUIVisitor *pVisitor )
 		pGlow->Visit( pVisitor );
 }
 
-void CWindowProgressBar::SetPosition( const float fPos ) 
-{ 
+void CWindowProgressBar::SetPosition( const float fPos )
+{
 	pInstance->fProgress = Clamp( fPos, 0.0f, 1.0f );
 	CTRect<float> rect;
 	FillWindowRect( &rect );
@@ -101,13 +101,13 @@ void CWindowProgressBar::SetForward( const NDb::SBackground *_pForward )
 
 // CWindowMultiTextureProgressBar
 
-int CWindowMultiTextureProgressBar::operator&( IBinSaver &saver ) 
-{ 
+int CWindowMultiTextureProgressBar::operator&( IBinSaver &saver )
+{
 	saver.Add( 1, static_cast<CWindow*>( this ) );
 	saver.Add( 2, &parts );
 	saver.Add( 4, &pInstance );
 	saver.Add( 5, &pShared );
-	return 0; 
+	return 0;
 }
 
 void CWindowMultiTextureProgressBar::Reposition( const CTRect<float> &parentRect )
@@ -134,7 +134,7 @@ void CWindowMultiTextureProgressBar::InitByDesc( const struct NDb::SUIDesc *_pDe
 void CWindowMultiTextureProgressBar::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
-	
+
 	CTRect<float> rect;
 	FillWindowRect( &rect );
 
@@ -142,7 +142,7 @@ void CWindowMultiTextureProgressBar::Visit( struct IUIVisitor *pVisitor )
 	{
 		NI_ASSERT( !pInstance->progresses.empty(), "Not enough values for multi texture progress bar" );
 		int nStateIndex = FindStateIndex( pInstance->progresses.front() );
-		
+
 		const CVec2 vPos( rect.x1, rect.y1 );
 		const CVec2 vSize ( rect.Width() * pInstance->progresses.front(), rect.Height() );
 		parts[nStateIndex]->SetPos( vPos, vSize );
@@ -154,7 +154,7 @@ void CWindowMultiTextureProgressBar::Visit( struct IUIVisitor *pVisitor )
 		{
 			float fProgress = pInstance->progresses[i];
 			int nStateIndex = FindStateIndex( fProgress );
-			
+
 			const CVec2 vSize( pInstance->fPieceSize, rect.Height() );
 			const CVec2 vPos( rect.x1 + vSize.x * i, rect.y1 );
 			parts[nStateIndex]->SetPos( vPos, vSize );

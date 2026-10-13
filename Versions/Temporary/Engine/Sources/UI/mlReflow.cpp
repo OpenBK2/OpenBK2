@@ -37,7 +37,7 @@ private:
 		TVisObjects line;
 
 		SLine() {}
-		SLine( float _fLeft, float _fRight, float _fY, float _fWidth, float _fHeight, EHAlign _nHAlign, EVAlign _nVAlign, const TVisObjects &_line ): 
+		SLine( float _fLeft, float _fRight, float _fY, float _fWidth, float _fHeight, EHAlign _nHAlign, EVAlign _nVAlign, const TVisObjects &_line ):
 			fLeft(_fLeft), fRight(_fRight), fY(_fY), fWidth(_fWidth), fHeight(_fHeight), nHAlign(_nHAlign), nVAlign(_nVAlign), line(_line) {}
 	};
 

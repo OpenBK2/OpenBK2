@@ -46,7 +46,7 @@ class CSCamDMoveFlightMutator : public CScriptMovieMutator
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vAnchorStart); f.Add(3,&vAnchorDir); f.Add(4,&fLengStart); f.Add(5,&fLengFinish); return 0; }
-	
+
 protected:
 	void Recalc();
 
@@ -66,7 +66,7 @@ public:
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
 		const CVec3 vStartDir( sin(-fStartYaw)*cos(-fStartPitch),
-													 cos(-fStartYaw)*cos(-fStartPitch), 
+													 cos(-fStartYaw)*cos(-fStartPitch),
 													 sin(-fStartPitch) );
 		fLengStart = fabs( placementStart.vPosition.z / vStartDir.z );
 		vAnchorStart = placementStart.vPosition + vStartDir * fLengStart;
@@ -74,7 +74,7 @@ public:
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
 		const CVec3 vFinishDir( sin(-fFinishYaw)*cos(-fFinishPitch),
-														cos(-fFinishYaw)*cos(-fFinishPitch), 
+														cos(-fFinishYaw)*cos(-fFinishPitch),
 														sin(-fFinishPitch) );
 		fLengFinish = fabs( placementFinish.vPosition.z / vFinishDir.z );
 		const CVec3 vFinishAnchor = placementFinish.vPosition + vFinishDir * fLengFinish;
@@ -83,7 +83,7 @@ public:
 };
 
 
-// direct flight with following target object 
+// direct flight with following target object
 class CSCamDFollowFlightMutator : public CScriptMovieMutator
 {
 	OBJECT_NOCOPY_METHODS( CSCamDFollowFlightMutator )
@@ -94,7 +94,7 @@ class CSCamDFollowFlightMutator : public CScriptMovieMutator
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseFlight); f.Add(3,&nTargetID); return 0; }
-	
+
 protected:
 	void Recalc();
 
@@ -117,7 +117,7 @@ public:
 };
 
 
-// direct flight for some time with rotation 
+// direct flight for some time with rotation
 class CSCamDRotateFlightMutator : public CScriptMovieMutator
 {
 	OBJECT_NOCOPY_METHODS( CSCamDRotateFlightMutator )
@@ -162,7 +162,7 @@ class CSCamSplineMutator : public CScriptMovieMutator
 
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vAnchorStart); f.Add(3,&vAnchorFinish); f.Add(4,&vAnchorDir); f.Add(5,&vStartDir); f.Add(6,&vFinishDir); f.Add(7,&fLengStart); f.Add(8,&fLengFinish); return 0; }
-	
+
 protected:
 	void Recalc();
 
@@ -179,11 +179,11 @@ public:
 
 		placementStart = _start;
 		placementFinish = _finish;
-	
+
 		const float fStartYaw = ToRadian( placementStart.fYaw );
 		const float fStartPitch = ToRadian( placementStart.fPitch );
 		vStartDir = CVec3(	sin(-fStartYaw)*cos(-fStartPitch),
-												cos(-fStartYaw)*cos(-fStartPitch), 
+												cos(-fStartYaw)*cos(-fStartPitch),
 												sin(-fStartPitch) );
 		fLengStart = fabs( placementStart.vPosition.z / vStartDir.z );
 		vStartDir *= fLengStart * fSpline1;
@@ -192,7 +192,7 @@ public:
 		const float fFinishYaw = ToRadian( placementFinish.fYaw );
 		const float fFinishPitch = ToRadian( placementFinish.fPitch );
 		vFinishDir = CVec3( sin(-fFinishYaw)*cos(-fFinishPitch),
-												cos(-fFinishYaw)*cos(-fFinishPitch), 
+												cos(-fFinishYaw)*cos(-fFinishPitch),
 												sin(-fFinishPitch) );
 		fLengFinish = fabs( placementFinish.vPosition.z / vFinishDir.z );
 		vFinishDir *= fLengFinish * fSpline2;

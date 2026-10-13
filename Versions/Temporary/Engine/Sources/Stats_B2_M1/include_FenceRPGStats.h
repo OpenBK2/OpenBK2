@@ -10,7 +10,7 @@ enum
 	FENCE_TYPE_CDAMAGE	= 0x00080000,
 };
 
-// 
+//
 virtual void ToAIUnits( bool bInEditor )
 {
 	eGameType = SGVOGT_FENCE;
@@ -25,11 +25,11 @@ virtual void ToAIUnits( bool bInEditor )
 
 
 // general fences rule:
-// frame index counting - 
+// frame index counting -
 // 1) center segments vis objects
 // 2) damage segments vis objects
 // 3) destroyed segments vis objects
-// 
+//
 
 
 //
@@ -42,7 +42,7 @@ const SSegments& GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) 
 	if ( nCur < centerSegments.visObjes.size() )
 		return centerSegments;
 	nCur -= centerSegments.visObjes.size();
-	
+
 	if ( nCur < damagedSegmentsOtherSide.visObjes.size() )
 		return damagedSegmentsOtherSide;
 	nCur -= damagedSegmentsOtherSide.visObjes.size();
@@ -50,7 +50,7 @@ const SSegments& GetSegmentsByFrameIndex( const int nFrameIndex, int *nVisObj ) 
 	if ( nCur < damagedSegments.visObjes.size() )
 		return damagedSegments;
 	nCur -= damagedSegments.visObjes.size();
-	
+
 	if ( nCur < destroyedSegments.visObjes.size() )
 		return destroyedSegments;
 	NI_ASSERT( false, fmt::format( "wrong frame index for fence, {}", nFrameIndex ) );
@@ -70,7 +70,7 @@ const NDb::SVisObj * GetVisObjByFrameIndex( const int nFrameIndex ) const
 
 virtual const CVec2& GetOrigin( const int nIndex = -1 ) const
 {
-	int nCur; 
+	int nCur;
 	return GetSegmentsByFrameIndex( nIndex, &nCur ).vOrigin;
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].vOrigin;
@@ -78,7 +78,7 @@ virtual const CVec2& GetOrigin( const int nIndex = -1 ) const
 
 virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const
 {
-	int nCur; 
+	int nCur;
 	return GetSegmentsByFrameIndex( nIndex, &nCur ).passability;
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].passability;
@@ -86,7 +86,7 @@ virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const
 
 virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
 {
-	int nCur; 
+	int nCur;
 	return GetSegmentsByFrameIndex( nIndex, &nCur ).vOrigin;
 	//NI_ASSERT( nIndex > -1 && nIndex < stats.size(), StrFmt("Index %d for the \"%s\"must be in the range [0..%d]", nIndex, szKeyName.c_str(), stats.size()) );
 	//return stats[nIndex].vVisOrigin;
@@ -95,7 +95,7 @@ virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
 virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 {
 	static SByteArray2 empty;
-	int nCur; 
+	int nCur;
 	const SSegments &segm = GetSegmentsByFrameIndex( nIndex, &nCur );
 	if ( segm.bUsePassabilityForVisibility )
 		return segm.passability;
@@ -104,7 +104,7 @@ virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
 
 virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const
 {
-	int nCur; 
+	int nCur;
 	return GetSegmentsByFrameIndex( nIndex, &nCur ).passProfile;
 }
 
@@ -114,12 +114,12 @@ virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 	return emptyProfile;
 }
 
-enum ETypesOfLife 
-{ 
-	ETOL_SAFE, 
-	ETOL_LEFT, 
+enum ETypesOfLife
+{
+	ETOL_SAFE,
+	ETOL_LEFT,
 	ETOL_RIGHT,
-	ETOL_DESTROYED 
+	ETOL_DESTROYED
 };
 
 bool HasLeftDamaged() const
@@ -140,7 +140,7 @@ int GetRandomFrameIndexByDamageType( const ETypesOfLife eType ) const
 		{
 			RecordRandomCall();
 			return centerSegments.visObjes.size() +
-						damagedSegmentsOtherSide.visObjes.size() + 
+						damagedSegmentsOtherSide.visObjes.size() +
 						NRandom::Random( 0, damagedSegments.visObjes.size() -1);
 		}
 	case ETOL_DESTROYED:

@@ -18,7 +18,7 @@ class CPointGlowAnimator : public CPtrFuncBase<CParticleEffect>
 protected:
 	virtual bool NeedUpdate() { return pTime.Refresh() | pPlacement.Refresh(); }
 	virtual void Recalc();
-private:	
+private:
 	ZDATA
 	CDGPtr< CFuncBase<STime> > pTime;
 	CDGPtr< CFuncBase<CVec3> > pPlacement;
@@ -34,7 +34,7 @@ private:
 	void CalcSize();
 public:
 	CPointGlowAnimator() {}
-	CPointGlowAnimator( IGScene *_pScene, CFuncBase<STime> *_pTime, CFuncBase<CVec3> *pPlace, 
+	CPointGlowAnimator( IGScene *_pScene, CFuncBase<STime> *_pTime, CFuncBase<CVec3> *pPlace,
 		CPtrFuncBase<NGfx::CTexture> *pTexture, float _fLightSize, float fOnTime, float fOffTime );
 	friend class CPointGlowEffect;
 };

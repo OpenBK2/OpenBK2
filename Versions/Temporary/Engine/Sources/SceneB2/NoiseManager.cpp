@@ -58,7 +58,7 @@ CNoiseAccessor CNoiseManager::GetNoise( const std::string &_szName )
 	NStr::ToLowerASCII( &szName, _szName );
 	for ( int i = 0; i < noises.size(); ++i )
 	{
-		if ( noises[i].szFileName == szName ) 
+		if ( noises[i].szFileName == szName )
 			return GetNoise( i );
 	}
 	NI_ASSERT( false, fmt::format("Unknown noise \"{}\"", szName) );

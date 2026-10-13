@@ -42,7 +42,7 @@ private:
 				bHidden = rProperty.bHidden;
 			}
 			return *this;
-		}	
+		}
 	};
 	typedef std::list<std::string> CPropertyList;								// для хранения порядка следования
 	typedef std::unordered_map<std::string, SProperty> CPropertyMap;	// для хранения данных
@@ -62,7 +62,7 @@ private:
 
 	CMaskManipulator() {}
 public:
-	// Конструирование манипулятора 
+	// Конструирование манипулятора
 	CMaskManipulator( const std::string& rszMask,  IManipulator *_pTargetManipulator, EMaskMode _maskMode );
 	// Добавление имен ( имена могут быть длинными, а могут быть короткими, по усмотрению.
 	bool AddName( const std::string &rszName, bool bFilled, const std::string& rszType, unsigned nID, bool bHidden );
@@ -72,7 +72,7 @@ public:
 	inline EMaskMode GetMode() const { return maskMode; }
 	// Установление пути
 	inline void SetMask( const std::string &rszMask )
-	{ 
+	{
 		//DebugTrace( "CMaskManipulator::SetMask(): <%s>", rszMask.c_str() );
 		szMask = rszMask;
 	}
@@ -103,14 +103,14 @@ public:
 class CMaskManipulatorIterator : public IManipulatorIterator
 {
 	OBJECT_BASIC_METHODS( CMaskManipulatorIterator )
-	
+
 	CPtr<CMaskManipulator> pMaskManipulator;
 	CMaskManipulator::CPropertyList::const_iterator propertyIterator;
 
 	CMaskManipulatorIterator() {}
 public:
 	CMaskManipulatorIterator( CMaskManipulator *_pMaskManipulator );
-	
+
 	//IManipulatorIterator
 	bool Next();
 	bool IsEnd() const;

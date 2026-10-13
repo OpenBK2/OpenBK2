@@ -9,9 +9,9 @@ extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
 CExecutorExactShot::CExecutorExactShot( CAIUnit *_pUnit )
-: state( EASS_READY_TO_ON ), CExecutor( TID_EXACT_SHOT, 1000/SConsts::AI_SEGMENT_DURATION ), 
+: state( EASS_READY_TO_ON ), CExecutor( TID_EXACT_SHOT, 1000/SConsts::AI_SEGMENT_DURATION ),
 timeLastUpdate( curTime ), pUnit( _pUnit )
-{  
+{
 }
 
 int CExecutorExactShot::Segment()

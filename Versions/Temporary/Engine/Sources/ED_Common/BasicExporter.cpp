@@ -13,7 +13,7 @@ bool CBasicExporter::LoadExporterSettings() const
 {
 	if ( textMapSettings.IsEmpty() )
 	{
-		if ( szObjectTypeName.empty() ) 
+		if ( szObjectTypeName.empty() )
 			return false;
 		SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 		pUserData->SerializeSettings( textMapSettings, szObjectTypeName, SUserData::EXPORTER_SETINGS, SUserData::ST_LOAD	);

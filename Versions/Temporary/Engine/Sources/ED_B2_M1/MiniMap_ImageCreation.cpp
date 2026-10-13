@@ -28,7 +28,7 @@
 
 namespace NImage
 {
-	template <> 
+	template <>
 	inline void __fill_tga_header<NImage::SColor>( STGAFileHeader *pHdr )
 	{
 		pHdr->cImageType = TGAIT_TRUE_COLOR;

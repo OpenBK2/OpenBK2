@@ -132,7 +132,7 @@ struct IBuilderContainer : public CObjectBase
 	// заполнить BuildData
 	virtual bool FillBuildData(	std::string *pszBuildDataTypeName,
 															std::string *pszBuildDataName,
-															SBuildDataParams *pBuildDataParams,					
+															SBuildDataParams *pBuildDataParams,
 															IBuildDataCallback *pBuildDataCallback ) = 0;
 	virtual bool FillNewObjectName( SBuildDataParams *pBuildDataParams ) = 0;
 };

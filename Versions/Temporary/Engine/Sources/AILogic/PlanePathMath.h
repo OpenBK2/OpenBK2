@@ -13,7 +13,7 @@ extern const float nOrientation;
 class CAnalyticBSpline3
 {
 	static const int N_PARTS_FOR_CLOSEST_POINT_SEARCHING;
-	
+
 	CAnalyticBSpline x, y, z;
 public:
 	CAnalyticBSpline3() {  }
@@ -53,7 +53,7 @@ class CBezierCurve
 	TVEC p0, p2, p1, p3;
 
 public:
-	// 
+	//
 	void Setup( const TVEC &_p0, const TVEC &_p1, const TVEC &_p2, const TVEC &_p3 )
 	{
 		p0 = _p0;
@@ -61,11 +61,11 @@ public:
 		p2 = _p2;
 		p3 = _p3;
 	}
-	
+
 	TVEC Get( const float fT ) const
 	{
 		const float fTNeg = 1 - fT;
-		return p0 * fTNeg * fTNeg * fTNeg + 
+		return p0 * fTNeg * fTNeg * fTNeg +
 					 p1 * fT * fTNeg * fTNeg +
 					 p2 * fT * fT * fTNeg +
 					 p3 * fT * fT * fT;
@@ -80,7 +80,7 @@ public:
 
 
 
-//	CDirectedCircle 
+//	CDirectedCircle
 
 // circle with preferred direction
 struct CDirectedCircle : public CCircle
@@ -109,7 +109,7 @@ bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirect
 
 // CHermitCurve
 
-template <class TVEC> 
+template <class TVEC>
 class CHermitCurve
 {
 	TVEC a, b, c, d;

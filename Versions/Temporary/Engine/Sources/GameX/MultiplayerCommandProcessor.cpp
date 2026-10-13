@@ -29,7 +29,7 @@ SMPUIMessage* CMPUIMessageProcessor::GetMessage()
 {
 	if ( messages.empty() )
 		return 0;
-		
+
 	CPtr<SMPUIMessage> pMsg = messages.front();
 	messages.pop_front();
 	return pMsg.Extract();
@@ -39,7 +39,7 @@ SMPUIMessage* CMPUIMessageProcessor::PeekMessage()
 {
 	if ( messages.empty() )
 		return 0;
-		
+
 	return messages.front();
 }
 

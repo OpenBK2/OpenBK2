@@ -43,14 +43,14 @@ private:
 
 		SBlob(): m_ptr(0), m_nSize(0), m_bDelete(false) {}
 		SBlob(void *_ptr): m_ptr(_ptr), m_nSize(0), m_bDelete(false) {}
-		SBlob(const void *_ptr, size_t _nSize, bool _bDelete = true): 
+		SBlob(const void *_ptr, size_t _nSize, bool _bDelete = true):
 			m_ptr(new uint8_t[_nSize]), m_nSize(_nSize), m_bDelete(_bDelete)
 		{
 			ASSERT( _ptr != 0 );
 			memcpy( m_ptr, _ptr, m_nSize );
 		}
 		SBlob(const SBlob &_blob):
-			m_nSize(_blob.m_nSize), m_bDelete(_blob.m_bDelete) 
+			m_nSize(_blob.m_nSize), m_bDelete(_blob.m_bDelete)
 		{
 			if(m_bDelete){
 				ASSERT( _blob.m_ptr != 0 );
@@ -117,7 +117,7 @@ private:
 		}
 	};
 
-	union 
+	union
 	{
 		float m_float;
 		int m_int;
@@ -140,7 +140,7 @@ public:
 	CVariant& operator=( const CVariant &var );
 	void SetMultiVariant( CMultiVariantMap *pMultiVariantMap, bool bDeleteInDestructor = true /* in fact it is true anyway */);
 	void SetDestructorDeleted( bool bDeleteInDestructor, int nBlobSize )
-	{ 
+	{
 		ASSERT( m_eType == VT_POINTER );
 		m_pblob->m_bDelete = bDeleteInDestructor;
 		m_pblob->m_nSize = nBlobSize;
@@ -171,7 +171,7 @@ private:
 public:
 	CVariant( const void *pVar, int nBlobSize )   : m_eType( VT_POINTER ), m_pblob( new SBlob(pVar, nBlobSize) ) {}
 
-	CVariant( CMultiVariantMap *pMultiVariantMap/*, bool bDelete = false*/ ) : 
+	CVariant( CMultiVariantMap *pMultiVariantMap/*, bool bDelete = false*/ ) :
 		m_eType( VT_MULTIVARIANT ), m_pmvar( new SMultiVariant(pMultiVariantMap) )
 	{}
 

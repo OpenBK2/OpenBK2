@@ -20,7 +20,7 @@ namespace
 struct SProlog
 {
 	float fFadeIn;
-	
+
 	SProlog() : fFadeIn( 0.0f ) {}
 
 	int operator&( IXmlSaver &saver )
@@ -49,30 +49,30 @@ int CICPlayMovie::operator&( IBinSaver &saver )
 
 void CICPlayMovie::Configure( const char *pszConfig )
 {
-	if ( !pszConfig ) 
+	if ( !pszConfig )
 		return;
 	// split string
 	std::vector<std::string> szStrings;
 	NStr::SplitStringWithMultipleBrackets( pszConfig, szStrings, ';' );
 	// movie sequence name
-	if ( szStrings.size() >= 1 ) 
+	if ( szStrings.size() >= 1 )
 		szSequenceName = szStrings[0];
 	// next interface type ID
-	if ( szStrings.size() >= 2 ) 
+	if ( szStrings.size() >= 2 )
 	{
 		szNextCommand = szStrings[1];
 		NStr::TrimBoth( szNextCommand, "\t\n\r \"" );
 	}
 }
 
-void CICPlayMovie::PostCreate( IInterface *pInterface ) 
-{ 
+void CICPlayMovie::PostCreate( IInterface *pInterface )
+{
 	std::string szMovie = szSequenceName;
 	if ( szSequenceName.size() >= 4 && szSequenceName.compare( szSequenceName.size() - 4, 4, ".xml" ) != 0 )
 		szMovie += ".xml";
 	pInterface->LoadMovieSequence( szMovie );
 	pInterface->SetNextInterface( szNextCommand );
-	NMainLoop::PushInterface( pInterface ); 
+	NMainLoop::PushInterface( pInterface );
 }
 
 // ************************************************************************************************************************ //
@@ -101,12 +101,12 @@ CPlayMovieInterface::~CPlayMovieInterface()
 void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 {
 	szFileName = _szFileName;
-	
+
 	if ( NGlobal::GetVar("novideo", 0) != 0 )
 	{
 		return;
 	}
-	
+
 	if ( !pScreen )
 	{
 		pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
@@ -114,7 +114,7 @@ void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 
 		pPlayerControl = GetChildChecked<IPlayer>( pScreen, "VideoPlayer", true );
 		pBackground = GetChildChecked<IWindow>( pPlayerControl, "Background", true );
-		
+
 		SProlog prolog;
 		{
 			CFileStream stream( NVFS::GetMainVFS(), szFileName );
@@ -142,7 +142,7 @@ void CPlayMovieInterface::LoadMovieSequence( const std::string &_szFileName )
 			}
 		}
 	}
-	
+
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bDemo )
 	{
@@ -190,7 +190,7 @@ void CPlayMovieInterface::MsgSkipMovie( const SGameMessage &msg )
 bool CPlayMovieInterface::StepLocal( bool bAppActive )
 {
 	const bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	if ( !bAppActive ) 
+	if ( !bAppActive )
 		return false;
 
 	if ( bProlog )
@@ -215,7 +215,7 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 			if ( pFader && pFader->IsInProgress() )
 				return bResult;
 
-			if ( pFader )	
+			if ( pFader )
 				pFader->Start( 0.0f, SCREEN_FADER_CLEAR, SCREEN_FADER_CLEAR, false );
 			if ( pBackground )
 				pBackground->ShowWindow( true );
@@ -231,7 +231,7 @@ bool CPlayMovieInterface::StepLocal( bool bAppActive )
 		}
 		return bResult;
 	}
-	
+
 	if ( !pPlayerControl || !pPlayerControl->IsPlaying() )
 		StartNextInterface();								// exit this screen...
 	return bResult;
@@ -259,13 +259,13 @@ void CPlayMovieInterface::OnGetFocus( bool bFocus )
 
 void PlayMovieSequence( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	if ( paramsSet.empty() ) 
+	if ( paramsSet.empty() )
 	{
 		csSystem << "usage: movie_sequence <file name>" << endl;
 		return;
 	}
 	std::string szSeqName = NStr::ToMBCS( paramsSet[0] );
-	if ( paramsSet.size() > 1 ) 
+	if ( paramsSet.size() > 1 )
 		szSeqName += ";" + NStr::ToMBCS( paramsSet[1] );
 	NMainLoop::Command( ML_COMMAND_PLAY_MOVIE, szSeqName.c_str() );
 }

@@ -53,7 +53,7 @@ const CVec2 CStandartDirPath::PeekPoint( const int nShift ) const
 		else
 			return res;
 	}
-	else 
+	else
 		return finishPoint;
 }
 

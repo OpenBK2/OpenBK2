@@ -102,7 +102,7 @@ private:
 
 	SModelEditorType eModelEditorType;
 	//
-	// Данные общего назначения 
+	// Данные общего назначения
 	CModelEditor *pModelEditor;
 	SEditParameters editParameters;
 	//

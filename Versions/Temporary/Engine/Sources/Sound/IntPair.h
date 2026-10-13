@@ -1,12 +1,12 @@
 #pragma once
 
-// для индексации клеток 
+// для индексации клеток
 struct SIntThree
 {
 	int x;
 	int y;
 	int z;
-	
+
 	SIntThree() {  }
 
 	SIntThree( const int _x, const int _y, const int _z) : x( _x ), y( _y ), z( _z ) {  }

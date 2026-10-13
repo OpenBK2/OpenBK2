@@ -12,18 +12,18 @@ enum EAbilitySwitchState
 {
 	EASS_DISABLE				= 0, // disabled by external conditions.
 	EASS_ACTIVE					= 1,
-	EASS_OFF						= 2,			
+	EASS_OFF						= 2,
 	EASS_SWITCHING_ON		= 3,
 	EASS_SWITCHING_OFF	= 4,
 	EASS_READY_TO_ON		= 5, // regenereated, but not switched on
 	EASS_CHANGE_AUTOCAST_ONLY			= 6, // не менять текущее состояние абилити, только автокаст
 };
 
-struct SAbilitySwitchState 
+struct SAbilitySwitchState
 {
-	union 
+	union
 	{
-		struct  
+		struct
 		{
 			unsigned						eState		: 8;	//EAbilitySwitchState
 			unsigned						bAutocast	: 8;

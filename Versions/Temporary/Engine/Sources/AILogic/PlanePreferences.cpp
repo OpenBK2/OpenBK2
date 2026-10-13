@@ -16,42 +16,42 @@ uint16_t CPlanePreferences::GetDivingAngle() const
 	return pStats->wDivingAngle;
 }
 
-float CPlanePreferences::GetPatrolHeight() const 
+float CPlanePreferences::GetPatrolHeight() const
 {
 	return Clamp( pStats->fMaxHeight, SPlanesConsts::GetMinHeight(), SPlanesConsts::MAX_HEIGHT );
 	//return (SPlanesConsts::MAX_HEIGHT + SPlanesConsts::GetMinHeight()) / 2.0f ;
 }
 
-float CPlanePreferences::GetR( const float fSpeed ) const 
-{ 
+float CPlanePreferences::GetR( const float fSpeed ) const
+{
 	return pStats->fTurnRadius / pStats->fSpeed * fSpeed;
 }
 
-float CPlanePreferences::GetStallSpeed() const 
-{ 
-	return pStats->fSpeed / 3.0f; 
+float CPlanePreferences::GetStallSpeed() const
+{
+	return pStats->fSpeed / 3.0f;
 }
 
 bool CPlanePreferences::CanFlip() const
 {
-	return bCanViolateHeghtLimits || 
+	return bCanViolateHeghtLimits ||
 				 pStats->etype == RPG_TYPE_AVIA_ATTACK ||
 				 pStats->etype == RPG_TYPE_AVIA_FIGHTER;
 }
 
-float CPlanePreferences::GetMaxSpeed() const 
+float CPlanePreferences::GetMaxSpeed() const
 {
-	return pStats->fSpeed * 2.0f; 
+	return pStats->fSpeed * 2.0f;
 }
 
-float CPlanePreferences::GetTiltSpeed() const 
-{ 
-	return pStats->fTiltSpeed; 
+float CPlanePreferences::GetTiltSpeed() const
+{
+	return pStats->fTiltSpeed;
 }
 
-float CPlanePreferences::GetTiltAccell() const 
-{ 
-	return pStats->fTiltAcceleration; 
+float CPlanePreferences::GetTiltAccell() const
+{
+	return pStats->fTiltAcceleration;
 }
 
 float CPlanePreferences::GetSpeed( const float fZ ) const

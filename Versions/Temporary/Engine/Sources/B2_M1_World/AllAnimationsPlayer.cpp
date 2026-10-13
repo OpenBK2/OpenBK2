@@ -33,7 +33,7 @@ void CAllAnimationsPlayer::Update()
 
 				if ( animDuration.first == -1 )
 					animInfo.nAnimation = -1;
-			} 
+			}
 			while ( animDuration.first <= 0 && animInfo.nAnimation != nStartAnim );
 
 			if ( animDuration.first > 0 )

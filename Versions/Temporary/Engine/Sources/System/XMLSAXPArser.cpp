@@ -124,13 +124,13 @@ bool ReadName( std::string *pszName, CBufferedStream &stream )
 {
 	pszName->clear();
 	pszName->reserve( 32 );
-	// Names start with letters or underscores. After that, they can be letters, underscores, numbers, hyphens, or colons. 
+	// Names start with letters or underscores. After that, they can be letters, underscores, numbers, hyphens, or colons.
 	// (Colons are valid only for namespaces, but this parser can't tell namespaces from names.)
 	if ( !stream.IsEnd() && ( isalpha((unsigned char) stream.GetChar()) || stream.GetChar() == '_' ) )
 	{
-		while ( !stream.IsEnd() && ( isalnum((unsigned char ) stream.GetChar()) || 
-			                           stream.GetChar() == '_' || 
-																 stream.GetChar() == '-' || 
+		while ( !stream.IsEnd() && ( isalnum((unsigned char ) stream.GetChar()) ||
+			                           stream.GetChar() == '_' ||
+																 stream.GetChar() == '-' ||
 																 stream.GetChar() == ':' ) )
 		{
 			*pszName += stream.GetChar();
@@ -430,7 +430,7 @@ bool ReadText( std::string *pszText, CBufferedStream &stream, const char *pszEnd
 // **
 // ************************************************************************************************************************ //
 
-// What is this thing? 
+// What is this thing?
 // - Elements start with a letter or underscore, but xml is reserved (min element node <a/>)
 // - Comments: <!-- (min comment node is <!---->)
 // - Declaration: <?xml (min declaration node is <?xml?>)
@@ -639,7 +639,7 @@ bool ParseElement( IXmlSaxVisitor *pVisitor, CBufferedStream &stream )
 				return false;
 			stream.Next();
 			return !stream.IsEnd();
-		} 
+		}
 		else if ( stream.GetChar() == '>' )
 		{
 			stream.Next();

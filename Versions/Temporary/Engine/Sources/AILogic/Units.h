@@ -23,8 +23,8 @@ template<uint8_t cOnlyVisible, int nSize> class CUnitsIter;
 class CUnits : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CUnits );
-public: 
-	int operator&( IBinSaver &saver ); 
+public:
+	int operator&( IBinSaver &saver );
 private:
 	struct SInitializedWord
 	{
@@ -62,7 +62,7 @@ private:
 
 	enum { N_CELLS_LEVELS = 3 };
 	CArray2D<uint16_t> numUnits[2][N_CELLS_LEVELS][3][2];
-	
+
 	// для нумерации ячеек
 	CFreeIds cellsIds;
 	// для сериализации
@@ -72,9 +72,9 @@ private:
 	// CRAP{ for debug
 	det_set<int> unitsInCellsSet;
 	// CRAP}
-	
+
 	std::vector< det_map<int, int> > nUnitsOfType;
-	
+
 	//
 	void AddUnitToConcreteCell( class CAIUnit* pUnit, const SVector &cell, bool bWithLeveledCelles );
 	void AddUnitToCell( class CAIUnit *pUnit, const CVec2 &newPos, bool bWithLeveledCelles );
@@ -86,18 +86,18 @@ private:
 
 public:
 	CUnits() { }
-	
+
 	void Init();
 	void Clear() { DestroyContents(); }
-	
+
 	void AddFormation( class CFormation *pFormation );
 	void DelFormation( class CFormation *pFormation );
-	
+
 	// добавить юнит в массив юнитов
 	void AddUnitToUnits( class CAIUnit *pUnit, const int nPlayer, const int nUnitType );
 	// добавить юнит на карту
 	void AddUnitToMap( class CAIUnit *pUnit );
-	
+
 	// убирает юнит отовсюду, но не отдаёт его id
 	void DeleteUnitFromMap( class CAIUnit *pUnit );
 	// окончательно удаляет юнит
@@ -105,12 +105,12 @@ public:
 
 	void AddUnitToCell( class CAIUnit *pUnit, bool bWithLeveledCelles );
 	void DelUnitFromCell( class CAIUnit *pUnit, bool bWithLeveledCelles );
-	
+
 	void UnitChangedPosition( class CAIUnit *pUnit, const CVec2 &newPos );
 	void ChangePlayer( class CAIUnit *pUnit, const uint8_t cNewPlayer );
-	
+
 	const int Size( const int nParty ) const;
-	
+
 	// количество солдат в круге центром vCenter и радиусом fRadius с партией nParty
 	// сейчас реализация - просто итерирование внутри круга
 	const int GetNSoldiers( const CVec2 &vCenter, const float fRadius, const int nParty );
@@ -133,7 +133,7 @@ public:
 	void CheckCorrectness( const SVector &tile );
 	void CheckUnitCell();
 	void WriteSpatialCellDebugInfo( FILE* f );
-	
+
   friend class CGlobalIter;
 	friend class CPlanesIter;
 	friend class CDeadPlanesIter;

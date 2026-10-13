@@ -6,7 +6,7 @@ namespace NGScene
 extern bool	bFreeze;
 extern bool bNewShadows;
 
-static void AttachPart( ISomePart *pRes, CVolumeNode *pNode, 
+static void AttachPart( ISomePart *pRes, CVolumeNode *pNode,
 	SFullStaticTrackers *pTrackers, bool bIsDynamic )
 {
 	///bool bIsLightmapped = !bIsDynamic && pRes->GetGroupInfo().nLightGroup == 0 && pRes->GetMaterial()->GetType() == IMaterial::MT_NORMAL;//!= IMaterial::MT_OCCLUDER;
@@ -19,7 +19,7 @@ static void AttachPart( ISomePart *pRes, CVolumeNode *pNode,
 		if( eDT == DT_FORCE_DYNAMIC ) {  bIsDynamic = true; }
 		if( eDT == DT_FORCE_STATIC ) { bIsDynamic = false; }
 	}
-	
+
 	if ( bIsDynamic )
 		pCPart = pNode->dynamicParts.GetCombinerPartForAdd( pRes->GetMaterial(), pTrackers, nFloorMask, true );
 	else
@@ -32,7 +32,7 @@ static void AttachPart( ISomePart *pRes, CVolumeNode *pNode,
 	//	pRes->SetCombiner( pCPart->GetCombiner(), true, false );
 }
 
-void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR, 
+void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR,
 	SFullStaticTrackers *pTrackers, bool bIsDynamic )
 {
 	CVolumeNode *pNode = pRoot->GetNode( vPos, fR );
@@ -47,7 +47,7 @@ CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV )
 	return pNode;
 }
 
-ISomePart::ISomePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo ) 
+ISomePart::ISomePart( CPtrFuncBase<CObjectInfo> *pData, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 : IPart( pData, 0 ), group( _pMaterial, _gInfo )
 {
 	SetCacheLightFlags();
@@ -116,7 +116,7 @@ void ISomePart::SetLM( CPtrFuncBase<NGfx::CTexture> *pLM )
 
 CStaticAnimatedPart::CStaticAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *pAnim,
 	CFuncBase<std::vector<NGfx::SCompactTransformer> > *pMMXAnim,
-	const SBound &_bv, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo ) 
+	const SBound &_bv, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 	: ISomePart( pData, _pMaterial, _gInfo ), pAnimation(pAnim), pMMXAnimation(pMMXAnim), bv(_bv)
 {
 }
@@ -130,7 +130,7 @@ CGenericDynamicPart::CGenericDynamicPart( CPtrFuncBase<CObjectInfo> *pData, IMat
 
 // CDynamicPart
 
-CDynamicPart::CDynamicPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *pPos, 
+CDynamicPart::CDynamicPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *pPos,
 													 IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 													 : CGenericDynamicPart( pData, _pMaterial, _gInfo ), pTransform(pPos), pTrackObjInfo(pData)
 {
@@ -183,7 +183,7 @@ CDynamicPartWithAnimatedBound::CDynamicPartWithAnimatedBound( CPtrFuncBase<CObje
 CAnimatedPart::CAnimatedPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase< std::vector<SHMatrix> > *_pAnim,
 	CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 	CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
-	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim), 
+	: CAnimatedBoundPart( pData, _pMaterial, _gInfo, _pBound, _pAnim),
 	pAnimation(_pAnim), pMMXAnimation(_pMMXAnim)
 {
 }
@@ -244,17 +244,17 @@ bool CAnimatedBoundPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTra
 
 // CDynamicGeometryPart
 
-CDynamicGeometryPart::CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *_pTransform, 
+CDynamicGeometryPart::CDynamicGeometryPart( CPtrFuncBase<CObjectInfo> *pData, CFuncBase<SFBTransform> *_pTransform,
 	CFuncBase<SBound> *_pBound, IMaterial *_pMaterial, const SFullGroupInfo &_gInfo )
 	: CGenericDynamicPart( pData, _pMaterial, _gInfo ), pBound(_pBound), pTransform(_pTransform), pChanges(pData)
 {
 }
 
-void CDynamicGeometryPart::AddChangeTrackers( CAnimationWatch *p, bool bVertices ) 
+void CDynamicGeometryPart::AddChangeTrackers( CAnimationWatch *p, bool bVertices )
 {
-	p->AddHandle( GetObjectInfoNode() ); 
-	if ( pTransform ) 
-		p->AddHandle( pTransform ); 
+	p->AddHandle( GetObjectInfoNode() );
+	if ( pTransform )
+		p->AddHandle( pTransform );
 }
 
 bool CDynamicGeometryPart::Update( CVolumeNode *pVolume, SFullStaticTrackers *pTrackers )
@@ -318,15 +318,15 @@ CCombinedPart::CCombinedPart( SFullStaticTrackers *pTrackers, int _nFloorMask, b
 void CCombinedPart::InitGeometry()
 {
 	SRenderGeometryInfo &gi = geometryInfo;
-	gi.pVertices = new CVBCombiner( 
-		pCombiner, 
+	gi.pVertices = new CVBCombiner(
+		pCombiner,
 		bIsDynamic ? CT_DYNAMIC : CT_STATIC,
 		pCombiner->GetAnimationTracker(), pPervertexLightState );
 	gi.pTriLists[TLT_POSITION] = new CIBCombiner( pCombiner, pCombiner->GetFullChangeTracker(), IBTT_POSITIONS );
 	gi.pTriLists[TLT_GEOM] = new CIBCombiner( pCombiner, pCombiner->GetFullChangeTracker(), IBTT_VERTICES );
 }
 
-SRenderGeometryInfo* CCombinedPart::GetGeometryInfo() 
+SRenderGeometryInfo* CCombinedPart::GetGeometryInfo()
 {
 	if ( !geometryInfo.pVertices )
 		InitGeometry();
@@ -370,7 +370,7 @@ void CCombinedPart::UpdatePartInfo()
 }
 
 void CCombinedPart::SetIgnored( int _nIgnoreMark, const CPartFlags &_parts )
-{ 
+{
 	//	pCombiner.Refresh();
 	nIgnoreMark = _nIgnoreMark;
 	ignoredParts = _parts;

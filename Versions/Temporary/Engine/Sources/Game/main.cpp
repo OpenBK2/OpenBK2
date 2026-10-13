@@ -360,7 +360,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 	NGlobal::SetVar( "code_build_date_time", BUILD_DATE_TIME_STR );
 	// Hash the final startup data once, after profile/mod configs and the version.
 	NGameX::InitializeMPDataVersionChecksum();
-	// 
+	//
 	pSplashScreen = 0;
 	// setup video mode
 	if ( !Scene()->SetupMode(SCENE_MODE_WINDOWED, false) )
@@ -398,7 +398,7 @@ static int RunGame( const std::vector<std::string> &arguments )
 		NGlobal::ProcessCommand( L"replay \"" + UTF8ToWide(szReplayFile) + L"\"" );
 	// start
 	Cursor()->Acquire( true );
-	while ( 1 ) 
+	while ( 1 )
 	{
 		NWinFrame::PumpMessages();
 
@@ -537,15 +537,15 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 			::MessageBox( 0, szVersion.c_str(), "Build version", MB_OK | MB_ICONEXCLAMATION );
 			return false;
 		}
-		if ( szString[0] == '-' ) 
+		if ( szString[0] == '-' )
 		{
 			szString.erase( 0, 1 );
 			NStr::TrimBoth( szString );
-			if ( szString.empty() ) 
+			if ( szString.empty() )
 				continue;
 		}
 		// check for spacial cases - save (.sav) and map (.b2m or .b2x)
-		if ( szString.size() > 4 ) 
+		if ( szString.size() > 4 )
 		{
 			const int nExtPos = szString.rfind( '.' );
 			if ( nExtPos != std::string::npos )
@@ -557,7 +557,7 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 					NGlobal::SetVar( "LoadSavedFile", szString );
 					continue;
 				}
-				else if ( (szExt == ".b2m") || (szExt == ".b2x") ) 
+				else if ( (szExt == ".b2m") || (szExt == ".b2x") )
 				{
 					NGlobal::SetVar( "StartNewMap", szString );
 					continue;

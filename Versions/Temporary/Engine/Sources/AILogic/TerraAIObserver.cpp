@@ -111,7 +111,7 @@ void CTerraAIObserverInGame::AddRiver( const NDb::SVSOInstance *pInstance )
 		{
 			const CVec3 vPos( pInstance->points[i].vPos + vDist * fDist );
 			riverSounds.push_back( CVec2( vPos.x, vPos.y ) );
-		}		
+		}
 		fDistSoFar = fDist - fSegmentLength;
 	}
 }

@@ -63,7 +63,7 @@ CVec2 CAIMap::GetPointByTile( const SObjTileInfo &tileInfo ) const
 	return GetPointByTile( tileInfo.tile );
 }
 
-CAIMap::CAIMap( const int _nSizeX, const int _nSizeY, const int _nTileSize, 
+CAIMap::CAIMap( const int _nSizeX, const int _nSizeY, const int _nTileSize,
 								const int _nMaxUnitTileRadius, const int _nMaxMapSize )
 :	nSizeX( _nSizeX ), nSizeY( _nSizeY ), nTileSize( _nTileSize ),
 	nMaxUnitTileRadius( _nMaxUnitTileRadius ), nMaxMapSize( _nMaxMapSize )
@@ -181,15 +181,15 @@ void CAIMap::RecreateCircles()
 		const uint16_t wDelta = fDelta;
 		uint16_t wAngle = 0;
 		SVector vOffset = GetOffset( wAngle, i );
-		do 
+		do
 		{
 			if ( i%2 == 0 )
 				AddLinesEven( vOffset, tiles, mask, nMaxRadius );
-			else 
+			else
 				AddLinesOdd( vOffset, tiles, mask, nMaxRadius );
 
 			const SVector vPrevOffset = vOffset;
-			do 
+			do
 			{
 				wAngle += wDelta;
 				vOffset = GetOffset( wAngle, i );

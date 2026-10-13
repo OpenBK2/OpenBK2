@@ -23,7 +23,7 @@ public:
 	void SetModal( bool _bIsModal ) {}
 	bool IsModal() const { return false; }
 	bool OnButtonDown( const CVec2 &vPos, const int nButton ){ return false; }
-	bool OnButtonUp( const CVec2 &vPos, const int nButton ) { return false; } 
+	bool OnButtonUp( const CVec2 &vPos, const int nButton ) { return false; }
 	bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) { return false; }
 	bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) { return false; }
 	IWindow* Pick( const CVec2 &vPos, const bool bRecursive ) { return 0; }
@@ -68,7 +68,7 @@ public:
 	// help context
 	void SetTooltipIDForMLHandler( int nID ) {}
 	int GetTooltipIDForMLHandler() const { return -1; }
-	
+
 	virtual void SetFocus( const bool bFocus ) { return; }
 	bool IsFocused() const { return false; }
 	void SetFadeValue( float fValue ) {}

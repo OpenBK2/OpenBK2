@@ -25,7 +25,7 @@ class CMapObjectSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CMapObjectState;
-	
+
 	class CMapObjectState* pParentState;
 
 	//конструкторы и операторы присваивания
@@ -57,7 +57,7 @@ class CMapObjectEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CMapObjectState;
-	
+
 	class CMapObjectState* pParentState;
 
 	//конструкторы и операторы присваивания
@@ -88,7 +88,7 @@ class CMapObjectAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CMapObjectState;
-	
+
 	class CMapObjectState* pParentState;
 
 	//конструкторы и операторы присваивания
@@ -126,7 +126,7 @@ class CMapObjectPasteState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CMapObjectState;
-	
+
 	class CMapObjectState* pParentState;
 
 	//конструкторы и операторы присваивания
@@ -138,7 +138,7 @@ class CMapObjectPasteState : public CDefaultInputState
 	{
 		NI_ASSERT( pParentState != 0, "CMapObjectPasteState(): Invalid parameter: pParentState == 0" );
 	}
-	
+
 	//IInputState interface
 	void Enter();
 	void Leave();
@@ -181,7 +181,7 @@ protected:
 		CVec3 vTerrainPos1;
 		bool bValid;
 		//
-		SSelector() 
+		SSelector()
 			: bTerrainSelector( true ),
 				frameRect( 0, 0, 0, 0 ),
 				vTerrainPos0( VNULL3 ),
@@ -215,7 +215,7 @@ protected:
 	virtual void Leave();
 	virtual void Draw( IPaintContext *pPaintDC );
 	virtual void PostDraw( IPaintContext *pPaintDC );
-	
+
 	virtual void OnSetFocus( IWidget* pNewWnd );
 
 	// CMapObjectState
@@ -234,10 +234,10 @@ protected:
 	// Удалить объект
 	virtual void RemoveSelection();
 	// Переместить объект, используя указаную точку на карте
-	virtual void MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave ); 
+	virtual void MoveSelection( const CVec3 &rvPosition, bool bExactPosition, bool bIgnoreDifference, bool bSave );
 	// Повернуть объект, используя указаную точку на карте
-	virtual void RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave ); 
-	// Вызывается из стейта добавления объекта ( если вернули true, переключится в IS_SELECT и автоматически обновится сцена ) 
+	virtual void RotateSelection( const CVec3 &rvPosition, bool bExactDirection, bool bIgnoreDifference, bool bSave );
+	// Вызывается из стейта добавления объекта ( если вернули true, переключится в IS_SELECT и автоматически обновится сцена )
 	virtual void InsertObjectEnter					() {}
 	virtual void InsertObjectLeave					() {}
 	virtual void InsertObjectDraw						( IPaintContext *pPaintDC ) {}
@@ -266,9 +266,9 @@ public:
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CMapObjectState(): pStoreInputState == 0" ) );
-		
+
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		
+
 		CMapObjectSelectState *pMapObjectSelectState = new CMapObjectSelectState( this );
 		nStateIndex = AddInputState( pMapObjectSelectState );
 		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CMapObjectState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
@@ -276,7 +276,7 @@ public:
 		CMapObjectEditState *pMapObjectEditState = new CMapObjectEditState( this );
 		nStateIndex = AddInputState( pMapObjectEditState );
 		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
-		
+
 		CMapObjectAddState *pMapObjectAddState = new CMapObjectAddState( this );
 		nStateIndex = AddInputState( pMapObjectAddState );
 		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CMapObjectState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );

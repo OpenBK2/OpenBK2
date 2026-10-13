@@ -53,7 +53,7 @@ void SObjectStatus::Clear()
 		armors[i] = 0;
 	}
 	pArmorPattern = 0;
-	
+
 	bIsTransport = false;
 	fFuel = -1.0f;
 }
@@ -77,8 +77,8 @@ void SObjectStatus::AddWeapon( const SWeapon &weapon )
 	}
 }
 
-CMapObj::CMapObj() : vScale( 1, 1, 1 ), fHP( 1 ), eDiplomacy( EDI_NEUTRAL ), bLoopedAnimation( false ), 
-	bVisible( false ), bIsSilentlyDead( false ), bHasMoveAnimation( false ), fAnimationSpeed( 1.0f ), 
+CMapObj::CMapObj() : vScale( 1, 1, 1 ), fHP( 1 ), eDiplomacy( EDI_NEUTRAL ), bLoopedAnimation( false ),
+	bVisible( false ), bIsSilentlyDead( false ), bHasMoveAnimation( false ), fAnimationSpeed( 1.0f ),
 	attachedSounds( __EAST_COUNTER__ ), nKeyObjectPlayer( -1 ), nParentID( -1 ), nPlayer( -1 ),
 	nColorIndex( 0 )
 {
@@ -132,7 +132,7 @@ void CMapObj::AttachSound( EAttachedSoundType eType, const NDb::SComplexSoundDes
 
 void CMapObj::DetachSound( EAttachedSoundType eType )
 {
-	if ( attachedSounds[eType] != 0 ) 
+	if ( attachedSounds[eType] != 0 )
 	{
 		SoundScene()->RemoveSound( attachedSounds[eType] );
 		attachedSounds[eType] = 0;
@@ -147,7 +147,7 @@ bool CMapObj::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::
 	nPlayer = pUpdate->info.nPlayer;
 
 	const bool bCreated = CreateSceneObject( nUniqueID, pUpdate, eSeason, bInEditor );
-	
+
 	fHP = pUpdate->info.fHitPoints / pStats->fMaxHP;
 	NI_ASSERT( fHP <= 1.0f, fmt::format( "From AILogic: (Create) current unit's hp exceed maximum hp ({})",
 		pStats ? pStats->GetDBID().ToString() : "" ) );
@@ -169,7 +169,7 @@ void CMapObj::SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, c
 		{
 			const NTimer::STime currTime = GameTimer()->GetGameTime();
 			for ( int i = 0; i < GetStats()->lightEffects.size(); ++i )
-			{		
+			{
 				if ( ( GetStats()->lightEffects[ i ].bOnAtNight && bIsNight ) ||
 					( GetStats()->lightEffects[ i ].bOnAtDay && !bIsNight ) )
 					Scene()->AttachLightEffect( GetID(), &(GetStats()->lightEffects[ i ]), currTime, ESAT_NO_REPLACE, bInEditor );
@@ -230,25 +230,25 @@ const NDb::SVisObj* CMapObj::ChooseVisObjForHP( float fHP )
 
 void CMapObj::ChangeModelToAnimable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
-	pModel = pNewModel; 
+	pModel = pNewModel;
 	Scene()->ChangeModel( nID, pModel );
 }
 
 void CMapObj::ChangeModelToTransportable( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
-	pModel = pNewModel; 
+	pModel = pNewModel;
 	Scene()->ChangeModel( nID, pModel );
 }
 
 void CMapObj::ChangeModelToUsual( const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
-	pModel = pNewModel; 
+	pModel = pNewModel;
 	Scene()->ChangeModel( nID, pModel );
 }
 
 void CMapObj::ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason )
 {
-	pModel = pNewModel; 
+	pModel = pNewModel;
 	Scene()->ChangeModel( nID, pModel );
 }
 
@@ -273,13 +273,13 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 				{
 					fCurHPVO = fDamageHP;
 					pCurVO = pDamageVO;
-				}	
+				}
 				if ( fNewHP <= fDamageHP && fNewHPVO > fDamageHP )
 				{
 					fNewHPVO = fDamageHP;
 					pNewVO = pDamageVO;
 					nResult = i;
-				}	
+				}
 			}
 			if ( pCurVO != pNewVO )
 			{
@@ -301,7 +301,7 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 			}
 			if ( fCurHPVO == fNewHPVO )
 				nResult = -1;
-				
+
 		}
 		fHP = fNewHP;
 		if ( fHP <= 0.0f )			// Dead, remove attached objects
@@ -311,16 +311,16 @@ int CMapObj::CommonUpdateHP( const float fNewHP, const SAINotifyRPGStats &stats,
 		}
 		UpdateIcons();
 	}
-	
+
 	return nResult;
 }
 
 void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NTimer::STime time )
 {
-	if ( pEffect == 0 ) 
+	if ( pEffect == 0 )
 		return;
 	const NTimer::STime timeEffect = (std::min)( time, GameTimer()->GetGameTime() );
-	if ( !pStats->surfacePoints.empty() ) 
+	if ( !pStats->surfacePoints.empty() )
 	{
 		const CVec3 vDir = CVec3( GetVectorByDirection( wDir ), 0 );
 		CQuat qInvRot;
@@ -364,7 +364,7 @@ void CMapObj::AIUpdateHit( const NDb::SComplexEffect *pEffect, uint16_t wDir, NT
 void CMapObj::AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update )
 {
 	nKeyObjectPlayer = update.nPlayer;
-	
+
 	UpdateIcons();
 }
 
@@ -410,7 +410,7 @@ const NDb::SAnimB2* CMapObj::GetAnimation( const int _nAnimation )
 	{
 		CDynamicCast<NDb::SInfantryRPGStats> pStats = GetStats();
 		if ( !pStats )
-			return 0;			
+			return 0;
 
 		int nAnimation = _nAnimation;
 		if ( pStats->animdescs.size() <= nAnimation )
@@ -427,7 +427,7 @@ const NDb::SAnimB2* CMapObj::GetAnimation( const int _nAnimation )
 	}
 	else
 	{
-		if ( pModel && pModel->pSkeleton && _nAnimation < pModel->pSkeleton->animations.size() ) 
+		if ( pModel && pModel->pSkeleton && _nAnimation < pModel->pSkeleton->animations.size() )
 		{
 			return checked_cast_ptr<const NDb::SAnimB2*>( pModel->pSkeleton->animations[_nAnimation] );
 		}
@@ -458,14 +458,14 @@ void CMapObj::AIUpdateAnimationChanged( const NDb::SAnimB2 *pAnim, const NTimer:
 			SetLoopedAnimation( false );
 		}
 		//
-		if ( pAnim != 0 ) 
+		if ( pAnim != 0 )
 		{
 			const NDb::SAnimB2 *pAnimation = pAnim;
 			//
-			if ( pAnimation != 0 ) 
+			if ( pAnimation != 0 )
 			{
 				SetLoopedAnimation( pAnimation->bLooped );
-				SetHasMoveAnimation( pAnimation->eType == NDb::ANIMATION_CRAWL || pAnimation->eType == NDb::ANIMATION_MARCH || 
+				SetHasMoveAnimation( pAnimation->eType == NDb::ANIMATION_CRAWL || pAnimation->eType == NDb::ANIMATION_MARCH ||
 					                   pAnimation->eType == NDb::ANIMATION_MOVE || pAnimation->eType == NDb::ANIMATION_WALK );
 				SetAnimSpeed( HasMoveAnimation() ? ( pAnimation->fMoveSpeed * AI_TILE_SIZE ) / 1000.0f : 1.0f );
 				AddAnimation( pAnimation, startTime, pAnimator );
@@ -480,13 +480,13 @@ std::pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 
 	if ( pAnimator )
 	{
-		const int nTotalAnimations = 
-			GetTypeID() == NDb::SInfantryRPGStats::typeID ? 
+		const int nTotalAnimations =
+			GetTypeID() == NDb::SInfantryRPGStats::typeID ?
 			NDb::__ANIMATION_TYPE_COUNTER : pModel->pSkeleton->animations.size();
 
 		if ( nAnimation >= 0 )
 		{
-			if ( const NDb::SAnimB2 *pAnimation = GetAnimation( nAnimation ) ) 
+			if ( const NDb::SAnimB2 *pAnimation = GetAnimation( nAnimation ) )
 			{
 				const NTimer::STime startTime = Singleton<IGameTimer>()->GetGameTime();
 
@@ -497,7 +497,7 @@ std::pair<int,bool> CMapObj::PlayAnimation( const int nAnimation )
 				if ( AddAnimation( pAnimation, startTime, pAnimator ) )
 					return std::pair<int,bool>( pAnimation->nLength, pAnimation->bLooped );
 			}
-			
+
 			return std::pair<int,bool>( 0, false );
 		}
 	}
@@ -520,7 +520,7 @@ void CMapObj::GetStatus( SObjectStatus *pStatus ) const
 }
 
 void CMapObj::SetVisible( bool _bVisible, const NDb::ESeason _eSeason, const bool _bIsNight )
-{ 
+{
 	bool bOldVisible = bVisible;
 
 	bVisible = _bVisible;
@@ -550,7 +550,7 @@ void CMapObj::ChangeLight( const int nLight, NDb::ESeason eSeason, bool bLight )
 		if ( bRightLight )
 		{
 			attachedLights[nLight] = bLight;
-			
+
 			const NDb::SModel *pLightModel = GetModel( GetStats()->lights[nLight].pvisualObject, eSeason );
 			if ( pLightModel )
 			{
@@ -574,14 +574,14 @@ void CMapObj::GetEnabledActions( CUserActions *pActions, EActionsType eActions )
 	*pActions |= actions;
 }
 
-NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
+NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith,
 	bool bAltMode ) const
 {
 	const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
 
 	CUserActions actions = actionsBy;
 	actions &= *pActionsWith;
-	
+
 	const std::vector<NDb::EUserAction> &priority = IsFriend() ? pClient->actionsPriority.friendActions :
 	( IsEnemy() ? pClient->actionsPriority.enemyActions : pClient->actionsPriority.neutralActions );
 	for ( int i = 0; i < priority.size(); ++i )
@@ -589,7 +589,7 @@ NDb::EUserAction CMapObj::GetBestAutoAction( const CUserActions &actionsBy, CUse
 		// если в списке встретилось NDb::USER_ACTION_UNKNOWN, выберем нейтральное действие по умолчанию
 		if ( priority[i] == NDb::USER_ACTION_UNKNOWN )
 			return NDb::USER_ACTION_UNKNOWN;
-			
+
 		if ( actions.HasAction( priority[i] ) )
 			return priority[i];
 	}
@@ -638,7 +638,7 @@ void CMapObj::UpdateIcons()
 
 void CMOSelectable::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
-	const float fAlpha = ( bHighlighted ? SOLID_ICON_ALPHA : FADED_ICON_ALPHA ) + 
+	const float fAlpha = ( bHighlighted ? SOLID_ICON_ALPHA : FADED_ICON_ALPHA ) +
 		( IsMousePicked() ? MOUSE_PICKED_ALPHA_BONUS : 0.0f );
 	iconInfo.fAlpha = Clamp( fAlpha, 0.0f, 1.0f );
 	iconInfo.nHPBarBaseLength = GetIconsHPBarLen();
@@ -660,21 +660,21 @@ void CMOSelectable::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	{
 		iconInfo.eIconGroup = eIconGroup;
 
-		if ( HasVisualGroup( EUS_PROCESS_GROUP ) )	
+		if ( HasVisualGroup( EUS_PROCESS_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_PROCESS );
-		if ( HasVisualGroup( EUS_GRUAD_GROUP ) )	
+		if ( HasVisualGroup( EUS_GRUAD_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_GUARD );
-		if ( HasVisualGroup( EUS_REPAIRS_GROUP ) )	
+		if ( HasVisualGroup( EUS_REPAIRS_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_BROKENTRUCK );
-		if ( HasVisualGroup( EUS_RESUPPLY_GROUP ) )	
+		if ( HasVisualGroup( EUS_RESUPPLY_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_NEED_RESUPPLY );
-		if ( HasVisualGroup( EUS_AGGRESSIVE_GROUP ) )	
+		if ( HasVisualGroup( EUS_AGGRESSIVE_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_AGRESSIVE );
-		if ( HasVisualGroup( EUS_BEST_SHOT_GROUP ) )	
+		if ( HasVisualGroup( EUS_BEST_SHOT_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_BEST_SHOT );
-		if ( HasVisualGroup( EUS_PACIFIC_GROUP ) )	
+		if ( HasVisualGroup( EUS_PACIFIC_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_PACIFIST );
-		if ( HasVisualGroup( EUS_INVISIBLE_GROUP ) )	
+		if ( HasVisualGroup( EUS_INVISIBLE_GROUP ) )
 			iconInfo.icons.push_back( NDb::SVisObjIconsSet::SVisObjIcon::VOIT_INVISIBLE );
 	}
 }
@@ -689,7 +689,7 @@ void CMOSelectable::SetIconsGroup( int nGroup, bool _bHighlighted )
 {
   if ( nGroup >= 0 )
   {
-		eIconGroup = static_cast<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType>( 
+		eIconGroup = static_cast<NDb::SVisObjIconsSet::SVisObjIcon::EVisObjIconType>(
 			NDb::SVisObjIconsSet::SVisObjIcon::VOIT_GROUP00 + nGroup );
 	}
 	else
@@ -733,10 +733,10 @@ NDb::EUserAction CMOSelectable::GetBestAutoAction( const CUserActions &actionsBy
 		return NDb::USER_ACTION_FOLLOW;
 
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
-}	
+}
 
 bool CMOSelectable::CanSelect() const
-{ 
+{
 	return bCanSelect && GetStats()->eSelectionType != NDb::SELECTION_TYPE_NONE;
 }
 
@@ -756,7 +756,7 @@ void CMOSelectable::UpdateVisualStatus( const struct SUnitStatusUpdate &update )
 		Scene()->SetCircle( GetID(), fVisualRadius, HIDE_RADIUS_COLOR, HIDE_RADIUS_WIDTH );
 	}*/
 //	Scene()->SetCircle( GetID(), 5.0f, HIDE_RADIUS_COLOR, HIDE_RADIUS_WIDTH ); // CRAP
-	
+
 	UpdateIcons();
 }
 
@@ -886,7 +886,7 @@ void PlaySoundEffect( const int nID, const NDb::SComplexSoundDesc *pEffect, NTim
 int PlayComplexEffect( const int nID, const NDb::SComplexEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos )
 {
 	PlaySoundEffect( nID, pEffect->pSoundEffect, timeStart, vPos );
-	
+
 	if ( const NDb::SEffect *pSceneEffect = pEffect->GetSceneEffect() )
 	{
 		const NTimer::STime currTime = GameTimer()->GetGameTime();
@@ -981,7 +981,7 @@ void PlayComplexEffect( const int nID, const std::string &szBoneName, ESceneSubO
 
 bool RunDefaultObjectAnimation( const NDb::SSkeleton *pSkeleton, NAnimation::ISkeletonAnimator *pAnimator )
 {
-	if ( pAnimator == 0 ) 
+	if ( pAnimator == 0 )
 		return false;
 	//
 	for ( int i = 0; i < pSkeleton->animations.size(); ++i )
@@ -1067,13 +1067,13 @@ void CombineAbilities( CAbilityInfo *pAbilities, NDb::EUnitSpecialAbility eAbili
 		// Priority: in progress, enabled, on, disabled
 		SAbilityInfo &oldAbilityInfo = it->second;
 
-		if ( oldAbilityInfo.abilityState.eState == EASS_SWITCHING_ON || 
+		if ( oldAbilityInfo.abilityState.eState == EASS_SWITCHING_ON ||
 			oldAbilityInfo.abilityState.eState == EASS_SWITCHING_OFF ||
 			oldAbilityInfo.abilityState.eState == EASS_OFF )
 		{
 			// in progress, do nothing
 		}
-		else if ( abilityInfo.abilityState.eState == EASS_SWITCHING_ON || 
+		else if ( abilityInfo.abilityState.eState == EASS_SWITCHING_ON ||
 			abilityInfo.abilityState.eState == EASS_SWITCHING_OFF ||
 			abilityInfo.abilityState.eState == EASS_OFF )
 		{

@@ -23,7 +23,7 @@
 
 ITerraManager *CScene::GetTerraManager()
 {
-	if ( !DoesTerraManagerExist() ) 
+	if ( !DoesTerraManagerExist() )
 	{
 		data[eScene]->pTerraManager = new CTerrainManager();
 		data[eScene]->pTerraManager->Setup( data[eScene]->GetGScene(), GetGameTimer() );
@@ -41,7 +41,7 @@ void CScene::AddTrack( const int nID, const float fFadingSpeed,
 											 const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
 											 const CVec2 &vNorm, const float _fWidth, const float fAplha )
 {
-	if ( data[eScene]->pTracksManager ) 
+	if ( data[eScene]->pTracksManager )
 		data[eScene]->pTerraManager->AddTrack( nID, fFadingSpeed, _v1, _v2, _v3, _v4, vNorm, _fWidth, fAplha, data[eScene]->pTracksManager );
 }
 
@@ -93,7 +93,7 @@ void CScene::SetLight( const NDb::SAmbientLight *pLight )
 
 int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptOrigin, float fR )
 {
-	const int nObjectID = GetID( nID );	
+	const int nObjectID = GetID( nID );
 	NI_ASSERT( data[eScene]->visObjects.find(nObjectID) == data[eScene]->visObjects.end(), fmt::format("Object 0x{:08x} already exist", static_cast<uint32_t>( nObjectID )) );
 
 	if ( CObjectBase *pObj = data[eScene]->GetGScene()->AddPointLight( ptColor, ptOrigin, fR ) )
@@ -123,9 +123,9 @@ int CScene::AddPointLight( const int nID, const CVec3 &ptColor, const CVec3 &ptO
 		return -1;
 }
 
-void CScene::ToggleShowMsg( const SGameMessage &msg, ESceneShow eShow ) 
-{ 
-	ToggleShow( eShow ); 
+void CScene::ToggleShowMsg( const SGameMessage &msg, ESceneShow eShow )
+{
+	ToggleShow( eShow );
 }
 
 bool CScene::ToggleShowPassability()
@@ -158,14 +158,14 @@ bool CScene::ProcessEvent( const SGameMessage &msg )
 void CScene::AfterLoad()
 {
 	// check for after-load already done
-	if ( (data.size() <= eScene) || (data[eScene]->p2DView != 0) && (data[eScene]->GetGScene() != 0) ) 
+	if ( (data.size() <= eScene) || (data[eScene]->p2DView != 0) && (data[eScene]->GetGScene() != 0) )
 		return;
 
 	data[eScene]->pAbsTimer->Set( GameTimer()->GetAbsTime() );
 	data[eScene]->pGameTimer->Set( GameTimer()->GetGameTime() );
 
 	CreateGScene();
-	
+
 	for ( SSceneData::CVisObjectsMap::iterator it = data[eScene]->visObjects.begin(); it != data[eScene]->visObjects.end(); ++it )
 	{
 		it->second->ClearObject();
@@ -217,7 +217,7 @@ void CScene::AfterLoad()
 	if ( data[eScene]->pTracksManager )
 		data[eScene]->pTracksManager->AfterLoad( data[eScene]->pGameTimer, data[eScene]->GetGScene() );
 
-	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
+	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() )
 	{
 		data[eScene]->pTerraManager->Setup( data[eScene]->GetGScene(), data[eScene]->pGameTimer );
 		const std::string szTerrainFilePath = NDb::GetFolderName( data[eScene]->pTerraManager->GetDesc()->GetDBID() );

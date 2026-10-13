@@ -126,7 +126,7 @@ void CTerminal::OutString( const std::string &szString )
 {
 	std::lock_guard lock( csClientSocketWriting );
 	writeCache.push_back( szString );
-	if ( bClientIsOK ) 
+	if ( bClientIsOK )
 	{
 		while ( !writeCache.empty() && bClientIsOK )
 		{
@@ -146,7 +146,7 @@ void CTerminal::ReadToCache()
 	static std::vector<char> buffer( INPUT_BUFFER_SIZE + 1 );
 	buffer[ INPUT_BUFFER_SIZE ] = 0;
 	int nBytesReceived = 0;
-	while ( bClientIsOK )	
+	while ( bClientIsOK )
 	{
 		nBytesReceived = recv( acceptedSocket, &buffer[0], INPUT_BUFFER_SIZE, 0 );
 		if ( nBytesReceived < 1 || nBytesReceived > INPUT_BUFFER_SIZE )

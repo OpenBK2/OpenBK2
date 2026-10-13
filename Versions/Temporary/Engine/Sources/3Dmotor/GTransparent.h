@@ -49,7 +49,7 @@ public:
 	virtual void Unlink() = 0;
 };
 
-class CTranspLightTexture : 
+class CTranspLightTexture :
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTranspLightTexture>
 {
 	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTranspLightTexture> CBase;
@@ -90,9 +90,9 @@ struct STransparentRenderContext
 	SRenderPathContext *pRPC;
 	const SLightInfo &lightInfo;
 
-	STransparentRenderContext( bool _bTnLMode, NGfx::CRenderContext *_pRC, NGfx::CTexture *_pParticleLight, 
+	STransparentRenderContext( bool _bTnLMode, NGfx::CRenderContext *_pRC, NGfx::CTexture *_pParticleLight,
 		NGfx::CCubeTexture *_pSky, ERenderPath _renderPath,
-		SRenderPathContext *_pRPC, const SLightInfo &_lightInfo ) 
+		SRenderPathContext *_pRPC, const SLightInfo &_lightInfo )
 		: bTnLMode(_bTnLMode), pRC(_pRC), pParticleLight(_pParticleLight), pSky(_pSky), renderPath(_renderPath), pRPC(_pRPC), lightInfo(_lightInfo) {}
 };
 

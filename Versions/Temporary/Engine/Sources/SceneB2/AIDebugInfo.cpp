@@ -13,7 +13,7 @@ namespace NAIVisInfo
 	void MakeVertex( NGScene::SVertex *pRes, const CVec2 &vAIPoint, const CVec2 &vTex )
 	{
 		ICommonB2M1AI *pAI = Singleton<ICommonB2M1AI>();
-		
+
 		const CVec3 vNormal( DWORDToVec3(Scene()->GetNormal( vAIPoint )) );
 		const float fZ = Scene()->GetZ( vAIPoint.x, vAIPoint.y ) + 10;
 
@@ -61,7 +61,7 @@ namespace NAIVisInfo
 
 		objData.geometry = tris;
 
-		// 
+		//
 		pValue->Assign( &objData, false );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,16 +81,16 @@ namespace NAIVisInfo
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void CDebugSegment::Init( const CSegment &aiSegment, const int nThickness )
 	{
-		fThick = F_MIN_AI_THICKNESS * nThickness / 2.0f;	
+		fThick = F_MIN_AI_THICKNESS * nThickness / 2.0f;
 		SetPosition( aiSegment );
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void CDebugSegment::SetPosition( const CSegment &aiSegment )
-	{ 
+	{
 		SetNeedUpdate( true );
 
 		CVec2 vDir( aiSegment.dir );
-		Normalize( &vDir ); 
+		Normalize( &vDir );
 
 		// calculate perpendicular
 		vDirPerp.x = -vDir.y * fThick;
@@ -162,7 +162,7 @@ namespace NAIVisInfo
 	void CDebugCircle::SetPosition( const CCircle &aiCircle )
 	{
 		SetNeedUpdate( true );
-		
+
 		static CVec2 vTurn( F_AI_TURN_X, F_AI_TURN_Y );
 		CVec2 vDir( aiCircle.r, 0.0f );
 
@@ -254,7 +254,7 @@ namespace NAIVisInfo
 			patches[nTileY][nTileX].push_back( *it );
 		}
 
-		for ( int nX = 0; nX < nPatchX; ++nX )	
+		for ( int nX = 0; nX < nPatchX; ++nX )
 		{
 			for ( int nY = 0; nY < nPatchY; ++nY )
 			{

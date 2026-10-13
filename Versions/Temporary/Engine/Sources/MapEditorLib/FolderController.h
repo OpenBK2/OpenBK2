@@ -37,7 +37,7 @@ class MAPEDITORLIB_EXPORT CFolderController : public CDefaultController
 {
 	OBJECT_NOCOPY_METHODS( CFolderController );
 
-public:	
+public:
 	struct SUndoData
 	{
 		enum EType
@@ -58,7 +58,7 @@ public:
 	};
 	//
 	typedef std::list<SUndoData> CUndoDataList;
-	
+
 	// список данных подвергнутых изменениям
 	CUndoDataList undoDataList;
 

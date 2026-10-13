@@ -24,13 +24,13 @@ static float AABB_HALF_SIZE_Y_MULTIPLIER = 3.5f;
 // расстояния между свигами бнитов вдоль перпендикуляра к пути, чтобы впереди идущий мешал сзади идущему
 static float MAX_DIFF_BETWEEN_SHIFTS = 100.0f;
 // квадрат расстояния между юнитами, чтобы впереди идущий мешал сзади идущему
-static float MAX_DIFF_BETWEEN_UNITS = 200000.0f; 
+static float MAX_DIFF_BETWEEN_UNITS = 200000.0f;
 // расстояние, на которое отъезжает юнит по направлению пути, чтобы пропустить сзади идущих
 static float FORWARD_SHIFT = 256.0f;
 // расстояние, с которого применяются построения
-static float MIN_DISTANCE_FOR_FORMATION = 2560.0f;  
+static float MIN_DISTANCE_FOR_FORMATION = 2560.0f;
 // количесвто юнитов в шеренге
-static int COLUMN_SIZE = 5;	
+static int COLUMN_SIZE = 5;
 // количество сегментов, через которые проверять состояние юнитов
 static int SEGMENT_PERIOD_CHECK = 20;
 // количество тайлов для определения направления пути
@@ -46,8 +46,8 @@ struct SUnitsSortByDirection
 	CVec2 vStartPoint, vDirection;
 	SUnitsSortByDirection( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
 		: vStartPoint( _vStartPoint ), vDirection( _vDirection ) {}
-		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const 
-		{ 
+		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
+		{
 			const float fValue1 = GetUnitPosition( pUnitInfo1.pUnit, vStartPoint, vDirection );
 			const float fValue2 = GetUnitPosition( pUnitInfo2.pUnit, vStartPoint, vDirection );
 			if ( fValue1 == fValue2 )
@@ -64,8 +64,8 @@ struct SUnitsSortByPriority
 	SUnitsSortByPriority( const CVec2 &_vStartPoint, const CVec2 &_vDirection )
 		: vStartPoint( _vStartPoint ), vDirection( _vDirection ) {}
 
-		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const 
-		{ 
+		bool operator()( const SUnitListInfo pUnitInfo1, const SUnitListInfo pUnitInfo2 ) const
+		{
 			const int nValue1 = pUnitInfo1.pUnit->GetUnitPriority();
 			const int nValue2 = pUnitInfo2.pUnit->GetUnitPriority();
 			if ( nValue1 == nValue2 )
@@ -125,7 +125,7 @@ bool CGroupMoveExecutor::SendUnitToPosition( CCommonUnit *pUnit, const CVec2 &vD
 	if ( pUnit->GetState()->GetName() == EUSN_MOVE_BY_FORMATION )
 	{
 //		DebugInfoManager()->CreateCircle( GetInstanceID(), CCircle( vFinishPoint, 24 ), NAIVisInfo::GREEN );
-		
+
 		CMoveByFormationState *pState = checked_cast<CMoveByFormationState *>( pUnit->GetState() );
 		return pState->SendUnitToPosition( vDestination );
 	}
@@ -183,7 +183,7 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 				const SVector vFinishTile( GetAIMap()->GetTile( vFinishPoint ) );
 				CCommonPathFinder *pPathFinder = Singleton<CCommonPathFinder>();
 				//PATHFINDING{
-				//pPathFinder->SetPathParameters( 1, aiClass, vGroupCenter, vFinishPoint, pUnit->GetProbablePlane( GetAIMap()->GetTile( vGroupCenter ) ) == PLANE_WATER, vStartTile );	
+				//pPathFinder->SetPathParameters( 1, aiClass, vGroupCenter, vFinishPoint, pUnit->GetProbablePlane( GetAIMap()->GetTile( vGroupCenter ) ) == PLANE_WATER, vStartTile );
 				pPathFinder->SetPathParameters( 1, aiClass, vGroupCenter, vFinishPoint, vStartTile, GetAIMap() );
 				//PATHFINDING}
 				CPtr<IStaticPath> pAveragePath = pPathFinder->CreatePath( true );
@@ -216,7 +216,7 @@ const bool CGroupMoveExecutor::Init( const std::vector<CCommonUnit*> &_units, co
 
 			int nPrevPriority = -1;
 			CCellsMap::iterator pos = cells.end();
-			for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )  
+			for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 			{
 				const int nPriority = it->pUnit->GetUnitPriority();
 				if ( nPrevPriority != nPriority || pos == cells.end() )
@@ -377,7 +377,7 @@ void CGroupMoveExecutor::MoveToDestination()
 	RecalcDestination();
 	int nPrevPriority = -1;
 	CCellsMap::iterator pos = cells.end();
-	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )  
+	for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 	{
 		const int nPriority = it->pUnit->GetUnitPriority();
 		if ( nPrevPriority != nPriority || pos == cells.end() )
@@ -408,12 +408,12 @@ void CGroupMoveExecutor::PeriodicalCheckForBuildFormation()
 			++it;
 			while ( it != units.end() )
 			{
-				if ( it->pUnit->IsIdle() && !it->bAtPlace )  
+				if ( it->pUnit->IsIdle() && !it->bAtPlace )
 				{
 					const float fThisUnitShift = GetUnitPosition( it->pUnit, vGroupCenter, vPerpPathDirection );
 					CUnitsList::iterator itFrwd = it;
 					bool bLockFound = false;
-					do 
+					do
 					{
 						--itFrwd;
 						const float fFrwdUnitShift = GetUnitPosition( itFrwd->pUnit, vGroupCenter, vPerpPathDirection );
@@ -524,7 +524,7 @@ bool CGroupMoveExecutor::TryMoveUnit( const int nUnitID )
 						MoveToDestination();
 					return true;
 				}
-				else 
+				else
 				{
 					nAtPlaceCount--;
 					nUnitsCount--;
@@ -577,7 +577,7 @@ int CGroupMoveExecutor::Segment()
 		return -1;
 	}
 
-	switch( eExecutorState ) 
+	switch( eExecutorState )
 	{
 	case ES_BUILD_FORMATION:
 		PeriodicalCheckForBuildFormation();
@@ -605,7 +605,7 @@ bool CGroupMoveExecutor::NotifyEvent( const CExecutorEvent &_event )
 	const SExecutorEventParam param = event->GetParam();
 	if ( param.eEventID == EID_START_IDLE )
 	{
-		switch( eExecutorState ) 
+		switch( eExecutorState )
 		{
 		case ES_MOVE_TO_DESTINATION:
 		case ES_DEFAULT_MOVE:

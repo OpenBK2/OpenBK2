@@ -20,7 +20,7 @@ namespace NDb
 class CSoldierStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CSoldierStatesFactory );
-	
+
 	static CPtr<CSoldierStatesFactory> pFactory;
 public:
 	int operator&( IBinSaver &saver )
@@ -39,8 +39,8 @@ public:
 
 class CSoldierRestState : public IUnitState
 {
-	OBJECT_BASIC_METHODS( CSoldierRestState );	
-	
+	OBJECT_BASIC_METHODS( CSoldierRestState );
+
 	ZDATA
 	CPtr<CAIUnit> pUnit;
 
@@ -53,10 +53,10 @@ class CSoldierRestState : public IUnitState
 	const bool CheckGuardPoint() const;
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit );
-	
+
 	CSoldierRestState() : pUnit( 0 ) { }
 	CSoldierRestState( class CAIUnit *pUnit );
-	
+
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
@@ -75,7 +75,7 @@ public:
 class CSoldierAttackState : public IUnitAttackingState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackState );
-	
+
 	enum { SHOOTING_CHECK = 3000, ENEMY_DIR_TOLERANCE = 10000 };
 	enum ESoldierAttackStates { ESAS_BRUTE_MOVING, ESAS_MOVING, ESAS_MOVING_TO_SIDE };
 
@@ -141,7 +141,7 @@ public:
 class CSoldierMoveToState : public IUnitState, public CFreeFireManager
 {
 	OBJECT_BASIC_METHODS( CSoldierMoveToState );
-	
+
 	enum { TIME_OF_WAITING = 200 };
 
 	ZDATA_(CFreeFireManager)
@@ -166,14 +166,14 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
 };
 
 class CSoldierTurnToPointState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CSoldierTurnToPointState );
-	
+
 	ZDATA_( CStatusUpdatesHelper )
 	CPtr<CAIUnit> pUnit;
 
@@ -193,7 +193,7 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_TURN_TO_POINT; }
 };
 
@@ -201,7 +201,7 @@ class CSoldierMoveByDirState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierMoveByDirState );
 
-	ZDATA 
+	ZDATA
 	CPtr<CAIUnit> pUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); return 0; }
 	//
@@ -256,7 +256,7 @@ public:
 class CSoldierEnterEntrenchmentState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierEnterEntrenchmentState );
-	
+
 	enum EEnterState { EES_START, EES_RUN, EES_FINISHED };
 	ZDATA
 	EEnterState state = {};
@@ -355,7 +355,7 @@ public:
 class CSoldierClearMineRadiusState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierClearMineRadiusState );
-	
+
 	enum EPutMineStates { EPM_START, EPM_MOVE,	EPM_WAITING };
 	ZDATA
 	EPutMineStates eState = {};
@@ -388,7 +388,7 @@ class CSoldierAttackUnitInBuildingState : public CCommonAttackUnitInBuildingStat
 	CPtr<CAIUnit> pUnit;
 	bool bTriedToShootBuilding = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonAttackUnitInBuildingState*)this); f.Add(2,&pUnit); f.Add(3,&bTriedToShootBuilding); return 0; }
-protected:	
+protected:
 	virtual class CAIUnit* GetUnit() const;
 	virtual void FireNow();
 public:
@@ -396,7 +396,7 @@ public:
 
 	CSoldierAttackUnitInBuildingState() : pUnit( 0 ) { }
 	CSoldierAttackUnitInBuildingState( class CAIUnit *pUnit, class CSoldier *pTarget, bool bAim, const bool bSwarmAttack );
-	
+
 	virtual void Segment();
 
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
@@ -424,7 +424,7 @@ class CSoldierEnterTransportNowState : public IUnitState
 
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
-	
+
 	CSoldierEnterTransportNowState() : pUnit( 0 ) { }
 	CSoldierEnterTransportNowState( class CAIUnit *pUnit, class CMilitaryCar *pTransport );
 
@@ -439,7 +439,7 @@ public:
 class CSoldierParaDroppingState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CSoldierParaDroppingState );
-	
+
 	enum ESoldierParaDroppingState
 	{
 		ESPDS_FALLING_W_PARASHUTE,
@@ -452,15 +452,15 @@ class CSoldierParaDroppingState : public IUnitState
 	ESoldierParaDroppingState eState = {};
 	ESoldierParaDroppingState eStateToSwitch = {};
 	CDBPtr<NDb::SInfantryRPGStats> pRememberedStats;
-	
-	
+
+
 	NTimer::STime timeToCloseParashute = {}, timeToFallWithParashute = {} ;
-	
+
 	CPtr<CSoldier> pUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&eStateToSwitch); f.Add(4,&pRememberedStats); f.Add(5,&timeToCloseParashute); f.Add(6,&timeToFallWithParashute); f.Add(7,&pUnit); return 0; }
 public:
 	static IUnitState* Instance( class CSoldier *pUnit, class CAviation *pPlane );
-	
+
 	CSoldierParaDroppingState() : pUnit( 0 ) { }
 	CSoldierParaDroppingState( class CSoldier *pUnit, class CAviation *pPlane );
 
@@ -476,7 +476,7 @@ public:
 class CSoldierUseSpyglassState : public IUnitState, public CStandartBehaviour, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CSoldierUseSpyglassState );
-	
+
 	ZDATA_(CStandartBehaviour)
 	CPtr<CSoldier> pSoldier;
 	CVec2 vPoint2Look;
@@ -501,7 +501,7 @@ public:
 class CSoldierAttackFormationState: public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackFormationState );
-	
+
 	ZDATA
 	CPtr<CAIUnit> pUnit;
 	CPtr<CFormation> pTarget;
@@ -509,7 +509,7 @@ class CSoldierAttackFormationState: public IUnitAttackingState
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&bSwarmAttack); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
-	
+
 	CSoldierAttackFormationState() : pUnit( 0 ) { }
 	CSoldierAttackFormationState( class CAIUnit *pUnit, class CFormation *pTarget, const bool bSwarmAttack );
 
@@ -531,7 +531,7 @@ class CSoldierIdleState : public IUnitState
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); return 0; }
 public:
 	static IUnitState* Instance( class CAIUnit *pUnit );
-	
+
 	CSoldierIdleState() : pUnit( 0 ) { }
 	CSoldierIdleState( class CAIUnit *pUnit );
 

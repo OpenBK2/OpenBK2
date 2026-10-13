@@ -27,9 +27,9 @@ class CHeightTileStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CHeightStateV3;
-	
+
 	class CHeightStateV3* pParentState;
-	
+
 	CHeightTileStateV3( CHeightStateV3* _pParentState = 0 ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightUpStateV3(): Invalid parameter: pParentState == 0" );
@@ -45,9 +45,9 @@ class CHeightUpStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CHeightStateV3;
-	
+
 	class CHeightStateV3* pParentState;
-	
+
 	CHeightUpStateV3( CHeightStateV3* _pParentState = 0 ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightUpStateV3(): Invalid parameter: pParentState == 0" );
@@ -65,9 +65,9 @@ class CHeightDownStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CHeightStateV3;
-	
+
 	class CHeightStateV3* pParentState;
-	
+
 	CHeightDownStateV3( CHeightStateV3* _pParentState = 0 ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightDownStateV3(): Invalid parameter: pParentState == 0" );
@@ -85,9 +85,9 @@ class CHeightRoundStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CHeightStateV3;
-	
+
 	class CHeightStateV3* pParentState;
-	
+
 	CHeightRoundStateV3( CHeightStateV3* _pParentState = 0 ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightRoundStateV3(): Invalid parameter: pParentState == 0" );
@@ -105,9 +105,9 @@ class CHeightPlatoStateV3 : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CHeightStateV3;
-	
+
 	class CHeightStateV3* pParentState;
-	
+
 	CHeightPlatoStateV3( CHeightStateV3* _pParentState = 0 ) : pParentState( _pParentState )
 	{
 		NI_ASSERT( pParentState != 0, "CHeightPlatoStateV3(): Invalid parameter: pParentState == 0" );
@@ -179,7 +179,7 @@ public:
 		std::vector<int> tileBrushSizeList;
 		std::vector<int> heightBrushSizeList;
 
-		SEditParameters() 
+		SEditParameters()
 			: nFlags( MITHV3EP_ALL ),
 				eBrush( B_TILE ),
 				eBrushSize( BS_1 ),
@@ -229,7 +229,7 @@ private:
 	//
 	void UpdateCommonPatterns();
 	void UpdateLevelPattern( const CTPoint<int> &rPatternPos, SEditParameters::EBrush eBrush );
-	
+
 	void CreateTileBrush( CArray2D<uint8_t> *pBrush, int nSize, int nTileIndex, bool bCircle );
 	void CreatePatternAndModifyGeometry( const SHeightPattern &rPattern );
 protected:
@@ -262,7 +262,7 @@ public:
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CHeightState(): pStoreInputState == 0" ) );
 
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		//	
+		//
 		CHeightTileStateV3 *pHeightTileState = new CHeightTileStateV3( this );
 		nStateIndex = AddInputState( pHeightTileState );
 		NI_ASSERT( nStateIndex == SEditParameters::B_TILE, fmt::format( "CHeightState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( SEditParameters::B_TILE ) ) );

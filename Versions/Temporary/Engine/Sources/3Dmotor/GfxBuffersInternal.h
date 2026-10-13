@@ -93,7 +93,7 @@ public:
 		ASSERT( nLockCount > 0 );
 		--nLockCount;
 	}
-	virtual void Free() 
+	virtual void Free()
 	{
 		ASSERT( nLockCount == 0 );
 		if ( pLocked )
@@ -125,10 +125,10 @@ public:
 	CVB( int _nSize, ETrueBufferUsage eUsage ): CRBase<IDirect3DVertexBuffer9>(_nSize)
 	{
 		HRESULT hRes = pDevice->CreateVertexBuffer(
-			nSize, 
+			nSize,
 			GetUsageFlags( eUsage ),
 			0,
-			GetPool( eUsage ), 
+			GetPool( eUsage ),
 			obj.GetAddr(),
 			0
 			);
@@ -156,7 +156,7 @@ public:
 	{
 		pLocked = 0;
 		HRESULT hRes = pDevice->CreateIndexBuffer(
-			_nSize, 
+			_nSize,
 			GetUsageFlags( eUsage ),
 			(D3DFORMAT)TFormat,
 			GetPool( eUsage ),

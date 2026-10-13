@@ -19,7 +19,7 @@ class CTracer
 	SRefTriangle GetTriangle( const SConvexHull &e, const SHMatrix &pos, const STriangle &t );
 	SInterval::SCrossPoint CalcCross( const SRefTriangle &t );
 	void TraceEntity( const SConvexHull &e, std::vector<SInterval::SCrossPoint> *pEnter, std::vector<SInterval::SCrossPoint> *pExit );
-		
+
 public:
 	CTracer( std::vector<SInterval> &_intersections ): intersections(_intersections) {}
 	bool TestSphere( const CVec3 &ptCenter, float fR );

@@ -73,8 +73,8 @@ void CGeneral::EnumWorkers( const enum EForceType eType, IWorkerEnumerator *pEnu
 	}
 }
 
-void CGeneral::CancelRequest( int nRequestID, enum EForceType eType ) 
-{  
+void CGeneral::CancelRequest( int nRequestID, enum EForceType eType )
+{
 	switch( eType )
 	{
 	case FT_AIR_SCOUT:
@@ -96,8 +96,8 @@ void CGeneral::CancelRequest( int nRequestID, enum EForceType eType )
 	}
 }
 
-int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType ) 
-{ 
+int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType )
+{
 	switch( eType )
 	{
 	case FT_AIR_SCOUT:
@@ -120,7 +120,7 @@ int /*request ID*/CGeneral::RequestForSupport( const CVec2 &vSupportCenter, enum
 
 void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 {
-	if ( !pWorker || !pWorker->IsRefValid() || !pWorker->IsAlive() ) 
+	if ( !pWorker || !pWorker->IsRefValid() || !pWorker->IsAlive() )
 		return;
 
 	const int nScriptID = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetScriptID( pWorker );
@@ -133,8 +133,8 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 			{
 				// don't consider gunners as infantry. they are pictures.
 			}
-			else if ( pFormation->IsInEntrenchment() || 
-						( pFormation->GetNextCommand() && 
+			else if ( pFormation->IsInEntrenchment() ||
+						( pFormation->GetNextCommand() &&
 							( ACTION_COMMAND_IDLE_TRENCH == pFormation->GetNextCommand()->ToUnitCmd().nCmdType ||
 								ACTION_COMMAND_IDLE_BUILDING == pFormation->GetNextCommand()->ToUnitCmd().nCmdType ||
 								ACTION_COMMAND_ENTER == pFormation->GetNextCommand()->ToUnitCmd().nCmdType
@@ -170,7 +170,7 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 					const int nScriptID = dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetScriptID( pWorker );
 					if ( IsMobileReinforcement( nScriptID ) || ( bFromReinforcement && nScriptID == -1 )  )
 					{
-						if ( pStats->etype == RPG_TYPE_TRN_CIVILIAN_AUTO ) 
+						if ( pStats->etype == RPG_TYPE_TRN_CIVILIAN_AUTO )
 						{
 							// такая байда нафиг не нужна генералу
 						}
@@ -194,11 +194,11 @@ void CGeneral::Give( CCommonUnit *pWorker, bool bFromReinforcement )
 						}
 					}
 				}
-				else 
+				else
 				{
 					if ( bFromReinforcement || IsMobileReinforcement( dynamic_cast<CAILogic*>(Singleton<IAILogic>())->GetScriptID( pWorker ) ) )
 						tanksFree.push_back( pWorker );
-					else 
+					else
 						stationaryTanks.push_back( pWorker );
 				}
 			}
@@ -211,7 +211,7 @@ void CGeneral::EraseLastSeen()
 	int nStep = 10; // optimisation parameter;
 
 	// if finished, start again
-	if ( curProcessed == enemys.end() ) 
+	if ( curProcessed == enemys.end() )
 		curProcessed = enemys.begin();
 
 	// убрать всех врагов, которых видели давно.
@@ -243,7 +243,7 @@ void CGeneral::Segment()
 		EraseLastSeen();
 
 		CCommander::Segment();
-		
+
 		pAirForce->Segment();
 
 		// бомбардировака областей
@@ -255,7 +255,7 @@ void CGeneral::Segment()
 			CheckAvailableReinforcement();
 
 		timeNextUpdate = curTime + SGeneralConsts::GENERAL_UPDATE_PERIOD + NRandom::Random( 1000 ); RecordRandomCall();
-		
+
 		//Singleton<IStatistics>()->UpdateEntry( "General: visible enemies", "" );
 		//Singleton<IStatistics>()->UpdateEntry( "General: antiartillery circles", "" );
 	}
@@ -264,8 +264,8 @@ void CGeneral::Segment()
 void CGeneral::GiveCommandToBombardment()
 {
 	if ( 2 == cBombardmentType ) return;
-	
-	const float fComparativeWeight = 
+
+	const float fComparativeWeight =
 		cBombardmentType == 1 ? SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS : SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE;
 	// количество областей, среди которых кидать рандом
 	int cnt = 0;
@@ -283,7 +283,7 @@ void CGeneral::GiveCommandToBombardment()
 	if ( cnt > 0 )
 	{
 		const int nRegion = NRandom::Random( 1, cnt ); RecordRandomCall();
-		
+
 		cnt = 0;
 		iter = resContainer.begin();
 		while ( cnt < nRegion )
@@ -311,7 +311,7 @@ void CGeneral::GiveCommandToBombardment()
 			{
 				if ( pInfo->IsLastVisibleAntiArt() )
 					bIsAntiArtilleryFight = true;
-				
+
 				vCenter += pUnit->GetCenterPlain();
 				++nUnits;
 			}
@@ -327,7 +327,7 @@ void CGeneral::GiveCommandToBombardment()
 					pAirForce->RequestForSupport( vCenter, FT_AIR_GUNPLANE, (*iter).GetCellNumber() );
 				pAirForce->RequestForSupport( vCenter, FT_AIR_BOMBER, (*iter).GetCellNumber() );
 			}
-			else	
+			else
 			{
 				float fMaxDistance = 0;
 				for ( CUnitsIter<0,3> unitsIter( nParty, EDI_ENEMY, vCellCenter, fRadius ); !unitsIter.IsFinished(); unitsIter.Iterate() )
@@ -335,7 +335,7 @@ void CGeneral::GiveCommandToBombardment()
 					CAIUnit *pUnit = *unitsIter;
 					CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-					// если это враг и его видели не так давно		
+					// если это враг и его видели не так давно
 					if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 					{
 						const float fDist = fabs( pUnit->GetCenterPlain() - vCenter );
@@ -390,7 +390,7 @@ const float Func( const float fX, const float fBound )
 
 void CGeneral::Bombardment()
 {
-	const float fComparativeWeight = 
+	const float fComparativeWeight =
 		cBombardmentType == 1 ? SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS : SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE;
 	// количество областей, среди которых кидать рандом
 	int cnt = 0;
@@ -461,7 +461,7 @@ void CGeneral::Bombardment()
 						CAIUnit *pUnit = *unitsIter;
 						CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-						// если это враг и его видели не так давно		
+						// если это враг и его видели не так давно
 						if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 						{
 							// "забыть" о невидимых юнитах в этом радиусе
@@ -472,7 +472,7 @@ void CGeneral::Bombardment()
 					pAirForce->RequestForSupport( vCenter, availFroces[NRandom::Random(0, availFroces.size() -1)], (*iter).GetCellNumber() ); RecordRandomCall();
 				}
 			}
-			else	
+			else
 			{
 				float fMaxDistance = 0;
 				for ( CUnitsIter<0,3> unitsIter( nParty, EDI_ENEMY, vCellCenter, fRadius ); !unitsIter.IsFinished(); unitsIter.Iterate() )
@@ -480,7 +480,7 @@ void CGeneral::Bombardment()
 					CAIUnit *pUnit = *unitsIter;
 					CAIUnitInfoForGeneral* pInfo = pUnit->GetUnitInfoForGeneral();
 
-					// если это враг и его видели не так давно		
+					// если это враг и его видели не так давно
 					if ( curTime - pInfo->GetLastTimeOfVisibility() < pUnit->GetTimeToForget() )
 					{
 						const float fDist = fabs( pUnit->GetCenterPlain() - vCenter );
@@ -529,9 +529,9 @@ void CGeneral::BombardmentSegment()
 			// check if best region have sufficient weight to bombard it
 			if ( fRatio >= 1.0f )
 			{
-				const float fProbability = 
+				const float fProbability =
 					Func( fRatio, 1 - SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE )
-					+ 
+					+
 					SGeneralConsts::PROBABILITY_TO_SHOOT_AFTER_ARTILLERY_FIRE;
 				// делится на 1000, т.к. проверка раз в секунду
 				const float fProbNow = fProbability >= 1.0f ? 1.0f : 1 - exp( 1.0f/((float)SGeneralConsts::TIME_TO_ARTILLERY_FIRE / 1000.0f) * log( 1.0f - fProbability ) );
@@ -552,7 +552,7 @@ void CGeneral::BombardmentSegment()
 						AviationBombardment();
 					}
 				}
-			}			
+			}
 		}
 	}
 }
@@ -566,8 +566,8 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit*> &pUnits, bool bFromRe
 {
 	typedef det_map<int, bool> Formations;
 	Formations formations; // добавляемые формации
-	
-	// забрать все юниты, кроме солдат. солдат забирать формациями	
+
+	// забрать все юниты, кроме солдат. солдат забирать формациями
 	for ( std::list<CCommonUnit*>::const_iterator iter = pUnits.begin(); iter != pUnits.end(); ++iter )
 	{
 		CCommonUnit *pUnit = *iter;
@@ -593,7 +593,7 @@ void CGeneral::GiveNewUnits( const std::list<CCommonUnit*> &pUnits, bool bFromRe
 			BalanceUpdate( BA_ADD_OWN, pUnit );
 		}
 	}
-	
+
 	// another oppotunity to ask for worker for tasks
 	for ( Tasks::iterator it = tasks.begin(); it != tasks.end(); ++it )
 		(*it)->AskForWorker( this, 0, true );
@@ -623,14 +623,14 @@ void CGeneral::Init( const NDb::SAIGeneralSide &mapInfo )
 	nMaxAllowedMobileTanks = mapInfo.nMaxMobileTanks;
 
 	Init();
-	
+
 	bool bReinforceCreated = false;
 
 	for ( int i = 0; i < mapInfo.parcels.size(); ++i )
 	{
 		switch( mapInfo.parcels[i].eType )
 		{
-		case EPATCH_DEFENCE:								// защита патчей 
+		case EPATCH_DEFENCE:								// защита патчей
 			{
 				CGeneralTaskToDefendPatch * pTask  = new CGeneralTaskToDefendPatch;
 				pTask->Init( mapInfo.parcels[i], this );
@@ -675,7 +675,7 @@ void CGeneral::SetUnitVisible( class CAIUnit *pUnit, const bool bVisible )
 {
 	const SUnitBaseRPGStats * pStats = pUnit->GetStats();
 	if ( EDI_ENEMY == theDipl.GetDiplStatusForParties( pUnit->GetParty(), nParty ) )
-	{	
+	{
 		if ( !pStats->IsAviation() )
 		{
 			if ( pStats->IsArtillery() )
@@ -754,7 +754,7 @@ void CGeneral::UnitDied( CAIUnitInfoForGeneral *pInfo )
 		CAIUnit *pUnit = pInfo->GetOwner();
 		CAIUnit *pTruck = pUnit->GetTruck();
 		if ( pTruck && pTruck->IsRefValid() && pTruck->IsAlive() )
-			Give( pTruck );			
+			Give( pTruck );
 	}
 }
 
@@ -800,7 +800,7 @@ void CGeneral::UnitChangedParty( CAIUnit *pUnit, const int nNewParty )
 	case EDI_FRIEND:
 		if ( !pUnit->GetStats()->IsAviation() )
 			pIntendant->UnitDead( pUnit );
-		
+
 		break;
 	}
 }

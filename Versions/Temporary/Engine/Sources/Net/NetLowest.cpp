@@ -22,7 +22,7 @@ std::string CNodeAddress::GetIP()
 	sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
 	char szBuf[1024];
 	const unsigned char *pOctets = AddressOctets( &nameRemote.sin_addr );
-	sprintf( szBuf, "%i.%i.%i.%i", 
+	sprintf( szBuf, "%i.%i.%i.%i",
 		(int) pOctets[0],
 		(int) pOctets[1],
 		(int) pOctets[2],

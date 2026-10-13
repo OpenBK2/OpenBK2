@@ -159,7 +159,7 @@ const std::string &CWindowTabControl::CreateTabName( const int nTab, CWindow *pT
 void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab )
 {
 	// if we have buttons, add button
-	
+
 
 	if ( pHeadersContainer )
 	{
@@ -168,7 +168,7 @@ void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab 
 		{
 			pHeadersContainer->PushBack( pButton, false );
 			pButton->Init();
-			pButton->SetTextString( szButtonName );			
+			pButton->SetTextString( szButtonName );
 			pButton->ShowWindow( true );
 			pButton->SetPlacement( 0, 0, pButton->GetOptimalWidth(), 0, EWPF_SIZE_X );
 			pButton->SetNotifySink( this );
@@ -178,7 +178,7 @@ void CWindowTabControl::AddTab( const std::wstring &szButtonName, CWindow *pTab 
 
 	// add container
 	// NI_ASSERT( pContainerSample != 0, "no container sample" );
-	
+
 	pTab->SetName( CreateTabName( nTabNumber, pTab ) );
 	AddChild( pTab, false );
 	++nTabNumber;

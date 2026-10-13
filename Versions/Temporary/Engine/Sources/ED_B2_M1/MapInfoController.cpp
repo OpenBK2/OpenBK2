@@ -5,6 +5,6 @@
 const char CMapInfoController::TEMPORARY_LABEL[] = "CMapInfoController::TEMPORARY_LABEL";
 
 
-// basement storage  
+// basement storage
 
 

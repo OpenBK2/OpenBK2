@@ -67,7 +67,7 @@ int CBitmap::operator&( IBinSaver &saver )
 
 void CBitmapWindow::Visit( struct IUIVisitor * pVisitor )
 {
-	if ( !pBitmap ) 
+	if ( !pBitmap )
 		return;
 
 	CRectLayout rects;

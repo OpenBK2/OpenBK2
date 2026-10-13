@@ -575,7 +575,7 @@ int luaK_code2 (FuncState *fs, OpCode o, int arg1, int arg2) {
 						fs->f->code.pop_back();
 						ASSERT( fs->f->code.size() == fs->pc );
             luaK_deltastack(fs, -1);  /* correct stack */
-            return NO_JUMP; 
+            return NO_JUMP;
           }
           break;
         }
@@ -596,7 +596,7 @@ int luaK_code2 (FuncState *fs, OpCode o, int arg1, int arg2) {
 					fs->f->code.pop_back();
 					ASSERT( fs->f->code.size() == fs->pc );
           luaK_deltastack(fs, -1);  /* correct stack */
-          return NO_JUMP; 
+          return NO_JUMP;
         }
         case OP_PUSHNIL: {  /* `repeat ... until nil' */
           if (GETARG_U(i) == 1) {

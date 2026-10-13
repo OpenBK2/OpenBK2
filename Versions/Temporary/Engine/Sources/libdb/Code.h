@@ -49,7 +49,7 @@ struct ICode : public CXmlResource
 			return szResult;
 		}
 	};
-	
+
 	virtual void GenerateCode( SCodeStreams *pCode, const std::string &szTabs, NDb::NTypeDef::STypeDef *pParentType, const std::string &szQualifiedName ) = 0;
 };
 

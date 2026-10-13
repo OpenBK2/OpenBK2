@@ -24,14 +24,14 @@ namespace NGScene
 {
 int SPartAndSkeletonKeyHash::operator()( const SPartAndSkeletonKey &k ) const
 {
-	return ( k.pGeometry?k.pGeometry->GetDBID().GetHashKey() : 0 ) ^ k.nGeometryPart ^ 
+	return ( k.pGeometry?k.pGeometry->GetDBID().GetHashKey() : 0 ) ^ k.nGeometryPart ^
 		( k.pSkeleton ? k.pSkeleton->GetDBID().GetHashKey() : 0 ) ^ k.nLightMapped;
 }
 
 CGrannyFile::~CGrannyFile()
 {
-	if ( pFile ) 
-		GrannyFreeFile( pFile ); 
+	if ( pFile )
+		GrannyFreeFile( pFile );
 	pFile = 0;
 }
 
@@ -43,7 +43,7 @@ void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 #pragma warning( disable: 4530 )
 	try
 	{
-		if ( pValue == 0 ) 
+		if ( pValue == 0 )
 			pValue = new CGrannyFile;
 		granny_int32 nBufferSize = req.GetStream()->GetSize();
 		CMemoryStream memoStream;
@@ -62,7 +62,7 @@ void CGrannyMemFileLoader::RecalcValue( CFileRequest *p )
 
 		pValue->pFile = pFile;
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 	}
 #pragma warning( default: 4530 )
@@ -168,7 +168,7 @@ void ConvertAIGeomTrisFromGranny( granny_mesh *pMesh, std::vector<STriangle> *pR
 void ConvertVerticesFromGranny( granny_mesh *pMesh, int nMaterialIndex, std::vector<NGScene::SVertex> *pVerts )
 {
 	int nSize = GrannyGetTotalObjectSize( pMesh->PrimaryVertexData->VertexType );
-	int nPosOffset, nNormalOffset, nTexUOffset, nTexVOffset, nTexOffset; 
+	int nPosOffset, nNormalOffset, nTexUOffset, nTexVOffset, nTexOffset;
 
 	nPosOffset = CalcGrannyTypedefOffset( pMesh->PrimaryVertexData->VertexType, GrannyVertexPositionName );
 	if ( nPosOffset < 0 )
@@ -266,7 +266,7 @@ const char *ConvertWeightsFromGrannyEx(
 	const char *res=0;
 
 
-	if ( pMesh->BoneBindingCount <= 0 ) 
+	if ( pMesh->BoneBindingCount <= 0 )
 		return "Error";
 
 	// A vertex may carry fewer than four influences. Clear unused slots even when
@@ -294,7 +294,7 @@ const char *ConvertWeightsFromGrannyEx(
 				fmt::format( "Bone index {} does not fit a byte, skeleton \"{}\"", nBone,
 					pSkeleton && pSkeleton->Name ? pSkeleton->Name : "?" ) );
 			const uint8_t cDefault[4] = { static_cast<uint8_t>( nBone ), 0, 0, 0 };
-			for ( int i = 0; i < nVertices; ++i ) 
+			for ( int i = 0; i < nVertices; ++i )
 			{
 				memcpy( (*pWeights)[i].fWeights, fDefault, 4 *sizeof(float) );
 				memcpy( (*pWeights)[i].cBoneIndices, cDefault, 4 );
@@ -853,7 +853,7 @@ void SetLoadMode( NGScene::ELoadMode eMode )
 }
 
 void CGrannyMeshLoader::Recalc()
-{	
+{
 	if ( key.pGeometry && !key.pGeometry->szModelFileRef.empty() )
 	{
 		if ( pSkeletonFileInfo )
@@ -884,10 +884,10 @@ void CGrannyMeshLoader::Recalc()
 		{
 			buff = fmt::format("bin\\Geometries\\{}_{}_{}_{}_{}_{}",
 				boost::uuids::to_string(key.pGeometry->uid ),
-				key.pGeometry->GetRecordID(), 
-				key.nGeometryPart, 
+				key.pGeometry->GetRecordID(),
+				key.nGeometryPart,
 				key.nMaterialPart,
-				key.pSkeleton->GetRecordID(), 
+				key.pSkeleton->GetRecordID(),
 				key.nSkeletonPart
 				);
 		}
@@ -914,11 +914,11 @@ void CGrannyMeshLoader::Recalc()
 			CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
 			sBinD & *pSaver;
 
-		
+
 			pValue->AssignDestructive( &sBinD );
 			bLightMapped = bLightMap;
 			return;
-		
+
 		}
 
 	}
@@ -934,14 +934,14 @@ void CGrannyMeshLoader::Recalc()
 	{
 		granny_file *pFile = pGrannyFile->GetValue()->pFile;
 
-		if ( pValue == 0 ) 
+		if ( pValue == 0 )
 			pValue = new CObjectInfo;
 
 		granny_file_info *pData = GrannyGetFileInfo( pFile );
 		granny_model *pModel = pData->Models[0];
 		bool bIsLightmappable = !EndsWith( pModel->Name, "noLM" );
 
-		if ( key.nGeometryPart >= 0 && key.nGeometryPart < pModel->MeshBindingCount ) 
+		if ( key.nGeometryPart >= 0 && key.nGeometryPart < pModel->MeshBindingCount )
 		{
 			granny_mesh *pMesh = pModel->MeshBindings[key.nGeometryPart].Mesh;
 			granny_int32 nGroupCount = GrannyGetMeshTriangleGroupCount( pMesh );
@@ -966,7 +966,7 @@ void CGrannyMeshLoader::Recalc()
 			}
 		}
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 	}
 #pragma warning( default: 4530 )

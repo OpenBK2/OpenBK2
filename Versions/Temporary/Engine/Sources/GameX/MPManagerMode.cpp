@@ -78,7 +78,7 @@ bool CMPManagerMode::SAutoUpdate::CheckNeedUpdate()
 	return true;
 }
 
-CMPManagerMode::~CMPManagerMode() 
+CMPManagerMode::~CMPManagerMode()
 {
 }
 

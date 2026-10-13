@@ -20,7 +20,7 @@ void LoadTextureData( std::vector<CArray2D<TPixel> > *pMips, int _nMips, int _nS
 	std::vector<CArray2D<TPixel> > &mips = *pMips;
 	//int nXSize = _nSizeX;
 	//int nYSize = _nSizeY;
-	
+
 	ASSERT( _nMips > 0 );
 	_nMips = (std::max)( _nMips, 1 );
 	mips.resize( _nMips );
@@ -53,7 +53,7 @@ static void CreateChecker( CSWTextureData *pTexture )
 }
 
 bool CSWTexture::IsReady()
-{ 
+{
 	Touch();
 	if ( bIsReady )
 		return true;
@@ -72,14 +72,14 @@ bool CSWTexture::IsReady()
 		return true;
 	pRequest = CreateFileRequiest( pTex->szDestName.c_str(), 0 ); //CreateFileRequiest( "Textures", GetKey() );
 	AddFileRequest( pRequest );
-	return false; 
+	return false;
 }
 
 template<class TPixel>
 void LoadDxt( CSWTextureData *pValue, int nDxt, int nSizeX, int nSizeY, int nMips, CDataStream *pStream )
 {
 	std::vector<CArray2D<TPixel> > dxt;
-	LoadTextureData<TPixel>( &dxt, nMips, nSizeX, nSizeY, pStream ); 
+	LoadTextureData<TPixel>( &dxt, nMips, nSizeX, nSizeY, pStream );
 	pValue->mips.resize( dxt.size() );
 	for ( int k = 0; k < dxt.size(); ++k )
 	{

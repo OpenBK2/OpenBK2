@@ -18,7 +18,7 @@ namespace NMapInfoEditor
 		const CVec2 vPos = CVec2( rvPos.x - vPosition.x - vAdditionalPosition.x, rvPos.y - vPosition.y - vAdditionalPosition.y );
 		return ( ClassifyConvexPolygon( spotSquare, vPos ) != CP_OUTSIDE );
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SSpotInfo::Pick( const CSelectionSquare &rSelectionSquare )
 	{
@@ -39,7 +39,7 @@ namespace NMapInfoEditor
 
 		float fObjectSceneDirection = fDirection + FP_PI2;
 		if ( fObjectSceneDirection > FP_2PI )
-		{ 
+		{
 			fObjectSceneDirection -= FP_2PI;
 		}
 		const CVec2 vDirection = CreateFromPolarCoord( SCENE_OBJECT_DIRECTION_RADIUS, fObjectSceneDirection );
@@ -494,6 +494,6 @@ namespace NMapInfoEditor
 };
 
 
-// basement storage  
+// basement storage
 
 

@@ -28,18 +28,18 @@ class CManuverStateDesc
 		return true;
 	}
 
-public:	
+public:
 
 	CManuverStateDesc() {  }
 	/*enum EPlanesAttitude*/ const int GetAtt() const { return att; }
 
 	// fill parameters according plane's & enemy's state
 	void Init( const enum EPlanesAttitude _att, struct IPlane *pPos, struct IPlane *pEnemy );
-	
+
 	//const float & GetLO( const /*enum EParameterID*/ int id ) const { return parameters[id].first; }
 	//const float & GetHI( const /*enum EParameterID*/ int id ) const { return parameters[id].second; }
 
-	bool CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const;	
+	bool CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const;
 };
 
 

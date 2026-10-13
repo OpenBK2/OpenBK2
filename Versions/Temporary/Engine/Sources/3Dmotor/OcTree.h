@@ -50,7 +50,7 @@ protected:
 public:
 	void SetSize( const CVec3 &_ptBase, float _fSize ) { ptBase = _ptBase; fSize = _fSize; }
 	float GetSize() const { return fSize; }
-	bool Walk() 
+	bool Walk()
 	{
 		bool bRes = IsEmpty();
 		for ( int i = 0; i < 8; ++i )

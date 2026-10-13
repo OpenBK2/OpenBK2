@@ -36,7 +36,7 @@ void CSupportAAGun::Segment()
 		for ( CPlanesIter iter; !iter.IsFinished(); iter.Iterate() )
 		{
 			if ( theDipl.GetDiplStatus( nPlayer, (*iter)->GetPlayer() ) == EDI_ENEMY )
-				pShootEstimator->AddUnit( *iter );		
+				pShootEstimator->AddUnit( *iter );
 		}
 		predictedFire.SetTarget( static_cast<CAviation*>( pShootEstimator->GetBestUnit() ) );
 	}

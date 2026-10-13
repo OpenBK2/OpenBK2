@@ -22,7 +22,7 @@ class CPlayerPointsTracker
 	hash_map<int,int> pendingRecycles;
 	hash_map<int,int> recycles;
 	int nMaxPointIndex;											// current max reinforcement point index
-	
+
 	void UpdateReinfPoint( int nFactoryID, int nPositionID ) const;
 	void UpdatePositionByFactory( const int nFactoryID );
 public:
@@ -38,7 +38,7 @@ public:
 	bool IsRecycling( const int nFactoryID ) const;
 	NTimer::STime GetRecycleTyme( const int nFactoryID ) const;
 	NTimer::STime GetNextRecycleEnd();
-	
+
 	// time in milliseconds
 	void SetRecycleTime( const int nFactory, const int nRecycleTime );
 

@@ -147,7 +147,7 @@ bool CMPManagerMode::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 	SMPSlot &newSlot = pMsg->info;
 
 	if ( IsInGameRoom() )
-	{	
+	{
 		// Process slot open/close
 		if ( IsGameHost() && newSlot.bPresent == false )
 		{

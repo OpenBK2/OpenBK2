@@ -30,7 +30,7 @@ class CFeedBackSystem
 		ZEND int operator&( IBinSaver &f ) { f.Add(3,&timeNextTalk); f.Add(4,&vCenter); f.Add(5,&nClientID); f.Add(6,&timeToForget); f.Add(7,&objectIDs); return 0; }
 	public:
 		SFeedBackCell( ) : vCenter( -1, -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
-		SFeedBackCell( const CVec2 &_vCenter ) 
+		SFeedBackCell( const CVec2 &_vCenter )
 			: vCenter( _vCenter ), nClientID( -1 ), timeToForget( 0 ), timeNextTalk( 0 ) {  }
 	};
 	typedef std::list<SFeedBackCell> CCells;
@@ -55,7 +55,7 @@ public:
 	}
 	void AddFeedback( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, int nParam );
 	void RemoveFeedback( int nID, EFeedBack eFeedBack );
-	
+
 	void AddFeedbackAndForget( int nID, const CVec2 &vCenter, EFeedBack eFeedBack, int nParam );
 
 	void RemovedAllFeedbacks( int nID );

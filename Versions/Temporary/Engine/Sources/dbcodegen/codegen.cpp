@@ -23,7 +23,7 @@ namespace NCodeGenTool
 
 struct STypesSort
 {
-	bool operator()( NDb::NTypeDef::STypeDef *pType1, NDb::NTypeDef::STypeDef *pType2 ) const 
+	bool operator()( NDb::NTypeDef::STypeDef *pType1, NDb::NTypeDef::STypeDef *pType2 ) const
 	{
 		return pType1->GetTypeName() < pType2->GetTypeName();
 	}
@@ -137,10 +137,10 @@ bool GenerateCode( std::list<std::string> *pFileTitles, const std::string &szSou
 bool ReadFile( std::vector<uint8_t> &data, const std::string &szFileName )
 {
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
-	if ( !stream.IsOk() ) 
+	if ( !stream.IsOk() )
 		return false;
 	const int nSize = stream.GetSize();
-	if ( nSize == 0 ) 
+	if ( nSize == 0 )
 		return false;
 	data.resize( nSize );
 	stream.Read( &(data[0]), nSize );

@@ -33,7 +33,7 @@ public:
 	const CVec3 GetCenter() const;
 	virtual bool IsAlive() const ;
 	virtual void IssueUnitAttackCommand( class CCommonUnit *pUnit );
-	
+
 	virtual bool CanDeleteByMovingOver( class CAIUnit * pUnit );
 	class CUpdatableObj * GetObject() const ;
 };

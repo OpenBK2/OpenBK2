@@ -7,7 +7,7 @@
 class MAPEDITORLIB_EXPORT CMultiInputState : public IInputState
 {
 	typedef std::vector<IInputState*> CInputStateList;
-	CInputStateList inputStateList;	
+	CInputStateList inputStateList;
 	int nActiveInputState;
 
 public:
@@ -54,7 +54,7 @@ public:
 			}
 		}
 	}
-	//	
+	//
 	int GetCount() { return inputStateList.size(); }
 	//
 	int SetActiveInputState( int nNewInputState, bool bSwitchStates, bool bForceSwitch )
@@ -83,9 +83,9 @@ public:
 		}
 		return nOldInputState;
 	}
-	//	
+	//
 	template<class TINPUTSTATE>
-	int AddInputState( TINPUTSTATE* pDummyInputState ) 
+	int AddInputState( TINPUTSTATE* pDummyInputState )
 	{
 		TINPUTSTATE *pNewInputState = pDummyInputState;
 		if ( !pNewInputState )
@@ -96,9 +96,9 @@ public:
 		//SetActiveInputState( inputStateList.size() - 1, true, false );
 		return inputStateList.size() - 1;
 	}
-	
+
 	//
-	int RemoveInputState( int nInputStateIndex ) 
+	int RemoveInputState( int nInputStateIndex )
 	{
 		if ( ( nInputStateIndex >= 0 ) && ( nInputStateIndex < inputStateList.size() ) )
 		{

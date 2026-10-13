@@ -53,9 +53,9 @@ private:
 		}
 		return true;
 	}
-	unsigned int MakeHashKey() const 
-	{ 
-		unsigned int __uHashKey = 0; 
+	unsigned int MakeHashKey() const
+	{
+		unsigned int __uHashKey = 0;
 		for ( std::string::const_iterator it = szKeyName.begin(); it != szKeyName.end(); ++it )
 			__uHashKey = 5*__uHashKey + ConvertChar( *it );
 		return __uHashKey;
@@ -68,19 +68,19 @@ public:
 	CDBID( const CDBID &dbid ): szKeyName( dbid.szKeyName ), dwHashKey(dbid.dwHashKey) {}
 	//
 	const CDBID &operator=( const CDBID &dbid )
-	{ 
+	{
 		if ( this != &dbid )
 		{
 			szKeyName = dbid.szKeyName;
 			dwHashKey = dbid.dwHashKey;
 		}
-		return *this; 
+		return *this;
 	}
 	//
 	bool operator==( const CDBID &dbid ) const { return dwHashKey == dbid.dwHashKey ? CompareEqual( dbid.szKeyName ) : false; }
 	bool operator!=( const CDBID &dbid ) const { return !( *this == dbid ); }
-	bool operator <( const CDBID &dbid ) const 
-	{ 
+	bool operator <( const CDBID &dbid ) const
+	{
 		const int nSize1 = szKeyName.size();
 		const int nSize2 = dbid.szKeyName.size();
 		const int nSize = (std::min)( nSize1, nSize2 );

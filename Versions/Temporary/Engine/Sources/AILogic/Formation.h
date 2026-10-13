@@ -37,7 +37,7 @@ class CFormation : public CCommonUnit
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&bHasMortar); f.Add(3,&pStats); f.Add(4,&fHP); f.Add(5,&ammo); return 0; }
 	public:
 		CCarryedMortar() : bHasMortar( false ), fHP( 0.0f ) { }
-		bool HasMortar() const { return bHasMortar; } 
+		bool HasMortar() const { return bHasMortar; }
 		class CAIUnit* CreateMortar( class CFormation *pOwner );
 		void Init( const class CAIUnit *pArt );
 	};
@@ -107,7 +107,7 @@ class CFormation : public CCommonUnit
 
 	NTimer::STime timeLastCatchArt = {};
 	uint32_t dwCatchArtFlag = {};
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CCommonUnit *)this); f.Add(2,&fPass); f.Add(3,&timeToCamouflage); f.Add(4,&availCommands); f.Add(5,&cPlayer); f.Add(6,&guns); f.Add(7,&bWaiting); f.Add(8,&pStats); f.Add(9,&bDisabled); f.Add(10,&eInsideType); f.Add(11,&pObjInside); f.Add(12,&fMaxFireRange); f.Add(13,&virtualUnits); f.Add(14,&nVirtualUnits); f.Add(15,&bCanBeResupplied); f.Add(16,&mortar); f.Add(17,&bBoredInMoveFormationSent); f.Add(18,&lastBoredInMoveFormationCheck); f.Add(19,&bWithMoraleOfficer); f.Add(20,&bUsedCharge); f.Add(21,&pCharge); f.Add(22,&nInUnitsID); f.Add(23,&pGroupSmoothPath); f.Add(24,&soldiers); f.Add(25,&fMaxSpeed); f.Add(26,&fSpeedCoeff); f.Add(27,&vAABBHalfSize); f.Add(28,&nBoundTileRadius); f.Add(29,&timeLastCatchArt); f.Add(30,&dwCatchArtFlag); return 0; }
 	//
 	void InitGeometries();
@@ -140,7 +140,7 @@ public:
 	void AddSoldier( class CSoldier *pUnit );
 	void DeleteSoldier( class CSoldier *pUnit );
 
-	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units 
+	// возвращает позицию в статах формации для юнита с порядковым номером cSlot в массиве units
 	const int GetUnitSlotInStats( const uint8_t cSlot ) const;
 	virtual const float GetPassability() const { return fPass; }
 

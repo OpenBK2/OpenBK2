@@ -33,7 +33,7 @@ bool HasTruck( CAIUnit *pUnit )
 {
 	CAIUnit *pTruck = pUnit->GetTruck();
 	return
-		pTruck && pTruck->IsRefValid() && pTruck->IsAlive() && 
+		pTruck && pTruck->IsRefValid() && pTruck->IsAlive() &&
 		theDipl.GetDiplStatusForParties( pUnit->GetParty(), pTruck->GetParty() ) != EDI_ENEMY;
 }
 
@@ -54,7 +54,7 @@ bool CanUnitBombardRegion( CAIUnit *pUnit, const CVec2 &vRegionCenter )
 // артиллерия свободна и может выполнять различные команды
 bool IsArtilleryFree( CAIUnit *pUnit )
 {
-	return !pUnit->GetState() || 
+	return !pUnit->GetState() ||
 				 ( pUnit->GetState()->GetName() == EUSN_REST || pUnit->GetState()->GetName() == EUSN_AMBUSH );
 }
 
@@ -89,11 +89,11 @@ void CGeneralArtillery::Segment()
 			else
 				++it;
 		}
-		else 
+		else
 			++it;
 	}
 
-	// 
+	//
 	for ( CUnitsList::iterator iter = freeUnits.begin(); iter != freeUnits.end(); )
 	{
 		CAIUnit *pUnit = *iter;
@@ -237,7 +237,7 @@ void CGeneralArtilleryGoToPosition::WaitForTruck()
 		else
 			theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_DEPLOY_ARTILLERY, vPos ), pUnit->GetTruck(), false );
 	}
-	else if ( startTime + 2000 < curTime && 
+	else if ( startTime + 2000 < curTime &&
 						pUnit->GetTruck()->GetState() && pUnit->GetTruck()->GetState()->IsRestState() )
 		bFinished = true;
 }
@@ -248,7 +248,7 @@ void CGeneralArtilleryGoToPosition::MovingWithTruck()
 		eState = EBS_START;
 	else if ( IsArtilleryFree( pUnit ) || IsArtilleryFree( pUnit->GetTruck() ) )
 	{
-		if ( DoesGoToReservePosition() || !pUnit->NeedDeinstall() ) 
+		if ( DoesGoToReservePosition() || !pUnit->NeedDeinstall() )
 			bFinished = true;
 		else
 		{
@@ -445,7 +445,7 @@ void CGeneralArtilleryTask::Rotating()
 	CheckEscapingUnits();
 
 	if ( startRotatingTime + 1000 < curTime )
-	{	
+	{
 		if ( startRotatingTime != 0 )
 		{
 			startRotatingTime = 0;
@@ -482,7 +482,7 @@ void CGeneralArtilleryTask::Rotating()
 				if ( !iter->pGoToPosition )
 				{
 					CAIUnit *pUnit = iter->pUnit;
-					
+
 					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ART_BOMBARDMENT, iter->vAttackPos ), pUnit, false );
 
 					CBasicGun *pGun = pUnit->GetFirstArtilleryGun();
@@ -500,12 +500,12 @@ void CGeneralArtilleryTask::Rotating()
 
 void CGeneralArtilleryTask::Firing()
 {
-	CheckEscapingUnits();	
-	
+	CheckEscapingUnits();
+
 	if ( curTime >= timeToFinishBombardment )
 	{
 		eState = EBS_ESCAPING;
-		
+
 		for ( std::list<SBombardmentUnitState>::iterator iter = bombardmentUnits.begin(); iter != bombardmentUnits.end(); ++iter )
 		{
 			if ( !iter->pGoToPosition )
@@ -531,7 +531,7 @@ void CGeneralArtilleryTask::Escaping()
 			++iter;
 		}
 	}
-	
+
 	if ( bFinished )
 		SetBombardmentFinished();
 }
@@ -553,8 +553,8 @@ void CGeneralArtilleryTask::CalculateTimeToSendAntiArtilleryAck()
 			if ( CBasicGun *pGun = pUnit->GetFirstArtilleryGun() )
 			{
 				CPtr<IBallisticTraj> pTraj = pGun->CreateTraj( CVec3( iter->vAttackPos, 0 ) );
-				const NTimer::STime localTimeToWait = 
-						pTraj->GetExplTime() - pTraj->GetStartTime() + 
+				const NTimer::STime localTimeToWait =
+						pTraj->GetExplTime() - pTraj->GetStartTime() +
 						2 * ( pGun->GetAimTime( false ) + pGun->GetRelaxTime( false ) );
 
 				if ( localTimeToWait > maxTimeToWait )

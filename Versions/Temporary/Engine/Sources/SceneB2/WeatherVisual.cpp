@@ -42,7 +42,7 @@ void CWeatherVisual::CWeatherPart::Recalc()
 		pValue->AssignFast( &(*pVisualData)[nNumPart] );
 }
 
-CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *_pScreenFader, 
+CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *_pScreenFader,
 							 CDBPtr<NDb::SAmbientLight> _pNormalWeatherLight, CDBPtr<NDb::SAmbientLight> _pBadWeatherLight )
 	: pDesc( _pWeatherDesc ),
 	pTimer( _pTimer ),
@@ -51,8 +51,8 @@ CWeatherVisual::CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBas
 	eState( NDb::EWS_UNKNOWN ),
 	pScreenFader( _pScreenFader ),
 	pNormalWeatherLight( _pNormalWeatherLight ),
-	pBadWeatherLight( _pBadWeatherLight )	
-{	
+	pBadWeatherLight( _pBadWeatherLight )
+{
 	InitParts();
 }
 
@@ -111,7 +111,7 @@ void CWeatherVisual::InitParts()
 
 	UpdateViewNormal();
 
-	pTimer.Refresh();	
+	pTimer.Refresh();
 	timeLightStop = pTimer->GetValue() + 1000*60/(pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ));
 	timeThunder = 0;
 
@@ -122,7 +122,7 @@ void CWeatherVisual::InitParts()
 	if ( !pDesc->lightnings.empty() )
 	{
 		lightningLoaders.resize( pDesc->lightnings.size() );
-		
+
 		for ( int iLightning = 0; iLightning < pDesc->lightnings.size(); ++iLightning )
 		{
 			if ( !pDesc->lightnings[iLightning] )
@@ -265,7 +265,7 @@ void CWeatherVisual::Recalc()
 					if ( IsValid(pScreenFader) )
 						pScreenFader->AddColorModificator( pLightningColor, false );
 
-					timeThunder = timeLastRecalc + NWin32Random::Random( 100, 1000 );					
+					timeThunder = timeLastRecalc + NWin32Random::Random( 100, 1000 );
 				}
 
 				timeLightStop = timeLastRecalc + 1000*60/(pDesc->fLightningsPerMinute + NWin32Random::Random( -pDesc->fLightningsRandom, pDesc->fLightningsRandom ));
@@ -343,7 +343,7 @@ void CWeatherVisual::Recalc()
 	}
 
 	if ( nTotalPartCount == 0 )
-	{		
+	{
 		return;
 	}
 
@@ -359,11 +359,11 @@ void CWeatherVisual::Recalc()
 	static std::vector<int> partsIndex;
 	partsIndex.resize( nVisualParts );
 	partsIndex.assign( nVisualParts, 0 );
-	
+
 	// We shouln't draw particles in the black border of the map
 	const NDb::STerrain *pTerraDesc = Scene()->GetTerraManager()->GetDesc();
 	CVec2 vMinCoords( 4*VIS_TILE_SIZE, 4*VIS_TILE_SIZE );
-	CVec2 vMaxCoords( pTerraDesc->nNumPatchesX*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE, pTerraDesc->nNumPatchesY*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE );	
+	CVec2 vMaxCoords( pTerraDesc->nNumPatchesX*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE, pTerraDesc->nNumPatchesY*DEF_VIS_PATCH_SIZE - 4*VIS_TILE_SIZE );
 
 	uint32_t dwColor = NGfx::GetDWORDColor( GetParticlesColor() );
 
@@ -372,7 +372,7 @@ void CWeatherVisual::Recalc()
 	{
 		if ( !bActive || !partsPresent[i] )
 			continue;
-		
+
 		int nNumPart = i % nVisualParts;
 		NGScene::CObjectInfo::SData &data = visualData[nNumPart];
 
@@ -675,7 +675,7 @@ int CWeatherVisual::operator&( IBinSaver &saver )
 
 	if ( saver.IsReading() )
 	{
-		InitParts();		
+		InitParts();
 	}
 
 	return 0;

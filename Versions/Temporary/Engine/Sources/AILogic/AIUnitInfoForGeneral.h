@@ -20,7 +20,7 @@ class CAIUnitInfoForGeneral : public CAIObjectBase
 
 	float fWeight = {};
 	CVec2 vLastRegisteredGeneralPos;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&lastVisibleTime); f.Add(4,&vLastVisiblePosition); f.Add(5,&lastVisibleAntiArtTime); f.Add(6,&vLastVisibleAntiArtCenter); f.Add(7,&fDistToLastVisibleAntiArt); f.Add(8,&nextTimeToReportGeneral); f.Add(9,&fWeight); f.Add(10,&vLastRegisteredGeneralPos); return 0; }
 
 public:
@@ -43,6 +43,6 @@ public:
 
 	const NTimer::STime GetLastTimeOfVisibility() const { return (std::max)( lastVisibleAntiArtTime, lastVisibleTime ); }
 	void SetLastVisibleTime( const NTimer::STime time ) { lastVisibleTime = time; lastVisibleAntiArtTime = time; }
-	
+
 	bool IsLastVisibleAntiArt() const { return lastVisibleAntiArtTime > lastVisibleTime; }
 };

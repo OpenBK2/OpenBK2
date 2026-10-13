@@ -16,22 +16,22 @@ class CCellsConglomerateContainer
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
 		SAddCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {  }
-		void operator()( const int nCurRank, const int nX, const int nY ) 
-		{ 
-			(*pConglomerates)[nCurRank][nY][nX].push_back( vCenter ); 
+		void operator()( const int nCurRank, const int nX, const int nY )
+		{
+			(*pConglomerates)[nCurRank][nY][nX].push_back( vCenter );
 		}
 		int GetSizeX() const { return (*pConglomerates)[0].GetSizeX(); }
 		int GetSizeY() const { return (*pConglomerates)[0].GetSizeY(); }
 	};
-	
+
 	struct SRemoveCellEnumerator
 	{
 		const SIntThree vCenter;
 		CConglomerates *pConglomerates;
 		SRemoveCellEnumerator( const SIntThree &_vCenter ) : vCenter( _vCenter ), pConglomerates( 0 ) {  }
-		void operator()( const int nCurRank, const int nX, const int nY ) 
-		{ 
-			(*pConglomerates)[nCurRank][nY][nX].remove( vCenter ); 
+		void operator()( const int nCurRank, const int nX, const int nY )
+		{
+			(*pConglomerates)[nCurRank][nY][nX].remove( vCenter );
 		}
 		int GetSizeX() const { return (*pConglomerates)[0].GetSizeX(); }
 		int GetSizeY() const { return (*pConglomerates)[0].GetSizeY(); }
@@ -46,7 +46,7 @@ class CCellsConglomerateContainer
 public:
 	CCellsConglomerateContainer() : bInitted( false ) {  }
 	void Init( const int nMaxX, const int nMaxY, const int nMinZ, const int nMaxZ );
-	
+
 	void AddHearCell( const SIntThree &vSourceCell, const int nRadius );
 	void RemoveHearCell( const SIntThree &vSourceCell, const int nRadius );
 	bool IsInitted() const { return bInitted; }
@@ -54,7 +54,7 @@ public:
 	void Clear();
 
 	// для всех клеток, звуки из которых слышны
-	template <class TEnumFunc> 
+	template <class TEnumFunc>
 		void EnumHearableCells( TEnumFunc func, const SIntThree &center )
 	{
 		for ( int z = 0; z < conglomeratesHeight.size(); ++z )

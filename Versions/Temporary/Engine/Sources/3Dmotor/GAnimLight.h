@@ -81,8 +81,8 @@ class _3DMOTOR_EXPORT CLightAnimator: public CPtrFuncBase<CAnimLight>
 protected:
 	virtual bool NeedUpdate() { return pTime.Refresh() | pInfo.Refresh() | pPlacement.Refresh(); }
 	virtual void Recalc();
-private:	
-	ZDATA	
+private:
+	ZDATA
 	float fScale;
 	STime stBeginTime;
 	CDBPtr<NDb::SLightInstance> pInstance;

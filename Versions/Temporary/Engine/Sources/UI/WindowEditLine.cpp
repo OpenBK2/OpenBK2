@@ -26,7 +26,7 @@ REGISTER_SAVELOAD_CLASS(UI, 0x11075B83, CWindowEditLine)
 // CWindowEditLine
 
 
-CWindowEditLine::CWindowEditLine() : timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ), 
+CWindowEditLine::CWindowEditLine() : timeSegment( 0 ), nCursorPos( 0 ), bShowCursor( 1 ),
 nBeginSel( -1 ), nEndSel( -1 ), m_nBeginDragSel( -1 ),
 nBeginText( 0 ), bRegistered( false ), bMouseButton1Down( false )
 {
@@ -59,7 +59,7 @@ bool CWindowEditLine::OnMouseMove( const CVec2 &_vPos, const int nButton )
 		return true;
 
 	if ( bMouseButton1Down ) // selection is in progress
-	{	
+	{
 		nCursorPos = GetSelection( _vPos.x );
 		if ( nBeginText + nCursorPos > m_nBeginDragSel )
 		{
@@ -124,7 +124,7 @@ void CWindowEditLine::SetFocus( const bool bFocus )
 		nEndSel = wszFullText.size();
 	}
 
-	CWindow::SetFocus( bFocus );	
+	CWindow::SetFocus( bFocus );
 
 	if ( bNotify )
 	{
@@ -133,7 +133,7 @@ void CWindowEditLine::SetFocus( const bool bFocus )
 		if ( !bFocus )
 			RunAnimationAndCommands( pInstance->sequienceOnFocusLost, "", false, false );
 	}
-	
+
 	if ( bFocus )
 	{
 		GetScreen()->RegisterToSegment( this, true );
@@ -157,8 +157,8 @@ int CWindowEditLine::GetSelection( const int _nX )
 	const int nX = vScreen.x;
 
 	int nCur = 0, nPrev = 0;
-	
-	
+
+
 	int i = 0;	// char number
 	//nCur += editRect.left;
 	for ( std::list<CTRect<float> >::const_iterator it = rectsList.begin(); it != rectsList.end(); ++it )
@@ -173,7 +173,7 @@ int CWindowEditLine::GetSelection( const int _nX )
 		nPrev = nCur;
 		++i;
 	}
-	
+
 
 	//if ( nCur <= nX && i > 0 )		//нажато правее края текста
 		//i--;
@@ -189,7 +189,7 @@ void CWindowEditLine::SetCursor( const int nPos )
 		nCursorPos = rectsList.size();
 	}
 	else
-		nCursorPos = nPos; 
+		nCursorPos = nPos;
 }
 
 bool CWindowEditLine::DeleteSelection()
@@ -568,7 +568,7 @@ void CWindowEditLine::OnCtrlRight( const struct SGameMessage &msg )
 				while( nBeginText+nCursorPos < wszFullText.size() && !isalpha(wszFullText[nBeginText+nCursorPos]) )
 					nCursorPos++;
 	}
-	
+
 	while( nBeginText+nCursorPos < wszFullText.size() && isspace(wszFullText[nBeginText+nCursorPos]) )
 		nCursorPos++;
 	EnsureCursorVisible();
@@ -670,7 +670,7 @@ void CWindowEditLine::Init()
 {
 	CWindow::Init();
 	InitLocal();
-	
+
 	UpdateFocus();
 	static int nTabOrder = 0;
 	if ( pInstance->nTabOrder == -1 )
@@ -759,7 +759,7 @@ int CWindowEditLine::GetTextWidth( const int nFirstChars )
 		return pos->x2;
 	}
 	std::list<CTRect<float> >::const_iterator it = rectsList.begin();
-	
+
 	advance( it, nFirstChars );
 	if ( it == rectsList.end() )
 		return GetTextWidth( -1 );
@@ -802,18 +802,18 @@ void CWindowEditLine::Visit( struct IUIVisitor *pVisitor )
 		if ( nBeginSel - nBeginText >= -1 )
 			nBegin = GetTextWidth( nBeginSel - nBeginText );
 		int nEnd = GetTextWidth( nEndSel - nBeginText );
-		
+
 		rect.left = wndRect.left + nBegin;
 		rect.right = wndRect.left + nEnd;
 		if ( rect.right > wndRect.right - 1 )
 			rect.right = wndRect.right - 1;
 		rect.top = textRect.top;
 		rect.bottom = textRect.bottom;
-		
+
 		rectLayout.AddRect( rect.x1, rect.y1, rect.Width(), rect.Height(), CTRect<float>(0,0,0,0), NGfx::SPixel8888( pShared->nSelColor ) );
 		pVisitor->VisitUIRect( 0, 0, rectLayout );
 	}
-	
+
 	// рисуем текст
 	pVisitor->VisitUIText( pGfxText, textRect.GetLeftTop(), textRect );
 
@@ -869,7 +869,7 @@ void CWindowEditLine::EnsureCursorVisible()
 	bShowCursor = true;
 	CTRect<float> wndRect;
 	FillWindowRectEditLine( &wndRect );
-	
+
 	/*IText *pText = pGfxText->GetText();
 	pText->SetText( wszFullText.c_str() + nBeginText );
 	pGfxText->SetText( pText );
@@ -979,7 +979,7 @@ bool CWindowEditLine::CheckTextInsideEditLine()
 
 void CWindowEditLine::SetSelection( const int nBegin, const int nEnd )
 {
-	nBeginSel = nBegin; 
+	nBeginSel = nBegin;
 	nEndSel = nEnd;
 }
 
@@ -1010,7 +1010,7 @@ bool CWindowEditLine::ProcessEvent( const struct SGameMessage &msg )
 
 	if (NInput::IsDInputDiscardableKey( msg.mMessage ) )
 		return IsFocused();
-	else 
+	else
 		return CWindow::ProcessEvent( msg );
 }
 

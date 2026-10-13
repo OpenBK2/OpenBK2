@@ -16,7 +16,7 @@ namespace NGScene
 struct SParticleLightInfo
 {
 	// size of single particle in texels
-	CVec2 vLightSize; 
+	CVec2 vLightSize;
 	// current alloc position and size of whole stuff
 	NGfx::SShortTextureUV vStart, vSize, vStep, vTrueStep;
 	short nCheckStart;
@@ -29,7 +29,7 @@ struct SParticleLightInfo
 		nCheckStart = vStart.nU;
 		vSize.nU = nDU * (nSizeX - 1) + 8;
 		vSize.nV = nDV * (nSizeY - 1) + 8;
-		vTrueStep.nU = nDU * nSizeX; 
+		vTrueStep.nU = nDU * nSizeX;
 		vTrueStep.nV = nDV * nSizeY;
 		if ( bIncremental )
 		{
@@ -45,8 +45,8 @@ struct SParticleLightInfo
 		if ( vStart.nU == nCheckStart )
 			vStart.nV += vTrueStep.nV;
 	}
-	void Inc() 
-	{ 
+	void Inc()
+	{
 		vStart.nU += vStep.nU;
 		if ( vStart.nU == nCheckStart )
 			vStart.nV += vStep.nV;

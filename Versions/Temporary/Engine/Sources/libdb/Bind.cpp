@@ -59,14 +59,14 @@ CBindStruct::~CBindStruct()
 		pMetaInfo->DestructStruct( (uint8_t*)(pStruct.GetPtr()), ownValues.empty() ? 0 : &(ownValues[0]), true );
 }
 
-void CBindStruct::SetDBID( const CDBID &_dbid ) 
-{ 
-	dbidMain = _dbid; 
+void CBindStruct::SetDBID( const CDBID &_dbid )
+{
+	dbidMain = _dbid;
 	CResourceHelper::SetDBID( pStruct.GetPtr(), _dbid );
 }
 
-void CBindStruct::SetChanged() 
-{ 
+void CBindStruct::SetChanged()
+{
 	if ( IsLoaded() )
 	{
 		if ( bTrackPropertyChanges && !bHaveSavedValues )
@@ -88,7 +88,7 @@ void CBindStruct::SetChanged()
 			bHaveSavedValues = true;
 		}
 		++nPropertyChangeVersion;
-		bChanged = true; 
+		bChanged = true;
 		SetDatabaseDataChanged( dbidMain );
 	}
 }

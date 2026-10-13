@@ -15,7 +15,7 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	f.Add( 1, &chars );
 	f.Add( 2, &kerns );
 	f.Add( 3, &inkBounds );
-	return 0;	
+	return 0;
 }
 
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02321170, CFontFormatInfo );

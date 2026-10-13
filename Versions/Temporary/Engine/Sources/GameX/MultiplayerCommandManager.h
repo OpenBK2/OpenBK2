@@ -67,7 +67,7 @@ enum EMPUIMessageType : int
 	EMUI_SHORT_INFO,
 	EMUI_CHANGE_FRIEND_IGNORE,
 	EMUI_NIVAL_NET_LADDER_STATS,
-	EMUI_NIVAL_NET_LADDER,					// 
+	EMUI_NIVAL_NET_LADDER,					//
 };
 
 struct SMPUIMessage : public CObjectBase
@@ -118,7 +118,7 @@ public:
 	std::wstring wszPassword;
 	bool bRememberPassword = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SMPUIMessage*)this); f.Add(2,&wszLogin); f.Add(3,&wszPassword); f.Add(4,&bRememberPassword); return 0; }
-	
+
 	SMPUILoginNivalNetMessage() {} // serialization only
 	SMPUILoginNivalNetMessage( const std::wstring &_wszLogin, const std::wstring &_wszPassword, const bool _bRemember ) :
 		SMPUIMessage( EMUI_LOGIN_NIVAL_NET ), wszLogin( _wszLogin ), wszPassword( _wszPassword ), bRememberPassword(_bRemember) {}
@@ -132,7 +132,7 @@ public:
 	int nGameID = {};
 	std::string szPassword;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SMPUIMessage*)this); f.Add(2,&nGameID); f.Add(3,&szPassword); return 0; }
-	
+
 	SMPUIJoinGameMessage() {} // serialization only
 	SMPUIJoinGameMessage( int _nGameID ) :
 	SMPUIMessage( EMUI_JOIN_GAME ), nGameID( _nGameID ) {}
@@ -248,14 +248,14 @@ public:
 		int nSecondsLeft = {};
 	};
 	typedef std::list<SLagItem> CLaggerList;
-	ZDATA_(SMPUIMessage) 
+	ZDATA_(SMPUIMessage)
 	bool bOwnLag = {};					// It is me who is paused, show Resume button
 	int nOwnTimeLeft = {};
 	CLaggerList lags;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SMPUIMessage*)this); f.Add(2,&bOwnLag); f.Add(3,&nOwnTimeLeft); f.Add(4,&lags); return 0; }
 
 	SMPUILagInfoMessage() : SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag(false) {}
-	SMPUILagInfoMessage( const bool _bOwnLag ) 
+	SMPUILagInfoMessage( const bool _bOwnLag )
 		: SMPUIMessage( EMUI_WAITING_INFO ), bOwnLag(_bOwnLag) {}
 };
 
@@ -305,7 +305,7 @@ struct SMPUIChatMessage : public SMPUIMessage
 	OBJECT_NOCOPY_METHODS(SMPUIChatMessage);
 
 public:
-	ZDATA_(SMPUIMessage)	
+	ZDATA_(SMPUIMessage)
 	std::string		szName;
 	std::wstring		wszText;
 	bool bPrivate = {};
@@ -497,7 +497,7 @@ struct SMPUIInGameChatMessage : public SMPUIMessage
 	OBJECT_NOCOPY_METHODS(SMPUIInGameChatMessage);
 
 public:
-	ZDATA_(SMPUIMessage)	
+	ZDATA_(SMPUIMessage)
 	std::wstring wszText;
 	bool bTeamOnly = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SMPUIMessage*)this); f.Add(2,&wszText); f.Add(3,&bTeamOnly); return 0; }

@@ -17,8 +17,8 @@ class CDeadHouseAnimations : public IClientUpdatableProcess
 	};
 	struct SSortAnimationsByTime
 	{
-		bool operator()( const SAnimationInfo &anim1, const SAnimationInfo &anim2 ) const 
-		{ 
+		bool operator()( const SAnimationInfo &anim1, const SAnimationInfo &anim2 ) const
+		{
 			return anim1.nEndTime > anim2.nEndTime;
 		}
 	};

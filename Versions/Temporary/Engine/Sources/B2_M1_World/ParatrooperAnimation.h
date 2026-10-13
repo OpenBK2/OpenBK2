@@ -30,7 +30,7 @@ class CParatrooperAnimationProcess : public IClientUpdatableProcess
 public:
 	CParatrooperAnimationProcess( CMapObj *_pInfantry, NTimer::STime _timeToChange, const NDb::SAnimB2 *_pUnitAnim,
 		int _nParachuteID, const NDb::SAnimB2 *_pParaAnim )
-		: pInfantry( _pInfantry ), timeToChange( _timeToChange ), 
+		: pInfantry( _pInfantry ), timeToChange( _timeToChange ),
 	    nParachuteID( _nParachuteID ), pUnitAnim( _pUnitAnim ),pParaAnim( _pParaAnim ) {}
 	bool Update( const NTimer::STime &time );
 };

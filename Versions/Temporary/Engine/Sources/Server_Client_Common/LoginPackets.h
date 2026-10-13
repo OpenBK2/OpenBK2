@@ -92,7 +92,7 @@ public:
 
 	CCheckConnectAnswerPacket() { }
 	CCheckConnectAnswerPacket( const int _nPrime1, const int _nPrime2,
-			const EConnectType _eConnectType, 
+			const EConnectType _eConnectType,
 			const std::string &_szNick, const std::string &_szPassword, const std::string &_szCDKey, const std::string &_szEmail )
 		: nPrime1( _nPrime1 ), nPrime2( _nPrime2 ),
 			eConnectType( _eConnectType ), szNick( _szNick ), szPassword( _szPassword ),

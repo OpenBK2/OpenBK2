@@ -4,7 +4,7 @@ namespace AICellsTiles
 {
 
 inline const SVector GetTileNC( const float x, const float y )
-{ 
+{
 	SVector res;
 	res.x = x / SAIConsts::TILE_SIZE;
 	res.y = y / SAIConsts::TILE_SIZE;
@@ -13,12 +13,12 @@ inline const SVector GetTileNC( const float x, const float y )
 }
 
 inline const SVector GetTileNC( const CVec2 &vPos )
-{ 
+{
 	return GetTileNC( vPos.x, vPos.y );
 }
 
 inline const SVector GetTile( const float x, const float y )
-{ 
+{
 	SVector res;
 	res.x = x < 0 ? 0 : x / SAIConsts::TILE_SIZE;
 	res.y = y < 0 ? 0 : y / SAIConsts::TILE_SIZE;
@@ -35,7 +35,7 @@ inline const SVector GetTile( const CVec2 &point )
 inline const CVec2 GetCenterOfTile( const float x, const float y )
 {
 	const SVector tile( GetTile( x, y ) );
-	return CVec2( tile.x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2, 
+	return CVec2( tile.x * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2,
 		tile.y * SAIConsts::TILE_SIZE + SAIConsts::TILE_SIZE/2 );
 }
 

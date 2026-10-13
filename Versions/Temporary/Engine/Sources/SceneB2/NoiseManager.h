@@ -13,8 +13,8 @@ class CNoiseAccessor
 	const unsigned int nYOffset;
 
 	CNoiseAccessor( const CArray2D<uint8_t> &_noise )
-		: noise(_noise), 
-			nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() ), 
+		: noise(_noise),
+			nXOffset( (float)rand() / RAND_MAX * _noise.GetSizeX() ),
 			nYOffset( (float)rand() / RAND_MAX * _noise.GetSizeY() ) {}
 public:
 	CNoiseAccessor( const CNoiseAccessor &acc )

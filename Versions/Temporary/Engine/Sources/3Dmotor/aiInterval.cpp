@@ -15,7 +15,7 @@ static bool CmpFloat( const float &a, const float &b )
 	return a < b;
 }
 template<class T, class TFunc, class TCompare>
-void CalcResult( 
+void CalcResult(
 	std::vector<T> *pEnter,
 	std::vector<T> *pExit,
 	bool bTerrain,
@@ -71,7 +71,7 @@ void FillIntersectionResults( std::vector<SInterval> *pRes,
 		exit[i].fT = (std::max)( enter[i].fT, exit[i].fT ); // this is it Beavis, correct wrong results so it seams less buggy
 		pRes->push_back( SInterval( _src, _nUserID, enter[i], exit[i] ) );
 	}
-}	
+}
 
 void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
 	std::vector<float> *pEnter,

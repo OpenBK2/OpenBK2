@@ -16,11 +16,11 @@ inline void MPLog( const char *pszInfo, ... )
 	if ( curTime >= timeToLogStart && curTime <= timeToLogFinish )
 	{
 		va_list va;
-		// 
+		//
 		va_start( va, pszInfo );
 		vsprintf( buff, pszInfo, va );
 		va_end( va );
-		
+
 		CONSOLE_BUFFER_LOG2( 10, buff, 0, true );
 	}
 }

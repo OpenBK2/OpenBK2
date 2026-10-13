@@ -9,7 +9,7 @@
 class CTankStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CTankStatesFactory );
-	
+
 	static CPtr<CTankStatesFactory> pFactory;
 public:
 	static IStatesFactory* Instance();
@@ -48,7 +48,7 @@ class CMechUnitSupportFireState : public IUnitAttackingState, public CStatusUpda
 	float fSearchRadius = {};
 	bool bFinish = {};
 	CPtr<CFormation> pFriendFormation;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pFriend); f.Add(5,&pEnemy); f.Add(6,&pObj); f.Add(7,&pGun); f.Add(8,&lastCheck); f.Add(9,&fSearchRadius); f.Add(10,&bFinish); f.Add(11,&pFriendFormation); return 0; }
 private:
 	//

@@ -3,7 +3,7 @@
 
 #include "InterfaceScreenBase.h"
 
-class CInterfaceMissionMovieBorder : public CInterfaceScreenBase, 
+class CInterfaceMissionMovieBorder : public CInterfaceScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionMovieBorder );
@@ -41,7 +41,7 @@ class CICMissionMovieBorder : public CInterfaceCommandBase<CInterfaceMissionMovi
 	void PostCreate( IInterface *pInterface );
 public:
 	CICMissionMovieBorder();
-	
+
 	void Configure( const char *pszConfig );
 };
 

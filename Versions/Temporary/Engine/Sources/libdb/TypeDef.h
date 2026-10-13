@@ -370,11 +370,11 @@ struct STypeStructBase : public STypeDef
 	const std::string GetTypeName() const { return szTypeName; }
 	//
 	EEditorType GetDefaultEditorType() const { return EDITOR_TYPE_UNKNOWN; }
-	void AddField( STypeDef *pType, 
+	void AddField( STypeDef *pType,
 		             const std::string &szName,
-								 const int nChunkID, 
+								 const int nChunkID,
 								 const std::wstring &wszDesc,
-		             SConstraints *pConstraints, 
+		             SConstraints *pConstraints,
 								 SAttributes *pAttributes,
 								 const CVariant &_vtDefVal = CVariant() );
 	virtual SAttributes* GetAttributes() const { return pAttributes; }
@@ -517,7 +517,7 @@ public:
 	SConstraintsMinMax(): tMin(0), tMax(0) {}
 	SConstraintsMinMax( TYPE _tMin, TYPE _tMax ): tMin( _tMin ), tMax( _tMax ) {}
 	//
-	bool CheckValueCorrect( const CVariant &value ) const 
+	bool CheckValueCorrect( const CVariant &value ) const
 	{
 		TYPE tValue = (TYPE)value;
 		return tValue >= tMin && tValue <= tMax;
@@ -546,7 +546,7 @@ public:
 	SConstraintsValuesList() {}
 	SConstraintsValuesList( const std::vector<TYPE> &_values ): values( _values ) {}
 	//
-	bool CheckValueCorrect( const CVariant &value ) const 
+	bool CheckValueCorrect( const CVariant &value ) const
 	{
 		return find( values.begin(), values.end(), (TYPE)value ) != values.end();
 	}
@@ -573,7 +573,7 @@ public:
 	SConstraintsArrayMinMax(): nMinElements( -1 ), nMaxElements( -1 ) {}
 	SConstraintsArrayMinMax( int _nMinElements, int _nMaxElements ): nMinElements( _nMinElements ), nMaxElements( _nMaxElements ) {}
 	//
-	bool CheckValueCorrect( const CVariant &value ) const 
+	bool CheckValueCorrect( const CVariant &value ) const
 	{
 		int nNumElements = (int)value;
 		if ( nMinElements >= 0 && nNumElements < nMinElements )
@@ -600,7 +600,7 @@ struct SConstraintsString : public SConstraints
 public:
 	std::string szRegExp;
 	//
-	bool CheckValueCorrect( const CVariant &value ) const 
+	bool CheckValueCorrect( const CVariant &value ) const
 	{
 //		string szValue = value.GetStr();
 //		if ( szRegExp.empty() )

@@ -39,7 +39,7 @@ class CSplashScreen : public CObjectBase
 	};
 
 	std::string szImageFileName;
-	CBitmap bitmap;	
+	CBitmap bitmap;
 	HWND hWnd;
 public:
 	CSplashScreen();
@@ -57,13 +57,13 @@ public:
 LRESULT CALLBACK SplashScreenWndProc( HWND hWnd, unsigned uMsg, WPARAM wParam, LPARAM lParam )
 {
 	CSplashScreen* pSplashScreen = reinterpret_cast<CSplashScreen*>( ::GetWindowLongPtr( hWnd, GWLP_USERDATA ) );
-	switch ( uMsg ) 
+	switch ( uMsg )
 	{
 	case WM_SYSCOMMAND:
 		return 1;
 
 	case WM_PAINT:
-		if ( GetUpdateRect( hWnd, 0, false ) != 0 ) 
+		if ( GetUpdateRect( hWnd, 0, false ) != 0 )
 		{
 			PAINTSTRUCT ps;
 			HDC hDC = ::BeginPaint( hWnd, &ps );
@@ -190,9 +190,9 @@ CSplashScreen::CSplashScreen() : hWnd( 0 )
 }
 
 CSplashScreen::~CSplashScreen()
-{ 
+{
 	if ( ::IsWindow(hWnd) )
-		Destroy();	
+		Destroy();
 }
 
 bool CSplashScreen::Draw( HDC *pHDC )
@@ -205,14 +205,14 @@ bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 	szImageFileName = _szImageFileName;
 
 	if ( ::IsWindow(hWnd) )
-		Destroy();	
+		Destroy();
 
 	if ( !bitmap.Load( szImageFileName ) )
 		return false;
 
 	WNDCLASSEX wcex;
 
-	wcex.cbSize					= sizeof( WNDCLASSEX ); 
+	wcex.cbSize					= sizeof( WNDCLASSEX );
 	wcex.style					= CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc		= (WNDPROC)SplashScreenWndProc;
 	wcex.cbClsExtra			= 0;
@@ -224,7 +224,7 @@ bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 	wcex.lpszMenuName		= 0;
 	wcex.lpszClassName	= pszSplashScreenWindowClass;
 	wcex.hIconSm				= 0;
-	if ( !::RegisterClassEx( &wcex ) ) 
+	if ( !::RegisterClassEx( &wcex ) )
 		return false;
 
 	hWnd = CreateWindowEx( WS_EX_TOOLWINDOW  | ( bTopMost ? WS_EX_TOPMOST :  0 ),
@@ -249,7 +249,7 @@ bool CSplashScreen::Create( const std::string &_szImageFileName, bool bTopMost )
 		const int nY = ( nScreenSizeY - bitmapSize.y ) / 2;
 		::MoveWindow( hWnd, nX, nY, bitmapSize.x, bitmapSize.y, false );
 		::SetWindowLongPtr( hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>( this ) );
-		::UpdateWindow( hWnd ); 
+		::UpdateWindow( hWnd );
 	}
 	return ::IsWindow( hWnd );
 }

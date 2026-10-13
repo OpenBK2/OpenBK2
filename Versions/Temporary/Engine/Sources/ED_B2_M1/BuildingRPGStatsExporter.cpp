@@ -1,8 +1,8 @@
 /*
 
-	Locator name				Description						
-	---------------				-----------------------			
-	LDoor						вход/выход для людей			
+	Locator name				Description
+	---------------				-----------------------
+	LDoor						вход/выход для людей
 	LWindow						огневые точки
 	----------------------------------------------------------------------------------------------------------------------
 
@@ -63,19 +63,19 @@ enum ESmoke
 {
 	ESD_NONE = 0,
 	// направление эффекта (из одной точки может вылетать несколько в разном направлении)
-	ESD_0 =		(1<<0),	
-	ESD_45 =	(1<<1),	
-	ESD_90 =	(1<<2),	
-	ESD_135 =	(1<<3),	
-	ESD_180 =	(1<<4),	
-	ESD_225 =	(1<<5),	
-	ESD_270 =	(1<<6),	
-	ESD_315 =	(1<<7)	
+	ESD_0 =		(1<<0),
+	ESD_45 =	(1<<1),
+	ESD_90 =	(1<<2),
+	ESD_135 =	(1<<3),
+	ESD_180 =	(1<<4),
+	ESD_225 =	(1<<5),
+	ESD_270 =	(1<<6),
+	ESD_315 =	(1<<7)
 };
 
 static bool RemoveSmokePoints( IManipulator *pBuildingRPGStatsManipulator )
 {
-	return pBuildingRPGStatsManipulator->RemoveNode( "smokePoints", NODE_REMOVEALL_INDEX );	
+	return pBuildingRPGStatsManipulator->RemoveNode( "smokePoints", NODE_REMOVEALL_INDEX );
 }
 
 static void AddSmokePoint( IManipulator *pBuildingRPGStatsManipulator, int nOx, int nOy, float fDirAngle )
@@ -102,16 +102,16 @@ static void AddSmokePoint( IManipulator *pBuildingRPGStatsManipulator, int nOx, 
 static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipulator )
 {
 	CArray2D<uint8_t> passability;
-	GetPassability( &passability, pBuildingRPGStatsManipulator );	
+	GetPassability( &passability, pBuildingRPGStatsManipulator );
 
 	int nSizeX = passability.GetSizeX();
 	int nSizeY = passability.GetSizeY();
 
 	//
-	// определение точек периметра и вычисление direction 
-	// 
+	// определение точек периметра и вычисление direction
+	//
 	CArray2D<int> direction;
-	direction.SetSizes( nSizeX+1, nSizeY+1 ); 
+	direction.SetSizes( nSizeX+1, nSizeY+1 );
 	for ( int x = 0; x < nSizeX+1; ++x )
 	{
 		for ( int y = 0; y < nSizeY+1; ++y )
@@ -170,7 +170,7 @@ static void CreateDestructionDustPoints( IManipulator *pBuildingRPGStatsManipula
 	// т.к. точки должны быть с шагом в 1 визуальный тайл, то нужно
 	// уменьшить число точек в периметре (в визульном тайле 4 AI-тайла)
 	CArray2D<int> visDirection;
-	visDirection.SetSizes( nSizeX+1, nSizeY+1 ); 
+	visDirection.SetSizes( nSizeX+1, nSizeY+1 );
 	for ( int x = 0; x < nSizeX+1; ++x )
 	{
 		for ( int y = 0; y < nSizeY+1; ++y )
@@ -254,7 +254,7 @@ struct SLocalWindowInfo
 	CVec2 vWindowScale;
 	int nStartTime;					// for animation
 	int nEndTime;
-	
+
 	bool bSection;					// "window" is section (for M1)
 };
 typedef std::list<SLocalDoorInfo> CLocalDoors;
@@ -321,7 +321,7 @@ const bool CBuildingRPGStatsExporter::UpdateVisObj( IManipulator* pManipulator, 
 			continue;
 		}
 		if ( models.find( szModelName ) == models.end() )
-		{ 
+		{
 			models.insert( szModelName );
 		}
 	}
@@ -535,7 +535,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 		if ( !NEditorGltf::ReadAttributes(pGeomManipulator, &attribs) ) return false;
 		{
 			// Export light properties to DB if successful
-			for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+			for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 			{
 				if ( PatMat( it->szBoneName.c_str(), "lwindow??" ) )						// Process window slot
 					nSlotType = SLOT_WINDOW;
@@ -558,7 +558,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 				nDir = int( QuatToDirection( qRot ) );
 
 			// Add to list, fill data
-			if ( nSlotType != SLOT_DOOR ) 
+			if ( nSlotType != SLOT_DOOR )
 			{
 				SLocalWindowInfo info;
 				if ( nSlotType == SLOT_SECTION )
@@ -622,14 +622,14 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 	pManipulator->RemoveNode( "entrances" );
 	for ( CLocalDoors::iterator it = doors.begin(); it != doors.end(); ++it )
 	{
-		if ( !pManipulator->InsertNode( "entrances" ) ) 
+		if ( !pManipulator->InsertNode( "entrances" ) )
 			continue;
 
 		const std::string szNodePrefix = fmt::format( "entrances.[{}].", nEntranceIndex );
 
 		// Write data
 		CManipulatorManager::SetVec3( it->vPos, pManipulator, szNodePrefix + "Pos" );
-		pManipulator->SetValue( szNodePrefix + "Dir", it->nDir );			
+		pManipulator->SetValue( szNodePrefix + "Dir", it->nDir );
 		pManipulator->SetValue( szNodePrefix + "Stormable", true );			// All entrances are stormable by default
 
 		++nEntranceIndex;
@@ -651,9 +651,9 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 
 	for ( CLocalWindows::iterator it = windows.begin(); it != windows.end(); ++it )
 	{
-		if ( it->nFound == -1 ) 
+		if ( it->nFound == -1 )
 		{
-			if ( !pManipulator->InsertNode( "slots" ) ) 
+			if ( !pManipulator->InsertNode( "slots" ) )
 				continue;
 
 			nCurrentSlot = nSlotNodes;
@@ -664,13 +664,13 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 
 		const std::string szNodePrefix = fmt::format( "slots.[{}].", nCurrentSlot );
 
-		pManipulator->SetValue( szNodePrefix + "LocatorName", it->szLocatorName );			
+		pManipulator->SetValue( szNodePrefix + "LocatorName", it->szLocatorName );
 		CManipulatorManager::SetVec3( it->vPos, pManipulator, szNodePrefix + "Pos" );
 		CManipulatorManager::SetVec3( it->vDamageCenter, pManipulator, szNodePrefix + "DamageCenter" );
-		pManipulator->SetValue( szNodePrefix + "Direction", float(float(it->nDir) * 360.0f / 65536.0f) );			
+		pManipulator->SetValue( szNodePrefix + "Direction", float(float(it->nDir) * 360.0f / 65536.0f) );
 
 		CVec4 vRot = it->qRot.GetInternalVector();
-		CManipulatorManager::SetVec4( vRot, pManipulator, szNodePrefix + "Rot" ); 
+		CManipulatorManager::SetVec4( vRot, pManipulator, szNodePrefix + "Rot" );
 
 		CManipulatorManager::SetVec2( it->vWindowScale, pManipulator, szNodePrefix + "WindowScale" );
 
@@ -699,7 +699,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 				pManipulator->RemoveNode( szNodePrefix + "Window.NightDamageLevels", NODE_REMOVEALL_INDEX );
 				// подготовка массивов
 				int nStageCount = 0;
-				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )  
+				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )
 				{
 					if ( PatMat( itAttr->szBoneName.c_str(), "*lstage??" ) )						// Process destruction stages
 						++nStageCount;
@@ -745,7 +745,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 				// Every numbered stage must exist before any animations are generated.
 				for ( const auto &frame : vFrames ) if ( frame.nStartTime < 0 ) return false;
 				// создание необходимой структуры
-				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr ) 
+				for ( CGrannyBoneAttributesList::const_iterator itAttr = attribs.begin(); itAttr != attribs.end(); ++itAttr )
 				{
 					if ( PatMat( itAttr->szBoneName.c_str(), "*lstage??" ) )						// Process destruction stages
 					{
@@ -772,7 +772,7 @@ const bool CBuildingRPGStatsExporter::UpdateEntrancesAndSlots( IManipulator *pMa
 			}
 		}
 	}
-	
+
 	// Clean up unused windows
 	for ( int i = nExistingSlots - 1; i >= 0; --i )
 	{
@@ -855,7 +855,7 @@ const std::string CBuildingRPGStatsExporter::GetMaterial( const std::string &szM
 				if ( !CreateTexture( szTexture, szModelPath + fmt::format( "{}.tga", nMaterial ) ) )
 					return "";
 		}
- 
+
 		CManipulatorManager::SetValue( szTexture, pMaterial, "Texture", true );
 		CManipulatorManager::SetValue( bReflective ? 1 : 0, pMaterial, "MetalMirror" );
 		CManipulatorManager::SetValue( szMirrorTexture, pMaterial, "Mirror", true );
@@ -870,7 +870,7 @@ const std::string CBuildingRPGStatsExporter::GetMaterial( const std::string &szM
 
 const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, const std::string &szRefName, const std::string &szObjectName, const int nMaterial )
 {
-	CPtr<IManipulator> pVisObj = CManipulatorManager::CreateManipulatorFromReference( szRefName, pManipulator, 0, 0, 0 ); 
+	CPtr<IManipulator> pVisObj = CManipulatorManager::CreateManipulatorFromReference( szRefName, pManipulator, 0, 0, 0 );
 	if ( !pVisObj )
 		return false;
 
@@ -882,7 +882,7 @@ const bool CBuildingRPGStatsExporter::UpdateModels( IManipulator *pManipulator, 
 		std::string szModelName;
 		CManipulatorManager::GetParamsFromReference( fmt::format( "Models.[{}].Model", i ), pVisObj, 0, &szModelName, 0 );
 		if ( !szModelName.empty() )
-		{	
+		{
 			models.insert( szModelName );
 		}
 	}
@@ -940,7 +940,7 @@ const bool CBuildingRPGStatsExporter::UpdateSectionMaterials( IManipulator *pMan
 	int nSlotsCount = 0;
 	if ( !CManipulatorManager::GetValue( &nSlotsCount, pManipulator, "slots" ) )
 		return false;
-	
+
 	for ( int i = 0; i < nSlotsCount; ++i )
 	{
 		std::string szSlotPrefix = fmt::format( "slots.[{}].", i );

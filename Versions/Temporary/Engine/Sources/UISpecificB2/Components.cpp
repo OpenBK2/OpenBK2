@@ -103,12 +103,12 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 			float fMinSin = sinf( fMinAngle2 );
 			float fMaxCos = cosf( fMaxAngle2 );
 			float fMaxSin = sinf( fMaxAngle2 );
-			
+
 			CVec2 vScr2;
 			CVec2 vScr3;
 			CVec2 vTex2;
 			CVec2 vTex3;
-			
+
 			switch ( i )
 			{
 				case 0:
@@ -121,7 +121,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 					vTex3 = CVec2( vTextureSize.x, vTextureCenter.y - fMaxK * vTextureHalf.x );
 				}
 				break;
-				
+
 				case 1:
 				{
 					float fMinK = fMinCos / fMinSin;
@@ -132,7 +132,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 					vTex3 = CVec2( vTextureCenter.x + fMaxK * vTextureHalf.y, 0 );
 				}
 				break;
-				
+
 				case 2:
 				{
 					float fMinK = fMinSin / fMinCos;
@@ -143,7 +143,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 					vTex3 = CVec2( 0, vTextureCenter.y + fMaxK * vTextureHalf.x );
 				}
 				break;
-				
+
 				case 3:
 				{
 					float fMinK = fMinCos / fMinSin;
@@ -155,7 +155,7 @@ void CTextureRoundSegmentVisitor::Visit( struct IUIVisitor *pVisitor )
 				}
 				break;
 			}
-			
+
 			DrawTriangle( pVisitor, vScreenCenter, vScr2, vScr3, vTextureCenter, vTex2, vTex3 );
 		}
 		fMinAngle += FP_PI2;

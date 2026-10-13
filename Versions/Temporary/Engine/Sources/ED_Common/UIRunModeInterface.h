@@ -8,12 +8,12 @@ class CUIRunModeInterface : public CRunModeInterfaceBase
 {
 	OBJECT_NOCOPY_METHODS( CUIRunModeInterface );
 
-public:	
+public:
 	// lifecycle
 	CUIRunModeInterface() {}
 	CUIRunModeInterface( const std::string &rszTypeName, const CDBID &rDBID, const CDBID &rTemplateWindowDBID, const CDBID &rTemplateScreenDBID );
 	virtual ~CUIRunModeInterface();
-	
+
 	// IInterfaceBase
 	bool ProcessEvent( const struct SGameMessage &msg );
 	void Step( bool bAppActive );

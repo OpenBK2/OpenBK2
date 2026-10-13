@@ -46,9 +46,9 @@ private:
 	{
 		CNodeAddress inetAddress;
 		CNodeAddressSet localAddress;
-		
+
 		SClientAddressInfo() {}
-		SClientAddressInfo( const CNodeAddress &_inetAddress, const CNodeAddressSet &_localAddress ) 
+		SClientAddressInfo( const CNodeAddress &_inetAddress, const CNodeAddressSet &_localAddress )
 			: inetAddress(_inetAddress), localAddress(_localAddress) {}
 	};
 	//
@@ -93,7 +93,7 @@ private:
 	void ProcessIncomingMessages();
 	void ProcessLogin( const CNodeAddress &addr, CBitStream &bits );
 	void ProcessNormal( const CNodeAddress &addr, CBitStream &bits );
-	void AddOutputMessage( EMessage msg, CP2PTracker::UCID _from, 
+	void AddOutputMessage( EMessage msg, CP2PTracker::UCID _from,
 		CMemoryStream &data, const std::vector<CP2PTracker::UCID> &received );
 
 	void PollMessages( SPeer *pPeer );
@@ -183,7 +183,7 @@ public:
 	virtual void PauseNet();
 	virtual void UnpauseNet();
 	virtual void SetLag( const NTimer::STime period );
-	
+
 	// thread functions for internal use only
 	void StartThread();
 	bool CanWork();

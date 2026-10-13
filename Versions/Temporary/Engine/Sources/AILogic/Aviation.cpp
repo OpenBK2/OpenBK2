@@ -80,22 +80,22 @@ void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	pStats = checked_cast<const SMechUnitRPGStats*>( _pStats );
 	// calculate appear height
 	timeNextGroundScan = curTime;
-	
+
 	const float fAppearHeight = Clamp( pStats->fMaxHeight, SPlanesConsts::GetMinHeight(), SPlanesConsts::MAX_HEIGHT );
 
 	const CVec2 vGoToPoint( center );
 	const CVec2 vDirection( GetVectorByDirection( dir ) );
 	const CVec2 vAppearPoint( center - vDirection * 100 );
-	
+
 	vInitialPoint = center;
-	
+
 	CVec2 vUitDir( vGoToPoint - vAppearPoint );
 	Normalize( &vUitDir );
 
 
 	// create formation if needed
 	CPtr<CPlanesFormation> pTempFormation = new CPlanesFormation( 0 );
-	pTempFormation->Init( pStats, CVec3(vAppearPoint, fAppearHeight), pStats->fTurnRadius, pStats->fTurnRadius * 2, 
+	pTempFormation->Init( pStats, CVec3(vAppearPoint, fAppearHeight), pStats->fTurnRadius, pStats->fTurnRadius * 2,
 		CVec3(vDirection * pStats->fSpeed,0), CVec3(0,0,1.0f), 0, false );
 	SetPlanesFormation( pTempFormation, VNULL3 );
 	fFuel = pStats->fFuel;
@@ -120,19 +120,19 @@ void CAviation::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats 
 	// SendAcknowledgement( ACK_PLANE_TAKING_OFF, true );
 }
 
-const class CPlanePreferences & CAviation::GetPreferencesB2() const 
-{ 
-	return pFormation->GetPreferencesB2(); 
+const class CPlanePreferences & CAviation::GetPreferencesB2() const
+{
+	return pFormation->GetPreferencesB2();
 }
 
-const IManuver * CAviation::GetManuver() const 
-{ 
-	return pFormation->GetManuver(); 
+const IManuver * CAviation::GetManuver() const
+{
+	return pFormation->GetManuver();
 }
 
-IStatesFactory* CAviation::GetStatesFactory() const 
-{ 
-	return CPlaneStatesFactory::Instance(); 
+IStatesFactory* CAviation::GetStatesFactory() const
+{
+	return CPlaneStatesFactory::Instance();
 }
 
 const uint16_t CAviation::GetDir() const
@@ -201,34 +201,34 @@ void CAviation::SecondSegment( const NTimer::STime timeDiff )
 	CMilitaryCar::SecondSegment( timeDiff );
 }
 
-CVec3 CAviation::GetSpeedB2() const 
-{ 
-	return pFormation->GetSpeedB2();	
+CVec3 CAviation::GetSpeedB2() const
+{
+	return pFormation->GetSpeedB2();
 }
 
-CVec3 CAviation::GetPosB2() const 
-{ 
-	return pFormation->GetPosB2(); 
+CVec3 CAviation::GetPosB2() const
+{
+	return pFormation->GetPosB2();
 }
 
-CVec3 CAviation::GetNormalB2() const 
-{ 
-	return pFormation->GetNormalB2(); 
+CVec3 CAviation::GetNormalB2() const
+{
+	return pFormation->GetNormalB2();
 }
 
-CVec3 CAviation::GetPosNext() const 
-{ 
-	return pFormation->GetPosNext(); 
+CVec3 CAviation::GetPosNext() const
+{
+	return pFormation->GetPosNext();
 }
 
-CVec3 CAviation::GetSpeedNext() const 
-{ 
-	return pFormation->GetSpeedNext(); 
+CVec3 CAviation::GetSpeedNext() const
+{
+	return pFormation->GetSpeedNext();
 }
 
-CVec3 CAviation::GetNormalNext() const 
-{ 
-	return pFormation->GetNormalNext(); 
+CVec3 CAviation::GetNormalNext() const
+{
+	return pFormation->GetNormalNext();
 }
 
 void CAviation::Segment()
@@ -238,7 +238,7 @@ void CAviation::Segment()
 	vNormale = pFormation->GetNormalNext();
 
 	CMilitaryCar::Segment();
-	if ( !IsAlive() ) 
+	if ( !IsAlive() )
 		return;
 	pFormation->AddAlive();
 
@@ -262,7 +262,7 @@ void CAviation::Segment()
 	}
 }
 
-void CAviation::GetSpeed3( CVec3 *pSpeed ) const 
+void CAviation::GetSpeed3( CVec3 *pSpeed ) const
 {
 	*pSpeed = pFormation->GetSpeedB2();
 }
@@ -318,7 +318,7 @@ void CAviation::Die( const bool fromExplosion, const float fDamage )
 	pUnitInfoForGeneral->Die();
 
 	// FEEDBACK ABOUT KILLING AVIATION
-	
+
 	//EFeedBack eFeed = 0;
 	int nParam = 0;
 	if ( GetPlayer() == theDipl.GetMyNumber() )
@@ -327,14 +327,14 @@ void CAviation::Die( const bool fromExplosion, const float fDamage )
 		nParam = 2;
 	else if ( EDI_ENEMY == theDipl.GetDiplStatus( GetParty(), theDipl.GetMyParty() ) )
 		nParam = 3;
-	
+
 /*	if ( nParam != 0 )
 		updater.AddUpdate( EFB_AVIA_KILLED, (nParam << 16) | GetAviationType() );
 	*/
 	ChangePlayer( theDipl.GetNeutralPlayer() );
-	
+
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_FLY_DEAD), this, false );
-	
+
 	updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 	updater.AddUpdate( 0, ACTION_NOTIFY_DEADPLANE, this, -1 );
 	theAckManager.UnitDead( this );

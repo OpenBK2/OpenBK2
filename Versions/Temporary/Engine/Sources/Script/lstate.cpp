@@ -102,7 +102,7 @@ lua_State *lua_open (int stacksize, const char* instanceName)
 void lua_close (lua_State *L)
 {
 	luaC_collect(L, 1);	/* collect all elements */
-	
+
 	LUA_ASSERT( L->protos.empty(), "list should be empty" );
 	LUA_ASSERT( L->closures.empty(), "list should be empty");
 	LUA_ASSERT( L->tables.empty(), "list should be empty");

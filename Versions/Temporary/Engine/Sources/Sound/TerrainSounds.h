@@ -10,7 +10,7 @@ class CTerrainSounds
 {
 public:
 	// для хранения звука и его обработки
-	class CTerrainSound 
+	class CTerrainSound
 	{
 		public: int operator&( IBinSaver &saver ); private:;
 
@@ -39,7 +39,7 @@ public:
 		bool bNeedUpdate;
 		uint16_t wSound;
 	public:
-		CTerrainSound() : fVolume ( 0.0f ), fPan ( 0.0f ), 
+		CTerrainSound() : fVolume ( 0.0f ), fPan ( 0.0f ),
 			bMustPlay( false ),
 			timeRestart ( 0 ), vOffset( VNULL2 ),
 			bNeedUpdate ( false ), vSoundPos( VNULL3 ), wSound( 0 ) {  }
@@ -51,7 +51,7 @@ public:
 
 		NTimer::STime GetRestartTime() { return timeRestart; }
 		// если изменилось положение камеры IsNeedUpdate вернет true
-		void Update(	const struct SSoundTerrainInfo& info, 
+		void Update(	const struct SSoundTerrainInfo& info,
 			const CVec3 &vCameraAnchor, const float fViewSize, const float fRelativeVolume );
 		void SetMustPlay( bool _bMustPlay ) ;
 		bool IsMustPlay() const { return bMustPlay; }

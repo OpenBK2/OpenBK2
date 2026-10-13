@@ -11,7 +11,7 @@ extern CEventUpdater updater;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1509C340, CExecutorThrowGrenade )
 
-CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility ) 
+CExecutorThrowGrenade::CExecutorThrowGrenade( CAIUnit *_pUnit, NDb::EUnitSpecialAbility _eAbility )
 : CExecutor(TID_THROW_GRENADE, 1000/SConsts::AI_SEGMENT_DURATION), pUnit( _pUnit ), eAbility( _eAbility )
 {
 	if ( HasGrenades() )
@@ -32,7 +32,7 @@ const bool CExecutorThrowGrenade::HasGrenades()
 	for ( int i = 0; i < nGuns; ++i )
 	{
 		CBasicGun *pGun = pUnit->GetGun( i );
-		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE && 
+		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_GRENADE &&
 			   pUnit->GetNAmmo( i ) > 0 )
 		{
 			bPresent = true;
@@ -83,14 +83,14 @@ bool CExecutorThrowGrenade::NotifyEvent( const CExecutorEvent &event )
 	const CExecutorEventSpecialAbility *pEv = static_cast<const CExecutorEventSpecialAbility *>( &event );
 	if ( pEv == 0 )
 		return false;
-		
+
 	if ( pEv->GetAbility() != NDb::ABILITY_THROW_GRENADE && pEv->GetAbility() != NDb::ABILITY_THROW_ANTITANK_GRENADE )
 		return false;
-		
+
 	CSoldier *pSoldier = checked_cast<CSoldier*>( pUnit.GetPtr() );
 	if ( pSoldier->GetUniqueId() != event.GetParam().nUnitID )
 		return false;
-	
+
 	switch ( event.GetParam().eEventID )
 	{
 		case EID_ABILITY_ACTIVATE_AUTOCAST:
@@ -138,7 +138,7 @@ void CExecutorThrowGrenade::RegisterOnEvents( IExecutorContainer *pContainer )
 
 	par.eEventID = EID_ABILITY_DEACTIVATE_AUTOCAST;
 	pContainer->RegisterOnEvent( this, par );
-	
+
 	par.eEventID = EID_ABILITY_ENABLE;
 	pContainer->RegisterOnEvent( this, par );
 

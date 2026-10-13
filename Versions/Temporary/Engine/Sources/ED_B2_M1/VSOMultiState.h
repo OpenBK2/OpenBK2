@@ -46,7 +46,7 @@ public:
 			PN_MULTI		= 1,
 			PN_ALL			= 2,
 		};
-		
+
 		enum EStatsType
 		{
 			STATS_DEFAULT	= 0,
@@ -104,7 +104,7 @@ public:
 	{
 		pMapInfoEditor = _pMapInfoEditor;
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		
+
 		CRoadState *pRoadState = new CRoadState( this );
 		nStateIndex = AddInputState( pRoadState );
 		NI_ASSERT( nStateIndex == IS_ROAD, fmt::format( "CVSOMultiState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_ROAD ) ) );
@@ -120,7 +120,7 @@ public:
 		CLakeState *pLakeState = new CLakeState( this );
 		nStateIndex = AddInputState( pLakeState );
 		NI_ASSERT( nStateIndex == IS_LAKE, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_LAKE ) ) );
-		
+
 		CCoastState *pCoastState = new CCoastState( this );
 		nStateIndex = AddInputState( pCoastState );
 		NI_ASSERT( nStateIndex == IS_COAST, fmt::format( "CVSOMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_COAST ) ) );

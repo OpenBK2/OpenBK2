@@ -9,14 +9,14 @@
 #define MAX_SEGMENT_DELAY 0x80
 // to make index
 #define MAKE_INDEX_HELPER 0x7f
-// this number of sleeping executers are checked 
+// this number of sleeping executers are checked
 #define CHECK_SLEEPING_PER_SEGMENT 100
 
 class CExecutorContainer :	public IExecutorContainer
 {
 	OBJECT_NOCOPY_METHODS( CExecutorContainer )
 	// executors queue
-	 	
+
 	struct SExID
 	{
 		ZDATA
@@ -52,7 +52,7 @@ class CExecutorContainer :	public IExecutorContainer
 	// executers, that subscribed for events
 	CEvents events;
 
-public: 
+public:
 	int operator&( IBinSaver &f)
 	{
 		f.Add(2,&executors);
@@ -78,7 +78,7 @@ public:
 	void Init();
 	int CreateID(){ return executorIDs.Get();	}
 	void ReturnID( const int id ) { executorIDs.Return( id ); }
-	
+
 	virtual void AddSleeping( CExecutor *pExecutor );
 	virtual void RemoveSleeping( CExecutor *pExecutor );
 	virtual void Add( CExecutor *pExecutor );
@@ -87,7 +87,7 @@ public:
 	virtual void RaiseEvent( const CExecutorEvent &event );
 	virtual void RaiseEvent( const SExecutorEventParam &param );
 	//CRAP}
-	
+
 	virtual void Segment();
 };
 

@@ -2,7 +2,7 @@ int GetGroupById( const int scriptID ) const
 {
 	for ( std::vector< SReinforcementGroupInfoEntry >::const_iterator it = infos.begin(); it != infos.end(); ++it )
 	{
-		int i = 0; 
+		int i = 0;
 		while( i < it->groupsVector.data.size() && it->groupsVector.data[i] != scriptID )
 			++i;
 		if ( i < it->groupsVector.data.size() )

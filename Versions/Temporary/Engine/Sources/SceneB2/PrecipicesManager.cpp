@@ -511,7 +511,7 @@ void CTerraGen::UpdateAllNeededPrecipices()
 			CreatePrecipiceMesh( pPrec, true );
 		if ( *it > 0xffff )
 		{
-			if ( pPrec = FindPrecipice( 0x20000 | ((*it) & 0xffff)) ) 
+			if ( pPrec = FindPrecipice( 0x20000 | ((*it) & 0xffff)) )
 				CreatePrecipiceMesh( pPrec, true );
 		}
 	}

@@ -43,8 +43,8 @@ void CVisObjIconInfo::OrientToViewer()
 		const CVec2 &vCurSizesMax = iconsSizesMax[i];
 
 		matrix.RotateVector( &s[0], CVec3( vCurSizesMin.x, 0, vCurSizesMin.y ) );
-		matrix.RotateVector( &s[1], CVec3( vCurSizesMax.x, 0, vCurSizesMin.y ) ); 
-		matrix.RotateVector( &s[2], CVec3( vCurSizesMax.x, 0, vCurSizesMax.y ) ); 
+		matrix.RotateVector( &s[1], CVec3( vCurSizesMax.x, 0, vCurSizesMin.y ) );
+		matrix.RotateVector( &s[2], CVec3( vCurSizesMax.x, 0, vCurSizesMax.y ) );
 		matrix.RotateVector( &s[3], CVec3( vCurSizesMin.x, 0, vCurSizesMax.y ) );
 
 		data.vertices[nInd].pos = vCenter + s[0];
@@ -64,7 +64,7 @@ void CVisObjIconInfo::OrientToViewer()
 
 void CVisObjIconInfo::Recalc()
 {
-	if ( pValue == 0 ) 
+	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 
 	OrientToViewer();
@@ -238,7 +238,7 @@ void CScene::SetIcon( const SSceneObjIconInfo &iconInfo )
 		RemoveIcon( iconInfo.nID );
 		return;
 	}
-	
+
 	if ( !( data[eScene]->pVisObjIconsManager ) && ( data[eScene]->pSceneConsts ) && ( data[eScene]->pSceneConsts->pVisObjIconsSet ) )
 	{
 		data[eScene]->pVisObjIconsManager = new CVisObjIconsManager;

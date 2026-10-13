@@ -75,7 +75,7 @@ int ReadData( char *pBuf, int nMaxSize )
 	{
 		int nSizeToRead = (std::min)( pStream->GetSize() - nCurPos, nMaxSize );
 		pStream->Read( pBuf, nSizeToRead );
-		return nSizeToRead;	
+		return nSizeToRead;
 	}
 }
 

@@ -22,14 +22,14 @@ class CInterfaceCustomCampaign : public CInterfaceScreenBase, public IProgrammed
 		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pCampaignDB); f.Add(3,&pWnd); f.Add(4,&pFlagWnd); f.Add(5,&pNameView); f.Add(6,&wszName); f.Add(7,&wszDesc); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
 	CPtr<IWindow> pCampaignsListPanel;
 	CPtr<IWindow> pCampaignDescPanel;
-	
+
 	CPtr<IScrollableContainer> pCampaignsListCont;
 	CPtr<IWindow> pCampaignsListItemTemplate;
 	CPtr<IScrollableContainer> pCampaignDescCont;
@@ -42,7 +42,7 @@ private:
 	void MakeInterior();
 	void AddCampaign( const NDb::SCampaign *pCampaign );
 	const SCampaign* FindSelected() const;
-	
+
 	bool OnBack();
 	bool OnPlay();
 	bool OnSelect();

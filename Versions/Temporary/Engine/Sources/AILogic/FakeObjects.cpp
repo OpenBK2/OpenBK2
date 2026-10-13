@@ -53,13 +53,13 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit
 		pUnit->UnlockTiles();
 		pUnit->FixUnlocking();
 	}
-	
+
 	CVec3 vPos( pUnit->GetCenter().x, pUnit->GetCenter().y, 0 );
 
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
 	const SMechUnitRPGStats *pMechUnitStats = dynamic_cast<const SMechUnitRPGStats*>( pStats );
 	const bool bDestructableCorpse = pMechUnitStats ? pMechUnitStats->bDestructableCorpse : false;
-	
+
 	CPtr<CFakeCorpseStaticObject> pFakeStObj =
 		new CFakeCorpseStaticObject( vPos, pUnit->GetDirection(), 1.0f, -1, tiles, bDestructableCorpse, pUnit, new CObjectProfile( pUnit->GetUnitRect(), false ) );
 	pFakeStObj->Init();
@@ -79,7 +79,7 @@ void CFakeCorpseStaticObject::CreateFakeCorpseStaticObject( class CAIUnit *pUnit
 CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const uint16_t wDir, const float fHP, const int nFrameIndex,
 																								  const std::list<SObjTileInfo> &tiles, const bool _bDestructByTracks,
 																									CUpdatableObj* _pDeadObj, CObjectProfile *_pPassProfile )
-: CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE ), pDeadObj( _pDeadObj ), 
+: CCommonStaticObject( center, fHP, wDir, nFrameIndex, ESOT_FAKE_CORPSE ), pDeadObj( _pDeadObj ),
 	tilesToLock( tiles ), eType( ESOT_FAKE_CORPSE ), pPassProfile( _pPassProfile ), bDestructByTracks( _bDestructByTracks )
 {
 	for ( std::list<SObjTileInfo>::iterator it = tilesToLock.begin(); it != tilesToLock.end(); ++it )
@@ -87,8 +87,8 @@ CFakeCorpseStaticObject::CFakeCorpseStaticObject( const CVec3 &center, const uin
 }
 
 const uint8_t CFakeCorpseStaticObject::GetPlayer() const
-{ 
-	return theDipl.GetNeutralPlayer(); 
+{
+	return theDipl.GetNeutralPlayer();
 }
 
 bool CFakeCorpseStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) const

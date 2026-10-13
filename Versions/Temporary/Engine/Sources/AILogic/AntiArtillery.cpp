@@ -31,7 +31,7 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 {
 	bIsAA = false;
 	Mem2UniqueIdObjs();
-	
+
 	fMaxRadius = _fMaxRadius;
 	if ( fMaxRadius == 0.0f )
 		fMaxRadius = ( GetAIMap()->GetSizeX() + GetAIMap()->GetSizeY() ) * SAIConsts::TILE_SIZE;
@@ -45,7 +45,7 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 	lastHeardPos.resize( 3, VNULL2 );
 	nHeardShots.resize( 3, 0 );
 	lastRevealCenter.resize( 3, VNULL2 );
-	
+
 	lastShotTime.resize( 3, 0 );
 	lastRevealCircleTime.resize( 3, 0 );
 }
@@ -53,15 +53,15 @@ void CAntiArtillery::Init( const float _fMaxRadius, const int _nParty )
 void CAntiArtillery::Scan( const CVec2 &center )
 {
 	std::fill(closestEnemyDist2.begin(), closestEnemyDist2.end(), 0.0f);
-	
+
 	for ( CUnitsIter<0,3> iter( nParty, EDI_ENEMY, center, fMaxRadius ); !iter.IsFinished(); iter.Iterate() )
 	{
-		if ( closestEnemyDist2[(*iter)->GetParty()] == 0 ) 
+		if ( closestEnemyDist2[(*iter)->GetParty()] == 0 )
 		{
 			const float fR2 = fabs2( center - (*iter)->GetCenterPlain() );
 			if ( fR2 <= sqr( fMaxRadius ) )
 				closestEnemyDist2[ (*iter)->GetParty() ] = fR2;
-		} 
+		}
 		else
 		{
 			const float fR2 = fabs2( center - (*iter)->GetCenterPlain() );
@@ -83,10 +83,10 @@ float GetRadius( const float nShots, const float fRevealRadius )
 	/*float fMax = SConsts::MAX_ANTI_ARTILLERY_RADIUS *
 								SConsts::ARTILLERY_REVEAL_COEEFICIENT / fRevealRadius;
 	fMax = fMax < SConsts::MIN_ANTI_ARTILLERY_RADIUS ? SConsts::MIN_ANTI_ARTILLERY_RADIUS : fMax;
-	
+
 	return fMax - (fMax - SConsts::MIN_ANTI_ARTILLERY_RADIUS)/ SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS * nShots;*/
 	// Another (older) variant
-	/*return SConsts::ARTILLERY_REVEAL_COEEFICIENT/fRevealRadius * 
+	/*return SConsts::ARTILLERY_REVEAL_COEEFICIENT/fRevealRadius *
 	(SConsts::MAX_ANTI_ARTILLERY_RADIUS - ( SConsts::MAX_ANTI_ARTILLERY_RADIUS - SConsts::MIN_ANTI_ARTILLERY_RADIUS ) / SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS * nShots); */
 }
 
@@ -140,7 +140,7 @@ void CAntiArtillery::Fired( const float _fGunRadius, const CVec2 &center )
 
 const CCircle CAntiArtillery::GetRevealCircle( const int nParty ) const
 {
-	return CCircle( lastRevealCenter[nParty], 
+	return CCircle( lastRevealCenter[nParty],
 									GetRadius( (std::min)( (float)nHeardShots[nParty], (float)SConsts::SHOTS_TO_MINIMIZE_LOCATION_RADIUS ), fMaxRadius ) );
 }
 
@@ -151,12 +151,12 @@ const NTimer::STime CAntiArtillery::GetLastHeardTime( const int nParty ) const
 
 void CAntiArtillery::Segment( bool bOwnerVisible )
 {
-	const int nMyParty = theDipl.GetMyParty();	
+	const int nMyParty = theDipl.GetMyParty();
 	for ( int nIterParty = 0; nIterParty < 2; ++nIterParty )
 	{
 		// если player - враг, слышал выстрел, не слишком давно, и пора рисовать круг
 		const bool bEnemy = theDipl.GetDiplStatusForParties( nParty, nIterParty ) == EDI_ENEMY;
-		
+
 		const bool bVisibleCircle = lastShotTime[nIterParty] != 0 && curTime - lastShotTime[nIterParty] <= SConsts::AUDIBILITY_TIME;
 		const bool bHaveToSendCircle = bVisibleCircle && curTime - lastRevealCircleTime[nIterParty] >= SConsts::REVEAL_CIRCLE_PERIOD;
 
@@ -174,8 +174,8 @@ void CAntiArtillery::Segment( bool bOwnerVisible )
 
 			// обязательно нужно создать, чтобы общая нумерация объектов не зависела от клиента
 			CPtr<CRevealCircle> pCircle = new CRevealCircle( GetRevealCircle( 1 - nParty ) );
-			
-			// этон наша сторона и мы для него не видны, 
+
+			// этон наша сторона и мы для него не видны,
 			if ( nMyParty == nIterParty && !bOwnerVisible )
 			{
 				if ( bIsAA )

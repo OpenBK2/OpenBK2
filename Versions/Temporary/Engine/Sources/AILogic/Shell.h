@@ -20,7 +20,7 @@ class CHitInfo : public CLinkObject
 	OBJECT_BASIC_METHODS( CHitInfo );
 public:
 	ZDATA_(CLinkObject)
-		
+
 	CDBPtr<SWeaponRPGStats> pWeapon;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	uint16_t wShell = {};
@@ -31,7 +31,7 @@ public:
 
 	SAINotifyHitInfo::EHitType eHitType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CLinkObject*)this); f.Add(2,&pWeapon); f.Add(3,&wShell); f.Add(4,&wDir); f.Add(5,&pVictim); f.Add(6,&explCoord); f.Add(7,&eHitType); return 0; }
-	
+
 	CHitInfo() { }
 	CHitInfo( const SWeaponRPGStats *_pWeapon, const uint16_t _wShell, const uint16_t &_wDir, CObjectBase *_pVictim, const SAINotifyHitInfo::EHitType _eHitType, const CVec3 &_explCoord )
 		: pWeapon( _pWeapon ), wShell( _wShell ), wDir( _wDir ), pVictim( _pVictim ), eHitType( _eHitType ), explCoord( _explCoord ) { SetUniqueIdForObjects(); }
@@ -42,7 +42,7 @@ public:
 	CHitInfo( const class CExplosion *pExpl, CObjectBase *pVictim, const enum SAINotifyHitInfo::EHitType &eHitType, const CVec3 &explCoord );
 
 	virtual void GetHitInfo( struct SAINotifyHitInfo *pHitInfo ) const;
-	
+
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
@@ -96,7 +96,7 @@ class AILOGIC_EXPORT CBallisticTraj: public IBallisticTraj
 public:
 	CBallisticTraj() { }
 	CBallisticTraj( const CVec3 &vStart, const CVec3 &vFinish, float fV, const NDb::SWeaponRPGStats::SShell::ETrajectoryType eType, uint16_t wMaxAngle, float fMaxRange, float fVerticalOffsetAngleRad = 0.0f );
-	
+
 	virtual const NTimer::STime& GetExplTime() const { return explTime; }
 	virtual const NTimer::STime& GetStartTime() const { return startTime; }
 	virtual const CVec3& GetStartPoint() const { return vStart3D; }
@@ -256,7 +256,7 @@ protected:
 	uint8_t nShellType = {};
 	CDBPtr<SWeaponRPGStats> pWeapon;
 	CPtr<CAIUnit> pUnit;
-	
+
 	CVec3 explCoord;
 	SAIAngle attackDir;
 	int nPlayerOfShoot = {};
@@ -274,9 +274,9 @@ protected:
 	const SAINotifyHitInfo::EHitType ProcessExactHit( class CAIUnit *pTarget, const SRect &combatRect, const CVec3 &explCoord, const int nRandPiercing, const int nRandArmor ) const;
 	void Init( class CAIUnit *pUnit, const struct SWeaponRPGStats *pWeapon, const float fDispersion, const float fDispRatio, const CVec3 &_explCoord, const CVec3 &attackerPos, const uint8_t nShellType, const bool bRandomize, const int nPlayerOfShoot );
 	//
-	bool InOnGround( const float fExplTerrainZ ) const 
-	{ 
-		return fabs(GetExplCoordinates().z - fExplTerrainZ) <= SConsts::TILE_SIZE; 
+	bool InOnGround( const float fExplTerrainZ ) const
+	{
+		return fabs(GetExplCoordinates().z - fExplTerrainZ) <= SConsts::TILE_SIZE;
 	}
 public:
 	CExplosion() : nPlayerOfShoot( -1 ), bForceAirEffect( false ) { }
@@ -299,14 +299,14 @@ public:
 	const float GetRandomDamage() const;
 	const float GetArea() const;
 	const float GetArea2() const;
-	
+
 	const int GetPartyOfShoot() const;
 	const int GetPlayerOfShoot() const;
 
 	virtual void Explode() = 0;
 	float GetMaxDamage() const ;
 	NDb::SWeaponRPGStats::SShell::ETrajectoryType GetTrajectoryType() const { return pWeapon->shells[nShellType].etrajectory; }
-	
+
 	// если explosion дымовой, то вернется true.
 	bool ProcessSmokeScreenExplosion() const;
 
@@ -369,7 +369,7 @@ public:
 	CFlameThrowerExpl() : vShooterPos( VNULL3 ), vTargetPos( VNULL3 ) { }
 	int operator&( IBinSaver &saver );
 	CFlameThrowerExpl( CAIUnit *pUnit, const class CBasicGun *pGun,
-										 const CVec3 &explCoord, const CVec3 &attackerPos, 
+										 const CVec3 &explCoord, const CVec3 &attackerPos,
 										 const uint8_t nShellType, const bool bRandomize = true );
 	void Explode();
 };
@@ -417,7 +417,7 @@ public:
 
 	const NTimer::STime GetExplTime() const { return explTime; }
 
-	const CVec3& GetExplCoordinates() const { return expl->GetExplCoordinates(); }	
+	const CVec3& GetExplCoordinates() const { return expl->GetExplCoordinates(); }
 	const SWeaponRPGStats *GetWeapon() const { return expl->GetWeapon(); }
 	const uint8_t GetShellType() const { return expl->GetShellType(); }
 
@@ -448,7 +448,7 @@ public:
 // видимый снаряд
 class CVisShell : public CLinkObject, public CShell
 {
-	OBJECT_BASIC_METHODS( CVisShell );		
+	OBJECT_BASIC_METHODS( CVisShell );
 public: int operator&( IBinSaver &saver ); private:
 	CPtr<IBallisticTraj> pTraj;
 	CVec3 center;
@@ -456,7 +456,7 @@ public: int operator&( IBinSaver &saver ); private:
 	bool bVisible = {};
 	int nPlatform = {};
 	int nOrder = {};
-	
+
 	void CalcVisibility();
 public:
 	CVisShell() : nOrder( 0 ) { }
@@ -478,7 +478,7 @@ public:
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
-	
+
 	virtual const bool IsVisibleByPlayer() const;
 
 	void SetOrder( const int _nOrder ) { nOrder = _nOrder; }
@@ -548,12 +548,12 @@ public:
 	CShellsStore() : nNextInvisShellOrder( 0 ), nNextVisShellOrder( 0 ) { }
 	void Clear();
 
-	void AddShell( CMomentShell	&shell ); 
+	void AddShell( CMomentShell	&shell );
 	void AddShell( CInvisShell *pShell );
 	void AddShell( CVisShell *pShell );
 
 	void Segment();
-	
+
 	// для тестирования multiplayer
 	void UpdateCheckSum( uLong *pCheckSum );
 	void UpdateDebugChecksums(FILE* f);

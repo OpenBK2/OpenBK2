@@ -141,7 +141,7 @@ namespace NMapInfoEditor
 								 bool bRotateLinkedObjects,
 								 bool bUpdateScene, IEditorScene *pEditorScene,
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
-		//		
+		//
 		bool CheckLinkCapability( unsigned nObjectInfoID, unsigned nLinkToSceneID );
 		bool InsertLink( unsigned nObjectInfoID, unsigned nLinkToSceneID, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		bool RemoveLinks( unsigned nObjectInfoID, CObjectBaseController *pObjectController, IManipulator *pManipulator );

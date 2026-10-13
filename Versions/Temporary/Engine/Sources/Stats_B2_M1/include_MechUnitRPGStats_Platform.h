@@ -41,7 +41,7 @@ bool ToAIUnits( bool bInEditor )
 	FOR_EACH_VAL( guns, ToAIUnits, bInEditor );
 	//
 	return true;
-} 
+}
 
 friend struct SMechUnitRPGStats;
 

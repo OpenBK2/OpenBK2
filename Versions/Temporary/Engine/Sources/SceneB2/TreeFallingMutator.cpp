@@ -30,11 +30,11 @@ void CTreeFallingMutator::Setup( ISkeletonAnimator *pAnimator, const CVec2 &vDir
 	mTrans.RotateVector( &vRotAxis, CVec3( -vDir.y, vDir.x, 0 ) );
 	vEffectRotAxis.Set( -vDir.y, vDir.x, 0 );
 	pAnimator->SetSpecialMutator( this );
-	
+
 	nEffectID = _nEffectID;
 	vTreePos = vPos;
 	fEffectHeight = _fEffectHeight;
-	
+
 	fCycles = fFallCycles;
 	fAnimLength = nFallDuration;
 }
@@ -87,7 +87,7 @@ void CTreeFallingMutator::TransformLeafBone( NAnimation::SBoneTransform *pTransf
 }
 
 void CTreeFallingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
-{	
+{
 	float fCoeff = GetCoeffForTime( pTimer->GetGameTime() - nStartTime );
 
 	CQuat qRot( fCoeff * fEndAngle, vRotAxis );
@@ -104,7 +104,7 @@ void CTreeFallingMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 		pTransform = pPose->GetBone( it->nBoneIndex );
 		TransformLeafBone( pTransform, qInverseRot * qRndRot );
 	}
-	
+
 	if ( !bFinished && nEffectID != -1 )
 	{
 		CVec3 vTransformedEffect;

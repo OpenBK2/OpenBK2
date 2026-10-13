@@ -56,7 +56,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
-class CARSendUIMessage : public IMessageReactionB2 
+class CARSendUIMessage : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSendUIMessage );
 	CDBPtr<NDb::SARSendUIMessage> pDesc;
@@ -66,7 +66,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
-class CARSendGameMessage : public IMessageReactionB2 
+class CARSendGameMessage : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSendGameMessage );
 	CDBPtr<NDb::SARSendGameMessage> pDesc;
@@ -76,7 +76,7 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
 
-class CARSiwtchTab : public IMessageReactionB2 
+class CARSiwtchTab : public IMessageReactionB2
 {
 	OBJECT_BASIC_METHODS( CARSiwtchTab );
 	CDBPtr<NDb::SARSwitchTab> pDesc;

@@ -10,20 +10,20 @@ public:
 	class CReactions : public IProgrammedReactionsAndChecks
 	{
 		OBJECT_NOCOPY_METHODS(CReactions);
-		
+
 		ZDATA_(IProgrammedReactionsAndChecks)
 		CPtr<IWindow> pScreen;
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,(IProgrammedReactionsAndChecks*)this); f.Add(2,&pScreen); return 0; }
 	public:
 		CReactions() {  }
-		~CReactions() 
-		{  
+		~CReactions()
+		{
 		}
 		CReactions( IWindow *_pScreen ) : pScreen( _pScreen ) {   }
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
 	};
-	
+
 private:
 	ZDATA_(CInterfaceScreenBase)
 	CObj<CReactions> pReactions;
@@ -33,14 +33,14 @@ protected:
 	void MsgCancel( const SGameMessage &msg );
 	void MsgYes( const SGameMessage &msg );
 	void MsgNo( const SGameMessage &msg );
-	
+
 	void ResizeTextView( ITextView *pTextView, const std::wstring &szText, int nMinX );
 public:
 	CInterfaceMessageBox();
 	~CInterfaceMessageBox();
 
 	bool Init();
-	
+
 	void SetParams( const std::string &szName, const std::wstring &szText );
 
 	void OnGetFocus( bool bFocus );
@@ -53,7 +53,7 @@ public:
 class CICMessageBox : public CInterfaceCommandBase<CInterfaceMessageBox>
 {
 	OBJECT_BASIC_METHODS( CICMessageBox );
-	
+
 	ZDATA_(CInterfaceCommandBase<CInterfaceMessageBox>)
 	std::string szMainWindowName;
 	std::wstring szText;
@@ -70,7 +70,7 @@ public:
 class CICPreviousMenu : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICPreviousMenu );
-	
+
 	ZDATA_(IInterfaceCommand)
 	std::string szResult; // message for send
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IInterfaceCommand*)this); f.Add(2,&szResult); return 0; }
@@ -96,7 +96,7 @@ public:
 class CICClearInterfaces : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICClearInterfaces );
-	
+
 	ZDATA_(IInterfaceCommand)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IInterfaceCommand*)this); return 0; }
 public:
@@ -106,7 +106,7 @@ public:
 class CICSuppressEnableFocus : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICSuppressEnableFocus );
-	
+
 	ZDATA_(IInterfaceCommand)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IInterfaceCommand*)this); return 0; }
 public:
@@ -116,7 +116,7 @@ public:
 class CICHideUnfocusedScreen : public IInterfaceCommand
 {
 	OBJECT_BASIC_METHODS( CICHideUnfocusedScreen );
-	
+
 	ZDATA_(IInterfaceCommand)
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(IInterfaceCommand*)this); return 0; }
 public:

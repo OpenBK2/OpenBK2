@@ -51,7 +51,7 @@ public:
 	int GetSegment() const;
 	// begin segments block. returns number of segments to process
 	int BeginSegments();
-	
+
 	bool CanStartNextSegment() const;
 	// increment for next segment. return false if can't increment for next segment
 	bool NextSegment();

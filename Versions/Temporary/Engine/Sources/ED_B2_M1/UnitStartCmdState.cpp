@@ -222,13 +222,13 @@ CUnitStartCmdState::~CUnitStartCmdState()
 
 
 NMapInfoEditor::SObjectInfoCollector* CUnitStartCmdState::GetObjectInfoCollector()
-{ 
+{
 	return &( pMapInfoEditor->objectInfoCollector );
 }
 
 
 CMapInfoEditor* CUnitStartCmdState::GetMapInfoEditor()
-{ 
+{
 	return pMapInfoEditor;
 }
 
@@ -288,8 +288,8 @@ bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_UNIT_START_CMD_WINDOW_UI_EVENT:
 		{
 			SUnitStartCmdWindowData data;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
-																																ID_WINDOW_GET_DIALOG_DATA, 
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW,
+																																ID_WINDOW_GET_DIALOG_DATA,
 																																reinterpret_cast<uintptr_t>(&data)) )
 			{
 				switch ( data.eLastAction )
@@ -324,7 +324,7 @@ bool CUnitStartCmdState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				RefreshDockingWindow( 0 );
 			}
-			return true;	
+			return true;
 		}
 	}
 	return false;
@@ -533,7 +533,7 @@ void CUnitStartCmdState::UsrEvtAddCmd( const SUnitStartCmdWindowData &data )
 	GetObjectInfoCollector()->ClearSelection();
 
 	UpdateCmdMarkers();
-	
+
 	NUnitStartCmdDialog::SData dd;
 	pEdUnitStartCmd->SetDialogData( &dd );
 	bEdCmdVisible = true;
@@ -728,7 +728,7 @@ void CUnitStartCmdState::ResetStateData()
 
 void CUnitStartCmdState::EdCmdOK()
 {
-	bEdCmdVisible = false; 
+	bEdCmdVisible = false;
 
 	NUnitStartCmdDialog::SData data;
 	pEdUnitStartCmd->GetDialogData( &data );
@@ -775,7 +775,7 @@ void CUnitStartCmdState::EdCmdOK()
 		}
 		cmd.vTgtPos = CVec2( vCurrTargetPos.x, vCurrTargetPos.y );
 		GetLinkIDs( &cmd.unitLinkIDs );
-		
+
 		if ( data.nCommandIndex < 0 || data.nCommandIndex >= commandsList.commands.size() )
 		{
 			NI_ASSERT( 0, "CUnitStartCmdState::EdCmdOK(): bad command index" );
@@ -833,7 +833,7 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 				}
 			}
 		}
-		
+
 		if ( commandTypesMnemonic.find(cmd.nCmdType) != commandTypesMnemonic.end() )
 		{
 			wcmd.szType = commandTypesMnemonic[cmd.nCmdType].szName;
@@ -842,7 +842,7 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 		{
 			wcmd.szType = RCSTR("<UNKNOWN>");
 		}
-		
+
 		data.commands.push_back( wcmd );
 	}
 
@@ -851,8 +851,8 @@ void CUnitStartCmdState::RefreshDockingWindow( const std::vector<int> *pSelectio
 		data.selectedCommands = (*pSelection);
 	}
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&data) );
 }
 
@@ -936,7 +936,7 @@ bool CUnitStartCmdState::GetLinkIDs( std::vector<int> *pLinkIDs )
 	for ( int i = 0; i < currCmdUnits.size(); ++i )
 	{
 		int nMapObjectID = currCmdUnits[i];
-		//				
+		//
 		SObjectInfoCollector::CObjectInfoMap::iterator it = GetObjectInfoCollector()->objectInfoMap.find( nMapObjectID );
 		if ( it != GetObjectInfoCollector()->objectInfoMap.end() )
 		{
@@ -1089,8 +1089,8 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 			}
 		}
 	}
-	
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW, 
+
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_UNIT_START_CMD_WINDOW,
 																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&data) );
 }
@@ -1099,7 +1099,7 @@ void CUnitStartCmdState::FilterCommandsyBySelection()
 void CUnitStartCmdState::UpdateCmdMarkers()
 {
 	ClearCmdMarkers();
-	
+
 	currentCmdMarker.unitPositions.clear();
 	for ( int j = 0; j < currCmdUnits.size(); ++j )
 	{
@@ -1132,7 +1132,7 @@ void CUnitStartCmdState::UpdateCmdMarkers()
 	///////
 
 	SUnitStartCmdWindowData data;
-	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW, 
+	if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_UNIT_START_CMD_WINDOW,
 																														ID_WINDOW_GET_DIALOG_DATA,
 																														reinterpret_cast<uintptr_t>(&data)) )
 	{

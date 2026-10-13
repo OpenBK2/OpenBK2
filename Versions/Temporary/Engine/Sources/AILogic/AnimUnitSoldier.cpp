@@ -22,7 +22,7 @@ void CAnimUnitSoldier::Init( CAIUnit *_pOwner )
 	nCurAnimation = NDb::ANIMATION_IDLE;
 	timeOfFinishAnimation = 0;
 	bMustFinishCurAnimation = true;
-	
+
 	pOwnerStats = checked_cast<const SInfantryRPGStats*>(pOwner->GetStats());
 	bComplexAttack = !pOwnerStats->bCanAttackDown || !pOwnerStats->bCanAttackUp;
 }
@@ -72,25 +72,25 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 			timeOfFinishAnimation = curTime + pOwnerStats->GetAnimTime( nAnimation );
 			timeOfFinishAnimation += 2000;
 			break;
-				
+
 		case NDb::ANIMATION_SHOOT:
 		case NDb::ANIMATION_SHOOT_DOWN:
 			bMustFinishCurAnimation = true;
 			{
 				NI_ASSERT( std::fegetround() == FE_TONEAREST, "something changed processor control word" );
 				const SInfantryRPGStats::SInfantryGun &gun = pOwnerStats->GetGun( pOwner->GetUniqueID(), 0, 0 );
-				timeOfFinishAnimation = curTime + 
+				timeOfFinishAnimation = curTime +
 					(std::max)( pOwnerStats->GetAnimTime( nAnimation ),
 					Float2Int( gun.pWeapon->nAmmoPerBurst * 60000 / gun.pWeapon->shells[0].fFireRate - 0.5f ) );
 			}
-			
+
 			if ( bComplexAttack )
 				timeOfFinishAnimation += 800;
 			break;
 
 		case NDb::ANIMATION_SHOOT_TRENCH:
-		case NDb::ANIMATION_THROW: 
-		case NDb::ANIMATION_THROW_TRENCH: 
+		case NDb::ANIMATION_THROW:
+		case NDb::ANIMATION_THROW_TRENCH:
 //		case NDb::ANIMATION_RADIO:
 		case NDb::ANIMATION_LIE:
 		case NDb::ANIMATION_STAND:
@@ -115,20 +115,20 @@ void CAnimUnitSoldier::AnimationSet( int nAnimation )
 
 void CAnimUnitSoldier::Segment()
 {
-	if ( movingState.state == SMovingState::EMS_STOPPED_TO_MOVING || 
+	if ( movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ||
 			 movingState.state == SMovingState::EMS_MOVING_TO_STOPPED )
 	{
 		if ( movingState.timeOfIntentionStart + 100 < curTime )
 		{
-			movingState.state = 
-				movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ? 
+			movingState.state =
+				movingState.state == SMovingState::EMS_STOPPED_TO_MOVING ?
 														 SMovingState::EMS_MOVING : SMovingState::EMS_STOPPED;
 
 			if ( nCurAnimation == NDb::ANIMATION_MOVE || nCurAnimation == NDb::ANIMATION_CRAWL ||
 				/*!bMustFinishCurAnimation || */
 						movingState.state == SMovingState::EMS_MOVING && nCurAnimation != NDb::ANIMATION_STAND && nCurAnimation != NDb::ANIMATION_LIE )
 			{
-				bMustFinishCurAnimation = false;												
+				bMustFinishCurAnimation = false;
 				StopCurAnimation();
 			}
 		}

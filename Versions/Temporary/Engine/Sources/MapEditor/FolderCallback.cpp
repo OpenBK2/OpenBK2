@@ -53,7 +53,7 @@ void CFolderCallback::UnockObjects( const SObjectSet &rObjectSet )
 			}
 			if ( itLockObject->second.empty() )
 			{
-				lockObjectMap.erase( itLockObject );  
+				lockObjectMap.erase( itLockObject );
 			}
 		}
 	}
@@ -206,7 +206,7 @@ bool CFolderCallback::RemoveObject( const std::string &rszObjectTypeName, const 
 		bool bFolder = ( !rszObjectName.empty() && ( rszObjectName[rszObjectName.size() - 1] == PATH_SEPARATOR_CHAR ) );
 		if ( !bFolder && IsObjectLocked( rszObjectTypeName, CDBID( rszObjectName ) ) )
 		{
-			NLog::Log( LT_IMPORTANT, "Can't remove object. Object is locked. %s:%s\n", rszObjectTypeName.c_str(), rszObjectName.c_str() ); 
+			NLog::Log( LT_IMPORTANT, "Can't remove object. Object is locked. %s:%s\n", rszObjectTypeName.c_str(), rszObjectName.c_str() );
 			return false;
 		}
 	}
@@ -268,6 +268,6 @@ bool CFolderCallback::SetColor( const std::string &rszObjectTypeName, const std:
 	return folderController.Redo( true, true, 0 );
 }
 
-// basement storage  
+// basement storage
 
 

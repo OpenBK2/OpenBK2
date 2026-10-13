@@ -42,7 +42,7 @@ IStatesFactory* CArtRocketStatesFactory::Instance()
 bool CArtRocketStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return 
+	return
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
 			cmdType == ACTION_COMMAND_REVERSE_TO				||
@@ -78,9 +78,9 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 	NI_ASSERT( dynamic_cast<CArtillery*>( pObj ) != 0, "Wrong unit type" );
 	CArtillery *pArtillery = checked_cast<CArtillery*>( pObj );
 
-	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();	
+	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	IUnitState* pResult = 0;
-	
+
 	switch ( cmd.nCmdType )
 	{
 	case ACTION_COMMAND_MECH_ENTER:
@@ -93,7 +93,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 				pResult = new CMechUnitInsideMechUnitState( pArtillery, pTransport, cmd.nCmdType == ACTION_MOVE_MECH_ENTER_NOW );
 			}
 		}
-	
+
 		break;
 	case ACTION_COMMAND_WAIT:
 		pResult = CArtilleryRestState::Instance( pArtillery, cmd.vPos, pArtillery->GetDirection(), cmd.fNumber );
@@ -136,7 +136,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_HOLD_SECTOR:
 			switch ( cmd.nNumber )
-			{	
+			{
 			case 0:
 				{
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_COMMAND_ROTATE_TO, cmd.vPos ), pArtillery );
@@ -169,19 +169,19 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_MOVE_IDLE:
 			pResult = CSoldierIdleState::Instance( pArtillery );
-			
+
 			break;
 		case ACTION_COMMAND_MOVE_TO:
 		case ACTION_COMMAND_REVERSE_TO:
 			{
-				pArtillery->UnsetFollowState();				
+				pArtillery->UnsetFollowState();
 				pArtillery->ResetHoldSector();
 				if ( pArtillery->IsInTankPit() )// сначала выйти из TankPit, потом поехать куда послали
 				{
 					theGroupLogic.InsertUnitCommand( pCommand->ToUnitCmd(), pArtillery );
 					theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pArtillery );
 				}
-				else 
+				else
 					pResult = CArtilleryMoveToState::Instance( pArtillery, cmd.vPos, cmd.nCmdType == ACTION_COMMAND_REVERSE_TO );
 			}
 
@@ -255,7 +255,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			break;
 		case ACTION_COMMAND_STAND_GROUND:
 			pArtillery->Stop();
-			pArtillery->UnsetFollowState();				
+			pArtillery->UnsetFollowState();
 			pArtillery->SetBehaviourMoving( SBehaviour::EMHoldPos );
 
 			break;
@@ -264,7 +264,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 			break;
 		case ACTION_COMMAND_SWARM_TO:
-			// сначала выйти из TankPit, потом поехать куда послали			
+			// сначала выйти из TankPit, потом поехать куда послали
 			pArtillery->ResetHoldSector();
 			if ( pArtillery->IsInTankPit() && !pCommand->IsFromAI() )
 			{
@@ -273,9 +273,9 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 			}
 			else if ( !pArtillery->CanMove() )
 				pArtillery->SendAcknowledgement( pCommand, ACK_NEGATIVE, !pCommand->IsFromAI() );
-			else 
+			else
 				pResult = CCommonSwarmState::Instance( pArtillery, cmd.vPos, cmd.fNumber );
-			
+
 			break;
 		default:
 			NI_ASSERT( false, "Wrong command" );
@@ -286,7 +286,7 @@ IUnitState* CArtRocketStatesFactory::ProduceState( class CQueueUnit *pObj, CAICo
 
 IUnitState* CArtRocketStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CArtillery*>( pUnit ) != 0, "Wrong unit type" );	
+	NI_ASSERT( dynamic_cast<CArtillery*>( pUnit ) != 0, "Wrong unit type" );
 	CArtillery * pArt = checked_cast<CArtillery*>( pUnit );
 	return CArtilleryRestState::Instance( pArt, CVec2( -1, -1 ), 0, -1 );
 }
@@ -363,7 +363,7 @@ void CArtRocketAttackGroundState::Segment()
 						bSaidNoAmmo = false;
 						if ( bFired )
 						{
-							CBasicGun *pGun = pArtillery->GetFirstArtilleryGun();							
+							CBasicGun *pGun = pArtillery->GetFirstArtilleryGun();
 							CTurret *pTurret = pGun->GetTurret();
 							pTurret->Unlock( pArtillery->GetFirstArtilleryGun() );
 							const int nGuns = pArtillery->GetNGuns();

@@ -10,7 +10,7 @@ class CSortedVector
 	CTElements elements;
 public:
 	void Reserve( const size_t size ) { elements.reserve( size ); }
-	
+
 	void Push( const T& el )
 	{
 		// find first element that TCmp is true for it
@@ -57,7 +57,7 @@ class CHeap
 {
 	TCmp cmp;
 	TWillSwap WillSwap;
-	
+
 	// нумерация элементов от 1!
 	std::vector<T> heap;
 	int nEl = 0;
@@ -65,7 +65,7 @@ class CHeap
 	// перебалансирует, начиная с эл. k и вверх
 	int Balance( int k );
 public:
-	int operator&( IBinSaver &saver );	
+	int operator&( IBinSaver &saver );
 
 	CHeap() : nEl( 0 ), heap( 1 ) { }
 	CHeap( const int nSize ) : heap( nSize + 1 ), nEl( 0 ) { }
@@ -125,7 +125,7 @@ int CHeap<T, TCmp, TWillSwap>::Balance( int k )
 template<class T, class TCmp, class TWillSwap>
 int CHeap<T, TCmp, TWillSwap>::Push( const T& el )
 {
-	heap[++nEl] = el;	
+	heap[++nEl] = el;
 
 	return Balance( nEl );
 }

@@ -163,7 +163,7 @@ void CICLoadBase::Exec()
 
 		CFileStream stream( szPathName, CFileStream::WIN_READ_ONLY );
 		CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_READ_64 );
-		if ( pSaver == 0 ) 
+		if ( pSaver == 0 )
 			return;
 		NMainLoop::Serialize( *pSaver );
 		OnProgress( STG_SERIALIZE_DONE );
@@ -203,7 +203,7 @@ void CICSaveBase::Exec()
 	{
 		CFileStream stream( GetSavePathName( szFileName ), CFileStream::WIN_CREATE );
 		CPtr<IBinSaver> pSaver = CreateSaveLoadSaver( &stream, SAVER_MODE_WRITE_64 );
-		if ( pSaver == 0 ) 
+		if ( pSaver == 0 )
 			return;
 		NMainLoop::Serialize( *pSaver );
 	}

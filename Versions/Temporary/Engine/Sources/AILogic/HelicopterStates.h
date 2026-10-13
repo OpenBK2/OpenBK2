@@ -135,7 +135,7 @@ class CHelicopterAttackUnitState : public CHelicopterBaseState
 public:
 	CHelicopterAttackUnitState() : pTarget( 0 ), pGun( 0 ), bSwarmAttack( false ), bAirModifierApplied( false ) { }
 	CHelicopterAttackUnitState( CHelicopter *pUnit, CAIUnit *pTarget, const bool _bSwarmAttack );
-	
+
 	//virtual ~CHelicopterAttackUnitState();
 	void OnFinish() override;
 

@@ -9,7 +9,7 @@
 enum
 {
 	CONSOLE_STREAM_CONSOLE	= 2,					// feedback to console (just to display)
-	
+
 	CONSOLE_STREAM_DEBUG_WINDOW	= 10,
 	// CONSOLE_STREAM_DEBUG_WINDOW +
 	// +0, +1 - debug windows, scrollable texts

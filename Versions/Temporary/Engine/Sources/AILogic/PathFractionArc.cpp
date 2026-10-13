@@ -30,7 +30,7 @@ CVec3 CPathFractionArc::GetNormale( const float fDist ) const
 
 CVec3 CPathFractionArc::GetPoint( const float fDist ) const
 {
-	//CRAP{ WILL OPTIMIZE 
+	//CRAP{ WILL OPTIMIZE
 	const CVec2 vFromX( x0 );
 	const CVec2 vFromR( vFromX - circle.center );
 	const uint16_t wFrom = GetDirectionByVector( vFromR );

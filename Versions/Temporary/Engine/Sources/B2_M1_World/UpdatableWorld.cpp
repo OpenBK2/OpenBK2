@@ -134,13 +134,13 @@ void CCombatMusic::Update( bool bCombatNotify )
 		return;
 
 	const NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
-	
+
 	if ( bCombatNotify )
 		timeLastCombatNotify = curTime;
 
 	switch ( eState )
 	{
-	case ESSS_IDLE: 
+	case ESSS_IDLE:
 		if ( bCombatNotify )
 		{
 			timeLastCombatNotify = curTime;
@@ -228,7 +228,7 @@ void CUpdatableWorld::InitPrivate()
 	REGISTER_UPDATE( NDb::SEntrenchmentRPGStats, CMOEntrenchmentPart );
 	REGISTER_UPDATE( NDb::SFenceRPGStats, CMOFence );
 
-	// 
+	//
 	InitEverySegmentFunctions();
 	InitUpdateTypeFunctions();
 	AckManager()->Init();
@@ -303,12 +303,12 @@ void CUpdatableWorld::UpdateBasicUpdates()
 {
 	const bool bNoVisual = NGlobal::GetVar( "temp.no_visual_updates", 0 );
 	pAI->PrepareUpdates();
-	while ( CPtr<CObjectBase> pRawUpdate = pAI->GetUpdate() ) 
+	while ( CPtr<CObjectBase> pRawUpdate = pAI->GetUpdate() )
 	{
 		if ( !bNoVisual )
 		{
 			CDynamicCast<SAIBasicUpdate> pUpdate = pRawUpdate;
-		
+
 			if ( pUpdate )
 			{
 				CUpdateType::iterator it = updateType.find( pUpdate->eUpdateType );
@@ -377,7 +377,7 @@ void CUpdatableWorld::InitUpdateTypeFunctions()
 	updateType[ACTION_NOTIFY_INFANTRY_SHOOT]		= &CUpdatableWorld::UpdateInfantryShoot;
 	updateType[ACTION_NOTIFY_UPDATE_DIPLOMACY]	= &CUpdatableWorld::UpdateDiplomacy;
 	updateType[ACTION_NOTIFY_SHOOT_AREA]	      = &CUpdatableWorld::UpdateShootAreas;
-	updateType[ACTION_NOTIFY_RANGE_AREA]	      = &CUpdatableWorld::UpdateRangeAreas;	
+	updateType[ACTION_NOTIFY_RANGE_AREA]	      = &CUpdatableWorld::UpdateRangeAreas;
 
 	updateType[ACTION_NOTIFY_SHOOT_BUILDING]				= &CUpdatableWorld::UpdateShootBuilding;
 	updateType[ACTION_NOTIFY_THROW_BUILDING]				= &CUpdatableWorld::UpdateThrowbuilding;
@@ -421,7 +421,7 @@ void CUpdatableWorld::InitUpdateTypeFunctions()
 	updateType[ACTION_NOTIFY_ANIMATION_CHANGED]			= &CUpdatableWorld::UpdateAnimationChanged;
 
 	updateType[ACTION_NOTIFY_HEADLIGHT]							= &CUpdatableWorld::UpdateSwitchLightFX;
-	
+
 	updateType[ACTION_NOTIFY_MODIFY_ENTRANCE_STATE]		= &CUpdatableWorld::UpdateModifyEntranceState;
 
 	updateType[ACTION_NOTIFY_INSTALL_ROTATE]				= &CUpdatableWorld::UpdateAction;
@@ -461,7 +461,7 @@ void CUpdatableWorld::InitUpdateTypeFunctions()
 	updateType[ACTION_NOTIFY_DISABLE_ACTION] = &CUpdatableWorld::UpdateNotifyDisableAction;
 	updateType[ACTION_NOTIFY_ENABLE_ACTION] = &CUpdatableWorld::UpdateNotifyEnableAction;
 	updateType[ACTION_NOTIFY_PARENT_OF_ATOM_OBJ] = &CUpdatableWorld::UpdateParentOfAtomObj;
-	
+
 	updateType[ACTION_NOTIFY_PLAY_EFFECT] = &CUpdatableWorld::UpdatePlayEffect;
 
 	updateType[ACTION_NOTIFY_UPDATE_STATUS] = &CUpdatableWorld::UpdateStatus;
@@ -556,13 +556,13 @@ void CUpdatableWorld::SendUpdateReinfPoints( int nFactoryID )
 	CReinforcementFactories::iterator pos = reinforcmentFactories.find( nFactoryID );
 	if ( pos != reinforcmentFactories.end() )
 	{
-		CReinforcmentPoints & reinforcmentPoints = pos->second;		
+		CReinforcmentPoints & reinforcmentPoints = pos->second;
 		bool bEnabled = false;
 		float fRecycle = 0.0f;
 		for ( CReinforcmentPoints::iterator it = reinforcmentPoints.begin(); it != reinforcmentPoints.end(); ++it )
 		{
 			CReinforcmentPoint *pPoint = it->second;
-			
+
 			fRecycle = max( fRecycle, pPoint->GetRecycle() );
 			if ( pPoint->IsEnabled() && pPoint->IsEnabledReinf() )
 			{
@@ -635,7 +635,7 @@ void CUpdatableWorld::UpdateSelectable( const SAIBasicUpdate * _pUpdate )
 		return;
 	//		(GetMapObj( checked_cast<const CUpdatableObj*>( pUpdate->pObj.GetPtr() )->GetUniqueId() ));
 	const bool bCanSelect = pUpdate->nParam;
-	if ( pMO->CanSelect() != bCanSelect ) 
+	if ( pMO->CanSelect() != bCanSelect )
 	{
 		if ( !bCanSelect )
 		{
@@ -661,7 +661,7 @@ void CUpdatableWorld::UpdateDeadProjectile( const SAIBasicUpdate * _pUpdate )
 }
 
 void CUpdatableWorld::UpdateDeadUnit( const SAIBasicUpdate * _pUpdate )
-{																					 
+{
 	//SAIDeadUnitUpdate
 	const SAIDeadUnitUpdate *pUpdate( checked_cast<const SAIDeadUnitUpdate*>( _pUpdate ) );
 
@@ -676,12 +676,12 @@ void CUpdatableWorld::UpdateDeadUnit( const SAIBasicUpdate * _pUpdate )
 		if ( pUnit->GetTypeID() == NDb::SInfantryRPGStats::typeID )
 		{
 			// Add to graveyard
-			graveyard[ nUniqueID ] = GameTimer()->GetGameTime() + NGlobal::GetVar( "infantry_corpses_existence", 10 ) * 1000;	
+			graveyard[ nUniqueID ] = GameTimer()->GetGameTime() + NGlobal::GetVar( "infantry_corpses_existence", 10 ) * 1000;
 		}
 	}
 
 	OnDeadOrRemoveMapObj( nUniqueID );
-}	
+}
 
 void CUpdatableWorld::UpdateSpecialAbility( const SAIBasicUpdate * _pUpdate )
 {
@@ -771,7 +771,7 @@ void CUpdatableWorld::UpdateModifyEntranceState( const SAIBasicUpdate *_pUpdate 
 	const SAIModifyEntranceStateUpdate *pUpdate = checked_cast<const SAIModifyEntranceStateUpdate*>( _pUpdate );
 	if ( pUpdate == 0 )
 		return;
-	
+
 	CMapObj *pMO = GetMapObj( pUpdate->nObjUniqueID );
 	IMOContainer *pMOCont = dynamic_cast<IMOContainer*>( pMO );
 	if ( pMOCont )
@@ -795,7 +795,7 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate * _pUpdate )
 	const NDb::SComplexEffect *pComplexEffect = 0;
 	int nVictimUniqueID = -1;
 
-	switch( pUpdate->info.eHitType ) 
+	switch( pUpdate->info.eHitType )
 	{
 	case SAINotifyHitInfo::EHitType::EHT_NONE:
 		//		DebugTrace( "EHT_NONE" );
@@ -846,7 +846,7 @@ void CUpdatableWorld::UpdateHit( const SAIBasicUpdate * _pUpdate )
 	{
 		if ( CMapObj *pUnit = checked_cast<CMapObj*>( GetMapObj( nVictimUniqueID ) ) )
 		{
-			if ( pUnit->GetTypeID() == NDb::SBridgeRPGStats::typeID )				
+			if ( pUnit->GetTypeID() == NDb::SBridgeRPGStats::typeID )
 				// For bridges, show explosion on top
 				PlayComplexEffect( OBJECT_ID_FORGET, pComplexEffect, pUpdate->nUpdateTime, pUpdate->info.explCoord );
 			else
@@ -904,7 +904,7 @@ void CUpdatableWorld::UpdateSilentDeath( const SAIBasicUpdate * _pUpdate )
 	const SAIActionUpdate *pUpdate = checked_cast<const SAIActionUpdate*>( _pUpdate );
 	const int nUniqueID = pUpdate->nObjUniqueID;
 	//	if ( checked_cast<const CUpdatableObj*>( pUpdate->pObj.GetPtr() )->GetObjectID() != -1 )
-	if ( CMapObj *pMO = checked_cast<CMapObj *>(GetMapObj( nUniqueID )) ) 
+	if ( CMapObj *pMO = checked_cast<CMapObj *>(GetMapObj( nUniqueID )) )
 	{
 		Scene()->RemoveAllAttached( pMO->GetID(), ESSOT_DEATH_EFFECTS );
 		const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats *>( pMO->GetStats() );
@@ -917,7 +917,7 @@ void CUpdatableWorld::UpdateSilentDeath( const SAIBasicUpdate * _pUpdate )
 			if ( pStats->pSeasonedEffectDeath )
 				PlayComplexSeasonedEffect( OBJECT_ID_FORGET, pStats->pSeasonedEffectDeath, pUpdate->nUpdateTime, vPos, eSeason );
 			else if ( pStats->pEffectDeath != 0 )
-				PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectDeath, pUpdate->nUpdateTime, vPos );			
+				PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectDeath, pUpdate->nUpdateTime, vPos );
 
 			// change model to death without animation and death effect
 			if ( IMOUnit *pUnit = dynamic_cast<IMOUnit *>( pMO ) )
@@ -1110,7 +1110,7 @@ void CUpdatableWorld::UpdateNotifyFeedback( const SAIBasicUpdate * _pUpdate )
 {
 	typedef SAIFeedbackUpdate T;
 	const T *pUpdate( checked_cast<const T*>( _pUpdate ) );
-	
+
 	OnUpdateNotifyFeedback( pUpdate );
 }
 
@@ -1263,13 +1263,13 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate * _pUpdate )
 	const T *pUpdate( checked_cast<const T*>( _pUpdate ) );
 
 	const int nInfantryUniqueID = pUpdate->info.nInfantryUniqueID;
-	
+
 	CMapObj * pMapObj = GetMapObj( nInfantryUniqueID );
 	if ( !pMapObj )
 		return;
 
 	const int nTargetUniqueID = pUpdate->info.nTargetUniqueID;
-	IMOContainer *pTarget = dynamic_cast<IMOContainer *>(GetMapObj( nTargetUniqueID ));	
+	IMOContainer *pTarget = dynamic_cast<IMOContainer *>(GetMapObj( nTargetUniqueID ));
 	CDynamicCast<CMOUnitInfantry> pInfantry = pMapObj;
 	if ( pTarget )
 	{
@@ -1307,7 +1307,7 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate * _pUpdate )
 				}
 				RemoveFromSelectionGroup( pInfantry );
 //				Scene()->ShowObject( pInfantry->GetID(), false );
-				pInfantry->SetTransport( pTarget );				
+				pInfantry->SetTransport( pTarget );
 			}
 			else
 			{
@@ -1315,7 +1315,7 @@ void CUpdatableWorld::UpdateEntranceState( const SAIBasicUpdate * _pUpdate )
 				pTarget->LoadSquad( pInfantry->GetSquad(), false );
 //				if ( pInfantry->IsVisible() )
 //					Scene()->ShowObject( pInfantry->GetID(), true );
-				pInfantry->SetTransport( 0 );			
+				pInfantry->SetTransport( 0 );
 			}
 			DoUpdateObjectStats( pTarget );
 		}
@@ -1358,20 +1358,20 @@ void CUpdatableWorld::UpdateNewFormation( const SAIBasicUpdate * _pUpdate )
 		Select( pSoilder );
 }
 
-void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate ) 
+void CUpdatableWorld::UpdateSideChanged( const SAIBasicUpdate *_pUpdate )
 {
 	// don't use ScenarioTracker when uncomment this code because tracker doesn't exist in B2_M1_World (shared part )
 	// better to make virtual function and implement it in GameX\WorldClient (specific part)
-	// 
+	//
 	//	const SAIActionUpdate *pUpdate( checked_cast<const SAIActionUpdate*>( _pUpdate ) );
 	// FOR FLAGS ONLY
 	/*
-	//CRAP{ 
+	//CRAP{
 	for ( CPtr<IPlayerScenarioInfoIterator> pIt = GetSingleton<IScenarioTracker>()->CreatePlayerScenarioInfoIterator();
 	!pIt->IsEnd(); pIt->Next() )
 	{
 	IPlayerScenarioInfo *pPlayer = pIt->Get();
-	if ( pPlayer->GetDiplomacySide() == action.nParam ) 
+	if ( pPlayer->GetDiplomacySide() == action.nParam )
 	{
 	IPlayerScenarioInfo *pUserPlayer = GetSingleton<IScenarioTracker>()->GetUserPlayer();
 	string szFlagName = pPlayer->GetGeneralSide();
@@ -1599,27 +1599,27 @@ void CUpdatableWorld::UpdateObjectsUnderConstruction( const SAIBasicUpdate * _pU
 		for( int i = 0; i < pUpdate->buildTiles.size(); ++i )
 			tiles[ i ] = SVector( pUpdate->buildTiles[ i ] );
 
-		if ( nGreenTilesID == -1 ) 
+		if ( nGreenTilesID == -1 )
 			nGreenTilesID = DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_GENERATE, tiles, NDebugInfo::GREEN );
 		else
 			DebugInfoManager()->CreateMarker( nGreenTilesID, tiles, NDebugInfo::GREEN );
-		
+
 		tiles.resize( pUpdate->impossibleToBuildTiles.size() );
 		for( int i = 0; i < pUpdate->impossibleToBuildTiles.size(); ++i )
 			tiles[ i ] = SVector( pUpdate->impossibleToBuildTiles[ i ] );
-		if ( nRedTilesID == -1 ) 
+		if ( nRedTilesID == -1 )
 			nRedTilesID = DebugInfoManager()->CreateMarker( NDebugInfo::OBJECT_ID_GENERATE, tiles, NDebugInfo::RED );
 		else
 			DebugInfoManager()->CreateMarker( nRedTilesID, tiles, NDebugInfo::RED );
 	}
 	else		//Remove markers
 	{
-		if ( nGreenTilesID != -1 ) 
+		if ( nGreenTilesID != -1 )
 		{
 			DebugInfoManager()->DeleteObject( nGreenTilesID );
 			nGreenTilesID = -1;
 		}
-		if ( nRedTilesID != -1 ) 
+		if ( nRedTilesID != -1 )
 		{
 			DebugInfoManager()->DeleteObject( nRedTilesID );
 			nRedTilesID = -1;
@@ -1678,12 +1678,12 @@ void CUpdatableWorld::AfterLoad()
 void CUpdatableWorld::AddMapObj( int nID, CMapObj *pMO )
 {
 	objects[nID] = pMO;
-	
+
 	OnNewMapObj( nID, pMO );
 }
 
 void CUpdatableWorld::RemoveMapObj( int nID, bool bGlobalRemove )
-{ 
+{
 	if ( bGlobalRemove )
 	{
 		Scene()->RemoveObject( nID );
@@ -1730,7 +1730,7 @@ void CUpdatableWorld::GetObjects( std::vector<CMapObj*> *pObjects ) const
 void CUpdatableWorld::CreateNewObject( const int nUniquieID, const int nTypeID, const SAIBasicUpdate *_pUpdate )
 {
 	CNewFuncsMap::iterator pos = newFuncs.find( nTypeID );
-	if ( pos != newFuncs.end() ) 
+	if ( pos != newFuncs.end() )
 	{
 		CMapObj *pMO = 0;
 
@@ -1964,7 +1964,7 @@ void CUpdatableWorld::UpdateParentOfAtomObj( const SAIBasicUpdate *pRawUpdate )
 {
 	CDynamicCast<SParentOfAtomObjectUpdate> pUpdate = pRawUpdate;
 	if ( !pUpdate )
-		return; 
+		return;
 
 	CMapObj *pMO = GetMapObj( pUpdate->nAtomObjectID );
 	if ( pMO )

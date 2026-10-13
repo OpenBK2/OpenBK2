@@ -25,7 +25,7 @@ CCreations creations;
 
 void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate )
 {
-	if ( !pFenceCreation ) 
+	if ( !pFenceCreation )
 		return;
 	pFenceCreation->CreateObjects( pUpdate );
 
@@ -49,7 +49,7 @@ void CComplexObstacleCreation::CreateObjects( SAIObjectsUnderConstructionUpdate 
 				bCanBuildCurrent = false;
 			}
 		}
-		antitanks[i]->GetNewUnitInfo( &pUpdate->objects[nFormerInd + i].info );	
+		antitanks[i]->GetNewUnitInfo( &pUpdate->objects[nFormerInd + i].info );
 		pUpdate->objects[nFormerInd + i].bCanBuild = bCanBuildCurrent;
 	}
 }
@@ -222,9 +222,9 @@ float CComplexObstacleCreation::GetPrice()
 		return SConsts::FENCE_SEGMENT_RU_PRICE;
 }
 
-bool CComplexObstacleCreation::IsCheatPath() const 
+bool CComplexObstacleCreation::IsCheatPath() const
 {
-	return !bTmpNonCheatPath && pFenceCreation->IsCheatPath(); 
+	return !bTmpNonCheatPath && pFenceCreation->IsCheatPath();
 }
 
 bool CComplexObstacleCreation::CannotFinish() const

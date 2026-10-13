@@ -121,11 +121,11 @@ struct IScene : public CObjectBase
 	virtual void ClearScene( const EScene eScene2Clear ) = 0;
 	// set scene light (re-light all scene)
 	virtual void SetLight( const NDb::SAmbientLight *pLight ) = 0;
-	// 
+	//
 	virtual struct ITerraManager *GetTerraManager() = 0;
 	virtual bool DoesTerraManagerExist() const = 0;
 	// add object to scene. returns new ID
-	virtual int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, 
+	virtual int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
 												 const CVec3 &vScale, ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel = 0,
 												 const bool bHasReflection = false ) = 0;
 	virtual int AddObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
@@ -154,7 +154,7 @@ struct IScene : public CObjectBase
 
 	// Attach light FX: to animated (with bone name) and to static objects (without bone name)
 	virtual void AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEffect *pLight, NTimer::STime timeStart, ESceneAttachMode eMode, const bool bInEditor = false, int nHoldID = -1 ) = 0;
-	
+
 	// add effect to scene. returns new ID
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const CVec3 &vPos, const CQuat &qRot ) = 0;
 	virtual int AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime timeStart, const SHMatrix &mPlace ) = 0;
@@ -173,7 +173,7 @@ struct IScene : public CObjectBase
 	virtual void SelectObject( const int nID, const CVec3 &vPos, const float fSelScale, const NDb::ESelectionType eSelType ) = 0;
 	virtual void UnselectObject( const int nID ) = 0;
 	// use nID = -1 for squad selection, use fFadeOutTime = -1.0f for no fade out
-	virtual int AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType, 
+	virtual int AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType,
 		float fFadeInTime, float fFadeOutTime ) = 0;
 	virtual void RemoveSelection( int nID ) = 0;
 	virtual void ClearSelection() = 0;
@@ -181,7 +181,7 @@ struct IScene : public CObjectBase
 	virtual void AddTrack( const int nID, const float fFadingSpeed,
 													const CVec2 &_v1, const CVec2 &_v2, const CVec2 &_v3, const CVec2 &_v4,
 													const CVec2 &vNorm, const float _fWidth, const float fAplha ) = 0;
-	// Weather 
+	// Weather
 	virtual void SwitchWeather( bool bActive, NTimer::STime timeLength ) = 0;
 	// traces operations
 	virtual void AddShotTrace( const CVec3 &vStart, const CVec3 &vEnd, NTimer::STime timeStart, const NDb::SWeaponRPGStats::SShell *pShell ) = 0;

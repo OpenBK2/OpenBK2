@@ -148,7 +148,7 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 		pParentState->pStoreInputState->OnMouseMove( nFlags, rMousePoint );
 		CVSOMultiState::SEditParameters *pEditParameters = pParentState->pParentState->GetEditParameters();
 		if ( ( nFlags & MK_LBUTTON ) &&
-				pParentState->currentSelection.IsValid() && 
+				pParentState->currentSelection.IsValid() &&
 				pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
 			NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
@@ -172,7 +172,7 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 					case CVSOMultiState::SEditParameters::PN_SINGLE:
 					default:
 					{
-						pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos - 
+						pSelectedVSO->controlPoints[pParentState->currentSelection.nIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
 																																									pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						break;
 					}
@@ -318,7 +318,7 @@ void CVSOEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoin
 			return;
 		}
 		else if ( ( nFlags & MK_RBUTTON ) &&
-							pParentState->currentSelection.IsValid() && 
+							pParentState->currentSelection.IsValid() &&
 							pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_RBUTTONDOWN].IsValid() )
 		{
 			if ( pParentState->currentSelection.IsNormalePointType() )
@@ -444,14 +444,14 @@ void CVSOEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePo
 		{
 			bool bOldVSONotPresent = true;
 			for ( int nSelectedVSOIndex = 0; nSelectedVSOIndex < pParentState->pickVSOIDList.size(); ++nSelectedVSOIndex )
-			{					
+			{
 				if ( nSelectedVSOID == pParentState->pickVSOIDList[nSelectedVSOIndex] )
 				{
 					pParentState->nSelectedIndex = nSelectedVSOIndex;
 					bOldVSONotPresent = false;
 					break;
 				}
-			}	
+			}
 			// Выделяем другой - первый обьект
 			if ( bOldVSONotPresent )
 			{
@@ -631,9 +631,9 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 	{
 		pParentState->pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
 		CVSOMultiState::SEditParameters *pEditParameters = pParentState->pParentState->GetEditParameters();
-		if ( nChar == VK_INSERT ) 
+		if ( nChar == VK_INSERT )
 		{
-			if ( pParentState->currentSelection.IsValid() && 
+			if ( pParentState->currentSelection.IsValid() &&
 					pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 			{
 				NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
@@ -705,7 +705,7 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 				}
 			}
 		}
-		else if ( nChar == VK_DELETE ) 
+		else if ( nChar == VK_DELETE )
 		{
 			NDb::SVSOInstance *pSelectedVSO = pParentState->GetVSO( pParentState->GetSelectedVSOID(), 0 );
 			if ( pSelectedVSO == 0 )
@@ -752,7 +752,7 @@ void CVSOEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags
 			pParentState->UpdateVSO( pParentState->GetSelectedVSOID(), ( nChar != VK_ESCAPE ) ? CVSOState::UT_FINISH : CVSOState::UT_CANCEL, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 			//
 			DebugTrace( "CVSOEditState::OnKeyDown(): pParentState->UpdateVSO(): %g", NHPTimer::GetTimePassed( &time ) );
-			//			
+			//
 			pParentState->ClearPickVSOIDList();
 			//
 			pParentState->SetActiveInputState( CVSOState::IS_SELECT, true, false );
@@ -1017,7 +1017,7 @@ void CVSOState::RemoveSelectedVSO()
 	if ( CanEdit() )
 	{
 		CVSOMultiState::SEditParameters *pEditParameters = pParentState->GetEditParameters();
-		if ( currentSelection.IsValid() && 
+		if ( currentSelection.IsValid() &&
 				pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
 			NDb::SVSOInstance *pSelectedVSO = GetVSO( GetSelectedVSOID(), 0 );
@@ -1065,7 +1065,7 @@ void CVSOState::RemoveSelectedVSO()
 														 IsComplete() );
 				UpdateVSO( GetSelectedVSOID(), CVSOState::UT_CHANGE_POINT_NUMBER, CVSOManager::SVSOSelection::ST_UNKNOWN, 0 );
 				currentSelection.Invalidate();
-				//					
+				//
 				Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 			}
 			return;
@@ -1096,13 +1096,13 @@ void CVSOState::RemoveSelectedVSO()
 
 
 CMapInfoEditor* CVSOState::GetMapInfoEditor()
-{ 
+{
 	return pParentState->pMapInfoEditor;
 }
 
 
 bool CVSOState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos )
-{ 
+{
 	return pParentState->PickOtherVSO( nFlags, rMousePoint, rvPos );
 }
 
@@ -1139,7 +1139,7 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			int nMaxCount = INVALID_NODE_ID;
 			GetControlPointBounds( &nMinCount, &nMaxCount );
 			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
-			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) && 
+			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) &&
 					( pVSO->controlPoints.size() > 1 ) )
 			{
 				if ( ( pVSO->controlPoints.size() > 3 ) && ( IsEdgesMustBeOut() ) )
@@ -1171,7 +1171,7 @@ void CVSOState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 void CVSOState::Draw( IPaintContext *pPaintDC )
 {
 	if ( CanEdit() )
-	{	
+	{
 		CVSOManager::SVSODrawParams drawParams;
 
 		drawParams.pScene = EditorScene();
@@ -1182,7 +1182,7 @@ void CVSOState::Draw( IPaintContext *pPaintDC )
 
 		if ( ( GetActiveInputStateIndex() == IS_SELECT ) || ( GetActiveInputStateIndex() == IS_EDIT ) )
 		{
-			drawParams.pSelectedVSO = GetVSO( GetSelectedVSOID(), 0 ); 
+			drawParams.pSelectedVSO = GetVSO( GetSelectedVSOID(), 0 );
 		}
 		else
 		{
@@ -1200,10 +1200,10 @@ void CVSOState::Draw( IPaintContext *pPaintDC )
 		//
 		switch ( GetActiveInputStateIndex() )
 		{
-		case IS_SELECT: 
+		case IS_SELECT:
 			drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_SELECT;
 			break;
-		case IS_EDIT: 
+		case IS_EDIT:
 			drawParams.eDrawer = CVSOManager::SVSODrawParams::VSO_IS_EDIT;
 			break;
 		case IS_ADD:
@@ -1229,7 +1229,7 @@ void CVSOState::Draw( IPaintContext *pPaintDC )
 	//		std::vector<CVec3> hole;
 	//		pTerraManager->GetHoleSamples( &hole );
 	//	}
-	//}	
+	//}
 }
 
 
@@ -1288,7 +1288,7 @@ bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChec
 			return true;
 		case ID_SELECTION_CLEAR:
 		{
-			if ( currentSelection.IsValid() && 
+			if ( currentSelection.IsValid() &&
 					pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 			{
 				( *pbEnable ) = true;
@@ -1308,6 +1308,6 @@ bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChec
 }
 
 
-// basement storage  
+// basement storage
 
 

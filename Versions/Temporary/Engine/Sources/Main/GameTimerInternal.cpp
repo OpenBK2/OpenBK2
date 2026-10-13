@@ -108,17 +108,17 @@ bool CGameTimer::NextSegment()
 
 void CGameTimer::ProcessPause( const bool bPause, const int nType )
 {
-	if ( bPause ) 
+	if ( bPause )
 	{
 		int nPrevPauseType = -1;
 		// check for existed pause or insert new one
 		for ( CPauseTypes::iterator it = pauseTypes.begin(); it != pauseTypes.end(); ++it )
 		{
 			// check for exact match
-			if ( *it == nType ) 
+			if ( *it == nType )
 				return;
 			// check for interval
-			if ( (*it > nType) && (nPrevPauseType < nType) ) 
+			if ( (*it > nType) && (nPrevPauseType < nType) )
 			{
 				pauseTypes.insert( it, nType );
 				return;
@@ -133,7 +133,7 @@ void CGameTimer::ProcessPause( const bool bPause, const int nType )
 	{
 		for ( CPauseTypes::iterator it = pauseTypes.begin(); it != pauseTypes.end(); ++it )
 		{
-			if ( *it == nType ) 
+			if ( *it == nType )
 			{
 				pauseTypes.erase( it );
 				return;
@@ -157,7 +157,7 @@ bool CGameTimer::HasPause( const int nType ) const
 {
 	for ( CPauseTypes::const_iterator it = pauseTypes.begin(); it != pauseTypes.end(); ++it )
 	{
-		if ( *it == nType ) 
+		if ( *it == nType )
 			return true;
 	}
 	return false;

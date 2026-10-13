@@ -38,7 +38,7 @@ public:
 };
 
 class CVisitZClearRectCmd : public IUIVisitorCmd
-{ 
+{
 	OBJECT_NOCOPY_METHODS( CVisitZClearRectCmd )
 	//
 	CRectLayout sLayout;
@@ -85,9 +85,9 @@ class CVisitUIRect2Cmd : public IUIVisitorCmd
 	CTRect<float> rectTexture;
 public:
 	CVisitUIRect2Cmd() {}
-	CVisitUIRect2Cmd( const NDb::STexture *_pTexture, const int _nShadingEffect, 
+	CVisitUIRect2Cmd( const NDb::STexture *_pTexture, const int _nShadingEffect,
 		const CVec2 *_pPos4, const NGfx::SPixel8888 *_pColors4, const CTRect<float> &_rectTexture )
-		: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rectTexture( _rectTexture ) 
+		: pTexture( _pTexture ), nShadingEffect( _nShadingEffect ), rectTexture( _rectTexture )
 	{
 		memcpy( pPos4, _pPos4, 4 * sizeof(pPos4[0]) );
 		memcpy( pColors4, _pColors4, 4 * sizeof(pColors4[0]) );
@@ -182,7 +182,7 @@ class CUIVisitor : public IUIVisitor
 public:
 	CUIVisitor() : rcClip(0, 0, 1024, 768 ), bClipApplied( false ), bLowerLevel( true ) { }
 	CUIVisitor( NGScene::I2DGameView *p2D ): bLowerLevel( true )
-	{ 
+	{
 		SetGView( p2D );
 	}
 	void ClearCommandsList() { upperLevelCommands.clear(); }
@@ -191,7 +191,7 @@ public:
 	void FlushUpperLevelData()
 	{
 		bool bStoredLowerLevel = bLowerLevel;
-		bLowerLevel = true; 
+		bLowerLevel = true;
 		//
 		for ( CCommandsList::iterator it = upperLevelCommands.begin(); it != upperLevelCommands.end(); ++it )
 			(*it)->Visit( this );
@@ -200,7 +200,7 @@ public:
 		bLowerLevel = bStoredLowerLevel;
 	}
 	//
-	void SetGView( NGScene::I2DGameView *_p2D ) 
+	void SetGView( NGScene::I2DGameView *_p2D )
 	{
 		const CVec2 vScreenSize( _p2D->GetViewportSize() );
 		pGFX = _p2D;
@@ -240,7 +240,7 @@ public:
 		pGFX->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0,0 ), rcClip );
 	}
 	//
-	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, 
+	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 	{
 		if ( !bLowerLevel )

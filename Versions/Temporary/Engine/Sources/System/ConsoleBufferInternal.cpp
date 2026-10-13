@@ -39,7 +39,7 @@ static std::wstring EraseTags( const std::wstring &szStr )
 
 void CConsoleBuffer::WriteASCII( const int nStreamID, const char *pszString, const uint32_t color, const bool bPersistentMsg )
 {
-	if ( pszString == 0 ) 
+	if ( pszString == 0 )
 		return;
 	Write( nStreamID, NStr::ToUnicode( pszString ), color, bPersistentMsg );
 }

@@ -16,7 +16,7 @@
 class CEntrenchmentDesignTool
 {
 public:
-	enum ESegType 
+	enum ESegType
 	{
 		ST_TERMINATOR	= 0,	// терминатор
 		ST_LINE				= 1,	// линейный сегмент
@@ -31,12 +31,12 @@ private:
 
 	float fArcDeltaAngle;									// половина острого угла конуса в модели Arc
 	CVec3 segAABBSizes[ST_COUNT];					// размеры соответствующих типов сегментов
-	CVec2 segAABBCentr[ST_COUNT];					// центры соответствующих типов сегментов 
+	CVec2 segAABBCentr[ST_COUNT];					// центры соответствующих типов сегментов
 	///
 	bool bComplete;										// окоп завершен (оба терминатора поставлены)
 	///
 	CVec3 vStartPos;									// позиция стартового терминатора
-	float fStartDir;									// направление стартового терминатора 	
+	float fStartDir;									// направление стартового терминатора
 	std::vector<ESegType> segments;				// типы сегментов составляющие окоп
 	int nLock;												// блок (все сегменты с индексом <= блока считаются нередактируемыми)
 	///
@@ -72,7 +72,7 @@ public:
 //
 //
 //
-//						ENTRENCHMENT STATE 
+//						ENTRENCHMENT STATE
 //
 //
 //
@@ -87,13 +87,13 @@ class CEntrenchmentState : public CMapObjectState
 	///
 	/// выбранный для постановки окоп
 	struct SSelectedEntrenchmentInfo
-	{ 
+	{
 		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats;
 		//
 		SSelectedEntrenchmentInfo() : pEntrenchmentRPGStats( 0 ) {}
-	};	
+	};
 	SSelectedEntrenchmentInfo selectedEntrenchmentInfo;
 	void RefreshSelectedEntrenchmentInfo();
 	///

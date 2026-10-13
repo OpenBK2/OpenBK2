@@ -26,10 +26,10 @@ void CFreeIds::Return( const int id )
 	if ( givenIDs.find( id ) != givenIDs.end() )
 	{
 //		NI_ASSERT_T( id < nexts.size(), NStr::Format( "Wrong id was given (%d)", id ) );
-		
+
 		nexts[id] = firstEl;
 		firstEl = id;
-		
+
 		givenIDs.erase( id );
 	}
 }

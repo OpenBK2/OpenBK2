@@ -16,11 +16,11 @@ struct COMMON_RTS_AI_EXPORT SAIAngle
 		int allign = 0;
 	};
 
-	SAIAngle() 
-		: allign( 0 )		
+	SAIAngle()
+		: allign( 0 )
 	{
 	}
-	SAIAngle( int _wAngle ) 
+	SAIAngle( int _wAngle )
 		: allign( 0 )
 	{
 		wAngle = _wAngle;

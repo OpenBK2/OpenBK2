@@ -8,7 +8,7 @@ class CExecutorThrowGrenade : public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorThrowGrenade)
 		ZDATA_(CExecutor)
-	CPtr<CAIUnit> pUnit;  
+	CPtr<CAIUnit> pUnit;
 	SAbilitySwitchState state;
 	SAbilitySwitchState secondaryState;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.

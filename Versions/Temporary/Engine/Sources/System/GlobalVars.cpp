@@ -79,7 +79,7 @@ namespace NGlobal
 
 struct SRecord
 {
-	void *pContext; 
+	void *pContext;
 	CmdHandler pCmdHandler;
 	VarHandler pVarHandler;
 	int nUniqueID;
@@ -267,7 +267,7 @@ void ProcessCommand( const std::wstring &wsCommandStr )
 	// remove empty strings
 	for ( std::vector<std::wstring>::iterator it = wordsSet.begin(); it != wordsSet.end(); )
 	{
-		if ( it->empty() ) 
+		if ( it->empty() )
 			it = wordsSet.erase( it );
 		else if ( it->compare(0, 2, L"//") == 0 )
 		{
@@ -382,9 +382,9 @@ struct SSaveRecord
 };
 struct SSaveRecordSort
 {
-	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const 
-	{ 
-		return s1.szName < s2.szName; 
+	bool operator()( const SSaveRecord &s1, const SSaveRecord &s2 ) const
+	{
+		return s1.szName < s2.szName;
 	}
 };
 static void SaveConfig( const std::string &szFileName, EStorageClass storage )
@@ -474,7 +474,7 @@ static void SplitString( const std::wstring &szCmd, std::vector<std::wstring> *p
 				std::wstring szRes = szCmd.substr( nLastPos, i - nLastPos );
 				if ( !szRes.empty() )
 					params.push_back( szRes );
-				nLastPos = i + 1; 
+				nLastPos = i + 1;
 			}
 		}
 		else if ( c == stackBrackets.back() )
@@ -537,7 +537,7 @@ static void CmdSetVar( const std::string &szID, const std::vector<std::wstring> 
 {
 	if ( paramsSet.size() < 3 )
 	{
-		csSystem << "usage: " << szID << " 'name' = 'value'" << endl;		
+		csSystem << "usage: " << szID << " 'name' = 'value'" << endl;
 		return;
 	}
 
@@ -556,7 +556,7 @@ static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &
 {
 	if ( paramsSet.size() < 3 )
 	{
-		csSystem << "usage: " << szID << " 'name' = 'aliased command'" << endl;		
+		csSystem << "usage: " << szID << " 'name' = 'aliased command'" << endl;
 		return;
 	}
 	if ( paramsSet[1].compare( L"=" ) != 0 )
@@ -568,7 +568,7 @@ static void CmdAlias( const std::string &szID, const std::vector<std::wstring> &
 		wszCommand = wszCommand + L" " + paramsSet[i];
 	//
 	if ( AddAlias( szAliasName, wszCommand ) == false )
-		csSystem << "alias " << szAliasName << " already exist!" << endl;		
+		csSystem << "alias " << szAliasName << " already exist!" << endl;
 }
 
 }

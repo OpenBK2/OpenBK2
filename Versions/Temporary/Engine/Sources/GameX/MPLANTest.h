@@ -7,7 +7,7 @@ class CLANTester : public CObjectBase
 	ZONSERIALIZE
 public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); return 0; }
-private:	
+private:
 	void OnSerialize( IBinSaver &f )
 	{
 		NI_ASSERT( false, "CLANTester should not be serialized!" )

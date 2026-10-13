@@ -21,23 +21,23 @@ class CStatisticsCollector : public IStatisticsCollector
 	void DumpToNameValueVectorsSpecific( std::vector<std::string> *pNames, std::vector<float> *pValues );
 public:
 	CStatisticsCollector() {}
-	CStatisticsCollector( const std::string &szCollectorName ) : szSpecificName( szCollectorName ) 
+	CStatisticsCollector( const std::string &szCollectorName ) : szSpecificName( szCollectorName )
 	{
-		collectors[szCollectorName] = this; 
-		nStartTime = GetLongTickCount(); 
-	} 
+		collectors[szCollectorName] = this;
+		nStartTime = GetLongTickCount();
+	}
 	virtual void SetSpecific( const std::string &szName, IStatisticsData* pData ) { specificData[szName] = pData; }
-	virtual IStatisticsData* operator[]( const std::string &szName ) 
+	virtual IStatisticsData* operator[]( const std::string &szName )
 	{
-		NI_ASSERT( specificData.find( szName ) != specificData.end(), 
+		NI_ASSERT( specificData.find( szName ) != specificData.end(),
 			fmt::format( "Statistics counter {} for collector {} is not set", szName, szSpecificName ) )
-		return specificData[szName]; 
+		return specificData[szName];
 	}
 	static IStatisticsData* GetGlobal( const std::string &szName )
-	{ 
-		NI_ASSERT( globalData.find( szName ) != globalData.end(), 
+	{
+		NI_ASSERT( globalData.find( szName ) != globalData.end(),
 			fmt::format( "Global statistics counter {} is not set", szName ) );
-		return globalData[szName]; 
+		return globalData[szName];
 	}
 	static void SetGlobal( const std::string &szName, IStatisticsData* pData ) { globalData[szName] = pData; }
 	static void Reset();
@@ -101,7 +101,7 @@ namespace NStatistics
 	IStatisticsData * CreateAverageValuePerTimeCounter() { return new CAverageValuePerTime(); }
 	IStatisticsData * CreateAverageValueCounter() { return new CAverageValue(); }
 	IStatisticsData * CreateEventsCounter() { return new CEventsCount(); }
-	IStatisticsData* GetGlobal( const std::string &szName ) { return CStatisticsCollector::GetGlobal( szName ); } 
+	IStatisticsData* GetGlobal( const std::string &szName ) { return CStatisticsCollector::GetGlobal( szName ); }
 	void Reset() { CStatisticsCollector::Reset(); }
 	std::string DumpToString() { return CStatisticsCollector::DumpToString(); }
 	void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues ) { CStatisticsCollector::DumpToNameValueVectors( pNames, pValues ); }

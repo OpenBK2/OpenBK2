@@ -6,7 +6,7 @@
 class CObjectRPGStatsExporter : public CObjectBaseRPGStatsExporter
 {
 	OBJECT_NOCOPY_METHODS( CObjectRPGStatsExporter );
-	
+
 	CObjectRPGStatsExporter() {}
 protected:
 	bool NeedCreatePassability() { return true; }

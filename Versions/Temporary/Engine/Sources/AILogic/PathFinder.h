@@ -9,15 +9,15 @@ struct IStaticPathFinder : public CAIObjectBase
 	virtual void SetPathParameters( const int nBoundTileRadius, const uint8_t aiClass, struct IPointChecking *pChecking, const CVec2 &startPoint, const CVec2 &finishPoint, const int upperLimit, const bool longPath, const SVector &lastKnownGoodTile ) = 0;
 
 	// поиск пути без каких-либо улучшений
-	virtual bool CalculatePath() = 0;	
+	virtual bool CalculatePath() = 0;
 	// поиск пути в точку без циклов
 	virtual void CalculatePathWOCycles() = 0;
 	virtual void SmoothPath() = 0;
-	
+
 	virtual const int GetPathLength()	const	= 0;
 	virtual const SVector GetStopTile( int n ) const = 0;
 	virtual const void GetStopTiles( void *buf, int len ) const = 0;
-	
+
 	virtual const SVector GetStartTile() const = 0;
 	virtual const SVector GetFinishTile() const = 0;
 };

@@ -22,7 +22,7 @@ namespace NDebugInfo
 		WHITE,
 	};
 
-	struct SArrowHead 
+	struct SArrowHead
 	{
 		CVec3 vPosition;
 		float fWidth = 0.0f;
@@ -42,7 +42,7 @@ struct IDebugInfoManager : public CObjectBase
 	virtual int CreateCircle( const int nID, const CCircle &circle, const NDebugInfo::EColor eColor ) = 0;
 	virtual int CreateSegment( const int nID, const CSegment &segment, const int nThickness, const NDebugInfo::EColor eColor ) = 0;
 	virtual void DeleteObject( const int nID ) = 0;
-	
+
 	//возвращает последовательно цвета: Красный, Синий, Зеленый, Красный ...
 	virtual NDebugInfo::EColor GetCycleColor() = 0;
 

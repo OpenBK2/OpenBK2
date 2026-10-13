@@ -32,7 +32,7 @@ class CAIUnit: public CCommonUnit
 
 	// половина угла обзора
 	SAIAngle wVisionAngle;
-	
+
 	//RPG stats
 	float fHitPoints = {};
 
@@ -40,7 +40,7 @@ class CAIUnit: public CCommonUnit
 	CObj<struct IAnimUnit> pAnimUnit;
 
 	//окоп, в котором этот юнит тусуется
-	CObj<CExistingObject> pTankPit; 
+	CObj<CExistingObject> pTankPit;
 	bool bVirtualTankPit = {};									// unit cannot move like it is in tankpit, but don't have bonuses
 	bool bIsInTankPit = {};
 	NTimer::STime camouflateTime = {};
@@ -57,9 +57,9 @@ class CAIUnit: public CCommonUnit
 
 	bool bFreeEnemySearch = {};
 	NTimer::STime creationTime = {};
-	
+
 	bool bAlwaysVisible = {};
-	
+
 	bool bRevealed = {};
 	bool bQueredToReveal = {};
 	NTimer::STime nextRevealCheck = {};
@@ -67,9 +67,9 @@ class CAIUnit: public CCommonUnit
 	NTimer::STime timeOfReveal = {};
 	int nVisIndexInUnits = {};
 	float fCamoflage = {};
-	
+
 	uint32_t dwForbiddenGuns = {};									// some guns will be excluded from auto attack
-	
+
 	bool bHoldingSector = {};
 	bool bTargetingTrack = {};
 	NDb::EReinforcementType eReinforcementType = {};
@@ -108,7 +108,7 @@ private:
 	void InitAbility( const NDb::EUnitSpecialAbility nAbility );
 	void UpdateUnitProfile();
 	uint8_t AnalyzeTargetScanInternal( CAIUnit *pCurTarget, const bool bDamageUpdated, const bool bScanForObstacles, CObjectBase *pCheckBuilding, const bool bOnlyShootWithoutMoving );
-	bool LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun, 
+	bool LookForTargetInRange(  CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun,
 		const float fRange, const bool bIteratePlanes, const bool bIterateBuildings );
 	void SetTargetScanRandom();
 	const bool AttackTarget( CAIUnit *pTarget, CAIUnit *pCurTarget );
@@ -119,7 +119,7 @@ protected:
 
 	// необходимые действия перед смертью/исчезновением с карты
 	void DieTrain( const float fDamage );
-	
+
 	virtual void InitGuns() = 0;
 	void Init( const CVec2 &center, const int z, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector );
 
@@ -188,14 +188,14 @@ public:
 
 	// CBasePathUnit
 	virtual const float GetTurnSpeed() const;
-	virtual const float GetMaxPossibleSpeed() const 
-	{ 
+	virtual const float GetMaxPossibleSpeed() const
+	{
 		float speed = GetStatsModifier()->speed.Get(GetStats()->fSpeed);
 		if (!IsGoForward() && CanGoBackward() && IsMech())
 			speed *= GetStats()->fReverseSpeedModifier;
 		return speed;
 
-		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed ); 
+		//return GetStatsModifier()->speed.Get( GetStats()->fSpeed );
 	}
 	// Group forward move should use the "forward cap" and ignore temporary reverse-direction state.
 	virtual const float GetMaxPossibleForwardSpeed() const { return GetStatsModifier()->speed.Get(GetStats()->fSpeed); }
@@ -234,7 +234,7 @@ public:
 	virtual bool IsSavedByCover() const;
 
 	virtual class CTurret* GetTurret( const int nTurret ) const { NI_ASSERT( false, "Wrong call of get turret" ); return 0; }
-	
+
 	// для стрельбы
 	virtual void GetShotInfo( struct SAINotifyInfantryShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const { NI_ASSERT( false, "Wrong call of GetShotInfo" ); }
@@ -249,7 +249,7 @@ public:
 	virtual const bool CanMoveCritical() const;
 	// может ли повернуться в принципе (может быть, понадобиться деинсталляция)
 	virtual const bool CanRotate() const;
-	
+
 	virtual void SetCamoulfage();
 	const float GetCamouflage() const;
 	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason );
@@ -264,7 +264,7 @@ public:
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
 	virtual bool CanCommandBeExecutedByStats( class CAICommand *pCommand );
 	virtual bool CanCommandBeExecutedByStats( int nCmd ) const;
-	
+
 	virtual const uint8_t GetPlayer() const { return player; }
 	// сменить дипломатию с корректным update в units
 	virtual void ChangePlayer( const uint8_t cPlayer );
@@ -275,7 +275,7 @@ public:
 	virtual const float GetSightRadius() const;
 	float GetRemissiveCoeff() const;
 	virtual const int GetNAIGroup() const { return GetNGroup(); }
-	
+
 	virtual const NTimer::STime GetTimeToCamouflage() const;
 	virtual void AnalyzeCamouflage();
 	virtual void StartCamouflating();
@@ -291,19 +291,19 @@ public:
 	virtual const float GetRelaxTimeBonus() const { return 1.0f; }
 	virtual const float GetFireRateBonus() const { return 1.0f; }
 	virtual const float GetAimTimeBonus() const;
-	
+
 	virtual void SetAmbush();
 	virtual void RemoveAmbush();
-	
+
 	virtual void GetFogInfo( struct SWarFogUnitInfo *pInfo ) const;
 	virtual void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const;
 	virtual void WarFogChanged();
 
 	// update изображения shoot area или range area
 	virtual void UpdateArea( const EActionNotify eAction );
-	
+
 	virtual const EAIClasses GetAIPassabilityClass() const { return (EAIClasses)GetStats()->nAIPassabilityClass; }
-	
+
 	// патроны
 	const int GetNCommonGuns() const;
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
@@ -314,41 +314,41 @@ public:
 	virtual bool IsCommonGunFiring( const int nCommonGun ) const;
 
 	virtual const float GetSmoothTurnThreshold() const { return 0.3f; }
-	
+
 	// заметен ли юнитом pUnit, радиус обнаружения fNoticeRadius
 	virtual bool IsNoticableByUnit( class CCommonUnit *pUnit, const float fNoticeRadius );
-	
+
 	const int ChooseFatality( const float fDamage, NDb::EAnimationType *pDeathAnimType );
-	
+
 	void NullCollisions();
 
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 	// ack для команды pCommand
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
-	
+
 	// коллизится ли с движущимися объектами
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
-	
+
 	virtual const int GetMinArmor() const;
 	virtual const int GetMaxArmor() const;
 	virtual const int GetMinPossibleArmor( const int nSide ) const;
 	virtual const int GetMaxPossibleArmor( const int nSide ) const;
 	virtual const int GetArmor( const int nSide ) const;
 	virtual const int GetRandomArmor( const int nSide ) const;
-	
+
 	//CRAP{ until SuspendedPoint unrealized in new Pathfinding
 	virtual bool HasSuspendedPoint() const { return false; }
 	//CRAP}
-  
+
 	//for bored condition
 	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType );
 	virtual void RegisterAsBored( const enum EUnitAckType eBoredType );
-	
-	virtual class CUnitGuns* GetGuns() = 0;	
+
+	virtual class CUnitGuns* GetGuns() = 0;
 	virtual const class CUnitGuns* GetGuns() const = 0;
 	virtual EUnitAckType GetGunsRejectReason() const;
 	bool DoesExistRejectGunsReason( const EUnitAckType &ackType ) const;
-	
+
 	// целеразрешение
 	// скорость убийства юнита с pStats из pGun
 	const float GetKillSpeed( const SHPObjectRPGStats *pStats, const CVec2 &vCenter, CBasicGun *pGun ) const;
@@ -361,7 +361,7 @@ public:
 	virtual const float GetKillSpeed( CAIUnit *pEnemy, const uint32_t dwGuns ) const;
 	void UpdateTakenDamagePower( const float fUpdate );
 	const float GetTakenDamagePower() const { return fTakenDamagePower; }
-	
+
 	// обнулить время для периодов сканирования
 	virtual void ResetTargetScan();
 	// просканировать, если пора; если нашли цель, то атаковать
@@ -391,7 +391,7 @@ public:
 	virtual const float GetTimeToForget() const;
 	CAIUnitInfoForGeneral* GetUnitInfoForGeneral() const;
 	void SetLastVisibleTime( const NTimer::STime time );
-	
+
 	// радиус, в котром сканируются цели
 	virtual const float GetTargetScanRadius();
 	// юнит находиться в свободном поиске целей
@@ -399,18 +399,18 @@ public:
 
 	// количество сегментнов, прошедшее с прошлого вызова SecondSegment
 	virtual const float GetPathSegmentsPeriod() const { return 1.0f; }
-	
+
 	virtual float GetPriceMax() const;
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
-	
+
 	virtual const NTimer::STime GetBehUpdateDuration() const;
-	
+
 	// killed: this unit + all units inside
 	virtual void SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType );
 
 //	const SAIExpLevel::SLevel& GetExpLevel() const;
-	
+
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
 	//для посылки генералу информации о видимых врагах, а также посылки update о видимости юнита
@@ -418,20 +418,20 @@ public:
 	// клиент зависима!
 	virtual const bool IsVisibleByPlayer();
 	bool CalculateUnitVisibility4PartyInner( const uint8_t party ) const;
-	
+
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun );
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
 	virtual void Unlock( const CBasicGun *pGun );
 	// залокан ли каким-либо gun-ом, не равным pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const;
-	
+
 	// смена текущего типа патронов.
 	void SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType );
 
 	// for planes
 	//void InitAviationPath();
-	
+
 	virtual void InstallAction( const EActionNotify eInstallAction, bool bAlreadyDone = false ) { }
 	virtual bool IsUninstalled() const { return true; }
 	virtual bool IsInstalled() const { return true; }
@@ -447,12 +447,12 @@ public:
 
 	void WantedToReveal( CAIUnit *pWhoRevealed );
 	bool IsRevealed() const;
-	
+
 	virtual const bool IsInfantry() const;
 	virtual bool IsHelicopter() const { return false; }
 	// обстрелян юнитом pUnit
 	virtual void Grazed( CAIUnit *pUnit ) { }
-	
+
 	void NullCreationTime() { creationTime = 0; }
 
 	const int GetNVisIndexInUnits() const { return nVisIndexInUnits; }
@@ -460,11 +460,11 @@ public:
 
 	virtual bool CanMoveAfterUserCommand() const;
 	virtual void NotifyAbilityRun( class CAICommand * pCommand );
-	
+
 	bool IsHoldingSector() const { return bHoldingSector; }
 	void SetHoldSector();
 	void ResetHoldSector();
-	
+
 	void SetTrackTargeting( bool bOn );
 	bool IsTargetingTrack() const { return bTargetingTrack; }
 
@@ -479,7 +479,7 @@ public:
 	const int GetXPLevel();
 	const int GetAbilityLevel();					// Introduced for leaders
 	/*
-	void SetAbilityLevel( const int _nLevel ) { nAbilityLevel = _nLevel; }  
+	void SetAbilityLevel( const int _nLevel ) { nAbilityLevel = _nLevel; }
 	void ResetAbilityLevel() { SetAbilityLevel( -1 ); }
 	*/
 
@@ -511,4 +511,4 @@ public:
 	void CheckAmmoStatus();
 };
 
- 
+

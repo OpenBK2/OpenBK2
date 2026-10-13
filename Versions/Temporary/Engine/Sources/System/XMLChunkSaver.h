@@ -48,7 +48,7 @@ class CXMLChunkSaver : public IXmlSaver
 	//
 	void PushReadChunkLevel( const NXml::CXmlNode *pNode );
 	void PopReadChunkLevel();
-	
+
 	bool StartChunk( const chunk_id idChunk, int nChunkNumber );
 	void FinishChunk();
 	int CountChunks();
@@ -82,8 +82,8 @@ class CXMLChunkSaver : public IXmlSaver
 
 	CXMLChunkSaver() {  }
 public:
-	CXMLChunkSaver( CDataStream *pStream, bool bRead ) 
-	{ 
+	CXMLChunkSaver( CDataStream *pStream, bool bRead )
+	{
 		NI_ASSERT( pStream != 0, "" );
 		Start( pStream, bRead );
 	}

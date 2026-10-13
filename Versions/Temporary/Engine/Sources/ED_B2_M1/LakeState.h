@@ -10,7 +10,7 @@ class CLakeState : public CVSOStateEx
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	//конструкторы и операторы присваивания
 	CLakeState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
 	{

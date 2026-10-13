@@ -10,9 +10,9 @@ void CTracer::InitProjection( const CVec3 &_ptOrigin, const CVec3 &_ptDir )
 	CVec3 v = _ptDir, vAxis1, vAxis2;
 	ASSERT( fabs2( v ) > 0 );
 	if ( fabs(v.x) > fabs(v.y) && fabs(v.x) > fabs( v.z ) )
-		vAxis1 = v ^ CVec3(0,1,0); 
+		vAxis1 = v ^ CVec3(0,1,0);
 	else
-		vAxis1 = v ^ CVec3(1,0,0); 
+		vAxis1 = v ^ CVec3(1,0,0);
 	Normalize( &vAxis1 );
 	vAxis2 = v ^ vAxis1;
 	Normalize( &vAxis2 );
@@ -46,12 +46,12 @@ CTracer::SRefTriangle CTracer::GetTriangle( const SConvexHull &e, const SHMatrix
 	int i1, i2, i3;
 	if ( t.i1 & 0x8000 )
 	{
-		i1 = e.tris.edges[ t.i1 & 0x7fff ].wFinish; 
+		i1 = e.tris.edges[ t.i1 & 0x7fff ].wFinish;
 		i2 = e.tris.edges[ t.i1 & 0x7fff ].wStart;
 	}
 	else
 	{
-		i1 = e.tris.edges[ t.i1 & 0x7fff ].wStart; 
+		i1 = e.tris.edges[ t.i1 & 0x7fff ].wStart;
 		i2 = e.tris.edges[ t.i1 & 0x7fff ].wFinish;
 	}
 	if ( t.i2 & 0x8000 )
@@ -102,9 +102,9 @@ SInterval::SCrossPoint CTracer::CalcCross( const SRefTriangle &t )
 		}
 		if ( fMinDistance == 1e30f )
 		{
-			// мало того, что параллельный треугольник подсунули, 
+			// мало того, что параллельный треугольник подсунули,
 			// так он еще и не пересекается
-			ASSERT(0); 
+			ASSERT(0);
 			fMinDistance = t.a * ptDir;
 		}
 		fMinDistance = ( fMinDistance - ptOrig * ptDir ) / fDirLeng;

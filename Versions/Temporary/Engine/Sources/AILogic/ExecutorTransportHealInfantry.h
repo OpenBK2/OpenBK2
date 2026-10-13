@@ -7,7 +7,7 @@ class CExecutorTransportHealInfantry :	public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorTransportHealInfantry)
 		ZDATA_(CExecutor)
-	CPtr<CAIUnit> pUnit;  
+	CPtr<CAIUnit> pUnit;
 
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pUnit); return 0; }
 	bool IsExecutorValidInternal() const;

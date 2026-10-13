@@ -12,7 +12,7 @@ void CScanLimiter::SegmentsFinished()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CScanLimiter::TargetScanning( const EUnitRPGType &scanUnitType )
 {
-	if ( !( 
+	if ( !(
 					( scanUnitType & RPG_TYPE_AVIATION ) ||
 					( scanUnitType & RPG_TYPE_ART_AAGUN ) ||
 					( scanUnitType & RPG_TYPE_ART_HOWITZER )

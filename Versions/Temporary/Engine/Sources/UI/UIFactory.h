@@ -48,7 +48,7 @@ class UI_EXPORT CUIFactory : public IUIInitialization
 	typedef std::unordered_map< std::wstring, CObj<IMLHandler> > CCustomMLHandlersMap;
 	CCustomMLHandlersMap customMLHandlers;
 	static IScreen * pScreenDuringLoad;
-	
+
 	static NInput::CGMORegContainer registeredMessages;
 
 private:
@@ -68,10 +68,10 @@ public:
 	void SetUIConsts( const struct NDb::SUIGameConsts *_pConsts ) { NUIFactory::pConsts = _pConsts; }
 	void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler );
 	IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc );
-	IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc, 
-																	const NDb::SUIGameConsts *pConsts, 
+	IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
+																	const NDb::SUIGameConsts *pConsts,
 																	struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
-																	NGScene::I2DGameView * p2DView, 
+																	NGScene::I2DGameView * p2DView,
 																	NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView );
 	IVirtualScreenController * GetVirtualScreenController() { return pVirtualScreenController; }
 	virtual void Set2DGameView( NGScene::I2DGameView* pView );

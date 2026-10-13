@@ -54,7 +54,7 @@ struct SCreateHeightPatternByGradientFunctional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fDistance )
-	{ 
+	{
 		pHeightPattern->heights[nYIndex][nXIndex] = ( *pGradient )( fDistance * ( pGradient->range.max - pGradient->range.min ), bSquareInterpolated ) * fRatio;
 		return true;
 	}
@@ -73,12 +73,12 @@ struct SCreateHeightPatternByValueFunctional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fDistance )
-	{ 
+	{
 		pHeightPattern->heights[nYIndex][nXIndex] = fValue;
 		return true;
 	}
 };
-	
+
 
 //функционал создающий паттерн заравнивания
 struct SCreateHeightPatternToLevelFunctional
@@ -94,7 +94,7 @@ struct SCreateHeightPatternToLevelFunctional
 	}
 
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == 1.0f )
 		{
 			float fDelta = ( fAverageHeight - GetHeight( nXIndex, nYIndex ) ) * fLevelRatio;
@@ -125,7 +125,7 @@ struct SCreateHeightPatternToLevelOverZeroFunctional
 	}
 
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == 1.0f )
 		{
 			const float fHeight = GetHeight( nXIndex, nYIndex );
@@ -158,7 +158,7 @@ struct SCreateHeightPatternFunctional
 	}
 
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == 1.0f )
 		{
 			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = GetHeight( nXIndex, nYIndex );
@@ -175,11 +175,11 @@ struct SCalculateAverageHeightFunctional
 {
 	float fTotalHeight;
 	int nPointCount;
-	//	
+	//
 	SCalculateAverageHeightFunctional() : fTotalHeight( 0.0f ), nPointCount( 0 ) {}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue != 0.0f )
 		{
 			fTotalHeight += GetHeight( nYIndex, nXIndex );
@@ -237,7 +237,7 @@ bool ApplyHeightPattern( const CTRect<int> &rRect,
 			}
 		}
 	}
-	//	
+	//
 	return true;
 }
 

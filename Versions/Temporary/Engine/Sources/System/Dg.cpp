@@ -4,7 +4,7 @@
 
 #include "System_export.h"
 
-#ifdef _MAPEDIT 
+#ifdef _MAPEDIT
 	const int N_HOLD_TIME = 16384; // must be power of 2
 #else
 	const int N_HOLD_TIME = 256; // must be power of 2
@@ -34,7 +34,7 @@ void ClearHoldQueue()
 }
 
 
-void MarkNewDGFrame() 
+void MarkNewDGFrame()
 {
 	nDGCurrentFrame++;
 	holdQueue[ nDGCurrentFrame&(N_HOLD_TIME-1) ].Clear();

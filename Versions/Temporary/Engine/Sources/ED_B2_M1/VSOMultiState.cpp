@@ -26,7 +26,7 @@ bool CVSOMultiState::PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePo
 {
 	const int nActiveStateIndex = GetActiveInputStateIndex();
 	const int nStateCount = GetCount();
-	
+
 	for ( int nStateIndex = 0; nStateIndex < nStateCount; ++nStateIndex )
 	{
 		if ( nStateIndex != nActiveStateIndex )
@@ -174,7 +174,7 @@ bool CVSOMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 
 
 CVSOMultiState::SEditParameters* CVSOMultiState::GetEditParameters()
-{ 
+{
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epVSOMultiState ) : 0 );
 }
 
@@ -193,6 +193,6 @@ int CVSOMultiState::SEditParameters::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 

@@ -80,7 +80,7 @@ void CSoldier::AdjustSpeed()
 void CSoldier::AllowLieDown( bool _bAllowLieDown )
 {
 	bAllowLieDown = _bAllowLieDown;
-	
+
 	if ( !bAllowLieDown )
 		StandUp();
 }
@@ -106,7 +106,7 @@ const uint32_t CSoldier::GetNormale() const
 
 IStatesFactory* CSoldier::GetStatesFactory() const
 {
-	if ( IsInBuilding() ) 
+	if ( IsInBuilding() )
 		return CInBuildingStatesFactory::Instance();
 	/*else if ( IsInEntrenchment() )
 	return CInEntrenchmentStatesFactory::Instance();*/
@@ -169,7 +169,7 @@ void CSoldier::SetInBuilding( CBuilding *pBuilding )
 
 void CSoldier::SetInEntrenchment( CEntrenchment *pEntrenchment )
 {
-	Stop();	
+	Stop();
 
 	pObjInside = pEntrenchment;
 	SetMasterOfStreetsBonus( EOIO_ENTRENCHMENT );
@@ -235,7 +235,7 @@ void CSoldier::SetFree()
 		SAIEntranceUpdate *pUpdate = new SAIEntranceUpdate;
 		pUpdate->info.bEnter = false;
 		pUpdate->info.nInfantryUniqueID = GetUniqueId();
-		switch (eInsideType) 
+		switch (eInsideType)
 		{
 		case EOIO_BUILDING:
 			pUpdate->info.nTargetUniqueID = GetBuilding()->GetUniqueId();
@@ -353,7 +353,7 @@ void CSoldier::GetThrowInfo( struct SAINotifyInfantryShot *pThrowInfo ) const
 {
 	NI_ASSERT( IsInTransport() == false, "Can't throw a grenade from inside of transport unit" );
 
-	pThrowInfo->typeID = GetThrowAction();	
+	pThrowInfo->typeID = GetThrowAction();
 
 	if ( IsInBuilding() )
 	{
@@ -411,8 +411,8 @@ const EActionNotify CSoldier::GetThrowAction() const
 
 bool CSoldier::InVisCone( const CVec2 &point ) const
 {
-	return 
-		GetVisionAngle() >= 32768 || 
+	return
+		GetVisionAngle() >= 32768 ||
 		DirsDifference( GetDirectionByVector( point - GetCenterPlain() ),GetFrontDirection() ) < GetVisionAngle();
 }
 
@@ -448,7 +448,7 @@ void CSoldier::Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *
 	for ( std::vector< CDBPtr< NDb::SUnitSpecialAblityDesc > >::const_iterator it = pStats->GetActions()->specialAbilities.begin(); it != pStats->GetActions()->specialAbilities.end(); ++it )
 	{
 		const NDb::SUnitSpecialAblityDesc *pSA = *it;
-		int nCharges; 
+		int nCharges;
 		if ( pSA )
 			nCharges = pSA->fParameter;
 		else
@@ -517,7 +517,7 @@ void CSoldier::UsedCharge( NDb::EUnitSpecialAbility eType, CMineStaticObject *pM
 	{
 		SExecutorEventParam par( EID_ABILITY_DISABLE, 0, GetUniqueId() );
 		CExecutorEventSpecialAbility event( par, eType );
-		pTheExecutorsContainer->RaiseEvent( event );		
+		pTheExecutorsContainer->RaiseEvent( event );
 	}
 }
 
@@ -631,7 +631,7 @@ void CSoldier::SetToSolidPlace()
 
 	if ( eInsideType == EOIO_NONE )
 		eInsideType = EOIO_UNKNOWN;
-	
+
 	WarFogChanged();
 }
 
@@ -732,11 +732,11 @@ void CSoldier::FreezeSegment()
 			// if ( IsInFormation() )
 				// GetFormation()->WasHitNearUnit();
 
-			lastHit = curTime;				
+			lastHit = curTime;
 			if ( bAllowLieDown && IsInFormation() && pFormation->IsAllowedLieDown() )
 				LieDown();
 		}
-		if ( NeedReturnToFormation() )  
+		if ( NeedReturnToFormation() )
 		{
 			FreezeByState( false );
 			theGroupLogic.RegisterSegments( this, false, false );
@@ -784,22 +784,22 @@ void CSoldier::Die( const bool fromExplosion, const float fDamage )
 	// flamethrowers die with explosion
 	if ( GetNGuns() > 0 && GetGun( 0 ) && GetGun( 0 )->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_FLAME_THROWER )
 	{
-		const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts(); 
+		const NDb::SAIGameConsts * pConsts = Singleton<IAILogic>()->GetAIConsts();
 		if ( pConsts->pFlamethrowerDeathExplotion )
 		{
 			theShellsStore.AddShell
-				( new CInvisShell( curTime + 100, new CBurstExpl( 0, pConsts->pFlamethrowerDeathExplotion, 
+				( new CInvisShell( curTime + 100, new CBurstExpl( 0, pConsts->pFlamethrowerDeathExplotion,
 				GetCenter(), VNULL3, 0, false, 1, true ), 0 ) );
 		}
 	}
 	// Reassign detonatable charges, if any
 	bool bTransferred = false;
-	if ( HasChargesToDetonate() && pFormation ) 
+	if ( HasChargesToDetonate() && pFormation )
 	{
 		for ( int i = 0; i < pFormation->Size(); ++i )
 		{
 			CSoldier *pFormationMember = (*pFormation)[ i ];
-			if ( !pFormationMember || pFormationMember == this ) 
+			if ( !pFormationMember || pFormationMember == this )
 				continue;
 
 			const NDb::SUnitBaseRPGStats *pMemberStats = pFormationMember->GetStats();
@@ -927,7 +927,7 @@ void CSoldier::ChangeAmmo( const int nCommonGun, const int nAmmo )
 			SExecutorEventParam par( EID_ABILITY_DISABLE, 0, GetUniqueId() );
 			CExecutorEventSpecialAbility event( par, NDb::ABILITY_THROW_GRENADE );
 			pTheExecutorsContainer->RaiseEvent( event );
-		}	
+		}
 	}
 	numControlledCharges.first = numControlledCharges.second;
 	numBlastingCharges.first = numBlastingCharges.second;
@@ -966,7 +966,7 @@ void CSoldier::Fired( const float fGunRadius, const int nGun )
 		CAIUnit::Fired( fGunRadius, nGun );
 }
 
-CTurret* CSoldier::GetTurret( const int nTurret ) const 
+CTurret* CSoldier::GetTurret( const int nTurret ) const
 {
 	NI_ASSERT( nTurret == 0, "Wrong number of turret for soldier" );
 	if ( !IsInBuilding() || GetSlot() == -1 )
@@ -986,7 +986,7 @@ const int CSoldier::GetNTurrets() const
 void CSoldier::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 {
 	//construct( pShootAreas );			// this causes memory leaks
-	
+
 	if ( IsFree() || IsInBuilding() && GetTurret( 0 ) != 0 || IsInEntrenchment() && IsInFirePlace() )
 		CAIUnit::GetShootAreas( pShootAreas, pnAreas );
 	else
@@ -999,7 +999,7 @@ void CSoldier::GetShootAreas( SShootAreas *pShootAreas, int *pnAreas ) const
 
 		area.fMinR = 0.0f;
 		area.fMaxR = GetMaxFireRange();
-		
+
 		if ( IsInSolidPlace() || IsInTransport() )
 		{
 			area.wStartAngle = 65535;
@@ -1043,7 +1043,7 @@ void CSoldier::PrepareToDelete()
 				if ( pMemorizedFormation->Size() == 0 && pMemorizedFormation->VirtualUnitsSize() == 0 )
 					pMemorizedFormation->Disappear();
 			}
-			
+
 			if ( pVirtualFormation )
 			{
 				pVirtualFormation->DelVirtualUnit( this );
@@ -1055,9 +1055,9 @@ void CSoldier::PrepareToDelete()
 	}
 }
 
-const CVec2 CSoldier::GetUnitPointInFormation() const 
-{ 
-	return pFormation->GetUnitCoord( this ); 
+const CVec2 CSoldier::GetUnitPointInFormation() const
+{
+	return pFormation->GetUnitCoord( this );
 }
 
 void CSoldier::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *pShell, const int nPlayerOfShoot, CAIUnit *pShotUnit )
@@ -1074,19 +1074,19 @@ void CSoldier::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell *p
 	}
 }
 
-bool CSoldier::IsFree() const 
-{ 
-	return eInsideType == EOIO_NONE || eInsideType ==	EOIO_UNKNOWN; 
+bool CSoldier::IsFree() const
+{
+	return eInsideType == EOIO_NONE || eInsideType ==	EOIO_UNKNOWN;
 }
 
-const bool CSoldier::CanShootToPlanes() const 
-{ 
-	return pGuns->CanShootToPlanes(); 
+const bool CSoldier::CanShootToPlanes() const
+{
+	return pGuns->CanShootToPlanes();
 }
 
-CBasicGun* CSoldier::ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime ) 
-{ 
-	return pGuns->ChooseGunForStatObj( this, pObj, pTime ); 
+CBasicGun* CSoldier::ChooseGunForStatObj( class CStaticObject *pObj, NTimer::STime *pTime )
+{
+	return pGuns->ChooseGunForStatObj( this, pObj, pTime );
 }
 
 bool CSoldier::CalculateUnitVisibility4Party( const uint8_t party )
@@ -1094,8 +1094,8 @@ bool CSoldier::CalculateUnitVisibility4Party( const uint8_t party )
 	bool bVisibility;
 	if ( IsInBuilding() )
 	{
-		bVisibility = 
-			( GetBuilding()->IsAnyAttackers() || IsInFirePlace() ) && 
+		bVisibility =
+			( GetBuilding()->IsAnyAttackers() || IsInFirePlace() ) &&
 			 GetBuilding()->IsSoldierVisible( party, GetCenterPlain(), IsCamoulflated(), GetCamouflage() );
 	}
 	else if ( IsInSolidPlace() )
@@ -1185,7 +1185,7 @@ void CSoldier::MemCurFormation()
 
 const int CSoldier::GetMinArmor() const
 {
-/*	
+/*
 	if ( IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return Min( CAIUnit::GetMinArmor(), checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetMinArmor() );
 	else
@@ -1195,17 +1195,17 @@ const int CSoldier::GetMinArmor() const
 
 const int CSoldier::GetMaxArmor() const
 {
-/*	
+/*
 	if ( IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return Max( CAIUnit::GetMaxArmor(), checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetMaxArmor() );
 	else
 */
 		return CAIUnit::GetMaxArmor();
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const int CSoldier::GetMinPossibleArmor( const int nSide ) const
 {
-/*	
+/*
 	if ( nSide == RPG_FRONT && IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetMinPossibleArmor( nSide );
 	else
@@ -1215,7 +1215,7 @@ const int CSoldier::GetMinPossibleArmor( const int nSide ) const
 
 const int CSoldier::GetMaxPossibleArmor( const int nSide ) const
 {
-/*	
+/*
 	if ( nSide == RPG_FRONT && IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetMaxPossibleArmor( nSide );
 	else
@@ -1225,7 +1225,7 @@ const int CSoldier::GetMaxPossibleArmor( const int nSide ) const
 
 const int CSoldier::GetArmor( const int nSide ) const
 {
-/*	
+/*
 	if ( nSide == RPG_FRONT && IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetArmor( nSide );
 	else
@@ -1235,7 +1235,7 @@ const int CSoldier::GetArmor( const int nSide ) const
 
 const int CSoldier::GetRandomArmor( const int nSide ) const
 {
-/*	
+/*
 	if ( nSide == RPG_FRONT && IsInFormation() && GetFormation()->GetState()->GetName() == EUSN_GUN_CREW_STATE )
 		return checked_cast<CFormationGunCrewState*>(GetFormation()->GetState())->GetArtillery()->GetRandomArmor( nSide );
 	else
@@ -1243,8 +1243,8 @@ const int CSoldier::GetRandomArmor( const int nSide ) const
 		return CAIUnit::GetRandomArmor( nSide );
 }
 
-bool CSoldier::IsAngleLimited() const 
-{ 
+bool CSoldier::IsAngleLimited() const
+{
 	return
 		IsInBuilding() || wMinAngle > 0 || wMaxAngle < 65535;
 }
@@ -1270,9 +1270,9 @@ bool CSoldier::ShouldSuspendAction( const EActionNotify &eAction ) const
 
 bool IsTransitionalCommand( const EActionCommand &eCmd )
 {
-	return 		
+	return
 		eCmd == ACTION_COMMAND_ENTER ||
-		eCmd == ACTION_COMMAND_ENTER_TRANSPORT_NOW || 
+		eCmd == ACTION_COMMAND_ENTER_TRANSPORT_NOW ||
 		eCmd == ACTION_COMMAND_LOAD || eCmd == ACTION_COMMAND_LOAD_NOW ||
 		eCmd == ACTION_COMMAND_LEAVE || eCmd == ACTION_COMMAND_LEAVE_NOW ||
 		eCmd == ACTION_COMMAND_UNLOAD || eCmd == ACTION_COMMAND_UNLOAD_NOW;
@@ -1283,7 +1283,7 @@ bool CSoldier::CanJoinToFormation() const
 	if ( !IsCurCmdFinished() )
 	{
 		bool bCan = true;
-		
+
 		if ( CAICommand *pCmd = GetCurCmd() )
 			bCan = bCan && !IsTransitionalCommand( pCmd->ToUnitCmd().nCmdType );
 		if ( CAICommand *pCmd = GetNextCommand() )
@@ -1300,10 +1300,10 @@ void CSoldier::SetVirtualFormation( CFormation *pFormation )
 	pVirtualFormation = pFormation;
 }
 
-void CSoldier::MemorizeFormation() 
-{ 
-	pFormation = pMemorizedFormation; 
-	pMemorizedFormation = 0; 
+void CSoldier::MemorizeFormation()
+{
+	pFormation = pMemorizedFormation;
+	pMemorizedFormation = 0;
 
 	pFormation->SetGeometryPropertiesToSoldier( this, true );
 }
@@ -1404,7 +1404,7 @@ const ECollidingType CSoldier::GetCollidingType( CBasePathUnit *pUnit ) const
 	}
 	const EUnitStateNames eFormationStateName = GetFormation()->GetState()->GetName();
 
-	return 
+	return
 		IsFree() && eFormationStateName != EUSN_GUN_CREW_STATE && eFormationStateName != EUSN_PARTROOP
 		? ECT_INTERNAL : ECT_NONE;
 }
@@ -1439,7 +1439,7 @@ void CSniper::Segment()
 	{
 		if ( IsInBuilding() && GetBuilding() )
 			GetBuilding()->RemoveTransparencies();
-		
+
 		lastVisibilityCheck = curTime;
 		bVisible = false;
 		const float fMaxVisRadius = 30 * SConsts::TILE_SIZE;
@@ -1447,7 +1447,7 @@ void CSniper::Segment()
 
 		//SSniperTrace sniperTracer( this );
 		const SVector curCenterTile( GetCenterTile() );
-		
+
 		for ( CUnitsIter<0,3> iter( GetParty(), EDI_ENEMY, GetCenterPlain(), fMaxVisRadius ); !bVisible && !iter.IsFinished(); iter.Iterate() )
 		{
 			CAIUnit *pUnit = *iter;
@@ -1510,11 +1510,11 @@ void CSniper::Fired( const float fGunRadius, const int nGun  )
 	CSoldier::Fired( fGunRadius, nGun );
 }
 
-/*void CSniper::SetSneak( const bool bSneakMode ) 
-{ 
+/*void CSniper::SetSneak( const bool bSneakMode )
+{
 	if ( bSneak != bSneakMode )
 	{
-		bSneak = bSneakMode; 
+		bSneak = bSneakMode;
 
 		if ( bSneakMode )
 		{

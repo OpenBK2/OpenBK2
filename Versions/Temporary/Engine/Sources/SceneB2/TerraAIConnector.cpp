@@ -239,7 +239,7 @@ void CTerraGen::PutAllRiversToAI() const
 		for ( std::list<STerrainInfo::SRiver>::const_iterator it = terrainInfo.rivers.begin(); it != terrainInfo.rivers.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRiver( it->nID );
-			if ( pInstance ) 
+			if ( pInstance )
 			{
 				PutRiverToAI( pInstance );
 				PutRiverCliffsToAI( *it );
@@ -258,7 +258,7 @@ void CTerraGen::PutAllRoadsToAI() const
 		for ( std::list<STerrainInfo::SRoad>::const_iterator it = terrainInfo.roads.begin(); it != terrainInfo.roads.end(); ++it )
 		{
 			const NDb::SVSOInstance *pInstance = FindRoad( it->nID );
-			if ( pInstance ) 
+			if ( pInstance )
 				PutRoadToAI( pInstance );
 		}
 	}

@@ -6,7 +6,7 @@
 
 int SVectorStripeObjectPoint::operator&( IXmlSaver &saver )
 {
-	
+
 	saver.Add( "Pos", &vPos );
 	saver.Add( "Norm", &vNorm );
 	saver.Add( "Radius", &fRadius );
@@ -19,7 +19,7 @@ int SVectorStripeObjectPoint::operator&( IXmlSaver &saver )
 
 int SVectorStripeObjectDesc::SLayer::operator&( IXmlSaver &saver )
 {
-	
+
 	saver.Add( "OpacityCenter", &opacityCenter );
 	saver.Add( "OpacityBorder", &opacityBorder );
 	saver.Add( "StreamSpeed", &fStreamSpeed );
@@ -35,7 +35,7 @@ int SVectorStripeObjectDesc::SLayer::operator&( IXmlSaver &saver )
 
 int SVectorStripeObjectDesc::SLayer::operator&( IBinSaver &saver )
 {
-	
+
 	saver.Add( 1, &opacityCenter );
 	saver.Add( 2, &opacityBorder );
 	saver.Add( 3, &fStreamSpeed );
@@ -51,8 +51,8 @@ int SVectorStripeObjectDesc::SLayer::operator&( IBinSaver &saver )
 
 int SVectorStripeObjectDesc::operator&( IXmlSaver &saver )
 {
-	
-	
+
+
 	saver.Add( "Type", &eType );
 	saver.Add( "Priority", &nPriority );
 	saver.Add( "Passability", &fPassability );
@@ -71,7 +71,7 @@ int SVectorStripeObjectDesc::operator&( IXmlSaver &saver )
 
 int SVectorStripeObjectDesc::operator&( IBinSaver &saver )
 {
-	
+
 
 	saver.Add( 1, &bottom );
 	saver.Add( 2, &bottomBorders );
@@ -91,7 +91,7 @@ int SVectorStripeObjectDesc::operator&( IBinSaver &saver )
 
 int SVectorStripeObject::operator&( IXmlSaver &saver )
 {
-	
+
 	saver.AddTypedSuper( static_cast<SVectorStripeObjectDesc*>(this) );
 	saver.Add( "DescName", &szDescName );
 	saver.Add( "Points", &points );
@@ -101,7 +101,7 @@ int SVectorStripeObject::operator&( IXmlSaver &saver )
 	if ( saver.IsReading() && !szDescName.empty() )
 	{
 		CFileStream stream( NVFS::GetMainVFS(), szDescName + ".xml" );
-		if ( stream.IsOk() ) 
+		if ( stream.IsOk() )
 		{
 			CPtr<IXmlSaver> saver1 = CreateXmlSaver( &stream, SAVER_MODE_READ );
 			SVectorStripeObjectDesc desc;

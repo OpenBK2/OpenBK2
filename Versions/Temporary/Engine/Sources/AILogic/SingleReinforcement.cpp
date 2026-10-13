@@ -98,7 +98,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 {
 	if ( !bDisableUpdates )
 	{
-		updater.AddUpdate( EFB_REINFORCEMENT_ARRIVED );			
+		updater.AddUpdate( EFB_REINFORCEMENT_ARRIVED );
 		if ( nPlayer == theDipl.GetMyNumber() )
 			updater.AddUpdate( EFB_REINFORCEMENT_CENTER_LOCAL_PLAYER, MAKELONG( vPosition.x, vPosition.y ) );
 	}
@@ -122,7 +122,7 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 			EAIClasses aiClass = EAC_HUMAN;
 			//CVec2 vSize = VNULL2;
 			int nBoundTileRadius = 0;
-			if ( pStats == 0 ) 
+			if ( pStats == 0 )
 			{
 				pStats = entries[i].pSquad;
 
@@ -212,12 +212,12 @@ void PlaceReinforcement( EReinforcementType eType, const int nPlayer, const std:
 			}
 		}
 	}
-	
+
 	// send acknowledgement
 	if ( units.begin() != units.end() && nPlayer == theDipl.GetMyNumber() )
 		(*units.begin())->SendAcknowledgement( NDb::ACK_REINFORCEMENT_ARRIVED, true );
 
-	if ( theDipl.GetNParty( nPlayer ) != theDipl.GetMyParty() && 
+	if ( theDipl.GetNParty( nPlayer ) != theDipl.GetMyParty() &&
 		( eType == NDb::RT_BOMBERS || eType == NDb::RT_FIGHTERS || eType == NDb::RT_GROUND_ATTACK_PLANES || eType == NDb::RT_RECON ||
 		  eType == NDb::RT_EXTRA_AIR_1 || eType == NDb::RT_EXTRA_AIR_2 || eType == NDb::RT_EXTRA_AIR_3 || eType == NDb::RT_EXTRA_AIR_4 || eType == NDb::RT_EXTRA_AIR_5 ||
 		  eType == NDb::RT_EXTRA_MAXLVL_AIR_1 || eType == NDb::RT_EXTRA_MAXLVL_AIR_2 || eType == NDb::RT_EXTRA_MAXLVL_AIR_3 || eType == NDb::RT_EXTRA_MAXLVL_AIR_4 || eType == NDb::RT_EXTRA_MAXLVL_AIR_5 ) )

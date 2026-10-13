@@ -44,7 +44,7 @@ public:
 	virtual bool IsContainer() const { return false; }
 	virtual const int GetNDefenders() const { return 0; }
 	virtual class CSoldier* GetUnit( const int n ) const { return 0; }
-	
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 
 	virtual void LockTiles() { }

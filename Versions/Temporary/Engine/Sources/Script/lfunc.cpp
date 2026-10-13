@@ -16,7 +16,7 @@
 #define sizeclosure(n)	((int)sizeof(Closure) + (int)sizeof(TObject)*((n)-1))
 
 
-int luaF_newclosure (lua_State *L, int nelems) 
+int luaF_newclosure (lua_State *L, int nelems)
 {
   Closure *c = new Closure;
   c->mark = c;
@@ -25,7 +25,7 @@ int luaF_newclosure (lua_State *L, int nelems)
 }
 
 
-int luaF_newproto (lua_State *L) 
+int luaF_newproto (lua_State *L)
 {
   Proto *f = new Proto;
 	return L->protos.push( f );

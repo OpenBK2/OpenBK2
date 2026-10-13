@@ -3,7 +3,7 @@
 #include "System_export.h"
 
 
-template <int N> 
+template <int N>
 struct SInt2Type { enum { value = N }; };
 
 // ************************************************************************************************************************ //
@@ -26,7 +26,7 @@ struct IBinSaver;
 
 // функция для создания нового объекта
 class CObjectBase;
-typedef CObjectBase* (*ObjectFactoryNewFunc)(); 
+typedef CObjectBase* (*ObjectFactoryNewFunc)();
 
 namespace NObjectFactory
 {
@@ -42,7 +42,7 @@ namespace NObjectFactory
 	SYSTEM_EXPORT bool IsRegistered( int nObjectTypeID );
 	// start register type
 	SYSTEM_EXPORT void StartRegister();
-	// 
+	//
 	template <class TT>
 		void RegisterTypeName( int nTypeID, ObjectFactoryNewFunc func, TT* ) { NObjectFactory::RegisterType( nTypeID, func, &typeid(TT) ); }
 	template <class TT>
@@ -58,9 +58,9 @@ namespace NObjectFactory
 #define REGISTER_CLASS_NM( N, name, nmspace ) { NObjectFactory::StartRegister(); NObjectFactory::RegisterTypeName( N, nmspace::name::New##name, (nmspace::name*)0 ); }
 #define UNREGISTER_CLASS_NM( N, name, nmspace ) NObjectFactory::UnRegisterTypeName( N, (nmspace::name*)0 );
 // make object by TypeID from objects factory
-template <class TYPE> 
+template <class TYPE>
 	inline TYPE* MakeObject( int nTypeID ) { return checked_cast<TYPE*>( NObjectFactory::MakeObject(nTypeID) ); }
-template <class TYPE> 
+template <class TYPE>
 	inline TYPE* MakeObjectVirtual( int nTypeID ) { return dynamic_cast<TYPE*>( NObjectFactory::MakeObject(nTypeID) ); }
 
 // ************************************************************************************************************************ //

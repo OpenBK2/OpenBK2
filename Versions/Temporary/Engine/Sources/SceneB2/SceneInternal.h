@@ -199,7 +199,7 @@ public:
 struct SSceneData : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( SSceneData )
-public:		
+public:
 	typedef std::unordered_map<int, CObj<SVisObjDescBase> > CVisObjectsMap;
 	typedef std::list< CObj<IWindow> > CScreens; // obsolete
 	typedef std::list< CObj<CObjectBase> > CMarkersList;
@@ -207,16 +207,16 @@ public:
 	typedef std::unordered_map<int, CObj<NGScene::CPolyline> > CPolylinesMap;
 	typedef std::unordered_map<int, CSceneIconHolder> CSceneIconsMap;
 	typedef std::unordered_map< int, CObj<SVisObjSelectionHandler> > CSelectionMap;
-	
+
 	struct SScreenData
 	{
 		ZDATA
 		CObj<IWindow> pScreen;
-		CVisObjectsMap interfaceVisObjects; // 3D interface objects		
+		CVisObjectsMap interfaceVisObjects; // 3D interface objects
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pScreen); f.Add(3,&interfaceVisObjects); return 0; }
 
 		CObj<NGScene::IGameView> p3DView; // 3D part of interface
-		
+
 		SScreenData() {}
 		SScreenData( IWindow *_pScreen );
 
@@ -232,7 +232,7 @@ public:
 		}
 	};
 	typedef std::list<SScreenData> CScreensData;
-	
+
 	enum EAIGeomMode
 	{
 		EAI_GEOM_NONE,
@@ -257,7 +257,7 @@ public:
 		std::vector<CVisObjReflectionInfoHolder> visObjReflections;
 		CObj<CWindController> pWindController;
 		CObj<CVisObjIconsManager> pVisObjIconsManager;
-		ZSKIP //CVisObjectsMap interfaceVisObjects; 
+		ZSKIP //CVisObjectsMap interfaceVisObjects;
 		std::unordered_map<int, int> attachIDToMapObjID;
 		CPtr<CWeatherVisual> pWeather;
 		ZSKIP
@@ -279,11 +279,11 @@ public:
 
 	void OnSerialize( IBinSaver &f )
 	{
-		if ( f.IsReading() ) 
+		if ( f.IsReading() )
 		{
 			timeStatLastShow = 0;
 			nStatNumFrames = 0;
-			
+
 			//{ CRAP - for compability with old saves
 			if ( screensData.empty() )
 			{
@@ -301,11 +301,11 @@ public:
 	EAIGeomMode eAIGeomMode;
 
 private:
-	CObj<NGScene::IGameView> pGScene;	
+	CObj<NGScene::IGameView> pGScene;
 public:
 	CObj<NGScene::IGameView> pInterfaceView;
 
-	CObj<NGScene::I2DGameView> p2DView;	
+	CObj<NGScene::I2DGameView> p2DView;
 
 	CObj< CSyncSrc<IVisObj> > pSyncSrc;
 	CObj<CAIMapVisitor> pAIMapVisitor;
@@ -328,9 +328,9 @@ public:
 	int nStatNumDIPs;
 	float fAveOverdraw;
 	int nFPSDropCounter;
-	
+
 	SSceneData();
-	
+
 	void Init();
 	NGScene::IGameView* GetGScene() { return bIsInternal ? pInterfaceView : pGScene; }
 	void SetGScene( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; };
@@ -340,7 +340,7 @@ public:
 		bIsInternal = _bIsInternal;
 		return bTmp;
 	};
-	
+
 	SVisObjSelectionHandler* GetNewSelection();
 };
 
@@ -381,9 +381,9 @@ protected:
 	int GetID( int nID ) { return nID == OBJECT_ID_GENERATE ? GetNextFreeID() : nID; }
 	//
 	bool CheckObjExist( int nID ) const;
-	int AddStaticObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, 
+	int AddStaticObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
 											 const CVec3 &vScale, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection );
-	int AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale, 
+	int AddAnimatedObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale,
 												 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection );
 	int AddIndexedPolylineInternal( const int nID, const std::vector<CVec3> &points, const std::vector<uint16_t> &indices, const CVec4 &vColor, bool bDepthCheck );
 
@@ -411,7 +411,7 @@ protected:
 	void AddReflectionFromObject( const NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pModel, const SHMatrix &matr );
 	//
 	CFuncBase<SFBTransform> *GetParentTransform( const int nTargetID, const std::string &szBoneName );
-	//	
+	//
 	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const std::string &szBoneName, const ESceneAttachMode eMode, const NTimer::STime timeStart,
 												CFuncBase<SFBTransform> **pTransrform, int *pnBoneIndex, const bool bConstantOffset );
 	bool PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const ESceneAttachMode eMode, const NTimer::STime timeStart,
@@ -432,7 +432,7 @@ protected:
 
 	void ProcessDebugInfoUpdates();
 
-	void MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD, const CVec3 &vPos, 
+	void MakeSelection( SVisObjSelection &selection, SModelVisObjDesc *pVOD, const CVec3 &vPos,
 		float fSelScale, NDb::ESelectionType eSelType, float fDeltaTime, bool bOn );
 	void UpdateSelectionHandlers();
 
@@ -458,13 +458,13 @@ public:
 
 	void SetSceneConsts( const NDb::SSceneConsts *_pSceneConsts );
 	const NDb::SSceneConsts *GetSceneConsts();
-	//	
+	//
 	void ClearScene( const EScene eScene2Clear );
-	// 
+	//
 	struct ITerraManager* GetTerraManager();
 	bool DoesTerraManagerExist() const { return data[eScene]->pTerraManager != 0; }
 	// add object to scene. returns new ID
-	int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale, 
+	int AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale,
 								 ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const NDb::SModel *pLowLevelModel, const bool bHasReflection );
 	//	AddObject with client-calculated matrix
 	int AddObject( const int nID, const NDb::SModel *pModel, const SHMatrix &mPlace,
@@ -505,7 +505,7 @@ public:
 	// selection operations
 	void SelectObject( const int nID, const CVec3 &vPos, const float fSelScale, const NDb::ESelectionType eSelType );
 	void UnselectObject( const int nID );
-	int AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType, 
+	int AddSelection( int nID, const CVec3 &vPos, float fSelScale, NDb::ESelectionType eSelType,
 		float fFadeInTime, float fFadeOutTime );
 	void RemoveSelection( int nID );
 	void ClearSelection();
@@ -580,11 +580,11 @@ public:
 
 	// AI debug info
 	/*
-	virtual class NAIVisInfo::CDebugSegment* CreateSegment( const CSegment &aiSegment, const int nThickness, 
+	virtual class NAIVisInfo::CDebugSegment* CreateSegment( const CSegment &aiSegment, const int nThickness,
 																									const NAIVisInfo::EColor eColor );
-	virtual class NAIVisInfo::CDebugCircle* CreateCircle( const CCircle &aiCircle, 
+	virtual class NAIVisInfo::CDebugCircle* CreateCircle( const CCircle &aiCircle,
 																								const NAIVisInfo::EColor eColor );
-	virtual class NAIVisInfo::CDebugMarker* CreateMarker( const list<CVec2> &tiles, 
+	virtual class NAIVisInfo::CDebugMarker* CreateMarker( const list<CVec2> &tiles,
 																								const NAIVisInfo::EColor eColor );
 
 	virtual void SetMarkerPosition( CObjectBase *pMarker, const list<CVec2> &tiles );
@@ -607,7 +607,7 @@ public:
 	CWindController *GetWindController() { return data[eScene]->pWindController; }
 	//
 	bool MakeMapShot( const SGameMessage &msg );
-	
+
 	virtual float GetZ( float x, float y ) const;
 	float GetTileHeight( int nX, int nY ) const;
 	virtual void UpdateZ( CVec3 *pvPos );

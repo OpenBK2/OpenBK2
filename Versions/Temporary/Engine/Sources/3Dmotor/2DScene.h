@@ -15,7 +15,7 @@ class I2DScene: public CObjectBase
 {
 public:
 	virtual void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow ) = 0;
-	virtual void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, 
+	virtual void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
 	virtual void CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow ) = 0;
 

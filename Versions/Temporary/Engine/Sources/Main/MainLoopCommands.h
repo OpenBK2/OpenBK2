@@ -23,13 +23,13 @@ public:
 		STG_SERIALIZE_DONE,
 		STG_AFTER_LOAD_DONE,
 	};
-	
+
 	CICLoadBase();
 	CICLoadBase( const std::string &szFileName );
-	
+
 	void Configure( const char *pszConfig );
 	void Exec();
-	
+
 	virtual void OnProgress( EStage eStage ) {}
 
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Wrong call" ); return 0; }
@@ -54,7 +54,7 @@ public:
 
 	CICSaveBase();
 	CICSaveBase( const std::string &szFileName );
-	
+
 	void Configure( const char *pszConfig );
 	void Exec();
 

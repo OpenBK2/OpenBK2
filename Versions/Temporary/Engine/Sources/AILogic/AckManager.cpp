@@ -14,7 +14,7 @@ extern CDiplomacy theDipl;
 
 int CAckManager::operator&( IBinSaver &saver )
 {
-	
+
 	saver.Add( 1, &acknowledgements );
 	saver.Add( 4, &bored );
 	saver.Add( 5, &ackIndex );
@@ -58,7 +58,7 @@ bool CAckManager::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 		return false;
 
 	CAckTypeBoredPrecence::iterator it = bored.begin();
-	if ( it->second.size() == 0 ) 
+	if ( it->second.size() == 0 )
 	{
 		bored.erase( it );
 		return false;
@@ -68,7 +68,7 @@ bool CAckManager::UpdateAcknowledgment( SAIBoredAcknowledgement &pAck )
 	pAck.nObjUniqueID = it2->second.first->GetUniqueId(); //	pAck.pObj = it2->second.first;
 	pAck.nAck = it->first;
 	it->second.erase( it2 );
-	if ( it->second.size() == 0 ) 
+	if ( it->second.size() == 0 )
 	{
 		bored.erase( it );
 		return false;

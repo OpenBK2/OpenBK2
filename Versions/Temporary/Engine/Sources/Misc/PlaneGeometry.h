@@ -62,7 +62,7 @@ struct SInRangeFunctional
 enum EClassifyEdge
 {
 	CE_UNKNOWN	= 0,
-	
+
 	CE_LEFT			= 1,
 	CE_RIGHT		= 2,
 	CE_BEYONG		= 3,
@@ -70,7 +70,7 @@ enum EClassifyEdge
 	CE_BETWEEN	= 5,
 	CE_BEGIN		= 6,
 	CE_END			= 7,
-	
+
 	CE_COUNT		= 8,
 };
 EXTERNVAR MISC_EXPORT const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
@@ -79,12 +79,12 @@ EXTERNVAR MISC_EXPORT const EClassifyEdge NEGATIVE_CLASSIFY_EDGE[CE_COUNT + 1];
 enum EClassifyPolygon
 {
 	CP_UNKNOWN	= 0,
-	
+
 	CP_INSIDE		= 1,
 	CP_OUTSIDE	= 2,
 	CP_BOUNDARY	= 3,
 	CP_VERTEX		= 4,
-	
+
 	CP_COUNT		= 5,
 };
 EXTERNVAR MISC_EXPORT const EClassifyPolygon NEGATIVE_CLASSIFY_POLYGON[CP_COUNT + 1];
@@ -93,12 +93,12 @@ EXTERNVAR MISC_EXPORT const EClassifyPolygon NEGATIVE_CLASSIFY_POLYGON[CP_COUNT 
 enum EClassifyIntersection
 {
 	CI_UNKNOWN				= 0,
-	
+
 	CI_COLLINEAR			= 1,
-	CI_PARALLEL				= 2,			
+	CI_PARALLEL				= 2,
 	CI_SKEW						= 3,
 	CI_SKEW_CROSS			= 4,
-	CI_SKEW_NO_CROSS	= 5,	
+	CI_SKEW_NO_CROSS	= 5,
 
 	CI_COUNT					= 6,
 };
@@ -107,7 +107,7 @@ enum EClassifyIntersection
 enum EClassifyRotation
 {
 	CR_UNKNOWN					= 0,
-	
+
 	CR_CLOCKWISE				= 1,
 	CR_COUNTERCLOCKWISE	= 2,
 	CR_LINE							= 3,
@@ -163,7 +163,7 @@ inline EClassifyEdge GetClassifyEdgeInnerSpace( EClassifyRotation classifyRotati
 //
 //
 //               CE_BEGIN                  CE_END
-// -*----------- *===========*============>* ------------*--------      
+// -*----------- *===========*============>* ------------*--------
 //  CE_BEHIND                CE_BETWEEN                  CE_BEYONG
 //
 //                     *CE_RIGHT
@@ -283,7 +283,7 @@ EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &
 
 	typename TPolygon::const_iterator itCurrentPoint0 = rPolygon.begin();
 	typename TPolygon::const_iterator itCurrentPoint1 = rPolygon.begin();
-	
+
 	++itCurrentPoint1;
 	if ( itCurrentPoint1 == rPolygon.end() )
 	{
@@ -296,7 +296,7 @@ EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &
 			return CP_OUTSIDE;
 		}
 	}
-	
+
 	EClassifyEdge classifyEdge = CE_UNKNOWN;
 	while ( ( classifyEdge != CE_LEFT ) && ( classifyEdge != CE_RIGHT ) )
 	{
@@ -321,7 +321,7 @@ EClassifyPolygon ClassifyConvexPolygon( const TPolygon &rPolygon, const TPoint &
 			itCurrentPoint1 = rPolygon.begin();
 		}
 	}
-	
+
 	EClassifyEdge negativeClassifyEdge = GetNegativeClassifyEdge( classifyEdge );
 	while ( itCurrentPoint0 != rPolygon.end() )
 	{
@@ -364,7 +364,7 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 			return CP_OUTSIDE;
 		}
 	}
-	
+
 	EClassifyPolygon classifyPolygon = CP_OUTSIDE;
 	while ( itCurrentPoint0 != rPolygon.end() )
 	{
@@ -384,7 +384,7 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 		{
 			classifyPolygon = GetNegativeClassifyPolygon( classifyPolygon );
 		}
-		else if ( ( itCurrentPoint0->y <= v.y ) && ( v.y < itCurrentPoint1->y ) && 
+		else if ( ( itCurrentPoint0->y <= v.y ) && ( v.y < itCurrentPoint1->y ) &&
 							( ( ( v.x - itCurrentPoint1->x ) * ( itCurrentPoint0->y - itCurrentPoint1->y ) ) >
 								( ( v.y - itCurrentPoint1->y ) * ( itCurrentPoint0->x - itCurrentPoint1->x ) ) ) )
 		{
@@ -405,8 +405,8 @@ EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPoint &v )
 template<class TPolygon, class TPoint>
 EClassifyPolygon ClassifyPolygon( const TPolygon &rPolygon, const TPolygon &rPolygonCheck )
 {
-	EClassifyPolygon classifyPolygonInside = CP_INSIDE;	
-	EClassifyPolygon classifyPolygonOutside = CP_OUTSIDE;	
+	EClassifyPolygon classifyPolygonInside = CP_INSIDE;
+	EClassifyPolygon classifyPolygonOutside = CP_OUTSIDE;
 	for (typename TPolygon::const_iterator itPoint = rPolygonCheck.begin(); itPoint != rPolygonCheck.end(); ++itPoint )
 	{
 		if ( ClassifyPolygon<TPolygon, TPoint>( rPolygon, *itPoint ) != CP_OUTSIDE )
@@ -555,7 +555,7 @@ EClassifyRotation ClassifyRotation( const TPoint &v0, const TPoint &v1, const TP
 template<class TPolygon>
 EClassifyRotation ClassifyRotation( const TPolygon &rPolygon )
 {
-	const float fPolygonSquare = GetSignedPolygonSquare( rPolygon );  
+	const float fPolygonSquare = GetSignedPolygonSquare( rPolygon );
 	if ( fPolygonSquare < 0  )
 	{
 		return CR_CLOCKWISE;
@@ -588,7 +588,7 @@ float GetSignedAngle( const TPoint &rvBegin, const TPoint &rvEnd, const TPoint &
 		}
 		else if ( fEngle < ( -FP_PI ) )
 		{
-			return ( fEngle + FP_2PI ); 
+			return ( fEngle + FP_2PI );
 		}
 		else if ( fEngle > FP_PI )
 		{
@@ -660,7 +660,7 @@ inline void MovePoint( TPoint *pPoint, const TPoint &rvMove ) { ( *pPoint ) += r
 
 template<class TPoint>
 inline void RotatePoint( TPoint *pPoint, float a )
-{ 
+{
 	const float fX = pPoint->x;
 	const float fSinA = sin( a );
 	const float fCosA = cos( a );
@@ -793,7 +793,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 		}
 		return true;
 	}
-	
+
 	while ( itSourcePoint0 != rSourcePolygon.end() )
 	{
 		const EClassifyEdge beginClassifyEdge = ClassifyEdge( rvBegin, rvEnd, ( *itSourcePoint0 ) );
@@ -826,7 +826,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 				}
 				if ( pLeftPolygon )
 				{
-					if ( endClassifyEdge == CE_LEFT ) 
+					if ( endClassifyEdge == CE_LEFT )
 					{
 						pLeftPolygon->push_back( vIntersectionPoint );
 					}
@@ -855,7 +855,7 @@ bool SplitByEdge( const TPolygon &rSourcePolygon, const TPoint &rvBegin, const T
 				}
 				if ( pRightPolygon )
 				{
-					if ( endClassifyEdge == CE_RIGHT ) 
+					if ( endClassifyEdge == CE_RIGHT )
 					{
 						pRightPolygon->push_back( vIntersectionPoint );
 					}
@@ -974,7 +974,7 @@ bool CutByPolygonCore( const TPolygon &rPolygon, const TPolygon &rPolygonCore, T
 			polygon0.clear();
 		}
 		++nCount;
-		
+
 		++itCurrentPoint0;
 		++itCurrentPoint1;
 		if ( itCurrentPoint1 == rPolygonCore.end() )
@@ -1025,7 +1025,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 			RotateEdgeToPI2( &vBegin, &vEnd );
 			vBegin += vOffset;
 			vEnd += vOffset;
-			
+
 			if ( ( nCount & 0x01 ) > 0 )
 			{
 				SplitByEdge( polygon1, vBegin, vEnd, &polygon0, static_cast<TPolygon*>( 0 ) );
@@ -1070,7 +1070,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 	polygon0.insert( polygon0.end(), rBoundingPolygon.begin(), rBoundingPolygon.end() );
 
 	int nCount = 0;
-	
+
 	for ( typename TPolygon::const_iterator itPoint = rBoundingPolygon.begin(); itPoint != rBoundingPolygon.end(); ++itPoint )
 	{
 		if ( ( itPoint->x != rPoint.x ) || ( itPoint->y != rPoint.y ) )
@@ -1078,7 +1078,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 			TPoint vBegin = rPoint;
 			TPoint vEnd = ( *itPoint );
 			RotateEdgeToPI2( &vBegin, &vEnd );
-			
+
 			if ( ( nCount & 0x01 ) > 0 )
 			{
 				SplitByEdge( polygon1, vBegin, vEnd, &polygon0, static_cast<TPolygon*>( 0 ) );
@@ -1100,7 +1100,7 @@ bool GetVoronoyPolygon( const TPolygon &rBoundingPolygon, const TPolygon &rPoint
 			TPoint vBegin = rPoint;
 			TPoint vEnd = ( *itPoint );
 			RotateEdgeToPI2( &vBegin, &vEnd );
-			
+
 			if ( ( nCount & 0x01 ) > 0 )
 			{
 				SplitByEdge( polygon1, vBegin, vEnd, &polygon0, static_cast<TPolygon*>( 0 ) );
@@ -1225,7 +1225,7 @@ inline CTRect<float> GetPolygonBoundingBox( const TPolygon &rPolygon )
 //      |
 //			|
 //	fMinSideDistanceRatio ( 0.0f ... 0.5f )
-//	
+//
 //	rShiftRatio - пределы относительного отклонения новой точки от отрезка
 //
 template<class TPoint>
@@ -1235,12 +1235,12 @@ TPoint GetRandomEdgePoint( const TPoint &rvBegin, const TPoint &rvEnd, float fMi
 						 fmt::format( "Invalid fMinSideDistanceRatio {:g} [0, 0.5]", fMinSideDistanceRatio ) );
 	NI_ASSERT( rShiftRatio.min <= rShiftRatio.max,
 						 fmt::format( "Invalid fShiftRatio {:g} < {:g}", rShiftRatio.min, rShiftRatio.max ) );
-	
+
 	const TPoint vEdge = rvEnd - rvBegin;
-	
+
 	TPoint vNormal = GetNormal( vEdge );
 	Normalize( &vNormal );
-	
+
 	const float fPoint = NWin32Random::Random( fMinSideDistanceRatio, 1.0f - fMinSideDistanceRatio );
 	TPoint vPoint = GetPointOnEdge( rvBegin, rvEnd, fPoint );
 
@@ -1253,7 +1253,7 @@ TPoint GetRandomEdgePoint( const TPoint &rvBegin, const TPoint &rvEnd, float fMi
 	{
 		vPoint -= vNormal * fShift;
 	}
-	
+
 	return vPoint;
 }
 
@@ -1284,7 +1284,7 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 	TPolygon sequence0;
 	TPolygon sequence1;
 	sequence0.insert( sequence0.end(), rSourceSequence.begin(), rSourceSequence.end() );
-	
+
 	int nCount = 0;
 	while ( nCount < nDepth )
 	{
@@ -1311,10 +1311,10 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 					sequence0.push_back( GetRandomEdgePoint( ( *itSourcePoint0 ), ( *itSourcePoint1 ), fMinSideDistanceRatio, rShiftRatio, classifyEdge ) );
 					classifyEdge = GetNegativeClassifyEdge( classifyEdge );
 					bNewPointsNotInserted = false;
-				}					
+				}
 				++itSourcePoint0;
 				++itSourcePoint1;
-				
+
 				if ( itSourcePoint1 == sequence1.end() )
 				{
 					if ( bPolygon )
@@ -1354,7 +1354,7 @@ bool RandomizeEdges( const TPolygon &rSourceSequence, int nDepth, float fMinSide
 				}
 				++itSourcePoint0;
 				++itSourcePoint1;
-				
+
 				if ( itSourcePoint1 == sequence0.end() )
 				{
 					if ( bPolygon )
@@ -1466,7 +1466,7 @@ bool EnlargePolygonCore( const TPolygon &rBoundingPolygon, const TPolygon &rPoly
 			polygon0.clear();
 		}
 		++nCount;
-		
+
 		++itCurrentPoint0;
 		++itCurrentPoint1;
 		if ( itCurrentPoint1 == rPolygon.end() )
@@ -1510,9 +1510,9 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 	{
 		return fabs( v - ( *itCurrentPoint0 ) );
 	}
-	
+
 	EClassifyPolygon classifyPolygon = ClassifyPolygon( rPolygon, v );
-	
+
 	//точка на границе полигона
 	if ( ( classifyPolygon == CP_BOUNDARY ) || ( classifyPolygon == CP_VERTEX ) )
 	{
@@ -1532,21 +1532,21 @@ float PolygonDistance( const TPolygon &rPolygon, const TPoint &v, bool bPolygon 
 		{
 			fDistance = fVertexDistance;
 		}
-		
+
 		//скялярные произведения
 		const float dotPoduct_v0_10 = ( v - ( *itCurrentPoint0 ) ) * ( ( *itCurrentPoint1 ) - ( *itCurrentPoint0 ) );
 		const float dotPoduct_v1_01 = ( v - ( *itCurrentPoint1 ) ) * ( ( *itCurrentPoint0 ) - ( *itCurrentPoint1 ) );
-		
+
 		//проекция внутри отрезка
 		if ( ( dotPoduct_v0_10 > FP_EPSILON ) && ( dotPoduct_v1_01 > FP_EPSILON ) )
 		{
-			const float fEdgeDistance = fVertexDistance * sqrt( 1 - fabs2( dotPoduct_v0_10 / ( fVertexDistance * fabs( ( *itCurrentPoint1 ) - ( *itCurrentPoint0 ) ) ) ) );	
+			const float fEdgeDistance = fVertexDistance * sqrt( 1 - fabs2( dotPoduct_v0_10 / ( fVertexDistance * fabs( ( *itCurrentPoint1 ) - ( *itCurrentPoint0 ) ) ) ) );
 			if ( fEdgeDistance < fDistance )
 			{
 				fDistance = fEdgeDistance;
 			}
 		}
-		
+
 		++itCurrentPoint0;
 		++itCurrentPoint1;
 		if ( itCurrentPoint1 == rPolygon.end() )
@@ -1720,7 +1720,7 @@ struct StoreTilesFunctional
 	TList tileList;
 
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		tileList.push_back( TPoint( nXIndex, nYIndex ) );
 		return true;
 	}
@@ -1740,7 +1740,7 @@ struct SModifyTilesFunctional
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		(*pLockArray)[nYIndex][nXIndex] = value;
 		return true;
 	}
@@ -1761,7 +1761,7 @@ struct SCheckTilesFunctional
 		NI_ASSERT( pLockArray != 0, "Wrong parameter: pLockArray == 0" );
 	}
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( (*pLockArray)[nYIndex][nXIndex] == value )
 		{
 			isPresent = true;
@@ -1798,7 +1798,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 			const CArray2D<uint8_t> &rPassability = pStaticObjectRPGStats->GetPassability( pMapObjectInfo[nObjectIndex].nFrameIndex );
 			CTPoint<int> start( ( pMapObjectInfo[nObjectIndex].vPos.x - rOrigin.x + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE,
 													( pMapObjectInfo[nObjectIndex].vPos.y - rOrigin.y + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE );
-			
+
 			CTRect<int> indices( start.x, start.y, start.x + rPassability.GetSizeX(), start.y + rPassability.GetSizeY() );
 			int result = ValidateIndices( rRect, &indices );
 			//нет ни одного тайла
@@ -1968,7 +1968,7 @@ bool ApplyTilesInRange( const CTRect<int> &rRect,
 
 //CRAP{оптимизировать колекционирование тайлов в круге
 
-//в радиусе нет локаных тайлов 
+//в радиусе нет локаных тайлов
 template<class Type>
 bool ApplyTilesInCircle( const CTRect<int> &rRect,	//границы применимости функционалов
 												 int nXPosition,						//центр круга

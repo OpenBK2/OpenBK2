@@ -102,7 +102,7 @@ struct SAnimWaterMaterialKey
 
 	bool operator == ( const SAnimWaterMaterialKey &animWaterKey )
 	{
-		return ( pTex == animWaterKey.pTex ) &&	
+		return ( pTex == animWaterKey.pTex ) &&
 			( pSecondTex == animWaterKey.pSecondTex) &&
 			( nPriority == animWaterKey.nPriority) &&
 			( pTime == animWaterKey.pTime) &&
@@ -125,7 +125,7 @@ static NGScene::CAnimWaterMaterial * GetAnimatedMaterial( const SAnimWaterMateri
 
 	animMaterials.push_back( std::pair<SAnimWaterMaterialKey, CPtr<NGScene::CAnimWaterMaterial> >() );
 	animMaterials.back().first = animWaterKey;
-	animMaterials.back().second = new NGScene::CAnimWaterMaterial( animWaterKey.pTex, animWaterKey.pSecondTex, animWaterKey.nPriority, animWaterKey.pTime, 
+	animMaterials.back().second = new NGScene::CAnimWaterMaterial( animWaterKey.pTex, animWaterKey.pSecondTex, animWaterKey.nPriority, animWaterKey.pTime,
 		animWaterKey.bProjectOnTerrain, animWaterKey.nNumFramesX, animWaterKey.nNumFramesY, animWaterKey.bApplyFog, animWaterKey.bAddPlaced, animWaterKey.bDrawHorses );
 
 	return animMaterials.back().second;
@@ -137,7 +137,7 @@ void CVisWaterPatch::UpdateGeomData()
 
 void CVisWaterPatch::Recalc()
 {
-	if ( pValue == 0 ) 
+	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 
 	UpdateGeomData();
@@ -582,7 +582,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 
 			// Create patch for current water param
 			for ( std::vector<uint8_t>::const_iterator it = useParams.begin(); it != useParams.end(); ++it )
-			{				
+			{
 				const NWaterStuff::SWaterParams &curParams = waterParams[*it];
 				const float fTexCoordOffsX = 1.0f / curParams.nNumFramesX;
 				const float fTexCoordOffsY = 1.0f / curParams.nNumFramesY;
@@ -590,7 +590,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 				CPtr<CVisWaterPatch> pCurPatch = 0;
 
 				CVec2 vMinBBs( FP_MAX_VALUE, FP_MAX_VALUE );
-				CVec2 vMaxBBs( -FP_MAX_VALUE, -FP_MAX_VALUE );				
+				CVec2 vMaxBBs( -FP_MAX_VALUE, -FP_MAX_VALUE );
 
 				// Create vertices for patch
 				int nVertexId = 0;
@@ -628,7 +628,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 						// Calculating UV for this vertex
 						float fTexX = Clamp((float)(ii - nFirstX)/DEF_WATER_PATCH_SIZE_X, 0.0f, 1.0f );
 						float fTexY = Clamp((float)(gg - nFirstY)/DEF_WATER_PATCH_SIZE_Y, 0.0f, 1.0f );
-						
+
 						vertex.tex.Set( fTexX * fTexCoordOffsX , fTexY * fTexCoordOffsY );
 
 						float fSecondTexX = GetFracPart( ii * DEF_WATER_TEX_TILE_COEFF * fTexCoordOffsX ) * 2;
@@ -670,7 +670,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 						// Noise
 						if ( !curParams.szNoiseFileName.empty() )
 						{
-							const CArray2D<SColor24> &curNoise = noises[*it];							
+							const CArray2D<SColor24> &curNoise = noises[*it];
 							const SColor24 noiseCol = curNoise[gg%curNoise.GetSizeY()][ii%curNoise.GetSizeX()];
 							const float fNoiseCoeff = curParams.fNoiseCoeff;
 
@@ -689,7 +689,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 
 						vertex.texU.dw = nColor;
 
-						pCurPatch->data.vertices.push_back( vertex );						
+						pCurPatch->data.vertices.push_back( vertex );
 					}
 				}
 
@@ -713,20 +713,20 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 						int nIndex11 = vertexInPatch[gg+1][ii+1];
 
 						if ( nIndex00 != -1 && nIndex01  != -1 && nIndex11 != -1 &&
-							( pCurPatch->data.vertices[nIndex00].normal.w != 0 || pCurPatch->data.vertices[nIndex01].normal.w != 0 || pCurPatch->data.vertices[nIndex11].normal.w != 0) ) 
+							( pCurPatch->data.vertices[nIndex00].normal.w != 0 || pCurPatch->data.vertices[nIndex01].normal.w != 0 || pCurPatch->data.vertices[nIndex11].normal.w != 0) )
 						{
 							pCurPatch->data.triangles.push_back( STriangle( nIndex00, nIndex01, nIndex11 ) );
 						}
 
 						if ( nIndex00 != -1 && nIndex11 != -1 && nIndex10 != -1 &&
-							( pCurPatch->data.vertices[nIndex00].normal.w != 0 || pCurPatch->data.vertices[nIndex11].normal.w != 0 || pCurPatch->data.vertices[nIndex10].normal.w != 0) ) 
+							( pCurPatch->data.vertices[nIndex00].normal.w != 0 || pCurPatch->data.vertices[nIndex11].normal.w != 0 || pCurPatch->data.vertices[nIndex10].normal.w != 0) )
 						{
 							pCurPatch->data.triangles.push_back( STriangle( nIndex00, nIndex11, nIndex10 ) );
 						}
 					}
 				}
 
-				if ( pCurPatch->data.triangles.empty() )					
+				if ( pCurPatch->data.triangles.empty() )
 				{
 					pCurPatch = 0;
 					continue;
@@ -805,7 +805,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 					vertex.tex.Set( fTexX * fTexCoordOffsX , fTexY * fTexCoordOffsY );
 					//vertex.tex.Set( 0, 0 );
 
-					CalcCompactVector( &(vertex.normal), CVec3(0, 0, 1) );						
+					CalcCompactVector( &(vertex.normal), CVec3(0, 0, 1) );
 					vertex.texU.dw = 0x00ffffff;
 					vertex.texV.dw = 0;
 				}
@@ -869,7 +869,7 @@ void CWaterController::CreatePatches( const std::vector<NWaterStuff::SWaterParam
 					waterPatches[nCurPatchNum].pHolder = pGScene->CreateMesh( meshInfo, idPlace, 0, 0 );
 				}
 				*/
-			
+
 		}
 	}
 }
@@ -967,7 +967,7 @@ class CShaderWater : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fRadius;
 	int nNumFramesX;
 	int nNumFramesY;
-	ZEND 
+	ZEND
 	void Recalc();
 protected:
 	CShaderWater() {}
@@ -1122,7 +1122,7 @@ void CShaderWater::Recalc()
 
 	/*
 	if ( 0 && !szNoiseFileName.empty() )
-	{	
+	{
 		CFileStream noiseStream( NVFS::GetMainVFS(), szNoiseFileName );
 		if ( noiseStream.IsOk() )
 		{

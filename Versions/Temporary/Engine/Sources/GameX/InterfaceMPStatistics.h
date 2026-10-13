@@ -84,7 +84,7 @@ public:
 	CInterfaceMPStatistics();
 
 	bool Init();
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;

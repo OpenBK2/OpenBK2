@@ -12,11 +12,11 @@
 #include <zconf.h>
 
 void CClientListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
-{	
+{
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
 
-	CDynamicCast<CClientListData> pInfo = pData;	
+	CDynamicCast<CClientListData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	SetData( pWindow, pData );
@@ -26,7 +26,7 @@ void CClientListViewer::SetData ( CObjectBase *pWindow, const CObjectBase *pData
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
-	CDynamicCast<CClientListData> pInfo = pData;	
+	CDynamicCast<CClientListData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	NMPSetData::SetChildText( pItem, "ItemClientName", NStr::ToUnicode( pInfo->szName ) );
@@ -40,7 +40,7 @@ void CClientListViewer::SetData ( CObjectBase *pWindow, const CObjectBase *pData
 	{
 		if ( IsValid( pInterface ) )
 			pInfo->pStatusIcon->SetState( pInterface->GetButtonState( pInfo->szName ) );
-		else 
+		else
 			pInfo->pStatusIcon->SetState( 0 );
 	}
 }
@@ -53,10 +53,10 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 
 	std::wstring wszText = L"";
 	if ( pInfo )
-		wszText = pInfo->wszText;	
+		wszText = pInfo->wszText;
 
-	CDynamicCast<ITextView> pTxt = pItem->GetChild( "ItemComboText", true );		
-	NMPSetData::SetText( pTxt, wszText );			
+	CDynamicCast<ITextView> pTxt = pItem->GetChild( "ItemComboText", true );
+	NMPSetData::SetText( pTxt, wszText );
 }
 
 

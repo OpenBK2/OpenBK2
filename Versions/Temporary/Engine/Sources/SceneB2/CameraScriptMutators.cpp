@@ -6,9 +6,9 @@
 
 #include <fmt/format.h>
 
-void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll, 
+void SLERPAngles( float *pfYaw, float *pfPitch, float *pfRoll,
 									const float fYaw1, const float fPitch1, const float fRoll1,
-									const float fYaw2, const float fPitch2, const float fRoll2, 
+									const float fYaw2, const float fPitch2, const float fRoll2,
 									const float fdt )
 {
 	CQuat q1, q2, qRes;
@@ -53,8 +53,8 @@ void CSCamDMoveFlightMutator::Recalc()
 		{
 			float fYaw, fPitch, fRoll;
 			SLERPAngles( &fYaw, &fPitch, &fRoll,
-									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0, 
-									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0, 
+									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0,
+									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0,
 									 fCoeff );
 			this->fYaw = ToDegree( fYaw );
 			this->fPitch = ToDegree( fPitch );
@@ -63,7 +63,7 @@ void CSCamDMoveFlightMutator::Recalc()
 		//
 		const float fLeng = interp( fLengStart, fLengFinish, fCoeff );
 		const CVec3 vDir( sin(ToRadian(-this->fYaw))*cos(ToRadian(-this->fPitch)),
-											cos(ToRadian(-this->fYaw))*cos(ToRadian(-this->fPitch)), 
+											cos(ToRadian(-this->fYaw))*cos(ToRadian(-this->fPitch)),
 											sin(ToRadian(-this->fPitch)) );
 		this->vPosition = vAnchor - vDir*fLeng;
 		this->fFOV = interp( placementStart.fFOV, placementFinish.fFOV, fCoeff );
@@ -158,7 +158,7 @@ void CSCamDRotateFlightMutator::Recalc()
 	const float fYaw = ToRadian(this->fYaw);
 
 	CVec3 vOldDir = CVec3(	sin(-fYaw)*cos(-fPitch),
-													cos(-fYaw)*cos(-fPitch), 
+													cos(-fYaw)*cos(-fPitch),
 													sin(-fPitch) );
 
 	if ( vOldDir.z != 0 ) //	We cannot rotate horizontal camera
@@ -168,7 +168,7 @@ void CSCamDRotateFlightMutator::Recalc()
 	const float fNewYaw = fStartYaw + fAngle*fCoeff;
 	this->fYaw = ToDegree( fNewYaw );
 	CVec3 vNewDir = CVec3(	sin(-fNewYaw)*cos(-fPitch),
-													cos(-fNewYaw)*cos(-fPitch), 
+													cos(-fNewYaw)*cos(-fPitch),
 													sin(-fPitch) );
 	vNewDir *= fabs( vOldDir );
 
@@ -213,8 +213,8 @@ void CSCamSplineMutator::Recalc()
 		{
 			float fYaw, fPitch, fRoll;
 			SLERPAngles( &fYaw, &fPitch, &fRoll,
-									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0, 
-									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0, 
+									 ToRadian(placementStart.fYaw), ToRadian(placementStart.fPitch), 0,
+									 ToRadian(placementFinish.fYaw), ToRadian(placementFinish.fPitch), 0,
 									 fCoeff );
 			this->fYaw = ToDegree( fYaw );
 			this->fPitch = ToDegree( fPitch );
@@ -266,7 +266,7 @@ CScriptMoviesMutatorHolder::CScriptMoviesMutatorHolder( const NDb::SScriptMovies
 
 		// calculate Anchor
 		const CVec3 vDir( sin(ToRadian(-camPlacement.fYaw))*cos(ToRadian(-camPlacement.fPitch)),
-											cos(ToRadian(-camPlacement.fYaw))*cos(ToRadian(-camPlacement.fPitch)), 
+											cos(ToRadian(-camPlacement.fYaw))*cos(ToRadian(-camPlacement.fPitch)),
 											sin(ToRadian(-camPlacement.fPitch)) );
 		const float fDist = fabs( camPlacement.vPosition.z / vDir.z );
 		const CVec3 vAnchor = camPlacement.vPosition + vDir * fDist;
@@ -351,7 +351,7 @@ void CScriptMoviesMutatorHolder::Recalc()
 					const CVec3 vAnchor = cameraAnchors[i] + (cameraAnchors[i + 1] - cameraAnchors[i]) * fCoeff;
 					const float fDist = interp( cameraDists[i], cameraDists[i + 1], fCoeff );
 					const CVec3 vDir( sin(-(placement.fYaw))*cos(-(FP_PI2 * 3.0f - placement.fPitch)),
-														cos(-(placement.fYaw))*cos(-(FP_PI2 * 3.0f - placement.fPitch)), 
+														cos(-(placement.fYaw))*cos(-(FP_PI2 * 3.0f - placement.fPitch)),
 														sin(-(FP_PI2 * 3.0f - placement.fPitch)) );
 					placement.vPosition = vAnchor - vDir*fDist;
 				}

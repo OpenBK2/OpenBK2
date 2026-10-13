@@ -1,7 +1,7 @@
-bool HasFireEffect() const 
-{ 
-	return !szFireEffect.empty(); 
-} 
+bool HasFireEffect() const
+{
+	return !szFireEffect.empty();
+}
 
 bool ToAIUnits( bool bInEditor )
 {

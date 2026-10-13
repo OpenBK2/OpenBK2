@@ -160,7 +160,7 @@ void CMechUnitJoggingMutator::Stop()
 }
 
 int CMechUnitJoggingMutator::operator&( IBinSaver &saver )
-{	
+{
 	saver.Add( 1, &joggingX );
 	saver.Add( 2, &joggingY );
 	saver.Add( 3, &nStartTime );

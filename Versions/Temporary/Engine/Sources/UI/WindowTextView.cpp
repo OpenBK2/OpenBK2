@@ -83,7 +83,7 @@ bool CWindowTextView::InitText()
 		}
 		return false;
 	}
-	
+
 	pGfxText = CreateML( this );
 	if ( nIDForMLHandler >= 0 )
 		pGfxText->SetIDForHandler( nIDForMLHandler );
@@ -130,8 +130,8 @@ void CWindowTextView::Visit( struct IUIVisitor *pVisitor )
 	if ( fFontScale != NGScene::GetRuntimeFontScale( UsesHudFontScale() ) )
 		InitText();
 	CWindow::Visit( pVisitor );
-	
-	if ( pGfxText ) 
+
+	if ( pGfxText )
 	{
 		CTRect<float> textRC;
 		FillWindowRect( &textRC );
@@ -151,7 +151,7 @@ const std::wstring& CWindowTextView::GetDBFormatText() const
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pTextFormat->,FormatString) )
 			return GET_TEXT_PRE(pTextFormat->,FormatString);
 	}
-	
+
 	return CWindow::GetDBFormatText();
 }
 
@@ -177,7 +177,7 @@ bool CWindowTextView::SetText( const std::wstring &_szText )
 {
 	if ( wszCustomText == _szText )
 		return true;
-		
+
 	wszCustomText = _szText;
 	return InitText();
 }

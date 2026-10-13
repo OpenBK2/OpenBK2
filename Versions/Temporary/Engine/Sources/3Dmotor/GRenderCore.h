@@ -40,20 +40,20 @@ class CPartFlags
 public:
 	void Clear() { Fill(0); }
 	void TakeAll() { Fill( 0xffffffff ); }
-	void Set( int nIndex ) 
-	{ 
+	void Set( int nIndex )
+	{
 		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
-		flags[ nIndex / 32 ] |= 1 << ( nIndex & 31 ); 
+		flags[ nIndex / 32 ] |= 1 << ( nIndex & 31 );
 	}
-	void Reset( int nIndex ) 
-	{ 
+	void Reset( int nIndex )
+	{
 		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
 		flags[ nIndex / 32 ] &= ~( 1 << ( nIndex & 31 ) );
 	}
-	int IsSet( int nIndex ) const 
-	{ 
-		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER ); 
-		return flags[ nIndex / 32 ] & ( 1 << nIndex ); 
+	int IsSet( int nIndex ) const
+	{
+		ASSERT( nIndex >= 0 && nIndex < PF_MAX_PARTS_PER_COMBINER );
+		return flags[ nIndex / 32 ] & ( 1 << nIndex );
 	}
 	bool IsEmpty() const { for ( int k = 0; k < GetBlocksNumber(); ++k ) { if ( flags[k] ) return false; } return true; }
 	bool IsFullGet() const { for ( int k = 0; k < GetBlocksNumber(); ++k ) { if ( flags[k] != 0xffffffff ) return false; } return true; }
@@ -96,7 +96,7 @@ struct SRenderPartSet
 	SRenderPartSet() {}
 	SRenderPartSet( CObjectBase *_pNode, const std::vector< CPtr<IPart> > *_pParts, SRenderGeometryInfo *_pGeometry, int _nFloorMask )
 		: pNode(_pNode), pParts(_pParts), pGeometry(_pGeometry), nFloorMask(_nFloorMask)
-	{ 
+	{
 		parts.Clear();
 	}
 	//SRenderPartSet( CObjectBase *_pNode ): pNode(_pNode) {}
@@ -114,7 +114,7 @@ public:
 		DT_DYNAMIC,
 		DT_ALL
 	};
-	
+
 	virtual CFuncBase<SPerVertexLightState> *GetLightState() const = 0;
 	virtual void FormPartList( CTransformStack *pTS, std::vector<SRenderPartSet> *pRes, EDepthType dt, const SGroupSelect &mask ) = 0;
 	virtual void FormDepthList( CTransformStack *pTS, const CVec3 &vDir, EDepthType dt, CSceneFragments *pRes ) = 0;
@@ -151,9 +151,9 @@ struct SRenderGeometryInfo
 	CDGPtr<IVBCombiner> pVertices;
 	CDGPtr< CFuncBase<std::vector<NGfx::STriangleList> > > pTriLists[TLT_NUMBER];
 
-	int operator&( CStructureSaver &f ) 
-	{ 
-		f.Add(1,&pVertices); 
+	int operator&( CStructureSaver &f )
+	{
+		f.Add(1,&pVertices);
 		for ( int k = 0; k < TLT_NUMBER; ++k )
 			f.Add(2,&pTriLists[k], k + 1 );
 		return 0;
@@ -331,7 +331,7 @@ struct SRenderFragmentKey
 };
 struct SRenderFragmentHash
 {
-	int operator()( const SRenderFragmentKey &a ) const 
+	int operator()( const SRenderFragmentKey &a ) const
 	{
 		ASSERT( sizeof(SRenderFragmentKey) == sizeof(int) * 4 );
 		int *p = (int*)&a;
@@ -352,7 +352,7 @@ private:
 	CPool<SRenderStaticInfo,128> staticInfos;
 	CPool<SRenderGeometryInfo,128> geometryInfos;
 	CPool<SRenderFragmentInfo,128> fragmentInfos;
-	
+
 	typedef std::unordered_map<SRenderFragmentKey, int, SRenderFragmentHash> CFragmentHash;
 	CFragmentHash fragmentHash;
 	std::vector<SRenderStaticInfo*> statics;
@@ -369,7 +369,7 @@ public:
 	void AddElement( int nGeometryIndex, const CPartFlags &_parts, IMaterial *pMaterial, const SPerPartVariables &_vars );
 	void AddLitParticles( IVBCombiner *pCombiner, CFuncBase<std::vector<NGfx::STriangleList> > *pTris, int nPart, const SBound &_bv );
 	void SetLitParticlesMaterial( IMaterial *p );
-	
+
 	int GetSceneTris() const { return nSceneTris; }
 	// starts with 1st element, 0th is lit particles
 	bool IsFilteredFragment( unsigned int n ) const { if ( n >= filterFragment.size() ) return false; return filterFragment[n]; }
@@ -397,7 +397,7 @@ class CSelectGeometries
 	std::vector<CPartFlags> holdParts;
 public:
 	template<class T>
-		CSelectGeometries( CSceneFragments *_pScene, const T &select ) : pScene(_pScene) 
+		CSelectGeometries( CSceneFragments *_pScene, const T &select ) : pScene(_pScene)
 	{
 		holdFlags = pScene->filterGeometry;
 		holdParts = pScene->selectedParts;
@@ -428,7 +428,7 @@ class CSelectFragments
 	std::vector<char> holdFilter;
 public:
 	template<class T>
-		CSelectFragments( CSceneFragments *_pScene, const T &select ) : pScene(_pScene) 
+		CSelectFragments( CSceneFragments *_pScene, const T &select ) : pScene(_pScene)
 	{
 		holdFilter = pScene->filterFragment;
 		if ( holdFilter.empty() )
@@ -527,7 +527,7 @@ public:
 		UParameter p1, p2, p3;
 
 		SOperation() {}
-		SOperation( const SRenderFragmentInfo *_pFrag, unsigned char _op, TPartPriority _nPartPriority, unsigned char _nPass, 
+		SOperation( const SRenderFragmentInfo *_pFrag, unsigned char _op, TPartPriority _nPartPriority, unsigned char _nPass,
 			int _nSBM, unsigned char _nRegister, UParameter _p1 = UParameter(float(0)), UParameter _p2 = UParameter(float(0)), UParameter _p3 = UParameter(float(0)) )
 			: pFrag(_pFrag), op(_op), nPass(_nPass), nStencilBlendMode(_nSBM), nDestRegister(_nRegister),
 			nPartPriority(_nPartPriority),
@@ -535,8 +535,8 @@ public:
 		bool IsSame( const SOperation &a ) const
 		{
 			ASSERT( sizeof(p1.f) == sizeof(p1) );
-			return op == a.op && nPass == a.nPass && nStencilBlendMode == a.nStencilBlendMode && 
-				nDestRegister == a.nDestRegister && nPartPriority == a.nPartPriority && 
+			return op == a.op && nPass == a.nPass && nStencilBlendMode == a.nStencilBlendMode &&
+				nDestRegister == a.nDestRegister && nPartPriority == a.nPartPriority &&
 				p1.nData == a.p1.nData && p2.nData == a.p2.nData && p3.nData == a.p3.nData;
 		}
 	};
@@ -558,13 +558,13 @@ public:
 		: pRes(_pRes), pCurFragment(_pTarget), bHasAddedOps(false), nPartPriority( _pTarget->vars.nPriority ) {}
 	bool HasAddedOps() const { return bHasAddedOps; }
 	void AddOperation(
-		unsigned char _op, unsigned char _nPass, int nSBM, char nDestRegister, 
-		CRenderCmdList::UParameter p1 = CRenderCmdList::UParameter(), 
-		CRenderCmdList::UParameter p2 = CRenderCmdList::UParameter(), 
+		unsigned char _op, unsigned char _nPass, int nSBM, char nDestRegister,
+		CRenderCmdList::UParameter p1 = CRenderCmdList::UParameter(),
+		CRenderCmdList::UParameter p2 = CRenderCmdList::UParameter(),
 		CRenderCmdList::UParameter p3 = CRenderCmdList::UParameter() )
 	{
 		ASSERT( pCurFragment );
-		pRes->push_back( 
+		pRes->push_back(
 			CRenderCmdList::SOperation( pCurFragment, _op, nPartPriority, _nPass, nSBM, nDestRegister, p1, p2, p3 )
 			);
 		bHasAddedOps = true;
@@ -572,7 +572,7 @@ public:
 	const SRenderFragmentInfo *GetCurFragment() const { return pCurFragment; }
 };
 
-void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade, 
+void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitParticles, float fMinFade,
 	SPerspDirectionalDepthInfo *pDepthInfo, unsigned char op,
 	CRenderCmdList::UParameter _p1 = CRenderCmdList::UParameter(),
 	CRenderCmdList::UParameter _p2 = CRenderCmdList::UParameter(),
@@ -588,7 +588,7 @@ struct SRenderPathContext
 	CPool<CVec3> vec3Pool;
 	bool bTnL;
 
-	SRenderPathContext( bool _bTnL, NGfx::CTexture *_pDepthTex, NGfx::CTexture *_pCurrentWaterReflectionTexture ) : bTnL(_bTnL), 
+	SRenderPathContext( bool _bTnL, NGfx::CTexture *_pDepthTex, NGfx::CTexture *_pCurrentWaterReflectionTexture ) : bTnL(_bTnL),
 		pCurrentDepthTexture(_pDepthTex), pCurrentWaterReflectionTexture(_pCurrentWaterReflectionTexture) {}
 };
 
@@ -622,7 +622,7 @@ public:
 	virtual IMaterial *GetNoReceiveShadows(){return 0;};
 	virtual void SetPriority( int nP ){};
 	virtual EDynamicType GetDynamicType(){ return DT_DONT_CARE; };
-	
+
 };
 
 struct SParticleLMRenderTargetInfo

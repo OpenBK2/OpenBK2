@@ -148,7 +148,7 @@ CNetPacket* CNet::ReceivePacket()
 			if ( pNetPacket )
 			{
 				pNetPacket->nClientID = nClientID;
-        return pNetPacket.Extract();			
+        return pNetPacket.Extract();
 			}
 		}
 	}
@@ -202,7 +202,7 @@ void CNet::SendPacket( CNetPacket *pPacket )
 			CPtr<IBinSaver> pSaver = CreateNetSaver( &memStream, SAVER_MODE_WRITE );
 			pSaver->Add( 1, &pNetPacket );
 		}
-		
+
 		if ( memStream.GetSize() > MIN_PACKET_SIZE_TO_ZIP )
 			SendZipped( pNetPacket->nClientID, memStream );
 		else

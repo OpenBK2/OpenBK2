@@ -64,7 +64,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseTransform); f.Add(3,&mMultiplier); f.Add(4,&pvTranslatePart); return 0; }
 
 	CAttachedLightEffectTransform() : pBaseTransform(0), pvTranslatePart(0) {}
-	CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier ); 
+	CAttachedLightEffectTransform( CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier );
 };
 
 class CConstantOffsetTransform : public CFuncBase<SFBTransform>

@@ -19,7 +19,7 @@ int lua##Name( lua_State* pState )																			\
 	Script *pScript;																											\
 	std::vector<SLuaParams> luaParams;																					\
 	if ( !luaPrepareData( pState, #Name, Params, &pScript, &luaParams ) )	\
-		return 0;																														
+		return 0;
 #define END_SCRIPT_COMMAND }
 
 

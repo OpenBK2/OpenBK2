@@ -9,7 +9,7 @@ extern CGroupLogic theGroupLogic;
 
 CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 : pUnit( _pUnit ), fEntrenchTimeCoeff( 1.0f ),
-	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION, 
+	CExecutorUnitBase( TID_SOLDIER_ENTRENCH_SELF, (1000 + NRandom::Random(1000))/SConsts::AI_SEGMENT_DURATION,
 	NDb::ABILITY_ENTRENCH_SELF )
 {
 	RecordRandomCall();
@@ -17,7 +17,7 @@ CExecutorSoldierEntrench::CExecutorSoldierEntrench( CAIUnit *_pUnit )
 	for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 	{
 		const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
-		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 
+		if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS )
 		{
 			const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 			NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found");
@@ -118,7 +118,7 @@ bool CExecutorSoldierEntrench::NotifyEvent( const CExecutorEvent &event )
 		if ( abilityEvent.GetAbility() == GetAbility() )
 			return CExecutorUnitBase::NotifyEvent( event );
 	}
-	
+
 	return false;
 }
 

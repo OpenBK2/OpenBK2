@@ -192,7 +192,7 @@ void CMPManagerModeNivalNet::OnLeaveGame()
 
 bool CMPManagerModeNivalNet::ShouldSendHeartbeatNow()
 {
-	return ( ( IsGameRunning() || IsInGameRoom() || eState == EGS_LADDER_WAIT_CLIENTS ) 
+	return ( ( IsGameRunning() || IsInGameRoom() || eState == EGS_LADDER_WAIT_CLIENTS )
 		&& nGameID >= 0 && ( Singleton<IGameTimer>()->GetAbsTime() > timeNextGameHeartbeat ) );
 }
 
@@ -557,7 +557,7 @@ void CMPManagerModeNivalNet::OnSurrender()
 
 bool CMPManagerModeNivalNet::OnLoginNivalNetMessage( SMPUILoginNivalNetMessage *pMsg )
 {
-	CreateServerClient();	
+	CreateServerClient();
 	if ( !pClient )
 	{
 		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NET_DRIVER_CRITICAL_ERROR" ) );
@@ -617,7 +617,7 @@ bool CMPManagerModeNivalNet::OnRegisterNivalNetMessage( SMPUIRegisterMessage *pM
 	}
 	szMPName = NStr::ToMBCS( pMsg->wszName );
 	NGlobal::SetVar( "Multiplayer.PlayerName", szMPName );
-	CRegisterPacket *pRegisterPkt = new CRegisterPacket( 0, szMPName, NStr::ToMBCS( pMsg->wszPassword ), 
+	CRegisterPacket *pRegisterPkt = new CRegisterPacket( 0, szMPName, NStr::ToMBCS( pMsg->wszPassword ),
 		NStr::ToMBCS( pMsg->wszCDKey ), NStr::ToMBCS( pMsg->wszEmail ) );
 	pClient->SendPacket( pRegisterPkt );
 	nMyClientID = -1;
@@ -682,7 +682,7 @@ bool CMPManagerModeNivalNet::OnSetupLadderGameMessage( SMPUILadderGameMessage *p
 		CLadderStatisticsRequestPacket *pPkt = new CLadderStatisticsRequestPacket( 0, szMPName, true );
 		pClient->SendPacket( pPkt );
 	}
-	
+
 	return true;
 }
 
@@ -970,12 +970,12 @@ bool CMPManagerModeNivalNet::OnGameClientWasKicked( class CGameClientWasKicked *
 
 bool CMPManagerModeNivalNet::OnNetRemoveClientPacket( class CNetRemoveClient *pPacket )
 {
-	if ( pPacket->nClientID == 0 )			// Disconnected from Server 
+	if ( pPacket->nClientID == 0 )			// Disconnected from Server
 	{
 		OnCriticalNetworkError( InterfaceState()->GetTextEntry( "T_NIVAL_NET_SERVER_DISCONNECT" ) );
 	}
 	RemoveClient( pPacket->nClientID, false );
-	
+
 	return true;
 }
 
@@ -1127,7 +1127,7 @@ bool CMPManagerModeNivalNet::OnSystemBroadcastPacket( class CSystemBroadcastPack
 
 	std::wstring wszMsg = InterfaceState()->GetTextEntry( "NIVAL_NET_BROADCAST_HEADER" );
 	wszMsg += L"<br>" + pPacket->wszText;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
 		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", wszMsg ).c_str() );
 	return true;
 }

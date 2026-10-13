@@ -58,7 +58,7 @@ public:
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState(class CAICommand *pCommand);
-	
+
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 	virtual EUnitStateNames GetName() { return EUSN_MOVE; }
@@ -89,7 +89,7 @@ public:
 
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_TURN_TO_POINT; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,7 +130,7 @@ public:
 
 	virtual bool IsAttacksUnit() const { return false; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_BOMBARDMANET; }
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +168,7 @@ public:
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState(class CAICommand *pCommand);
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_RANGING; }
 	void GetRangeCircle( CCircle *pCircle ) const;
 
@@ -183,7 +183,7 @@ class CArtilleryInstallTransportState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CArtilleryInstallTransportState );
 
-	enum EArtilleryInstallTransportState 
+	enum EArtilleryInstallTransportState
 	{
 		AITS_WAITING_FOR_CREW,
 		AITS_INSTALLING,
@@ -210,8 +210,8 @@ public:
 class CArtilleryUninstallTransportState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CArtilleryUninstallTransportState );
-	
-	enum EArtilleryUninstallTransportState 
+
+	enum EArtilleryUninstallTransportState
 	{
 		AUTS_WAIT_FOR_UNINSTALL,
 		AUTS_INSTALLING,
@@ -265,7 +265,7 @@ public:
 
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	class CAITransportUnit* GetTowingTransport() const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -279,7 +279,7 @@ class CArtilleryAttackState : public IUnitAttackingState, public CFreeFireManage
 	CPtr<CArtillery> pArtillery;
 	EAttackStates eState = {};
 	SAIAngle wDirToRotate;
-	
+
 	CPtr<CAIUnit> pEnemy;
 	bool bAim = {};
 	bool bFinish = {};
@@ -355,7 +355,7 @@ class CArtilleryRestState : public CMechUnitRestState
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMechUnitRestState*)this); f.Add(2,&pArtillery); return 0; }
 public:
 	static IUnitState* Instance( class CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
-	
+
 	CArtilleryRestState() : pArtillery( 0 ) { }
 	CArtilleryRestState( class CArtillery *pArtillery, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
@@ -370,7 +370,7 @@ class CArtilleryAttackAviationState : public CSoldierAttackAviationState
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CSoldierAttackAviationState*)this); f.Add(2,&pArtillery); return 0; }
 public:
 	static IUnitState* Instance( class CArtillery *pArtillery, class CAviation *pPlane );
-	
+
 	CArtilleryAttackAviationState() : pArtillery( 0 ) { }
 	CArtilleryAttackAviationState( class CArtillery *pArtillery, class CAviation *pPlane );
 

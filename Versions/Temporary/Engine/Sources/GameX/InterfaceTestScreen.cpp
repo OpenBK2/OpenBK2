@@ -25,7 +25,7 @@ bool CInterfaceTestScreen::Init()
 {
 	Cursor()->Show( true );
 	Cursor()->SetMode( NDb::USER_ACTION_UNKNOWN );
-	
+
 	return true;
 }
 
@@ -34,13 +34,13 @@ void CInterfaceTestScreen::SetScreen( const CDBID &_dbid )
 	dbid = _dbid;
 	if ( dbid.IsEmpty() )
 		return;
-	
+
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 
 	pScreen->SetGView( Scene()->GetG2DView() );
 	pScreen->Load( NDb::Get<NDb::SWindowScreen>(dbid), this );
 	Singleton<IScene>()->AddScreen( pScreen );
-	
+
 	pScreen->RegisterObservers();
 
 }
@@ -50,7 +50,7 @@ bool CInterfaceTestScreen::StepLocal( bool bAppActive )
 	if ( !CInterfaceScreenBase::StepLocal( bAppActive ) )
 		return false;
 
-	
+
 	return true;
 }
 
@@ -75,7 +75,7 @@ void CICTestScreen::Configure( const char *pszConfig )
 void StartTestScreen( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
-	if ( !paramsSet.empty() ) 
+	if ( !paramsSet.empty() )
 	{
 		const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 		NMainLoop::Command( ML_COMMAND_TEST_SCREEN, szVal.c_str() );

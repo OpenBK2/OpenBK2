@@ -15,8 +15,8 @@ inline void RandUniformlyInCircle( const float fR, CVec2 *pvRand )
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // равномерно по углу и по радиусу в круге с центром в 0 и радиусом fR
-inline void RandQuadrInCircle(	const float fR, 
-																CVec2 *pvRand, 
+inline void RandQuadrInCircle(	const float fR,
+																CVec2 *pvRand,
 																const float fRatio=0.0f,
 																CVec2 vTrajLine = VNULL2)
 {
@@ -24,7 +24,7 @@ inline void RandQuadrInCircle(	const float fR,
 	const CVec2 dir( GetVectorByDirection( temp ) );
 	const float fRandR = fR * NRandom::Random( 0.0f, 1.0f );
 
-	
+
 	if ( fRatio == 0.0f )
 	{
 		pvRand->x = dir.x * fRandR;

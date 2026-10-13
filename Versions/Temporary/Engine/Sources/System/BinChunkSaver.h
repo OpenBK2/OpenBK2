@@ -30,7 +30,7 @@ private:
 		chunk_id idChunk = 0, idLastChunk = 0;
 		int nStart = 0, nLength = 0;
 		int nLastPos = 0, nLastNumber = 0;
-		
+
 		void ClearCache();
 		void Clear();
 		SChunkLevel() { Clear(); }
@@ -101,14 +101,14 @@ public:
 		: pRes( _pRes )
 	{
 		SetMode(mode);
-		Start( ext ); 
+		Start( ext );
 	}
 
 	CStructureSaver( CDataStream *_pRes, ESaverMode mode, const std::vector<SBinSaverExternalObject> &ext, std::vector< CPtr<IDebugSaveCheckObj> > &_checkers )
 		: pRes( _pRes ), checkers( _checkers ), bDestroy( false )
 	{
 		SetMode(mode);
-		Start( ext ); 
+		Start( ext );
 	}
 
 	~CStructureSaver() { Finish(); }

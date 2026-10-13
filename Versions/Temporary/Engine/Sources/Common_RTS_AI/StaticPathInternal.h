@@ -23,18 +23,18 @@ class CCommonStaticPath : public IStaticPath
 public:
 	CCommonStaticPath()	: nLen( -1 ), startTile( -1, -1 ), finishTile( -1, -1 ), finishPoint( VNULL2 )	{ }
 	CCommonStaticPath( class CCommonPathFinder *pStaticPathFinder, CAIMap *pAIMap );
-	
+
 	// передвинуть начальный тайл на path[nStart]
 	void MoveStartTileTo( const int nStart );
 	// сделать конечным тайл на path[nFinish - 1]
 	void MoveFinishTileTo( const int nFinish );
 	// передвинуть конечную точку на vMove
 	void MoveFinishPointBy( const CVec2 &vMove );
-	
+
 	const int GetLength() const	{ return nLen; }
 
 	virtual const SVector GetTile( const int n ) const	{	NI_ASSERT( n >= 0 && n < nLen, "Wrong point number" ); return path[n]; }
-	
+
 	const SVector GetStartTile() const	{ return startTile; }
 	const SVector GetFinishTile() const	{ return finishTile; }
 	const CVec2& GetFinishPoint() const { return finishPoint; }

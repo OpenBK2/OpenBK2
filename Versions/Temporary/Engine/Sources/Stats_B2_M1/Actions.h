@@ -91,7 +91,7 @@ struct SAINotifyRPGStats : public SSuspendedUpdate
 public:
 	//
 	SAINotifyRPGStats() { }
-	SAINotifyRPGStats( const int nObjUniqueID, const float _fHitPoints ) 
+	SAINotifyRPGStats( const int nObjUniqueID, const float _fHitPoints )
 		: SSuspendedUpdate( nObjUniqueID ), fHitPoints( _fHitPoints ) { }
 };
 
@@ -103,7 +103,7 @@ struct SAINotifyDiplomacy : public SSuspendedUpdate
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&eDiplomacy); f.Add(3,&nPlayer); return 0; }
 public:
 	SAINotifyDiplomacy() { }
-	SAINotifyDiplomacy( EDiplomacyInfo _eDiplomacy, const int nObjUniqueID, const int _nPlayer ) 
+	SAINotifyDiplomacy( EDiplomacyInfo _eDiplomacy, const int nObjUniqueID, const int _nPlayer )
 		: SSuspendedUpdate( nObjUniqueID ), eDiplomacy( _eDiplomacy ), nPlayer( _nPlayer ) { }
 };
 
@@ -117,7 +117,7 @@ struct SAINotifyKeyBuilding : public SSuspendedUpdate
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SSuspendedUpdate *)this); f.Add(2,&nPlayer); f.Add(3,&nPrevPlayer); f.Add(4,&bStorage); return 0; }
 public:
 	SAINotifyKeyBuilding() { }
-	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer ) 
+	SAINotifyKeyBuilding( const int nObjUniqueID, bool _bStorage, const int _nPlayer, const int _nPrevPlayer )
 		: SSuspendedUpdate( nObjUniqueID ), nPlayer( _nPlayer ), nPrevPlayer( _nPrevPlayer ), bStorage( _bStorage ), bFriendLost( false ) { }
 };
 
@@ -138,7 +138,7 @@ public:
 struct SAINotifyPlacement : public SSuspendedUpdate
 {
 	bool bNewFormat = {};											// when true OLD is ignored
-	
+
 	//OLD{
 	CVec2 center;													// (x, y)
 	float z = {};															// height (mostly for planes)
@@ -147,7 +147,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 	//OLD}
 
 	//NEW{
-	CVec3 vPlacement;											// unit center 
+	CVec3 vPlacement;											// unit center
 	CQuat rotation;												// unit orientation (not sexual, in world)
 	//NEW}
 
@@ -180,7 +180,7 @@ struct SAINotifyPlacement : public SSuspendedUpdate
 		saver.Add( 9, &fSpeed );
 		saver.Add( 10, &cSoil );
 		saver.Add( 11, &fWaterCoeff );
-		
+
 		return 0;
 	}
 };
@@ -266,7 +266,7 @@ public:
 	SAINotifyMechShot() { }
 	SAINotifyMechShot( const uint8_t _typeID, const int _nObjUniqueID, const uint8_t _cGun, const uint8_t _cShell, const NTimer::STime &_time, const CVec3 &_vDestPos )
 		: SAINotifyBaseShot( _typeID, _nObjUniqueID, _cShell, _time, _vDestPos ), cGun( _cGun ) {  }
-	
+
 };
 
 struct SAINotifyInfantryShot : public SAINotifyBaseShot
@@ -324,7 +324,7 @@ struct SAINotifyUpdateLaseMark
 
 		int nPlatform = {};
 		int nGun = {};
-		
+
 		CVec3 vTarget;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLaserMarkID); f.Add(3,&nUnitID); f.Add(4,&nPlatform); f.Add(5,&nGun); f.Add(6,&vTarget); return 0; }
 public:

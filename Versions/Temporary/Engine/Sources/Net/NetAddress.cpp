@@ -12,7 +12,7 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 	memset( &addr, 0, sizeof( addr ) );
 	ASSERT( sizeof(addr) >= sizeof( sockaddr_in) );
   sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
-	
+
 	nameRemote.sin_family = AF_INET;
 	// extract port number from address
 	std::string szAddr = pszHost;
@@ -26,7 +26,7 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 		szAddr.resize( nIdx );
 	}
 	// determine host
-	nameRemote.sin_addr.s_addr = inet_addr( szAddr.c_str() ); 
+	nameRemote.sin_addr.s_addr = inet_addr( szAddr.c_str() );
 	if( nameRemote.sin_addr.s_addr == INADDR_NONE )  // not resolved?
 	{
 		hostent *he;
@@ -42,7 +42,7 @@ bool CNodeAddress::SetInetName( const char *pszHost, int nDefaultPort )
 std::string CNodeAddress::GetName( bool bResolve ) const
 {
   sockaddr_in &nameRemote = *(sockaddr_in*)&addr;
-	
+
 	hostent *he = 0;
 	if ( bResolve )
 		he = gethostbyaddr( (const char*)&addr, sizeof(addr), AF_INET ); // m.b. it is string comp.domain
@@ -50,7 +50,7 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 	if( he == 0 || he->h_name == 0 )
 	{
 		const unsigned char *pOctets = AddressOctets( &nameRemote.sin_addr );
-		sprintf( szBuf, "%i.%i.%i.%i:%i", 
+		sprintf( szBuf, "%i.%i.%i.%i:%i",
 			(int) pOctets[0],
 			(int) pOctets[1],
 			(int) pOctets[2],
@@ -59,7 +59,7 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 	}
 	else
 	{
-		sprintf( szBuf, "%s:%i", 
+		sprintf( szBuf, "%s:%i",
 			(const char*) he->h_name,
 			(int) ntohs( nameRemote.sin_port ) );
 	}

@@ -126,7 +126,7 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 		if ( files.find( pNode->GetFile() ) != files.end() )
 			continue;
 
-		VERIFY_NOLINE( insideDefs.find( szDefName ) == insideDefs.end(), 
+		VERIFY_NOLINE( insideDefs.find( szDefName ) == insideDefs.end(),
 			fmt::format( "{}({}) error: type {} redifinition, see \n\t\t{}({}):",
 			pNM->insideDefs[szDefName]->GetFile(), pNM->insideDefs[szDefName]->GetLine(), szDefName,
 			insideDefs[szDefName]->GetFile(), insideDefs[szDefName]->GetLine() ), return );
@@ -153,7 +153,7 @@ void CNamespace::MergeFiles( CNamespace *pNM, const std::string &szFileName )
 		if ( files.find( pAttr->GetFile() ) != files.end() )
 			continue;
 
-		VERIFY_NOLINE( insideAttrs.find( szAttrrDefName ) == insideAttrs.end(), 
+		VERIFY_NOLINE( insideAttrs.find( szAttrrDefName ) == insideAttrs.end(),
 			fmt::format( "{}({}): type {} redifinition, see\n\t\t {}({})",
 			pNM->insideAttrs[szAttrrDefName]->GetFile(), pNM->insideAttrs[szAttrrDefName]->GetLine(),
 			szAttrrDefName,
@@ -278,13 +278,13 @@ CTypeDefNode::TAttrIter CTypeDefNode::AttrEnd() const
 }
 
 CTypeNode* CTypeDefNode::GetReferencedType( bool bRecursive ) const
-{ 
+{
 	if ( !bRecursive )
 		return pReferencedType;
 	else
 	{
 		NI_VERIFY( pReferencedType != 0, "null referenced type", return 0 );
-		
+
 		CDynamicCast<CTypeDefNode> pType = pReferencedType;
 		return pType ? pType->GetReferencedType( true ) : pReferencedType.GetPtr();
 	}
@@ -347,17 +347,17 @@ CVariable::TAttrIter CVariable::AttrEnd() const
 //*******************************************************************
 
 CEnumNode::TEntriesIter CEnumNode::EntriesBegin() const
-{ 
+{
 	return SListOperations<CEnumEntryNode>().Begin( pEntriesList );
 }
 
 CEnumNode::TEntriesIter CEnumNode::EntriesEnd() const
-{ 
+{
 	return SListOperations<CEnumEntryNode>().End( pEntriesList );
 }
 
 CEnumNode::TAttrIter CEnumNode::AttrBegin() const
-{ 
+{
 	return SListOperations<CAttributeNode>().Begin( pAttrList );
 }
 

@@ -116,7 +116,7 @@ void CWindowListHeader::AdjustColums()
 	for ( int i = 0; i < columnSizes.size(); ++i )
 	{
 		const int nNext = columnSizes[i] + nXSoFar;
-		
+
 		if ( nXSoFar > nW )
 		{
 			columnSizes[i] = 0;
@@ -133,7 +133,7 @@ void CWindowListHeader::AdjustColums()
 
 		nXSoFar = nNext;
 	}
-	
+
 	if ( pHeaderNotify )
 		pHeaderNotify->ColumnsResized( columnSizes );
 }
@@ -142,8 +142,8 @@ bool CWindowListHeader::OnButtonDblClk( const CVec2 &vPos, const int nButton )
 {
 	const bool bRes = CWindow::OnButtonDblClk( vPos, nButton );
 	if ( (MSTATE_BUTTON1 & nButton) &&
-				IsInside( vPos ) && 
-				bResizable && 
+				IsInside( vPos ) &&
+				bResizable &&
 				pHeaderNotify )
 	{
 		const int nColumn = GetResizeColumnIndex( vPos ).first;
@@ -167,7 +167,7 @@ bool CWindowListHeader::OnMouseMove( const CVec2 &vPos, const int nButton )
 			nResizingIndex = -1;
 	}
 	CWindow::OnMouseMove( vPos, nButton );
-	
+
 	if ( MSTATE_FREE == nButton )
 	{
 		//CRAP{ before new scene
@@ -180,7 +180,7 @@ bool CWindowListHeader::OnMouseMove( const CVec2 &vPos, const int nButton )
 			else
 				Singleton<ICursor>()->SetMode( SInterfaceConsts::CURSOR_MODE_LIST_HEADER_RESIZE() );
 		}
-		else 
+		else
 			Singleton<ICursor>()->SetMode( SInterfaceConsts::CURSOR_MODE_NORMAL_UI() );
 			*/
 		//CRAP}
@@ -215,7 +215,7 @@ void CWindowListHeader::UpdateSortButton()
 		pSortIconDown->SetParent( 0 );
 	if ( pSortIconUp )
 		pSortIconUp->SetParent( 0 );
-		
+
 	if ( -1 != nSelectedColumn )
 	{
 		CWindow *pSelectedHeader = dynamic_cast<CWindow*>( subitems[nSelectedColumn].GetPtr() );
@@ -313,12 +313,12 @@ bool CWindowListHeader::OnButtonUp( const CVec2 &vPos, const int nButton )
 
 
 void CWindowListItem::InitByDesc( const struct NDb::SUIDesc *_pDesc )
-{ 
+{
 	const NDb::SWindowListItem *pDesc( checked_cast<const NDb::SWindowListItem*>( _pDesc ) );
 	pInstance = pDesc->Duplicate();
 	pShared = checked_cast_ptr<const NDb::SWindowListItemShared*>( pDesc->pShared );
 
-	CWindow::InitByDesc( pDesc ); 
+	CWindow::InitByDesc( pDesc );
 }
 
 int CWindowListItem::operator&( IBinSaver &saver )
@@ -334,7 +334,7 @@ int CWindowListItem::operator&( IBinSaver &saver )
 void CWindowListItem::MakeInterior( const int nColumns )
 {
 	NI_ASSERT( pShared->subItemSamples.size() >= nColumns, "Not enough subitems samples" );
-	
+
 	subitems.resize( nColumns >= 0 ? nColumns : pShared->subItemSamples.size() );
 	for ( int i = 0; i < subitems.size(); ++i )
 	{
@@ -396,7 +396,7 @@ void CWindowListCtrl::AfterLoad()
 void CWindowListCtrl::SetFocus( const bool bFocus )
 {
 	CWindowScrollableContainerBase::SetFocus( bFocus );
-	
+
 	if ( pFocusNotify )
 		pFocusNotify->OnFocus( bFocus );
 }
@@ -408,7 +408,7 @@ void CWindowListCtrl::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pShared = checked_cast_ptr<const NDb::SWindowListSharedData *>( pDesc->pShared );
 
 	CWindowScrollableContainerBase::InitByDesc( pDesc );
-	
+
 	// optional field
 	pHeader = dynamic_cast<CWindowListHeader*>( CUIFactory::MakeWindow( pShared->pListHeader ) );
 	AddChild( pHeader, false );
@@ -422,7 +422,7 @@ void CWindowListCtrl::Reposition( const CTRect<float> &parentRect )
 void CWindowListCtrl::Init()
 {
 	CWindowScrollableContainerBase::Init();
-	
+
 	if ( pHeader )
 	{
 		pHeader->Init();
@@ -515,7 +515,7 @@ void CWindowListCtrl::SetOptimalWidth( const int nColumn )
 	{
 		IListControlItem *pI = dynamic_cast_ptr<IListControlItem*>( *it );
 		CWindow *pSubItem = dynamic_cast<CWindow*>( pI->GetSubItem( nColumn ) );
-		
+
 		nMaxOptimalWidth = (std::max)( pSubItem->GetOptimalWidth(), nMaxOptimalWidth  );
 	}
 	pHeader->SetColumnSize( nColumn, nMaxOptimalWidth );
@@ -524,7 +524,7 @@ void CWindowListCtrl::SetOptimalWidth( const int nColumn )
 void CWindowListCtrl::Select( IWindow *pElement )
 {
 	CWindowScrollableContainerBase::Select( pElement );
-	
+
 	if ( pSelectNotify )
 	{
 		CDynamicCast<IListControlItem> pItem = pElement;
@@ -554,7 +554,7 @@ IListControlItem* CWindowListCtrl::GetSelectedListItem() const
 }
 
 void CWindowListCtrl::SelectItem( CObjectBase *pData )
-{	
+{
 	IWindow *pElement = 0;
 	if ( pData )
 	{

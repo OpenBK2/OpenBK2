@@ -40,7 +40,7 @@ bool CMessageReactionB2::Execute( struct IScreen *pScreen, struct IScriptWrapper
 		bRes &= Execute( &commonBefore, pScreen, pScript, pProg, wKeyboardFlags );
 	}
 	int nCustomCheckReturn = 0;
-	
+
 	if ( pCheck )
 	{
 		nCustomCheckReturn = pCheck->Check( pScreen, pScript, pProg, wKeyboardFlags );
@@ -76,10 +76,10 @@ void CMessageReactionB2::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	for ( std::vector<NDb::SMessageSequienceEntry>::const_iterator it = pDesc->branches.begin(); it != pDesc->branches.end(); ++it )
 		InitSequienceByDesc( &branches[it->nCustomCheckReturn], it->sequience.data );
-	
+
 	pCheck = CUIFactory::MakeCheck( pDesc->pConditionCheck );
-	
-	
+
+
 	InitSequienceByDesc( &commonBefore, pDesc->commonBefore.data );
 	InitSequienceByDesc( &commonAfter, pDesc->commonAfter.data );
 }
@@ -97,7 +97,7 @@ void CMessageReactionB2::InitSequienceByDesc( CMessageSequence *pCreate, const C
 
 bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute, struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
-	if ( pToExecute->empty() ) 
+	if ( pToExecute->empty() )
 		return false;
 	//execute other sections
 	for ( CMessageSequence::const_iterator reaction = pToExecute->begin(); reaction != pToExecute->end(); ++reaction )
@@ -113,13 +113,13 @@ bool CMessageReactionB2::Execute( const CMessageSequence *pToExecute, struct ISc
 
 
 bool CARSetGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
-{  
+{
 #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	DebugTrace( "\t\t SetGlobalVar \tvarName =\t\"%s\", \tValue =\t\"%s\"\n", 
-										pDesc->szVarName.c_str(), 
+	DebugTrace( "\t\t SetGlobalVar \tvarName =\t\"%s\", \tValue =\t\"%s\"\n",
+										pDesc->szVarName.c_str(),
 										pDesc->szVarValue.c_str() );
 #endif // #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	NGlobal::SetVar( pDesc->szVarName.c_str(), pDesc->szVarValue.c_str() ); 
+	NGlobal::SetVar( pDesc->szVarName.c_str(), pDesc->szVarValue.c_str() );
 	return true;
 }
 
@@ -139,14 +139,14 @@ void CARSetGlobalVar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 
 bool CARRemoveGlobalVar::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
-{  
+{
 #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	DebugTrace( "\t\t RemoveGlabalVar \tvarName =\t\"%s\"\n", 
+	DebugTrace( "\t\t RemoveGlabalVar \tvarName =\t\"%s\"\n",
 										pDesc->szVarName.c_str() );
 #endif // #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	NGlobal::RemoveVar( pDesc->szVarName ); 
+	NGlobal::RemoveVar( pDesc->szVarName );
 	return true;
-}	
+}
 
 int CARRemoveGlobalVar::operator&( IBinSaver &saver )
 {
@@ -167,11 +167,11 @@ void CARRemoveGlobalVar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 bool CARSendUIMessage::Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const
 {
 //#if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-//	DebugTrace( "\t\t SendMessage\tID =\t\"%s\tParam =\t%s\n", 
+//	DebugTrace( "\t\t SendMessage\tID =\t\"%s\tParam =\t%s\n",
 //										pDesc->szMessageID.c_str(), pDesc->szStringParam.c_str() );
 //#endif // #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	
-	return dynamic_cast<CWindow*>( pScreen )->ProcessMessage( 
+
+	return dynamic_cast<CWindow*>( pScreen )->ProcessMessage(
 		SBUIMessage(pDesc->szMessageID, pDesc->szStringParam, pDesc->nIntParam) );
 }
 

@@ -23,12 +23,12 @@ static void ConstructPlatforms( std::vector<CConstructorInfo::SUnitPlatform> *pP
 	{
 		if ( pProfile->platforms[i].bAttached )
 		{
-			CConstructorInfo::SUnitPlatform &platform = 
+			CConstructorInfo::SUnitPlatform &platform =
 				pPlatforms->size() <= i ? pPlatforms->emplace_back() :
 				(*pPlatforms)[i].nPlatformIndex > i ? *(pPlatforms->insert( pPlatforms->begin() + i, CConstructorInfo::SUnitPlatform() )) : (*pPlatforms)[i];
 
 			NI_VERIFY( platform.nPlatformIndex == -1 || platform.nPlatformIndex == i, "Wrong platform index", return );
-		
+
 			platform.nPlatformIndex = i;
 			platform.gunIndexes.reserve( pProfile->platforms[i].guns.size() );
 			for ( int j = 0; j < pProfile->platforms[i].guns.size(); ++j )

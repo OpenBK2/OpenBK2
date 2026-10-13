@@ -61,7 +61,7 @@ protected:
 public:
 	CBridgeSpan() : nScriptID( -1 ) { }
 	CBridgeSpan( const SBridgeRPGStats *pStats, const CVec3 &center, const float fHP, const uint16_t _nDir, const int nFrameIndex );
-	
+
 	void Build();													// построить сегмент моста, залокать как положено, послать в мир.
 
 	const SBridgeRPGStats * GetBridgeStats() const { return pStats; }
@@ -76,18 +76,18 @@ public:
 	virtual bool IsPointInside( const CVec2 &point ) const;
 	virtual void Die( const float fDamage );
 	virtual void SetHitPoints( const float fNewHP );
-	
+
 	virtual void Segment() { }
 
 	virtual EStaticObjType GetObjectType() const { return ESOT_BRIDGE_SPAN; }
-	
+
 	virtual bool IsContainer() const { return false; }
 	virtual const int GetNDefenders() const { return 0; }
 	virtual class CSoldier* GetUnit( const int n ) const { return 0; }
 
 	void SetFullBrige( CFullBridge *pFullBridge );
 	CFullBridge * GetFullBridge() { return pFullBridge; }
-	
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
@@ -106,7 +106,7 @@ class CFullBridge : public CLinkObject
 {
 	OBJECT_BASIC_METHODS( CFullBridge );
 	public: int operator&( IBinSaver &saver ); private:
-	
+
 	std::list<CBridgeSpan*> spans;					// построенные части моста
 	std::list<CBridgeSpan*> projectedSpans;	// части моста, которые находятся в проекте
 

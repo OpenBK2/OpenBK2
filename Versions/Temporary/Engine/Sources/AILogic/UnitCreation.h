@@ -80,7 +80,7 @@ struct SLocalInGameUnitCreationInfo
 
 class CUnitCreation
 {
-public: 
+public:
 	struct SFeedBack
 	{
 		int eEnable = {}, eDisable = {};
@@ -115,34 +115,34 @@ public:
 	void SetConsts( const NDb::SAIGameConsts *pConsts );
 	void Init( const NDb::SMapInfo *pMapInfo, ICollisionsCollector *pCollisionsCollector );
 	void Clear();
-	
+
 
 	// returns number (in new units) of this unit
-	int AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats, 
-									const float fHPFactor, 
-									const int x, 
-									const int y, 
-									const int z, 
+	int AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats,
+									const float fHPFactor,
+									const int x,
+									const int y,
+									const int z,
 									const uint16_t _dir,
 									const uint8_t player,
-									bool bInitialization,// = false, 
-									bool bSendToWorld,// = true, 
+									bool bInitialization,// = false,
+									bool bSendToWorld,// = true,
 									NDb::EReinforcementType eType) const;
 	void GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const uint16_t wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const;
 	class CCommonUnit* AddNewFormation( const SSquadRPGStats *pStats, const int nFormation, const float fHP, const float x, const float y, const float z, const uint16_t wDir, const int nDiplomacy,
 																			bool bInitialization,// = false,
 																			bool bSendToWorld,// = true,
-																			const int nUnits,// = -1 
+																			const int nUnits,// = -1
 																			NDb::EReinforcementType eType ) const;
 	class CCommonUnit* CreateSingleUnitFormation( class CSoldier *pSoldier ) const;
-	
+
 	CMineStaticObject* CreateMine( const enum NDb::EMineType nType, const class CVec3 &vPoint, const int nPlayer );
 	class CFormation* CreateParatroopers( const class CVec3 &where, class CAIUnit * pPlane, const int nScriptID ) const;
 	class CFormation* CreateResupplyEngineers( class CAITransportUnit *pUnit ) const;
-	CFormation * CreateCrew( class CArtillery *pUnit, const int nUnits,// = -1, 
-													 const CVec3 &vPos,// = CVec3(-1,-1,-1), 
+	CFormation * CreateCrew( class CArtillery *pUnit, const int nUnits,// = -1,
+													 const CVec3 &vPos,// = CVec3(-1,-1,-1),
 													 const int nPlayer,// = -1,
-													 const bool bImmidiateAttach// = true 
+													 const bool bImmidiateAttach// = true
 													 ) const;
 	class CAIUnit *CreateTorpedo( class CAIUnit *pOwner, const NDb::SWeaponRPGStats *pWeaponStats, const class CVec2 &vSource, const class CVec2 &vTarget );
 
@@ -151,14 +151,14 @@ public:
 	void SendFormationToWorld( CFormation * pUnit, const bool bSelectable ) const;
 
 	//void LockAppearPoint( const int nPlayer, const bool bLocked );
-	CVec2 GetRandomAppearPoint( const int nPlayer, 
-															const bool bLeave// = false 
+	CVec2 GetRandomAppearPoint( const int nPlayer,
+															const bool bLeave// = false
 															) const;
-	
+
 	const SFenceRPGStats* GetWireFence() const;
 	const SObjectBaseRPGStats* GetRandomAntitankObject() const;
 	const SEntrenchmentRPGStats* GetEntrenchment() const;
-	
+
 	const SMechUnitRPGStats *GetRandomTankPit( const class CVec2 &vSize, const bool bCanDig, float *pfResize ) const;
 	const SMechUnitRPGStats * GetFoxHole( const bool bCanDig ) const;
 	void Segment();

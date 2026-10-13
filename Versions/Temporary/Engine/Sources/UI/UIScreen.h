@@ -32,8 +32,8 @@ class CWindowScreen : public CWindow, public IScreen
 
 	CStateSequiences stateSequiences;
 	CStateSequiences finishedAnimations;					// finished reversable animations contained here
-	
-	// window may produce animation and command sequience. command sequence may 
+
+	// window may produce animation and command sequience. command sequence may
 	// have run after animation is finished.
 	CFreeIds animationIDs;
 
@@ -49,7 +49,7 @@ class CWindowScreen : public CWindow, public IScreen
 	// preprogrammed reactions
 	CPtr<IProgrammedReactionsAndChecks> pReactionsAndChecks;
 	CPtr<NDb::SWindowScreen> pInstance;
-	
+
 	CSortedVector<std::pair<CObj<CWindow>, int>, STabPairCompare> tabOrder;
 
 	int nMouseButtonState;
@@ -73,8 +73,8 @@ public:
 		CPtr<IWindow> pParent;
 		SButtonGroupID() {  }
 		SButtonGroupID( const int _nGroupID, IWindow *_pParent ) : nGroupID( _nGroupID ), pParent( _pParent ) {  }
-		bool operator==( const SButtonGroupID &id ) const 
-		{ 
+		bool operator==( const SButtonGroupID &id ) const
+		{
 			return id.nGroupID == nGroupID && id.pParent == pParent;
 		}
 		int operator&( IBinSaver &saver )
@@ -97,23 +97,23 @@ private:
 	CButtonGroups buttonGroups;
 
 	// all state descriptor sequiences possible on this screen
-	// when some window generates command sequience it only 
+	// when some window generates command sequience it only
 	// sends it's id
 	typedef std::unordered_map<std::string, NDb::SUIStateSequence> CCommandSequiences;
 	CCommandSequiences commandSequiences;
-	
+
 	static NGScene::I2DGameView *p2DGameView;
 	CPtr<NGScene::IGameView> pInterface3DView;
 
-	
+
 	void InitScreen();
 	void InitSingletonWindows();
 
 	void ProcessStateSequiences( const int timeDiff );
 	IUIEffector *RunStateCommand( const NDb::SUIStateBase &cmd );
-	
+
 	void RunStateCommandSequienceImmidiate( const std::string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward );
-	bool ActivateNextInTabOrder(); // returns true if activated, otherwise returns false 
+	bool ActivateNextInTabOrder(); // returns true if activated, otherwise returns false
 public:
 	CWindowScreen();
 	void SetHudFontScale( bool bHud ) override { bHudFontScale = bHud; }
@@ -127,7 +127,7 @@ public:
 	int operator&( struct IBinSaver &saver );
 
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	bool OnButtonUp( const CVec2 &vPos, const int nButton ); 
+	bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 	bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
 	bool OnKey( const SGameMessage &msg );
@@ -143,7 +143,7 @@ public:
 	void UndoStateCommandSequence( const std::string &szCmdSeq );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	void AfterLoad();
-	
+
 	bool RunReaction( const std::string &szSender, const std::string &szReactionName );
 	bool RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction );
 	void SetGView( NGScene::I2DGameView *_p2DGameView );

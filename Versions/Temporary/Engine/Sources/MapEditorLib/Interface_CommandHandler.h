@@ -37,7 +37,7 @@ struct ICommandHandlerContainer : public CObjectBase
 	virtual void Remove( unsigned nType, ICommandHandler *pCommandHandler ) = 0;
 	// Удалить обработчик команды
 	virtual void Remove( unsigned nType ) = 0;
-	// Получить обработчик команды 
+	// Получить обработчик команды
 	virtual ICommandHandler* Get( unsigned nType ) = 0;
 	// Передать команду на обработку, последнему зарегистрированному обработчику
 	virtual bool HandleCommand( unsigned nType, unsigned nCommandID, uintptr_t dwData ) = 0;

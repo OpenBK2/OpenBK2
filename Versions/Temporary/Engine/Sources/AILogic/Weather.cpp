@@ -9,7 +9,7 @@
 #include "Stats_B2_M1/AIUpdates.h"
 #include "Stats_B2_M1/DBMapInfo.h"
 
-extern CEventUpdater updater; 
+extern CEventUpdater updater;
 CWeather theWeather;
 
 extern NTimer::STime curTime;
@@ -43,7 +43,7 @@ const float CWeather::GetNextTimeRandom()
 		return 0;
 
 	RecordRandomCall();
-	return 1000 * ( theUnitCreation.GetMap()->weather.fWeatherPeriod + 
+	return 1000 * ( theUnitCreation.GetMap()->weather.fWeatherPeriod +
 		NRandom::Random( 0.0f, theUnitCreation.GetMap()->weather.fWeatherPeriodRandom ));
 }
 
@@ -61,7 +61,7 @@ void CWeather::SwitchAutomatic( const bool bSwitchAutomatic )
 
 void CWeather::Switch( const bool bActive )
 {
-	if ( bActive ) 
+	if ( bActive )
 		On();
 	else
 		Off();
@@ -107,8 +107,8 @@ void CWeather::On()
 	}
 }
 
-bool CWeather::IsActive() const 
-{ 
+bool CWeather::IsActive() const
+{
 	return eState != EWS_CLEAR;
 }
 

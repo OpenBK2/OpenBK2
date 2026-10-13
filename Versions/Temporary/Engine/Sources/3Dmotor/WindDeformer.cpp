@@ -72,7 +72,7 @@ void CWindDeformer::Recalc()
 	}
 }
 
-CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom, 
+CPtrFuncBase<CObjectInfo> *CreateDeformerHolder( CPtrFuncBase<CObjectInfo> *pGeom,
 	const SFBTransform &place )
 {
 	if ( pGeom )

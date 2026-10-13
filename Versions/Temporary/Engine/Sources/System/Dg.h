@@ -6,7 +6,7 @@
 
 EXTERNVAR SYSTEM_EXPORT int nDGCurrentFrame;
 
-// DG 
+// DG
 
 // any function should have version of its value to recalc only when function result
 // has changed, has frame counter to prevent frequent reevaluations
@@ -16,15 +16,15 @@ class CVersioningBase: public CObjectBase
 	int nFrameCalced = 0;     // mark of last update frame, used to cut recalc time
 	int nVersion = 0;         // current version number, used to determine if setParam needed
 	//
-	void DoUpdate() 
+	void DoUpdate()
 	{
-		ASSERT( IsValid( this ) ); 
-		if ( NeedUpdate() ) 
+		ASSERT( IsValid( this ) );
+		if ( NeedUpdate() )
 		{
 			++nVersion;
 			Recalc();
-		} 
-		nFrameCalced = nDGCurrentFrame; 
+		}
+		nFrameCalced = nDGCurrentFrame;
 	}
 protected:
 	bool IsFrameMatch() const { return nFrameCalced == nDGCurrentFrame; }
@@ -73,7 +73,7 @@ protected:
 	void Touch()
 	{
 		if ( nDGCurrentFrame > nDeleteFrame )
-			SetToHoldQueue( this, &nDeleteFrame ); 
+			SetToHoldQueue( this, &nDeleteFrame );
 	}
 	virtual bool NeedUpdate() { Touch(); return false; }
 public:
@@ -88,7 +88,7 @@ protected:
 	void Touch()
 	{
 		if ( nDGCurrentFrame > nDeleteFrame - 20 )
-			SetToHoldQueue( this, &nDeleteFrame ); 
+			SetToHoldQueue( this, &nDeleteFrame );
 	}
 	virtual bool NeedUpdate() { Touch(); return false; }
 public:

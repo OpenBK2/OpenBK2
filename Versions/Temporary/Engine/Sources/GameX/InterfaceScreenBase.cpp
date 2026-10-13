@@ -55,7 +55,7 @@ CInterfaceScreenBase::CInterfaceScreenBase( const std::string &_szInterfaceType,
 {
 	bInFocus = false;
 	nTime = 0; // 0 - need to set abs time at the appropriate place
-	//	
+	//
 	AddObserver( "win_mouse_move", &CInterfaceScreenBase::MsgMouseMove );
 	AddObserver( "win_left_button_down", &CInterfaceScreenBase::MsgLButtonDown );
 	AddObserver( "win_left_button_up", &CInterfaceScreenBase::MsgLButtonUp );
@@ -135,7 +135,7 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 			nFunk = 0;
 		}
 	}
-#endif	
+#endif
 
 
 	if ( pScreen )
@@ -144,7 +144,7 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 			return true;
 	}
 
-	if ( msg.mMessage.cType != NInput::CT_UNKNOWN && 
+	if ( msg.mMessage.cType != NInput::CT_UNKNOWN &&
 		(pScreen && !pScreen->IsEnabled()) )
 	{
 		return true;
@@ -153,7 +153,7 @@ bool CInterfaceScreenBase::ProcessEvent( const struct SGameMessage &msg )
 	if ( CGMORegContainer::ProcessEvent( msg, this ) )
 		return true;
 
-	if ( msg.mMessage.cType != NInput::CT_UNKNOWN && 
+	if ( msg.mMessage.cType != NInput::CT_UNKNOWN &&
 		(pScreen && pScreen->IsModal()) )
 	{
 		return true;
@@ -190,14 +190,14 @@ void CInterfaceScreenBase::StartInterface()
 {
 }
 
-void CInterfaceScreenBase::Draw( NGScene::CRTPtr *pTexture ) 
+void CInterfaceScreenBase::Draw( NGScene::CRTPtr *pTexture )
 {
-	Scene()->Draw( pTexture ); 
+	Scene()->Draw( pTexture );
 }
 
 void CInterfaceScreenBase::Step( bool bAppActive )
 {
-	if ( bAppActive == false ) 
+	if ( bAppActive == false )
 	{
 		if ( !GameTimer()->HasPause(PAUSE_TYPE_INACTIVE) )
 		{
@@ -225,7 +225,7 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 			GameTimer()->Pause( false, PAUSE_TYPE_INACTIVE );
 			// set gamma value
 			NGfx::SetGamma( true );
-			// 
+			//
 			Cursor()->Acquire( true );
 			Cursor()->SetPos( NISB::vCursorStoredPos.x, NISB::vCursorStoredPos.y );
 		}
@@ -258,25 +258,25 @@ void CInterfaceScreenBase::Step( bool bAppActive )
 
 		CVec3 vPos = pCamera->GetListener();
 		Vis2AI( &vPos );
-		
+
 		//DebugTrace( "camera pos : %f, %f, %f", vPos.x, vPos.y, vPos.z );
 		SoundScene()->UpdateSound( vPos, vDir, fScreenWidth );
 		Singleton<IMusicSystem>()->Update();
 	}
-	
+
 	// call UI screen segment
 	NTimer::STime nCurrTime = Singleton<IGameTimer>()->GetAbsTime();
 	int nDeltaTime = (nTime == 0) ? 0 : (std::max<int>)( 0, nCurrTime - nTime );
 	if ( pScreen )
 		pScreen->Segment( nDeltaTime );
 	nTime = nCurrTime;
-	
+
 	if ( IsInFocus() )
 	{
-		// emmit mouse move 
+		// emmit mouse move
 		const CVec2 pos = Cursor()->GetPos();
 		NInput::PostWinEvent( "mission_win_mouse_move_emit", PackCoords( CVec2( pos.x, pos.y) ), 0 );
-		
+
 		// draw entire scene
 		Draw();
 	}
@@ -301,7 +301,7 @@ bool CInterfaceScreenBase::ChangeResolution()
 	return false;
 }
 
-void CInterfaceScreenBase::OnGetFocus( bool bFocus ) 
+void CInterfaceScreenBase::OnGetFocus( bool bFocus )
 {
 	if ( bFocus && bShowScreenOnGetFocus )
 	{
@@ -310,11 +310,11 @@ void CInterfaceScreenBase::OnGetFocus( bool bFocus )
 
 		bShowScreenOnGetFocus = false;
 	}
-	
+
 	if ( pScreen )
 		pScreen->OnGetFocus( bFocus );
 
-	if ( bFocus ) 
+	if ( bFocus )
 		RestoreBindSection();
 	//
 	bInFocus = bFocus;
@@ -414,7 +414,7 @@ bool CInterfaceScreenBase::OnShowConsole( const struct SGameMessage &msg )
 		pScreen->RunStateCommandSequience( "ShowConsole", pConsole, 0, true );
 		return true;
 	}
-	//else 
+	//else
 	//	pScreen->RunStateCommandSequience( "ShowConsole", pConsole, 0, false );
 	return false;
 }
@@ -572,7 +572,7 @@ namespace NInterface
 
 static void CmdStartInterface ( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	if ( paramsSet.empty() ) 
+	if ( paramsSet.empty() )
 		return;
 
 	std::string res;

@@ -17,7 +17,7 @@ namespace NLog
 		virtual ILogger * GetLogger() = 0;
 	};
 	MAPEDITORLIB_EXPORT void SetLogger( ILoggerSink * pLoggerSink );
-	//	
+	//
 	MAPEDITORLIB_EXPORT ILogger * GetLogger();
 //	void FlushLogBuffer();
 	//

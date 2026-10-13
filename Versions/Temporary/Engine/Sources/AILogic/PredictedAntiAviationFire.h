@@ -32,7 +32,7 @@ class CPredictedAntiAviationFire
 		SAAS_FIRING,
 
 		SAAS_START_AIMING_TO_PREDICTED_POINT,	// для стрельбы заградительным огнем
-		SAAS_AIM_TO_PREDICTED_POINT,					
+		SAAS_AIM_TO_PREDICTED_POINT,
 		SAAS_START_FIRE_TO_PREDICTED_POINT,
 		SAAS_FIRING_TO_PREDICTED_POINT,
 
@@ -67,7 +67,7 @@ private:
 	void StopFire();
 
 public:
-	
+
 	CPredictedAntiAviationFire( CAIUnit *_pOwner, CAviation *_pPlane )
 		: pUnit( _pOwner ), pPlane( _pPlane ), eState( SAAS_ESITMATING ) {  }
 

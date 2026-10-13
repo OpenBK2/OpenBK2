@@ -21,22 +21,22 @@ struct IScenarioTracker : public IAIScenarioTracker
 	enum { tidTypeID = 0x11165340 };
 
 	enum EReinforcementState { ERS_DISABLED, ERS_NOT_ENABLED, ERS_ENABLED };
-	
+
 	enum EStatisticsKind
 	{
 		ESK_TIME, // mission time at seconds (real time, not game time)
 		ESK_CAMPAIGN_TIME, // campaign time at seconds (real time, not game time)
-		
+
 		ESK_EXP_EARNED,
 		ESK_CAMPAIGN_EXP_CURRENT,
 		ESK_CAMPAIGN_EXP_NEXT_LEVEL,
-		
+
 		ESK_UNITS_LOST,
 		ESK_UNITS_KILLED,
-		
+
 		ESK_KEY_BUILDINGS_CAPTURED,
 		ESK_REINFORCEMENTS_CALLED,
-		
+
 		ESK_SCORE,
 
 		ESK_UNITS_LOST_PRICE,
@@ -52,7 +52,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		ESK_TACTICAL_EFFICIENCY,
 		ESK_STRATEGIC_EFFICIENCY,
 	};
-	
+
 	struct SMissionStats
 	{
 		struct SOldReinf
@@ -63,7 +63,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			CDBPtr<NDb::SReinforcement> pDBReinf;
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pDBReinf); return 0; }
 		};
-		
+
 		ZDATA
 		std::vector< CDBPtr<NDb::SReinforcement> > bonusReinforcements;
 		CDBPtr<NDb::SPlayerRank> pNewPlayerRank;
@@ -71,7 +71,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		std::vector<SOldReinf> oldReinfs;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&bonusReinforcements); f.Add(3,&pNewPlayerRank); f.Add(4,&medals); f.Add(5,&oldReinfs); return 0; }
 	};
-	
+
 	// specific multiplayer info
 	struct SMultiplayerInfo
 	{
@@ -94,7 +94,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			int nCountry = {};
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&nTeam); f.Add(5,&nLevel); f.Add(6,&wszRank); f.Add(7,&nParty); f.Add(8,&nIndex); f.Add(9,&nCountry); return 0; }
 		};
-		
+
 		enum EMessageType
 		{
 			EMT_NEW_RANK,
@@ -103,7 +103,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			EMT_LOST_LEVEL,
 			EMT_MEDAL,
 		};
-		
+
 		struct SMessage
 		{
 			ZDATA
@@ -116,7 +116,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			std::wstring wszMedalDesc;
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&eType); f.Add(3,&wszRank); f.Add(4,&nLevel); f.Add(5,&nXP); f.Add(6,&pMedal); f.Add(7,&wszMedalName); f.Add(8,&wszMedalDesc); return 0; }
 		};
-		
+
 		ZDATA
 		std::vector<SPlayer> players;
 		std::wstring wszGameType;
@@ -138,7 +138,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 			int nUnitsLost = {};
 			float fExpDebt = {};
 			ZEND int operator&( IBinSaver &f ) { f.Add(2,&nRank); f.Add(3,&fExp); f.Add(4,&nUnitsKilled); f.Add(5,&nUnitsLost); f.Add(6,&fExpDebt); return 0; }
-			
+
 			SLeaderStatSet() : fExpDebt( 0.0f ) {}
 		};
 		ZDATA
@@ -152,7 +152,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(5,&info); f.Add(6,&storedInfo); f.Add(7,&pPicture); f.Add(8,&lastSeenInfo); return 0; }
 		SLeaderInfo() : wszName( L"" ) {}
 	};
-	
+
 	struct SGenerateLeaderInfo
 	{
 		ZDATA
@@ -160,10 +160,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 		ZSKIP //wstring wszFirstName;
 		ZSKIP //wstring wszLastName;
 		ZSKIP //CDBPtr<NDb::STexture> pPicture;
-		
+
 		// user info
 		std::wstring wszFullName;
-		
+
 		// internal
 		ZSKIP //int nFirstNameID;
 		ZSKIP //int nLastNameID;
@@ -174,7 +174,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		std::wstring wszName;
 		CDBPtr<NDb::STexture> pPicture;
 		ZEND int operator&( IBinSaver &f ) { f.Add(5,&wszFullName); f.Add(9,&nID); f.Add(10,&wszName); f.Add(11,&pPicture); return 0; }
-		
+
 		SGenerateLeaderInfo() : nID( -1 )
 		{
 		}
@@ -191,7 +191,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		int nValue = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eReinf); f.Add(6,&nValue); return 0; }
 	};
-	
+
 	struct SChapterReinf
 	{
 		ZDATA
@@ -200,7 +200,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 		bool bFromPrevChapter = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pDBReinf); f.Add(4,&bFromPrevChapter); return 0; }
 	};
-	
+
 	struct SPlayerColor
 	{
 		ZDATA
@@ -208,10 +208,10 @@ struct IScenarioTracker : public IAIScenarioTracker
 		CDBPtr<NDb::SBackground> pUnitFullInfo;
 		int nColorIndex = {}; // индекс цвета хитбара над юнитами на карте
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&dwColor); f.Add(3,&pUnitFullInfo); f.Add(4,&nColorIndex); return 0; }
-		
+
 		SPlayerColor() : dwColor( 0 ), nColorIndex( 0 ) {}
 	};
-	
+
 	virtual bool IsCustomMission() const = 0;
 	virtual bool IsCustomCampaign() const = 0;
 
@@ -245,7 +245,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 	//{ CRAP - убрать из интерфейса, когда будет известно, что миссия запускается только после инициализации ScenarioTracker
 	virtual void ClearMissionScriptVars() = 0;
 	//}
-	
+
 	// campaign
 	virtual void CampaignStart( const NDb::SCampaign * pCampaign, const int _nDifficulty, bool bIsTutorial, bool bCustom ) = 0;
 	virtual bool IsCampaignActive() const = 0;
@@ -258,7 +258,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 	virtual void SetLastVisiblePlayerStatsExp( float fCareer, float fNextRank ) = 0;
 	virtual void GetLastVisiblePlayerStatsExp( float *pCareer, float *pNextRank ) const = 0;
 	virtual std::wstring GetReinfName( NDb::EReinforcementType eType ) const = 0;
-	
+
 	// chapter
 	virtual bool IsChapterActive() const = 0;
 	virtual void NextChapter() = 0;
@@ -274,7 +274,7 @@ struct IScenarioTracker : public IAIScenarioTracker
 	virtual int GetReinforcementCallsOld() const = 0;	// Calls left in chapter before last mission, or 0 if chapter started
 	virtual const NDb::SPlayerRank *GetPlayerRank() const = 0;
 	virtual int GetPlayerRankIndex() const = 0;
-	
+
 	virtual int GetStatistics( int nPlayer, EStatisticsKind eKind ) const = 0;
 	virtual void SetStatistics( int nPlayer, EStatisticsKind eKind, int nValue ) = 0;
 	virtual void UpdateStatistics() = 0;

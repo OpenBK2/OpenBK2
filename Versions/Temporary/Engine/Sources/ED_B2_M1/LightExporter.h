@@ -5,7 +5,7 @@
 class CLightExporter : public IExporter
 {
 	OBJECT_NOCOPY_METHODS( CLightExporter );
-	
+
 	std::string szScriptText;
 	bool bNeedExport;
 

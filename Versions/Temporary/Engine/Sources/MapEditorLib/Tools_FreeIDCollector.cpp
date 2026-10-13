@@ -59,7 +59,7 @@ unsigned CFreeIDCollector::LockID()
 		}
 		return nLockID;
 	}
-}	
+}
 
 
 bool CFreeIDCollector::LockID( unsigned nID )
@@ -176,6 +176,6 @@ void CFreeIDCollector::FreeID( const unsigned nID )
 	}
 }
 
-// basement storage  
+// basement storage
 
 

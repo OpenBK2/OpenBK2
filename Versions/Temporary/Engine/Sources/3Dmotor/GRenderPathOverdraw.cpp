@@ -6,7 +6,7 @@
 
 namespace NGScene
 {
-void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC, 
+void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene )
 {
 	CRenderCmdList lightOps;
@@ -25,7 +25,7 @@ void RenderOverdraw( CTransformStack *pTS, NGfx::CRenderContext *pRC,
 void ColorOverdraw( NGfx::CRenderContext *pRC )
 {
 	const int N_COLORS = 20;
-	const float colors[N_COLORS][3] = 
+	const float colors[N_COLORS][3] =
 	{
 		{   0.0f/255.0f,   0.0f/255.0f,  85.0f/255.0f },
 		{   0.0f/255.0f,   0.0f/255.0f, 170.0f/255.0f },

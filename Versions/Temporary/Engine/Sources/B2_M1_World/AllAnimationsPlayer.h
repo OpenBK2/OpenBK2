@@ -7,7 +7,7 @@ class CMapObj;
 class CAllAnimationsPlayer : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CAllAnimationsPlayer );
-	
+
 	struct SAnimationInfo
 	{
 		ZDATA

@@ -12,7 +12,7 @@ virtual const SInfantryGun& GetGun( const int nUniqueID, const int nPlatform, co
 	GetGunPlatformIndex( nUniqueID, nPlatform, nGun, &nPlatformIdx, &nGunIdx );
 	if ( guns.size() > nGunIdx )
 		return guns[nGunIdx];
-	else 
+	else
 	{
 		NI_ASSERT( false, fmt::format( "wrong gun index, {}", nGunIdx ) );
 		return guns[0];
@@ -22,7 +22,7 @@ virtual const SInfantryGun& GetGun( const int nUniqueID, const int nPlatform, co
 virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
 {
 	const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;
-	return 
+	return
 		ConstructorInfo() && ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) ?
 		(*pPlatforms)[nPlatform].gunIndexes.size() : guns.size();
 }

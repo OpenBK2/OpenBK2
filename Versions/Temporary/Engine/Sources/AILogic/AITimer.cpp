@@ -21,7 +21,7 @@ NTimer::STime CAITimer::GetSegmentTime()
 	return pTimer->GetSegmentTime() ;//+ SConsts::AI_SEGMENT_DURATION * 3500 ;
 }
 
-NTimer::STime CAITimer::GetGameTime() 
+NTimer::STime CAITimer::GetGameTime()
 {
 	return pTimer->GetGameTime() ;//+ SConsts::AI_SEGMENT_DURATION * 3500 ;
 }

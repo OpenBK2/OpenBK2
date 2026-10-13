@@ -72,7 +72,7 @@ public:
 
 	void DelKilledUnitsFromBridge( const SRect &bridgeRect );
 	void AddBridgeKilledSoldier( const SVector &tile, CAIUnit *pSoldier );
-	
+
 	void Clear();
 };
 

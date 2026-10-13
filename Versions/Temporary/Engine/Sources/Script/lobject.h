@@ -76,7 +76,7 @@ public:
 
 struct Hash;
 
-struct TObject 
+struct TObject
 {
 private:
 	int ttype;
@@ -89,24 +89,24 @@ public:
 
 	int GetType() const { return ttype; }
 	Number GetN() const { ASSERT( ttype == LUA_TNUMBER ); return value.n; }
-	int GetUData() const { ASSERT( ttype == LUA_TUSERDATA ); return value.nUData; } 
+	int GetUData() const { ASSERT( ttype == LUA_TUSERDATA ); return value.nUData; }
 	TString* GetS() const { ASSERT( ttype == LUA_TSTRING ); return value.ts; }
 	int GetCL() const { ASSERT( ttype == LUA_TFUNCTION ); return value.nClosure; }
 	int GetH() const { ASSERT( ttype == LUA_TTABLE ); return value.nHash; }
 	int GetCI() const { ASSERT( ttype == LUA_TMARK ); return value.nCallInfo; }
-	bool HasValidType() const 
-	{ 
-		switch( ttype ) 
+	bool HasValidType() const
+	{
+		switch( ttype )
 		{
-			case LUA_TSTRING: 
-			case LUA_TMARK: 
-			case LUA_TUSERDATA: 
-			case LUA_TNUMBER: 
-			case LUA_TNIL: 
-			case LUA_TFUNCTION: 
+			case LUA_TSTRING:
+			case LUA_TMARK:
+			case LUA_TUSERDATA:
+			case LUA_TNUMBER:
+			case LUA_TNIL:
+			case LUA_TFUNCTION:
 			case LUA_TTABLE:
 				return true;
-		}  
+		}
 		return false;
 	}
 
@@ -124,7 +124,7 @@ public:
 		ASSERT( obj.HasValidType() );
 		if ( ttype != obj.ttype )
 			return false;
-		switch ( ttype ) 
+		switch ( ttype )
 		{
 		case LUA_TSTRING:
 			return GetS()->GetStr() == obj.GetS()->GetStr();
@@ -152,7 +152,7 @@ extern const TObject luaO_nilobject;
 
 
 
-struct UserData 
+struct UserData
 {
 	ZDATA
   int tag;
@@ -175,7 +175,7 @@ struct TStringHash
 ** Function Prototypes
 */
 
-struct LocVar 
+struct LocVar
 {
 	TString *varname;
   int startpc;  /* first point where variable is active */
@@ -229,7 +229,7 @@ struct ObjectHash
 	int operator()( const TObject &key ) const
 	{
 		unsigned long h;
-		switch ( key.GetType() ) 
+		switch ( key.GetType() )
 		{
 			case LUA_TNUMBER:
 				h = (unsigned long)(long)( key.GetN() );
@@ -257,7 +257,7 @@ struct ObjectHash
 	}
 };
 
-struct Hash 
+struct Hash
 {
 	typedef std::unordered_map<TObject, TObject, ObjectHash> CObjHash;
   struct Hash *mark;  /* marked tables (point to itself when not marked) */
@@ -267,7 +267,7 @@ struct Hash
 	int htag;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&h); f.Add(3,&htag); return 0; }
 
-	struct Node 
+	struct Node
 	{
 		const TObject *key;
 		const TObject *val;

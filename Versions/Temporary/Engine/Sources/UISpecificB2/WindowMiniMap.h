@@ -72,7 +72,7 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 		CVec2 vSize;
 		CVec2 vCenter;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&fSin); f.Add(3,&fCos); f.Add(4,&vSize); f.Add(5,&vCenter); return 0; }
-		
+
 		STransform()
 		{
 		}
@@ -81,20 +81,20 @@ class CWindowMiniMap : public CWindow, public IMiniMap
 		{
 			vSize = _vSize;
 			vCenter = _vCenter;
-			
+
 			fSin = sin( fAngle );
 			fCos = cos( fAngle );
 		}
-		
+
 		CVec2 Transform( const CVec2 &_vPos ) const
 		{
 			CVec2 vPos( _vPos.x - 0.5f, _vPos.y - 0.5f );
-			return CVec2( (fCos * vPos.x + fSin * vPos.y) * vSize.x, 
+			return CVec2( (fCos * vPos.x + fSin * vPos.y) * vSize.x,
 				-(-fSin * vPos.x + fCos * vPos.y) * vSize.y ) + vCenter;
 		}
 		CVec2 RotateBackgroundPos( const CVec2 &vPos ) const
 		{
-			return CVec2( (fCos * vPos.x - fSin * vPos.y), 
+			return CVec2( (fCos * vPos.x - fSin * vPos.y),
 				(fSin * vPos.x + fCos * vPos.y) );
 		}
 		float TransformRadius( float fRadius ) const
@@ -154,12 +154,12 @@ protected:
 	CArray2D< std::pair<CVec2, bool> > screenToMap;
 	bool bNeedScreenToMapRefresh;
 	CVec2 vOldDir;
-	
+
 	CDBPtr<NDb::STexture> pTexture;
-	
+
 	CVec2 vLastMousePos;
 	CVec2 vSize;	// for caching (optimisation)
-	
+
 	CDBPtr<NDb::STexture> pRotableBackgroundTexture;
 	CVec2 vRotableBackgroundSize;
 	CDBPtr<NDb::STexture> pRotableNorthPointTexture;
@@ -175,7 +175,7 @@ private:
 	bool MapToScreen( const CVec2 &vMapPos, CVec2 *pvRes ) const;
 	void RadiusMapToScreen( const CVec2 &vMapPos, CVec2 *pvRes );
 	float RadiusMapToScreen( float fRadius );
-	void MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vPoint01, 
+	void MakeTransformParams( const CVec2 &vPoint00, const CVec2 &vPoint01,
 		const CVec2 &vPoint10, const CVec2 &vPoint11 );
 	void MakeRotableTransformParams( const CVec2 &vDirView );
 	void MakeMaskMimimap();

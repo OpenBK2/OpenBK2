@@ -94,7 +94,7 @@ GAMEX_EXPORT bool Initialize()
 
 		// scene
 		NSingleton::RegisterSingleton( CreateScene(), IScene::tidTypeID );
-		
+
 		// AI DebugManager
 		NSingleton::RegisterSingleton( CreateDebugInfoManager(), IDebugInfoManager::tidTypeID );
 
@@ -113,7 +113,7 @@ GAMEX_EXPORT bool Initialize()
 		//MP to UI message manager
 		NSingleton::RegisterSingleton( CreateMPManager(), IMPToUIManager::tidTypeID );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NI_ASSERT( false, "Can't initialize specific module" );
 		return false;
@@ -128,11 +128,11 @@ void InitConsts()
 	const NDb::SUIConstsB2 *pUIConsts = GetUIConsts();
 	//
 	NI_ASSERT( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0, "Can't find all necessary consts" );
-	if ( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0 ) 
+	if ( pUIConsts != 0 && pSceneConsts != 0 && pClientConsts != 0 )
 	{
 		for ( std::vector<NDb::SCursor>::const_iterator it = pClientConsts->cursors.begin(); it != pClientConsts->cursors.end(); ++it )
 			Cursor()->RegisterMode( it->eAction, it->szFileName );
-		if ( pUIConsts ) 
+		if ( pUIConsts )
 			Singleton<IUIInitialization>()->SetUIConsts( pUIConsts );
 		Singleton<IClientAckManager>()->SetClientConsts( pClientConsts );
 		Singleton<IScene>()->SetSceneConsts( pSceneConsts );

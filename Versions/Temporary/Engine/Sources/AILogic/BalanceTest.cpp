@@ -212,7 +212,7 @@ void CBalanceTest::CollectBalanceTestData( int nIteration )
 void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 {
 	bTest = NGlobal::GetVar( "balance_test", 0 );
-	if ( !bTest ) 
+	if ( !bTest )
 		return;
 	NGlobal::SetVar( "temp.nogeneral_sript", true );
 
@@ -301,7 +301,7 @@ void CBalanceTest::InitBalanceTest( const NDb::SMapInfo *pMapInfo )
 
 void CBalanceTest::SegmentBalanceTest()
 {
-	if ( !bTest ) 
+	if ( !bTest )
 		return;
 
 	const int nTestTime = NGlobal::GetVar( "balance_params_iteration_time", 60 );

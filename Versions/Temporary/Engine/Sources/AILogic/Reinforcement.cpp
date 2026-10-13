@@ -38,7 +38,7 @@ void InitReinforcementTypes( const NDb::SAIGameConsts *_pConsts )
 		for ( int j = 0; j < nSize; ++j )
 		{
 			float fValue = expSet[ j ];
-			if ( fValue >= 0.0f && fValue <= 1.0f ) 
+			if ( fValue >= 0.0f && fValue <= 1.0f )
 				expediencyValues[ i ][ j ] = fValue;
 			else
 				NI_ASSERT( false, fmt::format( "Invalid Expediency value ({}, {})", i, j ) );

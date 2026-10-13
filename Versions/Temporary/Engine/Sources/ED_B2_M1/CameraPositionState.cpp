@@ -54,7 +54,7 @@ static bool GetStartCameraPositionFromDB( SCameraPos *pResult, IManipulator *pMa
 }
 
 
-static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCameraPos &rCamPos, int nPlayerIndex ) 
+static bool SetStartCameraPositionInDB( IManipulator *pMapInfoMan, const SCameraPos &rCamPos, int nPlayerIndex )
 {
 	if ( !pMapInfoMan )
 		return false;
@@ -157,7 +157,7 @@ bool CCameraPositionState::HandleCommand( unsigned nCommandID, uintptr_t dwData 
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, ID_WINDOW_GET_DIALOG_DATA, reinterpret_cast<uintptr_t>(&data) );
 			nCurrentPlayer = data.nPlayerIndex;
 			RefreshWindow( true );
-			return true;	
+			return true;
 		}
 		case ID_CPW_PARAM_TYPE_CHANGED:
 		{
@@ -227,8 +227,8 @@ void CCameraPositionState::RefreshWindow( bool bGetFromDB )
 		nCurrentPlayer = data.nPlayerCount > 0 ? 0 : -1;
 	data.nPlayerIndex = nCurrentPlayer;
 	data.bAllParams = nCurrentPlayer >= 0 && !cameraPositions[nCurrentPlayer].bUseAnchorOnly;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_CAMERA_POSITION_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&data) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
@@ -284,18 +284,18 @@ void CCameraPositionState::PostDraw( IPaintContext *pPaintDC )
 	//
 	for ( int i = 0; i < cameraPositions.size(); ++i )
 	{
-		CVec3 pos = CVec3( cameraPositions[i].vAnchor.x, cameraPositions[i].vAnchor.y, 0 ); 	
+		CVec3 pos = CVec3( cameraPositions[i].vAnchor.x, cameraPositions[i].vAnchor.y, 0 );
 		Vis2AI( &pos );
 		pos.z = GetTerrainHeight( pos.x, pos.y );
-		
+
 		CTransformStack ts = pCamera->GetTransform();
-		
+
 		CVec2 res = VNULL2;
-		
+
 		AI2Vis( &pos, pos );
 
 		if ( TestRayInFrustrum( pos, ts, pScene->GetScreenRect(), &res ) )
-			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ) , res );			
+			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "Player {} camera", i ) , res );
 	}
 }
 

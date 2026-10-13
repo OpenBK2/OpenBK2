@@ -62,7 +62,7 @@ public:
 			float fWidth;
 			float fHeight;
 			float fOpacity;
-			//			
+			//
 			SKeyPoint() : fWidth( DEFAULT_WIDTH ), fHeight( DEFAULT_HEIGHT ), fOpacity( DEFAULT_OPACITY ) {}
 			SKeyPoint( const SKeyPoint &rKeyPoint ) : fWidth( rKeyPoint.fWidth ), fHeight( rKeyPoint.fHeight ), fOpacity( rKeyPoint.fOpacity ) {}
 			SKeyPoint& operator=( const SKeyPoint &rKeyPoint )
@@ -74,7 +74,7 @@ public:
 					fOpacity = rKeyPoint.fOpacity;
 				}
 				return *this;
-			}	
+			}
 		};
 		typedef std::list<SKeyPoint> CKeyPointList;
 
@@ -176,7 +176,7 @@ private:
 													const float fStep );
 	static void SampleCurve( const std::vector<CVec3> &rControlPointList,
 													 CVSOPointList *pVSOPointList,
-													 float fStep, 
+													 float fStep,
 													 float fWidth,
 													 float fHeight,
 													 float fOpacity,
@@ -224,7 +224,7 @@ public:
 	//
 	static bool FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegin0,
 												const CVec2 &vBegin1, const CVec2 &vEnd1, bool bBegin1,
-												float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance, 
+												float fRadius, int nSegmentsCount, float fMinEdgeLength, float fDistance, float fDisturbance,
 												std::list<CVec2> *pPointsSequence, const std::vector<std::vector<CVec2> > &rLockedPolygons, std::list<CVec2> *pUsedPoints,
 												int nDepth = 0 );
 	//не симметричный метод, первый VSO продолжается на две точки по отношению ко второму с соблюдением ширины
@@ -232,7 +232,7 @@ public:
 	static bool Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin, NDb::SVSOInstance *pVSO1, bool bVSO1Begin );
 	//вернуть первую не нулевую высоту
 	static float GetEdgeHeght( const CVSOPointList &rVSOPointList, bool bBegin, bool bFirst );
-	// Необходим для генерации дорог ( используется не правильно )	
+	// Необходим для генерации дорог ( используется не правильно )
 	static std::string GetDescriptionName( const std::string &rszBeginVSODesc, const std::string &rszEndVSODesc )
 	{
 		return rszBeginVSODesc;
@@ -255,7 +255,7 @@ public:
 			VSO_IS_EDIT,
 			VSO_IS_ADD
 		};
-		EWhoDrawsVSO eDrawer; 
+		EWhoDrawsVSO eDrawer;
 		bool canEditPointList[SVSOSelection::ST_COUNT];
 		//
 		SVSODrawParams()
@@ -289,7 +289,7 @@ public:
 			{
 				return false;
 			}
-			else 
+			else
 			{
 				return canEditPointList[nIdx];
 			}

@@ -7,7 +7,7 @@
 class CMOBridge : public CMapObj
 {
 	OBJECT_NOCOPY_METHODS( CMOBridge );
-	
+
 	CDBPtr<NDb::SBridgeRPGStats> pStats;
 	int nFrameIndex = 0;
 	int nRandomSpan = 0;

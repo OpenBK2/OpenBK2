@@ -60,7 +60,7 @@ void MergePositions( std::vector<uint16_t> *pMatches, std::vector<CVec3> *pPosit
 	positions = mergedPositions;
 }
 
-// CObjectInfo 
+// CObjectInfo
 
 struct SRefTracker
 {
@@ -371,7 +371,7 @@ struct SVertexShift
 	int nXShift, nYShift;
 	SVertexShift( int _nVertex, int _nXShift, int _nYShift ) : nVertex(_nVertex), nXShift(_nXShift), nYShift(_nYShift) {}
 };
-inline bool operator==( const SVertexShift &a, const SVertexShift &b ) 
+inline bool operator==( const SVertexShift &a, const SVertexShift &b )
 {
 	return a.nVertex == b.nVertex && a.nXShift == b.nXShift && a.nYShift == b.nYShift;
 }

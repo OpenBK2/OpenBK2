@@ -67,7 +67,7 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 	UpdatePlayer();
 	if ( !pPlayer )
 		return;
-	
+
 	CTPoint<int> textureSize;
 	pPlayer->GetSize( &textureSize );
 	const CTRect<float> textureRect = CTRect<float>( 0.0f, 0.0f, textureSize.x, textureSize.y );
@@ -78,7 +78,7 @@ void CWindowPlayer::Visit( struct IUIVisitor *pVisitor )
 	if ( pInstance->bMaintainAspectRatio )
 	{
 		float fScale = (std::min)( dstRect.Width() / textureRect.Width(), dstRect.Height() / textureRect.Height() );
-		CTPoint<float> shift( ( dstRect.Width() - textureRect.Width() * fScale ) / 2, 
+		CTPoint<float> shift( ( dstRect.Width() - textureRect.Width() * fScale ) / 2,
 			( dstRect.Height() - textureRect.Height() * fScale ) / 2 );
 
 		CRectLayout black_rects;
@@ -157,7 +157,7 @@ void CWindowPlayer::SkipMovie()
 		return;
 	if ( !movies[nCurrMovie].bCanSkipMovie )
 		return;
-		
+
 	if ( pPlayer )
 	{
 		pPlayer->Stop();

@@ -237,7 +237,7 @@ void CTestClient::CommandEnterLobby( const SCommand &cmd )
 			pPacket = new CEnterLobbyPacket( 0, ERID_CUSTOM );
 		else
 			pPacket = new CEnterLobbyPacket( 0, ERID_LADDER );
-    
+
 		pServerClient->SendPacket( pPacket );
 
 		consoleCommandPackets.push_back( new CEnteredLobby() );
@@ -289,7 +289,7 @@ void CTestClient::CommandKillGame( const SCommand &cmd )
 {
 	if ( pServerClient )
 	{
-		if ( cmd.params.size() == 0 )   
+		if ( cmd.params.size() == 0 )
 			consoleCommandPackets.push_back( new CKillGamePacket( 0, -1 ) );
 		else
 			consoleCommandPackets.push_back( new CKillGamePacket( 0, cmd.GetInt( 0 ) ) );
@@ -427,7 +427,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 		return;
 	}
 
-	CPtr<CLadderInfoPacket> pPacket = new CLadderInfoPacket(); 
+	CPtr<CLadderInfoPacket> pPacket = new CLadderInfoPacket();
 	{
 		CFileStream stream( "../laddertest.xml", CFileStream::WIN_READ_ONLY );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_READ );
@@ -452,7 +452,7 @@ void CTestClient::CommandLadderTest( const SCommand &cmd )
 
 #ifdef LADDER_TEST_LOG
 	int nTime = GetCurrentTimeMilliseconds();
-	std::string szFileName = fmt::format( "../ladder_test_request_{}.xml", nTime ); 
+	std::string szFileName = fmt::format( "../ladder_test_request_{}.xml", nTime );
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
@@ -501,7 +501,7 @@ void CTestClient::CommandLadderWin( const SCommand &cmd )
 
 #ifdef LADDER_TEST_LOG
 	int nTime = GetCurrentTimeMilliseconds();
-	std::string szFileName = fmt::format( "../ladder_test_result_{}.xml", nTime ); 
+	std::string szFileName = fmt::format( "../ladder_test_result_{}.xml", nTime );
 	{
 		CFileStream stream( CreateStream( szFileName.c_str(), STREAM_PATH_ABSOLUTE ) );
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( &stream, SAVER_MODE_WRITE );
@@ -595,11 +595,11 @@ void CTestClient::Segment()
 		pPinger->Segment();
 
 	bool bCanCreateTester = ( GetCurrentTimeMilliseconds() > ( TESTER_CREATION_TIMEOUT + dwLastTesterCreationTime ) );
-	if ( !testers.empty() ) 
+	if ( !testers.empty() )
 	{
 		for ( int i = 0; i < testers.size(); ++i )
 		{
-			if ( testers[i] && !testers[i]->IsCancelled() )	
+			if ( testers[i] && !testers[i]->IsCancelled() )
 			{
 				testers[i]->Segment();
 			}

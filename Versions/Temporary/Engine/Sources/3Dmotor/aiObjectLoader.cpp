@@ -382,7 +382,7 @@ struct SStoredSkin
 	std::vector<NGScene::SLoadVertexWeight> weights;
 
 	int operator&( CStructureSaver &f )
-	{ 
+	{
 		f.Add( 1, &points );
 		f.Add( 2, &tris );
 		f.Add( 3, &weights );
@@ -510,7 +510,7 @@ void CSkinner::Recalc()
 	//pValue->points.resize( nVertices );
 	typedef CVec3 SVertex;
 	using NGScene::SVertexWeight;
-	
+
 	for ( CFileSkinPoints::CBodypartsHash::const_iterator i = src.parts.begin(); i != src.parts.end(); ++i )
 	{
 		SPiece &dst = pValue->pieces[i->first];
@@ -541,7 +541,7 @@ void CSkinner::Recalc()
 			pWeight++;
 		}
 	}
-	pValue->CalcBound();	
+	pValue->CalcBound();
 	/*if ( bDoPrecalc )
 		pValue->PrecalcCollideInfo();
 	else if ( !setTrees.empty() )

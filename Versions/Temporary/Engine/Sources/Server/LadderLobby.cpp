@@ -54,7 +54,7 @@ public:
 class CLadderConsts : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CLadderConsts )
-public: 
+public:
 	int nLevelDelta;
 	int nRaces;
 	int nMaxUnitTypes;
@@ -69,7 +69,7 @@ public:
 	std::vector<int> winsInSeriesMedals;
 	int nFirstPlaceMedalLevel;
 	int operator&( IXmlSaver &f )
-	{ 
+	{
 		f.Add( "LevelDelta", &nLevelDelta );
 		f.Add( "NumberOfRaces", &nRaces );
 		f.Add( "MaxUnitTypes", &nMaxUnitTypes );
@@ -276,14 +276,14 @@ void CLadderLobby::UpdatePlayerXP( SLadderGameInfo *pGameInfo, const int nPlayer
 	if ( nXP > 0 )
 	{
 		if ( pClientInfo->nMaxXPEarned < nXP )
-			pClientInfo->nMaxXPEarned = nXP;	
+			pClientInfo->nMaxXPEarned = nXP;
 	}
 	else
 	{
-		if ( pClientInfo->nMaxXPLost < ( -nXP ) ) 
+		if ( pClientInfo->nMaxXPLost < ( -nXP ) )
 			pClientInfo->nMaxXPLost = -nXP;
 	}
-	if ( pClientInfo->nXP < 0 ) 
+	if ( pClientInfo->nXP < 0 )
 		pClientInfo->nXP = 0;
 
 	for ( int i = pConsts->experience.levelXP.size() - 1; i >= 0; --i )
@@ -363,7 +363,7 @@ void CLadderLobby::CalcResults( const int nGameID )
 		pClientInfo->nTotalPlayTime += int( gameInfo.nDeathTime - gameInfo.nStartTime ) / 1000;
 		++pClientInfo->nTotalGamesPlayed;
 
-		pClientInfo->nUnitsEffectiveness = 
+		pClientInfo->nUnitsEffectiveness =
 			( pClientInfo->nUnitsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) + gameInfo.playerUnitsEff[ nPlayerID ] ) / pClientInfo->nTotalGamesPlayed;
 		pClientInfo->nKeyPointsEffectiveness =
 			( pClientInfo->nKeyPointsEffectiveness * ( pClientInfo->nTotalGamesPlayed - 1 ) + gameInfo.playerKeyPointEff[ nPlayerID ] ) / pClientInfo->nTotalGamesPlayed;
@@ -374,7 +374,7 @@ void CLadderLobby::CalcResults( const int nGameID )
 
 		if ( pClientInfo->techsPlayed.size() < ( gameInfo.nTechLevel + 1 ) )
 			pClientInfo->techsPlayed.resize( gameInfo.nTechLevel + 1, 0 );
-		++pClientInfo->techsPlayed[ gameInfo.nTechLevel ]; 
+		++pClientInfo->techsPlayed[ gameInfo.nTechLevel ];
 
 		if ( bWin )
 		{
@@ -410,7 +410,7 @@ void CLadderLobby::CalcResults( const int nGameID )
 
 		if ( CheckMedals( pClientInfo, gameInfo.unitsKilled[ nPlayerID ], gameInfo.unitsLost[ nPlayerID ] ) )
 			pClients->PutLadderInfoToDB( gameInfo.nickByID[ nPlayerID ] );
-		SendLadderInfoToPlayer( nPlayerID, gameInfo.nickByID[ nPlayerID ], true ); 
+		SendLadderInfoToPlayer( nPlayerID, gameInfo.nickByID[ nPlayerID ], true );
 	}
 
 	pClients->DBLogGameResult( &gameInfo );
@@ -433,7 +433,7 @@ bool CLadderLobby::CheckMedals( SLadderDBInfo *pInfo, const int nUnitsKilledInLa
 		}
 		++nArrayIndex;
 	}
-	
+
 	nArrayIndex = 0;
 	for ( int nMedalType = SLadderStatistics::EMedalTypes::KILLED_LOST_3; nMedalType <= SLadderStatistics::EMedalTypes::KILLED_LOST_1; ++nMedalType )
 	{
@@ -474,7 +474,7 @@ bool CLadderLobby::ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket )
 		return false;
 	const int nPlayerID = pPacket->nClientID;
 	const int nGameID = pPacket->nGameID;
-	
+
 	std::unordered_map< int, SLadderGameInfo >::iterator it = games.find( nGameID );
 	if ( it != games.end() )
 	{
@@ -499,7 +499,7 @@ bool CLadderLobby::MatchMakingStep()
 	waitingList.pop_front();
 
 	std::list<int> players = waitingList;
-	
+
 	CPtr<CLadderClient> pPlayer = ladderClients[nFirstPlayerID];
 
 	SLadderGameInfo gameInfo;
@@ -509,7 +509,7 @@ bool CLadderLobby::MatchMakingStep()
 	const bool bHistoricity = pPlayer->bHistoricity;
 	const int nLevel = pPlayer->nLevel;
 	const unsigned int uCheckSum = pPlayer->uCheckSum;
- 	
+
 	NLadder::DropFromListByTeamSize( ladderClients, &players, nTeamSize );
 	NLadder::DropFromListByHistoricityAndChecksum( ladderClients, &players, bHistoricity, uCheckSum );
 	NLadder::DropFromListByLevel( ladderClients, &players, nLevel, 2 * pConsts->nLevelDelta, 2 * pConsts->nLevelDelta );
@@ -547,7 +547,7 @@ bool CLadderLobby::MatchMakingStep()
 			{
 				gameInfo.team1Players.clear();
 				gameInfo.team2Players.clear();
-				
+
 				std::unordered_map<int, std::list<int> > candidates;
 				// Распихиваем игроков по командам, тех, кто не выбрал команду - распихиваем случайно
 				// Если историчность отключена - всех случайно
@@ -559,7 +559,7 @@ bool CLadderLobby::MatchMakingStep()
 					if ( !ladderClients[nPlayerID]->CanPlay( gameInfo.nMapID, gameInfo.nTechLevel, pConsts ) )
 						continue;
 
-					if ( bHistoricity && nSide ) 
+					if ( bHistoricity && nSide )
 					{
 						candidates[ nSide == nTeam1Side ? 1 : 2 ].push_back( *it );
 					}
@@ -581,7 +581,7 @@ bool CLadderLobby::MatchMakingStep()
 
 					// Заполняем команды кандидатами
 					gameInfo.team1Players.push_back( nFirstPlayerID );
-					while( ( gameInfo.team1Players.size() < nTeamSize && !candidates[1].empty() ) 
+					while( ( gameInfo.team1Players.size() < nTeamSize && !candidates[1].empty() )
 						|| ( gameInfo.team2Players.size() < nTeamSize && !candidates[2].empty() ) )
 					{
 						if ( gameInfo.team1Players.size() < nTeamSize )
@@ -598,7 +598,7 @@ bool CLadderLobby::MatchMakingStep()
 
 					if ( gameInfo.team1Players.size() < nTeamSize || gameInfo.team2Players.size() < nTeamSize )
 						continue; 				// Кандидатов не хватило :(
-					
+
 					const float nTeam1Level = NLadder::TeamLevel( ladderClients, gameInfo.team1Players );
 					const float nTeam2Level = NLadder::TeamLevel( ladderClients, gameInfo.team2Players );
 
@@ -612,7 +612,7 @@ bool CLadderLobby::MatchMakingStep()
 #endif
 						return true;
 					}
-						
+
 					std::list<int> &weakTeam = ( nTeam1Level < nTeam2Level ) ? gameInfo.team1Players : gameInfo.team2Players;
 					std::list<int> &strongTeam = ( nTeam1Level > nTeam2Level ) ? gameInfo.team1Players : gameInfo.team2Players;
 
@@ -628,7 +628,7 @@ bool CLadderLobby::MatchMakingStep()
 					}
 				}
 			}
-			
+
 		}
 	}
 	waitingList.push_back( nFirstPlayerID );

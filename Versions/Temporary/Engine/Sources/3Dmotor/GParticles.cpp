@@ -48,7 +48,7 @@ void CParticleAnimator::Recalc()
 	value.vWrap = CVec2(0,0);
 	if ( pInstance && pInstance->pParticle )
 		value.vWrap = pInstance->pParticle->vWrapSize;
-	
+
 	STime time = pTime->GetValue();
 	if ( time < stBeginTime )
 	{

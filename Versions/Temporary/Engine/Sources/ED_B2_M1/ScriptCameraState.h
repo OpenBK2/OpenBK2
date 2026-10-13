@@ -23,7 +23,7 @@ class CScriptCameraState : public CDefaultInputState, public ICommandHandler
 	CMapInfoEditor *pMapInfoEditor;
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
-  
+
 	std::vector<SCameraMarker> cameraMarkers;
 
 	SScriptCameraWindowData dialogData;

@@ -9,7 +9,7 @@
 // защита патча.
 // ****
 class CGeneral;
-class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator, public IEnemyEnumerator 
+class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator, public IEnemyEnumerator
 {
 	OBJECT_BASIC_METHODS(CGeneralTaskToDefendPatch);
 
@@ -19,7 +19,7 @@ class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator,
 	NDb::SAIGeneralParcel patchInfo;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nCurReinforcePoint = {};
-			
+
 	float fSeverity = {};										// current severity of this task
 	float fEnemyForce = {}, fFriendlyForce = {}, fFriendlyMobileForce = {};	//
 	float fMaxSeverity = {};
@@ -34,9 +34,9 @@ class CGeneralTaskToDefendPatch : public IGeneralTask, public IWorkerEnumerator,
 	CommonUnits stationaryUnits;
 	CommonUnits enemyForces;
 	bool bResistanceRemoved = {};
-	
+
 	CommonUnits newTanks;									// to take tanks not 1 by 1
-	
+
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&patchInfo); f.Add(4,&nCurReinforcePoint); f.Add(5,&fSeverity); f.Add(6,&fEnemyForce); f.Add(7,&fFriendlyForce); f.Add(8,&fFriendlyMobileForce); f.Add(9,&fMaxSeverity); f.Add(10,&bFinished); f.Add(11,&bWaitForFinish); f.Add(12,&timeLastUpdate); f.Add(13,&infantryInTrenches); f.Add(14,&infantryFree); f.Add(15,&tanksMobile); f.Add(16,&stationaryUnits); f.Add(17,&enemyForces); f.Add(18,&bResistanceRemoved); f.Add(19,&newTanks); return 0; }
 	void CalcSeverity( const bool bEnemyUpdated, const bool bFriendlyUpdated );
 	void InitTanks( class CCommonUnit *pUnit );
@@ -57,7 +57,7 @@ public:
 	//IEnumerator
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
 	virtual bool EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const;
-	
+
 	//IEnemyEnumerator
 	virtual bool EnumEnemy( class CAIUnit *pEnemy );
 
@@ -90,7 +90,7 @@ public:
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual float GetSeverity() const ;
-	virtual bool IsFinished() const { return false; } 
+	virtual bool IsFinished() const { return false; }
 	virtual void CancelTask( ICommander *pManager ) ;
 	virtual void Segment() ;
 	virtual int NeedNBest( const enum EForceType eType ) const { return true; }
@@ -121,7 +121,7 @@ public:
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false );
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual float GetSeverity() const { return fSeverity; }
-	virtual bool IsFinished() const ; 
+	virtual bool IsFinished() const ;
 	virtual void CancelTask( ICommander *pManager ) ;
 	virtual void Segment() ;
 
@@ -159,7 +159,7 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 
 	CTanks swarmingTanks;
 	bool bResistanesBusyByUs = {};
-	
+
 	CVec2 vTanksPosition;									// center of tanks formation
 	float fCurDistance = {};										// distance to nearest resistansce ( during enumeration )
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&vPrepearCenter); f.Add(4,&curResistanceToAttack); f.Add(5,&fSeverity); f.Add(6,&fMaxSeverity); f.Add(7,&fMinSeverity); f.Add(8,&nAdditionalIterations); f.Add(9,&bFinished); f.Add(10,&bReleaseWorkers); f.Add(11,&timeNextCheck); f.Add(12,&pOwner); f.Add(13,&swarmingTanks); f.Add(14,&bResistanesBusyByUs); f.Add(15,&vTanksPosition); f.Add(16,&fCurDistance); return 0; }
@@ -171,13 +171,13 @@ class CGeneralTaskToSwarmToPoint : public IGeneralTask, public IWorkerEnumerator
 public:
 	CGeneralTaskToSwarmToPoint();
 	CGeneralTaskToSwarmToPoint( class CGeneral *pOwner );
-	
+
 	//ITask
 	virtual ETaskName GetName() const { return ETN_SWARM_TO_POINT; }
 	virtual void AskForWorker( ICommander *pManager, const float _fMaxSeverity, const bool bInit = false );
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual float GetSeverity() const ;
-	virtual bool IsFinished() const ; 
+	virtual bool IsFinished() const ;
 	virtual void CancelTask( ICommander *pManager ) ;
 	virtual void Segment() ;
 
@@ -195,7 +195,7 @@ public:
 	friend class CGeneralSwarmWaitForReady;
 };
 
-class CGeneralSwarmWaitForReady : public IGeneralDelayedTask 
+class CGeneralSwarmWaitForReady : public IGeneralDelayedTask
 {
 	OBJECT_BASIC_METHODS( CGeneralSwarmWaitForReady );
 
@@ -205,7 +205,7 @@ class CGeneralSwarmWaitForReady : public IGeneralDelayedTask
 public:
 	CGeneralSwarmWaitForReady() {  }
 	CGeneralSwarmWaitForReady( class CGeneralTaskToSwarmToPoint *pTask )
-		:pGeneralTask( pTask )	
+		:pGeneralTask( pTask )
 	{
 	}
 	virtual bool IsTimeToRun() const { return pGeneralTask->IsTimeToRun(); }

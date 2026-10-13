@@ -47,7 +47,7 @@ public:
 		const CVec4 &_color, bool _bCheckDepth );
 	//
 	bool GetCheckDepth() const { return bCheckDepth; }
-	const CVec4& GetColor() const { return color; } 
+	const CVec4& GetColor() const { return color; }
 	void Render( NGfx::CRenderContext *pRC );
 };
 
@@ -56,7 +56,7 @@ struct SRayInfo
 	CVec3 vOrigin, vDir, vDirOrt;
 	float fLength;
 
-	SRayInfo( const CRay &r ) 
+	SRayInfo( const CRay &r )
 		: vOrigin( r.ptOrigin ), vDir( r.ptDir ), vDirOrt( r.ptDir ), fLength( fabs( r.ptDir ) )
 	{
 		Normalize( &vDirOrt );
@@ -71,8 +71,8 @@ class CFakeParticleLMTexture : public CPtrFuncBase<NGfx::CTexture>
 	CDGPtr<CFuncBase<CVec3> > pColor;
 	uint32_t dwNormalColor, dwParticleColor;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAmbient); f.Add(3,&pColor); f.Add(4,&dwNormalColor); f.Add(5,&dwParticleColor); return 0; }
-	bool NeedUpdate() 
-	{ 
+	bool NeedUpdate()
+	{
 		bool b1 = pColor.Refresh();
 		bool b2 = pAmbient.Refresh();
 		return b1 || b2;
@@ -191,21 +191,21 @@ public:
 	CGScene();
 	CGScene( int );
 	// outer space integration
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		const SFullGroupInfo &_ginfo );
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		const SFBTransform &trans, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<SFBTransform> *pPlacement, const SBound &hintBV, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<SFBTransform> *pPlacement, CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		const SBound &_bv, const SFullGroupInfo &_ginfo );
-	virtual CObjectBase* CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo, CFuncBase<SFBTransform> *pPlacement, IMaterial *pMat, 
+	virtual CObjectBase* CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo, CFuncBase<SFBTransform> *pPlacement, IMaterial *pMat,
 		CFuncBase<SBound> *pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo );
 	//
 	virtual CObjectBase* CreateParticles( CPtrFuncBase<CParticleEffect> *pInfo,
@@ -215,8 +215,8 @@ public:
 	virtual CObjectBase* CreatePostProcessor( CObjectBase *pRenderNode, IPostProcess *pProcessor );
 	virtual void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight );
 	virtual void SetSunFlares( const CVec3 &_dir, CSunFlares *_pSunFlares, CFuncBase<STime>* _pSunFlaresTime ) { sunFlareDir = _dir; pSunFlares = _pSunFlares; pSunFlaresTime = _pSunFlaresTime; }
-	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor, 
-		const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir, float fMaxHeight, float fShadowsMaxDetailLength, float fBlurShift, 
+	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor,
+		const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir, float fMaxHeight, float fShadowsMaxDetailLength, float fBlurShift,
 		CFuncBase<CVec3> *_pAmbient, CFuncBase<CVec3> *_pShadeColor, CFuncBase<CVec3> *_pIncidentShadeColor, const CVec3 &vParticlesColor,
 		CPtrFuncBase<NGfx::CTexture> *_pClouds, CFuncBase<SHMatrix> *_pCloudsProjection, const CVec3 &vDymanicLightsModifications );
 	virtual CObjectBase* AddPointLight( const CVec3 &_vColor, const CVec3 &ptOrigin, float fR );

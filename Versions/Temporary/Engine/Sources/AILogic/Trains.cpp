@@ -21,7 +21,7 @@
 extern CEventUpdater updater;
 extern NTimer::STime curTime;
 extern SRailRoadSystem theRailRoadSystem;
-extern CGroupLogic theGroupLogic;				
+extern CGroupLogic theGroupLogic;
 extern CGraveyard theGraveyard;
 
 static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, const int nWidth = 1, const NDebugInfo::EColor eColor = NDebugInfo::WHITE )
@@ -90,7 +90,7 @@ void CTrainLocomotive::Init( const CVec2 &center, const int z, const SUnitBaseRP
 			++nPoint;
 
 		vOwnPos = track.points[nPoint].vPos - track.points[nPoint - 1].vPos;
-		
+
 		uint16_t wOwnDir = dir;
 		uint16_t wDir1 = GetDirectionByVector( CVec2( -vOwnPos.x, -vOwnPos.y ) );			// To point 0
 		uint16_t wDir2 = GetDirectionByVector( CVec2( vOwnPos.x, vOwnPos.y ) );				// To end point
@@ -392,7 +392,7 @@ IStatesFactory* CLocomotiveStatesFactory::Instance()
 bool CLocomotiveStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return 
+	return
 		( cmdType == ACTION_COMMAND_ATTACK_UNIT			||
 		cmdType == ACTION_COMMAND_ATTACK_OBJECT			||
 		cmdType == ACTION_COMMAND_MOVE_TO						||
@@ -401,7 +401,7 @@ bool CLocomotiveStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 		cmdType == ACTION_COMMAND_SWARM_TO					||
 		cmdType == ACTION_COMMAND_PATROL						||
 		cmdType == ACTION_COMMAND_UNLOAD						||
-		cmdType == ACTION_COMMAND_WAIT							
+		cmdType == ACTION_COMMAND_WAIT
 		);
 }
 
@@ -410,11 +410,11 @@ IUnitState* CLocomotiveStatesFactory::ProduceState( class CQueueUnit *pObj, clas
 	NI_ASSERT( dynamic_cast<CTrainLocomotive*>( pObj ) != 0, "Wrong unit type (not Train Locomotive)" );
 	CTrainLocomotive *pUnit = checked_cast<CTrainLocomotive*>( pObj );
 
-	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();	
+	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	IUnitState* pResult = 0;
 
 	switch ( cmd.nCmdType )
-	{	
+	{
 	case ACTION_COMMAND_STOP:
 	case ACTION_COMMAND_STOP_THIS_ACTION:
 		pUnit->Stop();
@@ -488,7 +488,7 @@ IUnitState* CLocomotiveStatesFactory::ProduceState( class CQueueUnit *pObj, clas
 
 IUnitState* CLocomotiveStatesFactory::ProduceRestState( class CQueueUnit *pUnit )
 {
-	NI_ASSERT( dynamic_cast<CTrainLocomotive*>( pUnit ) != 0, "Wrong unit type" );	
+	NI_ASSERT( dynamic_cast<CTrainLocomotive*>( pUnit ) != 0, "Wrong unit type" );
 	CTrainLocomotive * pLoc = checked_cast<CTrainLocomotive*>( pUnit );
 	/*if ( pLoc->GetGuns() )
 		return CTrainRestState::Instance( pLoc );
@@ -505,7 +505,7 @@ IUnitState* CTrainRestState::Instance( CAIUnit *_pUnit )
 
 CTrainRestState::CTrainRestState( CAIUnit *_pUnit ) :
 CFreeFireManager( _pUnit ), pUnit( _pUnit )
-{ 
+{
 	CTrainLocomotive *pUnit = dynamic_cast<CTrainLocomotive*>( _pUnit );
 	if ( pUnit )
 	{
@@ -671,7 +671,7 @@ void CLocomotivePath::Segment( const NTimer::STime timeDiff )
 	if ( bFinished )
 		return;
 
-	if ( pUnit->GetSpeed() == 0.0f ) 
+	if ( pUnit->GetSpeed() == 0.0f )
 	{
 		fEndPos = fCurPos;
 		bFinished = true;
@@ -741,7 +741,7 @@ pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 
 void CLocomotiveAttackUnitState::Segment()
 {
-	switch( eState ) 
+	switch( eState )
 	{
 	case EAS_STARTING:
 		{
@@ -795,7 +795,7 @@ const bool CLocomotiveAttackUnitState::TryFiring()
 	{
 		CBasicGun *pGun = pUnit->GetGun( i );
 
-		if ( pGun->CanShootWOGunTurn( pTarget, 1 ) && 
+		if ( pGun->CanShootWOGunTurn( pTarget, 1 ) &&
 			!pGun->IsRelaxing() &&
 			!pGun->IsBursting() &&
 			pTarget->IsVisible( pUnit->GetParty() ) )
@@ -848,7 +848,7 @@ pUnit( _pUnit ), pTarget( _pTarget ), eState( EAS_STARTING ), pPath( 0 )
 
 void CLocomotiveAttackObjState::Segment()
 {
-	switch( eState ) 
+	switch( eState )
 	{
 	case EAS_STARTING:
 		{
@@ -902,7 +902,7 @@ const bool CLocomotiveAttackObjState::TryFiring()
 	{
 		CBasicGun *pGun = pUnit->GetGun( i );
 
-		if ( pGun->CanShootToObjectWOMove( pTarget ) && 
+		if ( pGun->CanShootToObjectWOMove( pTarget ) &&
 			!pGun->IsRelaxing() &&
 			!pGun->IsBursting() &&
 			pTarget->IsVisible( pUnit->GetParty() ) )

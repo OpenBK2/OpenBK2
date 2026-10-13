@@ -57,7 +57,7 @@ struct SKeyInfo
 	int nDevAction;
 	EControlType cType;
 };
-const SKeyInfo kiKeyInfoList [] = 
+const SKeyInfo kiKeyInfoList [] =
 {
 ////// KEYBOARD //////
 	{ "ESC",								DI8DEVTYPE_KEYBOARD,	DIK_ESCAPE			, CT_KEY		},
@@ -216,7 +216,7 @@ const SKeyInfo kiKeyInfoList [] =
 	{ "MOUSE_BUTTON5",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON5	, CT_KEY		},
 	{ "MOUSE_BUTTON6",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON6	, CT_KEY		},
 	{ "MOUSE_BUTTON7",			DI8DEVTYPE_MOUSE,			DIMOFS_BUTTON7	, CT_KEY		},
-	
+
 	{ "",								0 }
 };
 const int DIK_DBLCLK_MODIFIER = 0x4000;
@@ -373,7 +373,7 @@ bool InitInput( HWND hWnd, bool _bNonExclusiveMode, int nSampleBufferSize )
 
 	bInitialized = true;
 	SetFocus( true );
-	
+
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 		ResyncDevice( *iTempDevice );
 
@@ -458,7 +458,7 @@ static bool OpenDevices( int nSampleBufferSize )
 		hRes = pdiTempDevice->SetProperty( DIPROP_BUFFERSIZE, &sProp.diph );
 		if( FAILED(hRes) )
 			return false;
-		
+
 		AddDeviceInfo( pdiTempDevice, c_dfDIKeyboard.dwDataSize );
 	}
 
@@ -476,7 +476,7 @@ static bool SetCoopLevel()
 {
 	if ( bCoopLevelSet )
 		return true;
-	
+
 	for ( CDevicesList::iterator iTempDevice = devices.begin(); iTempDevice != devices.end(); ++iTempDevice )
 	{
 		HRESULT hRes;
@@ -495,9 +495,9 @@ static bool SetCoopLevel()
 		if( FAILED( hRes ) )
 			return false;
 	}
-	
+
 	bCoopLevelSet = true;
-	
+
 	return true;
 }
 
@@ -579,9 +579,9 @@ static std::string ReadControlLocalName( int nAction )
 // выкачать все event'ы, произошедшие с последней выкачки
 struct SSeqNumberLessThenFunctional
 {
-	bool operator()( const SInputEvent &sEvent1, const SInputEvent &sEvent2 ) const 
-	{ 
-		return ( sEvent1.dwSequence < sEvent2.dwSequence ); 
+	bool operator()( const SInputEvent &sEvent1, const SInputEvent &sEvent2 ) const
+	{
+		return ( sEvent1.dwSequence < sEvent2.dwSequence );
 	}
 };
 
@@ -701,8 +701,8 @@ void PumpMessages( bool bFocus )
 				const SKey &sKeyX = actionIDs[ INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ), INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ), 1 ) ];
 				SMessage sMessageX(
 					sKeyX.nAction, sKeyX.ePOVAxis, sKeyX.eType,
-					0, 
-					true, 
+					0,
+					true,
 					iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != - 1 )
 					sMessageX.nParam = cos( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
@@ -712,8 +712,8 @@ void PumpMessages( bool bFocus )
 				const SKey &sKeyY = actionIDs[ INPUT_KEYIDEX( INPUT_GETACTIONDEVICEID( iTempEvent->sMessage.nAction ), INPUT_GETACTIONOFFS( iTempEvent->sMessage.nAction ), 2 ) ];
 				SMessage sMessageY(
 					sKeyY.nAction, sKeyY.ePOVAxis, sKeyY.eType,
-					0, 
-					true, 
+					0,
+					true,
 					iTempEvent->sMessage.tTime );
 				if ( iTempEvent->sMessage.nParam != - 1 )
 					sMessageY.nParam = sin( ( (float)iTempEvent->sMessage.nParam * FP_2PI - FP_PI * 18000 ) / 36000 ) * POV_RANGE_VALUE;
@@ -761,7 +761,7 @@ static void ResyncDevice( const SInputDevice &sDevice )
 
 			if ( sKey.dwLastValue == dwData )
 				continue;
-			
+
 			bool bState = true;
 			if ( sKey.eType == CT_KEY )
 			{
@@ -973,7 +973,7 @@ static void AddDeviceInfo( IDirectInputDevice8 *pdiDevice, uint32_t dwFormatSize
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )
 		return;
-	
+
 	SInputDevice siDevice;
 	siDevice.nID = devices.size();
 	siDevice.bPoll = ( didCaps.dwFlags & DIDC_POLLEDDATAFORMAT ) ? true : false;
@@ -995,19 +995,19 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	HRESULT hRes;
 	DIDEVCAPS didCaps;
 	DIDEVICEINSTANCE didInstance;
-	
+
 	memset( &didInstance, 0, sizeof( DIDEVICEINSTANCE ) );
 	didInstance.dwSize = sizeof( DIDEVICEINSTANCE );
 	hRes = pdiDevice->GetDeviceInfo( &didInstance );
 	if ( FAILED( hRes ) )
 		return;
-	
+
 	memset( &didCaps, 0, sizeof( DIDEVCAPS ) );
 	didCaps.dwSize = sizeof( DIDEVCAPS );
 	hRes = pdiDevice->GetCapabilities( &didCaps );
 	if ( FAILED( hRes ) )
 		return;
-	
+
 	SInputDevice siDevice;
 	siDevice.nID = devices.size();
 	siDevice.bPoll = false;
@@ -1019,7 +1019,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 		siDevice.bPoll = true;
 
 	DebugTrace("INPUT: polled device: %s\n", siDevice.bPoll ? "yes" : "no" );
-	
+
 	SInputDeviceEnum sDeviceEnum;
 	sDeviceEnum.nID = siDevice.nID;
 	sDeviceEnum.szName = MakeDeviceEnumName( GET_DIDEVICE_TYPE( didInstance.dwDevType ) );
@@ -1027,7 +1027,7 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 	hRes = pdiDevice->EnumObjects( EnumDeviceObjectsCallback, &sDeviceEnum, DIDFT_ALL );
 	if ( FAILED(hRes) )
 		return;
-	
+
 	DIDATAFORMAT diDataFormat;
 	diDataFormat.dwSize			= sizeof(DIDATAFORMAT);
 	diDataFormat.dwObjSize	= sizeof(DIOBJECTDATAFORMAT);
@@ -1054,10 +1054,10 @@ static void AddDeviceEnum( IDirectInputDevice8 *pdiDevice )
 		if ( ( iTemp->dwType & DIDFT_AXIS ) == 0 )
 			continue;
 
-		DIPROPRANGE dipRange; 
-		dipRange.diph.dwSize       = sizeof(DIPROPRANGE); 
-		dipRange.diph.dwHeaderSize = sizeof(DIPROPHEADER); 
-		dipRange.diph.dwHow        = DIPH_BYID; 
+		DIPROPRANGE dipRange;
+		dipRange.diph.dwSize       = sizeof(DIPROPRANGE);
+		dipRange.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+		dipRange.diph.dwHow        = DIPH_BYID;
 		dipRange.diph.dwObj        = iTemp->dwType;
 		dipRange.lMin              = -AXIS_RANGE_VALUE;
 		dipRange.lMax              = AXIS_RANGE_VALUE;
@@ -1169,11 +1169,11 @@ static BOOL CALLBACK EnumDevicesCallback( const DIDEVICEINSTANCE* pdidInstance, 
 {
 	HRESULT hRes;
 	NWin32Helper::com_ptr<IDirectInputDevice8> pdiTempDevice;
-	
+
 	hRes = pdiInput->CreateDevice( pdidInstance->guidInstance, pdiTempDevice.GetAddr(), NULL );
-	if( FAILED( hRes ) ) 
+	if( FAILED( hRes ) )
 		return DIENUM_CONTINUE;
-		
+
 	DebugTrace("INPUT: New device found! Add new device %s\n", pdidInstance->tszProductName );
 
 	AddDeviceEnum( pdiTempDevice );
@@ -2025,35 +2025,35 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszG
 	}
 	switch ( rWindowMsg.msg )
 	{
-	case NWinFrame::SWindowsMsg::MOUSE_MOVE: 
+	case NWinFrame::SWindowsMsg::MOUSE_MOVE:
 		( *pszGameMessage ) = "win_mouse_move";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::RB_DBLCLK: 
+	case NWinFrame::SWindowsMsg::RB_DBLCLK:
 		( *pszGameMessage ) = "win_right_button_dblclk";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::LB_DBLCLK: 
+	case NWinFrame::SWindowsMsg::LB_DBLCLK:
 		( *pszGameMessage ) = "win_left_button_dblclk";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::RB_DOWN: 
+	case NWinFrame::SWindowsMsg::RB_DOWN:
 		( *pszGameMessage ) = "win_right_button_down";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::LB_DOWN: 
+	case NWinFrame::SWindowsMsg::LB_DOWN:
 		( *pszGameMessage ) = "win_left_button_down";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::RB_UP: 
+	case NWinFrame::SWindowsMsg::RB_UP:
 		( *pszGameMessage ) = "win_right_button_up";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::LB_UP: 
+	case NWinFrame::SWindowsMsg::LB_UP:
 		( *pszGameMessage ) = "win_left_button_up";
 		*peControlType = NInput::CT_WINDOWS;
 		break;
-	case NWinFrame::SWindowsMsg::CLOSE: 
+	case NWinFrame::SWindowsMsg::CLOSE:
 		( *pszGameMessage ) = "try_exit_windows";
 		*peControlType = NInput::CT_UNKNOWN;
 		break;

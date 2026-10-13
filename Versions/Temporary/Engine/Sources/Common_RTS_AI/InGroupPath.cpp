@@ -173,7 +173,7 @@ bool CInGroupPathBasis::DriveToFormation( const CVec2 &newCenter, const bool bAn
 			{
 				CutDriveToFormationPath( pPath );
 				CPtr<CStandartPath2> pStandartPath = new CStandartPath2( pUnit, pPath, newCenter, pPath->GetFinishPoint(), pAIMap );
-	
+
 				if ( pUnitOwnPath->Init( pUnit, pStandartPath, false, true, pAIMap ) )
 				{
 					bGoByOwnPath = true;
@@ -184,7 +184,7 @@ bool CInGroupPathBasis::DriveToFormation( const CVec2 &newCenter, const bool bAn
 
 				return true;
 			}
-			else 
+			else
 				return false;
 		}
 		//DebugTrace( "CanGoToFormationPos returns true (4)" );
@@ -254,7 +254,7 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 	{
 		// далеко от нужного положения
 		const bool bCanStep = pUnit->CanMoveBetweenTiles( pAIMap->GetTile( vCenter ), pAIMap->GetTile( result ) );
-		const bool bCanGoToPoint = 
+		const bool bCanGoToPoint =
 			bCanStep && ( pAIMap->GetTerrain()->CanUnitGoToPoint( pUnit->GetBoundTileRadius(), result, pUnit->GetAIPassabilityClass(), pAIMap ) != FREE_NONE );
 		if ( lineShift <= 0 && fDiff > 6 * pAIMap->GetTileSize() && bCanGoToPoint )
 		{
@@ -280,10 +280,10 @@ const CVec2 CInGroupPathBasis::MoveUnit( const NTimer::STime timeDiff, const flo
 		if ( !bGoByOwnPath )
 		{
 			const CVec2 vUnitPosition( pSmoothGroupPath->GetValidUnitCenter( pUnit ) );
-			CPtr<IStaticPath> pCheckPath = 
+			CPtr<IStaticPath> pCheckPath =
 				CreateStaticPathToPoint( vUnitPosition, VNULL2, pUnit, true, pAIMap );
 			const float fR = fabs( vUnitPosition - vCenter );
-			if ( pCheckPath && 
+			if ( pCheckPath &&
 				( fR < pAIMap->GetTileSize() && pCheckPath->GetLength() > 3 ||
 				fR >= pAIMap->GetTileSize() && pCheckPath->GetLength() * pAIMap->GetTileSize() > 3.0f * fR ) )
 			{

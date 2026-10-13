@@ -69,9 +69,9 @@ protected:
 	CExecutorUnitBase( const EExecutorTypeID _eTypeID, const int _nNextTime, const EUnitSpecialAbility eAbility );
 	CExecutorUnitBase() {}
 public:
-	
+
 	bool NotifyEvent( const CExecutorEvent &event ); // !!!! only events that is for this executor must go here (no checks inside)
-	
+
 	int Segment();
 
 	const EAbilitySwitchState GetState() const { return EAbilitySwitchState( state.eState ); }

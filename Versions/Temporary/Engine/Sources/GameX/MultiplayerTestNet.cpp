@@ -49,10 +49,10 @@ void CEmptyServerClient::Segment()
 
 	REGISTER_PACKET_PROCESSOR( OnEnterGameRoomPacket );
 	REGISTER_PACKET_PROCESSOR( OnLeaveGameRoomPacket );
-	
+
 	REGISTER_PACKET_PROCESSOR( OnGetRoomClientsPacket );
 	REGISTER_PACKET_PROCESSOR( OnGetRoomGamesPacket );
-	
+
 	REGISTER_PACKET_PROCESSOR( OnCreateGamePacket );
 	REGISTER_PACKET_PROCESSOR( OnConnectGamePacket );
 	REGISTER_PACKET_PROCESSOR( OnLeaveGamePacket );
@@ -75,7 +75,7 @@ CNetPacket* CMPUITestServerClient::GetPacket()
 {
 	if ( serverPackets.empty() )
 		return 0;
-		
+
 	CPtr< CNetPacket > pPacket = serverPackets.front();
 	serverPackets.pop_front();
 	return pPacket.Extract();
@@ -92,7 +92,7 @@ CNetPacket* CMPUITestServerClient::GetGamePacket()
 {
 	if ( gamePackets.empty() )
 		return 0;
-		
+
 	CPtr< CNetPacket > pPacket = gamePackets.front();
 	gamePackets.pop_front();
 	return pPacket.Extract();
@@ -114,7 +114,7 @@ bool CMPUITestServerClient::OnRegisterPacket( class CRegisterPacket *pPacket )
 		SPlayer &opponent = *it;
 		if ( opponent.wszNick == NStr::ToUnicode( pPacket->szNick ) )
 		{
-			CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, 
+			CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED,
 				CConnectServerPacket::ERR_ALREADY_REGISTERED );
 			PushPacket( pConnectPacket );
 			return true;
@@ -123,7 +123,7 @@ bool CMPUITestServerClient::OnRegisterPacket( class CRegisterPacket *pPacket )
 	opponents.push_back( SPlayer() );
 	opponents.back().nID = nFreeClientID++;
 	opponents.back().wszNick = NStr::ToUnicode( pPacket->szNick );
-	CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, 
+	CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS,
 		CConnectServerPacket::ERR_UNKNOWN );
 	PushPacket( pConnectPacket );
 	return true;
@@ -133,18 +133,18 @@ bool CMPUITestServerClient::OnLoginPacket( class CLoginPacket *pPacket )
 {
 	if ( player.nID != -1 )
 	{
-		CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED, 
+		CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_FAILED,
 			CConnectServerPacket::ERR_ALREADY_ONLINE );
 		PushPacket( pConnectPacket );
 		return true;
 	}
-	
+
 	player.nID = nFreeClientID++;
 	player.wszNick = NStr::ToUnicode( pPacket->szNick );
-	CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, 
+	CConnectServerPacket *pConnectPacket = new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS,
 		CConnectServerPacket::ERR_UNKNOWN );
 	PushPacket( pConnectPacket );
-	
+
 	CMyIDPacket *pIDPacket = new CMyIDPacket( player.nID );
 	PushPacket( pIDPacket );
 
@@ -166,7 +166,7 @@ bool CMPUITestServerClient::OnEnterGameRoomPacket( class CEnterLobbyPacket *pPac
 	SendPacket( new CRegisterPacket( 0, "ClientB2 02", "Pass", "Key", "email" ) );
 	SendPacket( new CRegisterPacket( 0, "ClientB2 03", "Pass", "Key", "email" ) );
 	//}
-	
+
 	return true;
 }
 
@@ -191,16 +191,16 @@ bool CMPUITestServerClient::OnGetRoomGamesPacket( class CGetLobbyGamesPacket *pP
 	for ( int i = 0; i < nCount; ++i )
 	{
 		SGameInfo info;
-		
+
 		info.nID = i;
 		info.szName = StrFmt( "MegaBattle %d", i );
 		info.nMaxPlayers = 16;
 		info.bCanConnect = true;
 		info.bHasPassword = false;
 		info.szPassword = "";
-		
+
 		CB2LobbyGameInfoPacket *pSpecificPacket = new CB2LobbyGameInfoPacket();
-		
+
 		pSpecificPacket->nPlayers = 2;
 		pSpecificPacket->nPing = 100;
 		pSpecificPacket->nMapType = 1;
@@ -221,14 +221,14 @@ bool CMPUITestServerClient::OnGetRoomGamesPacket( class CGetLobbyGamesPacket *pP
 			break;
 		};
 		GetSystemTime( &(pSpecificPacket->created) );
-		
+
 		info.pSpecificInfo = pSpecificPacket;
 
 		pInfoPacket->added.push_back( info );
 	}
-	
+
 	PushPacket( pInfoPacket );
-	
+
 	return true;
 }
 
@@ -238,11 +238,11 @@ bool CMPUITestServerClient::OnCreateGamePacket( class CCreateGamePacket *pPacket
 	player.bCreator = true;
 	nFreeGameID++;
 	PushPacket( new CConnectedGameID( player.nID, player.nGameID ) );
-	
+
 	PushPacket( new CNewGameClient( nFreeClientID++ ) );
 	PushPacket( new CNewGameClient( nFreeClientID++ ) );
 	PushPacket( new CNewGameClient( nFreeClientID++ ) );
-	
+
 	return true;
 }
 

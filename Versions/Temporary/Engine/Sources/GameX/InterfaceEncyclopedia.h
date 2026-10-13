@@ -20,10 +20,10 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		EFC_USSR,
 		EFC_GERMANY,
 		EFC_JAPAN,
-		
+
 		EFC_COUNT,
 	};
-	
+
 	enum EFilterUnitTypes
 	{
 		EFUT_ALL,
@@ -33,10 +33,10 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		EFUT_SEA,
 		EFUT_TRANSPORT,
 		EFUT_MISC,
-		
+
 		EFUT_COUNT,
 	};
-	
+
 	struct SFilterBtn
 	{
 		ZDATA
@@ -45,7 +45,7 @@ class CInterfaceEncyclopedia : public CInterfaceScreenBase, public IProgrammedRe
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBtn); f.Add(3,&szBtnName); return 0; }
 	};
 
-public:	
+public:
 	class CUnitData : public CObjectBase
 	{
 		OBJECT_NOCOPY_METHODS( CUnitData );
@@ -54,7 +54,7 @@ public:
 		CDBPtr<NDb::SUnitBaseRPGStats> pStats;
 		std::wstring wszBriefDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pStats); f.Add(3,&wszBriefDesc); return 0; }
-		
+
 		bool operator==( const CUnitData &data ) const
 		{
 			return pStats == data.pStats;
@@ -68,7 +68,7 @@ public:
 		void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 	};
 private:
-	
+
 	struct SSelectedUnit
 	{
 		ZDATA
@@ -77,7 +77,7 @@ private:
 		EFilterUnitTypes eUnitType;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pData); f.Add(3,&eCountry); f.Add(4,&eUnitType); return 0; }
 	};
-	
+
 	struct SFilterCache
 	{
 		ZDATA
@@ -85,12 +85,12 @@ private:
 		std::vector< CPtr<CUnitData> > filteredUnits;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnitListCont); f.Add(3,&filteredUnits); return 0; }
 	};
-	
+
 	struct SDataSorter
 	{
 		bool operator()( const CUnitData *pData1, const CUnitData *pData2 ) const;
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<ITextView> pUnitNameView;
 	CPtr<IScrollableContainer> pUnitDescCont;
@@ -98,22 +98,22 @@ private:
 	CPtr<IWindow3DControl> p3DCtrl;
 	CPtr<IButton> pStepBackward;
 	CPtr<IButton> pStepForward;
-	
+
 	std::vector< SFilterBtn > filterCountries;
 	std::vector< SFilterBtn > filterUnitTypes;
 	EFilterCountries eSelCountry;
 	EFilterUnitTypes eSelUnitType;
-	
+
 	std::unordered_map< CDBPtr<NDb::SUnitBaseRPGStats>, CPtr<CUnitData>, SDBPtrHash > knownUnits;
 	std::vector< SSelectedUnit > selectedUnits; // array for undo purpose
 	int nSelUnit;
-	
+
 	CObj<CDataViewer> pDataViewer;
-	
+
 	std::vector<SFilterCache> filterCache;
-	
+
 	ZSKIP //CPtr<IWindow> pBackground;
-	
+
 	bool bEffectEnter;
 	int nEffectCounter;
 	bool bEffectBorder;
@@ -125,23 +125,23 @@ private:
 	void MsgStepForward( const SGameMessage &msg );
 	void MsgUnitSelectionChanged( const SGameMessage &msg );
 	void MsgHelpScreen( const SGameMessage &msg );
-	
+
 	bool OnFilterBtn( const std::string &szName );
 	bool OnEffectFinished( const std::string &szName );
-	
+
 	void MakeInterior();
-	
+
 	void MakeFilterCache( IWindow *pSample );
 	void UpdateInfo();
 	void UpdateFilters();
 	void UpdateSelectedUnitInfo();
-	
+
 	void AddSelectedUnit( CUnitData *pData, EFilterCountries eCountry, EFilterUnitTypes eUnitType );
 	void SetFiltersBySelection();
 	void UpdateListCtrlSelection();
-	
+
 	CUnitData* GetUnitData( const NDb::SUnitBaseRPGStats *pStats );
-	
+
 	void EffectStart( bool bEnter );
 	void EffectFinish();
 	void EffectBorderStart( bool bEnter );
@@ -153,7 +153,7 @@ public:
 	bool Init();
 
 	bool StepLocal( bool bAppActive );
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
@@ -165,7 +165,7 @@ public:
 class CInterfaceEncyclopediaWait : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceEncyclopediaWait );
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	int nLoading;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&nLoading); return 0; }
@@ -173,7 +173,7 @@ public:
 	CInterfaceEncyclopediaWait();
 
 	bool Init();
-	
+
 	bool StepLocal( bool bAppActive );
 
 	//{ IProgrammedReactionsAndChecks

@@ -15,7 +15,7 @@ void CScene::SetFadedObjects( const std::list<int> &objects )
 	{
 		data[eScene]->fadeModes[*it] = true;
 	}
-	// включим 	
+	// включим
 	for ( std::unordered_map<int, bool>::iterator it = data[eScene]->fadeModes.begin(); it != data[eScene]->fadeModes.end(); ++it )
 	{
 		if ( old_fade.find( it->first ) == old_fade.end() )
@@ -92,7 +92,7 @@ void CScene::AddPostEffectObjects( const std::list<int> &objects, const CVec4 &v
 			}
 		}
 	}
-	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter( filterObjects, 
+	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter( filterObjects,
 		new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
 }
 

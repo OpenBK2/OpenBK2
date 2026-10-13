@@ -88,7 +88,7 @@ void SChapterReinfBase::SUnit::SetUnknown()
 		pSelectionWnd->ShowWindow( false );
 	if ( p3DCtrl )
 		p3DCtrl->ShowWindow( false );
-	
+
 	Clear3DView();
 }
 
@@ -109,7 +109,7 @@ void SChapterReinfBase::SUnit::SetNone()
 		pSelectionWnd->ShowWindow( false );
 	if ( p3DCtrl )
 		p3DCtrl->ShowWindow( false );
-		
+
 	Clear3DView();
 }
 
@@ -133,7 +133,7 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 		if ( pCountView )
 			pCountView->SetText( pCountView->GetDBText() + wszCount );
 	}
-	
+
 	std::wstring wszHP = NStr::ToUnicode( std::to_string( data.nHP ) );
 	if ( pHPView )
 		pHPView->SetText( pHPView->GetDBText() + wszHP );
@@ -147,7 +147,7 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 		}
 		pHPBar->SetPosition( 1.0f );
 	}
-		
+
 	bool bShowArmor = (data.armors.size() >= NUnitFullInfo::ES_ARMOR_COUNT);
 	if ( bShowArmor )
 	{
@@ -179,7 +179,7 @@ void SChapterReinfBase::SUnit::SetUnit( const SUnitData &_data )
 
 	if ( p3DCtrl )
 		p3DCtrl->ShowWindow( true );
-		
+
 	Show3DView();
 }
 
@@ -197,7 +197,7 @@ void SChapterReinfBase::SUnit::MakeUnitInfo()
 	NUnitFullInfo::MakeWeapons( data.weapons, pStats );
 	NUnitFullInfo::MakeArmors( data.armors, pStats );
 	data.nHP = NUnitFullInfo::MakeHP( pStats );
-	
+
 	Make3DInfo( pStats );
 }
 
@@ -392,7 +392,7 @@ void SChapterReinfUpgrade::InitControls( IWindow *_pBaseWnd )
 	InitUnitInfoControls( pUpgradePanel );
 }
 
-void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf, 
+void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 	const NDb::SReinforcement *pNewReinf )
 {
 	if ( !pNewReinf && !pOldReinf )
@@ -415,7 +415,7 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 	std::vector<SUnitData> unitsDataNew;
 	MakeReinfData( unitsDataOld, pOldReinf );
 	MakeReinfData( unitsDataNew, pNewReinf );
-	
+
 	int nMaxCount = (std::max)( unitsDataOld.size(), unitsDataNew.size() );
 	lines.reserve( nMaxCount );
 	for ( int i = 0; i < nMaxCount; ++i )
@@ -434,7 +434,7 @@ void SChapterReinfUpgrade::ShowReinf( const NDb::SReinforcement *pOldReinf,
 		line.pUnit2->InitControls( GetChildChecked<IWindow>( line.pWnd, "UnitPanel2", true ), fmt::format( "UnitBtnNew{}", i ), BASE_ID_3D + DELTA_ID_3D * (2 * i + 1) );
 		line.pUnit1->data.nCount = 0;
 		line.pUnit2->data.nCount = 0;
-		
+
 		if ( i < unitsDataOld.size()  )
 		{
 			line.pUnit1->SetUnit( unitsDataOld[i] );
@@ -476,7 +476,7 @@ void SChapterReinfUpgrade::UnitBtnPressed( const std::string &szSender )
 {
 	if ( !pBaseWnd || !pBaseWnd->IsVisible() )
 		return;
-	
+
 	for ( int i = 0; i < lines.size(); ++i )
 	{
 		SUpgradeLine &line = lines[i];
@@ -608,7 +608,7 @@ void SChapterReinfComposition::UnitBtnPressed( const std::string &szSender )
 {
 	if ( !pBaseWnd || !pBaseWnd->IsVisible() )
 		return;
-	
+
 	for ( int i = 0; i < units.size(); ++i )
 	{
 		SUnit *pUnit = units[i];
@@ -653,13 +653,13 @@ void SChapterReinfComposition::SelectUnit( SUnit *pUnit )
 void CInterfaceChapterMapMenu::SChapterDesc::InitControls( IWindow *_pBaseWnd )
 {
 	pBaseWnd = _pBaseWnd;
-	
+
 	pPanel = GetChildChecked<IWindow>( pBaseWnd, "ChapterDesc", true );
 	pContainer = GetChildChecked<IScrollableContainer>( pPanel, "Container", true );
 	pDescView = GetChildChecked<ITextView>( pContainer, "ItemChapterDesc", true );
 	pItemGeneral = GetChildChecked<IWindow>( pContainer, "ItemGeneral", true );
 	pDescHeader = GetChildChecked<ITextView>( pContainer, "ItemHeader", true );
-	
+
 	if ( pPanel )
 		pPanel->ShowWindow( false );
 	if ( pContainer )
@@ -726,14 +726,14 @@ void CInterfaceChapterMapMenu::SChapterDesc::Hide()
 void CInterfaceChapterMapMenu::SMissionDesc::InitControls( IWindow *_pBaseWnd )
 {
 	pBaseWnd = _pBaseWnd;
-	
+
 	pPanel = GetChildChecked<IWindow>( pBaseWnd, "MissionDesc", true );
 	pContainer = GetChildChecked<IScrollableContainer>( pPanel, "Container", true );
 	pDescView = GetChildChecked<ITextView>( pContainer, "Desc", true );
 	pNameView = GetChildChecked<ITextView>( pPanel, "Name", true );
 	pDifficultyView = GetChildChecked<ITextView>( pPanel, "Difficulty", true );
 	pWeatherView = GetChildChecked<ITextView>( pPanel, "Weather", true );
-	
+
 	if ( pPanel )
 		pPanel->ShowWindow( false );
 	if ( pContainer && pDescView )
@@ -761,7 +761,7 @@ void CInterfaceChapterMapMenu::SMissionDesc::Show( const NDb::SMissionEnableInfo
 		wszName = GET_TEXT_PRE(mission.pMap->,LocalizedName);
 	if ( pNameView )
 		pNameView->SetText( pNameView->GetDBText() + wszName );
-	
+
 	std::wstring wszDifficulty;
 	if ( IScenarioTracker *pST = Singleton<IScenarioTracker>() )
 	{

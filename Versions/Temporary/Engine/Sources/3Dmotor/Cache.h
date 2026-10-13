@@ -36,8 +36,8 @@ public:
 
 	CShortPtrAllocator(): nFree(NIL), nLast(0) {}
 	T& operator()( pointer p ) { return buffer[p]; }
-	pointer alloc() 
-	{ 
+	pointer alloc()
+	{
 		if ( nFree != NIL )
 		{
 			pointer nRes = nFree;
@@ -276,7 +276,7 @@ private:
 		Unlink( pNode );
 		Link( pTest, pNode );
 		/*
-		{	
+		{
 		// TEST
 		SListNode *pRoot = &Node(  pNode->nSize  ), *pPrev = pRoot, *pCurrent;
 		int nPrevTestCp = 0;
@@ -413,8 +413,8 @@ public:
 			}
 		}
 	}
-	void AdvanceFrameCounter() 
-	{ 
+	void AdvanceFrameCounter()
+	{
 		bThrashing = nLatestAllocRU == nCurrentRU;
 		++nCurrentRU;
 		nLatestAllocRU = 0;
@@ -506,9 +506,9 @@ public:
 	int nXSize, nYSize; // log2 of dimension, nXSize >= nYSize
 	int nShiftX, nShiftY;
 
-	int GetHash() const 
-	{ 
-		if ( nXSize > nYSize ) 
+	int GetHash() const
+	{
+		if ( nXSize > nYSize )
 			return nXSize * (nXSize + 1) + nYSize * 2;
 		else
 			return nYSize * (nYSize + 1) + nXSize * 2 + 1;
@@ -529,13 +529,13 @@ public:
 		++nYSize;
 		return QUAD;
 	}
-	ESplitType GetUsableSplit() const 
-	{ 
+	ESplitType GetUsableSplit() const
+	{
 		if ( nXSize > nYSize )
 			return XSPLIT;
 		if ( nXSize < nYSize )
 			return YSPLIT;
-		return NONE; 
+		return NONE;
 	}
 	bool SameSize( const CQuadTreeElement &a ) const
 	{

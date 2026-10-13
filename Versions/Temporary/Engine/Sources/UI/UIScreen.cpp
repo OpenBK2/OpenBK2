@@ -46,7 +46,7 @@ CWindowScreen::CWindowScreen()
 	bindCtrl( "ctrl_key" ),
 	bindAlt( "alt_key" ),
 	bIsScreenFocused( false )
-{	
+{
 	priorityEvents.AddObserver( "win_left_button_down", &CWindowScreen::MsgOnLMouseDown );
 	priorityEvents.AddObserver( "win_left_button_up", &CWindowScreen::MsgOnLMouseUp );
 	priorityEvents.AddObserver( "win_left_button_dblclk", &CWindowScreen::MsgOnLMouseDblClick );
@@ -73,9 +73,9 @@ void CWindowScreen::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	CWindow::InitByDesc( _pDesc );
 	messageReactions.InitByDesc( pDesc->messageReactions );
-	
+
 	CWindow::InitStatic();
-	
+
 	for ( std::vector<NDb::SCommandSequienceEntry>::const_iterator it = pDesc->commandSequiences.begin();
 				it != pDesc->commandSequiences.end(); ++it )
 	{
@@ -91,7 +91,7 @@ bool CWindowScreen::ProcessEvent( const struct SGameMessage &msg )
 	bindAlt.ProcessEvent( msg );
 	if ( msg.mMessage.cType == NInput::CT_UNKNOWN && !CUIFactory::IsMessageRegistered( msg ) )
 		return false;
-	
+
 	return CWindow::ProcessEvent( msg );
 }
 
@@ -191,7 +191,7 @@ void CWindowScreen::Load( const struct NDb::SUIDesc *pDesc, IProgrammedReactions
 	CUIFactory::SetScreenDuringLoad( this );
 	pReactionsAndChecks = _pReactionsAndChecks;
 	CWindow::InitStatic();
-	
+
 	//const NDb::SWindowScreen *pStats = NDb::Get<NDb::SWindowScreen>( nDBID );
 	InitByDesc( pDesc );
 
@@ -260,7 +260,7 @@ void CWindowScreen::UndoStateCommandSequence( const std::string &szCmdSeq )
 	// откатим незаконченную прямую последовательность
 	for ( CStateSequiences::iterator it = stateSequiences.begin(); it != stateSequiences.end(); ++it )
 	{
-		if ( it->GetName() == szCmdSeq ) 
+		if ( it->GetName() == szCmdSeq )
 		{
 			it->Reverse();
 			it->SetContext( pContext );
@@ -272,7 +272,7 @@ void CWindowScreen::UndoStateCommandSequence( const std::string &szCmdSeq )
 	// уберем законченную прямую последовательность
 	for ( CStateSequiences::iterator it = finishedAnimations.begin(); it != finishedAnimations.end(); ++it )
 	{
-		if ( it->GetName() == szCmdSeq ) 
+		if ( it->GetName() == szCmdSeq )
 		{
 			it->Reverse();
 			it->SetContext( pContext );
@@ -380,7 +380,7 @@ void CWindowScreen::RegisterToSegment( struct IWindow *pWnd, const bool bRegiste
 
 bool CWindowScreen::IsRegisteredToSegment( struct IWindow *pWnd ) const
 {
-	return segmentObjs.find( pWnd ) != segmentObjs.end(); 
+	return segmentObjs.find( pWnd ) != segmentObjs.end();
 }
 
 void CWindowScreen::RunAnimationSequienceBack( const int nAnimationID )
@@ -463,12 +463,12 @@ void CWindowScreen::RunStateCommandSequience( const std::string &szCmdSeq, IWind
 
 void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdSeq, CWindow *pSequenceParent, SWindowContext *pContext, const bool bForward )
 {
-	if ( szCmdSeq.empty() ) 
+	if ( szCmdSeq.empty() )
 		return;
 
 	CCommandSequiences::const_iterator cs = commandSequiences.find( szCmdSeq );
 	NI_ASSERT( cs != commandSequiences.end(), fmt::format( "unknown commad sequience number \"{}\"", szCmdSeq ) );
-	
+
 	if ( bForward )
 	{
 		bool bFound = false;
@@ -476,7 +476,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		// 2 effects with same name and same direction are not allowed
 		for ( CStateSequiences::iterator it = stateSequiences.begin(); it != stateSequiences.end(); ++it )
 		{
-			if ( szCmdSeq == it->GetName() ) 
+			if ( szCmdSeq == it->GetName() )
 			{
 				bFound = true;
 				if ( !it->IsForward() )							// reversed one found
@@ -500,7 +500,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		// find runned effect with this name and reverse it
 		for ( CStateSequiences::iterator it = stateSequiences.begin(); it != stateSequiences.end(); ++it )
 		{
-			if ( szCmdSeq == it->GetName() ) 
+			if ( szCmdSeq == it->GetName() )
 			{
 				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in stateSequieces \"{}\"", szCmdSeq) );
 				it->Reverse();
@@ -511,7 +511,7 @@ void CWindowScreen::RunStateCommandSequienceImmidiate( const std::string &szCmdS
 		}
 		for ( CStateSequiences::iterator it = finishedAnimations.begin(); it != finishedAnimations.end(); )
 		{
-			if ( szCmdSeq == it->GetName() ) 
+			if ( szCmdSeq == it->GetName() )
 			{
 				NI_ASSERT( !bFound, fmt::format( "duplicate sequience to reverse found in finishedAnimations \"{}\"", szCmdSeq ) );
 				it->Reverse();

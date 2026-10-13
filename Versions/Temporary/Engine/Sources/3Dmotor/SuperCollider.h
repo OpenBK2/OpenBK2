@@ -49,7 +49,7 @@ protected:
 	{
 		CVec3 vel, normVel;
 		float fVel;
-		
+
 		SVelocity( const CVec3 &a ): vel(a), normVel(a) { fVel = fabs(vel); Normalize( &normVel ); }
 	};
 	std::vector<SGlobalTriangle> tris;

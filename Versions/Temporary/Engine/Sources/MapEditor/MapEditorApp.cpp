@@ -476,12 +476,12 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	}
 	//
 	DebugTrace( "EditorApp() Load mainFrame: %g", NHPTimer::GetTimePassed( &time ) );
-	//	
+	//
 	// после создания MainFrame
 	GameXPostStorageInitialize();
 	//
 	DebugTrace( "EditorApp() GameXPostStorageInitialize(): %g", NHPTimer::GetTimePassed( &time ) );
-	//	
+	//
 	// after main frame initialization
 	const std::vector<IEditorModule*> &extModules = GetEditorModules();
 	for ( int i = 0; i < extModules.size(); ++i )
@@ -490,14 +490,14 @@ bool CEditorApp::Initialize( const std::vector<std::string> &rArgs )
 	}
 	//
 	DebugTrace( "EditorApp() ModulePostCreateMainFrame(): %g", NHPTimer::GetTimePassed( &time ) );
-	//	
+	//
 	// Окно создано, закрываем Splash Screen
 	if ( bShowSplashScreen )
 		pSplashScreen = 0;
 	//Singleton<IResourceManager>()->ResetCache();
 	//
 	//DebugTrace( "EditorApp() ResetCache(): %g", NHPTimer::GetTimePassed( &time ) );
-	//	
+	//
 	// И показываем основное окно
 	/**
 	if ( szCommandLine.find( "-topmost" ) != std::string::npos )
@@ -538,6 +538,6 @@ void CEditorApp::RegisterEditors()
 //	g_RegisterEditorsSemiAutoMagic.Load(); // сейчас регистрируются только в коде
 }
 
-// basement storage  
+// basement storage
 
 

@@ -59,7 +59,7 @@ class CWinVFS : public IVFS
 			CDataStream* OpenStream( const std::string &szPathName ) { return zipfile.OpenFile( nIndex ); }
 			bool GetStats( SFileStats *pStats, const std::string &szPathName ) const
 			{
-				if ( pStats == 0 ) 
+				if ( pStats == 0 )
 					return false;
 				pStats->nSize = zipfile.GetFileLen( nIndex );
 				pStats->mtime = zipfile.GetModDateTime( nIndex );
@@ -82,7 +82,7 @@ class CWinVFS : public IVFS
 		//
 		void operator()( NFile::CFileIterator &it ) const
 		{
-			if ( it.GetLength() <= 0 ) 
+			if ( it.GetLength() <= 0 )
 				return;
 			//
 			const uint32_t dwCheckTime = PackFileTime( it.GetLastWriteTime() );

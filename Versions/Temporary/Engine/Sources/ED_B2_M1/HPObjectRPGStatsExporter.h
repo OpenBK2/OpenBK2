@@ -6,8 +6,8 @@
 class CHPObjectRPGStatsExporter : public CBasicExporter
 {
 	void ExportSingleLightFX( IManipulator *pMan );
-	void CreateSingleIcons( IManipulator *pMan, 
-													const std::string &szObjectTypeName, 
+	void CreateSingleIcons( IManipulator *pMan,
+													const std::string &szObjectTypeName,
 													const std::string &szObjectName );
 public:
 	EXPORT_RESULT ExportObject( IManipulator* pManipulator,

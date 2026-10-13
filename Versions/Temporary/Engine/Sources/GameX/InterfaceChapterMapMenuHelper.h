@@ -29,11 +29,11 @@ public:
 		int nID;
 		CVec2 vDelta;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&points); f.Add(3,&fWidth); f.Add(4,&pTexture); f.Add(5,&nDependIndex); f.Add(7,&rcBounds); f.Add(8,&nID); f.Add(9,&vDelta); return 0; }
-		
+
 		GAMEX_EXPORT uint32_t GetColor() const;
 		uint32_t GetDependentColor() const;
 	};
-	
+
 	struct SMission
 	{
 		ZDATA
@@ -51,7 +51,7 @@ public:
 		CVec2 vEndOffset;
 		ZEND int operator&( IBinSaver &f ) { f.Add(4,&arrows); f.Add(5,&fPotentialIncomplete); f.Add(6,&fPotentialComplete); f.Add(7,&pWnd); f.Add(9,&vPos); f.Add(10,&bShowPotentialComplete); f.Add(11,&nIndex); f.Add(12,&nObjectIndex); f.Add(13,&vEndOffset); return 0; }
 	};
-	
+
 	ZDATA
 	CVec2 vMainStrike;
 	std::vector<SMission> missions;
@@ -59,7 +59,7 @@ public:
 	CDBPtr<NDb::SMapInfo> pDetailsMap;
 	CDBPtr<NDb::SChapter> pChapter;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&vMainStrike); f.Add(3,&missions); f.Add(4,&vDetailsCoeff); f.Add(5,&pDetailsMap); f.Add(6,&pChapter); return 0; }
-	
+
 	SChapterMapMenuHelper() {}
 	SChapterMapMenuHelper( const NDb::SChapter *pChapter, IWindow *pChapterMap );
 

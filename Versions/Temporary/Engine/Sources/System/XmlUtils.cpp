@@ -23,7 +23,7 @@ SEntityInfo entities[] =
 void ConvertToString( std::string *pStr )
 {
 	std::string &str = *pStr;
-	
+
 	int i = 0;
 	int nCnt = 0;
 	while ( i < str.size() )
@@ -35,12 +35,12 @@ void ConvertToString( std::string *pStr )
 				char c1, c2;
 				if ( isalpha( str[i+3] ) )
 					c1 = ( tolower( str[i+3] ) - 'a' + 10 ) * 16;
-				else				     
+				else
 					c1 = ( str[i+3] - '0' ) * 16;
 
-				if ( isalpha( str[i+4] ) ) 
+				if ( isalpha( str[i+4] ) )
 					c2 = ( tolower( str[i+4] ) - 'a' + 10 );
-				else				     
+				else
 					c2 = ( str[i+4] - '0' );
 
 				str[nCnt++] = c1;

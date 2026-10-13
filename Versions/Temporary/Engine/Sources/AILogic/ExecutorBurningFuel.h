@@ -14,7 +14,7 @@ class CExecutorBurningFuel : public CExecutor
 	CDBPtr<NDb::SBurningFuel> pStats;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime timeBurn = {};
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&vPos); f.Add(3,&pStats); f.Add(4,&timeBurn); return 0; }
 public:
 	CExecutorBurningFuel( const CVec3 &_vPos, const NDb::SBurningFuel *_pStats );

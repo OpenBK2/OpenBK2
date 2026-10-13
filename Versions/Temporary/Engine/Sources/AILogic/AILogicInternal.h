@@ -33,7 +33,7 @@ class CAILogic : public IAILogic
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bSuspended = {};
 	bool bFirstTime = {};
-	
+
 	// мосты
 	typedef std::list< std::list<CPtr<CBridgeSpan> > > Bridges;
 	Bridges bridges;
@@ -45,7 +45,7 @@ class CAILogic : public IAILogic
 	// скрипты
 	CScripts scripts;
 	bool bMissionLoaded = {};
-	
+
 	std::vector< SAIStartCommand > startCmds;
 	std::vector< SBattlePosition > reservePositions;
 
@@ -61,11 +61,11 @@ class CAILogic : public IAILogic
 	bool bNetGameStarted = {};
 
 	CPtr<ICheckSumLog> pCheckSumLog;
-	
+
 	// QUESTIONABLE determinism - iteration order is NOT DETERMINISTIC!
 	typedef det_set<CDBPtr<SMechUnitRPGStats>> CAvailTrucks;
 	CAvailTrucks availableTrucks;
-	
+
 	CPtr<IProgressHook> pProgress;
 
 	CObj<CAIMap> pAIMap;
@@ -77,7 +77,7 @@ class CAILogic : public IAILogic
 
 	NTimer::STime timeLastMiniMapUpdateUnits = {};
 	bool bNeedNewGroupNumber = {};
-	
+
 	// проверить, не является ли object грузовиком, подцеплённым к сценарийной артиллерии
 	// если да, ищет подходящий к артиллерии грузовик (в pNewStats) и возвращает true, если артиллерия не найдена - возвращает false
 	// если это не является таким грузовиком, возвращает true
@@ -145,16 +145,16 @@ public:
 	virtual void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	virtual void UnregisterGroup( const int nGroup );
 	virtual void GroupCommand( SAIUnitCmd *pCommand, const uint16_t wGroup, bool bPlaceInQueue );
-	
+
 	virtual void ShowAreas( const std::vector<int> &units, enum EActionNotify &eType, bool bShow );
 	virtual void GetShootAreas( int nUnitID, SShootAreas *pAreas );
-	
+
 	virtual const bool GetMiniMapUnitsInfo( std::vector< SMiniMapUnitInfo > &vUnits );
 	virtual bool GetMiniMapWarForInfo( CArray2D<uint8_t> **pWarFogInfo, bool bFirstTime );
 	virtual int GetMiniMapWarFogSizeX() const;
 	virtual int GetMiniMapWarFogSizeY() const;
 	virtual void CallScriptFunction( const char *pszCommand );
-	
+
 	virtual int GetUniqueIDOfObject( CObjectBase *pObj );
 	virtual CObjectBase* GetObjByUniqueID( const int id );
 
@@ -172,44 +172,44 @@ public:
 
 	bool UpdateAcknowledgment( SAIAcknowledgment &pAck );
 	bool UpdateAcknowledgment( SAIBoredAcknowledgement &pAck );
-	
+
 	virtual float GetZ( const CVec2 &vPoint ) const;
 	virtual const uint32_t GetNormal( const CVec2 &vPoint ) const;
 	virtual const bool GetIntersectionWithTerrain( CVec3 *pvResult, const CVec3 &vBegin, const CVec3 &vEnd ) const;
-	
+
 	virtual bool ToggleShow( const int nShowType );
 
 	virtual bool IsCombatSituation();
 	void InitStartCommands( const LinkInfo &linksInfo, det_map<int, int> &old2NewLinks );
 	void InitReservePositions( det_map<int, int> &old2NewLinks );
-	
+
 	bool IsSegment() const { return bSegment; }
-	
+
 		// difficuly levels
 	virtual void SetDifficultyLevel( const int nLevel );
 	virtual void SetCheatDifficultyLevel( const int nCheatLevel );
-	
+
 	const bool IsFirstTime() const { return bFirstTime; }
 
-	virtual void SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType eAck );	
+	virtual void SendAcknowlegdementForced( CObjectBase *pObj, const EUnitAckType eAck );
 
 	// for debug
 	virtual int GetUniqueID( CObjectBase *pObj );
-	
+
 	// при игре в multiplayer: все игроки загрузились и игра стартовала
 	virtual void NetGameStarted();
 	virtual bool IsNetGameStarted() const;
 
 	virtual const class CDifficultyLevel* GetDifficultyLevel() const;
-	
+
 	virtual void NeutralizePlayer( const int nPlayer );
 
 	virtual CObjectBase* GetUnitState( CObjectBase *pObj );
 	virtual bool IsFrozen( CObjectBase *pObj ) const;
 	virtual bool IsFrozenByState( CObjectBase *pObj ) const;
-	
+
 	virtual void GetGridUnitsCoordinates( const int nGroup, const CVec2 &vGridCenter, CVec2 **pCoord, int *pnLen );
-	
+
 	virtual CObjectBase* GetUpdate();
 	virtual void PrepareUpdates();
 	virtual void ToggleWarFog( const bool bWarFog );

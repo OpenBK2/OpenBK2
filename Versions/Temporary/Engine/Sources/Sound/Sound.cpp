@@ -11,7 +11,7 @@ REGISTER_SAVELOAD_CLASS( SOUND, 0x110793C1, CSound );
 //*******************************************************************
 
 
-CSound::CSound(	int wID, 
+CSound::CSound(	int wID,
 							 const NDb::SSoundDesc *_pDesc,
 														struct ISound *pSound,
 														const enum ESoundMixType eMixType,
@@ -20,8 +20,8 @@ CSound::CSound(	int wID,
 														const NDb::ESoundType eCombatType,
 														float fMinRadius,
 														float fMaxRadius )
-: pSample( pSound ), 
-	eMixType( eMixType ), 
+: pSample( pSound ),
+	eMixType( eMixType ),
 	bLooped( bLooped ),
 	wID( wID ),
 	timeBegin( 0 ),
@@ -59,7 +59,7 @@ float CSound::GetVolume( const NTimer::STime time, const float fDist ) const
 {
 	// сначала - затухание удаленного звука
 	float fVolDim = 0.0f;
-	if ( bDimMark ) 
+	if ( bDimMark )
 		fVolDim = 1.0f * (time - timeBeginDim) / SSoundSceneConsts::SS_SOUND_DIM_TIME;
 	if ( fVolDim > 1.0f )
 		return 0.0f;

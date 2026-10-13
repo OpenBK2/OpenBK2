@@ -48,7 +48,7 @@ void CPointGlowEffect::AddParticles( IParticleOutput *pRender )
 
 // CPointGlowAnimator
 
-CPointGlowAnimator::CPointGlowAnimator( IGScene *_pScene, CFuncBase<STime> *_pTime, CFuncBase<CVec3> *_pPlace, 
+CPointGlowAnimator::CPointGlowAnimator( IGScene *_pScene, CFuncBase<STime> *_pTime, CFuncBase<CVec3> *_pPlace,
 	CPtrFuncBase<NGfx::CTexture> *_pTexture, float _fLightSize, float _fOnTime, float _fOffTime )
 	: pScene(_pScene), pTime(_pTime), pPlacement(_pPlace), pTexture(_pTexture), fLightSize(_fLightSize),
 	expFader(_fOnTime,_fOffTime, 0), pCamera( pScene->GetCamera() ), nLastMaskAny(0), tNextCheck(0), bIsVisible(false)

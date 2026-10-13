@@ -23,11 +23,11 @@ class CWindowScrollBar : public CWindow, public ISlider, public IButtonNotify, p
 	CObj<CWindowSlider> pSlider;
 
 	bool bScrollGreater;													// timed scrolling up
-	int animTime;	
+	int animTime;
 	bool bFirstTime;
 	CDBPtr<NDb::SWindowScrollBarShared> pShared;
 	CPtr<NDb::SWindowScrollBar> pInstance;
-	
+
 	void Scroll( const float fDist = 1.0f );
 	void UpdateButtons();
 protected:
@@ -43,14 +43,14 @@ public:
 	void Segment( const int timeDiff );
 	void AfterLoad();
 
-	//IButtonNotify 
+	//IButtonNotify
 	void Released( class CWindow *pWho );
 	void Pushed( class CWindow *pWho );
 	void Entered( class CWindow *pWho );
 	void Leaved( class CWindow *pWho );
 	void StateChanged( class CWindow *pWho ) {  }
 	void AllowMouseScrolling( const bool _bAllow );
-	
+
 	bool IsLeverVisible() const;
 
 

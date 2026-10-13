@@ -3,7 +3,7 @@
 struct ICommonAI : public CObjectBase
 {
 	enum { tidTypeID = 0x30121380 };
-	
+
 	virtual void Segment() = 0;
 	virtual bool IsSuspended() const = 0;
 	virtual void Suspend() = 0;

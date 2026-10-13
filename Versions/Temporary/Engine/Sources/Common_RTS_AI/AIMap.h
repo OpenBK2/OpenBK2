@@ -21,7 +21,7 @@ template <int N> struct SGenericNumber
 class COMMON_RTS_AI_EXPORT CAIMap : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CAIMap );
-	
+
 	ZDATA
 		int nSizeX = 0, nSizeY = 0;
 		int nTileSize = 0;

@@ -1,6 +1,6 @@
 #pragma once
 void PostLoad( bool bInEditor )
-{	
+{
 	// CRAP, to emulate non zero default values
 	if ( vParticlesColor == VNULL3 )
 		vParticlesColor = CVec3( 0.25, 0.25, 0.25 );
@@ -16,7 +16,7 @@ void PostLoad( bool bInEditor )
 	*/
 
 
-	if ( !bWhitening ) 
+	if ( !bWhitening )
 	{
 		vLightColor *= 0.25f;
 		vAmbientColor *= 0.25f;

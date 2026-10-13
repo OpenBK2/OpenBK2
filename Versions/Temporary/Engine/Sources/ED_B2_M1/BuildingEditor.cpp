@@ -35,7 +35,7 @@ REGISTER_EDITOR_IN_DLL( BuildingRPGStats, CBuildingEditor )
 const int N_POINT_TYPES_NUM = 5;
 std::string listLabels[N_POINT_TYPES_NUM];
 
-CBuildingEditor::CBuildingEditor() : 
+CBuildingEditor::CBuildingEditor() :
 	pBuildingState(0),
 	pwndShortcutBar(0),
 	vLastCameraAnchor(VNULL3),
@@ -63,7 +63,7 @@ void CBuildingEditor::ChangeSeason( const NDb::ESeason eSeason )
 	szCurrSeason = typeSeasonMnemonics.GetMnemonic( eSeason );
 	std::string szMapName = NEditorOptions::GetBgMap( GetCurrSeason() );
 	CVec3 vCameraAnchor( NEditorOptions::GetBgMapAnchor(GetCurrSeason()) );
-	if ( vCameraAnchor == VNULL3 ) 
+	if ( vCameraAnchor == VNULL3 )
 	{
 		vCameraAnchor.x = 16.0f * VIS_TILE_SIZE;
 		vCameraAnchor.y = 16.0f * VIS_TILE_SIZE;
@@ -149,7 +149,7 @@ void CBuildingEditor::DestroyControls()
 }
 
 void CBuildingEditor::Create()
-{	
+{
 	// грузим файл с установками редактора
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	pUserData->SerializeSettings( editorSettings, "BuildingRPGStats", SUserData::EDITOR_SETTINGS, SUserData::ST_LOAD );
@@ -217,7 +217,7 @@ void CBuildingEditor::ReloadModel( NDb::ESeason eSeason )
 
 	// load building
 	CVec3 vVisCameraPos = GetLastCameraAnchor();
-		
+
 	Camera()->SetAnchor( vVisCameraPos );
 
 	if ( const NDb::SBuildingRPGStats *pBuildingStats = NDb::Get<NDb::SBuildingRPGStats>( GetObjectSet().objectNameSet.begin()->first ) )

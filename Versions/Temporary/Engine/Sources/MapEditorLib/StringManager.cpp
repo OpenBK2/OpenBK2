@@ -60,7 +60,7 @@ void CStringManager::CreateObjectSet( SObjectSet *pObjectSet, const std::string 
 	{
 		CStringManager::GetTypeAndNameFromRefValue( &szObjectTypeName, &szObjectName, rszName, TYPE_SEPARATOR_CHAR, pUserData->constUserData.szMainObjectType );
 	}
-	pObjectSet->szObjectTypeName = szObjectTypeName;	
+	pObjectSet->szObjectTypeName = szObjectTypeName;
 	InsertHashSetElement( &( pObjectSet->objectNameSet ), CDBID( szObjectName ) );
 }
 
@@ -286,7 +286,7 @@ int CStringManager::GetPowerPrecision( int nPrercision )
 	int nPowerPrecision = 1;
 	for ( int nPrecisionIndex = 0; nPrecisionIndex < nPrercision; ++nPrecisionIndex )
 	{
-		nPowerPrecision *= 10;	
+		nPowerPrecision *= 10;
 	}
 	return nPowerPrecision;
 }
@@ -482,7 +482,7 @@ void CStringManager::RemoveDoubleSlashes( std::string *pszFilePath )
 
 std::string CStringManager::GetFloatStringWithPrecision( const float fValue, const int nPrecision )
 {
-	if ( nPrecision > 0 ) 
+	if ( nPrecision > 0 )
 	{
 		const std::string szFormat = fmt::format( "%.{}f", nPrecision );
 		return fmt::sprintf( szFormat.c_str(), fValue );
@@ -518,6 +518,6 @@ int CStringManager::Compare( const std::string &rszLeft, const std::string &rszR
 	}
 }
 
-// basement storage  
+// basement storage
 
 

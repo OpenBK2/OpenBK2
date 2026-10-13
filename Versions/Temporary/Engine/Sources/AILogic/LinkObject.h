@@ -6,7 +6,7 @@ class CObjectBase * GetObjectByCmd( const struct SAIUnitCmd &cmd );
 
 class CLinkObject : public CUpdatableObj
 {
-public: 
+public:
 	ZDATA_( CUpdatableObj )
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		int nLink = {};
@@ -17,7 +17,7 @@ public:
 	CLinkObject();
 	CLinkObject( const int _nLink ) { SetLink( _nLink ); }
 	virtual ~CLinkObject();
-	
+
 	void SetUniqueIdForObjects();
 	void SetUniqueIdForUnits( const int nUniqueID );
 	void SetLink( const int _nLink );
@@ -32,26 +32,26 @@ public:
 	static void Segment();
 	// падает, если передан некорректный nUniqueID
 	static CLinkObject* GetObjectByUniqueId( const int nUniqueID );
-	
-	// возвращает 0, если передан некорректный nUniqueID	
+
+	// возвращает 0, если передан некорректный nUniqueID
 	static CLinkObject* GetObjectByUniqueIdSafe( const int nUniqueID );
-	
+
 	//
 	static bool IsLinkObjectExists( const int nUniqueID );
-	
+
 	// даёт nSize свободных линков
 	static void GetFreeLinks( std::list<int> *pLinks, const int nSize );
-	
+
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
 
-// возвращает 0, если передан некорректный nUniqueID	
+// возвращает 0, если передан некорректный nUniqueID
 template<class T>
 inline T* GetObjectByUniqueIdSafe( const int nUniqueID )
 {
 	CLinkObject *pLinkObject = CLinkObject::GetObjectByUniqueIdSafe( nUniqueID );
-	return 
+	return
 		pLinkObject ? checked_cast<T*>( pLinkObject ) : 0;
 }
 

@@ -39,7 +39,7 @@ bool CGeometryExporter::FormScript( std::string *pScriptText,
 		szRootMesh.clear();
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
 		szRootJoint.clear();
-	if ( szRootMesh == szRootJoint ) 
+	if ( szRootMesh == szRootJoint )
 		szRootJoint.clear();
 
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
@@ -51,9 +51,9 @@ bool CGeometryExporter::FormScript( std::string *pScriptText,
 	return true;
 }
 
-bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 																									const std::string &szSrcScenePath,
-																									const std::string &szDstFileName, 
+																									const std::string &szDstFileName,
 																									IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -64,16 +64,16 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		// read number of meshes from granny geometry file and write it to database
 		WaitForFile( szDstFileName, 10000 );
 		CGrannyFileInfoGuard fileInfo( szDstFileName );
-		if ( fileInfo->MeshCount == 0 ) 
+		if ( fileInfo->MeshCount == 0 )
 		{
 			pLogger->Log( LT_ERROR, fmt::format("Geometry has 0 meshes - invalid scene or root mesh name\n") );
 			pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
 			pLogger->Log( LT_ERROR, fmt::format("\tDestination file: {}\n", szDstFileName.c_str()) );
 			return false;
 		}
-		for ( int i = 0; i < fileInfo->MeshCount; ++i ) 
+		for ( int i = 0; i < fileInfo->MeshCount; ++i )
 		{
-			if ( fileInfo->Meshes[i]->PrimaryTopology->GroupCount != 1 ) 
+			if ( fileInfo->Meshes[i]->PrimaryTopology->GroupCount != 1 )
 			{
 				pLogger->Log( LT_ERROR, fmt::format("Geometry has invalid number of topology groups in mesh, (must have 1)\n") );
 				pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
@@ -94,7 +94,7 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			CManipulatorManager::SetVec3( vHalfSize * 2.0f, pManipulator, "Size" );
 		}
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		pLogger->Log( LT_ERROR, fmt::format("General fail during importing DB data for geometry\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
@@ -105,9 +105,9 @@ bool CGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 }
 
 EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
-																						  const std::string &szObjName, 
+																						  const std::string &szObjName,
 																							const std::string &szSrcScenePath,
-																							const std::string &szDestinationPath, 
+																							const std::string &szDestinationPath,
 																							IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -123,7 +123,7 @@ EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
 		return ER_FAIL;
 	}
 	// check for number of bones
-	if ( fileInfo->Skeletons[0]->BoneCount == 0 ) 
+	if ( fileInfo->Skeletons[0]->BoneCount == 0 )
 	{
 		pLogger->Log( LT_ERROR, fmt::format("Empty bones list - check \"RootMesh\" and \"RootJoint\"\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tGeometry: {}\n", szObjName.c_str()) );
@@ -141,6 +141,6 @@ EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 

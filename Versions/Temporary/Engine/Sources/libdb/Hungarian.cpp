@@ -155,7 +155,7 @@ const std::string GetFieldNameInCode( const NDb::NTypeDef::STypeClass::SField &f
 {
 	if ( field.pAttributes && field.pAttributes->attributes.find( "no_prefix" ) != field.pAttributes->attributes.end() )
 		return field.szName;
-	
+
 	NDb::NTypeDef::STypeDef *pFieldType = field.pType;
 	const std::string szPrefix = NHungarian::GetTypePrefix( pFieldType->eType, pFieldType->GetAttributes() );
 	std::string szResult( field.szName );

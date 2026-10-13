@@ -38,10 +38,10 @@ bool CObjectFilter::Match( const std::string &_szFullName, const std::string &sz
 	{
 		if ( it->eOpType == SEntry::OPERATION_UNION && it->Match(szFullName, szClassTypeName) != false )
 			bResult = true;
-		else if ( it->eOpType == SEntry::OPERATION_INTERSECTION && 
+		else if ( it->eOpType == SEntry::OPERATION_INTERSECTION &&
 			        (bResult == false || it->Match(szFullName, szClassTypeName) == false) )
 			return false;
-		else if ( it->eOpType == SEntry::OPERATION_DIFFERENCE && 
+		else if ( it->eOpType == SEntry::OPERATION_DIFFERENCE &&
 			        (bResult == false || it->Match(szFullName, szClassTypeName) != false) )
 			return false;
 	}

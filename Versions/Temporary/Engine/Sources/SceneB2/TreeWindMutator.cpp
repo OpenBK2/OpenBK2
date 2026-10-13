@@ -25,7 +25,7 @@ void CTreeWindMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
-	if ( curTime > lastUpdateTime ) 
+	if ( curTime > lastUpdateTime )
 	{
 		lastUpdateTime = curTime;
 		fMagnitude = Scene()->GetWindController()->GetWindCoeff( vPos );
@@ -100,7 +100,7 @@ bool CTreeWindMutator::NeedUpdate()
 {
 	NTimer::STime curTime = Singleton<IGameTimer>()->GetGameTime();
 
-	if ( curTime <= lastUpdateTime ) 
+	if ( curTime <= lastUpdateTime )
 		return false;
 
 	lastUpdateTime = curTime;
@@ -114,7 +114,7 @@ bool CTreeWindMutator::NeedUpdate()
 
 int CTreeWindMutator::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, &leafBones );	
+	saver.Add( 1, &leafBones );
 	saver.Add( 2, &vPos );
 	saver.Add( 3, &lastUpdateTime );
 	saver.Add( 4, &fMagnitude );

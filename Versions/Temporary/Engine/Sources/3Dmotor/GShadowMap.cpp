@@ -418,7 +418,7 @@ struct SAreaCalcInfo
 };
 static float CalcArea( float fRot, const SAreaCalcInfo &info, CVec4 *pX, CVec4 *pY )
 {
-	float fSin = sin( ToRadian( fRot ) ), fCos = cos( ToRadian( fRot ) ); 
+	float fSin = sin( ToRadian( fRot ) ), fCos = cos( ToRadian( fRot ) );
 
 	CVec3 vX, vY;
 	vX =  fCos * info.vXBase + fSin * info.vYBase;
@@ -469,10 +469,10 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	ts.Get().forward.RotateHVectorTransposed( &pl1, CVec4( 0, 0,1, 0) );
 	ts.Get().forward.RotateHVectorTransposed( &pl2, CVec4( 0, 0,1,-1) );
 
-	val = 1.0f / sqrtf ( pl1.x * pl1.x + pl1.y * pl1.y + pl1.z * pl1.z ); 
+	val = 1.0f / sqrtf ( pl1.x * pl1.x + pl1.y * pl1.y + pl1.z * pl1.z );
 	pl1 *= val;
 
-	val = 1.0f / sqrtf ( pl2.x * pl2.x + pl2.y * pl2.y + pl2.z * pl2.z ); 
+	val = 1.0f / sqrtf ( pl2.x * pl2.x + pl2.y * pl2.y + pl2.z * pl2.z );
 	pl2 *= val;
 
 	// occluderHedron - potential shadow casters bound
@@ -504,7 +504,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 		if( bNewShadows )
 		{
 			pl1.w -= 100;
-			NGeometry::Split( &hedron, -pl1 );			
+			NGeometry::Split( &hedron, -pl1 );
 		}
 		projHedron = hedron;
 		NGeometry::Split( &hedron, SPlane( CVec3(0,0,-1), Clamp( vSceneMax.z, 0.5f, fMaxHeight * 1.05f ) ) );
@@ -576,12 +576,12 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	static CVec4 svDirX;
 	static CVec4 svDirY;
 
-	bool bFirstCase = 
+	bool bFirstCase =
 	( ( ofMaxX - ofMinX ) > dX * 1.3f ) || ( ( ofMaxY - ofMinY ) > dY * 1.3f );
 
-	bool bSecondCase = 
-		!( ofMinX < fMinX && 
-		ofMinY < fMinY && 
+	bool bSecondCase =
+		!( ofMinX < fMinX &&
+		ofMinY < fMinY &&
 		ofMaxX > fMaxX &&
 		ofMaxY > fMaxY );
 
@@ -590,7 +590,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	{
 		ofMinX =  fMinX - dX * 0.1f;
 		ofMaxX =  fMaxX + dX * 0.1f;
-		
+
 		ofMinY =  fMinY - dY * 0.1f;
 		ofMaxY =  fMaxY + dY * 0.1f;
 
@@ -609,7 +609,7 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 
 	pRes->vDirX = svDirX;
 	pRes->vDirY = svDirY;
-	
+
 	SAreaCalcInfo areaInfo;
 	for ( std::unordered_map<CVec3,bool, SVec3Hash>::iterator i = pointHash.begin(); i != pointHash.end(); ++i )
 		areaInfo.points.push_back( i->first );
@@ -676,14 +676,14 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	// initialize shadow geom bound, Identity projection is used
 	pShadowGeomTS->Make();
 
-	
+
 
 	if( bNewShadows && pRes->bNeedUpdate )
 	{
 		pShadowGeomTS->AddClipPlane(pRes->vDirX);
-		
+
 		pShadowGeomTS->AddClipPlane
-			(  
+			(
 			CVec4( -pRes->vDirX.x, -pRes->vDirX.y, -pRes->vDirX.z, 1.0f - pRes->vDirX.w )
 			);
 

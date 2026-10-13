@@ -24,17 +24,17 @@ void CQueueUnit::Init()
 	bDoNotDeleteMeFromCommand = false;
 }
 
-void CQueueUnit::Clear() 
-{ 
+void CQueueUnit::Clear()
+{
 	cmds.Clear();
 }
 
-bool CQueueUnit::IsEmptyCmdQueue() const 
+bool CQueueUnit::IsEmptyCmdQueue() const
 {
 	return cmds.IsEmpty( GetUniqueIdQU() );
 }
 
-CAICommand* CQueueUnit::GetCurCmd() const 
+CAICommand* CQueueUnit::GetCurCmd() const
 {
 	return pCmdCurrent;
 }
@@ -55,12 +55,12 @@ void CQueueUnit::DelCmdQueue( const int id )
 void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 {
 	FreezeByState( false );
-	
+
 	const uint16_t wThisID = GetUniqueIdQU();
 	const uint16_t wUnitID = pUnit->GetUniqueIdQU();
 
 	DelCmdQueue( wThisID );
-	
+
 	if ( pUnit->GetCurCmd() && CanCommandBeExecuted( pUnit->GetCurCmd() ) )
 		cmds.Push( wThisID, pUnit->GetCurCmd() );
 
@@ -77,9 +77,9 @@ void CQueueUnit::InitWCommands( CQueueUnit *pUnit )
 void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 {
 	CPtr<CAICommand> pGarbage = pCommand;
-	
+
 	FreezeByState( false );
-	
+
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) && cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
 		return;
 
@@ -96,7 +96,7 @@ void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 
 		if ( IsValid( pCmdCurrent ) )
 		{
-			bDoNotDeleteMeFromCommand = pCmdCurrent->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_TO && 
+			bDoNotDeleteMeFromCommand = pCmdCurrent->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_TO &&
 				( pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_UNIT ||	pCommand->ToUnitCmd().nCmdType == ACTION_MOVE_SWARM_ATTACK_FORMATION || pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_SWARM_ATTACK_OBJECT );
 
 			pState->TryInterruptState( 0 );// грубо прервать состояние
@@ -113,9 +113,9 @@ void CQueueUnit::InsertUnitCommand( CAICommand *pCommand )
 void CQueueUnit::PushFrontUnitCommand( CAICommand *pCommand )
 {
 	CPtr<CAICommand> pGarbage = pCommand;
-	
+
 	FreezeByState( false );
-	
+
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) && cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
 		return;
 
@@ -134,13 +134,13 @@ void CQueueUnit::PushFrontUnitCommand( CAICommand *pCommand )
 void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand )
 {
 	CPtr<CAICommand> pGarbage = pCommand;
-	
+
 	FreezeByState( false );
-	
+
 	CPtr<CAICommand> pCmd = pCommand;
 	if ( !CanCommandBeExecutedByStats( pCommand ) )
 	{
- 		const EActionCommand &cmd = pCommand->ToUnitCmd().nCmdType;					
+ 		const EActionCommand &cmd = pCommand->ToUnitCmd().nCmdType;
 		if ( cmd == ACTION_COMMAND_MOVE_TO || cmd == ACTION_COMMAND_REVERSE_TO || cmd == ACTION_COMMAND_SWARM_TO )
 			SendAcknowledgement( pCommand, ACK_NEGATIVE );
 
@@ -149,10 +149,10 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 
 	const SAIUnitCmd &unitCmd = pCmd->ToUnitCmd();
 	NI_ASSERT( unitCmd.nCmdType != ACTION_COMMAND_DIE, "Can't process DIE command in CQueueUnit" );
-	
+
 	if ( !cmds.IsEmpty( GetUniqueIdQU() ) && cmds.Peek( GetUniqueIdQU() )->ToUnitCmd().nCmdType == ACTION_COMMAND_DISAPPEAR )
 		return;
-	
+
 	if ( bPlaceInQueue )
 		cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
 	//если текущее состояние завершено
@@ -166,7 +166,7 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 		cmds.Push( GetUniqueIdQU(), pCmd.GetPtr() );
 	}
 	//текущее состояние не завершено
-	else 
+	else
 	{
 		if ( pCmd && pCmd->ToUnitCmd().nCmdType == ACTION_COMMAND_STOP_THIS_ACTION ) // прервать насильно
 		{
@@ -176,21 +176,21 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 				NullSegmTime();
 			}
 		}
-		else  
+		else
 		{
 			const NDb::EUnitSpecialAbility eAbility1 = GetAbilityByCommand( pCmd->ToUnitCmd().nCmdType );
 			// A hack to allow Entrench (which is not an ability) have a progress indicator (like a normal ability)
 			const NDb::EUnitSpecialAbility eAbility = ( eAbility1 == NDb::ABILITY_ENTRENCH_SELF ) ?	NDb::ABILITY_NOT_ABILITY : eAbility1;
-			bool bNeedToInterruptsState = false; 
-						
+			bool bNeedToInterruptsState = false;
+
 			// ability commands
 			if ( eAbility != NDb::ABILITY_NOT_ABILITY )
 			{
 				bCommandAdded = false;
 				NotifyAbilityRun( pCommand ); // can add new command to queue and change bCommandAdded
-				
+
 				const NDb::SUnitSpecialAblityDesc *pSA = GetUnitAbilityDesc( eAbility );
-				if ( !bCommandAdded && pSA )				
+				if ( !bCommandAdded && pSA )
 					bNeedToInterruptsState = pSA->bStopCurrentAction;
 			}
 			else
@@ -198,9 +198,9 @@ void CQueueUnit::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 
 			const NDb::ESpecialAbilityParam eSAaction = NDb::ESpecialAbilityParam(int(pCmd->ToUnitCmd().fNumber));
 
-			if ( eAbility == NDb::ABILITY_NOT_ABILITY || 
-				!bCommandAdded && bNeedToInterruptsState && 
-				eSAaction != NDb::PARAM_ABILITY_AUTOCAST_ON && eSAaction != NDb::PARAM_ABILITY_AUTOCAST_OFF ) 
+			if ( eAbility == NDb::ABILITY_NOT_ABILITY ||
+				!bCommandAdded && bNeedToInterruptsState &&
+				eSAaction != NDb::PARAM_ABILITY_AUTOCAST_ON && eSAaction != NDb::PARAM_ABILITY_AUTOCAST_OFF )
 			{						// спрашиваем у текущего состояния можно ли его прервать
 
 				switch ( pState->TryInterruptState( pCommand ) )
@@ -265,9 +265,9 @@ void CQueueUnit::Segment()
 			case TSIR_NO_COMMAND_INCOMPATIBLE:
 				break;
 		}
-	} 
+	}
 	// текущее состояние завершилось само
-	else if ( bCmdFinished ) 
+	else if ( bCmdFinished )
 	{
 		//bCmdFinished = false;
 		CPtr<IUnitState> pNewState;
@@ -284,7 +284,7 @@ void CQueueUnit::Segment()
 			else // очередь команд не пуста
 			{
 				CObj<CAICommand> pCmd = cmds.Peek( GetUniqueIdQU() );
-				
+
 				// self-action
 				const EActionCommand cmdType = pCmd->ToUnitCmd().nCmdType;
 				if ( cmdType & 0x8000 )
@@ -330,7 +330,7 @@ void CQueueUnit::Segment()
 				}
 				else
 				{
-					// команда игнорируется					
+					// команда игнорируется
 				}
 			}
 		} while( pNewState == 0 );

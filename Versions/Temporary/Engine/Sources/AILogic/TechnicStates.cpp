@@ -49,7 +49,7 @@ void CTankPitLeaveState::Segment()
 {
 	switch( eState )
 	{
-		
+
 	case TLTPS_ESTIMATING:
 		updater.AddUpdate( 0, ACTION_NOTIFY_ENTRENCHMENT_STARTED, pUnit, 2 );
 		if ( curTime - timeStartLeave > SConsts::AA_BEH_UPDATE_DURATION )
@@ -88,9 +88,9 @@ IUnitState* CMechUnitEntrenchSelfState::Instance( class CAIUnit * pUnit )
 	return new CMechUnitEntrenchSelfState( pUnit );
 }
 
-CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit * _pUnit ) 
+CMechUnitEntrenchSelfState::CMechUnitEntrenchSelfState( class CAIUnit * _pUnit )
 : CStatusUpdatesHelper( EUS_ENTRENCH, _pUnit ), pUnit( _pUnit ), eState( ESHD_ESTIMATE ), timeStartBuild( 0 ), fOldProgress( 0.0f )
-{  
+{
 	if ( pUnit->IsInTankPit() )
 	{
 		eState = ESHD_END;
@@ -114,7 +114,7 @@ bool CMechUnitEntrenchSelfState::CheckInfantry( const CAIUnit * pUnit, const SRe
 				!iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pSoldier = *iter;
-	
+
 		if ( pSoldier->IsFree() && pSoldier->GetStats()->IsInfantry() && rect.IsPointInside( pSoldier->GetCenterPlain() ) )
 		{
 			if ( pFormation != pSoldier->GetFormation() )
@@ -173,7 +173,7 @@ void CMechUnitEntrenchSelfState::GetTilesNextToRect( const SRect &rect, const ui
 		const uint16_t wDirToTile = GetDirectionByVector( vec - rect.center );
 		if ( DirsDifference( wDirToTile, wDirExclude ) < (65535 / 8) )
 			it = tiles.erase( it );
-		else 
+		else
 			++it;
 	}
 }
@@ -227,9 +227,9 @@ void CMechUnitEntrenchSelfState::Segment()
 			const CVec2 vFrontDir( GetVectorByDirection(pUnit->GetFrontDirection()) );
 			rect.InitRect( pUnit->GetCenterPlain(), vFrontDir, vHalfSize.y, vHalfSize.x );
 			rectToCheck.InitRect( pUnit->GetCenterPlain(), vFrontDir, vHalfSize.y + SConsts::TILE_SIZE, vHalfSize.x + SConsts::TILE_SIZE );
-			
+
 			GetTilesNextToRect( rect, 65535 / 2 + pUnit->GetFrontDirection() );
-			
+
 			// проверить, не залоканы ли тайлы под TankPit
 			bool bCanAdd = true;
 			for ( std::list<SObjTileInfo> ::iterator i = tiles.begin(); i != tiles.end(); ++i )
@@ -240,11 +240,11 @@ void CMechUnitEntrenchSelfState::Segment()
 					break;
 				}
 			}
-			
+
 			if ( bCanAdd ) // проверить, нет ли под TankPit окопов
 				bCanAdd = CheckTrenches( pUnit, rectToCheck );
 			if ( bCanAdd )
-				bCanAdd = CheckInfantry( pUnit, rectToCheck ); 
+				bCanAdd = CheckInfantry( pUnit, rectToCheck );
 
 			if ( bCanAdd )
 			{
@@ -265,14 +265,14 @@ void CMechUnitEntrenchSelfState::Segment()
 			for ( int i = 0; i < (std::min<int>) ( pUnit->GetStats()->GetActions()->specialAbilities.size(), pUnit->GetAbilityLevel() ); ++i )
 			{
 				const int nAbility = pUnit->GetStats()->GetActions()->specialAbilities[i]->eName;
-				if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS ) 
+				if ( nAbility == NDb::ABILITY_MOBILE_FORTRESS )
 				{
 					const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 					NI_ASSERT( pSA, "Ability desc (Mobile Fortress) not found");
 					if ( pSA )
 						fCoeff = pSA->fParameter;
 				}
-				else if ( nAbility == NDb::ABILITY_ENTRENCH_SELF ) 
+				else if ( nAbility == NDb::ABILITY_ENTRENCH_SELF )
 				{
 					const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetStats()->GetActions()->specialAbilities[i];
 					NI_ASSERT( pSA, "Ability desc (Entrench Self) not found");
@@ -323,7 +323,7 @@ void CMechUnitEntrenchSelfState::Segment()
 
 			pUnit->SetInTankPit( theStatObjs.AddNewTankPit( pStats, CVec3(vTankPitCenter,0.0f), pUnit->GetFrontDirection(), 0, vHalfSize, tiles, pUnit ) );
 			pUnit->SendAcknowledgement( ACK_BUILDING_FINISHED, true );
-		
+
 			pUnit->SetCommandFinished();
 			updater.AddUpdate( 0, ACTION_NOTIFY_ENTRENCHMENT_STARTED, pUnit, 1 );
 		}
@@ -357,7 +357,7 @@ IUnitState* CSoldierEnterHoldSectorState::Instance( class CAIUnit * pUnit )
 	return new CSoldierEnterHoldSectorState( pUnit );
 }
 
-CSoldierEnterHoldSectorState::CSoldierEnterHoldSectorState( class CAIUnit *_pUnit ) 
+CSoldierEnterHoldSectorState::CSoldierEnterHoldSectorState( class CAIUnit *_pUnit )
 : pUnit( _pUnit )
 {
 	nTimeStart = curTime;
@@ -390,7 +390,7 @@ ETryStateInterruptResult CSoldierEnterHoldSectorState::TryInterruptState( class 
 	return TSIR_YES_IMMIDIATELY;
 }
 
-CMechUnitInsideMechUnitState::CMechUnitInsideMechUnitState( class CAIUnit *_pUnit, class CMilitaryCar *_pTransport, const bool bImmidiate ) 
+CMechUnitInsideMechUnitState::CMechUnitInsideMechUnitState( class CAIUnit *_pUnit, class CMilitaryCar *_pTransport, const bool bImmidiate )
 : pUnit( _pUnit ), pTransport( _pTransport ), timeNextCheck( curTime ), vEntrancePoint( VNULL2 ), eState( EMEM_APPROACHING ),
 vDestination( VNULL2 )
 {
@@ -495,12 +495,12 @@ void CMechUnitInsideMechUnitState::Segment()
 	switch( eState )
 	{
 	case EMEM_APPROACHING:
-		if ( fabs2( pUnit->GetCenterTile() - pTransport->GetEntrancePoint() ) < sqr( pUnit->GetBoundTileRadius() * SConsts::TILE_SIZE) ) 
+		if ( fabs2( pUnit->GetCenterTile() - pTransport->GetEntrancePoint() ) < sqr( pUnit->GetBoundTileRadius() * SConsts::TILE_SIZE) )
 		{ // if unit is near entrance
 			// board now, set state "on board"
 			BoardNow();
 		}
-		else if ( !pTransport->CanBoard( pUnit ) ) // cannot board 
+		else if ( !pTransport->CanBoard( pUnit ) ) // cannot board
 			TryInterruptState( 0 );
 		else if ( timeNextCheck > curTime && pTransport->GetEntrancePoint() != vEntrancePoint ) // transport moved
 		{
@@ -544,9 +544,9 @@ void CMechUnitInsideMechUnitState::Segment()
 
 			CVec2 vDir( vEntrancePoint - vTransportCenter );
 			Normalize( &vDir );
-			
+
 			CVec2 vDropPoint = vEntrancePoint;
-			
+
 			if ( GetTerrain()->CanUnitGo( pUnit->GetBoundTileRadius(), tile, pUnit->GetAIPassabilityClass() ) == FREE_TERRAIN  &&
 				   !WillUnitIntersectOtherUnits( pUnit, vEntrancePoint, vDir ) )
 			{

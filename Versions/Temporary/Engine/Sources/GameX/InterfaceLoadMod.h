@@ -17,14 +17,14 @@ class CInterfaceLoadMod : public CInterfaceScreenBase, public IProgrammedReactio
 		NFile::CFilePath szFullFolderPath;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pNameView); f.Add(4,&pCheckedWnd); f.Add(5,&wszName); f.Add(6,&wszDesc); f.Add(7,&szFullFolderPath); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
 	CPtr<IWindow> pModsListPanel;
 	CPtr<IWindow> pModDescPanel;
-	
+
 	CPtr<IScrollableContainer> pModsListCont;
 	CPtr<IWindow> pModsListItemTemplate;
 	CPtr<IScrollableContainer> pModDescCont;
@@ -42,7 +42,7 @@ private:
 	void MakeInterior();
 	void AddMod( const std::wstring &wszName, const std::wstring &wszDesc, const NFile::CFilePath &szFullFolderPath );
 	const SMod* FindSelected() const;
-	
+
 	bool OnBack();
 	bool OnDefault();
 	bool OnAccept();

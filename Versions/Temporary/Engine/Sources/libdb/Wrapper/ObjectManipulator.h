@@ -46,7 +46,7 @@ protected:
 	CObjectManipulatorIteratorWrapper() {}
 public:
 	CObjectManipulatorIteratorWrapper( NDb::IObjManIterator *_pIterator ): pIterator( _pIterator ) {}
-	
+
 	//interface functions
 	bool Next();
 	bool IsEnd() const;

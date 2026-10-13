@@ -7,29 +7,29 @@ template < class TEnumerator>
 {
 	const int nMinX = Clamp( vCenter.x - nRadius, 0, (*pEnumerator).GetSizeX() );
 	const int nMaxX = Clamp( vCenter.x + nRadius, 0, (*pEnumerator).GetSizeX() );
-	
+
 	const int nMinY =	Clamp( vCenter.y - nRadius, 0, (*pEnumerator).GetSizeY() );
 	const int nMaxY = Clamp( vCenter.y + nRadius, 0, (*pEnumerator).GetSizeY() );
 
 	if ( nMinX == nMaxX || nMinY == nMaxY ) return ;		// nothing to do
-	
+
 	// for better performance
 	const int nAreaUnderSound = ( nMaxX - nMinX ) * (  nMaxY - nMinY );
 	int nAreaSoFar = 0;
 
 	int nCurXMin(0), nCurYMin(0), nCurXMax(0), nCurYMax(0);
-		
+
 	// fill center with cells of maximum possible rank
 	int nCurRank = nMaxRank;
 	for ( ; nCurRank >= 0 && nAreaSoFar < nAreaUnderSound; --nCurRank )
 	{
 		const int nConglomerateSize = 1 << nCurRank;
-	
+
 		nCurXMin = nMinX / nConglomerateSize + (nMinX % nConglomerateSize == 0 ? 0 : 1);
 		nCurYMin = nMinY / nConglomerateSize + (nMinY % nConglomerateSize == 0 ? 0 : 1);
 		nCurXMax = (nMaxX / nConglomerateSize );
 		nCurYMax = (nMaxY / nConglomerateSize );
-			
+
 		if ( nCurXMin < nCurXMax && nCurYMin < nCurYMax )
 		{
 			const int nConglomerateArea = nConglomerateSize * nConglomerateSize;
@@ -55,14 +55,14 @@ template < class TEnumerator>
 	nCurYMin *= 2;
 	nCurXMax *= 2;
 	nCurYMax *= 2;
-	
+
 	// fill borders successively by cells with smaller rank
 	for ( ; nCurRank >= 0 && nAreaSoFar < nAreaUnderSound; --nCurRank )
 	{
 		const int nConglomerateSize = 1 << nCurRank;
 		const int nConglomerateArea = nConglomerateSize * nConglomerateSize;
-		
-		
+
+
 		const int nRankMinX = nMinX / nConglomerateSize + (nMinX % nConglomerateSize == 0 ? 0 : 1);
 		const int nRankMinY = nMinY / nConglomerateSize + (nMinY % nConglomerateSize == 0 ? 0 : 1);
 		const int nRankMaxX = (nMaxX / nConglomerateSize );
@@ -100,7 +100,7 @@ template < class TEnumerator>
 				(*pEnumerator)( nCurRank, nRankMinX, nY );
 			}
 		}
-		
+
 		const bool bRightExists = nRankMaxX > nCurXMax;					// rigth column exists
 		if ( bRightExists )
 		{
@@ -120,11 +120,11 @@ template < class TEnumerator>
 }
 
 template <class TEnumerator>
-	void EnumConglomerateHeight( const int nMinZ, 
+	void EnumConglomerateHeight( const int nMinZ,
 											 TEnumerator *pEnumerator,
-											 const int nMaxRank, 
+											 const int nMaxRank,
 											 const SIntThree &vCenter,
-											 const int _nRadius, 
+											 const int _nRadius,
 											 std::vector<CConglomerates> *pConglHeght )
 {
 	if ( _nRadius )
@@ -148,10 +148,10 @@ template <class TEnumerator>
 
 const int CCellsConglomerateContainer::MAX_RANK = 4;
 
-void CCellsConglomerateContainer::Clear() 
-{ 
-	bInitted = false; 
-	conglomeratesHeight.clear(); 
+void CCellsConglomerateContainer::Clear()
+{
+	bInitted = false;
+	conglomeratesHeight.clear();
 }
 
 void CCellsConglomerateContainer::Init( const int nMaxX, const int nMaxY, const int _nMinZ, const int nMaxZ )
@@ -166,7 +166,7 @@ void CCellsConglomerateContainer::Init( const int nMaxX, const int nMaxY, const 
 		// create conglomerates of all avalable ranks.
 		nMaxRank = MAX_RANK;
 		conglomerates.reserve( MAX_RANK + 1 );
-		
+
 		for ( int i = 0; i <= MAX_RANK; ++i )
 		{
 			const int nConglomerateSize = 1<<i;

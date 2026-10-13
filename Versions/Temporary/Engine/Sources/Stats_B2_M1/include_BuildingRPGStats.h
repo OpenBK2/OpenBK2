@@ -46,4 +46,4 @@ void ToAIUnits( bool bInEditor )
 	FOR_EACH_VAL( firePoints, ToAIUnits, bInEditor );
 	FOR_EACH_VAL( smokePoints, ToAIUnits, bInEditor );
 	FOR_EACH_VAL( dirExplosions, ToAIUnits, bInEditor );
-} 
+}

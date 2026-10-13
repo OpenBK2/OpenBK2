@@ -14,11 +14,11 @@ public:
 	public:
 		CReactions() {  }
 		~CReactions()	{	}
-		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) : 
+		CReactions( IWindow *_pScreen, CInterfaceEscMenu *_pInterface ) :
 			pScreen( _pScreen ), pInterface( _pInterface ) {   }
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
-		
+
 		int operator&( IBinSaver &saver )
 		{
 			saver.Add( 1, &pScreen );
@@ -35,7 +35,7 @@ private:
 		EMODE_RESTART_MISSION,
 		EMODE_FINISH_REPLAY,
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CObj<CReactions> pReactions;
 	EMode eMode;
@@ -65,12 +65,12 @@ private:
 	bool OnMenuBack( const std::string &szSender );
 	bool OnMPMenuBack( const std::string &szSender );
 	bool OnFinishReplay();
-	
+
 	void MsgMultiplayerEndMission( const SGameMessage &msg );
 	void MsgHelpButton( const SGameMessage &msg );
-	
+
 	void DoRestartMission();
-	
+
 	void GoMainMenu();
 	void GoChapterMap();
 protected:

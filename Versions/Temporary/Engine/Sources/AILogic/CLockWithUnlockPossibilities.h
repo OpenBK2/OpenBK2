@@ -3,12 +3,12 @@
 #include <cstdint>
 
 //в заданном тайл сете запоминает состояние залоченности
-// и сохраняет его. 
+// и сохраняет его.
 // после этого есть возможность восстановить начальное состояние залоченности
 class CAIUnit;
 class CLockWithUnlockPossibilities
 {
-	
+
 	void Unlock();
 	void Lock();
 
@@ -31,7 +31,7 @@ public:
 
 	bool LockRect( const SRect &rect, const uint8_t _bAIClass )
 	{
-		if ( bLocked )	
+		if ( bLocked )
 		{
 			TryLockAlongTheWay(false, bAIClass );
 		}

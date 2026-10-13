@@ -26,7 +26,7 @@ const CVec2 SRailRoadSystem::SRRInstance::GetPoint( const float fPos ) const
 	float fFraction;
 	int nPoint;
 	CVec3 vPos;
-	
+
 	Decompose( (std::max)( fPos, 0.0f ), &nPoint, &fFraction );
 	if ( nPoint + 1 >= points.size() )
 		vPos = points.back().vPos;

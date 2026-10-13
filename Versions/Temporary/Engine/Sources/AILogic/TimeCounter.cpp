@@ -10,7 +10,7 @@ extern NTimer::STime curTime;
 namespace NAI
 {
 CTimeCounter::CTimeCounter()
- : printTime( 0 ), counters( 100 ), startTimes( 100 ), names( 100 ), variables( 100 ), 
+ : printTime( 0 ), counters( 100 ), startTimes( 100 ), names( 100 ), variables( 100 ),
 	 nMaxIndex( -1 ), nMaxVar( -1 )
 {
 	memset( &counters[0], 0, sizeof(counters[0] * counters.size()) );
@@ -55,7 +55,7 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 36, "6" );
 	RegisterCounter( 37, "7" );
 	RegisterCounter( 38, "8" );
-	
+
 	RegisterCounter( 39, "SoldierShootEstimator" );
 	RegisterCounter( 40, "TankShootEstimator" );
 	RegisterCounter( 41, "GunCrewState" );
@@ -64,7 +64,7 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 44, "MechAttackState" );
 	RegisterCounter( 45, "SwarmState" );
 	RegisterCounter( 46, "RestState" );
-	
+
 	RegisterCounter( 47, "CollisionSegment" );
 	RegisterCounter( 48, "CollisionChange" );
 	RegisterCounter( 49, "CollisionFindCandidates" );
@@ -72,10 +72,10 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 51, "FirstSegmentActions" );
 	RegisterCounter( 52, "FirstSegmentClear" );
 	RegisterCounter( 53, "FirstSegmentCheck" );
-	
+
 	RegisterCounter( 54, "Iterating" );
 	RegisterCounter( 55, "Storages" );
-	
+
 	RegisterCounter( 56, "InitRest" );
 
 	RegisterCounter( 57, "1" );
@@ -84,7 +84,7 @@ CTimeCounter::CTimeCounter()
 	RegisterCounter( 60, "4" );
 	RegisterCounter( 61, "5" );
 	RegisterCounter( 62, "6" );
-	
+
 
 	RegisterCounter( 63, "general" );
 	RegisterCounter( 64, "general_removedead" );
@@ -155,7 +155,7 @@ void CTimeCounter::PrintCounters()
 			pConsoleBuffer->WriteASCII( 11, message.c_str(), 0, true );
 		}
 	}
-	
+
 	for ( det_map<std::string, double>::const_iterator iter = szCounters.begin(); iter != szCounters.end(); ++iter )
 	{
 		const double fTime = iter->second;

@@ -62,11 +62,11 @@ void CPlanesFormation::SerializeIDs( const int nChunk, IBinSaver &saver )
 //*******************************************************************
 
 IManuver * CPlaneManuverHistory::GetCurManuver() const
-{ 
+{
 	//NI_ASSERT( !pathHistory.empty(), "unitialized path" );
 	if ( pathHistory.empty() )
 		return 0;
-	return *pathHistory.begin(); 
+	return *pathHistory.begin();
 }
 
 void CPlaneManuverHistory::StartManuver( IManuver *pManuver )
@@ -76,7 +76,7 @@ void CPlaneManuverHistory::StartManuver( IManuver *pManuver )
 
 void CPlaneManuverHistory::ClearUnised()
 {
-	do 
+	do
 	{
 		IManuver *pManuver = pathHistory.back();
 		if ( pManuver->IsUsed() )
@@ -194,24 +194,24 @@ const CVec3 & CPlanesFormation::GetNormale( const CVec3 &vFormationOffset )
 	return pathHistory.GetValues( vFormationOffset ).vNormal;
 }
 
-void CPlanesFormation::AddProcessed() 
-{ 
-	++nProcessed; 
+void CPlanesFormation::AddProcessed()
+{
+	++nProcessed;
 }
 
-void CPlanesFormation::SetNewPos( const CVec3 &vCenter ) 
-{ 
+void CPlanesFormation::SetNewPos( const CVec3 &vCenter )
+{
 	vNewPos = vCenter;
 }
 
-void CPlanesFormation::AddAlive() 
-{ 
-	++nAlive; 
+void CPlanesFormation::AddAlive()
+{
+	++nAlive;
 }
 
-bool CPlanesFormation::IsAllProcessed() const 
-{ 
-	return nProcessed >= nAlive; 
+bool CPlanesFormation::IsAllProcessed() const
+{
+	return nProcessed >= nAlive;
 }
 
 void CPlanesFormation::SecondSegment( const NTimer::STime timeDiff )
@@ -219,7 +219,7 @@ void CPlanesFormation::SecondSegment( const NTimer::STime timeDiff )
 	vSpeed = vNewSpeed;
 	vNormal = vNewNormal;
 	vPos= vNewPos;
-	
+
 	pathHistory.ClearUnised();
 }
 

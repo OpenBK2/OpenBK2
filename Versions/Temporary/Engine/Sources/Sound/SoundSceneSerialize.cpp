@@ -22,7 +22,7 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 	saver.Add( 13, &soundCellsInBounds  );
 	// saver.Add( 14, &streamingSounds );
 	saver.Add( 15, &terrainSounds );
-	
+
 	saver.Add( 16, &mapSounds );
 	if ( saver.IsReading() )
 		mapSounds.SetSoundScene( this );
@@ -34,7 +34,7 @@ int CSoundScene2D::operator&( IBinSaver &saver  )
 
 	saver.Add( 23, &cellsPHS );
 	saver.Add( 24, &nMinZ );
-	
+
 	saver.Add( 25, &pSFX );
 	saver.Add( 26, &pGameTimer );
 	saver.Add( 27, &bMapInitted );
@@ -62,7 +62,7 @@ int CMapSounds::operator&( IBinSaver &saver  )
 
 int CMapSounds::CMapSoundCell::operator&( IBinSaver &saver )
 {
-	
+
 	saver.Add( 1, &playingLoopedSound );
 	saver.Add( 2, &playingSound );
 	saver.Add( 3, &cellSounds );
@@ -82,7 +82,7 @@ int CSubstSound::operator&( IBinSaver &saver  )
 
 int CSound::operator&( IBinSaver &saver  )
 {
-	saver.Add( 2, &wID );														// 
+	saver.Add( 2, &wID );														//
 	saver.Add( 3, &timeBegin );
 	saver.Add( 4, &timeToPlay );
 	saver.Add( 5, &timeBeginDim );
@@ -98,7 +98,7 @@ int CSound::operator&( IBinSaver &saver  )
 	saver.Add( 14, &pSample );
 	saver.Add( 15, &nMaxRadius );
 	saver.Add( 16, &nMinRadius );
-	
+
 	saver.Add( 17, &eCombatType );
 	saver.Add( 18, &vSpeed );
 	saver.Add( 19, &timeLastPosUpdate );
@@ -126,7 +126,7 @@ int CTerrainSounds::operator&( IBinSaver &saver  )
 
 int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
 {
-			
+
 	saver.Add( 1, &timeRestart );
 	saver.Add( 2, &bMustPlay );
 	saver.Add( 6, &fVolume );
@@ -142,7 +142,7 @@ int CTerrainSounds::CTerrainSound::operator&( IBinSaver &saver  )
 
 int CTerrainSounds::CTerrainSound::SSoundInfo::operator&( IBinSaver &saver  )
 {
-			
+
 	saver.Add( 1, &pSound );
 	saver.Add( 2, &bPeaceful );
 

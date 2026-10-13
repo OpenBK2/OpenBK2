@@ -25,9 +25,9 @@ virtual void ToAIUnits( bool bInEditor )
 				++itMember;
 		}
 		it->order.resize( members.size() );
-		if ( nOldSize < members.size() ) 
+		if ( nOldSize < members.size() )
 		{
-			for ( int i = nOldSize; i < members.size(); ++i ) 
+			for ( int i = nOldSize; i < members.size(); ++i )
 			{
 				it->order[i].vPos.Set( 0, 0 );
 				it->order[i].fDir = 0;
@@ -42,7 +42,7 @@ virtual void ToAIUnits( bool bInEditor )
 	availUserActions.SetAction( USER_ACTION_FOLLOW );
 	availUserExposures.SetAction( USER_ACTION_FOLLOW );
 	//
-	if ( members.size() == 1 ) 
+	if ( members.size() == 1 )
 	{
 		availUserActions.RemoveAction( USER_ACTION_DISBAND_SQUAD );
 		availUserActions.SetAction( USER_ACTION_FORM_SQUAD );
@@ -52,13 +52,13 @@ virtual void ToAIUnits( bool bInEditor )
 		availUserActions.SetAction( USER_ACTION_DISBAND_SQUAD );
 		availUserActions.SetAction( USER_ACTION_FORM_SQUAD );
 	}
-	else if ( members.empty() ) 
+	else if ( members.empty() )
 		availUserActions.Clear();
 }
 //
-virtual const CUserActions* GetUserActions( bool bActionsBy ) const 
-{ 
-	return bActionsBy ? &availUserActions : &availUserExposures; 
+virtual const CUserActions* GetUserActions( bool bActionsBy ) const
+{
+	return bActionsBy ? &availUserActions : &availUserExposures;
 }
 //
 const bool HasCommand( const int nCmd ) const
@@ -67,4 +67,4 @@ const bool HasCommand( const int nCmd ) const
 	return false;
 	//}CRAP
 }
-// 
+//

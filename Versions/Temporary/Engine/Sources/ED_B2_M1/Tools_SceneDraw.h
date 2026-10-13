@@ -32,7 +32,7 @@ class CSceneDrawTool
 		CVec3 vPos;
 		CQuat qRot;
 		CVec3 vScale;
-		//		
+		//
 		SModelInfo() : pModel( 0 ), vPos( VNULL3 ), qRot( QNULL ), vScale( VNULL3 ) {}
 		SModelInfo( const SModelInfo &rModelInfo )
 			: pModel( rModelInfo.pModel ),
@@ -49,7 +49,7 @@ class CSceneDrawTool
 				vScale = rModelInfo.vScale;
 			}
 			return *this;
-		}	
+		}
 	};
 	typedef std::list<SModelInfo> CModelInfoList;
 	//
@@ -59,7 +59,7 @@ class CSceneDrawTool
 		std::vector<CVec3> points;
 		CVec3 vColor;
 		bool bDepthCheck;
-		//		
+		//
 		SPolylineInfo() : vColor( VNULL3 ), bDepthCheck( true ) {}
 		SPolylineInfo( const SPolylineInfo &rPolylineInfo )
 			: points( rPolylineInfo.points ),
@@ -74,10 +74,10 @@ class CSceneDrawTool
 				bDepthCheck = rPolylineInfo.bDepthCheck;
 			}
 			return *this;
-		}	
+		}
 	};
 	typedef std::list<SPolylineInfo> CPolylineInfoList;
-	
+
 	CModelIDSet modelIDSet;
 	CPolylineIDSet polylineIDSet;
 	//
@@ -208,7 +208,7 @@ public:
 		// нет точек
 		if ( itTestPoint == rPolintList.end() )
 		{
-			return; 
+			return;
 		}
 		++itTestPoint;
 		// одна точка
@@ -240,7 +240,7 @@ public:
 		// нет точек
 		if ( itTestPoint == rPolintList.end() )
 		{
-			return; 
+			return;
 		}
 		++itTestPoint;
 		// одна точка
@@ -269,7 +269,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
 	void DrawCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
-	{	
+	{
 		if ( nParts < 2 )
 		{
 			return;
@@ -290,7 +290,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	template<class TPoint>
 	void Draw3DCircle( const TPoint &rCenter, float fRadius, int nParts, uint32_t dwColor, bool bDepthCheck )
-	{	
+	{
 		if ( nParts < 2 )
 		{
 			return;

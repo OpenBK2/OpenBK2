@@ -38,7 +38,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 					CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
 					CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, 0, 0 );
 					CPtr<IManipulator> pAIGeomMan = CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
-					if ( pAIGeomMan != 0 ) 
+					if ( pAIGeomMan != 0 )
 					{
 						CVec3 vAABBCenter;
 						CVec3 vAABBHalfSize;
@@ -59,12 +59,12 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 					int nFireplaceIndex = 0;
 					if ( GetGeometryAttributes( pGeomMan, &attribs ) )
 					{
-						for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+						for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 						{
-							if ( !PatMat( it->szBoneName.c_str(), "lfireplace??" ) )			
+							if ( !PatMat( it->szBoneName.c_str(), "lfireplace??" ) )
 								continue;
 
-							if ( !pManipulator->InsertNode( "fireplaces" ) ) 
+							if ( !pManipulator->InsertNode( "fireplaces" ) )
 								continue;
 
 							std::string szNodeName = szSegmentName + fmt::format( "fireplaces.[{}]", nFireplaceIndex );
@@ -75,7 +75,7 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 
 							Vis2AI( &vPos );
 
-							CManipulatorManager::SetVec2( vPos, pManipulator, szNodeName ); 
+							CManipulatorManager::SetVec2( vPos, pManipulator, szNodeName );
 
 							++nFireplaceIndex;
 						}
@@ -87,6 +87,6 @@ EXPORT_RESULT CEntrenchmentExporter::ExportObject( IManipulator* pManipulator,
 	return eResult;
 }
 
-// basement storage  
+// basement storage
 
 

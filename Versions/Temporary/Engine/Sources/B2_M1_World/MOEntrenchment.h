@@ -11,10 +11,10 @@ class CMOEntrenchment;
 class CMOEntrenchmentPart : public CMOSelectable
 {
 	OBJECT_NOCOPY_METHODS( CMOEntrenchmentPart );
-	
+
 	CPtr<CMOEntrenchment> pParent;
 	// Cached transformation
-	struct SCachedInfo 
+	struct SCachedInfo
 	{
 		//Indentifying parameters
 		CVec3			vPos;
@@ -43,7 +43,7 @@ public:
 		cached.vHoleEnd.Set( 0, 0 );
 		cached.fHoleWidth = 0;
 	};
-	
+
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );
 	bool CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pUpdate, NDb::ESeason eSeason, bool bInEditor );
 	void GetStatus( SObjectStatus *pStatus ) const;
@@ -72,7 +72,7 @@ public:
 class CMOEntrenchment : public CMOSelectable
 {
 	OBJECT_NOCOPY_METHODS( CMOEntrenchment );
-	
+
 	typedef std::list< CPtr<CMOEntrenchmentPart> > CPartsList;
 	CPartsList parts;
 public:
@@ -83,7 +83,7 @@ public:
 
 	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, NDb::ESeason eSeason ) { }
 	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason ) { }
-	
+
 	virtual IClientUpdatableProcess* AIUpdateRPGStats( const struct SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason ) { return 0; }
 
 	virtual bool Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb::ESeason eSeason, const NDb::EDayNight eDayTime, bool bInEditor );

@@ -18,7 +18,7 @@ int CSupremeBeing::operator&( IBinSaver &saver )
 
 int CCommander::operator&( IBinSaver &saver )
 {
-	
+
 	saver.Add( 1, &tasks );
 	saver.Add( 2, &fMeanSeverity );
 	return 0;

@@ -46,7 +46,7 @@ class CGroupMover : public CAIObjectBase
 		const bool IsEmpty() const { return units.empty(); }
 		IStaticPath* CreateStaticPath( CCommonUnit *pUnit, const CVec2 &vDefaultPoint );
 	};
-	
+
 	typedef det_map<int, CPtr<CCommonUnit> > TGroup; // unit's ID -> unit
 	typedef std::vector<SSubGroup> TSubGroups;
 	OBJECT_NOCOPY_METHODS( CGroupMover )
@@ -62,7 +62,7 @@ private:
 public:
 	CGroupMover() : vPosition( VNULL2 ), bNeedCalcPositions( true ) {}
 	CGroupMover( const CVec2 &_vPosition ) : vPosition( _vPosition ), bNeedCalcPositions( true ) {}
-	
+
 	void AddUnit( CCommonUnit *pUnit );
 	void DeleteUnit( const int nUnitID );
 

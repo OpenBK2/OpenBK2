@@ -21,7 +21,7 @@ protected:
 public:
 
 	CStatusUpdatesHelper() : __eStatus( EUS_UNDEFINED ), __pUnit( 0 ), __fRadius( 0.0f ), __bInited( false ) {}
-	
+
 	CStatusUpdatesHelper( const EUnitStatus _eStatus );
 	CStatusUpdatesHelper( const EUnitStatus _eStatus, CUpdatableObj *_pUnit );
 	CStatusUpdatesHelper( const EUnitStatus _eStatus, CUpdatableObj *_pUnit, const float _fRadius );

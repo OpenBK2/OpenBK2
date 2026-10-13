@@ -66,7 +66,7 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 		const std::string szScriptTemplate = GetScriptTemplate( "ExportAttribs" );
 		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
 			(szDstPath + PARAMS_AABBA).c_str(), szSrcPath.c_str(),
-			szAABBAName.c_str(), "", 
+			szAABBAName.c_str(), "",
 			szAttribSettingsFileName.c_str() );
 		*pScriptText += ";\n";
 	}
@@ -75,14 +75,14 @@ bool CAnimationExporter::FormScript( std::string *pScriptText,
 	{
 		*pScriptText += fmt::sprintf( szScriptTemplate.c_str(),
 			(szDstPath + PARAMS_AABBD).c_str(), szSrcPath.c_str(),
-			szAABBDName.c_str(), "", 
+			szAABBDName.c_str(), "",
 			szAttribSettingsFileName.c_str() );
 		*pScriptText += ";\n";
 	}
 	return true;
 }
 
-bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 																									 const std::string &szSrcScenePath,
 																									 const std::string &szDstFileName,
 															                     IManipulator *pManipulator )
@@ -118,8 +118,8 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			GetGrannyMeshBoundingBox( &vMin, &vMax, fileInfo );
 			CVec3 vCenter = ( vMax + vMin ) / 2.0f;
 			CVec3 vHalfSize = ( vMax - vMin ) / 2.0f;
-			Vis2AI( &vCenter ); 
-			Vis2AI( &vHalfSize ); 
+			Vis2AI( &vCenter );
+			Vis2AI( &vHalfSize );
 			//
 			pManipulator->SetValue( "aabb_a.Center.x", vCenter.x );
 			pManipulator->SetValue( "aabb_a.Center.y", vCenter.y );
@@ -140,8 +140,8 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			GetGrannyMeshBoundingBox( &vMin, &vMax, fileInfo );
 			CVec3 vCenter = ( vMax + vMin ) / 2.0f;
 			CVec3 vHalfSize = ( vMax - vMin ) / 2.0f;
-			Vis2AI( &vCenter ); 
-			Vis2AI( &vHalfSize ); 
+			Vis2AI( &vCenter );
+			Vis2AI( &vHalfSize );
 			//
 			pManipulator->SetValue( "aabb_d.Center.x", vCenter.x );
 			pManipulator->SetValue( "aabb_d.Center.y", vCenter.y );
@@ -151,7 +151,7 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			pManipulator->SetValue( "aabb_d.HalfSize.z", vHalfSize.z );
 		}
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		pLogger->Log( LT_ERROR, fmt::format("Can't open attribs file to update animation or can't open base animation file\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tBase animation file: {}\n", szDstFileName.c_str()) );
@@ -163,9 +163,9 @@ bool CAnimationExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 }
 
 EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
-																							 const std::string &szObjName, 
+																							 const std::string &szObjName,
 																							 const std::string &szSrcScenePath,
-																							 const std::string &szDestinationPath, 
+																							 const std::string &szDestinationPath,
 																							 IManipulator *pManipulator )
 {
 	ILogger *pLogger = NLog::GetLogger();
@@ -177,15 +177,15 @@ EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
 		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
 		pLogger->Log( LT_ERROR, fmt::format("\tSource file: {}\n", szSrcScenePath.c_str()) );
 		pLogger->Log( LT_ERROR, fmt::format("\tSkeletons count: {}\n", fileInfo->SkeletonCount) );
-		if ( fileInfo->SkeletonCount > 1 ) 
+		if ( fileInfo->SkeletonCount > 1 )
 		{
-			for ( int i = 0; i < fileInfo->SkeletonCount; ++i ) 
+			for ( int i = 0; i < fileInfo->SkeletonCount; ++i )
 				pLogger->Log( LT_ERROR, fmt::format("\t\t{}\n", fileInfo->Skeletons[i]->Name) );
 		}
 		return ER_FAIL;
 	}
 	// check for number of bones
-	if ( fileInfo->Skeletons[0]->BoneCount == 0 ) 
+	if ( fileInfo->Skeletons[0]->BoneCount == 0 )
 	{
 		pLogger->Log( LT_ERROR, fmt::format("Empty bones list in skeleton - check \"RootJoint\"\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tAnimation: {}\n", szObjName.c_str()) );
@@ -195,7 +195,7 @@ EXPORT_RESULT CAnimationExporter::CustomCheck( const std::string &szTypeName,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 
 

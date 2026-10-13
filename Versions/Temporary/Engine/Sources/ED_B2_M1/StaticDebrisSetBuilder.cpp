@@ -13,7 +13,7 @@ bool CStaticDebrisSetBuilder::IsValidBuildData( IManipulator *pBuildDataManipula
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CStaticDebrisSetBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CStaticDebrisSetBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	return true;
 }
 
@@ -37,11 +37,11 @@ bool CStaticDebrisSetBuilder::InternalInsertObject( std::string *pszObjectTypeNa
 		return false;
 	}
 	// Считываем данные
-	
+
 	bool bResult = true;
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

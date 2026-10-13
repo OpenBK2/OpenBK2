@@ -42,7 +42,7 @@ class CPlayList : public CObjectBase
 
 	void NextComposition();
 	void LaunchComposition( const NDb::SComposition *_pComposition );
-	
+
 public:
 
 	CPlayList() : eState( EPSS_OUT ), nStillSong( -1 ) { }
@@ -51,9 +51,9 @@ public:
 	{
 		Init( _pList );
 	}
-	
+
 	void Init( const NDb::SPlayList *_pList );
-	
+
 	void Segment();
 	/*
 	bool IsPlaying() const;

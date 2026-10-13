@@ -26,7 +26,7 @@ bool CInterfacePlayerStats::Init()
 	AddScreen( this );
 
 	MakeInterior();
-	
+
 	return true;
 }
 
@@ -39,7 +39,7 @@ void CInterfacePlayerStats::InitInteriorView()
 	pPlayerInfoPanel = GetChildChecked<IWindow>( pMain, "PlayerInfoPanel", true );
 	pMedalInfoPanel = GetChildChecked<IWindow>( pMain, "MedalInfoPanel", true );
 	pMedalListPanel = GetChildChecked<IWindow>( pMain, "MedalListPanel", true );
-	
+
 	pPlayerNameView = GetChildChecked<ITextView>( pPlayerInfoPanel, "PlayerNameView", true );
 	pPlayerRankPicture = GetChildChecked<IWindow>( pPlayerInfoPanel, "PlayerRankPicture", true );
 	pUnitsKilledView = GetChildChecked<ITextView>( pPlayerInfoPanel, "KilledView", true );
@@ -66,7 +66,7 @@ void CInterfacePlayerStats::InitInteriorView()
 void CInterfacePlayerStats::MakeInterior()
 {
 	InitInteriorView();
-	
+
 	if ( pPlayerNameView )
 		pPlayerNameView->SetText( pPlayerNameView->GetDBText() + NProfile::GetCurrentProfileName() );
 
@@ -119,7 +119,7 @@ void CInterfacePlayerStats::MakeInterior()
 
 	expProgressCareer.Init();
 	expProgressRank.Init();
-	
+
 	expProgressCareer.fStart = (std::min)( expProgressCareer.fTarget, (std::max)( expProgressCareer.fStart, fLastVisiblePlayerStatsExpCareer ) );
 	expProgressCareer.fCur = (std::max)( expProgressCareer.fCur, expProgressCareer.fStart );
 	expProgressRank.fStart = (std::min)( expProgressRank.fTarget, (std::max)( expProgressRank.fStart, fLastVisiblePlayerStatsExpNextRank ) );
@@ -128,7 +128,7 @@ void CInterfacePlayerStats::MakeInterior()
 	ExpProgressStep();
 
 	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
-		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
+		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pNextRankProgressView )
 		pNextRankProgressView->SetText( pNextRankProgressView->GetDBText() + wszRankHP );
@@ -138,11 +138,11 @@ void CInterfacePlayerStats::MakeInterior()
 	for ( int i = 0; i < missions.size(); ++i )
 	{
 		const IScenarioTracker::SMissionStats *pMission = missions[i];
-		
+
 		for ( std::list< CDBPtr<NDb::SMedal> >::const_iterator it = pMission->medals.begin(); it != pMission->medals.end(); ++it )
 		{
 			const NDb::SMedal *pMedal = *it;
-			if ( !pMedal )	
+			if ( !pMedal )
 				continue;
 
 			medals.push_back( SMedal() );
@@ -154,14 +154,14 @@ void CInterfacePlayerStats::MakeInterior()
 				medal.wszDesc = GET_TEXT_PRE(pMedal->,LocalizedDesc);
 			medal.pIcon = pMedal->pIconTexture;
 			medal.pPicture = pMedal->pPictureTexture;
-			
+
 			IWindow *pWnd = AddWindowCopy( pMedalCont, pMedalItem );
 			if ( !pWnd )
 				continue;
 
 			if ( pMedalCont )
 				pMedalCont->PushBack( pWnd, true );
-			
+
 			medal.pWnd = pWnd;
 			medal.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
 			medal.pNameView = GetChildChecked<ITextView>( pWnd, "Name", true );
@@ -174,7 +174,7 @@ void CInterfacePlayerStats::MakeInterior()
 				medal.pNameView->SetText( medal.pNameView->GetDBText() + medal.wszName );
 		}
 	}
-	
+
 	std::wstring wszFavoriteReinf;
 	if ( IScreen *pScreen = GetScreen() )
 		wszFavoriteReinf = pScreen->GetTextEntry( "T_NO_FAVORITE_REINF" );
@@ -186,7 +186,7 @@ void CInterfacePlayerStats::MakeInterior()
 
 	if ( GetScreen() )
 		GetScreen()->SetTexture( InterfaceState()->GetMenuBackgroundTexture() );
-	
+
 	SelectMedal( 0, true );
 }
 
@@ -200,7 +200,7 @@ void CInterfacePlayerStats::ExpProgressStep()
 		if ( pNewCareerBar )
 			pNewCareerBar->SetPosition( expProgressCareer.fNewProgress );
 	}
-	
+
 	if ( !expProgressRank.bFinal )
 	{
 		expProgressRank.Step( false );
@@ -209,7 +209,7 @@ void CInterfacePlayerStats::ExpProgressStep()
 		if ( pNewNextRankBar )
 			pNewNextRankBar->SetPosition( expProgressRank.fNewProgress );
 	}
-	
+
 	fLastVisiblePlayerStatsExpCareer = expProgressCareer.fCur;
 	fLastVisiblePlayerStatsExpNextRank = expProgressRank.fCur;
 }
@@ -245,7 +245,7 @@ bool CInterfacePlayerStats::OnMenuBack()
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NInput::PostEvent( "menu_return_from_subscreen", 0, 0 );
-	
+
 	return true;
 }
 
@@ -272,7 +272,7 @@ void CInterfacePlayerStats::SelectMedal( int nIndex, bool bForce )
 		return;
 
 	SMedal &medal = medals[nIndex];
-	
+
 	if ( bForce )
 	{
 		if ( pMedalCont )

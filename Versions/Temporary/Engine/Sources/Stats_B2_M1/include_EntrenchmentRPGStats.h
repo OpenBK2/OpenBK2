@@ -43,7 +43,7 @@ virtual void ToAIUnits( bool bInEditor )
 {
 	eGameType = SGVOGT_ENTRENCHMENT;
 	SHPObjectRPGStats::ToAIUnits( bInEditor );
-	FOR_EACH_VAL( segments, ToAIUnits, bInEditor ); 
+	FOR_EACH_VAL( segments, ToAIUnits, bInEditor );
 }
 //
 
@@ -63,7 +63,7 @@ virtual const int GetTypeFromIndex( const int nIndex ) const
 
 virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const
 {
-	switch ( nType ) 
+	switch ( nType )
 	{
 	case ENTRENCHMENT_LINE:
 		return GetLineIndex( pCurRandomSeed );
@@ -77,4 +77,4 @@ virtual const int GetIndexFromType( const int nType, int *pCurRandomSeed ) const
 	NI_ASSERT( false, fmt::format("Wrong type {} in entrenchment \"{}\"", nType, szParentName) );
 	return -1;
 }
-// 
+//

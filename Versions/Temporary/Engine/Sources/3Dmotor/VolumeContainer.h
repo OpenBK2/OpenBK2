@@ -49,9 +49,9 @@ const float F_NO_COLLISION = -1e20f;
 
 struct SSkipColliderAnalyzer
 {
-	template <class T> 
+	template <class T>
 		bool operator()( float fDist, const CVec3 &ptCollision, const SPlane &plane, const T& ) const { return true; }
-	template <class T> 
+	template <class T>
 		bool operator()( const T& ) const { return true; }
 };
 extern SSkipColliderAnalyzer skipAnalyzer;

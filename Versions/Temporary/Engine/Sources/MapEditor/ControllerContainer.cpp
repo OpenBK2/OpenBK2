@@ -425,6 +425,6 @@ bool CControllerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 }
 
 
-// basement storage  
+// basement storage
 
 

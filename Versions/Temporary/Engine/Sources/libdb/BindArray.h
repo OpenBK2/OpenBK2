@@ -40,7 +40,7 @@ public:
 	bool GetValue( const std::string &szRestName, const int nIndex, CVariant *pValue,
 		             void *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
 	//
-	bool InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
+	bool InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex,
 		                      void *pRawVector, NMetaInfo::SStructMetaInfo *pContained );
 	//
 	void AddArrayElementManipulator( IArrayElementManipulator *pArrElMan ) { arrayElementManipulators.push_back( pArrElMan ); }

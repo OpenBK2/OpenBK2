@@ -85,7 +85,7 @@ void CMessageReactions::RunScriptText( const std::string &szScriptBody )
 	pScript->Init();
 	pScript->AddRegFunctions( reglist );
 
-	if ( pScript->RunScript( szScriptBody.c_str() ) != 0 ) 
+	if ( pScript->RunScript( szScriptBody.c_str() ) != 0 )
 		pScript = 0;
 }
 void CMessageReactions::InitScript( const std::string &szScriptFileName )
@@ -117,9 +117,9 @@ int CMessageReactions::operator&( IBinSaver &saver )
 
 bool CMessageReactions::Execute( const std::string &szSender, const std::string &szReactionKey, struct IScreen *pScreen, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags )
 {
-	if ( pProg && 
+	if ( pProg &&
 		(pProg->NeedFlags() ? pProg->Execute( szSender, szReactionKey, wKeyboardFlags ) : pProg->Execute( szSender, szReactionKey )  ) ) return true;
-		
+
 	CReactions::iterator it = reactions.find( szReactionKey );
 	NI_ASSERT( it != reactions.end(), fmt::format( "unregistered reaction \"{}\"", szReactionKey ) );
 	if ( it != reactions.end() )

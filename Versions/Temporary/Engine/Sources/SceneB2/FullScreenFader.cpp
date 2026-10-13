@@ -41,7 +41,7 @@ public:
 
 	virtual bool IsInProgress() { return fDuration != 0.0f; };
 	virtual void Draw( const NTimer::STime &time, bool bAfterDrawingInterfaces );
-	
+
 private:
 	float GetValue( const NTimer::STime & _time );
 };
@@ -49,7 +49,7 @@ private:
 void CFullScreenFader::Start( float _fDuration, float _fStartValue, float _fEndValue, bool _bFadeInterfaces )
 {
 	startTime = 0;
-	fDuration = _fDuration; 
+	fDuration = _fDuration;
 	fStartValue = _fStartValue;
 	fEndValue = _fEndValue;
 

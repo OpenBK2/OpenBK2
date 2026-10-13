@@ -92,7 +92,7 @@ CRectLayout &VirtualToScreen( class CRectLayout *pRects )
 		VirtualToScreenX( rc.fX + rc.fSizeX, &rc.fSizeX );
 		VirtualToScreenX( rc.fX, &rc.fX );
 		rc.fSizeX -= rc.fX;
-		
+
 		VirtualToScreenY( rc.fY + rc.fSizeY, &rc.fSizeY );
 		VirtualToScreenY( rc.fY, &rc.fY );
 		rc.fSizeY -= rc.fY;

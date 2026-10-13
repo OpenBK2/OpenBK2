@@ -44,7 +44,7 @@ void CCursor::RegisterMode( const int nMode, const std::string &szFileName )
 	//
 	NWinCursor::TCursor hCursor = NWinCursor::LoadCursor( szFileName );
 	NI_ASSERT( hCursor != 0, fmt::format("Can't load cursor \"{}\" from file", szFileName) );
-	if ( hCursor != 0 ) 
+	if ( hCursor != 0 )
 	{
 		modes[nMode] = hCursor;
 		modesFiles[nMode] = szFileName;
@@ -122,7 +122,7 @@ void CCursor::OnSetCursor()
 void CCursor::Show( const bool _bShow )
 {
 	bShow = _bShow;
-	if ( bShow ) 
+	if ( bShow )
 		SetMode( nCurrMode );
 	else
 		NWinFrame::SetCursor( 0 );

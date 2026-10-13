@@ -46,8 +46,8 @@ void CCommonStaticPath::MoveFinishTileTo( const int nFinish )
 	finishPoint = pAIMap->GetPointByTile( finishTile );
 }
 
-void CCommonStaticPath::MoveFinishPointBy( const CVec2 &vMove ) 
-{ 
+void CCommonStaticPath::MoveFinishPointBy( const CVec2 &vMove )
+{
 	if ( pAIMap->GetTile( finishPoint + vMove ) == finishTile )
 		finishPoint += vMove;
 }

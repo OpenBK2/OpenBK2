@@ -85,12 +85,12 @@ void CTrack::Segment()
 	}
 }
 
-void CTrack::Play() 
+void CTrack::Play()
 {
 	timeLastCall = GetAbsTime();
 }
 
-void CTrack::OnResetTimer() 
+void CTrack::OnResetTimer()
 {
 	timeLastCall = GetAbsTime();
 }
@@ -124,18 +124,18 @@ bool CTrack::IsTimeToEndFade( NTimer::STime timeEndFade )
 	return timePlayed + timeEndFade > playTime.GetPlayTime();
 }
 
-int CTrack::operator&( IBinSaver &f ) 
-{ 
-	f.Add(2,&eType); 
-	f.Add(3,&timePlayed); 
-	f.Add(4,&timeLastCall); 
-	f.Add(5,&playTime); 
+int CTrack::operator&( IBinSaver &f )
+{
+	f.Add(2,&eType);
+	f.Add(3,&timePlayed);
+	f.Add(4,&timeLastCall);
+	f.Add(5,&playTime);
 	f.Add( 6, &eState );
 	f.Add( 7, &pTrack );
 	if ( f.IsReading() )
 		OpenTrack();
 
-	return 0; 
+	return 0;
 }
 }
 REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C3, CTrack, NMusicSystem )

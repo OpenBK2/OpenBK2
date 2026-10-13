@@ -93,6 +93,6 @@ void CChildFrameBase::Leave()
 	DebugTrace( "CChildFrameBase::Leave()" );
 }
 
-// basement storage  
+// basement storage
 
 

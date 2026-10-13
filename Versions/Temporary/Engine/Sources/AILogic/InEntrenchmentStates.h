@@ -9,7 +9,7 @@ class CAIUnit;
 class CInEntrenchmentStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CInEntrenchmentStatesFactory );
-	
+
 	static CPtr<CInEntrenchmentStatesFactory> pFactory;
 public:
 	static IStatesFactory* Instance();
@@ -21,7 +21,7 @@ public:
 	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
-	
+
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
@@ -31,7 +31,7 @@ class CSoldierRestInEntrenchmentState : public IUnitState, public CStandartBehav
 	OBJECT_BASIC_METHODS( CSoldierRestInEntrenchmentState );
 
 	ZDATA_(CStandartBehaviour)
-	CPtr<CSoldier> pSoldier;	
+	CPtr<CSoldier> pSoldier;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	NTimer::STime startTime = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CStandartBehaviour*)this); f.Add(2,&pSoldier); f.Add(3,&startTime); return 0; }
@@ -58,7 +58,7 @@ public:
 class CSoldierAttackInEtrenchState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackInEtrenchState );
-	
+
 	ZDATA
 	CPtr<CSoldier> pSoldier;
 	CPtr<CAIUnit> pEnemy;

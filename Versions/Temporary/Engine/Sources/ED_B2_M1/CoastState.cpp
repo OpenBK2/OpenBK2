@@ -133,7 +133,7 @@ void CCoastState::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 				if ( GetMapInfoEditor()->VSOCollector.coast.nVSOID == nVSOID )
 				{
 					if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-					{							
+					{
 						if ( UpdateVSOInBase( pMapInfoController, GetMapInfoEditor()->VSOCollector.coast ) )
 						{
 							pMapInfoController->AddChangeVSOOperation( GetVSOType(), oldVSOInstance, GetMapInfoEditor()->VSOCollector.coast );
@@ -201,7 +201,7 @@ int CCoastState::InsertVSO( const std::vector<CVec3> &rControlPointList )
 				DebugTrace( "CCoastState::InsertVSO(), CVSOManager::Update(): %g", NHPTimer::GetTimePassed( &time ) );
 				//
 				if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-				{							
+				{
 					if ( InsertVSOToBase( pMapInfoController, GetMapInfoEditor()->VSOCollector.coast ) )
 					{
 						pMapInfoController->AddInsertVSOOperation( GetVSOType(), GetMapInfoEditor()->VSOCollector.coast );
@@ -252,7 +252,7 @@ void CCoastState::RemoveVSO( int nVSOID )
 				if ( ITerraManager *pTerraManager = pScene->GetTerraManager() )
 				{
 					if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-					{							
+					{
 						if ( RemoveVSOFromBase( pMapInfoController ) )
 						{
 							pMapInfoController->AddRemoveVSOOperation( GetVSOType(), GetMapInfoEditor()->VSOCollector.coast );
@@ -403,7 +403,7 @@ bool CCoastState::UpdateVSOInBase( CObjectBaseController *pObjectController, con
 	return false;
 }
 
-// basement storage  
+// basement storage
 
 
 

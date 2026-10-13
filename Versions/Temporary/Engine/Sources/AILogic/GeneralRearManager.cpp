@@ -99,11 +99,11 @@ void CGeneral::CheckAvailableReinforcement()
 		fEffect = 0;
 		for ( int j = 0; j < NDb::_RT_NONE; ++j )
 		{
-			fEffect += NReinforcement::GetReinforcementExpediency( NDb::EReinforcementType(i), NDb::EReinforcementType(j) )	
+			fEffect += NReinforcement::GetReinforcementExpediency( NDb::EReinforcementType(i), NDb::EReinforcementType(j) )
 				/ ( 1 + enemyByRType[nReinfTypeNeeded] - enemyByRType[j] )				// Weigh according to how close it is to
 				/ ( 1 + enemyByRType[nReinfTypeNeeded] - enemyByRType[j] )				// the most needed (squared)
 				* ( ( j == nReinfTypeNeeded ) ? 2 : 1 );													// and added multiplier for the exact hit
-				
+
 		}
 		if ( fEffect > fMaxEffect )
 		{
@@ -122,7 +122,7 @@ void CGeneral::CheckAvailableReinforcement()
 		//CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW, StrFmt( "Calling reinforcement %d", nReinfTypeToCall ) );
 		float fRandValue = NRandom::Random( 0.0f, fSum ); RecordRandomCall();
 		int i = 0;
-		for ( ; i < nARQuantity - 1; ++i ) 
+		for ( ; i < nARQuantity - 1; ++i )
 		{
 			if ( fReinfEff[i] <= fRandValue && fReinfEff[i+1] > fRandValue )
 				break;
@@ -133,7 +133,7 @@ void CGeneral::CheckAvailableReinforcement()
 		for ( Tasks::iterator it = tasks.begin(); it != tasks.end(); ++it )
 			nWorkers += (*it)->GetWorkerCount();
 		nWorkers += tanksFree.size();
-		
+
 		if ( nWorkers <= nMaxAllowedMobileTanks )
 			theReinfArray[nParty].CallReinforcement( NDb::EReinforcementType( nAvailReinfs[i] ),	theReinfArray[nParty].GetRandomPoint(), -1 );
 	}
@@ -167,13 +167,13 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 		if ( eUType != DB_RPG_TYPE_SNIPER )
 			fTypeMult *= 0.1f;			// Soldier counts as 1/10 (all but snipers);
 	}
-	
+
 	int nUnitParty = pUnit->GetParty();
 	int nAvail;
 	int nAffected = 0;
 
 	//Check validity of values, and reset to least harmful
-	NI_VERIFY( eUType >= 0 && eUType < NDb::DB_RPG_TYPE_COUNT, 
+	NI_VERIFY( eUType >= 0 && eUType < NDb::DB_RPG_TYPE_COUNT,
 		fmt::format("Invalid unit type {}", int( eUType ) ), eUType = NDb::DB_RPG_TYPE_SOLDIER );
 
 	if ( eRType < 0 || eRType >= _RT_NONE )
@@ -187,21 +187,21 @@ void CGeneral::BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit )
 		// Get availability for enemy
 		nAvail = theReinfArray[nUnitParty].GetUnitAvailability( eUType, NDb::EReinforcementType(i) );
 
-		if ( nAvail ) 
+		if ( nAvail )
 		{
 			effects[ i ] += 1.0f / nAvail;
 			++nAffected;
 		}
-		else if ( i == eRType ) 
+		else if ( i == eRType )
 		{
 			effects[ eRType ] += 1;
 		}
 	}
 
-	//Depending 
+	//Depending
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
 	{
-		switch ( eAction ) 
+		switch ( eAction )
 		{
 		case BA_ADD_ENEMY :
 			enemyByRType[i] += effects[i] * fTypeMult;

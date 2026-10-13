@@ -21,7 +21,7 @@ inline const char *D3DErrorToString( HRESULT hErrorCode )
 		return "The currently set render states cannot be used together.";
 	case D3DERR_CONFLICTINGTEXTUREFILTER:
 		return "The current texture filters cannot be used together.";
-	case D3DERR_CONFLICTINGTEXTUREPALETTE: 
+	case D3DERR_CONFLICTINGTEXTUREPALETTE:
 		return "The current textures cannot be used simultaneously.\nThis generally occurs when a multitexture device requires that all palletized textures simultaneously enabled also share the same palette.";
 	case D3DERR_DEVICELOST:
 		return "The device is lost and cannot be restored at the current time, so rendering is not possible.";
@@ -41,7 +41,7 @@ inline const char *D3DErrorToString( HRESULT hErrorCode )
 		return "The requested item was not found.";
 	case D3DERR_OUTOFVIDEOMEMORY:
 		return "Direct3D does not have enough display memory to perform the operation.";
-	case D3DERR_TOOMANYOPERATIONS: 
+	case D3DERR_TOOMANYOPERATIONS:
 		return "The application is requesting more texture-filtering operations than the device supports.";
 	case D3DERR_UNSUPPORTEDALPHAARG:
 		return "The device does not support a specified texture-blending arguments for the alpha channel.";
@@ -53,7 +53,7 @@ inline const char *D3DErrorToString( HRESULT hErrorCode )
 		return "The device does not support a specified texture-blending operations for color values.";
 	case D3DERR_UNSUPPORTEDFACTORVALUE:
 		return "The specified texture factor value is not supported by the device.";
-	case D3DERR_UNSUPPORTEDTEXTUREFILTER: 
+	case D3DERR_UNSUPPORTEDTEXTUREFILTER:
 		return "The specified texture filter is not supported by the device.";
 	case D3DERR_WRONGTEXTUREFORMAT:
 		return "The pixel format of the texture surface is not valid.";

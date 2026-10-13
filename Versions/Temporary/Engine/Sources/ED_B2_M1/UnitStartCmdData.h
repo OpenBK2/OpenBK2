@@ -41,14 +41,14 @@ struct SUnitStartCmdWindowData
 	EAction eLastAction;							// последнее событие интерфейса пользователя
 	std::vector<int> selectedCommands;		// SCmd::nIndex выбранных в списке команд
 	//
-	SUnitStartCmdWindowData() 
+	SUnitStartCmdWindowData()
 	{
 		Clear();
 	}
 	//
 	void Clear()
 	{
-		eLastAction = NO_CMD; 
+		eLastAction = NO_CMD;
 		selectedCommands.clear();
 		commands.clear();
 	}

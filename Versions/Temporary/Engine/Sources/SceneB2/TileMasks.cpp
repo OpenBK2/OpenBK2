@@ -77,8 +77,8 @@ static void BlurLastColumn( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t>
 static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &srcMask, const int nX1, const int nY1,
 													const int nX2, const int nY2, const SInt2Type<1> &sep )
 {
-	
-	
+
+
 	//filter[0][0] = 1; filter[0][1] = 4;	filter[0][2] = 7;	filter[0][3] = 4;	filter[0][4] = 1;
 	//filter[1][0] = 4; filter[1][1] = 16; filter[1][2] = 26; filter[1][3] = 16; filter[1][4] = 4;
 	//filter[2][0] = 7; filter[2][1] = 26; filter[2][2] = 41; filter[2][3] = 26; filter[2][4] = 7;
@@ -88,7 +88,7 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 
 	CArray2D<int> filter;
 	int nScale;
-	
+
 	if ( s_nTerrainBlurRaduis == 2)
 	{
 		filter.SetSizes( 5, 5 );
@@ -103,8 +103,8 @@ static void BlurTileMask( CArray2D<uint8_t> *pDstMask, const CArray2D<uint8_t> &
 	{
 		// s_nTerrainBlurRaduis = 1
 		filter.SetSizes( 3, 3 );
-		filter[0][0] = 1; filter[0][1] = 2; filter[0][2] = 1;	
-		filter[1][0] = 2; filter[1][1] = 4; filter[1][2] = 2;	
+		filter[0][0] = 1; filter[0][1] = 2; filter[0][2] = 1;
+		filter[1][0] = 2; filter[1][1] = 4; filter[1][2] = 2;
 		filter[2][0] = 1; filter[2][1] = 2; filter[2][2] = 1;
 		nScale = 16;
 	}

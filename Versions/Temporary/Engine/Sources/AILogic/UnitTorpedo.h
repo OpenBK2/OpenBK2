@@ -59,7 +59,7 @@ public:
 	// This Init() does nothing
 	virtual void Init( const CVec2 &center, const int z, const SUnitBaseRPGStats *_pStats, const float fHP, const uint16_t dir, const uint8_t player, ICollisionsCollector *pCollisionsCollector ) { }
 
-	virtual const SUnitBaseRPGStats* GetStats() const { return pTorpedoStats; }	
+	virtual const SUnitBaseRPGStats* GetStats() const { return pTorpedoStats; }
 	virtual IStatesFactory* GetStatesFactory() const { return CTorpedoStatesFactory::Instance(); }
 	virtual const float GetSpeed() { return fSpeed; }
 	virtual void Die( const bool fromExplosion, const float fDamage );

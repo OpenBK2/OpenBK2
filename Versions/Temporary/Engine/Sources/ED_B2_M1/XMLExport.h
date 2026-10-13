@@ -18,7 +18,7 @@ private:
 	typedef std::unordered_map<std::string, bool> CExportedObjectsMap;
 	CExportedObjectsMap exportedObjects;
 	//
-	void ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID, 
+	void ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID,
 													const std::string &szObjectName, const int nObjectID, const std::string &szFieldName );
 protected:
 	const SObjStackEntry *GetFrontObject() { return objectsStack.empty() ? 0 : &( objectsStack.front() ); }

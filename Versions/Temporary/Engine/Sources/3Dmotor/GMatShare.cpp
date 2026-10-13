@@ -12,11 +12,11 @@ namespace NGScene
 
 // CSkyAdapter
 
-bool CSkyAdapter::NeedUpdate() 
-{ 
+bool CSkyAdapter::NeedUpdate()
+{
 	if ( !pTex )
 		return false;
-	return pTex.Refresh(); 
+	return pTex.Refresh();
 }
 
 void CSkyAdapter::Recalc()
@@ -26,8 +26,8 @@ void CSkyAdapter::Recalc()
 		pValue = pTex->GetValue();
 }
 
-void CSkyAdapter::SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex ) 
-{ 
+void CSkyAdapter::SetSource( CPtrFuncBase<NGfx::CCubeTexture> *_pTex )
+{
 	pTex = _pTex;
 	pValue = 0;
 	Updated();
@@ -60,7 +60,7 @@ void CMaterialShare::FillCreateMaterialInfo( const NDb::SMaterial *_pMaterial, S
 	mc.fDetailScale = _pMaterial->fDetailScale;
 	mc.bIgnoreZ = _pMaterial->bIgnoreZBuffer;
 	mc.bReceiveShadow = _pMaterial->bReceiveShadow;
-	
+
 	switch ( _pMaterial->eDynamicMode )
 	{
 	case NDb::SMaterial::DM_DONT_CARE : mc.eDynamicType = DT_DONT_CARE; break;

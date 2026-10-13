@@ -18,13 +18,13 @@ template<typename TMessage, typename TObj, typename TMFn>
 class CMPUIMessageHandler : public IMPUIMessageHandler
 {
 	OBJECT_NOCOPY_METHODS( CMPUIMessageHandler );
-	
+
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	TObj *pObj = {};
 	TMFn pMFn = {};
 public:
 	CMPUIMessageHandler() {}
-	CMPUIMessageHandler( TObj *_pObj, TMFn _pMFn ) : 
+	CMPUIMessageHandler( TObj *_pObj, TMFn _pMFn ) :
 		pObj( _pObj ),
 		pMFn( _pMFn )
 	{
@@ -34,7 +34,7 @@ public:
 	{
 		TMessage *pMsg = dynamic_cast<TMessage*>( _pMsg );
 		NI_VERIFY( pMsg, "Wrong message class", return false );
-		
+
 		return (pObj->*pMFn)( pMsg );
 	}
 };
@@ -61,10 +61,10 @@ public:
 class CMPUIMessageProcessor : public CMPUIMessageTranslator
 {
 	typedef std::list< CPtr<SMPUIMessage> > CMessages;
-	
+
 	CMessages messages;
 protected:
-	// stores outgoing message	
+	// stores outgoing message
 	void PushMessage( SMPUIMessage *pMsg );
 public:
 	// gets outgoing message

@@ -9,7 +9,7 @@ class CExecutorSoldierEntrench : public CExecutorUnitBase
 	OBJECT_NOCOPY_METHODS( CExecutorSoldierEntrench )
 
 	ZDATA_(CExecutorUnitBase)
-	CPtr<CAIUnit> pUnit;  
+	CPtr<CAIUnit> pUnit;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float					fEntrenchTimeCoeff = {};					//Used for Mobile Fortress ability
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutorUnitBase*)this); f.Add(2,&pUnit); f.Add(3,&fEntrenchTimeCoeff); return 0; }

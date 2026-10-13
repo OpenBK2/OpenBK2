@@ -19,8 +19,8 @@ const int N_PACKET_SIZE = 32768;	// Must be equal with buffer size from Net/NetS
 //const int N_PACKET_SIZE = 128000;	// Must be equal with buffer size from Net/NetStream.h
 
 
-CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds ) 
-	: pConsts(_pConsts), pCmdsSerialize(pCmds) 
+CMultiplayerInternal::CMultiplayerInternal( const NDb::SNetGameConsts *_pConsts, IAICmdsAutoMagic *pCmds )
+	: pConsts(_pConsts), pCmdsSerialize(pCmds)
 {
 }
 
@@ -141,7 +141,7 @@ CMultiplayerCommand* CMultiplayerInternal::GetCommand()
 	if ( pNetDriver->GetMessage( &eMsgID, &nClientID, 0, &pkt ) )
 	{
 		CMultiplayerCommand *pCommand = 0;
-		switch ( eMsgID ) 
+		switch ( eMsgID )
 		{
 		case NNet::IDriver::DIRECT:
 		case NNet::IDriver::BROADCAST:
@@ -178,7 +178,7 @@ CMultiplayerCommand* CMultiplayerInternal::ProcessPacket( const int nClientID, C
 	if ( pkt.GetPosition() < pkt.GetSize() )
 	{
 		pkt.Read( &msgID, sizeof(msgID) );
-		switch ( msgID ) 
+		switch ( msgID )
 		{
 		case NGM_ID_SEGMENT:
 			return new CMultiplayerCommand( CMultiplayerCommand::EMC_SEGMENT_FINISHED, nClientID, 0, 0 );

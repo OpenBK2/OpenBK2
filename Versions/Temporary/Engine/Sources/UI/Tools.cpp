@@ -6,7 +6,7 @@ namespace NUITools
 {
 
 void ApplyWindowAlign( NDb::EPositionAllign eAlign, float fParentPos, float fParentSize,
-								float fChildPos, 
+								float fChildPos,
 								float fLowerMargin, float fHigherMargin,
 								float *nSize,	/* in, out */
 								float *pScreenPos /* out */ )
@@ -75,12 +75,12 @@ void ApplyTextureAllign( const NDb::EPositionAllign eAllign,
 	}
 }
 
-void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float> &parentRect, 
+void ApplyPlacement( const NDb::SWindowPlacement &placement, const CTRect<float> &parentRect,
 	CTRect<float> *pRect )
 {
 	float nSizeX = pRect->GetSizeX();
 	float nSizeY = pRect->GetSizeY();
-	
+
 	if ( placement.horAllign.IsValid() )
 	{
 		NUITools::ApplyWindowAlign( placement.horAllign.Get(), parentRect.x1, parentRect.GetSizeX(),

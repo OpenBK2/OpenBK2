@@ -173,7 +173,7 @@ public:
 	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
 	CNetSaver() : pRes( 0 ) {}
-	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode ) 
+	CNetSaver( CMemoryStream *_pRes, ESaverMode _mode )
 		: pRes(_pRes), mode(_mode) {}
 };
 

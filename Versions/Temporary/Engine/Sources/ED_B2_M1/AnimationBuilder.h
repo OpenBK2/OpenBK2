@@ -5,7 +5,7 @@
 #include "MapEditorLib/Interface_CommandHandler.h"
 #include "MapEditorLib/BuildDataBuilder.h"
 
-struct SGrannyBoneAttributes; 
+struct SGrannyBoneAttributes;
 class CAnimationBuilder : public CDefaultBuilderBase, public IBuildDataCallback, public ICommandHandler
 {
 	OBJECT_NOCOPY_METHODS( CAnimationBuilder );

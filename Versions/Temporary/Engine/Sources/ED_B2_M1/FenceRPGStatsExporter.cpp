@@ -97,12 +97,12 @@ void CFenceRPGStatsExporter::CreatePassProfiles( IManipulator *pManipulator, con
 	{
 		NDb::SPassProfile passProfile;
 		if ( CreateObjectPassabilityProfile( szGrannyFileName, 1.0f, &passProfile ) )
-			SavePassProfile( passProfile, rszSegmentsSetName, "PassProfile", pManipulator ); 
+			SavePassProfile( passProfile, rszSegmentsSetName, "PassProfile", pManipulator );
 	}
 }
 
-bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator, 
-																					  const std::string &rszSegmentsSetName, 
+bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
+																					  const std::string &rszSegmentsSetName,
 																						const CArray2D<uint8_t> &rPassabilityArray,
 																						const CVec3 &rvPassabilityOrigin )
 {
@@ -110,7 +110,7 @@ bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
 
 	// Удаляем старый массив
 	bool bResult = CManipulatorManager::Remove2DArray( pManipulator, rszSegmentsSetName + ".passability" );
-	
+
 	if ( bResult )
 	{
 		bResult = bResult && CManipulatorManager::Set2DArray( rPassabilityArray, pManipulator, rszSegmentsSetName + ".passability" );

@@ -4,7 +4,7 @@
 
 
 // sends UI message
-// SBUIMessage( cmd.szParam1, 
+// SBUIMessage( cmd.szParam1,
 //							cmd.szParam2,
 //							bForward ? LOWORD(cmd.nParam1) : HIWORD(cmd.nParam1) )
 class CEffectorSendUIMessage : public IUIEffector

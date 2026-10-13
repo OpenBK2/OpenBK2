@@ -49,23 +49,23 @@ void CEventUpdater::CUpdateData::Init()
 	clientTransformers[ACTION_NOTIFY_MODIFY_ENTRANCE_STATE] = new CModifyEntranceUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_UPDATE_DIPLOMACY] = new CDiplomacyUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_SHOOT_AREA] = new CShootAreaUpdateTransformer;
-	clientTransformers[ACTION_NOTIFY_RANGE_AREA] = new CRangeAreaUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_PROJECTILE] = new CNewProjectileUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_DEAD_UNIT] = new CDeadUnitUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_DELETED_ST_OBJ] = new CDisappearUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_DISSAPEAR_OBJ] = new CDisappearUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_DEAD_PROJECTILE] = new CDisappearUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_BRIDGE_SPAN] = new CNewUnitUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_UNIT] = new CNewUnitUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_ST_OBJ] = new CNewUnitUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_ENTRENCHMENT] = new CNewEntrenchmentUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_NEW_FORMATION] = new CNewFormationUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_REVEAL_ARTILLERY] = new CRevealArtilleryUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_REINF_POINT] = new CStructCopierUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_AVAIL_REINF] = new CStructCopierUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_REINF_RECYCLE] = new CStructCopierUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_SPECIAL_ABLITY] = new CStructCopierUpdateTransformer;	
-	clientTransformers[ACTION_NOTIFY_TREE_BROKEN] = new CStructCopierUpdateTransformer;	
+	clientTransformers[ACTION_NOTIFY_RANGE_AREA] = new CRangeAreaUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_PROJECTILE] = new CNewProjectileUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_DEAD_UNIT] = new CDeadUnitUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_DELETED_ST_OBJ] = new CDisappearUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_DISSAPEAR_OBJ] = new CDisappearUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_DEAD_PROJECTILE] = new CDisappearUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_BRIDGE_SPAN] = new CNewUnitUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_UNIT] = new CNewUnitUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_ST_OBJ] = new CNewUnitUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_ENTRENCHMENT] = new CNewEntrenchmentUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_NEW_FORMATION] = new CNewFormationUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_REVEAL_ARTILLERY] = new CRevealArtilleryUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_REINF_POINT] = new CStructCopierUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_AVAIL_REINF] = new CStructCopierUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_REINF_RECYCLE] = new CStructCopierUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_SPECIAL_ABLITY] = new CStructCopierUpdateTransformer;
+	clientTransformers[ACTION_NOTIFY_TREE_BROKEN] = new CStructCopierUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_FEEDBACK] = new CStructCopierUpdateTransformer;
 	clientTransformers[ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION] = new CObjectsUnderConstructionTransformer;
 	clientTransformers[ACTION_NOTIFY_NEW_KEY_BUILDING] = new CKeyBuildingUpdateTransformer;
@@ -172,7 +172,7 @@ CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 			}
 		}
 	}
-	if ( !pStats->animdescs.empty() ) 
+	if ( !pStats->animdescs.empty() )
 	{
 		if ( pStats->animdescs.size() <= nAnimation )
 			nAnimation = NDb::ANIMATION_IDLE;
@@ -190,8 +190,8 @@ CEventUpdater::CUpdateData* CEventUpdater::CreateAnimationUpdate( CUpdatableObj 
 
 bool CEventUpdater::IsInterpolatableEvent( EActionNotify eUpdateType ) const
 {
-	return eUpdateType == ACTION_NOTIFY_PLACEMENT || 
-		eUpdateType == ACTION_NOTIFY_TURRET_VERT_TURN || 
+	return eUpdateType == ACTION_NOTIFY_PLACEMENT ||
+		eUpdateType == ACTION_NOTIFY_TURRET_VERT_TURN ||
 		eUpdateType == ACTION_NOTIFY_TURRET_HOR_TURN;
 }
 
@@ -219,13 +219,13 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 	}
 
 	bool bSuspend = ( pObj != 0 && ( IsInterpolatableEvent( eUpdateType ) || pObj->ShouldSuspendAction( eUpdateType ) ) && !pObj->IsVisible( nMyParty ) );
-	
-	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT && bSuspend )  
+
+	if ( eUpdateType == ACTION_NOTIFY_PLACEMENT && bSuspend )
 		return;
-	
+
 	++nCounter;
 	CUpdateData *pData = new CUpdateData( nTime, nCounter, eUpdateType, pObj, nParam );
-	
+
 	// animation processing
 	static std::vector<CPtr<CUpdateData> > updatesBush(3);
 	updatesBush.resize(0);
@@ -244,7 +244,7 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 			}
 		}
 	}
-	
+
 	// special cases - legacy (mainly for animation)
 	if ( eUpdateType == ACTION_NOTIFY_CHANGE_FRAME_INDEX )
 	{
@@ -300,7 +300,7 @@ void CEventUpdater::AddUpdate( SAIBasicUpdate *_pUpdate, EActionNotify eUpdateTy
 			pData->pData->nUpdateTime = nTime;
 		}
 	}
-	
+
 	if ( bSuspend )
 	{
 		if ( IsOneCopyEvent( eUpdateType ) )
@@ -399,7 +399,7 @@ CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
 				interpolatableUpdates.push_back( pData );
 			else
 				pData->bValid = false;
-		}	
+		}
 		// otherwise, try suspendable queue
 		if ( pData == 0 && pendingIt != pendingSuspendableUpdates.end() )
 		{
@@ -413,7 +413,7 @@ CEventUpdater::CUpdateData* CEventUpdater::PopUpdate()
 				pData->bValid = false;
 			++pendingIt;
 		}
-		
+
 		return pData.Extract();
   } while( true );
 }
@@ -474,10 +474,10 @@ void CEventUpdater::PumpUpdates()
 		}
 		lst.clear();
 	}
-	
+
 	// clear visible tiles
 	visibleTiles.clear();
-	
+
 	// Sort the lists
 	if ( bUpdatesChanged )
 		pendingUpdates.sort( SUpdateDataLessCompare() );
@@ -496,9 +496,9 @@ void CEventUpdater::ClearInterpolatable()
 void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 {
 	pendingUpdates.splice( pendingUpdates.end(), interpolatableUpdates );
-	
+
 	nReturnTime = nUpTo;
-	
+
 	for ( CUpdateList::iterator it = pendingSuspendableUpdates.begin(); it != pendingSuspendableUpdates.end(); )
 	{
 		if ( (*it)->bValid )
@@ -506,9 +506,9 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 		else
 			it = pendingSuspendableUpdates.erase( it );
 	}
-	
+
 	PumpUpdates();
-	
+
 	pendingIt = pendingSuspendableUpdates.begin();
 
 	if ( nUpTo - lastTimeUpTo > 1000 )
@@ -517,7 +517,7 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 		for ( CUpdateMap::iterator it = updatesHash.begin(); it != updatesHash.end(); )
 		{
 			CUpdateList &lst = it->second;
-			
+
 			for ( CUpdateList::iterator itUpdate = lst.begin(); itUpdate != lst.end(); )
 			{
 				if ( (*itUpdate)->bValid )
@@ -525,7 +525,7 @@ void CEventUpdater::CollectUpdates( NTimer::STime nUpTo )
 				else
 					itUpdate = lst.erase( itUpdate );
 			}
-			
+
 			if ( lst.empty() )
 				updatesHash.erase( it++ );
 			else
@@ -565,11 +565,11 @@ SAIBasicUpdate* CEventUpdater::GetUpdate()
 {
 	if ( CAITimer::GetGameTime() > nReturnTime )
 		CollectUpdates( CAITimer::GetGameTime() );
-	
+
 	CPtr<CUpdateData> pData = PopUpdate();
-	if ( pData == 0 ) 
+	if ( pData == 0 )
 		return 0;
-	
+
 	return pData->GetClientStruct( nReturnTime ) ;
 }
 
@@ -695,7 +695,7 @@ int CEventUpdater::operator&( IBinSaver &saver )
 			CPtr<CUpdateData> pCurrPendingIt = pendingIt == pendingSuspendableUpdates.end() ? 0 : *pendingIt;
 			saver.Add( 4, &pCurrPendingIt );
 		}
-		
+
 		saver.Add( 5, &updatesHash );
 		saver.Add( 7, &nTime );
 		saver.Add( 8, &nReturnTime );

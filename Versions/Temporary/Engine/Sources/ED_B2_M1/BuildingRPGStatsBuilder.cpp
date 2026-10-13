@@ -19,7 +19,7 @@ bool CBuildingRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CBuildingRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	std::string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
@@ -122,7 +122,7 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.NightObj", CVariant() );
 		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyedObj", CVariant() );
 		bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DestroyEffect", CVariant() );
-		
+
 		// fill default window
 		if ( szDefaultWindowDay != "" )
 			bResult = bResult && pBuildingRPGStatsManipulator->SetValue( "DefaultWindow.DayObj", szDefaultWindowDay );
@@ -136,6 +136,6 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

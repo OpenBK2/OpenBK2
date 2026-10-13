@@ -30,7 +30,7 @@ void CSortedGridUnits::AddUnit( CCommonUnit* pUnit )
 {
 	if ( units.size() >= nUnits - 1 )
 		units.resize( nUnits * 2 );
-	
+
 	units[nUnits++] = pUnit;
 
 	bSorted = false;
@@ -59,7 +59,7 @@ bool CSortedGridUnits::SUnitsCompare::operator()( const int a, const int b ) con
 		const CVec2 vBCenter( pSortedUnits->rotatedUnitsCoord[b] );
 		const int nARow = fmod( vACenter.y, STANDART_HEIGHT );
 		const int nBRow = fmod( vBCenter.y, STANDART_HEIGHT );
-		
+
 		if ( nARow != nBRow )
 			return nARow > nBRow;
 		if ( vACenter.x != vBCenter.x )
@@ -136,10 +136,10 @@ CGrid::CGrid( const CVec2 &vGridCenter, const int nGroup, const CVec2 &vGridDir 
 
 	CVec2 vNormGridDir( vGridDir );
 	Normalize( &vNormGridDir );
-	
+
 	sortedUnits.SetDir( vNormGridDir );
 	sortedUnits.Sort();
-	
+
 	CreateGrid();
 }
 
@@ -183,7 +183,7 @@ void CGrid::CalculateMaxWidth()
 void CGrid::CreateGrid()
 {
 	CalculateMaxWidth();
-	
+
 	float fUnitsSquare = 0.0f;
 	for ( int i = 0; i < sortedUnits.GetSize(); ++i )
 	{

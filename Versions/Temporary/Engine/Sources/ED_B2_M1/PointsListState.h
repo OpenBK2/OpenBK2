@@ -39,7 +39,7 @@ protected:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
-	// CPointsListState 
+	// CPointsListState
 	bool GetPointListDialogData( SPointListDialogData *pData );
 	bool SetPointListDialogData( SPointListDialogData *pData );
 
@@ -105,7 +105,7 @@ public:
 	{
 		NI_ASSERT( 0, "CEntrancePointsState()" );
 	}
-	CEntrancePointsState( CBuildingEditor* _pBuildingEditor ) 
+	CEntrancePointsState( CBuildingEditor* _pBuildingEditor )
 		:	CPointsListState( CHID_BUILDING_ENTRANCE_POINTS_STATE, 2, _pBuildingEditor ) {}
 	virtual ~CEntrancePointsState() {}
 

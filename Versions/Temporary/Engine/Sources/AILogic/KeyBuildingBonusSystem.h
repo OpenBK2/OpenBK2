@@ -14,7 +14,7 @@ class CKeyBuildingBonusSystem
 	CBuildingBonuses buildingBonuses;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&buildingBonuses); return 0; }
 public:
-	
+
 	// all buildings will notify about ownership change
 	void ChangeOwnership( int nOldPlayer, int nNewPlayer, int nLinkID, bool bDuringMapLoad );
 	bool IsStorage( int nLinkID ) const;
@@ -22,8 +22,8 @@ public:
 	bool IsKeyBuilding( int nLinkID ) const;
 
 	void SendUpdates() const;
-	
-	void Clear() 
+
+	void Clear()
 	{
 		buildingBonuses.clear();
 	}

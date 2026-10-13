@@ -19,15 +19,15 @@ void CUnderConstructionObject::SendClearUpdate()
 	updater.AddUpdate( pNewUpdate, ACTION_NOTIFY_OBJECTS_UNDER_CONSTRUCTION, 0, 0 );
 }
 
-void CUnderConstructionObject::Clear() 
-{ 
+void CUnderConstructionObject::Clear()
+{
 	//objects.clear();
 }
 #ifndef _FINALRELEASE
 #include "System/CheckSumLog.h"
 
 class CSimpleChecksumLog : public ICheckSumLog
-{ 
+{
 	OBJECT_BASIC_METHODS( CSimpleChecksumLog );
 	det_map<int, unsigned long> entries1;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -64,12 +64,12 @@ bool bShowUnderConstruction = false;
 
 void CUnderConstructionObject::ShowUnderConstruction( EActionCommand eCommand, const CVec2 &vStart, const CVec2 &vFinish, bool bFinished, CAILogic *pAI )
 {
-	if ( bFinished ) 
+	if ( bFinished )
 	{
 		SendClearUpdate();
 		return;
 	}
-	
+
 	CExistingObjectModifyAI prohibited;
 	switch ( eCommand )
 	{

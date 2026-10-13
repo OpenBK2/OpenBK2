@@ -60,7 +60,7 @@ struct SChapterReinfBase : public CObjectBase
 		void Make3DInfo( const NDb::SHPObjectRPGStats *pStats );
 	public:
 		~SUnit();
-		
+
 		void InitControls( IWindow *pWnd, const std::string &szBtnName, int nBaseIndex );
 		void ShowSelection( bool bShow );
 		void SetUnknown();
@@ -78,7 +78,7 @@ struct SChapterReinfBase : public CObjectBase
 		CPtr<ITextView> pAmmoView;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pCountView); f.Add(5,&pDamageView); f.Add(6,&pPenetrationView); f.Add(7,&pAmmoView); return 0; }
 	};
-	
+
 	ZDATA
 	CPtr<ITextView> pUnitNameView;
 	std::vector<SUnitWeapon> weapons;
@@ -103,7 +103,7 @@ public:
 		CObj<SUnit> pUnit2;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pUnit1); f.Add(4,&pUnit2); return 0; }
 	};
-	
+
 	ZDATA_(SChapterReinfBase)
 	CPtr<IWindow> pBaseWnd;
 	CPtr<IWindow> pUpgradePanel;
@@ -133,7 +133,7 @@ public:
 	CPtr<IWindow> pCompositionPanel;
 	CPtr<IWindow> pReinfIconWnd;
 	CPtr<ITextView> pReinfHeaderView;
-	
+
 	std::vector< CObj<SUnit> > units;
 	CPtr<SUnit> pSelectedUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SChapterReinfBase*)this); f.Add(2,&pBaseWnd); f.Add(3,&pCompositionPanel); f.Add(4,&pReinfIconWnd); f.Add(5,&pReinfHeaderView); f.Add(6,&units); f.Add(7,&pSelectedUnit); return 0; }
@@ -158,7 +158,7 @@ public:
 	CPtr<ITextView> pDescHeader;
 	CPtr<IWindow> pItemGeneral;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pBaseWnd); f.Add(3,&pPanel); f.Add(4,&pContainer); f.Add(5,&pDescView); f.Add(6,&pDescHeader); f.Add(7,&pItemGeneral); return 0; }
-	
+
 	void InitControls( IWindow *pBaseWnd );
 	void Show( const NDb::SChapter *pChapter );
 	void Hide();

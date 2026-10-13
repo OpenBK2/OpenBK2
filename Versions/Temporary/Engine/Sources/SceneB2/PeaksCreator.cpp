@@ -558,7 +558,7 @@ void CTerraGen::AddPeak( const STerrainInfo::SPeak &peak )
 			ReleaseUnusedAttribues( gfxInfo.patches.back() );
 		}
 	}
-	
+
 	terrainGfxInfo.peaks.push_back( gfxInfo );
 
 	if ( pGfxObserver )

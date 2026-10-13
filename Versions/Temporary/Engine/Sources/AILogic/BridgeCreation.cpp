@@ -72,7 +72,7 @@ CVec2 CBridgeCreation::SortBridgeSpans( std::vector< CObj<CBridgeSpan> > *spans,
 		reverse( spans->begin(), spans->end() );
 		return v2;
 	}
-	else 
+	else
 		return VNULL2;
 }
 
@@ -111,9 +111,9 @@ const CVec2 & CBridgeCreation::GetStartPoint() const
 	return vStartPoint;
 }
 
-CLine2 CBridgeCreation::GetCurLine() 
-{ 
-	return line; 
+CLine2 CBridgeCreation::GetCurLine()
+{
+	return line;
 }
 
 const int CBridgeCreation::GetMaxIndex() const

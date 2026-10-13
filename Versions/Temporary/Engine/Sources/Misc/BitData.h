@@ -289,14 +289,14 @@ public:
 	void FillZero() { array.FillZero(); }
 	void SetZeroFast() { array.FillZero(); }
 	//
-	void CopyEqualSizes( CArray2D1Bit & dest ) 
-	{ 
+	void CopyEqualSizes( CArray2D1Bit & dest )
+	{
 		NI_ASSERT( xSize == dest.xSize && array.GetSizeX() == dest.array.GetSizeX() && array.GetSizeY() == dest.array.GetSizeY(), "cannot copy, unequal sizes" );
 		array = dest.array;
 		//memcpy( array.GetBuffer(), dest.array.GetBuffer(), array.GetSizeX() * array.GetSizeY() );
 	}
-	void Set1() 
-	{ 
+	void Set1()
+	{
 		//array.FillEvery( unsigned int(-1) );
 		memset( &(array[0][0]), static_cast<unsigned int>( -1 ), array.GetSizeX() * array.GetSizeY());
 	};

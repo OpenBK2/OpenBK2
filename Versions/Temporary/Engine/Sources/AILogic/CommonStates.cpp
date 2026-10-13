@@ -60,7 +60,7 @@ IUnitState* CMechAttackUnitState::Instance( CAIUnit *pOwner, CAIUnit *pEnemy, bo
 }
 
 CMechAttackUnitState::CMechAttackUnitState( CAIUnit *_pOwner, CAIUnit *_pEnemy, bool _bAim, const bool _bSwarmAttack )
-: CFreeFireManager( _pOwner ), lastShootCheck( 0 ), lastEnemyTile( -1, -1 ), bAim( _bAim ), wLastEnemyDir( 0 ), 
+: CFreeFireManager( _pOwner ), lastShootCheck( 0 ), lastEnemyTile( -1, -1 ), bAim( _bAim ), wLastEnemyDir( 0 ),
 	pEnemy( _pEnemy ), pUnit( _pOwner ),
 	pGun( 0 ), bFinish( false ), bSwarmAttack( _bSwarmAttack ),
 	bTurningToBest( false ), nBestAngle( -1 ), lastEnemyCenter( -1, -1 ),
@@ -95,7 +95,7 @@ void CMechAttackUnitState::StartAgain()
 //		pGun->StopTracing();
 		pGun->StopFire();
 	}
-		
+
 	pGun = 0;
 	bTurningToBest = false;
 
@@ -159,7 +159,7 @@ bool CMechAttackUnitState::TurnToBestPos()
 					else
 						nBestAngle = -1;
 				}
-				else 
+				else
 					nBestAngle = -1;
 
 				lastEnemyCenter = pEnemy->GetCenterPlain();
@@ -191,7 +191,7 @@ void CMechAttackUnitState::AnalyzeBruteMovingPosition()
 			 bEnemyVisible && bCanShootToUnitWOMove )
 	{
 		TraceAim();
-		
+
 		// враг в зоне огня
 		if ( bEnemyVisible && bCanShootToUnitWOMove )
 		{
@@ -258,7 +258,7 @@ void CMechAttackUnitState::AnalyzeMovingPosition()
 	else if ( bIdle || curTime - lastShootCheck >= SHOOTING_CHECK && ( !bEnemyVisible || lastEnemyTile != enemyTile ) )
 	{
 		TraceAim();
-		
+
 		// в зоне поиска пути к стороне
 		if ( !bEnemyVisible || pGun->InGoToSideRange( pEnemy ) )
 		{
@@ -266,7 +266,7 @@ void CMechAttackUnitState::AnalyzeMovingPosition()
 			lastEnemyTile = SVector( -1, -1 );
 //			if ( IsValidObj( pGun ) )
 //				pGun->StopTracing();
-			
+
 			state = ESAS_MOVING_TO_SIDE;
 		}
 		// слишком близко
@@ -298,7 +298,7 @@ void CMechAttackUnitState::AnalyzeMovingPosition()
 				StopFire();
 			}
 
-			lastEnemyTile = pEnemy->GetCenterTile();			
+			lastEnemyTile = pEnemy->GetCenterTile();
 			lastShootCheck = curTime;
 		}
 	}
@@ -325,7 +325,7 @@ IStaticPath* CMechAttackUnitState::BestSidePath()
 					 eAttackType == EAT_POOR_PROB && fProb[i] >= fBestProbability )
 			{
 				// не CPtr, т.к. pPath не должен удаляться в случае, если он оптимален
-				IStaticPath *pPath = 
+				IStaticPath *pPath =
 					CreateStaticPathForSideAttack( pUnit, pEnemy, posDir, fRangeMin, fRangeMax, 8.0f * SConsts::TILE_SIZE, 8192, false );
 
 				if ( pPath != 0 )
@@ -378,7 +378,7 @@ void CMechAttackUnitState::AnalyzeMovingToSidePosition()
 	// стоим или пора проверять позицию и враг сдвинулся или намного повернулся
 	else
 	{
-		const bool bEnemyChangedPosition = 
+		const bool bEnemyChangedPosition =
 			bEnemyVisible &&
 			( lastEnemyTile != enemyTile || DirsDifference( wEnemyDir, wLastEnemyDir ) >= ENEMY_DIR_TOLERANCE );
 
@@ -388,7 +388,7 @@ void CMechAttackUnitState::AnalyzeMovingToSidePosition()
 			TraceAim();
 
 			// враг подставился удобной стороной брони к нам
-			const bool bGoodSideToShoot = 
+			const bool bGoodSideToShoot =
 				bEnemyVisible &&
 				eAttackType == EAT_GOOD_PROB && fProb[pEnemy->GetUnitRect().GetSide( pUnit->GetCenterPlain() )] >= SConsts::GOOD_ATTACK_RPOBABILITY ||
 				eAttackType == EAT_POOR_PROB && pEnemy->GetUnitRect().GetSide( pUnit->GetCenterPlain() ) == nBestSide;
@@ -414,7 +414,7 @@ void CMechAttackUnitState::AnalyzeMovingToSidePosition()
 				else if ( ( pUnit->GetStats()->eDBtype == DB_RPG_TYPE_SPG_ANTITANK				//Do not go to side
 					|| pUnit->GetStats()->eDBtype == DB_RPG_TYPE_SPG_ASSAULT								//if it is an SPG
 					|| pUnit->GetStats()->eDBtype == DB_RPG_TYPE_SPG_SUPER )								//without a turret
-					&& !pGun->IsOnTurret() ) 
+					&& !pGun->IsOnTurret() )
 				{
 					state = ESAS_BRUTE_MOVING;
 				}
@@ -438,7 +438,7 @@ void CMechAttackUnitState::AnalyzeMovingToSidePosition()
 						state = ESAS_BRUTE_MOVING;
 						bSent = true;
 					}
-					
+
 					if ( !bSent )
 					{
 						pUnit->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
@@ -447,7 +447,7 @@ void CMechAttackUnitState::AnalyzeMovingToSidePosition()
 				}
 			}
 
-			lastShootCheck = curTime;			
+			lastShootCheck = curTime;
 			lastEnemyTile = enemyTile;
 			wLastEnemyDir = wEnemyDir;
 		}
@@ -489,12 +489,12 @@ void CMechAttackUnitState::StartStateWithGun( CBasicGun *_pGun )
 	pGun = _pGun;
 
 	damageToEnemyUpdater.UnsetDamageFromEnemy( pEnemy );
-	
+
 	pUnit->Lock( pGun );
 
 	const bool bSPGCanShootWOMove = pUnit->GetStats()->IsSPG() && pGun->CanShootToUnitWOMove( pEnemy );
 
-	if ( pEnemy->IsVisible( pUnit->GetParty() ) && 
+	if ( pEnemy->IsVisible( pUnit->GetParty() ) &&
 			 ( !bAllowMove ||pUnit->NeedDeinstall() || !pUnit->CanMove() || pGun->IsBallisticTrajectory() || bSPGCanShootWOMove ) )
 		state = ESAS_SIMPLE_FIRING;
 	else if ( !bSPGCanShootWOMove )
@@ -523,7 +523,7 @@ void CMechAttackUnitState::Segment()
 {
 	if ( bFinish )
 	{
-		StopFire();			
+		StopFire();
 		pUnit->SetCommandFinished();
 	}
 	else if ( pGun == 0 )
@@ -535,8 +535,8 @@ void CMechAttackUnitState::Segment()
 			const EUnitAckType eReject = pUnit->GetGunsRejectReason();
 			//CRAP{ VOT ZAPLATKA TAK ZAPLATKA. if being told to attack unit out of range, being
 			// in tankpit - leave tankpit and repeat
-			if ( !pUnit->GetCurCmd()->IsFromAI() && 
-						pUnit->IsInTankPit() && 
+			if ( !pUnit->GetCurCmd()->IsFromAI() &&
+						pUnit->IsInTankPit() &&
 						( eReject == ACK_NOT_IN_FIRE_RANGE ) )
 			{
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF), pUnit );
@@ -639,7 +639,7 @@ ETryStateInterruptResult CMechAttackUnitState::TryInterruptState( CAICommand *pC
 		pUnit->SetCommandFinished();
 		return TSIR_YES_IMMIDIATELY;
 	}
-	
+
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	if ( cmd.nCmdType == ACTION_COMMAND_ATTACK_UNIT && GetObjectByCmd( cmd ) == pEnemy )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
@@ -699,7 +699,7 @@ void CMechAttackUnitState::StopFire()
 }
 
 //*******************************************************************
-//*									CCommonAttackCommonStatObjState									*	
+//*									CCommonAttackCommonStatObjState									*
 //*******************************************************************
 
 CCommonAttackCommonStatObjState::CCommonAttackCommonStatObjState( CAIUnit *pOwner, CStaticObject *_pObj, bool _bSwarmAttack )
@@ -833,7 +833,7 @@ void CCommonAttackCommonStatObjState::Segment()
 						pGun = 0;
 				}
 			}
-			
+
 			if ( GetUnit()->GetCurCmd() && !GetUnit()->GetCurCmd()->IsFromAI() && GetUnit()->IsInTankPit() && ( GetUnit()->GetGunsRejectReason() == ACK_NOT_IN_FIRE_RANGE ) )
 			{
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, VNULL2, PARAM_ABILITY_OFF), GetUnit() );
@@ -921,7 +921,7 @@ void CMechUnitRestState::Segment()
 		CCommonRestState::Segment();
 
 	AnalyzeUnderFire( pUnit );
-	
+
 	if ( bFinishWhenCanMove && pUnit->CanMove() )
 		pUnit->SetCommandFinished();
 }
@@ -931,15 +931,15 @@ ETryStateInterruptResult CMechUnitRestState::TryInterruptState( class CAICommand
 	//if ( bFinishWhenCanMove )
 		//return TSIR_YES_WAIT;
 
-	pUnit->UnRegisterAsBored( ACK_BORED_IDLE );	
-	
+	pUnit->UnRegisterAsBored( ACK_BORED_IDLE );
+
 	for ( int i = 0; i < pUnit->GetNTurrets(); ++i )
 	{
-//		pUnit->GetTurret( i )->StopTracing();	
+//		pUnit->GetTurret( i )->StopTracing();
 		pUnit->GetTurret( i )->SetCanReturn();
 	}
 
-	pUnit->SetCommandFinished();	
+	pUnit->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
 
@@ -985,7 +985,7 @@ void CCommonRestState::Segment()
 			pUnit->GetCurCmd()->ToUnitCmd().fNumber = wDir;
 		}
 	}
-	
+
 	bool bTargetFound = false;
 	if ( !pUnit->IsFormation() )
 	{
@@ -1054,7 +1054,7 @@ void CCommonRestState::Segment()
 
 ETryStateInterruptResult CCommonRestState::TryInterruptState( class CAICommand *pCommand )
 {
-	pUnit->UnRegisterAsBored( ACK_BORED_IDLE );	
+	pUnit->UnRegisterAsBored( ACK_BORED_IDLE );
 	pUnit->SetCommandFinished();
 
 	if ( pCommand )
@@ -1115,7 +1115,7 @@ void CCommonAmbushState::CommonState()
 		if ( pUnit->GetParty() != theDipl.GetNeutralParty() && pUnit->IsVisible( 1 - pUnit->GetParty() ) )
 			bAttack = true;
 	}
-	
+
 	if ( !bAttack )
 		pUnit->FreezeByState( true );
 
@@ -1125,7 +1125,7 @@ void CCommonAmbushState::CommonState()
 		int nSpecialGroup = pUnit->GetSpecialGroup();
 		if ( nSpecialGroup == 0 && pUnit->IsInFormation() )
 			nSpecialGroup = pUnit->GetFormation()->GetSpecialGroup();
-		
+
 		if (  nSpecialGroup == 0 )
 		{
 			if ( pTarget != 0 && pUnit->GetBehaviourFire() == SBehaviour::EFAtWill )
@@ -1138,7 +1138,7 @@ void CCommonAmbushState::CommonState()
 			std::list< CPtr<CCommonUnit> > groupUnits;
 			for ( int iter = theGroupLogic.BeginGroup( nSpecialGroup ); iter != theGroupLogic.EndGroup(); iter = theGroupLogic.Next( iter ) )
 				groupUnits.push_back( theGroupLogic.GetGroupUnit( iter ) );
-			
+
 			if ( pTarget != 0 && pUnit->GetBehaviourFire() == SBehaviour::EFAtWill )
 				theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_ATTACK_UNIT, pTarget->GetUniqueId(), float(1) ), pUnit, false );
 			else
@@ -1192,7 +1192,7 @@ ETryStateInterruptResult CCommonAmbushState::TryInterruptState( CAICommand *pCom
 {
 	if ( pCommand && pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_AMBUSH )
 		return TSIR_NO_COMMAND_INCOMPATIBLE;
-	
+
 	if ( pUnit->GetParty() != theDipl.GetNeutralParty() && pUnit->IsVisible( 1 - pUnit->GetParty() ) )
 		pUnit->RemoveCamouflage( ECRR_USER_COMMAND );
 
@@ -1204,7 +1204,7 @@ ETryStateInterruptResult CCommonAmbushState::TryInterruptState( CAICommand *pCom
 
 	// если следующая команда - стрелять по юниту, который мы отслеживали
 	//CAICommand *pCommand = pUnit->GetNextCommand();
-	if ( pCommand != 0 && pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_ATTACK_UNIT 
+	if ( pCommand != 0 && pCommand->ToUnitCmd().nCmdType == ACTION_COMMAND_ATTACK_UNIT
 				&& pTarget->GetUniqueId() == pCommand->ToUnitCmd().nObjectID )
 	{
 		// целиться не надо
@@ -1269,7 +1269,7 @@ bool CCommonAttackUnitInBuildingState::IsInTargetSector() const
 {
 	return IsInTheAngle(
 						GetDirectionByVector( GetUnit()->GetCenterPlain() - pTarget->GetCenterPlain() ),
-						pTarget->GetMinAngle(), pTarget->GetMaxAngle() 
+						pTarget->GetMinAngle(), pTarget->GetMaxAngle()
 					);
 }
 
@@ -1286,10 +1286,10 @@ bool CCommonAttackUnitInBuildingState::FindPathToUnit()
 
 bool CCommonAttackUnitInBuildingState::FindPathToSector()
 {
-	const CVec2 point = 
-		pTarget->GetCenterPlain() + 
+	const CVec2 point =
+		pTarget->GetCenterPlain() +
 		GetVectorByDirection
-		( 
+		(
 			uint16_t( pTarget->GetMaxAngle() - pTarget->GetMinAngle() ) / 2 + pTarget->GetMinAngle()
 		) * 320.0f;
 
@@ -1349,7 +1349,7 @@ void CCommonAttackUnitInBuildingState::Segment()
 						else
 						{
 							pUnit->Lock( pGun );
-							
+
 							bAim = true;
 							if ( pGun->CanShootToUnitWOMove( pTarget ) )
 								eState = EAUBS_MOVING_UNIT;
@@ -1405,9 +1405,9 @@ const CVec2 CCommonAttackUnitInBuildingState::GetPurposePoint() const
 		return CVec2( -1.0f, -1.0f );
 }
 
-CAIUnit* CCommonAttackUnitInBuildingState::GetTargetUnit() const 
-{ 
-	return GetTarget(); 
+CAIUnit* CCommonAttackUnitInBuildingState::GetTargetUnit() const
+{
+	return GetTarget();
 }
 
 //*******************************************************************
@@ -1437,7 +1437,7 @@ void CFollowState::Segment()
 
 		if ( fDist <= SConsts::FOLLOW_STOP_RADIUS )
 		{
-			pUnit->UnsetDesirableSpeed();			
+			pUnit->UnsetDesirableSpeed();
 			pUnit->Stop();
 			pUnit->SetCommandFinished();
 		}
@@ -1470,7 +1470,7 @@ void CFollowState::Segment()
 ETryStateInterruptResult CFollowState::TryInterruptState( CAICommand *pCommand )
 {
 	pUnit->UnsetDesirableSpeed();
-	pUnit->SetCommandFinished(); 
+	pUnit->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
 
@@ -1539,23 +1539,23 @@ void CCommonSwarmState::Segment()
 			if ( pUnit->IsIdle() )
 			{
 				const SUnitBaseRPGStats * pStats = pUnit->GetStats();
-			
+
 				if ( pStats->IsArmor() || pStats->IsSPG() || pStats->IsTrain() )
 				{
 					CTank * pTank = checked_cast_ptr<CTank*>( pUnit );
-					if ( pTank->IsTrackDamaged() ) 
+					if ( pTank->IsTrackDamaged() )
 					{
 						theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_MOVE_WAIT_FOR_TRUCKREPAIR), pUnit );
 						break;
 					}
 				}
-				
+
 				if ( pUnit->GetNextCommand() == 0 )
 				{
 					const uint16_t wDir = pUnit->GetFrontDirection() == pUnit->GetDirection() ? uint16_t( wDirToPoint ) : wDirToPoint + 32768;
 					theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_GUARD, pUnit->GetCenterPlain(), wDir ), pUnit, false );
 				}
-			
+
 				pUnit->SetCommandFinished();
 			}
 			pUnit->AnalyzeTargetScan( 0, false, true );
@@ -1598,7 +1598,7 @@ void CCommonMoveToGridState::Segment()
 			if ( startMoveTime < curTime )
 			{
 				eState = ES_MOVE;
-				
+
 				CPtr<IStaticPath> pStaticPath = CreateStaticPathToPoint( vPoint, VNULL2, pUnit, false, GetAIMap() );
 				if ( pStaticPath )
 					pUnit->SendAlongPath( pStaticPath, VNULL2, true );
@@ -1733,7 +1733,7 @@ IUnitState *CCommonPatrolState::Instance( CCommonUnit *pUnit, CVec2 &vTarget )
 	std::vector<CVec2> &points = thePatrolWaypoints[nID];
 	points.push_back( vTarget );
 
-	if ( bLastPatrolCommand ) 
+	if ( bLastPatrolCommand )
 	{
 		if ( bNoMoreCommands )
 		{

@@ -65,6 +65,6 @@ void CSceneDrawTool::Clear()
 	}
 }
 
-// basement storage  
+// basement storage
 
 

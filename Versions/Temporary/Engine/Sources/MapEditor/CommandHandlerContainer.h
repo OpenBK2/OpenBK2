@@ -24,7 +24,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 				commandIDSet = rCommandRange.commandIDSet;
 			}
 			return *this;
-		}	
+		}
 	};
 	//
 	typedef std::unordered_map<unsigned, SCommandRange> CCommandHandlerIDToCommandIDMap;
@@ -34,7 +34,7 @@ class  CCommandHandlerContainer : public ICommandHandlerContainer
 	CCommandHandlerIDToCommandIDMap commandHandlerIDToCommandIDMap;
 	CCommandIDToCommandHandlerIDMap commandIDToCommandHandlerIDMap;
 	CCommandHandlerMap commandHandlerMap;
-	
+
 public:
 	// ICommandHandlerContainer
 	void Register( unsigned nType, unsigned nFirstCommandID, unsigned nLastCommandID );

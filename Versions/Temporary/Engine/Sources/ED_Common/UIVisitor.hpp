@@ -33,7 +33,7 @@ class CUIVisitor : public IUIVisitor
 	}
 
 public:
-	void SetG2DView( NGScene::I2DGameView *_p2DView, const CVec2 &vScreen ) 
+	void SetG2DView( NGScene::I2DGameView *_p2DView, const CVec2 &vScreen )
 	{
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( vScreen.x, vScreen.y );
 
@@ -61,7 +61,7 @@ public:
 	{
 		p2DView->CreateDynamicRects( pTexture, rects, CTPoint<float>( 0,0 ), rcClip );
 	}
-	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, 
+	void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 	{
 		ASSERT( 0 ); // not implemented

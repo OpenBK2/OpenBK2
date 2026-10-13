@@ -15,7 +15,7 @@ struct ISound;
 class CWindowConsole : public CWindow, public IConsole
 {
 	OBJECT_BASIC_METHODS(CWindowConsole)
-	
+
 	CUIMORegConttainer impotantMsgs;
 
 	struct SColorString
@@ -30,11 +30,11 @@ class CWindowConsole : public CWindow, public IConsole
 		SColorString() : dwColor( 0xffffffff ) {  }
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth );
 	};
-	
+
 	typedef std::vector<std::wstring> CVectorOfStrings;
 	typedef std::vector<SColorString> CVectorOfColorStrings;
 	typedef std::unordered_set<std::string> CConsoleFunctions;
-	
+
 	ZDATA_ (CWindow)
 	CDBPtr<NDb::SWindowConsoleShared> pShared;
 	CPtr<NDb::SWindowConsole> pInstance;
@@ -71,10 +71,10 @@ public:
 	bool OnCtrlEnd( const struct SGameMessage &msg );
 	bool OnPgUp( const struct SGameMessage &msg );
 	bool OnPgDn( const struct SGameMessage &msg );
-	
+
 	bool OnKeyDown( const SGameMessage &msg );
 	bool OnChar( const SGameMessage &msg );
-	
+
 	bool OnShowConsole( const struct SGameMessage &msg );
 
 	virtual void Reposition( const CTRect<float> &rcParent );
@@ -83,12 +83,12 @@ public:
 	virtual void Segment( const int timeDiff );
 	//virtual void RegisterObservers();
 
-	virtual void Init();	
+	virtual void Init();
 
 	//virtual int operator&( IBinSaver &saver );
 };
 
-class CDebugSingleton : public IDebugSingleton 
+class CDebugSingleton : public IDebugSingleton
 {
 	OBJECT_BASIC_METHODS( CDebugSingleton )
 	CObj<IWindow> pConsole;

@@ -112,10 +112,10 @@ namespace NMapInfoEditor
 				nFlags = rControllerChangeInfo.nFlags;
 			}
 			return *this;
-		}	
+		}
 	};
 	typedef std::list<NMapInfoEditor::SControllerChangeInfo> CControllerChangeInfoList;
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SObjectLoadInfo
 	{
@@ -145,7 +145,7 @@ namespace NMapInfoEditor
 				nFrameIndex( -1 ),
 				nPlayer( 0 ),
 				fHP( 1.0f ) {}
-		virtual ~SObjectLoadInfo() {}	
+		virtual ~SObjectLoadInfo() {}
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,13 +169,13 @@ namespace NMapInfoEditor
 				fDirection( 0.0f ),
 				//
 				nFrameIndex( -1 ),
-				nPlayer( 0 ), 
+				nPlayer( 0 ),
 				fHP( 1.0f ),
 				//
 				bFitToGrid( false ),
 				bRotateTo90Degree( false ) {}
 
-		virtual ~SObjectCreateInfo() {}	
+		virtual ~SObjectCreateInfo() {}
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ namespace NMapInfoEditor
 		bool bFitToGrid;
 		bool bRotateTo90Degree;
 		//
-		virtual ~SObjectEditInfo() {}	
+		virtual ~SObjectEditInfo() {}
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,10 +204,10 @@ namespace NMapInfoEditor
 		{
 			if ( pMapInfo != 0 )
 			{
-				roadList = pMapInfo->roads;	
-				riverList = pMapInfo->rivers;	
-				cragList = pMapInfo->crags;	
-				lakeList = pMapInfo->lakes;	
+				roadList = pMapInfo->roads;
+				riverList = pMapInfo->rivers;
+				cragList = pMapInfo->crags;
+				lakeList = pMapInfo->lakes;
 				coast = pMapInfo->coast;
 				bHasCoast = pMapInfo->bHasCoast;
 				vCoastMidPoint = pMapInfo->vCoastMidPoint;
@@ -269,7 +269,7 @@ namespace NMapInfoEditor
 		}
 		//
 		bool RemoveVSO( CMapInfoController::SVSOUndoData::EVSOType eVSOType, int nVSOID )
-		{	
+		{
 			if ( CVSOInstanceList *pVSOInstanceList = GetVSOList( eVSOType ) )
 			{
 				for ( int nVSOIndex = 0; nVSOIndex < pVSOInstanceList->size(); ++nVSOIndex )

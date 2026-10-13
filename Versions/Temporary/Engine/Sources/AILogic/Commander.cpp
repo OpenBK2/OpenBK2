@@ -10,11 +10,11 @@
 extern NAI::CTimeCounter timeCounter;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CCommander::STaskCalcSeverityPredicate::STaskCalcSeverityPredicate()
-: nNumberNegative( 0 ), 
+: nNumberNegative( 0 ),
 	fSeverityNegative( 0 ),
 	nNumberPositive( 0 ),
 	fSeverityPositive( 0 )
-{  
+{
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const float CCommander::STaskCalcSeverityPredicate::GetSeverity() const
@@ -35,9 +35,9 @@ CCommander::CCommander()
 {
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-float CCommander::GetMeanSeverity() const 
-{ 
-	return fMeanSeverity; 
+float CCommander::GetMeanSeverity() const
+{
+	return fMeanSeverity;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCommander::Segment()
@@ -54,7 +54,7 @@ void CCommander::Segment()
 	// забрать всех работников у завершенных задач
 	STakeWorkersPredicate takeWorkers( this );
 	for_each( finishedFirst, tasks.end(), takeWorkers );
-	
+
 	// удалить завершенные задачи
 	tasks.erase( finishedFirst, tasks.end() );
 
@@ -67,19 +67,19 @@ void CCommander::Segment()
 	calcSeverity = for_each( tasks.begin(), tasks.end(), calcSeverity );
 	fMeanSeverity = calcSeverity.GetSeverity();
 
-	
+
 	// у тасков, которых все хорошо попытаться забрать лишние юниты
 	for ( Tasks::iterator i = tasks.begin(); i != tasks.end(); ++i )
 		(*i)->ReleaseWorker( this, calcSeverity.nNumberNegative ? -1.0f : fMeanSeverity );
-	
 
-	if ( !tasks.empty() ) 
+
+	if ( !tasks.empty() )
 	{
 		for ( Tasks::iterator it = tasks.end(); ; )
 		{
 			--it;
 			(*it)->AskForWorker( this, fMeanSeverity );
-			if ( it == tasks.begin() ) 
+			if ( it == tasks.begin() )
 				break;
 		}
 	}
@@ -111,7 +111,7 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 		SCalcRatingPredicate calcRating( pEn, eType );
 		for_each( units.begin(), units.end(), calcRating );
 		sort( units.begin(), units.end(), calcRating );
-		
+
 		bool bNeedMore = true;
 		for ( int i = 0; i < units.size(); ++i )
 		{
@@ -140,7 +140,7 @@ void CCommander::EnumWorkersInternal( const enum EForceType eType, IWorkerEnumer
 	{
   	SGeneralHelper::SFindByEnumeratorPredicate pr( pEn, eType );
 		CommonUnits::iterator suitable = remove_if( pUnits->begin(), pUnits->end(), pr );
-		
+
 		bool bNeedMore = true;
 		for ( CommonUnits::iterator it = suitable; it != pUnits->end() && bNeedMore; )
 		{

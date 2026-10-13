@@ -134,10 +134,10 @@ void CSupremeBeing::UpdateEnemyUnitInfo( CAIUnitInfoForGeneral *pInfo,
 
 	if ( nGeneralParty == 1 && generals.find( nGeneralParty ) != generals.end() )
 	{
-		generals[nGeneralParty]->UpdateEnemyUnitInfo( 
+		generals[nGeneralParty]->UpdateEnemyUnitInfo(
 			pInfo,
 			lastVisibleTimeDelta, vLastVisiblePos,
-			lastAntiArtTimeDelta, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt 
+			lastAntiArtTimeDelta, vLastVisibleAntiArtCenter, fDistToLastVisibleAntiArt
 		);
 	}
 }

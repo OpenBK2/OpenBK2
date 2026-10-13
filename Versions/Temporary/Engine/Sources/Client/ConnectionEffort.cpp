@@ -41,7 +41,7 @@ CConnectionEffort* CreateFirstClientEffort( const int nMyServerID, const int nCl
 	return new CSimpleClientEffort( nMyServerID, nClientServerID, pNet, szServerIP, nServerPort, nGameNetVersion, nTimeOut );
 }
 
-CConnectionEffort* CreateFirstServerEffort( const int nMyServerID, const int nClientServerID, 
+CConnectionEffort* CreateFirstServerEffort( const int nMyServerID, const int nClientServerID,
 	const std::string &szClientIP, const int nClientPort, CNet *pNet, CNet *pAcceptGamersNet )
 {
 	return new CSimpleServerEffort( nMyServerID, nClientServerID, szClientIP, nClientPort, pNet, pAcceptGamersNet );

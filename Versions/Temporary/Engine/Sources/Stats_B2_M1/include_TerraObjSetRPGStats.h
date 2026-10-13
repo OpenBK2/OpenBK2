@@ -11,9 +11,9 @@ virtual const CVec2& GetOrigin( const int nIndex = -1 ) const { return segments[
 virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const { return segments[nIndex].passability; }
 
 virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const { return segments[nIndex].vVisOrigin; }
-virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const 
-{ 
-	return segments[nIndex].visibility; 
+virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
+{
+	return segments[nIndex].visibility;
 }
 //
 

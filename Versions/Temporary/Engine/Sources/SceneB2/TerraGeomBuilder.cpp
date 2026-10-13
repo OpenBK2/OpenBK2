@@ -14,10 +14,10 @@ void CTerraGen::GenerateTerrain()
 
 	terrainInfo.heights.SetSizes( pDesc->nNumPatchesX * DEF_PATCH_SIZE + 1, pDesc->nNumPatchesY * DEF_PATCH_SIZE + 1 );
 	terrainInfo.heights.FillEvery( DEF_TERRA_HEIGHT );
-	//	
+	//
 	terrainInfo.addHeights.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	terrainInfo.addHeights.FillEvery( 0.0f );
-	//	
+	//
 	terrainInfo.waterAddHeights.SetSizes( terrainInfo.heights.GetSizeX(), terrainInfo.heights.GetSizeY() );
 	terrainInfo.waterAddHeights.FillEvery( 0.0f );
 	//
@@ -69,7 +69,7 @@ void CTerraGen::ResetTile( const int nTileX, const int nTileY )
 	tile.addHeights[1] = terrainInfo.riverHeights[nTileY][nTileX + 1] + terrainInfo.addHeights[nTileY][nTileX + 1];
 	tile.addHeights[2] = terrainInfo.riverHeights[nTileY + 1][nTileX + 1] + terrainInfo.addHeights[nTileY + 1][nTileX + 1];
 	tile.addHeights[3] = terrainInfo.riverHeights[nTileY + 1][nTileX] + terrainInfo.addHeights[nTileY + 1][nTileX];
-	
+
 	tile.triangles.resize( 2 );
 	tile.triangles[0].i1 = 0;
 	tile.triangles[0].i2 = 1;

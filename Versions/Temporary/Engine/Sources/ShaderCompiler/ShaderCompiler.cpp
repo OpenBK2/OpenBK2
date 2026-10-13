@@ -55,7 +55,7 @@ struct SProcedure
 };
 
 const char* pszCmds[] = {
-"add", "dp3", "dp4", "dst", "expp", "lit", "logp", "mad", "max", "min", "mov", "mul", "rcp", 
+"add", "dp3", "dp4", "dst", "expp", "lit", "logp", "mad", "max", "min", "mov", "mul", "rcp",
 "rsq", "sge", "slt", "sub", "exp", "frc", "log", "m3x2", "m3x3", "m3x4", "m4x3", "m4x4", 0 };
 
 const char* pszRegs[] = {
@@ -504,7 +504,7 @@ static void ParseFile( char *pszFile )
 	int nNextLine;
 	nLine = 1;
 	parseState = NONE;
-	SProgram prog; 
+	SProgram prog;
 	CProgramParser pparser( prog );
 	for ( ; pszParse[0]; pszParse = pNextLine, nLine = nNextLine )
 	{
@@ -636,7 +636,7 @@ static void ParseFile( char *pszFile )
 			vsc.GenerateShader( &szShader, prog.procs[k].szName.c_str() );
 			// has no effect on nVidia & ATi; looks like drivers already do this
 			//NVSOptimize::OptimizeVertexShader( &v.szShader, v.szShader );
-			
+
 			CompileShader( szShader.c_str(), v.szName, "vertex", &v.vsShader11 );
 
 			vertexShaders.push_back( v );

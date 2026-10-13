@@ -64,8 +64,8 @@ class ED_COMMON_EXPORT CWindowSimpleSharedEditor : public CEditorBase, public CD
 	//friend class CWindowSimpleSharedState;
 	OBJECT_NOCOPY_METHODS( CWindowSimpleSharedEditor );
 	//Данные специфичные для данного редактрора
-	
-	// Данные общего назначения 
+
+	// Данные общего назначения
 	std::vector<SEditorState> states;
 	CPtr<CWindowSimpleSharedController> pUndoController;
 	CPtr<IManipulator> pUndoManipulator;
@@ -92,15 +92,15 @@ public:
 	void RemoveViewManipulator();
 
 	// Создание Undo Operation
-	CWindowSimpleSharedController* CreateUndoController() 
-	{ 
-		return CDefaultView::CreateController<CWindowSimpleSharedController>( static_cast<CWindowSimpleSharedController*>( 0 ) ); 
+	CWindowSimpleSharedController* CreateUndoController()
+	{
+		return CDefaultView::CreateController<CWindowSimpleSharedController>( static_cast<CWindowSimpleSharedController*>( 0 ) );
 	}
 
 	//CDefaultView
 	void Undo( IController* pController );
 	void Redo( IController* pController );
-	
+
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }

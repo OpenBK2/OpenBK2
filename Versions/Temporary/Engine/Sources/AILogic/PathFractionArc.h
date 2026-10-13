@@ -24,11 +24,11 @@ public:
 	virtual CVec3 GetPoint( const float fDist ) const;
 	virtual CVec3 GetTangent( const float fDist ) const;
 	virtual CVec3 GetNormale( const float fDist ) const;
-	virtual float GetLength() const 
-	{ 
-		return fLength; 
+	virtual float GetLength() const
+	{
+		return fLength;
 	}
-	
+
 	virtual void GetSimplePath( CPathList *pPaths ) { NI_ASSERT( false, "wrong call" ); }
 };
 

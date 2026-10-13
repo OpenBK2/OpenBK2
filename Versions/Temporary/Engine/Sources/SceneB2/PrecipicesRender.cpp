@@ -387,7 +387,7 @@ void CTerraGen::CreatePrecipiceMesh( STerrainInfo::SPrecipice *pCurPrec, const b
 					}
 				}
 			}
-			
+
 			if ( (nPrevVertsNum == 0) || (nCurVertsNum == 0) || (pCurPrec->nodes[i] == pCurPrec->nodes[i - 1]) || (fMaxH <= (fMinH + DEF_MIN_PRECIPICE_HEIGHT)) )
 			{
 				if ( peakPoints.size() >= 2 )

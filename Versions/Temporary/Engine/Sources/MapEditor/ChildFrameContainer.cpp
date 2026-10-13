@@ -92,6 +92,6 @@ void CChildFrameContainer::Leave()
 	}
 }
 
-// basement storage  
+// basement storage
 
 

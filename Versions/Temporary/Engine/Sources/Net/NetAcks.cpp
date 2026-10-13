@@ -98,7 +98,7 @@ void CAckTracker::RegisterRTT( float _fRTT )
 	if ( fLastPingUpdateTime + TIME_TO_UPDATE_PING < fCurrentTime )
 	{
 		fPing = fSumPktRTT4Period / nPingPacketsReceived;
-		
+
 		fLastPingUpdateTime = fCurrentTime;
 		fSumPktRTT4Period = 2 * fPing;
 		nPingPacketsReceived = 2;
@@ -114,7 +114,7 @@ void CAckTracker::Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> 
 	//fUpdateTimeElapsed += fDeltaTime;
 
 	fCurrentTime += fDeltaTime;
-	// 
+	//
 	float fRTTDiscard = fAvrgRTT + GetRTTDisp() * 3; // 99% probability if normal distribution
 	// check network capacity
 	//float fMaxTimeElapsed = Max( fUpdateTimeDelay * 1.2f, fRTTDiscard );
@@ -273,7 +273,7 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 {
 	PACKET_ID nReceived;
 	UPDATE_ID nCurUpdate;
-	
+
 	pAcked->resize( 0 );
 	fTimeSinceLastRecv = 0;
 	//
@@ -293,7 +293,7 @@ bool CAckTracker::ReadAcks( std::vector<PACKET_ID> *pAcked, CBitStream &bits )
 	// check is not packet too obsolete
 	if ( !CheckRecvPacketNumber( nCurUpdate ) )
 		return false;
-	
+
 	// receiving acks
 	ReceivePktAcks( pAcked, bits );
 	//bHasNewPacketToAck = true;
@@ -336,13 +336,13 @@ PACKET_ID CAckTracker::WrtieAcks( CBitStream *pBits, int nPktSize )
 	// const unsigned char *pStart = bits.GetCurrentPtr();
 	PACKET_ID nPktCurrent = nPktSent++;
 	(*pBits).Write( &nPktCurrent, sizeof(PACKET_ID) );
-	
+
 	// acks on received packets
 	SendPktAcks( pBits );
-	
+
 	CUpdate &update = sentUpdates.emplace_back();
 	update.fTimeCreated = fCurrentTime;
-	update.nPktNumber = nPktCurrent; 
+	update.nPktNumber = nPktCurrent;
 	update.bOnTheWindowEdge = nFlyPackets + 1 > fWindow;
 
 //	bHasNewPacketToAck = false;
@@ -365,7 +365,7 @@ void CAckTracker::PacketLost( PACKET_ID pktID )
 #ifdef LOG
 			std::cout << "SEND FAILURE, new window=" << fWindow << "packets" << std::endl;
 #endif
-			it = sentUpdates.erase( it );			
+			it = sentUpdates.erase( it );
 		}
 		else
 			++it;

@@ -115,7 +115,7 @@ class CWeatherVisual : public CFuncBase<bool>
 
 public:
 	CWeatherVisual() {}
-	CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *pScreenFader, 
+	CWeatherVisual( const NDb::SWeatherDesc *_pWeatherDesc, CFuncBase<STime> *_pTimer, IFullScreenFader *pScreenFader,
 		CDBPtr<NDb::SAmbientLight> pNormalWeatherLight, CDBPtr<NDb::SAmbientLight> pBadWeatherLight );
 
 	NGScene::IGameView::SMeshInfo MakeMeshInfo();

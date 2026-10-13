@@ -55,9 +55,9 @@ struct SBoundCalcer
 	void Make( SBound *pRes ) const
 	{
 		if ( IsEmpty() )
-			pRes->BoxInit( CVec3(0,0,0), CVec3(0,0,0) ); 
+			pRes->BoxInit( CVec3(0,0,0), CVec3(0,0,0) );
 		else
-			pRes->BoxInit( ptMin, ptMax ); 
+			pRes->BoxInit( ptMin, ptMax );
 	}
 	void Make( SSphere *pRes ) const
 	{

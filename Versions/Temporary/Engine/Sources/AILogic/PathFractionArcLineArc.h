@@ -22,8 +22,8 @@ class CPahtFractionArcLineArc : public CPathFractionComplexBase
 	void Init( const CDirectedCircle &_start, const CVec2 &_vStart1, const CVec2 &_vStart2,
 		const CDirectedCircle &_finish, const CVec2 &_vFinish1, const CVec2 &_vFinish2, const float _fZ );
 
-	void TryPath( const CVec2 &x0, const CVec2 &x1, 
-		const CDirectedCircle &r1, const CDirectedCircle &o1, 
+	void TryPath( const CVec2 &x0, const CVec2 &x1,
+		const CDirectedCircle &r1, const CDirectedCircle &o1,
 		CPahtFractionArcLineArc *pPath, CPahtFractionArcLineArc *pBest,
 		bool *bInitted, const float _fZ ) const;
 

@@ -28,7 +28,7 @@ int CEffectorMoveTo::operator&( IBinSaver &saver )
 }
 
 void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
-{ 
+{
 	const NDb::SUISMoveTo *pCmd( checked_cast<const NDb::SUISMoveTo*>( _pCmd ) );
 	CParam<CVec2> vOffset( pCmd->vOffset );
 	CParam<float> moveTime( pCmd->fMoveTime );
@@ -56,7 +56,7 @@ void CEffectorMoveTo::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 	NI_ASSERT( pElement != 0, fmt::format( "no element \"{}\"", elementToMove.Get() ) );
 	if ( pElement )
 	{
-		if ( fMoveTime == 0 ) 
+		if ( fMoveTime == 0 )
 		{
 			bFinished = true;
 			return;
@@ -82,11 +82,11 @@ void CEffectorMoveTo::Reverse()
 {
 	std::pair<CVec2,int> res( GetCur() );
 	bForward = !bForward;
-			
+
 	const CVec2 vTmp( vMoveFrom );
 	vMoveFrom = vMoveOffset + vMoveFrom;
 	vMoveOffset = -vMoveOffset;
-	
+
 	fElapsedTime = fabs(res.first - vMoveFrom) / fabs( vSpeed );
 
 	//fMoveTime = fElapsedTime;

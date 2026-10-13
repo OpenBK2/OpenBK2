@@ -12,7 +12,7 @@
 class COMMON_RTS_AI_EXPORT CStaticMapHeights : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CStaticMapHeights );
-	
+
 	struct SOldHeights
 	{
 		int nX1 = 0, nY1 = 0;
@@ -48,7 +48,7 @@ public:
 	//void LoadNormals( const struct ::STerrainAIInfo *pTerrainAIInfo );
 	// init by plane with 0 height
 	// map size - in AI TILES
-	
+
 	// update given range of height
 	// для UpdateHeights массив "heghts" должен быть размером с карту
 	void UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &heghts );

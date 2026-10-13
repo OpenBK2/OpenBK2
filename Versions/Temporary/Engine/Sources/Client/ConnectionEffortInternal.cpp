@@ -43,7 +43,7 @@ CSimpleClientEffort::CSimpleClientEffort( const int _nMyServerID, const int _nCl
 
 IConnection* CSimpleClientEffort::CreateConnection() const
 {
-	return 
+	return
 		eState == ES_SUCCESS ? new CSimpleConnection( pConnet2PlayersNet, true, nClientServerID, 0, nMyServerID ) : 0;
 }
 
@@ -88,7 +88,7 @@ bool CSimpleClientEffort::ProcessClientAccepted( CGameConnectingClientAccepted *
 	{
 		CPtr<CNetPacket> pPacket = new CWant2Connect2Client( 0, nClientServerID, nClientServerID );
 		pNet->SendPacket( pPacket );
-		
+
 		return true;
 	}
 	else

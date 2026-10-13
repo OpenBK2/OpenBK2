@@ -43,7 +43,7 @@ public:
 	TServerID GetUniqueServerID() const { return uniqueServerID; }
 
 	CLoginSupport( APPLICATION_ID _applicationID );
-	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; } 
+	void Init( APPLICATION_ID _applicationID ) { applicationID = _applicationID; }
 private:
 	struct SAcceptedLogin
 	{

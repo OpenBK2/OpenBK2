@@ -16,7 +16,7 @@
 
 // CInterfaceMPWaitPlayers
 
-CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() : 
+CInterfaceMPWaitPlayers::CInterfaceMPWaitPlayers() :
 	CInterfaceMPScreenBase( "MPWaitPlayers", "mp_wait_players" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_WAITING_INFO, SMPUILagInfoMessage, &CInterfaceMPWaitPlayers::OnLagInfoMessage );

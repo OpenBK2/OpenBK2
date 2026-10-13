@@ -7,11 +7,11 @@
 
 ED_COMMON_EXPORT int CalculateGrannyTypedefOffset( granny_data_type_definition *pType, const char *pName );
 int CalculateGrannyMemberArraySize( granny_data_type_definition *pType, const char *pName );
-ED_COMMON_EXPORT bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo ); 
-ED_COMMON_EXPORT bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo, const std::string &szMeshName ); 
+ED_COMMON_EXPORT bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo );
+ED_COMMON_EXPORT bool GetGrannyMeshBoundingBox( CVec3 *pvMin, CVec3 *pvMax, granny_file_info *pInfo, const std::string &szMeshName );
 void GetVerticesFromGrannyMesh( granny_mesh *pMesh, std::vector<CVec3> *pVertexList );
 void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, std::vector<STriangle> *pTriangleList );
-ED_COMMON_EXPORT int GetGrannyAnimationLength( granny_file_info *pInfo ); 
+ED_COMMON_EXPORT int GetGrannyAnimationLength( granny_file_info *pInfo );
 
 struct ED_COMMON_EXPORT SGrannyBoneAttributes
 {

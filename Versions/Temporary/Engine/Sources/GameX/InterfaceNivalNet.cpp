@@ -28,7 +28,7 @@ const int nMIN_USERNAME = 4;
 
 // CInterfaceNivalNet
 
-CInterfaceNivalNet::CInterfaceNivalNet() : 
+CInterfaceNivalNet::CInterfaceNivalNet() :
 	CInterfaceMPScreenBase( "MPNivalNet", "nival_net" ),
 	eState( ES_NORMAL )
 {
@@ -37,13 +37,13 @@ CInterfaceNivalNet::CInterfaceNivalNet() :
 
 CInterfaceNivalNet::~CInterfaceNivalNet()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
 bool CInterfaceNivalNet::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
@@ -52,13 +52,13 @@ bool CInterfaceNivalNet::Init()
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	if ( AddUIScreen(pScreen, "MPNivalNet", this) == false )
 		return false;
-	
+
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	if ( !pMain )
 		return false;
-	
+
 	MakeInterior();
-	
+
 	return true;
 }
 
@@ -74,7 +74,7 @@ void CInterfaceNivalNet::MakeInterior()
 	pFrameRegister = GetChildChecked<IWindow>( pMain, "Registration", true );
 	pFrameLogin = GetChildChecked<IWindow>( pMain, "Login", true );
 	pFrameRecovery = GetChildChecked<IWindow> ( pMain, "Recovery", true );
-	
+
 	pLogin = GetChildChecked<IButton>( pFrameLogin, "ButtonLogin", true );
 	pBack = GetChildChecked<IButton>( pFrameLogin, "ButtonBack", true );
 	pRegistration = GetChildChecked<IButton>( pFrameLogin, "ButtonRegister", true );
@@ -91,7 +91,7 @@ void CInterfaceNivalNet::MakeInterior()
 
 	pLoginLoginEdit = GetChildChecked<IEditLine>( pMain, "edit_login_login", true );
 	pLoginPasswordEdit = GetChildChecked<IEditLine>( pMain, "edit_login_password", true );
-	
+
 	pUserNameRecovery = GetChildChecked<IEditLine>( pFrameRecovery, "edit_username_recovery", true );
 
 	pCDKey = GetChildChecked<IEditLine>( pFrameRegister, "edit_CDKey", true );
@@ -110,8 +110,8 @@ void CInterfaceNivalNet::MakeInterior()
 
 	if ( pFrameRecovery )
 		pFrameRecovery->ShowWindow( false );
-	
-	
+
+
 	if ( pFrameRegister )
 		pFrameRegister->ShowWindow( false );
 	eState = ES_NORMAL;
@@ -124,10 +124,10 @@ void CInterfaceNivalNet::UpdateInterior()
 	pFrameRecovery->ShowWindow( eState == ES_RECOVER );
 	switch ( eState )
 	{
-		case ES_NORMAL: 
+		case ES_NORMAL:
 		case ES_LOGIN: UpdateInteriorLogin();	break;
 		case ES_REGISTER: UpdateInteriorRegister(); break;
-		case ES_RECOVER: UpdateInteriorRecover(); 
+		case ES_RECOVER: UpdateInteriorRecover();
 	}
 }
 
@@ -160,16 +160,16 @@ bool CInterfaceNivalNet::Execute( const std::string &szSender, const std::string
 {
 	if ( szReaction == "back" )
 		return OnBackReaction( szSender );
-		
+
 	if ( szReaction == "login" )
 		return OnLoginReaction( szSender );
 
 	if ( szReaction == "login_register" )
-	{		
+	{
 		return OnLoginRegister();
 	}
 	if ( szReaction == "login_recovery" )
-	{		
+	{
 		return OnLoginRecovery();
 	}
 
@@ -224,13 +224,13 @@ bool CInterfaceNivalNet::OnConnectResultMessage( SMPUIConnectResultMessage *pMsg
 		pWaitWindow->ShowWindow( false );
 
 		eState = ES_NORMAL;
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 			GetScreen()->GetTextEntry( pMsg->szTextTag ) ).c_str() );
 	}
 
 	UpdateInterior();
-	
+
 	return true;
 }
 
@@ -240,7 +240,7 @@ bool CInterfaceNivalNet::OnBackReaction( const std::string &szSender )
 
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MULTIPLAYER_MENU, "" );
-	
+
 	return true;
 }
 
@@ -251,7 +251,7 @@ bool CInterfaceNivalNet::OnLoginReaction( const std::string &szSender )
 		std::wstring wszLogin = pLoginLoginEdit->GetText();
 		if ( wszLogin.empty() )
 		{
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 				GetScreen()->GetTextEntry( "CONNECT_ERR_NO_NICK" ) ).c_str() );
 			return true;
 		}
@@ -260,7 +260,7 @@ bool CInterfaceNivalNet::OnLoginReaction( const std::string &szSender )
 		pWaitWindow->ShowWindow( true );
 
 		eState = ES_LOGIN;
-		Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILoginNivalNetMessage( 
+		Singleton<IMPToUIManager>()->AddUIMessage( new SMPUILoginNivalNetMessage(
 			wszLogin, pLoginPasswordEdit->GetText(), ( pRememberPassword->GetState() == 1 ) ) );
 
 		UpdateInterior();
@@ -313,7 +313,7 @@ bool CInterfaceNivalNet::CheckRegistrationData( std::string &szReason )
 		szReason = "REGISTER_ERR_EMAILS_DIFFER";
 		return false;
 	}
-	if ( wszEmail1.size() == 0 || wszEmail2.size() == 0 ) 
+	if ( wszEmail1.size() == 0 || wszEmail2.size() == 0 )
 	{
 		szReason = "REGISTER_ERR_NO_EMAIL";
 		return false;
@@ -337,7 +337,7 @@ bool CInterfaceNivalNet::IsEmailValid( const std::wstring &wszEmail )
 
 	if ( parts[0].empty() || parts[1].empty() )
 		return false;
-	
+
 	return true;
 }
 
@@ -346,7 +346,7 @@ bool CInterfaceNivalNet::OnRegisterOkReaction( const std::string &szSender )
 	std::string szRejectReasonCode;
 	if ( !CheckRegistrationData( szRejectReasonCode ) )
 	{
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 			GetScreen()->GetTextEntry( szRejectReasonCode ) ).c_str() );
 		return true;
 	}
@@ -390,15 +390,15 @@ bool CInterfaceNivalNet::OnRecoveryCancelReaction( const std::string &szSender )
 
 bool CInterfaceNivalNet::OnRecoveryOkReaction( const std::string &szSender )
 {
-	
+
 	std::wstring text;
 	if ( pUserNameRecovery )
 		text = pUserNameRecovery->GetText();
 	// validate text
 	if ( text.empty() )
 	{
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 			std::wstring( L"Error: Empty user name" ) ).c_str() );
 		return true;
 	}

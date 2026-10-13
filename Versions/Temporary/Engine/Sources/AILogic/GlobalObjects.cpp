@@ -93,7 +93,7 @@ void NGlobalObjects::Clear()
 
 	theAAFeedBacks.Clear();
 	theExecutorContainer.Clear();
-	
+
 	theManuverBuilder.Clear();
 	theUnderConstructionObject.Clear();
 	theBridgeHeightsRemover.Clear();
@@ -111,8 +111,8 @@ void NGlobalObjects::Clear()
 
 class CGlobalSerializer
 {
-public: 
-	int operator&( IBinSaver &saver ); 
+public:
+	int operator&( IBinSaver &saver );
 private:
 };
 
@@ -141,17 +141,17 @@ int CGlobalSerializer::operator&( IBinSaver &saver )
 		saver.Add( 18, &theSupremeBeing );
 	}
 	saver.Add( 21, &theWeather );
-	
+
 	saver.Add( 22, &theDifficultyLevel );
 	saver.Add( 23, &theGraveyard );
 	saver.Add( 24, &theAAFeedBacks );
 	saver.Add( 25, &theExecutorContainer );
 
 	saver.Add( 29, &theManuverBuilder );
-	
+
 	if ( !saver.IsChecksum() )
 		saver.Add( 30, &theUnderConstructionObject );
-	
+
 	saver.Add( 31, &theBridgeHeightsRemover );
 	saver.Add( 32, &theBonusSystem );
 	saver.Add( 33, &thePatrolWaypoints );

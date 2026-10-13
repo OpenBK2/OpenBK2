@@ -12,7 +12,7 @@
 class CMissionReinf : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CMissionReinf );
-	
+
 	struct SReinfInfo
 	{
 		ZDATA
@@ -27,7 +27,7 @@ class CMissionReinf : public CObjectBase
 		CPtr<IWindow> pXPBarBg;
 		CPtr<IWindow> pIconEnabledWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pButton); f.Add(3,&pReinf); f.Add(4,&pIconWnd); f.Add(6,&pXPBar); f.Add(7,&pBadWeatherWnd); f.Add(8,&pIconDisabledWnd); f.Add(9,&chevrons); f.Add(10,&pXPBarBg); f.Add(11,&pIconEnabledWnd); return 0; }
-		
+
 		void ShowChevron( int nIndex );
 	};
 	struct SUnitInfo
@@ -97,9 +97,9 @@ class CMissionReinf : public CObjectBase
 	CPtr<IButton> pAutoShowReinfBtn;
 	bool bWasEnabled = false;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWorld); f.Add(3,&pNotifications); f.Add(4,&pReinfPanel); f.Add(6,&pProgress); f.Add(7,&pCount); f.Add(8,&pName); f.Add(9,&nameToTypes); f.Add(10,&reinfInfos); f.Add(11,&eSelected); f.Add(12,&bTrackMousePos); f.Add(13,&vMousePos); f.Add(14,&bAvailNotified); f.Add(16,&units); f.Add(17,&bFullInfoMode); f.Add(18,&pCommonInfo); f.Add(19,&pFullInfoWnd); f.Add(20,&pUnitFullInfo); f.Add(21,&pNoInfoView); f.Add(22,&bBadWeather); f.Add(23,&pRoundProgress); f.Add(24,&eSeason); f.Add(25,&pRoundProgressMask); f.Add(26,&nCalls); f.Add(27,&bDisabledByInterface); f.Add(29,&pReinfCountPanel); f.Add(30,&pRoller1); f.Add(31,&pRoller2); f.Add(32,&nPrevReinfCount); f.Add(33,&bIsOpen); f.Add(34,&bIsLight); f.Add(35,&textures); f.Add(36,&pToggleReinfBtn); f.Add(37,&bBlink); f.Add(38,&bBlinkFullTime); f.Add(39,&fBlinkStep); f.Add(40,&fBlinkDuration); f.Add(41,&fBlinkPeriod); f.Add(42,&pCallReinfModeBtn); f.Add(43,&pAutoShowReinfBtn); f.Add(44,&bWasEnabled); return 0; }
-	
+
 	NDb::EReinforcementType ePreSelected;
-	
+
 	NTimer::STime timeBlinkAbs;
 private:
 	void UpdateEnable();
@@ -113,28 +113,28 @@ private:
 	void SetFullInfoMode( bool bFullInfo );
 
 	void ShowReinfContents( const NDb::SReinforcement *pReinf );
-	
+
 	void NotifyAvailReinf();
 	void DisableNotifyAvailReinf();
 	void UpdateForcedAction();
-	
+
 	const NDb::SReinforcement* GetReinfContext( const NDb::EReinforcementType eType ) const;
 	const NDb::SReinforcementTypes* GetReinfTypes() const;
-	
+
 	NDb::EReinforcementType FindReinfInfo( const std::string &szName );
 	void UpdateReinfInfo();
 	bool CanCall( const NDb::EReinforcementType eType ) const;
 	bool IsAvia( const NDb::EReinforcementType eType ) const;
-	
+
 	int GetReinfCallsLeft() const;
 
 	void Update();
-	
+
 	void UpdateToggleButtonState();
 
 	void SetBlink( bool bBlink, bool bFullTime );
 	void UpdateBlink();
-	
+
 	bool HaveUnits() const;
 	bool IsAutoShowReinf() const;
 
@@ -146,14 +146,14 @@ private:
 public:
 	CMissionReinf();
 	~CMissionReinf();
-	
+
 	void Init( IScreen *pScr, CWorldClient *pWorld, IVisualNotifications *pNotifications, NDb::ESeason eSeason );
-	
+
 	void UpdateNewAvail();
 	void UpdateNewPoint( bool bIsPoints );
 
 	void Step();
-	
+
 	bool IsOpen() const { return bIsOpen; }
 	void Show();
 	void Select( const std::string &szSender );
@@ -183,7 +183,7 @@ public:
 	void OnReinfAutoShowReinf( bool bOn );
 
 	bool IsEnabled() const;
-	
+
 	void AfterLoad();
 };
 

@@ -18,7 +18,7 @@ enum EScenarioTrackerMissionTypes
 	STMT_NUM_ELEMENTS												= 9
 	/*
 
-	STMT_ENEMY_KILLED = _STMT_BEGIN_STATS,		  // KILLED ENEMYS NUMBER 
+	STMT_ENEMY_KILLED = _STMT_BEGIN_STATS,		  // KILLED ENEMYS NUMBER
 	STMT_ENEMY_KILLED_AI_PRICE							= 2,// AI PRICE OF KILLED ENEMYS
 
 	STMT_FRIENDLY_KILLED										= 3,// PLAYER'S UNITS KILLED NUMBER
@@ -58,7 +58,7 @@ enum EScenarioTrackerMissionTypes
 
 
 	// player's experience
-	STMT_PLAYER_EXPERIENCE									= 23,									
+	STMT_PLAYER_EXPERIENCE									= 23,
 
 
 

@@ -143,7 +143,7 @@ public:
 	CObj<CFileRequest> pData;
 	//vector<char> pData;
 	int nBytes;
-	
+
 	float fTEnd;
 	float fFrameRate;
 	int nParticles;

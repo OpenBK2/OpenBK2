@@ -84,15 +84,15 @@ public:
 		int nTris = 0;
 		float fAverageTriArea = 0.0f;
 		bool bIsLightmappable = false;
-		ZEND int operator&( IBinSaver &f ) { 
-			f.Add(2,&positions); 
-			f.Add(3,&verts); 
-			f.Add(4,&weights); 
-			f.Add(5,&posIndices); 
-			f.Add(6,&vertRefPositions); 
-			f.Add(7,&geometry); 
-			f.Add(8,&attributes); 
-			f.Add(9,&nTris); 
+		ZEND int operator&( IBinSaver &f ) {
+			f.Add(2,&positions);
+			f.Add(3,&verts);
+			f.Add(4,&weights);
+			f.Add(5,&posIndices);
+			f.Add(6,&vertRefPositions);
+			f.Add(7,&geometry);
+			f.Add(8,&attributes);
+			f.Add(9,&nTris);
 			f.Add(10,&fAverageTriArea);
 			f.Add(11,&bIsLightmappable);
 			return 0; }
@@ -108,7 +108,7 @@ public:
 	int nTris = 0;
 	float fAverageTriArea = 0.0f;
 	bool bIsLightmappable = false;
-	
+
 private:
 	void EstablishRefs();
 	void MergePositions();
@@ -117,7 +117,7 @@ private:
 	void Assign( const SData &data, std::vector<STriangle> *pGeom, bool bOptimizeVCache );
 
 public:
-	
+
 	void AssignDestructive(SBinData *pData)
 	{
 		std::swap( positions, pData->positions );
@@ -144,7 +144,7 @@ public:
 	    pData->fAverageTriArea = fAverageTriArea;
         pData->bIsLightmappable = bIsLightmappable;
 	}
-	CObjectInfo() : nTris(0), bIsLightmappable(true) {}	
+	CObjectInfo() : nTris(0), bIsLightmappable(true) {}
 	void Assign( const SData &data, bool bOptimizeVCache );
 	// will modify pData
 	void Assign( SData *pData, bool bOptimizeVCache );
@@ -164,7 +164,7 @@ public:
 	float GetAverageTriArea() { return fAverageTriArea; }
 	bool IsLightmappable() const { return bIsLightmappable; }
 	void SetLightmappable( bool _b ) { bIsLightmappable = _b; }
-	
+
 	bool IsEmpty() { return nTris == 0; }
 	void CalcBound( SBound *pRes );
 	void CalcBound( SSphere *pRes );

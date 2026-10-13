@@ -37,11 +37,11 @@ struct SAssertionDlgParams
 	SIgnoresList &ignores;
 	const char *pszExtInfo;
 	//
-	SAssertionDlgParams( const char *pszNewFileName, int nNewLineNumber, 
-		const char *pszNewCondition, const char *pszNewDescription, 
+	SAssertionDlgParams( const char *pszNewFileName, int nNewLineNumber,
+		const char *pszNewCondition, const char *pszNewDescription,
 		const std::vector<SCallStackEntry> &_entries, SIgnoresList &newIgnores, const char *szExtInfo )
-		: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ), 
-		szCondition( pszNewCondition ), szDescription( pszNewDescription ), 
+		: pszFileName( pszNewFileName ), nLineNumber( nNewLineNumber ),
+		szCondition( pszNewCondition ), szDescription( pszNewDescription ),
 		entries(_entries), ignores( newIgnores ), pszExtInfo( szExtInfo ) {  }
 };
 
@@ -52,7 +52,7 @@ static constexpr size_t nIntStrSize = std::numeric_limits<int>::digits10 + 1 + 1
 
 EBSUReport ShowAssertionDlg( HINSTANCE hInstance, HWND hWnd,
 																		const char *pszFileName, int nLineNumber,
-																		const char *_pszCondition, const char *_pszDescription, 
+																		const char *_pszCondition, const char *_pszDescription,
 																		const std::vector<SCallStackEntry> &entries, SIgnoresList &ignores,
 																		const char *pszExtInfo )
 {
@@ -96,12 +96,12 @@ inline SAssertionDlgParams *GetParams( LPARAM lParam )
 	return reinterpret_cast<SAssertionDlgParams*>(lParam);
 }
 
-static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam ) 
-{ 
+static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam )
+{
 	switch (message)
-	{ 
+	{
 	case WM_INITDIALOG:
-		{			
+		{
 			// Calculate splitter
 			RECT rcDlg, rc;
 			GetWindowRect( hwndDlg, &rcDlg );
@@ -175,14 +175,14 @@ static BOOL CALLBACK ReportAssertionDlgProc( HWND hwndDlg, unsigned message, WPA
 
 	case WM_COMMAND:
 		return ReportAssertionDlgProcCommand( hwndDlg, LOWORD(wParam), HIWORD(wParam), lParam );
-	} 
+	}
 	return false;
 }
 
 bool ReportAssertionDlgProcCommand( HWND hwndDlg, uint16_t wCtrlID, uint16_t wNotifCode, LPARAM lParam )
 {
 	switch(wCtrlID)
-	{ 
+	{
 	case IDC_ASSERTION_DETAILS:
 		{
 			SAssertionDlgParams *pParams = reinterpret_cast<SAssertionDlgParams*>( GetDlgUserData( hwndDlg ) );

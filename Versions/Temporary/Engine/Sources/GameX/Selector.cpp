@@ -80,7 +80,7 @@ CUserActions CSelector::MakeMultiClassActions()
 
 bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 {
-	const bool bAllUnitsCommand = ( 
+	const bool bAllUnitsCommand = (
 		eCommand == ACTION_COMMAND_MOVE_TO ||
 		eCommand == ACTION_COMMAND_REVERSE_TO ||
 		eCommand == ACTION_COMMAND_FOLLOW ||
@@ -100,11 +100,11 @@ bool CSelector::IsAllUnitsCommand( EActionCommand eCommand )
 
 		eCommand == ACTION_COMMAND_UNLOAD ||
 		eCommand == ACTION_COMMAND_LEAVE ||
-		
+
 		eCommand == ACTION_COMMAND_ENTER ||
 		eCommand == ACTION_COMMAND_LOAD ||
 		eCommand == ACTION_COMMAND_MECH_ENTER ||
-		
+
 		eCommand == ACTION_COMMAND_PARADE
 	);
 	return bAllUnitsCommand;
@@ -114,17 +114,17 @@ CSelector::CSelector()
 : groups( 10 ), eSelectionState( ssNone ), nCurrentAbilityGroup( -1 ), bUnloadMode( false ),
 	uaAllCommonActions( MakeCommonActions() ),
 	uaMultiClassActions( MakeMultiClassActions() ),
-	nMaxUnitSlots( 0 ), 
+	nMaxUnitSlots( 0 ),
 	nMaxUnitPerSlot( 0 ),
 	bNeedUpdateSelectedUnits( false ),
 	bNeedUpdatePreselectedObject( false ),
 	bNeedUpdateAbilityIcons( false ),
 	bNeedUpdateActionButtons( false ),
 	bNeedUpdateSelectionInterior( false )
-{ 
-	for ( int i = 0; i < groups.size(); ++i ) 
+{
+	for ( int i = 0; i < groups.size(); ++i )
 		groups[i].SetID( i );
-		
+
 	bSupportSingleSelection = NGlobal::GetVar( "mission_single_selection", 0 ) != 0;
 }
 
@@ -144,11 +144,11 @@ bool CSelector::SelectPrivate( CMapObj *_pMO, bool bSelect, bool bDeath )
 	CDynamicCast<CMOSelectable> pMO( _pMO );
 	if ( !pMO )
 		return false;
-	
+
 	if ( bSelect && !CanSelect( pMO ) )
 		return false;
 
-	if ( bSelect && !pMO->IsFriend() ) 
+	if ( bSelect && !pMO->IsFriend() )
 		return false;
 
 	IMOSquad *pSquad = 0;
@@ -174,7 +174,7 @@ bool CSelector::SelectPrivate( CMapObj *_pMO, bool bSelect, bool bDeath )
 	if ( bSelect == IsSelected( pMO ) )
 		return false;
 
-	if ( bSelect ) 
+	if ( bSelect )
 	{
 		if ( !CanAddObject( pMO ) )
 			return false;
@@ -184,7 +184,7 @@ bool CSelector::SelectPrivate( CMapObj *_pMO, bool bSelect, bool bDeath )
 
 		return true;
 	}
-	else 
+	else
 	{
 		newObjList.remove( pMO.GetPtr() );
 		for ( CMapObjectsVector::iterator it = objList.begin(); it != objList.end(); ++it)
@@ -338,7 +338,7 @@ void CSelector::DoneSelection( const bool bPreserveGroup, bool bKeepNumbers )
 	NInput::PostEvent( "mission_close_reinforcement", 0, 0 );
 
 	NInput::PostEvent( "new_reset_forced_action", 0, 0 );
-	
+
 	UpdateSelection( bPreserveGroup, bKeepNumbers );
 }
 
@@ -352,10 +352,10 @@ void CSelector::UpdateSelection( const bool bPreserveGroup, bool bKeepNumbers )
 			pMO->SetSelectionGroup( -1 );
 		}
   }
-	
-	if ( !newObjList.empty() ) 
+
+	if ( !newObjList.empty() )
 	{
-		for ( CMapObjectsList::iterator it = newObjList.begin(); it != newObjList.end(); ++it ) 
+		for ( CMapObjectsList::iterator it = newObjList.begin(); it != newObjList.end(); ++it )
 		{
 			// do smth for every new object in list
 		}
@@ -413,7 +413,7 @@ void CSelector::UpdateSelection( const bool bPreserveGroup, bool bKeepNumbers )
 
 		bUnloadMode = false;
 		int nSame = CalcAbilityGroups();
-			
+
 		SendUpdateSelectionInterior();
 		SetSelectionGroup( bPreserveGroup ? nSame : 0 );
 	}
@@ -438,7 +438,7 @@ int CSelector::CalcAbilityGroups()
 				nSame = vAbilityGroups.size()-1;
 			actionsFirst = actions;
 			nFirst = nIndex;
-		}  
+		}
 		nIndex++;
 	}
 
@@ -501,7 +501,7 @@ void CSelector::SetPreselection( CMapObj *_pMO )
 		{
 			if ( pBuilding->GetPassangersCount() == 0 && !pBuilding->IsKeyObject() )
 				pMO = 0;
-		}		
+		}
 	}
 	else
 	{
@@ -537,7 +537,7 @@ void CSelector::SetPreselection( CMapObj *_pMO )
 
 		if ( pMO->IsKeyObject() )
 		{
-			Scene()->AddKeyPointArea( CVec2(pMO->GetCenter().x, pMO->GetCenter().y), 
+			Scene()->AddKeyPointArea( CVec2(pMO->GetCenter().x, pMO->GetCenter().y),
 				NGlobal::GetVar("AI.TransportAndResupply.TakeStorageOwnershipRadius", 100), CVec3(0.5, 0.5, 0.5) );
 		}
 	}
@@ -555,7 +555,7 @@ void CSelector::SetPreselection( CMapObj *_pMO )
 void CSelector::UpdateUnitsIcons( bool bPreselection )
 {
 	NInput::PostEvent( "update_icon", -1, -1 );
-	
+
 	if ( objList.empty() )
 	{
 		bUnloadMode = false;
@@ -564,14 +564,14 @@ void CSelector::UpdateUnitsIcons( bool bPreselection )
 
 	bool bShowInterrior = false;
 	CMapObj *pMO = objList.front();
-	
+
 	if ( objList.size() == 1 )
 	{
 		IMOContainer *pContainer = dynamic_cast<IMOContainer*>( pMO );
 		if ( pContainer )
 			bShowInterrior = pContainer->NeedShowInterrior();
 	}
-	
+
 	if ( bShowInterrior )
 	{
 		std::vector<CMOSelectable*> units;
@@ -593,7 +593,7 @@ void CSelector::UpdateUnitsIcons( bool bPreselection )
 		const SSlot &slot = *it;
 		NInput::PostEvent( "update_icon", slot.objects[0]->GetID(), slot.objects.size() );
 	}
-	
+
 	if ( !bPreselection )
 		SetSelectionGroup( nCurrentAbilityGroup );
 }
@@ -689,7 +689,7 @@ void CSelector::AssignSelectionToGroup( int nIndex )
 		RemoveObjectFromGroup( groups[nIndex].GetList().front(), nIndex );
 	}
 	groups[nIndex].Clear();
-	for ( CMapObjectsVector::iterator it = objList.begin(); it != objList.end(); ++it) 
+	for ( CMapObjectsVector::iterator it = objList.begin(); it != objList.end(); ++it)
 	{
 		CMOSelectable *pMO = *it;
 		AddObjectToGroup( pMO, nIndex );
@@ -701,8 +701,8 @@ void CSelector::AssignGroupToSelection( int nIndex, bool bAddToCurrent )
 {
 	if ( groups[nIndex].GetList().empty() )
 		return; // выбор группы без юнитов не должен делать ничего, просто игнорируется
-		
-	if ( !bAddToCurrent ) 
+
+	if ( !bAddToCurrent )
 	{
 		Empty();
 	}
@@ -765,7 +765,7 @@ void CSelector::ReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable 
 		RemoveObjectFromGroup( pMO, nIndex );
 		AddObjectToGroup( pMO, nIndex );
 	}
-	
+
 	if ( pMOPattern->IsSelected() )
 	{
 		Select( pMOPattern, false );
@@ -800,7 +800,7 @@ int CSelector::FindSelectionGroup( CMOSelectable *pMO ) const
 void CSelector::GetGroupMembers( int nIndex, std::vector<CMOSelectable*> *pMembers )
 {
 	pMembers->clear();
-	for ( CMapObjectsList::const_iterator it = groups[nIndex].GetList().begin(); 
+	for ( CMapObjectsList::const_iterator it = groups[nIndex].GetList().begin();
 		it != groups[nIndex].GetList().end(); ++it )
 	{
 		CMOSelectable *pSO = *it;
@@ -821,7 +821,7 @@ void CSelector::GetGroupMembers( int nIndex, std::vector<CMOSelectable*> *pMembe
 	}
 }
 
-bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender, 
+bool CSelector::DoGroupCommand( CCommandsSender *pCommandsSender,
 															 const struct SAIUnitCmd *pCommand, bool bPlaceInQueue )
 {
 	if ( IsEmpty() || eSelectionState == ssEnemy )
@@ -991,7 +991,7 @@ void CSelector::GetActionsPrivate( CUserActions *pActions, bool bEnabledOnly )
 	for ( CMapObjectsVector::iterator it = objList.begin(); it != objList.end(); ++it )
 	{
 		CMOSelectable *pMO = *it;
-		
+
 		CUserActions actions;
 		if ( bEnabledOnly )
 			pMO->GetEnabledActions( &actions, ACTIONS_BY );
@@ -1021,7 +1021,7 @@ void CSelector::GetDisabledActions( CUserActions *pActions )
 	for ( CMapObjectsVector::iterator it = objList.begin(); it != objList.end(); ++it )
 	{
 		CMOSelectable *pMO = *it;
-		
+
 		CUserActions actions;
 		pMO->GetDisabledActions( &actions, ACTIONS_BY );
 		actionsCommon |= actions;
@@ -1194,7 +1194,7 @@ void CSelector::SelectSameSlots( const int nSlot )
 	{
 		std::vector< CPtr<CMOSelectable> > tmpObjects;
 		tmpObjects.resize( slots[nSlot].objects.size() );
-		for ( int i = 0; i < slots[nSlot].objects.size(); ++i ) 
+		for ( int i = 0; i < slots[nSlot].objects.size(); ++i )
 		{
 			tmpObjects[i] = slots[nSlot].objects[i];
 		}
@@ -1243,7 +1243,7 @@ void CSelector::SelectNextGroup()
 {
 	if ( vAbilityGroups.empty() || vAbilityGroups.size() == 1 )
 		return;
-	
+
 	const int nIndex = (nCurrentAbilityGroup ==  vAbilityGroups.size()-1) ? 0 : nCurrentAbilityGroup+1;
 	SetSelectionGroup( nIndex );
 }
@@ -1252,7 +1252,7 @@ void CSelector::SelectPrevGroup()
 {
 	if ( vAbilityGroups.empty() || vAbilityGroups.size() == 1 )
 		return;
-	
+
 	const int nIndex = (nCurrentAbilityGroup > 0) ? nCurrentAbilityGroup - 1 : vAbilityGroups.size() - 1;
 	SetSelectionGroup( nIndex );
 }
@@ -1297,7 +1297,7 @@ bool CSelector::IsSameType( const CMapObj *_pMO, const CMapObj *_pMO2 )
 		pMO = pInfantry->GetSquad();
 	if ( CDynamicCast<CMOUnitInfantry> pInfantry = pMO2 )
 		pMO2 = pInfantry->GetSquad();
-	return pMO->GetTypeID() == pMO2->GetTypeID() && 
+	return pMO->GetTypeID() == pMO2->GetTypeID() &&
 		pMO->GetStats() == pMO2->GetStats();
 }
 
@@ -1368,11 +1368,11 @@ const CMOSelectable* CSelector::GetFirstSlotUnit( int nSlot ) const
 {
 	if ( nSlot < 0 || nSlot >= slots.size() )
 		return 0;
-		
+
 	const SSlot &slot = slots[nSlot];
 	if ( slot.objects.empty() )
 		return 0;
-		
+
 	return slot.objects.front();
 }
 
@@ -1392,12 +1392,12 @@ void CSelector::FilterActions( CUserActions *pActionsBy, CMapObj *pMO ) const
 			break;
 		}
 	}
-		
+
 	if ( !bIsSameClass )
 	{
 		*pActionsBy &= uaMultiClassActions;
 	}
-	
+
 	if ( !pMO->IsFriend() )
 	{
 		pActionsBy->RemoveAction( NDb::USER_ACTION_FILL_RU );
@@ -1412,7 +1412,7 @@ void CSelector::AfterLoad()
 		(*it)->Select( true );
 
 	SetPreselection( 0 );
-	
+
 	Segment();
 }
 
@@ -1442,7 +1442,7 @@ int CSelector::operator&( IBinSaver &saver )
 	saver.Add( 25, &bNeedUpdateActionButtons );
 	saver.Add( 26, &bNeedUpdateSelectionInterior );
 	saver.Add( 27, &pPreselectedObject );
-	
+
 	return 0;
 }
 

@@ -20,7 +20,7 @@ extern CAntiArtilleryManager theAAManager;
 #define RETARGET_DELTA	10.0f
 
 CExecutorCounterFire::CExecutorCounterFire( CArtillery *_pUnit ) :
-pUnit( _pUnit ), CExecutor( TID_COUNTER_FIRE, 1000/SConsts::AI_SEGMENT_DURATION ), fSearchRadius( 0.0f ), 
+pUnit( _pUnit ), CExecutor( TID_COUNTER_FIRE, 1000/SConsts::AI_SEGMENT_DURATION ), fSearchRadius( 0.0f ),
 bBonusApplied( false ), vSearchCenter( VNULL2 ), vLastCirclePos( VNULL2 ), timeLastHeard( curTime )
 {
 	state.eState = EASS_READY_TO_ON;
@@ -70,7 +70,7 @@ int CExecutorCounterFire::Segment()
 {
 	if ( !IsExecutorValid() || !IsValid( pUnit ) )
 		return -1;					// The executor is to be deleted
-		
+
 	const EUnitStateNames eUnitState = pUnit->GetState()->GetName();
 	const NDb::SUnitSpecialAblityDesc *pSA = pUnit->GetUnitAbilityDesc( NDb::ABILITY_ANTIATRILLERY_FIRE );
 	if ( !pSA )
@@ -86,7 +86,7 @@ int CExecutorCounterFire::Segment()
 		ApplyBonus( false );
 		UpdateState();
 	}
-	else switch( state.eState ) 
+	else switch( state.eState )
 	{
 	case EASS_SWITCHING_ON:					//Need to choose target (or check if started firing)
 		{
@@ -167,7 +167,7 @@ int CExecutorCounterFire::Segment()
 			{					// Check if the circle moved since last time
 				const CVec2 vOldPos( vLastCirclePos );
 				vLastCirclePos = pCurrentTarget->GetLastRevealCenter( pUnit->GetParty() );
-				
+
 				if ( fabs2( vOldPos - vLastCirclePos ) > RETARGET_DELTA )			// Circle moved sufficiently, retarget
 				{
 					const CVec2 vNewPos = ( vLastCirclePos + vOldPos ) * 0.5f;
@@ -205,14 +205,14 @@ bool CExecutorCounterFire::NotifyEvent( const CExecutorEvent &event )
 		return false;
 	//end - Filter out wrong calls
 
-	switch( event.GetParam().eEventID ) 
+	switch( event.GetParam().eEventID )
 	{
 	case EID_ABILITY_SET_TARGET:
 		{
-			const CExecutorEventSpecialAbilitySetTarget *pEvSetTarget 
+			const CExecutorEventSpecialAbilitySetTarget *pEvSetTarget
 				= static_cast<const CExecutorEventSpecialAbilitySetTarget*>( pEv );
 			NI_ASSERT( pEvSetTarget, "Wrong event passed to executor (SetTarget expected)" );
-			if ( !pEvSetTarget ) 
+			if ( !pEvSetTarget )
 				return false;
 
 			state.eState = EASS_SWITCHING_ON;

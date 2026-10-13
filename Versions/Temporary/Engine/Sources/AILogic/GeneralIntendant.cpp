@@ -69,13 +69,13 @@ void CGeneralTaskToDefendStorage::CWaitForChangePlayer::Run()
 //*								CGeneralTaskToDefendStorage*
 //*******************************************************************
 
-CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage ( CBuilding * pStorage, const int nParty ) 
+CGeneralTaskToDefendStorage::CGeneralTaskToDefendStorage ( CBuilding * pStorage, const int nParty )
 : pStorage( pStorage ),
   fSeverity( 0 ),
 	nParty( nParty ),
 	//eState( TS_OPERATE ),
 	wRequestID( 0 )
-{  
+{
 	eState = EDI_FRIEND == theDipl.GetDiplStatusForParties( theDipl.GetNParty(pStorage->GetPlayer()), nParty ) ?
 					 TS_OPERATE : TS_RECAPTURE ;
 }
@@ -115,13 +115,13 @@ bool CGeneralTaskToDefendStorage::EnumWorker( class CCommonUnit *pUnit, const en
 	return false;
 }
 
-int CGeneralTaskToDefendStorage::NeedNBest( const enum EForceType eType ) const 
-{ 
+int CGeneralTaskToDefendStorage::NeedNBest( const enum EForceType eType ) const
+{
 	return (eType == FT_TRUCK_REPAIR_BUILDING ? 1 : 0);
 }
 
-float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const 
-{ 
+float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const
+{
 	switch( eType )
 	{
 	case FT_TRUCK_REPAIR_BUILDING:
@@ -130,7 +130,7 @@ float CGeneralTaskToDefendStorage::EvaluateWorkerRating( CCommonUnit * pUnit, co
 			const float fDist = fabs2( pStorage->GetCenter() - CVec3( pUnit->GetCenterPlain(),0 ) );
 			if ( fDist == 0.0f )
 				return 1;
-			return 1.0f / fDist; 
+			return 1.0f / fDist;
 		}
 
 		break;
@@ -159,7 +159,7 @@ void CGeneralTaskToDefendStorage::ReleaseWorker( ICommander *pManager, const flo
 		wRequestID = 0;
 	}
 
-	if ( IsValidObj( pRepairTransport ) && 
+	if ( IsValidObj( pRepairTransport ) &&
 			( eState == TS_FINISHED || pStorage->GetHitPoints() != 0 ) )
 	{
 		pManager->Give( pRepairTransport );
@@ -189,12 +189,12 @@ void CGeneralTaskToDefendStorage::Segment()
 	case TS_OPERATE:
 		if ( theDipl.GetNParty(pStorage->GetPlayer()) != nParty )
 			eState = TS_START_RECAPTURE;
-		else if ( pStorage->GetHitPoints()	== 0 ) 
+		else if ( pStorage->GetHitPoints()	== 0 )
 			eState = TS_START_REPAIR;
 
 		break;
 	case TS_START_RECAPTURE:
-		// storage was captured. 
+		// storage was captured.
 		// after some time we will ask for support ( to recapture storage )
 		RecordRandomCall();
 		if ( NRandom::Random( 0.0f, 1.0f ) < SGeneralConsts::RECAPTURE_STORAGE_PROBALITY )
@@ -221,7 +221,7 @@ void CGeneralTaskToDefendStorage::Segment()
 		break;
 	case TS_START_REPAIR:
 		RecordRandomCall();
-		if ( NRandom::Random( 0.0f, 1.0f ) < SGeneralConsts::REPAIR_STORAGE_PROBABILITY ) 
+		if ( NRandom::Random( 0.0f, 1.0f ) < SGeneralConsts::REPAIR_STORAGE_PROBABILITY )
 		{
 			eState = TS_REPAIR;
 			fSeverity = -1;
@@ -234,10 +234,10 @@ void CGeneralTaskToDefendStorage::Segment()
 			fSeverity = pStorage->GetHitPoints() / pStorage->GetStats()->fMaxHP;
 			eState = TS_OPERATE;
 		}
-		
+
 		if ( pRepairTransport && !IsValidObj( pRepairTransport ) )
 			pRepairTransport = 0;
-		
+
 		break;
 	}
 }
@@ -247,7 +247,7 @@ void CGeneralTaskToDefendStorage::Segment()
 //*******************************************************************
 
 
-struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate 
+struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate
 {
 	Storages storages;
 	virtual bool OnlyConnected() const { return false ; }
@@ -266,26 +266,26 @@ struct SEnumStorages : public CStaticObjects::IEnumStoragesPredicate
 //*								CGeneralTaskToResupplyCell*
 //*******************************************************************
 
-CGeneralTaskToResupplyCell::CGeneralTaskToResupplyCell( CResupplyCellInfo * pCell, const int nParty, const enum EResupplyType _eResupplyType, class CGeneralIntendant *_pCells ) 
+CGeneralTaskToResupplyCell::CGeneralTaskToResupplyCell( CResupplyCellInfo * pCell, const int nParty, const enum EResupplyType _eResupplyType, class CGeneralIntendant *_pCells )
 : pCell( pCell ), fSeverity( 1.0f ), eResupplyType( _eResupplyType ), bFinished( false ), nParty( nParty ),
 	timeNextCheck ( curTime ), pCells( _pCells )
-{ 
+{
 	pCell->MarkUnderSupply( eResupplyType );
 	vResupplyCenter = pCell->CalcResupplyPos( eResupplyType );
 	theSupremeBeing.RegisterDelayedTask( new CGeneralTaskCheckCellDanger( this, pCell, eResupplyType, _pCells ) );
 }
 
-void CGeneralTaskToResupplyCell::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit ) 
-{ 
+void CGeneralTaskToResupplyCell::AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit )
+{
 	if ( !bInit &&
 			 pCell->GetNNeeded( eResupplyType ) != 0 &&
-			 fSeverity <= fMaxSeverity && 
+			 fSeverity <= fMaxSeverity &&
 			 !IsValidObj( pResupplyTransport) )
 		pManager->EnumWorkers( FT_TRUCK_RESUPPLY, this );
 }
 
-void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const float fMinSeverity ) 
-{ 
+void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const float fMinSeverity )
+{
 	if ( bFinished )
 	{
 		pCell->MarkUnderSupply( eResupplyType, false );
@@ -297,25 +297,25 @@ void CGeneralTaskToResupplyCell::ReleaseWorker( ICommander *pManager, const floa
 	}
 }
 
-void CGeneralTaskToResupplyCell::CancelTask( ICommander *pManager ) 
-{ 
+void CGeneralTaskToResupplyCell::CancelTask( ICommander *pManager )
+{
 	bFinished = true;
 	ReleaseWorker( pManager, 0 );
 }
 
-void CGeneralTaskToResupplyCell::Segment() 
-{ 
+void CGeneralTaskToResupplyCell::Segment()
+{
 	//transport was killed.
 	if ( pResupplyTransport && !IsValidObj( pResupplyTransport ) )
 	{
-		pCells->MarkCellsDangerous( pCell->GetCenter() );		
+		pCells->MarkCellsDangerous( pCell->GetCenter() );
 	}
 	//all was resupplied
 	if ( pCell->GetNNeeded( eResupplyType ) == 0 || pCell->IsDangerous() )
 		bFinished = true;
 
 	// truck don't have resources and cannot find storage
-	if ( IsValidObj( pResupplyTransport ) && 
+	if ( IsValidObj( pResupplyTransport ) &&
 				EUSN_REST == pResupplyTransport->GetState()->GetName() )
 	{
 		bFinished = true;
@@ -325,8 +325,8 @@ void CGeneralTaskToResupplyCell::Segment()
 		fSeverity = -1;
 }
 
-bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enum EForceType _eType ) 
-{ 
+bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enum EForceType _eType )
+{
 	NI_ASSERT( !IsValidObj( pResupplyTransport ), "2 transport at 1 task" );
 	pResupplyTransport = pUnit;
 
@@ -336,17 +336,17 @@ bool CGeneralTaskToResupplyCell::EnumWorker( class CCommonUnit *pUnit, const enu
 }
 
 bool CGeneralTaskToResupplyCell::EvaluateWorker( CCommonUnit * pUnit, const enum EForceType _eType ) const
-{ 
+{
 	return pCell->IsUnitSuitable( pUnit, eResupplyType );
 }
 
 int CGeneralTaskToResupplyCell::NeedNBest( const enum EForceType _eType ) const
-{ 
+{
 	return 1;
 }
 
 float CGeneralTaskToResupplyCell::EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType _eType ) const
-{ 
+{
 	return 1000.0f / fabs2( pUnit->GetCenterPlain() - vResupplyCenter );
 }
 
@@ -403,26 +403,26 @@ void CResupplyCellInfo::RemoveUnitResupplyInternal( class CCommonUnit *pUnit, co
 	NI_ASSERT( resupplyInfo.end() != resupplyInfo.find( nID ), "unit unregistered" );
 	CResupplyInfo::iterator curInfo = resupplyInfo.find( nID );
 	curInfo->second &= ~(1<<eType);
-	
+
 	if ( 0 == curInfo->second )
 		resupplyInfo.erase( nID );
 }
 
-void CResupplyCellInfo::SetDanger( const NTimer::STime timeDanger ) 
-{ 
-	timeLastDanger = timeDanger; 
+void CResupplyCellInfo::SetDanger( const NTimer::STime timeDanger )
+{
+	timeLastDanger = timeDanger;
 }
 
-const bool CResupplyCellInfo::IsDangerous() const 
-{ 
-	return timeLastDanger && timeLastDanger > curTime; 
+const bool CResupplyCellInfo::IsDangerous() const
+{
+	return timeLastDanger && timeLastDanger > curTime;
 }
 
 void CResupplyCellInfo::AddUnit( class CCommonUnit *pUnit, const uint8_t cRes )
 {
 	NI_ASSERT( 0 !=  cRes, "unit doesn't need resupply" );
 	NI_ASSERT( cRes < (1<<_ERT_COUNT), fmt::format( "wrong resupply mask {}", cRes ) ) ;
-	
+
 //	const int nID = pUnit->GetUniqueId();
 //	const float fPrice = pUnit->GetPriceMax();
 	for ( int i = 0; i < _ERT_COUNT; ++i )
@@ -438,7 +438,7 @@ uint8_t CResupplyCellInfo::RemoveUnit( class CCommonUnit *pUnit )
 	const int nID = pUnit->GetUniqueId();
 
 	CResupplyInfo::iterator curResupply = resupplyInfo.find( nID );
-	
+
 	if ( resupplyInfo.end() != curResupply )
 	{
 		const uint8_t cRes = curResupply->second;
@@ -477,7 +477,7 @@ const bool CResupplyCellInfo::IsUnitRegistered( CCommonUnit * pUnit ) const
 void CResupplyCellInfo::MarkUnderSupply( const enum EResupplyType eType, const bool bSupply )
 {
 	if ( bSupply )
-		cMarkedUnderSupply |= (1<<eType); 
+		cMarkedUnderSupply |= (1<<eType);
 	else
 		cMarkedUnderSupply &= ~(1<<eType);
 }
@@ -525,7 +525,7 @@ void CResupplyCellInfo::IssueCommand( class CCommonUnit * pUnit, const enum ERes
 	default:
 		NI_ASSERT( false, "unknown resupply type asked" );
 	}
-	
+
 }
 
 CVec2 CResupplyCellInfo::CalcResupplyPos( const enum EResupplyType eType ) const
@@ -554,7 +554,7 @@ void CFreeArtilleryHolder::AddArtillery( CArtillery *pArtillery )
 		return;
 	const int nCurrentID = !IsValidCurrent() ? -1 : itCurrent->second.pArtillery->GetUniqueID();
 	artilleries[nUnitID] = SArtilleryInfo( pArtillery );
-	if ( nCurrentID == -1 ) 
+	if ( nCurrentID == -1 )
 		ResetIterator();
 	else
 		itCurrent = artilleries.find( nCurrentID );
@@ -571,7 +571,7 @@ void CFreeArtilleryHolder::RemoveArtillery( CArtillery *pArtillery )
 	//DebugTrace( "Remove artillery %d from holder", nUnitID );
 	if ( nCurrentID == -1 || artilleries.empty() )
 		itCurrent = artilleries.end();
-	else if ( nCurrentID == nUnitID )  
+	else if ( nCurrentID == nUnitID )
 		ResetIterator();
 	else
 		itCurrent = artilleries.find( nCurrentID );
@@ -581,7 +581,7 @@ const bool CFreeArtilleryHolder::IsValidCurrent() const
 {
 	if ( itCurrent == artilleries.end() )
 		return false;
-	
+
 	return IsValid( itCurrent->second.pArtillery ) && !(itCurrent->second.pArtillery->HasServeCrew());
 }
 
@@ -619,7 +619,7 @@ void CFreeArtilleryHolder::Segment()
 				artilleries.erase( itCurrent++ );
 			else if ( !IsFreeCurrent() )
 				++itCurrent;
-			else 
+			else
 				return;
 		}
 	}
@@ -683,9 +683,9 @@ void CGeneralIntendant::AddReiforcePositions( const struct NDb::SAIGeneralParcel
 {
 	bInitedByParcel = true;
 	const int nFormer = vPositions.size();
-	
+
 	vPositions.resize( vPositions.size() + patchInfo.reinforcePoints.size() );
-	
+
 	for ( int i = 0; i < patchInfo.reinforcePoints.size(); ++i )
 	{
 		const CVec2 vTransReinforcePoint ( patchInfo.reinforcePoints[i].vCenter.y, -patchInfo.reinforcePoints[i].vCenter.x );
@@ -713,7 +713,7 @@ void CGeneralIntendant::Init()
 		CGeneralTaskToDefendStorage * pTask = new CGeneralTaskToDefendStorage( *storIter, nParty );
 		tasks.push_back( pTask );
 	}
-	
+
 	theStatObjs.EnumStoragesForParty( 1 - nParty, &en );
 	for ( Storages::iterator storIter = en.storages.begin(); storIter != en.storages.end(); ++storIter )
 	{
@@ -763,7 +763,7 @@ void CGeneralIntendant::UnitChangedPosition( class CCommonUnit *pUnit, const CVe
 	ResupplyCells::iterator pFormerCell = GetCell( pUnit->GetCenterPlain() );
 	ResupplyCells::iterator pNewCell = GetCell( vNewPos );
 	NI_ASSERT( pFormerCell != pNewCell, "cannot move to the same cell" );
-	
+
 	pNewCell->second->AddUnit( pUnit, pFormerCell->second->RemoveUnit( pUnit ) );
 	if ( pFormerCell->second->IsEmpty() )
 		cellsWithRequests.erase( pFormerCell );
@@ -807,7 +807,7 @@ void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit * pUnit, const e
 			{
 				ResupplyCells::iterator pCell = GetCell( pAIUnit->GetCenterPlain() );
 
-				pCell->second->AddUnitResupply( pUnit, eType );	
+				pCell->second->AddUnitResupply( pUnit, eType );
 			}
 		}
 		else
@@ -816,7 +816,7 @@ void CGeneralIntendant::UnitAskedForResupply( class CCommonUnit * pUnit, const e
 			pCell->second->AddUnitResupply( pUnit, eType );
 		}
 	}
-	else 
+	else
 	{
 		if ( IsUnitRegistered( pUnit ) )
 		{
@@ -856,7 +856,7 @@ void CGeneralIntendant::SearchCrewForArtillery()
 {
 	freeArtilleryHolder.Segment();
 	CPtr<CArtillery> pArtillery = freeArtilleryHolder.Get();
-	if ( !IsValid( pArtillery ) || pArtillery->HasServeCrew() )	
+	if ( !IsValid( pArtillery ) || pArtillery->HasServeCrew() )
 		return;
 	const CVec2 vArtCenter( pArtillery->GetCenterPlain() );
 
@@ -914,7 +914,7 @@ void CGeneralIntendant::Segment()
 		}
 	}
 
-	if ( !cellsWithRequests.empty() && cResupplyPossible ) 
+	if ( !cellsWithRequests.empty() && cResupplyPossible )
 	{
 		// prioritize tasks to resupply
 		std::vector< CPtr<CResupplyCellInfo> > cellsToSort;
@@ -934,7 +934,7 @@ void CGeneralIntendant::Segment()
 			{
 				CResupplyCellInfo * pCell = cellsToSort[nCell];
 				if ( !pCell->IsDangerous() &&
-							(cResupplyPossible&(1<<i)) && 
+							(cResupplyPossible&(1<<i)) &&
 						 !pCell->IsMarkedUnderSupply( static_cast<EResupplyType>(i) ) &&
 						 pCell->GetNNeeded( static_cast<EResupplyType>(i) ) > 0.0f )
 				{
@@ -951,7 +951,7 @@ void CGeneralIntendant::Segment()
 void CGeneralIntendant::MarkCellsDangerous( const SVector &vCell )
 {
 	const int nRadius = SGeneralConsts::INTENDANT_DANGEROUS_CELL_RADIUS / ( SConsts::GENERAL_CELL_SIZE ) + 1;
-	const NTimer::STime timeDanger = curTime + 
+	const NTimer::STime timeDanger = curTime +
 								1000 * (SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH +
 									NRandom::Random( SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND ) ); RecordRandomCall();
 

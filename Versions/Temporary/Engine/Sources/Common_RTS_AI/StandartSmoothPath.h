@@ -64,21 +64,21 @@ protected:
 	const CVec2 GetSplineDX() const { return spline.GetDX(); }
 	const CVec2 GetSplinePoint() const { return spline.GetPoint(); }
 	const float GetSplineRadius() const { return spline.GetReverseR(); }
-	const bool IsSplinePointsEqual() const { return ( p0 == p1 && p1 == p2 && p2 == p3 ); } 
+	const bool IsSplinePointsEqual() const { return ( p0 == p1 && p1 == p2 && p2 == p3 ); }
 
 	void StartForwardIterating( CBSpline::SForwardIter *pIter ) { spline.StartForwardIterating( pIter ); }
-	void IterateSpline() { spline.Iterate(); ++nIter; } 
+	void IterateSpline() { spline.Iterate(); ++nIter; }
 	const int GetNIter() { return nIter; }
 	void IterateForwardSpline( CBSpline::SForwardIter *pIter ) { spline.IterateForward( pIter ); }
 	void SetSplinePoints( const CVec2 &vPoint ) { p0 = p1 = p2 = p3 = predPoint = vPoint; }
 	void RecalcSpline() { spline.Init( p0, p1, p2, p3 ); }
 	int InitSpline();
-	
+
 	void FinishPath();
 	CAIMap* GetAIMap() const { return pAIMap; }
 
 public:
-	CStandartSmoothPathBasis() : pPath( 0 ), pUnit( 0 ), bFinished( true ), bStopped( true ), 
+	CStandartSmoothPathBasis() : pPath( 0 ), pUnit( 0 ), bFinished( true ), bStopped( true ),
 		p0( VNULL2 ), p1( VNULL2 ), p2( VNULL2 ), p3( VNULL2 ), predPoint( VNULL2 ),
 		nIter( 0 ), nPoints( 0 ) {}
 	// возвращает - пошёл юнит по пути или нет
@@ -96,7 +96,7 @@ public:
 	virtual const CVec2 PeekPathPoint( const int nShift ) const;
 
 	virtual IMemento* CreateMemento() const
-	{ 
+	{
 		return new CStandartSmoothPathMemento( GetPath() );
 	}
 

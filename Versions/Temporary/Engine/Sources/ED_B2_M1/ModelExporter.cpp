@@ -32,7 +32,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		// first, check number of meshes and number of materials
 		std::string szGeometryName;
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pManipulator, 0, &szGeometryName, 0 );
-		if ( pGeomMan == 0 || szGeometryName.empty() ) 
+		if ( pGeomMan == 0 || szGeometryName.empty() )
 		{
 			Log( LT_ERROR, "Can't extract geometry from model\n" );
 			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
@@ -42,7 +42,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 			!NEditorGltf::Export(pGeomMan, "Geometry", true) ) return ER_BREAK;
 		int nNumGeometryMeshes = 0;
 		CManipulatorManager::GetValue( &nNumGeometryMeshes, pGeomMan, "NumMeshes" );
-		if ( nNumGeometryMeshes == 0 ) 
+		if ( nNumGeometryMeshes == 0 )
 		{
 			Log( LT_ERROR, "Empty 'NumMeshes' in geometry\n" );
 			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
@@ -54,7 +54,7 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		std::string szModelName = "";
 		CManipulatorManager::GetValue( &szModelName, pGeomMan, "RootMesh" );
 
-		if ( nNumGeomMaterials == 0 && PatMat( szModelName.c_str(), "*section??" ) == 0 ) 
+		if ( nNumGeomMaterials == 0 && PatMat( szModelName.c_str(), "*section??" ) == 0 )
 		{
 			Log( LT_ERROR, "Empty material list in model\n" );
 			Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
@@ -70,14 +70,14 @@ EXPORT_RESULT CModelExporter::ExportObject( IManipulator* pManipulator,
 		//CGrannyFileInfoGuard pInfo( pUserData->szExportDestinationFolder + fmt::format( "bin\\geometries\\{}", nGeomID ) );
 		int nNumGrannyMeshes = pInfo->MeshCount;
 		//
-		if ( nNumGrannyMeshes != nNumGeometryMeshes ) 
+		if ( nNumGrannyMeshes != nNumGeometryMeshes )
 		{
 		}
 		//
 		if ( nNumGeomMaterials > 0 )
 			MakeMaterialsList( pManipulator, pGeomMan, pInfo );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		Log( LT_ERROR, "General fail during model check\n" );
 		Log( LT_ERROR, fmt::format("\tModel name: {}\n", rszObjectName.c_str()) );
@@ -111,7 +111,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 	// find opacity attribute for each mesh
 	bool bHasTransparency = false;
 	std::unordered_map<std::string, bool> meshTranspInfoMap;
-	for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+	for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 	{
 		SGrannyBoneAttributes::CAttributeMap::const_iterator posAttribute = it->attributeMap.find( "transparent" );
 		bool bTransparent = posAttribute != it->attributeMap.end() ? posAttribute->second : false;
@@ -119,14 +119,14 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		bHasTransparency = bHasTransparency || bTransparent;
 	}
 	// check, do we need transparent material and leave if needn't
-	if ( !bHasTransparency ) 
+	if ( !bHasTransparency )
 		return true;
 	// collect all materials from model
 	std::string szTransparentMaterialName, szOpaqueMaterialName;
 	int nNumModelMaterials = 0;
 	CManipulatorManager::GetValue( &nNumModelMaterials, pModelMan, "Materials" );
 	std::list<SMaterialInfo> materials;
-	for ( int i = 0; i < nNumModelMaterials; ++i ) 
+	for ( int i = 0; i < nNumModelMaterials; ++i )
 	{
 		const std::string szMaterialRefName = fmt::format( "Materials.[{}]", i );
 		std::string szMaterialName;
@@ -141,18 +141,18 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		std::string szMaterialType;
 		CManipulatorManager::GetValue( &szMaterialType, pMaterialMan, "AlphaMode" );
 		//
-		if ( szMaterialType == "AM_TRANSPARENT" ) 
+		if ( szMaterialType == "AM_TRANSPARENT" )
 			szTransparentMaterialName = szMaterialName;
 		else
 			szOpaqueMaterialName = szMaterialName;
 		materials.push_back( SMaterialInfo(szMaterialName, szMaterialType) );
 	}
 	// make transparent material and change texture params
-	if ( szTransparentMaterialName.empty() && !materials.empty() ) 
+	if ( szTransparentMaterialName.empty() && !materials.empty() )
 	{
 		szTransparentMaterialName = NFile::GetFilePath( materials.front().szName ) + NFile::GetFileTitle( materials.front().szName ) + "_transp.xdb";
 		CPtr<IManipulator> pTranspMaterialMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
-		if ( pTranspMaterialMan == 0 ) 
+		if ( pTranspMaterialMan == 0 )
 		{
 			if ( MakeMaterialCopy( materials.front().szName, szTransparentMaterialName ) == false )
 			{
@@ -163,7 +163,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 			pTranspMaterialMan = Singleton<IResourceManager>()->CreateObjectManipulator( "Material", szTransparentMaterialName );
 		}
 		//
-		if ( pTranspMaterialMan != 0 ) 
+		if ( pTranspMaterialMan != 0 )
 			CManipulatorManager::SetValue( std::string("AM_TRANSPARENT"), pTranspMaterialMan, "AlphaMode" );
 		// change texture export params to achive transparency
 		CPtr<IManipulator> pMaterialMan = CManipulatorManager::CreateManipulatorFromReference( "Materials.[0]", pModelMan, 0, 0, 0 );
@@ -171,33 +171,33 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		bool bNeedConvertTexture = false;
 		std::string szConversionType;
 		CManipulatorManager::GetValue( &szConversionType, pTextureMan, "ConversionType" );
-		if ( szConversionType != "CONVERT_TRANSPARENT" ) 
+		if ( szConversionType != "CONVERT_TRANSPARENT" )
 		{
 			CManipulatorManager::SetValue( std::string("CONVERT_TRANSPARENT"), pTextureMan, "ConversionType" );
 			bNeedConvertTexture = true;
 		}
 		std::string szTextureFormat;
 		CManipulatorManager::GetValue( &szTextureFormat, pTextureMan, "Format" );
-		if ( szTextureFormat != "TF_DXT3" ) 
+		if ( szTextureFormat != "TF_DXT3" )
 		{
 			CManipulatorManager::SetValue( std::string("TF_DXT3"), pTextureMan, "Format" );
 			bNeedConvertTexture = true;
 		}
 		//
-		if ( bNeedConvertTexture ) 
+		if ( bNeedConvertTexture )
 		{
 			std::string szTextureName;
 			CManipulatorManager::GetValue( &szTextureName, pMaterialMan, "Texture" );
 			Singleton<IExporterContainer>()->ExportObject( pTextureMan, "Texture", szTextureName, true, NOT_EXPORT_REFERENCES );
 		}
 	}
-	// 
-	if ( pInfo->ModelCount != 1 ) 
+	//
+	if ( pInfo->ModelCount != 1 )
 	{
 		Log( LT_ERROR, "Granny file contains incorrect number of models\n" );
 		return ER_FAIL;
 	}
-	
+
 	for ( int i = 0; i < pInfo->Models[0]->MeshBindingCount; ++i )
 	{
 		std::string szBoneName = pInfo->Models[0]->MeshBindings[i].Mesh->BoneBindings[0].BoneName;
@@ -206,7 +206,7 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		//
 		std::string szMaterialName;
 		const std::string szMaterialRefName = fmt::format( "Materials.[{}]", i );
-		if ( i >= nNumModelMaterials ) 
+		if ( i >= nNumModelMaterials )
 		{
 			if ( pModelMan->InsertNode("Materials") == false )
 			{
@@ -217,18 +217,18 @@ bool CModelExporter::MakeMaterialsList( IManipulator* pModelMan, IManipulator* p
 		else
 			CManipulatorManager::GetValue( &szMaterialName, pModelMan, szMaterialRefName );
 		//
-		if ( szMaterialName.empty() || szMaterialName == " " ) 
+		if ( szMaterialName.empty() || szMaterialName == " " )
 		{
-			if ( bTransparent ) 
+			if ( bTransparent )
 				CManipulatorManager::SetValue( szTransparentMaterialName, pModelMan, szMaterialRefName, true );
 			else
 				CManipulatorManager::SetValue( szOpaqueMaterialName, pModelMan, szMaterialRefName, true );
 		}
 		else
 		{
-			if ( bTransparent && szMaterialName != szTransparentMaterialName ) 
+			if ( bTransparent && szMaterialName != szTransparentMaterialName )
 				CManipulatorManager::SetValue( szTransparentMaterialName, pModelMan, szMaterialRefName, true );
-			else if ( !bTransparent && szMaterialName == szTransparentMaterialName ) 
+			else if ( !bTransparent && szMaterialName == szTransparentMaterialName )
 				CManipulatorManager::SetValue( szOpaqueMaterialName, pModelMan, szMaterialRefName, true );
 		}
 	}

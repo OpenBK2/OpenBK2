@@ -27,7 +27,7 @@ void CAntiArtilleryManager::RemoveAA( CAntiArtillery *pAA )
 bool CAntiArtilleryManager::IsHeardForParty( CAntiArtillery *pAntiArt, const int nParty )
 {
 	const NTimer::STime lastShotTime = pAntiArt->lastShotTime[nParty];
-	return 
+	return
 		lastShotTime != 0 && curTime - lastShotTime <= SConsts::AUDIBILITY_TIME;
 }
 

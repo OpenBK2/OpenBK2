@@ -9,7 +9,7 @@ CLuaIDToFuncMap luaIDToFuncMap;
 lua_State *pLUASaverState;
 
 void lua_StartSerialize( lua_State *pL )
-{ 
+{
 	lua_RegisterFunc( (lua_CFunction)0, "NOFUNC" );
 	lua_RegisterFunc( (lua_Hook)0, "NOFUNC" );
 	pLUASaverState = pL;
@@ -36,7 +36,7 @@ static void lua_GetID( CLuaFuncID *pID, lua_Hook func )
 }
 
 static lua_CFunction lua_GetFunc( const CLuaFuncID& id )
-{ 
+{
 	CLuaIDToFuncMap::iterator i = luaIDToFuncMap.find( id );
 	if ( i == luaIDToFuncMap.end() )
 	{

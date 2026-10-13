@@ -38,7 +38,7 @@ class CTrack : public IPlayListElement
 	void OpenTrack();
 public:
 	int operator&( IBinSaver &f );
-	
+
 public:
 	CTrack(): pStreamingSound(0), pTrackStream( 0 ) { }
 	CTrack( const NDb::SMusicTrack *_pTrack, const NDb::SPlayTime *_pPlayTime, EStreamType _eType )

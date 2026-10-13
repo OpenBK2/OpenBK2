@@ -53,7 +53,7 @@ static const char* FindEndOfNodeText( const char *p )
 
 static  const char* SkipWhiteSpace( const char *p )
 {
-	while ( *p != 0 && IsWhiteSpace(*p) ) 
+	while ( *p != 0 && IsWhiteSpace(*p) )
 		++p;
 	//
 	return p;
@@ -184,7 +184,7 @@ const char* CXmlNode::Parse( const char *p, SPool *_pPool )
 	pHRefAttr = 0;
 	pHDataAttr = 0;
 	pPool = _pPool;
-	
+
 	p = SkipComments( p );
 	p = SkipWhiteSpace( p );
 	if ( !*p )
@@ -228,7 +228,7 @@ const CXmlNode* CXmlNode::FindChild( const char *pszChild ) const
 	nBestNodeToRead %= nodes.size();
 	if ( nodes[nBestNodeToRead]->GetName() == pszChild )
 		return nodes[nBestNodeToRead++];
-	
+
 	const int nMemBestNodeToRead = ++nBestNodeToRead;
 	while ( nBestNodeToRead < nodes.size() )
 	{
@@ -268,7 +268,7 @@ const SXmlAttribute* CXmlNode::GetAttribute( const char *pszAttr ) const
 	nBestAttrToRead %= attributes.size();
 	if ( attributes[nBestAttrToRead]->name == pszAttr )
 		return attributes[nBestAttrToRead++];
-	
+
 	const int nMemBestAttrToRead = ++nBestAttrToRead;
 	while ( nBestAttrToRead < attributes.size() )
 	{

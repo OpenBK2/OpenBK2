@@ -31,14 +31,14 @@ public:
 	void Update( ISFX * pSFX );
 
 	bool HasSounds() const { return sounds.begin() != sounds.end(); }
-	//		bool HearSounds() const { return hearableCells.begin() != hearableCells.end(); } 
+	//		bool HearSounds() const { return hearableCells.begin() != hearableCells.end(); }
 
 	void SetLastHearCombat( const NTimer::STime hearTime );
 	bool IsCombat() const;
 
 
 	// для всех звуков, которые слышны на расстояние больше nRadius и еще не доиграли
-	template <class TEnumFunc> 
+	template <class TEnumFunc>
 		void EnumHearableSounds( int nRadius, TEnumFunc func )
 	{
 		for ( CSounds::iterator it = sounds.begin(); it != sounds.end(); ++it )

@@ -15,24 +15,24 @@ extern NTimer::STime curTime;
 //*												CPlaneInFormationSmoothPath*
 //*******************************************************************
 
-const bool CPlaneInFormationSmoothPath::CanGoBackward() const 
-{ 
-	return false; 
+const bool CPlaneInFormationSmoothPath::CanGoBackward() const
+{
+	return false;
 }
 
-void CPlaneInFormationSmoothPath::Init( class CAviation *_pOwner ) 
-{ 
-	pOwner = _pOwner; 
-	pFormation = pOwner->GetPlanesFormation(); 
+void CPlaneInFormationSmoothPath::Init( class CAviation *_pOwner )
+{
+	pOwner = _pOwner;
+	pFormation = pOwner->GetPlanesFormation();
 }
 
-bool CPlaneInFormationSmoothPath::IsFinished() const 
-{ 
-	return false; 
+bool CPlaneInFormationSmoothPath::IsFinished() const
+{
+	return false;
 }
 
-void CPlaneInFormationSmoothPath::Segment( NTimer::STime timeDiff ) 
-{ 
+void CPlaneInFormationSmoothPath::Segment( NTimer::STime timeDiff )
+{
 	const CVec3 vNewPoint( pFormation->GetPosNext() );
 	pOwner->SetCenter( vNewPoint );
 }

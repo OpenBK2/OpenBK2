@@ -109,7 +109,7 @@ class CShadowBuilder
 	}
 	uint16_t AddPoint( SSPoint &pnt );
 public:
-	CShadowBuilder( CObjectInfo *_pRes, float _fNormalEdge, float _fDepthMargin ) 
+	CShadowBuilder( CObjectInfo *_pRes, float _fNormalEdge, float _fDepthMargin )
 		: pRes(_pRes), fNormalEdge(_fNormalEdge), fDepthMargin(_fDepthMargin)
 	{
 		info.geometry.resize(0);
@@ -373,7 +373,7 @@ protected:
 	const std::vector<STriangle> &srcTris;
 	const std::vector<SRealVertexWeight> &srcWeights;
 public:
-	CObjectInfoProcessor( CObjectInfo::SData *pInfo, const CObjectInfo &src ) 
+	CObjectInfoProcessor( CObjectInfo::SData *pInfo, const CObjectInfo &src )
 		: info(*pInfo), srcPositions( src.GetPositions() ), srcVertices( src.GetVertices() ),
 		posIndices( src.GetPositionIndices() ), vertMap( src.GetVertices().size(), -1 ),
 		srcTris( src.GetGeometry() ),
@@ -500,7 +500,7 @@ CExplosionShadowBuilder::CExplosionShadowBuilder( CObjectInfo::SData *pInfo, con
 				res.tex.v = fU * fSin + fV * fCos;
 				res.tex.u = Clamp( res.tex.u * 0.5f + 0.5f, -15.0f, 15.0f );
 				res.tex.v = Clamp( res.tex.v * 0.5f + 0.5f, -15.0f, 15.0f );
-				
+
 				AddVertex( &poly, nIdx, res );
 			}
 			else

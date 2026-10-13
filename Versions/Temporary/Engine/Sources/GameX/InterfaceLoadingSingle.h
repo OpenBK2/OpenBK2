@@ -13,7 +13,7 @@ class CProgressHookHelper : public IProgressHookB2
 		int nStep;
 		int nLockedRange;
 	};
-	
+
 	ZDATA
 	std::vector<SRange> ranges;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&ranges); return 0; }
@@ -24,7 +24,7 @@ protected:
 	int GetProgress( int nMin, int nMax ) const;
 public:
 	CProgressHookHelper();
-	
+
 	//{ IProgressHook
 	void SetNumSteps( const int nNumSteps );
 	void LockRange( const int nLength );
@@ -60,17 +60,17 @@ protected:
 	void MakeInterior();
 	void UpdateInterior();
 	void Draw();
-	
+
 	bool IsInitialized() const { return bInitialized; }
 	IScreen* GetScreen() const { return pScreen; }
 
 	void PlayOnEnterTransitEffect();
-	
+
 	bool IsEffectFinished() const;
 	void ShowFirstElement();
 public:
 	CInterfaceLoadingBase();
-	
+
 	//{ IProgressHook
 	void SetNumSteps( const int nNumSteps );
 	void LockRange( const int nLength );
@@ -101,7 +101,7 @@ protected:
 public:
 	CInterfaceLoadingSingle2D();
 	CInterfaceLoadingSingle2D( const NDb::STexture *pTexture, const std::wstring &wszDesc, const std::wstring &wszCitation, bool bChapter );
-	
+
 	//{ IProgressHookB2
 	void RunFinishScreen();
 	//}
@@ -110,7 +110,7 @@ public:
 class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceLoadingSingleFinished );
-	
+
 	enum EUIState
 	{
 		EUIS_NORMAL,
@@ -126,11 +126,11 @@ class CInterfaceLoadingSingleFinished : public CInterfaceScreenBase, public IPro
 	std::wstring wszPressKeyFormat2;
 	bool bFormat1;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&eUIState); f.Add(3,&pPressKeyView); f.Add(4,&wszPressKeyFormat1); f.Add(5,&wszPressKeyFormat2); f.Add(6,&bFormat1); return 0; }
-	
+
 	NTimer::STime timeAbs; // don't save
 private:
 	bool ProcessEvent( const struct SGameMessage &msg );
-	
+
 	void MoveOutInfoPanel();
 	void StartTransitToMission();
 	void StartTransitToMissionDone();
@@ -139,7 +139,7 @@ public:
 	CInterfaceLoadingSingleFinished();
 
 	bool Init();
-	
+
 	void Draw( NGScene::CRTPtr *pTarget );
 
 	bool StepLocal( bool bAppActive );
@@ -148,7 +148,7 @@ public:
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
 	//}
-	
+
 	bool IsModal() { return false; }
 };
 

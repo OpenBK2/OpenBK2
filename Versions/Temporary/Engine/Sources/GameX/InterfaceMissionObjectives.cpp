@@ -52,14 +52,14 @@ CInterfaceMissionObjectives::~CInterfaceMissionObjectives()
 
 bool CInterfaceMissionObjectives::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	// load screen
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	pReactions = new CReactions( pScreen, this );
 	AddUIScreen( pScreen, "MissionObjectives", pReactions );
-	
+
 	pMainWnd = GetChildChecked<IWindow>( pScreen, "Objectives", true );
 
 	if ( pMainWnd )
@@ -74,7 +74,7 @@ bool CInterfaceMissionObjectives::Init()
 	pHeader = GetChildChecked<ITextView>( pMainWnd, "Header", true );
 	pDescPanel = GetChildChecked<IWindow>( pMainWnd, "DescPanel", true );
 	pDescScrollableWnd = GetChildChecked<IScrollableContainer>( pMainWnd, "DescScrollable", true );
-	
+
 	if ( pObjectivesPanel )
 	{
 		int nHeight;
@@ -84,7 +84,7 @@ bool CInterfaceMissionObjectives::Init()
 
 	pObjectiveItem = GetChildChecked<IWindow>( pObjectivesPanel, "ObjectiveItem", true );
 	pNextObjective = GetChildChecked<IWindow>( pObjectivesPanel, "NextObjective", true );
-	
+
 	if ( pObjectiveItem )
 		pObjectiveItem->ShowWindow( false );
 	if ( pNextObjective )
@@ -102,7 +102,7 @@ bool CInterfaceMissionObjectives::Init()
 		if ( pDescFull )
 			pDescScrollableWnd->PushBack( pDescFull, false );
 	}
-	
+
 	if ( pScreen )
 	{
 		wszObjectivesSummary = pScreen->GetTextEntry( "T_OBJECTIVES_SUMMARY" );
@@ -124,16 +124,16 @@ bool CInterfaceMissionObjectives::Init()
 	MakeObjectives();
 	UpdateKnownObjectives();
 	UpdateObjectives( -1 );
-	
+
 	NInput::PostEvent( "blink_objective_button", 0, 0 );
-	
+
 	return true;
 }
 
 void CInterfaceMissionObjectives::MsgBack( const SGameMessage &msg )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "minimap_hide_objectives" );
-	
+
 	if ( bCameraBack )
 		NInput::PostEvent( "notifications_camera_back", 0, 0 );
 }
@@ -183,7 +183,7 @@ void CInterfaceMissionObjectives::MakeObjectives()
 			nDeltaX -= nStartX;
 			nDeltaY -= nStartY;
 			fItemHeight = nDeltaY;
-			
+
 			for ( int i = 0; i < N_OBJECTIVES_ROW_COUNT; ++i )
 			{
 				IWindow *pWnd = AddWindowCopy( pObjectivesPanel, pObjectiveItem );
@@ -219,7 +219,7 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 	}
 
 	int nIndex = 0;
-	
+
 	// special "objective" - mission briefing
 	SObjective &objective = objectives[nIndex];
 	nIndex++;
@@ -238,9 +238,9 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 		int nID = pST->GetKnownObjectiveID( i );
 		const NDb::SMissionObjective *pDBObjective = pDBInfo->objectives[nID];
 		NI_VERIFY( pDBObjective, "No objective", continue );
-		
+
 		NI_VERIFY( nIndex < N_OBJECTIVES_ROW_COUNT, "Designers: too many objectives", break );
-		
+
 		SObjective &objective = objectives[nIndex];
 		nIndex++;
 		objective.nID = nID;
@@ -255,7 +255,7 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 		if ( objective.pButton )
 			objective.pButton->SetTooltip( objective.pButton->GetDBTooltipStr() );
 	}
-	
+
 	float fDeltaHeight = fItemHeight * (N_OBJECTIVES_ROW_COUNT - nIndex);
 	if ( pMainWnd )
 		pMainWnd->SetPlacement( 0, fMainInitialTop + fDeltaHeight * 0.5f, 0, fMainInitialHeight - fDeltaHeight, EWPF_POS_Y | EWPF_SIZE_Y );
@@ -266,7 +266,7 @@ void CInterfaceMissionObjectives::UpdateKnownObjectives()
 void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 {
 	int nSelected = _nSelected;
-	
+
 	// Принудительно выберем элемент, если ничего не поселекчено
 	if ( nSelected == -1 )
 	{
@@ -321,7 +321,7 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 	const bool bIsSelectedObjective = (nSelected >= 0 && objectives[nSelected].nID >= 0);
 	if ( pDescPanel )
 		pDescPanel->ShowWindow( bIsSelectedObjective );
-	
+
 	if ( bIsSelectedObjective )
 	{
 		SObjective &objective = objectives[nSelected];
@@ -350,9 +350,9 @@ void CInterfaceMissionObjectives::UpdateObjectives( int _nSelected )
 			pDescStatus->ShowWindow( objective.nID != MISSION_BRIEFING_ID );
 		}
 	}
-	
+
 	nPrevSelectionID = (nSelected >= 0) ? objectives[nSelected].nID : -1;
-	
+
 	NInput::PostEvent( "set_modality", 0, 0 );
 	NInput::PostEvent( "minimap_show_objectives", nPrevSelectionID, 0 );
 	NInput::PostEvent( "set_modality", 1, 0 );
@@ -405,7 +405,7 @@ void CInterfaceMissionObjectives::SetStartID( int nID )
 int CInterfaceMissionObjectives::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, (CInterfaceScreenBase *)this );
-	
+
 	saver.Add( 2, &pMainWnd );
 	saver.Add( 3, &pDescPanel );
 

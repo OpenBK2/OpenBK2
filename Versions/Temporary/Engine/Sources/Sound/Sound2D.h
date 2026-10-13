@@ -8,7 +8,7 @@ namespace NDb
 	struct SSoundDesc;
 }
 
-class CSFXSound : public ISound 
+class CSFXSound : public ISound
 {
 	CPtr<CSoundSample> pSample;
 	CDBPtr<NDb::SSoundDesc> pDesc;
@@ -51,7 +51,7 @@ class CSound2D : public CSFXSound
 	float fPan;
 	void Init();
 public:
-	int operator&( IBinSaver &saver ); 
+	int operator&( IBinSaver &saver );
 
 	CSound2D( const NDb::SSoundDesc *pDesc, const bool bLooped );
 	CSound2D() : fVolume( 0.0f ), fPan( 0.0f )
@@ -62,9 +62,9 @@ public:
 
 	// 2D
 	void SetVolume( float _fVolume )
-	{ 
+	{
 		NI_ASSERT( fVolume != -4.3160208e+008, "unitialized!" );
-		fVolume = _fVolume; 
+		fVolume = _fVolume;
 	}
 	float GetVolume() const { return fVolume; }
 	void SetPan( float _fPan ) { fPan = _fPan; }
@@ -115,20 +115,20 @@ public:
 		fMax = fMaxDist;
 	}
 
-	CVec3 GetPos() const 
-	{ 
-		return vPos; 
+	CVec3 GetPos() const
+	{
+		return vPos;
 	}
-	void SetPos( const CVec3 &_vPos ) 
-	{ 
+	void SetPos( const CVec3 &_vPos )
+	{
 		vPos = _vPos;
 	}
-	CVec3 GetSpeed() const 
-	{ 
-		return vSpeed; 
+	CVec3 GetSpeed() const
+	{
+		return vSpeed;
 	}
-	void SetSpeed( const CVec3 &_vSpeed ) 
-	{ 
+	void SetSpeed( const CVec3 &_vSpeed )
+	{
 		vSpeed = _vSpeed;
 	}
 

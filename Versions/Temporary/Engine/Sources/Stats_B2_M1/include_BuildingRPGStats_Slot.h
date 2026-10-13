@@ -13,7 +13,7 @@ bool ToAIUnits( bool bInEditor )
 	CQuat quat = CQuat( -FP_PI2, V3_AXIS_X );
 	quat *= CQuat( ToRadian(fDirection), V3_AXIS_Z );
 	matDirection.Set( quat );
-	//	
+	//
 	wDirection = uint16_t( fDirection * 65536.0f / 360.0f );
 	wAngle = uint16_t( fAngle * 32768.0f / 360.0f );
 	if ( bInEditor )

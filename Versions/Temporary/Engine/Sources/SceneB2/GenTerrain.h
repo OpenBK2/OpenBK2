@@ -253,7 +253,7 @@ class CTerraGen : public CObjectBase
 	void RiverManipulator( STerrainInfo::SRiver *pRiver, const bool bRemove );
 	//
 	bool IsPointInsideRivers( const CVec3 &v, const int nExcludeID );
-	
+
 	// ROADS
 	const NDb::SVSOInstance* FindRoad( int nID ) const;
 	void AddRoad( NMeshData::SMeshData *pPatch, const std::vector<NGScene::SVertex> &verts, const std::vector<STriangle> &trgs );
@@ -273,7 +273,7 @@ class CTerraGen : public CObjectBase
 	void UpdateNeededPeaks();
 	void PeaksProjectTrgOnTiles( std::vector<NMeshData::SMeshDataTex2> *pDataArr, const CVec3 &v1, const CVec3 &v2, const CVec3 &v3, const CVec2 &vSecTex1, const CVec2 &vSecTex2, const CVec2 &vSecTex3, const CVec3 &vRealPos1, const CVec3 &vRealPos2, const CVec3 &vRealPos3, const CVec3 &vNorm1, const CVec3 &vNorm2, const CVec3 &vNorm3, const CVec3 &vBase1, const CVec3 &vBase2, const CVec3 &vBase3 );
 	void PeaksGetArrayOfFirstPoints( std::vector<SIntersectPoint> *firstArrPos, const CVec3 &v1, const CVec3 &v2 );
-	
+
 	// FOOTS
 	void AddFoot( const STerrainInfo::SFoot &foot );
 	void RemoveFoot( const int nVSOID );

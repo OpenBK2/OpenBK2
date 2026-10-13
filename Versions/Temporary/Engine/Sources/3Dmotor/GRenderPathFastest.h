@@ -20,7 +20,7 @@ struct SRTClearParams;
 class CTransparentRenderer;
 enum ETransparentMode : int;
 
-void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, 
+void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene, const SParticleLMRenderTargetInfo &particleLM,
 	const SRTClearParams &rtClear, CDirectionalLight *pLight, float fWarFogBlend, int nLightingOptions,
 	CTransparentRenderer *pTransp, ETransparentMode trMode,

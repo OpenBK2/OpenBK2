@@ -56,7 +56,7 @@ protected:
 	CFolderManipulatorIteratorWrapper() {}
 public:
 	CFolderManipulatorIteratorWrapper( const std::string &szSrcPath, const std::string &szDstPath, const std::string &szTypeName );
-	
+
 	bool Next();
 	bool IsEnd() const;
 	const SIteratorDesc* GetDesc() const;

@@ -114,7 +114,7 @@ class CGlobalWarFog : public CAIObjectBase
 	bool bMiniMapWarFogReady;
 	bool bFullSmooth;
 	*/
-	
+
 	std::vector<SSpiralPoint> spiral;   // S(круга) * sizeof( SSpiralPoint ) = S(круга) * 18
 	CArray2D<int> spiralCoords;    // MaxRadius * MaxRadius
 	std::vector<int> lengths;           // MaxRadius * sizeof( int )
@@ -146,9 +146,9 @@ private:
 
 	void RemoveTileValid( const int x, const int y );
 	void RemoveTileValid( const SVector &vTile ) { RemoveTileValid( vTile.x, vTile.y ); }
-	
+
 	void RecalculateArea( const SVector &vTile );
-  
+
 	void SetTileHeight( const int x, const int y, const float fHeight );
 	void SetTileHeight( const SVector &tile, const float fHeight ) { SetTileHeight( tile.x, tile.y, fHeight ); }
 	const int GetHeight( const SVector &tile ) const { return heights[tile.y][tile.x]; }
@@ -187,7 +187,7 @@ public:
 	void SynchronizeHeights( const SVector &vUpLeftTile, const SVector &vBottomRightTile );
 
 	bool GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nParty, const bool bFirstTime );
-	
+
 	int GetSizeX() const { return nSizeX; }
 	int GetSizeY() const { return nSizeY; }
 	int GetMaxRadius() const { return nMaxRadius; }

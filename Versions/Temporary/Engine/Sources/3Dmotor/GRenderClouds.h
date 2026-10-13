@@ -24,7 +24,7 @@ class CCloudMover : public CFuncBase<SHMatrix>
 	void Recalc();
 public:
 	CCloudMover() {}
-	CCloudMover( CFuncBase<STime> *_pTime, const CVec2 &_vWrapSize, float _fAngle, float _fSpeed ) 
+	CCloudMover( CFuncBase<STime> *_pTime, const CVec2 &_vWrapSize, float _fAngle, float _fSpeed )
 		: pTime(_pTime), vWrapSize(_vWrapSize), fAngle(_fAngle), fSpeed(_fSpeed) {}
 };
 }

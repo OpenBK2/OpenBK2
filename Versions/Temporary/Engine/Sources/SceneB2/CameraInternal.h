@@ -63,7 +63,7 @@ public:
 	void SetAnchorLimits( const CTRect<float> &vLimits );
 	// set camera's anchor
 	void SetAnchor( const CVec3 &_vAnchor );
-	// 
+	//
 	void ResetToDefault();
 	void SetPlacement( const float fDist, const float fPitch, const float fYaw );
 	virtual void SetDistance( const float fDist );
@@ -74,7 +74,7 @@ public:
 	const CVec3 GetListener() const;
 
 	void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw );
-	void GetCameraParams( float *pfNear, float *pfFar, float *pfFOV ) const 
+	void GetCameraParams( float *pfNear, float *pfFar, float *pfFOV ) const
 	{
 		(*pfNear) = fNearClipPlane;
 		(*pfFar) = fFarClipPlane;

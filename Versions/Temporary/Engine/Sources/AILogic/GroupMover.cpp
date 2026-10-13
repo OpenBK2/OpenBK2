@@ -105,7 +105,7 @@ void CGroupMover::SSubGroup::BalanceGroup( const CVec2 &vPosition )
 	std::sort(forces.begin(), forces.end(), [](const SForce& f1, const SForce& f2) {
 		return f1.nUnitID < f2.nUnitID;
 	});
-  
+
 	bool bNullForces = false;
 	for ( int i = 0; i < BALANCE_STEP_COUNT && !bNullForces; ++i )
 	{
@@ -242,14 +242,14 @@ const bool CGroupMover::CalcPositions()
 					it->second->SetSubGroup( nCurrentGroup - 1 );
 					unitsToCheck[it->second->GetUniqueID()] = it->second;
 					sortedUnits.erase( it++ );
-				} 
+				}
 				else
 					++it;
 			}
 			unitsToCheck.erase( pos );
 		}
 	}
-	
+
 	// set units to appropriate subgroups and find largest subgroup
 	subGroups.resize( nCurrentGroup );
 	int nMaxSubGroupIndex = -1;
@@ -316,7 +316,7 @@ CGroupMover *CreateGroupMover( const SAIUnitCmd &command )
 {
 	if ( command.nCmdType == ACTION_COMMAND_MOVE_TO || command.nCmdType == ACTION_COMMAND_REVERSE_TO ||
 		command.nCmdType == ACTION_COMMAND_SWARM_TO ||
-		command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE || 
+		command.nCmdType == ACTION_COMMAND_PLACEMINE || command.nCmdType == ACTION_COMMAND_CLEARMINE ||
 		command.nCmdType == ACTION_COMMAND_DEPLOY_ARTILLERY || command.nCmdType == ACTION_COMMAND_UNLOAD ||
 		command.nCmdType == ACTION_COMMAND_RESUPPLY_HR || command.nCmdType == ACTION_COMMAND_RESUPPLY ||
 		command.nCmdType == ACTION_COMMAND_REPAIR )

@@ -15,9 +15,9 @@ void CBackgroundMutableTexture::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 void CBackgroundMutableTexture::Visit( struct IUIVisitor* pVisitor )
 {
-	if ( !pData ) 
+	if ( !pData )
 		return;
-	if ( pData->picture.IsEmpty() ) 
+	if ( pData->picture.IsEmpty() )
 		return;
 
 	CRectLayout rects;
@@ -30,9 +30,9 @@ void CBackgroundMutableTexture::Visit( struct IUIVisitor* pVisitor )
 
 void CBackgroundMutableTexture::Set( const CArray2D<NGfx::SPixel8888> &src )
 {
-	if ( !IsValid( pData ) ) 
+	if ( !IsValid( pData ) )
 	{
-		pData = new CTextureData; 
+		pData = new CTextureData;
 		pos.SetEmpty();
 	}
 	pData->Set( src );
@@ -62,7 +62,7 @@ void CBackgroundMutableTexture::CTextureData::Recalc()
 		picture[0][0] = 0;
 	}
 
-	pValue = NGfx::MakeTexture( GetNextPow2( picture.GetSizeX() ), GetNextPow2( picture.GetSizeY() ), 
+	pValue = NGfx::MakeTexture( GetNextPow2( picture.GetSizeX() ), GetNextPow2( picture.GetSizeY() ),
 		1, NGfx::SPixel8888::ID, NGfx::DYNAMIC_TEXTURE, NGfx::CLAMP );
 
 	if ( !IsValid( pValue ) )

@@ -35,7 +35,7 @@ static bool s_bMPAllowStartGame;
 
 // CInterfaceMPGameRoom
 
-CInterfaceMPGameRoom::CInterfaceMPGameRoom() : 
+CInterfaceMPGameRoom::CInterfaceMPGameRoom() :
 CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPGameRoom::OnChatMessage );
@@ -45,13 +45,13 @@ CInterfaceMPScreenBase( "MPGameRoom", "game_room" )
 
 CInterfaceMPGameRoom::~CInterfaceMPGameRoom()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
 bool CInterfaceMPGameRoom::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
@@ -62,7 +62,7 @@ bool CInterfaceMPGameRoom::Init()
 		return false;
 
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
-	NI_VERIFY( pMain, "No main window found", return false );	
+	NI_VERIFY( pMain, "No main window found", return false );
 	SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 
 	InitControls();
@@ -74,7 +74,7 @@ bool CInterfaceMPGameRoom::Init()
 }
 
 void CInterfaceMPGameRoom::RegisterObservers()
-{	
+{
 	AddObserver( "message_box_ok", &CInterfaceMPGameRoom::MsgOk );
 	AddObserver( "message_box_cancel", &CInterfaceMPGameRoom::MsgCancel );
 }
@@ -91,12 +91,12 @@ void CInterfaceMPGameRoom::InitControls()
 
 	pSessionName = GetChildChecked<ITextView>( pMain, "SessionNameData", true );
 	pTechLevel = GetChildChecked<ITextView>( pMain, "TechLevelData", true );
-	pNumPlayers = GetChildChecked<ITextView>( pMain, "NumPlayersData", true );	
-	pMapName = GetChildChecked<ITextView>( pMain, "MapName", true );		
-	pTimeLimit = GetChildChecked<ITextView>( pMain, "TimeLimitData", true );	
-	pCaptureTime = GetChildChecked<ITextView>( pMain, "CaptureTimeData", true );	
-	pGameSpeed = GetChildChecked<ITextView>( pMain, "GameSpeedData", true );	
-	pUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperienceData", true );	
+	pNumPlayers = GetChildChecked<ITextView>( pMain, "NumPlayersData", true );
+	pMapName = GetChildChecked<ITextView>( pMain, "MapName", true );
+	pTimeLimit = GetChildChecked<ITextView>( pMain, "TimeLimitData", true );
+	pCaptureTime = GetChildChecked<ITextView>( pMain, "CaptureTimeData", true );
+	pGameSpeed = GetChildChecked<ITextView>( pMain, "GameSpeedData", true );
+	pUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperienceData", true );
 	pWaitMessage = GetChildChecked<IWindow>( pMain, "WaitMessage", true );
 	pAdvancedPopup = GetChildChecked<IWindow>( pMain, "AdvancedPopup", true );
 
@@ -133,13 +133,13 @@ bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::stri
 		return OnBackReaction();
 
 	if ( szReaction == "react_on_begin" )
-		return OnBeginGameReaction();	
+		return OnBeginGameReaction();
 
 	if ( szReaction == "react_on_accept" )
-		return OnAcceptGameReaction();	
+		return OnAcceptGameReaction();
 
 	if ( szReaction == "react_on_reject" )
-		return OnRejectGameReaction();	
+		return OnRejectGameReaction();
 
 	if ( szReaction == "chat_enter" )
 		return OnChatEnter();
@@ -149,7 +149,7 @@ bool CInterfaceMPGameRoom::Execute( const std::string &szSender, const std::stri
 
 	if ( szReaction == "react_on_change_player_side" )
 		return OnChangeSideReaction();
- 
+
 	if ( szReaction == "react_on_change_player_team" )
 		return OnChangeTeamReaction();
 
@@ -186,11 +186,11 @@ int CInterfaceMPGameRoom::SelectionIndexToNationIndex(int nSelectionIndex)
 	{
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
 			nValidIndex++;
-		
+
 		if ( nValidIndex == nSelectionIndex )
 			return i;
 	}
-	
+
 	// If nation index selection is somehow wrong (it should never be), just pick a random one..
 	return 0;
 }
@@ -207,7 +207,7 @@ int CInterfaceMPGameRoom::NationIndexToSelectionIndex(int nCountryIndex)
 		if ( !sides[i].techLevels[nTechLevel].bDisabled )
 			nValidIndex++;
 	}
-	
+
 	return nValidIndex;
 }
 
@@ -232,8 +232,8 @@ bool CInterfaceMPGameRoom::OnPlayerCombo( const std::string &szSender )
 		bRequestedSlotChangeClosed = bWantClosed;
 
 		// Ask user
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 			GetScreen()->GetTextEntry( "ASK_KICK_PLAYER" ) ).c_str() );
 
 		return true;
@@ -287,7 +287,7 @@ bool CInterfaceMPGameRoom::OnChangeColorReaction()
 
 	SendUpdateSlot( nOwnSlot );
 	CheckStartConditions();
-	return true;	
+	return true;
 }
 
 int CInterfaceMPGameRoom::Check( const std::string &szCheckName ) const
@@ -323,7 +323,7 @@ bool CInterfaceMPGameRoom::OnShowAdvanced( const bool bShow )
 }
 
 bool CInterfaceMPGameRoom::OnAcceptGameReaction()
-{	
+{
 	// Invoked when OWN slot changes
 	// Process Accept change
 	SUISlot &slot = slots[nOwnSlot];
@@ -375,7 +375,7 @@ void CInterfaceMPGameRoom::SendUpdateSlot( const int nSlot )
 	}
 	pMsg->info = slots[nSlot].info;
 	pMsg->nSlot = nSlot;
-	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );					
+	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
 }
 
 bool CInterfaceMPGameRoom::ProcessEvent( const SGameMessage &msg )
@@ -397,12 +397,12 @@ bool CInterfaceMPGameRoom::OnChatEnter()
 		std::wstring wszText = pChatInput->GetText();
 		if ( !wszText.empty() )
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );					
-			pChatInput->SetText( L"" );			
+			Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );
+			pChatInput->SetText( L"" );
 		}
 	}
 	return true;
-	
+
 };
 
 bool CInterfaceMPGameRoom::OnChatEscape()
@@ -428,9 +428,9 @@ bool CInterfaceMPGameRoom::OnChatMessage( SMPUIChatMessage *pMsg )
 void CInterfaceMPGameRoom::SetTimeLimit( int nTimeLimit )
 {
 	if ( !pTimeLimit )
-		return;	  	
+		return;
 	std::wstring wszText = NStr::ToUnicode( fmt::format( "{} min.", nTimeLimit ) );
-	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );	
+	pTimeLimit->SetText( pTimeLimit->GetDBText() + wszText );
 }
 
 void CInterfaceMPGameRoom::ReturnToGamesList()
@@ -520,13 +520,13 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		slot.pCountry->SetName( fmt::format( "Country{}", i ) );
 
 		//Set viewer
-		slot.pCountry->SetViewer( new CTextureViewer() );	
+		slot.pCountry->SetViewer( new CTextureViewer() );
 		CPtr<CTextureData> pRandomItem = new CTextureData( pMPConsts->pRandomCountryIcon, GetScreen()->GetTextEntry( "TT_RANDOM_COUNTRY" ) );
 		slot.pCountry->AddItem( pRandomItem );
 		for ( int j = 0; j < pMPConsts->sides.size(); ++j )
 		{
-			if ( pMPConsts->sides[j].pPartyInfo && 
-				 !pMPConsts->sides[j].techLevels[gameDesc.nTechLevel].bDisabled && 
+			if ( pMPConsts->sides[j].pPartyInfo &&
+				 !pMPConsts->sides[j].techLevels[gameDesc.nTechLevel].bDisabled &&
 				 CHECK_TEXT_NOT_EMPTY_PRE(pMPConsts->sides[j].,Name))
 			{
 				CPtr<CTextureData> pData = new CTextureData( pMPConsts->sides[j].pListItemIcon, GET_TEXT_PRE(pMPConsts->sides[j].,Name) );
@@ -538,7 +538,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		slot.pTeam->SetName( fmt::format( "Team{}", i ) );
 		slot.pColour = GetChildChecked<IComboBox>( pWnd, "Colour", true );
 		slot.pColour->SetName( fmt::format( "Colour{}", i ) );
-		slot.pColour->SetViewer( new CColorViewer() );	
+		slot.pColour->SetViewer( new CColorViewer() );
 		for ( int j = 0; j < pMPConsts->playerColorInfos.size(); ++j )
 			slot.pColour->AddItem( new CColorData( pMPConsts->playerColorInfos[j].nColor | 0xff000000 ) );
 
@@ -555,7 +555,7 @@ bool CInterfaceMPGameRoom::OnGameRoomInitMessage( const SMPUIGameRoomInitMessage
 		if ( slot.pControlDisabler )
 			slot.pControlDisabler->ShowWindow( false );
 
-		if ( i != nOwnSlot ) 
+		if ( i != nOwnSlot )
 		{
 			CPtr<IWindow> pShade = GetChildChecked<IWindow>( pWnd, "SlotShade", true );
 			if ( pShade )
@@ -611,7 +611,7 @@ bool CInterfaceMPGameRoom::OnUpdateSlotMessage( SMPUIUpdateSlotMessage *pMsg )
 #define PING_GOOD 200
 #define PING_AVG 400
 void CInterfaceMPGameRoom::UpdateInterior()
-{	
+{
 	// Rebuild player list
 	for ( int i = 0; i < slots.size(); ++i )
 	{
@@ -658,7 +658,7 @@ void CInterfaceMPGameRoom::UpdateInterior()
 				slot.pPing->SetState( 1 );
 				wszPingTooltip += GetScreen()->GetTextEntry( "PING_NO_REPLY" );
 			}
-			else 
+			else
 			{
 				wszPingTooltip += NStr::ToUnicode( fmt::format( " {} ", slot.info.nPing ) );
 				if ( slot.info.nPing < PING_GOOD )
@@ -718,7 +718,7 @@ void CInterfaceMPGameRoom::CheckStartConditions()
 			if ( eState == E_OK )
 				eState = E_ACCEPT;
 		}
-		
+
 		if ( slot.info.bPresent )
 		{
 			int nSlotColourMask = 1UL << slot.info.nColour;
@@ -812,7 +812,7 @@ void CICMPGameRoom::PostCreate( IInterface *pInterface )
 
 void CICMPGameRoom::Configure( const char *pszConfig )
 {
-	str = pszConfig;	
+	str = pszConfig;
 }
 
 START_REGISTER(MPGameRoomCommands)

@@ -15,20 +15,20 @@ struct SNLProjectionInfo
 	CVec4 vTexU, vTexV;
 	CVec4 vShift;
 	CVec4 vMinMax;// ( uMin, uMax, vMin, vMax )
-	
+
 	/////////////////////////////////////////////////////linear infos from this point
-	CVec4 vDirX; 
-	CVec4 vDirY; 
+	CVec4 vDirX;
+	CVec4 vDirY;
 	float fMinX, fMaxX, fMinY, fMaxY;
-	CVec4 lvShift; 
+	CVec4 lvShift;
 	bool bNeedUpdate;
 
 	SNLProjectionInfo() :
 	    lvShift(0, 0, 0, 0),
-	    vTexU(1,0,0,0), 
-		vTexV(0,1,0,0), 
-		vShift(0,0,0,0), 
-		vMinMax(0,0,0,0), 
+	    vTexU(1,0,0,0),
+		vTexV(0,1,0,0),
+		vShift(0,0,0,0),
+		vMinMax(0,0,0,0),
 		bNeedUpdate(true),
 		fMinX(+1e38f),
 		fMinY(+1e38f),
@@ -46,7 +46,7 @@ struct SShadowMatrixAlign
 };
 
 // fMinimalElement - value influencing non linearity of projection in meters, the more this value the more linear projection is
-void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, float fMinimalSize, const CTransformStack &ts, 
+void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, float fMinimalSize, const CTransformStack &ts,
 	const CVec3 &ptDir, float fMaxHeight, const SBound &sceneBound, float fSceneHeight, SShadowMatrixAlign *pAlign );
 
 }

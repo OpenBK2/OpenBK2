@@ -37,7 +37,7 @@ static int Script_LOG(lua_State* state)
 	return 0;
 }
 
-char *pErrToString[] = 
+char *pErrToString[] =
 {
 	"OK",
 	"Error while running the chunk",
@@ -153,7 +153,7 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 			{
 				case 'n':
 					isOK = o.IsNumber();
-					if ( isOK )			
+					if ( isOK )
 					{
 						param.f = o.GetNumber();
 						param.n = param.f;
@@ -238,7 +238,7 @@ bool Script::CheckArgs( const char *szArgList, const std::string &sFuncName, std
 }
 
 Script::Script( const char* instanceName, bool initStandardLibrary, lua_CFunction logFunction )
-	: m_ownState(false), nPushCount( 0 ) 
+	: m_ownState(false), nPushCount( 0 )
 {
 	m_state = lua_open(0, instanceName);
 	m_ownState = true;
@@ -380,7 +380,7 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 	const unsigned int INDENT_SIZE = 2;
 	const unsigned int indentSpaces = indentLevel * INDENT_SIZE;
 	strRet += IndentString(indentSpaces);
-	
+
 	if (name)
 	{
 		strRet += name;
@@ -454,7 +454,7 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 					// Only add the comma and return if not on the first item.
 					if ( !firstSequential )
 						strRet += "\n";
-					
+
 					// Write the object as an unnamed entry.
 					strRet += GetObjectAsText( NULL, value, indentLevel + 1 );
 
@@ -469,7 +469,7 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		{
 			hasSequential = true;
 		}
-		
+
 		// Cycle through the table.
 		int i;
 		script.PushNil();
@@ -535,7 +535,7 @@ std::string Script::GetObjectAsText( const char* name, Script::Object value, boo
 		{
 			strRet += ",\n";
 		}
-		
+
 		// Indent, with the intent of closing up the table.
 		strRet += IndentString(indentSpaces);
 
@@ -608,12 +608,12 @@ std::string Script::GetStateAsText()
 	return str;
 }
 
-int Script::operator&( IBinSaver &f ) 
-{ 
+int Script::operator&( IBinSaver &f )
+{
 	if ( f.IsReading() )
 	{
 		if ( m_ownState )
-			lua_close( m_state ); 
+			lua_close( m_state );
 		f.Add( 2, &m_ownState );
 		ASSERT( m_ownState );
 		m_state = lua_open(0);
@@ -625,7 +625,7 @@ int Script::operator&( IBinSaver &f )
 		f.Add( 2, &m_ownState );
 		f.Add( 3, m_state ); // все правильно, амперсенд не нужен
 	}
-	return 0; 
+	return 0;
 }
 
 

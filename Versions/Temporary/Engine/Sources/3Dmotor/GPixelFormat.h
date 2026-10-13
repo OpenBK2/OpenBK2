@@ -216,7 +216,7 @@ struct CInterpolateColor
 {
 	typedef uint32_t RET;
 	uint32_t operator()( uint32_t a, uint32_t b, float f ) const
-	{ 
+	{
 		return
 			Float2Int( (a&0xff) * (1-f) + (b&0xff) * f ) +
 			( Float2Int( ((a>>8)&0xff) * (1-f) + ((b>>8)&0xff) * f ) << 8 ) +

@@ -19,8 +19,8 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CWindowMSButtonSharedBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
-	
+	pszDescription->clear();
+
 	// Считываем данные
 	CVariant value;
 	pBuildDataManipulator->GetValue( "UseDefBuilder", &value );
@@ -39,7 +39,7 @@ bool CWindowMSButtonSharedBuilder::IsValidBuildData( IManipulator *pBuildDataMan
 	for ( int i = 0; i < nVisualStates; ++i )
 	{
 		const std::string elementName = fmt::format( "VisualStates.[{}]", i );
-		
+
 		pBuildDataManipulator->GetValue( elementName + ".NormalTexture", &value );
 		if ( value.GetType() == CVariant::VT_NULL || (std::string (value.GetStr()).empty() ) )
 		{
@@ -100,7 +100,7 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( std::string *pszObjectT
 	// get texture size (Normal, State 0)
 	pBuildDataManipulator->GetValue( "VisualStates.[0].NormalTexture", &value );
 	const std::string szTextureFileName = value.GetStr();
-		
+
 	CTPoint<int> imageSize(0,0);
 	if ( !szTextureFileName.empty() )
 	{
@@ -144,8 +144,8 @@ bool CWindowMSButtonSharedBuilder::InternalInsertObject( std::string *pszObjectT
 }
 
 
-bool CWindowMSButtonSharedBuilder::CreateVisualState( const std::string		 & rszUniqueObjectName, 
-																										  IManipulator		 * pBuildDataManipulator, 
+bool CWindowMSButtonSharedBuilder::CreateVisualState( const std::string		 & rszUniqueObjectName,
+																										  IManipulator		 * pBuildDataManipulator,
 																											IManipulator		 * pMSBManipulator,
 																											int								 index )
 {
@@ -158,20 +158,20 @@ bool CWindowMSButtonSharedBuilder::CreateVisualState( const std::string		 & rszU
 		return false;
 	if ( !CreateButtonState( rszUniqueObjectName, pBuildDataManipulator, pMSBManipulator, index, "Disabled", false ) )
 		return false;
-	
+
 	return true;
 }
 
 
-bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszUniqueObjectName, 
-																										  IManipulator		 * pBuildDataManipulator, 
+bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszUniqueObjectName,
+																										  IManipulator		 * pBuildDataManipulator,
 																											IManipulator		 * pMSBManipulator,
 																											int								 index,
-																											const char       * szSuffixName, 
+																											const char       * szSuffixName,
 																											bool							 bNormalState	)
 {
 	bool bResult = true;
-	
+
 	IResourceManager *pResourceManager = Singleton<IResourceManager>();
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
 
@@ -179,7 +179,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 
 	pBuildDataManipulator->GetValue( fmt::format( "VisualStates.[{}].{}Texture", index, szSuffixName ), &value );
 	const std::string szTextureFileName = value.GetStr();
-	
+
 	pBuildDataManipulator->GetValue( fmt::format( "VisualStates.[{}].{}Color", index, szSuffixName ), &value );
 	const int nColor = value;
 
@@ -194,7 +194,7 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 	const std::string szBuilderGenPrefix = rszUniqueObjectName + PATH_SEPARATOR_CHAR +  fmt::format( "{}_{}", szShortName.c_str(), index );
 	const std::string szTexObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
 	const std::string szBSTObjectName = szBuilderGenPrefix + PATH_SEPARATOR_CHAR + szSuffixName;
-	
+
 	if ( !szTextureFileName.empty() )
 	{
 		// create Texture object
@@ -248,6 +248,6 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

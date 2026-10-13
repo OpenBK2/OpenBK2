@@ -48,7 +48,7 @@ void CManuver::GetManuverParams( struct SPrevPathParams *pParams ) const
 	pParams->fDistToGo = fDistToGo;
 	pParams->fCurTiltSpeed = fCurTiltSpeed;
 	pPath->GetPrevPoints( pParams );
-}	
+}
 
 const CVec3 CManuver::CalcPredictedPoint( CPlanesFormation *pPos, CPlanesFormation *pEnemy )
 {
@@ -84,7 +84,7 @@ CVec3 CManuver::GetProspectivePoint( const NTimer::STime nTime ) const
 	// assume that speed is constant
 	const float fAdd = nTime * fSpeed;
 	const float fDiff = fAdd + fProgress  - pPath->GetLength();
-	
+
 	if ( fDiff > 0.0f ) // assume that further movement is by line
 		return pPath->GetEndPoint() + pPath->GetEndTangent() * fSpeed * fDiff;
 	else
@@ -112,7 +112,7 @@ void CManuver::InitInternal( struct IPathFraction *_pPath, CPlanesFormation *_pP
 
 	fSpeed = _fSpeed;
 	fProgress = 0;
-	
+
 	CalcPoint();
 	CalcSpeed();
 	vNormal = _vNormale;
@@ -159,7 +159,7 @@ void CManuver::AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesire
 	}
 	else if ( 0.0f == fCurTiltSpeed )
 	{
-		// start tilt 
+		// start tilt
 		*pnRotation = nDiffSign;
 		*pfTiltToGo = DirsDifference( wDesiredDir, wCur );
 	}
@@ -183,7 +183,7 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 	int nRotation = 0;										// if dirs difference is positive, then 1.
 	float fTiltToGo = 0;									// additional tilt angle to reach desired tilt
 	AdjustNormale( timeDiff, vDesiredNormale, &vNormal, &nRotation, &fTiltToGo );
-	
+
 	float fPositiveAccel = 0.0f;
 	const float fTiltAccel = pPlane->GetPreferencesB2().GetTiltAccell();
 
@@ -195,7 +195,7 @@ void CManuver::CalcNormale( const NTimer::STime timeDiff )
 		fPositiveAccel = 1.0f;
 	else if ( ( -1 == nRotation && !bNeedDecSpeed ) || ( 1 == nRotation && bNeedDecSpeed ) )
 		fPositiveAccel = -1.0f;
-  
+
 	const float fTiltSpeedDelta = fPositiveAccel * fTiltAccel * timeDiff;
 	if ( /*0.0f == fTiltToGo && */ 0 != fCurTiltSpeed && boost::math::sign( fCurTiltSpeed + fTiltSpeedDelta ) != boost::math::sign( fCurTiltSpeed ) )
 		fCurTiltSpeed = 0;
@@ -256,7 +256,7 @@ bool CManuver::AdvanceCommon( const NTimer::STime timeDiff )
 	fSpeed = pref.GetSpeed( vCenter.z );
 
 	CalcSpeed();
-	CVec3 vTmp = vNormal; 
+	CVec3 vTmp = vNormal;
 	CalcNormale( timeDiff );
 	if ( vNormal == VNULL3 )
 		vNormal = vTmp;
@@ -289,9 +289,9 @@ void CManuver::CheckToHorisontal()
 	}
 }
 
-CVec3 CManuver::GetNormale() const 
-{ 
-	return vNormal + 2.0f * V3_AXIS_Z * !pPlane->GetPreferencesB2().CanFlip(); 
+CVec3 CManuver::GetNormale() const
+{
+	return vNormal + 2.0f * V3_AXIS_Z * !pPlane->GetPreferencesB2().CanFlip();
 }
 
 
@@ -311,18 +311,18 @@ void CManuverSteepClimb::Init( CPlanesFormation *pPos )
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
 
 	CPathFractionArcLine3D *pNewPath = new CPathFractionArcLine3D ;
-	
+
 	const CVec3 vPos( pPos->GetPosB2() );
 	CVec3 vSpeed ( pPos->GetSpeedB2() );
 	CVec2 vHorSpeed( vSpeed.x, vSpeed.y );
 
-	float fPathLength = pref.GetR( fabs(vSpeed) ) * 2.0f; 
+	float fPathLength = pref.GetR( fabs(vSpeed) ) * 2.0f;
 	Normalize( &vHorSpeed );
 	const CVec3 vDesiredPos( vPos + CVec3( fPathLength * vHorSpeed, fPathLength / 2.0f ) );
-	
+
 	SPrevPathParams param( pPos );
 	pNewPath->Init( param, vDesiredPos, pref.GetR( fabs(vSpeed) ) );
-	
+
 	InitCommon( pNewPath, pPos, false );
 }
 
@@ -340,17 +340,17 @@ bool CManuverSteepClimb::Advance( const NTimer::STime timeDiff )
 void CManuverToHorisontal::Init( CPlanesFormation *pPos, const CVec3 &vPos )
 {
 	const CPlanePreferences &pref = pPos->GetPreferencesB2();
-	// create manuver to enter horisontal 
+	// create manuver to enter horisontal
 	const CVec3 vCurrentPos( pPos->GetPosB2() );
 	const CVec3 vCurrentSpeed( pPos->GetSpeedB2() );
-	
+
 	CVec3 vDesiredDir( vPos - vCurrentPos );
 	Normalize( &vDesiredDir );
 
 	const float fR ( pref.GetR( fabs(pPos->GetSpeedB2()) ) );
 	SPrevPathParams param( pPos );
 
-	if ( vCurrentSpeed.z < 0.00001f && fabs( vPos.z - vCurrentPos.z ) < 0.00001f ) 
+	if ( vCurrentSpeed.z < 0.00001f && fabs( vPos.z - vCurrentPos.z ) < 0.00001f )
 	{
 		// already at desired height
 		CPtr<CPahtFractionArcLineArc> pNewPath = new CPahtFractionArcLineArc;

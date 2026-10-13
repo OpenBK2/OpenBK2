@@ -17,12 +17,12 @@ struct SText
 		SCharRect( int _nIndex, CTRect<int> _sRect ):
 			nIndex( _nIndex ), sRect( _sRect ) {}
 	};
-	
+
 	struct SFontLayout
 	{
 		ZDATA
 		CRectLayout sLayout;
-		
+
 		SFont sFont;
 		CPtr<CFontInfo> pFontInfo;
 		ZEND int operator&( CStructureSaver &f ) { f.Add(2,&sLayout); f.Add(3,&sFont); f.Add(4,&pFontInfo); return 0; }
@@ -40,6 +40,6 @@ struct SText
 
 CFuncBase<SText>* CreateTextFormater( CTextLocaleInfo *pInfo, CFuncBase<CVec2> *pScreenRect, CFuncBase<std::wstring> *pText, CFuncBase< CTPoint<int> > *pSize, bool bProcessTAGs = true );
 
-}; // namespace 
+}; // namespace
 
 

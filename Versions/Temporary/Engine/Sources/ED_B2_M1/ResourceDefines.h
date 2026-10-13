@@ -77,7 +77,7 @@
 #define ID_SQUAD_CHANGE_STATE												3203
 //
 //	CScriptAreaState commands
-#define ID_SCRIPT_AREA_WINDOW_UI_EVENT							3302	
+#define ID_SCRIPT_AREA_WINDOW_UI_EVENT							3302
 //
 //  CCameraPositionState commands
 #define ID_CPE_ON_PLAYER_CHANGED										3410
@@ -192,7 +192,7 @@
 #define ID_MODEL_RESET_CAMERA												3709
 #define ID_MODEL_SPEED_DOWN													3710
 #define ID_MODEL_SPEED_UP														3711
-		
+
 
 //13000...19999 Strings
 #define IDS_TOOLBAR_MAPINFO_TOOLS										13000

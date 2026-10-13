@@ -11,12 +11,12 @@ namespace NDb
 	struct SMechUnitRPGStats;
 }
 
-// выход из танк-пита. 
+// выход из танк-пита.
 class CTankPitLeaveState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CTankPitLeaveState );
 
-	enum ETankLeaveTankPitState 
+	enum ETankLeaveTankPitState
 	{
 		TLTPS_ESTIMATING,
 		TLTPS_MOVING,
@@ -35,7 +35,7 @@ public:
 
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	
+
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 };
@@ -45,7 +45,7 @@ class CMechUnitEntrenchSelfState : public IUnitState, public CStatusUpdatesHelpe
 {
 	OBJECT_BASIC_METHODS( CMechUnitEntrenchSelfState );
 
-	enum ESoldierHullDownState 
+	enum ESoldierHullDownState
 	{
 		ESHD_ESTIMATE,
 		ESHD_START_BUILD,
@@ -75,7 +75,7 @@ private:
 	void GetTilesNextToRect( const SRect &rect, const uint16_t wDirExclude );
 public:
 	static IUnitState* Instance( class CAIUnit * pUnit );
-	
+
 	CMechUnitEntrenchSelfState() : pUnit( 0 ) {  }
 	CMechUnitEntrenchSelfState( class CAIUnit * pUnit );
 	virtual void Segment();
@@ -131,9 +131,9 @@ class CMechUnitInsideMechUnitState : public IUnitState
 	CPtr<CMechUnitRestOnBoardPath> pPath;
 	NTimer::STime timeNextCheck = {};
 	CVec2 vDestination;						// Final destination to send the unit to, after leaving transport
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&eState); f.Add(4,&pTransport); f.Add(5,&pEnemy); f.Add(6,&vEntrancePoint); f.Add(7,&pPath); f.Add(8,&timeNextCheck); f.Add(9,&vDestination); return 0; }
-	
+
 	void OnSerialize( IBinSaver &saver );
 	void SendToEntrance();
 	void BoardNow();

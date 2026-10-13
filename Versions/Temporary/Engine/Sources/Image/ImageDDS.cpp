@@ -37,7 +37,7 @@ static void DecompressARGB( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t
 {
 	SPixelConvertInfo pci( hdr.ddspf.dwABitMask, hdr.ddspf.dwRBitMask, hdr.ddspf.dwGBitMask, hdr.ddspf.dwBBitMask );
 	//
-	switch ( hdr.ddspf.dwRGBBitCount ) 
+	switch ( hdr.ddspf.dwRGBBitCount )
 	{
 		case 16:
 			{
@@ -72,10 +72,10 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 	pStream->Read( &hdr, sizeof(hdr) );
 	// check for sub-formats
 	// DXT#
-	if ( hdr.ddspf.dwFlags & DDS_FOURCC ) 
+	if ( hdr.ddspf.dwFlags & DDS_FOURCC )
 	{
 		int nCompSize = 0, nDxt = 0;
-		switch ( hdr.ddspf.dwFourCC ) 
+		switch ( hdr.ddspf.dwFourCC )
 		{
 			case MAKEFOURCC('D','X','T','1'):
 				nDxt = 1;
@@ -99,7 +99,7 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 				break;
 		}
 		// decompress
-		if ( nCompSize > 0 ) 
+		if ( nCompSize > 0 )
 		{
 
 			uint8_t *buffer = new uint8_t[nCompSize];
@@ -110,7 +110,7 @@ bool LoadImageDDS( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 		else
 			return false;
 	}
-	else if ( ((hdr.ddspf.dwFlags & DDS_ARGB) == DDS_ARGB) || ((hdr.ddspf.dwFlags & DDS_ARGB) == DDS_RGB) ) 
+	else if ( ((hdr.ddspf.dwFlags & DDS_ARGB) == DDS_ARGB) || ((hdr.ddspf.dwFlags & DDS_ARGB) == DDS_RGB) )
 	{
 		pRes->SetSizes( hdr.dwWidth, hdr.dwHeight );
 		if ( hdr.ddspf.dwRGBBitCount == 32 )	// directly read to image - this is ARGB8888

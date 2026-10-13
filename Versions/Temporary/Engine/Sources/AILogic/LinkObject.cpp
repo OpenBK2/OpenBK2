@@ -63,7 +63,7 @@ void CLinkObject::SetLink( const int _nLink )
 }
 
 void CLinkObject::Mem2UniqueIdObjs()
-{ 
+{
 	NI_ASSERT( nUniqueID > 0, "Unique id isn't set" );
 	SLinkObjDataAutoMagic::pLinkObjData->unitsID2object[nUniqueID] = this;
 }
@@ -96,7 +96,7 @@ void CLinkObject::Clear()
 		if ( SLinkObjDataAutoMagic::pLinkObjData->link2object[i] != 0 && SLinkObjDataAutoMagic::pLinkObjData->link2object[i]->IsRefValid() )
 			checked_cast<CLinkObject*>( SLinkObjDataAutoMagic::pLinkObjData->link2object[i].GetPtr() )->SetLink( -1 );
 	}
-	
+
 	SLinkObjDataAutoMagic::pLinkObjData->link2object.clear();
 	SLinkObjDataAutoMagic::pLinkObjData->deletedObjects.clear();
 	SLinkObjDataAutoMagic::pLinkObjData->deletedUniqueObjects.clear();
@@ -112,12 +112,12 @@ void CLinkObject::ClearLinks()
 		if ( SLinkObjDataAutoMagic::pLinkObjData->link2object[i] != 0 && SLinkObjDataAutoMagic::pLinkObjData->link2object[i]->IsRefValid() )
 			checked_cast<CLinkObject*>( SLinkObjDataAutoMagic::pLinkObjData->link2object[i].GetPtr() )->SetLink( -1 );
 	}
-	
+
 	SLinkObjDataAutoMagic::pLinkObjData->link2object.clear();
 }
 
 CLinkObject* CLinkObject::GetObjectByUniqueId( const int nUniqueID )
-{ 
+{
 	NI_ASSERT( nUniqueID > 0, "Wrong object" );
 	NI_ASSERT( SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end(), fmt::format( "Wrong unique id ({})", nUniqueID ) );
 	det_map<int, CObj<CLinkObject> >::iterator pos = SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID );

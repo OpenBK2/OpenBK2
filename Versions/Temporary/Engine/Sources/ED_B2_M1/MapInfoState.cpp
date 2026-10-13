@@ -38,7 +38,7 @@
 #include "port/wordpack.h"
 
 
-const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] = 
+const unsigned CMapInfoState::INPUT_STATE_LABEL_ID[IS_COUNT] =
 {
 	IDS_IS_TERRAIN_LABEL,
 	IDS_IS_OBJECT_LABEL,
@@ -61,7 +61,7 @@ const unsigned CMapInfoState::OBJECT_INPUT_SUSBSTATE_LABEL_ID[OBJECT_ISS_COUNT] 
 };
 
 
-const unsigned CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT] = 
+const unsigned CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COUNT] =
 {
 	IDS_GP_ISS_REINF_POINTS_LABEL,
 	IDS_GP_ISS_START_CAMERA_LABEL,
@@ -70,14 +70,14 @@ const unsigned CMapInfoState::GAMEPLAY_INPUT_SUSBSTATE_LABEL_ID[GAMEPLAY_ISS_COU
 };
 
 
-const unsigned CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] = 
+const unsigned CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] =
 {
 	IDS_SCRIPT_ISS_SCRIPT_AREAS_LABEL,
 	IDS_SCRIPT_ISS_SCRIPT_MOVIES_LABEL
 };
 
 
-//const unsigned CMapInfoState::MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT] = 
+//const unsigned CMapInfoState::MOV_EDITOR_INPUT_SUSBSTATE_LABEL_ID[MOV_EDITOR_ISS_COUNT] =
 //{
 //	IDS_MOV_EDITOR_ISS_EDITOR_LABEL
 //};
@@ -86,7 +86,7 @@ const unsigned CMapInfoState::SCRIPT_INPUT_SUSBSTATE_LABEL_ID[SCRIPT_ISS_COUNT] 
 const unsigned CMapInfoState::DEFAULT_INPUT_STATE = IS_OBJECT;
 
 
-const unsigned CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] = 
+const unsigned CMapInfoState::INPUT_SUBSTATE_COUNT[IS_COUNT] =
 {
 	TERRAIN_ISS_COUNT,
 	OBJECT_ISS_COUNT,
@@ -186,7 +186,7 @@ CMapInfoState::CMapInfoState(  CMapInfoEditor *_pMapInfoEditor ) : pMapInfoEdito
 		CMultiInputState *pMultiInputState = new CMultiInputState();
 		nStateIndex = AddInputState( pMultiInputState );
 		NI_ASSERT( nStateIndex == IS_SCRIPT, fmt::format( "CMapInfoState(): Wrong state number IS_SCRIPT: {} ({})", nStateIndex, static_cast<int>( IS_SCRIPT ) ) );
-		// SCRIPT_ISS_SCRIPT_AREAS		
+		// SCRIPT_ISS_SCRIPT_AREAS
 		{
 			CScriptAreaState *pScriptAreaState = new CScriptAreaState( pMapInfoEditor );
 			nStateIndex = pMultiInputState->AddInputState( pScriptAreaState );
@@ -439,7 +439,7 @@ void CMapInfoState::Enter()
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
 			{
 				NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map object {} on the map \"{}\" has no RPG stats. Skiping...\n", nObjectIndex, NDb::GetResName(pMapInfoEditor->pMapInfo) ) );
-				continue;				
+				continue;
 			}
 			if ( !pMapInfoEditor->objectInfoCollector.linkIDCollector.LockID( pMapInfoEditor->pMapInfo->objects[nObjectIndex].link.nLinkID ) )
 			{
@@ -487,7 +487,7 @@ void CMapInfoState::Enter()
 		{
 			if ( pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject == 0 )
 			{
-				continue;				
+				continue;
 			}
 			CDBID objectRPGStatsDBID = pMapInfoEditor->pMapInfo->objects[nObjectIndex].pObject->GetDBID();
 			std::string szObjectRPGStatsTypeName = NDb::GetClassTypeName( objectRPGStatsDBID );
@@ -620,7 +620,7 @@ void CMapInfoState::Enter()
 	Singleton<IControllerContainer>()->RemoveTemporaryControllers( CMapInfoController::TEMPORARY_LABEL );
 	pMapInfoEditor->SetModified( false );
 		NProgress::IteratePosition(); // 17
-	// Loading view filter from 
+	// Loading view filter from
 	pMapInfoEditor->ApplyViewFilter();
 	// загружаем состояние панелей
 	LoadEnterConfig();
@@ -770,11 +770,11 @@ void CMapInfoState::OnMButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoin
 
 void CMapInfoState::CancelSelection()
 {
-	
+
 }
 
 
-// basement storage  
+// basement storage
 
 /**
 namespace NTest
@@ -852,7 +852,7 @@ namespace NTest
 				else
 				{
 					const NDb::SModel *pModel = ChooseModelWithHP( pMapInfo->objects[nObjectIndex].pObject, pMapInfo->objects[nObjectIndex].fHP, pMapInfo->eSeason );
-					//const NDb::SModel *pModel = GetModel( pMapInfo->objects[nObjectIndex].pObject->pvisualObject, pMapInfo->eSeason ); 
+					//const NDb::SModel *pModel = GetModel( pMapInfo->objects[nObjectIndex].pObject->pvisualObject, pMapInfo->eSeason );
 					if ( pModel == 0 )
 						continue;
 					nSceneObjectID = pScene->AddObject( nObjectIndex, pModel, vPos, qRot, CVec3( 1, 1, 1 ), false );
@@ -864,7 +864,7 @@ namespace NTest
 /**
 	int nID = 0;
 	bool bLockID = true;
-	CFreeIDCollector freeIDCollector;	
+	CFreeIDCollector freeIDCollector;
 	DebugTrace( "Empty:" );
 	freeIDCollector.Trace();
 	//

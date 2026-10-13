@@ -12,7 +12,7 @@ class CTerrainEditor : public CEditorBase, public CDefaultView, public ICommandH
 	friend class CTerrainState;
 	OBJECT_NOCOPY_METHODS( CTerrainEditor );
 	//Данные специфичные для данного редактрора
-	// Данные общего назначения 
+	// Данные общего назначения
 	CTerrainState *pTerrainState;
 	//
 	CTerrainEditor();
@@ -33,7 +33,7 @@ public:
 	//CDefaultView
 	void Undo( IController* pController ) {}
 	void Redo( IController* pController ) {}
-	
+
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData ) { return false; }
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) { return false; }

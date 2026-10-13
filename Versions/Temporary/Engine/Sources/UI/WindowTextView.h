@@ -17,7 +17,7 @@ struct ISound;
 class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 {
 	OBJECT_BASIC_METHODS(CWindowTextView);
-	
+
 	CPtr<NDb::SWindowTextView> pInstance;
 	CDBPtr<NDb::SWindowTextViewShared> pShared;
 
@@ -28,7 +28,7 @@ class UI_EXPORT CWindowTextView : public CWindow, public ITextView
 	// Track control sizing separately: GetSize can refresh the markup before
 	// Visit has updated a ResizeOnTextSet window's height.
 	float fFontScale = 0;
-private:	
+private:
 	bool InitText();
 	//{ overrided
 	const std::wstring& GetDBFormatText() const;

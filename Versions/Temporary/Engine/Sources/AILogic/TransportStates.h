@@ -22,7 +22,7 @@ namespace NDb
 class CTransportStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CTransportStatesFactory );
-	
+
 	static CPtr<CTransportStatesFactory> pFactory;
 public:
 	int operator&( IBinSaver &saver )
@@ -68,12 +68,12 @@ class CTransportLandState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportLandState );
 
-	enum ELandStates 
-	{ 
-		ELS_STARTING, 
-		ELS_MOVING, 
-		ELS_LANDING, 
-		ELS_LANDING_MECH 
+	enum ELandStates
+	{
+		ELS_STARTING,
+		ELS_MOVING,
+		ELS_LANDING,
+		ELS_LANDING_MECH
 	};
 
 	ZDATA_( CStatusUpdatesHelper )
@@ -125,7 +125,7 @@ class CTransportLoadRuState : public IUnitState, public CStatusUpdatesHelper
 	CPtr<CAITransportUnit> pTransport;
 	int nEntrance = {};
 	bool bSubState = {};												// является ли этот стейт сабстейтом
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pStorage); f.Add(4,&pLoaderSquad); f.Add(5,&pTransport); f.Add(6,&nEntrance); f.Add(7,&bSubState); return 0; }
 private:
 	void CreateSquad();
@@ -143,7 +143,7 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
-	
+
 	bool IsSubStateFinished() const { return eState == ETLRS_SUBSTATE_FINISHED; }
 };
 
@@ -159,9 +159,9 @@ class CTransportServeState : public IUnitState, public CStatusUpdatesHelper
 		ETRS_CREATE_SQUAD,
 		ETRS_FINDING_UNIT_TO_SERVE,
 		ETRS_LOADERS_INROUTE,
-		
+
 		ETRS_GOING_TO_STORAGE,
-		
+
 		ETRS_WAIT_FOR_LOADERS,
 		ETRS_WAIT_FOR_UNIT_TO_SERVE,
 	};
@@ -186,7 +186,7 @@ public:
 	virtual bool FindUnitToServe( bool *pIsNotEnoughRU ) = 0;
 
 	virtual void SendLoaders() = 0;
-	
+
 	virtual void UpdateActionBegin() = 0;
 
 public:
@@ -249,7 +249,7 @@ public:
 class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CTransportHookArtilleryState );
-	
+
 	enum ETransportTakeGunState
 	{
 		TTGS_ESTIMATING,                    //0
@@ -272,7 +272,7 @@ class CTransportHookArtilleryState : public IUnitState, public CStatusUpdatesHel
 
 	CPtr<CArtillery> pArtillery;
 	CVec2 vArtilleryPoint;
-	
+
 	NTimer::STime timeLast = {};
 
 	SAIAngle wDesiredTransportDir; // куда бдет направлен транспорт при погрузке
@@ -296,7 +296,7 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_HOOK_ARTILLERY; }
 };
 
@@ -350,9 +350,9 @@ class CTransportBuildState : public IUnitState, public CStatusUpdatesHelper
 
 		ETBS_WAIT_FOR_ENDPOINT,
 		ETBS_END_POINT_READY,
-		
+
 		ETBS_APROACHING_BUILDPOINT,
-		
+
 		ETBS_CREATE_SQUAD,
 		ETBS_WAIT_FINISH_BUILD,
 		ETBS_START_APPROACH,
@@ -394,7 +394,7 @@ public:
 
 	void SetStartPoint( const CVec2 &_vStartPoint ) { vStartPoint = _vStartPoint; }
 	virtual void SetEndPoint( const CVec2& _vEndPoint ) ;
-	
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return vStartPoint; }
@@ -425,7 +425,7 @@ protected:
 public:
 
 	virtual void SetEndPoint( const CVec2& _vEndPoint );
-	
+
 };
 
 class CTransportBuildFenceState : public CTransportBuildLongObjectState
@@ -469,7 +469,7 @@ class CTransportClearMineState : public CTransportBuildState
 	bool bWorkDone = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&timeCheckPeriod); f.Add(3,&timeNextCheck); f.Add(4,&bWorkDone); return 0; }
-protected:	
+protected:
 	virtual void SendTransportToBuildPoint();
 	virtual bool HaveToSendEngeneersNow() ;
 	virtual bool IsEnoughResources() const;
@@ -499,7 +499,7 @@ class CTransportPlaceMineState : public CTransportBuildState
 	int nSquareSize = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&bWorkDone); f.Add(3,&bTransportSent); f.Add(4,&eCurrType); f.Add(5,&nSqI); f.Add(6,&nSqJ); f.Add(7,&vCorner); f.Add(8,&nSquareSize); return 0; }
-protected:	
+protected:
 	virtual void SendTransportToBuildPoint();
 	virtual bool HaveToSendEngeneersNow();
 	virtual bool IsEnoughResources() const;
@@ -517,7 +517,7 @@ public:
 	virtual EUnitStateNames GetName() { return EUSN_PLACE_MINE; }
 };
 
-class CTransportPlaceAntitankState : public CTransportBuildState 
+class CTransportPlaceAntitankState : public CTransportBuildState
 {
 	OBJECT_BASIC_METHODS( CTransportPlaceAntitankState );
 
@@ -526,7 +526,7 @@ class CTransportPlaceAntitankState : public CTransportBuildState
 	bool bSent = {};
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(2,&bWorkFinished); f.Add(3,&bSent); return 0; }
-protected:	
+protected:
 	virtual void SendTransportToBuildPoint();
 	virtual bool HaveToSendEngeneersNow() ;
 	virtual bool IsEnoughResources() const;
@@ -556,7 +556,7 @@ class CTransportRepairBridgeState : public CTransportBuildState
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTransportBuildState*)this); f.Add(3,&pBridgeToRepair); f.Add(4,&bSentToBuildPoint); return 0; }
 private:
-protected:	
+protected:
 	virtual void SendTransportToBuildPoint();
 	virtual bool HaveToSendEngeneersNow() ;
 	virtual bool IsEnoughResources() const;
@@ -569,7 +569,7 @@ public:
 
 	CTransportRepairBridgeState() {  }
 	CTransportRepairBridgeState( class CAITransportUnit *pTransport, class CBridgeSpan *pFullBridge );
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_REPAIR_BRIDGE; }
 };
 
@@ -634,7 +634,7 @@ public:
 class CMoveToPointNotPresize : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CMoveToPointNotPresize );
-	
+
 	ZDATA
 	CPtr<CAIUnit> pTransport;
 	CVec2 vPurposePoint;

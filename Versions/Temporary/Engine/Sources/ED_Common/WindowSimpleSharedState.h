@@ -24,7 +24,7 @@ private:
 	void LoadWindow();
 	void ReplaceChild( IWindow *pWindow, const CTPoint<int> &rMousePoint, int nFlags );
 	bool CheckInsertChild( const std::string & szTypeName, const CDBID &rDBID );
-	
+
 	bool InsertChildInstanceToDB( const std::string & szSharedTypeName, const CDBID &rSharedDBID, CDBID *pInstanceDBID );
 	IWindow * InsertChildInstanceToUI( const std::string & szSharedTypeName, const CDBID &rDBID );
 	bool GenerateChildInstance( const std::string &szTypeName, const CDBID &rDBID, std::string *szInstanceFullName, CDBID *pInstanceDBID );

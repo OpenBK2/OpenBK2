@@ -11,8 +11,8 @@ IStaticPath* CreateStaticPathToPoint( const CVec2 &_finishPoint, const CVec2 &vS
 		finishPoint = _finishPoint;
 	if ( !bCanGoOutOfRadius && !pUnit->CanGoToPoint( _finishPoint ) )
 		return 0;
-	
-	return 
+
+	return
 		pUnit->CreateBigStaticPath( pUnit->GetCenterPlain(), finishPoint, 0 );
 }
 
@@ -24,7 +24,7 @@ IStaticPath* CreateStaticPathToPoint( const CVec2 &_startPoint, const CVec2 &_fi
 	if ( !bCanGoOutOfRadius && !pUnit->CanGoToPoint( finishPoint ) )
 		return 0;
 
-	return 
+	return
 		pUnit->CreateBigStaticPath( _startPoint, finishPoint, 0 );
 }
 

@@ -234,7 +234,7 @@ CVariant::operator float() const
 {
 	if ( m_eType == VT_FLOAT )
 	{
-		return m_float;	
+		return m_float;
 	}
 	else
 	{
@@ -436,7 +436,7 @@ void CVariant::Trace() const
 {
 	if ( ( m_eType == VT_MULTIVARIANT ) && ( m_pmvar != 0 ) && ( m_pmvar->m_pMultiVariantMap != 0 ) )
 	{
-		for ( CMultiVariantMap::const_iterator itMultiVariant = m_pmvar->m_pMultiVariantMap->begin(); 
+		for ( CMultiVariantMap::const_iterator itMultiVariant = m_pmvar->m_pMultiVariantMap->begin();
 			    itMultiVariant != m_pmvar->m_pMultiVariantMap->end(); ++itMultiVariant )
 		{
 			DebugTrace( "%s", itMultiVariant->first.ToString().c_str() );
@@ -522,13 +522,13 @@ int CVariant::operator&( IXmlSaver &saver )
 		break;
 
 	case VT_POINTER:
-		if ( saver.IsReading() ) 
+		if ( saver.IsReading() )
 			m_pblob = new SBlob();
 		saver.Add( "Data", m_pblob );
 		break;
 
 	case VT_DBID:
-		if ( saver.IsReading() ) 
+		if ( saver.IsReading() )
 			m_dbid = new CDBID();
 		saver.Add( "Data", m_dbid );
 		break;

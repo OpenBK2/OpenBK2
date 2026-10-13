@@ -195,7 +195,7 @@ bool CMapObjectMultiState::UpdateCommand( unsigned nCommandID, bool *pbEnable, b
 
 
 CMapObjectMultiState::SEditParameters* CMapObjectMultiState::GetEditParameters()
-{ 
+{
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epMapObjectMultiState ) : 0 );
 }
 
@@ -213,6 +213,6 @@ int CMapObjectMultiState::SEditParameters::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 

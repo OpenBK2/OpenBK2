@@ -72,9 +72,9 @@ struct ISoundScene : public CObjectBase
 	// map sounds (vPos in AI pixels)
 	virtual uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos ) = 0;
 	virtual void RemoveSoundFromMap( const uint16_t	wInstanceID ) = 0;
-	// segment 
+	// segment
 	virtual void UpdateSound( const CVec3 &vListener, const CVec3 &vCameraDir, const float fViewRadius ) = 0;
-	// clear all map sounds. 
+	// clear all map sounds.
 	virtual void ClearSounds() = 0;
 };
 inline ISoundScene *SoundScene() { return Singleton<ISoundScene>(); }

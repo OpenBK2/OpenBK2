@@ -24,7 +24,7 @@ const float F_ZBUF_SCALE = 40000;
 const float F_ZBUF_SCALE_LOW = 10000;
 typedef unsigned short zbuf_type;
 
-static CVec3 vCamDirs[6] = 
+static CVec3 vCamDirs[6] =
 {
 	CVec3( 1, 0, 0 ),
 	CVec3( 0, 1, 0 ),
@@ -191,7 +191,7 @@ class CPartsRender: public CRasterizer<CPartsRender>
 	CObj<CHZBuffer> pHZBuffer;
 	CArray2D<unsigned short> indexBuffer;
 	std::vector<int> refCount;
-	
+
 	bool DoRenderBackface() const { return false; }
 
 	void ClipVertical( int *pnY )
@@ -338,7 +338,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 		for ( int nPart = 0; nPart < rps.pParts->size(); ++nPart )
 		{
 			pr.SetCurrentID( ++nIDCounter );
-			
+
 			if ( !rps.parts.IsSet( nPart ) )
 				continue;
 			if ( !rps.opaque.IsSet( nPart ) )
@@ -363,11 +363,11 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 				if ( !pHZOptimize->IsVisible( bounds[nPart], pTS ) )
 					continue;
 			}
-			
+
 			std::vector<CVec3> points;
 			std::vector<STriangle> tris;
 			TransformPart( pPart, &points, &tris );
-			
+
 			static std::vector<SProjectedPoint> verticesSet;
 			if ( points.size() > verticesSet.size() )
 				verticesSet.resize( points.size() );
@@ -376,7 +376,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 				const CVec3 &src = points[nVert];
 				verticesSet[nVert].Transform( sRes, src );
 			}
-			
+
 			for ( int i = 0; i < tris.size(); ++i )
 			{
 				const STriangle &tri = tris[i];
@@ -389,7 +389,7 @@ static void RenderStuff( CPartsRender &pr, IRender *pRender, CTransformStack *pT
 	}
 }
 
-void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius, 
+void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 	std::vector<SRenderPartSet> *pRes, IRender::EDepthType eType, const SGroupSelect &mask )
 {
 	CPartsRender pr( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT, F_ZBUF_SCALE_LOW );
@@ -403,7 +403,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		CTransformStack sTransform;
 		sTransform.MakeProjective( CVec2( N_OCCLUDE_BUFFER_WIDTH, N_OCCLUDE_BUFFER_HEIGHT ), 90, 0.1f, fRadius * 2.0f );
 		sTransform.SetCamera( cameraTransf );
-	
+
 		std::vector<SRenderPartSet> listParts;
 		pRender->FormPartList( &sTransform, &listParts, eType, mask );
 		pr.InitZBuffer( sTransform.GetProjection().forward, fRadius );
@@ -447,27 +447,27 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 		//	nodes.clear();
 		//	SGroupInfo sInfo( 0, 0xFEFFFFFF );
 		//	CPtr<IMaterial> pMaterial = CreateMaterial( CVec3( 1, 0.3f, 0.3f ) );
-		//	
+		//
 		//	CTransformStack sStack;
 		//	sStack.Init();
 		//	CPtr<CCFBTransform> pTransform = new CCFBTransform( sStack.Get() );
-		//	
+		//
 		//	for( int nTempX = 0; nTempX < pr.depthBuffer.GetSizeX(); nTempX++ )
 		//	{
 		//		for( int nTempY = 0; nTempY < pr.depthBuffer.GetSizeY(); nTempY++ )
 		//		{
 		//			if ( pr.depthBuffer[nTempY][nTempX].nIndex != 0 )
 		//			{
-		//				CVec4 vRes, vSrc( 
-		//					( ( nTempX + 0.5f ) / pr.GetWidth() - 0.5f ) * 2, 
-		//					( ( nTempY + 0.5f ) / pr.GetHeight() - 0.5f ) * 2, 
+		//				CVec4 vRes, vSrc(
+		//					( ( nTempX + 0.5f ) / pr.GetWidth() - 0.5f ) * 2,
+		//					( ( nTempY + 0.5f ) / pr.GetHeight() - 0.5f ) * 2,
 		//					pr.depthBuffer[nTempY][nTempX].fDepth, 1 );
 		//				pTS->Get().backward.RotateHVector( &vRes, vSrc );
 		//				ASSERT( vRes.w != 0 );
 		//				CVec3 vPos( vRes.x / vRes.w, vRes.y / vRes.w, vRes.z / vRes.w );
 		//				CObj<CMemObject> pModelBuilder( new CMemObject );
 		//				pModelBuilder->CreateSphere( vPos, 0.06f, 0 );
-		//				
+		//
 		//				nodes.push_back( pCurrentScene->CreatePart( CreateObjectInfo( pModelBuilder, CVec4(1,1,1,1) ), pMaterial, pTransform, sInfo ) );
 		//				//nodes.push_back( pCurrentScene->CreatePart( modelBuilder.CreateObjectInfo(), pMaterial, pTransform, sInfo ) );
 		//			}
@@ -477,7 +477,7 @@ void GeneratePartList( IRender *pRender, const CVec3 &vCenter, float fRadius,
 	}
 }
 
-void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS, 
+void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	const SGroupSelect &_mask, const CVec2 &screenSize, CIgnorePartsHash *pIgnore,
 	CObj<IHZBuffer> *pHZBuffer )
 {
@@ -522,8 +522,8 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	}
 }
 
-void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS, 
-	const SGroupSelect &_mask, const CVec2 &screenSize, CIgnorePartsHash *pIgnore, 
+void MakeInvisibleElementsListFast( IRender *pRender, CTransformStack *pTS,
+	const SGroupSelect &_mask, const CVec2 &screenSize, CIgnorePartsHash *pIgnore,
 	CObj<IHZBuffer> *pHZBuffer )
 {
 	CPartsRender pr( Clamp( (int)screenSize.x / 2, 4, 400 ), Clamp( (int)screenSize.y / 2, 4, 300 ), F_ZBUF_SCALE );
@@ -603,7 +603,7 @@ class CShadowVolumeBuilder
 public:
 	CShadowVolumeBuilder( const CVec3 &_vCenter, float _fRadius, std::vector<CVec3> *_pResPoints, std::vector<STriangle> *_pResTris )
 		: vCenter(_vCenter), fRadius(_fRadius), resPoints(*_pResPoints), resTris(*_pResTris), fHullRadius(_fRadius * FP_SQRT_3)
-	{ 
+	{
 		resPoints.resize( 0 );
 		resTris.resize( 0 );
 	}
@@ -823,7 +823,7 @@ void CShadowVolumeBuilder::AddTriangle( const CVec3 &p1, const CVec3 &p2, const 
 }
 
 
-void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCenter, 
+void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCenter,
 	float fRadius, std::vector<STriangle> *pTris,
 	std::vector<CVec3> *pVertices, IRender::EDepthType eType, const SGroupSelect &mask,
 	float *pHullRadius,

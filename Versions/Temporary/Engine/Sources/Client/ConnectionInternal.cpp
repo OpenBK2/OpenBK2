@@ -130,7 +130,7 @@ bool CSimpleConnection::ProcessPacketFromPlayersNet( CNetPacket *pPacket )
 	const int nCheckTestConnectionResult = CheckTestConnection( pPacket );
 	if ( nCheckTestConnectionResult != 0 )
 		return nCheckTestConnectionResult == 1;
-	
+
 	if ( pPacket->nClientID == nClientLocalID )
 	{
 		pPacket->nClientID = nClientServerID;

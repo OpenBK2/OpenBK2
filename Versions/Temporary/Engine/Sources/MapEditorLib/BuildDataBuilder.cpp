@@ -18,7 +18,7 @@ bool CBuildDataBuilder::InsertObject( std::string *pszObjectTypeName,
 	NI_ASSERT( pbCanChangeObjectName != 0, "CBuildDataBuilder::InsertObject() pbCanChangeObjectName == 0" );
 	NI_ASSERT( pbNeedExport != 0, "CBuildDataBuilder::InsertObject() pbNeedExport == 0" );
 	NI_ASSERT( pbNeedEdit != 0, "CBuildDataBuilder::InsertObject() pbNeedEdit == 0" );
-	//	
+	//
 	if ( !NeedBuildDataDialog() )
 	{
 		// call default implementation
@@ -63,6 +63,6 @@ bool CBuildDataBuilder::IsUniqueObjectName( const std::string &szObjectType, con
 	return Singleton<IFolderCallback>()->IsUniqueName( szObjectType, szObjectName );
 }
 
-// basement storage  
+// basement storage
 
 

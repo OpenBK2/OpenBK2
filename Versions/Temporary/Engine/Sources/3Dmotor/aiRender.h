@@ -16,13 +16,13 @@ const int N_F_INF = 0x7149f2ca;//1e30f//*(const int*)&F_INF;
 struct SConvexHull;
 class _3DMOTOR_EXPORT CFastRenderer: public CRasterizer<CFastRenderer>
 {
-public:	
+public:
 	struct SResult
 	{
 		union
 		{
 			float fDist[2];
-			struct 
+			struct
 			{
 				float fEnter, fExit;
 			};
@@ -124,7 +124,7 @@ private:
 			pNode->pObject = pCurrentObject;
 			pNode->fDist[0] = fDist;
 			pNode->pNext = 0;
-			
+
 
 			if ( pResult == 0 )
 			{

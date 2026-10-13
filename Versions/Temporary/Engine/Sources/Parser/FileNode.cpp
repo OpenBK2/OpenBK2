@@ -156,7 +156,7 @@ void CFileNode::Parse()
 		OpenNewNamespace( 0 );
 		// by the path on disk; OpenFile lowercases it back into GetName() as the key
 		VERIFY_NOLINE( NLang::OpenFile( GetPathOnDisk() ), fmt::format( "file {} not found", GetPathOnDisk() ), { eParseState = EPS_PARSED; return; } );
-		
+
 		nyyLineNumber = 1;
 		yyparse();
 

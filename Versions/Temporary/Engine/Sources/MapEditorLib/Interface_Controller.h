@@ -17,7 +17,7 @@ struct SObjectSet
 };
 
 
-// 
+//
 struct SSelectionSet
 {
 	std::string szObjectTypeName;
@@ -65,7 +65,7 @@ struct IControllerContainer : public CObjectBase
 	virtual bool CanUndo() const = 0;
 	// Есть ли для операции Redo данные
 	virtual bool CanRedo() const = 0;
-	// Undo na nCount операций	
+	// Undo na nCount операций
 	virtual bool Undo( int nCount ) = 0;
 	// Redo na nCount операций
 	virtual bool Redo( int nCount ) = 0;

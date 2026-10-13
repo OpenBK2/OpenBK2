@@ -192,7 +192,7 @@ void SInterfaceMissionWarFogInfo::GetNoise( CArray2D<float> *pNoise, NTimer::STi
 	Blur( pNoise, noise );
 }
 
-void SInterfaceMissionWarFogInfo::Blend( CArray2D<float> *pDst, 
+void SInterfaceMissionWarFogInfo::Blend( CArray2D<float> *pDst,
 																				const CArray2D<float> &src1, const CArray2D<float> &src2, float fDelta )
 {
 	pDst->SetSizes( nSizeX, nSizeY );

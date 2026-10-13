@@ -11,10 +11,10 @@ class CWindowProgressBar : public CWindow, public IProgressBar
 	CObj<IWindowPart> pForward;						// show increasing progress
 	CObj<IWindowPart> pBackward;						// show decreasing part
 	CObj<IWindowPart> pGlow;// texture drawn over border between increasing and decreasing parts
-	
+
 	CPtr<NDb::SWindowProgressBar> pInstance;
 	CDBPtr<NDb::SWindowProgressBarShared> pShared;
-	
+
 	float fStepSize;
 	bool bShowFirstElement;
 protected:
@@ -26,7 +26,7 @@ public:
 	virtual void Reposition( const CTRect<float> &parentRect );
 
 	virtual void Visit( struct IUIVisitor *pVisitor );
-	
+
 	//IProgressBar{
 	virtual void SetPosition( const float fPos );
 	virtual float GetPosition() const { return pInstance->fProgress; }
@@ -45,7 +45,7 @@ class CWindowMultiTextureProgressBar : public CWindow, public IMultiTextureProgr
 	CDBPtr<NDb::SWindowMultiTextureProgressBarShared> pShared;
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
-	
+
 	int FindStateIndex( float fProgress );
 public:
 	int operator&( IBinSaver &saver );
@@ -53,7 +53,7 @@ public:
 	virtual void Reposition( const CTRect<float> &parentRect );
 
 	virtual void Visit( struct IUIVisitor *pVisitor );
-	
+
 	//IMultiTextureProgressBar{
 	virtual bool IsSolid() const;
 	virtual void GetPositions( std::vector<float> *pPositions ) const;

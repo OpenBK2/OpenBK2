@@ -182,7 +182,7 @@ protected:
 	void AddGameInfoForUI( std::list<SUIGameInfo> *pList, const SNetGameInfo &game );
 	void UpdateMyConnectivityMask();
 	virtual void CheckJoinGameConditions() {}
-	
+
 	void WinGame();
 	void LoseGame();
 	void ScheduleWinGame();

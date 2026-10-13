@@ -39,9 +39,9 @@ void luaD_init (lua_State *L, int stacksize) {
 /**/
 
 
-void luaD_checkstack (lua_State *L, int n) 
+void luaD_checkstack (lua_State *L, int n)
 {
-	if ( L->pCT->stack.size() - 1 - L->pCT->top <= n ) 
+	if ( L->pCT->stack.size() - 1 - L->pCT->top <= n )
 		L->pCT->stack.resize( L->pCT->stack.size() * 2 );
 }
 
@@ -68,8 +68,8 @@ void luaD_adjusttop (lua_State *L, StkId base, int extra)
 */
 static void luaD_openstack (lua_State *L, StkId pos)
 {
-	int i = L->pCT->top-pos; 
-	while (i--) 
+	int i = L->pCT->top-pos;
+	while (i--)
 		*LObj(L, pos+i+1) = *LObj(L, pos+i);
 	incr_top;
 }
@@ -129,7 +129,7 @@ static StkId callCclosure (lua_State *L, const struct Closure *cl, StkId base)
 }
 
 
-void luaD_callTM (lua_State *L, int nClosure, int nParams, int nResults) 
+void luaD_callTM (lua_State *L, int nClosure, int nParams, int nResults)
 {
 	StkId base = L->pCT->top - nParams;
 	luaD_openstack(L, base);
@@ -144,9 +144,9 @@ void luaD_callTM (lua_State *L, int nClosure, int nParams, int nResults)
 ** When returns, the results are on the stack, starting at the original
 ** function position.
 ** The number of results is nResults, unless nResults=LUA_MULTRET.
-*/ 
+*/
 
-bool luaD_startCall( lua_State *L, StkId func, int nResults ) 
+bool luaD_startCall( lua_State *L, StkId func, int nResults )
 {
 	//
 	TObject *pO = LObj(L, func);
@@ -187,10 +187,10 @@ bool luaD_startCall( lua_State *L, StkId func, int nResults )
 	}
 }
 
-void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult ) 
+void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult )
 {
 	ASSERT( firstResult );
-	if ( L->callhook ) 
+	if ( L->callhook )
 		luaD_callHook(L, LObj(L, func), L->callhook, "return");
 	LUA_ASSERT( LObj(L, func)->GetType() == LUA_TMARK, "invalid tag");
 	CallInfo* ci = L->GetCallInfo( func );
@@ -208,7 +208,7 @@ void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstResult )
 		for (; nResults > 0; nResults--) {  /* if there are not enough results */
 			LObj(L, L->pCT->top)->SetNil();  /* adjust the stack */
 			incr_top;  /* must check stack space */
-		}	
+		}
 		ASSERT( L->pCT->Cbase <= L->pCT->top );
 	}
 	luaC_checkGC(L);
@@ -240,13 +240,13 @@ static void f_call (lua_State *L, void *ud) {
 
 
 int lua_call (lua_State *L, int nargs, int nresults) {
-	StkId func = L->pCT->top - (nargs+1);  // function to be called 
+	StkId func = L->pCT->top - (nargs+1);  // function to be called
 	struct CallS c;
 	int status;
 	c.func = func; c.nresults = nresults;
 	status = luaD_runprotected(L, f_call, &c);
-	if (status != 0)  // an error occurred? 
-		L->pCT->top = func;  // remove parameters from the stack 
+	if (status != 0)  // an error occurred?
+		L->pCT->top = func;  // remove parameters from the stack
 	return status;
 }
 /**/
@@ -337,7 +337,7 @@ static int parse_file (lua_State *L, const char *filename) {
 void lua_startCall (lua_State *L, int nargs, int nresults);
 // defined in lapi.cpp
 
-int lua_dofile (lua_State *L, const char *filename) 
+int lua_dofile (lua_State *L, const char *filename)
 {
 	// GetPtr() because pCT is a CPtr and this is a CObj, two unrelated types that
 	// each convert to CLuaThread *. Copy-initialising one from the other would need
@@ -370,7 +370,7 @@ int lua_parsebuffer (lua_State *L, const char *buff, size_t size, const char *na
 	return parse_buffer(L, buff, size, name);
 }
 
-int lua_dobuffer( lua_State *L, const char *buff, size_t size, const char *name ) 
+int lua_dobuffer( lua_State *L, const char *buff, size_t size, const char *name )
 {
 	CObj<CLuaThread> pOld = L->pCT.GetPtr();
 	lua_setThread( L, lua_newThread( L, "Buffer thread" ) );
@@ -394,10 +394,10 @@ int lua_dostring (lua_State *L, const char *str) {
 ** =======================================================
 */
 
-static void message( lua_State *L, const char *s ) 
+static void message( lua_State *L, const char *s )
 {
 	const TObject *em = luaH_getglobal( L, LUA_ERRORMESSAGE );
-	if ( em->GetType() == LUA_TFUNCTION ) 
+	if ( em->GetType() == LUA_TFUNCTION )
 	{
 		// выводим сообщение в новом thread-е
 		CObj<CLuaThread> pOld = L->pCT.GetPtr();
@@ -419,7 +419,7 @@ static void SaveStackForErrorMessage( lua_State *pState, const char *s )
 	int nDepth = 1;
 	while ( lua_getstack( pState, nDepth, &debugInfo ) != 0 )
 	{
-		if ( lua_getinfo ( pState, "lnuS", &debugInfo ) ) 
+		if ( lua_getinfo ( pState, "lnuS", &debugInfo ) )
 		{
 			SLUAError::SLUAStackTrace trace;
 			trace.nDepth = nDepth;
@@ -447,7 +447,7 @@ static void callErrorHook( lua_State *L )
 	if ( L->pCT->errorHookRef != LUA_REFNIL && lua_getref(L, L->pCT->errorHookRef) )
 	{
 		const TObject *pHook = LObj(L, L->pCT->top-1);
-		if ( pHook->GetType() == LUA_TFUNCTION ) 
+		if ( pHook->GetType() == LUA_TFUNCTION )
 		{
 			CObj<CLuaThread> pOld = L->pCT.GetPtr();
 			ASSERT( pOld );

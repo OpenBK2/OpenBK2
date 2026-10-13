@@ -1,6 +1,6 @@
 
 void GetGunPlatformIndex( const int nUniqueID, const int nPlatform, const int nGun, int *pnPlatform, int *pnGun ) const
-{ 
+{
 	if ( ConstructorInfo() )
 	{
 		const std::vector<CConstructorInfo::SUnitPlatform> *pPlatforms = 0;

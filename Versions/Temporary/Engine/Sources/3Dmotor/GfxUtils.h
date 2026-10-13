@@ -43,9 +43,9 @@ public:
 	void SetTarget( const CVec2 &vSize, int _dm );
 	void SetTarget( NGfx::CTexture *pTarget, const CVec2 &vSize, int _dm );
 	void SetTarget( const NGfx::CRenderContext &rc, const CVec2 &vSize, int _dm );
-	void AddRect( const CTRect<float> &rTarget, NGfx::CTexture *pTex, const CTRect<float> &rSrc, 
+	void AddRect( const CTRect<float> &rTarget, NGfx::CTexture *pTex, const CTRect<float> &rSrc,
 		SPixel8888 color = NGfx::SPixel8888(255,255,255,255), float fZ = 1.0f );
-	void AddRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, NGfx::CTexture *pTex, 
+	void AddRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, NGfx::CTexture *pTex,
 		const CTRect<float> &rSrc, float fZ = 1.0f );
 	void Flush();
 	void SetUserEffect( I2DEffect *p ) { pUserEffect = p; }
@@ -63,7 +63,7 @@ private:
 	void SetupRC( const CVec2 &vSize );
 	S2DRectInfoLock* GetRectInfoLock( CTexture *pContainer, const STexturePlaceInfo &region );
 	virtual void NewTextureWasAllocated() { Flush(); }
-	void FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, 
+	void FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc,
 		float fXAdd, float fYAdd, float fZ, CTexture *pContainer, const STexturePlaceInfo &region );
 };
 
@@ -109,7 +109,7 @@ public:
 void ShowTexture( NGfx::CTexture *pTex, float fpMag = 1 );
 void ShowTexture( NGfx::CRenderContext *pRC, NGfx::CTexture *pTex, const CVec2 &vScreenSize );
 // direct transofrm should be setup
-void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport, const CTRect<float> &rTarget, 
+void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport, const CTRect<float> &rTarget,
 	NGfx::CTexture *pTex, const CTRect<float> &rSrc, const CVec4 &vColor = CVec4(1,1,1,1), I2DEffect *pEffect = 0 );
 //void BlurLight( NGfx::CRenderContext *pRC, int nSrcRegister, int nDestRegister, float fBlurStrength = 1.5f );
 //void ModulateRegister( NGfx::CRenderContext *pRC, int nDestRegister, const CVec4 &vColor );

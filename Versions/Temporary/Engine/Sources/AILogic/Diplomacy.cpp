@@ -32,7 +32,7 @@ void CDiplomacy::Load( const std::vector<int> &_playerParty )
 				playerParty[i] = 2;
 		}
 	}
-	
+
 	// neutral always exists
 	isPlayerExist[playerParty.size() - 1] = 1;
 
@@ -45,13 +45,13 @@ void CDiplomacy::SetPlayerNotExist( const int nPlayer )
 	isPlayerExist[nPlayer] = 0;
 }
 
-int CDiplomacy::operator&( IBinSaver &saver ) 
-{ 
+int CDiplomacy::operator&( IBinSaver &saver )
+{
 	if ( !saver.IsChecksum() )
 	{
-		saver.Add( 1, &playerParty ); 
-		saver.Add( 2, &nMyNumber ); 
-		saver.Add( 3, &bNetGame ); 
+		saver.Add( 1, &playerParty );
+		saver.Add( 2, &nMyNumber );
+		saver.Add( 3, &bNetGame );
 		saver.Add( 4, &isPlayerExist );
 	}
 
@@ -67,7 +67,7 @@ bool CDiplomacy::IsPlayerExist( const int nPlayer ) const
 }
 
 void CDiplomacy::SetNetGame( bool _bNetGame )
-{ 
+{
 	bNetGame = _bNetGame;
 
 	if ( bNetGame )

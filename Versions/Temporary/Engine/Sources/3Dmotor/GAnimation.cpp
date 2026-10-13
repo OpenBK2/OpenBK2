@@ -17,7 +17,7 @@ CBasicShare<CDBPtr<NDb::SAnimBase>, CGrannyAnimationLoader, SDBPtrHash> shareAni
 
 // SSimpleBoneMutator
 
-void SSimpleBoneMutator::AddBoneTimePose( const STime &tEnd, 
+void SSimpleBoneMutator::AddBoneTimePose( const STime &tEnd,
 		const CQuat &finalRot, const CVec3 &finalPos )
 {
 	SBoneTimePose pos;
@@ -61,7 +61,7 @@ void SSimpleBoneMutator::GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos )
 	}
 	int nMaxIndex = positions.size() - 1;
 	*qRot = positions[ nMaxIndex ].rot;
-	*vPos = positions[ nMaxIndex ].pos;	
+	*vPos = positions[ nMaxIndex ].pos;
 }
 
 STime SSimpleBoneMutator::GetEnd() const
@@ -133,7 +133,7 @@ void CSkeletonAnimator::Create( const SSkeletonHandle &_skeletonH, CFuncBase<STi
 		return;
 	}
 
-	model.Name = GetModelNameOfSkeleton( pSkeletonFileLoader->GetValue(), _skeletonH.nModelInFile ); 
+	model.Name = GetModelNameOfSkeleton( pSkeletonFileLoader->GetValue(), _skeletonH.nModelInFile );
 	model.Skeleton = pSkeleton;
 	GrannyMakeIdentity( &model.InitialPlacement );
 	model.MeshBindingCount = 0;
@@ -176,8 +176,8 @@ CSkeletonAnimator::~CSkeletonAnimator()
 }
 
 // internal method to set position (without marking internal state as changed)
-void CSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &mGlobal ) 
-{ 
+void CSkeletonAnimator::SetGlobalPositionInternal( const SHMatrix &mGlobal )
+{
 	value.poseGlobal[0] = mGlobal._11; value.poseGlobal[4] = mGlobal._12; value.poseGlobal[8] = mGlobal._13; value.poseGlobal[12] = mGlobal._14;
 	value.poseGlobal[1] = mGlobal._21; value.poseGlobal[5] = mGlobal._22; value.poseGlobal[9] = mGlobal._23; value.poseGlobal[13] = mGlobal._24;
 	value.poseGlobal[2] = mGlobal._31; value.poseGlobal[6] = mGlobal._32; value.poseGlobal[10] = mGlobal._33; value.poseGlobal[14] = mGlobal._34;
@@ -215,8 +215,8 @@ void CSkeletonAnimator::CopyPoseToGranny()
 	}
 }
 
-void CSkeletonAnimator::SetGlobalPosition( const SHMatrix &mGlobal ) 
-{ 
+void CSkeletonAnimator::SetGlobalPosition( const SHMatrix &mGlobal )
+{
 	SetGlobalPositionInternal( mGlobal );
 	bSmthChanged = true;
 }
@@ -366,7 +366,7 @@ void CSkeletonAnimator::Recalc()
 				CVec3 vPos;
 				boneMutators[i].GetAtTime( time, &qRot, &vPos );
 				granny_transform *pBoneTransform = GrannyGetLocalPoseTransform( pGrannyPose.get(), i );
-				if ( pBoneTransform ) 
+				if ( pBoneTransform )
 				{
 					granny_transform tr;
 					GrannyMakeIdentity( &tr );
@@ -396,7 +396,7 @@ void CSkeletonAnimator::Recalc()
 
 void CSkeletonAnimator::ApplyGlobalMovementCorrection()
 {
-	SAnimationHolder &h = animHolders[ nAnimWithMovement ]; 
+	SAnimationHolder &h = animHolders[ nAnimWithMovement ];
 	float fLocalTime = GrannyGetControlClampedLocalClock( h.pControl );
 	float fEffectiveWeight = GrannyGetControlEffectiveWeight( h.pControl );
 	float fSpeed = GrannyGetControlSpeed( h.pControl );
@@ -532,7 +532,7 @@ bool CSkeletonAnimator::AddAnimationInternal( CSkeletonAnimator::SAnimationHolde
 }
 
 CSkeletonAnimator::SAnimID CSkeletonAnimator::AddAnimation(
-		STime tStartTime, const SAnimHandle &h, 
+		STime tStartTime, const SAnimHandle &h,
 		bool bLoop, float fSpeed, float fWeight, STime tEndTime )
 {
 	Touch();
@@ -583,7 +583,7 @@ void CSkeletonAnimator::FadeIn( const STime &tDuration, SAnimID id )
 		ASSERT(0);
 		return;
 	}
-	SAnimationHolder &h = animHolders[id]; 
+	SAnimationHolder &h = animHolders[id];
 	ASSERT( !h.bFadeIn && !h.bFadeOut );
 	h.bFadeIn = true;
 	h.tFadeDuration = tDuration;
@@ -598,7 +598,7 @@ void CSkeletonAnimator::FadeOut( const STime &tDuration, SAnimID id )
 		ASSERT(0);
 		return;
 	}
-	SAnimationHolder &h = animHolders[id]; 
+	SAnimationHolder &h = animHolders[id];
 	//ASSERT( !h.bFadeIn && !h.bFadeOut );
 	h.bFadeOut = true;
 	h.tFadeDuration = tDuration;
@@ -781,7 +781,7 @@ void CSkeletonAnimator::GetBoneNames( std::vector<std::string> *pBoneNames )
 	}
 }
 
-void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tStart, 
+void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tStart,
 	const std::vector<SDesiredBoneMove> &boneMutation )
 {
 	Touch();
@@ -791,13 +791,13 @@ void CSkeletonAnimator::SetBoneMutator( const char *pszBoneName, const STime &tS
 	SetBoneMutator( nBoneIndex, tStart, boneMutation );
 }
 
-void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStart, 
+void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStart,
 																			 const std::vector<SDesiredBoneMove> &boneMutation )
 {
 	Touch();
-	if ( nBoneIndex < 0 || nBoneIndex >= nBones ) 
+	if ( nBoneIndex < 0 || nBoneIndex >= nBones )
 	{
-		ASSERT(0); 
+		ASSERT(0);
 		return;
 	}
 	bBoneMutatorsEnabled = true;
@@ -806,7 +806,7 @@ void CSkeletonAnimator::SetBoneMutator( const int nBoneIndex, const STime &tStar
 		boneMutators[ nBoneIndex ].GetAtTime( tStart, &currRot, &currPos );
 	else
 	{
-		currRot = QNULL; 
+		currRot = QNULL;
 		currPos = VNULL3;
 	}
 	boneMutators[ nBoneIndex ].Clear();
@@ -892,7 +892,7 @@ bool CSkeletonAnimator::GetLocalBonePosition( const char *pszBoneName, SHMatrix 
 
 	CVec3 vPos;
 	CQuat qRot;
-	memcpy( &vPos, &(pBoneTransform->Position), 3 * sizeof( float ) ); 
+	memcpy( &vPos, &(pBoneTransform->Position), 3 * sizeof( float ) );
 	memcpy( &qRot, &(pBoneTransform->Orientation), 4 * sizeof( float ) );
 
 	pLocalPos->Set( vPos, qRot );
@@ -959,7 +959,7 @@ void CSkeletonAnimator::RecoverAnimHolder( SAnimID animID )
 	AddAnimationInternal( &h );
 	if ( h.bFadeIn )
 		FadeIn( h.tFadeDuration, animID );
-	else if ( h.bFadeOut ) 
+	else if ( h.bFadeOut )
 		FadeOut( h.tFadeDuration, animID );
 }
 
@@ -1003,7 +1003,7 @@ int CSkeletonAnimator::operator&( CStructureSaver &f )
 	f.Add( 12, &nAnimWithMovement );
 	f.Add( 13, &fGlobalMovementSpeed );
 	f.Add( 14, &fTransitHalfDuration );
-	if ( f.IsReading() ) 
+	if ( f.IsReading() )
 		bJustLoaded = true;
 	return 0;
 }
@@ -1014,7 +1014,7 @@ void CSkeletonAnimator::CheckJustLoaded()
 	{
 		Create( skeletonH, pTime );
 		for ( int i = 0; i < animHolders.size(); ++i )
-			RecoverAnimHolder( i ); 
+			RecoverAnimHolder( i );
 		bJustLoaded = false;
 	}
 }

@@ -20,7 +20,7 @@ const wchar_t* DYNAMIC_TAG_MISSION_NAME = L"mission_name";
 const wchar_t* DYNAMIC_TAG_MISSION_STATUS = L"mission_status";
 const wchar_t* DYNAMIC_TAG_FINAL_MISSION_LOCKS = L"final_mission_locks";
 
-// Too much is done in ChapterMap's Init() 
+// Too much is done in ChapterMap's Init()
 // So it has been moved to this file
 
 void CInterfaceChapterMapMenu::InitLoadControls()
@@ -108,7 +108,7 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 		bonusButtons[i].pBonusWnd = AddWindowCopy( pBonusGrid, pBonusGridBonusTemplate );
 		if ( bonusButtons[i].pBonusWnd )
 		{
-			bonusButtons[i].pBonusWnd->SetPlacement( nButtonX + vBonusGridBonusTemplateDelta.x, 
+			bonusButtons[i].pBonusWnd->SetPlacement( nButtonX + vBonusGridBonusTemplateDelta.x,
 				nButtonY + vBonusGridBonusTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 		}
 	}
@@ -141,7 +141,7 @@ void CInterfaceChapterMapMenu::InitLoadControls()
 		pChapterMapLeft->GetPlacement( &nChapterMapLeftX, &nChapterMapLeftY, 0, 0 );
 	if ( pChapterMapRight )
 		pChapterMapRight->GetPlacement( &nChapterMapRightX, &nChapterMapRightY, 0, 0 );
-		
+
 	pReinfUpgrade = new SChapterReinfUpgrade();
 	pReinfUpgrade->InitControls( pReinfDesc );
 	pReinfComposition = new SChapterReinfComposition();
@@ -198,19 +198,19 @@ void CInterfaceChapterMapMenu::InitReinforcements()
 		}
 		if ( pUIC->reinfButtons[i].pTextureDisabled )
 			reinfButtons[nIndex].pDisabledTexture = pUIC->reinfButtons[i].pTextureDisabled;
-			
+
 		if ( pReinfGrid )
 		{
 			int nButtonX = 0;
 			int nButtonY = 0;
 			reinfButtons[nIndex].pButton->GetPlacement( &nButtonX, &nButtonY, 0, 0 );
-			
+
 			IWindow *pUpgradableWnd = AddWindowCopy( pReinfGrid, pReinfGridUpgradableTemplate );
 			reinfButtons[nIndex].pBonusWnd = pUpgradableWnd;
 			if ( pUpgradableWnd )
 			{
 				pUpgradableWnd->SetName( fmt::format( "FixUpgrade{}", nIndex ) );
-				pUpgradableWnd->SetPlacement( nButtonX + vReinfGridUpgradableTemplateDelta.x, 
+				pUpgradableWnd->SetPlacement( nButtonX + vReinfGridUpgradableTemplateDelta.x,
 					nButtonY + vReinfGridUpgradableTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			}
 		}
@@ -236,7 +236,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 
 	pHelper = new SChapterMapMenuHelper( pChapter, pChapterMap );
 	const NDb::SCampaign *pCampaign = Singleton<IScenarioTracker>()->GetCurrentCampaign();
-	
+
 	int nIndex = 0;
 	for ( std::vector< NDb::SMissionEnableInfo >::const_iterator it = pChapter->missionPath.begin();
 		it != pChapter->missionPath.end(); ++it, ++nIndex )
@@ -273,7 +273,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 
 		target.nX = pHelper->missions[nIndex].vPos.x;
 		target.nY = pHelper->missions[nIndex].vPos.y;
-		target.vEndOffset = pHelper->missions[nIndex].vEndOffset; 
+		target.vEndOffset = pHelper->missions[nIndex].vEndOffset;
 
 		int nX, nY;
 		pElement->GetPlacement( 0, 0, &nX, &nY );
@@ -433,7 +433,7 @@ void CInterfaceChapterMapMenu::InitMissions()
 			reward.pBtn = pRewardButton;
 			reward.pBonusWnd = AddWindowCopy( pChapterMapBgr, pBonusGridBonusTemplate );
 			if ( reward.pBonusWnd )
-				reward.pBonusWnd->SetPlacement( nRewardX + vBonusGridBonusTemplateDelta.x, 
+				reward.pBonusWnd->SetPlacement( nRewardX + vBonusGridBonusTemplateDelta.x,
 					nRewardY + vBonusGridBonusTemplateDelta.y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 			target.rewards.push_back( reward );
 			target.rewardDescs[i] = pBonus;
@@ -486,7 +486,7 @@ void CInterfaceChapterMapMenu::EffectStart( EExitDestination eWhereTo )
 	pScreen->Enable( false ); // CRAP
 
 	eExitDir = eWhereTo;
-	
+
 	if ( eWhereTo == EED_RE_ENTER )
 	{
 		if ( pChapterMapLeft )

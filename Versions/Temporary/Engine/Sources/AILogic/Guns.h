@@ -45,7 +45,7 @@ struct IGunsFactory
 class CBasicGunCRAPSaver : public CLinkObject
 {
 	ZDATA_(CLinkObject)
-public: 
+public:
 protected:
 	CDBPtr<SWeaponRPGStats> pWeapon;
 public:
@@ -83,7 +83,7 @@ private:
 
 	float fRandom4Aim = {}, fRandom4Relax = {};
 	//
-protected:	
+protected:
 	uint8_t nShellType = {};
 	CPtr<CAIUnit> pOwner;
 	int nOwnerParty = {};
@@ -156,11 +156,11 @@ public:
 	CBasicGun() : pOwner( 0 ), pAntiAviationTarget( 0 ), bParallelGun( false ), vLastShotPoint( VNULL3	), lastCheckTurnTime( 0 ), bCanShootToUnitWOMove( false ) { }
 	CBasicGun( class CAIUnit *pOwner, const uint8_t nShellType, SCommonGunInfo *pCommonGunInfo, const IGunsFactory::EGunTypes eType );
 
-	virtual int GetShellType() const { return nShellType; } 
+	virtual int GetShellType() const { return nShellType; }
 
 	virtual const float GetAimTime( bool bRandomize = true ) const;
 	virtual const float GetRelaxTime( bool bRandomize = true ) const;
-	virtual class CAIUnit* GetOwner() const { return pOwner; }	
+	virtual class CAIUnit* GetOwner() const { return pOwner; }
 	virtual void SetOwner( CAIUnit *pOwner );
 	bool IsGrenade() const { return bGrenade; }
 
@@ -203,8 +203,8 @@ public:
 	virtual bool CanShootToObjectWOMove( class CStaticObject *pObj );
 	virtual bool CanShootToPointWOMove( const CVec2 &point, const float fZ, const uint16_t wHorAddAngle = 0, const uint16_t wVertAddAngle = 0, CAIUnit *pEnemy = 0 );
 
-	// можно ли дострельнуть по высоте	
-	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;	
+	// можно ли дострельнуть по высоте
+	virtual bool CanShootByHeight( class CAIUnit *pTarget ) const;
 	virtual bool CanShootByHeight( const float fZ ) const;
 
 	// можно ли стрельнуть в объект по прямому приказу

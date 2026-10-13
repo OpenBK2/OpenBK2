@@ -46,17 +46,17 @@ public:
 	CAICommand() : id( 0 ), nFlag( -1 ) { }
 	CAICommand( const SAIUnitCmd &unitCmd );
 	CAICommand( const CAICommand &cmd );
-	
+
 	static void Clear() { paths.Clear(); cmdIds.Clear(); }
 
 	SAIUnitCmd& ToUnitCmd() { return unitCmd; }
 	const SAIUnitCmd& ToUnitCmd() const { return unitCmd; }
-	
+
 	bool IsFromAI()const{return unitCmd.bFromAI;}
 	void SetFromAI( const bool bFromAI ){ unitCmd.bFromAI = bFromAI; }
 
-	~CAICommand() 
-	{ 
+	~CAICommand()
+	{
 		if ( id != 0 )
 		{
 			paths.DelQueue( id );

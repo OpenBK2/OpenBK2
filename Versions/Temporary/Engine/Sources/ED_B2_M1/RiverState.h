@@ -10,7 +10,7 @@ class CRiverState : public CVSOStateEx
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	//конструкторы и операторы присваивания
 	CRiverState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
 	{
@@ -69,7 +69,7 @@ class CRiverState : public CVSOState
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	bool bVSOChanged;
 	//конструкторы и операторы присваивания
 	CRiverState( class CVSOMultiState *_pParentState = 0 ) : CVSOState( _pParentState )
@@ -87,7 +87,7 @@ class CRiverState : public CVSOState
 		}
 		return false;
 	}
-	
+
 protected:
 	// CVSOState
 	bool CanEdit();

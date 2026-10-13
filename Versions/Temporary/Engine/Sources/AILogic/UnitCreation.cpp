@@ -104,7 +104,7 @@ void CHeavyPlaneCreation::CalcPositions( const int nMax, const CVec2 &box, const
 
 	int iLimit = nSize;
 	CVec2 vStartOffset( 0, 0 );// смещение первой точки ( 1, 5, 11 )
-	
+
 	const float resize = SConsts::PLANES_HEAVY_FORMATION_SIZE;
 
 	*offset = ( CVec2( resize * box.y, 0 ) * int(nSize/2) )^direction;
@@ -239,7 +239,7 @@ void CUnitCreation::Clear()
 	pCollisionsCollector = 0;
 }
 
-const SPartyDependentInfo * CUnitCreation::GetPartyDependentInfo( const int nDipl ) const 
+const SPartyDependentInfo * CUnitCreation::GetPartyDependentInfo( const int nDipl ) const
 {
 	NI_ASSERT( nDipl < partyDependentInfo.size(), fmt::format("Wrong party Number ( {} )", nDipl ) );
 	return partyDependentInfo[nDipl];
@@ -248,7 +248,7 @@ const SPartyDependentInfo * CUnitCreation::GetPartyDependentInfo( const int nDip
 CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const class CVec3 &vPoint, const int nPlayer )
 {
 	NI_ASSERT( nPlayer < inGameUnits.size(), fmt::format( "no mines for player {}", nPlayer ) );
-	
+
 //	const SPartyDependentInfo *pInfo = GetPartyDependentInfo( nDipl );
 
 	//статы мин брать из структуры, задаваемой в карте
@@ -270,7 +270,7 @@ CMineStaticObject* CUnitCreation::CreateMine( const enum EMineType nType, const 
 	case MT_LANDMINE:
 		pMineStats = pConsts->common.pLandMine;
 		break;
-	default: 
+	default:
 		NI_ASSERT( false, fmt::format( "wrong mine type {}", int( nType ) ) );
 		return 0;
 	}
@@ -295,28 +295,28 @@ void CUnitCreation::SendFormationToWorld( CFormation * pUnit, const bool bSelect
 CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPlane, const int nScriptID )const
 {
 	const int nDipl = pPlane->GetPlayer();
-	
+
 	NI_ASSERT( nDipl < inGameUnits.size(), fmt::format( "wrong player {}", nDipl ) );
 
 	const SSquadRPGStats *pStats = inGameUnits[pPlane->GetPlayer()].pParatrooper;
 	if ( !pStats )
 		return 0;
-	
+
 	const uint16_t wDir = pPlane->GetDirection();
 	const int nFormation = 0;
 	float fHP = 1.0f;
 
 	CPtr<CFormation> formation = checked_cast<CFormation*>( AddNewFormation( pStats, nFormation, fHP, where.x, where.y, where.z, wDir, nDipl,false,false, -1, pPlane->GetReinforcementType() ) );
-		
+
 	for ( int i = 0; i < formation->Size(); ++i )
 	{
 		(*formation)[i]->SetToSolidPlace();
 		pScripts->AddObjToScriptGroup( (*formation)[i], nScriptID );
 	}
-	
+
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_MOVE_PARACHUTE ), formation, false );
 	theGroupLogic.UnitCommand( SAIUnitCmd( ACTION_COMMAND_PARADE, -1.0f ), formation, true );
-	
+
 
 	return formation;
 }
@@ -324,9 +324,9 @@ CFormation* CUnitCreation::CreateParatroopers( const CVec3 &where, CAIUnit *pPla
 CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit )const
 {
 	NI_ASSERT( pWithUnit->GetPlayer() < inGameUnits.size(), fmt::format( "wrong player {}",pWithUnit->GetPlayer()) );
-	
+
 	const SSquadRPGStats *pStats = GetPartyDependentInfo( pWithUnit->GetPlayer())->pResupplyEngineerSquad;
-	
+
 	if ( !pStats )
 		return 0;
 
@@ -354,7 +354,7 @@ CFormation* CUnitCreation::CreateResupplyEngineers( CAITransportUnit *pWithUnit 
 CFormation * CUnitCreation::CreateCrew( CArtillery *pUnit, const int nUnits, const CVec3 &vPos, const int _nPlayer, const bool bImmidiateAttach )const
 {
 	NI_ASSERT( (_nPlayer == -1 ? pUnit->GetPlayer() : _nPlayer ) < inGameUnits.size(), fmt::format( "wrong player GetPlayer = {}, nPlayer = {}", pUnit->GetPlayer(), _nPlayer ) );
-	
+
 	CVec3 vCreatePos (vPos);
 	if ( -1 == vPos.x )
 		vCreatePos = pUnit->GetCenter();
@@ -366,7 +366,7 @@ CFormation * CUnitCreation::CreateCrew( CArtillery *pUnit, const int nUnits, con
 		return 0;
 
 	// для пулеметов - свой взвод - пулеметчики
-	const SSquadRPGStats * pStats = ( RPG_TYPE_ART_HEAVY_MG == pUnit->GetStats()->etype ) ? 
+	const SSquadRPGStats * pStats = ( RPG_TYPE_ART_HEAVY_MG == pUnit->GetStats()->etype ) ?
 													GetPartyDependentInfo(nPlayer)->pHeavyMachinegunSquad :
 													GetPartyDependentInfo(nPlayer)->pGunCrewSquad;
 
@@ -411,7 +411,7 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::S
 
 	const uint8_t nPlayer = theDipl.GetNeutralPlayer();
 
-	pUnit->Init( vSource, GetHeights()->GetZ( vSource ), pOwner, pWeaponStats, pStats, 
+	pUnit->Init( vSource, GetHeights()->GetZ( vSource ), pOwner, pWeaponStats, pStats,
 		pStats->fMaxHP, wDir, nPlayer, pCollisionsCollector );
 
 	units.AddUnitToUnits( pUnit, nPlayer, pStats->etype );
@@ -431,7 +431,7 @@ class CAIUnit *CUnitCreation::CreateTorpedo( class CAIUnit *pOwner, const NDb::S
 	return pUnit;
 }
 
-int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats, 
+int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pStats,
 															const float fHPFactor, const int x, const int y, const int z, const uint16_t dir,
 															const uint8_t player,
 															bool bInitialization, bool bSendToWorld, const NDb::EReinforcementType eType ) const
@@ -548,11 +548,11 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 	SWarFogUnitInfo fogInfo;
 	pUnit->GetFogInfo( &fogInfo );
 	theWarFog.AddUnit( pUnit->GetUniqueId(), fogInfo, pUnit->GetParty() );
-	
+
 	// по умолчанию все наши юниты - селектятся
 	pUnit->SetSelectable( pUnit->GetHitPoints() != 0.0f && player == theDipl.GetMyNumber() &&
 												pStats->etype != RPG_TYPE_AVIA_BOMBER, bSendToWorld );
-	
+
 	if ( pUnit->GetHitPoints() != 0.0f && pStats->IsArtillery() && theDipl.GetNeutralPlayer() != player )
 	{
 		CArtillery *pArt = static_cast_ptr<CArtillery*>( pUnit );
@@ -562,7 +562,7 @@ int CUnitCreation::AddNewUnit( const int nUniqueID, const SUnitBaseRPGStats *pSt
 				pArt->ChangePlayer( theDipl.GetNeutralPlayer() );
 		}
 		else
-			pArt->SetOperable( 1.0f ); 
+			pArt->SetOperable( 1.0f );
 	}
 
 	if ( pUnit->GetHitPoints() == 0.0f )
@@ -585,7 +585,7 @@ CVec2 CUnitCreation::GetRandomAppearPoint( const int _nPlayer, const bool bLeave
 }
 
 
-const SObjectBaseRPGStats*CUnitCreation::GetRandomAntitankObject() const 
+const SObjectBaseRPGStats*CUnitCreation::GetRandomAntitankObject() const
 {
 	return pConsts == 0 ? 0 : pConsts->common.antitankObjects[0];
 }
@@ -595,7 +595,7 @@ const SEntrenchmentRPGStats* CUnitCreation::GetEntrenchment() const
 	return pConsts == 0 ? 0 : pConsts->common.pEntrenchment;
 }
 
-const SFenceRPGStats *CUnitCreation::GetWireFence() const 
+const SFenceRPGStats *CUnitCreation::GetWireFence() const
 {
 	return pConsts == 0 ? 0 : pConsts->common.pAPFence;
 }
@@ -604,14 +604,14 @@ const SMechUnitRPGStats * CUnitCreation::GetFoxHole( const bool bCanDig ) const
 {
 	if (pConsts == 0)
 		return 0;
-	
+
 	RecordRandomCall();
 	return pConsts->foxHoles[NRandom::Random( pConsts->foxHoles.size() )];
 }
 
 const SMechUnitRPGStats * CUnitCreation::GetRandomTankPit( const class CVec2 &vSize, const bool bCanDig, float *pfResize ) const
 {
-	return ::GetRandomTankPit( pConsts->tankPits, vSize, bCanDig, pfResize );	
+	return ::GetRandomTankPit( pConsts->tankPits, vSize, bCanDig, pfResize );
 }
 
 void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats, const CVec2 &vFormCenter, const uint16_t wFormDir, const int nFormation, const int nUnits, std::list<CVec2> *pCenters ) const
@@ -622,7 +622,7 @@ void CUnitCreation::GetCentersOfAllFormationUnits( const SSquadRPGStats *pStats,
 	CVec2 vRelFormDir = GetVectorByDirection( wFormDir );
 	std::swap( vRelFormDir.x, vRelFormDir.y );
 	vRelFormDir.y = -vRelFormDir.y;
-	
+
 	for ( int j = 0; j < nSizeOfFormation; ++j )
 	{
 		CVec2 vUnitCenter( vFormCenter + ((formation.order[j].vPos) ^ vRelFormDir) );
@@ -640,7 +640,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	if ( _nFormation < pStats->formations.size() )
 		nFormation = _nFormation;
 #ifdef _DO_ASSERT_SLOW
-	for ( int i = 0; i < pStats->members.size(); ++i ) 
+	for ( int i = 0; i < pStats->members.size(); ++i )
 	{
 		if ( pStats->members[i] == 0 )
 		{
@@ -654,7 +654,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 	CObj<CFormation> pFormation = new CFormation();
 	const CVec2 vFormCenter( x, y );
 	pFormation->Init( pStats, vFormCenter, z, wDir, pCollisionsCollector );
-	
+
 	if ( bSendToWorld )
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_UNIT, pFormation, -1 );
 
@@ -720,7 +720,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 
 		(*pFormation)[i]->SetCenter( CVec3( vNewCoord, GetHeights()->GetZ( vNewCoord ) ) );
 	}
-	
+
 	// по умолчанию все наши юниты - селектятся
 	pFormation->SetSelectable( nDiplomacy == theDipl.GetMyNumber(), bSendToWorld );
 
@@ -735,7 +735,7 @@ CCommonUnit* CUnitCreation::AddNewFormation( const SSquadRPGStats *pStats, const
 CCommonUnit* CUnitCreation::CreateSingleUnitFormation( CSoldier *pSoldier ) const
 {
 	const SSquadRPGStats *pStats = GetSingleUnitFormation();
-	
+
 	CObj<CFormation> pFormation = new CFormation();
 	pFormation->Init( pStats, pSoldier->GetCenterPlain(), pSoldier->GetCenter().z, pSoldier->GetFrontDirection(), pCollisionsCollector );
 	pFormation->Mem2UniqueIdObjs();
@@ -799,9 +799,9 @@ CExistingObject* CUnitCreation::CreatePlayerFlag( int nPlayer, CStaticObject *pS
 	return checked_cast<CExistingObject*>( theStatObjs.AddNewStaticObject( partyDependentInfo[nPlayer]->pKeyBuildingFlag, 1.0f, pSample->GetCenter(), pSample->GetDir(), 0 ) );
 }
 
-const NDb::SVisObj *CUnitCreation::GetParatrooperVisObj( int nPlayer ) const 
-{ 
-	return partyDependentInfo[nPlayer]->pParatrooperVisObj; 
+const NDb::SVisObj *CUnitCreation::GetParatrooperVisObj( int nPlayer ) const
+{
+	return partyDependentInfo[nPlayer]->pParatrooperVisObj;
 }
 
 const NDb::SVisObj *CUnitCreation::GetParachuteVisObj() const

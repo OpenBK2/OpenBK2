@@ -9,20 +9,20 @@
 
 
 class CButtonSubStateVisual
-{	
+{
 public:
 	CObj<IWindowPart> pBackground;									// background for this substats
 	CObj<IWindowPart> pForeground;									// drawed after all window contents
 	CObj<CForegroundTextString> pTextString;				// text string
 	CDBPtr<NDb::STextFormat> pTextFormat;
-	
+
 	CButtonSubStateVisual() {  }
-	
+
 	void Init( const NDb::SButtonVisualSubState &substate );
 	void SetupTextString( const NDb::SForegroundTextString *pTextString );
 
-	bool IsValid() const 
-	{ 
+	bool IsValid() const
+	{
 		return pBackground || pForeground || pTextString;
 	}
 
@@ -111,7 +111,7 @@ public:
 class CButtonGroup;
 
 // Multi State Button may have any number of states (must be equal in number to graphical states )
-// generate Effector sequiences for 
+// generate Effector sequiences for
 // MouseEnter/MouseLeave
 // Pressed/Released
 // Also button is registered for game messages.
@@ -121,7 +121,7 @@ class CWindowMSButton : public CWindow, public IButton
 
 	CPtr<NDb::SWindowMSButton> pInstance;
 	CDBPtr<NDb::SWindowMSButtonShared> pShared;
-	
+
 	std::vector<CButtonState> states;
 	//vector<CObj<IWindow> > wins;
 	// dynamic data
@@ -155,7 +155,7 @@ private:
 	void SwitchSubStatePrivate();
 
 	void BackAnimation();
-	
+
 	void ApplySubstateText( const CButtonSubStateVisual &substate );
 protected:
 	NDb::SWindow* GetInstance()
@@ -176,7 +176,7 @@ public:
 	void OnActivatePushedState( const SGameMessage &msg );
 
 	CWindowMSButton() : bPressed( 4, false ), pButtonNotify( 0 ), bMouseEntered( false ), nAnimationID( 0 ) {  }
-	
+
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );

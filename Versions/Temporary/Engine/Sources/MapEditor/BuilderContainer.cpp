@@ -124,7 +124,7 @@ void CBuilderContainer::GetDefaultFolder( const std::string &rszObjectTypeName, 
 
 bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 																			 std::string *pszBuildDataName,
-																			 SBuildDataParams *pBuildDataParams,					
+																			 SBuildDataParams *pBuildDataParams,
 																			 IBuildDataCallback *pBuildDataCallback )
 {
 	NI_ASSERT( pszBuildDataTypeName != 0, "CBuilderContainer::FillBuildData() pszBuildDataTypeName == 0" );
@@ -151,7 +151,7 @@ bool CBuilderContainer::FillBuildData( std::string *pszBuildDataTypeName,
 	if ( CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( *pszBuildDataTypeName, *pszBuildDataName ) )
 	{
 		SObjectSet objectSet;
-		objectSet.szObjectTypeName = ( *pszBuildDataName ); 
+		objectSet.szObjectTypeName = ( *pszBuildDataName );
 		InsertHashSetElement( &( objectSet.objectNameSet ), CDBID( *pszBuildDataName ) );
 		//
 		const std::string szTemporaryLabel = fmt::format( "{}{:c}{}", pszBuildDataTypeName->c_str(), TYPE_SEPARATOR_CHAR, pszBuildDataName->c_str() );
@@ -180,6 +180,6 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 }
 
 
-// basement storage  
+// basement storage
 
 

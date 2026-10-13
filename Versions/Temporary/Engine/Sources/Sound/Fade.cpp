@@ -29,7 +29,7 @@ void CFade::SetCurrentVolume()
 		const float fCoef = ( pFade->fFinalVolume - fStartVolume ) / pFade->nFadeTime;
 		const float fTime = timeFaded;
 
-		Singleton<IMusicSystem>()->SetVolume( eVolumeType, 
+		Singleton<IMusicSystem>()->SetVolume( eVolumeType,
 			0.01f * Clamp( fStartVolume + fCoef * fTime, (std::min)( fStartVolume, pFade->fFinalVolume ),
 			(std::max)( fStartVolume, pFade->fFinalVolume ) ) );
 	}
@@ -64,7 +64,7 @@ void CFade::Segment()
 				if ( pTrackToEnd->IsTimeToEndFade( pFade->nFadeTime ) )
 					bStarting = true;
 			}
-			else 
+			else
 				bStarting = true;
 
 			if ( bStarting )

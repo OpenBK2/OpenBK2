@@ -20,7 +20,7 @@ class CParticles: public IParticles
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&bound); f.Add(3,&pParticles); f.Add(4,&pPlacement); f.Add(5,&pNode); f.Add(6,&groupInfo); f.Add(7,&nFlags); f.Add(8,&transformedBound); return 0; }
 public:
 	CParticles() {}
-	CParticles( CPtrFuncBase<CParticleEffect> *_pParticles, CFuncBase<SFBTransform> *_pPlacement, 
+	CParticles( CPtrFuncBase<CParticleEffect> *_pParticles, CFuncBase<SFBTransform> *_pPlacement,
 		const SBound &_bound, const SGroupInfo &_g, int _nFlags )
 		: pParticles(_pParticles), pPlacement(_pPlacement), bound(_bound), groupInfo(_g), nFlags(_nFlags) {}
 	const SGroupInfo& GetGroup() const { return groupInfo; }

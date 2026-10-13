@@ -45,6 +45,6 @@ CWeaponMnemonics::CWeaponMnemonics() : CMnemonicsCollector<int>( NDb::SWeaponRPG
 CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 CWeaponMnemonics typeWeaponMnemonics;
 
-// basement storage  
+// basement storage
 
 

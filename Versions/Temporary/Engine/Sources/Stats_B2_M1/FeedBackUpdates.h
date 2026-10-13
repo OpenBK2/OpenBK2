@@ -56,7 +56,7 @@ enum EFeedBack
 	// new feedback system
 	_EFB_NEW_START,
 	EFB_REMOVE_FEEDBACK = _EFB_NEW_START,									// nParam == id to remove
-	
+
 	EFB_KEYBUILDING_ATTACKED,
 	EFB_COMMANDER_LEVELUP,
 
@@ -65,7 +65,7 @@ enum EFeedBack
 	EFB_ENEMY_SIGHTED,										// enemy list is passed
 	EFB_UNDER_ATTACK,
 	EFB_TRACK_BROKEN,
-	EFB_NO_AMMO, 
+	EFB_NO_AMMO,
 	EFB_MINE_SIGHTED,											// mines list is passed
 	EFB_ENGINEER_WORK_FINISHED,
 	EFB_WORK_TERMINATED,									// nParam == makelong( x y )
@@ -115,8 +115,8 @@ public:
 	SAIFeedBack( const EFeedBack _feedBackType, uint32_t _nParam, CObjectBase *_pParam )
 		: feedBackType( _feedBackType ), nParam( _nParam ), pParam( _pParam ) { }
 
-	SAIFeedBack( const SAIFeedBack &feedBack ) : 
-	feedBackType( feedBack.feedBackType ), 
+	SAIFeedBack( const SAIFeedBack &feedBack ) :
+	feedBackType( feedBack.feedBackType ),
 		nParam( feedBack.nParam ), pParam( feedBack.pParam ) { }
 	const SAIFeedBack& operator=( const SAIFeedBack &feedBack ) { feedBackType = feedBack.feedBackType; nParam = feedBack.nParam; return *this; }
 };

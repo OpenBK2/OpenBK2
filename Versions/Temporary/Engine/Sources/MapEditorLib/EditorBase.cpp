@@ -15,6 +15,6 @@ void CEditorBase::SetModified( bool _bModified )
 	}
 }
 
-// basement storage  
+// basement storage
 
 

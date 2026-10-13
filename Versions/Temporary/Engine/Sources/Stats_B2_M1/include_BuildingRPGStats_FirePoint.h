@@ -4,4 +4,4 @@ bool ToAIUnits( bool bInEditor )
 	//fVerticalAngle = ToRadian( fVerticalAngle );
 	//Vis2AI( &vPos );
 	return true;
-} 
+}

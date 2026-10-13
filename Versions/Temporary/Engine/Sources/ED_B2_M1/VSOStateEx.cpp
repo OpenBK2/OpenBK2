@@ -136,7 +136,7 @@ void CVSOStateEx::UpdateVSO( int nVSOID, EUpdateType eEpdateType, CVSOManager::S
 				if ( ( eEpdateType == UT_FINISH ) && bVSOChanged )
 				{
 					if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-					{							
+					{
 						if ( UpdateVSOInBase( pMapInfoController, nVSOIndex, *pVSOInstance ) )
 						{
 							pMapInfoController->AddChangeVSOOperation( GetVSOType(), oldVSOInstance, *pVSOInstance );
@@ -213,7 +213,7 @@ int CVSOStateEx::InsertVSO( const std::vector<CVec3> &rControlPointList )
 				//
 				bool bVSOInserted = false;
 				if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-				{							
+				{
 					if ( InsertVSOToBase( pMapInfoController, NODE_ADD_INDEX, *posNewVSO ) )
 					{
 						pMapInfoController->AddInsertVSOOperation( GetVSOType(), ( *posNewVSO ) );
@@ -253,7 +253,7 @@ void CVSOStateEx::RemoveVSO( int nVSOID )
 		if ( pVSOInstance != 0 )
 		{
 			if ( CPtr<CMapInfoController> pMapInfoController = GetMapInfoEditor()->CreateController() )
-			{							
+			{
 				if ( RemoveVSOFromBase( pMapInfoController, nVSOIndex ) )
 				{
 					pMapInfoController->AddRemoveVSOOperation( GetVSOType(), *pVSOInstance );
@@ -389,6 +389,6 @@ bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int
 }
 
 
-// basement storage  
+// basement storage
 
 

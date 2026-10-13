@@ -17,7 +17,7 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 {
 	friend class CBuildingEditor;
 
-	// Данные общего назначения 
+	// Данные общего назначения
 	CBuildingEditor *pBuildingEditor;
 	bool bNeedLoadEnterConfig;
 
@@ -32,7 +32,7 @@ class CBuildingState : public CMultiInputState, public ICommandHandler
 public:
 	//конструкторы и операторы присваивания
 	CBuildingState( CBuildingEditor *_pBuildingEditor );
-			
+
 	enum EInputStates
 	{
 		IS_POINTS = 0,

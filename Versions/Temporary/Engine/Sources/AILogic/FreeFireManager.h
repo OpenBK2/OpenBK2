@@ -12,7 +12,7 @@ class CFreeFireManager
 	struct SShotInfo
 	{
 	public:
-		ZDATA 
+		ZDATA
 		CPtr<CAIUnit> pTarget;
 		CVec2 shootingPos;
 		SAIAngle unitDir;
@@ -20,12 +20,12 @@ class CFreeFireManager
 
 		public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&pTarget); f.Add(3,&shootingPos); f.Add(4,&unitDir); f.Add(5,&gunDir); return 0; }
 		SShotInfo() : shootingPos( VNULL2 ), unitDir( 0 ), gunDir( 0 ) { }
-		
+
 		bool NeedAim( CAIUnit *pNewTarget, class CBasicGun *pGun ) const;
 		void SetInfo( CAIUnit *pNewTarget, class CBasicGun *pGun );
 	};
 
-	ZDATA 
+	ZDATA
 	std::vector<SShotInfo> shootInfo;
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.

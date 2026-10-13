@@ -7,7 +7,7 @@ class CAIUnit;
 class CAnimUnitMech : public IAnimUnit
 {
 	OBJECT_BASIC_METHODS( CAnimUnitMech );
-	
+
 	struct SMovingState
 	{
 	public:
@@ -16,7 +16,7 @@ class CAnimUnitMech : public IAnimUnit
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 		EMovingState state = {};
 		NTimer::STime timeOfIntentionStart = {};
-	public: 
+	public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&state); f.Add(3,&timeOfIntentionStart); return 0; }
 
 		SMovingState() : state( EMS_STOPPED ), timeOfIntentionStart( 0 ) { }
@@ -24,7 +24,7 @@ class CAnimUnitMech : public IAnimUnit
 	ZDATA
 	CPtr<CAIUnit> pOwner;
 	SMovingState movingState;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&movingState); return 0; }
 public:
 	CAnimUnitMech() : pOwner( 0 ) { }
@@ -36,6 +36,6 @@ public:
 	virtual void Stopped();
 
 	virtual void Segment();
-	
+
 	virtual void StopCurAnimation() { }
 };

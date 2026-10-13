@@ -6,7 +6,7 @@
 
 // CInterfaceMissionMovieBorder
 
-CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder() : 
+CInterfaceMissionMovieBorder::CInterfaceMissionMovieBorder() :
 	CInterfaceScreenBase( "MissionMovieBorder", "no_section" )
 {
 }
@@ -17,11 +17,11 @@ CInterfaceMissionMovieBorder::~CInterfaceMissionMovieBorder()
 
 bool CInterfaceMissionMovieBorder::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
-	
+
 	AddScreen( this );
 
 	return true;

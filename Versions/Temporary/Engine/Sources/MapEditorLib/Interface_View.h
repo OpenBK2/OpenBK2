@@ -20,11 +20,11 @@ struct IView
 	//	Выполнить операции View после конца редактирования
 	virtual void Leave() = 0;
 	// Выполнить Undo
-	virtual void Undo( IController* pController ) = 0; 
+	virtual void Undo( IController* pController ) = 0;
 	// Выполнить Redo
-	virtual void Redo( IController* pController ) = 0; 
+	virtual void Redo( IController* pController ) = 0;
 	// Обновить без изменения значений (вызывается при добавлении команды в IControllerContainer)
-	//virtual void Update( IController* pController ) = 0; 
+	//virtual void Update( IController* pController ) = 0;
 	//Установить манипулятор
 	virtual void SetViewManipulator( IManipulator* _pViewManipulator,
 																	 const SObjectSet &rObjectSet,

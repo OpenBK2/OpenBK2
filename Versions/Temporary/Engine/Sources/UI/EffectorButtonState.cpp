@@ -16,18 +16,18 @@ int CEffectorButtonState::operator&( IBinSaver &saver )
 	return 0;
 }
 
-bool CEffectorButtonState::IsFinished() const 
-{ 
-	return bFinished; 
+bool CEffectorButtonState::IsFinished() const
+{
+	return bFinished;
 }
 
 void CEffectorButtonState::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
-{ 
+{
 	const NDb::SUISButtonSubstate *pCmd( checked_cast<const NDb::SUISButtonSubstate*>( _pCmd ) );
 	eSubstate = pCmd->eSubstate;
 	fWaitTime = pCmd->fWaitTime;
 	fElapsedTime = 0;
-	pWindow = dynamic_cast<CWindow*>( pScreen->GetVisibleElement( 
+	pWindow = dynamic_cast<CWindow*>( pScreen->GetVisibleElement(
 		szAnimatedWindow.empty() ? pCmd->szButton.first : szAnimatedWindow, true ) );
 	bStarted = false;
 
@@ -54,7 +54,7 @@ const int CEffectorButtonState::Segment( const int timeDiff, struct IScreen *pSc
 		pButton->SetEffectSubState( eSubstate, true );
 		bStarted = true;
 	}
-	
+
 	int nConsumedTime = timeDiff;
 
 	fElapsedTime += timeDiff;

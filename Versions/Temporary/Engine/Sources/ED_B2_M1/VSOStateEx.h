@@ -12,7 +12,7 @@ class CVSOStateEx : public CVSOState
 	{
 		oldVSOInstance.nVSOID = INVALID_NODE_ID;
 		oldVSOInstance.pDescriptor = 0;
-		oldVSOInstance.controlPoints.clear();	
+		oldVSOInstance.controlPoints.clear();
 		oldVSOInstance.points.clear();
 	}
 	bool bVSOChanged;

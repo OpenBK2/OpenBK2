@@ -18,7 +18,7 @@ inline void ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<
 	// convert weights
 	r.resize( nVertices );
 	memset( &r[0], 0, sizeof(SVertexWeight) * nVertices );
-	
+
 	int nMax = nVertices;
 	int nCount = wghts.size();
 	int i, nVertex = 0, j = 0;

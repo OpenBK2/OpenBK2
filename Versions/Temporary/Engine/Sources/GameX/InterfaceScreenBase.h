@@ -47,7 +47,7 @@ protected:
 	bool IsInFocus() const { return bInFocus; }
 	// Выводит экран помощи при выполнении всех условий показа
 	bool CheckedShowHelpScreen( bool bForced );
-	// 
+	//
 	virtual bool IsShowHelpScreenOnInit() { return true; }
 	//
 	bool ChangeResolution();
@@ -65,24 +65,24 @@ protected:
 
 	// Пауза вне игры, обусловленная интерфейсом
 	void PauseIntermission( bool bPause );
-	
+
 	const std::string& GetBindSection() const { return szBindSection; }
 	virtual void RestoreBindSection();
-	
+
 	void AddScreen( struct IProgrammedReactionsAndChecks *pReactions );
 	IScreen* GetScreen() { return pScreen; }
-	
+
 	template <typename TObj, typename TMsg>
 		void AddImportantObserver( const std::string &szMsgName, bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
 	{
 		importantMsgs.AddObserver( szMsgName, _pfnMemFun );
 	}
-	
+
 	void SetDynamicTextView( ITextView *pView, const std::vector< std::pair<std::wstring, std::wstring> > &params );
 	void SetDynamicTooltip( IWindow *pWnd, const std::wstring &wszTooltip, const std::vector< std::pair<std::wstring, std::wstring> > &params );
 
 	void SetMainWindowTexture( IWindow *pMainWindow, const NDb::STexture *pTexture );
-	
+
 	// disable explicit destruction
 	~CInterfaceScreenBase();
 public:
@@ -101,7 +101,7 @@ public:
 	// call this function after load is complete
 	virtual void AfterLoad();
 	virtual void Draw( NGScene::CRTPtr *pTexture = 0 );
-	
+
 	const std::string& GetInterfaceType() const { return szInterfaceType; }
 
 	virtual void HideUnfocusedScreen();

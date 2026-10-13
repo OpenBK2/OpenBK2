@@ -15,7 +15,7 @@ class CParticleEffect;
 class CSpriteAnimator: public CPtrFuncBase<CParticleEffect>
 {
 	OBJECT_BASIC_METHODS(CSpriteAnimator);
-private:	
+private:
 	ZDATA
 	CVec3 sDir;
 	ZSKIP;

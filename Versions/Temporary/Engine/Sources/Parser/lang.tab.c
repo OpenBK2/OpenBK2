@@ -69,7 +69,7 @@ void yyerror ( char *s, ... )  /* Called by yyparse on error */
 		if ( !bNoTrace )
 			DbgTrc( "%s(%d) error: %s\n", NLang::GetParsingFileName(), nyyLineNumber, buff );
 	}
-	
+
 	byySuccess = false;
 }
 
@@ -882,7 +882,7 @@ case 7:
 {
 																		if ( NLang::GetStep() == 0 )
 																		{
-																			yyval.psz = yyvsp[0].psz;														
+																			yyval.psz = yyvsp[0].psz;
 																			NLang::AddInclude( yyval.psz );
 																		}
 																	;
@@ -973,7 +973,7 @@ case 21:
     break;}
 case 22:
 #line 160 "lang.y"
-{ 
+{
 																								if ( NLang::GetStep() == 1 )
 																								{
 																									yyval.pNode = NLang::CreateComplexTypeNode( yyvsp[0].psz, true );
@@ -994,7 +994,7 @@ case 23:
     break;}
 case 24:
 #line 177 "lang.y"
-{ 
+{
 																							if ( NLang::GetStep() == 1 )
 																							{
 																								yyval.pNode = NLang::CreateComplexTypeNode( yyvsp[0].psz, false );
@@ -1055,7 +1055,7 @@ case 32:
     break;}
 case 33:
 #line 219 "lang.y"
-{ 
+{
 																					if ( NLang::GetStep() == 1 )
 																					{
 																						yyval.pNode = yyvsp[-2].pNode;
@@ -1139,8 +1139,8 @@ case 45:
     break;}
 case 46:
 #line 273 "lang.y"
-{ 
-										if ( NLang::GetStep() == 1 ) 
+{
+										if ( NLang::GetStep() == 1 )
 										{
 											yyval.pNode = yyvsp[0].pNode;
 											NLang::SetVarToPointer( yyval.pNode );
@@ -1150,7 +1150,7 @@ case 46:
 case 47:
 #line 280 "lang.y"
 {
-																			if ( NLang::GetStep() == 1 ) 
+																			if ( NLang::GetStep() == 1 )
 																			{
 																				yyval.pNode = yyvsp[-2].pNode;
 																				NLang::SetVarToPointer( yyval.pNode );
@@ -1262,7 +1262,7 @@ case 62:
     break;}
 case 63:
 #line 351 "lang.y"
-{ 
+{
 																	if ( NLang::GetStep() == 1 )
 																	{
 																		if ( yyvsp[-1].pNode == 0 )
@@ -1299,7 +1299,7 @@ case 67:
     break;}
 case 68:
 #line 377 "lang.y"
-{ 
+{
 																										if ( NLang::GetStep() == 1 )
 																										{
 																											yyval.pNode = yyvsp[-2].pNode;
@@ -1344,10 +1344,10 @@ case 76:
     break;}
 case 77:
 #line 402 "lang.y"
-{ 
+{
 																													if ( NLang::GetStep() == 1 )
 																													{
-																														yyval.pNode = yyvsp[-2].pNode; 
+																														yyval.pNode = yyvsp[-2].pNode;
 																														NLang::SetNameToEnumNode( yyval.pNode, yyvsp[-4].psz );
 																														NLang::AddAttrToEnumNode( yyval.pNode, yyvsp[-6].pNode );
 																													}

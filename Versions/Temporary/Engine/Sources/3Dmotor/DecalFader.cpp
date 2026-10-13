@@ -41,7 +41,7 @@ float CDecalFader::GetFadeValue( STime tCurrent ) const
 
 	if ( tCurrent > tFadeInStart )
 		return exp( fFadeLog * ( tFadeInEnd - tCurrent ) / ( tFadeInEnd - tFadeInStart ) );
-	
+
 	return 0;
 }
 

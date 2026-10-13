@@ -7,4 +7,4 @@ bool ToAIUnits( bool bInEditor )
 	visibility.PostLoad( bInEditor );
 	//
 	return true;
-} 
+}

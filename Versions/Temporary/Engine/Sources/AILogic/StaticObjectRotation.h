@@ -22,7 +22,7 @@ public:
 	{
 	}
 
-	int GetMinX() const 
+	int GetMinX() const
 	{
 		switch( nRotation )
 		{
@@ -87,7 +87,7 @@ public:
 		return array[0][0];
 	}
 
-	TCont & Get( const int nX, const int nY ) 
+	TCont & Get( const int nX, const int nY )
 	{
 		switch( nRotation )
 		{
@@ -99,16 +99,16 @@ public:
 		NI_ASSERT( false, fmt::format( "wrong rotation {}", nRotation ) );
 		return array[0][0];
 	}
-	int GetSizeX() const 
-	{ 
+	int GetSizeX() const
+	{
 		if ( nRotation == 0 || nRotation == 2 )
-			return array.GetSizeX(); 
+			return array.GetSizeX();
 		return array.GetSizeY();
 	}
-	int GetSizeY() const 
-	{ 
+	int GetSizeY() const
+	{
 		if ( nRotation == 0 || nRotation == 2 )
-			return array.GetSizeY(); 
+			return array.GetSizeY();
 		return array.GetSizeX();
 	}
 };
@@ -149,20 +149,20 @@ public:
 		wAngle = _wAngle;
 		vCenter = _vCenter;
 		vOrigin = _vOrigin;
-	
+
 		vRotationVector = CVec2( NMath::Cos( 2 * PI * (_wAngle) / 65536.0f ), NMath::Sin( 2 * PI * (_wAngle) / 65536.0f ) );
 		vRotationVectorBack = CVec2( NMath::Cos( 2 * PI * (65536 - _wAngle) / 65536.0f ), NMath::Sin( 2 * PI * ( 65536 - _wAngle) / 65536.0f ) );
 		std::vector<CVec2> vVertices;
-		
+
 		CVec2 vPt = -vOrigin;
 		vVertices.push_back( ( vPt ^ vRotationVector) + vCenter );
-		
+
 		vPt = CVec2(-vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE, -vOrigin.y );
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
 
 		vPt = CVec2(-vOrigin.x, -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE);
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
-		
+
 		vPt = CVec2(-vOrigin.x + ( array->GetSizeX() ) * SConsts::TILE_SIZE, -vOrigin.y + ( array->GetSizeY() ) * SConsts::TILE_SIZE );
 		vVertices.push_back( ( vPt ^ vRotationVector ) + vCenter );
 

@@ -29,7 +29,7 @@
 // Изначально все основные окна должны быть невидимыми.
 // При запуске интерфейса заданное основное окно делается видимым.
 //
-// Основное окно должно содержать окно с именем "MessageBoxTextWindow", которое определяет 
+// Основное окно должно содержать окно с именем "MessageBoxTextWindow", которое определяет
 // расположение текста. Это окно должно содержать WindowTextView с именем "MessageBoxTextView",
 // в который помещается текст MessageBox.
 //
@@ -50,7 +50,7 @@ bool CInterfaceMessageBox::CReactions::Execute( const std::string &szSender, con
 
 // CInterfaceMessageBox
 
-CInterfaceMessageBox::CInterfaceMessageBox() : 
+CInterfaceMessageBox::CInterfaceMessageBox() :
 	CInterfaceScreenBase( "MessageBoxScreen", "message_box_screen" )
 {
 	AddObserver( "message_box_ok", &CInterfaceMessageBox::MsgOk );
@@ -61,7 +61,7 @@ CInterfaceMessageBox::CInterfaceMessageBox() :
 
 CInterfaceMessageBox::~CInterfaceMessageBox()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
@@ -78,7 +78,7 @@ bool CInterfaceMessageBox::Init()
 	if ( AddUIScreen( pScreen, "MessageBoxScreen", pReactions ) == false )
 		return false;
 
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	return true;
@@ -94,7 +94,7 @@ void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstr
 	NI_ASSERT( pTextWindow, "Text window 'MessageBoxTextWindow' for message box not found" );
 	CTPoint<int> sizeTextWindow;
 	pTextWindow->GetPlacement( 0, 0, &sizeTextWindow.x, &sizeTextWindow.y );
-	
+
 	IWindow *pTextViewWindow = pScreen->GetVisibleChild( "MessageBoxTextView", true );
 	ITextView *pTextView = dynamic_cast<ITextView*>( pTextViewWindow );
 	NI_ASSERT( pTextView, "Text view window 'MessageBoxTextView' for message box not found" );
@@ -102,14 +102,14 @@ void CInterfaceMessageBox::SetParams( const std::string &szName, const std::wstr
 	// переразмерим диалог
 	ResizeTextView( pTextView, szText, sizeTextWindow.x );
 	const CTPoint<int> &sizeTextView = pTextView->GetSize();
-	
+
 	int nDeltaX = (std::max)( 0, sizeTextView.x - sizeTextWindow.x );
 	int nDeltaY = (std::max)( 0, sizeTextView.y - sizeTextWindow.y );
-	
+
 	CTPoint<int> posWindow;
 	CTPoint<int> sizeWindow;
 	pWindow->GetPlacement( &posWindow.x, &posWindow.y, &sizeWindow.x, &sizeWindow.y );
-	pWindow->SetPlacement( posWindow.x - nDeltaX / 2, posWindow.y - nDeltaY / 2, 
+	pWindow->SetPlacement( posWindow.x - nDeltaX / 2, posWindow.y - nDeltaY / 2,
 		sizeWindow.x + nDeltaX, sizeWindow.y + nDeltaY, EWPF_ALL );
 }
 
@@ -151,7 +151,7 @@ void CInterfaceMessageBox::ResizeTextView( ITextView *pTextView, const std::wstr
 	int nNiceX = (std::max)( (std::max)( nMinX, size.x), (int)sqrtf( size.x * size.y * TEXT_VIEW_NICE_X2Y ) );
 	pTextView->SetWidth( nNiceX );
 	const CTPoint<int> &size2 = pTextView->GetSize();
-	if ( size2.x < nNiceX ) 
+	if ( size2.x < nNiceX )
 		pTextView->SetWidth( size2.x );
 }
 

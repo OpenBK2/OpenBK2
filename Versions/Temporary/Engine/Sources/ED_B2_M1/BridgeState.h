@@ -14,7 +14,7 @@ class CBridgeState : public CMapObjectState
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CMapObjectMultiState;
-	
+
 	static const int START_TERMINATOR_INDEX;
 	static const int FINISH_TERMINATOR_INDEX;
 	static const int TERMINATOR_COUNT;
@@ -49,7 +49,7 @@ protected:
 	void InsertObjectEnter();
 	void InsertObjectLeave();
 	void InsertObjectDraw( IPaintContext *pPaintDC );
-	//	
+	//
 	bool InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );

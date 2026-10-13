@@ -11,9 +11,9 @@ REGISTER_SAVELOAD_CLASS(UI, 0x17122340, CWindowComboBox);
 
 // При клике на иконку вызывается скроллируемый список.
 // Список может располагаться за пределами исходного окна. Стандартный оконный механизм не позволяет
-// обрабатывать такое окно как дочернее для исходного - нормальный путь для мышиных сообщений 
-// проходит исключительно внутри границ всех родительских окон. Поэтому список делается дочерним для 
-// корневого с заданным приоритетом (надо задавать выше чем у всех "обычных" окон, но не тултипов), 
+// обрабатывать такое окно как дочернее для исходного - нормальный путь для мышиных сообщений
+// проходит исключительно внутри границ всех родительских окон. Поэтому список делается дочерним для
+// корневого с заданным приоритетом (надо задавать выше чем у всех "обычных" окон, но не тултипов),
 // получает фокус и убирается при его потере.
 
 CWindowComboBox::CWindowComboBox() :
@@ -32,10 +32,10 @@ void CWindowComboBox::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	CWindow::InitByDesc( _pDesc );
 	pShared = checked_cast_ptr<const NDb::SWindowComboBoxShared*>( pDesc->pShared ) ;
-	
+
 	// required field
 	CWindow *pLineWnd = CUIFactory::MakeWindow( pShared->pLine );
-	pLine = dynamic_cast<CWindowListItem*>( pLineWnd );	
+	pLine = dynamic_cast<CWindowListItem*>( pLineWnd );
 	NI_ASSERT( pLine, "Window not found" );
 	if ( pLine )
 	{
@@ -78,7 +78,7 @@ void CWindowComboBox::Init()
 void CWindowComboBox::Reposition( const CTRect<float> &parentRect )
 {
 	CWindow::Reposition( parentRect );
-	
+
 	if ( pList )
 	{
 		CTRect<float> rect = GetWindowRect();
@@ -110,7 +110,7 @@ void CWindowComboBox::AddItem( CObjectBase *pData )
 
 	IListControlItem *pItem = pList->AddItem( pData );
 	items.push_back( pItem );
-	
+
 	ResizeList();
 }
 
@@ -118,14 +118,14 @@ void CWindowComboBox::RemoveItem( CObjectBase *pData )
 {
 	if ( !pList )
 		return;
-	
+
 	CItems::iterator pos = find( items.begin(), items.end(), pData );
 	if ( pos == items.end() )
 		return;
-		
+
 	pList->RemoveItem( *pos );
 	items.erase( pos );
-	
+
 	ResizeList();
 }
 
@@ -133,8 +133,8 @@ void CWindowComboBox::RemoveAllItems()
 {
 	Select( -1 );
 	items.clear();
-	pList->RemoveAllElements();	
-	
+	pList->RemoveAllElements();
+
 	ResizeList();
 }
 
@@ -167,7 +167,7 @@ void CWindowComboBox::SetViewer( IDataViewer *_pViewer )
 		pList->SetViewer( pViewer );
 }
 
-void CWindowComboBox::SetLine( CObjectBase *pData ) 
+void CWindowComboBox::SetLine( CObjectBase *pData )
 {
 	pLineData = pData;
 	if ( pViewer )
@@ -178,7 +178,7 @@ void CWindowComboBox::Pushed( class CWindow *pWho )
 {
 	if ( bSuppressPopupList )
 		return;
-		
+
 	ShowList( !IsModalList() );
 	bSuppressPopupList = true;
 }
@@ -261,9 +261,9 @@ bool CWindowComboBox::OnEscape( const SGameMessage &msg )
 	return false;
 }
 
-bool CWindowComboBox::IsRelatedFocus( IWindow *pWindow ) const 
+bool CWindowComboBox::IsRelatedFocus( IWindow *pWindow ) const
 {
-	return this == pWindow || dynamic_cast_ptr<IWindow*>( pList ) == pWindow; 
+	return this == pWindow || dynamic_cast_ptr<IWindow*>( pList ) == pWindow;
 }
 
 

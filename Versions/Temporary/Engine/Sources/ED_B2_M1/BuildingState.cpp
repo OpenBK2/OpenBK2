@@ -27,8 +27,8 @@
 //
 //
 
-CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) : 
-	pBuildingEditor( _pBuildingEditor ), 
+CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) :
+	pBuildingEditor( _pBuildingEditor ),
 	bNeedLoadEnterConfig( true )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
@@ -43,7 +43,7 @@ CBuildingState::CBuildingState(  CBuildingEditor *_pBuildingEditor ) :
 			nStateIndex = pMultiInputState->AddInputState( pState );
 			NI_ASSERT( nStateIndex == POINTS_ISS_SMOKE_POINTS, fmt::format( "CBuildingMainState(): Wrong state number POINTS_ISS_SMOKE_POINTS: {}, ({})", nStateIndex, static_cast<int>( POINTS_ISS_SMOKE_POINTS ) ) );
 		}
-		// POINTS_ISS_SLOTS 
+		// POINTS_ISS_SLOTS
 		{
 			CSlotPointsState *pState = new CSlotPointsState( pBuildingEditor );
 			nStateIndex = pMultiInputState->AddInputState( pState );
@@ -88,10 +88,10 @@ void CBuildingState::LoadEnterConfig()
 void CBuildingState::Enter()
 {
 	NI_ASSERT( pBuildingEditor != 0, "CBuildingState::Enter(), pBuildingEditor == 0" );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, 
-																												ID_SCENE_ENABLE_GAME_INPUT, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE,
+																												ID_SCENE_ENABLE_GAME_INPUT,
 																												reinterpret_cast<uintptr_t>(new CBuildingInterfaceCommand(new CBuildingInterface())) );
-	
+
 	// читаем установки MapInfoEditor, чтобы выбрать террейн
 
 	//unsigned nMapID = -1;
@@ -101,7 +101,7 @@ void CBuildingState::Enter()
 	//	nMapID = pFolderMan->GetID( szMapName );
 	//}
 	//CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( pBuildingEditor->GetCurrSeason() );
-	//if ( vCameraAnchor == VNULL3 ) 
+	//if ( vCameraAnchor == VNULL3 )
 	//{
 	//	vCameraAnchor.x = 16.0f * VIS_TILE_SIZE;
 	//	vCameraAnchor.y = 16.0f * VIS_TILE_SIZE;
@@ -122,14 +122,14 @@ void CBuildingState::Enter()
 void CBuildingState::Leave()
 {
 	NI_ASSERT( pBuildingEditor != 0, "CBuildingState::Leave(), pBuildingEditor == 0" );
-	
+
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CBuildingState::Leave(): pScene == 0" );
-	
+
 	//
 	CMultiInputState::Leave();
 	Singleton<ICommandHandlerContainer>()->Remove( CHID_BUILDING_STATE );
-	
+
 	//Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 	const std::string szDebugParam = Singleton<IUserDataContainer>()->Get()->szDebugParam;
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
@@ -155,7 +155,7 @@ bool CBuildingState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState*>( GetInputState( nShortcutIndex ) );
 				NI_ASSERT( pMultiInputState != 0, "CBuildingState::HandleCommand(), pMultiInputState == 0" );
-				if ( ( nTabIndex >= 0 ) && 
+				if ( ( nTabIndex >= 0 ) &&
 						 ( nTabIndex < pMultiInputState->GetCount() ) )
 				{
 					pMultiInputState->SetActiveInputState( nTabIndex, true, false );

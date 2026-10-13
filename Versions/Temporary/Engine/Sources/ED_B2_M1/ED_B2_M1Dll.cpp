@@ -63,7 +63,7 @@ namespace
 				}
 			}
 		}
-		catch ( ... ) 
+		catch ( ... )
 		{
 			NLog::GetLogger()->Log( LT_ERROR, "Can't load object filters\n" );
 		}

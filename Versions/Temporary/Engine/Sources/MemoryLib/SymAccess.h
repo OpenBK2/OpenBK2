@@ -10,9 +10,9 @@ struct CSymString
 	enum { N_STRING_CHARS = 1024 };
 	char szStr[ N_STRING_CHARS ];
 	CSymString() { szStr[0] = 0; }
-	CSymString &operator=( const char *psz ) 
+	CSymString &operator=( const char *psz )
 	{
-		szStr[N_STRING_CHARS-1] = 0; 
+		szStr[N_STRING_CHARS-1] = 0;
 		strncpy( szStr, psz, N_STRING_CHARS -1 );
 		return *this;
 	}

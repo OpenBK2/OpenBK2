@@ -13,7 +13,7 @@ class CDynamicDebrisSetBuilder : public CBuildDataBuilder
 protected:
 	// IBuildDataCallback
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
-	
+
 	// CBuildDataBuilder
 	const std::string& GetBuildDataTypeName() { return BUILD_DATA_TYPE_NAME; }
 	bool InternalInsertObject( std::string *pszObjectTypeName,

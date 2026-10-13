@@ -138,7 +138,7 @@ bool CWindowSimpleSharedEditor::UOBegin( IManipulator *pManipulator, const std::
 		SObjectSet _objectSet;
 		_objectSet.szObjectTypeName = rObjectTypeName;
 		InsertHashSetElement( &( _objectSet.objectNameSet ), rDBID );
-		
+
 		pUndoController->GetInternalController()->SetObjectSet( _objectSet );
 		pUndoController->SetTemporaryLabel( CWindowSimpleSharedController::GetTemporaryLabel() );
 		pUndoManipulator->GetNameList( &( pUndoController->GetNameList() ) );

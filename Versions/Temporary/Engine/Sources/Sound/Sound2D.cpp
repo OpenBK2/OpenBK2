@@ -43,29 +43,29 @@ void CSFXSound::Init()
 }
 
 void CSFXSound::SetSample( CSoundSample *_pSample )
-{ 
-	pSample = _pSample; 
+{
+	pSample = _pSample;
 }
 
-int CSFXSound::Play() 
-{ 
+int CSFXSound::Play()
+{
 	int nChannel = FSOUND_PlaySound( FSOUND_FREE, GetSample()->GetInternalContainer() );
 	SetChannel( nChannel );
 	return nChannel;
 }
 
-CSoundSample* CSFXSound::GetSample() 
-{ 
-	return pSample; 
+CSoundSample* CSFXSound::GetSample()
+{
+	return pSample;
 }
 
-void CSFXSound::SetChannel( int _nChannel ) 
-{ 
-	nChannel = _nChannel; 
+void CSFXSound::SetChannel( int _nChannel )
+{
+	nChannel = _nChannel;
 }
 
-bool CSFXSound::IsPlaying() 
-{ 
+bool CSFXSound::IsPlaying()
+{
 	if ( (nChannel != -1) && FSOUND_IsPlaying(nChannel) )
 		return FSOUND_GetCurrentSample( nChannel ) == pSample->GetInternalContainer();
 	else
@@ -112,8 +112,8 @@ CSound2D::CSound2D( const NDb::SSoundDesc *_pDesc, const bool _bLooped )
 }
 
 int CSound2D::Visit( struct ISFXVisitor *pVisitor )
-{ 
-	return pVisitor->VisitSound2D( this ); 
+{
+	return pVisitor->VisitSound2D( this );
 }
 
 void CSound2D::Update( ISFX * pSFX )
@@ -122,7 +122,7 @@ void CSound2D::Update( ISFX * pSFX )
 	{
 		const int nPan = Clamp( int(128 + (GetPan() * 127)), 0, 255 );
 		FSOUND_SetPan( GetChannel(), nPan );
-		
+
 		float fTypedVolume = 0;
 		switch( GetVolumeType() )
 		{

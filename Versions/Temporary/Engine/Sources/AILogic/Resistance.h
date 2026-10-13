@@ -14,7 +14,7 @@ ZDATA
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCellNumber); f.Add(3,&nWeight); f.Add( 4, &nWeightExceed);return 0; }
 public:
 	SResistance() { Clear(); }
-	SResistance( const int _nCellNumber, const float fWeight, int _nWeightExceed ) 
+	SResistance( const int _nCellNumber, const float fWeight, int _nWeightExceed )
 		: nCellNumber( _nCellNumber ), nWeight( fWeight * 100 ), nWeightExceed( _nWeightExceed ) { }
 
 	void Clear(){ nCellNumber = -1; nWeight = -1.0f; }
@@ -39,7 +39,7 @@ struct SResistanceCmp
 	{
 		if (r1.GetWeight() != r2.GetWeight())
 			return r1.GetWeight() > r2.GetWeight();
-		
+
 		return r1.nCellNumber > r2.nCellNumber;
 	}
 };
@@ -82,8 +82,8 @@ class CResistancesContainer
 		{
 			SResistanceCmp cmp;
 			std::sort( pContainter->resistances.begin(), pContainter->resistances.end(), cmp );
-			iter = pContainter->resistances.begin(); 
-			IterateToNotInUse(); 
+			iter = pContainter->resistances.begin();
+			IterateToNotInUse();
 		}
 
 		void Iterate();
@@ -94,7 +94,7 @@ class CResistancesContainer
 	const int GetResistanceCellNumber( const CVec2 &vPos );
 	bool IsCellExcluded( const CVec2 &vCellCenter );
 
-	
+
 public:
 	CResistancesContainer() { }
 
@@ -102,7 +102,7 @@ public:
 
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
 			const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
-			const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt );			
+			const NTimer::STime lastAntiArtTimeDelta, const CVec2 &vLastVisibleAntiArtCenter, const float fDistToLastVisibleAntiArt );
 
 	void UnitDied( CAIUnitInfoForGeneral *pInfo );
 	void UnitChangedParty( CAIUnitInfoForGeneral *pInfo );

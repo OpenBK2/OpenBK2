@@ -2,13 +2,13 @@
 
 #include "CameraMapIterator.h"
 
-CCameraMapIterator::CCameraMapIterator( float fFOV, float fYaw, float fPitch, float fDistance, 
+CCameraMapIterator::CCameraMapIterator( float fFOV, float fYaw, float fPitch, float fDistance,
 																				const CVec2 &vScreenSize, float fMapSizeX, float fMapSizeY )
 : nScreenSizeX( vScreenSize.x ), nScreenSizeY( vScreenSize.y ), nCurrX( 0 ), nCurrY( 0 )
 {
 	const float fStepX = 2.0f * fDistance * tan( fFOV * 0.5f );
 	const float fStepY = vScreenSize.y * fStepX / ( vScreenSize.x * sin( fPitch ) );
-	// 
+	//
 	const float fAngle = -fYaw;
 	const float fSin = sin( fAngle );
 	const float fCos = cos( fAngle );

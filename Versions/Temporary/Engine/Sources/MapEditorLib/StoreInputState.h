@@ -86,7 +86,7 @@ public:
 				nRepCnt = rInputStateEventInfo.nRepCnt;
 			}
 			return *this;
-		}	
+		}
 	};
 
 	//IInputState interface

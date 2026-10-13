@@ -115,7 +115,7 @@ int PORT_CDECL main( int argc, char *argv[] )
 		if ( it->size() < 4 )
 			continue;
 		//
-		if ( (*it)[nSize - 4] == '.' && 
+		if ( (*it)[nSize - 4] == '.' &&
 			   NStr::ASCII_tolower((*it)[nSize - 3]) == 'x' &&
 				 NStr::ASCII_tolower((*it)[nSize - 2]) == 'd' &&
 				 NStr::ASCII_tolower((*it)[nSize - 1]) == 'b' )

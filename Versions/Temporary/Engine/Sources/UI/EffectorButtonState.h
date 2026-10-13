@@ -7,7 +7,7 @@ class CEffectorButtonState : public IUIEffector
 	OBJECT_BASIC_METHODS(CEffectorButtonState)
 	bool bFinished;
 	bool bForward;
-	
+
 	NDb::EButtonSubstateType eSubstate;
 	float fWaitTime;
 	float fElapsedTime;

@@ -23,4 +23,4 @@ bool ToAIUnits( bool bInEditor )
 	wMax = ToAngle( fMax );
 
 	return true;
-} 
+}

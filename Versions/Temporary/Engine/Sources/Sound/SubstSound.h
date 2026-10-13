@@ -24,7 +24,7 @@ public:
 	{
 		return pSample;
 	}
-	int operator&( IBinSaver &saver ); 
+	int operator&( IBinSaver &saver );
 };
 
 

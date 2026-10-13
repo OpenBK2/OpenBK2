@@ -26,7 +26,7 @@ enum EArmor
 	ARMOR_SIDE_2			= 3,
 	ARMOR_TOP					= 4,
 	ARMOR_BOTTOM			= 5,
-	
+
 	ARMOR_COUNT				= 6,
 };
 
@@ -53,7 +53,7 @@ struct SWeapon
 	int nAmmo;
 	int nMaxAmmo;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeapon); f.Add(3,&nCount); f.Add(4,&bPrimary); f.Add(5,&wszLocalizedName); f.Add(6,&nDamage); f.Add(7,&nPenetration); f.Add(8,&nAmmo); f.Add(9,&nMaxAmmo); return 0; }
-	
+
 	bool operator==( const SWeapon &weapon ) const
 	{
 		return pWeapon == weapon.pWeapon;
@@ -63,7 +63,7 @@ struct SWeapon
 struct SWeaponsSort
 {
 	bool operator()( const SWeapon &weapon1, const SWeapon &weapon2 ) const;
-	
+
 	int GetWeaponPriority( const SWeapon &weapon ) const;
 };
 

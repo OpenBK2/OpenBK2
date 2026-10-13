@@ -21,7 +21,7 @@ NGfx::SMMXWord mmxWeights[512];
 unsigned char nCubicRoot[32768];
 static struct SNormalizeInit
 {
-	SNormalizeInit() 
+	SNormalizeInit()
 	{
 		nNormalizeTable[0] = 0x7fff;
 		for ( int k = 1; k < std::size(nNormalizeTable); ++k )

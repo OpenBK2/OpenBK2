@@ -18,13 +18,13 @@ class CGMMemFunBoolObserver : public IGMObserver
 	bool (TObj::*pfnMemFun)( const TMsg &msg ) = nullptr;
 public:
 	CGMMemFunBoolObserver() {  }
-	CGMMemFunBoolObserver( bool (TObj::*_pfnMemFun)( const TMsg &_msg ) ) 
+	CGMMemFunBoolObserver( bool (TObj::*_pfnMemFun)( const TMsg &_msg ) )
 		: pfnMemFun( _pfnMemFun ) {}
 	//
-	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) 
-	{ 
+	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
+	{
 		if ( pThis )
-			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg ); 
+			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg );
 		return false;
 	}
 };
@@ -36,13 +36,13 @@ class CGMMemFunBoolObserver1 : public IGMObserver
 	T1 p1 = {};
 public:
 	CGMMemFunBoolObserver1() {}
-	CGMMemFunBoolObserver1( bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
+	CGMMemFunBoolObserver1( bool (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 		: pfnMemFun( _pfnMemFun ), p1( _p1 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
-	{ 
+	{
 		if ( pThis )
-			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1 ); 
+			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1 );
 		return false;
 	}
 };
@@ -55,13 +55,13 @@ class CGMMemFunBoolObserver2 : public IGMObserver
 	T2 p2 = {};
 public:
 	CGMMemFunBoolObserver2() {}
-	CGMMemFunBoolObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMMemFunBoolObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 		: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
-	{ 
+	{
 		if ( pThis )
-			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1, p2 ); 
+			return ( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1, p2 );
 		return false;
 	}
 };
@@ -76,11 +76,11 @@ public:
 	CGMMemFunObserver() {  }
 	CGMMemFunObserver( void (TObj::*_pfnMemFun)( const TMsg &msg ) ) : pfnMemFun( _pfnMemFun ) {}
 	//
-	bool Execute( const SGameMessage &msg, CObjectBase *pThis ) 
-	{ 
+	bool Execute( const SGameMessage &msg, CObjectBase *pThis )
+	{
 		if ( pThis )
 		{
-			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( msg ); 
+			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( msg );
 			return true;
 		}
 		return false;
@@ -94,14 +94,14 @@ class CGMMemFunObserver1 : public IGMObserver
 	T1 p1 = {};
 public:
 	CGMMemFunObserver1() {}
-	CGMMemFunObserver1( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
+	CGMMemFunObserver1( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 		: pfnMemFun( _pfnMemFun ), p1( _p1 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
-	{ 
+	{
 		if ( pThis )
 		{
-			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1 ); 
+			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1 );
 			return true;
 		}
 		return false;
@@ -116,14 +116,14 @@ class CGMMemFunObserver2 : public IGMObserver
 	T2 p2 = {};
 public:
 	CGMMemFunObserver2() {}
-	CGMMemFunObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMMemFunObserver2( void (TObj::*_pfnMemFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 		: pfnMemFun( _pfnMemFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis )
-	{ 
+	{
 		if ( pThis )
 		{
-			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1, p2 ); 
+			( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( _msg, p1, p2 );
 			return true;
 		}
 		return false;
@@ -138,7 +138,7 @@ class CGMFunBoolObserver : public IGMObserver
 	bool (*pfnFun)( const TMsg &_msg ) = nullptr;
 public:
 	CGMFunBoolObserver() {  }
-	CGMFunBoolObserver( bool (*_pfnFun)( const TMsg &_msg ) ) 
+	CGMFunBoolObserver( bool (*_pfnFun)( const TMsg &_msg ) )
 		: pfnFun( _pfnFun ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return (*pfnFun)( _msg ); }
@@ -151,7 +151,7 @@ class CGMFunBoolObserver1 : public IGMObserver
 	T1 p1 = {};
 public:
 	CGMFunBoolObserver1() {  }
-	CGMFunBoolObserver1( bool (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
+	CGMFunBoolObserver1( bool (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 		: pfnFun( _pfnFun ), p1( _p1 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return (*pfnFun)( _msg, p1 ); }
@@ -165,7 +165,7 @@ class CGMFunBoolObserver2 : public IGMObserver
 	T2 p2 = {};
 public:
 	CGMFunBoolObserver2() {  }
-	CGMFunBoolObserver2( bool (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMFunBoolObserver2( bool (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 		: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { return (*pfnFun)( _msg, p1, p2 ); }
@@ -179,7 +179,7 @@ class CGMFunObserver : public IGMObserver
 	void (*pfnFun)( const TMsg &_msg ) = nullptr;
 public:
 	CGMFunObserver() {  }
-	CGMFunObserver( void (*_pfnFun)( const TMsg &_msg ) ) 
+	CGMFunObserver( void (*_pfnFun)( const TMsg &_msg ) )
 		: pfnFun( _pfnFun ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { (*pfnFun)( _msg ); return true; }
@@ -192,7 +192,7 @@ class CGMFunObserver1 : public IGMObserver
 	T1 p1 = {};
 public:
 	CGMFunObserver1() {  }
-	CGMFunObserver1( void (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 ) 
+	CGMFunObserver1( void (*_pfnFun)( const TMsg &_msg, T1 _p1 ), T1 _p1 )
 		: pfnFun( _pfnFun ), p1( _p1 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { (*pfnFun)( _msg, p1 ); return true; }
@@ -206,7 +206,7 @@ class CGMFunObserver2 : public IGMObserver
 	T2 p2 = {};
 public:
 	CGMFunObserver2() {  }
-	CGMFunObserver2( void (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 ) 
+	CGMFunObserver2( void (*_pfnFun)( const TMsg &_msg, T1 _p1, T2 _p2 ), T1 _p1, T2 _p2 )
 		: pfnFun( _pfnFun ), p1( _p1 ), p2( _p2 ) {}
 	//
 	bool Execute( const SGameMessage &_msg, CObjectBase *pThis ) { (*pfnFun)( _msg, p1, p2 ); return true; }

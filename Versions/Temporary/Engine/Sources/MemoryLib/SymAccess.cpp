@@ -106,7 +106,7 @@ int CollectCallStack( EXCEPTION_POINTERS *pExPtrs, SCallStackEntry *pRes, int nM
 	int nEntry = 0;
 	for ( nEntry = 0; nEntry < nMaxEntries; ++nEntry )
 	{
-		BOOL bRes = StackWalk64( IMAGE_FILE_MACHINE_I386, se.GetProcess(), GetCurrentThread(), &stkFrame, &ctx, 0, 
+		BOOL bRes = StackWalk64( IMAGE_FILE_MACHINE_I386, se.GetProcess(), GetCurrentThread(), &stkFrame, &ctx, 0,
 			SymFunctionTableAccess64, SymGetModuleBase64, 0 );
 		if ( !bRes || stkFrame.AddrPC.Offset == 0 )
 			break;

@@ -18,7 +18,7 @@ public:
 
 	int operator&( IBinSaver &saver );
 	void Init( const NDb::SMapInfo *_pMapInfo );
-	
+
 	// return false if movement is finished
 	bool Segment( const NTimer::STime curTime );
 	// move to

@@ -3,7 +3,7 @@
 
 #include "InterfaceMPBase.h"
 
-class CInterfaceMultiplayer : public CInterfaceScreenBase, 
+class CInterfaceMultiplayer : public CInterfaceScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMultiplayer );

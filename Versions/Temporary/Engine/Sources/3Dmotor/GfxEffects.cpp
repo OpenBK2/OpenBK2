@@ -73,7 +73,7 @@ void SEffTransparentParticles::Use( CRenderContext *p )
 		p->SetPixelShader( psG3Particles );
 		p->SetTexture( 1, pLight, FILTER_LINEAR );
 	}
-	else 
+	else
 		p->SetPixelShader( psG3SimpleParticles );
 }
 

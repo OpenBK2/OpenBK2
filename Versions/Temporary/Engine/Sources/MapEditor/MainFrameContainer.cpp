@@ -31,6 +31,6 @@ void CMainFrameContainer::Set( IMainFrame* _pMainFrame, IWidget* _pMainWindow )
 
 BASIC_REGISTER_CLASS(MAPEDITOR, CMainFrameLoggerSink);
 
-// basement storage  
+// basement storage
 
 

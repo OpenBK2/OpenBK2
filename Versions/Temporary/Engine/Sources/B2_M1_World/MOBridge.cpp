@@ -39,7 +39,7 @@ bool CMOBridge::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 		}
 	}
 
-	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1), 
+	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1),
 		                  bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED, 0, 0 );
 	SetModel( pModel );
 
@@ -70,7 +70,7 @@ const NDb::SBridgeRPGStats::SElementRPGStats& CMOBridge::GetElement() const
 	return nFrameIndex == 0 ? pStats->end : pStats->center;
 }
 
-int CMOBridge::GetDamagedState( float fHP ) const 
+int CMOBridge::GetDamagedState( float fHP ) const
 {
 	int nResult = -1;
 	float fCurrHP = 1.0f;
@@ -130,7 +130,7 @@ void CMOBridge::PlayDeathAnimation( const NTimer::STime timeStart, const bool bI
 		if ( pAnim->eType == NDb::ANIMATION_DEATH )
 			deathAnims.push_back( pAnim );
 	}
-	if ( deathAnims.size() > 0 )	
+	if ( deathAnims.size() > 0 )
 	{
 		int nRandomAnim = deathAnims.size() == 1 ? 0 : NWin32Random::Random( deathAnims.size() );
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
@@ -173,7 +173,7 @@ IClientUpdatableProcess* CMOBridge::AIUpdateRPGStats( const SAINotifyRPGStats &s
 				const NDb::SBridgeRPGStats::SBridgeFirePoint &point = pStats->smokePoints[i];
 				CVec3 vEffectPos;
 				const CVec3 vPointPos( point.vPos.y - element.vOrigin.x, point.vPos.x - element.vOrigin.y, 0 );
-				qRot.Rotate( &vEffectPos, vPointPos ); 
+				qRot.Rotate( &vEffectPos, vPointPos );
 				vEffectPos += vPos;
 				const float fAngle = point.fDirection * FP_2PI / 65535.0;
 				CQuat qEffectRot( fAngle, CVec3( 0, 0, 1.0f ) );
@@ -228,7 +228,7 @@ NDb::EUserAction CMOBridge::GetBestAutoAction( const CUserActions &actionsBy, CU
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
-		
+
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
 

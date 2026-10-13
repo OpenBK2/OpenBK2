@@ -367,7 +367,7 @@ struct S_SP_CRBB_CHPTL_Functional
 		:	pHeightContainer( _pHeightContainer ),
 			pHeightPattern( _pHeightPattern ),
 			fAverageHeight( _fAverageHeight ),
-			fLevelRatio( _fLevelRatio )			
+			fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
@@ -376,7 +376,7 @@ struct S_SP_CRBB_CHPTL_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
 			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
@@ -397,7 +397,7 @@ struct S_SP_CRBB_CAH_Functional
 	ITerraManager *pTerraManager;
 	float fTotalHeight;
 	int nPointCount;
-	//	
+	//
 	S_SP_CRBB_CAH_Functional( CHeightContainer *_pHeightContainer )
 		: pHeightContainer( _pHeightContainer ),
 			fTotalHeight( 0.0f ),
@@ -409,7 +409,7 @@ struct S_SP_CRBB_CAH_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
 			fTotalHeight += pTerraManager->GetTerraHeightFast( nXIndex, nYIndex );
@@ -452,7 +452,7 @@ struct S_SP_CHPTL_Functional
 												 float _fLevelRatio )
 		:	pHeightPattern( _pHeightPattern ),
 			fAverageHeight( _fAverageHeight ),
-			fLevelRatio( _fLevelRatio )			
+			fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
@@ -460,7 +460,7 @@ struct S_SP_CHPTL_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == HEIGHT_MARK )
 		{
 			pHeightPattern->heights[nYIndex - pHeightPattern->pos.y][nXIndex - pHeightPattern->pos.x] = ( fAverageHeight - pTerraManager->GetTerraHeightFast( nXIndex, nYIndex ) ) * fLevelRatio;
@@ -480,7 +480,7 @@ struct S_SP_CAH_Functional
 	ITerraManager *pTerraManager;
 	float fTotalHeight;
 	int nPointCount;
-	//	
+	//
 	S_SP_CAH_Functional()
 		:	fTotalHeight( 0.0f ),
 			nPointCount( 0 )
@@ -490,7 +490,7 @@ struct S_SP_CAH_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == HEIGHT_MARK )
 		{
 			fTotalHeight += pTerraManager->GetTerraHeightFast( nXIndex, nYIndex );
@@ -525,7 +525,7 @@ struct S_CP_CRBB_CHPTL_Functional
 		:	pHeightContainer( _pHeightContainer ),
 			pHeightPattern( _pHeightPattern ),
 			vPlane( rvPlane ),
-			fLevelRatio( _fLevelRatio )			
+			fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightContainer != 0, "Wrong parameter: pHeightContainer == 0" );
@@ -534,7 +534,7 @@ struct S_CP_CRBB_CHPTL_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
 			const double fAverageHeight = vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
@@ -556,7 +556,7 @@ struct S_CP_CRBB_CAP_Functional
 	ITerraManager *pTerraManager;
 	CArray2D<double> matrix;
 	SDoubleVec3 vRightSide;
-	//	
+	//
 	S_CP_CRBB_CAP_Functional( CHeightContainer *_pHeightContainer )
 		: pHeightContainer( _pHeightContainer )
 	{
@@ -574,7 +574,7 @@ struct S_CP_CRBB_CAP_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( ( fValue == HEIGHT_MARK ) && pHeightContainer->Compare( nXIndex, nYIndex ) )
 		{
 			CalculateMatrix( &matrix, &vRightSide, nXIndex, nYIndex, pTerraManager );
@@ -583,7 +583,7 @@ struct S_CP_CRBB_CAP_Functional
 	}
 	//
 	inline bool GetPlane( SDoubleVec3 *pvPlane ) const
-	{ 
+	{
 		CArray2D<double> invertMatrix;
 		invertMatrix.SetSizes( 3, 3 );
 		invertMatrix.FillZero();
@@ -618,7 +618,7 @@ struct S_CP_CHPTL_Functional
 												 float _fLevelRatio )
 		:	pHeightPattern( _pHeightPattern ),
 			vPlane( rvPlane ),
-			fLevelRatio( _fLevelRatio )			
+			fLevelRatio( _fLevelRatio )
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
 		NI_ASSERT( pHeightPattern != 0, "Wrong parameter: pHeightPattern == 0" );
@@ -626,7 +626,7 @@ struct S_CP_CHPTL_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == HEIGHT_MARK )
 		{
 			const double fAverageHeight = vPlane.x * ( nXIndex * VIS_TILE_SIZE ) + vPlane.y * ( nYIndex * VIS_TILE_SIZE ) + vPlane.z;
@@ -647,7 +647,7 @@ struct S_CP_CAP_Functional
 	ITerraManager *pTerraManager;
 	CArray2D<double> matrix;
 	SDoubleVec3 vRightSide;
-	//	
+	//
 	S_CP_CAP_Functional()
 	{
 		pTerraManager = EditorScene()->GetTerraManager();
@@ -663,7 +663,7 @@ struct S_CP_CAP_Functional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		if ( fValue == HEIGHT_MARK )
 		{
 			CalculateMatrix( &matrix, &vRightSide, nXIndex, nYIndex, pTerraManager );
@@ -672,7 +672,7 @@ struct S_CP_CAP_Functional
 	}
 	//
 	inline bool GetPlane( SDoubleVec3 *pvPlane ) const
-	{ 
+	{
 		CArray2D<double> invertMatrix;
 		invertMatrix.SetSizes( 3, 3 );
 		invertMatrix.FillZero();
@@ -692,7 +692,7 @@ struct S_CP_CAP_Functional
 // CHeightStateV3
 
 CHeightStateV3::SEditParameters* CHeightStateV3::GetEditParameters()
-{ 
+{
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epHeightStateV3 ) : 0 );
 }
 
@@ -704,7 +704,7 @@ bool CHeightStateV3::CanEdit()
 
 
 int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
-{ 
+{
 	const int nSizeIndex = Clamp<int>( eBrushSize, 0, 4 );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -722,7 +722,7 @@ int CHeightStateV3::GetTileBrushSize( SEditParameters::EBrushSize eBrushSize )
 
 
 int CHeightStateV3::GetHeightBrushSize( SEditParameters::EBrushSize eBrushSize )
-{ 
+{
 	const int nSizeIndex = Clamp<int>( eBrushSize, 0, 4 );
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
@@ -817,11 +817,11 @@ void CHeightStateV3::SetEditParameters( unsigned nFlags )
 	{
 		for ( int nSizeIndex = pEditParameters->tileBrushSizeList.size(); nSizeIndex < 5; ++nSizeIndex )
 		{
-			pEditParameters->tileBrushSizeList.push_back( TILE_BRUSH_SIZE[nSizeIndex] );	
+			pEditParameters->tileBrushSizeList.push_back( TILE_BRUSH_SIZE[nSizeIndex] );
 		}
 		for ( int nSizeIndex = pEditParameters->heightBrushSizeList.size(); nSizeIndex < 5; ++nSizeIndex )
 		{
-			pEditParameters->heightBrushSizeList.push_back( HEIGHT_BRUSH_SIZE[nSizeIndex] );	
+			pEditParameters->heightBrushSizeList.push_back( HEIGHT_BRUSH_SIZE[nSizeIndex] );
 		}
 		//
 		if ( pEditParameters->nFlags & MITHV3EP_BRUSH )
@@ -1302,7 +1302,7 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 														pStoreInputState->lastEventInfo.gridPos.y * AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
 				if ( pEditParameters->eBrushType == SEditParameters::BT_CIRCLE )
 				{
-					sceneDrawTool.Draw3DCircle( center, fRadius, BRUSH_PARTS, BRUSH_COLOR, false ); 		
+					sceneDrawTool.Draw3DCircle( center, fRadius, BRUSH_PARTS, BRUSH_COLOR, false );
 				}
 				else
 				{
@@ -1310,22 +1310,22 @@ void CHeightStateV3::Draw( IPaintContext *pPaintDC )
 																		CVec2( center.x + fRadius, center.y - fRadius ),
 																		BRUSH_COLOR,
 																		false,
-																		BRUSH_PARTS / 4 ); 		
+																		BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x + fRadius, center.y - fRadius ),
 																		CVec2( center.x + fRadius, center.y + fRadius ),
 																		BRUSH_COLOR,
 																		false,
-																		BRUSH_PARTS / 4 ); 		
+																		BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x + fRadius, center.y + fRadius ),
 																		CVec2( center.x - fRadius, center.y + fRadius ),
 																		BRUSH_COLOR,
 																		false,
-																		BRUSH_PARTS / 4 ); 		
+																		BRUSH_PARTS / 4 );
 					sceneDrawTool.Draw3DLine( CVec2( center.x - fRadius, center.y + fRadius ),
 																		CVec2( center.x - fRadius, center.y - fRadius ),
 																		BRUSH_COLOR,
 																		false,
-																		BRUSH_PARTS / 4 ); 		
+																		BRUSH_PARTS / 4 );
 				}
 				sceneDrawTool.Draw3DLine( CTPoint<int>( pStoreInputState->lastEventInfo.gridPos.x - nBrushSize,
 																								pStoreInputState->lastEventInfo.gridPos.y ),
@@ -1459,7 +1459,7 @@ bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( SEditParameters *pEditParameters = GetEditParameters() )
 	{
-		switch( nCommandID ) 
+		switch( nCommandID )
 		{
 			case ID_GET_EDIT_PARAMETERS:
 			{
@@ -1487,7 +1487,7 @@ bool CHeightStateV3::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			}
 			default:
 				break;
-		} 
+		}
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	}
@@ -1502,7 +1502,7 @@ bool CHeightStateV3::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	( *pbEnable ) = false;
 	( *pbCheck ) = false;
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_GET_EDIT_PARAMETERS:
 		case ID_SET_EDIT_PARAMETERS:
@@ -1738,6 +1738,6 @@ int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 

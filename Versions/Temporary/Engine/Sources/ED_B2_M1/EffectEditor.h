@@ -11,7 +11,7 @@ class CEffectEditor : public CEditorBase, public CDefaultView
 	OBJECT_NOCOPY_METHODS( CEffectEditor );
 	//Данные специфичные для данного редактрора
 	CTPoint<int> terrainSize;
-	// Данные общего назначения 
+	// Данные общего назначения
 	CEffectState *pEffectState;
 	//
 	const char *GetDesiredMapSeason() const;

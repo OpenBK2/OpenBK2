@@ -50,7 +50,7 @@ unsigned long memdebug_maxmem = 0;
 unsigned long memdebug_memlimit = LONG_MAX;
 
 
-static void *checkblock (void *block) 
+static void *checkblock (void *block)
 {
 	HEAP_CHECK;
   unsigned long *b = blocksize(block);
@@ -65,7 +65,7 @@ static void *checkblock (void *block)
 }
 
 
-static void freeblock (void *block) 
+static void freeblock (void *block)
 {
 	HEAP_CHECK;
   if (block) {
@@ -78,17 +78,17 @@ static void freeblock (void *block)
 }
 
 
-static void *debug_realloc (void *block, size_t size) 
+static void *debug_realloc (void *block, size_t size)
 {
 	HEAP_CHECK;
-  if (size == 0) 
+  if (size == 0)
 	{
     freeblock(block);
     return NULL;
   }
   else if (memdebug_total+size > memdebug_memlimit)
     return NULL;  /* to test memory allocation errors */
-  else 
+  else
 	{
     size_t realsize = HEADER+size+MARKSIZE;
     char *newblock = (char *)(malloc)(realsize);  /* alloc a new block */
@@ -128,13 +128,13 @@ static void *debug_realloc (void *block, size_t size)
 
 
 void *luaM_growaux (lua_State *L, void *block, size_t nelems,
-               int inc, size_t size, const char *errormsg, size_t limit) 
+               int inc, size_t size, const char *errormsg, size_t limit)
 {
 	HEAP_CHECK;
   size_t newn = nelems+inc;
-	if (nelems >= limit-inc) 
+	if (nelems >= limit-inc)
 	{
-		lua_error(L, errormsg); 
+		lua_error(L, errormsg);
 		return NULL;
 	}
   if ((newn ^ nelems) <= nelems ||  /* still the same power-of-2 limit? */
@@ -148,7 +148,7 @@ void *luaM_growaux (lua_State *L, void *block, size_t nelems,
 /*
 ** generic allocation routine.
 */
-void *luaM_realloc (lua_State *L, void *block, lint32 size) 
+void *luaM_realloc (lua_State *L, void *block, lint32 size)
 {
 	HEAP_CHECK;
   if (size == 0) {

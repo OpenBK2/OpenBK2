@@ -22,7 +22,7 @@ void CRotatingFireplacesObject::AddUnit( CSoldier *pSoldier, const int nFireplac
 	}
 
 	iter->pSoldier = pSoldier;
-	
+
 	if ( pSoldier->IsInFirePlace() )
 	{
 		iter->nLastFireplace = nFireplace;
@@ -128,11 +128,11 @@ void CRotatingFireplacesObject::Segment()
 						iter->lastFireplaceChange = curTime + NRandom::Random( 500, 2000 ) ; RecordRandomCall();
 						if ( CanRotateSoldier( pSoldier ) )
 						{
-							iter->nLastFireplace = ( iter->nLastFireplace + 1 ) % GetNFirePlaces();	
+							iter->nLastFireplace = ( iter->nLastFireplace + 1 ) % GetNFirePlaces();
 
 							if ( IsBetterToGoToFireplace( pSoldier, iter->nLastFireplace ) )
 								ExchangeUnitToFireplace( pSoldier, iter->nLastFireplace );
-							
+
 							bChanged = true;
 						}
 					}

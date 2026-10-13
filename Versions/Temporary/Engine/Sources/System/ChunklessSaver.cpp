@@ -142,7 +142,7 @@ public:
 	virtual bool IsReading() { return mode == SAVER_MODE_READ; }
 	virtual int GetVersion() const { return N_SAVELOAD_VERSION; }
 	CChunklessSerializer() : pRes(0) {}
-	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode ) 
+	CChunklessSerializer( IPointerSerialization *_pTracker, CMemoryStream *_pRes, ESaverMode _mode )
 		: pTracker(_pTracker), pRes(_pRes), mode(_mode) {}
 };
 

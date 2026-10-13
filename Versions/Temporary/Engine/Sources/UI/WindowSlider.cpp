@@ -19,7 +19,7 @@ int CWindowSlider::operator&( IBinSaver &saver )
 	saver.Add( 2, &pShared );
 	saver.Add( 3, &fMin );
 	saver.Add( 4, &fMax );
-	saver.Add( 5, &fPageSize );														// 
+	saver.Add( 5, &fPageSize );														//
 	saver.Add( 6, &fCur );
 	saver.Add( 7, &fPickOffset );												// when slider is picked no on center
 	saver.Add( 8, &bManualScrolling );
@@ -54,13 +54,13 @@ void CWindowSlider::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 
 	pLever = dynamic_cast<CWindowMSButton*>( CUIFactory::MakeWindow( pShared->pLever ) );
 	NI_ASSERT( pLever, fmt::format( "Lever not found for slider: \"{}\"", pInstance->szName ) );
-	AddChild( pLever, false );	
+	AddChild( pLever, false );
 }
 
 void CWindowSlider::UpdatePos()
 {
 	fCur = VerifyPos( fCur );
-	
+
 	int nX, nY, nW, nH;
 	GetPlacement( &nX, &nY, &nW, &nH );
 
@@ -125,10 +125,10 @@ void CWindowSlider::SetRange( const float _fMin, const float _fMax, const float 
 }
 
 void CWindowSlider::AllowMouseScrolling( const bool _bAllow )
-{ 
+{
 	if ( bMouseScrollingAllowed != _bAllow )
 	{
-		bMouseScrollingAllowed = _bAllow; 
+		bMouseScrollingAllowed = _bAllow;
 		GetScreen()->RegisterToSegment( this, bMouseScrollingAllowed && fMax > fMin );
 	}
 }
@@ -165,7 +165,7 @@ void CWindowSlider::Reposition( const CTRect<float> &parentRect )
 	if ( !pLever )
 		pLever = dynamic_cast<CWindowMSButton*>( GetChild( "Lever", false ) );
 	NI_ASSERT( pLever != 0, "slider without lever" );
-	
+
 	int nW, nH;
 	GetPlacement( 0, 0, &nW, &nH );
 	if ( pShared->bHorisontal )
@@ -285,9 +285,9 @@ bool CWindowSlider::OnMouseMove( const CVec2 &vPos, const int nButton )
 float CWindowSlider::VerifyPos( const float _fCur ) const
 {
 	float fTriedCur = _fCur;
-	if ( fTriedCur < fMin ) 
+	if ( fTriedCur < fMin )
 		return fMin;
-	if ( fTriedCur > fMax ) 
+	if ( fTriedCur > fMax )
 		return fMax;
 	return fTriedCur;
 }
@@ -319,17 +319,17 @@ float CWindowSlider::CalcPressedPos( const CVec2 &vPos, const float fPosOffset )
 {
 	CTRect<float> rect;
 	FillWindowRect( &rect );
-	
+
 	int nLeverX, nLeverY, nLeverW, nLeverH;
 	pLever->GetPlacement( &nLeverX, &nLeverY, &nLeverW, &nLeverH );
-	
+
 	const float fOffset = pShared->bHorisontal ? vPos.x - fPosOffset - rect.left: vPos.y - fPosOffset - rect.top;
 	const float fSize = pShared->bHorisontal ? rect.Width() - nLeverW : rect.Height() - nLeverH;
 	int &nSpecialPositions = pInstance->nSpecialPositions;
 
 
 	if ( nSpecialPositions > 1 )
-	{		
+	{
 		float fPortion = fOffset / fSize;
 		if ( fPortion < 0 )
 			fPortion = 0;
@@ -339,7 +339,7 @@ float CWindowSlider::CalcPressedPos( const CVec2 &vPos, const float fPosOffset )
 		float fRest = fPortion * ( nSpecialPositions - 1 ) - nPortion;
 		if ( fRest > 0.5 )
 			nPortion++;
-		return nPortion * ( fMax - fMin ) / ( nSpecialPositions - 1 );		
+		return nPortion * ( fMax - fMin ) / ( nSpecialPositions - 1 );
 	}
 	return fOffset / fSize * ( fMax - fMin );
 }
@@ -349,7 +349,7 @@ float CWindowSlider::CalcPickOffset( const CVec2 &vPos ) const
 	CTRect<float> rect;
 	FillWindowRect( &rect );
 
-	int nLeverX, nLeverY;	
+	int nLeverX, nLeverY;
 	pLever->GetPlacement( &nLeverX, &nLeverY, 0, 0 );
 
 	return (pShared->bHorisontal ? vPos.x - nLeverX - rect.left : vPos.y - nLeverY - rect.top );
@@ -358,7 +358,7 @@ float CWindowSlider::CalcPickOffset( const CVec2 &vPos ) const
 bool CWindowSlider::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	CWindow::OnButtonDown( vPos, nButton );
-	
+
 	const char *pszPressed = GetPressedName( MSTATE_BUTTON1 );
 	if ( pszPressed && pLever->GetName() == pszPressed )
 	{
@@ -423,14 +423,14 @@ void CWindowSlider::Segment( const int timeDiff )
 	if ( bPressed && bFastScrolling )
 	{
 		animTime += timeDiff;
-		
+
 		if ( Pick( vPressedPos, false ) == pLever )
 		{
 			animTime = 0;
 		}
 		else if ( animTime > (bFirstTime ? CInterfaceConsts::SCROLLER_ANIM_TIME_1() : CInterfaceConsts::SCROLLER_ANIM_TIME()) )
 		{
-			ScrollFast();	
+			ScrollFast();
 			animTime = 0;
 			bFirstTime = false;
 		}

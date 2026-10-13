@@ -16,7 +16,7 @@ CUIRunModeInterface::CUIRunModeInterface( const std::string &rszTypeName, const 
 
 CUIRunModeInterface::~CUIRunModeInterface()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 	{
 		Singleton<IUIScene>()->RemoveWindow( pScreen );
 		pScreen = 0;
@@ -59,15 +59,15 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 	if ( rszTypeName == "WindowSimpleShared" )
 	{
 		CDBPtr<NDb::SWindowScreen> pScreenTemplate = NDb::Get<NDb::SWindowScreen>( rTemplateScreenDBID );
-		
+
 		pScreen = Singleton<IUIInitialization>()->CreateScreenFromDesc( pScreenTemplate, pUI, 0, Singleton<IUIScene>()->GetG2DView(), 0, 0 );
 
 		// avoid fitting UI to viewport size
 		Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
-		
+
 		CDBPtr<NDb::SWindowSimple> pTemplate = NDb::Get<NDb::SWindowSimple>( rTemplateWindowDBID );
 		CDBPtr<NDb::SWindowSimpleShared> pShared = NDb::Get<NDb::SWindowSimpleShared>( rDBID );
-		
+
 		CPtr<NDb::SWindowSimple> pInstance = pTemplate->Duplicate();
 		pInstance->pShared = pShared;
 
@@ -78,7 +78,7 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 	{
 		CDBPtr<NDb::SWindowScreenShared> pShared = NDb::Get<NDb::SWindowScreenShared>( rDBID );
 		CDBPtr<NDb::SWindowScreen> pTemplate = NDb::Get<NDb::SWindowScreen>( rTemplateScreenDBID );
-		
+
 		CPtr<NDb::SWindowScreen> pInstance = pTemplate->Duplicate();
 		pInstance->pShared = pShared;
 
@@ -86,7 +86,7 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 			pInstance, pUI, 0,
 			Singleton<IUIScene>()->GetG2DView(), 0, 0 );
 	}
-	else 
+	else
 	{
 		NI_ASSERT( 0, "CUIRunModeInterface::LoadWindow: Unknown widget type" );
 	}

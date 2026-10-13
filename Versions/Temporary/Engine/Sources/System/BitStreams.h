@@ -62,7 +62,7 @@ template<> SYSTEM_EXPORT inline void CBitStream::Write<std::string>( const std::
 template<> SYSTEM_EXPORT inline void CBitStream::Read<std::string>( std::string &a ) { ReadCString( a ); }
 
 // класс для выполнения побитного и скоростного ввода/вывода в поток общего назначения
-// после того, как с CDataStream начинает работать CBitLocker прямые операции с 
+// после того, как с CDataStream начинает работать CBitLocker прямые операции с
 // DataStream приведут к некорректному результату
 class CDataStream;
 class SYSTEM_EXPORT CBitLocker: public CBitStream
@@ -75,7 +75,7 @@ public:
 	// once per life of this object
 	void LockRead( CDataStream &data, unsigned int nSize );
 	void LockWrite( CDataStream &data, unsigned int nSize );
-	// alloc additional buffer space, for better perfomance minimize number of this 
+	// alloc additional buffer space, for better perfomance minimize number of this
 	// function calls
 	void ReserveRead( unsigned int nSize );
 	void ReserveWrite( unsigned int nSize );
@@ -86,7 +86,7 @@ class CBitEmbedded: public CBitStream
 {
 	CBitStream &bits;
 public:
-	CBitEmbedded( CBitStream &_bits ): 
+	CBitEmbedded( CBitStream &_bits ):
 #ifdef _DEBUG
 			CBitStream( _bits.pCurrent, _bits.mode, _bits.pReservedEnd - _bits.pCurrent )
 #else

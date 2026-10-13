@@ -5,7 +5,7 @@
 class CTextureInterface : public CRunModeInterfaceBase
 {
 	OBJECT_NOCOPY_METHODS( CTextureInterface );
-public:	
+public:
 	// life-cycle
 	CTextureInterface();
 	virtual ~CTextureInterface();

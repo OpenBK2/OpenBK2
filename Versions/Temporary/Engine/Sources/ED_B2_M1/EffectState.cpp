@@ -96,6 +96,6 @@ void CEffectState::Leave()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_DISABLE_GAME_INPUT, 0 );
 }
 
-// basement storage  
+// basement storage
 
 

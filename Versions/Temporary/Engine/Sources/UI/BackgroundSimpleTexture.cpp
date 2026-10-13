@@ -10,7 +10,7 @@ REGISTER_SAVELOAD_CLASS( UI, 0x11075B41, CBackgroundSimpleTexture )
 
 void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 {
-	if ( pos.IsEmpty() || !pStats ) 
+	if ( pos.IsEmpty() || !pStats )
 		return;
 
 	CTPoint<int> size;
@@ -39,9 +39,9 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 		rc.fSizeX = (std::min)( float(pos.Width()), float(size.x) );
 		rc.fSizeY = (std::min)( float(pos.Height()), float(size.y) );
 
-		NUITools::ApplyTextureAllign( pStats->eTextureX, pos.Width(), size.x, 
+		NUITools::ApplyTextureAllign( pStats->eTextureX, pos.Width(), size.x,
 			&rc.sTex.rcTexRect.x1, &rc.sTex.rcTexRect.x2, &rc.sTex.rcTexRect.x1 );
-		NUITools::ApplyTextureAllign( pStats->eTextureY, pos.Height(), size.y, 
+		NUITools::ApplyTextureAllign( pStats->eTextureY, pos.Height(), size.y,
 			&rc.sTex.rcTexRect.y1, &rc.sTex.rcTexRect.y2, &rc.sTex.rcTexRect.y1 );
 	}
 	else
@@ -56,7 +56,7 @@ void CBackgroundSimpleTexture::Visit( IUIVisitor * pVisitor )
 
 	if( pIcon )
 	{
-		pVisitor->VisitUITextureRect( pIcon, 3, rects );			
+		pVisitor->VisitUITextureRect( pIcon, 3, rects );
 		pos = mem;
 	}
 	else
@@ -97,7 +97,7 @@ void CBackgroundSimpleTexture::SetTexture( const struct NDb::STexture *_pDesc )
 }
 
 void CBackgroundSimpleTexture::SetOutline( const CDBID &nOutlineType )
-{	
+{
 	if( !pTexture )
 		return;
 

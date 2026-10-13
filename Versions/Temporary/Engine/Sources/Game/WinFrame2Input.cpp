@@ -61,26 +61,26 @@ void CWinToInputMessageConverter::Do()
 		switch ( wMsg.msg )
 		{
 		//case NWinFrame::SWindowsMsg::MOUSE_WHEEL: uMsg = WM_MOUSEWHEEL; break;
-		case NWinFrame::SWindowsMsg::MOUSE_MOVE: 
-			pszWinMsg = "win_mouse_move"; 
+		case NWinFrame::SWindowsMsg::MOUSE_MOVE:
+			pszWinMsg = "win_mouse_move";
 			break;
-		case NWinFrame::SWindowsMsg::RB_DBLCLK: 
-			pszWinMsg = "win_right_button_dblclk"; 
+		case NWinFrame::SWindowsMsg::RB_DBLCLK:
+			pszWinMsg = "win_right_button_dblclk";
 			break;
-		case NWinFrame::SWindowsMsg::LB_DBLCLK: 
-			pszWinMsg = "win_left_button_dblclk"; 
+		case NWinFrame::SWindowsMsg::LB_DBLCLK:
+			pszWinMsg = "win_left_button_dblclk";
 			break;
-		case NWinFrame::SWindowsMsg::RB_DOWN: 
-			pszWinMsg = "win_right_button_down"; 
+		case NWinFrame::SWindowsMsg::RB_DOWN:
+			pszWinMsg = "win_right_button_down";
 			break;
-		case NWinFrame::SWindowsMsg::LB_DOWN: 
-			pszWinMsg = "win_left_button_down"; 
+		case NWinFrame::SWindowsMsg::LB_DOWN:
+			pszWinMsg = "win_left_button_down";
 			break;
-		case NWinFrame::SWindowsMsg::RB_UP: 
-			pszWinMsg = "win_right_button_up"; 
+		case NWinFrame::SWindowsMsg::RB_UP:
+			pszWinMsg = "win_right_button_up";
 			break;
-		case NWinFrame::SWindowsMsg::LB_UP: 
-			pszWinMsg = "win_left_button_up"; 
+		case NWinFrame::SWindowsMsg::LB_UP:
+			pszWinMsg = "win_left_button_up";
 			break;
 		//case NWinFrame::SWindowsMsg::KEY_DOWN: uMsg = WM_KEYDOWN; break;
 		//case NWinFrame::SWindowsMsg::KEY_UP: uMsg = WM_KEYUP; break;
@@ -92,12 +92,12 @@ void CWinToInputMessageConverter::Do()
 		switch ( wMsg.msg )
 		{
 			case NWinFrame::SWindowsMsg::MOUSE_MOVE:
-			case NWinFrame::SWindowsMsg::LB_DBLCLK: 
+			case NWinFrame::SWindowsMsg::LB_DBLCLK:
 			case NWinFrame::SWindowsMsg::RB_DBLCLK:
-			case NWinFrame::SWindowsMsg::RB_DOWN: 
-			case NWinFrame::SWindowsMsg::LB_DOWN: 
-			case NWinFrame::SWindowsMsg::RB_UP: 
-			case NWinFrame::SWindowsMsg::LB_UP: 
+			case NWinFrame::SWindowsMsg::RB_DOWN:
+			case NWinFrame::SWindowsMsg::LB_DOWN:
+			case NWinFrame::SWindowsMsg::RB_UP:
+			case NWinFrame::SWindowsMsg::LB_UP:
 				nParam1 = PackCoords( CVec2( wMsg.x, wMsg.y) );
 				nParam2 = wMsg.dwFlags;
 				break;

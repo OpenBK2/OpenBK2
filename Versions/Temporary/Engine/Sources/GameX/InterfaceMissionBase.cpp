@@ -47,14 +47,14 @@ void CInterfaceMissionBase::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( false );
 
-	if ( pWorld ) 
+	if ( pWorld )
 		pWorld->OnGetFocus( true );
 }
 
 bool CInterfaceMissionBase::StepLocal( bool bAppActive )
 {
 	const bool bRet = CInterfaceScreenBase::StepLocal( bAppActive );
-	if ( !bAppActive ) 
+	if ( !bAppActive )
 		return false;
 
 	if ( IsValid( pTransceiver ) )
@@ -83,7 +83,7 @@ void CInterfaceMissionBase::NewMap( const NDb::SMapInfo *_pMap, ITransceiver *_p
 	//Scene()->SetFOV( NGameX::GetClientConsts()->pCamera->fFOV );
 
 	// Loading world
-	pWorld = new CWorldClient( pTransceiver, new CVisualNotificationsEmpty(), Singleton<IAILogic>(), 
+	pWorld = new CWorldClient( pTransceiver, new CVisualNotificationsEmpty(), Singleton<IAILogic>(),
 		_pScenarioTracker, 0 );
 
 	if ( pMap->pMusic )
@@ -123,7 +123,7 @@ void CInterfaceMissionBase::Unload()
 void CInterfaceMissionBase::AfterLoad()
 {
 	CInterfaceScreenBase::AfterLoad();
-	
+
 	if ( pWorld )
 		pWorld->AfterLoad( pMap );
 }

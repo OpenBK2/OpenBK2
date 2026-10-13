@@ -70,7 +70,7 @@ inline CVec3 ToEulerAngles( const SHMatrix &kM, unsigned int uiOrder )
 	if( s == ED_REPEAT )
 	{
 		float sy = sqrtf( kM.m[i][j] * kM.m[i][j] + kM.m[i][k] * kM.m[i][k] );
-	
+
 		if( sy > FP_EPSILON )
 		{
 			kAngles.x = atan2f( kM.m[i][j],  kM.m[i][k] );
@@ -87,7 +87,7 @@ inline CVec3 ToEulerAngles( const SHMatrix &kM, unsigned int uiOrder )
 	else
 	{
 		float cy = sqrtf( kM.m[i][i] * kM.m[i][i] + kM.m[j][i] * kM.m[j][i] );
-	
+
 		if( cy > FP_EPSILON )
 		{
 			kAngles.x = atan2f(  kM.m[k][j], kM.m[k][k] );

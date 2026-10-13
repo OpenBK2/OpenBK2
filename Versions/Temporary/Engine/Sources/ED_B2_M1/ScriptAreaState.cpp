@@ -43,7 +43,7 @@ void CScriptAreaState::GetScriptAreaMap()
 		const std::string szScriptAreaPefix = fmt::format( "ScriptAreas.[{}]", nScriptAreIndex );
 		//
 		CScriptAreaState::SScriptArea scriptArea;
-		// 
+		//
 		std::string szType;
 		if ( !CManipulatorManager::GetValue( &szType, pManipulator, szScriptAreaPefix + ".Type" ) )
 		{
@@ -65,19 +65,19 @@ void CScriptAreaState::GetScriptAreaMap()
 		}
 		//
 		CVec2 v0 = VNULL2;
-		if ( !CManipulatorManager::GetVec2<CVec2,float>( &v0, pManipulator, szScriptAreaPefix + ".Center" ) ) 
+		if ( !CManipulatorManager::GetVec2<CVec2,float>( &v0, pManipulator, szScriptAreaPefix + ".Center" ) )
 		{
 			continue;
 		}
 		//
 		CVec2 v1 = VNULL2;
-		if ( !CManipulatorManager::GetVec2<CVec2,float>( &v1, pManipulator, szScriptAreaPefix + ".AABBHalfSize" ) ) 
+		if ( !CManipulatorManager::GetVec2<CVec2,float>( &v1, pManipulator, szScriptAreaPefix + ".AABBHalfSize" ) )
 		{
 			continue;
 		}
 		//
 		float fR = 0;
-		if ( !CManipulatorManager::GetValue( &fR, pManipulator, szScriptAreaPefix + ".R" ) ) 
+		if ( !CManipulatorManager::GetValue( &fR, pManipulator, szScriptAreaPefix + ".R" ) )
 		{
 			continue;
 		}
@@ -126,7 +126,7 @@ void CScriptAreaState::UpdateScriptArea( unsigned nScriptAreaID )
 		szType = "EAT_RECTANGLE";
 	}
 	else if ( posScriptArea->second.eType == NDb::EAT_CIRCLE )
-	{ 
+	{
 		szType = "EAT_CIRCLE";
 	}
 	//
@@ -301,7 +301,7 @@ void CScriptAreaState::PickPolygon( const CVec3 &rvPos, CPolygonIDList *pPickPol
 		}
 	}
 	//
-	for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end(); ++itScriptArea )	
+	for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end(); ++itScriptArea )
 	{
 		if ( itScriptArea->second.Pick( rvPos ) )
 		{
@@ -402,7 +402,7 @@ bool CScriptAreaState::SetScriptAreaWindowData( SScriptAreaWindowData::EChangeMa
 		scriptAreaWindowData.nScriptAreaID = itScriptArea->second.nScriptAreaID;
 		scriptAreaWindowData.eType = itScriptArea->second.eType;
 		//
-		dialogData.scriptAreaList.push_back( scriptAreaWindowData ); 
+		dialogData.scriptAreaList.push_back( scriptAreaWindowData );
 		//
 		if ( itScriptArea->second.bSelected )
 		{
@@ -479,7 +479,7 @@ bool CScriptAreaState::ProcessScriptAreaWindowData()
 						break;
 					}
 				}
-			}		
+			}
 		}
 	}
 	// обновить список областей в окне редактора (
@@ -495,7 +495,7 @@ bool CScriptAreaState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
 	if ( !CPolygonState::HandleCommand( nCommandID, dwData ) )
 	{
-		switch( nCommandID ) 
+		switch( nCommandID )
 		{
 		case ID_SCRIPT_AREA_WINDOW_UI_EVENT:
 			{
@@ -517,7 +517,7 @@ bool CScriptAreaState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool 
 	//
 	if ( !CPolygonState::UpdateCommand( nCommandID, pbEnable, pbCheck ) )
 	{
-		switch( nCommandID ) 
+		switch( nCommandID )
 		{
 		case ID_SCRIPT_AREA_WINDOW_UI_EVENT:
 			( *pbEnable ) = true;
@@ -694,18 +694,18 @@ void CScriptAreaState::PostDraw( IPaintContext *pPaintDC )
 	//
 	for ( CScriptAreaMap::iterator itScriptArea = scriptAreaMap.begin(); itScriptArea != scriptAreaMap.end(); ++itScriptArea )
 	{
-		CVec3 pos = CVec3( itScriptArea->second.GetCenter().x, itScriptArea->second.GetCenter().y, 0 ); 	
+		CVec3 pos = CVec3( itScriptArea->second.GetCenter().x, itScriptArea->second.GetCenter().y, 0 );
 		pos.z = GetTerrainHeight( pos.x, pos.y );
-		
+
 		CTransformStack ts = pCam->GetTransform();
-		
+
 		CVec2 res = VNULL2;
-		
+
 		AI2Vis( &pos, pos );
 
 		if ( TestRayInFrustrum( pos, ts, pScene->GetScreenRect(), &res ) )
 		{
-			NDrawToolsDC::DrawLabelDC( pPaintDC, itScriptArea->second.szName, res );			
+			NDrawToolsDC::DrawLabelDC( pPaintDC, itScriptArea->second.szName, res );
 		}
 	}
 }

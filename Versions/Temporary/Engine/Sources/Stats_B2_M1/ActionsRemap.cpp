@@ -8,7 +8,7 @@
 
 #include <zconf.h>
 
-static const int actionCommandToUserAction[][2] = 
+static const int actionCommandToUserAction[][2] =
 {
 	{ ACTION_COMMAND_MOVE_TO						, NDb::USER_ACTION_MOVE },
 	{ ACTION_COMMAND_REVERSE_TO					, NDb::USER_ACTION_REVERSE },
@@ -89,7 +89,7 @@ static const int actionCommandToUserAction[][2] =
 	{ -1, -1 }
 };
 
-static const int abilityToActionCommand[][2] = 
+static const int abilityToActionCommand[][2] =
 {
 	{ ACTION_COMMAND_PLACE_CHARGE							, NDb::ABILITY_PLACE_CHARGE							},
 	{ ACTION_COMMAND_PLACE_CONTROLLED_CHARGE	, NDb::ABILITY_PLACE_CONTROLLED_CHARGE	},

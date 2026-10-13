@@ -28,7 +28,7 @@ void CEffectorSendUIMessage::Configure( const NDb::SUIStateBase *_pCmd, struct I
 	CParam<int> forwardParam( pCmd->nForwardParam );
 	CParam<int> backParam( pCmd->nBackParam );
 	szAnimatedWindow = _szAnimatedWindow;
-	
+
 	if ( pContext )
 	{
 		messageID.Merge( pContext->szMessageID );
@@ -70,8 +70,8 @@ const int CEffectorSendUIMessage::Segment( const int timeDiff, struct IScreen *p
 	return 0;
 }
 
-void CEffectorSendUIMessage::Reverse() 
-{  
+void CEffectorSendUIMessage::Reverse()
+{
 	bForward = !bForward;
 	bFinished = false;
 }

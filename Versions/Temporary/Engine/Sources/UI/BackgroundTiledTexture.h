@@ -2,12 +2,12 @@
 #include "Background.h"
 #include "3Dmotor/RectLayout.h"
 
-// tiled background. consists of following elements. 
+// tiled background. consists of following elements.
 // LT  T   T  RT
 // L   F   F  R
 // L   F   F  R
 // LB  B   B  RB
-// corner element (LT,RT,RB,LB). 
+// corner element (LT,RT,RB,LB).
 // inner element (F) is tiled to fill remaining space
 
 //CRAP{ DON'T KNOW IS IT REALLY NEEDED. NOT IMPLEMENTED ANYWAY.
@@ -26,7 +26,7 @@ class CBackgroundTiledTexture : public CBackground
 	CPtr<NDb::SBackgroundTiledTexture> pDesc;
 	CRectLayout layout;
 	//vector<SGFXRect2> rects;						// drawind rects
-	
+
 	//void InitTiles( NDb::SSubRect *pSub );
 	void InitBorderAndFill();
 

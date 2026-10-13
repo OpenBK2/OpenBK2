@@ -15,7 +15,7 @@ CAllowFakeObjToCrushExecutor::CAllowFakeObjToCrushExecutor()
 }
 
 bool CAllowFakeObjToCrushExecutor::IsExecutorValid() const
-{ 
+{
 	return IsValid( pObject ) && pObject->IsAlive();
 }
 

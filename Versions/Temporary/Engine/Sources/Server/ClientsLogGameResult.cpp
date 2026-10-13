@@ -30,7 +30,7 @@ struct SPlayerInfoToLog
 	std::vector<int> unitsLost;
 	std::vector<int> reinfXP;
 	std::vector<int> reinfUsed;
-	
+
 	void ConvertToHashMap( std::unordered_map<std::string,int> *pHashMap )
 	{
 #define CONVERT_NUMBER( name, var ) NHashMapConvertor::ConvertNumber( pHashMap, name, &(var), false )

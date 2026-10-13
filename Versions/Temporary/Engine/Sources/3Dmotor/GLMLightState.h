@@ -35,7 +35,7 @@ public:
 		CVec3 vColor, vCenter;
 		float fRadius;
 		//bool bCastShadow;
-		
+
 		SPointLight() {}
 		SPointLight( const CVec3 &_vColor, const CVec3 &_vCenter, float _fR )//, bool _bCastShadow )
 			: vColor(_vColor), vCenter(_vCenter), fRadius(_fR) {}//, bCastShadow(_bCastShadow) {}

@@ -48,7 +48,7 @@ public:
 	void BuildNext();
 	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units );
 	bool IsAnyUnitPrevent() const;
-	bool CanBuildNext() const; 
+	bool CanBuildNext() const;
 	void LockNext();
 	float GetPrice();
 	void LockCannotBuild(){ bCannot = true; }

@@ -13,7 +13,7 @@ class CGrannyFileInfo : public CObjectBase
 	OBJECT_NOCOPY_METHODS(CGrannyFileInfo);
 	granny_file *pFile;
 	granny_file_info *pData;
-public: 
+public:
 	CGrannyFileInfo() : pData(0), pFile(0) {}
 	CGrannyFileInfo( granny_file *_pFile ):pFile(_pFile)
 	{

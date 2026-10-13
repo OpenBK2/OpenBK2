@@ -110,13 +110,13 @@ public:
 };
 CBasicDatabase *CreateGameDatabase() { return new CGameDatabase(); }
 
-bool CGameDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator ) 
-{ 
+bool CGameDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFileCreator )
+{
 	SetFileSystem( _pVFS, _pFileCreator );
 	//
-	bool bRet = LoadTypesMap(); 
-	LoadIndex(); 
-	return bRet; 
+	bool bRet = LoadTypesMap();
+	LoadIndex();
+	return bRet;
 }
 
 void CGameDatabase::RegisterObject( const SFullTypeHeader &hdr )

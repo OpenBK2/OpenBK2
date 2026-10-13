@@ -47,11 +47,11 @@ CInterfaceMainMenu::CInterfaceMainMenu() :
 
 bool CInterfaceMainMenu::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
-		
+
 	Singleton<IGameTimer>()->Pause( false, PAUSE_TYPE_USER_PAUSE );
-	
+
 	AddScreen( this );
 
 	Cursor()->Show( true );
@@ -111,14 +111,14 @@ bool CInterfaceMainMenu::Init()
 		IButton *pCreditsBtn = GetChildChecked<IButton>( pMainWnd, "CreditsBtn", true );
 		IButton *pEncyclopediaBtn = GetChildChecked<IButton>( pMainWnd, "EncyclopediaBtn", true );
 		IButton *pMultiplayerBtn = GetChildChecked<IButton>( pMainWnd, "MultiplayerBtn", true );
-		
+
 		IWindow *pSinglePlayerMenuWnd = GetChildChecked<IWindow>( GetScreen(), "SinglePlayerMenu", true );
 		IButton *pTutorialBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "TutorialBtn", true );
 		IButton *pLoadGameBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "LoadGameBtn", true );
 		IButton *pCustomMissionBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "CustomMissionBtn", true );
 		IButton *pCustomCampaignBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "CustomCampaignBtn", true );
 		IButton *pProfileManagerBtn = GetChildChecked<IButton>( pSinglePlayerMenuWnd, "ProfileManagerBtn", true );
-		
+
 		if ( pMultiplayerBtn )
 			pMultiplayerBtn->Enable( false );
 //		if ( pOptionsBtn )
@@ -141,12 +141,12 @@ bool CInterfaceMainMenu::Init()
 		if ( pProfileManagerBtn )
 			pProfileManagerBtn->Enable( false );
 	}
-	
+
 	const bool bMPDemo = NGlobal::GetVar( "MP_DEMO", 0 ) != 0;
 	if ( bMPDemo )
 	{
 		IWindow *pMainWnd = GetChildChecked<IWindow>( GetScreen(), "MainMenu", true );
-		
+
 		IButton *pSinglePlayerBtn = GetChildChecked<IButton>( pMainWnd, "SinglePlayerBtn", true );
 		IButton *pLoadMODBtn = GetChildChecked<IButton>( pMainWnd, "LoadMODBtn", true );
 		IButton *pEncyclopediaBtn = GetChildChecked<IButton>( pMainWnd, "EncyclopediaBtn", true );
@@ -165,9 +165,9 @@ bool CInterfaceMainMenu::Init()
 void CInterfaceMainMenu::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( bFocus );
-	
+
 	PauseIntermission( false );
-	
+
 	if ( bFocus )
 	{
 		if ( GetScreen() )
@@ -180,7 +180,7 @@ void CInterfaceMainMenu::OnGetFocus( bool bFocus )
 bool CInterfaceMainMenu::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
 		pInterface->Step( bAppActive );
 
@@ -227,7 +227,7 @@ void CInterfaceMainMenu::MsgCampaignSelectionMenu( const SGameMessage &msg )
 void CInterfaceMainMenu::MsgProfileManagerMenu( const SGameMessage &msg )
 {
 	if ( GetScreen() )
-		GetScreen()->ShowWindow( false ); 
+		GetScreen()->ShowWindow( false );
 	NMainLoop::Command( ML_COMMAND_PROFILE_MENU, "" );
 }
 
@@ -239,8 +239,8 @@ void CInterfaceMainMenu::MsgMPGamesListMenu( const SGameMessage &msg )
 void CInterfaceMainMenu::MsgExit( const SGameMessage &msg )
 {
 //	Singleton<IMainLoop>()->Command( ML_COMMAND_MESSAGE_BOX, "type:MessageBoxWindowOkCancel;text:1234" );
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 			InterfaceState()->GetTextEntry( "T_MAIN_MENU_EXIT_QUESTION" ) ).c_str() );
 }
 
@@ -280,7 +280,7 @@ void CInterfaceMainMenu::MsgTutorialMenu( const SGameMessage &msg )
 	const NDb::SCampaign *pCampaign = pGameRoot->pTutorial;
 	NI_VERIFY( pCampaign, "Designers: tutorial campaign not found (GameRoot/Tutorial)", return );
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaign, nDifficulty, true );
-	
+
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_CHAPTER_MAP_MENU, "" );*/
 
@@ -336,7 +336,7 @@ void CInterfaceMainMenu::MsgSinglePlayer( const SGameMessage &msg )
 	bVisited = true;
 	NGlobal::SetVar( PROFILE_MANAGER_VISITED, 1, STORAGE_USER );
 	if ( GetScreen() )
-		GetScreen()->ShowWindow( false ); 
+		GetScreen()->ShowWindow( false );
 	NMainLoop::Command( ML_COMMAND_PROFILE_MENU, "" );
 }
 
@@ -369,7 +369,7 @@ void CICMainMenu::Configure( const char *pszConfig )
 void StartMainMenu( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
 #ifndef _FINALRELEASE
-	if ( !paramsSet.empty() ) 
+	if ( !paramsSet.empty() )
 	{
 		const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 		NGlobal::SetVar( "CRAP.MainMenu.BackgroundMap", szVal.c_str()  );

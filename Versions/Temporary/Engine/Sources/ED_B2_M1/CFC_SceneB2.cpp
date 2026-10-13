@@ -35,7 +35,7 @@
 
 #include <zconf.h>
 
-namespace 
+namespace
 {
 	const float fHorisontalStep					= 1.0f;
 	const float fVerticalStep						= 1.0f;
@@ -62,7 +62,7 @@ CCFCSceneB2::~CCFCSceneB2()
 }
 
 
-bool CCFCSceneB2::OnCreateChildFrameWnd() 
+bool CCFCSceneB2::OnCreateChildFrameWnd()
 {
 	NGScene::SFLB3_RunResourceLoadingThread();
 
@@ -89,7 +89,7 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 
 	// Small trick to force editor have the higthest graphic quality
 	NGlobal::ProcessCommand( L"set_quality 1" );
-	// init 
+	// init
 	if ( !EditorScene()->SetupMode( SCENE_MODE_WINDOWED, true ) )
 	{
 		NLog::GetLogger()->Log( LT_ERROR, "Failed to set display mode. Desktop must be in 32bit mode\n" );
@@ -101,20 +101,20 @@ bool CCFCSceneB2::OnCreateChildFrameWnd()
 }
 
 
-void CCFCSceneB2::OnDestroyChildFrameWnd() 
+void CCFCSceneB2::OnDestroyChildFrameWnd()
 {
 	NInput::DoneInput();
   NGfx::Done3D();
 }
 
 
-void CCFCSceneB2::OnPreDrawChildFrameWnd() 
+void CCFCSceneB2::OnPreDrawChildFrameWnd()
 {
 	NGfx::CheckBackBufferSize();
 }
 
 
-void CCFCSceneB2::OnDrawChildFrameWnd() 
+void CCFCSceneB2::OnDrawChildFrameWnd()
 {
 	if ( Singleton<IEditorContainer>()->GetActiveEditor() == nullptr )
 	{
@@ -403,6 +403,6 @@ void CCFCSceneB2::DrawFrameBorders( IPaintContext *pPaintContext )
 }
 
 
-// basement storage  
+// basement storage
 
 

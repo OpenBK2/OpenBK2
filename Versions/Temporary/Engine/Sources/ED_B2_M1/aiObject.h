@@ -62,7 +62,7 @@ public:
 	CPieceMap pieces;
 	//
 	SPiece* GetPiece( int nPieceID );
-	void AddPiece( int nPieceID, const std::vector<CVec3> &_points, const std::vector<STriangle> &_tris, 
+	void AddPiece( int nPieceID, const std::vector<CVec3> &_points, const std::vector<STriangle> &_tris,
 		float fVolume, std::vector<SJunction> juncs = std::vector<SJunction>(), bool _bClosed = true );
 		//const std::vector<CPtr<CPrecalcSpheres> > &spheres = std::vector<CPtr<CPrecalcSpheres> >() );
 	void CalcBound();

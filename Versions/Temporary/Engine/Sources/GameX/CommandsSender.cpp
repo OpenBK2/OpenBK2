@@ -19,7 +19,7 @@ static int AUTOSAVE_ID = 0;
 const int MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS = 300;
 const int MIN_TIME_BETWEEN_DIFFERENT_COMMANDS = 1000;
 
-CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -1 )  
+CCommandsSender::CCommandsSender( ITransceiver *_pTransciver ) : nLastGroupID( -1 )
 {
 	pTransciver = _pTransciver;
 	bHistoryPlaying = false;
@@ -38,7 +38,7 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 
 		if ( !Singleton<IAILogic>()->NeedNewGroupNumber() && vIDs == lastGroup )
 			return nLastGroupID;
-		
+
 		pTransciver->SendCommand( new CUnregisterGroupCommand( nLastGroupID ) );
 		const int nID = Singleton<IAILogic>()->GenerateGroupNumber();
 		Singleton<IAILogic>()->ResetNeedNewGroupNumber();
@@ -46,7 +46,7 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 
 		lastGroup.swap( vIDs );
 		nLastGroupID = nID;
-		bGroupChanged = true; 
+		bGroupChanged = true;
 
 		return nID;
 	}
@@ -54,7 +54,7 @@ int CCommandsSender::CommandRegisterGroup( const std::vector<int> &_vIDs )
 		return 0;
 }
 
-// unregister group 
+// unregister group
 void CCommandsSender::CommandUnregisterGroup( const uint16_t wGroup )
 {
 //	if ( !bHistoryPlaying )
@@ -74,7 +74,7 @@ void CCommandsSender::CommandGroupCommand( const SAIUnitCmd *pCommand, const uin
 				&& pCommand->nObjectID == lastCommand.nObjectID && pCommand->nNumber == lastCommand.nNumber
 				&& pCommand->fNumber == lastCommand.fNumber )
 			{
-				if ( fabs( pCommand->vPos - lastCommand.vPos ) < MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS 
+				if ( fabs( pCommand->vPos - lastCommand.vPos ) < MIN_DISTANCE_BETWEEN_DIFFERENT_COMMANDS
 					&& curTime - lastCommandTime < MIN_TIME_BETWEEN_DIFFERENT_COMMANDS )
 				{
 					bLastCommandSkipped = true;

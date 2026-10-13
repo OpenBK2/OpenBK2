@@ -52,7 +52,7 @@ IInterfaceState* CreateInterfaceState()
 struct SScreenEntryEqual
 {
 	std::string szName;
-	
+
 	SScreenEntryEqual( const std::string &_szName ) { szName = _szName; }
 	bool operator()( const NDb::SUIScreenEntry &value ) const
 	{
@@ -63,7 +63,7 @@ struct SScreenEntryEqual
 struct STextEntryEqual
 {
 	std::string szTextID;
-	
+
 	STextEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
 	bool operator()( const CDBPtr< NDb::STextEntry > &value ) const
 	{
@@ -75,7 +75,7 @@ struct STextEntryEqual
 struct STagEntryEqual
 {
 	std::string szName;
-	
+
 	STagEntryEqual( const std::string &_szName ) { szName = _szName; }
 	bool operator()( const NDb::SMLTag &value ) const
 	{
@@ -86,7 +86,7 @@ struct STagEntryEqual
 struct SSoundEntryEqual
 {
 	std::string szTextID;
-	
+
 	SSoundEntryEqual( const std::string &_szTextID ) { szTextID = _szTextID; }
 	bool operator()( const NDb::SUISoundEntry &value ) const
 	{
@@ -97,7 +97,7 @@ struct SSoundEntryEqual
 struct STextureEntryEqual
 {
 	std::string szID;
-	
+
 	STextureEntryEqual( const std::string &_szID ) { szID = _szID; }
 	bool operator()( const NDb::SUITextureEntry &value ) const
 	{
@@ -140,7 +140,7 @@ bool CCampaignState::IsCompleted() const
 	const bool bKRIDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
 	if ( bKRIDemo )
 		return false;
-		
+
 	return bIsCompleted;
 }
 
@@ -362,8 +362,8 @@ std::wstring CInterfaceState::GetMapSizeName( const NDb::SMapInfo *pMapInfo ) co
 	std::wstring wszEmpty;
 
 	if ( !pMapInfo )
-		return wszEmpty; 
-		
+		return wszEmpty;
+
 	std::wstring wszSize = NStr::ToUnicode( fmt::format( "{}x{}", pMapInfo->nNumPatchesX, pMapInfo->nNumPatchesY ) );
 	return wszSize;
 }
@@ -398,12 +398,12 @@ void CInterfaceState::StartSingleMission( const CDBID &dbidCampaign, int nChapte
 	NI_VERIFY( pMission, "Start single mission: mission not found", return );
 
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
-	
+
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaign, nDifficulty, false, false );
 	for ( int i = 0; i <= nChapterNumber; ++i )
 		Singleton<IScenarioTracker>()->NextChapter();
 	Singleton<IScenarioTracker>()->MissionStart( pMission );
-	
+
 	NGlobal::RemoveVar( "Multiplayer.Host" );
 	NGlobal::RemoveVar( "Multiplayer.Client" );
 
@@ -472,7 +472,7 @@ struct SVar
 	std::string szName;
 	NGlobal::CValue value;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szName); f.Add(3,&value); return 0; }
-	
+
 	SVar() {}
 	SVar( const std::string &_szName, const NGlobal::CValue &_value ) :
 		szName( _szName ), value( _value ) {}
@@ -528,7 +528,7 @@ void CInterfaceState::MakeScenarioTracker( EScenarioTrackerType eType )
 		{
 			break;
 		}
-		
+
 		case ESTT_SINGLE:
 		{
 			IScenarioTracker *pScenarioTracker = CreateScenarioTracker();
@@ -537,7 +537,7 @@ void CInterfaceState::MakeScenarioTracker( EScenarioTrackerType eType )
 
 			break;
 		}
-		
+
 		case ESTT_MULTI:
 		{
 			IScenarioTracker *pScenarioTracker = CreateScenarioTrackerMultiplayer();
@@ -568,7 +568,7 @@ void CInterfaceState::SetTransitEffectFlag( bool bTransit )
 const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 {
 	const NDb::STexture *pBackground = 0;
-	
+
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST )
 	{
@@ -576,7 +576,7 @@ const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 		if ( pCampaign )
 			pBackground = pCampaign->pTextureMenuBackground;
 	}
-	
+
 	if ( !pBackground )
 	{
 		if ( const NDb::SGameRoot *pGameRoot = GetGameRoot() )
@@ -584,7 +584,7 @@ const NDb::STexture* CInterfaceState::GetMenuBackgroundTexture() const
 			pBackground = pGameRoot->pInterfacesBackground;
 		}
 	}
-	
+
 	return pBackground;
 }
 
@@ -631,7 +631,7 @@ const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, in
 		if ( nIDForHandler >= 0 )
 		{
 			std::wstring wszDynamicTag = wszTag.substr( 1 );
-			
+
 			if ( !wszDynamicTag.empty() )
 			{
 				const std::vector< std::pair<std::wstring, std::wstring> > &params = GetParamsForMLHandler( nIDForHandler );
@@ -660,7 +660,7 @@ const std::wstring& CInterfaceState::ExpandMLTag( const std::wstring &wszTag, in
 		return wszUndefined;
 #endif //_FINALRELEASE
 	}
-	
+
 	const std::wstring &wszText = GetMLTag( wszTag );
 	return wszText;
 }
@@ -828,11 +828,11 @@ void StartSingleMission( const std::string &szID, const std::vector<std::wstring
 	const CDBID dbidCampaign = GetCampaignDBIDFromName( NStr::ToMBCS(paramsSet[0]) );
 	if ( dbidCampaign.IsEmpty() )
 		return;
-		
+
 	const int nChapterIndex = NStr::ToInt( NStr::ToMBCS(paramsSet[1]) );
 	const int nMissionIndex = GetMissionIndexFromName( dbidCampaign, nChapterIndex, NStr::ToMBCS(paramsSet[2]) );
 	const int nDifficulty = (paramsSet.size() >= 4) ? GetDifficultyFromName( NStr::ToMBCS(paramsSet[3]) ) : 0;
-	
+
 	InterfaceState()->StartSingleMission( dbidCampaign, nChapterIndex, nMissionIndex, nDifficulty );
 }
 

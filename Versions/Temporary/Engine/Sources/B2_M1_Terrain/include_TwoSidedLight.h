@@ -4,11 +4,11 @@ void PostLoad( bool bInEditor )
 		return;
 	vLightColor -= vAmbientColor;
 	vShadeColor -= vShadeAmbientColor;
-	if ( !bWhitening ) 
+	if ( !bWhitening )
 	{
 		vLightColor *= 0.25f;
 		vAmbientColor *= 0.25f;
 		vShadeColor *= 0.25f;
 		vShadeAmbientColor *= 0.25f;
 	}
-} 
+}

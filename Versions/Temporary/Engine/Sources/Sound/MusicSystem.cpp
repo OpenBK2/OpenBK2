@@ -72,14 +72,14 @@ void CMusicSystem::Update()
 
 	fades.Update();
 
-	const float fMusicVolume = volumes[EMS_MASTER] * 
+	const float fMusicVolume = volumes[EMS_MASTER] *
 		volumes[EMS_MUSIC_MASTER] *
 		volumes[EMS_MUSIC_FADE_SELF] *
 		volumes[EMS_MUSIC_FADE_FROM_VOICE] ;
 	const float fVoiceVolume = volumes[EMS_MASTER] *
 		volumes[EMS_VOICE_MASTER] *
 		volumes[EMS_VOICE_SELF] ;
-	
+
 	if ( channels[EST_MUSIC] > 0 )
 	{
 		if ( int(fMusicVolume * 255) != FSOUND_GetVolume( channels[EST_MUSIC] ) )
@@ -112,7 +112,7 @@ void CMusicSystem::PauseMusic( EMusicSystemVolume eType, bool bPause )
 	pauses[eType] = bPause;
 }
 
-void CMusicSystem::PlayVoice( const NDb::SVoice *pVoice ) 
+void CMusicSystem::PlayVoice( const NDb::SVoice *pVoice )
 {
 	if ( pVoiceTrack )
 	{
@@ -138,7 +138,7 @@ void CMusicSystem::PlayVoice( const NDb::SVoice *pVoice )
 	pVoiceTrack->Segment();
 }
 
-void CMusicSystem::Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList ) 
+void CMusicSystem::Init( const NDb::SMapMusic *pMapMusic, int nActivePlayList )
 {
 	// just don't do anything if already all is ok
 	if ( pMapMusic == pCurrentMapMusic && nActivePlayList == nPlayList )
@@ -202,7 +202,7 @@ int CMusicSystem::GetPlayList() const
 	return nPlayList;
 }
 
-void CMusicSystem::ChangePlayList( int _nPlayList ) 
+void CMusicSystem::ChangePlayList( int _nPlayList )
 {
 	if ( _nPlayList >= playlists.size() || _nPlayList < 0 )
 		return;
@@ -250,15 +250,15 @@ void CMusicSystem::UpdatePlayListChange()
 	}
 }
 
-int CMusicSystem::operator&( IBinSaver &f ) 
-{ 
-	f.Add(2,&nPlayList); 
-	f.Add(3,&playlists); 
-	f.Add(4,&pVoiceTrack); 
-	f.Add(5,&volumes); 
-	f.Add(6,&pauses); 
-	f.Add(7,&channels); 
-	f.Add(8,&fades); 
+int CMusicSystem::operator&( IBinSaver &f )
+{
+	f.Add(2,&nPlayList);
+	f.Add(3,&playlists);
+	f.Add(4,&pVoiceTrack);
+	f.Add(5,&volumes);
+	f.Add(6,&pauses);
+	f.Add(7,&channels);
+	f.Add(8,&fades);
 	f.Add( 9, &nDesiredPlayList );
 	f.Add( 10, &eState );
 	f.Add( 11, &pCurrentMapMusic );
@@ -267,7 +267,7 @@ int CMusicSystem::operator&( IBinSaver &f )
 		channels.clear();
 		channels.resize( 2, 0 );
 	}
-	return 0; 
+	return 0;
 }
 }
 

@@ -57,7 +57,7 @@ bool CRoadState::CanInsertVSO()
 
 
 NMapInfoEditor::CVSOInstanceList* CRoadState::GetVSOList()
-{ 
+{
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.roadList );
 }
@@ -97,7 +97,7 @@ void CRoadState::UpdateVisualVSO( NDb::SVSOInstance *pVSO, bool bBothEdges )
 			int nMaxCount = INVALID_NODE_ID;
 			GetControlPointBounds( &nMinCount, &nMaxCount );
 			//UniquePolygon<std::vector<CVec3>, CVec3>( &( pVSOtoAddVSOInstance.controlPoints ), CVSOState::DEFAULT_POINT_RADIUS );
-			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) && 
+			if ( ( ( nMinCount == INVALID_NODE_ID ) || ( pVSO->controlPoints.size() >= nMinCount ) ) &&
 					( pVSO->controlPoints.size() > 1 ) )
 			{
 				CVSOManager::Update( pVSO,
@@ -180,6 +180,6 @@ void CRoadState::UpdateVSOInTerrain( int nVSOID )
 }
 
 
-// basement storage  
+// basement storage
 
 

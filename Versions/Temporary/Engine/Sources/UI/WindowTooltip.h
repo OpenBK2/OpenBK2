@@ -24,7 +24,7 @@ public:
 	CWindowTooltip( const std::wstring &_wszText ) : wszText( _wszText ), bInitializedByText( true ) { }
 	// CRAP}
 
-	// return position on screen 
+	// return position on screen
 	virtual void InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRect, const std::wstring &szText,
 		IScreen *pScreen, const int nTooltipWidth, const float fHorisontalToVerticalRatio,
 		int nIDForMLHandler );

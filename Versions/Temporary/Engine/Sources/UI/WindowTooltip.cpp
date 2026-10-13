@@ -15,7 +15,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 																	const int nTooltipWidth, const float fHorisontalToVerticalRatio, int nIDForMLHandler )
 {
 	wszText = _szText;
-	
+
 	std::wstring szText;
 	if ( const NDb::SForegroundTextString *pForeground = pInstance->pTextString )
 	{
@@ -23,11 +23,11 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 			szText = GET_TEXT_PRE(pForeground->pShared->,FormatString); // format
 	}
 	szText += _szText;
-	
+
 	CWindow * pChild = dynamic_cast<CWindow*>(GetChild( "TooltipText", false ));
 	ITextView *pText = dynamic_cast<ITextView*>( pChild );
 	NI_ASSERT( pText != 0, "tooltip window must have TextView child" );
-	
+
 	CWindow *pScreen = dynamic_cast<CWindow*>( _pScreen );
 	if ( pText && pScreen )
 	{
@@ -45,7 +45,7 @@ void CWindowTooltip::InitTooltip( const CVec2 &vPos, const CTRect<float> &wndRec
 		int nSizeX, nSizeY;
 		pChild->GetPlacement( 0, 0, &nSizeX, &nSizeY );
 		pScreen->RepositionChildren( this );
-		
+
 		const int nW = nSizeX + pShared->vLowerBorder.x + pShared->vHigherBorder.x;
 		const int nH = nSizeY + pShared->vLowerBorder.y + pShared->vHigherBorder.y;
 
@@ -74,7 +74,7 @@ void CWindowTooltip::AdjustPosByMousePos( const CVec2 &vMousePos )
 {
 	int nX, nY, nSizeX, nSizeY;
 	GetPlacement( &nX, &nY, &nSizeX, &nSizeY );
-	
+
 	if ( bInitializedByText )
 	{
 		nX = Clamp( int(vMousePos.x), 0, nMaxXPos );

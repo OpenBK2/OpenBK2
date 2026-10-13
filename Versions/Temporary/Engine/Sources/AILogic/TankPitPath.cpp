@@ -34,14 +34,14 @@ void CTankPitPath::Segment( const NTimer::STime timeDiff )
 		float fDistToGo = fabs( vDir );
 		if ( fDistToGo >= fPassedLenght )// еще нужно идти
 		{
-			Normalize( &vDir );	
+			Normalize( &vDir );
 			vDir *= fPassedLenght ;
 			vCurPoint += vDir;
 		}
 		else
-			vCurPoint = vEndPoint;		
+			vCurPoint = vEndPoint;
 	}
-	
+
 	pUnit->SetCenter( CVec3( vCurPoint.x, vCurPoint.y, GetHeights()->GetZ( vCurPoint ) ) );
 }
 

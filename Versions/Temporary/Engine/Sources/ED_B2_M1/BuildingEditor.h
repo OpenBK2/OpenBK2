@@ -16,7 +16,7 @@ class CBuildingRPGStatsEditorSettings
 {
 public:
 	bool bShowShortcutBar;
-	
+
 	CBuildingRPGStatsEditorSettings()
 		: bShowShortcutBar( true )
 	{}
@@ -34,7 +34,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 {
 	friend class CBuildingState;
 	OBJECT_NOCOPY_METHODS( CBuildingEditor );
-	//	
+	//
 	CBuildingState *pBuildingState;
 	CBuildingRPGStatsEditorSettings editorSettings;
 	CVec3 vLastCameraAnchor;
@@ -61,7 +61,7 @@ class CBuildingEditor : public CEditorBase, public CDefaultView, public ICommand
 	//
 	CBuildingEditor();
 	~CBuildingEditor();
-	//	
+	//
 public:
 	//IEditor
 	CObj<CMOBuilding> &GetBuildingPtr() { return pBuilding; };

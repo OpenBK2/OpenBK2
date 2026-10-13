@@ -13,7 +13,7 @@ SYSTEM_EXPORT float Sin( float fAlpha );
 BOOST_FORCEINLINE float Cos( const float fAlpha ) { return Sin( fAlpha + FP_PI2 ); }
 
 // result depends on current FPU rounding state, don't use in AI, can lead to async
-float FastSin( float fAlpha );	
+float FastSin( float fAlpha );
 BOOST_FORCEINLINE float FastCos( const float fAlpha ) { return FastSin( fAlpha + FP_PI2 ); }
 
 // arc sinus & arc cosinus

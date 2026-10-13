@@ -35,7 +35,7 @@ struct SSaveInfo
 	ZSKIP
 	ZSKIP
 	//}
-	
+
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	bool bCustomMission = {};
 	ZSKIP//	CDBPtr<NDb::SCampaign> pCampaignDB;
@@ -64,13 +64,13 @@ struct SSaveInfo
 	std::wstring wszMissionName;
 	std::wstring wszMissionDesc;
 	std::wstring wszMissionLoadingDesc;
-	
+
 	NFile::CFilePath szMODPath;
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(6,&bCustomMission); f.Add(10,&pFlagTexture); f.Add(11,&bQuickSave); f.Add(12,&bFromChapter); f.Add(14,&bAutoSave); f.Add(15,&wszSaveName); f.Add(21,&pPicture); f.Add(22,&screenShot); f.Add(24,&wszCampaignName); f.Add(25,&wszChapterName); f.Add(26,&wszChapterDesc); f.Add(27,&wszMissionName); f.Add(28,&wszMissionDesc); f.Add(29,&wszMissionLoadingDesc); f.Add(30,&szMODPath); return 0; }
 
 	SSaveInfo();
-	
+
 	void Read( const std::string &szFullFileName );
 	void Write( const std::string &szFullFileName, const std::wstring &wszSaveName, bool bQuickSave, bool bAutoSave, bool bFromChapter );
 	void Rename( const std::string &szFullFileName, const std::wstring &wszNewSaveName );
@@ -85,11 +85,11 @@ struct SSaveInfo
 	const std::wstring &GetMissionLoadingDesc() const { return wszMissionLoadingDesc; }
 
 	//
-	
+
 	void SetLoadInfo(); // set global var
 };
 
-struct SSavegameEntry 
+struct SSavegameEntry
 {
 	ZDATA
 	std::wstring					wszName;
@@ -113,7 +113,7 @@ struct SWaitLoadData
 	bool bChapter = {};
 	CDBID dbidMinimap;
 	ZEND int operator&( IBinSaver &f ) { f.Add(3,&wszDesc); f.Add(4,&bChapter); f.Add(5,&dbidMinimap); return 0; }
-	
+
 	void Set( const NDb::STexture *pMinimap, const std::wstring &wszDesc, bool bChapter );
 	void Reset();
 };

@@ -62,13 +62,13 @@ struct SNetCompressorInit
 };
 static SNetCompressorInit sNetCompressorInit;
 
-CNetCompressor::CNetCompressor() 
-{ 
-	cPrevLetter = 0; nBlockStart = -1; 
-	nCurrent = 0; 
+CNetCompressor::CNetCompressor()
+{
+	cPrevLetter = 0; nBlockStart = -1;
+	nCurrent = 0;
 	nNext[0] = N_COMPRESS_HISTORY;
-	memset( nHashTable, 0, sizeof(nHashTable) ); 
-	cBuffer[0] = 0; cBuffer[N_COMPRESS_HISTORY] = 0; 
+	memset( nHashTable, 0, sizeof(nHashTable) );
+	cBuffer[0] = 0; cBuffer[N_COMPRESS_HISTORY] = 0;
 	cBuffer[N_COMPRESS_HISTORY - 1] = 0;
 	cBuffer[2*N_COMPRESS_HISTORY - 1] = 0;
 
@@ -83,7 +83,7 @@ void CNetCompressor::EmitBlock( int nStart )
 	nShift &= N_COMPRESS_HISTORY - 1;
 	//cout << "Block, shift = " << nShift << "   length = " << nBlockLength << endl;
 	nBlockStart = -1;
-	
+
 	if ( nBlockLength <= 34 )
 		data.WriteBits( nLengthBits[ nBlockLength - 1 ], nLengthBitsNum[ nBlockLength - 1 ] );
 	else

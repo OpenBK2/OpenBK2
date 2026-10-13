@@ -52,7 +52,7 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec
 {
 	if ( !IsInsideAIMap( vPos ) )
 		return false;
-	
+
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
 	return PerformGroupAction( &command, bPlaceInQueue );
@@ -62,7 +62,7 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec
 {
 	if ( !IsInsideAIMap( vPos ) )
 		return false;
-	
+
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
 	command.nObjectID = nObjectID;
@@ -73,7 +73,7 @@ bool CWorldClient::PerformGroupAction( EActionCommand eActionCommand, const CVec
 {
 	if ( !IsInsideAIMap( vPos ) )
 		return false;
-	
+
 	SAIUnitCmd command( eActionCommand );
 	command.vPos = vPos;
 	command.fNumber = fParam;
@@ -95,11 +95,11 @@ bool CWorldClient::PerformGroupActionAutocast( const struct SAIUnitCmd *pCommand
 
 bool CWorldClient::ActionMove( const CVec2 &vPos, const CMapObj *pMO, bool bForced )
 {
-	if ( bForced ) 
+	if ( bForced )
 	{
 		if ( pMO )
 		{
-			switch( pMO->GetTypeID() ) 
+			switch( pMO->GetTypeID() )
 			{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -124,9 +124,9 @@ bool CWorldClient::ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 	if ( !pMO )
 	{
 		bool bResult = PerformGroupAction( ACTION_COMMAND_SWARM_TO, vPos, GetPlaceInQueue() );
-//		if ( bResult ) 
+//		if ( bResult )
 //			PlaceMapCommandAck( CVec3( vPos.x, vPos.y, Singleton<IAILogic>()->GetZ( vPos ) ) );
-//		if ( PerformGroupAction( ACTION_COMMAND_ART_BOMBARDMENT, vPos, GetPlaceInQueue() ) ) 
+//		if ( PerformGroupAction( ACTION_COMMAND_ART_BOMBARDMENT, vPos, GetPlaceInQueue() ) )
 //			bResult = true;
 		return bResult;
 	}
@@ -134,7 +134,7 @@ bool CWorldClient::ActionAttack( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 	{
 		if ( bForced || pMO->GetDiplomacy() == EDI_ENEMY )
 		{
-			switch( pMO->GetTypeID() ) 
+			switch( pMO->GetTypeID() )
 			{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -212,7 +212,7 @@ bool CWorldClient::ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 				squad.push_back( pUnit->GetSquad()->GetID() );
 
 				const int groupID = pCommandsSender->CommandRegisterGroup( squad );
-				SAIUnitCmd command;		
+				SAIUnitCmd command;
 				command.nCmdType = ACTION_COMMAND_ENTER;
 				command.nObjectID = nBuildingID;
 				pCommandsSender->CommandGroupCommand( &command, groupID, GetPlaceInQueue(), ML_COMMAND_SAVE_GAME );
@@ -261,9 +261,9 @@ bool CWorldClient::ActionLeave( const CVec2 &vPos, const CMapObj *pMO, bool bFor
 			{
 				units[i] = passengers[i]->GetID();
 			}
-	
+
 			const int groupID = pCommandsSender->CommandRegisterGroup( units );
-			SAIUnitCmd command;		
+			SAIUnitCmd command;
 			command.nCmdType = ACTION_COMMAND_LEAVE;
 			command.vPos = vPos;
 			command.fNumber = ALP_POSITION_VALID;
@@ -289,7 +289,7 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 
 			std::vector<CMOSelectable*> passangers;
 			pContainer->GetPassangers( &passangers );
-			if ( nIndex < 0 || nIndex >= passangers.size() ) 
+			if ( nIndex < 0 || nIndex >= passangers.size() )
 				return false;
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
@@ -297,7 +297,7 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 			units.push_back( nUnitIndex );
 
 			const int groupID = pCommandsSender->CommandRegisterGroup( units );
-			SAIUnitCmd command;		
+			SAIUnitCmd command;
 			command.nCmdType = ACTION_COMMAND_LEAVE;
 			command.fNumber = ALP_POSITION_INVALID;
 			command.vPos = CVec2( 300.0f, 300.0f );
@@ -320,14 +320,14 @@ bool CWorldClient::ActionLeaveOneSquad( const int nIndex )
 
 			std::vector<CMOSelectable*> passangers;
 			pContainer->GetPassangers( &passangers );
-			if ( nIndex < 0 || nIndex >= passangers.size() ) 
+			if ( nIndex < 0 || nIndex >= passangers.size() )
 				return false;
-				
+
 			const int nUnitIndex = passangers[nIndex]->GetID();
 
 			 std::vector<int> group;
 			 group.push_back( pContainer->GetID() );
-			
+
 			 const int groupID = pCommandsSender->CommandRegisterGroup( group );
 
 			SAIUnitCmd command( ACTION_COMMAND_UNLOAD );
@@ -411,9 +411,9 @@ bool CWorldClient::ActionBuildEntrenchment( const CVec2 &vPos, const CMapObj *pM
 		ResetFirstCommandPoint();
 		eBuildObjectState = EBS_NONE;
 	}
-	else 
+	else
 	{
-		SetFirstCommandPoint( vPos );		
+		SetFirstCommandPoint( vPos );
 		eBuildObjectState = EBS_FIRST_POINT_SELECTED;
 
 		lastUpdate = 0;
@@ -440,9 +440,9 @@ bool CWorldClient::ActionBuildFence( const CVec2 &vPos, const CMapObj *pMO, bool
 		ResetFirstCommandPoint();
 		eBuildObjectState = EBS_NONE;
 	}
-	else 
+	else
 	{
-		SetFirstCommandPoint( vPos );		
+		SetFirstCommandPoint( vPos );
 		eBuildObjectState = EBS_FIRST_POINT_SELECTED;
 
 		lastUpdate = 0;
@@ -459,7 +459,7 @@ bool CWorldClient::ActionRepair( const CVec2 &vPos, const CMapObj *pMO, bool bFo
 	{
 		CUserActions actions;
 		pMO->GetActions( &actions, ACTIONS_WITH );
-		if ( actions.HasAction( NDb::USER_ACTION_ENGINEER_REPAIR ) ) 
+		if ( actions.HasAction( NDb::USER_ACTION_ENGINEER_REPAIR ) )
 		{
 			switch ( pMO->GetTypeID() )
 			{
@@ -482,7 +482,7 @@ bool CWorldClient::ActionResupply( const CVec2 &vPos, const CMapObj *pMO, bool b
 	{
 		CUserActions actions;
 		pMO->GetActions( &actions, ACTIONS_WITH );
-		if ( actions.HasAction( NDb::USER_ACTION_SUPPORT_RESUPPLY ) ) 
+		if ( actions.HasAction( NDb::USER_ACTION_SUPPORT_RESUPPLY ) )
 			return PerformGroupAction( ACTION_COMMAND_RESUPPLY, pMO->GetID(), GetPlaceInQueue() );
 		return false;
 	}
@@ -557,7 +557,7 @@ bool CWorldClient::ActionUseThrow( const CVec2 &vPos, const CMapObj *pMO, bool b
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() ) 
+		switch( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -600,7 +600,7 @@ bool CWorldClient::ActionUseBlastingCharge( const CVec2 &vPos, const CMapObj *pM
 {
 /*	if ( pMO )
 	{
-		switch( pMO->GetTypeID() ) 
+		switch( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -638,7 +638,7 @@ bool CWorldClient::ActionUseControlledCharge( const CVec2 &vPos, const CMapObj *
 {
 	if ( pMO )
 	{
-		/*switch( pMO->GetTypeID() ) 
+		/*switch( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -688,7 +688,7 @@ bool CWorldClient::ActionSupportFire( const CVec2 &vPos, const CMapObj *pMO, boo
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() ) 
+		switch( pMO->GetTypeID() )
 		{
 		case NDb::SMechUnitRPGStats::typeID:
 		case NDb::SInfantryRPGStats::typeID:
@@ -718,7 +718,7 @@ bool CWorldClient::ActionSpyMode( const CVec2 &vPos, const CMapObj *pMO, bool bF
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() ) 
+		switch( pMO->GetTypeID() )
 		{
 		case NDb::SInfantryRPGStats::typeID:
 			{
@@ -745,7 +745,7 @@ bool CWorldClient::ActionUseTrackTargeting( const CVec2 &vPos, const CMapObj *pM
 {
 	if ( pMO )
 	{
-		switch( pMO->GetTypeID() ) 
+		switch( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:			// Can use TT only on MechUnits
 			{
@@ -843,7 +843,7 @@ bool CWorldClient::ActionCounterFire( const CVec2 &vPos, const CMapObj *pMO, boo
 	marker.p2 = CVec2( vPos.x, vPos.y + 10 );
 	marker.dir = marker.p2 - marker.p1;
 	DebugInfoManager()->CreateSegment( OBJECT_ID_FORGET, marker, 1, NAIVisInfo::GREEN );*/
-	
+
 	return PerformGroupAction( &command, GetPlaceInQueue() );
 }
 
@@ -877,7 +877,7 @@ bool CWorldClient::ActionDropBombs( const CVec2 &vPos, const CMapObj *pMO, bool 
 	int nID = 0;
 	if ( pMO )
 	{
-		switch ( pMO->GetTypeID() ) 
+		switch ( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -893,7 +893,7 @@ bool CWorldClient::ActionExactShot( const CVec2 &vPos, const CMapObj *pMO, bool 
 {
 	if ( pMO )
 	{
-		switch ( pMO->GetTypeID() ) 
+		switch ( pMO->GetTypeID() )
 		{
 			case NDb::SMechUnitRPGStats::typeID:
 			case NDb::SInfantryRPGStats::typeID:
@@ -917,7 +917,7 @@ bool CWorldClient::ActionFirstAid( const CVec2 &vPos, const CMapObj *pMO, bool b
 {
 	if ( pMO )
 	{
-		switch ( pMO->GetTypeID() ) 
+		switch ( pMO->GetTypeID() )
 		{
 			case NDb::SInfantryRPGStats::typeID:
 				return PerformGroupAction( ACTION_COMMAND_FIRST_AID, pMO->GetID(), GetPlaceInQueue() );

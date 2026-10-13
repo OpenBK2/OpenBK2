@@ -34,7 +34,7 @@ CBind::~CBind()
 // CAnimatedBound
 
 CAnimatedBound::CAnimatedBound( const SBound &_bv, CFuncBase<NAnimation::SSkeletonPose> *_pAnimation )
-	: bv(_bv), pAnimation(_pAnimation) 
+	: bv(_bv), pAnimation(_pAnimation)
 {
 	Zero( value );
 	Zero( prevValue );
@@ -44,8 +44,8 @@ static bool operator==( const SSphere &a, const SSphere &b )
 {
 	return memcmp( &a, &b, sizeof(a) ) == 0;
 }
-bool CAnimatedBound::NeedUpdate() 
-{ 
+bool CAnimatedBound::NeedUpdate()
+{
 	// discretisation step
 	const float F_DISCR_STEP = 1;
 	if ( !pAnimation.Refresh() )

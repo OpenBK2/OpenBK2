@@ -24,13 +24,13 @@ public:
 	//
 	inline int operator&( IBinSaver &rBS )
 	{
-		rBS.Add( 1, &nTypeID );	
+		rBS.Add( 1, &nTypeID );
 		return 0;
 	}
 	//
 	inline int operator&( IXmlSaver &rXS )
 	{
-		rXS.Add( "TypeID", &nTypeID );	
+		rXS.Add( "TypeID", &nTypeID );
 		return 0;
 	}
 };
@@ -58,13 +58,13 @@ public:
 	//
 	inline int operator&( IBinSaver &rBS )
 	{
-		rBS.Add( 1, &nRecordID );	
+		rBS.Add( 1, &nRecordID );
 		return 0;
 	}
 	//
 	inline int operator&( IXmlSaver &rXS )
 	{
-		rXS.Add( "RecordID", &nRecordID );	
+		rXS.Add( "RecordID", &nRecordID );
 		return 0;
 	}
 };
@@ -94,15 +94,15 @@ public:
 	//
 	inline int operator&( IBinSaver &rBS )
 	{
-		rBS.Add( 1, &typeID );	
-		rBS.Add( 2, &recordID );	
+		rBS.Add( 1, &typeID );
+		rBS.Add( 2, &recordID );
 		return 0;
 	}
 	//
 	inline int operator&( IXmlSaver &rXS )
 	{
-		rXS.AddTypedSuper( &typeID );	
-		rXS.AddTypedSuper( &recordID );	
+		rXS.AddTypedSuper( &typeID );
+		rXS.AddTypedSuper( &recordID );
 		return 0;
 	}
 };

@@ -70,8 +70,8 @@ const void CStaticMapHeights::UpdateVisZ( CVec3 *pVec ) const
 }
 
 
-const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY ) const 
-{ 
+const float CStaticMapHeights::GetTileHeight( const int nTileX, const int nTileY ) const
+{
 	const int inMapX = (std::min)( (std::max)( 0, nTileX ), nStaticMapSizeX - 1 );
 	const int inMapY = (std::min)( (std::max)( 0, nTileY ), nStaticMapSizeY - 1 );
 
@@ -155,7 +155,7 @@ void CStaticMapHeights::FinalizeUpdateHeights( const int nX1, const int nY1, con
 
 void CStaticMapHeights::UpdateHeights( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<float> &initHeights )
 {
-	if ( initHeights.IsEmpty() ) 
+	if ( initHeights.IsEmpty() )
 		return;
 	const int nInitSizeX = initHeights.GetSizeX();
 	const int nInitSizeY = initHeights.GetSizeY();
@@ -185,7 +185,7 @@ void CStaticMapHeights::UpdateHeights( const int nX1, const int nY1, const int n
 			heights[0][j+1] = initHeights[0][j];
 	}
 
-	if ( nY2 >= nInitSizeY - 1 ) 
+	if ( nY2 >= nInitSizeY - 1 )
 	{
 		/**
 		DebugTrace( "CStaticMapHeights::UpdateHeights():[%d,%d,%d,%d] in (%dx%d) to [%d,%d,%d,%d] in(%dx%d)",
@@ -274,7 +274,7 @@ int CStaticMapHeights::UpdateLocalHeights( const int nX1, const int nY1, const C
 		}
 	}
 	FinalizeUpdateHeights( nVisX1, nVisY1, nVisX1+nVisHeightsSizeX+1, nVisY1+nVisHeightsSizeY+1 );
-	
+
 #ifndef _FINALRELEASE
 	if ( NGlobal::GetVar( "bridge_vis_tile_markers", 0 ) )
 	{
@@ -377,7 +377,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		t02 = (vLineY[0] == 0) ? -1.0f : -vLineY[1]/vLineY[0];
 	else if ( vBegin.y > maxY )
 		t02 = (vLineY[0] == 0) ? -1.0f : ( maxY - vLineY[1] )/vLineY[0];
-	else 
+	else
 		t02 = 0.0f;
 	const float t1 = (std::max)( t01, t02 );
 
@@ -385,14 +385,14 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 		t01 = (vLineX[0] == 0) ? 2.0f : -vLineX[1]/vLineX[0];
 	else if ( vEnd.x > maxX )
 		t01 = (vLineX[0] == 0) ? 2.0f : ( maxX - vLineX[1] )/vLineX[0];
-	else 
+	else
 		t01 = 1.0f;
 
 	if ( vEnd.y < 0 )
 		t02 = (vLineY[0] == 0) ? 2.0f : -vLineY[1]/vLineY[0];
 	else if ( vEnd.y > maxY )
 		t02 = (vLineY[0] == 0) ? 2.0f : ( maxY - vLineY[1] )/vLineY[0];
-	else 
+	else
 		t02 = 1.0f;
 	const float t2 = (std::min)( t01, t02 );
 
@@ -456,7 +456,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrain( CVec3 *pvResult, const
 
 			zV = vLineZ[0] * t + vLineZ[1];
 
-			const float tX = t - ( zV - zT )*( t - t0 )/( zV - zT - ( zV0 - zT0 ) );			
+			const float tX = t - ( zV - zT )*( t - t0 )/( zV - zT - ( zV0 - zT0 ) );
 			if ( t0 <= tX && tX <= t )
 			{
 				pvResult->x = vLineX[0] * tX + vLineX[1];
@@ -509,7 +509,7 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 		t02 = (vLineY[0] == 0) ? -1.0f : -vLineY[1]/vLineY[0];
 	else if ( vBegin.y > maxY )
 		t02 = (vLineY[0] == 0) ? -1.0f : ( maxY - vLineY[1] )/vLineY[0];
-	else 
+	else
 		t02 = 0.0f;
 	const float t1 = (std::max)( t01, t02 );
 
@@ -517,14 +517,14 @@ const bool CStaticMapHeights::GetIntersectionWithTerrainForEditor( CVec3 *pvResu
 		t01 = (vLineX[0] == 0) ? 2.0f : -vLineX[1]/vLineX[0];
 	else if ( vEnd.x > maxX )
 		t01 = (vLineX[0] == 0) ? 2.0f : ( maxX - vLineX[1] )/vLineX[0];
-	else 
+	else
 		t01 = 1.0f;
 
 	if ( vEnd.y < 0 )
 		t02 = (vLineY[0] == 0) ? 2.0f : -vLineY[1]/vLineY[0];
 	else if ( vEnd.y > maxY )
 		t02 = (vLineY[0] == 0) ? 2.0f : ( maxY - vLineY[1] )/vLineY[0];
-	else 
+	else
 		t02 = 1.0f;
 	const float t2 = (std::min)( t01, t02 );
 

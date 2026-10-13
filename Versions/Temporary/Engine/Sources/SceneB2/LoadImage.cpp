@@ -40,7 +40,7 @@ bool LoadGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 		data.SetSizes( hdr.imagespec.wImageWidth, hdr.imagespec.wImageHeight );
 
 	const int nRequested = data.GetSizeX() * data.GetSizeY();
-	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 ) 
+	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 	{
 		for ( int i = data.GetSizeY() - 1; i >= 0; --i )
 			pStream->Read( &(data[i][0]), data.GetSizeX() * sizeof(uint8_t) );
@@ -66,7 +66,7 @@ bool AppendGrayTGAImageAtBottom( CDataStream *pStream, CArray2D<uint8_t> &data, 
 		pStream->Seek( pStream->GetPosition() + hdr.cIDLength );
 	//
 	const int nRequested = int( hdr.imagespec.wImageWidth ) * int( hdr.imagespec.wImageHeight );
-	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 ) 
+	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 	{
 		for ( int i = nPosY + int(hdr.imagespec.wImageHeight) - 1; nPosY >= 0; --i )
 			pStream->Read( &(data[i][0]), hdr.imagespec.wImageWidth * sizeof(uint8_t) );

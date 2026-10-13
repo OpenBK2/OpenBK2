@@ -44,7 +44,7 @@ namespace NScene
 	{
 		try
 		{
-			if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() ) 
+			if ( const NDb::STerrain *pDesc = pTerraManager->GetDesc() )
 			{
 				const std::string szTerrainBinFileName = szMapFilePath + "/" + SZ_TERRA_BIN_FILE_NAME;
 				//
@@ -224,12 +224,12 @@ int CTerrainManager::operator&( IBinSaver &saver )
 	saver.Add( 3, &pDesc );
 	saver.Add( 4, &pGameView );
 	saver.Add( 5, &pTimer );
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
 		pTerraGen = new CTerraGen();
-		pTerraGen->SetStreamPathes(szDstPath, szSrcPath); 
-		bPathesSet = true; 
-		if ( pGameView ) 
+		pTerraGen->SetStreamPathes(szDstPath, szSrcPath);
+		bPathesSet = true;
+		if ( pGameView )
 		{
 			pTerrain = new CSceneTerrain( pDesc, pGameView, pTimer );
 			pTerraGen->SetGfxObserver( pTerrain );

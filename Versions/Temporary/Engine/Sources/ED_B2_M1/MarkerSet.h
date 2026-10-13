@@ -54,7 +54,7 @@ public:
 	void AttachToScene();
 	void DetachFromScene();
 	//
-	void AddMarker( const CVec3 &rPos, const float fDir, EDirMeasure eDirMeasure, 
+	void AddMarker( const CVec3 &rPos, const float fDir, EDirMeasure eDirMeasure,
 					bool bActive, bool bUseBuildingPos, bool bUseOrigin );
 	//
 };

@@ -9,9 +9,9 @@ public:
 	ZDATA
 		// chat message
 		std::wstring wszMessage;
-	//  To/From Nick 
+	//  To/From Nick
 	std::string szNick;
-	//  To ID 
+	//  To ID
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nID = {};
 	bool bIsBroadcast = {};
@@ -96,7 +96,7 @@ public:
 
 	CChatClientListChangeNotifyPacket() {}
 	CChatClientListChangeNotifyPacket( const int nClientID, const int _nID, const std::string &_szNick, bool _bJoined )
-		:	CNetPacket( nClientID ), nID( _nID ), szNick( _szNick ), bJoined( _bJoined ) {}	
+		:	CNetPacket( nClientID ), nID( _nID ), szNick( _szNick ), bJoined( _bJoined ) {}
 };
 
 class CChatChannelsListRequestPacket : public CNetPacket

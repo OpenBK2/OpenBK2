@@ -46,8 +46,8 @@ public:
 
 struct SSpiralPointSort
 {
-	bool operator()( const SSpiralPoint &pPoint1, const SSpiralPoint &pPoint2 ) const 
-	{ 
+	bool operator()( const SSpiralPoint &pPoint1, const SSpiralPoint &pPoint2 ) const
+	{
 		if ( pPoint1.nRadius == pPoint2.nRadius )
 		{
 			if ( pPoint1.sector.wStartAngle == pPoint2.sector.wStartAngle )

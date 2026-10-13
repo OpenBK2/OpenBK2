@@ -121,7 +121,7 @@ bool CInterfaceChapterMapMenu::CReactions::Execute( const std::string &szSender,
 		return pInterface->OnTargetPushed( szSender );
 	if ( szReaction == "target_pushed_back" )
 		return pInterface->OnTargetPushedBack( szSender );
-		
+
 	if ( szReaction == "reinf_upgrade_dialog_close" )
 		return pInterface->OnReinfUpgradeDialogClose( szSender );
 	if ( szReaction == "reinf_upgrade_unit_btn" )
@@ -139,7 +139,7 @@ bool CInterfaceChapterMapMenu::CReactions::Execute( const std::string &szSender,
 
 // CInterfaceChapterMapMenu
 
-CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() : 
+CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() :
 	CInterfaceScreenBase( "ChapterMapMenu", "chapter_map_menu" ),
 	eUIState( EUIS_NORMAL ), eReinfDescState( ERDWS_NONE ), nDelay( 0 ), pChapter( 0 ),
 	eExitDir( EED_ENTER ), nSelectedMission( -1 ), nRecommendedTarget( 0 ),
@@ -152,7 +152,7 @@ CInterfaceChapterMapMenu::CInterfaceChapterMapMenu() :
 
 CInterfaceChapterMapMenu::~CInterfaceChapterMapMenu()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 	pReactions = 0;
 }
@@ -164,7 +164,7 @@ int CInterfaceChapterMapMenu::CReactions::Check( const std::string &szCheckName 
 
 bool CInterfaceChapterMapMenu::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
@@ -172,7 +172,7 @@ bool CInterfaceChapterMapMenu::Init()
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
 	pReactions = new CReactions( pScreen, this );
 	AddUIScreen( pScreen, "ChapterMapMenu", pReactions );
-	if ( pUIC->contexts.size() > 1 ) 
+	if ( pUIC->contexts.size() > 1 )
 		pScreen->SetTooltipContext( 1 );
 
 	pMain = GetChildChecked<IWindow>( pScreen, "ChapterMapMain", true );
@@ -378,8 +378,8 @@ bool CInterfaceChapterMapMenu::OnSaveGame()
 
 void CInterfaceChapterMapMenu::MsgBack( const SGameMessage &msg )
 {
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 		InterfaceState()->GetTextEntry( "T_CHAPTER_MAP_QUESTION_BACK" ) ).c_str() );
 }
 
@@ -521,7 +521,7 @@ void CInterfaceChapterMapMenu::AfterLoad()
 
 bool CInterfaceChapterMapMenu::StepLocal( bool bAppActive )
 {
-	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );												 
+	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 
 	if ( bNeedToRunAnimation && eExitDir == EED_RE_ENTER )
 	{
@@ -546,7 +546,7 @@ bool CInterfaceChapterMapMenu::StepLocal( bool bAppActive )
 			if ( nDelay <= 0 )				// Start animations now
 			{
 				timeStartEffect = Singleton<IGameTimer>()->GetAbsTime();
-				PlayReinfRollerAnim( Singleton<IScenarioTracker>()->GetReinforcementCallsOld(), 
+				PlayReinfRollerAnim( Singleton<IScenarioTracker>()->GetReinforcementCallsOld(),
 					Singleton<IScenarioTracker>()->GetReinforcementCallsLeftInChapter() );
 			}
 		}
@@ -714,7 +714,7 @@ void CInterfaceChapterMapMenu::SelectTarget( int nIndex )
 					dwColor = arrow.GetDependentColor();
 				}
 			}
-			
+
 			pFrontlines->AddArrow( arrow.points, arrow.fWidth, arrow.pTexture, dwColor );
 		}
 	}
@@ -889,7 +889,7 @@ void CInterfaceChapterMapMenu::MakeChapterInfo()
 
 int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 {
-	int nAvailReinfs = 0; 
+	int nAvailReinfs = 0;
 
 	// Fill reinforcements
 	for ( int i = 0; i < NDb::_RT_NONE; ++i )
@@ -901,7 +901,7 @@ int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 		if ( !reinfButtons[i].pButton )
 			continue;
 
-		const NDb::SReinforcement *pReinf = 
+		const NDb::SReinforcement *pReinf =
 			Singleton<IScenarioTracker>()->GetReinforcement( 0, NDb::EReinforcementType( i ) );
 		if ( pReinf )
 		{
@@ -932,7 +932,7 @@ int CInterfaceChapterMapMenu::MakeArmyInfo( bool bShow )
 		}
 		else if ( bShow )
 		{
-			IScenarioTracker::EReinforcementState eRState = 
+			IScenarioTracker::EReinforcementState eRState =
 				Singleton<IScenarioTracker>()->GetReinforcementEnableState( 0, NDb::EReinforcementType( i ) );
 			if ( eRState == IScenarioTracker::ERS_NOT_ENABLED )
 			{
@@ -1127,7 +1127,7 @@ bool CInterfaceChapterMapMenu::OnTargetDblClick( const std::string &szSender )
 	{
 		NMainLoop::Command( ML_COMMAND_MISSION_BRIEFING, "" );
 	}
-	
+
 	return true;
 }
 
@@ -1282,7 +1282,7 @@ void CInterfaceChapterMapMenu::ShowAllRewards( bool bShow )
 	for ( int i = 0; i < targets.size(); ++i )
 	{
 		STarget &target = targets[i];
-		
+
 		for ( int j = 0; j < target.rewards.size(); ++j )
 		{
 			SReward &reward = target.rewards[j];
@@ -1310,7 +1310,7 @@ void CInterfaceChapterMapMenu::PlayReinfRollerAnim( int nStart, int nEnd )
 	rollers.push_back( pReinfRoller1 );
 	rollers.push_back( pReinfRoller2 );
 	rollers.push_back( pReinfRoller3 );
-	
+
 	NUIElementsHelper::PlayRollerAnim( rollers, nStart, nEnd, ROLLER_TIME );
 }
 
@@ -1319,7 +1319,7 @@ void CInterfaceChapterMapMenu::PlayMissionRollerAnim( int nStart, int nEnd )
 	std::vector<IPlayer*> rollers;
 	rollers.push_back( pMissionReinfRoller2 );
 	rollers.push_back( pMissionReinfRoller1 );
-	
+
 	NUIElementsHelper::PlayRollerAnim( rollers, nStart, nEnd, ROLLER_TIME );
 }
 
@@ -1374,19 +1374,19 @@ void CInterfaceChapterMapMenu::UpdateRecommendedButton( STarget &target, bool bP
 	if ( target.pWindow->GetState() == 1 )
 	{
 		if ( target.pRecommended )
-			target.pRecommended->SetPlacement( target.nRecommendedX + SELECTION_SELECTED_DELTA_X, 
+			target.pRecommended->SetPlacement( target.nRecommendedX + SELECTION_SELECTED_DELTA_X,
 				target.nRecommendedY + SELECTION_SELECTED_DELTA_Y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 	}
 	else if ( bPushed )
 	{
 		if ( target.pRecommended )
-			target.pRecommended->SetPlacement( target.nRecommendedX + SELECTION_PUSHED_DELTA_X, 
+			target.pRecommended->SetPlacement( target.nRecommendedX + SELECTION_PUSHED_DELTA_X,
 				target.nRecommendedY + SELECTION_PUSHED_DELTA_Y, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 	}
 	else
 	{
 		if ( target.pRecommended )
-			target.pRecommended->SetPlacement( target.nRecommendedX, 
+			target.pRecommended->SetPlacement( target.nRecommendedX,
 				target.nRecommendedY, 0, 0, EWPF_POS_X | EWPF_POS_Y );
 	}
 }
@@ -1468,7 +1468,7 @@ void CInterfaceChapterMapMenu::ProceedInitialDialogs()
 			return;
 		}
 	}
-	
+
 	if ( InterfaceState()->IsAutoShowCommanderScreen() )
 		NMainLoop::Command( ML_COMMAND_ARMY_SCREEN, "" );
 }
@@ -1525,7 +1525,7 @@ void ChapterMapAutostartMission( const std::string &szID, const std::vector<std:
 				nRecommendedValue = info.nRecommendedOrder;
 			}
 		}
-		
+
 		const NDb::SMapInfo *pMap = 0;
 		if ( 0 <= nRecommendedTarget && nRecommendedTarget < pChapter->missionPath.size() )
 			pMap = pChapter->missionPath[nRecommendedTarget].pMap;

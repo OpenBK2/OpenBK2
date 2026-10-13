@@ -16,7 +16,7 @@ public:
 
 	CCreateGamePacket() { }
 	CCreateGamePacket( const int nClientID ) : CNetPacket( nClientID ), pInitialGameInfo( 0 ) { }
-	CCreateGamePacket( const int nClientID, SGameInfo *_pInitialGameInfo ) : 
+	CCreateGamePacket( const int nClientID, SGameInfo *_pInitialGameInfo ) :
 		CNetPacket( nClientID ), pInitialGameInfo( _pInitialGameInfo ) {}
 };
 
@@ -426,7 +426,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nSendTime); f.Add(3,&nFromID); return 0; }
 
 	CPingPacket() { }
-	CPingPacket( const int nClientID, const int _nFromID, const int _nSendTime ) 
+	CPingPacket( const int nClientID, const int _nFromID, const int _nSendTime )
 		: CNetPacket( nClientID ), nFromID( _nFromID ), nSendTime( _nSendTime ) {}
 };
 

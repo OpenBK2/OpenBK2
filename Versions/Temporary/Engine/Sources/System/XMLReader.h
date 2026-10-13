@@ -68,7 +68,7 @@ class SYSTEM_EXPORT CXmlNode
 	const char* ParseNodeAttributes( const char *pszBegin );
 public:
 	CXmlNode() : nBestNodeToRead( 0 ), pHRefAttr( 0 ), nBestAttrToRead( 0 ), pHDataAttr( 0 ), pPool( 0 ) { }
-	
+
 	const char* Parse( const char *pszBegin, SPool *pPool );
 
 	const SXmlValue& GetValue() const { return value; }

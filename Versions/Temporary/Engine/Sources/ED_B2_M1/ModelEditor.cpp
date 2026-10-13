@@ -26,7 +26,7 @@
 REGISTER_EDITOR_IN_DLL( Model, CModelEditor )
 
 
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] = 
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MODEL_ELEMENTS_ID[TOOLBAR_MODEL_ELEMENTS_COUNT] =
 {
 	ID_MODEL_RELOAD_EDITOR,
 	NMainFrameBar::SEPARATOR,
@@ -150,7 +150,7 @@ void CModelEditor::PreDestroyControls()
 
 void CModelEditor::DestroyControls()
 {
-	// разрушаем shortcut docking window 
+	// разрушаем shortcut docking window
 	if ( pwndTool != 0 )
 	{
 		if ( pwndTool->IsAlive() )
@@ -215,7 +215,7 @@ void CModelEditor::Destroy()
 
 bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
@@ -227,14 +227,14 @@ bool CModelEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		}
 		case ID_MODEL_VIEW_TOOL:
 		{
-			if ( pwndTool != 0 ) 
+			if ( pwndTool != 0 )
 			{
 				pwndTool->Show( !pwndTool->IsVisible() );
 			}
 		}
 		default:
 			return false;
-	} 
+	}
 	return false;
 }
 
@@ -243,7 +243,7 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	NI_ASSERT( pbEnable != 0, "CModelEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CModelEditor::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_MODEL_VIEW_TOOLBAR:
 		{
@@ -261,7 +261,7 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 		}
 		case ID_MODEL_VIEW_TOOL:
 		{
-			if ( pwndTool != 0 ) 
+			if ( pwndTool != 0 )
 			{
 				( *pbEnable ) = true;
 				( *pbCheck ) = pwndTool->IsVisible();
@@ -281,6 +281,6 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 }
 
 
-// basement storage  
+// basement storage
 
 

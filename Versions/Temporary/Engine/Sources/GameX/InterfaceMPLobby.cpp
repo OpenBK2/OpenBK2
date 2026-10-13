@@ -18,7 +18,7 @@
 
 #include <fmt/format.h>
 
-CInterfaceMPLobby::CInterfaceMPLobby() : 
+CInterfaceMPLobby::CInterfaceMPLobby() :
 CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_CHAT_MESSAGE, SMPUIChatMessage, &CInterfaceMPLobby::OnChatMessage );
@@ -31,12 +31,12 @@ CInterfaceMPScreenBase( "MPGameLobby", "game_lobby" )
 
 bool CInterfaceMPLobby::Init()
 {
-	if ( CInterfaceScreenBase::	Init() == false ) 
+	if ( CInterfaceScreenBase::	Init() == false )
 		return false;
 	AddScreen( this );
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
 	if ( !pMain )
-		return false;	
+		return false;
 	SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 	InitControls();
 	TryToJoinChatChannel( "Common" );
@@ -54,13 +54,13 @@ void CInterfaceMPLobby::InitControls()
 	pChannelsList = GetChildChecked<IListControl>( pMain, "ChannelsList", true );
 	pChannelsButton = GetChildChecked<IButton>( pMain, "ChannelsButton", true );
 	CPtr<CChannelListViewer> pViewer = new CChannelListViewer();
-	pChannelsList->SetViewer( pViewer );		
+	pChannelsList->SetViewer( pViewer );
 	pChannelsList->Update();
 	pChannelsList->ShowWindow( false );
 	pChannelNameEdit = GetChildChecked<IEditLine>( pMain, "ChatChannelEdit", true );
 	pNicksList = GetChildChecked<IListControl>( pMain, "ClientsList", true );
 	CPtr<CClientListViewer> pClientsViewer = new CClientListViewer( this );
-	pNicksList->SetViewer( pClientsViewer );		
+	pNicksList->SetViewer( pClientsViewer );
 	pNicksList->Update();
 	pClientInfoWindow = GetChildChecked<IWindow>( pMain, "ClientInfo", true );
 	pLadderButton = GetChildChecked<IButton>( pMain, "LadderGame", true );
@@ -140,7 +140,7 @@ bool CInterfaceMPLobby::Execute( const std::string &szSender, const std::string 
 
 bool CInterfaceMPLobby::OnLadderGameReaction()
 {
-	NMainLoop::Command( ML_COMMAND_MP_LADDER_GAME, "" ); 
+	NMainLoop::Command( ML_COMMAND_MP_LADDER_GAME, "" );
 	return true;
 }
 
@@ -152,7 +152,7 @@ int CInterfaceMPLobby::Check( const std::string &szCheckName ) const
 bool CInterfaceMPLobby::OnBackReaction()
 {
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NO_NET );
-	
+
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_MULTIPLAYER_MENU, "" );
 	//Crap
@@ -162,7 +162,7 @@ bool CInterfaceMPLobby::OnBackReaction()
 bool CInterfaceMPLobby::OnCustomGameReaction()
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	NMainLoop::Command( ML_COMMAND_MP_CUSTOM_GAME_MENU, "" ); 
+	NMainLoop::Command( ML_COMMAND_MP_CUSTOM_GAME_MENU, "" );
 	Singleton<IMPToUIManager>()->AddUIMessage( EMUI_NIVAL_NET_CUSTOM_GAME );
 	return true;
 }
@@ -246,7 +246,7 @@ bool CInterfaceMPLobby::OnClientMenu( const std::string &szSender )
 	pNicksList->SelectItem( 0 );
 	if ( pPostMessage )
 		pPostMessage->SetState( 0 );
-	
+
 	return true;
 }
 
@@ -272,14 +272,14 @@ bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 	{
 		if ( bFriendOld )
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage( 
+			Singleton<IMPToUIManager>()->AddUIMessage(
 				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_FRIEND ) );
 			chatFriends.erase( szSelectedClient );
 			bNeedUpdate = true;
 		}
 		else
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage( 
+			Singleton<IMPToUIManager>()->AddUIMessage(
 				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_FRIEND ) );
 		}
 	}
@@ -287,14 +287,14 @@ bool CInterfaceMPLobby::OnClientInfoClose( const bool bApply )
 	{
 		if ( bIgnoreOld )
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage( 
+			Singleton<IMPToUIManager>()->AddUIMessage(
 				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_REMOVE_IGNORE ) );
 			chatIgnores.erase( szSelectedClient );
 			bNeedUpdate = true;
 		}
 		else
 		{
-			Singleton<IMPToUIManager>()->AddUIMessage( 
+			Singleton<IMPToUIManager>()->AddUIMessage(
 				new SMPUIChangeFriendIgnoreStatusMessage( szSelectedClient, SMPUIChangeFriendIgnoreStatusMessage::EA_ADD_IGNORE ) );
 			chatIgnores[szSelectedClient] = new CClientListData( szSelectedClient, EMPS_OFFLINE );
 			bNeedUpdate = true;
@@ -465,7 +465,7 @@ bool CInterfaceMPLobby::OnClientSelected()
 			pPostMessage->SetState( 0 );
 		return true;
 	}
-	
+
 	return true;
 }
 

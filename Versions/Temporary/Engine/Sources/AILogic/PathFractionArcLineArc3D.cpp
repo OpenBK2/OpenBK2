@@ -13,7 +13,7 @@ REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C81, CPahtFractionArcLineArc3D)
 //	CPahtFractionArcLineArc
 
 
-void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths ) 
+void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 {
 	CPathFractionArc3D *pStartArc = pStart->GetArc();
 	CPathFractionArc3D *pFinishArc = pFinish->GetArc();
@@ -30,7 +30,7 @@ void CPahtFractionArcLineArc3D::GetSimplePath( CPathList *pPaths )
 	}
 }
 
-void CPahtFractionArcLineArc3D::Init( const SPrevPathParams &prevPath, 
+void CPahtFractionArcLineArc3D::Init( const SPrevPathParams &prevPath,
 																	 const CVec3 &x1, const CVec3 &v1,
 																	 const float fR0, const float fR1 )
 {
@@ -61,7 +61,7 @@ void CPahtFractionArcLineArc3D::Init( const CVec3 &x0, const CVec3 &x1,			// coo
 	pFinish->Init( x1, -v1, vForwardArcFinish, r1 );	// backward, ignore speed on arc vForwardArcFinish
 	CVec3 vBackArcFinish = pFinish->GetArc() ? pFinish->GetArc()->GetEndPoint() : pFinish->GetLine()->GetStartPoint();
 
-	// improved forward 
+	// improved forward
 	pStart->Init( x0, v0, vBackArcFinish, r0 );
 
 	for ( int a = 0; a < 3;  ++a )
@@ -83,7 +83,7 @@ void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &pa
 	float r0( 522.68530f );
 	float r1(	522.68530f	);
 
-	if ( paramsSet.size() == 2 ) 
+	if ( paramsSet.size() == 2 )
 	{
 		x1.x = NStr::ToFloat( NStr::ToMBCS( paramsSet[0] ) );
 		x1.y = NStr::ToFloat( NStr::ToMBCS( paramsSet[1] ) );
@@ -95,7 +95,7 @@ void PlanePathTest( const std::string &szID, const std::vector<std::wstring> &pa
 	CPathList pathList;
 	pPath->GetSimplePath( &pathList );
 	CPtr<CPathFractionComplex> pCP = new CPathFractionComplex( pathList );
-	
+
 	const float fAtom = 30;
 	float fPathLenght = pCP->GetLength();
 	std::vector<CVec3> points;

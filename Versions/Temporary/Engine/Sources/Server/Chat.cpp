@@ -11,7 +11,7 @@
 
 std::wstring CChatLobby::wszWelcomeText;
 
-CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName ) 
+CChatLobby::CChatLobby( CClients *_pClients, const std::string& _szCfgFileName )
 	: pClients( _pClients ), szCfgFile( _szCfgFileName )
 {
 	Initialize();
@@ -57,7 +57,7 @@ bool CChatLobby::Segment()
 	if ( nTime < nLastRefreshTime + nRefreshTime )
 		return true;
 	nLastRefreshTime = nTime;
-	
+
 	DeleteOfflineClients();
 
 	return true;
@@ -166,7 +166,7 @@ bool CChatLobby::ProcessChatChannelPacket( CChatChannelPacket *pPacket )
 {
 	const int nID = pPacket->nClientID;
 	const std::string &szChannelName = pPacket->szChannelName;
-	if ( szChannelName == "" ) 
+	if ( szChannelName == "" )
 		return true;
 
 	if ( channelClients.find( szChannelName ) == channelClients.end() )
@@ -282,7 +282,7 @@ bool CChatLobby::ProcessChatChannelByNickPacket( CChatChannelByNickPacket *pPack
 	return true;
 }
 
-void CChatLobby::NotifyClientJoinChannel( const int nID, const std::string &szChannelName ) 
+void CChatLobby::NotifyClientJoinChannel( const int nID, const std::string &szChannelName )
 {
 	const std::list<int> &clientsList = channelClients[szChannelName];
 	std::list<SIDNickPair> listToSend;
@@ -313,7 +313,7 @@ void CChatLobby::NotifyClientJoinChannel( const int nID, const std::string &szCh
 
 }
 
-void CChatLobby::NotifyClientLeaveChannel( const int nID, const std::string &szChannelName ) 
+void CChatLobby::NotifyClientLeaveChannel( const int nID, const std::string &szChannelName )
 {
 	std::string szNick = clientNicks[ nID ];
 	clientNicks.erase( nID );
@@ -339,7 +339,7 @@ void CChatLobby::NotifyChannelOpened( const std::string &szChannelName )
 	channels.Add( szChannelName );
 }
 
-void CChatLobby::NotifyChannelClosed( const std::string &szChannelName ) 
+void CChatLobby::NotifyChannelClosed( const std::string &szChannelName )
 {
 	channels.Remove( szChannelName );
 }
@@ -386,7 +386,7 @@ void CChatLobby::NotifyFriends( const int nClientID, const EChatStatus eStatus, 
 			int nNotifierID;
 			if ( !pClients->GetClientID( szNotifierName, &nNotifierID ) )
 				eChatStatus = OFFLINE;
-			else 
+			else
 			{
 				if ( clientChannel.find( nNotifierID ) != clientChannel.end() )
 					eChatStatus = ONLINE;

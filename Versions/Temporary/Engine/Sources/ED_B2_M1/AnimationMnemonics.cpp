@@ -112,7 +112,7 @@ NDb::EAnimationType CMayaAnimationMnemonics::Get( const std::string &rszMnemonic
 		{
 			if ( pnNumber )
 			{
-				if ( nPos != -1 ) 
+				if ( nPos != -1 )
 				{
 					const std::string szNumber = rszMnemonicType.substr( nPos );
 
@@ -142,6 +142,6 @@ NDb::EAnimationType CMayaAnimationMnemonics::Get( const std::string &rszMnemonic
 CMayaAnimationMnemonics typeMayaAnimationMnemonics;
 CAnimationMnemonics typeAnimationMnemonics;
 
-// basement storage  
+// basement storage
 
 

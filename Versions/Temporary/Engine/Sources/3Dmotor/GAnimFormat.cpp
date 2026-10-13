@@ -6,10 +6,10 @@
 namespace NAnimation
 {
 
-void CGrannyFileInfo::InitMe() 
-{ 
-	if ( pFile ) 
-		pData = GrannyGetFileInfo( pFile ); 
+void CGrannyFileInfo::InitMe()
+{
+	if ( pFile )
+		pData = GrannyGetFileInfo( pFile );
 	else
 		pData = 0;
 }

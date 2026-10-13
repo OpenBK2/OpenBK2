@@ -36,7 +36,7 @@ bool GetDumpFlag()
 }
 
 class CLightmapTextureCache;
-class CLMRegion : 
+class CLMRegion :
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CLMRegion>
 {
 	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CLMRegion> CParent;
@@ -159,7 +159,7 @@ void CLightmapTexture::Recalc()
 
 	pValue = NGfx::MakeTexture( cTex.GetSizeX(), cTex.GetSizeY(), 1, NGfx::SPixel8888::ID, NGfx::REGULAR, NGfx::CLAMP );
 	NGfx::CTextureLock<NGfx::SPixel8888> t( pValue, 0, NGfx::INPLACE );
-	
+
 	if ( bChessLM )
 	{
 		for ( int y = 0; y < t.GetSizeY(); ++y )
@@ -220,19 +220,19 @@ void CLMGeometryGen::Recalc()
 		pValue = 0;
 		return;
 	}
-	
+
 	pValue = new CObjectInfo;
 	CObjectInfo::SData data, lmData;
 
 	CTPoint<int> lmSize;
 	CGrannyMeshLoader *pML=CDynamicCast<CGrannyMeshLoader>( pSrc.GetPtr() );
-	
+
 	if ( pML != 0 )
-	{		
+	{
 		SPartAndSkeletonKey key = pML->GetKey();
 		key.nLightMapped = 0;
 		CDGPtr<CGrannyMeshLoader> pML2 = GetMeshLoader( key );
-		pML2.Refresh();		
+		pML2.Refresh();
 		MakeSData( &data, *pML2->GetValue() );
 
 		//ASSERT ( pML2->GetValue()->b
@@ -243,7 +243,7 @@ void CLMGeometryGen::Recalc()
 		ASSERT ( 0 )
 		MakeSData( &data, *p );
 	}
-	
+
 	if ( bLMCalc )
 	{
 

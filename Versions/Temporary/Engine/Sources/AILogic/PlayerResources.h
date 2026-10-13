@@ -39,8 +39,8 @@ class CPlayerResourcesTracker
 	};
 	vector<SReinforcementInfo> reinforcementInfo;			// reinforcements by type (EReinforcementType)
 
-	typedef hash_map<int, SPoint> CPoints;	
-	typedef hash_map<int, CPoints> CFactories; 
+	typedef hash_map<int, SPoint> CPoints;
+	typedef hash_map<int, CPoints> CFactories;
 
 	CFactories factories;
 
@@ -51,19 +51,19 @@ class CPlayerResourcesTracker
 	int nPlayer;
 
 	CArray2D<int>	unitAvailability;
-	
+
 	static float GetReinfPrice( const NDb::SReinforcement *pReinf );
 
 	void BalanceReinfAdd( const NDb::SReinforcement *pReinf );
 	void BalanceReinfSubtract( const NDb::SReinforcement *pReinf );
-	
-	
+
+
 	void UpdateEntry( const SReinforcementInfo &entry, const int nFactoryID, const int nPositionID, const bool bEnabled ) const;
 	pair<int,int> GetFactoryPointByType( const NDb::EReinforcementType eType );
 public:
 
 	CPlayerResourcesTracker() : nPlayer( -1 ), fMaxPoints( 0 ), fCurrentPoints( 0 ), fPointsOrdered( 0 ), fMaxPointsToOrder( 0 ) {}
-	
+
 	void Init( const int nPlayerIndex, const NDb::SMapPlayerInfo &playerInfo );
 	// register available reinforcement type
 	void AddAvailReinforcementType( const int nFactoryID, const int nPositionID, const NDb::EReinforcementType eType );
@@ -89,7 +89,7 @@ public:
 	// client updates
 	void Update( const int nFactoryID, const int nPositionID ) const;
 	void Update() const;
-	
+
 	int operator&( IBinSaver &saver );
 };
 

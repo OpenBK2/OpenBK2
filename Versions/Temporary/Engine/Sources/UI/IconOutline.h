@@ -55,9 +55,9 @@ struct SFormattingInfo
 			: type(ELEM_PICTURE), pTexture(_pTexture), vPos(_vPos), vSize(_vSize), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
 		SCmd( const CDBID &_nOutlineType ) : type(ELEM_OUTLINE), nOutlineType(_nOutlineType), vPos(0,0), vSize(0,0), dwColor(0), nFlags(0), nChainX(-1) {}
 		SCmd( uint32_t _dwColor ) : type(ELEM_GRAY_FILTER), vPos(0,0), vSize(0,0), dwColor(_dwColor), nFlags(0), nChainX(-1) {}
-		bool operator==( const SCmd &a ) const 
-		{ 
-			return szText == a.szText && vPos == a.vPos && vSize == a.vSize && dwColor == a.dwColor && 
+		bool operator==( const SCmd &a ) const
+		{
+			return szText == a.szText && vPos == a.vPos && vSize == a.vSize && dwColor == a.dwColor &&
 				pTexture == a.pTexture && nOutlineType == a.nOutlineType && nFlags == a.nFlags && nChainX == a.nChainX &&
 				type == a.type;
 		}
@@ -94,7 +94,7 @@ class CIconOutliner : public CPtrFuncBase<NGfx::CTexture>
 
 public:
 	CIconOutliner( CDBID nOutlineType = CDBID(), NGfx::ETextureUsage _eUsage=NGfx::TEXTURE_2D, const CTPoint<int> &size = CTPoint<int>(0,0) );
-	
+
 	const CTPoint<int> &GetSize() { return size; };
 	void SetFormat( const SFormattingInfo &_fmt );
 	void SetText( const std::wstring &wszText )

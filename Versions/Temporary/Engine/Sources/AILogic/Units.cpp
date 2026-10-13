@@ -37,13 +37,13 @@ const bool CUnits::IsUnitInCell( const int nUnitID ) const
 void CUnits::Init()
 {
   nUnitsOfType.resize( 3 );
-	
+
 	units.IncreaseListsNum( 3 + 1 );
 	posUnitInCell.resize( SConsts::AI_START_VECTOR_SIZE );
-	
+
 	nBigCellsSizeX = GetAIMap()->GetSizeX() / SConsts::BIG_CELL_COEFF;
 	nBigCellsSizeY = GetAIMap()->GetSizeY() / SConsts::BIG_CELL_COEFF;
-	
+
 	nUnitsCell.SetSizes( nBigCellsSizeX, nBigCellsSizeY );
 	nUnitsCell.FillZero();
 
@@ -51,7 +51,7 @@ void CUnits::Init()
 	nCell.FillZero();
 
 	sizes.resize( 3, 0 );
-	
+
 	for ( int nVis = 0; nVis < 2; ++nVis )
 	{
 		for ( int nCellLevel = 0; nCellLevel < N_CELLS_LEVELS; ++nCellLevel )
@@ -71,7 +71,7 @@ void CUnits::Init()
 			}
 		}
 	}
-	
+
 	unitsInCells.resize( 2 );
 }
 
@@ -153,7 +153,7 @@ void CUnits::AddUnitToConcreteCell( CAIUnit *pUnit, const SVector &cell, bool bW
 	// если юнит единственный в свой ячейке, записать ячейку в список
 	if ( ++nUnitsCell[cell.y][cell.x] == 1 )
 		nCell[cell.y][cell.x] = cellsIds.Get();
-	
+
 	// добавить юнит в список стоящих на этой ячейке
 	const int newId = nCell[cell.y][cell.x] * 2 * 3 + ( 2 * pUnit->GetParty() + uint8_t( pUnit->GetStats()->IsInfantry() ) ) + 1;
 
@@ -276,7 +276,7 @@ void CUnits::DeleteUnitFromMap( CAIUnit *pUnit )
 	}
 
 	const int nUnitUniqueID = pUnit->GetUniqueId();
-	
+
 	CIDsRemap::const_iterator pos = idsRemap.find( nUnitUniqueID );
 	if ( pos == idsRemap.end() )
 		return;
@@ -321,20 +321,20 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 	const SVector newBigCell = AICellsTiles::GetBigCell( newPos );
 	const bool bInOldCell = IsUnitInCell( nUnitID );
 
-	NI_ASSERT( !bInOldCell || IsBigCellInside( oldBigCell ), 
+	NI_ASSERT( !bInOldCell || IsBigCellInside( oldBigCell ),
 								fmt::format( "Wrong old big cell ({},{})", oldBigCell.x, oldBigCell.y ) );
 	if ( oldBigCell != newBigCell || !bInOldCell )
 	{
 		//DEBUG{
 		/*
 #ifndef _FINALRELEASE
-		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
+		CONSOLE_BUFFER_LOG( CONSOLE_STREAM_DEBUG_WINDOW + 1,
 			fmt::format( "Unit {} ChangedPosition ({}, {}) > ({}, {}) TIME {}", pUnit->GetUniqueId(), oldBigCell.x, oldBigCell.y, newBigCell.x, newBigCell.y, curTime ) );
 #endif
 			*/
 		//DEBUG}
 
-		if ( bInOldCell ) 
+		if ( bInOldCell )
 			DelUnitFromCell( pUnit, false );
 
 		AddUnitToCell( pUnit, newPos, false );
@@ -371,7 +371,7 @@ void CUnits::UnitChangedPosition( CAIUnit *pUnit, const CVec2 &newPos )
 }
 
 CAIUnit* CUnits::operator[]( const int id )
-{ 
+{
 	if ( id == 0 /*|| !units.GetEl( id )->IsRefValid() */)
 		return 0;			// Cheat to avoid assert for trains
 	CAIUnit * pUnit = units.GetEl( id );
@@ -384,14 +384,14 @@ CAIUnit* CUnits::operator[]( const int id )
 	if ( !pUnit->IsRefValid() )
 		return 0;
 
-	return pUnit; 
+	return pUnit;
 }
 
 void CUnits::ChangePlayer( CAIUnit *pUnit, const uint8_t cNewPlayer )
 {
 	if ( pUnit && pUnit->IsAlive() && pUnit->GetPlayer() != cNewPlayer )
 	{
-		// чтобы не удалился		
+		// чтобы не удалился
 		CObj<CAIUnit> pSaveUnit = pUnit;
 		DeleteUnitFromMap( pUnit );
 		FullUnitDelete( pUnit );

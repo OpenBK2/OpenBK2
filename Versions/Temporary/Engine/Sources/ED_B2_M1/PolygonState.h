@@ -13,9 +13,9 @@ class CPolygonSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CPolygonState;
-	
+
 	class CPolygonState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CPolygonSelectState() : pParentState( 0 )
   {
@@ -37,9 +37,9 @@ class CPolygonEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CPolygonState;
-	
+
 	class CPolygonState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CPolygonEditState() : pParentState( 0 )
   {
@@ -63,9 +63,9 @@ class CPolygonAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CPolygonState;
-	
+
 	class CPolygonState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CPolygonAddState() : pParentState( 0 )
   {
@@ -138,7 +138,7 @@ protected:
 	CPolygonIDList pickPolygonIDList;							// список ID выделенных полигонов
 	CControlPointList controlPointList;						// контрольные точки полигона при добавлении,
 																								// сохраняем начальное положение контрольных точек при редактировании
-	int nSelectedIndex;														// текущий выделенный полигон (индекс его ID в массиве выделенных полигонов) 
+	int nSelectedIndex;														// текущий выделенный полигон (индекс его ID в массиве выделенных полигонов)
 	int nSelectedControlPoint;										// текущая выделенная точка в полигоне
 	CMapInfoStoreInputState *pStoreInputState;
 	CSceneDrawTool sceneDrawTool;
@@ -152,7 +152,7 @@ protected:
 		}
 	}
 	inline int GetSelectedPolygonID()
-	{ 
+	{
 		if ( ( nSelectedIndex < 0 ) || ( nSelectedIndex >= pickPolygonIDList.size() ) )
 		{
 			return INVALID_NODE_ID;
@@ -206,9 +206,9 @@ public:
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CPolygonState(): pStoreInputState == 0" ) );
-		
+
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		
+
 		CPolygonSelectState *pPolygonSelectState = new CPolygonSelectState( this );
 		nStateIndex = AddInputState( pPolygonSelectState );
 		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CPolygonState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
@@ -216,7 +216,7 @@ public:
 		CPolygonEditState *pPolygonEditState = new CPolygonEditState( this );
 		nStateIndex = AddInputState( pPolygonEditState );
 		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
-		
+
 		CPolygonAddState *pPolygonAddState = new CPolygonAddState( this );
 		nStateIndex = AddInputState( pPolygonAddState );
 		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CPolygonState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );

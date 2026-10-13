@@ -4,7 +4,7 @@
 
 class CBasePathUnit;
 // специфический путь для юнита, когда он выезжает из TankPit.
-// идя по этому пути танк не поворачивает. если он на что-либо натыкается, то он должен 
+// идя по этому пути танк не поворачивает. если он на что-либо натыкается, то он должен
 // остановиться.
 class CTankPitPath : public ISmoothPath
 {
@@ -22,7 +22,7 @@ public:
 	CTankPitPath( CBasePathUnit *pUnit, const class CVec2 &vStartPoint, const class CVec2 &vEndPoint );
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );
-	
+
 	virtual const CVec2& GetFinishPoint() const { return vEndPoint; }
 //ненужные функции
 	virtual bool Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )

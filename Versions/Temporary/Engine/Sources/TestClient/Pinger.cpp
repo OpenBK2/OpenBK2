@@ -27,7 +27,7 @@ CPinger::CPinger( const int &nPeriod, const std::string &_szName, const std::str
 
 bool CPinger::Segment()
 {
-	if ( pServerClient ) 
+	if ( pServerClient )
 	{
 		pServerClient->Segment();
 

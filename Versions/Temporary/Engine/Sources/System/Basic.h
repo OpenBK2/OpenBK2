@@ -16,7 +16,7 @@
 // влияния внешних обстоятельств)
 //   Ограничения - иногда может потребоваться в .cpp файле использовать BASIC_REGISTER_CLASS()
 // - при использовании указателей на forward declared classes
-// Нельзя переопределять operator new, так как удалятся объекты будут с помощью стандартного 
+// Нельзя переопределять operator new, так как удалятся объекты будут с помощью стандартного
 // operator`a delete (из-за delete this)
 
 #pragma warning(disable:4250)
@@ -258,7 +258,7 @@ struct SPtrTest
 {
 	CObjectBase *pTest = nullptr;
 	SPtrTest( CObjectBase *_pTest ): pTest(_pTest) {}
-	template <class T,class T1> 
+	template <class T,class T1>
 		bool operator()( const CPtrBase<T,T1> &a ) const { return a == pTest; }
 };
 

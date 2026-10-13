@@ -5,7 +5,7 @@
 
 #include <zconf.h>
 
-CReinforcementTypeMnemonics::CReinforcementTypeMnemonics() : 
+CReinforcementTypeMnemonics::CReinforcementTypeMnemonics() :
 CMnemonicsCollector<int>( NDb::_RT_NONE, "_RT_NONE" )
 {
 	Insert( NDb::RT_MAIN_INFANTRY, "RT_MAIN_INFANTRY" );

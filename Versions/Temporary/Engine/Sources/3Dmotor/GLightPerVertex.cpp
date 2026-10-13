@@ -95,11 +95,11 @@ void SPerVertexLightState::SetWarFogBlend( float _fBlend )
 	fWarFogBlend = _fBlend;
 }
 
-float SPerVertexLightState::GetWarFogBlend() const 
-{ 
-	if ( warFogNew.GetSizeX() <= 1 ) 
-		return 1; 
-	return bWarFogUseOnlyNew ? 1 : fWarFogBlend; 
+float SPerVertexLightState::GetWarFogBlend() const
+{
+	if ( warFogNew.GetSizeX() <= 1 )
+		return 1;
+	return bWarFogUseOnlyNew ? 1 : fWarFogBlend;
 }
 
 bool SPerVertexLightState::SetWarFog( const CArray2D<unsigned char> &_fog, float _fScale )

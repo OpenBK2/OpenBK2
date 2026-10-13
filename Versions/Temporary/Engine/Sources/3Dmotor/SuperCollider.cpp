@@ -98,7 +98,7 @@ static void ClosestPointOnSegment( CVec3 *pRes, const CVec3 &p, const CVec3 &a, 
 {
 	// a-b is the line, p the point in question
 	CVec3 c = p - a;
-	const CVec3 &v = ba; 
+	const CVec3 &v = ba;
 	float d = fabs2(v);
 	if ( d < 1e-6f )
 	{
@@ -142,7 +142,7 @@ float CSuperCollider::CollideSphereTriangle( const SSphere &sphere, const SVeloc
 		CalcAplusBC( &planePoint, spherePoint, -fDistToPlane, plane.n ); // embedded sphere
 	else
 		CalcAplusBC( &planePoint, spherePoint, -(fDistToPlane / scal), velocity.normVel );
-	
+
 	const CVec3 &v0 = points[tri.n1];
 	const CVec3 &v1 = points[tri.n2];
 	const CVec3 &v2 = points[tri.n3];
@@ -231,7 +231,7 @@ void CSuperCollider::AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_
 		tris.push_back( tout );
 		trisSegments.push_back( tsegout );
 		ASSERT( tris.size() == trisSegments.size() );
-		volume.Add( bounds, nTri );			
+		volume.Add( bounds, nTri );
 	}
 }
 

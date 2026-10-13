@@ -17,7 +17,7 @@ public:
 	CRevealCircle( const CCircle &_circle ) : circle( _circle ) { SetUniqueIdForObjects(); }
 
 	virtual void GetRevealCircle( CCircle *pCircle ) const { *pCircle = circle; }
-	
+
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
@@ -27,7 +27,7 @@ class CAIUnit;
 class CAntiArtillery : public CLinkObject
 {
 	OBJECT_BASIC_METHODS( CAntiArtillery );
-	
+
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fMaxRadius = {};
 	int nParty = {};
@@ -44,22 +44,22 @@ class CAntiArtillery : public CLinkObject
 	std::vector<uint8_t> nHeardShots;
 	std::vector<CVec2> lastRevealCenter;
 	CPtr<CAIUnit> pOwner;
-public: 
-	int operator&( IBinSaver &f ) 
-	{ 
+public:
+	int operator&( IBinSaver &f )
+	{
 		if ( !f.IsChecksum() )
 		{
-			f.Add(1,( CLinkObject*)this); f.Add(2,&fMaxRadius); f.Add(3,&nParty); f.Add(4,&lastScan); f.Add(5,&lastShotTime); f.Add(6,&lastRevealCircleTime); f.Add(7,&bIsAA); f.Add(8,&closestEnemyDist2); f.Add(9,&lastHeardPos); f.Add(10,&nHeardShots); f.Add(11,&lastRevealCenter); 
+			f.Add(1,( CLinkObject*)this); f.Add(2,&fMaxRadius); f.Add(3,&nParty); f.Add(4,&lastScan); f.Add(5,&lastShotTime); f.Add(6,&lastRevealCircleTime); f.Add(7,&bIsAA); f.Add(8,&closestEnemyDist2); f.Add(9,&lastHeardPos); f.Add(10,&nHeardShots); f.Add(11,&lastRevealCenter);
 			f.Add( 12, &pOwner );
 		}
-		return 0; 
+		return 0;
 	}
 	//
 	void Scan( const CVec2 &center );
 public:
 	CAntiArtillery() { }
 	explicit CAntiArtillery( class CAIUnit *pOwner );
-	
+
 	void SetParty( const int _nParty ) { nParty = _nParty; }
 
 	void Init( const float fMaxRadius, const int nParty );
@@ -76,7 +76,7 @@ public:
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const { pTiles->clear(); }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { return false; }
-	
+
 	//
 	friend struct SAntiArtillerySort;
 	friend class CAntiArtilleryManager;

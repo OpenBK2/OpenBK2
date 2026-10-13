@@ -51,7 +51,7 @@ public:
 	SSimpleBoneMutator() : bEnabled(false) {}
 
 	void GetAtTime( const STime &t, CQuat *qRot, CVec3 *vPos );
-	void AddBoneTimePose( const STime &tEnd, 
+	void AddBoneTimePose( const STime &tEnd,
 		const CQuat &finalRot, const CVec3 &finalPos );
 	void Clear();
 	void Enable( bool bEnable )
@@ -185,7 +185,7 @@ public:
 	virtual float GetChannelValue( int nChannelIndex );
 
 	// ISkeletonAnimator
-	virtual SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h, 
+	virtual SAnimID AddAnimation( STime tStartTime, const SAnimHandle &h,
 		bool bLoop, float fSpeed = 1.0f, float fWeight = 1.0f, STime tEndTime = -1 );
 
 	virtual void ClearAllAnimations();
@@ -206,9 +206,9 @@ public:
 	virtual void SetGlobalTransform( CFuncBase<SFBTransform> *pTransform );
 	virtual void SetGlobMoveAnimation( const SAnimID animID, const float fMovementSpeed );
 
-	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart, 
+	virtual void SetBoneMutator( const char *pszBoneName, const STime &tStart,
 		const std::vector<SDesiredBoneMove> &boneMutation );
-	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart, 
+	virtual void SetBoneMutator( const int nBoneIndex, const STime &tStart,
 		const std::vector<SDesiredBoneMove> &boneMutation );
 	virtual void SetSpecialMutator( IAnimMutator *pMutator );
 
@@ -217,7 +217,7 @@ public:
 	virtual bool GetBonePosition( const char *pszBoneName, SHMatrix *pRes );
 	virtual bool GetBonePosition( int nBoneIndex, SHMatrix *pRes );
 	virtual bool GetLocalBonePosition( const char *pszBoneName, SHMatrix *pLocalPos );
-	
+
 	virtual CFuncBase<SFBTransform>* CreateTransform( const std::string &szBoneName );
 	virtual CFuncBase<SFBTransform>* CreateTransform( int nBoneIndex );
 

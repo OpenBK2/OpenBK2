@@ -29,7 +29,7 @@ void PlayRollerAnim( std::vector<IPlayer*> &rollers, int _nStart, int _nEnd, flo
 	std::vector<int> frameStart;
 	std::vector<int> frameEnd;
 	std::vector<int> frameSkip;
-	
+
 	digStart.resize( rollers.size() );
 	digEnd.resize( rollers.size() );
 	frameStart.resize( rollers.size() );
@@ -60,7 +60,7 @@ void PlayRollerAnim( std::vector<IPlayer*> &rollers, int _nStart, int _nEnd, flo
 		}
 		else if ( digStart[i] > digEnd[i] )
 		{
-			frameStart[i] = digStart[i] + 1;			
+			frameStart[i] = digStart[i] + 1;
 			frameEnd[i] = digEnd[i] + 11;
 		}
 		else

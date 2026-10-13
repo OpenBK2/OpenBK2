@@ -11,12 +11,12 @@
 
 #include <fmt/format.h>
 
-const float TEXTURE_POINT_X = 4.0f; 
+const float TEXTURE_POINT_X = 4.0f;
 const float TEXTURE_POINT_Y = 7.0f;
 
 // CInterfaceMissionBriefing
 
-CInterfaceMissionBriefing::CInterfaceMissionBriefing() : 
+CInterfaceMissionBriefing::CInterfaceMissionBriefing() :
 	CInterfaceScreenBase( "MissionBriefing", "mission_briefing" )
 {
 }
@@ -27,7 +27,7 @@ bool CInterfaceMissionBriefing::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -44,9 +44,9 @@ void CInterfaceMissionBriefing::MakeInterior()
 	pMissionDescPanel = GetChildChecked<IWindow>( pMainWnd, "LeftPanel", true );
 	pMinimapPanel = GetChildChecked<IWindow>( pMainWnd, "RightTopPanel", true );
 	pObjectivesListPanel = GetChildChecked<IWindow>( pMainWnd, "RightBottomPanel", true );
-	
+
 	pHeaderView = GetChildChecked<ITextView>( pTopPanel, "HeaderView", true );
-	
+
 	if ( pMapInfo )
 	{
 		std::wstring wszName;
@@ -60,7 +60,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 		if ( pHeaderView )
 			pHeaderView->SetText( pHeaderView->GetDBText() + wszName );
 	}
-	
+
 	pMissionDescCont = GetChildChecked<IScrollableContainer>( pMissionDescPanel, "MissionDescCont", true );
 	pMissionDescView = GetChildChecked<ITextView>( pMissionDescPanel, "MissionDescView", true );
 
@@ -72,15 +72,15 @@ void CInterfaceMissionBriefing::MakeInterior()
 		if ( pMissionDescView )
 			pMissionDescView->SetText( pMissionDescView->GetDBText() + wszMissionDesc );
 	}
-	
+
 	if ( pMissionDescCont && pMissionDescView )
 		pMissionDescCont->PushBack( pMissionDescView, false );
-	
+
 	pMinimap = GetChildChecked<IMiniMap>( pMinimapPanel, "Minimap", true );
 
 	pObjectivesListCont = GetChildChecked<IScrollableContainer>( pObjectivesListPanel, "ObjectivesListCont", true );
 	pObjectivesView = GetChildChecked<ITextView>( pObjectivesListPanel, "ObjectivesListView", true );
-	
+
 	if ( pMapInfo )
 	{
 		std::wstring wszDesc;
@@ -89,7 +89,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 		if ( pObjectivesView )
 			pObjectivesView->SetText( pObjectivesView->GetDBText() + wszDesc );
 	}
-	
+
 	if ( pObjectivesListCont && pObjectivesView )
 		pObjectivesListCont->PushBack( pObjectivesView, false );
 
@@ -105,7 +105,7 @@ void CInterfaceMissionBriefing::MakeInterior()
 		pMinimap->SetLoadingMapParams( x, y );
 		pMinimap->SetTexture( pTexture );
 	}
-	
+
 	if ( pMainWnd )
 		SetMainWindowTexture( pMainWnd, InterfaceState()->GetMenuBackgroundTexture() );
 }

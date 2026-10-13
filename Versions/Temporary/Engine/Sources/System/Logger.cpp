@@ -80,7 +80,7 @@ ILogDumper *CreateAssertDumper()
 
 // ************************************************************************************************************************ //
 // **
-// ** logger 
+// ** logger
 // **
 // **
 // **
@@ -137,7 +137,7 @@ CLogger &CLogger::operator<<( const std::string &szText )
 	return ( *this << szText.c_str() );
 }
 
-CLogger &CLogger::operator<<( const wchar_t *pwszText ) 
+CLogger &CLogger::operator<<( const wchar_t *pwszText )
 {
 	wszLogBuffer += pwszText;
 	return *this;

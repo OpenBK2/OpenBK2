@@ -47,7 +47,7 @@ namespace NRandom
 		if ( s_bLogRandomCalls )
 		{
 			const auto message = fmt::format("RandomCall {}", nRandomCalls);
-			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 2, 
+			Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 2,
 				 message.c_str());
 			DebugTrace( "RandomCall %i", nRandomCalls );
 			++nRandomCalls;
@@ -164,9 +164,9 @@ namespace NRandom
 void NRandom::Isaac( SRandData *pRnd )
 {
 	uint32_t a, b, x, y, *m, *mm, *m2, *r, *mend;
-	mm = pRnd->randmem; 
+	mm = pRnd->randmem;
 	r = pRnd->randrsl;
-	a = pRnd->randa; 
+	a = pRnd->randa;
 	b = pRnd->randb + ( ++pRnd->randc );
 	for ( m = mm, mend = m2 = m+(RANDSIZ/2); m<mend; )
 	{
@@ -182,7 +182,7 @@ void NRandom::Isaac( SRandData *pRnd )
 		rngstep( a<<2 , a, b, mm, m, m2, r, x );
 		rngstep( a>>16, a, b, mm, m, m2, r, x );
 	}
-	pRnd->randb = b; 
+	pRnd->randb = b;
 	pRnd->randa = a;
 }
 
@@ -256,7 +256,7 @@ void CRandomGenSeed::SFLB0_InitVariables()
 	// fill in the first set of results
 	NRandom::Isaac( &rnd );
 	// prepare to use the first set of results
-	rnd.randcnt = RANDSIZ;		
+	rnd.randcnt = RANDSIZ;
 }
 
 void CRandomGenSeed::Init()

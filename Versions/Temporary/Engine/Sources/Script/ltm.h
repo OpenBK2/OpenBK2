@@ -50,15 +50,15 @@ int luaT_tag (lua_State *L, const TObject *o);
 
 inline int& luaT_gettm( lua_State *L, int tag, int event ) { return L->TMtable[tag].info.method[event]; }
 inline int luaT_gettmindex( lua_State *L, const TObject *o, int e ) { return luaT_gettm( L, luaT_tag( L, o ), e ); }
-inline Closure *luaT_gettm( lua_State *L, const TObject *o, int e )  
-{ 
+inline Closure *luaT_gettm( lua_State *L, const TObject *o, int e )
+{
 	int nCL = luaT_gettmindex( L, o, e );
 	if ( nCL == STK_NULL )
 		return NULL;
 	return L->closures[ nCL ];
 }
 
-inline bool IsValidTag( lua_State *L, int nTag ) 
+inline bool IsValidTag( lua_State *L, int nTag )
 {
 	return nTag >= NUM_TAGS && nTag < L->TMtable.size();
 }

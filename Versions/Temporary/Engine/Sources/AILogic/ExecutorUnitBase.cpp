@@ -10,7 +10,7 @@ extern CEventUpdater updater;
 CExecutorUnitBase::CExecutorUnitBase( const EExecutorTypeID _eTypeID, const int _nNextTime, const EUnitSpecialAbility _eAbility )
 : timeLastUpdate( curTime ), timeDisableGroup( curTime ), eAbility( _eAbility ), state( EASS_READY_TO_ON ), stateBeforeDisable( EASS_DISABLE ),
 	CExecutor( _eTypeID, _nNextTime ), fSpeedCoeff (1.0f), pAbilityDesc(0), fOldProgress( -1.0f )
-{  
+{
 
 }
 
@@ -91,7 +91,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 			}
 			else
 				UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
-		}	
+		}
 
 		break;
 	case EASS_OFF:
@@ -119,7 +119,7 @@ bool CExecutorUnitBase::UpdateAbilityState()
 						UpdateProgress( state, float(nTimePassed) / float(nTimeNeeded) );
 				}
 			}
-		}	
+		}
 
 		break;
 	case EASS_SWITCHING_ON:
@@ -303,13 +303,13 @@ void CExecutorUnitBase::ForceActivate( )
 void CExecutorUnitBase::ForceDeactivate( )
 {
 	fOldProgress = -1.0f;
-	if ( state.eState == EASS_ACTIVE ) 
+	if ( state.eState == EASS_ACTIVE )
 	{
 		SwitchingOffStart();
 		timeLastUpdate = curTime;
 		state.eState = EASS_SWITCHING_OFF;
 	}
-	else if ( state.eState == EASS_SWITCHING_ON ) 
+	else if ( state.eState == EASS_SWITCHING_ON )
 	{
 		timeLastUpdate = curTime;
 		state.eState = EASS_READY_TO_ON;

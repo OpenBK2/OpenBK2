@@ -7,9 +7,9 @@ class CExecutorWatchForEnemyUnloadPassangers : public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorWatchForEnemyUnloadPassangers)
 	ZDATA_(CExecutor)
-	CPtr<CMilitaryCar> pUnit;  
+	CPtr<CMilitaryCar> pUnit;
 
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pUnit); return 0; }
 	bool IsExecutorValidInternal() const;
 public:

@@ -15,8 +15,8 @@
 //
 // http://www.acm.org/jgt/papers/MollerTrumbore97/code.html
 //
-int IntersectTriangle(	float *t, 
-												float *pU, 
+int IntersectTriangle(	float *t,
+												float *pU,
 												float *pV,
 												const CVec3 &rvOrig,
 												const CVec3 &rvDir,
@@ -26,11 +26,11 @@ int IntersectTriangle(	float *t,
 {
    /* find vectors for two edges sharing vert0 */
    CVec3 vEdge1 = (rvVert1 - rvVert0);
-	 CVec3 vEdge2 = (rvVert2 - rvVert0);	
-   
+	 CVec3 vEdge2 = (rvVert2 - rvVert0);
+
    /* begin calculating determinant - also used to calculate U parameter */
 	 CVec3 vPvec = rvDir ^ vEdge2;
-   
+
    /* if determinant is near zero, ray lies in plane of triangle */
    float fDet = vEdge1 * vPvec;
 
@@ -48,8 +48,8 @@ int IntersectTriangle(	float *t,
      return 0;
 
    /* prepare to test V parameter */
-	 CVec3 vQvec = vTvec ^ vEdge1;	
-   
+	 CVec3 vQvec = vTvec ^ vEdge1;
+
    /* calculate V parameter and test bounds */
    *pV = ( rvDir * vQvec ) * fInvDet;
    if (*pV < 0.0 || *pU + *pV > 1.0)
@@ -62,7 +62,7 @@ int IntersectTriangle(	float *t,
 }
 
 static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pSurfacePoint1,
-											const std::vector<STriangleForTrace> &rTrianglesForTrace, 
+											const std::vector<STriangleForTrace> &rTrianglesForTrace,
 											const CVec3 &vRayOrig, const CVec3 vDir )
 {
 	//
@@ -79,7 +79,7 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 		float v = 0;
 		//
 		const STriangleForTrace &rTr = rTrianglesForTrace[k];
-		if ( IntersectTriangle( &t, &u, &v, vRayOrig, vDir, 
+		if ( IntersectTriangle( &t, &u, &v, vRayOrig, vDir,
 				 rTr.vertices[0], rTr.vertices[1], rTr.vertices[2] ) )
 		{
 			CVec3 vIntersPoint = vRayOrig + vDir * t;
@@ -152,7 +152,7 @@ static int TraceCell(	SModelSurfacePoint *pSurfacePoint0, SModelSurfacePoint *pS
 	return nResult;
 }
 
-void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints, 
+void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 											const std::vector<STriangleForTrace> &rTrianglesForTrace,
 											const CVec3 &rvMin, const CVec3 &rvMax,
 											int nNumPointsPerCell )
@@ -187,13 +187,13 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;
-				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_Y ); 
+				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_Y );
 
 				if ( nRes )
 				{
-					if ( nRes & 1 ) 
+					if ( nRes & 1 )
 						pSurfacePoints->push_back( sp0 );
-					if ( nRes & 2 ) 
+					if ( nRes & 2 )
 						pSurfacePoints->push_back( sp1 );
 
 					++nNumPointsFound;
@@ -213,7 +213,7 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 		{
 			CVec3 vCellPos = CVec3( rvMin.x, rvMin.y + (fDy * i), rvMin.z + (fDz * j) );
 			CVec3 vRayOrig = vCellPos;
-	
+
 			int nNumPointsFound = 0;
 			for ( int nCycle = 0; nCycle < N_MAX_CYCLES_NUM; ++nCycle )
 			{
@@ -222,13 +222,13 @@ void TraceTriangles(	std::vector<SModelSurfacePoint> *pSurfacePoints,
 
 				SModelSurfacePoint sp0;
 				SModelSurfacePoint sp1;
-				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_X ); 
+				int nRes = TraceCell(	&sp0, &sp1, rTrianglesForTrace, vRayOrig, V3_AXIS_X );
 
 				if ( nRes )
 				{
-					if ( nRes & 1 ) 
+					if ( nRes & 1 )
 						pSurfacePoints->push_back( sp0 );
-					if ( nRes & 2 ) 
+					if ( nRes & 2 )
 						pSurfacePoints->push_back( sp1 );
 
 					++nNumPointsFound;
@@ -292,7 +292,7 @@ int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_inf
 				{
 					nVertexIndex = *(int*)( &pIndices[ ( nTriIndex * 3 + v ) * nBytesPerIndex ] );
 				}
-				
+
 				granny_uint8 *pVtxData = &pVertices[ nVertexIndex * nVertexSize ];
 				granny_uint8 *pPosData = &pVtxData[ nPositionOffset ];
 				//
@@ -394,7 +394,7 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 	if ( !pFile )
 		return false;
 
-	granny_file_info *pInfo = GrannyGetFileInfo( pFile );				
+	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( !pInfo )
 		return false;
 

@@ -22,7 +22,7 @@ public:
 	ZDATA
 	std::wstring wszText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
-	
+
 	CDifficultyData() {}
 	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
 };
@@ -40,16 +40,16 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
-	
+
 	CDynamicCast<ITextView> pView = pItem->GetSubItem( 0 );
 	NI_VERIFY( pView, "Wrong window", return );
-	
+
 	std::wstring wszText;
 	if ( pData )
 	{
 		CDynamicCast<CDifficultyData> pText = pData;
 		NI_VERIFY( pText, "Wrong data", return );
-		
+
 		wszText = pText->wszText;
 	}
 	pView->SetText( pView->GetDBText() + wszText );
@@ -59,7 +59,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomMissions
 
-CInterfaceCustomMissions::CInterfaceCustomMissions() : 
+CInterfaceCustomMissions::CInterfaceCustomMissions() :
 	CInterfaceScreenBase( "CustomMissions", "custom_missions" )
 {
 }
@@ -70,7 +70,7 @@ bool CInterfaceCustomMissions::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -90,10 +90,10 @@ void CInterfaceCustomMissions::MakeInterior()
 
 	pMissionsListItemTemplate = GetChildChecked<IWindow>( pMissionsListPanel, "MissionsListItem", true );
 	pMissionsListCont = GetChildChecked<IScrollableContainer>( pMissionsListPanel, "MissionsListCont", true );
-	
+
 	if ( pMissionsListItemTemplate )
 		pMissionsListItemTemplate->ShowWindow( false );
-	
+
 	pMissionDescView = GetChildChecked<ITextView>( pMissionDescPanel, "MissionDescView", true );
 	pMissionDescCont = GetChildChecked<IScrollableContainer>( pMissionDescPanel, "MissionDescCont", true );
 	pMissionDescItemHeader = GetChildChecked<IWindow>( pMissionDescPanel, "MissionDescItemHeader", true );
@@ -109,7 +109,7 @@ void CInterfaceCustomMissions::MakeInterior()
 	}
 
 	pMinimap = GetChildChecked<IMiniMap>( pMinimapPanel, "Minimap", true );
-	
+
 	pDifficultyComboBox = GetChildChecked<IComboBox>( pBottomPanel, "Difficulty", true );
 	pPlayBtn = GetChildChecked<IButton>( pBottomPanel, "PlayBtn", true );
 
@@ -124,7 +124,7 @@ void CInterfaceCustomMissions::MakeInterior()
 
 		AddMission( pMapInfo );
 	}
-	
+
 	IWindow *pFirstLineWnd = 0;
 	if ( !missions.empty() )
 		pFirstLineWnd = missions.front().pWnd;
@@ -148,7 +148,7 @@ void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 	mission.pFlagWnd = GetChildChecked<IWindow>( mission.pWnd, "Flag", true );
 	mission.pNameView = GetChildChecked<ITextView>( mission.pWnd, "MissionNameView", true );
 	mission.pSizeView = GetChildChecked<ITextView>( mission.pWnd, "MissionMapSizeView", true );
-	
+
 	const NDb::STexture *pFlag = 0;
 	if ( !pMapInfo->players.empty() )
 	{
@@ -166,14 +166,14 @@ void CInterfaceCustomMissions::AddMission( const NDb::SMapInfo *pMapInfo )
 
 	mission.wszSize = InterfaceState()->GetMapSizeName( pMapInfo );
 	mission.wszSeason = InterfaceState()->GetSeasonName( pMapInfo->eSeason );
-	
+
 	if ( mission.pFlagWnd )
 		mission.pFlagWnd->SetTexture( pFlag );
 	if ( mission.pNameView )
 		mission.pNameView->SetText( mission.pNameView->GetDBText() + mission.wszName );
 	if ( mission.pSizeView )
 		mission.pSizeView->SetText( mission.pSizeView->GetDBText() + mission.wszSize );
-	
+
 	if ( mission.pWnd )
 		mission.pWnd->ShowWindow( true );
 	if ( pMissionsListCont )
@@ -197,14 +197,14 @@ const CInterfaceCustomMissions::SMission* CInterfaceCustomMissions::FindSelected
 		pSelectedWnd = pMissionsListCont->GetSelectedItem();
 	if ( !pSelectedWnd )
 		return 0;
-		
+
 	for ( int i = 0; i < missions.size(); ++i )
 	{
 		const SMission &mission = missions[i];
 		if ( mission.pWnd == pSelectedWnd )
 			return &mission;
 	}
-	
+
 	return 0;
 }
 
@@ -249,7 +249,7 @@ bool CInterfaceCustomMissions::OnPlay()
 bool CInterfaceCustomMissions::OnSelect()
 {
 	UpdateSelection( false );
-	
+
 	return true;
 }
 
@@ -272,7 +272,7 @@ void CInterfaceCustomMissions::MissionStart( const NDb::SMapInfo *pMapInfo )
 		nDifficulty = pDifficultyComboBox->GetSelectedIndex();
 
 	Singleton<IScenarioTracker>()->CustomMissionStart( pMapInfo, nDifficulty, false );
-	
+
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 //	NMainLoop::Command( ML_COMMAND_MISSION, StrFmt( "%s;normal", pMapInfo->GetDBID().ToString().c_str() ) );
 	NMainLoop::Command( ML_COMMAND_MISSION_BRIEFING, "" );
@@ -281,7 +281,7 @@ void CInterfaceCustomMissions::MissionStart( const NDb::SMapInfo *pMapInfo )
 void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 {
 	const SMission *pMission = FindSelected();
-		
+
 	if ( !pMission || !pMission->pWnd )
 	{
 		if ( pMinimap )
@@ -294,10 +294,10 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 			pPlayBtn->Enable( false );
 		if ( pDifficultyComboBox )
 			pDifficultyComboBox->ShowWindow( false );
-			
+
 		return;
 	}
-	
+
 	if ( pMinimap && pMission->pMapInfo )
 	{
 		pMinimap->ShowWindow( true );
@@ -328,7 +328,7 @@ void CInterfaceCustomMissions::UpdateSelection( bool bFirstTime )
 
 	if ( pPlayBtn )
 		pPlayBtn->Enable( true );
-		
+
 	UpdateDifficulty( pMission, bFirstTime );
 }
 
@@ -336,7 +336,7 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 {
 	if ( !pDifficultyComboBox )
 		return;
-		
+
 	const int nOldDifficulty = bFirstTime ? CUSTOM_MISSION_DEFAULT_DIFFICULTY : pDifficultyComboBox->GetSelectedIndex();
 	pDifficultyComboBox->RemoveAllItems();
 
@@ -345,10 +345,10 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 		pDifficultyComboBox->ShowWindow( false );
 		return;
 	}
-	
+
 	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pMission->pMapInfo->customDifficultyLevels;
 
-	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty : 
+	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty :
 		(std::max)( 0, (std::min)( CUSTOM_MISSION_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
 
 	pDifficultyComboBox->ShowWindow( true );
@@ -361,7 +361,7 @@ void CInterfaceCustomMissions::UpdateDifficulty( const SMission *pMission, bool 
 		else
 			pDifficultyComboBox->AddItem( new CDifficultyData( L"******" ) );
 	}
-	
+
 	pDifficultyComboBox->Select( nNewDifficulty );
 }
 

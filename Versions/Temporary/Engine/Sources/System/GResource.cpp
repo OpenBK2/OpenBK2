@@ -71,7 +71,7 @@ CFileResource::CFileResource( const char *pszResName, int nFileID )
 
 CFileResource::CFileResource( const char *pszResName, const SResKey<int> &key )
 : f(	NVFS::GetMainVFS(),
-			DoesFileExist( pszResName, key.uidKey ) ? 
+			DoesFileExist( pszResName, key.uidKey ) ?
 				GetFileResourceUidName( pszResName, key.uidKey ) :
 				GetFileResourceName( pszResName, key.tKey )
 	 )
@@ -112,7 +112,7 @@ void CResourceFileOpener::Clear()
 }
 
 
-CFileRequest::CFileRequest( const char *_pszResName, int _nID, bool _bDelayedLoad ) 
+CFileRequest::CFileRequest( const char *_pszResName, int _nID, bool _bDelayedLoad )
 	: pszResName(_pszResName), nID(_nID), bIsReady(false), bDelayedLoad(_bDelayedLoad)
 {
 	Zero( uid );

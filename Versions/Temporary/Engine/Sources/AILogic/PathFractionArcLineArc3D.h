@@ -5,7 +5,7 @@ class CPathFractionArcLine3D;
 
 //	CPahtFractionArcLineArc3D
 
-// path is suitable if 
+// path is suitable if
 // 1) direction change is small ( < Pi/2 )
 // 2) direction difference of v0 and x1-x0 is small
 // 3) distance is long ( > 2R )

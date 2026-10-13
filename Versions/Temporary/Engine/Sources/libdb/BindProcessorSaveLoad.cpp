@@ -58,8 +58,8 @@ static void LoadFilePathFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, c
 	}
 }
 
-bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode, 
-														  const NTypeDef::STypeStructBase::SField &field, 
+bool LoadSimpleValueFromNode( CVariant *pRes, const NXml::CXmlNode *pNode,
+														  const NTypeDef::STypeStructBase::SField &field,
 															const std::string &szFullFieldName, IObjMan *pParent )
 {
 	if ( field.pType->eType == NTypeDef::TYPE_TYPE_REF )
@@ -82,7 +82,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 {
 	if ( pType->pBaseType )
 	{
-		NI_VERIFY( LoadXML( szAddName, pType->pBaseType, pBaseNode, pParent ) != false, 
+		NI_VERIFY( LoadXML( szAddName, pType->pBaseType, pBaseNode, pParent ) != false,
 			("Can't load base substruct " + szAddName).c_str(), return false );
 	}
 	//
@@ -100,7 +100,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 				if ( LoadSimpleValueFromNode( &value, pNode, *itField, szFullFieldName, pParent ) == false )
 					continue;
 				const bool bValueSet = SetValue( szFullFieldName, value );
-				NI_VERIFY( bValueSet != false, 
+				NI_VERIFY( bValueSet != false,
 					fmt::format("Can't set value \"{}\" for field \"{}\"", itField->pType->ToString(value), szFullFieldName), continue );
 			}
 			else
@@ -109,7 +109,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 				if ( vtDefVal.GetType() != CVariant::VT_NULL )
 				{
 					const bool bValueSet = SetValue( szFullFieldName, vtDefVal );
-					NI_VERIFY( bValueSet != false, 
+					NI_VERIFY( bValueSet != false,
 						fmt::format("Can't set value \"{}\" for field \"{}\"", itField->pType->ToString(vtDefVal), szFullFieldName), continue );
 				}
 			}
@@ -118,12 +118,12 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 		{
 			if ( pNode )
 			{
-				NI_VERIFY( LoadXML( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType), pNode, pParent ) != false, 
+				NI_VERIFY( LoadXML( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType), pNode, pParent ) != false,
 					("Can't load substruct " + szFullFieldName).c_str(), continue );
 			}
 			else
 			{
-				NI_VERIFY( SetDefault( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType) ) != false, 
+				NI_VERIFY( SetDefault( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType) ) != false,
 					("Can't set defaults for substruct " + szFullFieldName).c_str(), continue );
 			}
 		}
@@ -149,7 +149,7 @@ bool SBindProcessor::LoadXML( const std::string &szAddName, NTypeDef::STypeStruc
 							if ( LoadSimpleValueFromNode( &value, nodes[i], pTypeArray->field, szFullFieldName, pParent ) == false )
 								continue;
 							const bool bValueSet = pBindArray->SetValue( "", i, value, arrReqs.pRawVector, arrReqs.pContained );
-							NI_VERIFY( bValueSet != false, 
+							NI_VERIFY( bValueSet != false,
 								fmt::format("Can't set value \"{}\" for field \"{}.[{}]\"", arrReqs.pTypeArray->field.pType->ToString(value), szFullFieldName, i), continue );
 						}
 					}
@@ -206,7 +206,7 @@ static void SaveFilePathToNode( NLXML::CXMLNode *pNode, const CVariant &value, c
 	checked_cast<NLXML::CXMLElement*>(pNode)->SetAttribute( "href", szRelPath );
 }
 
-bool SaveSimpleValueToNode( const CVariant &value, NLXML::CXMLElement *pElement, 
+bool SaveSimpleValueToNode( const CVariant &value, NLXML::CXMLElement *pElement,
 													  const NTypeDef::STypeStructBase::SField &field, IObjMan *pParent )
 {
 	if ( field.pType->eType == NTypeDef::TYPE_TYPE_REF )
@@ -226,7 +226,7 @@ bool SBindProcessor::SaveXML( const std::string &szAddName, NTypeDef::STypeStruc
 {
 	if ( pType->pBaseType )
 	{
-		NI_VERIFY( SaveXML( szAddName, pType->pBaseType, pBaseNode, pParent ) != false, 
+		NI_VERIFY( SaveXML( szAddName, pType->pBaseType, pBaseNode, pParent ) != false,
 			("Can't load base substruct " + szAddName).c_str(), return false );
 	}
 	//
@@ -247,13 +247,13 @@ bool SBindProcessor::SaveXML( const std::string &szAddName, NTypeDef::STypeStruc
 		}
 		else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 		{
-			NI_VERIFY( SaveXML( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType), pElement, pParent ) != false, 
+			NI_VERIFY( SaveXML( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType), pElement, pParent ) != false,
 				("Can't save substruct " + szFullFieldName).c_str(), continue );
 		}
 		else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_ARRAY )
 		{
 			CVariant value;
-			NI_VERIFY( GetValue( szFullFieldName, &value ) != false, 
+			NI_VERIFY( GetValue( szFullFieldName, &value ) != false,
 				("Can't get array size for " + szFullFieldName).c_str(), continue );
 			const int nArraySize = (int)value;
 			NTypeDef::STypeArray *pTypeArray = checked_cast_ptr<NTypeDef::STypeArray *>( itField->pType );
@@ -300,7 +300,7 @@ bool SBindProcessor::SetDefault( const std::string &szAddName, NTypeDef::STypeSt
 {
 	if ( pType->pBaseType )
 	{
-		NI_VERIFY( SetDefault( szAddName, pType->pBaseType ) != false, 
+		NI_VERIFY( SetDefault( szAddName, pType->pBaseType ) != false,
 			("Can't set default for base substruct " + szAddName).c_str(), return false );
 	}
 	//
@@ -314,7 +314,7 @@ bool SBindProcessor::SetDefault( const std::string &szAddName, NTypeDef::STypeSt
 		}
 		else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_STRUCT )
 		{
-			NI_VERIFY( SetDefault( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType) ) != false, 
+			NI_VERIFY( SetDefault( szFullFieldName, checked_cast_ptr<NTypeDef::STypeStructBase *>(itField->pType) ) != false,
 				("Can't set default value for substruct " + szFullFieldName).c_str(), continue );
 		}
 		else if ( itField->pType->eType == NTypeDef::TYPE_TYPE_ARRAY )

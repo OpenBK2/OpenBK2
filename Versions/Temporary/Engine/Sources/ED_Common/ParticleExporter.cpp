@@ -86,7 +86,7 @@ EXPORT_RESULT CParticleExporter::ExportObject( IManipulator* pManipulator,
 	szScriptText += fmt::format( "for ($item in $list)\r\n" );
 	szScriptText += fmt::format( "  select -add -ne $item;\r\n" );
 	szScriptText += fmt::format( "file -es -f -typ \"{}\" -op \"particles=1;{};\" \"{}\";\r\n",
-			GetOption( &SUserData::SMayaExportData::szOldPluginName ).c_str(), 
+			GetOption( &SUserData::SMayaExportData::szOldPluginName ).c_str(),
 			GetOption( &SUserData::SMayaExportData::szOldPluginParticleFixYZOption ).c_str(),
 			szTempDstName.c_str()
 		);
@@ -102,7 +102,7 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 	MEFinishScript( &szScriptText, true );
 	MERunScript( szScriptText, rszObjectTypeName, bNeedExport, true );
 	//
-	if ( GetObjectSet().objectNameSet.empty() ) 
+	if ( GetObjectSet().objectNameSet.empty() )
 		return;
 	//
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
@@ -129,7 +129,7 @@ void CParticleExporter::FinishExport( const std::string &rszObjectTypeName, bool
 }
 
 
-bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName, 
+bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 																								 const std::string &szDstFileName,
 																								 IManipulator *pManipulator )
 {
@@ -166,6 +166,6 @@ bool CParticleExporter::ImportInfoToDBAfterRefs( const std::string &szObjName,
 	return true;
 }
 
-// basement storage  
+// basement storage
 
 

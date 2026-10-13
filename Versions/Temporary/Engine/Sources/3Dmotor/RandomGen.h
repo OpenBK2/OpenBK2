@@ -10,7 +10,7 @@ struct SRandomSeed
 struct SRand
 {
 	SRandomSeed seed;
-	
+
 	SRand();
 	SRand( const SRandomSeed &rseed ) : seed( rseed ) {}
 	int Get( int nMax );

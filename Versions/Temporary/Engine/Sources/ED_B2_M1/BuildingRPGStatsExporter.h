@@ -5,7 +5,7 @@
 class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 {
 	OBJECT_NOCOPY_METHODS( CBuildingRPGStatsExporter );
-	
+
 	CBuildingRPGStatsExporter() {}
 
 	struct SAnimationInfo
@@ -25,7 +25,7 @@ class CBuildingRPGStatsExporter : public CObjectBaseRPGStatsExporter
 	const bool CreateVisObj( IManipulator* pManipulator, const std::string &szObjectName, const std::string &szRoot );
 	const bool ProcessVisObj( IManipulator *pManipulator, const std::string &szRefName, const std::string &szNewName, const std::string &szRoot, const std::vector<SAnimationInfo> &frames, const int nStage );
 	const bool UpdateEntrancesAndSlots( IManipulator *pManipulator, const std::string &szObjectName );
-	
+
 	const bool CreateTexture( const std::string &szTextureName, const std::string &szFileName );
 	const std::string GetMaterial( const std::string &szModelName, const std::string &szModelPath, const int nMaterial, const bool bTransparent, const bool bReflective );
 

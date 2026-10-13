@@ -126,7 +126,7 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 {
 	// CRAP{ PLAIN_TEXT
 	ILogger *pLogger = NLog::GetLogger();
-	for ( CObjectNameSet::const_iterator itObject = rObjectSet.objectNameSet.begin(); itObject != rObjectSet.objectNameSet.end(); ++itObject ) 
+	for ( CObjectNameSet::const_iterator itObject = rObjectSet.objectNameSet.begin(); itObject != rObjectSet.objectNameSet.end(); ++itObject )
 	{
 		try
 		{
@@ -136,7 +136,7 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 				pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
 			}
 		}
-		catch ( ... ) 
+		catch ( ... )
 		{
 			pLogger->Log( LT_ERROR, "ForEachObject processing general fail\n" );
 			pLogger->Log( LT_ERROR, fmt::format("\tType: {}, ID: {}\n", rObjectSet.szObjectTypeName.c_str(), itObject->first.ToString() ) );
@@ -149,5 +149,5 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 //! move temp file, made during export, to real destination and register it in RCS
 MAPEDITORLIB_EXPORT void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName );
 
- 
+
 

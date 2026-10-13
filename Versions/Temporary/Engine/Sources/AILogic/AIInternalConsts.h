@@ -31,22 +31,22 @@ public:
 	};
 	// расстояние, в котором пересчитать туман для юнитов при удалении стат. объекта
 	static const int MAX_DIST_TO_RECALC_FOG;
-	
+
 	// на какой максимальный угол поворачиваться мгновенно
 	static const int TURN_TOLERANCE;
-	
+
 	// стандартный угол обзора
 	static const uint16_t STANDART_VIS_ANGLE;
-	
+
 	// при какой разнице в угле нужно остановиться и поворачиваться
 	static const uint16_t DIR_DIFF_TO_SMOOTH_TURNING;
 
 	// максимальная длина пути в тайлах, при котором можно ехать задом
 	static const int MAX_LEN_TO_GO_BACKWARD;
-	
+
 	// насколько forward iteration смотреть вперёд при хождении вдоль сплайна
 	static const int NUMBER_ITERS_TO_LOOK_AHEAD;
-	
+
 	// для прямоугольника впереди движущегося юнита
 	static const int SPEED_FACTOR;
 
@@ -56,20 +56,20 @@ public:
 	// size of "neighbours scan" cell
 	static const int CELL_COEFF;
 	static const int CELL_SIZE;			// must be divisible by TILE_SIZE
-	
+
 	static const int BIG_CELL_COEFF;
 	static const int BIG_CELL_SIZE;
-	
+
 	// max number of tiles, occupied by a unit
 	static const int MAX_UNIT_TILE_RADIUS;
 	// максимальный радиус юнита в точках
 	static const int MAX_UNIT_RADIUS;
-	
+
 	static const int BIG_PATH_SHIFT;
 
 	// starting sizes of vectors
 	static const int AI_START_VECTOR_SIZE;
-	
+
 	//
 	// максимальное асстояние для того, чтобы юниты были в одной "простой" группе
 	static const int GROUP_DISTANCE;
@@ -85,12 +85,12 @@ public:
 	static const float DIST_FOR_LAND;
 	// расстояние от точки высадки транспорта до точки, куда оттуда нужно сразу же бежать ( для проверки "пригодности" точки )
 	static float GOOD_LAND_DIST;
-	
+
 	//
 	// деление карты на ячейки для статических объектов
 	static const int STATIC_OBJ_CELL;
 	static const int STATIC_CONTAINER_OBJ_CELL;
-	
+
 	// размер ячейки для записи разорвавшихся снарядов
 	static const int HIT_CELL_COEFF;
 	static const int HIT_CELL_SIZE;
@@ -110,7 +110,7 @@ public:
 	static int BEH_UPDATE_DURATION;
 	// время между updates поведения для солдат
 	static int SOLDIER_BEH_UPDATE_DURATION;
-	// то же для AA 
+	// то же для AA
 	static int AA_BEH_UPDATE_DURATION;
 	// для дальнобойной артиллерии
 	static int LONG_RANGE_ARTILLERY_UPDATE_DURATION;
@@ -128,26 +128,26 @@ public:
 	static int RADIUS_OF_HIT_NOTIFY;
 	// периодичность проверки, под обстрелом или нет
 	static int TIME_OF_HIT_NOTIFY;
-	
+
 	// время в милисекундах между 2 сканированиями мин для инженеров
-	static int ENGINEER_MINE_CHECK_PERIOD; 
+	static int ENGINEER_MINE_CHECK_PERIOD;
 	// радиус ( в точках ), в котором инженер видит мины
 	static int MINE_VIS_RADIUS;
 	// радиус ( в точках ), в котором инженер снимает мины
 	static int MINE_CLEAR_RADIUS;
 	// максимальное расстояние убегания от центра формации
 	static int RADIUS_OF_FORMATION;
-	
+
 	// радиус, в котором можно бегать при guard state
 	static float GUARD_STATE_RADIUS;
-	
+
 	// множитель на скорость при ползании
 	static float LYING_SPEED_FACTOR;
-	
+
 	// радиус для call for help
 	static int CALL_FOR_HELP_RADIUS;
 	static int AI_CALL_FOR_HELP_RADIUS;
-	
+
 	// время, которое солдаты собираются в здании перед участием в штурме
 	static int CAMPING_TIME;
 	// множитель на weapon range при стрельбе солдатиков внутри объекта
@@ -159,7 +159,7 @@ public:
 
 	// пороговое время времени install/uninstall для того, чтобы пушки install/uninstall самостоятельно
 	static int THRESHOLD_INSTALL_TIME;
-	
+
 	// количество выстрелов для пристрелки артиллерии по области
 	static int SHOOTS_TO_RANGE;
 	// коэффициент на dispersion если ведётся стрельба по пристрелянной области
@@ -179,15 +179,15 @@ public:
 	static int AUDIBILITY_TIME;
 	// периодичность рисования кругов антиартиллерийской борьбы
 	static int REVEAL_CIRCLE_PERIOD;
-	
+
 	// вероятность пробивания брони, при которой не нужно маневрировать
 	static float GOOD_ATTACK_RPOBABILITY;
-	
+
 	//for fighter
-	static int FIGHTER_PATROL_TIME;//after that time fighter will cancel patrolling 
+	static int FIGHTER_PATROL_TIME;//after that time fighter will cancel patrolling
 	static float FIGHTER_VERTICAL_SPEED_UP;		// скорость набора высоты
 	static float FIGHTER_VERTICAL_SPEED_DOWN;		// скорость сброса высоты
-	
+
 	//for paratrooper
 	static float PARATROOPER_FALL_SPEED;
 	static int PARADROP_SPRED ; //для поиска свободного тайла, на который выпрыгнуть.
@@ -209,7 +209,7 @@ public:
 	static float HOLD_SECTOR_SIGHT_BONUS;
 	static float HOLD_SECTOR_DISPERSION_BONUS;
 	static int TIME_TO_ENTER_HOLD_SECTOR;
-	
+
 	static float TRACK_TARGETING_AIM_BONUS;
 	static float TRACK_TARGETING_DAMAGE_MODIFIER;
 
@@ -217,25 +217,25 @@ public:
 	static float AREA_DAMAGE_COEFF;
 	// минимальный угол, на который можно повернуть базу во время атаки turret-ом, чтобы улучшить свою позицию
 	static uint16_t MIN_ROTATE_ANGLE;
-	
+
 	// радиус кругов от выстрелов, начиная с которого артиллерия начинает antiartillery борьбу
 	static float RADIUS_TO_START_ANTIARTILLERY_FIRE;
-	
+
 	// емкость грузовика в RU
 	static float TRANSPORT_RU_CAPACITY;
 	// дистанция на которую дожен подъехать грузовик к складу
 	static float TRANSPORT_LOAD_RU_DISTANCE ;
 	// максимальная длина пути (от склада, в тайлах), по которой происходит снабжение
 	static int RESUPPLY_MAX_PATH;
-	
+
 	// время, которое держится alarm при обстреле юнита снарядами по баллистиике
 	static float TIME_OF_ALARM_UNDER_FIRE;
 	// радиус действия для складов. на такое расстояние телепортятся ресурсы между сладами
 	static float STORAGE_RESUPPLY_RADIUS;
-	
+
 	// сопротивление воздуха для бомб
 	static float TRAJ_BOMB_ALPHA;
-	
+
 	// подойдя на это расстояние к нужной точке артиллеристы телепортятся в нее.
 	static float GUN_CREW_TELEPORT_RADIUS;
 
@@ -244,7 +244,7 @@ public:
 	// максимальное смещение паращютисов перпендикулярно вектору движения самолетов.
 	static float PLANE_PARADROP_INTERVAL_PERP_MIN;
 	static float PLANE_PARADROP_INTERVAL_PERP_MAX;
-	
+
 	// fuel control
 	static float PLANE_FUEL_DEC_ECONOMY;
 	static float PLANE_FUEL_DEC;
@@ -252,7 +252,7 @@ public:
 	// 1 раз в этот интервал паращютисты проверяют не падают ли они на залоченную клетку
 	static int PARATROOPER_GROUND_SCAN_PERIOD;
 
-	// с этого расстояния грузовичок за пушкой будет подъезжать задом	
+	// с этого расстояния грузовичок за пушкой будет подъезжать задом
 	static float TRANSPORT_MOVE_BACK_DISTANCE;
 
 	// столько раз транспорт будет пытаться отцепить артиллерию.
@@ -265,7 +265,7 @@ public:
 
 	// здоровье гусеницы
 	static float TANK_TRACK_HIT_POINTS;
-	
+
 	// какую долю расстояния снаряд по пологой траектории летит прямо
 	static float TRAJECTORY_LOW_LINE_RATIO;
 
@@ -273,10 +273,10 @@ public:
 
 	// радиус выхода из пикирования на цель
 	static float PLANE_DIVE_FINISH_DISTANCE_SQR	;
-	
+
 	static float SNIPER_CAMOUFLAGE_DECREASE_PER_SHOOT;
 	static float SNIPER_CAMOUFLAGE_INCREASE;
-	
+
 	// доля юнитов, которые должны иметь возможность поразить
 	// цель из засады для того, чтобы весь Ambush начал атаковать.
 	static float AMBUSH_ATTACK_BEGIN_CIRTERIA;
@@ -284,15 +284,15 @@ public:
 	static float ARTILLERY_REVEAL_COEEFICIENT;
 	// минимальный и максимальный разброс для всех типов траекторий
 	static float dispersionRatio[12][2];
-	
+
 	static float COEFF_FOR_RANDOM_DELAY;
-	
+
 	// на какую высоту нужно подняться, чтобы радиус видимости увеличился на один тайл
 	static float HEIGHT_FOR_VIS_RADIUS_INC;
-	
+
 	// скорость горения здания ( проценты в tick )
 	static float BURNING_SPEED;
-	
+
 	// follow константы
 	// радиус достаточно близко от ведущего
 	static float FOLLOW_STOP_RADIUS;
@@ -302,34 +302,34 @@ public:
 	static float FOLLOW_GO_RADIUS;
 	// радиус, за которым ведущий должен ждать
 	static float FOLLOW_WAIT_RADIUS;
-	
+
 	static float FATALITY_PROBABILITY;
 	static float DAMAGE_FOR_MASSIVE_DAMAGE_FATALITY;
 	static float MASSIVE_DAMAGE_FATALITY_PROBABILITY;
 
 	static float BOMB_START_HEIGHT;
-	
+
 	static float STAND_LIE_RANDOM_DELAY;
-	
+
 	static float TRANSPORT_RESUPPLY_OFFSET;
 	static float HP_BALANCE_COEFF;
-	
+
 	// при выходе из дома солдатики в squad будут выходить по одному через этот интервал
 	static int SQUAD_MEMBER_LEAVE_INTERVAL;
 
-	// стоимость солдата в RU. нужна при восстановлении 
+	// стоимость солдата в RU. нужна при восстановлении
 	static float SOLDIER_RU_PRICE;
 	static float LOW_HP_PERCENTAGE;
-	
+
 	// damage по прямой траектории в отрезок времени, необходимый для того, чтобы ситуация была комбатная
 	static float DIRECT_HIT_DAMAGE_COMBAT_SITUATION;
 	static int DIRECT_HIT_TIME_COMBAT_SITUATION;
 	static int NUMBER_ENEMY_MECH_MOVING_TO_COMBAT_SITUATION;
 	static int NUMBER_ENEMY_INFANTRY_MOVING_TO_COMBAT_SITUATION;
-	
+
 	// коэффициент на firerange оружия офицера, в котором он сканирует ( радиус сканирования firerange * OFFICER_COEFFICIENT_FOR_SCAN )
 	static float OFFICER_COEFFICIENT_FOR_SCAN;
-	
+
 	static float MAIN_STORAGE_HEALING_SPEED;
 	static float RADIUS_TO_TAKE_STORAGE_OWNERSHIP;
 	static float TANKPIT_COVER;
@@ -339,25 +339,25 @@ public:
 	static float ENTRENCHMENT_SEGMENT_RU_PRICE;
 	static float MINE_RU_PRICE[2];
 	static float ANTITANK_RU_PRICE;
-	
+
 	// время, которое юнит виден после того, как он уехал из области видимости
 	static int RESIDUAL_VISIBILITY_TIME;
 
 	static int MED_TRUCK_HEAL_RADIUS;
 	static float MED_TRUCK_HEAL_PER_UPDATEDURATION;
-	
+
 	//
 	// периодичность, с которой юнит пытается найти путь до своей формации, если он где-то заблокался
 	static int PERIOD_OF_PATH_TO_FORMATION_SEARCH;
-	
+
 	static int ENTRENCH_SELF_TIME;
-	
+
 	// максимальное количество юнитов, которое может быть просканировано за сегмент
 	static int N_SCANNING_UNITS_IN_SEGMENT;
 
 	// size of cell for general
 	static int GENERAL_CELL_SIZE;
-	
+
 	// flags
 	// радиус зоны флага (в точках)
 	static float FLAG_RADIUS;
@@ -373,24 +373,24 @@ public:
 	//
 	// максимальная броня, пробиваемая area damage
 	static int ARMOR_FOR_AREA_DAMAGE;
-	
+
 	// default cover for fireplace
 	static float BUILDING_FIREPLACE_DEFAULT_COVER;
 
 	static int DIVE_BEFORE_EXPLODE_TIME;
 	static int DIVE_AFTER_EXPLODE_TIME;
-	
+
 
 	static int WEATHER_TIME;
 	static int WEATHER_TIME_RANDOM;
 	static int WEATHER_TURN_PERIOD;
 	static int WEATHER_TURN_PERIOD_RANDOM;
-	
+
 	static float BAD_WEATHER_FIRE_RANGE_COEFFICIENT;
 	static int TIME_TO_WEATHER_FADE_OFF;
-	
+
 	static int AA_AIM_ITERATIONS;
-	
+
 	// во сколько раз быстрее понижать мораль без офицера
 	static float COEFF_TO_LOW_MORALE_WITHOUT_OFFICER;
 	static float MORALE_DISPERSION_COEFF;
@@ -399,7 +399,7 @@ public:
 
 	// максимальное расстояние, чтобы солдат пытался бросить гранату
 	static float MAX_DISTANCE_TO_THROW_GRENADE;
-	
+
 	// target resolution constants
 	static float TR_GUNPLANE_ALPHA_ATTACK_1;//1.0f;
 	static float TR_GUNPLANE_ALPHA_ATTACK_2;//0.3f;
@@ -412,7 +412,7 @@ public:
 	static float MAX_FIRE_RANGE_TO_SHOOT_BY_LINE;
 
 	static int SHOW_ALL_TIME_COEFF;
-	
+
 	static float HP_PERCENT_TO_ESCAPE_FROM_BUILDING;
 
 	static float REINFORCEMENT_GROUP_DISTANCE;

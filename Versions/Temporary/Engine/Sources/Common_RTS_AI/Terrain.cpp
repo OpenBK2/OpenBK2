@@ -144,17 +144,17 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 				nX = Clamp( rightX * 2 + 1, 0, terrainTypes.GetSizeX() - 1 );
 				nY = Clamp( rightY * 2 + 1, 0, terrainTypes.GetSizeY() - 1 );
 				terrainTypes.SetData( nX, nY, ETT_WATER_TERRAIN );
-				/*				
-				soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] = 
+				/*
+				soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] =
 					soil[rightY * 2 + 1][rightX * 2	] = soil[rightY * 2 + 1][rightX * 2 + 1] = SVectorStripeObject::ESP_DUST;
 				*/
 
-				soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] = 
+				soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] =
 					soil[rightY * 2 + 1][rightX * 2	] = soil[rightY * 2 + 1][rightX * 2 + 1] = 0;
-				
+
 				continue;
 			}
-			else if ( tileType >= soilParams.size() ) 
+			else if ( tileType >= soilParams.size() )
 			{
 				tileType = 0;
 			}
@@ -162,7 +162,7 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 
 			// soil type
 			const uint8_t cSoilType = soilParams[tileType];
-			soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] = 
+			soil[rightY * 2][rightX * 2 ] = soil[rightY * 2][rightX * 2 + 1] =
 				soil[rightY * 2 + 1][rightX * 2	] = soil[rightY * 2 + 1][rightX * 2 + 1] = cSoilType;
 
 			// инициализировать возможность строительства окопов
@@ -190,7 +190,7 @@ void CTerrain::UpdateTypes( const int nX1, const int nY1, const int nX2, const i
 
 			// инициализировать типы terrain для воронок
 			if ( passClasses[ tileType ] & EAC_WATER )
-			{				
+			{
 				int nX = Clamp( rightX * 2, 0, terrainTypes.GetSizeX() - 1 );
 				int nY = Clamp( rightY * 2, 0, terrainTypes.GetSizeY() - 1 );
 				terrainTypes.SetData( nX, nY, ETT_WATER_TERRAIN );
@@ -282,7 +282,7 @@ void CTerrain::AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPas
 			upY = (std::max)( upY, tile.y + pAIMap->GetMaxUnitTileRadius() + 1 );
 
 			if ( ( aiClass & EAC_WATER ) != EAC_WATER )
-			{				
+			{
 				int nX = Clamp( tile.x, 0, terrainTypes.GetSizeX() - 1 );
 				int nY = Clamp( tile.y, 0, terrainTypes.GetSizeY() - 1 );
 				terrainTypes.SetData( nX, nY, ETT_WATER_TERRAIN );
@@ -378,12 +378,12 @@ void CTerrain::InitMaxesDefault( const int nSizeX, const int nSizeY )
 	maxesSmooth.SetSizes( GetClassIndex(EAC_COUNT), 2 );
 	for ( int i = 0; i < GetClassIndex(EAC_COUNT); ++i )
 	{
-		maxes[0][i].SetSizes( nSizeX, nSizeY );	
+		maxes[0][i].SetSizes( nSizeX, nSizeY );
 		maxes[1][i].SetSizes( nSizeX, nSizeY );
 		maxes[0][i].FillZero();
 		maxes[1][i].FillZero();
 
-		maxesSmooth[0][i].SetSizes( nSizeX, nSizeY );	
+		maxesSmooth[0][i].SetSizes( nSizeX, nSizeY );
 		maxesSmooth[1][i].SetSizes( nSizeX, nSizeY );
 		maxesSmooth[0][i].FillZero();
 		maxesSmooth[1][i].FillZero();
@@ -463,12 +463,12 @@ void CTerrain::LockUnitProfile( const SUnitProfile &profile, const int id, SVect
 		pAIMap->GetTilesCoveredByCircle( circle.center, circle.r, &tiles );
 	}
 
-	int downX = 2 * pAIMap->GetMaxMapSize(); 
-	int downY = 2 * pAIMap->GetMaxMapSize(); 
+	int downX = 2 * pAIMap->GetMaxMapSize();
+	int downY = 2 * pAIMap->GetMaxMapSize();
 
 	int upX = -10, upY = -10;
 
-	const int nWater = ( bWater ) ? 1 : 0; 
+	const int nWater = ( bWater ) ? 1 : 0;
 
 	// lock tiles
 	//DebugTrace( "CTerrain::LockUnitProfile( %d ( %2.3f x %2.3f, %2.3f ), %d, ..., %s )", tiles.size(), profile.GetCenter().x, profile.GetCenter().y, profile.GetRadius(), id, bWater ? "true" : "false" );
@@ -522,13 +522,13 @@ bool CTerrain::UnlockUnitProfile( const int id, SVector *pDownTile, SVector *pUp
 			pAIMap->GetTilesCoveredByCircle( circle.center, circle.r, &tiles );
 		}
 
-		int downX = 2 * pAIMap->GetMaxMapSize(); 
-		int downY = 2 * pAIMap->GetMaxMapSize(); 
+		int downX = 2 * pAIMap->GetMaxMapSize();
+		int downY = 2 * pAIMap->GetMaxMapSize();
 
 		int upX = -10, upY = -10;
 
 		*pbWater = pos->second.bWater;
-		const int nWater = pos->second.bWater ? 1 : 0; 
+		const int nWater = pos->second.bWater ? 1 : 0;
 
 		//DebugTrace( "CTerrain::UnlockUnitProfile( %d ( %2.3f x %2.3f, %2.3f ), %d, ..., %s )", tiles.size(), pos->second.profile.GetCenter().x, pos->second.profile.GetCenter().y, pos->second.profile.GetRadius(), id, *pbWater ? "true" : "false" );
 		for ( std::vector<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
@@ -653,7 +653,7 @@ void CTerrain::InitExplosionTerrainTypes()
 bool CTerrain::TemporaryUnlockUnitProfile( const int id, const SUnitProfile &unitProfile, const int nDecrease, const bool bWater )
 {
 	std::unordered_map< int, std::pair< bool, CTmpLockInfoBuf > >::iterator pos = tmpUnlockUnitsMap.find( id );
-	
+
 	if ( pos == tmpUnlockUnitsMap.end() )
 	{
 		const int nWater = bWater ? 1 : 0;
@@ -739,7 +739,7 @@ void CTerrain::SetTerrainPassability( const int nX, const int nY, const int nTer
 {
 	if ( pAIMap->IsTileInside( nX, nY ) && nTerrainType != 0xff /*water, just crap*/ )
 	{
-		passTypes[nY >> 1][nX >> 1] = nTerrainType;		
+		passTypes[nY >> 1][nX >> 1] = nTerrainType;
 		const EAIClasses aiClass = passabilities[nTerrainType] == 0.0f ? EAC_ANY : (EAIClasses)(passClasses[nTerrainType]);
 		LockTile( nX, nY, aiClass );
 	}
@@ -805,23 +805,23 @@ bool CTerrain::HasRiverCliffTiles( const SVector &tile, const int nBoundTileRadi
 }
 
 bool CTerrain::IsStaticLocked( const int x, const int y, const EAIClasses aiClass ) const
-{ 
+{
 	return ( !pAIMap->IsTileInside( x, y ) || ( (buf[y][x] & aiClass) == aiClass ) );
 }
 
-bool CTerrain::IsLocked( const int x, const int y, const EAIClasses aiClass ) const 
-{ 
-	return IsStaticLocked( x, y, aiClass ) || 
+bool CTerrain::IsLocked( const int x, const int y, const EAIClasses aiClass ) const
+{
+	return IsStaticLocked( x, y, aiClass ) ||
 		( ( eMode == ELM_ALL ) && ( ( unitsBuf[0][y][x] > 0 && ( aiClass & EAC_TERRAIN ) ) || ( unitsBuf[1][y][x] > 0 && ( aiClass & EAC_WATER ) ) ) );
 }
 
 bool CTerrain::IsStaticLockedWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const
-{ 
+{
 	return (buf[y][x] & aiClass) == aiClass;
 }
 
 bool CTerrain::IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EAIClasses aiClass ) const
-{ 
+{
 	if ( IsStaticLockedWOBoundaryCheck( x, y, aiClass ) )
 		return true;
 	if ( eMode == ELM_ALL )
@@ -831,7 +831,7 @@ bool CTerrain::IsLocked4ClassWOBoundaryCheck( const int x, const int y, const EA
 }
 
 bool CTerrain::IsLocked4Class( const int x, const int y, const EAIClasses aiClass ) const
-{ 
+{
 	if ( IsStaticLocked( x, y, aiClass ) )
 		return true;
 	if ( eMode == ELM_ALL )
@@ -840,7 +840,7 @@ bool CTerrain::IsLocked4Class( const int x, const int y, const EAIClasses aiClas
 		return false;
 }
 
-EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &tile, const EAIClasses aiClass ) const 	
+EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &tile, const EAIClasses aiClass ) const
 {
 	if ( !pAIMap->IsTileInside( tile.x, tile.y ) )
 		return FREE_NONE;
@@ -856,7 +856,7 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 		const int nClassIndexStatic = GetClassIndexFast( aiClass & EAC_WATER );
 		const int nClassIndexDynamic = ( aiClass & EAC_TERRAIN ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_WATER );
 
-		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 && 
+		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 &&
 			maxesSmooth[eMode][ nClassIndexDynamic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 )
 		{
 			eResult = (EFreeTileInfo)((int)eResult | (int)FREE_WATER);
@@ -867,7 +867,7 @@ EFreeTileInfo CTerrain::CanUnitGo( const int nBoundTileRadius, const SVector &ti
 		const int nClassIndexStatic = GetClassIndexFast( aiClass & EAC_TERRAIN );
 		const int nClassIndexDynamic = ( aiClass & EAC_WATER ) ? GetClassIndexFast( EAC_ANY ) : GetClassIndexFast( EAC_TERRAIN );
 
-		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 && 
+		if ( maxesSmooth[eMode][ nClassIndexStatic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 &&
 				maxesSmooth[eMode][ nClassIndexDynamic ].GetData( tile.x, tile.y ) >= nBoundTileRadius + 1 )
 		{
 			eResult = (EFreeTileInfo)((int)eResult | (int)FREE_TERRAIN);
@@ -908,7 +908,7 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 			vResult = pAIMap->GetPointByTile( bres.GetDirection() );
 			bres.MakePointStep();
 		}
-		if ( bres.GetDirection() == vEndTile && CanUnitGo( nBoundTileRadius, bres.GetDirection(), aiClass ) != FREE_NONE ) 
+		if ( bres.GetDirection() == vEndTile && CanUnitGo( nBoundTileRadius, bres.GetDirection(), aiClass ) != FREE_NONE )
 			return vEnd;
 		return vResult;
 	}
@@ -919,7 +919,7 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 		bres.InitPoint( vEndTile, vStartTile );
 		while ( bres.GetDirection() != vStartTile && CanUnitGo( nBoundTileRadius, bres.GetDirection(), aiClass ) == FREE_NONE )
 			bres.MakePointStep();
-		if ( bres.GetDirection() == vEndTile ) 
+		if ( bres.GetDirection() == vEndTile )
 			return vEnd;
 		else if ( bres.GetDirection() == vStartTile )
 			return vStart;
@@ -929,7 +929,7 @@ const CVec2 CTerrain::GetValidPoint( const int nBoundTileRadius, const CVec2 &vS
 }
 
 uint8_t CTerrain::GetSoilType( const SVector &tile ) const
-{ 
+{
 	const int nX = Clamp( tile.x, 0, soil.GetSizeX() - 1 );
 	const int nY = Clamp( tile.y, 0, soil.GetSizeY() - 1 );
 	return soil[nY][nX];
@@ -964,7 +964,7 @@ void CTerrain::LockTile( const int x, const int y, const EAIClasses aiClasses )
 
 // разлокать от статич. объекта
 void CTerrain::UnlockTile( const int x, const int y, const EAIClasses aiClasses )
-{ 
+{
 	//const EAIClasses aiClass = buf[y][x];
 	buf[y][x] = (EAIClasses)( (uint8_t)buf[y][x] & ~(uint8_t)aiClasses );
 	/*
@@ -1039,7 +1039,7 @@ void CTerrain::UpdateMaxesForRemovedTiles( int downX, int upX, int downY, int up
 							maxes[eMode][nClassIndex].SetData( x, y, 1 );
 						else if ( IsLocked4ClassWOBoundaryCheck( x + mx_1y - 1, y + mx_1y - 1, aiClass ) )
 							maxes[eMode][nClassIndex].SetData( x, y, mx_1y - 1 );
-						else if ( x + mx_1y >= nSizeX || y + mx_1y >= nSizeY || 
+						else if ( x + mx_1y >= nSizeX || y + mx_1y >= nSizeY ||
 							IsLocked4ClassWOBoundaryCheck( x - mx_1y, y - mx_1y, aiClass ) || mx_1y > nMaxUnitTileRadius )
 							maxes[eMode][nClassIndex].SetData( x, y, mx_1y );
 						else
@@ -1148,7 +1148,7 @@ void CTerrain::UpdateMaxesForAddedTiles( int downX, int upX, int downY, int upY,
 							maxes[eMode][nClassIndex].SetData( x, y, 1 );
 						else if ( IsLocked4ClassWOBoundaryCheck( x + mx_1y - 1, y + mx_1y - 1, aiClass ) )
 							maxes[eMode][nClassIndex].SetData( x, y, mx_1y - 1 );
-						else if ( x + mx_1y >= nSizeX || y + mx_1y >= nSizeY || 
+						else if ( x + mx_1y >= nSizeX || y + mx_1y >= nSizeY ||
 							IsLocked4ClassWOBoundaryCheck( x - mx_1y, y - mx_1y, aiClass ) || mx_1y > nMaxUnitTileRadius )
 							maxes[eMode][nClassIndex].SetData( x, y, mx_1y );
 						else
@@ -1245,30 +1245,30 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 	const int yMin = (std::max)( _yMin, 1 );
 	const int xMax = (std::min)( _xMax, pAIMap->GetSizeX() - 2 );
 	const int yMax = (std::min)( _yMax, pAIMap->GetSizeY() - 2 );
-	
+
 	// избавляемся от "левых" залоканных мест
   for ( int y = yMin; y <= yMax; ++y )
 		for ( int x = xMin; x <= xMax; ++x )
 		{
 			const uint8_t bValue = thisMaxesSmooth.GetData( x, y );
-			if ( IsFreeAround( thisMaxesSmooth, x, y, bValue ) )  
+			if ( IsFreeAround( thisMaxesSmooth, x, y, bValue ) )
 			{
 				tiles.push_back( SVector( x, y ) );
 				maskForSmooth.SetData( x, y );
 			}
 		}
-	
+
 	while ( !tiles.empty() )
 	{
 		const SVector tile = *(tiles.begin());
 		tiles.pop_front();
 		const uint8_t bValue = thisMaxesSmooth.GetData( tile.x, tile.y );
 		thisMaxesSmooth.SetData( tile.x, tile.y, bValue + 1 );
-		for ( int i = 0; i < 4; ++i )  
+		for ( int i = 0; i < 4; ++i )
 		{
 			const int xx = tile.x + offsets[i].x;
 			const int yy = tile.y + offsets[i].y;
-			if ( maskForSmooth.GetData( xx, yy ) == 0 && thisMaxesSmooth.GetData( xx, yy ) == bValue && IsFreeAround( thisMaxesSmooth, xx, yy, bValue ) )  
+			if ( maskForSmooth.GetData( xx, yy ) == 0 && thisMaxesSmooth.GetData( xx, yy ) == bValue && IsFreeAround( thisMaxesSmooth, xx, yy, bValue ) )
 			{
 				tiles.push_back( SVector( xx, yy ) );
 				maskForSmooth.SetData( xx, yy );
@@ -1282,7 +1282,7 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 		for ( int x = xMin; x <= xMax; ++x )
 		{
 			const uint8_t bValue = thisMaxesSmooth.GetData( x, y );
-			if ( IsLockAround( thisMaxesSmooth, x, y, bValue ) )  
+			if ( IsLockAround( thisMaxesSmooth, x, y, bValue ) )
 			{
 				tiles.push_back( SVector( x, y ) );
 				maskForSmooth.SetData( x, y );
@@ -1295,11 +1295,11 @@ void CTerrain::SmoothLock( const int _xMin, const int _yMin, const int _xMax, co
 		tiles.pop_front();
 		const uint8_t bValue = thisMaxesSmooth.GetData( tile.x, tile.y );
 		thisMaxesSmooth.SetData( tile.x, tile.y, bValue - 1 );
-		for ( int i = 0; i < 4; ++i )  
+		for ( int i = 0; i < 4; ++i )
 		{
 			const int xx = tile.x + offsets[i].x;
 			const int yy = tile.y + offsets[i].y;
-			if ( maskForSmooth.GetData( xx, yy ) == 0 && thisMaxesSmooth.GetData( xx, yy ) == bValue && IsLockAround( thisMaxesSmooth, xx, yy, bValue ) )  
+			if ( maskForSmooth.GetData( xx, yy ) == 0 && thisMaxesSmooth.GetData( xx, yy ) == bValue && IsLockAround( thisMaxesSmooth, xx, yy, bValue ) )
 			{
 				tiles.push_back( SVector( xx, yy ) );
 				maskForSmooth.SetData( xx, yy );

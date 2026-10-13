@@ -33,7 +33,7 @@ struct SColor
 {
   union
   {
-    struct  
+    struct
     {
       uint8_t b, g, r, a;
     };

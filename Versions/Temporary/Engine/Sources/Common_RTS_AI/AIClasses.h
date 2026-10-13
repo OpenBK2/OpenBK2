@@ -13,7 +13,7 @@ enum EAIClasses
 
 	EAC_COUNT = 5,
 
-	EAC_WATER = EAC_RIVER | EAC_SEA, 
+	EAC_WATER = EAC_RIVER | EAC_SEA,
 	EAC_TERRAIN = EAC_WHELL | EAC_TRACK | EAC_HUMAN,
 
 	EAC_ANY   = EAC_WATER | EAC_TERRAIN, // в Terrain.cpp считается, что EAC_ANY имеет самое большое значение (нужно в classIndices  !!!!
@@ -23,7 +23,7 @@ enum EAIClasses
 
 inline const int GetClassIndex( const uint8_t aiClass )
 {
-	switch( aiClass ) 
+	switch( aiClass )
 	{
 	case EAC_WHELL:    return 0;
 	case EAC_TRACK:    return 1;
@@ -33,7 +33,7 @@ inline const int GetClassIndex( const uint8_t aiClass )
 	case EAC_WATER:    return 5;
 	case EAC_TERRAIN:  return 6;
 	case EAC_ANY:      return 7;  // это для амфибий
-	case EAC_COUNT:    return 8;  // на EAC_COUNT необходимо вернуть количество индексов, это нужно для 
+	case EAC_COUNT:    return 8;  // на EAC_COUNT необходимо вернуть количество индексов, это нужно для
                                 // инициализации массивов толщины юнитов
 	default:
 // при вычислении пути от колонны разнотипных юнитов можно легко получить EAC_WHELL | EAC_TRACK

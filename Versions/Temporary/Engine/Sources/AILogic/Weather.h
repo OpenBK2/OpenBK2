@@ -17,19 +17,19 @@ private:
 	void Off();
 	void On();
 	const float GetNextTimeRandom();
-	
+
 public:
 	CWeather();
 	void Init();
 
 	void Clear();
-	
+
 	bool IsActive() const;
 	void Segment();
-	
+
 	// turn on/off weather manually
 	void Switch( const bool bActive );
-	
+
 	// turn on/off automatic weather changes
 	void SwitchAutomatic( const bool bSwitchAutomatic );
 };

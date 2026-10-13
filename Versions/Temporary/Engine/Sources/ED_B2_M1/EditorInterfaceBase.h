@@ -5,7 +5,7 @@ struct ICamera;
 
 class CEditorInterfaceBase : public CGameInputInterface
 {
-public:	
+public:
 	CEditorInterfaceBase();
 	//
 	virtual void ToggleCameraControl( const SGameMessage &msg, bool bEnableCameraControl );

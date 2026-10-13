@@ -27,7 +27,7 @@ struct SMPSlot
 	SMPSlot() : nClientID(-1), bPresent(false), szName(""), nTeam(0), nCountry(0), bRandomCountry(true)
 		, nColour(0), bAccept(false), nPing(-1) , wConnectedTo(0) {}
 
-	void Clear() 
+	void Clear()
 	{
 		nClientID = -1;
 		bPresent = false;
@@ -41,8 +41,8 @@ struct SMPSlot
 		wConnectedTo = 0;
 	}
 
-	SMPSlot& operator=( const SMPSlot &src ) 
-	{ 
+	SMPSlot& operator=( const SMPSlot &src )
+	{
 		//nClientID = src.nClientID;		// Client ID not assigned, it is different in each case
 		bPresent = src.bPresent;
 		szName = src.szName;
@@ -57,7 +57,7 @@ struct SMPSlot
 	}
 };
 
-struct SB2GameSpecificData 
+struct SB2GameSpecificData
 {
 public:
 	enum EGameType
@@ -65,7 +65,7 @@ public:
 		EGT_FLAG_CONTROL_2,
 	};
 
-	ZDATA		
+	ZDATA
 	CDBPtr<NDb::SMultiplayerMap> pMPMap;
 	int nPlayers = {};					// Actual number of players allowed
 	int nTimeLimit = {};
@@ -76,7 +76,7 @@ public:
 	EGameType eType = {};
 	bool bRandomPlacement = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMPMap); f.Add(3,&nPlayers); f.Add(4,&nTimeLimit); f.Add(5,&nGameSpeed); f.Add(6,&nTechLevel); f.Add(7,&bUnitExp); f.Add(8,&nCaptureTime); f.Add(9,&eType); f.Add(10,&bRandomPlacement); return 0; }
-	SB2GameSpecificData() : nPlayers( 0 ), nTimeLimit( 0 ), nGameSpeed( 0 ), nTechLevel( 0 ), 
+	SB2GameSpecificData() : nPlayers( 0 ), nTimeLimit( 0 ), nGameSpeed( 0 ), nTechLevel( 0 ),
 		bUnitExp( false ), nCaptureTime( 0 ), eType( EGT_FLAG_CONTROL_2 ), bRandomPlacement( true ) {}
 	SB2GameSpecificData& operator=( const SB2GameSpecificData &src )
 	{

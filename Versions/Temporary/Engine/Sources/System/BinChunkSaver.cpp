@@ -32,18 +32,18 @@ typedef IBinSaver::chunk_id chunk_id;
 
 // CStructureSaver::CChunkLevel
 
-void CStructureSaver::SChunkLevel::ClearCache() 
-{ 
+void CStructureSaver::SChunkLevel::ClearCache()
+{
 	idLastChunk = (chunk_id)0xff;
 	nLastPos = 0;
 }
 
-void CStructureSaver::SChunkLevel::Clear() 
+void CStructureSaver::SChunkLevel::Clear()
 {
-	idChunk = (chunk_id)0xff; 
-	nStart = 0; 
-	nLength = 0; 
-	ClearCache(); 
+	idChunk = (chunk_id)0xff;
+	nStart = 0;
+	nLength = 0;
+	ClearCache();
 }
 
 // chunks operations with whole saves
@@ -181,11 +181,11 @@ bool CStructureSaver::ReadShortChunk( SChunkLevel &src, int &nPos, SChunkLevel &
 	return true;
 }
 
-bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID, 
+bool CStructureSaver::WriteShortChunk( SChunkLevel &dst, chunk_id dwID,
 																			const unsigned char *pData, int nLength )
 {
 #if defined(_DEBUG) && !defined(_FASTDEBUG)
-	bool bFound = false; 
+	bool bFound = false;
 	for ( int i = 0; i < nLength; ++i )
 	{
 		if ( pData[i] != 0xcd && pData[i] != 0xad && pData[i] != 0xfd  )
@@ -235,7 +235,7 @@ bool CStructureSaver::GetShortChunk( SChunkLevel &src, chunk_id dwID, SChunkLeve
 			return GetShortChunk( src, dwID, res, nNumber );
 		}
 	}
-	else 
+	else
 	{
 		if ( nNumber != 0 )
 		{
@@ -376,7 +376,7 @@ void CStructureSaver::StoreObject( CObjectBase *pObject )
 	if ( pObject )
 	{
 		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
-	}	
+	}
 	// the object's ID rather than its address, see storedObjects
 	void *pID = 0;
 	if ( pObject != 0 )
@@ -458,14 +458,14 @@ bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 {
 	SChunkLevel &last = chunks.back();
 	chunks.emplace_back();
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		bool bRes = GetShortChunk( last, idChunk, chunks.back(), nChunkNumber );
 		if ( !bRes )
 			chunks.pop_back();
 		return bRes;
 	}
-	else 
+	else
 	{
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
 		ASSERT( CountShortChunks( last, idChunk ) == nChunkNumber - 1 );
@@ -479,11 +479,11 @@ bool CStructureSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 
 void CStructureSaver::FinishChunk()
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		chunks.pop_back();
 	}
-	else 
+	else
 	{
 		CChunkLevelIterator it = --chunks.end(), it1;
 		it1 = it; --it1;
@@ -510,7 +510,7 @@ void CStructureSaver::Start( const std::vector<SBinSaverExternalObject> &ext )
 	objSizes.clear();
 	szWhoSaved = "static data";
 #endif
-	
+
 	CDataStream &res = *pRes;
 	int nBaseSeek = res.GetPosition();
 	//
@@ -653,7 +653,7 @@ void CStructureSaver::Finish()
 #ifdef CALC_SIZE
 		int nOldSize = res.GetSize();
 #endif // CALC_SIZE
-		
+
 		// save standard data
 		AlignDataFileSize();
 		CMemoryStream version;

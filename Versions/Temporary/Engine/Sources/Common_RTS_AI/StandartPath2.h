@@ -23,7 +23,7 @@ class COMMON_RTS_AI_EXPORT CStandartPath2 : public IPath
 
 		CPtr<CCommonStaticPath> pStaticPath;
 		int nCurStaticPathTile = 0;
-		
+
 		CVec2 vStartPoint;
 		CVec2 vFinishPoint;
 		SVector vFinishTile;
@@ -52,8 +52,8 @@ private:
 	void CopyPath( const int nLength );
 	const bool CalculatePath( const bool bShift, const SVector &vLastKnownGoodTile );
 
-	void SetFinishPoint( const CVec2 &_vFinishPoint ) { vFinishPoint = _vFinishPoint; vFinishTile = GetTile( vFinishPoint ); } 
-	void SetFinishTile( const SVector &_vFinishTile ) { vFinishTile = _vFinishTile; vFinishPoint = GetPoint( vFinishTile ); } 
+	void SetFinishPoint( const CVec2 &_vFinishPoint ) { vFinishPoint = _vFinishPoint; vFinishTile = GetTile( vFinishPoint ); }
+	void SetFinishTile( const SVector &_vFinishTile ) { vFinishTile = _vFinishTile; vFinishPoint = GetPoint( vFinishTile ); }
 
 	void InitByStaticPath( CCommonStaticPath *pStaticPath, const CVec2 &vStartPoint, const CVec2 &vFinishPoint, const bool bResetShift );
 public:

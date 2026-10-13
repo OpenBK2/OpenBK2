@@ -10,7 +10,7 @@
 
 extern NTimer::STime curTime;
 extern CStaticObjects theStatObjs;
-extern CGlobalWarFog theWarFog; 
+extern CGlobalWarFog theWarFog;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4B5, CSmokeScreen );
 
@@ -40,7 +40,7 @@ void CSmokeScreen::TraceToPoint( const int x, const int y, const bool bAdd )
 {
 	const SVector center = tileCenter;
 	const SVector finishPoint( tileCenter.x + x, tileCenter.y + y );
-	
+
 	CBres bres;
 	bres.InitPoint( center, finishPoint );
 
@@ -59,11 +59,11 @@ void CSmokeScreen::OctupleTrace( const int x, const int y, const bool bAdd )
 	TraceToPoint( -x,  y, bAdd );
 	TraceToPoint(  x, -y, bAdd );
 	TraceToPoint( -x, -y, bAdd );
-	
+
 	TraceToPoint(  y,  x, bAdd );
 	TraceToPoint(  y, -x, bAdd );
 	TraceToPoint( -y,  x, bAdd );
-	TraceToPoint( -y, -x, bAdd ); 
+	TraceToPoint( -y, -x, bAdd );
 }
 
 void CSmokeScreen::Trace( const bool bAdd )
@@ -84,7 +84,7 @@ void CSmokeScreen::Trace( const bool bAdd )
 	TraceToPoint(  r,  0, bAdd );
 	TraceToPoint( -r,  0, bAdd );
 
-	do 
+	do
 	{
 		if ( d < 0 )
 			d += 4*x + 6;
@@ -95,7 +95,7 @@ void CSmokeScreen::Trace( const bool bAdd )
 			OctupleTrace( x, y, bAdd );
 		}
 		++x;
-		
+
 		OctupleTrace( x, y, bAdd );
 	}	while ( x <= y );
 }

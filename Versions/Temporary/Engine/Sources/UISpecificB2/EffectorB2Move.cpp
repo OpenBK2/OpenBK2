@@ -17,7 +17,7 @@
 #include <zconf.h>
 
 void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *_pContext, const std::string &szAnimatedWindow )
-{ 
+{
 	const NDb::SUISB2Move *pCmd( checked_cast<const NDb::SUISB2Move*>( _pCmd ) );
 	NI_VERIFY( pCmd, "no command", return );
 	SWindowContextB2Move *pContext = dynamic_cast<SWindowContextB2Move*>( _pContext );
@@ -53,7 +53,7 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 		(vAccelCoeffBounceIn.x <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeffBounceIn.x,
 		(vAccelCoeffBounceIn.y <= FP_EPSILON) ? 0.0f : 1.0f / vAccelCoeffBounceIn.y );
 	fMoveTime2 = pCmd->fMoveTimeBounce;
-	
+
 	fWaitTime = (std::max)( 0.0f, (std::max)( pCmd->fMaxMoveTime, (pContext ? pContext->fMaxMoveTime : 0.0f) ) - fMoveTime );
 
 	int x, y, w, h;
@@ -85,7 +85,7 @@ void CEffectorB2Move::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen 
 
 	vOuterPos = vInitialPos + GetDelta( vSpeed, vAccel, fMoveTime );
 	vBouncePos = vInitialPos + GetDelta( vSpeedBounceIn, vAccelBounceIn, fMoveTime2 );
-	
+
 	vBounceSize = vInitialSize - 2.0f * GetDelta( vSpeedBounceIn, vAccelBounceIn, fMoveTime2 );
 
 	bFinished = false;
@@ -131,7 +131,7 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 		bFinished = true;
 		return 0;
 	}
-		
+
 	const float fFormerElapsedTime = fElapsedTime;
 	fElapsedTime += timeDiff;
 

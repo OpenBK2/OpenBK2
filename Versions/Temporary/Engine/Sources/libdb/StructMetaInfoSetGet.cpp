@@ -331,7 +331,7 @@ bool SStructMetaInfo::SField::SetValueToOwnDBID( const CVariant &value, uint8_t 
 	CPtr<IObjMan> pObjMan = NDb::GetManipulator( dbid );
 	if ( !dbid.IsEmpty() && pObjMan == 0 )
 		return false;
-	
+
 	if ( pObjMan && pTypeDef )
 	{
 		if ( NBind::CBindStruct *pBind = dynamic_cast_ptr<NBind::CBindStruct *>( pObjMan ) )

@@ -12,7 +12,7 @@
 #include "lstring.h"
 #include "ltm.h"
 
-TString *luaS_newlstr (lua_State *L, const char *str) 
+TString *luaS_newlstr (lua_State *L, const char *str)
 {
 	TString res( str );
 	CLuaStrings::iterator it = L->strings.insert( std::pair<TString,bool>( res, false ) ).first;
@@ -20,11 +20,11 @@ TString *luaS_newlstr (lua_State *L, const char *str)
 }
 
 
-static int luaS_newudata (lua_State *L, CObjectBase *pData, int tag ) 
+static int luaS_newudata (lua_State *L, CObjectBase *pData, int tag )
 {
 	UserData *pRes = new UserData;
 	pRes->marked = 0;
-	switch ( tag ) 
+	switch ( tag )
 	{
 		case tagLuaCPtr:
 			pRes->pPtr = pData;
@@ -42,7 +42,7 @@ static int luaS_newudata (lua_State *L, CObjectBase *pData, int tag )
 }
 
 
-int luaS_createudata (lua_State *L, CObjectBase *pData, int tag) 
+int luaS_createudata (lua_State *L, CObjectBase *pData, int tag)
 {
 	ASSERT( IsValid(pData) );
 	for ( int it = 0; it < L->userdatas.size(); ++it )

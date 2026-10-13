@@ -121,7 +121,7 @@ class CWriteStream
 	//
 	void Dump()
 	{
-		if ( buffer.GetSize() > 1024 ) 
+		if ( buffer.GetSize() > 1024 )
 		{
 			pStream->Write( buffer.str(), buffer.GetSize() );
 			buffer.Clear();
@@ -129,7 +129,7 @@ class CWriteStream
 	}
 	void DumpForced()
 	{
-		if ( !buffer.IsEmpty() ) 
+		if ( !buffer.IsEmpty() )
 		{
 			pStream->Write( buffer.str(), buffer.GetSize() );
 			buffer.Clear();
@@ -176,7 +176,7 @@ BOOST_FORCEINLINE bool IsWhiteSpace( const char chr )
 }
 inline const char* SkipWhiteSpace( const char *p )
 {
-	while ( (*p != 0) && IsWhiteSpace(*p) ) 
+	while ( (*p != 0) && IsWhiteSpace(*p) )
 		++p;
 	//
 	return p;
@@ -184,12 +184,12 @@ inline const char* SkipWhiteSpace( const char *p )
 
 inline bool IsEqualSubstring( const std::string &szString, const char *pszBegin, const char *pszEnd )
 {
-	if ( pszEnd - pszBegin < szString.length() ) 
+	if ( pszEnd - pszBegin < szString.length() )
 		return false;
 	//
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++pszBegin )
 	{
-		if ( *it != *pszBegin ) 
+		if ( *it != *pszBegin )
 			return false;
 	}
 	return true;
@@ -199,7 +199,7 @@ inline bool IsEqualSubstring( const std::string &szString, const char *p )
 {
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
-		if ( *it != *p ) 
+		if ( *it != *p )
 			return false;
 	}
 	return true;
@@ -209,7 +209,7 @@ inline bool IsEqualSubstringIC( const std::string &szString, const char *p )
 {
 	for ( std::string::const_iterator it = szString.begin(); it != szString.end(); ++it, ++p )
 	{
-		if ( *it != tolower(*p) ) 
+		if ( *it != tolower(*p) )
 			return false;
 	}
 	return true;

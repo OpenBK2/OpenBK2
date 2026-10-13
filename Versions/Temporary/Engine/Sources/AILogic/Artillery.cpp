@@ -71,14 +71,14 @@ void CArtillery::SetBeingHooked( class CAIUnit *pUnit )
 	}
 }
 
-const CUnitGuns* CArtillery::GetGuns() const 
-{ 
-	return pGuns; 
+const CUnitGuns* CArtillery::GetGuns() const
+{
+	return pGuns;
 }
 
-CUnitGuns* CArtillery::GetGuns() 
-{ 
-	return pGuns; 
+CUnitGuns* CArtillery::GetGuns()
+{
+	return pGuns;
 }
 
 void CArtillery::CreateAmmoBox()
@@ -86,7 +86,7 @@ void CArtillery::CreateAmmoBox()
 	// у пушки должен быть ящик с патронами
 	const SStaticObjectRPGStats* pStats = theUnitCreation.GetShellBox();
 
-	if ( pStats != 0 ) 
+	if ( pStats != 0 )
 	{
 		pBulletStorage = new CArtilleryBulletStorage( pStats, GetAmmoBoxCoordinates(), 1.0f, 0, this );
 		Mem2UniqueIdObjs();
@@ -102,13 +102,13 @@ void CArtillery::UpdateAmmoBoxVisibility( const bool bVisibilityChanged, const b
 
 	if ( bVisible )
 		ShowAmmoBox();
-	else 
+	else
 		HideAmmoBox();
 }
 
 void CArtillery::ShowAmmoBox()
 {
-	if ( !bBulletStorageVisible && pBulletStorage ) 
+	if ( !bBulletStorageVisible && pBulletStorage )
 	{
 		updater.AddUpdate( 0, ACTION_NOTIFY_NEW_ST_OBJ, pBulletStorage, -1 );
 
@@ -116,15 +116,15 @@ void CArtillery::ShowAmmoBox()
 		if ( pBulletStorage->GetCenter() != newCenter )
 			pBulletStorage->MoveTo( newCenter );
 	}
-	
+
 	bBulletStorageVisible = true;
 }
 
 void CArtillery::HideAmmoBox()
 {
-	if ( bBulletStorageVisible && pBulletStorage ) 
+	if ( bBulletStorageVisible && pBulletStorage )
 		updater.AddUpdate( 0, ACTION_NOTIFY_DELETED_ST_OBJ, pBulletStorage, -1 );
-	
+
 	bBulletStorageVisible = false;
 }
 
@@ -143,11 +143,11 @@ void CArtillery::TakeDamage( const float fDamage, const SWeaponRPGStats::SShell 
 			{
 				if ( pShotUnit )
 				{
-					theStatistics.UnitKilled( nPlayerOfShoot, (*pCrew)[0]->GetPlayer(), 
+					theStatistics.UnitKilled( nPlayerOfShoot, (*pCrew)[0]->GetPlayer(),
 						(*pCrew)[0]->GetStats()->fExpPrice, pShotUnit->GetReinforcementType(), GetReinforcementType(), true );
 				}
 				//theMPInfo.UnitsKilled( nPlayerOfShoot, (*pCrew)[0]->GetStats()->fPrice, (*pCrew)[0]->GetPlayer() );
-				
+
 				(*pCrew)[0]->Die( false, 0 );
 			}
 			if ( IsValidObj( pCrew ) )
@@ -166,11 +166,11 @@ void CArtillery::Disappear()
 		HideAmmoBox();
 }
 
-const CVec3 CArtillery::GetAmmoBoxCoordinates() 
+const CVec3 CArtillery::GetAmmoBoxCoordinates()
 {
 	const bool b360DegreesRotate = pStats->GetPlatform( GetUniqueID(), 1 ).constraint.wMax >= 65535;
 	CVec2 vGunDir;
-	
+
 	if ( b360DegreesRotate && GetStats()->etype != RPG_TYPE_ART_AAGUN )
 	{
 		CTurret *pTurret = GetTurret( 0 );
@@ -179,14 +179,14 @@ const CVec3 CArtillery::GetAmmoBoxCoordinates()
 	}
 	else
 		vGunDir = GetDirectionVector();
-	
+
 	const CVec2 vAmmoPoint( pStats->vAmmoPoint.y, -pStats->vAmmoPoint.x );
 	return CVec3( GetCenterPlain() + ( vAmmoPoint^vGunDir), 0.0f );
 }
 
 const bool CArtillery::TurnToTarget( const CVec2 &vTarget )
 {
-	lastCheckToInstall = curTime;	
+	lastCheckToInstall = curTime;
 	if ( !MustHaveCrewToOperate() || fOperable != 0.0f )
 	{
 		pStaticPathToSend = 0;
@@ -201,7 +201,7 @@ const bool CArtillery::TurnToTarget( const CVec2 &vTarget )
 
 bool CArtillery::TurnToDir( const uint16_t &newDir, const bool bCanBackward, const bool bForward )
 {
-	lastCheckToInstall = curTime;	
+	lastCheckToInstall = curTime;
 	if ( !MustHaveCrewToOperate() || fOperable != 0.0f )
 	{
 		pStaticPathToSend = 0;
@@ -216,7 +216,7 @@ bool CArtillery::TurnToDir( const uint16_t &newDir, const bool bCanBackward, con
 
 bool CArtillery::TurnToUnit( const CVec2 &targCenter )
 {
-	lastCheckToInstall = curTime;	
+	lastCheckToInstall = curTime;
 	if ( !MustHaveCrewToOperate() || fOperable != 0.0f )
 	{
 		pStaticPathToSend = 0;
@@ -230,14 +230,14 @@ bool CArtillery::TurnToUnit( const CVec2 &targCenter )
 	return false;
 }
 
-bool CArtillery::IsBeingCaptured() const 
-{ 
-	return IsValidObj( pCapturingUnit ); 
+bool CArtillery::IsBeingCaptured() const
+{
+	return IsValidObj( pCapturingUnit );
 }
 
-void CArtillery::SetCapturingUnit( CFormation * pFormation ) 
-{ 
-	pCapturingUnit = pFormation; 
+void CArtillery::SetCapturingUnit( CFormation * pFormation )
+{
+	pCapturingUnit = pFormation;
 }
 
 void CArtillery::DelCrew()
@@ -427,7 +427,7 @@ const float CArtillery::GetMaxSpeedHere( const CVec2 &point, bool bAdjust ) cons
 	float fSpeed = fOperable * CAIUnit::GetMaxSpeedHere( point, false );
 	if ( bAdjust )
 		AdjustWithDesirableSpeed( &fSpeed );
-	
+
 	return fSpeed;
 }
 
@@ -446,7 +446,7 @@ void CArtillery::SetOperable( float _fOperable )
 	fOperable = _fOperable;
 	if ( fOperable == 0.0f || !HasServeCrew() )
 	{
-		for ( int i = 0; i < GetNGuns(); ++i )	
+		for ( int i = 0; i < GetNGuns(); ++i )
 			GetGun( i )->StopFire();
 	}
 }
@@ -526,7 +526,7 @@ void CArtillery::Segment()
 					GetTurret( i )->TurnVer( 16384 * 3 );
 					bCanDoInstallAction = false;
 				}
-					
+
 				++i;
 			}
 
@@ -621,8 +621,8 @@ void CArtillery::Segment()
 	}
 	else if ( bBulletStorageVisible && !bBoxMustBeShown )
 		HideAmmoBox();
-	
-	
+
+
 	// артиллеристы должны быть но их нет.
 	// пушка в этом случае нейтральная.
 	if ( MustHaveCrewToOperate() && !HasServeCrew()  && ( IsOperable() || IsSelectable() || GetPlayer() != theDipl.GetNeutralPlayer()) )
@@ -702,7 +702,7 @@ void CArtillery::InstallAction( const EActionNotify eInstallAction, bool bAlread
 	}
 	else
 			NI_ASSERT( false, "Wrong install action" );
-	
+
 	if ( eInstallAction == eNextInstallAction )
 		bInstallActionInstant = bAlreadyDone;
 
@@ -792,14 +792,14 @@ void CArtillery::GetRangeArea( SShootAreas *pRangeArea ) const
 	}
 }
 
-int CArtillery::GetNGuns() const 
-{ 
-	return pGuns->GetNTotalGuns(); 
+int CArtillery::GetNGuns() const
+{
+	return pGuns->GetNTotalGuns();
 }
 
-CBasicGun* CArtillery::GetGun( const int n ) const 
-{ 
-	return pGuns->GetGun( n ); 
+CBasicGun* CArtillery::GetGun( const int n ) const
+{
+	return pGuns->GetGun( n );
 }
 
 const NTimer::STime CArtillery::GetBehUpdateDuration() const
@@ -807,23 +807,23 @@ const NTimer::STime CArtillery::GetBehUpdateDuration() const
 	return behUpdateDuration;
 }
 
-CBasicGun* CArtillery::ChooseGunForStatObj( CStaticObject *pObj, NTimer::STime *pTime ) 
-{ 
-	return pGuns->ChooseGunForStatObj( this, pObj, pTime ); 
+CBasicGun* CArtillery::ChooseGunForStatObj( CStaticObject *pObj, NTimer::STime *pTime )
+{
+	return pGuns->ChooseGunForStatObj( this, pObj, pTime );
 }
 
 CBasicGun* CArtillery::GetFirstArtilleryGun() const
-{ 
-	return pGuns->GetFirstArtilleryGun(); 
+{
+	return pGuns->GetFirstArtilleryGun();
 }
 
-const bool CArtillery::CanShootToPlanes() const 
-{ 
-	return pGuns->CanShootToPlanes(); 
+const bool CArtillery::CanShootToPlanes() const
+{
+	return pGuns->CanShootToPlanes();
 }
 
-bool CArtillery::HasSlaveTransport() 
-{ 
+bool CArtillery::HasSlaveTransport()
+{
 	return pSlaveTransport && pSlaveTransport->IsRefValid() && pSlaveTransport->IsAlive();
 }
 
@@ -944,7 +944,7 @@ void CArtillery::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 	CAIUnit::LookForTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
 
 	// в радиусе цели нет
-	if ( *pBestTarget == 0 && 
+	if ( *pBestTarget == 0 &&
 			 ( pCurTarget == 0 || pCurTarget->GetStats()->IsInfantry() ) && theDipl.IsAIPlayer( GetPlayer() ) )
 	{
 		LookForFarTarget( pCurTarget, bDamageUpdated, pBestTarget, pGun );
@@ -952,7 +952,7 @@ void CArtillery::LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, 
 }
 
 const bool CArtillery::NeedDeinstall() const
-{ 
+{
 	return GetStats()->nUninstallRotate != 0 || GetStats()->nUninstallTransport != 0;
 }
 
@@ -960,17 +960,17 @@ EActionNotify CArtillery::GetFinishInstallUpdate( EActionNotify eAction )
 {
 	switch ( eAction )
 	{
-		case ACTION_NOTIFY_INSTALL_TRANSPORT:		
+		case ACTION_NOTIFY_INSTALL_TRANSPORT:
 			return ACTION_NOTIFY_FINISH_INSTALL_TRANSPORT;
 		case ACTION_NOTIFY_INSTALL_ROTATE:
 			return ACTION_NOTIFY_FINISH_INSTALL_ROTATE;
-		case ACTION_NOTIFY_INSTALL_MOVE: 				
+		case ACTION_NOTIFY_INSTALL_MOVE:
 			return ACTION_NOTIFY_FINISH_INSTALL_MOVE;
-		case ACTION_NOTIFY_UNINSTALL_TRANSPORT: 
+		case ACTION_NOTIFY_UNINSTALL_TRANSPORT:
 			return ACTION_NOTIFY_FINISH_UNINSTALL_TRANSPORT;
-		case ACTION_NOTIFY_UNINSTALL_MOVE:			
+		case ACTION_NOTIFY_UNINSTALL_MOVE:
 			return ACTION_NOTIFY_FINISH_UNINSTALL_MOVE;
-		case ACTION_NOTIFY_UNINSTALL_ROTATE:		
+		case ACTION_NOTIFY_UNINSTALL_ROTATE:
 			return ACTION_NOTIFY_FINISH_UNINSTALL_ROTATE;
 		default:
 			NI_ASSERT( false, "Wrong action for CArtillery::GetFinishInstallUpdate" );

@@ -29,7 +29,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 
 	int nSizeX, nSizeY;
 	pChapterMap->GetPlacement( 0, 0, &nSizeX, &nSizeY );
-	
+
 	vDetailsCoeff.Set( 1.0f, 1.0f );
 	if ( pDetailsMap )
 	{
@@ -38,7 +38,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 		if ( nSizeY > 0 )
 			vDetailsCoeff.y = float( nSizeY ) / ( pDetailsMap->nNumPatchesY * AI_TILE_SIZE * AI_TILES_IN_PATCH );
 	}
-	
+
 	missions.resize( pChapter->missionPath.size() );
 	for ( int nMission = 0; nMission < pChapter->missionPath.size(); ++nMission )
 	{
@@ -74,7 +74,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 					break;
 				}
 			}
-			
+
 			// search for arrows
 			mission.arrows.reserve( pDetailsMap->roads.size() );
 			for ( int nRoad = 0; nRoad < pDetailsMap->roads.size(); ++nRoad )
@@ -101,7 +101,7 @@ SChapterMapMenuHelper::SChapterMapMenuHelper( const NDb::SChapter *_pChapter, IW
 						for ( int i = 0; i < road.points.size(); ++i )
 						{
 							arrow.points[i] = Map2Screen( road.points[i].vPos );
-							arrow.rcBounds.Union( CTRect<float>( arrow.points[i].x, arrow.points[i].y, 
+							arrow.rcBounds.Union( CTRect<float>( arrow.points[i].x, arrow.points[i].y,
 								arrow.points[i].x + 1, arrow.points[i].y + 1 ) );
 						}
 						arrow.fWidth = road.points[0].fWidth / 4;
@@ -151,7 +151,7 @@ void SChapterMapMenuHelper::UpdateArrow( NDb::SMapInfo *pDetailsMap, SArrow *pAr
 	if ( pDetailsMap )
 	{
 		NDb::SVSOInstance *pRoad = &pDetailsMap->roads[pArrow->nID];
-		
+
 		for ( int i = 0; i < pArrow->points.size(); ++i )
 		{
 			pRoad->points[i].vPos = Screen2Map( pArrow->points[i] );

@@ -10,8 +10,8 @@ struct IMessageReactionB2;
 
 // class contains message reactions
 // that may be launched.
-// Message Reaction is a set basic actions 
-class CMessageReactions 
+// Message Reaction is a set basic actions
+class CMessageReactions
 {
 	typedef std::unordered_map<std::string, CPtr<IMessageReactionB2> > CReactions;
 	CReactions reactions;

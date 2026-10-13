@@ -141,7 +141,7 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 					{
 						bResult = pExporter->StartExport( rszObjectTypeName, bForce );
 					}
-					catch ( ... ) 
+					catch ( ... )
 					{
 						ILogger *pLogger = NLog::GetLogger();
 						pLogger->Log( LT_ERROR, fmt::format( "\nStartExport throw exception\n" ) );
@@ -158,7 +158,7 @@ void CExporterBase::InnerStartExport( const CObjectTypeNameList &rNewObjectTypeN
 					{
 						bResult = pExporter->StartCheck( rszObjectTypeName, bExport );
 					}
-					catch ( ... ) 
+					catch ( ... )
 					{
 						ILogger *pLogger = NLog::GetLogger();
 						pLogger->Log( LT_ERROR, fmt::format( "\nStartCheck throw exception\n" ) );
@@ -201,7 +201,7 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 				{
 					pExporter->FinishExport( rszObjectTypeName, bForce );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					ILogger *pLogger = NLog::GetLogger();
 					pLogger->Log( LT_ERROR, fmt::format( "\nFinishExport throw exception\n" ) );
@@ -214,7 +214,7 @@ void CExporterBase::InnerFinishExport( bool bExport, bool bForce )
 			{
 				pExporter->FinishCheck( rszObjectTypeName, bExport );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nFinishCheck throw exception\n" ) );
@@ -277,7 +277,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				{
 					eResult = pExporter->ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, ET_BEFORE_REF );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					ILogger *pLogger = NLog::GetLogger();
 					pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
@@ -296,7 +296,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				{
 					eResult = pExporter->CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, ET_BEFORE_REF );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					ILogger *pLogger = NLog::GetLogger();
 					pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
@@ -333,7 +333,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				{
 					eResult = pExporter->ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, ET_AFTER_REF );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					ILogger *pLogger = NLog::GetLogger();
 					pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
@@ -352,7 +352,7 @@ EXPORT_RESULT CExporterBase::InnerExportObject( IManipulator* pManipulator,
 				{
 					eResult = pExporter->CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, ET_AFTER_REF );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					ILogger *pLogger = NLog::GetLogger();
 					pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
@@ -499,7 +499,7 @@ EXPORT_RESULT CExporterBase::CheckObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 START_REGISTER(DefaultExporterCommands)
 REGISTER_VAR_EX( "report_safe_refs", NGlobal::VarBoolHandler, &s_bReportSafeRefs, true, STORAGE_NONE );

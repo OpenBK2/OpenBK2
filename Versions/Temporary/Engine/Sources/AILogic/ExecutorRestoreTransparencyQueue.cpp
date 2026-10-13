@@ -52,13 +52,13 @@ int CExecutorRestoreTransparencyQueue::Segment()
 
 	if ( !objectQueue.empty() )
 	{
-		// process some objects, 
+		// process some objects,
 		int nRestored = 0;
-		while ( nRestored < nObjectsPerCalculation && !objectQueue.empty() ) 
+		while ( nRestored < nObjectsPerCalculation && !objectQueue.empty() )
 		{
 			const int nID = objectQueue.front();
 			CObjectsToRestore::iterator pos = objectsToRestore.find( nID );
-			
+
 			if ( pos != objectsToRestore.end() )
 			{
 				if ( CLinkObject::IsLinkObjectExists( nID ) )
@@ -66,7 +66,7 @@ int CExecutorRestoreTransparencyQueue::Segment()
 					CLinkObject * pLinkObj = CLinkObject::GetObjectByUniqueId( nID );
 					CExistingObject *pObj = checked_cast<CExistingObject *>( pLinkObj );
 					if ( pObj )
-						pObj->RestoreTransparenciesImmidiately(); 
+						pObj->RestoreTransparenciesImmidiately();
 					++nRestored;
 				}
 				objectsToRestore.erase( pos );

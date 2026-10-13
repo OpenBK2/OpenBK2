@@ -63,9 +63,9 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "Mines/";
 		*pszPostfix = '/' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "ComplexSoundDesc" ) || 
+	else if ( ( szTypeName == "ComplexSoundDesc" ) ||
 		( szTypeName == "Composition" ) ||
-		( szTypeName == "MusicTrack" ) || 
+		( szTypeName == "MusicTrack" ) ||
 		( szTypeName == "PlayList" ) ||
 		( szTypeName == "PlayTime" ) ||
 		( szTypeName == "SoundDesc" ) ||
@@ -74,9 +74,9 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "SoundAndMusic/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "AIGameConsts" ) || 
+	else if ( ( szTypeName == "AIGameConsts" ) ||
 		( szTypeName == "CameraLimits" ) ||
-		( szTypeName == "ClientGameConsts" ) || 
+		( szTypeName == "ClientGameConsts" ) ||
 		( szTypeName == "GameConsts" ) ||
 		( szTypeName == "MultiplayerConsts" ) ||
 		( szTypeName == "NetGameConsts" ) ||
@@ -100,16 +100,16 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		( szTypeName == "ForegroundTextString" ) ||
 		( szTypeName == "ForegroundTextStringShared" ) ||
 		( szTypeName == "TextFormat" ) ||
-		( szTypeName == "TooltipContext" ) || 
+		( szTypeName == "TooltipContext" ) ||
 		( szTypeName == "MessageReactionComplex" )  )
 	{
 		*pszPrefix = "UI/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
 	// SCENE{
-	else if ( ( szTypeName == "AnimLight" ) || 
+	else if ( ( szTypeName == "AnimLight" ) ||
 		( szTypeName == "LightInstance" ) ||
-		( szTypeName == "Particle" ) || 
+		( szTypeName == "Particle" ) ||
 		( szTypeName == "ParticleInstance" ) ||
 		( szTypeName == "ComplexEffect" ) ||
 		( szTypeName == "ComplexSeasonedEffect" ) ||
@@ -124,14 +124,14 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "Scene/Lights/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "Material" ) || 
+	else if ( ( szTypeName == "Material" ) ||
 		        ( szTypeName == "Texture" ) ||
 						( szTypeName == "CubeTexture" ) )
 	{
 		*pszPrefix = "Scene/TexAndMats/";
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( ( szTypeName == "AIGeometry" ) || 
+	else if ( ( szTypeName == "AIGeometry" ) ||
 		( szTypeName == "Geometry" ) ||
 		( szTypeName == "Skeleton" ) ||
 		( szTypeName == "Model" ) ||
@@ -170,7 +170,7 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "Terrain/" + szTypeName + '/';
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else if ( 
+	else if (
 		( szTypeName == "DeployTemplate" ) ||
 		( szTypeName == "Reinforcement" ) ||
 		( szTypeName == "ReinforcementChange" ) ||
@@ -181,7 +181,7 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 		*pszPrefix = "Reinforcements/" + szTypeName + '/';
 		*pszPostfix = '_' + szTypeName + ".xdb";
 	}
-	else 
+	else
 	{
 		*pszPrefix = "Other/" + szTypeName + '/';
 		*pszPostfix = '/' + szTypeName + ".xdb";
@@ -190,7 +190,7 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
@@ -200,7 +200,7 @@ void MakePrefixAndPostfix( std::string *pszPrefix, std::string *pszPostfix, cons
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **

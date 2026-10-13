@@ -120,7 +120,7 @@ namespace NMapInfoEditor
 			return false;
 		}
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = dynamic_cast<const NDb::SBridgeRPGStats*>( NDb::GetObject( pBridgeCreateInfo->rpgStatsDBID ) );
-		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", pBridgeCreateInfo->szRPGStatsTypeName.c_str() ) ); 
+		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", pBridgeCreateInfo->szRPGStatsTypeName.c_str() ) );
 		if (  pBridgeRPGStats == 0 )
 		{
 			return false;
@@ -249,14 +249,14 @@ namespace NMapInfoEditor
 				vStart = CVec3( rvStart.x, fY, rvStart.z );
 				vEnd = CVec3( rvEnd.x, fY, rvEnd.z );
 				break;
-			}				
+			}
 			case DIRECTION_Y:
 			{
 				const float fX = float ( rvStart.x + rvEnd.x ) / 2.0f;
 				vStart = CVec3( fX, rvStart.y, rvStart.z );
 				vEnd = CVec3( fX, rvEnd.y, rvEnd.z );
 				break;
-			}				
+			}
 			case DIRECTION_UNKNOWN:
 			{
 				const float fSizeX = abs( rvEnd.x - rvStart.x );
@@ -341,7 +341,7 @@ namespace NMapInfoEditor
 			}
 			if ( pVisObj != 0 )
 			{
-				return ::GetModel( pVisObj, eSeason ); 
+				return ::GetModel( pVisObj, eSeason );
 			}
 		}
 		return 0;
@@ -377,6 +377,6 @@ namespace NMapInfoEditor
 	}
 };
 
-// basement storage  
+// basement storage
 
 

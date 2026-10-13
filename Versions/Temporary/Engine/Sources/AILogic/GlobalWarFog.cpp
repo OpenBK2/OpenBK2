@@ -47,7 +47,7 @@ struct SMaskVisitor
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nMaxRadius = {};
 	SMaskVisitor() : nMaxRadius( theWarFog.GetMaxRadius() ) {}
-	
+
 	bool operator()( const SVector &vOffset, const bool bVisible )
 	{
 		const int nX = vOffset.x + nMaxRadius;
@@ -57,7 +57,7 @@ struct SMaskVisitor
 			mask.RemoveData( nX, nY );
 		else if ( !visit.GetData( nX, nY ) )
 			mask.SetData( nX, nY );
-		
+
 		visit.SetData( nX, nY );
 		return true;
 	}
@@ -204,7 +204,7 @@ void CGlobalWarFog::RemoveTileValid( const int x, const int y )
 {
 	if ( !bInitialization )
 	{
-		for ( int i = 0; i < GetSpiralLength(); ++i ) 
+		for ( int i = 0; i < GetSpiralLength(); ++i )
 		{
 			const int x1 = GetSpiralPoint( i ).vOffset.x + x;
 			const int y1 = GetSpiralPoint( i ).vOffset.y + y;
@@ -256,7 +256,7 @@ void CGlobalWarFog::UpdateUnit( const int nID, const SWarFogUnitInfo &updateInfo
 {
 	//NI_ASSERT( updateInfo.bPlane || IsTileInside( updateInfo.vPos ), StrFmt( "Trying update unit %d to wrong position (%d x %d), size of map: %d x %d", nID, updateInfo.vPos.x, updateInfo.vPos.y, GetSizeX(), GetSizeY() ) );
 	//NI_ASSERT( updateInfo.nRadius <= GetMaxRadius(), StrFmt( "WARNING: nMaxRadius exceed (nMaxRadius = %d, updateInfo.nRadius = %d)", GetMaxRadius(), updateInfo.nRadius ) );
-	
+
 	TWarFogUnitsMap::iterator pos = units.find( nID );
 #ifdef _FINALRELEASE
 	if ( pos == units.end() )
@@ -316,7 +316,7 @@ void CGlobalWarFog::SynchronizeHeights( const SVector &vUpLeftTile, const SVecto
 	const int nY1 = vUpLeftTile.y;
 	const int nX2 = vBottomRightTile.x;
 	const int nY2 = vBottomRightTile.y;
-	
+
 	for ( int y = nY1; y < nY2-1; ++y )
 	{
 		for ( int x = nX1; x < nX2-1; ++x )
@@ -474,7 +474,7 @@ bool CGlobalWarFog::IsTileVisible( const SVector &tile, const int nParty ) const
 	if ( !theDipl.IsNetGame() && IsOpenBySriptArea( tile ) && theDipl.GetMyParty() == nParty )
 		return true;
 
-	return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0; 
+	return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0;
 }
 
 bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool bCamouflated ) const
@@ -487,9 +487,9 @@ bool CGlobalWarFog::IsUnitVisible( const SVector &tile, const int nParty, bool b
 		return true;
 
 	if ( bCamouflated )
-		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nCloseVisible != 0; 
+		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nCloseVisible != 0;
 	else
-		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0; 
+		return warFog[nParty][tile.y/AI_TILES_IN_VIS_TILE][tile.x/AI_TILES_IN_VIS_TILE].nVisible != 0;
 }
 
 void CGlobalWarFog::ToggleOpenForScriptAreaTiles( const NDb::SScriptArea &scriptArea, bool bOpen )
@@ -614,7 +614,7 @@ bool CGlobalWarFog::GetWarForInfo( CArray2D<uint8_t> **pWarFogInfo, const int nP
 				miniMapWarFog[1][x] = miniMapWarFog[0][x];
 			}
 		}
-		else if ( y > 1 ) 
+		else if ( y > 1 )
 		{
 			int nNewSum;
 			nNewSum = GetClientTileVis( 0, y*AI_TILES_IN_VIS_TILE, nParty ) + GetClientTileVis( AI_TILES_IN_VIS_TILE, y*AI_TILES_IN_VIS_TILE, nParty );

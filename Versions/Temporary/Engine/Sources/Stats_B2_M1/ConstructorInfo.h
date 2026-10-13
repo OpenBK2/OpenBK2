@@ -17,7 +17,7 @@ class STATS_B2_M1_EXPORT CConstructorInfo : public CObjectBase
 public:
 	struct SUnitPlatform
 	{
-		ZDATA 
+		ZDATA
 			// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 			int nPlatformIndex = {};
 			std::vector<int> gunIndexes;
@@ -40,7 +40,7 @@ public:
 
 	void SetPlayerUnit( const int nUniqueID, CObjectBase *pPlayerUnit );
 	CObjectBase* GetPlayerUnit( const int nUniqueID );
-	
+
 	int GetSlotsSize( const int nUniqueID ) const;
 	int GetSlotObject( const int nUniqueID, const int nSlot ) const;
 };

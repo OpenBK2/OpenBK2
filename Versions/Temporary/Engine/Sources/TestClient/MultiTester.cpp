@@ -93,7 +93,7 @@ bool CMultiTester::Segment()
 {
   if ( bCancelled || !pServerClient )
 		return false;
-	
+
 	pServerClient->Segment();
 
 	CPtr<CNetPacket> pPacket;
@@ -192,7 +192,7 @@ bool CMultiTester::ProcessChatChannelClientsListPacket( CChatChannelClientsListP
 bool CMultiTester::ProcessClientRemoved( CNetRemoveClient *pPacket )
 {
 	if ( pPacket->nClientID == 0 )
-	{	
+	{
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "{} connection lost\n", szName ).c_str() );
 		bCancelled = true;
 		pServerClient = 0;

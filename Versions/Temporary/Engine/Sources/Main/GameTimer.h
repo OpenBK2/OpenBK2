@@ -35,10 +35,10 @@ public:
 	void Update( const NTimer::STime &time, const NTimer::STime &timeMaxDelta )
 	{
 		NTimer::STime dT = prevTime == 0 ? 0 : time - prevTime;
-		if ( dT > timeMaxDelta ) 
+		if ( dT > timeMaxDelta )
 			dT = timeMaxDelta;
 		prevTime = time;
-		if ( !bPaused ) 
+		if ( !bPaused )
 		{
 			const float fdt = float( dT*fScale ) + fError;
 			dT = NTimer::STime( Float2Int( fdt ) );
@@ -54,7 +54,7 @@ public:
 		saver.Add( 3, &fScale );
 		saver.Add( 4, &fError );
 		saver.Add( 5, &bPaused );
-		if ( saver.IsReading() ) 
+		if ( saver.IsReading() )
 			prevTime = 0;
 		return 0;
 	}
@@ -106,7 +106,7 @@ enum EPauseType
 	PAUSE_TYPE_USER_PAUSE = 0,
 	PAUSE_TYPE_INACTIVE		= 1,
 	PAUSE_TYPE_INTERFACE	= 2, // pause specified by interface
-	
+
 	PAUSE_TYPE_WAIT_FOR_CONNECT = 3,
 	PAUSE_TYPE_MP_NO_SEGMENT_DATA = 100,	// no segment data in multiplayer mode
 };

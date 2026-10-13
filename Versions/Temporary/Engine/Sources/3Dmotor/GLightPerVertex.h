@@ -25,7 +25,7 @@ struct SPerVertexLightState
 		int nID;
 
 		SPointLightInfo() {}
-		SPointLightInfo( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor, int _nID ) 
+		SPointLightInfo( const CVec3 &_vCenter, float _fRadius, const CVec3 &_vColor, int _nID )
 			: vCenter(_vCenter), fRadius(_fRadius), vColor(_vColor), nID(_nID) {}
 	};
 	ZDATA
@@ -90,11 +90,11 @@ struct SCacheLightingInfo
 };
 
 struct SUVInfo;
-void CalcPerVertexLight( NGfx::SGeomVecFull *pRes, 
+void CalcPerVertexLight( NGfx::SGeomVecFull *pRes,
 	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<uint16_t> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<uint32_t> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );
-void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes, 
+void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 	const std::vector<CVec3> &srcPos, const SUVInfo *pSrc, const std::vector<uint16_t> &posIndices,
 	const std::vector<NGfx::SCompactVector> &_normals, const std::vector<uint32_t> &vertexColor,
 	const SPerVertexLightState &ls, SCacheLightingInfo *pCache, const SBound &bv );

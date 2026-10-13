@@ -34,7 +34,7 @@ class CPlayerReinforcement
 	CArray2D<int>	unitAvailability;	// do not serialize in checksum
 	ZDATA
 		CPositions positions;
-		
+
 		// reinforcement info by type
 		CInfos reinforcementInfos;
 		NTimer::STime timeReinfButtonEnable = {};
@@ -67,7 +67,7 @@ class CPlayerReinforcement
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&positions); f.Add(3,&reinforcementInfos); f.Add(4,&timeReinfButtonEnable); f.Add(5,&nPlayer); f.Add(6,&recycleTimes); f.Add(7,&bReinfButtonEnabled); OnSerialize( f ); f.Add(9,&nMapReinforcementBonus); f.Add(10,&fRecycleTimeCoeff); f.Add(11,&commands); f.Add(12,&timeToCall); f.Add(13,&fStoredProgress); f.Add(14,&timeReinfIncrease); f.Add(15,&superWeaponType); f.Add(16,&nSuperWeaponShots); f.Add(17,&timeSuperWeaponRecycleTime); f.Add(18,&timeSuperWeaponFlyTime); f.Add(19,&superWeaponState); f.Add(20,&timeSuperWeaponFire); f.Add(21,&vSuperWeaponCallPoint); f.Add(22,&pSuperWeaponShell); f.Add(23,&nSuperWeaponShotsLeft); return 0; }
 private:
-	
+
 private:
 	void OnSerialize( IBinSaver &f ) { if ( !f.IsChecksum() ) f.Add(8,&unitAvailability); }
 
@@ -82,10 +82,10 @@ private:
 	void UpdateAddPosition( int nID, const NDb::SReinforcementPosition &point ) const;
 	void UpdateDeletePosition( int nUniqueID ) const;
 	void AddPosition( const NDb::SReinforcementPosition &point, int nID, bool bEnabled );
-	
+
 	void SendReinforcementToPoint( std::list< std::pair<int, CObjectBase*> > &objects, const NDb::EReinforcementType eType, const CVec2 &vPoint, const bool bIsParatroops, const float fCmdParam );
 public:
-	
+
 	CPlayerReinforcement();
 
 	void AddCallReinforcementCommand( NDb::EReinforcementType eType, const CVec2 &vPoint );
@@ -98,7 +98,7 @@ public:
 	void CallSuperWeapon();
 	void ShotSuperWeapon();
 	void Segment();
-	
+
 	bool CanCallNow() const;
 	bool HasReinforcement( NDb::EReinforcementType eType ) const;
 	NTimer::STime GetRecycleTimeLeft() const;
@@ -108,7 +108,7 @@ public:
 	int GetReinforcementCallsLeft() const;
 
 	void SetRecycleCoeff( const float fNewCoeff );		// -1 == doesn't recycle
-	
+
 	int GetRandomPointID() const;		// randomize appear point (generally for general)
 	CVec2 GetRandomPoint() const;		// randomize appear point (generally for general)
 

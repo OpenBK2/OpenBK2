@@ -139,7 +139,7 @@ void CServerClient::SendPacket( CNetPacket *pPacket2Process )
 	// direct packet to client
 	if ( pPacket->nClientID != 0 )
 	{
-		CPtr<CDirectPacketToClient> pPacket2Server = 
+		CPtr<CDirectPacketToClient> pPacket2Server =
 			new CDirectPacketToClient( 0, pPacket->nClientID, pPacket );
 		pNet->SendPacket( pPacket2Server );
 	}
@@ -168,7 +168,7 @@ void CServerClient::Segment()
 {
 	if ( bDebugPaused )
 		return;
-	
+
 	GetPacketsFromNet();
 
 	std::list< CPtr<CPacketProcessor> >::iterator iter = processors.begin();
@@ -196,7 +196,7 @@ void CServerClient::SendGamePacket( CNetPacket *_pPacket, bool bBroadcast )
 		return;
 	}
 
-	
+
 	CPtr<CNetPacket> pPacket = _pPacket;
 	GetNetLogger()->Log( "client", fmt::format("send game {}, broadcast {}", GetPacketInfo( pPacket ), int(bBroadcast)) );
 	pPlayGameProcessor->SendGamePacket( pPacket, bBroadcast );

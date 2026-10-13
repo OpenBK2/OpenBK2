@@ -23,7 +23,7 @@ void CCombatEstimator::AddShell( NTimer::STime time, float _fDamage )
 
 void CCombatEstimator::Segment()
 {
-	for ( CShellTimes::iterator it = shellTimes.begin(); 
+	for ( CShellTimes::iterator it = shellTimes.begin();
 				it != shellTimes.end() && curTime > it->time;  )
 	{
 		fDamage -= it->fDamage;
@@ -39,8 +39,8 @@ void CCombatEstimator::Clear()
 	registeredMechUnits.clear();
 }
 
-bool CCombatEstimator::IsCombatSituation() const 
-{ 
+bool CCombatEstimator::IsCombatSituation() const
+{
 	//CRAP{ FOR TEST
 //	const int nMechs = registeredMechUnits.size();
 //	const int nInfantry = registeredInfantry.size();
@@ -49,7 +49,7 @@ bool CCombatEstimator::IsCombatSituation() const
 			registeredMechUnits.size() > SConsts::NUMBER_ENEMY_MECH_MOVING_TO_COMBAT_SITUATION ||
 			registeredInfantry.size() > SConsts::NUMBER_ENEMY_INFANTRY_MOVING_TO_COMBAT_SITUATION;
 
-} 
+}
 
 void CCombatEstimator::AddUnit( CAIUnit *pUnit )
 {

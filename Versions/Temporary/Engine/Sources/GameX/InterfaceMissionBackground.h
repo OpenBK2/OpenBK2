@@ -24,7 +24,7 @@ public:
 	~CInterfaceMissionBackground();
 public:
 	CInterfaceMissionBackground();
-	
+
 	bool Init();
 };
 
@@ -36,7 +36,7 @@ class CICMissionBackground : public CInterfaceCommandBase<CInterfaceMissionBackg
 	void PostCreate( IInterface *pInterface );
 public:
 	void Configure( const char *pszConfig );
-	
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, (CInterfaceCommandBase<CInterfaceMissionBackground>*)( this ) );

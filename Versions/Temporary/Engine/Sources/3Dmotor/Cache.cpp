@@ -9,7 +9,7 @@ namespace NCache
 int nFibbonachiSeries[N_MAX_FIB];
 struct SCacheInit
 {
-	SCacheInit() 
+	SCacheInit()
 	{
 		nFibbonachiSeries[0] = nFibbonachiSeries[1] = 1;
 		for ( int i = 2; i < N_MAX_FIB; ++i )

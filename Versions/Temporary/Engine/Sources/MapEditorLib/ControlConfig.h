@@ -1,7 +1,7 @@
 #pragma once
 
 
-// save / load expanded / collapsed states	
+// save / load expanded / collapsed states
 // save / load columns count / width
 // save / load selected / focused elements
 

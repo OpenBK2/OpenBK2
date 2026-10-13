@@ -30,7 +30,7 @@ public:
 
 	void SetParams( const CVec2 &vEndPoint, const float fMaxSpeed );
 	void SetParams( const CVec2 &_vEndPoint, const float fMaxSpeed, const CVec2 &_vSpeed2 );
-	
+
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );
 
@@ -40,9 +40,9 @@ public:
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit  ) { return true; }
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
 	virtual void Stop() {}
-	virtual const float GetSpeed() const 
-	{ 
-		return fSpeedLen; 
+	virtual const float GetSpeed() const
+	{
+		return fSpeedLen;
 	}
 	virtual void NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) { }
 //	virtual void SlowDown() {}
@@ -97,7 +97,7 @@ public:
 	virtual float GetCurvatureRadius() const { return 0.0f; }
 
 	virtual bool IsWithFormation() const { return false; }
-	
+
 	virtual void GetSpeed3( CVec3 *pvSpeed ) const { *pvSpeed = CVec3( vSpeed, 0.0f ); }
 };
 

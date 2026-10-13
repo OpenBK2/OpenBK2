@@ -12,7 +12,7 @@ class CAICmdsAutomagic : public IAICmdsAutoMagic
 		std::unordered_map<int, uint8_t> msg2byte;
 	std::vector<int> byte2msg;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&msg2byte); f.Add(3,&byte2msg); return 0; }
-public:	
+public:
 	CAICmdsAutomagic();
 	virtual int GetCommandID( CObjectBase *p );
 	virtual CObjectBase *MakeCommand( int nID );

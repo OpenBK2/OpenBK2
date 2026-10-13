@@ -12,7 +12,7 @@ class CDamageToEnemyUpdater
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nTakenDamageUpdated = {};
 	float fTakenDamagePower = {};
-	
+
 	CPtr<CAIUnit> pCurEnemy;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTakenDamageUpdated); f.Add(3,&fTakenDamagePower); f.Add(4,&pCurEnemy); return 0; }
 public:

@@ -30,7 +30,7 @@ class CTankShootEstimator : public IShootEstimator
 	float fBestRating = {};
 	uint32_t dwForbidden = {};
 	uint32_t dwDefaultForbidden = {};
-	
+
 	CDBPtr<SUnitBaseRPGStats> pMosinStats;
 
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pBestUnit); f.Add(4,&pBestGun); f.Add(5,&nBestGun); f.Add(6,&pCurTarget); f.Add(7,&bDamageToCurTargetUpdated); f.Add(8,&fBestRating); f.Add(9,&dwForbidden); f.Add(10,&dwDefaultForbidden); f.Add(11,&pMosinStats); return 0; }
@@ -127,7 +127,7 @@ public:
 	virtual const int GetNumberOfBestGun() const;
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// for 
+// for
 class CBuilding;
 class CPlaneShturmovikShootEstimator : public IShootEstimator
 {
@@ -163,11 +163,11 @@ class CPlaneShturmovikShootEstimator : public IShootEstimator
 	CPtr<CAIUnit> pOwner;
 	CPtr<CAIUnit> pCurEnemy;
 	CVec2 vCenter;
-	
+
 	STargetInfo bestForGuns;
 	STargetInfo bestForBombs;
 	STargetInfo bestAviation;
-	
+
 	CBuildings buildings;
 	CPtr<CBuilding> pBestBuilding;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&pCurEnemy); f.Add(4,&vCenter); f.Add(5,&bestForGuns); f.Add(6,&bestForBombs); f.Add(7,&bestAviation); f.Add(8,&buildings); f.Add(9,&pBestBuilding); return 0; }
@@ -187,11 +187,11 @@ public:
 	void CalcBestBuilding();
 	class CBuilding * GetBestBuilding() const { return pBestBuilding; }
 
-	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;} 
-	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;} 
+	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;}
+	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;}
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// для стрельбы по препятствиям. 
+// для стрельбы по препятствиям.
 class CShootEstimatorForObstacles : public IObstacleEnumerator
 {
 	ZDATA
@@ -212,7 +212,7 @@ class CShootEstimatorSupportAAGun : public IShootEstimator
 
 		ZDATA
 	CPtr<CAIUnit> pOwner;
-	CPtr<CAIUnit> pBestTarget; 
+	CPtr<CAIUnit> pBestTarget;
 	uint32_t dwForbidden = {};
 	float fBestRating = {};
 	bool bDamageToCurTargetUpdated = {} ;
@@ -226,8 +226,8 @@ public:
 	void AddUnit( class CAIUnit *pEnemy );
 	class CAIUnit* GetBestUnit() const { return pBestTarget; }
 
-	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;} 
-	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;} 
+	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;}
+	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;}
 };
 
 

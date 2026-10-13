@@ -31,7 +31,7 @@ class CChapterState : public CDefaultInputState
 	CVec2 vChapterMapSize;
 	SChapterMapMenuHelper::SArrow *pPickedArrow;
 	CObj<CMaskManipulator> pMaskManipulator;
-	// Данные общего назначения 
+	// Данные общего назначения
 	CChapterEditor *pChapterEditor;
 	CPtr<ITextView> pNumberView;
 	CPtr<ITextView> pBigNumberView;
@@ -51,9 +51,9 @@ private:
 	void OnKeyArrows( int nDeltaX, int nDeltaY );
 public:
 	CChapterState( CChapterEditor *pChapterEditor );
-	
+
 	void UpdateView();
-	
+
 	//IInputState
 	void Enter();
 	void Leave();

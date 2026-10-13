@@ -68,7 +68,7 @@ public:
 	void AddShotTrace( const CDBPtr<NDb::SWeaponRPGStats> pWeapon, const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene );
 
   bool IsVisible() const;
-  
+
   void SetEntrench( bool bEntrench );
 	IMOContainer* GetContainer() const { return pTransport ? pTransport.GetPtr() : pSquad.GetPtr(); }
 };

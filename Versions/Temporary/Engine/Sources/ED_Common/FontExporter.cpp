@@ -115,14 +115,14 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 	std::string szCommandLine;
 	if ( NFile::DoesFileExist( szCharsFileName ) )
 	{
-		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\" \"{}\"", nHeight, nWeight, 
-														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(), 
+		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\" \"{}\"", nHeight, nWeight,
+														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(),
 														szFaceName.c_str(), szBinFileName.c_str(), szPicFileName.c_str(), szCharsFileName.c_str() );
 	}
 	else
 	{
-		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\"", nHeight, nWeight, 
-														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(), 
+		szCommandLine = fmt::format( "FontGen.exe -h{} -w{} {} {} -{} -{} \"{}\" \"{}\" \"{}\"", nHeight, nWeight,
+														szItalic.c_str(), szAA.c_str(), szPitch.c_str(), szCharset.c_str(),
 														szFaceName.c_str(), szBinFileName.c_str(), szPicFileName.c_str() );
 	}
 	//
@@ -137,7 +137,7 @@ EXPORT_RESULT CFontExporter::ExportObject( IManipulator* pManipulator,
 
 
 /*
-const std::string szCommandLine = fmt::format( "{} -t{} -f{} -m{} -a{} -s{:f} {} \"{}\" \"{}\"", 
+const std::string szCommandLine = fmt::format( "{} -t{} -f{} -m{} -a{} -s{:f} {} \"{}\" \"{}\"",
 pUserData->szTEToolFileName.c_str(),
 szType.c_str(),
 szFormat.c_str(),

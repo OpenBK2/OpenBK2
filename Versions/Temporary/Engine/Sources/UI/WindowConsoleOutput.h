@@ -18,7 +18,7 @@ class CWindowConsoleOutput : public CWindow, public IConsoleOutput
 		std::wstring szString;
 		uint32_t dwColor;
 		CPtr<IML> pGfxText;
-		
+
 		SColorString() : dwColor( 0xffffffff ) {  }
 		SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth, IWindow *pFontScaleWindow );
 		int operator&( IBinSaver &saver );
@@ -47,10 +47,10 @@ public:
 	void ToBegin();
 	void ToEnd();
 	void Init();
-	void ClearContent() 
-	{ 
+	void ClearContent()
+	{
 		nBeginString = 0;
-		vectorOfStrings.clear(); 
+		vectorOfStrings.clear();
 	}
 	void Segment( const int timeDiff );
 };

@@ -68,7 +68,7 @@ public:
 	// channel data
 	CRingBuffer<N_STREAM_BUFFER> channelInBuf;
 	std::list<CMemoryStream> outList;
-	
+
 	CStreamTracker();
 	bool HasOutData() { return !outList.empty() || channelOutBuf.GetSize() != 0 || !channelOutList.empty(); }
 	// A datagram carries at most 255 stream bytes, even with a larger UDP limit.
@@ -89,12 +89,12 @@ private:
 		unsigned char nLength;
 		char cData[256];
 		PACKET_ID nPkt;
-		
+
 		int GetSendSize() const { return sizeof(nOffset) + sizeof(nLength) + nLength; }
 		static int GetHeaderSize() { return sizeof(CHANNEL_DATA_OFFSET) + sizeof(unsigned char); }
 	};
 #pragma pack(pop)
-	
+
 	// streaming data control structures
 	// текущее смещение отсылаемых и принимаемых данных
 	CHANNEL_DATA_OFFSET nChannelOutputOffset, nChannelInputOffset;

@@ -64,7 +64,7 @@ void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
 			timeStart = time - nDeltaTime % nTime;
 		}
 	}
-	
+
 	int nX = 0;
 	int nY = 0;
 	if ( pStats->nFrameCountX > 0 )
@@ -72,14 +72,14 @@ void CBackgroundFrameSequence::Visit( IUIVisitor * pVisitor )
 		nX = nFrame % pStats->nFrameCountX;
 		nY = nFrame / pStats->nFrameCountX;
 	}
-	
+
 	CVec2 vVirtSize;
 	vVirtSize.x = (std::min)( (float)( pos.Width() ), (float)( pStats->vFrameSize.x ) );
 	vVirtSize.y = (std::min)( (float)( pos.Height() ), (float)( pStats->vFrameSize.y ) );
 	NGfx::SPixel8888 sColor = FadeColor( pStats->nColor, GetFadeValue() );
 
-	CRectLayout rects( pos.x1, pos.y1, vVirtSize.x, vVirtSize.y, 
-		nX * pStats->vFrameSize.x, nY * pStats->vFrameSize.y, 
+	CRectLayout rects( pos.x1, pos.y1, vVirtSize.x, vVirtSize.y,
+		nX * pStats->vFrameSize.x, nY * pStats->vFrameSize.y,
 		pStats->vFrameSize.x, pStats->vFrameSize.y, FadeColor( sColor.dwColor, GetFadeValue() ) );
 	VirtualToScreen( &rects );
 

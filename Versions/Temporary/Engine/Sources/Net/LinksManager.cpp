@@ -113,7 +113,7 @@ bool CLinksManagerCommon::Init( const int nPort )
 		setsockopt( s, SOL_SOCKET, SO_RCVBUF, (char *)&nBuf, nBufSize );
 		nBuf = 500000;
 		setsockopt( s, SOL_SOCKET, SO_SNDBUF, (char *)&nBuf, nBufSize );
-	}		
+	}
 	return true;
 }
 

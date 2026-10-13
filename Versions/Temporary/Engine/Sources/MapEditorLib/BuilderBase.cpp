@@ -44,7 +44,7 @@ bool CBuilderBase::RemoveObject( const std::string &rszObjectTypeName, const std
 bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string &szObjectName )
 {
 	IResourceManager *pRM = Singleton<IResourceManager>();
-	if ( CPtr<IManipulator> pMan = pRM->CreateObjectManipulator(szObjectTypeName, szObjectName) ) 
+	if ( CPtr<IManipulator> pMan = pRM->CreateObjectManipulator(szObjectTypeName, szObjectName) )
 	{
 		CManipulatorManager::CReferenceInfoList refsList;
 		const unsigned nFlags = REFINFO_MAKE_UNIQUE_LIST | REFINFO_OBJECT_TYPE_NAME | REFINFO_OBJECT_NAME;
@@ -52,7 +52,7 @@ bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string 
 
 		if ( Singleton<IBuilderContainer>()->RemoveObject( szObjectTypeName, szObjectName, pFolderCallback ) )
 		{
-			for ( CManipulatorManager::CReferenceInfoList::const_iterator it = refsList.begin(); it != refsList.end(); ++it ) 
+			for ( CManipulatorManager::CReferenceInfoList::const_iterator it = refsList.begin(); it != refsList.end(); ++it )
 			{
 				HierarchicalDelete( it->szObjectTypeName, it->szObjectName, pFolderCallback );
 			}
@@ -63,6 +63,6 @@ bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string 
 }
 /**/
 
-// basement storage  
+// basement storage
 
 

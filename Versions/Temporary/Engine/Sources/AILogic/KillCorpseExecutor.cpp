@@ -9,7 +9,7 @@
 extern NTimer::STime curTime;
 
 bool CKillCorpseExecutor::IsExecutorValid() const
-{ 
+{
 	return IsValid( pObject ) && pObject->IsAlive();
 }
 

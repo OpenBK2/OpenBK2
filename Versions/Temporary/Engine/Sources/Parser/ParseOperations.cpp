@@ -962,9 +962,9 @@ void AddDef( CLangNode *pRawNode )
 {
 	if ( pRawNode == 0 )
 		return;
-	
+
 	CFileNode *pFile = GetCurFileNode();
-	
+
 	if ( CDynamicCast<CAttributeDefNode> pNode = pRawNode )
 		AddAttrDef( pNode );
 	else

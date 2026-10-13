@@ -12,7 +12,7 @@ class CEmptyServerClient : public IServerClient
 	OBJECT_NOCOPY_METHODS( CEmptyServerClient );
 public:
 	CEmptyServerClient() {}
-	
+
 	//{
 	CNetPacket* GetPacket();
 	void SendPacket( CNetPacket *pPacket );
@@ -51,13 +51,13 @@ class CMPUITestServerClient : public CServerClientWrapper, public CPacketProcess
 
 		int nGameID;
 		bool bCreator;
-		
+
 		SPlayer() : nID( -1 ), nGameID( -1 ) {}
 	};
-	
+
 	list< CPtr<CNetPacket> > serverPackets;
 	list< CPtr<CNetPacket> > gamePackets;
-	
+
 	SPlayer player;
 	list<SPlayer> opponents;
 	int nFreeClientID;
@@ -74,26 +74,26 @@ private:
 
 	// chat
 	bool OnSendRoomChatPacket( class CChatPacket *pPacket );
-	
+
 	// lobby
 	bool OnEnterGameRoomPacket( class CEnterLobbyPacket *pPacket );
 	bool OnLeaveGameRoomPacket( class CLeaveLobbyPacket *pPacket );
-	
+
 	bool OnGetRoomClientsPacket( class CGetLobbyClientsPacket *pPacket );
 	bool OnGetRoomGamesPacket( class CGetLobbyGamesPacket *pPacket );
-	
+
 	// game
 	bool OnCreateGamePacket( class CCreateGamePacket *pPacket );
 	bool OnConnectGamePacket( class CConnectGamePacket *pPacket );
 	bool OnLeaveGamePacket( class CLeaveGamePacket *pPacket );
 	bool OnKillGamePacket( class CKillGamePacket *pPacket );
-	
+
 	// game specific
 	bool OnB2GameRoomPlayerPacket( class CB2GameRoomPlayerPacket *pPacket );
 	//}
 public:
 	CMPUITestServerClient();
-	
+
 	//{ IServerClient
 	CNetPacket* GetPacket();
 	void SendPacket( CNetPacket *pPacket );
@@ -101,7 +101,7 @@ public:
 	CNetPacket* GetGamePacket();
 	void SendGamePacket( CNetPacket *pPacket, bool bBroadcast );
 	//}
-	
+
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "do not serialize" ); return 0; }
 };*/
 

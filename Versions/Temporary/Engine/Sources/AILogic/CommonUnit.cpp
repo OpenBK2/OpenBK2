@@ -80,7 +80,7 @@ void CCommonUnit::Init( const CVec3 &_vCenter, const uint16_t _wDirection, IColl
 
 	qFinish = qStart;
 
-	CBasePathUnit::Init( _vCenter, _wDirection, GetAIMap(), pCollisionsCollector, Singleton<CCommonPathFinder>() ); 
+	CBasePathUnit::Init( _vCenter, _wDirection, GetAIMap(), pCollisionsCollector, Singleton<CCommonPathFinder>() );
 	CGroupUnit::Init();
 	CQueueUnit::Init();
 	nCommandLeft = g_nDefaultCommandsLimit;
@@ -115,22 +115,22 @@ const uint8_t CCommonUnit::GetParty() const
 	return theDipl.GetNParty( GetPlayer() );
 }
 
-void CCommonUnit::Lock( const CBasicGun *pGun ) 
-{ 
+void CCommonUnit::Lock( const CBasicGun *pGun )
+{
 	pLockingGun = const_cast<CBasicGun*>(pGun);
 }
 
-void CCommonUnit::Unlock( const CBasicGun *pGun ) 
-{ 
-	if ( pLockingGun != 0 && !IsValidObj( pLockingGun ) ) 
-		pLockingGun = 0; 
-	else if ( pGun == pLockingGun ) 
-		pLockingGun = 0; 
+void CCommonUnit::Unlock( const CBasicGun *pGun )
+{
+	if ( pLockingGun != 0 && !IsValidObj( pLockingGun ) )
+		pLockingGun = 0;
+	else if ( pGun == pLockingGun )
+		pLockingGun = 0;
 }
 
-bool CCommonUnit::IsLocked( const CBasicGun *pGun ) const 
-{ 
-	return IsValidObj( pLockingGun ) && pLockingGun != pGun; 
+bool CCommonUnit::IsLocked( const CBasicGun *pGun ) const
+{
+	return IsValidObj( pLockingGun ) && pLockingGun != pGun;
 }
 
 bool CCommonUnit::CanShootToUnitWoMove( class CAIUnit *_pTarget )
@@ -475,7 +475,7 @@ const uint32_t CCommonUnit::GetNormale( const CVec2 &vCenter ) const
 }
 
 void CCommonUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff )
-{ 
+{
 	NI_ASSERT( timeDiff <= SConsts::AI_SEGMENT_DURATION, fmt::format( "wrong segment time {}", timeDiff ) );
 	const float t = Clamp( (float)timeDiff/(float)(SConsts::AI_SEGMENT_DURATION), 0.0f, 1.0f );
 	//DebugTrace( "CCommonUnit::GetPlacement t = %2.3f", t );
@@ -491,7 +491,7 @@ void CCommonUnit::GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::ST
 	pPlacement->bNewFormat = true;
 	pPlacement->rotation.Interpolate( qStart, qFinish, 1.0f - t );
 	pPlacement->vPlacement = vPosition;
-	
+
 	pPlacement->fSpeed = GetSpeed();
 	pPlacement->fWaterCoeff = 0.0f;
 	pPlacement->nObjUniqueID = GetUniqueID();
@@ -531,7 +531,7 @@ void CCommonUnit::ProduceEventByAction( const NDb::EUnitSpecialAbility eAbility,
 			SExecutorEventParam param( EID_ABILITY_ACTIVATE, 0, GetUniqueId() );
 			CExecutorEventSpecialAbilityActivate event( param, eAbility, pCommand, pDesc );
 			theExecutorContainer.RaiseEvent( event );
-		}	
+		}
 		break;
 	case PARAM_ABILITY_OFF: // switch ability off ( single use )
 		{

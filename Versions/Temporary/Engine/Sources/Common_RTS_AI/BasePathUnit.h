@@ -119,7 +119,7 @@ class COMMON_RTS_AI_EXPORT CBasePathUnit
 	public:
 	ZEND int operator&( IBinSaver &f ) { OnSerialize( f ); f.Add(3,&wDirection); f.Add(4,&wFrontDirection); f.Add(5,&wLastDirection); f.Add(6,&bGoForward); f.Add(7,&bTurning); f.Add(8,&bTurnCalled); f.Add(9,&vCenter); f.Add(10,&vTile); f.Add(11,&vLastKnownGoodTile); f.Add(12,&fSpeed); f.Add(13,&fDesiredSpeed); f.Add(14,&bLocking); f.Add(15,&bOnLockedTiles); f.Add(16,&bIdle); f.Add(17,&bFixUnlocking); f.Add(18,&nCollisionsCount); f.Add(19,&pSmoothPath); f.Add(20,&pDefaultPath); f.Add(21,&pPathMemento); f.Add(22,&pCurrentCollision); f.Add(23,&pInterruptedCollision); f.Add(24,&bNoCollision); f.Add(25,&stayTime); f.Add(26,&collStayTime); f.Add(27,&nextSecondPathSegmTime); f.Add(28,&checkOnLockedTime); f.Add(29,&bMaxSlowed); f.Add(30,&bMinSlowed); f.Add(31,&bNotified); f.Add(32,&bTurningToDirContinuesly); f.Add(33,&wDirToContinueslyTurn); f.Add(34,&eMovementPlane); f.Add(35,&pAIMap); f.Add(36,&pHeights); f.Add(37,&pCollisionsCollector); f.Add(38,&pInterruptedPath); f.Add(40,&bPlacementUpdated); f.Add(41,&bStoppedSent); f.Add(43,&vOldPlacement); f.Add(44,&wOldDirection); return 0; }
 	private:
-	
+
 	void OnSerialize( IBinSaver &f );
 	const bool MakeTurnToDirection( const uint16_t wDirection );
 
@@ -155,7 +155,7 @@ public:
 	const CVec2 & GetCenterPlain() const { return *( reinterpret_cast<const CVec2 *>( &vCenter ) ); }
 
 	CCommonPathFinder* GetPathFinder() const { return pPathFinder; }
-	
+
 	//! информация о позиции юнита в AI тайлах
 	const SVector GetCenterTile() const { return vTile; }
 	//! последнйи тайл, на котором юнит ни кому не мешался
@@ -165,12 +165,12 @@ public:
 	const bool IsValidCenter( const CVec3 &vCenter );
 	//! изменить центр юнита, bNeedUpdate - показывает необходимость вызова UpdatePlacement
 	virtual void SetCenter( const CVec3 &vCenter, const bool bNeedUpdate = true );
-  
+
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении
 	const bool IsValidDirection( const uint16_t wDirection );
 	//! проверить, что юнит не будет выходить за пределы карты в новом направлении (направление задается вектором)
 	const bool IsValidDirection( const CVec2 &vDirection ) { return IsValidDirection( GetDirectionByVector( vDirection ) ); }
-	//! получить направление движения юнита, 
+	//! получить направление движения юнита,
 	const uint16_t GetDirection() const { return wDirection; }
 	const float GetDir() const { return float(wFrontDirection) / 65536.0f * FP_2PI; }
 
@@ -227,7 +227,7 @@ public:
 	//! установить направление движения юнита (передом или задом)
 	void SetGoForward( const bool bGoForward );
 	//! принудительно заставить юнит двигаться передом
-	void ForceGoForward() { bGoForward = true; }  
+	void ForceGoForward() { bGoForward = true; }
 
 	//! получить "плоскость" движения юнита (вода/земля)
 	virtual const EMovementPlane GetMovementPlane() const { return eMovementPlane; }
@@ -258,7 +258,7 @@ public:
 	const bool IsOnLockedTiles( const SUnitProfile &profile ) const;
 	//! восстановить залоканость тайлов, вызывается после load'а
 	void RestoreLock();
-	 
+
 	//! первый сегмент перемещения юнита: разрешение коллизий
 	virtual void FirstSegment( const NTimer::STime timeDiff );
 	//! второй сегмент перемещения юнита: движение вдоль пути
@@ -271,7 +271,7 @@ public:
 	virtual ISmoothPath *GetDefaultPath() const { return pDefaultPath; }
 	//! гладкий путь, по которому движется юнит в данный момент
 	virtual ISmoothPath *GetSmoothPath() const { return pSmoothPath; }
-	//! коллизия в которой участвует юнит 
+	//! коллизия в которой участвует юнит
 	virtual ICollision *GetCollision() const { return pCurrentCollision; }
 	//! задать коллизию для юнита
 	virtual void SetCollision( ICollision *pCollision, IPath *pPath );
@@ -294,7 +294,7 @@ public:
 	}
 	virtual void RestoreSmoothPath();
 
-	const bool IsPathFinished() const { return GetSmoothPath()->IsFinished(); }  
+	const bool IsPathFinished() const { return GetSmoothPath()->IsFinished(); }
 	//! эта функция ДОЛЖНА быть переопределена в классах - потомках
 	virtual const int GetUniqueID() const = 0;
 
@@ -320,7 +320,7 @@ public:
 	virtual const bool ShouldScatter() const { return false; }
 	virtual const bool IsInfantry() const { return false; }
 	virtual const bool IsAviation() const { return false; }
-	
+
 
 	//! может ли юнит двигаться
 	virtual const bool CanMove() const { return true; }
@@ -332,7 +332,7 @@ public:
 
 	//! юнит задавлен другим юнитом (pTramplerUnit - юнит, который задавил this)
 	virtual void UnitTrampled( const CBasePathUnit *pTramplerUnit ) = 0;
-	
+
 	//! юнит может быть задавлен другим юнитом (pTramplerUnit - тот кто собирается давить this)
 	//! что-то вроде this - пехота и враг для pTramplerUnit
 	virtual const bool CanUnitTrampled( const CBasePathUnit *pTramplerUnit ) const = 0;

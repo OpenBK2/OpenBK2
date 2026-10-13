@@ -50,7 +50,7 @@ void CTrackObjInfo::Recalc()
 {
   if ( pValue == 0 )
     pValue = new NGScene::CObjectInfo();
-  if ( pTimer ) 
+  if ( pTimer )
   {
     data.verts.resize( 0 );
 		data.geometry.resize(0);
@@ -163,7 +163,7 @@ void CTracksManager::AddTrack( const int nID, const float fFadingSpeed, const NM
 {
   int nTrackID = -1;
   CTracksMap::const_iterator pos = tracksMap.find( nID );
-  if ( pos == tracksMap.end() ) 
+  if ( pos == tracksMap.end() )
   {
     // assign new free track ID for it
     if ( !freeTracks.empty() )
@@ -181,8 +181,8 @@ void CTracksManager::AddTrack( const int nID, const float fFadingSpeed, const NM
 			if ( !pTracksMaterial )
 				return;
 			//
-      tracks[nTrackID].trackHolder.pHolder = pGScene->CreateDynamicMesh( 
-				pGScene->MakeMeshInfo( tracks[nTrackID].trackHolder.pPatch, pTracksMaterial ), 
+      tracks[nTrackID].trackHolder.pHolder = pGScene->CreateDynamicMesh(
+				pGScene->MakeMeshInfo( tracks[nTrackID].trackHolder.pPatch, pTracksMaterial ),
 				0, tracks[nTrackID].pBound, NGScene::MakeLargeHintBound(), room );
     }
   }
@@ -191,7 +191,7 @@ void CTracksManager::AddTrack( const int nID, const float fFadingSpeed, const NM
     nTrackID = pos->second;
   }
   // use nTrackID here
-  if ( nTrackID != -1 ) 
+  if ( nTrackID != -1 )
   {
     STrackObj &trackObj = tracks[nTrackID];
     trackObj.vMin.Minimize( vMin );
@@ -209,7 +209,7 @@ void CTracksManager::FreeTrackBuffer( const int nFreeID )
   delQueue.push_back( nFreeID );
   for ( CTracksMap::iterator it = tracksMap.begin(); it != tracksMap.end(); ++it )
   {
-    if ( it->second == nFreeID ) 
+    if ( it->second == nFreeID )
     {
       tracksMap.erase( it );
       break;
@@ -236,7 +236,7 @@ void CTracksManager::AfterLoad( CFuncBase<STime> *_pTimer, NGScene::IGameView *_
   NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
   for ( std::vector<int>::const_iterator it = updatedTracks.begin(); it != updatedTracks.end(); ++it )
   {
-    tracks[*it].trackHolder.pHolder = pGScene->CreateDynamicMesh( 
+    tracks[*it].trackHolder.pHolder = pGScene->CreateDynamicMesh(
       pGScene->MakeMeshInfo( tracks[*it].trackHolder.pPatch, pTracksMaterial ), 0, tracks[*it].pBound, NGScene::MakeLargeHintBound(), room );
   }
 }

@@ -65,7 +65,7 @@ private:
 		CTriVertexCacheOptimizer *pOptimizer;
 		const std::vector<STriangle> &tris;
 		SBestSearch( CTriVertexCacheOptimizer *pO, const std::vector<STriangle> &_tris ) : nBestIdx( -1 ), nBestCached( -1 ), pOptimizer(pO), tris(_tris) {}
-		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize ) 
+		bool GetL( int *pnResDistance, int n, int nVertex, int nVCacheSize )
 		{
 			if ( n <= *pnResDistance )
 				return false;
@@ -78,8 +78,8 @@ private:
 			}
 			int nFL = pOptimizer->CountNotCachedFL( tris, nVertex );
 			ASSERT( nFL <= pOptimizer->freeLinks[nVertex] * 3 );
-			if ( n + nFL + 1 >= nVCacheSize ) 
-				return false; 
+			if ( n + nFL + 1 >= nVCacheSize )
+				return false;
 			*pnResDistance = n;
 			return true;// - 0 * fl;// - 3 * fl;
 		}

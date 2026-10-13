@@ -43,7 +43,7 @@ CGameLobby::CGameLobby( CClients *_pClients, const std::string &_szCfgFile )
 	ReloadConfig();
 
 	WriteMSG( "GameLobby: Timeout to delete dead games is %d\n", dwGameTimeOut );
-	WriteMSG( "GameLobby: Timeout to delete dead games in loading state is %d\n", dwGameLoadingTimeOut ); 
+	WriteMSG( "GameLobby: Timeout to delete dead games in loading state is %d\n", dwGameLoadingTimeOut );
 	NStatistics::SetGlobalCounter( "TotalGamesCreated", NStatistics::CreateEventsCounter() );
 	NStatistics::SetGlobalCounter( "ThroughServerConnections", NStatistics::CreateEventsCounter() );
 }
@@ -287,7 +287,7 @@ bool CGameLobby::ProcessWant2Connect2Client( CWant2Connect2Client *pPacket )
 	if ( pClients->GetGameConnectInfo( pPacket->nClientID, pPacket->nMyConnect, &addrClient ) &&
 		pClients->GetGameConnectInfo( pPacket->nClient2Connect, 0, &addrClientTo ) )
 	{
-		CPtr<CNetPacket> pInfoToClient = 
+		CPtr<CNetPacket> pInfoToClient =
 			new CClientGameConnectInfo( pPacket->nClientID, addrClientTo.szIP, addrClientTo.nPort, pPacket->nClient2Connect );
 		CPtr<CNetPacket> pInfoToClientToConnect =
 			new CClientWantToConnect( pPacket->nClient2Connect, pPacket->nClientID, addrClient.szIP, addrClient.nPort );
@@ -340,7 +340,7 @@ bool CGameLobby::ProcessEnterLobby( CEnterLobbyPacket *pPacket )
 	ClientEntered( pPacket->nClientID );
 	ClientEnterToLobby( pPacket->nClientID );
 
-	// Сообщение о том, что вход в лобби прошел успешно 
+	// Сообщение о том, что вход в лобби прошел успешно
 	PushPacket( new CEnterLobbyPacket( pPacket->nClientID, pPacket->nLobbyID ) );
 	//
 	return false; // Оставляем пакет для других лобби
@@ -443,7 +443,7 @@ bool CGameLobby::ProcessKillGame( CKillGamePacket *pPacket )
 		return false;
 
 	const int nGameID = pPacket->nGameID;
-	return KillGame( nGameID );	
+	return KillGame( nGameID );
 }
 
 bool CGameLobby::ProcessGetLobbyGames( CGetLobbyGamesPacket *pPacket )
@@ -596,10 +596,10 @@ bool CGameLobby::ProcessThroughServerConnection( CThroughServerConnectionPacket 
 			NStatistics::GetGlobal( "ThroughServerConnections" )->Add( 1.0f );
 #ifndef CONSOLE_LOG_SILENCE
 			std::string szClientNick, szClientWithNick;
-			if ( pClients->GetNick( pPacket->nClientID, &szClientNick ) && 
+			if ( pClients->GetNick( pPacket->nClientID, &szClientNick ) &&
 				pClients->GetNick( pPacket->nClientWith, &szClientWithNick ) )
 			{
-				WriteMSG( "clients %s and %s are connected through the server\n", 
+				WriteMSG( "clients %s and %s are connected through the server\n",
 					szClientNick.c_str(), szClientWithNick.c_str() );
 			}
 #endif
@@ -624,8 +624,8 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 		{
 			SGameInfo &info = iter->second.gameInfo;
 			NI_ASSERT( iter->first == info.nID, fmt::format( "wrong ids for game, {}->{}", iter->first, info.nID ) );
-			szStr += fmt::format( "    \"{}\", id {}, max players {}, has_password-{}, password \"{}\"", 
-				info.szName, info.nID, 
+			szStr += fmt::format( "    \"{}\", id {}, max players {}, has_password-{}, password \"{}\"",
+				info.szName, info.nID,
 				info.nMaxPlayers, (int)info.bHasPassword, info.szPassword );
 			if ( info.bCanConnect )
 				szStr += ", can connect";

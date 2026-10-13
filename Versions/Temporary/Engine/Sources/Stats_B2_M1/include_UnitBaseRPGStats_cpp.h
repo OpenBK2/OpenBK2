@@ -35,11 +35,11 @@ void SUnitBaseRPGStats::CountShellTypes( const int nUniqueID, const int nPlatfor
 	// set actions
 	/*if ( nDamagetypes[0] + nDamagetypes[1] + nDamagetypes[2] > 1 )
 	{
-		if ( nDamagetypes[DAMAGE_HEALTH] != 0 ) 
+		if ( nDamagetypes[DAMAGE_HEALTH] != 0 )
 			availUserActions.SetAction( USER_ACTION_USE_SHELL_DAMAGE );
-		if ( nDamagetypes[DAMAGE_MORALE] != 0 ) 
+		if ( nDamagetypes[DAMAGE_MORALE] != 0 )
 			availUserActions.SetAction( USER_ACTION_USE_SHELL_AGIT );
-		if ( nDamagetypes[DAMAGE_FOG] != 0 ) 
+		if ( nDamagetypes[DAMAGE_FOG] != 0 )
 			availUserActions.SetAction( USER_ACTION_USE_SHELL_SMOKE );
 	}
 	else
@@ -101,7 +101,7 @@ void SUnitBaseRPGStats::ToAIUnits( bool bInEditor )
 
 		if (!pvisualObject)
 			return;
-		
+
 		for ( int i = 0; i < pvisualObject->models.size(); ++i )
 		{
 			if ( pvisualObject->models[i].eSeason == SEASON_SUMMER )

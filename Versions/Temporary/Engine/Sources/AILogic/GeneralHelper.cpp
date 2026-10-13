@@ -25,7 +25,7 @@ void SGeneralHelper::SFindBestByEnumeratorPredicate::operator()( class CCommonUn
 	if ( pEn->EvaluateWorker( pU1, eType ) )
 	{
 		const float fNewRating = pEn->EvaluateWorkerRating( pU1, eType );
-	
+
 		if ( !pBest || fNewRating > fRating )
 		{
 			pBest = pU1;
@@ -53,8 +53,8 @@ bool SGeneralHelper::SInactiveUnitPredicate::operator() ( class CCommonUnit * pU
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool SGeneralHelper::SFindByEnumeratorPredicate::operator()( class CCommonUnit *pU1 )
-{ 
-	return pEn->EvaluateWorker( pU1, eType ); 
+{
+	return pEn->EvaluateWorker( pU1, eType );
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,14 +62,14 @@ bool SGeneralHelper::SFindByEnumeratorPredicate::operator()( class CCommonUnit *
 //*											SGeneralHelper*
 //*******************************************************************
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SGeneralHelper::IsUnitNearParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel ) 
+bool SGeneralHelper::IsUnitNearParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel )
 {
 	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return false;
 	const CVec2 vDiff1( ( pUnit->GetCenterPlain() - parcel.vCenter ) );
 	return  fabs( vDiff1 ) <=  parcel.fRadius + SConsts::SPY_GLASS_RADIUS / 2;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SGeneralHelper::IsUnitInParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel ) 
+bool SGeneralHelper::IsUnitInParcel( const CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel )
 {
 	if ( !pUnit->IsRefValid() || !pUnit->IsAlive() ) return false;
 	const CVec2 vDiff( pUnit->GetCenterPlain() - parcel.vCenter );

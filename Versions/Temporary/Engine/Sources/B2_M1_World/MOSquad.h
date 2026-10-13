@@ -4,7 +4,7 @@
 class CMOSquad : public IMOSquad
 {
   OBJECT_NOCOPY_METHODS( CMOSquad );
-  
+
   ZDATA_(IMOSquad)
 	CUnitsList units;
 	CPtr<IMOUnit> pServedGun;
@@ -57,7 +57,7 @@ public:
 
 	void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager );
 	void AIUpdateServedArtillery( IMOUnit *pMOUnit );
-	
+
 	IMOUnit* GetServedGun() const { return pServedGun; }
 
 	bool AIUpdateAction( bool bEnable, EActionCommand eAction );
@@ -65,7 +65,7 @@ public:
 
 	float GetVisualHPFraction() const;
 	float GetVisualHPFractionSmooth() const;
-	
+
 	bool IsFirstUnit( const IMOUnit *pUnit ) const;
 	void FillIconsInfoForFirstUnit( SSceneObjIconInfo &iconInfo );
 	void UpdateSquadIcons();

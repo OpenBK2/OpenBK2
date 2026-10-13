@@ -11,7 +11,7 @@ class CMapInfoState : public CMultiInputState, public ICommandHandler
 {
 	friend class CMapInfoEditor;
 
-	// Данные общего назначения 
+	// Данные общего назначения
 	CMapInfoEditor *pMapInfoEditor;
 	CPtr<CMaskManipulator> pMaskManipulator;
 	// The clipboard tool has no palette or persisted state of its own.

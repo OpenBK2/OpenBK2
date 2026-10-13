@@ -11,7 +11,7 @@ private:
 		EST_DEFAULT,
 		EST_DELETE_QUESTION,
 	};
-	
+
 	struct SProfileEntry
 	{
 		ZDATA
@@ -20,7 +20,7 @@ private:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszName); f.Add(3,&pWindow); return 0; }
 	};
 	typedef	std::vector< SProfileEntry > CProfileList;
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CProfileList profiles;
 	int nSelectedItem;
@@ -30,7 +30,7 @@ private:
 	CPtr< IScrollableContainer > pProfileList;
 	CPtr< IWindow > pItemTemplate;
 	CPtr< IEditLine > pNameEditLine;
-	
+
 	EState eState;
 	CPtr<IWindow> pCenterPanel;
 	CPtr<IButton> pCreateBtn;
@@ -47,7 +47,7 @@ protected:
 	void MsgDelete( const std::string &szSender );
 	void MsgSelectionChange( const std::string &szSender );
 	bool OnEditChanged();
-	
+
 	int FindProfileIndex() const;
 	void UpdateButtons();
 

@@ -59,6 +59,6 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 	Singleton<IMainFrameContainer>()->Get()->SetStatusBarText( 2, fmt::format( "({:g}, {:g}), [{}, {}]", lastEventInfo.vTerrainPos.x, lastEventInfo.vTerrainPos.y, lastEventInfo.visTilePos.x, lastEventInfo.visTilePos.y ) );
 }
 
-// basement storage  
+// basement storage
 
 

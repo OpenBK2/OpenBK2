@@ -59,9 +59,9 @@ void CCombinerVFS::GetAllFileNames( std::vector<std::string> *pFileNames, const 
 }
 
 void CCombinerVFS::SetVFSList( const std::vector< CObj<IVFS> > &vfsList )
-{ 
-	vfses.clear(); 
-	vfses = vfsList; 
+{
+	vfses.clear();
+	vfses = vfsList;
 }
 
 ICombinerVFS *CreateCombinerVFS( IVFS *pVFS )

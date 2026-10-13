@@ -15,7 +15,7 @@ enum ETGAImageType
 
 #pragma pack( 1 )
 // describe the color map (if any) used for the image
-struct SColorMapSpecification 
+struct SColorMapSpecification
 {
 	uint16_t wFirstEntryIndex;								// Index of the first color map entry. Index refers to the starting entry in loading the color map.
 	uint16_t wColorMapLength;									// Total number of color map entries included
@@ -46,7 +46,7 @@ struct STGAFileHeader
 	uint8_t cColorMapType;										// indicates the type of color map (if any) included with the image
 	uint8_t cImageType;											// TGA File Format can be used to store Pseudo-Color, True-Color and Direct-Color images of various pixel depths
 	SColorMapSpecification colormap;      //
-	SImageSpecification imagespec;				// 
+	SImageSpecification imagespec;				//
 };
 struct STGAFileFooter
 {

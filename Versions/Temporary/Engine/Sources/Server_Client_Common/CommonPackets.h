@@ -101,7 +101,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLobbyID); return 0; }
 
 	CEnterLobbyPacket() { }
-	CEnterLobbyPacket( const int nClientID, const int _nLobbyID ) 
+	CEnterLobbyPacket( const int nClientID, const int _nLobbyID )
 		: CNetPacket( nClientID ), nLobbyID( _nLobbyID ) { }
 };
 

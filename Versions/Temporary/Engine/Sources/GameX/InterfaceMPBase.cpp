@@ -14,9 +14,9 @@ CInterfaceMPScreenBase::CInterfaceMPScreenBase( const std::string &szInterfaceTy
 bool CInterfaceMPScreenBase::StepLocal( bool bAppActive )
 {
 	Singleton<IMPToUIManager>()->MPUISegment();
-	
+
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( bAppActive )
 	{
 		while ( CPtr< SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage() )
@@ -30,7 +30,7 @@ bool CInterfaceMPScreenBase::StepLocal( bool bAppActive )
 		pInterface->Step( bAppActive );
 
 	//Singleton<IMPToUIManager>()->MPUISegment();
-	
+
 	return bResult;
 }
 

@@ -18,7 +18,7 @@ SPrevPathParams::SPrevPathParams( struct IPlane *pPlane )
 	{
 		vSpeed = pPlane->GetSpeedB2();
 		Normalize( &vSpeed );
-		
+
 		p2 = pPlane->GetPosB2();
 		vCur = p1 = p2 - vSpeed * SConsts::PLANE_SPLINE_POINT_DIST;
 		p0 = p1 - vSpeed * SConsts::PLANE_SPLINE_POINT_DIST;

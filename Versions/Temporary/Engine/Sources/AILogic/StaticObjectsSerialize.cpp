@@ -36,7 +36,7 @@
 
 int CFullBridge::SSpanLock::operator&( IBinSaver &saver )
 {
-	
+
 	saver.Add( 1, &formerTiles );
 	SerializeOwner( 3, &pSpan, &saver );
 	saver.Add( 4, &tiles );
@@ -54,7 +54,7 @@ int CFullBridge::operator&( IBinSaver &saver )
 		saver.Add( ++cnt, &nSize );
 		for ( std::list<CBridgeSpan*>::iterator iter = spans.begin(); iter != spans.end(); ++iter )
 			SerializeOwner( ++cnt, &(*iter), &saver );
-		
+
 		nSize = projectedSpans.size();
 		saver.Add( ++cnt, &nSize );
 		for ( std::list<CBridgeSpan*>::iterator iter = projectedSpans.begin(); iter != projectedSpans.end(); ++iter )
@@ -68,7 +68,7 @@ int CFullBridge::operator&( IBinSaver &saver )
 		spans.clear();
 		std::vector<CBridgeSpan*> spanseVector;
 		spanseVector.resize( nSize );
-		
+
 		for ( std::vector<CBridgeSpan*>::iterator iter = spanseVector.begin(); iter != spanseVector.end(); ++iter )
 			SerializeOwner( ++cnt, &(*iter), &saver );
 		spans.insert( spans.end(), spanseVector.begin(), spanseVector.end() );

@@ -28,9 +28,9 @@ SIconsSetInfo iconsSetDefault;
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignBuildingType eType )
 {
 	if ( !bIsInitializedByDB )
-	{		
+	{
 		const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
-		
+
 		for ( int i = 0; i < pClient->buildingIconsSets.size(); ++i )
 		{
 			const NDb::SClientGameConsts::SBuildingIconsSet &iconsSet = pClient->buildingIconsSets[i];
@@ -56,8 +56,8 @@ const SIconsSetInfo& GetDBIconsSet( NDb::EDesignBuildingType eType )
 // CMOBuilding
 
 CMOBuilding::CMOBuilding() :
-	wAmbientSound(0), 
-	wCycledSound(0), 
+	wAmbientSound(0),
+	wCycledSound(0),
 	wCycledSoundTimed(0),
 	fCapturingProgress( 0.0f ),
 	bCanEnter( true )
@@ -105,7 +105,7 @@ bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate
 		AddDynamicDebris( pModel, vPos, qRot, eSeason );
 
 	const NDb::SBuildingRPGStats *pStats = checked_cast<const NDb::SBuildingRPGStats*>( GetStats() );
-	bool bAnimated = pVisObj->bForceAnimated; 
+	bool bAnimated = pVisObj->bForceAnimated;
 
 	// Check if there are any non-death animations
 	for ( int i = 0; i < pModel->animations.size(); ++i )
@@ -119,7 +119,7 @@ bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate
 	}
 	// Init attached objects
 	attachedObjects.clear();
-	attachedObjects.resize( __ESSOT_COUNTER ); 
+	attachedObjects.resize( __ESSOT_COUNTER );
 
 	attachedWindows.resize( GetStats()->slots.size(), EWS_NONE );
 
@@ -138,7 +138,7 @@ bool CMOBuilding::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate
 
 	fBuildingHP = pUpdate->info.fHitPoints;
 
-	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1), 
+	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1),
 		                  bAnimated ? OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC : OBJ_ANIM_MODE_FORCE_NON_ANIMATED, 0 );
 	SetModel( pModel );
 
@@ -154,7 +154,7 @@ bool CMOBuilding::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, N
 	if ( pStats )
 		bStorage = pStats->etype == NDb::TYPE_MAIN_RU_STORAGE || pStats->etype == NDb::TYPE_MAIN_RU_STORAGE;
 
-	if ( !bInEditor ) 
+	if ( !bInEditor )
 	{
 		if ( pStats->iconsSetParams.bCustom )
 			SetIconsSetInfo( SIconsSetInfo( pStats->iconsSetParams.fRaising, pStats->iconsSetParams.fHPBarLen ) );
@@ -217,7 +217,7 @@ void CMOBuilding::GetActions( CUserActions *pActions, EActionsType eActions ) co
 		pActions->SetAction( NDb::USER_ACTION_BOARD );
 		pActions->SetAction( NDb::USER_ACTION_ATTACK );
 		pActions->SetAction( NDb::USER_ACTION_ENGINEER_REPAIR );
-		
+
 		const NDb::SBuildingRPGStats *pStats = checked_cast<const NDb::SBuildingRPGStats*>( GetStats() );
 		if ( GetHP() < 0.1f ) // don't allow filling resources when damaged
 			pActions->RemoveAction( NDb::USER_ACTION_FILL_RU );
@@ -248,7 +248,7 @@ void CMOBuilding::GetDisabledActions( CUserActions *pActions, EActionsType eActi
 	}
 }
 
-NDb::EUserAction CMOBuilding::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
+NDb::EUserAction CMOBuilding::GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith,
 	bool bAltMode ) const
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_BOARD ) )
@@ -297,7 +297,7 @@ void CMOBuilding::GetStatus( SObjectStatus *pStatus ) const
 			weapon.nAmmo = nCurrentAmmo;
 
 			pStatus->AddWeapon( weapon );
-			
+
 			break;
 		}
 	}
@@ -311,7 +311,7 @@ bool CMOBuilding::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 	const int nID = pSquad->GetID();
 	if ( bEnter )
 	{
-		if ( !IsInside( nID ) ) 
+		if ( !IsInside( nID ) )
 			vPassangers.push_back( pSquad );
 	}
 	else
@@ -358,7 +358,7 @@ bool CMOBuilding::NeedShowInterrior() const
 }
 
 IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
-{ 
+{
 	nCurrentAmmo = 0;
 	for ( std::vector<SAINotifyRPGStats::SWeaponAmmo>::const_iterator it = stats.ammo.begin(); it != stats.ammo.end(); ++it )
 	{
@@ -366,7 +366,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 		nCurrentAmmo += updateAmmo.nAmmo;
 		break;
 	}
-	
+
 	fBuildingHP = stats.fHitPoints;
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	bool bAlive = fNewHP > 0;
@@ -389,7 +389,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 				const NDb::SBuildingRPGStats::SFirePoint &point = pStats->smokePoints[i];
 				CVec3 vEffectPos;
 				const CVec3 vPointPos( point.vPos.y - pStats->vOrigin.x, point.vPos.x - pStats->vOrigin.y, point.vPos.z );
-				qRot.Rotate( &vEffectPos, vPointPos ); 
+				qRot.Rotate( &vEffectPos, vPointPos );
 				vEffectPos += vPos;
 				const float fAngle = AI2VisRad(point.fDirection) + FP_PI;
 				CQuat qEffectRot( fAngle, CVec3( 0, 0, 1.0f ) );
@@ -400,12 +400,12 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 				PlayComplexEffect( OBJECT_ID_FORGET, level.pDamageEffectSmoke, stats.time, mEffectPos );
 			}
 		}
-		
+
 		if ( bAlive /* && nStage > nOldModelStage */ )
 		{
 			//for rotating effect up
 			const NDb::SEffect *pEffect = level.pDamageEffectWindow != 0 ? level.pDamageEffectWindow->GetSceneEffect() : 0;
-			for ( int i = 0; i < pStats->slots.size(); ++i )		
+			for ( int i = 0; i < pStats->slots.size(); ++i )
 			{
 				int nDamageRandom = NWin32Random::Random(100);
 				/*if ( nDamageRandom < WINDOW_BREAK_PROBABILITY )				// Break random windows
@@ -463,7 +463,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateRPGStats( const SAINotifyRPGStats 
 		}
 		nOldModelStage = nStage;
 	}
-	
+
 	return 0;
 }
 
@@ -475,7 +475,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 		return 0;
 
 	projectilesAlreadyHit.insert( nProjectileID );
-	
+
 	int nSlot = -1;
 	for ( std::list<int>::const_iterator iter = probableHitAttached.begin(); iter != probableHitAttached.end() && nSlot == -1; ++iter )
 	{
@@ -493,7 +493,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	}
 
 	float fTime = Singleton<IGameTimer>()->GetGameTime();
-	
+
 	fBuildingHP = (std::max)( fBuildingHP - fDamage, 0.0f );
 	const bool bAlive = fBuildingHP > 0;
 	CPtr<CDeadHouseAnimations> pHolder = new CDeadHouseAnimations();
@@ -501,7 +501,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	if ( fMaxDistance > 0.1f && !GetStats()->slots.empty() )
 	{
 		nSlot = NWin32Random::Random( GetStats()->slots.size() );
-		
+
 		const CVec3 vPoint = GetStats()->slots[nSlot].vDamageCenter;
 		for ( int i = 0; i < GetStats()->slots.size(); ++i )
 		{
@@ -567,7 +567,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 	stats.fFuel = 0.0f;
 	stats.nSupply = 0;
 	stats.time = fTime;
-	
+
 	const int nStage = CommonUpdateHP( fBuildingHP / GetStats()->fMaxHP, stats, pScene, eSeason );
 	if ( nStage >= 0 )
 	{
@@ -583,7 +583,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 				const NDb::SBuildingRPGStats::SFirePoint &point = pStats->smokePoints[i];
 				CVec3 vEffectPos;
 				const CVec3 vPointPos( point.vPos.y - pStats->vOrigin.x, point.vPos.x - pStats->vOrigin.y, point.vPos.z );
-				qRot.Rotate( &vEffectPos, vPointPos ); 
+				qRot.Rotate( &vEffectPos, vPointPos );
 				vEffectPos += vPos;
 				const float fAngle = AI2VisRad(point.fDirection) + FP_PI;
 				CQuat qEffectRot( fAngle, CVec3( 0, 0, 1.0f ) );
@@ -598,7 +598,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 		{
 			//for rotating effect up
 			const NDb::SEffect *pEffect = level.pDamageEffectWindow != 0 ? level.pDamageEffectWindow->GetSceneEffect() : 0;
-			for ( int i = 0; i < pStats->slots.size(); ++i )		
+			for ( int i = 0; i < pStats->slots.size(); ++i )
 			{
 				int nDamageRandom = NWin32Random::Random(100);
 				if ( pEffect && nDamageRandom < DAMAGE_EFFECT_PROBABILITY )
@@ -657,7 +657,7 @@ IClientUpdatableProcess* CMOBuilding::AIUpdateDamage( int nProjectileID, float f
 void CMOBuilding::AIUpdateKeyObject( const struct SAINotifyKeyBuilding &update )
 {
 	IMOContainer::AIUpdateKeyObject( update );
-	
+
 	bStorage = update.bStorage;
 }
 
@@ -706,7 +706,7 @@ void CMOBuilding::Select( bool bSelect )
 void CMOBuilding::SetCanSelect( bool bCanSelect )
 {
 	CMOSelectable::SetCanSelect( bCanSelect );
-	
+
 //	DisableIcons( !bCanSelect );
 }
 
@@ -718,10 +718,10 @@ const NDb::SBuildingRPGStats* CMOBuilding::GetStats() const
 void CMOBuilding::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 {
 	DisableIcons( false );//GetPassangersCount() == 0 );
-	
+
 	SetIconsHitbar( IsVisible() && IsHitbarVisible(), IsSelected() );
 	SetIconsGroup( IsVisible() ? GetSelectionGroup() : -1, IsSelected() );
-	
+
 	IMOContainer::FillIconsInfo( iconInfo );
 
 	iconInfo.fHPBarAdditionalValue = fCapturingProgress;
@@ -730,7 +730,7 @@ void CMOBuilding::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 
 const int CMOBuilding::GetSlotHPIndex( const int nWindow, const EWindowState eState ) const
 {
-	if ( eState != EWS_DESTROYED )  
+	if ( eState != EWS_DESTROYED )
 	{
 		const float fHPRatio = attachedObjectsHP[nWindow] / GetStats()->slots[nWindow].window.fMaxHP;
 		const std::vector<NDb::SSlotDamageLevel> &levels = ( eState == EWS_DAY ) ? GetStats()->slots[nWindow].window.dayDamageLevels : GetStats()->slots[nWindow].window.nightDamageLevels;
@@ -962,8 +962,8 @@ static void MakeSlotPos( const CVec3 &_vBuildingPos, const CQuat &qBuildingOrien
 
 const int CMOBuilding::AttachSubObjectToSlot( const int nSlot, const ESceneSubObjType eType, const NDb::SModel *pSubModel )
 {
-	RemoveSubObjectsFromSlot( nSlot, eType );	
-	
+	RemoveSubObjectsFromSlot( nSlot, eType );
+
 	SHMatrix mPos;
 	MakeSlotPos( GetCenter(), GetOrientation(), GetStats()->slots[nSlot].vPos, GetStats()->slots[nSlot].qRot, GetStats()->slots[nSlot].vWindowScale, &mPos );
 	CAttachedObjIDs &attaches = attachedObjects[eType];
@@ -986,7 +986,7 @@ void CMOBuilding::AIUpdatePlacement( const struct SAINotifyPlacement &placement,
 	{
 		const int nSlot = iter->first;
 		const int nSlotSceneID = iter->second;
-		
+
 		SHMatrix mPos;
 		MakeSlotPos( GetCenter(), GetOrientation(), GetStats()->slots[nSlot].vPos, GetStats()->slots[nSlot].qRot, GetStats()->slots[nSlot].vWindowScale, &mPos );
 		pScene->MoveObject( nSlotSceneID, mPos );

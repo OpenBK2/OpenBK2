@@ -39,7 +39,7 @@ struct STmpReinfEntry
 {
 	const NDb::SHPObjectRPGStats *pStats;
 	int nCount;
-	
+
 	bool operator==( const STmpReinfEntry &reinf ) const
 	{
 		bool bResult = (pStats == reinf.pStats);
@@ -61,7 +61,7 @@ void CMissionReinf::SReinfInfo::ShowChevron( int nIndex )
 
 // CMissionReinf
 
-CMissionReinf::CMissionReinf() : 
+CMissionReinf::CMissionReinf() :
 	bTrackMousePos( false ),
 	ePreSelected( NDb::_RT_NONE ),
 	bDisabledByInterface( false ),
@@ -87,7 +87,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	eSeason = _eSeason;
 	if ( !pScr )
 		return;
-	
+
 	eSelected = NDb::_RT_NONE;
 	bAvailNotified = false;
 	bBadWeather = false;
@@ -102,7 +102,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	pReinfPanel->SetPlacement( nX + nSizeX, 0, 0, 0, EWPF_POS_X );*/
 	pReinfPanel->ShowWindow( false );
 	pReinfPanel->Enable( false );
-		
+
 	IWindow *pRightPanel = GetChildChecked<IWindow>( pScr, "MissionActionsPanel", true );
 /*	pReinfMode = GetChildChecked<IWindow>( pRightPanel, "ReinforcementBtn", true );
 	if ( pReinfMode )
@@ -117,13 +117,13 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 		pRoundProgressMask->ShowWindow( false );
 
 //	pCount = GetChildChecked<ITextView>( pReinfMode, "ReinfCount", true );
-	
+
 	pReinfCountPanel = GetChildChecked<IWindow>( pRightPanel, "ReinfCountPanel", true );
 	pRoller1 = GetChildChecked<IPlayer>( pReinfCountPanel, "Roller1", true );
 	pRoller2 = GetChildChecked<IPlayer>( pReinfCountPanel, "Roller2", true );
 	NUIElementsHelper::InitRoller( pRoller1 );
 	NUIElementsHelper::InitRoller( pRoller2 );
-	
+
 /*	pCloseReinfBtn = GetChildChecked<IButton>( pRightPanel, "CloseReinforcementBtn", true );
 	if ( pCloseReinfBtn )
 	{
@@ -151,7 +151,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 			IWindow *pWnd = pCommonInfo->GetChild( fmt::format( "ReinfInfoUnit{}", i ), true );
 			if ( !pWnd )
 				break;
-				
+
 			pWnd->ShowWindow( false );
 			units.push_back( SUnitInfo() );
 			SUnitInfo &info = units.back();
@@ -166,7 +166,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 
 			info.pCountView = GetChildChecked<ITextView>( info.pWnd, "Count", true );
 		}
-		
+
 		pName = GetChildChecked<ITextView>( pCommonInfo, "ReinfInfoName", true );
 		if ( pName )
 			pName->ShowWindow( false );
@@ -181,10 +181,10 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 		IWindow *pWnd = pReinfPanel->GetChild( fmt::format( "ButtonReinf{:02d}", i ), true );
 		if ( !dynamic_cast<IButton*>( pWnd ) )
 			break;
-			
+
 		pWnd->ShowWindow( false );
 	}
-	
+
 	if ( const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts() )
 	{
 		for ( std::vector< NDb::SReinfButton >::const_iterator it = pUIConsts->reinfButtons.begin();
@@ -206,7 +206,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 				info.pXPBar = GetChildChecked<IProgressBar>( pButton, "XPBar", true );
 				info.pXPBarBg = GetChildChecked<IWindow>( pButton, "XPBarBg", true );
 				info.pBadWeatherWnd = GetChildChecked<IWindow>( pButton, "BadWeather", true );
-				
+
 				pButton->ShowWindow( false/*true*/ );
 
 				if ( info.pIconWnd )
@@ -236,7 +236,7 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 			}
 		}
 	}
-	
+
 	textures.resize( 8 );
 	textures[0] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_NORMAL" );
 	textures[N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_LEFT_LIGHT" );
@@ -247,12 +247,12 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE" );
 	textures[N_TX_REINF_RIGHT | N_TX_REINF_INACTIVE | N_TX_REINF_LIGHT] = InterfaceState()->GetTextureEntry( "TX_TOGGLE_REINF_RIGHT_INACTIVE_LIGHT" );
 //	SetToggleButtonState( bIsOpen, false, false, -1.0f );
-	
+
 	pUnitFullInfo = new CMissionUnitFullInfo();
 	IWindow *pAppearanceWnd = GetChildChecked<IWindow>( pScr, "AppearancePanel", true );
 	IWindow *pAppearanceForReinfWnd = GetChildChecked<IWindow>( pAppearanceWnd, "AppearanceForReinf", true );
 	pUnitFullInfo->InitByReinf( pFullInfoWnd, pAppearanceForReinfWnd, eSeason );
-	
+
 	pCallReinfModeBtn = GetChildChecked<IButton>( pReinfPanel, "CallReinfModeBtn", true );
 	pAutoShowReinfBtn = GetChildChecked<IButton>( pReinfPanel, "AutoShowReinfBtn", true );
 	if ( pCallReinfModeBtn )
@@ -270,9 +270,9 @@ void CMissionReinf::Init( IScreen *pScr, CWorldClient *_pWorld, IVisualNotificat
 		if ( info.pXPBarBg )
 			info.pXPBarBg->ShowWindow( false );
 	}
-	
+
 	UpdateReinfsXPAndLevel();
-	
+
 	Update();
 }
 
@@ -313,7 +313,7 @@ void CMissionReinf::Update()
 {
 	if ( !pWorld )
 		return;
-	
+
 	UpdateReinfs();
 	UpdatePoints();
 	UpdateEnable();
@@ -343,7 +343,7 @@ void CMissionReinf::SelectDblClick( const std::string &szSender )
 void CMissionReinf::Select( NDb::EReinforcementType eType )
 {
 	eSelected = NDb::_RT_NONE;
-	
+
 	for ( CReinfInfos::iterator iInfo = reinfInfos.begin(); iInfo != reinfInfos.end(); ++iInfo )
 	{
 		SReinfInfo &info = iInfo->second;
@@ -373,7 +373,7 @@ void CMissionReinf::Select( NDb::EReinforcementType eType )
 	}
 
 	UpdateReinfInfo();
-	
+
 	UpdateForcedAction();
 }
 
@@ -396,7 +396,7 @@ void CMissionReinf::UpdateForcedAction()
 			}
 		}
 	}
-	
+
 	if ( eSelected == NDb::_RT_NONE )
 	{
 		// do nothing
@@ -430,7 +430,7 @@ void CMissionReinf::Close( bool bForced )
 		NInput::PostEvent( "reinf_mode", 0, 0 );
 		eSelected = NDb::_RT_NONE;
 	}
-	
+
 	pNotifications->Notify( EVNT_SELECT_KEY_POINT, -1, VNULL2 );
 }
 
@@ -467,7 +467,7 @@ void CMissionReinf::UpdateReinfInfo()
 	NDb::EReinforcementType eType = ePreSelected;
 	if ( eType == NDb::_RT_NONE )
 		eType = eSelected;
-	
+
 	for ( CReinfInfos::iterator iInfo = reinfInfos.begin(); iInfo != reinfInfos.end(); ++iInfo )
 	{
 		SReinfInfo &info = iInfo->second;
@@ -510,7 +510,7 @@ bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
 		case NDb::RT_EXTRA_MAXLVL_AIR_4:
 		case NDb::RT_EXTRA_MAXLVL_AIR_5:
 			return true;
-			
+
 		case NDb::RT_ELITE_INFANTRY:
 		case NDb::RT_EXTRA_MIXED_1:
 		case NDb::RT_EXTRA_MIXED_2:
@@ -537,7 +537,7 @@ bool CMissionReinf::IsAvia( const NDb::EReinforcementType eType ) const
 			}
 			return false;
 		}
-		
+
 		default:
 			return false;
 	};
@@ -620,7 +620,7 @@ void CMissionReinf::Show()
 		std::wstring wszText = InterfaceState()->GetTextEntry( "T_REINF_OPEN" );
 		InterfaceState()->WriteToMissionConsole( wszText );
 	}
-		
+
 //	if ( eSelected == NDb::_RT_NONE ) // don't select default now
 //		eSelected = GetDefaultReinfType();
 	eSelected = NDb::_RT_NONE;
@@ -670,14 +670,14 @@ void CMissionReinf::UpdateEnable()
 			pRoller2->SetTooltip( wszTooltip );
 		}
 	}
-		
+
 	if ( Singleton<IScenarioTracker>()->IsMissionActive() )
 	{
 		if ( IsEnabled() )
 			NotifyAvailReinf();
 		else
 			DisableNotifyAvailReinf();
-		
+
 		SetBlink( true, !HaveUnits() );
 	}
 	else
@@ -690,16 +690,16 @@ void CMissionReinf::UpdateEnable()
 void CMissionReinf::UpdateReinfs()
 {
 	 const CEnabledReinforcements &enabledReinf = pWorld->GetEnabledReinfs();
-	 
+
 	// clear previous state
 	for ( CReinfInfos::iterator it = reinfInfos.begin(); it != reinfInfos.end(); ++it )
 	{
 		SReinfInfo &reinf = it->second;
 		reinf.pReinf = 0;
 	}
-	
+
 	// fill new data
-	for ( CEnabledReinforcements::const_iterator it = enabledReinf.begin(); 
+	for ( CEnabledReinforcements::const_iterator it = enabledReinf.begin();
 		it != enabledReinf.end(); ++it )
 	{
 		const NDb::SReinforcement *pReinf = *it;
@@ -710,9 +710,9 @@ void CMissionReinf::UpdateReinfs()
 		SReinfInfo &info = iInfo->second;
 		info.pReinf = pReinf;
 	}
-	
+
 	UpdateReinfsXPAndLevel();
-	
+
 	UpdateForcedAction();
 }
 
@@ -728,12 +728,12 @@ void CMissionReinf::UpdateReinfsVisual()
 
 		if ( info.pButton )
 			info.pButton->ShowWindow( bIsReinf );
-		
+
 		if ( info.pIconWnd )
 			info.pIconWnd->ShowWindow( bIsReinf && bCanCall );
 		if ( info.pIconDisabledWnd )
 			info.pIconDisabledWnd->ShowWindow( bIsReinf && !bCanCall );
-			
+
 		if ( info.pBadWeatherWnd )
 			info.pBadWeatherWnd->ShowWindow( bIsReinf && IsAviaAndCanNotFly( eType ) );
 	}
@@ -827,7 +827,7 @@ void CMissionReinf::UpdateReinfsXPAndLevel()
 			fNextRankExp = pST->GetLeaderRankExp( eType, nRank + 1 );
 			fDeltaExp = fNextRankExp - fCurRankExp;
 		}
-		
+
 		float fPosition;
 		if ( fDeltaExp > 0.0f )
 		{
@@ -868,7 +868,7 @@ void CMissionReinf::UpdatePoints()
 {
 	int nBestID = -1;
 	float fBestDist2 = 0.0f;
-	
+
 	if ( IsOpen() && bTrackMousePos )
 	{
 		const CKeyBuildings &keyBuildings = pWorld->GetKeyBuildings();
@@ -936,7 +936,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 				tmpReinfEntry.pStats = entry.pSquad;
 			NI_VERIFY( tmpReinfEntry.pStats, fmt::format("Incorrect data in reinforcement \"{}\" entry {}", pReinf->GetDBID().ToString(), i), continue );
 			tmpReinfEntry.nCount = 1;
-			
+
 			tmpReinfEntries.push_back( tmpReinfEntry );
 		}
 
@@ -957,7 +957,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 					break;
 			}
 		}
-		
+
 		//NI_ASSERT( tmpReinfEntries.size() <= units.size(), "Can't show all unit's types in the reinforcement" );
 		for ( int i = 0; i < units.size(); ++i )
 		{
@@ -970,7 +970,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 			info.pWnd->ShowWindow( true );
 			info.pStats = tmpReinfEntries[i].pStats;
 			info.nCount = tmpReinfEntries[i].nCount;
-			
+
 			const NDb::STexture *pIconTexture = 0;
 			const NDb::STexture *pFlagBgTexture = 0;
 			if ( info.pStats )
@@ -982,7 +982,7 @@ void CMissionReinf::ShowReinfContents( const NDb::SReinforcement *pReinf )
 				info.pIcon->SetTexture( pIconTexture );
 			if ( info.pFlagBg )
 				info.pFlagBg->SetTexture( pFlagBgTexture );
-				
+
 			if ( info.pCountView )
 				info.pCountView->SetText( info.pCountView->GetDBText() + NStr::ToUnicode( std::to_string(  info.nCount ) ) );
 		}
@@ -1002,7 +1002,7 @@ void CMissionReinf::NotifyAvailReinf()
 {
 	if ( bAvailNotified )
 		return;
-	
+
 	bAvailNotified = true;
 	pNotifications->Notify( EVNT_REINFORCEMENT_AVAILABLE, -1, VNULL2 );
 }
@@ -1023,7 +1023,7 @@ void CMissionReinf::Call( const CVec2 &vPos )
 		cmd.nNumber = eSelected;
 		cmd.vPos = vPos;
 		pWorld->GetCommandsSender()->CommandUnitCommand( &cmd );
-		
+
 		nCalls++;
 		bDisabledByInterface = true;
 
@@ -1034,7 +1034,7 @@ void CMissionReinf::Call( const CVec2 &vPos )
 			params.eEventType = NDb::NEVT_REINF_CANT_CALL;
 			pNotifications->OnEvent( params );
 		}*/
-		
+
 		IScenarioTracker *pST = Singleton<IScenarioTracker>();
 		pST->MarkFavoriteReinf( eSelected );
 	}
@@ -1054,9 +1054,9 @@ void CMissionReinf::Step()
 	UpdateReinfsXPAndLevel();
 
 	UpdateEnable();
-	
+
 	UpdateBlink();
-	
+
 	bool bEnabled = IsEnabled();
 	if ( IsAutoShowReinf() && bEnabled && !bWasEnabled && NGlobal::GetVar( "History.Playing", 0 ) == 0 )
 	{
@@ -1065,7 +1065,7 @@ void CMissionReinf::Step()
 			Show();
 		}
 	}
-	
+
 	if ( !bEnabled )
 		bWasEnabled = false;
 }
@@ -1117,7 +1117,7 @@ void CMissionReinf::OnReinfCallMode()
 
 void CMissionReinf::OnReinfAutoShowReinf( bool bOn )
 {
-	if ( pAutoShowReinfBtn ) 
+	if ( pAutoShowReinfBtn )
 		pAutoShowReinfBtn->SetStateWithVisual( bOn ? 0 : 1 );
 }
 
@@ -1132,7 +1132,7 @@ bool CMissionReinf::IsAviaPresents() const
 	{
 		NDb::EReinforcementType eType = it->first;
 		const SReinfInfo &info = it->second;
-		
+
 		if ( IsAvia( eType ) && info.pReinf )
 			return true;
 	}
@@ -1145,8 +1145,8 @@ bool CMissionReinf::IsNonAllWeatherAviaPresents() const
 	{
 		NDb::EReinforcementType eType = it->first;
 		const SReinfInfo &info = it->second;
-		
-		if ( info.pReinf && IsAvia( eType ) && !IsAllWeatherAvia( eType ) ) 
+
+		if ( info.pReinf && IsAvia( eType ) && !IsAllWeatherAvia( eType ) )
 			return true;
 	}
 	return false;
@@ -1184,7 +1184,7 @@ bool CMissionReinf::IsAllWeatherAvia( const NDb::EReinforcementType eType ) cons
 			bool bAllWeather = HasMasterPilot( pReinf, nLevel );
 			return bAllWeather;
 		}
-			
+
 		default:
 			return false;
 	};
@@ -1236,7 +1236,7 @@ void CMissionReinf::UpdateToggleButtonState()
 	float fProgress = pWorld->GetReinfRecycleProgress();
 	int nCount = GetReinfCallsLeft();
 	bool bHaveReinf = ( nCount == IAIScenarioTracker::INFINITE_CALLS || nCount > 0 );
-	bool bClockVisible = Singleton<IScenarioTracker>()->IsMissionActive() && 
+	bool bClockVisible = Singleton<IScenarioTracker>()->IsMissionActive() &&
 		!pWorld->IsReinfEnabled() && timeToEnable != 0 && bHaveReinf;
 
 	int nIndex = (bIsOpen ? N_TX_REINF_RIGHT : 0) |
@@ -1267,7 +1267,7 @@ void CMissionReinf::SetBlink( bool _bBlink, bool _bFullTime )
 		fBlinkPeriod = 0.0f;
 
 		timeBlinkAbs = Singleton<IGameTimer>()->GetAbsTime();
-		
+
 		if ( bBlink )
 		{
 			bIsLight = true;
@@ -1318,7 +1318,7 @@ void CMissionReinf::UpdateBlink()
 			fBlinkPeriod = 0.0f;
 		}
 	}
-	
+
 	UpdateToggleButtonState();
 
 	timeBlinkAbs = timeAbs;

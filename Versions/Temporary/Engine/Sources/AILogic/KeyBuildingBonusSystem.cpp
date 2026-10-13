@@ -23,17 +23,17 @@ void CKeyBuildingBonusSystem::InitBonusSystem( const NDb::SMapInfo * pMapInfo )
 bool CKeyBuildingBonusSystem::IsStorage( int nLinkID ) const
 {
 	CBuildingBonuses::const_iterator pos = buildingBonuses.find( nLinkID );
-	return pos != buildingBonuses.end() && pos->second.bStorage; 
+	return pos != buildingBonuses.end() && pos->second.bStorage;
 }
 
 bool CKeyBuildingBonusSystem::IsKeyBuilding( int nLinkID ) const
 {
 	CBuildingBonuses::const_iterator pos = buildingBonuses.find( nLinkID );
-	return pos != buildingBonuses.end(); 
+	return pos != buildingBonuses.end();
 }
 
-void CKeyBuildingBonusSystem::SendUpdates() const 
-{ 
+void CKeyBuildingBonusSystem::SendUpdates() const
+{
 	if ( !GetScenarioTracker() )
 		return;
 

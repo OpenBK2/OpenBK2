@@ -12,7 +12,7 @@ class CEditorTestEditor : public CEditorBase, public CDefaultView
 	OBJECT_NOCOPY_METHODS( CEditorTestEditor );
 	//Данные специфичные для данного редактрора
 	CTPoint<int> terrainSize;
-	// Данные общего назначения 
+	// Данные общего назначения
 	CEditorTestState *pEditorTestState;
 	//
 	CEditorTestEditor();

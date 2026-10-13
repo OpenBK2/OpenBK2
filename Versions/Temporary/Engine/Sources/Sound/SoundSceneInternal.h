@@ -270,7 +270,7 @@ public:
 	uint16_t AddSoundToMap( const NDb::SComplexSoundDesc* pDesc, const CVec3 &vPos );
 	void RemoveSoundFromMap( const uint16_t	wInstanceID );
 	void ClearSounds();
-	
+
 	static bool Is3D();
 
 };

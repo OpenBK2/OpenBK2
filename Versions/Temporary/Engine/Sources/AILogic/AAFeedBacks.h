@@ -9,11 +9,11 @@ class CAAFeedBacks
 
 	CAAFeedBacksList feedbacks;
 public:
-	int operator&( IBinSaver &f ) 
-	{ 
+	int operator&( IBinSaver &f )
+	{
 		if ( !f.IsChecksum() )
 			f.Add(2,&feedbacks);
-		return 0; 
+		return 0;
 	}
 private:
 	void SendFeedBack( class CAIUnit *pAA ) const;

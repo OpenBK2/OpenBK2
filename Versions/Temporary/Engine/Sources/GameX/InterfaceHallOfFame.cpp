@@ -26,28 +26,28 @@ CHallOfFame theHallOfFame;
 
 // CInterfaceHallOfFame
 
-CInterfaceHallOfFame::CInterfaceHallOfFame() : 
+CInterfaceHallOfFame::CInterfaceHallOfFame() :
 CInterfaceScreenBase( "HallOfFame", "hall_of_fame" )
 {
 	AddObserver( "esc_pressed", &CInterfaceHallOfFame::MsgBack );
 }
 
 bool CInterfaceHallOfFame::Execute( const std::string &szSender, const std::string &szReaction )
-{ 
+{
 	if ( szReaction == "menu_back" )
 	{
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "options_menu_end" );
 		NMainLoop::Command( ML_COMMAND_MAIN_MENU, "" );
 		return true;
 	}
-	return false; 
+	return false;
 }
 
 bool CInterfaceHallOfFame::Init()
 {
 	theHallOfFame.AddRecord( L"Veselov", 12000 );
 
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	pScreen = MakeObjectVirtual<IScreen>( UI_SCREEN );
@@ -73,7 +73,7 @@ void CInterfaceHallOfFame::MakeInterior()
 	const NDb::SGameRoot * pRoot = InterfaceState()->GetGameRoot();
 	std::vector<SHallOfFameEntry> entries;
 	entries.reserve( pRoot->hallOfFameDefaultRecords.size() + theHallOfFame.GetNRecords() );
-	
+
 	for ( int i = 0; i < pRoot->hallOfFameDefaultRecords.size(); ++i )
 	{
 		SHallOfFameEntry val;
@@ -90,7 +90,7 @@ void CInterfaceHallOfFame::MakeInterior()
 	// resort altogether
 	SHallOfFameEntryCompare pr;
 	sort( entries.begin(), entries.end(), pr );
-	
+
 	// fill screen
 	for ( int i = 0; i < nMaxEntries && i < entries.size(); ++i )
 	{
@@ -107,7 +107,7 @@ void CInterfaceHallOfFame::MakeInterior()
 
 bool CInterfaceHallOfFame::StepLocal( bool bAppActive )
 {
-	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );		
+	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
 
 	return bResult;
 }

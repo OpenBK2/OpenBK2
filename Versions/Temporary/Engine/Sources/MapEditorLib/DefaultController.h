@@ -9,7 +9,7 @@ class CDefaultView;
 class MAPEDITORLIB_EXPORT CDefaultController : public IController
 {
 	friend class CDefaultView;
-	
+
 	// Operation Description it the Undo List
 	std::string szDescription;
 	// Метка для последующего удаления Undo Operation из очереди
@@ -23,7 +23,7 @@ protected:
 	// New methods
 	virtual bool UndoWithoutUpdateViews() = 0;
 	virtual bool RedoWithoutUpdateViews() = 0;
-public:	
+public:
 	CDefaultController() {}
 	//
 	inline const SObjectSet& GetObjectSet() const { return objectSet; }

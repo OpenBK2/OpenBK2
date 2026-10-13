@@ -15,7 +15,7 @@ class CTestClientProcessor : public CPacketProcessor
 
 	uint32_t dwClientsVersion;
 	std::unordered_map<int, SCustomLobbyClientInfo> lobbyClients;
-	
+
 	int nGameID;
 	uint32_t dwLastGameUpdate;
 	uint32_t dwGamesVersion;
@@ -61,9 +61,9 @@ public:
 	bool ProcessShowGameClients( class CTestShowGameClients *pPacket );
 	bool ProcessSendSpecGameInfo( class CTestSpecGameInfo *pPacket );
 	bool ProcessReceiveSpecificGameInfo( class CSpecificGameInfo *pPacket );
-	
+
 	bool ProcessLadderInvitePacket( class CLadderInvitePacket *pPacket );
-	bool ProcessLadderStatisticsPacket( class CLadderStatisticsPacket *pPacket ); 
+	bool ProcessLadderStatisticsPacket( class CLadderStatisticsPacket *pPacket );
 	bool ProcessForgottenPasswordAnswerPacket( class CForgottenPasswordAnswerPacket *pPacket );
 
 	bool ProcessChatChannelClientsListPacket( class CChatChannelClientsListPacket *pPacket );

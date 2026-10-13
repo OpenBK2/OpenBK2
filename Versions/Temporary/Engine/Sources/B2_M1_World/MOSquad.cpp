@@ -18,9 +18,9 @@ SIconsSetInfo iconsSetDefault;
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignSquadType eType )
 {
 	if ( !bIsInitializedByDB )
-	{		
+	{
 		const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
-		
+
 		for ( int i = 0; i < pClient->squadIconsSets.size(); ++i )
 		{
 			const NDb::SClientGameConsts::SSquadIconsSet &iconsSet = pClient->squadIconsSets[i];
@@ -50,7 +50,7 @@ CMOSquad::CMOSquad()
 
 CMOSquad::~CMOSquad(void)
 {
-	while ( !units.empty() ) 
+	while ( !units.empty() )
 	{
 		CObj<IMOUnit> pUnit = units.back().GetPtr();
 		units.pop_back();
@@ -83,7 +83,7 @@ bool CMOSquad::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb:
 	const NDb::SSquadRPGStats *pStats = checked_cast_ptr<const NDb::SSquadRPGStats *>( pUpdate->info.pStats );
 	SetStats( pStats );
 
-	if ( !bInEditor ) 
+	if ( !bInEditor )
 	{
 		if ( pStats->iconsSetParams.bCustom )
 			SetIconsSetInfo( SIconsSetInfo( pStats->iconsSetParams.fRaising, pStats->iconsSetParams.fHPBarLen ) );
@@ -100,9 +100,9 @@ bool CMOSquad::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb:
 void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 {
 	static int nLevel = 0; // DEBUG
-	
+
 	IMOSquad::GetStatus( pStatus );
-	
+
 	NI_VERIFY( nLevel == 0, "Can't use nested squads", return );
 
 	++nLevel;
@@ -112,10 +112,10 @@ void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 	{
 		IMOUnit *pUnit = *it;
 		++nCount;
-		
+
 		SObjectStatus status;
 		pUnit->GetStatus( &status );
-		
+
 		// Armor
 		if ( status.armors[0] > nMaxArmor )
 		{
@@ -126,14 +126,14 @@ void CMOSquad::GetStatus( SObjectStatus *pStatus ) const
 			}
 			pStatus->pArmorPattern = status.pArmorPattern;
 		}
-		
+
 		// Weapons
 		for ( int i = 0; i < status.weapons.size(); ++i )
 		{
 			pStatus->AddWeapon( status.weapons[i] );
 		}
 	}
-	
+
 	--nLevel;
 }
 
@@ -207,7 +207,7 @@ void CMOSquad::GetPossibleActions( CUserActions *pActions ) const
 		if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
 	}
-	
+
 	if ( pSt->formations.empty() )
 		pActions->RemoveAction( NDb::USER_ACTION_FORMATION );
 	else
@@ -280,7 +280,7 @@ void CMOSquad::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct I
 	IClientAckManager *pAckManager )
 {
 	CPtr<IMOContainer> pTransport = units.empty() ? 0 : checked_cast_ptr<CMOUnitInfantry*>( units.front() )->GetTransport();
-	
+
 	std::vector< CPtr<IMOUnit> > toDissapear;
 	toDissapear.resize( units.size() );
 	copy( units.begin(), units.end(), toDissapear.begin() );
@@ -310,7 +310,7 @@ void CMOSquad::AIUpdateServedArtillery( IMOUnit *pMOUnit )
 bool CMOSquad::AIUpdateAction( bool bEnable, EActionCommand eAction )
 {
 	NI_ASSERT( eAction == ACTION_COMMAND_CATCH_ARTILLERY, "Unknown update" );
-	
+
 //	bCanCatchArtillery = bEnable;
 
 	return true;
@@ -319,7 +319,7 @@ bool CMOSquad::AIUpdateAction( bool bEnable, EActionCommand eAction )
 void CMOSquad::GetAbilityInfo( CAbilityInfo &squadAbilities ) const
 {
 	squadAbilities.clear();
-	
+
 	//Collect ability info
 	for( CUnitsList::const_iterator it = units.begin(); it != units.end(); ++it )
 	{
@@ -340,7 +340,7 @@ int CMOSquad::GetAbilityTier( NDb::EUserAction eAction ) const
 		IMOUnit *pUnit = *it;
 		if ( !pUnit->IsAlive() )
 			continue;
-			
+
 		int nTier = pUnit->GetAbilityTier( eAction );
 		if ( nTier != -1 )
 			return nTier;
@@ -369,7 +369,7 @@ bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 {
 	if ( bEnter )
 	{
-		if ( !IsInSquad( pUnit ) ) 
+		if ( !IsInSquad( pUnit ) )
 		{
 			units.push_back( pUnit );
 			pUnit->SetSquad( this );
@@ -379,7 +379,7 @@ bool CMOSquad::Load( struct IMOUnit *pUnit, const bool bEnter )
 	{
 		for ( CUnitsList::iterator it = units.begin(); it != units.end(); ++it )
 		{
-			if ( *it == pUnit ) 
+			if ( *it == pUnit )
 			{
 				units.remove( pUnit );
 				pUnit->SetSquad( 0 );

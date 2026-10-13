@@ -59,22 +59,22 @@ class CResourcePrecache : public IPrecache
 {
 	OBJECT_NOCOPY_METHODS(CResourcePrecache);
 	CDGPtr<T> pStuff;
-	int operator&( IBinSaver &f ) 
-	{ 
-		f.Add(2,&pStuff); 
+	int operator&( IBinSaver &f )
+	{
+		f.Add(2,&pStuff);
 		if ( f.IsReading() )
 			AddToPrecachedUpdate( this );
 			//precacheUpdateList.push_back( this );
-		return 0; 
+		return 0;
 	}
 public:
 	CResourcePrecache( T *_pStuff = 0 ) : pStuff(_pStuff) { TryUpdate(); }
 	~CResourcePrecache() { TryUpdate(); }
-	bool TryUpdate() 
+	bool TryUpdate()
 	{
 		bool bRes = true;
-		if ( IsValid(pStuff) ) 
-		{ 
+		if ( IsValid(pStuff) )
+		{
 			pStuff.Refresh();
 			bRes = pStuff->GetValue() != 0;
 		}
@@ -82,8 +82,8 @@ public:
 	}
 	void ForceUpdate()
 	{
-		if ( IsValid(pStuff) ) 
-		{ 
+		if ( IsValid(pStuff) )
+		{
 			pStuff.Refresh();
 			while ( !pStuff->GetValue() )
 				std::this_thread::yield();

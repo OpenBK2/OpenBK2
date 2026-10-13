@@ -11,7 +11,7 @@ REGISTER_SAVELOAD_CLASS(AILOGIC, 0x11095C80, CPahtFractionArcLineArc)
 //	CPahtFractionArcLineArc
 
 
-void CPahtFractionArcLineArc::Init( const SPrevPathParams &prevPath, 
+void CPahtFractionArcLineArc::Init( const SPrevPathParams &prevPath,
 																		const CVec3 &x1, const CVec3 &v1,
 																		const float fR1, const float fR2 )
 {
@@ -23,14 +23,14 @@ void CPahtFractionArcLineArc::Init( const CVec3 &x0, const CVec3 &x1,
 					const float fR0, const float fR1 )
 {
 	Init( CVec2(x0.x, x0.y), CVec2(x1.x, x1.y),
-		CVec2(v0.x, v0.y), CVec2(v1.x, v1.y), 
+		CVec2(v0.x, v0.y), CVec2(v1.x, v1.y),
 		fR0, fR1,
 		x0.z );
 }
 
 float CPahtFractionArcLineArc::GetLength() const
-{ 
-	return pStart->GetLength() + pLine->GetLength() + pFinish->GetLength(); 
+{
+	return pStart->GetLength() + pLine->GetLength() + pFinish->GetLength();
 }
 
 void CPahtFractionArcLineArc::GetSimplePath( CPathList *pPaths )
@@ -83,8 +83,8 @@ void CPahtFractionArcLineArc::Init( const CVec2 &x0, const CVec2 &x1, const CVec
 	TryPath( x0, x1, r2, o2, pPath, this, &bInitted, _fZ );
 }
 
-void CPahtFractionArcLineArc::TryPath( const CVec2 &x0, const CVec2 &x1, 
-																						const CDirectedCircle &r1, const CDirectedCircle &o1, 
+void CPahtFractionArcLineArc::TryPath( const CVec2 &x0, const CVec2 &x1,
+																						const CDirectedCircle &r1, const CDirectedCircle &o1,
 																						CPahtFractionArcLineArc *pPath, CPahtFractionArcLineArc *pBest,
 																						bool *bInitted, const float _fZ ) const
 {
@@ -95,7 +95,7 @@ void CPahtFractionArcLineArc::TryPath( const CVec2 &x0, const CVec2 &x1,
 		pPath->Init( r1, x0, v0, o1, v1, x1, _fZ );
 		if ( !*bInitted )
 			*pBest = *pPath;
-		else 
+		else
 		{
 			const float fL1 = pPath->GetLength();
 			const float fL2 = pBest->GetLength();

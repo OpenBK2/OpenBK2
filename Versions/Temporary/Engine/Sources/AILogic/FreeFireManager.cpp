@@ -10,8 +10,8 @@
 
 extern NTimer::STime curTime;
 
-CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner ) 
-: shootInfo( 2 * pOwner->GetNGuns() ), lastCheck( 0 ) 
+CFreeFireManager::CFreeFireManager( CCommonUnit *pOwner )
+: shootInfo( 2 * pOwner->GetNGuns() ), lastCheck( 0 )
 {
 }
 
@@ -24,7 +24,7 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 			{ lastCheck = curTime - NRandom::Random( 0, 500 ); RecordRandomCall(); }
 		else
 			lastCheck = curTime;
-		
+
 		const float fSightRadius = pUnit->GetSightRadius();
 		uint32_t dwForbidden = 0;
 
@@ -34,7 +34,7 @@ void CFreeFireManager::Analyze( CCommonUnit *pUnit, CBasicGun *pActiveGun )
 			CBasicGun *pGun = pUnit->GetGun( i );
 
 			// нельзя анализировать
-			if ( pGun->IsCommonEqual( pActiveGun ) || pGun->IsCommonGunFiring() || 
+			if ( pGun->IsCommonEqual( pActiveGun ) || pGun->IsCommonGunFiring() ||
 				pGun->GetGun().nPriority == 0 && !pUnit->IsIdle() && !pUnit->CanShootInMovement() || pGun->GetNAmmo() == 0 )
 			{
 				dwForbidden |= ( 1 << i );

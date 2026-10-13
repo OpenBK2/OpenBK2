@@ -8,19 +8,19 @@ virtual void ToAIUnits( bool bInEditor )
 virtual const CVec2& GetOrigin( const int nIndex = -1 ) const { return vOrigin; }
 virtual const SByteArray2& GetPassability( const int nIndex = -1 ) const { return passability; }
 
-virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const 
-{ 
+virtual const CVec2& GetVisOrigin( const int nIndex = -1 ) const
+{
 	if ( bUsePassabilityForVisibility )
 		return vOrigin;
 	else
-		return vVisOrigin; 
+		return vVisOrigin;
 }
-virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const 
-{ 
+virtual const SByteArray2& GetVisibility( const int nIndex = -1 ) const
+{
 	if ( bUsePassabilityForVisibility )
 		return passability;
 	else
-		return visibility; 
+		return visibility;
 }
 
 virtual const SPassProfile& GetPassProfile( const int nIndex = -1 ) const

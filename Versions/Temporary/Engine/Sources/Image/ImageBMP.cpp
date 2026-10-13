@@ -175,7 +175,7 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 				*pImageData++ = pci.DecompColor( data ) | 0xFF000000;
       }
       if ( nEndOfLineSkip )   // each row is 0-padded to a 4-byte boundary
-				pStream->Seek( pStream->GetPosition() + nEndOfLineSkip ); 
+				pStream->Seek( pStream->GetPosition() + nEndOfLineSkip );
     }
 	}
 	else if ( wNumBits == 24 )

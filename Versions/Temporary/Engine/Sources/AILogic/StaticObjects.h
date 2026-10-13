@@ -14,13 +14,13 @@ class CBuilding;
 namespace NDb
 {
 	struct SFenceRPGStats;
-	struct SObjectBaseRPGStats; 
+	struct SObjectBaseRPGStats;
 	struct SBuildingRPGStats;
-	struct SStaticObjectRPGStats; 
+	struct SStaticObjectRPGStats;
 	struct SEntrenchmentRPGStats;
-	struct SBridgeRPGStats; 
-	struct SMineRPGStats; 
-	struct SMechUnitRPGStats; 
+	struct SBridgeRPGStats;
+	struct SMineRPGStats;
+	struct SMechUnitRPGStats;
 }
 template<bool bOnlyContainers> class CStObjIter;
 typedef std::list< CPtr<CBuilding> > CStoragesList;
@@ -35,7 +35,7 @@ class CBridgeSpan;
 class CStaticObjects : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CStaticObjects );
-	
+
 	typedef CAreaMap<IObstacle, CPtr<IObstacle>, SVector, int > ObstacleAreaMap;
 	typedef det_map< int, CPtr<IObstacle> > ObstacleObjectMap;
 	typedef CAreaMap<CExistingObject, CObj<CExistingObject>, SVector, int> StaticObjectsAreaMap;
@@ -54,7 +54,7 @@ public:
 		virtual bool AddStorage( class CBuilding * pStorage, const float fPathLenght ) = 0;
 	};
 
-	// для хранения информации о складах RU 
+	// для хранения информации о складах RU
 	class CStoragesContainer
 	{
 		typedef det_map< int, CObj<CBuilding> > CStorages;
@@ -71,11 +71,11 @@ public:
 		//void Segment();
 		void EnumStoragesForParty( const int nParty, IEnumStoragesPredicate * pPred );
 		void Init() { Clear(); }
-		void EnumStoragesInRange( const CVec2 &vCenter, 
-			const int nParty, 
+		void EnumStoragesInRange( const CVec2 &vCenter,
+			const int nParty,
 			const float fMaxPathLenght,
 			const float fMaxOffset,
-		class CCommonUnit * pUnitToFindPath, 
+		class CCommonUnit * pUnitToFindPath,
 			IEnumStoragesPredicate * pPred );
 
 		void AddStorage( class CBuilding *pNewStorage, const int nPlayer, int nLinkID );
@@ -128,12 +128,12 @@ public:
 		: areaMap( SConsts::STATIC_OBJ_CELL ), containersAreaMap( SConsts::STATIC_CONTAINER_OBJ_CELL ),
 			obstacles( SConsts::STATIC_OBJ_CELL ), bIterCreated( false ) { }
 	void Init( const int nMapTileSizeX, const int nMapTileSizeY );
-	
+
 	void PostAllObjectsInit();
 
 	void AddObstacle( struct IObstacle *pObstacle );
 	void RemoveObstacle( struct IObstacle *pObstacle );
-	
+
 	class CStaticObject* AddNewFenceObject( const SFenceRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nDiplomacy, const int nFrameIndex );
 	void AddStaticObject( class CExistingObject* pObj, bool bAlreadyLocked );
 	class CStaticObject* AddNewStaticObject( const SObjectBaseRPGStats *pStats, const float fHPFactor, const CVec3 &center, const uint16_t wDir, const int nFrameIndex );
@@ -160,12 +160,12 @@ public:
 	// вызываются только самими удаляемыми объектами
 	void DeleteInternalObjectInfo( class CExistingObject *pObj );
 	void DeleteInternalEntrenchmentInfo( class CEntrenchment *pEntrench );
-	
+
 	void StartBurning( class CExistingObject *pObj );
 	void EndBurning( class CExistingObject *pObj );
 
 	void StorageChangedDiplomacy( class CBuilding *pNewStorage, const int nNewPlayer );
-	
+
 	void UpdateAllObjectsPos();
 
 	void EnumObstaclesInRange( const CVec2 &vCenter, const float fRadius, struct IObstacleEnumerator *f );

@@ -515,7 +515,7 @@ void CTerraGen::ReCreateAllWaterZones()
 	for ( int i = 0; i < pDesc->lakes.size(); ++i )
 	{
 		const NDb::SLakeDesc *pLakeDesc = static_cast<const NDb::SLakeDesc *>( pDesc->lakes[i].pDescriptor.GetPtr() );
-		// if LakeVSO is not lake then it is an island		
+		// if LakeVSO is not lake then it is an island
 		if ( pLakeDesc->bIsLake )
 			procLakes.push_back( i );
 		else

@@ -94,7 +94,7 @@ public:
 	{
 		pMapInfoEditor = _pMapInfoEditor;
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		
+
 		CSimpleObjectState *pSimpleObjectState = new CSimpleObjectState( this );
 		nStateIndex = AddInputState( pSimpleObjectState );
 		NI_ASSERT( nStateIndex == IS_SIMPLE_OBJECT, fmt::format( "CMapObjectMultiState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SIMPLE_OBJECT ) ) );
@@ -114,7 +114,7 @@ public:
 		CEntrenchmentState *pEntrenchmentState = new CEntrenchmentState( this );
 		nStateIndex = AddInputState( pEntrenchmentState );
 		NI_ASSERT( nStateIndex == IS_ENTRENCHMENT, fmt::format( "CMapObjectMultiState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ENTRENCHMENT ) ) );
-		
+
 		SetActiveInputState( IS_SIMPLE_OBJECT, false, false );
 		Singleton<ICommandHandlerContainer>()->Set( CHID_MAPINFO_MAPOBJECT_MULTI_STATE, this );
 	}

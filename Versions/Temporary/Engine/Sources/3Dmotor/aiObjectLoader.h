@@ -109,7 +109,7 @@ class CFileSkinPointsLoadFromGranny : public CHoldedPtrFuncBase<CFileSkinPoints>
 {
 	typedef CHoldedPtrFuncBase<CFileSkinPoints> TParent;
 	OBJECT_BASIC_METHODS(CFileSkinPointsLoadFromGranny);
-	
+
 	ZDATA
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pData;
 	CDGPtr<CPtrFuncBase<NAnimation::CGrannyFileInfo> > pSkeletonData;

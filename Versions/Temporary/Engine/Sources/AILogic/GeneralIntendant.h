@@ -28,7 +28,7 @@ public:
 	SVector GetCenter() const { return vCell; }
 	void AddUnitResupply( class CCommonUnit * pUnit, const enum EResupplyType eType );
 	void RemoveUnitResupply( class CCommonUnit * pUnit, const enum EResupplyType eType );
-	
+
 	uint8_t RemoveUnit( class CCommonUnit * pUnit );
 	void AddUnit( class CCommonUnit * pUnit, const uint8_t cRes );
 	const bool IsUnitRegistered( CCommonUnit * pUnit ) const;
@@ -42,9 +42,9 @@ public:
 
 	float GetNNeeded( const uint8_t cTypeMask ) const;
 	bool IsEmpty() const;
-	float GetNNeeded( const enum EResupplyType eType ) const 
-	{ 
-		return resupplyCount[eType]; 
+	float GetNNeeded( const enum EResupplyType eType ) const
+	{
+		return resupplyCount[eType];
 	}
 
 	static bool IsUnitSuitable( const class CCommonUnit *pUnit, const enum EResupplyType eType );
@@ -60,7 +60,7 @@ public:
 			float s1n = s1->GetNNeeded( cMask );
 			float s2n = s2->GetNNeeded( cMask );
 			if (s1n != s2n)
-				return s1n > s2n; 
+				return s1n > s2n;
 			else
 			{
 				auto p1 = s1->GetCenter();
@@ -69,7 +69,7 @@ public:
 					return p1.x > p2.x;
 				if (p1.y != p2.y)
 					return p1.y > p2.y;
-				
+
 				// this should never happen since centers are always unique
 				return false;
 			}
@@ -88,7 +88,7 @@ class CGeneralTaskToDefendStorage : public IGeneralTask, public IWorkerEnumerato
 	OBJECT_BASIC_METHODS(CGeneralTaskToDefendStorage);
 
 public:
-	class CWaitForChangePlayer : public IGeneralDelayedTask 
+	class CWaitForChangePlayer : public IGeneralDelayedTask
 	{
 		OBJECT_BASIC_METHODS(CWaitForChangePlayer);
 	ZDATA
@@ -133,10 +133,10 @@ public:
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual void CancelTask( ICommander *pManager ) ;
 	virtual void Segment() ;
-	
+
 
 	virtual float GetSeverity() const { return fSeverity; }
-	virtual bool IsFinished() const { return eState == TS_FINISHED; } 
+	virtual bool IsFinished() const { return eState == TS_FINISHED; }
 
 	//IWorkerEnumerator
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType );
@@ -174,7 +174,7 @@ public:
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity );
 	virtual void CancelTask( ICommander *pManager ) ;
 	virtual void Segment() ;
-	
+
 
 	virtual float GetSeverity() const { return fSeverity; }
 	virtual bool IsFinished() const { return bFinished; }
@@ -202,7 +202,7 @@ public:
 		: pTask( _pTask ), pCell( _pCell ), eResupplyType( _eResupplyType ), pCommander( _pCommander )
 	{
 	}
-	
+
 	virtual bool IsTimeToRun() const
 	{
 		return !pTask || pTask->IsFinished() || pCell->IsDangerous() || pCell->GetNNeeded( eResupplyType ) == 0;
@@ -269,7 +269,7 @@ public:
 		int operator()( const SVector & v ) const { return (v.x<<16) & v.y; }
 	};
 private:
-	
+
 	typedef det_map< SVector, CPtr<CResupplyCellInfo>, SVectorHash > ResupplyCells;
 	typedef det_map< /*Unique ID*/ int, CPtr<CEnemyRememberer> > CFreeArtillery;
 	typedef std::pair<CVec2, uint16_t> CPosition;
@@ -304,12 +304,12 @@ public:
 	void Init();
 	void AddReiforcePositions( const struct NDb::SAIGeneralParcel &_patchInfo );
 	void AddReiforcePosition( const CVec2 & vPos, const uint16_t wDirection );
-	
+
 	virtual void Give( CCommonUnit *pWorker );
 	virtual float GetMeanSeverity() const { return 0; }
 	virtual void EnumWorkers( const EForceType eType, IWorkerEnumerator *pEnumerator );
 	virtual void Segment() ;
-	
+
 	virtual int RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
 	virtual void CancelRequest( int nRequestID, enum EForceType eType );
 
@@ -318,7 +318,7 @@ public:
 	void UnitAskedForResupply( class CCommonUnit * pUnit, const enum EResupplyType eType, const bool bSet );
 	void SetArtilleryVisible( const CAIUnit *pArtillery, const bool bVisible );
 
-	void MarkCellsDangerous( const SVector &vCell );		
+	void MarkCellsDangerous( const SVector &vCell );
 };
 
 

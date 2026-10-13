@@ -34,7 +34,7 @@ const char *CSkeletonExporter::GetAddPath() const
 
 bool CSkeletonExporter::FormScript( std::string *pScriptText,
 																		const std::string &szTypeName,
-																		const std::string &szObjName, 
+																		const std::string &szObjName,
                                     const std::string &szDstPath,
 																		const std::string &szSrcPath,
                                     IManipulator *pManipulator )
@@ -78,9 +78,9 @@ bool CSkeletonExporter::FormScript( std::string *pScriptText,
 	return true;
 }
 
-bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName, 
+bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 																									const std::string &szSrcScenePath,
-																									const std::string &szDstFileName, 
+																									const std::string &szDstFileName,
 																									IManipulator *pManipulator )
 {
 	IFolderCallback *pFolderCallback = Singleton<IFolderCallback>();
@@ -97,7 +97,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		return false;
 	}
 	//
-	// 
+	//
 	std::string szSrcName;
 	std::string szRootJoint;
 	CManipulatorManager::GetValue( &szSrcName, pManipulator, "SrcName" );
@@ -108,7 +108,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 	//
 	std::string szAnimationNamePrefix = NFile::CutFileExt( szObjName, 0 );
 	const std::string szSkeletonPostfix = "_skeleton";
-	if ( NFile::ComparePathEq(szAnimationNamePrefix.size() - szSkeletonPostfix.size(), szSkeletonPostfix.size(), 
+	if ( NFile::ComparePathEq(szAnimationNamePrefix.size() - szSkeletonPostfix.size(), szSkeletonPostfix.size(),
 		                        szAnimationNamePrefix, 0, szSkeletonPostfix.size(), szSkeletonPostfix) != false )
 	{
 		szAnimationNamePrefix = szAnimationNamePrefix.substr( 0, szAnimationNamePrefix.size() - szSkeletonPostfix.size() ) + "_";
@@ -124,7 +124,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		granny_file_info *pGFI = NMEGeomAttribs::GetAttribs( szSrcFileName, "", ANIMATIONS_ROOT_JOINT );
 		ReadAttributes( &attributesList, pGFI, ANIMATIONS_ROOT_JOINT, false );
 		int nAnimationRefCount = 0;
-		for ( CGrannyBoneAttributesList::const_iterator itAttribute = attributesList.begin(); 
+		for ( CGrannyBoneAttributesList::const_iterator itAttribute = attributesList.begin();
 			    itAttribute != attributesList.end(); ++itAttribute )
 		{
 			bool bResult = true;
@@ -152,7 +152,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 					std::string szMnemonic = typeMayaAnimationMnemonics.GetMnemonic( animationType );
 					NStr::ToLowerASCII( &szMnemonic );
 					if ( nNumber != INVALID_NODE_ID )
-						szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber ); 
+						szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber );
 					else
 						szAnimationName = szMnemonic;
 					bResult = bResult && itAttribute->GetAttribute( "starttime", &nFirstFrame );
@@ -181,14 +181,14 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 			szAnimationName = szAnimationNamePrefix + szAnimationName + "_animb2.xdb";
 			if ( bResult )
 			{
-				if ( animations.find(szAnimationName) == animations.end() && 
+				if ( animations.find(szAnimationName) == animations.end() &&
 					   pFolderCallback->IsUniqueName(szAnimationTypeName,  szAnimationName) )
 				{
 					pFolderCallback->InsertObject( szAnimationTypeName, szAnimationName );
 					NLog::Log( LT_IMPORTANT, "Adding new animation \"%s\"\n", szAnimationName.c_str() );
 				}
 				//
-				if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) ) 
+				if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) )
 				{
 					// Удалим анимацию из списка несуществующих анимаций
 					std::string szTypeAndName;
@@ -218,7 +218,7 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 		}
 		//
 		// remove left animations
-		for ( CAnimationRefMap::iterator itAnimationName = animations.begin(); itAnimationName != animations.end(); ++itAnimationName ) 
+		for ( CAnimationRefMap::iterator itAnimationName = animations.begin(); itAnimationName != animations.end(); ++itAnimationName )
 		{
 			pFolderCallback->RemoveObject( "AnimB2", itAnimationName->first.ToString(),  false );
 			const std::string szFileName = NDb::GetFileName( itAnimationName->first );
@@ -230,19 +230,19 @@ bool CSkeletonExporter::ImportInfoToDBBeforeRefs( const std::string &szObjName,
 //		if ( nAnimationRefCount == 0 )
 //			pFolderCallback->RemoveObject( szAnimationTypeName, szAnimationFolder, false );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::Log( LT_ERROR, "Can't get params file to read animations\n" );
 		bResult = false;
 	}
-	//	
+	//
 	return bResult;
 }
 
 EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
-																							const std::string &szObjName, 
+																							const std::string &szObjName,
 																							const std::string &szSrcScenePath,
-																							const std::string &szDestinationPath, 
+																							const std::string &szDestinationPath,
 																							IManipulator *pManipulator )
 {
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );
@@ -256,7 +256,7 @@ EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
 		return ER_FAIL;
 	}
 	// check for number of bones
-	if ( fileInfo->Skeletons[0]->BoneCount == 0 ) 
+	if ( fileInfo->Skeletons[0]->BoneCount == 0 )
 	{
 		NLog::Log( LT_ERROR, "Empty bones list in file - check \"RootJoint\"\n" );
 		NLog::Log( LT_ERROR, "\tSkeleton: %s\n", szObjName.c_str() );
@@ -267,7 +267,7 @@ EXPORT_RESULT CSkeletonExporter::CustomCheck( const std::string &szTypeName,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 
 

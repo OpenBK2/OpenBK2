@@ -3,11 +3,11 @@
 #include "IconOutline.h"
 
 // texture draw only part that will fit to background size
-// texture alignment may be 
+// texture alignment may be
 class CBackgroundSimpleTexture :	public CBackground
 {
 	OBJECT_BASIC_METHODS(CBackgroundSimpleTexture);
-	
+
 	CDBPtr<NDb::SBackgroundSimpleTexture> pStats;
 	CDBPtr<NDb::STexture> pTexture;
 	CObj<CIconOutliner> pIcon;

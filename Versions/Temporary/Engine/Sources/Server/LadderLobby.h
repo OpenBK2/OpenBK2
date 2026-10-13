@@ -13,7 +13,7 @@ class CLadderClient : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CLadderClient );
 public:
 	int nSide; // 0 - random, 1 - allies, 2 - fascist
-	int nTeamSize; // players in team 
+	int nTeamSize; // players in team
 	bool bHistoricity;
 	unsigned int uCheckSum;
 	int nLevel;
@@ -36,7 +36,7 @@ public:
 	~CLadderCacheLocker();
 };
 
-struct SLadderGameInfo 
+struct SLadderGameInfo
 {
 	std::list<int> team1Players;
 	std::list<int> team2Players; // fascist
@@ -77,7 +77,7 @@ struct SLadderGameInfo
 	std::unordered_map<int,CPtr<SLadderDBInfo> > playerInfo;
 	std::unordered_map<int,std::vector<int> > mapsRequested;
 	std::unordered_map<int,std::vector<int> > techsRequested;
-	std::list< CPtr<CLadderCacheLocker> > lockers; 
+	std::list< CPtr<CLadderCacheLocker> > lockers;
 };
 
 class CLadderLobby : public CGameLobby

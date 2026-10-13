@@ -132,7 +132,7 @@ int lua_tag (lua_State *L, int index) {
 int lua_equal (lua_State *L, int index1, int index2) {
   StkId o1 = luaA_indexAcceptable(L, index1);
   StkId o2 = luaA_indexAcceptable(L, index2);
-  if (o1 == STK_NULL || o2 == STK_NULL) 
+  if (o1 == STK_NULL || o2 == STK_NULL)
 		return 0;  /* index out-of-range */
   else return luaO_equalObj( LObj(L, o1), LObj(L, o2) );
 }
@@ -140,20 +140,20 @@ int lua_equal (lua_State *L, int index1, int index2) {
 int lua_lessthan (lua_State *L, int index1, int index2) {
   StkId o1 = luaA_indexAcceptable(L, index1);
   StkId o2 = luaA_indexAcceptable(L, index2);
-  if (o1 == STK_NULL || o2 == STK_NULL) 
+  if (o1 == STK_NULL || o2 == STK_NULL)
 		return 0;  /* index out-of-range */
   else return luaV_lessthan(L, o1, o2, L->pCT->top);
 }
 
 
 
-double lua_tonumber (lua_State *L, int index) 
+double lua_tonumber (lua_State *L, int index)
 {
   StkId o = luaA_indexAcceptable(L, index);
   return (o == STK_NULL || tonumber( LObj(L, o) )) ? 0 : LObj(L, o)->GetN();
 }
 
-const char *lua_tostring (lua_State *L, int index) 
+const char *lua_tostring (lua_State *L, int index)
 {
   StkId o = luaA_indexAcceptable(L, index);
   return (o == STK_NULL || tostring(L, LObj(L, o))) ? NULL : LObj(L, o)->GetS()->c_str();
@@ -164,13 +164,13 @@ size_t lua_strlen (lua_State *L, int index) {
   return (o == STK_NULL || tostring(L, LObj(L, o))) ? 0 : LObj(L, o)->GetS()->GetStr().size();
 }
 
-lua_CFunction lua_tocfunction (lua_State *L, int index) 
+lua_CFunction lua_tocfunction (lua_State *L, int index)
 {
   StkId o = luaA_indexAcceptable(L, index);
   return ( o == STK_NULL || !iscfunction( L, LObj(L, o) ) ) ? NULL : L->GetClosure(o)->f.c;
 }
 
-CObjectBase *lua_touserdata (lua_State *L, int index) 
+CObjectBase *lua_touserdata (lua_State *L, int index)
 {
   StkId o = luaA_indexAcceptable(L, index);
 	if ( o == STK_NULL || LObj(L, o)->GetType() != LUA_TUSERDATA )
@@ -179,18 +179,18 @@ CObjectBase *lua_touserdata (lua_State *L, int index)
 	return pUD->tag == tagLuaCPtr ? pUD->pPtr.GetPtr() : pUD->pObj.GetPtr();
 }
 
-const void *lua_topointer( lua_State *L, int index ) 
+const void *lua_topointer( lua_State *L, int index )
 {
   StkId o = luaA_indexAcceptable( L, index );
-  if ( o == STK_NULL ) 
+  if ( o == STK_NULL )
 		return NULL;
-  switch ( LObj(L, o)->GetType() ) 
+  switch ( LObj(L, o)->GetType() )
 	{
-    case LUA_TTABLE: 
+    case LUA_TTABLE:
       return L->GetHash(o);
     case LUA_TFUNCTION:
       return L->GetClosure(o);
-    default: 
+    default:
 			return NULL;
   }
 }
@@ -265,7 +265,7 @@ void lua_gettable (lua_State *L, int index) {
 }
 
 
-void lua_rawget( lua_State *L, int index ) 
+void lua_rawget( lua_State *L, int index )
 {
   StkId t = Index(L, index);
   LUA_ASSERT( LObj(L, t)->GetType() == LUA_TTABLE, "table expected" );
@@ -283,7 +283,7 @@ void lua_rawgeti (lua_State *L, int index, int n) {
 }
 
 
-void lua_getglobals (lua_State *L) 
+void lua_getglobals (lua_State *L)
 {
   LObj(L, L->pCT->top)->SetH( L->nGT );
   api_incr_top(L);
@@ -303,7 +303,7 @@ int lua_getref (lua_State *L, int ref) {
 }
 
 
-void lua_newtable (lua_State *L) 
+void lua_newtable (lua_State *L)
 {
   LObj(L, L->pCT->top)->SetH( luaH_new(L, 0) );
   api_incr_top(L);
@@ -329,7 +329,7 @@ void lua_settable (lua_State *L, int index) {
 }
 
 
-void lua_rawset (lua_State *L, int index) 
+void lua_rawset (lua_State *L, int index)
 {
   StkId t = Index(L, index);
   LUA_ASSERT( LObj(L, t)->GetType() == LUA_TTABLE, "table expected" );
@@ -354,7 +354,7 @@ void lua_setglobals (lua_State *L)
 }
 
 
-int lua_ref (lua_State *L,  int lock) 
+int lua_ref (lua_State *L,  int lock)
 {
   int ref;
   if ( LObj(L, L->pCT->top-1)->GetType() == LUA_TNIL )
@@ -365,7 +365,7 @@ int lua_ref (lua_State *L,  int lock)
       L->refFree = L->refArray[ref].st;
     }
     else /* no more free places */
-		{  
+		{
       ref = L->refArray.size();
 			L->refArray.push_back( Ref() );
     }
@@ -553,7 +553,7 @@ int LuaCFuncSetThreadErrorHook( lua_State *L )
 
 void lua_settag (lua_State *L, int tag) {
   luaT_realtag(L, tag);
-  switch ( LObj(L, L->pCT->top-1)->GetType() ) 
+  switch ( LObj(L, L->pCT->top-1)->GetType() )
 	{
     case LUA_TTABLE:
 			L->GetHash( L->pCT->top-1 )->htag = tag;
@@ -619,7 +619,7 @@ int lua_getn (lua_State *L, int index) {
   const TObject *value = h->GetStr( luaS_new(L, "n") );  /* value = h.n */
   if ( value->GetType() == LUA_TNUMBER )
     return (int)value->GetN();
-  else 
+  else
 		return (int) h->GetMaxIntKey();
 }
 

@@ -156,11 +156,11 @@ static void TheThreadProc( CNetDriver *pNet )
 	pNet->FinishThread();
 }
 
-IDriver::EState CNetDriver::GetState() const 
+IDriver::EState CNetDriver::GetState() const
 {
 	// Тут не локаем треды, так как большой погоды это не делает, а производительность ест и мешает работать с сетью
 //	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	return state; 
+	return state;
 }
 
 void CNetDriver::StartThread()
@@ -185,7 +185,7 @@ CNetDriver::CNetDriver() : serverInfo( 0 ), login( 0 ), state( INACTIVE )
 	bIsBroadcast = true;
 }
 
-CNetDriver::CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast ) 
+CNetDriver::CNetDriver( const SNetDriverConsts &_consts, bool _bIsBroadcast )
 : serverInfo( 0 ), login( 0 ), state( INACTIVE ), consts(_consts), bIsBroadcast(_bIsBroadcast)
 {
 }
@@ -204,7 +204,7 @@ CNetDriver::~CNetDriver()
 	KillThread();
 
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	switch ( state )
 	{
 		case ACTIVE:
@@ -219,7 +219,7 @@ CNetDriver::~CNetDriver()
 					//sends message to server only
 					for ( CPeerList::iterator i = clients.begin(); i != clients.end(); ++i )
 					{
-						if ( i->second.clientID == 0 ) 
+						if ( i->second.clientID == 0 )
 							CSendPacket p( i->second.currentAddr, LOGOUT, login.GetSelfClientID(), pLinks );
 					}
 					break;
@@ -237,7 +237,7 @@ void CNetDriver::Init( const APPLICATION_ID nApplicationID, const int _nGamePort
 {
 	NI_ASSERT( pLinksManager != 0, "Can't initialize by 0 linksManager" );
 	pLinks = pLinksManager;
-	
+
 	serverInfo.Init( nApplicationID );
 	login.Init( nApplicationID );
 	nGamePort = _nGamePort;
@@ -350,7 +350,7 @@ bool CNetDriver::SendDirect( int nClient, const CMemoryStream &_pkt )
 void CNetDriver::Kick( int nClient )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	SPeer *pDst = GetClient( nClient );
 //	NI_ASSERT( pDst != 0, "pDst == 0 " );
 	NI_ASSERT( state == ACTIVE, "Wrong state of the game" );
@@ -366,7 +366,7 @@ bool CNetDriver::AnalyzeLags()
 
 	if ( bReceiveNow )
 		return true;
-	
+
 	if ( Singleton<IGameTimer>() )
 	{
 		const NTimer::STime curTime = Singleton<IGameTimer>()->GetAbsTime();
@@ -402,7 +402,7 @@ bool CNetDriver::GetMessage( EMessage *pMsg, int *pClientID, std::vector<int> *p
 if ( !AnalyzeLags() )
 	return false;
 #endif // __TEST_LAGS__
-	
+
 	if ( msgQueue.empty() )
 		return false;
 	else
@@ -426,7 +426,7 @@ void CNetDriver::ProcessLogin( const CNodeAddress &addr, CBitStream &bits )
 	CLoginSupport::SLoginInfo info;
 	if ( login.ProcessLogin( addr, bits, &info ) )
 	{
-		bool bAddp2pClient = false;		
+		bool bAddp2pClient = false;
 		EReject reject = NONE;
 		if ( info.bWrongVersion )
 			reject = WRONG_VERSION;
@@ -488,7 +488,7 @@ void CNetDriver::ProcessNormal( const CNodeAddress &addr, CBitStream &bits )
 		{
 			pPeer->data.ReadMsg( bits );
 			pPeer->data.Commit( acked );
-			PollMessages( pPeer );			
+			PollMessages( pPeer );
 		}
 	}
 	else
@@ -649,7 +649,7 @@ void CNetDriver::StepConnecting()
 	}
 }
 
-void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from, 
+void CNetDriver::AddOutputMessage( EMessage msg, const CP2PTracker::UCID _from,
 		CMemoryStream &data, const std::vector<CP2PTracker::UCID> &received )
 {
 	if ( msg == KICKED )
@@ -794,7 +794,7 @@ void CNetDriver::StepActive( float fDeltaTime )
 			break;
 		}
 	}
-	
+
 	for ( CPeerList::iterator it = clients.begin(); it != clients.end(); ++it )
 	{
 		if ( p2p.IsActive( it->second.clientID ) )
@@ -820,7 +820,7 @@ void CNetDriver::StepActive( float fDeltaTime )
 					pktID = it->second.acks.WrtieAcks( pkt.GetBits(), PACKET_SIZE ); // CRAP - packet size limits??
 					it->second.data.WriteMsg( pktID, pkt.GetBits(), PACKET_SIZE );
 				}
-				
+
 				if ( !CSendPacket::GetResult() )
 				{
 					it->second.acks.PacketLost( pktID );
@@ -852,11 +852,11 @@ void CNetDriver::Step()
 
 	{
 		// CRAP{
-		
+
 		// for traffic to winsock measurement
 		// use external code to do this
 		// doing this here puck ups due to Step() calls from other thread
-	 // if ( Singleton<IGameTimer>() != 0  )	
+	 // if ( Singleton<IGameTimer>() != 0  )
 		//{
 		//	NTimer::STime curTime = Singleton<IGameTimer>()->GetAbsTime();
 		//	if ( lastTrafficCheckTime > curTime )
@@ -915,7 +915,7 @@ void CNetDriver::StartGame()
 void CNetDriver::ConnectGame( const CNodeAddress &addr, const CMemoryStream &pwd )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	state = CONNECTING;
 	login.StartLogin( addr, pwd );
 
@@ -944,17 +944,17 @@ void CNetDriver::StartGameInfoSend( const SGameInfo &_gameInfo )
 void CNetDriver::StopGameInfoSend()
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	serverInfo.StopReply();
 }
 
 bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion, float *pPing, SGameInfo *pGameInfo )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	CServerInfoSupport::CServerInfoList &servers = serverInfo.GetServers();
 	CServerInfoSupport::CServerInfoList::iterator k = servers.begin();
-	
+
 	for ( ; k != servers.end(); ++k, --nIdx )
 	{
 		if ( nIdx <= 0 )
@@ -980,7 +980,7 @@ bool CNetDriver::GetGameInfo( int nIdx, CNodeAddress *pAddr, bool *pWrongVersion
 	return false;
 }
 
-void CNetDriver::StartNewPlayerAccept() 
+void CNetDriver::StartNewPlayerAccept()
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
 
@@ -990,7 +990,7 @@ void CNetDriver::StartNewPlayerAccept()
 void CNetDriver::StopNewPlayerAccept()
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	bAcceptNewClients = false;
 }
 
@@ -1008,12 +1008,12 @@ const float CNetDriver::GetPing( int nClientID )
 const float CNetDriver::GetTimeSinceLastRecv( const int nClientID )
 {
 	std::lock_guard criticalSectionLock( netDriverCriticalSection );
-	
+
 	CPeerList::const_iterator iter = clients.find( nClientID );
 	if ( iter == clients.end() )
 		return -1.0f;
 	else
-		return iter->second.acks.GetTimeSinceLastRecv();	
+		return iter->second.acks.GetTimeSinceLastRecv();
 }
 
 const std::string CNetDriver::GetIP( const int nClientID )
@@ -1052,7 +1052,7 @@ void CNetDriver::SetLag( const NTimer::STime period )
 }
 
 IDriver* CreateNetDriver( const SNetDriverConsts &consts, bool bIsBroadcast )
-{	
+{
 	return new NNet::CNetDriver( consts, bIsBroadcast );
 }
 

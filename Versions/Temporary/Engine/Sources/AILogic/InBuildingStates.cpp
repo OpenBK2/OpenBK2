@@ -39,7 +39,7 @@ IStatesFactory* CInBuildingStatesFactory::Instance()
 bool CInBuildingStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return 
+	return
 		( cmdType == ACTION_COMMAND_DIE						||
 			cmdType == ACTION_COMMAND_ATTACK_UNIT		||
 			cmdType == ACTION_COMMAND_IDLE_BUILDING ||
@@ -53,10 +53,10 @@ IUnitState* CInBuildingStatesFactory::ProduceState( class CQueueUnit *pUnit, CAI
 {
 	NI_ASSERT( dynamic_cast<CSoldier*>( pUnit ) != 0, "Wrong unit type" );
 	CSoldier *pSoldier = checked_cast<CSoldier*>( pUnit );
-	
+
 	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	IUnitState* pResult = 0;
-	
+
 	switch ( cmd.nCmdType )
 	{
 		case ACTION_COMMAND_DIE:
@@ -100,7 +100,7 @@ IUnitState* CSoldierRestInBuildingState::Instance( CSoldier *pSoldier, CBuilding
 {
 	CSoldierRestInBuildingState *pRest = new CSoldierRestInBuildingState( pSoldier );
 	pRest->SendUnitTo( pBuilding );
-	
+
 	return pRest;
 }
 
@@ -218,7 +218,7 @@ void CSoldierAttackInBuildingState::Segment()
 		else if ( !pGun->IsFiring() )
 		{
 			damageToEnemyUpdater.SetDamageToEnemy( pSoldier, pEnemy, pGun );
-			
+
 			// если враг мёртв или его не видно или стреляем сами по себе или пора заканчивать стрельбу
 			if ( !IsValidObj( pEnemy ) || pEnemy.GetPtr() == pSoldier ||
 					 !pEnemy->IsNoticableByUnit( pSoldier, pGun->GetFireRange( 0 ) ) || bFinish ||
@@ -239,7 +239,7 @@ void CSoldierAttackInBuildingState::Segment()
 }
 
 ETryStateInterruptResult CSoldierAttackInBuildingState::TryInterruptState( class CAICommand *pCommand )
-{ 
+{
 	if ( !pCommand )
 	{
 		pSoldier->UnRegisterAsBored( ACK_BORED_ATTACK );

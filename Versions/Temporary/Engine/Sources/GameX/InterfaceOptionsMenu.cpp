@@ -91,7 +91,7 @@ int CInterfaceOptionsMenu::CReactions::Check( const std::string &szCheckName ) c
 
 // CInterfaceOptionsMenu
 
-CInterfaceOptionsMenu::CInterfaceOptionsMenu() : 
+CInterfaceOptionsMenu::CInterfaceOptionsMenu() :
 	CInterfaceScreenBase( "OptionsMenu", "options_menu" )
 {
 	AddObserver( "back", &CInterfaceOptionsMenu::MsgBack );
@@ -106,12 +106,12 @@ bool CInterfaceOptionsMenu::Init()
 {
 	screenMode = MODE_NORMAL;					//Redundant?
 
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	pReactions = new CReactions( pScreen, this );
 	AddScreen( pReactions );
-	
+
 	return true;
 }
 
@@ -127,9 +127,9 @@ void CInterfaceOptionsMenu::FillScreen()
 	IWindow *pOptionsMenu = GetChildChecked<IWindow>( pScreen, "OptionsMenu", true );
 	if ( pOptionsMenu )
 		pOptionsMenu->ShowWindow( false );
-	
+
 	//Get the appropriate screen
-	if ( screenMode == MODE_FILTERS ) 
+	if ( screenMode == MODE_FILTERS )
 	{
 		nOptionMask = 0x08;				//Filters only
 		pMain = pMPFilters;
@@ -166,13 +166,13 @@ void CInterfaceOptionsMenu::FillScreen()
 	pButtonTemplate->GetPlacement( &nButtonX, &nButtonY, &nButtonSX, &nButtonSY );
 	categoryOffset.x -= nButtonX;
 	categoryOffset.y -= nButtonY;
-  
+
 	pCheckBoxItemTemplate = GetChildChecked<IWindow>( pMain, "CheckBoxTemplate", true );
 	pEditLineItemTemplate = GetChildChecked<IWindow>( pMain, "EditLineTemplate", true );
 	pSliderItemTemplate = GetChildChecked<IWindow>( pMain, "SliderTemplate", true );
 	pMultichoiceTemplate = GetChildChecked<IWindow>( pMain, "MultichoiceTemplate", true );
 	pEditNumberItemTemplate = GetChildChecked<IWindow>( pMain, "EditNumberTemplate", true );
-	
+
 	//Fill categories, create category buttons
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	pOptionSystem = pGameRoot->pGameOptions;
@@ -183,7 +183,7 @@ void CInterfaceOptionsMenu::FillScreen()
 		SCategoryInstance category;
 		category.nCategoryEntry = i;
 
-		//Filter the empty categories out? 
+		//Filter the empty categories out?
 		int nOptionsInCategory = 0;
 		//Fill in the options
 		for ( int j = 0 ; j <  pOptionSystem->categories[i].options.size(); ++j )
@@ -200,20 +200,20 @@ void CInterfaceOptionsMenu::FillScreen()
 			option.szSavedValue = NStr::ToMBCS( NGlobal::GetVar( option.szProgName, pOptionSystem->categories[i].options[j].szDefaultValue ) );
 			option.szCurrentValue = option.szSavedValue;
 			if ( pOptionSystem->categories[i].options[j].eEditorType ==
-			     NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER) 
+			     NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER)
 			{
 				option.fSliderPosition = NStr::ToFloat( option.szSavedValue );
 			}
 			options.push_back(option);
 			++nOptionsInCategory;
 		}
-		if ( nOptionsInCategory ) 
+		if ( nOptionsInCategory )
 		{		//Add non-empty categories
 			IWindow *pElement = AddWindowCopy( pGroupPanel, pButtonTemplate );
 			pElement->SetName( fmt::format( "Category{}", i ) );
 			pElement->ShowWindow( true );
 			pElement->SetTextString( pElement->GetDBText() + GET_TEXT_PRE(pOptionSystem->categories[i].,Name) );
-			pElement->SetPlacement( nButtonX + i * categoryOffset.x, nButtonY + nScreenPos * categoryOffset.y, 
+			pElement->SetPlacement( nButtonX + i * categoryOffset.x, nButtonY + nScreenPos * categoryOffset.y,
 				0, 0, EWPF_POS_X | EWPF_POS_Y );
 			pElement->SetTooltip( GET_TEXT_PRE(pOptionSystem->categories[i].,Tooltip) );
 
@@ -231,12 +231,12 @@ void CInterfaceOptionsMenu::FillScreen()
 		{
 			//categories[0].pWindow ->ShowWindow( false );
 		}
-	} 
-	else 
+	}
+	else
 	{
 		nSelectedCategory = -1;
 	}
-	
+
 	if ( pMain )
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 }
@@ -259,10 +259,10 @@ void CInterfaceOptionsMenu::ChangeResolution()
 	for ( int i = 0; i < options.size(); ++i )
 	{
 		SOptionInstance *pOption = &( options[i] );
-		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry = 
+		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry =
 			pOptionSystem->categories[ categories[ pOption->nCategoryEntry ].nCategoryEntry ].options[ pOption->nOptionEntry ];
 
-		if ( options[i].szProgName.find( "gfx_" ) != -1 && 
+		if ( options[i].szProgName.find( "gfx_" ) != -1 &&
 			options[i].szSavedValue != options[i].szCurrentValue )
 		{
 			bGFXOptionsChanged = true;
@@ -272,10 +272,10 @@ void CInterfaceOptionsMenu::ChangeResolution()
 
 	for ( int i = 0; i < options.size(); ++i )
 	{
-		if ( options[i].szProgName == "gfx_quality" ) 
+		if ( options[i].szProgName == "gfx_quality" )
 		{
 			SOptionInstance *pOption = &( options[i] );
-			const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry = 
+			const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry =
 				pOptionSystem->categories[ categories[ pOption->nCategoryEntry ].nCategoryEntry ].options[ pOption->nOptionEntry ];
 
 			if ( entry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER )
@@ -318,8 +318,8 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 			if ( pButton->GetState() == 1 )
 				bNoChanges = true;
 			pButton->SetState( 1 );
-		} 
-		else 
+		}
+		else
 		{
 			pButton->SetState( 0 );
 		}
@@ -343,7 +343,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 	nWidthRight = nWidthAll - nWidthLeft - 3 * ITEM_DELTA_X;
 
 	//Pointer to current category
-  const NDb::SOptionSystem::SOptionsCategory *pCat = 
+  const NDb::SOptionSystem::SOptionsCategory *pCat =
 		&( pOptionSystem->categories[ categories[ nCategory ].nCategoryEntry ] );
 
 	pCategoryTitle = GetChildChecked<ITextView>( pOptionList, "CategoryTitle", true );
@@ -359,14 +359,14 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 	// Fill in the options
 	for ( int i = 0; i < options.size(); ++i )			//Cycle for all options in the current category
 	{
-		if ( options[i].nCategoryEntry != categories[ nCategory ].nCategoryEntry ) 
+		if ( options[i].nCategoryEntry != categories[ nCategory ].nCategoryEntry )
 			continue;
 		SOptionInstance *pOption = &( options[i] );
 		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry = pCat->options[pOption->nOptionEntry];
 
 		IWindow *pElement = 0;
 		// Create a corresponding control
-		switch ( pEntry.eEditorType ) 
+		switch ( pEntry.eEditorType )
 		{
 			case NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_CHECKBOX:
 				pElement = AddWindowCopy( pOptionList, pCheckBoxItemTemplate );
@@ -388,7 +388,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 		}
 		NI_ASSERT( pElement, "Could not create Option Item entry" );
 		pElement->GetPlacement( &nItemX, &nItemY, &nItemSX, &nItemSY );
-		pElement->SetPlacement( 0, i * ( nItemSY + ITEM_DELTA_Y ), nWidthAll, 0, 
+		pElement->SetPlacement( 0, i * ( nItemSY + ITEM_DELTA_Y ), nWidthAll, 0,
 			EWPF_POS_X | EWPF_POS_Y | EWPF_SIZE_X );
 		pElement->SetName( fmt::format("Option{}", i ) );
 		pElement->SetTooltip( GET_TEXT_PRE(pEntry.,Tooltip) );
@@ -396,7 +396,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 		ITextView *pOptionName = GetChildChecked<ITextView>( pElement, "OptionName", true );
 		pOptionName->SetText( pOptionName->GetDBText() + GET_TEXT_PRE(pEntry.,Name) );
 		pOptionName->SetTooltip( GET_TEXT_PRE(pEntry.,Tooltip) );
-		pOptionName->SetPlacement( ITEM_DELTA_X, ITEM_DELTA_Y, nWidthLeft, 0, 
+		pOptionName->SetPlacement( ITEM_DELTA_X, ITEM_DELTA_Y, nWidthLeft, 0,
 			EWPF_POS_X | EWPF_POS_Y | EWPF_SIZE_X );
 
 		IWindow *pOptionControl = GetChildChecked<IWindow>( pElement, "OptionControl", true );
@@ -421,7 +421,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 		IEditLine *pEditLineControl = 0;
 		//Fill in control-values
 		pOption->pWindow = pOptionControl;
-		switch ( pEntry.eEditorType ) 
+		switch ( pEntry.eEditorType )
 		{
 			case NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITLINE:
 			case NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITNUMBER:
@@ -468,7 +468,7 @@ void CInterfaceOptionsMenu::SelectCategory( int nCategory, bool bForceRecreate )
 						const int nPos = FindStateByValue( pOption->szCurrentValue, pEntry );
 						if ( nPos != -1 )
 						{
-							if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry.states[nPos].,Name) ) 
+							if ( CHECK_TEXT_NOT_EMPTY_PRE(pEntry.states[nPos].,Name) )
 								pOptionControl->SetTextString( GET_TEXT_PRE(pEntry.states[nPos].,Name) );
 							pOptionControl->SetTooltip( GET_TEXT_PRE(pEntry.states[nPos].,Tooltip) );
 						}
@@ -516,10 +516,10 @@ void CInterfaceOptionsMenu::OnControlChange( const std::string &szSender )
 			//pList = dynamic_cast<IScrollableContainer*>( pOptionList.GetPtr() );
 			//pList->Select( pOption->pWindow->GetParentWindow() );
 			//Store it
-			const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry = 
+			const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &entry =
 				pOptionSystem->categories[ categories[ nSelectedCategory ].nCategoryEntry ].options[ pOption->nOptionEntry ];
 
-			switch ( entry.eEditorType ) 
+			switch ( entry.eEditorType )
 			{
 			case NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_CHECKBOX:
 				pWindow = pOption->pWindow;
@@ -606,7 +606,7 @@ void CInterfaceOptionsMenu::SliderPosition( const float fPosition, CWindow *pWho
 		SOptionInstance *pOption = &( options[i] );
 		if ( !pOption->pWindow )
 			continue;
-		if ( pOption->pWindow->GetName() == pWho->GetName() ) 
+		if ( pOption->pWindow->GetName() == pWho->GetName() )
 		{
 			ISlider* pSliderControl = dynamic_cast<ISlider*> ( pOption->pWindow.GetPtr() );
 			NI_ASSERT( pSliderControl, "Slider dynamic cast failed" );
@@ -634,11 +634,11 @@ void CInterfaceOptionsMenu::CommitEditLineChanges()
 			continue;
 		pOption = &( options[i] );
 		//Store it
-		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry = 
+		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry =
 			pOptionSystem->categories[categories[nSelectedCategory].nCategoryEntry].options[pOption->nOptionEntry];
 
 		if ( pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITLINE ||
-			pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITNUMBER ) 
+			pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_EDITNUMBER )
 		{
 			pWindow = pOption->pWindow;
 			pEditLineControl = dynamic_cast<IEditLine*>( pWindow );
@@ -657,15 +657,15 @@ void CInterfaceOptionsMenu::RestoreDefaultValues()
 
 	for ( int j = 0 ; j < options.size(); ++j )
 	{
-		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry = 
+		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry =
 			pOptionSystem->categories[options[j].nCategoryEntry].options[options[j].nOptionEntry];
 
 		NGlobal::SetVar( options[j].szProgName, pEntry.szDefaultValue );
 		options[j].szCurrentValue = pEntry.szDefaultValue;
-		if ( pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER) 
+		if ( pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER)
 			options[j].fSliderPosition = NStr::ToFloat( pEntry.szDefaultValue );
 	}
-	
+
 	ChangeResolution();
 	SelectCategory( nSelectedCategory, true );		//and redraw current option list
 }
@@ -674,10 +674,10 @@ void CInterfaceOptionsMenu::RollbackChanges()
 {
 	for ( int j = 0 ; j < options.size(); ++j )
 	{
-		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry = 
+		const NDb::SOptionSystem::SOptionsCategory::SOptionEntry &pEntry =
 			pOptionSystem->categories[options[j].nCategoryEntry].options[options[j].nOptionEntry];
 
-		if ( pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER) 
+		if ( pEntry.eEditorType == NDb::SOptionSystem::SOptionsCategory::SOptionEntry::OPTION_EDITOR_SLIDER)
 			options[j].fSliderPosition = NStr::ToFloat( options[j].szSavedValue );
 
 		NGlobal::SetVar( options[j].szProgName, options[j].szSavedValue );
@@ -710,7 +710,7 @@ bool CInterfaceOptionsMenu::ProcessEvent( const SGameMessage &msg )
 
 void CInterfaceOptionsMenu::SetMode( const std::string &szMode )
 {
-	if ( szMode == "mp_filters" ) 
+	if ( szMode == "mp_filters" )
 		screenMode = MODE_FILTERS;
 	else
 		screenMode = MODE_NORMAL;
@@ -748,7 +748,7 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 
 	if ( fParam < 0 )
 	{
-		NGlobal::ProcessCommand( L"autodetect" ); 
+		NGlobal::ProcessCommand( L"autodetect" );
 		return;
 	}
 
@@ -756,7 +756,7 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 	if (!pGameRoot)
 	{
 		MessageBox(
-			nullptr, 
+			nullptr,
 			"GameRoot.xdb file not found. Are you missing Data folder?",
 			"Error",
 			MB_OK | MB_ICONERROR
@@ -771,7 +771,7 @@ static void CommandQuality( const std::string &szID, const std::vector<std::wstr
 	{
 		const NDb::SOptionSystem::SOptionsCategory &categorie = pOptionSystem->categories[iCategorie];
 		for ( int iEntry = 0; iEntry < categorie.options.size(); ++iEntry )
-		{			
+		{
 			if ( categorie.options[iEntry].szProgName == "gfx_quality" )
 			{
 				pQualityOption = &categorie.options[iEntry];
@@ -812,7 +812,7 @@ static void CommandAutodetect( const std::string &szID, const std::vector<std::w
 		return;
 	}
 
-	// Detecting computers perfomance and setting 
+	// Detecting computers perfomance and setting
 	NGScene::AutoDetectVideoConfig();
 	const NGfx::SPerformanceInfo &performanceInfo = NGfx::GetPerformanceInfo();
 

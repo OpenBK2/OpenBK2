@@ -57,11 +57,11 @@ struct SLayerType
 		minimap2ndbMap[LAYER_TERRAIN]		= NDb::LAYER_TERRAIN;
 	}
 	int GetMinimapLayer( NDb::EMinimapLayerType eMinimapLayerType ) const
-	{ 
+	{
 		std::unordered_map<int,int>::const_iterator it = ndb2minimapMap.find( eMinimapLayerType );
 		if ( it != ndb2minimapMap.end() )
 		{
-			return it->second;	
+			return it->second;
 		}
 		else
 		{
@@ -73,7 +73,7 @@ struct SLayerType
 		std::unordered_map<int,int>::const_iterator it = minimap2ndbMap.find( eLayerType );
 		if ( it != minimap2ndbMap.end() )
 		{
-			return it->second;	
+			return it->second;
 		}
 		else
 		{
@@ -100,11 +100,11 @@ struct SScaleType
 		ndb2imageMap[NDb::IMAGE_SCALE_METHOD_MITCHELL]	= NImage::IMAGE_SCALE_METHOD_MITCHELL;
 	}
 	NImage::EImageScaleMethod GetImageScaleMethod( NDb::EImageScaleMethod eScaleMethod ) const
-	{ 
+	{
 		std::unordered_map<int,int>::const_iterator it = ndb2imageMap.find( eScaleMethod );
 		if ( it != ndb2imageMap.end() )
 		{
-			return (NImage::EImageScaleMethod)( it->second );	
+			return (NImage::EImageScaleMethod)( it->second );
 		}
 		else
 		{
@@ -132,11 +132,11 @@ struct SRoadType
 		ndb2roadMap[1] = ROAD_ROAD;
 	}
 	ERoadType GetRoadType( int nRoadType ) const
-	{ 
+	{
 		std::unordered_map<int,int>::const_iterator it = ndb2roadMap.find( nRoadType );
 		if ( it != ndb2roadMap.end() )
 		{
-			return (ERoadType)( it->second );	
+			return (ERoadType)( it->second );
 		}
 		else
 		{
@@ -164,11 +164,11 @@ struct SLakeType
 		ndb2lakeMap[1] = LAKE_SWAMP;
 	}
 	ELakeType GetLakeType( int nLakeType ) const
-	{ 
+	{
 		std::unordered_map<int,int>::const_iterator it = ndb2lakeMap.find( nLakeType );
 		if ( it != ndb2lakeMap.end() )
 		{
-			return (ELakeType)( it->second );	
+			return (ELakeType)( it->second );
 		}
 		else
 		{
@@ -201,7 +201,7 @@ struct SLakeInfo
 			islandPointListPtrList = rLakeInfo.islandPointListPtrList;
 		}
 		return *this;
-	}	
+	}
 };
 typedef std::list<SLakeInfo> CLakeList;
 
@@ -227,7 +227,7 @@ struct SCreateParameter
 			size = rCreateParameter.size;
 		}
 		return *this;
-	}	
+	}
 };
 typedef std::vector<SCreateParameter> CCreateParameterList;
 

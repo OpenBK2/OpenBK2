@@ -68,11 +68,11 @@ enum EExecutorEventID
 	EID_ADD_TO_RESTORE_TRANSPARENCY_QUEUE,
 
 	EID_TERMINATE_STATE,
-	// attack point 
+	// attack point
 	EID_ATTACKGROUP_ADD_UNIT,
 	EID_ATTACKGROUP_ATTACK,
 	EID_ATTACKGROUP_DELETE,
-	// 
+	//
 	EID_SUPER_WEAPON_INITIALIZE,
 	EID_SUPER_WEAPON_CONTROL,
 	EID_SUPER_WEAPON_USE,
@@ -89,7 +89,7 @@ struct SExecutorEventParam
 	EExecutorEventID eEventID = {};							// what event
 	int nExecutorID = {};												// for executor generated event
 	int nUnitID = {};														// for unit generated event (legacy)
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eEventID); f.Add(3,&nExecutorID); f.Add(4,&nUnitID); return 0; }
 	SExecutorEventParam() : eEventID( (EExecutorEventID)0 ), nExecutorID( 0 ), nUnitID( 0 ) { }
 	SExecutorEventParam( const EExecutorEventID _eEventID, const int _nExecutorID, const int _nUnitID )
@@ -123,13 +123,13 @@ public:
 
 };
 
-// object added to restore transparency queue. 
+// object added to restore transparency queue.
 // all objects around this object will set their transparency again.
 class CExecutorEventAddToRestoreTransparencyQueue : public CExecutorEvent
 {
 	int nID = {};
 public:
-	CExecutorEventAddToRestoreTransparencyQueue( const SExecutorEventParam &_param, const int _nID ) 
+	CExecutorEventAddToRestoreTransparencyQueue( const SExecutorEventParam &_param, const int _nID )
 		: nID( _nID ), CExecutorEvent( _param )
 	{
 	}
@@ -174,7 +174,7 @@ public:
 	const NDb::SUnitSpecialAblityDesc * GetDesc() const { return pDesc; }
 
 	CExecutorEventSpecialAbilityActivate() {  }
-	CExecutorEventSpecialAbilityActivate( const SExecutorEventParam &_param, 
+	CExecutorEventSpecialAbilityActivate( const SExecutorEventParam &_param,
 																				const NDb::EUnitSpecialAbility _eAbility,
 																				class CAICommand *_pCommand,
 																				const NDb::SUnitSpecialAblityDesc *_pDesc )
@@ -191,7 +191,7 @@ class CExecutorEventSpecialAbilityDeactivate : public CExecutorEventSpecialAbili
 public:
 
 	CExecutorEventSpecialAbilityDeactivate() {  }
-	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param, 
+	CExecutorEventSpecialAbilityDeactivate( const SExecutorEventParam &param,
 		const NDb::EUnitSpecialAbility _eAbility )
 		: CExecutorEventSpecialAbility( param, _eAbility )
 	{
@@ -209,11 +209,11 @@ public:
 
 public:
 	CExecutorEventSpecialAbilitySetTarget() {  }
-	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param, 
+	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
 		const NDb::EUnitSpecialAbility _eAbility, const CVec2 _vCoords )
 		: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( _vCoords )
 	{	}
-	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param, 
+	CExecutorEventSpecialAbilitySetTarget( const SExecutorEventParam &param,
 		const NDb::EUnitSpecialAbility _eAbility, const NDb::SHPObjectRPGStats *_pTarget )
 		: CExecutorEventSpecialAbility( param, _eAbility ), vCoords( VNULL2 ), pTarget(_pTarget)
 	{	}
@@ -236,7 +236,7 @@ public:
 
 	const int GetPlayer() const { return nPlayer; }
 	const bool IsEnabled() const { return bEnabled; }
-	const int GetUnitID() const { return nUnitID; } 
+	const int GetUnitID() const { return nUnitID; }
 };
 
 class CExecutorEventSuperWeaponUse : public CExecutorEvent
@@ -261,12 +261,12 @@ struct IExecutor :	public CAIObjectBase
 	// if IsExecutorValid() return GetNextTime. (see CExecutor)
 	// itherwize return negative value.
 	virtual int Segment() = 0;
-	
+
 	// return true if executer have to be called in current segment
 	virtual bool NotifyEvent( const CExecutorEvent &event ) = 0;
 	// if return false then this executor is to be deleted from any list
 	virtual bool IsExecutorValid() const = 0;
-	virtual int operator&( IBinSaver &saver ) 
+	virtual int operator&( IBinSaver &saver )
 	{
 		return 0;
 	}
@@ -290,9 +290,9 @@ protected:
 	virtual ~CExecutor();
 public:
 
-	void IncID() 
-	{ 
-		++nID; 
+	void IncID()
+	{
+		++nID;
 	}
 	const int GetID() const { return nID; }
 
@@ -346,14 +346,14 @@ struct IExecutorContainer : public CAIObjectBase
 {
 	// adds sleeping, have to be registered on event prior or after adding
 	virtual void AddSleeping( CExecutor *pExecutor ) = 0;
-	// add active, may be registered on event. 
+	// add active, may be registered on event.
 	virtual void Add( CExecutor *pExecutor ) = 0;
-	// 
+	//
 	virtual void RegisterOnEvent( CExecutor *pExecutor, const SExecutorEventParam &ev ) = 0;
 	virtual void RaiseEvent( const CExecutorEvent &event ) = 0;
 	virtual void RaiseEvent( const SExecutorEventParam &param ) = 0;
 	virtual void Segment() = 0;
-	
+
 	virtual int CreateID() = 0;
 	virtual void ReturnID( const int id ) = 0;
 

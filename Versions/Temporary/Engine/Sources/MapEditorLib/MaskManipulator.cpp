@@ -7,7 +7,7 @@ CMaskManipulator::CMaskManipulator( const std::string& rszMask,  IManipulator* _
 {
 	NI_ASSERT( _pTargetManipulator != 0, "CMaskManipulator::CMaskManipulator() pTargetManipulator == 0" );
 }
-	
+
 
 bool CMaskManipulator::AddName( const std::string &rszName, bool bFilled, const std::string& rszType, unsigned nID, bool bHidden )
 {
@@ -366,6 +366,6 @@ unsigned CMaskManipulatorIterator::GetID() const
 	}
 }
 
-// basement storage  
+// basement storage
 
 

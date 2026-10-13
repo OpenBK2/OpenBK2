@@ -20,9 +20,9 @@ namespace NCamera
 		bool bCyclic = {};
 		//
 		void SetLimit( float _fMin, float _fMax, float _fAve, float _fAuto, float _fMan, bool _bCyclic )
-		{ 
-			fMin = _fMin; 
-			fMax = _fMax; 
+		{
+			fMin = _fMin;
+			fMax = _fMax;
 			fAve = _fAve;
 			//
 			if ( fMin < fMax )
@@ -31,9 +31,9 @@ namespace NCamera
 				fMax = (std::max)( fAve, fMax );
 			}
 			//
-			fAutoSpeed = _fAuto; 
-			fManualSpeed = _fMan; 
-			bCyclic = _bCyclic; 
+			fAutoSpeed = _fAuto;
+			fManualSpeed = _fMan;
+			bCyclic = _bCyclic;
 		}
 
 		bool IsEmpty() const { return fMin >= fMax; }

@@ -179,7 +179,7 @@ public:
 		hr = pDX->obj->Unlock();
 		ASSERT( hr == D3D_OK );
 	}
-	void NextFrame( bool bOnThrashing, bool *pbNeedFlush ) 
+	void NextFrame( bool bOnThrashing, bool *pbNeedFlush )
 	{
 		pCache->AdvanceFrameCounter();
 		int nReserve = 10;
@@ -208,10 +208,10 @@ public:
 		dwNextLockFlags = dwFirstLockFlags;
 	}
 	void WasTouched( TUserObject *p ) { frames.front().data.push_back( p ); }
-	void CalcStats( NCache::SStats *pStats ) 
-	{ 
+	void CalcStats( NCache::SStats *pStats )
+	{
 		if ( IsValid( pCache ) )
-			pCache->CalcStats( pStats ); 
+			pCache->CalcStats( pStats );
 		pStats->bThrashing |= bIsThrashing;
 	}
 	void DrawRU( CTexture *pTarget )
@@ -262,7 +262,7 @@ public:
 };
 
 template<class TBuffer, class TDXBuffer, class TUserObject>
-class CLinearBufferElement : 
+class CLinearBufferElement :
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CFibElement, TUserObject>,
 	public ILinearBuffer
 {
@@ -291,7 +291,7 @@ public:
 
 class CUserGeometry;
 typedef CLinearBuffer<CVB, CUserGeometry> CGeometryBuffer;
-class CUserGeometry : 
+class CUserGeometry :
 	public CLinearBufferElement<CGeometryBuffer, CVB, CUserGeometry>,
 	public CGeometry
 {
@@ -308,7 +308,7 @@ public:
 		if ( Touch() )
 			pBuffer->WasTouched( this );
 	}
-	virtual void SetVertexStream() 
+	virtual void SetVertexStream()
 	{
 		ASSERT( IsValid( this ) );
 		RealSetVertexStream( pBuffer->GetBuffer()->obj, pBuffer->GetStride() );
@@ -329,9 +329,9 @@ public:
 		if ( ( (++nSlowCheck) & 0xff ) == 0 && !wrappers.empty() )
 			EraseInvalidRefs( &wrappers );
 		ASSERT( nTris <= pThis->GetSize() );
-		CTriListWrapper *pRes = new CTriListWrapper( pThis, nTris ); 
-		wrappers.push_back( pRes ); 
-		return pRes;  
+		CTriListWrapper *pRes = new CTriListWrapper( pThis, nTris );
+		wrappers.push_back( pRes );
+		return pRes;
 	}
 };
 
@@ -358,7 +358,7 @@ public:
 
 /*class CTriListCore16;
 typedef CLinearBuffer<CIB16, CTriListCore16> CIndicesBuffer;
-class CTriListCore16: 
+class CTriListCore16:
 	public CLinearBufferElement<CIndicesBuffer, CIB16, CTriListCore16>,
 	public CTriList, public CTriListWrapperHandle
 {
@@ -378,8 +378,8 @@ public:
 		renderStats.nVertices += nMaxIndex - nMinIndex;
 		renderStats.nTris += _nTris;
 		pDevice->SetIndices( pBuffer->GetBuffer()->obj, nVBStart );
-		HRESULT hRes = pDevice->DrawIndexedPrimitive( 
-			D3DPT_TRIANGLELIST, 
+		HRESULT hRes = pDevice->DrawIndexedPrimitive(
+			D3DPT_TRIANGLELIST,
 			0,
 			nMinIndex, nMaxIndex - nMinIndex + 1,
 			nStart * 3,
@@ -429,12 +429,12 @@ public:
 			dwUsage |= D3DUSAGE_DYNAMIC;
 		D3DPOOL pool = usage == REGULAR ? D3DPOOL_MANAGED : D3DPOOL_DEFAULT;
 
-		HRESULT hRes = pDevice->CreateTexture( 
-			_nXSize, 
-			_nYSize, 
-			_nLevels, 
+		HRESULT hRes = pDevice->CreateTexture(
+			_nXSize,
+			_nYSize,
+			_nLevels,
 			dwUsage,
-			_format, 
+			_format,
 			pool,
 			obj.GetAddr(),
 			0 );
@@ -449,7 +449,7 @@ public:
 		D3DASSERT( hRes, "CreateTexture failed with X: %d Y: %d Levels: %d Usage: %d Format: %d Pool: %d", _nXSize, _nYSize, _nLevels, dwUsage, fmt::underlying( _format ), fmt::underlying( pool ) );
 		bInitOk &= SUCCEEDED(hRes);
 	}
-	
+
 	int GetSizeX() const { return nXSize; }
 	int GetSizeY() const { return nYSize; }
 	D3DFORMAT GetFormat() const { return format; }
@@ -495,12 +495,12 @@ public:
 	CSysTexture( D3DFORMAT _format )
 	{
 		bBusy = false;
-		HRESULT hRes = pDevice->CreateTexture( 
+		HRESULT hRes = pDevice->CreateTexture(
 			N_SYSMEM_TEXTURE_SIZE,
 			N_SYSMEM_TEXTURE_SIZE,
 			1,
-			0, 
-			_format, 
+			0,
+			_format,
 			D3DPOOL_SYSTEMMEM,
 			pTexture.GetAddr(),
 			0 );
@@ -634,7 +634,7 @@ CTextureLocker::~CTextureLocker()
 		{
 			pTempBuf->UnlockRect();
 			// fix for a strange bug (adding dirty rects during lockrect for pool_default textures break)
-			if ( access == INPLACE && pTexture ) 
+			if ( access == INPLACE && pTexture )
 				 pTexture->AddDirtyRect( (RECT*)&rect );
 		}
 	}
@@ -653,8 +653,8 @@ CTextureLocker::~CTextureLocker()
 				POINT dst;
 				dst.x = rect.x1;
 				dst.y = rect.y1;
-				HRESULT hRes = pDevice->UpdateSurface( 
-					pTempBuf, 
+				HRESULT hRes = pDevice->UpdateSurface(
+					pTempBuf,
 					(RECT*)&copyRect,
 					pObj,
 					(POINT*)&dst );
@@ -664,7 +664,7 @@ CTextureLocker::~CTextureLocker()
 	}
 }
 
-class CTexture: public I2DBuffer, 
+class CTexture: public I2DBuffer,
 	public NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTexture>
 {
 	typedef NCache::CGatherElementBase<NCache::CShortPtrAllocator,NCache::CQuadTreeElement, CTexture> CBase;
@@ -699,7 +699,7 @@ public:
 	}
 };
 
-I2DBufferLock* CTexture::Lock( int nLevel, EAccess access ) 
+I2DBufferLock* CTexture::Lock( int nLevel, EAccess access )
 {
 	if ( !IsValid( pTB ) || !pTB->obj )
 		ThrowD3DBufferError( "Texture Lock: texture unavailable", E_POINTER );
@@ -753,11 +753,11 @@ public:
 		if ( bNoCubeMapMipLevels )
 			nMipLevels = 1;
 
-		HRESULT hRes = pDevice->CreateCubeTexture( 
+		HRESULT hRes = pDevice->CreateCubeTexture(
 			_nSize,
 			nMipLevels,
 			usage == REGULAR ? 0 : D3DUSAGE_RENDERTARGET,
-			_format, 
+			_format,
 			usage == REGULAR ? D3DPOOL_MANAGED : D3DPOOL_DEFAULT,
 			obj.GetAddr(),
 			0 );
@@ -805,7 +805,7 @@ inline D3DCUBEMAP_FACES GetD3DFace( EFace face )
 	return D3DCUBEMAP_FACE_POSITIVE_X;
 }
 
-I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access ) 
+I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access )
 {
 	if ( !IsValid( pTB ) || !pTB->obj )
 		ThrowD3DBufferError( "Cube texture Lock: texture unavailable", E_POINTER );
@@ -815,7 +815,7 @@ I2DBufferLock* CCubeTexture::Lock( EFace face, int nLevel, EAccess access )
 		ThrowD3DBufferError( "GetCubeMapSurface for texture Lock", hr );
 	int nSize = pTB->GetSize();
 	CTRect<int> rect( 0, 0, nSize >> nLevel, nSize >> nLevel );
-	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), 0 ); 
+	return new CTextureLocker( pSurface, rect, access, pTB->GetFormat(), 0 );
 }
 
 void GetSurface( CCubeTexture *pTexture, EFace face, int nLevel, NWin32Helper::com_ptr<IDirect3DSurface9> *pRes )
@@ -874,7 +874,7 @@ public:
 			return 0;
 		CTexture *pRes = new CTexture( pBuffer, CLAMP );
 		pCache->PerformAlloc( pRes, &place );
-		pRes->region.SetRect( 
+		pRes->region.SetRect(
 			place.resPlace.nShiftX, place.resPlace.nShiftY,
 			place.resPlace.nShiftX + nXSize, place.resPlace.nShiftY + nYSize
 			);
@@ -1044,7 +1044,7 @@ class CDynamicTrisIndices32 : public CDynamicTrisBase<CDynamicTrisIndices32, CIB
 	typedef CDynamicTrisBase<CDynamicTrisIndices32, CIB32Fast> TBase;
 	int nMaxVBIndex; // fake to keep DX happy
 	EPrim currentPrim;
-	
+
 public:
 	enum EE
 	{
@@ -1090,10 +1090,10 @@ public:
 
 			S32Triangle *pTri = (S32Triangle*)pDynamicTrisBuffer->pLocked;
 			pTri += nLast;
-			ReallyFastShiftingTransfer( (const unsigned short*)&pSrcTris[ nSrcStart ], (int*)pTri, 
-				nToDraw* 3, 
+			ReallyFastShiftingTransfer( (const unsigned short*)&pSrcTris[ nSrcStart ], (int*)pTri,
+				nToDraw* 3,
 				nVBStart );
-			
+
 			nLast += nToDraw;
 			nSrcStart += nToDraw;
 			nTris -= nToDraw;
@@ -1108,7 +1108,7 @@ public:
 	{
 		if ( pDynamicTrisBuffer->pLocked )
 			pDynamicTrisBuffer->Unlock();
-		
+
 		if ( bWasLinearBufferLock )
 			FreeLinearBuffers();
 		if ( nLast - nStart > 0 )
@@ -1117,8 +1117,8 @@ public:
 			switch ( currentPrim )
 			{
 			case TRILIST:
-				hr = pDevice->DrawIndexedPrimitive( 
-					D3DPT_TRIANGLELIST, 
+				hr = pDevice->DrawIndexedPrimitive(
+					D3DPT_TRIANGLELIST,
 					0,
 					0, nMaxVBIndex,
 					nStart * 3,
@@ -1131,8 +1131,8 @@ public:
 				++renderStats.nDIPs;
 				break;
 			case LINESTRIP:
-				hr = pDevice->DrawIndexedPrimitive( 
-					D3DPT_LINELIST, 
+				hr = pDevice->DrawIndexedPrimitive(
+					D3DPT_LINELIST,
 					0,
 					0, nMaxVBIndex,
 					nStart * 3,
@@ -1176,8 +1176,8 @@ class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB
 			switch ( _prim )
 			{
 			case TRILIST:
-				hr = pDevice->DrawIndexedPrimitive( 
-					D3DPT_TRIANGLELIST, 
+				hr = pDevice->DrawIndexedPrimitive(
+					D3DPT_TRIANGLELIST,
 					nVBStart,
 					nMin, nMax - nMin + 1,
 					nStart * 3,
@@ -1189,8 +1189,8 @@ class CDynamicTrisIndices16 : public CDynamicTrisBase<CDynamicTrisIndices16, CIB
 				++renderStats.nDIPs;
 				break;
 			case LINESTRIP:
-				hr = pDevice->DrawIndexedPrimitive( 
-					D3DPT_LINELIST, 
+				hr = pDevice->DrawIndexedPrimitive(
+					D3DPT_LINELIST,
 					nVBStart,
 					nMin, nMax - nMin + 1,
 					nStart * 3,
@@ -1956,7 +1956,7 @@ void TypeStats( CLinearBuffer<TBuf,TElem> *pLinearBuffer )
 	csSystem << "frame=" << (int)stats.nCurrentRU << "; eldest=" << (int)stats.nEldestEntry;
 	if ( stats.bThrashing )
 		csSystem << " thrashing" << endl;
-	else 
+	else
 		csSystem << " ok" << endl;
 }
 

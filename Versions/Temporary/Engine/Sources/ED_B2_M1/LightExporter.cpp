@@ -76,6 +76,6 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 

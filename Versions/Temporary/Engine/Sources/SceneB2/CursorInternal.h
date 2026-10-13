@@ -12,7 +12,7 @@ class CCursor : public ICursor
 	//
 	typedef std::unordered_map<int, NWinCursor::TCursor> CModesMap;
 	CModesMap modes;											// registered modes
-	
+
 	std::unordered_map<int, std::string> modesFiles;
 	//
 	int nCurrMode;												// current cursor mode

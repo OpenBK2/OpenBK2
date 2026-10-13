@@ -22,20 +22,20 @@
 
 // CInterfaceMPLadderGame
 
-CInterfaceMPLadderGame::CInterfaceMPLadderGame() : 
+CInterfaceMPLadderGame::CInterfaceMPLadderGame() :
 CInterfaceScreenBase( "MPLadderGame", "ladder_game" )
 {
 }
 
 CInterfaceMPLadderGame::~CInterfaceMPLadderGame()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
 bool CInterfaceMPLadderGame::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
@@ -45,14 +45,14 @@ bool CInterfaceMPLadderGame::Init()
 	if ( AddUIScreen( pScreen, "MPLadderGame", this ) == false )
 		return false;
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
-	NI_VERIFY( pMain, "No main window found", return false );	
+	NI_VERIFY( pMain, "No main window found", return false );
 
 	InitControls();
 	return true;
 }
 
 void CInterfaceMPLadderGame::RegisterObservers()
-{	
+{
 }
 
 void CInterfaceMPLadderGame::FillMapData()
@@ -94,8 +94,8 @@ void CInterfaceMPLadderGame::SetControls()
 
 	if ( pSide )
 	{
-		pViewer = new CTextDataViewer(); 
-		pSide->SetViewer( pViewer );	
+		pViewer = new CTextDataViewer();
+		pSide->SetViewer( pViewer );
 		pData = new CTextData( wszAnyText );
 		pSide->AddItem( pData );
 		pSide->Select( 0 );
@@ -112,14 +112,14 @@ void CInterfaceMPLadderGame::SetControls()
 					pData = new CTextData( GET_TEXT_PRE(side.,Name) );
 					pSide->AddItem( pData );
 				}
-			}		
+			}
 		}
 	}
 
 	if ( pTechLevel )
 	{
-		pViewer = new CTextDataViewer(); 
-		pTechLevel->SetViewer( pViewer );	
+		pViewer = new CTextDataViewer();
+		pTechLevel->SetViewer( pViewer );
 		pData = new CTextData( wszAnyText );
 		pTechLevel->AddItem( pData );
 		pTechLevel->Select( 0 );
@@ -135,14 +135,14 @@ void CInterfaceMPLadderGame::SetControls()
 					pData = new CTextData( GET_TEXT_PRE(techlevel.,Name) );
 					pTechLevel->AddItem( pData );
 				}
-			}		
+			}
 		}
 	}
 
 	if ( pGameTypeBox )
 	{
-		pViewer = new CTextDataViewer(); 
-		pGameTypeBox->SetViewer( pViewer );		
+		pViewer = new CTextDataViewer();
+		pGameTypeBox->SetViewer( pViewer );
 		pData = new CTextData( wszAnyText );
 		pGameTypeBox->AddItem( pData );
 		for ( int i = 1; i < 5; ++i )
@@ -150,10 +150,10 @@ void CInterfaceMPLadderGame::SetControls()
 			pData = new CTextData( NStr::ToUnicode( fmt::format( "{} v {}", i, i ) ) );
 			pGameTypeBox->AddItem( pData );
 		}
-		pGameTypeBox->Select( 0 );		
+		pGameTypeBox->Select( 0 );
 	}
 
-	if ( pList ) 
+	if ( pList )
 	{
 		CPtr<CItemLadderMapListViewer> pCustomViewer = new CItemLadderMapListViewer();
 		pList->SetViewer( pCustomViewer );
@@ -184,22 +184,22 @@ void CInterfaceMPLadderGame::CheckEnableStartButton()
 }
 
 void CInterfaceMPLadderGame::UpdateInterior()
-{	
-	NI_VERIFY( pList, "No maps list", return );	
+{
+	NI_VERIFY( pList, "No maps list", return );
 
 	pList->RemoveAllElements();
 	for ( CMPMaps::iterator it = maps.begin(); it!= maps.end(); it++ )
-	{		
+	{
 		pList->AddItem( *it );
 	}
 	pList->Update();
 }
 
 void CInterfaceMPLadderGame::CItemLadderMapListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
-{	
+{
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
-	CDynamicCast<CLadderMapData> pInfo = pData;	
+	CDynamicCast<CLadderMapData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	NMPSetData::SetChildText( pItem,  "ItemMapName", GET_TEXT_PRE( pInfo->pMapDesc->, MapName ) );
@@ -283,7 +283,7 @@ bool CInterfaceMPLadderGame::OnStartGameReaction( const std::string &szSender )
 }
 
 bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
-{	
+{
 	IListControlItem *pItem = pList->GetSelectedListItem();
 	CDynamicCast<CLadderMapData> pInfo = pItem->GetUserData();
 	CDBPtr<NDb::SMultiplayerMap> pSelected = pInfo->pMapDesc;
@@ -301,7 +301,7 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 	if ( pMiniMap )
 	{
 		if ( pMiniMap->pTexture )
-		{		
+		{
 			if ( pWindowMiniMap )
 			{
 				pWindowMiniMap->SetLoadingMapParams( pSelected->pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
@@ -309,11 +309,11 @@ bool CInterfaceMPLadderGame::OnSelectMapReaction( const std::string &szSender )
 				pWindowMiniMap->SetMaterial( pMiniMap );
 				pWindowMiniMap->ShowWindow( true );
 			}
-		}		
+		}
 	}
 	NMPSetData::SetText( pMapName, wszName);
 	if ( pPicture )
-		pPicture->SetTexture( pMiniMapTexture );	
+		pPicture->SetTexture( pMiniMapTexture );
 
 	return true;
 }

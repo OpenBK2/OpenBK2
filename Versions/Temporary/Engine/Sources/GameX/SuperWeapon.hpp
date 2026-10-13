@@ -28,14 +28,14 @@ class CMissionSuperWeapon : public IMissionSuperWeapon
 	CPtr<CMapObj> pMO;
 	CDBPtr<NDb::SHPObjectRPGStats> pDBUnit;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSuperWeaponBtn); f.Add(3,&pSuperWeaponProgress); f.Add(4,&pSuperWeaponMaskWnd); f.Add(5,&bExist); f.Add(6,&bEnabled); f.Add(7,&fProgress); f.Add(8,&bActive); f.Add(9,&pUnitFullInfo); f.Add(10,&pWorld); f.Add(11,&bDisabledByInterface); f.Add(12,&pMO); f.Add(13,&pDBUnit); return 0; }
-private:	
+private:
 	void UpdateVisual();
 	bool IsEnabled() const;
 public:
 	CMissionSuperWeapon();
-	
+
 	void Init( IWindow *pScr, CWorldClient *pWorld, NDb::ESeason eSeason );
-	
+
 	//{ IMissionSuperWeapon
 	void OnUpdateSuperWeaponControl( CMapObj *pMO, const NDb::SHPObjectRPGStats *pDBUnit, bool bExist );
 	void OnUpdateSuperWeaponRecycle( float fProgress );

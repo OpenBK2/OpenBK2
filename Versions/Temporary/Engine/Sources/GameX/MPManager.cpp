@@ -31,7 +31,7 @@ CMPManager::CMPManager()
 	pCurrentNetMode = new CMPManagerModeNoNet;
 }
 
-CMPManager::~CMPManager() 
+CMPManager::~CMPManager()
 {
 }
 

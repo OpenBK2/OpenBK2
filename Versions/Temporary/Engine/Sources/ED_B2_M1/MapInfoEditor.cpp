@@ -64,7 +64,7 @@ REGISTER_EDITOR_IN_DLL( MapInfo, CMapInfoEditor )
 
 
 
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] = 
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO_TOOLS_ELEMENTS_COUNT] =
 {
 	ID_TOOLS_RESET_CAMERA,
 	ID_TOOLS_UPDATE_VSO,
@@ -80,7 +80,7 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_TOOLS_ELEMENTS_ID[TOOLBAR_MAPINFO
 };
 
 
-ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] = 
+ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_VIEW_ELEMENTS_COUNT] =
 {
 	ID_MI_VIEW_MINIMAP,
 	ID_MI_VIEW_TOOL,
@@ -88,10 +88,10 @@ ED_B2_M1_EXPORT const unsigned TOOLBAR_MAPINFO_VIEW_ELEMENTS_ID[TOOLBAR_MAPINFO_
 
 
 CMapInfoEditor::CMapInfoEditor()
-	: nMapInfoToolsToolbarID( 0xFFFFFFFF ), 
-		nMapInfoViewToolbarID( 0xFFFFFFFF ), 
-		pMapInfo( 0 ), 
-		pwndShortcutBar( 0 ), 
+	: nMapInfoToolsToolbarID( 0xFFFFFFFF ),
+		nMapInfoViewToolbarID( 0xFFFFFFFF ),
+		pMapInfo( 0 ),
+		pwndShortcutBar( 0 ),
 		pwndMiniMap( 0 ),
 		pwndMoviesEditor( 0 ),
 		pMiniMapView( 0 ),
@@ -164,7 +164,7 @@ void CMapInfoEditor::CreateControls()
 		}
 	}
 	DebugTrace( "CMapInfoEditor::CreateControls(): Create minimap window: %g", NHPTimer::GetTimePassed( &time ) );
-	
+
 	nID = ID_MAPINFO_EDITOR_SHORTCUT_DW;
 	// создаем shortcut docking window
 	if ( pwndShortcutBar = Singleton<IMainFrameContainer>()->Get()->CreateControlBar( &nID, "ShortcutBar", NMainFrameBar::ALIGN_ANY, NMainFrameBar::DOCK_LEFT, 0.8f, 265 ) )
@@ -331,7 +331,7 @@ void CMapInfoEditor::PreDestroyControls()
 
 void CMapInfoEditor::DestroyControls()
 {
-	// разрушаем shortcut docking window 
+	// разрушаем shortcut docking window
 	if ( pwndShortcutBar != 0 )
 	{
 		if ( pwndShortcutBar->IsAlive() )
@@ -404,7 +404,7 @@ void CMapInfoEditor::Create()
 
 	if ( pwndMiniMap )
 		pwndMiniMap->Show( editorSettings.bShowMinimapBar );
-	
+
 	if ( pwndMoviesEditor )
 		pwndMoviesEditor->Show( editorSettings.bShowMoviesEditor );
 
@@ -532,7 +532,7 @@ void CMapInfoEditor::Save( bool bSaveChanges )
 
 bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
 		{
@@ -773,7 +773,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		case ID_MI_VIEW_MINIMAP:
 		{
-			if ( pwndMiniMap != 0 ) 
+			if ( pwndMiniMap != 0 )
 			{
 				pwndMiniMap->Show( !pwndMiniMap->IsVisible() );
 			}
@@ -782,7 +782,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		case ID_MI_VIEW_MOVIE_EDITOR:
 		{
-			if ( pwndMoviesEditor != 0 ) 
+			if ( pwndMoviesEditor != 0 )
 			{
 				pwndMoviesEditor->Show( dwData != 0 );
 			}
@@ -791,7 +791,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		case ID_MI_VIEW_TOOL:
 		{
-			if ( pwndShortcutBar != 0 ) 
+			if ( pwndShortcutBar != 0 )
 			{
 				pwndShortcutBar->Show( !pwndShortcutBar->IsVisible() );
 			}
@@ -818,7 +818,7 @@ bool CMapInfoEditor::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		//
 		default:
 			return false;
-	} 
+	}
 	return false;
 }
 
@@ -827,7 +827,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	NI_ASSERT( pbEnable != 0, "CMapInfoEditor::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CMapInfoEditor::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 	case ID_TOOLS_CREATE_SCRIPT_PATH_POINTS:
 	{
@@ -898,7 +898,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	case ID_MI_VIEW_MINIMAP:
 	{
-		if ( pwndMiniMap != 0 ) 
+		if ( pwndMiniMap != 0 )
 		{
 			( *pbEnable ) = true;
 			( *pbCheck ) = pwndMiniMap->IsVisible();
@@ -913,7 +913,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	case ID_MI_VIEW_MOVIE_EDITOR:
 	{
-		if ( pwndMoviesEditor != 0 ) 
+		if ( pwndMoviesEditor != 0 )
 		{
 			( *pbEnable ) = true;
 			( *pbCheck ) = pwndMoviesEditor->IsVisible();
@@ -928,7 +928,7 @@ bool CMapInfoEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	//
 	case ID_MI_VIEW_TOOL:
 	{
-		if ( pwndShortcutBar != 0 ) 
+		if ( pwndShortcutBar != 0 )
 		{
 			( *pbEnable ) = true;
 			( *pbCheck ) = pwndShortcutBar->IsVisible();
@@ -1105,7 +1105,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1113,7 +1113,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1121,7 +1121,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1138,7 +1138,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1146,7 +1146,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1154,7 +1154,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1171,7 +1171,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1179,7 +1179,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1187,7 +1187,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1205,7 +1205,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1214,7 +1214,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1223,7 +1223,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1249,7 +1249,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1257,7 +1257,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1265,7 +1265,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->oldValue, pMapInfo ) )
 												{
@@ -1282,7 +1282,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1290,7 +1290,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1298,7 +1298,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->oldValue, pMapInfo ) )
 												{
@@ -1315,7 +1315,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1323,7 +1323,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1331,7 +1331,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->oldValue, pMapInfo ) )
 												{
@@ -1349,7 +1349,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 									{
 										switch( posVSOUndoData->eType )
 										{
-											case CMapInfoController::SVSOUndoData::TYPE_INSERT: 
+											case CMapInfoController::SVSOUndoData::TYPE_INSERT:
 											{
 												if ( VSOCollector.RemoveVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue.nVSOID ) )
 												{
@@ -1358,7 +1358,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_REMOVE: 
+											case CMapInfoController::SVSOUndoData::TYPE_REMOVE:
 											{
 												if ( VSOCollector.InsertVSO( posVSOUndoData->eVSOType, posVSOUndoData->newValue, pMapInfo ) )
 												{
@@ -1367,7 +1367,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 												}
 												break;
 											}
-											case CMapInfoController::SVSOUndoData::TYPE_CHANGE: 
+											case CMapInfoController::SVSOUndoData::TYPE_CHANGE:
 											{
 												if ( VSOCollector.UpdateVSO( posVSOUndoData->eVSOType, posVSOUndoData->oldValue, pMapInfo ) )
 												{
@@ -1609,7 +1609,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							}
 						}
 					}
-				}		
+				}
 				else if ( szName == szSpotsLabel )
 				{
 					if ( posUndoData->eType == CObjectBaseController::SUndoData::TYPE_INSERT )
@@ -1670,7 +1670,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 							}
 						}
 					}
-				}		
+				}
 			}
 			//
 			if ( bRedo )
@@ -1718,7 +1718,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				if ( posObjectIndexToLinkID == objectIndexToLinkIDMap.end() )
 				{
 					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map object {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
-					continue;				
+					continue;
 				}
 				const std::string szObjectPrefix = fmt::format( "Objects.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
@@ -1768,7 +1768,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			{
 				const int nBridgeIndex = *itIndex;
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): insert bridge: %d", nBridgeIndex );
-				//				
+				//
 				NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 				objectLoadInfo.nObjectIndex = nBridgeIndex;
 				objectLoadInfo.bSearchIndices = true;
@@ -1784,7 +1784,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 			{
 				const int nEntrenchmentIndex = *itIndex;
 				//DebugTrace( "CMapInfoEditor::GetChangesFromController(): insert entrenchment: %d", nEntrenchmentIndex );
-				//				
+				//
 				NMapInfoEditor::SObjectLoadInfo objectLoadInfo;
 				objectLoadInfo.nObjectIndex = nEntrenchmentIndex;
 				objectLoadInfo.bSearchIndices = true;
@@ -1860,7 +1860,7 @@ void CMapInfoEditor::GetChangesFromController( CObjectBaseController *pObjectCon
 				if ( posSpotIndexToLinkID == spotIndexToLinkIDMap.end() )
 				{
 					NLog::GetLogger()->Log( LT_ERROR, fmt::format( "Map spot {} on the map \"{}\" has no objectID. Skiping...\n", *itIndex, NDb::GetResName(pMapInfo) ) );
-					continue;				
+					continue;
 				}
 				const std::string szSpotPrefix = fmt::format( "Spots.[{}]", *itIndex );
 				std::string szRPGStatsTypeName;
@@ -1939,7 +1939,7 @@ void CMapInfoEditor::Undo( IController* pController )
 {
 	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
 	{
-		GetChangesFromController( pObjectController, false ); 
+		GetChangesFromController( pObjectController, false );
 	}
 }
 
@@ -1948,7 +1948,7 @@ void CMapInfoEditor::Redo( IController* pController )
 {
 	if ( CObjectBaseController *pObjectController = dynamic_cast<CObjectBaseController*>( pController ) )
 	{
-		GetChangesFromController( pObjectController, true ); 
+		GetChangesFromController( pObjectController, true );
 	}
 }
 
@@ -2182,7 +2182,7 @@ void CMapInfoEditor::ApplyViewFilter()
 		filterSettings[szTypeName] = editorSettings.viewFilterData.objTypeFilter[t].bShow;
 	}
 
-	for ( NMapInfoEditor::SObjectInfoCollector::CObjectInfoMap::iterator itObjectInfo = objectInfoCollector.objectInfoMap.begin(); 
+	for ( NMapInfoEditor::SObjectInfoCollector::CObjectInfoMap::iterator itObjectInfo = objectInfoCollector.objectInfoMap.begin();
 		itObjectInfo != objectInfoCollector.objectInfoMap.end(); ++itObjectInfo )
 	{
 		// по объектам
@@ -2190,7 +2190,7 @@ void CMapInfoEditor::ApplyViewFilter()
 		if ( !pOI )
 			continue;
 
-		for ( NMapInfoEditor::SObjectInfo::CSceneIDToLinkIDMap::iterator 
+		for ( NMapInfoEditor::SObjectInfo::CSceneIDToLinkIDMap::iterator
 					itSceneIDToElemID = pOI->sceneIDToLinkIDMap.begin();
 					itSceneIDToElemID != pOI->sceneIDToLinkIDMap.end(); ++itSceneIDToElemID )
 		{
@@ -2291,7 +2291,7 @@ void CMapInfoEditor::RunGame()
 }
 
 
-// basement storage  
+// basement storage
 
 		/**
 		// удаляемые объекты убираем из добавляемых

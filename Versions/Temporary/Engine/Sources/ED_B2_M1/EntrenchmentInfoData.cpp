@@ -13,7 +13,7 @@
 
 #include <zconf.h>
 
-namespace NMapInfoEditor 
+namespace NMapInfoEditor
 {
 	////////////////////////////////////////////////////////////////////t//////////////////////////////////////////////////////////
 	const NDb::SModel* SEntrenchmentInfo::GetModel(	const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats, NDb::EEntrenchSegmType type, NDb::ESeason eSeason )
@@ -25,24 +25,24 @@ namespace NMapInfoEditor
 		int nSegmentIndex = -1;
 		switch ( type )
 		{
-			case NDb::EST_LINE: 
+			case NDb::EST_LINE:
 			{
-				nSegmentIndex = pEntrenchmentRPGStats->GetLineIndex(); 
+				nSegmentIndex = pEntrenchmentRPGStats->GetLineIndex();
 				break;
 			}
-			case NDb::EST_FIREPLACE: 
+			case NDb::EST_FIREPLACE:
 			{
-				nSegmentIndex = pEntrenchmentRPGStats->GetFirePlaceIndex(); 
+				nSegmentIndex = pEntrenchmentRPGStats->GetFirePlaceIndex();
 				break;
 			}
-			case NDb::EST_TERMINATOR: 
+			case NDb::EST_TERMINATOR:
 			{
-				nSegmentIndex = pEntrenchmentRPGStats->GetTerminatorIndex(); 
+				nSegmentIndex = pEntrenchmentRPGStats->GetTerminatorIndex();
 				break;
 			}
-			case NDb::EST_ARC: 
+			case NDb::EST_ARC:
 			{
-				nSegmentIndex = pEntrenchmentRPGStats->GetArcIndex(); 
+				nSegmentIndex = pEntrenchmentRPGStats->GetArcIndex();
 				break;
 			}
 			default:
@@ -54,7 +54,7 @@ namespace NMapInfoEditor
 		{
 			return 0;
 		}
-		const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats *pSeg = &pEntrenchmentRPGStats->segments[nSegmentIndex]; 
+		const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats *pSeg = &pEntrenchmentRPGStats->segments[nSegmentIndex];
 		const NDb::SVisObj *pVisObj = pSeg->pVisObj;
 		if ( !pVisObj )
 		{
@@ -109,7 +109,7 @@ namespace NMapInfoEditor
 		CVec3 vTerraDir = vPos1 - vPos0;
 		float fTerraLen = fabs( vTerraDir );
 		//
-		NI_ASSERT( fTerraLen > FLT_EPSILON, "GetEntrenchmentSegmentPositionOnTerrain(): fTerraLen <= FLT_EPSILON" ); 
+		NI_ASSERT( fTerraLen > FLT_EPSILON, "GetEntrenchmentSegmentPositionOnTerrain(): fTerraLen <= FLT_EPSILON" );
 		if ( !( fTerraLen > FLT_EPSILON ) )
 		{
 			return false;
@@ -123,7 +123,7 @@ namespace NMapInfoEditor
 		//
 		CVec3 vrAxis = VNULL3;
 		qXYRot.Rotate( &vrAxis, -V3_AXIS_Y );
-		CQuat qRotVert( fVertAngle, vrAxis ); 
+		CQuat qRotVert( fVertAngle, vrAxis );
 		//
 		*pQuat = qRotVert * qXYRot;
 		//
@@ -296,7 +296,7 @@ namespace NMapInfoEditor
 				pUpdate->info.nExpLevel = 0;
 				//
 				pObjectInfoCollector->pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-			}		
+			}
 			//
 			SObjectInfo::SSceneElement sceneElement;
 			sceneElement.vPosition = itMapInfoElement->second.vPosition;
@@ -367,7 +367,7 @@ namespace NMapInfoEditor
 				CVec3 vScale = CVec3( 1.0f, 1.0f, 1.0f );
 				float fDirection = pSgInfo->fDirAngle;
 				SEntrenchmentInfo::GetEntrenchmentSegmentPositionOnTerrain(	&vTerrainPos, &qRot, &dwNormal, &vScale, pSgInfo->vAABBSize.x, vCenterPoint, fDirection );
-				vTerrainPos.z = 0;		 // в базе хранится высота сегмента относительно высоты террейна 
+				vTerrainPos.z = 0;		 // в базе хранится высота сегмента относительно высоты террейна
 				//
 				int nObjectIndex = INVALID_NODE_ID;
 				CManipulatorManager::GetValue( &nObjectIndex, pManipulator, "Objects" );
@@ -555,6 +555,6 @@ namespace NMapInfoEditor
 	}
 }
 
-// basement storage  
+// basement storage
 
 

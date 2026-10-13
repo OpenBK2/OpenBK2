@@ -27,11 +27,11 @@ template<class T>
 	{
 		T diag=left[i][i], diag1=left[i][i];
 		int maxi = i;
-		for ( int k=i+1; k<nSize; k++ ) 
+		for ( int k=i+1; k<nSize; k++ )
 		{
 			if ( fabs(left[k][i]) > diag1 )
 			{
-				diag1 = left[k][i]; 
+				diag1 = left[k][i];
 				maxi = k;
 			}
 		}
@@ -81,15 +81,15 @@ template<class T>
 				//	for( s=0; s<size; s++){ left[k][s]-=koef*left[i][s]; right[k][s]-=koef*right[i][s]; }
 				while ( le < lefin )
 				{
-					le[0] -= koef*lei[0]; le++; lei++; 
+					le[0] -= koef*lei[0]; le++; lei++;
 					ri[0] -= koef*rii[0]; ri++; rii++;
 				}
 			}
 		}
 	}
-	for ( int i=nSize-1; i>=0; i-- ) 
+	for ( int i=nSize-1; i>=0; i-- )
 	{
-		for ( int k=0; k<i; k++ ) 
+		for ( int k=0; k<i; k++ )
 		{
 			T  koef = left[k][i];
 			T *le = &left[k][0], *lei = &left[i][0];
@@ -100,7 +100,7 @@ template<class T>
 				//	for( s=0; s<size; s++){ left[k][s]-=koef*left[i][s]; right[k][s]-=koef*right[i][s];}
 				while ( le < lefin )
 				{
-					le[0] -= koef*lei[0]; le++; lei++; 
+					le[0] -= koef*lei[0]; le++; lei++;
 					ri[0] -= koef*rii[0]; ri++; rii++;
 				}
 			}
@@ -116,24 +116,24 @@ struct SSquare
 };
 static float CalcIntegral( const SSquare &a, const SSquare & b )
 {
-	float fRes = ( 1 / 36.0f ) * ( 
-		4 * ( 
-		a.a[0][0] * b.a[0][0] + 
-		a.a[0][1] * b.a[0][1] + 
-		a.a[1][0] * b.a[1][0] + 
-		a.a[1][1] * b.a[1][1] 
+	float fRes = ( 1 / 36.0f ) * (
+		4 * (
+		a.a[0][0] * b.a[0][0] +
+		a.a[0][1] * b.a[0][1] +
+		a.a[1][0] * b.a[1][0] +
+		a.a[1][1] * b.a[1][1]
 		) +
-		2 * ( 
+		2 * (
 		a.a[0][0] * b.a[0][1] + a.a[0][0] * b.a[1][0] +
 		a.a[0][1] * b.a[0][0] + a.a[0][1] * b.a[1][1] +
 		a.a[1][0] * b.a[1][1] + a.a[1][0] * b.a[0][0] +
 		a.a[1][1] * b.a[1][0] + a.a[1][1] * b.a[0][1]
-		) + 
+		) +
 		(
-		a.a[0][0] * b.a[1][1] + 
-		a.a[0][1] * b.a[1][0] + 
-		a.a[1][0] * b.a[0][1] + 
-		a.a[1][1] * b.a[0][0] 
+		a.a[0][0] * b.a[1][1] +
+		a.a[0][1] * b.a[1][0] +
+		a.a[1][0] * b.a[0][1] +
+		a.a[1][1] * b.a[0][0]
 		)
 		);
 	return fRes;
@@ -233,7 +233,7 @@ void EnlargeImage( CArray2D<T> &r, const CArray2D<T> &src, int nMargin, bool bWr
 	}
 }
 
-static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *pRes, const CVec4 &conv, 
+static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *pRes, const CVec4 &conv,
 	int nMargin, bool bWrapX, bool bWrapY )
 {
 	CArray2D<float> &p = *pRes;
@@ -272,7 +272,7 @@ static void Create2XSampledSource( const CArray2D<CVec4> &src, CArray2D<float> *
 			nY += nMargin;
 			p[y*2][x*2] = p[nY*2][nX*2];
 		}
-	}	
+	}
 	// interpolate
 	for ( int y = 0; y < p.GetSizeY() / 2 - 1; ++y )
 	{
@@ -451,7 +451,7 @@ bool GenerateMipLevel( CArray2D<CVec4> *pDst, const CArray2D<CVec4> &src, bool b
 	CalcChannel( &channel, src, CVec4(0,0,0,1), bWrapX, bWrapY );
 	for ( int y = 0; y < nYSize; ++y ) for ( int x = 0; x < nXSize; ++x )
 		(*pDst)[y][x].a = channel[y][x];
-	
+
 	return true;
 }
 

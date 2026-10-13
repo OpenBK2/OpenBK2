@@ -75,7 +75,7 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 		int nAmmo = 0;
 		int nMaxAmmo = 0;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWeaponID); f.Add(3,&nCount); f.Add(4,&bPrimary); f.Add(5,&szLocalizedName); f.Add(6,&nDamage); f.Add(7,&nPenetration); f.Add(8,&nAmmo); f.Add(9,&nMaxAmmo); return 0; }
-		
+
 		bool operator==( const SWeapon &weapon ) const
 		{
 			return pWeaponID == weapon.pWeaponID;
@@ -87,10 +87,10 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 
 	int nHP = 0;
 	int nMaxHP = 0;
-	
+
 	int nSupply = 0;
 	ZSKIP //int nSecondaryAmmo;
-	
+
 	ZSKIP //int nPrimaryGunCount;
 	ZSKIP //int nSecondaryGunCount;
 
@@ -98,16 +98,16 @@ struct B2_M1_WORLD_EXPORT SObjectStatus
 	std::vector<SWeapon> weapons;
 
 	CDBPtr< NDb::SArmorPattern > pArmorPattern;
-	
+
 	bool bIsTransport = false;
 	ZSKIP //bool bIsResourcesCarrier;
-	
+
 	float fFuel = 0.0f;
-	
+
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szLocalizedName); f.Add(3,&nHP); f.Add(4,&nMaxHP); f.Add(5,&nSupply); f.Add(9,&armors); f.Add(10,&weapons); f.Add(11,&pArmorPattern); f.Add(12,&bIsTransport); f.Add(14,&fFuel); return 0; }
-	
+
 	SObjectStatus();
-	
+
 	void Clear();
 	void AddWeapon( const SWeapon &weapon );
 };
@@ -118,13 +118,13 @@ struct SIconsSetInfo
 		float fRaising = 0.0f;
 		float fHPBarLen = 0.0f;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fRaising); f.Add(3,&fHPBarLen); return 0; }
-	
+
 	SIconsSetInfo() {}
-	SIconsSetInfo( float _fRaising, float _fHPBarLen ) : 
+	SIconsSetInfo( float _fRaising, float _fHPBarLen ) :
 		fRaising( _fRaising ), fHPBarLen( _fHPBarLen ) {}
 };
 
-struct SAbilityInfo 
+struct SAbilityInfo
 {
 	SAbilitySwitchState	abilityState;
 	float fParam = 0.0f;
@@ -144,7 +144,7 @@ inline const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeas
 	{
 		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
-			if ( it->eSeason == eSeason ) 
+			if ( it->eSeason == eSeason )
 				return it->pModel;
 		}
 	}
@@ -158,7 +158,7 @@ inline const NDb::SModel* GetExactLowLevelModel( const NDb::SVisObj *pVisObj, ND
 	{
 		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
-			if ( it->eSeason == eSeason ) 
+			if ( it->eSeason == eSeason )
 				return it->pLowLevelModel;
 		}
 	}
@@ -178,7 +178,7 @@ inline const NDb::SModel* GetLowLevelModel( const NDb::SVisObj *pVisObj, NDb::ES
 	return pExactModel != 0 ? pExactModel : GetExactLowLevelModel( pVisObj, NDb::SEASON_SUMMER );
 }
 
-enum EActionsType 
+enum EActionsType
 {
 	ACTIONS_WITH,
 	ACTIONS_BY,
@@ -205,7 +205,7 @@ class B2_M1_WORLD_EXPORT CMapObj : public IB2MapObj
 	//
 	bool bHasMoveAnimation = false;
 	float fAnimationSpeed = 0.0f;
-	
+
 	int nKeyObjectPlayer = 0;
 	int nParentID = 0;
 	int nPlayer = 0;
@@ -247,12 +247,12 @@ protected:
 
 	void SetDeathState();
 
-	virtual NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
+	virtual NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith,
 		bool bAltMode ) const;
 
 	virtual void FillIconsInfo( SSceneObjIconInfo &iconInfo ) {}
 	virtual bool CanShowIcons() const { return false; }
-	
+
 	void UpdateVisibility( bool bForced );
 public:
 	CMapObj();
@@ -272,7 +272,7 @@ public:
 	virtual int GetUniqueID() const { return GetID(); }
 
 	void AfterLoad();
-	
+
 	virtual void SwitchLightFX( const bool bNewState, const NDb::ESeason eSeason, const bool bIsNight, const bool bInEditor = false );
 	void ForceSwitchLightFX( const bool bNewState, const bool bInEditor );
 	void ForceSwitchLightFX( int nEffect, const bool bNewState, const bool bInEditor );
@@ -284,7 +284,7 @@ public:
 	void GetPlacement( CVec3 *pvPos, CQuat *pqRot, CVec3 *pvScale ) const { *pvPos = vPos; *pqRot = qRot; *pvScale = vScale; }
 
   const CVec3 &GetCenter() const { return vPos; }
-	const CQuat &GetOrientation() const { return qRot; } 
+	const CQuat &GetOrientation() const { return qRot; }
 
 	void SetDiplomacy( const EDiplomacyInfo diplomacy ) { eDiplomacy = diplomacy; }
 	EDiplomacyInfo GetDiplomacy() const { return eDiplomacy; }
@@ -328,7 +328,7 @@ public:
 	bool IsAlive() const { return GetHP() > 0; }
 	//
 	virtual bool CanSelect() const { return false; }
-	
+
 	virtual void GetStatus( SObjectStatus *pStatus ) const;
 
 	void UpdateIcons();
@@ -359,9 +359,9 @@ public:
 	int GetParentID() const { return nParentID; }
 
 	virtual bool IsPlaceMapCommandAck( NDb::EUserAction eUserAction ) const { return false; }
-	
+
 	virtual bool AIUpdateAction( bool bEnable, EActionCommand eAction ) { return false; }
-	
+
 	int GetPlayer() const { return nPlayer; }
 	int GetColorIndex() const { return nColorIndex; }
 	void SetColorIndex( int nColorIndex, bool bForceUpdate );
@@ -392,10 +392,10 @@ protected:
 	void FillIconsInfo( SSceneObjIconInfo &iconInfo );
 	void SetIconsHitbar( bool bHitbar, bool bHighlighted );
 	void SetIconsGroup( int nGroup, bool bHighlighted );
-	
+
 	void SetIconsSetInfo( const SIconsSetInfo &info ) { iconsSetInfo = info; }
 
-	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith, 
+	NDb::EUserAction GetBestAutoAction( const CUserActions &actionsBy, CUserActions *pActionsWith,
 		bool bAltMode ) const;
 public:
 	CMOSelectable() : bSelected( false ), bCanSelect( true ), nSelectionGroup( -1 ),
@@ -460,7 +460,7 @@ public:
 	// get all passangers from container.
 	virtual void GetPassangers( std::vector<CMOSelectable*> *pBuffer ) const = 0;
 	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const;
-	
+
 	virtual int GetPassangersCount() const = 0;
 	// get free places
 	virtual int GetFreePlaces() const = 0;
@@ -521,7 +521,7 @@ struct IMOUnit : public IMOContainer
 	virtual void AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, struct ISoundScene *pSoundScene, struct IClientAckManager *pAckManager  ) = 0;
 	virtual void AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager ) = 0;
 	virtual class CMOProjectile* LaunchProjectile( const SAINewProjectileUpdate *pUpdate ) = 0;
-	
+
 	virtual void SetUnitLevel( int nLevel, bool bShowUnitRank ) = 0;
 	virtual void SetNewAbility( bool bNewAbility ) = 0;
 
@@ -529,7 +529,7 @@ struct IMOUnit : public IMOContainer
 	virtual void SetReinfType( NDb::EReinforcementType eType ) = 0;
 	//
 	virtual IClientUpdatableProcess *AIUpdateStartFinishParadrop( const SParadropStartFinishUpdate *pUpdate, NDb::ESeason eSeason ) { return 0; }
-	
+
 	virtual void SetPointer( const NDb::SModel *pModel ) = 0;
 	virtual void ClearPointer() = 0;
 };

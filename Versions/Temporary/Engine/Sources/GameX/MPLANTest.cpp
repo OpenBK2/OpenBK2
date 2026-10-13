@@ -38,7 +38,7 @@
 //			LANTEST.PlayerName = "LANTEST"
 //			LANTEST.ExecuteOnEnd = ""
 //			LANTEST.ExecuteOnAsync = ""
-//	
+//
 //			The feature is disabled in final release.
 //
 
@@ -118,7 +118,7 @@ void CLANTester::ClientInfoChanged( const int nSlot, const bool bReady )
 			bAcceptSent = true;
 		}
 	}
-	
+
 }
 
 void CLANTester::ClientRemoved( const int nClientID )

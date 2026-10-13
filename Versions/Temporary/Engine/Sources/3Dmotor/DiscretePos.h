@@ -16,7 +16,7 @@ public:
 
 struct SDiscretePos
 {
-	enum 
+	enum
 	{
 		TURN_0   = 0,
 		TURN_90  = 1,
@@ -31,7 +31,7 @@ struct SDiscretePos
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&ptMove); f.Add(3,&nRotation); f.Add(4,&pTransform); return 0; }
 
 	SDiscretePos() {}
-	SDiscretePos( CFBTransform *_pTransform, const CVec3 &_ptMove, int nRotationID ) 
+	SDiscretePos( CFBTransform *_pTransform, const CVec3 &_ptMove, int nRotationID )
 		: ptMove(_ptMove), nRotation(nRotationID), pTransform(_pTransform) {}
 	void MakeMatrix( SFBTransform *pRes ) const;
 	void MoveAndRotate( CVec3 *pPoint ) const;

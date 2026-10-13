@@ -14,7 +14,7 @@ namespace NDb
 
 class CQueueUnit
 {
-	
+
 	// деки команд
 	static CDecksSet< CObj<CAICommand> > cmds;
 
@@ -28,7 +28,7 @@ class CQueueUnit
 	CObj<CAICommand> pCmdCurrent; // текущая команда, выполняемая этим юнитом
 
 	NTimer::STime lastChangeStateTime = {};
-	
+
 	// some abilities must interrupt current state. But some of them will and new command to
 	// units queue during NotifyAbilityRun. This variable will guard command queue from
 	// erasing by initial command, when new command was added.
@@ -63,7 +63,7 @@ public:
 	// текущая команда прерывается, а в голову очереди кладётся pCommand
 	virtual void PushFrontUnitCommand( class CAICommand *pCommand );
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
-	
+
 	void SetCommandFinished();
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand ) = 0;
 	// может ли команда быть выполнена, исходя из статов юнита
@@ -71,7 +71,7 @@ public:
 	virtual void NotifyAbilityRun( class CAICommand * pCommand ) = 0;
 
 	void Segment();
-	
+
 	// возвращает команду, лежащую верхней деке команд
 	class CAICommand* GetNextCommand() const;
 	class CAICommand* GetLastCommand() const;
@@ -81,13 +81,13 @@ public:
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false ) = 0;
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false ) = 0;
 
-	// в очередь перенести текущую команду pUnit и все команды из его очереди  
+	// в очередь перенести текущую команду pUnit и все команды из его очереди
 	void InitWCommands( CQueueUnit *pUnit );
-	
+
 	virtual const NTimer::STime GetNextSegmTime() const { return 0; }
 	// обнулить время, которое проходит между вызовами сегментов у юнита
 	virtual void NullSegmTime() { }
-	
+
 	const NTimer::STime GetLastChangeStateTime() const { return lastChangeStateTime; }
 
 	virtual void FreezeByState( const bool bFreeze ) = 0;

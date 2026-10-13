@@ -10,7 +10,7 @@
 
 #include <cstdio>
 
-SMainFrameParams::SMainFrameParams() 
+SMainFrameParams::SMainFrameParams()
 	: bMaximized( false )
 {
 }
@@ -80,6 +80,6 @@ void SMainFrameParams::Save()
 }
 
 
-// basement storage  
+// basement storage
 
 

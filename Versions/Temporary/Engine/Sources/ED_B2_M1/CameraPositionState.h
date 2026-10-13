@@ -14,10 +14,10 @@ struct SCameraPos
 	bool bUseAnchorOnly;
 	//
 	SCameraPos()
-		: vAnchor( VNULL3 ), 
-			fYaw( 45.0f ), 
-			fPitch( 45.0f ), 
-			fDistance( 170.0f ), 
+		: vAnchor( VNULL3 ),
+			fYaw( 45.0f ),
+			fPitch( 45.0f ),
+			fDistance( 170.0f ),
 			bUseAnchorOnly( true )
 	{
 	}
@@ -57,7 +57,7 @@ public:
 	void Leave();
 	void Draw( IPaintContext *pPaintDC );
 	void PostDraw( IPaintContext *pPaintDC );
-	
+
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
@@ -66,7 +66,7 @@ public:
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
-	//	CCameraPositionState 
+	//	CCameraPositionState
 	CCameraPositionState( CMapInfoEditor* _pMapInfoEditor = 0 );
 };
 

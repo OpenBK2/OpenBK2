@@ -15,12 +15,12 @@ void RenderRectLayout( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, const
 			color.a = 0;
 
 		CTRect<float> rTarget( r.fX, r.fY, r.fX + r.fSizeX, r.fY + r.fSizeY );
-		CTRect<float> rSrc( r.sTex.rcTexRect ); 
+		CTRect<float> rSrc( r.sTex.rcTexRect );
 		pRes->AddRect( rTarget, pTex, rSrc, color, fZ );
 	}
 }
 
-bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex, 
+bool ClipRect( CTRect<float> *pClippedRect, CRectLayout::STextureCoord *pTex,
 	const CRectLayout::SRect &sRect, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 {
 	CTRect<float> &sClippedRect = *pClippedRect;
@@ -57,7 +57,7 @@ void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex
 		const CRectLayout::SRect &sRect = sLayout.rects[nTemp];
 		CTRect<float> sClippedRect;
 		CRectLayout::STextureCoord sTex;
-		
+
 		if ( !ClipRect( &sClippedRect, &sTex, sRect, sPosition, sWindow ) )
 			continue;
 
@@ -69,7 +69,7 @@ void RenderRectLayoutClipped( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex
 	}
 }
 
-void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex, 
+void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, float fZ )
 {
 	pRes->AddRect( pPos4, pColors4, pTex, rSrc, fZ );

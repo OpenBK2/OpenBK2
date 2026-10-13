@@ -28,10 +28,10 @@ void CWriteStream::WriteChecked( const std::string &str )
 	{
 		const int chr = str[i];
 
-		switch ( chr ) 
+		switch ( chr )
 		{
 			case '&':
-				if ( (i < ( (int)str.length() - 2 )) && (str[i + 1] == '#') && (str[i + 2] == 'x') ) 
+				if ( (i < ( (int)str.length() - 2 )) && (str[i + 1] == '#') && (str[i + 2] == 'x') )
 				{
 					// Hexadecimal character reference.
 					// Pass through unchanged.
@@ -93,14 +93,14 @@ const char* GetEntity( const char *p, char *pValue )
 	// Ignore the &#x entities.
 	if ( (*((uint16_t*)p) == *((uint16_t*)phx)) && *(p + 2) && *(p + 3) )
 	{
-		if ( isalpha(*(p + 2)) ) 
+		if ( isalpha(*(p + 2)) )
 			*pValue = ( tolower( *(p + 2) ) - 'a' + 10 ) * 16;
-		else				     
+		else
 			*pValue = ( *(p + 2) - '0' ) * 16;
 
-		if ( isalpha(*(p + 3)) ) 
+		if ( isalpha(*(p + 3)) )
 			*pValue += ( tolower( *(p + 3) ) - 'a' + 10 );
-		else				     
+		else
 			*pValue += ( *(p + 3) - '0' );
 
 		return p + 5;
@@ -141,7 +141,7 @@ const char* ReadName( const char *p, std::string *pszName )
 	pszName->clear();
 	ASSERT( p );
 
-	// Names start with letters or underscores. After that, they can be letters, underscores, numbers, hyphens, or colons. 
+	// Names start with letters or underscores. After that, they can be letters, underscores, numbers, hyphens, or colons.
 	// (Colons are valid ony for namespaces, but LightXML can't tell namespaces from names.)
 	if ( p && *p && ( isalpha((unsigned char) *p) || *p == '_' ) )
 	{

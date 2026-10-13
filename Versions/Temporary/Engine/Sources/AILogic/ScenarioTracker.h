@@ -46,7 +46,7 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual void DecreaseReinforcementCallsLeft( int nPlayer, int nCalls ) = 0;		// if nCalls==0, then decrease by 1, but register as reinf call
 	virtual void IncreaseReinforcementCallsLeft( int nPlayer, int nCalls ) { }
 	virtual void RegisterReinforcementCall( int nPlayer, NDb::EReinforcementType eType ) = 0;
-	
+
 	virtual float GetReinforcementXP( int nPlayer, NDb::EReinforcementType eType ) const = 0;
 	virtual void SetReinforcementXP( int nPlayer, NDb::EReinforcementType eType, float fXP ) = 0;
 	virtual int GetReinforcementXPLevel( int nPlayer, NDb::EReinforcementType eType ) const = 0; // XPLevel: [0..]

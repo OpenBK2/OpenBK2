@@ -9,7 +9,7 @@ class CMountedTurret;
 class CCommonMountedGun
 {
 	public: int operator&( IBinSaver &saver ); private:
-	
+
 	CDBPtr<SBuildingRPGStats> pBuildingStats;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	class CBuilding *pBuilding = {};
@@ -83,7 +83,7 @@ class CMountedGunsFactory : public IGunsFactory
 public:
 	CMountedGunsFactory( class CBuilding *_pBuilding, class CMountedTurret *_pMountedTurret, const int _nCommonGun )
 		: pBuilding( _pBuilding ), pMountedTurret( _pMountedTurret ), nCommonGun( _nCommonGun ) { }
-	
+
 	virtual int GetNCommonGun() const { return nCommonGun; }
 
 	virtual class CBasicGun* CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const;

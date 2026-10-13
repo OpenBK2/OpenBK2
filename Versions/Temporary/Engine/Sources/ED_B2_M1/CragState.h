@@ -10,7 +10,7 @@ class CCragState : public CVSOStateEx
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	const NDb::SCragDesc* pSelectedCragDesc;
 	//конструкторы и операторы присваивания
 	CCragState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState ), pSelectedCragDesc( 0 )
@@ -70,7 +70,7 @@ class CCragState : public CVSOState
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	bool bVSOChanged;
 	const NDb::SCragDesc* pSelectedCragDesc;
 	//конструкторы и операторы присваивания
@@ -89,7 +89,7 @@ class CCragState : public CVSOState
 		}
 		return false;
 	}
-	
+
 protected:
 	// CVSOState
 	bool CanEdit();

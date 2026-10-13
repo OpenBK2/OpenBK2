@@ -39,7 +39,7 @@ public:
 	void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder );
 	bool FillBuildData( std::string *pszBuildDataTypeName,
 											std::string *pszBuildDataName,
-											SBuildDataParams *pBuildDataParams,					
+											SBuildDataParams *pBuildDataParams,
 											IBuildDataCallback *pBuildDataCallback );
 	bool FillNewObjectName( SBuildDataParams *pBuildDataParams );
 };

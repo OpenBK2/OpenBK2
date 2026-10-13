@@ -47,7 +47,7 @@ enum EWindowPlacementFlags
 	EWPF_POS_Y					= 2,
 	EWPF_SIZE_X					= 4,
 	EWPF_SIZE_Y					= 8,
-	
+
 	EWPF_ALL						= 0xffff,
 };
 
@@ -71,9 +71,9 @@ struct IUIInitialization : public CObjectBase
 	virtual void SetMLHandler( const std::wstring &wsTAG, struct IMLHandler *pHandler ) = 0;
 	virtual struct IWindow * CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 	virtual struct IWindow * CreateScreenFromDesc( const struct NDb::SUIDesc *pDesc,
-																										const NDb::SUIGameConsts *pConsts, 
+																										const NDb::SUIGameConsts *pConsts,
 																										struct IProgrammedReactionsAndChecks *pReactionsAndChecks,
-																										NGScene::I2DGameView * p2DView, 
+																										NGScene::I2DGameView * p2DView,
 																										NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView ) = 0;
 	virtual IVirtualScreenController * GetVirtualScreenController() = 0;
 
@@ -182,7 +182,7 @@ struct IWindow : virtual public CObjectBase
 	virtual bool IsModal() const = 0;
 	// return true if processed
 	virtual bool OnButtonDown( const CVec2 &vPos, const int nButton ) = 0;
-	virtual bool OnButtonUp( const CVec2 &vPos, const int nButton ) = 0; 
+	virtual bool OnButtonUp( const CVec2 &vPos, const int nButton ) = 0;
 	virtual bool OnButtonDblClk( const CVec2 &vPos, const int nButton ) = 0;
 	virtual bool OnMouseMove( const CVec2 &vPos, const int nMouseState ) = 0;
 	// pick
@@ -390,7 +390,7 @@ struct IScreen : virtual public IWindow
 
 	virtual bool RunReaction( const std::string &szSender, const std::string &szReactionName ) = 0;
 	virtual bool RunReaction( const std::string &szSender, const NDb::SUIDesc *pReaction ) = 0;
-	
+
 	// run animation sequience on provided window. return ID of animation
 	virtual int /*AnimationID*/RunAnimationSequienceForward( const NDb::SUIStateSequence &seq, class CWindow *pWindow ) = 0;
 	virtual void RunAnimationSequienceBack( const int nAnimationID ) = 0;
@@ -400,7 +400,7 @@ struct IScreen : virtual public IWindow
 	// instantly undo command sequence (run in backward direction)
 	virtual void UndoStateCommandSequence( const std::string &szCmdSeq ) = 0;
 
-	// 
+	//
 	virtual void RegisterEffect( const std::string &szEffect, const struct NDb::SUIStateSequence &cmds ) = 0;
 	virtual void RegisterEffect( const std::string &szEffect, const std::vector<CDBPtr<NDb::SUIStateBase> > &cmds, const bool bReversable ) = 0;
 	virtual void RegisterReaction( const std::string &szReactionKey, struct IMessageReactionB2 *pReaction ) = 0;
@@ -413,7 +413,7 @@ struct IScreen : virtual public IWindow
 	virtual IWindow* AddElement( const struct NDb::SUIDesc *pDesc ) = 0;
 	virtual IWindow* GetElement( const std::string &szName, const bool bRecursive = false ) = 0;
 	virtual IWindow* GetVisibleElement( const std::string &szName, const bool bRecursive = false ) = 0;
-	
+
 	virtual void SetTooltipContext( const int nContext ) = 0;
 	virtual IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner ) = 0;
 
@@ -490,7 +490,7 @@ struct ITabControl : virtual public IWindow
 // effect on interface
 struct IUIEffector : public CObjectBase
 {
-	// effect may want to calculate something 
+	// effect may want to calculate something
 	// return consumed time. if time is completely consumed, return timeDiff
 	// this needed for effect fast forward
 	virtual const int Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward ) = 0;
@@ -516,14 +516,14 @@ struct IWindowPart : public CObjectBase
 	virtual void SetTexture(const struct NDb::STexture *_pDesc) { NI_ASSERT( 0, "SetTexture works only with BackgroundSimpleTexture or BackgroundSimpleScalingTexture!!!"); }
 	virtual void SetOutline( const CDBID &outlineType ) { NI_ASSERT( 0, "OutLine works only with BackgroundSimpleTexture!!!"); }
 	virtual void Init() = 0;
-	
+
 	virtual void SetFadeValue( float fValue ) = 0;
 };
 
 struct IListControlItem : virtual public IWindow
 {
 	virtual IWindow * GetSubItem( const int nSubItem ) = 0;
-	
+
 	virtual CObjectBase* GetUserData() const = 0;
 	virtual void SetUserData( CObjectBase *pData ) = 0;
 };
@@ -534,7 +534,7 @@ struct IWindowSorter : public CObjectBase
 	virtual bool Compare( IWindow *pSubItem1, IWindow *pSubItem2 ) = 0;
 	virtual void SetDirection( const bool bAscending ) = 0;
 	virtual void SetColumn( const int nColumn ) = 0;
-	// 
+	//
 	virtual bool IsAscending() const = 0;
 };
 
@@ -549,12 +549,12 @@ struct IListControl : virtual public IWindow
 
 	virtual void SetViewer( IDataViewer *pViewer ) = 0;
 	virtual void RemoveAllElements() = 0;
-	
+
 	virtual	const int GetNColumns() const = 0;
 	virtual int GetItemCount() const = 0;
 	virtual IListControlItem* GetSelectedListItem() const = 0;
 	virtual void SelectItem( CObjectBase *pData ) = 0;
-	
+
 	virtual void Update() = 0;
 };
 
@@ -564,7 +564,7 @@ struct IDebugSingleton : public CObjectBase
 
 	virtual struct IWindow * GetConsole() = 0;
 	virtual struct IWindow * GetDebug() = 0;
-	
+
 	virtual void ShowDebugInfo( const bool bShow ) = 0;
 	virtual void ShowStatsWindow( const bool bShow ) = 0;
 	virtual struct IWindow * GetDebugInfoWindow( const int nWindow ) = 0;
@@ -608,7 +608,7 @@ struct IComboBox : virtual public IWindow
 	virtual void SetLine( CObjectBase *pData ) = 0;
 };
 
-// возвращает указатель только при наличии дочернего окна соответствующего типа, 
+// возвращает указатель только при наличии дочернего окна соответствующего типа,
 // иначе возвращает 0 и выдает предупреждение
 
 // выдает предупреждение при отсутствии окна нужного типа

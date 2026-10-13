@@ -59,7 +59,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 
 	int nIdx = (bActive ? 1 : 0);
 	int nBaseIdx = (bActive ? 0x1000 : 0x2000);
-	
+
 	CVec4 clrX = ( bActive ? CLR_X_ACTIVE : CLR_X );
 	CVec4 clrY = ( bActive ? CLR_Y_ACTIVE : CLR_Y );
 	CVec4 clrZ = ( bActive ? CLR_Z_ACTIVE : CLR_Z );
@@ -75,9 +75,9 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	for ( std::vector<SMarkerPoint>::const_iterator i = points.begin(); i != points.end(); ++i )
 	{
 		CVec3 v = i->pos;
-		
+
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_X; 
+		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_X;
 
 		indices[k] = k;
 		indices[k+1] = k+1;
@@ -91,7 +91,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Y; 
+		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Y;
 		k += 2;
 	}
 	++nBaseIdx;
@@ -102,7 +102,7 @@ void SMarkerSet::AttachToScene( bool bActive, const std::vector<SMarkerPoint> &p
 	{
 		CVec3 v = i->pos;
 		polyline[k] = v;
-		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Z; 
+		polyline[k+1] = v + F_AXIS_SIZE * V3_AXIS_Z;
 		k += 2;
 	}
 	++nBaseIdx;
@@ -137,7 +137,7 @@ void SMarkerSet::AttachToScene()
 
 void SMarkerSet::DetachFromScene()
 {
-	if ( !bIsInScene ) 
+	if ( !bIsInScene )
 		return;
 
 	IEditorScene *pScene = EditorScene();
@@ -166,11 +166,11 @@ void SMarkerSet::DetachFromScene()
 	bIsInScene = false;
 }
 
-void SMarkerSet::AddMarker( const CVec3 &rPos, 
-													 const float fDir, 
-													 EDirMeasure eDirMeasure, 							
-													 bool bActive, 
-													 bool bUseBuildingPos, 
+void SMarkerSet::AddMarker( const CVec3 &rPos,
+													 const float fDir,
+													 EDirMeasure eDirMeasure,
+													 bool bActive,
+													 bool bUseBuildingPos,
 													 bool bUseOrigin )
 {
 	IEditorScene *pScene = EditorScene();
@@ -188,10 +188,10 @@ void SMarkerSet::AddMarker( const CVec3 &rPos,
 
 	int nAITileX = point.pos.x / AI_TILE_SIZE;
 	int nAITileY = point.pos.y / AI_TILE_SIZE;
-	float fTileHeight = EditorScene()->GetTileHeight( nAITileX, nAITileY ); 
+	float fTileHeight = EditorScene()->GetTileHeight( nAITileX, nAITileY );
 
 	point.pos.y += fTileHeight;
-    
+
 	if ( bUseBuildingPos )
 	{
 		point.pos += vBuildingPos;

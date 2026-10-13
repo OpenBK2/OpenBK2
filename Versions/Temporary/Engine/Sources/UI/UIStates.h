@@ -11,7 +11,7 @@ struct SUIState
 	CDBPtr<NDb::SUIStateBase> pCmd;										// cmd that creates this state
 	CObj<IUIEffector> pEffect;							// effect that was created by the command
 	// null if no effect.
-	CObj<CWindow> pCommandParent;						// window that must be notified after 
+	CObj<CWindow> pCommandParent;						// window that must be notified after
 	SUIState() {  }
 	SUIState( const NDb::SUIStateBase * _pCmd ) : pCmd( _pCmd ) {  }
 	int operator&( IBinSaver &saver )
@@ -23,11 +23,11 @@ struct SUIState
 	}
 };
 
-class CStates 
+class CStates
 {
 	std::vector<SUIState> states;
 	int nCurIndex;												// currently running effect
-	bool bForward;												// effect direction 
+	bool bForward;												// effect direction
 	bool bEnd;														// all effects are finished
 	CPtr<CWindow> pNotifySink;						// window that must be notified after
 	CPtr<SWindowContext> pContext;
@@ -49,16 +49,16 @@ class CStates
 public:
 	CStates() : nCurIndex( 0 ), bForward( true ), bEnd( true ), bReversable( false ) {  }
 
-	CStates( const NDb::SUIStateSequence &seq, 
+	CStates( const NDb::SUIStateSequence &seq,
 					 const std::string &_szCmdName,
-					 const bool _bReversable, 
+					 const bool _bReversable,
 					 uint16_t wFlags );
 
 	void FastForward( const int timeDiff, class CWindowScreen *pScreen );
 	const std::string &GetName() const { return szCmdName; }
 	void SetNotifySink( class CWindow *pWindow ) { pNotifySink = pWindow; }
 	void SetContext( SWindowContext *_pContext ) { pContext = _pContext; }
-	
+
 	// if this states are animation states - then they will need id.
 	void SetAnimatedWindow( const int nID, class CWindow * pWindow );
 	const std::pair<int, CPtr<CWindow> > GetID() const { return id; }

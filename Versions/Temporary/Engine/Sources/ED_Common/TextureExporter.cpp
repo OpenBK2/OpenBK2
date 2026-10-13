@@ -167,21 +167,21 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 			ePixelFormat = NGfx::CF_A4R4G4B4;
 		if ( szFormat == "TF_8888" )
 			ePixelFormat = NGfx::CF_A8R8G8B8;
-		else if ( szFormat == "TF_DXT1" ) 
+		else if ( szFormat == "TF_DXT1" )
 			ePixelFormat = NGfx::CF_DXT1;
-		else if ( szFormat == "TF_DXT2" ) 
+		else if ( szFormat == "TF_DXT2" )
 			ePixelFormat = NGfx::CF_DXT2;
-		else if ( szFormat == "TF_DXT3" ) 
+		else if ( szFormat == "TF_DXT3" )
 			ePixelFormat = NGfx::CF_DXT3;
-		else if ( szFormat == "TF_DXT4" ) 
+		else if ( szFormat == "TF_DXT4" )
 			ePixelFormat = NGfx::CF_DXT4;
-		else if ( szFormat == "TF_DXT5" ) 
+		else if ( szFormat == "TF_DXT5" )
 			ePixelFormat = NGfx::CF_DXT5;
 
 		{
 			CArray2D<uint32_t> image;
 			CFileStream stream( NVFS::GetMainVFS(), szSource );
-			if ( stream.IsOk() ) 
+			if ( stream.IsOk() )
 			{
 				// load TGA or PSD file
 				if ( NImage::RecognizeFormatTGA( &stream ) == true )
@@ -239,7 +239,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 					// non-2d texture must be power of 2
 					if ( image.GetSizeX() != GetNextPow2(image.GetSizeX()) ||image.GetSizeY() != GetNextPow2(image.GetSizeY()) )
 					{
-						const std::string szError = fmt::format( "Source image \"{}\" must be power two size ({} : {})\n", 
+						const std::string szError = fmt::format( "Source image \"{}\" must be power two size ({} : {})\n",
 							                             szSource.c_str(), image.GetSizeX(), image.GetSizeY() );
 						NLog::Log( LT_ERROR, "Source image size must be power of 2\n" );
 						NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
@@ -252,7 +252,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 					}
 				}
 
-				if ( bFlipY ) 
+				if ( bFlipY )
 					NImage::FlipY( image );
 				szDestination = NFile::GetTempFileName();
 				// No device: compression is a CPU pass over the pixels now.
@@ -286,14 +286,14 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 		szRealDestination = NVFS::GetWritePath( NVFS::GetMainFileCreator(), szRealDestination );
 		CManipulatorManager::SetValue( dbDestination, pManipulator, "DestName" );
 		szDestination = szRealDestination;
-		// 
+		//
 		CTPoint<int> imageSize;
 		if ( GetDDSImageSize( szDestination, &imageSize ) )
 		{
 			pManipulator->SetValue( "Width", imageSize.x );
 			pManipulator->SetValue( "Height", imageSize.y );
 			// set IsDXT
-			if ( (szFormat == "TF_DXT1") || (szFormat == "TF_DXT2") || (szFormat == "TF_DXT3") || (szFormat == "TF_DXT4") || (szFormat == "TF_DXT5") ) 
+			if ( (szFormat == "TF_DXT1") || (szFormat == "TF_DXT2") || (szFormat == "TF_DXT3") || (szFormat == "TF_DXT4") || (szFormat == "TF_DXT5") )
 				pManipulator->SetValue( "IsDXT", true );
 			else
 				pManipulator->SetValue( "IsDXT", false );
@@ -311,7 +311,7 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 	else
 		NFile::RemoveFile( szDestination.c_str() );
 	//
-	// 
+	//
 	NLog::Log( LT_ERROR, "Texture export failed (most probable reason - source was not loaded correctly)\n" );
 	NLog::Log( LT_ERROR, "\tObject name: %s\n", rszObjectName.c_str() );
 	return ER_FAIL;
@@ -320,9 +320,9 @@ EXPORT_RESULT CTextureExporter::ExportObject( IManipulator* pManipulator,
 
 int GetDDSBPP( const SDDSHeader &hdr )
 {
-	if ( hdr.ddspf.dwFlags & DDS_FOURCC ) 
+	if ( hdr.ddspf.dwFlags & DDS_FOURCC )
 		return hdr.ddspf.dwFourCC == MAKEFOURCC('D','X','T','1') ? 4 : 8;
-	else if ( (hdr.ddspf.dwFlags & DDS_RGB) == DDS_RGB ) 
+	else if ( (hdr.ddspf.dwFlags & DDS_RGB) == DDS_RGB )
 		return hdr.ddspf.dwRGBBitCount;
 	else
 		return 8;
@@ -330,7 +330,7 @@ int GetDDSBPP( const SDDSHeader &hdr )
 
 
 EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
-																						 const std::string &rszObjectTypeName, 
+																						 const std::string &rszObjectTypeName,
 																						 const std::string &rszObjectName,
 																						 bool bExport,
 																						 EXPORT_TYPE exportType )
@@ -346,14 +346,14 @@ EXPORT_RESULT CTextureExporter::CheckObject( IManipulator* pManipulator,
 	//
 	ILogger *pLogger = NLog::GetLogger();
 	SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	
+
 	std::string szSorceValue;
 	CManipulatorManager::GetValue( &szSorceValue, pManipulator, "SrcName" );
 	bool bStandardExport = true;
 	CManipulatorManager::GetValue( &bStandardExport, pManipulator, "StandardExport" );
 	const std::string szSrcFileName = TextureSourcePath( pManipulator, szSorceValue );
 	// check texture file name
-	if ( bStandardExport && !NFile::IsValidFileName( szSrcFileName.c_str() ) ) 
+	if ( bStandardExport && !NFile::IsValidFileName( szSrcFileName.c_str() ) )
 	{
 		const std::string szError = fmt::format( "Texture \"{}\" has invalid source file name \"{}\"\n", rszObjectName.c_str(), szSrcFileName.c_str() );
 		pLogger->Log( LT_ERROR, szError );
@@ -381,7 +381,7 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 	// check destination
 	std::string szDestValue;
 	CFileStream stream( szFileName, CFileStream::WIN_READ_ONLY );
-	if ( !stream.IsOk() ) 
+	if ( !stream.IsOk() )
 	{
 		NLog::Log( LT_ERROR, "Texture doesn't exist (not exported yet?)\n" );
 		NLog::Log( LT_ERROR, "\tTexture name:  \"%s\"\n", szObjectName.c_str() );
@@ -392,7 +392,7 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 	{
 		SDDSFileHeader fhdr;
 		stream.Read( &fhdr, sizeof(fhdr) );
-		if ( fhdr.dwSignature != SDDSFileHeader::SIGNATURE ) 
+		if ( fhdr.dwSignature != SDDSFileHeader::SIGNATURE )
 		{
 			NLog::Log( LT_ERROR, "Invalid header in texture\n" );
 			NLog::Log( LT_ERROR, "\tTexture name:  \"%s\"\n", szObjectName.c_str() );
@@ -402,7 +402,7 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 		const int nTextureDataSize = stream.GetSize() - sizeof( fhdr );
 		int nNumMipLevels = fhdr.header.dwMipMapCount;
 
-		//BUGFIX{ : The DX DDS-saver sets nMips=0, but non-DX one sets nMips=1 
+		//BUGFIX{ : The DX DDS-saver sets nMips=0, but non-DX one sets nMips=1
 		if ( 0 == nNumMipLevels )
 			++nNumMipLevels;
 		//BUGFIX}
@@ -424,14 +424,14 @@ bool CTextureExporter::CheckDestination( const std::string &szFileName, const st
 			width = (std::max)(uint64_t(1), width / 2);
 			height = (std::max)(uint64_t(1), height / 2);
 		}
-		if ( nTotalSize != nTextureDataSize ) 
+		if ( nTotalSize != nTextureDataSize )
 		{
 			NLog::Log( LT_ERROR, "Invalid result texture (size check)\n" );
 			NLog::Log( LT_ERROR, "\tTexture name: \"%s\"\n", szObjectName.c_str() );
 			return false;
 		}
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::Log( LT_ERROR, "General error during texture check\n" );
 		NLog::Log( LT_ERROR, "\tTexture name: \"%s\"\n", szObjectName.c_str() );

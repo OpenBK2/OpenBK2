@@ -47,7 +47,7 @@ class CPlanesFormation : public CAIObjectBase, public IPlane, public CBasePathUn
 	CVec3 vNewPos;
 	CVec3 vNewSpeed;
 	CVec3 vNewNormal;
-	
+
 	// for member counting
 	int nProcessed = {};
 	int nAlive = {};
@@ -61,12 +61,12 @@ protected:
 
 public:
 	CPlanesFormation() : nID( -1 ) {}
-	CPlanesFormation( int ) 
+	CPlanesFormation( int )
 	{
 		nID = nIDSoFar++;
 		existence[nID] = true;
 	}
-	~CPlanesFormation() 
+	~CPlanesFormation()
 	{
 		existence.erase( nID );
 	}
@@ -81,27 +81,27 @@ public:
 	void CreatePointManuver( const CVec3 &vPos, const bool bToHorisontal );
 	void Advance( const NTimer::STime timeDiff );
 	//}
-	
+
 	//{ IPlane interface
 	// current speed
-	virtual CVec3 GetSpeedB2() const 
-	{ 
-		return vSpeed; 
+	virtual CVec3 GetSpeedB2() const
+	{
+		return vSpeed;
 	}
 	// current position
-	virtual CVec3 GetPosB2() const 
-	{ 
-		return vPos; 
+	virtual CVec3 GetPosB2() const
+	{
+		return vPos;
 	}
 	// current vertical direction
-	virtual CVec3 GetNormalB2() const 
-	{ 
-		return vNormal; 
+	virtual CVec3 GetNormalB2() const
+	{
+		return vNormal;
 	}
 
 	virtual const struct IManuver * GetManuver() const
-	{ 
-		return pathHistory.GetCurManuver(); 
+	{
+		return pathHistory.GetCurManuver();
 	}
 
 	// next calculated position
@@ -119,9 +119,9 @@ public:
 	virtual void NotifyAttackedB2(IPlane & attacker, bool bAttack) { }
 
 	// access to plane's preferences
-	virtual const class CPlanePreferences & GetPreferencesB2() const 
-	{ 
-		return preferences; 
+	virtual const class CPlanePreferences & GetPreferencesB2() const
+	{
+		return preferences;
 	}
 	//}
 

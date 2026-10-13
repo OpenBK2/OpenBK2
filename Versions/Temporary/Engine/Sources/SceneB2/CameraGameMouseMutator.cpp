@@ -41,25 +41,25 @@ namespace NCamera
 		bSmoothZoomActive = false;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	float CCameraGameMouseMutator::GetPitchDelta() 
-	{ 
-		return GetPitchMouseDelta() * s_fGameCameraMousePitchSensetivity + 
-					GetPitchKeyboardDelta() * s_fGameCameraKeyboardPitchSensetivity; 
+	float CCameraGameMouseMutator::GetPitchDelta()
+	{
+		return GetPitchMouseDelta() * s_fGameCameraMousePitchSensetivity +
+					GetPitchKeyboardDelta() * s_fGameCameraKeyboardPitchSensetivity;
 	}
-	float CCameraGameMouseMutator::GetYawDelta() 
-	{ 
-		return GetYawMouseDelta() * s_fGameCameraMouseYawSensetivity + 
-					GetYawKeyboardDelta() * s_fGameCameraKeyboardYawSensetivity; 
+	float CCameraGameMouseMutator::GetYawDelta()
+	{
+		return GetYawMouseDelta() * s_fGameCameraMouseYawSensetivity +
+					GetYawKeyboardDelta() * s_fGameCameraKeyboardYawSensetivity;
 	}
-	float CCameraGameMouseMutator::GetForwardDelta() 
-	{ 
-		return GetForwardMouseDelta() * s_fGameCameraMouseForwardSensetivity + 
-					GetForwardKeyboardDelta() * s_fGameCameraKeyboardForwardSensetivity; 
+	float CCameraGameMouseMutator::GetForwardDelta()
+	{
+		return GetForwardMouseDelta() * s_fGameCameraMouseForwardSensetivity +
+					GetForwardKeyboardDelta() * s_fGameCameraKeyboardForwardSensetivity;
 	}
-	float CCameraGameMouseMutator::GetStrafeDelta() 
-	{ 
-		return GetStrafeMouseDelta() * s_fGameCameraMouseStrafeSensetivity + 
-					GetStrafeKeyboardDelta() * s_fGameCameraKeyboardStrafeSensetivity; 
+	float CCameraGameMouseMutator::GetStrafeDelta()
+	{
+		return GetStrafeMouseDelta() * s_fGameCameraMouseStrafeSensetivity +
+					GetStrafeKeyboardDelta() * s_fGameCameraKeyboardStrafeSensetivity;
 	}
 	float CCameraGameMouseMutator::GetZoomDistance( float fTimeDiff, float fRealSensetivity )
 	{
@@ -123,7 +123,7 @@ namespace NCamera
 
 		if ( !IsCameraLocked() )
 		{
-			const float fRealSensetivity = s_fGameCameraMouseSensetivity < 0.5f ? 
+			const float fRealSensetivity = s_fGameCameraMouseSensetivity < 0.5f ?
 				s_fGameCameraMouseSensetivity + 0.5f : 2.0f * s_fGameCameraMouseSensetivity;
 			// mouse camera control
 			float fPitchDelta = GetPitchDelta() * fRealSensetivity;
@@ -181,7 +181,7 @@ namespace NCamera
 			Normalize( &vAxisX );
 			vGameAnchor += vAxisX * fStrafe;
 			// bound anchor
-			if ( !GetAnchorLimit().IsEmpty() ) 
+			if ( !GetAnchorLimit().IsEmpty() )
 			{
 				const CTRect<float> rcAnchorLimit = GetAnchorLimit();
 				vGameAnchor.x = Clamp( vGameAnchor.x, rcAnchorLimit.minx, rcAnchorLimit.maxx );
@@ -204,17 +204,17 @@ namespace NCamera
 //			fYaw = IncrementValue( fYaw, fYawDelta, GetYawLimit(), fTimeDiff, HasAutopositioning(), s_bGameFreeCamera );
 			fYaw += fYawDelta;
 			fYaw = fmod( fYaw, FP_2PI );
-			
+
 			const CQuat quat = CQuat( fYaw, V3_AXIS_Z ) * CQuat( fPitch, V3_AXIS_X );
 			quat.GetZAxis( &vDir );
 			vPosition = GetAnchor() - vDir*GetDistance();
 			if ( s_bGameCameraTrackHeights && !NGlobal::GetVar( "temp.script_movie", false ) )
 				vPosition.z += AI2Vis( Scene()->GetZ( Vis2AI( vPosition.x ), Vis2AI( vPosition.y ) ) );
-			
+
 			ClearSliders();
 		}
 
-		SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) || 
+		SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) ||
 									( fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
 									( fabs2( vPositionOld - vPosition ) > EPS_VALUE ) );
 	}

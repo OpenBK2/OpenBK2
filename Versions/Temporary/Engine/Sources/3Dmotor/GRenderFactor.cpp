@@ -170,10 +170,10 @@ static void NormaliseFace( NGfx::CCubeTexture *pTex, NGfx::EFace f )
 			float fZ = n.z;
 			n += CVec3(1,1,1);
 			n *= 127;
-			lock[y][x] = NGfx::SPixel8888( 
-				Float2Int(n.x + Rnd()), 
-				Float2Int(n.y + Rnd()), 
-				Float2Int(n.z + Rnd()), 
+			lock[y][x] = NGfx::SPixel8888(
+				Float2Int(n.x + Rnd()),
+				Float2Int(n.y + Rnd()),
+				Float2Int(n.z + Rnd()),
 				fZ > 0 ? pow( fZ, 8 ) * 255 : 0
 				);
 		}
@@ -205,8 +205,8 @@ static void Normalize( CArray2D<float> *pRes )
 			fA += (*pRes)[y][x];
 		}
 	}
-	fA /= pRes->GetSizeX() * pRes->GetSizeY(); 
-	fM /= pRes->GetSizeX() * pRes->GetSizeY(); 
+	fA /= pRes->GetSizeX() * pRes->GetSizeY();
+	fM /= pRes->GetSizeX() * pRes->GetSizeY();
 	for ( int y = 0; y < pRes->GetSizeY(); ++y )
 	{
 		for ( int x = 0; x < pRes->GetSizeX(); ++x )

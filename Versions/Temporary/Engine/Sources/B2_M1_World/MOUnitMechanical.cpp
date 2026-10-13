@@ -61,9 +61,9 @@ static IMechUnitJoggingMutator::SJoggingParams ConvertJoggingParams( const NDb::
 const SIconsSetInfo& GetDBIconsSet( NDb::EDesignUnitType eType )
 {
 	if ( !bIsInitializedByDB )
-	{		
+	{
 		const NDb::SClientGameConsts *pClient = Singleton<IClientGameConsts>()->GetClientGameConsts();
-		
+
 		for ( int i = 0; i < pClient->mechUnitIconsSets.size(); ++i )
 		{
 			const NDb::SClientGameConsts::SMechUnitIconsSet &iconsSet = pClient->mechUnitIconsSets[i];
@@ -324,7 +324,7 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 		fTrackWidth = 0;
 	}
 
-	if ( bResult ) 
+	if ( bResult )
 	{
 		if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID()) )
 		{
@@ -337,7 +337,7 @@ bool CMOUnitMechanical::Create( const int nUniqueID, const SAIBasicUpdate *_pUpd
 	}
 	pIdleProcess = 0;
 
-	if ( !bInEditor ) 
+	if ( !bInEditor )
 	{
 		if ( pStats->iconsSetParams.bCustom )
 			SetIconsSetInfo( SIconsSetInfo( pStats->iconsSetParams.fRaising, pStats->iconsSetParams.fHPBarLen ) );
@@ -434,7 +434,7 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 	const NDb::SMechUnitRPGStats * pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
 
 	if ( eActions == ACTIONS_BY || eActions == ACTIONS_ALL )
-	{		
+	{
 		if ( bArtilleryHooked )
 			pActions->RemoveAction( NDb::USER_ACTION_HOOK_ARTILLERY );
 		else
@@ -469,7 +469,7 @@ void CMOUnitMechanical::GetActions( CUserActions *pActions, EActionsType eAction
 			pActions->RemoveAction( NDb::USER_ACTION_CAPTURE_ARTILLERY );
 		// break track for tanks (CRAP)
 		if ( (pStats->IsArmor() || pStats->IsSPG() ) && pStats->eSelectionType != NDb::SELECTION_TYPE_WATER )
-			pActions->SetAction( NDb::USER_ACTION_TRACK_TARGETING );		
+			pActions->SetAction( NDb::USER_ACTION_TRACK_TARGETING );
 		// human
 		if ( GetFreePlaces() <= 0 || IsNeutral() )
 			pActions->RemoveAction( NDb::USER_ACTION_BOARD );
@@ -546,7 +546,7 @@ void CMOUnitMechanical::GetDisabledActions( CUserActions *pActions, EActionsType
 
 void CMOUnitMechanical::AIUpdateState( const int nParam )
 {
-	switch( nParam ) 
+	switch( nParam )
 	{
 	case ECS_HOOK_CANNON:
 		bArtilleryHooked = true;
@@ -575,7 +575,7 @@ const CVec3 CMOUnitMechanical::GetFirePoint( const int nPlatform, const int nGun
 }
 
 void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason )
-{																																								
+{
 	const SAINotifyMechShot &shot = *( static_cast<const SAINotifyMechShot*>(&_shot) );
 
 	const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
@@ -584,7 +584,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 	SHMatrix mShootPoint;
 	const int nID = GetID();
 	const NDb::SMechUnitRPGStats::SMechUnitGun &gun = pStats->GetGun( nID, shot.cPlatform, shot.cGun );
-	if ( !gun.szShootPoint.empty() ) 
+	if ( !gun.szShootPoint.empty() )
 	{
 		NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, gun.szShootPoint );
 		if ( !pAnimator )
@@ -635,7 +635,7 @@ void CMOUnitMechanical::AIUpdateShot( const SAINotifyBaseShot &_shot, const NTim
 		// earthquake
 		if ( gun.pWeapon->shells[shot.cShell].fDetonationPower > 0 )
 		{
-			Camera()->AddEarthquake( CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 ), 
+			Camera()->AddEarthquake( CVec3( mShootPoint._14, mShootPoint._24, mShootPoint._34 ),
 				                      gun.pWeapon->shells[shot.cShell].fDetonationPower );
 		}
 	}
@@ -668,7 +668,7 @@ void CMOUnitMechanical::AIUpdateTurretTurn( const struct SAINotifyTurretTurn &tu
 	if ( bHorTurn )
 	{
 		const std::string szBoneName = platform.pAttachedPlatformVisObj ? platform.szAttachedPlatformLocator : platform.szRotatePoint;
-		if ( !szBoneName.empty() ) 
+		if ( !szBoneName.empty() )
 		{
 			NAnimation::ISkeletonAnimator *pAnimator = pScene->GetAnimator( nID, szBoneName );
 			if ( pAnimator )
@@ -719,7 +719,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 {
 	if ( NGlobal::GetVar( "m1", 0 ) == 0 && GameTimer()->GetPauseType() != -1 )
 		return;
-	
+
 	const NDb::SMechUnitRPGStats *pStats = GetStatsLocal();
 	const bool bHasAmphibianStats = pStats->IsAmphibious() && pStats->pAmphibianStats;
 	const bool bWaterEffectsWereActive = bAmphibianWaterEffectsActive;
@@ -759,7 +759,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	}
 
 	// in-transport units don't leave tracks, no tracks on zero speed
-	if ( ( pStats->bLeavesTracks || pStats->pEffectWheelDust != 0 ) && !pTransport && placement.fSpeed > 0.0f ) 
+	if ( ( pStats->bLeavesTracks || pStats->pEffectWheelDust != 0 ) && !pTransport && placement.fSpeed > 0.0f )
 	{
 		if ( nLastTrackTime < 0 )
 		{
@@ -770,20 +770,20 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			trackPoints[0].Set( vBack.x - pStats->vAABBHalfSize.x * ( 1.0f - pStats->fTrackOffset * 0.5f ), vBack.y, 0 );
 			trackPoints[1].Set( trackPoints[0].x + fTrackWidth, trackPoints[0].y, 0 );
 			trackPoints[3].Set( vBack.x + pStats->vAABBHalfSize.x * ( 1.0f - pStats->fTrackOffset * 0.5f ), vBack.y, 0 );
-			trackPoints[2].Set( trackPoints[3].x - fTrackWidth, trackPoints[3].y, 0 );			
+			trackPoints[2].Set( trackPoints[3].x - fTrackWidth, trackPoints[3].y, 0 );
 			CVec2 vFront = pStats->vAABBCenter;
 			vFront.y += pStats->vAABBHalfSize.y * ( 1.0f - pStats->fTrackStart * 0.5f );
 			trackPoints[4].Set( vFront.x - pStats->vAABBHalfSize.x * ( 1.0f - pStats->fTrackOffset * 0.5f ), vFront.y, 0 );
 			trackPoints[5].Set( trackPoints[4].x + fTrackWidth, trackPoints[4].y, 0 );
 			trackPoints[7].Set( vFront.x + pStats->vAABBHalfSize.x * ( 1.0f - pStats->fTrackOffset * 0.5f ), vFront.y, 0 );
-			trackPoints[6].Set( trackPoints[7].x - fTrackWidth, trackPoints[7].y, 0 );			
+			trackPoints[6].Set( trackPoints[7].x - fTrackWidth, trackPoints[7].y, 0 );
 		}
 		bool bPlaceSegment = false;
 		bool bNewDir = bForwardMoving;
 		uint16_t wDirRange = abs( wLastTrackDir - placement.dir );
 		if ( nLastTrackTime < 0 || ( Singleton<IGameTimer>()->GetGameTime() - nLastTrackTime > pStats->nTrackLifetime ) || ( wDirRange > 32768 ? wDirRange < ( 65536 - 8192 ) : wDirRange > 8192 ) )
 		{
-			//reset old placed track points, center and dir, put current segment	
+			//reset old placed track points, center and dir, put current segment
 			bPlaceSegment = true;
 			if ( nLastTrackTime >= 0 )
 			{
@@ -800,7 +800,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			for ( int i = 0; i < 4; ++i )
 			{
 				qRot.Rotate( &( lastTrackPoints[i] ), trackPoints[i + nDirectionOffset] );
-				lastTrackPoints[i] += vPos;		
+				lastTrackPoints[i] += vPos;
 			}
 		}
 		else
@@ -826,7 +826,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 			{
 				qRot.Rotate( &( newTrackPoints[i] ), trackPoints[i + nDirectionOffset] );
 				newTrackPoints[i] += vPos;
-			}	
+			}
 
 			//calc normale
 			CVec3 vNorm3;
@@ -864,7 +864,7 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 				curPts[2].Set( lastTrackPoints[0].x, lastTrackPoints[0].y );
 				curPts[3].Set( lastTrackPoints[1].x, lastTrackPoints[1].y );
 				curPts[4].Set( newTrackPoints[3].x, newTrackPoints[3].y );
-				curPts[5].Set( newTrackPoints[2].x, newTrackPoints[2].y );				
+				curPts[5].Set( newTrackPoints[2].x, newTrackPoints[2].y );
 				curPts[6].Set( lastTrackPoints[2].x, lastTrackPoints[2].y );
 				curPts[7].Set( lastTrackPoints[3].x, lastTrackPoints[3].y );
 				dustPts[0] = trackPoints[4];
@@ -910,13 +910,13 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 					pScene->AddTrack( GetID(), 256.0f / pStats->nTrackLifetime, curPts[0], curPts[1], curPts[2], curPts[3], vNorm2, fTrackWidth * 0.5f, 1.0f - pStats->fTrackIntensity );
 					pScene->AddTrack( GetID(), 256.0f / pStats->nTrackLifetime, curPts[4], curPts[5], curPts[6], curPts[7], vNorm2, fTrackWidth * 0.5f, 1.0f - pStats->fTrackIntensity );
 				}
-				if ( bForwardMoving && (pStats->pEffectWheelDust != 0) && 
+				if ( bForwardMoving && (pStats->pEffectWheelDust != 0) &&
 					   ( (placement.cSoil & SVectorStripeObjectDesc::ESP_DUST) || bIsShip) )
 				{
 					PlayComplexSeasonedEffect( OBJECT_ID_FORGET, pStats->pEffectWheelDust, Singleton<IGameTimer>()->GetGameTime(), mDustPlace1, eSeason );
 					PlayComplexSeasonedEffect( OBJECT_ID_FORGET, pStats->pEffectWheelDust, Singleton<IGameTimer>()->GetGameTime(), mDustPlace2, eSeason );
 				}
-				if ( bForwardMoving && (pStats->pEffectWheelSplash != 0) && 
+				if ( bForwardMoving && (pStats->pEffectWheelSplash != 0) &&
 					( (placement.cSoil & SVectorStripeObjectDesc::ESP_SPLASH) || bIsShip) )
 				{
 					PlayComplexSeasonedEffect( OBJECT_ID_FORGET, pStats->pEffectWheelSplash, Singleton<IGameTimer>()->GetGameTime(), mDustPlace1, eSeason );
@@ -951,11 +951,11 @@ void CMOUnitMechanical::AIUpdatePlacement( const struct SAINotifyPlacement &plac
 	}
 }
 
-void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport ) 
-{ 
+void CMOUnitMechanical::SetTransport( IMOContainer *_pTransport )
+{
 	bool bChanged = (pTransport != _pTransport);
 
-	pTransport = _pTransport; 
+	pTransport = _pTransport;
 
 	if ( pJoggingMutator )
 		pJoggingMutator->Stop();
@@ -988,7 +988,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 			DetachSound( EAST_IDLE );
 			// Play exhaust only for visible units, sound is played always
 			if ( IsVisible() && !pStats->exhaustPoints.empty() && pStats->pEffectDiesel && pStats->pEffectDiesel->GetSceneEffect() )
-			{			
+			{
 				IScene *pScene = Scene();
 				for ( int i = 0; i < pStats->exhaustPoints.size(); ++i )
 					pScene->AttachEffect( GetID(), ESSOT_EXHAUST, pStats->exhaustPoints[i], pStats->pEffectDiesel->GetSceneEffect(), time, i == 0 ? ESAT_REPLACE_ON_TYPE : ESAT_NO_REPLACE );
@@ -999,7 +999,7 @@ IClientUpdatableProcess* CMOUnitMechanical::AIUpdateMovement( const NTimer::STim
 	{
 		DetachSound( EAST_MOVEMENT );
 		const NDb::SMechUnitRPGStats *pStats = checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() );
-		if ( pStats->pSoundMoveStop ) 
+		if ( pStats->pSoundMoveStop )
 			pSoundScene->AddSound( pStats->pSoundMoveStop, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, 0, 2 );
 		bMoved = false;
 		UpdateAmphibianJogging( false );
@@ -1016,7 +1016,7 @@ bool CMOUnitMechanical::Load( struct IMOUnit *pMO, bool bEnter )
 	const int nID = pMO->GetID();
 	if ( bEnter )
 	{
-		if ( !IsInside( nID ) ) 
+		if ( !IsInside( nID ) )
 			vPassangers.push_back( pMO );
 	}
 	else
@@ -1050,7 +1050,7 @@ bool CMOUnitMechanical::LoadSquad( struct IMOSquad *pSquad, bool bEnter )
 	const int nID = pSquad->GetID();
 	if ( bEnter )
 	{
-		if ( !IsInside( nID ) ) 
+		if ( !IsInside( nID ) )
 			vPassangers.push_back( pSquad );
 	}
 	else
@@ -1108,12 +1108,12 @@ int CMOUnitMechanical::GetMechPassangersCount() const
 }
 
 void CMOUnitMechanical::SetTrackBroken( const bool bNewValue )
-{ 
-	if ( bTrackBroken != bNewValue ) 
-	{ 
-		bTrackBroken = bNewValue; 
+{
+	if ( bTrackBroken != bNewValue )
+	{
+		bTrackBroken = bNewValue;
 		UpdateIcons();
-	} 
+	}
 }
 
 void CMOUnitMechanical::FillIconsInfo( SSceneObjIconInfo &iconInfo )
@@ -1137,7 +1137,7 @@ const NDb::SAnimB2* CMOUnitMechanical::GetAnimB2(
 		if ( eAnimType < animdescs.size() && nAnimID >= 0 && nAnimID < animdescs[eAnimType].anims.size() )
 		{
 			const int nAnimSkeletonIndex = animdescs[eAnimType].anims[nAnimID].nFrameIndex;
-			if ( nAnimSkeletonIndex >= 0 && nAnimSkeletonIndex < pModel->pSkeleton->animations.size() )			
+			if ( nAnimSkeletonIndex >= 0 && nAnimSkeletonIndex < pModel->pSkeleton->animations.size() )
 				return dynamic_cast_ptr<const NDb::SAnimB2*>(pModel->pSkeleton->animations[nAnimSkeletonIndex]);
 		}
 
@@ -1218,7 +1218,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 	if (pStats->pAnimableModel != 0)
 		isAnimable = true;
 
-	if ( nParam != -1 ) 
+	if ( nParam != -1 )
 	{
 		eAnimType = NDb::EAnimationType( ( nParam >> 16 ) & 0x00000fff );
 		const int nAnimID = nParam & 0x0000ffff;
@@ -1245,7 +1245,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 			const NDb::SMechUnitRPGStats::SPlatform &platform = pStats->GetPlatform( nID, i );
 			if ( platform.pAttachedPlatformVisObj )
 			{
-				PlayAnimDescForAttached( 
+				PlayAnimDescForAttached(
 					pScene->GetAttached( nID, ESSOT_PLATFORMS, i ), platform.pAttachedPlatformVisObj->animdescs,
 					nStartTime, eAnimType, nAnimID );
 			}
@@ -1256,7 +1256,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 				if ( gun.pAttachedGunVisObj )
 				{
 					PlayAnimDescForAttached(
-						pScene->GetAttached( nID, ESSOT_GUNS, GetAttachedGunID( i, j ) ), platform.pAttachedPlatformVisObj->animdescs, 
+						pScene->GetAttached( nID, ESSOT_GUNS, GetAttachedGunID( i, j ) ), platform.pAttachedPlatformVisObj->animdescs,
 						nStartTime, eAnimType, nAnimID );
 				}
 			}
@@ -1264,7 +1264,7 @@ void CMOUnitMechanical::PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate )
 	}
 }
 
-void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight, 
+void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const NDb::ESeason eSeason, const bool bIsNight,
 																				 ISoundScene *pSoundScene, struct IClientAckManager *pAckManager )
 {
 	if ( pJoggingMutator )
@@ -1291,7 +1291,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 	{
 		for ( int i = pStats->damageLevels.size() - 1; i >= 0; --i )
 		{
-			if ( pStats->damageLevels[i].fDamageHP <= 0 && pStats->damageLevels[i].pVisObj != 0 ) 
+			if ( pStats->damageLevels[i].fDamageHP <= 0 && pStats->damageLevels[i].pVisObj != 0 )
 			{
 				if ( const NDb::SModel *pNewModel = GetModel(pStats->damageLevels[i].pVisObj, eSeason) )
 				{
@@ -1311,7 +1311,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 			const NDb::EAnimationType eAnimType = NDb::EAnimationType( ( pUpdate->dieAnimation.nParam >> 16 ) & 0x00000fff );
 			const int nStartTime = (std::min)( pUpdate->dieAnimation.time, GameTimer()->GetGameTime() );
 
-			if ( eAnimType == NDb::ANIMATION_DEATH_FATALITY && pStats->pEffectFatality ) 
+			if ( eAnimType == NDb::ANIMATION_DEATH_FATALITY && pStats->pEffectFatality )
 			{
 				if ( const NDb::SEffect *pEffect = pStats->pEffectFatality->GetSceneEffect() )
 				{
@@ -1341,7 +1341,7 @@ void CMOUnitMechanical::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, cons
 						szLocator = pStats->damagePoints[NWin32Random::Random(pStats->damagePoints.size())];
 						pDeathAnimator = Scene()->GetAnimator( GetID(), szLocator );
 					}
-					
+
 					if ( !pDeathAnimator )
 					{
 						// no locator, attach to center
@@ -1388,7 +1388,7 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 	else if ( pUpdate->nParam == 0 ) // explode
 	{
 		smokeTrails.clear();
-		if (  pStats->pEffectFatality ) 
+		if (  pStats->pEffectFatality )
 			PlayComplexEffect( OBJECT_ID_FORGET, pStats->pEffectFatality, timeEffect, GetCenter() );
 	}
 }
@@ -1396,7 +1396,7 @@ void CMOUnitMechanical::AIUpdateDeadPlane( const SAIActionUpdate *pUpdate )
 void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, struct ISoundScene *pSoundScene, IClientAckManager *pAckManager )
 {
 	CMOUnit::AIUpdateDissapear( pUpdate, pSoundScene, pAckManager );
-	
+
 	DetachSound( EAST_MOVEMENT );
 	DetachSound( EAST_IDLE );
 	Scene()->RemoveAllAttached( GetID(), ESSOT_DEATH_EFFECTS );
@@ -1406,7 +1406,7 @@ void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 		CQuat qRot;
 		GetPlacement( &vPos, &qRot, &vScale );
 		if ( GetStatsLocal()->pEffectDisappear != 0 )
-			PlayComplexEffect( OBJECT_ID_FORGET, GetStatsLocal()->pEffectDisappear, pUpdate->nUpdateTime, vPos );		
+			PlayComplexEffect( OBJECT_ID_FORGET, GetStatsLocal()->pEffectDisappear, pUpdate->nUpdateTime, vPos );
 	}
 	if ( pTransport )
 		pTransport->Load( this, false );
@@ -1416,7 +1416,7 @@ void CMOUnitMechanical::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate,
 void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason )
 {
 	const NDb::SMechUnitRPGStats* mech = GetStatsLocal();
-	switch ( pUpdate->eUpdateType ) 
+	switch ( pUpdate->eUpdateType )
 	{
 	case ACTION_NOTIFY_INSTALL_TRANSPORT:
 	case ACTION_NOTIFY_INSTALL_MOVE:
@@ -1424,21 +1424,21 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 		{
 			if ( pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_TRANSPORT )
 			{
-				const NDb::SVisObj *pVisObj = mech->pvisualObject; 
+				const NDb::SVisObj *pVisObj = mech->pvisualObject;
 				if ( mech->pAnimableModel != 0 )
 					pVisObj = mech->pAnimableModel;
 				ChangeModelToAnimable( GetModel( pVisObj, eSeason ), eSeason );
 			}
-			const NDb::EAnimationType eType = pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_ROTATE ? 
-				NDb::ANIMATION_INSTALL_ROT : 
+			const NDb::EAnimationType eType = pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_ROTATE ?
+				NDb::ANIMATION_INSTALL_ROT :
 				( pUpdate->eUpdateType == ACTION_NOTIFY_INSTALL_MOVE ? NDb::ANIMATION_INSTALL_PUSH : NDb::ANIMATION_INSTALL );
 			const NDb::SModel *pModel = GetModelDesc();
-			if ( eType < GetStatsLocal()->animdescs.size() && GetStatsLocal()->animdescs[eType].anims.size() > 0 ) 
+			if ( eType < GetStatsLocal()->animdescs.size() && GetStatsLocal()->animdescs[eType].anims.size() > 0 )
 			{
 				const int nIndex = GetStatsLocal()->animdescs[eType].anims[0].nFrameIndex;
-				if ( nIndex >= 0 && nIndex < pModel->pSkeleton->animations.size() ) 
+				if ( nIndex >= 0 && nIndex < pModel->pSkeleton->animations.size() )
 				{
-					if ( const NDb::SAnimB2 *pAnim = checked_cast<const NDb::SAnimB2*>( pModel->pSkeleton->animations[nIndex].GetPtr() ) ) 
+					if ( const NDb::SAnimB2 *pAnim = checked_cast<const NDb::SAnimB2*>( pModel->pSkeleton->animations[nIndex].GetPtr() ) )
 					{
 						if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
 						{
@@ -1461,7 +1461,7 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 
 				if (anims.size() < 1)
 					return;
-				
+
 				auto pAnim = anims[0];
 				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
 				{
@@ -1491,14 +1491,14 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 		{
 			ChangeModelToAnimable( GetModel( GetStatsLocal()->pAnimableModel, eSeason ), eSeason );
 			const NDb::EAnimationType eType = pUpdate->eUpdateType == ACTION_NOTIFY_UNINSTALL_ROTATE ?
-				NDb::ANIMATION_UNINSTALL_ROT : 
+				NDb::ANIMATION_UNINSTALL_ROT :
 				( pUpdate->eUpdateType == ACTION_NOTIFY_UNINSTALL_MOVE ? NDb::ANIMATION_UNINSTALL_PUSH : NDb::ANIMATION_UNINSTALL );
-			if ( eType < GetStatsLocal()->animdescs.size() && GetStatsLocal()->animdescs[eType].anims.size() > 0 ) 
+			if ( eType < GetStatsLocal()->animdescs.size() && GetStatsLocal()->animdescs[eType].anims.size() > 0 )
 			{
 				const int nIndex = GetStatsLocal()->animdescs[eType].anims[0].nFrameIndex;
-				if ( nIndex >= 0 && nIndex < GetModelDesc()->pSkeleton->animations.size() ) 
+				if ( nIndex >= 0 && nIndex < GetModelDesc()->pSkeleton->animations.size() )
 				{
-					if ( const NDb::SAnimB2 *pAnim = checked_cast<const NDb::SAnimB2*>( GetModelDesc()->pSkeleton->animations[nIndex].GetPtr() ) ) 
+					if ( const NDb::SAnimB2 *pAnim = checked_cast<const NDb::SAnimB2*>( GetModelDesc()->pSkeleton->animations[nIndex].GetPtr() ) )
 					{
 						if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
 						{
@@ -1521,7 +1521,7 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 
 				if (anims.size() < 1)
 					return;
-				
+
 				auto pAnim = anims[0];
 
 				if ( NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() ) )
@@ -1545,7 +1545,7 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 		break;
 
 	case ACTION_NOTIFY_FINISH_UNINSTALL_TRANSPORT:
-		if ( GetStatsLocal()->pTransportableModel ) 
+		if ( GetStatsLocal()->pTransportableModel )
 			ChangeModelToTransportable( GetModel( GetStatsLocal()->pTransportableModel, eSeason ), eSeason )	;
 
 		break;
@@ -1562,7 +1562,7 @@ void CMOUnitMechanical::AIUpdateAction( const SAIActionUpdate *pUpdate, const ND
 
 void CMOUnitMechanical::Select( bool bSelect )
 {
-	// show unit selections	
+	// show unit selections
   if ( bSelect )
     Scene()->SelectObject( GetID(), GetCenter(), GetSelectionScale(), GetSelectionType() );
   else
@@ -1607,7 +1607,7 @@ CMOProjectile* CMOUnitMechanical::LaunchProjectile( const SAINewProjectileUpdate
 
 //	// calculate gun direction
 //	const NDb::SMechUnitRPGStats::SPlatform &platform = GetStatsLocal()->GetPlatform( nID, pUpdate->info.nPlatform );
-//	const string szPlatformBoneName = 
+//	const string szPlatformBoneName =
 //		platform.pAttachedPlatformVisObj ? platform.szAttachedPlatformLocator : platform.szRotatePoint;
 //	NAnimation::ISkeletonAnimator *pPlatformAnimator = Scene()->GetAnimator( nID, szPlatformBoneName );
 //	if ( !pPlatformAnimator )

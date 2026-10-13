@@ -32,7 +32,7 @@ bool CBasicDataExtractor::LoadImagesFromSource( CArray2D<uint32_t> *pSmallImage,
 	{
 		CArray2D<uint32_t> imageSource;
 		NImage::LoadImageDDS( &imageSource, streamHolder.pStream );
-		if ( !imageSource.IsEmpty() ) 
+		if ( !imageSource.IsEmpty() )
 		{
 			pSmallImage->SetSizes( SMALL_IMAGE_SIZE_X, SMALL_IMAGE_SIZE_Y );
 			pNormalImage->SetSizes( NORMAL_IMAGE_SIZE_X, NORMAL_IMAGE_SIZE_Y );
@@ -104,7 +104,7 @@ bool CBasicDataExtractor::LoadImagesFromCache( CArray2D<uint32_t> *pNormalImage,
 				pSaver->Add( 2, &imageNormal );
 				//
 				if ( ( imageSmall.GetSizeX() == SMALL_IMAGE_SIZE_X ) && ( imageSmall.GetSizeY() == SMALL_IMAGE_SIZE_Y ) &&
-						 ( imageNormal.GetSizeX() == NORMAL_IMAGE_SIZE_X ) && ( imageNormal.GetSizeY() == NORMAL_IMAGE_SIZE_Y ) ) 
+						 ( imageNormal.GetSizeX() == NORMAL_IMAGE_SIZE_X ) && ( imageNormal.GetSizeY() == NORMAL_IMAGE_SIZE_Y ) )
 				{
 					( *pNormalImage ) = imageNormal;
 					( *pSmallImage ) = imageSmall;
@@ -143,7 +143,7 @@ bool CBasicDataExtractor::GetLabel( std::string *pszLabel, const std::string &rs
 	int nPos = rszObjectName.rfind( PATH_SEPARATOR_CHAR );
 	if ( nPos != std::string::npos )
 	{
-		( *pszLabel ) = rszObjectName.substr( nPos + 1 ).c_str(); 
+		( *pszLabel ) = rszObjectName.substr( nPos + 1 ).c_str();
 		return true;
 	}
 	return false;

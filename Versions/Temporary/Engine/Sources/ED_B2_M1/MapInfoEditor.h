@@ -48,7 +48,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	friend class CBridgeState;
 	friend class CEntrenchmentState;
 	friend class CFenceState;
-	
+
 	friend class CTileState;
 	friend class CHeightState;
 	friend class CHeightStateV2;
@@ -102,7 +102,7 @@ class CMapInfoEditor : public CEditorBase, public CDefaultView, public ICommandH
 	// see ShortcutBarView.h.
 	std::unique_ptr<NShortcutBar::IView> pShortcutBarView;
 	CObj<IEditorScene> pEditorScene;
-	// Данные общего назначения 
+	// Данные общего назначения
 	CMapInfoState *pMapInfoState;
 	//
 	CMapInfoEditor();
@@ -136,7 +136,7 @@ public:
 
 	// Создание Undo Operation
 	virtual CMapInfoController* CreateController()
-	{ 
+	{
 		CMapInfoController* pMapInfoController = CDefaultView::CreateController<CMapInfoController>( static_cast<CMapInfoController*>( 0 ) );
 		if ( pMapInfoController )
 		{
@@ -151,7 +151,7 @@ public:
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	
+
 	////////////////////////////
 	bool CreateMinimapImage();
 	bool GenerateMinimapImage( const std::string &szFileName );

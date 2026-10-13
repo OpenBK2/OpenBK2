@@ -32,9 +32,9 @@ namespace NMapInfoEditor
 		unsigned nBridgeID;
 
 		OBJECT_BASIC_METHODS( SBridgeInfo );
-		
+
 	public:
-		//	
+		//
 		SBridgeInfo() : nBridgeID( INVALID_NODE_ID ) {}
 		static int CreateCenterPoints( CBridgeCenterPointList *pResultList,
 																	 CVec3 *pvDirection,

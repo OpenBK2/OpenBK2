@@ -63,13 +63,13 @@ int CUnits::operator&( IBinSaver &saver )
 	saver.Add( 104, &nBigCellsSizeX );
 	saver.Add( 105, &nBigCellsSizeY );
 	saver.Add( 106, &idsRemap );
-	
+
 	return 0;
 }
 
 int CPlanesIter::operator&( IBinSaver &saver )
 {
-	
+
 
 	//saver.Add( 1, &iter );
 

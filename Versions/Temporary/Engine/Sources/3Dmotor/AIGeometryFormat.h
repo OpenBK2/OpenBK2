@@ -12,7 +12,7 @@ struct SStoredPiece
 	//vector<CPtr<NAI::CPrecalcSpheres> > precalc;
 
 	int operator&( CStructureSaver &f )
-	{ 
+	{
 		f.Add( 1, &verts );
 		f.Add( 2, &tris );
 		f.Add( 3, &weights );

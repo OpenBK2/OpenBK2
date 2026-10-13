@@ -5,7 +5,7 @@
 struct SGeneralConsts
 {
 	static int TIME_DONT_SEE_ENEMY_BEFORE_FORGET;
-	
+
 	static int SCOUT_FREE_POINT;
 	static int SCOUT_POINTS;
 	static NTimer::STime TIME_SONT_SEE_AA_BEFORE_FORGET;
@@ -20,7 +20,7 @@ struct SGeneralConsts
 	static float AVATION_LONG_PERIOD_PROBABILITY;
 	static float AVATION_PERIOD_MULTIPLY;
 	static float PLAYER_FORCE_COEFFICIENT;
-	
+
 	// размер ячейки сопротивления
 	static const int RESISTANCE_CELL_SIZE;
 	// время "протухания" антиартиллерийского круга (msec)
@@ -49,7 +49,7 @@ struct SGeneralConsts
 	static float SWARM_WEIGHT_COEFFICIENT;
 
 	// update period duration
-	static int GENERAL_UPDATE_PERIOD;	
+	static int GENERAL_UPDATE_PERIOD;
 
 	// general sends truck to repair with this probability.( estimates every GENERAL_UPDATE_PERIOD )
 	static float REPAIR_STORAGE_PROBABILITY;
@@ -60,12 +60,12 @@ struct SGeneralConsts
 	// number of tanks that general send to recapture lost storage
 	static int RECAPTURE_ARTILLERY_TANKS_NUMBER;
 
-	// intendant will send transport to cell where transport dead only 
+	// intendant will send transport to cell where transport dead only
 	// after this time interval.
 	static int RESUPPLY_CELL_AFTER_TRANSPORT_DEATH;
 	static int RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND;
 	static float INTENDANT_DANGEROUS_CELL_RADIUS;
-	
+
 	static int TIME_TO_WAIT_SWARM_READY;
 	static int TIME_TO_WAIT_SWARM_READY_RANDOM;
 

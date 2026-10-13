@@ -23,10 +23,10 @@ IWindow * CButtonGroup::ChooseDefault()
 	return pDefault;
 }
 
-void CButtonGroup::Add( IWindow * pButton ) 
-{ 
+void CButtonGroup::Add( IWindow * pButton )
+{
 	NI_ASSERT( dynamic_cast<CWindowMSButton*>( pButton ) != 0, "not button passed" );
-	buttons.insert( dynamic_cast<CWindowMSButton*>( pButton ) ); 
+	buttons.insert( dynamic_cast<CWindowMSButton*>( pButton ) );
 }
 
 void CButtonGroup::SetActive( IWindow *_pButton )
@@ -72,7 +72,7 @@ IWindow* CButtonGroup::GetPressed() const
 }
 
 IWindow* CButtonGroup::GetButton( int i )
-{	
+{
 	int k = 0;
 	for ( CButtons::iterator it = buttons.begin(); it != buttons.end(); ++it  )
 	{

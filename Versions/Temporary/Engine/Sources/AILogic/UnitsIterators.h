@@ -10,7 +10,7 @@ extern CDiplomacy theDipl;
 
 class CGlobalIter
 {
-ZDATA	
+ZDATA
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int iter = {};
 	int nCurParty = {};

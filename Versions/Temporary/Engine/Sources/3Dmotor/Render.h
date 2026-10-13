@@ -75,7 +75,7 @@ class CRasterizer
 		float fZ0, fZx, fZy;
 	};
 	// sLeft - single edge, sRight - upper edge, sRight2 - lower edge; [nSY;nFY2) - upper edge; [nFY2;nFY) - lower edge
-	void RasterTriangleLow( const SEdgeInfo &sLeft, const SEdgeInfo &sRight, const SEdgeInfo &sRight2, 
+	void RasterTriangleLow( const SEdgeInfo &sLeft, const SEdgeInfo &sRight, const SEdgeInfo &sRight2,
 		const SZGradientInfo &zGradient, int nSY, int nFY2, int nFY, int nBack )
 	{
 		ASSERT( sLeft.nSY == nSY && sLeft.nFY == nFY );
@@ -105,7 +105,7 @@ class CRasterizer
 			if ( nBackface && !pThis->DoRenderBackface() )
 				continue;
 			pThis->ClipHorizontal( &nLeft, &nRight );
-			
+
 			float fZ = fZBase + nLeft * zGradient.fZx;
 			pThis->RasterSpan( nY, nLeft, nRight, fZ, zGradient.fZx, nBackface ); // right exclusive
 		}
@@ -169,22 +169,22 @@ class CRasterizer
 		if ( !CalcZGradient( &zGrad, vA, vEdge2, vEdge3 ) )
 			return;
 		SEdgeInfo sLeft[2], sRight[2];
-		
+
 		if ( vEdge1.y > 0 )
 			InitEdge( &sLeft[nLeft++], vA, vEdge1, nA, nB );
 		else if ( vEdge1.y < 0 )
 			InitEdge( &sRight[nRight++], vB, vEdge1, nB, nA );
-		
+
 		if ( vEdge2.y > 0 )
 			InitEdge( &sLeft[nLeft++], vB, vEdge2, nB, nC );
 		else if ( vEdge2.y < 0 )
 			InitEdge( &sRight[nRight++], vC, vEdge2, nC, nB );
-		
+
 		if ( vEdge3.y > 0 )
 			InitEdge( &sLeft[nLeft++], vC, vEdge3, nC, nA );
 		else if ( vEdge3.y < 0 )
 			InitEdge( &sRight[nRight++], vA, vEdge3, nA, nC );
-		
+
 		SEdgeInfo *pLeft, *pRight;
 		int nEdges, nBack;
 		if ( nLeft == 1 )
@@ -327,7 +327,7 @@ public:
 protected:
 	CTRect<int> region; // with exclusive borders
 	STextureMapping texMapping;
-	
+
 	void ClipVertical( int *pnSY, int *pnFY2, int *pnFY )
 	{
 		(*pnSY) = (std::max)( *pnSY, region.y1 );

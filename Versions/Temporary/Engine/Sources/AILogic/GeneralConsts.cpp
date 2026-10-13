@@ -29,7 +29,7 @@ int SGeneralConsts::GENERAL_UPDATE_PERIOD = 1000;
 float SGeneralConsts::REPAIR_STORAGE_PROBABILITY = 0.1f;
 float SGeneralConsts::RECAPTURE_STORAGE_PROBALITY = 0.2f;
 float SGeneralConsts::RECAPTURE_STORAGE_MAX_DISTANCE = 2000.0f;
-int SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER = 2; 
+int SGeneralConsts::RECAPTURE_ARTILLERY_TANKS_NUMBER = 2;
 int SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH;
 int SGeneralConsts::RESUPPLY_CELL_AFTER_TRANSPORT_DEATH_RAND;
 float SGeneralConsts::INTENDANT_DANGEROUS_CELL_RADIUS = 1000;
@@ -42,7 +42,7 @@ float SGeneralConsts::MIN_WEIGHT_TO_ARTILLERY_FIRE = 50.0f;
 float SGeneralConsts::MIN_WEIGHT_TO_SEND_BOMBERS = 100.0f;
 float SGeneralConsts::SWARM_WEIGHT_COEFFICIENT = 1.0f;
 
-int SGeneralConsts::TIME_TO_WAIT_SWARM_READY = 10; 
+int SGeneralConsts::TIME_TO_WAIT_SWARM_READY = 10;
 int SGeneralConsts::TIME_TO_WAIT_SWARM_READY_RANDOM = 10;
 
 int SGeneralConsts::TIME_SWARM_DURATION;
@@ -52,7 +52,7 @@ int SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES;
 void SGeneralConsts::Init()
 {
 	TIME_DONT_SEE_ENEMY_BEFORE_FORGET = NGlobal::GetVar( "AI.General.TimeDontSeeTheEnemyBeforeForget", 10000 );
-	
+
 	SCOUT_FREE_POINT = NGlobal::GetVar( "AI.General.Aviation.ScoutFreePoint", 300 );
 	SCOUT_POINTS = NGlobal::GetVar( "AI.General.Aviation.ScoutPointsPerMap", 4 );
 
@@ -77,7 +77,7 @@ void SGeneralConsts::Init()
 	MIN_WEIGHT_TO_ARTILLERY_FIRE = NGlobal::GetVar( "AI.General.Artillery.MinWeightToArtilleryFire", 3.0f );
 	MIN_WEIGHT_TO_SEND_BOMBERS = NGlobal::GetVar( "AI.General.Artillery.MinWeightToSendBombers", 100.0f );
 
-	
+
 	GENERAL_UPDATE_PERIOD = NGlobal::GetVar( "AI.General.UpdatePeriod", 3000 );
 	REPAIR_STORAGE_PROBABILITY = NGlobal::GetVar( "AI.General.Intendant.ProbabilityToRepairStorage", 0.1f );
 	RECAPTURE_STORAGE_PROBALITY = NGlobal::GetVar( "AI.General.Intendant.ProbabilityToRecaptureStorage", 0.4f );

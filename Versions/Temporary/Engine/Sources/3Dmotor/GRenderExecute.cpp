@@ -57,7 +57,7 @@ static void InitGeomDepths( NGfx::CRenderContext *pRC, const CSceneFragments &sc
 		geomDepths[k] = scene.GetStaticInfo( k ).bv.s.ptCenter * wDir;
 }
 
-static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &fragment, 
+static void AddTriangles( NGfx::CRenderContext *pRC, const SRenderFragmentInfo &fragment,
 	const CSceneFragments &scene, ETrilistType triListType )
 {
 	static std::vector<int> indices;
@@ -261,7 +261,7 @@ static ETrilistType ExecuteRenderOp( NGfx::CRenderContext *pRC, const CRenderCmd
 			pRC->SetPixelShader( psDiffuse );
 			pRC->SetVertexShader(  bNewShadows ? vsDepthLP : vsDepth );
 			SetupNLShadowsProjection( pRC, *op.p1.pPDirDepth );
-			pRC->SetVSConst( 17, CVec4(0,0,0,0.5) - op.p1.pPDirDepth->vDepth * 0.10f );			
+			pRC->SetVSConst( 17, CVec4(0,0,0,0.5) - op.p1.pPDirDepth->vDepth * 0.10f );
 			triListType = TLT_POSITION;
 			break;
 		case RO_DIR_COLOR:
@@ -419,9 +419,9 @@ static void ExecOps( NGfx::CRenderContext *pRC, const std::vector<CRenderCmdList
 				pRC->Flush();
 		}
 		pPrevOp = &op;
-		
+
 		triListType = ExecuteRenderOp( pRC, op, lightInfo );
-		
+
 		// prevent TLT_POSITION from being used to reduce memory usage
 		if ( bLowRAM )
 			triListType = TLT_GEOM;

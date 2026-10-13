@@ -38,10 +38,10 @@ public:
 	// для BORED acknowledgements
 	void RegisterAsBored(	EUnitAckType eAck, class CAIUnit *pObject );
 	void UnRegisterAsBored(	EUnitAckType eAck, class CAIUnit *pObject );
-	
+
 	void AddAcknowledgment(	EUnitAckType eAck, class CUpdatableObj *pObject, const int nSet = 0 );
 	void Clear();
-	
+
 	void UnitDead( class CAIUnit *pObject );
 };
 

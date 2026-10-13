@@ -48,7 +48,7 @@ public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CMOUnit *)this); OnSerialize( f ); f.Add(2,&bArtilleryHooked); f.Add(3,&vPassangers); f.Add(4,&pJoggingMutator); f.Add(5,&bMoved); f.Add(6,&lastTrackPoints); f.Add(7,&trackPoints); f.Add(8,&fTrackWidth); f.Add(9,&wLastTrackDir); f.Add(10,&nLastTrackTime); f.Add(11,&bForwardMoving); f.Add(12,&pTransport); f.Add(13,&bTrackBroken); f.Add(14,&smokeTrails); f.Add(15,&pOneFromCrew); f.Add(16,&bAmphibianInWater); f.Add(17,&nJoggingBasisBoneIndex); f.Add(18,&nJoggingMode); f.Add(19,&nLastWaterMoveEffectTime); f.Add(20,&vLastWaterMoveEffectPos); f.Add(21,&bAmphibianWaterEffectsActive); return 0; }
 	void OnSerialize( IBinSaver &f );
 private:
-	
+
 	bool IsInside( const int nID );
 	const NDb::SMechUnitRPGStats* GetStatsLocal() const { return checked_cast<const NDb::SMechUnitRPGStats*>( GetStats() ); }
 	int GetMechPassangersCount() const;
@@ -58,11 +58,11 @@ private:
 	void AttachComplexEffectToLocators( IScene *pScene, const std::vector<std::string> &locators, const NDb::SComplexEffect *pComplexEffect, const NTimer::STime time ) const;
 	void UpdateWaterMoveEffects( const struct SAINotifyPlacement &placement, IScene *pScene );
 	void PlayDieAnimation( const SAIDeadUnitUpdate *pUpdate );
-	const NDb::SAnimB2* GetAnimB2( 
+	const NDb::SAnimB2* GetAnimB2(
 		const NDb::SModel *pModel, const std::vector<NDb::Svector_AnimDescs> &animdescs,
 		const NDb::EAnimationType eAnimType, const int nAnimID, bool skipAnimdescs = false );
 
-	void PlayAnimDesc( NAnimation::ISkeletonAnimator *pAnimator, const NDb::SModel *pModel, 
+	void PlayAnimDesc( NAnimation::ISkeletonAnimator *pAnimator, const NDb::SModel *pModel,
 										 const std::vector<NDb::Svector_AnimDescs> &animdescs,
 										 const int nStartTime, const NDb::EAnimationType eAnimType, const int nAnimID );
 	void PlayAnimDescForAttached( IAttachedObject *pObject, const std::vector<NDb::Svector_AnimDescs> &animdescs,
@@ -89,7 +89,7 @@ public:
 	int GetFreeMechPlaces() const;
 
 	const CVec3 GetFirePoint( const int nPlatform, const int nGun ) const;
-	
+
 	void AIUpdateState( const int nParam );
 	void AIUpdateShot( const struct SAINotifyBaseShot &shot, const NTimer::STime &currTime, IScene *pScene, NDb::ESeason eSeason );
 	IClientUpdatableProcess* AIUpdateMovement( const NTimer::STime &time, const bool _bMove, IScene *pScene, ISoundScene *pSoundScene  );

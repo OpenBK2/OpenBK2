@@ -19,10 +19,10 @@ namespace NGScene
 struct ICampaignState : public CObjectBase
 {
 	virtual const CDBID &GetDBID() const = 0;
-	
+
 	virtual bool IsCompleted() const = 0;
 	virtual void SetCompleted( const bool bValue ) = 0;
-	
+
 	virtual bool IsStarted() const = 0;
 	virtual void SetStarted( const bool bValue ) = 0;
 };
@@ -30,14 +30,14 @@ struct ICampaignState : public CObjectBase
 struct IInterfaceState : public CObjectBase
 {
 	enum { tidTypeID = 0x170C1B40 };
-	
+
 	enum EScenarioTrackerType
 	{
 		ESTT_NONE,
 		ESTT_SINGLE,
 		ESTT_MULTI,
 	};
-	
+
 	virtual const NDb::SGameRoot* GetGameRoot() const = 0;
 	virtual const NDb::SUIConstsB2* GetUIConsts() const = 0;
 
@@ -54,45 +54,45 @@ struct IInterfaceState : public CObjectBase
 
 	virtual int GetDifficulty() const = 0;
 	virtual void SetDifficulty( int nDifficulty ) = 0;
-	
+
 	virtual ICampaignState* GetCampaign( const CDBID &dbidCampaign ) = 0;
 
 	virtual void StartSingleMission( const CDBID &dbidCampaign, int nChapterNumber, int nMissionNumber, int nDifficulty ) = 0;
-	
+
 	//{ mission console
 	virtual void SetMissionConsoleColor( uint32_t dwColor ) = 0;
 	virtual void WriteToMissionConsole( const std::wstring &wszText ) = 0;
 	virtual void WriteToMissionConsoleSelected( const std::wstring &wszText ) = 0;
 	virtual std::wstring GetMissionConsoleMLTag() const = 0;
 	//}
-	
+
 	virtual bool IsSuppressEnableFocus() const = 0;
 	virtual void SetSuppressEnableFocus( bool bSuppress ) = 0;
 
 	// closing interfaces in a bunch
 	virtual void SendCommandsToCloseAllIncluding( struct IInterfaceBase * pLastInterfaceToClose ) = 0;
 	virtual void SendCommandsToCloseAllIncluding( const std::string &szInterfaceID ) = 0;
-	
+
 	virtual void MakeScenarioTracker( EScenarioTrackerType eType ) = 0;
 	virtual void VerifyScenarioTracker( EScenarioTrackerType eType ) const = 0; // sanity check
-	
+
 	virtual bool IsTransitEffectFlag() const = 0;
 	virtual void SetTransitEffectFlag( bool bTransit ) = 0;
 
 	virtual bool IsFirstTimeInChapter() const = 0;
 	virtual void SetFirstTimeInChapter( bool bFirstTime ) = 0;
-	
+
 	virtual bool IsAutoShowCommanderScreen() const = 0;
 	virtual void SetAutoShowCommanderScreen( bool bAutoShow ) = 0;
-	
+
 	virtual const NDb::STexture* GetMenuBackgroundTexture() const = 0;
 
 	virtual std::wstring GetRandomCitation() = 0;
-	
+
 	virtual int GetAndRegisterIDForMLHandler( const std::vector< std::pair<std::wstring, std::wstring> > &params ) = 0;
 	virtual void UnregisterIDForMLHandler( int nID ) = 0;
 	virtual const std::wstring& ExpandMLTag( const std::wstring &wszTag, int nIDForHandler ) const = 0;
-	
+
 	// push/pop mp chat messages with tags (color etc.)
 	//
 	virtual void AddMPChatMessage( const std::wstring &wszText ) = 0;
@@ -101,7 +101,7 @@ struct IInterfaceState : public CObjectBase
 
 	// проверяет текст, заменяя запрещенные вхождения на спец. символы
 	virtual std::wstring FilterMPChatText( const std::wstring &wszText ) = 0;
-	
+
 	virtual int GetTutorialRecommendedMission() const = 0;
 	virtual void MarkTutorialRecommendedMission( int nMission ) = 0;
 	virtual void ApplyTutorialRecommendedMission() = 0;

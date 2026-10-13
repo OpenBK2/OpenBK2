@@ -93,6 +93,6 @@ float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CV
 	return fabs( vResult ) / fabs( rvDirection );
 }
 
-// basement storage  
+// basement storage
 
 

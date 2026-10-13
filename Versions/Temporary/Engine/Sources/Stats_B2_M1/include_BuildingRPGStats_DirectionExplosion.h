@@ -7,4 +7,4 @@ bool ToAIUnits( bool bInEditor )
 	fVerticalAngle = ToRadian( fVerticalAngle );
 	//
 	return true;
-} 
+}

@@ -36,6 +36,6 @@ const EClassifyRotation NEGATIVE_CLASSIFY_ROTATION[CR_COUNT + 1] =
 	CR_UNKNOWN,
 };
 
-// basement storage  
+// basement storage
 
 

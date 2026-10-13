@@ -37,9 +37,9 @@ bool GetInternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11,
 {
 	if ( fabs( c1.center - c2.center ) <= c1.r + c2.r )
 		return false;
-	
+
 	// for test;
-	
+
 	CCircle expanded = c1;
 	expanded.r += c2.r;
 	// find tangent points to expanded circle from the center of second circle
@@ -89,7 +89,7 @@ static void GetExternalTangentPointsFirstGreater( const CCircle &c1, const CCirc
 // 2ND INDEX - TANGENT LINE
 static bool GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec2 *v11, CVec2 *v21, CVec2 *v12, CVec2 *v22 )
 {
-	if ( !c1.r || !c2.r || c1.center == c2.center ) 
+	if ( !c1.r || !c2.r || c1.center == c2.center )
 		return false;
 
 	if ( c1.r == c2.r )
@@ -98,7 +98,7 @@ static bool GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec
 		CVec2 vC1toC2( c2.center - c1.center );
 		CVec2 vPerp ( -vC1toC2.y, vC1toC2.x );
 		Normalize( &vPerp );
-		
+
 		vPerp *= c1.r;
 		*v11 = c1.center + vPerp;
 		*v12 = c1.center - vPerp;
@@ -117,14 +117,14 @@ static bool GetExternalTangentPoints( const CCircle &c1, const CCircle &c2, CVec
 // return false if there are no tangens
 bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirectedCircle &to, CVec2 *v1, CVec2 *v2 )
 {
-	if ( from.center == to.center ) 
+	if ( from.center == to.center )
 		return false;
 
 	CVec2 v11, v12, v21, v22;
 
 	if ( from.nDir == to.nDir )
 	{
-		if ( !GetExternalTangentPoints( from, to, &v11, &v21, &v12, &v22 ) ) 
+		if ( !GetExternalTangentPoints( from, to, &v11, &v21, &v12, &v22 ) )
 			return false;
 	}
 	else if ( !GetInternalTangentPoints( from, to, &v11, &v21, &v12, &v22 ) )

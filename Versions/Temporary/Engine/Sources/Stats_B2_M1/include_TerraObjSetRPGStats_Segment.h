@@ -5,4 +5,4 @@ bool ToAIUnits( bool bInEditor )
 	passability.PostLoad( bInEditor );
 	visibility.PostLoad( bInEditor );
 	return true;
-} 
+}

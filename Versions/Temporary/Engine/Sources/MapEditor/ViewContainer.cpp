@@ -111,6 +111,6 @@ bool CViewContainer::GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSe
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

@@ -54,7 +54,7 @@ class CClients : public CObjectBase
 
 	std::unordered_map<int, SCommonClientInfo> onLine;
 	std::unordered_map<int, SGameConnection> gameConnections;
-	
+
 	std::unordered_map< std::string, CPtr<SLadderDBInfo> > ladderInfoCache;
 	std::unordered_map< std::string, int > ladderInfoCacheLockCounter;
 
@@ -75,7 +75,7 @@ class CClients : public CObjectBase
 	// not something a database backend should know about.
 	bool Query( const std::string &szQuery, CDbResult *pResult );
 	bool Execute( const std::string &szStatement );
-	
+
 	void LoadIgnoreFriendList();
 	void AddIgnoreFriendPairToDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList );
 	void DeleteIgnoreFriendPairFromDB( const int nRecipientDBUserID, const int nSenderDBUserID, EIgnoreFriendList eList );
@@ -129,7 +129,7 @@ public:
 
 	SLadderDBInfo* GetLadderInfoFromDB( const std::string &szNick );
 	void PutLadderInfoToDB( const std::string &szNick );
-	
+
 	void DBLogGameResult( SLadderGameInfo *pGameInfo );
 	//
 	void Log( const int nClientID, const std::string &szMsg ) const;

@@ -16,7 +16,7 @@ class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 	typedef std::unordered_map<CDBID, CPtr<IManipulator> > CManipulatorMap;
 	typedef std::list<std::string> CNameMap;
 	typedef CUniqueList<CNameMap, std::string> CUniqueNameList;
-	
+
 	CManipulatorMap manipulatorMap;
 	CDBID activeDBID;
 	CPtr<IManipulator> pActiveManipulator;
@@ -35,7 +35,7 @@ class MAPEDITORLIB_EXPORT CMultiManipulator : public IManipulator
 	bool CheckMultiValue( const std::string &rszName, const CVariant &rValue, bool *pResult ) const;
 
 public:
-	// Конструирование манипулятора 
+	// Конструирование манипулятора
 	CMultiManipulator() : pActiveManipulator( 0 ), pPropertyDescManipulator( 0 ), pFirstManipulator( 0 ) {}
 
 	// Добавить манипулятор в список
@@ -81,14 +81,14 @@ public:
 class CMultiManipulatorIterator : public IManipulatorIterator
 {
 	OBJECT_BASIC_METHODS( CMultiManipulatorIterator )
-	
+
 	CPtr<CMultiManipulator> pMultiManipulator;
 	CPtr<IManipulatorIterator> pManipulatorIterator;
 
 	CMultiManipulatorIterator() {}
 public:
 	CMultiManipulatorIterator( CMultiManipulator *_pMultiManipulator, bool bShowHidden, ECacheType eCache );
-	
+
 	//IManipulatorIterator
 	bool Next();
 	bool IsEnd() const;

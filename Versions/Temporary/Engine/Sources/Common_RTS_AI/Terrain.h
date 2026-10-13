@@ -19,7 +19,7 @@ enum ETerrainTypes
 	ETT_EARTH_TERRAIN  = 0,
 	ETT_WATER_TERRAIN  = 1,
 	ETT_MARINE_TERRAIN = 2,
-};	
+};
 
 enum EFreeTileInfo : int
 {
@@ -116,19 +116,19 @@ class COMMON_RTS_AI_EXPORT CTerrain : public CObjectBase
 	OBJECT_NOCOPY_METHODS( CTerrain );
 
 	struct STmpLockInfo
-	{ 
-		SVector tile; 
+	{
+		SVector tile;
 		int nUnitsBuf = 0;
 		EAIClasses aiClass{};
-		
+
 		STmpLockInfo() : tile( -1, -1 ), nUnitsBuf( -1 ), aiClass( EAC_FORCE_DWORD ) {}
 		STmpLockInfo( const SVector &_tile, const int _nUnitsBuf, const EAIClasses _aiClass )
 			: tile( _tile ), nUnitsBuf( _nUnitsBuf ), aiClass( _aiClass ) {}
 	};
 
 	struct STmpLockInfo2
-	{ 
-		SVector tile; 
+	{
+		SVector tile;
 		EAIClasses aiClass{};
 
 		STmpLockInfo2() : tile( 0, 0 ), aiClass( EAC_NONE ) {}
@@ -229,7 +229,7 @@ public:
 	void PrepareTerraTypes( const int nCount );
 	void SetTerraTypes( const int nIndex, const float fPass, const uint32_t passClass, const uint8_t soilType, const uint8_t digImpossible );
 	void UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2, const CArray2D<uint8_t> &types );
-	
+
 	void AddTiles( const std::list<SVector> vTiles, const EAIClasses aiPassClass, const float fPassability, const int nSoilType, const bool bCanEntrench );
 	void AddMarineTiles( const std::list<SVector> coastTiles, const uint8_t coastSoilType, const std::list<SVector> waterTiles, const uint8_t waterSoilType );
 	void ClearRiverCliffTiles();
@@ -274,7 +274,7 @@ public:
 	void RemoveTerrainPassability( const int nX, const int nY );
 	// в прямоугольнике либо убирает террайн, либо ставит старый
 	void UpdateTerrainPassabilityRect( const int nMinX, const int nMinY, const int nMaxX, const int nMaxY, bool bRemove );
-	// локает тайл и проставаляет проходимость в соответствии с terrain nTerrainType, 
+	// локает тайл и проставаляет проходимость в соответствии с terrain nTerrainType,
 	void SetTerrainPassability( const int nX, const int nY, const int nTerrainType );
 	// по номеру тайла выдаёт тип terrain
 	const int GetTerrainPassTypeByTileNum( const int nTile ) { return terrSubTypes[nTile]; }

@@ -73,7 +73,7 @@ namespace NMapInfoEditor
 			}
 			vPosition = CVec3( vMassCenter.x - vAdditionalPosition.x, vMassCenter.y - vAdditionalPosition.y, 0.0f );
 			if ( bDirection )
-			{ 
+			{
 				fDirection = GetPolarAngle( spotSquare[1] - spotSquare[0] );
 			}
 		}

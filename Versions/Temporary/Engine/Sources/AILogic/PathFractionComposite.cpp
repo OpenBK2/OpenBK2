@@ -12,7 +12,7 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 {
 	pParams->p0 = p0;
 	pParams->p1 = p1;
-	pParams->p2 = p2; 
+	pParams->p2 = p2;
 	pParams->vNormale = vNormale;
 
 /*
@@ -20,7 +20,7 @@ void CPathFractionComposite::GetPrevPoints( struct SPrevPathParams *pParams ) co
 	{
 		pParams->p0 = p0;
 		pParams->p1 = p1;
-		pParams->p2 = p2; 
+		pParams->p2 = p2;
 		pParams->vNormale = vNormale;
 	}
 	else
@@ -51,7 +51,7 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 	p0 = param.p0;
 	p1 = param.p1;
 	p2 = param.p2;
-	
+
 	substitute.insert( substitute.end(), pathList.begin(), pathList.end() );
 
 	// substitute every N points with spline path
@@ -105,10 +105,10 @@ CPathFractionComposite::CPathFractionComposite( struct IPlane *pPlane, struct IP
 
 	vNormale = normales[0];
 	spline.Setup( p0, p1, p2, p3 );
-	
+
 	fSplineProgress = param.fSplineProgress;
 	float fDistRemain;
-	vPosLastPoint = vPos;					
+	vPosLastPoint = vPos;
 	vSpeedLastPoint = vSpeed;
 	// Initialize the saved previous normal from the actual path, not stale memory.
 	vNormaleLastPoint = vNormale;
@@ -150,9 +150,9 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 			// get next point, init spline, iterate trough it
 			if ( nIndex < points.size() - 2 ) //CHEAT: don't finish path, use 1 point as a reserve.
 			{
-				p0 = p1; 
-				p1 = p2; 
-				p2 = p3; 
+				p0 = p1;
+				p1 = p2;
+				p2 = p3;
 				p3 = points[nIndex];
 				//vNormale = normales[nIndex];
 				spline.Setup( p0, p1, p2, p3 );
@@ -203,7 +203,7 @@ bool CPathFractionComposite::Iterate( const float fDist, float *pfDistRemain )
 				vNormale = normales[nIndex] - vSpeed * ( normales[nIndex] * vSpeed );
 				Normalize( &vNormale );
 
-				vPosLastPoint = vNew;					
+				vPosLastPoint = vNew;
 				vSpeedLastPoint = vTangent;
 				vNormaleLastPoint = normales[nIndex];
 			}

@@ -7,7 +7,7 @@
 class CInBuildingStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CInBuildingStatesFactory );
-	
+
 	static CPtr<CInBuildingStatesFactory> pFactory;
 public:
 	static IStatesFactory* Instance();
@@ -19,7 +19,7 @@ public:
 	virtual struct IUnitState* ProduceState( class CQueueUnit *pUnit, class CAICommand *pCommand );
 	virtual struct IUnitState* ProduceRestState( class CQueueUnit *pUnit );
 	virtual bool CanCommandBeExecuted( class CAICommand *pCommand );
-	
+
 	// for Saving/Loading of static members
 	friend class CStaticMembers;
 };
@@ -27,7 +27,7 @@ public:
 class CSoldierRestInBuildingState : public IUnitState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CSoldierRestInBuildingState );
-	
+
 	ZDATA_(CStandartBehaviour)
 	CPtr<CSoldier> pSoldier;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -39,7 +39,7 @@ public:
 
 	CSoldierRestInBuildingState() : pSoldier( 0 ) { }
 	CSoldierRestInBuildingState( class CSoldier *pSoldier );
-	
+
 	void SendUnitTo( class CBuilding *pBuilding );
 
 	virtual void Segment();
@@ -57,7 +57,7 @@ public:
 class CSoldierAttackInBuildingState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CSoldierAttackInBuildingState );
-	
+
 
 	ZDATA
 	CPtr<CSoldier> pSoldier;

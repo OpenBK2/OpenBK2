@@ -22,7 +22,7 @@ class CPlayList;
 class CMusicSystem : public IMusicSystem
 {
 	OBJECT_NOCOPY_METHODS( CMusicSystem );
-	
+
 	enum EPlayListSwitchState
 	{
 		EPST_NOT_INITTED,
@@ -46,10 +46,10 @@ class CMusicSystem : public IMusicSystem
 	CDBPtr<NDb::SMapMusic> pCurrentMapMusic;
 	int operator&( IBinSaver &f );
 	void InitDefault();
-	
+
 	void UpdatePlayListChange();
 public:
-	CMusicSystem() 
+	CMusicSystem()
 	{
 		InitDefault();
 	}

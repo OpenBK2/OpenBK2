@@ -10,16 +10,16 @@ namespace NGScene
 
 // CDirectionalLight
 
-CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor, CFuncBase<CVec3> *_pGlossColor, 
+CDirectionalLight::CDirectionalLight( CFuncBase<CVec3> *_pColor, CFuncBase<CVec3> *_pGlossColor,
 	const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir,
-	float _fMaxHeight, 
+	float _fMaxHeight,
 	CFuncBase<CVec3> *_pAmbient,
 	CFuncBase<CVec3> *_pShadeColor, CFuncBase<CVec3> *_pIncidentShadeColor,
 	CPtrFuncBase<NGfx::CTexture> *_pClouds, CFuncBase<SHMatrix> *_pCloudsProjection,
 	float _fShadowsMaxDetailLength, const CVec3 &_vDymanicLightsModification )
 : pColor(_pColor), pGlossColor(_pGlossColor), pAmbient(_pAmbient), vDepth( 0, 0, 1 / _fMaxHeight, 0 ),
 	fMaxHeight(_fMaxHeight), pShadeColor(_pShadeColor), pIncidentShadeColor(_pIncidentShadeColor), nVersionID(0), fSmoothedSceneHeight(0),
-	pClouds(_pClouds), pCloudsProjection(_pCloudsProjection), fShadowsMaxDetailLength(_fShadowsMaxDetailLength), vDymanicLightsModification(_vDymanicLightsModification)	
+	pClouds(_pClouds), pCloudsProjection(_pCloudsProjection), fShadowsMaxDetailLength(_fShadowsMaxDetailLength), vDymanicLightsModification(_vDymanicLightsModification)
 {
 	vLightDir = _vLightDir;
 	vShadowsLightDir = _vShadowsLightDir;
@@ -74,8 +74,8 @@ float CDirectionalLight::GetSmoothedSceneHeight( float f )
 	return fSmoothedSceneHeight;
 }
 
-NGfx::CTexture *CDirectionalLight::GetCloudsTexture() 
-{ 
+NGfx::CTexture *CDirectionalLight::GetCloudsTexture()
+{
 	if ( !pClouds )
 		return 0;
 	pClouds.Refresh();
@@ -88,14 +88,14 @@ void CDirectionalLight::CalcCloudProjection( SHMatrix *pRes )
 		return;
 	Identity( pRes );
 	if ( !pCloudsProjection )
-		return; 
+		return;
 	pCloudsProjection.Refresh();
 	*pRes = pCloudsProjection->GetValue();
 }
 
 // CPointLight
 
-CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID ) 
+CPointLight::CPointLight() : nThisPointLightID( ++nPointLightID )
 {
 }
 
@@ -172,7 +172,7 @@ bool CLightStateNode::NeedUpdate()
 		dynamicLights[nIndex++] = pLight;
 	}
 	dynamicLights.resize( nIndex );
-	
+
 	bRes |= !value.dynamicPointLights.empty();
 	return bRes;
 }
@@ -220,9 +220,9 @@ void CLightStateNode::AddPointLight( CDynamicPointLight *p )
 	dynamicLights.push_back( p );
 }
 
-void CLightStateNode::SetClipTS( const CTransformStack &_ts ) 
-{ 
-	tsClip = _ts; 
+void CLightStateNode::SetClipTS( const CTransformStack &_ts )
+{
+	tsClip = _ts;
 }
 
 START_REGISTER(GRenderLight)

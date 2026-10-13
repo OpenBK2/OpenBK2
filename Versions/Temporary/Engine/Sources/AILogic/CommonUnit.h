@@ -74,7 +74,7 @@ class CCommonUnit : public CLinkObject, public CBasePathUnit, public CGroupUnit,
 	CVec2 vFollowShift;
 
 	CObj<IShootEstimator> pShootEstimator;
-	
+
 	bool bCanBeFrozenByState = {};
 	bool bCanBeFrozenByScan = {};
 	NTimer::STime nextFreezeScan = {};
@@ -98,7 +98,7 @@ public:
 	virtual int GetMovingType() const { return 0; }
 	virtual bool IsSelectable() const { return bSelectable; }
 	virtual void Init( const CVec3 &_vCenter, const uint16_t _wDirection, ICollisionsCollector *pCollisionsCollector );
-	
+
 	virtual int GetNGuns() const = 0;
 	virtual CBasicGun* GetGun( const int n ) const = 0;
 
@@ -117,7 +117,7 @@ public:
 	virtual const uint8_t GetPlayer() const = 0;
 	const uint8_t GetParty() const;
 	virtual void ChangePlayer( const uint8_t cPlayer ) = 0;
-	
+
 	// какой максимальный damage можно нанести юниту pTarget
 	virtual const float GetMaxDamage( class CCommonUnit *pTarget ) const;
 
@@ -138,16 +138,16 @@ public:
 	virtual const bool CanShoot() const { return true; }
 	virtual const bool CanShootToPlanes() const = 0;
 	virtual const bool CanShootInMovement() { return false; }
-	
+
 	virtual void Fired( const float fGunRadius, const int nGun ) = 0;
-	
+
 	virtual CBasicGun* GetFirstArtilleryGun() const { return 0; }
-	
+
 	virtual const NTimer::STime GetTimeToCamouflage() const = 0;
 	virtual void SetCamoulfage()=0;
 	virtual void RemoveCamouflage( ECamouflageRemoveReason eReason )=0;
 
-	
+
 	// про updat-ить область range/пристрелки
 	virtual void UpdateArea( const EActionNotify eAction ) = 0;
 	virtual const uint32_t GetNormale( const CVec2 &vCenter ) const;
@@ -158,18 +158,18 @@ public:
 	virtual void Unlock( const CBasicGun *pGun );
 	// залокан ли каким-либо gun-ом, не равным pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const;
-	
+
 	virtual class CTurret* GetTurret( const int nTurret ) const = 0;
 	virtual const int GetNTurrets() const = 0;
 	virtual bool IsMech() const = 0;
-	
+
 	void SetBattlePos( const CVec2 &vPos, const uint16_t _wReserveDir = 0 ) { vBattlePos = vPos; wReserveDir = _wReserveDir; }
 	bool DoesReservePosExist() const { return vBattlePos.x != -1.0f; }
 	const CVec2& GetBattlePos() const { NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" ); return vBattlePos; }
 	const uint16_t GetReserveDir() const { NI_ASSERT( DoesReservePosExist(), "Reserve pos doesn't exist" ); return wReserveDir; }
 	void SetTruck( class CAIUnit *pUnit );
 	class CAIUnit* GetTruck() const;
-	
+
 	// удалить юнит с карты
 	virtual void Disappear() = 0;
 	// умереть
@@ -206,19 +206,19 @@ public:
 
 	virtual void Segment();
 	virtual void FreezeSegment();
-	
+
 	// управляем ли (н-р, пушка без расчёта неуправляема)
 	virtual bool IsOperable() const { return true; }
-	
+
 	virtual const int GetMinArmor() const = 0;
 	virtual const int GetMaxArmor() const = 0;
 	virtual const int GetMinPossibleArmor( const int nSide ) const = 0;
 	virtual const int GetMaxPossibleArmor( const int nSide ) const = 0;
 	virtual const int GetArmor( const int nSide ) const = 0;
 	virtual const int GetRandomArmor( const int nSide ) const = 0;
-	
+
 	virtual float GetMaxFireRange() const = 0;
-	
+
 	virtual void UnRegisterAsBored( const enum EUnitAckType eBoredType ) = 0;
 	virtual void RegisterAsBored( const enum EUnitAckType eBoredType ) = 0;
 
@@ -243,7 +243,7 @@ public:
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, CBasicGun **pGun ) = 0;
 	// поиск препятствия
 	virtual struct IObstacle * LookForObstacle() { return 0; };
-	
+
 	// нужно ли пытаться подъезать близко к точке, которую охраняет (н-р, для поездов не нужно)
 	virtual bool CanMoveForGuard() const = 0;
 
@@ -251,24 +251,24 @@ public:
 	virtual void NotifyAbilityRun( class CAICommand * pCommand ) = 0;
 
 	virtual const NTimer::STime GetNextPathSegmTime() const { return 0; }
-	
+
 	virtual float GetPriceMax() const = 0;
 	virtual const NTimer::STime GetBehUpdateDuration() const = 0;
-	
+
 	virtual void AnimationSegment() { }
-	
+
 	virtual const float GetTargetScanRadius() { return 0.0f; }
 
 	bool CanBeFrozen() const;
 	bool IsFrozenByState() const;
 	virtual void FreezeByState( const bool bFreeze );
-	
+
 	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const { return false; }
 	virtual bool IsTowing() const { return false; }
-	
+
 	void SetPrice( float fNewPrice ) { fPrice = fNewPrice; }
 	float GetPrice() { return fPrice; }
-	
+
 	virtual bool CanMoveAfterUserCommand() const = 0;
 
 	virtual const CVec2 GetUnitPointInFormation() const { return VNULL2; }
@@ -295,7 +295,7 @@ public:
 	IStaticPath* GetPathToBuilding( CBuilding *pBuilding, int *pnEntrance );
 	IStaticPath* GetPathToEntrenchment( CEntrenchment *pEntrenchment );
 	virtual const int GetFormationSlot() { return 0; }
-  
+
 	virtual void WarFogChanged() = 0;
 
 	virtual const float GetZ() const { return 0.0f; }

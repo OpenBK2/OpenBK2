@@ -171,7 +171,7 @@ void CVisObjBuilder::GetResourceFileName( std::string *pszResourceFileName, ERes
 
 
 bool CVisObjBuilder::AddVisObjEntry( const std::string &rszUniqueObjectName,
-																		 IManipulator *pBuildDataManipulator,	
+																		 IManipulator *pBuildDataManipulator,
 																		 const std::string &rszMBFullFileName,
 																		 const std::string &rszTGAFullFileName,
 																		 NDb::ESeason eSeason )
@@ -362,7 +362,7 @@ bool CVisObjBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std:
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CVisObjBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CVisObjBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	std::string szMBFullFileName;
 	if ( !CManipulatorManager::GetValue( &szMBFullFileName, pBuildDataManipulator, "ModelFileName" ) || szMBFullFileName.empty() )
@@ -499,12 +499,12 @@ bool CVisObjBuilder::CreateVisObj( const std::string &rszVisObjFolder )
 			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}{}", szMBFileFolder, nMBFileCount + 1, modelExtension)) ) )
 			{
 				++nMBFileCount;
-			}	
+			}
 			while ( NFile::DoesFileExist( BuilderSourcePath(fmt::format("{}{}.tga", szTGAFileFolder, nTGAFileCount + 1)) ) )
 			{
 				++nTGAFileCount;
-			}	
-			bResult = ( nMBFileCount > 0 ) && ( nTGAFileCount > 0 ); 
+			}
+			bResult = ( nMBFileCount > 0 ) && ( nTGAFileCount > 0 );
 			//whole
 			if (  bResult )
 			{
@@ -647,7 +647,7 @@ bool CVisObjBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_VIS_OBJ:
-		{	
+		{
 			SSelectionSet selectionSet;
 			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
@@ -735,7 +735,7 @@ bool CVisObjBuilder::RemoveMaterial( const std::string &rszObjectTypeName, const
 	std::string szTextureName;
 	{
 		const std::string szRefValueName = "Texture";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szTextureTypeName, &szTextureName, 0 ); 
+		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szTextureTypeName, &szTextureName, 0 );
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
@@ -762,7 +762,7 @@ bool CVisObjBuilder::RemoveGeometry( const std::string &rszObjectTypeName, const
 	std::string szAIGeometryName;
 	{
 		const std::string szRefValueName = "AIGeometry";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAIGeometryTypeName, &szAIGeometryName, 0 ); 
+		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAIGeometryTypeName, &szAIGeometryName, 0 );
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
@@ -795,7 +795,7 @@ bool CVisObjBuilder::RemoveSkeleton( const std::string &rszObjectTypeName, const
 			{
 				const std::string szRefValueName = fmt::format( "Animations.[{}]", nAnimationIndex );
 				std::string szAnimationName;
-				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAnimationTypeName, &szAnimationName, 0 ); 
+				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szAnimationTypeName, &szAnimationName, 0 );
 				if ( !szAnimationName.empty() )
 				{
 					animationNameList.push_back( szAnimationName );
@@ -834,7 +834,7 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 			{
 				const std::string szRefValueName = fmt::format( "Materials.[{}]", nMaterialIndex );
 				std::string szMaterialName;
-				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szMaterialTypeName, &szMaterialName, 0 ); 
+				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szMaterialTypeName, &szMaterialName, 0 );
 				if ( !szMaterialName.empty() )
 				{
 					materialNameList.push_back( szMaterialName );
@@ -847,14 +847,14 @@ bool CVisObjBuilder::RemoveModel( const std::string &rszObjectTypeName, const st
 	std::string szGeometryName;
 	{
 		const std::string szRefValueName = "Geometry";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szGeometryTypeName, &szGeometryName, 0 ); 
+		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szGeometryTypeName, &szGeometryName, 0 );
 	}
 	//
 	std::string szSkeletonTypeName;
 	std::string szSkeletonName;
 	{
 		const std::string szRefValueName = "Skeleton";
-		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szSkeletonTypeName, &szSkeletonName, 0 ); 
+		CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szSkeletonTypeName, &szSkeletonName, 0 );
 	}
 	if ( pFolderCallback->RemoveObject( rszObjectTypeName, rszObjectName, true ) )
 	{
@@ -895,7 +895,7 @@ bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 			{
 				const std::string szRefValueName = fmt::format( "Models.[{}].Model", nModelIndex );
 				std::string szModelName;
-				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szModelTypeName, &szModelName, 0 ); 
+				CManipulatorManager::GetParamsFromReference( szRefValueName, pManipulator, &szModelTypeName, &szModelName, 0 );
 				if ( !szModelName.empty() )
 				{
 					modelNameList.push_back( szModelName );
@@ -913,6 +913,6 @@ bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 	return true;
 }
 
-// basement storage  
+// basement storage
 
 

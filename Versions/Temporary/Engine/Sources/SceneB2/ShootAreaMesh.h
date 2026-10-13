@@ -11,7 +11,7 @@ struct SLinearHeightFunctor
 class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 {
 	OBJECT_BASIC_METHODS( CShootAreaMesh )
-	
+
 	CDGPtr<CFuncBase<SFBTransform> > pTransform;
 	float fStartAngle;
 	float fEndAngle;
@@ -19,7 +19,7 @@ class CShootAreaMesh : public CPtrFuncBase<NGScene::CObjectInfo>
 	float fMaxRadius;
 	CPtr<CTerrainManager> pTerraManager;
 	float fWidth;
-	
+
 	CVec2 GetCenter();
 	static void FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func );
 	static void LinearTransform( std::vector<float> &output, const std::vector<float> &input, float fMin, float fMax );
@@ -36,7 +36,7 @@ protected:
 public:
 	CShootAreaMesh( const CVec2 &vCenter, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, CTerrainManager *_pTerraManager, float fWidth = 1.0f );
 	CShootAreaMesh( CFuncBase<SFBTransform> *pTransform, float fStartAngle, float fEndAngle, float fMinRadius, float fMaxRadius, CTerrainManager *_pTerraManager, float fWidth = 1.0f );
-	
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 2, &pTerraManager );

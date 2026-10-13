@@ -107,7 +107,7 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 	//  might be faster
 	// Call RunTimingSession() to run each of them & output result to txt file
 
- 
+
 	// freak variable bit structure method
 	// normal math
 	// This method is fastest
@@ -127,9 +127,9 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 
 	if ( !bDxt1 || pBlock->col0 > pBlock->col1 )
 	{
-		// Four-color block: derive the other two colors.    
+		// Four-color block: derive the other two colors.
 		// 00 = color_0, 01 = color_1, 10 = color_2, 11 = color_3
-		// These two bit codes correspond to the 2-bit fields 
+		// These two bit codes correspond to the 2-bit fields
 		// stored in the 64-bit block.
 
 		wrd = ((uint16_t)col_0->r * 2 + (uint16_t)col_1->r )/3;
@@ -158,13 +158,13 @@ inline void GetColorBlockColors( SDXTColBlock *pBlock, SColor8888 *col_0, SColor
 	else
 	{
 		// Three-color block: derive the other color.
-		// 00 = color_0,  01 = color_1,  10 = color_2,  
+		// 00 = color_0,  01 = color_1,  10 = color_2,
 		// 11 = transparent.
-		// These two bit codes correspond to the 2-bit fields 
-		// stored in the 64-bit block. 
+		// These two bit codes correspond to the 2-bit fields
+		// stored in the 64-bit block.
 
 		// explicit for each component, unlike some refrasts...
-		
+
 		// TRACE("block has alpha\n");
 
 		wrd = ((uint16_t)col_0->r + (uint16_t)col_1->r )/2;
@@ -274,7 +274,7 @@ inline void  DecodeAlphaExplicit( uint32_t *pImPos, SDXTAlphaBlockExplicit *pAlp
 										// To correct for this, and get 0xff for max alpha,
 										//  or the low bits back in after left shifting
 			col.a = col.a | (col.a << 4 );	// This allows max 4 bit alpha to be 0xff alpha
-											//  in final image, and is crude approach to full 
+											//  in final image, and is crude approach to full
 											//  range scale
 
 			*pImPos |= *((uint32_t*)&col);	// or the bits into the prev. nulled alpha
@@ -297,29 +297,29 @@ inline void DecodeAlpha3BitLinear( uint32_t * pImPos, SDXTAlphaBlock3BitLinear *
 	s_Alphas[0] = pAlphaBlock->alpha0;
 	s_Alphas[1] = pAlphaBlock->alpha1;
 
-	
-	// 8-alpha or 6-alpha block?    
+
+	// 8-alpha or 6-alpha block?
 
 	if( s_Alphas[0] > s_Alphas[1] )
 	{
-		// 8-alpha block:  derive the other 6 alphas.    
+		// 8-alpha block:  derive the other 6 alphas.
 		// 000 = alpha_0, 001 = alpha_1, others are interpolated
 
 		s_Alphas[2] = ( 6 * s_Alphas[0] +     s_Alphas[1]) / 7;	// bit code 010
-		s_Alphas[3] = ( 5 * s_Alphas[0] + 2 * s_Alphas[1]) / 7;	// Bit code 011    
-		s_Alphas[4] = ( 4 * s_Alphas[0] + 3 * s_Alphas[1]) / 7;	// Bit code 100    
+		s_Alphas[3] = ( 5 * s_Alphas[0] + 2 * s_Alphas[1]) / 7;	// Bit code 011
+		s_Alphas[4] = ( 4 * s_Alphas[0] + 3 * s_Alphas[1]) / 7;	// Bit code 100
 		s_Alphas[5] = ( 3 * s_Alphas[0] + 4 * s_Alphas[1]) / 7;	// Bit code 101
-		s_Alphas[6] = ( 2 * s_Alphas[0] + 5 * s_Alphas[1]) / 7;	// Bit code 110    
+		s_Alphas[6] = ( 2 * s_Alphas[0] + 5 * s_Alphas[1]) / 7;	// Bit code 110
 		s_Alphas[7] = (     s_Alphas[0] + 6 * s_Alphas[1]) / 7;	// Bit code 111
-	}    
+	}
 	else
 	{
-		// 6-alpha block:  derive the other alphas.    
+		// 6-alpha block:  derive the other alphas.
 		// 000 = alpha_0, 001 = alpha_1, others are interpolated
 
 		s_Alphas[2] = (4 * s_Alphas[0] +     s_Alphas[1]) / 5;	// Bit code 010
-		s_Alphas[3] = (3 * s_Alphas[0] + 2 * s_Alphas[1]) / 5;	// Bit code 011    
-		s_Alphas[4] = (2 * s_Alphas[0] + 3 * s_Alphas[1]) / 5;	// Bit code 100    
+		s_Alphas[3] = (3 * s_Alphas[0] + 2 * s_Alphas[1]) / 5;	// Bit code 011
+		s_Alphas[4] = (2 * s_Alphas[0] + 3 * s_Alphas[1]) / 5;	// Bit code 100
 		s_Alphas[5] = (    s_Alphas[0] + 4 * s_Alphas[1]) / 5;	// Bit code 101
 		s_Alphas[6] = 0;										// Bit code 110
 		s_Alphas[7] = 255;									// Bit code 111
@@ -517,8 +517,8 @@ void DecompressDXT3( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 void DecompressDXT2( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
-	// Can do color & alpha same as dxt3, but color is pre-multiplied 
-	//   so the result will be wrong unless corrected. 
+	// Can do color & alpha same as dxt3, but color is pre-multiplied
+	//   so the result will be wrong unless corrected.
 	DecompressDXT3( pRes, hdr, pCompBytes );
 }
 
@@ -590,8 +590,8 @@ void DecompressDXT5( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pComp
 
 void DecompressDXT4( uint32_t *pRes, const SDDSHeader &hdr, const uint8_t *pCompBytes )
 {
-	// Can do color & alpha same as dxt5, but color is pre-multiplied 
-	//   so the result will be wrong unless corrected. 
+	// Can do color & alpha same as dxt5, but color is pre-multiplied
+	//   so the result will be wrong unless corrected.
 	DecompressDXT5( pRes, hdr, pCompBytes );
 }
 
@@ -602,7 +602,7 @@ void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<ui
 	hdr.dwWidth = nXSize;
 	hdr.dwHeight = nYSize;
 	pRes->SetSizes( nXSize, nYSize );
-	switch ( nDxt ) 
+	switch ( nDxt )
 	{
 	case 1:
 		DecompressDXT1( (uint32_t*)&(*pRes)[0][0], hdr, (const uint8_t*)pData );

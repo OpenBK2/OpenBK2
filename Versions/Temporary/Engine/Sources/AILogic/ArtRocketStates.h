@@ -30,7 +30,7 @@ class CArtRocketAttackGroundState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CArtRocketAttackGroundState );
 	enum EAttackGroundState { EAGS_ROTATING, EAGS_FIRING };
-	
+
 	ZDATA
 	CPtr<CArtillery> pArtillery;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -51,7 +51,7 @@ public:
 
 	virtual void Segment();
 	ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
-	
+
 	virtual bool IsAttackingState() const { return true; }
 	virtual const CVec2 GetPurposePoint() const { return point; }
 

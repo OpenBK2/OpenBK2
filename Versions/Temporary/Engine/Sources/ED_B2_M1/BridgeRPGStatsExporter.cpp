@@ -68,7 +68,7 @@ void CBridgeRPGStatsExporter::EnlargeArray( CArray2D<uint8_t> *pDestination, con
 	{
 		return;
 	}
-	CVec2 vDifference = ( rvSource - rvDestination ); 
+	CVec2 vDifference = ( rvSource - rvDestination );
 	NI_ASSERT( ( vDifference.x > 0.0f ) || ( vDifference.y > 0.0f ), fmt::format( "CBridgeRPGStatsExporter:EnlargeArray() wrong sign: ({:g},{:g})", vDifference.x, vDifference.y ) );
 	CTPoint<int> difference( 0.5f + ( vDifference.x / AI_TILE_SIZE ), 0.5f + ( vDifference.y / AI_TILE_SIZE ) );
 	if ( ( difference.x == 0 ) && ( difference.y == 0 ) )
@@ -377,15 +377,15 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 				GetGrannyMeshBoundingBox( &vMin, &vMax, pInfo );
 				GrannyFreeFile( pFile );
-				Vis2AI( &vMin ); 
-				Vis2AI( &vMax ); 
+				Vis2AI( &vMin );
+				Vis2AI( &vMax );
 				NormalizePassabilityOrigin( &vBridgePassabilityOrigin,
 					CTPoint<int>( bridgePassabilityArray.GetSizeX(),
 					bridgePassabilityArray.GetSizeY() ),
 					vMin,
 					vMax );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				return ER_SUCCESS;
 			}
@@ -396,8 +396,8 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				WaitForFile( szCenterDestination, 10000 );
 				CGrannyFileInfoGuard pInfo( szCenterDestination );
 				GetGrannyMeshBoundingBox( &vMin, &vMax, pInfo );
-				Vis2AI( &vMin ); 
-				Vis2AI( &vMax ); 
+				Vis2AI( &vMin );
+				Vis2AI( &vMax );
 				NormalizePassabilityOrigin( &vCenterPassabilityOrigin,
 					CTPoint<int>( centerPassabilityArray.GetSizeX(),
 					centerPassabilityArray.GetSizeY() ),
@@ -409,7 +409,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 					bHeightCalculated = true;
 				}
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				return ER_SUCCESS;
 			}
@@ -420,8 +420,8 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				WaitForFile( szBorderDestination, 10000 );
 				CGrannyFileInfoGuard pInfo( szBorderDestination );
 				GetGrannyMeshBoundingBox( &vMin, &vMax, pInfo );
-				Vis2AI( &vMin ); 
-				Vis2AI( &vMax ); 
+				Vis2AI( &vMin );
+				Vis2AI( &vMax );
 				NormalizePassabilityOrigin( &vBorderPassabilityOrigin,
 					CTPoint<int>( borderPassabilityArray.GetSizeX(),
 					borderPassabilityArray.GetSizeY() ),
@@ -429,7 +429,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 					vMax );
 				vSize = CVec2( vMax.x - vMin.x, vMax.y - vMin.y );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				return ER_SUCCESS;
 			}
@@ -528,7 +528,7 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 				if ( nMaxYSize > itPassabilityArray->GetSizeY() )
 				{
 					EnlargeYSide( &( *itPassabilityArray ),
-						&( *itPassabilityOrigin ), 
+						&( *itPassabilityOrigin ),
 						( itPassabilityArray->GetSizeY() & 0x01 ) != ( nMaxYSize & 0x01 ),
 						( ( nMaxYSize - itPassabilityArray->GetSizeY() ) & ( 0xFFFFFFFF - 0x01 ) ) / 2 );
 				}
@@ -594,6 +594,6 @@ EXPORT_RESULT CBridgeRPGStatsExporter::ExportObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 

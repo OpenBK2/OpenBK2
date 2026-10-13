@@ -28,21 +28,21 @@ private:
 	void MsgTutorialMenu( const SGameMessage &msg );
 	void MsgSinglePlayer( const SGameMessage &msg );
 	void MsgQuickLoad( const SGameMessage &msg );
-	
+
 	void OnMultiplayer( const std::string &szSender );
 	void OnCustomCampaign( const std::string &szSender );
 	void OnLoadMod( const std::string &szSender );
 	void OnHallOfFame( const std::string &szSender );
 
-public:	
+public:
 	CInterfaceMainMenu();
 
 	//
 	bool Init();
-	
+
 	void OnGetFocus( bool bFocus );
 	bool StepLocal( bool bAppActive );
-	
+
 	void RegisterObservers();
 
 	bool IsModal();
@@ -51,7 +51,7 @@ public:
 class CICMainMenu : public CInterfaceCommandBase<CInterfaceMainMenu>
 {
 	OBJECT_BASIC_METHODS( CICMainMenu );
-	
+
 	ZDATA_(CInterfaceCommandBase<CInterfaceMainMenu>)
 	std::string szConfig;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMainMenu>*)this); f.Add(2,&szConfig); return 0; }

@@ -18,15 +18,15 @@ struct SExceptionDlgInitParams
 	const std::vector<SCallStackEntry> &entries;
 	const char *pszExtInfo;
 	//
-	SExceptionDlgInitParams( const char *pszNewCondition, const char *pszNewDescription, 
+	SExceptionDlgInitParams( const char *pszNewCondition, const char *pszNewDescription,
 		const std::vector<SCallStackEntry> &_entries, const char *szExtInfo )
-		: pszCondition( pszNewCondition ), pszDescription( pszNewDescription ), 
+		: pszCondition( pszNewCondition ), pszDescription( pszNewDescription ),
 		entries(_entries), pszExtInfo(szExtInfo) {  }
 };
 static const SExceptionDlgInitParams *g_pParams = 0;
 
 EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
-																		const char *pszCondition, const char *pszDescription, 
+																		const char *pszCondition, const char *pszDescription,
 																		const std::vector<SCallStackEntry> &entries, const char *pszExtInfo )
 {
 	WriteReportToFile( "error.txt", pszCondition, pszDescription, entries );
@@ -53,10 +53,10 @@ EBSUReport PORT_CDECL ShowExceptionDlg( HINSTANCE hInstance, HWND hWnd,
 	}
 }
 
-static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam ) 
-{ 
-	switch (message) 
-	{ 
+static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPARAM wParam, LPARAM lParam )
+{
+	switch (message)
+	{
 	case WM_INITDIALOG:
 		{
 			SExceptionDlgInitParams *pParams = reinterpret_cast<SExceptionDlgInitParams*>( lParam );
@@ -68,13 +68,13 @@ static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPA
 			SetDlgItemText( hwndDlg, IDC_STATIC_DESCR, pParams->pszDescription );
 		}
 		break;
-	case WM_COMMAND: 
-		switch ( LOWORD(wParam) ) 
-		{ 
+	case WM_COMMAND:
+		switch ( LOWORD(wParam) )
+		{
 		case IDC_EXCEPTION_DEBUG:
 		case IDC_EXCEPTION_ABORT:
-			EndDialog( hwndDlg, LOWORD(wParam) ); 
-			return TRUE; 
+			EndDialog( hwndDlg, LOWORD(wParam) );
+			return TRUE;
 		case IDC_EXCEPTION_DETAILS:
 			{
 				SExceptionDlgInitParams *pParams = reinterpret_cast<SExceptionDlgInitParams*>( GetDlgUserData( hwndDlg ) );
@@ -84,12 +84,12 @@ static BOOL CALLBACK ReportExceptionDlgProc( HWND hwndDlg, unsigned message, WPA
 			break;
 		case IDC_EXCEPTION_EMERGENCY:
 			//NBSU::ExecuteEmergencyCommands();
-			EndDialog( hwndDlg, IDC_EXCEPTION_ABORT ); 
+			EndDialog( hwndDlg, IDC_EXCEPTION_ABORT );
 			return TRUE;
-		} 
+		}
 		break;
-	} 
-	return FALSE; 
+	}
+	return FALSE;
 }
 
 }

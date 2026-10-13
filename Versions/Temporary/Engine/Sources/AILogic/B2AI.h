@@ -25,7 +25,7 @@ enum EActionCommand : int;
 struct IAILogic : public ICommonB2M1AI
 {
 	enum { tidTypeID = 0x3015CB01 };
-	
+
 	virtual void Suspend() = 0;
 	virtual void Resume() = 0;
 	virtual void ClearAI() = 0;

@@ -17,7 +17,7 @@ void CMinesIter::Iterate()
 {
 	// сместиться от предыдущего значения.
 	CStObjCircleIter<false>::Iterate();
-	// 
+	//
 	IterateToNextMine();
 }
 
@@ -54,7 +54,7 @@ bool CMinesIter::IsFinished() const
 	return CStObjCircleIter<false>::IsFinished();
 }
 
-void CMinesIter::Reset() 
+void CMinesIter::Reset()
 {
 	CStObjCircleIter<false>::Reset();
 	IterateToNextMine();

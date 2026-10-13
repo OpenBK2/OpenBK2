@@ -8,7 +8,7 @@ class CSoundDescExporter : public IExporter
 
 	CSoundDescExporter() {}
 public:
-		
+
 	// IExporter
 	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce ) { return true; }
 	virtual void FinishExport( const std::string &rszObjectTypeName, bool bForce ) {}

@@ -40,11 +40,11 @@ bool CInterfaceWinLoose::Init()
 		InterfaceState()->GetScreenShotTexture()->Generate( true );
 	}
 
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -53,7 +53,7 @@ bool CInterfaceWinLoose::Init()
 void CInterfaceWinLoose::MakeInterior()
 {
 	pMainWnd = GetChildChecked<IWindow>( GetScreen(), "Main", true );
-	
+
 	pWinView = GetChildChecked<ITextView>( pMainWnd, "WinView", true );
 	pLostView = GetChildChecked<ITextView>( pMainWnd, "LostView", true );
 }
@@ -179,7 +179,7 @@ void CInterfaceWinLoose::EndGameRotation()
 
 	fEndGameRestTime = END_GAME_ROTATE_TIME;
 	fSetYawSpeedTime = SET_YAW_SPEED_DELAY;
-	
+
 	CVec3 vPos = GetAnchor();
 	if ( vPos != VNULL3 )
 	{
@@ -208,7 +208,7 @@ void CInterfaceWinLoose::EndGameFade()
 void CInterfaceWinLoose::EndGameStatistics()
 {
 	eUIState = EUIS_END_GAME_STATISTICS;
-	
+
 	NextScreen();
 }
 

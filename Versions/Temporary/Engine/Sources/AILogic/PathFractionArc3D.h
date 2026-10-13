@@ -23,7 +23,7 @@ class CPathFractionArc3D : public CPathFractionComplexBase
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CPathFractionComplexBase*)this); f.Add(2,&i); f.Add(3,&j); f.Add(4,&k); f.Add(5,&circle); f.Add(6,&x0); f.Add(7,&x1); f.Add(8,&fLength); f.Add(9,&bNegative); f.Add(10,&nDiff); return 0; }
 public:
 	CPathFractionArc3D() : fLength( 0 ) { }
-	
+
 	void Init( const CVec3 &_i, const CVec3 &_j, const CVec3 &_k,
 		const CDirectedCircle &_circle, const CVec3 &_x0, const CVec3 &_x1, const float _fLength,
 		const uint16_t _nDiff );
@@ -37,7 +37,7 @@ public:
 	CVec3 GetStartPoint() const;
 	CVec3 GetEndTangent() const;
 	CVec3 GetStartTangent() const;
-	
+
 	void GetSimplePath( CPathList *pPaths );
 	void Negate() { bNegative = true; }
 };

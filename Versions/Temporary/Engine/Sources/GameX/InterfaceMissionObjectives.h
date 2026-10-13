@@ -16,10 +16,10 @@ public:
 		CPtr<CInterfaceMissionObjectives> pInterface;
 	public:
 		CReactions() {  }
-		~CReactions() 
-		{  
+		~CReactions()
+		{
 		}
-		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface ) : 
+		CReactions( IWindow *_pScreen, CInterfaceMissionObjectives *_pInterface ) :
 			pScreen( _pScreen ), pInterface( _pInterface )
 		{
 		}
@@ -48,20 +48,20 @@ private:
 		std::wstring wszDescFull;
 		int nButtonIndex;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&nID); f.Add(4,&pButton); f.Add(5,&bAutoSelect); f.Add(6,&pText); f.Add(7,&pStatus); f.Add(8,&wszHeader); f.Add(9,&wszDescBrief); f.Add(10,&wszDescFull); f.Add(11,&nButtonIndex); return 0; }
-		
+
 		SObjective() : nID( -1 ), nButtonIndex( 0 ) {}
 	};
-	
+
 	CObj<CReactions> pReactions;
-	
+
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pDescPanel;
 
 	std::vector<SObjective> objectives;
 	bool bIsModal;
-	
+
 	int nPrevSelectionID;
-	
+
 	bool bCameraBack;
 	CPtr<IScrollableContainer> pDescScrollableWnd;
 	CPtr<ITextView> pDescName;
@@ -84,7 +84,7 @@ protected:
 	void MsgBack( const SGameMessage &msg );
 	void MsgSetModality( const SGameMessage &msg );
 	void MsgMissionObjectivesChanged( const SGameMessage &msg );
-	
+
 	void UpdateKnownObjectives();
 	void MakeObjectives();
 	void UpdateObjectives( int nSelected );
@@ -100,14 +100,14 @@ public:
 	int operator&( IBinSaver &saver );
 
 	bool IsModal();
-	
+
 	void SetStartID( int nID );
 };
 
 class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjectives>
 {
 	OBJECT_BASIC_METHODS( CICMissionObjectives );
-	
+
 	ZDATA_(CInterfaceCommandBase<CInterfaceMissionObjectives>)
 	int nID;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceMissionObjectives>*)this); f.Add(2,&nID); return 0; }

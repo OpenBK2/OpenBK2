@@ -139,7 +139,7 @@ private:
 			DataChunk( 2, &data[0], sizeof(T) * nSize, 1 );
 	}
 	// hash_map
-	template <class T1,class T2,class T3> 
+	template <class T1,class T2,class T3>
 		void DoHashMap( std::unordered_map<T1,T2,T3> &data )
 	{
 		if ( IsReading() )
@@ -292,7 +292,7 @@ private:
 		Add(1, &c);
 	}
 
-	template <class T1,class T2> 
+	template <class T1,class T2>
 		void DoSet( std::set<T1,T2> &data )
 	{
 		if ( IsReading() )
@@ -347,13 +347,13 @@ public:
 	void AddRawData( const chunk_id idChunk, void *pData, int nSize, int nChunkNumber = 1 ) { DataChunk( idChunk, pData, nSize, nChunkNumber ); }
 	//
 	template<class T>
-		void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, T *p, int nChunkNumber = 1 )
 	{
 		const int N_HAS_SERIALIZE_TEST = sizeof( (*p)&(*this) );
 		SInt2Type<N_HAS_SERIALIZE_TEST> separator;
 		CallObjectSerialize( idChunk, nChunkNumber, p, &separator );
 	}
-	void Add( const chunk_id idChunk, stdString *pStr, int nChunkNumber = 1 ) 
+	void Add( const chunk_id idChunk, stdString *pStr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -454,7 +454,7 @@ public:
 		FinishChunk();
 	}
 	template<class T1>
-		void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, CArray2D<T1> *pArr, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -490,7 +490,7 @@ public:
 			Add( 1, &(*k), i );
 		FinishChunk();
 	}
-	template <class T1, class T2> 
+	template <class T1, class T2>
 		void Add( const chunk_id idChunk, std::pair<T1, T2> *pData, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk(idChunk, nChunkNumber) )
@@ -499,7 +499,7 @@ public:
 		Add( 2, &( pData->second ) );
 		FinishChunk();
 	}
-	void AddPolymorphicBase( chunk_id idChunk, CObjectBase *pObject, int nChunkNumber = 1 ) 
+	void AddPolymorphicBase( chunk_id idChunk, CObjectBase *pObject, int nChunkNumber = 1 )
 	{
 		if ( !StartChunk( idChunk, nChunkNumber ) )
 			return;
@@ -507,18 +507,18 @@ public:
 		FinishChunk();
 	}
 	//
-	template <class T1, class T2> 
-		void DoPtr( CPtrBase<T1,T2> *pData ) 
+	template <class T1, class T2>
+		void DoPtr( CPtrBase<T1,T2> *pData )
 	{
 #ifdef CHECK_VALID_SERIALIZED_POINTERS
-		if ( !IsReading() ) 
+		if ( !IsReading() )
 		{
 			ASSERT( !pData->GetPtr() || IsValid(*pData) );
 		}
 #endif
-		if ( IsReading() ) 
-			pData->Set( CastToUserObject( LoadObject(), (T1*)0 ) ); 
-		else 
+		if ( IsReading() )
+			pData->Set( CastToUserObject( LoadObject(), (T1*)0 ) );
+		else
 			StoreObject( pData->GetBarePtr() );
 	}
 private:
@@ -529,7 +529,7 @@ private:
 		ASSERT( 0 && "Hash table iterator can't be serialized" );
 	}
 	template <class T>
-		void Add( const chunk_id idChunk, T **pData, int nChunkNumber = 1 ) 
+		void Add( const chunk_id idChunk, T **pData, int nChunkNumber = 1 )
 	{
 		ASSERT( 0 && "Pointer or vector iterator can't be serialized" );
 	}

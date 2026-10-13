@@ -15,7 +15,7 @@ struct SStringToCommand
 	const char *pszHelp;
 };
 
-static SStringToCommand szCommandsList[] = 
+static SStringToCommand szCommandsList[] =
 {
 	// client
 	{ "register", ESC_REGISTER, false, "usage: <name> <password> <CDKey> <email>" },
@@ -47,13 +47,13 @@ static SStringToCommand szCommandsList[] =
 	{ "pause_accept_gamers_net", ESC_PAUSE_ACCEPT, false, "pause accept players, usage: <1|0 (pause or not)>" },
 	{ "pause_connect_gamers_net", ESC_PAUSE_CONNECT, false, "pause connect to player, usage: <client id> <1|0 (pause or not)>" },
 	{ "pause_client_module", ESC_PAUSE_CLIENT, false, "pause whole client modle, usage: <1|0 (pause or not)>" },
-	
+
 	{ "chat_bc", ESC_CHAT_LOBBY, false, "send chat channel broadcast message , usage: <chat message>" },
 	{ "chat_private", ESC_CHAT_PRIVATE, false, "usage: <chat message> <user nick>" },
 	{ "afk", ESC_AFK, false, "away from keyboard/in-game, usage: no arguments" },
 	{ "chat_join", ESC_CHAT_JOIN, false, "join chat channel, usage: <channel name>"  },
 	{ "chat_ignore", ESC_CHAT_IGNORE, false, "add/remove user to/from ignorelist, usage: <nick> <1/0>" },
-	{ "chat_friend", ESC_CHAT_FRIEND, false, "add/remove user to/from friendlist, usage: <nick> <1/0>" }, 
+	{ "chat_friend", ESC_CHAT_FRIEND, false, "add/remove user to/from friendlist, usage: <nick> <1/0>" },
 	{ "chat_channels", ESC_CHAT_CHANNELS, false, "list chat channels, usage: no arguments" },
 	{ "chat_where", ESC_CHAT_WHERE, false, "name of user's channel, usage: <user nick>" },
 
@@ -126,7 +126,7 @@ CCommands::CCommands( const bool _bServer )
 	REGISTER_PARSE( ESC_MULTI_TEST, ParseMultiTest, false );
 	REGISTER_PARSE( ESC_PING, ParsePing, false );
 
-	REGISTER_PARSE( ESC_FORGOT_PASSWORD, ParseForgotPassword, false ); 
+	REGISTER_PARSE( ESC_FORGOT_PASSWORD, ParseForgotPassword, false );
 	// server
 	REGISTER_PARSE( ESC_CLIENTS, ParseClientsList, true );
 	REGISTER_PARSE( ESC_CLIENT_STATE, ParseClientState, true );
@@ -654,7 +654,7 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 			(this->*pfnFunc)( szWords, &cmd );
 			const std::string &szErrorMsg = GetErrorMsg();
 			if ( szErrorMsg.empty() )
-			{ 
+			{
 				PushCommand( cmd );
 				return true;
 			}

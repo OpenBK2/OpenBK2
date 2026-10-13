@@ -16,7 +16,7 @@ void CUpdateUnitContainer::Clear()
 void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag updateFlag, const float fDist )
 {
 	int nNewLevel = -1;
-	switch( updateFlag ) 
+	switch( updateFlag )
 	{
 	case UPD_DELETE_UNIT:
 	case UPD_CREATE_NEW_UNIT:
@@ -33,7 +33,7 @@ void CUpdateUnitContainer::Push( const int nID, const EUpdateWarFogUnitInfoFlag 
 			nNewLevel = 3;
 		else if ( fDist > fMaxRadius2 )
 			nNewLevel = 4;
-		else if ( fDist > 0 )  
+		else if ( fDist > 0 )
 			nNewLevel = 5;
 	}
 
@@ -85,7 +85,7 @@ int CUpdateUnitContainer::Pop()
 					pos = it;
 				else if (pos->first > it->first)
 					pos = it;
-				
+
 			const int nResult = pos->first;
 			updateLists[i].erase( pos );
 			return nResult;

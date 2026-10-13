@@ -16,7 +16,7 @@ void SGradient::UpdateHeightRanges()
 	//
 	for ( ++itHeight; itHeight != heightList.end(); ++itHeight )
 	{
-		if ( *itHeight < fMin ) 
+		if ( *itHeight < fMin )
 		{
 			fMin = *itHeight;
 		}
@@ -79,7 +79,7 @@ bool SGradient::CreateFromImage( const CArray2D<uint32_t> &rImage, const CTPoint
 		for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 		{
 			const uint32_t dwColor = rImage[nYIndex][nXIndex];
-			if ( ( GetRedFromARGBColor( dwColor )		< 0x80 ) && 
+			if ( ( GetRedFromARGBColor( dwColor )		< 0x80 ) &&
 					 ( GetGreenFromARGBColor( dwColor )	< 0x80 ) &&
 					 ( GetBlueFromARGBColor( dwColor )	< 0x80 ) )
 			{
@@ -149,7 +149,7 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 				p2.x = range.min + 2.0f * fGranularity;
 				p2.y = heightList[2];
 			}
-			else 
+			else
 			{
 				p0.x = range.min + ( nIndex - 1 ) * fGranularity;
 				p0.y = heightList[nIndex - 1];
@@ -172,6 +172,6 @@ bool SGradient::Get( float *pfValue, float fPosition, bool isSquareInterpolated 
 	return true;
 }
 
-// basement storage  
+// basement storage
 
 

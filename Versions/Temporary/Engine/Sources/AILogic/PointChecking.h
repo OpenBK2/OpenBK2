@@ -18,7 +18,7 @@ public:
 	CAttackPointChecking() { }
 	CAttackPointChecking( const float _fRangeMin, const float _fRangeMax, const SVector &_targetTile, const bool _bIgnoreObstacles )
 		: fRangeMin( _fRangeMin ), fRangeMax( (std::max)(0.0f, _fRangeMax - 5 * SConsts::TILE_SIZE ) ), targetTile( _targetTile ), bIgnoreObstacles( _bIgnoreObstacles ) { }
-	
+
 	virtual bool IsGoodTile( const SVector &curTile ) const;
 };
 

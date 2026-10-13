@@ -7,8 +7,8 @@
 #include <fmt/format.h>
 
 #pragma pack ( 1 )
-struct SColor24 
-{ 
+struct SColor24
+{
 	uint8_t b;
 	uint8_t g;
 	uint8_t r;
@@ -17,15 +17,15 @@ struct SColor24
 
 namespace NImage
 {
-inline unsigned long FP_NORM_TO_BYTE2(float p)                                                 
-{                                                                            
-  float fpTmp = p + 1.0f;                                                      
-  return ((*(unsigned *)&fpTmp) >> 15) & 0xFF;  
+inline unsigned long FP_NORM_TO_BYTE2(float p)
+{
+  float fpTmp = p + 1.0f;
+  return ((*(unsigned *)&fpTmp) >> 15) & 0xFF;
 }
 
-inline unsigned long FP_NORM_TO_BYTE3(float p)     
+inline unsigned long FP_NORM_TO_BYTE3(float p)
 {
-  float ftmp = p + 12582912.0f;                                                      
+  float ftmp = p + 12582912.0f;
   return ((*(unsigned long *)&ftmp) & 0xFF);
 }
 
@@ -96,7 +96,7 @@ template <> class CPaletteConvertor<uint32_t>
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
-		switch ( nColorMapEntrySize ) 
+		switch ( nColorMapEntrySize )
 		{
 			case 32:
 				palette.resize( nColorMapLength );
@@ -125,7 +125,7 @@ template <> class CPaletteConvertor<SColor24>
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
-		switch ( nColorMapEntrySize ) 
+		switch ( nColorMapEntrySize )
 		{
 			case 32:
 				{
@@ -159,7 +159,7 @@ template <> class CPaletteConvertor<uint8_t>
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
-		switch ( nColorMapEntrySize ) 
+		switch ( nColorMapEntrySize )
 		{
 			case 32:
 				{
@@ -193,7 +193,7 @@ template <> class CPaletteConvertor<CVec4>
 public:
 	CPaletteConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream )
 	{
-		switch ( nColorMapEntrySize ) 
+		switch ( nColorMapEntrySize )
 		{
 			case 32:
 				{
@@ -282,7 +282,7 @@ public:
 	CRawColorConvertor( int nColorMapLength, int nColorMapEntrySize, CDataStream *pStream ) {}
 	CVec4 operator()( const uint32_t input ) const { return CVec4( GetR(input) / 255.0f, GetG(input) / 255.0f, GetB(input) / 255.0f, GetA(input) / 255.0f ); }
 	CVec4 operator()( const SColor24 input ) const { return CVec4( input.r / 255.0f, input.g / 255.0f, input.b / 255.0f, 1.0f ); }
-	CVec4 operator()( const CVec4 &input ) const { return input; }	
+	CVec4 operator()( const CVec4 &input ) const { return input; }
 	bool IsReady() const { return true; }
 };
 
@@ -309,7 +309,7 @@ inline void Convert( CArray2D<TOutColor> *pDst, const CArray2D<TInColor> &src )
 template <typename TColor>
 inline void FlipY( CArray2D<TColor> &data, int nBegin, int nEnd )
 {
-	while ( nEnd > nBegin ) 
+	while ( nEnd > nBegin )
 	{
 		for ( int x = 0; x < data.GetSizeX(); ++x )
 		{
@@ -329,7 +329,7 @@ inline void FlipY( CArray2D<TColor> &data )
 template <typename TColor>
 inline void FlipX( CArray2D<TColor> &data, int nBegin, int nEnd )
 {
-	while ( nEnd > nBegin ) 
+	while ( nEnd > nBegin )
 	{
 		for ( int y = 0; y < data.GetSizeY(); ++y )
 		{

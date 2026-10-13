@@ -6,11 +6,11 @@
 
 class MAPEDITORLIB_EXPORT CEditorBase : public IEditor
 {
-	bool bEditorBaseModified;	
+	bool bEditorBaseModified;
 
 public:
 	CEditorBase() : bEditorBaseModified( false ) {}
-	
+
 	virtual void Save( bool bSaveChanges ) { SetModified( false ); }
 	virtual bool IsModified() { return bEditorBaseModified; }
 	virtual void SetModified( bool _bModified );

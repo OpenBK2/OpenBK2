@@ -15,9 +15,9 @@ static void CreatePolylineForOnePatch( std::vector<CVec3> *pVertices, std::vecto
 	// create vertices
 	pVertices->reserve( (nNumTilesInPatch + 1) * (nNumTilesInPatch + 1) );
 
-	for ( int y = 0; y <= nNumTilesInPatch; ++y ) 
+	for ( int y = 0; y <= nNumTilesInPatch; ++y )
 	{
-		for ( int x = 0; x <= nNumTilesInPatch; ++x ) 
+		for ( int x = 0; x <= nNumTilesInPatch; ++x )
 		{
 			const CVec2 vPos = CVec2( (nStartX + x)*fTileSizeInAIUnits,	(nStartY + y)*fTileSizeInAIUnits );
 			const float fZ = Scene()->GetZ( vPos.x, vPos.y );
@@ -26,28 +26,28 @@ static void CreatePolylineForOnePatch( std::vector<CVec3> *pVertices, std::vecto
 			pVertices->push_back( vVisPos );
 		}
 	}
-	// 
+	//
 	const int nSizeX = (nNumTilesInPatch + 1);
 	// create center indices (horizontal)
-	for ( int y = 1; y < nNumTilesInPatch; ++y ) 
+	for ( int y = 1; y < nNumTilesInPatch; ++y )
 	{
-		for ( int x = 0; x < nNumTilesInPatch; ++x ) 
+		for ( int x = 0; x < nNumTilesInPatch; ++x )
 		{
 			pIndicesCenter->push_back( nSizeX*y + x );
 			pIndicesCenter->push_back( nSizeX*y + x + 1 );
 		}
 	}
 	// create center indices (vertical)
-	for ( int y = 0; y < nNumTilesInPatch; ++y ) 
+	for ( int y = 0; y < nNumTilesInPatch; ++y )
 	{
-		for ( int x = 1; x < nNumTilesInPatch; ++x ) 
+		for ( int x = 1; x < nNumTilesInPatch; ++x )
 		{
 			pIndicesCenter->push_back( nSizeX*y + x );
 			pIndicesCenter->push_back( nSizeX*(y + 1) + x );
 		}
 	}
 	// create border indices
-	for ( int i = 0; i < nNumTilesInPatch; ++i ) 
+	for ( int i = 0; i < nNumTilesInPatch; ++i )
 	{
 		// horizontal
 		pIndicesBorder->push_back( i );
@@ -71,15 +71,15 @@ void CScene::ShowTerrainGrid( ESceneShow eShow )
 	{
 		data[eScene]->terrainGrid.clear();
 	}
-	else if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
+	else if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() )
 	{
 		std::vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
 		CPtr<NGScene::IGameView> pGScene = data[eScene]->GetGScene();
-		
+
 		const int nNumPatchesX = data[eScene]->pTerraManager->GetDesc()->nNumPatchesX;
 		const int nNumPatchesY = data[eScene]->pTerraManager->GetDesc()->nNumPatchesY;
 		grid.reserve( nNumPatchesY * nNumPatchesX * 2 );
-		
+
 		const int fTileSizeInAIUnits =	bAIGrid ? AI_TILE_SIZE : ( AI_TILE_SIZE * AI_TILES_IN_VIS_TILE );
 		const int nNumTilesInPatch = bAIGrid ? (VIS_TILES_IN_PATCH * AI_TILES_IN_VIS_TILE) : VIS_TILES_IN_PATCH;
 
@@ -112,7 +112,7 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY )
 
 void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGrid )
 {
-	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() ) 
+	if ( data[eScene]->pTerraManager && data[eScene]->pTerraManager->GetDesc() )
 	{
 		std::vector< CObj<NGScene::CPolyline> > &grid = data[eScene]->terrainGrid;
 		CPtr<NGScene::IGameView> pGScene = data[eScene]->GetGScene();

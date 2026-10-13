@@ -18,7 +18,7 @@ void CGlobalIter::Init( const uint8_t cStartDipl, const uint8_t cFilter )
 			parties[nParties++] = i;
 	}
 
-	nCurParty = 0; 
+	nCurParty = 0;
 	if ( nParties == 0 )
 		iter = 0;
 	else
@@ -30,14 +30,14 @@ void CGlobalIter::Init( const uint8_t cStartDipl, const uint8_t cFilter )
 				iter = units.units.GetNext( iter );
 			else
 			{
-				++nCurParty;			
+				++nCurParty;
 
 				if ( nCurParty < nParties )
 					iter = units.units.begin( parties[nCurParty] );
 			}
 		}
 	}
-	
+
 	visitedUnits.clear();
 }
 
@@ -65,8 +65,8 @@ void CGlobalIter::Iterate()
 	}
 }
 
-CAIUnit* CGlobalIter::operator*() const 
-{ 
+CAIUnit* CGlobalIter::operator*() const
+{
 	return units.units.GetEl(iter);
 }
 

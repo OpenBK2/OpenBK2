@@ -26,7 +26,7 @@ private:
 	void MsgSkipSequence( const struct SGameMessage &msg );
 	void MsgSkipMovie( const struct SGameMessage &msg );
 	~CPlayMovieInterface();
-public:	
+public:
 	CPlayMovieInterface();
 	//
 	void LoadMovieSequence( const std::string &szFileName );

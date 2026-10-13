@@ -23,7 +23,7 @@ public:
 	const float GetPing() const { return fPing; }
 	// if true is returned then packet considered sent and timer corrected accordingly
 	// all packets are considered to be of same size
-	bool CanSend(); 
+	bool CanSend();
 	bool NeedSend() const;
 	void Step( std::vector<PACKET_ID> *pRolled, std::vector<PACKET_ID> *pErased, double fDeltaTime, float fMaxRTT );
 	PACKET_ID WrtieAcks( CBitStream *pBits, int nPktSize );
@@ -45,7 +45,7 @@ private:
 
 	// ping information
 	float fPing;
-	long nPingPacketsReceived;		
+	long nPingPacketsReceived;
 	float fSumPktRTT4Period;
 	float fLastPingUpdateTime;
 
@@ -61,16 +61,16 @@ private:
 	// bool bHasNewPacketToAck;
 	//
 	// пакет, сформированный из CUpdateRequest
-	class CUpdate 
+	class CUpdate
 	{
-	public: 
+	public:
 		double fTimeCreated;
 		PACKET_ID nPktNumber;
 		bool bOnTheWindowEdge;
 	};
 	// info on sent update packets
 	std::list< CUpdate > sentUpdates, rolledUpdates;    // unacknowledged updates
-	
+
 	void RegisterRTT( float fRTT );
 	void SendPktAcks( CBitStream *pBits );
 	void ReceiveAck( std::vector<PACKET_ID> *pAcked, PACKET_ID nPkt );

@@ -41,7 +41,7 @@ public:
 	//
 	virtual void VisitZClearRect( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow, float fZ=1.0f ) = 0;
 	virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, const class CRectLayout &rect ) = 0;
-  virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect, 
+  virtual void VisitUIRect( const NDb::STexture *pTexture, const int nShadingEffect,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
 	virtual void VisitUITextureRect( CPtrFuncBase<NGfx::CTexture> *pTexture, const int nShadingEffect, const class CRectLayout &rects ) = 0;
 	virtual void VisitUIText( struct IML *pML, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
@@ -60,7 +60,7 @@ public:
 	CClipStore( IUIVisitor * _pVisitor, const CTRect<float> &rNewClip, bool bScrollViewport = false )
 		: pVisitor( _pVisitor ), previousTextClip( _pVisitor->textClip ),
 		bPreviousTextClipApplied( _pVisitor->bTextClipApplied )
-	{ 
+	{
 		if ( bScrollViewport )
 			pVisitor->bTextClipApplied = false;
 		else
@@ -68,7 +68,7 @@ public:
 			pVisitor->textClip = pVisitor->GetTextClip( rNewClip );
 			pVisitor->bTextClipApplied = true;
 		}
-		pVisitor->ClipSet( rNewClip ); 
+		pVisitor->ClipSet( rNewClip );
 	}
 	~CClipStore()
 	{

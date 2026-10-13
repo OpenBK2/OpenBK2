@@ -50,7 +50,7 @@ public:
 	virtual void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB ) = 0;
 	virtual void SetFade( float _fFade ) {	}
 	//
-	virtual void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer, 
+	virtual void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer,
 														NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, bool bShowBB ) { }
 };
 
@@ -71,7 +71,7 @@ struct SModelVisObjDesc : public SVisObjDescBase
 
 	static std::vector<int> n2Attach;
 	CObj<CObjectBase> pObjLowLevel;
-	
+
 	CSyncSrcBind<IVisObj> srcBind;
 	CObj<CObjectBase> pBBPolyLine;
 
@@ -106,12 +106,12 @@ public:
 	void UpdatePlacement( NGScene::IGameView *pGScene, const CVec3 &vPos, const CQuat &qRot, const CVec3 &vScale );
 	void UpdatePlacement( NGScene::IGameView *pGScene, const SHMatrix &mPlace );
 	void MoveAfterUpdatePlacement( NGScene::IGameView *pGScene );
-	const SFBTransform &GetPlacement() const { return transform; }	
+	const SFBTransform &GetPlacement() const { return transform; }
 	CCSFBTransform* GetTransform() const { return 0; }
-	void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer, 
+	void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer,
 		NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, bool bShowBB );
 	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
-	
+
 	CFuncBase<SBound> *GetBounder() { return 0; }
 };
 
@@ -152,12 +152,12 @@ struct SAnimatedVisObjDescBase : public SModelVisObjDesc
 	void ClearObject();
 	void ReCreateObject( NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 	//
-	void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer, 
+	void ChangeModel( const NDb::SModel *pNewModel, CCSTime *pGameTimer,
 										NGScene::IGameView *pGScene, CSyncSrc<IVisObj> *pSyncSrc, bool bShowBB );
 	virtual CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene, const NDb::SModel *pModel, NGScene::IGameView::SMeshInfo *pMeshInfoPassed ) = 0;
 };
 
-struct SAnimatedVisObjDesc : public SAnimatedVisObjDescBase 
+struct SAnimatedVisObjDesc : public SAnimatedVisObjDescBase
 {
 	OBJECT_NOCOPY_METHODS( SAnimatedVisObjDesc )
 public:
@@ -166,7 +166,7 @@ public:
 	//
 	CObjectBase *CreateAnimatedMesh( NGScene::IGameView *pGScene, const NDb::SModel *pModel, NGScene::IGameView::SMeshInfo *pMeshInfoPassed );
 };
-struct SAnimatedStaticVisObjDesc : public SAnimatedVisObjDescBase 
+struct SAnimatedStaticVisObjDesc : public SAnimatedVisObjDescBase
 {
 	OBJECT_NOCOPY_METHODS( SAnimatedStaticVisObjDesc )
 public:

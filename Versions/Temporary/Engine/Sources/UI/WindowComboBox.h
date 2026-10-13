@@ -8,13 +8,13 @@ class CWindowListItem;
 class CWindowMSButton;
 class CWindowListCtrl;
 
-class CWindowComboBox : public CWindow, public IComboBox, 
+class CWindowComboBox : public CWindow, public IComboBox,
 	public IButtonNotify, public ISelectNotify, public IClickNotify, public IFocusNotify
 {
 	OBJECT_BASIC_METHODS(CWindowComboBox);
 
 	typedef std::vector< CPtr<IListControlItem> > CItems;
-	
+
 	ZDATA_(CWindow)
 	CDBPtr<NDb::SWindowComboBoxShared> pShared;
 	CPtr<NDb::SWindowComboBox> pInstance;
@@ -30,7 +30,7 @@ class CWindowComboBox : public CWindow, public IComboBox,
 	int nListBaseHeight;
 	int nRowHeight;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CWindow*)this); f.Add(2,&pShared); f.Add(3,&pInstance); f.Add(4,&pLine); f.Add(5,&pIcon); f.Add(6,&pList); f.Add(7,&vListPos); f.Add(8,&pViewer); f.Add(9,&items); f.Add(10,&nSelected); f.Add(11,&pLineData); f.Add(12,&nMaxVisibleRows); f.Add(13,&nListBaseHeight); f.Add(14,&nRowHeight); return 0; }
-	
+
 	bool bSuppressPopupList;
 private:
 	void ResizeList();
@@ -41,7 +41,7 @@ protected:
 	//}
 
 	bool OnEscape( const SGameMessage &msg );
-	
+
 	// Returns true for visible "modal" drop-down list, false otherwise
 	bool IsModalList() const;
 	void ShowList( bool bShow );
@@ -50,9 +50,9 @@ public:
 
 	//{ CWindow
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	
+
 	void Init();
-	
+
 	void Reposition( const CTRect<float> &parentRect );
 
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );

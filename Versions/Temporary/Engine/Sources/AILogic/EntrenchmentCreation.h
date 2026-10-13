@@ -8,7 +8,7 @@ class CEntrenchmentPart;
 class CEntrenchment;
 namespace NDb
 {
-	struct SEntrenchmentRPGStats; 
+	struct SEntrenchmentRPGStats;
 }
 
 class CEntrenchmentCreation : public CLongObjectCreation
@@ -25,11 +25,11 @@ class CEntrenchmentCreation : public CLongObjectCreation
 	CDBPtr<SEntrenchmentRPGStats> pEntrenchmentStats;
 	CObj<CEntrenchment> pFullEntrenchment;
 	CParts parts;
-	
+
 	CObj<CEntrenchmentPart> pBeginTerminator;		//
 	CObj<CEntrenchmentPart> pEndTerminator;			// текущий конечный терминатор
 	CObj<CEntrenchmentPart> pNewEndTerminator;	// будуший конечный терминатор
-	
+
 	std::vector<CVec2> vPoints;						// центры окопов
 	//
 	int nCurIndex = {};
@@ -56,7 +56,7 @@ class CEntrenchmentCreation : public CLongObjectCreation
 public:
 	CEntrenchmentCreation() : CLongObjectCreation( -1, false ) { }
 	CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification );
-	
+
 	static bool SearchTrenches( const CVec2 &vCenter, const SRect &rectToTest );
 
 	int GetEntrenchmentID() const;
@@ -73,7 +73,7 @@ public:
 	void GetUnitsPreventingByIndex( std::list< CPtr<CAIUnit> > *units, const int _nIndex );
 	bool IsAnyUnitPrevent() const;
 	bool IsAnyUnitPreventByIndex( const int _nIndex ) const;
-  bool CanBuildNext() const; 
+  bool CanBuildNext() const;
 	bool CanBuildByIndexSlow( const int _nIndex ) const;
 	void LockNext();
 	float GetPrice();

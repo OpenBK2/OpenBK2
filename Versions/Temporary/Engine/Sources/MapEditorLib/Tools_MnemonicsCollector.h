@@ -30,7 +30,7 @@ public:
 		direct[rValue] = rszMnemonic;
 		reverse[rszMnemonic] = rValue;
 	}
-	//	
+	//
 	int Size()
 	{
 		return direct.size();

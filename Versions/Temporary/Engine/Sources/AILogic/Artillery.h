@@ -15,7 +15,7 @@ class CMechUnitGuns;
 class CArtillery : public CAIUnit
 {
 	OBJECT_NOCOPY_METHODS( CArtillery );
-	
+
 	CDBPtr<SMechUnitRPGStats> pStats;
 
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -45,7 +45,7 @@ class CArtillery : public CAIUnit
 
 	CPtr<CAIUnit> pSlaveTransport; // транспорт, который работает на эту пушку
 	CPtr<CAIUnit> pHookingTransport;	// transport, that is hooking this artillery.
-	
+
 	CObj<CArtilleryBulletStorage> pBulletStorage;
 	bool bBulletStorageVisible = {};
 	NTimer::STime lastCheckToInstall = {};
@@ -82,11 +82,11 @@ public:
 	virtual class CTurret* GetTurret( const int nTurret ) const { return turrets[nTurret]; }
 	virtual const int GetNTurrets() const { return turrets.size(); }
 
-	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const 
-	{ 
-		pShotInfo->typeID = GetShootAction(); 
+	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
+	{
+		pShotInfo->typeID = GetShootAction();
 		pShotInfo->nObjUniqueID = GetUniqueId();
-	}	
+	}
 
 	virtual const EActionNotify GetShootAction() const { return ACTION_NOTIFY_MECH_SHOOT; }
 	virtual const EActionNotify GetAimAction() const { return ACTION_NOTIFY_AIM; }
@@ -120,12 +120,12 @@ public:
 	virtual const bool IsIdle() const;
 	virtual const bool SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vShift, const bool bSmoothTurn );
 	virtual const bool SendAlongPath( IPath *pPath );
-	
+
 	virtual float GetMaxFireRange() const;
 	virtual void GetRangeArea( struct SShootAreas *pRangeArea ) const;
-		
+
 	virtual bool IsMech() const { return true; }
-	
+
 	virtual bool TurnToDir( const uint16_t &newDir, const bool bCanBackward = true, const bool bForward = true );
 	const bool TurnToTarget( const CVec2 &vTarget );
 
@@ -145,12 +145,12 @@ public:
 
 	//для буксировки
 	virtual CVec2 GetTowPoint();
-	
+
 	//CRAP { к майлстоуну заплатка
 	virtual void SetSlaveTransport( class CAIUnit* _pSlaveTransport ){ pSlaveTransport = _pSlaveTransport; }
 	virtual bool HasSlaveTransport();
 	virtual class CAIUnit* GetSlaveTransport() { return pSlaveTransport; }
-	//CRAP } 
+	//CRAP }
 
 	const CVec3 GetAmmoBoxCoordinates();
 
@@ -162,9 +162,9 @@ public:
 
 	// у всех пушек очищает флаг на ожидание перезарядки
 	virtual void ClearWaitForReload();
-	
+
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const;
-	
+
 	virtual const bool CanGoBackward() const { return GetCrew() == 0; }
 
 	virtual void Stop();
@@ -175,11 +175,11 @@ public:
 	const CVec3 GetHookPoint3D() const;
 	// The artillery's authored towing point determines the attachment position.
 	bool IsForwardTowed() const { return pStats->pExtendedStats && pStats->pExtendedStats->bForwardTowed; }
-	
+
 	EActionNotify GetCurUninstallAction() const { return eCurrentStateOfInstall; }
 
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
-	
+
 	virtual void SendAcknowledgement( CAICommand *pCommand, EUnitAckType ack, bool bForce = false );
 	virtual void SendAcknowledgement( EUnitAckType ack, bool bForce = false );
 
@@ -190,12 +190,12 @@ public:
 	bool IsBeingCaptured() const ;
 	void SetCapturingUnit( CFormation * pFormation ) ;
 	CFormation * GetCapturedUnit() { return pCapturingUnit; }
-	
+
 	// to allow only one transport to hook artillery
 	bool IsBeingHooked() const;
 	void SetBeingHooked( class CAIUnit *pUnit );
 	CAIUnit *GetHookingTransport();
-	
+
 	void UpdateAmmoBoxVisibility( const bool bVisibilityChanged, const bool bVisible );
 	EActionNotify GetFinishInstallUpdate( EActionNotify eAction );
 	virtual const float GetMaxPossibleSpeed() const;

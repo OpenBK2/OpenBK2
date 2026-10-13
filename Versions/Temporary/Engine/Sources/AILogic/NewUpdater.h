@@ -221,7 +221,7 @@ public:
 			SAIBasicUpdate* Transform( CUpdateData *pUpdate, int nReturnTime );
 		};
 	private:
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////		
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		static det_map< int, CPtr<IUpdateTransformer> > clientTransformers;
 
 	protected:
@@ -239,17 +239,17 @@ public:
 		int nParam = {};
 		//for removing sent updates
 		bool bValid = {};
-		
+
 		CUpdateData( const NTimer::STime &nTime, int nCounter, EActionNotify eType, CUpdatableObj *_pObj, int _nParam ) :
 			nUpdateTime( nTime ),
 			nOrder( nCounter ),
 			eUpdateType( eType ),
 			pObj( _pObj ),
-			nParam( _nParam ), 
+			nParam( _nParam ),
 			bValid( true ),
 			pData( 0 ) {}
-		
-		CUpdateData( const CUpdateData &data ) : 
+
+		CUpdateData( const CUpdateData &data ) :
 			nUpdateTime( data.nUpdateTime ),
 			nOrder( data.nOrder ),
 			eUpdateType( data.eUpdateType ),
@@ -257,11 +257,11 @@ public:
 			nParam( data.nParam ),
 			bValid( data.bValid ),
 			pData( data.pData ) {}
-		
+
 		static void Init();
-		
-		SAIBasicUpdate* GetClientStruct( int nReturnTime ); 
-		
+
+		SAIBasicUpdate* GetClientStruct( int nReturnTime );
+
 		int operator&( IBinSaver &saver );
 	};
 	struct SUpdateDataLessCompare
@@ -305,15 +305,15 @@ private:
 	det_set<int> updatedPlacements;
 	NTimer::STime lastTimeUpTo = {};
 
-	void DestroyContents();	
-	
+	void DestroyContents();
+
 	//get update from queue
 	CUpdateData* PopUpdate();
 	//updating suspended updates visibility
 	void PumpUpdates();
 	//add visible suspended updates to queue
 	void CollectUpdates( NTimer::STime nUpTo = 0 );
-	
+
 	CUpdateData* CreateAnimationUpdate( CUpdatableObj *pObj, int nAnimation );
 	bool IsInterpolatableEvent( EActionNotify eUpdateType ) const;
 	bool IsOneCopyEvent( EActionNotify eUpdateType ) const;
@@ -324,7 +324,7 @@ public:
 	void ClearInterpolatable();
 	void Init( const int nStaticMapSizeX, const int nStaticMapSizeY );
 	void Clear() { DestroyContents(); }
-	
+
 	//send update
 	void AddUpdate( EFeedBack eFeedBack, int nParam = -1, CObjectBase *pParam = 0 );
 	void AddUpdate( SAIBasicUpdate *pUpdate, EActionNotify eUpdateType, CUpdatableObj *pObj, int nParam );
@@ -334,7 +334,7 @@ public:
 	void ClearUpdates( CUpdatableObj *pObj, EActionNotify eUpdateType = ACTION_NOTIFY_NONE );
 	//update current segment time
 	void UpdateTime( const NTimer::STime &nNewTime );
-	
+
 	void UpdateAreasGroup( const bool bShow, EActionNotify eType );
 
 	bool IsPlacementUpdated( CUpdatableObj *pObj ) const;

@@ -55,7 +55,7 @@ void CEditorTestEditor::Create()
 	}
 	// set camera anchor
 	CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( "SEASON_SUMMER" );
-	if ( vCameraAnchor == VNULL3 ) 
+	if ( vCameraAnchor == VNULL3 )
 	{
 		vCameraAnchor.x = terrainSize.x * 8.0f * AI_TILE_SIZE;
 		vCameraAnchor.y = terrainSize.y * 8.0f * AI_TILE_SIZE;
@@ -80,6 +80,6 @@ void CEditorTestEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-// basement storage  
+// basement storage
 
 

@@ -11,7 +11,7 @@ class CGeneral;
 class CGeneralArtilleryGoToPosition : public CAIObjectBase
 {
 	OBJECT_BASIC_METHODS( CGeneralArtilleryGoToPosition );
-	
+
 	enum EBombardmentState { EBS_START, EBS_MOVING, EBS_WAIT_FOR_TRUCK, EBS_MOVING_WITH_TRUCK, EBS_FINISHING };
 
 	ZDATA
@@ -25,7 +25,7 @@ class CGeneralArtilleryGoToPosition : public CAIObjectBase
 	NTimer::STime timeOfFinish = {};
 	NTimer::STime startTime = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&vPos); f.Add(5,&bToReservePosition); f.Add(6,&bFinished); f.Add(7,&timeOfFinish); f.Add(8,&startTime); return 0; }
-	// 
+	//
 	void StartState();
 	void WaitForTruck();
 	void MovingWithTruck();
@@ -78,7 +78,7 @@ class CGeneralArtilleryTask
 	std::list<SBombardmentUnitState> bombardmentUnits;
 
 	int nCellNumber = {};
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&bBombardmentFinished); f.Add(4,&vBombardmentCenter); f.Add(5,&fBombardmentRadius); f.Add(6,&timeToFinishBombardment); f.Add(7,&timeToSendAntiArtilleryAck); f.Add(8,&vAntiArtilleryAckCenter); f.Add(9,&bIsAntiArtilleryFight); f.Add(10,&startRotatingTime); f.Add(11,&eState); f.Add(12,&bombardmentUnits); f.Add(13,&nCellNumber); return 0; }
 
 	//
@@ -92,7 +92,7 @@ public:
 	void Firing();
 	// когда приехали на резервные позиции, закончить артобстрел
 	void Escaping();
-	// если часть юнитов по какой-то причине не смогла провести артобстрел, проследить, 
+	// если часть юнитов по какой-то причине не смогла провести артобстрел, проследить,
 	// чтобы они вернулись на резервные позиции
 	void CheckEscapingUnits();
 
@@ -111,7 +111,7 @@ public:
 class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 {
 	OBJECT_BASIC_METHODS( CGeneralArtillery );
-	
+
 	typedef std::list< CPtr<CAIUnit> > CUnitsList;
 
 	ZDATA
@@ -120,13 +120,13 @@ class CGeneralArtillery : public CAIObjectBase, public IEnemyEnumerator
 	CUnitsList trucks;
 
 	std::list<CGeneralArtilleryTask> tasks;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pOwner); f.Add(3,&freeUnits); f.Add(4,&trucks); f.Add(5,&tasks); return 0; }
 	void OnSerialize( IBinSaver &saver );
 public:
 	CGeneralArtillery() { }
 	CGeneralArtillery( CGeneral *pGeneralOwner );
-	
+
 	// дать генералу юнит для использования в качестве артиллерии
 	void TakeArtillery( CAIUnit *pUnit );
 	// the same for trucks

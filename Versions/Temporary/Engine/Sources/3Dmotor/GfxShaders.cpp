@@ -105,853 +105,853 @@ SVShader vsG3Surf( 49, dwvs11G3Surf,0);
 static DWORD dwvs11G3WriteZ[] ={ 0xfffe0101, 0x1f, 0x80000000, 0x900f0000, 0x1f, 0x80000003, 0x900f0001, 0x1f, 0x80000005, 0x900f0003, 0x1f, 0x80000006, 0x900f0004, 0x1f, 0x80010006, 0x900f0005, 0x1f, 0x80010005, 0x900f0006, 0x14, 0x800f0000, 0x90e40000, 0xa0e4000a, 0x1, 0xc00f0000, 0x80e40000, 0x5, 0xe0030000, 0x90e40003, 0xa0000006, 0x1, 0xe00f0001, 0x80aa0000, 0xffff };
 SVShader vsG3WriteZ( 50, dwvs11G3WriteZ,0);
 static DWORD dwps11G3WriteZ[] ={ 0xffff0200, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0010001, 0x200001f, 0x90000000, 0xa00f0800, 0x3000042, 0x800f0001, 0xb0e40000, 0xa0e40800, 0x3000002, 0x800f0000, 0xb0000001, 0xa100001d, 0x2000023, 0x800f0000, 0x80e40000, 0x3000005, 0x801f0000, 0x80e40000, 0xa055001d, 0x2000001, 0x80080000, 0x80ff0001, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaG3WriteZ[] = { 
+static SRenderState rsshaG3WriteZ[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3WriteZ[] = { 
+static STextureStageState tssshaG3WriteZ[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3WriteZ[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3WriteZ[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3WriteZ[] = { 
+static STextureStageState tssstateG3WriteZ[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3WriteZ( 1 , dwps11G3WriteZ,0,0,0, rsshaG3WriteZ, tssshaG3WriteZ, rsstateG3WriteZ, tssstateG3WriteZ );
 static DWORD dwps11G3DepthOfField[] ={ 0xffff0200, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x3000042, 0x800f0000, 0xb0e40000, 0xa0e40800, 0x3000042, 0x800f0001, 0xb0e40000, 0xa0e40801, 0x3000005, 0x80080001, 0x80550001, 0xa000001a, 0x4000004, 0x80030003, 0xa0e40000, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030005, 0xa0e40001, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030007, 0xa0e40002, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030009, 0xa0e40003, 0x80ff0001, 0xb0e40000, 0x4000004, 0x8003000b, 0xa0e40004, 0x80ff0001, 0xb0e40000, 0x3000042, 0x800f0002, 0x80e40003, 0xa0e40800, 0x3000042, 0x800f0003, 0x80e40003, 0xa0e40801, 0x3000042, 0x800f0004, 0x80e40005, 0xa0e40800, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40007, 0xa0e40800, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000042, 0x800f0008, 0x80e40009, 0xa0e40800, 0x3000042, 0x800f0009, 0x80e40009, 0xa0e40801, 0x3000042, 0x800f000a, 0x80e4000b, 0xa0e40800, 0x3000042, 0x800f000b, 0x80e4000b, 0xa0e40801, 0x3000002, 0x80080003, 0x80000003, 0x81000001, 0x4000058, 0x80010003, 0x80ff0003, 0xa0aa001a, 0x80550003, 0x4000004, 0x80070000, 0x80e40002, 0x80000003, 0x80e40000, 0x3000002, 0x80040001, 0xa0aa001a, 0x80000003, 0x3000002, 0x80080005, 0x80000005, 0x81000001, 0x4000058, 0x80010005, 0x80ff0005, 0xa0aa001a, 0x80550005, 0x4000004, 0x80070000, 0x80e40004, 0x80000005, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000005, 0x3000002, 0x80080007, 0x80000007, 0x81000001, 0x4000058, 0x80010007, 0x80ff0007, 0xa0aa001a, 0x80550007, 0x4000004, 0x80070000, 0x80e40006, 0x80000007, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000007, 0x3000002, 0x80080009, 0x80000009, 0x81000001, 0x4000058, 0x80010009, 0x80ff0009, 0xa0aa001a, 0x80550009, 0x4000004, 0x80070000, 0x80e40008, 0x80000009, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000009, 0x3000002, 0x8008000b, 0x8000000b, 0x81000001, 0x4000058, 0x8001000b, 0x80ff000b, 0xa0aa001a, 0x8055000b, 0x4000004, 0x80070000, 0x80e4000a, 0x8000000b, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x8000000b, 0x4000004, 0x80030003, 0xa0e40005, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030005, 0xa0e40006, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030007, 0xa0e40007, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030009, 0xa0e40008, 0x80ff0001, 0xb0e40000, 0x4000004, 0x8003000b, 0xa0e40009, 0x80ff0001, 0xb0e40000, 0x3000042, 0x800f0002, 0x80e40003, 0xa0e40800, 0x3000042, 0x800f0003, 0x80e40003, 0xa0e40801, 0x3000042, 0x800f0004, 0x80e40005, 0xa0e40800, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40007, 0xa0e40800, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000042, 0x800f0008, 0x80e40009, 0xa0e40800, 0x3000042, 0x800f0009, 0x80e40009, 0xa0e40801, 0x3000042, 0x800f000a, 0x80e4000b, 0xa0e40800, 0x3000042, 0x800f000b, 0x80e4000b, 0xa0e40801, 0x3000002, 0x80080003, 0x80000003, 0x81000001, 0x4000058, 0x80010003, 0x80ff0003, 0xa0aa001a, 0x80550003, 0x4000004, 0x80070000, 0x80e40002, 0x80000003, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000003, 0x3000002, 0x80080005, 0x80000005, 0x81000001, 0x4000058, 0x80010005, 0x80ff0005, 0xa0aa001a, 0x80550005, 0x4000004, 0x80070000, 0x80e40004, 0x80000005, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000005, 0x3000002, 0x80080007, 0x80000007, 0x81000001, 0x4000058, 0x80010007, 0x80ff0007, 0xa0aa001a, 0x80550007, 0x4000004, 0x80070000, 0x80e40006, 0x80000007, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000007, 0x3000002, 0x80080009, 0x80000009, 0x81000001, 0x4000058, 0x80010009, 0x80ff0009, 0xa0aa001a, 0x80550009, 0x4000004, 0x80070000, 0x80e40008, 0x80000009, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000009, 0x3000002, 0x8008000b, 0x8000000b, 0x81000001, 0x4000058, 0x8001000b, 0x80ff000b, 0xa0aa001a, 0x8055000b, 0x4000004, 0x80070000, 0x80e4000a, 0x8000000b, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x8000000b, 0x4000004, 0x80030003, 0xa0e4000a, 0x80ff0001, 0xb0e40000, 0x4000004, 0x80030005, 0xa0e4000b, 0x80ff0001, 0xb0e40000, 0x3000042, 0x800f0002, 0x80e40003, 0xa0e40800, 0x3000042, 0x800f0003, 0x80e40003, 0xa0e40801, 0x3000042, 0x800f0004, 0x80e40005, 0xa0e40800, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000002, 0x80080003, 0x80000003, 0x81000001, 0x4000058, 0x80010003, 0x80ff0003, 0xa0aa001a, 0x80550003, 0x4000004, 0x80070000, 0x80e40002, 0x80000003, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000003, 0x3000002, 0x80080005, 0x80000005, 0x81000001, 0x4000058, 0x80010005, 0x80ff0005, 0xa0aa001a, 0x80550005, 0x4000004, 0x80070000, 0x80e40004, 0x80000005, 0x80e40000, 0x3000002, 0x80040001, 0x80aa0001, 0x80000005, 0x2000006, 0x80080001, 0x80aa0001, 0x3000005, 0x80070000, 0x80e40000, 0x80ff0001, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaG3DepthOfField[] = { 
+static SRenderState rsshaG3DepthOfField[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DepthOfField[] = { 
+static STextureStageState tssshaG3DepthOfField[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DepthOfField[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateG3DepthOfField[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DepthOfField[] = { 
+static STextureStageState tssstateG3DepthOfField[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DepthOfField( 2 , dwps11G3DepthOfField,0,0,0, rsshaG3DepthOfField, tssshaG3DepthOfField, rsstateG3DepthOfField, tssstateG3DepthOfField );
 static DWORD dwps11Dp3[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x8, 0x800f0000, 0xb0e40000, 0xa0e40000, 0x2, 0x80070000, 0x80e40000, 0x86e40000, 0xffff };
-static SRenderState rsshaDp3[] = { 
+static SRenderState rsshaDp3[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDp3[] = { 
+static STextureStageState tssshaDp3[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDp3[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateDp3[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDp3[] = { 
+static STextureStageState tssstateDp3[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDp3( 3 , dwps11Dp3,0,0,0, rsshaDp3, tssshaDp3, rsstateDp3, tssstateDp3 );
 static DWORD dwps11AlphaTestTexturePerVertexTransp[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x1, 0x80070000, 0xb0e40000, 0x5, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaAlphaTestTexturePerVertexTransp[] = { 
+static SRenderState rsshaAlphaTestTexturePerVertexTransp[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaAlphaTestTexturePerVertexTransp[] = { 
+static STextureStageState tssshaAlphaTestTexturePerVertexTransp[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateAlphaTestTexturePerVertexTransp[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAREF, 120}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATER}, 
+static SRenderState rsstateAlphaTestTexturePerVertexTransp[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAREF, 120},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATER},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateAlphaTestTexturePerVertexTransp[] = { 
+static STextureStageState tssstateAlphaTestTexturePerVertexTransp[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psAlphaTestTexturePerVertexTransp( 4 , dwps11AlphaTestTexturePerVertexTransp,0,0,0, rsshaAlphaTestTexturePerVertexTransp, tssshaAlphaTestTexturePerVertexTransp, rsstateAlphaTestTexturePerVertexTransp, tssstateAlphaTestTexturePerVertexTransp );
 static DWORD dwps11G3DiffuseTex[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3DiffuseTex[] = { 
+static SRenderState rsshaG3DiffuseTex[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTex[] = { 
+static STextureStageState tssshaG3DiffuseTex[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTex[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTex[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTex[] = { 
+static STextureStageState tssstateG3DiffuseTex[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTex( 5 , dwps11G3DiffuseTex,0,0,0, rsshaG3DiffuseTex, tssshaG3DiffuseTex, rsstateG3DiffuseTex, tssstateG3DiffuseTex );
 static DWORD dwps11G3DiffuseTexNoAlpha[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x12, 0x80070000, 0xb0e40001, 0x80e40001, 0x80e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3DiffuseTexNoAlpha[] = { 
+static SRenderState rsshaG3DiffuseTexNoAlpha[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexNoAlpha[] = { 
+static STextureStageState tssshaG3DiffuseTexNoAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexNoAlpha[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexNoAlpha[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexNoAlpha[] = { 
+static STextureStageState tssstateG3DiffuseTexNoAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexNoAlpha( 6 , dwps11G3DiffuseTexNoAlpha,0,0,0, rsshaG3DiffuseTexNoAlpha, tssshaG3DiffuseTexNoAlpha, rsstateG3DiffuseTexNoAlpha, tssstateG3DiffuseTexNoAlpha );
 static DWORD dwps11G3DiffuseTexNoShadows[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x82170000, 0x90e40001, 0xb0e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3DiffuseTexNoShadows[] = { 
+static SRenderState rsshaG3DiffuseTexNoShadows[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexNoShadows[] = { 
+static STextureStageState tssshaG3DiffuseTexNoShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexNoShadows[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexNoShadows[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexNoShadows[] = { 
+static STextureStageState tssstateG3DiffuseTexNoShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexNoShadows( 7 , dwps11G3DiffuseTexNoShadows,0,0,0, rsshaG3DiffuseTexNoShadows, tssshaG3DiffuseTexNoShadows, rsstateG3DiffuseTexNoShadows, tssstateG3DiffuseTexNoShadows );
 static DWORD dwps11G3TransparentGeomNoLM[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x82170000, 0x90e40001, 0xb0e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3TransparentGeomNoLM[] = { 
+static SRenderState rsshaG3TransparentGeomNoLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3TransparentGeomNoLM[] = { 
+static STextureStageState tssshaG3TransparentGeomNoLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3TransparentGeomNoLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3TransparentGeomNoLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3TransparentGeomNoLM[] = { 
+static STextureStageState tssstateG3TransparentGeomNoLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3TransparentGeomNoLM( 8 , dwps11G3TransparentGeomNoLM,0,0,0, rsshaG3TransparentGeomNoLM, tssshaG3TransparentGeomNoLM, rsstateG3TransparentGeomNoLM, tssstateG3TransparentGeomNoLM );
 static DWORD dwps11G3TransparentGeom[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3TransparentGeom[] = { 
+static SRenderState rsshaG3TransparentGeom[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3TransparentGeom[] = { 
+static STextureStageState tssshaG3TransparentGeom[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3TransparentGeom[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3TransparentGeom[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3TransparentGeom[] = { 
+static STextureStageState tssstateG3TransparentGeom[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3TransparentGeom( 9 , dwps11G3TransparentGeom,0,0,0, rsshaG3TransparentGeom, tssshaG3TransparentGeom, rsstateG3TransparentGeom, tssstateG3TransparentGeom );
 static DWORD dwps11G3DiffuseTexMirror[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
 static DWORD dwps14G3DiffuseTexMirror[] ={ 0xffff0104, 0x42, 0x800f0000, 0xb0e40000, 0x42, 0x800f0001, 0xb0e40001, 0x40, 0x80070002, 0xb0f40002, 0x42, 0x800f0003, 0xb0e40003, 0x42, 0x800f0004, 0xb0e40004, 0x5, 0x82170005, 0x90e40000, 0x80e40000, 0x40000002, 0x82180005, 0x80e40001, 0x81aa0002, 0x5, 0x82170002, 0x90e40001, 0x80e40000, 0x40000002, 0x80080005, 0xa0e40004, 0x80e40005, 0x12, 0x80070002, 0x80e40001, 0x80e40002, 0x80e40005, 0x50, 0x80070005, 0x80ff0005, 0x80e40005, 0x80e40002, 0x40000005, 0x80080005, 0x80ff0000, 0xa0e40000, 0x1, 0x80070002, 0x80e40003, 0x40000005, 0x80080002, 0x90ff0000, 0x80ff0003, 0x5, 0x800f0002, 0x80e40002, 0x80e40004, 0x12, 0x80070000, 0x80ff0002, 0x80e40002, 0x80e40005, 0x40000004, 0x80080000, 0x80ff0002, 0x86ff0005, 0x80ff0005, 0xffff };
-static SRenderState rsshaG3DiffuseTexMirror[] = { 
+static SRenderState rsshaG3DiffuseTexMirror[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexMirror[] = { 
+static STextureStageState tssshaG3DiffuseTexMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexMirror[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexMirror[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexMirror[] = { 
+static STextureStageState tssstateG3DiffuseTexMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexMirror( 10 , dwps11G3DiffuseTexMirror,dwps14G3DiffuseTexMirror,0,0, rsshaG3DiffuseTexMirror, tssshaG3DiffuseTexMirror, rsstateG3DiffuseTexMirror, tssstateG3DiffuseTexMirror );
 static DWORD dwps11G3DiffuseTexDetail[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x42, 0xb00f0003, 0x5, 0x82070000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82070001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0x5, 0x810f0000, 0x80e40000, 0xb0e40003, 0xffff };
-static SRenderState rsshaG3DiffuseTexDetail[] = { 
+static SRenderState rsshaG3DiffuseTexDetail[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexDetail[] = { 
+static STextureStageState tssshaG3DiffuseTexDetail[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexDetail[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexDetail[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexDetail[] = { 
+static STextureStageState tssstateG3DiffuseTexDetail[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexDetail( 11 , dwps11G3DiffuseTexDetail,0,0,0, rsshaG3DiffuseTexDetail, tssshaG3DiffuseTexDetail, rsstateG3DiffuseTexDetail, tssstateG3DiffuseTexDetail );
 static DWORD dwps11G3DiffuseTex2[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x42, 0xb00f0003, 0x5, 0x80070000, 0x90e40000, 0xb0e40000, 0x5, 0x80070001, 0x90e40001, 0xb0e40000, 0x5, 0x82170000, 0x80e40000, 0xb0e40003, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x80e40001, 0xb0e40003, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0x5, 0x80080000, 0x80ff0000, 0xb0e40003, 0xffff };
-static SRenderState rsshaG3DiffuseTex2[] = { 
+static SRenderState rsshaG3DiffuseTex2[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTex2[] = { 
+static STextureStageState tssshaG3DiffuseTex2[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTex2[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTex2[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTex2[] = { 
+static STextureStageState tssstateG3DiffuseTex2[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTex2( 12 , dwps11G3DiffuseTex2,0,0,0, rsshaG3DiffuseTex2, tssshaG3DiffuseTex2, rsstateG3DiffuseTex2, tssstateG3DiffuseTex2 );
 static DWORD dwps11G3DiffuseTexLM[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x42, 0xb00f0003, 0x5, 0x80070000, 0xb0e40003, 0xa0e40002, 0x2, 0x80070000, 0x80e40000, 0xa0e40001, 0x2, 0x80070001, 0x90e40001, 0x80e40000, 0x2, 0x80070000, 0x90e40000, 0x80e40000, 0x5, 0x82170000, 0x80e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x80e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3DiffuseTexLM[] = { 
+static SRenderState rsshaG3DiffuseTexLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexLM[] = { 
+static STextureStageState tssshaG3DiffuseTexLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexLM[] = { 
+static STextureStageState tssstateG3DiffuseTexLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexLM( 13 , dwps11G3DiffuseTexLM,0,0,0, rsshaG3DiffuseTexLM, tssshaG3DiffuseTexLM, rsstateG3DiffuseTexLM, tssstateG3DiffuseTexLM );
 static DWORD dwps11G3DiffuseTexLMNoShadows[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x820f0000, 0xb0e40001, 0xb0e40000, 0xffff };
-static SRenderState rsshaG3DiffuseTexLMNoShadows[] = { 
+static SRenderState rsshaG3DiffuseTexLMNoShadows[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexLMNoShadows[] = { 
+static STextureStageState tssshaG3DiffuseTexLMNoShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexLMNoShadows[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexLMNoShadows[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexLMNoShadows[] = { 
+static STextureStageState tssstateG3DiffuseTexLMNoShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexLMNoShadows( 14 , dwps11G3DiffuseTexLMNoShadows,0,0,0, rsshaG3DiffuseTexLMNoShadows, tssshaG3DiffuseTexLMNoShadows, rsstateG3DiffuseTexLMNoShadows, tssstateG3DiffuseTexLMNoShadows );
 static DWORD dwps11G3DiffuseTexDetailLM[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x42, 0xb00f0003, 0x5, 0x80070000, 0xb0e40003, 0xa0e40002, 0x2, 0x80070000, 0x80e40000, 0xa0e40001, 0x2, 0x80070001, 0x90e40001, 0x80e40000, 0x2, 0x80070000, 0x90e40000, 0x80e40000, 0x5, 0x82170000, 0x80e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x80e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
 static DWORD dwps14G3DiffuseTexDetailLM[] ={ 0xffff0104, 0x42, 0x800f0000, 0xb0e40000, 0x42, 0x800f0001, 0xb0e40001, 0x40, 0x80070002, 0xb0f40002, 0x42, 0x800f0003, 0xb0e40003, 0x42, 0x800f0004, 0xb0e40004, 0x4, 0x80070005, 0x80e40003, 0xa0e40002, 0xa0e40001, 0x40000002, 0x82180005, 0x80e40001, 0x81aa0002, 0x2, 0x80070002, 0x90e40001, 0x80e40005, 0x2, 0x80070005, 0x90e40000, 0x80e40005, 0x5, 0x82070005, 0x80e40005, 0x80e40000, 0x5, 0x82070002, 0x80e40002, 0x80e40000, 0x40000002, 0x80080005, 0xa0e40004, 0x80e40005, 0x12, 0x80070002, 0x80e40001, 0x80e40002, 0x80e40005, 0x50, 0x80070005, 0x80ff0005, 0x80e40005, 0x80e40002, 0x40000005, 0x80080005, 0x80ff0000, 0x90ff0000, 0x5, 0x810f0005, 0x80e40005, 0x80e40004, 0xffff };
-static SRenderState rsshaG3DiffuseTexDetailLM[] = { 
+static SRenderState rsshaG3DiffuseTexDetailLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexDetailLM[] = { 
+static STextureStageState tssshaG3DiffuseTexDetailLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexDetailLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexDetailLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexDetailLM[] = { 
+static STextureStageState tssstateG3DiffuseTexDetailLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexDetailLM( 15 , dwps11G3DiffuseTexDetailLM,dwps14G3DiffuseTexDetailLM,0,0, rsshaG3DiffuseTexDetailLM, tssshaG3DiffuseTexDetailLM, rsstateG3DiffuseTexDetailLM, tssstateG3DiffuseTexDetailLM );
 static DWORD dwps11G3DiffuseTexTerrain[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000002, 0x80080000, 0xb0e40000, 0x94e40000, 0x2, 0x82080000, 0x80ff0000, 0xa0ff0003, 0xffff };
-static SRenderState rsshaG3DiffuseTexTerrain[] = { 
+static SRenderState rsshaG3DiffuseTexTerrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexTerrain[] = { 
+static STextureStageState tssshaG3DiffuseTexTerrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexTerrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexTerrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexTerrain[] = { 
+static STextureStageState tssstateG3DiffuseTexTerrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexTerrain( 16 , dwps11G3DiffuseTexTerrain,0,0,0, rsshaG3DiffuseTexTerrain, tssshaG3DiffuseTexTerrain, rsstateG3DiffuseTexTerrain, tssstateG3DiffuseTexTerrain );
 static DWORD dwps11G3DiffuseTex2Terrain[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x42, 0xb00f0003, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000002, 0x80080000, 0xb0e40000, 0x94e40000, 0x2, 0x82080000, 0x80ff0000, 0xa0ff0003, 0x5, 0x800f0000, 0x80e40000, 0xb0e40003, 0xffff };
-static SRenderState rsshaG3DiffuseTex2Terrain[] = { 
+static SRenderState rsshaG3DiffuseTex2Terrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTex2Terrain[] = { 
+static STextureStageState tssshaG3DiffuseTex2Terrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTex2Terrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTex2Terrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTex2Terrain[] = { 
+static STextureStageState tssstateG3DiffuseTex2Terrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTex2Terrain( 17 , dwps11G3DiffuseTex2Terrain,0,0,0, rsshaG3DiffuseTex2Terrain, tssshaG3DiffuseTex2Terrain, rsstateG3DiffuseTex2Terrain, tssstateG3DiffuseTex2Terrain );
 static DWORD dwps11G3DiffuseTexSpec[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
 static DWORD dwps14G3DiffuseTexSpec[] ={ 0xffff0104, 0x42, 0x800f0003, 0xb0a40003, 0x42, 0x800f0004, 0xb0a40004, 0x5, 0x80070005, 0x80ff0004, 0x80ff0004, 0x40000005, 0x80080005, 0x80ff0004, 0xa0e40000, 0x5, 0x80070005, 0x80e40005, 0x80e40005, 0x40000004, 0x80080005, 0x80aa0005, 0xa0e40001, 0x80ff0005, 0x5, 0x80070005, 0x80e40003, 0xa0e40005, 0x40000004, 0x80080005, 0x80aa0005, 0xa0e40002, 0x80ff0005, 0x5, 0x80070003, 0x80ff0005, 0x80e40005, 0xfffd, 0x42, 0x800f0000, 0xb0a40000, 0x42, 0x800f0001, 0xb0a40001, 0x40, 0x80070002, 0xb0f40002, 0x5, 0x82170005, 0x90e40001, 0x80e40000, 0x40000002, 0x82180005, 0x80e40001, 0x81aa0002, 0x2, 0x80070005, 0x80e40003, 0x80e40005, 0x5, 0x82170002, 0x90e40000, 0x80e40000, 0x40000002, 0x80080005, 0xa0e40006, 0x80e40005, 0x12, 0x80070002, 0x80e40001, 0x80e40002, 0x80e40005, 0x50, 0x80070000, 0x80ff0005, 0x80e40002, 0x80e40005, 0x40000005, 0x80080000, 0x80ff0000, 0x90ff0000, 0x8, 0x82180001, 0x90e40000, 0xa0ff0005, 0x5, 0x80070000, 0x80e40000, 0x80ff0001, 0xffff };
-static SRenderState rsshaG3DiffuseTexSpec[] = { 
+static SRenderState rsshaG3DiffuseTexSpec[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexSpec[] = { 
+static STextureStageState tssshaG3DiffuseTexSpec[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexSpec[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexSpec[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexSpec[] = { 
+static STextureStageState tssstateG3DiffuseTexSpec[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexSpec( 18 , dwps11G3DiffuseTexSpec,dwps14G3DiffuseTexSpec,0,0, rsshaG3DiffuseTexSpec, tssshaG3DiffuseTexSpec, rsstateG3DiffuseTexSpec, tssstateG3DiffuseTexSpec );
 static DWORD dwps11G3DiffuseTexSpecLM[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x82180000, 0xb0e40001, 0xb1aa0002, 0x5, 0x82170001, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0x80e40000, 0x12, 0x80070001, 0xb0e40001, 0x80e40001, 0x80e40000, 0x50, 0x80070000, 0x80ff0000, 0x80e40000, 0x80e40001, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
 static DWORD dwps14G3DiffuseTexSpecLM[] ={ 0xffff0104, 0x42, 0x800f0003, 0xb0a40003, 0x42, 0x800f0004, 0xb0a40004, 0x5, 0x80070005, 0x80ff0004, 0x80ff0004, 0x40000005, 0x80080005, 0x80ff0004, 0xa0e40000, 0x5, 0x80070005, 0x80e40005, 0x80e40005, 0x40000004, 0x80080005, 0x80aa0005, 0xa0e40001, 0x80ff0005, 0x5, 0x80070005, 0x80e40003, 0xa0e40005, 0x40000004, 0x80080005, 0x80aa0005, 0xa0e40002, 0x80ff0005, 0x5, 0x80070003, 0x80ff0005, 0x80e40005, 0xfffd, 0x42, 0x800f0000, 0xb0a40000, 0x42, 0x800f0001, 0xb0a40001, 0x40, 0x80070002, 0xb0f40002, 0x42, 0x800f0005, 0xb0a40005, 0x4, 0x80070005, 0x80e40005, 0xa0e40003, 0xa0e40004, 0x2, 0x80070004, 0x90e40000, 0x80e40005, 0x2, 0x80070005, 0x90e40001, 0x80e40005, 0x5, 0x82170005, 0x80e40005, 0x80e40000, 0x40000002, 0x82180005, 0x80e40001, 0x81aa0002, 0x2, 0x80070005, 0x80e40003, 0x80e40005, 0x5, 0x82170004, 0x80e40004, 0x80e40000, 0x40000002, 0x80080005, 0xa0e40006, 0x80e40005, 0x12, 0x80070004, 0x80e40001, 0x80e40004, 0x80e40005, 0x50, 0x80070000, 0x80ff0005, 0x80e40004, 0x80e40005, 0x40000005, 0x80080000, 0x80ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3DiffuseTexSpecLM[] = { 
+static SRenderState rsshaG3DiffuseTexSpecLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3DiffuseTexSpecLM[] = { 
+static STextureStageState tssshaG3DiffuseTexSpecLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3DiffuseTexSpecLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG3DiffuseTexSpecLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3DiffuseTexSpecLM[] = { 
+static STextureStageState tssstateG3DiffuseTexSpecLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3DiffuseTexSpecLM( 19 , dwps11G3DiffuseTexSpecLM,dwps14G3DiffuseTexSpecLM,0,0, rsshaG3DiffuseTexSpecLM, tssshaG3DiffuseTexSpecLM, rsstateG3DiffuseTexSpecLM, tssstateG3DiffuseTexSpecLM );
 static DWORD dwps11TFactor[] ={ 0xffff0101, 0x1, 0x800f0000, 0xa0e40000, 0xffff };
-static SRenderState rsshaTFactor[] = { 
+static SRenderState rsshaTFactor[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTFactor[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TFACTOR}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTFactor[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_COLORARG1, D3DTA_TFACTOR},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTFactor[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTFactor[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTFactor[] = { 
+static STextureStageState tssstateTFactor[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTFactor( 20 , dwps11TFactor,0,0,0, rsshaTFactor, tssshaTFactor, rsstateTFactor, tssstateTFactor );
 static DWORD dwps11TextureCopyAlpha[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x1, 0x800f0000, 0xb0e40000, 0xffff };
-static SRenderState rsshaTextureCopyAlpha[] = { 
+static SRenderState rsshaTextureCopyAlpha[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTextureCopyAlpha[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTextureCopyAlpha[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTextureCopyAlpha[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTextureCopyAlpha[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTextureCopyAlpha[] = { 
+static STextureStageState tssstateTextureCopyAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTextureCopyAlpha( 21 , dwps11TextureCopyAlpha,0,0,0, rsshaTextureCopyAlpha, tssshaTextureCopyAlpha, rsstateTextureCopyAlpha, tssstateTextureCopyAlpha );
 static DWORD dwps11TextureAlpha[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x1, 0x800f0000, 0xb0ff0000, 0xffff };
-static SRenderState rsshaTextureAlpha[] = { 
+static SRenderState rsshaTextureAlpha[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTextureAlpha[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE|D3DTA_ALPHAREPLICATE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTextureAlpha[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE|D3DTA_ALPHAREPLICATE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTextureAlpha[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTextureAlpha[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTextureAlpha[] = { 
+static STextureStageState tssstateTextureAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTextureAlpha( 22 , dwps11TextureAlpha,0,0,0, rsshaTextureAlpha, tssshaTextureAlpha, rsstateTextureAlpha, tssstateTextureAlpha );
 static DWORD dwps11TextureTFactor[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x800f0000, 0xb0e40000, 0xa0e40000, 0xffff };
-static SRenderState rsshaTextureTFactor[] = { 
+static SRenderState rsshaTextureTFactor[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTextureTFactor[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_TFACTOR}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTextureTFactor[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_TFACTOR},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTextureTFactor[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTextureTFactor[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTextureTFactor[] = { 
+static STextureStageState tssstateTextureTFactor[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTextureTFactor( 23 , dwps11TextureTFactor,0,0,0, rsshaTextureTFactor, tssshaTextureTFactor, rsstateTextureTFactor, tssstateTextureTFactor );
 static DWORD dwps11Clouds[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x800f0000, 0xb0e40000, 0xa0e40000, 0x5, 0x80070000, 0x80e40000, 0x90e40000, 0xffff };
-static SRenderState rsshaClouds[] = { 
+static SRenderState rsshaClouds[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaClouds[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_TFACTOR}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaClouds[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_TFACTOR},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_TFACTOR},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateClouds[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateClouds[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateClouds[] = { 
+static STextureStageState tssstateClouds[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psClouds( 24 , dwps11Clouds,0,0,0, rsshaClouds, tssshaClouds, rsstateClouds, tssstateClouds );
 static DWORD dwps11DiffuseTexture[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x800f0000, 0xb0e40000, 0x90e40000, 0xffff };
-static SRenderState rsshaDiffuseTexture[] = { 
+static SRenderState rsshaDiffuseTexture[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDiffuseTexture[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaDiffuseTexture[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDiffuseTexture[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateDiffuseTexture[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDiffuseTexture[] = { 
+static STextureStageState tssstateDiffuseTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDiffuseTexture( 25 , dwps11DiffuseTexture,0,0,0, rsshaDiffuseTexture, tssshaDiffuseTexture, rsstateDiffuseTexture, tssstateDiffuseTexture );
 static DWORD dwps11TexturePlusDiffuse[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x2, 0x800f0000, 0xb0e40000, 0x90e40000, 0xffff };
-static SRenderState rsshaTexturePlusDiffuse[] = { 
+static SRenderState rsshaTexturePlusDiffuse[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTexturePlusDiffuse[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_ADD}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTexturePlusDiffuse[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_ADD},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTexturePlusDiffuse[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTexturePlusDiffuse[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTexturePlusDiffuse[] = { 
+static STextureStageState tssstateTexturePlusDiffuse[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTexturePlusDiffuse( 26 , dwps11TexturePlusDiffuse,0,0,0, rsshaTexturePlusDiffuse, tssshaTexturePlusDiffuse, rsstateTexturePlusDiffuse, tssstateTexturePlusDiffuse );
 static DWORD dwps11TnLLitTexture[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x82070000, 0xb0e40000, 0x90e40000, 0x40000005, 0x80080000, 0xb0e40000, 0x90e40000, 0xffff };
-static SRenderState rsshaTnLLitTexture[] = { 
+static SRenderState rsshaTnLLitTexture[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTnLLitTexture[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTnLLitTexture[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTnLLitTexture[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateTnLLitTexture[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTnLLitTexture[] = { 
+static STextureStageState tssstateTnLLitTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTnLLitTexture( 27 , dwps11TnLLitTexture,0,0,0, rsshaTnLLitTexture, tssshaTnLLitTexture, rsstateTnLLitTexture, tssstateTnLLitTexture );
 static DWORD dwps11TnLLitTexture2[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x800f0000, 0xb0e40000, 0x90e40000, 0x5, 0x82070000, 0x80e40000, 0xb0e40001, 0x40000005, 0x80080000, 0x80e40000, 0xb0e40001, 0xffff };
-static SRenderState rsshaTnLLitTexture2[] = { 
+static SRenderState rsshaTnLLitTexture2[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTnLLitTexture2[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_MODULATE4X}, 
-{ 1, D3DTSS_COLORARG1, D3DTA_CURRENT}, 
-{ 1, D3DTSS_COLORARG2, D3DTA_TEXTURE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 1, D3DTSS_ALPHAARG1, D3DTA_CURRENT}, 
-{ 1, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
+static STextureStageState tssshaTnLLitTexture2[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_COLOROP, D3DTOP_MODULATE4X},
+{ 1, D3DTSS_COLORARG1, D3DTA_CURRENT},
+{ 1, D3DTSS_COLORARG2, D3DTA_TEXTURE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 1, D3DTSS_ALPHAARG1, D3DTA_CURRENT},
+{ 1, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTnLLitTexture2[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateTnLLitTexture2[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTnLLitTexture2[] = { 
+static STextureStageState tssstateTnLLitTexture2[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTnLLitTexture2( 28 , dwps11TnLLitTexture2,0,0,0, rsshaTnLLitTexture2, tssshaTnLLitTexture2, rsstateTnLLitTexture2, tssstateTnLLitTexture2 );
 static DWORD dwps11TnLLitTextureTerrain[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x82070000, 0xb0e40000, 0x90e40000, 0x40000002, 0x80080000, 0xb0e40000, 0x90e40000, 0xffff };
-static SRenderState rsshaTnLLitTextureTerrain[] = { 
+static SRenderState rsshaTnLLitTextureTerrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTnLLitTextureTerrain[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTnLLitTextureTerrain[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTnLLitTextureTerrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateTnLLitTextureTerrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTnLLitTextureTerrain[] = { 
+static STextureStageState tssstateTnLLitTextureTerrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTnLLitTextureTerrain( 29 , dwps11TnLLitTextureTerrain,0,0,0, rsshaTnLLitTextureTerrain, tssshaTnLLitTextureTerrain, rsstateTnLLitTextureTerrain, tssstateTnLLitTextureTerrain );
 static DWORD dwps11TnLLitTexture2Terrain[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x82070000, 0xb0e40000, 0x90e40000, 0x40000002, 0x80080000, 0xb0e40000, 0x90e40000, 0x5, 0x800f0000, 0x80e40000, 0xb0e40001, 0xffff };
-static SRenderState rsshaTnLLitTexture2Terrain[] = { 
+static SRenderState rsshaTnLLitTexture2Terrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTnLLitTexture2Terrain[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_MODULATE}, 
-{ 1, D3DTSS_COLORARG1, D3DTA_CURRENT}, 
-{ 1, D3DTSS_COLORARG2, D3DTA_TEXTURE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 1, D3DTSS_ALPHAARG1, D3DTA_CURRENT}, 
-{ 1, D3DTSS_ALPHAARG2, D3DTA_TEXTURE}, 
+static STextureStageState tssshaTnLLitTexture2Terrain[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_ADD},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_COLOROP, D3DTOP_MODULATE},
+{ 1, D3DTSS_COLORARG1, D3DTA_CURRENT},
+{ 1, D3DTSS_COLORARG2, D3DTA_TEXTURE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 1, D3DTSS_ALPHAARG1, D3DTA_CURRENT},
+{ 1, D3DTSS_ALPHAARG2, D3DTA_TEXTURE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTnLLitTexture2Terrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateTnLLitTexture2Terrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTnLLitTexture2Terrain[] = { 
+static STextureStageState tssstateTnLLitTexture2Terrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTnLLitTexture2Terrain( 30 , dwps11TnLLitTexture2Terrain,0,0,0, rsshaTnLLitTexture2Terrain, tssshaTnLLitTexture2Terrain, rsstateTnLLitTexture2Terrain, tssstateTnLLitTexture2Terrain );
 static DWORD dwps11SoftShadowTest[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x2, 0x80180000, 0xb0e40000, 0x91e40000, 0x12, 0x80070000, 0xb0e40000, 0xa0e40001, 0xa0e40002, 0x40000002, 0x82180000, 0x80e40000, 0x80e40000, 0x1, 0x81080000, 0x86e40000, 0xffff };
-static SRenderState rsshaSoftShadowTest[] = { 
+static SRenderState rsshaSoftShadowTest[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaSoftShadowTest[] = { 
+static STextureStageState tssshaSoftShadowTest[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateSoftShadowTest[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateSoftShadowTest[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateSoftShadowTest[] = { 
+static STextureStageState tssstateSoftShadowTest[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psSoftShadowTest( 31 , dwps11SoftShadowTest,0,0,0, rsshaSoftShadowTest, tssshaSoftShadowTest, rsstateSoftShadowTest, tssstateSoftShadowTest );
 static DWORD dwps11DepthATTexture[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x2, 0x80070000, 0xb0e40000, 0xb6e40000, 0x40000001, 0x80080000, 0xb0e40000, 0x50, 0x80080000, 0x80ff0000, 0x90e40000, 0xa0e40000, 0xffff };
-static SRenderState rsshaDepthATTexture[] = { 
+static SRenderState rsshaDepthATTexture[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDepthATTexture[] = { 
+static STextureStageState tssshaDepthATTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDepthATTexture[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAREF, 1}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateDepthATTexture[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAREF, 1},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDepthATTexture[] = { 
+static STextureStageState tssstateDepthATTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDepthATTexture( 32 , dwps11DepthATTexture,0,0,0, rsshaDepthATTexture, tssshaDepthATTexture, rsstateDepthATTexture, tssstateDepthATTexture );
 static DWORD dwps11CloudShadows[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x80070000, 0xb0e40001, 0xb0e40000, 0x40000001, 0x80080000, 0xb0ff0000, 0xffff };
-static SRenderState rsshaCloudShadows[] = { 
+static SRenderState rsshaCloudShadows[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaCloudShadows[] = { 
+static STextureStageState tssshaCloudShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateCloudShadows[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateCloudShadows[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateCloudShadows[] = { 
+static STextureStageState tssstateCloudShadows[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psCloudShadows( 33 , dwps11CloudShadows,0,0,0, rsshaCloudShadows, tssshaCloudShadows, rsstateCloudShadows, tssstateCloudShadows );
 static DWORD dwps11Depth16ATTexture[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x1, 0x80080000, 0xb0e40001, 0x50, 0x800f0000, 0x80ff0000, 0xb0e40000, 0xa0e40000, 0xffff };
-static SRenderState rsshaDepth16ATTexture[] = { 
+static SRenderState rsshaDepth16ATTexture[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDepth16ATTexture[] = { 
+static STextureStageState tssshaDepth16ATTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDepth16ATTexture[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAREF, 1}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateDepth16ATTexture[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAREF, 1},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDepth16ATTexture[] = { 
+static STextureStageState tssstateDepth16ATTexture[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDepth16ATTexture( 34 , dwps11Depth16ATTexture,0,0,0, rsshaDepth16ATTexture, tssshaDepth16ATTexture, rsstateDepth16ATTexture, tssstateDepth16ATTexture );
 static DWORD dwps11Constant[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x800f0000, 0xb0e40000, 0xa0e40000, 0xffff };
-static SRenderState rsshaConstant[] = { 
+static SRenderState rsshaConstant[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaConstant[] = { 
+static STextureStageState tssshaConstant[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateConstant[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAREF, 120}, 
+static SRenderState rsstateConstant[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAREF, 120},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateConstant[] = { 
+static STextureStageState tssstateConstant[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psConstant( 35 , dwps11Constant,0,0,0, rsshaConstant, tssshaConstant, rsstateConstant, tssstateConstant );
 static DWORD dwps11Diffuse[] ={ 0xffff0101, 0x1, 0x800f0000, 0x90e40000, 0xffff };
-static SRenderState rsshaDiffuse[] = { 
+static SRenderState rsshaDiffuse[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDiffuse[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaDiffuse[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_COLORARG1, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDiffuse[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateDiffuse[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDiffuse[] = { 
+static STextureStageState tssstateDiffuse[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDiffuse( 36 , dwps11Diffuse,0,0,0, rsshaDiffuse, tssshaDiffuse, rsstateDiffuse, tssstateDiffuse );
 static DWORD dwps11DiffuseAlpha[] ={ 0xffff0101, 0x1, 0x800f0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaDiffuseAlpha[] = { 
+static SRenderState rsshaDiffuseAlpha[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaDiffuseAlpha[] = { 
+static STextureStageState tssshaDiffuseAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateDiffuseAlpha[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateDiffuseAlpha[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateDiffuseAlpha[] = { 
+static STextureStageState tssstateDiffuseAlpha[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psDiffuseAlpha( 37 , dwps11DiffuseAlpha,0,0,0, rsshaDiffuseAlpha, tssshaDiffuseAlpha, rsstateDiffuseAlpha, tssstateDiffuseAlpha );
 static DWORD dwps11TransparentDifTex4[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x82070000, 0xb0e40000, 0x90e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaTransparentDifTex4[] = { 
+static SRenderState rsshaTransparentDifTex4[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaTransparentDifTex4[] = { 
-{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE}, 
-{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X}, 
-{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE}, 
-{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE}, 
-{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE}, 
-{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE}, 
-{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE}, 
-{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE}, 
+static STextureStageState tssshaTransparentDifTex4[] = {
+{ 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 1, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_DISABLE},
+{ 0, D3DTSS_COLOROP, D3DTOP_MODULATE4X},
+{ 0, D3DTSS_COLORARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_COLORARG2, D3DTA_DIFFUSE},
+{ 0, D3DTSS_ALPHAOP, D3DTOP_MODULATE},
+{ 0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE},
+{ 0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE},
+{ 1, D3DTSS_COLOROP, D3DTOP_DISABLE},
+{ 1, D3DTSS_ALPHAOP, D3DTOP_DISABLE},
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateTransparentDifTex4[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateTransparentDifTex4[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateTransparentDifTex4[] = { 
+static STextureStageState tssstateTransparentDifTex4[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psTransparentDifTex4( 38 , dwps11TransparentDifTex4,0,0,0, rsshaTransparentDifTex4, tssshaTransparentDifTex4, rsstateTransparentDifTex4, tssstateTransparentDifTex4 );
 static DWORD dwps11G3Particles[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x5, 0x80070000, 0xb0e40000, 0x90e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0x5, 0x82070000, 0x80e40000, 0xb0e40001, 0x5, 0x80070001, 0x90e40001, 0x80ff0000, 0x40000005, 0x80080001, 0x80ff0000, 0x90ff0001, 0x12, 0x800f0000, 0x90ff0001, 0x80e40000, 0x80e40001, 0xffff };
-static SRenderState rsshaG3Particles[] = { 
+static SRenderState rsshaG3Particles[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3Particles[] = { 
+static STextureStageState tssshaG3Particles[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3Particles[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateG3Particles[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3Particles[] = { 
+static STextureStageState tssstateG3Particles[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3Particles( 39 , dwps11G3Particles,0,0,0, rsshaG3Particles, tssshaG3Particles, rsstateG3Particles, tssstateG3Particles );
 static DWORD dwps11G3SimpleParticles[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x5, 0x80070000, 0xb0e40000, 0x90e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0x5, 0x80070001, 0x90e40001, 0x80ff0000, 0x40000005, 0x80080001, 0x80ff0000, 0x90ff0001, 0x12, 0x800f0000, 0x90ff0001, 0x80e40000, 0x80e40001, 0xffff };
-static SRenderState rsshaG3SimpleParticles[] = { 
+static SRenderState rsshaG3SimpleParticles[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3SimpleParticles[] = { 
+static STextureStageState tssshaG3SimpleParticles[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3SimpleParticles[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateG3SimpleParticles[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3SimpleParticles[] = { 
+static STextureStageState tssstateG3SimpleParticles[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3SimpleParticles( 40 , dwps11G3SimpleParticles,0,0,0, rsshaG3SimpleParticles, tssshaG3SimpleParticles, rsstateG3SimpleParticles, tssstateG3SimpleParticles );
 static DWORD dwps11GlossedMirror[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x1, 0x80070000, 0xb0e40000, 0x40000005, 0x80080000, 0x90ff0000, 0xb0ff0000, 0x5, 0x800f0000, 0x80e40000, 0xb0e40001, 0xffff };
-static SRenderState rsshaGlossedMirror[] = { 
+static SRenderState rsshaGlossedMirror[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaGlossedMirror[] = { 
+static STextureStageState tssshaGlossedMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateGlossedMirror[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateGlossedMirror[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateGlossedMirror[] = { 
+static STextureStageState tssstateGlossedMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psGlossedMirror( 41 , dwps11GlossedMirror,0,0,0, rsshaGlossedMirror, tssshaGlossedMirror, rsstateGlossedMirror, tssstateGlossedMirror );
 static DWORD dwps11Blend2TexColor[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x80070001, 0xb0e40000, 0x90e40000, 0x40000005, 0x80080001, 0x90ff0000, 0xb0ff0001, 0x12, 0x80070000, 0x80ff0001, 0xb0e40001, 0x80e40001, 0x5, 0x80070000, 0x80e40000, 0x90e40001, 0x40000005, 0x80080000, 0xb0aa0002, 0xb0ff0000, 0xffff };
-static SRenderState rsshaBlend2TexColor[] = { 
+static SRenderState rsshaBlend2TexColor[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaBlend2TexColor[] = { 
+static STextureStageState tssshaBlend2TexColor[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateBlend2TexColor[] = { 
+static SRenderState rsstateBlend2TexColor[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateBlend2TexColor[] = { 
+static STextureStageState tssstateBlend2TexColor[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psBlend2TexColor( 42 , dwps11Blend2TexColor,0,0,0, rsshaBlend2TexColor, tssshaBlend2TexColor, rsstateBlend2TexColor, tssstateBlend2TexColor );
 static DWORD dwps11ReflectionWaterCube[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x49, 0xb00f0001, 0xb4e40000, 0x49, 0xb00f0002, 0xb4e40000, 0x4d, 0xb00f0003, 0xb4e40000, 0x1, 0x80070000, 0xb0e40003, 0x40000005, 0x80080000, 0x90ff0000, 0xb0ff0003, 0xffff };
-static SRenderState rsshaReflectionWaterCube[] = { 
+static SRenderState rsshaReflectionWaterCube[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaReflectionWaterCube[] = { 
+static STextureStageState tssshaReflectionWaterCube[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateReflectionWaterCube[] = { 
+static SRenderState rsstateReflectionWaterCube[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateReflectionWaterCube[] = { 
+static STextureStageState tssstateReflectionWaterCube[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psReflectionWaterCube( 43 , dwps11ReflectionWaterCube,0,0,0, rsshaReflectionWaterCube, tssshaReflectionWaterCube, rsstateReflectionWaterCube, tssstateReflectionWaterCube );
 static DWORD dwps11ReflectionWater[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x47, 0xb00f0001, 0xb4e40000, 0x48, 0xb00f0002, 0xb4e40000, 0x42, 0xb00f0003, 0x12, 0x80070000, 0xb0ff0003, 0xb0e40002, 0xb0e40003, 0x40000001, 0x80080000, 0x90ff0000, 0xffff };
-static SRenderState rsshaReflectionWater[] = { 
+static SRenderState rsshaReflectionWater[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaReflectionWater[] = { 
+static STextureStageState tssshaReflectionWater[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateReflectionWater[] = { 
+static SRenderState rsstateReflectionWater[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateReflectionWater[] = { 
+static STextureStageState tssstateReflectionWater[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psReflectionWater( 44 , dwps11ReflectionWater,0,0,0, rsshaReflectionWater, tssshaReflectionWater, rsstateReflectionWater, tssstateReflectionWater );
 static DWORD dwps11G3AnimWater[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x40, 0xb00f0003, 0x5, 0x82170000, 0x90e40000, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0xb1aa0002, 0x5, 0x80080001, 0xb0ff0001, 0xb0aa0003, 0x12, 0x80070000, 0x80ff0001, 0xb0e40001, 0x80e40000, 0x40000005, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3AnimWater[] = { 
+static SRenderState rsshaG3AnimWater[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3AnimWater[] = { 
+static STextureStageState tssshaG3AnimWater[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3AnimWater[] = { 
+static SRenderState rsstateG3AnimWater[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3AnimWater[] = { 
+static STextureStageState tssstateG3AnimWater[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3AnimWater( 45 , dwps11G3AnimWater,0,0,0, rsshaG3AnimWater, tssshaG3AnimWater, rsstateG3AnimWater, tssstateG3AnimWater );
 static DWORD dwps11G3AnimWaterWithoutHorse[] ={ 0xffff0101, 0x42, 0xb00f0000, 0x42, 0xb00f0001, 0x40, 0xb00f0002, 0x5, 0x82170000, 0x90e40001, 0xb0e40000, 0x40000002, 0x80080000, 0xa0e40004, 0xb1aa0002, 0x5, 0x80080000, 0xb0ff0000, 0x90ff0000, 0xffff };
-static SRenderState rsshaG3AnimWaterWithoutHorse[] = { 
+static SRenderState rsshaG3AnimWaterWithoutHorse[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG3AnimWaterWithoutHorse[] = { 
+static STextureStageState tssshaG3AnimWaterWithoutHorse[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG3AnimWaterWithoutHorse[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateG3AnimWaterWithoutHorse[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG3AnimWaterWithoutHorse[] = { 
+static STextureStageState tssstateG3AnimWaterWithoutHorse[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG3AnimWaterWithoutHorse( 46 , dwps11G3AnimWaterWithoutHorse,0,0,0, rsshaG3AnimWaterWithoutHorse, tssshaG3AnimWaterWithoutHorse, rsstateG3AnimWaterWithoutHorse, tssstateG3AnimWaterWithoutHorse );
 static DWORD dwps11CLSkyLight3[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x98000000, 0xa00f0802, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb0030002, 0x200001f, 0x80000000, 0xb00f0003, 0x200001f, 0x80000000, 0xb00f0004, 0x200001f, 0x80000000, 0x900f0000, 0x3000042, 0x800f0000, 0xb0e40000, 0xa0e40800, 0x3000042, 0x800f0001, 0xb0e40001, 0xa0e40800, 0x3000042, 0x800f0002, 0xb0e40002, 0xa0e40800, 0x3000002, 0x80170000, 0x80e40000, 0x91e40000, 0x3000002, 0x80170001, 0x80e40001, 0x91e40000, 0x3000002, 0x80170002, 0x80e40002, 0x91e40000, 0x4000004, 0x80070000, 0x80e40000, 0xa0e40000, 0xa0ff0000, 0x4000004, 0x80070000, 0x80e40001, 0xa0e40001, 0x80e40000, 0x4000004, 0x80070000, 0x80e40002, 0xa0e40002, 0x80e40000, 0x3000042, 0x800f0004, 0xb0e40004, 0xa0e40802, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000009, 0xa0550009, 0x3000008, 0x80110003, 0x80e40004, 0xa0e40006, 0x3000008, 0x80120003, 0x80e40004, 0xa0e40007, 0x3000008, 0x80140003, 0x80e40004, 0xa0e40008, 0x4000058, 0x80070000, 0x80e40000, 0xa0e40003, 0x80e40003, 0x3000008, 0x80070000, 0x80e40000, 0xa0e40004, 0x3010042, 0x800f0001, 0xb0e40003, 0xa0e40801, 0x4000004, 0x80070000, 0x80e40000, 0xa0e40005, 0x80e40001, 0x2000001, 0x80080000, 0xa0e40004, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaCLSkyLight3[] = { 
+static SRenderState rsshaCLSkyLight3[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaCLSkyLight3[] = { 
+static STextureStageState tssshaCLSkyLight3[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateCLSkyLight3[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateCLSkyLight3[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateCLSkyLight3[] = { 
+static STextureStageState tssstateCLSkyLight3[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psCLSkyLight3( 47 , dwps11CLSkyLight3,0,0,0, rsshaCLSkyLight3, tssshaCLSkyLight3, rsstateCLSkyLight3, tssstateCLSkyLight3 );
 static DWORD dwps11CLSkyLight3Translucent[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x98000000, 0xa00f0802, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb0030002, 0x200001f, 0x80000000, 0xb00f0003, 0x200001f, 0x80000000, 0xb00f0004, 0x200001f, 0x80000000, 0x900f0000, 0x3000042, 0x800f0000, 0xb0e40000, 0xa0e40800, 0x3000042, 0x800f0001, 0xb0e40001, 0xa0e40800, 0x3000042, 0x800f0002, 0xb0e40002, 0xa0e40800, 0x3000002, 0x80170000, 0x80e40000, 0x91e40000, 0x3000002, 0x80170001, 0x80e40001, 0x91e40000, 0x3000002, 0x80170002, 0x80e40002, 0x91e40000, 0x4000004, 0x80070000, 0x80e40000, 0xa0e40000, 0xa0ff0000, 0x4000004, 0x80070000, 0x80e40001, 0xa0e40001, 0x80e40000, 0x4000004, 0x80070000, 0x80e40002, 0xa0e40002, 0x80e40000, 0x3000042, 0x800f0004, 0xb0e40004, 0xa0e40802, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000009, 0xa0550009, 0x3000008, 0x80110003, 0x80e40004, 0xa0e40006, 0x3000008, 0x80120003, 0x80e40004, 0xa0e40007, 0x3000008, 0x80140003, 0x80e40004, 0xa0e40008, 0x3000008, 0x80110005, 0x81e40004, 0xa0e40006, 0x3000008, 0x80120005, 0x81e40004, 0xa0e40007, 0x3000008, 0x80140005, 0x81e40004, 0xa0e40008, 0x4000058, 0x80070005, 0x80e40000, 0xa0e40003, 0x80e40005, 0x4000058, 0x80070000, 0x80e40000, 0xa0e40003, 0x80e40003, 0x3000008, 0x80070000, 0x80e40000, 0xa0e40004, 0x3000008, 0x80070005, 0x80e40005, 0xa0e40004, 0x4000004, 0x80070000, 0x80e40005, 0xa0e4000a, 0x80e40000, 0x3010042, 0x800f0001, 0xb0e40003, 0xa0e40801, 0x4000004, 0x80070000, 0x80e40000, 0xa0e40005, 0x80e40001, 0x2000001, 0x80080000, 0xa0e40004, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaCLSkyLight3Translucent[] = { 
+static SRenderState rsshaCLSkyLight3Translucent[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaCLSkyLight3Translucent[] = { 
+static STextureStageState tssshaCLSkyLight3Translucent[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateCLSkyLight3Translucent[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateCLSkyLight3Translucent[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateCLSkyLight3Translucent[] = { 
+static STextureStageState tssstateCLSkyLight3Translucent[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psCLSkyLight3Translucent( 48 , dwps11CLSkyLight3Translucent,0,0,0, rsshaCLSkyLight3Translucent, tssshaCLSkyLight3Translucent, rsstateCLSkyLight3Translucent, tssstateCLSkyLight3Translucent );
 static DWORD dwps11LinearToGamma[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x80000000, 0xb0030000, 0x3000042, 0x800f0000, 0xb0e40000, 0xa0e40800, 0x3000020, 0x80010000, 0x80000000, 0xa0000000, 0x3000020, 0x80020000, 0x80550000, 0xa0000000, 0x3000020, 0x80040000, 0x80aa0000, 0xa0000000, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaLinearToGamma[] = { 
+static SRenderState rsshaLinearToGamma[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaLinearToGamma[] = { 
+static STextureStageState tssshaLinearToGamma[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateLinearToGamma[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateLinearToGamma[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateLinearToGamma[] = { 
+static STextureStageState tssstateLinearToGamma[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psLinearToGamma( 49 , dwps11LinearToGamma,0,0,0, rsshaLinearToGamma, tssshaLinearToGamma, rsstateLinearToGamma, tssstateLinearToGamma );
 static DWORD dwps11PointCubeMapDepth[] ={ 0xffff0200, 0x200001f, 0x80000000, 0xb0070000, 0x3000008, 0x801f0000, 0xb0e40000, 0xb0e40000, 0x2000007, 0x80080001, 0x80ff0000, 0x3000005, 0x800f0000, 0x80ff0001, 0x80ff0000, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaPointCubeMapDepth[] = { 
+static SRenderState rsshaPointCubeMapDepth[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaPointCubeMapDepth[] = { 
+static STextureStageState tssshaPointCubeMapDepth[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstatePointCubeMapDepth[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstatePointCubeMapDepth[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstatePointCubeMapDepth[] = { 
+static STextureStageState tssstatePointCubeMapDepth[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psPointCubeMapDepth( 50 , dwps11PointCubeMapDepth,0,0,0, rsshaPointCubeMapDepth, tssshaPointCubeMapDepth, rsstatePointCubeMapDepth, tssstatePointCubeMapDepth );
 static DWORD dwps11CLPointLightShadowed[] ={ 0xffff0200, 0x200001f, 0x98000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x98000000, 0xa00f0802, 0x200001f, 0x80000000, 0xb0070000, 0x200001f, 0x80000000, 0xb00f0001, 0x200001f, 0x80000000, 0xb0070002, 0x3000008, 0x80180000, 0xb0e40000, 0xb0e40000, 0x3000002, 0x80080002, 0x81ff0000, 0xa1550000, 0x300000b, 0x80080002, 0x80ff0002, 0xa0aa0000, 0x4000004, 0x80080001, 0x80ff0000, 0xa0000004, 0xa0550004, 0x2000006, 0x80080001, 0x80ff0001, 0x3000005, 0x80080001, 0x80ff0001, 0x80ff0002, 0x2000007, 0x80080004, 0x80ff0000, 0x3000005, 0x80070003, 0xb0e40000, 0x80ff0004, 0x3000042, 0x800f0002, 0xb0e40002, 0xa0e40802, 0x4000004, 0x800f0002, 0x80e40002, 0xa0000000, 0xa0550000, 0x3000008, 0x801f0003, 0x80e40003, 0x81e40002, 0x3000008, 0x801f0002, 0x80e40003, 0x80e40002, 0x4000004, 0x800f0003, 0x80e40002, 0xa0e40005, 0x80e40003, 0x3000005, 0x800f0001, 0x80ff0001, 0xa0e40003, 0x3000005, 0x800f0003, 0x80e40003, 0x80e40001, 0x3000005, 0x80080000, 0x80ff0004, 0x80ff0000, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000002, 0x80080000, 0x80e40002, 0x81e40000, 0x3000002, 0x80080000, 0x80ff0000, 0xa0ff0002, 0x4000058, 0x800f0000, 0x80ff0000, 0x80e40003, 0xa0e40001, 0x3010042, 0x800f0001, 0xb0e40001, 0xa0e40801, 0x3000002, 0x800f0000, 0x80e40000, 0x80e40001, 0x2000001, 0x800f0800, 0x80e40000, 0xffff };
-static SRenderState rsshaCLPointLightShadowed[] = { 
+static SRenderState rsshaCLPointLightShadowed[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaCLPointLightShadowed[] = { 
+static STextureStageState tssshaCLPointLightShadowed[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateCLPointLightShadowed[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
+static SRenderState rsstateCLPointLightShadowed[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateCLPointLightShadowed[] = { 
+static STextureStageState tssstateCLPointLightShadowed[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psCLPointLightShadowed( 51 , dwps11CLPointLightShadowed,0,0,0, rsshaCLPointLightShadowed, tssshaCLPointLightShadowed, rsstateCLPointLightShadowed, tssstateCLPointLightShadowed );
 static DWORD dwps11G5DiffuseTex[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTex[] = { 
+static SRenderState rsshaG5DiffuseTex[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTex[] = { 
+static STextureStageState tssshaG5DiffuseTex[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTex[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTex[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTex[] = { 
+static STextureStageState tssstateG5DiffuseTex[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTex( 52 , dwps11G5DiffuseTex,0,0,0, rsshaG5DiffuseTex, tssshaG5DiffuseTex, rsstateG5DiffuseTex, tssstateG5DiffuseTex );
 static DWORD dwps11G5TransparentGeom[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5TransparentGeom[] = { 
+static SRenderState rsshaG5TransparentGeom[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5TransparentGeom[] = { 
+static STextureStageState tssshaG5TransparentGeom[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5TransparentGeom[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5TransparentGeom[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5TransparentGeom[] = { 
+static STextureStageState tssstateG5TransparentGeom[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5TransparentGeom( 53 , dwps11G5TransparentGeom,0,0,0, rsshaG5TransparentGeom, tssshaG5TransparentGeom, rsstateG5TransparentGeom, tssstateG5TransparentGeom );
 static DWORD dwps11G5DiffuseTexMirror[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x98000000, 0xa00f0803, 0x200001f, 0x90000000, 0xa00f0804, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0070003, 0x200001f, 0x80000000, 0xb0030004, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x3000005, 0x80080003, 0x80ff0002, 0xa0e40000, 0x3000042, 0x800f0001, 0xb0e40003, 0xa0e40803, 0x3000005, 0x80080001, 0x90ff0000, 0x80ff0001, 0x3000042, 0x800f0000, 0xb0e40004, 0xa0e40804, 0x3000005, 0x800f0001, 0x80e40001, 0x80e40000, 0x4000012, 0x80070004, 0x80ff0001, 0x80e40001, 0x80e40003, 0x3000002, 0x80080004, 0xa0aa0007, 0x81ff0003, 0x4000004, 0x80080004, 0x80ff0001, 0x80ff0004, 0x80ff0003, 0x2000001, 0x800f0800, 0x80e40004, 0xffff };
-static SRenderState rsshaG5DiffuseTexMirror[] = { 
+static SRenderState rsshaG5DiffuseTexMirror[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexMirror[] = { 
+static STextureStageState tssshaG5DiffuseTexMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexMirror[] = { 
-{ D3DRS_ALPHATESTENABLE, FALSE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexMirror[] = {
+{ D3DRS_ALPHATESTENABLE, FALSE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexMirror[] = { 
+static STextureStageState tssstateG5DiffuseTexMirror[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexMirror( 54 , dwps11G5DiffuseTexMirror,0,0,0, rsshaG5DiffuseTexMirror, tssshaG5DiffuseTexMirror, rsstateG5DiffuseTexMirror, tssstateG5DiffuseTexMirror );
 static DWORD dwps11G5DiffuseTexDetail[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x3000042, 0x800f0000, 0xb0e40003, 0xa0e40803, 0x3000005, 0x800f0003, 0x80e40003, 0x80e40000, 0x3000005, 0x800f0003, 0x80e40003, 0xa0550007, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexDetail[] = { 
+static SRenderState rsshaG5DiffuseTexDetail[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexDetail[] = { 
+static STextureStageState tssshaG5DiffuseTexDetail[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexDetail[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexDetail[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexDetail[] = { 
+static STextureStageState tssstateG5DiffuseTexDetail[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexDetail( 55 , dwps11G5DiffuseTexDetail,0,0,0, rsshaG5DiffuseTexDetail, tssshaG5DiffuseTexDetail, rsstateG5DiffuseTexDetail, tssstateG5DiffuseTexDetail );
 static DWORD dwps11G5DiffuseTex2[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x3000042, 0x800f0000, 0xb0e40003, 0xa0e40803, 0x3000005, 0x800f0003, 0x80e40003, 0x80e40000, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTex2[] = { 
+static SRenderState rsshaG5DiffuseTex2[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTex2[] = { 
+static STextureStageState tssshaG5DiffuseTex2[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTex2[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTex2[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTex2[] = { 
+static STextureStageState tssstateG5DiffuseTex2[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTex2( 56 , dwps11G5DiffuseTex2,0,0,0, rsshaG5DiffuseTex2, tssshaG5DiffuseTex2, rsstateG5DiffuseTex2, tssstateG5DiffuseTex2 );
 static DWORD dwps11G5DiffuseTexLM[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0000, 0xb0e40003, 0xa0e40803, 0x3000005, 0x80070000, 0x80e40000, 0xa0e40002, 0x3000002, 0x80070000, 0x80e40000, 0xa0e40001, 0x3000002, 0x80070001, 0x90e40001, 0x80e40000, 0x3000002, 0x80070000, 0x90e40000, 0x80e40000, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x80e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x80e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexLM[] = { 
+static SRenderState rsshaG5DiffuseTexLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexLM[] = { 
+static STextureStageState tssshaG5DiffuseTexLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexLM[] = { 
+static STextureStageState tssstateG5DiffuseTexLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexLM( 57 , dwps11G5DiffuseTexLM,0,0,0, rsshaG5DiffuseTexLM, tssshaG5DiffuseTexLM, rsstateG5DiffuseTexLM, tssstateG5DiffuseTexLM );
 static DWORD dwps11G5DiffuseTexDetailLM[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x90000000, 0xa00f0804, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0xb0030004, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0000, 0xb0e40003, 0xa0e40803, 0x3000005, 0x80070000, 0x80e40000, 0xa0e40002, 0x3000002, 0x80070000, 0x80e40000, 0xa0e40001, 0x3000002, 0x80070001, 0x90e40001, 0x80e40000, 0x3000002, 0x80070000, 0x90e40000, 0x80e40000, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x80e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x80e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x3000042, 0x800f0000, 0xb0e40004, 0xa0e40804, 0x3000005, 0x800f0003, 0x80e40003, 0x80e40000, 0x3000005, 0x800f0003, 0x80e40003, 0xa0550007, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexDetailLM[] = { 
+static SRenderState rsshaG5DiffuseTexDetailLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexDetailLM[] = { 
+static STextureStageState tssshaG5DiffuseTexDetailLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexDetailLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexDetailLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexDetailLM[] = { 
+static STextureStageState tssstateG5DiffuseTexDetailLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexDetailLM( 58 , dwps11G5DiffuseTexDetailLM,0,0,0, rsshaG5DiffuseTexDetailLM, tssshaG5DiffuseTexDetailLM, rsstateG5DiffuseTexDetailLM, tssstateG5DiffuseTexDetailLM );
 static DWORD dwps11G5DiffuseTexSpec[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x98000000, 0xa00f0804, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0xb0070004, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0000, 0xb0e40000, 0xa0e40800, 0x3000042, 0x800f0001, 0xb0e40001, 0xa0e40801, 0x3000042, 0x800f0003, 0xb0e40003, 0xa0e40803, 0x3000042, 0x800f0004, 0xb0e40004, 0xa0e40804, 0x3000005, 0x80070005, 0x90e40001, 0x80e40000, 0x3000005, 0x80170005, 0x80e40005, 0xa0000007, 0x3000005, 0x80070002, 0x80ff0004, 0x80ff0004, 0x3000005, 0x80080002, 0x80ff0004, 0xa0e40000, 0x4000004, 0x80080002, 0x80aa0002, 0xa0e40001, 0x80ff0002, 0x3000005, 0x80070002, 0x80e40002, 0x80e40002, 0x4000004, 0x80080002, 0x80aa0002, 0xa0e40002, 0x80ff0002, 0x3000005, 0x80070002, 0x80e40003, 0xa0e40005, 0x4000004, 0x80070005, 0x80ff0002, 0x80e40002, 0x80e40005, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40000, 0x3000005, 0x80170003, 0x80e40003, 0xa0000007, 0x4000012, 0x80070003, 0x80e40001, 0x80e40003, 0x80e40005, 0x2000001, 0x80070000, 0x80e40003, 0x2000001, 0x80070001, 0x80e40005, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x3000008, 0x80080001, 0x90e40000, 0xa0ff0005, 0x3000005, 0x80180001, 0x80e40001, 0xa0000007, 0x3000005, 0x80070003, 0x80e40003, 0x80ff0001, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexSpec[] = { 
+static SRenderState rsshaG5DiffuseTexSpec[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexSpec[] = { 
+static STextureStageState tssshaG5DiffuseTexSpec[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexSpec[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexSpec[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexSpec[] = { 
+static STextureStageState tssstateG5DiffuseTexSpec[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexSpec( 59 , dwps11G5DiffuseTexSpec,0,0,0, rsshaG5DiffuseTexSpec, tssshaG5DiffuseTexSpec, rsstateG5DiffuseTexSpec, tssstateG5DiffuseTexSpec );
 static DWORD dwps11G5DiffuseTexSpecLM[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x98000000, 0xa00f0804, 0x200001f, 0x90000000, 0xa00f0805, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0xb0070004, 0x200001f, 0x80000000, 0xb0030005, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40003, 0xa0e40803, 0x3000042, 0x800f0003, 0xb0e40004, 0xa0e40804, 0x3000005, 0x80070000, 0x80ff0003, 0x80ff0003, 0x3000005, 0x80080000, 0x80ff0003, 0xa0e40000, 0x4000004, 0x80080000, 0x80aa0000, 0xa0e40001, 0x80ff0000, 0x3000005, 0x80070000, 0x80e40000, 0x80e40000, 0x4000004, 0x80080000, 0x80aa0000, 0xa0e40002, 0x80ff0000, 0x3000005, 0x80070000, 0x80e40002, 0xa0e40005, 0x3000005, 0x80070002, 0x80ff0000, 0x80e40000, 0x3000042, 0x800f0003, 0xb0e40000, 0xa0e40800, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x3000042, 0x800f0001, 0xb0e40005, 0xa0e40805, 0x3000005, 0x80070001, 0x80e40001, 0xa0e40003, 0x3000002, 0x80070001, 0x80e40001, 0xa0e40004, 0x3000002, 0x80070000, 0x90e40000, 0x80e40001, 0x3000002, 0x80070001, 0x90e40001, 0x80e40001, 0x3000005, 0x80070001, 0x80e40001, 0x80e40003, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000002, 0x80070001, 0x80e40002, 0x80e40001, 0x3000005, 0x80070000, 0x80e40000, 0x80e40003, 0x3000005, 0x80170000, 0x80e40000, 0xa0000007, 0x4000012, 0x80070000, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000005, 0x80080003, 0x80ff0003, 0x90ff0000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexSpecLM[] = { 
+static SRenderState rsshaG5DiffuseTexSpecLM[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexSpecLM[] = { 
+static STextureStageState tssshaG5DiffuseTexSpecLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexSpecLM[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexSpecLM[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexSpecLM[] = { 
+static STextureStageState tssstateG5DiffuseTexSpecLM[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexSpecLM( 60 , dwps11G5DiffuseTexSpecLM,0,0,0, rsshaG5DiffuseTexSpecLM, tssshaG5DiffuseTexSpecLM, rsstateG5DiffuseTexSpecLM, tssstateG5DiffuseTexSpecLM );
 static DWORD dwps11G5DiffuseTexTerrain[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x4000004, 0x800f0001, 0x90ff0000, 0xa0550007, 0xa1aa0007, 0x3000002, 0x80180003, 0x80e40002, 0x80e40001, 0x3000002, 0x80080003, 0x80ff0003, 0xa0ff0003, 0x3000005, 0x80080003, 0x80ff0003, 0xa0000007, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTexTerrain[] = { 
+static SRenderState rsshaG5DiffuseTexTerrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTexTerrain[] = { 
+static STextureStageState tssshaG5DiffuseTexTerrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTexTerrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTexTerrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTexTerrain[] = { 
+static STextureStageState tssstateG5DiffuseTexTerrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTexTerrain( 61 , dwps11G5DiffuseTexTerrain,0,0,0, rsshaG5DiffuseTexTerrain, tssshaG5DiffuseTexTerrain, rsstateG5DiffuseTexTerrain, tssstateG5DiffuseTexTerrain );
 static DWORD dwps11G5DiffuseTex2Terrain[] ={ 0xffff0200, 0x200001f, 0x90000000, 0xa00f0800, 0x200001f, 0x90000000, 0xa00f0801, 0x200001f, 0x90000000, 0xa00f0803, 0x200001f, 0x80000000, 0xb0030000, 0x200001f, 0x80000000, 0xb0030001, 0x200001f, 0x80000000, 0xb00f0002, 0x200001f, 0x80000000, 0xb0030003, 0x200001f, 0x80000000, 0x900f0000, 0x200001f, 0x80000000, 0x90070001, 0x3000042, 0x800f0002, 0xb0e40000, 0xa0e40800, 0x3000005, 0x800f0003, 0x90e40000, 0x80e40002, 0x3000005, 0x801f0000, 0x80e40003, 0xa0000007, 0x3000005, 0x80070001, 0x90e40001, 0x80e40002, 0x3000005, 0x80170001, 0x80e40001, 0xa0000007, 0x3000042, 0x800f0004, 0xb0e40001, 0xa0e40801, 0x4000012, 0x80070001, 0x80e40004, 0x80e40001, 0x80e40000, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070003, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80030004, 0xa0e4000a, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000b, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e4000c, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e4000d, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000002, 0x80030004, 0xa0e4000e, 0xb0e40001, 0x3000002, 0x80030005, 0xa0e4000f, 0xb0e40001, 0x3000002, 0x80030006, 0xa0e40010, 0xb0e40001, 0x3000002, 0x80030007, 0xa0e40011, 0xb0e40001, 0x3000042, 0x800f0004, 0x80e40004, 0xa0e40801, 0x3000042, 0x800f0005, 0x80e40005, 0xa0e40801, 0x3000042, 0x800f0006, 0x80e40006, 0xa0e40801, 0x3000042, 0x800f0007, 0x80e40007, 0xa0e40801, 0x3000002, 0x800f0004, 0x80ff0004, 0xb1ff0002, 0x4000004, 0x800f0004, 0x80e40004, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070004, 0x80e40004, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40004, 0x3000002, 0x800f0005, 0x80ff0005, 0xb1ff0002, 0x4000004, 0x800f0005, 0x80e40005, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070005, 0x80e40005, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40005, 0x3000002, 0x800f0006, 0x80ff0006, 0xb1ff0002, 0x4000004, 0x800f0006, 0x80e40006, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070006, 0x80e40006, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40006, 0x3000002, 0x800f0007, 0x80ff0007, 0xb1ff0002, 0x4000004, 0x800f0007, 0x80e40007, 0xa0000007, 0xa1ff0007, 0x4000058, 0x80070007, 0x80e40007, 0x80e40000, 0x80e40001, 0x3000002, 0x80070003, 0x80e40003, 0x80e40007, 0x3000005, 0x80070003, 0x80e40003, 0xa0000008, 0x4000004, 0x800f0001, 0x90ff0000, 0xa0550007, 0xa1aa0007, 0x3000002, 0x80180003, 0x80e40002, 0x80e40001, 0x3000002, 0x80080003, 0x80ff0003, 0xa0ff0003, 0x3000005, 0x80080003, 0x80ff0003, 0xa0000007, 0x3000042, 0x800f0002, 0xb0e40003, 0xa0e40803, 0x3000005, 0x800f0003, 0x80e40003, 0x80e40002, 0x2000001, 0x800f0800, 0x80e40003, 0xffff };
-static SRenderState rsshaG5DiffuseTex2Terrain[] = { 
+static SRenderState rsshaG5DiffuseTex2Terrain[] = {
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssshaG5DiffuseTex2Terrain[] = { 
+static STextureStageState tssshaG5DiffuseTex2Terrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
-static SRenderState rsstateG5DiffuseTex2Terrain[] = { 
-{ D3DRS_ALPHATESTENABLE, TRUE}, 
-{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL}, 
+static SRenderState rsstateG5DiffuseTex2Terrain[] = {
+{ D3DRS_ALPHATESTENABLE, TRUE},
+{ D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL},
 {(D3DRENDERSTATETYPE)0,0} };
-static STextureStageState tssstateG5DiffuseTex2Terrain[] = { 
+static STextureStageState tssstateG5DiffuseTex2Terrain[] = {
 {-1,(D3DTEXTURESTAGESTATETYPE)0,0} };
 SPShader psG5DiffuseTex2Terrain( 62 , dwps11G5DiffuseTex2Terrain,0,0,0, rsshaG5DiffuseTex2Terrain, tssshaG5DiffuseTex2Terrain, rsstateG5DiffuseTex2Terrain, tssstateG5DiffuseTex2Terrain );
 

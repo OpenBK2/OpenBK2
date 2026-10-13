@@ -42,7 +42,7 @@ void CWindow3DControl::Visit( struct IUIVisitor *pVisitor )
 	VirtualToScreen( &rcClip );
 	VirtualToScreen( &ptPosition );
 	pVisitor->VisitZClearRect( rcLayout, ptPosition, rcClip );
-	
+
 	UpdateObjects( false );
 }
 
@@ -99,7 +99,7 @@ void CWindow3DControl::UpdateObjects( bool bForced )
 			if ( !obj.pModel )
 				continue;
 			Scene()->AddInterfaceObject( GetScreen(), nBaseID3D + i, obj.pModel, CVec2( obj.vPos.x + rect.x1, obj.vPos.y + rect.y1 ), obj.vSize );
-			
+
 			NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetInterfaceObjAnimator( GetScreen(), nBaseID3D + i );
 			if ( pAnimator && obj.pAnim )
 			{
@@ -131,7 +131,7 @@ IWindow3DControl::SParam CWindow3DControl::GetDBObjectParam( int nIndex ) const
 		param.vPos = VNULL2;
 		param.vSize = VNULL2;
 	}
-		
+
 	return param;
 }
 

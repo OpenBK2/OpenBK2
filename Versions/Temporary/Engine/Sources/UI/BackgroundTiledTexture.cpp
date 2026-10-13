@@ -72,7 +72,7 @@ void CBackgroundTiledTexture::DivideSubrects( const NDb::SSubRect &in, CRectLayo
 				sub.fSizeX = x + in.ptSize.x - sub.fX;
 				sub.sTex.rcTexRect.x2 = (  in.rcMaps.x2 );
 			}
-			
+
 			CTRect<float> sTexRect( sub.sTex.rcTexRect );
 			//swap( sTexRect.y1, sTexRect.y2 );
 

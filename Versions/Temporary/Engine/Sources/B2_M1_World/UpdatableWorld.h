@@ -19,7 +19,7 @@ typedef det_map<int, CPtr<CMapObj> > CKeyBuildings;
 
 class CCombatMusic
 {
-	enum ECombatMusicState 
+	enum ECombatMusicState
 	{
 		ESSS_IDLE,
 		ESSS_TO_COMBAT,
@@ -31,7 +31,7 @@ class CCombatMusic
 	ECombatMusicState eState{};
 	NTimer::STime combatPlayWONotify = 0;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&timeLastCombatNotify); f.Add(3,&eState); f.Add(4,&combatPlayWONotify); return 0; }
-public: 
+public:
 	CCombatMusic();
 	void Update( bool bCombat );
 };
@@ -44,7 +44,7 @@ class B2_M1_WORLD_EXPORT CUpdatableWorld : public virtual CObjectBase, public IU
 	CMapObjMap objects;
 	NDb::ESeason eSeason{};
 	NDb::EDayNight eDayTime{};					// needed to determine if headlights are on
-	
+
 	NTimer::STime currTime = 0;
 
 	// every segment update functions
@@ -64,7 +64,7 @@ private:
 
 	// for animations testing
 	CPtr<CAllAnimationsPlayer> pAllAnimationsPlayer;
-	
+
 	int nLastRangeAreasTime = 0;
 
 	typedef std::unordered_map<int /*UnitID*/, NTimer::STime> CWaitingCorpses;
@@ -73,7 +73,7 @@ private:
 
 	CPtr<IVisualNotifications> pNotifications;
 	CPtr<ICommonB2M1AI> pAI;
-	
+
 	// reinforcements
 	CReinforcementPositions reinforcementPositions;
 	CEnabledReinforcements enabledReinforcements;
@@ -157,8 +157,8 @@ private:
 	void UpdateDeadUnit( const SAIBasicUpdate * _pUpdate );
 	void UpdatePreDisappear( const SAIBasicUpdate * _pUpdate );
 	void UpdateNewEntrenchment( const SAIBasicUpdate *_pUpdate );
-	void UpdateAnimationChanged( const SAIBasicUpdate *_pUpdate );	
-	
+	void UpdateAnimationChanged( const SAIBasicUpdate *_pUpdate );
+
 	void UpdateModifyEntranceState( const SAIBasicUpdate *pUpdate );
 	// helper functions
 	void UpdateSelectable( const SAIBasicUpdate * _pUpdate );
@@ -212,7 +212,7 @@ private:
 protected:
 	void AddMapObj( int nID, CMapObj *pMO );
 	void RemoveMapObj( int nID, bool bGlobalRemove );
-	
+
 	virtual void OnNewMapObj( int nID, CMapObj *pMO ) {}
 	virtual void OnDeadOrRemoveMapObj( int nID ) {}
 	//
@@ -221,7 +221,7 @@ protected:
 	//
 	virtual void PlayerObjectiveChanged( const int nObjective, const enum EMissionObjectiveState eState ) = 0;
 	IVisualNotifications* GetNotifications() const { return pNotifications; }
-	
+
 	virtual void OnUpdateNotifyFeedback( const struct SAIFeedbackUpdate *pUpdate ) {}
 	virtual void OnUpdateNewUnit( const SAINewUnitUpdate *pUpdate, CMapObj *pMO ) {}
 	virtual void OnUpdateDiplomacy( CMapObj *pMO, const int nNewPlayer ) = 0;
@@ -232,8 +232,8 @@ protected:
 	virtual void OnUpdateSuperWeaponRecycle( const struct SSuperWeaponRecycle &update ) {}
 	virtual void OnReplaceSelectionGroup( CMOSelectable *pMOPattern, CMOSelectable *pMO ) {}
 
-	void ObjectPlayAttachedEffect( const SAIBasicUpdate *_pUpdate );	
-	void ObjectStopAttachedEffect( const SAIBasicUpdate *_pUpdate );	
+	void ObjectPlayAttachedEffect( const SAIBasicUpdate *_pUpdate );
+	void ObjectStopAttachedEffect( const SAIBasicUpdate *_pUpdate );
 
 	//
 	CUpdatableWorld();
@@ -243,7 +243,7 @@ public:
 	bool bEditor = false;
 	void SetSeason( const NDb::ESeason _eSeason, const NDb::EDayNight _eDayTime ) { eSeason = _eSeason; eDayTime = _eDayTime; }
 	void AfterLoad();
-	
+
 	virtual void Update();
 	//
 	CMapObj* GetMapObj( int nID ) const
@@ -256,8 +256,8 @@ public:
 	virtual void DeSelect( CMapObj *pMapObj ) = 0;
 	virtual void DeSelectDead( CMapObj *pMapObj ) = 0;
 	virtual void RemoveFromSelectionGroup( CMapObj *pMopObj ) = 0;
-	virtual void HideFromSelectionGroup( CMapObj *pMapObj ) { RemoveFromSelectionGroup( pMapObj ); } 
-	virtual void UnHideFromSelectionGroup( CMapObj *pMapObj ) {} 
+	virtual void HideFromSelectionGroup( CMapObj *pMapObj ) { RemoveFromSelectionGroup( pMapObj ); }
+	virtual void UnHideFromSelectionGroup( CMapObj *pMapObj ) {}
 	virtual void UpdateSpecialSelection( int nID, CMapObj *pMO ) {}
 	virtual bool IsActive( CMapObj *pMopObj ) = 0;
 	virtual bool IsSuperActive( CMapObj *pMopObj ) = 0;

@@ -44,7 +44,7 @@ PObjectBase & GetLast()
 void CheckLast()
 {
 	static CCheckSumSaver saver;
-	
+
 	if ( GetLast() )
 	{
 		if ( NObjectFactory::IsRegistered( NObjectFactory::GetObjectTypeID( GetLast() ) ) )

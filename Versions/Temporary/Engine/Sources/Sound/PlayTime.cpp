@@ -21,7 +21,7 @@ CPlayTime::CPlayTime( const NDb::SPlayTime *_pPlayTime, const NDb::SMusicTrack *
 		return;
 	const float fRandom ( NWin32Random::Random( 0.0f, 1.0f ) );
 	if ( _pPlayTime->nNumer != 0 )
-	{	
+	{
 		CFileStream trackStream( NVFS::GetMainVFS(), pTrack->szMusicFileName );
 		FSOUND_STREAM * pStreamingSound = OpenTrack( &trackStream );
 //		NI_ASSERT( pStreamingSound != 0, StrFmt( "cannot open stream file %s", pTrack->szMusicFileName ) );

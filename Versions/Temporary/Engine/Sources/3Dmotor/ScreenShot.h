@@ -29,7 +29,7 @@ private:
 	CVec4 vCoeff;
 	CArray2D<NGfx::SPixel8888> sScreenShot;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&eMode); f.Add(3,&vCoeff); f.Add(4,&sScreenShot); return 0; }
-	
+
 protected:
 	void Recalc();
 

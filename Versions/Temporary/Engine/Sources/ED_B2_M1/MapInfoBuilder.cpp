@@ -68,13 +68,13 @@ bool CMapInfoBuilder::EnsureMinimapMaterialAndTexture( IManipulator *pObjectMani
 	bool bResult = false;
 	std::string szMiniMapMaterialName;
 	CManipulatorManager::GetValue( &szMiniMapMaterialName, pObjectManipulator, "MiniMap" );
-	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " ) 
+	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " )
 	{
 		if ( CPtr<IManipulator> pMaterialMan = pResourceManager->CreateObjectManipulator( "Material", szMiniMapMaterialName ) )
 		{
 			std::string szMiniMapTextureName;
 			CManipulatorManager::GetValue( &szMiniMapTextureName, pMaterialMan, "Texture" );
-			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " ) 
+			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " )
 			{
 				// delete texture source and destination
 				if ( CPtr<IManipulator> pTexMan = pResourceManager->CreateObjectManipulator( "Texture", szMiniMapTextureName ) )
@@ -125,7 +125,7 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 		bResult = bResult && CManipulatorManager::SetValue( "TF_8888", pTexMan, "Format", false );
 		bResult = bResult && CManipulatorManager::SetValue( szFolder + "minimap.tga", pTexMan, "SrcName", false );
 		bResult = bResult && CManipulatorManager::SetValue( 1, pTexMan, "NMips" );
-		if ( bResult ) 
+		if ( bResult )
 		{
 			// create empty texture image
 			CArray2D<uint32_t> image( 256, 256 );
@@ -153,7 +153,7 @@ bool CMapInfoBuilder::MakeMinimapMaterialAndTexture( std::string *pszObjectName,
 		*pszObjectName = szMaterialName;
 		return bResult;
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		return false;
 	}
@@ -163,7 +163,7 @@ bool CMapInfoBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 
 	std::string szTypeName;
 	if ( pBuildDataManipulator->GetType( std::string(), &szTypeName ) )
@@ -197,7 +197,7 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, s
 	{
 		for ( int nPlayerIndex = 0; nPlayerIndex < nPlayerCount; ++nPlayerIndex )
 		{
-			if ( CheckStringValue(pszDescription, fmt::format("Players.[{}]", nPlayerIndex), pBuildDataManipulator) == false ) 
+			if ( CheckStringValue(pszDescription, fmt::format("Players.[{}]", nPlayerIndex), pBuildDataManipulator) == false )
 			{
 				return false;
 			}
@@ -211,11 +211,11 @@ bool CMapInfoBuilder::IsValidDataBuilder( IManipulator *pBuildDataManipulator, s
 	{
 		return false;
 	}
-	if ( CheckStringValue(pszDescription, "Season", pBuildDataManipulator) == false ) 
+	if ( CheckStringValue(pszDescription, "Season", pBuildDataManipulator) == false )
 	{
 		return false;
 	}
-	if ( CheckStringValue(pszDescription, "DayTime", pBuildDataManipulator) == false ) 
+	if ( CheckStringValue(pszDescription, "DayTime", pBuildDataManipulator) == false )
 	{
 		return false;
 	}
@@ -270,7 +270,7 @@ bool CMapInfoBuilder::InternalInsertObject( std::string *pszObjectTypeName,
 	const std::string szLightName = NEditorOptions::GetLight( szSeasonName, szDayTimeName );
 	const std::string szPreLightName = NEditorOptions::GetPreLight( szSeasonName, szDayTimeName );
 	const std::string szOceanWater = NEditorOptions::GetOceanWater( szSeasonName );
-	if ( szTilesetName.empty() || szLightName.empty() || szPreLightName.empty() || szOceanWater.empty() ) 
+	if ( szTilesetName.empty() || szLightName.empty() || szPreLightName.empty() || szOceanWater.empty() )
 		return false;
 	//
 	bool bResult = pFolderCallback->InsertObject( *pszObjectTypeName, szFullObjectName );
@@ -481,7 +481,7 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 	// remove MapInfo object
 	CBuilderBase::RemoveObject( rszObjectTypeName, rszObjectName );
 	// remove minimap
-	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " ) 
+	if ( !szMiniMapMaterialName.empty() && szMiniMapMaterialName != " " )
 	{
 		if ( CPtr<IManipulator> pMaterialMan = pRM->CreateObjectManipulator(MATERIAL_TYPE_NAME, szMiniMapMaterialName) )
 		{
@@ -490,7 +490,7 @@ bool CMapInfoBuilder::RemoveObject( const std::string &rszObjectTypeName, const 
 			// remove minimap material
 			CBuilderBase::RemoveObject( MATERIAL_TYPE_NAME, szMiniMapMaterialName );
 			//
-			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " ) 
+			if ( !szMiniMapTextureName.empty() && szMiniMapTextureName != " " )
 			{
 				// delete texture source and destination
 				if ( CPtr<IManipulator> pTextureMan = pRM->CreateObjectManipulator(TEXTURE_TYPE_NAME, szMiniMapTextureName) )
@@ -542,7 +542,7 @@ bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
 	NI_ASSERT( pbCanChangeObjectName != 0, "CBuildDataBuilder::InsertObject() pbCanChangeObjectName == 0" );
 	NI_ASSERT( pbNeedExport != 0, "CBuildDataBuilder::InsertObject() pbNeedExport == 0" );
 	NI_ASSERT( pbNeedEdit != 0, "CBuildDataBuilder::InsertObject() pbNeedEdit == 0" );
-	//	
+	//
 	if ( !NeedBuildDataDialog() )
 	{
 		// call default implementation
@@ -581,6 +581,6 @@ bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
 	return false;
 }
 
-// basement storage  
+// basement storage
 
 

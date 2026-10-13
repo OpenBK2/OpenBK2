@@ -84,9 +84,9 @@ CRandomGenerator randomGen;
 void CRandomGenerator::Isaac()
 {
 	unsigned int a, b, x, y, *m, *mm, *m2, *r, *mend;
-	mm = randmem; 
+	mm = randmem;
 	r = randrsl;
-	a = randa; 
+	a = randa;
 	b = randb + ( ++randc );
 	for ( m = mm, mend = m2 = m+(RANDSIZ/2); m<mend; )
 	{
@@ -102,7 +102,7 @@ void CRandomGenerator::Isaac()
 		rngstep( a<<2 , a, b, mm, m, m2, r, x );
 		rngstep( a>>16, a, b, mm, m, m2, r, x );
 	}
-	randb = b; 
+	randb = b;
 	randa = a;
 }
 

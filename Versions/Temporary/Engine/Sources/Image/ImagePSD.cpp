@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "ImagePSD.h" 
+#include "ImagePSD.h"
 
 #include <cstdint>
 
@@ -54,7 +54,7 @@ namespace NImage
 		}// End of Seek definition
 
 		// PSD-specific byte-order readers
-		int Get8() 
+		int Get8()
 		{
 			int i;
 
@@ -64,7 +64,7 @@ namespace NImage
 			return i & 0x000000FF;
 		}// End of Get8 definition
 
-		int Get16() 
+		int Get16()
 		{
 			int hi = Get8();
 			int lo = Get8();
@@ -72,7 +72,7 @@ namespace NImage
 			return ( hi << 8 ) | lo;
 		}// End of Get16 definition
 
-		int Get32() 
+		int Get32()
 		{
 			int a = Get8();
 			int b = Get8();
@@ -108,7 +108,7 @@ namespace NImage
 		{
 			// Welcome, STORAGE!!!
 			CData3D src3D; // For reading RLE data
-			CData2D dst2D; // For uncompressed data 
+			CData2D dst2D; // For uncompressed data
 
 			// Resizing to fit actual RLE-data
 
@@ -125,8 +125,8 @@ namespace NImage
 					// Space for RLE-data
 					int nLineSize = Get16();
 					src3D[i][j].resize( nLineSize );
-					// Attention! Cannot read data right here, cause RLE-lines lenghths 
-					// stored separately from RLE-lines data. 
+					// Attention! Cannot read data right here, cause RLE-lines lenghths
+					// stored separately from RLE-lines data.
 					// (I've just made an attempt to do so.. ;))
 				}
 			}
@@ -136,9 +136,9 @@ namespace NImage
 
 			for ( int i = 0; i < nChannels; ++i )
 			{
-				// We'll use push_back method to fill the vector, 
+				// We'll use push_back method to fill the vector,
 				// so we need some reset..
-				dst2D[i].resize( 0 ); 
+				dst2D[i].resize( 0 );
 
 				for ( int j = 0; j < nHeight; ++j )
 				{
@@ -147,7 +147,7 @@ namespace NImage
 				}
 			}
 
-			// Now we have src3D with RLE data and an empty, 
+			// Now we have src3D with RLE data and an empty,
 			// properly sized dst2D for storing uncompressed data!
 			// Let's go bowling! 8) ... Oh, I mean - do some decoding.. ;)
 
@@ -209,14 +209,14 @@ namespace NImage
 		if ( nTmp != 0x00010000 )	// Then - should be 0x00000100
 			return 0;
 
-		nTmp = rPS.Get32();			
+		nTmp = rPS.Get32();
 		if ( nTmp != 0x00000000 )	// Then - should be 0x00000000
 			return 0;
 
 		// Ok, this file is realy PSD.
 
 		// But!
-        
+
 		// Is it 8-bit per channel?
 		rPS.Seek( 22, E_STREAM_SEEK_SET ); // Rewind file
 
@@ -259,7 +259,7 @@ namespace NImage
 		tmp = rPS.Get32();
 		rPS.Seek( tmp, E_STREAM_SEEK_CUR ); // Rewind Layer and Mask Section
 
-		// Finally, we are at the beginning of the Image Data Section, 
+		// Finally, we are at the beginning of the Image Data Section,
 		// where all channels are stored!!! Let's make STORAGE...
 		CData2D PSimg2D;
 

@@ -22,7 +22,7 @@ class CExecutorAttackGroup :	public CExecutor
 	CVec2 vPoint;
 	float fRadius = {};
 	EAttackGroupState eState = {};
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&nGroupID); f.Add(3,&units); f.Add(4,&vPoint); f.Add(5,&fRadius); f.Add(6,&eState); return 0; }
 
 public:

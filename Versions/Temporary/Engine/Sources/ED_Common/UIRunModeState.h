@@ -8,7 +8,7 @@ public:
 	//Life-cycle
 	CUIRunModeState( class CWindowSimpleSharedEditor *_pEditor, const std::string &rszTypeName, const CDBID &rDBID );
 	virtual ~CUIRunModeState();
-	
+
 	//IInputState
 	void Enter();
 	void Leave();

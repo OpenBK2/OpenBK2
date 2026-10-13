@@ -160,7 +160,7 @@ struct SModifyBitFunctional
 	{
 	}
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		( *pPlaneArray )[nYIndex][nXIndex] |= ( 1 << nBit );
 		return true;
 	}
@@ -228,7 +228,7 @@ void CHeightContainer::SetSize( const int x, const int y, bool _bTraceToImage )
 
 void CHeightContainer::Mark( const int x, const int y )
 {
-	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
+	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) );
 	GetBits( &markedBitslList, point.x, point.y );
 	/**
 	std::string szMessage = fmt::format( "CHeightContainer::Mark( {}, {} ), marked Bits: ", x, y );
@@ -247,7 +247,7 @@ void CHeightContainer::Mark( const int x, const int y )
 
 bool CHeightContainer::Compare( const int x, const int y )
 {
-	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) ); 
+	CTPoint<int> point( Clamp( x, 0, planeSize.x - 1 ), Clamp( y, 0, planeSize.y - 1 ) );
 	std::vector<uint32_t> bitsList;
 	GetBits( &bitsList, point.x, point.y );
 	for ( int nStackIndex = 0; nStackIndex < nStackCount; ++nStackIndex )
@@ -335,7 +335,7 @@ void CHeightContainer::ErasePolygon( int nPolygonID )
 {
 	if ( nStackCount == 0 )
 	{
-		return;	
+		return;
 	}
 	if ( ( planeSize.x == 0 ) || ( planeSize.y == 0 ) )
 	{
@@ -355,7 +355,7 @@ bool CHeightContainer::GetBlackRedBallance( const CTRect<int> &rRect )
 	{
 		return false;
 	}
-	CTRect<int> rect( rRect );	
+	CTRect<int> rect( rRect );
 	ValidateRect( CTRect<int>( 0, 0, planeSize.x, planeSize.y ), &rect );
 	//
 	std::vector<uint32_t> blackBitsList;
@@ -467,6 +467,6 @@ void CHeightContainer::Trace()
 	DebugTrace( "CHeightContainer, end" );
 }
 
-// basement storage  
+// basement storage
 
 

@@ -13,19 +13,19 @@ class CUIMessageHandler
 public:
 	CUIMessageHandler() : pH( 0 ) {  }
 	CUIMessageHandler( MESSAGE_HANDLER _pH ) : pH( _pH ) {  }
-	bool Execute( const struct SBUIMessage &msg, void *pObj ) 
-	{ 
+	bool Execute( const struct SBUIMessage &msg, void *pObj )
+	{
 		NI_ASSERT( pH != 0, "null message handler" );
-		return pH( msg, pObj ); 
+		return pH( msg, pObj );
 	}
 };
 
 // handle map is used by all macros
 #define HM_TYPE std::unordered_map<std::string,CUIMessageHandler>
 #define DECLARE_HANDLE_MAP static HM_TYPE handleMap;
-#define IMPLEMENT_HANDLE_MAP(ClassName) HM_TYPE ClassName::handleMap; 
+#define IMPLEMENT_HANDLE_MAP(ClassName) HM_TYPE ClassName::handleMap;
 
-// message handler declaration 
+// message handler declaration
 #define DECLARE_MESSAGE_HANDLER(HandleName) \
 		static bool HandleName( const struct SBUIMessage &msg, void *pObj );\
 		bool _##HandleName( const struct SBUIMessage &msg );
@@ -41,11 +41,11 @@ public:
 		return ((ClassName*)(pObj))->_##HandleName( msg );\
 	}\
 	bool ClassName::_##HandleName( const struct SBUIMessage &msg )
-		
+
 
 // messag handler registratoin
 //#define REGISTER_MESSAGE_HANDLER(ClassName,HandleName,MessageName)\
-	//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );	
+	//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );
 
 
 

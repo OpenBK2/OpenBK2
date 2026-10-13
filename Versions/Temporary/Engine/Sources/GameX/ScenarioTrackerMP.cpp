@@ -98,7 +98,7 @@ void CScenarioTrackerMultiplayer::GetReinforcementCallsInfo( int nPlayer, std::v
 	}
 }
 
-void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission, const int _nTechLevel ) 
+void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission, const int _nTechLevel )
 {
 	const NDb::SUIConstsB2 *pUIConsts = NGameX::GetUIConsts();
 
@@ -117,7 +117,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 
 	reinfCallsByType.SetSizes( NDb::_RT_NONE, pMission->players.size() );
 	reinfCallsByType.FillZero();
-	
+
 	// init neutral player color
 	if ( pUIConsts )
 	{
@@ -140,7 +140,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 	NI_ASSERT( pAIConsts, "AI Consts inaccessible" );
 	NI_ASSERT( pMPConsts, "MP Consts inaccessible" );
 
-	// 
+	//
 	nNeutralPlayer = -1;
 	for ( int i = 0; i < pMission->players.size(); ++i )
 	{
@@ -206,7 +206,7 @@ void CScenarioTrackerMultiplayer::MissionStart( const NDb::SMapInfo * _pMission,
 void CScenarioTrackerMultiplayer::MissionCancel()
 {
 	UpdateStatistics();
-	
+
 	pLastMission = pMission;
 	pMission = 0;
 	bMissionWon = false;
@@ -215,7 +215,7 @@ void CScenarioTrackerMultiplayer::MissionCancel()
 void CScenarioTrackerMultiplayer::MissionWin()
 {
 	UpdateStatistics();
-	
+
 	NI_ASSERT( pMission != 0, "no mission started" );
 	pLastMission = pMission;
 	pMission = 0;
@@ -270,9 +270,9 @@ int CScenarioTrackerMultiplayer::GetPlayerSide( int nPlayer ) const
 	return 2;
 }
 
-enum EMissionObjectiveState CScenarioTrackerMultiplayer::GetObjectiveState( const int nID ) const 
-{ 
-	return EMOS_MIN; 
+enum EMissionObjectiveState CScenarioTrackerMultiplayer::GetObjectiveState( const int nID ) const
+{
+	return EMOS_MIN;
 }
 
 void CScenarioTrackerMultiplayer::AddPlayer( const int nPlayer )
@@ -372,7 +372,7 @@ const float CScenarioTrackerMultiplayer::GetRecycleSpeedCoeff( const int nSide )
 			fFullTime = FULL_RECYCLE_TIME;
 		if ( fMinTime == 0.0f )
 			fMinTime = MIN_RECYCLE_TIME;
-		
+
 		fCoeff = ( fFullTime - ( fFullTime - fMinTime ) * nOwnFlags / nFlags )/* / fFullTime*/;
 
 		return fCoeff;	// Time of recycle in seconds
@@ -517,7 +517,7 @@ float CScenarioTrackerMultiplayer::GetReinforcementXPForLevel( NDb::EReinforceme
 	if ( !pMPConsts )
 		return 0.0f;
 
-		for ( int i = 0; i < pMPConsts->expLevels.size(); ++i ) 
+		for ( int i = 0; i < pMPConsts->expLevels.size(); ++i )
 	{
 		const NDb::SAIExpLevel *pLevels = pMPConsts->expLevels[i];
 		if ( !pLevels )
@@ -646,7 +646,7 @@ void CScenarioTrackerMultiplayer::CalculateScore( const int nPlayer )
 		/*if ( bNoKeyBuildings )
 			SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, pMission->players[nPlayer].nReinforcementCalls - GetReinforcementCallsLeft( nPlayer ) );
 		else*/
-			SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, players[nPlayer].nReinforcementCallsUsed );	
+			SetStatistics( nPlayer, ESK_REINFORCEMENTS_CALLED, players[nPlayer].nReinforcementCallsUsed );
 	}
 
 	// ESK_KEY_BUILDINGS_CAPTURED
@@ -788,7 +788,7 @@ const NDb::SPartyDependentInfo* CScenarioTrackerMultiplayer::GetPlayerParty( con
 		if ( !pMapInfo )
 			return 0;
 
-		return pMapInfo->players[nPlayer].pPartyInfo; 
+		return pMapInfo->players[nPlayer].pPartyInfo;
 	}
 
 	if ( players[nPlayer].nMultiplayerSide >= 0 )
@@ -829,7 +829,7 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 
 		if ( nTechLevel >= techLevels.size() )
 			continue;
-		
+
 		const std::vector< CDBPtr<NDb::SReinforcement> > &reinfSet = techLevels[nTechLevel].reinforcements;
 
 		for ( int k = 0; k < reinfSet.size(); ++k )
@@ -842,7 +842,7 @@ void CScenarioTrackerMultiplayer::UpdateReinforcements( const int nPlayer )
 		}
 
 		// The following cycle selects the best (techlevel-wise, but not better than the selected tech level) reinforcement
-		// from the MPConsts->sides. Default is taken from mapinfo 
+		// from the MPConsts->sides. Default is taken from mapinfo
 		// const std::vector<NDb::STechLevelReinfSet> &techLevels = pMPConsts->sides[players[nPlayer].nMultiplayerSide].techLevels;
 		// for ( int j = 0; j <= nTechLevel; ++j )
 		// {
@@ -887,7 +887,7 @@ const IScenarioTracker::SPlayerColor& CScenarioTrackerMultiplayer::GetPlayerColo
 {
 	if ( nPlayer < 0 || nPlayer >= players.size() )
 		return playerColorNeutral;
-	
+
 	return players[nPlayer].playerColor;
 }
 

@@ -24,17 +24,17 @@ int CAIUnit::operator&( IBinSaver &saver )
 	saver.Add( 26, &nGrenades );
 	saver.Add( 27, &targetScanRandom );
 	saver.Add( 32, &pUnitInfoForGeneral );
-	
+
 	saver.Add( 40, &bFreeEnemySearch );
 	saver.Add( 41, &pAnimUnit );
 	saver.Add( 42, &creationTime );
-	
+
 	if ( !saver.IsChecksum() )
 	{
 		saver.Add( 43, &bAlwaysVisible );
 		saver.Add( 44, &bCountToDissapear );
 		saver.Add( 46, &lastTimeOfVis );
-		
+
 		saver.Add( 47, &bRevealed );
 		saver.Add( 48, &bQueredToReveal );
 		saver.Add( 49, &nextRevealCheck );
@@ -44,7 +44,7 @@ int CAIUnit::operator&( IBinSaver &saver )
 		{
 			visible4Party.resize( 3, false );
 		}
-		
+
 		saver.Add( 52, &nVisIndexInUnits );
 	}
 	saver.Add( 53, &bTargetingTrack );
@@ -92,17 +92,17 @@ void CSoldier::OnSerialize( IBinSaver &saver )
 
 int CArtillery::operator&( IBinSaver &f )
 {
-	f.Add( 1, static_cast<CAIUnit*>(this) ); 
-	f.Add(2,&pStats); f.Add(3,&nInitialPlayer); f.Add(4,&pGuns); f.Add(5,&turrets); 
-	f.Add(6,&eCurInstallAction); f.Add(7,&eNextInstallAction); 
-	f.Add(8,&eCurrentStateOfInstall); f.Add(9,&bInstalled); 
-	f.Add(10,&installActionTime); f.Add(11,&bInstallActionInstant); f.Add(12,&pStaticPathToSend); 
-	f.Add(13,&vShift); f.Add(14,&pIPathToSend); f.Add(15,&pCapturingUnit); 
-	f.Add(16,&pCrew); f.Add(17,&fOperable); f.Add(18,&pSlaveTransport); 
-	f.Add(19,&pHookingTransport); f.Add(20,&pBulletStorage); 
-	
+	f.Add( 1, static_cast<CAIUnit*>(this) );
+	f.Add(2,&pStats); f.Add(3,&nInitialPlayer); f.Add(4,&pGuns); f.Add(5,&turrets);
+	f.Add(6,&eCurInstallAction); f.Add(7,&eNextInstallAction);
+	f.Add(8,&eCurrentStateOfInstall); f.Add(9,&bInstalled);
+	f.Add(10,&installActionTime); f.Add(11,&bInstallActionInstant); f.Add(12,&pStaticPathToSend);
+	f.Add(13,&vShift); f.Add(14,&pIPathToSend); f.Add(15,&pCapturingUnit);
+	f.Add(16,&pCrew); f.Add(17,&fOperable); f.Add(18,&pSlaveTransport);
+	f.Add(19,&pHookingTransport); f.Add(20,&pBulletStorage);
+
 	if ( !f.IsChecksum() )
-		f.Add(21,&bBulletStorageVisible); 
+		f.Add(21,&bBulletStorageVisible);
 
 	f.Add(22,&lastCheckToInstall); f.Add(23,&behUpdateDuration);
 	return 0;

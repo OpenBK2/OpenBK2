@@ -10,7 +10,7 @@ struct IPath;
 class AILOGIC_EXPORT CPresizePath : public ISmoothPath
 {
 	OBJECT_BASIC_METHODS( CPresizePath );
-	
+
 	enum EPresizePathState
 	{
 		EPPS_WAIT_FOR_INIT,
@@ -31,7 +31,7 @@ class AILOGIC_EXPORT CPresizePath : public ISmoothPath
 	CVec2 vEndDir;
 	uint16_t wDesiredDir = {};
 
-	CPtr<ISmoothPath> pPathStandart; 
+	CPtr<ISmoothPath> pPathStandart;
 	CPtr<ISmoothPath> pPathCheat;
 
 	float fSpeedLen = {};
@@ -44,7 +44,7 @@ public:
 
 	virtual bool IsFinished() const;
 	virtual void Segment( const NTimer::STime timeDiff );
-	
+
 	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap );
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit );
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap );
@@ -85,14 +85,14 @@ public:
 	virtual void GetSpeed3( CVec3 *vSpeed ) const;
 	void Advance();
 
-	virtual const CVec2& GetFinishPoint() const 
-	{ 
+	virtual const CVec2& GetFinishPoint() const
+	{
 		static CVec2 vFinish( VNULL2 );
-		return vFinish; 
+		return vFinish;
 	}
 	virtual bool IsFinished() const { return false; }
 
-	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; } 
+	virtual bool Init( CBasePathUnit *pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) { return false; }
 	virtual bool InitByFormationPath( class CFormation *pFormation, CBasePathUnit *pUnit ) { return false; }
 	virtual bool Init( struct IMemento *pMemento, CBasePathUnit *pUnit, CAIMap *pAIMap ) { return false; }
 	virtual void Stop() {}

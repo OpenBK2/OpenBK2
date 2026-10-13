@@ -17,7 +17,7 @@ class CComplexTypeNode;
 class PARSER_EXPORT CFileNode : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CFileNode );
-	
+
 	// The file's name as the parser knows it: its full path, lowercased. It keys
 	// the includes maps and is what the rest of the pipeline sees.
 	std::string szFullFileName;

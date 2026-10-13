@@ -45,7 +45,7 @@ class CGrid
 		static CGrid *pGrid;
 		bool operator()( const int a, const int b ) const;
 	};
-	
+
 	typedef std::vector<int> CSortedColumns;
 	ZDATA
 	CSortedColumns sortedColumns;
@@ -61,7 +61,7 @@ class CGrid
 	//
 	bool CanPlaceUnitToColumn( const int nColumn, const CVec2 &vAABBUnitSize );
 	void SetUnitCenterByColumn( const int nUnit, const int nColumn );
-	
+
 	void MoveCenterToRealWorld( CVec2 *pCenter );
 	void CalculateMaxWidth();
 

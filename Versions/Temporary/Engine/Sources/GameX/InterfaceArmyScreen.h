@@ -22,7 +22,7 @@ private:
 		CPtr<IWindow> pBgWnd;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&szBtnName); f.Add(3,&pBtn); f.Add(4,&pIcon); f.Add(5,&pDBStats); f.Add(6,&pCountView); f.Add(7,&pBgWnd); return 0; }
 	};
-	
+
 	struct SVisAbility
 	{
 		ZDATA
@@ -35,7 +35,7 @@ private:
 		CPtr<ITextView> pRankLabel;
 		ZEND int operator&( IBinSaver &f ) { f.Add(4,&pWnd); f.Add(5,&pIconWnd); f.Add(6,&pRankView); f.Add(7,&pNameView); f.Add(8,&pRankLabel); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
 	CPtr<IWindow> pRightPanel;
@@ -60,9 +60,9 @@ private:
 	CPtr<ITextView> pLeaderKilledView;
 	CPtr<ITextView> pLeaderLostView;
 	ZSKIP //vector< CPtr<IWindow> > leaderAbilities;
-	
+
 	CObj<IDataViewer> pReinfViewer;
-	
+
 	std::vector< CObj<CReinfData> > reinforcements;
 	ZSKIP //int nPromotionsAvailable;
 	ZSKIP //int nSelection;
@@ -90,7 +90,7 @@ private:
 	ZSKIP //CDBPtr<NDb::SHPObjectRPGStats> pSelectedUnit;
 	ZSKIP //CPtr<IWindow> pReinfInfoLeaderIcon;
 	std::vector<SVisAbility> visAbilities;
-	
+
 	ZSKIP //bool bIgnoreNextMenuBack;
 	ZSKIP //int nEffectCounter;
 	ZSKIP //bool bEnterState;
@@ -98,16 +98,16 @@ private:
 	ZSKIP //CPtr<IWindow> pLeaderDisabledQuestionIconWnd2;
 	ZSKIP //CPtr<IWindow> pReinfInfoUnitHelp;
 	ZSKIP //EState eState;
-	
+
 	CPtr<IWindow> pLeftPanel;
 	CPtr<IWindow> pTopPanel;
 	CPtr<IWindow> pBottomPanel;
 	ZSKIP //CPtr<IWindow> pScreenBorderWnd;
-	
+
 	CPtr<IWindow> pCommanderInfoBlock;
 	CPtr<IWindow> pReinfCurrentBlock;
 	CPtr<IWindow> pPictureBlock;
-	
+
 	CPtr<ITextView> pPromoteCommanderView;
 	CPtr<IWindow> pPermanentCommanderWnd;
 	CPtr<IWindow> pPermanentCommanderIcon;
@@ -118,10 +118,10 @@ private:
 
 	CPtr<ITextView> pProfileUnitNameView;
 	CPtr<ITextView> pProfileUnitExpView;
-	
+
 	CPtr<IButton> pUndoBtn;
 	int nAssignmentCount;
-	
+
 	CPtr<IWindow> pAutoAssignDlg;
 	CPtr<IWindow> pUndoPromotionsDlg;
 	CPtr<IWindow> pUndoAllPromotionsDlg;
@@ -169,7 +169,7 @@ public:
 	bool Init();
 
 	bool StepLocal( bool bAppActive );
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;

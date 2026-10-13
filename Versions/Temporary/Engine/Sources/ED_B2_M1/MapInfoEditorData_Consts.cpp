@@ -72,7 +72,7 @@ namespace NMapInfoEditor
 	bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
 														const std::string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex )
 	{
-		/**					
+		/**
 		case NDb::SBuildingRPGStats::typeID:
 		case NDb::SMechUnitRPGStats::typeID:
 		case NDb::SSquadRPGStats::typeID:
@@ -140,6 +140,6 @@ namespace NMapInfoEditor
 	}
 };
 
-// basement storage  
+// basement storage
 
 

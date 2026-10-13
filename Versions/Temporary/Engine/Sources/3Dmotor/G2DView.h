@@ -27,12 +27,12 @@ struct ILayoutFakeView
 {
 public:
 	virtual void CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
-	virtual void CreateDynamicRects( const NDb::STexture *pTexture, 
+	virtual void CreateDynamicRects( const NDb::STexture *pTexture,
 		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) = 0;
 	virtual void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow ) = 0;
 };
 
-class I2DGameView: public CObjectBase, public ILayoutFakeView 
+class I2DGameView: public CObjectBase, public ILayoutFakeView
 {
 public:
 	virtual void CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow ) = 0;

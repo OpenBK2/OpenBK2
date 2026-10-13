@@ -46,7 +46,7 @@ void CInterfaceEncyclopedia::CDataViewer::MakeInterior( CObjectBase *pWindow, co
 			IWindow *pIconWnd = GetChildChecked<IWindow>( pItem, "Icon", true );
 			IWindow *pIconShadowWnd = GetChildChecked<IWindow>( pItem, "IconShadow", true );
 			ITextView *pDescView = GetChildChecked<ITextView>( pItem, "Desc", true );
-			
+
 			if ( pData->pStats )
 			{
 				if ( pIconWnd )
@@ -128,7 +128,7 @@ bool CInterfaceEncyclopedia::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 //	pScreen->Enable( false );
@@ -202,7 +202,7 @@ void CInterfaceEncyclopedia::EffectBorderFinish()
 void CInterfaceEncyclopedia::MakeInterior()
 {
 	CPtr<IWindow> pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
-	
+
 	pUnitNameView = GetChildChecked<ITextView>( pMain, "UnitNameView", true );
 	pUnitDescCont = GetChildChecked<IScrollableContainer>( pMain, "UnitDescContainer", true );
 	pUnitDescView = GetChildChecked<ITextView>( pUnitDescCont, "UnitDescriptionView", true );
@@ -238,7 +238,7 @@ void CInterfaceEncyclopedia::MakeInterior()
 		SFilterBtn &filter = *it;
 		filter.pBtn = GetChildChecked<IButton>( pMain, filter.szBtnName, true );
 	}
-	
+
 	if ( pUnitDescCont && pUnitDescView )
 		pUnitDescCont->PushBack( pUnitDescView, false );
 	if ( pStepBackward )
@@ -247,7 +247,7 @@ void CInterfaceEncyclopedia::MakeInterior()
 		pStepForward->Enable( false );
 	if ( pUnitListCont )
 		pUnitListCont->ShowWindow( false );
-		
+
 	pDataViewer = new CDataViewer();
 
 	eSelCountry = EFC_ALL;
@@ -255,7 +255,7 @@ void CInterfaceEncyclopedia::MakeInterior()
 
 	selectedUnits.reserve( 100 );
 	nSelUnit = -1;
-	
+
 	MakeFilterCache( pUnitListCont );
 
 	if ( pRunUnit )
@@ -369,7 +369,7 @@ bool CInterfaceEncyclopedia::OnFilterBtn( const std::string &szName )
 			return true;
 		}
 	}
-	
+
 	return true;
 }
 
@@ -392,7 +392,7 @@ bool CInterfaceEncyclopedia::OnEffectFinished( const std::string &szName )
 void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 {
 	const NDb::SGameRoot *pRoot = InterfaceState()->GetGameRoot();
-	
+
 	filterCache.resize( EFC_COUNT * EFUT_COUNT );
 
 	IListControlItem *pItemToSelect = 0;
@@ -436,11 +436,11 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 						case NDb::POLITICAL_SIDE_USSR:
 							eCountry = EFC_USSR;
 							break;
-							
+
 						case NDb::POLITICAL_SIDE_USA:
 							eCountry = EFC_US;
 							break;
-							
+
 						default:
 							NI_ASSERT( 0, "Unknown diplomacy side" );
 							eCountry = EFC_ALL;
@@ -483,7 +483,7 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 					}
 					if ( (EFilterUnitTypes)( nUnitType ) != EFC_ALL && (EFilterUnitTypes)( nUnitType ) != eUnitType )
 						continue;
-					
+
 					CUnitData *pData = GetUnitData( pStats );
 					if ( pData )
 					{
@@ -506,7 +506,7 @@ void CInterfaceEncyclopedia::MakeFilterCache( IWindow *pSample )
 void CInterfaceEncyclopedia::UpdateInfo()
 {
 	UpdateFilters();
-	
+
 	SFilterCache &cache = filterCache[eSelCountry * EFUT_COUNT + eSelUnitType];
 	if ( !cache.filteredUnits.empty() )
 	{
@@ -533,13 +533,13 @@ void CInterfaceEncyclopedia::UpdateFilters()
 		if ( filter.pBtn )
 			filter.pBtn->SetState( (i == eSelUnitType) ? 1 : 0 );
 	}
-	
+
 	for ( int nCountry = 0; nCountry < EFC_COUNT; ++nCountry )
 	{
 		for ( int nUnitType = 0; nUnitType < EFUT_COUNT; ++nUnitType )
 		{
 			SFilterCache &cache = filterCache[nCountry * EFUT_COUNT + nUnitType];
-			
+
 			if ( cache.pUnitListCont )
 			{
 				bool bShow = (nCountry == eSelCountry && nUnitType == eSelUnitType);
@@ -557,7 +557,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 		pStepBackward->Enable( nSelUnit > 0 );
 	if ( pStepForward )
 		pStepForward->Enable( nSelUnit + 1 < selectedUnits.size() );
-		
+
 	if ( nSelUnit >= 0 && nSelUnit < selectedUnits.size() )
 	{
 		SSelectedUnit &unit = selectedUnits[nSelUnit];
@@ -585,7 +585,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 		if ( p3DCtrl )
 		{
 			std::vector<IWindow3DControl::SObject> objects;
-			
+
 			IWindow3DControl::SParam param = p3DCtrl->GetDBObjectParam( 0 );
 			IWindow3DControl::SObject object;
 			object.nID = 0;
@@ -594,7 +594,7 @@ void CInterfaceEncyclopedia::UpdateSelectedUnitInfo()
 			object.vPos = param.vPos;
 			object.vSize = param.vSize;
 			objects.push_back( object );
-			
+
 			p3DCtrl->SetObjects( objects );
 		}
 	}
@@ -675,7 +675,7 @@ bool CInterfaceEncyclopedia::RunWithUnit( const NDb::SUnitBaseRPGStats *pStats )
 {
 	pRunUnit = pStats;
 	NMainLoop::Command( ML_COMMAND_ENCYCLOPEDIA_WAIT, "" );
-	
+
 	return true;
 }
 
@@ -709,21 +709,21 @@ bool CInterfaceEncyclopediaWait::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	nLoading = 2;
-	
+
 	return true;
 }
 
 bool CInterfaceEncyclopediaWait::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( nLoading > 0 )
 	{
 		--nLoading;
 		if ( nLoading == 0 )
-		{ 
+		{
 			NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 			if ( !pRunUnit )
 			{
@@ -732,7 +732,7 @@ bool CInterfaceEncyclopediaWait::StepLocal( bool bAppActive )
 			NMainLoop::Command( ML_COMMAND_ENCYCLOPEDIA, "" );
 		}
 	}
-	
+
 	return bResult;
 }
 

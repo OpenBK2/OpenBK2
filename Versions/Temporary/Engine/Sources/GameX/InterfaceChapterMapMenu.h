@@ -30,10 +30,10 @@ public:
 		CPtr<CInterfaceChapterMapMenu> pInterface;
 	public:
 		CReactions() {  }
-		~CReactions() 
-		{  
+		~CReactions()
+		{
 		}
-		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface ) : 
+		CReactions( IWindow *_pScreen, CInterfaceChapterMapMenu *_pInterface ) :
 			pScreen( _pScreen ), pInterface( _pInterface ) {   }
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
@@ -114,7 +114,7 @@ private:
 		EUIS_PLAY_MISSION_DONE,
 		EUIS_PLAY_MISSION_PRESSED,
 	};
-	
+
 	enum EUIEffectState
 	{
 		EUIES_FADE,
@@ -166,7 +166,7 @@ private:
 	CTargets targets;
 
 	CPtr<IWindow> pMain;
-	
+
 	CPtr<IWindow> pChapterMap;
 	CPtr<IButton> pChapterMapTarget;
 	CPtr<IButton> pChapterMapTargetBig;
@@ -229,7 +229,7 @@ private:
 	int nChapterMapLeftY;
 	int nChapterMapRightX;
 	int nChapterMapRightY;
-	
+
 	CPtr<IButton> pReinfGridUpgradableTemplate;
 	CVec2 vReinfGridUpgradableTemplateDelta;
 
@@ -262,11 +262,11 @@ private:
 
 	bool OnReinfUpgradeDialogClose( const std::string &szSender );
 	bool OnReinfUpgradeUnitBtn( const std::string &szSender );
-	
+
 	bool OnChapterDescDlgClose( const std::string &szSender );
 	bool OnMissionDescDlgClose( const std::string &szSender );
 	bool OnShowMissionDesc( const std::string &szSender );
-	
+
 	void HideDialogs();
 protected:
 	void MsgBack( const SGameMessage &msg );
@@ -281,7 +281,7 @@ protected:
 	bool OnArmyManager();
 	bool OnPlayerStats();
 	bool OnSaveGame();
-	
+
 	void OnTargetSelect( const std::string &szSender );
 	bool OnTargetDblClick( const std::string &szSender );
 	void OnPopupClicked( const std::string &szSender );
@@ -325,15 +325,15 @@ protected:
 	void ShowAllRewards( bool bShow );
 	void PlayReinfRollerAnim( int _nStart, int _nEnd );
 	void PlayMissionRollerAnim( int _nStart, int _nEnd );
-	
+
 	void HideChildren( IWindow *pParent );
-	
+
 	void RegisterObservers();
 
 	void DoAutoSave();
-	
+
 	void UpdateRecommendedButton( STarget &target, bool bPushed );
-	
+
 	void ProceedInitialDialogs();
 
 	~CInterfaceChapterMapMenu();

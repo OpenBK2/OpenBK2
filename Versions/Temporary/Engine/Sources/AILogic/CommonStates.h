@@ -17,7 +17,7 @@ class CStaticObject;
 class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CMechAttackUnitState );
-	
+
 	enum { SHOOTING_CHECK = 3000, ENEMY_DIR_TOLERANCE = 10000 };
 	enum ESoldierAttackStates { ESAS_ESTIMATING, ESAS_BRUTE_MOVING, ESAS_MOVING, ESAS_MOVING_TO_SIDE, ESAS_SIMPLE_FIRING };
 	enum EAttackType { EAT_GOOD_PROB, EAT_POOR_PROB };
@@ -34,7 +34,7 @@ class CMechAttackUnitState : public IUnitAttackingState, public CFreeFireManager
 	std::vector<float> fProb;
 	EAttackType eAttackType = {};
 	uint8_t nBestSide = {};
-	
+
 	bool bTurningToBest = {};
 	int nBestAngle = {};
 	CVec2 lastEnemyCenter;
@@ -63,7 +63,7 @@ protected:
 	void AnalyzeBruteMovingPosition();
 	void AnalyzeMovingPosition();
 	void AnalyzeMovingToSidePosition();
-	
+
 	void TraceAim();
 	// пытается развернуться лбом к противнику за время перезарядки, если вернула false, то сейчас не время для поворота
 	bool TurnToBestPos();
@@ -109,7 +109,7 @@ class CCommonAttackUnitInBuildingState : public IUnitAttackingState, public CFre
 
 	CDamageToEnemyUpdater damageToEnemyUpdater;
 	CRndRunUpToEnemy runUpToEnemy;
-	
+
 	int nSlot = {};
 
 	//
@@ -126,7 +126,7 @@ protected:
 	virtual class CAIUnit* GetUnit() const = 0;
 	virtual void FireNow() = 0;
 	virtual bool IsInTargetSector() const;
-	
+
 	void FinishState();
 private:
 	bool FindPathToUnit();
@@ -200,7 +200,7 @@ class CCommonRestState : public IUnitState, public CStandartBehaviour
 	NTimer::STime startMoveTime = {};
 
 	bool bScanned = {};
-	
+
 	bool bWait = {};
 	NTimer::STime timeToFinishState = {};
 public:
@@ -208,7 +208,7 @@ public:
 public:
 	CCommonRestState() : pUnit( 0 ) { }
 	CCommonRestState( const CVec2 &guardPoint, const uint16_t wDir, CCommonUnit *pUnit, const float fTimeToWait );
-	
+
 	virtual void Segment();
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 
@@ -251,7 +251,7 @@ public:
 class CCommonAmbushState : public IUnitState, public CStandartBehaviour
 {
 	OBJECT_BASIC_METHODS( CCommonAmbushState );
-	
+
 	enum { AMBUSH_CHECK = 3000, VISIBLE_CHECK = 500 };
 	enum EAmbushStates { EAS_COMMON, EAS_FIRING };
 	ZDATA_(CStandartBehaviour)
@@ -259,7 +259,7 @@ protected:
 	CPtr<CCommonUnit> pUnit;
 private:
 	EAmbushStates eState = {};
-	
+
 	NTimer::STime startTime = {};
 	NTimer::STime lastCheckTime = {};
 	NTimer::STime lastVisibleCheck = {};
@@ -274,7 +274,7 @@ private:
 
 public:
 	static IUnitState* Instance( class CCommonUnit *pUnit );
-	
+
 	CCommonAmbushState() { }
 	CCommonAmbushState( class CCommonUnit *pUnit );
 
@@ -315,11 +315,11 @@ public:
 class CCommonSwarmState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CCommonSwarmState );
-	
+
 	enum { TIME_OF_WAITING = 200 };
-	enum ECommonSwarmStates 
-	{ 
-		ESSS_WAIT, 
+	enum ECommonSwarmStates
+	{
+		ESSS_WAIT,
 		ESSS_MOVING,
 		ESS_WAIT_UNTIL_TRACK_REPAIR,
 	};

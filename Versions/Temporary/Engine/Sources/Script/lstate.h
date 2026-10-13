@@ -52,7 +52,7 @@ public:
 	~CVectorList() { clear(); }
 	T* operator[]( int i ) { return data[i].pData; }
 	int size() const { return data.size(); }
-	int push( T* pT ) 
+	int push( T* pT )
 	{
 		if ( nFirstFree >= 0 )
 		{
@@ -67,23 +67,23 @@ public:
 			return data.size() - 1;
 		}
 	}
-	void erase( int i ) 
-	{ 
+	void erase( int i )
+	{
 		ASSERT( data[i].pData );
 		delete data[i].pData;
-		data[i].pData = 0; 
-		data[i].nNextFree = nFirstFree; 
-		nFirstFree = i; 
+		data[i].pData = 0;
+		data[i].nNextFree = nFirstFree;
+		nFirstFree = i;
 	}
-	bool empty() const  
-	{ 
-		for ( int i = 0; i < data.size(); ++i ) 
+	bool empty() const
+	{
+		for ( int i = 0; i < data.size(); ++i )
 		{
 			if ( data[i].pData )
-				return false; 
+				return false;
 		}
 		return true;
-	} 
+	}
 	int operator&( IBinSaver &f );
 };
 
@@ -126,7 +126,7 @@ class CLuaThread : public CObjectBase
 
 public:
 	ZDATA
-	StkId top;  // first free slot in the stack 
+	StkId top;  // first free slot in the stack
 	StkId Cbase;  // base for current C function
 	std::vector<TObject> stack;  // stack base
 	std::vector<SLuaVMState> executedCalls;
@@ -187,7 +187,7 @@ typedef std::list<CObj<CLuaThread> > CThreads;
 typedef std::unordered_map<TString, bool, TStringHash> CLuaStrings;
 
 
-struct lua_State 
+struct lua_State
 {
 	// execution context
 	CPtr<CObjectBase> pContext;
@@ -199,9 +199,9 @@ struct lua_State
 	CPtr<CLuaThread> pCT; // current thread
 	std::vector<char> Mbuffer;  // buffer
 
-	// global state 
+	// global state
 	CThreads threads;
-	int nGT;  // index of table for globals 
+	int nGT;  // index of table for globals
 	std::vector<TM> TMtable;  // table for tag methods
 	std::vector<Ref> refArray;  // locked objects
 	int refFree;  // list of free positions in refArray
@@ -209,13 +209,13 @@ struct lua_State
 	int nGCAvoid;
 	int allowhooks;
 	int nNoWait;
-	
+
 	lua_Hook callhook;
 	lua_Hook linehook;
 	CLuaStrings strings;
-	CVectorList<Proto> protos;  
-	CVectorList<Closure> closures;  
-	CVectorList<Hash> tables;  
+	CVectorList<Proto> protos;
+	CVectorList<Closure> closures;
+	CVectorList<Hash> tables;
 	CVectorList<UserData> userdatas;
 	CVectorList<CallInfo> callInfos;
 
@@ -233,9 +233,9 @@ inline TObject *LObj( lua_State *L, StkId st )
 	return &L->pCT->stack[ st ];
 }
 
-inline bool iscfunction( lua_State *L, TObject *o )	
-{ 
-	return o->GetType() == LUA_TFUNCTION && L->closures[ o->GetCL() ]->isC; 
+inline bool iscfunction( lua_State *L, TObject *o )
+{
+	return o->GetType() == LUA_TFUNCTION && L->closures[ o->GetCL() ]->isC;
 }
 
 CLuaThread* lua_newThread( lua_State *L, const char *name );

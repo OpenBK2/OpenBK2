@@ -19,7 +19,7 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 {
 	const int nPlayer = pUnit->GetPlayer();
 	const int nParty = pUnit->GetParty();
-	
+
 	// aeieiiaoey niaiaaaao n aeieiiaoeae caueoieeia iauaeoa
 	if ( GetNDefenders() > 0 && theDipl.GetDiplStatus( GetPlayer(), nPlayer ) != EDI_ENEMY ||
 			 GetNDefenders() == 0 && !bAttackers )
@@ -41,7 +41,7 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 		// oaeeo au? iao
 		if ( attackers.begin( nParty ) == attackers.end() )
 			startTimes[nParty] = curTime;
-		
+
 		attackers.Add( nParty, pUnit );
 		++nAttackers[nParty];
 
@@ -50,11 +50,11 @@ void CStormableObject::AddInsider( CSoldier *pUnit )
 			++nActiveAttackers;
 
 		pUnit->SetToSolidPlace();
-		
+
 		// eciaieou warfog aey anao caueoieeia
 		if ( !bAttackers )
 		{
-			bAttackers = true;			
+			bAttackers = true;
 			for ( int i = 0; i < GetNDefenders(); ++i )
 				GetUnit( i )->WarFogChanged();
 		}
@@ -71,7 +71,7 @@ void CStormableObject::DelFromAttackers( CSoldier *pUnit )
 		i = attackers.GetNext( i );
 
 	NI_ASSERT( i != attackers.end(), "Trying to delete non-existing unit from stormable object" );
-				
+
 	attackers.Erase( nParty, i );
 
 	--nAttackers[nParty];
@@ -128,10 +128,10 @@ void CStormableObject::InsiderDamaged( CSoldier *pUnit )
 const float CStormableObject::GetDamage( CBasicGun *pGun, CSoldier *pTarget ) const
 {
 	float fDamage = 0;
-	
+
 	SRect combatRect( pTarget->GetUnitRect() );
 	combatRect.Compress( pTarget->GetRemissiveCoeff() );
-	
+
 	/*
 	const float fDispRadius = GetDispByRadius( pGun, pGun->GetDispersion() * SConsts::INSIDE_OBJ_WEAPON_FACTOR );
 	*/
@@ -161,7 +161,7 @@ void CStormableObject::Combat( CSoldier *pAttacker, CSoldier *pDefender )
 {
 	const float fDamageFromAttacker = GetDamage( pAttacker->GetGun( 0 ), pDefender );
 	const float fDamageFromDefender = GetDamage( pDefender->GetGun( 0 ), pAttacker );
-	
+
 	pDefender->TakeDamage( fDamageFromAttacker, &pAttacker->GetGun( 0 )->GetShell(), pAttacker->GetPlayer(), pAttacker );
 	pAttacker->TakeDamage( fDamageFromDefender, &pDefender->GetGun( 0 )->GetShell(), pDefender->GetPlayer(), pDefender );
 }
@@ -197,7 +197,7 @@ bool CStormableObject::Segment()
 					nActiveAttackers += nAttackers[i];
 				}
 			}
-			
+
 			if ( nActiveAttackers != 0 )
 			{
 				const int nAttacker = NRandom::Random( nActiveAttackers ); RecordRandomCall();

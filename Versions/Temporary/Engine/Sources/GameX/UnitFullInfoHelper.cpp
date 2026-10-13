@@ -42,46 +42,46 @@ int SWeaponsSort::GetWeaponPriority( const SWeapon &weapon ) const
 	{
 		case NDb::SWeaponRPGStats::WEAPON_PISTOL:
 			return 20;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_MACHINEGUN:
 			return 30;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_SUBMACHINEGUN:
 			return 100;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_RIFLE:
 			return 50;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_SNIPER_RIFLE:
 			return 70;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_ANTITANK_RIFLE:
 			return 500;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_BAZOOKA:
 			return 700;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_PIAT:
 			return 600;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_RIFLE_AMERICAN:
 			return 60;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_FLAME_THROWER:
 			return 1000; // high
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_STEN:
 			return 90;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_PANZERFAUST:
 			return 800;
-			
+
 		case NDb::SWeaponRPGStats::WEAPON_LUFTFAUST:
 			return 900;
-		
+
 		case NDb::SWeaponRPGStats::WEAPON_HEAVY_CANNON:
 			return 10; // low
-		
+
 		default:
 			return 0;
 	}
@@ -90,7 +90,7 @@ int SWeaponsSort::GetWeaponPriority( const SWeapon &weapon ) const
 void MakeMechWeapons( std::vector<SWeapon> &weapons, const NDb::SMechUnitRPGStats *pStats )
 {
 	weapons.clear();
-	
+
 	const int nID = -1;
 	for ( int i = 0; i < pStats->GetPlatformsSize( nID ); ++i )
 	{
@@ -130,7 +130,7 @@ void MakeSquadWeapons( std::vector<SWeapon> &weapons, const NDb::SSquadRPGStats 
 		it != pStats->members.end(); ++it )
 	{
 		const NDb::SInfantryRPGStats *pInfantryStats = *it;
-		
+
 		AddInfantryWeapons( weapons, pInfantryStats );
 	}
 	std::sort( weapons.begin(), weapons.end(), SWeaponsSort() );
@@ -152,7 +152,7 @@ void AddInfantryWeapons( std::vector<SWeapon> &weapons, const NDb::SInfantryRPGS
 		weapon.pWeapon = gun.pWeapon;
 		weapon.nCount = 1;
 		weapon.bPrimary = gun.bIsPrimary;
-		
+
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(gun.pWeapon->,LocalizedName) )
 			weapon.wszLocalizedName = GET_TEXT_PRE(gun.pWeapon->,LocalizedName);
 
@@ -218,11 +218,11 @@ void MakeMechArmors( std::vector<int> &armors, const NDb::SMechUnitRPGStats *pSt
 			pStats->armors[ARMOR_SIDE_2].fMin + pStats->armors[ARMOR_SIDE_2].fMax) / 4;
 		int nArmorBack = (pStats->armors[ARMOR_BACK].fMin + pStats->armors[ARMOR_BACK].fMax) / 2;
 		int nArmorTop = (pStats->armors[ARMOR_TOP].fMin + pStats->armors[ARMOR_TOP].fMax) / 2;
-		
+
 		if ( nArmorFront + nArmorSize + nArmorBack + nArmorTop > 0 )
 		{
 			armors.resize( ARMOR_COUNT );
-			
+
 			armors[ES_ARMOR_FRONT] = nArmorFront;
 			armors[ES_ARMOR_SIDE] = nArmorSize;
 			armors[ES_ARMOR_BACK] = nArmorBack;
@@ -239,7 +239,7 @@ void MakeSquadArmors( std::vector<int> &armors, const NDb::SSquadRPGStats *pStat
 	armors[ES_ARMOR_SIDE] = 0;
 	armors[ES_ARMOR_BACK] = 0;
 	armors[ES_ARMOR_TOP] = 0;
-	
+
 	for ( std::vector< CDBPtr< NDb::SInfantryRPGStats > >::const_iterator it = pStats->members.begin();
 		it != pStats->members.end(); ++it )
 	{
@@ -307,7 +307,7 @@ const NDb::SModel* GetExactModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSea
 	{
 		for ( std::vector<NDb::SVisObj::SSingleObj>::const_iterator it = pVisObj->models.begin(); it != pVisObj->models.end(); ++it )
 		{
-			if ( it->eSeason == eSeason ) 
+			if ( it->eSeason == eSeason )
 				return it->pModel;
 		}
 	}

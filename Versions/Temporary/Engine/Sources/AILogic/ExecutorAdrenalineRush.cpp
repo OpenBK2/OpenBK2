@@ -13,9 +13,9 @@ CExecutorUnitCombatBonus ( NDb::ABILITY_ADRENALINE_RUSH, _pUnit, TID_ADRENALINE_
 
 CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorAdrenalineRush::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
-	if ( ( GetState() == EASS_READY_TO_ON || GetState() == EASS_SWITCHING_OFF ) && ( newModeFlags & EUM_FIGHTING ) ) 
+	if ( ( GetState() == EASS_READY_TO_ON || GetState() == EASS_SWITCHING_OFF ) && ( newModeFlags & EUM_FIGHTING ) )
 		return EACR_FORCE_ACTIVATE;
-	else if ( ( GetState() == EASS_ACTIVE || GetState() == EASS_SWITCHING_ON ) && !( newModeFlags & EUM_FIGHTING ) ) 
+	else if ( ( GetState() == EASS_ACTIVE || GetState() == EASS_SWITCHING_ON ) && !( newModeFlags & EUM_FIGHTING ) )
 		return EACR_FORCE_DEACTIVATE;
 	return EACR_IGNORE;
 }

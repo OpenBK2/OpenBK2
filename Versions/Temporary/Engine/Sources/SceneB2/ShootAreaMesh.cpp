@@ -50,7 +50,7 @@ struct SCircleHeightFunctor : public SLinearHeightFunctor
 		if ( t < 0.5f )
 			return 2.0f * t * t;
 		return 1.0f - 2.0f * sqr( 1 - t );
-	}	
+	}
 };
 
 void CShootAreaMesh::FillGrid( std::vector<float> &grid, int nNumPoints, SLinearHeightFunctor &func )
@@ -92,9 +92,9 @@ void CShootAreaMesh::Recalc()
 		AppendToVector( objData.verts, verts );
 		BuildLine( verts, tris, fEndAngle );
 		AppendToVector( allTris, tris, objData.verts.size() );
-		AppendToVector( objData.verts, verts );		
+		AppendToVector( objData.verts, verts );
 	}
-	
+
 	objData.geometry.swap( allTris );
 	pValue->AssignFast( &objData );
 }
@@ -106,12 +106,12 @@ CVec2 CShootAreaMesh::GetCenter()
 	return CVec2( vCenter.x, vCenter.y );
 }
 
-CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) : 
+CShootAreaMesh::CShootAreaMesh( CFuncBase<SFBTransform> *_pTransform, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) :
 	pTransform( _pTransform ), fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
 {
 }
 
-CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) : 
+CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float _fEndAngle, float _fMinRadius, float _fMaxRadius, CTerrainManager *_pTerraManager, float _fWidth ) :
 	fStartAngle( _fStartAngle ), fEndAngle( _fEndAngle ), fMinRadius( _fMinRadius ), fMaxRadius( _fMaxRadius ), pTerraManager( _pTerraManager ), fWidth(_fWidth)
 {
 	SFBTransform transform;
@@ -121,7 +121,7 @@ CShootAreaMesh::CShootAreaMesh( const CVec2 &vCenter, float _fStartAngle, float 
 }
 
 void CShootAreaMesh::BuildCircle( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris, float fRadius )
-{	
+{
 	const float fSRadius = fRadius - fWidth;
 	const int nSegments = (std::max)( int( fRadius * FP_2PI / 4.0f ), 16 );
 	const float fStep = FP_2PI / nSegments;
@@ -207,7 +207,7 @@ void CShootAreaMesh::FillVertexData( NGScene::SVertex &vertex )
 void CShootAreaMesh::BuildSector( std::vector<NGScene::SVertex> &verts, std::vector<STriangle> &tris )
 {
 	const float fHeightCoeff = 10.0f;
-	
+
 	const int nNumRadians = 10;
 	std::vector<float> radians;
 	std::vector<float> transformedRadians;

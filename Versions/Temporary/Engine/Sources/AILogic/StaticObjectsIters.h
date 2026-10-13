@@ -7,7 +7,7 @@
 
 //
 // Итераторы, не cэйвятся!
-// 
+//
 
 extern CStaticObjects theStatObjs;
 
@@ -36,7 +36,7 @@ public:
 
 	void Iterate();
 	bool IsFinished() const;
-	void Reset() 
+	void Reset()
 	{
 		theStatObjs.SetIterCreated( false );
 		Init( downX, upX, downY, upY );
@@ -75,7 +75,7 @@ class CMinesIter : protected CStObjCircleIter<false>
 {
 	int nParty = {};
 	const bool bAllMines = {};
-	
+
 	void IterateToNextMine();
 public:
 	// итерировать по минам, невидимым nParty
@@ -121,7 +121,7 @@ inline int CStObjIter<true>::GetCellSize() const
 
 template<bool bOnlyContainers>
 CStObjIter<bOnlyContainers>::CStObjIter( const int downX, const int upX, const int downY, const int upY )
-{ 
+{
 	Init( downX, upX, downY, upY );
 }
 
@@ -136,7 +136,7 @@ void CStObjIter<bOnlyContainers>::Init( const int _downX, const int _upX, const 
 	upY = Clamp( _upY, 0, GetAreaMap().GetSizeY() - 1 );
 
 #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
-	NI_ASSERT( !theStatObjs.IsIterCreated(), "Can't create two iterators concurrently" ); 
+	NI_ASSERT( !theStatObjs.IsIterCreated(), "Can't create two iterators concurrently" );
 	theStatObjs.SetIterCreated( true );
 #endif // #if !defined(_FINALRELEASE) && !defined(_BETARELEASE)
 
@@ -185,7 +185,7 @@ bool CStObjIter<bOnlyContainers>::IsFinished() const
 
 template<bool bOnlyContainers>
 void CStObjIter<bOnlyContainers>::Iterate()
-{ 
+{
 	do
 	{
 		if ( ++iter == GetAreaMap()[y][x].end() )
@@ -199,9 +199,9 @@ void CStObjIter<bOnlyContainers>::Iterate()
 }
 
 template<bool bOnlyContainers>
-CExistingObject* CStObjIter<bOnlyContainers>::operator*() 
-{ 
-	NI_ASSERT( !IsFinished(), "Can't perform operator *" ); 
+CExistingObject* CStObjIter<bOnlyContainers>::operator*()
+{
+	NI_ASSERT( !IsFinished(), "Can't perform operator *" );
 	return *iter;
 }
 

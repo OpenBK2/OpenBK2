@@ -59,7 +59,7 @@ int CScriptWrapper::CallScriptFunction( const char *pszFunction, const bool bLog
 		if( obj.IsNumber() )
 			nResult = obj.GetNumber();
 	}
-	
+
 	for ( int i = 1; i <= nNumRetArgs; ++i )
 	{
 		Script::Object obj = pScript->GetScript()->GetObject( i );
@@ -120,7 +120,7 @@ int CScriptWrapper::RunScriptByID( int nID )
 int CScriptWrapper::RunScript( const char *pszScriptText )
 {
 	if ( pszScriptText == 0 || !strlen( pszScriptText ) ) return 0;
-	return (script.DoBuffer( &(pszScriptText[0]), strlen(pszScriptText), "Script" ) == 0) ; 
+	return (script.DoBuffer( &(pszScriptText[0]), strlen(pszScriptText), "Script" ) == 0) ;
 }
 
 int CScriptWrapper::RunScriptFile( const char *pszFileName )
@@ -131,7 +131,7 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 	// +10 на всякий случай
 	std::vector<char> buffer( nSize + 10 );
 	stream.Read( &(buffer[0]), nSize );
-	return (script.DoBuffer( &(buffer[0]), nSize, "Script" ) == 0) ; 
+	return (script.DoBuffer( &(buffer[0]), nSize, "Script" ) == 0) ;
 }
 
 } // namespace

@@ -27,7 +27,7 @@ const char *const luaO_typenames[] = {
 
 
 /*
-** returns smaller power of 2 larger than `n' (minimum is MINPOWER2) 
+** returns smaller power of 2 larger than `n' (minimum is MINPOWER2)
 */
 lint32 luaO_power2 (lint32 n) {
   lint32 p = MINPOWER2;
@@ -36,14 +36,14 @@ lint32 luaO_power2 (lint32 n) {
 }
 
 
-int luaO_equalObj (const TObject *t1, const TObject *t2) 
+int luaO_equalObj (const TObject *t1, const TObject *t2)
 {
 	return *t1 == *t2;
 }
 
 
 char *luaO_openspace (lua_State *L, size_t n) {
-  if ( n > L->Mbuffer.size() ) 
+  if ( n > L->Mbuffer.size() )
 		L->Mbuffer.resize(n);
   return &L->Mbuffer[0];
 }
@@ -127,7 +127,7 @@ int TObject::operator&( IBinSaver &f )
 {
 	f.Add( 2, &ttype );
 	ASSERT( ttype != LUA_TNONE );
-	switch ( ttype ) 
+	switch ( ttype )
 	{
 		case LUA_TNUMBER :
 		case LUA_TNIL :

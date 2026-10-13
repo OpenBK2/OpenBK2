@@ -18,14 +18,14 @@
 
 void CNetLogger::OpenLogFile( const std::string &szNick )
 {
-#ifndef _DONT_LOG_PACKETS 
+#ifndef _DONT_LOG_PACKETS
 	CloseLogFile( szNick );
 
 	std::string szFullName;
 	NFile::GetFullName( &szFullName, "..\\Logs\\" );
 	NFile::CreatePath( szFullName.c_str() );
 	szFullName += szNick + ".log";
-	
+
 	logs[szNick] = fopen( szFullName.c_str(), "a" );
 	if ( logs[szNick] == 0 )
 		logs.erase( szNick );
@@ -34,7 +34,7 @@ void CNetLogger::OpenLogFile( const std::string &szNick )
 
 void CNetLogger::CloseLogFile( const std::string &szNick )
 {
-#ifndef _DONT_LOG_PACKETS	
+#ifndef _DONT_LOG_PACKETS
 	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( szNick	);
 	if ( iter != logs.end() )
 	{
@@ -46,7 +46,7 @@ void CNetLogger::CloseLogFile( const std::string &szNick )
 
 CNetLogger::~CNetLogger()
 {
-#ifndef _DONT_LOG_PACKETS	
+#ifndef _DONT_LOG_PACKETS
 	for ( std::unordered_map<std::string, FILE*>::iterator iter = logs.begin(); iter != logs.end(); ++iter )
 		fclose( iter->second );
 #endif
@@ -54,12 +54,12 @@ CNetLogger::~CNetLogger()
 
 void CNetLogger::Log( const std::string &wszNick, const std::string &szLog )
 {
-#ifndef _DONT_LOG_PACKETS	
+#ifndef _DONT_LOG_PACKETS
 	std::unordered_map<std::string, FILE*>::iterator iter = logs.find( wszNick	);
 	if ( logs.find( wszNick ) != logs.end() )
 	{
 		std::string szStr;
-		
+
 		// _strdate wrote "MM/DD/YY", _strtime "HH:MM:SS", and _ftime64 supplied the
 		// milliseconds. One reading of the clock serves all three here where the
 		// original took three, so the stamp can no longer straddle a second boundary

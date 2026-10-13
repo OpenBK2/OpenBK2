@@ -54,17 +54,17 @@ struct SShootArea
 	};
 
 	EShootAreaType eType = {};
-	
+
 	CVec3 vCenter3D;
 	float fMinR = {}, fMaxR = {};
 
 	// углы задают конус стрельбы - против часовой стрелки
 	uint16_t wStartAngle = {};
 	uint16_t wFinishAngle = {};
-	
+
 	//
 	SShootArea()
-		: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ), 
+		: vCenter3D( VNULL3 ), fMinR( 0.0f ), fMaxR( 0.0f ),
 			wStartAngle( 65535 ), wFinishAngle( 65535 ), eType( ESAT_LINE ) { }
 
 	const uint32_t GetColor() const
@@ -87,13 +87,13 @@ struct SShootArea
 		NI_ASSERT( int( eType ) < 4, fmt::format( "Wrong type of area ({})", (int)eType ) );
 		return colors[eType];
 	}
-	
+
 	bool operator!=( const SShootArea &arg ) const
 	{
 		return eType != arg.eType || vCenter3D != arg.vCenter3D || fMinR != arg.fMinR || fMaxR != arg.fMaxR ||
 			wStartAngle != arg.wStartAngle || wFinishAngle != arg.wFinishAngle;
 	}
-	
+
 	int operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &eType );
@@ -102,7 +102,7 @@ struct SShootArea
 		saver.Add( 4, &fMaxR );
 		saver.Add( 5, &wStartAngle );
 		saver.Add( 6, &wFinishAngle );
-		return 0;	
+		return 0;
 	}
 };
 
@@ -113,7 +113,7 @@ struct SShootAreas
 
 	virtual int operator&( struct IBinSaver &saver )
 	{
-		
+
 		saver.Add( 1, &areas );
 		return 0;
 	}

@@ -89,14 +89,14 @@
 #define ID_HELP_ABOUT																931
 
 //1000...9999 ComandIDs
-#define ID_FIRST_COMMAND_ID													1000 
+#define ID_FIRST_COMMAND_ID													1000
 #define ID_LAST_COMMAND_ID													9999
 
 //13000...19999 Strings
 #define IDS_FIRST_STRING_ID													13000
 #define IDS_LAST_STRING_ID													19999
 
-//23000...	
+//23000...
 #define IDS_FIRST_DIALOG_ID													23000
 
 #define ID_OS_GET_OBJECTSET													1000 //Получить описатель текущего объекта

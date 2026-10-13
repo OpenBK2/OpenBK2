@@ -154,7 +154,7 @@ CBasicDatabase *CreateEditorDatabase() { return new CEditorDatabase(); }
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
@@ -166,7 +166,7 @@ bool CEditorDatabase::OpenDatabase( NVFS::IVFS *_pVFS, NVFS::IFileCreator *_pFil
 	//
 	bool bRet = NMetaInfo::CreateFullMetaInfoCopy( &metaInfoMap );
 	bRet = LoadTypesMap() && bRet;
-	LoadIndex(); 
+	LoadIndex();
 	return bRet;
 }
 
@@ -377,7 +377,7 @@ bool CEditorDatabase::IsFileRegistered( const std::string &szFileName )
 {
 	CDBID dbid, _dbid( szFileName );
 	NormalizeDBID( &dbid, _dbid );
-	
+
 	return elementsMap.find( dbid ) != elementsMap.end();
 }
 
@@ -417,11 +417,11 @@ NBind::CBindStruct *CEditorDatabase::CreateNewBind( const STypeObjectHeader &hea
 	// paranoid check
 	//if ( pStruct == 0 )
 	//{
-	//	const bool bNoCode = pTypeClass->pAttributes && 
-	//		(pTypeClass->pAttributes->HashAttribute("noCode") || 
+	//	const bool bNoCode = pTypeClass->pAttributes &&
+	//		(pTypeClass->pAttributes->HashAttribute("noCode") ||
 	//		pTypeClass->pAttributes->HashAttribute("noHeader") );
-	//	NI_VERIFY( pStruct == 0 && (bNoCode || pTypeClass->nClassTypeID == -1), 
-	//		StrFmt("Can't create new object of type \"%s\" correctly", header.szClassTypeName.c_str()), 
+	//	NI_VERIFY( pStruct == 0 && (bNoCode || pTypeClass->nClassTypeID == -1),
+	//		StrFmt("Can't create new object of type \"%s\" correctly", header.szClassTypeName.c_str()),
 	//		return 0 );
 	//}
 	// create and register bind
@@ -496,7 +496,7 @@ bool CEditorDatabase::LoadObject( NBind::CBindStruct *pBind, const CDBID &dbid )
 		}
 	}
 	// load main object
-	NI_VERIFY( pBind->LoadXML( "", pBind->GetMetaInfo()->pStructTypeDef, pRootElement ) != false, 
+	NI_VERIFY( pBind->LoadXML( "", pBind->GetMetaInfo()->pStructTypeDef, pRootElement ) != false,
 						  fmt::format("Can't load data for object \"{}\"", szFileName), return false );
 	CResourceHelper::SetLoaded( pBind->GetObject() );
 	//
@@ -509,7 +509,7 @@ IObjMan *CEditorDatabase::CreateNewObject( const std::string &szClassTypeName )
 	NI_VERIFY( pMetaInfo != 0 && pMetaInfo->pStructTypeDef != 0, "Can't get struct meta info", return 0 );
 	NTypeDef::STypeClass *pTypeClass = dynamic_cast_ptr<NTypeDef::STypeClass *>( pMetaInfo->pStructTypeDef );
 	CObj<CResource> pStruct = dynamic_cast<CResource*>( NObjectFactory::MakeObject( pTypeClass->nClassTypeID ) );
-	NI_VERIFY( !(pStruct == 0 && pTypeClass->nClassTypeID != -1 && pMetaInfo->nNumCodeValues != 0), 
+	NI_VERIFY( !(pStruct == 0 && pTypeClass->nClassTypeID != -1 && pMetaInfo->nNumCodeValues != 0),
 		         fmt::format("Can't create new object of type \"{}\" correctly", szClassTypeName), return 0 );
 	NBind::CBindStruct *pBind = new NBind::CBindStruct( pStruct, pMetaInfo );
 	pBind->SetDefault( "", pTypeClass );
@@ -821,7 +821,7 @@ void CEditorDatabase::DropCachedResources()
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **

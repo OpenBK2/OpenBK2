@@ -27,22 +27,22 @@ CArtilleryCrewPath::CArtilleryCrewPath( CBasePathUnit *_pUnit, const CVec2 &vSta
 }*/
 
 void CArtilleryCrewPath::SetParams( const CVec2 &_vEndPoint, const float fMaxSpeed, const CVec2 &_vSpeed2 )
-{ 
+{
 	SetParams( _vEndPoint, fMaxSpeed );
 	vSpeed3 = CVec3( _vSpeed2, 0.0f );
 }
 
 void CArtilleryCrewPath::SetParams( const CVec2 &_vEndPoint, const float fMaxSpeed )
-{ 
+{
 	bNotInitialized = false;
-	
+
 	vEndPoint = _vEndPoint;
 	fSpeedLen = fMaxSpeed;
 	bSelfSpeed = fMaxSpeed == 0.0f;
 	vSpeed3 = VNULL3;
 }
 
-bool CArtilleryCrewPath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap ) 
+bool CArtilleryCrewPath::Init( CBasePathUnit *_pUnit, IPath *pPath, bool bSmoothTurn, bool bCheckTurn, CAIMap *pAIMap )
 {
 	CPtr<IPath> p = pPath;
 	pUnit = _pUnit;
@@ -77,19 +77,19 @@ void CArtilleryCrewPath::Segment( const NTimer::STime timeDiff )
 	{
 		if ( bSelfSpeed )
 			fSpeedLen = pUnit->GetMaxSpeedHere();
-		
+
 		float fPassedLenght = fSpeedLen * timeDiff;
 		CVec2 vDir = vEndPoint - vCurPoint;
 		float fDistToGo = fabs( vDir );
 		if ( fDistToGo >= fPassedLenght )// еще нужно идти
 		{
-			Normalize( &vDir );	
+			Normalize( &vDir );
 			vDir *= fPassedLenght ;
 			vCurPoint += vDir;
 			pUnit->SetDirectionVec( vDir );
 		}
 		else
-			vCurPoint = vEndPoint;		
+			vCurPoint = vEndPoint;
 	}
 	pUnit->SetCenter( GetHeights()->Get3DPoint( vCurPoint ) );
 }
@@ -99,12 +99,12 @@ void CArtilleryCrewPath::Segment( const NTimer::STime timeDiff )
 //*******************************************************************
 
 CArtilleryBeingTowedPath::CArtilleryBeingTowedPath( const float fSpeedLen, const CVec2 &vCurPoint, const CVec2 &vSpeed )
-{ 
-	Init( fSpeedLen, vCurPoint, vSpeed ); 
+{
+	Init( fSpeedLen, vCurPoint, vSpeed );
 }
 
 bool CArtilleryBeingTowedPath::Init( float _fSpeedLen, const class CVec2 &_vCurPoint, const CVec2 &_vSpeed )
-{ 
+{
 	fSpeedLen = _fSpeedLen;
 	vCurPoint = GetHeights()->Get3DPoint( _vCurPoint );
 	vCurPoint2D = _vCurPoint;

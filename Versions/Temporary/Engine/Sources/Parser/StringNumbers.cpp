@@ -10,7 +10,7 @@ bool IsInt( const std::string &szVal )
 {
 	if ( szVal.empty() )
 		return false;
-	
+
 	int n = 0;
 	while ( n < szVal.size() && IsSign( szVal[n] ) )
 		++n;

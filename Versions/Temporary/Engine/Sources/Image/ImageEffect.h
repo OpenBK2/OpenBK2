@@ -113,7 +113,7 @@ struct SApplyFilterFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 	const CArray2D<int> *pFilter;
 	int nDivider;
-	CTPoint<int> filterHalfSize; 
+	CTPoint<int> filterHalfSize;
 
 	SApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
 													const CArray2D<uint32_t> *_pSourceImage,
@@ -136,7 +136,7 @@ struct SApplyFilterFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		CTRect<int> localIndices( nXIndex - filterHalfSize.x,
 															nYIndex - filterHalfSize.y,
 															nXIndex + filterHalfSize.x,
@@ -148,7 +148,7 @@ struct SApplyFilterFunctional
 					nLocalYIndex <= localIndices.maxy;
 					++nFilterYIndex, ++nLocalYIndex )
 		{
-			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx; 
+			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx;
 						nLocalXIndex <= localIndices.maxx;
 						++nFilterXIndex, ++nLocalXIndex )
 			{
@@ -178,8 +178,8 @@ struct SWBCApplyFilterFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 	const CArray2D<int> *pFilter;
 	int nDivider;
-	CTPoint<int> size; 
-	CTPoint<int> filterHalfSize; 
+	CTPoint<int> size;
+	CTPoint<int> filterHalfSize;
 
 	SWBCApplyFilterFunctional( CArray2D<uint32_t> *_pDestImage,
 														 const CArray2D<uint32_t> *_pSourceImage,
@@ -204,7 +204,7 @@ struct SWBCApplyFilterFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		CTRect<int> localIndices( nXIndex - filterHalfSize.x,
 															nYIndex - filterHalfSize.y,
 															nXIndex + filterHalfSize.x,
@@ -216,7 +216,7 @@ struct SWBCApplyFilterFunctional
 					nLocalYIndex <= localIndices.maxy;
 					++nFilterYIndex, ++nLocalYIndex )
 		{
-			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx; 
+			for ( int nFilterXIndex = 0, nLocalXIndex = localIndices.minx;
 						nLocalXIndex <= localIndices.maxx;
 						++nFilterXIndex, ++nLocalXIndex )
 			{
@@ -264,7 +264,7 @@ struct SMarkOutsideEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ) < dwMinAlpha )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
@@ -291,7 +291,7 @@ struct SWBCMarkOutsideEdgeFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 	uint32_t dwEdgeColor;
 	uint32_t dwMinAlpha;
-	CTPoint<int> size; 
+	CTPoint<int> size;
 
 	SWBCMarkOutsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
 																 const CArray2D<uint32_t> *_pSourceImage,
@@ -309,14 +309,14 @@ struct SWBCMarkOutsideEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ) < dwMinAlpha )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) && 
+					if ( ( nLocalXIndex >= 0 ) &&
 							 ( nLocalYIndex >= 0 ) &&
 							 ( nLocalXIndex < size.x ) &&
 							 ( nLocalYIndex < size.y ) )
@@ -356,7 +356,7 @@ struct SMarkInsideEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ) >= dwMinAlpha )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
@@ -383,7 +383,7 @@ struct SWBCMarkInsideEdgeFunctional
 	const CArray2D<uint32_t> *pSourceImage;
 	uint32_t dwEdgeColor;
 	uint32_t dwMinAlpha;
-	CTPoint<int> size; 
+	CTPoint<int> size;
 
 	SWBCMarkInsideEdgeFunctional( CArray2D<uint32_t> *_pDestImage,
 																const CArray2D<uint32_t> *_pSourceImage,
@@ -401,14 +401,14 @@ struct SWBCMarkInsideEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( GetAlphaFromARGBColor( ( *pSourceImage )[nYIndex][nXIndex] ) >= dwMinAlpha )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) && 
+					if ( ( nLocalXIndex >= 0 ) &&
 							 ( nLocalYIndex >= 0 ) &&
 							 ( nLocalXIndex < size.x ) &&
 							 ( nLocalYIndex < size.y ) )
@@ -443,7 +443,7 @@ struct SEraseEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( ( *pSourceImage )[nYIndex][nXIndex] != 0 )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
@@ -469,7 +469,7 @@ struct SWBCEraseEdgeFunctional
 {
 	CArray2D<uint32_t> *pDestImage;
 	const CArray2D<uint32_t> *pSourceImage;
-	CTPoint<int> size; 
+	CTPoint<int> size;
 
 	SWBCEraseEdgeFunctional( CArray2D<uint32_t> *_pDestImage, const CArray2D<uint32_t> *_pSourceImage )
 		: pDestImage( _pDestImage ), pSourceImage( _pSourceImage )
@@ -484,14 +484,14 @@ struct SWBCEraseEdgeFunctional
 	}
 	//
 	void operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( ( *pSourceImage )[nYIndex][nXIndex] != 0 )
 		{
 			for ( int nLocalYIndex = ( nYIndex - 1 ); nLocalYIndex <= ( nYIndex + 1 ); ++nLocalYIndex )
 			{
 				for ( int nLocalXIndex = ( nXIndex - 1 ); nLocalXIndex <= ( nXIndex + 1 ); ++nLocalXIndex )
 				{
-					if ( ( nLocalXIndex >= 0 ) && 
+					if ( ( nLocalXIndex >= 0 ) &&
 							 ( nLocalYIndex >= 0 ) &&
 							 ( nLocalXIndex < size.x ) &&
 							 ( nLocalYIndex < size.y ) )

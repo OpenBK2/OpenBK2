@@ -27,7 +27,7 @@ public:
 	bool IsBeamIntersectLine( const SVector &ptStart, const SVector &ptSecond ) const
 	{
 		return ( fabs( GetDistFromLine( ptStart ) ) > fabs( GetDistFromLine( ptSecond ) ) ) || IsSegmIntersectLine( ptStart, ptSecond );
-	} 
+	}
 	bool IsBeamIntersectSegm( const SVector &ptStart, const SVector &ptSecond ) const
 	{
 		if ( !IsBeamIntersectLine( ptStart, ptSecond ) )

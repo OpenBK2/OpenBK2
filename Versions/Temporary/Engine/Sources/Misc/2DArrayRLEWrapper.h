@@ -35,7 +35,7 @@ public:
 
 	int operator&( struct IBinSaver &saver )
 	{
-		
+
 		saver.Add( 1, &a.xSize );
 
 		CArray2DRLEWrapper<uint8_t> rleWrapper( a.array, packingData );
@@ -126,7 +126,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 							// тип неопределён, поставить в тип "последовательность нулей"
 							if ( nType == -1 )
 								nType = 0;
-							//тип "уникальная последовательность", последовательность закончилась, 
+							//тип "уникальная последовательность", последовательность закончилась,
 							//сдвинуть указатель назад и выйти из цикла
 							else if ( nType == 1 )
 							{
@@ -175,11 +175,11 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 	else
 	{
 		a.Clear();
-		
+
 		int nSizeX, nSizeY;
 		saver.Add( 1, &nSizeX );
 		saver.Add( 2, &nSizeY );
-		
+
 		a.SetSizes( nSizeX, nSizeY );
 		if ( packingData == 0 )
 			a.FillZero();
@@ -192,7 +192,7 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 			saver.Add( 3, &nRLELength );
 			T *pRLE = new T[nRLELength];
 			saver.AddRawData( 4, pRLE, sizeof(T) * nRLELength );
-			
+
 			T *pData = &(a[0][0]);
 
 			int cnt = 0;

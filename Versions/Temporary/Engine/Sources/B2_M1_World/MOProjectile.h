@@ -7,7 +7,7 @@
 
 class CMOProjectile : public CMapObj
 {
-	OBJECT_NOCOPY_METHODS( CMOProjectile );	
+	OBJECT_NOCOPY_METHODS( CMOProjectile );
 
 	ZDATA_( CMapObj )
 		CVec3 vPosDiff;

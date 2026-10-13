@@ -20,7 +20,7 @@ const uint16_t GetDirectionByVector( float x, float y )
 {
 	if ( IsAlmostZero( x, y ) )
 		return 0;
-	
+
 	float add = 49152.0f;
 
 	if ( x <= 0 && y > 0 )
@@ -33,18 +33,18 @@ const uint16_t GetDirectionByVector( float x, float y )
 	else if ( y <= 0 && x < 0 )
 	{
 		add = 16384.0f;
-		
+
 		x = -x;
 		y = -y;
 	}
 	else if ( x >= 0 && y < 0 )
 	{
 		add = 32768.0f;
-		
+
 		std::swap( x, y );
 		x = -x;
 	}
-		
+
 	//NI_VERIFY( (x >= 0) && (y >= 0), StrFmt("Wrong vector {%g, %g}", x, y), return 0 );
 	if ( x < 0 || y < 0 )
 		return 0;
@@ -103,7 +103,7 @@ const int DifferenceSign( const uint16_t dir1, const uint16_t dir2 )
 
 bool IsInTheAngle( const uint16_t dir, const uint16_t startAngleDir, const uint16_t finishAngleDir )
 {
-	return 
+	return
 		uint16_t( dir - startAngleDir ) + uint16_t( finishAngleDir - dir ) == uint16_t( finishAngleDir - startAngleDir );
 }
 
@@ -218,7 +218,7 @@ bool SRect::IsIntersectProject( const CVec2 &v1, const CVec2 &v2, const CVec2 &v
 	const float max12 = (std::max)( proj1, proj2 );
 	const float max34 = (std::max)( proj3, proj4 );
 
-	return 
+	return
 		!( (std::min)( min12, min34 ) >= max || (std::max)( max12, max34 ) <= min );
 }
 
@@ -227,18 +227,18 @@ bool SRect::IsIntersected( const CSegment &segment ) const
 	CVec2 vSegmetDir = segment.p2 - segment.p1;
 	const float fSegmLength = fabs( vSegmetDir );
 	vSegmetDir /= fSegmLength;
-	
+
 	const CVec2 vYDir( 0.0f, 1.0f );
 	const CVec2 vSegmentDirPerp = vSegmetDir ^ vYDir;
 
-	return 	
+	return
 		IsIntersectProject( v1() - segment.p1, v2() - segment.p1, v3() - segment.p1, v4() - segment.p1, vSegmetDir, 0.0f, fSegmLength ) &&
 		IsIntersectProject( v1() - segment.p1, v2() - segment.p1, v3() - segment.p1, v4() - segment.p1, vSegmentDirPerp, 0.0f, 0.0f );
 }
 
 bool SRect::IsIntersected( const SRect &rect ) const
 {
-	return 
+	return
 		IsIntersectProject( v1() - rect.center, v2() - rect.center, v3() - rect.center, v4() - rect.center, rect.dir, -rect.lengthBack, rect.lengthAhead ) &&
 		IsIntersectProject( v1() - rect.center, v2() - rect.center, v3() - rect.center, v4() - rect.center, rect.dirPerp, -rect.width, rect.width ) &&
 		IsIntersectProject( rect.v1() - center, rect.v2() - center, rect.v3() - center, rect.v4() - center, dir, -lengthBack, lengthAhead ) &&
@@ -254,7 +254,7 @@ bool SRect::IsPointInside( const CVec2 &point ) const
 	if ( rightSign == 0 )
 		return fabs2( point - center ) < 0.001f;
 
-	return 
+	return
 		boost::math::sign( TriangleAAA ( v1(), v2(), point ) ) == rightSign && boost::math::sign( TriangleAAA ( v2(), v3(), point ) ) == rightSign &&
 		boost::math::sign( TriangleAAA ( v3(), v4(), point ) ) == rightSign && boost::math::sign( TriangleAAA ( v4(), v1(), point ) ) == rightSign;
 }
@@ -305,7 +305,7 @@ bool SRect::IsIntersectTriangle( const CVec2 &vTr1, const CVec2 &vTr2, const CVe
 
 const int SRect::GetSide( const uint16_t dirFromRectCenter ) const
 {
-	// разница по модулю 65536	
+	// разница по модулю 65536
 	const uint16_t diff = dirFromRectCenter - GetDirectionByVector( dir );
 
 	if ( diff <= 8192 )
@@ -367,7 +367,7 @@ const bool GetRectBeamIntersection( CVec2 *pvResult, const CVec2 &vPoint, const 
 {
 	if ( pvResult )
 		*pvResult = VNULL2;
-  
+
 	int nNearestPoint = 0;
 	float fNearestDist2 = fabs2( vPoint - rect.v[0] );
 	for ( int i = 1; i < 4; ++i )

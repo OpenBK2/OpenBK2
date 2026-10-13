@@ -51,7 +51,7 @@ void CPointsListState::Enter()
 	pMarkers = 0;
 
 	currDialogData.nInstanceID = nInstanceID;
-	currDialogData.nNumPoints = GetPointsNum( GetPointsArrayFieldName() ); 
+	currDialogData.nNumPoints = GetPointsNum( GetPointsArrayFieldName() );
 	currDialogData.nSelectedPoint = 0;
 	currDialogData.bChkPassability = false;
 	currDialogData.bChkPropmask = true;
@@ -81,13 +81,13 @@ void CPointsListState::Leave()
 
 
 void CPointsListState::SetPointMarkers()
-{ 
+{
 	IEditorScene *pScene = EditorScene();
 	if ( !pScene )
 		return;
 
 	CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->
-		CreateObjectManipulator( pBuildingEditor->GetObjectSet().szObjectTypeName, 
+		CreateObjectManipulator( pBuildingEditor->GetObjectSet().szObjectTypeName,
 														 pBuildingEditor->GetObjectSet().objectNameSet.begin()->first );
 
 	CVec2 vBuildingOrigin = VNULL2;
@@ -108,7 +108,7 @@ void CPointsListState::SetPointMarkers()
 		for ( int i = 0; i < nNumElems; ++i )
 		{
 			CVec3 pos = VNULL3;
-			CManipulatorManager::GetValue( &pos, pManipulator, fmt::format("{}.[{}].{}", GetPointsArrayFieldName().c_str(), i, GetPositionFieldName().c_str()) ); 
+			CManipulatorManager::GetValue( &pos, pManipulator, fmt::format("{}.[{}].{}", GetPointsArrayFieldName().c_str(), i, GetPositionFieldName().c_str()) );
 
 			CVariant dir = 0.0f;
 			if ( !GetDirectionFieldName().empty() )
@@ -118,14 +118,14 @@ void CPointsListState::SetPointMarkers()
 			bool bOriginInUse				= IsOriginInUse();
 			float fDirection				= static_cast<float>(dir);
 			EDirMeasure eDirMeasure	= GetDirMeasure();
-						
+
 			pMarkers->AddMarker( pos, fDirection, eDirMeasure, bMarkerIsActive, true, bOriginInUse );
 
 			AddPointSpecificMarker( pManipulator, i );
 		}
 	}
 
-	pMarkers->AttachToScene();	
+	pMarkers->AttachToScene();
 }
 
 
@@ -155,17 +155,17 @@ void CPointsListState::ClearMaskManipulator()
 	if ( pMaskManipulator != 0 )
 	{
 		IView *pView = 0;
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
-																													ID_PC_DIALOG_GET_VIEW, 
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
+																													ID_PC_DIALOG_GET_VIEW,
 																													reinterpret_cast<uintptr_t>(&pView) );
 		if ( pView != 0 )
 		{
 			pView->RemoveViewManipulator();
 			pView->SetViewManipulator( pBuildingEditor->CreateBuildingManipulator(), pBuildingEditor->GetObjectSet(), std::string() );
 		}
-		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
+		Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
 																													ID_PC_DIALOG_CREATE_TREE, 0 );
-		pMaskManipulator = 0;	
+		pMaskManipulator = 0;
 	}
 }
 
@@ -188,16 +188,16 @@ void CPointsListState::SetMaskManipulator()
 		ClearMaskManipulator();
 
 	IView *pView = 0;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
-																												ID_PC_DIALOG_GET_VIEW, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
+																												ID_PC_DIALOG_GET_VIEW,
 																												reinterpret_cast<uintptr_t>(&pView) );
 	if ( pView != 0 )
 		pView->RemoveViewManipulator();
 
-	pMaskManipulator = 0;	
+	pMaskManipulator = 0;
 
 	const std::string szMask = fmt::format( "{}.[{}].", GetPointsArrayFieldName().c_str(), GetSelectedPointIndex() );
-	
+
 	pMaskManipulator = new CMaskManipulator( szMask, pBuildingEditor->GetViewManipulator(), CMaskManipulator::SMART_MODE );
 
 	std::vector<std::string> maskFields;
@@ -208,9 +208,9 @@ void CPointsListState::SetMaskManipulator()
 		std::string szM = (*it);
 		pMaskManipulator->AddName( szM, false, "", INVALID_NODE_ID, false );
 	}
-	
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
-																												ID_PC_DIALOG_GET_VIEW, 
+
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
+																												ID_PC_DIALOG_GET_VIEW,
 																												reinterpret_cast<uintptr_t>(&pView) );
 	bool bNeedCreateTree = true;
 	if ( pView != 0 )
@@ -218,12 +218,12 @@ void CPointsListState::SetMaskManipulator()
 		bNeedCreateTree = ( pView->GetViewManipulator() != pMaskManipulator );
 		pView->SetViewManipulator( pMaskManipulator, pBuildingEditor->GetObjectSet(), std::string() );
 	}
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
 																												bNeedCreateTree ? ID_PC_DIALOG_CREATE_TREE : ID_PC_DIALOG_UPDATE_VALUES, 0 );
 
 	ICommandHandler *pCommandHandler = 0;
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, 
-																												ID_PC_DIALOG_GET_COMMAND_HANDLER, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG,
+																												ID_PC_DIALOG_GET_COMMAND_HANDLER,
 																												reinterpret_cast<uintptr_t>(&pCommandHandler) );
 	if ( pCommandHandler != 0 )
 		pCommandHandler->HandleCommand( ID_PC_EXPAND_ALL, 0 );
@@ -232,13 +232,13 @@ void CPointsListState::SetMaskManipulator()
 
 bool CPointsListState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 	case ID_POINTS_LIST_DLG_CHANGE_STATE:
 		{
 			int nPointsListDlgInstanceID = dwData;
 			if ( nPointsListDlgInstanceID == nInstanceID )
-				RefreshState();							
+				RefreshState();
 
 			return true;
 		}
@@ -250,8 +250,8 @@ bool CPointsListState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 
 bool CPointsListState::GetPointListDialogData( SPointListDialogData *pData )
 {
-	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG, 
-																																		ID_WINDOW_GET_DIALOG_DATA, 
+	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG,
+																																		ID_WINDOW_GET_DIALOG_DATA,
 																																		reinterpret_cast<uintptr_t>(pData) );
 	return bRes;
 }
@@ -259,8 +259,8 @@ bool CPointsListState::GetPointListDialogData( SPointListDialogData *pData )
 
 bool CPointsListState::SetPointListDialogData( SPointListDialogData *pData )
 {
-	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG, 
-																																		ID_WINDOW_SET_DIALOG_DATA, 
+	bool bRes = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_POINTS_LIST_DIALOG,
+																																		ID_WINDOW_SET_DIALOG_DATA,
 																																		reinterpret_cast<uintptr_t>(pData) );
 	return bRes;
 }
@@ -349,11 +349,11 @@ void CSmokePointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 	pMaskFields->push_back( "Pos.y" );
 	pMaskFields->push_back( "Pos.z" );
 	pMaskFields->push_back( "Direction" );
-	pMaskFields->push_back( "VerticalAngle" );		
-	pMaskFields->push_back( "FireEffect" );		
-	pMaskFields->push_back( "Coverage" );		
-	pMaskFields->push_back( "PicturePosition.x" );		
-	pMaskFields->push_back( "PicturePosition.y" );		
+	pMaskFields->push_back( "VerticalAngle" );
+	pMaskFields->push_back( "FireEffect" );
+	pMaskFields->push_back( "Coverage" );
+	pMaskFields->push_back( "PicturePosition.x" );
+	pMaskFields->push_back( "PicturePosition.y" );
 }
 
 
@@ -369,12 +369,12 @@ void CSlotPointsState::GetMaskFields(std::vector<std::string> *pMaskFields )
 	//
 	pMaskFields->push_back( "LocatorName" );
 	pMaskFields->push_back( "NumFirePlaces" );
-	pMaskFields->push_back( "Pos.x" );		
-	pMaskFields->push_back( "Pos.y" );		
-	pMaskFields->push_back( "Pos.z" );		
-	pMaskFields->push_back( "Direction" );		
-	pMaskFields->push_back( "Angle" );		
-	pMaskFields->push_back( "SightMultiplier" );		
+	pMaskFields->push_back( "Pos.x" );
+	pMaskFields->push_back( "Pos.y" );
+	pMaskFields->push_back( "Pos.z" );
+	pMaskFields->push_back( "Direction" );
+	pMaskFields->push_back( "Angle" );
+	pMaskFields->push_back( "SightMultiplier" );
 	pMaskFields->push_back( "Coverage" );
 	pMaskFields->push_back( "Gun.Weapon" );
 	pMaskFields->push_back( "Gun.Priority" );
@@ -490,7 +490,7 @@ void CDamageLevelsState::RefreshState()
 	CPointsListState::RefreshState();
 	//
 	CPtr<IManipulator> pManipulator = Singleton<IResourceManager>()->
-		CreateObjectManipulator( pBuildingEditor->GetObjectSet().szObjectTypeName, 
+		CreateObjectManipulator( pBuildingEditor->GetObjectSet().szObjectTypeName,
 														 pBuildingEditor->GetObjectSet().objectNameSet.begin()->first );
 
 	CMOBuilding *pBuilding = pBuildingEditor->GetBuildingPtr();

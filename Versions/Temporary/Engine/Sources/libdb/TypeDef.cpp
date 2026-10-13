@@ -190,7 +190,7 @@ bool STypeRef::CheckRefType( const int nClassTypeID ) const
 			return pTypeClass->nClassTypeID == nClassTypeID;
 		else
 		{
-			for ( STypeClass::CDerivedTerminalTypesList::const_iterator it = pTypeClass->derivedTerminalTypes.begin(); 
+			for ( STypeClass::CDerivedTerminalTypesList::const_iterator it = pTypeClass->derivedTerminalTypes.begin();
 				    it != pTypeClass->derivedTerminalTypes.end(); ++it )
 			{
 				if ( (*it)->nClassTypeID == nClassTypeID )
@@ -203,38 +203,38 @@ bool STypeRef::CheckRefType( const int nClassTypeID ) const
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
 // ************************************************************************************************************************ //
 
-CVariant STypeGUID::GetDefaultValue() const 
-{ 
+CVariant STypeGUID::GetDefaultValue() const
+{
 	return boost::uuids::random_generator()();
 }
 
-CVariant STypeBinary::GetDefaultValue() const 
-{ 
+CVariant STypeBinary::GetDefaultValue() const
+{
 	std::vector<uint8_t> buffer( nBinaryObjectSize );
 	fill( buffer.begin(), buffer.end(), 0 );
 	CVariant var( &(buffer[0]), nBinaryObjectSize );
-	return var; 
+	return var;
 }
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
 // ************************************************************************************************************************ //
 
-void STypeStructBase::AddField( STypeDef *pType, 
+void STypeStructBase::AddField( STypeDef *pType,
 																const std::string &szName,
-																const int nChunkID, 
+																const int nChunkID,
 																const std::wstring &wszDesc,
-							                  SConstraints *pConstraints, 
+							                  SConstraints *pConstraints,
 																SAttributes *pAttributes,
 																const CVariant &_vtDefVal )
 {
@@ -249,7 +249,7 @@ void STypeStructBase::AddField( STypeDef *pType,
 }
 
 bool STypeStructBase::SField::CheckValueCorrect( const CVariant &value ) const
-{ 
+{
 	for ( int i = 0; i < constraints.size(); ++i )
 	{
 		if ( !constraints[i]->CheckValueCorrect( value ) )

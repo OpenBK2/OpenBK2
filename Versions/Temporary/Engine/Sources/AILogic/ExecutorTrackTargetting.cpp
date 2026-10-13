@@ -13,9 +13,9 @@ extern NTimer::STime curTime;
 extern CEventUpdater updater;
 
 CExecutorTrackTargetting::CExecutorTrackTargetting( CAIUnit *_pUnit )
-: state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000/SConsts::AI_SEGMENT_DURATION ), 
+: state( EASS_READY_TO_ON ), CExecutor( TID_TRACK_TARGETTING, 1000/SConsts::AI_SEGMENT_DURATION ),
 timeLastUpdate( curTime ), pUnit( _pUnit )
-{  
+{
 	NI_ASSERT( _pUnit, "Attempt to create TrackTargetting executor for null unit" );
 }
 
@@ -36,7 +36,7 @@ int CExecutorTrackTargetting::Segment()
 			!iter.IsFinished(); iter.Iterate() )
 		{
 			CAIUnit *pCurUnit = *iter;
-			if ( pCurUnit->IsRefValid() && pCurUnit->IsAlive() && 
+			if ( pCurUnit->IsRefValid() && pCurUnit->IsAlive() &&
 				pCurUnit->IsVisible( pUnit->GetParty() ) && !pCurUnit->GetStats()->IsAviation() )
 			{
 				CTank *pTankTarget;
@@ -50,9 +50,9 @@ int CExecutorTrackTargetting::Segment()
 				}
 			}
 		}
-		
+
 		// Found non-track-damaged unit
-		if ( bFoundUnit ) 
+		if ( bFoundUnit )
 		{
 			//pUnit->SetTrackTargeting( true );
 			SAIUnitCmd cmd( ACTION_COMMAND_TRACK_TARGETING, pTarget->GetUniqueId() );

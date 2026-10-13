@@ -15,9 +15,9 @@ public:
 	CReactionObserver( void (TObj::*_pfnMemFun)(const std::string &) )
 		: pfnMemFun( _pfnMemFun ) {}
 		void Execute( CObjectBase * pThis, const std::string &szSender )
-		{ 
+		{
 			if ( pThis )
-				( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( szSender ); 
+				( CastToUserObject( pThis ,(TObj*)0) ->*pfnMemFun )( szSender );
 		}
 };
 
@@ -26,15 +26,15 @@ class CCheckObserver : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CCheckObserver )
 		int (TObj::*pfnMemFun)()const;
-	
+
 public:
 	CCheckObserver() {  }
-	CCheckObserver( int (TObj::*_pfnMemFun)()const ) 
+	CCheckObserver( int (TObj::*_pfnMemFun)()const )
 		: pfnMemFun( _pfnMemFun ) {}
 		int Execute( const CObjectBase * pThis ) const
-		{ 
+		{
 			if ( pThis )
-				return ( CastToUserObject( const_cast<CObjectBase*>(pThis) ,(TObj*)0) ->*pfnMemFun )(); 
+				return ( CastToUserObject( const_cast<CObjectBase*>(pThis) ,(TObj*)0) ->*pfnMemFun )();
 			return 0;
 		}
 };

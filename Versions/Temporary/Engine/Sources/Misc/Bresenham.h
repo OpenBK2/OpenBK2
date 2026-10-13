@@ -89,21 +89,21 @@ class CBres
 public:
 	// для того, чтобы выдавал направления
 	void Init( const SVector &start, const SVector &finish)
-	{ 
+	{
 		xlen = finish.x - start.x;
 		ylen = finish.y - start.y;
 
-		Initialize(); 
+		Initialize();
 	}
 
 	// для того, чтобы выдавал точки
 	void InitPointByDirection( const SVector& start, const SVector &direction )
-	{ 
+	{
 		dir = start;
 		xlen = direction.x;
 		ylen = direction.y;
 
-		Initialize(); 
+		Initialize();
 	}
 
 	// для того, чтобы выдавал точки

@@ -2,4 +2,4 @@
 
 #include "MapInfoEditorData.h"
 
-// basement storage  
+// basement storage

@@ -72,9 +72,9 @@ inline float CBetaSpline3D::b_2( const float t[3] ) const
 
 inline float CBetaSpline3D::b_1( const float t[3] ) const
 {
-	return fBeta1_3 * t[0] * ( t[1] - 3*t[0] + 3 ) + 
-		fBeta1_2 * ( t[2] - 3*t[1] + 2 ) + 
-		fBeta1 * ( t[2] - 3*t[0] + 2 ) + 
+	return fBeta1_3 * t[0] * ( t[1] - 3*t[0] + 3 ) +
+		fBeta1_2 * ( t[2] - 3*t[1] + 2 ) +
+		fBeta1 * ( t[2] - 3*t[0] + 2 ) +
 		fBeta2 * ( 2 * t[2] - 3 * t[1] + 1);
 }
 
@@ -96,7 +96,7 @@ inline float CBetaSpline3D::db_2( const float t[3] ) const
 
 inline float CBetaSpline3D::db_1( const float t[3] ) const
 {
-	return 3.0f * (fBeta1_3 * square( t[0] - 1 ) + fBeta1_2 * (t[0] - 2) * t[0] 
+	return 3.0f * (fBeta1_3 * square( t[0] - 1 ) + fBeta1_2 * (t[0] - 2) * t[0]
 	+ fBeta1 * (t[1] - 1) + fBeta2 * 2 * (t[0] - 1) * t[0]);
 }
 
@@ -112,11 +112,11 @@ inline float CBetaSpline3D::db1( const float t[3] ) const
 
 // Вычисление интерполированного значения для параметров 0<= u,v <= 1
 // ptControls - массив контрольных точек
-// в строке вершины вдоль параметра u; считается, что точки расположены в след. порядке: 
+// в строке вершины вдоль параметра u; считается, что точки расположены в след. порядке:
 // v(-2, l), v(-1, l), v(0, l), (1, l)
 // в столбце вдоль параметра v; в следующем порядке v(j, -2), v(j, -1), v(j, -0), (j, 1)
 // Полученное интерполированное значение принадлежит интервалу v1( -1, -1 ) - v2( 0, 0 )
-// ( v1 соответствует u=v=0,  v2  u=v=1 - "элементарная поверхность" ) 
+// ( v1 соответствует u=v=0,  v2  u=v=1 - "элементарная поверхность" )
 const float CBetaSpline3D::Value( float u, float v, const float ptCtrls[16] ) const
 {
 	float t[3];
@@ -131,7 +131,7 @@ const float CBetaSpline3D::Value( float u, float v, const float ptCtrls[16] ) co
 	float bl[4] = { b_2( t ), b_1( t ), b0( t ), b1( t ) };
 
 	// внутреннее суммирование по параметру v
-	return	
+	return
 		bj[0] * ( bl[0] * ptCtrls[0] + bl[1] * ptCtrls[4] + bl[2] * ptCtrls[8]	+ bl[3] * ptCtrls[12] ) +
 		bj[1] * ( bl[0] * ptCtrls[1] + bl[1] * ptCtrls[5] + bl[2] * ptCtrls[9]  + bl[3] * ptCtrls[13] ) +
 		bj[2] * ( bl[0] * ptCtrls[2] + bl[1] * ptCtrls[6] + bl[2] * ptCtrls[10] + bl[3] * ptCtrls[14] ) +
@@ -153,7 +153,7 @@ void CBetaSpline3D::GetNormale( CVec3 *pvNormale, float u, float v, const float 
 	const float bl[4] = { b_2( t ), b_1( t ), b0( t ), b1( t ) };
 	const float dbl[4] = { db_2( t ), db_1( t ), db0( t ), db1( t ) };
 
-	const float z1 = 
+	const float z1 =
 		dbj[0] * ( bl[0] * ptCtrls[0] + bl[1] * ptCtrls[4] + bl[2] * ptCtrls[8]  + bl[3] * ptCtrls[12] ) +
 		dbj[1] * ( bl[0] * ptCtrls[1] + bl[1] * ptCtrls[5] + bl[2] * ptCtrls[9]  + bl[3] * ptCtrls[13] ) +
 		dbj[2] * ( bl[0] * ptCtrls[2] + bl[1] * ptCtrls[6] + bl[2] * ptCtrls[10] + bl[3] * ptCtrls[14] ) +
@@ -161,7 +161,7 @@ void CBetaSpline3D::GetNormale( CVec3 *pvNormale, float u, float v, const float 
 	const float x1 = (  bl[0] +  bl[1] +  bl[2] +  bl[3] ) * ( -2 * dbj[0] - dbj[1] + dbj[3] );
 	const float y1 = ( dbj[0] + dbj[1] + dbj[2] + dbj[3] ) * ( -2 *  bl[0] -  bl[1] +  bl[3] );
 
-	const float z2 = 
+	const float z2 =
 		bj[0] * ( dbl[0] * ptCtrls[0] + dbl[1] * ptCtrls[4] + dbl[2] * ptCtrls[8]  + dbl[3] * ptCtrls[12] ) +
 		bj[1] * ( dbl[0] * ptCtrls[1] + dbl[1] * ptCtrls[5] + dbl[2] * ptCtrls[9]  + dbl[3] * ptCtrls[13] ) +
 		bj[2] * ( dbl[0] * ptCtrls[2] + dbl[1] * ptCtrls[6] + dbl[2] * ptCtrls[10] + dbl[3] * ptCtrls[14] ) +
@@ -246,25 +246,25 @@ inline float CBetaSpline3D::F33( const float t[2][4] ) const
 
 inline float CBetaSpline3D::F01( const float s[2][4], const float t[2][4] ) const
 {
-	return (9*s[0][0] - 5*s[0][2] + 2*s[0][3] - 9*s[1][0] + 5*s[1][2] - 2*s[1][3]) * 
+	return (9*s[0][0] - 5*s[0][2] + 2*s[0][3] - 9*s[1][0] + 5*s[1][2] - 2*s[1][3]) *
 		(-4*t[0][0] + 6*t[0][1] - 4*t[0][2] + t[0][3] - t[1][0] * (-4 + 6*t[1][0] - 4*t[1][1] + t[1][2]) );
 }
 
 inline float CBetaSpline3D::F02( const float s[2][4], const float t[2][4] ) const
 {
-	return (-2*s[0][0] - 3*s[0][1] - 3*s[0][2] + 2*s[0][3] + s[1][0] * (2 + 3*s[1][0] + 3*s[1][1] - 2*s[1][2])) * 
+	return (-2*s[0][0] - 3*s[0][1] - 3*s[0][2] + 2*s[0][3] + s[1][0] * (2 + 3*s[1][0] + 3*s[1][1] - 2*s[1][2])) *
 		(-4*t[0][0] + 6*t[0][1] - 4*t[0][2] + t[0][3] - t[1][0] * (-4 + 6*t[1][0] - 4*t[1][1] + t[1][2]));
 }
 
 inline float CBetaSpline3D::F03( const float s[2][4], const float t[2][4] ) const
 {
-	return (s[0][3] - s[1][3]) * 
+	return (s[0][3] - s[1][3]) *
 		(-4*t[0][0] + 6*t[0][1] - 4*t[0][2] + t[0][3] - t[1][0]*(-4 + 6*t[1][0] - 4*t[1][1] + t[1][2]));
 }
 
 inline float CBetaSpline3D::F12( const float s[2][4], const float t[2][4] ) const
 {
-	return (-2*s[0][0] - 3*s[0][1] - 3*s[0][2] + 2*s[0][3] + s[1][0] * (2 + 3*s[1][0] + 3*s[1][1] - 2*s[1][2])) 
+	return (-2*s[0][0] - 3*s[0][1] - 3*s[0][2] + 2*s[0][3] + s[1][0] * (2 + 3*s[1][0] + 3*s[1][1] - 2*s[1][2]))
 		* (9*t[0][0] - 5*t[0][2] + 2*t[0][3] - 9*t[1][0] + 5*t[1][2] - 2*t[1][3]);
 }
 
@@ -275,7 +275,7 @@ inline float CBetaSpline3D::F13( const float s[2][4], const float t[2][4] ) cons
 
 inline float CBetaSpline3D::F23( const float s[2][4], const float t[2][4] ) const
 {
-	return (s[0][3] - s[1][3]) * 
+	return (s[0][3] - s[1][3]) *
 		(-2*t[0][0] - 3*t[0][1] - 3*t[0][2] + 2*t[0][3] + t[1][0] * (2 + 3*t[1][0] + 3*t[1][1] - 2*t[1][2]));
 }
 

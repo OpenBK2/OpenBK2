@@ -55,12 +55,12 @@ private:
 	void InitGfxText();
 public:
 	CPlacedText();
-	
+
 	void Init();
 	void SetFontScaleWindow( IWindow *pWindow );
 
 	void Visit( struct IUIVisitor *pVisitor );
-	
+
 	const std::wstring& GetText() const { return wszText; }
 	void SetText( const std::wstring &wszText );
 

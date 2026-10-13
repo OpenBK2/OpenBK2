@@ -70,7 +70,7 @@ inline time_t UnpackFileTime( const uint32_t _w32time )
 	{
 		union
 		{
-			struct  
+			struct
 			{
 				uint32_t seconds : 5;								// seconds (0..29 with 2 sec. interval)
 				uint32_t minutes : 6;								// minutes (0..59)

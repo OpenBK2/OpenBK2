@@ -54,7 +54,7 @@ class CEntrenchment : public CStaticObject, public ILoadableObject, public CStor
 
 	int nBusyFireplaces = {};
 	std::vector<SFireplaceInfo> fireplaces;
-	
+
 	std::list<SInsiderInfo> insiders;
 	ZSKIP
 
@@ -91,9 +91,9 @@ public:
 
 	virtual void Segment();
 	virtual const NTimer::STime GetNextSegmentTime() const;
-	
+
 	virtual EStaticObjType GetObjectType() const { return ESOT_ENTRENCHMENT; }
-	
+
 	// итерирование по fire slots
 	virtual void StartIterate() { iter = insiders.begin(); }
 	virtual void Iterate();
@@ -106,13 +106,13 @@ public:
 	virtual const uint8_t GetPlayer() const;
 
 	void Delete();
-	
-	// возвращает в pvResult точку в окопе, ближаюшую к vPoint 
+
+	// возвращает в pvResult точку в окопе, ближаюшую к vPoint
 	void GetClosestPoint( const CVec2 &vPoint, CVec2 *pvResult ) const;
 	virtual const bool IsVisibleForDiplomacyUpdate() { return IsAnyInsiderVisible(); }
-	
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
-	
+
 	// можно ли менять слот у этого слодата
 	virtual bool CanRotateSoldier( class CSoldier *pSoldier ) const;
 	// поставить солдата в place вместо сидящего там
@@ -155,22 +155,22 @@ class CEntrenchmentPart : public CExistingObject
 	NTimer::STime nextSegmTime = {};
 	bool bSuspendedAppear = {};	// client-dependent
 	bool bPlayerCreates = {};
-	int operator&( IBinSaver &f ) 
-	{ 
-		f.Add(1,( CExistingObject*)this); 
+	int operator&( IBinSaver &f )
+	{
+		f.Add(1,( CExistingObject*)this);
 		f.Add(2,&pStats); f.Add(3,&pOwner); f.Add(4,&center); f.Add(5,&dir);
-		f.Add(6,&boundRect); 
+		f.Add(6,&boundRect);
 		if ( !f.IsChecksum() )
 		{
 			f.Add(7,&bVisible);
 			f.Add(8,&bOwnerChanged);
 			f.Add(9,&bDigBySegment);
 		}
-		f.Add(10,&coveredTiles); f.Add(11,&pFullEntrenchment); f.Add(12,&nextSegmTime); 
+		f.Add(10,&coveredTiles); f.Add(11,&pFullEntrenchment); f.Add(12,&nextSegmTime);
 		if ( !f.IsChecksum() )
-			f.Add( 13, &bSuspendedAppear ); 
+			f.Add( 13, &bSuspendedAppear );
 		f.Add( 14, &bPlayerCreates );
-		return 0; 
+		return 0;
 	}
 	//
 	// виден всеми сторонами
@@ -189,9 +189,9 @@ public:
 	const SEntrenchmentRPGStats::SEntrenchSegmentRPGStats& GetSegmStats() const { return pStats->segments[GetFrameIndex()]; }
 	const EEntrenchSegmType GetType() const { return pStats->segments[GetFrameIndex()].eType; }
 	CEntrenchment *GetOwner() const { return pOwner; }
-	void SetOwner( CEntrenchment *_pOwner, bool _bDigBySegment = false ) 
-	{ 
-		pOwner = _pOwner; bOwnerChanged = true; bDigBySegment = _bDigBySegment; 
+	void SetOwner( CEntrenchment *_pOwner, bool _bDigBySegment = false )
+	{
+		pOwner = _pOwner; bOwnerChanged = true; bDigBySegment = _bDigBySegment;
 	}
 
 	virtual void GetPlacement( SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
@@ -220,7 +220,7 @@ public:
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	// бессмертен
 	virtual void Die( const float fDamage ) { }
-	
+
 	virtual EStaticObjType GetObjectType() const { return ESOT_ENTR_PART; }
 
 	virtual bool IsContainer() const { return true; }
@@ -229,14 +229,14 @@ public:
 
 	void SetVisible( const bool bLastSegment = false );
 	void SetFullEntrench( class CFullEntrenchment *_pFullEntrenchment ) { pFullEntrenchment = _pFullEntrenchment; }
-	const class CFullEntrenchment *GetFullEntrench() const { return pFullEntrenchment; } 
+	const class CFullEntrenchment *GetFullEntrench() const { return pFullEntrenchment; }
 
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual CObjectProfile* GetPassProfile() const { return 0; }
 	bool ShouldSuspendAction( const EActionNotify &eAction ) const
 	{
 		return
-			( CExistingObject::ShouldSuspendAction( eAction ) || 
+			( CExistingObject::ShouldSuspendAction( eAction ) ||
 			eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ && bSuspendedAppear );
 	}
@@ -260,7 +260,7 @@ class CFullEntrenchment : public CAIObjectBase
 
 public:
 	CFullEntrenchment() { }
-	
+
 	void AddEntrenchmentSection( class CEntrenchment *pSection );
 
 	void SetVisible();
@@ -275,8 +275,8 @@ class CEntrenchmentTankPit : public CGivenPassabilityStObject
 
 	CDBPtr<SMechUnitRPGStats> pStats;
 	SAIAngle wDir;
-	
-	CVec2 vHalfSize; 
+
+	CVec2 vHalfSize;
 	SRect boundRect;
 	std::list<SObjTileInfo> tilesToLock;
 
@@ -309,7 +309,7 @@ public:
 	virtual void Die( const float fDamage );
 
 	virtual EStaticObjType GetObjectType() const { return ESOT_TANKPIT; }
-	
+
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
 
 	virtual bool IsContainer() const { return false; }

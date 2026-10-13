@@ -18,7 +18,7 @@ class CChapterEditor : public CEditorBase, public CDefaultView
 	OBJECT_NOCOPY_METHODS( CChapterEditor );
 	//Данные специфичные для данного редактрора
 	CChapterEditorSettings editorSettings;
-	// Данные общего назначения 
+	// Данные общего назначения
 	CChapterState *pChapterState;
 	//
 	CChapterEditor();
@@ -40,7 +40,7 @@ public:
 	//CDefaultView
 	void Undo( IController* pController ) {}
 	void Redo( IController* pController );
-	
+
 	const CChapterEditorSettings GetEditorSettings() const { return editorSettings; }
 
 	IManipulator* CreateChapterManipulator();

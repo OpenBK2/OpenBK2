@@ -14,11 +14,11 @@ class CControlSumCheckCommand : public IAILogicCommandB2
 
 	// не сэйвится!
 	static std::vector< std::list<unsigned long> > checkSums;
-public:	
+public:
 	static uint16_t wMask;
 public:
 	CControlSumCheckCommand() { }
-	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum ) 
+	CControlSumCheckCommand( const int _nPlayer, const unsigned long _ulCheckSum )
 		: nPlayer( _nPlayer ), ulCheckSum( _ulCheckSum ) { }
 
 	void Execute();
@@ -36,7 +36,7 @@ class CControlSumHistoryCommand : public IAILogicCommandB2
 {
 	OBJECT_BASIC_METHODS( CControlSumHistoryCommand );
 
-public:	
+public:
 	int nPlayer = {};
 	unsigned long ulCheckSum = {};
 	int nSegment = {};
@@ -46,7 +46,7 @@ public:
 	static uint16_t wMask;
 public:
 	CControlSumHistoryCommand() { }
-	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum ) 
+	CControlSumHistoryCommand( const int _nPlayer, const int _nSegment, const unsigned long _ulCheckSum )
 		: nPlayer( _nPlayer ), nSegment( _nSegment ), ulCheckSum( _ulCheckSum ) { }
 
 		void Execute();

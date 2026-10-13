@@ -23,7 +23,7 @@ struct SUpdateInfo
 class CUpdatableList
 {
 	enum EChange
-	{ 
+	{
 		EC_NOP = 0,
 		EC_ADDED = 1,
 		EC_REMOVED = 2,

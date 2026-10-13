@@ -113,7 +113,7 @@ bool CStandartSmoothMechPath::BuildLargeTurn( const uint16_t wStartDir, const ui
 		}
 	}
 
-	if ( dirDiff > DIR_DIFF_TO_SMOOTH_TURNING ) 
+	if ( dirDiff > DIR_DIFF_TO_SMOOTH_TURNING )
 	{
 		circles.push_back( CCirclePath( wStartDir, dirDiff, GetUnit()->GetCenterPlain(), GetUnit()->GetTurnRadius(), bClockWise, true ) );
 		GetPath()->RecoverPath( circles.back().GetLastX(), GetUnit()->GetProbablePlane( GetAIMap()->GetTile( circles.back().GetLastX() ) ) == PLANE_WATER , GetAIMap()->GetTile( circles.back().GetLastX() ) );
@@ -278,7 +278,7 @@ bool CStandartSmoothMechPath::CheckTurn( const uint16_t wNewDir )
 	const uint16_t wRightDirsDiff = DirsDifference( wUnitDir, wNewDir );
 	const uint16_t wBackDirsDiff = DirsDifference( wUnitDir + 32768, wNewDir );
 	// поворот небольшой
-	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING || 
+	if ( wRightDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING ||
 		bCanBackward && wBackDirsDiff < DIR_DIFF_TO_SMOOTH_TURNING )
 		return true;
 	else
@@ -450,7 +450,7 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 			while ( iter != tiles.end() )
 			{
 				const SVector &tile = iter->tile;
-				if ( abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius || 
+				if ( abs( tile.x - unitTileCenter.x ) <= nBoundTileRadius ||
 					   abs( tile.y - unitTileCenter.y ) <= nBoundTileRadius )
 					iter = tiles.erase( iter );
 				else
@@ -467,7 +467,7 @@ const bool CStandartSmoothMechPath::ValidateCurrentPath( const CVec2 &vCenter, c
 					}
 				}
 			}
-			
+
 			const float fDist2 = fabs2( vCenter - GetPath()->GetFinishPoint() );
 			if ( fDist2 <= sqr( 3 * GetUnit()->GetUnitProfile().GetHalfLength() ) )
 				FinishPath();
@@ -538,7 +538,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 	}
 
 	// если есть окружности, по которым ехать, используем их !!!
-	if ( !circles.empty() ) 
+	if ( !circles.empty() )
 	{
 		const float fLength = circles.front().Iterate( fMoveSpeed * timeDiff );
 		const CVec2 vResult = circles.front().GetX();
@@ -577,7 +577,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 			if ( GetUnit()->IsDangerousDirExist() )
 			{
 				const uint16_t wDangerousDir = GetUnit()->GetDangerousDir();
-				bCheck = DirsDifference( wFrontDir, wDangerousDir ) > 
+				bCheck = DirsDifference( wFrontDir, wDangerousDir ) >
 					DirsDifference( wFrontDir + 32768, wDangerousDir );
 			}
 
@@ -609,7 +609,7 @@ const CVec2 CStandartSmoothMechPath::MoveUnit( const NTimer::STime timeDiff, con
 			FinishPath();
 			return GetSplinePoint();
 		}
-		else		
+		else
 		{
 			if ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() >= CBSpline::N_OF_ITERATONS )
 				InitSpline();

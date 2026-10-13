@@ -49,7 +49,7 @@ void CParatrooperPath::FindFreeTile()
 			}
 		}
 	}
-	
+
 	//fall to locked tile ( death will occur ) (last)
 	vFinishPoint = CVec3( landPoint, GetHeights()->GetZ( landPoint ) );
 }
@@ -100,11 +100,11 @@ void CParatrooperPath::Segment( const NTimer::STime timeDiff )
 		//horSpeed;
 		vCurPoint += vHorSpeed * timeDiff;
 		vCurPoint.z -= timeDiff * SConsts::PARATROOPER_FALL_SPEED;
-	}			
+	}
 	if ( IsFinished() )
 		vCurPoint = vFinishPoint;
 
-	pUnit->SetCenter( vCurPoint, true ); 
+	pUnit->SetCenter( vCurPoint, true );
 	return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

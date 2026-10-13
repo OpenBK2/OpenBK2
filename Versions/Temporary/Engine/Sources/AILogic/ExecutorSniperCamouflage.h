@@ -11,7 +11,7 @@ class CExecutorSniperCamouflage : public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorSniperCamouflage)
 		ZDATA_(CExecutor)
-	CPtr<CAIUnit> pUnit;  
+	CPtr<CAIUnit> pUnit;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nEnemysAround = {};											// count of enemies around, that can see unit
 	bool bWasSomeAction = {};										// camouflated unit performed some action
@@ -19,7 +19,7 @@ class CExecutorSniperCamouflage : public CExecutor
 	EAbilitySwitchState eStateBeforeDisable = {}; // to switch to that state after disable
 	EAbilitySwitchState eState = {};
 	NTimer::STime timeDisableGroup = {};					// this executor may be disabled by group run
-	
+
 	NTimer::STime timeLastUpdate = {};
 	SSpecialAbilityInfo lastSent;
 	CPtr<SAISpecialAbilityUpdate> pUpdate;
@@ -34,7 +34,7 @@ class CExecutorSniperCamouflage : public CExecutor
 	bool IsExecutorValidInternal() const;
 	int UpdateCamoflage( const EUnitSpecialAbility eAbility );
 	void UpdateState( const EAbilitySwitchState eState, const float fParam );
-	
+
 	void UnCamoUnit();
 	void CamoUnit();
 	bool IsCamoflageAbility( const EUnitSpecialAbility eAbility );

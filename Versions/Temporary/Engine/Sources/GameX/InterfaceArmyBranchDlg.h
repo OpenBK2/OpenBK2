@@ -5,7 +5,7 @@
 class CInterfaceArmyBranchDlg : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceArmyBranchDlg );
-	
+
 	struct SVisSlot
 	{
 		ZDATA
@@ -41,7 +41,7 @@ private:
 private:
 	void MakeInterior();
 	void UpdateInterior();
-	
+
 	bool OnClose();
 	bool OnLeft();
 	bool OnRight();
@@ -61,7 +61,7 @@ public:
 class CICArmyBranchDlg : public CInterfaceCommandBase<CInterfaceArmyBranchDlg>
 {
 	OBJECT_BASIC_METHODS( CICArmyBranchDlg );
-	
+
 	ZDATA_(CInterfaceCommandBase<CInterfaceArmyBranchDlg>)
 	std::vector<CInterfaceArmyBranchDlg::SBranch> branches;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceCommandBase<CInterfaceArmyBranchDlg>*)this); f.Add(2,&branches); return 0; }

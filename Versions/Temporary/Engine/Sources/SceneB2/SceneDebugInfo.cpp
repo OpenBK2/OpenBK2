@@ -169,7 +169,7 @@ void CScene::ProcessDebugInfoUpdates()
 			case NDebugInfo::DEBUG_INFO_DELETE_LINE:
 				RemovePolyline( pDebugInfoUpdate->nID );
 				break;
-			} 
+			}
 		}
 	} while( pDebugInfoManager->PopUpdate() );
 }

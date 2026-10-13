@@ -27,7 +27,7 @@ class CCheckSum
 	// The constructor retains the checksum seed; the type-probe pointer stays null.
 	uint32_t dwCheckSum = 0;
 	IBinSaver *p = nullptr;
-	
+
 	char PORT_CDECL TestType(...) { return 0; }
 	// Vector elements are const here; recognize strings/nested vectors instead
 	// of hashing their implementation storage (including allocation addresses).
@@ -68,7 +68,7 @@ public:
 		SeparateCheckSum( data, &separator );
 		return *this;
 	}
-	
+
 	template<class T>
 	CCheckSum& operator<<( const std::vector<T> &vec )
 	{

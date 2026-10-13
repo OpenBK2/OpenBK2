@@ -16,7 +16,7 @@ namespace NDb
 
 typedef std::list<int> CManuverIndices;
 typedef det_map<int/*EPlanesAttitude*/, CManuverIndices> CManuvers;
-class CManuverBuilder 
+class CManuverBuilder
 {
 	static CManuverStateDesc state;				// temprorary value, used inside CreateManuver()
 	static std::vector<int> suitableIndeces;
@@ -46,7 +46,7 @@ class CManuverBuilder
 	typedef det_map<int, SGRoundAttackTarget> CGroundAttacks;
 	typedef std::vector<std::pair<int,CVec3> > CAttackerOffsets;
 	typedef det_map<int, CAttackerOffsets> CAviaAttacks;
-	
+
 	ZDATA
 	CDBPtr<NDb::SAIGameConsts> pConsts;
 	CAviaAttacks attacks;
@@ -60,7 +60,7 @@ public:
 
 	// default plane's behaviour. _must_ always return non null IManuver
 	struct IManuver * CreateDefaultManuver( const enum EPlanesAttitude att, class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
-	
+
 	enum EPlanesAttitude GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const;
 
 	CVec3 CalcAttackerPoint( class CPlanesFormation *pAttacker, class CPlanesFormation *pEnemy );
@@ -68,8 +68,8 @@ public:
 
 public:
 	void Init( const NDb::SAIGameConsts *pConsts );
-	void Clear() 
-	{ 
+	void Clear()
+	{
 		attacks.clear();
 		groundAttacks.clear();
 	}

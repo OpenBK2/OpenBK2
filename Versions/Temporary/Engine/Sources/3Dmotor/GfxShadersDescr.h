@@ -8,7 +8,7 @@ struct SVShader
 {
 	int nID;
 	DWORD*pShader11, *pShader20;
-	
+
 	SVShader( int _nID, DWORD*_pShader11, DWORD*_pShader20 ): nID(_nID), pShader11(_pShader11), pShader20(_pShader20) {}
 };
 
@@ -32,13 +32,13 @@ struct SPShader
 	STextureStageState *pShaTSS;
 	SRenderState *pStateRS;
 	STextureStageState *pStateTSS;
-	
-	SPShader( 
+
+	SPShader(
 		int _nID, DWORD*_pShader11, DWORD*_pShader14, DWORD*_pShader20, DWORD*_pShader20a,
-		SRenderState *_pShaRS, STextureStageState *_pShaTSS, 
+		SRenderState *_pShaRS, STextureStageState *_pShaTSS,
 		SRenderState *_pStateRS, STextureStageState *_pStateTSS )
 		:nID(_nID), pShader11(_pShader11), pShader14(_pShader14), pShader20(_pShader20), pShader20a(_pShader20a),
-		pShaRS(_pShaRS), pShaTSS(_pShaTSS), 
+		pShaRS(_pShaRS), pShaTSS(_pShaTSS),
 		pStateRS(_pStateRS), pStateTSS(_pStateTSS) {}
 };
 

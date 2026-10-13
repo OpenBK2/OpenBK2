@@ -12,7 +12,7 @@ namespace NDb
 class CAnimUnitSoldier : public IAnimUnit
 {
 	OBJECT_BASIC_METHODS( CAnimUnitSoldier );
-	
+
 	struct SMovingState
 	{
 	public:

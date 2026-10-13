@@ -155,7 +155,7 @@ void CSpotState::ModifySpotSquare( NDb::STerrainSpotInstance *pTerrainSpotInstan
 	pTerrainSpotInstance->points.resize( 4 );
 	const float fScaleCoeff = ( pTerrainSpotInstance->pDescriptor->fScaleCoeff > 0.0f ) ? pTerrainSpotInstance->pDescriptor->fScaleCoeff : 1.0f;
 	const CVec2 vSpotSize( pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nWidth * pTerrainSpotInstance->pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
-												 pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nHeight * pTerrainSpotInstance->pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff ); 
+												 pTerrainSpotInstance->pDescriptor->pMaterial->pTexture->nHeight * pTerrainSpotInstance->pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
 	// Заполняем геометрическую информацию:
 	pTerrainSpotInstance->points[0] = CVec2( 0.0f, 0.0f );
 	pTerrainSpotInstance->points[1] = CVec2( vSpotSize.x, 0.0f );
@@ -222,7 +222,7 @@ void CSpotState::InsertObjectEnter()
 		if ( !objectSet.objectNameSet.empty() )
 		{
 			const NDb::STerrainSpotDesc *pTerrainSpotDesc = dynamic_cast<const NDb::STerrainSpotDesc*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
-			if ( ( pTerrainSpotDesc->pMaterial != 0 ) && 
+			if ( ( pTerrainSpotDesc->pMaterial != 0 ) &&
 					( pTerrainSpotDesc->pMaterial->pTexture != 0 ) )
 			{
 				//NDb::SMapInfo* pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
@@ -262,7 +262,7 @@ void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 				terrainSpotInstance.points.resize( 4 );
 				const float fScaleCoeff = ( terrainSpotInstance.pDescriptor->fScaleCoeff > 0.0f ) ? terrainSpotInstance.pDescriptor->fScaleCoeff : 1.0f;
 				const CVec2 vSpotSize( terrainSpotInstance.pDescriptor->pMaterial->pTexture->nWidth * terrainSpotInstance.pDescriptor->fUsedTexSizeX * 2.0f / fScaleCoeff,
-																terrainSpotInstance.pDescriptor->pMaterial->pTexture->nHeight * terrainSpotInstance.pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff ); 
+																terrainSpotInstance.pDescriptor->pMaterial->pTexture->nHeight * terrainSpotInstance.pDescriptor->fUsedTexSizeY * 2.0f / fScaleCoeff );
 				//
 				ModifySpotSquare( &terrainSpotInstance, vPosition, fDirection );
 				std::list<CVec3> pointList;
@@ -273,12 +273,12 @@ void CSpotState::InsertObjectDraw( IPaintContext *pPaintDC )
 	}
 }
 
-// basement storage  
+// basement storage
 
 /**
 fPlacementDirection += FP_PI2;
 if ( fPlacementDirection > FP_2PI )
-{ 
+{
 	fPlacementDirection -= FP_2PI;
 }
 /**/

@@ -22,25 +22,25 @@ struct SCfgValue { const char *pszName; float fValue; };
 //	{ "gfx_cl_sky_textures", 0 },
 //	{ "gfx_cl_use_precise_shadows", 0 },
 //	{ "gfx_cl_use_bump_always", 1 },
-//	{ 0, 0 } 
+//	{ 0, 0 }
 //};
 //static SCfgValue lightingQuality1[] = {
 //	{ "gfx_cl_sky_textures", 0 },
 //	{ "gfx_cl_use_precise_shadows", 1 },
 //	{ "gfx_cl_use_bump_always", 0 },
-//	{ 0, 0 } 
+//	{ 0, 0 }
 //};
 //static SCfgValue lightingQuality2[] = {
 //	{ "gfx_cl_sky_textures", 0 },
 //	{ "gfx_cl_use_precise_shadows", 1 },
 //	{ "gfx_cl_use_bump_always", 1 },
-//	{ 0, 0 } 
+//	{ 0, 0 }
 //};
 //static SCfgValue lightingQuality3[] = {
 //	{ "gfx_cl_sky_textures", 4 },
 //	{ "gfx_cl_use_precise_shadows", 1 },
 //	{ "gfx_cl_use_bump_always", 0 },
-//	{ 0, 0 } 
+//	{ 0, 0 }
 //};
 //static SCfgValue *lightingQualityConfig[4] = { lightingQuality0, lightingQuality1, lightingQuality2, lightingQuality3 };
 
@@ -58,7 +58,7 @@ static SCfgValue speed0[] = {
 	{ "gfx_noshadows", 0 },
 	//{ "gfx_point_specular", 1 },
 	//{ "gfx_cl_blur", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue speed1[] = {
 	//{ "gfx_fog", 1 },
@@ -72,7 +72,7 @@ static SCfgValue speed1[] = {
 	{ "gfx_noshadows", 0 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue speed2[] = {
 	//{ "gfx_fog", 0 },
@@ -86,7 +86,7 @@ static SCfgValue speed2[] = {
 	{ "gfx_noshadows", 1 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 0 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue speed3[] = {
 	//{ "gfx_fog", 0 },
@@ -100,7 +100,7 @@ static SCfgValue speed3[] = {
 	{ "gfx_noshadows", 1 },
 	//{ "gfx_point_specular", 0 },
 	//{ "gfx_cl_blur", 0 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue *speedConfig[4] = { speed0, speed1, speed2, speed3 };
 
@@ -112,21 +112,21 @@ static SCfgValue texture0[] = {
 	{ "gfx_depth_tex_resolution", 1024 },
 	{ "gfx_texture_mip", 2 },
 	//{ "gfx_terrain_565", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue texture1[] = {
 	//{ "gfx_cl_cube_resolution", 32 },
 	//{ "gfx_texture_usedxt", 1 },
 	{ "gfx_depth_tex_resolution", 1024 },
 	{ "gfx_texture_mip", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue texture2[] = {
 	//{ "gfx_cl_cube_resolution", 64 },
 	//{ "gfx_texture_usedxt", 1 },
 	{ "gfx_depth_tex_resolution", 1024 },
 	//{ "gfx_terrain_565", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue texture3[] = {
 	//{ "gfx_cl_cube_resolution", 128 },
@@ -134,7 +134,7 @@ static SCfgValue texture3[] = {
 	{ "gfx_depth_tex_resolution", 2048 },
 	{ "gfx_texture_mip", 0 },
 	//{ "gfx_terrain_565", 0 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue *textureConfig[4] = { texture0, texture1, texture2, texture3 };
 
@@ -143,23 +143,23 @@ static SCfgValue *textureConfig[4] = { texture0, texture1, texture2, texture3 };
 static SCfgValue fsaa0[] = {
 	{ "gfx_fsaa", 0 },
 	{ "gfx_register_resolution", 0.5f },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue fsaa1[] = {
 	{ "gfx_fsaa", 0 },
 	{ "gfx_register_resolution", 1 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue fsaa2[] = {
 	{ "gfx_fsaa", 2 },
 	{ "gfx_register_resolution", 2 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue fsaa3[] = {
 	{ "gfx_fsaa", 4 },
 	//{ "gfx_register_resolution", 4 },
 	{ "gfx_register_resolution", 2 },
-	{ 0, 0 } 
+	{ 0, 0 }
 };
 static SCfgValue *fsaaConfig[4] = { fsaa0, fsaa1, fsaa2, fsaa3 };
 

@@ -22,13 +22,13 @@ class CSquadEditorSettings
 public:
 	bool bShowShortcutBar;
 	CVec3 vLastBECameraAnchor;
-	
+
 	CSquadEditorSettings() :
 		bShowShortcutBar( true ),
 		vLastBECameraAnchor( VNULL3 )
 	{
 	}
-	
+
 	// serializing...
 	int operator&( IXmlSaver &xs )
 	{
@@ -74,7 +74,7 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 {
 	friend class CSquadState;
 	OBJECT_NOCOPY_METHODS( CSquadEditor );
-	
+
 	// common data memebers
 	CSquadState *pSquadState;
 	//
@@ -91,7 +91,7 @@ class CSquadEditor : public CEditorBase, public CDefaultView, ICommandHandler
 	CVec3 vSquadCenterPos;
 	//
 	CPtr<SMarkerSet> pMarkers;
-	
+
 	//
 	CSquadEditor();
 	~CSquadEditor();

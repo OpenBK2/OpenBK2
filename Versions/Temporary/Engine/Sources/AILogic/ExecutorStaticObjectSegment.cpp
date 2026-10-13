@@ -9,7 +9,7 @@ extern NTimer::STime curTime;
 REGISTER_SAVELOAD_CLASS(AILOGIC, 0x110684C0, CExecutorStaticObjectSegment)
 
 CExecutorStaticObjectSegment::CExecutorStaticObjectSegment( CStaticObject *_pObj )
-: CExecutor(TID_STATIC_OBJECT_SEGMENT, (_pObj->GetNextSegmentTime() - curTime ) / SConsts::AI_SEGMENT_DURATION), pObject( _pObj ) 
+: CExecutor(TID_STATIC_OBJECT_SEGMENT, (_pObj->GetNextSegmentTime() - curTime ) / SConsts::AI_SEGMENT_DURATION), pObject( _pObj )
 {
 }
 
@@ -23,7 +23,7 @@ int CExecutorStaticObjectSegment::Segment()
 	if ( IsExecutorValidInternal() && !pObject->IsTerminateExecutors() )
 	{
 		pObject->Segment();
-		
+
 		if ( pObject->IsTerminateExecutors() )
 			return -1;
 		else

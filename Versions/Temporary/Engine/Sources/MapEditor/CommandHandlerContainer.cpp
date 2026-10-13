@@ -49,7 +49,7 @@ void CCommandHandlerContainer::UnRegister( unsigned nType )
 
 
 void CCommandHandlerContainer::Set( unsigned nType, ICommandHandler *pCommandHandler )
-{ 
+{
 	if ( pCommandHandler == 0 )
 	{
 		Remove( nType );
@@ -75,7 +75,7 @@ void CCommandHandlerContainer::Remove( unsigned nType, ICommandHandler *pCommand
 
 
 void CCommandHandlerContainer::Remove( unsigned nType )
-{ 
+{
 	CCommandHandlerMap::iterator posCommandHandler = commandHandlerMap.find( nType );
 	if ( posCommandHandler != commandHandlerMap.end() )
 	{
@@ -142,6 +142,6 @@ bool CCommandHandlerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnabl
 	return false;
 }
 
-// basement storage  
+// basement storage
 
 

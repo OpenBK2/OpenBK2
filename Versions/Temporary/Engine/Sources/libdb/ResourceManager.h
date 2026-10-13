@@ -39,7 +39,7 @@ struct LIBDB_EXPORT IResourceManager : CObjectBase
 //		DB_ANY_EXISTENT,
 //		DB_MAIN
 //	};
- 
+
 	virtual void FillReferencingObjects( bool *bServiceIsReady, const std::string &szTypeName, const std::string &szObjectName, std::list<std::string> &results ) = 0;
 	virtual void ResetCache() = 0;
 

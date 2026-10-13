@@ -94,7 +94,7 @@ void SSaveInfo::Write( const std::string &szFullFileName, const std::wstring &_w
 	//Save screenshot & desc
 	CFileStream stream(  szFullFileName, CFileStream::WIN_CREATE );
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
-	if ( pSaver ) 
+	if ( pSaver )
 		pSaver->Add( 1, this );
 }
 
@@ -103,7 +103,7 @@ void SSaveInfo::GenerateInfo()
 	//Acquire screenshot and resize
 	CArray2D<NGfx::SPixel8888> tmpScreenShot;
 	InterfaceState()->GetScreenShotTexture()->Get( &tmpScreenShot );
-	if ( tmpScreenShot.IsEmpty() /*|| !Singleton<IScenarioTracker>()->IsMissionActive()*/ ) 
+	if ( tmpScreenShot.IsEmpty() /*|| !Singleton<IScenarioTracker>()->IsMissionActive()*/ )
 	{
 		screenShot.Clear();
 	}
@@ -111,13 +111,13 @@ void SSaveInfo::GenerateInfo()
 	{
 		CArray2D<uint32_t> image1;
 
-		int nScreenShotSizeX = VirtualToScreenX( SCREENSHOT_X_SIZE ); 
-		int nScreenShotSizeY = VirtualToScreenY( SCREENSHOT_Y_SIZE ); 
+		int nScreenShotSizeX = VirtualToScreenX( SCREENSHOT_X_SIZE );
+		int nScreenShotSizeY = VirtualToScreenY( SCREENSHOT_Y_SIZE );
 
 		const int nScreenOffset = 11;
 		int nScreenShotOffsetX = VirtualToScreenX( nScreenOffset );
 		int nScreenShotOffsetY = VirtualToScreenY( nScreenOffset );
-				
+
 		if ( bFromChapter )
 		{
 			int nChapterMapSizeX = VirtualToScreenX( CHAPTERMAP_X_SIZE );
@@ -151,7 +151,7 @@ void SSaveInfo::GenerateInfo()
 
 	//Fill info
 	bCustomMission = Singleton<IScenarioTracker>()->IsCustomMission();
-	
+
 	const NDb::SCampaign *pCampaignDB = Singleton<IScenarioTracker>()->GetCurrentCampaign();
 	const NDb::SChapter *pChapterDB = Singleton<IScenarioTracker>()->GetCurrentChapter();
 	const NDb::SMapInfo *pMapInfoDB = Singleton<IScenarioTracker>()->GetCurrentMission();
@@ -181,7 +181,7 @@ void SSaveInfo::GenerateInfo()
 		if ( pMapInfoDB )
 			pPicture = pMapInfoDB->pLoadingPicture;
 	}
-	
+
 	if ( NMOD::DoesAnyMODAttached() )
 	{
 		NMOD::SMOD mod;
@@ -199,14 +199,14 @@ void SSaveInfo::Rename( const std::string &szFullFileName, const std::wstring &w
 		{
 			pSaver->Add( 1, this );
 		}
-	}	
+	}
 
 	wszSaveName = wszNewSaveName;
 
 	{
 		CFileStream stream(  szFullFileName, CFileStream::WIN_CREATE );
 		CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_WRITE );
-		if ( pSaver ) 
+		if ( pSaver )
 			pSaver->Add( 1, this );
 	}
 }
@@ -214,7 +214,7 @@ void SSaveInfo::Rename( const std::string &szFullFileName, const std::wstring &w
 const NDb::STexture* SSaveInfo::GetPlayerIcon( const NDb::SMapInfo *pMapInfo, int nPlayer ) const
 {
 	const NDb::STexture *pTexture = 0;
-	
+
 	if ( pMapInfo )
 	{
 		if ( 0 <= nPlayer && nPlayer < pMapInfo->players.size() )
@@ -236,7 +236,7 @@ void SSaveInfo::SetLoadInfo()
 	else
 		wszDesc = wszMissionLoadingDesc;
 	g_WaitLoadData.Set( pPicture, wszDesc, bFromChapter );
-	
+
 	if ( szMODPath.empty() )
 	{
 		if ( NMOD::DoesAnyMODAttached() )
@@ -291,7 +291,7 @@ void GetSaveList( CSaveList *pSaves, int *pnLastID )
 
 		// get extra info
 		sg.szInfoFileName = szPath + sg.szFileTitle + NSaveLoad::INFO_FILE_EXTENSION;
-		
+
 		sg.info.Read( sg.szInfoFileName );
 		if ( !sg.info.wszSaveName.empty() )
 			sg.wszName = sg.info.wszSaveName;
@@ -307,7 +307,7 @@ bool IsSaveListEmpty()
 	std::list<std::string> names;
 
 	NFile::GetDirectoryFiles( szPath.c_str(), "*.sav", &names, false );
-	
+
 	return names.empty();
 }
 
@@ -317,7 +317,7 @@ std::string GetUniqueFileName( const CSaveList &saves )
 	for ( int i = 0; i < saves.size(); ++i )
 	{
 		const SSavegameEntry &save = saves[i];
-		
+
 		int nLen = strlen( SAVE_NAME_PREFIX );
 		int nFileIndex = 0;
 		if ( nLen < save.szFileTitle.size() )
@@ -367,7 +367,7 @@ void MakeUniqueSave( const std::wstring &wszUserName, bool bQuickSave, bool bAut
 	NI_VERIFY( NFile::IsValidDirName( szName ), fmt::format("Wrong file name \"{}\"", szName), return );
 
 	NSaveLoad::SSaveInfo info;
-	info.Write( GetSavePath() + szName + INFO_FILE_EXTENSION, 
+	info.Write( GetSavePath() + szName + INFO_FILE_EXTENSION,
 		          wszUserName, bQuickSave, bAutoSave, bFromChapter );
 	NMainLoop::Command( ML_COMMAND_SAVE_GAME, szName.c_str() );
 }

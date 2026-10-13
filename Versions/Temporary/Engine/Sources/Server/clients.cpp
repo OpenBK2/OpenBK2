@@ -62,7 +62,7 @@ void CClients::RecalcDBOverload()
 	const float fTimeInterval = float( GetLongTickCount() - dwQueriesCountTime ) / 1000.0f;
 	if ( fTimeInterval > QUERIES_CALC_INTERVAL )
 	{
-		dwQueriesCountTime = GetLongTickCount(); 
+		dwQueriesCountTime = GetLongTickCount();
 		fPrevQueriesPerSecond = float( nQueries ) / QUERIES_CALC_INTERVAL;
 		nQueries = 0;
 		fQueriesPerSecond = 0.0f;
@@ -121,7 +121,7 @@ int CClients::GetDBUserIDbyNick( const std::string &_szNick )
 		const std::string szDBUserID = row[0];
 		return NStr::ToInt( szDBUserID );
 	}
-	else 
+	else
 	{
 		return -1;
 	}
@@ -284,7 +284,7 @@ std::list<std::string> CClients::GetIgnoreFriendList( const int nClient, EIgnore
 			szQuery = fmt::format( "SELECT names.Name FROM friendlist, users, names WHERE users.userID = friendlist.notifier AND names.nameID = users.name AND friendlist.player = '{}'",
 				GetDBUserIDbyNick( nickByID[nClient] ) );
 		}
-			
+
 		CDbResult result;
 		Query( szQuery, &result );
 		int nRows = result.GetRowCount();
@@ -331,7 +331,7 @@ bool CClients::IsBannedNick( const std::string &szNick )
 		if ( row[0] == "1" )
 			ans = true;
 	}
-	
+
 	return ans;
 }
 
@@ -413,7 +413,7 @@ bool CClients::IsNickRegistered( const std::string &szNick )
 	Query( szQuery, &result );
 	if ( result.GetRowCount() > 0 )
 	{
-		return true;	
+		return true;
 	}
 	return false;
 }
@@ -659,7 +659,7 @@ void CClients::SetOffLine( const int nClientID )
 {
 	onLine.erase( nClientID );
 	const std::string szNick = nickByID[nClientID];
-	
+
 	std::string szNickLowerCase;
 	NStr::ToLower( &szNickLowerCase, szNick );
 	onLineNicks.erase( szNickLowerCase );
@@ -721,7 +721,7 @@ void CClients::SetCommonClientInfo( const int nClientID, const SCommonClientInfo
 		iter->second = commonClientInfo;
 }
 
-void CClients::SetGameConnectInfo( const int nClientID, const int nConnection, 
+void CClients::SetGameConnectInfo( const int nClientID, const int nConnection,
 																	 const std::string &szIP, const int nGameConnectPort )
 {
 	std::unordered_map<int, SCommonClientInfo>::iterator iter = onLine.find( nClientID );
@@ -763,7 +763,7 @@ bool CClients::IsCDKeyOnline( const std::string &szCDKey )
 {
 	if ( szCDKey == "" )
 		return true;
-	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) + 
+	std::string szQuery = "SELECT n.Name FROM cdkeys AS c, users AS u, names AS n WHERE c.CDKey = '" + EscapeString( szCDKey ) +
 		"' AND c.cdkeyID = u.cdkey AND u.name = n.nameID";
 	CDbResult result;
 	Query( szQuery, &result );

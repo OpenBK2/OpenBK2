@@ -25,15 +25,15 @@ void CAAFeedBacks::Clear()
 
 void CAAFeedBacks::Fired( CAIUnit *pAA, CAIUnit *pTarget )
 {
-	if ( theDipl.GetDiplStatus( pAA->GetPlayer(), theDipl.GetMyNumber() ) != EDI_ENEMY ) 
+	if ( theDipl.GetDiplStatus( pAA->GetPlayer(), theDipl.GetMyNumber() ) != EDI_ENEMY )
 		return;
-	
+
 	const int nAAID = pAA->GetUniqueId();
 	const int nTargetID = pTarget->GetUniqueId();
 
 	CTargetList &targets = feedbacks[nAAID];	// yes, explisit creation. i need it.
 
-	if ( find( targets.begin(), targets.end(), nTargetID ) == targets.end() )		
+	if ( find( targets.begin(), targets.end(), nTargetID ) == targets.end() )
 	{
 		// register this target, send feedback
 		targets.push_back( nTargetID );

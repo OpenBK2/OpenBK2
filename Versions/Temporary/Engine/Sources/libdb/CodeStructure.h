@@ -8,7 +8,7 @@ namespace NDb
 namespace NTypeDef
 {
 	class CTerminalTypesDescriptor;
-} 
+}
 }
 
 namespace NLang
@@ -19,7 +19,7 @@ namespace NLang
 namespace NCodeGen
 {
 class CFile;
-	
+
 class CCodeStructure : public CXmlResource
 {
 	OBJECT_NOCOPY_METHODS( CCodeStructure )

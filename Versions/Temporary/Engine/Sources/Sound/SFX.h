@@ -27,14 +27,14 @@ struct ISound : public CObjectBase
 {
 	// visiting
 	virtual int Visit( struct ISFXVisitor *pVisitor ) = 0;
-	
+
 	// 0.0f ... 1.0f
 	virtual void SetVolume( float nVolume ) = 0;
 	virtual float GetVolume()const = 0;
 
 	virtual void SetVolumeType( int nVolumeType ) = 0;
 	virtual int GetVolumeType() const = 0;
-	
+
 	// -1.0f ... 1.0f
 	virtual void SetPan( float nPan ) = 0;
 	virtual float GetPan() const = 0;
@@ -44,9 +44,9 @@ struct ISound : public CObjectBase
 
 	virtual CVec3 GetSpeed() const = 0;
 	virtual void SetSpeed( const CVec3 &vSpeed ) = 0;
-	
+
 	virtual void SetMinMax( const float fMinDist, const float fMaxDist ) = 0;
-	
+
 	// продолжительность звука в самплах
 	virtual unsigned int GetLenght() =0;
 	virtual unsigned int GetSampleRate() =0;
@@ -71,7 +71,7 @@ struct ISFX : public CObjectBase
 	//
 	// sample sounds
 	virtual int PlaySample( ISound *pSound, bool bLooped = false, unsigned int nStartPos = 0 ) = 0;
-	
+
 	// update sound acording to internal parametres
 	virtual void UpdateSample( ISound *pSound ) = 0;
 	virtual void StopSample( ISound *pSound ) = 0;
@@ -83,7 +83,7 @@ struct ISFX : public CObjectBase
 	//
 	virtual bool Pause( bool bPause ) = 0;
 	virtual bool IsPaused() = 0;
-	
+
 	virtual bool IsPlaying( ISound *pSound ) = 0;
 
 	// текущая позиция прогирыша

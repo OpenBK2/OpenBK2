@@ -37,7 +37,7 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 	/*IScrollableContainer *pPlayerList = GetChildChecked<IScrollableContainer>( pMain, "PlayerList", true );
 	IWindow *pPlayerListItem = GetChildChecked<IWindow>( pPlayerList, "PlayerListItem", true );
 	pPlayerListItem->ShowWindow( false );*/
-	
+
 	if ( pMapPictureWnd && params.pMapPicture )
 		pMapPictureWnd->SetTexture( params.pMapPicture );
 
@@ -48,7 +48,7 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 	}
 	if ( pMapNameView )
 		pMapNameView->SetText( pMapNameView->GetDBText() + params.wszMapName );
-		
+
 	if ( pPlayerOnMapTeamWnd )
 		pPlayerOnMapTeamWnd->ShowWindow( false );
 
@@ -59,7 +59,7 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 	for ( int i = 0; i < params.players.size(); ++i )
 	{
 		const SPlayer &player = params.players[i];
-	
+
 		// Put on minimap
 		CVec2 vPos = pMinimapWnd->GetAIToScreen( player.vMinimapPos );
 
@@ -109,7 +109,7 @@ void CInterfaceMPLoading2D::MakeInterior( const SParams &params )
 	}
 	/*if ( pPlayerList )
 		pPlayerList->Update();*/
-	
+
 	CInterfaceLoadingBase::MakeInterior();
 }
 

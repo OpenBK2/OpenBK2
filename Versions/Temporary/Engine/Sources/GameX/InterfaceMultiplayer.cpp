@@ -18,20 +18,20 @@
 
 // CInterfaceMultiplayer
 
-CInterfaceMultiplayer::CInterfaceMultiplayer() : 
+CInterfaceMultiplayer::CInterfaceMultiplayer() :
 	CInterfaceScreenBase( "Multiplayer", "multiplayer" )
 {
 }
 
 CInterfaceMultiplayer::~CInterfaceMultiplayer()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
 bool CInterfaceMultiplayer::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();

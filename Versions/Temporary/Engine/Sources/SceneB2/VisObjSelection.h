@@ -80,7 +80,7 @@ struct SVisObjSelection
 		saver.Add( 7, &vSelCenter );
 		return 0;
 	}
-	
+
 	void Recreate() { SVisObjSelection::~SVisObjSelection(); new(this) SVisObjSelection(); }
 };
 

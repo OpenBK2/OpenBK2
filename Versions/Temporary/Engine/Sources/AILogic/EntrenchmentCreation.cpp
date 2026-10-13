@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-const static float fNearToNormale = 0.05f; 
+const static float fNearToNormale = 0.05f;
 extern CStaticObjects theStatObjs;
 extern CUnitCreation theUnitCreation;
 
@@ -22,9 +22,9 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AA, CEntrenchmentCreation );
 
 void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 {
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
-		if ( pEntrenchmentStats == 0 ) 
+		if ( pEntrenchmentStats == 0 )
 			InitConsts();
 		else
 			nTermInd = pEntrenchmentStats->GetTerminatorIndex();
@@ -32,7 +32,7 @@ void CEntrenchmentCreation::OnSerialize( IBinSaver &saver )
 }
 
 CEntrenchmentCreation::CEntrenchmentCreation( const int nPlayer, const bool bAllowAIModification )
-: CLongObjectCreation( nPlayer, bAllowAIModification ), nStartIndex( 0 ), nCurIndex( -1 ), 
+: CLongObjectCreation( nPlayer, bAllowAIModification ), nStartIndex( 0 ), nCurIndex( -1 ),
 	line( 0, 0, 0), wAngle( 0 ), bCannot( false ), bSayAck( false )
 {
 	InitConsts();
@@ -73,7 +73,7 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * p
 		return;
 	// add all objects, check if tiles are locked and mark objects and tiles.
 	pUpdate->objects.resize( parts.size() + 2 );
-	
+
 	// add terminators
 	pUpdate->objects[parts.size()].bCanBuild = true;
 	pUpdate->objects[parts.size()+1].bCanBuild = true;
@@ -102,7 +102,7 @@ void CEntrenchmentCreation::CreateObjects( SAIObjectsUnderConstructionUpdate * p
 
 		parts[i]->GetNewUnitInfo( &pUpdate->objects[i].info );
 		pUpdate->objects[i].bCanBuild = bPossibleBecauseOfTiles && CanDigBecauseOfOtherTrenches( rect, vPoints[i] );
-		
+
 		pUpdate->bCanBuild |= pUpdate->objects[i].bCanBuild;
 	}
 	if ( !pUpdate->objects[0].bCanBuild )
@@ -133,7 +133,7 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 	SplitLineToSegrments( &vPoints, vFrom, vTo, fTrenchWidth );
 
 	wAngle = GetLineAngle( vFrom, vTo );
-	
+
 	if ( vPoints.size() <= 1 ) return false;
 
 	//lines and fireplaces
@@ -152,12 +152,12 @@ bool CEntrenchmentCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, con
 			parts.push_back( 0 );
 		//
 	}
-	if ( parts.empty() ) 
+	if ( parts.empty() )
 		return false;
 
 	if ( IsAIModificationAllowed() )
 	{
-		do 
+		do
 		{
 			CalcTilesUnder();
 		} while ( !CanBuildNextInner() && ++nCurIndex < parts.size()  );
@@ -211,8 +211,8 @@ const CVec2 CEntrenchmentCreation::GetBuildPointForIndex( const int nPlace, cons
 }
 
 void CEntrenchmentCreation::LockCannotBuild()
-{ 
-	bCannot = true; 
+{
+	bCannot = true;
 }
 
 void CEntrenchmentCreation::BuildNext()
@@ -221,11 +221,11 @@ void CEntrenchmentCreation::BuildNext()
 	if ( nStartIndex == nCurIndex )
 		theStatObjs.AddEntrencmentPart( pBeginTerminator, true );
 	theStatObjs.AddEntrencmentPart( parts[nCurIndex], true );
-	
+
 	//
 	++nCurIndex;
 	//
-	
+
 	if ( pFullEntrenchment )
 	{
 		theStatObjs.DeleteInternalEntrenchmentInfo( pFullEntrenchment );
@@ -236,10 +236,10 @@ void CEntrenchmentCreation::BuildNext()
 		theStatObjs.DeleteInternalObjectInfo( pEndTerminator );
 		pEndTerminator = 0;
 	}
-	
+
 
 	std::vector<CObjectBase*> vEntr;
-	
+
 	vEntr.push_back( pBeginTerminator );
 
 	pEndTerminator = pNewEndTerminator;
@@ -312,12 +312,12 @@ void CEntrenchmentCreation::GetTilesUnderForIndex( std::list<SVector> *pTiles, c
 void CEntrenchmentCreation::CreateNewEndTerminator()
 {
   CDBPtr<SEntrenchmentRPGStats> pRPG = theUnitCreation.GetEntrenchment();
-	
+
   int nTermInd = pRPG->GetTerminatorIndex( 0 );
 
 	if ( nCurIndex + 1 < vPoints.size() )
 		pNewEndTerminator = AddElement( pRPG, CVec3(vPoints[nCurIndex+1],0.0f), wAngle, nTermInd, GetPlayer() );
-	else 
+	else
 		pNewEndTerminator = 0;
 }
 
@@ -332,7 +332,7 @@ void CEntrenchmentCreation::GetUnitsPreventingByIndex( std::list< CPtr<CAIUnit> 
 	SRect r1, r2, r3 ;
 	parts[nIndex]->GetBoundRect( &r1 );
 	pNewEndTerminator->GetBoundRect( &r2 );
-	if ( nStartIndex == nIndex ) 
+	if ( nStartIndex == nIndex )
 		pBeginTerminator->GetBoundRect( &r3 );
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + r2.lengthAhead + r2.lengthBack + r2.width + SConsts::TILE_SIZE * 5;
@@ -341,8 +341,8 @@ void CEntrenchmentCreation::GetUnitsPreventingByIndex( std::list< CPtr<CAIUnit> 
 		if ( !(*iter)->GetStats()->IsInfantry() )
 		{
 			const SRect rect = (*iter)->GetUnitRect();
-			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) || 
-				 ( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false ) 
+			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) ||
+				 ( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false )
 				 )
 				units->push_back( *iter );
 		}
@@ -360,7 +360,7 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 	SRect r1, r2, r3 ;
 	parts[nIndex]->GetBoundRect( &r1 );
 	pNewEndTerminator->GetBoundRect( &r2 );
-	if ( nStartIndex == nIndex ) 
+	if ( nStartIndex == nIndex )
 		pBeginTerminator->GetBoundRect( &r3 );
 
 	const float fRadius = r1.lengthAhead + r1.lengthBack + r1.width + r2.lengthAhead + r2.lengthBack + r2.width + SConsts::TILE_SIZE * 5;
@@ -369,8 +369,8 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 		if ( !(*iter)->GetStats()->IsInfantry() )
 		{
 			const SRect rect = (*iter)->GetUnitRect();
-			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) || 
-				( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false ) 
+			if ( r1.IsIntersected( rect ) || r2.IsIntersected( rect ) ||
+				( nStartIndex == nIndex ? r3.IsIntersected( rect ) : false )
 				)
 				return true;
 		}
@@ -381,7 +381,7 @@ bool CEntrenchmentCreation::IsAnyUnitPreventByIndex( const int _nIndex ) const
 
 bool CEntrenchmentCreation::CanBuildNext() const
 {
-	if ( bCannot || !pNewEndTerminator ) 
+	if ( bCannot || !pNewEndTerminator )
 		return false;
 
 	return CanBuildNextInner();
@@ -389,7 +389,7 @@ bool CEntrenchmentCreation::CanBuildNext() const
 
 bool CEntrenchmentCreation::CanBuildByIndexSlow( const int _nIndex ) const
 {
-	if ( bCannot || !pNewEndTerminator ) 
+	if ( bCannot || !pNewEndTerminator )
 		return false;
 
 	return CanBuildNextInnerSlow( _nIndex + nStartIndex );
@@ -417,7 +417,7 @@ bool CEntrenchmentCreation::CanBuildNextInner() const
 
 			if ( r1.IsIntersected( rect ) )
 			{
-				if ( pUnit->GetPlayer() == GetPlayer() && 
+				if ( pUnit->GetPlayer() == GetPlayer() &&
 					EUSN_REST == pUnit->GetState()->GetName() &&
 					pUnit->CanMove() )
 					(*iter)->UnlockTiles();
@@ -456,7 +456,7 @@ bool CEntrenchmentCreation::CanBuildNextInnerSlow( const int nIndex ) const
 
 			if ( r1.IsIntersected( rect ) )
 			{
-				if ( pUnit->GetPlayer() == GetPlayer() && 
+				if ( pUnit->GetPlayer() == GetPlayer() &&
 					EUSN_REST == pUnit->GetState()->GetName() &&
 					pUnit->CanMove() )
 					(*iter)->UnlockTiles();

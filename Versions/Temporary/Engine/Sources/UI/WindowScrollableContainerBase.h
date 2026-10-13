@@ -23,8 +23,8 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 		int nPos;																// pChild's position inside control
 		SElement() {  }
 		SElement( CWindow *_pChild, const int _bSelectable, const int _nPos, CWindow *pNegativeSelecion )
-			: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos ) 
-		{ 
+			: szName( _pChild->GetName() ), bSelectable( _bSelectable ), nPos( _nPos )
+		{
 			if ( pNegativeSelecion )
 				szNegativeSelection = pNegativeSelecion->GetName();
 		}
@@ -63,7 +63,7 @@ class CWindowScrollableContainerBase : public CWindow, public IScrollableContain
 	CDBPtr<NDb::SWindowScrollableContainerBaseShared> pShared;
 	CFreeIds elementIDs;
 	int nPosSize;															// total size of elements
-	CObj<CWindowScrollBar> pScrollBar;	
+	CObj<CWindowScrollBar> pScrollBar;
 	CObj<CWindowSimple> pBorder;  // for clipping
 	CObj<CWindowSimple> pContainer;  // contains elements
 	typedef std::vector<SElement> CElements;
@@ -101,11 +101,11 @@ public:
 	void AfterLoad();
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 
-	
+
 	virtual int operator&( IBinSaver &saver );
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	
+
 	virtual void Clicked( struct IWindow *pWho, int nButton );
 	void DoubleClicked( struct IWindow *pWho, int nButton );
 	virtual IWindow *GetSelectedItem() const { return pSelected; }

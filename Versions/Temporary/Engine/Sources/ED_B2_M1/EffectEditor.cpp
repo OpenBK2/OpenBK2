@@ -49,7 +49,7 @@ void CEffectEditor::Create()
 		std::string szMapName = NEditorOptions::GetBgMap( GetDesiredMapSeason() );
 		nMapID = pFolderMan->GetID( szMapName );
 	}
-	// 
+	//
 	/**/
 	if ( const NDb::SMapInfo *pMapInfo = NDb::Get<NDb::SMapInfo>( CDBID( szMapName ) ) )
 	{
@@ -72,7 +72,7 @@ void CEffectEditor::Create()
 	}
 	// set camera anchor
 	CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( GetDesiredMapSeason() );
-	if ( vCameraAnchor == VNULL3 ) 
+	if ( vCameraAnchor == VNULL3 )
 	{
 		vCameraAnchor.x = terrainSize.x * 8.0f * AI_TILE_SIZE;
 		vCameraAnchor.y = terrainSize.y * 8.0f * AI_TILE_SIZE;
@@ -96,6 +96,6 @@ void CEffectEditor::Destroy()
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_CLEAR, 0 );
 }
 
-// basement storage  
+// basement storage
 
 

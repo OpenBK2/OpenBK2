@@ -175,7 +175,7 @@ inline CVec3 GetLinearColor( const CVec3 &_vColor )
 	return CVec3( GetLinear( _vColor.x ), GetLinear( _vColor.y ), GetLinear( _vColor.z ) );
 }
 
-void CLightState::CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_bounds, 
+void CLightState::CreateScattered( SLightStateCalcSeed *pSeed, const SSphere &_bounds,
 	const SPerVertexLightState &l, IGScene *_pVis, int nSkyDirs )
 {
 	pVis = _pVis;

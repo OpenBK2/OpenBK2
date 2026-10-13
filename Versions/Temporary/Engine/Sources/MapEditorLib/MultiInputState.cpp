@@ -142,6 +142,6 @@ void CMultiInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 		inputStateList[nActiveInputState]->OnContextMenu( rMousePoint );
 }
 
-// basement storage  
+// basement storage
 
 

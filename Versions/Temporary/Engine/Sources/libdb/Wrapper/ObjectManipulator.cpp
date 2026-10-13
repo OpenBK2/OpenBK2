@@ -242,11 +242,11 @@ void CObjectManipulatorWrapper::ClearCache()
 }
 
 bool CObjectManipulatorWrapper::GetName( unsigned nID, std::string *pszName ) const
-{ 
+{
 	if ( nID != -1 )
 		return false;
 	*pszName = pObjMan->GetDBID().ToString();
-	return true; 
+	return true;
 }
 // ************************************************************************************************************************ //
 // **

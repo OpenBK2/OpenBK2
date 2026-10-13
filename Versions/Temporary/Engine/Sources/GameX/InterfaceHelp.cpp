@@ -9,7 +9,7 @@
 
 // CInterfaceHelp
 
-CInterfaceHelp::CInterfaceHelp() : 
+CInterfaceHelp::CInterfaceHelp() :
 	CInterfaceScreenBase( "Help", "help" )
 {
 }
@@ -20,11 +20,11 @@ CInterfaceHelp::~CInterfaceHelp()
 
 bool CInterfaceHelp::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
-	
+
 	AddScreen( this );
 
 	return true;
@@ -36,13 +36,13 @@ void CInterfaceHelp::MakeInterior( const std::wstring &wszHeader, const std::wst
 	pHeader = GetChildChecked<ITextView>( pMain, "Header", true );
 	pDescCont = GetChildChecked<IScrollableContainer>( pMain, "DescCont", true );
 	pDesc = GetChildChecked<ITextView>( pMain, "Desc", true );
-	
+
 	if ( pHeader )
 		pHeader->SetText( pHeader->GetDBText() + wszHeader );
 	if ( pDescCont && pDesc )
 	{
 		pDescCont->PushBack( dynamic_cast_ptr<IWindow*>( pDesc ), false );
-		pDesc->SetText( pDesc->GetDBText() + wszDesc ); 
+		pDesc->SetText( pDesc->GetDBText() + wszDesc );
 		pDescCont->Update();
 	}
 }
@@ -54,7 +54,7 @@ void CInterfaceHelp::RegisterObservers()
 void CInterfaceHelp::OnGetFocus( bool bFocus )
 {
 	CInterfaceScreenBase::OnGetFocus( bFocus );
-	
+
 	if ( bFocus )
 	{
 		Cursor()->Show( true );
@@ -66,7 +66,7 @@ bool CInterfaceHelp::Execute( const std::string &szSender, const std::string &sz
 {
 	if ( szReaction == "close" )
 		return OnCloseReaction( szSender );
-		
+
 	return false;
 }
 
@@ -78,7 +78,7 @@ int CInterfaceHelp::Check( const std::string &szCheckName ) const
 bool CInterfaceHelp::OnCloseReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
-	
+
 	return true;
 }
 

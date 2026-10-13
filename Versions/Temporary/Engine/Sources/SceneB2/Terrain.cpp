@@ -109,10 +109,10 @@ void CFoot::CreatePatches( NGScene::IGameView *pGView, const NDb::STerrain *pTer
 
 void CRiverPatch::Recalc()
 {
-	if ( pValue == 0 ) 
+	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 	NGScene::CObjectInfo::SData objData;
-	if ( pTimer ) 
+	if ( pTimer )
 	{
 		objData.verts = pInfo->vertices;
 		//objData.secondTex.resize( pInfo->vertices.size() );
@@ -146,7 +146,7 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 		for ( int i = 0; i < pInfo->waterPatches.size(); ++i )
 		{
 			NI_ASSERT( pInfo->pDesc->waterLayers[0].materials[0], "Material is not set for first river layer" );
-			if ( pInfo->pDesc->waterLayers[0].materials[0] == 0 ) 
+			if ( pInfo->pDesc->waterLayers[0].materials[0] == 0 )
 				continue;
 			//NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_NEVER_STATIC, -100 ), 0, 0 );
@@ -177,7 +177,7 @@ void CRiver::CreatePatches( NGScene::IGameView *pGView )
 		for ( int i = 0; i < pInfo->water2Patches.size(); ++i )
 		{
 			NI_ASSERT( pInfo->pDesc->waterLayers[1].materials[0], "Material is not set for first river layer" );
-			if ( pInfo->pDesc->waterLayers[1].materials[0] == 0 ) 
+			if ( pInfo->pDesc->waterLayers[1].materials[0] == 0 )
 				continue;
 			//NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_SKIP_LIGHTING, -100 ), 0, 0 );
 			NGScene::SFullRoomInfo room( NGScene::SRoomInfo( NGScene::LF_NEVER_STATIC, -100 ), 0, 0 );
@@ -320,7 +320,7 @@ int CSceneTerrain::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pDBDesc );
 	//
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
 		patches.clear();
 		terraBorders.clear();

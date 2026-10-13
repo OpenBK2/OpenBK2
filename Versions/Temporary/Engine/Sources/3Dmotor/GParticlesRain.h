@@ -11,7 +11,7 @@ class CRainAnimator : public CPtrFuncBase<CParticleEffect>
 protected:
 	virtual bool NeedUpdate() { return pCamera.Refresh() | pTime.Refresh(); }
 	virtual void Recalc();
-private:	
+private:
 	ZDATA
 	CDGPtr< CFuncBase<STime> > pTime;
 	CDGPtr<CFuncBase<CVec4> > pCamera;

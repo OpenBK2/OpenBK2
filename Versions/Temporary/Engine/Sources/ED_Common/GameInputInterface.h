@@ -7,9 +7,9 @@
 
 class ED_COMMON_EXPORT CGameInputInterface : public IInterfaceBase, protected NInput::CGMORegContainer
 {
-public:	
+public:
 	virtual ~CGameInputInterface() {}
-	
+
 	// IInterfaceBase
 	virtual void OnGetFocus( bool bFocus ) {}
 	virtual void Step( bool bAppActive ) {}

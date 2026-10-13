@@ -144,7 +144,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 	const auto &vMax = mesh.maximum;
 	fInfinity = 1000.0f * fabs( vMax - vMin );
 
-#ifdef _DEBUG_GENERATION		
+#ifdef _DEBUG_GENERATION
 	mask.Init( CVec2(vMin.x, vMin.y), CVec2(vMax.x, vMax.y) );
 #endif //_DEBUG_GENERATION
 
@@ -185,7 +185,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 		{
 			for ( int i = 0; i < prjPoints.size(); ++i )
 				Vis2AI( &(prjPoints[i]) );
-			
+
 			prjPoints.push_back( prjPoints[0] );
 			for ( int i = 0; i < prjPoints.size() - 1; ++i )
 			{
@@ -195,7 +195,7 @@ void CPassabilityProfileCreator::GenerateStartSegments( const NEditorGltf::SMesh
 		}
 	}
 
-#ifdef _DEBUG_GENERATION	
+#ifdef _DEBUG_GENERATION
 	for ( std::list<CSegment>::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 		mask.DrawLine( iter->p1, iter->p2, NImage::SColor( 100, 0, 255, 0 ) );
 
@@ -234,7 +234,7 @@ static const float ExactSign( const float fX )
 bool IsPointInside( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
-	return 
+	return
 		IsEqual( line.DistToPoint( vPoint ), 0.0f ) &&
 		Sign( vPoint.x - v1.x ) * Sign( v2.x - vPoint.x ) >= 0 &&
 		Sign( vPoint.y - v1.y ) * Sign( v2.y - vPoint.y ) >= 0;
@@ -350,11 +350,11 @@ void CPassabilityProfileCreator::MakeConnections()
 		if ( !IsEqual( v1, v2 ) )
 		{
 			connectedPoints.push_back( SConnectedPoint( v1, FindNumberForPoint( v1 ) ) );
-			const int n1 = connectedPoints.back().nNumber; 
+			const int n1 = connectedPoints.back().nNumber;
 			connNum2Point[n1] = v1;
 
 			connectedPoints.push_back( SConnectedPoint( v2, FindNumberForPoint( v2 ) ) );
-			const int n2 = connectedPoints.back().nNumber; 
+			const int n2 = connectedPoints.back().nNumber;
 			connNum2Point[n2] = v2;
 
 			nMaxPoint = (std::max)( nMaxPoint, (std::max)( n1, n2 ) );
@@ -535,7 +535,7 @@ void CPassabilityProfileCreator::FormPolygon()
 		for ( int i = 0; i < connections.GetSizeX(); ++i )
 		{
 			if ( connections[point.nNumber][i] == 1 && deleted.find( i ) == deleted.end() )
-			{				
+			{
 				const SConnectedPoint nextPoint( connNum2Point[i], i );
 
 				//mask.DrawPoint( predPoint.vPoint, NImage::SColor( 255, 0, 0, 255 ) );
@@ -696,7 +696,7 @@ void CPassabilityProfileCreator::SimplifyPolygons()
 					//mask.DrawPoint( vPredPoint, NImage::SColor( 255, 0, 0, 0 ) );
 					//mask.DrawPoint( vPoint, NImage::SColor( 255, 0, 0, 0 ) );
 					//mask.DrawPoint( vNextPoint, NImage::SColor( 255, 0, 0, 0 ) );
-					//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" ); 
+					//mask.SaveImage( "c:\\m1\\Geometries\\debug.tga" );
 
 					if ( fabs( line.DistToPoint(vNextPoint) ) < fTolerance )
 					{

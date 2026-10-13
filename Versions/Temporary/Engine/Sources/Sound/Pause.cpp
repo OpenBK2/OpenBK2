@@ -12,8 +12,8 @@ namespace NMusicSystem
 // CPause
 
 
-void CPause::Segment() 
-{ 
+void CPause::Segment()
+{
 	switch( eState )
 	{
 	case EPS_NOT_STARTED:
@@ -32,7 +32,7 @@ void CPause::Segment()
 
 		break;
 	case EPS_FINISHED:
-		
+
 		break;
 	}
 }
@@ -48,15 +48,15 @@ void CPause::OnResetTimer()
 }
 
 
-bool CPause::IsFinished() const 
-{ 
+bool CPause::IsFinished() const
+{
 	return eState == EPS_FINISHED;
 }
 
 CPause::CPause( const NDb::SPlayPause &_Pause )
 : timeToPause( _Pause.nPauseTime + NWin32Random::Random(0, _Pause.nPauseRandom ) ),
 	eState( EPS_NOT_STARTED ), timeLastCall ( 0 ), timePaused( 0 )
-{  
+{
 }
 }
 

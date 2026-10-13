@@ -17,7 +17,7 @@ public:
 	public:
 		CReactions() { }
 		~CReactions()	{ }
-		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface ) 
+		CReactions( IWindow *_pScreen, CInterfaceCredits *_pInterface )
 			: pScreen( _pScreen ), pInterface( _pInterface ) { }
 			bool Execute( const std::string &szSender, const std::string &szReaction );
 			int Check( const std::string &szCheckName ) const;

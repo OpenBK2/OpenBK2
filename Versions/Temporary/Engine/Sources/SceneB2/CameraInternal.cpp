@@ -116,7 +116,7 @@ void CCamera::SetAnchorLimits( const CTRect<float> &vLimits )
 }
 
 void CCamera::SwitchAutoPositioning( const bool bAllowAutoPositioning )
-{ 
+{
 	if ( pMouseMutator )
 		pMouseMutator->SwitchAutoPositioning( bAllowAutoPositioning );
 }
@@ -267,7 +267,7 @@ void CCamera::Update()
 	timeLastUpdate = GameTimer()->GetAbsTime();
 	fTimeDiff = float( timeLastUpdate ) > fTimeDiff ? float( timeLastUpdate ) - fTimeDiff : 0;
 
-	if ( !earthquakes.empty() ) 
+	if ( !earthquakes.empty() )
 	{
 		float fVal = 0;
 		for ( std::list<NCamera::SEarthQuake>::iterator it = earthquakes.begin(); it != earthquakes.end(); )
@@ -436,7 +436,7 @@ void CCamera::SetScrollSpeedX( const float _fSpeed )
 		pMouseMutator->SetScrollSpeedX( _fSpeed );
 }
 
-void CCamera::SetScrollSpeedY( const float _fSpeed )	
+void CCamera::SetScrollSpeedY( const float _fSpeed )
 {
 	if ( pMouseMutator )
 		pMouseMutator->SetScrollSpeedY( _fSpeed );
@@ -466,7 +466,7 @@ bool CCamera::ProcessEvent( const SGameMessage &msg )
 
 void CCamera::AddEarthquake( const CVec3 &vPos, const float fPower )
 {
-	if ( fPower <= 0 ) 
+	if ( fPower <= 0 )
 		return;
 
 	const CVec3 &vAnchor = GetAnchor();
@@ -498,7 +498,7 @@ void CCamera::ConformMouseMutator2ScriptMutator()
 
 	const float fFakePitch = ToRadian( 270.0f ) - placement.fPitch;
 	const CVec3 vDir( sin(placement.fYaw)*cos(fFakePitch),
-										-cos(placement.fYaw)*cos(fFakePitch), 
+										-cos(placement.fYaw)*cos(fFakePitch),
 										sin(fFakePitch) );
 
 	const float fDistance = fabs( placement.vPosition.z / vDir.z );
@@ -654,7 +654,7 @@ int CCamera::operator&( IBinSaver &saver )
 
 // ************************************************************************************************************************ //
 // **
-// ** 
+// **
 // **
 // **
 // **
@@ -668,16 +668,16 @@ ICamera* CreateCamera()
 // set_camera_pitch_limits min max ave asp msp
 static void SetCameraLimits( NCamera::ELimitsType eType, const std::vector<std::wstring> &szParams )
 {
-	if ( szParams.size() != 5 ) 
+	if ( szParams.size() != 5 )
 	{
 		csSystem << "this call requires 5 params: min max ave auto_speed manual_speed" << endl;
 		return;
 	}
 	//
-	NCamera::SCameraLimits limits = NCamera::SCameraLimits( 
-		NStr::ToFloat( NStr::ToMBCS(szParams[0]) ), 
+	NCamera::SCameraLimits limits = NCamera::SCameraLimits(
+		NStr::ToFloat( NStr::ToMBCS(szParams[0]) ),
 		NStr::ToFloat( NStr::ToMBCS(szParams[1]) ),
-		NStr::ToFloat( NStr::ToMBCS(szParams[2]) ), 
+		NStr::ToFloat( NStr::ToMBCS(szParams[2]) ),
 		NStr::ToFloat( NStr::ToMBCS(szParams[3]) ),
 		NStr::ToFloat( NStr::ToMBCS(szParams[4]) ), false );
 	//

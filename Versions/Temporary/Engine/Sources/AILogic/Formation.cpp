@@ -69,7 +69,7 @@ CAIUnit* CFormation::CCarryedMortar::CreateMortar( class CFormation *pOwner )
 {
 	NI_ASSERT( bHasMortar, "formation doesn't have mortar");
 	CVec3 vPos( (*pOwner)[0]->GetCenter() );
-	
+
 	pOwner->SetCenter( vPos );
 	const int nUniqueID = ++SLinkObjDataAutoMagic::pLinkObjData->nCurUniqueID;
 	const int nID = theUnitCreation.AddNewUnit( nUniqueID, pStats, fHP / pStats->fMaxHP, vPos.x, vPos.y, vPos.z,
@@ -130,7 +130,7 @@ void CFormation::CCarryedMortar::Init( const class CAIUnit *pArt )
 //BASIC_REGISTER_CLASS( CFormation );
 
 CFormation::CFormation()
-: nInUnitsID(-1), pObjInside( 0 ), bWithMoraleOfficer( false ), bUsedCharge( false ), pCharge( 0 ), 
+: nInUnitsID(-1), pObjInside( 0 ), bWithMoraleOfficer( false ), bUsedCharge( false ), pCharge( 0 ),
 fSpeedCoeff( 1.0f ), nBoundTileRadius( 0 ), timeLastCatchArt( 0 ), dwCatchArtFlag( 0 ),
 fPass( 0.0f ), timeToCamouflage( 0 ), cPlayer( 0 ), bWaiting( false ), bDisabled( false ),
 eInsideType( EOIO_NONE ), fMaxFireRange( 0.0f ), nVirtualUnits( 0 ), bCanBeResupplied( false ),
@@ -204,7 +204,7 @@ const int CFormation::GetUnitSlotInStats( const uint8_t cSlot ) const
 {
 	return 0;
 	/*
-	NI_ASSERT( cSlot < Size(), "Wrong unit position" ); 
+	NI_ASSERT( cSlot < Size(), "Wrong unit position" );
 	NI_ASSERT( units[cSlot].nSlotInStats != -1, "Non initialized stats-slot of unit" );
 	return units[cSlot].nSlotInStats;
 	*/
@@ -288,7 +288,7 @@ void CFormation::Segment()
 			if ( Size()>1 )
 			{
 				fMaxSpeed = (*this)[0]->GetMaxSpeedHere();
-				for ( int i = 1; i < Size(); ++i )  
+				for ( int i = 1; i < Size(); ++i )
 					fMaxSpeed = (std::min)( fMaxSpeed, (*this)[i]->GetMaxSpeedHere() );
 			}
 		}
@@ -326,7 +326,7 @@ const bool CFormation::IsIdle() const
 
 void CFormation::BalanceCenter()
 {
-	if ( Size() > 0 ) 
+	if ( Size() > 0 )
 	{
 		CVec2 vNewCenter( VNULL2 );
 		for ( int i = 0; i < Size();	++i )
@@ -455,22 +455,22 @@ const float CFormation::GetSightRadius() const
 	return fResult;
 }
 
-void CFormation::Disable() 
-{ 
+void CFormation::Disable()
+{
 	bDisabled = true;
 	theSupremeBeing.UnitAskedForResupply( this, ERT_HUMAN_RESUPPLY, false );
 }
 
-void CFormation::Enable() 
-{ 
-	bDisabled = false; 
+void CFormation::Enable()
+{
+	bDisabled = false;
 	if ( Size() != pStats->members.size() )
 		theSupremeBeing.UnitAskedForResupply( this, ERT_HUMAN_RESUPPLY, true );
 }
 
 void CFormation::WasHitNearUnit()
 {
-	if ( pStats->formations[GetCurrentGeometry()].changesByEvent[0] != -1 && 
+	if ( pStats->formations[GetCurrentGeometry()].changesByEvent[0] != -1 &&
 		pStats->formations[GetCurrentGeometry()].changesByEvent[0] != GetCurrentGeometry() )
 		ChangeGeometry( pStats->formations[GetCurrentGeometry()].changesByEvent[0] );
 }
@@ -562,7 +562,7 @@ void CFormation::PrepareToDelete()
 	theGroupLogic.DelUnitFromGroup( this );
 	theGroupLogic.DelUnitFromSpecialGroup( this );
 	DelCmdQueue( GetUniqueId() );
-	
+
 	dynamic_cast<CAILogic*>(Singleton<IAILogic>())->ToGarbage( this );
 	::units.DelFormation( this );
 
@@ -586,7 +586,7 @@ void CFormation::Disappear()
 
 void CFormation::Die( const bool fromExplosion, const float fDamage )
 {
-	// т.к. последний юнит формации вызовет эту функцию, то общее удаление формации выполняется только тогда	
+	// т.к. последний юнит формации вызовет эту функцию, то общее удаление формации выполняется только тогда
 	if ( Size() != 0 )
 	{
 		while ( Size() != 0 )
@@ -605,7 +605,7 @@ const bool CFormation::SendAlongPath( IStaticPath *pStaticPath, const CVec2 &vSh
 		const CCommonStaticPath *pPath = dynamic_cast<const CCommonStaticPath *>(pStaticPath);
 
 #ifndef _FINALRELEASE
-		if ( bDrawPathMarkers ) 
+		if ( bDrawPathMarkers )
 		{
 			if ( pPath )
 			{
@@ -726,7 +726,7 @@ void CFormation::UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOn
 
 void CFormation::DeleteSoldier( class CSoldier *pUnit )
 {
-	if ( pGroupSmoothPath->DeleteUnit( pUnit ) )  
+	if ( pGroupSmoothPath->DeleteUnit( pUnit ) )
 	{
 		for ( std::vector< CPtr<CSoldier> >::iterator it = soldiers.begin(); it != soldiers.end(); ++it )
 		{
@@ -756,27 +756,27 @@ void CFormation::DeleteSoldier( class CSoldier *pUnit )
 	}
 }
 
-void CFormation::SetFree() 
-{ 
-	eInsideType = EOIO_NONE; 
+void CFormation::SetFree()
+{
+	eInsideType = EOIO_NONE;
 	pObjInside = 0;
 }
 
-void CFormation::SetInBuilding( class CBuilding *pBuilding ) 
-{ 
-	eInsideType = EOIO_BUILDING; 
+void CFormation::SetInBuilding( class CBuilding *pBuilding )
+{
+	eInsideType = EOIO_BUILDING;
 	pObjInside = pBuilding;
 }
 
-void CFormation::SetInTransport(  class CMilitaryCar *pUnit ) 
-{ 
-	eInsideType = EOIO_TRANSPORT; 
+void CFormation::SetInTransport(  class CMilitaryCar *pUnit )
+{
+	eInsideType = EOIO_TRANSPORT;
 	pObjInside = pUnit;
 }
 
-void CFormation::SetInEntrenchment( class CEntrenchment *pEntrenchment ) 
-{ 
-	eInsideType = EOIO_ENTRENCHMENT; 
+void CFormation::SetInEntrenchment( class CEntrenchment *pEntrenchment )
+{
+	eInsideType = EOIO_ENTRENCHMENT;
 	pObjInside = pEntrenchment;
 }
 
@@ -1049,7 +1049,7 @@ void CFormation::ChangeGeometry( const int nGeometry )
 		for ( int i = 0; i < Size(); ++i )
 			(*this)[i]->ApplyStatsModifier( pFormerMod, false );
 	}
-	pGroupSmoothPath->ChangeGeometry( nGeometry ); 
+	pGroupSmoothPath->ChangeGeometry( nGeometry );
 
 	for ( int i = 0; i < Size(); ++i )
 		SetGeometryPropertiesToSoldier( (*this)[i], true );
@@ -1063,12 +1063,12 @@ void CFormation::ChangeGeometry( const int nGeometry )
 }
 
 const int CFormation::GetGeometriesCount() const
-{ 
+{
 	return pGroupSmoothPath->GetGeometriesCount();
 }
 
 const int CFormation::GetCurrentGeometry() const
-{ 
+{
 	return pGroupSmoothPath->GetCurrentGeometry();
 }
 
@@ -1083,17 +1083,17 @@ const CVec2 CFormation::GetUnitDir( const CBasePathUnit *pSoldier ) const
 }
 
 const float CFormation::GetMaxProjection() const
-{ 
-	return pGroupSmoothPath->GetMaxProjection(); 
+{
+	return pGroupSmoothPath->GetMaxProjection();
 }
 
 const float CFormation::GetRadius() const
-{ 
-	return pGroupSmoothPath->GetRadius(); 
+{
+	return pGroupSmoothPath->GetRadius();
 }
 
 void CFormation::MoveGeometries2Center()
-{ 
+{
 	pGroupSmoothPath->AlignGeometriesToCenter();
 }
 

@@ -13,7 +13,7 @@ CExecutorUnitBonus ( eAbility, _pUnit, eTID ), modeFlags ( 0 )
 
 int CExecutorUnitCombatBonus::Segment()
 {
-	if ( !IsExecutorValid() ) 
+	if ( !IsExecutorValid() )
 		return -1;
 
 	uint16_t oldMode = modeFlags;
@@ -39,7 +39,7 @@ int CExecutorUnitCombatBonus::Segment()
 		eReaction = OnModeChange( oldMode, modeFlags );
 
 	//Process reaction
-	switch ( eReaction ) 
+	switch ( eReaction )
 	{
 	case EACR_FORCE_ACTIVATE:
 		ForceActivate();

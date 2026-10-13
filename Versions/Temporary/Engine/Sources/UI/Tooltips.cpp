@@ -27,14 +27,14 @@ void CTooltips::Segment( const int timeDiff, class CWindowScreen *pScreen )
 	{
 		CVec2 vMousePos;
 		ScreenToVirtual( vLastMousePos, &vMousePos );
-	
+
 		// check if another window now have tool tip (a child of current pTooltipedWindow)
 		CWindow *pNewTooltiped = dynamic_cast<CWindow*>( pScreen->Pick( vLastMousePos, true ) );
 		while ( pNewTooltiped && !pNewTooltiped->DemandTooltip() )
 			pNewTooltiped = pNewTooltiped->GetParent();
-		
-		const bool bShouldHideTooltip = 
-			pNewTooltiped != pTooltipedWindow || !pTooltipedWindow->IsInside( vMousePos ) 
+
+		const bool bShouldHideTooltip =
+			pNewTooltiped != pTooltipedWindow || !pTooltipedWindow->IsInside( vMousePos )
 			|| !pScreen->IsEnabled()
 			|| !pNewTooltiped->DemandTooltip();
 
@@ -81,7 +81,7 @@ IWindow *CTooltips::CreateTooltipWindow( const std::wstring &wszTooltipText, IWi
 {
 	if ( nContext == -1 )
 		return new CWindowTooltip( wszTooltipText );
-	
+
 	CDynamicCast<CWindowTooltip> pTooltip = CUIFactory::MakeWindow( CUIFactory::GetConsts()->contexts[nContext]->pWindow );
 	if ( !pTooltip )
 		return 0;
@@ -105,11 +105,11 @@ void CTooltips::OnMouseMove( const CVec2 &vPos, const int nButton, class CWindow
 {
 	if ( nContext == -1 )
 		return;
-	
-	if ( fabs( vLastMousePos - vPos ) > CUIFactory::GetConsts()->contexts[nContext]->nMouseMaxOffsetToAppear )	
-		timeMouseFreese = 0;			
 
-	vLastMousePos = vPos;	
+	if ( fabs( vLastMousePos - vPos ) > CUIFactory::GetConsts()->contexts[nContext]->nMouseMaxOffsetToAppear )
+		timeMouseFreese = 0;
+
+	vLastMousePos = vPos;
 }
 
 void CTooltips::HideTooltip()
@@ -125,15 +125,15 @@ void CTooltips::HideTooltip()
 
 void CTooltips::SetTooltipContext( const int _nContext, class CWindowScreen *pScreen )
 {
-	if ( !CUIFactory::GetConsts() ) 
+	if ( !CUIFactory::GetConsts() )
 		return;
 	nContext = _nContext;
-	if ( CUIFactory::GetConsts()->contexts[nContext] == 0 ) 
+	if ( CUIFactory::GetConsts()->contexts[nContext] == 0 )
 		return;
 
 	if ( CUIFactory::GetConsts()->contexts[nContext]->pWindow == 0 )
 		return;
-	
+
 	NI_ASSERT( CUIFactory::GetConsts()->contexts.size() > nContext, "no such context" );
 }
 

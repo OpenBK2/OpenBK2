@@ -23,7 +23,7 @@ class CFenceDesignTool
 	CVec3 vRayOrigin;		// точка начала куска забора
 	float fRayDir;			// направление куска
 	bool bFitToAIGrid;	// привязывать к сетке
-	int nNumSections;		// текущее число число секций 
+	int nNumSections;		// текущее число число секций
 	float fSectionLen;	// длина одной секции
 
 	CVec3 GetFencePlace( const CVec3 &p );	// ищет центр ближайшего к p тайла (есди bFitToAIGrd == false тогда просто возвращает p)
@@ -33,7 +33,7 @@ public:
 	bool bRay;					// зафиксирована точка начала куска забора или нет
 	CVec3 vLastPos;
 
-	CFenceDesignTool() : bEnabled( false ) {} 
+	CFenceDesignTool() : bEnabled( false ) {}
 	//
 	void SetUp( bool bFitToAIGrd, const NDb::SFenceRPGStats *pStats );
 	void Clear();
@@ -51,7 +51,7 @@ public:
 		CVec3 vPosition;
 		float fDirection;
 	};
-	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode ); 
+	void GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode );
 	///
 };
 
@@ -75,12 +75,12 @@ class CFenceState : public CMapObjectState
 	//
 	// выбранный для постановки забор
 	struct SSelectedFenceInfo
-	{ 
+	{
 		std::string szRPGStatsTypeName;
 		CDBID rpgStatsDBID;
 		const NDb::SFenceRPGStats *pFenceRPGStats;
 		SSelectedFenceInfo() : pFenceRPGStats( 0 ) {}
-	};	
+	};
 	SSelectedFenceInfo selectedFenceInfo;
 	void RefreshSelectedFenceInfo();
 	//

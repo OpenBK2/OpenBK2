@@ -85,7 +85,7 @@ wGameUniqueID(0), eCurrentState( EGS_NOT_IN_GAME )
 
 bool CMPManagerModeLAN::Segment()
 {
-	if ( pLanTester ) 
+	if ( pLanTester )
 	{
 		if ( !pLanTester->IsStarted() )
 		{
@@ -176,7 +176,7 @@ void CMPManagerModeLAN::UpdateGameList()
 bool CMPManagerModeLAN::OnChatMessage( SMPUIChatMessage *pMsg )
 {
 	std::wstring wszFilteredText = InterfaceState()->FilterMPChatText( pMsg->wszText );
-	
+
 	CPtr<CChatPacket> pPacket = new CChatPacket( 0, wszFilteredText, "", 0, true );
 
 	for ( int i = 0; i < slots.size(); ++i )

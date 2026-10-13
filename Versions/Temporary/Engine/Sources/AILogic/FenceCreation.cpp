@@ -30,8 +30,8 @@ float CFenceCreation::GetPrice()
 	return SConsts::FENCE_SEGMENT_RU_PRICE;
 }
 
-CFenceCreation::CFenceCreation( const int nPlayer, const bool bAllowAIModification ) 
-: CLongObjectCreation ( nPlayer, bAllowAIModification ), bCannot( false ), 
+CFenceCreation::CFenceCreation( const int nPlayer, const bool bAllowAIModification )
+: CLongObjectCreation ( nPlayer, bAllowAIModification ), bCannot( false ),
 	bSayAck( false ), bTmpNonCheatPath( false ), line( 0, 0, 0 ), nCurIndex( -1 ), wAngle( 0 )
 {
 }
@@ -137,9 +137,9 @@ bool CFenceCreation::PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool
 	while ( nCurIndex < fenceSegements.size() && fenceSegements[nCurIndex] == 0 )
 	{
 		++nCurIndex;
-	} 
+	}
 
-	if ( fenceSegements.empty() ) 
+	if ( fenceSegements.empty() )
 		return false;
 	return true;
 }
@@ -205,7 +205,7 @@ const int CFenceCreation::GetCurIndex() const
 
 bool CFenceCreation::CanBuildNext() const
 {
-	if ( bCannot || nCurIndex >= fenceSegements.size() || fenceSegements[nCurIndex] == 0 ) 
+	if ( bCannot || nCurIndex >= fenceSegements.size() || fenceSegements[nCurIndex] == 0 )
 		return false;
 
 	SRect r1;

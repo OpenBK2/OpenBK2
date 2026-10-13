@@ -16,7 +16,7 @@ class SYSTEM_EXPORT CFreeIds
 
 	typedef det_map<int, bool> CGivenIDMap;
 	CGivenIDMap givenIDs;
-	
+
 	std::vector<int> nexts;
 	int firstEl = 0;
 public:
@@ -24,7 +24,7 @@ public:
 
 	void Init( const int nElements );
 	void Clear();
-	
+
 	const int Get();
 	void Return( const int id );
 
@@ -35,7 +35,7 @@ public:
 		saver.Add( 3, &firstEl );
 		return 0;
 	}
-	
+
 };
 
 

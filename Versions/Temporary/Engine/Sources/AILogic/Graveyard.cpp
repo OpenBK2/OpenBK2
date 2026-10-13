@@ -29,7 +29,7 @@ extern CDiplomacy theDipl;
 //*                     SKilledUnit                                 *
 //*******************************************************************
 struct SKilledUnit : public CObjectBase
-{ 
+{
 	OBJECT_NOCOPY_METHODS( SKilledUnit );
 public:
 	ZDATA
@@ -135,7 +135,7 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 		pUnit->ForceLockTiles();
 
 	CPtr<SKilledUnit> pKillInfo = new SKilledUnit();
-	
+
 	const SUnitBaseRPGStats *pStats = pUnit->GetStats();
 	const SMechUnitRPGStats* mech = dynamic_cast<const SMechUnitRPGStats*>(pStats);
 	std::vector<const NDb::SAnimB2*> animable_anims;
@@ -148,7 +148,7 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 		pKillInfo->endFogTime = 0;
 
 		int nAABBD = -1;
-		
+
 		if (pStats->animdescs.size() > NDb::ANIMATION_DEATH_FATALITY && pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims.size() > nFatality)
 			nAABBD = pStats->animdescs[NDb::ANIMATION_DEATH_FATALITY].anims[nFatality].nAABB_D;
 
@@ -187,7 +187,7 @@ void CGraveyard::AddKilledUnit( CAIUnit *pUnit, const NTimer::STime &timeOfVisDe
 				return;	// fatal error
 
 			animable_anims = GetVisObjAnimsFromModel(mech->pAnimableModel, NDb::EAnimationType::ANIMATION_DEATH_FATALITY);
-			
+
 			if (animable_anims.size() < nFatality)
 				return;
 
@@ -266,7 +266,7 @@ void CGraveyard::CheckSoonBeDead()
 	soonToDie.reserve(16);
 	for ( UpdateObjSet::iterator iter = soonBeDead.begin(); iter != soonBeDead.end(); ++iter )
 		soonToDie.push_back(iter->second);
-	
+
 	std::sort(soonToDie.begin(), soonToDie.end(), [](std::pair<CObj<CAIUnit>, float> u1, std::pair<CObj<CAIUnit>, float> u2)
 	{
 		return u1.first->GetUniqueId() > u2.first->GetUniqueID();
@@ -283,7 +283,7 @@ void CGraveyard::CheckSoonBeDead()
 			const int nFatality = pUnit->ChooseFatality( fDamage, &eDeathAnimType );
 			const bool bPutMud = !GetTerrain()->IsBridge( pUnit->GetCenterTile() );
 			//pUnit->CalcVisibility( true );
-			
+
 			if ( !pUnit->IsInSolidPlace() )
 			{
 				updater.AddUpdate( 0, ACTION_NOTIFY_DEAD_UNIT, new CDeadUnit( pUnit, curTime, pUnit->GetDieAction(), nFatality, bPutMud, eDeathAnimType ), -1 );
@@ -370,9 +370,9 @@ bool CDeadUnit::ShouldSuspendAction( const EActionNotify &eAction ) const
 
 	return
 		( (
-				eAction == ACTION_NOTIFY_DEAD_UNIT && curTime != 0 && 
+				eAction == ACTION_NOTIFY_DEAD_UNIT && curTime != 0 &&
 				!theGraveyard.IsDiedVisible( pDieObj->GetUniqueID() )
-			) || 
+			) ||
 			eAction == ACTION_NOTIFY_GET_DEAD_UNITS_UPDATE ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ );
 }
@@ -395,7 +395,7 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 	{
 		if ( nFatality == -1 )
 			nFatality =	uint16_t( -1 );
-		
+
 		pDyingInfo->nParam = nFatality;
 	}
 
@@ -406,9 +406,9 @@ void CDeadUnit::GetDyingInfo( SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDi
 		*pbVisibleWhenDie = bVisibleWhenDie;
 }
 
-CUpdatableObj* CDeadUnit::GetDieObject() const 
-{ 
-	return pDieObj; 
+CUpdatableObj* CDeadUnit::GetDieObject() const
+{
+	return pDieObj;
 }
 
 bool CGraveyard::IsDiedVisible( int nUniqueID )

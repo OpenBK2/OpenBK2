@@ -43,7 +43,7 @@ int CDebugInfoManager::CreateSegment( const int nID, const CSegment &segment, co
 
 void CDebugInfoManager::DeleteObject( const int nID )
 {
-	if ( nID > 0 ) 
+	if ( nID > 0 )
 		PushUpdate( new NDebugInfo::SDebugInfoDeleteObject( nID ) );
 }
 
@@ -97,7 +97,7 @@ int CDebugInfoManager::DrawRect( const int nID, const SRect &rect, const float f
 
 void CDebugInfoManager::RemoveLine( const int nID )
 {
-	if ( nID > 0 ) 
+	if ( nID > 0 )
 		PushUpdate( new NDebugInfo::SDebugInfoDeleteLine( nID ) );
 }
 
@@ -127,7 +127,7 @@ void CDebugInfoManager::ShowAxes( const bool bShow )
 
 NDebugInfo::EColor CDebugInfoManager::GetCycleColor()
 {
-	switch( currentColor ) 
+	switch( currentColor )
 	{
 	case NDebugInfo::RED:
 		currentColor = NDebugInfo::GREEN;

@@ -34,7 +34,7 @@ struct SVectorStripeObjectDesc
 		TYPE_ROAD			= 2,
 		TYPE_RAILROAD	= 3,
 	};
-	
+
 	//----------------------------------------------------------------------------------------------------
 	struct SLayer
 	{
@@ -50,11 +50,11 @@ struct SVectorStripeObjectDesc
 
 		SLayer()
 			: opacityCenter( 0xff ), opacityBorder( 0x80 ), fStreamSpeed( 0.1f ), fTextureStep( 0.1f ),	fDisturbance( 0.3f ), fRelWidth( 1 ), nNumCells( 4 ), bAnimated( false ) {}
-		
+
 		int operator&( IXmlSaver &saver );
 		int operator&( IBinSaver &saver );
 	};
-	
+
 	//----------------------------------------------------------------------------------------------------
 	int eType = 0;														// type
 	int nPriority = 0;												// priority
@@ -62,14 +62,14 @@ struct SVectorStripeObjectDesc
 	uint32_t dwAIClasses = 0;										// AI классы, которые не могут ходить по этой дороге
 
 	enum ESoilParams
-	{ 
+	{
 		ESP_TRACE = 0x01,
 		ESP_DUST	= 0x10,
 		ESP_RAIL	= 0x20,
 		ESP_SPLASH = 0x40,
 	};
 	uint8_t cSoilParams = 0;											// параметры почвы - следы, пыль и т.д.
-	
+
 	//----------------------------------------------------------------------------------------------------
 	// layers
 	SLayer bottom;												// bottom central layer
@@ -77,16 +77,16 @@ struct SVectorStripeObjectDesc
 	std::vector<SLayer> layers;						// additional layers
 	NImage::SColor miniMapCenterColor;						// цвет обьекта на минимапе ( центральная часть )
 	NImage::SColor miniMapBorderColor;						// цвет обьекта на минимапе ( край )
-	
+
 	//----------------------------------------------------------------------------------------------------
 	// ambient sound
 	std::string szAmbientSound;
-	
+
 	//----------------------------------------------------------------------------------------------------
-	SVectorStripeObjectDesc() 
+	SVectorStripeObjectDesc()
 		: eType( TYPE_UNKNOUN ), nPriority( 0 ), miniMapCenterColor( 0x00000000 ), miniMapBorderColor( 0x00000000 ),
 			fPassability( 1.0f ), dwAIClasses( 0 ), cSoilParams( 0 ) { }
-	
+
 	//----------------------------------------------------------------------------------------------------
 	virtual int operator&( IXmlSaver &saver );
 	virtual int operator&( IBinSaver &saver );

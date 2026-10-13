@@ -15,7 +15,7 @@ namespace NDb
 	bool IsAviation( EUnitRPGType type ) { return (type & RPG_TYPE_AVIATION) != 0; }
 	bool IsTrain( EUnitRPGType type ) { return (type & RPG_TYPE_TRAIN) != 0; }
 
-	
+
 	enum EUnitRPGType ReMapRPGType( enum EDBUnitRPGType eType )
 	{
 		switch( eType )
@@ -65,7 +65,7 @@ namespace NDb
 	};
 	const EUnitRPGClass GetRPGClass( const EUnitRPGType eType )
 	{
-		switch ( eType ) 
+		switch ( eType )
 		{
 		case RPG_TYPE_ART_GUN:
 		case RPG_TYPE_ART_AAGUN:

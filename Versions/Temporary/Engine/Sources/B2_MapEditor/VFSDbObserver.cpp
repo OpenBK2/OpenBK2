@@ -13,7 +13,7 @@ class CVFSDbObserver : public IDbObserver
 	CObjectsList objects2remove;
 public:
 	void ObjectChanged( const CDBID &dbid ) {}
-	void ObjectAdded( const CDBID &dbid ) 
+	void ObjectAdded( const CDBID &dbid )
 	{
 		// remove from 'objects2remove' newly added object
 		for ( CObjectsList::iterator it = objects2remove.begin(); it != objects2remove.end(); ++it )

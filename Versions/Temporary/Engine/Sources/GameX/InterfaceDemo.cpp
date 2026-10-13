@@ -59,33 +59,33 @@ int CInterfaceDemo::Check( const std::string &szCheckName ) const
 void CInterfaceDemo::MakeInterior()
 {
 	pMain = GetChildChecked<IWindow>( GetScreen(), "Main", true );
-	
+
 	LoadSequence();
-	
+
 	pPictureTexture = new CBackgroundMutableTexture();
 	if ( pMain )
 		pMain->SetBackground( pPictureTexture );
-		
+
 	NextPicture();
 }
 
 bool CInterfaceDemo::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( bAppActive && !bFinished )
 	{
 		NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 		if ( timeAbs != 0 )
 		{
 			fDelay -= (float)(timeAbsCur - timeAbs) * 0.001f;
-			
+
 			if ( fDelay <= 0.0f )
 				NextPicture();
 		}
 		timeAbs = timeAbsCur;
 	}
-	
+
 	return bResult;
 }
 
@@ -114,7 +114,7 @@ bool CInterfaceDemo::LoadImage( const std::string &szFileName )
 
 void CInterfaceDemo::NextPicture()
 {
-	while ( nNextPicture < frames.size() ) 
+	while ( nNextPicture < frames.size() )
 	{
 		SFrame &frame = frames[nNextPicture];
 		nNextPicture++;

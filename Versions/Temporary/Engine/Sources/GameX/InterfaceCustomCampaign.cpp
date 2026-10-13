@@ -23,7 +23,7 @@ public:
 	ZDATA
 	std::wstring wszText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&wszText); return 0; }
-	
+
 	CDifficultyData() {}
 	CDifficultyData( const std::wstring &_wszText ) { wszText = _wszText; }
 };
@@ -41,16 +41,16 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
-	
+
 	CDynamicCast<ITextView> pView = pItem->GetSubItem( 0 );
 	NI_VERIFY( pView, "Wrong window", return );
-	
+
 	std::wstring wszText;
 	if ( pData )
 	{
 		CDynamicCast<CDifficultyData> pText = pData;
 		NI_VERIFY( pText, "Wrong data", return );
-		
+
 		wszText = pText->wszText;
 	}
 	pView->SetText( pView->GetDBText() + wszText );
@@ -60,7 +60,7 @@ void CDifficultyTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBas
 
 // CInterfaceCustomCampaign
 
-CInterfaceCustomCampaign::CInterfaceCustomCampaign() : 
+CInterfaceCustomCampaign::CInterfaceCustomCampaign() :
 	CInterfaceScreenBase( "CustomCampaign", "custom_campaign" )
 {
 }
@@ -71,7 +71,7 @@ bool CInterfaceCustomCampaign::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -88,19 +88,19 @@ void CInterfaceCustomCampaign::MakeInterior()
 
 	pCampaignsListCont = GetChildChecked<IScrollableContainer>( pCampaignsListPanel, "CampaignsListCont", true );
 	pCampaignsListItemTemplate = GetChildChecked<IWindow>( pCampaignsListPanel, "CampaignsListItem", true );
-	
+
 	if ( pCampaignsListItemTemplate )
 		pCampaignsListItemTemplate->ShowWindow( false );
 
 	pCampaignDescCont = GetChildChecked<IScrollableContainer>( pCampaignDescPanel, "CampaignDescCont", true );
 	pCampaignDescView = GetChildChecked<ITextView>( pCampaignDescPanel, "CampaignDescItemView", true );
-	
+
 	if ( pCampaignDescCont )
 	{
 		if ( pCampaignDescView )
 			pCampaignDescCont->PushBack( pCampaignDescView, false );
 	}
-	
+
 	pDifficultyComboBox = GetChildChecked<IComboBox>( pBottomPanel, "Difficulty", true );
 	pPlayBtn = GetChildChecked<IButton>( pBottomPanel, "PlayBtn", true );
 
@@ -115,7 +115,7 @@ void CInterfaceCustomCampaign::MakeInterior()
 
 		AddCampaign( pCampaign );
 	}
-	
+
 	IWindow *pFirstLineWnd = 0;
 	if ( !campaigns.empty() )
 		pFirstLineWnd = campaigns.front().pWnd;
@@ -138,7 +138,7 @@ void CInterfaceCustomCampaign::AddCampaign( const NDb::SCampaign *pCampaignDB )
 	campaign.pWnd = AddWindowCopy( pCampaignsListCont, pCampaignsListItemTemplate );
 	campaign.pFlagWnd = GetChildChecked<IWindow>( campaign.pWnd, "Flag", true );
 	campaign.pNameView = GetChildChecked<ITextView>( campaign.pWnd, "Name", true );
-	
+
 	const NDb::STexture *pFlag = pCampaignDB->pTextureMenuIcon;
 
 	if ( CHECK_TEXT_NOT_EMPTY_PRE(pCampaignDB->,LocalizedName) )
@@ -150,7 +150,7 @@ void CInterfaceCustomCampaign::AddCampaign( const NDb::SCampaign *pCampaignDB )
 		campaign.pFlagWnd->SetTexture( pFlag );
 	if ( campaign.pNameView )
 		campaign.pNameView->SetText( campaign.pNameView->GetDBText() + campaign.wszName );
-	
+
 	if ( campaign.pWnd )
 		campaign.pWnd->ShowWindow( true );
 	if ( pCampaignsListCont )
@@ -166,14 +166,14 @@ const CInterfaceCustomCampaign::SCampaign* CInterfaceCustomCampaign::FindSelecte
 		pSelectedWnd = pCampaignsListCont->GetSelectedItem();
 	if ( !pSelectedWnd )
 		return 0;
-		
+
 	for ( int i = 0; i < campaigns.size(); ++i )
 	{
 		const SCampaign &campaign = campaigns[i];
 		if ( campaign.pWnd == pSelectedWnd )
 			return &campaign;
 	}
-	
+
 	return 0;
 }
 
@@ -216,7 +216,7 @@ bool CInterfaceCustomCampaign::OnPlay()
 bool CInterfaceCustomCampaign::OnSelect()
 {
 	UpdateSelection( false );
-	
+
 	return true;
 }
 
@@ -245,7 +245,7 @@ void CInterfaceCustomCampaign::CampaignStart( const NDb::SCampaign *pCampaignDB 
 void CInterfaceCustomCampaign::UpdateSelection( bool bFirstTime )
 {
 	const SCampaign *pCampaign = FindSelected();
-		
+
 	if ( !pCampaign || !pCampaign->pWnd )
 	{
 		if ( pCampaignDescCont )
@@ -255,10 +255,10 @@ void CInterfaceCustomCampaign::UpdateSelection( bool bFirstTime )
 			pPlayBtn->Enable( false );
 		if ( pDifficultyComboBox )
 			pDifficultyComboBox->ShowWindow( false );
-			
+
 		return;
 	}
-	
+
 	if ( pCampaignDescView )
 		pCampaignDescView->SetText( pCampaignDescView->GetDBText() + pCampaign->wszDesc );
 
@@ -270,7 +270,7 @@ void CInterfaceCustomCampaign::UpdateSelection( bool bFirstTime )
 
 	if ( pPlayBtn )
 		pPlayBtn->Enable( true );
-		
+
 	UpdateDifficulty( pCampaign, bFirstTime );
 }
 
@@ -278,7 +278,7 @@ void CInterfaceCustomCampaign::UpdateDifficulty( const SCampaign *pCampaign, boo
 {
 	if ( !pDifficultyComboBox )
 		return;
-		
+
 	const int nOldDifficulty = bFirstTime ? CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY : pDifficultyComboBox->GetSelectedIndex();
 	pDifficultyComboBox->RemoveAllItems();
 
@@ -287,10 +287,10 @@ void CInterfaceCustomCampaign::UpdateDifficulty( const SCampaign *pCampaign, boo
 		pDifficultyComboBox->ShowWindow( false );
 		return;
 	}
-	
+
 	const std::vector< CDBPtr< NDb::SDifficultyLevel > > &difficultyLevels = pCampaign->pCampaignDB->difficultyLevels;
 
-	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty : 
+	const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < difficultyLevels.size() ) ? nOldDifficulty :
 		(std::max)( 0, (std::min)( CUSTOM_CAMPAIGN_DEFAULT_DIFFICULTY, (int)( difficultyLevels.size() ) - 1 ) );
 
 	pDifficultyComboBox->ShowWindow( true );
@@ -303,7 +303,7 @@ void CInterfaceCustomCampaign::UpdateDifficulty( const SCampaign *pCampaign, boo
 		else
 			pDifficultyComboBox->AddItem( new CDifficultyData( L"******" ) );
 	}
-	
+
 	pDifficultyComboBox->Select( nNewDifficulty );
 }
 

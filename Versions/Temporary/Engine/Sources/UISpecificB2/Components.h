@@ -22,13 +22,13 @@ private:
 	bool ClampAngles( float *pStart, float *pFinish, float fMin, float fMax );
 public:
 	CTextureRoundSegmentVisitor();
-	
+
 	void SetTexture( const NDb::STexture *pTexture );
 	void SetColor( uint32_t dwColor );
 	void SetPlacement( const CTRect<float> &rect );
 	// draw only: fStartAngle <= fFinishAngle
 	void SetAngles( float fStartAngle, float fFinishAngle );
-	
+
 	void Visit( struct IUIVisitor *pVisitor );
 };
 

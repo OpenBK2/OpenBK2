@@ -17,7 +17,7 @@ namespace NDb
 	struct SMechUnitRPGStats;
 	enum EManuverID : int;
 }
-class CPlanePreferences 
+class CPlanePreferences
 {
 	ZDATA
 	CDBPtr<SMechUnitRPGStats> pStats;

@@ -19,7 +19,7 @@ struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPla
 	const CVec3 vPos( pPos->GetPosB2() );
 	const float fMinPathLength = 2.0f * pref.GetR( pref.GetMaxSpeed() ) ;
 	const CVec2 vDir( GetVectorByDirection( GetAngle( nAttacker ) ) );
-	
+
 	const float fDiveAngle = pref.GetDivingAngle() * 2.0f * PI / 65535;
 	float fStartAttackDist = fMinPathLength;
 	if ( fDiveAngle != 0.0f )
@@ -34,7 +34,7 @@ struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPla
 	{
 		vAttackPos.x += vDir.x * fMinPathLength;
 		vAttackPos.y += vDir.y * fMinPathLength;
-	}	
+	}
 	Normalize( &vDirection );
 	CManuverPrepareGroundAttack * pManuver = new CManuverPrepareGroundAttack;
 	pManuver->Init( pPos, vAttackPos, vDirection );
@@ -50,7 +50,7 @@ struct IManuver* CManuverBuilder::SGRoundAttackTarget::CreateManuver( class CPla
 void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 {
 	pConsts = _pConsts;
-	
+
 	const int nDescs = pConsts->planeManuvers.size();
 	suitableIndeces.reserve( nDescs );
 	for ( int i = 0; i < pConsts->planeManuvers.size(); ++i )
@@ -60,13 +60,13 @@ void CManuverBuilder::Init( const NDb::SAIGameConsts *_pConsts )
 const SManuverDescriptor *CManuverBuilder::Choose( const CManuverStateDesc &current, const CPlanePreferences &pref ) const
 {
 	CManuvers::const_iterator manuverPos = manuvers.find( current.GetAtt() );
-	
+
 	suitableIndeces.clear();
-	
+
 	if ( manuverPos != manuvers.end() )
 	{
 		const CManuverIndices &indices = manuverPos->second;
-		
+
 		for ( CManuverIndices::const_iterator it = indices.begin(); it != indices.end(); ++it )
 		{
 			const NDb::SManuverDescriptor *pDesc = pConsts->planeManuvers[*it];
@@ -112,9 +112,9 @@ CVec3 CManuverBuilder::CalcAttackerPoint( class CPlanesFormation *pAttacker, cla
 	const CVec3 vPoint( CManuver::CalcPredictedPoint( pAttacker, pEnemy ) );
 	CVec3 vSpeed( CManuver::CalcPredictedSpeed( pAttacker, pEnemy ) );
 	Normalize( &vSpeed );
-	
+
 	int nAttackerIndex = RegisterAsAttacker( pAttacker, pEnemy );
-	
+
 	const CVec3 vOffset( attacks[pEnemy->GetFormationID()][nAttackerIndex].second );
 	const CVec2 vSpeed2( vSpeed.x, vSpeed.y );
 	CVec2 vOffset2( -vOffset.y, vOffset.x );
@@ -172,7 +172,7 @@ struct IManuver* CManuverBuilder::CreatePointManuver ( class CPlanesFormation *p
 }
 
 EPlanesAttitude CManuverBuilder::GetAttitude( class CPlanesFormation *pPlane, class CPlanesFormation *pEnemy ) const
-{ 
+{
 	if ( pPlane->IsBeingAttackedB2()  )
 		return EPA_RETREAT;
 	return EPA_ATTACK;
@@ -183,7 +183,7 @@ struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, 
 	//return CreateDefaultManuver( att, pPos, pEnemy );
 	// create maneuver to attack ground unit
 	const int nFormationID = pPos->GetFormationID();
-	
+
 	SGRoundAttackTarget &target = groundAttacks[nTargetUniqueID];
 
 	while( true )

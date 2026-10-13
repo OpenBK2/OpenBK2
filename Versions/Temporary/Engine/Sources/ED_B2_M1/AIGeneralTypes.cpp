@@ -5,7 +5,7 @@
 
 #include <zconf.h>
 
-CAIGeneralParcelTypeMnemonics::CAIGeneralParcelTypeMnemonics() : 
+CAIGeneralParcelTypeMnemonics::CAIGeneralParcelTypeMnemonics() :
 CMnemonicsCollector<int>(NDb::EPATCH_UNKNOWN, "EPATCH_UNKNOWN" )
 {
 	Insert( NDb::EPATCH_UNKNOWN, "EPATCH_UNKNOWN" );

@@ -31,16 +31,16 @@ void UpdateARGBColorFromBGRColor( uint32_t color, TColor *pColor )
 
 template<class TColor>
 void MakeBGRColor( uint32_t *pnColor, TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	( *pnColor ) = ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	( *pnColor ) = ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) +
+								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 								 ( ( nRed & 0xFF ) & 0x000000FF );
 }
 template<class TColor>
 uint32_t MakeBGRColor( TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	return ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	return ( ( ( nBlue & 0xFF ) << 16 ) & 0x00FF0000 ) +
+				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 				 ( ( nRed & 0xFF ) & 0x000000FF );
 }
 
@@ -85,18 +85,18 @@ void GetVec4FromBGRColor( CVec4 *pvColor, TColor nColor )
 
 template<class TColor>
 void MakeARGBColor( TColor *pnColor, TColor nAlpha, TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	( *pnColor ) = ( ( ( nAlpha & 0xFF ) << 24 ) & 0xFF000000 ) + 
-								 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	( *pnColor ) = ( ( ( nAlpha & 0xFF ) << 24 ) & 0xFF000000 ) +
+								 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) +
+								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 								 ( ( nBlue & 0xFF ) & 0x000000FF );
 }
 template<class TColor>
 void UpdateColorARGBColor( TColor *pnColor, TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	( *pnColor ) = ( ( *pnColor ) & 0xFF000000 ) + 
-								 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	( *pnColor ) = ( ( *pnColor ) & 0xFF000000 ) +
+								 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) +
+								 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 								 ( ( nBlue & 0xFF ) & 0x000000FF );
 }
 template<class TColor>
@@ -111,18 +111,18 @@ void UpdateBlueARGBColor( TColor *pnColor, TColor nBlue ) { ( *pnColor ) = ( ( n
 
 template<class TColor>
 TColor MakeARGBColor( TColor nAlpha, TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	return ( ( ( nAlpha & 0xFF ) << 24 ) & 0xFF000000 ) + 
-				 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	return ( ( ( nAlpha & 0xFF ) << 24 ) & 0xFF000000 ) +
+				 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) +
+				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 				 ( ( nBlue & 0xFF ) & 0x000000FF );
 }
 template<class TColor>
 TColor UpdateColorARGBColor( TColor nColor, TColor nRed, TColor nGreen, TColor nBlue )
-{ 
-	return ( nColor & 0xFF000000 ) + 
-				 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) + 
-				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) + 
+{
+	return ( nColor & 0xFF000000 ) +
+				 ( ( ( nRed & 0xFF ) << 16 ) & 0x00FF0000 ) +
+				 ( ( ( nGreen & 0xFF ) << 8 ) & 0x0000FF00 ) +
 				 ( ( nBlue & 0xFF ) & 0x000000FF );
 }
 template<class TColor>

@@ -63,7 +63,7 @@ void CBridgeState::InsertObjectDraw( IPaintContext *pPaintDC )
 	{
 		const int nBridgeElementCount = bridgeElementCenterPointList.size();
 		int nBridgeElementIndex = 0;
-		float fDirection = GetPolarAngle( vDirection ); 
+		float fDirection = GetPolarAngle( vDirection );
 		for ( NMapInfoEditor::CBridgeCenterPointList::const_iterator itBridgeElementCenterPoint = bridgeElementCenterPointList.begin(); itBridgeElementCenterPoint != bridgeElementCenterPointList.end(); ++itBridgeElementCenterPoint )
 		{
 			CVec2 vHalfSize = VNULL2;
@@ -253,7 +253,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		pEditParameters->nFlags = MIMOSEP_PLAYER_INDEX;
 		GetEditParameters( pEditParameters, CHID_MAPINFO_MAPOBJECT_WINDOW );
 		//
-		// получаем размер 
+		// получаем размер
 		if ( objectSet.szObjectTypeName.empty() )
 		{
 			if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
@@ -292,7 +292,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		//
 		const NDb::SBridgeRPGStats *pBridgeRPGStats = 0;
 		pBridgeRPGStats = dynamic_cast<const NDb::SBridgeRPGStats*>( NDb::GetObject( objectSet.objectNameSet.begin()->first ) );
-		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) ); 
+		NI_ASSERT( pBridgeRPGStats != 0, fmt::format( "{} not NDb::SBridgeRPGStats type", objectSet.szObjectTypeName.c_str() ) );
 		//
 		if ( bPlace )
 		{
@@ -370,7 +370,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 							pUpdate->info.nExpLevel = 0;
 							//
 							GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-						}		
+						}
 						sceneIDlist.push_back( nSceneID );
 					}
 					pScene->SetFadedObjects( sceneIDlist, NMapInfoEditor::SCENE_FADE_COEFFICIENT );
@@ -413,7 +413,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 							pUpdate->info.nExpLevel = 0;
 							//
 							GetMapInfoEditor()->objectInfoCollector.pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-						}		
+						}
 						sceneIDlist.push_back( nSceneID );
 						newSceneIDList.push_back( nSceneID );
 					}
@@ -437,7 +437,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 					}
 				}
 				// ставим повое изображение моста
-				const float fInDirectionAngle = GetPolarAngle( vDirection ); 
+				const float fInDirectionAngle = GetPolarAngle( vDirection );
 				int nBridgeElementSceneID = INVALID_NODE_ID;
 				//
 				NMapInfoEditor::CSceneIDList::const_iterator itStartTerminator = sceneIDlist.begin();
@@ -495,7 +495,7 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 }
 
 
-// basement storage  
+// basement storage
 
 /**
 			// Поднимаем землю под мостом

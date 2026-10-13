@@ -48,7 +48,7 @@ void CFenceState::InsertFence()
 			return;
 		}
 		std::vector<CFenceDesignTool::SFenceSectionInfo> segInfo;
-		designTool.GetSectionsInfo( &segInfo, selectedFenceInfo.pFenceRPGStats->ePlacementType ); 
+		designTool.GetSectionsInfo( &segInfo, selectedFenceInfo.pFenceRPGStats->ePlacementType );
 		if ( segInfo.empty() )
 		{
 			return;
@@ -102,7 +102,7 @@ bool CFenceState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		return true;
 	}
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 	case ID_TOOLS_FIT_TO_GRID:
 		{ // изменена настройка редактора FitToAIGrid
@@ -131,7 +131,7 @@ bool CFenceState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 		return true;
 	}
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 	case ID_TOOLS_FIT_TO_GRID:
 		( *pbEnable ) = true;
@@ -152,7 +152,7 @@ void CFenceState::RefreshSelectedFenceInfo()
 	if ( Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_OBJECTSET, reinterpret_cast<uintptr_t>( &objectSet ) ) && ( !objectSet.objectNameSet.empty() ) )
 	{
 		bool bRes = ( objectSet.szObjectTypeName == "FenceRPGStats" ) && ( !objectSet.objectNameSet.empty() );
-		if ( !bRes ) 
+		if ( !bRes )
 		{
 			return;
 		}
@@ -281,7 +281,7 @@ bool CFenceState::InsertObjectMouseMove( unsigned nFlags, const CVec3 &rTerrainP
 		{
 			return false;
 		}
-		designTool.ProcessMovePoint( rTerrainPos ); 
+		designTool.ProcessMovePoint( rTerrainPos );
 		FillScene( nFlags, rTerrainPos );
 	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
@@ -293,7 +293,7 @@ bool CFenceState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrai
 {
 	if ( !designTool.bRay )
 	{
-		designTool.ProcessLClickPoint( rTerrainPos ); 
+		designTool.ProcessLClickPoint( rTerrainPos );
 		designTool.ProcessMovePoint( rTerrainPos );
 		FillScene( nFlags, rTerrainPos );
 	}
@@ -308,7 +308,7 @@ bool CFenceState::InsertObjectLButtonDown( unsigned nFlags, const CVec3 &rTerrai
 		RefreshSelectedFenceInfo();
 		designTool.SetUp( GetMapInfoEditor()->editorSettings.bFitToGrid, selectedFenceInfo.pFenceRPGStats );
 		//
-		designTool.ProcessLClickPoint( vLastPos ); 
+		designTool.ProcessLClickPoint( vLastPos );
 		designTool.ProcessMovePoint( vLastPos );
 		FillScene( nFlags, rTerrainPos );
 	}
@@ -370,7 +370,7 @@ bool CFenceState::InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CV
 				RefreshSelectedFenceInfo();
 				designTool.SetUp( GetMapInfoEditor()->editorSettings.bFitToGrid, selectedFenceInfo.pFenceRPGStats );
 				//
-				designTool.ProcessLClickPoint( vLastPos ); 
+				designTool.ProcessLClickPoint( vLastPos );
 				designTool.ProcessMovePoint( vLastPos );
 				FillScene( nFlags, rTerrainPos );
 			}
@@ -568,7 +568,7 @@ void CFenceDesignTool::Complete()
 	{
 		nNumSections = 1; // одиночный кусок забора
 	}
-	bComplete = true;		
+	bComplete = true;
 }
 
 bool CFenceDesignTool::IsComplete()
@@ -580,7 +580,7 @@ bool CFenceDesignTool::IsComplete()
 }
 
 
-void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo, 
+void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSectionInfo,
 																			  NDb::SFenceRPGStats::EFencePlacementMode ePlacementMode )
 {
 	if ( ( !bEnabled ) || ( !bRay ) )
@@ -603,7 +603,7 @@ void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSection
 		SFenceSectionInfo segInfo;
 		// fRayDir - угол отсчитывается против часовой стрелки от оси OX
 		// fDirection - AI угол - нужно отсчитывать от OY
-		segInfo.fDirection = fRayDir - FP_PI2; 
+		segInfo.fDirection = fRayDir - FP_PI2;
 		//
 		if ( ePlacementMode == NDb::SFenceRPGStats::FENCE_PLACE_STAGGERED )
 		{

@@ -3,7 +3,7 @@
 #include "AIUpdates.h"
 #include "DBMapInfo.h"
 
-struct SAIReinfPointUpdate : public SAIBasicUpdate 
+struct SAIReinfPointUpdate : public SAIBasicUpdate
 {
 private:
 	OBJECT_BASIC_METHODS( SAIReinfPointUpdate )
@@ -20,7 +20,7 @@ public:
 	SAIReinfPointUpdate() : bEnable( false ) {}
 };
 
-struct SAIAvailableReinfUpdate : public SAIBasicUpdate 
+struct SAIAvailableReinfUpdate : public SAIBasicUpdate
 {
 private:
 	OBJECT_BASIC_METHODS( SAIAvailableReinfUpdate )
@@ -34,7 +34,7 @@ public:
 	SAIAvailableReinfUpdate() : bEnabled( false ), nReinforcementCallsLeft( 0 ) {}
 };
 
-struct SAIReinfRecycleUpdate : public SAIBasicUpdate 
+struct SAIReinfRecycleUpdate : public SAIBasicUpdate
 {
 private:
 	OBJECT_BASIC_METHODS( SAIReinfRecycleUpdate )

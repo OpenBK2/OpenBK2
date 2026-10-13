@@ -14,7 +14,7 @@ class CEffectorMoveTo : public IUIEffector
 	float fMoveTime;												// points per second
 	CVec2 vSpeed;														// speed
 	float fElapsedTime;											// time elapsed so far
-	
+
 	CVec2 vMoveFrom;
 	bool bForward;
 

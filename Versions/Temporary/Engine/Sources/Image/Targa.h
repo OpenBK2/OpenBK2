@@ -30,7 +30,7 @@ enum ETGAImageType
 
 #pragma pack( 1 )
 // describe the color map (if any) used for the image
-struct SColorMapSpecification 
+struct SColorMapSpecification
 {
 	uint16_t wFirstEntryIndex;								// Index of the first color map entry. Index refers to the starting entry in loading the color map.
 	uint16_t wColorMapLength;									// Total number of color map entries included
@@ -61,7 +61,7 @@ struct STGAFileHeader
 	uint8_t cColorMapType;										// indicates the type of color map (if any) included with the image
 	uint8_t cImageType;											// TGA File Format can be used to store Pseudo-Color, True-Color and Direct-Color images of various pixel depths
 	SColorMapSpecification colormap;      //
-	SImageSpecification imagespec;				// 
+	SImageSpecification imagespec;				//
 };
 struct STGAFileFooter
 {
@@ -103,7 +103,7 @@ public:
 	static bool Load( TOutColor *pColors, const STGAFileHeader &hdr, CDataStream *pStream )
 	{
 		TConvertor convertor( hdr.colormap.wColorMapLength, hdr.colormap.cColorMapEntrySize, pStream );
-		if ( !convertor.IsReady() ) 
+		if ( !convertor.IsReady() )
 			return false;
 		// second condition (!= 1) are to avoid pallettized image loading w/o conversion
 		const int nColorsEqual = sizeof( TInColor ) == sizeof( TOutColor ) && sizeof( TInColor ) != 1;
@@ -146,7 +146,7 @@ public:
 	static bool Load( TOutColor *pColors, const STGAFileHeader &hdr, CDataStream *pStream )
 	{
 		TConvertor convertor( hdr.colormap.wColorMapLength, hdr.colormap.cColorMapEntrySize, pStream );
-		if ( !convertor.IsReady() ) 
+		if ( !convertor.IsReady() )
 			return false;
 		const int nColorsEqual = sizeof( TInColor ) == sizeof( TOutColor );
 		SInt2Type<nColorsEqual> separator;
@@ -248,7 +248,7 @@ bool LoadTGAImage( CArray2D<TOutColor> &dst, CDataStream *pStream )
 	if ( !pStream->IsOk() || hdr.imagespec.wImageWidth == 0 || hdr.imagespec.wImageHeight == 0 )
 		return false;
 	dst.SetSizes( hdr.imagespec.wImageWidth, hdr.imagespec.wImageHeight );
-	if ( LoadTGAImageData(&(dst[0][0]), hdr, pStream) == false ) 
+	if ( LoadTGAImageData(&(dst[0][0]), hdr, pStream) == false )
 		return false;
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 		FlipY( dst );
@@ -262,9 +262,9 @@ int LoadTGAImageAppendY( CArray2D<TOutColor> &dst, const int nY, CDataStream *pS
 	STGAFileHeader hdr;
 	LoadTGAHeader( &hdr, pStream );
 	NI_ASSERT( (dst.GetSizeX() == int(hdr.imagespec.wImageWidth)) && (dst.GetSizeY() > nY + int(hdr.imagespec.wImageHeight)), "Image too small to append" );
-	if ( (dst.GetSizeX() != int(hdr.imagespec.wImageWidth)) || (dst.GetSizeY() <= nY + int(hdr.imagespec.wImageHeight)) ) 
+	if ( (dst.GetSizeX() != int(hdr.imagespec.wImageWidth)) || (dst.GetSizeY() <= nY + int(hdr.imagespec.wImageHeight)) )
 		return nY;
-	if ( LoadTGAImageData(&(dst[nY][0]), hdr, pStream) == false ) 
+	if ( LoadTGAImageData(&(dst[nY][0]), hdr, pStream) == false )
 		return nY;
 	if ( hdr.imagespec.descriptor.cTopToBottomOrder == 0 )
 		FlipY( dst, nY, nY + int(hdr.imagespec.wImageHeight) - 1 );
@@ -284,18 +284,18 @@ inline void __fill_tga_header( STGAFileHeader *pHdr )
 {
 	NI_ASSERT( false, "Unknwon format" );
 }
-template <> 
+template <>
 inline void __fill_tga_header<uint32_t>( STGAFileHeader *pHdr )
 {
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 	pHdr->imagespec.descriptor.cAlphaChannelBits = 8;
 }
-template <> 
+template <>
 inline void __fill_tga_header<SColor24>( STGAFileHeader *pHdr )
 {
 	pHdr->cImageType = TGAIT_TRUE_COLOR;
 }
-template <> 
+template <>
 inline void __fill_tga_header<uint8_t>( STGAFileHeader *pHdr )
 {
 	pHdr->cImageType = TGAIT_BLACK_WHITE;

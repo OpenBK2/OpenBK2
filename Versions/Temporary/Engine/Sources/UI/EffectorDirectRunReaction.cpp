@@ -3,13 +3,13 @@
 
 REGISTER_SAVELOAD_CLASS(UI, 0x210C5AC0, CEffectorDirectRunReaction)
 
-bool CEffectorDirectRunReaction::IsFinished() const 
-{ 
-	return bFinished; 
+bool CEffectorDirectRunReaction::IsFinished() const
+{
+	return bFinished;
 }
 
 void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &_szAnimatedWindow )
-{ 
+{
 	szAnimatedWindow = _szAnimatedWindow;
 	const NDb::SUISDirectRunReaction *pCmd( checked_cast<const NDb::SUISDirectRunReaction*>( _pCmd ) );
 	pReactionForward = pCmd->pReactionForward;
@@ -19,7 +19,7 @@ void CEffectorDirectRunReaction::Configure( const NDb::SUIStateBase *_pCmd, stru
 }
 
 const int CEffectorDirectRunReaction::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
-{ 
+{
 	// to do RUN COMMAND cmd.szParam
 	// in messageReaction
 	// this effect is instant

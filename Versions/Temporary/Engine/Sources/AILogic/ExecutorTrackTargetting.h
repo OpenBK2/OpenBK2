@@ -22,7 +22,7 @@ class CExecutorTrackTargetting : public CExecutor
 	SSpecialAbilityInfo						lastSent;
 	CPtr<SAISpecialAbilityUpdate> pUpdate;
 	CPtr<CAIUnit> pUnit;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&timeLastUpdate); f.Add(3,&state); f.Add(4,&lastSent); f.Add(5,&pUpdate); f.Add(6,&pUnit); return 0; }
 private:
 	void UpdateProgress( const SAbilitySwitchState _state, const float fParam );

@@ -46,7 +46,7 @@ namespace NMapInfoEditor
 		bool NeedProcessEditParameters() { return false; }
 		//
 		static const NDb::SModel* GetModel( const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats, NDb::EEntrenchSegmType type, NDb::ESeason eSeason );
-		
+
 		const NDb::SEntrenchmentRPGStats::SEntrenchSegmentRPGStats* GetSegmentInfo( const NDb::SEntrenchmentRPGStats *pEntrenchmentRPGStats, int nFrameIndex );
 
 		bool Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator );
@@ -66,7 +66,7 @@ namespace NMapInfoEditor
 								 bool bUpdateDB, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		bool RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator );
 		virtual void CreateSceneObjects( IEditorScene *pEditorScene, IManipulator *pManipulator, bool bUpdateParentStructure );
-		static bool GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegInfo *pSegInfo, const SObjectInfo *pMOI, 
+		static bool GetEntrenchmentSegInfoByMapObjElement( SEntrenchmentSegInfo *pSegInfo, const SObjectInfo *pMOI,
 		const NDb::SEntrenchmentRPGStats *pEntrenchmentStats, const SMapInfoElement *pElement );
 		bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 	};

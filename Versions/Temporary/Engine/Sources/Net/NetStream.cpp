@@ -50,7 +50,7 @@ void CStreamTracker::WriteMsg( PACKET_ID nPkt, CBitStream *pBits, int nSizeLimit
 			int nMaxSize = nSizeLimit - SChannelBlock::GetHeaderSize();
 			nMaxSize = (std::min)( nMaxSize, N_MAX_STREAM_BLOCK_SIZE );
 			int nSize = (std::min)( nMaxSize, channelOutBuf.GetSize() );
-			
+
 			SChannelBlock &block = channelOutFlyList.emplace_back();
 			block.nOffset = nChannelOutputOffset;
 			block.nLength = nSize;

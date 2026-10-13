@@ -87,10 +87,10 @@ public:
 		int nWaitTime;
 		int fExpStep;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&bExpChanged); f.Add(4,&bRankChanged); f.Add(5,&bLostChanged); f.Add(6,&bKilledChanged); f.Add(7,&fCurExp); f.Add(8,&nCurRank); f.Add(9,&nCurLost); f.Add(10,&nCurKilled); f.Add(11,&nWaitTime); f.Add(12,&fExpStep); return 0; }
-		
+
 		SLastSeen() : eState( ST_NONE ) {}
 	};
-	
+
 	ZDATA
 	std::wstring wszName;
 	CDBPtr<NDb::STexture> pIcon;
@@ -181,7 +181,7 @@ void CInterfaceArmyScreen::CReinfViewer::MakeInterior( CObjectBase *pWindow, con
 		ITextView *pLine01View = GetChildChecked<ITextView>( pWnd, "ReinfNameView", true );
 		ITextView *pAssignedView = GetChildChecked<ITextView>( pWnd, "Assigned", true );
 		ITextView *pUnassignedView = GetChildChecked<ITextView>( pWnd, "Unassigned", true );
-		
+
 		if ( pIcon )
 			pIcon->SetTexture( pData->pTexture );
 		if ( pLine01View )
@@ -218,9 +218,9 @@ bool CInterfaceArmyScreen::Init()
 	AddScreen( this );
 
 	MakeInterior();
-	
+
 	CheckAutoAssign();
-	
+
 	InterfaceState()->SetAutoShowCommanderScreen( false );
 
 	return true;
@@ -239,7 +239,7 @@ void CInterfaceArmyScreen::GetElements()
 		pUndoPromotionsDlg->ShowWindow( false );
 	if ( pUndoAllPromotionsDlg )
 		pUndoAllPromotionsDlg->ShowWindow( false );
-	
+
 	pLeftPanel = GetChildChecked<IWindow>( pMain, "LeftPanel", true );
 	pRightPanel = GetChildChecked<IWindow>( pMain, "RightPanel", true );
 	pTopPanel = GetChildChecked<IWindow>( pMain, "TopPanel", true );
@@ -252,26 +252,26 @@ void CInterfaceArmyScreen::GetElements()
 	pCommanderInfoBlock = GetChildChecked<IWindow>( pLeftPanel, "CommanderInfo", true );
 	pReinfCurrentBlock = GetChildChecked<IWindow>( pLeftPanel, "ReinfCurrent", true );
 	pPictureBlock = GetChildChecked<IWindow>( pLeftPanel, "PictureBlock", true );
-	
+
 	pReinfList = GetChildChecked<IListControl>( pRightPanel, "ArmyList", true );
 
 	pPromoteCommanderView = GetChildChecked<ITextView>( pLeftPanel, "PromoteCommanderView", true );
 	pPromotionsView = GetChildChecked<ITextView>( pLeftPanel, "PromotionsAvailableView", true );
-	
+
 	pPermanentCommanderWnd = GetChildChecked<IWindow>( pPictureBlock, "Permanent", true );
 	pPermanentCommanderIcon = GetChildChecked<IWindow>( pPermanentCommanderWnd, "Icon", true );
 	pSelectCommanderBtn = GetChildChecked<IButton>( pPictureBlock, "SelectCommanderBtn", true );
 	pSelectCommanderIcon = GetChildChecked<IWindow>( pSelectCommanderBtn, "Icon", true );
 	pUnselectCommanderBtn = GetChildChecked<IButton>( pPictureBlock, "UnselectCommanderBtn", true );
 	pUnselectCommanderIcon = GetChildChecked<IWindow>( pUnselectCommanderBtn, "Icon", true );
-	
+
 	pLeaderNameView = GetChildChecked<ITextView>( pCommanderInfoBlock, "NameView", true );
 	pLeaderExpBar = GetChildChecked<IProgressBar>( pCommanderInfoBlock, "ExpBar", true );
 	pLeaderRankView = GetChildChecked<ITextView>( pCommanderInfoBlock, "RankView", true );
 	pLeaderRankLabel = GetChildChecked<ITextView>( pCommanderInfoBlock, "RankLabel", true );
 	pLeaderKilledView = GetChildChecked<ITextView>( pCommanderInfoBlock, "KilledView", true );
 	pLeaderLostView = GetChildChecked<ITextView>( pCommanderInfoBlock, "LostView", true );
-	
+
 	for ( int i = 1; ; ++i )
 	{
 		IWindow *pWnd = pLeftPanel ? pLeftPanel->GetChild( fmt::format( "Ability{}", i ), true ) : 0;
@@ -285,7 +285,7 @@ void CInterfaceArmyScreen::GetElements()
 		visAbility.pRankLabel = GetChildChecked<ITextView>( pWnd, "RankLabel", true );
 		visAbilities.push_back( visAbility );
 	}
-	
+
 	pAssignLeaderDlg = GetChildChecked<IWindow>( GetScreen(), "AssignLeaderDlg", true );
 	pAssignLeaderEdit = GetChildChecked<IEditLine>( pAssignLeaderDlg, "AssignLeaderNameEdit", true );
 
@@ -304,7 +304,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	pReinfViewer = new CReinfViewer();
 	if ( pReinfList )
 		pReinfList->SetViewer( pReinfViewer );
-	
+
 	const int nLocalPlayer = 0;
 	const NDb::SUIConstsB2 *pUIConsts = InterfaceState()->GetUIConsts();
 	std::vector<IScenarioTracker::SChapterReinf> reinfs;
@@ -330,8 +330,8 @@ void CInterfaceArmyScreen::MakeInterior()
 				if ( !pDBReinf->entries.empty() )
 				{
 					const NDb::SReinforcementEntry &entry = pDBReinf->entries.front();
-					const NDb::SHPObjectRPGStats *pDBStats = (entry.pMechUnit != 0) ? 
-						checked_cast_ptr<const NDb::SHPObjectRPGStats*>( entry.pMechUnit ) : 
+					const NDb::SHPObjectRPGStats *pDBStats = (entry.pMechUnit != 0) ?
+						checked_cast_ptr<const NDb::SHPObjectRPGStats*>( entry.pMechUnit ) :
 						checked_cast_ptr<const NDb::SHPObjectRPGStats*>( entry.pSquad );
 					if ( pDBStats && CHECK_TEXT_NOT_EMPTY_PRE(pDBStats->,LocalizedName) )
 						pReinf->wszProfileUnit = GET_TEXT_PRE(pDBStats->,LocalizedName);
@@ -368,7 +368,7 @@ void CInterfaceArmyScreen::MakeInterior()
 				pReinf->pTexture = pDBReinf->pIconTexture;
 				pReinf->wszProfileUnitRank = NDBWrap::GetReinfXPLevelName( pST->GetReinforcementXPLevel( nLocalPlayer, pReinf->eType ) );
 			}
-			
+
 			IScenarioTracker::SUndoLeaderInfo undo;
 			FillLeaderInfo( pReinf, undo );
 			if ( pReinf && pReinf->pLeader )
@@ -381,14 +381,14 @@ void CInterfaceArmyScreen::MakeInterior()
 			reinforcements.push_back( pReinf.GetPtr() );
 		}
 	}
-	
+
 	if ( pPromotionsView )
 		pPromotionsView->SetText( pPromotionsView->GetDBText() + NStr::ToUnicode( std::to_string(  pST->GetAvailablePromotions() ) ) );
 
 	for ( int i = 0; i < reinforcements.size(); ++i )
 	{
 		CReinfData *pReinf = reinforcements[i];
-		
+
 		pReinf->pItem = pReinfList->AddItem( pReinf );
 	}
 	pSelection = reinforcements.empty() ? 0 : reinforcements.front();
@@ -396,7 +396,7 @@ void CInterfaceArmyScreen::MakeInterior()
 	{
 		pReinfList->SelectItem( pSelection );
 	}
-	
+
 	if ( IScreen *pScreen = GetScreen() )
 		wszChangedValueTag = pScreen->GetTextEntry( "CHANGED_VALUE_TAG" );
 
@@ -418,7 +418,7 @@ void CInterfaceArmyScreen::MakeInterior()
 		params.push_back( std::pair<std::wstring, std::wstring>( wszTag, wszRankName ) );
 		SetDynamicTextView( visAbility.pRankLabel, params );
 	}
-	
+
 	if ( pMain )
 		SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 
@@ -448,7 +448,7 @@ void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTr
 		pLeader->wszSpecialization = pReinf->wszName;
 		pLeader->nKilled = pSTLeader->info.nUnitsKilled;
 		pLeader->nLost = pSTLeader->info.nUnitsLost;
-		
+
 		// fill last seen info
 		pLeader->lastSeen.fCurExp = pSTLeader->lastSeenInfo.fExp;
 		pLeader->lastSeen.nCurRank = pSTLeader->lastSeenInfo.nRank;
@@ -459,7 +459,7 @@ void CInterfaceArmyScreen::FillLeaderInfo( CReinfData *pReinf, const IScenarioTr
 		{
 			pLeader->lastSeen.bExpChanged = true;
 			pLeader->lastSeen.fExpStep = (pLeader->fExp - pLeader->lastSeen.fCurExp) * EXP_PROGRESS_STEP_FRACTION;
-			if ( pLeader->lastSeen.fExpStep < 1 )	
+			if ( pLeader->lastSeen.fExpStep < 1 )
 				pLeader->lastSeen.fExpStep = 1;
 		}
 		else
@@ -564,7 +564,7 @@ void CInterfaceArmyScreen::ShowReinfAbilities( bool bEnabled, const CReinfData *
 			if ( visAbility.pWnd )
 			{
 				visAbility.pWnd->ShowWindow( true );
-				
+
 				std::vector< std::pair<std::wstring, std::wstring> > params;
 				params.push_back( std::pair<std::wstring, std::wstring>( TEXT_TAG_ABILITY_TOOLTIP, ability.wszTooltip ) );
 				SetDynamicTooltip( visAbility.pWnd, visAbility.pWnd->GetDBTooltipStr(), params );
@@ -594,7 +594,7 @@ struct SDBUnit
 {
 	int nCount;
 	const NDb::SHPObjectRPGStats *pDBStats;
-	
+
 	bool operator==( const NDb::SHPObjectRPGStats *_pDBStats ) const
 	{
 		return pDBStats == _pDBStats;
@@ -739,7 +739,7 @@ bool CInterfaceArmyScreen::OnSetLeader()
 		if ( pAssignLeaderDlg )
 			pAssignLeaderDlg->ShowWindow( true );
 	}
-	
+
 	return true;
 }
 
@@ -771,7 +771,7 @@ bool CInterfaceArmyScreen::OnAssignLeaderOk()
 
 	if ( pAssignLeaderDlg )
 		pAssignLeaderDlg->ShowWindow( false );
-		
+
 	return true;
 }
 
@@ -779,7 +779,7 @@ bool CInterfaceArmyScreen::OnAssignLeaderCancel()
 {
 	if ( pAssignLeaderDlg )
 		pAssignLeaderDlg->ShowWindow( false );
-		
+
 	return true;
 }
 
@@ -839,7 +839,7 @@ void CInterfaceArmyScreen::Back()
 		const IScenarioTracker::SLeaderInfo *pSTLeader = pST->GetLeaderInfo( pReinf->eType );
 		if ( !pSTLeader )
 			continue;
-		if ( pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_NONE && 
+		if ( pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_NONE &&
 			pLeader->lastSeen.eState != CLeaderInfo::SLastSeen::ST_DONE )
 		{
 			IScenarioTracker::SLeaderInfo::SLeaderStatSet info;
@@ -872,7 +872,7 @@ void CInterfaceArmyScreen::ShowNoSelection()
 		pSelectCommanderBtn->ShowWindow( false );
 	if ( pUnselectCommanderBtn )
 		pUnselectCommanderBtn->ShowWindow( false );
-		
+
 	if ( pReinfCurrentBlock )
 		pReinfCurrentBlock->ShowWindow( false );
 	if ( pPictureBlock )
@@ -881,7 +881,7 @@ void CInterfaceArmyScreen::ShowNoSelection()
 	for ( int i = 0; i < visAbilities.size(); ++i )
 	{
 		SVisAbility &visAbility = visAbilities[i];
-		
+
 		if ( visAbility.pWnd )
 			visAbility.pWnd->ShowWindow( false );
 	}
@@ -904,7 +904,7 @@ void CInterfaceArmyScreen::UndoAllAssignCommander()
 		for ( int i = 0; i < reinforcements.size(); ++i )
 		{
 			CReinfData *pReinf = reinforcements[i];
-			
+
 			if ( pReinf->pLeader && !pReinf->pLeader->bPermanent )
 			{
 				pST->UndoAssignLeader( pReinf->pLeader->undo ) ;
@@ -948,7 +948,7 @@ void CInterfaceArmyScreen::UndoAssignCommander()
 		UpdateSelectionInfo();
 
 		pReinfViewer->MakeInterior( pSelection->pItem, pSelection );
-		
+
 		if ( pUndoBtn )
 			pUndoBtn->Enable( nAssignmentCount > 0 );
 	}
@@ -1002,13 +1002,13 @@ bool CInterfaceArmyScreen::OnUndoAllPromotionsCancel()
 bool CInterfaceArmyScreen::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( timeAbs == 0 )
 	{
 		timeAbs = Singleton<IGameTimer>()->GetAbsTime();
 		return bResult;
 	}
-	
+
 	NTimer::STime timeAbsCur = Singleton<IGameTimer>()->GetAbsTime();
 	int nDeltaTime = timeAbsCur - timeAbs;
 	timeAbs = timeAbsCur;
@@ -1126,7 +1126,7 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 	std::vector< std::pair<std::wstring, std::wstring> > params;
 	params.push_back( std::pair<std::wstring, std::wstring>( DYNAMIC_TAG_RANK_NUMBER, wszRankNumber ) );
 	SetDynamicTextView( pLeaderRankLabel, params );
-	
+
 	std::wstring wszKilled = NStr::ToUnicode( std::to_string( pLeader->lastSeen.nCurKilled ) );
 	if ( pLeader->lastSeen.bKilledChanged && pLeader->lastSeen.nCurKilled == pLeader->nKilled )
 		wszKilled = wszChangedValueTag + wszKilled;
@@ -1142,7 +1142,7 @@ void CInterfaceArmyScreen::UpdateLeaderVisualInfo( const CLeaderInfo *pLeader )
 
 bool CInterfaceArmyScreen::IsMainScreenActive() const
 {
-	if ( pAutoAssignDlg && pAutoAssignDlg->IsVisible() ) 
+	if ( pAutoAssignDlg && pAutoAssignDlg->IsVisible() )
 		return false;
 	if ( pUndoPromotionsDlg && pUndoPromotionsDlg->IsVisible() )
 		return false;

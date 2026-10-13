@@ -80,7 +80,7 @@ void DumpGrannyMemory()
 	{
 		const SMemoryInfo &info = it->second;
 		sprintf( szBuf, "%s\t%d", info.pszFile, info.nLine );
-		
+
 		TMemoryRequestMap::iterator itRequest = MemoryRequestMap.find(szBuf);
 		if ( itRequest == MemoryRequestMap.end() )
 			MemoryRequestMap.insert( std::pair<std::string, int>( szBuf, 0 ) );

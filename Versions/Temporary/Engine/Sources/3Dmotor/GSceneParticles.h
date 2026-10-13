@@ -72,7 +72,7 @@ public:
 	}
 	virtual void FreeWriteBuffer() = 0;
 	virtual void SampleWarFog( const std::vector<CVec3> &vPos, std::vector<float> *pRes )
-	{ 
+	{
 		if ( pRootOutput )
 			pRootOutput->SampleWarFog( vPos, pRes );
 		else
@@ -136,13 +136,13 @@ public:
 			pWriteBuffer = new SWriteBuffer( &pValue );
 		RealStart( pEffect, nStartParticle, bv, lm, dwPColor, pWriteBuffer->nTarget );
 	}
-	void FreeWriteBuffer() 
-	{ 
+	void FreeWriteBuffer()
+	{
 		ASSERT(!bIsAddingPart);
-		if ( pWriteBuffer ) 
-			delete pWriteBuffer; 
-		pWriteBuffer = 0; 
-		bc.Make( &bound ); 
+		if ( pWriteBuffer )
+			delete pWriteBuffer;
+		pWriteBuffer = 0;
+		bc.Make( &bound );
 	}
 };
 
@@ -271,7 +271,7 @@ class CParticlesTriList : public CFuncBase<std::vector<NGfx::STriangleList> >
 	std::vector<int> particles;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&particles); return 0; }
 	bool bNeedUpdate;
-protected: 
+protected:
 	void Recalc();
 	bool NeedUpdate() { return bNeedUpdate; }
 public:

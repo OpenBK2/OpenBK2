@@ -12,7 +12,7 @@
 class CTurretGun : public CBasicGun
 {
 	OBJECT_BASIC_METHODS( CTurretGun );
-	
+
 	ZDATA_(CBasicGun)
 	SAIAngle wBestWayDir;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -25,7 +25,7 @@ class CTurretGun : public CBasicGun
 	bool TurnByVer( const CVec2 &vEnemyCenter, const float zDiff );
 	bool TurnArtilleryToEnemy( const CVec2 &vEnemyCenter );
 	bool TurnByBestWay( const uint16_t wDirToEnemy );
-	
+
 	// эта функция считает угол, под которым нужно повернуть турель, чтобы обстреливать
 	// заданную точку. с учетом вертикальных ограничений.
 	uint16_t CalcVerticalAngle( const class CVec3 &pt ) const;
@@ -57,13 +57,13 @@ public:
 
 	virtual uint16_t GetHorTurnConstraint() const;
 	virtual uint16_t GetVerTurnConstraint() const;
-	
+
 	void SetCircularAttack( const bool bCanAttack );
 
 	virtual void StartPointBurst( const CVec3 &target, bool bReAim );
 	virtual void StartPointBurst( const CVec2 &target, bool bReAim, bool bStartParallelGuns = true );
 	virtual void StartEnemyBurst( class CAIUnit *pEnemy, bool bReAim );
-	
+
 	virtual const NTimer::STime GetTimeToShootToPoint( const CVec3 &vPoint ) const;
 	virtual const NTimer::STime GetTimeToShoot( const CVec3 &vPoint ) const;
 };
@@ -116,8 +116,8 @@ public:
 		: pUnit( _pUnit ), nCommonGun( _nCommonGun ), nTurret( _nTurret ) { }
 
 	virtual int GetNCommonGun() const { return nCommonGun; }
-	virtual CBasicGun* CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const 
-	{ 
+	virtual CBasicGun* CreateGun( const EGunTypes eType, const int nShell, SCommonGunInfo *pCommonGunInfo ) const
+	{
 		CBasicGun *pGun = 0;
 		if ( nTurret != -1 )
 			pGun = new CTurretGun( pUnit, nShell, pCommonGunInfo, eType, nTurret );

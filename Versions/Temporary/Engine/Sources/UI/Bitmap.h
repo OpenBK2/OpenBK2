@@ -42,7 +42,7 @@ public:
 	void SetPos( const CVec2 &vPos );
 	const CVec2 GetSize() const { return vSize; }
 	void SetSize( const CVec2 &vSize );
-	
+
 	void PutPixel( const CVec2 &vPos, const NGfx::SPixel8888 &color );
 	const NGfx::SPixel8888 GetPixel( const CVec2 &vPos ) const;
 	void Fill( const NGfx::SPixel8888 &color );

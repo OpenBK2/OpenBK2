@@ -243,7 +243,7 @@ bool CVSOManager::SVSOCircle::GetPointsSequence( const CVec2 &v, int nSegmentsCo
 	{
 		if ( fStartPolarAngle < fEndPolarAngle )
 		{
-			fStartPolarAngle += FP_2PI;	
+			fStartPolarAngle += FP_2PI;
 		}
 		for ( float fAngle = fStartPolarAngle; fAngle > fEndPolarAngle; fAngle -= fAngleStep )
 		{
@@ -283,20 +283,20 @@ int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 	float fLen = *pfRest + fStep;
 	float fLastT = 0, fT = 0;
 	CVec2 vLastPos, vPos = rSpline.Get( fT );
-	while ( 1 ) 
+	while ( 1 )
 	{
 		fLen -= fStep;
-		while ( fLen < fStep ) 
+		while ( fLen < fStep )
 		{
 			vLastPos = vPos;
 			// make step
 			fT += dt;
 			vPos = rSpline.Get( fT );
 			fLen += fabs( vLastPos - vPos );
-			if ( fT > 1 ) 
+			if ( fT > 1 )
 				break;
 		}
-		if ( (fT > 1) || (fLen < fStep) ) 
+		if ( (fT > 1) || (fLen < fStep) )
 			break;
 		//
 		NDb::SVSOPoint point;
@@ -322,7 +322,7 @@ int CVSOManager::SliceSpline( const CAnalyticBSpline2 &rSpline,
 
 void CVSOManager::SampleCurve( const std::vector<CVec3> &rControlPointList,
 															 CVSOPointList *pVSOPointList,
-															 float fStep, 
+															 float fStep,
 															 float fWidth,
 															 float fHeight,
 															 float fOpacity,
@@ -347,13 +347,13 @@ void CVSOManager::SampleCurve( const std::vector<CVec3> &rControlPointList,
 	}
 	else
 	{
-		splinePointList.push_back( rControlPointList[0] - 
+		splinePointList.push_back( rControlPointList[0] -
 															( rControlPointList[1] - rControlPointList[0] ) );
 		for( std::vector<CVec3>::const_iterator itControlPoint = rControlPointList.begin(); itControlPoint != rControlPointList.end(); ++itControlPoint )
 		{
 			splinePointList.push_back( *itControlPoint );
 		}
-		splinePointList.push_back( rControlPointList[rControlPointList.size() - 1] + 
+		splinePointList.push_back( rControlPointList[rControlPointList.size() - 1] +
 															( rControlPointList[rControlPointList.size() - 1] - rControlPointList[rControlPointList.size() - 2] ) );
 	}
 	//form spline points
@@ -406,14 +406,14 @@ void CVSOManager::SampleCurve( const std::vector<CVec3> &rControlPointList,
 void CVSOManager::SmoothCurve( const std::vector<int> &rKeyPointList, std::vector<float> *pPointList, bool bCircle, bool bComplete )
 {
 	NI_ASSERT( pPointList != 0, "CVSOManager::SmoothCurveWidth(): pPointList == 0" );
-	
+
 	// form indices for spline
 	std::vector<float> originalPointList = ( *pPointList );
 	std::vector<int> indexList;
 	indexList.reserve( rKeyPointList.size() + 4 );
 	if ( bCircle )
 	{
-    if ( rKeyPointList.size() < 3 )   
+    if ( rKeyPointList.size() < 3 )
     {
       return;
     }
@@ -428,7 +428,7 @@ void CVSOManager::SmoothCurve( const std::vector<int> &rKeyPointList, std::vecto
 	}
 	else
 	{
-    if ( rKeyPointList.size() < 2 )   
+    if ( rKeyPointList.size() < 2 )
     {
       return;
     }
@@ -971,13 +971,13 @@ bool CVSOManager::GetPointsSequence( const SVSOCircle &rCircleBegin, const SVSOC
 				newCircleEnd.r *= ( -1 );
 			}
 		}
-		
+
 		CVec2 vTangentPoint;
 		if ( !newCircleEnd.GetTangentPoint( rCircleBegin.center, &vTangentPoint ) )
 		{
 			return false;
 		}
-		
+
 		CVec2 vAdditionalRadius = vTangentPoint - newCircleEnd.center;
 		if ( newCircleEnd.classifyRotation != rCircleEnd.classifyRotation )
 		{
@@ -1044,10 +1044,10 @@ bool CVSOManager::GetPointsSequence( const CVec2 &vBegin0, const CVec2 &vEnd0, f
 	{
 		fPerimeter0111 = GetPolygonPerimeter( road0111points );
 	}
-	
+
 	int nIndex = -1;
 	float nMinPerimeter = fPerimeter0010 + fPerimeter0011 + fPerimeter0110 + fPerimeter0111 + 1.0f;
-	
+
 	if ( ( fPerimeter0010 >= 0 ) && ( fPerimeter0010 < nMinPerimeter ) )
 	{
 		nMinPerimeter = fPerimeter0010;
@@ -1123,7 +1123,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 			{
 				continue;
 			}
-			
+
 			std::vector<CVec2>::const_iterator itCurrentPoint0;
 			std::vector<CVec2>::const_iterator itCurrentPoint1;
 			float fCrossPoint;
@@ -1207,7 +1207,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 					vNewEnd1 = vTemp;
 				}
 				currentPath0.clear();
-				std::list<CVec2> currentPath1;				
+				std::list<CVec2> currentPath1;
 				if ( FindPath( vBegin0, vEnd0, bBegin0,
 											 vNewBegin, vNewEnd0, true,
 											 fRadius, nSegmentsCount, fMinEdgeLength,
@@ -1235,7 +1235,7 @@ bool CVSOManager::FindPath( const CVec2 &vBegin0, const CVec2 &vEnd0, bool bBegi
 		++itCurrentPath0;
 		++itCurrentPath1;
 	}
-	
+
 	pPointsSequence->insert( pPointsSequence->end(), currentPath0.begin(), currentPath0.end() );
 	//UniquePolygon<std::list<CVec2>, CVec2>( pPointsSequence, RMGC_MINIMAL_VIS_POINT_DISTANCE );
 	return true;
@@ -1256,7 +1256,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 	CVec3 vPointToAdd1 = VNULL3;
 	float fWidthToAdd0 = DEFAULT_WIDTH;
 	float fWidthToAdd1 = DEFAULT_WIDTH;
-	
+
 	if ( bVSO1Begin )
 	{
 		backupKeyPoints1.SetFrontOpacity( 0.0f );
@@ -1273,7 +1273,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 		{
 			vPointToAdd0 = *( pVSO1->controlPoints.begin() + 1 );
 			vPointToAdd1 = *( pVSO1->controlPoints.begin() + 2 );
-			
+
 			bool bFirst = true;
 			bool bWidthToAdd0 = false;
 			bool bWidthToAdd1 = false;
@@ -1306,7 +1306,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 	else
 	{
 		backupKeyPoints1.SetBackOpacity( 0.0f );
-		
+
 		if ( pVSO1->controlPoints.size() < 3 )
 		{
 			vPointToAdd0 = ( pVSO1->controlPoints.front() + pVSO1->controlPoints.back() ) / 2.0f;
@@ -1319,7 +1319,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 		{
 			vPointToAdd0 = *( pVSO1->controlPoints.end() - 2 );
 			vPointToAdd1 = *( pVSO1->controlPoints.end() - 3 );
-			
+
 			bool bFirst = true;
 			bool bWidthToAdd0 = false;
 			bool bWidthToAdd1 = false;
@@ -1366,7 +1366,7 @@ bool CVSOManager::Merge( NDb::SVSOInstance *pVSO0, bool bVSO0Begin,
 		pVSO0->controlPoints.push_back( vPointToAdd0 );
 		pVSO0->controlPoints.push_back( vPointToAdd1 );
 	}
-	//	
+	//
 	Update( pVSO0, true, true, DEFAULT_STEP, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_OPACITY, true, false, true, false, false );
 	backupKeyPoints0.LoadKeyPoints( &( pVSO0->points ) );
 	Update( pVSO0, true, true, DEFAULT_STEP, DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_OPACITY, true, false, true, false, false );
@@ -1630,7 +1630,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 				pDrawParams->pSceneDrawTool->DrawPolyline( opNormalePointList, NORMALE_LINE_COLOR, false, false );
 			}
 			//
-			if ( pDrawParams->CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) || 
+			if ( pDrawParams->CanEditPoints( CVSOManager::SVSOSelection::ST_CONTROL ) ||
 				( pDrawParams->eDrawer == SVSODrawParams::VSO_IS_ADD ) )
 			{
 				std::list<CVec3> pointList;
@@ -1649,7 +1649,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 			{
 				if ( pDrawParams->pCurrSelection->IsControlPointType() )
 				{
-					if ( ( pDrawParams->pCurrSelection->nIndex ) >= 0 && 
+					if ( ( pDrawParams->pCurrSelection->nIndex ) >= 0 &&
 						( pDrawParams->pCurrSelection->nIndex < pControlPoints->size() ) )
 					{
 						float fRadius = CONTROL_POINT_RADIUS - 1.0f;
@@ -1665,7 +1665,7 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 				else if ( pDrawParams->pCurrSelection->IsCenterPointType() || pDrawParams->pCurrSelection->IsNormalePointType() )
 				{
 					if ( ( pDrawParams->pCurrSelection->nIndex ) >= 0 && ( pDrawParams->pCurrSelection->nIndex < pPoints->size() ) )
-					{		
+					{
 						float fRadius = CENTER_POINT_RADIUS - 1.0f;
 						if ( pDrawParams->pCurrSelection->eSelectionType == CVSOManager::SVSOSelection::ST_CENTER )
 						{
@@ -1712,14 +1712,14 @@ void CVSOManager::DrawVSO( SVSODrawParams *pDrawParams )
 	}
 }
 
-// basement storage  
+// basement storage
 
 /**
 
 bool CVSOManager::UpdateZ( NDb::SVSOInstance *pVSO )
 {
 	NI_ASSERT( pVSO != 0, "CVSOManager::UpdateZ(): Wrong parameter: pVSO " );
-	
+
 	bool bResult = true;
 	for ( std::vector<CVec3>::iterator itControlPoint = pVSO->controlPoints.begin(); itControlPoint != pVSO->controlPoints.end(); ++itControlPoint )
 	{

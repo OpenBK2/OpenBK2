@@ -26,7 +26,7 @@ static void DisplayDebugCross( const CVec2 &vPos, const float fSize = 5.0f, cons
 }
 
 CExecutorTransportReinforcement::CExecutorTransportReinforcement( std::list<CAIUnit*> *pTransports, const NDb::SReinforcement *_pReinf, const CVec2 &_vStart, const CVec2 &_vUnload, const CVec2 &_vTarget ) :
-CExecutor(TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION), 
+CExecutor(TID_TRANSPORT_REINFORCEMENT, SConsts::BEH_UPDATE_DURATION/SConsts::AI_SEGMENT_DURATION),
 vStart( _vStart ), vTarget( _vTarget )
 {
 	// Assign transports
@@ -92,7 +92,7 @@ int CExecutorTransportReinforcement::Segment()
 			switch ( transports[i].eState )
 			{
 			case ETS_FULL:
-				{	
+				{
 					transports[i].eState = ETS_UNLOADING;
 					bFinish = false;
 				}

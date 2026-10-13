@@ -11,7 +11,7 @@
 
 // CInterfaceArmyBranchDlg
 
-CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() : 
+CInterfaceArmyBranchDlg::CInterfaceArmyBranchDlg() :
 	CInterfaceScreenBase( "ArmyBranchDlg", "army_branch_dlg" )
 {
 }
@@ -22,7 +22,7 @@ bool CInterfaceArmyBranchDlg::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -31,27 +31,27 @@ bool CInterfaceArmyBranchDlg::Init()
 void CInterfaceArmyBranchDlg::SetParams( const std::vector<CInterfaceArmyBranchDlg::SBranch> &_branches )
 {
 	branches = _branches;
-	
+
 	nSelectedBranch = branches.empty() ? -1 : 0;
 	nLeftBranch = 0;
-	
+
 	UpdateInterior();
 }
 
 void CInterfaceArmyBranchDlg::MakeInterior()
 {
 	pMainWnd = GetChildChecked<IWindow>( GetScreen(), "ArmyBranchPanel", true );
-	
+
 	pLeftBtn = GetChildChecked<IButton>( pMainWnd, "LeftBtn", true );
 	pRightBtn = GetChildChecked<IButton>( pMainWnd, "RightBtn", true );
 
 	pBranchNameView = GetChildChecked<ITextView>( pMainWnd, "BranchNameView", true );
 	pDescCont = GetChildChecked<IScrollableContainer>( pMainWnd, "DescCont", true );
 	pDescView = GetChildChecked<ITextView>( pMainWnd, "DescView", true );
-	
+
 	if ( pDescView && pDescCont )
 			pDescCont->PushBack( pDescView, false );
-			
+
 	IWindow *pBranchesBlock = GetChildChecked<IWindow>( pMainWnd, "BranchesBlock", true );
 	if ( pBranchesBlock )
 	{
@@ -60,7 +60,7 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 			IWindow *pWnd = pBranchesBlock->GetChild( fmt::format( "Branch{:02d}", i + 1 ), true );
 			if ( !pWnd )
 				break;
-				
+
 			SVisSlot visSlot;
 			visSlot.pWnd = pWnd;
 			visSlot.pBtn = GetChildChecked<IButton>( pWnd, "BranchBtn", true );
@@ -69,16 +69,16 @@ void CInterfaceArmyBranchDlg::MakeInterior()
 				visSlot.pBtn->SetName( visSlot.szBtnName );
 			visSlot.pIconWnd = GetChildChecked<IWindow>( pWnd, "Icon", true );
 			visSlot.pSelectionWnd = GetChildChecked<IWindow>( pWnd, "Selection", true );
-			
+
 			if ( visSlot.pBtn )
 				visSlot.pBtn->ShowWindow( false );
 			if ( visSlot.pSelectionWnd )
 				visSlot.pSelectionWnd->ShowWindow( false );
-			
+
 			visSlots.push_back( visSlot );
 		}
 	}
-	
+
 /*	for ( int i = 0; i < 12; ++i )
 	{
 		SBranch branch;
@@ -107,7 +107,7 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 		pRightBtn->ShowWindow( branches.size() > visSlots.size() );
 		pRightBtn->Enable( nLeftBranch + visSlots.size() < branches.size() );
 	}
-		
+
 	for ( int i = 0; i < visSlots.size(); ++i )
 	{
 		SVisSlot &visSlot = visSlots[i];
@@ -119,7 +119,7 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 		else
 		{
 			SBranch &branch = branches[nLeftBranch + i];
-			
+
 			if ( visSlot.pBtn )
 				visSlot.pBtn->ShowWindow( true );
 			if ( visSlot.pIconWnd )
@@ -132,7 +132,7 @@ void CInterfaceArmyBranchDlg::UpdateInterior()
 	if ( nSelectedBranch >= 0 && nSelectedBranch < branches.size() )
 	{
 		SBranch &branch = branches[nSelectedBranch];
-		
+
 		if ( pBranchNameView )
 			pBranchNameView->SetText( pBranchNameView->GetDBText() + branch.wszName );
 
@@ -160,7 +160,7 @@ bool CInterfaceArmyBranchDlg::OnLeft()
 
 		UpdateInterior();
 	}
-	
+
 	return true;
 }
 

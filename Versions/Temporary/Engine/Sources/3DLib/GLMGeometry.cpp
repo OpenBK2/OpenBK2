@@ -194,7 +194,7 @@ void CSquarePacker::Build( SLMLOD *pLMLOD, std::vector<SLightmapInfo> *pLMaps )
 	//		ASSERT( lmLOD.lmSize.y <= nLMSize );
 }
 
-static void CalcMirroredVector( NGfx::SCompactVector *pRes, 
+static void CalcMirroredVector( NGfx::SCompactVector *pRes,
 	const NGfx::SCompactVector &a, const NGfx::SCompactVector &b, const NGfx::SCompactVector &c )
 {
 	CVec3 v = NGfx::GetVector(a) + NGfx::GetVector(b) - NGfx::GetVector(c);
@@ -226,8 +226,8 @@ static void GenVertices( std::vector<SVertex> *pRes, std::vector<CVec2> *pSecond
 	{
 		//CTRect<int> lmRegion = p->GetLMRegion();
 		CTRect<int> lmRegion;
-		lmRegion.Set( 
-			_shift.x, _shift.y, 
+		lmRegion.Set(
+			_shift.x, _shift.y,
 			_shift.x + lmLOD.lmSize.x, _shift.y + lmLOD.lmSize.y );
 		int nShiftX = lmRegion.x1;
 		int nShiftY = lmRegion.y1;
@@ -287,7 +287,7 @@ static void BuildLM( const CObjectInfo::SData &src, float fLMResolution, int nLM
 	packer.Build( &lmLOD, &lmaps );
 }
 
-void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src, 
+void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift )
 {
 	SLMLOD lmLOD;
@@ -317,7 +317,7 @@ void MakeLMGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjec
 	*pSize = lmLOD.lmSize;
 }
 
-void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src, 
+void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *pSize, const CObjectInfo::SData &src,
 	float fLMResolution, int nLMSize, const CTPoint<int> &_shift, std::vector<SLMQuad> *pQuads )
 {
 	SLMLOD lmLOD;

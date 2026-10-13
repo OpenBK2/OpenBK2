@@ -65,8 +65,8 @@ void CBSpline::Iterate()
 	}
 }
 
-const float CBSpline::GetReverseR() const 
-{ 
+const float CBSpline::GetReverseR() const
+{
 	const CVec2 first = 3 * a * sqr( t ) + 2 * b * t + c;
 	const CVec2 second = 6 * a * t + 2 * b;
 	const float tanLen = fabs( first );
@@ -133,7 +133,7 @@ float CCirclePath::Iterate( const float fLength )
 	fCurrentDelta += fDelta;
 	float fResult = 0.0f;
 
-	if ( fCurrentDelta > fDirDiff )  
+	if ( fCurrentDelta > fDirDiff )
 	{
 		fResult = fLength -	( fDirDiff - fCurrentDelta ) * fRadius;
 		fCurrentDelta = fDirDiff;
@@ -212,7 +212,7 @@ const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantr
 		lengthAhead = 0;
 
 	SRect speedRect;
-	speedRect.InitRect( pUnit->GetCenterPlain()  + pUnit->GetCenterShift() + 2 * pUnit->GetDirectionVector() * vAABBHalfSize.y, 
+	speedRect.InitRect( pUnit->GetCenterPlain()  + pUnit->GetCenterShift() + 2 * pUnit->GetDirectionVector() * vAABBHalfSize.y,
 		pUnit->GetDirectionVector(), lengthAhead, lengthBack, width );
 
 	return speedRect;
@@ -240,7 +240,7 @@ const SRect GetUnitNormalRect( const CBasePathUnit *pUnit )
 
 	const float fLength = vAABBHalfSize.y * BOUND_RECT_FACTOR;
 	const float fWidth = vAABBHalfSize.x * BOUND_RECT_FACTOR;
-	
+
 	SRect unitRect;
 	unitRect.InitRect( pUnit->GetCenterPlain() + pUnit->GetCenterShift(), pUnit->GetFrontDirectionVector(), fLength, fWidth );
 

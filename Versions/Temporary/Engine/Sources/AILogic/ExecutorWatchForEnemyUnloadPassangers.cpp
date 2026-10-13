@@ -30,7 +30,7 @@ int CExecutorWatchForEnemyUnloadPassangers::Segment()
 			for ( CUnitsIter<1,3> iter( nParty, EDI_ENEMY, pUnit->GetCenterPlain(), pUnit->GetSightRadius() ); !iter.IsFinished(); iter.Iterate() )
 			{
 				CAIUnit * pEnemy = *iter;
-				if ( pEnemy->IsRefValid() && pEnemy->IsAlive() && pEnemy->IsVisible( nParty ) && 
+				if ( pEnemy->IsRefValid() && pEnemy->IsAlive() && pEnemy->IsVisible( nParty ) &&
 						 !pEnemy->GetStats()->IsAviation() && pEnemy->IsFree() &&
 							pEnemy->GetState()->GetName() != EUSN_PARTROOP )
 				{

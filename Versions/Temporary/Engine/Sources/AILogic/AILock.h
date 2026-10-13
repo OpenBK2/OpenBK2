@@ -31,7 +31,7 @@ struct SStaticObjectLockInfo
 template <class TAccess>
 void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 	std::vector<SEntranceData> &entrances,
-	EAIClasses ePassClass, 
+	EAIClasses ePassClass,
 	SStaticObjectLockInfo &lockInfo,
 	TAccess & access )
 {
@@ -68,7 +68,7 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 				const CVec2 vTileCenter( AICellsTiles::GetCenterOfTile( x, y ) );
 				if ( pass.GetVal( vTileCenter ) )
 				{
-					const SVector tile( AICellsTiles::GetTile( x, y ) );				
+					const SVector tile( AICellsTiles::GetTile( x, y ) );
 					if ( !access.IsTileInside( tile ) )
 						continue;
 

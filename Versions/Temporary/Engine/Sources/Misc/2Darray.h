@@ -1,26 +1,26 @@
 #pragma once
 
 // Defensive member defaults; explicit constructor values still take precedence.
-template < class T > 
+template < class T >
 struct CBoundCheck
 {
 	T *data = nullptr;
 	int nSize = 0;
-	CBoundCheck( T *d, int nS ) 
-	{ 
-		data = d; 
-		nSize = nS; 
+	CBoundCheck( T *d, int nS )
+	{
+		data = d;
+		nSize = nS;
 	}
-	T& operator[]( int i ) 
-	{ 
-		ASSERT( i>=0 && i<nSize ); 
-		return data[i]; 
+	T& operator[]( int i )
+	{
+		ASSERT( i>=0 && i<nSize );
+		return data[i];
 	}
 
-	const T& operator[]( int i ) const 
-	{ 
-		ASSERT( i>=0 && i<nSize ); 
-		return data[i]; 
+	const T& operator[]( int i ) const
+	{
+		ASSERT( i>=0 && i<nSize );
+		return data[i];
 	}
 };
 
@@ -31,15 +31,15 @@ class CArray2D
 	T *data = nullptr;
 	T **pData = nullptr;
 	int nXSize = 0, nYSize = 0;
-	void Copy( const CArray2D &a ) 
-	{ 
+	void Copy( const CArray2D &a )
+	{
 		if ( !( a.IsEmpty() ) )
 		{
 			nXSize = a.nXSize;
 			nYSize = a.nYSize;
-			Create(); 
-			for( int i = 0; i < nXSize*nYSize; i++ ) 
-				data[i] = a.data[i]; 
+			Create();
+			for( int i = 0; i < nXSize*nYSize; i++ )
+				data[i] = a.data[i];
 		}
 		else
 		{
@@ -48,26 +48,26 @@ class CArray2D
 			pData = 0;
 		}
 	}
-	void Destroy() 
-	{ 
-		if ( data ) 
-			delete[] data; 
-		if ( pData ) 
-			delete[] pData; 
+	void Destroy()
+	{
+		if ( data )
+			delete[] data;
+		if ( pData )
+			delete[] pData;
 	}
-	void Create() 
-	{ 
-		data = new T[ nXSize*nYSize ]; 
-		pData = new PT[ nYSize ]; 
-		for( int i = 0; i < nYSize; i++) 
-			pData[i] = data+i*nXSize; 
+	void Create()
+	{
+		data = new T[ nXSize*nYSize ];
+		pData = new PT[ nYSize ];
+		for( int i = 0; i < nYSize; i++)
+			pData[i] = data+i*nXSize;
 	}
 public:
 	CArray2D() : data(0), pData(0), nXSize(0), nYSize(0) {}
 	CArray2D( int xsize, int ysize ) { nXSize = xsize; nYSize = ysize; Create(); }
 	CArray2D( const CArray2D &a ) { Copy(a); }
-	CArray2D& operator=( const CArray2D &a ) 
-	{ 
+	CArray2D& operator=( const CArray2D &a )
+	{
 		if ( nXSize == a.nXSize && nYSize == a.nYSize )
 		{
 			for ( int k = 0, nTotal = nXSize * nYSize; k < nTotal; ++k )
@@ -75,48 +75,48 @@ public:
 		}
 		else
 		{
-      Destroy(); Copy(a); 
+      Destroy(); Copy(a);
 		}
-		return *this; 
+		return *this;
 	}
 	~CArray2D() { Destroy(); }
-	void SetSizes( int xsize, int ysize ) 
-	{ 
-		if ( nXSize == xsize && nYSize == ysize ) 
-			return; 
-		Destroy(); 
-		nXSize = xsize; 
-		nYSize = ysize; 
-		Create(); 
+	void SetSizes( int xsize, int ysize )
+	{
+		if ( nXSize == xsize && nYSize == ysize )
+			return;
+		Destroy();
+		nXSize = xsize;
+		nYSize = ysize;
+		Create();
 	}
 	void Clear() { Destroy(); data = 0; pData = 0; nXSize = 0; nYSize = 0; }
 #ifdef _DEBUG
-	CBoundCheck<T> operator[]( int i ) 
-	{ 
-		ASSERT( i>=0 && i<nYSize ); 
-		return CBoundCheck<T>( pData[i], nXSize ); 
+	CBoundCheck<T> operator[]( int i )
+	{
+		ASSERT( i>=0 && i<nYSize );
+		return CBoundCheck<T>( pData[i], nXSize );
 	}
 
-	const CBoundCheck<T> operator[]( int i ) const 
-	{ 
-		ASSERT( i>=0 && i<nYSize ); 
-		return CBoundCheck<T>( pData[i], nXSize ); 
+	const CBoundCheck<T> operator[]( int i ) const
+	{
+		ASSERT( i>=0 && i<nYSize );
+		return CBoundCheck<T>( pData[i], nXSize );
 	}
 #else
-	const T* operator[]( int i ) const 
-	{ 
+	const T* operator[]( int i ) const
+	{
 #ifndef _BETARELEASE
-		ASSERT( i>=0 && i<nYSize ); 
+		ASSERT( i>=0 && i<nYSize );
 #endif
-		return pData[i]; 
+		return pData[i];
 	}
 
-	T* operator[]( int i ) 
-	{ 
+	T* operator[]( int i )
+	{
 #ifndef _BETARELEASE
-		ASSERT( i>=0 && i<nYSize ); 
+		ASSERT( i>=0 && i<nYSize );
 #endif
-		return pData[i]; 
+		return pData[i];
 	}
 #endif
 	int GetSizeX() const { return nXSize; }
@@ -134,7 +134,7 @@ public:
 };
 
 template<class T> class CArray3D;
-template<class T> 
+template<class T>
 class CArray3DFetcher
 {
 	T *pData = nullptr;
@@ -144,17 +144,17 @@ public:
 #ifdef _DEBUG
 	CBoundCheck<T> operator[]( int i ) const { ASSERT( i>=0 && i<a.GetYSize() ); return CBoundCheck<T>( &pData[i*a.GetXSize()], a.GetXSize() ); }
 #else
-	T* operator[]( int i ) const 
-	{ 
+	T* operator[]( int i ) const
+	{
 #ifndef _BETARELEASE
-		ASSERT( i>=0 && i<a.GetYSize() ); 
+		ASSERT( i>=0 && i<a.GetYSize() );
 #endif
-		return &pData[i*a.GetXSize()]; 
+		return &pData[i*a.GetXSize()];
 	}
 #endif
 };
 
-template<class T> 
+template<class T>
 class CArray3D
 {
 	ZDATA
@@ -171,12 +171,12 @@ public:
 #ifdef _DEBUG
 	CArray3DFetcher<T> operator[]( int i ) { ASSERT( i>=0 && i<nZSize ); return CArray3DFetcher<T>( &data[i*nXYSize], *this ); }
 #else
-	CArray3DFetcher<T> operator[]( int i ) 
-	{ 
+	CArray3DFetcher<T> operator[]( int i )
+	{
 #ifndef _BETARELEASE
-		ASSERT( i>=0 && i<nZSize ); 
+		ASSERT( i>=0 && i<nZSize );
 #endif
-		return CArray3DFetcher<T>( &data[i*nXYSize], *this ); 
+		return CArray3DFetcher<T>( &data[i*nXYSize], *this );
 	}
 #endif
 };

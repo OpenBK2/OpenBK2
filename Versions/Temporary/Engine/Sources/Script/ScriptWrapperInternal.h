@@ -8,7 +8,7 @@ namespace NScript
 {
 Script * GetScript();
 
-class CScriptWrapper : public IScriptWrapper 
+class CScriptWrapper : public IScriptWrapper
 {
 	Script script;
 	OBJECT_NOCOPY_METHODS(CScriptWrapper);

@@ -3,7 +3,7 @@
 #include "CommonUnit.h"
 #include "Executor.h"
 
-struct SUnitListInfo 
+struct SUnitListInfo
 {
 	ZDATA
 	CPtr<CCommonUnit> pUnit;

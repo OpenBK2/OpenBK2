@@ -40,12 +40,12 @@ IPart::IPart( CPtrFuncBase<CObjectInfo> *pData, CPerMaterialCombiner *_pCombiner
 
 IPart::~IPart()
 {
-	if ( IsValid( pCombiner ) ) 
-		pCombiner->RemovePart( this ); 
+	if ( IsValid( pCombiner ) )
+		pCombiner->RemovePart( this );
 }
 
-void IPart::RefreshObjectInfo() 
-{ 
+void IPart::RefreshObjectInfo()
+{
 	pObjInfo.Refresh();
 	while ( !pObjInfo->GetValue() )
 		std::this_thread::yield();
@@ -79,7 +79,7 @@ void IPart::SetObjectInfoNode( CPtrFuncBase<CObjectInfo> *p )
 
 // CAnimationWatch
 
-bool CAnimationWatch::NeedUpdate() 
+bool CAnimationWatch::NeedUpdate()
 {
 	bool bCombiner = pCombiner.Refresh();
 	const std::vector< CPtr<IPart> > &parts = pCombiner->GetValue();

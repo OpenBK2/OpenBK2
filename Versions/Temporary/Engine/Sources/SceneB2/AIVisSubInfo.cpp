@@ -6,7 +6,7 @@
 #include "VisObjDesc.h"
 
 /*
-NAIVisInfo::CDebugSegment* CScene::CreateSegment( const CSegment &aiSegment, const int nThickness, 
+NAIVisInfo::CDebugSegment* CScene::CreateSegment( const CSegment &aiSegment, const int nThickness,
 																									const NAIVisInfo::EColor eColor )
 {
 	NAIVisInfo::CDebugSegment *pSegment = new NAIVisInfo::CDebugSegment();
@@ -16,7 +16,7 @@ NAIVisInfo::CDebugSegment* CScene::CreateSegment( const CSegment &aiSegment, con
 	return pSegment;
 }
 
-NAIVisInfo::CDebugCircle* CScene::CreateCircle( const CCircle &aiCircle, 
+NAIVisInfo::CDebugCircle* CScene::CreateCircle( const CCircle &aiCircle,
 																								const NAIVisInfo::EColor eColor )
 {
 	NAIVisInfo::CDebugCircle *pCircle = new NAIVisInfo::CDebugCircle();
@@ -26,7 +26,7 @@ NAIVisInfo::CDebugCircle* CScene::CreateCircle( const CCircle &aiCircle,
 	return pCircle;
 }
 
-NAIVisInfo::CDebugMarker* CScene::CreateMarker( const list<CVec2> &tiles, 
+NAIVisInfo::CDebugMarker* CScene::CreateMarker( const list<CVec2> &tiles,
 																								const NAIVisInfo::EColor eColor )
 {
 	NAIVisInfo::CDebugMarker *pMarker = new NAIVisInfo::CDebugMarker();
@@ -57,7 +57,7 @@ void CScene::AddShootArea( int nID, float fStartAngle, float fEndAngle, float fM
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
-	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
+	data[eScene]->markers[ESMT_SHOOT_AREA][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
 void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &vColor )
@@ -73,7 +73,7 @@ void CScene::AddKeyPointArea( const CVec2 &vCenter, float fRadius, const CVec3 &
 	SFBTransform transform;
 	transform.forward.Set( CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
 	transform.backward.Set( -CVec3( vCenterVis.x, vCenterVis.y, 0 ), QNULL );
-	data[eScene]->markers[ESMT_KEY_AREA][0].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
+	data[eScene]->markers[ESMT_KEY_AREA][0].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
 void CScene::ClearKeyPointAreas()
@@ -87,7 +87,7 @@ void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, con
 	CVec2 vEndVis = vEnd;
 	AI2Vis( &vStartVis );
 	AI2Vis( &vEndVis );
-	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CLineMesh( vStartVis, vEndVis, data[eScene]->pTerraManager );	
+	CPtr< CPtrFuncBase<NGScene::CObjectInfo> > pGeom = new CLineMesh( vStartVis, vEndVis, data[eScene]->pTerraManager );
 	NGScene::IGameView::SMeshInfo meshInfo;
 	meshInfo.parts.resize( 1 );
 	meshInfo.parts[0].pGeometry = pGeom;
@@ -95,7 +95,7 @@ void CScene::AddLineMarker( int nID, const CVec2 &vStart, const CVec2 &vEnd, con
 	SFBTransform transform;
 	transform.forward = SHMatrix( 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 );
 	transform.backward = transform.forward;
-	data[eScene]->markers[ESMT_LINE][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );	
+	data[eScene]->markers[ESMT_LINE][nID].push_back( data[eScene]->GetGScene()->CreateMesh( meshInfo, transform, 0, 0 ) );
 }
 
 void CScene::ClearMarkers( ESceneMarkerType eType, int nID )

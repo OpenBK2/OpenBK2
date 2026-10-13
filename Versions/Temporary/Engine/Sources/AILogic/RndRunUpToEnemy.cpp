@@ -40,7 +40,7 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 	if ( bForceStaying )
 		return;
 	NI_ASSERT( !bForceStaying, "Wrong force staying value ( false expected )" );
-	
+
 	const CVec2 vDirToEnemy = pEnemy->GetCenterPlain() - pOwner->GetCenterPlain();
 	const uint16_t wDirToEnemy = GetDirectionByVector( vDirToEnemy );
 
@@ -84,13 +84,13 @@ void CRndRunUpToEnemy::SendOwnerToRandomRun()
 		}
 		else
 		{
-			bRunningToEnemy = false;	
+			bRunningToEnemy = false;
 			bForceStaying = false;
 		}
 	}
 	else
 	{
-		bRunningToEnemy = false;	
+		bRunningToEnemy = false;
 		bForceStaying = false;
 	}
 }
@@ -102,7 +102,7 @@ void CRndRunUpToEnemy::Segment()
 	if (
 			 bCheck &&
 		   pOwner->IsFree() && IsValidObj( pEnemy ) &&
-			 ( bRunningToEnemy || fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) >= sqr(0.7f) * sqr(pOwner->GetGun( 0 )->GetFireRange( 0 )) ) 
+			 ( bRunningToEnemy || fabs2( pOwner->GetCenter() - pEnemy->GetCenter() ) >= sqr(0.7f) * sqr(pOwner->GetGun( 0 )->GetFireRange( 0 )) )
 		 )
 	{
 		if ( !bRunningToEnemy )

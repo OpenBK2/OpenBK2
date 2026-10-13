@@ -26,7 +26,7 @@ bool CMOEntrenchmentPart::CreateSceneObject( const int nUniqueID, const SAINewUn
 	Scene()->AddObject( nUniqueID, pModel, cached.mPlace, OBJ_ANIM_MODE_DEFAULT, 0 );
 	SetModel( pModel );
 
-	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, 
+	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW,
 		StrFmt( "Create trench" ) );*/
 
 
@@ -135,7 +135,7 @@ void CMOEntrenchmentPart::DeriveTransform( const CVec3 &_vPos, const uint16_t _w
 }
 
 void CMOEntrenchmentPart::GetHoleParams( CVec2 *pStart, CVec2 *pEnd, float *pWidth )
-{ 
+{
 	*pStart = cached.vHoleStart;
 	*pEnd = cached.vHoleEnd;
 	*pWidth = cached.fHoleWidth;
@@ -175,7 +175,7 @@ int CMOEntrenchmentPart::operator&( IBinSaver &saver )
 
 CMOEntrenchment::~CMOEntrenchment(void)
 {
-	while ( !parts.empty() ) 
+	while ( !parts.empty() )
 	{
 		CPtr<CMOEntrenchmentPart> pPart = parts.back();
 		parts.pop_back();
@@ -192,14 +192,14 @@ bool CMOEntrenchment::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdat
 }
 
 void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, const bool bDigBySegment /*= false*/ )
-{ 
+{
 	std::vector<CVec2> pts;
 	CVec2	vStart, vEnd;
 	float fWidth = 0.0f;
 
-	pPart->SetParent( this ); 
-	parts.push_back( pPart ); 
-	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
+	pPart->SetParent( this );
+	parts.push_back( pPart );
+	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1,
 		StrFmt( "Add trench (DBID %d)", pPart->GetID() ) );*/
 
 	ITerraManager *pTerraManager = Scene()->GetTerraManager();
@@ -242,9 +242,9 @@ void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, con
 					pts[0].Set( vStart.x, vStart.y );
 				}
 
-				/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
+				/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1,
 					StrFmt( "Digging trench (%d segments), width %.2f", nSize, fWidth ) );
-				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
+				Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1,
 					StrFmt( "Point[%d] = (%.2f, %.2f)", 0, pts[0].x, pts[0].y ) );
 				DisplayDebugCross( pts[0], 20, 1, NDebugInfo::BLUE );*/
 
@@ -259,7 +259,7 @@ void CMOEntrenchment::AddPart( CMOEntrenchmentPart *pPart, const bool bLast, con
 					CVec2 vNextPoint = ( fStartDiff > fEndDiff ) ? vStart : vEnd;
 					pts[ i ].Set( vNextPoint.x, vNextPoint.y );
 
-					/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1, 
+					/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW + 1,
 						StrFmt( "Point[%d] = (%.2f, %.2f)", i, vNextPoint.x, vNextPoint.y ) );
 					DisplayDebugCross( vNextPoint, 20 );*/
 
@@ -296,7 +296,7 @@ NDb::EUserAction CMOEntrenchment::GetBestAutoAction( const CUserActions &actions
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
-		
+
 	return CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 }
 

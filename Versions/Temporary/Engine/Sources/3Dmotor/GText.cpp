@@ -77,7 +77,7 @@ struct SChunk
 	std::wstring wsText;
 	ECharType eType;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&nCount); f.Add(3,&nIndex); f.Add(4,&sState); f.Add(5,&wsText); f.Add(6,&eType); return 0; }
-	
+
 	SChunk() {}
 	SChunk( ECharType _eType, int _nIndex, const SState &_sState, int _nCount )
 		: eType( _eType ), nIndex( _nIndex ), sState( _sState ), nCount( _nCount ) {}

@@ -14,7 +14,7 @@ int CExecutorAttackGroup::Segment()
 	switch( eState )
 	{
 	case EAGS_BEGIN:
-		
+
 		return 20;
 	case EAGS_APPROACH_RADIUS:
 		{
@@ -41,7 +41,7 @@ int CExecutorAttackGroup::Segment()
 	case EAGS_SWARM:
 
 		return 20;
-	case EAGS_END:			 
+	case EAGS_END:
 
 		return -1;
 	}

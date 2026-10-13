@@ -77,6 +77,6 @@ void SetCameraPosition( const CVec3 &rvCamAnchor )
 	pCamera->SetAnchor( vCamNewPos );
 }
 
-// basement storage  
+// basement storage
 
 

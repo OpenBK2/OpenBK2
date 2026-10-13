@@ -38,9 +38,9 @@ CRegisterEditorsSemiAutoMagic::~CRegisterEditorsSemiAutoMagic()
 
 void CRegisterEditorsSemiAutoMagic::Load()
 {
-	LoadXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml", 
+	LoadXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml",
 		GetLabel(), *this );
-		
+
 	// UI
 	for ( std::vector<SUIEditor>::const_iterator it = uiEditors.begin(); it != uiEditors.end(); ++it )
 	{
@@ -53,12 +53,12 @@ void CRegisterEditorsSemiAutoMagic::Load()
 void CRegisterEditorsSemiAutoMagic::Save()
 {
 	NI_VERIFY( 0, "Creates an example. Don't use.", return );
-	
+
 	// UI (samples)
 	uiEditors.push_back( SUIEditor( "WindowScreen" ) );
 	uiEditors.push_back( SUIEditor( "WindowSimple" ) );
-	
-	SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml", 
+
+	SaveXMLResource( Singleton<IUserDataContainer>()->Get()->constUserData.szStartFolder + GetXMLPath(), ".xml",
 		GetLabel(), *this );
 }
 

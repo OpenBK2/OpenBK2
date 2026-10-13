@@ -39,7 +39,7 @@
 // C/C++ standard conforming fp-bits retrieving
 inline uint32_t GetFloatBits( float fVal )
 {
-	union 
+	union
 	{
 		float f;
 		unsigned char c[4];
@@ -49,11 +49,11 @@ inline uint32_t GetFloatBits( float fVal )
 }
 
 inline uint32_t PackDWORD( const uint16_t high, const uint16_t low )
-{ 
+{
 	return ( uint32_t(high) << 16 ) | uint32_t(low);
 }
 inline uint32_t PackDWORD( const uint8_t b3, const uint8_t b2, const uint8_t b1, const uint8_t b0 )
-{ 
+{
 	return ( uint32_t(b3) << 24 ) | ( uint32_t(b2) << 16 ) | ( uint32_t(b1) << 8 ) | uint32_t(b0);
 }
 inline uint16_t UnpackHighWORD( const uint32_t value ) { return (value >> 16) & 0x0000ffff; }
@@ -123,7 +123,7 @@ void BresenhamFilledCircle( int nCenterX, int nCenterY, int nRadius, TFunctional
 	int x = 0, y = nRadius;
 	int d = 3 - 2*y;
 	//
-	do 
+	do
 	{
 		if ( d < 0 )
 			d += 4*x + 6;

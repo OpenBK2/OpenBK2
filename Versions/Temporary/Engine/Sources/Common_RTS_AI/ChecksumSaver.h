@@ -34,7 +34,7 @@ class CCheckSumSaver : 	public IBinSaver
 	virtual void DataChunkString( std::wstring &data );
 	// storing/loading pointers to objects
 	virtual void StoreObject( CObjectBase *pObject );
-	
+
 	virtual CObjectBase* LoadObject() { NI_ASSERT( false,  "wrong call" ); return 0; }
 
 	virtual int CountChunks( const chunk_id idChunk ) { return 0; }

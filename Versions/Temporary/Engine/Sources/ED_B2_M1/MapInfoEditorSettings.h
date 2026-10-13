@@ -18,7 +18,7 @@ public:
 	bool bRotateTo90Degree;
 	int nLastLoadedMap;
 	CVec3 vLastMapCameraAnchor;
-	//	
+	//
 	bool bShowShortcutBar;
 	bool bShowMinimapBar;
 	bool bShowMoviesEditor;

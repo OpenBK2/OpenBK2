@@ -56,7 +56,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
 	reinfDescSingleItem.pButton = GetChildChecked<IButton>( pCurrentWindow, "SingleReinfDescButton", true );
 	reinfDescSingleItem.pIcon = GetChildChecked<IWindow>( reinfDescSingleItem.pButton, "Icon", true );
 	HideChildren( reinfDescSingleItem.pIcon );
-	reinfDescSingleItem.pReinforcement = 0;		
+	reinfDescSingleItem.pReinforcement = 0;
 	const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
 	for ( int i = 0; i < pUIC->reinfButtons.size(); ++i )
 	{
@@ -69,7 +69,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf 
       break;
 		}
 	}
-	
+
 	if ( !reinfDescSingleItem.pReinforcement )
 	{
 		OnReinfDescOK();
@@ -96,7 +96,7 @@ void CInterfaceChapterMapMenu::ShowReinfDesc( const NDb::SReinforcement *pReinf,
 	reinfDescSingleItem.pButton = GetChildChecked<IButton>( pCurrentWindow, "SingleReinfDescButton", true );
 	reinfDescSingleItem.pIcon = GetChildChecked<IWindow>( reinfDescSingleItem.pButton, "Icon", true );
 	HideChildren( reinfDescSingleItem.pIcon );
-	reinfDescSingleItem.pReinforcement = 0;		
+	reinfDescSingleItem.pReinforcement = 0;
 	const NDb::SUIConstsB2 *pUIC = InterfaceState()->GetUIConsts();
 	for ( int i = 0; i < pUIC->reinfButtons.size(); ++i )
 	{
@@ -292,7 +292,7 @@ void CInterfaceChapterMapMenu::ReinfDescFillUnits( const NDb::SReinforcement *pR
 				units[nIndex].pIcon->ShowWindow( true );
 				units[nIndex].pIcon->SetTexture( entry.pSquad->pIconTexture );
 			}
-			else 
+			else
 			{
 				NI_ASSERT( false, fmt::format( "DESIGN: Invalid reinforcement entry ReinfID \"{}\", entry {}", NDb::GetResName(pReinf), i ) );
 			}
@@ -382,7 +382,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 
 				for ( int k = 0; k < pWeapon->shells.size(); ++k )
 				{
-					if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH && 
+					if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
 						   pWeapon->shells[k].fDamagePower > nDamage )
 					{
 						nDamage = pWeapon->shells[k].fDamagePower;
@@ -413,7 +413,7 @@ void CInterfaceChapterMapMenu::ReinfDescMakeUnitInfo()
 
 			for ( int k = 0; k < pWeapon->shells.size(); ++k )
 			{
-				if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH && 
+				if ( pWeapon->shells[k].eDamageType == NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH &&
 					   pWeapon->shells[k].fDamagePower > nDamage )
 				{
 					nDamage = pWeapon->shells[k].fDamagePower;
@@ -445,15 +445,15 @@ void CInterfaceChapterMapMenu::OnReinfDescEncyclopedia()
 	}
 	else
 	{
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 		NStr::ToUnicode( "No Encyclopedia for infantry" ) ).c_str() );
 	}
 }
 
 IWindow *CInterfaceChapterMapMenu::GetCurrentReinfDescPopup()
 {
-	switch ( eReinfDescState ) 
+	switch ( eReinfDescState )
 	{
 	case ERDWS_UNIT:
 		return pReinfDesc1Unit;
@@ -525,7 +525,7 @@ void CInterfaceChapterMapMenu::ReinfDescProcessScroll( const int nStep )
 		else
 			pButtonScrollRight->Enable( false );
 	}
-	else											
+	else
 	{
 		int nDX = 0;
 		if ( nStep > 0 )					// Scrolling right

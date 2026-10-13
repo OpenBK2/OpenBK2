@@ -10,7 +10,7 @@ class CPCBaseDialog : public ICommandHandler
 	// ICommandHandler
 	virtual bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
-	
+
 	// Получить указатель на дерево
 	virtual IView* GetView() = 0;
 	// Получить указатель на обработчик команд

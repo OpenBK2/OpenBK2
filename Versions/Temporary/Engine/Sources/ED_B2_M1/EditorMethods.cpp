@@ -72,17 +72,17 @@ namespace NEditor
 		std::string szMapInfoNameLoaded = rszMapInfoNameLoaded;
 		NStr::ToLower( &szMapInfoNameLoaded );
 		IEditorScene *pScene = EditorScene();
-		if ( pScene == 0 ) 
+		if ( pScene == 0 )
 			return;
 		// get map and camera anchor from options
 		std::string szMapName = NEditorOptions::GetBgMap( szDesiredSeason );
 		NStr::ToLower( &szMapName );
 		/**
-		if ( szMapName == szMapInfoNameLoaded ) 
+		if ( szMapName == szMapInfoNameLoaded )
 			return;
 		/**/
 		CVec3 vCameraAnchor = NEditorOptions::GetBgMapAnchor( szDesiredSeason );
-		if ( vCameraAnchor == VNULL3 ) 
+		if ( vCameraAnchor == VNULL3 )
 		{
 			vCameraAnchor.x = 16.0f * AI_TILE_SIZE;
 			vCameraAnchor.y = 16.0f * AI_TILE_SIZE;
@@ -100,7 +100,7 @@ namespace NEditor
 				const std::string szMapFilePath = MakeMapPath( pMapInfo->GetDBID() );
 				//
 				NScene::LoadTerrain( pTerraManager, pMapInfo, szMapFilePath );
-				if ( pBgMapSize ) 
+				if ( pBgMapSize )
 				{
 					pBgMapSize->x = pMapInfo->nNumPatchesX;
 					pBgMapSize->y = pMapInfo->nNumPatchesY;
@@ -109,7 +109,7 @@ namespace NEditor
 		}
 		else
 		{
-			if ( pBgMapSize ) 
+			if ( pBgMapSize )
 			{
 				pBgMapSize->x = 0;
 				pBgMapSize->y = 0;
@@ -145,14 +145,14 @@ bool LoadUnitCommandTypesFromXML( std::vector<SUnitCommandTypeInfo> *pCmdTypes )
 		return false;
 	}
 	CPtr<IXmlSaver> pXS = CreateXmlSaver( &stream, SAVER_MODE_READ );
-	if ( pXS == 0 ) 
+	if ( pXS == 0 )
 	{
 		NI_ASSERT( pXS != 0, fmt::format("Can't open stream \"{}\" to read", szFileName.c_str()) );
 		return false;
 	}
 	pXS->Add( "Fields", pCmdTypes );
 	return true;
-} 
+}
 
 
 bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax, const std::vector<CVec3> &rPoly )
@@ -173,13 +173,13 @@ bool GetPolyBoundingRect( float *pXmin, float *pYmin, float *pXmax, float *pYmax
 
 		if ( v.x >= xMax )
 			xMax = v.x;
-		
+
 		if ( v.x <= xMin )
 			xMin = v.x;
 
 		if ( v.y >= yMax )
 			yMax = v.y;
-		
+
 		if ( v.y <= yMin )
 			yMin = v.y;
 	}

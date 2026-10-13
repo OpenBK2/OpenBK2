@@ -61,34 +61,34 @@ public:
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nLightmap); f.Add(3,&lmShift); f.Add(4,&fLMResolution); return 0; }
 
 		SLightmap() : nLightmap(-1), lmShift(0,0), fLMResolution(0.001f) {}
-		SLightmap( int _nLightmap, const CTPoint<int> &_lmShift, float _fLMResolution ) 
+		SLightmap( int _nLightmap, const CTPoint<int> &_lmShift, float _fLMResolution )
 			: nLightmap(_nLightmap), lmShift(_lmShift), fLMResolution(_fLMResolution) {}
 	};
 	ZDATA
 	std::unordered_map<int, SLightmap> lightmaps;
 	std::vector<CArray2D<NGfx::SPixel8888> > textures;
 	ZONSERIALIZE
-	ZEND int operator&( IBinSaver &f ) { 
-		f.Add(2,&lightmaps); 
-		f.Add(3,&textures);  
+	ZEND int operator&( IBinSaver &f ) {
+		f.Add(2,&lightmaps);
+		f.Add(3,&textures);
 		OnSerialize( f ); return 0; }
-	
+
 	void OnSerialize( IBinSaver &f )
 	{
 		/*
-		if ( !f.IsReading() ) 
+		if ( !f.IsReading() )
 		{
 			int r=rand();
-			
+
 			for( int i=0; i<textures.size(); ++i)
 			{
 				char buff[1024];
 				sprintf( buff, "C:\\test\\lm%i_%i.ddx", r, i );
-	
+
 				CFileStream stream( buff, CFileStream::WIN_CREATE );
 				NImage::ConvertAndSaveAsDDS( &stream, *(CArray2D<uint32_t> *)&textures[i], NImage::IMAGE_TYPE_PICTURE, NGfx::CF_DXT1, 1, true, true, 1024.0f);
 			}
-		
+
 		}*/
 	}
 };
@@ -182,7 +182,7 @@ static void AddPart( const SSphere &highResLM, std::vector<SLMGroup> *pRes, ISom
 	g.parts.push_back( SLMPartCalc( pPart, lmPos, lmSize, fLMResolution, geomBound, lmQuads ) );
 }
 
-static void RenderParallelDepth( IRender *pRender, NGfx::CRenderContext *pRC, 
+static void RenderParallelDepth( IRender *pRender, NGfx::CRenderContext *pRC,
 																const SSphere &_bound, const CVec3 &vDir, const SGroupSelect &_groupSelect,
 																SDirectionalDepthInfo *pDepthInfo )
 {
@@ -227,11 +227,11 @@ static void DrawBorder( NGfx::CRenderContext *pRC, int nXSize, int nYSize )
 	RenderRectLayout( &qr, 0, borderLayout );
 }
 
-static NGfx::EColorWriteMask depthChannels[3] = 
+static NGfx::EColorWriteMask depthChannels[3] =
 {
 	NGfx::COLORWRITE_RED, NGfx::COLORWRITE_GREEN, NGfx::COLORWRITE_BLUE
 };
-static void RecalcDepthChannels( IRender *pRender, NGfx::CTexture *pDepth, const SSphere &_bound,  
+static void RecalcDepthChannels( IRender *pRender, NGfx::CTexture *pDepth, const SSphere &_bound,
 															 const std::vector<CVec3> &skyDirs, std::vector<SDirectionalDepthInfo> *pDepthInfos,
 															 int nBase, const SGroupSelect &groupSelect )
 {
@@ -264,13 +264,13 @@ struct SLightmapTargetGeom
 	CTransformStack *pTS;
 //	int nTargetRegister;
 
-	SLightmapTargetGeom( CSceneFragments *_pGeom, NGfx::CRenderContext *_pRC, CTransformStack *_pTS ) 
+	SLightmapTargetGeom( CSceneFragments *_pGeom, NGfx::CRenderContext *_pRC, CTransformStack *_pTS )
 		: pGeom(_pGeom), pRC(_pRC), pTS(_pTS) {}
 };
 
-static void RenderLight( 
+static void RenderLight(
 												SLightmapTargetGeom *pTarget, const SLightInfo &lightInfo,
-												ERenderOperation op, ERenderOperation opTrans, CRenderCmdList::UParameter param1, 
+												ERenderOperation op, ERenderOperation opTrans, CRenderCmdList::UParameter param1,
 												int nStencilOp )
 {
 	NGfx::CRenderContext &rc = *pTarget->pRC;
@@ -296,7 +296,7 @@ static void RenderLight(
 	Execute( 0, &rc, *pTarget->pTS, res, *pTarget->pGeom, lightInfo );
 }
 
-static void RenderSkyCheck( SLightmapTargetGeom *pTarget, 
+static void RenderSkyCheck( SLightmapTargetGeom *pTarget,
 													 const std::vector<CVec3> &skyDirs, const std::vector<SDirectionalDepthInfo> &depthInfos,
 													 const CVec3 &vColor,
 													 int nBase,
@@ -372,7 +372,7 @@ static void RenderQuad( NGfx::CRenderContext *pRC, const CVec3 &_vCenter, const 
 
 static void RenderCubeMapDepth(
 	IRender *pRender,
-	const CVec3 &_vCenter, float fRadius, const CVec3 &_vNormal, 
+	const CVec3 &_vCenter, float fRadius, const CVec3 &_vNormal,
 	NGfx::CCubeTexture *pDepth )
 {
 	ASSERT( IsValid( pDepth ) );
@@ -428,14 +428,14 @@ static void RenderCubeMapDepth(
 		CRenderCmdList dp;
 		MakeSingleOp( &dp, geom, true, -1, 0, RO_CL_CUBEMAP_DEPTH );
 		Execute( 0, &rc, ts, dp, geom, lightInfo );
-		
+
 		if ( fabs2( _vNormal ) > 0 )
 			RenderQuad( &rc, _vCenter, _vNormal, fRadius );
 	}
 }
 
-static void RenderPointLightShadowed( 
-	SLightmapTargetGeom *pTarget, 
+static void RenderPointLightShadowed(
+	SLightmapTargetGeom *pTarget,
 	const CVec3 &_vCenter, float fRadius, const CVec3 &_vColor,
 	NGfx::CCubeTexture *pDepth, NGfx::CTexture *pAdd )
 {
@@ -463,7 +463,7 @@ static void MakeLMTS( CTransformStack *pTS, const CVec4 &vZ, int nLMSize )
 	ts.Init( m );
 }
 
-static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSphere &_bound, 
+static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSphere &_bound,
 	const SLMGroup &lmGroup,
 	const CLightState &ls,
 	const SGroupSelect &groupSelect, CArray2D<NGfx::SPixel8888> *pRes )
@@ -495,7 +495,7 @@ static void CalcLight( IRender *pRender, CSceneFragments *pTargetGeom, const SSp
 	{
 		RecalcDepthChannels( pRender, pDepth, _bound, skyDirs, &depthInfos, k, groupSelect );
 		rcTarget.SetTextureRT( pTargetFP1 );
-		RenderSkyCheck( 
+		RenderSkyCheck(
 			&lmTarget, skyDirs, depthInfos, ls.vAmbientColor,//CVec3(1,1,1),//
 			k, F_SKY_SINGLE_STRENGTH_MUL / nTotalSkyDirs, pDepth, pTargetFP2 );
 		std::swap( pTargetFP1, pTargetFP2 );
@@ -728,20 +728,20 @@ static CLightmapsHolder *CombineLightmaps( const std::vector<SLMGroup> &groups )
 			const SLMPartCalc &lm = g.parts[ nPart ];
 			const CArray2D<NGfx::SPixel8888> &tex = lm.lightmap;
 			ISomePart *pPart = lm.pPart;
-			
+
 			const SFullGroupInfo &info = pPart->GetFullGroupInfo();
 			int nUserID = info.nUserID;
 			ASSERT( nUserID != 0 );
 			//ASSERT( pRes->lightmaps.find( nUserID ) == pRes->lightmaps.end() );
-			
+
 			if(  pRes->lightmaps.find( nUserID ) != pRes->lightmaps.end() )continue;
-			
+
 			int nTexture;
 			CTPoint<int> texPos;
 			bool bAllocOk = lmAlloc.AllocRegion( tex, &texPos, &nTexture );
 			ASSERT( bAllocOk );
 
-		
+
 			pRes->lightmaps[ nUserID ] = CLightmapsHolder::SLightmap( nTexture, texPos, lm.fLMResolution );
 		}
 	}
@@ -750,7 +750,7 @@ static CLightmapsHolder *CombineLightmaps( const std::vector<SLMGroup> &groups )
 	pRes->textures.resize( nTextures );
 	for ( int k = 0; k < nTextures; ++k )
 		pRes->textures[k] = lmAlloc.GetTexture( k );
-	
+
 	// output amount of generated LMs
 	csSystem << nTextures << " lightmaps generated" << endl;
 
@@ -766,7 +766,7 @@ CLightmapsTempHolder *CreateLightmapsTempHolder()
 	return new  CLightmapsTempHolder();
 }
 
-CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, int nUserID, 
+CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, int nUserID,
 	const SSphere &highResLM, ELightmapQuality quality, CLightmapsTempHolder *pTmpHolder )
 {
 	if ( !CanCalcLM() )
@@ -841,7 +841,7 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene, IRender *pRender, CObjectBase 
 
 void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLightmapsHolder *pLightmaps, CLightmapsLoader * pLD  )
 {
-	
+
 	pLightmaps = pLD->GetHolder();
 	if ( !IsValid( pLightmaps ) )
 	{
@@ -871,7 +871,7 @@ void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLig
 
 		CPtrFuncBase<CObjectInfo> *pGeom = GetRawGeometry( pPart );
 		CGrannyMeshLoader *pML=CDynamicCast<CGrannyMeshLoader>( pGeom );
-		
+
 		extern std::unordered_set<std::string>  objects;
 
 
@@ -890,13 +890,13 @@ void ApplyLightmaps( IGScene *pScene, IRender *pRender, CObjectBase *pUser, CLig
 		else
 		if( pML == 0 || !pML->IsLightMapped() )
 		{
-	    
+
 			pPart->SetObjectInfoNode( new CLMGeometryGen( pGeom, lm.lmShift, lm.fLMResolution, false, false ) );
 
 		}
 	}
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////	
+////////////////////////////////////////////////////////////////////////////////////////////////////
 const CArray2D< NGfx::SPixel8888>& CLightmapsLoader::GetTexture(int UID)
 {
 	if ( pLM == 0 )

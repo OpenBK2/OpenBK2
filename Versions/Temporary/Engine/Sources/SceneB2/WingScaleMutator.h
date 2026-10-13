@@ -10,7 +10,7 @@ class CWingScaleMutator : public IWingScaleMutator
 		bool bShowStatic;
 		std::vector<int> scaledWings;
 		int nStaticWing;
-public:	
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&fScale); f.Add(3,&bShowStatic); f.Add(4,&scaledWings); f.Add(5,&nStaticWing); return 0; }
 private:
 

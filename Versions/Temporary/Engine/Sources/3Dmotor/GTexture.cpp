@@ -10,9 +10,9 @@
 
 NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 {
-	if ( hdr.ddspf.dwFlags & DDS_FOURCC ) 
+	if ( hdr.ddspf.dwFlags & DDS_FOURCC )
 	{
-		switch ( hdr.ddspf.dwFourCC ) 
+		switch ( hdr.ddspf.dwFourCC )
 		{
 			case MAKEFOURCC('D','X','T','1'):
 				return NGfx::CF_DXT1;
@@ -27,13 +27,13 @@ NGfx::EPixelFormat GetPixelFormat( const SDDSHeader &hdr )
 		}
 		ASSERT( false && "Unknown DXT format" );
 	}
-	else if ( (hdr.ddspf.dwFlags & DDS_RGB) == DDS_RGB ) 
+	else if ( (hdr.ddspf.dwFlags & DDS_RGB) == DDS_RGB )
 	{
-		if ( (hdr.ddspf.dwRGBBitCount == 32) && (hdr.ddspf.dwGBitMask == 0x0000ff00) ) 
+		if ( (hdr.ddspf.dwRGBBitCount == 32) && (hdr.ddspf.dwGBitMask == 0x0000ff00) )
 			return NGfx::CF_A8R8G8B8;
 		else if ( hdr.ddspf.dwRGBBitCount == 16 )
 		{
-			switch ( hdr.ddspf.dwGBitMask ) 
+			switch ( hdr.ddspf.dwGBitMask )
 			{
 				case 0x000003e0:
 					return NGfx::CF_A1R5G5B5;
@@ -81,7 +81,7 @@ STextureKey GetKey( const NDb::STexture *pTex )
 // CTextureLoader
 
 template <class TPixel, class TStream>
-void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY, 
+void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY,
 	int _nLevels, TStream *pFile, int nCutMip, const TPixel *p = 0 )
 {
 	CDynamicCast<NGfx::I2DBuffer> pTexBuffer( pTexture );
@@ -107,7 +107,7 @@ void LoadTextureData( NGfx::CTexture *pTexture, int _nX, int _nY, int _nSizeX, i
 
 static NGfx::EFace loadFace;
 template <class TPixel, class TStream>
-void LoadTextureData( NGfx::CCubeTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY, 
+void LoadTextureData( NGfx::CCubeTexture *pTexture, int _nX, int _nY, int _nSizeX, int _nSizeY,
 	int _nLevels, TStream *pFile, int nCutMip, const TPixel *p = 0 )
 {
 	CDynamicCast<NGfx::ICubeBuffer> pTexBuffer( pTexture );
@@ -255,13 +255,13 @@ static NGfx::CTexture* MakeTexture( const SDDSHeader &hdr, NGfx::ETextureUsage e
 	// 16 bit has to be built as a regular texture instead.
 	if ( eUsage == NGfx::TEXTURE_2D && ePixelFormat != NGfx::CF_A8R8G8B8 )
 		eUsage = NGfx::REGULAR;
-	return NGfx::MakeTexture( hdr.dwWidth >> nCutMips, hdr.dwHeight >> nCutMips, hdr.dwMipMapCount - nCutMips, 
+	return NGfx::MakeTexture( hdr.dwWidth >> nCutMips, hdr.dwHeight >> nCutMips, hdr.dwMipMapCount - nCutMips,
 		ePixelFormat, eUsage, eWrap );
 }
 
 void FixMips( SDDSHeader *pRes )
 {
-	if ( pRes->dwMipMapCount == 0 ) 
+	if ( pRes->dwMipMapCount == 0 )
 		pRes->dwMipMapCount = 1;
 	NGfx::EPixelFormat format = GetPixelFormat( *pRes );
 	int nMaxPossibleLevels = GetMSB( (std::min)(pRes->dwWidth, pRes->dwHeight) ) - ( (format >= NGfx::CF_DXT1) && (format <= NGfx::CF_DXT5) ? 2 : 0 );

@@ -125,7 +125,7 @@ void ResetStack()
 
 void SFLB4_PushInterface( IInterfaceBase *pInterface )
 {
-	if ( !interfaces.empty() ) 
+	if ( !interfaces.empty() )
 		interfaces.back()->OnGetFocus( false );
 	interfaces.push_back( pInterface );
 	pInterface->OnGetFocus( true );
@@ -137,12 +137,12 @@ void PushInterface( IInterfaceBase *pInterface )
 
 void PopInterface()
 {
-	if ( !interfaces.empty() ) 
+	if ( !interfaces.empty() )
 	{
 		interfaces.back()->OnGetFocus( false );
 		interfaces.pop_back();
 	}
-	if ( !interfaces.empty() ) 
+	if ( !interfaces.empty() )
 		interfaces.back()->OnGetFocus( true );
 }
 
@@ -259,7 +259,7 @@ static bool ProcessEvent( const SGameMessage &msg )
 {
 	if ( !interfaces.empty() )
 	{
-		CInterfacesList::iterator it = interfaces.end(); 
+		CInterfacesList::iterator it = interfaces.end();
 		while ( it != interfaces.begin() )
 		{
 			--it;
@@ -335,7 +335,7 @@ bool StepApp( bool bActive )
 	NInput::PumpMessages( bActive );
 
 	// step only top interface
-	if ( !interfaces.empty() ) 
+	if ( !interfaces.empty() )
 	{
 		//if ( bActive )
 		//	NGfx::CheckBackBufferSize();

@@ -44,10 +44,10 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 		}
 		pScene->CreateRects( NGScene::GetSWTex( pTexture ), rl );
 	}
-	void CreateDynamicRects( const NDb::STexture *pTexture, 
-		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture ) 
+	void CreateDynamicRects( const NDb::STexture *pTexture,
+		const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 	{
-		NI_ASSERT( 0, "not implemented" ); 
+		NI_ASSERT( 0, "not implemented" );
 	}
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *_pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow )
 	{
@@ -70,10 +70,10 @@ struct SRLBuilder : public NGScene::ILayoutFakeView
 CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, const CTPoint<int> &_size )
 : bNeedUpdate(true), fixedSize(_size), eUsage( _eUsage ), nOutlineType(_nOutlineType), size(1,1)
 {
-	//ASSERT( OutlineIDs.size() ); //call before SetOutlineIDs 
+	//ASSERT( OutlineIDs.size() ); //call before SetOutlineIDs
 }
 
-/*void CIconOutliner::SetOutlineIDs( const vector<int> &_OutlineIDs ) 
+/*void CIconOutliner::SetOutlineIDs( const vector<int> &_OutlineIDs )
 {
 	if ( OutlineIDs.size() )
 		return;
@@ -84,11 +84,11 @@ CIconOutliner::CIconOutliner( CDBID _nOutlineType, NGfx::ETextureUsage _eUsage, 
 	}
 }*/
 
-bool CIconOutliner::NeedUpdate() 
-{ 
-	bool bRes = bNeedUpdate; 
-	bNeedUpdate = false; 
-	return bRes; 
+bool CIconOutliner::NeedUpdate()
+{
+	bool bRes = bNeedUpdate;
+	bNeedUpdate = false;
+	return bRes;
 }
 
 CVec2 CIconOutliner::GetOutlineAdd( const CDBID &nOutlineType )
@@ -98,7 +98,7 @@ CVec2 CIconOutliner::GetOutlineAdd( const CDBID &nOutlineType )
 }
 
 void CIconOutliner::Recalc()
-{	
+{
 	NGfx::EPixelFormat pf = NGfx::Is16BitTextures() ? NGfx::CF_A4R4G4B4 : NGfx::CF_A8R8G8B8;
 	pValue = NGfx::MakeTexture( size.x, size.y, 1, pf, eUsage, NGfx::CLAMP );
 	if ( !IsValid(pValue) )
@@ -156,7 +156,7 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 		fmtProcessed.AddOutline( nOutlineType );
 
 	bool bIsFixedSize = fixedSize.x != 0 && fixedSize.y != 0;
-	int nSizeXAdd = (eUsage==NGfx::TEXTURE_2D)?GetSizeAdd().x:0; 
+	int nSizeXAdd = (eUsage==NGfx::TEXTURE_2D)?GetSizeAdd().x:0;
 	int nSizeYAdd = (eUsage==NGfx::TEXTURE_2D)?GetSizeAdd().y:0;
 	CTPoint<int> resSize = fixedSize;
 	for ( int k = 0; k < fmtProcessed.cmds.size(); ++k )
@@ -218,7 +218,7 @@ void CIconOutliner::SetFormat( const SFormattingInfo &_fmt )
 					pML->Generate( resSize.x - cmd.vPos.x );
 					CTPoint<int> sz = pML->GetSize();
 					cmd.vSize.x = sz.x;
-					cmd.vSize.y = sz.y; 
+					cmd.vSize.y = sz.y;
 					ASSERT( sz.x <= resSize.x - cmd.vPos.x );
 					ASSERT( sz.y <= resSize.y - cmd.vPos.y );
 				}

@@ -47,7 +47,7 @@ public:
 	CVec3 vSceneColor;								// CVec3( 0 ... 255 )
 	CVec4 vTerrainColor;							// CVec4( 0 ... 255 )
 	int nMaxAnimationsCount;					// 0 ... 64
-	float fAnimationsCircleDistance;	// in vis tiles ( 2 ... 32 ) 
+	float fAnimationsCircleDistance;	// in vis tiles ( 2 ... 32 )
 	float fAnimationsBetweenDistance; // in vis tiles ( 2 ... 16 )
 	int nGameTimerSpeed;							// -10 ... +10
 	//

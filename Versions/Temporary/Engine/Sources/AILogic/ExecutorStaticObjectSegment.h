@@ -7,7 +7,7 @@ class CExecutorStaticObjectSegment :	public CExecutor
 {
 	OBJECT_BASIC_METHODS(CExecutorStaticObjectSegment)
 	ZDATA_(CExecutor)
-	CPtr<CStaticObject> pObject;  
+	CPtr<CStaticObject> pObject;
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pObject); return 0; }
 
 	bool IsExecutorValidInternal() const;

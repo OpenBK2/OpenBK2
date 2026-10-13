@@ -14,7 +14,7 @@ const int NO_MOD = -1;
 
 // CInterfaceLoadMod
 
-CInterfaceLoadMod::CInterfaceLoadMod() : 
+CInterfaceLoadMod::CInterfaceLoadMod() :
 	CInterfaceScreenBase( "LoadMod", "load_mod" ),
 	nInitialMod( NO_MOD )
 {
@@ -26,7 +26,7 @@ bool CInterfaceLoadMod::Init()
 		return false;
 
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -43,14 +43,14 @@ void CInterfaceLoadMod::MakeInterior()
 
 	pModsListCont = GetChildChecked<IScrollableContainer>( pModsListPanel, "ModsListCont", true );
 	pModsListItemTemplate = GetChildChecked<IWindow>( pModsListPanel, "ModsListItem", true );
-	
+
 	if ( pModsListItemTemplate )
 		pModsListItemTemplate->ShowWindow( false );
 
 	pModDescCont = GetChildChecked<IScrollableContainer>( pModDescPanel, "ModDescCont", true );
 	pModDescView = GetChildChecked<ITextView>( pModDescPanel, "ModDescView", true );
 	pModNameView = GetChildChecked<ITextView>( pModDescPanel, "ModDescNameView", true );
-	
+
 	if ( pModDescCont )
 	{
 		if ( pModNameView )
@@ -58,7 +58,7 @@ void CInterfaceLoadMod::MakeInterior()
 		if ( pModDescView )
 			pModDescCont->PushBack( pModDescView, false );
 	}
-	
+
 	pDefaultBtn = GetChildChecked<IButton>( pBottomPanel, "DefaultBtn", true );
 	pAcceptBtn = GetChildChecked<IButton>( pBottomPanel, "AcceptBtn", true );
 
@@ -69,7 +69,7 @@ void CInterfaceLoadMod::MakeInterior()
 		NMOD::SMOD &gameMOD = gameMODs[i];
 		AddMod( gameMOD.wszName, gameMOD.wszDesc, gameMOD.szFullFolderPath );
 	}
-	
+
 	if ( IScreen *pScreen = GetScreen() )
 	{
 		wszModDefaultName = pScreen->GetTextEntry( "T_MOD_DEFAULT_NAME" );
@@ -93,7 +93,7 @@ void CInterfaceLoadMod::MakeInterior()
 			}
 		}
 	}
-	
+
 	if ( pModsListCont )
 		pModsListCont->Select( pWnd );
 
@@ -109,7 +109,7 @@ void CInterfaceLoadMod::AddMod( const std::wstring &wszName, const std::wstring 
 	mod.wszName = wszName;
 	mod.wszDesc = wszDesc;
 	mod.szFullFolderPath = szFullFolderPath;
-	
+
 	if ( mod.pWnd )
 		mod.pWnd->ShowWindow( true );
 	if ( mod.pNameView )
@@ -129,14 +129,14 @@ const CInterfaceLoadMod::SMod* CInterfaceLoadMod::FindSelected() const
 		pSelectedWnd = pModsListCont->GetSelectedItem();
 	if ( !pSelectedWnd )
 		return 0;
-		
+
 	for ( int i = 0; i < mods.size(); ++i )
 	{
 		const SMod &mod = mods[i];
 		if ( mod.pWnd == pSelectedWnd )
 			return &mod;
 	}
-	
+
 	return 0;
 }
 
@@ -193,7 +193,7 @@ bool CInterfaceLoadMod::OnAccept()
 bool CInterfaceLoadMod::OnSelect()
 {
 	UpdateSelection();
-	
+
 	return true;
 }
 
@@ -230,7 +230,7 @@ void CInterfaceLoadMod::UpdateSelection()
 	}
 
 	const SMod *pMod = FindSelected();
-		
+
 	if ( !pMod || !pMod->pWnd )
 	{
 		if ( pModNameView )
@@ -239,7 +239,7 @@ void CInterfaceLoadMod::UpdateSelection()
 			pModDescView->SetText( pModDescView->GetDBText() + wszModDefaultDesc );
 		if ( pModDescCont )
 			pModDescCont->Update();
-			
+
 		if ( pDefaultBtn )
 			pDefaultBtn->Enable( false );
 		if ( pAcceptBtn )
@@ -247,7 +247,7 @@ void CInterfaceLoadMod::UpdateSelection()
 
 		return;
 	}
-	
+
 	if ( pModNameView )
 		pModNameView->SetText( pModNameView->GetDBText() + pMod->wszName );
 	if ( pModDescView )
@@ -260,7 +260,7 @@ void CInterfaceLoadMod::UpdateSelection()
 		pDefaultBtn->Enable( true );
 	if ( pAcceptBtn )
 		pAcceptBtn->Enable( IsChanged() );
-		
+
 	pPrevCheckedWnd = pMod->pCheckedWnd;
 	if ( pPrevCheckedWnd )
 		pPrevCheckedWnd->ShowWindow( true );

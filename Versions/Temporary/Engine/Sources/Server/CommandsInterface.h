@@ -15,7 +15,7 @@ class CCommandsBase : public CObjectBase
 protected:
 	void PreprocessLine( std::string *pszLine, std::vector<std::string> *pszWords );
 	void PushCommand( const SCommand &cmd );
-public:	
+public:
 	virtual void GetStringCommands( std::vector<std::string> *pCommands ) = 0;
 	virtual bool LineEntered( const std::string &szLine, std::string *pszErr ) = 0;
 

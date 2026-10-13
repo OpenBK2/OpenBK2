@@ -14,14 +14,14 @@
 
 static const char *getfuncname (lua_State *L, TObject *f, const char **name);
 
-static void setnormalized( lua_State *L, TObject *d, const TObject *s ) 
+static void setnormalized( lua_State *L, TObject *d, const TObject *s )
 {
   if ( s->GetType() == LUA_TMARK )
 	{
 		CallInfo *ci = L->callInfos[ s->GetCI() ];
     d->SetCL( ci->nFunc );
 	}
-  else 
+  else
 		*d = *s;
 }
 
@@ -51,7 +51,7 @@ lua_Hook lua_setlinehook (lua_State *L, lua_Hook func) {
 */
 static TObject* aux_stackedfunction (lua_State *L, int level, TObject *top) {
   TObject *pCurr;
-  for ( pCurr = (top-1); pCurr >= &L->pCT->stack[0]; --pCurr ) 
+  for ( pCurr = (top-1); pCurr >= &L->pCT->stack[0]; --pCurr )
 	{
     if ( is_T_MARK( pCurr->GetType() ) ) {
       if (level == 0)
@@ -65,7 +65,7 @@ static TObject* aux_stackedfunction (lua_State *L, int level, TObject *top) {
 
 int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
 	TObject* f = aux_stackedfunction(L, level, LObj( L, L->pCT->top ) );
-  if (f == NULL) return 0;  // there is no such level 
+  if (f == NULL) return 0;  // there is no such level
   else {
     ar->_func = f;
     return 1;
@@ -75,7 +75,7 @@ int lua_getstack (lua_State *L, int level, lua_Debug *ar) {
 
 static int nups( lua_State *L, TObject* f )
 {
-  switch ( f->GetType() ) 
+  switch ( f->GetType() )
 	{
     case LUA_TFUNCTION:
       return L->closures[ f->GetCL() ]->upvalues.size();
@@ -96,20 +96,20 @@ int luaG_getline ( const std::vector<int> &lineinfo, int pc, int refline, int *p
     return -1;  // no line info or function is not active
   refi = prefi ? *prefi : 0;
   if (lineinfo[refi] < 0)
-    refline += -lineinfo[refi++]; 
+    refline += -lineinfo[refi++];
   LUA_ASSERT(lineinfo[refi] >= 0, "invalid line info");
   while (lineinfo[refi] > pc) {
     refline--;
     refi--;
     if (lineinfo[refi] < 0)
-      refline -= -lineinfo[refi--]; 
+      refline -= -lineinfo[refi--];
     LUA_ASSERT(lineinfo[refi] >= 0, "invalid line info");
   }
   for (;;) {
     int nextline = refline + 1;
     int nextref = refi + 1;
     if (lineinfo[nextref] < 0)
-      nextline += -lineinfo[nextref++]; 
+      nextline += -lineinfo[nextref++];
     LUA_ASSERT(lineinfo[nextref] >= 0, "invalid line info");
     if (lineinfo[nextref] > pc)
       break;
@@ -121,7 +121,7 @@ int luaG_getline ( const std::vector<int> &lineinfo, int pc, int refline, int *p
 }
 
 
-static int currentpc (TObject *f) 
+static int currentpc (TObject *f)
 {
 	return 0;
 /*  CallInfo *ci = f->GetCI();
@@ -133,11 +133,11 @@ static int currentpc (TObject *f)
 		*/
 }
 
-static int currentline (lua_State *L, TObject* f) 
+static int currentline (lua_State *L, TObject* f)
 {
   if (!isLmark(L, f))
-    return -1;  // only active lua functions have current-line information 
-  else 
+    return -1;  // only active lua functions have current-line information
+  else
 	{
     CallInfo *ci = L->callInfos[ f->GetCI() ];
 		Closure *cl = L->closures[ ci->nFunc ];
@@ -148,7 +148,7 @@ static int currentline (lua_State *L, TObject* f)
 /*
 
 
-static Proto *getluaproto (StkId f) 
+static Proto *getluaproto (StkId f)
 {
   return isLmark(f) ? f->GetCI()->func->f.l : NULL;
 }
@@ -161,7 +161,7 @@ const char *lua_getlocal (lua_State *L, const lua_Debug *ar, int n) {
   if (!fp) return NULL;  // `f' is not a Lua function?
   name = luaF_getlocalname(fp, n, currentpc(f));
   if (!name) return NULL;
-  luaA_pushobject(L, (f+1)+(n-1));  // push value 
+  luaA_pushobject(L, (f+1)+(n-1));  // push value
   return name;
 }
 
@@ -170,10 +170,10 @@ const char *lua_setlocal (lua_State *L, const lua_Debug *ar, int n) {
   const char *name;
   StkId f = ar->_func;
   Proto *fp = getluaproto(f);
-  L->pCT->top--;  // pop new value 
-  if (!fp) return NULL;  // `f' is not a Lua function? 
+  L->pCT->top--;  // pop new value
+  if (!fp) return NULL;  // `f' is not a Lua function?
   name = luaF_getlocalname(fp, n, currentpc(f));
-  if (!name || name[0] == '(') return NULL;  // `(' starts private locals 
+  if (!name || name[0] == '(') return NULL;  // `(' starts private locals
   *((f+1)+(n-1)) = *L->pCT->top;
   return name;
 }
@@ -188,10 +188,10 @@ static void infoLproto (lua_Debug *ar, Proto *f) {
 }
 
 
-static void funcinfo( lua_State *L, lua_Debug *ar, TObject* func ) 
+static void funcinfo( lua_State *L, lua_Debug *ar, TObject* func )
 {
   Closure *cl = NULL;
-  switch ( func->GetType() ) 
+  switch ( func->GetType() )
 	{
     case LUA_TFUNCTION:
       cl = L->closures[ func->GetCL() ];
@@ -207,7 +207,7 @@ static void funcinfo( lua_State *L, lua_Debug *ar, TObject* func )
       lua_error(L, "value for `lua_getinfo' is not a function");
 			break;
   }
-  if (cl->isC) 
+  if (cl->isC)
 	{
     ar->source = "=C";
     ar->linedefined = -1;
@@ -231,11 +231,11 @@ static void funcinfo( lua_State *L, lua_Debug *ar, TObject* func )
 }
 
 
-static const char *travtagmethods (lua_State *L, const TObject *o) 
+static const char *travtagmethods (lua_State *L, const TObject *o)
 {
-  if ( o->GetType() == LUA_TFUNCTION ) 
+  if ( o->GetType() == LUA_TFUNCTION )
 	{
-    for ( int e = 0; e < TM_N; ++e ) 
+    for ( int e = 0; e < TM_N; ++e )
 		{
       for ( int t = 0; t < L->TMtable.size(); ++t )
 			{
@@ -252,7 +252,7 @@ static const char *travglobals (lua_State *L, const TObject *o) {
   Hash *g = L->tables[ L->nGT ];
 	for ( Hash::CObjHash::iterator it = g->h.begin(); it != g->h.end(); ++it )
 	{
-		if ( luaO_equalObj( o, &it->second ) && it->first.GetType() == LUA_TSTRING ) 
+		if ( luaO_equalObj( o, &it->second ) && it->first.GetType() == LUA_TSTRING )
 			return it->first.GetS()->c_str();
 	}
   return NULL;
@@ -262,13 +262,13 @@ static const char *travglobals (lua_State *L, const TObject *o) {
 static void getname (lua_State *L, TObject *f, lua_Debug *ar) {
   TObject o;
   setnormalized( L, &o, f);
-  // try to find a name for given function 
+  // try to find a name for given function
   if ((ar->name = travglobals(L, &o)) != NULL)
     ar->namewhat = "global";
-  // not found: try tag methods 
+  // not found: try tag methods
   else if ((ar->name = travtagmethods(L, &o)) != NULL)
     ar->namewhat = "tag-method";
-  else ar->namewhat = "";  // not found at all 
+  else ar->namewhat = "";  // not found at all
 }
 
 int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
@@ -277,7 +277,7 @@ int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
   if (isactive)
     func = ar->_func;
   else {
-    what++;  // skip the '>' 
+    what++;  // skip the '>'
     func = LObj(L, L->pCT->top - 1);
   }
   for (; *what; what++) {
@@ -302,13 +302,13 @@ int lua_getinfo (lua_State *L, const char *what, lua_Debug *ar) {
       }
       case 'f': {
         setnormalized( L, LObj(L, L->pCT->top), func);
-        incr_top;  // push function 
+        incr_top;  // push function
         break;
       }
-      default: return 0;  // invalid option 
+      default: return 0;  // invalid option
     }
   }
-  if (!isactive) L->pCT->top--;  // pop function 
+  if (!isactive) L->pCT->top--;  // pop function
   return 1;
 }
 
@@ -326,12 +326,12 @@ static int pushpc (int *stack, int pc, int top, int n) {
 
 
 static Instruction luaG_symbexec (const Proto *pt, int lastpc, int stackpos) {
-  int stack[MAXSTACK];  // stores last instruction that changed a stack entry 
+  int stack[MAXSTACK];  // stores last instruction that changed a stack entry
   const Instruction *code = &pt->code[0];
   int top = pt->numparams;
   int pc = 0;
-  if (pt->is_vararg)  // varargs? 
-    top++;  // `arg' 
+  if (pt->is_vararg)  // varargs?
+    top++;  // `arg'
   while (pc < lastpc) {
     const Instruction i = code[pc++];
     LUA_ASSERT(0 <= top && top <= pt->maxstacksize, "wrong stack");
@@ -383,13 +383,13 @@ static Instruction luaG_symbexec (const Proto *pt, int lastpc, int stackpos) {
       case OP_JMPONT:
       case OP_JMPONF: {
         int newpc = pc + GETARG_S(i);
-        // jump is forward and do not skip `lastpc'? 
+        // jump is forward and do not skip `lastpc'?
         if (pc < newpc && newpc <= lastpc) {
-          stack[top-1] = pc-1;  // value comes from `and'/`or' 
-          pc = newpc;  // do the jump 
+          stack[top-1] = pc-1;  // value comes from `and'/`or'
+          pc = newpc;  // do the jump
         }
         else
-          top--;  // do not jump; pop value 
+          top--;  // do not jump; pop value
         break;
       }
       default: {
@@ -409,13 +409,13 @@ static const char *getobjname (lua_State *L, TObject *obj, const char **name) {
 	*name = 0;
   TObject *func = aux_stackedfunction(L, 0, obj);
   if (!isLmark(L, func))
-    return NULL;  // not an active Lua function 
+    return NULL;  // not an active Lua function
   else {
 		CallInfo *ci = L->callInfos[ func->GetCI() ];
 		Closure *cl = L->closures[ ci->nFunc ];
     Proto *p = L->protos[ cl->f.nProto ];
     int pc = currentpc(func);
-    int stackpos = obj - (func+1);  // func+1 == function base 
+    int stackpos = obj - (func+1);  // func+1 == function base
     Instruction i = luaG_symbexec(p, pc, stackpos);
     LUA_ASSERT(pc != -1, "function must be active");
     switch (GET_OPCODE(i)) {
@@ -434,37 +434,37 @@ static const char *getobjname (lua_State *L, TObject *obj, const char **name) {
         return "field";
       }
       default:
-        return NULL;  // no useful name found 
+        return NULL;  // no useful name found
     }
   }
 }
 
 
 static const char *getfuncname (lua_State *L, TObject *f, const char **name) {
-  TObject* func = aux_stackedfunction(L, 0, f);  // calling function 
+  TObject* func = aux_stackedfunction(L, 0, f);  // calling function
   if (!isLmark(L, func))
-    return NULL;  // not an active Lua function 
+    return NULL;  // not an active Lua function
   else {
 		CallInfo *ci = L->callInfos[ func->GetCI() ];
 		Closure *cl = L->closures[ ci->nFunc ];
 		Proto *p = L->protos[ cl->f.nProto ];
     int pc = currentpc(func);
     Instruction i;
-    if (pc == -1) return NULL;  // function is not activated 
+    if (pc == -1) return NULL;  // function is not activated
     i = p->code[pc];
     switch (GET_OPCODE(i)) {
       case OP_CALL: case OP_TAILCALL:
         return getobjname(L, (func+1)+GETARG_A(i), name);
       default:
-        return NULL;  // no useful name found 
+        return NULL;  // no useful name found
     }
   }
 }
 
 
-// }====================================================== 
+// }======================================================
 
-void luaG_typeerror ( lua_State *L, TObject *o, const char *op ) 
+void luaG_typeerror ( lua_State *L, TObject *o, const char *op )
 {
   //const char *name = 0;
   //const char *kind = getobjname(L, o, &name);
@@ -473,7 +473,7 @@ void luaG_typeerror ( lua_State *L, TObject *o, const char *op )
 	//{
 	//	luaO_verror(L, "attempt to %.30s %.20s `%.40s' (a %.10s value)", op, kind, name, t);
 	//}
-	//else	
+	//else
 	{
    luaO_verror(L, "attempt to %.30s a %.10s value", op, t);
 	}

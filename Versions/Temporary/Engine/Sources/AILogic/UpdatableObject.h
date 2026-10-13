@@ -41,11 +41,11 @@ public:
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo ) { NI_ASSERT( false, "Wrong call of GetNewUnitInfo" ); }
 	virtual void GetProjectileInfo( struct SAINotifyNewProjectile *pProjectileInfo ) { NI_ASSERT( false, "Wrong call of GetProjectileInfo" ); }
 	virtual void GetDyingInfo( struct SAINotifyAction *pDyingInfo, bool *pbVisibleWhenDie ) { NI_ASSERT( false, "Wrong call of GetDyingInfo" ); }
-	
+
 	virtual void GetMechShotInfo( struct SAINotifyMechShot *pMechShotInfo, const NTimer::STime &time ) const { NI_ASSERT( false, "Wrong call of GetMechShotInfo" ); }
 	virtual void GetInfantryShotInfo( struct SAINotifyInfantryShot *pInfantryShotInfo, const NTimer::STime &time ) const { NI_ASSERT( false, "Wrong call of GetInfantryShotInfo" ); }
 	virtual void GetEntranceStateInfo( struct SAINotifyEntranceState *pInfo ) const { NI_ASSERT( false, "Wrong call of GetEntranceStateInfo" ); }
-	
+
 	virtual void GetRevealCircle( CCircle *pCircle ) const { NI_ASSERT( false, "Wrong call of GetCircle" ); }
 	virtual void GetShootAreas( struct SShootAreas *pShootAreas, int *pnAreas ) const { *pnAreas = 0; }
 	virtual void GetRangeArea( struct SShootAreas *pRangeArea ) const {  }
@@ -54,7 +54,7 @@ public:
 
 	virtual const uint8_t GetPlayer() const { NI_ASSERT( false, "Wrong call of GetPlayer" ); return 0xff; }
 	virtual const int GetNAIGroup() const { return -2; }
-	
+
 	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const;
 
 	virtual const int GetUnitState() const { return 0; }
@@ -69,13 +69,13 @@ public:
 	virtual CUpdatableObj* GetDieObject() const { NI_ASSERT( false, "Wrong call of GetDieObject" ); return 0; }
 
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const { NI_ASSERT( false, "wrong call" ); return false; }
-	// 
+	//
 	virtual const int GetUniqueId() const = 0;
-	
+
 	virtual void SetScriptID( const int nScriptID ) { }
-	
+
 	virtual const NDb::SHPObjectRPGStats *GetStats() const { return 0; }
-	
+
 	virtual void AnimationSet( int nAnimation ) { }
 	virtual bool IsFree() const { return true; }
 };

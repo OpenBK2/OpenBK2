@@ -27,7 +27,7 @@ void luaD_checkstack (lua_State *L, int n);
 
 void luaD_breakrun (lua_State *L, int errcode);
 
-bool luaD_startCall (lua_State *L, StkId func, int nResults); 
+bool luaD_startCall (lua_State *L, StkId func, int nResults);
 void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstresult );
 
 

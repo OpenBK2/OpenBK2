@@ -58,7 +58,7 @@ private:
 	};
 
 	typedef det_map<int, SActionDesc> CActionsMap;
-	
+
 	struct SMapCommandAck
 	{
 		ZDATA
@@ -68,18 +68,18 @@ private:
 		float fShowTime;
 		CVec3 vPos;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nUniqueID); f.Add(3,&pModel); f.Add(4,&bPlaced); f.Add(5,&fShowTime); f.Add(6,&vPos); return 0; }
-		
+
 		NTimer::STime nTime;
 	public:
 		SMapCommandAck() : nTime( 0 ) {}
-		
+
 		void Place( const CVec3 &vPos );
 		void Place( const CVec3 &vPos, const CVec3 &vStartPos );
 		void Update();
 	};
-	
+
 	struct SUISelection;
-	
+
 	//
 	CDBPtr<NDb::SMapInfo> pMapInfo;
 	//
@@ -108,10 +108,10 @@ private:
 
 	bool bAreasShown;
 	bool bRangesShown;
-	
+
 	SMapCommandAck mapCommandAck;
 	SMapCommandAck mapCommandAckDir;
-	
+
 	bool bCameraUpdated; // don't save
 	CPtr<IAILogic> pAI;
 
@@ -120,7 +120,7 @@ private:
 	bool bOnMinimap; // don't save
 	bool bOnMinimapOff; // don't save
 	std::vector<SSoundTerrainInfo> terrainSounds;
-	
+
 	typedef det_map< int, CPtr<CMOSelectable> > CSpecialGroup;
 	CSpecialGroup sgFighters;
 	CSpecialGroup sgGroundAttackPlanes;
@@ -130,7 +130,7 @@ private:
 	CSpecialGroup sgSuperWeapons;
 
 	CPtr<IScenarioTracker> pScenarioTracker;
-	
+
 	bool bUISelectionMode; // don't save
 	bool bUISelectionDir; // don't save
 	CVec2 vUISelectionStartDir; // don't save
@@ -139,7 +139,7 @@ private:
 
 	typedef det_map< int, CPtr<CMapObj> > CObjMap;
 	CObjMap ownAvia;
-	
+
 	struct SUnitIcon
 	{
 		ZDATA
@@ -149,22 +149,22 @@ private:
 	};
 	typedef det_map< int, SUnitIcon > CUnitIconMap;
 	CUnitIconMap unitIcons;
-	
+
 	std::vector<CVec4> minimapColors;
 	bool bIsOwnUnitsPresent;
 
 	std::vector< det_map< int, int > > xrayUnits; // vector by players < id, time >, don't save
 	NTimer::STime timeAbs; // don't save
-	
+
 	CPtr<IMissionSuperWeapon> pSuperWeapon;
 private:
 	void MsgScrollMap( const SGameMessage &msg );
-	
+
 	void MsgStartSelection( const SGameMessage &msg );
 	void MsgUpdateSelection( const SGameMessage &msg );
 	void MsgEndSelection( const SGameMessage &msg );
 	void MsgCancelSelection( const SGameMessage &msg );
-	
+
 	void MsgSetTarget( const SGameMessage &msg );
 	void MsgResetTarget( const SGameMessage &msg );
 	void MsgUpdateDirection( const SGameMessage &msg );
@@ -176,10 +176,10 @@ private:
 	void MsgUpdateSelectedUnit( const SGameMessage &msg );
 
 	void MsgSetSpecialAbility( const SGameMessage &msg );
-	
+
 //	bool MsgShiftDown( const SGameMessage &msg )	{ SetPlaceInQueue( true ); return false; }
 //	bool MsgShiftUp( const SGameMessage &msg )	{ SetPlaceInQueue( false ); return false; }
-	
+
 	void MsgAreasUp( const SGameMessage &msg );
 	void MsgAreasDown( const SGameMessage &msg );
 	void MsgRangesUp( const SGameMessage &msg );
@@ -203,13 +203,13 @@ private:
 	void MsgRestoreSelectionGroup( const SGameMessage &msg, int nParam );
 	void MsgCenterSelectionGroup( const SGameMessage &msg, int nParam );
 	void MsgCenterCurrentSelection( const SGameMessage &msg );
-	
+
 	void UpdateCursorObjects( const CVec2 &vPos );
 	bool IsObstacleObject( CMapObj *pMO ) const;
-	
+
 	void PlaceMapCommandAck( const CVec2 &vTarget );
 	void PlaceMapCommandAckDir( const CVec2 &vTarget );
-	
+
 	bool IsFighter( CMapObj *pMO ) const;
 	bool IsGroundAttackPlane( CMapObj *pMO ) const;
 	bool IsReconPlane( CMapObj *pMO ) const;
@@ -219,14 +219,14 @@ private:
 	bool IsAviation( CMapObj *pMO ) const;
 	// pMO == 0 - remove object
 	void UpdateSpecialGroups( int nID, CMapObj *pMO );
-	
+
 	void CenterSelectionGroupPrivate( const std::vector<CMOSelectable*> &group );
 
 	void OnSelectSlot( int nSlot, uint16_t wKeyboardFlags );
 	void OnActionOnSlot( int nSlot, uint16_t wKeyboardFlags );
-	
+
 	void ShowSelectionDst( const CVec2 &vTarget );
-	void ShowSelectionDst( SUISelection *pUISelection, const CVec2 &vMovePos, 
+	void ShowSelectionDst( SUISelection *pUISelection, const CVec2 &vMovePos,
 		const CVec2 &vStartDirPos, const CVec2 &vFinishDirPos, bool bFadeOut );
 	void ClearSelectionDst();
 	void GotoSelectionDst( SUISelection *pUISelection );
@@ -249,9 +249,9 @@ private:
 protected:
 	void SetCursor( NDb::EUserAction _eForcedAction );
 	void SetForcedAction( NDb::EUserAction eForcedAction );
-	NDb::EUserAction GetForcedAction() const { return eForcedAction; } 
+	NDb::EUserAction GetForcedAction() const { return eForcedAction; }
 	bool IsForcedAction() const { return GetForcedAction() != NDb::USER_ACTION_UNKNOWN; }
-	
+
 	NDb::EUserAction DetermineBestAutoAction( CMapObj *_pMO, bool bAltMode );
 	NDb::EUserAction DetermineBestCtrlAction( CMapObj *_pMO );
 
@@ -276,13 +276,13 @@ protected:
 		bFirstCommandPointDef= true;
 	}
 	const bool IsFirstCommandPointDefined() const { return bFirstCommandPointDef; }
-	const CVec2 GetFirstCommandPoint() const { 
+	const CVec2 GetFirstCommandPoint() const {
 		NI_ASSERT( IsFirstCommandPointDefined(), "Trying recieve first point for command before its defenition." );
 		return vFirstCommandPoint;
 	}
 
 	void DoAction( const CVec2 &vPos, bool bMiniMap, enum EKeyboardFlags eFlags );
-	void DoAction( USER_ACTION pfnAction, NDb::EUserAction eUserAction, const CVec2 &vTarget, const CMapObj *pMO, 
+	void DoAction( USER_ACTION pfnAction, NDb::EUserAction eUserAction, const CVec2 &vTarget, const CMapObj *pMO,
 		bool bSelfAction, bool bShiftState, bool bLikeForced );
 
 //	void SetPlaceInQueue( bool bPlaceInQueue ) { bPlaceCommandInQuery = bPlaceInQueue; }
@@ -290,7 +290,7 @@ protected:
 	bool GetPlaceInQueue() const { return pMouseTranslator->IsShiftDown(); }
 
 	void MsgResetForcedAction( const SGameMessage &msg );
-	
+
 	void InitPrivate();
 
 	virtual void PlayerObjectiveChanged( const int nObjective, const EMissionObjectiveState eState );
@@ -311,7 +311,7 @@ protected:
 	//}
 public:
 	CWorldClient();
-	CWorldClient( ITransceiver *pTransceiver, IVisualNotifications *pNotifications, IAILogic *pAI, 
+	CWorldClient( ITransceiver *pTransceiver, IVisualNotifications *pNotifications, IAILogic *pAI,
 		IScenarioTracker *pScenarioTracker, IMissionSuperWeapon *pSuperWeapon );
 	~CWorldClient();
 
@@ -320,7 +320,7 @@ public:
 	bool ProcessEvent( const struct SGameMessage &msg );
 	bool PickMapObj( const CVec2 &vPos, std::list<int> *pPickObjects );
 	CMapObj *PickTopMapObj( const CVec2 &vPos );
-	// PickTopMapObj that can be actioned upon with eActionOn 
+	// PickTopMapObj that can be actioned upon with eActionOn
 	CMapObj *PickTopMapObj( const CVec2 &vPos, const NDb::EUserAction eActionOn );
 
 	// vPos - in AI coords
@@ -353,7 +353,7 @@ public:
 	bool ActionBoard( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionLeave( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionMechBoard( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
-	
+
 	bool ActionLeaveOneSquad( const int nIndex );
 
 	bool ActionInstall( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
@@ -362,7 +362,7 @@ public:
 	bool ActionCaptureArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionHookArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionDeployArtillery( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
-	
+
 	bool ActionEntrenchSelf( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionPlaceMines( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
 	bool ActionClearMines( const CVec2 &vPos, const CMapObj *pMO, bool bForced );
@@ -460,7 +460,7 @@ public:
 
 	void MsgSetForcedAction( const SGameMessage &msg );
 	void MsgSetForcedActionWithParam( const SGameMessage &msg, CObjectBase *pParam );
-	
+
 	bool IsCameraUpdated() const { return bCameraUpdated; }
 	void ResetCameraUpdated() { bCameraUpdated = false; }
 
@@ -475,7 +475,7 @@ public:
 
 	EActionMode GetActionMode() const { return eActionMode; }
 	void SetActionMode( EActionMode eActionMode );
-	
+
 	bool IsOnMinimap() const { return bOnMinimap; }
 	void SetOnMinimap( bool bOnMinimap );
 
@@ -500,7 +500,7 @@ public:
 
 	void UpdateUnitIcons( float fDeltaTime );
 	void SetMinimapColors( const std::vector<CVec4> &_minimapColors );
-	
+
 	bool IsOwnUnitsPresent() const { return bIsOwnUnitsPresent; }
 	void GameResetForcedAction();
 	void OnChangeForcedAction( NDb::EUserAction eOldForcedAction );

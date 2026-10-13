@@ -40,13 +40,13 @@ void CSinglePlayerTransceiver::StartMission( const NDb::SMapInfo *_pMap, IAILogi
 {
 	pAI = _pAI;
 	//
-	NGlobal::RemoveVar( "MultiplayerGame" );	
+	NGlobal::RemoveVar( "MultiplayerGame" );
 	// reset timer
 	Scene()->ResetTimer( GetCurrentTimeMilliseconds() );
 
 	nCommonSegment = 0;
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
-	if ( !pST || pST->GetGameType() == IAIScenarioTracker::EGT_SINGLE ) 
+	if ( !pST || pST->GetGameType() == IAIScenarioTracker::EGT_SINGLE )
 		pAI->SetNetGame( false );
 	else
 		pAI->SetNetGame( true );
@@ -82,7 +82,7 @@ void CSinglePlayerTransceiver::DoSegments()
 
 	if ( NGlobal::GetVar( "AI_SLOWDOWN", 0 ) == 1 )
 	{
-		const int nCurrentGameSpeed = pTimer->GetSpeed();	
+		const int nCurrentGameSpeed = pTimer->GetSpeed();
 		const int nUserSpeedDelta = nCurrentGameSpeed - nAdjustedGameSpeed;
 		const NTimer::STime nCurTime = pTimer->GetAbsTime();
 		if ( nFrames == 0 )
@@ -123,7 +123,7 @@ void CSinglePlayerTransceiver::DoSegments()
 		if ( !pAI->IsSuspended() )
 		{
 			bCommandsFromHistory = true;
-			pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );			
+			pCmdsHistory->ExecuteSegmentCommands( nCommonSegment, this );
 			bCommandsFromHistory = false;
 			pAI->Segment();
 			++nCommonSegment;
@@ -139,19 +139,19 @@ void CSinglePlayerTransceiver::SendCommand( IAILogicCommandB2 *pCmd )
 		pCmd->Execute();
 }
 
-void CSinglePlayerTransceiver::CommandClientTogglePause() 
-{ 
+void CSinglePlayerTransceiver::CommandClientTogglePause()
+{
 	NInput::PostEvent( "toggle_pause", 0, 0 );
 }
 
-void CSinglePlayerTransceiver::CommandClientSpeed( const int nChange ) 
-{ 
+void CSinglePlayerTransceiver::CommandClientSpeed( const int nChange )
+{
 	NInput::PostEvent( "game_speed", nChange, 0 );
 }
 
-const NDb::SMapInfo *CSinglePlayerTransceiver::GetMap() const 
+const NDb::SMapInfo *CSinglePlayerTransceiver::GetMap() const
 {
-	return pCmdsHistory->GetMap(); 
+	return pCmdsHistory->GetMap();
 }
 
 ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic *pAI )

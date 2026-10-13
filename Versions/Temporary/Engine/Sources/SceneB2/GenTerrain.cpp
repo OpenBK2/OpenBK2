@@ -167,7 +167,7 @@ bool CTerraGen::LoadTerrainInfo( CDataStream *pStream )
 		return true;
 
 		/*
-		//		
+		//
 		InitWater();
 		CreateNormals();
 		ReCreateAllFeaturesGfx();
@@ -185,7 +185,7 @@ bool CTerraGen::LoadTerrainInfo( CDataStream *pStream )
 
 void CTerraGen::SaveTerrainInfo( CDataStream *pStream )
 {
-	if ( pStream->IsOk() ) 
+	if ( pStream->IsOk() )
 	{
 		OptimizeTerrainInfo();
 		//

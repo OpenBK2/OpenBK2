@@ -30,7 +30,7 @@ bool CLakeState::CanInsertVSO()
 			{
 				if ( const NDb::SLakeDesc *pDescriptor = NDb::Get<NDb::SLakeDesc>( objectSet.objectNameSet.begin()->first ) )
 				{
-					if ( pDescriptor->pWaterParams != 0 ) 
+					if ( pDescriptor->pWaterParams != 0 )
 					{
 						return true;
 					}
@@ -44,7 +44,7 @@ bool CLakeState::CanInsertVSO()
 
 
 NMapInfoEditor::CVSOInstanceList* CLakeState::GetVSOList()
-{ 
+{
 	//NDb::SMapInfo *pMapInfo = const_cast<NDb::SMapInfo*>( GetMapInfoEditor()->pMapInfo );
 	return &( GetMapInfoEditor()->VSOCollector.lakeList );
 }
@@ -138,6 +138,6 @@ void CLakeState::UpdateVSOInTerrain( int nVSOID )
 	}
 }
 
-// basement storage  
+// basement storage
 
 

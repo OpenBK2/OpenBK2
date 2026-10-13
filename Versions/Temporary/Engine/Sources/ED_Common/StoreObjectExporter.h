@@ -10,7 +10,7 @@ class CStoreObjectExporter : public IExporter
 
 public:
 	inline const SObjectSet& GetObjectSet() const { return objectSet; }
-	
+
 	// IExporter
 	virtual bool StartExport( const std::string &rszObjectTypeName, bool bForce )
 	{

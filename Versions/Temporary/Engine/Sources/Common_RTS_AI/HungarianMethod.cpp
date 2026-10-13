@@ -27,7 +27,7 @@ void CHungarianMethod::Minimize()
 	for ( int i = 0; i < nSize; ++i )
 	{
 		float fMin = matrix[0][i];
-		for ( int j = 1; j < nSize; ++j ) 
+		for ( int j = 1; j < nSize; ++j )
 		{
 			if ( matrix[j][i] < fMin )
 				fMin = matrix[j][i];
@@ -40,7 +40,7 @@ void CHungarianMethod::Minimize()
 	for ( int j = 0; j < nSize; ++j )
 	{
 		float fMin = matrix[j][0];
-		for ( int i = 1; i < nSize; ++i ) 
+		for ( int i = 1; i < nSize; ++i )
 		{
 			if ( matrix[j][i] < fMin )
 				fMin = matrix[j][i];
@@ -184,7 +184,7 @@ void CHungarianMethod::UpdateMatrix()
 	{
 		if ( markRow[i] == 1 )
 		{
-			for ( int j = 0; j < nSize; ++j )  
+			for ( int j = 0; j < nSize; ++j )
 			{
 				if ( markCol[j] == 0 )
 				{

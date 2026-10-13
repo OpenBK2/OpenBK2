@@ -9,7 +9,7 @@ class CTextureExporter : public IExporter
 	std::list<std::string> invalidObjects;
 
 	bool CheckDestination( const std::string &szFileName, const std::string &szObjectName ) const;
-	
+
 	CTextureExporter() {}
 public:
 	// IExporter

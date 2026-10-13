@@ -2,12 +2,12 @@
 #include "DBMinimap.h"
 #include "MinimapMnemonics.h"
 
-CMinimapLayerMnemonics::CMinimapLayerMnemonics() : 
+CMinimapLayerMnemonics::CMinimapLayerMnemonics() :
 CMnemonicsCollector<int>( NDb::LAYER_UNKNOWN, "LAYER_UNKNOWN" )
 {
 	Insert( NDb::LAYER_UNKNOWN,		"LAYER_UNKNOWN" );
 	Insert( NDb::LAYER_BRIDGE,		"LAYER_BRIDGE" );
-	Insert( NDb::LAYER_BUILDING,	"LAYER_BUILDING" );	
+	Insert( NDb::LAYER_BUILDING,	"LAYER_BUILDING" );
 	Insert( NDb::LAYER_RIVER,			"LAYER_RIVER" );
 	Insert( NDb::LAYER_RAILOAD,		"LAYER_RAILOAD" );
 	Insert( NDb::LAYER_ROAD,			"LAYER_ROAD" );
@@ -18,7 +18,7 @@ CMnemonicsCollector<int>( NDb::LAYER_UNKNOWN, "LAYER_UNKNOWN" )
 	Insert( NDb::LAYER_TERRAIN,		"LAYER_TERRAIN" );
 }
 
-CImageScaleMethod::CImageScaleMethod() : 
+CImageScaleMethod::CImageScaleMethod() :
 CMnemonicsCollector<int>( NDb::IMAGE_SCALE_METHOD_DEFAULT, "IMAGE_SCALE_METHOD_DEFAULT" )
 {
 	Insert( NDb::IMAGE_SCALE_METHOD_DEFAULT,	"IMAGE_SCALE_METHOD_DEFAULT" );

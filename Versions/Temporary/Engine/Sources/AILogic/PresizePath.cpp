@@ -135,9 +135,9 @@ void CPresizePath::Stop()
 
 /*
 float& CPresizePath::GetSpeedLen()
-{ 
+{
 	if ( eState == EPPS_APPROACH_BY_STANDART)
-		return pPathStandart->GetSpeedLen(); 
+		return pPathStandart->GetSpeedLen();
 	if ( eState == EPPS_APPROACH_DESIRED_POINT)
 		return pPathCheat->GetSpeedLen();
 	return fSpeedLen;
@@ -145,7 +145,7 @@ float& CPresizePath::GetSpeedLen()
 */
 
 /*
-void CPresizePath::NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist ) 
+void CPresizePath::NotifyAboutClosestThreat( CBasePathUnit *pCollUnit, const float fDist )
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		pPathStandart->NotifyAboutClosestThreat( pCollUnit, fDist ) ;
@@ -160,8 +160,8 @@ void CPresizePath::SlowDown()
 }
 */
 
-const bool CPresizePath::CanGoBackward() const 
-{ 
+const bool CPresizePath::CanGoBackward() const
+{
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->CanGoBackward();
 	return false;
@@ -175,21 +175,21 @@ const bool CPresizePath::CanGoForward() const
 }
 
 /*
-void CPresizePath::GetNextTiles( list<SVector> *pTiles ) 
+void CPresizePath::GetNextTiles( list<SVector> *pTiles )
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		pPathStandart->GetNextTiles( pTiles ) ;
 }
 */
 
-const CVec2 CPresizePath::PeekPathPoint( const int nToShift ) const 
-{ 
+const CVec2 CPresizePath::PeekPathPoint( const int nToShift ) const
+{
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->PeekPathPoint( nToShift );
 	return VNULL2;
 }
 
-IMemento* CPresizePath::CreateMemento() const 
+IMemento* CPresizePath::CreateMemento() const
 {
 	if ( eState == EPPS_APPROACH_BY_STANDART)
 		return pPathStandart->CreateMemento();
@@ -198,9 +198,9 @@ IMemento* CPresizePath::CreateMemento() const
 
 /*
 void CPresizePath::SetOwner( CBasePathUnit *_pUnit )
-{ 
+{
 	pUnit = _pUnit;
-	
+
 	if ( IsValid( pPathStandart ) )
 		pPathStandart->SetOwner( pUnit );
 	if ( IsValid( pPathCheat ) )
@@ -232,7 +232,7 @@ void CMechUnitRestOnBoardPath::Segment( const NTimer::STime timeDiff )
 
 void CMechUnitRestOnBoardPath::Advance()
 {
-	//CRAP{ UNTILL 
+	//CRAP{ UNTILL
 	if ( pUnit )
 	{
 		pUnit->SetDirection( pTransport->GetBoardedDirection( checked_cast<CAIUnit*>( pUnit ), 0 ) );

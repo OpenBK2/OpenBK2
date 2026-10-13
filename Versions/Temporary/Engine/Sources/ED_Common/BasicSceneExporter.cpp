@@ -29,9 +29,9 @@ bool CBasicSceneExporter::Validate( IManipulator *pManipulator )
 }
 
 
-bool CBasicSceneExporter::ExportFromMaya( const std::string &szTypeName, 
-																				  const std::string &szObjName, 
-																				  const std::string &szDstPath, 
+bool CBasicSceneExporter::ExportFromMaya( const std::string &szTypeName,
+																				  const std::string &szObjName,
+																				  const std::string &szDstPath,
 																				  const std::string &szSrcPath,
 																				  IManipulator *pManipulator )
 {
@@ -41,7 +41,7 @@ bool CBasicSceneExporter::ExportFromMaya( const std::string &szTypeName,
 		if ( FormScript( &szScript, szTypeName, szObjName, szDstPath, szSrcPath, pManipulator ) == false )
 			return false;
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		const std::string szError( "Script formation failed - wrong script template - check it\n" );
 		Log( LT_ERROR, szError );
@@ -77,7 +77,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 {
 	if ( NEditorGltf::IsGltf(pManipulator) )
 		return NEditorGltf::Export(pManipulator, rszObjectTypeName, false) ? ER_SUCCESS : ER_BREAK;
-	if ( exportType == ET_BEFORE_REF ) 
+	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
 	//
 	ILogger *pLogger = NLog::GetLogger();
@@ -92,18 +92,18 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	std::string szObjName( rszObjectName );
 	NStr::ReplaceAllChars( &szObjName, '\\', '/' );
 	// check source sife existance
-	if ( !NFile::DoesFileExist( szSrcScenePath ) ) 
+	if ( !NFile::DoesFileExist( szSrcScenePath ) )
 	{
 		const std::string szError = fmt::format( "Object \"{}\" (of type \"{}\") source file \"{}\" doesn't exist!\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szSrcScenePath.c_str() );
 		Log( LT_ERROR, szError );
 		return ER_FAIL;
 	}
 	// check for destination file
-	if ( WaitForFile( szDestinationPath, 10000, false ) == false ) 
+	if ( WaitForFile( szDestinationPath, 10000, false ) == false )
 	{
 		// old file name style ?
 		std::string _szDestinationPath = szDestinationFolder + std::to_string(  pManipulator->GetID( "" ) );
-		if ( !NFile::DoesFileExist( _szDestinationPath ) ) 
+		if ( !NFile::DoesFileExist( _szDestinationPath ) )
 		{
 			const std::string szError = fmt::format( "Object \"{}\" (of type \"{}\") destination file \"{}\" doesn't exist (not exported yet?)\n", rszObjectName.c_str(), rszObjectTypeName.c_str(), szDestinationPath.c_str() );
 			Log( LT_ERROR, szError );
@@ -116,7 +116,7 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	{
 		return CustomCheck( rszObjectTypeName, szObjName, szSrcScenePath, szDestinationPath, pManipulator );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		const std::string szError = fmt::format( "General fail during check object \"{}\" of type \"{}\"\n", szObjName.c_str(), rszObjectTypeName.c_str() );
 		Log( LT_ERROR, szError );
@@ -125,6 +125,6 @@ EXPORT_RESULT CBasicSceneExporter::CheckObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 

@@ -230,13 +230,13 @@ bool CreateObjectPassability( const std::string &rszGrannyFileName, CArray2D<uin
 //
 //
 
-void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
-											IManipulator* pRPGStatsManipulator, 
+void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
+											IManipulator* pRPGStatsManipulator,
 											const char *pszModelSrcField )
 {
 	const char SKELETON_FIELD_IN_VISOBJ[] = "Skeleton";
 
-	CPtr<IManipulator> pItVisObj = 
+	CPtr<IManipulator> pItVisObj =
 		CManipulatorManager::CreateManipulatorFromReference( pszModelSrcField, pRPGStatsManipulator, 0, 0, 0 );
 	if ( !pItVisObj )
 		return;
@@ -245,7 +245,7 @@ void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
 	if ( !pItModel )
 		return;
 
-	CPtr<IManipulator> pSkelManinpulator = 
+	CPtr<IManipulator> pSkelManinpulator =
 		CManipulatorManager::CreateManipulatorFromReference( SKELETON_FIELD_IN_VISOBJ, pItModel, 0, 0, 0 );
 	if ( !pSkelManinpulator )
 		return;
@@ -272,7 +272,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	//
 	CObj<CCSTime> pCSTime = new CCSTime();
 	pCSTime->Set( 0 );
-	// 
+	//
 	/*
 	NAnimation::CGrannyFileInfo *pSkeletonFileInfo = NAnimation::GetSkeletonFileInfo( handle.nFileName )->GetValue();
 	if ( !pSkeletonFileInfo || !GetSkeleton( pSkeletonFileInfo, handle.nModelInFile ) )
@@ -294,7 +294,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	//
 
 	SHMatrix zeroPos = SHMatrix( CVec3(0.0f, 0.0f, 0.0f), CQuat( 0.0f, V3_AXIS_Z/*CVec3( 0.0f, 1.0f, 0.0f )*/ ) );
-	pAnimator->SetGlobalPosition( zeroPos ); 
+	pAnimator->SetGlobalPosition( zeroPos );
 	pAnimator.Refresh(); // CSkeletonAnimator::Recalc()
 
 
@@ -336,7 +336,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 	if ( !pFile )
 		return;
 
-	granny_file_info *pInfo = GrannyGetFileInfo( pFile );				
+	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( !pInfo )
 		return;
 
@@ -350,7 +350,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 
 		CVec3 bonePos = VNULL3;
 		SHMatrix mtx;
-		if ( pAnimator->GetBonePosition( pBone->Name, &bonePos ) && 
+		if ( pAnimator->GetBonePosition( pBone->Name, &bonePos ) &&
 			 pAnimator->GetBonePosition( pBone->Name, &mtx ) )
 		{
 			SSkeletonLocatorInfo inf;
@@ -359,7 +359,7 @@ void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
 			inf.vPos = bonePos;
 			inf.mtx = mtx;
 			inf.nParentIdx = pBone->ParentIndex;
-			pLocatorsInfo->push_back( inf ); 
+			pLocatorsInfo->push_back( inf );
 			potentialParents[nBoneIndex] = (pLocatorsInfo->size() - 1);
 		}
 	}
@@ -389,36 +389,36 @@ int PatMat(const char *raw,const char *pat)
 	if (*pat == '\0')
 		return( 0 ) ;
 	if (*pat == '*')
-	{ 
+	{
 		if (*(pat+1) == '\0')
 			return( 1 ) ;
 		for(i=0,slraw=strlen(raw);i<=slraw;i++)
 			if ((*(raw+i) == *(pat+1)) ||
 				(*(pat+1) == '?'))
 				if (PatMat(raw+i+1,pat+2) == 1)
-					return( 1 ) ;              
+					return( 1 ) ;
 	}
 	else
-	{ 
-		if (*raw == '\0')                    
-			return( 0 ) ;                      
+	{
+		if (*raw == '\0')
+			return( 0 ) ;
 		if ((*pat == '?') || (*pat == *raw))
-			if (PatMat(raw+1,pat+1) == 1)   
+			if (PatMat(raw+1,pat+1) == 1)
 				return( 1 ) ;
 	}
-	return( 0 ) ;                       
+	return( 0 ) ;
 }
 
 bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern )
 {
-	if ( !PatMat( pszName, pszPattern ) )	
+	if ( !PatMat( pszName, pszPattern ) )
 		return false;
 
 	const char *pp = pszName;
-	
+
 	while ( *pp && ! isdigit(*pp) )
 		++pp;
-	
+
 	if ( *pp )
 	{
 		if ( pp[1] && isdigit(pp[1]) )
@@ -440,7 +440,7 @@ bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern
 	return true;
 }
 
-void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo, 
+void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo,
 										const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 										const char *pszLocatorNamePattern )
 {
@@ -456,10 +456,10 @@ void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo,
 		qinf.inf = *i;
 		qinf.nQIdx = nQIdx;
 
-		pQLocInfo->push_back( qinf ); 
+		pQLocInfo->push_back( qinf );
 	}
 
-	sort( pQLocInfo->begin(), pQLocInfo->end() ); 
+	sort( pQLocInfo->begin(), pQLocInfo->end() );
 }
 
 bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
@@ -477,7 +477,7 @@ bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
 	return false;
 }
 
-void SetPointValueForVec2Field(	IManipulator* pManipulator, 
+void SetPointValueForVec2Field(	IManipulator* pManipulator,
 															 const char *pszLocatorName,
 															 const char *pszFieldName,
 															 const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
@@ -486,11 +486,11 @@ void SetPointValueForVec2Field(	IManipulator* pManipulator,
 	if ( SearchLocator( &inf, rLocatorsInfo, pszLocatorName ) )
 	{
 		CVec2 vPoint = CVec2( inf.vPos.x, inf.vPos.y );
-		CManipulatorManager::SetVec2( vPoint, pManipulator, pszFieldName ); 
+		CManipulatorManager::SetVec2( vPoint, pManipulator, pszFieldName );
 	}
 }
 
-void SetPointValueForStringField(	IManipulator* pManipulator, 
+void SetPointValueForStringField(	IManipulator* pManipulator,
 																 const char *pszLocatorName,
 																 const char *pszFieldName,
 																 const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
@@ -500,15 +500,15 @@ void SetPointValueForStringField(	IManipulator* pManipulator,
 		pManipulator->SetValue( pszFieldName, inf.szName );
 }
 
-void SetPointsValuesForVec2Array(	IManipulator* pManipulator, 
+void SetPointsValuesForVec2Array(	IManipulator* pManipulator,
 																 const char *pszLocatorNamePattern,
 																 const char *pszFieldName,
 																 const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
-	pManipulator->RemoveNode( pszFieldName, NODE_REMOVEALL_INDEX );	
+	pManipulator->RemoveNode( pszFieldName, NODE_REMOVEALL_INDEX );
 
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
+	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern );
 
 	int nIdx = 0;
 	for ( CLocatorQInfoConstIter i = lc.begin(); i != lc.end(); ++i, ++nIdx )
@@ -518,20 +518,20 @@ void SetPointsValuesForVec2Array(	IManipulator* pManipulator,
 		char pszAddr[256] = {0};
 		sprintf( pszAddr, "%s.[%d]", pszFieldName, nIdx );
 
-		CVec2 vPoint = CVec2( i->inf.vPos.x, i->inf.vPos.y ); 
-		CManipulatorManager::SetVec2( vPoint, pManipulator, pszAddr ); 
+		CVec2 vPoint = CVec2( i->inf.vPos.x, i->inf.vPos.y );
+		CManipulatorManager::SetVec2( vPoint, pManipulator, pszAddr );
 	}
 }
 
-void SetPointsValuesForStringArray(	IManipulator* pManipulator, 
+void SetPointsValuesForStringArray(	IManipulator* pManipulator,
 																	 const char *pszLocatorNamePattern,
 																	 const char *pszFieldName,
 																	 const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
-	pManipulator->RemoveNode( pszFieldName, NODE_REMOVEALL_INDEX );	
+	pManipulator->RemoveNode( pszFieldName, NODE_REMOVEALL_INDEX );
 
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
+	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern );
 
 	int nIdx = 0;
 	for ( CLocatorQInfoConstIter i = lc.begin(); i != lc.end(); ++i, ++nIdx )
@@ -545,7 +545,7 @@ void SetPointsValuesForStringArray(	IManipulator* pManipulator,
 	}
 }
 
-void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator, 
+void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 																			 const char *pszLocatorNamePattern,
 																			 const char *pszArrayName,
 																			 const char *pszStructFieldName,
@@ -556,7 +556,7 @@ void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 	// если точек больше чем элементов в массиве будет добавлено нужное число пустых структур
 
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
+	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern );
 
 	CVariant v;
 	pManipulator->GetValue( pszArrayName, &v );
@@ -570,12 +570,12 @@ void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 		char pszDBA[256] = {0};
 		sprintf( pszDBA, "%s.[%d].%s", pszArrayName, nIdx, pszStructFieldName );
 
-		CVec2 vPoint = CVec2( i->inf.vPos.x, i->inf.vPos.y ); 
-		CManipulatorManager::SetVec2( vPoint, pManipulator, pszDBA ); 
+		CVec2 vPoint = CVec2( i->inf.vPos.x, i->inf.vPos.y );
+		CManipulatorManager::SetVec2( vPoint, pManipulator, pszDBA );
 	}
 }
 
-void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator, 
+void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 																			 const char *pszLocatorNamePattern,
 																			 const char *pszArrayName,
 																			 const char *pszStructFieldName,
@@ -588,11 +588,11 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 	// если bClear, то все уже существующие элементы массива будут удалены
 
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern ); 
+	SearchLocators( &lc, rLocatorsInfo, pszLocatorNamePattern );
 
 	if ( bClear )
 	{
-		pManipulator->RemoveNode( pszArrayName, NODE_REMOVEALL_INDEX );	
+		pManipulator->RemoveNode( pszArrayName, NODE_REMOVEALL_INDEX );
 		for ( int i = 0; i < lc.size(); ++i )
 			pManipulator->InsertNode( pszArrayName );
 	}
@@ -611,14 +611,14 @@ void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 		char pszDBA[256] = {0};
 		sprintf( pszDBA, "%s.[%d].%s", pszArrayName, nIdx, pszStructFieldName );
 
-		CManipulatorManager::SetVec3( i->inf.vPos, pManipulator, pszDBA ); 
+		CManipulatorManager::SetVec3( i->inf.vPos, pManipulator, pszDBA );
 	}
 }
 
 void GetPassability( CArray2D<uint8_t> *pPassability, IManipulator *pBuildingRPGStatsManipulator )
 {
 	CVariant v;
-	pBuildingRPGStatsManipulator->GetValue( "passability.data", &v ); 
+	pBuildingRPGStatsManipulator->GetValue( "passability.data", &v );
 	int nSizeY = v;
 	int nMaxSizeX = 0;
 	std::vector< std::vector<int> > data;
@@ -680,7 +680,7 @@ static const int FindLocator( std::vector<SLocatorQInfo> &lc, const std::string 
 static void FixLocators( IManipulator *pManipulator, const std::string &szLocatorNamePattern, const std::string &szArrayName, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, szLocatorNamePattern.c_str() ); 
+	SearchLocators( &lc, rLocatorsInfo, szLocatorNamePattern.c_str() );
 	std::vector<bool> locatorFound( lc.size(), false );
 	int nLocators = 0;
 
@@ -771,8 +771,8 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 {
 	float fDirection = 0.0f;
 	SHMatrix mtx = pLocInfo->mtx;
-	CVec3 vec;   
-	mtx.RotateVector( &vec, V3_AXIS_Z ); 
+	CVec3 vec;
+	mtx.RotateVector( &vec, V3_AXIS_Z );
 	float fAngle = atan2( vec.y, vec.x ); // -pi...+pi
 
 	// угол возвращается в AI системе отчсчета (отсчитывается против часовой стрелки от (0,1,0))
@@ -803,7 +803,7 @@ float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadi
 		fDirection = (fAngle / FP_2PI)*0xFFFF;
 	}
 
-	return fDirection;			
+	return fDirection;
 }
 
 // Acquire attributes for a given model
@@ -850,11 +850,11 @@ bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const
 	ILogger *pLogger = NLog::GetLogger();
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
 	//
-	if ( CheckFilesUpdated(pUserData->constUserData.szExportSourceFolder + szFilesListFileName, 
+	if ( CheckFilesUpdated(pUserData->constUserData.szExportSourceFolder + szFilesListFileName,
 		                     Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFilesListFileName, bForce) == false )
 	{
 		// first, copy XML file
-		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szFilesListFileName, 
+		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szFilesListFileName,
 			                    Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szFilesListFileName ) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't copy files list\n" );

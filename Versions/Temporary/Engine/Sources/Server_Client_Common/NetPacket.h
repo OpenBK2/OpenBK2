@@ -2,7 +2,7 @@
 
 class CNetPacket : public CObjectBase
 {
-public:	
+public:
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nClientID = {};
 

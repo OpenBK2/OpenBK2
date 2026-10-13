@@ -32,7 +32,7 @@ class CModelEditor : public CEditorBase, public CDefaultView, public ICommandHan
 	bool bPreviousCameraHandleType;
 	float fFOV;
 
-	// Данные общего назначения 
+	// Данные общего назначения
 	CModelState *pModelState;
 	CModelEditorSettings editorSettings;
 	//
@@ -55,7 +55,7 @@ public:
 	//CDefaultView
 	void Undo( IController* pController ) {}
 	void Redo( IController* pController ) {}
-	
+
 	//ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );

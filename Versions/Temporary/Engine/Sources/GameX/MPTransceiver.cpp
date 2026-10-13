@@ -310,8 +310,8 @@ void CMPTransceiver::FinalizeSegmentPack()
 #endif
 	SetSegmentFinished( nMyLogicID, nSegment, ulCheckSum );
 	CAISegmentFinishedPacket *pPacket = new CAISegmentFinishedPacket();
-	pPacket->nSegment = nCommonSegment;	
-	pPacket->ulCheckSum = ulCheckSum;		
+	pPacket->nSegment = nCommonSegment;
+	pPacket->ulCheckSum = ulCheckSum;
 	const int nSegmentToExecute = GetSegmentToExecute( nCommonSegment );
 
 	for ( std::list< CPtr<IAILogicCommandB2> >::iterator it = aiCommandsToSend.begin(); it != aiCommandsToSend.end(); ++it )
@@ -349,7 +349,7 @@ void CMPTransceiver::AdvanceToNextSegment()
 
 int CMPTransceiver::GetSegmentToExecute( const int nSegment ) const
 {
-	return ( nSegment + nSegmentsPackSize ) % pConsts->nMaxLatency;  
+	return ( nSegment + nSegmentsPackSize ) % pConsts->nMaxLatency;
 }
 
 bool CMPTransceiver::OnAISegmentFinishedPacket( class CAISegmentFinishedPacket *pPacket )
@@ -577,7 +577,7 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 	pAI->ClearAI();
 	pAI->SetNPlayers( players.size() );
 	pAI->SetNetGame( true );
-	pAI->SetMyDiplomacyInfo( players[nMyLogicID].nTeam, nMyLogicID ); 
+	pAI->SetMyDiplomacyInfo( players[nMyLogicID].nTeam, nMyLogicID );
 	nGameSpeed = params.nSpeedAdjustment;
 	checkSums.SetSizes( pConsts->nMaxLatency, players.size() );
 	segmFinished.resize( pConsts->nMaxLatency, 0 );
@@ -588,8 +588,8 @@ void CMPTransceiver::Init( IServerClient *_pClient, const SB2StartGameParams &pa
 }
 
 void CMPTransceiver::CommandTimeOut( bool bSet )
-{ 
-	bWaiting = bSet; 
+{
+	bWaiting = bSet;
 	pTimer->Pause( bSet, PAUSE_TYPE_USER_PAUSE );
 }
 

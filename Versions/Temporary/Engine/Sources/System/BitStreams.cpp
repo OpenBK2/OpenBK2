@@ -29,9 +29,9 @@ static unsigned char *ReserveW( CDataStream *pData, int nSize )
 
 // CBitLocker realization
 
-CBitLocker::~CBitLocker() 
+CBitLocker::~CBitLocker()
 {
-	FlushBits(); 
+	FlushBits();
 	if ( pData )
 		::Free( pData, pCurrent - pBuffer );
 }
@@ -83,13 +83,13 @@ void CBitLocker::ReserveWrite( unsigned int nSize )
 }
 
 void CBitLocker::Free()
-{ 
+{
 	ASSERT( pData );
-	if ( pData ) 
-	{ 
-		FlushBits(); 
+	if ( pData )
+	{
+		FlushBits();
 		::Free( pData, pCurrent - pBuffer );
-		pData = 0; 
-	} 
+		pData = 0;
+	}
 }
 

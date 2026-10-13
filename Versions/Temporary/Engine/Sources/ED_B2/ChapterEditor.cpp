@@ -50,8 +50,8 @@ void CChapterEditor::Destroy()
 
 IManipulator* CChapterEditor::CreateChapterManipulator()
 {
-	IManipulator* pChapterManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( 
-		GetObjectSet().szObjectTypeName, 
+	IManipulator* pChapterManipulator = Singleton<IResourceManager>()->CreateObjectManipulator(
+		GetObjectSet().szObjectTypeName,
 		GetObjectSet().objectNameSet.begin()->first );
 	return pChapterManipulator;
 }

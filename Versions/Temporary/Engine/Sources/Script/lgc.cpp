@@ -43,7 +43,7 @@ static void protomark (lua_State *L, Proto *f) {
 }
 
 
-static void markstack (lua_State *L, GCState *st) 
+static void markstack (lua_State *L, GCState *st)
 {
   StkId o;
 	// that is how it was:
@@ -84,9 +84,9 @@ static void markclosure (lua_State *L, GCState *st, Closure *cl) {
 }
 
 
-static void marktagmethods (lua_State *L, GCState *st) 
+static void marktagmethods (lua_State *L, GCState *st)
 {
-  for ( int e=0; e<TM_N; e++) 
+  for ( int e=0; e<TM_N; e++)
 	{
     for ( int t=0; t < L->TMtable.size(); ++t )
 		{
@@ -102,11 +102,11 @@ static void marktagmethods (lua_State *L, GCState *st)
 }
 
 
-static void markobject( lua_State *L, GCState *st, const TObject *o ) 
+static void markobject( lua_State *L, GCState *st, const TObject *o )
 {
-  switch ( o->GetType() ) 
+  switch ( o->GetType() )
 	{
-    case LUA_TUSERDATA:  
+    case LUA_TUSERDATA:
       strmark( L->userdatas[ o->GetUData() ] );
       break;
 		case LUA_TSTRING:
@@ -125,10 +125,10 @@ static void markobject( lua_State *L, GCState *st, const TObject *o )
 				markclosure( L, st, pCL );
 				break;
 			}
-    case LUA_TTABLE: 
+    case LUA_TTABLE:
 			{
 				Hash *pH = L->tables[ o->GetH() ];
-				if ( !ismarked( pH ) ) 
+				if ( !ismarked( pH ) )
 				{
 					pH->mark = st->tmark;  /* chain it in list of marked */
 					st->tmark = pH;
@@ -157,7 +157,7 @@ static void markall (lua_State *L) {
       for (i=0; i<f->upvalues.size(); i++)  /* mark its upvalues */
         markobject(L, &st, &f->upvalues[i]);
     }
-    else if (st.tmark) 
+    else if (st.tmark)
 		{
       Hash *h = st.tmark;  /* get first table from list */
       st.tmark = h->mark;  /* remove it from list */
@@ -181,12 +181,12 @@ static void markall (lua_State *L) {
 }
 
 
-static int hasmark(lua_State *L, const TObject *o) 
+static int hasmark(lua_State *L, const TObject *o)
 {
   /* valid only for locked objects */
-  switch ( o->GetType() ) 
+  switch ( o->GetType() )
 	{
-    case LUA_TSTRING: 
+    case LUA_TSTRING:
 			return o->GetS()->marked;
 		case LUA_TUSERDATA:
       return L->userdatas[ o->GetUData() ]->marked;
@@ -223,7 +223,7 @@ static void invalidaterefs (lua_State *L) {
 
 
 template<class T>
-static void Collect( CVectorList<T> *pRes, lua_State *L ) 
+static void Collect( CVectorList<T> *pRes, lua_State *L )
 {
 	for ( int i = 0; i < pRes->size(); ++i )
 	{
@@ -238,31 +238,31 @@ static void Collect( CVectorList<T> *pRes, lua_State *L )
 }
 
 template<class T>
-static void CollectMarkList( CVectorList<T> *pRes, lua_State *L ) 
+static void CollectMarkList( CVectorList<T> *pRes, lua_State *L )
 {
 	for ( int i = 0; i < pRes->size(); ++i )
 	{
 		T *pCur = (*pRes)[i];
 		if ( !pCur )
 			continue;
-    if ( ismarked(pCur) ) 
+    if ( ismarked(pCur) )
       pCur->mark = pCur;  /* unmark */
-    else 
+    else
 			pRes->erase( i );
 	}
 }
 
-static void collectproto( lua_State *L ) 
+static void collectproto( lua_State *L )
 {
 	Collect( &L->protos, L );
 }
 
-static void collectclosure( lua_State *L ) 
+static void collectclosure( lua_State *L )
 {
 	CollectMarkList( &L->closures, L );
 }
 
-static void collecttable (lua_State *L) 
+static void collecttable (lua_State *L)
 {
 	CollectMarkList( &L->tables, L );
 }
@@ -270,17 +270,17 @@ static void collecttable (lua_State *L)
 /*static void collectstrings (lua_State *L, int all) {
   int i;
 
-  for ( i = 0; i < L->strings.size(); i++ ) 
-	{ 
+  for ( i = 0; i < L->strings.size(); i++ )
+	{
     TString **p = &L->strt.hash[i];
     TString *next;
     while ((next = *p) != NULL) {
-      if (next->marked && !all) {  // preserve? 
-        if (next->marked < FIXMARK)  // does not change FIXMARKs 
+      if (next->marked && !all) {  // preserve?
+        if (next->marked < FIXMARK)  // does not change FIXMARKs
           next->marked = 0;
         p = &next->nexthash;
-      } 
-      else {  // collect 
+      }
+      else {  // collect
         *p = next->nexthash;
         L->strt.nuse--;
         luaM_free(L, next);
@@ -290,7 +290,7 @@ static void collecttable (lua_State *L)
 }*/
 
 
-static void collectudata (lua_State *L, int all) 
+static void collectudata (lua_State *L, int all)
 {
 	for ( int i = 0; i < L->userdatas.size(); ++i )
 	{
@@ -313,20 +313,20 @@ static void collectudata (lua_State *L, int all)
 
 
 #define MINBUFFER	256
-static void checkMbuffer (lua_State *L) 
+static void checkMbuffer (lua_State *L)
 {
-  if ( L->Mbuffer.size() > MINBUFFER*2 ) 
-	{  
+  if ( L->Mbuffer.size() > MINBUFFER*2 )
+	{
     size_t newsize = L->Mbuffer.size()/2;  /* still larger than MINBUFFER */
     L->Mbuffer.resize( newsize );
   }
 }
 
 
-static void callgcTM (lua_State *L, const TObject *o) 
+static void callgcTM (lua_State *L, const TObject *o)
 {
   int tm = luaT_gettmindex(L, o, TM_GC);
-  if (tm != STK_NULL) 
+  if (tm != STK_NULL)
 	{
     int oldah = L->allowhooks;
     L->allowhooks = 0;  // stop debug hooks during GC tag methods
@@ -335,18 +335,18 @@ static void callgcTM (lua_State *L, const TObject *o)
     *LObj(L, L->pCT->top+1) = *o;
     L->pCT->top += 2;
     luaD_call(L, L->pCT->top-2, 0);
-    L->allowhooks = oldah;  // restore hooks 
+    L->allowhooks = oldah;  // restore hooks
   }
 }
 
 
-static void callgcTMudata (lua_State *L) 
+static void callgcTMudata (lua_State *L)
 {
   TObject o;
   o.SetUData( 0 );
   ++L->nGCAvoid;
-  for ( int tag = L->TMtable.size() - 1; tag >= 0; --tag ) 
-	{ 
+  for ( int tag = L->TMtable.size() - 1; tag >= 0; --tag )
+	{
 		std::list<int> &collect = L->TMtable[tag].collected;
 		for ( std::list<int>::iterator i = collect.begin(); i != collect.end(); ++i )
 		{
@@ -380,7 +380,7 @@ static void luaC_collectgarbage (lua_State *L) {
 }
 
 
-void luaC_checkGC (lua_State *L) 
+void luaC_checkGC (lua_State *L)
 {
 	if ( L->nGCAvoid > 0 )
 		return;

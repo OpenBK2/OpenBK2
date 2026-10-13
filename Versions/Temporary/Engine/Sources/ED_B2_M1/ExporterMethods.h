@@ -65,48 +65,48 @@ struct SLocatorQInfo
 
 	bool operator<( const SLocatorQInfo &rOther ) const
 	{
-		return nQIdx < rOther.nQIdx; 
+		return nQIdx < rOther.nQIdx;
 	}
 };
-typedef std::vector<SSkeletonLocatorInfo>::const_iterator CLocatorInfoConstIter; 
-typedef std::vector<SSkeletonLocatorInfo>::iterator CLocatorInfoIter; 
-typedef std::vector<SLocatorQInfo>::const_iterator CLocatorQInfoConstIter; 
+typedef std::vector<SSkeletonLocatorInfo>::const_iterator CLocatorInfoConstIter;
+typedef std::vector<SSkeletonLocatorInfo>::iterator CLocatorInfoIter;
+typedef std::vector<SLocatorQInfo>::const_iterator CLocatorQInfoConstIter;
 struct IManipulator;
-void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, 
-						IManipulator* pRPGStatsManipulator, 
+void GetModelLocators(	std::vector<SSkeletonLocatorInfo> *pLocatorsInfo,
+						IManipulator* pRPGStatsManipulator,
 						const char *pszModelSrcField );
 void GetSkeletonLocatorsInfo( std::vector<SSkeletonLocatorInfo> *pLocatorsInfo, const CDBID &dbidSkeleton );
 int PatMat(const char *raw,const char *pat);
 bool IsNameMatchPattern( int *pQIdx, const char *pszName, const char *pszPattern );
-void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo, 
+void SearchLocators(	std::vector<SLocatorQInfo> *pQLocInfo,
 						const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 						const char *pszLocatorNamePattern );
 bool SearchLocator(	SSkeletonLocatorInfo *pLocInfo,
 					const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 					const char *pszLocatorName );
 float GetLocatorDirection( const SSkeletonLocatorInfo *pLocInfo, bool bGetInRadian );
-void SetPointValueForVec2Field(	IManipulator* pManipulator, 
+void SetPointValueForVec2Field(	IManipulator* pManipulator,
 								const char *pszLocatorName,
 								const char *pszFieldName,
 								const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointValueForStringField(	IManipulator* pManipulator, 
+void SetPointValueForStringField(	IManipulator* pManipulator,
 									const char *pszLocatorName,
 									const char *pszFieldName,
 									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec2Array(	IManipulator* pManipulator, 
+void SetPointsValuesForVec2Array(	IManipulator* pManipulator,
 									const char *pszLocatorNamePattern,
 									const char *pszFieldName,
 									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForStringArray(	IManipulator* pManipulator, 
+void SetPointsValuesForStringArray(	IManipulator* pManipulator,
 									const char *pszLocatorNamePattern,
 									const char *pszFieldName,
 									const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator, 
+void SetPointsValuesForVec2StructArray(	IManipulator* pManipulator,
 										const char *pszLocatorNamePattern,
 										const char *pszArrayName,
 										const char *pszStructFieldName,
 										const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo );
-void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator, 
+void SetPointsValuesForVec3StructArray(	IManipulator* pManipulator,
 										const char *pszLocatorNamePattern,
 										const char *pszArrayName,
 										const char *pszStructFieldName,
@@ -123,7 +123,7 @@ bool GetGeometryAttributes( IManipulator* pGeomMan, CGrannyBoneAttributesList *p
 
 struct IManipulator* CreateModelManipulatorFromVisObj( struct IManipulator *pVisObjectManipulator, std::string *pModelName );
 
-template<class TValue> 
+template<class TValue>
 bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const std::string &rszName, const std::string &rszSeasonArrayName, NDb::ESeason eSeason, std::string *pszDataPrefix )
 {
 	NI_ASSERT( pData != 0, "CManipulatorManager::GetValue(): pData == 0" );

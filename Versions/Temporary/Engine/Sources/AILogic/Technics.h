@@ -28,15 +28,15 @@ class CMilitaryCar : public CAIUnit
 
 	// вращающаяся пушка
 	std::vector< CObj<CTurret> > turrets;
-	
+
 	// пассажиры
 	std::list<CPtr<CSoldier> > pass;
-	
+
 	CPtr<CFormation> pLockingUnit;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fDispersionBonus = {};
 	NTimer::STime timeLastHeal = {};						// последнее время лечения
-	
+
 	// mech units, currently On The Way to board
 	det_map<int, CPtr<CAIUnit> > boarding;
 	std::vector<CPtr<CAIUnit> > onBoard;
@@ -66,8 +66,8 @@ public:
 	void Lock( class CFormation *_pLockingUnit );
 	bool IsLocked() const { return pLockingUnit != 0; }
 	void Unlock() { pLockingUnit = 0; }
-	
-	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }	
+
+	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
 	virtual IStatesFactory* GetStatesFactory() const =0;
 
 	// расстояние от центра до точки, откуда можно напрямую бежать к entrance point
@@ -91,8 +91,8 @@ public:
 	virtual const int GetNTurrets() const { return turrets.size(); }
 
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
-	{ 
-		pShotInfo->typeID = GetShootAction(); 
+	{
+		pShotInfo->typeID = GetShootAction();
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
@@ -119,10 +119,10 @@ public:
 	virtual class CArtillery* GetTowedArtillery() const = 0;
 
 	virtual const bool CanGoBackward() const { return GetTowedArtillery() == 0 && GetMovementPlane() == PLANE_TERRAIN; }
-	
+
 	const CVec2 GetHookPoint() const;
 	const CVec3 GetHookPoint3D() const;
-	
+
 	// killed: this unit + all units inside
 	virtual void SendNTotalKilledUnits( const int nPlayerOfShoot, NDb::EReinforcementType eKillerType, NDb::EReinforcementType eDeadType );
 	virtual void LookForTarget( CAIUnit *pCurTarget, const bool bDamageUpdated, CAIUnit **pBestTarget, class CBasicGun **pGun );
@@ -160,10 +160,10 @@ public:
 class CTank : public CMilitaryCar
 {
 	OBJECT_BASIC_METHODS( CTank );
-	
+
 	ZDATA_(CMilitaryCar)
 	bool bTrackDamaged = {}; // true если у танка перебита гусеница
-	
+
 	SAIAngle wDangerousDir;
 	bool bDangerousDirSet = {};
 	bool bDangerousDirSetInertia = {};
@@ -208,7 +208,7 @@ public:
 	virtual bool CanMoveAfterUserCommand() const;
 };
 
-// транспорт, перевозит марериальные ресурсы, 
+// транспорт, перевозит марериальные ресурсы,
 // может цеплять пушки
 class CAITransportUnit : public CMilitaryCar
 {
@@ -222,7 +222,7 @@ class CAITransportUnit : public CMilitaryCar
 	CExternLoaders externLoaders; // дошоняющие гранспорт грузчики
 	CPtr<CFormation> pTowedArtilleryCrew;	// when artillery is attached the crew.
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMilitaryCar*)this); f.Add(2,&fResursUnits); f.Add(3,&pTowedArtillery); f.Add(4,&pMustTow); f.Add(5,&externLoaders); f.Add(6,&pTowedArtilleryCrew); return 0; }
-	// для группового подцепления артиллерии, 
+	// для группового подцепления артиллерии,
 	// выбирает юнит из нашей группы, ближайший к артиллерии и возвращает его nUniqueId
 	const int GetNUnitToTakeArtillery( bool bPlaceInQueue, CAIUnit *pUnitToTake );
 public:
@@ -240,10 +240,10 @@ public:
 
 	virtual IStatesFactory* GetStatesFactory() const;
 	bool CanCommandBeExecuted( class CAICommand *pCommand );
-	
+
 	virtual void GetRPGStats( struct SAINotifyRPGStats *pStats );
 	virtual const int GetUnitState() const;
-	
+
 	static void PrepareLoaders( CFormation *pLoaderSquad, CAITransportUnit * pTransport );
 	static void FreeLoaders( CFormation *pLoaderSquad, CAITransportUnit * pTransport );
 	virtual void Segment();
@@ -257,11 +257,11 @@ public:
 	virtual bool HasTowedArtilleryCrew() const ;
 	virtual void SetTowedArtilleryCrew( class CFormation *pFormation ) ;
 	virtual CFormation * GetTowedArtilleryCrew() ;
-	
-	// 
+
+	//
 	void SetMustTow( class CAIUnit *_pUnit );
 	bool IsMustTow() const;
-	
+
 	virtual void UnitCommand( CAICommand *pCommand, bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 
 	virtual bool CanHookUnit( class CAIUnit *pUnitToHook ) const;

@@ -25,7 +25,7 @@
 std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 {
 	const SUserData *pUserData = Singleton<IUserDataContainer>()->Get();
-	SUserData::SMayaExportData::CGrannyExportSettingsMap::const_iterator pos = 
+	SUserData::SMayaExportData::CGrannyExportSettingsMap::const_iterator pos =
 		pUserData->constUserData.mayaExportData.grannyExportSettings.find( szTypeName );
 	std::string szSettingsFileName = pos == pUserData->constUserData.mayaExportData.grannyExportSettings.end() ? "" : pos->second;
 	NStr::ReplaceAllChars( &szSettingsFileName, '\\', '/' );
@@ -35,7 +35,7 @@ std::string GetGrannyExportSettingsFileName( const std::string &szTypeName )
 
 bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool bForced )
 {
-	if ( bForced ) 
+	if ( bForced )
 		return false;
 
 	NVFS::SFileStats src, dst;
@@ -48,13 +48,13 @@ bool CheckFilesUpdated( const std::string &szSrc, const std::string &szDst, bool
 void MakeDoubleSlash( std::string *pszPath )
 {
   NI_ASSERT( pszPath != 0, "MakeDoubleSlash() pszPath == 0" );
-	//	
+	//
 	for ( std::string::iterator itChar = pszPath->begin(); itChar != pszPath->end(); ++itChar )
 	if ( ( *itChar ) == '\\' )
 	{
 		int nCount = 0;
 		while ( ( itChar != pszPath->end() ) && ( ( *itChar ) == '\\' ) )
-		{	
+		{
 			++itChar;
 			++nCount;
 		}
@@ -164,7 +164,7 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 		// Запускаем Maya
 		const std::string &szUserDataToolFileName = "maya.exe";//GetOption( &SUserData::SMayaExportData::szToolFileName );
 		const std::string szGUIMode = bGUIMode ? " " : " -batch ";
-		const std::string szCommandLine = fmt::format( "{}{}-script \"{}\" -log \"{}\"", 
+		const std::string szCommandLine = fmt::format( "{}{}-script \"{}\" -log \"{}\"",
 																				szUserDataToolFileName.c_str(),
 																				szGUIMode.c_str(),
 																				szScriptFileName.c_str(),
@@ -180,7 +180,7 @@ bool MERunScript( const std::string &rszScriptText, const std::string &rszFileNa
 bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( szImageFileName, CFileStream::WIN_READ_ONLY );
-	if ( stream.IsOk() ) 
+	if ( stream.IsOk() )
 	{
 		SDDSFileHeader hdr;
 		stream.Read( &hdr, sizeof( hdr ) );
@@ -201,7 +201,7 @@ bool GetDDSImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 {
 	CFileStream stream( NVFS::GetMainVFS(), szImageFileName );
-	if ( stream.IsOk() ) 
+	if ( stream.IsOk() )
 	{
 		NImage::STGAFileHeader hdr;
 		NImage::LoadTGAHeader( &hdr, &stream );
@@ -221,7 +221,7 @@ bool GetTGAImageSize( const std::string &szImageFileName, CTPoint<int> *pSize )
 void CutExtension( std::string *pFileName, const char *pszExt )
 {
 	const int nPos = pFileName->rfind( '.' );
-	if ( nPos == std::string::npos ) 
+	if ( nPos == std::string::npos )
 		return;
 	//
 	if ( pFileName->compare(nPos + 1, -1, pszExt) == 0 )
@@ -354,7 +354,7 @@ bool WaitForFile( const std::string &szFileName, const double fMaxWaitTime, bool
 {
 	NHPTimer::STime timeCurr, timeOriginal;
 	NHPTimer::GetTime( &timeOriginal );
-	do 
+	do
 	{
 		timeCurr = timeOriginal;
 		// check file existance
@@ -420,6 +420,6 @@ void MoveTempFileToDestination( const std::string &szTempFileFullName, const std
 	NFile::RemoveFile( szTempFileFullName.c_str() );
 }
 
-// basement storage  
+// basement storage
 
 

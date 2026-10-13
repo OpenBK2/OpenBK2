@@ -11,7 +11,7 @@ class CWarFogTracer
 protected:
 	const bool IsTileInside( const SVector &vTile ) const { return pWarFog->IsTileInside( vTile ); }
 	const int GetStaticObjectAtTile( const SVector &vTile ) { return pWarFog->GetStaticObjectAtTile( vTile ); }
-	
+
 	const int GetHeight( const SVector &vTile ) const { return pWarFog->GetHeight( vTile ); }
 	const int GetUnitHeight() const { return pWarFog->GetUnitHeight(); }
 public:
@@ -35,7 +35,7 @@ public:
 		int nObjectTileID = -1;
 		const float fOriginHeight = GetHeight( vOrigin ) + GetUnitHeight();
 
-		do 
+		do
 		{
 			bres.MakePointStep();
 			const SVector checkPoint = bres.GetDirection();
@@ -91,7 +91,7 @@ public:
 
 		visitor( bres.GetDirection(), true );
 		int nObjectTileID = GetStaticObjectAtTile( tile0 );
-		do 
+		do
 		{
 			bres.MakePointStep();
 			const SVector checkPoint = bres.GetDirection();

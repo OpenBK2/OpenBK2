@@ -51,7 +51,7 @@ void CPlayerPointsTracker::SetPositionAvailible( int nPositionID )
 void CPlayerPointsTracker::RemovePositionAvailibility( int nPositionID )
 {
 	if ( allPositions.find( nPositionID ) == allPositions.end() )
-		return;	
+		return;
 	const NDb::SReinforcementPosition &position = allPositions[nPositionID];
 	CPositionList &lst = factories[position.nFactoryID].availibility[position.eType];
 	for ( CPositionList::iterator it = lst.begin(); it != lst.end(); ++it )
@@ -72,9 +72,9 @@ bool CPlayerPointsTracker::IsPositionEnabled( int nPositionID ) const
 {
 	CPositionMap::const_iterator pos = allPositions.find( nPositionID );
 	if (  pos == allPositions.end() )
-		return false;	
+		return false;
 	const NDb::SReinforcementPosition &position = pos->second;
-	
+
 	CFactoryMap::const_iterator posFactory = factories.find( position.nFactoryID );
 	if ( posFactory == factories.end() )
 		return false;
@@ -167,7 +167,7 @@ void CPlayerPointsTracker::UpdateReinfPoint( int nFactoryID, int nPointID ) cons
 {
 	if ( nPlayer != theDipl.GetMyNumber() )
 		return;
-	
+
 	CFactoryMap::const_iterator itFactory = factories.find( nFactoryID );
 	if ( itFactory == factories.end() )
 		return;
@@ -179,8 +179,8 @@ void CPlayerPointsTracker::UpdateReinfPoint( int nFactoryID, int nPointID ) cons
 	hash_map<int,int>::const_iterator itRecycle = pendingRecycles.find( nFactoryID );
 	pUpdate->fRecycle = ( itRecycle == pendingRecycles.end() ? 1.0f : ( float( curTime - itRecycle->second ) / recycles.find( nFactoryID )->second ) );
 	pUpdate->bEnable = pUpdate->fRecycle >= 1.0f;
-	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
-	
+	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );
+
 }
 
 int CPlayerPointsTracker::operator&( IBinSaver &saver )
@@ -192,7 +192,7 @@ int CPlayerPointsTracker::operator&( IBinSaver &saver )
 	saver.Add( 4, &pendingRecycles );
 	saver.Add( 5, &recycles );
 	saver.Add( 6, &nMaxPointIndex );
-	
+
 	return 0;
 }
 
@@ -222,7 +222,7 @@ CPlayerPointsTracker* CReinforcementPointsTracker::operator[]( const int &nIndex
 void CReinforcementPointsTracker::Segment()
 {
 	for ( int i = 0; i < trackers.size(); ++i )
-		trackers[i].Segment();	
+		trackers[i].Segment();
 }
 
 int CReinforcementPointsTracker::operator&( IBinSaver &saver )

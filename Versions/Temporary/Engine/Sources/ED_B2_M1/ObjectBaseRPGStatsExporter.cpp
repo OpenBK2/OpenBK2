@@ -203,7 +203,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 	std::string szTextureFolder;
 	std::string szTextureFileFolder;
 	int nMaterialCount = 0;
-	CManipulatorManager::GetValue( &nMaterialCount, pModelManipulator, "Materials" );	
+	CManipulatorManager::GetValue( &nMaterialCount, pModelManipulator, "Materials" );
 	if ( nMaterialCount > 0 )
 	{
 		std::string szMaterialName;
@@ -234,14 +234,14 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		if ( bNeedStaticDebris )
 		{
 			// Получаем манипулятор на описатель
-			CPtr<IManipulator> pDebrisManipulator = CManipulatorManager::CreateManipulatorFromReference( "StaticDebris.Debris", pManipulator, 0, 0, 0 ); 
+			CPtr<IManipulator> pDebrisManipulator = CManipulatorManager::CreateManipulatorFromReference( "StaticDebris.Debris", pManipulator, 0, 0, 0 );
 			if ( !pDebrisManipulator ) return ObjectExportError(rszObjectName, "Static debris is enabled but its Debris resource is missing.");
 			{
 				int nDebrisCount = 0;
 				bResult = bResult && CManipulatorManager::GetValue( &nDebrisCount, pDebrisManipulator, "Debris" );
 				bResult = bResult && CManipulatorManager::EnsureArraySize( nDebrisCount, pManipulator, "StaticDebris.Masks" );
 
-				// пробегаем по списку установленных 
+				// пробегаем по списку установленных
 				for ( int nDebrisIndex = 0; nDebrisIndex < nDebrisCount; ++nDebrisIndex )
 				{
 					const std::string szDebrisPrefix = fmt::format( "Debris.[{}]", nDebrisIndex );
@@ -282,7 +282,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 					if ( !szMaskFileName.empty() && ( szMaskFileName[0] != ' ' ) )
 					{
 						NFile::RemoveFile( ( pUserData->constUserData.szExportSourceFolder + szMaskFileName ).c_str() );
-					}					
+					}
 				}
 			}
 			//
@@ -290,7 +290,7 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 		}
 	}
 	// Записываем третий параметр - AI проходимость объекта
-	bResult = bResult && ExportDynamicDebris( pManipulator, rszObjectName ); 
+	bResult = bResult && ExportDynamicDebris( pManipulator, rszObjectName );
 	if ( bResult && NeedCreatePassability() )
 	{
 		bool bHasPassability = false;
@@ -319,6 +319,6 @@ EXPORT_RESULT CObjectBaseRPGStatsExporter::ExportObject( IManipulator* pManipula
 }
 
 
-// basement storage  
+// basement storage
 
 

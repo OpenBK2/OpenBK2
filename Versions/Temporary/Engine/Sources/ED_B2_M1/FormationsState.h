@@ -35,12 +35,12 @@ class CFormationsState : public CDefaultInputState, public ICommandHandler
 	void OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnLButtonUp( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
-		
+
 	// ICommandHandler
 	bool HandleCommand( unsigned nCommandID, uintptr_t dwData );
 	bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 
-	// CFormationsState 
+	// CFormationsState
 	bool GetFormationWindowDialogData( SFormationWindowDialogData *pData );
 	bool SetFormationWindowDialogData( SFormationWindowDialogData *pData );
 	void ReloadSquad( NDb::SSquadRPGStats::SFormation::EFormationMoveType eFormation );

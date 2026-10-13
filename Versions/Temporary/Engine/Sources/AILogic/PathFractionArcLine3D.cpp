@@ -38,19 +38,19 @@ void CPathFractionArcLine3D::GetSimplePath( CPathList *pPaths )
 		pPaths->push_back( pLine.GetPtr() );
 }
 
-CPathFractionArc3D * CPathFractionArcLine3D::GetArc() 
-{ 
-	return pArc; 
+CPathFractionArc3D * CPathFractionArcLine3D::GetArc()
+{
+	return pArc;
 }
 
-IPathFraction * CPathFractionArcLine3D::GetLine() 
-{ 
-	return pLine; 
+IPathFraction * CPathFractionArcLine3D::GetLine()
+{
+	return pLine;
 }
 
-float CPathFractionArcLine3D::GetLength() const 
-{ 
-	return (pArc ? pArc->GetLength(): 0.0f) + (pLine? pLine->GetLength(): 0.0f); 
+float CPathFractionArcLine3D::GetLength() const
+{
+	return (pArc ? pArc->GetLength(): 0.0f) + (pLine? pLine->GetLength(): 0.0f);
 }
 
 void CPathFractionArcLine3D::Init( const SPrevPathParams &prevPath, const CVec3 &x1, const float fR/*circle radius*/)
@@ -110,8 +110,8 @@ void CPathFractionArcLine3D::Init( const CVec3 &x0, const CVec3 &_v0, const CVec
 
 bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const CVec3 &x1, const float fR, const int nDir, CVec3 *vT )
 {
-	CVec3 x0x1 = x1 - x0;									
-	CVec3 _x0x1 = x1 - x0;									
+	CVec3 x0x1 = x1 - x0;
+	CVec3 _x0x1 = x1 - x0;
 	Normalize( &_x0x1 );
 	// introduce new (_right_ if nDir == 1 or _left_ if nDir == -1 ) coordinate system ( i, j, k ), coordinate center (0,0) = x0.
 	// i,y - manuver plane, k - normal to manuver plane

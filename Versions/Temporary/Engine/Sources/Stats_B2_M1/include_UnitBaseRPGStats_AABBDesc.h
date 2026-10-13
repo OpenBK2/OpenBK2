@@ -4,4 +4,4 @@ int ToAIUnits( bool bInEditor )
 	//Vis2AI( &vHalfSize );
 
 	return 0;
-} 
+}

@@ -32,7 +32,7 @@ CMissionUnitFullInfo::~CMissionUnitFullInfo()
 void CMissionUnitFullInfo::InitByReinf( IWindow *pInfo, IWindow *pAppearanceWnd, NDb::ESeason _eSeason )
 {
 	eSeason = _eSeason;
-	
+
 	InitPrivate( pInfo, pAppearanceWnd, ET_REINF );
 }
 
@@ -53,9 +53,9 @@ void CMissionUnitFullInfo::InitBySuperWeapon( IWindow *pInfo, IWindow *pAppearan
 void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd, EType _eType )
 {
 	eType = _eType;
-	
+
 	IWindow *pInfo = GetChildChecked<IWindow>( _pInfo, "UnitFullInfo3", true );
-	
+
 	pName = GetChildChecked<ITextView>( pInfo, "Name", true );
 	pWeaponsWnd = GetChildChecked<IWindow>( pInfo, "Weapons", true );
 	pSuppliesWnd = GetChildChecked<IWindow>( pInfo, "Supplies", true );
@@ -118,7 +118,7 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 			IButton *pBtn = dynamic_cast<IButton*>( pWnd );
 			if ( !pBtn )
 				break;
-				
+
 			SViewMember viewMember;
 			viewMember.pBtn = pBtn;
 			viewMember.pIconWnd = GetChildChecked<IWindow>( pBtn, "MemberIcon", true );
@@ -132,7 +132,7 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 		if ( pBuildingTooltipHolderWnd )
 			wszTooltipMemberInBuilding = pBuildingTooltipHolderWnd->GetDBTooltipStr();
 	}
-	
+
 	if ( pSuppliesWnd )
 	{
 		pSuppliesCountView = GetChildChecked<ITextView>( pSuppliesWnd, "SuppliesCount", true );
@@ -141,9 +141,9 @@ void CMissionUnitFullInfo::InitPrivate( IWindow *_pInfo, IWindow *pAppearanceWnd
 
 	if ( pInfo )
 		pInfo->ShowWindow( true );
-		
+
 	ClearInfo();
-	
+
 	int nBaseID;
 	if ( eType == ET_OBJECT )
 		nBaseID = BASE_ID_3D_OBJECT;
@@ -167,12 +167,12 @@ void CMissionUnitFullInfo::ClearInfo()
 	wszLocalizedName = L"";
 	fFuel = -1.0f;
 	nPlayer = 0;
-	
+
 	weapons.clear();
 	members.clear();
 	armors.clear();
 	objects.clear();
-	
+
 	HideSpecific();
 
 	Clear3DView();
@@ -246,18 +246,18 @@ void CMissionUnitFullInfo::SetObject( CMapObj *pMO )
 		UpdateObject( pMO );
 		return;
 	}
-	
+
 	ClearInfo();
-	
+
 	if ( !pMO )
 		return;
 
 	pBaseMO = pMO;
 	pSelMO = pMO;
-		
+
 	const NDb::SHPObjectRPGStats *pStats = pMO->GetStats();
 	NI_VERIFY( pStats, "Incorrect unit's stats", return );
-	
+
 	pBaseStats = pStats;
 	pSelStats = pStats;
 
@@ -281,7 +281,7 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 
 	const NDb::SHPObjectRPGStats *pStats = pMO->GetStats();
 	NI_VERIFY( pStats, "Incorrect unit's stats", return );
-	
+
 	bool bSimilarMembers = false;
 	bool bMembersDetailsUpdated = false;
 	if ( pMO == pBaseMO )
@@ -290,14 +290,14 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 		members.swap( oldMembers );
 		MakeMembers( &members );
 		bSimilarMembers = (members == oldMembers);
-		
+
 		if ( !bSimilarMembers )
 		{
 			pSelStats = pBaseStats;
 			pSelMO = pBaseMO;
 			nSelWeapon = 0;
 			nSelMember = -1;
-			
+
 			MakeCurrent();
 		}
 		else
@@ -312,12 +312,12 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 			}
 		}
 	}
-	
+
 	if ( bSimilarMembers || bMembersDetailsUpdated )
 	{
 		SObjectStatus status;
 		pSelMO->GetStatus( &status );
-		
+
 		if ( !status.bIsTransport )
 		{
 			if ( !IsSameWeapons( status ) )
@@ -338,7 +338,7 @@ void CMissionUnitFullInfo::UpdateObject( CMapObj *pMO )
 
 		MakeCurrent3DObjects(); // TODO: можно оптимизировать и вызывать только на смерть пехотинца из отряда
 	}
-	
+
 //	if ( bMembersUpdated )
 		ShowMembers();
 	ShowCurrent();
@@ -371,17 +371,17 @@ void CMissionUnitFullInfo::MakeMembers( std::vector<SMember> *pMembers )
 		pMOCont->GetPassangers( &passengers );
 		for ( std::vector<CMOSelectable*>::iterator it = passengers.begin(); it != passengers.end(); ++it )
 		{
-			CMOSelectable *pPassenger = *it; 
+			CMOSelectable *pPassenger = *it;
 			if ( !pPassenger )
 				continue;
-				
+
 			NI_ASSERT( pPassenger->IsAlive(), "Programmers: dead unit inside container" );
-				
+
 			SMember member;
 			member.pStats = pPassenger->GetStats();
 			member.pMO = pPassenger;
 			member.nPassengerCount = 0;
-			
+
 			if ( CDynamicCast<IMOSquad> pSquad = pPassenger )
 			{
 				member.nPassengerCount = pSquad->GetPassangersCount();
@@ -395,7 +395,7 @@ void CMissionUnitFullInfo::MakeMembers( std::vector<SMember> *pMembers )
 void CMissionUnitFullInfo::MakeCurrentWeapons()
 {
 	weapons.clear();
-	
+
 	if ( pSelMO )
 	{
 		SObjectStatus status;
@@ -458,7 +458,7 @@ void CMissionUnitFullInfo::MakeCurrentSupplies()
 void CMissionUnitFullInfo::MakeCurrentFlag()
 {
 	pKeyObjectTexture = 0;
-	
+
 	if ( pSelMO && pSelMO->IsKeyObject() )
 	{
 		if ( const NDb::SMapInfo *pMapInfo = Singleton<IScenarioTracker>()->GetCurrentMission() )
@@ -547,7 +547,7 @@ void CMissionUnitFullInfo::MakeCurrentHP()
 {
 	hps.clear();
 	nPlayer = 0;
-	
+
 	if ( pSelMO )
 	{
 		nPlayer = pSelMO->GetPlayer();
@@ -573,7 +573,7 @@ void CMissionUnitFullInfo::MakeCurrentHP()
 			SHP hp;
 			hp.fFraction = pSelMO->GetHP();
 			float fHP = hp.fFraction * status.nMaxHP;
-			hp.nHP = fHP > 1.0f ? fHP : ( fHP > 0.0f ? 1.0f : 0.0f );	
+			hp.nHP = fHP > 1.0f ? fHP : ( fHP > 0.0f ? 1.0f : 0.0f );
 			hps.push_back( hp );
 		}
 	}
@@ -581,7 +581,7 @@ void CMissionUnitFullInfo::MakeCurrentHP()
 	{
 		SHP hp;
 		hp.fFraction = 1.0f;
-		hp.nHP = pSelStats->fMaxHP;	
+		hp.nHP = pSelStats->fMaxHP;
 		hps.push_back( hp );
 	}
 }
@@ -634,7 +634,7 @@ void CMissionUnitFullInfo::MakeWeapons( const SObjectStatus &status, bool bSquad
 	for ( int i = 0; i < status.weapons.size(); ++i )
 	{
 		const SObjectStatus::SWeapon &statusWeapon = status.weapons[i];
-		
+
 		NUnitFullInfo::SWeapon weapon;
 		weapon.pWeapon = statusWeapon.pWeaponID;
 		weapon.nCount = statusWeapon.nCount;
@@ -644,7 +644,7 @@ void CMissionUnitFullInfo::MakeWeapons( const SObjectStatus &status, bool bSquad
 		weapon.nPenetration = statusWeapon.nPenetration;
 		weapon.nAmmo = statusWeapon.nAmmo;
 		weapon.nMaxAmmo = statusWeapon.nMaxAmmo;
-		
+
 		weapons.push_back( weapon );
 	}
 //	if ( bSquad )
@@ -657,7 +657,7 @@ void CMissionUnitFullInfo::UpdateWeaponsAmmo( const struct SObjectStatus &status
 	{
 		const SObjectStatus::SWeapon &statusWeapon = status.weapons[i];
 		NUnitFullInfo::SWeapon &weapon = weapons[i];
-		
+
 		weapon.nAmmo = statusWeapon.nAmmo;
 	}
 }
@@ -687,17 +687,17 @@ void CMissionUnitFullInfo::ShowArmor()
 
 	if ( pArmorsWnd )
 		pArmorsWnd->ShowWindow( true );
-		
+
 	std::wstring wszArmorFront = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_FRONT] ) );
 	std::wstring wszArmorSide = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_SIDE] ) );
 	std::wstring wszArmorBack = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_BACK] ) );
 	std::wstring wszArmorTop = NStr::ToUnicode( std::to_string(  armors[NUnitFullInfo::ES_ARMOR_TOP] ) );
-	
+
 	if ( pArmorFrontView )
 	{
 		pArmorFrontView->SetText( pArmorFrontView->GetDBText() + wszArmorFront );
 	}
-	
+
 	if ( pArmorSide1View )
 	{
 		pArmorSide1View->SetText( pArmorSide1View->GetDBText() + wszArmorSide );
@@ -739,15 +739,15 @@ void CMissionUnitFullInfo::ShowWeapons()
 				weaponItems[i].pItem->ShowWindow( false );
 			continue;
 		}
-		
+
 		if ( weaponItems[i].pItem )
 			weaponItems[i].pItem->ShowWindow( true );
-			
+
 		std::wstring wszDamage = NStr::ToUnicode( std::to_string(  weapons[i].nDamage ) );
 		std::wstring wszPenetration = NStr::ToUnicode( std::to_string(  weapons[i].nPenetration ) );
 		std::wstring wszAmmo = NStr::ToUnicode( fmt::format( "{}/{}", weapons[i].nAmmo, weapons[i].nMaxAmmo ) );
 		std::wstring wszCount = NStr::ToUnicode( std::to_string(  weapons[i].nCount ) );
-		
+
 		if ( weaponItems[i].pDamage )
 			weaponItems[i].pDamage->SetText( weaponItems[i].pDamage->GetDBText() + wszDamage );
 		if ( weaponItems[i].pPenetration )
@@ -769,7 +769,7 @@ void CMissionUnitFullInfo::ShowWeapons()
 			if ( weapons[i].pWeapon )
 				weaponItems[i].pIcon->SetTexture( weapons[i].pWeapon->pWeaponTypeTexture );
 		}
-		
+
 		if ( i == nSelWeapon )
 		{
 			if ( pWeaponFullName )
@@ -827,7 +827,7 @@ void CMissionUnitFullInfo::ShowMembers()
 
 	if ( pMembersWnd )
 		pMembersWnd->ShowWindow( true );
-		
+
 	for ( int i = 0; i < viewMembers.size(); ++i )
 	{
 		SViewMember &viewMember = viewMembers[i];
@@ -837,9 +837,9 @@ void CMissionUnitFullInfo::ShowMembers()
 				viewMember.pBtn->ShowWindow( false );
 			continue;
 		}
-		
+
 		SMember &member = members[i];
-		
+
 		if ( viewMember.pBtn )
 		{
 			viewMember.pBtn->ShowWindow( true );
@@ -861,7 +861,7 @@ void CMissionUnitFullInfo::ShowFlag()
 
 	if ( pFlagWnd )
 		pFlagWnd->ShowWindow( true );
-		
+
 	if ( pFlagWnd )
 		pFlagWnd->SetTexture( pKeyObjectTexture );
 }
@@ -909,7 +909,7 @@ void CMissionUnitFullInfo::ShowHP()
 		{
 			pHPView->SetText( pHPView->GetDBText() + wszValue );
 		}
-		
+
 		if ( pHPBarUnit )
 		{
 			const IScenarioTracker::SPlayerColor &color = Singleton<IScenarioTracker>()->GetPlayerColor( nPlayer );
@@ -1021,7 +1021,7 @@ void CMissionUnitFullInfo::SetMemberTooltip( IWindow *pWnd )
 	bool bInBuilding = false;
 	if ( dynamic_cast_ptr<CMOBuilding*>( pBaseMO ) != 0 )
 		bInBuilding = true;
-		
+
 	if ( !bInBuilding )
 		pWnd->SetTooltip( wszTooltipMemberInTransport );
 	else

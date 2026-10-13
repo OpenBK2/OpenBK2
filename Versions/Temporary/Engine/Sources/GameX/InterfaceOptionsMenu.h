@@ -14,10 +14,10 @@ public:
 		CPtr<CInterfaceOptionsMenu> pInterface;
 	public:
 		CReactions() {  }
-		~CReactions() 
-		{  
+		~CReactions()
+		{
 		}
-		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface ) 
+		CReactions( IWindow *_pScreen, CInterfaceOptionsMenu *_pInterface )
 			: pScreen( _pScreen ), pInterface( _pInterface ) {   }
 		virtual bool Execute( const std::string &szSender, const std::string &szReaction );
 		virtual int Check( const std::string &szCheckName ) const;
@@ -65,7 +65,7 @@ private:
 		std::string					szCurrentValue;
 	};
 	typedef std::vector< SOptionInstance > CInstances;
-	struct SCategoryInstance 
+	struct SCategoryInstance
 	{
 		int							nCategoryEntry;
 		CPtr< IWindow > pWindow;
@@ -94,7 +94,7 @@ private:
 	CPtr< IWindow >		pEditNumberItemTemplate;
 
 	CPtr< IScrollableContainer >		pOptionList;
-	EScreenModes			screenMode;			
+	EScreenModes			screenMode;
 
 	CPtr<IWindow> pGroupPanel;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pReactions); f.Add(3,&pOptionSystem); f.Add(4,&categories); f.Add(5,&options); f.Add(6,&nSelectedCategory); f.Add(7,&pMain); f.Add(8,&pOptionListTemplate); f.Add(9,&pCategoryTitle); f.Add(10,&pButtonTemplate); f.Add(11,&categoryOffset); f.Add(12,&pCheckBoxItemTemplate); f.Add(13,&pEditLineItemTemplate); f.Add(14,&pSliderItemTemplate); f.Add(15,&pMultichoiceTemplate); f.Add(16,&pEditNumberItemTemplate); f.Add(17,&pOptionList); f.Add(18,&screenMode); f.Add(19,&pGroupPanel); return 0; }

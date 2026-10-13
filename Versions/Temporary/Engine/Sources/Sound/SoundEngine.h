@@ -26,9 +26,9 @@ class CPlayLog
 	std::vector<SLogEntry> log;
 	int nCurPos;
 	bool bLogIsFull;
-	
+
 	int nChannels;
-	
+
 	ESFXOutputType eOutput;
 	int nFrequ;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&log); f.Add(3,&nCurPos); f.Add(4,&bLogIsFull); f.Add(5,&nChannels); f.Add(6,&eOutput); f.Add(7,&nFrequ); return 0; }
@@ -39,7 +39,7 @@ public:
 	void SaveToFile( const std::string &szFilename );
 	void PlayFile( const std::string &szFileName, int nMaxSize );
 };
-#endif 
+#endif
 
 typedef std::unordered_map<ISound*, int> CSoundChannelMap;
 typedef std::unordered_map<int, CPtr<ISound> > CChannelSoundMap;
@@ -53,7 +53,7 @@ class CSoundEngine : public ISFX
 		std::string szDriverName;
 		bool isHardware3DAccelerated;				// this driver supports hardware accelerated 3d sound.
 		bool supportEAXReverb;							// this driver supports EAX reverb
-		bool supportReverb;									// this driver supports EAX2/A3D3 reverb  
+		bool supportReverb;									// this driver supports EAX2/A3D3 reverb
 		bool supportEAX3;										// this driver supports EAX3
 	};
 	// initialization info - drivers
@@ -69,7 +69,7 @@ class CSoundEngine : public ISFX
 	bool bInited;
 	bool bEnableSFX;											// enable SFXes playing
 	bool bEnableStreaming;								// enable streaming playing
-	bool bSoundCardPresent;								
+	bool bSoundCardPresent;
 	bool bPaused;													// is all SFX sounds paused?
 	bool bStreamingPaused;								// is streaming sound paused
 	//
@@ -83,10 +83,10 @@ class CSoundEngine : public ISFX
 	void ReEnableSounds();
 	//
 	~CSoundEngine();
-	
+
 public:
 	CSoundEngine();
-	int operator&( IBinSaver &saver ); 
+	int operator&( IBinSaver &saver );
 
 	void Set3DMode( bool _b3DMode );
 	// internal-use service functions

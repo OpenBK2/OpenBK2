@@ -415,7 +415,7 @@ bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, boo
 {
 	//	{CRAP !!! create faster method !!! /CRAP}
 	//	what about CW/CCW ?
-	
+
 	std::vector<CVec3dEx> trianglePoly( 3 );
 	trianglePoly.clear();
 

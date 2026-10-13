@@ -392,7 +392,7 @@ int CWaterPatch::Process( const long nTime )
 			for ( int g = 0; g < ( nCoastLen - 1 ); ++g )
 			{
 				const unsigned int nGridInd = g * waterSurf.GetSizeX() + i;
-				
+
 				{
 					const CVec3 &vNode = grid[nGridInd].pos;
 					objDataSurf.verts[nCount].pos.Set( vNode.x * fWaterRotationCos - vNode.y * fWaterRotationSin + waterHorDeform[g][i].fOffsX * DEF_COAST_HOR_DEFORM_COEFF + vWaterOffset.x,
@@ -708,7 +708,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 	// init phase offsets for each wave
 	for ( int k = 0; k < waves.size(); ++k )
 	{
-		if ( k == 0 ) 
+		if ( k == 0 )
 			waves[k].fPhaseOffset = 0.0f;
 		else
 			waves[k].fPhaseOffset = waves[k - 1].fPhaseOffset + GetPhase( 0, 0, k ) * ( 0.5f + NWin32Random::Random( 0.0f, 1.0f ) * 0.5f );
@@ -803,7 +803,7 @@ int CWaterPatch::Init( const int nSX, const int nSY, const int nCoast, const CVe
 	std::vector<STriangle> trgs;
 	std::vector<STriangle> trgs2;
 	STriangle curTrg;
-	for ( int k = 0; k < 2; ++k ) 
+	for ( int k = 0; k < 2; ++k )
 	{
 		objDataWater.verts.resize( ( nSX - 1 ) * ( nSY - 1 ) * 4 );
 		objDataWater.secondTex.resize( ( nSX - 1 ) * ( nSY - 1 ) * 4 );

@@ -43,8 +43,8 @@ bool CInterfaceSaveLoadMenu::SSortByName::operator()( const NSaveLoad::SSavegame
 
 	std::wstring wszName1 = save1.wszName;
 	std::wstring wszName2 = save2.wszName;
-	transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower ); 
-	transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower ); 
+	transform( wszName1.begin(), wszName1.end(), wszName1.begin(), towlower );
+	transform( wszName2.begin(), wszName2.end(), wszName2.begin(), towlower );
 
 	return wszName1 < wszName2;
 }
@@ -61,7 +61,7 @@ bool CInterfaceSaveLoadMenu::SSortByDate::operator()( const NSaveLoad::SSavegame
 
 // CInterfaceSaveLoadMenu
 
-CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() : 
+CInterfaceSaveLoadMenu::CInterfaceSaveLoadMenu() :
 	CInterfaceScreenBase( "SaveLoadMenu", "save_load_menu" )
 {
 	pScreenShotTexture = new CBackgroundMutableTexture;
@@ -84,9 +84,9 @@ CInterfaceSaveLoadMenu::~CInterfaceSaveLoadMenu()
 
 bool CInterfaceSaveLoadMenu::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
-		
+
 	pReactions = new CReactions( pScreen, this );
 	AddScreen( pReactions );
 
@@ -183,7 +183,7 @@ void CInterfaceSaveLoadMenu::MakeInterior()
 
 	if ( CWindow *pPic = dynamic_cast_ptr<CWindow *>(pPicture) ) // CRAP - don't use CWindow type out of UI implementation
 		pPic->SetBackground( pScreenShotTexture );
-	
+
 	UpdateButtons();
 
 	if ( pMain )
@@ -226,10 +226,10 @@ void CInterfaceSaveLoadMenu::FillSaveList( const ESortModes nSortMode )
 			pFlag->SetTexture( save.info.pFlagTexture );
 			pFlag->ShowWindow( save.info.pFlagTexture != 0 );
 		}
-		
+
 		if ( pName )
 			pName->SetText( pName->GetDBText() + save.wszName );
-		
+
 		std::wstring wszDate = NStr::ToUnicode( fmt::format("{:02d}.{:02d}.{:04d} {:02d}:{:02d}",
 			save.time.wDay, save.time.wMonth, save.time.wYear,
 			save.time.wHour, save.time.wMinute ) );
@@ -268,25 +268,25 @@ bool CInterfaceSaveLoadMenu::StepLocal( bool bAppActive )
 
 void CInterfaceSaveLoadMenu::MsgDelete( const SGameMessage &msg )
 {
-	if ( nSelected == -1 ) 
+	if ( nSelected == -1 )
 	{
 		return;
 	}
 	eConfirmAction = CONFIRM_DELETE;
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 		InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_DELETE_QUESTION" ) ).c_str() );
 }
 
 void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 {
 	//User agreed to do something (delete or overwrite savegame)
-	switch ( eConfirmAction ) 
+	switch ( eConfirmAction )
 	{
 		case CONFIRM_SAVE:
 			DoSaveGame();
 			break;
-			
+
 		case CONFIRM_DELETE:
 			{
 				//Delete file
@@ -305,11 +305,11 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 				if ( nSelected >= saves.size() )
 					nSelected = saves.size() - 1;
 				SelectItem( true, true );
-				
+
 				UpdateButtons();
 			}
 			break;
-			
+
 		case CONFIRM_LOAD:
 		{
 			IWindow *pWait = GetChildChecked<IWindow>( pMain, "LoadingPopup", true );
@@ -322,7 +322,7 @@ void CInterfaceSaveLoadMenu::MsgOk( const SGameMessage &msg )
 			NMainLoop::Command( ML_COMMAND_LOAD_GAME, saves[nSelected].szFileTitle.c_str() );
 		}
 		break;
-	
+
 		case NO_SAVE_NAME:
 			break;
 	}
@@ -366,8 +366,8 @@ void CInterfaceSaveLoadMenu::Load()
 		if ( bConfirmLoadQuestion )
 		{
 			eConfirmAction = CONFIRM_LOAD;
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 				InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_CONFIRM_LOAD" ) ).c_str() );
 		}
 		else
@@ -391,10 +391,10 @@ void CInterfaceSaveLoadMenu::MsgSave( const SGameMessage &msg )
 	if ( wszSaveName.empty() )
 	{
 		eConfirmAction = NO_SAVE_NAME;
-		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-			CICMessageBox::MakeConfigString( "MessageBoxWindowOk", 
+		NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+			CICMessageBox::MakeConfigString( "MessageBoxWindowOk",
 			InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_NO_NAME" ) ).c_str() );
-			
+
 		return;
 	}
 	//Check if the game name already exists
@@ -403,8 +403,8 @@ void CInterfaceSaveLoadMenu::MsgSave( const SGameMessage &msg )
 		if ( saves[i].wszName == wszSaveName )			//Already exists, ask
 		{
 			eConfirmAction = CONFIRM_SAVE;
-			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+			NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+				CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 				InterfaceState()->GetTextEntry( "T_SAVELOAD_MENU_OVERWRITE_QUESTION" ) ).c_str() );
 
 			return;
@@ -418,14 +418,14 @@ void CInterfaceSaveLoadMenu::MsgSave( const SGameMessage &msg )
 void CInterfaceSaveLoadMenu::DoSaveGame()
 {
 	NSaveLoad::SSavegameEntry sg;
-	
+
 	//Get EditLine contents
 	std::wstring wszSaveName = pEditLine ? pEditLine->GetText() : L"";
 	nSelected = -1;
 	for ( int i = 0; i < saves.size(); ++i )
 	{
 		NSaveLoad::SSavegameEntry &save = saves[i];
-		
+
 		if ( wszSaveName == save.wszName )
 		{
 			nSelected = i;
@@ -574,12 +574,12 @@ void CInterfaceSaveLoadMenu::OnSelectionChange( const std::string &szSender )
 {
 	nSelected = -1;
 	IWindow *pSelection = pSaveList ? pSaveList->GetSelectedItem() : 0;
-	if ( !pSelection ) 
+	if ( !pSelection )
 		return;
 
 	for ( int i = 0; i < saves.size(); ++i )
 	{
-		if ( pSelection == saves[i].pWindow ) 
+		if ( pSelection == saves[i].pWindow )
 		{
 			nSelected = i;
 			SelectItem( false, true );
@@ -598,11 +598,11 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 
   //Campaign
 	wszCampaign = info.GetCampaignName();
-	
+
 	//Chapter
 	wszChapter = info.GetChapterName();
 	wszChapterBriefing = info.GetChapterDesc();
-	
+
 	//Mission
 	bool bIsMission = false;
 	wszMission = info.GetMissionName();
@@ -614,7 +614,7 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 		pDescCustomPanel->ShowWindow( !info.bFromChapter && info.bCustomMission );
 	if ( pDescChapterPanel )
 		pDescChapterPanel->ShowWindow( info.bFromChapter );
-		
+
 	if ( pDescCampaignView )
 		pDescCampaignView->SetText( pDescCampaignView->GetDBText() + wszCampaign );
 	if ( pDescChapterView )
@@ -655,7 +655,7 @@ void CInterfaceSaveLoadMenu::ComposeDescription( const NSaveLoad::SSaveInfo &inf
 	}
 }
 
-void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditLine ) 
+void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditLine )
 {
 	if ( pDescPanel )
 		pDescPanel->ShowWindow( false );
@@ -703,7 +703,7 @@ void CInterfaceSaveLoadMenu::SelectItem( bool bUpdateSelection, bool bClearEditL
 	{
 		NSaveLoad::SSavegameEntry &save = saves[nSelected];
 		IWindow *pSelection = save.pWindow;
-		
+
 		if ( pSaveList )
 		{
 			if ( bUpdateSelection )

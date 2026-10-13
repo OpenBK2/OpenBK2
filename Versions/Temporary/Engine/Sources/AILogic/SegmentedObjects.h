@@ -68,7 +68,7 @@ void CContainer<TPObj>::RegisterSegments( const TPObj pObj, const bool bInitiali
 template <class TPObj>
 inline int CContainer<TPObj>::operator&( IBinSaver &saver )
 {
-	
+
 
 	saver.Add( 1, &container );
 	saver.Add( 2, &registerdObjects );
@@ -83,12 +83,12 @@ inline void Segment( const NTimer::STime lastSegmTime, const NTimer::STime round
 	{
 		const int nIndex = GetSegmUnitsIndexByTime(time);
 
-		int nPredValue = 0;			
+		int nPredValue = 0;
 		for ( int iter = container.begin( nIndex ); iter != container.end(); iter = container.GetNext( iter ) )
 		{
 			typename TSegments::TObjType pObj = container.GetEl( iter );
 
-			static TSegments check;			
+			static TSegments check;
 			check.SetSegmentObject( pObj );
 			if ( check.Check() /*&& container.IsRegistered( pObj )*/ )
 			{
@@ -122,7 +122,7 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime, const NTimer::STime
 
 		for ( int iter = container.begin( nIndex ); iter != container.end(); iter = container.GetNext( iter ) )
 		{
-			static TSegments check;			
+			static TSegments check;
 			check.SetSegmentObject( container.GetEl( iter ) );
 			if ( check.Check() )
 				check.ProcessSegment();

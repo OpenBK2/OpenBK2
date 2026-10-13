@@ -27,14 +27,14 @@ const char *GetDesiredMapSeason()
 
 //
 //
-//			
-//					SQUAD STATE					
+//
+//					SQUAD STATE
 //
 //
 //
 
-CSquadState::CSquadState(  CSquadEditor *_pSquadEditor ) : 
-	pSquadEditor( _pSquadEditor ), 
+CSquadState::CSquadState(  CSquadEditor *_pSquadEditor ) :
+	pSquadEditor( _pSquadEditor ),
 	bNeedLoadEnterConfig( true )
 {
 	int nStateIndex = INVALID_INPUT_STATE_INDEX;
@@ -84,7 +84,7 @@ void CSquadState::Enter()
 	NI_ASSERT( pSquadEditor != 0, "CSquadState::Enter(), pSquadEditor == 0" );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_GAME_INPUT, reinterpret_cast<uintptr_t>( new CSquadInterfaceCommand( new CSquadInterface() ) ) );
 	//
-	pSquadEditor->ReloadTerrain(); 
+	pSquadEditor->ReloadTerrain();
 	//
 	LoadEnterConfig();
 	//
@@ -96,10 +96,10 @@ void CSquadState::Enter()
 void CSquadState::Leave()
 {
 	NI_ASSERT( pSquadEditor != 0, "CSquadState::Leave(), pSquadEditor == 0" );
-	
+
 	IEditorScene *pScene = EditorScene();
 	NI_ASSERT( pScene != 0, "CSquadState::Leave(): pScene == 0" );
-	
+
 	// store last loaded map and camera's anchor
 	pSquadEditor->editorSettings.vLastBECameraAnchor = Camera()->GetAnchor();
 	//
@@ -131,7 +131,7 @@ bool CSquadState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 			{
 				CMultiInputState *pMultiInputState = checked_cast<CMultiInputState*>( GetInputState( nShortcutIndex ) );
 				NI_ASSERT( pMultiInputState != 0, "CSquadState::HandleCommand(), pMultiInputState == 0" );
-				if ( ( nTabIndex >= 0 ) && 
+				if ( ( nTabIndex >= 0 ) &&
 						 ( nTabIndex < pMultiInputState->GetCount() ) )
 				{
 					pMultiInputState->SetActiveInputState( nTabIndex, true, false );

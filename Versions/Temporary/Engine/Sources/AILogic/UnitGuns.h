@@ -42,7 +42,7 @@ public:
 
 	bool AddGun( const struct IGunsFactory &gunsFactory, const int nPlatform, const int nGunInStats, const SWeaponRPGStats *pWeapon, int *nGuns, const int nAmmo );
 	void SetOwner( class CAIUnit *pUnit );
-	
+
 	const uint8_t GetNTotalGuns() const { return guns.size(); }
 	void Segment();
 
@@ -53,10 +53,10 @@ public:
 	virtual class CBasicGun* GetFirstArtilleryGun() const = 0;
 
 	class CBasicGun* ChooseGunForStatObj( class CAIUnit *pOwner, class CStaticObject *pObj, NTimer::STime *pTime );
-	
+
 	const bool CanShootToPlanes() const { return bCanShootToPlanes; }
 	float GetMaxFireRange( const class CAIUnit *pOwner ) const;
-	
+
 	const int GetNCommonGuns() const { return nCommonGuns; }
 	// Returns the dense common-gun index used by ammo and resupply bookkeeping.
 	int GetCommonGunIndex( const CBasicGun *pGun ) const;
@@ -69,7 +69,7 @@ public:
 	// даёт reject reason самого приоритетного gun из тех, кто отказался стрелять
 	const EUnitAckType GetRejectReason() const;
 	bool DoesExistRejectReason( const EUnitAckType &ackType ) const;
-	
+
 	// gun с priority 0
 	class CBasicGun* GetMainGun() const;
 
@@ -79,7 +79,7 @@ public:
 
 class CMechUnitGuns : public CUnitGuns
 {
-	OBJECT_BASIC_METHODS( CMechUnitGuns );	
+	OBJECT_BASIC_METHODS( CMechUnitGuns );
 
 	ZDATA_(CUnitGuns)
 	int nFirstArtGun = {};
@@ -96,7 +96,7 @@ public:
 
 class CInfantryGuns : public CUnitGuns
 {
-	OBJECT_BASIC_METHODS( CInfantryGuns );	
+	OBJECT_BASIC_METHODS( CInfantryGuns );
 	ZDATA_(CUnitGuns)
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(1,(CUnitGuns*)this); return 0; }
 public:

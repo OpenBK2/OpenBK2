@@ -124,14 +124,14 @@ void CStandartPath2::CopyPath( const int nLength )
 const bool CStandartPath2::CalculatePath( const bool bShift, const SVector &vLastKnownGoodTile )
 {
 	// нечего считать, пора заканчивать
-	if ( pathTiles[nLastPathTile] == vFinishTile ) 
+	if ( pathTiles[nLastPathTile] == vFinishTile )
 		return false;
 
 	const int nPrevStaticPathTile = nCurStaticPathTile;
 	// выбираем точку на текущем статическом пути
 	if ( bShift )
 		nCurStaticPathTile = (std::min)( nCurStaticPathTile + STATIC_PATH_SHIFT, pStaticPath->GetLength()-2 );
-	
+
 	SVector vNextTile = GetTileWithShift( pStaticPath->GetTile( nCurStaticPathTile ) );
 	bool bNextTileValid = true;
 	if ( !IsValidTile( vNextTile ) )
@@ -238,8 +238,8 @@ const CVec2 CStandartPath2::PeekPoint( const int _nShift ) const
 
 	int nShift = nCurInsTile + _nShift - insTiles.size();
 	NI_VERIFY( nShift <= MAX_LOOK_FORWARD_POINTS, "Cannot predict point. Shift too far", nShift = MAX_LOOK_FORWARD_POINTS );
-  
-	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT; 
+
+	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT;
 	if ( nCurPathTile + nShift > nLastPathTile2 )
 		return vFinishPoint;
 
@@ -261,7 +261,7 @@ void CStandartPath2::Shift( const int _nShift )
 	nCurInsTile = insTiles.size();
 
 	nCurPathTile = ( nCurPathTile + nShift )%MAX_PATH_TILES_COUNT;
-	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT; 
+	const int nLastPathTile2 = ( nCurPathTile < nLastPathTile ) ? nLastPathTile : nLastPathTile + MAX_PATH_TILES_COUNT;
 	if ( nCurPathTile + MAX_LOOK_FORWARD_POINTS >= nLastPathTile2 )
 	{
 		CalculatePath( true, INVALID_TILE );
@@ -277,7 +277,7 @@ void CStandartPath2::InsertTiles( const std::list<SVector> &tiles )
 }
 
 const bool CStandartPath2::CanGoBackward( const CBasePathUnit *pUnit ) const
-{ 
+{
 	return pUnit->CanGoBackward() && pStaticPath->GetLength() * float( pAIMap->GetTileSize() ) <= pUnit->GetUnitProfile().GetHalfLength() * 5.0f;
 }
 
@@ -340,7 +340,7 @@ void CStandartPath2::MarkPath( const int nID, const NDebugInfo::EColor color ) c
 	{
 		tiles.push_back( pathTiles[i] );
 		++i;
-		if ( i == MAX_PATH_TILES_COUNT ) 
+		if ( i == MAX_PATH_TILES_COUNT )
 			i = 0;
 	}
 	DebugInfoManager()->CreateMarker( nID, tiles, color );

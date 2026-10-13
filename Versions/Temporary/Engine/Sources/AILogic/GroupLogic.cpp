@@ -138,7 +138,7 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 		{
 			CAIUnit * pAIUnit = checked_cast<CAIUnit*>( pCommonUnit );
 			if ( pAIUnit->GetStats()->IsAviation() )
-			{				
+			{
 				vPos += pAIUnit->GetCenterPlain();
 				aviaIndexes[nAvia++] = i;
 			}
@@ -186,7 +186,7 @@ void CGroupLogic::RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, con
 				else
 					pGroupUnit = pUnit;
 
-				if ( pGroupUnit->nGroup != wGroup )				
+				if ( pGroupUnit->nGroup != wGroup )
 				{
 					DelUnitFromGroup( pGroupUnit );
 
@@ -233,7 +233,7 @@ void CGroupLogic::UnregisterSpecialGroup( const uint16_t wSpecialGroup )
 }
 
 void CGroupLogic::UnregisterGroup( const uint16_t wGroup )
-{ 	
+{
 	if ( registeredGroups.find( wGroup ) != registeredGroups.end() )
 	{
 		DelGroup( wGroup );
@@ -402,7 +402,7 @@ void CGroupLogic::CreateAmbushGroup( const uint16_t wGroup )
 void CGroupLogic::SetToAmbush( CAmbushGroups::iterator &iter )
 {
 	std::list< std::pair<CCommonUnit*, int> > oldUnitsGroups;
-	
+
 	std::vector<int> objects;
 	int nLen = 0;
 	for ( std::list<SAmbushInfo>::iterator innerIter = iter->begin(); innerIter != iter->end(); ++innerIter )
@@ -459,7 +459,7 @@ void CGroupLogic::ProcessAmbushGroups()
 			{
 				const int nUniqueId = innerIter->nUniqueId;
 				// уже в другой ambush группе, or deleted from ambush groups, удалить из этой
-				if ( checkedUnits.find( nUniqueId ) != checkedUnits.end() || 
+				if ( checkedUnits.find( nUniqueId ) != checkedUnits.end() ||
 						 ambushUnits.find( nUniqueId ) == ambushUnits.end() )
 					innerIter = iter->erase( innerIter );
 				else
@@ -481,7 +481,7 @@ void CGroupLogic::ProcessAmbushGroups()
 
 						if ( pUnit->GetState() && innerIter->vAmbushCenter.x != -1.0f )
 						{
-							const bool bRest = 
+							const bool bRest =
 								pUnit->GetState()->IsRestState() && pUnit->IsIdle() &&
 								( !pUnit->IsFormation() || checked_cast<CFormation*>(pUnit)->IsEveryUnitResting() );
 
@@ -500,7 +500,7 @@ void CGroupLogic::ProcessAmbushGroups()
 								else
 								{
 									const int nParty = pUnit->GetParty();
-									bCanSetToAmbush = 
+									bCanSetToAmbush =
 										bCanSetToAmbush && ( pUnit->GetLastChangeStateTime() + 5000 < curTime ) &&
 										nParty < 2 && !pUnit->IsVisible( 1 - nParty );
 								}
@@ -538,8 +538,8 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 {
 	theCommandTrackerForScript.Called( command.nCmdType );
 
-	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW, 
-		StrFmt( "CMD(time %d): ID = %d, (%.2f, %.2f), %d, %.2f", curTime, command.nCmdType, command.vPos.x, command.vPos.y, 
+	/*Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_DEBUG_WINDOW,
+		StrFmt( "CMD(time %d): ID = %d, (%.2f, %.2f), %d, %.2f", curTime, command.nCmdType, command.vPos.x, command.vPos.y,
 		command.nObjectID, command.fNumber ) );
 	Singleton<IGameTimer>()->Pause( true, 0 );*/
 
@@ -571,7 +571,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 			CreateSpecialGroup( wGroup );
 			CreateAmbushGroup( wGroup );
 		}*/
-		
+
 		std::vector<CCommonUnit*> groups( groupUnits.GetSize( wGroup ) );
 
 		int nGroupsIter = 0;
@@ -592,7 +592,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 			DebugTrace( str.c_str() );
 		}
 */
-		// этот рандом вызывать нужно независимо от command.bFromAI - для правильной работы 
+		// этот рандом вызывать нужно независимо от command.bFromAI - для правильной работы
 		// мультиплера
 		if ( groupUnits.GetSize(wGroup) != 0 )
 		{
@@ -668,7 +668,7 @@ void CGroupLogic::GroupCommand( const SAIUnitCmd &command, const uint16_t wGroup
 							bSendCommand = false;
 					}
 				}
-				
+
 				if ( bSendCommand )
 					pUnit->TryExecuteCommand( pCommand, bPlaceInQueue, false );
 			}
@@ -719,7 +719,7 @@ void CGroupLogic::SegmentFollowingUnits()
 void CGroupLogic::StayTimeSegment()
 {
 	int nCntNotRestUnits = 0;
-	
+
 	for ( CGlobalIter iter( 0, ANY_PARTY ); !iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit *pUnit = (*iter);
@@ -729,7 +729,7 @@ void CGroupLogic::StayTimeSegment()
 	}
 }
 
-void CGroupLogic::Segment() 
+void CGroupLogic::Segment()
 {
 	updater.ClearInterpolatable();
 
@@ -930,7 +930,7 @@ void CGroupLogic::UpdateDebugChecksums(FILE* f)
 			int id = pUnit->GetUniqueId();
 			CVec2 pos = pUnit->GetCenterPlain();
 			uint16_t dir = pUnit->GetDirection();
-			
+
 			uint8_t player = pUnit->GetPlayer();
 			uLong checksum = CalculateChecksum(baseChecksum, id, pos.x, pos.y, dir);
 

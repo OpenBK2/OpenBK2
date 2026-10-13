@@ -147,8 +147,8 @@ enum EActionNotify : unsigned int
 
 	ACTION_NOTIFY_ENTRENCHMENT_STARTED				= 0x451,
 
-	ACTION_NOTIFY_REINF_RECYCLE								= 0x461,		
-	ACTION_SET_SELECTION_GROUP								= 0x471,		
+	ACTION_NOTIFY_REINF_RECYCLE								= 0x461,
+	ACTION_SET_SELECTION_GROUP								= 0x471,
 	//ACTION_NOTIFY_RU_STORAGE_AREA						= 0x210,
 	ACTION_NOTIFY_CHANGE_SCENARIO_INDEX				= 0x481,
 	// нужен только для отложеннvх updates
@@ -172,7 +172,7 @@ enum EActionNotify : unsigned int
 	ACTION_NOTIFY_KEY_BUILDING_LOST						= 0x530,	// A Key Building changed ownership
 	ACTION_NOTIFY_KEY_CAPTURE_PROGRESS				= 0x531,	// A Key Building is being captured
 	ACTION_NOTIFY_NEW_KEY_BUILDING						= 0x540,
-	
+
 	ACTION_NOTIFY_PARADROP_STARTED						= 0x541,
 
 	ACTION_NOTIFY_DAMAGE										  = 0x600,  // нанести повреждение по определенной точке

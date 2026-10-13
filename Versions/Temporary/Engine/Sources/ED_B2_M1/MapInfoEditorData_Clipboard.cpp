@@ -63,7 +63,7 @@ namespace NMapInfoEditor
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectClipboard::Insert( const SObjectInfo *pObjectInfo )
-	{ 
+	{
 		CObjectClipboardPartList::iterator itObjectClipboardPart = objectClipboardPartlist.insert( objectClipboardPartlist.end(), pObjectInfo->CallDuplicate() );
 		if ( ( *itObjectClipboardPart ) )
 		{
@@ -95,6 +95,6 @@ namespace NMapInfoEditor
 	}
 };
 
-// basement storage  
+// basement storage
 
 

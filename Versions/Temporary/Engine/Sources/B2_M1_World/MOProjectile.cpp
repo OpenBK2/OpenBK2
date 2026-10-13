@@ -29,7 +29,7 @@ void CMOProjectile::CreateAttachedEffect()
 		if ( const NDb::SEffect *pEffect = pComplexEffect->GetSceneEffect() )
 		{
 			Scene()->AttachEffect(
-				GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator, 
+				GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator,
 				pEffect, Singleton<IGameTimer>()->GetGameTime(), ESAT_REPLACE_ON_BONE );
 		}
 		//
@@ -98,7 +98,7 @@ bool CMOProjectile::Create( const SAINewProjectileUpdate *pUpdate, const NDb::SP
 
 		InitSmokyExhaustInfo( vVisPos, qRot, startTime );
 	}
-	
+
 	SetVisible( false, NDb::SEASON_SUMMER, false );
 	return true;
 }
@@ -122,7 +122,7 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 			if ( const NDb::SEffect *pEffect = pComplexEffect->GetSceneEffect() )
 			{
 				Scene()->AttachEffect(
-					GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator, 
+					GetID(), ESSOT_PROJECTILE, pProjectile->szAttachedEffectLocator,
 					pEffect, Singleton<IGameTimer>()->GetGameTime(), ESAT_REPLACE_ON_BONE );
 			}
 			if ( pComplexEffect->pSoundEffect )
@@ -152,10 +152,10 @@ void CMOProjectile::AIUpdatePlacement( const SAINotifyPlacement &placement, ISce
 		CQuat( vRotationSpeedRad.z * fElapsedSeconds, V3_AXIS_Z );
 	projPlacement.rotation = projPlacement.rotation * qLocalSpin;
 
-	
-	
+
+
 	if ( bTraceTargetIntersection || bModelExists )
-	{	
+	{
 		if ( curTime < startTime + timeToEqualizePos )
 		{
 			const float fTimeCoeff = (curTime - startTime) / (float)timeToEqualizePos;
@@ -215,9 +215,9 @@ void CMOProjectile::Explode( SAINotifyHitInfo::EHitType eHitType, NDb::ESeason e
 	if ( bHitTarget )
 		return;
 	bHitTarget = true;
-	
+
 	const NDb::SComplexEffect *pComplexEffect = 0;
-	switch ( eHitType )	
+	switch ( eHitType )
 	{
 		case SAINotifyHitInfo::EHitType::EHT_HIT:
 			pComplexEffect = pWeapon->shells[nShell].pEffectHitDirect;

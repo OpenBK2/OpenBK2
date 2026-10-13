@@ -50,12 +50,12 @@ class CRndInstance
 					sectors.push_back( SSector( i, sectors.back().fValue + elements[i].fWeight ) );
 			}
 		}
-		
+
 		if ( sectors.empty() )
 			return 0;
 
 		float fValue = randomFunc( 0.0f, sectors.back().fValue );
-		
+
 		int nLeft = 0;
 		int nRight = sectors.size() - 1;
 		while ( nLeft < nRight )
@@ -86,10 +86,10 @@ public:
 	{
 		return Get( randomFunc, filter, true );
 	}
-	
+
 	int operator&( IBinSaver &saver )
 	{
-		if ( saver.IsReading() ) 
+		if ( saver.IsReading() )
 		{
 			vector<SDbElement> dbElements;
 			saver.Add( 1, &dbElements );
@@ -103,7 +103,7 @@ public:
 					elements[i].fWeight = 0.0f;
 
 				elements[i].pObj = 0;
-				if ( dbElements[i].nTypeID != 0 && dbElements[i].nObjectID != 0 ) 
+				if ( dbElements[i].nTypeID != 0 && dbElements[i].nObjectID != 0 )
 					elements[i].pObj = const_cast<T*>( CastToDBUserObject( NDb::GetResource(dbElements[i].nTypeID, dbElements[i].nObjectID), (T*)0 ) );
 			}
 		}
@@ -182,7 +182,7 @@ template<class TRndType, class TGetFloatRandomFunc>
 const typename TRndType::TRefType* GetRnd( const TRndType &rndType, TGetFloatRandomFunc randomFunc )
 {
 	vector<typename TRndType::EFlagType> filter;
-	return GetRnd( rndType, randomFunc, filter, false );	
+	return GetRnd( rndType, randomFunc, filter, false );
 }
 
 template<class TRndType, class TGetFloatRandomFunc>

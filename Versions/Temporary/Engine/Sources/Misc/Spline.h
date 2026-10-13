@@ -47,7 +47,7 @@ public:
 class CAnalyticBSpline2
 {
 	static const int N_PARTS_FOR_CLOSEST_POINT_SEARCHING;
-	
+
 	CAnalyticBSpline x, y;
 public:
 	CAnalyticBSpline2() {  }
@@ -87,7 +87,7 @@ public:
 	}
 	float GetLength( const float t, const int nNumSteps = 100 ) const
 	{
-		if ( t < 1e-4 ) 
+		if ( t < 1e-4 )
 			return fabs( Get(t) - Get(0) );
 		const float fStep = t / float( nNumSteps );
 		CVec2 vLastPos, vPos = Get( 0 );
@@ -102,7 +102,7 @@ public:
 	}
 	const float GetLength( const float fT1, const float fT2, const int nNumSteps = 100 ) const
 	{
-		if ( fT2 - fT1 < 1e-4 ) 
+		if ( fT2 - fT1 < 1e-4 )
 			return fabs( Get(fT2) - Get(fT1) );
 		const float fStep = (fT2 - fT1) / float( nNumSteps );
 		CVec2 vLastPos, vPos = Get( fT1 );
@@ -120,7 +120,7 @@ public:
 		float fLen1 = GetLength( 100 );
 		float fLen2 = GetLength( 200 );
 		int nStepCounter = 2;
-		while ( (fabs(fLen1 - fLen2) > fTolerance) && (nStepCounter < nStepLimit) ) 
+		while ( (fabs(fLen1 - fLen2) > fTolerance) && (nStepCounter < nStepLimit) )
 		{
 			++nStepCounter;
 			fLen1 = fLen2;
@@ -157,8 +157,8 @@ public:
 		const float fCoeff = ( fabs2( dx ) + fabs2( dy ) ) / denominator;
 		return CVec2( x(t) - fCoeff*dy, y(t) + fCoeff*dx );
 	}
-	
-	// найти ближайшую точку к vPoint; *pvClosestPoint - ближайшая точка, *pfT - её параметер, 
+
+	// найти ближайшую точку к vPoint; *pvClosestPoint - ближайшая точка, *pfT - её параметер,
 	// fT0 и fT1 - параметры, задающие часть сплайна
 	void GetClosestPoint( const CVec2 &vPoint, CVec2 *pvClosestPoint, float *pfT, const float fT0 = 0.0f, const float fT1 = 1.0f );
 };

@@ -2,7 +2,7 @@
 
 // настройки фильтра визуализации объектов сцены для MapInfo Editor
 struct SViewFilterData
-{ 
+{
 	struct SObjTypeFilter
 	{
 		std::string szObjTypeName;
@@ -62,7 +62,7 @@ struct SViewFilterData
 		if ( !pObjTypes )
 			return;
 		// эти типы объектов можно будет показывать/скрывать
-		const char *pszObjTypeNames[] = 
+		const char *pszObjTypeNames[] =
 		{
 				"ObjectRPGStats",
 				"MechUnitRPGStats",
@@ -84,13 +84,13 @@ struct SViewFilterData
 	int operator&( IXmlSaver &xs )
 	{
 		xs.Add( "objTypeFilter", &objTypeFilter );
-		xs.Add( "ShowGrid", &bShowGrid );	
-		xs.Add( "GridSize", &szGridSize );	
-		xs.Add( "ShowBBoxes", &bShowBBoxes );	
-		xs.Add( "WireFrame", &bWireFrame );	
-		xs.Add( "ShowShadows", &bShowShadows );	
-		xs.Add( "ShowWarFog", &bShowWarfog );	
-		xs.Add( "ShowStats", &bShowStats );	
+		xs.Add( "ShowGrid", &bShowGrid );
+		xs.Add( "GridSize", &szGridSize );
+		xs.Add( "ShowBBoxes", &bShowBBoxes );
+		xs.Add( "WireFrame", &bWireFrame );
+		xs.Add( "ShowShadows", &bShowShadows );
+		xs.Add( "ShowWarFog", &bShowWarfog );
+		xs.Add( "ShowStats", &bShowStats );
 		//
 		if ( xs.IsReading() )
 		{

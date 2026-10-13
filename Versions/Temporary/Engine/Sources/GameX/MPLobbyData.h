@@ -6,7 +6,7 @@ enum EMPChatStatus : int;
 
 class CClientListData : public CObjectBase
 {
-	OBJECT_NOCOPY_METHODS(CClientListData)	
+	OBJECT_NOCOPY_METHODS(CClientListData)
 public:
 	ZDATA
 	std::string szName;
@@ -21,7 +21,7 @@ public:
 
 class CClientListViewer : public IDataViewer
 {
-	OBJECT_NOCOPY_METHODS(CClientListViewer)	
+	OBJECT_NOCOPY_METHODS(CClientListViewer)
 public:
 	ZDATA
 	CPtr<class CInterfaceMPLobby> pInterface;

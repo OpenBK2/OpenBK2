@@ -23,7 +23,7 @@ void Serialize( const char chunkID, IBinSaver &saver )
 	// serialize
 	saver.Add( chunkID, &holder );
 	// restore some things
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 	{
 		NRandom::SetRandomSeed( holder.pRandomSeed );
 	}

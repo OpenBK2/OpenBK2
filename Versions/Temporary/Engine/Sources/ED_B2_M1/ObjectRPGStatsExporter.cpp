@@ -32,11 +32,11 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 	ILogger *pLogger = NLog::GetLogger();
 	//
 	int nNumSpecificJoints = 0;
-	if ( CManipulatorManager::GetValue( &nNumSpecificJoints, pManipulator, "SpecificJoints" ) && nNumSpecificJoints != 0 ) 
+	if ( CManipulatorManager::GetValue( &nNumSpecificJoints, pManipulator, "SpecificJoints" ) && nNumSpecificJoints != 0 )
 	{
-		if ( CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 ) ) 
+		if ( CPtr<IManipulator> pVisObjMan = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, 0, 0 ) )
 		{
-			if ( CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 ) ) 
+			if ( CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 ) )
 			{
 				std::string szSkeletonName;
 				if ( CManipulatorManager::GetParamsFromReference( "Skeleton", pModelMan, 0, &szSkeletonName, 0 ) && !szSkeletonName.empty() )
@@ -50,7 +50,7 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 					if ( !NGltf::BuildSkeleton(NEditorGltf::Load(skeletonResource), root, 0, &skeleton) ) return ER_FAIL;
 					{
 						//
-						for ( int i = 0; i < nNumSpecificJoints; ++i ) 
+						for ( int i = 0; i < nNumSpecificJoints; ++i )
 						{
 							std::string szJointName;
 							if ( CManipulatorManager::GetValue( &szJointName, pManipulator, fmt::format("SpecificJoints.[{}]", i) ) && !szJointName.empty() )
@@ -74,6 +74,6 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 	return ER_SUCCESS;
 }
 
-// basement storage  
+// basement storage
 
 

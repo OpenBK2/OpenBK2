@@ -64,6 +64,6 @@ struct SLadderStatistics
 		(*pMedals)[nRace] |= 0x0001 << nMedalType;
 	}
 
-}; 
+};
 
 

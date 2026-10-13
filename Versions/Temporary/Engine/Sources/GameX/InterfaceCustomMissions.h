@@ -25,7 +25,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pMapInfo); f.Add(3,&pWnd); f.Add(4,&pFlagWnd); f.Add(5,&pNameView); f.Add(6,&pSizeView); f.Add(7,&wszName); f.Add(8,&wszSize); f.Add(9,&wszSeason); f.Add(10,&wszDesc); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMainWnd;
 	CPtr<IWindow> pTopPanel;
@@ -33,7 +33,7 @@ class CInterfaceCustomMissions : public CInterfaceScreenBase, public IProgrammed
 	CPtr<IWindow> pMissionsListPanel;
 	CPtr<IWindow> pMinimapPanel;
 	CPtr<IWindow> pMissionDescPanel;
-	
+
 	CPtr<IWindow> pMissionsListItemTemplate;
 	CPtr<IScrollableContainer> pMissionsListCont;
 	CPtr<ITextView> pMissionDescView;
@@ -50,12 +50,12 @@ private:
 	void MakeInterior();
 	void AddMission( const NDb::SMapInfo *pMapInfo );
 	const SMission* FindSelected() const;
-	
+
 	bool OnBack();
 	bool OnPlay();
 	bool OnSelect();
 	bool OnDblClick();
-	
+
 	void MissionStart( const NDb::SMapInfo *pMapInfo );
 	void UpdateSelection( bool bFirstTime );
 	void UpdateDifficulty( const SMission *pMission, bool bFirstTime );
@@ -63,7 +63,7 @@ public:
 	CInterfaceCustomMissions();
 
 	bool Init();
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;

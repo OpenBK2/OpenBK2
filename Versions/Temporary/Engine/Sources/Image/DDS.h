@@ -2,11 +2,11 @@
 
 #include <cstdint>
 
-// This header defines constants and structures that are useful when parsing 
+// This header defines constants and structures that are useful when parsing
 // DDS files.  DDS files were originally designed to use several structures
 // and constants that are native to DirectDraw and are defined in ddraw.h,
-// such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar 
-// (compatible) constants and structures so that one can use DDS files 
+// such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar
+// (compatible) constants and structures so that one can use DDS files
 // without needing to include ddraw.h.
 
 #ifndef MAKEFOURCC
@@ -94,7 +94,7 @@ const uint32_t DDS_CUBEMAP_POSITIVEZ				= 0x00004200;	// DDSCAPS2_CUBEMAP | DDSC
 const uint32_t DDS_CUBEMAP_NEGATIVEZ				= 0x00008200;	// DDSCAPS2_CUBEMAP | DDSCAPS2_CUBEMAP_NEGATIVEZ
 
 const uint32_t DDS_CUBEMAP_ALLFACES				= DDS_CUBEMAP_POSITIVEX | DDS_CUBEMAP_NEGATIVEX |
-																					DDS_CUBEMAP_POSITIVEY | DDS_CUBEMAP_NEGATIVEY | 
+																					DDS_CUBEMAP_POSITIVEY | DDS_CUBEMAP_NEGATIVEY |
 																					DDS_CUBEMAP_POSITIVEZ | DDS_CUBEMAP_NEGATIVEZ;
 // volume flags...
 const uint32_t DDS_FLAGS_VOLUME						= 0x00200000;	// DDSCAPS2_VOLUME

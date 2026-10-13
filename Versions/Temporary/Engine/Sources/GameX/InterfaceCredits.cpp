@@ -25,7 +25,7 @@ int CInterfaceCredits::CReactions::Check( const std::string &szCheckName ) const
 
 CInterfaceCredits::~CInterfaceCredits()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
@@ -41,7 +41,7 @@ bool CInterfaceCredits::Init()
 		return false;
 	pText = GetChildChecked<IWindow>( pScreen, "CreditsText", true );
 	IScrollableContainer *pScroll = GetChildChecked<IScrollableContainer>( pScreen, "CreditsScroll", true );
-		
+
 	if ( pScroll && pText )
 	{
 		pText->ShowWindow( true );
@@ -53,7 +53,7 @@ bool CInterfaceCredits::Init()
 	}
 
 	timeLastMove = Singleton<IGameTimer>()->GetAbsTime();
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	return true;
@@ -61,7 +61,7 @@ bool CInterfaceCredits::Init()
 
 bool CInterfaceCredits::StepLocal( bool bAppActive )
 {
-	if ( !bAppActive ) 
+	if ( !bAppActive )
 		return false;
 
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )

@@ -16,13 +16,13 @@ int CEffectorPlaySound::operator&( IBinSaver &saver )
 	return 0;
 }
 
-bool CEffectorPlaySound::IsFinished() const 
-{ 
+bool CEffectorPlaySound::IsFinished() const
+{
 	return bFinished;
 }
 
 void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, struct IScreen *pScreen, SWindowContext *pContext, const std::string &szAnimatedWindow )
-{ 
+{
 	const NDb::SUISPlaySound *pCmd( checked_cast<const NDb::SUISPlaySound*>( _pCmd ) );
 	CParam<CDBPtr<NDb::SComplexSoundDesc> > pS( pCmd->pSoundToPlay );
 	if ( pContext )
@@ -32,7 +32,7 @@ void CEffectorPlaySound::Configure( const NDb::SUIStateBase *_pCmd, struct IScre
 }
 
 const int CEffectorPlaySound::Segment( const int timeDiff, struct IScreen *pScreen, const bool bFastForward )
-{ 
+{
 	Singleton<ISoundScene>()->AddSound( pSound, VNULL3, SFX_INTERFACE, SAM_ADD_N_FORGET, bFastForward ? timeDiff : 0, 2 );
 	bFinished = true;
 	return 0;

@@ -95,13 +95,13 @@ public:
 	CCommonPathFinder();
 	void Init();
 
-	void SetPathParameters( 
+	void SetPathParameters(
 		const int nBoundTileRadius,
 		const EAIClasses aiClass,
 		const CVec2 &vStartPoint, const CVec2 &vFinishPoint,
 		const SVector &lastKnownGoodTile, CAIMap *pAIMap );
 
-	void SetLimitedPathParameters( 
+	void SetLimitedPathParameters(
 		const int nBoundTileRadius,
 		const EAIClasses aiClass,
 		const CVec2 &vStartPoint, const CVec2 &vFinishPoint,
@@ -125,13 +125,13 @@ public:
 
 	const int GetPathLength()	const { return nLength; }
 	void GetTiles( void *pBuf, const int nLen ) const
-	{ 
-		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" ); 
+	{
+		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
 		memcpy( pBuf, &(addPoints[0]), nLen * sizeof(SVector) );
 	}
 	void GetStopPoints( void *pBuf, const int nLen ) const
-	{ 
-		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" ); 
+	{
+		NI_ASSERT( nLength > 0 && nLen > 0 && nLen <= nLength, "Wrong number of stop points" );
 		memcpy( pBuf, &(stopPoints[0]), nLen * sizeof(SVector) );
 	}
 

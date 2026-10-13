@@ -51,7 +51,7 @@ private:
 	CObj< CPtrFuncBase<NGfx::CTexture> > pTexture;
 	CDGPtr< CPtrFuncBase<CFontFormatInfo> > pInfo;
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&sFont); f.Add(3,&pTexture); f.Add(4,&pInfo); return 0; }
-		
+
 public:
 	CFontInfo() {}
 	CFontInfo( const SFont &_sFont, CPtrFuncBase<NGfx::CTexture> *_pTexture, CPtrFuncBase<CFontFormatInfo> *_pInfo ):
@@ -122,6 +122,6 @@ inline int FontPointsToPixelWidth( const int nPoints, const float fScreenWidth )
 	return (float)nPoints * fScreenWidth / 1024.0f;
 }
 
-}; // namespace 
+}; // namespace
 
 

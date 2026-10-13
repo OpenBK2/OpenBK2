@@ -90,14 +90,14 @@ void CUIFactory::RegisterMLHandlers( struct IML *pML )
 }
 
 IWindow * CUIFactory::CreateWindowFromDesc( const struct NDb::SUIDesc *pDesc )
-{ 
+{
 	return CUIFactory::MakeWindow( pDesc );
 }
 
-IWindow * CUIFactory::CreateScreenFromDesc( const struct NDb::SUIDesc *_pDesc, 
+IWindow * CUIFactory::CreateScreenFromDesc( const struct NDb::SUIDesc *_pDesc,
 																						const NDb::SUIGameConsts *_pConsts,
 																						IProgrammedReactionsAndChecks *pReactionsAndChecks,
-																						NGScene::I2DGameView * p2DView, 
+																						NGScene::I2DGameView * p2DView,
 																						NGScene::IGameView *pGView, NGScene::IGameView *pInterface3DView )
 {
 	NUIFactory::pConsts = _pConsts;
@@ -122,7 +122,7 @@ NGScene::I2DGameView * CUIFactory::Get2DGameView()
 
 CWindow * CUIFactory::MakeWindow( const struct NDb::SUIDesc *pDesc )
 {
-	if ( !pDesc ) 
+	if ( !pDesc )
 		return 0;
 
 	NI_ASSERT( checked_cast<const NDb::SWindow*>(pDesc)->pShared != 0, fmt::format( "shared part is empty, WindowName \"{}\"", checked_cast<const NDb::SWindow*>(pDesc)->szName ) );
@@ -143,18 +143,18 @@ IWindowPart * CUIFactory::MakeWindowPart( const struct NDb::SUIDesc *pDesc )
 
 IMessageReactionB2 * CUIFactory::MakeReaction( const struct NDb::SUIDesc *pDesc )
 {
-	if ( !pDesc ) 
+	if ( !pDesc )
 		return 0;
 	static int nCurrentID = 0;
-	
+
 	NI_ASSERT( nCurrentID != pDesc->nClassTypeID, fmt::format( "attempt to create cyclic Reactions DBID = \"{}\"", pDesc->GetDBID().ToString() ) );
 	nCurrentID = pDesc->nClassTypeID;
-	
+
 	IMessageReactionB2 *p = MakeObject<IMessageReactionB2>( pDesc->nClassTypeID );
 	p->InitByDesc( pDesc );
-	
+
 	nCurrentID = 0;
-	
+
 	return p;
 }
 

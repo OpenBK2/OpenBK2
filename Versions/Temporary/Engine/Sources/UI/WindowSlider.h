@@ -8,24 +8,24 @@
 
 
 // window with button. button can move horisontally or vertically,
-// 
+//
 class CWindowMSButton;
 
-class CWindowSlider : public CWindow, public ISlider  
+class CWindowSlider : public CWindow, public ISlider
 {
 	OBJECT_BASIC_METHODS(CWindowSlider)
 
 	CDBPtr<NDb::SWindowSliderShared> pShared;
 	CPtr<NDb::SWindowSlider> pInstance;
-	
+
 	//
 	float fMin;
 	float fMax;
-	float fPageSize;														// 
+	float fPageSize;														//
 	float fCur;
 	float fPickOffset;												// when slider is picked no on center
 	//}
-	
+
 	//{ dynamic data
 	bool bManualScrolling;
 	// fast scrolling parameters
@@ -57,7 +57,7 @@ protected:
 public:
 
 	CWindowSlider() : fMin( 0.0f ), fMax( 0.0f ), fCur( 0.0f ), fPageSize( 100.0f ),
-		bPressed( false ), bFastScrolling( false ), pNotifySink( 0 ), bManualScrolling( false ), 
+		bPressed( false ), bFastScrolling( false ), pNotifySink( 0 ), bManualScrolling( false ),
 		bMouseScrollingAllowed ( false ), inputScroll( "mouse_wheel_scroll" ), bLeverOn( false ){  }
 
 	virtual bool IsHorisontal() const { return pShared->bHorisontal; }
@@ -76,9 +76,9 @@ public:
 	void OnKeyEnd( const struct SGameMessage &msg );
 	// end message sinks
 
-	
+
 	bool ProcessEvent( const struct SGameMessage &msg );
-	//ISlider{ 
+	//ISlider{
 	void  SetRange( const float _fMin, const float _fMax, const float _fPageSize );
 	void GetRange( float *pMax, float *pMin ) const;
 	void SetPos( const float _nCur );
@@ -94,7 +94,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 
 	void Segment( const int timeDiff );
-	
+
 	bool OnMouseMove( const CVec2 &vPos, const int nButton );
 	bool OnButtonDown( const CVec2 &vPos, const int nButton );
 	bool OnButtonUp( const CVec2 &vPos, const int nButton );

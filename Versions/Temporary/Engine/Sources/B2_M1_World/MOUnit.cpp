@@ -26,7 +26,7 @@ bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pU
 	const NDb::SVisObj *pVisObj = ChooseVisObjForHP( fNewHP );
 
 	const NDb::SModel *pModel = GetModel( pVisObj, eSeason );
-	if ( pModel == 0 ) 
+	if ( pModel == 0 )
 		return false;
 
 	const NDb::SModel *pLowLevelModel = GetLowLevelModel( pVisObj, eSeason );
@@ -50,7 +50,7 @@ bool CMOUnit::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *pU
 void CMOUnit::GetStatus( SObjectStatus *pStatus ) const
 {
 	IMOUnit::GetStatus( pStatus );
-	
+
 	pStatus->nSupply = nSupply;
 	pStatus->fFuel = fFuel;
 
@@ -133,10 +133,10 @@ void CMOUnit::GetActions( CUserActions *pActions, EActionsType eActions ) const
 		if ( pActions->HasAction( NDb::USER_ACTION_MOVE ) )
 			pActions->SetAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN );
 	}
-	else if ( eActions == ACTIONS_WITH ) 
+	else if ( eActions == ACTIONS_WITH )
 	{
 		*pActions |= GetStatsLocal()->GetActions()->availUserExposures;
-		pActions->SetAction( NDb::USER_ACTION_EXACT_SHOT );		
+		pActions->SetAction( NDb::USER_ACTION_EXACT_SHOT );
 		pActions->SetAction( NDb::USER_ACTION_SUPPORT_FIRE );
 		if ( !checked_cast<const NDb::SUnitBaseRPGStats*>(GetStats())->IsAviation() )
 			pActions->SetAction( NDb::USER_ACTION_DROP_BOMB );
@@ -191,7 +191,7 @@ IClientUpdatableProcess* CMOUnit::AIUpdateRPGStats( const SAINotifyRPGStats &sta
 			ammo.nAmmo += updateAmmo.nAmmo;
 		}
 	}
-	
+
 	if ( pAckManager && nNewCurAmmo < nMaxAmmo / 3 && nCurAmmo >= nMaxAmmo / 3 )
 	{
 		if ( NGlobal::GetVar( "m1", 0 ).GetFloat() == 0 )
@@ -267,7 +267,7 @@ void CMOUnit::GetAbilityInfo( CAbilityInfo &abilityList ) const
 
 void CMOUnit::SetAnimation( const NDb::SAnimB2 *pAnimation, const NTimer::STime startTime )
 {
-	if ( pAnimation == 0 ) 
+	if ( pAnimation == 0 )
 		return;
 	NAnimation::ISkeletonAnimator *pAnimator = Scene()->GetAnimator( GetID() );
 	if ( pAnimator != 0 )
@@ -532,7 +532,7 @@ void CMOUnit::ChangeModelToTransportable( const NDb::SModel *pNewModel, const ND
 	InitAttached( eSeason, pChooseFunc );
 }
 
-void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc, 
+void CMOUnit::TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc,
 														const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber )
 {
 	if ( pAttachedObj )
@@ -564,7 +564,7 @@ void CMOUnit::SetPointer( const NDb::SModel *pModel )
 
 			bPointer = true;
 
-			if ( pModel->pSkeleton != 0 ) 
+			if ( pModel->pSkeleton != 0 )
 			{
 				if ( NAnimation::ISkeletonAnimator *pAnimator = pAttached->GetAnimator() )
 				{

@@ -31,7 +31,7 @@ struct SVideoModeInfo
 {
 	D3DDISPLAYMODE mode;
 	SVideoMode info;
-	
+
 	SVideoModeInfo() {}
 	SVideoModeInfo( D3DDISPLAYMODE &_m, SVideoMode &_info ) : mode(_m), info(_info) {}
 };
@@ -221,29 +221,29 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 	//
 	if ( bUseHWVP )
 	{
-	    // Peter Popov - NVPerfHUD profiling	
-			// Set default settings 
+	    // Peter Popov - NVPerfHUD profiling
+			// Set default settings
 		  D3DDEVTYPE deviceType = DEVICE_TYPE;
 
 			if ( NGlobal::GetVar( "gfx_nvperfhud_enable", 0 ) != 0 )
 			{
-				for ( int nAdapter = 0; nAdapter < pD3D->GetAdapterCount(); ++nAdapter ) 
+				for ( int nAdapter = 0; nAdapter < pD3D->GetAdapterCount(); ++nAdapter )
 				{
-					D3DADAPTER_IDENTIFIER9 identifier; 
+					D3DADAPTER_IDENTIFIER9 identifier;
 					HRESULT hRes = pD3D->GetAdapterIdentifier( nAdapter, 0, &identifier );
 					if ( SUCCEEDED(hRes) && strcmp(identifier.Description, "NVIDIA NVPerfHUD") == 0 )
-					{ 
-						nAdapterToUse = nAdapter; 
-						deviceType = D3DDEVTYPE_REF; 
+					{
+						nAdapterToUse = nAdapter;
+						deviceType = D3DDEVTYPE_REF;
 						csSystem << "NVperfHUD found" << endl;
-						break; 
+						break;
 					}
 				}
 			}
 
 		bHardwareVP = true;
 		hr = pD3D->CreateDevice(
-			GetAdapterToUse(), 
+			GetAdapterToUse(),
 			deviceType,
 			hWnd,
 #if defined(_DEBUG) && !defined(FAST_DEBUG)
@@ -258,10 +258,10 @@ static HRESULT CreateDevice( NWin32Helper::com_ptr<IDirect3DDevice9> *pRes, D3DP
 	if ( FAILED( hr ) )
 	{
 		bHardwareVP = false;
-		hr = pD3D->CreateDevice( 
-			GetAdapterToUse(), 
+		hr = pD3D->CreateDevice(
+			GetAdapterToUse(),
 			DEVICE_TYPE,
-			hWnd, 
+			hWnd,
 			D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 			pPP,
 			pRes->GetAddr() );
@@ -399,26 +399,26 @@ static int GetZBpp( D3DFORMAT format )
 
 static bool TestZBufferFormat( D3DFORMAT screen, D3DFORMAT rTarget, D3DFORMAT zBuf )
 {
-	if ( D3D_OK != pD3D->CheckDeviceFormat( 
-		GetAdapterToUse(), 
+	if ( D3D_OK != pD3D->CheckDeviceFormat(
+		GetAdapterToUse(),
 		DEVICE_TYPE,
-		screen, 
+		screen,
 		D3DUSAGE_DEPTHSTENCIL,
 		D3DRTYPE_SURFACE,
 		zBuf ) )
 		return false;
-	return D3D_OK == pD3D->CheckDepthStencilMatch( 
-		GetAdapterToUse(), 
+	return D3D_OK == pD3D->CheckDepthStencilMatch(
+		GetAdapterToUse(),
 		DEVICE_TYPE,
-		screen, 
-		rTarget, 
+		screen,
+		rTarget,
 		zBuf );
 }
 
 static bool TestRTargetFormat( D3DFORMAT screen, D3DFORMAT rTarget )
 {
-	if ( D3D_OK != pD3D->CheckDeviceFormat( 
-		GetAdapterToUse(), 
+	if ( D3D_OK != pD3D->CheckDeviceFormat(
+		GetAdapterToUse(),
 		DEVICE_TYPE,
 		screen,
 		D3DUSAGE_RENDERTARGET,
@@ -487,7 +487,7 @@ static void FillFSAA( D3DPRESENT_PARAMETERS *pRes )
 	if ( nFSAA > 0 && nMaxFSAA > 0 )
 	{
 		DWORD nFront, nDepth;
-		if ( 
+		if (
 			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
 				pRes->BackBufferFormat, pRes->Windowed, D3DMULTISAMPLE_NONMASKABLE, &nFront ) ) &&
 			SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE,
@@ -564,7 +564,7 @@ static bool FillPresent( const SVideoMode &m, D3DPRESENT_PARAMETERS *pRes )
 	}
 	//
 	// Windowed mode
-	// ensure that our back buffer bit depth is the same as that of 
+	// ensure that our back buffer bit depth is the same as that of
   // windowed display depth to work in windowed mode
   if ( GetBpp( desktop.Format ) != m.nBpp )
 		return false;
@@ -737,7 +737,7 @@ static bool CheckDeviceCaps()
 	bBan32BitIndices = devCaps.MaxVertexIndex < 1000000 || !bHardwareVP; // ban streaming actually
 
 	// check textures support
-	bool bRequiredTextureFormatsAreSupported = 
+	bool bRequiredTextureFormatsAreSupported =
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_R5G6B5 ) ) &&
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A1R5G5B5 ) ) &&
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A4R4G4B4 ) );
@@ -749,11 +749,11 @@ static bool CheckDeviceCaps()
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3 ) ) &&
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT4 ) ) &&
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5 ) );
-	b8888Supported = 
+	b8888Supported =
 		SUCCEEDED( pD3D->CheckDeviceFormat( GetAdapterToUse(), DEVICE_TYPE, desktop.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8R8G8B8 ) );
 
 	DWORD nFrontFSAA, nDepthFSAA;
-	if ( 
+	if (
 		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_X8R8G8B8,
 			FALSE, D3DMULTISAMPLE_NONMASKABLE, &nFrontFSAA ) ) &&
 		SUCCEEDED( pD3D->CheckDeviceMultiSampleType( GetAdapterToUse(), DEVICE_TYPE, D3DFMT_D24S8,
@@ -1126,7 +1126,7 @@ bool Is3DActive()
 {
 	HRESULT hr = pDevice->TestCooperativeLevel();
 	if ( hr == D3DERR_DEVICELOST )
-		return false; 
+		return false;
 	if ( hr == D3D_OK )
 		return true;
 	if ( pp.Windowed )

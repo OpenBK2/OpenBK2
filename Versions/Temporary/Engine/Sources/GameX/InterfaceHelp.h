@@ -3,7 +3,7 @@
 
 #include "InterfaceScreenBase.h"
 
-class CInterfaceHelp : public CInterfaceScreenBase, 
+class CInterfaceHelp : public CInterfaceScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceHelp );

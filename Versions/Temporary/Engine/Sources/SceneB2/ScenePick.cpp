@@ -117,7 +117,7 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos, 
 
 	int nX = GetGridPosition( vPos.x, fastRender.resGrid.GetSizeX() );
 	int nY = GetGridPosition( (1 - vPos.y), fastRender.resGrid.GetSizeY() );
-	
+
 	NAI::CFastRenderer::SResult *pResult = fastRender.resGrid[ nY ][ nX ];
 
 	// Processing the result
@@ -216,7 +216,7 @@ void CScene::PickObjects( std::list<int> &pickObjects, const CVec2 &vScreenPos1,
 			}
 		}
 	}
-} 
+}
 
 void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &vScreenPos1, const CVec2 &vScreenPos2, const SObjectFilter &canBeCovered, const SObjectFilter &canBeObstacle )
 {
@@ -269,7 +269,7 @@ void CScene::GetObstacleObjects( std::list<int> *pObstacleObjects, const CVec2 &
 
 				// Check if this object can be covered by others
 				if ( pVisObjDescBase && canBeCovered( pVisObjDescBase->GetID() ) )
-					pCovered = pResult;					
+					pCovered = pResult;
 			}
 
 			if ( !pCovered )
@@ -319,7 +319,7 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFi
 
 					// Check if this object can obstacle others
 					if ( pVisObjDescBase && canBeObstacle( pVisObjDescBase->GetID() ) )
-						bNodeIsCovered = true;					
+						bNodeIsCovered = true;
 				}
 				else
 				{
@@ -349,7 +349,7 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFi
 	for ( list<int>::const_iterator it = objects.begin(); it != objects.end(); ++it )
 	{
 		SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( *it );
-		if ( pos == data[eScene]->visObjects.end() ) 
+		if ( pos == data[eScene]->visObjects.end() )
 			continue;
 		SVisObjDescBase *pObj = pos->second;
 

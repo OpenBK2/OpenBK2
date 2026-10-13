@@ -15,7 +15,7 @@
 class CWindow3DControl : public CWindow, public IWindow3DControl
 {
 	OBJECT_NOCOPY_METHODS( CWindow3DControl );
-	
+
 	ZDATA_(CWindow)
 	CPtr<NDb::SWindow3DControl> pInstance;
 	CDBPtr<NDb::SWindow3DControlShared> pShared;
@@ -38,7 +38,7 @@ public:
 	void Visit( struct IUIVisitor *pVisitor );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	//}
-	
+
 	//{ IWindow3DControl
 	void SetObjects( const std::vector<SObject> &objects );
 	SParam GetDBObjectParam( int nIndex ) const;

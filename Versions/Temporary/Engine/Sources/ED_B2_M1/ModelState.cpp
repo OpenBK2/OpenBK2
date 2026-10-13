@@ -356,7 +356,7 @@ void CModelState::UpdateModels( bool bUpdateAll )
 					if ( pModel != 0 )
 					{
 						const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
-						const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f ); 
+						const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f );
 						if ( bUpdateAll || ( nModelSceneID == INVALID_NODE_ID ) )
 						{
 							CVec3 vPos = vModelPos + pModelEditor->editorSettings.vShift;
@@ -408,7 +408,7 @@ void CModelState::UpdateModels( bool bUpdateAll )
 			}
 			UpdateAIGeometry( false );
 		}
-	}	
+	}
 }
 
 
@@ -426,7 +426,7 @@ void CModelState::UpdateLight()
 			if ( CPtr<IManipulator> pFolderManipulator = Singleton<IResourceManager>()->CreateFolderManipulator( "AmbientLight" ) )
 			{
 				std::string szLight = NEditorOptions::GetMiscString( "Light" );
-				if ( szLight.empty() ) 
+				if ( szLight.empty() )
 				{
 					szLight = NEditorOptions::GetLight( "SEASON_SUMMER", "DAY_DAY" );
 					NLog::GetLogger()->Log( LT_IMPORTANT, "Can't get light from options - trying summer daylight\n" );
@@ -540,7 +540,7 @@ void CModelState::CenterCamera()
 	if ( pModelEditor != 0 )
 	{
 		const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
-		const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f ); 
+		const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f );
 		Singleton<ICamera>()->SetAnchor( vModelPos + pModelEditor->editorSettings.vShift );
 	}
 }
@@ -602,7 +602,7 @@ void CModelState::ResetCamera( bool bDefaultCamera )
 		if ( !pCameraPlacement->IsValid() )
 		{
 			const int nGridSize = Clamp<int>( pModelEditor->editorSettings.nGridSize, 8, 64 );
-			const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f ); 
+			const CVec3 vModelPos = CVec3( nGridSize * VIS_TILE_SIZE / 2.0f, nGridSize * VIS_TILE_SIZE / 2.0f, 0.0f );
 			pCameraPlacement->vAnchor = vModelPos + pModelEditor->editorSettings.vShift;
 			pCameraPlacement->fDistance = VIS_TILE_SIZE * 16.0f;
 			pCameraPlacement->fPitch = 45.0f;
@@ -1140,7 +1140,7 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		return false;
 	}
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_MODEL_DRAW_TERRAIN:
 		{
@@ -1238,7 +1238,7 @@ bool CModelState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		}
 		default:
 			break;
-	} 
+	}
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_SET_FOCUS, 0 );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 	return true;
@@ -1257,7 +1257,7 @@ bool CModelState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCh
 	//
 	( *pbEnable ) = false;
 	( *pbCheck ) = false;
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_MODEL_DRAW_TERRAIN:
 		{
@@ -1491,7 +1491,7 @@ CObjectBase* CModelState::BuildPlane( const CVec3 &vStart, const CVec2 &vSize, c
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 /**
 template<class TPolygon, class TPoint>
@@ -1519,7 +1519,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 			++nIntersectionPointCount;
 			if ( pIntersectionPointList != 0 )
 			{
-				pIntersectionPointList->push_back( fIntersectionPoint );	
+				pIntersectionPointList->push_back( fIntersectionPoint );
 			}
 		}
 		++itSourcePoint0;
@@ -1574,7 +1574,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		CVec3 vPoint = vCenterPoint + CVec3( 0.0f, fRadius, 0.0f );
 		RotatePoint( &vPoint, nPointIndex * FP_2PI / nPointCount, vCenterPoint );
 		vPointList.push_back( vPoint );
-	}	
+	}
 	std::vector<float> intersectionPointList;
 	//
 	const int nCaseCount = 64 * 64 * 128;
@@ -1588,7 +1588,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 /**/
 /**
 	{
-		CFreeIDCollector freeIDCollector;	
+		CFreeIDCollector freeIDCollector;
 		DebugTrace( "Empty:" );
 		freeIDCollector.Trace();
 		//
@@ -1608,7 +1608,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		DebugTrace( "LockID(): %d", nLockID );
 		freeIDCollector.Trace();
 		//
-		freeIDCollector.Clear();	
+		freeIDCollector.Clear();
 		DebugTrace( "Clear:" );
 		freeIDCollector.Trace();
 		//
@@ -1704,7 +1704,7 @@ int GetIntersectionPointList( const TPolygon &rPolygon, const TPoint &rvBegin, c
 		int nCount = 1;
 		for ( int nTestIndex = 0; nTestIndex < 8; ++nTestIndex )
 		{
-			CFreeIDCollector freeIDCollector;	
+			CFreeIDCollector freeIDCollector;
 			{
 				NHPTimer::STime time = 0;
 				NHPTimer::GetTime( &time );

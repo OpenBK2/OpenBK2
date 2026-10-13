@@ -78,7 +78,7 @@ int CAILogic::operator&( IBinSaver &saver )
 		timeLastMiniMapUpdateUnits = curTime;
 
 	SetNeedNewGroupNumber();
-		
+
 	return 0;
 }
 

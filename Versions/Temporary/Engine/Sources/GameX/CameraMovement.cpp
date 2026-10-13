@@ -25,7 +25,7 @@ void CCameraMovement::Init( const NDb::SMapInfo *_pMapInfo )
 // return false if movement is finished
 bool CCameraMovement::Segment( const NTimer::STime curTime )
 {
-	if ( bMovementFinished ) 
+	if ( bMovementFinished )
 		return false;
 
 	const NTimer::STime timeDiff( curTime - timeMoveStart );

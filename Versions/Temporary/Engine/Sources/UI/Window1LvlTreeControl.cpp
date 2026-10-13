@@ -39,13 +39,13 @@ IWindow * CWindow1LvlTreeControl::AddItem()
 void CWindow1LvlTreeControl::Expand( CWindow1LvlTreeControl::SItem *pContainer )
 {
 	pContainer->bCollapsed = false;
-	if ( !pContainer->subitems.empty() ) 
+	if ( !pContainer->subitems.empty() )
 	{
 		for ( SItem::CSubItems::iterator it = pContainer->subitems.end(); ; )
 		{
 			--it;
 			InsertAfter( pContainer->pItem, *it, true );
-			if ( it == pContainer->subitems.begin() ) 
+			if ( it == pContainer->subitems.begin() )
 				break;
 		}
 	}
@@ -59,13 +59,13 @@ void CWindow1LvlTreeControl::Expand( CWindow1LvlTreeControl::SItem *pContainer )
 void CWindow1LvlTreeControl::Collapse( CWindow1LvlTreeControl::SItem *pContainer )
 {
 	pContainer->bCollapsed = true;
-	if ( !pContainer->subitems.empty() ) 
+	if ( !pContainer->subitems.empty() )
 	{
 		for ( SItem::CSubItems::iterator it = pContainer->subitems.end(); ; )
 		{
 			--it;
 			Remove( *it );
-			if ( it == pContainer->subitems.begin() ) 
+			if ( it == pContainer->subitems.begin() )
 				break;
 		}
 	}

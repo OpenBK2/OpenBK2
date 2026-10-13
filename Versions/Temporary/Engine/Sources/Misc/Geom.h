@@ -53,7 +53,7 @@ public:
 	void Lerp( const float t, const CVec2 &v1, const CVec2 &v2 ) { x = t*v2.x + (1 - t)*v1.x; y = t*v2.y + (1 - t)*v1.y; } //this = (1 - t)*v1 + t*v2
   void Interpolate( const CVec2 &v1, const CVec2 &v2, const float t ) { Lerp(t, v1, v2); }
 	CVec2& CProduct( const CVec2& v ) {  const float oldX = x; x = oldX * v.x - y * v.y; y = oldX * v.y + y * v.x; return *this; }
-	
+
   // mathematical operations
 	CVec2& operator^=( const CVec2& v ) {  const float oldX = x; x = oldX * v.x - y * v.y; y = oldX * v.y + y * v.x; return *this; }
   CVec2& operator+=( const CVec2 &v ) { x += v.x; y += v.y; return *this; }
@@ -218,7 +218,7 @@ inline bool Normalize( CVec4 *pVec ) { return Normalize(pVec->x, pVec->y, pVec->
 
 class CVecPolar
 {
-public:	
+public:
 	float fLat = 0.0f, fLong = 0.0f;
 
 	CVecPolar() { }
@@ -249,12 +249,12 @@ struct SVector
 	SVector( const CVec2 &vec ) : x( vec.x ), y( vec.y ) {  }
 
 	const CVec2 ToCVec2() const { return CVec2( x, y ); }
-	const CVec2 Norm() const 
-	{ 
+	const CVec2 Norm() const
+	{
 		if ( float revR = sqrt( float(x*x + y*y) ) )
 		{
 			revR = 1 / revR;
-			return CVec2( float(x)*revR, float(y)*revR ); 
+			return CVec2( float(x)*revR, float(y)*revR );
 		}
 		else
 			return VNULL2;
@@ -267,7 +267,7 @@ struct SVector
 	{
 		const short int signX = boost::math::sign( x );
 		const short int signY = boost::math::sign( y );
-		/*	
+		/*
 		if ( signX >= 0 && signY == -1 ) 	{ x = 1;  y = 0; return; }
 		if ( signX == 1 && signY >= 0 )		{ x = 0;  y = 1; return; }
 		if ( signX <= 0 && signY == 1 )		{ x = -1; y = 0; return; }
@@ -321,13 +321,13 @@ struct SVector
 	{
 		const short int signX = boost::math::sign( x );
 		const short int signY = boost::math::sign( y );
-		/*	
+		/*
 		if ( signX >=0 && signY == 1 )		{ x = 1;  y = 0; return; }
 		if ( signX == -1 && signY >= 0 )	{ x = 0;  y = 1; return; }
 		if ( signX <= 0 && signY == -1 )	{ x = -1; y = 0; return; }
 		if ( signX == 1 && signY <= 0 )		{ x = 0;  y = -1; return; }
 		*/
-		if ( signX != 0 && signX * signY <= 0 ) 
+		if ( signX != 0 && signX * signY <= 0 )
 			x = 0, y = -signX;
 		else
 			y = 0, x = signY;
@@ -338,7 +338,7 @@ struct SVector
 		const short int signX = boost::math::sign( x );
 		const short int signY = boost::math::sign( y );
 
-		if ( signX != 0 && signX * signY <= 0 ) 
+		if ( signX != 0 && signX * signY <= 0 )
 		{
 			if ( abs(x) > abs(y) )
 				x = signX;
@@ -433,7 +433,7 @@ public:
 	//}
 	//
 	CSegment() { }
-	CSegment( const CVec2 &_p1, const CVec2 &_p2 ) 
+	CSegment( const CVec2 &_p1, const CVec2 &_p2 )
 		: p1( _p1 ), p2( _p2 ), dir( p2 - p1 ) {  }
 	CSegment( const float x1, const float y1, const float x2, const float y2 )
 		: p1( x1, y1 ), p2( x2, y2 ), dir( p2 - p1 ) { }
@@ -450,7 +450,7 @@ public:
 	float r = 0.0f;
 	//
 	CCircle() { }
-	CCircle( const CVec2 &_center, const float _r ) 
+	CCircle( const CVec2 &_center, const float _r )
 		: center( _center ), r( _r ) {  }
 	//
 	const CVec2& GetCenter() const { return center; }
@@ -686,7 +686,7 @@ public:
   //
   friend float fabs2( const CQuat &q ) { return fabs2( q.vec4.x, q.vec4.y, q.vec4.z, q.vec4.w ); }
   friend float fabs( const CQuat &q ) { return static_cast<float>( sqrt( fabs2(q) ) ); }
-  
+
   const CVec4& GetInternalVector() const { return vec4; }
 };
 const CQuat QNULL = CQuat( 0, 1, 0, 0 );
@@ -766,16 +766,16 @@ public:
 	};
 	//
 	CTRect() : minx{}, miny{}, maxx{}, maxy{} {  }
-	CTRect( const TYPE _minx, const TYPE _miny, const TYPE _maxx, const TYPE _maxy ) 
+	CTRect( const TYPE _minx, const TYPE _miny, const TYPE _maxx, const TYPE _maxy )
 		: minx( _minx ), miny( _miny ), maxx( _maxx ), maxy( _maxy ) {  }
-	CTRect( const TPoint &vLT, const TPoint &vRB ) 
+	CTRect( const TPoint &vLT, const TPoint &vRB )
 		: minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {  }
-	CTRect( const CVec2 &vLT, const CVec2 &vRB ) 
+	CTRect( const CVec2 &vLT, const CVec2 &vRB )
 		: minx( vLT.x ), miny( vLT.y ), maxx( vRB.x ), maxy( vRB.y ) {  }
 	template <class T1>
-		CTRect( const CTRect<T1> &rect ) 
+		CTRect( const CTRect<T1> &rect )
 			: x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {  }
-	CTRect( const TRect &rect ) 
+	CTRect( const TRect &rect )
 		: x1( rect.x1 ), y1( rect.y1 ), x2( rect.x2 ), y2( rect.y2 ) {  }
 	// assignment
 	template <class T1>
@@ -866,7 +866,7 @@ inline float TriangleAAA( const CVec2 &p1, const CVec2 &p2, const CVec2 &p3 )
 }
 
 class CRay
-{ 
+{
 public:
 	CVec3 ptOrigin, ptDir;
 	//
@@ -899,7 +899,7 @@ struct SBound
 {
 	SSphere s;
 	CVec3 ptHalfBox;
-	
+
 	void BoxInit( const CVec3 &ptMin, const CVec3 &ptMax )
 	{
 		ptHalfBox = ( ptMax - ptMin ) * 0.5f;
@@ -937,9 +937,9 @@ inline bool DoesIntersect( const SBound &a, const SBound &b )
 	CVec3 ptDif = a.s.ptCenter - b.s.ptCenter;
 	if ( fabs2(ptDif) > fabs2( a.s.fRadius + b.s.fRadius ) )
 		return false;
-	if ( 
-		fabs(ptDif.x) > a.ptHalfBox.x + b.ptHalfBox.x || 
-		fabs(ptDif.y) > a.ptHalfBox.y + b.ptHalfBox.y || 
+	if (
+		fabs(ptDif.x) > a.ptHalfBox.x + b.ptHalfBox.x ||
+		fabs(ptDif.y) > a.ptHalfBox.y + b.ptHalfBox.y ||
 		fabs(ptDif.z) > a.ptHalfBox.z + b.ptHalfBox.z )
 		return false;
 	return true;
@@ -1090,8 +1090,8 @@ inline const SHMatrix operator*( const SHMatrix &a, const SHMatrix &b )
   Multiply( &ret, a, b );
   return ret;
 }
-inline SFBTransform operator*( const SFBTransform &a, const SFBTransform &b ) 
-{ 
+inline SFBTransform operator*( const SFBTransform &a, const SFBTransform &b )
+{
 	SFBTransform res;
 	res.forward = a.forward * b.forward;
 	res.backward = b.backward * a.backward;
@@ -1299,7 +1299,7 @@ inline void CQuat::FromAngleAxis( float fAngle, const CVec3 &vAxis, const bool b
 inline void CQuat::FromAngleAxis( float fAngle, float fAxisX, float fAxisY, float fAxisZ, const bool bNormalizeAxis )
 {
   NI_ASSERT( bNormalizeAxis || fabs( fabs( fAxisX, fAxisY, fAxisZ ) - 1 ) < FP_QUAT_EPSILON, "not normalized quat" );
-	
+
 	fAngle *= 0.5f;
   const float fSinAlpha = bNormalizeAxis ? sin( fAngle ) / fabs( fAxisX, fAxisY, fAxisZ ) : sin( fAngle );
   vec4.x = fAxisX * fSinAlpha;
@@ -1794,7 +1794,7 @@ inline float IsPointInsideTriangle( const CVec2 &p1, const CVec2 &p2, const CVec
 	{
 		if ( nSign1 == 0 && nSign2 == 0 && nSign3 == 0 )
 		{
-			return CSegment( p1, p2 ).GetDistToPoint( p ) < 1e-6 || 
+			return CSegment( p1, p2 ).GetDistToPoint( p ) < 1e-6 ||
 						 CSegment( p1, p3 ).GetDistToPoint( p ) < 1e-6;
 		}
 		else
@@ -1947,7 +1947,7 @@ inline const CVec2 Norm( const CVec2 &v )
 {
 	return ( v == VNULL2 ) ? VNULL2 : v/fabs(v);
 }
-// получить углы, необходимые для поворота этой нормали относительно осей X (phi) и Y (theta) 
+// получить углы, необходимые для поворота этой нормали относительно осей X (phi) и Y (theta)
 // для совпадения её с осью Z
 inline void GetAngles( const CVec3 &vNormal, float *pfPhi, float *pfTheta )
 {

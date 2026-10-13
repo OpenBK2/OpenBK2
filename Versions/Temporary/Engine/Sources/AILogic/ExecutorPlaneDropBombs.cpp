@@ -40,7 +40,7 @@ int CExecutorPlaneDropBombsObject::Segment()
 	for ( int i = 0; i < nGun; ++i )
 	{
 		CBasicGun *pGun = pUnit ->GetGun( i );
-		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB && 
+		if ( pGun->GetShell().etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB &&
 			   pGun->GetNAmmo() != 0 )
 		{
 			bBombsOnBoard = true;
@@ -107,9 +107,9 @@ float CExecutorPlaneDropBombsObject::OnAbilityOff()
 	return 1.0f;
 }
 
-CCommonUnit *CExecutorPlaneDropBombsObject::GetUnit() 
-{ 
-	return pUnit; 
+CCommonUnit *CExecutorPlaneDropBombsObject::GetUnit()
+{
+	return pUnit;
 }
 
 void CExecutorPlaneDropBombsObject::SwitchingOffEnd()

@@ -30,7 +30,7 @@ const float GetWeightOfUnit( const SUnitBaseRPGStats* pStats )
 	const float fPrice = pStats->fPrice;
 	const float fUnitTypeCoeff = pStats->IsInfantry() ? 0.1f : 1.0f;
 
-	return 
+	return
 		fUnitTypeCoeff * ( 1.0f * fPrice + 1.0f * fArmorMember );
 }
 
@@ -76,7 +76,7 @@ const float GetWeightByAntiArtPos( CAIUnit *pUnit, const NTimer::STime deltaTime
 		// вес юнита
 		const float fWeight = GetWeightOfUnit( theUnitCreation.Get152mmML20Stats() );
 
-		return 
+		return
 			fWeight * fTimeCoeff;// * fAccuracyCoeff;
 	}
 }
@@ -109,7 +109,7 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 			cellsWeights[nLastCell].fCellWeight = fNew;
 			if ( pos != resistances.end() )
 				pos->SetWeight( fNew );
-			if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
+			if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 				--goodWeight[nLastCell];
 		}
 
@@ -130,10 +130,10 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 
 		pInfo->SetWeight( fNewWeight );
 		pInfo->SetRegisteredPos( vNewPos );
-		
+
 		const int nNewCell = GetResistanceCellNumber( vNewPos );
 		CCellsWeights::iterator posCells = cellsWeights.find( nNewCell );
-		
+
 		if ( posCells == cellsWeights.end() )
 		{
 			cellsWeights[nNewCell] = SSellInfo( fNewWeight, false, !IsCellExcluded( SResistance::GetResistanceCellCenter( nNewCell ) ) );
@@ -142,7 +142,7 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 		else
 			posCells->second.fCellWeight += fNewWeight;
 
-		if ( fNewWeight > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
+		if ( fNewWeight > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 			++goodWeight[nLastCell];
 
 		CResistance::iterator posRes = find( resistances.begin(), resistances.end(), SResistance( nNewCell, 0, 0 ) );
@@ -163,7 +163,7 @@ void CResistancesContainer::UpdateEnemyUnitInfo(
 		}
 	}
 }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////			
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 {
 	if ( !pInfo->GetOwner()->GetStats()->IsAviation() )
@@ -174,7 +174,7 @@ void CResistancesContainer::UnitDied( CAIUnitInfoForGeneral *pInfo )
 			return;
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
-		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
+		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 			--goodWeight[nCell];
 	}
 }
@@ -190,7 +190,7 @@ void CResistancesContainer::UnitChangedParty( CAIUnitInfoForGeneral *pInfo )
 
 		cellsWeights[nCell].fCellWeight = (std::max)( 0.0f, cellsWeights[nCell].fCellWeight - pInfo->GetWeight() );
 		pos->SetWeight( cellsWeights[nCell].fCellWeight	);
-		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES ) 
+		if ( pInfo->GetWeight() > SGeneralConsts::MIN_UNIT_WEIGHT_TO_SEND_GUNPLANES )
 			--goodWeight[nCell];
 	}
 }
@@ -204,7 +204,7 @@ void CResistancesContainer::SetCellInUse( const int nResistanceCellNumber, bool 
 void CResistancesContainer::RemoveExcluded( const CVec2 &vCenter )
 {
 	/*
-	list<CCircle>::iterator it = excluded.remove_if(  
+	list<CCircle>::iterator it = excluded.remove_if(
 		binder1st( ptr_mem_fun( CCircle::GetCenter() ),
 		equal_to<CVec2>( vCenter ) );
 */

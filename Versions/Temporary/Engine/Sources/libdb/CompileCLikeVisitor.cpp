@@ -379,7 +379,7 @@ void CVisitor::VisitVariable( NLang::CVariable *pVariableNode, const bool bArray
 	{
 		field.pType = pTypeDefCreated->pRealType;
 		NI_ASSERT( field.pType != 0, "null type" );
-		
+
 		if ( pTypeDefCreated->pAttributes )
 		{
 			if ( bArray )

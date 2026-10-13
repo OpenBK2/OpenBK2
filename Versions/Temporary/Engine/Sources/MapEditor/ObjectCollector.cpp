@@ -103,7 +103,7 @@ void CObjectFilterCollector::SObjectFilter::ExtractObjectsForFilterPart( CObject
 			if ( pFolderManipulatorIterator != 0 )
 			{
 				std::string szFolderPrefix;
-				for ( ; !pFolderManipulatorIterator->IsEnd(); pFolderManipulatorIterator->Next() ) 
+				for ( ; !pFolderManipulatorIterator->IsEnd(); pFolderManipulatorIterator->Next() )
 				{
 					std::string szObjectName;
 					if ( pFolderManipulatorIterator->GetName( &szObjectName ) )
@@ -143,7 +143,7 @@ void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pD
 		}
 		else if ( szOperationType == "MEET" )							// meet of set
 		{
-			for ( CObjectNameCollection::iterator itObjectNameCollection = pDestination->begin(); itObjectNameCollection != pDestination->end();  ) 
+			for ( CObjectNameCollection::iterator itObjectNameCollection = pDestination->begin(); itObjectNameCollection != pDestination->end();  )
 			{
 				if ( rSource.find( itObjectNameCollection->first ) == rSource.end() )
 				{
@@ -157,7 +157,7 @@ void CObjectFilterCollector::SObjectFilter::MergeSets( CObjectNameCollection *pD
 		}
 		else if ( szOperationType == "SUB" )							// set substruction
 		{
-			for ( CObjectNameCollection::const_iterator itObjectNameCollection = rSource.begin(); itObjectNameCollection != rSource.end(); ++itObjectNameCollection ) 
+			for ( CObjectNameCollection::const_iterator itObjectNameCollection = rSource.begin(); itObjectNameCollection != rSource.end(); ++itObjectNameCollection )
 			{
 				CObjectNameCollection::iterator posObjectNameCollection = pDestination->find( itObjectNameCollection->first );
 				if ( posObjectNameCollection != pDestination->end() )
@@ -188,13 +188,13 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 	objectCollection.clear();
 	nObjectCollectionCount = 0;
 	// extract and merge sets
-	for ( CPartList::const_iterator itPart = partList.begin(); itPart != partList.end(); ++itPart ) 
+	for ( CPartList::const_iterator itPart = partList.begin(); itPart != partList.end(); ++itPart )
 	{
-		if ( itPart->nameList.empty() ) 
+		if ( itPart->nameList.empty() )
 		{
 			nObjectCollectionCount += GetObjectCollection( pObjectCollection, itPart->szObjectType );
 		}
-		else	
+		else
 		{
 			CObjectNameCollection &rObjectNameCollection = objectCollection[itPart->szObjectType];
 			CObjectNameCollection objectNameCollection;
@@ -203,9 +203,9 @@ int CObjectFilterCollector::SObjectFilter::GetObjectCollection( CObjectCollectio
 		}
 	}
 	// add result sets
-	for ( CObjectCollection::const_iterator itObjectCollection = objectCollection.begin(); itObjectCollection != objectCollection.end(); ++itObjectCollection ) 
+	for ( CObjectCollection::const_iterator itObjectCollection = objectCollection.begin(); itObjectCollection != objectCollection.end(); ++itObjectCollection )
 	{
-		for ( CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin(); itObjectNameCollection != itObjectCollection->second.end(); ++itObjectNameCollection ) 
+		for ( CObjectNameCollection::const_iterator itObjectNameCollection = itObjectCollection->second.begin(); itObjectNameCollection != itObjectCollection->second.end(); ++itObjectNameCollection )
 		{
 			if ( InsertObjectToCollection( pObjectCollection, itObjectCollection->first, itObjectNameCollection->first ) )
 			{
@@ -250,7 +250,7 @@ bool CObjectFilterCollector::Load( CDataStream *pStream )
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( pStream, SAVER_MODE_READ );
 		pSaver->Add( "Filters", &objectFilterListMap );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::GetLogger()->Log( LT_ERROR, "Can't load filters map\n" );
 		return false;
@@ -266,7 +266,7 @@ bool CObjectFilterCollector::Save( CDataStream *pStream )
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( pStream, SAVER_MODE_WRITE );
 		pSaver->Add( "Filters", &objectFilterListMap );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::GetLogger()->Log( LT_ERROR, "Can't save filters map\n" );
 		return false;
@@ -566,7 +566,7 @@ bool CObjectCollector::Load( CDataStream *pStream )
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( pStream, SAVER_MODE_READ );
 		pSaver->Add( "Extractors", &dataExtractorTypeMap );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::GetLogger()->Log( LT_ERROR, "Can't load extractors map\n" );
 		return false;
@@ -582,7 +582,7 @@ bool CObjectCollector::Save( CDataStream *pStream )
 		CPtr<IXmlSaver> pSaver = CreateXmlSaver( pStream, SAVER_MODE_WRITE );
 		pSaver->Add( "Extractors", &dataExtractorTypeMap );
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		NLog::GetLogger()->Log( LT_ERROR, "Can't save extractors map\n" );
 		return false;
@@ -702,6 +702,6 @@ IImageList* CObjectCollector::GetImageList( int nImageListType )
 }
 
 
-// basement storage 
+// basement storage
 
 

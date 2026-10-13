@@ -110,7 +110,7 @@ bool NormalizePath( std::string *pszPath, bool bFile, bool bExists, bool bReturn
 		// Имя по которому будет проверятся наличие фала на диске
 		std::string szCheckPath;
 		//
-		if ( !szPathPrefix.empty() ) 
+		if ( !szPathPrefix.empty() )
 		{
 			if ( szLCPath.compare( 0, szLCPathPrefix.size(), szLCPathPrefix ) == 0 )
 			{
@@ -190,7 +190,7 @@ bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 	int nPos = rszFileName.find( ':' );
 	if ( ( nPos != std::string::npos ) && ( nPos != std::string::npos != 1 ) )
 	{
-		return false;			
+		return false;
 	}
 	else if ( nPos == 1 )
 	{
@@ -199,7 +199,7 @@ bool IsValidFileName( const std::string &rszFileName, bool bAbsolutePath )
 			nPos = rszFileName.find( nPos, ':' );
 			if ( nPos != std::string::npos )
 			{
-				return false;			
+				return false;
 			}
 		}
 		else
@@ -223,7 +223,7 @@ bool CheckLatestBINResource( const std::string &rszResourceFileName, const std::
 			NVFS::GetWinFileStats( &streamXMLStats, ( rszResourceFileName + rszXMLExtention ).c_str() );
 			Zero( streamBINStats );
 			NVFS::GetWinFileStats( &streamBINStats, ( rszResourceFileName + rszBINExtention ).c_str() );
-		}		
+		}
 		return ( streamBINStats.mtime >= streamXMLStats.mtime );
 	}
 	catch ( ... )
@@ -520,7 +520,7 @@ void File2String( std::string *pstrText, bool *pbUnicode, const std::string &rsz
 				File2String( pstrText, pbUnicode, fileBuffer, bRemove_0D, pbNeedsUnicodeRepair );
 			}
 		}
-	}	
+	}
 }
 
 
@@ -577,7 +577,7 @@ void File2String( std::wstring *pwszText, const std::string &rszTextPath, bool b
 				File2String( pwszText, fileBuffer, bRemove_0D );
 			}
 		}
-	}	
+	}
 }
 
 
@@ -711,6 +711,6 @@ void String2File( const std::wstring &rwszText, const std::string &rszTextPath, 
 }
 
 
-// basement storage  
+// basement storage
 
 

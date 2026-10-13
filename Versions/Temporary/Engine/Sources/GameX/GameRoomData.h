@@ -30,7 +30,7 @@ public:
 
 class CColorBackground: public CBackground
 {
-	OBJECT_BASIC_METHODS(CColorBackground);		
+	OBJECT_BASIC_METHODS(CColorBackground);
 public:
 	int nColor;
 	virtual void Visit( struct IUIVisitor * pVisitor );

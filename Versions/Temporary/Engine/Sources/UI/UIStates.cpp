@@ -21,7 +21,7 @@ int CStates::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &states );
 	saver.Add( 2, &nCurIndex );												// currently running effect
-	saver.Add( 3, &bForward );												// effect direction 
+	saver.Add( 3, &bForward );												// effect direction
 	saver.Add( 4, &bEnd );														// all effects are finished
 	saver.Add( 5, &pNotifySink );						// window that must be notified after
 	saver.Add( 6, &bReversable );												// effect can be undone
@@ -67,19 +67,19 @@ void CStates::Add( const NDb::SUIStateBase *_pCmd )
 	CheckEnd();
 }
 
-void CStates::Advance() 
-{ 
+void CStates::Advance()
+{
 	NI_ASSERT( states.size() != 0, "no states" );
 	bForward ? ++nCurIndex : --nCurIndex;
 	CheckEnd();
 }
 
-const bool CStates::IsToBeDeleted() const 
-{ 
+const bool CStates::IsToBeDeleted() const
+{
 	return IsEnd() &&	(!bForward || !bReversable );
 }
 
-void CStates::Reverse() 
+void CStates::Reverse()
 {
 	bForward = !bForward;
 	CheckEnd();
@@ -127,7 +127,7 @@ void CStates::Play( const int timeDiff, class CWindowScreen *pScreen, const bool
 
 IUIEffector *CStates::CreateEffect( const NDb::SUIStateBase *pCmd, class CWindowScreen *pScreen, SWindowContext *pContext )
 {
-	IUIEffector * pEff = CUIFactory::MakeEffect( pCmd, pScreen, pContext, id.second ? id.second->GetName() : 
+	IUIEffector * pEff = CUIFactory::MakeEffect( pCmd, pScreen, pContext, id.second ? id.second->GetName() :
 		(pNotifySink ? pNotifySink->GetName() : "") );
 //	NI_ASSERT( pEff != 0, "effect not created" );
 	if ( pEff != 0 && pEff->IsFinished() )
@@ -139,9 +139,9 @@ IUIEffector *CStates::CreateEffect( const NDb::SUIStateBase *pCmd, class CWindow
 }
 
 void CStates::SetAnimatedWindow( const int nID, class CWindow * pWindow )
-{ 
+{
 	id.first = nID;
-	id.second = pWindow; 
+	id.second = pWindow;
 }
 
 

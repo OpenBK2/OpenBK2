@@ -15,7 +15,7 @@ struct IFolderCallback : public CObjectBase
 	virtual bool IsObjectLocked( const std::string &rszTypeName, const CDBID &rDBID ) const = 0;
 	// Очистить буфер
 	virtual void ClearUndoData() = 0;
-	// Удалить созданные объекты объекты 
+	// Удалить созданные объекты объекты
 	virtual void UndoChanges() = 0;
 	// Уникальное ли имя
 	virtual bool IsUniqueName( const std::string &rszTypeName, const std::string &rszName ) = 0;

@@ -94,7 +94,7 @@ public:
 	void AIUpdateModifyEntranceState( bool _bOpen ) { bCanEnter = _bOpen; }
 	virtual void AIUpdatePlacement( const struct SAINotifyPlacement &placement, struct IScene *pScene, struct ISoundScene *pSoundScene, NDb::ESeason eSeason );
 	bool IsOpen() const { return true; }
-	
+
 	bool IsStorage() const { return bStorage; }
 	virtual bool IsBuilding() const { return true; }
 	//

@@ -48,8 +48,8 @@ const NDb::SAckParameter* GetParam( const NDb::EUnitAckType eAck, const CUnitAck
 //*		 								   CAckPredicate															*
 //*******************************************************************
 
-bool CClientAckManager::CAckPredicate::operator()( const SAck & a ) 
-{ 
+bool CClientAckManager::CAckPredicate::operator()( const SAck & a )
+{
 	const NDb::SAckParameter *pParam = ::GetParam( a.eAck, acksInfo, pConsts );
 	if ( pParam )
 		return pParam->eAckClass == eType;
@@ -62,7 +62,7 @@ bool CClientAckManager::CAckPredicate::operator()( const SAck & a )
 
 int CClientAckManager::CBoredUnitsContainer::operator&( IBinSaver &saver )
 {
-	saver.Add( 1, &boredUnits );							
+	saver.Add( 1, &boredUnits );
 	saver.Add( 2, &nCounter );
 	saver.Add( 3, &timeLastBored );
 	return 0;
@@ -74,9 +74,9 @@ void CClientAckManager::CBoredUnitsContainer::Clear()
 	nCounter = 0;
 }
 
-CClientAckManager::CBoredUnitsContainer::CBoredUnitsContainer() 
+CClientAckManager::CBoredUnitsContainer::CBoredUnitsContainer()
 : nCounter( 0 ), timeLastBored ( 0 )
-{  
+{
 }
 
 void CClientAckManager::CBoredUnitsContainer::Copy( const CClientAckManager::CBoredUnitsContainer &cp )
@@ -106,8 +106,8 @@ void CClientAckManager::CBoredUnitsContainer::DelUnit( struct IMOUnit *pUnit )
 	}
 }
 
-bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTime, 
-																											const NDb::EUnitAckType eBored, 
+bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTime,
+																											const NDb::EUnitAckType eBored,
 																											IClientAckManager *pAckManager,
 																											const NTimer::STime timeInterval )
 {
@@ -119,7 +119,7 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 	{
 		return false;
 	}
-	else 
+	else
 	{
 		bool bSayAck = true;
 		if ( bSayAck )
@@ -132,7 +132,7 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 				DelUnit( pUnit );
 				pUnit = 0;
 				if ( nCounter != 0 )
-					pUnit = (*boredUnits.begin()).first;	
+					pUnit = (*boredUnits.begin()).first;
 			}
 			if ( IsValid( pUnit ) )
 				pUnit->SendAcknowledgement( pAckManager, eBored );
@@ -149,7 +149,7 @@ bool CClientAckManager::CBoredUnitsContainer::SendAck( const NTimer::STime curTi
 // ** particular actions
 // ************************************************************************************************************************ //
 
-int CClientAckManager::operator&(IBinSaver &saver) 
+int CClientAckManager::operator&(IBinSaver &saver)
 {
 	saver.Add( 1, &pConsts );
 	if ( saver.IsReading() )
@@ -159,9 +159,9 @@ int CClientAckManager::operator&(IBinSaver &saver)
 	saver.Add( 2, &unitAcks );
 	saver.Add( 3, &pLastSelected );
 	saver.Add( 4, &nSelectionCounter );
-	saver.Add( 5, &boredUnits );	
+	saver.Add( 5, &boredUnits );
 	saver.Add( 7, &deathAcks );
-	saver.Add( 8, &timeLastDeath );	
+	saver.Add( 8, &timeLastDeath );
 	saver.Add( 9, &acksPresence );
 	return 0;
 }
@@ -172,14 +172,14 @@ void CClientAckManager::SetClientConsts( const NDb::SClientGameConsts *_pConsts 
 	InitConsts();
 }
 
-int CClientAckManager::SDeathAck::operator& (IBinSaver &saver) 
+int CClientAckManager::SDeathAck::operator& (IBinSaver &saver)
 {
 	saver.Add( 1, &pSound );
 	saver.Add( 2, &vPos );
 	return 0;
 }
 
-int CClientAckManager::SUnitAck::operator& (IBinSaver &saver) 
+int CClientAckManager::SUnitAck::operator& (IBinSaver &saver)
 {
 	saver.Add( 1, &acks );
 	saver.Add( 2, &wSoundID );
@@ -188,7 +188,7 @@ int CClientAckManager::SUnitAck::operator& (IBinSaver &saver)
 	return 0;
 }
 
-int CClientAckManager::SAck::operator& (IBinSaver &saver) 
+int CClientAckManager::SAck::operator& (IBinSaver &saver)
 {
 	saver.Add( 1, &eMixType );
 	saver.Add( 2, &pSound );
@@ -205,8 +205,8 @@ bool CClientAckManager::IsNegative( const NDb::EUnitAckType eAck )
 	return GetParam( eAck ) && GetParam( eAck )->eAckClass == NDb::ACKT_NEGATIVE;
 }
 
-CClientAckManager::CClientAckManager() 
-: TIME_ACK_WAIT( 0 ), 
+CClientAckManager::CClientAckManager()
+: TIME_ACK_WAIT( 0 ),
 	nSelectionCounter( 0 )
 {
 }
@@ -244,7 +244,7 @@ void CClientAckManager::Clear()
 
 void CClientAckManager::AddDeathAcknowledgement( const CVec3 &vPos, const NDb::SComplexSoundDesc *pSound, const unsigned int timeSinceStart )
 {
-	if ( pGameTimer->GetPauseType() != -1 ) 
+	if ( pGameTimer->GetPauseType() != -1 )
 		return;
 
 	//NI_ASSERT( timeSinceStart < pGameTimer->GetAbsTime(), StrFmt( "somebody dead before times with sound %s, timeSinceStart = %d, absTime =%d", sound.c_str(), timeSinceStart, pGameTimer->GetGameTimer() ) );
@@ -265,13 +265,13 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EU
 	if ( GetParam( eAck ) == 0 )
 		return;
 	NDb::EAckClass eType = GetParam( eAck )->eAckClass;
-	if ( pGameTimer->GetPauseType() != -1 && NDb::ACKT_NOTIFY != eType ) 
+	if ( pGameTimer->GetPauseType() != -1 && NDb::ACKT_NOTIFY != eType )
 		return;
 
 
 	if ( NDb::ACK_UNIT_DIED == eAck )
 	{
-		if ( deathAcks.empty() || 
+		if ( deathAcks.empty() ||
 			( nTimeSinceStart < pGameTimer->GetAbsTime() && timeLastDeath < pGameTimer->GetAbsTime() - nTimeSinceStart) )
 		{
 		}
@@ -306,7 +306,7 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EU
 			// найти все позитивы в очереди и убрать.
 			CAckPredicate  pr( NDb::ACKT_POSITIVE, acksInfo, pConsts );
 			CAcks::iterator positives = remove_if( unitAcks[pUnit].acks.begin(), unitAcks[pUnit].acks.end(), pr );
-			if ( positives == unitAcks[pUnit].acks.end() ) 
+			if ( positives == unitAcks[pUnit].acks.end() )
 			{
 				// ни одного Positive, Negative игнорировать
 			}
@@ -351,7 +351,7 @@ void CClientAckManager::AddAcknowledgement( struct IMOUnit *pUnit, const NDb::EU
 				unitAcks[pUnit].acks.push_back( ack );
 			}
 		}
-		// 
+		//
 
 		break;
 	case NDb::ACKT_BORED:
@@ -467,7 +467,7 @@ void CClientAckManager::UnitDead( struct IMOUnit *pUnit, struct ISoundScene *pSo
 		}
 		unitAcks.erase(it);
 	}
-	
+
 
 	for ( BoredUnits::iterator it = boredUnits.begin(); it != boredUnits.end(); ++it )
 		it->second.DelUnit( pTipaUnit );

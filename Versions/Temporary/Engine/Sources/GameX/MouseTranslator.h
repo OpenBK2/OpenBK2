@@ -53,7 +53,7 @@ Default Action:
   do_action                          вектор
 
 p.s.: посколькe для всех событий вектор - это то что прислали (т.е. координаты относительно экрана) поэтому
-  к чему относиться конкретно вектор должно определять само приложение. Исключение состовляют 
+  к чему относиться конкретно вектор должно определять само приложение. Исключение состовляют
 	???????????_minimap - в этом случае координаты в единицах AI
 
 
@@ -105,23 +105,23 @@ protected:
 	bool IsDownSameTime( const NTimer::STime &curTime ) const;
 //	bool IsCanDoRotate() const { return bCanDoRotate; }
 
-	void RaiseEvent( const char *pszEventName ) 
+	void RaiseEvent( const char *pszEventName )
 	{
 		NInput::PostEvent( pszEventName, 0, 0 );
 	}
-	void RaiseEvent( const char *pszEventName, int nParam ) 
+	void RaiseEvent( const char *pszEventName, int nParam )
 	{
 		NInput::PostEvent( pszEventName, nParam, 0 );
 	}
-	void RaiseEvent( const char *pszEventName, const CVec2 &vPos ) 
+	void RaiseEvent( const char *pszEventName, const CVec2 &vPos )
 	{
 		NInput::PostEvent( pszEventName, PackCoords( vPos ), 0 );
 	}
-	void RaiseEventAndFlags( const char *pszEventName, int nParam ) 
+	void RaiseEventAndFlags( const char *pszEventName, int nParam )
 	{
 		NInput::PostEvent( pszEventName, nParam, GetFlags() );
 	}
-	void RaiseEventAndFlags( const char *pszEventName, const CVec2 &vPos ) 
+	void RaiseEventAndFlags( const char *pszEventName, const CVec2 &vPos )
 	{
 		NInput::PostEvent( pszEventName, PackCoords( vPos ), GetFlags() );
 	}
@@ -142,7 +142,7 @@ public:
 
 	void DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode );
 	void DoMouseMove( const CVec2 &vPos, bool bMouseMoveDirect )
-	{ 
+	{
 		if ( eActionState != AS_NONE )
 			OnMouseMove( vPos, bMouseMoveDirect );
 	}
@@ -194,7 +194,7 @@ class CMouseTranslatorB2Base : public CMouseTranslator
 	ZDATA_(CMouseTranslator)
 	ZONSERIALIZE
 	bool bWasForcedAction;
-public:	
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CMouseTranslator*)this); OnSerialize( f ); f.Add(2,&bWasForcedAction); return 0; }
 private:
 	void InitPrivate();
@@ -214,7 +214,7 @@ protected:
 	void OnMinimapRButtonDown( const CVec2 &vPos, bool bTargetMode );
 
 	void CancelAction();
-	
+
 	void MsgNotifyForcedAction( const SGameMessage &msg );
 
 	bool ProcessEvent( const SGameMessage &event );

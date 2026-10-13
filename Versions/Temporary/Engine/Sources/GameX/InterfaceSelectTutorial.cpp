@@ -26,7 +26,7 @@ bool CInterfaceSelectTutorial::Init()
 	AddScreen( this );
 
 	MakeInterior();
-	
+
 	return true;
 }
 
@@ -39,7 +39,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 	pMissionsPanel = GetChildChecked<IWindow>( pMainWnd, "LeftPanel", true );
 	pMinimapPanel = GetChildChecked<IWindow>( pMainWnd, "MinimapPanel", true );
 	pMissionDescPanel = GetChildChecked<IWindow>( pMainWnd, "MissionDescPanel", true );
-	
+
 	pPlayBtn = GetChildChecked<IButton>( pMainWnd, "PlayBtn", true );
 	if ( pPlayBtn )
 		pPlayBtn->Enable( false );
@@ -48,7 +48,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 	pMissionsItemWnd = GetChildChecked<IWindow>( pMissionsCont, "MissionsListItem", true );
 	if ( pMissionsItemWnd )
 		pMissionsItemWnd->ShowWindow( false );
-	
+
 	pMinimap = GetChildChecked<IMiniMap>( pMinimapPanel, "Minimap", true );
 
 	pMissionNameView = GetChildChecked<ITextView>( pMissionDescPanel, "NameView", true );
@@ -63,7 +63,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 		if ( pMissionDescView )
 			pMissionDescCont->PushBack( pMissionDescView, false );
 	}
-	
+
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	if ( pGameRoot )
 	{
@@ -80,7 +80,7 @@ void CInterfaceSelectTutorial::MakeInterior()
 			maps.push_back( mapInfo );
 		}
 	}
-	
+
 	if ( pMissionsCont && pMissionsItemWnd && !maps.empty() )
 	{
 		for ( int i = 0; i < maps.size(); ++i )
@@ -144,10 +144,10 @@ bool CInterfaceSelectTutorial::OnPlay()
 	if ( nIndex >= 0 && nIndex < maps.size() )
 	{
 		SMapInfo &mapInfo = maps[nIndex];
-		
+
 		InterfaceState()->MarkTutorialRecommendedMission( nIndex + 1 );
 		Singleton<IScenarioTracker>()->CustomMissionStart( mapInfo.pMapInfo, 0, true );
-		
+
 		NMainLoop::Command( ML_COMMAND_MISSION_BRIEFING, "" );
 	}
 
@@ -206,7 +206,7 @@ bool CInterfaceSelectTutorial::OnSelect()
 				pMissionDescCont->Update();
 		}
 	}
-		
+
 	return true;
 }
 

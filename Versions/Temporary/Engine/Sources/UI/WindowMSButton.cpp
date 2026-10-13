@@ -122,7 +122,7 @@ const std::wstring& CWindowMSButton::GetDBFormatText() const
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(pTextFormat->, FormatString) )
 			return GET_TEXT_PRE( pTextFormat->, FormatString );
 	}
-	
+
 	return CWindow::GetDBFormatText();
 }
 
@@ -193,7 +193,7 @@ void CWindowMSButton::OnPush( const int nButton )
 		bPressed[nButton] = true;
 		if ( nButton == MSTATE_BUTTON1 && CUIFactory::GetConsts() )
 			GetScreen()->RunAnimationSequienceForward( CUIFactory::GetConsts()->buttonClickSound, this );
-		// 
+		//
 		if ( pShared->eTriggerMode == NDb::BCST_ON_PUSH )
 		{
 			// switch to next state
@@ -202,7 +202,7 @@ void CWindowMSButton::OnPush( const int nButton )
 			{
 				// run state NORMAL in backward direction
 				BackAnimation();
-				if ( pInstance->bAutoChangeState ) 
+				if ( pInstance->bAutoChangeState )
 					SetNextState();
 				// run logical state Sequience
 				GetScreen()->RunAnimationSequienceForward( pInstance->buttonStates[GetState()].commandsOnEnterState, this );
@@ -214,7 +214,7 @@ void CWindowMSButton::OnPush( const int nButton )
 				// run state change sequience and visual effects
 				RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
 					pInstance->buttonStates[GetState()].szMessageOnEnterState,
-					pInstance->buttonStates[GetState()].bWaitVisual, 
+					pInstance->buttonStates[GetState()].bWaitVisual,
 					pInstance->buttonStates[GetState()].bReverseCommands );
 			}
 			else if ( nButton == MSTATE_BUTTON2 )
@@ -232,7 +232,7 @@ void CWindowMSButton::OnPush( const int nButton )
 				// run state change sequience and visual effects
 				RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
 					pInstance->buttonStates[GetState()].szMessageOnEnterState,
-					pInstance->buttonStates[GetState()].bWaitVisual, 
+					pInstance->buttonStates[GetState()].bWaitVisual,
 					pInstance->buttonStates[GetState()].bReverseCommands );
 			}
 		}
@@ -281,7 +281,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					// run state PRESSED in backward direction
 					BackAnimation();
 					// change state (static appearance )
-					if ( pInstance->bAutoChangeState ) 
+					if ( pInstance->bAutoChangeState )
 						SetNextState();
 					// run logical state Sequience
 					NI_ASSERT( pInstance->buttonStates.size() > GetState(), "button states(in instance) have less states then button states in shared." );
@@ -289,7 +289,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
 						pInstance->buttonStates[GetState()].szMessageOnEnterState,
-						pInstance->buttonStates[GetState()].bWaitVisual, 
+						pInstance->buttonStates[GetState()].bWaitVisual,
 						!pInstance->buttonStates[GetState()].bReverseCommands );
 				}
 				else if ( nButton == MSTATE_BUTTON2 )
@@ -303,7 +303,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 					// run state change sequience and visual effects
 					RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
 						pInstance->buttonStates[GetState()].szMessageOnEnterState,
-						pInstance->buttonStates[GetState()].bWaitVisual, 
+						pInstance->buttonStates[GetState()].bWaitVisual,
 						!pInstance->buttonStates[GetState()].bReverseCommands );
 				}
 			}
@@ -329,7 +329,7 @@ void CWindowMSButton::OnRelease( const bool bInside, const int nButton )
 
 void CWindowMSButton::OnRightClick()
 {
-	
+
 }
 
 void CWindowMSButton::BackAnimation()
@@ -366,7 +366,7 @@ void CWindowMSButton::OnActivatePushedState( const SGameMessage &msg )
 void CWindowMSButton::Init()
 {
 	CWindow::Init();
-	
+
 	//bEnabled and substate must by synchronized:
 	//SwitchSubState( NDb::BST_NORMAL );
 	Enable( IsEnabled() );
@@ -393,7 +393,7 @@ bool CWindowMSButton::OnButtonDown( const CVec2 &vPos, const int nButton )
 {
 	if ( CWindow::OnButtonDown( vPos, nButton ) )
 		return true;
-	if ( !IsInside( vPos ) ) 
+	if ( !IsInside( vPos ) )
 		return false;
 	if ( !IsEnabled() )
 		return true;
@@ -406,7 +406,7 @@ bool CWindowMSButton::OnButtonUp( const CVec2 &vPos, const int nButton )
 	if ( CWindow::OnButtonUp( vPos, nButton ) )
 		return true;
 
-	if ( !bPressed[nButton] || !IsEnabled() ) 
+	if ( !bPressed[nButton] || !IsEnabled() )
 		return false;
 
 	const bool bInside = IsInside( vPos );
@@ -481,7 +481,7 @@ void CWindowMSButton::SetStateWithVisual( const int nState )
 	// run state change sequience and visual effects
 	RunAnimationAndCommands( pShared->visualStates[GetState()].visualOnEnterState,
 		pInstance->buttonStates[GetState()].szMessageOnEnterState,
-		pInstance->buttonStates[GetState()].bWaitVisual, 
+		pInstance->buttonStates[GetState()].bWaitVisual,
 		!pInstance->buttonStates[GetState()].bReverseCommands );
 
 	if ( !IsEnabled() )
@@ -518,7 +518,7 @@ void CWindowMSButton::SetTextString( const std::wstring &wszText )
 
 void CWindowMSButton::SetOutline( const CDBID &outlineType )
 {
-	CWindow::SetOutline( outlineType );	
+	CWindow::SetOutline( outlineType );
 	SwitchSubStatePrivate();
 }
 
@@ -540,7 +540,7 @@ void CWindowMSButton::SwitchSubStatePrivate()
 	//if ( states[pInstance->nState].substates[substate].pTextString )
 	// apply substate's text/format
 	ApplySubstateText( substate );
-	
+
 	states[pInstance->nState].eSubState = eSubState;
 }
 
@@ -606,21 +606,21 @@ void CWindowMSButton::ApplySubstateText( const CButtonSubStateVisual &substate )
 			wszText = GetDBFormatText() + wszText;
 		}
 	}
-	
+
 	if ( substate.pTextFormat )
 	{
 		SetTextPlacement( substate.pTextFormat->placement );
 	}
 	else if ( substate.pTextString )
 	{
-		if ( const NDb::SWindowPlacement *pPlacement = substate.pTextString->GetPlacement() )	
+		if ( const NDb::SWindowPlacement *pPlacement = substate.pTextString->GetPlacement() )
 			SetTextPlacement( *pPlacement );
 	}
 	else
 	{
 		if ( const NDb::SWindowPlacement *pPlacement = GetDBTextPlacement() )
 			SetTextPlacement( *pPlacement );
-	}	
+	}
 
 	CWindow::SetTextString( wszText );
 }

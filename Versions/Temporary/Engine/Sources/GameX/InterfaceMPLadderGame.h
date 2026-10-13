@@ -5,7 +5,7 @@
 
 
 
-class CInterfaceMPLadderGame : public CInterfaceScreenBase, 
+class CInterfaceMPLadderGame : public CInterfaceScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPLadderGame );

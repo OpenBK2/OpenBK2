@@ -45,7 +45,7 @@ public:
 	IWindow* AddSubItem( IWindow *pItem );
 	void Init();
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
-	
+
 	// IButtonNotify
 	void Released( class CWindow *pWho );
 	void Pushed( class CWindow *pWho ) {  }

@@ -27,10 +27,10 @@ static std::string GetProfileRootDir()
 }
 
 // directory name with default profile settings
-// these settings are loaded in LoadProfile() if no data for specified in global.cfg profile is found 
+// these settings are loaded in LoadProfile() if no data for specified in global.cfg profile is found
 // these settings are also loaded when ResetToDefault() is called
-// in game installation in Profiles\\ directory there should be only this profile and correct localized 
-// default player name should be specified in global.cfg (then during first run settings will be loaded 
+// in game installation in Profiles\\ directory there should be only this profile and correct localized
+// default player name should be specified in global.cfg (then during first run settings will be loaded
 // from szDefaultProfileName and then will be saved to normal profile dir)
 static std::string szDefaultProfileName = "default_profile";
 static bool IsDefaultProfileName( const std::string &szName )
@@ -122,7 +122,7 @@ static std::string GetProfileDir( const std::wstring &szName )
 static void OnProfileChange()
 {
 	// if it happens to be project dependent we could separate this into special .cfg
-	NGlobal::ProcessCommand( L"autodetect" ); 
+	NGlobal::ProcessCommand( L"autodetect" );
 }
 
 static void LoadUserConfig( const std::string &szProfileDir )

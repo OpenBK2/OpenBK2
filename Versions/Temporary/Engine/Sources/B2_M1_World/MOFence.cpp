@@ -40,7 +40,7 @@ void CMOFence::GetStatus( SObjectStatus *pStatus ) const
 }
 
 IClientUpdatableProcess* CMOFence::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
-{ 
+{
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	CommonUpdateHP( fNewHP, stats, Scene(), eSeason );
 	return 0;
@@ -69,7 +69,7 @@ NDb::EUserAction CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUs
 {
 	if ( bAltMode && pActionsWith->HasAction( NDb::USER_ACTION_MOVE_LIKE_TERRAIN ) )
 		return NDb::USER_ACTION_MOVE_LIKE_TERRAIN;
-		
+
 	NDb::EUserAction eAction = CMapObj::GetBestAutoAction( actionsBy, pActionsWith, bAltMode );
 
 	if ( eAction == NDb::USER_ACTION_UNKNOWN )
@@ -93,7 +93,7 @@ NDb::EUserAction CMOFence::GetBestAutoAction( const CUserActions &actionsBy, CUs
 			}
 		}
 	}
-		
+
 	return eAction;
 }
 

@@ -4,7 +4,7 @@
 #include "MapEditorLib/ResourceDefines.h"
 #include "MapEditorLib/CommandHandlerDefines.h"
 
-CRunModeInterfaceBase::CRunModeInterfaceBase( CTimeCounter *_pTimer ) : 
+CRunModeInterfaceBase::CRunModeInterfaceBase( CTimeCounter *_pTimer ) :
 	dwTime(0), pTimer(_pTimer)
 {
 	NInput::PurgeEvents();

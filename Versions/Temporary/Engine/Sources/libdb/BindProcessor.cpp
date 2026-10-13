@@ -23,7 +23,7 @@ IObjMan *SBindProcessor::CreateManipulator( const std::string &szName, IObjMan *
 		if ( ExtractArrayCallParams( szName, nArrayIndexStartPos, &callParams ) == false )
 			return 0;
 
-		IObjMan *pMan = callParams.pUValue->pArray->CreateManipulator( callParams.nArrayIndex, szName.substr(0, nArrayIndexStartPos - 1), 
+		IObjMan *pMan = callParams.pUValue->pArray->CreateManipulator( callParams.nArrayIndex, szName.substr(0, nArrayIndexStartPos - 1),
 			callParams.pRawVector, callParams.pContained, callParams.pTypeArray, pParent );
 		return callParams.szRestName.empty() ? pMan : pMan->CreateManipulator( callParams.szRestName );
 	}

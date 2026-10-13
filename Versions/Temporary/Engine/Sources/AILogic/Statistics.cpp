@@ -126,7 +126,7 @@ void CStatistics::UnitKilled( const int nPlayer, const int nKilledUnitsPlayer, c
 		{
 			CPtr<SFeedBackUnitsArray> pParam = new SFeedBackUnitsArray;
 			for ( CGlobalIter iter( theDipl.GetNParty( nPlayer ), EDI_FRIEND ); !iter.IsFinished(); iter.Iterate() )
-				if ( (*iter)->GetPlayer() == nPlayer && (*iter)->GetReinforcementType() == eKillerType ) 
+				if ( (*iter)->GetPlayer() == nPlayer && (*iter)->GetReinforcementType() == eKillerType )
 					pParam->unitIDs.push_back( (*iter)->GetUniqueID() );
 
 			if ( nPlayer == theDipl.GetMyNumber() )
@@ -187,7 +187,7 @@ void CStatistics::AviationCalled( const int nPlayer )
 void CStatistics::ReinforcementUsed( const int nPlayer )
 {
 	/*
-	if ( pScenarioTracker ) 
+	if ( pScenarioTracker )
 	{
 		if ( IMissionStatistics *pPlayerStats = GetPlayerStats( nPlayer ) )
 			pPlayerStats->AddValue( STMT_REINFORCEMENT_USED, 1.0f );

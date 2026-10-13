@@ -10,50 +10,50 @@
 	Unit				Locator name							Description										Comments
 	----------- ---------------						-----------------------				----------------------
 	поезд				MainGun										пушка													только у бронепоезда
-							MachineGun								пулемет	
-							MachineGun_Turret_Coax		пулемет спаренный с пушкой	
-							MachineGun_Turret_Back		пулемет сзади на башне	
-							MachineGun_Turret_Cupola	пулемет на командирской башенке	
-							MachineGun_Basis					курсовой пулемет на корпусе	
+							MachineGun								пулемет
+							MachineGun_Turret_Coax		пулемет спаренный с пушкой
+							MachineGun_Turret_Back		пулемет сзади на башне
+							MachineGun_Turret_Cupola	пулемет на командирской башенке
+							MachineGun_Basis					курсовой пулемет на корпусе
 							Smoke											точки дымления								у паровозов пар по бокам
-							FatalitySmoke							точки фатального дымления	
-							Exhaust										точки выхлопа	
-							TowingPoint								точки сцепки впереди	
-							HookPoint									точки сцепки сзади	
-							FrontWheel								центры осей передних колес	
-							BackWheel									центры осей задних колес	
-							People										точки захода людей	
-							Steam											дым из трубы паровоза	
+							FatalitySmoke							точки фатального дымления
+							Exhaust										точки выхлопа
+							TowingPoint								точки сцепки впереди
+							HookPoint									точки сцепки сзади
+							FrontWheel								центры осей передних колес
+							BackWheel									центры осей задних колес
+							People										точки захода людей
+							Steam											дым из трубы паровоза
 
-	пушка				MainGun										пушка	
-							Explosion									точки попадания - взрыв	
-							Smoke											точки дымления	
-							TowingPoint								точки буксировки	
-							Gunner										точки расположения людей	
-							Ammo											точки расположения ящиков со снарядами	
+	пушка				MainGun										пушка
+							Explosion									точки попадания - взрыв
+							Smoke											точки дымления
+							TowingPoint								точки буксировки
+							Gunner										точки расположения людей
+							Ammo											точки расположения ящиков со снарядами
 
-	самолет			MainGun										бомболюк	
-							MachineGun								пулемет	
-							Cannon										пушка	
-							Smoke											точки дымления	
-							People										точки выхода людей	
+	самолет			MainGun										бомболюк
+							MachineGun								пулемет
+							Cannon										пушка
+							Smoke											точки дымления
+							People										точки выхода людей
 
-	автомобиль	Explosion									точки попадания - взрыв	
-							Smoke											точки дымления	
-							Exhaust										точки выхлопа	
-							TowingPoint								точки буксировки	
-							People										точки захода людей	
+	автомобиль	Explosion									точки попадания - взрыв
+							Smoke											точки дымления
+							Exhaust										точки выхлопа
+							TowingPoint								точки буксировки
+							People										точки захода людей
 
-	танки и САУ	MainGun										пушка	
-							MachineGun								пулемет	
-							MachineGun_Turret_Coax		пулемет спаренный с пушкой	
-							MachineGun_Turret_Back		пулемет сзади на башне	
-							MachineGun_Turret_Cupola	пулемет на командирской башенке	
-							MachineGun_Basis					курсовой пулемет на корпусе	
-							Smoke											точки дымления	
-							FatalitySmoke							точки фатального дымления	
-							Exhaust										точки выхлопа	
-							Explosion									точки попадания - взрыв	
+	танки и САУ	MainGun										пушка
+							MachineGun								пулемет
+							MachineGun_Turret_Coax		пулемет спаренный с пушкой
+							MachineGun_Turret_Back		пулемет сзади на башне
+							MachineGun_Turret_Cupola	пулемет на командирской башенке
+							MachineGun_Basis					курсовой пулемет на корпусе
+							Smoke											точки дымления
+							FatalitySmoke							точки фатального дымления
+							Exhaust										точки выхлопа
+							Explosion									точки попадания - взрыв
 
 
 	-------------------------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@
 	*
 	*
 
-	Поле в MechUnitRPGStatus					Смысл																						Откуда берется 
+	Поле в MechUnitRPGStatus					Смысл																						Откуда берется
 	------------------------------		--------------------------------------------		----------------------------
 	platforms[i].constraint						constraint for procedural animation							rot Z limit для Turret
 	platforms[i].constraintVertical		ограничение на вертикальную наводку ствола			rot X limit для GunCarriage
@@ -138,26 +138,26 @@ struct SGunInfo
 	int nDirection;			// поворот пушки односительно оси юнита в горизонтальной плоскости
 											// MAYA: rotation соответствующего локатора вокруг Z
 											// хранится в виде числа 0..64к
-	
+
 	std::string szShootPoint;	// имя пушки ( MAYA: имя локатора пушки, обязательно начинается с L: LMainGun, LMachineGun01 и т.п. )
-	
+
 	std::string szRecoilPoint;	// имя части пушки, которая участвует в отдаче (есть не у всех пушек)
 												// MAYA: имя родительского трансформа пушки	(имя которого строго MainBarrel??)
-	
+
 	float fRecoilLength;	// если пушка вложена в RecoilPoint, то (trans_limit_Y_max - trans_limit_Y_min)
-	
+
 	bool bRecoil;					// есть ли отдача (true если fRecoilLength != 0)
-	
+
 	std::string szRotatePoint;	// точка вертикального поворота (есть не у всех пушек)
 												// MAYA: в родительский  трансформ с именем GunCarriage??
 
-	
+
 	std::string szPlatform;		// платформа, к которой прикреплена пушка
-												// MAYA: родительский трансформ 
-												//		 имя платформы может быть только 
+												// MAYA: родительский трансформ
+												//		 имя платформы может быть только
 												//		 Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
-	
-	
+
+
 	SGunInfo()
 	{
 		nDirection = 0;
@@ -185,7 +185,7 @@ struct SGunInfo
 			bIsMainGun = IsNameMatchPattern( &nMainGunIdx, szShootPoint.c_str(), "LMainGun??" );
 		bIsCannon = IsNameMatchPattern( &nCannonIdx, szShootPoint.c_str(), "L*Cannon??" );
 		bIsMachineGun = IsNameMatchPattern( &nMachineGunIdx, szShootPoint.c_str(), "LMachineGun*" );
-		
+
 
 		int nMainGunIdx2 = -1;
 		bool bIsMainGun2 = false;
@@ -203,7 +203,7 @@ struct SGunInfo
 			bIsMainGun2 = IsNameMatchPattern( &nMainGunIdx2, rOther.szShootPoint.c_str(), "LMainGun??" );
 		bIsCannon2 = IsNameMatchPattern( &nCannonIdx2, rOther.szShootPoint.c_str(), "L*Cannon??" );
 		bIsMachineGun2 = IsNameMatchPattern( &nMachineGunIdx2, rOther.szShootPoint.c_str(), "LMachineGun*" );
-		
+
 		if ( bIsMainGun2 )
 		{
 			if ( !bIsMainGun )
@@ -214,7 +214,7 @@ struct SGunInfo
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, "There are two main guns on one platform\n" );
 				pLogger->Log( LT_ERROR, fmt::format("\tPlatform: {}\n", szPlatform.c_str()) );
-				return (nMainGunIdx < nMainGunIdx2); 
+				return (nMainGunIdx < nMainGunIdx2);
 			}
 		}
 
@@ -230,7 +230,7 @@ struct SGunInfo
 				{
 					if ( bIsMachineGun )
 					{
-						return (nMainGunIdx < nMainGunIdx2);	
+						return (nMainGunIdx < nMainGunIdx2);
 					}
 					else
 					{
@@ -252,7 +252,7 @@ struct SGunInfo
 			{
 				if ( bIsCannon )
 				{
-					return (nCannonIdx < nCannonIdx2); 
+					return (nCannonIdx < nCannonIdx2);
 				}
 				else
 				{
@@ -269,7 +269,7 @@ struct SGunInfo
 struct SPlatformInfo
 {
 	//
-	//		имя платформы может быть только 
+	//		имя платформы может быть только
 	//			Basis, Basis_a, Basis_A, Turret, Turret00, Turret01 и т.п.
 	//
 	//		Basis или Basis_a - платформы верхнего уровня
@@ -279,7 +279,7 @@ struct SPlatformInfo
 
 	float constraint[2];	// горизонтальный констрейн ( MAYA: rot_limit_Z у трансформа платформы )
 
-	float constraintVertical[2]; // вертикальный констрейн 
+	float constraintVertical[2]; // вертикальный констрейн
 								 // 0+ пушек имеют в качестве одного из родительских трансформов
 								 // трансформ GunCarriage??
 								 // только у одного из этих трансформов rot_limit_X != 0
@@ -317,7 +317,7 @@ struct SPlatformInfo
 			bool bRes0 = IsNameMatchPattern( &nIdx0, szRotatePoint.c_str(), "Turret??" );
 			if ( bRes0 && bRes1 )
 			{
-				return (nIdx0 < nIdx1); 
+				return (nIdx0 < nIdx1);
 			}
 		}
 		return false;
@@ -345,24 +345,24 @@ struct SConstraintInfo
 static void SetGunnersPoints( IManipulator* pManipulator, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	// расположение стрелков у пушек в 3-х возможных моделях пушки (стрельба+разворот+транспортировка)
-	pManipulator->RemoveNode( "Gunners", NODE_REMOVEALL_INDEX );	
+	pManipulator->RemoveNode( "Gunners", NODE_REMOVEALL_INDEX );
 	pManipulator->InsertNode( "Gunners" );
 	pManipulator->InsertNode( "Gunners" );
 	pManipulator->InsertNode( "Gunners" );
 
 	std::vector<SLocatorQInfo> lc;
-	SearchLocators( &lc, rLocatorsInfo, "LGunner??" ); 
+	SearchLocators( &lc, rLocatorsInfo, "LGunner??" );
 
 	int gunnersNumber[3] = {0,0,0};
 	int nIdx = 0;
 	for ( CLocatorQInfoConstIter i = lc.begin(); i != lc.end(); ++i, ++nIdx )
 	{
 		if ( i->nQIdx < 10 ) // стрельба
-		{	
+		{
 			pManipulator->InsertNode( "Gunners.[0].gunners" );
 			char pszGunnerDBA[64]={0};
 			sprintf( pszGunnerDBA, "Gunners.[0].gunners.[%d]", gunnersNumber[0] );
-			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );  
+			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );
 			++gunnersNumber[0];
 		}
 		else if ( i->nQIdx < 20 ) // разворот
@@ -370,7 +370,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const std::vector<SSke
 			pManipulator->InsertNode( "Gunners.[1].gunners" );
 			char pszGunnerDBA[64]={0};
 			sprintf( pszGunnerDBA, "Gunners.[1].gunners.[%d]", gunnersNumber[1] );
-			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );  
+			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );
 			++gunnersNumber[1];
 		}
 		else if ( i->nQIdx < 30 ) // транспортировка
@@ -378,7 +378,7 @@ static void SetGunnersPoints( IManipulator* pManipulator, const std::vector<SSke
 			pManipulator->InsertNode( "Gunners.[2].gunners" );
 			char pszGunnerDBA[64]={0};
 			sprintf( pszGunnerDBA, "Gunners.[2].gunners.[%d]", gunnersNumber[2] );
-			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );  
+			CManipulatorManager::SetVec2( CVec2( i->inf.vPos.x, i->inf.vPos.y ), pManipulator, pszGunnerDBA );
 			++gunnersNumber[2];
 		}
 	}
@@ -450,24 +450,24 @@ static bool IsGunExist( IManipulator* pManipulator, int nPlatformNo, int nGunNo 
 
 static bool AddPlatform( IManipulator* pManipulator )
 {
-	return pManipulator->InsertNode( "platforms" ); 
+	return pManipulator->InsertNode( "platforms" );
 }
 
 static bool AddGun( IManipulator *pManipulator, int nPlatformNo )
 {
 	char pszDBA[64] = {0};
 	sprintf( pszDBA, "platforms.[%d].guns", nPlatformNo );
-	return pManipulator->InsertNode( pszDBA ); 
+	return pManipulator->InsertNode( pszDBA );
 }
 
-static bool SetGunShootPoint(	IManipulator* pManipulator, 
-								const SSkeletonLocatorInfo *pLocatorInfo, 
-								int nPlatformNo, 
-								int nGunNo ) 
+static bool SetGunShootPoint(	IManipulator* pManipulator,
+								const SSkeletonLocatorInfo *pLocatorInfo,
+								int nPlatformNo,
+								int nGunNo )
 {
 	char pszDBA[64] = {0};
 	sprintf( pszDBA, "platforms.[%d].guns.[%d].ShootPoint", nPlatformNo, nGunNo );
-	return CManipulatorManager::SetValue( pLocatorInfo->szName, pManipulator, pszDBA, false ); 
+	return CManipulatorManager::SetValue( pLocatorInfo->szName, pManipulator, pszDBA, false );
 }
 
 const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
@@ -481,11 +481,11 @@ const SSkeletonLocatorInfo* GetLocator( const char *pszLocatorName, const std::v
 static void GetPlatforms( std::vector<SPlatformInfo> *pPlatforms, const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo )
 {
 	//
-	// функция считает № платформы: 
+	// функция считает № платформы:
 	//		Basis или Basis_a, Basis?? - платформы верхнего уровня
 	//
 	//		Turret*		  - другие платформы (прилинкованные к Basis)
-	//		
+	//
 	pPlatforms->clear();
 	bool bHasBasis = false;
 	bool bHasBasisA = false;
@@ -589,11 +589,11 @@ bool CMechUnitRPGStatsExporter::ProcessAABB( IManipulator *pItUnit )
 	{
 		// convert animations from anims array to RPG stats structures
 		CPtr<IManipulator> pItVisObj = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pItUnit, 0, 0, 0 );
-		if ( pItVisObj == 0 ) 
+		if ( pItVisObj == 0 )
 			return true;
 		// find first non-null model
 		CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
-		if ( pItModel == 0 ) 
+		if ( pItModel == 0 )
 			return true;
 		//
 		CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
@@ -679,10 +679,10 @@ bool CMechUnitRPGStatsExporter::ProcessMechUnitAnimations( IManipulator *pItUnit
 	{
 		CPtr<IManipulator> pItVisObj = pRM->CreateObjectManipulator( "VisObj", *it );
 		CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
-		if ( pItModel == 0 ) 
+		if ( pItModel == 0 )
 			continue;
 		pItModel->GetValue( "Skeleton", &var );
-		if ( !IsDBIDEmpty(var) )	
+		if ( !IsDBIDEmpty(var) )
 			skeletons[var.GetStr()] = true;
 	}
 	if ( skeletons.empty() )
@@ -756,7 +756,7 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 	const int nPlatforms = var;
 	for ( int i = 0; i< nPlatforms; ++i )
 	{
-		CPtr<IManipulator> pAttachedPlatformManipulator = 
+		CPtr<IManipulator> pAttachedPlatformManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
 			ProcessMechUnitAnimations( pAttachedPlatformManipulator );
@@ -765,7 +765,7 @@ void CMechUnitRPGStatsExporter::ProcessAttachedObjects( IManipulator *pUnitManip
 		const int nGuns = var;
 		for ( int j = 0; j < nGuns; ++j )
 		{
-			CPtr<IManipulator> pAttachedGunManipulator = 
+			CPtr<IManipulator> pAttachedGunManipulator =
 				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].guns.[{}].AttachedGunVisObj", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
 				ProcessMechUnitAnimations( pAttachedGunManipulator );
@@ -816,7 +816,7 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToObject( IManipulator *pUnitManip
 	{
 		pAttachedManipulator->InsertNode( "DamageLevels" );
 
-		CPtr<IManipulator> pObjDamageLevelManipulator = 
+		CPtr<IManipulator> pObjDamageLevelManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "DamageLevels.[{}]", j ), pUnitManipulator, 0, 0, 0 );
 		CPtr<IManipulator> pAttachedDamagedLevelManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "DamageLevels.[{}]", j ), pAttachedManipulator, 0, 0, 0 );
@@ -832,7 +832,7 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 	const int nPlatforms = var;
 	for ( int i = 0; i< nPlatforms; ++i )
 	{
-		CPtr<IManipulator> pAttachedPlatformManipulator = 
+		CPtr<IManipulator> pAttachedPlatformManipulator =
 			CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].AttachedPlatformVisObj", i ), pUnitManipulator, 0, 0, 0 );
 		if ( pAttachedPlatformManipulator )
 			CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
@@ -841,7 +841,7 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 		const int nGuns = var;
 		for ( int j = 0; j < nGuns; ++j )
 		{
-			CPtr<IManipulator> pAttachedGunManipulator = 
+			CPtr<IManipulator> pAttachedGunManipulator =
 				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "platforms.[{}].guns.[{}]", i, j ), pUnitManipulator, 0, 0, 0 );
 			if ( pAttachedGunManipulator )
 				CopyAnimationsToObject( pUnitManipulator, pAttachedPlatformManipulator );
@@ -849,14 +849,14 @@ void CMechUnitRPGStatsExporter::CopyAnimationsToAttached( IManipulator *pUnitMan
 	}
 }
 
-static void ProcessGun(	SGunInfo *pGunInfo, 
+static void ProcessGun(	SGunInfo *pGunInfo,
 						const SSkeletonLocatorInfo &rGunLocator,
 						const std::vector<SSkeletonLocatorInfo> &rLocatorsInfo,
 						const std::vector<SPlatformInfo> &rPlatformsInfo )
 {
 	// имя пушки?
 	pGunInfo->szShootPoint = rGunLocator.szName;
-	
+
 	// платформа?
 	pGunInfo->szPlatform = GetLocatorPlatform( rGunLocator, rLocatorsInfo, rPlatformsInfo );
 	if ( pGunInfo->szPlatform.empty() )
@@ -870,14 +870,14 @@ static void ProcessGun(	SGunInfo *pGunInfo,
 	// точка вертикального поворота
 	pGunInfo->szRotatePoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*GunCarriage*" );
 
-	// часть пушки, которая участвует в отдаче 
+	// часть пушки, которая участвует в отдаче
 	pGunInfo->szRecoilPoint = GetParentLocator( rGunLocator, rLocatorsInfo, "*MainBarrel*" );
 }
 
 static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std::vector<SGunInfo> &rGuns )
 {
 	const std::string szGunsDba = fmt::format( "platforms.[{}].guns", nPlatformIdx );
-	
+
 	CVariant v;
 	if ( !pManipulator->GetValue( szGunsDba, &v ) )
 		return;
@@ -938,7 +938,7 @@ static void UpdateGuns( IManipulator *pManipulator, int nPlatformIdx, const std:
 				szWarnMsg = "WARNING: can't write: " + szRotatePointDBA;
 				NI_ASSERT( bRes, szWarnMsg.c_str() );
 
-				gunProcessed[ nIdx ] = true; 
+				gunProcessed[ nIdx ] = true;
 			}
 		}
 	}
@@ -1006,7 +1006,7 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 {
 	bool bRes;
 	CVariant v;
-	std::string szDBA; 
+	std::string szDBA;
 	std::string szWarnMsg;
 
 	v = pP->constraint[0];
@@ -1035,7 +1035,7 @@ static void WritePlatformData( IManipulator *pManipulator, const SPlatformInfo *
 }
 
 static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlatformInfo> &rPlatforms )
-{ 
+{
 	// обновить существующие платформы
 	CVariant v;
 	if ( !pManipulator->GetValue( "platforms", &v ) )
@@ -1069,7 +1069,7 @@ static void UpdatePlatforms( IManipulator *pManipulator, const std::vector<SPlat
 			{
 				WritePlatformData( pManipulator, pP, i );
 				UpdateGuns( pManipulator, i, pP->guns );
-				platformProcessed[ nIdx ] = true; 
+				platformProcessed[ nIdx ] = true;
 			}
 		}
 	}
@@ -1112,9 +1112,9 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 	// собрать данные о пушках
 	for ( CLocatorInfoConstIter i = rLocatorsInfo.begin(); i != rLocatorsInfo.end(); ++i )
 	{
-		if (	PatMat( i->szName.c_str(), "LMainGun*" ) || 
+		if (	PatMat( i->szName.c_str(), "LMainGun*" ) ||
 				PatMat( i->szName.c_str(), "LMachineGun*" ) ||
-				PatMat( i->szName.c_str(), "Cannon*" ) ) 
+				PatMat( i->szName.c_str(), "Cannon*" ) )
 		{
 			SGunInfo g;
 			ProcessGun( &g, (*i), rLocatorsInfo, platformsInfo );
@@ -1135,14 +1135,14 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 		}
 	}
 
-	// сортировка пушек 
+	// сортировка пушек
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
 		std::sort( i->guns.begin(), i->guns.end() );
 
 
 	// ограничения
 	std::vector<SConstraintInfo> constraints;
-	GetModelConstraints( &constraints, pManipulator ); 
+	GetModelConstraints( &constraints, pManipulator );
 
 	// ограничения на горизонтальные повороты платформ
 	for ( std::vector<SPlatformInfo>::iterator i = platformsInfo.begin(); i != platformsInfo.end(); ++i )
@@ -1237,11 +1237,11 @@ static void SetupPlatformsAndGuns( IManipulator *pManipulator, const std::vector
 				if ( k->szName == pG->szShootPoint )
 				{
 					SHMatrix mtx = k->mtx;
-					CVec3 vec;   
-          mtx.RotateVector( &vec, V3_AXIS_Z ); 
+					CVec3 vec;
+          mtx.RotateVector( &vec, V3_AXIS_Z );
 					vec.z = 0;
 					Normalize( &vec );
-					float fDir = NMath::ACos( vec.y ); 
+					float fDir = NMath::ACos( vec.y );
 					const float F_EPS_ANGLE = 0.01f;
 					if ( fabs(fDir) < F_EPS_ANGLE )
 						pG->nDirection = 0xFFFF;
@@ -1285,11 +1285,11 @@ static void CalculteGunsAndPlatformPositions( IManipulator *pManipulator, const 
 	{
 		// set platform position
 		const std::string szPlatformName = fmt::format( "platforms.[{}].", i );
-		
+
 		std::string szRotateBone;
 		if ( !CManipulatorManager::GetValue( &szRotateBone, pManipulator, szPlatformName + "RotatePoint" ) )
 			CManipulatorManager::SetVec3( VNULL3, pManipulator, szPlatformName + "AIRotatePointPos" );
-		else 
+		else
 		{
 			const int nLocator = FindLocator( szRotateBone, rLocatorsInfo );
 			if ( nLocator != -1 )
@@ -1406,11 +1406,11 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator
 	{
 		std::string szRPGType;
 		CManipulatorManager::GetValue( &szRPGType, pManipulator, "DBtype" );
-		if ( szRPGType == "DB_RPG_TYPE_AVIA_ATTACK" ) 
+		if ( szRPGType == "DB_RPG_TYPE_AVIA_ATTACK" )
 		{
 			float fDivingAngle = 0;
 			CManipulatorManager::GetValue( &fDivingAngle, pManipulator, "DivingAngle" );
-			if ( fDivingAngle == 0 ) 
+			if ( fDivingAngle == 0 )
 			{
 				pLogger->Log( LT_ERROR, "Invalid diving angle for ground attack plane\n" );
 				pLogger->Log( LT_ERROR, fmt::format("\tMechUnit: {}\n", rszObjectName.c_str()) );

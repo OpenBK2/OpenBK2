@@ -47,7 +47,7 @@ struct SAckDesc
 	const char *pszCodeName;
 	NDb::EUnitAckType eType;
 };
-static SAckDesc s_AckDescs[] = 
+static SAckDesc s_AckDescs[] =
 {
 	{ "ACK_POSITIVE", "ACK_POSITIVE", NDb::ACK_POSITIVE },
 	{ "ACK_NEGATIVE", "ACK_NEGATIVE", NDb::ACK_NEGATIVE },
@@ -134,9 +134,9 @@ struct SAckSetKey
 	SAckSetKey( const std::string &_szTypeName, int _nSubtype, int _nVoiceID )
 		: szTypeName( _szTypeName ), nSubtype( _nSubtype ), nVoiceID( _nVoiceID ) {}
 	//
-	bool operator==( const SAckSetKey &key ) const 
-	{ 
-		return key.szTypeName == szTypeName && key.nSubtype == nSubtype && key.nVoiceID == nVoiceID; 
+	bool operator==( const SAckSetKey &key ) const
+	{
+		return key.szTypeName == szTypeName && key.nSubtype == nSubtype && key.nVoiceID == nVoiceID;
 	}
 };
 }
@@ -354,7 +354,7 @@ bool CAcksBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, std::s
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	std::string szExcelFileName;
 	if ( !CManipulatorManager::GetValue( &szExcelFileName, pBuildDataManipulator, "ExcelFile" ) || szExcelFileName.empty() )
@@ -433,7 +433,7 @@ bool CAcksBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 	case ID_TOOLS_CREATE_ACK_SETS:
-		{	
+		{
 			SSelectionSet selectionSet;
 			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;

@@ -30,7 +30,7 @@ public:
 	ZDATA
 	std::wstring szText;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&szText); return 0; }
-	
+
 	CTextData() {}
 	CTextData( const std::wstring &_szText ) { szText = _szText; }
 };
@@ -48,15 +48,15 @@ void CListItemTextViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase 
 {
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
-	
+
 	CDynamicCast<ITextView> pView = pItem->GetSubItem( 0 );
 	NI_VERIFY( pView, "Wrong window", return );
-	
+
 	if ( pData )
 	{
 		CDynamicCast<CTextData> pText = pData;
 		NI_VERIFY( pText, "Wrong data", return );
-		
+
 		pView->SetText( pView->GetDBText() + pText->szText );
 	}
 	else
@@ -72,13 +72,13 @@ CInterfaceCampaignSelectionMenu::CInterfaceCampaignSelectionMenu() :
 
 bool CInterfaceCampaignSelectionMenu::Init()
 {
-	if ( !CInterfaceScreenBase::Init() ) 
+	if ( !CInterfaceScreenBase::Init() )
 		return false;
 
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
-	
+
 	AddScreen( this );
-	
+
 	MakeInterior();
 
 	return true;
@@ -97,7 +97,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 	CreateCampaignWindows( nCampaignCount );
 
 	const bool bDemo = NGlobal::GetVar( "DEMO_MODE", 0 ) != 0;
-	
+
 	// get components
 	// 0 = USA
 	// 1 = Germany
@@ -123,7 +123,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 		ICampaignState *pCampaignState = InterfaceState()->GetCampaign( pDBCampaign->GetDBID() );
 		if ( pCampaignState && pCampaignState->IsCompleted() )
 			campaign.ePlay = PT_OUTRO;
-		else 
+		else
 			campaign.ePlay = PT_CAMPAIGN;
 
 		const NDb::STexture *pPicture = (campaign.ePlay == PT_CAMPAIGN) ? pDBCampaign->pTextureNotStarted : pDBCampaign->pTextureCompleted;
@@ -146,7 +146,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 		if ( campaign.pDescCont )
 			campaign.pDescCont->Update();
 	}
-	
+
 	if ( nCampaignCount > 3 )
 		CreateCampaignList();
 
@@ -165,7 +165,7 @@ void CInterfaceCampaignSelectionMenu::MakeInterior()
 
 	ePlay = PT_CAMPAIGN;
 	nSelected = -1;
-	
+
 	SelectCampaign( 0, true );
 	if ( pPlayBtn )
 		pPlayBtn->Enable( nSelected >= 0 );
@@ -363,7 +363,7 @@ void CInterfaceCampaignSelectionMenu::OnGetFocus( bool bFocus )
 bool CInterfaceCampaignSelectionMenu::StepLocal( bool bAppActive )
 {
 	bool bResult = CInterfaceScreenBase::StepLocal( bAppActive );
-	
+
 	if ( IInterfaceBase *pInterface = NMainLoop::GetPrevInterface( this ) )
 		pInterface->Step( bAppActive );
 
@@ -421,7 +421,7 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 		wszCommand = NStr::ToUnicode( szCommand );
 
 		NGlobal::ProcessCommand( wszCommand );
-		
+
 		return true;
 	}
 	//
@@ -430,7 +430,7 @@ bool CInterfaceCampaignSelectionMenu::OnPlay()
 	int nDifficulty = pDifficulty ? pDifficulty->GetSelectedIndex() : 0;
 	const NDb::SCampaign *pCampaign = pGameRoot->campaigns[nSelected];
 	NI_VERIFY( pCampaign, "Designers: no campaign", return true );
-	
+
 	StartCampaign( pCampaign, nDifficulty, false );
 #endif // !defined(_SINGLE_DEMO) && !defined(_MP_DEMO)
 
@@ -467,14 +467,14 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 
 	const NDb::SGameRoot *pGameRoot = NGameX::GetGameRoot();
 	NI_VERIFY( 0 <= nIndex && nIndex < pGameRoot->campaigns.size(), "index out of range", return );
-	
+
 	const NDb::SCampaign *pCampaign = pGameRoot->campaigns[nIndex];
 	NI_VERIFY( pCampaign, "No campaign info", return );
-	
+
 	if ( pDifficulty )
 	{
 		const int nOldDifficulty = bFirstTime ? CAMPAIGN_DEFAULT_DIFFICULTY : pDifficulty->GetSelectedIndex();
-		const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < pCampaign->difficultyLevels.size() ) ? nOldDifficulty : 
+		const int nNewDifficulty = (nOldDifficulty >= 0 && nOldDifficulty < pCampaign->difficultyLevels.size() ) ? nOldDifficulty :
 			(std::max)( 0, (std::min)( CAMPAIGN_DEFAULT_DIFFICULTY, (int)( pCampaign->difficultyLevels.size() ) - 1 ) );
 
 		pDifficulty->RemoveAllItems();
@@ -507,7 +507,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 					AddDifficultyLevel( pDifficultyLevel );
 				}
 			}
-			
+
 			pDifficulty->Select( nNewDifficulty );
 		}
 	}
@@ -521,7 +521,7 @@ void CInterfaceCampaignSelectionMenu::SelectCampaign( int _nIndex, bool bFirstTi
 		if ( panelRect.left < listRect.left || panelRect.right > listRect.right )
 			pCampaignList->EnsureElementVisible( campaigns[nSelected].pWnd );
 	}
-	
+
 	ePlay = PT_CAMPAIGN;
 	for ( int i = 0; i < campaigns.size(); ++i )
 	{
@@ -581,14 +581,14 @@ void StartCampaign( const NDb::SCampaign *pCampaignDB, int _nDifficulty, bool bC
 		else
 			nDifficulty--;
 	}
-	
+
 	InterfaceState()->SetFirstTimeInChapter( true );
 
 	InterfaceState()->VerifyScenarioTracker( IInterfaceState::ESTT_NONE );
 	InterfaceState()->MakeScenarioTracker( IInterfaceState::ESTT_SINGLE );
 
 	Singleton<IScenarioTracker>()->CampaignStart( pCampaignDB, nDifficulty, false, bCustom );
-	
+
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 //	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" ); // уберем подложку с миссией
 

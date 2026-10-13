@@ -3,7 +3,7 @@
 #include "AIUnit.h"
 
 class CExecutorTransportReinforcement : public CExecutor
-{	
+{
 	OBJECT_BASIC_METHODS(CExecutorTransportReinforcement);
 
 	enum ETransportStates { ETS_FULL, ETS_UNLOADING, ETS_EMPTY, ETS_LEFT };

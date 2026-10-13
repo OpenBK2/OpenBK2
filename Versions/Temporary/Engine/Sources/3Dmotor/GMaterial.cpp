@@ -261,7 +261,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 			}
 			else
 			{
-				pRC->SetPixelShader( bNoDepthRender || bAlphaTest || !bReceiveShadows ||( eType == DT_FORCE_DYNAMIC ) 
+				pRC->SetPixelShader( bNoDepthRender || bAlphaTest || !bReceiveShadows ||( eType == DT_FORCE_DYNAMIC )
 				                    ? psG3DiffuseTexNoShadows : psG3DiffuseTex );
 			}
 
@@ -277,7 +277,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 				float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 				float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
-				pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );			
+				pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 			}
 			else
 			{
@@ -309,7 +309,7 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 			float _co = 2.0f * cos( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 			float _si = 2.0f * sin( WindTime ) / NGfx::N_VEC_FULL_TEX_SIZE;
 
-			pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );			
+			pRC->SetVSConst( 31, CVec4( +_co, +_si, -_si * 0.2f, +_co * 0.2f ) );
 		}
 		else
 		{
@@ -496,8 +496,8 @@ bool CGenericMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInf
 	return true;
 }
 
-void CGenericMaterial::SetTransparentRenderMode( NGfx::CRenderContext *pRC, const SPerPartVariables &vars, 
-	const SLightInfo &lightInfo, SRenderPathContext *pRPC ) 
+void CGenericMaterial::SetTransparentRenderMode( NGfx::CRenderContext *pRC, const SPerPartVariables &vars,
+	const SLightInfo &lightInfo, SRenderPathContext *pRPC )
 {
 	if ( bAddPlaced )
 	{
@@ -732,7 +732,7 @@ void CGenericMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 		}
 		if ( pSky )
 		{
-			pOp->AddOperation( RO_GLOSSED_MIRROR, 51, nAlphaMode | DPM_EQUAL, 0, 
+			pOp->AddOperation( RO_GLOSSED_MIRROR, 51, nAlphaMode | DPM_EQUAL, 0,
 				this, pSky, pMirror );
 		}
 	}
@@ -875,7 +875,7 @@ void CAnimWaterMaterial::Precache()
 }
 
 bool CAnimWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightInfo &lightInfo, int nROP, CRenderCmdList::UParameter p1, CRenderCmdList::UParameter p2 )
-{	
+{
 	const float F_RADIUS = 0.1f;
 	pRC->SetAlphaRef( p1.pFastInfo->nAlphaTest );
 	const int nFrame = ( p1.pFastInfo->tTime / 75 ) % ( nNumFramesX * nNumFramesY ) ;
@@ -908,7 +908,7 @@ bool CAnimWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLightI
 		pRC->SetPixelShader( psG3AnimWater );
 		pRC->SetVertexShader( vsG3AnimWater );
 
-		// Building horses		
+		// Building horses
 		const float fCurTime = p1.pFastInfo->tTime * 0.00003f;
 
 		const float fInvPeriod = 1.0f/0.3f;
@@ -1146,7 +1146,7 @@ bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLig
 		break;
 
 	case RO_WITH_REFLECTION:
-		
+
 
 		//pRC->SetVSConst( 30, CVec4( lightInfo.fWarFogBlend, 1-lightInfo.fWarFogBlend, 0,0) );
 
@@ -1213,7 +1213,7 @@ bool CReflectWaterMaterial::SetRenderMode( NGfx::CRenderContext *pRC, const SLig
 
 		pRC->SetVSConst( 34, CVec4( 0, 0, fDielMirror, fMetalMirror ) );
 
-	
+
 
 
 		pRC->SetPSConst( 0, CVec4( 0.0f, 0.0f, 0.0f, 0.5f) );
@@ -1397,7 +1397,7 @@ void CTerrainMaterial::AddOperations( COpGenContext *pOp, SRenderPathContext *pR
 		pOp->AddOperation( RO_TERRAIN_GF2, 11 + nPriority, DPM_NORMAL | nFogMode, 0, this, pInfo );
 		return;
 	}
-	
+
 	pInfo->pPersp = &pRPC->depthInfo;
 	pInfo->pDepth = pRPC->pCurrentDepthTexture;
 	pInfo->nAlphaTest = 1;//40;
@@ -1536,18 +1536,18 @@ IMaterial* CreateMaterial( const SMaterialCreateInfo &m )
 			pRes->SetReceiveShadows ( m.bReceiveShadow );
 			pRes->SetAngVel( m.fFloatParam );
 			pRes->SetDynamicType( m.eDynamicType );
-		
+
 			switch ( m.alphaMode & MF_ALPHA_MASK )
 			{
 			case MF_OPAQUE:         break;
 			case MF_DECAL:          pRes->SetExactDecal(); break;
 			case MF_OVERLAY:        pRes->SetDecal(); break;
 			case MF_OVERLAY_ZWRITE: pRes->SetDecalZWrite(); break;
-			case MF_TRANSPARENT:    
+			case MF_TRANSPARENT:
 				if ( ( m.fMetalMirror != 0 || m.fDielMirror != 0 ) && NGfx::GetHardwareLevel() < NGfx::HL_R300 )
 					pRes->SetDecalZWrite();
 				else
-					pRes->SetTransparent(); 
+					pRes->SetTransparent();
 				break;
 			case MF_ALPHA_TEST:     pRes->SetAlphaTest( true ); break;
 			}
@@ -1563,7 +1563,7 @@ IMaterial* CreateMaterial( const SMaterialCreateInfo &m )
 			//fDielMirror = 1;
 			//fMetalMirror = 1;
 			//ASSERT ( m.pSky == 0 )
-	
+
 
 			pRes->SetReflectionInfo( m.pSky, m.pMirrorTexture, m.fDielMirror, m.fMetalMirror );
 			pRes->SetTranslucentColor( m.vTranslucentColor );

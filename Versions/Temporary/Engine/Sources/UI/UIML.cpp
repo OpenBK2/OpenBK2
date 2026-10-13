@@ -1153,7 +1153,7 @@ void CML::GenerateLayout()
 			eThisChar = eLastChar;
 		else if ( ( wcChar == L'\0' ) || ( wcChar == L'\n' ) )
 			eThisChar = CHAR_EOL;
-		else if ( wcChar == L'\r' ) 
+		else if ( wcChar == L'\r' )
 			eThisChar = CHAR_SKIP;
 
 		if ( eLastChar != eThisChar )
@@ -1169,7 +1169,7 @@ void CML::GenerateLayout()
 				std::wstring &wsTemp = paramsSet.emplace_back();
 				pStream->GetString( nWordBegin, pStream->GetSeek() - nWordBegin, &wsTemp );
 			}
-			else if ( eThisChar == CHAR_SKIP ) 
+			else if ( eThisChar == CHAR_SKIP )
 				pStream->IncSeek();
 
 			nWordBegin = pStream->GetSeek();

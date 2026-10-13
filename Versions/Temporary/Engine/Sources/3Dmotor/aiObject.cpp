@@ -31,12 +31,12 @@ int PushTri( const STriangle &t, const std::vector<SEdge> &edges, std::vector<in
 	uint16_t i1, i2, i3;
 	if ( t.i1 & 0x8000 )
 	{
-		i1 = edges[ t.i1 & 0x7fff ].wFinish; 
+		i1 = edges[ t.i1 & 0x7fff ].wFinish;
 		i2 = edges[ t.i1 & 0x7fff ].wStart;
 	}
 	else
 	{
-		i1 = edges[ t.i1 & 0x7fff ].wStart; 
+		i1 = edges[ t.i1 & 0x7fff ].wStart;
 		i2 = edges[ t.i1 & 0x7fff ].wFinish;
 	}
 	if ( t.i2 & 0x8000 )
@@ -94,7 +94,7 @@ void CEdgesInfo::BuildClosedMeshes( std::vector<std::vector<STriangle> > *pMeshe
 	count.resize( edges.size(), 0 );
 	triUsed.resize( nFreeTris, 0 );
 	int nEdge = -1;
-	while ( nFreeTris > 0 )	
+	while ( nFreeTris > 0 )
 	{
 		int nTri;
 		if ( nEdge == -1 )
@@ -143,12 +143,12 @@ void CEdgesInfo::BuildTriangleList( std::vector<STriangle> *pRes ) const
 		const STriangle &t = mesh[i];
 		if ( t.i1 & 0x8000 )
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wFinish; 
+			i1 = edges[ t.i1 & 0x7fff ].wFinish;
 			i2 = edges[ t.i1 & 0x7fff ].wStart;
 		}
 		else
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wStart; 
+			i1 = edges[ t.i1 & 0x7fff ].wStart;
 			i2 = edges[ t.i1 & 0x7fff ].wFinish;
 		}
 		if ( t.i2 & 0x8000 )
@@ -210,17 +210,17 @@ void CEdgesInfo::GenerateEdgeList( const std::vector<STriangle> &tris, const std
 		const STriangle &t = tris[i];
 		if ( t.i1 == t.i2 || t.i1 == t.i3 || t.i2 == t.i3 )
 			continue;
-		mesh.push_back( STriangle( 
-			InsertEdge( t.i1, t.i2, pts ), 
-			InsertEdge( t.i2, t.i3, pts ), 
+		mesh.push_back( STriangle(
+			InsertEdge( t.i1, t.i2, pts ),
+			InsertEdge( t.i2, t.i3, pts ),
 			InsertEdge( t.i3, t.i1, pts ) ) );
 	}
 }
 
 // CGeometryInfo
 
-SPiece* CGeometryInfo::GetPiece( int nPieceID ) 
-{ 
+SPiece* CGeometryInfo::GetPiece( int nPieceID )
+{
 	CPieceMap::iterator i = pieces.find( nPieceID );
 	if ( i == pieces.end() )
 		return 0;
@@ -257,7 +257,7 @@ void CGeometryInfo::CalcBound()
 	SBoundCalcer b;
 	for ( CPieceMap::const_iterator i = pieces.begin(); i != pieces.end(); ++i )
 		b.LookSet( i->second.points, SGetSelf<CVec3>() );
-	
+
 	b.Make( &bound );
 }
 

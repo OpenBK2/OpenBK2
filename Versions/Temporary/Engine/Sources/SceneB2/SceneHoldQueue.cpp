@@ -26,7 +26,7 @@ void ClearSceneHoldQueue()
 	}
 }
 
-void StepSceneHoldQueue( const NTimer::STime _timeCurrTime ) 
+void StepSceneHoldQueue( const NTimer::STime _timeCurrTime )
 {
 	const NTimer::STime timeCurrTime = _timeCurrTime / 1000;
 	const int nPrevPos = int( timeLastTime ) & ( N_HOLD_TIME - 1 );

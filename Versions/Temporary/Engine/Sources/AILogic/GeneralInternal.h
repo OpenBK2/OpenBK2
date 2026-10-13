@@ -56,7 +56,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 	CObj<CGeneralIntendant> pIntendant;
 
 	RequestedTasks requestedTasks;
-	
+
 	CResistancesContainer resContainer;
 
 	NTimer::STime lastBombardmentCheck = {};
@@ -65,7 +65,7 @@ class CGeneral : public CCommander, public IEnemyContainer
 	bool bSendReserves = {};										// send tanks to swarm
 	int nMaxAllowedMobileTanks = {};
 
-	public: 
+	public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommander*)this); OnSerialize( f ); f.Add(2,&requestIDs); f.Add(3,&nParty); f.Add(4,&enemys); f.Add(5,&antiAviation); f.Add(6,&infantryInTrenches); f.Add(7,&infantryFree); f.Add(8,&tanksFree); f.Add(9,&stationaryTanks); f.Add(10,&transportsFree); f.Add(11,&timeNextUpdate); f.Add(12,&mobileReinforcementGroupIDs); f.Add(13,&enemyByRType); f.Add(14,&nAirReinfTurnCounter); f.Add(15,&pAirForce); f.Add(16,&pGeneralArtillery); f.Add(17,&pIntendant); f.Add(18,&requestedTasks); f.Add(19,&resContainer); f.Add(20,&lastBombardmentCheck); f.Add(21,&cBombardmentType); f.Add(22,&bSendReserves); f.Add(23,&nMaxAllowedMobileTanks); return 0; }
 		void OnSerialize( IBinSaver &saver );
 	// сегмент принятия решения - начинать арт. обстрел / бомбардировку или нет
@@ -86,22 +86,22 @@ class CGeneral : public CCommander, public IEnemyContainer
 	void BalanceUpdate( EBalanceAction eAction, CCommonUnit *_pUnit );
 
 	void EraseLastSeen();
-	
+
 	void ArtilleryBombardment();
 	void AviationBombardment();
 	void Bombardment();
 public:
 	CGeneral()
-		: nParty( -1 ), 
-			lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), 
+		: nParty( -1 ),
+			lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ),
 			nAirReinfTurnCounter( 0 ), nMaxAllowedMobileTanks( 0 )
-	{ 
+	{
 		curProcessed = enemys.end();
 	}
-	CGeneral( const int _nParty ) : nParty( _nParty ), 
-		lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ), 
-		nAirReinfTurnCounter( 0 ) 
-	{ 
+	CGeneral( const int _nParty ) : nParty( _nParty ),
+		lastBombardmentCheck( 0 ), timeNextUpdate( 1000 ),
+		nAirReinfTurnCounter( 0 )
+	{
 		curProcessed = enemys.end();
 	}
 
@@ -138,7 +138,7 @@ public:
 	virtual void CancelRequest( int nRequestID, enum EForceType eType  );
 	virtual int /*request ID*/RequestForSupport( const CVec2 &vSupportCenter, enum EForceType eType );
 
-	
+
 	// для очагов сопротивления
 	void UpdateEnemyUnitInfo( class CAIUnitInfoForGeneral *pInfo,
 		const NTimer::STime lastVisibleTimeDelta, const CVec2 &vLastVisiblePos,
@@ -147,7 +147,7 @@ public:
 	void UnitDied( class CCommonUnit * pUnit );
 	void UnitChangedParty( CAIUnit *pUnit, const int nNewParty );
 
-	// to allow Intendant tracking registered units 
+	// to allow Intendant tracking registered units
 	void UnitChangedPosition( class CCommonUnit * pUnit, const CVec2 &vNewPos );
 	void UnitAskedForResupply( class CCommonUnit * pUnit, const EResupplyType eType, const bool bSet );
 

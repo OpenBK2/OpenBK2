@@ -52,7 +52,7 @@ void CTerraGen::RemoveInvisibleTriangles( NMeshData::SMeshData *pPatch )
 	for ( int iTriangle = 0; iTriangle < pPatch->triangles.size();  )
 	{
 		const STriangle &triangle = pPatch->triangles[iTriangle];
-		if ( pPatch->vertices[triangle.i1].normal.w == 0 && 
+		if ( pPatch->vertices[triangle.i1].normal.w == 0 &&
 			pPatch->vertices[triangle.i2].normal.w == 0 &&
 			pPatch->vertices[triangle.i3].normal.w == 0 )
 		{
@@ -779,7 +779,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 							if ( (nAlpha1 == 255) && (nAlpha2 == 255) && (nAlpha3 == 255) && (nAlpha4 == 255) )
 								break;
 
-							continue;						
+							continue;
 						}
 
 						bool bFound = false;
@@ -799,7 +799,7 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 							if ( (nAlpha1 == 255) && (nAlpha2 == 255) && (nAlpha3 == 255) && (nAlpha4 == 255) )
 								break;
 
-							continue;						
+							continue;
 						}
 
 						curData.triangles.push_back( STriangle(nLayerInd1, nLayerInd2, nLayerInd3) );

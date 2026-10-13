@@ -43,11 +43,11 @@ bool CInterfaceMissionBackground::Init()
 		return false;
 
 	NGlobal::SetVar( "MissionIconsMovieMode", 1.0f );
-	
+
 	const NDb::SGameRoot *pGameRoot = InterfaceState()->GetGameRoot();
 	const NDb::SMapInfo *pMapInfo = pGameRoot ? pGameRoot->mainMenuBackground.pMap : 0;
 	const NDb::STexture *pPicture = pGameRoot ? pGameRoot->mainMenuBackground.pPicture : 0;
-	
+
 	pScenarioTracker = CreateScenarioTracker();
 
 	if ( pPicture && !pMapInfo )
@@ -57,7 +57,7 @@ bool CInterfaceMissionBackground::Init()
 		if ( pMain )
 			SetMainWindowTexture( pMain, pPicture );
 	}
-	
+
 	Singleton<ISFX>()->Pause( false );
 
 	return true;
@@ -73,13 +73,13 @@ void CInterfaceMissionBackground::StartMissionMap( const NDb::SMapInfo *pMapInfo
 
 	// Set camera
 	const int nPlayer = 0;
-	if ( nPlayer < pMapInfo->players.size() ) 
+	if ( nPlayer < pMapInfo->players.size() )
 	{
 		Camera()->SetAnchor( pMapInfo->players[nPlayer].camera.vAnchor );
 		if ( !pMapInfo->players[nPlayer].camera.bUseAnchorOnly )
 		{
-			Camera()->SetPlacement( pMapInfo->players[nPlayer].camera.fDist, 
-				pMapInfo->players[nPlayer].camera.fPitch, 
+			Camera()->SetPlacement( pMapInfo->players[nPlayer].camera.fDist,
+				pMapInfo->players[nPlayer].camera.fPitch,
 				pMapInfo->players[nPlayer].camera.fYaw );
 		}
 	}

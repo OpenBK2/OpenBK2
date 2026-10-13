@@ -194,7 +194,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								}
 							}
 							if ( ( diff.GetSizeX() > 0 ) && ( diff.GetSizeY() > 0 ) )
-							{ 
+							{
 								pMapInfoController->AddChangeTileOperation( diff, vDiffPos );
 							}
 						}
@@ -227,7 +227,7 @@ void CFieldState::UpdatePolygon( int nPolygonID, EUpdateType eEpdateType )
 								}
 							}
 							if ( ( diff.GetSizeX() > 0 ) && ( diff.GetSizeY() > 0 ) )
-							{ 
+							{
 								pMapInfoController->AddChangeHeightOperation( diff, diffPos );
 							}
 						}
@@ -399,7 +399,7 @@ int CFieldState::GetPolygonLine( int nYPos, float fSide, const CFieldPolygon &rP
 		}
 		return pXPosList->size();
 	}
-	
+
 	const float fY = ( nYPos * fSide ) + ( fSide / 2.0f );
 
 	while ( currentPointIterator0 != rPolygon.end() )
@@ -559,7 +559,7 @@ bool CFieldState::FillTileSet( CArray2D<uint8_t> *pTile2DArray,
 																		 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 						fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 					}
-					
+
 					if ( fDistance >= 0 )
 					{
 						fDistance /= fTileSize;
@@ -606,7 +606,7 @@ struct SAddFunctional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		pHeightPattern->heights[nYIndex][nXIndex] += fValue;
 		return true;
 	}
@@ -624,7 +624,7 @@ struct SSubstractFunctional
 	}
 	//
 	bool operator()( int nXIndex, int nYIndex, float fValue )
-	{ 
+	{
 		pHeightPattern->heights[nYIndex][nXIndex] -= fValue;
 		return true;
 	}
@@ -653,7 +653,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	{
 		fPositiveRatio = 1.0f;
 	}
-	else if ( fPositiveRatio < 0.0f ) 
+	else if ( fPositiveRatio < 0.0f )
 	{
 		fPositiveRatio = 0.0f;
 	}
@@ -681,7 +681,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 	}
 	if ( !Singleton<IUserDataContainer>()->Get()->NormalizePath( &( szProfileFileName ), true, true, true, SUserData::NPT_EXPORT_DESTINATION, 0 ) )
 	{
-		return true;	
+		return true;
 	}
 	//
 	CTRect<int> boundingRect( 0, 0, terrainSize.x, terrainSize.y );
@@ -762,7 +762,7 @@ bool CFieldState::FillProfilePattern(	SHeightPattern *pHeightPattern,
 																		 ( nYIndex * fTileSize ) + ( fTileSize / 2.0f ) );
 						fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 					}
-					
+
 					if ( fDistance >= 0 )
 					{
 						// обновляем высоты
@@ -815,7 +815,7 @@ struct ModifyTilesFunctional
 	}
 
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		(*pLockArray)[nYIndex][nXIndex] = bValue;
 		return true;
 	}
@@ -836,7 +836,7 @@ struct CheckTilesFunctional
 	}
 
 	bool operator()( int nXIndex, int nYIndex )
-	{ 
+	{
 		if ( (*pLockArray)[nYIndex][nXIndex] == bValue )
 		{
 			isPresent = true;
@@ -871,7 +871,7 @@ bool ApplyTilesInObjectsPassability( const CTRect<int> &rRect,										//гра
 			const CArray2D<uint8_t> &rPassability = pStaticObjectRPGStats->GetPassability( pMapObjectInfo[nObjectIndex].nFrameIndex );
 			CTPoint<int> start( ( pMapObjectInfo[nObjectIndex].vPos.x - rOrigin.x + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE,
 													( pMapObjectInfo[nObjectIndex].vPos.y - rOrigin.y + ( SAIConsts::TILE_SIZE / 2.0 ) ) / SAIConsts::TILE_SIZE );
-			
+
 			CTRect<int> indices( start.x, start.y, start.x + rPassability.GetSizeX(), start.y + rPassability.GetSizeY() );
 			int result = ValidateRect( rRect, &indices );
 			//нет ни одного тайла
@@ -1002,7 +1002,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 					{
 						fDistance = PolygonDistance( rPolygon, vTileCenter, true );
 					}
-					
+
 					if ( fDistance >= 0 )
 					{
 						fDistance /= fTileSize;
@@ -1012,7 +1012,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 						{
 							fWidth += rField.objectShells[nShellIndex].fWidth;
 							if ( fWidth > fDistance )
-							{																				
+							{
 								if ( ( rField.objectShells[nShellIndex].nBetweenDistance > 0 ) && ( !rField.objectShells[nShellIndex].objects.empty() ) )
 								{
 									const float fAdditionalRatio = 1.0f / fabs2( rField.objectShells[nShellIndex].nBetweenDistance );
@@ -1075,7 +1075,7 @@ bool CFieldState::FillObjectSet( CMapInfoEditor *pMapInfoEditor,
 
 
 CFieldState::SEditParameters* CFieldState::GetEditParameters()
-{ 
+{
 	return ( ( pMapInfoEditor != 0 ) ? &( pMapInfoEditor->editorSettings.epFieldState ) : 0 );
 }
 
@@ -1099,6 +1099,6 @@ int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 

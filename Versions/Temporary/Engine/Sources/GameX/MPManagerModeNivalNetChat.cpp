@@ -29,7 +29,7 @@ bool CMPManagerModeNivalNet::OnChatMessage( SMPUIChatMessage *pMsg )
 			pClient->SendPacket( new CChatPacket( 0, wszFilteredText, pMsg->szName, 0, false ) );
 			PushMessage( new SMPUIChatMessage( szMPName, wszFilteredText ) );
 		}
-		else 
+		else
 			pClient->SendPacket( new CChatPacket( 0, wszFilteredText, "", 0, true ) );
 	}
 	else if ( eState == EGS_GAME_ROOM )
@@ -123,7 +123,7 @@ bool CMPManagerModeNivalNet::OnChatChannelClientsPacket( class CChatChannelClien
 bool CMPManagerModeNivalNet::OnChatChannelClientNotifyPacket( class CChatClientListChangeNotifyPacket *pPacket )
 {
 	//DebugTrace( "+++ ChatClientsListChange" );
-	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage( pPacket->szNick, 
+	SMPUIChatChannelNicksChangeMessage *pMsg = new SMPUIChatChannelNicksChangeMessage( pPacket->szNick,
 		( pPacket->bJoined ? EMPS_ONLINE : EMPS_OFFLINE ), false );
 	PushMessage( pMsg );
 	return true;

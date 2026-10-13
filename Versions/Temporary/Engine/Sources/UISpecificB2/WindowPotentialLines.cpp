@@ -41,7 +41,7 @@ void CWindowChapterMapLayer::Recalc()
 
 	NGfx::CTextureLock<NGfx::SPixel8888> lock( pValue, 0, NGfx::INPLACE );
 	const int nSize = sizeof( NGfx::SPixel8888 ) * nWidth;
-	for ( int y = 0; y < nHeight; ++y ) 
+	for ( int y = 0; y < nHeight; ++y )
 		memcpy( lock[y], &points[y][0], nSize );
 	bNeedUpdate = false;
 }
@@ -125,7 +125,7 @@ void CDrawMapPixelFunctional::DrawOctoCircle( int nX0, int nY0, float fR )
 				uint8_t nOldAlpha = pMapLayer->GetPixelAlpha( nX, nY );
 				if ( fDist > fR * LINE_BLUR_PART )
 				{
-					nNewAlpha = nNewAlpha * ( fR - fDist ) / ( fR * ( 1.0f - LINE_BLUR_PART ) );  
+					nNewAlpha = nNewAlpha * ( fR - fDist ) / ( fR * ( 1.0f - LINE_BLUR_PART ) );
 				}
 				pMapLayer->PutPixel( nX, nY, color );
 				pMapLayer->SetPixelAlpha( nX, nY, (std::max)( nOldAlpha, nNewAlpha ) );
@@ -176,7 +176,7 @@ void CWindowPotentialLines::Visit( IUIVisitor *pVisitor )
 
 	const CTRect<float> rectTexture = CTRect<float>( 0.0f, 0.0f, vTextureSize.x, vTextureSize.y );
 	CRectLayout rects;
-	rects.AddRect( vPos.x, vPos.y, 
+	rects.AddRect( vPos.x, vPos.y,
 		pInstance->placement.size.Get().x, pInstance->placement.size.Get().y, rectTexture, FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
 	VirtualToScreen( &rects );
 
@@ -208,7 +208,7 @@ void CWindowPotentialLines::Recalculate()
 		CTRect<float> rect = GetWindowRect();
 		int nSizeX = rect.GetSizeX();
 		int nSizeY = rect.GetSizeY();
-		
+
 		vTextureSize.x = nSizeX;
 		vTextureSize.y = nSizeY;
 
@@ -338,7 +338,7 @@ void CWindowPotentialLines::Recalculate()
 				case 5:
 				case 10:
 					{
-						pt.eType = EIT_CROSS;				
+						pt.eType = EIT_CROSS;
 						const float fPart1 = s_nPotentialGridSize * fabs( fValues[3] / ( fValues[3] - fValues[0] ) );		// S wall
 						const float fPart2 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[3] ) );		// W wall
 						const float fPart3 = s_nPotentialGridSize * fabs( fValues[2] / ( fValues[2] - fValues[1] ) );		// N wall
@@ -476,7 +476,7 @@ void CWindowPotentialLines::DrawArrows( struct IUIVisitor *pVisitor )
 
 	std::vector<float> segmentLengths;
 	CTRect<float> rect = GetWindowRect();
-	CVec2 vPos( rect.x1, rect.y1 ); 
+	CVec2 vPos( rect.x1, rect.y1 );
 	CVec2 vSizeMultiplier( rect.Width() / vTextureSize.x, rect.Height() / vTextureSize.y );
 
 	for ( CArrowList::iterator itArrow = arrows.begin(); itArrow != arrows.end(); ++itArrow )
@@ -609,7 +609,7 @@ void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 			float fSy = 3 * fYp * fYp - 2 * fYp * fYp * fYp;
 			float fA = fS + fSx * ( fT - fS );
 			float fB = fU + fSx * ( fV - fU );
-			
+
 			fNoiseValue = fA + fSy * ( fB - fA );			// Is between -1 and 1
 
 			noise[nY][nX] += fNoiseValue * s_fWeightPerlinNoise + ( fXGrad + fYGrad ) * s_fWeightMainStrike;
@@ -617,12 +617,12 @@ void CWindowPotentialLines::DrawNoise( const CVec2 &vMainStrike )
 	}
 }
 
-void CWindowPotentialLines::OnSerialize( IBinSaver &f ) 
+void CWindowPotentialLines::OnSerialize( IBinSaver &f )
 {
-	if ( f.IsReading() ) 
-	{ 
-		bValid = false; 
-		bLayerInit = false; 
+	if ( f.IsReading() )
+	{
+		bValid = false;
+		bLayerInit = false;
 
 		// regenerate layers and noise
 		SetupNoise();

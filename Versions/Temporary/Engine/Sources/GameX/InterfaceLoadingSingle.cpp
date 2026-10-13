@@ -22,7 +22,7 @@ const float MIN_PROGRESS_DELTA = 0.001f;
 static int s_nTransitionEffectToMissionDuration = 400;
 static float s_fTransitionEffectToMissionLength = 0.0f; //0.1f;
 
-static float s_fBlinkTime = 1.0f; 
+static float s_fBlinkTime = 1.0f;
 
 CObj<IWindow> g_pLoadingSingleScreen;
 
@@ -72,9 +72,9 @@ protected:
 	~CLoadingScene();
 public:
 	CLoadingScene();
-	
+
 	void SetScreen( IWindow *pScreen );
-	
+
 	void Draw( NGfx::CTexture *pTexture = 0 );
 
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Can't be saved/loaded" ); return 0; }
@@ -93,13 +93,13 @@ class CInterfaceLoadingBase::CReactions : public IProgrammedReactionsAndChecks
 public:
 	CReactions();
 	CReactions( IWindow *pScreen );
-	~CReactions(); 
+	~CReactions();
 
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;
 	//}
-	
+
 	bool IsEffectFinished() const { return bIsEffectFinished; }
 };
 
@@ -109,7 +109,7 @@ CInterfaceLoadingBase::CLoadingScene::CLoadingScene()
 {
 	pUIVisitor = new CUIVisitor();
 	p2DView = NGScene::CreateNew2DView();
-	
+
 	const CVec2 vSize = NGfx::GetScreenRect();
 	Cursor()->SetBounds( 0, 0, vSize.x, vSize.y );
 
@@ -148,13 +148,13 @@ CInterfaceLoadingBase::CReactions::CReactions() :
 {
 }
 
-CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen ) : 
+CInterfaceLoadingBase::CReactions::CReactions( IWindow *_pScreen ) :
 	pScreen( _pScreen ),
 	bIsEffectFinished( false )
 {
 }
 
-CInterfaceLoadingBase::CReactions::~CReactions() 
+CInterfaceLoadingBase::CReactions::~CReactions()
 {
 }
 
@@ -207,7 +207,7 @@ void CInterfaceLoadingBase::InitInternal( const std::string &szScreenName )
 
 	pScreen->SetGView( Scene()->GetG2DView() );
 	pScreen->Load( NDb::Get<NDb::SWindowScreen>(dbidScreen), pReactions );
-	
+
 	pLoadingScene = new CLoadingScene();
 	pLoadingScene->SetScreen( pScreen );
 
@@ -223,7 +223,7 @@ void CInterfaceLoadingBase::MakeInterior()
 
 	if ( pVideo && !pVideo->IsVisible() )
 		pVideo = 0;
-	
+
 	if ( pProgress )
 		pProgress->SetPosition( 0.0f );
 	if ( pVideo )
@@ -238,18 +238,18 @@ void CInterfaceLoadingBase::UpdateInterior()
 {
 	if ( !bInitialized )
 		return;
-		
+
 	bool bUpdated = false;
-		
+
 	float fProgress = GetProgress();
-	
+
 	if ( pProgress && (fProgress - fCurrProgress >= MIN_PROGRESS_DELTA) )
 	{
 		bUpdated = true;
 		fCurrProgress = fProgress;
 		pProgress->SetPosition( fProgress );
 	}
-	
+
 	if ( pVideo )
 	{
 		int nNewFrame = ceilf( fProgress * (nTotalFrames - 1) + 0.5f ) + 1;
@@ -298,7 +298,7 @@ void CInterfaceLoadingBase::Step()
 void CInterfaceLoadingBase::SetCurrentStep( int nCurrentStep )
 {
 	CProgressHookHelper::SetCurrentStep( nCurrentStep );
-	
+
 	UpdateInterior();
 }
 
@@ -406,7 +406,7 @@ void CInterfaceLoadingSingle2D::MakeInterior( const NDb::STexture *pTexture, con
 
 	if ( pPressKeyView )
 		pPressKeyView->ShowWindow( false );
-		
+
 	CInterfaceLoadingBase::MakeInterior();
 }
 
@@ -431,7 +431,7 @@ void CInterfaceLoadingSingle2D::ShowOnEnterMoveEffect()
 		Draw();
 		std::this_thread::sleep_for( std::chrono::milliseconds( 10 ) );
 	}
-	
+
 	ShowFirstElement();
 	Draw();
 }
@@ -440,7 +440,7 @@ void CInterfaceLoadingSingle2D::RunFinishScreen()
 {
 	if ( pPressKeyView )
 		pPressKeyView->ShowWindow( true );
-	
+
 	g_pLoadingSingleScreen = GetScreen();
 
 	NMainLoop::Command( ML_COMMAND_LOADING_SINGLE_FINISHED, "" );
@@ -466,7 +466,7 @@ void CProgressHookHelper::SetNumSteps( const int nNumSteps )
 void CProgressHookHelper::LockRange( const int nLength )
 {
 	ranges.back().nLockedRange = nLength;
-	
+
 	ranges.push_back( SRange() );
 	SRange &range = ranges.back();
 	range.nStep = 0;
@@ -532,7 +532,7 @@ bool CInterfaceLoadingSingleFinished::Init()
 		NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 		return true;
 	}
-	
+
 	pScreen = dynamic_cast_ptr<IScreen*>( g_pLoadingSingleScreen );
 	g_pLoadingSingleScreen = 0;
 
@@ -541,13 +541,13 @@ bool CInterfaceLoadingSingleFinished::Init()
 	Singleton<IScene>()->AddScreen( pScreen );
 
 	pPressKeyView = GetChildChecked<ITextView>( GetScreen(), "PressKeyView", true );
-	
+
 	if ( IScreen *pScreen = GetScreen() )
 	{
 		wszPressKeyFormat1 = pScreen->GetTextEntry( "T_FORMAT_1" );
 		wszPressKeyFormat2 = pScreen->GetTextEntry( "T_FORMAT_2" );
 	}
-	
+
 	ShowPressKey( bFormat1 );
 
 	return true;
@@ -579,8 +579,8 @@ bool CInterfaceLoadingSingleFinished::StepLocal( bool bAppActive )
 			ShowPressKey( bFormat1 );
 		}
 	}
-		
-	
+
+
 	return bResult;
 }
 

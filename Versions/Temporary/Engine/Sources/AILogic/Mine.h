@@ -22,7 +22,7 @@ class CMineStaticObject : public CGivenPassabilityStObject
 	NTimer::STime nextSegmTime = {};
 
 	bool bIfWillBeDeleted = {}; // кто-то из солдат направляется к этой мине
-	ZONSERIALIZE 
+	ZONSERIALIZE
 	ZSKIP		//bool bIfRegisteredInCWorld; // мина видима
 
 	bool bAlive = {};
@@ -38,7 +38,7 @@ public:
 		if ( !f.IsChecksum() )
 			f.Add( 7, &bIfRegisteredInCWorld );
 	}
-public: 
+public:
 	CMineStaticObject();
 	CMineStaticObject( const SMineRPGStats *_pStats, const CVec3 &center,  const float fHP, const int nFrameIndex, int player );
 	virtual void Init();
@@ -68,11 +68,11 @@ public:
 	void RegisterInWorld();
 
 	void ClearVisibleStatus();
-	
+
 	virtual bool IsContainer() const { return false; }
 	virtual const int GetNDefenders() const { return 0; }
 	virtual class CSoldier* GetUnit( const int n ) const { return 0; }
-	
+
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 };

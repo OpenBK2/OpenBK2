@@ -54,12 +54,12 @@ inline NTypeDef::ETypeType GetSimpleTypeDef( CDBPtr<TYPE> * ) { return NTypeDef:
 //
 inline NTypeDef::ETypeType GetSimpleTypeDefEnumOrBinary( SInt2Type<0> * ) { return NTypeDef::TYPE_TYPE_BINARY; }
 inline NTypeDef::ETypeType GetSimpleTypeDefEnumOrBinary( SInt2Type<1> * ) { return NTypeDef::TYPE_TYPE_ENUM; }
-template <class TYPE> 
-inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * ) 
-{ 
+template <class TYPE>
+inline NTypeDef::ETypeType GetSimpleTypeDef( TYPE * )
+{
 	const int N_KNOWN_ENUM = SKnownEnum<TYPE>::isKnown;
 	SInt2Type<N_KNOWN_ENUM> separator;
-	return GetSimpleTypeDefEnumOrBinary( &separator ); 
+	return GetSimpleTypeDefEnumOrBinary( &separator );
 }
 
 // ************************************************************************************************************************ //
@@ -167,7 +167,7 @@ inline void ReportStructMetaInfo<float, CTRect>( const std::string &_szName, con
 
 //template <>
 //inline void ReportStructMetaInfo<int, CArray2D>( const string &_szName, const CArray2D<int> *pField, uint8_t *pThis )
-//{	
+//{
 //}
 //template <>
 //inline void ReportStructMetaInfo<uint8_t, CArray2D>( const string &_szName, const CArray2D<uint8_t> *pField, uint8_t *pThis )

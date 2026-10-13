@@ -79,7 +79,7 @@ void Bind( EMappingType eType, const std::string &sCmd, const std::string &szSec
 	TCommandsMap &sCommandsMap = GetCommands();
 
 	SCommand &sCommand = sCommandsMap[sCmd];
-	
+
 	if ( szControlsSet.empty() )
 		return;
 
@@ -401,13 +401,13 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 		fDelta += pBindCommand->fDelta;
 		return false;
 	}
-	
+
 	if ( find( eEvent.commands.begin(), eEvent.commands.end(), pBindCommand ) == eEvent.commands.end() )
 		return false;
 
 	if ( ( eEvent.mMessage.cType == CT_UNKNOWN || eEvent.mMessage.cType == CT_WINDOWS ) && ( eEvent.mMessage.nAction == -1 ) )
 		return true;
-	
+
 	return ProcessCommandMessage( eEvent.mMessage, *pBindCommand );
 }
 
@@ -419,11 +419,11 @@ bool CBind::ProcessEvent( const SGameMessage &eEvent )
 static void Update( uint32_t dwTime )
 {
 	TCommandsMap &sCommands = GetCommands();
-	
+
 	for ( TCommandsMap::iterator iTempCommand = sCommands.begin(); iTempCommand != sCommands.end(); ++iTempCommand )
 	{
 		SCommand &sCommand = iTempCommand->second;
-		
+
 		bool bActive = false;
 		int64_t nValue = 0;
 		for( std::list<SMapping>::iterator iTempMapping = sCommand.mappingsList.begin(); iTempMapping != sCommand.mappingsList.end(); ++iTempMapping )
@@ -468,7 +468,7 @@ static bool IsBindActive( const SMapping &sMapping )
 			for( int nTemp = 0; nTemp < sBlockingSet.size(); nTemp++ )
 			{
 				const SActionInfo &sTempInfo = sActions[sBlockingSet[nTemp]];
-				
+
 				if ( sTempInfo.bActive )
 					nBlockingCount++;
 				else if ( ( sTempInfo.eType == CT_AXIS ) || ( sTempInfo.eType == CT_LIMAXIS ) )
@@ -495,7 +495,7 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 	SGameMessage gameMessage;
 	TActionsMap &sActions = GetActions();
 	TCommandsMap &sCommands = GetCommands();
-	
+
 	gameMessage.commands.clear();
 	gameMessage.mMessage = mMsg;
 
@@ -528,7 +528,7 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 				iTempMapping->sAccumulator.sLimAxisAccumulator.Deactivate( mMsg.tTime );
 				continue;
 			}
-			
+
 			if ( iTempMapping->bActive && ( iTempMapping->mType == MTYPE_EVENT ) )
 				continue;
 
@@ -537,7 +537,7 @@ static void ProcessMessage( const NInput::SMessage &mMsg )
 			continue;
 		}
 	}
-	
+
 	events.push_back( gameMessage );
 }
 
@@ -555,12 +555,12 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 			continue;
 		if ( find( iTempMapping->fullActionsSet.begin(), iTempMapping->fullActionsSet.end(), mMsg.nAction ) == iTempMapping->fullActionsSet.end() )
 			continue;
-		
+
 		SActionInfo &sActionInfo = sActions[mMsg.nAction];
 		sActionInfo.bActive = mMsg.bState;
 
 		bool bSetActive = IsBindActive( *iTempMapping );
-		
+
 		if ( ( mMsg.cType == CT_AXIS ) || ( mMsg.cType == CT_LIMAXIS ) )
 			sActionInfo.bActive = false;
 
@@ -577,7 +577,7 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 		{
 			if ( mMsg.nParam != -1 )
 				iTempMapping->sAccumulator.sPOVAccumulator.Activate( iTempMapping->nPower * sActionInfo.fCoeff * mMsg.nParam / sActionInfo.fGranularity, mMsg.tTime );
-			else 
+			else
 				iTempMapping->sAccumulator.sPOVAccumulator.Deactivate( mMsg.tTime );
 		}
 		else if ( ( iTempMapping->mType == MTYPE_EVENT ) && ( mMsg.cType == CT_KEY ) )
@@ -589,10 +589,10 @@ static bool ProcessCommandMessage( const NInput::SMessage &mMsg, SCommand &sComm
 			iTempMapping->sAccumulator.sKeyAccumulator.Activate( 0, mMsg.tTime );
 			return true;
 		}
-		
+
 		return true;
 	}
-	
+
 	return false;
 }
 
@@ -602,7 +602,7 @@ static bool IsMappingBSubsetA( const SMapping &mSetA, const SMapping &mSetB )
 	for ( std::vector<int>::const_iterator iTempB = mSetB.actionsSet.begin(); iTempB != mSetB.actionsSet.end(); ++iTempB )
 	{
 		bool bInSet = false;
-		
+
 		for ( std::vector<int>::const_iterator iTempA = mSetA.actionsSet.begin(); iTempA != mSetA.actionsSet.end(); ++iTempA )
 		{
 			if ( *iTempB == *iTempA )
@@ -648,13 +648,13 @@ static void CrossMappings( const SMapping &sBaseSet, SMapping *pSubSet )
 	{
 		int nAction = sBaseSet.actionsSet[nBaseTemp];
 		bool bCrossover = false;
-		
+
 		for ( int nSubTemp = 0; nSubTemp < pSubSet->actionsSet.size(); nSubTemp++ )
 		{
 			if ( pSubSet->actionsSet[nSubTemp] == nAction )
 				bCrossover = true;
 		}
-		
+
 		const SActionInfo &sTempInfo = sActions[nAction];
 		if ( !bCrossover && ( sTempInfo.eType == CT_KEY ) )
 		{

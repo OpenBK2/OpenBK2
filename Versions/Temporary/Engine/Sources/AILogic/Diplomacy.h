@@ -8,7 +8,7 @@
 class CDiplomacy
 {
 	public: int operator&( IBinSaver &saver ); private:;
-	
+
 	// 0, 1 - игровые стороны, 2 - нейтралы
 	std::vector<int> playerParty;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -19,7 +19,7 @@ class CDiplomacy
 	bool bNetGame = {};
 public:
 	CDiplomacy() : nMyNumber( 0 ), bNetGame( false ) { }
-	
+
 	void Load( const std::vector<int> &playerParty );
 	void SetNPlayers( const int nPlayers ) { playerParty.resize( nPlayers + 1, 0 ); playerParty[nPlayers] = 2; }
 
@@ -28,7 +28,7 @@ public:
 	const int GetNPlayers() const { return playerParty.size(); }
 
 	const EDiplomacyInfo GetDiplStatus( const uint8_t a, const uint8_t b ) const
-	{ 
+	{
 		if ( playerParty[a] == 2 || playerParty[b] == 2 )
 			return EDI_NEUTRAL;
 		else if ( playerParty[a] != playerParty[b] )
@@ -57,10 +57,10 @@ public:
 	int GetNeutralParty() const { return 2; }
 
 	void SetParty( const uint8_t nPlayer, const uint8_t newParty ) { playerParty[nPlayer] = newParty; }
-	
+
 	void SetMyNumber( const int nNumber ) { nMyNumber = nNumber; }
 	void SetNetGame( bool _bNetGame );
-	
+
 	bool IsNetGame() const { return bNetGame; }
 
 	//

@@ -35,7 +35,7 @@ static uint32_t ConvertColor( const CVec3 &vColor )
 
 void CColorBackground::Visit( struct IUIVisitor * pVisitor )
 {
-	if ( pos.IsEmpty() ) 
+	if ( pos.IsEmpty() )
 		return;
 
 	CTPoint<int> size;
@@ -56,11 +56,11 @@ void CColorBackground::Visit( struct IUIVisitor * pVisitor )
 };
 
 void CColorViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
-{	
+{
 	CDynamicCast<IListControlItem> pList = pWindow;
 	NI_VERIFY( pList, "Wrong window", return );
 
-	CDynamicCast<CColorData> pInfo = pData;	
+	CDynamicCast<CColorData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	CWindow *pWnd = GetChildChecked<CWindow>( pList, "ComboColorWnd", true );
@@ -68,15 +68,15 @@ void CColorViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData 
 	pBackground->nColor = pInfo->nColor;
 
 	if ( pWnd )
-		pWnd->SetBackground( pBackground );	
+		pWnd->SetBackground( pBackground );
 }
 
 void CTextureViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
-{	
+{
 	CDynamicCast<IListControlItem> pList = pWindow;
 	NI_VERIFY( pList, "Wrong window", return );
 
-	CDynamicCast<CTextureData> pInfo = pData;	
+	CDynamicCast<CTextureData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 
 	CWindow *pWnd = GetChildChecked<CWindow>( pList, "ComboTextureWnd", true );
@@ -101,9 +101,9 @@ void CTextDataViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pDa
 
 	std::wstring wszText = L"";
 	if ( pInfo )
-		wszText = pInfo->wszText;		
+		wszText = pInfo->wszText;
 
-	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemComboText", true );		
+	ITextView *pTxt = GetChildChecked<ITextView>( pItem, "ItemComboText", true );
 	pTxt->SetText( pTxt->GetDBText() + wszText );
 
 }
@@ -118,15 +118,15 @@ void NMPSetData::SetText( ITextView *pText, const std::wstring &szText )
 }
 
 void NMPSetData::SetNum( ITextView *pWindow, int nText )
-{	
+{
 	std::wstring newstring = NStr::ToUnicode( std::to_string(  nText ) );
-	SetText( pWindow, newstring );	
+	SetText( pWindow, newstring );
 }
 
 void NMPSetData::SetChildText( IListControlItem *pItem, const std::string &szName, const std::wstring &szText )
 {
-	ITextView *pTxt = GetChildChecked<ITextView>( pItem, szName, true );		
-	SetText( pTxt, szText );			
+	ITextView *pTxt = GetChildChecked<ITextView>( pItem, szName, true );
+	SetText( pTxt, szText );
 }
 
 

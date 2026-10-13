@@ -32,7 +32,7 @@ void ReplaceTokens( std::string *pszString )
 	const std::string szTokenName = pszString->substr( nPos + 1, nLastPos - nPos - 1 );
 	CTokensMap::const_iterator posToken = s_TokensMap.find( szTokenName );
 	if ( posToken != s_TokensMap.end() )
-		pszString->replace( pszString->begin() + nPos, pszString->begin() + nLastPos + 1, posToken->second );		
+		pszString->replace( pszString->begin() + nPos, pszString->begin() + nLastPos + 1, posToken->second );
 	ReplaceTokens( pszString );
 }
 
@@ -131,6 +131,6 @@ void CUserDataContainer::Save()
 }
 
 
-// basement storage  
+// basement storage
 
 

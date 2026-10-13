@@ -6,8 +6,8 @@
 #include <cstdint>
 
 //
-//			
-//					SQUAD STATE					
+//
+//					SQUAD STATE
 //
 //
 
@@ -16,7 +16,7 @@ class CSquadState : public CMultiInputState, public ICommandHandler
 {
 	friend class CSquadEditor;
 
-	// Данные общего назначения 
+	// Данные общего назначения
 	CSquadEditor *pSquadEditor;
 	bool bNeedLoadEnterConfig;
 
@@ -26,7 +26,7 @@ class CSquadState : public CMultiInputState, public ICommandHandler
 
 	//конструкторы и операторы присваивания
 	CSquadState( CSquadEditor *_pSquadEditor );
-			
+
 public:
 	enum EInputStates
 	{

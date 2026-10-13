@@ -22,12 +22,12 @@ static SUserActionsChecker<int(NDb::USER_ACTION_UNKNOWN)> check_USER_ACTION_UNKN
 void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 {
 	user.Clear();
-	for ( int i = 0; i != 128; ++i ) 
+	for ( int i = 0; i != 128; ++i )
 	{
 		if ( ai.GetData(i) != 0 )
 		{
 			const NDb::EUserAction nUserAction = GetActionByCommand( (EActionCommand)i );
-			if ( nUserAction != NDb::USER_ACTION_UNKNOWN ) 
+			if ( nUserAction != NDb::USER_ACTION_UNKNOWN )
 			{
 				user.SetAction( nUserAction );
 			}
@@ -39,7 +39,7 @@ void NDb::SUnitActions::ReMapCommands( CUserCommands &ai, CUserActions &user )
 
 const NDb::SComplexSoundDesc * ChooseAcknowledgement( const NDb::SAckSetRPGStats *pStats, const NDb::EUnitAckType type )
 {
-	if ( pStats == 0 || type < 0 || type >= pStats->types.size() ) 
+	if ( pStats == 0 || type < 0 || type >= pStats->types.size() )
 		return 0;
 	return pStats->types[type].pAck;
 }
@@ -93,22 +93,22 @@ void NDb::SUnitActions::ToAIUnits( bool bInEditor )
 
 const bool NDb::SUnitBaseRPGStats::HasCommand( const int nCmd ) const
 {
-	if ( -1 == nCmd ) 
+	if ( -1 == nCmd )
 		return false;
 	NI_ASSERT( (nCmd >= 0 && nCmd < pActions->availCommands.GetSize()) || (nCmd >= 1000), fmt::format( "Wrong command ( {} )\n", nCmd ) );
 	return nCmd >= 1000 ? true : ( nCmd < GetActions()->availCommands.GetSize() ? GetActions()->availCommands.GetData(nCmd) : false );
 }
 void NDb::SUnitBaseRPGStats::GetUserActions( CUserActions *pActions ) const
-{ 
-	this->pActions->availUserActions.GetActions( pActions ); 
+{
+	this->pActions->availUserActions.GetActions( pActions );
 }
-const bool NDb::SUnitBaseRPGStats::HasUserAction( const int nAction ) const 
-{ 
-	return pActions->availUserActions.HasAction( nAction ); 
+const bool NDb::SUnitBaseRPGStats::HasUserAction( const int nAction ) const
+{
+	return pActions->availUserActions.HasAction( nAction );
 }
 const CUserActions* NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) const
-{ 
-	return bActionsBy ? &(pActions->availUserActions) : &(pActions->availUserExposures); 
+{
+	return bActionsBy ? &(pActions->availUserActions) : &(pActions->availUserExposures);
 }
 
 

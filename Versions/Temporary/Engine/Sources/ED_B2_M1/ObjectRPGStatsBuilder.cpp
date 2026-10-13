@@ -16,7 +16,7 @@ bool CObjectRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipulat
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CObjectRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	std::string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
@@ -79,6 +79,6 @@ bool CObjectRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeNam
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

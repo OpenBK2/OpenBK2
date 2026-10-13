@@ -40,7 +40,7 @@ struct IMiniMap : virtual public IWindow
 		CVec2 vTexturePoint;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&pTexture); f.Add(4,&vTexturePoint); return 0; }
 	};
-	
+
 	struct SFigure
 	{
 		ZDATA
@@ -102,7 +102,7 @@ struct IWindow3DControl : virtual public IWindow
 		CVec2 vSize;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&vPos); f.Add(3,&vSize); return 0; }
 	};
-	
+
 	struct SObject
 	{
 		ZDATA
@@ -112,7 +112,7 @@ struct IWindow3DControl : virtual public IWindow
 		CVec2 vSize;
 		CDBPtr<NDb::SAnimB2> pAnim;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nID); f.Add(3,&pModel); f.Add(4,&vPos); f.Add(5,&vSize); f.Add(6,&pAnim); return 0; }
-		
+
 		bool operator==( const SObject &object ) const
 		{
 			return nID == object.nID && pModel == object.pModel &&

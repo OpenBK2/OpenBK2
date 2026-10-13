@@ -18,7 +18,7 @@ private:
 	CTypeNewHash typeInfo;
 
 	static VFT GetObjectType( T *pObject )
-	{ 
+	{
 		NI_ASSERT( pObject != 0, "null object passed" );
 		if ( pObject == 0 )
 			return 0;
@@ -57,21 +57,21 @@ public:
 	}
 	template < class TT >
 		void RegisterType( int nTypeID, newFunc func, TT* ) { RegisterTypeBase( nTypeID, func, &typeid(TT) ); }
-	void RegisterTypeSafe( int nTypeID, newFunc func ) 
+	void RegisterTypeSafe( int nTypeID, newFunc func )
 	{
 		CPtr<T> pObj = func();
 		VFT vft = GetObjectType( pObj );
-		RegisterTypeBase( nTypeID, func, vft ); 
+		RegisterTypeBase( nTypeID, func, vft );
 	}
-	T* CreateObject( int nTypeID ) 
-	{ 
+	T* CreateObject( int nTypeID )
+	{
 		typename CTypeNewHash::iterator i = typeInfo.find( nTypeID );
 		if ( i == typeInfo.end() )
 			return 0;
 		newFunc f = i->second;
 		if ( f )
-			return f(); 
-		return 0; 
+			return f();
+		return 0;
 	}
 	bool IsRegistered( int nTypeID ) const { return typeInfo.find( nTypeID ) != typeInfo.end(); }
 	int GetObjectTypeID( T *pObject ) { return VFT2TypeID( GetObjectType( pObject ) ); }

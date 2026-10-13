@@ -66,7 +66,7 @@ void CTargetMesh::Recalc()
 	CVec2 vScreenSize = NGfx::GetScreenRect();
 	float fAspect = vScreenSize.x/vScreenSize.y;
 
-	NGScene::CObjectInfo::SData objData;	
+	NGScene::CObjectInfo::SData objData;
 	objData.verts.resize( 4 );
 	for ( int iVertex = 0; iVertex < 4; ++iVertex )
 	{
@@ -81,7 +81,7 @@ void CTargetMesh::Recalc()
 
 		FillVertexData( objData.verts[iVertex] );
 	}
-	
+
 	objData.geometry.reserve( 2 );
 	objData.geometry.push_back( STriangle( 0, 1, 2) );
 	objData.geometry.push_back( STriangle( 2, 3, 0) );
@@ -104,7 +104,7 @@ void CreateTargetMesh( float fSizeX, float fSizeY )
 	meshInfo.parts[0].pGeometry = pGeom;
 	meshInfo.parts[0].pMaterial = pGameView->CreateMaterial( CVec4( 0.75, 0.75, 0.75, 0.5f ), false );
 
-	pTargetMesh = pGameView->CreateMesh( meshInfo, new CTargetMeshTransform(), new CTargetMeshBound(), 0 );	
+	pTargetMesh = pGameView->CreateMesh( meshInfo, new CTargetMeshTransform(), new CTargetMeshBound(), 0 );
 
 	return;
 }

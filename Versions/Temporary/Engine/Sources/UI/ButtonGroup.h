@@ -22,7 +22,7 @@ public:
 	void Init();
 	void SetActive( IWindow *pButton );
 	void Remove_All();
-	IWindow* GetPressed() const; 
+	IWindow* GetPressed() const;
 	IWindow* GetButton( int i );
 };
 

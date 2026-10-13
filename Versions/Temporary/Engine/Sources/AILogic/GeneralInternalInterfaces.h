@@ -64,13 +64,13 @@ struct IWorkerEnumerator
 {
 	// return FALSE if enumerator already has enough workers
 	virtual bool EnumWorker( class CCommonUnit *pUnit, const enum EForceType eType ) = 0;
-	
+
 	// return the avalability of worker for the specific work ( should be fast )
 	virtual bool EvaluateWorker( CCommonUnit * pUnit, const enum EForceType eType ) const = 0;
 
 	// if enumerator needs only best units of this kind
 	virtual int NeedNBest( const enum EForceType eType ) const { return 0; }
-	
+
 	// return presize avalability of worker for enumerator
 	virtual float EvaluateWorkerRating( CCommonUnit * pUnit, const enum EForceType eType ) const { return 1.0f; }
 };
@@ -103,7 +103,7 @@ struct IGeneralTask : public CAIObjectBase
 	// чтобы таск мог запросить работников, но так, чтобы суммарная сила работников
 	// не превышала заданной
 	virtual void AskForWorker( ICommander *pManager, const float fMaxSeverity, const bool bInit = false ) = 0;
-	// чтобы таск мог вернуть работников, но так, чтобы суммарая не стала 
+	// чтобы таск мог вернуть работников, но так, чтобы суммарая не стала
 	// меньше заданной
 	virtual void ReleaseWorker( ICommander *pManager, const float fMinSeverity ) = 0;
 	// по этому параметру таски сортируются
@@ -115,7 +115,7 @@ struct IGeneralTask : public CAIObjectBase
 
 	// принудительно завершить задачу, вернуть всех работников
 	virtual void CancelTask( ICommander *pManager ) = 0;
-	
+
 	virtual void Segment() = 0;
 	virtual int GetWorkerCount() { return 0; }
 };

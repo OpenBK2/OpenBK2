@@ -13,12 +13,12 @@ struct SGeneralHelper
 	static bool IsUnitNearParcel( const class CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel );
 	static bool IsUnitInParcel( const class CCommonUnit *pUnit, const struct NDb::SAIGeneralParcel &parcel );
 	static float CalcUnitSeverity( const class CCommonUnit *pUnit );
-	//return true if any removed 
+	//return true if any removed
 	static bool RemoveDead( CommonUnits *pUnits );
 	static bool RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer );
 
 	//
-	struct SRandomFunctor 
+	struct SRandomFunctor
 	{
 		int operator()( int N )
 		{
@@ -35,7 +35,7 @@ struct SGeneralHelper
 		void operator()( const CCommonUnit *pUnit );
 	};
 	//
-	// 
+	//
 	struct SFindByEnumeratorPredicate
 	{
 		IWorkerEnumerator * pEn = {};

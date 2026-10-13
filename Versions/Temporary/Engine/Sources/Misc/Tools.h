@@ -265,7 +265,7 @@ inline TYPE square( const TYPE x )
 	return x*x;
 }
 
-template <class TYPE> 
+template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y )
 {
   TYPE u = fabs2( x, y );
@@ -278,7 +278,7 @@ inline bool Normalize( TYPE &x, TYPE &y )
   y *= u;
   return true;
 }
-template <class TYPE> 
+template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
 {
   TYPE u = fabs2( x, y, z );
@@ -292,7 +292,7 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z )
   z *= u;
   return true;
 }
-template <class TYPE> 
+template <class TYPE>
 inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
 {
   TYPE u = fabs2( x, y, z, w );
@@ -300,7 +300,7 @@ inline bool Normalize( TYPE &x, TYPE &y, TYPE &z, TYPE &w )
     return true;                        // already normalized
   if ( u < FP_EPSILON2 )
     return false;                       // can't normalize
-  u = static_cast<TYPE>( TYPE(1) / sqrt( u ) );  
+  u = static_cast<TYPE>( TYPE(1) / sqrt( u ) );
   x *= u;
   y *= u;
   z *= u;

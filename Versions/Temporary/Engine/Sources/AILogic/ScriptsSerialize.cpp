@@ -22,7 +22,7 @@ int CScripts::operator&( IBinSaver &saver )
 	saver.Add( 12, &reinforcs );
 	saver.Add( 13, &suspendedReinforcs );
 	saver.Add( 14, &lastTimeToCheckSuspendedReinforcs );
-	
+
 	if ( saver.IsReading() )
 		reinforcsIter = suspendedReinforcs.begin();
 

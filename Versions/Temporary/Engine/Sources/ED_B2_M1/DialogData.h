@@ -11,7 +11,7 @@ struct SPointListDialogData
 	bool bChkPassability;
 	bool bChkPropmask;
 	NDb::ESeason eSeason;
-	
+
 	SPointListDialogData() :
 		nInstanceID(-1),
 		nNumPoints(0),
@@ -28,7 +28,7 @@ struct SFormationWindowDialogData
 	NDb::SSquadRPGStats::SFormation::EFormationMoveType eSelectedFormation;
 	std::vector<NDb::SSquadRPGStats::SFormation::EFormationMoveType> squadFormations;
 	bool bChkPropmask;
-    
+
 	SFormationWindowDialogData() :
 		eSelectedFormation(NDb::SSquadRPGStats::SFormation::EFormationMoveType(-1)),
 		bChkPropmask(false)

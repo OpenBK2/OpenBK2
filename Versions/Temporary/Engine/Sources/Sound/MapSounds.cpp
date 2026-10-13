@@ -94,7 +94,7 @@ void CMapSounds::CMapSoundCell::Update( struct ISoundScene * pScene, const CMapS
 					SFX_MIX_IF_TIME_EQUALS,
 					SAM_LOOPED_NEED_ID, 0, 1.0f );
 			}
-		}		
+		}
 
 		// run next non looped sound
 		// remove current sound

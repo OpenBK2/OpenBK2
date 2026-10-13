@@ -49,7 +49,7 @@ inline bool CAIMap::Process8Tiles( const SVector &vCenter, const SVector &vOffse
 	}
 	else
 	{
-		return 
+		return
 			IsLocked( vCenter + SVector( vOffset.x,  vOffset.y  ), aiClass ) ||
 			IsLocked( vCenter + SVector( -vOffset.x, vOffset.y  ), aiClass ) ||
 			IsLocked( vCenter + SVector( vOffset.x,  -vOffset.y ), aiClass ) ||
@@ -334,7 +334,7 @@ inline bool CAIMap::ProcessQuadrangleTiles( const CVec2 &v1, const CVec2 &v2, co
 	}
 
 	if ( N )
-	{ 
+	{
 		const SVector tile( GetTile( center ) );
 		if ( pTiles->empty() && IsTileInside( tile ) )
 			pTiles->push_back( tile );
@@ -352,13 +352,13 @@ inline void CAIMap::GetTilesCoveredByQuadrangle( const CVec2 &v1, const CVec2 &v
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
-	ProcessCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() ); 
+	ProcessCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
 template<class TContainter>
 inline void CAIMap::GetTilesCoveredByLargeCircle( const CVec2 &vCenter, const float fRadius, TContainter *pTiles )
 {
-	ProcessLargeCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() ); 
+	ProcessLargeCircleTiles( vCenter, fRadius, pTiles, EAC_NONE, SGenericNumber<1>() );
 }
 
 template<class TContainter>
@@ -376,12 +376,12 @@ public:
 	CAIMap *pAIMap = nullptr;
 	CTilesCollector( TContainter* _pTiles, CAIMap *_pAIMap ) : pTiles( _pTiles ), pAIMap( _pAIMap ) { }
 
-	bool operator()( float x, float y ) 
-	{ 
+	bool operator()( float x, float y )
+	{
 		if ( pAIMap->IsTileInside( x, y ) )
 			pTiles->push_back( SVector( x, y ) );
 
-		return true; 
+		return true;
 	}
 };
 

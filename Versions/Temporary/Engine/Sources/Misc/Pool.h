@@ -43,11 +43,11 @@ public:
 				pBlockStart = 0;
 			p = pPool->pCurrent;
 		}
-		void operator--() 
+		void operator--()
 		{
 			ASSERT(pPool);
-			--p; 
-			if ( p == pBlockStart ) 
+			--p;
+			if ( p == pBlockStart )
 			{
 				if ( i == pPool->data.begin() )
 				{

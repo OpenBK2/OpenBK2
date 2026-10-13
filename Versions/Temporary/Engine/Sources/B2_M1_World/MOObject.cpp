@@ -26,7 +26,7 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 
 	bAnimateOnDeath = false;			// Default
 
-	if ( GetStats()->pvisualObject == 0 ) 
+	if ( GetStats()->pvisualObject == 0 )
 		return false;
 	const NDb::SModel *pModel = GetModel( ChooseVisObjForHP( fNewHP ), eSeason );
 	if ( !pModel )
@@ -41,7 +41,7 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 
 	SetModel( pModel );
 
-	if ( const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( GetStats() ) ) 
+	if ( const NDb::SObjectBaseRPGStats *pStats = dynamic_cast<const NDb::SObjectBaseRPGStats*>( GetStats() ) )
 	{
 		if ( const NDb::SObjectRPGStats *pObjectStats = dynamic_cast<const NDb::SObjectRPGStats*>( pStats ) )
 		{
@@ -49,12 +49,12 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 				return true;
 		}
 
-		if ( pStats->bCanFall ) 
+		if ( pStats->bCanFall )
 		{
 			eAnimMode = OBJ_ANIM_MODE_FORCE_NON_ANIMATED;
 			bAnimateOnDeath = true;
 		}
-		if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )	
+		if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
 		{
 			eAnimMode = OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC;
 			bAnimateOnDeath = false;
@@ -67,7 +67,7 @@ bool CMOObject::CreateSceneObject( const int nUniqueID, const SAINewUnitUpdate *
 	}
 
 	Scene()->AddObject( nUniqueID, pModel, vPos, qRot, CVec3(1, 1, 1), eAnimMode, 0 );
-	
+
 	return true;
 }
 
@@ -79,8 +79,8 @@ bool CMOObject::Create( const int nUniqueID, const SAIBasicUpdate *_pUpdate, NDb
 		RunDefaultObjectAnimation( GetModelDesc()->pSkeleton, pAnimator );
 		//
 		if ( const NDb::SObjectRPGStats *pStats = dynamic_cast<const NDb::SObjectRPGStats*>(GetStats()) )
-		{			
-			if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )	
+		{
+			if ( pStats->eGameType == NDb::SGVOGT_FLORA && bAnimateTrees && Scene()->GetWindController()->GetWindIntensity() > FP_EPSILON )
 			{						//It's a tree! And the "animated trees" are on. Add wind mutator.
 				if ( pAnimator )
 				{
@@ -114,7 +114,7 @@ void CMOObject::GetStatus( SObjectStatus *pStatus ) const
 }
 
 IClientUpdatableProcess* CMOObject::AIUpdateRPGStats( const SAINotifyRPGStats &stats, struct IClientAckManager *pAckManager, NDb::ESeason eSeason )
-{ 
+{
 	const float fNewHP = stats.fHitPoints / GetStats()->fMaxHP;
 	CommonUpdateHP( fNewHP, stats, Scene(), eSeason );
 	if ( fNewHP <= 0 )

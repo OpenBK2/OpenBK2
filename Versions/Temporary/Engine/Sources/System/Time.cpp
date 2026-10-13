@@ -5,15 +5,15 @@
 
 // CTimeCounter
 
-CTimeCounter::CTimeCounter() 
+CTimeCounter::CTimeCounter()
 {
-	prevTime = 0; 
+	prevTime = 0;
 	pTime = new CCTime( 0 );
 }
 
-void CTimeCounter::ResetTiming() 
+void CTimeCounter::ResetTiming()
 {
-	prevTime = 0; 
+	prevTime = 0;
 }
 
 void CTimeCounter::SetCurrent( STime t )

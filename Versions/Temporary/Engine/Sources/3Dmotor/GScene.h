@@ -143,21 +143,21 @@ class CDecalTarget;
 struct IGScene : virtual public CObjectBase
 {
 public:
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		const SFBTransform &trans, const SFullGroupInfo &_ginfo ) = 0;
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<SFBTransform> *pPlacement, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<SFBTransform> *pPlacement, CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		CFuncBase<SBound> *_pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
-	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat, 
+	virtual CObjectBase* CreateGeometry( CPtrFuncBase<CObjectInfo> *pInfo, IMaterial *pMat,
 		CFuncBase<std::vector<SHMatrix> > *pPlacement, CFuncBase<std::vector<NGfx::SCompactTransformer> > *_pMMXAnim,
 		const SBound &_bv, const SFullGroupInfo &_ginfo ) = 0;
-	virtual CObjectBase* CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo, CFuncBase<SFBTransform> *pPlacement, IMaterial *pMat, 
+	virtual CObjectBase* CreateDynamicGeometry( CPtrFuncBase<CObjectInfo> *pInfo, CFuncBase<SFBTransform> *pPlacement, IMaterial *pMat,
 		CFuncBase<SBound> *pBound, const SBound &hintBV, const SFullGroupInfo &_ginfo ) = 0;
 	virtual CObjectBase* CreateParticles( CPtrFuncBase<CParticleEffect> *pInfo,
 		CFuncBase<SFBTransform> *pPlacement, const SBound &bound, const SBound &hintBV, const SGroupInfo &_ginfo, int nPFlags ) = 0;
@@ -167,14 +167,14 @@ public:
 	virtual void SetAmbientAnimation( CPtrFuncBase<CAnimLight> *pLight ) = 0;
 	virtual void SetSunFlares( const CVec3 &dir, CSunFlares *pSunFlares, CFuncBase<STime>* pSunFlaresTime ) = 0;
 	virtual void SetWarFogBlend( float fBlend ) = 0;
-	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor, 
+	virtual void SetDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor,
 		const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir,
-		float fMaxHeight, float fShadowsMaxDetailLength, float fBlurShift, 
+		float fMaxHeight, float fShadowsMaxDetailLength, float fBlurShift,
 		CFuncBase<CVec3> *_pAmbient, CFuncBase<CVec3> *_pShadeColor, CFuncBase<CVec3> *_pIncidentShadeColor, const CVec3 &vParticlesColor,
 		CPtrFuncBase<NGfx::CTexture> *_pClouds, CFuncBase<SHMatrix> *_pCloudsProjection, const CVec3 &vDymanicLightsModifications ) = 0;
 	virtual CObjectBase* AddPointLight( const CVec3 &_vColor, const CVec3 &ptOrigin, float fR ) = 0;
 	virtual CObjectBase* AddPointLight( CPtrFuncBase<CAnimLight> *pLight ) = 0;
-	virtual CObjectBase* AddSpotLight( CFuncBase<CVec3> *pColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV, 
+	virtual CObjectBase* AddSpotLight( CFuncBase<CVec3> *pColor, const CVec3 &ptOrigin, const CVec3 &ptDir, float fFOV,
 		float fRadius, CPtrFuncBase<NGfx::CTexture> *pMask, bool bLightmapOnly ) = 0;
 	virtual CDecalTarget* CreateDecalTarget( const std::vector<CObjectBase*> &targets, const SDecalMappingInfo &_info ) = 0;
 	virtual CObjectBase* AddDecal( NGScene::CDecalTarget *pTarget, IMaterial *pMaterial ) = 0;
@@ -213,7 +213,7 @@ _3DMOTOR_EXPORT void GetRenderStats( SRenderStats *pStats );
 _3DMOTOR_EXPORT float GetFrameTime();
 _3DMOTOR_EXPORT void Flip();
 _3DMOTOR_EXPORT int CalcTouchedTextureSize();
-bool GetGeometryObjectInfo( CObjectBase *p, 
+bool GetGeometryObjectInfo( CObjectBase *p,
 	CPtrFuncBase<CObjectInfo> **pGeometry, SFBTransform *pPos, SFullGroupInfo *pGroupInfo );
 CFuncBase<std::vector<NGfx::SCompactTransformer> >* MakeMMXAnimation( CFuncBase<std::vector<SHMatrix> > *pAnim );
 void SetPartFade( CObjectBase *p, float fFade );
@@ -222,7 +222,7 @@ void SetPartLM( CObjectBase *p, CPtrFuncBase<NGfx::CTexture> *pLM );//CFuncBase<
 CPtrFuncBase<CParticleEffect> *GetParticleAnimator( CObjectBase *p );
 class CLightmapsHolder;
 class CLightmapsLoader;
-class CLightmapsTempHolder; 
+class CLightmapsTempHolder;
 enum ELightmapQuality : int;
 CLightmapsTempHolder *CreateLightmapsTempHolder();
 CLightmapsHolder *FinalMergeLightmaps( CLightmapsTempHolder *pTmpHolder );

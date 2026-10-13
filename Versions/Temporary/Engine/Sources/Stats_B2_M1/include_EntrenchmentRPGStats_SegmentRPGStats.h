@@ -9,13 +9,13 @@ bool ToAIUnits( bool bInEditor )
 	return true;
 }
 
-float GetLength() const 
-{ 
+float GetLength() const
+{
 	return vAABBHalfSize.x*2.0f*AI_TO_VIS;
 }
-float GetHalfLength() const 
-{ 
-	return vAABBHalfSize.x*AI_TO_VIS; 
+float GetHalfLength() const
+{
+	return vAABBHalfSize.x*AI_TO_VIS;
 }
 /*const CVec2 GetVisFirePlace() const
 {

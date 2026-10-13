@@ -121,7 +121,7 @@ bool CReinfPointsState::GetReinfPointsFromWindow()
 		CManipulatorManager::GetValue( &nTypedTemplates, pManipulator, szTypedTemplates );
 		rp.typedTemplates.clear();
 		for ( int iTypedTemplate = 0; iTypedTemplate < nTypedTemplates; ++iTypedTemplate ) // for each template
-		
+
 		{
 			STypedTemplate newTemplate;
 
@@ -274,8 +274,8 @@ bool CReinfPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 		case ID_REINF_POINTS_WINDOW_CHANGE_STATE:
 		{
 			SReinfPointsWindowData data;
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(  CHID_REINF_POINTS_WINDOW, 
-																																	ID_WINDOW_GET_DIALOG_DATA, 
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(  CHID_REINF_POINTS_WINDOW,
+																																	ID_WINDOW_GET_DIALOG_DATA,
 																																	reinterpret_cast<uintptr_t>(&data) ) )
 			{
 				nSelectedReinfPoint = data.nSelectedPoint;
@@ -417,11 +417,11 @@ void CReinfPointsState::RefreshReinfPointsWindow()
 		data.reinfPoints.push_back( rp );
 	}
 	//
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_REINF_POINTS_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_REINF_POINTS_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&data) );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, 
-																												ID_SCENE_UPDATE, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE,
+																												ID_SCENE_UPDATE,
 																												0 );
 }
 
@@ -445,7 +445,7 @@ void CReinfPointsState::Draw( IPaintContext *pPaintDC )
 		float fDir = AI2VisRad( point.nDirection );
 		fDir += FP_PI2;
 		if ( fDir >= FP_2PI )
-		{ 
+		{
 			fDir -= FP_2PI;
 		}
 		// ground
@@ -510,7 +510,7 @@ void CReinfPointsState::PostDraw( IPaintContext *pPaintDC )
 	//
 	for ( int i = 0; i < reinfPoints.size(); ++i )
 	{
-		CVec3 vPos( reinfPoints[i].vPosition, 0 ); 	
+		CVec3 vPos( reinfPoints[i].vPosition, 0 );
 		vPos.z = GetTerrainHeight( vPos.x, vPos.y );
 
 		CTransformStack ts = pCamera->GetTransform();
@@ -519,7 +519,7 @@ void CReinfPointsState::PostDraw( IPaintContext *pPaintDC )
 		AI2Vis( &vPos );
 
 		if ( TestRayInFrustrum( vPos, ts, pScene->GetScreenRect(), &res ) )
-			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "{} : ({:.0f}, {:.0f})", i, reinfPoints[i].vPosition.x, reinfPoints[i].vPosition.y ) , res );			
+			NDrawToolsDC::DrawLabelDC( pPaintDC, fmt::format( "{} : ({:.0f}, {:.0f})", i, reinfPoints[i].vPosition.x, reinfPoints[i].vPosition.y ) , res );
 	}
 }
 
@@ -625,7 +625,7 @@ void CReinfPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 			float fNewDir = GetPolarAngle( vNewDir ) - FP_PI2;
 			if ( fNewDir < 0 )
 				fNewDir += FP_2PI;
-			
+
 			reinfPoints[nSelectedReinfPoint].nDirection = Vis2AIRad( fNewDir );
 		}
 		else

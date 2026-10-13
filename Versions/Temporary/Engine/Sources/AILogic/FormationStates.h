@@ -35,7 +35,7 @@ struct IEngineerFormationState : public IUnitState
 class CFormationStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CFormationStatesFactory );
-	
+
 	static CPtr<CFormationStatesFactory> pFactory;
 public:
 	static CFormationStatesFactory* Instance();
@@ -60,15 +60,15 @@ class CFormationRestState : public CCommonRestState
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonRestState*)this); f.Add(2,&pFormation); return 0; }
 protected:
 	virtual class CCommonUnit* GetUnit() const;
-	
+
 public:
 	static IUnitState* Instance( class CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
-	
+
 	CFormationRestState() : pFormation( 0 ) { }
 	CFormationRestState( class CFormation *pFormation, const CVec2 &guardPoint, const uint16_t wDir, const float fTimeToWait );
 
 	void Segment();
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_REST; }
 	virtual bool IsAttackingState() const { return false; }
 
@@ -169,7 +169,7 @@ public:
 class CFormationEnterEntrenchmentState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEnterEntrenchmentState );
-	
+
 	enum EEnterState { EES_START, EES_RUN, EES_WAIT_TO_ENTER, EES_FINISHED };
 	ZDATA_( CStatusUpdatesHelper )
 	EEnterState state = {};
@@ -296,12 +296,12 @@ class CFormationPlaceMine : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationPlaceMine );
 
-	enum EPlaceMineStates 
-	{ 
+	enum EPlaceMineStates
+	{
 		EPM_WAIT_FOR_HOMETRANSPORT,
-		EPM_START, 
-		EPM_MOVE, 
-		EPM_WAITING 
+		EPM_START,
+		EPM_MOVE,
+		EPM_WAITING
 	};
 	ZDATA
 	EPlaceMineStates eState = {};
@@ -355,7 +355,7 @@ public:
 class CFormationAttackUnitState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackUnitState );
-	
+
 	enum EAttackUnitStates { EPM_MOVING, EPM_WAITING };
 	ZDATA
 	EAttackUnitStates eState = {};
@@ -383,14 +383,14 @@ public:
 
 	virtual bool IsAttacksUnit() const { return true; }
 	virtual class CAIUnit* GetTargetUnit() const { return 0; }
-	
+
 	virtual EUnitStateNames GetName();
 };
 
 class CFormationAttackCommonStatObjState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackCommonStatObjState );
-	
+
 	enum EAttackUnitStates { EPM_START, EPM_MOVING, EPM_WAITING };
 	ZDATA
 	EAttackUnitStates eState = {};
@@ -422,7 +422,7 @@ public:
 class CFormationRotateState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationRotateState );
-	
+
 	ZDATA
 	CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); return 0; }
@@ -442,7 +442,7 @@ public:
 class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHelper
 {
 	OBJECT_BASIC_METHODS( CFormationEnterTransportState );
-	
+
 	enum { CHECK_PERIOD = 500 };
 	enum EEnterTransportStates { EETS_START, EETS_MOVING, EETS_WAIT_FOR_TURRETS_RETURN, EETS_WAITING, EETS_FINISHED, EETS_WAIT_TO_UNLOCK_TRANSPORT };
 	ZDATA_( CStatusUpdatesHelper )
@@ -463,7 +463,7 @@ class CFormationEnterTransportState : public IUnitState, public CStatusUpdatesHe
 	bool IsAllTransportTurretsReturned() const;
 public:
   static IUnitState* Instance( class CFormation *pFormation, class CMilitaryCar *pTransport );
-	
+
 	CFormationEnterTransportState() { }
 	CFormationEnterTransportState( class CFormation *pFormation, class CMilitaryCar *pTransport );
 
@@ -574,14 +574,14 @@ public:
 		CFindBestUnitPredicate() : bNotEnoughtRu( false ), fCurWeight( 0.0f ) { }
 		virtual bool HasUnit(){ return pUnit; }
 		virtual bool SetUnit( class CAIUnit *_pUnit, const float fMissedHP, const float fDist )
-		{ 
+		{
 			const float fWeight = CalcWeight( fMissedHP, fDist) ;
 			if ( fCurWeight < fWeight )
 			{
-				pUnit = _pUnit; 
+				pUnit = _pUnit;
 				fCurWeight = fWeight;
 			}
-			return false; 
+			return false;
 		}
 		virtual void SetNotEnoughRu() { bNotEnoughtRu = true; }
 		bool IsNotEnoughRu() const { return bNotEnoughtRu; }
@@ -609,13 +609,13 @@ protected:
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&eState); f.Add(3,&pHomeTransport); f.Add(4,&fWorkAccumulator); f.Add(5,&fWorkLeft); f.Add(6,&pPreferredUnit); return 0; }
 public:
-	
-	CFormationServeUnitState( CAIUnit *_pPreferredUnit ) 
-		: eState( EFRUS_WAIT_FOR_HOME_TRANSPORT ), 
-		 fWorkLeft( 0 ), 
+
+	CFormationServeUnitState( CAIUnit *_pPreferredUnit )
+		: eState( EFRUS_WAIT_FOR_HOME_TRANSPORT ),
+		 fWorkLeft( 0 ),
 		 fWorkAccumulator( 0 ),
 		 pPreferredUnit( _pPreferredUnit ){  }
-	
+
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
@@ -625,7 +625,7 @@ public:
 class CFormationRepairUnitState : public CFormationServeUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationRepairUnitState );
-	
+
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
 	CPtr<CAIUnit> pUnitInQuiestion;			//юнит, который нужно обслужить
@@ -638,7 +638,7 @@ class CFormationRepairUnitState : public CFormationServeUnitState
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CFormationServeUnitState*)this); f.Add(2,&pUnit); f.Add(3,&pUnitInQuiestion); f.Add(4,&pTank); f.Add(5,&vPointInQuestion); f.Add(6,&lastRepearTime); f.Add(7,&fRepCost); f.Add(8,&bNearTruck); return 0; }
 
 	void Interrupt();
-	
+
 	static bool CheckUnit( CAIUnit *pU, CFormationServeUnitState::CFindUnitPredicate * pPred, const float fResurs, const CVec2 &vCenter );
 public:
 	// первое попавшееся наше хранилище для починки
@@ -654,15 +654,15 @@ public:
 		bool HasStorage() const { return bHasStor; }
 		bool IsNotEnoughRU() const { return bNotEnoughRu; }
 	};
-	static void FindUnitToServe( const CVec2 &vCenter, 
-																int nPlayer, 
-																const float fResurs, 
-																CCommonUnit * pLoaderSquad, 
+	static void FindUnitToServe( const CVec2 &vCenter,
+																int nPlayer,
+																const float fResurs,
+																CCommonUnit * pLoaderSquad,
 																CFormationServeUnitState::CFindUnitPredicate * pPred,
 																CAIUnit *_pPreferredUnit );
 
 	static IUnitState* Instance( class CFormation *pUnit, CAIUnit *_pPreferredUnit );
-	
+
 	CFormationRepairUnitState() : CFormationServeUnitState( 0 ), pUnit( 0 ) { }
 	CFormationRepairUnitState( class CFormation *pUnit, CAIUnit *_pPreferredUnit );
 
@@ -694,7 +694,7 @@ class CFormationResupplyUnitState : public CFormationServeUnitState
 	static bool CheckUnit( CAIUnit *pU, CFormationServeUnitState::CFindUnitPredicate * pPred, const float fResurs, const CVec2 &vCenter );
 public:
 	static IUnitState* Instance( class CFormation *pUnit, CAIUnit *pPreferredUnit );
-	
+
 	CFormationResupplyUnitState() : CFormationServeUnitState( 0 ), pUnit( 0 ) { }
 	CFormationResupplyUnitState( class CFormation *pUnit, CAIUnit *pPreferredUnit );
 
@@ -704,19 +704,19 @@ public:
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
 
-	static void FindUnitToServe( const CVec2 &vCenter, int nPlayer, const float fResurs, 
+	static void FindUnitToServe( const CVec2 &vCenter, int nPlayer, const float fResurs,
 		CCommonUnit * pLoaderSquad, CFormationServeUnitState::CFindUnitPredicate * pPred, CAIUnit *_pPreferredUnit );
 
 	virtual EUnitStateNames GetName() { return EUSN_RESUPPLY_UNIT; }
 };
 
-// загрузка грузовичка ресурсами 
+// загрузка грузовичка ресурсами
 // подходят к складу, делают Use, при этом в грузовик поступают ресурсы
 class CBuilding;
 class CFormationLoadRuState: public CFormationServeUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationLoadRuState );
-	
+
 	ZDATA_(CFormationServeUnitState)
 	CPtr<CFormation> pUnit;
 	CPtr<CBuilding> pStorage;			//из этого хранилища берем ресурсы
@@ -726,12 +726,12 @@ class CFormationLoadRuState: public CFormationServeUnitState
 	void Interrupt();
 public:
 	static IUnitState* Instance( class CFormation *pUnit, class CBuilding *pStorage);
-	
+
 	CFormationLoadRuState() : CFormationServeUnitState( 0 ),pUnit( 0 ) { }
 	CFormationLoadRuState( class CFormation *pUnit, class CBuilding *pStorage);
 
 	virtual void Segment();
-	
+
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
@@ -741,8 +741,8 @@ public:
 class CFormationCatchTransportState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationCatchTransportState );
-	
-	enum ECatchState 
+
+	enum ECatchState
 	{
 		E_SENDING,
 		E_CHECKING,
@@ -762,7 +762,7 @@ class CFormationCatchTransportState : public IUnitState
 	void Interrupt();
 public:
 	static IUnitState* Instance( class CFormation *pUnit, class CAITransportUnit *pTransport, float fResursPerSoldier );
-	
+
 	CFormationCatchTransportState() : pUnit( 0 ), fResursPerSoldier( 0 ) {  }
 	CFormationCatchTransportState( class CFormation *pUnit, class CAITransportUnit *pTransport, float fResursPerSoldier );
 
@@ -801,7 +801,7 @@ class CFormationPlaceAntitankState : public IEngineerFormationState
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&eState); f.Add(4,&pAntitank); f.Add(5,&pHomeTransport); f.Add(6,&vDesiredPoint); f.Add(7,&fWorkAccumulator); f.Add(8,&timeBuild); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pUnit, const CVec2 &vDesiredPoint );
-	
+
 	CFormationPlaceAntitankState() : pUnit( 0 ) { }
 	CFormationPlaceAntitankState( class CFormation *pUnit, const CVec2 &vDesiredPoint );
 
@@ -818,7 +818,7 @@ class CLongObjectCreation;
 class CFormationBuildLongObjectState : public IEngineerFormationState
 {
 	OBJECT_BASIC_METHODS( CFormationBuildLongObjectState );
-	
+
 	enum EFormationBuildEntrenchState
 	{
 		ETBS_WAITING_FOR_HOMETRANSPORT,
@@ -844,7 +844,7 @@ class CFormationBuildLongObjectState : public IEngineerFormationState
 	std::list<CPtr<CAIUnit> > unitsPreventing;
 	float fWorkLeft = {};
 	CPtr<CAITransportUnit> pHomeTransport;
-				
+
 	CPtr<CLongObjectCreation> pCreation;
 	float fCompletion = {};										// степень готовности данного сегмента
 	int nCurrentSegment = {};
@@ -865,7 +865,7 @@ public:
 
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
 	virtual EUnitStateNames GetName() { return EUSN_BUILD_LONGOBJECT; }
-	
+
 };
 
 class CEntrenchmentCreation;
@@ -883,7 +883,7 @@ class CFormationBuildEntrenchmentState : public IUnitState
 	};
 
 	ZDATA
-	
+
 	CPtr<CFormation> pFormation;
 	EFormationBuildEntrenchmentState eState = {};
 
@@ -936,7 +936,7 @@ class CFormationCaptureArtilleryState : public IUnitState, public CStatusUpdates
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&eState); f.Add(3,&pUnit); f.Add(4,&pArtillery); f.Add(5,&usedSoldiers); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *_pUnit, CArtillery *pArtillery, const bool bUseFormationPart );
-	
+
 	CFormationCaptureArtilleryState() { }
 	CFormationCaptureArtilleryState( class CFormation *_pUnit, CArtillery *pArtillery, const bool bUseFormationPart );
 
@@ -945,7 +945,7 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const { return CVec2( -1.0f, -1.0f ); }
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_GUN_CAPTURE; }
 };
 
@@ -993,7 +993,7 @@ class CFormationGunCrewState : public IUnitState
 	public:
 		bool bOnPlace = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(1,(SUnit*)this); f.Add(2,&bOnPlace); return 0; }
-		
+
 		SCrewMember();
 		SCrewMember( const CVec2 &vServePoint, class CSoldier *pUnit = 0, const EActionNotify eAction = ACTION_NOTIFY_IDLE );
 	};
@@ -1004,7 +1004,7 @@ class CFormationGunCrewState : public IUnitState
 		EGSS_ROTATE = 1,
 		EGSS_MOVE = 2,
 	};
-	
+
 	enum EGunOperateSubState
 	{
 		EGOSS_AIM,
@@ -1012,7 +1012,7 @@ class CFormationGunCrewState : public IUnitState
 		EGOSS_RELAX,
 		EGOSS_RELOAD,
 	};
-	
+
 	typedef std::list< SUnit > CFreeUnits;
 
 	ZDATA
@@ -1023,7 +1023,7 @@ class CFormationGunCrewState : public IUnitState
 
 	// состояние пушки ( а также инжекс в массиве vGunners статов у пушки)
 	EGunServeState eGunState = {};
-	
+
 	// подсостояния пушки в режиме Operate
 	EGunOperateSubState eGunOperateSubState = {};
 
@@ -1041,13 +1041,13 @@ class CFormationGunCrewState : public IUnitState
 	float fReloadPrice = {}; // цена одной перезарядки
 	float fReloadProgress = {};	// текущее состояние перезарядки
 
-	SAIAngle wGunTurretDir ; 
+	SAIAngle wGunTurretDir ;
 	SAIAngle wGunBaseDir;
 	SAIAngle wTurretHorDir; //  предыдущее направление ствола
 	SAIAngle wTurretVerDir; //  предыдущее направление ствола
 	int nFormationSize = {};
 	CVec2 vGunPos;
-	
+
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&nReloadPhaze); f.Add(4,&b360DegreesRotate); f.Add(5,&eGunState); f.Add(6,&eGunOperateSubState); f.Add(7,&crew); f.Add(8,&pArtillery); f.Add(9,&pStats); f.Add(10,&freeUnits); f.Add(11,&startTime); f.Add(12,&timeLastUpdate); f.Add(13,&bReloadInProgress); f.Add(14,&fReloadPrice); f.Add(15,&fReloadProgress); f.Add(16,&wGunTurretDir); f.Add(17,&wGunBaseDir); f.Add(18,&wTurretHorDir); f.Add(19,&wTurretVerDir); f.Add(20,&nFormationSize); f.Add(21,&vGunPos); return 0; }
 	// сброс всех распределений - чтобы расставить арттиллеристов как-то по-новому
 	// return true - завершить состояние
@@ -1071,7 +1071,7 @@ class CFormationGunCrewState : public IUnitState
 	bool IsGunAttacking() const ;
 public:
 	static IUnitState* Instance( class CFormation *pUnit, CArtillery *pArtillery);
-	
+
 	CFormationGunCrewState() : pUnit( 0 ) { }
 	CFormationGunCrewState( class CFormation *pUnit, CArtillery *pArtillery);
 
@@ -1082,11 +1082,11 @@ public:
 	virtual const CVec2 GetPurposePoint() const;
 
 	virtual EUnitStateNames GetName() { return EUSN_GUN_CREW_STATE; }
-	
+
 	CArtillery* GetArtillery() const { return pArtillery; }
 };
 
-// 
+//
 class CFormationInstallMortarState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationInstallMortarState );
@@ -1109,12 +1109,12 @@ public:
 class CFormationUseSpyglassState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationUseSpyglassState );
-	ZDATA	
+	ZDATA
 	CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pFormation, const CVec2 &point );
-	
+
 	CFormationUseSpyglassState() : pFormation( 0 ) { }
 	CFormationUseSpyglassState( class CFormation *pFormation, const CVec2 &point );
 
@@ -1123,7 +1123,7 @@ public:
 	virtual ETryStateInterruptResult TryInterruptState( class CAICommand *pCommand );
 	virtual bool IsAttackingState() const { return false; }
 	virtual const CVec2 GetPurposePoint() const;
-	
+
 	virtual EUnitStateNames GetName() { return EUSN_USE_SPYGLASS; }
 };
 
@@ -1131,7 +1131,7 @@ public:
 class CFormationAttackFormationState : public IUnitAttackingState
 {
 	OBJECT_BASIC_METHODS( CFormationAttackFormationState );
-	ZDATA	
+	ZDATA
 	CPtr<CFormation> pUnit;
 	CPtr<CFormation> pTarget;
 	bool bSwarmAttack = {};
@@ -1139,7 +1139,7 @@ class CFormationAttackFormationState : public IUnitAttackingState
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pUnit); f.Add(3,&pTarget); f.Add(4,&bSwarmAttack); f.Add(5,&nEnemyParty); return 0; }
 public:
 	static IUnitState* Instance( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
-	
+
 	CFormationAttackFormationState() : pUnit( 0 ) { }
 	CFormationAttackFormationState( class CFormation *pFormation, class CFormation *pTarget, const bool bSwarmAttack );
 
@@ -1329,7 +1329,7 @@ class CFormationRepairBridgeState : public IEngineerFormationState
 	enum EFormationRepearBridgeState
 	{
 		FRBS_WAIT_FOR_HOMETRANSPORT,
-		
+
 		FRBS_START_APPROACH,
 		FRBS_APPROACH,
 		FRBS_REPEAR,
@@ -1341,7 +1341,7 @@ class CFormationRepairBridgeState : public IEngineerFormationState
 	CPtr<CFullBridge> pBridgeToRepair;
 	CPtr<CAITransportUnit> pHomeTransport ;
 	std::vector< CObj<CBridgeSpan> > bridgeSpans;
-	
+
 	float fWorkLeft = {};											// RU that engineers have with them
 	float fWorkDone = {};
 	NTimer::STime timeLastCheck = {};
@@ -1403,7 +1403,7 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return CVec2(-1,-1); }
 
 	virtual void SetHomeTransport( class CAITransportUnit *pTransport );
-	
+
 	// returns nearest entrance
 	static int SendToNearestEntrance( CCommonUnit *pTransport, CBuilding * pStorage );
 
@@ -1413,7 +1413,7 @@ public:
 class CFormationEnterBuildingNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterBuildingNowState );
-	ZDATA 
+	ZDATA
 	CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); return 0; }
 public:
@@ -1432,7 +1432,7 @@ public:
 class CFormationEnterEntrenchmentNowState : public IUnitState
 {
 	OBJECT_BASIC_METHODS( CFormationEnterEntrenchmentNowState );
-	ZDATA 
+	ZDATA
 		CPtr<CFormation> pFormation;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); return 0; }
 public:
@@ -1470,10 +1470,10 @@ class CFormationPlaceChargeState : public IUnitState, public CStatusUpdatesHelpe
 	NDb::EUnitSpecialAbility eChargeType = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStatusUpdatesHelper *)this); f.Add(2,&pFormation); f.Add(3,&pSapper); f.Add(4,&vTarget); f.Add(5,&nOffset); f.Add(6,&eState); f.Add(7,&nBeginAnimTime); f.Add(8,&eChargeType); return 0; }
 	void ReturnSapper();
-	
+
 public:
 	static IUnitState* Instance( class CFormation *pUnit, const CVec2 &vDesiredPoint, NDb::EUnitSpecialAbility _eChargeType, int nTimeOffset );
-	
+
 	CFormationPlaceChargeState() : pFormation( 0 ) {}
 	CFormationPlaceChargeState( class CFormation *pUnit, const CVec2 &vDesiredPoint, NDb::EUnitSpecialAbility _eChargeType, int nTimeOffset );
 
@@ -1522,7 +1522,7 @@ class CFormationThrowGrenadeState : public IUnitState
 		SThrowInfo( class CSoldier *_pSoilder ) : bPassSegment( true ), pSoilder( _pSoilder ) {}
 	};
 
-	ZDATA 
+	ZDATA
 	CPtr<CFormation> pFormation;
 	std::vector<SThrowInfo> vSoldiers;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pFormation); f.Add(3,&vSoldiers); return 0; }

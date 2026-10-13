@@ -42,10 +42,10 @@ void ConvertXMLSysChars( std::string *pString )
 	{
 		const int chr = (*pString)[i];
 
-		switch ( chr ) 
+		switch ( chr )
 		{
 		case '&':
-			if ( (i < ( (int)(*pString).length() - 2 )) && ((*pString)[i + 1] == '#') && ((*pString)[i + 2] == 'x') ) 
+			if ( (i < ( (int)(*pString).length() - 2 )) && ((*pString)[i + 1] == '#') && ((*pString)[i + 2] == 'x') )
 			{
 				// Hexadecimal character reference.
 				// Pass through unchanged.
@@ -262,7 +262,7 @@ const std::string GetTypeName( const SPropertyDesc *pDesc, const std::string &sz
 		return pDesc->szTypeName;
 }
 
-void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID, 
+void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName, const int nClassTypeID,
 																			const std::string &szObjectName, const int nObjectID, const std::string &szFieldName )
 {
 	StartExport( szObjectName, szTypeName, szFieldName );
@@ -281,7 +281,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 	IResourceManager *pRM = Singleton<IResourceManager>();
 	if ( CObj<IManipulator> pObjMan = pRM->CreateObjectManipulator( szTypeName, szObjectName ) )
 	{
-		for ( CObj<IManipulatorIterator> pIt = pObjMan->Iterate(true, ECT_CACHE_GLOBAL); 
+		for ( CObj<IManipulatorIterator> pIt = pObjMan->Iterate(true, ECT_CACHE_GLOBAL);
 			pIt != 0 && !pIt->IsEnd(); pIt->Next() )
 		{
 			if ( const SPropertyDesc *pDesc = dynamic_cast<const SPropertyDesc*>(pIt->GetDesc()) )
@@ -322,7 +322,7 @@ void CXmlExporter::ExportObjectToXML( FILE *file, const std::string &szTypeName,
 							else
 								fprintf( file, "<%s href=\"\"/>\n", szChunkName.c_str() );
 						}
-						else 
+						else
 						{
 							CVariant value;
 							std::string szValue;
@@ -507,7 +507,7 @@ static void DumpTypeNames()
 	if ( CObj<IManipulator> pTableMan = pRM->CreateTableManipulator() )
 	{
 		std::vector<std::string> typeNames;
-		for ( CObj<IManipulatorIterator> pItTable = pTableMan->Iterate(true, ECT_CACHE_GLOBAL); 
+		for ( CObj<IManipulatorIterator> pItTable = pTableMan->Iterate(true, ECT_CACHE_GLOBAL);
 			pItTable != 0 && !pItTable->IsEnd(); pItTable->Next() )
 		{
 			std::string szTypeName;
@@ -531,7 +531,7 @@ static void DumpTypeNames()
 	}
 }
 
-static const char *s_pszTypeNames[] = 
+static const char *s_pszTypeNames[] =
 {
 	{ "AIExpLevel" },
 	{ "AIGameConsts" },
@@ -777,11 +777,11 @@ void DumpAllObjects()
 		//
 		if ( CObj<IManipulator> pFolderMan = pRM->CreateFolderManipulator(szTypeName) )
 		{
-			for ( CObj<IManipulatorIterator> pItFolder = pFolderMan->Iterate(true, ECT_CACHE_GLOBAL); 
+			for ( CObj<IManipulatorIterator> pItFolder = pFolderMan->Iterate(true, ECT_CACHE_GLOBAL);
 				pItFolder != 0 && !pItFolder->IsEnd(); pItFolder->Next() )
 			{
 				std::string szObjectName;
-				if ( !pItFolder->IsFolder() && pItFolder->GetName( &szObjectName ) != false && 
+				if ( !pItFolder->IsFolder() && pItFolder->GetName( &szObjectName ) != false &&
 					!szObjectName.empty() && szObjectName != " " )
 				{
 					GetExporter()->ExportObject( szObjectName, szTypeName, "" );

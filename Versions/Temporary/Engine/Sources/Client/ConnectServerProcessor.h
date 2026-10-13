@@ -33,7 +33,7 @@ public:
 	bool ProcessCheckConnect( class CCheckConnectPacket *pCheckConnectPacket );
 	bool ProcessLoginPacket( class CLoginPacket *pLoginPacket );
 	bool ProcessRegisterPacket( class CRegisterPacket *pRegisterPacket );
-	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket ); 
+	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket );
 	bool ProcessNewClient( class CNetNewClient *pPacket );
 };
 

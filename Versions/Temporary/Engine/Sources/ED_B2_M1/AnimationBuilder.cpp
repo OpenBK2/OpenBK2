@@ -47,7 +47,7 @@ bool CAnimationBuilder::IsValidBuildData( IManipulator *pBuildDataManipulator, s
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMapInfoBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMapInfoBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
+	pszDescription->clear();
 	// Считываем данные
 	std::string szSrcName;
 	if ( !CManipulatorManager::GetValue( &szSrcName, pBuildDataManipulator, "SrcName" ) || szSrcName.empty() )
@@ -216,7 +216,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 								NStr::ToLowerASCII( &szMnemonic );
 								if ( nNumber != INVALID_NODE_ID )
 								{
-									szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber ); 
+									szAnimationName = fmt::format( "{}_{:02d}", szMnemonic.c_str(), nNumber );
 								}
 								else
 								{
@@ -264,9 +264,9 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 							{
 								pFolderCallback->InsertObject( szAnimationTypeName, szAnimationName );
 							}
-							if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) ) 
+							if ( CPtr<IManipulator> pAnimationManipulator = Singleton<IResourceManager>()->CreateObjectManipulator( szAnimationTypeName, szAnimationName ) )
 							{
-								
+
 								// Удалим анимацию из списка несуществующих анимаций
 								CAnimationMap::iterator posAnimation = animationMap.find( szAnimationName );
 								if ( posAnimation != animationMap.end() )
@@ -285,7 +285,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 								bResult = bResult && pAnimationManipulator->SetValue( "Looped", bLooped );
 								bResult = bResult && pAnimationManipulator->SetValue( "MoveSpeed", fSpeed );
 								bResult = bResult && pAnimationManipulator->SetValue( "ActionFrame", nActionFrame );
-								
+
 								if ( bResult )
 								{
 									Singleton<IExporterContainer>()->ExportObject( pAnimationManipulator,
@@ -305,7 +305,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 											szSrcName.c_str(),
 											nAnimationRefCount );
 				}
-				catch ( ... ) 
+				catch ( ... )
 				{
 					const std::string szError = fmt::format( "General error during build/update animation(s) from params file \"{}\"\n", szAnimParamsDestination.c_str() );
 					NLog::GetLogger()->Log( LT_ERROR, szError );
@@ -317,7 +317,7 @@ bool CAnimationBuilder::UpdateAminations( const std::string &rszAnimationFolder 
 			// Удаляем лишние анимации:
 			if ( bResult )
 			{
-				for ( CAnimationMap::iterator itAnimation = animationMap.begin(); itAnimation != animationMap.end(); ++itAnimation ) 
+				for ( CAnimationMap::iterator itAnimation = animationMap.begin(); itAnimation != animationMap.end(); ++itAnimation )
 				{
 					bResult = pFolderCallback->RemoveObject( szAnimationTypeName, itAnimation->first, false );
 					DebugTrace( "CAnimationBuilder::UpdateAminations() delete animation: %s <%s>",
@@ -344,7 +344,7 @@ bool CAnimationBuilder::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 	switch( nCommandID )
 	{
 		case ID_TOOLS_CREATE_INF_ANIMS:
-		{	
+		{
 			SSelectionSet selectionSet;
 			bool bResult = Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_OBJECT_STORAGE, ID_OS_GET_SELECTION, reinterpret_cast<uintptr_t>( &selectionSet ) );
 			const std::string szObjectTypeName = selectionSet.szObjectTypeName;
@@ -412,6 +412,6 @@ uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) c
 }
 
 
-// basement storage  
+// basement storage
 
 

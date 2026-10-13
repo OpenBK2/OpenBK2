@@ -31,7 +31,7 @@ enum EPacket
 	PKT_KICK_ADDR
 };
 /////////////////////////////////////////////////////////////////////////////////////
-void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from, 
+void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 		const CMemoryStream *pData, std::vector<UCID> *pReceived )
 {
 #ifdef LOG
@@ -58,7 +58,7 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 #ifdef __LOG__
 	switch ( msg )
 	{
-		case DIRECT:		
+		case DIRECT:
 			{
 				uint8_t cMsgID = 0xff;
 				if ( pData )
@@ -67,22 +67,22 @@ void CP2PTracker::AddOutputMessage( EOutMessage msg, const UCID _from,
 					streamCopy.Seek( 0 );
 					streamCopy >> cMsgID;
 				}
-				
+
 				Singleton<IConsoleBuffer>()->WriteASCII(
-					CONSOLE_STREAM_CONSOLE, 
+					CONSOLE_STREAM_CONSOLE,
 					fmt::format( "p2p: direct from {}, msg {}", _from, (int)cMsgID ), 0xffffff00, true );
 			}
 
 			break;
-		case NEW_CIENT: 
+		case NEW_CIENT:
 			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE, 
+				CONSOLE_STREAM_CONSOLE,
 				fmt::format( "p2p: new client from {}", _from ), 0xffffff00, true );
 
 			break;
-		case REMOVE_CLIENT: 
+		case REMOVE_CLIENT:
 			Singleton<IConsoleBuffer>()->WriteASCII(
-				CONSOLE_STREAM_CONSOLE, 
+				CONSOLE_STREAM_CONSOLE,
 				fmt::format( "p2p: del client {}", _from ), 0xffffff00, true );
 
 			break;
@@ -206,7 +206,7 @@ void CP2PTracker::ReceiveDirect( const UCID peer, CMemoryStream &data )
 	b.msg = data;
 	b.nID = -1;
 	b.bDirect = true;
-	CheckQueuedMessages( peer );	
+	CheckQueuedMessages( peer );
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void CP2PTracker::ReceiveBroadcast( const UCID peer, CMemoryStream &data, int nID )
@@ -281,11 +281,11 @@ void CP2PTracker::ReceiveAck( const UCID from, int nID, PEER_ID id )
 		}
 		if ( bFound )
 			CheckQueuedMessages( addr );
-		else 
+		else
 		{
 			// save ack for the future
 			// if sender is inactive no messages from him will be received and ack is useless
-			if ( pSender->IsActive() ) 
+			if ( pSender->IsActive() )
 			{
 				SFastAck &b = pFrom->fastacks.emplace_back();
 				b.addr = addr;
@@ -345,7 +345,7 @@ void CP2PTracker::ReceiveRemoveClient( const UCID peer, const UCID corpse, bool 
 	pWho->RemoveClient( corpse );
 	KickClient( corpse, bIsBroadcast );
 
-	// every ack for broadcast message from pWho awaiting ack from client corpse 
+	// every ack for broadcast message from pWho awaiting ack from client corpse
 	// is approved via ack remove
 	for ( std::list<SQMessage>::iterator i = pWho->messages.begin(); i != pWho->messages.end(); ++i )
 	{
@@ -453,7 +453,7 @@ void CP2PTracker::AddNewClient( const UCID addr, CMemoryStream &_addrInfo, bool 
 	}
 	// to client addr info sent about every active SPeer on the moment
 	SPeer res;
-	res.addr = addr;	
+	res.addr = addr;
 	res.bActive = true;
 	res.addrInfo = _addrInfo;
 	for ( std::unordered_map<UCID,SPeer>::iterator i2 = clients.begin(); i2 != clients.end(); ++i2 )
@@ -541,10 +541,10 @@ void CP2PTracker::SendBroadcast( const UCID dest, int nID, CMemoryStream &data )
 	pkt << nID;
 	pkt.WriteFrom( data );
 	packets.push_back( SPacket( dest, pkt ) );
-	
+
 #ifdef __LOG__
 	data.Seek( 0 );
-	
+
 	uint8_t cMsgID;
 	data >> cMsgID;
 	if ( cMsgID != 9 ) {}

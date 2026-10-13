@@ -62,7 +62,7 @@ void CPlayLog::SaveToFile( const std::string &szFileName )
 {
 	const int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos + 1;
 	const int nStartPos = bLogIsFull ? ( nCurPos + SOUND_PLAY_LOG_SIZE - 1 ) % SOUND_PLAY_LOG_SIZE : 0;
-	
+
 	CFileStream stream( fmt::format( "{}.soundlog", szFileName ), CFileStream::WIN_CREATE );
 
 	nChannels = FSOUND_GetMaxChannels();
@@ -85,18 +85,18 @@ void CPlayLog::PlayFile( const std::string &szFileName, int nMaxSize )
 
 	CPtr<IBinSaver> pSaver = CreateBinSaver( &stream, SAVER_MODE_READ );
 	operator&( *pSaver.GetPtr() );
-	
+
 	ISFX * pSFX = Singleton<ISFX>();
-	
+
 	int nStartPos = bLogIsFull ? ( nCurPos + SOUND_PLAY_LOG_SIZE -1 ) % SOUND_PLAY_LOG_SIZE : 0;
 	int nEntries = bLogIsFull ? SOUND_PLAY_LOG_SIZE : nCurPos;
-	
+
 	std::list<FSOUND_SAMPLE *> toDelete;
 	for ( int i = 0; i < (std::min)( nEntries, nMaxSize ); ++i )
 	{
 		const SLogEntry &entry = log[( i + nStartPos ) % SOUND_PLAY_LOG_SIZE];
 		const NDb::SSoundDesc * pDesc = NDb::Get<NDb::SSoundDesc>( entry.szName );
-		
+
 		if ( pDesc )
 		{
 			CFileStream steram( NVFS::GetMainVFS(), pDesc->szSoundPath );
@@ -163,10 +163,10 @@ public:
 
 static CPlayVisitor thePlayVisitor;
 
-CSoundEngine::CSoundEngine() 
-: bInited( false ), bPaused( false ), bEnableSFX( true ), bEnableStreaming( true ), 
+CSoundEngine::CSoundEngine()
+: bInited( false ), bPaused( false ), bEnableSFX( true ), bEnableStreaming( true ),
 bSoundCardPresent( false ), timeLastUpdate( -1 )
-{  
+{
 }
 
 bool CSoundEngine::SearchDevices()
@@ -200,7 +200,7 @@ bool CSoundEngine::IsInitialized()
 
 CObjectBase* CSoundEngine::QI( int nInterfaceTypeID )
 {
-	if ( nInterfaceTypeID == 0 ) 
+	if ( nInterfaceTypeID == 0 )
 		return reinterpret_cast<CObjectBase*>( FSOUND_GetOutputHandle() );
 	return 0;
 }
@@ -209,7 +209,7 @@ bool CSoundEngine::Init( HWND hWnd, int nDriver, ESFXOutputType output, int nMix
 {
 	if ( !SearchDevices() )
 		return false;
-	
+
 	NI_ASSERT( nDriver < drivers.size(), fmt::format("Can't find driver {} (max found {})", nDriver, drivers.size()) );
 	FSOUND_SetDriver( nDriver );
 	bSoundCardPresent = true;
@@ -297,10 +297,10 @@ void CSoundEngine::Update( const CVec3 &vListener, const CVec3 &vCameraDir, NTim
 	if ( b3DMode )
 	{
 		CVec3 vPos( vListener.x, vListener.z, vListener.y );
-		
+
 		// camera speed - ignore it
 		CVec3 vSpeed( VNULL3 );//timeDiff != 0 ? ( vFormerListener - vListener ) / timeDiff : VNULL3 );
-		
+
 		vFormerListener = vPos;
 
 		CVec3 vFwd( vCameraDir.x, vCameraDir.z, vCameraDir.y );
@@ -341,7 +341,7 @@ bool CSoundEngine::IsPaused()
 
 bool CSoundEngine::Pause( bool bPause )
 {
-	if ( bPaused != bPause ) 
+	if ( bPaused != bPause )
 	{
 		for ( CChannelSoundMap::iterator it = soundsMap.begin(); it != soundsMap.end(); ++it )
 		{
@@ -391,7 +391,7 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 		return -1;
 
 	CSoundSample *pSample = checked_cast<CSFXSound*>( pSound )->GetSample();
-	
+
 	int nLength = pSound->GetLenght();
 	int nSampleRate = pSound->GetSampleRate();
 	int nTimeLength = 1000 * nLength / nSampleRate;
@@ -417,7 +417,7 @@ int CSoundEngine::PlaySample( ISound *pSound, bool bLooped, unsigned int nStartP
 	playLog.Add( pSample->GetName(), bLooped, nStartPos );
 	//DEBUG}
 #endif
-	
+
 	return nChannel;
 }
 
@@ -430,7 +430,7 @@ void CSoundEngine::StopSample( ISound *pSound )
 {
 	CSoundChannelMap::iterator pos = channelsMap.find( pSound );
 	if ( pos != channelsMap.end() )
-	{		
+	{
 		StopChannel( pos->second );
 	}
 }
@@ -453,7 +453,7 @@ void CSoundEngine::StopChannel( int nChannel )
 	CChannelSoundMap::iterator pos = soundsMap.find( nChannel );
 	if ( pos != soundsMap.end() )
 	{
-		
+
 		channelsMap.erase( pos->second );
 		soundsMap.erase( pos );
 	}

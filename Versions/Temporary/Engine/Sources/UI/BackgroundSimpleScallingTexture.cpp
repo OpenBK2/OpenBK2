@@ -41,12 +41,12 @@ void CBackgroundSimpleScallingTexture::SetTexture( const struct NDb::STexture *_
 
 void CBackgroundSimpleScallingTexture::Visit( struct IUIVisitor* pVisitor )
 {
-	if ( pos.IsEmpty() || !pStats ) 
+	if ( pos.IsEmpty() || !pStats )
 		return;
 
 	CRectLayout rects;
 	const CTRect<float> rectTexture = ( pTexture == 0 )?CTRect<float>( 0.0f, 0.0f, 0.0f, 0.0f ) :
-		CTRect<float>( 0.0f, 0.0f, vSize.x == 0.0f ? pTexture->nWidth : vSize.x, 
+		CTRect<float>( 0.0f, 0.0f, vSize.x == 0.0f ? pTexture->nWidth : vSize.x,
 		vSize.y == 0.0f ? pTexture->nHeight : vSize.y );
 	rects.AddRect( pos.x1, pos.y1, pos.Width(), pos.Height(), rectTexture, FadeColor( pStats->nColor, GetFadeValue() ) );
 

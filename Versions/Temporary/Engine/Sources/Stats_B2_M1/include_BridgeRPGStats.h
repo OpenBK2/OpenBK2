@@ -30,20 +30,20 @@ int GetRandomBeginIndex( int nIndex, int nState, int *pRandomSeed )	const { retu
 int GetRandomLineIndex( int nIndex, int nState, int *pRandomSeed )  const { return GetIndexLocal( nIndex, states[nState].lines, "line", pRandomSeed ); }
 int GetRandomEndIndex( int nIndex, int nState, int *pRandomSeed )   const { return GetIndexLocal( nIndex, states[nState].ends, "end", pRandomSeed ); }
 //
-bool IsBeginIndex( int nIndex ) const 
-{ 
+bool IsBeginIndex( int nIndex ) const
+{
 	return	( find( states[0].begins.begin(), states[0].begins.end(), nIndex ) != states[0].begins.end() ) ||
 		( find( states[1].begins.begin(), states[1].begins.end(), nIndex ) != states[1].begins.end() ) ||
 		( find( states[2].begins.begin(), states[2].begins.end(), nIndex ) != states[2].begins.end() );
 }
-bool IsEndIndex( int nIndex ) const 
-{ 
+bool IsEndIndex( int nIndex ) const
+{
 	return	( find( states[0].ends.begin(), states[0].ends.end(), nIndex ) != states[0].ends.end() ) ||
 		( find( states[1].ends.begin(), states[1].ends.end(), nIndex ) != states[1].ends.end() ) ||
 		( find( states[2].ends.begin(), states[2].ends.end(), nIndex ) != states[2].ends.end() );
 }
-bool IsLineIndex( int nIndex ) const 
-{ 
+bool IsLineIndex( int nIndex ) const
+{
 	return	( find( states[0].lines.begin(), states[0].lines.end(), nIndex ) != states[0].lines.end() ) ||
 		( find( states[1].lines.begin(), states[1].lines.end(), nIndex ) != states[1].lines.end() ) ||
 		( find( states[2].lines.begin(), states[2].lines.end(), nIndex ) != states[2].lines.end() );
@@ -102,10 +102,10 @@ virtual void ToAIUnits( bool bInEditor )
 {
 	eGameType = SGVOGT_BRIDGE;
 	SStaticObjectRPGStats::ToAIUnits( bInEditor );
-	//FOR_EACH_VAL( segments, ToAIUnits, bInEditor ); 
-	FOR_EACH_VAL( firePoints, ToAIUnits, bInEditor ); 
-	FOR_EACH_VAL( smokePoints, ToAIUnits, bInEditor ); 
-	FOR_EACH_VAL( dirExplosions, ToAIUnits, bInEditor ); 
+	//FOR_EACH_VAL( segments, ToAIUnits, bInEditor );
+	FOR_EACH_VAL( firePoints, ToAIUnits, bInEditor );
+	FOR_EACH_VAL( smokePoints, ToAIUnits, bInEditor );
+	FOR_EACH_VAL( dirExplosions, ToAIUnits, bInEditor );
 	//
 	center.passability.PostLoad( bInEditor );
 	end.passability.PostLoad( bInEditor );
@@ -114,11 +114,11 @@ virtual void ToAIUnits( bool bInEditor )
 
 const int GetTypeFromIndex( const int nIndex, const int nDamageState ) const
 {
-	if ( find(states[nDamageState].begins.begin(), states[nDamageState].begins.end(), nIndex) != states[nDamageState].begins.end() ) 
+	if ( find(states[nDamageState].begins.begin(), states[nDamageState].begins.end(), nIndex) != states[nDamageState].begins.end() )
 		return BRIDGE_SPAN_TYPE_BEGIN;
-	if ( find(states[nDamageState].lines.begin(), states[nDamageState].lines.end(), nIndex) != states[nDamageState].lines.end() ) 
+	if ( find(states[nDamageState].lines.begin(), states[nDamageState].lines.end(), nIndex) != states[nDamageState].lines.end() )
 		return BRIDGE_SPAN_TYPE_CENTER;
-	if ( find(states[nDamageState].ends.begin(), states[nDamageState].ends.end(), nIndex) != states[nDamageState].ends.end() ) 
+	if ( find(states[nDamageState].ends.begin(), states[nDamageState].ends.end(), nIndex) != states[nDamageState].ends.end() )
 		return BRIDGE_SPAN_TYPE_END;
 	//
 	NI_ASSERT( false, StrFmt("Unknown span index %d in bridge \"%s\"", nIndex, szParentName.c_str()) );
@@ -127,7 +127,7 @@ const int GetTypeFromIndex( const int nIndex, const int nDamageState ) const
 
 const int GetIndexFromTypeLocal( const int nType, const int nDamageState, int *pCurRandomSeed ) const
 {
-	switch ( nType ) 
+	switch ( nType )
 	{
 	case BRIDGE_SPAN_TYPE_BEGIN:
 		return GetRandomBeginIndex( -1, nDamageState, pCurRandomSeed );

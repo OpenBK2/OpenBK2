@@ -104,7 +104,7 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 		//
 		if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
 				 ( nFlags & MK_LBUTTON ) &&
-				 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) && 
+				 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) &&
 				 pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].IsValid() )
 		{
 			if ( CPolygonState::CControlPointList *pControlPointList = pParentState->GetControlPoints( pParentState->GetSelectedPolygonID() ) )
@@ -115,7 +115,7 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 					case CPolygonState::MT_SINGLE:
 					default:
 					{
-						( *pControlPointList )[pParentState->nSelectedControlPoint] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos - 
+						( *pControlPointList )[pParentState->nSelectedControlPoint] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
 																																					 pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						break;
 					}
@@ -125,7 +125,7 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 						{
 							for ( int nControlPointIndex = pParentState->nSelectedControlPoint; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
 							{
-								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos - 
+								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
 																															pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
@@ -133,7 +133,7 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 						{
 							for ( int nControlPointIndex = 0; nControlPointIndex <= pParentState->nSelectedControlPoint; ++nControlPointIndex )
 							{
-								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos - 
+								( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
 																															pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 							}
 						}
@@ -143,7 +143,7 @@ void CPolygonEditState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rMouse
 					{
 						for ( int nControlPointIndex = 0; nControlPointIndex < pControlPointList->size(); ++nControlPointIndex )
 						{
-							( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos - 
+							( *pControlPointList )[nControlPointIndex] += pParentState->pStoreInputState->lastEventInfo.vTerrainPos -
 																														pParentState->pStoreInputState->eventInfoList[CStoreInputState::ISE_LBUTTONDOWN].vTerrainPos;
 						}
 						break;
@@ -205,14 +205,14 @@ void CPolygonEditState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMou
 		{
 			bool bOldPolygonNotPresent = true;
 			for ( int nSelectedPolygonIndex = 0; nSelectedPolygonIndex < pParentState->pickPolygonIDList.size(); ++nSelectedPolygonIndex )
-			{					
+			{
 				if ( nSelectedPolygonID == pParentState->pickPolygonIDList[nSelectedPolygonIndex] )
 				{
 					pParentState->nSelectedIndex = nSelectedPolygonIndex;
 					bOldPolygonNotPresent = false;
 					break;
 				}
-			}	
+			}
 			// Выделяем другой - первый обьект
 			if ( bOldPolygonNotPresent )
 			{
@@ -279,7 +279,7 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 	{
 		pParentState->pStoreInputState->OnKeyDown( nChar, nRepCnt, nFlags );
 		//
-		if ( nChar == VK_INSERT ) 
+		if ( nChar == VK_INSERT )
 		{
 			if ( ( pParentState->GetSelectedPolygonID() != INVALID_NODE_ID ) &&
 					 ( pParentState->nSelectedControlPoint != INVALID_NODE_ID ) )
@@ -314,7 +314,7 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 				}
 			}
 		}
-		else if ( nChar == VK_DELETE ) 
+		else if ( nChar == VK_DELETE )
 		{
 			pParentState->OnDelete();
 		}
@@ -331,7 +331,7 @@ void CPolygonEditState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 				}
 				pParentState->UpdatePolygon( pParentState->GetSelectedPolygonID(), ( nChar != VK_ESCAPE ) ? CPolygonState::UT_FINISH : CPolygonState::UT_CANCEL );
 			}
-			//			
+			//
 			pParentState->nSelectedControlPoint = INVALID_NODE_ID;
 			pParentState->controlPointList.clear();
 			pParentState->pickPolygonIDList.clear();
@@ -600,7 +600,7 @@ void CPolygonState::Draw( IPaintContext *pPaintDC )
 				//
 				sceneDrawTool.DrawCircle( vPoint, CONTROL_POINT_RADIUS, CONTROL_POINT_PARTS, CONTROL_POINT_COLOR, false );
 				pointList.push_back( vPoint );
-			}	
+			}
 			sceneDrawTool.DrawPolyline( pointList, CONTROL_POINT_COLOR, IsClosedPolygon(), false );
 		}
 		//
@@ -699,6 +699,6 @@ bool CPolygonState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pb
 }
 
 
-// basement storage  
+// basement storage
 
 

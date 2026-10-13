@@ -13,13 +13,13 @@ float CWindController::CoeffFunc( int nParam )
 	float fRes = 0.0f;
 	float fParam = nParam / fWindIntensity * 0.5f;		// Multiplied by speed
 
-	if ( fParam < nPoint1 ) 
+	if ( fParam < nPoint1 )
 		fRes = 0.0f;
-	else if ( fParam < nPoint2 ) 
+	else if ( fParam < nPoint2 )
 		fRes = fParam / nPoint2;
-	else if ( fParam < nPoint3 ) 
+	else if ( fParam < nPoint3 )
 		fRes = 1.0f;
-	else if ( fParam < nPoint4 ) 
+	else if ( fParam < nPoint4 )
 		fRes = 1.0f - ( fParam - nPoint3 ) / ( nPoint4 - nPoint3 );
 
 	//elsewhere

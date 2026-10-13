@@ -40,7 +40,7 @@ namespace NMapInfoEditor
 							 ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_FIGHTER )||
 							 ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_SUPER ) ||
 							 ( pMechUnitRPGStats->eDBtype == NDb::DB_RPG_TYPE_AVIA_LANDER ) ||
-							 ( ( pMechUnitRPGStats->pM1UnitTargetType ) && 
+							 ( ( pMechUnitRPGStats->pM1UnitTargetType ) &&
 								 ( pMechUnitRPGStats->pM1UnitTargetType->eBaseType == NDb::M1_PLANE ) )
 						 )
 					{
@@ -58,7 +58,7 @@ namespace NMapInfoEditor
 		}
 		return false;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SSimpleObjectInfo::Load( const SObjectLoadInfo* pObjectLoadInfo, IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
@@ -124,7 +124,7 @@ namespace NMapInfoEditor
 		NI_ASSERT( pObjectCreateInfo != 0, "SSimpleObjectInfo::Create(), pObjectCreateInfo == 0" );
 		//
 		const NDb::SHPObjectRPGStats *pHPObjectRPGStats = dynamic_cast<const NDb::SHPObjectRPGStats*>( NDb::GetObject( pObjectCreateInfo->rpgStatsDBID ) );
-		NI_ASSERT( pHPObjectRPGStats != 0, fmt::format( "{} not NDb::SHPObjectRPGStats type", pObjectCreateInfo->szRPGStatsTypeName.c_str() ) ); 
+		NI_ASSERT( pHPObjectRPGStats != 0, fmt::format( "{} not NDb::SHPObjectRPGStats type", pObjectCreateInfo->szRPGStatsTypeName.c_str() ) );
 		if (  pHPObjectRPGStats == 0 )
 		{
 			return false;
@@ -202,7 +202,7 @@ namespace NMapInfoEditor
 		{
 			if ( const NDb::SVisObj *pVisObj = pHPObjectRPGStats->pvisualObject )
 			{
-				return ::GetModel( pVisObj, eSeason ); 
+				return ::GetModel( pVisObj, eSeason );
 			}
 		}
 		return 0;
@@ -213,12 +213,12 @@ namespace NMapInfoEditor
 	{
 		if ( pHPObjectRPGStats )
 		{
-			if ( fHP != 1 && !pHPObjectRPGStats->damageLevels.empty() ) 
+			if ( fHP != 1 && !pHPObjectRPGStats->damageLevels.empty() )
 			{
 				const NDb::SVisObj *pVisObj = pHPObjectRPGStats->damageLevels.back().pVisObj;
-				for ( int nDamadeLeveIndex = pHPObjectRPGStats->damageLevels.size() - 1; nDamadeLeveIndex >= 0; --nDamadeLeveIndex ) 
+				for ( int nDamadeLeveIndex = pHPObjectRPGStats->damageLevels.size() - 1; nDamadeLeveIndex >= 0; --nDamadeLeveIndex )
 				{
-					if ( pHPObjectRPGStats->damageLevels[nDamadeLeveIndex].fDamageHP >= fHP ) 
+					if ( pHPObjectRPGStats->damageLevels[nDamadeLeveIndex].fDamageHP >= fHP )
 					{
 						return ::GetModel( pVisObj, eSeason );
 					}

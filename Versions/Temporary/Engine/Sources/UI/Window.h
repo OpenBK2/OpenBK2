@@ -54,7 +54,7 @@ class UI_EXPORT CWindow : virtual public IWindow, public CUIMORegConttainer
 	// dynamic data, set during execution
 	CPtr<IWindow> pCustomTooltip;
 	std::wstring wszCustomTooltip;
-	
+
 	CPtr<CWindow> pParent;									// parent window.
 	CObj<CWindow> pFocusedChild;									// child or its parent that has keyboard focus
 	bool bFocused;
@@ -63,9 +63,9 @@ class UI_EXPORT CWindow : virtual public IWindow, public CUIMORegConttainer
 	std::vector< CObj<CWindow> > pressed;		// pressed with each mouse button
 	CVec2 vScreenPos;
 	IClickNotify *pClickNotify;
-	
+
 	CObj<class CPlacedText> pPlacedText;
-	
+
 	bool bDelayChildRemove; // valid only during ProcessEvent
 	std::vector<CObj<CWindow> > removedChildren;
 	float fFadeValue;
@@ -87,7 +87,7 @@ private:
 	typedef std::unordered_set<CPtr<CWindow>> CChildren;
 	CChildren children;
 	std::pair<CTRect<float>, bool> delayedReposition;
-	
+
 	// message handler
 	DECLARE_HANDLE_MAP;
 	DECLARE_MESSAGE_HANDLER(ShowWindow);
@@ -116,26 +116,26 @@ protected:
 	}
 	int RunAnimationAndCommands( const NDb::SUIStateSequence &seq, const std::string &szCommanEffect,
 																const bool bWaitOnGraphics, const bool bForward );
-	
+
 	// Returns root window
 	CWindow* GetRoot();
-	
+
 	// Returns a final focused window (not any of its parents)
 	CWindow* FindFocusedWindow();
 	// Removes focus from a focused window
 	void RemoveAnyFocus();
 	// if pressed window is not focused window (or its parent) - remove focus from former window
 	void CheckRemoveFocus( CWindow *pClickedWnd );
-	
+
 	// for debug purpose only
 	int CheckNamedChildrenCount( const std::string &szName, bool bRecursive );
-	
+
 	virtual const std::wstring& GetDBFormatText() const;
 	virtual const std::wstring& GetDBInstanceText() const;
 	virtual const NDb::SWindowPlacement* GetDBTextPlacement() const;
 	virtual void OnChangeVisibility( bool bShow );
 	virtual bool IsRelatedFocus( IWindow *pWindow ) const { return this == pWindow; }
-	
+
 	float GetTotalFadeValue() const { return fFadeValue * fInternalFadeValue; }
 
 	virtual bool IsActiveArea( const CVec2 &vPos ) const;
@@ -147,7 +147,7 @@ public:
 	bool IsTransparent() const { return pShared->flags.bTransparent; }
 	virtual bool IsPickable() const;
 	//}
-	
+
 	int GetPriority() const;
 	void SetPriority( int n ); // works only before insertion into parent due to there is no children resort provided
 
@@ -155,7 +155,7 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 	int operator&( IBinSaver &ss );
-	
+
 	// fills rect with on-screen coordinates
 	void FillWindowRect( CTRect<float> *pRect ) const;
 	CTRect<float> GetWindowRect() const;
@@ -183,15 +183,15 @@ public:
 
 	void ShowWindow( const bool bShow );
 	bool IsVisible() const;
-	const NDb::EPositionAllign GetVerAllign() const 
+	const NDb::EPositionAllign GetVerAllign() const
 	{
 		return GetInstance()->placement.verAllign.first ;
 	}
-	const NDb::EPositionAllign GetHorAllign() const 
+	const NDb::EPositionAllign GetHorAllign() const
 	{
 		return GetInstance()->placement.horAllign.first ;
 	}
-	void SetAllign( const NDb::EPositionAllign eHorAllign, const NDb::EPositionAllign eVerAllign ) 
+	void SetAllign( const NDb::EPositionAllign eHorAllign, const NDb::EPositionAllign eVerAllign )
 	{
 		GetInstance()->placement.horAllign = eHorAllign;
 		GetInstance()->placement.verAllign = eVerAllign;
@@ -218,7 +218,7 @@ public:
 	void SetName( const std::string &_szName );
 	// return minimal width that text is displayed properly
 	int GetOptimalWidth() const ;
-	
+
 	// broadcast UI message processing
 	// return true if message is processed and don't need to process it anymore
 	// generally, if Screen returns false, that means something wriong with this message
@@ -238,7 +238,7 @@ public:
 	//void MsgOnChar( const struct SGameMessage &msg );
 	// IWindow implementation
 	virtual bool OnButtonDown( const CVec2 &vPos, const int nButton );
-	virtual bool OnButtonUp( const CVec2 &vPos, const int nButton ); 
+	virtual bool OnButtonUp( const CVec2 &vPos, const int nButton );
 	virtual bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 	virtual bool OnMouseMove( const CVec2 &vPos, const int nMouseState );
 	//virtual void OnChar( const wchar_t chr );
@@ -266,7 +266,7 @@ public:
 	void SetTooltipIDForMLHandler( int nID );
 	int GetTooltipIDForMLHandler() const;
 	virtual void SetTooltip( IWindow *pTooltipWindow );
-	
+
 	// DRAWING
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void RegisterObservers();

@@ -42,7 +42,7 @@ void TakeScreenShotMsg( const SGameMessage &msg )
 
 // SSceneData::SScreenData
 
-SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) : 
+SSceneData::SScreenData::SScreenData( IWindow *_pScreen ) :
 	pScreen( _pScreen )
 {
 	p3DView = NGScene::CreateNewView();
@@ -57,8 +57,8 @@ void SSceneData::SScreenData::SetSceneConsts( const NDb::SSceneConsts *pSceneCon
 
 // SSceneData
 
-SSceneData::SSceneData() : 
-	bIsInternal( false ), 
+SSceneData::SSceneData() :
+	bIsInternal( false ),
 	nFreeSelectionID( 0 )
 {
 	eAIGeomMode = EAI_GEOM_NONE;
@@ -94,7 +94,7 @@ void SSceneData::Init()
 	markers.resize( _ESMT_ENUM_COUNTER );
 
 	pWindController = new CWindController( GameTimer(), 0, 0 );	//CRAP need to take parameters from MapInfo
-	
+
 	pAbsTimer->Set( GameTimer()->GetAbsTime() );
 	pGameTimer->Set( GameTimer()->GetGameTime() );
 

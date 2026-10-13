@@ -129,7 +129,7 @@ public:
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
-	
+
 	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
@@ -161,7 +161,7 @@ public:
 			}
 
 			bFinished = IsFinished();
-			if ( !bFinished ) 
+			if ( !bFinished )
 			{
 				CObjectBase *pCheckUnit = CastToObjectBase( operator*() );
 				bFinished = pCheckUnit && pCheckUnit->IsRefValid();
@@ -234,7 +234,7 @@ class CUnitsIter<1, 0>
 		const int nCellID = units.nCell[nYCell][nXCell] * 2 * 3 + 2 * cCurDipl + cCurMech + 1;
 		return units.unitsInCells[cCurVis].begin( nCellID );
 	}
-	
+
 	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		nDownX = vDownLeft.x / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
@@ -297,7 +297,7 @@ public:
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
-	
+
 	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
@@ -325,7 +325,7 @@ public:
 					nIter = GetCurCellIter();
 			}
 			bFinished = IsFinished();
-			if ( !bFinished ) 
+			if ( !bFinished )
 			{
 				CObjectBase *pCheckUnit = CastToObjectBase( operator*() );
 				bFinished = pCheckUnit && pCheckUnit->IsRefValid();
@@ -333,9 +333,9 @@ public:
 		}
 	}
 
-	class CAIUnit* operator*() const 
-	{ 
-		return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; 
+	class CAIUnit* operator*() const
+	{
+		return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue];
 	}
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };
@@ -401,7 +401,7 @@ class CUnitsIter<0, 0>
 		const int nCellID = units.nCell[nYCell][nXCell] * 2 * 3 + 2 * cCurDipl + cCurMech + 1;
 		return units.unitsInCells[cCurVis].begin( nCellID );
 	}
-	
+
 	void Init( uint8_t _cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs )
 	{
 		nDownX = vDownLeft.x / ( SConsts::TILE_SIZE * SConsts::BIG_CELL_COEFF * ( 1 << NSize ) );
@@ -464,7 +464,7 @@ public:
 
 		InitAll( vCenter, CVec2( fR, fR ), cStartDipl, cDiplomacies, cStartMech, cMechs );
 	}
-	
+
 	void Init4HighIter( const CVec2 &_vDownLeft, const CVec2 &_vUpRight, uint8_t cStartDipl, uint8_t cDiplomacies, uint8_t cStartMech, uint8_t cMechs, uint8_t cHighIterVis )
 	{
 		vDownLeft = _vDownLeft;
@@ -493,7 +493,7 @@ public:
 			}
 
 			bFinished = IsFinished();
-			if ( !bFinished ) 
+			if ( !bFinished )
 			{
 				CObjectBase *pCheckUnit = CastToObjectBase( operator*() );
 				bFinished = pCheckUnit && pCheckUnit->IsRefValid();

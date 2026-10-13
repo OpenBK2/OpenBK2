@@ -8,7 +8,7 @@ bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGrad
 	NI_ASSERT( nGridLines > 0, fmt::format( "Invalid GridLines Number: {}\n", nGridLines ) );
 	if ( nGridLines < 0 )
 	{
-		return false;	
+		return false;
 	}
 	bOdd = ( ( nGridLines & 0x1 ) != 0 );
 	//
@@ -17,7 +17,7 @@ bool SHeightPattern::CreateByGradient( float fValue, int nGridLines, const SGrad
 	//
 	SCreateHeightPatternByGradientFunctional functional( this, &rGradient, fValue, true );
 	const bool bResult = ApplyInRadius( CTRect<int>( 0, 0, nGridLines, nGridLines ), functional );
-	//Trace2DFloatArray( heights, fmt::format( "SHeightPattern::CreateByGradient(): {}", bResult ? "true" : "false" ) ); 
+	//Trace2DFloatArray( heights, fmt::format( "SHeightPattern::CreateByGradient(): {}", bResult ? "true" : "false" ) );
 	return bResult;
 }
 
@@ -27,7 +27,7 @@ bool SHeightPattern::CreateByValue( float fValue, int nGridLines, bool bEllipse 
 	NI_ASSERT( nGridLines > 0, fmt::format( "Invalid GridLines Number: {}\n", nGridLines ) );
 	if ( nGridLines < 0 )
 	{
-		return false;	
+		return false;
 	}
 	bOdd = ( ( nGridLines & 0x1 ) != 0 );
 	//
@@ -46,6 +46,6 @@ bool SHeightPattern::CreateByValue( float fValue, int nGridLines, bool bEllipse 
 	}
 }
 
-// basement storage  
+// basement storage
 
 

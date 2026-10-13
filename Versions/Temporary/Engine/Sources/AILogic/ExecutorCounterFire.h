@@ -27,7 +27,7 @@ class CExecutorCounterFire : public CExecutor
 	CPtr< CAntiArtillery >	pCurrentTarget;
 
 	bool bBonusApplied = {};
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CExecutor*)this); f.Add(2,&pUnit); f.Add(3,&state); f.Add(4,&stateBeforeDisable); f.Add(5,&lastSent); f.Add(6,&pUpdate); f.Add(7,&timeLastHeard); f.Add(8,&vSearchCenter); f.Add(9,&vLastCirclePos); f.Add(10,&fSearchRadius); f.Add(11,&pCurrentTarget); f.Add(12,&bBonusApplied); return 0; }
 	void UpdateState( );
 	void ApplyBonus( const bool bForward );

@@ -69,7 +69,7 @@ static void init_entry (lua_State *L, int tag) {
 }
 
 
-void luaT_init( lua_State *L ) 
+void luaT_init( lua_State *L )
 {
 	L->TMtable.resize( NUM_TAGS );
   for (int t=0; t<L->TMtable.size(); ++t)
@@ -107,7 +107,7 @@ int lua_copytagmethods (lua_State *L, int tagto, int tagfrom) {
 }
 
 
-int luaT_tag (lua_State *L, const TObject *o) 
+int luaT_tag (lua_State *L, const TObject *o)
 {
   int t = o->GetType();
   switch (t) {
@@ -118,13 +118,13 @@ int luaT_tag (lua_State *L, const TObject *o)
 }
 
 
-void lua_gettagmethod (lua_State *L, int t, const char *event) 
+void lua_gettagmethod (lua_State *L, int t, const char *event)
 {
   int e;
   e = luaI_checkevent(L, event, t);
   checktag(L, t);
 	TObject *pTop = LObj( L, L->pCT->top );
-  if ( luaT_validevent(t, e) && luaT_gettm(L, t, e) ) 
+  if ( luaT_validevent(t, e) && luaT_gettm(L, t, e) )
     pTop->SetCL( luaT_gettm(L, t, e) );
   else
     pTop->SetNil();
@@ -141,7 +141,7 @@ void lua_settagmethod (lua_State *L, int t, const char *event) {
                 (t == LUA_TTABLE || t == LUA_TUSERDATA) ?
                    " with default tag" : "");
 	TObject *pPrTop = LObj(L, L->pCT->top - 1);
-  switch ( pPrTop->GetType() ) 
+  switch ( pPrTop->GetType() )
 	{
     case LUA_TNIL:
       luaT_gettm(L, t, e) = STK_NULL;

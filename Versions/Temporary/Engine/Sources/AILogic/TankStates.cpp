@@ -43,7 +43,7 @@ IStatesFactory* CTankStatesFactory::Instance()
 bool CTankStatesFactory::CanCommandBeExecuted( CAICommand *pCommand )
 {
 	const EActionCommand &cmdType = pCommand->ToUnitCmd().nCmdType;
-	return 
+	return
 		( cmdType == ACTION_COMMAND_DIE							||
 			cmdType == ACTION_COMMAND_MOVE_TO					||
 			cmdType == ACTION_COMMAND_REVERSE_TO				||
@@ -92,13 +92,13 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 {
 	NI_ASSERT( dynamic_cast<CTank*>( pObj ) != 0, "Wrong unit type" );
 	CTank *pUnit = checked_cast<CTank*>( pObj );
-	
-	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();	
+
+	const SAIUnitCmd &cmd = pCommand->ToUnitCmd();
 	IUnitState* pResult = 0;
 	bool bSwarmAttack = false;
-	
+
 	switch ( cmd.nCmdType )
-	{	
+	{
 	case ACTION_COMMAND_WAIT:
 		pResult = CMechUnitRestState::Instance( pUnit, cmd.vPos, pUnit->GetDirection(), 0, cmd.fNumber );
 
@@ -162,7 +162,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			}
 		}
 		break;
-	
+
 	case ACTION_MOVE_TO_NOT_PRESIZE:
 		pResult = CMoveToPointNotPresize::Instance( pUnit, cmd.vPos, cmd.fNumber );
 
@@ -178,7 +178,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		break;
 	case ACTION_MOVE_SELF_ENTRENCH:
 		pResult = CMechUnitEntrenchSelfState::Instance( pUnit );
-		
+
 		break;
 	case ACTION_MOVE_LEAVE_SELF_ENTRENCH:
 		pUnit->ResetHoldSector();
@@ -223,10 +223,10 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 			}
 		}
 		break;
-		
+
 	case ACTION_COMMAND_HOLD_SECTOR:
 		switch ( cmd.nNumber )
-		{	
+		{
 			case 0:
 				{
 					SAIUnitCmd newCmd( ACTION_COMMAND_HOLD_SECTOR );
@@ -326,7 +326,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 	case ACTION_COMMAND_SWARM_TO:
 		if ( pUnit->IsTrackDamaged() )
 			pUnit->SendAcknowledgement( pCommand, ACK_CANNOT_MOVE_TRACK_DAMAGED, !pCommand->IsFromAI() );
-		else 
+		else
 		{
 			pUnit->ResetHoldSector();
 			if (pUnit->IsInTankPit() && (theDipl.IsNetGame() || ( !theDipl.IsNetGame() && ( !pCommand->IsFromAI() || pUnit->GetPlayer() != theDipl.GetMyNumber() ) ) ) ) // сначала выйти из TankPit, потом поехать куда послали
@@ -335,10 +335,10 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 				theGroupLogic.InsertUnitCommand( SAIUnitCmd( ACTION_MOVE_LEAVE_SELF_ENTRENCH ), pUnit );
 				//theGroupLogic.InsertUnitCommand( SAIUnitCmd(ACTION_COMMAND_ENTRENCH_SELF, float(int(PARAM_ABILITY_OFF)), false ), pUnit );
 			}
-			else				
+			else
 				pResult = CCommonSwarmState::Instance( pUnit, cmd.vPos, cmd.fNumber );
 		}
-		
+
 		break;
 	case ACTION_COMMAND_SUPPORT_FIRE:
 		{
@@ -358,12 +358,12 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		break;
 	/*case ACTION_COMMAND_AMBUSH:					//Removed: ambush is now an ability (via Executor), not a state
 		pResult = CCommonAmbushState::Instance( pUnit );
-		
+
 		break;*/
 	case ACTION_COMMAND_ART_BOMBARDMENT:
 	case ACTION_COMMAND_FIRE_ROCKETS:
 		if ( pUnit->GetFirstArtilleryGun() != 0 )
-		{ 
+		{
 			if ( pUnit->GetFirstArtilleryGun()->CanShootToPointWOMove( cmd.vPos, 0.0f ) )
 			{
 				// FIRE_ROCKETS is deliberately finite even for non-rocket artillery weapons.
@@ -426,7 +426,7 @@ IUnitState* CTankStatesFactory::ProduceState( class CQueueUnit *pObj, CAICommand
 		break;
 	case ACTION_COMMAND_STAND_GROUND:
 		pUnit->Stop();
-		pUnit->UnsetFollowState();				
+		pUnit->UnsetFollowState();
 		pUnit->SetBehaviourMoving( SBehaviour::EMHoldPos );
 
 		break;
@@ -493,7 +493,7 @@ IUnitState* CMechUnitSupportFireState::Instance( CAIUnit *pUnit, CAIUnit *pFrien
 }
 
 CMechUnitSupportFireState::CMechUnitSupportFireState( CAIUnit *_pUnit, CAIUnit *_pFriend )
-: CStatusUpdatesHelper( EUS_SUPPORT_FIRE, _pUnit ), pUnit( _pUnit ), eState( ESFS_WAITING ), bFinish( false ), pFriend( _pFriend ), 
+: CStatusUpdatesHelper( EUS_SUPPORT_FIRE, _pUnit ), pUnit( _pUnit ), eState( ESFS_WAITING ), bFinish( false ), pFriend( _pFriend ),
 pGun( pUnit->GetFirstArtilleryGun() ), pFriendFormation( 0 )
 {
 	pUnit->Stop();
@@ -588,7 +588,7 @@ void CMechUnitSupportFireState::CheckArea()
 		for ( CStObjCircleIter<true> iter( pFriend->GetCenterPlain(), fSearchRadius ); !iter.IsFinished() && pObj == 0; iter.Iterate() )
 		{
 			CExistingObject *pIteratingObject = *iter;
-			if ( pIteratingObject->GetObjectType() == ESOT_BUILDING && theDipl.GetDiplStatus( pIteratingObject->GetPlayer(), pUnit->GetPlayer() ) == EDI_ENEMY && 
+			if ( pIteratingObject->GetObjectType() == ESOT_BUILDING && theDipl.GetDiplStatus( pIteratingObject->GetPlayer(), pUnit->GetPlayer() ) == EDI_ENEMY &&
 				pIteratingObject->IsVisible( pUnit->GetParty() ) && pIteratingObject->GetNDefenders() > 0 &&
 				fabs2( pIteratingObject->GetAttackCenter( pFriend->GetCenterPlain() ) - pFriend->GetCenterPlain() ) <= sqr( fSearchRadius ) && pGun->CanShootToObjectWOMove( pIteratingObject ) )
 			{
@@ -652,7 +652,7 @@ void CMechUnitSupportFireState::Segment()
 					}
 					break;
 				case ESFS_SHOOT_UNIT:
-					if ( IsValidObj( pEnemy ) && pEnemy->IsVisible( pUnit->GetParty() ) && 
+					if ( IsValidObj( pEnemy ) && pEnemy->IsVisible( pUnit->GetParty() ) &&
 						pGun->CanShootToUnitWOMove( pEnemy ) && fabs2( pEnemy->GetCenterPlain() - pFriend->GetCenterPlain() ) <= sqr( fSearchRadius ) )
 						pGun->StartEnemyBurst( pEnemy, false );
 					else
@@ -677,7 +677,7 @@ void CMechUnitSupportFireState::Segment()
 				}
 			}
 		}
-		else	
+		else
 		{
 			if ( pGun->GetNAmmo() == 0 )
 			{

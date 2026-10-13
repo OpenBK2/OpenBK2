@@ -48,7 +48,7 @@ bool CUnitGuns::AddGun( const struct IGunsFactory &gunsFactory, const int nPlatf
 	for ( int i = 0; i < pWeapon->shells.size(); ++i )
 	{
 		CBasicGun *pGun;
-		
+
 		if ( pWeapon->shells[i].etrajectory == NDb::SWeaponRPGStats::SShell::TRAJECTORY_BOMB )
 			pGun = gunsFactory.CreateGun( IGunsFactory::PLANE_GUN, i, commonGunsInfo[nCommonGun] );//when create bomb
 		else if ( pWeapon->shells[i].IsATGMTrajectory() )
@@ -155,10 +155,10 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 {
 	if ( pOwner->GetNGuns() == 0 )
 		return 0;
-	
+
 	*pTime = 0;
 	int nGun = -1;
-	
+
 	std::list< SWeaponPathInfo > pathInfo666( 0 );
 	const SWeaponRPGStats *pWStats = pOwner->GetGun(0)->GetWeapon();
 	int i = 0;
@@ -171,10 +171,10 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 			pGun->SetRejectReason( ACK_NEGATIVE );
 		else if ( pGun->CanShootToObject( pObj ) )
 		{
-			SWeaponPathInfo info;			
+			SWeaponPathInfo info;
 			if ( !pOwner->CanMove() || FindTimeToStatObjGo( pOwner, pObj, pWStats, info ) )
 			{
-				// если мы в формации и нельзя выходить за её пределы, а чтобы стрелять в юнита, придётся				
+				// если мы в формации и нельзя выходить за её пределы, а чтобы стрелять в юнита, придётся
 				if ( pOwner->CanMove() && !pOwner->CanGoToPoint( info.pStaticPath->GetFinishPoint() ) )
 					continue;
 
@@ -199,7 +199,7 @@ CBasicGun* CUnitGuns::ChooseGunForStatObj( CAIUnit *pOwner, CStaticObject *pObj,
 				}
 			}
 		}
-	
+
 		++i;
 		if ( i < GetNTotalGuns() )
 			pWStats = pOwner->GetGun(i)->GetWeapon();
@@ -339,7 +339,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 		pUnit->CreateAntiArtillery( fMaxRevealRadius );
 
 	int i = 0;
-	while ( i < GetNGuns() && 
+	while ( i < GetNGuns() &&
 					(
 						GetGun(i)->GetShell().IsLineTrajectory() ||
 						GetGun(i)->GetShell().IsATGMTrajectory() ||
@@ -350,14 +350,14 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 		++i;
 
 	nFirstArtGun = ( i < GetNGuns() ) ? i : -1;
-	
+
 	for ( int i = 1; i < GetNGuns(); ++i )
 	{
 		if ( GetGun( i )->GetGun().nPriority == 0 )
 		{
 			int j = 0;
-			while ( j < i && 
-							( GetGun( j )->GetGun().nPriority != 0 || 
+			while ( j < i &&
+							( GetGun( j )->GetGun().nPriority != 0 ||
 							  GetGun( j )->IsCommonEqual( GetGun( i ) ) ) )
 				++j;
 
@@ -373,7 +373,7 @@ void CMechUnitGuns::Init( CCommonUnit *pCommonUnit )
 bool CMechUnitGuns::SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType )
 {
 	int i = 0;
-	while ( i < GetNGuns() && 
+	while ( i < GetNGuns() &&
 					(
 					GetGun(i)->GetShell().IsLineTrajectory() ||
 					GetGun(i)->GetShell().IsATGMTrajectory() ||
@@ -400,10 +400,10 @@ const int CMechUnitGuns::GetActiveShellType() const
 }
 
 class CBasicGun* CMechUnitGuns::GetFirstArtilleryGun() const
-{ 
-	if ( nFirstArtGun >= 0 ) 
-		return GetGun( nFirstArtGun ); 
-	else return 0; 
+{
+	if ( nFirstArtGun >= 0 )
+		return GetGun( nFirstArtGun );
+	else return 0;
 }
 
 //*******************************************************************

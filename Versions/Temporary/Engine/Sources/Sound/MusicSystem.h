@@ -27,7 +27,7 @@ enum EStreamType
 	EST_VOICE,
 };
 
-// music has 2 streams: MUSIC & voice. "MUSIC STREAM" generally is music. 
+// music has 2 streams: MUSIC & voice. "MUSIC STREAM" generally is music.
 // "VOICE STREAM" is generally voice over and some short streaming sounds.
 // MUSIC STREAM is running always with settings, set in MapMusic structure. It has pauses and fade in/fade out.
 // VOICE STREAM is running periodically, it is launched through specific functions.
@@ -36,7 +36,7 @@ struct IMusicSystem : public CObjectBase
 	enum { tidTypeID = 0x11181340 };
 
 	virtual void Update() = 0;
-	virtual void Clear() = 0;	
+	virtual void Clear() = 0;
 
 	// voice stream functions
 	virtual void PlayVoice( const NDb::SVoice *pVoice ) = 0;

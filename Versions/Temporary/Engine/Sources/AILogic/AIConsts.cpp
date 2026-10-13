@@ -130,7 +130,7 @@ int SConsts::PARATROOPER_GROUND_SCAN_PERIOD = 200;
 
 float SConsts::TRANSPORT_MOVE_BACK_DISTANCE = 700.0f*700.0f;
 int SConsts::TRIES_TO_UNHOOK_ARTILLERY = 2;
-int SConsts::ENGINEER_MINE_CHECK_PERIOD; 
+int SConsts::ENGINEER_MINE_CHECK_PERIOD;
 float SConsts::FIGHTER_VERTICAL_SPEED_UP = 150.0f;
 float SConsts::FIGHTER_VERTICAL_SPEED_DOWN = 300.0f;
 float SConsts::PLANE_GUARD_STATE_RADIUS = 3000;
@@ -412,7 +412,7 @@ START_REGISTER(AILogicConsts)
 	REGISTER_VAR_EX( "AI.Common.DamageForMassiveDamageFatality",NGlobal::VarFloatHandler, &SConsts::DAMAGE_FOR_MASSIVE_DAMAGE_FATALITY, 0.7f, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Common.MassiveDamageFatalityProbability",NGlobal::VarFloatHandler, &SConsts::MASSIVE_DAMAGE_FATALITY_PROBABILITY, 0.8f, STORAGE_NONE );
 
-	REGISTER_VAR_EX( "AI.Aviation.PlanesBombHeight",NGlobal::VarFloatHandler, &SConsts::BOMB_START_HEIGHT, 0.5f, STORAGE_NONE ); 
+	REGISTER_VAR_EX( "AI.Aviation.PlanesBombHeight",NGlobal::VarFloatHandler, &SConsts::BOMB_START_HEIGHT, 0.5f, STORAGE_NONE );
 
 	REGISTER_VAR_EX( "AI.Infantry.StandLieRandomDelay",	NGlobal::VarFloatHandler, &SConsts::STAND_LIE_RANDOM_DELAY		, 500.0f, STORAGE_NONE );
 
@@ -492,15 +492,15 @@ START_REGISTER(AILogicConsts)
 	REGISTER_VAR_EX( "AI.Common.MinRotateAngle",  NGlobal::VarFloatHandler, &fMinRotateAngle, 0.1f, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Aviation.FighterPatrolTime",  NGlobal::VarIntHandler, &nFighterPatrolTime, 400, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Infantry.FullHealthTime", NGlobal::VarIntHandler, &SConsts::INFANTRY_FULL_HEAL_TIME, 2000, STORAGE_NONE );
-	
+
 	REGISTER_VAR_EX( "AI.Engineers.RepairCostAdjust",  NGlobal::VarFloatHandler, &SConsts::REPAIR_COST_ADJUST, 50.0f, STORAGE_NONE );
 
 	REGISTER_VAR_EX( "AI.Common.TimeToAllowKillCrushedObj",  NGlobal::VarFloatHandler, &SConsts::TIME_TO_ALLOW_KILL_CRUSHED_OBJ, 20000, STORAGE_NONE );
 	//REGISTER_VAR_EX( "AI.Common.TileHeightDiffToLock", NGlobal::VarFloatHandler, &SConsts::TILE_HEIGHT_DIFF_TO_LOCK, 10.0f, STORAGE_NONE );
 	REGISTER_VAR_EX( "AI.Flags.StorageCaptureTime", NGlobal::VarIntHandler, &SConsts::STORAGE_CAPTURE_TIME, 5000, STORAGE_NONE );
-	
+
 	REGISTER_VAR_EX( "use_round_units", NGlobal::VarBoolHandler, &g_bUseRoundUnits, false, STORAGE_NONE );
-	
+
 
 FINISH_REGISTER
 
@@ -534,7 +534,7 @@ void SConsts::Load()
 		const auto message = fmt::format("CallForHelpRadius is too big, reduced to {}", CALL_FOR_HELP_RADIUS );
 		CONSOLE_BUFFER_LOG2( PIPE_CHAT, message.c_str(), 0xffff0000, true );
 	}
-	
+
 }
 
 void SConsts::LoadRevealInfo()

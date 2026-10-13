@@ -5,7 +5,7 @@
 
 #include <zconf.h>
 
-CEntrenchmentSegmentTypeMnemonics::CEntrenchmentSegmentTypeMnemonics() : 
+CEntrenchmentSegmentTypeMnemonics::CEntrenchmentSegmentTypeMnemonics() :
 CMnemonicsCollector<int>( NDb::EST_LINE, "EST_LINE" )
 {
 	Insert( NDb::EST_LINE,				"EST_LINE" );

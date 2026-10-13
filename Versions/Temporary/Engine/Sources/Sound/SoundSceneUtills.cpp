@@ -17,7 +17,7 @@ size_t SIntThreeHash::operator() ( const struct SIntThree &v ) const
 }
 
 bool CSoundStartTimePredicate::operator()( class CSound* one, class CSound *two ) const
-{ 
+{
 	return one->GetBeginTime() < two->GetBeginTime();
 };
 

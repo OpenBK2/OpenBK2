@@ -27,12 +27,12 @@ class CWindowChapterMapLayer :  public CPtrFuncBase< NGfx::CTexture >
 	bool bNeedUpdate;
 	int nLastUpdateTime;
 protected:
-	bool NeedUpdate() { 
+	bool NeedUpdate() {
 		int nTime = Singleton<IGameTimer>()->GetAbsTime();
 		if ( bNeedUpdate /*&& ( nTime - nLastUpdateTime - 100 ) > 0*/ )
 		{
 			nLastUpdateTime = nTime;
-			return true; 
+			return true;
 		}
 		else
 			return false;
@@ -90,7 +90,7 @@ public:
 			if ( nMaskWidth > 0 || nMaskHeight > 0 )		// Ignore empty mask
 			{
 				if ( x >= nMaskWidth || y >= nMaskHeight || pMask->GetData( x, y ) )
-					return;		
+					return;
 			}
 
 			if ( nLineWidth == 0 )
@@ -105,8 +105,8 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 {
 	OBJECT_BASIC_METHODS( CWindowPotentialLines );
 
-	enum EIntersectionType { 
-		EIT_SEA, EIT_NONE, 
+	enum EIntersectionType {
+		EIT_SEA, EIT_NONE,
 		EIT_CORNER_NE, EIT_CORNER_SE, EIT_CORNER_SW, EIT_CORNER_NW,
 		EIT_LINE_V, EIT_LINE_H,
 		EIT_CROSS
@@ -133,7 +133,7 @@ class CWindowPotentialLines: public CWindow, public IPotentialLines
 	};
 	typedef std::list<SNodeDesc> CNodeList;
 
-	struct SArrowDesc 
+	struct SArrowDesc
 	{
 		ZDATA
 		std::vector<CVec2> pts;
@@ -191,7 +191,7 @@ public:
 
 	//{ CWindow
 	void Visit( struct IUIVisitor *pVisitor );
-	void InitByDesc( const struct NDb::SUIDesc *pDesc ); 
+	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	//}
 
 	void SetParams( const std::string &szMask, const std::string &szDiffColourMap, const CVec2 &_vMainStrike, const uint32_t _dwBorderColour1, const uint32_t _dwBorderColour2 );

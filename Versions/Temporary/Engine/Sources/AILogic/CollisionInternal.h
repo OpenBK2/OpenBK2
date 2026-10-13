@@ -11,7 +11,7 @@ class CPlaneCollision : public ICollision
 	OBJECT_BASIC_METHODS( CPlaneCollision );
 	ZDATA
 	ZEND int operator&( IBinSaver &f ) { return 0; }
-public:	
+public:
 	void Init( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority ) {}
 
 	const int GetPriority() const { return 0; }

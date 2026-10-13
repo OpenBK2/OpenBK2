@@ -65,8 +65,8 @@ class CAmbientAnimator : public CFuncBase<CVec3>
 	CDGPtr<CFuncBase<CVec3> > pAmbient;
 	CDGPtr<CPtrFuncBase<CAnimLight> > pAnim;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pAmbient); f.Add(3,&pAnim); return 0; }
-	bool NeedUpdate() 
-	{ 
+	bool NeedUpdate()
+	{
 		bool b1 = pAmbient.Refresh();
 		bool b2 = IsValid( pAnim ) ? pAnim.Refresh() : false;
 		return b1 || b2;
@@ -92,7 +92,7 @@ public:
 	CPtrFuncBase<CAnimLight> *GetAnimation() const { return pAnim; }
 };
 
-bool GetGeometryObjectInfo( CObjectBase *p, 
+bool GetGeometryObjectInfo( CObjectBase *p,
 	CPtrFuncBase<CObjectInfo> **pGeometry, SFBTransform *pPos, SFullGroupInfo *pGroupInfo )
 {
 	CDynamicCast<ISomePart> pPart( p );
@@ -1926,7 +1926,7 @@ CTransparentRenderer *CGScene::CreateTransparentRenderer( CTransformStack *pTS, 
 	if ( !bLitParticles )
 	{
 		CTPoint<int> ptFakeRegisterSize( N_FAKE_LM_SIZEX, N_FAKE_LM_SIZEY );
-		pTransp = new CTransparentRenderer( *pTS, ptFakeRegisterSize, true, 
+		pTransp = new CTransparentRenderer( *pTS, ptFakeRegisterSize, true,
 			pFakeParticleLM->GetParticleColor(), pFakeParticleLM->GetNormalColor(),
 			&pRefreshLight->GetValue() );
 	}

@@ -31,7 +31,7 @@ void DebugUnLock( const std::string &szFileName, const int nLine )
 	const SLockInfo lockStart = locks.back();
 	locks.pop_back();
 
-	DbgTrc( "lock info: %d ms\n\t%s(%d) lock start\n\t%s(%d) lock end", 
+	DbgTrc( "lock info: %d ms\n\t%s(%d) lock start\n\t%s(%d) lock end",
 					dwTime - lockStart.dwTime, lockStart.szFileName.c_str(), lockStart.nLine, szFileName.c_str(), nLine );
 }
 

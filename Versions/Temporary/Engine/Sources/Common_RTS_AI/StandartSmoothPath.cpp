@@ -97,7 +97,7 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 	const float fSpeed = (std::min)( _fSpeed, GetUnit()->GetMaxSpeedHere() );
 	const float fRemain = fSpeed * timeDiff;
 	const CVec2 vCenter = GetUnit()->GetCenterPlain();
-	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain ) 
+	while ( !IsFinished() && fabs( GetSplinePoint() - vCenter ) < fRemain )
 	{
 		while ( fabs( GetSplinePoint() - vCenter ) < fRemain && GetNIter() < CBSpline::N_OF_ITERATONS )
 			IterateSpline();
@@ -107,7 +107,7 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 			FinishPath();
 			return GetSplinePoint();
 		}
-		else		
+		else
 		{
 			if ( fabs( spline.GetPoint() - vCenter ) < fRemain && GetNIter() >= CBSpline::N_OF_ITERATONS )
 				InitSpline();
@@ -119,7 +119,7 @@ const CVec2 CStandartSmoothPathBasis::MoveUnit( const NTimer::STime timeDiff, co
 		if ( pPath->IsFinished() && mDistance( GetSplinePoint(), pPath->GetFinishPoint() ) < 2 )
 		{
 			FinishPath();
-			return GetSplinePoint(); 
+			return GetSplinePoint();
 		}
 	}
 
@@ -136,7 +136,7 @@ void CStandartSmoothPathBasis::Segment( const NTimer::STime timeDiff )
 	if ( !IsFinished() )
 	{
 		const CVec2 vNewCenter = MoveUnit( timeDiff, GetUnit()->GetSpeed() );
-		if ( !IsFinished() )  
+		if ( !IsFinished() )
 		{
 			const SVector vOldTile = pAIMap->GetTile( GetUnit()->GetCenterPlain() );
 			const SVector vNewTile = pAIMap->GetTile( vNewCenter );
@@ -161,7 +161,7 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 		StartForwardIterating( &iter );
 
 		CVec2 iterPoint( iter.x );
-		IterateForwardSpline( &iter ); 
+		IterateForwardSpline( &iter );
 
 		while ( iter.t != -1 && fabs2( iterPoint - iter.x ) <= sqr( pAIMap->GetTileSize() ) / 4 )
 			IterateForwardSpline( &iter );
@@ -202,7 +202,7 @@ const bool CStandartSmoothPathBasis::ValidateCurrentPath( const CVec2 &vCenter, 
 			}
 
 			++i;
-			IterateForwardSpline( &iter ); 
+			IterateForwardSpline( &iter );
 		}
 	}
 
@@ -254,7 +254,7 @@ LOG}*/
 		pPath->Shift( 1 );
 	}
 
-	nIter = 0;	
+	nIter = 0;
 	spline.Init( p0, p1, p2, p3 );
 
 	//DebugInfoManager()->CreateCircle( NDebugInfo::OBJECT_ID_FORGET, CCircle( p3, 10 ), NDebugInfo::RED );

@@ -16,7 +16,7 @@ typedef std::vector<SHMatrix> SSkeletonMatrices;
 }
 
 namespace NAnimation
-{	
+{
 
 // Engine-owned animation pose.  Format-specific animators translate their data
 // into this representation, so renderers and gameplay mutators never see GR2

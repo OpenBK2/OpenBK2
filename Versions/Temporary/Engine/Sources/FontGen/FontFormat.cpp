@@ -12,7 +12,7 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 	f.Add( 15, &wDefaultChar );
 	f.Add( 1, &chars );
 	f.Add( 2, &kerns );
-	return 0;	
+	return 0;
 }
 
 REGISTER_SAVELOAD_CLASS( FONTGEN, 0x02321170, CFontFormatInfo );

@@ -8,11 +8,11 @@
 
 class CRunModeInterfaceBase : public IInterfaceBase, protected NInput::CGMORegContainer
 {
-public:	
+public:
 	// lifecycle
 	CRunModeInterfaceBase( CTimeCounter * pTimer = 0 );
 	virtual ~CRunModeInterfaceBase();
-	
+
 	// IInterfaceBase
 	virtual void OnGetFocus( bool bFocus );
 	virtual void Step( bool bAppActive );

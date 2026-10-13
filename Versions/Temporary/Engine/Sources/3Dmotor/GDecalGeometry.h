@@ -27,7 +27,7 @@ public:
 	CDecalGeometry() {}
 	// srcPos transforms source geometry to space where _vOrigin, _vNormal are specified
 	// rotation is in radians
-	CDecalGeometry( CPtrFuncBase<CObjectInfo> *p, const SDiscretePos &_srcPos, 
+	CDecalGeometry( CPtrFuncBase<CObjectInfo> *p, const SDiscretePos &_srcPos,
 		const CVec3 &_vOrigin, const CVec3 &_vNormal, const CVec2 &_vSize, float _fRotation, const CVec2 &_vShift = VNULL2,
 		float fNormalEdge = -0.01f, float fDepthMargin = 1e10f );
 };

@@ -67,7 +67,7 @@ bool CInterfaceMPLobby::OnChatHideChannels()
 
 bool CInterfaceMPLobby::OnChatEscape()
 {
-	pChatInput->SetText( L"" );			
+	pChatInput->SetText( L"" );
 	return true;
 }
 
@@ -79,9 +79,9 @@ bool CInterfaceMPLobby::OnPostChatMessageReaction()
 		if ( !wszText.empty() )
 		{
 			if ( pSelection )
-				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( pSelection->szName, wszText ) );					
+				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( pSelection->szName, wszText ) );
 			else
-				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );					
+				Singleton<IMPToUIManager>()->AddUIMessage( new SMPUIChatMessage( wszText ) );
 		}
 		pChatInput->SetText( L"" );
 	}

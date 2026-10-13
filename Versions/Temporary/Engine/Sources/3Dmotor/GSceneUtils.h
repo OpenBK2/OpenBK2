@@ -32,7 +32,7 @@ DEFINE_DG_CONSTANT_NODE( CCWString, std::wstring );
 DEFINE_DG_CONSTANT_NODE( CCRectLayout, CRectLayout );
 
 //! Создаёт CCTRect
-inline CCTRect* CreateRect( int x, int y, int width, int height ) 
+inline CCTRect* CreateRect( int x, int y, int width, int height )
 {
 	CCTRect *pRect = new CCTRect( CTRect<int>( x, y, x + width, y + height ) );
 	return pRect;

@@ -22,9 +22,9 @@ struct SIgnoresEntry
 	//
 	bool operator==( const SIgnoresEntry &ig ) const
 	{
-		return ( ( szCondition == ig.szCondition ) && 
-			( szFileName == ig.szFileName   ) && 
-			( nLineNumber == ig.nLineNumber ) && 
+		return ( ( szCondition == ig.szCondition ) &&
+			( szFileName == ig.szFileName   ) &&
+			( nLineNumber == ig.nLineNumber ) &&
 			( dwFlags == ig.dwFlags         ) );
 	}
 };

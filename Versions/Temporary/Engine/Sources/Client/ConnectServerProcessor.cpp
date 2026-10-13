@@ -89,8 +89,8 @@ bool CConnectServerProcessor::ProcessCheckConnect( CCheckConnectPacket *pCheckCo
 				NI_ASSERT( pPrime->IsPrime( nPrime2 ), "Wrong prime" );
 
 				CNetPacket *pPacket;
-				if ( eConnectType != ECT_FORGOT_PASSWORD )								
-				{	
+				if ( eConnectType != ECT_FORGOT_PASSWORD )
+				{
 					pPacket = new CCheckConnectAnswerPacket(
 						nPrime1, nPrime2,
 						eConnectType == ECT_LOGIN ? CCheckConnectAnswerPacket::ECT_LOGIN : CCheckConnectAnswerPacket::ECT_REGISTER,
@@ -145,9 +145,9 @@ bool CConnectServerProcessor::ProcessForgottenPasswordPacket( CForgottenPassword
 
 bool CConnectServerProcessor::ProcessNewClient( CNetNewClient *pPacket )
 {
-	if ( !bCheckConnect )				
+	if ( !bCheckConnect )
 		PushPacket( new CConnectServerPacket( CConnectServerPacket::ECS_SUCCESS, CConnectServerPacket::ERR_UNKNOWN ) );
-	
+
 	return pPacket->nClientID == 0;
 }
 

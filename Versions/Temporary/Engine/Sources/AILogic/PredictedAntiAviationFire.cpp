@@ -65,14 +65,14 @@ void CPredictedAntiAviationFire::SetTarget( CAviation *_pPlane )
 
 void CPredictedAntiAviationFire::Segment()
 {
-	if (	eState != SAAS_WAIT_FOR_END_OF_BURST && 
-				eState != SAAS_FINISH && 
+	if (	eState != SAAS_WAIT_FOR_END_OF_BURST &&
+				eState != SAAS_FINISH &&
 				( !IsValidObj( pPlane ) || EDI_ENEMY != theDipl.GetDiplStatus( pPlane->GetPlayer(), pUnit->GetPlayer() ) ) )
 	{
 		eState = SAAS_FINISH;
 		StopFire();
 	}
-	
+
 	if ( nGuns.empty() )
 		return;
 
@@ -168,7 +168,7 @@ void CPredictedAntiAviationFire::Aim()
 			// Predicted AA fire shoots at a point, so remember the plane only for shot-time modifiers.
 			pGun->SetAntiAviationTarget( pPlane );
 		}
-	}	
+	}
 }
 
 void CPredictedAntiAviationFire::Stop()
@@ -184,7 +184,7 @@ void CPredictedAntiAviationFire::Stop()
 
 bool CPredictedAntiAviationFire::CalcAimPoint()
 {
-	if ( !IsValidObj( pPlane ) ) 
+	if ( !IsValidObj( pPlane ) )
 		return false;
 	timeLastAimUpdate = curTime;
 
@@ -201,7 +201,7 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 		pGunAbleToShoot = pGun;
 	}
 
-	if ( !pGunAbleToShoot ) 
+	if ( !pGunAbleToShoot )
 	{
 		StopFire();
 		return false;

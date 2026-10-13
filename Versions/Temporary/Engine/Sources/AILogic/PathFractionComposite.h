@@ -12,21 +12,21 @@ ZDATA_(CPathFractionComplexBase)
 	std::vector<CVec3> normales;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nIndex = {};															// point index
-	
+
 	float fSplineProgress = {};									// move by spline (0..1)
 	CVec3 p0, p1, p2, p3;										// points to init spline
-	ZSKIP	
+	ZSKIP
 	CAnalyticBSpline3 spline;
 
-	CVec3 vPos;					
+	CVec3 vPos;
 	CVec3 vSpeed;
 	CVec3 vNormale;
-	
+
 	float fPathLenght = {};											//
 	CPtr<IPathFraction> pInitialPath;
 	bool bFinished = {};
 
-	CVec3 vPosLastPoint;					
+	CVec3 vPosLastPoint;
 	CVec3 vSpeedLastPoint;
 	CVec3 vNormaleLastPoint;
 
@@ -35,27 +35,27 @@ public:
 	CPathFractionComposite() : fSplineProgress( 0 )  {  }
 	CPathFractionComposite( struct IPlane *pPlane, struct IPathFraction *pPath );
 
-	virtual CVec3 GetPoint() const 
-	{ 
-		return vPos; 
+	virtual CVec3 GetPoint() const
+	{
+		return vPos;
 	}
-	virtual CVec3 GetTangent() const 
-	{ 
-		return vSpeed; 
+	virtual CVec3 GetTangent() const
+	{
+		return vSpeed;
 	}
-	virtual CVec3 GetNormale() const 
-	{ 
+	virtual CVec3 GetNormale() const
+	{
 		return vNormale;
 	}
 	virtual bool Iterate( const float fDist, float *pfDistRemain );
 
-	virtual float GetLength() const 
-	{ 
-		return fPathLenght; 
+	virtual float GetLength() const
+	{
+		return fPathLenght;
 	}
-	virtual void GetSimplePath( CPathList *paths ) 
-	{ 
-		NI_ASSERT( false, "wrong call" ); 
+	virtual void GetSimplePath( CPathList *paths )
+	{
+		NI_ASSERT( false, "wrong call" );
 	}
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const;
 };

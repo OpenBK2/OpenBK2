@@ -13,7 +13,7 @@ class CPlanesFormation;
 class CAviation : public CMilitaryCar, public IPlane
 {
 	OBJECT_NOCOPY_METHODS( CAviation );
-	
+
 protected:
 		ZDATA_(CMilitaryCar)
 	CDBPtr<SMechUnitRPGStats> pStats;
@@ -47,13 +47,13 @@ public:
 
 	virtual void Segment();
 	virtual void SecondSegment( const NTimer::STime timeDiff );
-	
+
 	virtual const SUnitBaseRPGStats* GetStats() const { return pStats; }
 	virtual IStatesFactory* GetStatesFactory() const;
 	// для стрельбы
 	virtual void GetShotInfo( struct SAINotifyMechShot *pShotInfo ) const
-	{ 
-		pShotInfo->typeID = GetShootAction(); 
+	{
+		pShotInfo->typeID = GetShootAction();
 		pShotInfo->nObjUniqueID = GetUniqueId();
 	}
 
@@ -65,19 +65,19 @@ public:
 
 	//
 	virtual const bool IsVisible( const uint8_t party ) const { return true; }
-	
+
 	virtual NTimer::STime GetDisappearInterval() const { return 0; }
 
 	// для получения нормали у истребителей.
 	virtual float GetTerrainHeight( const float x, const float y, const NTimer::STime timeDiff ) const { return 0; }
 
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
-	
+
 	virtual bool IsMech() const { return true; }
 	// Strategic bombers use normal plane movement, but their attacks are forced through horizontal bombing.
 	bool IsStrategicBomber() const { return GetStats()->eDBtype == NDb::DB_RPG_TYPE_AVIA_STRAT_BOMBER; }
 	virtual bool IsHelicopter() const { return false; }
-	
+
 	virtual const ECollidingType GetCollidingType( CBasePathUnit *pUnit ) const { return ECT_NONE; }
 	virtual const bool CanGoBackward() const { return false; }
 	virtual const float GetSightRadius() const;
@@ -85,14 +85,14 @@ public:
 
 	virtual void Stop() { }
 	virtual void Disappear();
-	
+
 	// залокать unit ( если уже был залокана, то старый lock исчезает )
 	virtual void Lock( const CBasicGun *pGun ) { }
 	// unlock unit ( если залокан другим gun-ом, то ничего не делается )
 	virtual void Unlock( const CBasicGun *pGun ) { }
 	// залокан ли каким-либо gun-ом, не равным pGun
 	virtual bool IsLocked( const CBasicGun *pGun ) const { return true; }
-	
+
 	// plane's formation, to force planes keep parade during flight.
 	void SetPlanesFormation( class CPlanesFormation *pFormation, const CVec3 &vShift );
 	CPlanesFormation * GetPlanesFormation();
@@ -117,13 +117,13 @@ public:
 	virtual CVec3 GetNormalNext() const;
 
 	virtual void SetB2( const CVec3 &_vPos, const CVec3 &_vSpeed, const CVec3 &_vNormal )
-	{ 
+	{
 		NI_ASSERT( false, "wrong call" );
 	}
 	virtual bool IsBeingAttackedB2() { return false; }
 	virtual void NotifyAttackedB2(IPlane & attacker, bool bAttack) {}
 	virtual const class CPlanePreferences & GetPreferencesB2() const;
-	
+
 	// fuel control
 	virtual void DecFuel( const bool bEconomyMode );
 	float GetFuel() const;

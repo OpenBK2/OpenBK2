@@ -24,7 +24,7 @@
 
 bool CMPManagerMode::OnB2SlotInfoPacket( class CB2SlotInfoPacket *pPacket )
 {
-	DebugTrace( "+++ Slot Info packet from client %d for slot %d, name %s, conn %d", 
+	DebugTrace( "+++ Slot Info packet from client %d for slot %d, name %s, conn %d",
 		pPacket->nClientID, pPacket->nSlot, pPacket->info.szName.c_str(), pPacket->info.wConnectedTo );
 	// Store for myself
 	NI_VERIFY( pPacket->nSlot >= 0 && pPacket->nSlot < slots.size(), "PRG: Got slot info that is outside bounds", return true );

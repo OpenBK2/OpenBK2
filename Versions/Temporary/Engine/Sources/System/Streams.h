@@ -67,7 +67,7 @@ public:
 	void Clear() { ASSERT( CanWrite() ); data.pFileEnd = data.pBuffer; data.pCurrent = data.pBuffer; }
 	bool Seek( int nPos ) { return Seek( data.pBuffer + nPos ); }
 	void Trunc() { ASSERT( CanWrite() ); data.pFileEnd = data.pCurrent; }
-	
+
 	// обычные функции для чтения/записи из/в поток
 	void Read( void *pDest, int nSize )
 	{

@@ -114,7 +114,7 @@ public:
 	void Create( CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, const NDb::SModel *pModel );
 	void Set( const SBound &_bound )
 	{
-		bound = _bound; 
+		bound = _bound;
 		hintBV = _bound;
 	}
 	void Set( CFuncBase<SBound> *_pBounder )

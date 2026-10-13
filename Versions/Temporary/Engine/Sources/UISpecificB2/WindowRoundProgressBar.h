@@ -16,7 +16,7 @@
 class CWindowRoundProgressBar : public CWindow, public IWindowRoundProgressBar
 {
 	OBJECT_BASIC_METHODS( CWindowRoundProgressBar );
-	
+
 	ZDATA_(CWindow)
 	CPtr<NDb::SWindowRoundProgressBar> pInstance;
 	CDBPtr<NDb::SWindowRoundProgressBarShared> pShared;
@@ -36,7 +36,7 @@ public:
 	void Visit( struct IUIVisitor *pVisitor );
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	//}
-	
+
 	//{ IWindowRoundProgressBar
 	void SetAngles( float _fStartAngle, float _fFinishAngle );
 	void SetPosition( const float );

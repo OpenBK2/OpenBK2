@@ -35,10 +35,10 @@ public:
 	bool IsCombatSituation() const ;
 
 	void AddShell( NTimer::STime time, float fDamage );
-	
+
 	void AddUnit( CAIUnit *pUnit );
 	void DelUnit( CAIUnit *pUnit );
-	                                                                                                                          
+
 };
 
 

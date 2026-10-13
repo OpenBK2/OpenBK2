@@ -25,7 +25,7 @@ namespace NMapInfoEditor
 			eDayNight( NDb::DAY_DAY ),
 			pMapInfoEditor( 0 ),
 			pEditorUpdatableWorld( 0 ) {}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfoCollector::Clear()
 	{
@@ -201,7 +201,7 @@ namespace NMapInfoEditor
 			CObjectInfoMap::const_iterator posObject = objectInfoMap.find( itSceneID->second );
 			if ( posObject != objectInfoMap.end() )
 			{
-				return posObject->first;	
+				return posObject->first;
 			}
 		}
 		return INVALID_NODE_ID;
@@ -352,7 +352,7 @@ namespace NMapInfoEditor
 			const CVec3 vSelectionPosition = CVec3( objectSelection.vPosition.x, objectSelection.vPosition.y, 0.0f );
 			float fSelectionDirection = objectSelection.fDirection + FP_PI2;
 			if ( fSelectionDirection > FP_2PI )
-			{ 
+			{
 				fSelectionDirection -= FP_2PI;
 			}
 			//
@@ -526,7 +526,7 @@ namespace NMapInfoEditor
 			vSelectionPosition.z = GetTerrainHeight( vSelectionPosition.x, vSelectionPosition.y );
 			float fSelectionDirection = objectSelection.fDirection + FP_PI2;
 			if ( fSelectionDirection > FP_2PI )
-			{ 
+			{
 				fSelectionDirection -= FP_2PI;
 			}
 			//
@@ -831,7 +831,7 @@ namespace NMapInfoEditor
 		NHPTimer::GetTime( &totalTime );
 
 		bool bCreateTree = true;
-		
+
 		CPtr<IManipulator> packupManipulator = pPropertyManipulator;
 		if ( pPropertyManipulator = new CMultiManipulator() )
 		{
@@ -884,7 +884,7 @@ namespace NMapInfoEditor
 				pView->RemoveViewManipulator();
 			}
 			Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_PC_DIALOG, ID_PC_DIALOG_CREATE_TREE, 0 );
-			pPropertyManipulator = 0;	
+			pPropertyManipulator = 0;
 		}
 	}
 
@@ -923,7 +923,7 @@ namespace NMapInfoEditor
 			}
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfoCollector::UpdateSelectionByController()
 	{
@@ -946,7 +946,7 @@ namespace NMapInfoEditor
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfoCollector::ClearClipboard()
-	{ 
+	{
 		for ( CObjectClipboardPartList::const_iterator itObjectClipboardPart = objectClipboard.objectClipboardPartlist.begin(); itObjectClipboardPart != objectClipboard.objectClipboardPartlist.end(); ++itObjectClipboardPart )
 		{
 			if ( ( *itObjectClipboardPart ) )

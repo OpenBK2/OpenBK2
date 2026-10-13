@@ -160,6 +160,6 @@ public:
 
 
 
-CMPTransceiver* CreateMPTransceiver( IServerClient *pClient, 
+CMPTransceiver* CreateMPTransceiver( IServerClient *pClient,
 																				const SB2StartGameParams &params, int nMySlot );
 

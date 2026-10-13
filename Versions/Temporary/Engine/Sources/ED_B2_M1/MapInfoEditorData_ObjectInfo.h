@@ -68,7 +68,7 @@ namespace NMapInfoEditor
 					nLinkToLinkID = rMapInfoElement.nLinkToLinkID;
 				}
 				return *this;
-			}	
+			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			inline CVec3 GetPosition( const CVec3 &rvPosition ) const { return rvPosition + vPosition + vAdditionalPosition; }
@@ -150,7 +150,7 @@ namespace NMapInfoEditor
 					fAdditionalDirection = rSceneElement.fAdditionalDirection;
 				}
 				return *this;
-			}	
+			}
 
 			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			inline CVec3 GetPosition( const CVec3 &rvPosition ) const { return rvPosition + vPosition + vAdditionalPosition; }
@@ -183,7 +183,7 @@ namespace NMapInfoEditor
 		CSceneElementMap sceneElementMap;															// Набор визуальных составляющих
 		CSceneIDToLinkIDMap sceneIDToLinkIDMap;												// Пересчет визуальных составляющих в элементы объекта
 		//
-		virtual ~SObjectInfo() {}	
+		virtual ~SObjectInfo() {}
 		//
 		void MakeAbsolute();
 		void MakeRelative();
@@ -201,7 +201,7 @@ namespace NMapInfoEditor
 			}
 			return INVALID_NODE_ID;
 		}
-		
+
 		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		inline SMapInfoElement* GetMapInfoElementByLinkID( unsigned nLinkID )
 		{

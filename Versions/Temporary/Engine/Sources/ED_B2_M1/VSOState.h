@@ -40,9 +40,9 @@ class CVSOSelectState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CVSOState;
-	
+
 	class CVSOState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CVSOSelectState() : pParentState( 0 )
   {
@@ -64,9 +64,9 @@ class CVSOEditState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CVSOState;
-	
+
 	class CVSOState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CVSOEditState() : pParentState( 0 )
   {
@@ -92,9 +92,9 @@ class CVSOAddState : public CDefaultInputState
 {
 	friend class CMultiInputState;
 	friend class CVSOState;
-	
+
 	class CVSOState* pParentState;
-	
+
 	//конструкторы и операторы присваивания
 	CVSOAddState() : pParentState( 0 )
   {
@@ -168,7 +168,7 @@ private:
 	//
 	CVSOManager::CVSOSelectionParamList leftButtonVSOSelectionParamList;
 	CVSOManager::CVSOSelectionParamList rightButtonVSOSelectionParamList;
-	
+
 	void ClearPickVSOIDList()
 	{
 		pickVSOIDList.clear();
@@ -195,7 +195,7 @@ protected:
 		}
 	}
 	inline int GetSelectedVSOID()
-	{ 
+	{
 		if ( ( nSelectedIndex < 0 ) || ( nSelectedIndex >= pickVSOIDList.size() ) )
 		{
 			return INVALID_NODE_ID;
@@ -213,7 +213,7 @@ protected:
 	virtual void Enter();
 	virtual void Leave();
 	virtual void Draw( IPaintContext *pPaintDC );
-	
+
 	virtual void OnSetFocus( IWidget* pNewWnd );
 
 	// CVSOState
@@ -276,9 +276,9 @@ public:
 	{
 		pStoreInputState = new CMapInfoStoreInputState();
 		NI_ASSERT( pStoreInputState != 0, fmt::format( "CVSOState(): pStoreInputState == 0" ) );
-		
+
 		int nStateIndex = INVALID_INPUT_STATE_INDEX;
-		
+
 		CVSOSelectState *pVSOSelectState = new CVSOSelectState( this );
 		nStateIndex = AddInputState( pVSOSelectState );
 		NI_ASSERT( nStateIndex == IS_SELECT, fmt::format( "CVSOState(): Wrong state number: {} ({})", nStateIndex, static_cast<int>( IS_SELECT ) ) );
@@ -286,7 +286,7 @@ public:
 		CVSOEditState *pVSOEditState = new CVSOEditState( this );
 		nStateIndex = AddInputState( pVSOEditState );
 		NI_ASSERT( nStateIndex == IS_EDIT, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_EDIT ) ) );
-		
+
 		CVSOAddState *pVSOAddState = new CVSOAddState( this );
 		nStateIndex = AddInputState( pVSOAddState );
 		NI_ASSERT( nStateIndex == IS_ADD, fmt::format( "CVSOState(): Wrong state number: {}, ({})", nStateIndex, static_cast<int>( IS_ADD ) ) );
@@ -307,7 +307,7 @@ public:
 	void RemoveSelectedVSO();
 	//
 	virtual class CMapInfoEditor* GetMapInfoEditor();
-	
+
 	bool PickOtherVSO( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	void EmulateSelectLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint, const CVec3 &rvPos );
 	// ICommandHandler

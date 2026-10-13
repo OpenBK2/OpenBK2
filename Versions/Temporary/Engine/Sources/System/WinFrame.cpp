@@ -316,7 +316,7 @@ static void SetActive( bool _bActive )
  	if ( bAppAlwaysActive )
 		return;
 
-	bActive = _bActive;        // activation flag 
+	bActive = _bActive;        // activation flag
 	if ( s_bMinimizeOnDeactivate )
 	{
 		if ( !bActive )
@@ -374,7 +374,7 @@ bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned d
   const std::wstring wszWnd = UTF8ToWide( pszWnd );
   WNDCLASSW wndClass = { 0, WndProc, 0, 0, hInstance,
                         LoadIconA( hInstance, nIcon ),
-                        0,//LoadCursor( NULL, IDC_ARROW ), 
+                        0,//LoadCursor( NULL, IDC_ARROW ),
                         (HBRUSH)GetStockObject(NULL_BRUSH), // NULL_BRUSH // WHITE_BRUSH
                         NULL, wszWnd.c_str() };
 	wndClass.style |= CS_DBLCLKS;
@@ -386,7 +386,7 @@ bool SFLB2_CreateWin( LPCSTR pszApp, LPCSTR pszWnd, unsigned dwWidth, unsigned d
   // Create the render window
   hWnd = CreateWindowW( wszWnd.c_str(), wszApp.c_str(), dwWinStyle,
                          0, 0, dwWidth, dwHeight, 0L,
-                         0,//LoadMenu( hInstance, MAKEINTRESOURCE(IDR_MENU) ), 
+                         0,//LoadMenu( hInstance, MAKEINTRESOURCE(IDR_MENU) ),
                          hInstance, 0L );
 
   if ( !hWnd )

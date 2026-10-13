@@ -17,8 +17,8 @@ CExecutorFormationFirstAid::CExecutorFormationFirstAid( CFormation *_pUnit )
 }
 
 CCommonUnit *CExecutorFormationFirstAid::GetUnit()
-{ 
-	return pFormation; 
+{
+	return pFormation;
 }
 
 float CExecutorFormationFirstAid::OnAbilityActive()
@@ -94,7 +94,7 @@ void CExecutorFormationFirstAid::RegisterOnEvents( IExecutorContainer *pContaine
 int CExecutorFormationFirstAid::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, static_cast<CExecutorUnitBase*>( this ) );
-	saver.Add( 2, &pFormation );  
+	saver.Add( 2, &pFormation );
 	return 0;
 }
 

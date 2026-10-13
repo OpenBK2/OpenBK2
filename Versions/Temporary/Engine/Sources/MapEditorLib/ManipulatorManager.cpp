@@ -74,7 +74,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 			pSourceManipulatorIterator->Next();
 		}
 	}
-	
+
 	//создаем все необходимые массивы
 	std::list<std::string>::const_iterator itSourceArray = sourceArrayList.begin();
 	std::list<int>::const_iterator itSourceArraySize = sourceArraySizeList.begin();
@@ -104,7 +104,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 				{
 					if ( ( !pDesc->bArray || ( szName[szName.size() - 1] == ARRAY_NODE_END_CHAR ) ) && ( !pDesc->bStruct ) )
 					{
-						// добавление 
+						// добавление
 						destinationFields[szName] = 0;
 					}
 				}
@@ -133,7 +133,7 @@ bool CManipulatorManager::CloneDBManipulator( IManipulator *pDestinationManipula
 							CVariant value;
 							pSourceManipulator->GetValue( szName, &value );
 							pDestinationManipulator->SetValue( szName, value );
-							
+
 						}
 					}
 				}
@@ -164,7 +164,7 @@ bool CManipulatorManager::GetParamsFromReference( const std::string &rszRefValue
 			CVariant refValue;
 			if ( pSourceManipulator->GetValue( rszRefValueName, &refValue ) )
 			{
-				if ( !IsDBIDEmpty(refValue) ) 
+				if ( !IsDBIDEmpty(refValue) )
 				{
 					std::string szRefObjectTypeName;
 					std::string szRefObjectName;
@@ -313,15 +313,15 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 				{
 					CReferenceInfoList::iterator posReferenceInfo = pReferenceInfoList->insert( pReferenceInfoList->end(), SReferenceInfo() );
 					posReferenceInfo->nFlags = nFlags;
-					if ( posReferenceInfo->nFlags & REFINFO_PROPERTY_NAME ) 
+					if ( posReferenceInfo->nFlags & REFINFO_PROPERTY_NAME )
 					{
 						posReferenceInfo->szName = szName;
 					}
-					if ( posReferenceInfo->nFlags & REFINFO_OBJECT_TYPE_NAME ) 
+					if ( posReferenceInfo->nFlags & REFINFO_OBJECT_TYPE_NAME )
 					{
 						posReferenceInfo->szObjectTypeName = szObjectTypeName;
 					}
-					if ( posReferenceInfo->nFlags & REFINFO_OBJECT_NAME ) 
+					if ( posReferenceInfo->nFlags & REFINFO_OBJECT_NAME )
 					{
 						posReferenceInfo->szObjectName = szObjectName;
 					}
@@ -329,7 +329,7 @@ bool CManipulatorManager::EnumReferences( CReferenceInfoList *pReferenceInfoList
 					{
 						posReferenceInfo->isEmpty = ( ( !szObjectTypeName.empty() ) && ( szObjectName.empty() ) );
 					}
-					if ( posReferenceInfo->nFlags & REFINFO_CHECK_VALID ) 
+					if ( posReferenceInfo->nFlags & REFINFO_CHECK_VALID )
 					{
 						if ( szObjectTypeName.empty() || szObjectName.empty() )
 						{
@@ -442,6 +442,6 @@ void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator* pMa
 	}
 }
 
-// basement storage  
+// basement storage
 
 

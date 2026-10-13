@@ -23,7 +23,7 @@ void CWindowRoundProgressBar::Visit( struct IUIVisitor *pVisitor )
 	CClipStore s( pVisitor, rc );*/
 
 	CWindow::Visit( pVisitor );
-	
+
 	roundVisitor.SetPlacement( GetWindowRect() );
 	roundVisitor.Visit( pVisitor );
 	roundVisitor2.SetPlacement( GetWindowRect() );
@@ -73,7 +73,7 @@ void CWindowRoundProgressBar::SetAngles( float _fStartAngle, float _fFinishAngle
 }
 
 void CWindowRoundProgressBar::SetPosition( float fPos ) // considered full circle
-{	
+{
 	fPosition = fPos;
 	SetAngles( 0., fPosition * FP_2PI );
 }

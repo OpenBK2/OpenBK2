@@ -47,7 +47,7 @@ class CInterfaceHallOfFame : public CInterfaceScreenBase, public IProgrammedReac
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceHallOfFame );
 	ZDATA_(CInterfaceScreenBase)
-	CPtr<IWindow> pMain;	
+	CPtr<IWindow> pMain;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); return 0; }
 	void MakeInterior();
 
@@ -57,7 +57,7 @@ public:
 	bool Init();
 	bool StepLocal( bool bAppActive );
 	void OnGetFocus( bool bFocus );
-	
+
 	void MsgBack( const SGameMessage &msg );
 
 	//{ IProgrammedReactionsAndChecks

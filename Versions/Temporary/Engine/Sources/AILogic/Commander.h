@@ -11,9 +11,9 @@ class CCommander : public ICommander
 {
 	public: int operator&( IBinSaver &saver ); private:;
 	//
-	struct STaskSortPresicate 
+	struct STaskSortPresicate
 	{
-		bool operator()( const IGeneralTask *pT1, const IGeneralTask *pT2 ) const 
+		bool operator()( const IGeneralTask *pT1, const IGeneralTask *pT2 ) const
 		{	return pT1->GetSeverity() > pT2->GetSeverity(); }
 	};
 	//
@@ -50,12 +50,12 @@ class CCommander : public ICommander
 	{
 		int nNumberPositive = {}, nNumberNegative = {};
 		float fSeverityPositive = {}, fSeverityNegative = {};
-		void operator()( const IGeneralTask *pT ) 
-		{ 
-			const float fSeverity = pT->GetSeverity(); 
+		void operator()( const IGeneralTask *pT )
+		{
+			const float fSeverity = pT->GetSeverity();
 			if ( fSeverity >= 0 )
 			{
-				++nNumberPositive; 
+				++nNumberPositive;
 				fSeverityPositive += fSeverity;
 			}
 			else
@@ -67,8 +67,8 @@ class CCommander : public ICommander
 		STaskCalcSeverityPredicate();
 		const float GetSeverity() const;
 	};
-	// 
-	struct STakeWorkersPredicate 
+	//
+	struct STakeWorkersPredicate
 	{
 		CPtr<ICommander> pManager;
 		void operator()( IGeneralTask *pT ) { pT->ReleaseWorker( pManager, 0 ); }
@@ -77,7 +77,7 @@ class CCommander : public ICommander
 protected:
 
 	typedef std::vector< CObj<IGeneralTask> > Tasks;
-	Tasks tasks;			// all tasks of this colonel. 
+	Tasks tasks;			// all tasks of this colonel.
 	float fMeanSeverity = {};
 
 	void EnumWorkersInternal( const enum EForceType eType, IWorkerEnumerator *pEn, CommonUnits *pUnits );
@@ -85,6 +85,6 @@ public:
 	CCommander();
 	virtual float GetMeanSeverity() const ;
 	virtual void Segment();
-	
+
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -188,7 +188,7 @@ void GetTrianglesFromGrannyMesh( granny_mesh *pMesh, std::vector<STriangle> *pTr
 bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, const std::string &rszFileName, const std::string &rszDesiredSkeletonName, bool bFromRoot )
 {
 	granny_file *pFile = GrannyReadEntireFile( rszFileName.c_str() );
-	if ( pFile == 0 ) 
+	if ( pFile == 0 )
 		return false;
 	granny_file_info *pInfo = GrannyGetFileInfo( pFile );
 	if ( (pInfo == 0) || (pInfo->SkeletonCount != 1) )
@@ -221,7 +221,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 		return false;
 	//
 	pBoneList->reserve( pBoneList->size() + pInfo->Skeletons[0]->BoneCount );
-	for ( int i = nStartFromBone; i < pInfo->Skeletons[0]->BoneCount; ++i ) 
+	for ( int i = nStartFromBone; i < pInfo->Skeletons[0]->BoneCount; ++i )
 	{
 		std::string szBoneName = pInfo->Skeletons[0]->Bones[i].Name;
 		NStr::ToLowerASCII( &szBoneName );
@@ -231,7 +231,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 		int nOffset = 0;
 		for ( int j = 0; pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type != GrannyEndMember; ++j )
 		{
-			if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyReal32Member ) 
+			if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyReal32Member )
 			{
 				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
 				/**
@@ -245,7 +245,7 @@ bool ReadAttributes( CGrannyBoneAttributesList *pBoneList, granny_file_info *pIn
 				DebugTrace( "Read attribute: <%s:%g>", szName.c_str(), fValue );
 				/**/
 			}
-			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyInt32Member ) 
+			else if ( pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Type == GrannyInt32Member )
 			{
 				std::string szName = pInfo->Skeletons[0]->Bones[i].ExtendedData.Type[j].Name;
 				/**
@@ -344,10 +344,10 @@ CGrannyFileInfoGuard::CGrannyFileInfoGuard( const std::string &szFileName )
 
 CGrannyFileInfoGuard::~CGrannyFileInfoGuard()
 {
-	if ( pFile ) 
+	if ( pFile )
 		GrannyFreeFile( pFile );
 }
 
-// basement storage  
+// basement storage
 
 

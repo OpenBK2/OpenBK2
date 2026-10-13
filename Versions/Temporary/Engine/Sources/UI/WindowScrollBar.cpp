@@ -19,7 +19,7 @@ int CWindowScrollBar::operator&( IBinSaver &saver )
 	saver.Add( 3, &pButtonGreater );
 	saver.Add( 4, &pSlider );
 	saver.Add( 5, &bScrollGreater );													// timed scrolling up
-	saver.Add( 6, &animTime );	
+	saver.Add( 6, &animTime );
 	saver.Add( 7, &bFirstTime );
 	saver.Add( 8, &pShared );
 	saver.Add( 9, &pInstance );
@@ -58,9 +58,9 @@ void CWindowScrollBar::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pSlider->SetNotifySink( this );
 }
 
-bool CWindowScrollBar::IsHorisontal() const 
-{ 
-	return pSlider->IsHorisontal(); 
+bool CWindowScrollBar::IsHorisontal() const
+{
+	return pSlider->IsHorisontal();
 }
 
 void CWindowScrollBar::Init()
@@ -155,8 +155,8 @@ void CWindowScrollBar::Pushed( class CWindow *pWho )
 }
 
 void CWindowScrollBar::SetNotifySink( struct ISliderNotify *_pNotifySink )
-{ 
-	pSlider->SetNotifySink( _pNotifySink ); 
+{
+	pSlider->SetNotifySink( _pNotifySink );
 }
 
 void CWindowScrollBar::SetRange( const float fMin, const float fMax, const float fPageSize )

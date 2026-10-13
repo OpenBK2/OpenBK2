@@ -25,7 +25,7 @@ const int nMAX_PLAYERS = 8;
 
 // CInterfaceMPCustomGame
 
-CInterfaceMPCustomGame::CInterfaceMPCustomGame() : 
+CInterfaceMPCustomGame::CInterfaceMPCustomGame() :
 CInterfaceMPScreenBase( "MPCustomGame", "custom_game" ), nSelectedID(-1)
 {
 	REGISTER_MPUI_MESSAGE_HANDLER( EMUI_UPDATE_GAME_LIST, SMPUIGameListMessage, &CInterfaceMPCustomGame::OnUpdateGameList );
@@ -37,7 +37,7 @@ CInterfaceMPCustomGame::~CInterfaceMPCustomGame()
 
 bool CInterfaceMPCustomGame::Init()
 {
-	if ( CInterfaceScreenBase::	Init() == false ) 
+	if ( CInterfaceScreenBase::	Init() == false )
 		return false;
 
 	AddScreen( this );
@@ -62,7 +62,7 @@ void CInterfaceMPCustomGame::SetFiltersData()
 
 	std::wstring wszAnyText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_ANY");
 	if ( pMapSizeBox )
-	{		
+	{
 		pData = new CTextData( wszAnyText );
 		std::wstring wszSmallText = InterfaceState()->GetTextEntry("T_MP_GAME_ROOM_SMALL_MAP");
 		pMapSizeBox->AddItem( pData );
@@ -103,14 +103,14 @@ void CInterfaceMPCustomGame::SetFiltersData()
 			std::wstring wszPlayers = NStr::ToUnicode( std::to_string( i * 2 ) );
 			pData = new CTextData( wszPlayers );
 			pNumPlayersBox->AddItem( pData );
-		}	
-		pNumPlayersBox->Select( 0 );		
+		}
+		pNumPlayersBox->Select( 0 );
 	}
 }
 
 void CInterfaceMPCustomGame::SetControls()
 {
-	IButton *pBtn = pBtn = GetChildChecked<IButton>( pMain, "ButtonJoinGame", true );		
+	IButton *pBtn = pBtn = GetChildChecked<IButton>( pMain, "ButtonJoinGame", true );
 	pBtn->Enable( false );
 	pFilters = GetChildChecked<IWindow> ( pMain, "Filters", true );
 	if ( pFilters )
@@ -153,19 +153,19 @@ void CInterfaceMPCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBas
 
 	CDynamicCast<CCustomGameListData> pInfo = pData;
 	SMPGameInfo &info = pInfo->info;
-	
-	NMPSetData::SetChildText( pItem, "ItemGameName", NStr::ToUnicode( info.szSessionName ) );			
+
+	NMPSetData::SetChildText( pItem, "ItemGameName", NStr::ToUnicode( info.szSessionName ) );
 
 	std::wstring wStr = NStr::ToUnicode( info.szMapName );
 	NMPSetData::SetChildText( pItem, "ItemMapName", wStr );
 
 	std::wstring wszTechText;
-	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size() 
+	if ( info.nTechLevel >= 0 && info.nTechLevel < NGameX::GetMPConsts()->techLevels.size()
 		&& CHECK_TEXT_NOT_EMPTY_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name ) )
 		wszTechText = GET_TEXT_PRE( NGameX::GetMPConsts()->techLevels[info.nTechLevel]., Name );
 	NMPSetData::SetChildText( pItem, "ItemTechLevel", wszTechText );
 
-	ITextView *pTxt = GetChildChecked<ITextView> ( pItem, "ItemGameType", true );		
+	ITextView *pTxt = GetChildChecked<ITextView> ( pItem, "ItemGameType", true );
 	//NMPSetData::SetGameType( pTxt, info.pMPMap->pMap, 0/*info.nGameType*/ );
 
 	NMPSetData::SetChildText( pItem, "ItemMapSize", NStr::ToUnicode( fmt::format( "{} x {}", info.nSizeX, info.nSizeY ) ) );
@@ -246,7 +246,7 @@ int CInterfaceMPCustomGame::Check( const std::string &szCheckName ) const
 }
 
 bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
-{	
+{
 	if ( pGettingListPopup )
 		pGettingListPopup->ShowWindow( false );
 	if ( pRefresh )
@@ -292,7 +292,7 @@ bool CInterfaceMPCustomGame::OnUpdateGameList( SMPUIGameListMessage *pMsg )
 			pList->RemoveItem( entry.pItem );
 			entry.pItem = 0;
 		}
-	}	
+	}
 	pList->Update();
 	return true;
 }
@@ -333,8 +333,8 @@ bool CInterfaceMPCustomGame::OnJoinGameReaction( const std::string &szSender )
 }
 
 bool CInterfaceMPCustomGame::OnFiltersReaction( const std::string &szSender )
-{	
-	pFilters->ShowWindow( true );	
+{
+	pFilters->ShowWindow( true );
 
 	if ( pMapSizeBox )
 		 pMapSizeBox->Select( filter.nMapSize );
@@ -371,18 +371,18 @@ bool CInterfaceMPCustomGame::OnLoadGameReaction( const std::string &szSender )
 {
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	NMainLoop::Command( ML_COMMAND_SAVE_LOAD_MENU, "load_from_main_menu" );
-	
+
 	return true;
 }
 
 bool CInterfaceMPCustomGame::OnSelectGameReaction( const std::string &szSender )
-{	
+{
 	IButton *pBtn = GetChildChecked<IButton>( pMain, "ButtonJoinGame", true );
 	IListControlItem *pItem = pList->GetSelectedListItem();
 	CDynamicCast<CCustomGameListData> pInfo = pItem->GetUserData();
 	if ( pInfo && pBtn )
 	{
-		nSelectedID = pInfo->info.nServerID;	
+		nSelectedID = pInfo->info.nServerID;
 		pBtn->Enable( true );
 	}
 	//DebugTrace( "+++Selected Server %d", nSelectedID );
@@ -419,7 +419,7 @@ void CInterfaceMPCustomGame::TryToJoinGame()
 {
 	// Send join message
 	SMPUIJoinGameMessage *pMsg = new SMPUIJoinGameMessage( nSelectedID, NStr::ToMBCS( wszPassword ) );
-	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );				
+	Singleton<IMPToUIManager>()->AddUIMessage( pMsg );
 
 	// Stop updating games list
 	SMPUIGameListMessage *pStopUpdateMsg = new SMPUIGameListMessage( false );
@@ -442,7 +442,7 @@ void CInterfaceMPCustomGame::RebuildGameList()
 
 		if ( IsAllowedByFilter( entry.info ) )
 			entry.pItem = pList->AddItem( pData );
-	}	
+	}
 	pList->Update();
 }
 

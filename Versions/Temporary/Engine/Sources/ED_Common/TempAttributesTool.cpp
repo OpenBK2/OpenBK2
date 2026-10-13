@@ -36,7 +36,7 @@ class CTempAttributesTool : public IExportTool
 	std::string szAttribsExportSettings;
 	//
 	typedef std::list<SDesc> CDescsList;
-	typedef std::unordered_map<std::string, CDescsList> CDescsMap; 
+	typedef std::unordered_map<std::string, CDescsList> CDescsMap;
 	CDescsMap descsMap;
 	// load export settings and script template
 	bool LoadSettings()
@@ -56,7 +56,7 @@ class CTempAttributesTool : public IExportTool
 		szAttribsExportSettings = GetGrannyExportSettingsFileName( "Attribs" );
 		return !szAttribsExportTemplate.empty() && !szAttribsExportSettings.empty();
 	}
-	// export granny with desired root mesh and root joint and add 
+	// export granny with desired root mesh and root joint and add
 	bool AddGrannyFile( SDesc *pDesc, const std::string &szFileName, const std::string &szRootMesh, const std::string &szRootJoint )
 	{
 		if ( LoadSettings() == false )
@@ -140,11 +140,11 @@ public:
 };
 
 static CObj<CTempAttributesTool> pTempAttributesTool;
-IExportTool *GetOrCreateTempAttributesExportTool() 
-{ 
+IExportTool *GetOrCreateTempAttributesExportTool()
+{
 	if ( pTempAttributesTool == 0 )
-		pTempAttributesTool = new CTempAttributesTool(); 
-	return pTempAttributesTool; 
+		pTempAttributesTool = new CTempAttributesTool();
+	return pTempAttributesTool;
 }
 void DestroyTempAttributesExportTool() { pTempAttributesTool = 0; }
 
@@ -163,13 +163,13 @@ granny_file_info *GetAttribsByVisObj( IManipulator *pMan )
 		CManipulatorManager::GetValue( &szSeason, pMan, fmt::format("Models.[{}].Season", i) );
 		if ( szSeason == "SEASON_SUMMER" )
 		{
-			CPtr<IManipulator> pModelMan = 
+			CPtr<IManipulator> pModelMan =
 				CManipulatorManager::CreateManipulatorFromReference( fmt::format( "Models.[{}].Model", i ), pMan, 0, 0, 0 );
 			return GetAttribsByModel( pModelMan );
 		}
 	}
 	// try any model
-	CPtr<IManipulator> pModelMan = 
+	CPtr<IManipulator> pModelMan =
 		CManipulatorManager::CreateManipulatorFromReference( "Models.[0].Model", pMan, 0, 0, 0 );
 	return GetAttribsByModel( pModelMan );
 }
@@ -178,7 +178,7 @@ granny_file_info *GetAttribsByModel( IManipulator *pMan )
 {
 	if ( pMan == 0 )
 		return 0;
-	CPtr<IManipulator> pGeomMan = 
+	CPtr<IManipulator> pGeomMan =
 		CManipulatorManager::CreateManipulatorFromReference( "Geometry", pMan, 0, 0, 0 );
 	return GetAttribsByGeometry( pGeomMan );
 }

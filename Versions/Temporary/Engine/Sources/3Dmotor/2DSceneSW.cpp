@@ -13,7 +13,7 @@
 namespace NGScene
 {
 	static CBasicShare<CDBPtr<NDb::STexture>, CSWTexture, SDBPtrHash > shareSWTextures(112);
-CSWTexture* GetSWTex( const NDb::STexture *pTex ) 
+CSWTexture* GetSWTex( const NDb::STexture *pTex )
 {
 	return shareSWTextures.Get( pTex );
 }
@@ -533,7 +533,7 @@ static void CalcMip( CArray2D<NGfx::SPixel8888> *pRes )
 			const NGfx::SPixel8888 &s1 = src[y*2+1][x*2];
 			const NGfx::SPixel8888 &s2 = src[y*2][x*2+1];
 			const NGfx::SPixel8888 &s3 = src[y*2+1][x*2+1];
-			(*pRes)[y][x] = NGfx::SPixel8888( 
+			(*pRes)[y][x] = NGfx::SPixel8888(
 				(int(s.r) + s1.r + s2.r + s3.r)>>2,
 				(int(s.g) + s1.g + s2.g + s3.g)>>2,
 				(int(s.b) + s1.b + s2.b + s3.b)>>2, 0 );
@@ -633,9 +633,9 @@ static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget,
 			{
 				CVec3 vNormal( m[y][x].fDU, m[y][x].fDV, 1 );
 				Normalize( &vNormal );
-				lock[y][x] = NGfx::SPixel8888( 
-					Float2Int( vNormal.x * 127 + 128 ), 
-					Float2Int( vNormal.y * 127 + 128 ), 
+				lock[y][x] = NGfx::SPixel8888(
+					Float2Int( vNormal.x * 127 + 128 ),
+					Float2Int( vNormal.y * 127 + 128 ),
 					Float2Int( vNormal.z * 127 + 128 ), 255 );
 			}
 		}
@@ -650,9 +650,9 @@ static void CalcNormals( const CArray2D<SBumpPixel> &m, NGfx::CTexture *pTarget,
 			{
 				CVec3 vNormal( m[y][x].fDU, m[y][x].fDV, 1 );
 				Normalize( &vNormal );
-				lock[y][x] = NGfx::SPixel565( 
-					Float2Int( vNormal.x * 127 + 128 ) >> 3, 
-					Float2Int( vNormal.y * 127 + 128 ) >> 2, 
+				lock[y][x] = NGfx::SPixel565(
+					Float2Int( vNormal.x * 127 + 128 ) >> 3,
+					Float2Int( vNormal.y * 127 + 128 ) >> 2,
 					Float2Int( vNormal.z * 127 + 128 ) >> 3 );
 			}
 		}

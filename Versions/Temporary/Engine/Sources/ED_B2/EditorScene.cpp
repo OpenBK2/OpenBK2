@@ -62,7 +62,7 @@ void CEditorScene::SwitchScene( const EScene eScene )
 	Scene()->SwitchScene ( eScene );
 }
 
-int CEditorScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot, 
+int CEditorScene::AddObject( const int nID, const NDb::SModel *pModel, const CVec3 &vPos, const CQuat &qRot,
 											const CVec3 &vScale, ESceneObjAnimMode eAnimMode, NGScene::IGameView::SMeshInfo *pMeshInfo, const bool bHasReflection )
 {
 	return Scene()->AddObject( nID, pModel, vPos, qRot, vScale, eAnimMode, pMeshInfo, 0, bHasReflection );

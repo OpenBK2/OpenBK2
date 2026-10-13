@@ -267,7 +267,7 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 				if ( g > 0 )
 				{
 					vDNorm = ( vPrevX - vCur ) ^ ( vPrevY - vCur );
-					Normalize( &vDNorm ); 
+					Normalize( &vDNorm );
 					if ( vDNorm.z < 0.0f )
 						vDNorm = -vDNorm;
 					vNorm += vDNorm;
@@ -276,8 +276,8 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 				if ( g < (terrainInfo.heights.GetSizeY() - 1) )
 				{
 					vDNorm = ( vPrevX - vCur ) ^ ( vNextY - vCur );
-					Normalize( &vDNorm ); 
-					if ( vDNorm.z < 0.0f ) 
+					Normalize( &vDNorm );
+					if ( vDNorm.z < 0.0f )
 						vDNorm = -vDNorm;
 					vNorm += vDNorm;
 					++nNormsCount;
@@ -288,8 +288,8 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 				if ( g > 0 )
 				{
 					vDNorm = ( vNextX - vCur ) ^ ( vPrevY - vCur );
-					Normalize( &vDNorm ); 
-					if ( vDNorm.z < 0.0f ) 
+					Normalize( &vDNorm );
+					if ( vDNorm.z < 0.0f )
 						vDNorm = -vDNorm;
 					vNorm += vDNorm;
 					++nNormsCount;
@@ -297,8 +297,8 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 				if ( g < (terrainInfo.heights.GetSizeY() - 1) )
 				{
 					vDNorm = ( vNextX - vCur ) ^ ( vNextY - vCur );
-					Normalize( &vDNorm ); 
-					if ( vDNorm.z < 0.0f ) 
+					Normalize( &vDNorm );
+					if ( vDNorm.z < 0.0f )
 						vDNorm = -vDNorm;
 					vNorm += vDNorm;
 					++nNormsCount;

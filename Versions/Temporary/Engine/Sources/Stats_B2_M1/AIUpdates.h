@@ -100,7 +100,7 @@ struct SAIPlacementUpdateBase : public SAIBasicUpdate
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
-struct SAIPlacementUpdate : public SAIPlacementUpdateBase 
+struct SAIPlacementUpdate : public SAIPlacementUpdateBase
 {
 private:
 	OBJECT_BASIC_METHODS( SAIPlacementUpdate )
@@ -125,7 +125,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIRPGUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyRPGStats info;	
+		SAINotifyRPGStats info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -166,7 +166,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIMechShotUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyMechShot info;		
+		SAINotifyMechShot info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -176,7 +176,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIInfantryShotUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyInfantryShot info;		
+		SAINotifyInfantryShot info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -196,7 +196,7 @@ private:
 	OBJECT_BASIC_METHODS( SAITurretUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyTurretTurn info;			
+		SAINotifyTurretTurn info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -206,7 +206,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIEntranceUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyEntranceState info;				
+		SAINotifyEntranceState info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -216,7 +216,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIDiplomacyUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyDiplomacy info;					
+		SAINotifyDiplomacy info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -226,7 +226,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIKeyBuildingUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyKeyBuilding info;					
+		SAINotifyKeyBuilding info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
 
@@ -248,7 +248,7 @@ struct SAIShootAreaUpdate : public SAIBasicUpdate
 private:
 	OBJECT_BASIC_METHODS( SAIShootAreaUpdate )
 public:
-	ZDATA_(SAIBasicUpdate)	
+	ZDATA_(SAIBasicUpdate)
 		std::vector<SShootAreas> info;
 		int nObjID = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nObjID); return 0; }
@@ -311,7 +311,7 @@ struct SAIFormationUpdate : public SAIBasicUpdate
 	OBJECT_BASIC_METHODS( SAIFormationUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SSoldier2Formation info;						
+		SSoldier2Formation info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 public:
 	SAIFormationUpdate() { }
@@ -333,7 +333,7 @@ private:
 	OBJECT_BASIC_METHODS( SAIChangeDBIDUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SChangeDBIDUpdate info; 
+		SChangeDBIDUpdate info;
 	int nObjUniqueID = {};
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); f.Add(3,&nObjUniqueID); return 0; }
 };
@@ -451,7 +451,7 @@ struct SAINewProjectileUpdate : public SAIBasicUpdate
 	OBJECT_BASIC_METHODS( SAINewProjectileUpdate )
 public:
 	ZDATA_(SAIBasicUpdate)
-		SAINotifyNewProjectile info;						
+		SAINotifyNewProjectile info;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 public:
 	REGISTER_TO_UPDATES
@@ -620,18 +620,18 @@ public:
 	std::vector<CVec2> impossibleToBuildTiles;
 	std::vector<CVec2> buildTiles;
 	bool bCanBuild = {};
-public: 
-	int operator&( IBinSaver &f ) 
-	{ 
+public:
+	int operator&( IBinSaver &f )
+	{
 		if ( !f.IsChecksum() )
 		{
-			f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&bSet); 
-			f.Add(3,&objects); 
+			f.Add(1,( SAIBasicUpdate *)this); f.Add(2,&bSet);
+			f.Add(3,&objects);
 			f.Add(4,&impossibleToBuildTiles);
-			f.Add(5,&buildTiles); 
-			f.Add(6,&bCanBuild); 
+			f.Add(5,&buildTiles);
+			f.Add(6,&bCanBuild);
 		}
-		return 0; 
+		return 0;
 	}
 public:
 	SAIObjectsUnderConstructionUpdate() : bCanBuild( true ) {  }
@@ -644,7 +644,7 @@ struct SClientUpdateButtonsUpdate : public SAIBasicUpdate
 	ZDATA_( SAIBasicUpdate )
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( SAIBasicUpdate *)this); return 0; }
 public:
-	REGISTER_TO_UPDATES	
+	REGISTER_TO_UPDATES
 };
 
 struct SClientUpdateSingleUnitUpdate : public SAIBasicUpdate
@@ -718,7 +718,7 @@ public:
 	SWinLoseUpdate( const bool &_bWin ) : bWin( _bWin ) {}
 
 	REGISTER_TO_UPDATES
-}; 
+};
 
 struct SMoneyChangedUpdate : public SAIBasicUpdate
 {
@@ -742,7 +742,7 @@ public:
 	SStartStopSequenceUpdate( const bool &_bStart ) : bStart( _bStart ) {}
 
 	REGISTER_TO_UPDATES
-}; 
+};
 
 // "MS" means Music System
 

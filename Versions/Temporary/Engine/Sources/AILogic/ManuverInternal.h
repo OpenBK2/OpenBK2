@@ -25,7 +25,7 @@ struct IPathFraction;
  * к центру кривизны.
  */
 
-class CManuver : public IManuver 
+class CManuver : public IManuver
 {
 
 	ZDATA
@@ -36,10 +36,10 @@ class CManuver : public IManuver
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	float fProgress = {};															// path progress
 	float fSpeed = {};
-	
+
 	CVec3 vCenter;
 	CVec3 vSpeed;
-	CVec3 vNormal;			
+	CVec3 vNormal;
 
 	bool bUsed = {};
 
@@ -60,7 +60,7 @@ private:
 	void CalcSpeed();
 	void CalcPoint();
 	void CalcNormale( const NTimer::STime timeDiff );
-	
+
 	void AdjustNormale( const NTimer::STime timeDiff, const CVec3 &vDesiredNormale, CVec3 *vNormal, int *pnRotation, float *pfTiltToGo ) const;
 
 	// height difference needed to start horisontal move
@@ -74,7 +74,7 @@ public:
 
 	// to init next manuver with this params - will be smooth transition between manuvers
 	void GetManuverParams( struct SPrevPathParams *pParams ) const;
-	
+
 	CManuver() : bUsed( false ), fCurTiltSpeed( 0 ), bToHorisontal( 0 ) {  }
 	//CRAP{ FOR TEST
 	// preferred top direction
@@ -91,7 +91,7 @@ public:
 
 	CVec3 GetProspectivePoint( const NTimer::STime nTime ) const;
 	CVec3 GetProspectiveSpeed( NTimer::STime nTime ) const;
-	
+
 	// helper functions
 	static const CVec3 CalcPredictedPoint( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
 	static const CVec3 CalcPredictedSpeed( class CPlanesFormation *pPos, class CPlanesFormation *pEnemy );
@@ -99,7 +99,7 @@ public:
 
 //	CManuverGeneric
 
-class CManuverGeneric : public CManuver 
+class CManuverGeneric : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverGeneric );
 	ZDATA_(CManuver)
@@ -126,7 +126,7 @@ class CManuverPrepareGroundAttack : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverPrepareGroundAttack )
 	ZDATA_(CManuver)
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CManuver*)this); return 0; }
 public:
 	void Init( CPlanesFormation *pPos, const CVec3 &vPos, const CVec3 &vDirection );
@@ -137,7 +137,7 @@ public:
 
 // 30-45 degrees gorka
 //
-class CManuverSteepClimb : public CManuver 
+class CManuverSteepClimb : public CManuver
 {
 	OBJECT_BASIC_METHODS( CManuverSteepClimb );
 	ZDATA_(CManuver)
@@ -145,7 +145,7 @@ class CManuverSteepClimb : public CManuver
 
 public:
 	CManuverSteepClimb() {  }
-	
+
 	void Init( CPlanesFormation *pPos );
 	virtual bool Advance( const NTimer::STime timeDiff );
 	virtual void Init( const NDb::EManuverDestination dest, CPlanesFormation *pPlane, CPlanesFormation *pEnemy = 0 );

@@ -15,12 +15,12 @@ namespace NDb
 class CSound : public CObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CSound );
-	int wID;														// 
+	int wID;														//
 	CPtr<ISound> pSample;								// звук, который нужно играть
 	CPtr<CSubstSound> pSubstitute;						// звук, который играется вместо pSample
 
 	NDb::ESoundType eCombatType;				// поведение звука во время боя
-	NTimer::STime timeBegin;						// начало проигрыша звука. 
+	NTimer::STime timeBegin;						// начало проигрыша звука.
 	NTimer::STime timeToPlay;						// время начала звука
 	NTimer::STime timeBeginDim;
 

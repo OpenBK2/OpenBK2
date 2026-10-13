@@ -8,7 +8,7 @@ bool CDefaultController::Undo(  bool bUpdateManipulator, bool bUpdateViews, IVie
 	// самостоятельно выполнить команду
 	bool bResult = true;
 	if ( bUpdateManipulator )
-	{ 
+	{
 		bResult = UndoWithoutUpdateViews();
 	}
 	// Обновить Views
@@ -96,6 +96,6 @@ void CDefaultController::GetNameListToUpdate( IManipulator::CNameMap *pNameMap, 
 	}
 }
 
-// basement storage  
+// basement storage
 
 

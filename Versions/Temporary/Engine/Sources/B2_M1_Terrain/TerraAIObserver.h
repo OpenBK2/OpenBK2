@@ -19,7 +19,7 @@
 //
 //	SSingleSide() : bSingleSide( false ) {}
 //	SSingleSide( const bool _bSingleSide, const float _fOffset1, const float _fOffset2 )
-//		: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 ) 
+//		: bSingleSide( _bSingleSide ), fOffset1( _fOffset1 ), fOffset2( _fOffset2 )
 //	{ }
 //};
 

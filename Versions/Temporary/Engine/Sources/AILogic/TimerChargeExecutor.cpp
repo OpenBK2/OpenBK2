@@ -8,7 +8,7 @@ extern NTimer::STime curTime;
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x12086B40, CTimerChargeExecutor )
 
-CTimerChargeExecutor::CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffset ) 
+CTimerChargeExecutor::CTimerChargeExecutor( CMineStaticObject *_pObj, int nOffset )
 : pCharge( _pObj ), nTimeToExplode( curTime + nOffset ),
 	CExecutor( TID_TIMED_CHARGE, 1 )
 {

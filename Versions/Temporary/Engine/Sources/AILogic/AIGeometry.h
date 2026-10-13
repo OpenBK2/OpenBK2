@@ -48,7 +48,7 @@ struct SLine
 
 	SLine() {  };
 	SLine( int _a, int _b, int _c ) : a( _a ), b( _b ), c( _c ) {  }
-	SLine( const SVector &ptStart, const SVector &ptFinish ) 
+	SLine( const SVector &ptStart, const SVector &ptFinish )
 		: a( ptFinish.y - ptStart.y ), b( ptStart.x - ptFinish.x ), c( ptFinish.x*ptStart.y - ptStart.x*ptFinish.y ) {  }
 
 	bool IsPointOnLine( const SVector &point )	const { return a*point.x + b*point.y + c == 0; }
@@ -75,21 +75,21 @@ class CBresZ
 	int xinc = {}, yinc = {}, zinc = {}, rinc = {};
 
 	int intPart = {}, dxy = {};
-	
+
 	SVector dir;
 	int z = {}, r = {};
 
 public:
 	void InitXY( const SVector &start, const SVector &finish )
-	{ 
-		dir = start; 
-		
+	{
+		dir = start;
+
 		xlen = finish.x - start.x;
 		ylen = finish.y - start.y;
 
 		xerr = 0;
 		yerr = 0;
-		
+
 		xinc = boost::math::sign( xlen );
 		yinc = boost::math::sign( ylen );
 
@@ -103,7 +103,7 @@ public:
 	void InitZ( const int startZ, const int finishZ, const SVector &startPoint, const SVector &finishPoint )
 	{
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
-		
+
 		const int zlen = finishZ-startZ;
 		dxy = (std::max)( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
 
@@ -111,17 +111,17 @@ public:
 		rinc = abs( zlen % dxy );
  		zinc = boost::math::sign( zlen );
 
-		z = finishZ; 
+		z = finishZ;
 		r = 0;
 	}
 
 	void InitZWithStep( const int startZ, const int finishZ, const SVector &startPoint, const SVector &finishPoint )
 	{
 		NI_ASSERT( startPoint != finishPoint, "Wrong ray" );
-		
+
 		const int zlen = finishZ-startZ;
 		dxy = (std::max)( abs( finishPoint.x-startPoint.x ), abs( finishPoint.y-startPoint.y ) );
-		
+
 		intPart = zlen / dxy;
 		rinc = abs( zlen % dxy );
 		zinc = boost::math::sign( zlen );
@@ -145,7 +145,7 @@ public:
 		if ( r >= dxy )
 			z += zinc, r -= dxy;
 	}
-	
+
 	const SVector& GetPoint() const { return dir; }
 	const int GetZ() const { return z; }
 };

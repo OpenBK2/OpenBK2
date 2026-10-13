@@ -133,7 +133,7 @@ void CUnitTorpedo::Segment()
 
 void CUnitTorpedo::Die( const bool fromExplosion, const float fDamage )
 {
-	if ( fromExplosion )	// hit an object 
+	if ( fromExplosion )	// hit an object
 	{
 		CAIUnit::Die( false, fDamage );
 		CVec3 vExplPoint( vContactPoint, GetHeights()->GetZ( vContactPoint ) );

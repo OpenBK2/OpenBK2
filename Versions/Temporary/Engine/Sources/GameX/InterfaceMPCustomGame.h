@@ -4,7 +4,7 @@
 #include "InterfaceMPBase.h"
 
 
-class CInterfaceMPCustomGame : public CInterfaceMPScreenBase, 
+class CInterfaceMPCustomGame : public CInterfaceMPScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPCustomGame );
@@ -90,7 +90,7 @@ private:
 
 	//{
 	bool OnBackReaction( const std::string &szSender );
-	
+
 	bool OnJoinGameReaction( const std::string &szSender );
 
 	bool OnFiltersReaction( const std::string &szSender );

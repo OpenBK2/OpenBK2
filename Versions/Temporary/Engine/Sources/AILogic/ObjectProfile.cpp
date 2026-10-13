@@ -132,7 +132,7 @@ void CObjectProfile::Init( const NDb::SPassProfile &_profile, const CVec2 &_vCen
 		}
 	}
 	CArray2D<uint8_t> passBorder( passArray );
-	
+
 	SVector tile;
 	for ( tile.x = leftDownTile.x; tile.x <= rightUpTile.x; ++tile.x )
 	{
@@ -211,7 +211,7 @@ static const float SignEps( const float x )
 static bool IsPointInsideSegment( const CVec2 &vPoint, const CVec2 &v1, const CVec2 &v2 )
 {
 	CLine2 line( v1, v2 );
-	return 
+	return
 		fabs( line.DistToPoint( vPoint ) ) < fEps &&
 		SignEps( vPoint.x - v1.x ) * SignEps( v2.x - vPoint.x ) >= 0 &&
 		SignEps( vPoint.y - v1.y ) * SignEps( v2.y - vPoint.y ) >= 0;
@@ -271,7 +271,7 @@ bool CObjectProfile::IsWeakIntersected( const SRect &unitRect ) const
 {
 	if ( IsPointInside( unitRect.v1() ) || IsPointInside( unitRect.v2() ) || IsPointInside( unitRect.v3() ) || IsPointInside( unitRect.v4() ) )
 		return true;
-	
+
 	for ( int k = 0; k < profile.polygons.size(); ++k )
 	{
 		const std::vector<CVec2> &points = profile.polygons[k].verts;

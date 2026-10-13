@@ -1,7 +1,7 @@
 #pragma once
 
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 {
 	if ( pSet )
@@ -12,7 +12,7 @@ void InsertHashSetElement( TContainer *pSet, const TElement &rElement )
 
 
 
-template<class TContainer> 
+template<class TContainer>
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -26,7 +26,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 }
 
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -40,7 +40,7 @@ void InsertIndexToIndicesList( TContainer *pList, int nIndex )
 }
 
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 {
 	for ( typename TContainer::iterator itElement = pList->begin(); itElement != pList->end(); ++itElement )
@@ -62,7 +62,7 @@ void RemoveIndexToIndicesList( TContainer *pList, int nIndex )
 }
 
 
-template<class TContainer, class TContainerIterator> 
+template<class TContainer, class TContainerIterator>
 TContainerIterator FindIndex( TContainer &rList, int nIndex )
 {
 	for ( TContainerIterator itElement = rList.begin(); itElement != rList.end(); ++itElement )
@@ -76,14 +76,14 @@ TContainerIterator FindIndex( TContainer &rList, int nIndex )
 }
 /**
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 void AddListElement( TContainer *pList, const TElement &rElement )
 {
 	pList->push_back( rElement );
 }
 
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 void AddUniqueElementToList( TContainer *pList, const TElement &rElement )
 {
 	TContainer::iterator posExistingElement = find( pList->begin(), pList->end(), rElement );
@@ -96,7 +96,7 @@ void AddUniqueElementToList( TContainer *pList, const TElement &rElement )
 }
 
 
-template<class TContainer, class TElement> 
+template<class TContainer, class TElement>
 bool IsElementExistsInList( const TContainer &rList, const TElement &rElement )
 {
 	return ( find( rList.begin(), rList.end(), rElement ) != rList.end() );

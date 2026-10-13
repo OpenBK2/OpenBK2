@@ -222,7 +222,7 @@ void C2DQuadsRenderer::FillRect( const CVec2 *pPos4, const NGfx::SPixel8888 *pCo
 	}
 }
 
-void C2DQuadsRenderer::AddRect( const CTRect<float> &_rTarget, NGfx::CTexture *pTex, const CTRect<float> &_rSrc, 
+void C2DQuadsRenderer::AddRect( const CTRect<float> &_rTarget, NGfx::CTexture *pTex, const CTRect<float> &_rSrc,
 	SPixel8888 color, float fZ )
 {
 	float fXAdd = 0, fYAdd = 0;
@@ -394,7 +394,7 @@ void C2DQuadsRenderer::Flush()
 }
 
 
-void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport, const CTRect<float> &rTarget, 
+void CopyTexture( const NGfx::CRenderContext &_rc, const CVec2 &vTargetViewport, const CTRect<float> &rTarget,
 	NGfx::CTexture *pTex, const CTRect<float> &rSrc, const CVec4 &vColor, I2DEffect *pEffect )
 {
 	NGfx::SPixel8888 color;

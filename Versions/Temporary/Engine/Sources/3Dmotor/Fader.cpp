@@ -45,7 +45,7 @@ protected:
 				bNeedUpdate = false;
 				bForceWOTimer = false;
 			}
-		} 
+		}
 		else if ( pTimer && eFadeType == E_FORCE_SHOW )
 		{
 			const int nCurTime = pTimer->GetValue();
@@ -53,8 +53,8 @@ protected:
 			value = 1.0f;
 			bNeedUpdate = false;
 			bForceWOTimer = false;
-		} 
-		else 
+		}
+		else
 		{
 			if ( !bHide )
 			{
@@ -100,14 +100,14 @@ public:
 	CSimpleFader( EFadeType _eFadeType, CObjectBase *_pOwner ) : nStartTime(0), eFadeType(_eFadeType), bHide(false), bNeedUpdate(true),
 		expFader( _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ),
 		pOwner(_pOwner), bForceWOTimer(false)
-	{ 
+	{
 		value = 1;
 	}
 	//
-	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner ) : 
+	CSimpleFader( EFadeType _eFadeType, int _nStartTime, float _fLatency, CObjectBase *_pOwner ) :
 		expFader(_fLatency, _fLatency, _eFadeType == E_FADE_TO_WHITE ? 0 : 1 ),
-		eFadeType(_eFadeType), bHide(false), bNeedUpdate(true), pOwner(_pOwner), bForceWOTimer(false) 
-	{ 
+		eFadeType(_eFadeType), bHide(false), bNeedUpdate(true), pOwner(_pOwner), bForceWOTimer(false)
+	{
 		value = 1;
 		SetStartTime( _nStartTime );
 	}

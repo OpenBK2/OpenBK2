@@ -60,7 +60,7 @@ IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, ICheckSumLog * pLog, c
 }
 
 CCheckSumSaver::CCheckSumSaver( uLong *_pCheckSum, ICheckSumLog * pLog, const NTimer::STime segmentTime  )
-: checkSumData( _pCheckSum ), checkSumString( _pCheckSum ), 
+: checkSumData( _pCheckSum ), checkSumString( _pCheckSum ),
  checkSumObjects( _pCheckSum ), nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ),
  nSegment( segmentTime ), pCommandsHistory ( pLog )
 {
@@ -70,7 +70,7 @@ CCheckSumSaver::~CCheckSumSaver()
 {
 	if ( IsReading() )
 		return;
-	
+
 	int nObject = 0;
 	bDissalowStoreObjects = true;
 	for ( CAddOrder::iterator it = addOrder.begin(); it != addOrder.end(); ++it )
@@ -93,7 +93,7 @@ CCheckSumSaver::~CCheckSumSaver()
 }
 
 CCheckSumSaver::CCheckSumSaver()
-: checkSumData( &nLocalCheckSum ), checkSumString( &nLocalCheckSum ), 
+: checkSumData( &nLocalCheckSum ), checkSumString( &nLocalCheckSum ),
 checkSumObjects( &nLocalCheckSum ), nAddedObjects( 0 ), bDissalowStoreObjects( false ), nCount( 0 ),
 nSegment( 0 )
 {
@@ -177,7 +177,7 @@ void CCheckSumSaver::DataChunkString( std::wstring &data )
 
 void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 {
-	if ( pObject == 0 || bDissalowStoreObjects ) 
+	if ( pObject == 0 || bDissalowStoreObjects )
 		return;
 
 	CAddedObjects::iterator pos = addedObjects.find( pObject );
@@ -189,7 +189,7 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 		pos = addedObjects.find( pObject );
 	}
 	const int nObj = pos->second;
-	//	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,//CONSOLE_STREAM_DEBUG_STATUS, 
+	//	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,//CONSOLE_STREAM_DEBUG_STATUS,
 	//	StrFmt( "%s, %i", typeid(*pObject).name(), nObj ), 0, true );
 
 	static const int nBreakCount = NGlobal::GetVar( "break_count", -1 );

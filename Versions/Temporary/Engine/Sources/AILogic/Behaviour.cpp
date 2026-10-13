@@ -22,9 +22,9 @@ extern CHitsStore theHitsStore;
 void CShootEstimatorLighAA::Init( CCommonUnit *_pUnit )
 {
 	pUnit = _pUnit;
-	
+
 	party = pUnit->GetParty();
-	
+
 	pResult = 0;
 	fWorstDamage = -1;
 	bestTime = 100000;
@@ -44,7 +44,7 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 	if ( IsValidObj( pTarget ) && pTarget->GetStats()->IsAviation() )
 	{
 		if ( pGun != 0 && ( !pGun->CanShootByHeight( pTarget ) || !pGun->CanBreakArmor( pTarget ) ) ) return;
-		
+
 		CBasicGun *pChosenGun = pGun;
 		// gun не задан, нужно его выбрать и найти время для убиения врага
 		if ( pChosenGun == 0 )
@@ -62,7 +62,7 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 
 		const float fDistance = fabs2( pUnit->GetCenter() - pTarget->GetCenter() );
 		const float fDamage = pTarget->GetMaxDamage( pUnit );
-		
+
 		//его можно прострелить
 		if ( pChosenGun != 0 )
 		{
@@ -78,7 +78,7 @@ void CShootEstimatorLighAA::AddUnit( CAIUnit *pTarget )
 			}
 			else
 			{
-				// он может нанести больший damage 
+				// он может нанести больший damage
 				// или может стрелять (исходя из дистанции)
 				// или он нанесёт такой же damage, но его быстрее пристрелить
 				// или damage и время совпадают, но он ближе
@@ -141,7 +141,7 @@ void CStandartBehaviour::UponFire( class CCommonUnit *pUnit, class CAIUnit *pWho
 
 bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 {
-	const int nParty = pUnit->GetParty();	
+	const int nParty = pUnit->GetParty();
 	RecordRandomCall();
 	if ( curTime - fleeTraceEnemyTime >= 3000 + NRandom::Random( 0, 1000 ) && pUnit->GetNGuns() > 0 )
 	{
@@ -196,7 +196,7 @@ bool CStandartBehaviour::TryToTraceEnemy( CAIUnit *pUnit )
 		}
 		else
 		{
-			pBestGun->GetTurret()->StopTracing();			
+			pBestGun->GetTurret()->StopTracing();
 			return false;
 		}
 	}
@@ -227,8 +227,8 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 							lastTimeOfRotate != NTimer::STime( -1 ) && (curTime - lastTimeOfRotate < 10000 + NRandom::Random( 0, 1000 ) & RecordRandomCall()) ) )
 				{
 					// если танк с перебитой гусеницей или зенитка
-					if ( pUnit->GetTurret( 0 )->GetHorTurnConstraint() != 0 && 
-							( !pUnit->CanMove() && pUnit->GetStats()->IsArmor() || pUnit->GetStats()->etype == RPG_TYPE_ART_AAGUN ) 
+					if ( pUnit->GetTurret( 0 )->GetHorTurnConstraint() != 0 &&
+							( !pUnit->CanMove() && pUnit->GetStats()->IsArmor() || pUnit->GetStats()->etype == RPG_TYPE_ART_AAGUN )
 						 )
 					{
 						RecordRandomCall();
@@ -236,7 +236,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 						{
 							CTurret *pTurret = pUnit->GetTurret( 0 );
 							const uint16_t wTurretAngle = pTurret->GetHorCurAngle();
-							
+
 							uint16_t wRotateAngle;
 							if ( pUnit->GetStats()->IsArmor() )
 								wRotateAngle = (std::min)( (uint16_t)15000, (uint16_t)pTurret->GetHorTurnConstraint() );
@@ -245,7 +245,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 
 							const uint16_t wMinRotateAngle = wRotateAngle / 4;
 							const uint16_t wMaxRotateAngle = (std::max)( DirsDifference( wTurretAngle, wRotateAngle ), DirsDifference( wTurretAngle, -wRotateAngle ) );
-							
+
 							if ( wMaxRotateAngle > 0 && (int)wMaxRotateAngle - (int)wMinRotateAngle + 1 != 0 )
 							{
 								uint16_t wRotate = NRandom::Random( wMinRotateAngle, wMaxRotateAngle ); RecordRandomCall();
@@ -257,7 +257,7 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 									bClockWise = true;
 								if ( DirsDifference( wTurretAngle - wRotate, 0 ) <= wRotateAngle )
 									bCounterClockWise = true;
-								
+
 								int nSign = 0;
 								if ( bClockWise && !bCounterClockWise )
 									nSign = 1;

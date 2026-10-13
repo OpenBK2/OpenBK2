@@ -62,7 +62,7 @@ enum EActionCommand : int
 	ACTION_COMMAND_UNINSTALL								= 18,
 	//
 	ACTION_MOVE_PLANE_LEAVE													= 1017,	// (AI only)
-	
+
 	ACTION_MOVE_PARACHUTE														= 1019,	// (AI only)
 	//
 	ACTION_COMMAND_RESUPPLY									= 23,
@@ -134,7 +134,7 @@ enum EActionCommand : int
 	ACTION_MOVE_WAIT_FOR_TRUCKREPAIR								= 1051, // (AI only) for waiting something during swarm
 
 	ACTION_SET_APPEAR_POINT													= 1052, // (AI only) AVIATION REMEMBER CURRENT APPEAR POINT
-	ACTION_COMMAND_HEAL_INFANTRY						= 51,					
+	ACTION_COMMAND_HEAL_INFANTRY						= 51,
 
 	ACTION_MOVE_TO_NOT_PRESIZE  										= 1053, // (AI general only)
 	ACTION_COMMAND_PLACE_MARKER											= 1054, // (AI only) service command, client only
@@ -223,7 +223,7 @@ enum EActionCommand : int
 	ACTION_MOVE_DROP_BOMBS_TO_TARGET								= 1073,
 
 	// Train commands - given to the cars
-	ACTION_COMMAND_TRAIN_MOVE												= 1074,		
+	ACTION_COMMAND_TRAIN_MOVE												= 1074,
 	ACTION_COMMAND_TRAIN_ATTACK_OBJECT							= 1075,
 	ACTION_COMMAND_TRAIN_ATTACK_UNIT								= 1076,
 	ACTION_COMMAND_TRAIN_STOP												= 1077,
@@ -403,13 +403,13 @@ static const std::unordered_map<EActionCommand, std::string> ActionCommandToStri
 	{ACTION_COMMAND_USE_FLAMETHROWER, "ACTION_COMMAND_USE_FLAMETHROWER"}
 };
 
-enum EActionLeaveParam 
+enum EActionLeaveParam
 {
 	ALP_POSITION_VALID = 0,
 	ALP_POSITION_INVALID = 1,
 };
 
-enum EActionThrowGrenadeParam 
+enum EActionThrowGrenadeParam
 {
 	ATGP_ATACK_UNIT = 0,
 	ATGP_ATACK_OBJECT = 1,

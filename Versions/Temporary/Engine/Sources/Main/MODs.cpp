@@ -113,11 +113,11 @@ class CICAttachMOD : public IInterfaceCommand
 public:
 	CICAttachMOD( NDb::EDatabaseMode _eMode ): eMode(_eMode) {}
 
-	void Configure( const char *pszConfig ) 
-	{ 
-		szFullFolderPath = pszConfig == 0 ? "" : pszConfig; 
-		if ( szFullFolderPath.size() > 1 && 
-			   szFullFolderPath[szFullFolderPath.size() - 1] != '/' && 
+	void Configure( const char *pszConfig )
+	{
+		szFullFolderPath = pszConfig == 0 ? "" : pszConfig;
+		if ( szFullFolderPath.size() > 1 &&
+			   szFullFolderPath[szFullFolderPath.size() - 1] != '/' &&
 				 szFullFolderPath[szFullFolderPath.size() - 1] != '/' )
 		{
 			szFullFolderPath += "/";

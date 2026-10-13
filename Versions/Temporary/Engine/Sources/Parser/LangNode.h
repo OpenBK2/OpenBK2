@@ -30,9 +30,9 @@ namespace NLang
 			NI_ASSERT( false, "unknown visit" );
 		}
 	};
-	
+
 	enum ESimpleType
-	{ 
+	{
 		EST_UNKNOWN,
 		EST_NOTYPE,
 		EST_STRING,

@@ -157,7 +157,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile,
 	}
 
 	pClients = new CClients( pDatabase );
-	
+
 	if ( bRegisterClosedBetaUsers )
 	{
 		for ( int i = 0; i < names.size(); ++i )
@@ -190,7 +190,7 @@ CGameServer::CGameServer( CCommands *_pCommands, const std::string &szCfgFile,
 	AddLobby( new CChatLobby( pClients, szCfgFile ) );
 
 	WriteMSG( "Server started, port %d, gameversion %d\n", nPort, nNetVersion );
-	
+
 	nDatabasePingTime = GetLongTickCount();
 	nLastStatisticsLogTime = GetLongTickCount() - nServerStatisticsLogPeriod;
 	pTerminal = new CTerminal( pCommands, nTerminalPort );
@@ -250,7 +250,7 @@ void CGameServer::SendPackets()
 {
 	for ( int i = 0; i < lobbies.size(); ++i )
 	{
-		int nPacketsPerLobbyLeft = 200; 
+		int nPacketsPerLobbyLeft = 200;
 		while ( CPtr<CNetPacket> pPacket = lobbies[i]->GetPacket() )
 		{
 #ifndef _FINALRELEASE
@@ -352,7 +352,7 @@ void CGameServer::CommandKick( const SCommand &cmd )
 	else
 		szStr = "unknown client " + cmd.GetStr( 0 ) + "\n";
 
-	WriteMSG( "%s", szStr.c_str() );	
+	WriteMSG( "%s", szStr.c_str() );
 }
 
 void CGameServer::CommandGames( const SCommand &cmd )
@@ -364,7 +364,7 @@ void CGameServer::CommandGames( const SCommand &cmd )
 void CGameServer::CommandClientState( const SCommand &cmd )
 {
 	std::string szStr;
-	
+
 	int nID;
 	if ( !pClients->GetClientID( cmd.GetStr( 0 ), &nID ) )
 		szStr = fmt::format( "Nick {} isn't online", cmd.GetStr( 0 ) );

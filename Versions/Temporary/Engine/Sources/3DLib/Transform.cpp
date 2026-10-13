@@ -108,17 +108,17 @@ bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m )
 	pRes->_21 = -m._21 * m3344 + m._31 * m2344 - m._41 * m2334;
 	pRes->_31 =  m._21 * m3244 - m._31 * m2244 + m._41 * m2234;
 	pRes->_41 = -m._21 * m3243 + m._31 * m2243 - m._41 * m2233;
-	
+
 	pRes->_12 = -m._12 * m3344 + m._32 * m1344 - m._42 * m1334;
 	pRes->_22 =  m._11 * m3344 - m._31 * m1344 + m._41 * m1334;
 	pRes->_32 = -m._11 * m3244 + m._31 * m1244 - m._41 * m1234;
 	pRes->_42 =  m._11 * m3243 - m._31 * m1243 + m._41 * m1233;
-	
+
 	pRes->_13 =  m._12 * m2344 - m._22 * m1344 + m._42 * m1324;
 	pRes->_23 = -m._11 * m2344 + m._21 * m1344 - m._41 * m1324;
 	pRes->_33 =  m._11 * m2244 - m._21 * m1244 + m._41 * m1224;
 	pRes->_43 = -m._11 * m2243 + m._21 * m1243 - m._41 * m1223;
-	
+
 	pRes->_14 = -m._12 * m2334 + m._22 * m1334 - m._32 * m1324;
 	pRes->_24 =  m._11 * m2334 - m._21 * m1334 + m._31 * m1324;
 	pRes->_34 = -m._11 * m2234 + m._21 * m1234 - m._31 * m1224;
@@ -136,7 +136,7 @@ bool InvertMatrix( SHMatrix *pRes, const SHMatrix &m )
 	pRes->_12 *= fDet;	pRes->_22 *= fDet;	pRes->_32 *= fDet;	pRes->_42 *= fDet;
 	pRes->_13 *= fDet;	pRes->_23 *= fDet;	pRes->_33 *= fDet;	pRes->_43 *= fDet;
 	pRes->_14 *= fDet;	pRes->_24 *= fDet;	pRes->_34 *= fDet;	pRes->_44 *= fDet;
-	
+
 	return bRes;
 }
 
@@ -316,7 +316,7 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 	w = (float)1/tan(fFovX*0.5);  // 1/tan(x) == cot(x)
 	h = (float)1/tan(fFovY*0.5);   // 1/tan(x) == cot(x)
 	Q = far_plane/(far_plane - near_plane);
- 
+
 	SHMatrix ret;
 	memset( &ret, 0, sizeof(ret) );
 	ret._11 = w;
@@ -331,12 +331,12 @@ void CTransformStack::MakeProjective( float fAspect, float fFovX, float fZMin, f
 	PrepareClipPlanes();
 }
 
-void CTransformStack::MakeProjective( const CVec2 &screenRect, float fFovX, float fZMin, float fZMax, const CVec2 &vShift ) 
-{ 
+void CTransformStack::MakeProjective( const CVec2 &screenRect, float fFovX, float fZMin, float fZMax, const CVec2 &vShift )
+{
 	if ( screenRect.y == 0 || screenRect.x == 0 )
 		MakeProjective( 1, fFovX, fZMin, fZMax, vShift );
 	else
-		MakeProjective( screenRect.y / screenRect.x, fFovX, fZMin, fZMax, vShift ); 
+		MakeProjective( screenRect.y / screenRect.x, fFovX, fZMin, fZMax, vShift );
 }
 
 void CTransformStack::MakeParallel( float fWidth, float fHeight, float fZMin, float fZMax )
@@ -494,10 +494,10 @@ bool CTransformStack::PushClipHint( const SBound &bv )
 	ASSERT( nClipFlagsPtr < std::size(nClipFlags) );
 	if ( !bDoubt )
 		return true;
-	if ( CheckParallelepiped( 
-		bv.s.ptCenter, 
-		CVec3( bv.ptHalfBox.x, 0, 0 ), 
-		CVec3( 0, bv.ptHalfBox.y, 0 ), 
+	if ( CheckParallelepiped(
+		bv.s.ptCenter,
+		CVec3( bv.ptHalfBox.x, 0, 0 ),
+		CVec3( 0, bv.ptHalfBox.y, 0 ),
 		CVec3( 0, 0, bv.ptHalfBox.z ) ) )
 		return true;
 	--nClipFlagsPtr;
@@ -606,7 +606,7 @@ static bool ClipPolygon( const SClipPolygon &pts, const CVec4 &plane, SClipPolyg
 	}
 	return !pRes->empty();
 }
-static int nPolygonIndices[6][4] = 
+static int nPolygonIndices[6][4] =
 {
 	{3,2,1,0},
 	{4,5,6,7},
@@ -617,7 +617,7 @@ static int nPolygonIndices[6][4] =
 };
 
 // could have been much more efficient - look box/box intersection info
-bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter, 
+bool CTransformStack::CheckParallelepiped( const CVec3 &ptCenter,
 	const CVec3 &ptXAxis, const CVec3 &ptYAxis, const CVec3 &ptZAxis )
 {
 	// project 8 points & test them against frustrum
@@ -684,14 +684,14 @@ bool CTransformStack::IsIn( const SBound &s )
 	bool bRes;
 	if ( CheckSphere( ptCenter, s.s.fRadius, &bRes ) )
 		return bRes;
-	return CheckParallelepiped( 
-		s.s.ptCenter, 
-		CVec3( s.ptHalfBox.x, 0, 0 ), 
-		CVec3( 0, s.ptHalfBox.y, 0 ), 
+	return CheckParallelepiped(
+		s.s.ptCenter,
+		CVec3( s.ptHalfBox.x, 0, 0 ),
+		CVec3( 0, s.ptHalfBox.y, 0 ),
 		CVec3( 0, 0, s.ptHalfBox.z ) );
 }
 
-bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis, 
+bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis,
 	const CVec3 &_ptYAxis, const CVec3 &_ptZAxis )
 {
 	if ( IsFullGet() )
@@ -701,10 +701,10 @@ bool CTransformStack::IsIn( const SSphere &s, const CVec3 &_ptXAxis,
 	bool bRes;
 	if ( CheckSphere( ptCenter, s.fRadius, &bRes ) )
 		return bRes;
-	return CheckParallelepiped( 
-		s.ptCenter, 
-		_ptXAxis, 
-		_ptYAxis, 
+	return CheckParallelepiped(
+		s.ptCenter,
+		_ptXAxis,
+		_ptYAxis,
 		_ptZAxis );
 }
 

@@ -40,7 +40,7 @@ void CManuverStateDesc::Init( const enum EPlanesAttitude _att, struct IPlane *pP
 
 bool CManuverStateDesc::CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const
 {
-	return 
+	return
 		IsParamSuitable( enemyDirection, pDesc->conditions.pEnemyDirection ) &&
 		IsParamSuitable( selfDirection, pDesc->conditions.pSelfDirection ) &&
 		IsParamSuitable( speedAngle, pDesc->conditions.pSpeedAngle ) &&

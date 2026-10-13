@@ -29,7 +29,7 @@ class CClientAckManager : public IClientAckManager
 	class CBoredUnitsContainer
 	{
 		typedef std::unordered_map<CPtr<IMOUnit>, bool, SPtrHash> CBoredUnits;
-		CBoredUnits boredUnits;							
+		CBoredUnits boredUnits;
 		int nCounter = 0;												// для оптимизации - размер boredUnits
 		NTimer::STime timeLastBored = 0;				// time for last bored sound
 		void Copy( const CBoredUnitsContainer &cp );
@@ -43,16 +43,16 @@ class CClientAckManager : public IClientAckManager
 
 		void AddUnit( struct IMOUnit *pUnit );
 		void DelUnit( struct IMOUnit *pUnit );
-		// если время подошло, то заставляет рандомного юнита послать Ack. 
+		// если время подошло, то заставляет рандомного юнита послать Ack.
 		//Если ack послали, то true;
-		bool SendAck( const NTimer::STime curTime, 
-			const NDb::EUnitAckType eBored, 
+		bool SendAck( const NTimer::STime curTime,
+			const NDb::EUnitAckType eBored,
 			IClientAckManager *pAckManager,
 			const NTimer::STime timeInterval );
 		void Clear();
 	};
 
-	// 
+	//
 	struct SAck
 	{
 		NDb::EUnitAckType eAck{};
@@ -63,7 +63,7 @@ class CClientAckManager : public IClientAckManager
 		bool operator==( const SAck & ack ) const { return eAck == ack.eAck; }
 	};
 	typedef std::list< SAck > CAcks;
-	//	
+	//
 	struct SUnitAck
 	{
 		int operator&( IBinSaver &saver );
@@ -97,7 +97,7 @@ class CClientAckManager : public IClientAckManager
 		const CUnitAcksInfo &acksInfo;
 		const NDb::SClientGameConsts *pConsts = nullptr;
 	public:
-		CAckPredicate( const NDb::EAckClass _eType, const CUnitAcksInfo &_acksInfo, const NDb::SClientGameConsts * _pConsts ) 
+		CAckPredicate( const NDb::EAckClass _eType, const CUnitAcksInfo &_acksInfo, const NDb::SClientGameConsts * _pConsts )
 			: acksInfo( _acksInfo ), eType( _eType ), pConsts( _pConsts ) {  }
 		bool operator()( const SAck & a );
 	};
@@ -111,9 +111,9 @@ class CClientAckManager : public IClientAckManager
 
 	// тут инфо о юнитах, зарегистрированных в bored состояниях
 	typedef std::unordered_map<int, CBoredUnitsContainer> BoredUnits;
-	BoredUnits boredUnits;	
+	BoredUnits boredUnits;
 
-	CUnitAcksPresence acksPresence;				// наличие в даный момент в звучании данного Ack'а 
+	CUnitAcksPresence acksPresence;				// наличие в даный момент в звучании данного Ack'а
 	CUnitsAcks				unitAcks;						// для хранения всех текущих Ack'ов
 	CDeathAcks				deathAcks;					// for death acknowledgements;
 	NTimer::STime timeLastDeath = 0;

@@ -27,8 +27,8 @@ public:
 class CGroupLogic : public CAIObjectBase
 {
 	OBJECT_NOCOPY_METHODS( CGroupLogic );
-public: 
-	int operator&( IBinSaver &saver ); 
+public:
+	int operator&( IBinSaver &saver );
 private:
 CFreeGroupIDs groupIds;
 	det_set<int> registeredGroups;
@@ -42,7 +42,7 @@ CFreeGroupIDs groupIds;
 	NSegmObjs::CContainer< CPtr<CAIUnit> > secondPathUnits;
 
 	NTimer::STime lastSegmTime = {};
-	
+
 	struct SAmbushInfo
 	{
 		int nUniqueId = {};
@@ -92,7 +92,7 @@ public:
 	void RegisterGroup( const std::vector<int> &vIDs, const uint16_t wGroup );
 	void RegisterGroup( CObjectBase **pUnitsBuffer, const int nLen, const uint16_t wGroup );
 	void UnregisterGroup( const uint16_t wGroup );
-	
+
 	void DelUnitFromGroup( class CCommonUnit *pUnit );
 	void AddUnitToGroup( class CCommonUnit *pUnit, const int nGroup );
 	void DelUnitFromSpecialGroup( class CCommonUnit *pUnit );
@@ -101,15 +101,15 @@ public:
 	void UnitCommand( const SAIUnitCmd &command, class CCommonUnit *pGroupUnit, bool bPlaceInQueue );
 	void InsertUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
 	void PushFrontUnitCommand( const SAIUnitCmd &command, class CCommonUnit *pUnit );
-	
+
 	// послать updates на shoot areas для всех юнитов в группе
 	void UpdateAllAreas( const std::vector<int> &units, const EActionNotify eAction );
 
 	void Segment();
-	
+
 	void CreateSpecialGroup( const uint16_t wGroup );
 	void UnregisterSpecialGroup( const uint16_t wSpecialGroup );
-	
+
 	int BeginGroup( const int nGroup ) const { return groupUnits.begin( nGroup ); }
 	int EndGroup() const { return groupUnits.end(); }
 	int Next( const int nIter ) const { return groupUnits.GetNext( nIter ); }

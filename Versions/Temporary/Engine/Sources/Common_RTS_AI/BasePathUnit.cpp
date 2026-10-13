@@ -191,7 +191,7 @@ void CBasePathUnit::SetDirection( const uint16_t _wDirection, const bool bNeedUp
 
 void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 {
-	//DEBUG{ переодически попадаются "подземные юниты" (с z координатой равной 0). выставлять z координату - 
+	//DEBUG{ переодически попадаются "подземные юниты" (с z координатой равной 0). выставлять z координату -
 	//головная боль тех, кто двигает юнит. полная трехмерность ;-)
 	//if ( _vCenter.z <= 0.1f )
 	//	DebugTrace( "WARNING: undeground position !!!" );
@@ -211,7 +211,7 @@ void CBasePathUnit::SetCenter( const CVec3 &_vCenter, const bool bNeedUpdate )
 	{
 		UpdateTile();
 
-		if ( bNeedLockTiles )  
+		if ( bNeedLockTiles )
 			UnlockTiles();
 
 		const EMovementPlane newPlane = ( pAIMap->GetTerrain()->GetTerrainType( vNewTile ) == ETT_WATER_TERRAIN ) ? PLANE_WATER : PLANE_TERRAIN;
@@ -319,7 +319,7 @@ const bool CBasePathUnit::TurnToDirection( const uint16_t _wDirection, const boo
 			else
 				SetGoForward( bCanForward || !CanGoBackward() );
 
-			wLastDirection = _wDirection; 
+			wLastDirection = _wDirection;
 		}
 
 		return MakeTurnToDirection( _wDirection );
@@ -383,7 +383,7 @@ const bool CBasePathUnit::CanTurnTo( const uint16_t wNewDir, const bool bCanRebu
 				const uint16_t wRightDirDiff = DirsDifference( wUnitDir, wCurDir );
 				const uint16_t wBackDirDiff = DirsDifference( wUnitDir + 32768, wCurDir );
 				const uint16_t wDirsDiff = (std::min)( wRightDirDiff, wBackDirDiff );
-				if ( ( CanGoBackward() || wDirsDiff == wRightDirDiff ) && 
+				if ( ( CanGoBackward() || wDirsDiff == wRightDirDiff ) &&
 					CheckTurn( 1.0f, vCurDir, false, true ) )
 				{
 					CVec2 vPoint( vUnitCenter + vCurDir * pAIMap->GetTileSize() );
@@ -407,8 +407,8 @@ const bool CBasePathUnit::CanTurnTo( const uint16_t wNewDir, const bool bCanRebu
 
 					if ( !bOnLockTiles && bCanTurn )
 					{
-						const float fTime = 
-							fabs( vPoint - vUnitCenter ) * GetMaxPossibleSpeed() + 
+						const float fTime =
+							fabs( vPoint - vUnitCenter ) * GetMaxPossibleSpeed() +
 							wDirsDiff * GetTurnSpeed();
 
 						if ( fTime < fBestTime )
@@ -496,7 +496,7 @@ const bool CBasePathUnit::CheckTurn( const float fRectCoeff, const CVec2 &vDir, 
 
 void CBasePathUnit::SetSpeed( const EAdjustSpeedParam eAdjust, const float fValue )
 {
-	switch( eAdjust ) 
+	switch( eAdjust )
 	{
 	case ADJUST_SLOW:
 		fSpeed /= fValue;
@@ -602,7 +602,7 @@ void CBasePathUnit::AdjustSpeed()
 		const float fDiffSpeed = lastTimeDiff * GetMaxPossibleSpeed() / 2000.0f; // old version works with 50ms AI_SEGMENT
 		const float minSpeed = fSpeed - fDiffSpeed;//GetMaxPossibleSpeed() / 40.0f;
 		const float maxSpeed = fSpeed + fDiffSpeed;//GetMaxPossibleSpeed() / 40.0f;
-		float maxSpeedHere = GetMaxSpeedHere();		
+		float maxSpeedHere = GetMaxSpeedHere();
 
 		if ( maxSpeed < maxSpeedHere )
 			fSpeed = maxSpeed;
@@ -764,7 +764,7 @@ IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const
 		UnlockTiles();
 	{
 		STerrainModeSetter modeSetter( ELM_STATIC, pAIMap->GetTerrain() );
-		pPathFinder->SetCheckingPathParameters( GetBoundTileRadius(), GetAIPassabilityClass(), vStartPoint, vFinishPoint, GetLastKnownGoodTile(), pChecking, pAIMap );	
+		pPathFinder->SetCheckingPathParameters( GetBoundTileRadius(), GetAIPassabilityClass(), vStartPoint, vFinishPoint, GetLastKnownGoodTile(), pChecking, pAIMap );
 		pPath = pPathFinder->CreatePath( false );
 		if ( !IsInfantry() && !pChecking && IsValid( pPath ) && pPath->GetLength() > 2 )
 		{
@@ -774,7 +774,7 @@ IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const
 			int nStepCount = 4;
 			while ( !bPathToFinishPoint && !bEmptyPathFound && --nStepCount >= 0 )
 			{
-				pPathFinder->SetPathParameters( GetBoundTileRadius(), GetAIPassabilityClass(), pAIMap->GetPointByTile( pPath->GetFinishTile() ), vFinishPoint, GetLastKnownGoodTile(), pAIMap );	
+				pPathFinder->SetPathParameters( GetBoundTileRadius(), GetAIPassabilityClass(), pAIMap->GetPointByTile( pPath->GetFinishTile() ), vFinishPoint, GetLastKnownGoodTile(), pAIMap );
 				CPtr<IStaticPath> pTempPath = pPathFinder->CreatePath( false );
 				if ( IsValid( pTempPath ) && pTempPath->GetLength() > 2 )
 				{
@@ -782,7 +782,7 @@ IStaticPath *CBasePathUnit::CreateBigStaticPath( const CVec2 &vStartPoint, const
 					bPathToFinishPoint = mDistance( pPath->GetFinishTile(), vFinishTile ) < 2;
 					bEmptyPathFound = false;
 				}
-				else 
+				else
 					bEmptyPathFound = true;
 			}
 		}
@@ -914,7 +914,7 @@ void CBasePathUnit::SetCollision( ICollision *pCollision, IPath *pPath )
 		pInterruptedPath = pSmoothPath;
 		pPathMemento = GetSmoothPath()->CreateMemento();
 	}
-	
+
 	if ( !bNoCollision )
 	{
 		pSmoothPath = pDefaultPath;
@@ -1012,7 +1012,7 @@ const bool CBasePathUnit::IsValidCenter( const CVec3 &_vCenter )
 
 	if ( unitProfile.bRect )
 	{
-		return 
+		return
 			pAIMap->IsPointInside( unitProfile.rect.v1() ) && pAIMap->IsPointInside( unitProfile.rect.v2() ) &&
 			pAIMap->IsPointInside( unitProfile.rect.v3() ) && pAIMap->IsPointInside( unitProfile.rect.v4() );
 	}
@@ -1040,7 +1040,7 @@ const bool CBasePathUnit::IsValidDirection( const uint16_t _wDirection )
 
 	if ( unitProfile.bRect )
 	{
-		return 
+		return
 			pAIMap->IsPointInside( unitProfile.rect.v1() ) && pAIMap->IsPointInside( unitProfile.rect.v2() ) &&
 			pAIMap->IsPointInside( unitProfile.rect.v3() ) && pAIMap->IsPointInside( unitProfile.rect.v4() );
 	}

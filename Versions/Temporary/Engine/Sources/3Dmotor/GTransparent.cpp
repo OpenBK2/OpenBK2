@@ -22,7 +22,7 @@ const unsigned int N_OVER_SRC_INFO = N_PARTICLE_OVER_FLAG >> N_PARTICLES_PER_EFF
 
 // CTransparentRenderer
 
-CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize, 
+CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTPoint<int> &vLightBuffersize,
 	bool _bUseFakeLM, uint32_t _dwLitColor, uint32_t _dwNormalColor, const SPerVertexLightState *_pLightState )
 	: nTotalParticles(0), nLitParticles(0), dwLitColor(_dwLitColor), dwNormalColor(_dwNormalColor),
 	nElementPtr(0), nInfoIdx(-(1<<N_PARTICLES_PER_EFFECT_LG2)), pLightState(_pLightState)
@@ -58,8 +58,8 @@ CTransparentRenderer::CTransparentRenderer( const CTransformStack &ts, const CTP
 	NGfx::CalcCompactVector( &vNormal, -orientation.vBasic[2] );
 }
 
-STransparentInfo* CTransparentRenderer::AddFragment() 
-{ 
+STransparentInfo* CTransparentRenderer::AddFragment()
+{
 	nInfoIdx += 1 << N_PARTICLES_PER_EFFECT_LG2;
 	// make sure enough place is allocated
 	if ( nElementPtr + N_RESERVE_DEPTH_BUFFER > depths.size() )
@@ -81,7 +81,7 @@ void CTransparentRenderer::AllocParticlesWriteBuffer()
 	nTargetParticle = 0;
 }
 
-void CTransparentRenderer::FinishParticles() 
+void CTransparentRenderer::FinishParticles()
 {
 	if ( IsValid(pParticlesGeometry) )
 		pParticlesGeometry->FreeWriteBuffer();
@@ -100,7 +100,7 @@ void CTransparentRenderer::FinishParticlesPiece()
 	pParticlesGeometry->FinishPart( &bv, pLMAlloc );
 	if ( pReportParticles )
 	{
-		pReportParticles->AddParticles( pParticlesGeometry, pParticlesTrilist, pParticlesGeometry->GetPartsNum() - 1, 
+		pReportParticles->AddParticles( pParticlesGeometry, pParticlesTrilist, pParticlesGeometry->GetPartsNum() - 1,
 			nParticles, bv );
 	}
 }
@@ -117,8 +117,8 @@ void CTransparentRenderer::StartParticlesPiece()
 	pParticlesGeometry->Start( pCurrentEffect, nEffectParticle, currentEffectBV, *pLMAlloc, dwCurrentParticleColor );
 }
 
-void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv, 
-	IReportParticlesGeometry *pStore ) 
+void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, const SBound &bv,
+	IReportParticlesGeometry *pStore )
 {
 	pCurrentEffect = pParticles->GetEffect();
 	if ( pCurrentEffect->IsEmpty() )
@@ -148,9 +148,9 @@ void CTransparentRenderer::AddParticles( IParticles *pParticles, bool bIsLit, co
 	}
 	nTargetStart = nTargetParticle;
 	StartParticlesPiece();
-	
+
 	pCurrentEffect->AddParticles( this );
-	
+
 	FinishParticlesPiece();
 	nTotalParticles += nTargetParticle - nTargetStart;
 	if ( bIsLit )

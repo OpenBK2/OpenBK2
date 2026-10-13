@@ -22,8 +22,8 @@ namespace NAIVisInfo
 		bool bNeedUpdate;
 	protected:
 		virtual bool NeedUpdate()
-		{ 
-			return bNeedUpdate; 
+		{
+			return bNeedUpdate;
 		}
 
 		virtual void Recalc();
@@ -60,7 +60,7 @@ namespace NAIVisInfo
 	class CDebugSegment : public CDebugObject, public CEngineInfoHolder
 	{
 		OBJECT_BASIC_METHODS( CDebugSegment );
-		
+
 		static const float F_MIN_AI_THICKNESS;
 		static const float F_AI_SPLICE_LEN;
 

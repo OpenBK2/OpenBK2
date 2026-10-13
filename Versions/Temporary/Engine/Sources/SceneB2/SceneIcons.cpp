@@ -15,7 +15,7 @@ void CSceneIconInfo::Visit( IAIVisitor *pVisitor )
 											 0,				fMaxSize, 0,				vCenter.y,
 											 0,				0,				fMaxSize, vCenter.z,
 											 0,				0,				0,				1 );
- 
+
 	//pVisitor->AddHull( NDb::Get<NDb::SAIGeometry>( 1136 ), trans, 0, 0, 1 );
 	pVisitor->AddHull( pAIGeometry, matr, 0, 0, 1 );
 }
@@ -29,8 +29,8 @@ void CSceneIconInfo::OrientToViewer()
 	CalcCompactVector( &vNorm, -pCamera->GetViewMatrix().GetZAxis3() );
 
 	matrix.RotateVector( &s[0], CVec3( -vHalfSize.x, 0, -vHalfSize.y ) );
-	matrix.RotateVector( &s[1], CVec3(	vHalfSize.x, 0, -vHalfSize.y ) ); 
-	matrix.RotateVector( &s[2], CVec3(	vHalfSize.x, 0,	vHalfSize.y ) ); 
+	matrix.RotateVector( &s[1], CVec3(	vHalfSize.x, 0, -vHalfSize.y ) );
+	matrix.RotateVector( &s[2], CVec3(	vHalfSize.x, 0,	vHalfSize.y ) );
 	matrix.RotateVector( &s[3], CVec3( -vHalfSize.x, 0,	vHalfSize.y ) );
 
 	data.vertices[0].pos = vCenter + s[0];
@@ -45,7 +45,7 @@ void CSceneIconInfo::OrientToViewer()
 
 void CSceneIconInfo::Recalc()
 {
-	if ( pValue == 0 ) 
+	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 
 	OrientToViewer();

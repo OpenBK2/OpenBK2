@@ -60,8 +60,8 @@ CTransportResupplyState::CTransportResupplyState( CAITransportUnit *_pTransport,
 bool CTransportResupplyState::FindUnitToServe( bool *pIsNotEnoughRU )
 {
 	CFormationServeUnitState::CFindFirstUnitPredicate pred;
-	CFormationResupplyUnitState::FindUnitToServe( pTransport->GetCenterPlain(), 
-																								pTransport->GetPlayer(), 
+	CFormationResupplyUnitState::FindUnitToServe( pTransport->GetCenterPlain(),
+																								pTransport->GetPlayer(),
 																								(std::min)(pTransport->GetResursUnitsLeft(), SConsts::ENGINEER_RU_CARRY_WEIGHT),
 																								pLoaderSquad, &pred, pPreferredUnit );
 	*pIsNotEnoughRU = pred.IsNotEnoughRu();
@@ -107,9 +107,9 @@ void CTransportRepairState::UpdateActionBegin()
 bool CTransportRepairState::FindUnitToServe( bool *pIsNotEnoughRU )
 {
 	CFormationServeUnitState::CFindFirstUnitPredicate pred;
-	CFormationRepairUnitState::FindUnitToServe( pTransport->GetCenterPlain(), 
-																							pTransport->GetPlayer(), 
-																							pTransport->GetResursUnitsLeft(), 
+	CFormationRepairUnitState::FindUnitToServe( pTransport->GetCenterPlain(),
+																							pTransport->GetPlayer(),
+																							pTransport->GetResursUnitsLeft(),
 																							pLoaderSquad, &pred,
 																							pPreferredUnit );
 	*pIsNotEnoughRU |= pred.IsNotEnoughRu();
@@ -143,7 +143,7 @@ CTransportLoadRuState::CTransportLoadRuState ( CAITransportUnit *_pTransport, co
 CBuilding* CTransportLoadRuState::FindNearestSource()
 {
 	// для поиска ближайшего хранилища
-	class CFindNearestConnected : public CStaticObjects::IEnumStoragesPredicate 
+	class CFindNearestConnected : public CStaticObjects::IEnumStoragesPredicate
 	{
 		CPtr<CBuilding> pNearest;
 		// Defaults cover construction before Init/load; explicit constructor values still take precedence.
@@ -163,9 +163,9 @@ CBuilding* CTransportLoadRuState::FindNearestSource()
 		}
 		class CBuilding * GetNearest() { return pNearest; };
 	};
-	
+
 	CFindNearestConnected pred;
-	theStatObjs.EnumStoragesInRange( pTransport->GetCenterPlain(), 
+	theStatObjs.EnumStoragesInRange( pTransport->GetCenterPlain(),
 																	 pTransport->GetParty(),
 																	 SConsts::RESUPPLY_MAX_PATH,
 																	 SConsts::TRANSPORT_LOAD_RU_DISTANCE,
@@ -190,9 +190,9 @@ void CTransportLoadRuState::Segment()
 							IsValidObj( pStorage ) &&	// preferred storage exists
 							theDipl.GetNParty(pStorage->GetPlayer()) == pTransport->GetParty()	// and of our party
 					 ) ||
-					 ( 
+					 (
 							//theStatObjs.IsPointUnderSupply( pTransport->GetPlayer(), pTransport->GetCenter() ) &&
-							(pStorage = FindNearestSource()) 
+							(pStorage = FindNearestSource())
 					 )
 				 )
 			{
@@ -218,7 +218,7 @@ void CTransportLoadRuState::Segment()
 			}
 			else
 				InitStatus();
-		}	
+		}
 
 		break;
 	case ETLRS_APPROACHING_STORAGE:
@@ -234,7 +234,7 @@ void CTransportLoadRuState::Segment()
 
 		break;
 	case ETLRS_START_LOADING_RU:
-		// send loaders 
+		// send loaders
 		if ( IsValidObj( pStorage ) )
 		{
 			if ( pTransport->UpdateExternalLoaders() )
@@ -266,7 +266,7 @@ void CTransportLoadRuState::Segment()
 				// send again.
 				eState = ETLRS_START_LOADING_RU;
 			}
-			else 
+			else
 				Interrupt();
 		}
 
@@ -283,7 +283,7 @@ void CTransportLoadRuState::Segment()
 		}
 		else
 			pTransport->SetCommandFinished();
-		
+
 		break;
 
 	}
@@ -293,7 +293,7 @@ void CTransportLoadRuState::Interrupt()
 {
 	if ( bSubState )
 		eState  = ETLRS_SUBSTATE_FINISHED;
-	else 
+	else
 		TryInterruptState( 0 );
 }
 
@@ -302,7 +302,7 @@ void CTransportLoadRuState::CreateSquad()
 	pTransport->Unlock();
 	if ( IsValidObj( pLoaderSquad ) )
 		pLoaderSquad->Disappear();
-	
+
 	if ( pTransport->GetPlayer() == theDipl.GetNeutralPlayer() )
 	{
 		pLoaderSquad = 0;
@@ -450,7 +450,7 @@ void CTransportServeState::Segment()
 				pTransport->SendAcknowledgement( ACK_NEGATIVE_NOTIFICATION );
 				TryInterruptState( 0 );
 			}
-		}			
+		}
 		break;
 	case ETRS_CREATE_SQUAD:
 		//if ( pTransport->UpdateExternalLoaders() )
@@ -515,12 +515,12 @@ void CTransportServeState::Segment()
 		if ( curTime - timeLastUpdate < pTransport->GetBehUpdateDuration() )
 		{
 		}
-		else 
+		else
 		{
 			timeLastUpdate = curTime;
 			if ( !IsValidObj( pLoaderSquad ) || pLoaderSquad->IsInTransport() )
 				eState = ETRS_CREATE_SQUAD;
-		}			
+		}
 
 		break;
 	case ETRS_WAIT_FOR_LOADERS:
@@ -535,7 +535,7 @@ void CTransportServeState::Segment()
 		}
 		else
 			pTransport->SetCommandFinished();
-		
+
 		break;
 	}
 }
@@ -676,10 +676,10 @@ void CTransportBuildState::Segment()
 				theFeedBackSystem.AddFeedbackAndForget( pUnit->GetUniqueID(), pUnit->GetCenterPlain(), EFB_ENGINEER_WORK_FINISHED, -1 );
 			TryInterruptState( 0 );
 		}
-		
+
 		break;
 	case ETBS_CREATE_SQUAD:
-		{	
+		{
 			pUnit->Unlock();
 			if ( IsValidObj( pEngineers ) )
 				pEngineers->Disappear();
@@ -713,7 +713,7 @@ void CTransportBuildState::Segment()
 			pUnit->Unlock();
 			if ( IsValidObj( pEngineers ) )
 				pEngineers->Disappear();
-			
+
 			if ( IsWorkDone() )
 			{
 				if ( pUnit->GetPlayer() == theDipl.GetMyNumber() )
@@ -734,7 +734,7 @@ void CTransportBuildState::Segment()
 			else
 				eState = ETBS_CREATE_SQUAD;
 		}
-			
+
 		break;
 	case ETBS_WAIT_FOR_LOADERS:
 		if ( IsValidObj( pEngineers ) )
@@ -806,7 +806,7 @@ ETryStateInterruptResult CTransportBuildState::TryInterruptState( class CAIComma
 //*******************************************************************
 
 CTransportBuildLongObjectState::CTransportBuildLongObjectState ( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint, class CLongObjectCreation *_pCreation )
-: pCreation( _pCreation ), CTransportBuildState( pTransport, vDestPoint ) 
+: pCreation( _pCreation ), CTransportBuildState( pTransport, vDestPoint )
 {
 }
 
@@ -822,7 +822,7 @@ bool CheckThePoint( CVec2 *vPoint, const CVec2 &vStart, const CVec2 &vEnd, float
 {
 	vPoint->x = Clamp( vPoint->x, 128.0f, float( ( GetAIMap()->GetSizeX() - 4 ) * SConsts::TILE_SIZE) );
 	vPoint->y = Clamp( vPoint->y, 128.0f, float( ( GetAIMap()->GetSizeY() - 4 ) * SConsts::TILE_SIZE) );
-	
+
 	return GetDistanceToSegment( vStart, vEnd, *vPoint ) > fMinDist;
 }
 
@@ -878,7 +878,7 @@ void CTransportBuildLongObjectState::SendTransportToBuildPoint()
 	}
 }
 
-bool CTransportBuildLongObjectState::HaveToSendEngeneersNow() 
+bool CTransportBuildLongObjectState::HaveToSendEngeneersNow()
 {
 	const float fDist = GetDistanceToSegment( vStartPoint, vEndPoint, pUnit->GetCenterPlain() );
 	const float fRadius = pUnit->GetStats()->vAABBHalfSize.x + pUnit->GetStats()->vAABBHalfSize.y + 7 * SConsts::TILE_SIZE;
@@ -954,7 +954,7 @@ void CTransportBuildEntrenchmentState::PreCreate()
 
 CTransportClearMineState::CTransportClearMineState( class CAITransportUnit *pTransport, const class CVec2 & vDestPoint )
 	: CTransportBuildState( pTransport, vDestPoint ), timeNextCheck( curTime ), bWorkDone( false )
-{  
+{
 	// посчитать время, которое нужно для того, чтобы проехать 1 длину грузовичка
 	SetStatus( EUS_DEMINE );
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats *>(pTransport->GetStats());
@@ -968,7 +968,7 @@ void CTransportClearMineState::SendTransportToBuildPoint()
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
 
-bool CTransportClearMineState::HaveToSendEngeneersNow() 
+bool CTransportClearMineState::HaveToSendEngeneersNow()
 {
 	if ( curTime >= timeNextCheck )
 	{
@@ -976,7 +976,7 @@ bool CTransportClearMineState::HaveToSendEngeneersNow()
 		const int nParty = pUnit->GetParty();
  		for ( CMinesIter iter( pUnit->GetCenterPlain(), SConsts::MINE_CLEAR_RADIUS*2, nParty, true ); !iter.IsFinished(); iter.Iterate() )
 		{
-			if ( (*iter)->WillExplodeUnder( pUnit ) ) 
+			if ( (*iter)->WillExplodeUnder( pUnit ) )
 				return true;
 		}
 	}
@@ -1003,10 +1003,10 @@ void CTransportClearMineState::SendEngineers()
 
 	bool bToQueue = false;
 	for ( CVec2 vCurPoint = vUnitCenter + vDir * SConsts::MINE_CLEAR_RADIUS;
-				fabs2( vCurPoint - vUnitCenter ) < fMaxDist; 
+				fabs2( vCurPoint - vUnitCenter ) < fMaxDist;
 				vCurPoint += vDir * SConsts::MINE_CLEAR_RADIUS )
 	{
-		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CLEARMINE, vCurPoint), pEngineers, bToQueue );	
+		theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CLEARMINE, vCurPoint), pEngineers, bToQueue );
 		bToQueue = true;
 	}
 
@@ -1036,7 +1036,7 @@ void CTransportPlaceMineState::SendTransportToBuildPoint()
 	bTransportSent = true;
 }
 
-bool CTransportPlaceMineState::HaveToSendEngeneersNow() 
+bool CTransportPlaceMineState::HaveToSendEngeneersNow()
 {
 //	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
 
@@ -1109,7 +1109,7 @@ void CTransportPlaceAntitankState::SendTransportToBuildPoint()
 	bSent = true;
 }
 
-bool CTransportPlaceAntitankState::HaveToSendEngeneersNow() 
+bool CTransportPlaceAntitankState::HaveToSendEngeneersNow()
 {
 //	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
 	if ( pUnit->IsIdle() && fabs2(pUnit->GetCenterPlain() - vStartPoint) <= sqr(SConsts::TRANSPORT_RESUPPLY_OFFSET * 2) )
@@ -1172,7 +1172,7 @@ void CTransportRepairBridgeState::SendTransportToBuildPoint()
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
 
-bool CTransportRepairBridgeState::HaveToSendEngeneersNow() 
+bool CTransportRepairBridgeState::HaveToSendEngeneersNow()
 {
 	return bSentToBuildPoint && pUnit->IsIdle();
 }
@@ -1194,7 +1194,7 @@ void CTransportRepairBridgeState::SendEngineers()
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
 
-bool CTransportRepairBridgeState::IsEndPointNeeded() const 
+bool CTransportRepairBridgeState::IsEndPointNeeded() const
 {
 	return false;
 }
@@ -1224,7 +1224,7 @@ void CTransportBuildBridgeState::SendTransportToBuildPoint()
 		pUnit->SendAlongPath( pPath, VNULL2, true );
 }
 
-bool CTransportBuildBridgeState::HaveToSendEngeneersNow() 
+bool CTransportBuildBridgeState::HaveToSendEngeneersNow()
 {
 	return bTransportSent && pUnit->IsIdle();
 }
@@ -1250,11 +1250,11 @@ void CTransportBuildBridgeState::SendEngineers()
 	}
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_BUILD_LONGOBJECT, pCreation->GetUniqueId() ), pEngineers, bToQueue );
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_SET_HOME_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
-	
+
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
 
-bool CTransportBuildBridgeState::IsEndPointNeeded() const 
+bool CTransportBuildBridgeState::IsEndPointNeeded() const
 {
 	return false;
 }
@@ -1289,7 +1289,7 @@ void CTransportRepairBuildingState::SendTransportToBuildPoint()
 	}
 }
 
-bool CTransportRepairBuildingState::HaveToSendEngeneersNow() 
+bool CTransportRepairBuildingState::HaveToSendEngeneersNow()
 {
 	const SMechUnitRPGStats * pStats = checked_cast<const SMechUnitRPGStats*>( pUnit->GetStats() );
 	if ( bSentToBuildPoint && pUnit->IsIdle() || fabs2(pUnit->GetCenterPlain() - vStartPoint) <= sqr(pStats->vAABBHalfSize.y * 2) )
@@ -1314,7 +1314,7 @@ void CTransportRepairBuildingState::SendEngineers()
 	theGroupLogic.UnitCommand( SAIUnitCmd(ACTION_MOVE_CATCH_TRANSPORT, pUnit->GetUniqueId()), pEngineers, true );
 }
 
-bool CTransportRepairBuildingState::IsEndPointNeeded() const 
+bool CTransportRepairBuildingState::IsEndPointNeeded() const
 {
 	return false;
 }

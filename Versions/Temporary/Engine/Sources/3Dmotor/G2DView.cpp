@@ -29,7 +29,7 @@ public:
 	C2DGameView();
 
 	void CreateDynamicRects( const NDb::STexture *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
-	void CreateDynamicRects( const NDb::STexture *pTexture, const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, 
+	void CreateDynamicRects( const NDb::STexture *pTexture, const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4,
 		const CTRect<float> &rectTexture );
 	void CreateDynamicRects( CPtrFuncBase<NGfx::CTexture> *pTexture, const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sWindow );
 	void CreateDynamicClearRects( const CRectLayout &sLayout, const CTPoint<float> &sPosition, const CTRect<float> &sClipWindow );
@@ -67,7 +67,7 @@ void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, const CRect
 		pScene->CreateDynamicRects( shareTextures.Get( STextureKey( pTexture ) ), sLayout, sPosition, sWindow );
 }
 
-void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture, 
+void C2DGameView::CreateDynamicRects( const NDb::STexture *pTexture,
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rectTexture )
 {
 	if ( !pTexture )//CObjectBase *pRes = pScene->Create

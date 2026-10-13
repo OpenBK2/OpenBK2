@@ -10,7 +10,7 @@ namespace NDb
 class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMissionBriefing );
-	
+
 	struct SObjective
 	{
 		ZDATA
@@ -27,7 +27,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 	CPtr<IWindow> pMissionDescPanel;
 	CPtr<IWindow> pMinimapPanel;
 	CPtr<IWindow> pObjectivesListPanel;
-	
+
 	CPtr<IScrollableContainer> pMissionDescCont;
 	CPtr<ITextView> pMissionDescView;
 	CPtr<IMiniMap> pMinimap;
@@ -42,7 +42,7 @@ class CInterfaceMissionBriefing : public CInterfaceScreenBase, public IProgramme
 private:
 	void MakeInterior();
 	void MissionStart();
-	
+
 	bool OnBack();
 	bool OnPlay();
 public:

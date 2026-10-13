@@ -9,16 +9,16 @@
 class CWindowPlayer : public CWindow, public IPlayer
 {
 	OBJECT_BASIC_METHODS(CWindowPlayer)
-	
+
 	struct SMovie
 	{
 		std::string szFileName;							// short file name (with respect to 'data' subdir)
 		bool bCanSkipMovie;									// can we this movie with mouse/SPACE/ENTER/[ESC] buttons
 		bool bCanSkipSequence;							// we can skip all movies sequence with ESC button
 		bool bSlideShowMode;						// "SlideShow" mode (wait for complete loading of each frame)
-		
+
 		SMovie() : bCanSkipMovie( false ), bCanSkipSequence( false ), bSlideShowMode( false ) {}
-		
+
 		//
 		int operator&( IXmlSaver &saver );
 		int operator&( IBinSaver &saver );
@@ -33,7 +33,7 @@ class CWindowPlayer : public CWindow, public IPlayer
 	CDBPtr<NDb::SWindowPlayerShared> pShared;
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
-	
+
 	uint32_t GetSceneFlags();
 	void UpdatePlayer();
 public:

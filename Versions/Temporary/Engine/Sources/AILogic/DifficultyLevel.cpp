@@ -24,7 +24,7 @@ void CDifficultyLevel::Init()
 	partiesNames.resize( 2 );
 	partiesNames[0] = "Friends";
 	partiesNames[1] = "Enemies";
-	
+
 	coeff.resize( 3 );
 	coeff[0].SetSizes( EM_MAX_NUM, levelsNames.size() );
 	coeff[1].SetSizes( EM_MAX_NUM, levelsNames.size() );
@@ -53,7 +53,7 @@ void CDifficultyLevel::Init()
 }
 
 void CDifficultyLevel::SetLevel( const int _nLevel )
-{ 
+{
 	nLevel = _nLevel;
 }
 

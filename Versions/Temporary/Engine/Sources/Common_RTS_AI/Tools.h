@@ -22,8 +22,8 @@ public: int operator&( IBinSaver &saver ); private:;
 				float t = 0.0f, tForward = 0.0f;
 				uint8_t cntToForward = 0;
 public:
-	CBSpline() : a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ), 
-		x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ), 
+	CBSpline() : a( VNULL2 ), b( VNULL2 ), c( VNULL2 ), d( VNULL2 ),
+		x( VNULL2 ), dx( VNULL2 ), d2x( VNULL2 ), d3x( VNULL2 ),
 		fw_dx( VNULL2 ), fw_d2x( VNULL2 ), fw_d3x( VNULL2 ), t( 0 ), tForward( 0 ),
 		cntToForward( 0 ) {}
 
@@ -73,7 +73,7 @@ class CCirclePath
 public:
 	CCirclePath()
 		: fStartDir( 0 ), fDirDiff( 0 ), vCenter( 0, 0 ), fRadius( 0.0f ), bClockWise( false ),
-		fCurrentDelta( 0 ), vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true ) {} 
+		fCurrentDelta( 0 ), vX( 0, 0 ), vDX( 0, 0 ), vLastX( 0, 0 ), vLastDX( 0, 0 ), bForwardDir( true ) {}
 
 		CCirclePath( const uint16_t _wStartDir, const uint16_t _wDirDiff, const CVec2 &_vPoint, const float _fRadius, const bool _bClockWise, const bool _bForward )
 			: fRadius( _fRadius ), bClockWise( _bClockWise ), fCurrentDelta( 0 ), bForwardDir( _bForward )
@@ -115,7 +115,7 @@ public:
 };
 
 //! вызвать func для тайлов на окружности начиная от wStartAngle до wStartAngle+wDiffAngle, и до тех
-//! пор, пока func возвращает true. Возвращает дельту между начальным углом и последним углом, где 
+//! пор, пока func возвращает true. Возвращает дельту между начальным углом и последним углом, где
 //! func вернул true
 template<class TYPE>
 uint16_t CheckArcTiles( TYPE &func, const CVec2 &vUnit, const uint16_t wStartAngle, const uint16_t wDiffAngle, const float fRadius, const bool bClockWise, const bool bForward, CAIMap *pAIMap )

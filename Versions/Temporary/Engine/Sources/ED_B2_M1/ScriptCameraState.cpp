@@ -102,7 +102,7 @@ void CScriptCameraState::Leave()
 
 bool CScriptCameraState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_SCRIPT_CAMERA_GET_YAW:
 		{
@@ -410,7 +410,7 @@ bool CScriptCameraState::UpdateCommand( unsigned nCommandID, bool *pbEnable, boo
 	NI_ASSERT( pbEnable != 0, "CScriptCameraState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CScriptCameraState::UpdateCommand(), pbCheck == 0" );
 
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_SCRIPT_CAMERA_WINDOW_UI_EVENT:
 		{
@@ -723,7 +723,7 @@ bool CScriptCameraState::KeySetup( const CArray1Bit &actKeys, int nSeqIndex )
 			NI_VERIFY( (i >= 0) && (i < actSeq.posKeys.size()), "Active key couldn't be found in DB!\n", return false )
 			NDb::SScriptMovieKeyPos *pActKey = &(actSeq.posKeys[i]);
 			std::string szKeyName = fmt::format( "Movie {}, Key {}", nSeqIndex, i );
-      
+
 			if ( NMovieKeySettings::Run( Singleton<IMainFrameContainer>()->GetMainWindow(), pActKey, szKeyName ) )
 			{
 				if ( CPtr<CObjectBaseController> pObjectController = GetMapInfoEditor()->CreateController() )
@@ -935,7 +935,7 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 
 	if ( dialogData.scriptCameras.empty() )
 		return;	// nothing to draw
-	
+
 	if ( CScriptMoviesMutatorHolder *pMoviesHolder = Camera()->GetScriptMutatorsHolder() )
 	{
 		if ( !pMoviesHolder->IsStopped() )
@@ -959,7 +959,7 @@ void CScriptCameraState::Draw( IPaintContext *pPaintDC )
 		//
 		CVec3 vNewDir( VNULL3 );
 		CVec3 vDir = CVec3( sin(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)),
-												-cos(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)), 
+												-cos(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)),
 												sin(ToRadian(it->fPitch)) );
 
 		if ( vDir.z != 0 )
@@ -1014,11 +1014,11 @@ void CScriptCameraState::RefreshDialogData( bool bNeedUpdateFromDB )
 		SetMovie( moviesData.nActiveMovie );
 	}
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCRIPT_CAMERA_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&dialogData) );
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MOVIES_EDITOR_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_MOVIES_EDITOR_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&moviesData) );
 
 	float fDist;
@@ -1150,7 +1150,7 @@ void CScriptCameraState::DeleteScriptCameraMarkers()
 		return;
 	for ( std::vector<SCameraMarker>::const_iterator it = cameraMarkers.begin(); it < cameraMarkers.end(); ++it )
 	{
-		pScene->RemoveObject( (*it).nMarkerID ); 
+		pScene->RemoveObject( (*it).nMarkerID );
 	}
 	cameraMarkers.clear();
 }
@@ -1174,7 +1174,7 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 	if ( !pModel )
 		return;
 
-	int i = 0;	
+	int i = 0;
 	cameraMarkers.clear();
 	if ( dialogData.scriptCameras.size() == 0 )
 		return;
@@ -1189,7 +1189,7 @@ void CScriptCameraState::RefreshScriptCameraMarkers()
 		//
 		CVec3 vPos = it->vPosition;
 		CVec3 vDir = CVec3( sin(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)),
-												-cos(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)), 
+												-cos(ToRadian(it->fYaw))*cos(ToRadian(it->fPitch)),
 												sin(ToRadian(it->fPitch)) );
 		vDir = CVec3( -vDir.y, vDir.x, 0 ); // rotate new vDir 90 degree over OZ
 		Normalize( &vDir );
@@ -1232,7 +1232,7 @@ void CScriptCameraState::ChangeCurrentFOV( float fFOVdelta )
 void CScriptCameraState::OnLButtonDown( unsigned nFlags, const CTPoint<int> &rMousePoint )
 {
 	return;
-  
+
 	if ( CPtr<IEditorScene> pScene = EditorScene() )
 	{
 		std::list<int> sceneIDList;

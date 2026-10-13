@@ -49,7 +49,7 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 				timeStart = time - nDeltaTime % nTime;
 			}
 		}
-		
+
 		int nX = 0;
 		int nY = 0;
 		if ( pShared->nFrameCountX > 0 )
@@ -57,10 +57,10 @@ void CWindowFrameSequence::Visit( struct IUIVisitor *pVisitor )
 			nX = nFrame % pShared->nFrameCountX;
 			nY = nFrame / pShared->nFrameCountX;
 		}
-		
+
 		CTRect<float> rect = GetWindowRect();
 
-		CRectLayout rects( rect.x1, rect.y1, rect.Width(), rect.Height(), 
+		CRectLayout rects( rect.x1, rect.y1, rect.Width(), rect.Height(),
 			nX * pShared->vFrameSize.x, nY * pShared->vFrameSize.y, pShared->vFrameSize.x, pShared->vFrameSize.y,
 			FadeColor( 0xFFFFFFFF, GetTotalFadeValue() ) );
 		VirtualToScreen( &rects );
@@ -73,7 +73,7 @@ void CWindowFrameSequence::InitByDesc( const struct NDb::SUIDesc *pDesc )
 {
 	pInstance = checked_cast<const NDb::SWindowFrameSequence*>( pDesc )->Duplicate();
 	pShared = checked_cast_ptr<const NDb::SWindowFrameSequenceShared*>( pInstance->pShared );
-	
+
 	if ( pShared )
 	{
 		if ( pShared->bRandomStartFrame && pShared->nFrameCount > 0 )
@@ -85,7 +85,7 @@ void CWindowFrameSequence::InitByDesc( const struct NDb::SUIDesc *pDesc )
 			nTime += NWin32Random::Random( 0, pShared->nRandomAddTime - 1 );
 	}
 	bRun = false;
-	
+
 	CWindow::InitByDesc( pDesc );
 }
 
@@ -93,7 +93,7 @@ void CWindowFrameSequence::Run( bool _bRun )
 {
 	if ( bRun == _bRun )
 		return;
-		
+
 	bRun = _bRun;
 	if ( bRun )
 		timeStart = Singleton<IGameTimer>()->GetAbsTime();

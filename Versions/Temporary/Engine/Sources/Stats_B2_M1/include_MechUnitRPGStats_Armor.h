@@ -11,4 +11,4 @@ bool ToAIUnits( bool bInEditor )
 	nMax = nArmorMax;
 
 	return true;
-} 
+}

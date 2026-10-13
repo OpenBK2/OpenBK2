@@ -6,11 +6,11 @@ class CRoadState : public CVSOStateEx
 {
 	static const std::string VSO_NAME;
 	static const std::string VSO_TYPE_NAME;
-	
+
 	friend class CMultiInputState;
 	friend class CMapInfoState;
 	friend class CVSOMultiState;
-	
+
 	//конструкторы и операторы присваивания
 	CRoadState( class CVSOMultiState *_pParentState = 0 ) : CVSOStateEx( _pParentState )
 	{

@@ -31,7 +31,7 @@ bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
 			{
 				bResult = pExporter->StartExport( rszObjectTypeName, bForce );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nStartExport throw exception\n" ) );
@@ -48,7 +48,7 @@ bool CExporterContainer::StartExport( const std::string &rszExportTypeName,
 			{
 				bResult = pExporter->StartCheck( rszObjectTypeName, bExport );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nStartCheck throw exception\n" ) );
@@ -79,7 +79,7 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 			{
 				pExporter->FinishExport( rszObjectTypeName, bForce );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nFinishExport throw exception\n" ) );
@@ -92,7 +92,7 @@ void CExporterContainer::FinishExport( const std::string &rszExportTypeName,
 		{
 			pExporter->FinishCheck( rszObjectTypeName, bExport );
 		}
-		catch ( ... ) 
+		catch ( ... )
 		{
 			ILogger *pLogger = NLog::GetLogger();
 			pLogger->Log( LT_ERROR, fmt::format( "\nFinishCheck throw exception\n" ) );
@@ -128,7 +128,7 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportType
 			{
 				eResult = pExporter->ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, ET_NO_REF );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nExportObject throw exception\n" ) );
@@ -147,7 +147,7 @@ EXPORT_RESULT	CExporterContainer::ExportObject( const std::string &rszExportType
 			{
 				eResult = pExporter->CheckObject( pManipulator, rszObjectTypeName, rszObjectName, bExport, ET_NO_REF );
 			}
-			catch ( ... ) 
+			catch ( ... )
 			{
 				ILogger *pLogger = NLog::GetLogger();
 				pLogger->Log( LT_ERROR, fmt::format( "\nCheckObject throw exception\n" ) );
@@ -319,6 +319,6 @@ EXPORT_RESULT CExporterContainer::GetExportResult( const std::string &rszObjectT
 }
 
 
-// basement storage  
+// basement storage
 
 

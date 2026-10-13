@@ -24,7 +24,7 @@ struct SAIUnitCmd
 		int nNumber = {};
 		bool bFromAI = {};			// если true, то команда пришла от клиента или от генерала
 		// CRAP{ may be here we can act in other way - our goal is to get rid of old int-ids
-		// CDBPtr<NDb::SHPObjectRPGStats> pTarget; 
+		// CDBPtr<NDb::SHPObjectRPGStats> pTarget;
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&nCmdType); f.Add(3,&vPos); f.Add(4,&nObjectID); f.Add(5,&bFromExplosion); f.Add(6,&fNumber); f.Add(7,&nNumber); f.Add(8,&bFromAI); return 0; }
 private:
 	// forbidden

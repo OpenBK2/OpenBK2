@@ -675,7 +675,7 @@ void CMultiManipulator::GetNameList( IManipulator::CNameMap *pNameMap ) const
 }
 
 
-CMultiManipulatorIterator::CMultiManipulatorIterator( CMultiManipulator *_pMultiManipulator, bool bShowHidden, ECacheType eCache ) : pMultiManipulator( _pMultiManipulator )  
+CMultiManipulatorIterator::CMultiManipulatorIterator( CMultiManipulator *_pMultiManipulator, bool bShowHidden, ECacheType eCache ) : pMultiManipulator( _pMultiManipulator )
 {
 	NI_ASSERT( pMultiManipulator != 0, "CMultiManipulatorIterator::CMultiManipulatorIterator(): pMultiManipulator == 0" );
 	pManipulatorIterator = 0;
@@ -785,6 +785,6 @@ unsigned CMultiManipulatorIterator::GetID() const
 	return INVALID_NODE_ID;
 }
 
-// basement storage  
+// basement storage
 
 

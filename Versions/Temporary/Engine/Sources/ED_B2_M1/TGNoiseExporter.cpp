@@ -26,7 +26,7 @@ EXPORT_RESULT CTGNoiseExporter::ExportObject( IManipulator* pManipulator,
 	std::string szNoiseFileName;
 	if ( CManipulatorManager::GetValue(&szNoiseFileName, pManipulator, "FileName") != false && !szNoiseFileName.empty() )
 	{
-		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szNoiseFileName, 
+		if ( NFile::CopyFile( pUserData->constUserData.szExportSourceFolder + szNoiseFileName,
 			                    Singleton<IMODContainer>()->GetDataFolder( SUserData::NPT_EXPORT_DESTINATION ) + szNoiseFileName ) == false )
 		{
 			pLogger->Log( LT_ERROR, "Can't export noise\n" );

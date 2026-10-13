@@ -33,7 +33,7 @@ class CScenarioTracker : public IScenarioTracker
 	typedef std::vector<char> CKnownReinforcements;
 	typedef std::vector< CPtr<CMapObj> > CObjectiveObjects;
 	typedef std::unordered_map< int, CObjectiveObjects > CObjectivesObjects;
-	
+
 	struct SFavoriteReinf
 	{
 		ZDATA
@@ -41,14 +41,14 @@ class CScenarioTracker : public IScenarioTracker
 		int nTotalCount = {};
 		int nCurrentCount = {};
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&nTotalCount); f.Add(3,&nCurrentCount); return 0; }
-		
+
 		SFavoriteReinf() : nTotalCount( 0 ), nCurrentCount( 0 ) {}
 	};
-	
+
 	ZDATA
 
 	// reinforcements, that was given when chapter started
-	CReinforcementTypes playerChapter;								
+	CReinforcementTypes playerChapter;
 	CReinforcementTypes enemyChapter;
 	int nReinforcementCallsLeftInChapter = {};
 	int nReinforcementCallsUsed = {};
@@ -355,7 +355,7 @@ private:
 	{
 		if ( !f.IsChecksum() )
 		{
-			f.Add(4,&bMissionWon); 
+			f.Add(4,&bMissionWon);
 			f.Add(16,&nLocalPlayer);
 		}
 	}
@@ -386,7 +386,7 @@ public:
 
 	bool IsCustomMission() const { return false; }
 	bool IsCustomCampaign() const { return false; }
-	
+
 	// objectives
 	// Задания, про которые игрок уже знает
 	int GetKnownObjectiveCount() const { return 0; }

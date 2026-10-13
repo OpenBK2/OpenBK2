@@ -28,7 +28,7 @@ namespace NGScene
 struct SPartAndSkeletonKey
 {
 	ZDATA
-	CDBPtr<NDb::SGeometry> pGeometry; 
+	CDBPtr<NDb::SGeometry> pGeometry;
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nGeometryPart = {};
 	int nMaterialPart = {};
@@ -41,10 +41,10 @@ struct SPartAndSkeletonKey
 	SPartAndSkeletonKey( const NDb::SGeometry *_pGeometry, int _nGeometryPart, int _nMaterialPart, const NDb::SSkeleton *_pSkeleton, int _nSkeletonPart, int _nLightMapped )
 		: pGeometry(_pGeometry), nGeometryPart(_nGeometryPart), nMaterialPart(_nMaterialPart),
 			pSkeleton(_pSkeleton), nSkeletonPart(_nSkeletonPart), nLightMapped(_nLightMapped)  {}
-	bool operator==( const SPartAndSkeletonKey &a ) const 
-	{ 
+	bool operator==( const SPartAndSkeletonKey &a ) const
+	{
 		return pGeometry == a.pGeometry && nGeometryPart == a.nGeometryPart && nMaterialPart == a.nMaterialPart
-				&& pSkeleton == a.pSkeleton && nSkeletonPart == a.nSkeletonPart && nLightMapped == a.nLightMapped; 
+				&& pSkeleton == a.pSkeleton && nSkeletonPart == a.nSkeletonPart && nLightMapped == a.nLightMapped;
 	}
 };
 
@@ -101,12 +101,12 @@ struct SGrannyFileLoaderInfoHash
 class CGrannyMemFileLoader : public CLazyResourceLoader<SGrannyFileLoaderInfo, CGrannyFile>
 {
 	OBJECT_BASIC_METHODS(CGrannyMemFileLoader);
-	virtual CFileRequest* CreateRequest()	
-	{ 
+	virtual CFileRequest* CreateRequest()
+	{
 		const SResKey<SGrannyFileLoaderInfo> &k = GetKey();
 		static const char *str;
 
-		return CreateFileRequiest( k.tKey.szResName.c_str(), SIntResKey( k.uidKey, k.tKey.nID ), k.tKey.bAllowDelayedLoad ); 
+		return CreateFileRequiest( k.tKey.szResName.c_str(), SIntResKey( k.uidKey, k.tKey.nID ), k.tKey.bAllowDelayedLoad );
 	}
 	//
 	virtual void RecalcValue( CFileRequest *p );
@@ -125,10 +125,10 @@ class CGrannyMeshLoader : public CHoldedPtrFuncBase<CObjectInfo>
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pGrannyFile); f.Add(3,&key); f.Add(4,&pSkeletonFileInfo); f.Add(5,&sLightMapped); f.Add(6,&bLightMapped); return 0; }
 protected:
 	bool NeedUpdate();
-	
+
 public:
 	void Recalc();
-	
+
 
 	bool  IsLightMapped()
 	{
@@ -139,7 +139,7 @@ public:
 		return sLightMapped;
 	}
 	CGrannyMeshLoader(){}
-	
+
 	const SPartAndSkeletonKey &GetKey()
 	{
 		return key;

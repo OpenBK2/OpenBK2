@@ -26,7 +26,7 @@ public:
 	CQuery( IDirect3DQuery9 *p ) : pQuery(p) {}
 	virtual void Start() { pQuery->Issue( D3DISSUE_BEGIN ); }
 	virtual void Finish() { pQuery->Issue( D3DISSUE_END ); }
-	virtual int GetData() 
+	virtual int GetData()
 	{
 		int nRes = 10000;
 		for (;;)
@@ -115,7 +115,7 @@ EVideoCard GetVideoCard()
 
 EHardwareLevel GetHardwareLevel()
 {
-	
+
 	if ( bTnLDevice )
 		return HL_TNL_DEVICE;
 	if ( bHardwarePixelShaders20 )
@@ -844,7 +844,7 @@ static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 	HRESULT hr;
 	// actually this was required only for textures that are rendertargets
 	for ( int k = 0; k < 8; ++k )
-		pDevice->SetTexture( k, 0 ); 
+		pDevice->SetTexture( k, 0 );
 	//hr = pDevice->EndScene(); ASSERT( hr == D3D_OK );
 	if ( pCurrentRTTB != pTB )
 	{
@@ -871,7 +871,7 @@ static void SetRT( IDirect3DSurface9 *pTB, IDirect3DSurface9 *pZB )
 
 static const CRenderContext *pCurrentRenderContext;
 CRenderContext::CRenderContext()
-	: alpha(COMBINE_NONE), stencil( SStencilMode(STENCIL_NONE) ), depth(DEPTH_NORMAL), 
+	: alpha(COMBINE_NONE), stencil( SStencilMode(STENCIL_NONE) ), depth(DEPTH_NORMAL),
 	cull(CULL_CW), colorWrite( COLORWRITE_ALL ), targetMode( RTM_SCREEN ), fog(FOG_NONE),
 	pTarget(0), nMipLevel(0), pPixelShader(&psDiffuse), nVertexShader(1),
 	nRegister(0), pOutstandingStream(0)
@@ -1211,7 +1211,7 @@ void CRenderContext::SetPSConst( int nReg, const CVec4 *pData, int nSize )
 {
 	ASSERT( pOutstandingStream == 0 );
 	ASSERT( pCurrentRenderContext == this );
-	NGfx::SetPSConst( nReg, pData, nSize );	
+	NGfx::SetPSConst( nReg, pData, nSize );
 }
 
 void CRenderContext::SetPSConst( int nReg, const CVec3 &_param )
@@ -1298,7 +1298,7 @@ void CRenderContext::CheckStream( CGeometry *pGeom )
 {
 	if ( pOutstandingStream )
 	{
-		if ( pGeom->GetVertexStream() != pOutstandingStream ) 
+		if ( pGeom->GetVertexStream() != pOutstandingStream )
 		{
 			Flush();
 			StartStream( pGeom );
@@ -1387,9 +1387,9 @@ CTexture* GetDepthRegisterTexture()
 	return pDepthRegister;
 }
 
-bool IsNVidiaNP2Bug() 
-{ 
-	return bNVHackNP2; 
+bool IsNVidiaNP2Bug()
+{
+	return bNVHackNP2;
 }
 
 
@@ -1454,7 +1454,7 @@ bool InitZBuffer( D3DFORMAT format )
 		if ( !AddZBuffer( format, i->first.nResolution ) )
 			return false;
 	}
-	
+
 	hr = pDevice->GetRenderTarget( 0, pScreenColor.GetAddr() );
 	D3DASSERT( hr, "GetRenderTarget failed" );
 	hr = pDevice->GetDepthStencilSurface( pScreenDepth.GetAddr() );
@@ -1541,7 +1541,7 @@ static void InitStateBlocks()
 			if ( pShader && *pShader == 0xffff0200 && !bHardwarePixelShaders20 )
 				continue;
 			HRESULT hr;
-			hr = pDevice->CreatePixelShader( 
+			hr = pDevice->CreatePixelShader(
 				pShader,
 				pixelShaders[k].GetAddr() );
 			D3DASSERT( hr, "CreatePixelShader failed" );
@@ -1556,7 +1556,7 @@ static void InitStateBlocks()
 			if ( !pShader )
 				continue;
 			HRESULT hr;
-			hr = pDevice->CreateVertexShader( 
+			hr = pDevice->CreateVertexShader(
 				pShader,
 				vertexShaders[k].GetAddr() );
 			D3DASSERT( hr, "CreateVertexShader failed" );
@@ -1568,7 +1568,7 @@ static void InitStateBlocks()
 			if ( p )
 			{
 				HRESULT hr;
-				hr = pDevice->CreateVertexDeclaration( 
+				hr = pDevice->CreateVertexDeclaration(
 					p,
 					vertexDeclarations[k].GetAddr() );
 				D3DASSERT( hr, "CreateVertexDeclaration failed" );
@@ -1612,7 +1612,7 @@ static void InitEffects()
 	memset( samplerStates, 0xcc, sizeof(samplerStates) );
 	for ( int nTemp = 0; nTemp < 8; nTemp++ )
 		InitTextureStage( nTemp );
-	
+
 	InitStateBlocks();
 	nLastUsedVShader = -1;
 	nLastUsedVDeclaration = -1;

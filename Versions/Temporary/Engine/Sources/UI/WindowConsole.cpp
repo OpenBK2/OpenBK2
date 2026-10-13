@@ -21,7 +21,7 @@ static int nConsoleSize = 100;
 
 void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	if ( paramsSet.empty() ) 
+	if ( paramsSet.empty() )
 		return;
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
@@ -34,7 +34,7 @@ void ShowStatsWindow( const std::string &szID, const std::vector<std::wstring> &
 
 void ShowDebugInfo( const std::string &szID, const std::vector<std::wstring> &paramsSet, void *pContext )
 {
-	if ( paramsSet.empty() ) 
+	if ( paramsSet.empty() )
 		return;
 	const std::string szVal = NStr::ToMBCS( paramsSet[0] );
 	const int nVal = NStr::ToInt( szVal );
@@ -64,8 +64,8 @@ CWindowConsole::CWindowConsole() : currTime( 0 ), nBeginCommand( 0 ), nBeginStri
 }
 
 CWindowConsole::SColorString::SColorString( const wchar_t *pszStr, uint32_t col, const int nWidth )
-: szString( pszStr ), dwColor( col ) 
-{  
+: szString( pszStr ), dwColor( col )
+{
 	const std::wstring szText = pszStr;
 	pGfxText = CreateML();
 	CUIFactory::RegisterMLHandlers( pGfxText );
@@ -82,7 +82,7 @@ void CWindowConsole::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 	pShared = checked_cast_ptr<const NDb::SWindowConsoleShared *>( pDesc->pShared );
 	pEditLine = dynamic_cast<CWindowEditLine*>( CUIFactory::MakeWindow( pShared->pEditLine ) );
 	AddChild( pEditLine, false );
-	
+
 	pUpperSign = CreateML();
 	CUIFactory::RegisterMLHandlers( pUpperSign );
 	pUpperSign->SetText( L"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^", 0 );
@@ -174,12 +174,12 @@ void CWindowConsole::Segment( const int timeDiff )
 void CWindowConsole::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
-	
+
 	if ( IsVisible() )
 	{
 		CTRect<float> wndRect;
 		FillWindowRect( &wndRect );
-		
+
 		int nCurrentY = wndRect.y2 - 2 * TEXT_VERTICAL_SIZE;
 		if ( nBeginString != 0 )
 		{
@@ -277,7 +277,7 @@ bool CWindowConsole::OnKeyDown( const SGameMessage &msg )
 		}
 		return true;
 	}
-	
+
 	if( msg.nParam1==VK_PRIOR )
 		return OnPgUp( msg );
 
@@ -307,20 +307,20 @@ bool CWindowConsole::OnChar( const SGameMessage &msg )
 
 bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
-	
+
 	if( vectorOfCommands.empty() )
 		return true;
 
 	if( nBeginCommand<0 || nBeginCommand>=vectorOfCommands.size() )
 		nBeginCommand = vectorOfCommands.size();
-	
+
 	if( nBeginCommand>0 )
 		nBeginCommand--;
 
 	pEditLine->SetText( vectorOfCommands[nBeginCommand].c_str() );
-	
+
 
 	/*
 	if ( nBeginCommand == vectorOfCommands.size() || nBeginCommand == -1 )
@@ -343,12 +343,12 @@ bool CWindowConsole::OnUp( const struct SGameMessage &msg )
 
 bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
 
 	if( vectorOfCommands.empty() )
 		return true;
-	
+
 	if( nBeginCommand<0)
 		return true;
 
@@ -377,55 +377,55 @@ bool CWindowConsole::OnDown( const struct SGameMessage &msg )
 
 bool CWindowConsole::OnCtrlHome( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
 
 	if ( vectorOfStrings.size() > CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE )
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
-	
+
 	return true;
 }
 
 bool CWindowConsole::OnCtrlEnd( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
 
 	nBeginString = 0;
-	
+
 	return true;
 }
 
 bool CWindowConsole::OnPgUp( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
 
 	if ( nBeginString + CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE < vectorOfStrings.size() )
 		nBeginString += CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
 	else
 		nBeginString = vectorOfStrings.size() - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE + MINUS_PAGE_SIZE;
-	
+
 	return true;
 }
 
 bool CWindowConsole::OnPgDn( const struct SGameMessage &msg )
 {
-	if ( !IsVisible() ) 
+	if ( !IsVisible() )
 		return false;
 
 	if ( nBeginString - CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE > 0 )
 		nBeginString -= CONSOLE_HEIGHT / TEXT_VERTICAL_SIZE - MINUS_PAGE_SIZE;
 	else
 		nBeginString = 0;
-	
+
 	return true;
 }
 
 void CWindowConsole::SetParent( CWindow *_pParent )
 {
 	IWindow *pParent = GetParent();
-	if ( pParent && IsValid( pParent ) ) 
+	if ( pParent && IsValid( pParent ) )
 	{
 		if ( IsVisible() )
 		{
@@ -445,14 +445,14 @@ bool CWindowConsole::OnShowConsole( const struct SGameMessage &msg )
 {
 	if( !IsVisible() )
 		return false;
-	
+
 	IScreen * pIScreen = GetScreen();
 	if ( !pIScreen )
 	{
 		ASSERT(0);
 		return false;
 	}
-	
+
 	pIScreen->RunStateCommandSequience( "ShowConsole", this, 0, false );
 
 	return true;

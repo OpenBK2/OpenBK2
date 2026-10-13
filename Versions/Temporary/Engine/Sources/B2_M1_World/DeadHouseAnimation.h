@@ -8,7 +8,7 @@
 class CDeadHouseAnimation : public IClientUpdatableProcess
 {
 	OBJECT_BASIC_METHODS( CDeadHouseAnimation )
-	
+
 	ZDATA
 	int nID = 0;
 	NTimer::STime nEndTime = 0;

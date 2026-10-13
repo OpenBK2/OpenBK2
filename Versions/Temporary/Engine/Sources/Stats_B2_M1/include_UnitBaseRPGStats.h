@@ -13,8 +13,8 @@ const NDb::SUnitSpecialAblityDesc * GetAbilityDescByCmd( const int nCmdType ) co
 
 void ToAIUnits( bool bInEditor );
 int GetAnimTime( int nAnim ) const { return nAnim < 0 || nAnim >= animdescs.size() || animdescs[nAnim].anims.empty() ? 0 : animdescs[nAnim].anims[0].nLength; }
-int GetAnimActionTime( int nAnim ) const 
-{ 
+int GetAnimActionTime( int nAnim ) const
+{
 	if ( nAnim < 0 || nAnim >= animdescs.size() || animdescs[nAnim].anims.empty() )
 		return 0;
 	else
@@ -33,7 +33,7 @@ virtual const NDb::SComplexSoundDesc * ChooseAcknowledgement( const EUnitAckType
 {
 	if ( acksNames.size() <= nSet )
 		return 0;
-	else 
+	else
 		return ::ChooseAcknowledgement( acksNames[nSet].GetPtr(), etype );
 }
 const EUnitRPGClass GetRPGClass() const { return NDb::GetRPGClass( etype ); }
@@ -62,7 +62,7 @@ const bool HasCommand( const int nCmd ) const;
 virtual const float GetTurnRadius() const { return 0.0f; }
 //
 void GetUserActions( CUserActions *pActions ) const;
-const bool HasUserAction( const int nAction ) const; 
+const bool HasUserAction( const int nAction ) const;
 //
 const std::vector<SAnimDesc>* GetAnims( const int netype ) const { return netype < animdescs.size() ? &(animdescs[netype].anims) : 0; }
 //

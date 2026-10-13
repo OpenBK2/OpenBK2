@@ -54,7 +54,7 @@ int CScene::AddEffect( const int nID, const NDb::SEffect *pEffect, NTimer::STime
 	pVOD->pEffect = pEffect;
 	pVOD->ReCreateObject( data[eScene]->GetGScene(), 0, data[eScene]->pGameTimer, false );
 	if ( pVOD->pObj == 0 )
-		return -1;	
+		return -1;
 	if ( nID == OBJECT_ID_FORGET )
 	{
 		pVOD->nID = -1;
@@ -89,7 +89,7 @@ void CScene::AddEffect( const int nID, const std::string &szBoneName, const NDb:
 void CScene::StopEffectGeneration( const int nID, NTimer::STime time )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nID );
-	if ( pos == data[eScene]->visObjects.end() ) 
+	if ( pos == data[eScene]->visObjects.end() )
 		return;																			// No such effect
 	if ( pos->second->pObj == 0 )
 	{

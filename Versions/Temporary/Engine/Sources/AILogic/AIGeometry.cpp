@@ -7,21 +7,21 @@
 const float GetDistanceToSegment( const CVec2 &vSegmentStart, const CVec2 &vSegmentEnd, const CVec2 &vPoint )
 {
 	CLine2 line( vSegmentStart, vSegmentEnd );
-	
+
 	CVec2 vNormal;
 	line.ProjectPoint( vPoint, &vNormal );
 
 	const float fDiff1 = fabs( vSegmentStart - vNormal );
 	const float fDiff2 = fabs( vSegmentEnd - vNormal );
 	const float fDiff3 = fabs( vSegmentEnd - vSegmentStart );
-	
+
 	if ( fDiff3 < fDiff2 + fDiff1 ) // нормаль от точки не падает на отрезок
 	{
 		const float fDist1 = fabs( vSegmentStart - vPoint );
 		const float fDist2 = fabs( vSegmentEnd - vPoint );
 		return (std::min)( fDist1, fDist2 );
 	}
-	else 
+	else
 	{
 		return fabs( vNormal - vPoint );
 	}
@@ -51,7 +51,7 @@ void MakeQuatBySpeedAndNormale( CQuat *pQuat, const CVec3 &vSpeed, const CVec3 &
 		vN.x, vN.y, vN.z, 0,
 		vO.x, vO.y, vO.z, 0,
 		0,		0,		0,		1 );
-	/**/	
+	/**/
 	pQuat->FromEulerMatrix( m );
 	//pQuat->Negate();
 }

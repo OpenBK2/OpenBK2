@@ -9,7 +9,7 @@ int CGroupLogic::operator&( IBinSaver &saver )
 	{
 		saver.Add( 1, &groupIds );
 		saver.Add( 2, &followingUnits );
-		
+
 		saver.Add( 3, &registeredGroups );
 		saver.Add( 4, &ambushGroups );
 		saver.Add( 5, &ambushUnits );

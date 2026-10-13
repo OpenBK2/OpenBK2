@@ -172,7 +172,7 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 	// enumerate all ZIP files and retrieve packed files from them
 	for ( NFile::CFileIterator it( (szDir + szExt).c_str() ); !it.IsEnd(); ++it )
 	{
-		if ( it.IsDirectory() ) 
+		if ( it.IsDirectory() )
 			continue;
 		// open ZIP file
 		CObj<CZipFile> pArch = new CZipFile( it.GetFullName().c_str() );
@@ -196,7 +196,7 @@ CWinVFS::CWinVFS( const std::string &_szBasePath )
 			zip.GetFileName( i, &szFileName );
 			NStr::ReplaceAllChars( &szFileName, '/', '\\' );
 			CStreamEntriesMap::iterator pos = streamEntriesMap.find( szFileName );
-			if ( pos == streamEntriesMap.end() ) 
+			if ( pos == streamEntriesMap.end() )
 				streamEntriesMap[szFileName] = new CZipFileEntry( dwCheckTime, zip, i );
 			else
 			{
@@ -224,7 +224,7 @@ CWinVFS::CFileEntry *CWinVFS::UpdateFileEntry( const NFile::CFilePath &szPath )
 	std::lock_guard csLock( g_WinVFSCriticalSection );
 	// first, check for registered file
 	CStreamEntriesMap::iterator pos = streamEntriesMap.find( szPath );
-	if ( pos != streamEntriesMap.end() ) 
+	if ( pos != streamEntriesMap.end() )
 	{
 		// check for win-file if this entry still not checked
 		if ( !pos->second->IsChecked() )
@@ -277,7 +277,7 @@ CDataStream* CWinVFS::OpenFileDirect( const std::string &_szPath )
 	EStreamPath ePath;
 	PreprocessPath( &szPath, &ePath, _szPath, szBasePath );
 	//
-	if ( ePath == STREAM_PATH_RELATIVE ) 
+	if ( ePath == STREAM_PATH_RELATIVE )
 	{
 		if ( CFileEntry *pEntry = UpdateFileEntry(szPath) )
 			return pEntry->OpenStream( szPath );

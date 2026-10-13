@@ -68,14 +68,14 @@ enum EUnitStateNames
 
 inline bool IsRestState( const EUnitStateNames eStateName )
 {
-	return 
-		eStateName == EUSN_REST || eStateName == EUSN_REST_ON_BOARD || 
+	return
+		eStateName == EUSN_REST || eStateName == EUSN_REST_ON_BOARD ||
 		eStateName == EUSN_REST_ENTRENCHMENT || eStateName == EUSN_REST_IN_BUILDING;
 }*/
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 inline bool IsRestCommand( const EActionCommand command )
 {
-	return 
+	return
 		command == ACTION_COMMAND_IDLE_BUILDING ||
 		command == ACTION_COMMAND_IDLE_TRENCH ||
 		command == ACTION_COMMAND_IDLE_TRANSPORT ||

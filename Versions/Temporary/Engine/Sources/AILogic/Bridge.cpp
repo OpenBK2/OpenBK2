@@ -49,9 +49,9 @@ void CBridgeHeightRemover::RegisterOrder( const int nHeightID )
 	heightsOrder.push_front( nHeightID );
 }
 
-void CBridgeHeightRemover::RemoveHeight( const int nHeightID ) 
-{ 
-	heightToRemove[nHeightID] = true; 
+void CBridgeHeightRemover::RemoveHeight( const int nHeightID )
+{
+	heightToRemove[nHeightID] = true;
 }
 
 void CBridgeHeightRemover::Segment()
@@ -79,7 +79,7 @@ void CBridgeHeightRemover::Segment()
 //*******************************************************************
 
 CBridgeSpan::CBridgeSpan( const SBridgeRPGStats *_pStats, const CVec3 &center, const float _fHP, const uint16_t _nDir, const int nFrameIndex )
-: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ), 
+: CGivenPassabilityStObject( center, _fHP, _nDir, nFrameIndex ), pStats( _pStats ),
 	bNewBuilt( false ), bLocked( false ), bDeletingAround( false ),
 	nScriptID( -1 )
 {
@@ -132,7 +132,7 @@ void CBridgeSpan::GetCoveredTiles( std::list<SVector> *pTiles ) const
 bool CBridgeSpan::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return
-		( eAction == ACTION_NOTIFY_RPG_CHANGED || 
+		( eAction == ACTION_NOTIFY_RPG_CHANGED ||
 			eAction == ACTION_NOTIFY_UPDATE_DIPLOMACY ||
 			eAction == ACTION_NOTIFY_CHANGE_FRAME_INDEX ||
 			eAction == ACTION_NOTIFY_NEW_ST_OBJ && bNewBuilt );
@@ -163,7 +163,7 @@ void CBridgeSpan::SetHeights()
 {
 	CSmoothRotatedArray2D<uint8_t, const SHPObjectRPGStats::SByteArray2 > pass;
 	GetPassability( &pass );
-	
+
 	CArray2D<bool> newHeightsInfo;
 	const float fBridgeZ = GetCenter().z;
 	//DebugTrace( "Set bridge's heights at %2.3f + %2.3f = %2.3f", fBridgeZ, pStats->fHeight, fBridgeZ + pStats->fHeight );
@@ -193,7 +193,7 @@ void CBridgeSpan::SetHeights()
 		theWarFog.SynchronizeHeights( tileUp, tileDown );
 
 	const CVec3 vCenter( GetCenter() );
-	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, CVec2( vCenter.x, vCenter.y ), SConsts::TILE_SIZE * (newHeightsInfo.GetSizeX() + newHeightsInfo.GetSizeY() ) ); 
+	for ( CUnitsIter<0,0> iter( 0, ANY_PARTY, CVec2( vCenter.x, vCenter.y ), SConsts::TILE_SIZE * (newHeightsInfo.GetSizeX() + newHeightsInfo.GetSizeY() ) );
 				!iter.IsFinished(); iter.Iterate() )
 	{
 		CAIUnit * pUnit = *iter;
@@ -324,7 +324,7 @@ void CBridgeSpan::RealLockTiles()
 	GetTerrain()->AddStaticObjectTiles( lockTiles );
 }
 
-void CBridgeSpan::UnlockTiles() 
+void CBridgeSpan::UnlockTiles()
 {
 	if ( fHP < 0 || !bLocked )
 		return;
@@ -375,7 +375,7 @@ void CBridgeSpan::SetHitPoints( const float fNewHP )
 
 void CBridgeSpan::Die( const float fDamage )
 {
-	if ( bDeletingAround ) 
+	if ( bDeletingAround )
 		return;
 
 	SRect	boundRect;
@@ -392,7 +392,7 @@ void CBridgeSpan::Die( const float fDamage )
 
 	// убить юнитов, стоявших на этом пролёте
 	const CVec2 rectCenter( ( pass.GetMaxX() + pass.GetMinX() ) * 0.5f, ( pass.GetMinY() + pass.GetMaxY() ) * 0.5f );
-	const CVec2 vAABBHalfSize( ( pass.GetMaxX() - pass.GetMinX() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS, 
+	const CVec2 vAABBHalfSize( ( pass.GetMaxX() - pass.GetMinX() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS,
 		( pass.GetMaxY() - pass.GetMinY() ) * 0.5f + SConsts::MAX_UNIT_TILE_RADIUS );
 
 	std::list<CAIUnit*> deadUnits;
@@ -458,7 +458,7 @@ void CBridgeSpan::TakeDamage( const float fDamage, const bool bFromExplosion, co
 			WasHit();
 			updater.AddUpdate( 0, ACTION_NOTIFY_RPG_CHANGED, this, -1 );
 		}
-	
+
 		pFullBridge->DamageTaken( this, fDamage, bFromExplosion, nPlayerOfShoot, pShotUnit );
 	}
 }
@@ -504,7 +504,7 @@ public:
 	CTilesColl( std::list<SVector> *_pTiles ) : pTiles( _pTiles ) { }
 
 	void operator()( const int x, const int y )
-	{ 
+	{
 		if ( GetAIMap()->IsTileInside( x, y ) )
 			pTiles->push_back( SVector( x, y ) );
 	}
@@ -561,7 +561,7 @@ CFullBridge::SSpanLock::SSpanLock( CBridgeSpan * pSpan, const uint16_t wDir )
 : pSpan( pSpan )
 {
 	// найти тайлы. запомнить состояние залоченности.
-	SRect rect; 
+	SRect rect;
 	pSpan->GetBoundRect( &rect );
 
 	SOnlyDirNeed a;
@@ -603,7 +603,7 @@ void CFullBridge::SSpanLock::Unlock()
 		++tilesInfoIter;
 	}
 	GetTerrain()->AddStaticObjectTiles( tilesInfo );
-	
+
 	// забыть тайлы
 	tiles.clear();
 	formerTiles.clear();

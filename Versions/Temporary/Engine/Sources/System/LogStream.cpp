@@ -67,7 +67,7 @@ CLogStream& CLogStream::operator<< ( const char* szText )
 	return *this;
 }
 
-CLogStream& CLogStream::operator<< ( const wchar_t* szText ) 
+CLogStream& CLogStream::operator<< ( const wchar_t* szText )
 {
 	bConsoleUpdated = true;
 

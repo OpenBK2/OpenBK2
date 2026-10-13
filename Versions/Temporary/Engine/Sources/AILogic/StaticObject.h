@@ -16,14 +16,14 @@ namespace NDb
 	struct SStaticObjectRPGStats;
 }
 
-enum EStaticObjType : int 
-{ 
-	ESOT_COMMON, 
-	ESOT_BUILDING, 
-	ESOT_MINE, 
-	ESOT_ENTR_PART, 
-	ESOT_ENTRENCHMENT, 
-	ESOT_TERRA, 
+enum EStaticObjType : int
+{
+	ESOT_COMMON,
+	ESOT_BUILDING,
+	ESOT_MINE,
+	ESOT_ENTR_PART,
+	ESOT_ENTRENCHMENT,
+	ESOT_TERRA,
 	ESOT_BRIDGE_SPAN,
 	ESOT_TANKPIT,
 	ESOT_FENCE,
@@ -52,7 +52,7 @@ public:
 	bool IsTerminateExecutors() const { return bTerminateSegmentFlag; }
 
 	virtual const SHPObjectRPGStats* GetStats() const = 0;
-	
+
 	// расположение объекта
 	virtual const CVec3& GetCenter() const = 0;
 	virtual const CVec2 GetAttackCenter( const CVec2 &vPoint ) const = 0;
@@ -73,11 +73,11 @@ public:
 
 	virtual EStaticObjType GetObjectType() const = 0;
 	virtual const uint8_t GetPlayer() const;
-		
+
 	virtual bool IsContainer() const = 0;
 	virtual const int GetNDefenders() const = 0;
 	virtual class CSoldier* GetUnit( const int n ) const = 0;
-	
+
 	// для suspended updates
 	virtual const bool IsVisible( const uint8_t cParty ) const;
 	virtual void GetTilesForVisibility( CTilesSet *pTiles ) const;
@@ -144,18 +144,18 @@ public:
 	virtual void SetNewPlaceWithoutMapUpdate( const CVec3 &center, const uint16_t dir = 0 ) = 0;
 	static void Init()
 	{
-		globalMark = 0;	
+		globalMark = 0;
 	}
-	static void Clear() 
-	{ 
+	static void Clear()
+	{
 	}
 	CExistingObject() : bTrampled( false ) { }
-	CExistingObject( const int _nFrameIndex, const float _fHP ) 
+	CExistingObject( const int _nFrameIndex, const float _fHP )
 		: nFrameIndex( _nFrameIndex ), fHP( _fHP ), mark( 0 ), burningEnd( 0 ), bTrampled( false )
-	{ 
+	{
 		SetAlive( fHP > 0.0f );
 		if ( !CExistingObjectModifyAI::IsProhibited() )
-			SetUniqueIdForObjects(); 
+			SetUniqueIdForObjects();
 	}
 
 	void SetTrampled() { bTrampled = true; }
@@ -181,7 +181,7 @@ public:
 	virtual void RemoveTransparencies() = 0;
 	// поставить прозрачность ещё раз, если она сейчас поставлена
 	virtual void RestoreTransparenciesImmidiately() = 0;
-	
+
 	// для updater-а
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	virtual void GetNewUnitInfo( struct SNewUnitInfo *pNewUnitInfo );
@@ -196,7 +196,7 @@ public:
 	const int GetMark() const { return mark; }
 
 	static void UpdateGlobalMark();
-	
+
 	// true при попадании
 	virtual bool ProcessCumulativeExpl( class CExplosion *pExpl, const int nArmorDir, const bool bFromExpl );
 	virtual bool ProcessBurstExpl( class CExplosion *pExpl, const int nArmorDir, const float fRadius, const float fSmallRadius );
@@ -208,7 +208,7 @@ public:
 	virtual void WasHit();
 	// минимальное количество HP для объекта (для всех 0, кроме ключувых зданий)
 	virtual const float GetMinHP() const { return 0.0f; }
-	
+
 	//if object falls on destruction
 	virtual bool CanFall() { return false; }
 	//fall to direction
@@ -300,14 +300,14 @@ class CCommonStaticObject : public CGivenPassabilityStObject
 public:
 	CCommonStaticObject() { }
 	CCommonStaticObject( const CVec3 &center, const float fHP, const uint16_t wDir, const int nFrameIndex, EStaticObjType _eType )
-		: CGivenPassabilityStObject( center, fHP, wDir, nFrameIndex ), eType( _eType ), bFallen( false ) 
+		: CGivenPassabilityStObject( center, fHP, wDir, nFrameIndex ), eType( _eType ), bFallen( false )
 	{
 		//CLinkObject::SetUniqueIdForObjects();
 	}
 
 	virtual void TakeDamage( const float fDamage, const bool bFromExplosion, const int nPlayerOfShoot, CAIUnit *pShotUnit );
 	virtual void Die( const float fDamage );
-	
+
 	virtual void Segment() { }
 
 	virtual EStaticObjType GetObjectType() const { return eType; }
@@ -347,14 +347,14 @@ class CTerraMeshStaticObject : public CCommonStaticObject
 {
 	OBJECT_BASIC_METHODS( CTerraMeshStaticObject );
 	ZDATA_(CCommonStaticObject)
-	CDBPtr<SStaticObjectRPGStats> pStats;	
+	CDBPtr<SStaticObjectRPGStats> pStats;
 	SAIAngle wDir;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CCommonStaticObject*)this); f.Add(2,&pStats); f.Add(3,&wDir); return 0; }
 public:
 	CTerraMeshStaticObject() { }
 	CTerraMeshStaticObject( const SStaticObjectRPGStats *_pStats, const CVec3 &center, const uint16_t _wDir, const float fHP, const int nFrameIndex, EStaticObjType eType )
 		: pStats( _pStats ), wDir( _wDir ), CCommonStaticObject( center, fHP, _wDir, nFrameIndex, eType ) { }
-	
+
 	virtual const SHPObjectRPGStats *GetStats() const { return pStats; }
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const;
 

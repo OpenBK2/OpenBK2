@@ -77,7 +77,7 @@ public:
 	void SetFocus( const bool bFocus );
 	//}
 	void SetFocusNotify( IFocusNotify *_pNotify ) { pFocusNotify = _pNotify; }
-	
+
 	void Init();
 	void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	void AfterLoad();
@@ -97,12 +97,12 @@ public:
 	void SetSelection( const int nBegin, const int nEnd );
 	void SetText( const wchar_t *pszText );
 	const wchar_t * GetText() const { return wszFullText.c_str(); }
-	
+
 
 	void RegisterObservers();
 
 	bool ProcessEvent( const struct SGameMessage &msg );
-	
+
 	//begin message sinks
 	bool OnReturn();
 	void OnTab( const struct SGameMessage &msg );

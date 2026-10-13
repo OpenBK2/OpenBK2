@@ -26,7 +26,7 @@ class SCRIPT_EXPORT Script
 {
 	int nPushCount = {};
 public:
-	
+
 	typedef int TableIterator;
 	typedef int ObjectReference;
 /*	class Reference
@@ -48,7 +48,7 @@ public:
 		Object( Script *pParent, int index ) : m_parent(pParent), m_stackIndex(index) {}
 		Object() : m_parent( pCurrentScript ) {}
 
-		int operator&( IBinSaver &f ); 
+		int operator&( IBinSaver &f );
 
 		Script& GetParent() const			{  return *m_parent;  }
 		lua_State* GetState() const			{  return m_parent->m_state;  }
@@ -94,7 +94,7 @@ public:
 
 			return Object(m_parent, m_parent->GetTop());
 		}
-		
+
 		// Creates (or reassigns) the object called [name] to [value].
 		void SetNumber(const char* name, double value)
 		{
@@ -102,7 +102,7 @@ public:
 			lua_pushnumber(GetState(), value);
 			lua_settable(GetState(), m_stackIndex);
 		}
-		
+
 		// Creates (or reassigns) the object called [name] to [value].
 		void SetString(const char* name, const char* value)
 		{
@@ -110,7 +110,7 @@ public:
 			lua_pushstring(GetState(), value);
 			lua_settable(GetState(), m_stackIndex);
 		}
-		
+
 		// Creates (or reassigns) the object called [name] to [data].
 		void SetUserData( const char* name, CObjectBase* data )
 		{
@@ -125,7 +125,7 @@ public:
 			lua_pushusertag(GetState(), data, nTag);
 			lua_settable(GetState(), m_stackIndex);
 		}
-		
+
 		int Tag() const {  return lua_tag(GetState(), m_stackIndex);  }
 		bool IsUserTag() const { return Tag() > LUA_TFUNCTION; }
 
@@ -143,7 +143,7 @@ public:
 			lua_rawgeti(GetState(), m_stackIndex, index);
 			return Object(m_parent, m_parent->GetTop());
 		}
-		
+
 		// Table operation ////////////////////////////////////////////////////
 		int GetTableSize()		const { return lua_getn( GetState(), m_stackIndex ); }
 		TableIterator First()	{ m_parent->PushNil(); m_parent->PushNil(); return Next(); }
@@ -272,7 +272,7 @@ public:
 	void Pop(int amount = 1)					{  lua_pop(m_state, amount);  }
 	bool CheckArgs( const char *szArgList, const std::string &sFuncName, std::vector<SLuaParams> *pParams, bool bLog );
 
-	
+
 	int  RegisterNewTag( const SRegFunction *pList );
 	void Register( const SRegFunction *pList );
 	void RegisterSaveLoad( const SRegFunction *pList );

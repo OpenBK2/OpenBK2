@@ -13,7 +13,7 @@
 
 bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const uint8_t _bAIClass )
 {
-	// залочить/разлочить тайлы 
+	// залочить/разлочить тайлы
 	if ( bLock )
 	{
 		NI_ASSERT( pathTiles.size() == 0, "wrong call" );
@@ -23,7 +23,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 		for ( CUnitsIter<0,3> iter( 0, ANY_PARTY, bigRect.center, (std::max)( bigRect.width, (std::max)(bigRect.lengthAhead,bigRect.lengthBack) ) );
 					!iter.IsFinished(); iter.Iterate() )
 		{
-			if ( bigRect.IsIntersected( (*iter)->GetUnitRect() ) ) 
+			if ( bigRect.IsIntersected( (*iter)->GetUnitRect() ) )
 			{
 				if ( ++nUnits > 1 )
 					return false;
@@ -33,7 +33,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 		// разлочить танк
 		// запомнить состояние залоченности на всем пути и выяснить возможность танку выехать
 		GetAIMap()->GetTilesCoveredByRect( bigRect, &pathTiles );
-		
+
 		formerTilesType.resize( pathTiles.size(),0 );
 		int i = 0;
 		bool bPossible = true;
@@ -68,7 +68,7 @@ bool CLockWithUnlockPossibilities::TryLockAlongTheWay( const bool bLock, const u
 	{
 		if ( pathTiles.size() != 0 ) // что-то лочили
 		{
-			//разлочить 
+			//разлочить
 			std::list<SObjTileInfo> tilesInfo;
 			for ( std::list<SVector>::iterator it = pathTiles.begin(); it != pathTiles.end(); ++it )
 				tilesInfo.push_back( SObjTileInfo( *it, EAC_ANY ) );

@@ -24,7 +24,7 @@ class CTurret : public CLinkObject
 
 		// время, когда начался и закончится процесс поворачивания
 		NTimer::STime startTime = {}, endTime = {};
-		
+
 		// поворот закончен
 		bool bFinished = {};
 
@@ -65,10 +65,10 @@ protected:
 public:
 	CTurret() { }
 	CTurret( const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, bool bReturnToNULLVerAngle );
-	
+
 	const float GetHorRotationSpeed() const { return hor.wRotationSpeed; }
 	const float GetVerRotationSpeed() const { return ver.wRotationSpeed; }
-	
+
 	virtual void Turn( const uint16_t wHorAngle, const uint16_t wVerAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
 	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
@@ -90,7 +90,7 @@ public:
 
 	uint16_t GetHorFinalAngle() const { return hor.wFinalAngle; }
 	uint16_t GetVerFinalAngle() const { return ver.wFinalAngle; }
-	
+
 	const NTimer::STime& GetHorEndTime() const { return hor.endTime; }
 	const NTimer::STime& GetVerEndTime() const { return ver.endTime; }
 	const NTimer::STime GetEndTurnTime() const { return (std::max)( GetHorEndTime(), GetVerEndTime() ); }
@@ -101,7 +101,7 @@ public:
 	void TraceAim( class CAIUnit *pUnit, class CBasicGun *pGun );
 	class CAIUnit* GetTracedUnit() { return pTracedUnit; }
 	void StopTracing();
-	
+
 	const float GetHorRotateSpeed() const { return hor.wRotationSpeed; }
 	const float GetVerRotateSpeed() const { return ver.wRotationSpeed; }
 
@@ -119,7 +119,7 @@ public:
 
 	virtual void GetHorTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
 	virtual void GetVerTurretTurnInfo( struct SAINotifyTurretTurn *pTurretTurn ) = 0;
-	
+
 	// залокать turret gun-ом ( если уже была залокана, то старый lock исчезает )
 	void Lock( const class CBasicGun *pGun );
 	// unlock turret ( если залокана другим gun-ом, то ничего не делается )
@@ -129,7 +129,7 @@ public:
 
 	void SetDefaultHorAngle( const uint16_t wHorAngle ) { wDefaultHorAngle = wHorAngle; }
 	const uint16_t GetDefaultHorAngle() const { return wDefaultHorAngle; }
-	
+
 	virtual bool IsOwnerOperable() const = 0;
 
 	virtual const bool IsVisible( const uint8_t cParty ) const { return true; }
@@ -144,13 +144,13 @@ public:
 class CUnitTurret : public CTurret
 {
 	OBJECT_BASIC_METHODS( CUnitTurret );
-	
+
 	ZDATA_(CTurret)
 	CPtr<CAIUnit> pOwner;
 //	int nModelPart;
 	int nPlatform = {};
 //	uint32_t nGunCarriageParts;
-	SAIAngle wHorConstraint; 
+	SAIAngle wHorConstraint;
 	SAIAngle wVerConstraint;
 	SAIAngle wOldHorConstraint;
 
@@ -167,7 +167,7 @@ public:
 	CUnitTurret( class CAIUnit *pOwner, const int nPlatform, const uint16_t wHorRotationSpeed, const uint16_t wVerRotationSpeed, const uint16_t wHorConstraint,
 		const uint16_t wVerConstraint, const bool bBuckGunsDirection );
 
-	// возвращает - был произведён поворот, или turret уже в нужном положении	
+	// возвращает - был произведён поворот, или turret уже в нужном положении
 	virtual bool TurnHor( const uint16_t wHorAngle, const bool bInstantly = false );
 	// возвращает - был произведён поворот, или turret уже в нужном положении
 	virtual bool TurnVer( const uint16_t wVerAngle, const bool bInstantly = false );
@@ -194,8 +194,8 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 class CMountedTurret : public CTurret
 {
-	OBJECT_BASIC_METHODS( CMountedTurret );	
-	
+	OBJECT_BASIC_METHODS( CMountedTurret );
+
 	ZDATA_(CTurret)
 		CPtr<CBuilding> pBuilding;
 		CVec2 center;
@@ -203,7 +203,7 @@ class CMountedTurret : public CTurret
 		SAIAngle wHorTurnConstraint;
 		SAIAngle wVerTurnConstraint;
 		SAIAngle wOldHorConstraint;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CTurret*)this); f.Add(2,&pBuilding); f.Add(3,&center); f.Add(4,&dir); f.Add(5,&wHorTurnConstraint); f.Add(6,&wVerTurnConstraint); f.Add(7,&wOldHorConstraint); return 0; }
 private:
 	void CheckAlive() { SetAlive( IsValidObj( pBuilding ) ); }

@@ -127,7 +127,7 @@ void CMOUnitInfantry::GetStatus( SObjectStatus *pStatus ) const
 		weapon.pWeaponID = gun.pWeapon;
 		weapon.nCount = 1;
 		weapon.bPrimary = gun.bIsPrimary;
-		
+
 		if ( CHECK_TEXT_NOT_EMPTY_PRE(gun.pWeapon->,LocalizedName) )
 			weapon.szLocalizedName = GET_TEXT_PRE(gun.pWeapon->,LocalizedName);
 
@@ -156,7 +156,7 @@ void CMOUnitInfantry::SetSquad( struct IMOSquad *_pSquad )
 	pSquad = _pSquad;
 	if ( pSquad )
 		pSquad->Load( this, true );
-		
+
 	if ( pSquad )
 	{
 		bool bNeedUpdate = (GetIconsSetInfo().fHPBarLen != pSquad->GetIconsSetInfo().fHPBarLen );
@@ -171,11 +171,11 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 	const SAINotifyInfantryShot &infShot = *( static_cast<const SAINotifyInfantryShot*>(&shot) );
 	const SAINotifyInfantryShot *pInfShot = &infShot;
 	NI_ASSERT( pInfShot, "Wrong infantry shot notification" );
-	if ( !pInfShot ) 
+	if ( !pInfShot )
 		return;
 
 	const NDb::SComplexEffect *pEffectTemp = 0;
-  
+
 	// Идущий дальше фокус нужен нам в M1, потому что мы иначе не умеем передавать pWeapon
 	// Фокус{
 
@@ -187,20 +187,20 @@ void CMOUnitInfantry::AIUpdateShot( const struct SAINotifyBaseShot &shot, const 
 	}
 
 	const CDBPtr<NDb::SWeaponRPGStats> &pWeapon = *ppWeapon;
-	
+
 	// Фокус}
 
 	pEffectTemp = pWeapon->shells[ pInfShot->cShell ].pEffectGunFire.GetPtr();
 
 	const NDb::SComplexEffect *pEffect = pEffectTemp;
-	if ( !pEffect ) 
+	if ( !pEffect )
 		return;
 
 	int nTime = currTime - shot.time;
 	nTime = ( nTime > 0 ) ? nTime : 0;
 
 	const NDb::SComplexSoundDesc *pSound = pEffect->pSoundEffect.GetPtr();
-	if ( pSound ) 
+	if ( pSound )
 	{
 		SoundScene()->AddSound( pSound, GetCenter(), SFX_MIX_IF_TIME_EQUALS, SAM_ADD_N_FORGET, nTime, 2 );
 	}
@@ -336,7 +336,7 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 //		Scene()->ShowObject( GetID(), true );
 		SetVisible( true, eSeason, bIsNight );
 	}
-	
+
 	CMOUnit::AIUpdateDeadUnit( pUpdate, eSeason, bIsNight, pSoundScene, pAckManager );
 
 	SetSquad( 0 );
@@ -362,7 +362,7 @@ void CMOUnitInfantry::AIUpdateDeadUnit( const SAIDeadUnitUpdate *pUpdate, const 
 			const NDb::SInfantryRPGStats *pStats = checked_cast<const NDb::SInfantryRPGStats*>( GetStats() );
 			if ( (nAnimID >= 0) && (nAnimType < pStats->animdescs.size()) && (nAnimID < pStats->animdescs[nAnimType].anims.size()) )
 			{
-				if ( const NDb::SAnimB2 *pAnimation = checked_cast<const NDb::SAnimB2*>( pStats->animdescs[nAnimType].anims[nAnimID].pAnimation.GetPtr() ) ) 
+				if ( const NDb::SAnimB2 *pAnimation = checked_cast<const NDb::SAnimB2*>( pStats->animdescs[nAnimType].anims[nAnimID].pAnimation.GetPtr() ) )
 				{
 					SetLoopedAnimation( pAnimation->bLooped );
 					AddAnimation( pAnimation, nStartTime, pAnimator );
@@ -385,7 +385,7 @@ void CMOUnitInfantry::AIUpdateDissapear( const SAIDissapearObjUpdate *pUpdate, s
 void CMOUnitInfantry::AIUpdateAction( const SAIActionUpdate *pUpdate, const NDb::ESeason eSeason )
 {
 	/*
-	switch ( pUpdate->eUpdateType ) 
+	switch ( pUpdate->eUpdateType )
 	{
 	case ACTION_NOTIFY_DELAYED_SHOOT:
 		if ( const NDb::SUnitBaseRPGStats *pStats = checked_cast<const NDb::SUnitBaseRPGStats*>( GetStats() ) )
@@ -427,7 +427,7 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 	bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
 	bool bShowIcons = IsVisible() && !bServed && !pTransport && IsFirstUnit();
 	if ( NGlobal::GetVar( "m1", 0 ) == 1 )
-	{		
+	{
 		SetIconsHitbar( IsVisible() && ( IsSelected() || IsMousePicked() ) && !pTransport, IsSelected() );
 	}
 	else
@@ -436,7 +436,7 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 //		bool bServed = (pSquad != 0) && (pSquad->GetServedGun() != 0);
 //		SetIconsHitbar( IsVisible() && !bServed && !pTransport, IsSelected() );
 		SetIconsHitbar( bShowIcons, CMOSelectable::IsSelected() );
-	}	
+	}
 //	SetIconsGroup( IsVisible() ? (IsSelected() ? GetSelectionGroup() : -1) : -1, IsSelected() );
 	SetIconsGroup( bShowIcons ? GetSelectionGroup() : -1, CMOSelectable::IsSelected() );
 
@@ -448,7 +448,7 @@ void CMOUnitInfantry::FillIconsInfo( SSceneObjIconInfo &iconInfo )
 
 void CMOUnitInfantry::Select( bool bSelect )
 {
-	// show unit selections	
+	// show unit selections
   if ( bSelect )
     Scene()->SelectObject( GetID(), GetCenter(), GetSelectionScale(), GetSelectionType() );
   else
@@ -463,7 +463,7 @@ void CMOUnitInfantry::SetTransport( IMOContainer *_pTransport )
 {
 	bool bChanged = (pTransport != _pTransport);
 
-	pTransport = _pTransport; 
+	pTransport = _pTransport;
 
 	if ( bChanged )
 		UpdateVisibility( true );
@@ -494,8 +494,8 @@ IClientUpdatableProcess *CMOUnitInfantry::StartParadrop( const SParadropStartFin
 	CVec3 vParachutePos, vParachuteScale;
 	CQuat qParachuteRot;
 	GetPlacement( &vParachutePos, &qParachuteRot, &vParachuteScale );
-	nParachuteID = Scene()->AddObject( OBJECT_ID_GENERATE, pParachuteModel, 
-		vParachutePos, qParachuteRot, vParachuteScale, 
+	nParachuteID = Scene()->AddObject( OBJECT_ID_GENERATE, pParachuteModel,
+		vParachutePos, qParachuteRot, vParachuteScale,
 		OBJ_ANIM_MODE_FORCE_ANIMATED, 0, 0 );
 	//
 	const NTimer::STime timeBegin = (std::min)( pUpdate->nUpdateTime, GameTimer()->GetGameTime() );

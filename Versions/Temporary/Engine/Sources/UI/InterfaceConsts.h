@@ -4,7 +4,7 @@
 
 
 #pragma once
-class CInterfaceConsts  
+class CInterfaceConsts
 {
 public:
 	CInterfaceConsts();
@@ -23,7 +23,7 @@ public:
 	{
 		return 500;
 	}
-	
+
 	static const int LIST_CONTROL_COLUMN_HEADER_MIN_WIDTH()
 	{
 		return 10;
@@ -45,7 +45,7 @@ public:
 	{
 		return 0;
 	}
-	
+
 	// tooltip text horisontal size / vertical size
 	static const float TOOLTIP_WINDOW_PROPORTION()
 	{

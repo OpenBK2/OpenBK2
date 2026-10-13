@@ -24,7 +24,7 @@ extern NTimer::STime curTime;
 extern CDiplomacy theDipl;
 extern CGroupLogic theGroupLogic;
 
-CPlayerReinforcement::CPlayerReinforcement() 
+CPlayerReinforcement::CPlayerReinforcement()
 : bReinfButtonEnabled( false ), timeReinfButtonEnable( curTime ), nMapReinforcementBonus( 0 ), fRecycleTimeCoeff( 1.0f ),
 timeToCall( 0 ), fStoredProgress( 0.0f ), timeReinfIncrease( 0 ), superWeaponType( NDb::SUPER_WEAPON_BOMBER ), nSuperWeaponShots( -1 ),
 timeSuperWeaponRecycleTime( 0 ), timeSuperWeaponFlyTime( 0 ), nSuperWeaponShotsLeft( -1 ), vSuperWeaponCallPoint( VNULL2 ),
@@ -60,7 +60,7 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer, const NDb::SMa
 			pUpdate->bEnabled = true;
 			pUpdate->pReinf = it->second;
 			pUpdate->nReinforcementCallsLeft = pTracker->GetReinforcementCallsLeft( nPlayer );
-			updater.AddUpdate( pUpdate, ACTION_NOTIFY_AVAIL_REINF, 0, -1 );		
+			updater.AddUpdate( pUpdate, ACTION_NOTIFY_AVAIL_REINF, 0, -1 );
 		}
 	}
 
@@ -100,7 +100,7 @@ void CPlayerReinforcement::InitPlayerReinforcement( int _nPlayer, const NDb::SMa
 			else if ( entry.pSquad )
 			{
 				NDb::EReinforcementType eRType = NDb::_RT_NONE;
-				switch ( entry.pSquad->eSquadType ) 
+				switch ( entry.pSquad->eSquadType )
 				{
 				case NDb::Assault_Squad :
 					eRType = NDb::RT_ASSAULT_INFANTRY;
@@ -164,11 +164,11 @@ void CPlayerReinforcement::EnablePosition( int nPositionID, bool bEnable )
 	}
 }
 
-const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb::SReinforcementPosition &positionToDeploy, NDb::EReinforcementType eType ) 
+const NDb::SDeployTemplate * CPlayerReinforcement::GetDeployTemplate( const NDb::SReinforcementPosition &positionToDeploy, NDb::EReinforcementType eType )
 {
 	// first - use default
 	CDBPtr<NDb::SDeployTemplate> pTemplate =	positionToDeploy.pTemplate;
-	
+
 	// choose from consts
 	const NDb::SAIGameConsts * pConsts = static_cast<CAILogic*>( Singleton<IAILogic>() )->GetAIConsts();
 	for ( int i = 0; i < pConsts->typedTemplates.size(); ++i )
@@ -269,7 +269,7 @@ void CPlayerReinforcement::CallReinforcement( NDb::EReinforcementType eType, con
 	int nPointID = -1;
 	CInfos::iterator pos = reinforcementInfos.find( eType );
 	const NDb::SReinforcement *pReinf = pos == reinforcementInfos.end() ? 0 : pos->second;
-	
+
 	float fMinRange = 10000000;
 	bool bOnWater = false;
 	bool bAviation = pReinf && pReinf->IsAviation();
@@ -519,7 +519,7 @@ void CPlayerReinforcement::UpdateDeletePosition( int nUniqueID ) const
 
 	pUpdate->bEnable = false;
 	pUpdate->nPointID = nUniqueID;
-	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
+	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );
 }
 
 void CPlayerReinforcement::UpdateAddPosition( int nID, const NDb::SReinforcementPosition &point ) const
@@ -533,7 +533,7 @@ void CPlayerReinforcement::UpdateAddPosition( int nID, const NDb::SReinforcement
 	pUpdate->nPointID = nID;
 	pUpdate->position = point;
 
-	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );		
+	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_POINT, 0, -1 );
 }
 
 void CPlayerReinforcement::UpdateReinfButtonState( bool bEnable, NTimer::STime timeWhenEnabled, float fPercentComplete )
@@ -547,7 +547,7 @@ void CPlayerReinforcement::UpdateReinfButtonState( bool bEnable, NTimer::STime t
 	pUpdate->bEnabled = bEnable;
 	pUpdate->timeRecycleEnd = timeWhenEnabled;
 	pUpdate->fProgress = fPercentComplete;
-	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_RECYCLE, 0, -1 );		
+	updater.AddUpdate( pUpdate, ACTION_NOTIFY_REINF_RECYCLE, 0, -1 );
 }
 
 void CPlayerReinforcement::SetRecycleCoeff( const float fNewCoeff )
@@ -646,7 +646,7 @@ bool CPlayerReinforcement::CanCallNow() const
 		return false;
 
 	const int nCallsLeft = GetReinforcementCallsLeft();
-	const bool bCanBeCalled = !reinforcementInfos.empty() && 
+	const bool bCanBeCalled = !reinforcementInfos.empty() &&
 		( nCallsLeft > 0 || nCallsLeft == IAIScenarioTracker::INFINITE_CALLS );
 
 	if ( !bCanBeCalled )
@@ -669,7 +669,7 @@ int CPlayerReinforcement::GetRandomPointID() const
 	}
 	if ( pointIDs.empty() )
 		return -1;
-	
+
 	RecordRandomCall();
 	return pointIDs[NRandom::Random( pointIDs.size() )];
 }
@@ -722,9 +722,9 @@ const NDb::SHPObjectRPGStats * CPlayerReinforcement::GetUnitSample( NDb::EReinfo
 }
 
 const int CPlayerReinforcement::GetUnitAvailability( const NDb::EDBUnitRPGType eUnit, const NDb::EReinforcementType eReinf )
-{ 
+{
 	if ( unitAvailability.GetSizeX() > eUnit && unitAvailability.GetSizeY() > eReinf )
-		return unitAvailability[eReinf][eUnit]; 
+		return unitAvailability[eReinf][eUnit];
 	return 0;
 }
 

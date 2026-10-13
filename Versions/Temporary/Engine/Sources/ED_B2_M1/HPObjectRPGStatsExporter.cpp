@@ -37,8 +37,8 @@ static bool SaveSurfacePointsToDB( IManipulator *pManipulator, const std::vector
 		if ( fa > 0 )
 			fA = asin( fa );
 		else
-			ax = V3_AXIS_Z;			
-		
+			ax = V3_AXIS_Z;
+
 		CQuat q( fA, ax, true );
 
 		if ( !CManipulatorManager::SetVec3( pos, pManipulator, szDBAPos ) )
@@ -62,7 +62,7 @@ static bool CreateSingleSurfacePoints( IManipulator *pMan )
 	if ( pVisObjMan )
 	{
 		CPtr<IManipulator> pModelMan = CreateModelManipulatorFromVisObj( pVisObjMan, 0 );
-		if ( pModelMan != 0 ) 
+		if ( pModelMan != 0 )
 		{
 			std::string szGeometryName;
 			CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pModelMan, 0, &szGeometryName, 0 );
@@ -125,7 +125,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 		CManipulatorManager::GetValue( &nExistingLights, pMan, "LightEffects" );
 
 		// 1. Collect all information from granny file
-		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 		{
 			if ( !PatMat( it->szBoneName.c_str(), "leffect??" ) )
 				continue;
@@ -161,12 +161,12 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			it->GetAttribute( "atday", &tmpLight.bAtDay );
 			it->GetAttribute( "atnight", &tmpLight.bAtNight );
 
-			if ( !tmpLight.bNeedCone ) 
+			if ( !tmpLight.bNeedCone )
 			{
 				tmpLight.fConeSize = 0.0f;
 				tmpLight.fConeLength = 0.0f;
 			}
-			if ( !tmpLight.bNeedFlare ) 
+			if ( !tmpLight.bNeedFlare )
 			{
 				tmpLight.fFlareSize = 0.0f;
 			}
@@ -207,7 +207,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 			nEffectIndex = 0;
 			for ( std::list<STempLightInfo>::iterator it = lights.begin(); it != lights.end(); ++it )
 			{
-				if ( !pMan->InsertNode( "LightEffects" ) ) 
+				if ( !pMan->InsertNode( "LightEffects" ) )
 					continue;
 
 				const STempLightInfo &tmpLight = *it;
@@ -215,11 +215,11 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 				const std::string szNodePrefix = fmt::format( "LightEffects.[{}].", nEffectIndex );
 
 				pMan->SetValue( szNodePrefix + "LocatorName", tmpLight.szLocatorName );
-				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" ); 
-				CManipulatorManager::SetVec4( tmpLight.vEffectRot, pMan, szNodePrefix + "Rot" ); 
+				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" );
+				CManipulatorManager::SetVec4( tmpLight.vEffectRot, pMan, szNodePrefix + "Rot" );
 				CManipulatorManager::SetVec3( tmpLight.vFlarePos, pMan, szNodePrefix + "FlarePos" );
 				pMan->SetValue( szNodePrefix + "FlareSize", tmpLight.fFlareSize );
-				CManipulatorManager::SetVec3( tmpLight.vPointLightPos, pMan, szNodePrefix + "PointLightPos" ); 
+				CManipulatorManager::SetVec3( tmpLight.vPointLightPos, pMan, szNodePrefix + "PointLightPos" );
 				pMan->SetValue( szNodePrefix + "PointLightSize", tmpLight.fPointLightSize );
 				pMan->SetValue( szNodePrefix + "ConeSize", tmpLight.fConeSize );
 				pMan->SetValue( szNodePrefix + "ConeLength", tmpLight.fConeLength );
@@ -232,7 +232,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 				colour.b = tmpLight.vPointLightColour.b;
 				colour.a = 255;
 				int nColour = colour.dwColor;
-				//CManipulatorManager::SetVec3( tmpLight.vPointLightColour, pMan, szNodePrefix + "Colour" ); 
+				//CManipulatorManager::SetVec3( tmpLight.vPointLightColour, pMan, szNodePrefix + "Colour" );
 				pMan->SetValue( szNodePrefix + "Colour", nColour );
 
 				++nEffectIndex;
@@ -269,11 +269,11 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 				const STempLightInfo &tmpLight = *itLight;
 
 				// Locator found, update data
-				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" ); 
-				CManipulatorManager::SetVec4( tmpLight.vEffectRot, pMan, szNodePrefix + "Rot" ); 
+				CManipulatorManager::SetVec3( tmpLight.vEffectPos, pMan, szNodePrefix + "Pos" );
+				CManipulatorManager::SetVec4( tmpLight.vEffectRot, pMan, szNodePrefix + "Rot" );
 				CManipulatorManager::SetVec3( tmpLight.vFlarePos, pMan, szNodePrefix + "FlarePos" );
 				pMan->SetValue( szNodePrefix + "FlareSize", tmpLight.fFlareSize );
-				CManipulatorManager::SetVec3( tmpLight.vPointLightPos, pMan, szNodePrefix + "PointLightPos" ); 
+				CManipulatorManager::SetVec3( tmpLight.vPointLightPos, pMan, szNodePrefix + "PointLightPos" );
 				pMan->SetValue( szNodePrefix + "PointLightSize", tmpLight.fPointLightSize );
 				pMan->SetValue( szNodePrefix + "ConeSize", tmpLight.fConeSize );
 				pMan->SetValue( szNodePrefix + "ConeLength", tmpLight.fConeLength );
@@ -289,7 +289,7 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 					colour.b = tmpLight.vPointLightColour.b;
 					colour.a = 255;
 					int nColour = colour.dwColor;
-					//CManipulatorManager::SetVec3( tmpLight.vPointLightColour, pMan, szNodePrefix + "Colour" ); 
+					//CManipulatorManager::SetVec3( tmpLight.vPointLightColour, pMan, szNodePrefix + "Colour" );
 					pMan->SetValue( szNodePrefix + "Colour", nColour );
 				}
 			}
@@ -303,8 +303,8 @@ void CHPObjectRPGStatsExporter::ExportSingleLightFX( IManipulator *pMan )
 	}
 }
 
-void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan, 
-																									 const std::string &szObjectTypeName, 
+void CHPObjectRPGStatsExporter::CreateSingleIcons( IManipulator *pMan,
+																									 const std::string &szObjectTypeName,
 																									 const std::string &szObjectName )
 {
 	const std::string szIconTexturePrefix = "All\\UI\\Mission\\Icons\\";

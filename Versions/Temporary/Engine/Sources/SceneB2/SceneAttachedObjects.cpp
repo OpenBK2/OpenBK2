@@ -96,7 +96,7 @@ bool CScene::PrepareToAttach( const int nTargetID, ESceneSubObjType eType, const
 	*pnBoneIndex = pGetBone->GetBoneIndex( szBoneName.c_str() );
 	if ( *pnBoneIndex == -1 )
 		return false;
-	
+
 	return DeleteAttachesByType( nTargetID, eType, eMode, time, *pnBoneIndex );
 }
 
@@ -203,7 +203,7 @@ void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const 
 	CPtr< CFuncBase<SFBTransform> > pDelTransform = pTransform;
 }
 
-void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode, 
+void CScene::AttachSubModel( const int nTargetID, ESceneSubObjType eType, const NDb::SModel *pSubModel, ESceneAttachMode eMode,
 	const int nNumber, bool bForceAnimated, const CVec3 &vOffset )
 {
 	CFuncBase<SFBTransform> *pTransform = 0;
@@ -309,7 +309,7 @@ void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEf
 		CDynamicCast<SStaticVisObjDesc> pStaticVO = data[eScene]->visObjects[nTargetID];
 		NI_ASSERT( pStaticVO, fmt::format( "VisObject {} is neither animated nor static", nTargetID ) );
 
-		if ( pStaticVO ) 
+		if ( pStaticVO )
 		{
 			DeleteAttachesByType( nTargetID, ESSOT_LIGHT, eMode, timeStart, 0 );
 			SModelVisObjDesc::TAttachOfOneType &attaches = pStaticVO->attachedObjects[ESSOT_LIGHT];
@@ -331,7 +331,7 @@ void CScene::AttachLightEffect( const int nTargetID, const NDb::SAttachedLightEf
 void CScene::RemoveAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
-	if ( pos != data[eScene]->visObjects.end() )	
+	if ( pos != data[eScene]->visObjects.end() )
 	{
 		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
 		{
@@ -353,7 +353,7 @@ void CScene::RemoveAllAttached( const int nTargetID, ESceneSubObjType eType )
 		return;
 
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
-	if ( pos != data[eScene]->visObjects.end() )	
+	if ( pos != data[eScene]->visObjects.end() )
 	{
 		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
 			pVO->ClearAttached( eType );
@@ -363,7 +363,7 @@ void CScene::RemoveAllAttached( const int nTargetID, ESceneSubObjType eType )
 IAttachedObject* CScene::GetAttached( const int nTargetID, ESceneSubObjType eType, const int nNumber )
 {
 	SSceneData::CVisObjectsMap::iterator pos = data[eScene]->visObjects.find( nTargetID );
-	if ( pos != data[eScene]->visObjects.end() )	
+	if ( pos != data[eScene]->visObjects.end() )
 	{
 		if ( SModelVisObjDesc *pVO = dynamic_cast_ptr<SModelVisObjDesc*>( pos->second ) )
 		{

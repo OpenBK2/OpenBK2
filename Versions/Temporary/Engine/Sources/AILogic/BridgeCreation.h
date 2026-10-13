@@ -48,7 +48,7 @@ public:
 	bool CanBuildNext() const { return true; }
 	void LockNext() { }
 	void LockCannotBuild() { }
-	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) { return true; } 
+	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock ) { return true; }
 	void GetUnitsPreventing( std::list< CPtr<CAIUnit> > * units ){}
 	virtual bool IsCheatPath() const { return true; }
 };

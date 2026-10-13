@@ -38,14 +38,14 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 						int nNodeCount = 0;
 						if ( CManipulatorManager::GetValue( &nNodeCount, pObjectManipulator, szName ) )
 						{
-							CArrayDataList::iterator posArrayData = arrayList.insert( arrayList.end(), SArrayData() );		
+							CArrayDataList::iterator posArrayData = arrayList.insert( arrayList.end(), SArrayData() );
 							posArrayData->szName = szName;
 							posArrayData->nCount = nNodeCount;
 						}
 					}
 					else if ( nType != PCIE_STRUCT )
 					{
-						CValueDataList::iterator posValueData = valueList.insert( valueList.end(), SValueData() );		
+						CValueDataList::iterator posValueData = valueList.insert( valueList.end(), SValueData() );
 						posValueData->szName = szName;
 						pObjectManipulator->GetValue( posValueData->szName, &( posValueData->value ) );
 					}
@@ -74,14 +74,14 @@ void CObjectBaseController::SUndoData::FillLists( const std::string &szStartNode
 							int nNodeCount = 0;
 							if ( CManipulatorManager::GetValue( &nNodeCount, pObjectManipulator, szName ) )
 							{
-								CArrayDataList::iterator posArrayData = arrayList.insert( arrayList.end(), SArrayData() );		
+								CArrayDataList::iterator posArrayData = arrayList.insert( arrayList.end(), SArrayData() );
 								posArrayData->szName = szName;
 								posArrayData->nCount = nNodeCount;
 							}
 						}
 						else if ( nType != PCIE_STRUCT )
 						{
-							CValueDataList::iterator posValueData = valueList.insert( valueList.end(), SValueData() );		
+							CValueDataList::iterator posValueData = valueList.insert( valueList.end(), SValueData() );
 							posValueData->szName = szName;
 							pObjectManipulator->GetValue( posValueData->szName, &( posValueData->value ) );
 						}
@@ -205,7 +205,7 @@ bool CObjectBaseController::SUndoData::Undo( IManipulator *pObjectManipulator, c
 			}
 			else
 			{
-				bResult = pObjectManipulator->SetValue( szName.c_str(), oldValue );	
+				bResult = pObjectManipulator->SetValue( szName.c_str(), oldValue );
 			}
 			break;
 		///////////////////////////////////////////
@@ -276,7 +276,7 @@ bool CObjectBaseController::SUndoData::Redo( IManipulator *pObjectManipulator, c
 			}
 			else
 			{
-				bResult = pObjectManipulator->SetValue( szName.c_str(), newValue );	
+				bResult = pObjectManipulator->SetValue( szName.c_str(), newValue );
 			}
 			break;
 		///////////////////////////////////////////
@@ -348,7 +348,7 @@ void CObjectBaseController::GetDescription( std::string *pszDescription ) const
 		if ( pszDescription->empty() )
 		{
 			const int nSize = undoDataList.size();
-			
+
 			if ( nSize == 1 )
 			{
 				const SUndoData &rUndoData = undoDataList.front();
@@ -591,6 +591,6 @@ bool CObjectBaseController::AddExpandOperation( const std::string &rszPropertyNa
 	return posNewUndoData->Redo( pObjectManipulator, 0 );
 }
 
-// basement storage  
+// basement storage
 
 

@@ -19,7 +19,7 @@ private:
 		std::wstring wszDesc;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(5,&pIcon); f.Add(6,&pPicture); f.Add(7,&wszName); f.Add(8,&wszDesc); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
 	CPtr<IWindow> pHeaderPanel;
@@ -27,7 +27,7 @@ private:
 	CPtr<IWindow> pPlayerInfoPanel;
 	CPtr<IWindow> pMedalInfoPanel;
 	CPtr<IWindow> pMedalListPanel;
-	
+
 	CPtr<ITextView> pPlayerNameView;
 	CPtr<IWindow> pPlayerRankPicture;
 	CPtr<ITextView> pUnitsKilledView;
@@ -35,7 +35,7 @@ private:
 	CPtr<ITextView> pMissionsPassedView;
 	CPtr<ITextView> pInGameTimeView;
 	CPtr<ITextView> pFavoriteReinfView;
-	
+
 	CPtr<ITextView> pMedalNameView;
 	CPtr<IWindow> pMedalPicture;
 	CPtr<ITextView> pMedalDescView;
@@ -70,7 +70,7 @@ public:
 
 	bool Init();
 	bool StepLocal( bool bAppActive );
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;

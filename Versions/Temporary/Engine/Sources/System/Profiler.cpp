@@ -31,7 +31,7 @@ void DumpStats()
 	else
 	{
 		DbgTrc( "============= Profile info =============" );
-		
+
 		std::vector<std::string> sortedTimes;
 		sortedTimes.reserve( pTimes->size() );
 		for ( Times::iterator iter = pTimes->begin(); iter != pTimes->end(); ++iter )

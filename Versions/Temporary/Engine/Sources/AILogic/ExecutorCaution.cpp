@@ -41,7 +41,7 @@ bool CExecutorCaution::NotifyEvent( const CExecutorEvent &event )
 
 CExecutorUnitCombatBonus::EAbilityCombatReaction CExecutorCaution::OnModeChange( const uint16_t oldModeFlags, const uint16_t newModeFlags )
 {
-	if ( GetAutocast() && GetState() == EASS_READY_TO_ON )	
+	if ( GetAutocast() && GetState() == EASS_READY_TO_ON )
 	{
 		if ( !( oldModeFlags & EUM_FIGHTING ) && ( newModeFlags & EUM_FIGHTING ) )		//Started fighting
 			return EACR_FORCE_ACTIVATE;

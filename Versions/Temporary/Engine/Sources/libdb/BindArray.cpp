@@ -37,8 +37,8 @@ class CArrayElementManipulator : public IArrayElementManipulator, public ILoadab
 public:
 	CArrayElementManipulator( const int _nIndex, const std::string &_szAddName, void *_pRawVector,
 		NMetaInfo::SStructMetaInfo *_pContained, NTypeDef::STypeArray *_pTypeArray, IObjMan *_pParent, CBindArray *_pBindArray )
-		: pContained( _pContained ), pTypeArray( _pTypeArray ), pRawVector( _pRawVector ), pBindArray( _pBindArray ), 
-		  pParent( _pParent ), szAddName( _szAddName ), nIndex( _nIndex ) 
+		: pContained( _pContained ), pTypeArray( _pTypeArray ), pRawVector( _pRawVector ), pBindArray( _pBindArray ),
+		  pParent( _pParent ), szAddName( _szAddName ), nIndex( _nIndex )
 	{
 		pBindArray->AddArrayElementManipulator( this );
 	}
@@ -46,7 +46,7 @@ public:
 	// position-in-array functions
 	void SetIndex( const int _nIndex ) { nIndex = _nIndex; }
 	int GetIndex() const { return nIndex; }
-	int GetSize() const 
+	int GetSize() const
 	{
 		int nSize = 0;
 		if ( pParent->GetValue(szAddName, &nSize) != false )
@@ -62,7 +62,7 @@ public:
 		else if ( nIndex >= nPos + nAmount ) nIndex -= nAmount;
 	}
 	//
-	IObjManIterator *CreateIterator( bool bShowHidden ) 
+	IObjManIterator *CreateIterator( bool bShowHidden )
 	{
 		return new CArrayIterator( nIndex, "", pTypeArray, this, bShowHidden );
 	}
@@ -94,12 +94,12 @@ public:
 	}
 	// main fields manipulation functions
 	bool SetValue( const std::string &szName, const CVariant &value )
-	{ 
+	{
 		SetChanged();
 		SBindProcessor bindProcessor;
 		if ( pBindArray->InitBindProcessor( &bindProcessor, nIndex, pRawVector, pContained ) )
 			return bindProcessor.SetValue( szName, value );
-		else 
+		else
 			return false;
 	}
 	bool GetValue( const std::string &szName, CVariant *pValue )
@@ -202,7 +202,7 @@ IObjManIterator *CBindArray::CreateIterator( const int nIndex, const std::string
 	return new CArrayIterator( nIndex, szAddName, pTypeArray, pParent, bShowHidden );
 }
 
-bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex, 
+bool CBindArray::InitBindProcessor( SBindProcessor *pBindProcessor, int nIndex,
 	void *pRawVector, NMetaInfo::SStructMetaInfo *pContained )
 {
 	if ( nIndex < 0 )
@@ -385,7 +385,7 @@ CArrayIterator::CArrayIterator( const int nIndex, const std::string &_szAddName,
 	}
 	else
 	{
-		NI_VERIFY( pParent->GetValue( szAddName, &nNumArrayElements ) != false, 
+		NI_VERIFY( pParent->GetValue( szAddName, &nNumArrayElements ) != false,
 			fmt::format("Can't get number of elements for array iterator \"{}\"", szAddName), nNumArrayElements = 0 );
 	}
 	if ( pTypeArray->field.pType->IsSimpleType() == false && bArrayElementLocked )
@@ -434,7 +434,7 @@ bool CArrayIterator::IsEnd() const
 		return nCurrElementIndex >= nNumArrayElements;
 	else if ( pIterator )
 	{
-		return ( nCurrElementIndex >= nNumArrayElements ) || 
+		return ( nCurrElementIndex >= nNumArrayElements ) ||
 			     ( pIterator->IsEnd() && (nCurrElementIndex + 1 >= nNumArrayElements || bArrayElementLocked) );
 	}
 	else if ( pIterator == 0 )

@@ -77,7 +77,7 @@ void CExecutorContainer::RaiseEvent( const CExecutorEvent &event )
 	bEventRoze = true;
 
 	CEvents::iterator pos = events.find( event.GetParam() );
-	if ( pos == events.end() ) 
+	if ( pos == events.end() )
 	{
 		bEventRoze = false;
 		return;
@@ -123,7 +123,7 @@ void CExecutorContainer::Segment()
 				sleeping[pEx];
 				it = cur.erase( it );
 			}
-			else																	// delete executor 
+			else																	// delete executor
 				it = cur.erase( it );
 		}
 	}
@@ -131,7 +131,7 @@ void CExecutorContainer::Segment()
 	// advance to next segm time
 	++nCurTime;
 	nCurTime %= MAX_SEGMENT_DELAY;
-	
+
 	// clear invalid sleeping executors
 	if ( checkIter == sleeping.end() )
 		checkIter = sleeping.begin();

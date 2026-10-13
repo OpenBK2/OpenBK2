@@ -26,15 +26,15 @@ void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdw
 		if ( pdwMinColor )
 		{
 			( *pdwMinColor ) = 0;
-		}	
+		}
 		if ( pdwMaxColor )
 		{
 			( *pdwMaxColor ) = 0;
-		}	
+		}
 		if ( pdwAverageColor )
 		{
 			( *pdwAverageColor ) = 0;
-		}	
+		}
 		return;
 	}
 	//
@@ -110,15 +110,15 @@ void GetImageParams( uint32_t *pdwMinColor, uint32_t *pdwMaxColor, uint32_t *pdw
 	if ( pdwMinColor )
 	{
 		( *pdwMinColor ) = MakeARGBColor<uint32_t>( nMinA, nMinR, nMinG, nMinB );
-	}	
+	}
 	if ( pdwMaxColor )
 	{
 		( *pdwMaxColor ) = MakeARGBColor<uint32_t>( nMaxA, nMaxR, nMaxG, nMaxB );
-	}	
+	}
 	if ( pdwAverageColor )
 	{
 		( *pdwAverageColor ) = MakeARGBColor<uint32_t>( dwAverageA, dwAverageR, dwAverageG, dwAverageB );
-	}	
+	}
 }
 
 
@@ -268,7 +268,7 @@ void ApplyFilter( CArray2D<uint32_t> *pImage, const CArray2D<int> &rFilter, uint
 	//
 	CArray2D<uint32_t> destImage( size.x, size.y );
 	destImage.FillZero();
-	//	
+	//
 	int nDivider = 0;
 	for ( int nYIndex = 0; nYIndex < filterSize.y; ++ nYIndex )
 	{
@@ -294,7 +294,7 @@ void MarkEdge( CArray2D<uint32_t> *pImage, uint32_t dwEdgeColor, bool bOutside, 
 	//
 	CArray2D<uint32_t> edgeImage( size.x, size.y );
 	edgeImage.FillZero();
-	//	
+	//
 	if ( bOutside )
 	{
 		SMarkOutsideEdgeFunctional markEdgeFunctional( &edgeImage, pImage, dwEdgeColor, dwMinAlpha );
@@ -320,7 +320,7 @@ void EraseEdge( CArray2D<uint32_t> *pImage, uint32_t dwMinAlpha )
 	//
 	CArray2D<uint32_t> edgeImage( size.x, size.y );
 	edgeImage.FillZero();
-	//	
+	//
 	SEraseEdgeFunctional eraseEdgeFunctional( &edgeImage, pImage );
 	SWBCEraseEdgeFunctional wbcEraseEdgeFunctional( &edgeImage, pImage );
 	ApplyFunctional( size, check, &eraseEdgeFunctional, &wbcEraseEdgeFunctional );
@@ -339,7 +339,7 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 	//
 	CArray2D<uint32_t> heightImage( size.x, size.y );
 	heightImage.FillZero();
-	//	
+	//
 	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -349,7 +349,7 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 	}
 	//
 	ApplyFilter( &heightImage, rFilter, dwMinAlpha );
-	//	
+	//
 	for ( int nYIndex = 0; nYIndex < size.y; ++nYIndex )
 	{
 		for ( int nXIndex = 0; nXIndex < size.x; ++nXIndex )
@@ -372,7 +372,7 @@ void Emboss( CArray2D<uint32_t> *pImage, const CTPoint<int> &rShiftPoint, const 
 			const uint32_t dwRed = Clamp<uint32_t>( GetRedFromARGBColor( dwImageColor ) * ( ( GetRedFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetRedFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
 			const uint32_t dwGreen = Clamp<uint32_t>( GetGreenFromARGBColor( dwImageColor ) * ( ( GetGreenFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetGreenFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
 			const uint32_t dwBlue = Clamp<uint32_t>( GetBlueFromARGBColor( dwImageColor ) * ( ( GetBlueFromARGBColor( dwHeightColor ) / 2 ) + ( 0xFF - ( GetBlueFromARGBColor( dwShiftHeigthColor ) / 2 ) ) ) / 0xFF, 0, 0xFF );
-			//			
+			//
 			UpdateColorARGBColor( &( ( *pImage )[nYIndex][nXIndex] ), dwRed, dwGreen, dwBlue );
 		}
 	}
@@ -509,7 +509,7 @@ void GetShadow( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &rSourc
 			if ( GetAlphaFromARGBColor( rSourceImage[nYIndex][nXIndex] ) >= dwMinAlpha )
 			{
 				CTPoint<int> shiftPoint( nXIndex + rShiftPoint.x, nYIndex + rShiftPoint.y );
-				if ( ( shiftPoint.x >= 0 ) && 
+				if ( ( shiftPoint.x >= 0 ) &&
 						 ( shiftPoint.y >= 0 ) &&
 						 ( shiftPoint.x < size.x ) &&
 						 ( shiftPoint.y < size.y ) )
@@ -580,11 +580,11 @@ void GetAlphaEmboss( CArray2D<uint32_t> *pDestImage, const CArray2D<uint32_t> &r
 				const int nYPos = Clamp<int>( nYIndex + backShift.y, 0, size.y - 1 );
 				dwBackShiftHeigthColor = heightImage[nYPos][nXPos];
 			}
-			//			
+			//
 			const uint32_t dwRed = Clamp<uint32_t>( ( ( GetRedFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetRedFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
 			const uint32_t dwGreen = Clamp<uint32_t>( ( ( GetGreenFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetGreenFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
 			const uint32_t dwBlue = Clamp<uint32_t>( ( ( GetBlueFromARGBColor( dwFrontShiftHeigthColor ) / 2 ) + ( 0xFF - ( GetBlueFromARGBColor( dwBackShiftHeigthColor ) / 2 ) ) ) / 2, 0, 0xFF );
-			//			
+			//
 			( *pDestImage )[nYIndex][nXIndex] = MakeARGBColor<uint32_t>( 0xFF, dwRed, dwGreen, dwBlue );
 		}
 	}

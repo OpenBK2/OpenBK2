@@ -79,11 +79,11 @@ namespace NCamera
 			const CQuat quat = CQuat( fYaw, V3_AXIS_Z ) * CQuat( fPitch, V3_AXIS_X );
 			quat.GetZAxis( &vDir );
 			vPosition = GetAnchor() - vDir*GetDistance();
-			
+
 			ClearSliders();
 		}
 
-		SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) || 
+		SetWasUpdated( ( fabs( fYawOld - fYaw ) > EPS_VALUE ) ||
 			( fabs( fPitchOld - fPitch ) > EPS_VALUE ) ||
 			( fabs2( vPositionOld - vPosition ) > EPS_VALUE ) );
 	}

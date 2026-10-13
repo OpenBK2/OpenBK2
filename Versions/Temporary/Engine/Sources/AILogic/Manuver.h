@@ -19,9 +19,9 @@ ZDATA
 	NTimer::STime lastMoveTime = {};
 	public: ZEND int operator&( IBinSaver &f ) { f.Add(2,&vWorldPosition); f.Add(3,&vSpeed); f.Add(4,&vNormal); f.Add(5,&lastMoveTime); return 0; }
 public:
-	SFormationMemberInfo() 
+	SFormationMemberInfo()
 		: lastMoveTime( NTimer::STime(-1) ), vWorldPosition( VNULL3 ), vSpeed( VNULL3 ), vNormal( VNULL3 )
-	{ 
+	{
 	}
 };
 
@@ -34,14 +34,14 @@ struct IManuver : public CAIObjectBase
 {
 	// world position
 	virtual CVec3 GetPos() const = 0;
-	// plane speed 
+	// plane speed
 	virtual CVec3 GetSpeed() const = 0;
 	// plane's top direction
 	virtual CVec3 GetNormale() const = 0;
 	// preferred top direction
 	virtual CVec3 GetTopDirection() const = 0;
 
-	// advance plane according it's speed 
+	// advance plane according it's speed
 	// return true if manuver is finished.
 	virtual bool Advance( const NTimer::STime timeDiff ) = 0;
 
@@ -54,7 +54,7 @@ struct IManuver : public CAIObjectBase
 	// return approximate point, where plane will be in fT time.
 	virtual CVec3 GetProspectivePoint( const NTimer::STime nTime ) const = 0;
 	virtual CVec3 GetProspectiveSpeed( NTimer::STime nTime ) const = 0;
-	
+
 	// init manuver to specific point, or destination (COMBAT ONLY)
 	virtual void Init( const NDb::EManuverDestination dest, class CPlanesFormation *pPlane, struct IPlane *pEnemy = 0 ) { NI_ASSERT(false,"WRONG CALL");}
 	virtual void GetManuverParams( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wron call" ); }

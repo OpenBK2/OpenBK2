@@ -33,7 +33,7 @@ CFence::CFence( const SFenceRPGStats *_pStats, const CVec3 &center, const float 
 bool CFence::ShouldSuspendAction( const EActionNotify &eAction ) const
 {
 	return
-		( CCommonStaticObject::ShouldSuspendAction( eAction ) || 
+		( CCommonStaticObject::ShouldSuspendAction( eAction ) ||
 		eAction == ACTION_NOTIFY_DISSAPEAR_OBJ ||
 		eAction == ACTION_NOTIFY_NEW_ST_OBJ && bSuspendAppear );
 }
@@ -49,7 +49,7 @@ void CFence::InitDirectionInfo()
 	// "left tile" - tle under the other end
 	const CVec3 vCenter( GetCenter() );
 	rightTile = leftTile = AICellsTiles::GetTile( vCenter.x, vCenter.y );
-	
+
 	const CVec2 vOtherEnd = GetVectorByDirection( GetDir() ) * SConsts::TILE_SIZE * 2 + CVec2( vCenter.x, vCenter.y );
 	const SVector vOtherEndTile( AICellsTiles::GetTile( vOtherEnd ) );
 
@@ -57,7 +57,7 @@ void CFence::InitDirectionInfo()
 	for ( std::list<SVector>::const_iterator iter = tiles.begin(); iter != tiles.end(); ++iter )
 	{
 		const SVector &tile = *iter;
-		if ( tile == vOtherEndTile ) 
+		if ( tile == vOtherEndTile )
 		{
 			bFound = true;
 			break;

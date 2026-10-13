@@ -24,8 +24,8 @@ CFreeIds CAICommand::cmdIds;
 
 CAICommand::CAICommand( const SAIUnitCmd &_unitCmd )
  : unitCmd( _unitCmd ), nFlag( -1 )
-{ 
-	InitCmdId(); 
+{
+	InitCmdId();
 	pMover = CreateGroupMover( _unitCmd );
 }
 

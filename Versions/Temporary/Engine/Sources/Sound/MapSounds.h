@@ -16,7 +16,7 @@ namespace NDb
 // для звуков, прописанных в точке карты
 class CMapSounds
 {
-public: 
+public:
 	int operator&( IBinSaver &saver ); private:;
 
 	typedef CTypeConvertor< CDBPtr<NDb::SComplexSoundDesc>, int, SDBPtrHash > RegisteredSounds;
@@ -24,8 +24,8 @@ public:
 	//
 	class CMapSoundCell
 	{
-	public: 
-		int operator&( IBinSaver &saver ); 
+	public:
+		int operator&( IBinSaver &saver );
 	private:
 
 		// for similar map sounds

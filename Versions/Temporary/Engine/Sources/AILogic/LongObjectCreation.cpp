@@ -14,7 +14,7 @@ BASIC_REGISTER_CLASS(AILOGIC, CLongObjectCreation);
 
 uint16_t CLongObjectCreation::GetLineAngle( const CVec2 &vBegin, const CVec2 &vEnd )
 {
-	CVec2 vTmp = vEnd - vBegin;  
+	CVec2 vTmp = vEnd - vBegin;
 	Normalize( &vTmp );
 	float fAngle = NMath::ACos( ( vTmp.x )/ fabs( vTmp.x, vTmp.y ) );
 	if ( vTmp.y < 0 )
@@ -51,7 +51,7 @@ void CLongObjectCreation::SplitLineToSegrments( std::vector<CVec2> *_vPoints, co
 		vAddSegment.y = vDir.y * TRENCHWIDTH ;
 		vAddSegment.x += currentPoint.x;
 		vAddSegment.y += currentPoint.y;
-	}	
+	}
 }
 
 void CLongObjectCreation::GetUnitsPreventing( const SRect &r1, std::list< CPtr<CAIUnit> > *units ) const
@@ -62,7 +62,7 @@ void CLongObjectCreation::GetUnitsPreventing( const SRect &r1, std::list< CPtr<C
 		if ( !(*iter)->GetStats()->IsInfantry() && !(*iter)->GetStats()->IsAviation() )
 		{
 			const SRect rect = (*iter)->GetUnitRect();
-			if ( r1.IsIntersected( rect ) ) 
+			if ( r1.IsIntersected( rect ) )
 				units->push_back( *iter );
 		}
 	}
@@ -86,7 +86,7 @@ bool CLongObjectCreation::IsAnyUnitPrevent( const SRect &r1 ) const
 bool CLongObjectCreation::CanBuildOnRect( SRect r1, const std::list<SVector> &tilesUnder ) const
 {
 	// hack! to avoid problem with bounds (due to open set of coordinates)
-	r1.Compress( 0.99f );	
+	r1.Compress( 0.99f );
 	if ( !GetAIMap()->IsRectInside( r1 ) )
 		return false;
 

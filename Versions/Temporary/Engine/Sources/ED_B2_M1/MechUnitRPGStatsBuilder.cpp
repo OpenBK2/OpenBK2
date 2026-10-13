@@ -42,7 +42,7 @@ struct SPropellerInfo
 	SPropellerInfo( const int _nLocatorIndex, const std::string &_szLocatorName ) : szLocatorName( _szLocatorName ), nLocatorIndex( _nLocatorIndex ), nScaledStart( -1 ), nScaledEnd( -1 ), nDynamicStart( -1 ),
 		nDynamicEnd( -1 ), fScaledSpeed( 0.0f ), fDynamicSpeed( 0.0f ), bScaledDefined( false ), bDynamicDefined( false ) {}
 
-	const bool IsDefined() const { return bScaledDefined && bDynamicDefined; } 
+	const bool IsDefined() const { return bScaledDefined && bDynamicDefined; }
 };
 
 // сделать копию модели, если szOldModelName и szNewModelName совпадают, просто очистить модель от анимации, прописать новые RootMesh и RootJoint, поправить текстуры
@@ -61,7 +61,7 @@ static bool CopyModel( const std::string &szOldModelName, const std::string &szN
 	}
 	//удалить анимацию
 	pModel->RemoveNode( "Animations", NODE_REMOVEALL_INDEX );
-	
+
 	//копировать геометрию
 	std::string szGeometry = "";
 	std::string szGeometryType = "";
@@ -129,7 +129,7 @@ static bool CopyModel( const std::string &szOldModelName, const std::string &szN
 	CPtr<IManipulator> pOldModel = Singleton<IResourceManager>()->CreateObjectManipulator( "Model", szOldModelName );
 	if ( !pOldModel )
 		return false;
-  
+
 	std::string szMaterialName;
 	std::string szTextureName;
 	int nMaterialsCount = 0;
@@ -275,7 +275,7 @@ static bool TryBuildHelicopter( const std::string &rszObjectName, IManipulator* 
 			return false;
 	}
 	*/
-	
+
 	// получаем манипулятор на visObj
 	std::string szVisObjName;
 	CPtr<IManipulator> pVisObjectManipulator = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pManipulator, 0, &szVisObjName, 0 );
@@ -301,7 +301,7 @@ static bool TryBuildHelicopter( const std::string &rszObjectName, IManipulator* 
 	int nPropellersCount = 0;
 	if ( GetGeometryAttributes( pGeomManipulator, &attribs ) )
 	{
-		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 		{
 			if ( PatMat( it->szBoneName.c_str(), "laxis??" ) )
 			{
@@ -379,7 +379,7 @@ static bool TryBuildHelicopter( const std::string &rszObjectName, IManipulator* 
 		return false;
 	}
 	pHelicopterStats->RemoveNode( "Axes", NODE_REMOVEALL_INDEX );
-	
+
 	for ( int i = 1; i <= nPropellersCount; ++i )
 	{
 		std::unordered_map<int, SPropellerInfo>::const_iterator pos = propellers.find( i );
@@ -411,8 +411,8 @@ bool CMechUnitRPGStatsBuilder::IsValidBuildData( IManipulator *pBuildDataManipul
 {
 	NI_ASSERT( pBuildDataManipulator != 0, "CMechUnitRPGStatsBuilder::IsValidBuildData() pBuildDataManipulator == 0" );
 	NI_ASSERT( pszDescription != 0, "CMechUnitRPGStatsBuilder::IsValidBuildData() pszDescription == 0" );
-	pszDescription->clear();	
-	
+	pszDescription->clear();
+
 	// Считываем данные
 	std::string szVisualObject;
 	if ( !CManipulatorManager::GetValue( &szVisualObject, pBuildDataManipulator, "VisualObject" ) || szVisualObject.empty() )
@@ -507,6 +507,6 @@ bool CMechUnitRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 	return bResult;
 }
 
-// basement storage  
+// basement storage
 
 

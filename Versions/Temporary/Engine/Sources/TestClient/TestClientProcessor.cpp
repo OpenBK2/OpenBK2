@@ -86,7 +86,7 @@ bool CTestClientProcessor::ProcessConnectServerResult( CConnectServerPacket *pPa
 		szMessage = "Connection failed, ";
 		switch ( pPacket->eRejectReason )
 		{
-		case CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS: 
+		case CConnectServerPacket::ERR_CANT_RESOLVE_ADDRESS:
 			szMessage += "can't resolve address\n";
 			break;
 		case CConnectServerPacket::ERR_CONNECTION_LOST:
@@ -161,7 +161,7 @@ bool CTestClientProcessor::ProcessChatPacket( CChatPacket *pPacket )
 	}
 
 	return true;
-	
+
 }
 
 bool CTestClientProcessor::ProcessChatChannelClientsListPacket( CChatChannelClientsListPacket *pPacket )
@@ -244,7 +244,7 @@ bool CTestClientProcessor::ProcessChatChannelByNickPacket( CChatChannelByNickPac
 		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, szOutString.c_str() );
 	}
 	else
-		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, 
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE,
 			fmt::format( "User {} is not in chat.\n", pPacket->szNick ).c_str() );
 	return true;
 }
@@ -264,7 +264,7 @@ bool CTestClientProcessor::ProcessChatFriendNotifyPacket( CChatFriendNotifyPacke
 	default:
 		szStatus = "offline";
 	}
-	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "Notification from friend. {} is now {}.\n", 
+	Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, fmt::format( "Notification from friend. {} is now {}.\n",
 		pPacket->szNick, szStatus ).c_str() );
 	return true;
 }
@@ -307,7 +307,7 @@ bool CTestClientProcessor::ProcessEnteredLobby( CEnteredLobby *pPacket )
 
 bool CTestClientProcessor::ProcessGetLobbyClientsPacket( CGetLobbyClientsPacket *pPacket )
 {
-	CPtr<CNetPacket> pDelete = pPacket;	
+	CPtr<CNetPacket> pDelete = pPacket;
 
 	pPacket->dwVersion = dwClientsVersion;
 	if ( pServerClient )
@@ -320,7 +320,7 @@ bool CTestClientProcessor::ProcessGetLobbyClientsPacket( CGetLobbyClientsPacket 
 
 bool CTestClientProcessor::ProcessCustomLobbyClients( CCustomLobbyClientsPacket *pPacket )
 {
-	CPtr<CNetPacket> pDelete = pPacket;	
+	CPtr<CNetPacket> pDelete = pPacket;
 
 	dwClientsVersion = pPacket->dwVersion;
 	if ( pPacket->bFullUpdate )
@@ -456,7 +456,7 @@ bool CTestClientProcessor::ProcessGetLobbyGamesPacket( CGetLobbyGamesPacket *pPa
 
 bool CTestClientProcessor::ProcessCustomLobbyGamesPacket( CLobbyGamesPacket *pPacket )
 {
-	CPtr<CNetPacket> pDelete = pPacket;	
+	CPtr<CNetPacket> pDelete = pPacket;
 
 	dwGamesVersion = pPacket->dwVersion;
 	if ( pPacket->bFullUpdate )

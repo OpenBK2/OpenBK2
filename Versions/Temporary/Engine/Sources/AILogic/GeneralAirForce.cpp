@@ -22,7 +22,7 @@
 #include <algorithm>
 
 extern CPlayerReinforcementArray theReinfArray;
-// time to wait for reinforcement system to process aviation call 
+// time to wait for reinforcement system to process aviation call
 static const int TIME_WAIT_FOR_REINFORCE_SYSTEM = 1000;
 
 
@@ -40,11 +40,11 @@ REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1508D4AE, CGeneralAirForce );
 //*											CGeneralAirForce*
 //*******************************************************************
 
-CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyContainer ) 
-	: pEnemyContainer( pEnemyContainer ), 
+CGeneralAirForce::CGeneralAirForce( const int nParty, IEnemyContainer *pEnemyContainer )
+	: pEnemyContainer( pEnemyContainer ),
 	nParty( nParty ), bOurTurn( false ),
 	nCurrentRequest( FT_NONE ), timeWaitForReinforceSystem( curTime )
-{  
+{
 	for ( int i = 0; i < theDipl.GetNPlayers(); ++i )
 	{
 		if ( theDipl.GetNParty(i) == nParty )
@@ -138,7 +138,7 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 			continue;
 
 		if ( pPlane->IsAlive() &&
-			RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype && 
+			RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype &&
 			EDI_FRIEND == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
 		{
 			// don't call new fighters
@@ -152,7 +152,7 @@ bool CGeneralAirForce::PrepeareFighters( int nPlayer )
 			continue;
 
 		if ( pPlane->IsAlive() &&
-				 RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype && 
+				 RPG_TYPE_AVIA_FIGHTER != pPlane->GetStats()->etype &&
 				 EDI_ENEMY == theDipl.GetDiplStatus( pPlane->GetPlayer(), nPlayer ) )
 		{
 			RequestForSupport( pPlane->GetCenterPlain(), FT_AIR_FIGHTER, -1 );
@@ -169,7 +169,7 @@ void CGeneralAirForce::GiveOrders( const int nPlayer )
 
 	std::list<CVec2> vPoints;
 	Requests *pRequest = &requests[nCurrentRequest];
-	
+
 	for ( Requests::iterator it = pRequest->begin(); it != pRequest->end(); ++it )
 		vPoints.push_back( it->second.vPoint );
 
@@ -228,7 +228,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 	for ( AntiAviation::iterator it = antiAviation.begin(); it != antiAviation.end(); ++it )
 	{
 		CAIUnit *pUnit = GetObjectByUniqueIdSafe<CAIUnit>( it->first );
-		
+
 		if ( !pUnit || !pUnit->IsRefValid() || !pUnit->IsAlive() ) continue;
 
 		const CVec2 vCenter = pUnit->GetCenterPlain();
@@ -246,7 +246,7 @@ float CGeneralAirForce::CheckLineForSafety( const CVec2 &vStart, const CVec2 &vF
 
 				if ( fDistToCenter > fDist1 ) // нормаль от точки не падает на отрезок
 					fMinDist = fDist1;
-				else 
+				else
 				{
 					const float fDist2 = fabs2( vCenter - vFinish );
 					if ( fDistToCenter > fDist2 )
@@ -268,9 +268,9 @@ void CGeneralAirForce::LaunchPlane( EForceType eType, const std::list<CVec2> &vP
 {
 	bOurTurn = false;
 
-	if ( vPoints.empty() ) 
+	if ( vPoints.empty() )
 		return;
-	
+
 	SAIUnitCmd cmd;
 	std::list<CVec2>::const_iterator it = vPoints.begin();
 	const int nGroupID = Singleton<IAILogic>()->GenerateGroupNumber();
@@ -315,7 +315,7 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 	const int nParty = theDipl.GetNParty( nPlayer );
 
 	std::vector<CVec2> points;
-	
+
 	const int nStep = (std::max)( 2.0f, fSizeX / SGeneralConsts::SCOUT_POINTS );
 
 	for ( int x = nStep / 2; x < fSizeX; x += nStep )
@@ -355,13 +355,13 @@ void CGeneralAirForce::LaunchScoutFree( const int nPlayer, const NDb::EReinforce
 
 	const CVec2 vAppearPoint( pSamplePlane->GetCenterPlain() );
 	const float fFlyHeight( pSamplePlane->GetZ() );
-	
+
 	std::list<CVec2> vPointsToFly;
 	const float fCheckRadius = (std::min)( static_cast<int>( SGeneralConsts::SCOUT_FREE_POINT ),
 																	static_cast<int>( nStep * SConsts::TILE_SIZE ) );
-	
+
 	CVec2 vCurStartPoint = vAppearPoint;
-	
+
 	for ( int i = 0; i < points.size(); ++i )
 	{
 		bool bCan = true;
@@ -409,7 +409,7 @@ int /*request ID*/CGeneralAirForce::RequestForSupport( const CVec2 &vSupportCent
 	SSupportInfo info;
 	info.vPoint = vSupportCenter;
 	info.nResistanceCellNumber = nResistanceCellNumber;
-	
+
 	requests[eType][nID] = info;
 	return nID;
 }

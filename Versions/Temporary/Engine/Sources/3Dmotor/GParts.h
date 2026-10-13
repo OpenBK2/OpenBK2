@@ -272,7 +272,7 @@ public:
 };
 
 //! node size
-const int N_MINIMAL_OCTREE_NODE = 8;//16; 
+const int N_MINIMAL_OCTREE_NODE = 8;//16;
 class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_NOCOPY_METHODS( CVolumeNode );
@@ -344,11 +344,11 @@ public:
 		return GetNode( ptCenter, fR );
 	}
 	virtual bool IsEmpty();
-private:	
+private:
 	typedef COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true> CParent;
 };
 
-void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR, 
+void PlaceToOctree( ISomePart *pPart, CVolumeNode *pRoot, const CVec3 &vPos, float fR,
 	SFullStaticTrackers *pTrackers, bool bIsDynamic );
 CVolumeNode *GetUpdatable( CVolumeNode *pRoot, const SBound &hintBV );
 }

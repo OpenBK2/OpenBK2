@@ -36,7 +36,7 @@ void CMouseTranslatorB1::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDi
 		RaiseEvent( "update_selection", vPos );
 		break;
 	case AS_MOVE:
-		if ( IsAltDown() ) 
+		if ( IsAltDown() )
 		{
 			RaiseEvent( "update_direction", vPos );
 			bUpdateDir = true;
@@ -68,7 +68,7 @@ void CMouseTranslatorB1::OnButtonUp( const CVec2 &vPos )
 		{
 			if ( !bSelectByRect )
 				nSelectAction = SA_CLEAR_ALWAYS;
-			else 
+			else
 				nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
 		}
 		else if ( !bSelectByRect )
@@ -101,9 +101,9 @@ void CMouseTranslatorB1::OnRButtonDown( const CVec2 &vPos, bool bObject )
 			RaiseEvent( "set_target", vPos );
 	else
 	{
-		if ( bObject ) 
+		if ( bObject )
 		{
-			if ( IsSelected( 0 ) ) 
+			if ( IsSelected( 0 ) )
 				RaiseEvent( "do_action", vPos );
 		}
 		else
@@ -157,7 +157,7 @@ void CMouseTranslatorB2Base::ResetState()
 	bWasForcedAction = false;
 }
 
-void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect ) 
+void CMouseTranslatorB2Base::OnMouseMove( const CVec2 &vPos, const bool bMouseMoveDirect )
 {
 	switch ( GetActionState() )
 	{
@@ -188,13 +188,13 @@ void CMouseTranslatorB2Base::OnButtonUp( const CVec2 &vPos )
 	case AS_SELECT:
 	{
 		const bool bSelectByRect = !IsDownSamePos();
-		if ( !IsShiftDown() ) 
+		if ( !IsShiftDown() )
 			nSelectAction = SA_CLEAR_IF_NEW_NOT_EMPTY;
 		else if ( !bSelectByRect )
 			nSelectAction = SA_INVERSE;
 		else
 			nSelectAction = SA_PRESERVE;
-		if ( IsCtrlDown() ) 
+		if ( IsCtrlDown() )
 			nSelectAction |= SA_ONE_TYPE;
 		if ( bSelectByRect )
 		{
@@ -229,7 +229,7 @@ void CMouseTranslatorB2Base::OnRButtonDown( const CVec2 &vPos, bool bObject )
 	{
 		if ( IsSelected( 0 ) )
 		{
-			if ( bObject || IsCtrlDown() ) 
+			if ( bObject || IsCtrlDown() )
 			{
 				RaiseEventAndFlags( "do_action", vPos );
 			}
@@ -301,14 +301,14 @@ void CMouseTranslatorB2Base::CheckForcedAction()
 // **
 // ************************************************************************************************************************ //
 
-CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	: 
+CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	:
 	pSelector( _pSelector ),
 	bindShift( "shift_key" ),
 	bindCtrl( "ctrl_key" ),
 	bindAlt( "alt_key" )
 {
 	ResetState();
-	
+
 	AddObserver( "cancel_action", &CMouseTranslator::MsgCancelAction );
 	bDownSameTime = false;
 	downTime = 0;
@@ -316,14 +316,14 @@ CMouseTranslator::CMouseTranslator( CSelector *_pSelector )	:
 
 bool CMouseTranslator::IsSelected( class CMapObj *pMO ) const
 {
-	if ( pMO ) 
+	if ( pMO )
 	{
 		if ( pSelector->CanSelect( pMO ) )
 			return pSelector->IsSelected( checked_cast<CMOSelectable*>(pMO) );
 		else
       return false;
 	}
-	else 
+	else
 		return !pSelector->IsEmpty();
 }
 
@@ -351,9 +351,9 @@ void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, b
 	{
 		RaiseEvent( "start_selection", vPos );
 		int nSelectAction = SA_ONE_TYPE;
-		if ( !IsShiftDown() ) 
+		if ( !IsShiftDown() )
 			nSelectAction |= SA_CLEAR_ALWAYS;
-		if ( IsCtrlDown() ) 
+		if ( IsCtrlDown() )
 			nSelectAction |= SA_ON_WORLD;
 		RaiseEvent( "end_selection", nSelectAction );
 		eActionState = AS_NONE;
@@ -362,7 +362,7 @@ void CMouseTranslator::DoLButtonDblClk( const CVec2 &vPos, class CMapObj *pMO, b
 
 void CMouseTranslator::DoLButtonDown( const CVec2 &vPos, class CMapObj *pMO, bool bTargetMode )
 {
-	if ( eButtonState == BS_NONE ) 
+	if ( eButtonState == BS_NONE )
 	{
 		eButtonState = BS_LEFT_DOWN;
 		bDownTargetMode = bTargetMode;
@@ -376,7 +376,7 @@ void CMouseTranslator::DoLButtonUp( const CVec2 &vPos, class CMapObj *pMO, bool 
 {
 	bDownSamePos = IsDownSamePos( vPos );
 	bDownSameTime = IsDownSameTime( Singleton<IGameTimer>()->GetAbsTime() );
-	if ( eButtonState == BS_LEFT_DOWN ) 
+	if ( eButtonState == BS_LEFT_DOWN )
 	{
 		if ( vPos.x != -1 && vPos.y != -1 )
 			OnButtonUp( vPos );
@@ -416,7 +416,7 @@ bool CMouseTranslator::ProcessEvent( const SGameMessage &event )
 	bindShift.ProcessEvent( event );
 	bindCtrl.ProcessEvent( event );
 	bindAlt.ProcessEvent( event );
-	
+
 	return CGMORegContainer::ProcessEvent(event, this);
 }
 
@@ -444,7 +444,7 @@ void CMouseTranslator::CancelAction()
 int CMouseTranslator::operator&( IBinSaver &saver )
 {
 	saver.Add( 1, &pSelector );
-	if ( saver.IsReading() ) 
+	if ( saver.IsReading() )
 		ResetState();
 	return 0;
 }

@@ -18,20 +18,20 @@ struct IHeaderNotify : public virtual CObjectBase
 class CWindowListHeader : public CWindow, public IButtonNotify
 {
 	OBJECT_BASIC_METHODS(CWindowListHeader)
-	
+
 	CPtr<NDb::SWindowListHeader> pInstance;
 	CDBPtr<NDb::SWindowListHeaderShared> pShared;
 	std::vector< CPtr<IWindowSorter> > sorters;
 	int nSelectedColumn;										// sorting is performed by this column
 	int bResizable;
-	
+
 	int nResizingIndex;											// this column is currently being resized
 
 	CObj<CWindow> pSortIconDown;			// is being added to currently selected column
 	CObj<CWindow> pSortIconUp;			// is being added to currently selected column
-	
+
 	CPtr<IHeaderNotify> pHeaderNotify;
-	
+
 	std::vector<int> columnSizes;
 	std::vector< CPtr<IWindow> > subitems;
 
@@ -60,7 +60,7 @@ public:
 	const int GetNColumns() const  { return subitems.size(); }
 	void Resort( const int nColumn, const bool bAscending );
 	void SetSorter( IWindowSorter *pSorter, const int nColumn ) { sorters[nColumn] = pSorter; }
-	
+
 	void SetColumnSize( const int nColumn, const int nWidth );
 
 	//{ IButtonNotify
@@ -76,15 +76,15 @@ public:
 	bool OnButtonDblClk( const CVec2 &vPos, const int nButton );
 };
 
-// CWindowListItem 
+// CWindowListItem
 
 class CWindowListItem : public CWindow, public IListControlItem
 {
 	OBJECT_BASIC_METHODS(CWindowListItem)
-	
+
 	CPtr<NDb::SWindowListItem> pInstance;
 	CDBPtr<NDb::SWindowListItemShared> pShared;
-	
+
 	std::vector< CPtr<IWindow> > subitems;
 	CPtr< CObjectBase > pUserData;
 protected:
@@ -97,7 +97,7 @@ public:
 
 	//{ struct IListControlItem
 	IWindow * GetSubItem( const int nSubItem );
-	
+
 	CObjectBase* GetUserData() const { return pUserData; }
 	void SetUserData( CObjectBase *pData ) { pUserData = pData; }
 	//}
@@ -114,7 +114,7 @@ class CWindowListCtrl :	public CWindowScrollableContainerBase, public IListContr
 	CPtr<NDb::SWindowListCtrl> pInstance;
 	CDBPtr<NDb::SWindowListSharedData> pShared;
 	CObj<CWindowListHeader> pHeader;
-	
+
 	typedef std::list< CObj<IWindow> > CItems;
 	CItems items;
 
@@ -128,7 +128,7 @@ private:
 	IListControlItem* AddItemInternal();
 protected:
 	virtual NDb::SWindow* GetInstance() { return pInstance; }
-	
+
 	//{ CWindowScrollableContainerBase
 	void Select( IWindow *pElement );
 	//}
@@ -150,7 +150,7 @@ public:
 
 	void Resort( const int nColumn = -1, const bool bAscending = true );
 	void SetSorter( IWindowSorter *pSorter, const int nColumn );
-	
+
 	void SetViewer( IDataViewer *pViewer );
 	void RemoveAllElements();
 
@@ -161,13 +161,13 @@ public:
 
 	void Update() { CWindowScrollableContainerBase::Update(); }
 	//}
-	
+
 	//{ IHeaderNotify
 	virtual void ColumnsResized( const std::vector<int> &sizes );
 	virtual void ColumnResort( IWindowSorter *pSorter );
 	virtual void SetOptimalWidth( const int nColumn );
 	//}
-	
+
 	void SetSelectNotify( ISelectNotify *_pNotify ) { pSelectNotify = _pNotify; }
 	void SetFocusNotify( IFocusNotify *_pNotify ) { pFocusNotify = _pNotify; }
 

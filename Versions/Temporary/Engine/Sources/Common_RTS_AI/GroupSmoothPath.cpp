@@ -22,7 +22,7 @@ const CVec2 CGroupSmoothPath::GetUnitFormationShift( const CBasePathUnit *pUnit 
 
 	if ( geometries.size() <= GetCurrentGeometry() )
 		return VNULL2;
-		
+
 	CPriorityCells::const_iterator posCell = geometries[GetCurrentGeometry()].geometry.find( nPriority );
 	NI_ASSERT( posCell != geometries[GetCurrentGeometry()].geometry.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {}) [wrong priority]", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( posCell == geometries[GetCurrentGeometry()].geometry.end() )
@@ -51,7 +51,7 @@ const float CGroupSmoothPath::GetUnitFormationProjection( const CBasePathUnit *p
 bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 {
 	//! больше нет мест в формации
-	NI_ASSERT( GetUnitsCount() < GetCellsCount(), "Cannot add more units to formation" );  
+	NI_ASSERT( GetUnitsCount() < GetCellsCount(), "Cannot add more units to formation" );
 	if ( GetUnitsCount() >= GetCellsCount() )
 		return false;
 
@@ -69,7 +69,7 @@ bool CGroupSmoothPath::AddUnit( CBasePathUnit *pUnit, const int nPriority )
 }
 
 bool CGroupSmoothPath::DeleteUnit( CBasePathUnit *pUnit )
-{	
+{
 	CUnitsMap::iterator pos = units.find( pUnit->GetUniqueID() );
 	NI_ASSERT( pos != units.end(), fmt::format( "Unit (ID: {}) not found in formation (ID: {})", pUnit->GetUniqueID(), GetUnit()->GetUniqueID() ) );
 	if ( pos == units.end() )
@@ -114,7 +114,7 @@ void CGroupSmoothPath::RecalcCells( const CVec2 &vPosition, const CVec2 &vDirect
 		if ( pos != geometries[GetCurrentGeometry()].geometry.end() )
 		{
 			NI_ASSERT( nCount <= pos->second.size(), fmt::format( "Too much units with priority {} ({} > {})", nPriority, nCount, pos->second.size() ) );
-			if ( nCount <= pos->second.size() ) 
+			if ( nCount <= pos->second.size() )
 			{
 				const int nSize = (std::min<int>)( nCount, pos->second.size() );
 				CArray2D<float> distMatrix;
@@ -164,7 +164,7 @@ void CGroupSmoothPath::AddGeometry( const std::vector<SGeometryCellInfo> &cells 
 	NI_ASSERT( ( GetCellsCount() == 0 || cells.size() == GetCellsCount() ), "Wrong geometry." );
 	if ( GetCellsCount() != 0 && cells.size() != GetCellsCount() )
 		return;
-	
+
 	if ( GetCellsCount() == 0 )
 		nCellsCount = cells.size();
 

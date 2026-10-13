@@ -76,7 +76,7 @@ void CInfantryExporter::BuildAnimsMap()
 						uint32_t dwAnimMask;
 						memcpy( &dwAnimMask, var.GetPtr(), 4 );
 						if ( dwAnimMask != 0 )
-						{ 
+						{
 							animsMap[dwAnimMask].push_back( *it );
 						}
 					}
@@ -90,25 +90,25 @@ void CInfantryExporter::BuildAnimsMap()
 bool CInfantryExporter::ProcessAABB( IManipulator *pMan )
 {
 	CPtr<IManipulator> pItVisObj = CManipulatorManager::CreateManipulatorFromReference( "visualObject", pMan, 0, 0, 0 );
-	if ( pItVisObj == 0 ) 
+	if ( pItVisObj == 0 )
 	{
 		return false;
 	}
 	// find first non-null model
 	CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 );
-	if ( pItModel == 0 ) 
+	if ( pItModel == 0 )
 	{
 		return false;
 	}
 	//
 	CPtr<IManipulator> pGeomMan = CManipulatorManager::CreateManipulatorFromReference( "Geometry", pItModel, 0, 0, 0 );
-	if ( pGeomMan == 0 ) 
+	if ( pGeomMan == 0 )
 	{
 		return false;
 	}
 	// find first non-null model
 	CPtr<IManipulator> pAIGeomMan = CManipulatorManager::CreateManipulatorFromReference( "AIGeometry", pGeomMan, 0, 0, 0 );
-	if ( pAIGeomMan == 0 ) 
+	if ( pAIGeomMan == 0 )
 	{
 		return false;
 	}
@@ -166,7 +166,7 @@ bool CInfantryExporter::ProcessShootPoint( IManipulator *pMan )
 	CGrannyBoneAttributesList attribs;
 	if ( GetGeometryAttributes( pGeomModelMan, &attribs ) )
 	{
-		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it ) 
+		for ( CGrannyBoneAttributesList::const_iterator it = attribs.begin(); it != attribs.end(); ++it )
 		{
 			if ( PatMat( it->szBoneName.c_str(), "lshootpoint" ) )			// Found the shoot point
 			{
@@ -179,7 +179,7 @@ bool CInfantryExporter::ProcessShootPoint( IManipulator *pMan )
 	}
 	// Store the data
 	const std::string szPrefix = "guns.[0].ShootPointOffset";
-	CManipulatorManager::SetVec3( vOffset, pMan, szPrefix ); 
+	CManipulatorManager::SetVec3( vOffset, pMan, szPrefix );
 	return true;
 }
 
@@ -373,7 +373,7 @@ bool CInfantryExporter::ProcessInfantrySpecificAnimations( IManipulator *pItUnit
 						}
 					}
 				}
-			}	
+			}
 		}
 	}
 	return bAnimationsAssigned;
@@ -435,7 +435,7 @@ bool CInfantryExporter::ProcessMechUnitLikeAnimations( IManipulator *pItUnit )
 		{
 			if ( CPtr<IManipulator> pItModel = CreateModelManipulatorFromVisObj( pItVisObj, 0 ) )
 			{
-				if ( pItModel != 0 ) 
+				if ( pItModel != 0 )
 				{
 					if ( pItModel->GetValue( "Skeleton", &var ) && !IsDBIDEmpty(var) )
 					{
@@ -490,7 +490,7 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 																							bool bExport,
 																							EXPORT_TYPE exportType )
 {
-	if ( exportType == ET_BEFORE_REF ) 
+	if ( exportType == ET_BEFORE_REF )
 		return ER_SUCCESS;
 	//
 	ILogger *pLogger = NLog::GetLogger();
@@ -503,7 +503,7 @@ EXPORT_RESULT CInfantryExporter::CheckObject( IManipulator* pManipulator,
 		return ER_FAIL;
 	}
 	//
-	if ( szArmJointName.empty() || szArmJointName == " " ) 
+	if ( szArmJointName.empty() || szArmJointName == " " )
 	{
 		pLogger->Log( LT_ERROR, fmt::format("Empty 'GunBoneName' - infantry unit will be without weapon in hands!\n") );
 		pLogger->Log( LT_ERROR, fmt::format("\tStats type: {}\n", rszObjectTypeName.c_str()) );

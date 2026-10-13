@@ -21,7 +21,7 @@ IXmlSaver *CreateXmlSaver( CDataStream *pStream, ESaverMode mode )
 {
 	if ( ( mode == SAVER_MODE_READ ) && ( pStream == 0 || pStream->GetSize() == 0 ) )
 		return 0;
-	if ( mode == SAVER_MODE_WRITE && pStream == 0 ) 
+	if ( mode == SAVER_MODE_WRITE && pStream == 0 )
 		return 0;
 	return new CXMLChunkSaver( pStream, mode == SAVER_MODE_READ );
 }
@@ -31,7 +31,7 @@ void CXMLChunkSaver::PushReadChunkLevel( const NXml::CXmlNode *pNode )
 	++nCurChunkLevel;
 	if ( readChunkLevels.size() <= nCurChunkLevel )
 		readChunkLevels.resize( nCurChunkLevel * 2 );
-	
+
 	readChunkLevels[nCurChunkLevel] = pNode;
 }
 
@@ -47,7 +47,7 @@ void CXMLChunkSaver::Start( CDataStream *pStream, bool bRead )
 	nCurChunkLevel = -1;
 	readChunkLevels.resize( START_CHUNK_LEVELS );
 
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		const char* pBuffer = (const char*)pStream->GetBuffer();
 		pXmlReader = new NXml::CXmlReader( pBuffer, pBuffer + pStream->GetSize() );
@@ -111,7 +111,7 @@ void CXMLChunkSaver::Start( CDataStream *pStream, bool bRead )
 
 void CXMLChunkSaver::Finish()
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 	}
 	else
@@ -152,7 +152,7 @@ void CXMLChunkSaver::Finish()
 
 bool CXMLChunkSaver::StartChunk( const chunk_id idChunk, int nChunkNumber )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( nChunkNumber > 0 )	// elements container
 		{
@@ -212,7 +212,7 @@ void CXMLChunkSaver::FinishChunk()
 {
 	if ( IsReading() )
 	{
-		if ( nCurChunkLevel != -1 ) 
+		if ( nCurChunkLevel != -1 )
 		{
 			pReadNode = readChunkLevels[nCurChunkLevel];
 			PopReadChunkLevel();
@@ -222,7 +222,7 @@ void CXMLChunkSaver::FinishChunk()
 	}
 	else
 	{
-		if ( !chunkLevels.empty() ) 
+		if ( !chunkLevels.empty() )
 		{
 			pCurrNode = chunkLevels.back();
 			chunkLevels.pop_back();
@@ -242,7 +242,7 @@ int CXMLChunkSaver::CountChunks()
 
 static const int ReadInt( const char *p, const int nSize )
 {
-/*	
+/*
 	int n = 0;
 	_snscanf(  p, nSize, "%i", &n );
 	return n;
@@ -369,7 +369,7 @@ static const float ReadFloat( const char *p, const int nSize )
 
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkNumber )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( const NXml::CXmlNode *pNode = pReadNode->FindChild( idChunk ) )
 		{
@@ -378,7 +378,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 		}
 		else
 		{
-			if ( (strcmp(idChunk, "Item") == 0) || (strcmp(idChunk, "item") == 0) ) 
+			if ( (strcmp(idChunk, "Item") == 0) || (strcmp(idChunk, "item") == 0) )
 			{
 				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild("item") )
 				{
@@ -393,13 +393,13 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 			{
 				const NXml::SXmlAttribute *pAttribute = pReadNode->GetAttribute( idChunk );
 				int nCheck = 0;
-				if ( pAttribute && pAttribute->value.nSize ) 
+				if ( pAttribute && pAttribute->value.nSize )
 					*pnData = ReadInt( pAttribute->value.pszBegin, pAttribute->value.nSize );
 				return true;
 			}
 		}
 	}
-	else if ( pCurrNode ) 
+	else if ( pCurrNode )
 	{
 		CXMLElement *pElement = new CXMLElement();
 		pElement->SetValue( idChunk );
@@ -412,7 +412,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, int *pnData, int nChunkN
 
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChunkNumber )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( const NXml::CXmlNode *pNode = pReadNode->FindChild( idChunk ) )
 		{
@@ -421,7 +421,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChun
 		}
 		else
 		{
-			if ( (strcmp(idChunk, "Item") == 0) || (strcmp(idChunk, "item") == 0) ) 
+			if ( (strcmp(idChunk, "Item") == 0) || (strcmp(idChunk, "item") == 0) )
 			{
 				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild("item") )
 				{
@@ -446,7 +446,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, float *pfData, int nChun
 			}
 		}
 	}
-	else if ( pCurrNode ) 
+	else if ( pCurrNode )
 	{
 		CXMLElement *pElement = new CXMLElement();
 		pElement->SetValue( idChunk );
@@ -477,7 +477,7 @@ static bool String2Bool( const char *pszStr )
 
 bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkNumber )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( const NXml::CXmlNode *pNode = pReadNode->FindChild(idChunk) )
 		{
@@ -490,12 +490,12 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 		}
 		else
 		{
-			if ( strcmp(idChunk, "Item") == 0 ) 
+			if ( strcmp(idChunk, "Item") == 0 )
 			{
 				if ( const NXml::CXmlNode *pNode = pReadNode->FindChild("item") )
 				{
 					const NXml::SXmlAttribute *pAttribute = pNode->GetDataAttribute();
-					if ( pAttribute && pAttribute->value.nSize ) 
+					if ( pAttribute && pAttribute->value.nSize )
 					{
 						*pData = String2Bool( pAttribute->value.pszBegin );
 						return true;
@@ -507,7 +507,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 			else
 			{
 				const NXml::SXmlAttribute *pAttribute = pReadNode->GetAttribute( idChunk );
-				if ( pAttribute && pAttribute->value.nSize ) 
+				if ( pAttribute && pAttribute->value.nSize )
 				{
 					*pData = String2Bool( pAttribute->value.pszBegin );
 					return true;
@@ -517,7 +517,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, bool *pData, int nChunkN
 			}
 		}
 	}
-	else if ( pCurrNode ) 
+	else if ( pCurrNode )
 	{
 		CXMLElement *pElement = new CXMLElement();
 		pElement->SetValue( idChunk );
@@ -535,7 +535,7 @@ bool CXMLChunkSaver::DataChunk( const chunk_id idChunk, void *pData, int nSize, 
 		return false;
 	NI_ASSERT( nSize > 0, "Wrong size passed" );
 	std::string szString;
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		DataChunkString( szString );
 		if ( !szString.empty() )
@@ -665,7 +665,7 @@ bool CXMLChunkSaver::DataChunkFilePath( NFile::CFilePath *pFilePath )
 
 bool CXMLChunkSaver::DataChunkString( std::string &data )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( pReadNode )
 		{
@@ -675,7 +675,7 @@ bool CXMLChunkSaver::DataChunkString( std::string &data )
 			return true;
 		}
 	}
-	else if ( pCurrNode ) 
+	else if ( pCurrNode )
 	{
 		checked_cast<CXMLElement*>(pCurrNode)->SetText( data );
 		return true;
@@ -685,7 +685,7 @@ bool CXMLChunkSaver::DataChunkString( std::string &data )
 
 bool CXMLChunkSaver::DataChunkString( std::wstring &data )
 {
-	if ( IsReading() ) 
+	if ( IsReading() )
 	{
 		if ( pReadNode )
 		{
@@ -695,7 +695,7 @@ bool CXMLChunkSaver::DataChunkString( std::wstring &data )
 			return true;
 		}
 	}
-	else if ( pCurrNode ) 
+	else if ( pCurrNode )
 	{
 		const std::string szString = WideToUTF8( data );
 		checked_cast<CXMLElement*>(pCurrNode)->SetText( szString );
@@ -709,7 +709,7 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 	if ( pObject )
 	{
 		NI_ASSERT( NObjectFactory::GetObjectTypeID( pObject ) != -1, fmt::format( "trying to save unregistered object \"{}\"", typeid(*pObject).name() ) );
-	}	
+	}
 
 	// the object's ID rather than its address, see storedObjects
 	void *pServerPtr = 0;
@@ -726,8 +726,8 @@ void CXMLChunkSaver::StoreObject( CObjectBase *pObject )
 	DataChunk( 0, &pServerPtr, 4, 0 );
 }
 
-void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid ) 
-{ 
+void CXMLChunkSaver::ReportCurrentObject( const CDBID &dbid )
+{
 	std::string szFileName = NDb::GetFileName( dbid );
 	NStr::ReplaceAllChars( &szFileName, '\\', '/' );
 	const std::string szObjectPath = szFileName.substr( 0, szFileName.rfind('/') + 1 );
@@ -745,10 +745,10 @@ void CXMLChunkSaver::PushCurrentObject( const CDBID &dbid )
 	szCurrObjectPath = szObjectPath;
 }
 
-void CXMLChunkSaver::PopCurrentObject() 
-{ 
-	NI_VERIFY( !objectNamesStack.empty(), "Poping from empty stack!", return ); 
-	objectNamesStack.pop_back(); 
+void CXMLChunkSaver::PopCurrentObject()
+{
+	NI_VERIFY( !objectNamesStack.empty(), "Poping from empty stack!", return );
+	objectNamesStack.pop_back();
 	szCurrObjectPath = objectNamesStack.empty() ? "" : objectNamesStack.back();
 }
 

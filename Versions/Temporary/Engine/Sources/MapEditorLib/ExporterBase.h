@@ -28,7 +28,7 @@ class MAPEDITORLIB_EXPORT CExporterBase : public IExporter
 	// результаты вызовов ExportObject
 	CResultMap exportObjectResultMap;
 	// Список незаполненных ссылок
-	CInvalidLinkList invalidLinkList;	
+	CInvalidLinkList invalidLinkList;
 	//
 	bool GetObjectTypeNameSet( IManipulator* pManipulator,
 														 const std::string &rszObjectTypeName,

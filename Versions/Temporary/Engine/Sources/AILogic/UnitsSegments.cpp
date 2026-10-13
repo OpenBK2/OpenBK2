@@ -17,7 +17,7 @@ void CFreezeSegments::SetSegmentObject( CCommonUnit *_pUnit )
 }
 
 bool CFreezeSegments::Check()
-{ 
+{
 	return pUnit && pUnit->IsRefValid() && ( pUnit->IsAlive() || pUnit->IsTrain() );
 }
 
@@ -41,7 +41,7 @@ void CStateSegments::SetSegmentObject( CCommonUnit *_pUnit )
 }
 
 bool CStateSegments::Check()
-{ 
+{
 	bIsValid = pUnit && pUnit->IsRefValid() && ( pUnit->IsAlive() || pUnit->IsTrain() );
 	bCheck = bIsValid /*&& !pUnit->CanBeFrozen()*/;
 

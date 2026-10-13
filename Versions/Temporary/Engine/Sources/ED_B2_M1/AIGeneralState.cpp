@@ -187,7 +187,7 @@ void CAIGeneralPointsState::Draw( IPaintContext *pPaintDC )
 
 bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData )
 {
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_UPDATE_EDIT_PARAMETERS:
 		{
@@ -197,8 +197,8 @@ bool CAIGeneralPointsState::HandleCommand( unsigned nCommandID, uintptr_t dwData
 		}
 		case ID_AIGEN_POINTS_WINDOW_UI_EVENT:
 		{
-			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_AIGEN_POINTS_WINDOW, 
-																																ID_WINDOW_GET_DIALOG_DATA, 
+			if ( Singleton<ICommandHandlerContainer>()->HandleCommand(CHID_AIGEN_POINTS_WINDOW,
+																																ID_WINDOW_GET_DIALOG_DATA,
 																																reinterpret_cast<uintptr_t>(&dialogData)) )
 			{
 				switch ( dialogData.eLastAction )
@@ -257,7 +257,7 @@ bool CAIGeneralPointsState::UpdateCommand( unsigned nCommandID, bool *pbEnable, 
 	NI_ASSERT( pbEnable != 0, "CAIGeneralPointsState::UpdateCommand(), pbEnable == 0" );
 	NI_ASSERT( pbCheck != 0, "CAIGeneralPointsState::UpdateCommand(), pbCheck == 0" );
 	//
-	switch( nCommandID ) 
+	switch( nCommandID )
 	{
 		case ID_UPDATE_EDIT_PARAMETERS:
 		{
@@ -384,7 +384,7 @@ void CAIGeneralPointsState::OnRButtonUp( unsigned nFlags, const CTPoint<int> &rM
 	bRotatePoint = false;
 
 	AddPoint( rMousePoint );
-	
+
 	RefreshWindowData();
 }
 
@@ -400,7 +400,7 @@ void CAIGeneralPointsState::OnMouseMove( unsigned nFlags, const CTPoint<int> &rM
 
 	SAIGeneralPointsWindowData::SAIPlayerInfo &currentPlayer = dialogData.players[dialogData.CurrentPlayer()];
 	SAIGeneralPointsWindowData::SAIPlayerInfo::SAIParcel &currentParcel = currentPlayer.parcels[dialogData.CurrentParcel()];
-	
+
 	if ( bMoveParcel )
 	{
 		currentParcel.vCenter = vPickPos;
@@ -566,8 +566,8 @@ void CAIGeneralPointsState::RefreshWindowData()
 	if ( dialogData.nCurrentPlayer == -1 )
 		return;
 
-	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_WINDOW, 
-																												ID_WINDOW_SET_DIALOG_DATA, 
+	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_AIGEN_POINTS_WINDOW,
+																												ID_WINDOW_SET_DIALOG_DATA,
 																												reinterpret_cast<uintptr_t>(&dialogData) );
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_UPDATE, 0 );
 }
@@ -631,7 +631,7 @@ void CAIGeneralPointsState::AddParcel()
 
 			if ( pObjectController->AddInsertOperation(fmt::format("Players.[{}].general.parcels", dialogData.CurrentPlayer()), NODE_ADD_INDEX, pManipulator) )
 			{
-				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", dialogData.CurrentPlayer(), nParcel), 
+				bResult = bResult && pObjectController->AddChangeOperation( fmt::format("Players.[{}].general.parcels.[{}].Type", dialogData.CurrentPlayer(), nParcel),
 																																		std::string(typeAIGeneralParcel.GetMnemonic((int)newParcel.eType).c_str()), pManipulator );
 				bResult = bResult && pObjectController->AddChangeVec2Operation<CVec2, float>( fmt::format("Players.[{}].general.parcels.[{}].Center", dialogData.CurrentPlayer(), nParcel),
 																																											newParcel.vCenter, pManipulator );

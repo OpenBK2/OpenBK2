@@ -18,9 +18,9 @@ public:
 		int nPlayerIndex;
 		int nTeam;
 		CVec2 vMinimapPos;
-		
+
 		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Should not be serialized" ); return 0; }
-		
+
 		SPlayer() :
 			pSideListItemIcon( 0 ),
 			pSideMinimapIcon( 0 ),
@@ -41,7 +41,7 @@ public:
 		std::vector<SPlayer> players;
 
 		int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "Should not be serialized" ); return 0; }
-		
+
 		SParams() :
 			pMapPicture( 0 ),
 			pMinimap( 0 )

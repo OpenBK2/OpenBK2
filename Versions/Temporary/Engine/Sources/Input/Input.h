@@ -50,7 +50,7 @@ INPUT_EXPORT void PumpMessages( bool bFocus );
 bool GetMessage( SMessage *pMsg );
 INPUT_EXPORT bool IsDInputDiscardableKey( const SMessage &mMsg );
 INPUT_EXPORT STime GetLastEventTime();
-	
+
 INPUT_EXPORT int GetControlID( const std::string &sCommand );
 void GetControlInfo( int nAction, EControlType *pcType, float *pfGranularity );
 INPUT_EXPORT std::string GetControlLocalName( int nAction );

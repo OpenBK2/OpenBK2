@@ -33,7 +33,7 @@ class CGameLobby : public CPacketProcessor
 	{
 		CGameLobby *pThis;
 		SGetGameInfoFunc( CGameLobby *_pThis ) : pThis( _pThis ) { }
-		const bool operator()( const int nGameID, struct SGameInfo *pInfo ) const 
+		const bool operator()( const int nGameID, struct SGameInfo *pInfo ) const
 		{ return pThis->GetGameInfo( nGameID, pInfo ); }
 	};
 
@@ -46,7 +46,7 @@ class CGameLobby : public CPacketProcessor
 	void EraseGameClients( const int nGameID );
 	void SetClientLobbyID( const int nClientID, const uint8_t cLobbyID );
 	void InformThroughServerClients( const int nLeftGameClient );
-	void RemoveLobbyClient( const int nClientID ); 
+	void RemoveLobbyClient( const int nClientID );
 	bool KillGame( const int nGameID );
 protected:
 	bool IsLobbyClient( const int nID ) const { return lobbyClients.find( nID ) != lobbyClients.end(); }

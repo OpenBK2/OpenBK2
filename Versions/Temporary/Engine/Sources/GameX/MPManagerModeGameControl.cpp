@@ -218,17 +218,17 @@ std::string GenerateDateTimeReplayFilename() {
     // Get current time
     auto now = std::chrono::system_clock::now();
     auto time_t = std::chrono::system_clock::to_time_t(now);
-    
+
     // Convert to local time
     std::tm local_time = *std::localtime(&time_t);
-    
+
     // Create string stream for formatting
     std::ostringstream oss;
-    
+
     // Format: "MatchFrom_YYYY-MM-DD_HOURS-MINS-SECONDS"
     oss << "MatchFrom_"
         << std::put_time(&local_time, "%Y-%m-%d_%H-%M-%S");
-    
+
     return oss.str();
 }
 
@@ -301,7 +301,7 @@ bool CMPManagerMode::CheckAllLeftWin()
 		int nOppositePlayers = 0;
 		for ( int i = 0; i < slots.size(); ++i )
 		{
-			if ( IsPlayerPresent( i ) && slots[nOwnSlot].nTeam + slots[i].nTeam == 1 )	
+			if ( IsPlayerPresent( i ) && slots[nOwnSlot].nTeam + slots[i].nTeam == 1 )
 				++nOppositePlayers;		// one of them is 1 and another is 0, i.e. enemies
 		}
 
@@ -499,7 +499,7 @@ void CMPManagerMode::AnalyzeLaggers()
 				GetOwnClientID(),
 				fmt::format( "player={} time_left={}", i, lagInfo.nLagLeft ) );
 			pClient->SendGamePacket( pPkt, true );
-			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft ); 
+			//DebugTrace( "*** LAG STOP for player %d at time %d, time left %d", i, curTime, lagInfo.nLagLeft );
 		}
 		else if ( IsPlayerLagging( i ) )
 		{

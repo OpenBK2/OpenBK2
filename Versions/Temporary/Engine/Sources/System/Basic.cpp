@@ -38,12 +38,12 @@ static void FreeLists()
 {
 	if ( pDestroy && pDestroy->empty() )
 	{
-		delete pDestroy; 
+		delete pDestroy;
 		pDestroy = 0;
 	}
 	if ( pInvalidate && pInvalidate->empty() )
 	{
-		delete pInvalidate; 
+		delete pInvalidate;
 		pInvalidate = 0;
 	}
 }
@@ -66,7 +66,7 @@ void CObjectBase::ReleaseObj( int nRef, int nMask )
 		{
 			bDestroyInProgress = true;
 			delete this;
-			DestroyDelayed(); 
+			DestroyDelayed();
 		}
 	}
 	else if ( (nObjData & nMask) == 0 )
@@ -81,7 +81,7 @@ void CObjectBase::ReleaseObj( int nRef, int nMask )
 		{
 			AddRef();
 			bDestroyInProgress = true;
-			DestroyContents(); 
+			DestroyContents();
 			ReleaseRef();
 			DestroyDelayed();
 		}
@@ -121,13 +121,13 @@ void CObjectBase::DestroyDelayed()
 		{
 			CObjectBase *pObj = toInvalidate.front();
 			toInvalidate.pop_front();
-			pObj->DestroyContents(); 
+			pObj->DestroyContents();
 			pObj->ReleaseRef();
 		}
 	}
 	bDestroyInProgress = false;
 	if ( !tracker.bIsRunning )
-		FreeLists();		
+		FreeLists();
 }
 
 #ifdef TRACK_OBJECTS_STATISTICS

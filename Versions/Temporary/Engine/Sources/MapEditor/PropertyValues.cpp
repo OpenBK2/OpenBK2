@@ -192,7 +192,7 @@ namespace NPropertyValues
 			uint8_t nLowByte = 0;
 			int nByteIndex = 0;
 			bool bLowByteAcquired = false;
-			for ( int nCharIndex = 0; nCharIndex < rszValue.length(); ++nCharIndex ) 
+			for ( int nCharIndex = 0; nCharIndex < rszValue.length(); ++nCharIndex )
 			{
 				if ( ( rszValue[nCharIndex] >= '0' ) && ( rszValue[nCharIndex] <= '9' ) )
 				{
@@ -214,7 +214,7 @@ namespace NPropertyValues
 				{
 					pData[nByteIndex] = ( nHighByte << 4 ) + nLowByte;
 					++nByteIndex;
-					if ( nByteIndex >= pPropertyDesc->nSize ) 
+					if ( nByteIndex >= pPropertyDesc->nSize )
 					{
 						break;
 					}
@@ -514,7 +514,7 @@ namespace NPropertyValues
 			float fR = Clamp<float>( Clamp<int>( r, 0, 255 ) / 255.0f, 0.0f, 1.0f );
 			float fG = Clamp<float>( Clamp<int>( g, 0, 255 ) / 255.0f, 0.0f, 1.0f );
 			float fB = Clamp<float>( Clamp<int>( b, 0, 255 ) / 255.0f, 0.0f, 1.0f );
-			//	
+			//
 			bResult = bResult && pObjectController->AddChangeOperation( rszName + ".x", fR, pManipulator );
 			bResult = bResult && pObjectController->AddChangeOperation( rszName + ".y", fG, pManipulator );
 			bResult = bResult && pObjectController->AddChangeOperation( rszName + ".z", fB, pManipulator );
@@ -544,7 +544,7 @@ bool GetPCItemStringValue( std::string *pszValue,
 	switch ( nType )
 	{
 		case PCIE_INT_INPUT:
-				return IntInputString( pszValue, rValue, pDesc ); 
+				return IntInputString( pszValue, rValue, pDesc );
 		case PCIE_INT_SLIDER:
 		case PCIE_INT_COMBO:
 			( *pszValue ) = std::to_string(  (int)rValue );
@@ -628,19 +628,19 @@ bool GetPCItemStringValue( std::string *pszValue,
 		}
 		case PCIE_BINARY_BIT_FIELD:
 		{
-			return NPropertyValues::BitFieldString( pszValue, rValue, pDesc ); 
+			return NPropertyValues::BitFieldString( pszValue, rValue, pDesc );
 		}
 		case PCIE_GUID:
 		{
-			return GuidString( pszValue, rValue, pDesc ); 
+			return GuidString( pszValue, rValue, pDesc );
 		}
 		case PCIE_TEXT_FILE:
 		{
-			return TextFileString( pszValue, rValue, pDesc ); 
+			return TextFileString( pszValue, rValue, pDesc );
 		}
 		case PCIE_NEW_TEXT_FILE:
 		{
-			return ExTextFileString( pszValue, rValue, pDesc ); 
+			return ExTextFileString( pszValue, rValue, pDesc );
 		}
 		default:
 			break;
@@ -758,19 +758,19 @@ bool GetPCItemValue( CVariant *pValue,
 			return true;
 		case PCIE_BINARY_BIT_FIELD:
 		{
-			return NPropertyValues::BitFieldValue( pValue, rszValue, pDesc ); 
+			return NPropertyValues::BitFieldValue( pValue, rszValue, pDesc );
 		}
 		case PCIE_GUID:
 		{
-			return GuidValue( pValue, rszValue, pDesc ); 
+			return GuidValue( pValue, rszValue, pDesc );
 		}
 		case PCIE_TEXT_FILE:
 		{
-			return TextFileValue( pValue, rszValue, pDesc ); 
+			return TextFileValue( pValue, rszValue, pDesc );
 		}
 		case PCIE_NEW_TEXT_FILE:
 		{
-			return ExTextFileValue( pValue, rszValue, pDesc ); 
+			return ExTextFileValue( pValue, rszValue, pDesc );
 		}
 		default:
 			break;

@@ -10,7 +10,7 @@ namespace NDb
 }
 
 #define REF_TYPE_UNKNOWN (-1)                   //subject to remove
-#define NODE_ADD_INDEX (-1)                     //Manipulator - add to the end of list 
+#define NODE_ADD_INDEX (-1)                     //Manipulator - add to the end of list
 #define NODE_REMOVEALL_INDEX (-1)               //Manipulator - remove all
 #define INVALID_NODE_ID (0xffFFffFF)            //error when asking for node id
 //
@@ -55,7 +55,7 @@ struct SPropertyDesc : public SIteratorDesc
 		PCT_MIN		= 0x0001,
 		PCT_MAX		= 0x0002,
 	};
-	
+
 	std::string szDesc;                                  //property description MBCS
 	bool bDescInitialized;
 
@@ -65,12 +65,12 @@ struct SPropertyDesc : public SIteratorDesc
 	int nMaxOccurs;
 	uint32_t dwChecks;                                 //check flags contained here
 	std::string szDefault;                               // default field value in string representation
-	
+
 	std::string szTypeName;                              //type name
-	CTypesMap refTypes;                             //possible types of objects, to which references can be set  
+	CTypesMap refTypes;                             //possible types of objects, to which references can be set
 	CValuesList values;                             //possible values (i.e. for combo boxes), MBCS
 	std::string szEnumName;
-	
+
 	bool bArray;                                    //Массив
 	bool bStruct;                                   //Структура
 	bool bMultiArray;                               //Является массивом в массиве (always false)
@@ -84,7 +84,7 @@ struct SPropertyDesc : public SIteratorDesc
 	std::string szTypeRename;
 	std::string szTypePrefix;
 	std::string szTypePath;
-	
+
 	std::string szLocalDef;                //if related type should be defined in local namespace (for code generator)
 	bool bCheckSum;                   //if the field should be counted when calculationg checksum (for code generator)
 	int nTypeID;                      //struct typeID (for code generator)
@@ -104,7 +104,7 @@ struct SPropertyDesc : public SIteratorDesc
 			nMinOccurs( 0 ),
 			nMaxOccurs( -1 ),
 			dwChecks( PCT_NONE ),
-			bArray( false ), 
+			bArray( false ),
 			bStruct( false ),
 			bMultiArray( false ),
 			bHidden( false ),

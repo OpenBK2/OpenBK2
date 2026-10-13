@@ -7,7 +7,7 @@
 
 
 
-class CInterfaceMPGameRoom : public CInterfaceMPScreenBase, 
+class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 	public IProgrammedReactionsAndChecks
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPGameRoom );
@@ -29,17 +29,17 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 	typedef std::vector<SUISlot> CUISlots;
 
 	ZDATA_(CInterfaceMPScreenBase)
-		// { Info for the game 
+		// { Info for the game
 	CPtr<ITextView> pSessionName;
 	CPtr<ITextView> pTechLevel;
-	CPtr<ITextView> pNumPlayers;	
-	CPtr<ITextView>	pMapName;		
+	CPtr<ITextView> pNumPlayers;
+	CPtr<ITextView>	pMapName;
 	CPtr<IWindow> pMinimap;
 	CPtr<ITextView> pTimeLimit;
 	CPtr<ITextView> pCaptureTime;
 	CPtr<ITextView> pGameSpeed;
-	CPtr<IButton> pUnitExperience;	
-	// } Info for the game 
+	CPtr<IButton> pUnitExperience;
+	// } Info for the game
 
 	CPtr<IWindow> pMain;
 
@@ -49,8 +49,8 @@ class CInterfaceMPGameRoom : public CInterfaceMPScreenBase,
 	CPtr<IScrollableContainer> pList;
 	CPtr<IWindow> pSlotTemplate;
 	// } List of players
-		
-	CPtr<IButton> pButtonBeginGame;		
+
+	CPtr<IButton> pButtonBeginGame;
 
 	CPtr<IEditLine> pChatInput;
 	CPtr<IScrollableContainer> pChatOutput;
@@ -88,8 +88,8 @@ private:
 	bool OnBackReaction();
 	bool OnBeginGameReaction();
 
-	bool OnAcceptGameReaction();	
-	bool OnRejectGameReaction();	
+	bool OnAcceptGameReaction();
+	bool OnRejectGameReaction();
 	bool OnChangeSideReaction();
 	bool OnChangeTeamReaction();
 	bool OnChangeColorReaction();
@@ -111,7 +111,7 @@ private:
 	bool CheckNewColor( int nClientID, int nColor );
 	int GetAvailableColor();
 	void TryInitThisPlayerSideAndColor();
-	
+
 protected:
 	~CInterfaceMPGameRoom();
 public:
@@ -124,7 +124,7 @@ public:
 	void FillMapData();
 
 	void SetOwner( bool _bCreator );
-	
+
 
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );

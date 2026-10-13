@@ -36,7 +36,7 @@ public:
 	CLogStream& operator<< ( const std::wstring &szText );
 	CLogStream& operator<< ( const std::string &szText ) { operator<<(szText.c_str()); return *this; }
 	CLogStream& operator<< ( const EConsoleColor &eColor );
-	
+
 	CLogStream& operator<< ( CLogStream& (*Func)( CLogStream& csStream ) );
 };
 
@@ -47,7 +47,7 @@ struct SConsoleLine
 
 	bool bCommand = false;
 	std::wstring szText;
-	
+
 	SConsoleLine( int _nID, const int _nStream, bool _bCommand, const std::wstring &_szText )
 		: nID( _nID ), nStream( _nStream ), bCommand( _bCommand ), szText( _szText ) {}
 };

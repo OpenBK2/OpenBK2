@@ -6,7 +6,7 @@
 
 
 
-class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase, 
+class CInterfaceMPCreateCustomGame : public CInterfaceMPScreenBase,
 	public IProgrammedReactionsAndChecks, public ISliderNotify
 {
 	OBJECT_NOCOPY_METHODS( CInterfaceMPCreateCustomGame );

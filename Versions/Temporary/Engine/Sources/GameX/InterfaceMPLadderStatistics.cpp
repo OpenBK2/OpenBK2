@@ -27,7 +27,7 @@ CInterfaceMPLadderStatistics::~CInterfaceMPLadderStatistics()
 
 bool CInterfaceMPLadderStatistics::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	AddScreen( this );
@@ -79,7 +79,7 @@ bool CInterfaceMPLadderStatistics::StepLocal( bool bAppActive )
 
 	if ( bAppActive )
 	{
-		while ( 1 ) 
+		while ( 1 )
 		{
 			CPtr< SMPUIMessage> pMsg = Singleton<IMPToUIManager>()->GetUIMessage();
 			if ( !pMsg )
@@ -193,7 +193,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			pMedalButton->SetName( aMedal.szControlName );
 			if ( i < side.medals.size() )
 			{
-				if ( pMedalName ) 
+				if ( pMedalName )
 					pMedalName->SetText( pMedalName->GetDBText() + GET_TEXT_PRE( side.medals[i]->, LocalizedName ) );
 				if ( pMedalIcon )
 					pMedalIcon->SetTexture( side.medals[i]->pIconTexture );
@@ -202,7 +202,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 			}
 			else
 			{
-				if ( pMedalName ) 
+				if ( pMedalName )
 					pMedalName->SetText( pMedalName->GetDBText() + NStr::ToUnicode( fmt::format( "Medal {}", i ) ) );
 			}
 			medals.push_back( aMedal );
@@ -214,7 +214,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 
 	//////////////////////////////////////// Advanced Panel
 	// Win/Lose
-	Add4Line( L"", GetScreen()->GetTextEntry( "T_HDR_WON" ), 
+	Add4Line( L"", GetScreen()->GetTextEntry( "T_HDR_WON" ),
 		GetScreen()->GetTextEntry( "T_HDR_LOST" ), GetScreen()->GetTextEntry( "T_HDR_WON_PERCENT" ) );
 	Add4Line( L"", L"", L"", L"" );
 	AddWinLoseSummary( info, GetScreen()->GetTextEntry( "T_HDR_SOLO" ), 1, 0 );
@@ -254,7 +254,7 @@ void CInterfaceMPLadderStatistics::OnLadderStatsMessage( struct SMPUILadderStats
 	}
 	Add2Line( GetScreen()->GetTextEntry( "T_HDR_FAVOURITE_REINF" ), wszReinfName );
 	Add1Line( L"" );
-	
+
 	std::wstring wszName = L"-";
 	if ( info.nStrongestAgainst >= 0 && info.nStrongestAgainst < pMPConsts->sides.size() )
 		wszName = GET_TEXT_PRE( pMPConsts->sides[info.nStrongestAgainst]., Name );

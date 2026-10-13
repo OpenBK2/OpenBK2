@@ -162,7 +162,7 @@ void* GetDlgUserData( HWND hwndDlg )
 //	return SendMessage( GetDlgItem(hwndDlg, nElementID), BM_GETCHECK, 0, 0 );
 //}
 
-void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription, 
+void WriteReportToFile( const char *pszFileName, const char *pszCondition, const char *pszDescription,
 												const std::vector<SCallStackEntry> &entries )
 {
 	char buffer[1024];
@@ -172,7 +172,7 @@ void WriteReportToFile( const char *pszFileName, const char *pszCondition, const
 		char *ptr = buffer;
 		for ( char *it = buffer + nSize - 1; it > buffer; --it )
 		{
-			if ( *it == '\\' ) 
+			if ( *it == '\\' )
 			{
 				ptr = it + 1;
 				*(it + 1) = 0;
@@ -183,7 +183,7 @@ void WriteReportToFile( const char *pszFileName, const char *pszCondition, const
 		strcpy( ptr, pszFileName );
 	}
 	//
-	if ( FILE *file = fopen(buffer, "at") ) 
+	if ( FILE *file = fopen(buffer, "at") )
 	{
 		fprintf( file, "%s\n", pszCondition );
 		fprintf( file, "%s\n\n", pszDescription );

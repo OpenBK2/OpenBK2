@@ -10,7 +10,7 @@ struct SAckDebugHelper
 	const char* pszName = nullptr;
 };
 
-static SAckDebugHelper debugAckNames[] = 
+static SAckDebugHelper debugAckNames[] =
 {
 	{ NDb::ACK_BORED_ATTACK, "ACK_BORED_ATTACK" },
 	{ NDb::ACK_BORED_IDLE, "ACK_BORED_IDLE" },

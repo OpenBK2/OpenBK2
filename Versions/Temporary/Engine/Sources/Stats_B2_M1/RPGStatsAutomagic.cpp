@@ -64,7 +64,7 @@ CRPGStatsAutomagic::CRPGStatsAutomagic()
 	i2s[0x04] = "human";
 	//
 	//
-	for ( CI2SMap::const_iterator it = i2s.begin(); it != i2s.end(); ++it ) 
+	for ( CI2SMap::const_iterator it = i2s.begin(); it != i2s.end(); ++it )
 		s2i[it->second] = it->first;
 	//
 	int a = CRAP_LinkerTooSmart_FeedBackUpdates();

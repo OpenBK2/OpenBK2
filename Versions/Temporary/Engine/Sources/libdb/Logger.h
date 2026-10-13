@@ -9,12 +9,12 @@ class LIBDB_EXPORT CLogger
 	std::list<std::string> stkTrace;
 	CDataStream *pStream = nullptr;
 	CMemoryStream memoryStream;
-	
+
 	std::string GetStackTrace() const;
 public:
 	CLogger();
 	~CLogger();
-	
+
 	void SetLogStream( CDataStream *_pStream );
 	void PushStack( const std::string &szLevel );
 	void PopStack();

@@ -29,7 +29,7 @@ public:
 	{
 		UCID addr;
 		CMemoryStream pkt;
-		
+
 		SPacket() {}
 		SPacket( UCID _addr, CMemoryStream &_pkt ): addr(_addr), pkt(_pkt) {}
 	};
@@ -119,7 +119,7 @@ private:
 
 	SPeer* GetClient( UCID addr );
 	SPeer* GetClientByPeerID( PEER_ID id );
-	void AddOutputMessage( EOutMessage msg, UCID _from, 
+	void AddOutputMessage( EOutMessage msg, UCID _from,
 		const CMemoryStream *pData = 0, std::vector<UCID> *pReceived = 0 );
 	void AddKickApprove( UCID victim, UCID kickFrom );
 	void ApproveKick( UCID victim, UCID from );
@@ -136,6 +136,6 @@ private:
 	void SendBroadcast( const UCID dest, int nID, CMemoryStream &data );
 	//void SendDirect( const SPeer &dest, CMemoryStream &pkt );
 	void SendAck( const UCID dest, int nID, PEER_ID id );
-};	
+};
 }
 

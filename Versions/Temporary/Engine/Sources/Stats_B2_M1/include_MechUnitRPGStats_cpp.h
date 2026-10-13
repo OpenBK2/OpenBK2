@@ -19,9 +19,9 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 	}
 
 	// armor
-	FOR_EACH_ARR_VAL( armors, ToAIUnits, armors.size(), bInEditor ); 
+	FOR_EACH_ARR_VAL( armors, ToAIUnits, armors.size(), bInEditor );
 	// проинициализировать min/max Armor
-	if ( !armors.empty() ) 
+	if ( !armors.empty() )
 	{
 		nMinArmor = armors[0].nMin;
 		nMaxArmor = armors[0].nMax;

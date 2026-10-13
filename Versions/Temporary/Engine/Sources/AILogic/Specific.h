@@ -19,14 +19,14 @@ using namespace NDb;
 #define CONSOLE_BUFFER_LOG2(n,s,c,b) ;
 #endif
 
-//DEBUG{ 
+//DEBUG{
 #ifndef _FINALRELEASE
 void DrawWhiteCross( const CVec3 &vPoint );
 #define DRAW_WHITE_CROSS(a) DrawWhiteCross(a)
 void DrawWhiteCross( const CVec3 &vPoint );
 #else
 #define DRAW_WHITE_CROSS( a ) ;
-#endif 
+#endif
 //DEBUG}
 
 struct IAIScenarioTracker *GetScenarioTracker();

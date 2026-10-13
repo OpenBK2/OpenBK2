@@ -26,20 +26,20 @@
 
 // CInterfaceMPCreateCustomGame
 
-CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame() : 
+CInterfaceMPCreateCustomGame::CInterfaceMPCreateCustomGame() :
 CInterfaceMPScreenBase( "MPCreateCustomGame", "create_custom_game" )
 {
 }
 
 CInterfaceMPCreateCustomGame::~CInterfaceMPCreateCustomGame()
 {
-	if ( pScreen ) 
+	if ( pScreen )
 		Scene()->RemoveScreen( pScreen );
 }
 
 bool CInterfaceMPCreateCustomGame::Init()
 {
-	if ( CInterfaceScreenBase::Init() == false ) 
+	if ( CInterfaceScreenBase::Init() == false )
 		return false;
 
 	RegisterObservers();
@@ -50,7 +50,7 @@ bool CInterfaceMPCreateCustomGame::Init()
 		return false;
 
 	pMain = GetChildChecked<IWindow>( pScreen, "Main", true );
-	NI_VERIFY( pMain, "No main window found", return false );	
+	NI_VERIFY( pMain, "No main window found", return false );
 	SetMainWindowTexture( pMain, InterfaceState()->GetMenuBackgroundTexture() );
 
 	pSelected = 0;
@@ -59,7 +59,7 @@ bool CInterfaceMPCreateCustomGame::Init()
 }
 
 void CInterfaceMPCreateCustomGame::RegisterObservers()
-{	
+{
 }
 
 void CInterfaceMPCreateCustomGame::FillMapData()
@@ -75,7 +75,7 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 			continue;
 
 		tmpInfo.wszMapName = GET_TEXT_PRE( pMPMap->, MapName );
-		tmpInfo.wszGameType = L""; 
+		tmpInfo.wszGameType = L"";
 		tmpInfo.pMPMap = pMPMap;
 
 		tmpInfo.nPlayersMax = pMPMap->nPlayers;
@@ -89,7 +89,7 @@ void CInterfaceMPCreateCustomGame::FillMapData()
 
 void CInterfaceMPCreateCustomGame::InitControls()
 {
-	pButtonCreateGame = GetChildChecked<IButton>( pMain, "ButtonCreateGame", true );		
+	pButtonCreateGame = GetChildChecked<IButton>( pMain, "ButtonCreateGame", true );
 	pTechLevelBox = GetChildChecked<IComboBox> ( pMain, "TechLevel", true );
 	pNumPlayersBox = GetChildChecked<IComboBox> ( pMain, "NumPlayers", true );
 	pSessionName = GetChildChecked<IEditLine>( pMain, "SessionName", true );
@@ -119,7 +119,7 @@ void CInterfaceMPCreateCustomGame::SetControls()
 	if ( pTechLevelBox )
 	{
 		pViewer = new CTextDataViewer();
-		pTechLevelBox->SetViewer( pViewer );		
+		pTechLevelBox->SetViewer( pViewer );
 		// Get Tech Levels from MPConsts
 		const NDb::SMultiplayerConsts *pMPConsts = NGameX::GetMPConsts();
 		for ( int i = 0; i < pMPConsts->techLevels.size(); ++i )
@@ -132,18 +132,18 @@ void CInterfaceMPCreateCustomGame::SetControls()
 		}
 		pTechLevelBox->Select( 0 );
 	}
-	if ( pNumPlayersBox )  
-	{		
-		pViewer = new CTextDataViewer(); 
+	if ( pNumPlayersBox )
+	{
+		pViewer = new CTextDataViewer();
 		pNumPlayersBox->SetViewer( pViewer );
 		pNumPlayersBox->Enable( false );
 	}
-	if ( pList ) 
+	if ( pList )
 	{
 		CPtr<CItemCustomGameListViewer> pCustomViewer = new CItemCustomGameListViewer();
 		pList->SetViewer( pCustomViewer );
 	}
-	
+
 	if ( pTimeLimit )
 		pTimeLimit->SetText( L"60" );
 
@@ -153,7 +153,7 @@ void CInterfaceMPCreateCustomGame::SetControls()
 	if ( pSliderGameSpeed )
 	{
 		int nMax = pSliderGameSpeed->GetNSpecialPositions();
-		pSliderGameSpeed->SetRange( 0, nMax, 1 );	
+		pSliderGameSpeed->SetRange( 0, nMax, 1 );
 		pSliderGameSpeed->SetNotifySink( this );
 		pSliderGameSpeed->SetPos( nMax / 2 );
 		SliderPosition( nMax / 2, 0 );
@@ -180,8 +180,8 @@ void CInterfaceMPCreateCustomGame::SetControls()
 void CInterfaceMPCreateCustomGame::SliderPosition( const float fPosition, CWindow *pWho )
 {
 	if ( !pGameSpeedText )
-		return;	
-	int nPos = fPosition; // 
+		return;
+	int nPos = fPosition; //
 	int nShown = nPos - pSliderGameSpeed->GetNSpecialPositions() / 2;
 	std::wstring newtext = pGameSpeedText->GetDBText() + NStr::ToUnicode( fmt::format("  {:+d}", nShown ) );
 	pGameSpeedText->SetText( newtext );
@@ -198,13 +198,13 @@ bool CInterfaceMPCreateCustomGame::OnSessionEnter()
 }
 
 void CInterfaceMPCreateCustomGame::UpdateInterior()
-{	
-	NI_VERIFY( pList, "No maps list", return );	
+{
+	NI_VERIFY( pList, "No maps list", return );
 
 	pList->RemoveAllElements();
 
 	for ( CMPMaps::iterator it = maps.begin(); it!= maps.end(); it++ )
-	{		
+	{
 		SMPMapInfo &info = *it;
 		CPtr<CCustomGameListData> pData = new CCustomGameListData( info );
 		IListControlItem *pNewItem = pList->AddItem( pData );
@@ -214,23 +214,23 @@ void CInterfaceMPCreateCustomGame::UpdateInterior()
 			pList->SelectItem( pData );
 			OnSelectMapReaction();
 		}
-	}	
+	}
 
 	pList->Update();
 }
 
 void CInterfaceMPCreateCustomGame::CItemCustomGameListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const
-{	
+{
 	CDynamicCast<IListControlItem> pItem = pWindow;
 	NI_VERIFY( pItem, "Wrong window", return );
 
-	CDynamicCast<CCustomGameListData> pInfo = pData;	
+	CDynamicCast<CCustomGameListData> pInfo = pData;
 	NI_VERIFY( pInfo, "Wrong data", return );
 	SMPMapInfo &info = pInfo->info;
 
 	NMPSetData::SetChildText( pItem,  "ItemMapName", info.wszMapName );
 	NMPSetData::SetChildText( pItem,  "ItemGameType", info.wszGameType );
-	NMPSetData::SetChildText( pItem,  "ItemMapSize", 
+	NMPSetData::SetChildText( pItem,  "ItemMapSize",
 		NStr::ToUnicode( fmt::format( "{} x {}", info.nMapSizeX, info.nMapSizeY ) ) );
 	NMPSetData::SetChildText( pItem,  "ItemMaxPlayers",
 		NStr::ToUnicode( std::to_string( info.nPlayersMax ) ) );
@@ -253,14 +253,14 @@ bool CInterfaceMPCreateCustomGame::Execute( const std::string &szSender, const s
 		return OnCreateGameReaction( szSender );
 
 	if ( szReaction == "react_on_select_map" )
-		return OnSelectMapReaction();	
+		return OnSelectMapReaction();
 
 	if ( szReaction == "session_enter" )
 		return OnSessionEnter();
 
 	if ( szReaction == "react_on_open_advanced" )
 		return OnShowAdvanced( true );
-	
+
 	if ( szReaction == "react_on_close_advanced" )
 		return OnShowAdvanced( false );
 
@@ -314,8 +314,8 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 	{
 		int nShown = pSliderGameSpeed->GetPos() - pSliderGameSpeed->GetNSpecialPositions() / 2;
 		pCreateMsg->specificInfo.nGameSpeed = nShown;
-	}	
-	
+	}
+
 	pCreateMsg->specificInfo.nTechLevel = pTechLevelBox->GetSelectedIndex();
 	bool bUnitExp = false;
 	CPtr<IButton> pUnitExperience = GetChildChecked<IButton>( pMain, "UnitExperience", true );
@@ -342,20 +342,20 @@ bool CInterfaceMPCreateCustomGame::OnCreateGameReaction( const std::string &szSe
 }
 
 bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
-{	
+{
 	IListControlItem *pItem = pList->GetSelectedListItem();
 	CDynamicCast<CCustomGameListData> pInfo = pItem->GetUserData();
 	if ( pInfo )
-		pSelected = pInfo->info.pMPMap;	
+		pSelected = pInfo->info.pMPMap;
 
 	bool bEnableCreate = false;
 	bool bEnableGameType = false;
-	bool bEnableNumPlayers = false;	
+	bool bEnableNumPlayers = false;
 	std::wstring wszName = L"";
 	CDBPtr <NDb::STexture> pMiniMapTexture = 0;
 
 	CPtr<IMiniMap> pWindowMiniMap = GetChildChecked<IMiniMap>( pMain, "Minimap", true );
-	
+
 	if ( !pSelected || !pSelected->pMap )
 	{
 		NI_ASSERT( 0, "DATA: Invalid MP map descriptor" );
@@ -363,7 +363,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 		return true;
 	}
 
-	bEnableCreate = true;				
+	bEnableCreate = true;
 	wszName = GET_TEXT_PRE( pSelected->, MapName );
 
 	/*if ( pMapInfo->pLocalizedDescription ) //Map info
@@ -373,7 +373,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	if ( pMiniMap ) //MiniMap
 	{
 		if ( pMiniMap->pTexture )
-		{		
+		{
 			if ( pWindowMiniMap )
 			{
 				pWindowMiniMap->SetLoadingMapParams( pSelected->pMap->nNumPatchesX * AI_TILES_IN_PATCH * AI_TILE_SIZE,
@@ -381,7 +381,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 				pWindowMiniMap->SetMaterial( pMiniMap );
 				pWindowMiniMap->ShowWindow( true );
 			}
-		}		
+		}
 	}
 
 	CPtr<CTextData> pData;
@@ -389,7 +389,7 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	NMPSetData::SetText( pMapName, wszName);
 
 	if ( pPicture )
-		pPicture->SetTexture( pMiniMapTexture );	
+		pPicture->SetTexture( pMiniMapTexture );
 
 	CheckEnableCreateButton();
 
@@ -402,14 +402,14 @@ bool CInterfaceMPCreateCustomGame::OnSelectMapReaction()
 	if ( pNumPlayersBox )
 		pNumPlayersBox->Enable( bEnableNumPlayers );
 	if ( pNumPlayersBox )
-	{	
-		pNumPlayersBox->RemoveAllItems();						
-		for ( int i = pSelected->nPlayers; i > 1; i-- )		
+	{
+		pNumPlayersBox->RemoveAllItems();
+		for ( int i = pSelected->nPlayers; i > 1; i-- )
 		{
 			CPtr<CTextData> pData = new CTextData( i );
-			pNumPlayersBox->AddItem( pData );	
-			pNumPlayersBox->Enable( true );			
-		}			
+			pNumPlayersBox->AddItem( pData );
+			pNumPlayersBox->Enable( true );
+		}
 		pNumPlayersBox->Select( 0 );
 	}
 	return true;

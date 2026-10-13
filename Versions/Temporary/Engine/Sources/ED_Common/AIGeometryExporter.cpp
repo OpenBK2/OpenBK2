@@ -27,7 +27,7 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 																 	    IManipulator *pManipulator )
 {
 	std::string szSettingsFileName = GetGrannyExportSettingsFileName( szTypeName );
-	if ( szSettingsFileName.empty() ) 
+	if ( szSettingsFileName.empty() )
 	{
 		szSettingsFileName = GetOption( &SUserData::SMayaExportData::szAIGeomSettingsFileName );
 		NStr::ReplaceAllChars( &szSettingsFileName, '\\', '/' );
@@ -49,7 +49,7 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 		szRootMesh.clear();
 	if ( CManipulatorManager::GetValue( &szRootJoint, pManipulator, "RootJoint" ) == false )
 		szRootJoint.clear();
-	if ( szRootMesh == szRootJoint ) 
+	if ( szRootMesh == szRootJoint )
 		szRootJoint.clear();
 
 	*pScriptText = fmt::sprintf( szScriptTemplate.c_str(),
@@ -61,7 +61,7 @@ bool CAIGeometryExporter::FormScript( std::string *pScriptText,
 	return true;
 }
 
-bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObjName, 
+bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObjName,
 																									  const std::string &szSrcScenePath,
 																										const std::string &szDstFileName,
 																										IManipulator *pManipulator )
@@ -81,7 +81,7 @@ bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObj
 		CManipulatorManager::SetVec3( vAABBHalfSize, pManipulator, "AABBHalfSize" );
 		return true;
 	}
-	catch ( ... ) 
+	catch ( ... )
 	{
 		ILogger *pLogger = NLog::GetLogger();
 		pLogger->Log( LT_ERROR, "Error while retrieving AABB from AI geometry\n" );
@@ -92,9 +92,9 @@ bool CAIGeometryExporter::ImportInfoToDBBeforeRefs( const std::string &szGeomObj
 }
 
 EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
-																								const std::string &szObjName, 
+																								const std::string &szObjName,
 																								const std::string &szSrcScenePath,
-																								const std::string &szDestinationPath, 
+																								const std::string &szDestinationPath,
 																								IManipulator *pManipulator )
 {
 	CGrannyFileInfoGuard fileInfo( szDestinationPath );

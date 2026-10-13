@@ -14,7 +14,7 @@
 class UI_EXPORT CBackgroundMutableTexture : public CBackground
 {
 	OBJECT_BASIC_METHODS(CBackgroundMutableTexture);
-	
+
 public:
 	class CTextureData: public CPtrFuncBase<NGfx::CTexture>
 	{
@@ -35,7 +35,7 @@ private:
 	CObj<CTextureData> pData;
 
 public:
-	CBackgroundMutableTexture() 
+	CBackgroundMutableTexture()
 	{
 		pData = new CTextureData;
 	}

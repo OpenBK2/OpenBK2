@@ -48,7 +48,7 @@ bool CInterfaceSingleStatistic::Init()
 
 	if ( !CInterfaceScreenBase::Init() )
 		return false;
-		
+
 	AddScreen( this );
 
 	MakeInterior();
@@ -83,7 +83,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pInfoPanel = GetChildChecked<IWindow>( pMain, "InfoPanel", true );
 	pRewardPanel = GetChildChecked<IWindow>( pMain, "RewardPanel", true );
 	pBottomPanel = GetChildChecked<IWindow>( pMain, "BottomPanel", true );
-	
+
 	pMissionSuccessLabel = GetChildChecked<ITextView>( pInfoPanel, "MissionSuccessLabel", true );
 	pMissionFailedLabel = GetChildChecked<ITextView>( pInfoPanel, "MissionFailedLabel", true );
 	pCareerProgress = GetChildChecked<IProgressBar>( pInfoPanel, "CareerProgress", true );
@@ -97,7 +97,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 		pMissionSuccessLabel->ShowWindow( false );
 	if ( pMissionFailedLabel )
 		pMissionFailedLabel->ShowWindow( false );
-	
+
 	if ( pInfoPanel )
 	{
 		for ( int i = 1; ; ++i )
@@ -105,9 +105,9 @@ void CInterfaceSingleStatistic::MakeInterior()
 			IWindow *pWnd = pInfoPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
 				break;
-				
+
 			pWnd->ShowWindow( false );
-			
+
 			SPlayer player;
 			player.pWnd = pWnd;
 			player.pIconWnd = GetChildChecked<IWindow>( pWnd, "Flag", true );
@@ -119,7 +119,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 			players.push_back( player );
 		}
 	}
-	
+
 	if ( pRewardPanel )
 	{
 		for ( int i = 1; ; ++i )
@@ -127,9 +127,9 @@ void CInterfaceSingleStatistic::MakeInterior()
 			IWindow *pWnd = pRewardPanel->GetChild( fmt::format( "Line{:02d}", i ), true );
 			if ( !pWnd )
 				break;
-				
+
 			pWnd->ShowWindow( false );
-			
+
 			SReinf reinf;
 			reinf.pWnd = pWnd;
 			reinf.pBtn = GetChildChecked<IButton>( pWnd, "BlockBtn", true );
@@ -151,7 +151,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	pMedalIconWnd = GetChildChecked<IWindow>( pNewMedalPanel, "MedalIcon", true );
 	pMedalDescCont = GetChildChecked<IScrollableContainer>( pNewMedalPanel, "MedalDescCont", true );
 	pMedalDescView = GetChildChecked<ITextView>( pNewMedalPanel, "MedalDescView", true );
-	
+
 	pRestartBtn = GetChildChecked<IButton>( pBottomPanel, "RestartMissionBtn", true );
 	pExitToMainMenuBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToMainMenuBtn", true );
 	pExitToChapterBtn = GetChildChecked<IButton>( pBottomPanel, "ExitToChapterBtn", true );
@@ -162,7 +162,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 	wszTime1 = GetScreen()->GetTextEntry( "T_TIME_1" );
 	wszTime2 = GetScreen()->GetTextEntry( "T_TIME_2" );
 	wszTime3 = GetScreen()->GetTextEntry( "T_TIME_3" );
-	
+
 	bool bMissionWon = pST->IsMissionWon();
 	if ( pMissionSuccessLabel )
 		pMissionSuccessLabel->ShowWindow( bMissionWon );
@@ -182,7 +182,7 @@ void CInterfaceSingleStatistic::MakeInterior()
 		pLoadBtn->ShowWindow( !bMissionWon );
 //	if ( pExitToWindowsBtn )
 //		pExitToWindowsBtn->ShowWindow( false );
-		
+
 	pCareerExpNAView = GetChildChecked<ITextView>( pInfoPanel, "CareerExpNAView", true );
 	pMissionExpNAView = GetChildChecked<ITextView>( pInfoPanel, "MissionExpNAView", true );
 	pNewReinfLabel = GetChildChecked<ITextView>( pRewardPanel, "NewReinfLabel", true );
@@ -262,7 +262,7 @@ void CInterfaceSingleStatistic::MakeCampaignStatistics()
 	ExpProgressStep();
 
 	std::wstring wszRankHP = NStr::ToUnicode( fmt::format( "{}/{}",
-		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ), 
+		(int)( expProgressRank.fTarget - expProgressRank.fTargetLevelExp ),
 		(int)( expProgressRank.fTargetNextLevelExp - expProgressRank.fTargetLevelExp ) ) );
 	if ( pExpView )
 		pExpView->SetText( pExpView->GetDBText() + wszRankHP );
@@ -312,15 +312,15 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 		SPlayer &player = players[nIndex];
 		nIndex++;
 		player.bHasStatistics = true;
-		
+
 		const NDb::SPartyDependentInfo *pPartyInfo = pST->GetPlayerParty( i );
 		NI_ASSERT( pPartyInfo, "Designers: empty party info detected" );
 		if ( !pPartyInfo )
 			continue;
-		
+
 		if ( player.pWnd )
 			player.pWnd->ShowWindow( true );
-		
+
 		if ( player.pIconWnd )
 			player.pIconWnd->SetTexture( pPartyInfo->pStatisticsIcon );
 
@@ -328,22 +328,22 @@ void CInterfaceSingleStatistic::MakePlayerStatistics( bool bChapter )
 
 		int nUnitsLost = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_LOST );
 		if ( player.pLostView )
-			player.pLostView->SetText( player.pLostView->GetDBText() + 
+			player.pLostView->SetText( player.pLostView->GetDBText() +
 				NStr::ToUnicode( std::to_string(  nUnitsLost ) ) );
 
 		int nUnitsKilled = pST->GetStatistics( i, IScenarioTracker::ESK_UNITS_KILLED );
 		if ( player.pKilledView )
-			player.pKilledView->SetText( player.pKilledView->GetDBText() + 
+			player.pKilledView->SetText( player.pKilledView->GetDBText() +
 				NStr::ToUnicode( std::to_string(  nUnitsKilled ) ) );
 
 		int nReinfCalled = pST->GetStatistics( i, IScenarioTracker::ESK_REINFORCEMENTS_CALLED );
 		if ( player.pReinfView )
-			player.pReinfView->SetText( player.pReinfView->GetDBText() + 
+			player.pReinfView->SetText( player.pReinfView->GetDBText() +
 				NStr::ToUnicode( std::to_string(  nReinfCalled ) ) );
 	}
 }
 
-void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb::SMapPlayerInfo &dbPlayer, 
+void CInterfaceSingleStatistic::MakePlayerName( const SPlayer &player, const NDb::SMapPlayerInfo &dbPlayer,
 	bool bPlayer, bool bChapter )
 {
 	std::wstring wszPlayerName;
@@ -424,7 +424,7 @@ void CInterfaceSingleStatistic::MakeReinf()
 			bUpgrade = true;
 			break;
 		}
-			
+
 		reinf.pReinf = pReinf;
 		if ( reinf.pWnd )
 			reinf.pWnd->ShowWindow( true );
@@ -469,10 +469,10 @@ bool CInterfaceSingleStatistic::Execute( const std::string &szSender, const std:
 		return OnMedalDialogClose();
 	if ( szReaction == "new_rank_close" )
 		return OnNewRankDialogClose();
-		
+
 	if ( szReaction == "reinf_click" )
 		return OnReinfClick( szSender );
-		
+
 	if ( szReaction == "reinf_upgrade_dialog_close" )
 		return OnChapterReinfClose();
 	if ( szReaction == "reinf_upgrade_unit_btn" )
@@ -516,7 +516,7 @@ void CInterfaceSingleStatistic::OnGetFocus( bool bFocus )
 
 	if ( bFocus )
 	{
-		if ( pBlackBgWnd )	
+		if ( pBlackBgWnd )
 			pBlackBgWnd->ShowWindow( false );
 		if ( pLoadBtn )
 		{
@@ -570,7 +570,7 @@ bool CInterfaceSingleStatistic::OnMenuNextOnEnter()
 	IScenarioTracker *pST = Singleton<IScenarioTracker>();
 	if ( pST->IsMissionWon() )
 		NextMenu();
-	
+
 	return true;
 }
 
@@ -582,7 +582,7 @@ bool CInterfaceSingleStatistic::OnRestartMission()
 	NI_VERIFY( pMapInfo, "Wrong mission info", return true );
 
 	Singleton<IScenarioTracker>()->MissionStart( pMapInfo );
-		
+
 	NMainLoop::Command( ML_COMMAND_PREVIOUS_MENU, "" );
 	const auto command = fmt::format( "{};normal", pMapInfo->GetDBID().ToString() );
 	NMainLoop::Command( ML_COMMAND_MISSION, command.c_str() );
@@ -622,8 +622,8 @@ bool CInterfaceSingleStatistic::OnLoad()
 
 bool CInterfaceSingleStatistic::OnExitToWindows()
 {
-	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX, 
-		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel", 
+	NMainLoop::Command( ML_COMMAND_MESSAGE_BOX,
+		CICMessageBox::MakeConfigString( "MessageBoxWindowOkCancel",
 		InterfaceState()->GetTextEntry( "T_ESCAPE_MENU_EXIT_WINDOWS_QUESTION" ) ).c_str() );
 
 	return true;
@@ -651,7 +651,7 @@ bool CInterfaceSingleStatistic::OnMedalDialogClose()
 		pPopupBgWnd->ShowWindow( true );
 
 	timePrevPopup = Singleton<IGameTimer>()->GetAbsTime();
-	
+
 	CheckNextPopup();
 
 	return true;
@@ -692,14 +692,14 @@ bool CInterfaceSingleStatistic::OnChapterReinfClose()
 		pChapterReinfDescWnd->ShowWindow( false );
 
 	pChapterReinfUpgrade->Hide();
-	
+
 	return true;
 }
 
 bool CInterfaceSingleStatistic::OnChapterReinfUnitBtn( const std::string &szSender )
 {
 	pChapterReinfUpgrade->UnitBtnPressed( szSender );
-	
+
 	return true;
 }
 
@@ -757,7 +757,7 @@ std::wstring CInterfaceSingleStatistic::GetFormattedTime( int nTime ) const
 	{
 		wszTime = NStr::ToUnicode( std::to_string(  nTime % 60 ) ) + wszTime1 + wszTime;
 	}
-	
+
 	return wszTime;
 }
 
@@ -775,7 +775,7 @@ void CInterfaceSingleStatistic::CheckNextPopup()
 			return;
 		if ( pNewMedalDlg && pNewMedalDlg->IsVisible() )
 			return;
-			
+
 		if ( pNewPlayerRank || !medals.empty() )
 		{
 			NTimer::STime timeCur = Singleton<IGameTimer>()->GetAbsTime();
@@ -828,13 +828,13 @@ void CInterfaceSingleStatistic::ShowMedal( const NDb::SMedal *pMedal )
 
 	if ( pMedalIconWnd )
 		pMedalIconWnd->SetTexture( pMedal ? pMedal->pPictureTexture : 0 );
-		
+
 	std::wstring wszName;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedName) )
 		wszName = GET_TEXT_PRE(pMedal->,LocalizedName);
 	if ( pMedalNameView )
 		pMedalNameView->SetText( pMedalNameView->GetDBText() + wszName );
-		
+
 	std::wstring wszDesc;
 	if ( pMedal && CHECK_TEXT_NOT_EMPTY_PRE(pMedal->,LocalizedDesc) )
 		wszDesc = GET_TEXT_PRE(pMedal->,LocalizedDesc);
@@ -854,7 +854,7 @@ void CInterfaceSingleStatistic::ExpProgressStep()
 		if ( pNewCareerProgress )
 			pNewCareerProgress->SetPosition( expProgressCareer.fNewProgress );
 	}
-	
+
 	if ( !expProgressRank.bFinal )
 	{
 		expProgressRank.Step( false );

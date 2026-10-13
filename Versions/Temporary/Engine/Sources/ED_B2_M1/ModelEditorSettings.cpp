@@ -74,6 +74,6 @@ int CModelEditorSettings::operator&( IXmlSaver &xs )
 	return 0;
 }
 
-// basement storage  
+// basement storage
 
 

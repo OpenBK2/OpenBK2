@@ -16,7 +16,7 @@ class CGeneralAirForce : public CCommander
 {
 	friend class CGeneralAirForceLaunchFighters;
 	OBJECT_BASIC_METHODS(CGeneralAirForce);
-	
+
 	struct SSameEnemyPointPredicate
 	{
 		bool operator()( const CVec2 &v1, const CVec2 &v2 ) {	return fabs2(v1-v2) < sqr(SConsts::PLANE_GUARD_STATE_RADIUS/2); }

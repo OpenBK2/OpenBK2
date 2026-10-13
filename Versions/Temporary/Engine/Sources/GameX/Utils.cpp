@@ -11,7 +11,7 @@ CVec3 CorrectPosByCameraAndHeight( const CVec3 &vCenter )
 	CVec3 vLook = vOldAnchor - Camera()->GetPos();
 	Vis2AI( &vOldAnchor );
 	Vis2AI( &vLook );
-	if ( vLook.z != 0.0f ) 
+	if ( vLook.z != 0.0f )
 	{
 		float fCoeff = vLook.x / vLook.z;
 		vVisPos.x += ( vOldAnchor.z - vCenter.z ) * fCoeff;

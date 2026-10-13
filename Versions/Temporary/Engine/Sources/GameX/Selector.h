@@ -16,7 +16,7 @@ enum ESelectionState
 	ssBuilding,
 };
 
-struct SSelectionGroup 
+struct SSelectionGroup
 {
 private:
 	CMapObjectsList objList;
@@ -105,8 +105,8 @@ private:
 private:
 	struct SObjectsSort
 	{
-		bool operator()( const CMapObj *pMapObject1, const CMapObj *pMapObject2 ) const 
-		{ 
+		bool operator()( const CMapObj *pMapObject1, const CMapObj *pMapObject2 ) const
+		{
 			CUserActions actions1, actions2;
 			pMapObject1->GetPossibleActions( &actions1 );
 			pMapObject2->GetPossibleActions( &actions2 );
@@ -141,7 +141,7 @@ private:
 	struct SSameSlotCompare
 	{
 		CPtr<CMOSelectable> pSO;
-		
+
 		SSameSlotCompare( CMOSelectable *_pSO ) { pSO = _pSO; }
 		bool operator()( const SSlot &slot ) const
 		{
@@ -151,8 +151,8 @@ private:
 
 	struct SSlotsSort
 	{
-		bool operator()( const SSlot &slot1, const SSlot &slot2 ) const 
-		{ 
+		bool operator()( const SSlot &slot1, const SSlot &slot2 ) const
+		{
 			CUserActions actions1, actions2;
 			GetActions( &actions1, slot1.objects, ACTIONS_BY );
 			GetActions( &actions2, slot2.objects, ACTIONS_BY );
@@ -174,7 +174,7 @@ private:
 				return actions1 > actions2;
 		}
 	};
-	
+
 	//
 	CMapObjectsVector				objList;
 	CMapObjectsList					newObjList;
@@ -210,7 +210,7 @@ private:
 	bool CanAddObject( CMOSelectable *pSO ) const;
 	int CalcAbilityGroups();
 	void UpdateAbilityIcons( const std::vector< CPtr<CMOSelectable> > &objects ) const;
-	
+
 	// уведомим об изменениях самой селекции
 	void SendUpdateSelection();
 	// уведомим об изменениях внутри селекции
@@ -222,7 +222,7 @@ private:
 	bool SelectPrivate( CMapObj *pMO, bool bSelect, bool bDeath );
 
 	void GetActionsPrivate( CUserActions *pActions, bool bEnabledOnly );
-	
+
 	void AddObjectToGroup( CMOSelectable *pMO, int nGroup );
 	void RemoveObjectFromGroup( CMOSelectable *pMO, int nGroup );
 	int FindObjectGroup( CMOSelectable *pMO ) const;
@@ -241,7 +241,7 @@ public:
 	void GetSelectionMembers( std::vector<CMOSelectable*> *pBuffer ) const;
 	//
 	bool CanSelect( const CMapObj *pMO ) const { return (pMO && pMO->CanSelect()); }
-  
+
 	bool Select( CMapObj *pMO, bool bSelect );
 	bool DeSelectDead( CMapObj *pMO );
 
@@ -258,7 +258,7 @@ public:
 	// update selection by internal events
 	void UpdateSelection( const bool bPreserveGroup, bool bKeepNumbers );
 	bool IsEmpty() const { return objList.empty(); }
-	
+
 	void SetPreselection( CMapObj *pMO );
 
 	void AssignSelectionToGroup( int nIndex );
@@ -274,7 +274,7 @@ public:
 
 	bool DoGroupCommand( class CCommandsSender *pCommandsSender, const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );
 	bool DoGroupCommandAutocast( class CCommandsSender *pCommandsSender, const struct SAIUnitCmd *pCommand, bool bPlaceInQueue );
-	
+
 	void SetShowAreas( EActionNotify eType, bool bOn );
 	void GetAreas( SShootAreas *pAreas );
 
@@ -303,15 +303,15 @@ public:
 	void DoUpdateStats( CMapObj *pMO );
 
 	ESelectionState GetSelectionState() const { return eSelectionState; }
-	
+
 	const CMOSelectable* GetFirstSlotUnit( int nSlot ) const;
-	
-	// убирает недопустимые действия для использования на указанном объекте 
+
+	// убирает недопустимые действия для использования на указанном объекте
 	// (проверка на сухопутные, воздушные, морские юниты)
 	void FilterActions( CUserActions *pActionsBy, CMapObj *pMO ) const;
 
 	void AfterLoad();
-	
+
 	int operator&( IBinSaver &saver );
 };
 

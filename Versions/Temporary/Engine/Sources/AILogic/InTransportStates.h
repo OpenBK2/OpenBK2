@@ -8,7 +8,7 @@ class CSoldier;
 class CInTransportStatesFactory : public IStatesFactory
 {
 	OBJECT_BASIC_METHODS( CInTransportStatesFactory );
-	
+
 	static CPtr<CInTransportStatesFactory> pFactory;
 public:
 	static IStatesFactory* Instance();
@@ -30,7 +30,7 @@ class CSoldierRestOnBoardState : public IUnitState
 	OBJECT_BASIC_METHODS( CSoldierRestOnBoardState );
 	ZDATA
 	CPtr<CSoldier> pSoldier;
-public: 
+public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(2,&pSoldier); return 0; }
 public:
 	static IUnitState* Instance( class CSoldier *pSoldier, class CMilitaryCar* pTransport );

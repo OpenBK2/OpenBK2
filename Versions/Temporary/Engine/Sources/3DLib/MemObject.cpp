@@ -12,7 +12,7 @@ struct SMemBuilderVertex
 {
 	CVec3 point;
 	CVec3 normal;
-	bool operator==( const SMemBuilderVertex &a ) const 
+	bool operator==( const SMemBuilderVertex &a ) const
 	{
 		return point == a.point && fabs2( normal - a.normal ) < 1e-6;
 	}
@@ -21,7 +21,7 @@ struct SMemBuilderVertex
 struct SMemBuilderVertexHash
 {
 	int operator()( const SMemBuilderVertex &v ) const
-	{ 
+	{
 		float f = v.point.x + v.point.y * 123 + v.point.z * 15352331;
 		return *(int*)&f;
 	}
@@ -159,7 +159,7 @@ struct SMOTessPoint
 	int nIndex;
 	float fNormal;
 	CVec2 vPoint;
-	
+
 	SMOTessPoint( float _fNormal, const CVec2 &_vPoint, int _nIndex ): fNormal(_fNormal), vPoint(_vPoint), nIndex(_nIndex) {}
 };
 typedef CVec2 TTriangle[3];
@@ -168,7 +168,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 {
 	if ( points.size() < 3 )
 		return;
-	
+
 	std::vector<CVec3> vert;
 	vert.resize( points.size() );
 
@@ -190,7 +190,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 	bool bTryAgain = true;
 	float fRange = -FP_EPSILON;
 	std::vector<STriangle> tris;
-	while( poly.size() > 2 )	
+	while( poly.size() > 2 )
 	{
 		bool bRemoved = false;
 		std::list<SMOTessPoint>::iterator iPrev, iPrev2;
@@ -203,7 +203,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 			const SMOTessPoint &prev = *iPrev2;
 			const SMOTessPoint &temp = *iPrev;
 			const SMOTessPoint &next = *i;
-			
+
 			if ( temp.fNormal > fRange )
 				continue;
 
@@ -224,7 +224,7 @@ void CMemObject::CreatePolygone( const std::vector<CVec2> &points, float fZ )
 				}
 				if ( bGoOut )
 					continue;
-				
+
 				bHasInside = IsPointInPolygon( vTri, vTest );
 				if ( bHasInside )
 					break;
@@ -391,7 +391,7 @@ void CMemObject::Create( const std::vector<CVec3> &points, const std::vector<STr
 		//CVec3 normal(0,0,1);
 		CVec3 normal = ( points[t.i2] - points[t.i1] ) ^ ( points[t.i3] - points[t.i1] );
 		Normalize( &normal );
-		resTris.push_back( STriangle( 
+		resTris.push_back( STriangle(
 			b.GetPointIndex(points[t.i1], normal ),
 			b.GetPointIndex(points[t.i2], normal ),
 			b.GetPointIndex(points[t.i3], normal )

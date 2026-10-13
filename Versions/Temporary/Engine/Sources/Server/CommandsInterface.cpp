@@ -16,7 +16,7 @@ const int SCommand::GetInt( const int nIndex ) const
 
 
 bool CCommandsBase::GetCommand( SCommand *pCmd )
-{ 
+{
 	if ( cmds.empty() )
 		return false;
 
@@ -26,7 +26,7 @@ bool CCommandsBase::GetCommand( SCommand *pCmd )
 }
 
 void CCommandsBase::PushCommand( const SCommand &cmd )
-{ 
+{
 	cmds.push_back( cmd );
 }
 

@@ -9,7 +9,7 @@
 
 #include <fmt/format.h>
 
-namespace NStr 
+namespace NStr
 {
 
 // разделить строку на массив строк по заданному разделителю
@@ -296,7 +296,7 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 	uint8_t *pData = (uint8_t*)pBuffer;
 	for ( const char *it = pszData; *it != 0; it += 2 )
 		*pData++ = ( HexSymbolToHalfByte( *it ) << 4 ) | HexSymbolToHalfByte( *(it +1) );
-	if ( pnSize ) 
+	if ( pnSize )
 		*pnSize = int( pData - (uint8_t*)pBuffer );
 	return pBuffer;
 }

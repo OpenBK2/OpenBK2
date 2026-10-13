@@ -43,13 +43,13 @@ class CVisObjBuilder : public CBuildDataBuilder, public ICommandHandler
 											 NDb::ESeason eSeason );
 	bool CreateVisObj( const std::string &rszVisObjFolder );
 	//
-	bool RemoveMaterial( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveTexture( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveAIGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveSkeleton( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveAnimation( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
-	bool RemoveModel( const std::string &rszObjectTypeName, const std::string &rszObjectName );	
+	bool RemoveMaterial( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveTexture( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveAIGeometry( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveSkeleton( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveAnimation( const std::string &rszObjectTypeName, const std::string &rszObjectName );
+	bool RemoveModel( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	//
 	CVisObjBuilder();
 	~CVisObjBuilder();

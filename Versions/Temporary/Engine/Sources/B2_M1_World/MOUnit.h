@@ -31,7 +31,7 @@ class CMOUnit : public IMOUnit
 			return pWeapon == ammo.pWeapon;
 		}
 	};
-	
+
 	CAbilityInfo abilityMap;
 	std::vector<SShootAreas> oldAreas;
 	int nOldAreasTime = 0;
@@ -67,7 +67,7 @@ protected:
 	};
 
 	virtual void InitAttached( const NDb::ESeason eSeason, IChooseAttached *pChooseFunc ) = 0;
-	void TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc, 
+	void TryToAttach( const NDb::SAttachedModelVisObj *pAttachedObj, IChooseAttached *pChooseFunc,
 										const NDb::ESeason eSeason, const std::string &szLocator, const ESceneSubObjType eType, const int nNumber );
 
 	virtual void ChangeModelToDamaged( const int nDamaged, const NDb::SModel *pNewModel, const NDb::ESeason eSeason );
@@ -97,7 +97,7 @@ public:
 	virtual struct IMOSquad* GetSquad() const {	return 0; }
 	//
 	virtual bool NeedShowInterrior() const;
-	
+
 	virtual void SendAcknowledgement( struct IClientAckManager *pAckManager, const NDb::EUnitAckType eAck );
 	void AIUpdateAcknowledgement( const NDb::EUnitAckType eAck, struct IClientAckManager *pAckManager, const int nSet );
 	void AIUpdateBoredAcknowledgement( const struct SAIBoredAcknowledgement &ack, struct IClientAckManager *pAckManager );
@@ -106,7 +106,7 @@ public:
 	void AIUpdateShootAreas( const SAIShootAreaUpdate *pUpdate );
 
 	bool IsSelected() const
-	{ 
+	{
 		return (GetSquad()) ? (GetSquad()->IsSelected()) : (CMOSelectable::IsSelected());
 	}
 	void GetActions( CUserActions *pActions, EActionsType eActions ) const;

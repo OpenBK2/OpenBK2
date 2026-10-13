@@ -38,17 +38,17 @@ int FindBySeason( const std::string &szDesiredSeason, const std::string &szName,
 {
 	int nAmount = 0;
 	CManipulatorManager::GetValue( &nAmount, pOptsMan, szName );
-	if ( nAmount == 0 ) 
+	if ( nAmount == 0 )
 		return -1;
 	//
-	if ( szDesiredSeason == "SEASON_ANY" ) 
+	if ( szDesiredSeason == "SEASON_ANY" )
 		return 0;
 	//
-	for ( int i = 0; i < nAmount; ++i ) 
+	for ( int i = 0; i < nAmount; ++i )
 	{
 		std::string szSeason;
 		if ( CManipulatorManager::GetValue( &szSeason, pOptsMan, fmt::format("{}.[{}].Season", szName.c_str(), i) ) &&
-			   szDesiredSeason == szSeason ) 
+			   szDesiredSeason == szSeason )
 		{
 			return i;
 		}
@@ -59,23 +59,23 @@ int FindBySeason( const std::string &szDesiredSeason, const std::string &szName,
 std::pair<int, int> FindBySeasonAndTime( const std::string &szDesiredSeason, const std::string &szDesiredTime, const std::string &szName, IManipulator *pOptsMan )
 {
 	const int nSeason = FindBySeason( szDesiredSeason, szName, pOptsMan );
-	if ( nSeason == -1 ) 
+	if ( nSeason == -1 )
 		return std::pair<int, int>( -1, -1 );
 	const std::string szAddName = fmt::format( "{}.[{}].DayTimes", szName.c_str(), nSeason );
 		//
 	int nAmount = 0;
 	CManipulatorManager::GetValue( &nAmount, pOptsMan, szAddName );
-	if ( nAmount == 0 ) 
+	if ( nAmount == 0 )
 		return std::pair<int, int>( nSeason, -1 );
 	//
-	if ( szDesiredTime == "DAY_ANY" ) 
+	if ( szDesiredTime == "DAY_ANY" )
 		return std::pair<int, int>( nSeason, 0 );
 	//
-	for ( int i = 0; i < nAmount; ++i ) 
+	for ( int i = 0; i < nAmount; ++i )
 	{
 		std::string szDayTime;
 		if ( CManipulatorManager::GetValue( &szDayTime, pOptsMan, fmt::format("{}.[{}].DayTime", szAddName.c_str(), i) ) &&
-			szDesiredTime == szDayTime ) 
+			szDesiredTime == szDayTime )
 		{
 			return std::pair<int, int>( nSeason, i );
 		}
@@ -84,11 +84,11 @@ std::pair<int, int> FindBySeasonAndTime( const std::string &szDesiredSeason, con
 }
 
 template <class TYPE>
-bool GetFromOptionsForSeason( TYPE *pRes, const std::string &szPreName, const std::string &szPostName, 
+bool GetFromOptionsForSeason( TYPE *pRes, const std::string &szPreName, const std::string &szPostName,
 															const std::string &szDesiredSeason, IManipulator *pOptsMan )
 {
 	const int nIndex = FindBySeason( szDesiredSeason, szPreName, pOptsMan );
-	if ( nIndex == -1 ) 
+	if ( nIndex == -1 )
 		return false;
 	if ( CManipulatorManager::GetValue( pRes, pOptsMan, fmt::format("{}.[{}].{}", szPreName.c_str(), nIndex, szPostName.c_str()) ) )
 		return true;
@@ -96,12 +96,12 @@ bool GetFromOptionsForSeason( TYPE *pRes, const std::string &szPreName, const st
 }
 
 template <class TYPE>
-bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const std::string &szPreName, const std::string &szPostName, 
-														         const std::string &szDesiredSeason, const std::string &szDesiredTime, 
+bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const std::string &szPreName, const std::string &szPostName,
+														         const std::string &szDesiredSeason, const std::string &szDesiredTime,
 																		 IManipulator *pOptsMan )
 {
 	const std::pair<int, int> seasonTime = FindBySeasonAndTime( szDesiredSeason, szDesiredTime, szPreName, pOptsMan );
-	if ( seasonTime.first == -1 || seasonTime.second == -1 ) 
+	if ( seasonTime.first == -1 || seasonTime.second == -1 )
 		return false;
 	if ( CManipulatorManager::GetValue( pRes, pOptsMan, fmt::format("{}.[{}].DayTimes.[{}].{}", szPreName.c_str(), seasonTime.first, seasonTime.second, szPostName.c_str()) ) )
 		return true;
@@ -111,7 +111,7 @@ bool GetFromOptionsForSeasonAndTime( TYPE *pRes, const std::string &szPreName, c
 template <class TYPE>
 bool GetFromOptions( TYPE *pRes, const std::string &szPreName, const std::string &szPostName, const std::string &szDesiredSeason )
 {
-	if ( CPtr<IManipulator> pOptsMan = CreateOptionsManipulator() ) 
+	if ( CPtr<IManipulator> pOptsMan = CreateOptionsManipulator() )
 	{
 		if ( GetFromOptionsForSeason( pRes, szPreName, szPostName, szDesiredSeason, pOptsMan ) == true )
 			return true;
@@ -123,10 +123,10 @@ bool GetFromOptions( TYPE *pRes, const std::string &szPreName, const std::string
 }
 
 template <class TYPE>
-bool GetFromOptions( TYPE *pRes, const std::string &szPreName, const std::string &szPostName, 
+bool GetFromOptions( TYPE *pRes, const std::string &szPreName, const std::string &szPostName,
 										 const std::string &szDesiredSeason, const std::string &szDesiredTime )
 {
-	if ( CPtr<IManipulator> pOptsMan = CreateOptionsManipulator() ) 
+	if ( CPtr<IManipulator> pOptsMan = CreateOptionsManipulator() )
 	{
 		if ( GetFromOptionsForSeasonAndTime( pRes, szPreName, szPostName, szDesiredSeason, szDesiredTime, pOptsMan ) == true )
 			return true;
@@ -137,7 +137,7 @@ bool GetFromOptions( TYPE *pRes, const std::string &szPreName, const std::string
 	return false;
 }
 
-std::string GetStringFromOptions( const std::string &szPreName, const std::string &szPostName, 
+std::string GetStringFromOptions( const std::string &szPreName, const std::string &szPostName,
 														 const std::string &szDesiredSeason, const std::string &szDesiredDayTime )
 {
 	std::string szValue;

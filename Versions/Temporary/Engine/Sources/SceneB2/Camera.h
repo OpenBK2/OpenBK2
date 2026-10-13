@@ -43,7 +43,7 @@ namespace NCamera
 
 		bool bCyclic = {};
 
-		SCameraLimits() 
+		SCameraLimits()
 			: fMin( 0.0f ), fMax( 0.0f ), fAve( 0.0f ), fAutoSpeed( 0.0f ), fManualSpeed( 0.0f ), bCyclic( false )
 		{
 		}
@@ -92,7 +92,7 @@ namespace NCamera
 		const CVec3 GetDirection() const
 		{
 			return CVec3( sin(ToRadian(this->fYaw))*cos(ToRadian(this->fPitch)),
-										-cos(ToRadian(this->fYaw))*cos(ToRadian(this->fPitch)), 
+										-cos(ToRadian(this->fYaw))*cos(ToRadian(this->fPitch)),
 										sin(ToRadian(this->fPitch)) );
 		}
 		const float GetDistance() const
@@ -118,7 +118,7 @@ namespace NCamera
 struct ICamera : public CObjectBase
 {
 	enum { tidTypeID = 0x3014EC01 };
-	
+
 	virtual void Update() = 0;
 	//
 	virtual void SetLimits( const NCamera::ELimitsType eLimitsType, const NCamera::SCameraLimits &limits ) = 0;
@@ -137,7 +137,7 @@ struct ICamera : public CObjectBase
 	//
 	virtual void SetHandleType( bool bMayaHandleType ) = 0;
 	virtual bool GetHandleType() = 0;
-	// 
+	//
 	virtual void SetPlacement( const float fDist, const float fPitch, const float fYaw ) = 0;
 	virtual void SetDistance( const float fDist ) = 0;
 	virtual float GetDistance() const = 0;
@@ -166,12 +166,12 @@ struct ICamera : public CObjectBase
 	virtual void SetOrthographicTransform( float fWidth, float fHeight, float fNear, float fFar ) = 0;
 	virtual void GetCameraParams( float *pfNear, float *pfFar, float *pfFOV ) const = 0;
 	virtual void SwitchAutoPositioning( const bool bAllowAutoPositioning ) = 0;
-	// we need a named locker, for example finishing a script can't to permit a moving, 
+	// we need a named locker, for example finishing a script can't to permit a moving,
 	// locked by a mouse selector and vice versa
 	virtual void SwitchManualScrolling( const std::string &szLocker, const bool bManualOn ) = 0;
 
 	// for listener positioning
-	virtual const CVec3 GetListener() const { return GetPos(); } 
+	virtual const CVec3 GetListener() const { return GetPos(); }
 	// border scrolling
 	virtual void ResetScrolling() = 0;
 	virtual void SetScrollSpeedX( const float _fSpeed ) = 0;

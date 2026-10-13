@@ -20,7 +20,7 @@ void CMSRNode::Recalc()
 
 int CMSRNode::operator&( CStructureSaver &f )
 {
-	f.Add( 1, &pAncestor ); 
+	f.Add( 1, &pAncestor );
 	f.Add( 2, &pPos );
 	return 0;
 }
@@ -48,8 +48,8 @@ void CScaleNode::Recalc()
 
 int CScaleNode::operator&( CStructureSaver &f )
 {
-	f.Add( 1, &vScreenRect ); 
-	f.Add( 2, &pSize ); 
+	f.Add( 1, &vScreenRect );
+	f.Add( 2, &pSize );
 	return 0;
 }
 
@@ -71,7 +71,7 @@ void CMSRConvert::Recalc()
 
 int CMSRConvert::operator&( CStructureSaver &f )
 {
-	f.Add( 1, &pMove ); 
+	f.Add( 1, &pMove );
 	f.Add( 2, &pRotate );
 	f.Add( 3, &pScale );
 	return 0;
@@ -88,7 +88,7 @@ void CVec3Convert::Recalc()
 
 int CVec3Convert::operator&( CStructureSaver &f )
 {
-	f.Add( 1, &pX ); 
+	f.Add( 1, &pX );
 	f.Add( 2, &pY );
 	f.Add( 3, &pZ );
 	return 0;

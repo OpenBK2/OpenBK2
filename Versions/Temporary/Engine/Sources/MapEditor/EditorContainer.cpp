@@ -54,7 +54,7 @@ void CEditorContainer::AddExtendObjectType( const std::string &rszBaseObjectType
 
 void CEditorContainer::Destroy( const std::string &rszObjectTypeName, bool bDestroyChildFrame )
 {
-	//	
+	//
 	if ( szActiveTypeName == rszObjectTypeName )
 	{
 		DestroyActiveEditor( std::string(), std::string(), bDestroyChildFrame );
@@ -201,7 +201,7 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 	//
 	if ( !CanCreate( rObjectSet.szObjectTypeName ) )
 	{
-		NProgress::Destroy();	
+		NProgress::Destroy();
 		return 0;
 	}
 	// Создаем заранее новый редактор чтобы опросить тип ChildFrame
@@ -231,10 +231,10 @@ IEditor* CEditorContainer::Create( IManipulator* _pManipulator, const SObjectSet
 		{
 			NProgress::SetPosition( 2 );
 		}
-		NProgress::Destroy();	
+		NProgress::Destroy();
 		return posEditor->second;
 	}
-	NProgress::Destroy();	
+	NProgress::Destroy();
 	return 0;
 }
 
@@ -248,7 +248,7 @@ void CEditorContainer::DestroyActiveEditor( bool bDestroyChildFrame )
 	NProgress::SetPosition( 0 );
 	Destroy( szActiveTypeName, bDestroyChildFrame );
 	NProgress::SetPosition( 1 );
-	NProgress::Destroy();	
+	NProgress::Destroy();
 }
 
 
@@ -306,7 +306,7 @@ void CEditorContainer::ReloadActiveEditor( bool bClearResources )
 		}
 	}
 	NProgress::SetPosition( 1 );
-	NProgress::Destroy();	
+	NProgress::Destroy();
 }
 
 
@@ -423,6 +423,6 @@ bool CEditorContainer::IsModified()
 	return false;
 }
 
-// basement storage  
+// basement storage
 
 

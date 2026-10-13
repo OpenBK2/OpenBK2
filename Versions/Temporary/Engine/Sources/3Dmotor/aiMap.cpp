@@ -56,7 +56,7 @@ class CUserHullsTracker : public CObjectBase
 	ZEND int operator&( CStructureSaver &f ) { f.Add(2,&data); return 0; }
 public:
 	void AddHull( CObjectBase *pUser, CConvexHull *pHull ) { data[pUser].push_back( pHull ); }
-	void RemoveHull( CObjectBase *pUser, CConvexHull *pHull ) 
+	void RemoveHull( CObjectBase *pUser, CConvexHull *pHull )
 	{
 		SUserHash::iterator i = data.find( pUser );
 		ASSERT( i != data.end() );
@@ -93,7 +93,7 @@ public:
 	//
 	CConvexHull() {}
 	CConvexHull( CUserHullsTracker *_pUserHulls, CPtrFuncBase<CGeometryInfo> *_pGeometry, const SHMatrix &_pos,
-		const NDb::CResource *_pArmor, CObjectBase *_pSrc, int _nMask, int _nFloor ) 
+		const NDb::CResource *_pArmor, CObjectBase *_pSrc, int _nMask, int _nFloor )
 		: pGeometry(_pGeometry), pos(_pos), src( _pSrc, _pArmor, _nFloor, _nMask ), pUserHulls(_pUserHulls)
 	{
 		if ( IsValid( pUserHulls ) )
@@ -113,7 +113,7 @@ class CStaticConvexHull: public CConvexHull
 public:
 	CStaticConvexHull() {}
 	CStaticConvexHull( CUserHullsTracker *_pUserHulls, CPtrFuncBase<CGeometryInfo> *_pGeometry, const SHMatrix &_pos,
-		const NDb::CResource *_pArmor, CObjectBase *_pSrc, int _nMask, int _nFloor ) 
+		const NDb::CResource *_pArmor, CObjectBase *_pSrc, int _nMask, int _nFloor )
 		: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor )
 	{
 	}
@@ -133,7 +133,7 @@ public:
 	CDynamicConvexHull() {}
 	CDynamicConvexHull( CUserHullsTracker *_pUserHulls, CPtrFuncBase<CGeometryInfo> *_pGeometry, const SHMatrix &_pos,
 		const NDb::CResource *_pArmor, CObjectBase *_pSrc, int _nMask, int _nFloor,
-		CFuncBase<SBound> *_pBound, CFuncBase<NAnimation::SGrannySkeletonPose> *_pAnimation ) 
+		CFuncBase<SBound> *_pBound, CFuncBase<NAnimation::SGrannySkeletonPose> *_pAnimation )
 		: CConvexHull( _pUserHulls, _pGeometry, _pos, _pArmor, _pSrc, _nMask, _nFloor ),
 		pBound( _pBound), pAnimationTracker(_pAnimation)
 	{
@@ -273,18 +273,18 @@ struct SFloorsSelector
 {
 	std::vector<char> take;
 
-	bool IsTaken( int _nFloor ) const 
-	{ 
+	bool IsTaken( int _nFloor ) const
+	{
 		unsigned int n = _nFloor - N_MIN_FLOOR;
-		if ( n >= take.size() ) 
+		if ( n >= take.size() )
 			return true;
-		return take[n] != 0; 
+		return take[n] != 0;
 	}
 };
 
 
 //! node size
-const int N_MINIMAL_OCTREE_NODE = 4; 
+const int N_MINIMAL_OCTREE_NODE = 4;
 class CVolumeNode : public COcTreeNode<CVolumeNode, N_MINIMAL_OCTREE_NODE, true>
 {
 	OBJECT_BASIC_METHODS( CVolumeNode );
@@ -312,7 +312,7 @@ public:
 		bool bInformOnDoorFlip;
 		ZEND int operator&( CStructureSaver &f ) { f.Add(2,&pTracker); f.Add(3,&bound); f.Add(4,&nMask); f.Add(5,&bInformOnDoorFlip); return 0; }
 		STrackerDescr() {}
-		STrackerDescr( IAIMapTracker *_p, const SBound &_b, int _nMask, bool _bInform ): 
+		STrackerDescr( IAIMapTracker *_p, const SBound &_b, int _nMask, bool _bInform ):
 			pTracker(_p), bound(_b), nMask(_nMask), bInformOnDoorFlip( _bInform ) {}
 	};
 	struct SElementInfo
@@ -371,20 +371,20 @@ class CAIMap: public IAIMap
 	bool InitFloorsSelector( SFloorsSelector *pRes, const CFloorsSet &fs );
 	void CallInform( CConvexHull *pHull, const SBound &b, bool bDoorFlipped = false );
 	//
-	// adding new hull 
-	CObjectBase *AddHull( const NDb::SAIGeometry *pAIGeom, 
-		const SHMatrix &pos, 
+	// adding new hull
+	CObjectBase *AddHull( const NDb::SAIGeometry *pAIGeom,
+		const SHMatrix &pos,
 		const NDb::CResource *pArmor, int nFloor, int nMask );
-	CObjectBase *AddHull( CMemObject *pAIGeom, 
-		const SHMatrix &pos, 
+	CObjectBase *AddHull( CMemObject *pAIGeom,
+		const SHMatrix &pos,
 		const NDb::CResource *pArmor, int nFloor, int nMask );
-	CObjectBase *AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAnimation::SGrannySkeletonHandle &skeletonH, 
-		CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, 
+	CObjectBase *AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAnimation::SGrannySkeletonHandle &skeletonH,
+		CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation,
 		const NDb::CResource *pArmor, int nFloor, int nMask );
 	void AssignUserID( CObjectBase *p, int _nUserID );
 	//
 	template<class TTest>
-		void SelectHulls( SHullSet *pRes, const TTest &f, CVolumeNode *pNode, const SFloorsSelector &fSelect, 
+		void SelectHulls( SHullSet *pRes, const TTest &f, CVolumeNode *pNode, const SFloorsSelector &fSelect,
 			int nMask, bool bSelect2DoorHulls = false )
 		{
 			if ( pNode == 0 )
@@ -466,10 +466,10 @@ bool CConvexHull::SetNode( CVolumeNode *_p, const SBound &_bound )
 	return true;
 }
 
-const SBound& CConvexHull::GetLinkedBound() 
-{ 
-	ASSERT( pNode ); 
-	return pNode->hullBounds[nIndexInNode]; 
+const SBound& CConvexHull::GetLinkedBound()
+{
+	ASSERT( pNode );
+	return pNode->hullBounds[nIndexInNode];
 }
 
 void CConvexHull::SetLinkedBound( const SBound &b )
@@ -592,9 +592,9 @@ void CVolumeNode::AddInform( const SBound &b, int nMask, bool bTraverseUp )
 		if ( ( nMask & nInformMask ) == nMask )
 		{
 			CVec3 vDif = bInform.s.ptCenter - b.s.ptCenter;
-			if ( 
-				fabs( vDif.x ) <= bInform.ptHalfBox.x - b.ptHalfBox.x && 
-				fabs( vDif.y ) <= bInform.ptHalfBox.y - b.ptHalfBox.y && 
+			if (
+				fabs( vDif.x ) <= bInform.ptHalfBox.x - b.ptHalfBox.x &&
+				fabs( vDif.y ) <= bInform.ptHalfBox.y - b.ptHalfBox.y &&
 				fabs( vDif.z ) <= bInform.ptHalfBox.z - b.ptHalfBox.z )
 				return;
 		}
@@ -623,7 +623,7 @@ void CVolumeNode::CallCachedInforms()
 {
 	if ( nInformMask == 0 )
 		return;
-	
+
 	for ( std::vector<STrackerDescr>::iterator i = trackers.begin(); i != trackers.end(); )
 	{
 		if ( (nInformMask & i->nMask) != 0 )
@@ -679,7 +679,7 @@ void CVolumeNode::InformTrackers( const SBound &b, int nMask, bool bDoorFlipped 
 	}
 
 	for ( int k = 0; k < 8; ++k )
-		if ( GetNode(k) ) 
+		if ( GetNode(k) )
 			GetNode(k)->InformTrackers( b, nMask, bDoorFlipped );
 }
 
@@ -756,8 +756,8 @@ bool CAIMap::InitFloorsSelector( SFloorsSelector *pRes, const CFloorsSet &fs )
 	return true;
 }
 
-CObjectBase *CAIMap::AddHull( const NDb::SAIGeometry *pAIGeom, 
-	const SHMatrix &pos, 
+CObjectBase *CAIMap::AddHull( const NDb::SAIGeometry *pAIGeom,
+	const SHMatrix &pos,
 	const NDb::CResource *pArmor, int nFloor, int nMask )
 {
 	if ( !pAIGeom )
@@ -765,7 +765,7 @@ CObjectBase *CAIMap::AddHull( const NDb::SAIGeometry *pAIGeom,
 	if ( !DoesAIGeometryExist(pAIGeom) )
 		return 0;
 	RegisterFloor( nFloor );
-	CConvexHull *pRes = new CStaticConvexHull( pUserHullsTracker, shareAIModel.Get( pAIGeom ), pos, pArmor, 
+	CConvexHull *pRes = new CStaticConvexHull( pUserHullsTracker, shareAIModel.Get( pAIGeom ), pos, pArmor,
 		GetCurrentSrcObject(), nMask, nFloor );
 	InsertHull( pRes );
 	Register( pRes );
@@ -780,8 +780,8 @@ void CAIMap::AssignUserID( CObjectBase *_p, int _nUserID )
 		p->AssignUserID( _nUserID );
 }
 
-CObjectBase *CAIMap::AddHull( CMemObject *pModel, 
-	const SHMatrix &pos, 
+CObjectBase *CAIMap::AddHull( CMemObject *pModel,
+	const SHMatrix &pos,
 	const NDb::CResource *pArmor, int nFloor, int nMask )
 {
 	if ( pModel->IsPolyLine() )
@@ -795,8 +795,8 @@ CObjectBase *CAIMap::AddHull( CMemObject *pModel,
 	return pRes;
 }
 
-CObjectBase *CAIMap::AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAnimation::SGrannySkeletonHandle &skeletonH, 
-	CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation, 
+CObjectBase *CAIMap::AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAnimation::SGrannySkeletonHandle &skeletonH,
+	CFuncBase<NAnimation::SGrannySkeletonPose> *pAnimation,
 	const NDb::CResource *pArmor, int nFloor, int nMask )
 {
 	if ( !pAIGeom )
@@ -805,14 +805,14 @@ CObjectBase *CAIMap::AddAnimatedHull( const NDb::SAIGeometry *pAIGeom, const NAn
 		return 0;
 	ASSERT( IsValid( pAnimation ) );
 	NGScene::CBind *pBind = new NGScene::CBind( pAnimation, skeletonH );
-	CSkinner *pSkin = new CSkinner( 
+	CSkinner *pSkin = new CSkinner(
 		GetSkinPoints( pAIGeom, skeletonH ),
 		pBind );
-	
+
 	SHMatrix id;
 	Identity( &id );
-	CDynamicConvexHull *pRes = new CDynamicConvexHull( pUserHullsTracker, pSkin, id, pArmor, 
-		GetCurrentSrcObject(), nMask, nFloor, 
+	CDynamicConvexHull *pRes = new CDynamicConvexHull( pUserHullsTracker, pSkin, id, pArmor,
+		GetCurrentSrcObject(), nMask, nFloor,
 		new NGScene::CMeshBound( pBind ), pAnimation );
 
 	dynamicHulls.push_back( pRes );
@@ -886,7 +886,7 @@ void CAIMap::AddTracker( IAIMapTracker *pTracker, const SBound &b, int nMask, bo
 			bool bBoxIsInside = ( fDiff <= sph.fRadius );
 			fDiff = fabs( sph.ptCenter - (b.s.ptCenter + b.ptHalfBox) );
 			bBoxIsInside &= ( fDiff <= sph.fRadius );
-			ASSERT( bSphereIsInside || bBoxIsInside );	
+			ASSERT( bSphereIsInside || bBoxIsInside );
 			pPrt = pPrt->GetUpLink();
 		}
 	}
@@ -998,9 +998,9 @@ struct SSphereSphere
 	float fRadius;
 
 	SSphereSphere( const CVec3 &_ptCenter, float _fRadius ): ptCenter(_ptCenter), fRadius(_fRadius) {}
-	bool operator()( const CVec3 &_ptCenter, float _fRadius, bool ) const 
-	{ 
-		return fabs2( ptCenter - _ptCenter ) < sqr( fRadius + _fRadius ); 
+	bool operator()( const CVec3 &_ptCenter, float _fRadius, bool ) const
+	{
+		return fabs2( ptCenter - _ptCenter ) < sqr( fRadius + _fRadius );
 	}
 };
 
@@ -1028,7 +1028,7 @@ bool CAIMap::CalcIntersection( const CVec3 &vCenter, float fRadius, int nMask, C
 void CAIMap::GetEntities( std::vector<SObjectInfo> *pRes, int nMask, const CFloorsSet &fs )
 {
 	SHullSet res;
-	pRes->clear();	
+	pRes->clear();
 	SelectFloorSet( &res, fs, nMask, SAlwaysTrue() );
 	Convert( pRes, res );
 }

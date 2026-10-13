@@ -106,33 +106,33 @@ struct CZipFile::SZipFileHeader
 	const char* GetComment() const { return GetExtra() + wExtraLen; }
 };
 // host operating system codes
-// 0  - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems) 
-// 1  - Amiga 
-// 2  - OpenVMS 
-// 3  - Unix 
-// 4  - VM/CMS 
-// 5  - Atari ST 
-// 6  - OS/2 H.P.F.S. 
-// 7  - Macintosh 
-// 8  - Z-System 
-// 9  - CP/M 
-// 10 - Windows NTFS 
-// 11 - MVS 
-// 12 - VSE 
+// 0  - MS-DOS and OS/2 (FAT / VFAT / FAT32 file systems)
+// 1  - Amiga
+// 2  - OpenVMS
+// 3  - Unix
+// 4  - VM/CMS
+// 5  - Atari ST
+// 6  - OS/2 H.P.F.S.
+// 7  - Macintosh
+// 8  - Z-System
+// 9  - CP/M
+// 10 - Windows NTFS
+// 11 - MVS
+// 12 - VSE
 // 13 thru 255 - unused
 
 // compression methods
-// 0  - The file is stored (no compression) 
-// 1  - The file is Shrunk 
-// 2  - The file is Reduced with compression factor 1 
-// 3  - The file is Reduced with compression factor 2 
-// 4  - The file is Reduced with compression factor 3 
-// 5  - The file is Reduced with compression factor 4 
-// 6  - The file is Imploded  
-// 7  - Reserved for Tokenizing compression algorithm  
-// 8  - The file is Deflated  
-// 9  - Enhanced Deflating using Deflate64(tm) 
-// 10 - PKWARE Date Compression Library Imploding 
+// 0  - The file is stored (no compression)
+// 1  - The file is Shrunk
+// 2  - The file is Reduced with compression factor 1
+// 3  - The file is Reduced with compression factor 2
+// 4  - The file is Reduced with compression factor 3
+// 5  - The file is Reduced with compression factor 4
+// 6  - The file is Imploded
+// 7  - Reserved for Tokenizing compression algorithm
+// 8  - The file is Deflated
+// 9  - Enhanced Deflating using Deflate64(tm)
+// 10 - PKWARE Date Compression Library Imploding
 
 
 #pragma pack()
@@ -175,7 +175,7 @@ CZipFile::CZipFile( const char *pszName ) : mmf( pszName, STREAM_ACCESS_READ )
 
 	int nDirStart = cdh.dwDirOffset;//cdhOffset - cdh.dwDirSize;
 	int nDirSize = cdh.dwDirSize;
-	
+
 	CMemoryMappedFileFragment dirData( &mmf, nDirStart, nDirSize );
 
 	// Go to the beginning of the directory & process each entry

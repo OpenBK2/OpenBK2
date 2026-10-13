@@ -26,7 +26,7 @@ extern bool bSimpleParticles;
 namespace NGScene
 {
 extern bool bWaterReflection;
-bool bFreeze = false; 
+bool bFreeze = false;
 static CObj<NGfx::CTexture> pCurrentDepthTexture;
 static CObj<NGfx::CTexture> pCurrentWaterReflectionTexture;
 
@@ -63,7 +63,7 @@ static void MakeDepthRenderInfo( SPerspDirectionalDepthInfo *pRes, const SPerspD
 	MakeDepthRenderInfo( &pRes->nlp, nResolution );
 }
 
-static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
+static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade,
 	SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
 	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
@@ -77,10 +77,10 @@ static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 
 		COpGenContext fi( &pRes->ops, &f );
 		NGfx::CTexture *pATexture = 0;
-		
+
 		if ( f.pMaterial == 0 )
 			continue;
-		
+
 		pATexture = f.pMaterial->GetAlphaTestTex();
 		bool reject = !f.pMaterial->DoesCastShadow();
 
@@ -89,7 +89,7 @@ static void MakeShadowDepthCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 	}
 }
 
-static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade, 
+static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, float fMinFade,
 								   SPerspDirectionalDepthInfo *pDepthInfo, ERenderOperation normalOp, ERenderOperation atOp )
 {
 	const std::vector<SRenderFragmentInfo*> &fragments = src.GetFragments();
@@ -110,10 +110,10 @@ static void MakeShadowColorCmdList( CRenderCmdList *pRes, CSceneFragments &src, 
 			pATexture = f.pMaterial->GetAlphaTestTex();
 			reject =  !f.pMaterial->DoesCastShadow();
 		}
-		
+
 		if ( pATexture == 0 )
 			pATexture = GetWhiteTexture();
-		
+
 		if ( !reject )
 			fi.AddOperation( normalOp, 100, DPM_NORMAL_NOTEQ, 0, pDepthInfo, pATexture );
 	}
@@ -156,10 +156,10 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom
 
 	SPerspDirectionalDepthInfo renderDepthInfo;
 	MakeDepthRenderInfo( &renderDepthInfo, *pDepthInfo, nDepthTexResolution );
-	
 
 
-	
+
+
 	if ( !IsUsing16bitShadows() || bNewShadows )
 	{
 		rc.SetTextureRT( pDepthTex );
@@ -181,12 +181,12 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom
 		rc.ClearBuffers( 0xFFFFFF );
 
 		CRenderCmdList res;
-	
+
 		SPerspDirectionalDepthInfo renderDepthInfo16 = renderDepthInfo;
 		//renderDepthInfo16.vDepth.w -= 4.0 / 256;
 
 		NGfx::SetDithering( NGfx::DITHER_OFF );
-		
+
 		MakeShadowDepthCmdList( &res, geom, 0.01f, &renderDepthInfo16, RO_DIR_DEPTH_16, RO_DIR_DEPTH_16_AT_NLP );
 		Execute( pRender, &rc, sts, res, geom, lightInfo );
 
@@ -197,15 +197,15 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom
 		rc.SetAlphaCombine( NGfx::COMBINE_NONE );
 		rc.SetStencil( NGfx::STENCIL_NONE );
 		NGfx::CopyTexture( rc, CVec2(nDepthTexResolution,nDepthTexResolution), depthTexSize, pDepthTex16, depthTexSize, CVec4(1,1,1,1), pEffect );
-		
+
 		NGfx::SetDithering( NGfx::DITHER_ON );
 	}
-	
+
 
 	if ( bNewShadows )
 	{
 		CRenderCmdList res;
-		
+
 		rc.SetAlphaCombine( NGfx::COMBINE_NONE );
 		rc.SetStencil( NGfx::STENCIL_NONE );
 		rc.SetColorWrite( NGfx::COLORWRITE_COLOR );
@@ -258,11 +258,11 @@ static void RenderDepthTexture( NGfx::CTexture *pDepthTex, CSceneFragments &geom
 }
 
 static void FixParticles( const SParticleLMRenderTargetInfo &particleLM, const SLightInfo &lightInfo )
-{	
+{
 	if ( particleLM.pParticleLMs && !NGfx::bSimpleParticles )
-	{	
+	{
 		NGfx::CRenderContext particleRC;
-		particleRC.SetTextureRT( particleLM.pParticleLMs );		
+		particleRC.SetTextureRT( particleLM.pParticleLMs );
 		particleRC.SetAlphaCombine( NGfx::COMBINE_NONE );
 
 		CTRect<float> rDest( 0, 0, particleLM.vParticleLMSize.x, particleLM.vParticleLMSize.y );
@@ -293,21 +293,21 @@ static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, 
 	pDepthInfo->vDepth = pLight->GetDepth();
 	int nDepthTexResolution = GetDepthTexResolution();
 	CSceneFragments depthGeom;
-	pRender->FormDepthList( &sts, vShadowsLightDir, 
+	pRender->FormDepthList( &sts, vShadowsLightDir,
 		bNewShadows ? IRender::DT_STATIC : IRender::DT_ALL, &depthGeom );
-	
+
 	//MakeSingleOp( &res, geom, true, -1, 0, RO_LP_DEPTH, &depthInfo );
 
 	NGfx::CTexture *pDepthTexCopy = pDepthShadowCopy.GetTexture();
-	
+
 	if( pDepthInfo->nlp.bNeedUpdate || !bNewShadows )
 		RenderDepthTexture( bNewShadows ? pDepthTexCopy : pDepthTexture, depthGeom, pLight, lightInfo, sts, nDepthTexResolution, particleLM, pDepthInfo, pRender, sceneGeom );
 
 
-	
+
 	if( bNewShadows )
 	{
-		NGfx::CRenderContext rc;	
+		NGfx::CRenderContext rc;
 		rc.SetTextureRT( pDepthTexture );
 		//rc.ClearBuffers( 0 );
 		rc.ClearZBuffer();
@@ -336,31 +336,31 @@ static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, 
 		c2 *= 0.02f;
 		b2 *= 0.02f;
 
-		CObj<NGfx::I2DEffect> pEffect = new NGfx::CCopyShadowsAndCloudsEffect 
+		CObj<NGfx::I2DEffect> pEffect = new NGfx::CCopyShadowsAndCloudsEffect
 			( pLight->GetCloudsTexture(), CVec4( b1, c1, b2, c2 ) );
-		
+
 		CTRect<float> depthTexSize( 0, 0, nDepthTexResolution, nDepthTexResolution );
-		NGfx::CopyTexture( rc, 
-			CVec2( nDepthTexResolution, nDepthTexResolution ), 
-			depthTexSize, 
-			pDepthTexCopy, 
-			depthTexSize, 
-			CVec4(1,1,1,1), 
+		NGfx::CopyTexture( rc,
+			CVec2( nDepthTexResolution, nDepthTexResolution ),
+			depthTexSize,
+			pDepthTexCopy,
+			depthTexSize,
+			CVec4(1,1,1,1),
 			pEffect );
 
 		CSceneFragments depthDynamicGeom;
 		pRender->FormDepthList( &sts, vShadowsLightDir, IRender::DT_DYNAMIC, &depthDynamicGeom );
 
-		RenderDynamicDepthTexture( 
-			pDepthTexture, 
-			depthDynamicGeom, 
-			pLight, 
-			lightInfo, 
-			sts, 
-			nDepthTexResolution, 
-			particleLM, 
-			pDepthInfo, 
-			pRender, 
+		RenderDynamicDepthTexture(
+			pDepthTexture,
+			depthDynamicGeom,
+			pLight,
+			lightInfo,
+			sts,
+			nDepthTexResolution,
+			particleLM,
+			pDepthInfo,
+			pRender,
 			sceneGeom );
 
 	}
@@ -375,7 +375,7 @@ static void UpdateDepthTexture( CTransformStack *pTS, CTransformStack *pClipTS, 
 		NGfx::GetRenderTargetData( &tmp, pDepthTexture );
 
 		NGfx::CTextureLock<NGfx::SPixel8888> t( pDepthTexture, 0, NGfx::WRITEONLY );
-		
+
 		//csSystem << t.GetSizeY() << endl;
 		for ( int y = 0; y < t.GetSizeY(); ++y )
 		{
@@ -435,7 +435,7 @@ static float Dot4( const CVec4 &a, const CVec4 &b ) { return a.x * b.x + a.y * b
 
 void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::CRenderContext *pRC, const CSceneFragments &scene,
 													 const SLightInfo &lightInfo )
-{	
+{
 	CVec3 vBoxMins( FP_MAX_VALUE, FP_MAX_VALUE, FP_MAX_VALUE );
 	CVec3 vBoxMaxs( -FP_MAX_VALUE, -FP_MAX_VALUE, -FP_MAX_VALUE );
 
@@ -451,14 +451,14 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 
 		if ( !fragment.pMaterial || !fragment.pMaterial->IsUsingWaterReflection() )
 			continue;
-	
+
 		fZ += fragment.pMaterial->GetReflectionZ();
 		fDiv += 1.0f;
 
 		for ( int iElement = 0; iElement < fragment.elements.size(); ++iElement )
 		{
 			const SRenderFragmentInfo::SElement &element = fragment.elements[iElement];
-			
+
 			SRenderGeometryInfo *pGeometryInfo = scene.GetGeometryInfo( element.nGeometry );
 			pGeometryInfo->pVertices.Refresh();
 
@@ -485,12 +485,12 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 
 
 	// Calculating transformation for mirrored camera
-	SHMatrix matMirrorZ( 1.0f, 0.0f, 0.0f, 0.0f, 
+	SHMatrix matMirrorZ( 1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, -1.0f, 2.0f*fWaterHeight, 
+		0.0f, 0.0f, -1.0f, 2.0f*fWaterHeight,
 		0.0f, 0.0f, 0.0f, 1.0f);
 
-	SHMatrix matMirrorY( 1.0f, 0.0f, 0.0f, 0.0f, 
+	SHMatrix matMirrorY( 1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, -1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f);
@@ -529,7 +529,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 		vProjectWaterPlane /= fFarPlane;
 
 		// put projection space clip plane in Z column
-		SHMatrix matClipProj( 1.0f, 0.0f, 0.0f, 0.0f, 
+		SHMatrix matClipProj( 1.0f, 0.0f, 0.0f, 0.0f,
 													0.0f, 1.0f, 0.0f, 0.0f,
 													vProjectWaterPlane.x, vProjectWaterPlane.y, vProjectWaterPlane.z,  vProjectWaterPlane.w,
 													0.0f, 0.0f, 0.0f, 1.0f);
@@ -546,7 +546,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 	points[0] = CVec4( vBoxMins.x, vBoxMins.y, fWaterHeight, 1.0f );
 	points[1] = CVec4( vBoxMins.x, vBoxMaxs.y, fWaterHeight, 1.0f );
 	points[2] = CVec4( vBoxMaxs.x, vBoxMaxs.y, fWaterHeight, 1.0f );
-	points[3] = CVec4( vBoxMaxs.x, vBoxMins.y, fWaterHeight, 1.0f );	
+	points[3] = CVec4( vBoxMaxs.x, vBoxMins.y, fWaterHeight, 1.0f );
 
 	for ( int iPoint = 0; iPoint < 4; ++iPoint)
 	{
@@ -568,7 +568,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 		CVec4 planeTransposed;
 		ScaleClipVertex( &planeTransposed, plane, matTranspose );
 		tsMirrored.AddClipPlane( planeTransposed );
-	}	
+	}
 	*/
 
 	// Render
@@ -585,7 +585,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 	// Creating scene list
 	CSceneFragments mirrorScene;
 	pRender->FormRenderList( &tsMirrored, &mirrorScene, pTransp );
-	
+
 	SRenderPathContext rpc( false, pCurrentDepthTexture, 0 );
 	Render( &tsMirrored, &rc, pRender, mirrorScene, lightInfo, &rpc );
 
@@ -593,12 +593,12 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 
 	STransparentRenderContext trc( rpc.bTnL, &rc, 0, 0, RP_GF3_FAST, &rpc, lightInfo );
 	pTransp->Render( trc );
-	
+
 	/*
 	CPtr<IDataStream> pStream = CreateStream( "C:/Temp/Test.tga", STREAM_PATH_ABSOLUTE );
 
 	CArray2D<NGfx::SPixel8888> texture;
-	NGfx::GetRenderTargetData( &texture, pCurrentWaterReflectionTexture );	
+	NGfx::GetRenderTargetData( &texture, pCurrentWaterReflectionTexture );
 
 	CArray2D<uint32_t> image;
 	image.SetSizes( texture.GetSizeX(), texture.GetSizeY() );
@@ -619,7 +619,7 @@ void UpdateWaterReflection( CTransformStack *pTS, IRender *pRender, const NGfx::
 static CRTPtr pDepthShadow( "DepthMap" );
 static CRTPtr pWaterReflection( "WaterReflection" );
 
-void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC, 
+void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene, const SParticleLMRenderTargetInfo &particleLM,
 	const SRTClearParams &rtClear, CDirectionalLight *pLight, float _fWarFogBlend, int nLightingOptions,
 	CTransparentRenderer *pTransp, ETransparentMode trMode,
@@ -630,7 +630,7 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 	if ( nLightingOptions & LO_NOSHADOWS )
 		pCurrentDepthTexture = GetWhiteTexture();
 	else
-		pCurrentDepthTexture = pDepthShadow.GetTexture();	
+		pCurrentDepthTexture = pDepthShadow.GetTexture();
 
 	SLightInfo lightInfo;
 	pLight->PrepareLightInfo( &lightInfo );
@@ -640,9 +640,9 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 	SBound sceneBound;
 	scene.GetBound( &sceneBound );
 
-	
+
 	bool bDrawWaterReflection = NGScene::bWaterReflection;
-		
+
 	if ( bDrawWaterReflection )
 		pCurrentWaterReflectionTexture = pWaterReflection.GetTexture();
 
@@ -660,7 +660,7 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 		FixParticles( particleLM, lightInfo );
 	}
 
-	if ( bDrawWaterReflection ) 
+	if ( bDrawWaterReflection )
 	{
 		UpdateWaterReflection( pTS, pRender, pRC, scene, lightInfo );
 	}

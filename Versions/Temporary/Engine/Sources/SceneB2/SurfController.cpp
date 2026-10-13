@@ -77,7 +77,7 @@ void CVisSurfPatch::UpdateGeomData()
 
 void CVisSurfPatch::Recalc()
 {
-	if ( pValue == 0 ) 
+	if ( pValue == 0 )
 		pValue = new NGScene::CObjectInfo;
 
 	UpdateGeomData();
@@ -227,7 +227,7 @@ void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const st
 		}
 
 		//// map boundaries check
-		//if ( (vBBMin.x >= vMapSize.x) || (vBBMin.y >= vMapSize.y) || 
+		//if ( (vBBMin.x >= vMapSize.x) || (vBBMin.y >= vMapSize.y) ||
 		//		 (vBBMax.x <= 0) || (vBBMax.y <= 0) )
 		//	continue;
 

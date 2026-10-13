@@ -4,7 +4,7 @@
 class CGroupUnit
 {
 	public: int operator&( IBinSaver &saver ); private:;
-	
+
 	// номер группы
 	// Defaults cover construction before Init/load; explicit constructor values still take precedence.
 	int nGroup = {};
@@ -14,7 +14,7 @@ class CGroupUnit
 	int nSubGroup = {};
 	// смещение относительно центра группы
 	CVec2 vShift;
-	
+
 	// номер AI группы ( н-р, для ambush )
 	int nSpecialGroup = {};
 	int nSpecialPos = {};
@@ -28,7 +28,7 @@ public:
 	const int GetNGroup() const { return nGroup; }
 	const int GetSpecialGroup() const { return nSpecialGroup; }
 
-	void SetGroupShift( const CVec2 &_vShift ) { vShift = _vShift; }	
+	void SetGroupShift( const CVec2 &_vShift ) { vShift = _vShift; }
 	void SetSubGroup( const int _nSubGroup ) { nSubGroup = _nSubGroup; }
 
 	friend class CGroupLogic;

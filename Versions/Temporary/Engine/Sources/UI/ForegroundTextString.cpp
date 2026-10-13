@@ -92,7 +92,7 @@ const std::wstring& CForegroundTextString::GetDBInstanceText() const
 		return GET_TEXT_PRE(pInstance->,TextString);
 	else if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,TextString) )
 		return GET_TEXT_PRE(pInstance->pShared->,TextString);
-	else 
+	else
 		return szEmpty;
 }
 
@@ -101,7 +101,7 @@ const std::wstring& CForegroundTextString::GetDBFormatText() const
 	static std::wstring szEmpty;
 	if ( pInstance->pShared && CHECK_TEXT_NOT_EMPTY_PRE(pInstance->pShared->,FormatString) )
 		return GET_TEXT_PRE(pInstance->pShared->,FormatString);
-	else 
+	else
 		return szEmpty;
 }
 
@@ -111,7 +111,7 @@ const std::wstring & CForegroundTextString::GetText() const
 }
 
 void CForegroundTextString::SetText( const std::wstring &_szText )
-{ 
+{
 	wszCustomText = _szText;
 	InitText();
 }
@@ -125,7 +125,7 @@ const NDb::SWindowPlacement* CForegroundTextString::GetPlacement() const
 
 void CForegroundTextString::Visit( struct IUIVisitor *pVisitor )
 {
-	if ( pGfxText ) 
+	if ( pGfxText )
 		VisitPlacedText( pVisitor, pGfxText, rcParent, GetPlacement() );
 }
 

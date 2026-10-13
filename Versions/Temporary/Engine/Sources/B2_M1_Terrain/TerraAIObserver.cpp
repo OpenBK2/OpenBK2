@@ -76,7 +76,7 @@
 //	CVec2 v[4];
 //	if ( singleSide.bSingleSide )
 //	{
-//		v[1] = vCenter1 + singleSide.fOffset1 * vNorm1; 
+//		v[1] = vCenter1 + singleSide.fOffset1 * vNorm1;
 //		v[2] = vCenter2 + singleSide.fOffset1 * vNorm2;
 //		v[0] = vCenter1 + singleSide.fOffset2 * vNorm1;
 //		v[3] = vCenter2 + singleSide.fOffset2 * vNorm2;
@@ -149,7 +149,7 @@
 //void CTerraAIObserver::UpdateTypes( const int nX1, const int nY1, const int nX2, const int nY2,
 //																		const CArray2D<uint8_t> &types )
 //{
-//	if ( !types.IsEmpty() ) 
+//	if ( !types.IsEmpty() )
 //		pTerrain->UpdateTypes( nX1, nY1, nX2, nY2, types );
 //	pTerrain->StartInitMode();
 //}

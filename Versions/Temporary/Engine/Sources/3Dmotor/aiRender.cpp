@@ -109,7 +109,7 @@ void CFastRenderer::CalcDistMul()
 		{
 			for ( int x = 0; x < distMult.GetSizeX(); ++x )
 			{
-				float fDistMul = sqrt( 1 + 
+				float fDistMul = sqrt( 1 +
 					sqr( ( x + region.x1 + 0.5f ) * fPerPixelShiftX ) +
 					sqr( ( y + region.y1 + 0.5f ) * fPerPixelShiftY ) );
 				distMult[y][x] = fDistMul;
@@ -321,12 +321,12 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 		const STriangle &t = mesh[i];
 		if ( t.i1 & 0x8000 )
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wFinish; 
+			i1 = edges[ t.i1 & 0x7fff ].wFinish;
 			i2 = edges[ t.i1 & 0x7fff ].wStart;
 		}
 		else
 		{
-			i1 = edges[ t.i1 & 0x7fff ].wStart; 
+			i1 = edges[ t.i1 & 0x7fff ].wStart;
 			i2 = edges[ t.i1 & 0x7fff ].wFinish;
 		}
 		if ( t.i2 & 0x8000 )
@@ -349,7 +349,7 @@ void CFastRenderer::RealTraceEntity( const SConvexHull &e )
 	}
 }
 
-void CFastRenderer::SetSource( const SSourceInfo *_pSrc, int _nUserID ) 
+void CFastRenderer::SetSource( const SSourceInfo *_pSrc, int _nUserID )
 {
 	pCurrentObject = _pSrc->pUserData;
 	objectStart = TPool::SIterator( &res );

@@ -10,7 +10,7 @@ namespace AICellsTiles
 {
 	// cell coordinates by the point coordinates
 	inline const SVector GetCell( const int x, const int y )
-	{ 
+	{
 		SVector res;
 		if ( x < 0 )
 			res.x = 0;
@@ -25,7 +25,7 @@ namespace AICellsTiles
 	}
 	// big cell coordinates by the point coordinates
 	inline const SVector GetBigCell( const int x, const int y )
-	{ 
+	{
 		SVector res;
 		if ( x < 0 )
 			res.x = 0;
@@ -35,7 +35,7 @@ namespace AICellsTiles
 			res.y = 0;
 		else
 			res.y = y / SConsts::BIG_CELL_SIZE;
-		
+
 		return res;
 	}
 

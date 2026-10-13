@@ -45,18 +45,18 @@ extern CStatistics theStatistics;
 
 CEntrenchmentPart::CEntrenchmentPart( const SEntrenchmentRPGStats *_pStats, const CVec3 &_center, const uint16_t _dir, const int nFrameIndex,  float fHP, int nPlayer, bool _bPlayerCreates )
 :	CExistingObject( nFrameIndex, fHP ), pStats( _pStats ), center( _center ), dir( _dir ),
-	bDigBySegment( false ), bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ), 
+	bDigBySegment( false ), bOwnerChanged( false ), bVisible( false ), nextSegmTime( 0 ),
 	bSuspendedAppear( nPlayer != theDipl.GetMyNumber() ),
 	bPlayerCreates( _bPlayerCreates )
 {
 	boundRect.InitRect( VNULL2, VNULL2, 0, 0, 0 );
 }
 
-const int CEntrenchmentPart::GetNDefenders() const 
-{ 
+const int CEntrenchmentPart::GetNDefenders() const
+{
 	NI_ASSERT( pOwner != 0, "entrenchment part without entrenchment" );
 	if ( pOwner )
-		return pOwner->GetNDefenders(); 
+		return pOwner->GetNDefenders();
 	return 0;
 }
 
@@ -104,7 +104,7 @@ bool CEntrenchmentPart::CanUnregister() const
 {
 	for ( std::list<SVector>::const_iterator iter = coveredTiles.begin(); iter != coveredTiles.end(); ++iter )
 	{
-		const SVector &tile = *iter;		
+		const SVector &tile = *iter;
 		if ( !theWarFog.IsTileVisible( tile, 0 ) || !theWarFog.IsTileVisible( tile, 1 ) )
 			return false;
 	}
@@ -132,7 +132,7 @@ void CEntrenchmentPart::Segment()
 		}
 	}
 
-	// unregister только если виден всеми сторонами - для multiplayer	
+	// unregister только если виден всеми сторонами - для multiplayer
 	if ( CanUnregister() )
 		theStatObjs.UnregisterSegment( this );
 
@@ -161,19 +161,19 @@ SRect CEntrenchmentPart::CalcBoundRect( const CVec2 & center, const uint16_t _di
 }
 
 void CEntrenchmentPart::SetNewPlaceWithoutMapUpdate( const CVec3 &_center, const uint16_t _dir )
-{ 
-	center = _center; 
-	dir = _dir; 
+{
+	center = _center;
+	dir = _dir;
 }
 
-void CEntrenchmentPart::GetRPGStats( SAINotifyRPGStats *pStats ) 
-{ 
+void CEntrenchmentPart::GetRPGStats( SAINotifyRPGStats *pStats )
+{
 	pStats->nObjUniqueID = GetUniqueId();
 	pStats->fHitPoints = 1;
 	pStats->time = curTime;
 }
 
-CVec2 CEntrenchmentPart::GetShift( const CVec2 &vPoint, const CVec2 &vDir ) 
+CVec2 CEntrenchmentPart::GetShift( const CVec2 &vPoint, const CVec2 &vDir )
 {
 	const CVec2 dirPerp( vDir.y, -vDir.x );
 	return CVec2( vDir * vPoint.y + dirPerp * vPoint.x );
@@ -213,9 +213,9 @@ void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/)
 	}
 	if ( bOwnerChanged )
 	{
-				
+
 		bOwnerChanged = false;
-		int nParam = ( bLastSegment ? 1 : -1 ) * ( bDigBySegment ? 2 : 1 ); 
+		int nParam = ( bLastSegment ? 1 : -1 ) * ( bDigBySegment ? 2 : 1 );
 
 		if ( GetType() == EST_TERMINATOR && bDigBySegment )			//CRAP: force terminators to dig every time when digging in-game
 			nParam = 2;
@@ -225,9 +225,9 @@ void CEntrenchmentPart::SetVisible( const bool bLastSegment /*=false*/)
 	}
 }
 
-const NTimer::STime CEntrenchmentPart::GetNextSegmentTime() const 
-{ 
-	return nextSegmTime > curTime ? nextSegmTime : curTime; 
+const NTimer::STime CEntrenchmentPart::GetNextSegmentTime() const
+{
+	return nextSegmTime > curTime ? nextSegmTime : curTime;
 }
 
 //*******************************************************************
@@ -242,7 +242,7 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 	SetAlive( true );
 	NI_ASSERT( nLen != 0, "Окоп из нуля сегментов" );
 	SetUniqueIdForObjects();
-	
+
 	insiders.clear();
 	fireplaces.reserve( 0 );
 
@@ -281,7 +281,7 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 				if ( fLength < 0 && -fLength > fLengthBack )
 					fLengthBack = -fLength;
 			}
-			
+
 			for ( int i = 0; i < pPart->GetSegmStats().fireplaces.size(); ++i )
 				fireplaces.push_back( SFireplaceInfo( vPartCenter + GetShift( pPart->GetSegmStats().fireplaces[i], vDir ), 0, pPart->GetFrameIndex() ) );
 		}
@@ -290,7 +290,7 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 		pPart->SetFullEntrench( pFullEntrenchment );
 
 		segments.push_back( pPart );
-		
+
 		theStatObjs.RegisterSegment( pPart );
 	}
 
@@ -327,15 +327,15 @@ CEntrenchment::CEntrenchment( CObjectBase** _segments, const int nLen, CFullEntr
 #endif
 }
 
-const NTimer::STime CEntrenchment::GetNextSegmentTime() const 
-{ 
-	return nextSegmTime > curTime ? nextSegmTime : curTime; 
+const NTimer::STime CEntrenchment::GetNextSegmentTime() const
+{
+	return nextSegmTime > curTime ? nextSegmTime : curTime;
 }
 
-CAIUnit* CEntrenchment::GetIteratedUnit() 
-{ 
-	NI_VERIFY( !IsIterateFinished(), "Wrong fire unit to get", return 0 ); 
-	return iter->pUnit; 
+CAIUnit* CEntrenchment::GetIteratedUnit()
+{
+	NI_VERIFY( !IsIterateFinished(), "Wrong fire unit to get", return 0 );
+	return iter->pUnit;
 }
 
 CVec2 CEntrenchment::GetShift( const CVec2 &vPoint, const CVec2 &vDir )
@@ -352,16 +352,16 @@ void CEntrenchment::AddSoldier( CSoldier *pUnit )
 	pUnit->ApplyStatsModifier( pStats->pInnerUnitBonus, true );
 	if ( nBusyFireplaces == 0 )
 	{
-		nextSegmTime = curTime + SConsts::AI_SEGMENT_DURATION - 1;		
+		nextSegmTime = curTime + SConsts::AI_SEGMENT_DURATION - 1;
 		theStatObjs.RegisterSegment( this );
 	}
-	
+
 	int nFireplace = -1;
 	if ( nBusyFireplaces < fireplaces.size() )
 	{
 		++nBusyFireplaces;
-		
-		// найти ближайшее к центру юнита свободное fireplace 
+
+		// найти ближайшее к центру юнита свободное fireplace
 		int i = 0;
 		float fBestDist = 1e10;
 		while ( i < fireplaces.size() )
@@ -399,12 +399,12 @@ void CEntrenchment::AddSoldierToFirePlace( CSoldier *pUnit, const int nFirePlace
 {
 	if ( nBusyFireplaces == 0 )
 	{
-		nextSegmTime = curTime + SConsts::AI_SEGMENT_DURATION - 1;		
+		nextSegmTime = curTime + SConsts::AI_SEGMENT_DURATION - 1;
 		theStatObjs.RegisterSegment( this );
 	}
 
 	NI_ASSERT( nBusyFireplaces < fireplaces.size(), "Not enough fireplaces" );
-	
+
 	++nBusyFireplaces;
 	fireplaces[nFirePlace].pUnit = pUnit;
 	CVec3 vNewCenter = GetHeights()->Get3DPoint( fireplaces[nFirePlace].center );
@@ -427,7 +427,7 @@ void CEntrenchment::ProcessEmptyFireplace( const int nFireplace )
 	if ( !insiders.empty() && insiders.back().nFireplace == -1 && insiders.back().pUnit->IsInEntrenchment() )
 	{
 		CSoldier *pUnit = insiders.back().pUnit;
-		
+
 		insiders.back().nFireplace = nFireplace;
 		fireplaces[nFireplace].pUnit = pUnit;
 
@@ -474,8 +474,8 @@ void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, 
 	// Designers requested this feature removed - 06.04-2005
 	return;
 
-	/*list< CPtr<CSoldier> > dead;	
-	
+	/*list< CPtr<CSoldier> > dead;
+
 	// все убиты
 	if ( fDamage >= pStats->fMaxHP || theCheats.GetFirstShoot( nPlayerOfShoot ) == 1 )
 	{
@@ -500,7 +500,7 @@ void CEntrenchment::TakeDamage( const float fDamage, const bool bFromExplosion, 
 
 		if ( pShotUnit )
 			pShotUnit->EnemyKilled( pSoldier );
-		
+
 		theStatistics.UnitKilled( nPlayerOfShoot, pSoldier->GetPlayer(), pSoldier->GetStats()->fExpPrice, pShotUnit ? pShotUnit->GetReinforcementType() : NDb::_RT_NONE, pSoldier->GetReinforcementType() );
 		theMPInfo.UnitsKilled( nPlayerOfShoot, pSoldier->GetStats()->fPrice, pSoldier->GetPlayer() );
 
@@ -513,13 +513,13 @@ void CEntrenchment::GetCoveredTiles( std::list<SVector> *pTiles ) const
 	GetAIMap()->GetTilesCoveredByRect( rect, pTiles );
 }
 
-void CEntrenchment::Iterate() 
-{ 
+void CEntrenchment::Iterate()
+{
 	if ( iter != insiders.end() )
 	{
 		++iter;
-		while ( iter != insiders.end() && iter->nFireplace == -1 ) 
-			++iter; 
+		while ( iter != insiders.end() && iter->nFireplace == -1 )
+			++iter;
 	}
 }
 
@@ -545,8 +545,8 @@ const uint8_t CEntrenchment::GetPlayer() const
 		return insiders.begin()->pUnit->GetPlayer();
 }
 
-void CEntrenchment::Segment() 
-{ 
+void CEntrenchment::Segment()
+{
 	nextSegmTime = curTime + NRandom::Random( 200, 1000 ); RecordRandomCall();
 
 	if ( !IsUnitsInside() )
@@ -600,11 +600,11 @@ CSoldier* CEntrenchment::GetSoldierInFireplace( const int nFireplace) const
 	return fireplaces[nFireplace].pUnit;
 }
 
-const CVec3& CEntrenchment::GetCenter() const 
-{ 
+const CVec3& CEntrenchment::GetCenter() const
+{
 	static CVec3 vCenter;
 	vCenter = CVec3( rect.center, z );
-	return vCenter; 
+	return vCenter;
 }
 
 void CEntrenchment::SetVisible()
@@ -612,7 +612,7 @@ void CEntrenchment::SetVisible()
 	CEntrenchmentPart *pPrevIter = 0;
 	for ( CSegmentList::iterator iter = segments.begin(); iter != segments.end(); ++iter )
 	{
-		if ( pPrevIter ) 
+		if ( pPrevIter )
 			pPrevIter->SetVisible();
 
 		pPrevIter = (*iter);
@@ -689,7 +689,7 @@ bool CEntrenchmentTankPit::ShouldSuspendAction( const EActionNotify &eAction ) c
 		CGivenPassabilityStObject::ShouldSuspendAction( eAction );
 }
 
-void CEntrenchmentTankPit::UnlockTiles() 
+void CEntrenchmentTankPit::UnlockTiles()
 {
 	GetTerrain()->RemoveStaticObjectTiles( tilesToLock );
 }

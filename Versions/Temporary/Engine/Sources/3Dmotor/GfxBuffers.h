@@ -83,12 +83,12 @@ struct SGeomVecT2C1
 //};
 
 const int N_VEC_FULL_TEX_SIZE = 2048;
-inline void CalcTexCoords( SShortTextureUV *pRes, float fU, float fV ) 
+inline void CalcTexCoords( SShortTextureUV *pRes, float fU, float fV )
 {
 	pRes->nU = Float2Int( fU * N_VEC_FULL_TEX_SIZE );
 	pRes->nV = Float2Int( fV * N_VEC_FULL_TEX_SIZE );
 }
-inline void CalcLMCoords( SShortTextureUV *pRes, float fU, float fV ) 
+inline void CalcLMCoords( SShortTextureUV *pRes, float fU, float fV )
 {
 	pRes->nU = (std::min)( Float2Int( fU * 65536 ), 65535 ) - 32768;
 	pRes->nV = (std::min)( Float2Int( fV * 65536 ), 65535 ) - 32768;
@@ -201,7 +201,7 @@ class CTextureLock
 	std::vector<void*> raws;
 	int nXSize = {}, nYSize = {}, nStride = {};
 	typedef TPixel Element;
-	
+
 	CTextureLock( const CTextureLock &a ) { ASSERT( 0 ); }
 	CTextureLock& operator=( const CTextureLock & a ) { ASSERT( 0 ); return *this; }
 	void InitAccess()
@@ -238,7 +238,7 @@ public:
 	}
 	~CTextureLock() { delete pLock; }
 	// get physical size (in physical pixels, for DXT real size / 4 f.e.
-	int GetSizeX() const { return nXSize; } 
+	int GetSizeX() const { return nXSize; }
 	int GetSizeY() const { return nYSize; }
 	int GetStride() const { return nStride; }
 	TPixel* operator[]( int nY ) { return (TPixel*)raws[nY]; }

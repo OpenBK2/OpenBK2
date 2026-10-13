@@ -21,7 +21,7 @@ CPCIEMnemonics::CPCIEMnemonics() : CMnemonicsCollector<int>( PCIE_UNKNOWN, "" )
 	Insert( PCIE_STRING_BIG_INPUT,				"string_big_input" );
 	Insert( PCIE_STRING_COMBO,						"string_combo" );
 	Insert( PCIE_STRING_COMBO_REF,				"string_combo_ref" );
-	Insert( PCIE_STRING_COMBO_MULTI_REF,	"string_combo_multi_ref" ); 
+	Insert( PCIE_STRING_COMBO_MULTI_REF,	"string_combo_multi_ref" );
 	Insert( PCIE_STRING_FILE_REF,					"string_file_ref" );
 	Insert( PCIE_STRING_DIR_REF,					"string_dir_ref" );
 	Insert( PCIE_BINARY_BIT_FIELD,				"bit_field" );
@@ -61,7 +61,7 @@ EPCIEType CPCIEMnemonics::Get( const SPropertyDesc *pDesc, const std::string &rs
 	if ( rszName.empty() )
 	{
 		return Get( pDesc, false );
-	}	
+	}
 	else
 	{
 		return Get( pDesc, rszName[rszName.size() - 1] == ARRAY_NODE_END_CHAR );
@@ -79,7 +79,7 @@ bool CPCIEMnemonics::IsPointer( EPCIEType nType )
 bool CPCIEMnemonics::IsLeaf( EPCIEType nType )
 {
 	return ( ( nType != PCIE_UNKNOWN ) &&
-					 ( nType != PCIE_FOLDER ) &&	 
+					 ( nType != PCIE_FOLDER ) &&
 					 ( nType != PCIE_STRUCT ) &&
 					 ( nType != PCIE_LIST ) );
 }
@@ -88,7 +88,7 @@ bool CPCIEMnemonics::IsLeaf( EPCIEType nType )
 bool CPCIEMnemonics::IsRef( EPCIEType nType )
 {
 	return ( ( nType == PCIE_STRING_REF ) ||
-					 ( nType == PCIE_STRING_MULTI_REF ) ||	 
+					 ( nType == PCIE_STRING_MULTI_REF ) ||
 					 ( nType == PCIE_STRING_COMBO_REF ) ||
 					 ( nType == PCIE_STRING_COMBO_MULTI_REF ) ||
 					 ( nType == PCIE_STRING_NEW_REF ) ||
@@ -106,7 +106,7 @@ bool CPCIEMnemonics::IsSingleRef( EPCIEType nType )
 
 bool CPCIEMnemonics::IsMultiRef( EPCIEType nType )
 {
-	return ( ( nType == PCIE_STRING_MULTI_REF ) ||	 
+	return ( ( nType == PCIE_STRING_MULTI_REF ) ||
 					 ( nType == PCIE_STRING_COMBO_MULTI_REF ) ||
 					 ( nType == PCIE_STRING_NEW_MULTI_REF ) );
 }
@@ -114,6 +114,6 @@ bool CPCIEMnemonics::IsMultiRef( EPCIEType nType )
 
 CPCIEMnemonics typePCIEMnemonics;
 
-// basement storage  
+// basement storage
 
 

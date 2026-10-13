@@ -15,7 +15,7 @@ struct IMessageReactionB2 : public CObjectBase
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
 
-// custom check 
+// custom check
 struct IMessageCheck : public CObjectBase
 {
 	// returns check result

@@ -63,7 +63,7 @@ private:
 		AddHead( nID );
 	}
 protected:
-	int Add( T *p ) 
+	int Add( T *p )
 	{
 		ASSERT( !Has(p) );
 		ASSERT( p );
@@ -83,7 +83,7 @@ protected:
 		}
 		return nID;
 	}
-	void Remove( int nID ) 
+	void Remove( int nID )
 	{
 		objects[nID].pObject = 0;
 		freeIDs.push_back( nID );
@@ -223,7 +223,7 @@ public:
 			Remove( i->second );
 		}
 	}
-	void Set( T *p ) 
+	void Set( T *p )
 	{
 		typename CStuffHash::iterator k = stuff.find( p );
 		if ( k == stuff.end() )
@@ -243,7 +243,7 @@ class CBoolSyncDstUtil: public CSyncDst<T>
 public:
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); f.Add(2,&pRes); f.Add(3,&nMask); f.Add(4,&track); return 0; }
 private:
-	
+
 	void VisitObject( int nID, T *pObject )
 	{
 		if ( track.size() < nID + 1 )
@@ -283,7 +283,7 @@ class CBoolSyncSrc: public CSyncSrc<T>
 	CObjectsHash objects;
 	CBoolSyncDstUtil<T,TThis> syncA, syncB;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(TParent*)this); f.Add(2,&objects); f.Add(3,&syncA); f.Add(4,&syncB); return 0; }
-	
+
 	void BoolSwitch( T *pObject, int nMask )
 	{
 		typename CObjectsHash::iterator i = objects.find( pObject );
@@ -333,8 +333,8 @@ class CBoolSyncSrc: public CSyncSrc<T>
 	}
 public:
 	CBoolSyncSrc() {}
-	CBoolSyncSrc( CSyncSrc<T> *pA, CSyncSrc<T> *pB ): 
-		syncA( pA, this, 1 ), 
+	CBoolSyncSrc( CSyncSrc<T> *pA, CSyncSrc<T> *pB ):
+		syncA( pA, this, 1 ),
 		syncB( pB, this, 2 ) {}
 
 	friend class CBoolSyncDstUtil<T,TThis>;

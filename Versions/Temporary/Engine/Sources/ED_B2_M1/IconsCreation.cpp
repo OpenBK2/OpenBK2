@@ -55,7 +55,7 @@ static bool CreateScreenShot( CArray2D<NGfx::SPixel8888> *pTexture, IEditorScene
 	NTargetMesh::CreateTargetMesh( N_ICONS_SIZE_X/(float)N_TARGET_SIZE_X, N_ICONS_SIZE_Y/(float)N_TARGET_SIZE_Y );
 
 	// Getting data
-	NGfx::GetRenderTargetData( pTexture, pTarget->GetTexture() );	
+	NGfx::GetRenderTargetData( pTexture, pTarget->GetTexture() );
 
 	return true;
 }
@@ -130,7 +130,7 @@ static bool SaveCameraPosition( NDb::IObjMan *pManipulator )
 	// Getting parameters from camera
 	float fDistance;
 	float fPitch;
-	float fYaw;	
+	float fYaw;
 	Singleton<ICamera>()->GetPlacement( &fDistance, &fPitch, &fYaw );
 
 	CVec3 vAnchor = Singleton<ICamera>()->GetAnchor();
@@ -205,7 +205,7 @@ void CModelEditor::RestoreCameraParametersFromStats()
 	// Getting camera parameters
 	float fDistance = 0.0f;
 	float fPitch = 0.0f;
-	float fYaw = 0.0f;	
+	float fYaw = 0.0f;
 	CVec3 vAnchor( VNULL3 );
 	float fFOV = 0.0f;
 

@@ -7,7 +7,7 @@ class CExecutorFormationFirstAid : public CExecutorUnitBase
 {
 	OBJECT_BASIC_METHODS( CExecutorFormationFirstAid )
 
-	CPtr<CFormation> pFormation;  
+	CPtr<CFormation> pFormation;
 
 	// if 0 then ability must be switched off
 	float OnAbilityActive();

@@ -21,7 +21,7 @@ class CDirectionalLight: public ILight
 	ZDATA
 	CDGPtr<CFuncBase<CVec3> > pColor;
 	CDGPtr<CFuncBase<CVec3> > pGlossColor;
-	CDGPtr<CFuncBase<CVec3> > pAmbient;	
+	CDGPtr<CFuncBase<CVec3> > pAmbient;
 	CVec4 vDepth;
 	CVec3 vLightDir;
 	float fMaxHeight;
@@ -39,9 +39,9 @@ class CDirectionalLight: public ILight
 	int nVersionID;
 public:
 	CDirectionalLight() : nVersionID(0) {}
-	CDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor, 
+	CDirectionalLight( CFuncBase<CVec3> *pColor, CFuncBase<CVec3> *pGlossColor,
 		const CVec3 &_vLightDir, const CVec3 &_vShadowsLightDir,
-		float fMaxHeight, 
+		float fMaxHeight,
 		CFuncBase<CVec3> *pAmbient,
 		CFuncBase<CVec3> *_pShadeColor, CFuncBase<CVec3> *_pIncidentShadeColor,
 		CPtrFuncBase<NGfx::CTexture> *_pClouds, CFuncBase<SHMatrix> *_pCloudsProjection,
@@ -57,7 +57,7 @@ public:
 	NGfx::CTexture *GetCloudsTexture();
 	void CalcCloudProjection( SHMatrix *pRes );
 	float GetShadowsMDLength() const { return fShadowsMaxDetailLength; }
-}; 
+};
 
 class CPointLight: public ILight
 {

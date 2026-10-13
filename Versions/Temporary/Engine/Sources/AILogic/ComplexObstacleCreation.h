@@ -29,7 +29,7 @@ class CComplexObstacleCreation : public CLongObjectCreation
 	{
 		return _nIndex;
 	}
-	const int GetWireFenceIndex( const int _nIndex ) const 
+	const int GetWireFenceIndex( const int _nIndex ) const
 	{
 		return _nIndex - antitanks.size();
 	}
@@ -38,10 +38,10 @@ class CComplexObstacleCreation : public CLongObjectCreation
 
 public:
 	CComplexObstacleCreation() : CLongObjectCreation( -1, false ) {  }
-	CComplexObstacleCreation( const int _nPlayer, const bool bAllowAIModification ) 
+	CComplexObstacleCreation( const int _nPlayer, const bool bAllowAIModification )
 		: nCurIndex( 0 ), CLongObjectCreation( _nPlayer, bAllowAIModification ),
 		bTmpNonCheatPath( false ), bCannot( false )
-	{  
+	{
 	}
 	bool PreCreate( const CVec2 &vFrom, const CVec2 &vTo, const bool bCheckLock );
 	const int GetMaxIndex() const;

@@ -29,9 +29,9 @@ protected:
 	void SplitLineToSegrments( std::vector<CVec2> *_vPoints, const CVec2 &vBegin, const CVec2 &vEnd, float TRENCHWIDTH );
 
 public:
-	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification ) 
+	CLongObjectCreation( const int _nPlayer, const bool _bAllowAIModification )
 		: nPlayer( _nPlayer ), fWorkAccumulated( 0.0f ), bAllowAIModification ( _bAllowAIModification )
-	{  
+	{
 		if ( bAllowAIModification )
 		{
 			SetUniqueIdForObjects();

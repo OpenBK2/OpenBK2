@@ -19,7 +19,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 
 //	class CData;
 //	class CDataViewer;
-	
+
 	struct SPlayer
 	{
 		ZDATA
@@ -44,7 +44,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 		std::string szButtonName;
 		ZEND int operator&( IBinSaver &f ) { f.Add(2,&pWnd); f.Add(3,&pIconWnd); f.Add(4,&pNameView); f.Add(6,&pReinf); f.Add(7,&pBtn); f.Add(8,&szButtonName); return 0; }
 	};
-	
+
 	ZDATA_(CInterfaceScreenBase)
 	CPtr<IWindow> pMain;
 	ZSKIP //CPtr<IButton> pNextBtn;
@@ -64,7 +64,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	ZSKIP //CPtr<IWindow> pMedalDialogBgr;
 	std::list< CDBPtr<NDb::SMedal> > pendingMedals;
 	ZSKIP //NTimer::STime timeShowNextMedal;
-	
+
 	CPtr<IWindow> pInfoPanel;
 	CPtr<IWindow> pRewardPanel;
 	CPtr<ITextView> pMissionSuccessLabel;
@@ -79,7 +79,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	std::wstring wszTime1;
 	std::wstring wszTime2;
 	std::wstring wszTime3;
-	
+
 	CPtr<IWindow> pNewRankDlg;
 	CPtr<IWindow> pNewRankPanel;
 	CPtr<IWindow> pNewRankIconWnd;
@@ -91,14 +91,14 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<IWindow> pMedalIconWnd;
 	CPtr<IScrollableContainer> pMedalDescCont;
 	CPtr<ITextView> pMedalDescView;
-	
+
 	CPtr<IWindow> pChapterReinfDescWnd;
 	CObj<SChapterReinfUpgrade> pChapterReinfUpgrade;
 	ZSKIP //CObj<SChapterReinfComposition> pChapterReinfComposition;
 
 	CDBPtr<NDb::SPlayerRank> pNewPlayerRank;
 	std::list< CDBPtr<NDb::SMedal> > medals;
-	
+
 	bool bPopup;
 	CPtr<IWindow> pPopupBgWnd;
 	ZSKIP //float fCareerProgressWidth;
@@ -120,7 +120,7 @@ class CInterfaceSingleStatistic : public CInterfaceScreenBase, public IProgramme
 	CPtr<ITextView> pMissionExpNAView;
 	CPtr<ITextView> pNewReinfLabel;
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,(CInterfaceScreenBase*)this); f.Add(2,&pMain); f.Add(18,&pendingMedals); f.Add(20,&pInfoPanel); f.Add(21,&pRewardPanel); f.Add(22,&pMissionSuccessLabel); f.Add(23,&pMissionFailedLabel); f.Add(24,&pCareerProgress); f.Add(25,&pRankProgress); f.Add(26,&pExpView); f.Add(27,&pMissionTimeView); f.Add(28,&pCampaignTimeView); f.Add(29,&players); f.Add(30,&reinfs); f.Add(31,&wszTime1); f.Add(32,&wszTime2); f.Add(33,&wszTime3); f.Add(34,&pNewRankDlg); f.Add(35,&pNewRankPanel); f.Add(36,&pNewRankIconWnd); f.Add(37,&pNewRankView); f.Add(38,&pNewMedalDlg); f.Add(39,&pNewMedalPanel); f.Add(40,&pMedalNameView); f.Add(41,&pMedalIconWnd); f.Add(42,&pMedalDescCont); f.Add(43,&pMedalDescView); f.Add(44,&pChapterReinfDescWnd); f.Add(45,&pChapterReinfUpgrade); f.Add(47,&pNewPlayerRank); f.Add(48,&medals); f.Add(49,&bPopup); f.Add(50,&pPopupBgWnd); f.Add(53,&expProgressCareer); f.Add(54,&expProgressRank); f.Add(55,&pNewCareerProgress); f.Add(56,&pNewRankProgress); f.Add(57,&pRestartBtn); f.Add(58,&pExitToMainMenuBtn); f.Add(59,&pExitToChapterBtn); f.Add(60,&pLoadBtn); f.Add(62,&pBottomPanel); f.Add(63,&pNextBtn); f.Add(64,&pBlackBgWnd); f.Add(65,&pCareerExpNAView); f.Add(66,&pMissionExpNAView); f.Add(67,&pNewReinfLabel); return 0; }
-	
+
 	NTimer::STime timePrevPopup; // don't serialize
 private:
 	void MakeInterior();
@@ -129,14 +129,14 @@ private:
 	void MakePlayerStatistics( bool bChapter );
 	void MakePlayerName( const SPlayer &player, const NDb::SMapPlayerInfo &dbPlayer, bool bPlayer, bool bChapter );
 	void MakeReinf();
-	
+
 	void NextMenu();
 	void ShowReinf( const NDb::SReinforcement *pReinf );
 	void CheckNextPopup();
 	void ShowNewRank( const NDb::SPlayerRank *pRank );
 	void ShowMedal( const NDb::SMedal *pMedal );
 	void ExpProgressStep();
-	
+
 	std::wstring GetFormattedTime( int nTime ) const;
 
 	bool OnMenuNext();
@@ -151,7 +151,7 @@ private:
 	bool OnExitToChapter();
 	bool OnLoad();
 	bool OnExitToWindows();
-	
+
 	void MsgOk( const SGameMessage &msg );
 	void MsgCancel( const SGameMessage &msg );
 	void MsgTryExitWindows( const SGameMessage &msg );
@@ -162,7 +162,7 @@ public:
 	bool Init();
 	bool StepLocal( bool bAppActive );
 	void OnGetFocus( bool bFocus );
-	
+
 	//{ IProgrammedReactionsAndChecks
 	bool Execute( const std::string &szSender, const std::string &szReaction );
 	int Check( const std::string &szCheckName ) const;

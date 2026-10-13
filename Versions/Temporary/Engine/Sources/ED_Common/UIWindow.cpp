@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-CUIWindow::CUIWindow() : 
+CUIWindow::CUIWindow() :
 	pos(0, 0, 0, 0), pTexture(0), color(0)
 {
 }

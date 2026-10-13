@@ -90,7 +90,7 @@ namespace NMapInfoEditor
 				{
 					float fObjectSceneDirection = itSceneElement->second.GetDirection( fDirection ) + FP_PI2;
 					if ( fObjectSceneDirection > FP_2PI )
-					{ 
+					{
 						fObjectSceneDirection -= FP_2PI;
 					}
 					CVec2 vDirection = CreateFromPolarCoord( SCENE_OBJECT_DIRECTION_RADIUS, fObjectSceneDirection );
@@ -119,7 +119,7 @@ namespace NMapInfoEditor
 				{
 					float fObjectSceneDirection = itMapInfoElement->second.GetDirection( fDirection ) + FP_PI2;
 					if ( fObjectSceneDirection > FP_2PI )
-					{ 
+					{
 						fObjectSceneDirection -= FP_2PI;
 					}
 					CVec2 vDirection = CreateFromPolarCoord( OBJECT_DIRECTION_RADIUS, fObjectSceneDirection );
@@ -182,7 +182,7 @@ namespace NMapInfoEditor
 			{
 				float fObjectSceneDirection = fDirection + FP_PI2;
 				if ( fObjectSceneDirection > FP_2PI )
-				{ 
+				{
 					fObjectSceneDirection -= FP_2PI;
 				}
 				//
@@ -412,7 +412,7 @@ namespace NMapInfoEditor
 			UpdateSceneElements( false, true, false, 0.0f );
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SObjectInfo::PostLoad( IEditorScene *pEditorScene, IManipulator *pManipulator )
 	{
@@ -428,7 +428,7 @@ namespace NMapInfoEditor
 						itLinkedMapInfoElement->second.linkedLinkIDIist.push_back( itMapInfoElement->first );
 						return true;
 					}
-				}							
+				}
 			}
 		}
 		return true;
@@ -505,8 +505,8 @@ namespace NMapInfoEditor
 									pUpdate->info.nExpLevel = 0;
 									//
 									pObjectInfoCollector->pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-								}		
-								
+								}
+
 								if ( CPtr<SAIActionUpdate> pUpdate = new SAIActionUpdate( nSceneID, ACTION_NOTIFY_ANIMATION_CHANGED, NDb::ANIMATION_IDLE, Singleton<IGameTimer>()->GetGameTime() ) )
  								{
 									pObjectInfoCollector->pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
@@ -573,7 +573,7 @@ namespace NMapInfoEditor
 					pUpdate->info.nExpLevel = 0;
 					//
 					pObjectInfoCollector->pEditorUpdatableWorld->ProcessEditorUpdate( pUpdate );
-				}		
+				}
 				SObjectInfo::SSceneElement sceneElement;
 				sceneElement.vPosition = itMapInfoElement->second.GetPosition( VNULL3 );
 				sceneElement.fDirection = itMapInfoElement->second.GetDirection( 0.0f );
@@ -836,7 +836,7 @@ namespace NMapInfoEditor
 			sceneIDToLinkIDMap.clear();
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool SObjectInfo::RemoveFromDB( CObjectBaseController *pObjectController, IManipulator *pManipulator )
 	{
@@ -867,7 +867,7 @@ namespace NMapInfoEditor
 					{
 						if ( nCommandLinkIDCount > 1 )
 						{
-							pObjectController->AddRemoveOperation( szCommandPrefix + ".unitLinkIDs", nCommandLinkIDIndex, pManipulator ); 			
+							pObjectController->AddRemoveOperation( szCommandPrefix + ".unitLinkIDs", nCommandLinkIDIndex, pManipulator );
 							--nCommandLinkIDCount;
 						}
 						else
@@ -1174,7 +1174,7 @@ namespace NMapInfoEditor
 			}
 		}
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SObjectInfo::InsertMaskManipulators( CMultiManipulator *pPropertyManipulator, IManipulator *pManipulator )
 	{
@@ -1205,7 +1205,7 @@ namespace NMapInfoEditor
 				}
 				//
 				pMaskManipulator->SetMask( szMask );
-				pPropertyManipulator->InsertManipulator( CDBID( szMask ), pMaskManipulator, false, false );  
+				pPropertyManipulator->InsertManipulator( CDBID( szMask ), pMaskManipulator, false, false );
 			}
 		}
 	}
@@ -1345,6 +1345,6 @@ namespace NMapInfoEditor
 	}
 };
 
-// basement storage  
+// basement storage
 
 
