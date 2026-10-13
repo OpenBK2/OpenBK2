@@ -6,6 +6,7 @@ set(SOURCES
     BinaryResources.cpp
     BinChunkSaver.cpp
     BitStreams.cpp
+    BuildStamp.cpp
     CheckSumLog.cpp
     ChunklessSaver.cpp
     CombinerVFS.cpp

@@ -101,6 +101,11 @@ if(ENABLE_ASAN OR ENABLE_TSAN OR ENABLE_UBSAN)
         endif()
         if(ENABLE_UBSAN)
             list(APPEND OBK2_SANITIZERS undefined)
+            # Neither GCC nor clang defines a macro for this one, the way they
+            # do __SANITIZE_ADDRESS__ and __SANITIZE_THREAD__, so code that
+            # reports which configuration it is has no other way to know.
+            # System/BuildStamp.cpp is the consumer, for the replay stamp.
+            add_compile_definitions(ENABLE_UBSAN)
         endif()
         list(JOIN OBK2_SANITIZERS "," OBK2_SANITIZE_ARG)
         # The flag goes on the link line as well as the compile line: it is
