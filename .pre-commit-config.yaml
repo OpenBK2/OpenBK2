@@ -1,0 +1,83 @@
+# File hygiene, enforced before a commit is made and again in CI by
+# .github/workflows/hygiene.yml. The rules themselves are declared for editors
+# in .editorconfig and for git in .gitattributes; this is what makes them hold
+# for anyone who edits the tree with something that reads neither.
+#
+# Install once per clone (hooks are not cloned):
+#
+#     pipx install pre-commit     (or pip install pre-commit)
+#     pre-commit install
+#
+# The hooks run on staged files only, so a commit is checked in the time it
+# takes to read the files it touches. To check the whole tree the way CI does:
+#
+#     pre-commit run --all-files
+#
+# See "file hygiene" in Contributing.md.
+
+# pre-commit-hooks v6 uses the hook stage names pre-commit 3.2 introduced, so
+# an older pre-commit refuses the manifest. Debian 13 still packages 2.21, and
+# the error it gives without this line names a key rather than the cause.
+minimum_pre_commit_version: "3.2.0"
+
+# Never touched, anywhere, by any hook:
+#
+#   Parser/test/cases    the .cll grammar's fixture corpus. Every byte is input
+#                        to NLang::Parse, including the mixed endings and the
+#                        missing final newlines, so tidying one edits the test.
+#   Sources/vendor       third-party drops (d3d9stub, fmod, granny, libgr2),
+#                        kept comparable with upstream.
+#   Soft/SDK/STL docs    vendored 1990s STL documentation.
+#   third_party          submodules; not ours to rewrite.
+#   out, cmake-build-*   build trees, when one is not ignored.
+exclude: |
+  (?x)^(
+    Versions/Temporary/Engine/Sources/Parser/test/cases/.*
+    |Versions/Temporary/Engine/Sources/vendor/.*
+    |Soft/SDK/STL[ ]docs/.*
+    |third_party/.*
+    |(out|cmake-build-[^/]*|linux-build-[^/]*)/.*
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      # The sources, the resource scripts, the build system, the CI
+      # definitions, the scripts and the prose. Deliberately not the game data
+      # trees, and deliberately not the .cll type descriptions: dbcodegen
+      # copies a tooltip comment into types.xml verbatim, trailing space
+      # included, so rewriting one is a data change. git still holds .cll to LF
+      # on its own, through the eol=lf rule in .gitattributes.
+      - id: mixed-line-ending
+        args: [--fix=lf]
+        files: &scope |
+          (?x)^(
+            Versions/Temporary/Engine/Sources/.*\.(c|cc|cpp|cxx|h|hpp|hxx|inl|rc|rc2)
+            |(.*/)?CMakeLists\.txt
+            |.*\.cmake
+            |CMakePresets\.json
+            |\.github/.*\.ya?ml
+            |scripts/.*\.(py|sh)
+            |.*\.md
+          )$
+
+      # A source file that does not end in a newline is undefined behaviour in
+      # both C and C++.
+      - id: end-of-file-fixer
+        files: *scope
+
+      # Two trailing spaces are a hard line break in Markdown, so .md keeps the
+      # pair and loses only a longer run.
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        files: *scope
+
+      # The tree is UTF-8 without a mark. One header had one.
+      - id: fix-byte-order-marker
+        files: *scope
+
+      # Cheap, and catches the two mistakes that are expensive to find later.
+      - id: check-merge-conflict
+      - id: check-yaml
+        files: ^\.github/.*\.ya?ml$

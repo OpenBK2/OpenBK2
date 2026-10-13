@@ -18,6 +18,7 @@ Few rules:
 - Projects like AILogic, Stats_B2_M1, B2_M1_World and similar need to be deterministic!
 - Linux exports every function by default, but windows does not! So make sure to mark function for exporting in appropriate header file
 - The game database schema and its C++ structs are generated from the .cll files by dbcodegen: change the .cll and regenerate, never the generated DB*.h/.cpp or types.xml. See "adding things to the game database" in Contributing.md
+- Sources are UTF-8 with LF endings, a newline on the last line, no whitespace at the end of a line, and tabs two columns wide. `.editorconfig` declares it, `.gitattributes` pins the endings and `.pre-commit-config.yaml` enforces it, locally and in CI. Install it once per clone with `pre-commit install`. See "file hygiene" in Contributing.md for what is deliberately left alone
 
 ### Determinism coding rules
 1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation.

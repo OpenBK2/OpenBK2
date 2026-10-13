@@ -1,0 +1,73 @@
+name: Hygiene
+
+# The same hooks a commit runs locally, run again here, because a hook is only
+# installed in the clones where somebody installed it. Encoding, line endings,
+# the newline at the end of a file and trailing whitespace; the rules they
+# enforce are declared in .editorconfig for editors and .gitattributes for git.
+#
+# Cheap enough to run on everything it covers: no compiler, no game data, about
+# 3900 files. It gates nothing the build gates, so it runs beside the build jobs
+# rather than before them.
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-24.04
+
+    steps:
+      # Only the paths the hooks cover. The full tree is 11 GB and 238k files,
+      # almost all of it game data that these rules deliberately say nothing
+      # about; see build-windows.yml for the reasoning behind sparse checkouts
+      # here. Cone mode always materialises the files at the repository root,
+      # which is where the configuration and most of the Markdown live.
+      #
+      # Submodules are left out: third_party is excluded in the hook config, so
+      # checking it out would only cost time.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            .github
+            cmake
+            scripts
+            docs
+            OBK2_Examples
+            Versions/Temporary/Engine/Sources
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # The hook environments, not the results. Keyed on the config, so a new
+      # hook or a new pinned revision rebuilds it and nothing else does.
+      - name: Cache pre-commit environments
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      # Not --all-files: that asks git for every path in the index, including
+      # the 234k this job did not check out, and the hooks would fail on the
+      # missing files rather than on anything real. The pathspecs below are the
+      # sparse list plus the root files, so the set checked here is the set
+      # checked out. No tracked path in it contains a space.
+      #
+      # --show-diff-on-failure prints the fix rather than only the verdict,
+      # which is usually enough to apply by hand without installing anything.
+      - name: Run the hygiene hooks
+        run: >
+          pre-commit run --show-diff-on-failure --color=always
+          --files $(git ls-files --
+          .github cmake scripts docs OBK2_Examples
+          Versions/Temporary/Engine/Sources
+          '*.md' CMakeLists.txt CMakePresets.json)

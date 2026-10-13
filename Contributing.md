@@ -451,6 +451,59 @@ believing the last one.
 the longer-lived findings, the hazards this is all pointed at and the sites that still
 carry them, are in `docs/Determinism.md`.
 
+# file hygiene
+
+the sources are UTF-8 without a byte order mark, end their lines with LF, end their last
+line with a newline, carry no whitespace at the end of a line, and indent with tabs two
+columns wide. three things hold that in place, and they agree with each other:
+
+- [.editorconfig](.editorconfig) is what visual studio, clion, vs code and rider all read
+  without a plugin, so an editor stops reintroducing what the hooks strip
+- [.gitattributes](.gitattributes) pins the sources to LF on checkout. this is the part
+  that does not depend on anyone's local settings: a default git for windows, and the
+  github windows runners, check text out as CRLF
+- [.pre-commit-config.yaml](.pre-commit-config.yaml) is the enforcement, before a commit
+  is made locally and again in CI through
+  [.github/workflows/hygiene.yml](.github/workflows/hygiene.yml)
+
+hooks are not cloned, so install them once per clone:
+
+```bash
+pipx install pre-commit     # or pip install pre-commit
+pre-commit install
+```
+
+they then run on staged files only, which costs about as long as reading the files the
+commit touches. to check the tree the way CI does:
+
+```bash
+pre-commit run --all-files
+```
+
+needs pre-commit 3.2 or newer. debian still packages 2.21, which refuses the pinned hook
+revision with an error that names a config key rather than the cause.
+
+while there, install the commit message hook too. it strips the assistant attribution
+trailers this history does not use:
+
+```bash
+cp scripts/git-hooks/commit-msg .git/hooks/commit-msg
+```
+
+four things are left alone on purpose, and the hook config says so too:
+
+- `Parser/test/cases`, the `.cll` grammar's fixture corpus. every byte is input to
+  `NLang::Parse`, including the mixed line endings and the missing final newlines, so
+  tidying one edits the test
+- the `.cll` type descriptions. dbcodegen copies a tooltip comment into `types.xml`
+  verbatim, trailing space included, so rewriting one is a game data change rather than a
+  whitespace one. git still holds them to LF through `.gitattributes`
+- `Versions/Temporary/Engine/Sources/vendor` and `third_party`, which stay comparable with
+  upstream
+- the game data trees. the records are already LF where they are text, the localised text
+  is UTF-16LE from end to end, and both are written by the editor and the database tools
+  rather than by hand
+
 # branches
 
 there are few branches where main development takes its place:
