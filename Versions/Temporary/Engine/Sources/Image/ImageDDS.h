@@ -21,4 +21,3 @@ IMAGE_EXPORT bool ConvertAndSaveAsDDS( const std::string &szFileName, const CArr
 															 EImageType eImageType, NGfx::EPixelFormat nSubFormat, int nNumMipLevels,
 															 bool bWrapX, bool bWrapY, float fMappingSize );
 }
-

@@ -156,5 +156,3 @@ public:
 	virtual void DrawStatistic( IPaintContext *pPaintContext ) = 0;
 	virtual void DrawFrameBorders( IPaintContext *pPaintContext ) = 0;
 };
-
-

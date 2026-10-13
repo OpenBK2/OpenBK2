@@ -103,6 +103,3 @@ bool CUpdateUnitContainer::IsEmpty()
 	}
 	return true;
 }
-
-
-

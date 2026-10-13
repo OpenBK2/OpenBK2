@@ -68,5 +68,3 @@ namespace NLang
 
 	bool IsEqualDefs( CLangNode *pNode1, CLangNode *pNode2 );
 }
-
-

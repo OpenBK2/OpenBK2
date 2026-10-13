@@ -204,5 +204,3 @@ void CCheckSumSaver::StoreObject( CObjectBase *pObject )
 
 	*checkSumObjects = adler32( *checkSumObjects, (const uint8_t*)&(nObj), sizeof(nObj) );
 }
-
-

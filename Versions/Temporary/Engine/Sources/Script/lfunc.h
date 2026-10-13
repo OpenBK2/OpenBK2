@@ -15,6 +15,3 @@ int luaF_newproto (lua_State *L);
 int luaF_newclosure (lua_State *L, int nelems);
 
 const char *luaF_getlocalname (const Proto *func, int local_number, int pc);
-
-
-

@@ -340,4 +340,3 @@ namespace NFieldView
 		return pWindow;
 	}
 }
-

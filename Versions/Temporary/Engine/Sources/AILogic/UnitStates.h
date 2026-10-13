@@ -121,5 +121,3 @@ struct IUnitAttackingState : public IUnitState
 	CType *pObjTo = dynamic_cast_ptr<CType*>(pObjFrom);					\
 	NI_ASSERT( pObjTo != 0, msg );														\
 	if ( pObjTo == 0 ) break;
-
-

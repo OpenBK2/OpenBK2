@@ -10,5 +10,3 @@ public:
 	CCFSceneB2();
 	virtual ~CCFSceneB2();
 };
-
-

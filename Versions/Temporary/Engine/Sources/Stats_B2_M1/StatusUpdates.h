@@ -86,5 +86,3 @@ public:
 STATS_B2_M1_EXPORT SUnitStatusUpdate *CreateStatusUpdate( const EUnitStatus eStatus, const bool bEnabled );
 STATS_B2_M1_EXPORT SUnitStatusUpdate *CreateStatusUpdate( const EUnitStatus eStatus, const bool bEnabled, const float fRadius );
 const char *GetStatusName( const EUnitStatus eStatus );
-
-

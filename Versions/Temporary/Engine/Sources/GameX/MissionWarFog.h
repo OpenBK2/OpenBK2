@@ -42,5 +42,3 @@ private:
 	void ApplyCloudDensity( CArray2D<float> *pNoise );
 	void Blur( CArray2D<float> *pDst, const CArray2D<float> &src );
 };*/
-
-

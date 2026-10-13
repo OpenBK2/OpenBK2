@@ -24,5 +24,3 @@ inline void MPLog( const char *pszInfo, ... )
 		CONSOLE_BUFFER_LOG2( 10, buff, 0, true );
 	}
 }
-
-

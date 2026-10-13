@@ -58,5 +58,3 @@ void CEffectorRunReaction::Reverse()
 	bForward = !bForward;
 	bFinished = false;
 }
-
-

@@ -59,5 +59,3 @@ public:
 // debug functions
 	void DebugTogglePause( bool bPause );
 };
-
-

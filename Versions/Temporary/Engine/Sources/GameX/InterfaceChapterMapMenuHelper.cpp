@@ -218,5 +218,3 @@ void SChapterMapMenuHelper::ReReadPotentials()
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1721A380, SChapterMapMenuHelper )
-
-

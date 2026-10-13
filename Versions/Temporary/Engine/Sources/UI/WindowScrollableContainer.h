@@ -15,5 +15,3 @@ public:
 	void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 	virtual void Select( IWindow *pElement );
 };
-
-

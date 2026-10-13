@@ -8,5 +8,3 @@ enum ESceneObjAnimMode : int
 	OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC,
 	OBJ_ANIM_MODE_FORCE_ANIMATED_STATIC_ABS, // absolute timer
 };
-
-

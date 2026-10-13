@@ -182,5 +182,3 @@ public:
 	virtual const std::wstring &GetTextEntry( const std::string &szName ) const;
 	void RegisterTabOrder( IWindow * pWindow, int nTabOrder );
 };
-
-

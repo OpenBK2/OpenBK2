@@ -282,6 +282,3 @@ void CTerraGen::UpdateAfterTilesModifying()
 	vTexModMin.Set( -1, -1 );
 	vTexModMax.Set( -1, -1 );
 }
-
-
-

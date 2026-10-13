@@ -4,6 +4,3 @@
 #include "WindowSimpleSharedEditor.h"
 
 REGISTER_EDITOR_IN_DLL( WindowScreenShared, CWindowSimpleSharedEditor )
-
-
-

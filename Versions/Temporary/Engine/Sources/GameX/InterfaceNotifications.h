@@ -197,5 +197,3 @@ public:
 	void PlaceMarker( const CVec2 &vPos );
 	//}
 };
-
-

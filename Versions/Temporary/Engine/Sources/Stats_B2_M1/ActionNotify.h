@@ -247,5 +247,3 @@ inline bool DoWeNeedAction( const int nAction )
 	}
 	return false;
 }
-
-

@@ -10,5 +10,3 @@
 
 int luaH_new (lua_State *L, int nhash);
 const TObject *luaH_getglobal (lua_State *L, const char *name);
-
-

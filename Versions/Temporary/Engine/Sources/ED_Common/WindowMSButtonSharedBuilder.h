@@ -33,5 +33,3 @@ private:
 	bool CreateVisualState( const std::string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index );
 	bool CreateButtonState( const std::string &rszUniqueObjectName, IManipulator *pBuildDataManipulator, IManipulator * pMSBManipulator, int index, const char * szSuffixName, bool bNormalState );
 };
-
-

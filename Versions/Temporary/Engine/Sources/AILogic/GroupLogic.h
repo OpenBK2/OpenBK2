@@ -129,5 +129,3 @@ public:
 };
 
 const CVec2 GetGoPointByCommand( const SAIUnitCmd &cmd );
-
-

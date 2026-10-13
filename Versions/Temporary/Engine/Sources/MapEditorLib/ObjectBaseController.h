@@ -393,6 +393,3 @@ inline bool CObjectBaseController::AddChangeValueOperation<CVec4>( const std::st
 {
 	return AddChangeVec4Operation<CVec4, float>( rszPropertyName, vNewData, pObjectManipulator );
 }
-
-
-

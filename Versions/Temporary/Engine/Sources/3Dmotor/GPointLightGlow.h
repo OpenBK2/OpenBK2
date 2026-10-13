@@ -39,5 +39,3 @@ public:
 	friend class CPointGlowEffect;
 };
 }
-
-

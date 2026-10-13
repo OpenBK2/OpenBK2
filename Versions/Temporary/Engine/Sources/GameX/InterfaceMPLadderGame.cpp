@@ -371,5 +371,3 @@ void CICMPLadderGame::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x321B6380, CInterfaceMPLadderGame );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_LADDER_GAME, CICMPLadderGame );
-
-

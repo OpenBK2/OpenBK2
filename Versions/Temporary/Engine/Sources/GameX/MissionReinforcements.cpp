@@ -1348,5 +1348,3 @@ REGISTER_VAR_EX( "reinf_button_blink_period", NGlobal::VarFloatHandler, &s_fBlin
 REGISTER_VAR_EX( "auto_show_reinf", NGlobal::VarIntHandler, &s_nAutoShowReinf, 1, STORAGE_USER );
 
 FINISH_REGISTER
-
-

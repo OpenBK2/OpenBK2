@@ -56,5 +56,3 @@ namespace AICellsTiles
 												vPos.y * SConsts::GENERAL_CELL_SIZE + SConsts::GENERAL_CELL_SIZE / 2 );
 	}
 };
-
-

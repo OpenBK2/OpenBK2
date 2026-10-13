@@ -60,5 +60,3 @@ public:
 	virtual void RemoveVSOFromTerrain( int nVSOID ) = 0;
 	virtual void UpdateVSOInTerrain( int nVSOID ) = 0;
 };
-
-

@@ -117,5 +117,3 @@ namespace NMapInfoEditor
 		void Trace() const;
 	};
 };
-
-

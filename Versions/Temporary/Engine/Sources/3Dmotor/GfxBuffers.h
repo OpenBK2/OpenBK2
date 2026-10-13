@@ -291,5 +291,3 @@ void ReplaceTextureSurface( CTexture *pTex, int nLevel, IDirect3DSurface9 *pSurf
 void FlushQueue();
 
 }
-
-

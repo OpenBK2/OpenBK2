@@ -49,5 +49,3 @@ virtual const NDb::SComplexSoundDesc* GetAmbientSoundDesc( const NDb::ESeason se
 	}
 	return pAmbientSound;
 }
-
-

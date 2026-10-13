@@ -192,5 +192,3 @@ public:
 	int operator&( IBinSaver &saver ) { return 0; }
 };
 }
-
-

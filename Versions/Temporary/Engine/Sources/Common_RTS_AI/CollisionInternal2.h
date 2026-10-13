@@ -151,5 +151,3 @@ public:
 	const bool IsSolved() const { return timeLeft == 0; }
 	const NCollision::ECollisionName GetName() const { return NCollision::ECN_STOP; }
 };
-
-

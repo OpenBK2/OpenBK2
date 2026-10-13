@@ -42,5 +42,3 @@ public:
 	virtual const bool CanBuildComplexTurn() const { return false; }
 	virtual void MarkPath( const int nID, const NDebugInfo::EColor color ) const;
 };
-
-

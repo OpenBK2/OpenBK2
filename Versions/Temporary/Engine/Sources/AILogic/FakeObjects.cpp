@@ -132,4 +132,3 @@ bool CFakeCorpseStaticObject::ProcessAreaDamage( const class CExplosion *pExpl, 
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x110BA300, CFakeCorpseStaticObject );
-

@@ -48,5 +48,3 @@ EXPORT_RESULT CClientGameConstsExporter::ExportObject( IManipulator* pManipulato
 	//
 	return ER_SUCCESS;
 }
-
-

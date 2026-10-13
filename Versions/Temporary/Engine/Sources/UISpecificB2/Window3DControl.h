@@ -45,5 +45,3 @@ public:
 	void SetBaseID3D( int nID );
 	//}
 };
-
-

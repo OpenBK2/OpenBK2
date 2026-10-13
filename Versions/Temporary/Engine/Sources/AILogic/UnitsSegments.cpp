@@ -152,4 +152,3 @@ void CStayTimeSegments::ProcessSegment()
 		pUnit->ResetCollisionsCount();
 	}
 }
-

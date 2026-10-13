@@ -327,4 +327,3 @@ CEnumEntryNode* CFileNode::FindEnumEntry( const std::string &szEntyrName, bool b
 
 using namespace NLang;
 BASIC_REGISTER_CLASS( PARSER, CFileNode );
-

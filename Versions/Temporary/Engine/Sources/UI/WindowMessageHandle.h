@@ -46,6 +46,3 @@ public:
 // messag handler registratoin
 //#define REGISTER_MESSAGE_HANDLER(ClassName,HandleName,MessageName)\
 	//handleMap["MessageName"] = CUIMessageHandler( ClassName::HandleName );
-
-
-

@@ -319,5 +319,3 @@ CDataStream *CZipFile::OpenFile( int nIndex )
 	// Go to the actual file and read the local header.
 	return OpenFile( papDir[nIndex] );
 }
-
-

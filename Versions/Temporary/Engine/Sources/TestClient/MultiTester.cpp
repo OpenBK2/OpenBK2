@@ -352,6 +352,3 @@ IMultiTester *CreateMultiTester()
 {
 	return new CMultiTester();
 }
-
-
-

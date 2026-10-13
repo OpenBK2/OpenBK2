@@ -103,4 +103,3 @@ void CreateStaticObjectLockedTilesInfo( std::list<SObjTileInfo> *pTiles,
 	}
 }
 };
-

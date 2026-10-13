@@ -90,4 +90,3 @@ struct ISkeletonAnimator : public CFuncBase<SSkeletonPose>, public IChannelAnima
 _3DMOTOR_EXPORT ISkeletonAnimator *CreateSkeletonAnimator(
 	const SSkeletonHandle &skeleton, CFuncBase<STime> *_pTime );
 } // namespace
-

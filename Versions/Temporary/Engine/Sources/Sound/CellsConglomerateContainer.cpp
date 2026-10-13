@@ -192,4 +192,3 @@ void CCellsConglomerateContainer::RemoveHearCell( const SIntThree &vCenter, cons
 	SRemoveCellEnumerator en( vCenter );
 	EnumConglomerateHeight( nMinZ, &en, nMaxRank, vCenter, nRadius, &conglomeratesHeight );
 }
-

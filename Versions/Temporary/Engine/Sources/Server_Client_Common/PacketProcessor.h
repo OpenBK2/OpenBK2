@@ -71,5 +71,3 @@ class CPacketProcessor : virtual public CObjectBase, public CPacketProcessorBase
 public:
 	virtual bool CanBePaused() { return false; }
 };
-
-

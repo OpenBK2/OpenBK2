@@ -16,4 +16,3 @@ struct IFullScreenFader : public CObjectBase
 };
 
 IFullScreenFader *CreateFullScreenFader();
-

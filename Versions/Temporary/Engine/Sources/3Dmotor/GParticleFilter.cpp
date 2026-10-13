@@ -5,4 +5,3 @@
 
 using namespace NGScene;
 BASIC_REGISTER_CLASS(_3DMOTOR, IParticleFilter)
-

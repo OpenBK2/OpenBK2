@@ -2933,4 +2933,3 @@ namespace NObjectBrowser
 		return pBrowser.release();
 	}
 }
-

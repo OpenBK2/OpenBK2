@@ -201,5 +201,3 @@ bool CTextureRoundSegmentVisitor::ClampAngles( float *pStart, float *pFinish, fl
 	*pFinish = (std::min)( *pFinish, fMax );
 	return *pStart < *pFinish;
 }
-
-

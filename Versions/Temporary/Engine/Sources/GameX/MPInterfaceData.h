@@ -92,5 +92,3 @@ public:
 		return *this;
 	}
 };
-
-

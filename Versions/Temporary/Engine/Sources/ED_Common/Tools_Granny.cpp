@@ -349,5 +349,3 @@ CGrannyFileInfoGuard::~CGrannyFileInfoGuard()
 }
 
 // basement storage
-
-

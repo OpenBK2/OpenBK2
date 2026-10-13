@@ -1109,5 +1109,3 @@ void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit 
 		saver.Add( nChunkID, &pObject );
 	}
 }
-
-

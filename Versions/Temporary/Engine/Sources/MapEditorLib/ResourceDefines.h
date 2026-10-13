@@ -245,5 +245,3 @@
 #define ID_LOG_SHOW_ERRORS													1192
 #define ID_LOG_CLEAR_ALL														1193
 #define ID_LOG_LAST_COMMAND_ID											1193
-
-

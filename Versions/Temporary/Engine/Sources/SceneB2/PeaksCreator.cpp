@@ -620,5 +620,3 @@ void CTerraGen::UpdateNeededPeaks()
 		}
 	}
 }
-
-

@@ -173,5 +173,3 @@ public:
 
 	int GetRowHeight() const;
 };
-
-

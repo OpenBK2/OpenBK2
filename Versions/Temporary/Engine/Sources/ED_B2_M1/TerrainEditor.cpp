@@ -30,5 +30,3 @@ void CTerrainEditor::Destroy()
 }
 
 // basement storage
-
-

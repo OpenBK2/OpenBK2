@@ -709,5 +709,3 @@ void CScriptAreaState::PostDraw( IPaintContext *pPaintDC )
 		}
 	}
 }
-
-

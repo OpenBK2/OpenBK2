@@ -32,5 +32,3 @@ namespace NCreateUpdate
 	CObjectBase* RemoveObject( int nObjectID );
 	CObjectBase* MoveObject( int nObjectID, const CVec3 &rvPlacement, const CQuat &rRotation );
 };
-
-

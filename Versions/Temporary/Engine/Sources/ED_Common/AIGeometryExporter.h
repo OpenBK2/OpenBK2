@@ -27,5 +27,3 @@ class CAIGeometryExporter : public CBasicSceneExporter
 
 	CAIGeometryExporter() {  }
 };
-
-

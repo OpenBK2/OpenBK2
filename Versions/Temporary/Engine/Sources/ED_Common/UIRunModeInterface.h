@@ -28,5 +28,3 @@ protected:
 };
 
 INTERFACE_COMMAND_DECLARE( CUIRunModeIC, CUIRunModeInterface )
-
-

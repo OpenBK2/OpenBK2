@@ -96,5 +96,3 @@ struct IAIScenarioTracker : public CObjectBase
 	virtual bool GiveXPToPlayer( const int nPlayer, const int nXP ) = 0;														// Give to player only
 	virtual const NDb::SUnitStatsModifier *GetPlayerChapterModifier( NDb::EReinforcementType eReinf ) = 0;
 };
-
-

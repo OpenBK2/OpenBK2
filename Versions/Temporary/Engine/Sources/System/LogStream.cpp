@@ -149,5 +149,3 @@ CLogStream& CLogStream::operator<< ( CLogStream& (*Func)( CLogStream& csStream )
 //START_REGISTER(LogStream)
 //	REGISTER_VAR_EX( "ui_messages", NGlobal::VarBoolHandler, &bConsoleMessages, 1, true )
 //FINISH_REGISTER
-
-

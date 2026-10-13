@@ -388,6 +388,3 @@ void CCameraPositionState::GetDBInfo()
 		}
 	}
 }
-
-
-

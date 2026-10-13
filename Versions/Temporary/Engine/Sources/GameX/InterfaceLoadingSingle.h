@@ -161,5 +161,3 @@ class CICLoadingSingleFinished : public CInterfaceCommandBase<CInterfaceLoadingS
 public:
 	void Configure( const char *pszConfig );
 };
-
-

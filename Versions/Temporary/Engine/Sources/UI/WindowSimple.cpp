@@ -13,4 +13,3 @@ void CWindowSimple::Visit( struct IUIVisitor *pVisitor )
 	CClipStore s( pVisitor, rc, bScrollViewport );
 	CWindow::Visit( pVisitor );
 }
-

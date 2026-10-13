@@ -43,4 +43,3 @@ void MatchPacketTrace_SetFinalState( unsigned long dwPresentMask, unsigned long 
 // Replaces the active journal with the completed trace; failed writes can retry.
 void MatchPacketTrace_Flush( const char *szReason );
 }
-

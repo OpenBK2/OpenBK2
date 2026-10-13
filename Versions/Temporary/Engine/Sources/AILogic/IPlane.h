@@ -35,4 +35,3 @@ public:
 	// access to plane's preferences
 	virtual const class CPlanePreferences & GetPreferencesB2() const = 0;
 };
-

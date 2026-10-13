@@ -109,5 +109,3 @@ public:
 	int operator&( IBinSaver &saver );
 	//
 };
-
-

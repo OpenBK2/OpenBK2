@@ -575,4 +575,3 @@ namespace NDBLink
 		return bAccepted;
 	}
 }
-

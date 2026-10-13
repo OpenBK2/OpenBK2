@@ -63,5 +63,3 @@ class CICMPLadderStatistics : public CInterfaceCommandBase<CInterfaceMPLadderSta
 public:
 	void Configure( const char *pszConfig );
 };
-
-

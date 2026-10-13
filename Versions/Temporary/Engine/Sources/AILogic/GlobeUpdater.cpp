@@ -28,4 +28,3 @@ void CUpdates2Globe::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x30133400, CUpdates2Globe );
-

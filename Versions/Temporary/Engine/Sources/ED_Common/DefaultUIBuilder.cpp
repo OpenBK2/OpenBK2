@@ -7,6 +7,3 @@
 
 
 const std::string CDefaultUIBuilder::DEFAULT_BUILD_DATA_TYPE_NAME = "DefaultUIBuilder";
-
-
-

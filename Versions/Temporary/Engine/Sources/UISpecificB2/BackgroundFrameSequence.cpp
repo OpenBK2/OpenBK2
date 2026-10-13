@@ -98,5 +98,3 @@ void CBackgroundFrameSequence::SetTexture( const struct NDb::STexture *pDesc )
 }
 
 REGISTER_SAVELOAD_CLASS( UISPECIFICB2, 0x171C1B40, CBackgroundFrameSequence )
-
-

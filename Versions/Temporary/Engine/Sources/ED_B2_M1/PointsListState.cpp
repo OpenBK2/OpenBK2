@@ -523,5 +523,3 @@ void CDamageLevelsState::Leave()
 
 	CPointsListState::Leave();
 }
-
-

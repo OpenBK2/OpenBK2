@@ -441,5 +441,3 @@ void CPlayGameProcessor::TogglePauseConnectGamer( const int nGamer, bool bPause 
 }
 
 BASIC_REGISTER_CLASS( CLIENT, CPlayGameProcessor )
-
-

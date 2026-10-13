@@ -1000,5 +1000,3 @@ const bool CArtillery::CanHook() const
 	const NDb::SUnitBaseRPGStats *pStats = GetStats();
 	return ( pStats && pStats->GetUserActions( false )->HasAction( ACTION_COMMAND_TAKE_ARTILLERY ) );
 }
-
-

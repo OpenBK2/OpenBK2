@@ -62,5 +62,3 @@ bool CMapInfoEditorSettings::MustRotateTo90Degrees( const std::string &rsObjectT
 /**/
 
 // basement storage
-
-

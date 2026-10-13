@@ -26,5 +26,3 @@ void CGameLinksManager::BanAddress( const sockaddr &sockAddr )
 }
 
 }
-
-

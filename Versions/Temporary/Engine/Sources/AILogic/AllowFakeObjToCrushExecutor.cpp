@@ -43,4 +43,3 @@ int CAllowFakeObjToCrushExecutor::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x3014AC01, CAllowFakeObjToCrushExecutor )
-

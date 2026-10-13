@@ -12,5 +12,3 @@
 
 int luaA_index (lua_State *L, int index);
 void luaA_pushobject (lua_State *L, const TObject *o);
-
-

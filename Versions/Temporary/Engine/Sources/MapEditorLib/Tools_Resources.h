@@ -225,5 +225,3 @@ MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::
 MAPEDITORLIB_EXPORT void String2File( const std::string &rszText, bool bUnicode, const std::string &rszTextPath, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( std::vector<uint8_t> *pBuffer, const std::wstring &rwszText, bool bAdd_0D );
 MAPEDITORLIB_EXPORT void String2File( const std::wstring &rwszText, const std::string &rszTextPath, bool bAdd_0D );
-
-

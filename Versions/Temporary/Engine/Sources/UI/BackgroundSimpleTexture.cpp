@@ -116,5 +116,3 @@ int CBackgroundSimpleTexture::operator&( struct IBinSaver &saver )
 	saver.Add( 6, &pIcon );
 	return 0;
 }
-
-

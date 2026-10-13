@@ -11,4 +11,3 @@ public:
 	static void ToClientTime( NTimer::STime *pTime );
 	static void SetSpeed( int nSpeed );
 };
-

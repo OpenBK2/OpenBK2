@@ -57,5 +57,3 @@ public:
 	virtual const bool CanGoForward() const { return bCanGoForward; }
 	virtual void SetForceGoBackward( const bool bForce );
 };
-
-

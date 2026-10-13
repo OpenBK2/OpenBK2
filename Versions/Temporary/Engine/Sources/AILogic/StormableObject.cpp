@@ -275,6 +275,3 @@ const bool CStormableObject::IsAnyInsiderVisible() const
 		return false;
 	}
 }
-
-
-

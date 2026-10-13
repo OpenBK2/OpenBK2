@@ -26,5 +26,3 @@ public:
 I2DScene* Make2DScene();
 
 }
-
-

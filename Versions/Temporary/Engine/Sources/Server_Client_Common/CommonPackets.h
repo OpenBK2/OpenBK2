@@ -190,8 +190,3 @@ public:
 	CTestDirectPacket() { }
 	CTestDirectPacket( const int nClientID ) : CNetPacket( nClientID ) { }
 };
-
-
-
-
-

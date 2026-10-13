@@ -224,5 +224,3 @@ void CTerraGen::CreateDebris( const std::string &szFileName, CArray2D<uint8_t> *
 		break;
 	}
 }
-
-

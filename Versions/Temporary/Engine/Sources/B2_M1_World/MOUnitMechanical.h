@@ -122,5 +122,3 @@ public:
 	IMOContainer* GetContainer() const { return pTransport; }
 	void SetCrewSoldier( IMOUnit *pCrewSoldier ) { pOneFromCrew = pCrewSoldier; }
 };
-
-

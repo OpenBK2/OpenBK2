@@ -27,5 +27,3 @@ void RenderGf3Fast( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRende
 	NGfx::CTexture *pParticleLight, NGfx::CCubeTexture *_pSky );
 
 }
-
-

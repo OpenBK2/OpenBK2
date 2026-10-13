@@ -13,5 +13,3 @@ public:
 	virtual bool ProcessEvent( const struct SGameMessage &msg );
 	virtual void Step( bool bAppActive );
 };
-
-

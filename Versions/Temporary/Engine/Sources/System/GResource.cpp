@@ -266,5 +266,3 @@ struct SKillLoaderThread
 	}
 } killLoaderThread;
 }
-
-

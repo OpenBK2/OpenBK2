@@ -138,5 +138,3 @@ void CScene::SetCircle( int nID, float fRadius, const CVec3 &vColor, float fWidt
 	else
 		pVO->pCircle = 0;
 }
-
-

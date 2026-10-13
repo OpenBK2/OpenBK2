@@ -79,5 +79,3 @@ struct SLinkObjDataAutoMagic
 		pLinkObjData = 0;
 	}
 };
-
-

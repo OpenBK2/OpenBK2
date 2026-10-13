@@ -1665,6 +1665,3 @@ void CATGMTraj::Segment()
 		bFinished = true;
 	}
 }
-
-
-

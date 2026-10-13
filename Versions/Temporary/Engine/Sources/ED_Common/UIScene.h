@@ -20,6 +20,3 @@ struct IUIScene : public CObjectBase
 };
 
 IUIScene *CreateUIScene();
-
-
-

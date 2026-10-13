@@ -1815,5 +1815,3 @@ void CArtilleryAttackAviationState::Segment()
 	if ( pArtillery->IsInstalled() )
 		CSoldierAttackAviationState::Segment();
 }
-
-

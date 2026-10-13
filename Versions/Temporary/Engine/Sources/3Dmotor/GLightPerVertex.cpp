@@ -630,4 +630,3 @@ void CalcPerVertexLight( NGfx::SGeomVecT2C1 *pRes,
 	}
 }
 }
-

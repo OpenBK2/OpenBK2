@@ -42,5 +42,3 @@ struct SSceneObjIconInfo
 	{
 	}
 };
-
-

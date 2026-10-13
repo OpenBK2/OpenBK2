@@ -86,5 +86,3 @@ class CICMPLadderGame : public CInterfaceCommandBase<CInterfaceMPLadderGame>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

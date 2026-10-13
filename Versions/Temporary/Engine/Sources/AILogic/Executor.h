@@ -358,5 +358,3 @@ struct IExecutorContainer : public CAIObjectBase
 	virtual void ReturnID( const int id ) = 0;
 
 };
-
-

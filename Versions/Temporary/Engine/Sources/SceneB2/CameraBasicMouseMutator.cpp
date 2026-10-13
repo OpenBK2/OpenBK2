@@ -260,5 +260,3 @@ int CCameraBasicMouseMutator::operator&( IBinSaver &saver )
 }
 
 }
-
-

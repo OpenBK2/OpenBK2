@@ -202,5 +202,3 @@ std::string CMODContainer::GetDataFolder( SUserData::ENormalizePathType eNormali
 }
 
 // basement storage
-
-

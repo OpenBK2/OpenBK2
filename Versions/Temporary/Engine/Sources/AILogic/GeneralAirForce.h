@@ -90,5 +90,3 @@ public:
 	void PassTurn();
 	bool TurnReturned() const;
 };
-
-

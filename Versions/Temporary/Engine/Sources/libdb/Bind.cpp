@@ -250,5 +250,3 @@ bool CStructIterator::Next()
 
 }
 }
-
-

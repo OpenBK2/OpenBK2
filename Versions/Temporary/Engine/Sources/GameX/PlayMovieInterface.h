@@ -50,5 +50,3 @@ public:
 	//
 	virtual int operator&( IBinSaver &saver );
 };
-
-

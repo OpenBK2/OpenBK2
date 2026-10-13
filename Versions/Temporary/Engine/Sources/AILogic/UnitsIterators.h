@@ -41,5 +41,3 @@ public:
 	class CAviation* operator*() const;
 	const bool IsFinished() const;
 };
-
-

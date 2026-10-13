@@ -10,4 +10,3 @@ void CMapInfoInterface::ToggleCameraControl( const SGameMessage &msg, bool bEnab
 		pMapInfoState->CancelSelection();
 	}
 }
-

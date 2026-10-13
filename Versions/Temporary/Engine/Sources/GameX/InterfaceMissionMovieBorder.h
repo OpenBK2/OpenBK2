@@ -44,5 +44,3 @@ public:
 
 	void Configure( const char *pszConfig );
 };
-
-

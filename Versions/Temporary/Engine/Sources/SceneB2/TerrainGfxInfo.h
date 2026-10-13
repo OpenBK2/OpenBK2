@@ -155,5 +155,3 @@ struct STerrainGfxInfo
 		return 0;
 	}
 };
-
-

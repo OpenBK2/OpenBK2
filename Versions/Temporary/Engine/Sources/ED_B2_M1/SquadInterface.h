@@ -8,5 +8,3 @@ class CSquadInterface : public CEditorInterfaceBase
 };
 
 INTERFACE_COMMAND_DECLARE( CSquadInterfaceCommand, CSquadInterface )
-
-

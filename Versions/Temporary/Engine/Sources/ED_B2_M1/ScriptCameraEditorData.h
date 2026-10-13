@@ -42,6 +42,3 @@ struct SScriptCameraWindowData
 		eLastAction = SCA_NO_ACTIONS;
 	}
 };
-
-
-

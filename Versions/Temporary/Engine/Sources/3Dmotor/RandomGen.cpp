@@ -163,5 +163,3 @@ void CRandomGenerator::FillRandRsl()
 	for ( int k = 0; k < RANDSIZ; ++k )
 		randrsl[k] = rd();
 }
-
-

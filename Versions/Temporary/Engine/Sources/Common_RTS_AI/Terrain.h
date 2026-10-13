@@ -359,5 +359,3 @@ struct COMMON_RTS_AI_EXPORT STerrainModeSetter
 	explicit STerrainModeSetter( const ELockMode &eMode, CTerrain *pTerrain );
 	~STerrainModeSetter();
 };
-
-

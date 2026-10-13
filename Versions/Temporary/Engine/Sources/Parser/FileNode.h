@@ -99,5 +99,3 @@ void AddCPPExternal( const std::string &szIncludeName );
 CFileNode* GetCurFileNode();
 
 }
-
-

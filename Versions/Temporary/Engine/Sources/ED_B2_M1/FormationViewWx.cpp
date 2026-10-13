@@ -215,4 +215,3 @@ namespace NFormationView
 		return pWindow;
 	}
 }
-

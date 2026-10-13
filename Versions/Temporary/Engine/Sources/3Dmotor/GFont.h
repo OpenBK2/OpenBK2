@@ -13,5 +13,3 @@ protected:
 };
 
 }; // namespace
-
-

@@ -31,4 +31,3 @@ public:
 
 	virtual void GetSimplePath( CPathList *pPaths ) { NI_ASSERT( false, "wrong call" ); }
 };
-

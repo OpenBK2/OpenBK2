@@ -831,5 +831,3 @@ void SavePassProfile( const NDb::SPassProfile &passProfile, const std::string &_
 		}
 	}
 }
-
-

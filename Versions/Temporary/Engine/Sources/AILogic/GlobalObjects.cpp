@@ -168,5 +168,3 @@ void NGlobalObjects::Serialize( int idChunk, IBinSaver &saver )
 	CGlobalSerializer globalSerializer;
 	saver.Add( idChunk, &globalSerializer );
 }
-
-

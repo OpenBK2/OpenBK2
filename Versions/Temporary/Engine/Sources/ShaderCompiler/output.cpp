@@ -213,4 +213,3 @@ void WriteResult( const char *pszOutput )
 		std::filesystem::remove( szTempFileName );
 	}
 }
-

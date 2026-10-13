@@ -5,5 +5,3 @@
 
 AILOGIC_EXPORT void CreateAI();
 struct IAILogic* CreateAI4Globe();
-
-

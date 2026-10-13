@@ -143,4 +143,3 @@ CLongObjectCreation * Create( const CVec2 &vPos, int nPlayer, bool bAllowModific
 	return data.pCreation;
 }
 }
-

@@ -75,4 +75,3 @@ public:
 	virtual const ENetMode GetMode() const { return ENM_LAN; }
 	virtual void SetLanTester( CLANTester *_pLANTester ) { pLanTester = _pLANTester ; }
 };
-

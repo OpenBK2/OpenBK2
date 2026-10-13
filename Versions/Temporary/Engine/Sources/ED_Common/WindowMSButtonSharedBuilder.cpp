@@ -249,5 +249,3 @@ bool CWindowMSButtonSharedBuilder::CreateButtonState( const std::string		 & rszU
 }
 
 // basement storage
-
-

@@ -75,5 +75,3 @@ int CModelEditorSettings::operator&( IXmlSaver &xs )
 }
 
 // basement storage
-
-

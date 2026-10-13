@@ -656,4 +656,3 @@ void CMechUnitInsideMechUnitState::OnSerialize( IBinSaver &saver )
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11123380, CMechUnitInsideMechUnitState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E5, CMechUnitEntrenchSelfState );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4C2, CTankPitLeaveState );
-

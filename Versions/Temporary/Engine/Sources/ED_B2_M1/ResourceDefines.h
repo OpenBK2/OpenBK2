@@ -566,5 +566,3 @@
 #define ID_MODEL_EDITOR_DW													(IDC_DOCKING_WINDOW_0 + 40)
 //
 #define ID_MOVIES_EDITOR_DW													(IDC_DOCKING_WINDOW_0 + 50)
-
-

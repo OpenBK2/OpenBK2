@@ -386,5 +386,3 @@ void CScene::GetCoveredObjects( std::list<int> *pCoveredObjects, const SObjectFi
 	}
 */
 }
-
-

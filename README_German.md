@@ -80,4 +80,3 @@ Dieses Projekt wird unter einer **speziellen nicht-kommerziellen Lizenz** von NI
 - **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlib-Lizenz
 
 Bitte lesen Sie die vollständige [Lizenzvereinbarung](LICENSE.md) vor der Nutzung dieses Codes.  
-

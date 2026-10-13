@@ -35,5 +35,3 @@ inline CStrStream& qcomma( CStrStream& sStream ) { sStream << "\""; return sStre
 inline CStrStream& tab( CStrStream& sStream ) { sStream << "\t"; return sStream; }
 
 }
-
-

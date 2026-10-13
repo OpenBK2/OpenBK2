@@ -1152,4 +1152,3 @@ void CFormation::QuickLoadToMechUnit( CAITransportUnit *pTransport )
 START_REGISTER(FormationVars)
 REGISTER_VAR_EX( "draw_path_marker", NGlobal::VarBoolHandler, &bDrawPathMarkers, 0, STORAGE_NONE );
 FINISH_REGISTER
-

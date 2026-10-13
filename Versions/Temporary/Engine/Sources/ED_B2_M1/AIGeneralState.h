@@ -57,5 +57,3 @@ public:
 	void DeletePoint();
 	void RefreshWindowData();
 };
-
-

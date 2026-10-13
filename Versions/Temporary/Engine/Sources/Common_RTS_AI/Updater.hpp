@@ -23,5 +23,3 @@ public:
 	virtual void AddUpdate( CObjectBase *pSingleUpdate, IUpdatableObject *pUpdateOwner );
 	virtual void AddUpdate( IContinuosUpdate *pContinuosUpdate );
 };
-
-

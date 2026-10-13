@@ -23,6 +23,3 @@ void CZipPacket::UnZip( CMemoryStream *pOutStream ) const
 	uncompress( pOutStream->GetBufferForWrite(), &nNewSize, buffer.GetBuffer(), buffer.GetSize() );
 	NI_ASSERT( nNewSize == nUnzippedSize, "Size after decompression differs!" )
 }
-
-
-

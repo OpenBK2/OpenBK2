@@ -60,5 +60,3 @@ public:
 	virtual void SetPositions( const std::vector<float> &positions, bool bSolid );
 	//IMultiTextureProgressBar}
 };
-
-

@@ -72,5 +72,3 @@ public:
 	// peeks outgoing message
 	SMPUIMessage* PeekMessage();
 };
-
-

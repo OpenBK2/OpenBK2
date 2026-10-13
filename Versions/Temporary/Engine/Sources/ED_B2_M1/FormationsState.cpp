@@ -555,5 +555,3 @@ void CFormationsState::ClearMaskManipulator()
 		pMaskManipulator = 0;
 	}
 }
-
-

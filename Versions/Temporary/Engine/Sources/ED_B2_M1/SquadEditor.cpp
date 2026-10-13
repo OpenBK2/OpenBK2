@@ -296,5 +296,3 @@ int CSquadEditor::GetMemberIndexBySceneID( int nSceneID )
 	}
 	return -1;
 }
-
-

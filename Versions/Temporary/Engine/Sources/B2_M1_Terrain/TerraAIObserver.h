@@ -60,5 +60,3 @@
 //	virtual void InitHeights4Editor( int nSizeX, int nSizeY );
 //
 //};
-
-

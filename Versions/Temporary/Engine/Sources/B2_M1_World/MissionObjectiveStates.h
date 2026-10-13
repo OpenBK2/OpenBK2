@@ -11,5 +11,3 @@ enum EMissionObjectiveState : int
 
 	EMOS_MAX				= 3,
 };
-
-

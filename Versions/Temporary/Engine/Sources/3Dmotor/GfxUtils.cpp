@@ -482,4 +482,3 @@ void CCopyShadowsAndCloudsEffect::SetEffect( NGfx::CRenderContext *pRC, NGfx::CT
 	pRC->SetTexture( 1, pCloud, FILTER_POINT );
 }
 }
-

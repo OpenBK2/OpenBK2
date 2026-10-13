@@ -48,4 +48,3 @@ int CBackground::operator&( struct IBinSaver &saver )
 	saver.Add( 2, &fFadeValue );
 	return 0;
 }
-

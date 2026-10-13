@@ -170,5 +170,3 @@ int GetMaxBufferedFlipsNum();
 void ForceTextureFilterSetup();
 
 } // namespace
-
-

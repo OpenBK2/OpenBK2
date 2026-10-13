@@ -91,5 +91,3 @@ _3DMOTOR_EXPORT IAIMap* CreateAIMap();
 
 void FindClosePositionOnSurface( IAIMap *pMap, const CVec3 &ptPos, CVec3 *pRes, int nFlags );
 } // namespace
-
-

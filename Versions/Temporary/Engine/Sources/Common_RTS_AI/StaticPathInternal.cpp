@@ -88,5 +88,3 @@ int CCommonStaticPath::MarkStaticPath( const int nID, const NDebugInfo::EColor c
 
 	return DebugInfoManager()->CreateMarker( nID, tiles, color );
 }
-
-

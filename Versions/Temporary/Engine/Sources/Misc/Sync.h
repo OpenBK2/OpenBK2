@@ -357,5 +357,3 @@ class CSubtractFunc
 public:
 	static bool GetResult( int nMask ) { return nMask == 1; }
 };
-
-

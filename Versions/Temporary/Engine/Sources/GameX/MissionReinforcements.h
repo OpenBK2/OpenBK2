@@ -186,5 +186,3 @@ public:
 
 	void AfterLoad();
 };
-
-

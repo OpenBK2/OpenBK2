@@ -65,4 +65,3 @@ namespace NWx
 		return new TWindow( std::forward<TArgs>( rArgs )... );
 	}
 }
-

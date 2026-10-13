@@ -52,6 +52,3 @@ public:
 	int LoadModel( const NDb::SModel *pModel, const CVec3 &rvPosition );
 	void RefreshState( bool bForce );
 };
-
-
-

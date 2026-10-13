@@ -17,6 +17,3 @@
 //! chain.
 MAPEDITORLIB_EXPORT bool SetGetEditParameters( uintptr_t pEditParameters, unsigned nCommandHandlerType, int nCmdID );
 MAPEDITORLIB_EXPORT void CreateRefKey( std::string *pszKey, const struct SPropertyDesc *pPropertyDesc );
-
-
-

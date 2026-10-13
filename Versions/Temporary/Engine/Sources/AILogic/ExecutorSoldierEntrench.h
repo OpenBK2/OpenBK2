@@ -40,5 +40,3 @@ public:
 	bool IsExecutorValid() const;
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 };
-
-

@@ -198,5 +198,3 @@ public:
 	void OnWeaponOverOn( const std::string &szSender );
 	void OnWeaponOverOff( const std::string &szSender );
 };
-
-

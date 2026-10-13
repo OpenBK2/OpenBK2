@@ -13,5 +13,3 @@ public:
 };
 
 INTERFACE_COMMAND_DECLARE( CICDummy, CDummyInterface );
-
-

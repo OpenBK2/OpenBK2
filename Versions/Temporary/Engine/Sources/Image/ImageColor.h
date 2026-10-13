@@ -191,5 +191,3 @@ TColor GetARGBColorGradient( TColor zeroColor, TColor fullColor, float fGradient
 												(TColor)(int)( nZeroGreen + ( nFullGreen - nZeroGreen ) * fGradient ),
 												(TColor)(int)( nZeroBlue + ( nFullBlue - nZeroBlue ) * fGradient ) );
 }
-
-

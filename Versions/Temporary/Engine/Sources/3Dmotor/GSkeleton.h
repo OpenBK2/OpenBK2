@@ -99,5 +99,3 @@ struct IGetBone
 };
 
 }
-
-

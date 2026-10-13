@@ -77,5 +77,3 @@ EXPORT_RESULT CLightExporter::ExportObject( IManipulator* pManipulator,
 }
 
 // basement storage
-
-

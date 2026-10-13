@@ -28,5 +28,3 @@ int CExecutorAdrenalineRush::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19129441, CExecutorAdrenalineRush )
-
-

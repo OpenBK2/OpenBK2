@@ -22,6 +22,3 @@ struct SAIConsts
 		WAR_FOG_FULL_UPDATE = 200,
 	};
 };
-
-
-

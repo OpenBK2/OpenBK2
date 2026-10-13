@@ -82,5 +82,3 @@ public:
 	bool IsFinishedTask() const { return eState == SAAS_FINISHED_TASK; }
 	void Stop();
 };
-
-

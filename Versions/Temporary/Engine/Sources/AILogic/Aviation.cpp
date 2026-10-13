@@ -359,5 +359,3 @@ void CAviation::GetRPGStats( struct SAINotifyRPGStats *pStats )
 	CMilitaryCar::GetRPGStats( pStats );
 	pStats->fFuel = fFuel;
 }
-
-

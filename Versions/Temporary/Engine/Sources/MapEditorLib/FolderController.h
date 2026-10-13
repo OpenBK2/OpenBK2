@@ -79,7 +79,3 @@ public:
 	bool AddColorOperation( const std::string &rszObjectName, int nNewColor );
 	bool AddExpandOperation( const std::string &rszObjectName, bool bExpand );
 };
-
-
-
-

@@ -462,5 +462,3 @@ bool CMouseTranslator::IsDownSameTime( const NTimer::STime &curTime ) const
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1507B440, CMouseTranslatorB1 );
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1117AB80, CMouseTranslatorB2Game );
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1117AB81, CMouseTranslatorB2Replay );
-
-

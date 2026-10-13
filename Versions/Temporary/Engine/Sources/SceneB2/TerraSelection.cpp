@@ -81,5 +81,3 @@ void CTerraGen::CreateSelection( NMeshData::SMeshData *pData, const CVec3 &vMin,
 		}
 	}
 }
-
-

@@ -23,5 +23,3 @@ inline bool CheckRange( const TContainer &container, const int nIndex )
 #define CheckFixedRange( x, y, z ) true
 
 #endif // use ctrl + }
-
-

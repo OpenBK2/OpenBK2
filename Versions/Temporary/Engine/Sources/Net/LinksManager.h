@@ -26,5 +26,3 @@ namespace NNet
 		virtual bool GetSelfAddress( class  CNodeAddressSet *pRes ) const;
 	};
 }
-
-

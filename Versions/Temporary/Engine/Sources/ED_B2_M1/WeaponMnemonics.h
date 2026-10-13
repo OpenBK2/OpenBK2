@@ -16,5 +16,3 @@ public:
 
 extern CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 extern CWeaponMnemonics typeWeaponMnemonics;
-
-

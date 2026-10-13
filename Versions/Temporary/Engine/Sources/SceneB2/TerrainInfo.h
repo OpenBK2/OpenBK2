@@ -424,5 +424,3 @@ struct STerraObjectInfo
 		return 0;
 	}
 };
-
-

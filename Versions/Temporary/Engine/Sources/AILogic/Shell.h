@@ -558,5 +558,3 @@ public:
 	void UpdateCheckSum( uLong *pCheckSum );
 	void UpdateDebugChecksums(FILE* f);
 };
-
-

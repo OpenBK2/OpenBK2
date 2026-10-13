@@ -62,5 +62,3 @@ bool HasReinfUpgrade( const NDb::SChapter *pChapter, const NDb::SReinforcement *
 }
 
 } //namespace NDBWrap
-
-

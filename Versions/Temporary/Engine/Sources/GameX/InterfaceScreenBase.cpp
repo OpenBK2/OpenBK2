@@ -586,4 +586,3 @@ static void CmdStartInterface ( const std::string &szID, const std::vector<std::
 START_REGISTER(Interfaces)
 REGISTER_CMD( "start_interface", NInterface::CmdStartInterface )
 FINISH_REGISTER
-

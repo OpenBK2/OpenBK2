@@ -53,4 +53,3 @@ public:
 	bool GetNextLine( SConsoleLine *pRes, int *pSequenceID );
 	SPipeChannel &GetPipeChannel( int n ) { return pipes[n]; }
 };
-

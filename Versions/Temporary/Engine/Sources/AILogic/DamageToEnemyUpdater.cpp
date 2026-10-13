@@ -68,4 +68,3 @@ void CDamageToEnemyUpdater::UnsetDamageFromEnemy( CAIUnit *pEnemy )
 	}
 	pCurEnemy = 0;
 }
-

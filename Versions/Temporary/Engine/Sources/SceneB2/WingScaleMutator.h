@@ -22,5 +22,3 @@ public:
 	void ShowStatic( const bool bShow ) { bShowStatic = bShow; }
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 };
-
-

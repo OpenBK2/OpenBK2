@@ -16,5 +16,3 @@ enum
 	AI_TRAIN_CAR					= 0x191992C1,
 	AI_TRAIN_ARTILLERY		= 0x312583C0,
 };
-
-

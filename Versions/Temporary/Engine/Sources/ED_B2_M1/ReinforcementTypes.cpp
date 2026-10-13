@@ -61,5 +61,3 @@ CMnemonicsCollector<int>( NDb::_RT_NONE, "_RT_NONE" )
 }
 
 CReinforcementTypeMnemonics typeReinforcementMnemonics;
-
-

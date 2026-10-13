@@ -88,5 +88,3 @@ void CButtonGroup::Remove_All()
 	buttons.clear();
 	pPressed = 0;
 }
-
-

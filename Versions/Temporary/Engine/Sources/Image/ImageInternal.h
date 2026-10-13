@@ -40,5 +40,3 @@ public:
 	uint32_t ComposeColorSlow( uint32_t dwColor ) const;
 	uint32_t DecompColor( uint32_t dwColor ) const;
 };
-
-

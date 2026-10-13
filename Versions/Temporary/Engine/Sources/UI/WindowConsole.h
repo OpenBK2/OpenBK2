@@ -116,5 +116,3 @@ public:
 	void ShowStatsWindow( const bool bShow );
 	struct IStatsSystemWindow * GetStatsWindow();
 };
-
-

@@ -1903,4 +1903,3 @@ namespace NMainFrameWx
 		}
 	}
 }
-

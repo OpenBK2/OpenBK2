@@ -22,5 +22,3 @@ public:
 
 SERVER_CLIENT_COMMON_EXPORT CNetLogger* GetNetLogger();
 SERVER_CLIENT_COMMON_EXPORT const char* GetPacketInfo( class CNetPacket *pPacket );
-
-

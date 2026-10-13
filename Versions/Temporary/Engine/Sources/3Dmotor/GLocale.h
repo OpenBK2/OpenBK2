@@ -123,5 +123,3 @@ inline int FontPointsToPixelWidth( const int nPoints, const float fScreenWidth )
 }
 
 }; // namespace
-
-

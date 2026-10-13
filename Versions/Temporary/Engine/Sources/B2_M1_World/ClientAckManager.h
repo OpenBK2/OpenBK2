@@ -29,5 +29,3 @@ struct IClientAckManager : public CObjectBase
 
 B2_M1_WORLD_EXPORT IClientAckManager * AckManager();
 B2_M1_WORLD_EXPORT IClientAckManager *CreateAckManager();
-
-

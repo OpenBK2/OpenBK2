@@ -29,5 +29,3 @@ protected:
 														 IManipulator *pBuildDataManipulator ) { return false; }
 	bool NeedBuildDataDialog() const { return false; }
 };
-
-

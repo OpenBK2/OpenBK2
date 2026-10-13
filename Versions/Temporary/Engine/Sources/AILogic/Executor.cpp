@@ -38,5 +38,3 @@ CExecutor::~CExecutor()
 	if ( -1 != nUniqueID && pTheExecutorsContainer )
 		pTheExecutorsContainer->ReturnID( nUniqueID );
 }
-
-

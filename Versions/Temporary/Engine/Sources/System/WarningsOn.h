@@ -12,7 +12,3 @@ the MS headers to compile.
 
 /* Get the warning level back to level 4. */
 #pragma warning ( pop )
-
-
-
-

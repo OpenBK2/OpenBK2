@@ -131,5 +131,3 @@ public:
 	bool ProcessLadderStatisticsRequestPacket( class CLadderStatisticsRequestPacket *pPacket );
 	bool ProcessSurrenderPacket( CLadderSurrenderPacket *pPacket );
 };
-
-

@@ -176,4 +176,3 @@ _3DLIB_EXPORT void SplitWrapping( CObjectInfo::SData *pData );
 void SplitWrapping2( CObjectInfo::SData *pData );
 
 }
-

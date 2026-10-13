@@ -160,5 +160,3 @@ public:
 
 	friend class CBridgeCreation;
 };
-
-

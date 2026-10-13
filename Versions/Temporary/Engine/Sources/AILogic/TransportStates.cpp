@@ -1515,5 +1515,3 @@ ETryStateInterruptResult CTransportWaitForUnload::TryInterruptState( class CAICo
 	pTransport->SetCommandFinished();
 	return TSIR_YES_IMMIDIATELY;
 }
-
-

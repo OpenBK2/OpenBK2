@@ -723,5 +723,3 @@ int CEventUpdater::operator&( IBinSaver &saver )
 
 	return 0;
 }
-
-

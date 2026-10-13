@@ -415,5 +415,3 @@ enum EActionThrowGrenadeParam
 	ATGP_ATACK_OBJECT = 1,
 	ATGP_ATACK_POINT = 2,
 };
-
-

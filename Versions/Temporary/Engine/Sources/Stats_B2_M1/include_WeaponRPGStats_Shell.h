@@ -37,4 +37,3 @@ bool ToAIUnits( bool bInEditor )
 	nRelaxTime = int( fRelaxTime * 1000.0f );
 	return true;
 }
-

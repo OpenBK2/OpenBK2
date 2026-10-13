@@ -113,5 +113,3 @@ void SerializeSceneHoldQueue( IBinSaver::chunk_id chunkID, IBinSaver &saver )
 		saver.Add( chunkID, &hq );
 	}
 }
-
-

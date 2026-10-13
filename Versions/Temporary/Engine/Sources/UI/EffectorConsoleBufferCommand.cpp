@@ -45,4 +45,3 @@ const int CEffectorConsoleBufferCommand::Segment( const int timeDiff, struct ISc
 	bFinished = true;
 	return 0;
 }
-

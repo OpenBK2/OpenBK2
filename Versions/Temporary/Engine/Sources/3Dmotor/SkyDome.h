@@ -19,5 +19,3 @@ public:
 ISkyDome *CreateSkyDome( NGScene::IGameView *pView, const NDb::SModel *pModel );
 
 } // namespace NGScene
-
-

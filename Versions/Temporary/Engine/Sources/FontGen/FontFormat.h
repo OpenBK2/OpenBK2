@@ -75,5 +75,3 @@ public:
 	int operator&( CStructureSaver &f );
 	friend class CFontGen;
 };
-
-

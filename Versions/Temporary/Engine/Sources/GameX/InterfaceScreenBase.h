@@ -138,5 +138,3 @@ class CommandName : public CInterfaceCommandBase< InterfaceName >	\
 {																																	\
 	OBJECT_NOCOPY_METHODS( CommandName );														\
 };
-
-

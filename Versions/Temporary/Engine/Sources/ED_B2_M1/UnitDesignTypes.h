@@ -9,6 +9,3 @@ public:
 };
 
 extern CUnitDesignTypeMnemonics typeUnitDesignTypeMnemonics;
-
-
-

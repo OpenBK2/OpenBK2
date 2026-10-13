@@ -42,5 +42,3 @@ bool Compile( std::vector< CObj<NDb::NTypeDef::STypeDef> > *pTypes, NDb::NTypeDe
 }
 
 }
-
-

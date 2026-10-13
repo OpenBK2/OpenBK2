@@ -8,4 +8,3 @@ struct SDecalMappingInfo
 	float fRadius, fRotation;
 };
 }
-

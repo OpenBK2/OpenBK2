@@ -65,5 +65,3 @@ class CICMissionBriefing : public CInterfaceCommandBase<CInterfaceMissionBriefin
 public:
 	void Configure( const char *pszConfig );
 };
-
-

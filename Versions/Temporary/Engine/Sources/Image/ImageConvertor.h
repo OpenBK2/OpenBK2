@@ -346,4 +346,3 @@ inline void FlipX( CArray2D<TColor> &data )
 }
 
 }
-

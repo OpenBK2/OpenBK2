@@ -20,6 +20,3 @@ struct IMODContainer : public CObjectBase
 	/**/
 	virtual std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType ) = 0;
 };
-
-
-

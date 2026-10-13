@@ -142,5 +142,3 @@ inline void CGameLobby::GetUpdate( TInPacket *pInPacket, TOutPacket*, TGetInfo &
 
 	PushPacket( pOutPacket );
 }
-
-

@@ -707,4 +707,3 @@ namespace NMapObjectView
 		return pWindow;
 	}
 }
-

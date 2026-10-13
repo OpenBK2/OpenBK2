@@ -173,5 +173,3 @@ const bool CDebugInfoManager::PopUpdate()
 		return true;
 	}
 }
-
-

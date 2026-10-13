@@ -48,5 +48,3 @@ struct SConfigFile
 	// return number of entries removed
 	int RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase );
 };
-
-

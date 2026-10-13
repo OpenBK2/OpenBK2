@@ -103,4 +103,3 @@ CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGe
 
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x1318BB41, CHeightFogHolder )
-

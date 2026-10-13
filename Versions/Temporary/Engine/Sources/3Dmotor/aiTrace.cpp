@@ -183,4 +183,3 @@ void CTracer::TraceEntity( const std::vector<SConvexHull> &hulls, bool bTerrain 
 }
 
 }
-

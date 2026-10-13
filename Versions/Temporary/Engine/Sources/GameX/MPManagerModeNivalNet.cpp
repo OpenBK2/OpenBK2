@@ -1141,5 +1141,3 @@ bool CMPManagerModeNivalNet::OnLadderInvalidStatisticsPacket( class CLadderInval
 	}
 	return true;
 }
-
-

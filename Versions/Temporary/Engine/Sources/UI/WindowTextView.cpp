@@ -190,5 +190,3 @@ void CWindowTextView::SetIDForMLHandler( int nID )
 	if ( pGfxText )
 		InitText();
 }
-
-

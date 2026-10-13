@@ -206,4 +206,3 @@ void CMapSounds::Update( const CVec3 &vListener, const float fViewRadius )
 		timeNextUpdate = CSoundScene2D::GetCurTime() + SSoundSceneConsts::SS_MAP_SOUND_PERIOND;
 	}
 }
-

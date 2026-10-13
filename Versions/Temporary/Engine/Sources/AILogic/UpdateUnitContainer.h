@@ -48,4 +48,3 @@ public:
 		return 0;
 	}
 };
-

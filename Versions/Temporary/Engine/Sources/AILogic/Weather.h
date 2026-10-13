@@ -33,5 +33,3 @@ public:
 	// turn on/off automatic weather changes
 	void SwitchAutomatic( const bool bSwitchAutomatic );
 };
-
-

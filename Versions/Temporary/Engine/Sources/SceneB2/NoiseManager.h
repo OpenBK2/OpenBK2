@@ -70,5 +70,3 @@ public:
 	CNoiseAccessor GetNoise( unsigned int nNoiseNum );
 	CNoiseAccessor GetNoise( const std::string &szName );
 };
-
-

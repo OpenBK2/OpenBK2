@@ -21,5 +21,3 @@ inline void LoadDBID( IBinSaver *pSaver, const int nChunk, int *pDBID )
 	*pDBID = Singleton<IObjectsDB>()->GetIndex( pDesc );
 }
 */
-
-

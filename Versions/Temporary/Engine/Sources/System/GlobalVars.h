@@ -112,4 +112,3 @@ SYSTEM_EXPORT void ResetVarsToDefault( EStorageClass storage );
 SYSTEM_EXPORT void SaveAllVars( const std::string &szGlobalName, const std::string &szUserName );
 
 }
-

@@ -622,5 +622,3 @@ bool CInterfaceChapterMapMenu::OnMouseOverReinf( const std::string &szSender, bo
 
 	return true;
 }
-
-

@@ -186,4 +186,3 @@ void CPassMarkersDraw::DrawPassabilities1()
 START_REGISTER( PassMarkers )
 REGISTER_VAR_EX( "show_water", NGlobal::VarBoolHandler, &NPassMarkers::s_bShowWater, false, STORAGE_NONE );
 FINISH_REGISTER
-

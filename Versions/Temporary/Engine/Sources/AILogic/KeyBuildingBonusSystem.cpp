@@ -116,4 +116,3 @@ void CKeyBuildingBonusSystem::ChangeOwnership( int _nOldPlayer, int _nNewPlayer,
 		}
 	}
 }
-

@@ -11,5 +11,3 @@
 #define LOOK_INIT( a )
 #define LOOK_FUNC
 #endif // _NSTL_HELP_DEBUG
-
-

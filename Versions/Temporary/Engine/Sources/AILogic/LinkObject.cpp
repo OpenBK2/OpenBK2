@@ -157,5 +157,3 @@ bool CLinkObject::IsLinkObjectExists( const int nUniqueID )
 {
 	return SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.find( nUniqueID ) != SLinkObjDataAutoMagic::pLinkObjData->unitsID2object.end();
 }
-
-

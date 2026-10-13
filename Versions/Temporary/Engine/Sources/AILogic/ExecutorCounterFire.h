@@ -41,4 +41,3 @@ public:
 	virtual bool IsExecutorValid() const { return IsValid( pUnit );	}
 	virtual void RegisterOnEvents( IExecutorContainer *pContainer );
 };
-

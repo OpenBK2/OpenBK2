@@ -247,5 +247,3 @@ struct SCompactTransformer
 };
 
 }; // namespace NGfx
-
-

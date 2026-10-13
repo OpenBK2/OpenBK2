@@ -65,5 +65,3 @@ bool CPCBaseDialog::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pb
 }
 
 // basement storage
-
-

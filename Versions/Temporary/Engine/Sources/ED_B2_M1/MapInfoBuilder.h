@@ -55,5 +55,3 @@ public:
 	static bool EnsureMinimapMaterialAndTexture( IManipulator *pObjectManipulator, const CDBID &dbid );
 	static bool MakeMinimapMaterialAndTexture( std::string *pszObjectName, const std::string &szFolder );
 };
-
-

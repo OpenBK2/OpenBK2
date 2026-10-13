@@ -139,4 +139,3 @@ public:
 	virtual bool IsAttackingState() const { return true; }
 	virtual const CVec2 GetPurposePoint() const { return VNULL2; }
 };
-

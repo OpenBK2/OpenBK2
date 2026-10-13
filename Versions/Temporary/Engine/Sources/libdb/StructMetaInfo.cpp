@@ -512,5 +512,3 @@ void SStructMetaInfo::LinkWithTypeDef( const std::string &szAddName, NTypeDef::S
 }
 
 };
-
-

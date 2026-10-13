@@ -211,5 +211,3 @@ public:
 	friend class CWarFogVisibility;
 	friend class CWarFogTracer;
 };
-
-

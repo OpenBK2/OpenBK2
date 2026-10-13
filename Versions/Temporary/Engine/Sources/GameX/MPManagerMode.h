@@ -256,4 +256,3 @@ public:
 	CB2GameLostPacket( const int nClientID, const int _nGameID, const int _nSegment )
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nSegment( _nSegment ) { }
 };
-

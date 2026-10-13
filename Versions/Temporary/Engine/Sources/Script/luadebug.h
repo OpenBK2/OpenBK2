@@ -40,6 +40,3 @@ struct lua_Debug {
   /* private part */
   struct TObject *_func;  /* active function */
 };
-
-
-

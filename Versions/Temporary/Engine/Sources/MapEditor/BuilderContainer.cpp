@@ -181,5 +181,3 @@ bool CBuilderContainer::FillNewObjectName( SBuildDataParams *pBuildDataParams )
 
 
 // basement storage
-
-

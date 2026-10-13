@@ -104,5 +104,3 @@ public:
 
 	int operator&( IBinSaver &saver ) { NI_ASSERT( 0, "do not serialize" ); return 0; }
 };*/
-
-

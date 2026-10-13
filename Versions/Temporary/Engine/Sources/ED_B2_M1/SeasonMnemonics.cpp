@@ -38,5 +38,3 @@ CSeasonFolderPostfixMnemonics::CSeasonFolderPostfixMnemonics() : CMnemonicsColle
 CSeasonMnemonics typeSeasonMnemonics;
 CSeasonFilePostfixMnemonics typeSeasonFilePostfixMnemonics;
 CSeasonFolderPostfixMnemonics typeSeasonFolderPostfixMnemonics;
-
-

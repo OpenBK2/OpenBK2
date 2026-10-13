@@ -144,4 +144,3 @@ bool GetDirectedCirclesTangentPoints( const CDirectedCircle &from, const CDirect
 	}
 	return true;
 }
-

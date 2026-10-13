@@ -16,5 +16,3 @@ float GetLeaderRankExp( const NDb::SCampaign *pCampaign, int nRank );
 bool HasReinfUpgrade( const NDb::SChapter *pChapter, const NDb::SReinforcement *pCurReinf );
 
 } //namespace NDBWrap
-
-

@@ -278,5 +278,3 @@ void CStandartSmoothPathBasis::OnSerialize( IBinSaver &f )
 {
 	SerializeBasePathUnit( f, 2, &pUnit );
 }
-
-

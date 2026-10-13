@@ -27,5 +27,3 @@ public:
 	void MutateSkeletonPose( NAnimation::SSkeletonPose *pPose );
 	int operator&( IBinSaver &saver );
 };
-
-

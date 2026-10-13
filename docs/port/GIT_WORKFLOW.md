@@ -225,5 +225,3 @@ Nuclear option: `rm -rf .git/rr-cache` - you only lose memoised resolutions, nev
 
 **It is per-repository.** `.git/rr-cache` lives in the WSL clone and is not pushed. The Windows
 repo has its own (empty) cache. If you ever want to carry resolutions across, copy the directory.
-
-

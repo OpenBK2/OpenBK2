@@ -120,6 +120,3 @@ bool CFenceRPGStatsExporter::ExportVisobjs( IManipulator *pManipulator,
 
 	return bResult;
 }
-
-
-

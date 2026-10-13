@@ -30,5 +30,3 @@ struct granny_file_info;
 int TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, granny_file_info *pFile );
 bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::string &rszGeometryResourceName );
 //////////////////////////////////////////////////////////////////////////////////////`////////////////////////////////////////
-
-

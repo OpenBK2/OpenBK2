@@ -222,5 +222,3 @@ public:
 	const CDataStream* operator->() const { return pStream; }
 	operator CDataStream*() { return pStream; }
 };
-
-

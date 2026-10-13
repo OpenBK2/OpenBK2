@@ -263,5 +263,3 @@ const int CEffectorB2Move::Segment( const int timeDiff, struct IScreen *pScreen,
 
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B2B80, SWindowContextB2Move)
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x171B1C42, CEffectorB2Move)
-
-

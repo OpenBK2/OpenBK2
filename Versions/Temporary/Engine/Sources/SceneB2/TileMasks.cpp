@@ -570,6 +570,3 @@ START_REGISTER( TerrainBluring )
 	REGISTER_VAR_EX( "terrain_blur_radius", NGlobal::VarIntHandler, &s_nTerrainBlurRaduis, 1, STORAGE_USER );
 	REGISTER_VAR_EX( "terrain_blur_treshhold", NGlobal::VarIntHandler, &s_nTerrainBlurThreshHold, 0, STORAGE_USER );
 FINISH_REGISTER
-
-
-

@@ -712,4 +712,3 @@ namespace NSceneSurface
 		return new CWxSceneSurface();
 	}
 }
-

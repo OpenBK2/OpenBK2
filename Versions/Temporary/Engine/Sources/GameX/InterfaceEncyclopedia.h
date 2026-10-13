@@ -201,5 +201,3 @@ class CICEncyclopediaWait : public CInterfaceCommandBase<CInterfaceEncyclopediaW
 public:
 	void Configure( const char *pszConfig );
 };
-
-

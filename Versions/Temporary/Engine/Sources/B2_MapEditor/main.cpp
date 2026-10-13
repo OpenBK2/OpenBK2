@@ -144,4 +144,3 @@ CEditorApp& NWxHost::GetEditorApp()
 {
 	return theEditorApp;
 }
-

@@ -47,5 +47,3 @@
 
 #define PCSV_MAX_RECISION						6
 #define PCSV_DEFAULT_RECISION				-1
-
-

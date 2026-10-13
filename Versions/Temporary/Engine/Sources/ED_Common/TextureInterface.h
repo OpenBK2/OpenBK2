@@ -12,5 +12,3 @@ public:
 };
 
 INTERFACE_COMMAND_DECLARE( CTexturelIC, CTextureInterface )
-
-

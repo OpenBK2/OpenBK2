@@ -105,5 +105,3 @@ public:
 
 	int GetCurrentSpecialPosition() const;
 };
-
-

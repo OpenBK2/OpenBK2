@@ -132,5 +132,3 @@ void CUserDataContainer::Save()
 
 
 // basement storage
-
-

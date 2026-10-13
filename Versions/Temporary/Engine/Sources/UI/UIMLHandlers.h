@@ -318,5 +318,3 @@ public:
 			pLayout->PopState();
 	}
 };
-
-

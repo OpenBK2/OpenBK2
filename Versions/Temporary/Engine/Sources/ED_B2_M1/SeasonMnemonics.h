@@ -32,6 +32,3 @@ public:
 extern CSeasonMnemonics typeSeasonMnemonics;
 extern CSeasonFilePostfixMnemonics typeSeasonFilePostfixMnemonics;
 extern CSeasonFolderPostfixMnemonics typeSeasonFolderPostfixMnemonics;
-
-
-

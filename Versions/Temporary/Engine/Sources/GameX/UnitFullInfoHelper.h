@@ -85,5 +85,3 @@ const NDb::SModel* GetModel( const NDb::SVisObj *pVisObj, NDb::ESeason eSeason )
 bool IsResourcesCarrier( const CUserActions &userActions );
 
 } //namespace NUnitFullInfo
-
-

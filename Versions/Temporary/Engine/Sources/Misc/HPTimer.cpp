@@ -113,5 +113,3 @@ struct SHPTimerInit
 	SHPTimerInit() { InitHPTimer(); }
 };
 static SHPTimerInit hptInit;
-
-

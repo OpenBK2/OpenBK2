@@ -254,4 +254,3 @@ public:
 		return CTRect<int>( 0, 0, nWidth, nHeight );
 	}
 };
-

@@ -60,5 +60,3 @@ public:
 
 	virtual void OnProgress( EStage eStage ) {}
 };
-
-

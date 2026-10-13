@@ -27,4 +27,3 @@ struct IDbObserver: public CObjectBase
 };
 
 }
-

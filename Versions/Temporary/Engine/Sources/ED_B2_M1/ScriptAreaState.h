@@ -92,5 +92,3 @@ public:
 	//
 	void PostDraw( IPaintContext *pPaintDC );
 };
-
-

@@ -101,6 +101,3 @@ bool SaveGrayTGAImage( CDataStream *pStream, CArray2D<uint8_t> &data )
 	//
 	return true;
 }
-
-
-

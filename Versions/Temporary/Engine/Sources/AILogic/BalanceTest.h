@@ -34,5 +34,3 @@ public:
 	const NDb::SUnitStatsModifier * GetModifier( int nPlayer ) const;
 	void UnitDead( class CAIUnit *pUnit );
 };
-
-

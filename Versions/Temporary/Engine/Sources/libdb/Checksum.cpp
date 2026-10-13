@@ -51,5 +51,3 @@ uint32_t CalcCheckSum( const uint32_t dwLastCheckSum, const uint8_t *pBuf, const
 	return adler32( dwLastCheckSum, pBuf, nLen );
 }
 }
-
-

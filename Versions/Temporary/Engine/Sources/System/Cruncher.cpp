@@ -467,4 +467,3 @@ void CNetCompressor::Unpack( CDataStream &src, CDataStream &appendTo )
 	}
 	data.Free();
 }
-

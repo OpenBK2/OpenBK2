@@ -856,6 +856,3 @@ void CTerraGen::UpdateGfxInfo( const int nPatchX, const int nPatchY )
 			pGfxObserver->UpdatePatchGeometry( &terrainGfxInfo.terraPatches[nPatchInd + i], nPatchInd + i );
 	}
 }
-
-
-

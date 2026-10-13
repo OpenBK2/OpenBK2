@@ -79,5 +79,3 @@ void CExecutorCamouflage::SwitchOnEnd()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19139380, CExecutorCamouflage )
-
-

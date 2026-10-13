@@ -32,5 +32,3 @@ bool CDeadHouseAnimations::Update( const NTimer::STime &time )
 	}
 	return !animations.empty();
 }
-
-

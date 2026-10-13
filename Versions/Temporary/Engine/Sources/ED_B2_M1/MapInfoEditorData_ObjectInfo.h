@@ -346,5 +346,3 @@ namespace NMapInfoEditor
 		virtual void Trace() const;
 	};
 };
-
-

@@ -35,5 +35,3 @@ public:
 	void EndGame();
 	void AsyncDetected();
 };
-
-

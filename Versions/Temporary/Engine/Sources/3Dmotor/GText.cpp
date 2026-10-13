@@ -631,4 +631,3 @@ void CTextFormater::GetFontFormatInfo( const SFont &sFont, SFontInfo *pFontInfo 
 } // namespace
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02931161, CTextFormater );
-

@@ -61,6 +61,3 @@ public:
 	EXPORT_RESULT GetExportResult( const std::string &rszObjectRefName );
 	EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 };
-
-
-

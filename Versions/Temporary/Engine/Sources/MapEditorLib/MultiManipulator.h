@@ -98,5 +98,3 @@ public:
 	unsigned GetID() const;
 	bool IsFolder() const { return false; }
 };
-
-

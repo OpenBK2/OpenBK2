@@ -25,5 +25,3 @@ public:
 																			bool bExport,
 																			EXPORT_TYPE exportType ) { return ER_SUCCESS; }
 };
-
-

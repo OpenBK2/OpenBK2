@@ -54,4 +54,3 @@ SYSTEM_EXPORT void WriteToPipe( int nPipe, const std::wstring &sz, uint32_t dwCo
 SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::string *pRes, uint32_t *pDWColor );
 SYSTEM_EXPORT bool ReadFromPipe( int nPipe, std::wstring *pRes, uint32_t *pDWColor );
 SYSTEM_EXPORT void SetupPipeDumpToConsole( int nSrcPipe, int nDstStream );
-

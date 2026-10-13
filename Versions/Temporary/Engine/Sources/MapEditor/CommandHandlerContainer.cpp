@@ -143,5 +143,3 @@ bool CCommandHandlerContainer::UpdateCommand( unsigned nCommandID, bool *pbEnabl
 }
 
 // basement storage
-
-

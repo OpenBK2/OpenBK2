@@ -44,5 +44,3 @@ public:
 	bool Get( float *pfValue, float fPosition, bool bSquareInterpolated ) const;
 	inline float operator()( float fPosition, bool bSquareInterpolated = false ) const { float fValue = 0.0f; Get( &fValue, fPosition, bSquareInterpolated ); return fValue; }
 };
-
-

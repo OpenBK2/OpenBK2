@@ -421,5 +421,3 @@ ETryStateInterruptResult CArtRocketAttackGroundState::TryInterruptState(class CA
 	}
 	return TSIR_YES_WAIT;
 }
-
-

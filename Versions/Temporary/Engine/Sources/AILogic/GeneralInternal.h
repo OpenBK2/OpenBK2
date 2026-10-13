@@ -155,5 +155,3 @@ public:
 	bool IsInResistanceCircle( const CVec2 &vPoint ) const;
 	int GetParty() const { return nParty; }
 };
-
-

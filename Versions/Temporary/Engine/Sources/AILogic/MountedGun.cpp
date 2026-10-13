@@ -55,4 +55,3 @@ CBasicGun* CMountedGunsFactory::CreateGun( const EGunTypes eType, const int nShe
 	return new CMountedToBaseGun( pBuilding, pMountedTurret, nCommonGun, nShell, pCommonGunInfo, eType );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-

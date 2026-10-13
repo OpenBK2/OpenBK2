@@ -48,6 +48,3 @@ public:
 	void Fill( const NGfx::SPixel8888 &color );
 
 };
-
-
-

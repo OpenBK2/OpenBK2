@@ -146,5 +146,3 @@ IFullScreenFader *CreateFullScreenFader()
 
 BASIC_REGISTER_CLASS( SCENEB2, IFullScreenFader );
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3423B300, CFullScreenFader )
-
-

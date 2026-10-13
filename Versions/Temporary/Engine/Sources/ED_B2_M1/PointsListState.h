@@ -155,5 +155,3 @@ public:
 	void SetPointMarkers() {}
 	void Leave();
 };
-
-

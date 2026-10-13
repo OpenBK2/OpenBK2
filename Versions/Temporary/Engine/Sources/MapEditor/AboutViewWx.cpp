@@ -166,4 +166,3 @@ namespace NAbout
 		dialog.ShowModal();
 	}
 }
-

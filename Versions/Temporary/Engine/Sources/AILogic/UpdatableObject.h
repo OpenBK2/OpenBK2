@@ -79,5 +79,3 @@ public:
 	virtual void AnimationSet( int nAnimation ) { }
 	virtual bool IsFree() const { return true; }
 };
-
-

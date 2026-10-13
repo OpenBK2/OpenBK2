@@ -264,5 +264,3 @@ unsigned long CMPManagerMode::GetCheckSum( const NDb::SMultiplayerMap *pMPMap )
 
 	return ulCheckSum;
 }
-
-

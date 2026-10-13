@@ -109,4 +109,3 @@ void Serialize( const char chunkID, IBinSaver &saver )
 }
 
 }
-

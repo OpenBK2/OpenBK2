@@ -1739,5 +1739,3 @@ int CHeightStateV3::SEditParameters::operator&( IXmlSaver &xs )
 }
 
 // basement storage
-
-

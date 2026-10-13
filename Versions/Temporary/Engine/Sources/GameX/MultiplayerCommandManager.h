@@ -506,5 +506,3 @@ public:
 	SMPUIInGameChatMessage( const std::wstring &_wszText, bool _bTeamOnly ):
 		SMPUIMessage( EMUI_IN_GAME_CHAT_MESSAGE ), wszText(_wszText), bTeamOnly( _bTeamOnly ) {}
 };
-
-

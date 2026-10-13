@@ -265,5 +265,3 @@ void CScene::ClearSelection()
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1311E300, CVisObjSelectionInfo );
-
-

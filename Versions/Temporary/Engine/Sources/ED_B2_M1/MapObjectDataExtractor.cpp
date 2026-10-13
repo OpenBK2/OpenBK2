@@ -29,5 +29,3 @@ bool CMapObjectDataExtractor::GetLabel( std::string *pszLabel, const std::string
 	}
 	return false;
 }
-
-

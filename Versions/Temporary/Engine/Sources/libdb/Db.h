@@ -42,5 +42,3 @@ bool IsDBIDValid( const CDBID &dbid );
 LIBDB_EXPORT void SegmentProfiler();
 
 }
-
-

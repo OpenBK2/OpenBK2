@@ -538,5 +538,3 @@ int CVariant::operator&( IXmlSaver &saver )
 	}
 	return 0;
 }
-
-

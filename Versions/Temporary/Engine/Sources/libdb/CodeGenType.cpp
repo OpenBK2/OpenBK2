@@ -708,4 +708,3 @@ void CTypeDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szTa
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D02, CTypeDefinition );
-

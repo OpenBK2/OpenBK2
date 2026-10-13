@@ -4892,4 +4892,3 @@ int CScripts::BlinkActionButton( struct lua_State *pState )
 }
 
 #undef CHECK_ERROR
-

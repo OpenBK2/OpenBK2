@@ -376,4 +376,3 @@ inline void CreateOrthographicProjectionMatrixRH( SHMatrix *pRes, float fWidth, 
 	pRes->_34 = -fNear / ( fFar - fNear );
 	pRes->_44 = 1.0f;
 }
-

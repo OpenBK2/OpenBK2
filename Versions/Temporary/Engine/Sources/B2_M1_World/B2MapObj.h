@@ -24,5 +24,3 @@ struct IB2MapObj : virtual public CObjectBase
 	virtual void SetMousePicked( const bool ) {}
 	virtual const bool IsMousePicked() { return false; }
 };
-
-

@@ -670,5 +670,3 @@ bool CCommands::LineEntered( const std::string &szLineEntered, std::string *pszE
 	else
 		return true;
 }
-
-

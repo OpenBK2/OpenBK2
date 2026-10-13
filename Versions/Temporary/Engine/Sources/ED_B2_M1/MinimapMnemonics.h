@@ -16,5 +16,3 @@ public:
 
 extern CMinimapLayerMnemonics typeMinimapLayer;
 extern CImageScaleMethod typeImageScaleMethod;
-
-

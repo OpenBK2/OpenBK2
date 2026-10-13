@@ -92,4 +92,3 @@ bool CopyAB( const CArray2D<uint32_t> &src, const CTRect<long> *pSrcRect, CArray
 }
 
 }
-

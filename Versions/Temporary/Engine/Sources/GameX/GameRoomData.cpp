@@ -128,5 +128,3 @@ void NMPSetData::SetChildText( IListControlItem *pItem, const std::string &szNam
 	ITextView *pTxt = GetChildChecked<ITextView>( pItem, szName, true );
 	SetText( pTxt, szText );
 }
-
-

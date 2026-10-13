@@ -404,7 +404,3 @@ bool CCoastState::UpdateVSOInBase( CObjectBaseController *pObjectController, con
 }
 
 // basement storage
-
-
-
-

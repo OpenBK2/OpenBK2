@@ -45,5 +45,3 @@ struct SFormationWindowDialogData
 		squadFormations.push_back(e);
 	}
 };
-
-

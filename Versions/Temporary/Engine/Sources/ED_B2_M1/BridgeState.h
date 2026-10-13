@@ -55,6 +55,3 @@ protected:
 	bool InsertObjectRButtonUp( unsigned nFlags, const CVec3 &rTerrainPos );
 	bool InsertObjectKeyDown( unsigned nChar, unsigned nFlags, const CVec3 &rTerrainPos );
 };
-
-
-

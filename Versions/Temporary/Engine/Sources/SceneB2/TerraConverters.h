@@ -20,5 +20,3 @@ void LegacyLoadTileMap( const std::string &szMapFilesPath, int nX, int nY, CArra
 		pTileTerraMap->FillZero();
 	}
 }
-
-

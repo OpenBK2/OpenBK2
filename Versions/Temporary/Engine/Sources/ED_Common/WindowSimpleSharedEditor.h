@@ -123,5 +123,3 @@ public:
 	void PushRunModeState( const std::string &rszEditorTypeName, const CDBID &rDBID );
 	void PopRunModeState();
 };
-
-

@@ -24,4 +24,3 @@ public:
 	int operator&( IBinSaver &f ) { f.Add( 1, &this->first ); f.Add( 2, &this->second ); return 0; }
 	uint32_t CalcCheckSum() const { return 0; }
 };
-

@@ -456,5 +456,3 @@ void CICMissionObjectives::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x170CEC41, CInterfaceMissionObjectives );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_OBJECTIVES, CICMissionObjectives );
 REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170CEC42, CReactions, CInterfaceMissionObjectives );
-
-

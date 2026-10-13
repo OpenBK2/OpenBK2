@@ -656,5 +656,3 @@ bool CTerraGen::GetCragPrecVerts( std::vector<CVec3> *pVerts, int nVSOId )
 	}
 	return false;
 }
-
-

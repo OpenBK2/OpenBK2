@@ -43,5 +43,3 @@ bool CStaticDebrisSetBuilder::InternalInsertObject( std::string *pszObjectTypeNa
 }
 
 // basement storage
-
-

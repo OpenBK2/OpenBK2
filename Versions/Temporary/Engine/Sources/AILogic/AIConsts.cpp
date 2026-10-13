@@ -568,5 +568,3 @@ void SConsts::InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorit
 	for ( std::vector<SUnitTypePriority>::const_iterator it = priorities.begin(); it != priorities.end(); ++it )
 		PRIORITIES[ it->eUnitType ] = it->nPriority;
 }
-
-

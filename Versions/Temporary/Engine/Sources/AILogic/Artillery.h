@@ -207,5 +207,3 @@ public:
 	const bool CanHook() const;
 	//virtual const bool CanLockTiles() const { return false; }
 };
-
-

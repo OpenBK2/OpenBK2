@@ -24,5 +24,3 @@ public:
 
 	bool ProcessConnectServerResult( class CConnectServerPacket *pPacket );
 };
-
-

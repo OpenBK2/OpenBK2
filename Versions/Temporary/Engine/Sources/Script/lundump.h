@@ -33,4 +33,3 @@ int luaU_endianess (void);
 // multiplying by 1E8 gives non-trivial integer values
 #define	TEST_NUMBER	3.14159265358979323846E8
 */
-

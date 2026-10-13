@@ -5,5 +5,3 @@
 #include "Interface_Editor.h"
 
 DEFINE_FACTORY( Editor );
-
-

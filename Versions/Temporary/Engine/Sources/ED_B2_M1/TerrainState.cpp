@@ -53,5 +53,3 @@ void CTerrainState::Leave()
 }
 
 // basement storage
-
-

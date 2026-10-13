@@ -152,5 +152,3 @@ void CExecutorContainer::RemoveSleeping( CExecutor *pExecutor )
 		sleeping.erase( pos );
 	checkIter = sleeping.end();
 }
-
-

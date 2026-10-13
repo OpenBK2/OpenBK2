@@ -263,5 +263,3 @@ int CPerlinNoise::CreateTiled( const int nSizeX, const int nSizeY, const long nO
 
 	return true;
 }
-
-

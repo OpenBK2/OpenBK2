@@ -297,6 +297,3 @@ void CTerraGen::PutAllFeaturesToAI() const
 	PutAllRiversToAI();
 	PutAllCragsToAI();
 }
-
-
-

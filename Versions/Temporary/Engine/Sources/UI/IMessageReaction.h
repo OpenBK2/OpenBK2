@@ -22,5 +22,3 @@ struct IMessageCheck : public CObjectBase
 	virtual int Check( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const = 0;
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc ) = 0;
 };
-
-

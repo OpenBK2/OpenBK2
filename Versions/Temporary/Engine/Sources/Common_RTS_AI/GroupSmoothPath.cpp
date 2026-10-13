@@ -275,5 +275,3 @@ REGISTER_VAR_EX( "show_group_marker", NGlobal::VarBoolHandler, &s_bShowGroupMark
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x310C9B00, CGroupSmoothPath );
-
-

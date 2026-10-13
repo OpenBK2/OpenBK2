@@ -688,4 +688,3 @@ START_REGISTER(GRenderPathFastest)
 
 FINISH_REGISTER
 }
-

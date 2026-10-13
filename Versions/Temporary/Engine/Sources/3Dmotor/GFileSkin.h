@@ -38,5 +38,3 @@ inline void ConvertWeights( std::vector<SVertexWeight> *pRes, const std::vector<
 }
 
 } // namespace
-
-

@@ -258,4 +258,3 @@ void CMechUnitRestOnBoardPath::OnSerialize( IBinSaver &saver )
 {
   SerializeBasePathUnit( saver, 127, &pUnit );
 }
-

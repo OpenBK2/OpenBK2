@@ -170,5 +170,3 @@ class CICInterfaceSaveLoad : public CInterfaceCommandBase<CInterfaceSaveLoadMenu
 public:
 	void Configure( const char *pszConfig );
 };
-
-

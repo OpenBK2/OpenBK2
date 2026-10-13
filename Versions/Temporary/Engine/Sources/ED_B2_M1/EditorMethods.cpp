@@ -233,6 +233,3 @@ int SUnitCommandTypeInfo::operator&( IXmlSaver &saver )
 	saver.Add( "NeedTargetUnit", &nNeedTargetUnit );
 	return 0;
 }
-
-
-

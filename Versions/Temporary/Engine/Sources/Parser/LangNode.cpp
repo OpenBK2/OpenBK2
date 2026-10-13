@@ -105,5 +105,3 @@ void CSimpleValue::SetValue( const std::string &szDefValue, bool bString )
 }
 
 }
-
-

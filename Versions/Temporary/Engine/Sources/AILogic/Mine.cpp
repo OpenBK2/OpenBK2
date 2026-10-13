@@ -177,5 +177,3 @@ bool CMineStaticObject::ShouldSuspendAction( const EActionNotify &eAction ) cons
 		//eAction == ACTION_NOTIFY_DELETED_ST_OBJ ||
 		eAction == ACTION_NOTIFY_SILENT_DEATH );
 }
-
-

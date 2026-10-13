@@ -29,5 +29,3 @@ void luaD_breakrun (lua_State *L, int errcode);
 
 bool luaD_startCall (lua_State *L, StkId func, int nResults);
 void luaD_endCall (lua_State *L, StkId func, int nResults, StkId firstresult );
-
-

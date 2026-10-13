@@ -89,5 +89,3 @@ inline bool IsDeathAnimation( const int nAnimation )
 {
 	return ( nAnimation == NDb::ANIMATION_DEATH || nAnimation == NDb::ANIMATION_DEATH_DOWN );
 }
-
-

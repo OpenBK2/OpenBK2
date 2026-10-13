@@ -258,5 +258,3 @@ public:
 	virtual void ReCreate( NGScene::IGameView *pGScene, CCSTime *pTimer );
 	virtual void Destroy( const NTimer::STime time );
 };
-
-

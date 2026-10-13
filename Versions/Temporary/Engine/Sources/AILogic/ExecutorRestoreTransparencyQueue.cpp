@@ -118,4 +118,3 @@ bool CExecutorRestoreTransparencyQueue::NotifyEvent( const CExecutorEvent &_even
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1111BB40, CExecutorRestoreTransparencyQueue )
-

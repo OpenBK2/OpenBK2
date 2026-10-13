@@ -60,5 +60,3 @@ IUIScene *CreateUIScene()
 	pUIScene->Create();
 	return pUIScene;
 }
-
-

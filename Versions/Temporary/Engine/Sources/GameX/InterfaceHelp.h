@@ -53,5 +53,3 @@ class CICHelp : public CInterfaceCommandBase<CInterfaceHelp>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

@@ -145,5 +145,3 @@ void CICMPWaitPlayers::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1713CBC1, CInterfaceMPWaitPlayers );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_WAIT_PLAYERS, CICMPWaitPlayers );
-
-

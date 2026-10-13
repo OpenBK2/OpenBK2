@@ -10,6 +10,3 @@ public:
 	// IEditorAI
 	struct ITerraAIObserver* CreateTerraAIObserver( const int nAIMapSizeX, const int nAIMapSizeY );
 };
-
-
-

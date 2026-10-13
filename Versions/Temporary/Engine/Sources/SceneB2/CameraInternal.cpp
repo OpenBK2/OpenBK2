@@ -721,5 +721,3 @@ REGISTER_VAR_EX( "camera_validate_time", NGlobal::VarFloatHandler, &s_fValidateT
 REGISTER_VAR_EX( "camera_validate_diff", NGlobal::VarFloatHandler, &s_fValidateDifference, 0.0001f, STORAGE_NONE );
 
 FINISH_REGISTER
-
-

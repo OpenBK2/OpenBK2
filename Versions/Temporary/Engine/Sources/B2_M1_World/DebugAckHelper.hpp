@@ -51,5 +51,3 @@ static SAckDebugHelper debugAckNames[] =
 
 	{ NDb::ACK_NONE, "ACK_NONE" },
 };
-
-

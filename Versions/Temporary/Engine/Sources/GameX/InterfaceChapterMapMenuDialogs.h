@@ -182,5 +182,3 @@ public:
 	void Show( const NDb::SMissionEnableInfo &mission );
 	void Hide();
 };
-
-

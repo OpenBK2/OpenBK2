@@ -145,5 +145,3 @@ void GetReplayList( CReplays *pReplays );
 bool DeleteReplay( const std::string &szFileName );
 
 } //NSaveLoad
-
-

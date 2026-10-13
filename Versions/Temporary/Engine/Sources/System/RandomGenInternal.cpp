@@ -332,4 +332,3 @@ REGISTER_VAR_EX( "log_random_calls", NGlobal::VarBoolHandler, &s_bLogRandomCalls
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( SYSTEM, 0x1009DC80, CRandomGenSeed )
-

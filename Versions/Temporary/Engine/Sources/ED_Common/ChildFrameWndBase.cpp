@@ -938,5 +938,3 @@ void CChildFrameWndBase::OnVScroll( EScrollAction eAction, unsigned nPos )
 }
 
 // basement storage
-
-

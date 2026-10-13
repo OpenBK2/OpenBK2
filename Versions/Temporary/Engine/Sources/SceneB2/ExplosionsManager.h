@@ -45,5 +45,3 @@ public:
 	void RemoveExplosion( const int nID );
 	void AttachGameView( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; }
 };
-
-

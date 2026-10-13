@@ -62,5 +62,3 @@ void CBasicExporter::FinishExport( const std::string &rszObjectTypeName, bool bF
 {
 	pMayaProcess = 0;
 }
-
-

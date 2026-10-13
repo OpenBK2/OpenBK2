@@ -34,5 +34,3 @@ CNetPacket* CPacketProcessorBase::GetPacket()
 		return pPacket.Extract();
 	}
 }
-
-

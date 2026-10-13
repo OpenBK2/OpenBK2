@@ -810,6 +810,3 @@ void CAIGeneralPointsState::EditParcel()
 		RefreshWindowData();
 	}
 }
-
-
-

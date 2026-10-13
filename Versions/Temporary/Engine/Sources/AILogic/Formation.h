@@ -354,5 +354,3 @@ public:
 	void SetCatchArtFlag( const uint32_t _dwCatchArtFlag ) { dwCatchArtFlag = _dwCatchArtFlag; }
 	void QuickLoadToMechUnit( CAITransportUnit *pTransport );
 };
-
-

@@ -308,6 +308,3 @@ void CTerraGen::UpdateNormals( const int nX1, const int nY1, const int nX2, cons
 		}
 	}
 }
-
-
-

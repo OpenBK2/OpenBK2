@@ -64,5 +64,3 @@ public:
 	void OnMouseMove( unsigned nFlags, const CTPoint<int> &rMousePoint );
 	void OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFlags );
 };
-
-

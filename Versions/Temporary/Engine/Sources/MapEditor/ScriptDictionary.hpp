@@ -10,4 +10,3 @@ struct IScriptDictionary : public CObjectBase
 	virtual void GetKeywords( int nDictionary, std::vector< std::string > &vszKeywords ) = 0;
 	virtual uint32_t GetKeywordsColor( int nDictionary ) = 0;
 };
-

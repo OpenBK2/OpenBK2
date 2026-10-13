@@ -166,5 +166,3 @@ void SCheats::CheckPassword( const std::string &szPassword )
 		NGlobal::SetVar( "VVP", 1 );
 	}
 }
-
-

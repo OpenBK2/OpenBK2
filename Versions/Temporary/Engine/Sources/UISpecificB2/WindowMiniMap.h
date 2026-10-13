@@ -222,5 +222,3 @@ public:
 	void SetNortDirectionTexture( const NDb::STexture *pTexture );
 	int operator&( IBinSaver &saver );
 };
-
-

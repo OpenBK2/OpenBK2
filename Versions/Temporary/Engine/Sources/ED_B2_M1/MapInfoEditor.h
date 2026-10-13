@@ -157,5 +157,3 @@ public:
 	bool GenerateMinimapImage( const std::string &szFileName );
 	//
 };
-
-

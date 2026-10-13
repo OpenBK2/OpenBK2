@@ -63,5 +63,3 @@ void CLineMesh::FillVertexData( NGScene::SVertex &vertex )
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x101554C1, CLineMesh )
-
-

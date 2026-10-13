@@ -25,6 +25,3 @@ public:
 	/**/
 	std::string GetDataFolder( SUserData::ENormalizePathType eNormalizePathType );
 };
-
-
-

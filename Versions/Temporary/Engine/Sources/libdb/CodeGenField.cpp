@@ -83,4 +83,3 @@ void CFieldDefinition::GenerateCode( SCodeStreams *pCode, const std::string &szT
 
 using namespace NCodeGen;
 REGISTER_SAVELOAD_CLASS( LIBDB, 0x301B6D03, CFieldDefinition );
-

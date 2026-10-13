@@ -125,5 +125,3 @@ protected:
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck );
 	///
 };
-
-

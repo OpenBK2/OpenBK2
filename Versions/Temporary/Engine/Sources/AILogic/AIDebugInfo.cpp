@@ -70,5 +70,3 @@ void ToggleLockProfiles()
 }
 
 }
-
-

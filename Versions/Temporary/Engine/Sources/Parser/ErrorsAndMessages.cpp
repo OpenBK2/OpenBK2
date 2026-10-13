@@ -50,5 +50,3 @@ void ShowErrorNoLine( const std::string &szError )
 }
 
 }
-
-

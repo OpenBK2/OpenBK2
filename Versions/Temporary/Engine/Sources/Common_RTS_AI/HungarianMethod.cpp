@@ -242,5 +242,3 @@ void CHungarianMethod::Solve()
 	}
 	BuildResult();
 }
-
-

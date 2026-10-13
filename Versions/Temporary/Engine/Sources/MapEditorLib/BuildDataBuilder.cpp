@@ -64,5 +64,3 @@ bool CBuildDataBuilder::IsUniqueObjectName( const std::string &szObjectType, con
 }
 
 // basement storage
-
-

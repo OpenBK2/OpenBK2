@@ -81,6 +81,3 @@ public:
 	bool CannotFinish() const { return bSayAck; }
 	void CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate );
 };
-
-
-

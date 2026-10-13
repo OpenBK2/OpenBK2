@@ -21,5 +21,3 @@ _3DLIB_EXPORT void MakeLMCalcGeometry( CObjectInfo::SData *pRes, CTPoint<int> *p
 _3DLIB_EXPORT void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src );
 
 }
-
-

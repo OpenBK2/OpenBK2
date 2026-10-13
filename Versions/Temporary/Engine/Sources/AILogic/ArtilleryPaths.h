@@ -100,5 +100,3 @@ public:
 
 	virtual void GetSpeed3( CVec3 *pvSpeed ) const { *pvSpeed = CVec3( vSpeed, 0.0f ); }
 };
-
-

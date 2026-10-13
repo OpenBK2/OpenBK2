@@ -230,4 +230,3 @@ bool CPredictedAntiAviationFire::CalcAimPoint()
 	aimPoint = SPredict( vPredict, fRange, curTime + nTimeToShoot, pUnit );
 	return true;
 }
-

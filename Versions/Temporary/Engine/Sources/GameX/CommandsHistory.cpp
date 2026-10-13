@@ -616,4 +616,3 @@ ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay )
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1007AB80, CCommandsHistory );
-

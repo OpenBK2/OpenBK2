@@ -192,5 +192,3 @@ int CWindowMultiTextureProgressBar::FindStateIndex( float fProgress )
 	}
 	return (std::min<int>)( nIndex, parts.size() - 1 );
 }
-
-

@@ -76,5 +76,3 @@ void CCustomLobby::GameDead( const int nGameID )
 {
 	--nGamesTotal;
 }
-
-

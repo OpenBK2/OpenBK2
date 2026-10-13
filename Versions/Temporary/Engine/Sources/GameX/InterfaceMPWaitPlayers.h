@@ -41,5 +41,3 @@ class CICMPWaitPlayers : public CInterfaceCommandBase<CInterfaceMPWaitPlayers>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

@@ -269,5 +269,3 @@ bool CFolderCallback::SetColor( const std::string &rszObjectTypeName, const std:
 }
 
 // basement storage
-
-

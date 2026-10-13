@@ -9,5 +9,3 @@ class CDefaultExporter : public CExporterBase
 
 	CDefaultExporter() {}
 };
-
-

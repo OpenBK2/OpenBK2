@@ -27,5 +27,3 @@ public:
 	void Segment();
 	void AddGunNumber( const int nGun );
 };
-
-

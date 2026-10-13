@@ -352,5 +352,3 @@ int CWindowSimpleSharedEditorSettings::operator&( IXmlSaver &xs )
 	xs.Add( "TemplateWindowDBID", &templateWindowDBID );
 	return 0;
 }
-
-

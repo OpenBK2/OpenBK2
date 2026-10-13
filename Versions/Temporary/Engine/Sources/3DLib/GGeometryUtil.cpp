@@ -284,4 +284,3 @@ void CTriVertexCacheOptimizer::Optimize( std::vector<STriangle> *pTris, std::vec
 }
 
 }
-

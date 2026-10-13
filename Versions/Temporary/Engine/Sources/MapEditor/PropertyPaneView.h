@@ -158,4 +158,3 @@ namespace NPropertyPane
 	// and must outlive the contents. Owned by the caller; null on failure.
 	IPropertyPane* CreateWxIn( wxWindow *pParent, IWidget *pOwner, const std::string &rszOptionsLabel, wxWindow **ppWindow );
 }
-

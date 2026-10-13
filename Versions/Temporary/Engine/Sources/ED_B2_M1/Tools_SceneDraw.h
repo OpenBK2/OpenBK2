@@ -310,5 +310,3 @@ public:
 		posNewPolyline->bDepthCheck = bDepthCheck;
 	}
 };
-
-

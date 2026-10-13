@@ -1534,5 +1534,3 @@ void CSniper::Fired( const float fGunRadius, const int nGun  )
 		}
 	}
 }*/
-
-

@@ -42,6 +42,3 @@ public:
 	virtual void SetNameList( const IManipulator::CNameMap &rNameList ) { nameMap = rNameList; }
 	virtual void GetNameListToUpdate( IManipulator::CNameMap *pNameMap, const IManipulator::CNameMap &rManipulatorNameMap, const std::string &rszName ) const;
 };
-
-
-

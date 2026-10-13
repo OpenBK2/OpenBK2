@@ -18,5 +18,3 @@ bool CSpotDataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<ui
 	}
 	return false;
 }
-
-

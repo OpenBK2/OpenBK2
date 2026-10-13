@@ -314,5 +314,3 @@ void CICPlayerStats::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1722A301, CInterfacePlayerStats )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PLAYER_STATS, CICPlayerStats )
-
-

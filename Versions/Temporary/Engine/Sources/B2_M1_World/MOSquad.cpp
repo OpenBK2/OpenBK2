@@ -474,4 +474,3 @@ void CMOSquad::UpdateServedGunCrew( const bool bClearCrew )
 }
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7485, CMOSquad );
-

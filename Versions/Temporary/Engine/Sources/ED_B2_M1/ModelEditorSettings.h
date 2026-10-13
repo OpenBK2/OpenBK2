@@ -55,5 +55,3 @@ public:
 	// serializing...
 	int operator&( IXmlSaver &xs );
 };
-
-

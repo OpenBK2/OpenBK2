@@ -38,5 +38,3 @@ EXPORT_RESULT CMinimapExporter::ExportObject( IManipulator* pManipulator,
 	}
 	return ER_SUCCESS;
 }
-
-

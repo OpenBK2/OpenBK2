@@ -335,4 +335,3 @@ namespace NMiniMapView
 		return new CWxMiniMapView;
 	}
 }
-

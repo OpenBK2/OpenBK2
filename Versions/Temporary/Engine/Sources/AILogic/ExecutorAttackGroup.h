@@ -34,5 +34,3 @@ public:
 	virtual bool NotifyEvent( const CExecutorEvent &event );
 	virtual bool IsExecutorValid() const;
 };
-
-

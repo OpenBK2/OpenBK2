@@ -72,5 +72,3 @@ public:
 	void MoveArrow( SArrow *pArrow, const CVec2 &vDelta );
 	void ReReadPotentials();
 };
-
-

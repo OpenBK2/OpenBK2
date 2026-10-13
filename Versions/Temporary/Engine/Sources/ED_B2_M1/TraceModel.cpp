@@ -404,5 +404,3 @@ bool TraceModel( std::vector<SModelSurfacePoint> *pSurfacePoints, const std::str
 
 	return bRes;
 }
-
-

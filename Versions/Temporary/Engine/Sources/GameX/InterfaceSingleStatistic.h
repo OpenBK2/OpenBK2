@@ -178,5 +178,3 @@ class CICSingleStatistic : public CInterfaceCommandBase<CInterfaceSingleStatisti
 public:
 	void Configure( const char *pszConfig );
 };
-
-

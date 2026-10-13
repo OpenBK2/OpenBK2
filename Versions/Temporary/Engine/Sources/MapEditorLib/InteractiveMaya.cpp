@@ -194,4 +194,3 @@ bool CInteractiveMaya::TransactQuery( const std::string &szScript, std::string *
 	}
 	return false;
 }
-

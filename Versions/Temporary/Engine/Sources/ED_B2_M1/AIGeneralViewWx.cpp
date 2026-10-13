@@ -392,4 +392,3 @@ namespace NAIGeneralView
 		return pWindow;
 	}
 }
-

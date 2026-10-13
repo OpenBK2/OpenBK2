@@ -121,4 +121,3 @@ namespace NObjectBrowser
 	IObjectBrowser* CreateWxIn( wxWindow *pParent, IWidget *pOwner, IObjectBrowser::IListener *pListener,
 															IObjectBrowser::EKind eKind, wxWindow **ppWindow, int nGDBBrowserID = -1 );
 }
-

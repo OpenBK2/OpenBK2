@@ -229,5 +229,3 @@ public:
 	virtual class CBasicGun* GetBestGun() const { NI_ASSERT(false,"Wrong call"); return 0;}
 	virtual const int GetNumberOfBestGun() const{ NI_ASSERT(false,"Wrong call"); return 0;}
 };
-
-

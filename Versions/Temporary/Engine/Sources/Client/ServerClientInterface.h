@@ -14,5 +14,3 @@ struct IServerClient : public CObjectBase
 
 	static IServerClient* Create( const char* pServerIPAddress, const int nNetGameVersion, const int nServerPort, const int nTimeOut );
 };
-
-

@@ -84,5 +84,3 @@ public:
 	// if bToHorisontal == true then plane will first start horizonal move, then point move
 	struct IManuver* CreatePointManuver ( class CPlanesFormation *pPos, const CVec3 &vPoint, const bool bToHorisontal );
 };
-
-

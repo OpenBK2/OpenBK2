@@ -60,6 +60,3 @@ void CTextureState::Leave()
 	Singleton<IUIScene>()->Clear();
 	Singleton<ICommandHandlerContainer>()->HandleCommand( CHID_SCENE, ID_SCENE_ENABLE_RUN_MODE, 0 );
 }
-
-
-

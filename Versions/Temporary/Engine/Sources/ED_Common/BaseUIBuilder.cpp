@@ -98,5 +98,3 @@ bool CBaseUIBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 
 
 // basement storage
-
-

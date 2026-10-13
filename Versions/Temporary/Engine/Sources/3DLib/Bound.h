@@ -100,5 +100,3 @@ inline bool DoesIntersect( const SSphere &s, const SBound &bv )
 		fabs(v.y) - s.fRadius < bv.ptHalfBox.y &&
 		fabs(v.z) - s.fRadius < bv.ptHalfBox.z;
 }
-
-

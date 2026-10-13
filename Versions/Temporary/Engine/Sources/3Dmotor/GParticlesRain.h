@@ -27,4 +27,3 @@ public:
 	CRainAnimator( CFuncBase<STime> *_pTime, CFuncBase<CVec4> *_pCamera, IParticleFilter *_pFilter ) : pTime(_pTime), pCamera(_pCamera), pFilter(_pFilter), tStart(0) {}
 };
 }
-

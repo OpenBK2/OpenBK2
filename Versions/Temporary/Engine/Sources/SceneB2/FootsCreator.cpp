@@ -155,5 +155,3 @@ void CTerraGen::RemoveFootGfxInfo( const int nVSOID )
 			++it;
 	}
 }
-
-

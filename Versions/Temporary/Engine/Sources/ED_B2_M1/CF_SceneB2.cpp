@@ -20,5 +20,3 @@ CCFSceneB2::~CCFSceneB2()
 
 
 // basement storage
-
-

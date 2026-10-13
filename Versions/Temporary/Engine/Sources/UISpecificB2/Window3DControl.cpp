@@ -141,5 +141,3 @@ void CWindow3DControl::SetBaseID3D( int nID )
 }
 
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x17176440, CWindow3DControl)
-
-

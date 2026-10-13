@@ -16,5 +16,3 @@ struct STerrainAIInfo
 		return 0;
 	}
 };
-
-

@@ -73,5 +73,3 @@ public:
 	bool ProcessNewGameClient( class CNewGameClient *pPacket );
 	bool ProcessGameKilled( class CGameKilled *pPacket );
 };
-
-

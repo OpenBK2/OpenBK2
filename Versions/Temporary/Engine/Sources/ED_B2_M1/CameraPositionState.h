@@ -69,6 +69,3 @@ public:
 	//	CCameraPositionState
 	CCameraPositionState( CMapInfoEditor* _pMapInfoEditor = 0 );
 };
-
-
-

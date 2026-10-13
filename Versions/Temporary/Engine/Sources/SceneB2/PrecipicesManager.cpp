@@ -553,6 +553,3 @@ void CTerraGen::AddToPrecipiceUpdateQueue( const int nID )
 {
 	AddUnique( &updatedPrecipices, nID );
 }
-
-
-

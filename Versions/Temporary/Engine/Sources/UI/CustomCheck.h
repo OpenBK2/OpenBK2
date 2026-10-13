@@ -61,5 +61,3 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 
 };
-
-

@@ -131,5 +131,3 @@ bool CExecutorTrackTargetting::NotifyEvent( const CExecutorEvent &event )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19152B80, CExecutorTrackTargetting )
-
-

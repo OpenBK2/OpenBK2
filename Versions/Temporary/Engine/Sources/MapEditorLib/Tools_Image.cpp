@@ -15,5 +15,3 @@ void NImage::Copy( CArray2D<uint32_t> *pDestination, const CArray2D<uint32_t> &r
 		}
 	}
 }
-
-

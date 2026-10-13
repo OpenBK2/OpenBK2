@@ -31,5 +31,3 @@ public:
 
 	void Visit( struct IUIVisitor *pVisitor );
 };
-
-

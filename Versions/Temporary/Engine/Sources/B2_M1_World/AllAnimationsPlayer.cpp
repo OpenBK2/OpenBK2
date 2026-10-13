@@ -56,4 +56,3 @@ void CAllAnimationsPlayer::Update()
 }
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x300BA500, CAllAnimationsPlayer )
-

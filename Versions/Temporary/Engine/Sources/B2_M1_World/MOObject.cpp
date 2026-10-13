@@ -202,4 +202,3 @@ REGISTER_VAR_EX( "misc_animations_trees", NGlobal::VarBoolHandler, &bAnimateTree
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7484, CMOObject );
-

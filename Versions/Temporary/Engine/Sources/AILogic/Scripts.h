@@ -506,5 +506,3 @@ public:
 
 	static SRegFunction pRegList[];
 };
-
-

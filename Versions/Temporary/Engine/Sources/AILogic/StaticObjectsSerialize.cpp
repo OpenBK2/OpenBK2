@@ -90,5 +90,3 @@ int CFullBridge::operator&( IBinSaver &saver )
 	saver.Add( ++cnt, &bLockingBridge );
 	return 0;
 }
-
-

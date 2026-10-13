@@ -117,4 +117,3 @@ void CWinToInputMessageConverter::Do()
 	ParseChars();
 /**/
 }
-

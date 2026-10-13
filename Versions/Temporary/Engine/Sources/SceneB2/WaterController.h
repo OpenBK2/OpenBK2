@@ -146,5 +146,3 @@ public:
 	//const CArray2D<CPtr<SWaterNode> > &GetWaterNodes() const { return waterNodes; }
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
 };
-
-

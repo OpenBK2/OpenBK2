@@ -65,5 +65,3 @@ void CExecutorCaution::SwitchingOffEnd()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19129440, CExecutorCaution )
-
-

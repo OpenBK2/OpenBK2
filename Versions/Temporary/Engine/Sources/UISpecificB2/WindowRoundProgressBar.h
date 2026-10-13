@@ -45,5 +45,3 @@ public:
 	void SetForward( const NDb::SBackground *pForward ) {}
 	//}
 };
-
-

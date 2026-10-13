@@ -15,5 +15,3 @@ namespace NCodeGen
 	LIBDB_EXPORT CXmlResource* GenerateCodeStructure( NLang::CFileNode *pRootFile, const CNodes2TypeDefs &nodes2TypeDefs,
 																			const std::string &szRootDir, NDb::NTypeDef::CTerminalTypesDescriptor *pTermTypesDesc );
 }
-
-

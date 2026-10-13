@@ -731,6 +731,3 @@ CAIUnit* CMechUnitSupportFireState::GetTargetUnit() const
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1915D340, CMechUnitSupportFireState );
-
-
-

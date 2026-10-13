@@ -38,5 +38,3 @@ struct IInputState
 	//
 	virtual ~IInputState() {}
 };
-
-

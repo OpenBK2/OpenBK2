@@ -64,6 +64,3 @@ void CUIRunModeState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nFla
 	}
 	CDefaultInputState::OnKeyDown( nChar, nRepCnt, nFlags );
 }
-
-
-

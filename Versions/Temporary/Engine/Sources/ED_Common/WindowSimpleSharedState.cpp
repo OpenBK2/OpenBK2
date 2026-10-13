@@ -916,6 +916,3 @@ void CWindowSimpleSharedState::UndoRemove( const std::string & szTypeName, const
 	}
 	/**/
 }
-
-
-

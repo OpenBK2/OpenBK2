@@ -59,5 +59,3 @@ void CMinesIter::Reset()
 	CStObjCircleIter<false>::Reset();
 	IterateToNextMine();
 }
-
-

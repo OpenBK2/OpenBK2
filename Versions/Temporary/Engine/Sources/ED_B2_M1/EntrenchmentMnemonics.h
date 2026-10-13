@@ -9,5 +9,3 @@ public:
 };
 
 extern CEntrenchmentSegmentTypeMnemonics typeEntrenchmentSegment;
-
-

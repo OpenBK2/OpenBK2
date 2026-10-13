@@ -72,5 +72,3 @@ public:
 	}
 	void Clear() { data.clear(); pCurrent = pLast = 0; }
 };
-
-

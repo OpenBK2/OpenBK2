@@ -111,5 +111,3 @@ void SortIntervals( std::vector<SInterval> *pRes )
 }
 
 }
-
-

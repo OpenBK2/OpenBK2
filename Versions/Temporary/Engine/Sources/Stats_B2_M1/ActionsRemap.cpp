@@ -213,5 +213,3 @@ public:
 	}
 };
 static CActionsRemapAutomagic theActionsRemapAutomagic;
-
-

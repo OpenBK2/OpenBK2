@@ -112,5 +112,3 @@ class CStandartSmoothPath : public CStandartSmoothPathBasis
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CStandartSmoothPathBasis *)this); return 0; }
 public:
 };
-
-

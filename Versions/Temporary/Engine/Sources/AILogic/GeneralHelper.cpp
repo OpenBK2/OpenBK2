@@ -99,5 +99,3 @@ bool SGeneralHelper::RemoveNotCurrentPlayer( CommonUnits *pUnits, int nPlayer )
 	pUnits->erase( firstDead, pUnits->end() );
 	return bDeleted;
 }
-
-

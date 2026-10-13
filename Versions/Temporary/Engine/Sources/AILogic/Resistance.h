@@ -121,5 +121,3 @@ public:
 
 	iterator begin() { return CIter( this ); }
 };
-
-

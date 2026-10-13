@@ -173,5 +173,3 @@ void CScene::ProcessDebugInfoUpdates()
 		}
 	} while( pDebugInfoManager->PopUpdate() );
 }
-
-

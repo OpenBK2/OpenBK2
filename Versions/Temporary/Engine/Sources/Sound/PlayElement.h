@@ -13,4 +13,3 @@ struct IPlayListElement : public CObjectBase
 };
 
 }
-

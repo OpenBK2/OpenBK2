@@ -65,5 +65,3 @@ struct SLadderStatistics
 	}
 
 };
-
-

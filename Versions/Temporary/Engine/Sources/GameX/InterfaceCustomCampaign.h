@@ -74,5 +74,3 @@ class CICCustomCampaign : public CInterfaceCommandBase<CInterfaceCustomCampaign>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

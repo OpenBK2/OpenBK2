@@ -40,5 +40,3 @@ public:
 	//
 	void SendCommand( struct IAILogicCommandB2 *pCmd );
 };
-
-

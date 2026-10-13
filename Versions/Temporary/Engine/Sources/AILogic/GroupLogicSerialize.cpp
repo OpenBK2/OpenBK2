@@ -43,5 +43,3 @@ int CGroupUnit::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
-
-

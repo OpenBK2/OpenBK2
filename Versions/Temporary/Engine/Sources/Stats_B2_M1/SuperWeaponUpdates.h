@@ -40,5 +40,3 @@ public:
 	SSuperWeaponRecycle( const int _nPlayer, const float _fPartComplete ) : SAIBasicUpdate( ACTION_NOTIFY_SUPERWEAPON_RECYCLE, 0 ),
 		nPlayer( _nPlayer ), fPartComplete( _fPartComplete ) {}
 };
-
-

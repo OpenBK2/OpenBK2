@@ -81,5 +81,3 @@ public:
 	// нужно ли сохранять в истории команд
 	bool NeedToBeStored() const { return true; }
 };
-
-

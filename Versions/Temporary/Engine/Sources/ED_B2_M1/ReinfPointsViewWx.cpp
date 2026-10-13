@@ -321,4 +321,3 @@ namespace NReinfPointsView
 		return pWindow;
 	}
 }
-

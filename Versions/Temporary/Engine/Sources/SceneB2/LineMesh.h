@@ -26,5 +26,3 @@ public:
 		return 0;
 	}
 };
-
-

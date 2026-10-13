@@ -185,5 +185,3 @@ class CICArmyScreen : public CInterfaceCommandBase<CInterfaceArmyScreen>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

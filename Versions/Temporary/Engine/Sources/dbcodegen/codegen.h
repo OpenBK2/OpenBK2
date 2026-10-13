@@ -30,5 +30,3 @@ bool CopySourceCode( const std::list<std::string> &filetitles, const std::string
 
 }
 }
-
-

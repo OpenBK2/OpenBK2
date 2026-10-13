@@ -45,5 +45,3 @@ enum ENetGameMessages
 	//NGM_FINISHED,
 	//NGM_STREAM_FINISHED,
 };
-
-

@@ -542,5 +542,3 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vTarget; }
 	virtual EUnitStateNames GetName() { return EUSN_PLANE_SUICIDE; }
 };
-
-

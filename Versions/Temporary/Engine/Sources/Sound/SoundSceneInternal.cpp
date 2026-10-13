@@ -1227,4 +1227,3 @@ START_REGISTER(SoundSceneInternalCommands)
 REGISTER_VAR_EX( "Sound.Use3DSound", NGlobal::VarBoolHandler, &s_bSound5_1, false, STORAGE_USER );
 
 FINISH_REGISTER
-

@@ -62,4 +62,3 @@ template < class T > bool luaIsDBPtr( const Script::Object &o )
 
 }
 //
-

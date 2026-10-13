@@ -141,5 +141,3 @@ namespace NMapInfoEditor
 };
 
 // basement storage
-
-

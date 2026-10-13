@@ -62,5 +62,3 @@ inline void ReplaceColor( CArray2D<uint8_t> *pImage, const uint8_t nSrcColor, co
 		}
 	}
 }
-
-

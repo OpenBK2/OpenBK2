@@ -18,5 +18,3 @@ public:
 	void Zip( const CMemoryStream &inStream );
 	void UnZip( CMemoryStream *pOutStream ) const;
 };
-
-

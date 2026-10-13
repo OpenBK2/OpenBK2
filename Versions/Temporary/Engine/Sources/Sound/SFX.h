@@ -92,5 +92,3 @@ struct ISFX : public CObjectBase
 };
 
 SOUND_EXPORT ISFX *CreateSoundEngine();
-
-

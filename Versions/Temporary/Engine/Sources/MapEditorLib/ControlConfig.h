@@ -18,5 +18,3 @@ struct IControlConfig
 	virtual void SetWidth( int nWidth, int nColumnIndex ) = 0;
 	virtual int GetWidth( int nColumnIndex ) = 0;
 };
-
-

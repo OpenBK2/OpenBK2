@@ -90,5 +90,3 @@ void CWindowSelection::InitByDesc( const struct NDb::SUIDesc *pDesc )
 	bSelectorVisible = false;
 	vSelectionFirstPoint = VNULL2;
 }
-
-

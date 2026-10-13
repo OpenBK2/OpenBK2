@@ -110,5 +110,3 @@ enum EPauseType
 	PAUSE_TYPE_WAIT_FOR_CONNECT = 3,
 	PAUSE_TYPE_MP_NO_SEGMENT_DATA = 100,	// no segment data in multiplayer mode
 };
-
-

@@ -32,5 +32,3 @@ IPath* CreatePathByDirection( const CVec2 &startPoint, const CVec2 &dir, const C
 {
 	return new CStandartDirPath( startPoint, dir, finishPoint, pAIMap->GetTileSize() );
 }
-
-

@@ -89,5 +89,3 @@ public:
 	void Configure( const char *pszConfig );
 };
 #endif // _MP_DEMO
-
-

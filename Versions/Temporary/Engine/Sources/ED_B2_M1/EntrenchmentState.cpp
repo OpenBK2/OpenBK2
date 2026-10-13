@@ -731,5 +731,3 @@ void CEntrenchmentDesignTool::SetSegAABBCenter( NDb::EEntrenchSegmType eSegType,
 		break;
 	}
 }
-
-

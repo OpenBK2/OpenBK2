@@ -40,5 +40,3 @@ public:
 	void Reset();
 	//}
 };
-
-

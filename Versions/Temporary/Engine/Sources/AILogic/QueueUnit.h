@@ -102,5 +102,3 @@ public:
 
 	friend class CStaticMembers;
 };
-
-

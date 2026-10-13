@@ -111,5 +111,3 @@ public:
 	int operator&( IBinSaver &saver );
 	CPlayerResourcesTracker* operator[]( const int &nIndex );
 };*/
-
-

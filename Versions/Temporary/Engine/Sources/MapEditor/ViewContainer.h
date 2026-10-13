@@ -21,6 +21,3 @@ public:
 	void Remove( IView *pView, const SObjectSet &rObjectSet );
 	bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const;
 };
-
-
-

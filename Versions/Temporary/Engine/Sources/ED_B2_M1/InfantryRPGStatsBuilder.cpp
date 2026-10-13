@@ -111,5 +111,3 @@ bool CInfantryRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 }
 
 // basement storage
-
-

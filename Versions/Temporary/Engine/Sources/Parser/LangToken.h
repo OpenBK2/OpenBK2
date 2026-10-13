@@ -14,5 +14,3 @@ struct SToken
 };
 
 #define YYSTYPE SToken
-
-

@@ -91,5 +91,3 @@ public:
 	static void RegisterMessage( const std::string &szMessage );
 	static bool IsMessageRegistered( const SGameMessage &msg );
 };
-
-

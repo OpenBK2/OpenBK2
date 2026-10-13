@@ -142,5 +142,3 @@ public:
 	void MarkTutorialRecommendedMission( int nMission );
 	void ApplyTutorialRecommendedMission();
 };
-
-

@@ -38,5 +38,3 @@ void CreateRefKey( std::string *pszKey, const SPropertyDesc *pPropertyDesc )
 		}
 	}
 }
-
-

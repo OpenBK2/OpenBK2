@@ -29,6 +29,3 @@ public:
 	void Register( const std::string &szReactionKey, IMessageReactionB2 *pReaction );
 	int operator&( IBinSaver &saver );
 };
-
-
-

@@ -209,5 +209,3 @@ public:
 	CChatChannelByNickPacket( const int nClientID, const std::string &_szNick, const std::string &_szChannel )
 		: CNetPacket( nClientID ), szNick( _szNick ), szChannel( _szChannel ) {}
 } ;
-
-

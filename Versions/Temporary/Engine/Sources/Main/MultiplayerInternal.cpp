@@ -227,4 +227,3 @@ IMultiplayer *CreateMultiplayerClient( IAICmdsAutoMagic *pCmds, const NDb::SNetG
 }
 
 REGISTER_SAVELOAD_CLASS( MAIN, 0x300A7540, CMultiplayerInternal )
-

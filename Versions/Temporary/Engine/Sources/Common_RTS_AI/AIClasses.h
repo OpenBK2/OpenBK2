@@ -41,5 +41,3 @@ inline const int GetClassIndex( const uint8_t aiClass )
 		return -1;
 	}
 }
-
-

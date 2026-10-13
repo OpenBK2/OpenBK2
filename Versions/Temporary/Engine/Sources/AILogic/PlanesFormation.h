@@ -219,5 +219,3 @@ public:
 	virtual const bool IterateUnits( const CVec2 &vCenter, const float fRadius,	const bool bOnlyMech, const SIterateUnitsCallback &callback ) const { return false; }
 	const bool IsStaticUnit() const { return false; }
 };
-
-

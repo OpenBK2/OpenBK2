@@ -147,5 +147,3 @@ public:
 	friend class CUnitsIter<1,1>;
 	friend class CUnitsIter<1,0>;
 };
-
-

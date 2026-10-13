@@ -314,4 +314,3 @@ public:
 };
 template <class T>
 inline bool IsValid( const CDynamicCast<T> &p ) { return IsValid( p.GetPtr() ); }
-

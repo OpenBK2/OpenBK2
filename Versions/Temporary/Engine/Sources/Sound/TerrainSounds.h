@@ -79,4 +79,3 @@ public:
 	void Clear();
 	int operator&( IBinSaver &saver );
 };
-

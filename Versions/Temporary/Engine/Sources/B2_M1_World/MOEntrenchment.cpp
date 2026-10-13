@@ -314,4 +314,3 @@ int CMOEntrenchment::operator&( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7482, CMOEntrenchmentPart );
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x100A7483, CMOEntrenchment );
-

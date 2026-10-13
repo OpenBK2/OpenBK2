@@ -229,4 +229,3 @@ void CTerrainSounds::Update( const CVec3 &vNewListener, const float fViewSize, c
 			sound.DoUpdate( pSFX );
 	}
 }
-

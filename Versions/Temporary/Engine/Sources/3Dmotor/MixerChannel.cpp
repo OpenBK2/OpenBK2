@@ -6,4 +6,3 @@
 
 using namespace NAnimation;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x50161340, CMixerChannel )
-

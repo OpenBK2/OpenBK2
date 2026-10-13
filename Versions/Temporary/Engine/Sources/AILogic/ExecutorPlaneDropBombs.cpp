@@ -139,4 +139,3 @@ void CExecutorPlaneDropBombsObject::SwitchOnStart( const class CAICommand *pComm
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1115AAC1, CExecutorPlaneDropBombsObject );
-

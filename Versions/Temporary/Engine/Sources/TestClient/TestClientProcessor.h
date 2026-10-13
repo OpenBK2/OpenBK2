@@ -76,5 +76,3 @@ public:
 	bool ProcessWelcomePacket( class CSystemBroadcastPacket *pPacket );
 	bool ProcessPingPacket( class CPingPacket *pPacket );
 };
-
-

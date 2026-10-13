@@ -36,5 +36,3 @@ public:
 	bool ProcessForgottenPasswordPacket( class CForgottenPasswordPacket *pPacket );
 	bool ProcessNewClient( class CNetNewClient *pPacket );
 };
-
-

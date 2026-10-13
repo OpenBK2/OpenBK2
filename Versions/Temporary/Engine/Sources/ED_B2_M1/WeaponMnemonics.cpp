@@ -46,5 +46,3 @@ CMayaWeaponMnemonics typeMayaWeaponMnemonics;
 CWeaponMnemonics typeWeaponMnemonics;
 
 // basement storage
-
-

@@ -443,5 +443,3 @@ void CManipulatorManager::Trace( const std::string &rszPrefix, IManipulator* pMa
 }
 
 // basement storage
-
-

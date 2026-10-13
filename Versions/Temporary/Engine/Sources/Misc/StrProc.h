@@ -569,5 +569,3 @@ struct SASCIICharsComparer
 };
 
 }; // end of namespace NStr
-
-

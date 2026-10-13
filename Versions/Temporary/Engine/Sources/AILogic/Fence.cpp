@@ -209,4 +209,3 @@ bool CFence::CanUnitGoThrough( const EAIClasses &eClass ) const
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4E4, CFence );
-

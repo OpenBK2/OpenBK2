@@ -753,6 +753,3 @@ void CReinfPointsState::OnKeyDown( unsigned nChar, unsigned nRepCnt, unsigned nF
 		}
 	}
 }
-
-
-

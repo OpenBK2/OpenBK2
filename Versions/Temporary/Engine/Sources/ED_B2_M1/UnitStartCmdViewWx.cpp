@@ -210,4 +210,3 @@ namespace NUnitStartCmdView
 		return pWindow;
 	}
 }
-

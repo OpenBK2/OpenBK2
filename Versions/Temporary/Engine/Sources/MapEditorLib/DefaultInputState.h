@@ -35,5 +35,3 @@ public:
 	//
 	virtual void OnContextMenu( const CTPoint<int> &rMousePoint ) {}
 };
-
-

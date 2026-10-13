@@ -162,4 +162,3 @@ const uint32_t dwWaitObject = ::WaitForSingleObject( procinfo.hProcess, INFINITE
 ::CloseHandle( procinfo.hThread );
 
 */
-

@@ -59,5 +59,3 @@ public:
 	}
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const;
 };
-
-

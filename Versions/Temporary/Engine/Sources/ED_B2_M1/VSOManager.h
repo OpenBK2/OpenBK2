@@ -299,5 +299,3 @@ public:
 	static void DrawVSO( SVSODrawParams *pDrawParams );
 	//
 };
-
-

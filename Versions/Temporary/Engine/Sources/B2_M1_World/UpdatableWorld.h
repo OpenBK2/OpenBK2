@@ -322,5 +322,3 @@ public:
 	void GetObjects( std::vector<IB2MapObj*> *pObjects ) const;
 	void GetObjects( std::vector<CMapObj*> *pObjects ) const;
 };
-
-

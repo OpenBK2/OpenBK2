@@ -608,5 +608,3 @@ void CInterfaceChapterMapMenu::OnEffectFinish()
 		}
 	}
 }
-
-

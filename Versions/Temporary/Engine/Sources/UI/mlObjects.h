@@ -17,5 +17,3 @@ IReflowObject* CreateFontObject( int nFlags, const NGScene::SFont &font, const N
 IReflowObject* CreateMinFontSizeObject( int nSize );
 
 } // NAMESPACE
-
-

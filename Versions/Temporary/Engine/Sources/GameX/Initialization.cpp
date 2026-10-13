@@ -235,5 +235,3 @@ const NDb::SMultiplayerConsts *GetMPConsts()
 }
 
 };
-
-

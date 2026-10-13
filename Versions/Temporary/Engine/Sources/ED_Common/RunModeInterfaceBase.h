@@ -26,5 +26,3 @@ protected:
 	CTimeCounter * pTimer;
 	uint32_t dwTime;
 };
-
-

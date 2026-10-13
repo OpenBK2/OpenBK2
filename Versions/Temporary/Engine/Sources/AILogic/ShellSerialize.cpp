@@ -37,4 +37,3 @@ int CVisShell::operator&( IBinSaver &saver )
 
 	return 0;
 }
-

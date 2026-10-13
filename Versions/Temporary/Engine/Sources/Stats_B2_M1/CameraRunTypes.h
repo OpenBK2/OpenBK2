@@ -11,5 +11,3 @@ namespace NDb
 		SCRT_ERROR,
 	};
 };
-
-

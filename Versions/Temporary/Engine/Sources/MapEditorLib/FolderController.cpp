@@ -237,5 +237,3 @@ bool CFolderController::AddExpandOperation( const std::string &rszObjectName, bo
 }
 
 // basement storage
-
-

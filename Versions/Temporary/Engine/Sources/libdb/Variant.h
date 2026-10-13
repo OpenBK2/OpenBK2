@@ -212,4 +212,3 @@ public:
 
 	void Trace() const;
 };
-

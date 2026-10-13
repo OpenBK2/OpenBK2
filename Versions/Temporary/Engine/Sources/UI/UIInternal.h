@@ -24,6 +24,3 @@ struct SBUIMessage
 		return 0;
 	}
 };
-
-
-

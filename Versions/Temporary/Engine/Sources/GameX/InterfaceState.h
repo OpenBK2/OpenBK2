@@ -110,5 +110,3 @@ struct IInterfaceState : public CObjectBase
 inline IInterfaceState* InterfaceState() { return Singleton<IInterfaceState>(); }
 
 IInterfaceState* CreateInterfaceState();
-
-

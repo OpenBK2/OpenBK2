@@ -29,5 +29,3 @@ public:
 
 	IWindow *CreateTooltipWindow( const std::wstring &wszTooltipText, IWindow *pTooltipOwner, IScreen *pScreen );
 };
-
-

@@ -11,5 +11,3 @@ EXPORT_RESULT CStaticObjectRPGStatsExporter::ExportObject( IManipulator* pManipu
 	// Preserve failures from the shared object exporter.
 	return CHPObjectRPGStatsExporter::ExportObject( pManipulator, rszObjectTypeName, rszObjectName, bForce, exportType );
 }
-
-

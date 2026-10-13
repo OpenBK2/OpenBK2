@@ -44,6 +44,3 @@ void CTankPitPath::Segment( const NTimer::STime timeDiff )
 
 	pUnit->SetCenter( CVec3( vCurPoint.x, vCurPoint.y, GetHeights()->GetZ( vCurPoint ) ) );
 }
-
-
-

@@ -280,6 +280,3 @@ void CSurfController::Init( const float fAngle, const CVec2i &vMapSize, const st
 		}
 	}
 }
-
-
-

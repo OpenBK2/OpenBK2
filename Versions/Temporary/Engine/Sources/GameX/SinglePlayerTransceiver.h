@@ -44,5 +44,3 @@ public:
 	ICheckSumLog *GetCheckSumLogger() { return pCmdsHistory; }
 	const NDb::SMapInfo *GetMap() const;
 };
-
-

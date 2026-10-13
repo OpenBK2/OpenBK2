@@ -81,5 +81,3 @@ public:
 	friend struct SAntiArtillerySort;
 	friend class CAntiArtilleryManager;
 };
-
-

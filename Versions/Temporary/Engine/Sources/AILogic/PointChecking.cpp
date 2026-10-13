@@ -90,5 +90,3 @@ bool CAttackStObjectChecking::IsGoodTile( const SVector &curTile ) const
 		fDist <= sqr( long( fRangeMax / SConsts::TILE_SIZE ) ) &&
 		fDist >= sqr( long( fRangeMin / SConsts::TILE_SIZE ) );
 }
-
-

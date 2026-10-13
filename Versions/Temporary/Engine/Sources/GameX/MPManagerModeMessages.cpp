@@ -336,5 +336,3 @@ bool CMPManagerMode::OnInGameChatMessage( SMPUIInGameChatMessage *pMsg )
 	InterfaceState()->AddMPChatMessage( txt );
 	return true;
 }
-
-

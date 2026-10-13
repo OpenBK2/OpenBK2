@@ -184,5 +184,3 @@ unsigned CBasicDataExtractor::GetObjectData( CArray2D<uint32_t> *pNormalImage,
 	}
 	return nResult;
 }
-
-

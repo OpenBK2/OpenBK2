@@ -501,4 +501,3 @@ public:
 	// TrainCar-specific
 	const bool TryFiring();
 };
-

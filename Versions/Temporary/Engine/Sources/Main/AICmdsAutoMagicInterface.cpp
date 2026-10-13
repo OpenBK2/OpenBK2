@@ -21,4 +21,3 @@ IAICmdsAutoMagic *CreateDefaultCmdsCreator()
 }
 BASIC_REGISTER_CLASS( MAIN, IAICmdsAutoMagic )
 REGISTER_SAVELOAD_CLASS( MAIN, 0x20129340, CDefaultAICmdsAutoMagic )
-

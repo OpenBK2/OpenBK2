@@ -60,5 +60,3 @@ void CMapInfoStoreInputState::OnInputStateEvent( const SInputStateEventInfo &rIn
 }
 
 // basement storage
-
-

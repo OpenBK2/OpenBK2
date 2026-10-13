@@ -24,5 +24,3 @@ public:
 	void AttachGameView( NGScene::IGameView *_pGScene ) { pGScene = _pGScene; }
 	void AddDynamicDebris( const NMeshData::SMeshDataTex2 &debrisData, const NDb::SMaterial *pMaterial );
 };
-
-

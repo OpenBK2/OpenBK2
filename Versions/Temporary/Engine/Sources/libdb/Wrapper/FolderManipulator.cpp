@@ -341,5 +341,3 @@ void CFolderManipulatorIteratorWrapper::Reset()
 {
 	posCurrElement = entriesList.empty() ? entriesList.end() : entriesList.begin();
 }
-
-

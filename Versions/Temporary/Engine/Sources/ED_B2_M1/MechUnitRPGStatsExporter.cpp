@@ -1421,5 +1421,3 @@ EXPORT_RESULT CMechUnitRPGStatsExporter::CheckObject( IManipulator* pManipulator
 	//
 	return ER_SUCCESS;
 }
-
-

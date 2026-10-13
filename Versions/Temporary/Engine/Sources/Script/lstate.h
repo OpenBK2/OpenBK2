@@ -243,6 +243,3 @@ void lua_setThread( lua_State *L, CLuaThread *pThread );
 
 
 const std::string MakeUniqueName( lua_State *L, const char *name );
-
-
-

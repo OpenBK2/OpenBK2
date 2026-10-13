@@ -119,5 +119,3 @@ struct SShootAreas
 	}
 };
 #pragma pack()
-
-

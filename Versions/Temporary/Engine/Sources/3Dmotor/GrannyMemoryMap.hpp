@@ -6,5 +6,3 @@ void InitializeGrannyMemoryMap();
 void DumpGrannyMemory();
 
 #endif // GRANNY_MEMORY_MAP
-
-

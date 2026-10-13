@@ -150,5 +150,3 @@ bool CConnectServerProcessor::ProcessNewClient( CNetNewClient *pPacket )
 
 	return pPacket->nClientID == 0;
 }
-
-

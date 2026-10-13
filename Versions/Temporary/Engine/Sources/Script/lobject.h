@@ -376,6 +376,3 @@ int luaO_str2d (const char *s, Number *result);
 
 void PORT_CDECL luaO_verror (lua_State *L, const char *fmt, ...);
 void PORT_CDECL luaO_chunkid (char *out, const char *source, int len);
-
-
-

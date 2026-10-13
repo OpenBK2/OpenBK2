@@ -48,5 +48,3 @@ void CStatusUpdatesHelper::SetStatus( const EUnitStatus _eStatus )
 		updater.AddUpdate( CreateStatusUpdate( __eStatus, true, __fRadius ), ACTION_NOTIFY_UPDATE_STATUS, __pUnit, -1 );
 	}
 }
-
-

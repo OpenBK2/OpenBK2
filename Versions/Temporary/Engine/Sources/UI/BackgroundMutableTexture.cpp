@@ -81,5 +81,3 @@ void CBackgroundMutableTexture::CTextureData::Recalc()
 
 	bNeedUpdate = false;
 }
-
-

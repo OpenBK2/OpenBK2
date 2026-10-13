@@ -91,5 +91,3 @@ inline float SRand::GetFloat( float fpMin, float fpMax )
 // non-deterministic source. Nothing the simulation reads may come from here, or
 // clients diverge; AILogic uses System/RandomGen.h and NRandom for that.
 extern CRandomGenerator randomGen;
-
-

@@ -131,5 +131,3 @@ uint32_t SPixelConvertInfo::DecompColor( uint32_t dwColor ) const
 	// Return converted color
 	return (r | g | b | a);
 }
-
-

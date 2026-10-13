@@ -519,5 +519,3 @@ int CStringManager::Compare( const std::string &rszLeft, const std::string &rszR
 }
 
 // basement storage
-
-

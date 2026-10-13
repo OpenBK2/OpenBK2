@@ -234,5 +234,3 @@ IConnection* CThroughServerEffort::CreateConnection() const
 {
 	return new CThroughServerConnection( nClientServerID, pNet );
 }
-
-

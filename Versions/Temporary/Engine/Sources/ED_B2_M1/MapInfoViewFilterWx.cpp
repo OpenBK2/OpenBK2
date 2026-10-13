@@ -282,4 +282,3 @@ namespace NMapInfoViewFilter
 		return true;
 	}
 }
-

@@ -67,4 +67,3 @@ public:
 };
 
 #endif // !defined(__COAST_VSO_STATE__)
-

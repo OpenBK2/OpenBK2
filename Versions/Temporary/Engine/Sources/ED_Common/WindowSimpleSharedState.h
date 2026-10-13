@@ -75,6 +75,3 @@ protected:
 	CTPoint<int> rStartPoint;
 	bool bDragging;
 };
-
-
-

@@ -576,4 +576,3 @@ inline IBinSaver *CreateBinSaver( CDataStream *pStream, ESaverMode mode )
 {
 	return CreateBinSaver( pStream, mode, std::vector<SBinSaverExternalObject>() );
 }
-

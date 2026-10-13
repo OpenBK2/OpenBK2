@@ -20,6 +20,3 @@ public:
 	const NTimer::STime GetLastSeen() const { return timeLastSeen; }
 	const bool IsTimeToForget() const;
 };
-
-
-

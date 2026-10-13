@@ -41,5 +41,3 @@ public:
 
 	bool CheckSuitable( const NDb::SManuverDescriptor *pDesc ) const;
 };
-
-

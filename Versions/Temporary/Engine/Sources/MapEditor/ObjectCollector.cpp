@@ -703,5 +703,3 @@ IImageList* CObjectCollector::GetImageList( int nImageListType )
 
 
 // basement storage
-
-

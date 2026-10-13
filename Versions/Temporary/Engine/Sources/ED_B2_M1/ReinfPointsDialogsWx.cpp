@@ -329,4 +329,3 @@ namespace NReinfPointsAddTemplate
 		return true;
 	}
 }
-

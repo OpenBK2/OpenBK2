@@ -457,5 +457,3 @@ void CICMPCreateCustomGame::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x32197340, CInterfaceMPCreateCustomGame );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_CREATE_CUSTOM_GAME_MENU, CICMPCreateCustomGame );
-
-

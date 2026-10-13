@@ -35,5 +35,3 @@ public:
 	void Undo( IController* pController ) {}
 	void Redo( IController* pController ) {}
 };
-
-

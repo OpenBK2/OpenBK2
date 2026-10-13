@@ -98,6 +98,3 @@ public:
 };
 
 //INTERFACE_COMMAND_DECLARE( CICEscMenu, CInterfaceEscMenu );
-
-
-

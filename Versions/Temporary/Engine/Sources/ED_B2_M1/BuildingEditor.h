@@ -104,5 +104,3 @@ public:
 	//
 	void ChangeSeason( const NDb::ESeason eSeason );
 };
-
-

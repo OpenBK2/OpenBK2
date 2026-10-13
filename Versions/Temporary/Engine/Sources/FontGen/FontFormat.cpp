@@ -16,4 +16,3 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 }
 
 REGISTER_SAVELOAD_CLASS( FONTGEN, 0x02321170, CFontFormatInfo );
-

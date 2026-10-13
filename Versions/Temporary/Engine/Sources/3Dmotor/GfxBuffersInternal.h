@@ -195,4 +195,3 @@ typedef CIBFast<D3DFMT_INDEX16> CIB16Fast;
 //class CIB16: public CRBase<IDirect3DIndexBuffer8>
 
 }
-

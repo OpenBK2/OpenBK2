@@ -367,5 +367,3 @@ START_REGISTER(GAutoDetect)
 FINISH_REGISTER
 
 } // namespace
-
-

@@ -18,5 +18,3 @@ void CArtilleryBulletStorage::MoveTo( const CVec3 &newCenter )
 	SetNewPlaceWithoutMapUpdate( newCenter );
 	Init();
 }
-
-

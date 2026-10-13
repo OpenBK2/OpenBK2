@@ -30,5 +30,3 @@ EConfigValue GetFSAAMode();
 void SetFSAAMode( EConfigValue eMode );
 
 } // namespace
-
-

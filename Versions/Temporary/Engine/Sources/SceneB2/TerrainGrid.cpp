@@ -160,5 +160,3 @@ void CScene::UpdateGrid( int nMinX, int nMinY, int nMaxX, int nMaxY, bool bAIGri
 		}
 	}
 }
-
-

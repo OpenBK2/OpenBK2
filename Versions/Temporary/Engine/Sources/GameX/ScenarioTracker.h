@@ -307,5 +307,3 @@ IScenarioTracker * CreateScenarioTracker();
 IScenarioTracker * CreateScenarioTrackerMultiplayer();
 
 // END new scenario tracker
-
-

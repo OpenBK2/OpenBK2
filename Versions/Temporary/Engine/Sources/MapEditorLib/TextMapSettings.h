@@ -31,6 +31,3 @@ public:
 		textMap[szKey] = szValue;
 	}
 };
-
-
-

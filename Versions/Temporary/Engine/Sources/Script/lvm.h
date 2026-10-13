@@ -29,5 +29,3 @@ void luaV_strconc (lua_State *L, int total, StkId top);
 /// Step-by-step execution
 void luaV_beginExecute(lua_State *L, int nClosure, StkId base, int nResults );
 void luaV_stepExecute( lua_State *L );
-
-

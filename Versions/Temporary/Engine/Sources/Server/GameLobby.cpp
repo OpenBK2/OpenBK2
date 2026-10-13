@@ -665,5 +665,3 @@ bool CGameLobby::ProcessShowLobbyGames( CShowLobbyGamesPacket *pPacket )
 
 
 BASIC_REGISTER_CLASS( SERVER, CGameLobby );
-
-

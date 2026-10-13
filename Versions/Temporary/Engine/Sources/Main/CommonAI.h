@@ -21,5 +21,3 @@ struct ICommonAI : public CObjectBase
 
 	virtual void ProcessCommand( CObjectBase *pCommand ) { }
 };
-
-

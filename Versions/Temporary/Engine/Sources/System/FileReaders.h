@@ -112,4 +112,3 @@ public:
 	CMemoryMappedFileFragment( CMMFile *_pFile, int _nOffset, int _nSize ) : pFile(_pFile), nOffset(_nOffset), nSize(_nSize) { StartAccess( F_CanRead ); }
 	~CMemoryMappedFileFragment() { FinishAccess(); }
 };
-

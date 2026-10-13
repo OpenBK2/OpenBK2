@@ -436,5 +436,3 @@ const uint16_t GetVisibleAngle( const CVec2 &point, const SRect rect )
 
 	return (std::max)( (std::max) ( (std::max)( diff1, diff2 ), (std::max)( diff3, diff4 ) ), (std::max)( diff5, diff6 ) );
 }
-
-

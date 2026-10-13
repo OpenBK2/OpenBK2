@@ -57,4 +57,3 @@ struct STGAFileFooter
 	uint8_t cBinaryZeroStringTerminator;			// '\0'
 };
 #pragma pack()
-

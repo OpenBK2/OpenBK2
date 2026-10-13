@@ -20,5 +20,3 @@ public:
 	virtual void SetTexture( const struct NDb::STexture *_pDesc );
 	virtual void SetOutline( const CDBID &outlineType );
 };
-
-

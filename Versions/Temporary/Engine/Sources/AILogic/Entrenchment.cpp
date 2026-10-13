@@ -724,5 +724,3 @@ void CFullEntrenchment::SetVisible()
 		pSection->SetVisible();
 	}
 }
-
-

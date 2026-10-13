@@ -8,5 +8,3 @@ class CEffectInterface : public CEditorInterfaceBase
 };
 
 INTERFACE_COMMAND_DECLARE( CEffectInterfaceCommand, CEffectInterface )
-
-

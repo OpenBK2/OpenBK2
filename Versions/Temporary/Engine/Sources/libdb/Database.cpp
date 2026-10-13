@@ -273,4 +273,3 @@ bool IsDBIDValid( const CDBID &dbid )
 }
 
 }
-

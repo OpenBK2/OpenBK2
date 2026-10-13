@@ -692,4 +692,3 @@ void CStandartSmoothMechPath::Stop()
 }
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, STANDART_SMOOTH_MECH_PATH, CStandartSmoothMechPath );
-

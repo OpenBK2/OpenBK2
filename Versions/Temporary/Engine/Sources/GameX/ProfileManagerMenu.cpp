@@ -375,5 +375,3 @@ void CICProfileManager::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19113481, CInterfaceProfileManager )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_PROFILE_MENU, CICProfileManager )
-
-

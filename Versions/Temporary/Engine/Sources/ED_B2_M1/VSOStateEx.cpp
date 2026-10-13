@@ -390,5 +390,3 @@ bool CVSOStateEx::UpdateVSOInBase( CObjectBaseController *pObjectController, int
 
 
 // basement storage
-
-

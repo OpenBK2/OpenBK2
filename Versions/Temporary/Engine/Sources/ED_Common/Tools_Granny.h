@@ -49,5 +49,3 @@ public:
 	granny_file_info &operator*() const { return *pInfo; }
 	operator granny_file_info *() const { return pInfo; }
 };
-
-

@@ -146,6 +146,3 @@ public:
 // object list's three context menu items -- so it overrides HandleCommand and
 // UpdateCommand and falls through to here for the edit-parameter pair.
 typedef CEditParameterCommands<CMapObjectMultiState::SEditParameters> CMapObjectCommands;
-
-
-

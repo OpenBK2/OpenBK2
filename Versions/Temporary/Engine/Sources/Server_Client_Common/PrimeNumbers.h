@@ -15,5 +15,3 @@ public:
 	const int GetPrime( const int nIndex ) const { return numbers[nIndex]; }
 	bool IsPrime( const int nNumber ) { return isPrime.find( nNumber ) != isPrime.end(); }
 };
-
-

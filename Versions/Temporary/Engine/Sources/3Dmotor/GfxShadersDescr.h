@@ -41,6 +41,3 @@ struct SPShader
 		pShaRS(_pShaRS), pShaTSS(_pShaTSS),
 		pStateRS(_pStateRS), pStateTSS(_pStateTSS) {}
 };
-
-
-

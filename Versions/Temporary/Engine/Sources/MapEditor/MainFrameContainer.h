@@ -21,6 +21,3 @@ public:
 	IMainFrame* Get() { return pMainFrame; }
 	IWidget* GetMainWindow() { return pMainWindow; }
 };
-
-
-

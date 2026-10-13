@@ -9,4 +9,3 @@ struct SRegFunction
 	const char *name = {};
 	CFunction func = {};
 };
-

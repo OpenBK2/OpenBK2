@@ -2377,5 +2377,3 @@ namespace NUpdatableProcess
 		processesToUpdate.push_back( pProcess );
 	}
 }
-
-

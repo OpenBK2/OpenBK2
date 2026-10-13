@@ -139,5 +139,3 @@ public:
 			return 0;
 	}
 };
-
-

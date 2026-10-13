@@ -12,6 +12,3 @@
 
 void luaC_collect (lua_State *L, int all);
 void luaC_checkGC (lua_State *L);
-
-
-

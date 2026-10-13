@@ -156,4 +156,3 @@ int CCellsConglomerateContainer::operator&( IBinSaver &saver  )
 	saver.Add( 3, &bInitted );
 	return 0;
 }
-

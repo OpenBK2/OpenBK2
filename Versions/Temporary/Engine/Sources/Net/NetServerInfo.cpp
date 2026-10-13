@@ -127,4 +127,3 @@ bool CServerInfoSupport::CanSendRequest( const CNodeAddress &broadcast, std::vec
 }
 
 }
-

@@ -279,4 +279,3 @@ namespace NShortcutBar
 		return new CWxShortcutBarView();
 	}
 }
-

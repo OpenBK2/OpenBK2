@@ -171,6 +171,3 @@ void *luaM_realloc (lua_State *L, void *block, lint32 size)
   }
   return block;
 }
-
-
-

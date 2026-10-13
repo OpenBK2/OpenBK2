@@ -195,5 +195,3 @@
 //	pHeights->Init4Editor( nSizeX, nSizeY, 32 );
 //}
 //
-
-

@@ -127,5 +127,3 @@ uint32_t CDBPtr<TUserObj,TPtr>::CalcCheckSum() const
 	else
 		return GetBarePtr()->CalcCheckSum();
 }
-
-

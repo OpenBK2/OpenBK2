@@ -410,4 +410,3 @@ void CMemObject::CalcBound( SBound *pRes ) const
 }
 
 REGISTER_SAVELOAD_CLASS( _3DLIB, 0x2012CD00, CMemObject )
-

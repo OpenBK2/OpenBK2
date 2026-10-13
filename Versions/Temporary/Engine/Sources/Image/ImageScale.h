@@ -23,4 +23,3 @@ enum EImageScaleMethod
 
 IMAGE_EXPORT void Scale( CArray2D<uint32_t> *pDst, const CArray2D<uint32_t> &src, const EImageScaleMethod method );
 }
-

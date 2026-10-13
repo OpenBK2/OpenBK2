@@ -3288,6 +3288,3 @@ REGISTER_CMD( "pass_marker", CommandPassMarker )
 REGISTER_CMD( "dump_maxes", CommandDumpMaxes );
 #endif
 FINISH_REGISTER
-
-
-

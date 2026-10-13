@@ -67,4 +67,3 @@ std::string CNodeAddress::GetName( bool bResolve ) const
 }
 
 }
-

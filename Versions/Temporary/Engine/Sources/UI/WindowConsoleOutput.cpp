@@ -160,4 +160,3 @@ void CWindowConsoleOutput::Visit( struct IUIVisitor *pVisitor )
 		}
 	}
 }
-

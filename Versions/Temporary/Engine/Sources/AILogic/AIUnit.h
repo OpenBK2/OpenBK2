@@ -510,5 +510,3 @@ public:
 	void UpdateCrewAndTruckVisibility( uint8_t party, bool bNewVisibility );
 	void CheckAmmoStatus();
 };
-
-

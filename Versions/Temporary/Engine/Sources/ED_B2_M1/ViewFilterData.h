@@ -145,5 +145,3 @@ struct SViewFilterData
 		return 0;
 	}
 };
-
-

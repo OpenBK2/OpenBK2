@@ -274,6 +274,3 @@ static bool ApplyInRadius( const CTRect<int> &rRect, TYPE &rApplyFunctional )
 	}
 	return true;
 }
-
-
-

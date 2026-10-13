@@ -167,5 +167,3 @@ bool GetSeasonedValue( TValue *pData, struct IManipulator *pManipulator, const s
 }
 
 bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const char *pszBase );
-
-

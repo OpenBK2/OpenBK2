@@ -18,5 +18,3 @@ IAILogic* CreateAI4Globe()
 {
 	return new CAILogic();
 }
-
-

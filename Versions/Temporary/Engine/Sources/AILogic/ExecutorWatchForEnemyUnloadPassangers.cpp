@@ -74,4 +74,3 @@ bool CExecutorWatchForEnemyUnloadPassangers::IsExecutorValidInternal() const
 {
 	return IsValidObj( pUnit );
 }
-

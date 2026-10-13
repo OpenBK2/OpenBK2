@@ -152,5 +152,3 @@ int SConfigFile::RemoveKeyword( const std::string &rszKeyword, bool bIgnoreCase 
 
 
 // basement storage
-
-

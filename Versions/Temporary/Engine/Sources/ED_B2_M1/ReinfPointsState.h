@@ -67,5 +67,3 @@ public:
 	bool EditPointDeployTemplate();
 	bool EditPointTypedTemplate();
 };
-
-

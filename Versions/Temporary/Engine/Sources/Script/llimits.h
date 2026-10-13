@@ -263,6 +263,3 @@ typedef unsigned long Instruction;
 #ifndef LOOKBACKNUMS
 #define LOOKBACKNUMS    20      /* arbitrary constant */
 #endif
-
-
-

@@ -15,5 +15,3 @@ namespace NAIVisInfo
 	AILOGIC_EXPORT void RemoveProfile( const int nID );
 	AILOGIC_EXPORT void ToggleLockProfiles();
 }
-
-

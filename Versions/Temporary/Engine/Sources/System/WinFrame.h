@@ -80,5 +80,3 @@ namespace NWinFrame
 	void EnableCursorManagement( bool bEnable );
 	SYSTEM_EXPORT void FlashTaskbarIfInactive();
 };
-
-

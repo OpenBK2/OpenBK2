@@ -31,5 +31,3 @@ public:
 	virtual void Enter();
 	virtual void Leave();
 };
-
-

@@ -256,5 +256,3 @@ bool CGrid::SColumnCompare::operator()( const int a, const int b ) const
 		pGrid->columns[a] == pGrid->columns[b] && a < b;
 
 }
-
-

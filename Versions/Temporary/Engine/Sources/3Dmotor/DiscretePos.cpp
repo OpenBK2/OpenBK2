@@ -48,5 +48,3 @@ CFBTransform* SDiscretePos::GetTransform() const
 }
 
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x025a1130, CFBTransform );
-
-

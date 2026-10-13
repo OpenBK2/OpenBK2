@@ -210,5 +210,3 @@ public:
 
 	void Reposition( const CTRect<float> &parentRect );
 };
-
-

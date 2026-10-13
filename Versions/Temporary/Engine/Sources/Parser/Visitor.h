@@ -27,5 +27,3 @@ struct IVisitor : public CObjectBase
 	virtual void Visit( CNamespace *pNM ) = 0;
 };
 }
-
-

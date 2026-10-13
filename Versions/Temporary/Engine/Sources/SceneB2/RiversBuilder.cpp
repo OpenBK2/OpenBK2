@@ -1580,5 +1580,3 @@ bool CTerraGen::IsPointInsideRivers( const CVec3 &v, const int nExcludeID )
 	}
 	return false;
 }
-
-

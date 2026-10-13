@@ -71,5 +71,3 @@ const char *EnumToString_NDb_NTypeDef_ETypeType( NDb::NTypeDef::ETypeType eType 
 		return "TYPE_TYPE_UNKNOWN";
 	}
 }
-
-

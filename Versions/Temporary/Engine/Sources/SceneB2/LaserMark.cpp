@@ -81,5 +81,3 @@ REGISTER_VAR_EX( "laser_mark_pulsar_time", NGlobal::VarFloatHandler, &LASER_MARK
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x311B8340, CLaserMarkTrace )
-
-

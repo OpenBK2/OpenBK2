@@ -34,5 +34,3 @@ public:
 
 	const std::wstring &GetText() const { return wszText; }
 };
-
-

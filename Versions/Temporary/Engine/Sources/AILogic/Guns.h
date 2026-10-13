@@ -313,4 +313,3 @@ float GetDispByRadius( const class CBasicGun *pGun, const float fDist );
 float GetDispByRadius( const float fDispRadius, const float fRangeMax, const float fDist );
 
 const float GetFireRangeMax( const SWeaponRPGStats *pStats, CAIUnit *pOwner );
-

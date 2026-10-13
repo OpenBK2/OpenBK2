@@ -22,5 +22,3 @@ void UpdateEntry( const std::string &szName, const std::string &szValue, const u
 }
 
 }
-
-

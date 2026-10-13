@@ -150,4 +150,3 @@ public:
 	virtual bool Advance( const NTimer::STime timeDiff );
 	virtual void Init( const NDb::EManuverDestination dest, CPlanesFormation *pPlane, CPlanesFormation *pEnemy = 0 );
 };
-

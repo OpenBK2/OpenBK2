@@ -38,5 +38,3 @@ public:
 	bool TransactCommand( const std::string &szScript, const std::string &szExpectedResult );
 	bool TransactQuery( const std::string &szScript, std::string *pszResult );
 };
-
-

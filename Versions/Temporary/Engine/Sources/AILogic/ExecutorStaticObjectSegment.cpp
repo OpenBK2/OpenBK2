@@ -34,6 +34,3 @@ int CExecutorStaticObjectSegment::Segment()
 
 //	return GetNextTime();
 }
-
-
-

@@ -73,5 +73,3 @@ _3DMOTOR_EXPORT CRTPtr *GetFrameTransitionCapture1( const SFrameTransitionInfo &
 NGfx::CTexture *GetTexture( CRTPtr * pTex);
 
 }
-
-

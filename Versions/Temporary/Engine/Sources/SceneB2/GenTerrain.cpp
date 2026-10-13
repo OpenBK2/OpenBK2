@@ -297,5 +297,3 @@ int CTerraGen::operator&( IBinSaver &saver )
 
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1007EA80, CTerraGen );
-
-

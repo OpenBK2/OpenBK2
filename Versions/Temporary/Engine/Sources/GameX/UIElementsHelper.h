@@ -55,5 +55,3 @@ void InitRoller( IPlayer *pRoller );
 void PlayRollerAnim( std::vector<IPlayer*> &rollers, int nStart, int nEnd, float fRollerTime );
 
 } //namespace NUIElementsHelper
-
-

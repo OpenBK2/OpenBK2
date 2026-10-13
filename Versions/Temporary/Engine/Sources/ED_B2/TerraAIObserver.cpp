@@ -11,6 +11,3 @@ CTerraAIObserverInEditor::CTerraAIObserverInEditor( const int nAIMapSizeX, const
 
 	InitPassMarkers( pAIMap );
 }
-
-
-

@@ -48,6 +48,3 @@ struct ICommandHandlerContainer : public CObjectBase
 	// Проверить возможность обработки команды, обработчик получить из ранее зарегистрированных
 	virtual bool UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbCheck ) = 0;
 };
-
-
-

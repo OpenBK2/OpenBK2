@@ -68,5 +68,3 @@ public:
 	void CreateTarget();
 	void DeleteTarget();
 };
-
-

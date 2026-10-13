@@ -590,5 +590,3 @@ static bool ProcessCommandLine( const std::vector<std::string> &arguments )
 	}
 	return true;
 }
-
-

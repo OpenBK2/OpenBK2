@@ -246,5 +246,3 @@ void CICSelectTutorial::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17255300, CInterfaceSelectTutorial )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SELECT_TUTORIAL, CICSelectTutorial )
-
-

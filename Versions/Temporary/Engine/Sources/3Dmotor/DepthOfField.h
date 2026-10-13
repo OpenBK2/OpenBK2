@@ -25,5 +25,3 @@ public:
 void ProcessDepthOfField( const SDepthOfField *pDOF, const CSceneFragments *pScene, const CTransformStack *pTS, IRender *pRender );
 
 } // namespace NGScene
-
-

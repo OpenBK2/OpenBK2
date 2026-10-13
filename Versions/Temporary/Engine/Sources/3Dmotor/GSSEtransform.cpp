@@ -40,5 +40,3 @@ static struct SNormalizeInit
 		}
 	}
 } normalizeInit;
-
-

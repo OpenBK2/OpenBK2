@@ -1384,5 +1384,3 @@ REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x171BD2C0, SEvent, CVisualNotifications )
 START_REGISTER( InterfaceNotifications )
 REGISTER_VAR_EX( "autosave_objective_complete", NGlobal::VarBoolHandler, &s_bAutosaveObjectiveComplete, false, STORAGE_USER );
 FINISH_REGISTER
-
-

@@ -215,4 +215,3 @@ namespace NLogView
 		return pView;
 	}
 }
-

@@ -2348,4 +2348,3 @@ void CMapInfoEditor::RunGame()
 		{
 		}
 		/**/
-

@@ -75,5 +75,3 @@ namespace NProgress
 }
 
 // basement storage
-
-

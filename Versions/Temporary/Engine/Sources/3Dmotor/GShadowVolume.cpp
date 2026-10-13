@@ -893,4 +893,3 @@ void MakeShadowVolumes( IRender *pRender, CTransformStack *pTS, const CVec3 &vCe
 }
 using namespace NGScene;
 BASIC_REGISTER_CLASS( _3DMOTOR, CHZBuffer )
-

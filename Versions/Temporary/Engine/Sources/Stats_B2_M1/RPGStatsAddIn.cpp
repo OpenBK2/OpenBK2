@@ -110,5 +110,3 @@ const CUserActions* NDb::SUnitBaseRPGStats::GetUserActions( bool bActionsBy ) co
 {
 	return bActionsBy ? &(pActions->availUserActions) : &(pActions->availUserExposures);
 }
-
-

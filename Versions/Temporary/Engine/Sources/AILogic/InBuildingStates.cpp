@@ -275,5 +275,3 @@ CAIUnit* CSoldierAttackInBuildingState::GetTargetUnit() const
 {
 	return pEnemy;
 }
-
-

@@ -161,6 +161,3 @@ struct IMainFrameContainer : public CObjectBase
 	virtual bool CreateMenu() = 0;
 	virtual void DestoryMenu() = 0;
 /**/
-
-
-

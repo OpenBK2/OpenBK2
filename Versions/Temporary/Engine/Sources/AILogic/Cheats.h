@@ -56,5 +56,3 @@ public:
 
 	bool IsPasswordOk() const { return bPasswordOK; }
 };
-
-

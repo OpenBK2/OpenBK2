@@ -683,5 +683,3 @@ public:
 	virtual const CVec2 GetPurposePoint() const { return vPurposePoint; }
 	virtual EUnitStateNames GetName() { return EUSN_LAND; }
 };
-
-

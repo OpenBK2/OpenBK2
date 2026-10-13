@@ -115,5 +115,3 @@ template <class TID> void Invalidate( TID *pID ) { if ( pID != 0 ) { pID->Invali
 template <> void Invalidate( int *pID ) { if ( pID != 0 ) { ( *pID ) = ( -1 ); } }
 template <> void Invalidate( std::string *pID ) { if ( pID != 0 ) { pID->clear(); } }
 /**/
-
-

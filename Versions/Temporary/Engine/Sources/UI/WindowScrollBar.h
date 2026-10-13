@@ -67,5 +67,3 @@ public:
 	void SetNSpecialPositions( int nPositions );
 	void SetSpecialPosition( int nPosition );
 };
-
-

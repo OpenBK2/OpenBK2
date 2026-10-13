@@ -235,5 +235,3 @@ void CARSiwtchTab::InitByDesc( const struct NDb::SUIDesc *_pDesc )
 {
 	pDesc = checked_cast<const NDb::SARSwitchTab*>( _pDesc );
 }
-
-

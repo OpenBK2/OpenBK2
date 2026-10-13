@@ -202,5 +202,3 @@ bool CSupremeBeing::IsInResistanceCircle( const CVec2 &vPoint, const int nGenera
 		return generals[nGeneralParty]->IsInResistanceCircle( vPoint );
 	return false;
 }
-
-

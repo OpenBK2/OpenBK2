@@ -15,5 +15,3 @@ namespace NReinforcement
 	const NDb::EReinforcementType GetReinforcementType( const NDb::EDBUnitRPGType eUnitRpgType );
 	const float GetReinforcementExpediency( const NDb::EReinforcementType eMyType, const NDb::EReinforcementType eEnemyType );
 }
-
-

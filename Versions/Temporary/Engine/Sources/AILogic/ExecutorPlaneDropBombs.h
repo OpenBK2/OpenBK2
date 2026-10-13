@@ -33,4 +33,3 @@ public:
 		return 0;
 	}
 };
-

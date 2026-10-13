@@ -144,6 +144,3 @@ void Multiply3x3Matrix( TVec3 *pResult, const CArray2D<double> &rSource, const T
 	pResult->y = rSource[1][0] * rC.x + rSource[1][1] * rC.y + rSource[1][2] * rC.z;
 	pResult->z = rSource[2][0] * rC.x + rSource[2][1] * rC.y + rSource[2][2] * rC.z;
 }
-
-
-

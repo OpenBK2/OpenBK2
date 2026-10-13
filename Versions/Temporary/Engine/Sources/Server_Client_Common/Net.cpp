@@ -244,5 +244,3 @@ void CNet::DebugTogglePause( bool bPause )
 		pausePackets.clear();
 	}
 }
-
-

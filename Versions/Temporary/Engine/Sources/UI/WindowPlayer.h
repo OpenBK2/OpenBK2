@@ -60,6 +60,3 @@ public:
 	virtual void PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip = 0 );
 	//IPlayer}
 };
-
-
-

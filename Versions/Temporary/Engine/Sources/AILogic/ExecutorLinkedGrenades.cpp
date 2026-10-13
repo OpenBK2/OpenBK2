@@ -34,5 +34,3 @@ int CExecutorLinkedGrenades::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19140C00, CExecutorLinkedGrenades )
-
-

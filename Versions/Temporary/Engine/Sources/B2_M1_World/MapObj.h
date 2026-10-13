@@ -549,6 +549,3 @@ void GetPlacementFromUpdate( CVec3 *pvPos, CQuat *pqRot, const SAINewUnitUpdate 
 
 B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator, bool bLooped, float fSpeed = 1.0f );
 B2_M1_WORLD_EXPORT bool AddAnimation( const NDb::SAnimB2 *pAnim, const NTimer::STime timeStart, NAnimation::ISkeletonAnimator *pAnimator );
-
-
-

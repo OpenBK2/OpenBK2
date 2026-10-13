@@ -30,5 +30,3 @@ public:
 	void Update();
 	void SwitchToNextAnimation() { bSwitchToNextAnimation = true; }
 };
-
-

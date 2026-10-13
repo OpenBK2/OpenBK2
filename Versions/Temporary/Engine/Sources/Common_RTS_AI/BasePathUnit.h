@@ -368,5 +368,3 @@ public:
 //! CBasePathUnit не является потомком CObjectBase, поэтому для его сериализации нельзя использовать operator&, необходимо
 //! пользоваться SerializeBasePathUnit( ... )
 COMMON_RTS_AI_EXPORT void SerializeBasePathUnit( IBinSaver &saver, const int nChunkID, CBasePathUnit **pUnit );
-
-

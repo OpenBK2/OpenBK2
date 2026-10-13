@@ -108,5 +108,3 @@ void DumpGrannyMemory()
 
 	DebugTrace( "total\t\t%d", nTotalSize );
 }
-
-

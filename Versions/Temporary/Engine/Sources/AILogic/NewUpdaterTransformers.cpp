@@ -416,5 +416,3 @@ SAIBasicUpdate* CEventUpdater::CUpdateData::CUpdateSuperWeaponRecycleTransform::
 	pData->nUpdateTime = pUpdate->nUpdateTime;
 	return pData;
 }
-
-

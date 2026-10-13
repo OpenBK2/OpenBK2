@@ -712,5 +712,3 @@ void String2File( const std::wstring &rwszText, const std::string &rszTextPath, 
 
 
 // basement storage
-
-

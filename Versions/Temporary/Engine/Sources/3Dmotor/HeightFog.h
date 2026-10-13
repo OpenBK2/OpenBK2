@@ -19,5 +19,3 @@ CPtrFuncBase<CObjectInfo> *CreateHeightFogHolder( CPtrFuncBase<CObjectInfo> *pGe
 																								  CFuncBase<SFBTransform> *pPlace );
 
 } // namespace NGScene
-
-

@@ -46,5 +46,3 @@ void RegisterMapEditorTypeDelayed( const std::string &szType, const std::string 
 {
 	GetEditorModuleRegistrator()->AddMapEditorType( szType, szName, pfnNewFunc );
 }
-
-

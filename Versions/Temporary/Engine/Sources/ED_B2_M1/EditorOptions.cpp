@@ -253,5 +253,3 @@ std::string GetMiscString( const std::string &szName )
 }
 
 }
-
-

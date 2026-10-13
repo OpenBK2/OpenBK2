@@ -14,5 +14,3 @@ protected:
 	bool StepLocal( bool bAppActive );
 public:
 };
-
-

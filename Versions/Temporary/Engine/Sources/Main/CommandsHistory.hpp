@@ -79,4 +79,3 @@ struct ICommandsHistory : public ICheckSumLog
 };
 struct SReplayInfo;
 ICommandsHistory *CreateCommandsHistory( const SReplayInfo &replay );
-

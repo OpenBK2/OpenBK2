@@ -25,5 +25,3 @@ public:
 	void SetFinishPoint( const int nPoint, const int nTimeToMove, const NTimer::STime curTime );
 	void FinishMove() { bMovementFinished = true; }
 };
-
-

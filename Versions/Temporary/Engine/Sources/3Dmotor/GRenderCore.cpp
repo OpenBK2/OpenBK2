@@ -368,4 +368,3 @@ void MakeSingleOp( CRenderCmdList *pRes, CSceneFragments &src, bool bTakeLitPart
 }
 
 using namespace NGScene;
-

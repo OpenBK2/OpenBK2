@@ -143,5 +143,3 @@ const SRect GetUnitFullSpeedRect( const CBasePathUnit *pUnit, const bool bForInf
 const SRect GetUnitSpeedRect( const CBasePathUnit *pUnit, const bool bForInfantry );
 const SRect GetUnitSmallRect( const CBasePathUnit *pUnit );
 const SRect GetUnitNormalRect( const CBasePathUnit *pUnit );
-
-

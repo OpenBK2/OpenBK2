@@ -79,4 +79,3 @@ void CWindowStatsSystem::Visit( struct IUIVisitor *pVisitor )
 }
 
 REGISTER_SAVELOAD_CLASS( UI, 0x110AC482, CWindowStatsSystem );
-

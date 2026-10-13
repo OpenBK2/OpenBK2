@@ -142,5 +142,3 @@ const char* GetPacketInfo( CNetPacket *pPacket )
 	return "";
 #endif
 }
-
-

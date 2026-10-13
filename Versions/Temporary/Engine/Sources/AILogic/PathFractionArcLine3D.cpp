@@ -196,4 +196,3 @@ bool CPathFractionArcLine3D::TryCircle( const CVec3 &x0, const CVec3 &v0, const 
 	}
 	return true;
 }
-

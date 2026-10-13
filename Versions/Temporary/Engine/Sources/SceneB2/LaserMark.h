@@ -38,5 +38,3 @@ public:
 
 	void UpdatePoints( const CVec3 &vStart, const CVec3 &vEnd );
 };
-
-

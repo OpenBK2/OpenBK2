@@ -282,4 +282,3 @@ if ( fPlacementDirection > FP_2PI )
 	fPlacementDirection -= FP_2PI;
 }
 /**/
-

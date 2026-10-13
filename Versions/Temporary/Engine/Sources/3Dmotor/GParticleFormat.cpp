@@ -154,4 +154,3 @@ void CParticlesLoader::RecalcValue( CFileRequest *pRequest )
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02541140, CParticlesLoader );
-

@@ -147,4 +147,3 @@ public:
 void GetTransparentTexturePlace( STransparentTexturePlace *pRes, NGfx::CTexture *pTex, float fOffset = 0.5f );
 
 }
-

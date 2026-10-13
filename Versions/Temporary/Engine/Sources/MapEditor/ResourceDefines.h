@@ -262,5 +262,3 @@
 #define IDC_CM_NAME_EDIT																22174
 #define IDC_CM_DESC_LABEL																22175
 #define IDC_CM_DESC_EDIT																22176
-
-

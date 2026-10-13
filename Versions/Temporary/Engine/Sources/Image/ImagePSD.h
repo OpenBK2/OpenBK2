@@ -12,5 +12,3 @@ namespace NImage
 
 	IMAGE_EXPORT bool LoadImagePSD( CArray2D<uint32_t> &pRes, CDataStream *pStream );
 };
-
-

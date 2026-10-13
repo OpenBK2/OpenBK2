@@ -89,6 +89,3 @@ struct IEditorContainer : public CObjectBase
 	// Определяет можно ли нажимать Save
 	virtual bool IsModified() = 0;
 };
-
-
-

@@ -11,4 +11,3 @@ class CSceneFragments;
 
 void RenderPolycount( CTransformStack *pTS, NGfx::CRenderContext *pRC, IRender *pRender, CSceneFragments &scene );
 }
-

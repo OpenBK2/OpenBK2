@@ -16,6 +16,3 @@ public:
 	virtual void SetModified( bool _bModified );
 	virtual bool ShowProgress() { return true; }
 };
-
-
-

@@ -19,5 +19,3 @@ namespace NVFS
 	SYSTEM_EXPORT bool WriteFile( IFileCreator *pCreator, const std::string &szPath,
 		const CDataStream &data, std::string *pError = nullptr );
 }
-
-

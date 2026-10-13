@@ -77,5 +77,3 @@ EXPORT_RESULT CSoundDescExporter::ExportObject( IManipulator* pManipulator,
 	//
 	return ER_SUCCESS;
 }
-
-

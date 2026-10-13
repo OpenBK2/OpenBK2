@@ -169,4 +169,3 @@ namespace NCreateMod
 		return !pMod->szFolderPath.empty() && !pMod->wszName.empty();
 	}
 }
-

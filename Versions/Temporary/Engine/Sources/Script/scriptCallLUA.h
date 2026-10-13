@@ -32,4 +32,3 @@ void luaCreateCPtrVar( const std::string &szVarName, CObjectBase *pObj );
 
 }
 //
-

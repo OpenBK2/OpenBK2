@@ -136,6 +136,3 @@ struct IBuilderContainer : public CObjectBase
 															IBuildDataCallback *pBuildDataCallback ) = 0;
 	virtual bool FillNewObjectName( SBuildDataParams *pBuildDataParams ) = 0;
 };
-
-
-

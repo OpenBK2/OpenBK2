@@ -622,5 +622,3 @@ inline TCheck* GetChildChecked( IWindow *pParent, const std::string &szName, con
 	NI_ASSERT( !s_bUICommonShowWarnings || pCheck, fmt::format( "Window not found: \"{}\"", szName ) );
 	return pCheck;
 }
-
-

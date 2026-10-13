@@ -149,7 +149,3 @@ public:
 // HandleCommand or an UpdateCommand of its own. The last of the five
 // edit-parameter palettes, and the only one of them that needs nothing more.
 typedef CEditParameterCommands<CModelState::SEditParameters> CModelCommands;
-
-
-
-

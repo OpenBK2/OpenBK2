@@ -263,4 +263,3 @@ namespace NNewObject
 		return bAccepted;
 	}
 }
-

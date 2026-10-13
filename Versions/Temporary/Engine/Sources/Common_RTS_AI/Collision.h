@@ -76,5 +76,3 @@ struct ICollision : public CAIObjectBase
 
 COMMON_RTS_AI_EXPORT ICollisionsCollector *CreateCollisionsCollector();
 COMMON_RTS_AI_EXPORT ICollision *CreateCollision( CBasePathUnit *pUnit, CBasePathUnit *pPushUnit, const int nPriority, const NCollision::ECollisionName eName );
-
-

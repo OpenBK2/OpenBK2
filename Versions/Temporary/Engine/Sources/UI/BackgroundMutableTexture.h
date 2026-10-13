@@ -46,5 +46,3 @@ public:
 	virtual void SetTexture( const struct NDb::STexture *_pDesc ) { ASSERT(!_pDesc); }
 	void Set( const CArray2D<NGfx::SPixel8888> &src );
 };
-
-

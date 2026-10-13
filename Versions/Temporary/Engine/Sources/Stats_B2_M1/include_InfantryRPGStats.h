@@ -26,4 +26,3 @@ virtual const int GetGunsSize( const int nUniqueID, const int nPlatform ) const
 		ConstructorInfo() && ConstructorInfo()->GetUnitPlatforms( nUniqueID, &pPlatforms ) ?
 		(*pPlatforms)[nPlatform].gunIndexes.size() : guns.size();
 }
-

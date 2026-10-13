@@ -56,5 +56,3 @@ namespace NErrors
 	if ( !bCheck )\
 		NErrors::ShowWarningNoLine( user_text );\
 }
-
-

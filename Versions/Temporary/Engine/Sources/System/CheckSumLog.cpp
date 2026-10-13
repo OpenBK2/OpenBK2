@@ -4,4 +4,3 @@
 #include "System_export.h"
 
 BASIC_REGISTER_CLASS( SYSTEM, ICheckSumLog )
-

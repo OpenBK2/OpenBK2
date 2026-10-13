@@ -316,4 +316,3 @@ namespace NRefList
 		dialog.SaveState();
 	}
 }
-

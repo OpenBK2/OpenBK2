@@ -866,5 +866,3 @@ public:
 	SChatClear() {}
 	REGISTER_TO_UPDATES
 };
-
-

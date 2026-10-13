@@ -177,5 +177,3 @@ _3DMOTOR_EXPORT void SetLoadMode( ELoadMode eMode );
 
 
 }	// namespace NGScene
-
-

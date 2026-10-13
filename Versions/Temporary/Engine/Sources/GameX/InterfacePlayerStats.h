@@ -86,5 +86,3 @@ class CICPlayerStats : public CInterfaceCommandBase<CInterfacePlayerStats>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

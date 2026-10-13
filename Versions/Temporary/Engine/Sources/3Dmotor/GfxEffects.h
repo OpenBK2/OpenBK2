@@ -58,5 +58,3 @@ struct SEffTransparentParticles : public SEffect
 
 
 } // namespace
-
-

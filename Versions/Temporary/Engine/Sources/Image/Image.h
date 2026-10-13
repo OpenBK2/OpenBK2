@@ -48,4 +48,3 @@ struct SColor
   operator uint32_t() const { return dwColor; }
 };
 }
-

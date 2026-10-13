@@ -358,4 +358,3 @@ const NDb::SUnitStatsModifier * CBalanceTest::GetModifier( int nPlayer ) const
 		return NDb::Get<NDb::SUnitStatsModifier>( szDBID );
 	return 0;
 }
-

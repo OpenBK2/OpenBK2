@@ -582,4 +582,3 @@ void CBridgeState::InsertBridge( SBridgeInfo::EDirection direction, bool bFixSta
 		}
 	}
 /**/
-

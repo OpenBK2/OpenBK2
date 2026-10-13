@@ -115,4 +115,3 @@ void lua_AddString( IBinSaver &f, IBinSaver::chunk_id idChunk, TString **ppszStr
 		f.Add( idChunk, &str, nChunk );
 	}
 }
-

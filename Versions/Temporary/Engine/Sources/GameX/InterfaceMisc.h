@@ -122,5 +122,3 @@ class CICHideUnfocusedScreen : public IInterfaceCommand
 public:
 	void Exec();
 };
-
-

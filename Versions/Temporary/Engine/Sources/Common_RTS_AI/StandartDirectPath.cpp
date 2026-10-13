@@ -38,5 +38,3 @@ void CStandartDirectPath::MarkPath( const int nID, const NDebugInfo::EColor colo
 }
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x31224300, CStandartDirectPath );
-
-

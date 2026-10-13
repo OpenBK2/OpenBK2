@@ -14,5 +14,3 @@ struct SMainFrameParams
 	void Load();
 	void Save();
 };
-
-

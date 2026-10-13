@@ -302,5 +302,3 @@ template<typename T> struct std::hash<CDBPtr<T>> {
 	CPtr<name> pTemp = new name;	\
 	pTemp->ReportMetaInfo();			\
 	} } init##name##N;
-
-

@@ -114,5 +114,3 @@ protected:
 	//CStoreInputState
 	virtual void OnInputStateEvent( const SInputStateEventInfo &rInputStateEventInfo ) = 0;
 };
-
-

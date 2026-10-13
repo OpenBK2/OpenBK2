@@ -72,4 +72,3 @@ const SUnitActions* GetActions() const
 {
 	return pActions ? pActions.GetPtr() : NDb::Get<NDb::SUnitActions>( CDBID("Other/UnitActions/Game/Units/dummy.xdb") );
 }
-

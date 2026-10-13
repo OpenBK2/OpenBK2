@@ -34,5 +34,3 @@ public:
 	void FinalizeDeath( NDb::ESeason eSeason );
 	int operator&( IBinSaver &saver );
 };
-
-

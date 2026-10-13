@@ -64,5 +64,3 @@ int CExecutorUnitCombatBonus::operator&( IBinSaver &saver )
 }
 
 //REGISTER_SAVELOAD_CLASS( 0x19128500, CExecutorUnitCombatBonus )
-
-

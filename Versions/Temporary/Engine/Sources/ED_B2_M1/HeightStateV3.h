@@ -309,7 +309,3 @@ public:
 // the tile list's three context menu items -- so it overrides HandleCommand and
 // UpdateCommand and falls through to here for the edit-parameter pair.
 typedef CEditParameterCommands<CHeightStateV3::SEditParameters> CHeightCommandsV3;
-
-
-
-

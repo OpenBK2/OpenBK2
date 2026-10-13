@@ -14,5 +14,3 @@ struct ICommonB2M1AI : public CObjectBase
 	virtual void ProcessCommand( CObjectBase *pCommand ) { }
 	virtual void DumpAfterAssinc() {}
 };
-
-

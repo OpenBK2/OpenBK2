@@ -26,6 +26,3 @@ int luaS_createudata (lua_State *L, CObjectBase *pData, int tag);
 TString *luaS_newlstr (lua_State *L, const char *str);
 TString *luaS_new (lua_State *L, const char *str);
 TString *luaS_newfixed (lua_State *L, const char *str);
-
-
-

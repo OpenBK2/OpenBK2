@@ -299,5 +299,3 @@ namespace NMapInfoEditor
 	bool CheckLinkCapability( const std::string &rszObjectRPGStatsTypeName, const CDBID &rObjectRPGStatsDBID, unsigned nFrameIndex,
 														const std::string &rszLinkToObjectRPGStatsTypeName, const CDBID &rLinkToObjectRPGStatsID, unsigned nLinkToFrameIndex );
 };
-
-

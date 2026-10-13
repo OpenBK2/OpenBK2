@@ -11,4 +11,3 @@ struct SPerformanceInfo
 void PerformBenchmark();
 _3DMOTOR_EXPORT const SPerformanceInfo &GetPerformanceInfo();
 }
-

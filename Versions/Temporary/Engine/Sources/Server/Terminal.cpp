@@ -203,5 +203,3 @@ void WriteMSG( const char* pszFormat, ... )
 		pTheTerminal->OutString( buff );
 	}
 }
-
-

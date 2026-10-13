@@ -515,5 +515,3 @@ void CTerrainManager::SetRainyWaters( CDBPtr<NDb::SWater> pRainyWater )
 
 BASIC_REGISTER_CLASS( SCENEB2, ITerraManager );
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x10096401, CTerrainManager )
-
-

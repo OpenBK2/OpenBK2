@@ -392,5 +392,3 @@ void CICMPLadderStatistics::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19263380, CInterfaceMPLadderStatistics );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MP_LADDER_STATISTICS, CICMPLadderStatistics );
-
-

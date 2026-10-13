@@ -148,5 +148,3 @@ public:
 	void RegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
 	void UnRegisterAsBored( const NDb::EUnitAckType eBored, struct IMOUnit *pObject );
 };
-
-

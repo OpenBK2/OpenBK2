@@ -51,4 +51,3 @@ EBSUReport PORT_STDCALL ReportAssert( const char *pszCondition, const char *pszD
 	return eRetCode;
 }
 }
-

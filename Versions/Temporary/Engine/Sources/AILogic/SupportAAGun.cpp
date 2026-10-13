@@ -44,4 +44,3 @@ void CSupportAAGun::Segment()
 
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11143C40, CSupportAAGun )
-

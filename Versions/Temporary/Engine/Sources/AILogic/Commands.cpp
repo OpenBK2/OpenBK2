@@ -75,5 +75,3 @@ IStaticPath* CAICommand::CreateStaticPath( CCommonUnit *pUnit )
 		return pPath.Extract();
 	}
 }
-
-

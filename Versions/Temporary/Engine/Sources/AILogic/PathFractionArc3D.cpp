@@ -109,4 +109,3 @@ void CPathFractionArc3D::Init( const CVec3 &_i, const CVec3 &_j, const CVec3 &_k
 #endif
 	*/
 }
-

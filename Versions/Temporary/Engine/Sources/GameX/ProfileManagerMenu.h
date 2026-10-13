@@ -79,6 +79,3 @@ class CICProfileManager : public CInterfaceCommandBase<CInterfaceProfileManager>
 public:
 	void Configure( const char *pszConfig );
 };
-
-
-

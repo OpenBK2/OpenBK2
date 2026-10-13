@@ -373,5 +373,3 @@ int luaX_lex (LexState *LS, SemInfo *seminfo) {
     }
   }
 }
-
-

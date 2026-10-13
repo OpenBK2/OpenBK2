@@ -294,5 +294,3 @@ void CStandartBehaviour::AnalyzeUnderFire( CAIUnit *pUnit )
 		underFireAnalyzeTime = curTime + SConsts::TIME_OF_HIT_NOTIFY + NRandom::Random( 0, 1000 ); RecordRandomCall();
 	}
 }
-
-

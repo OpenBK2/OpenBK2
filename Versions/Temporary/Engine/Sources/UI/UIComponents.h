@@ -21,5 +21,3 @@ struct IFocusNotify : public virtual CObjectBase
 {
 	virtual void OnFocus( const bool bFocus ) = 0;
 };
-
-

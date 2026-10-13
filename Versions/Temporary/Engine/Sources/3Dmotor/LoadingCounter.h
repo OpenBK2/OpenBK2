@@ -7,5 +7,3 @@ public:
 	virtual void SetTotalCount( int nTotalCount ) = 0;
 	virtual void Step() = 0;
 };
-
-

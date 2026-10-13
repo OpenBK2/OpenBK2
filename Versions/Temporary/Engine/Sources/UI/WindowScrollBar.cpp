@@ -213,5 +213,3 @@ void CWindowScrollBar::SetSpecialPosition( int nPosition )
 {
 	pSlider->SetSpecialPosition( nPosition );
 }
-
-

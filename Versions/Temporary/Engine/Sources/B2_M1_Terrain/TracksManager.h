@@ -119,5 +119,3 @@ public:
 		return 0;
 	}
 };
-
-

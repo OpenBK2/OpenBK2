@@ -75,5 +75,3 @@ class CTextureViewer : public IDataViewer
 public:
 	void MakeInterior( CObjectBase *pWindow, const CObjectBase *pData ) const;
 };
-
-

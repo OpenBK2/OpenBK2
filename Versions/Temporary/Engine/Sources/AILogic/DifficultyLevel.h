@@ -46,5 +46,3 @@ public:
 	const float GetDispersionCoeff( const int nParty ) const	{ return coeff[nParty][GetLevel()][EM_DISPERSION]; }
 	*/
 };
-
-

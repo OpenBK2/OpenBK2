@@ -67,5 +67,3 @@ inline CRectLayout MakeLayout( float fScrX, float fScrY, float fScrW, float fScr
 {
 	return CRectLayout( fScrX, fScrY, fScrW, fScrH, fTxtX, fTxtY, fTxtW, fTxtH, dwColor );
 }
-
-

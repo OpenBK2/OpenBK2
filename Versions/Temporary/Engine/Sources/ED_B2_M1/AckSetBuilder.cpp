@@ -482,6 +482,3 @@ bool CAcksBuilder::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 	}
 	return false;
 }
-
-
-

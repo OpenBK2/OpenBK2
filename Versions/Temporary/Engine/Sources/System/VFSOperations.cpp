@@ -34,5 +34,3 @@ void SetMainFileCreator( IFileCreator *pFileCreator )
 }
 
 }
-
-

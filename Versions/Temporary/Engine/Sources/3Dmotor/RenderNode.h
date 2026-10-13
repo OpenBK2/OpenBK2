@@ -22,5 +22,3 @@ public:
 };
 
 } // namespace NGScene
-
-

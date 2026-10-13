@@ -1489,5 +1489,3 @@ bool CMapObjectState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *
 }
 
 // basement storage
-
-

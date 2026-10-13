@@ -40,4 +40,3 @@ const char *GetModelNameOfSkeleton( CGrannyFileInfo *pGrannyFI, const int nModel
 }
 
 };
-

@@ -148,5 +148,3 @@ public:
 	void Configure( const char *pszConfig );
 };
 #endif // _SINGLE_DEMO
-
-

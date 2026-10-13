@@ -122,4 +122,3 @@ void CPahtFractionArcLineArc::Init( const CDirectedCircle &_start, const CVec2 &
 	pFinish->Init( _finish, _vFinish1, _vFinish2, _fZ );
 	pLine->Init( CVec3(_vStart2, _fZ), CVec3(_vFinish1, _fZ ) );
 }
-

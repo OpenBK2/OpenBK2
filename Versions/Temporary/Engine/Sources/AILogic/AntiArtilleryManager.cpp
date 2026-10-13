@@ -134,5 +134,3 @@ bool CAntiArtilleryManager::CIterator::IsFinished() const
 {
 	return nCurParty >= 3;
 }
-
-

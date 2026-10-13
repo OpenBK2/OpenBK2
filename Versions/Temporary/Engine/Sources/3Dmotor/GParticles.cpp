@@ -141,4 +141,3 @@ void CParticleAnimator::StopParticlesGeneration( const STime &tStop )
 }
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x27041142, CParticleAnimator )
-

@@ -32,5 +32,3 @@ namespace NWin32Random
 	};
 	const SRandomFunc& RndFunc();
 };
-
-

@@ -51,6 +51,3 @@ public:
 
 	static void SetWelcomeText( const std::wstring& _wszWelcomeText ) { wszWelcomeText = _wszWelcomeText; }
 };
-
-
-

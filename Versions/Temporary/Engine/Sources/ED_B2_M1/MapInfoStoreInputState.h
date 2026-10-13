@@ -46,5 +46,3 @@ public:
 	CMapInfoStoreInputState() : bFixInvalidPos( false ), visSize( 0, 0 ) {}
 	inline void SetSizes( const CTPoint<int> &rVisSize, bool _bFixInvalidPos ) { visSize = rVisSize; bFixInvalidPos = _bFixInvalidPos; }
 };
-
-

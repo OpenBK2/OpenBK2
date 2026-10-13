@@ -112,4 +112,3 @@ void CAckManager::UnitDead( class CAIUnit *pObject )
 		it->second.erase( pObject->GetUniqueId() );
 	// common acks from dead units will be deleted in update.
 }
-

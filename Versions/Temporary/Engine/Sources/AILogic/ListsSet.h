@@ -555,5 +555,3 @@ int CDecksSet<T>::operator&( IBinSaver &saver )
 
 	return 0;
 }
-
-

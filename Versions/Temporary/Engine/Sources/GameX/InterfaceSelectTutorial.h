@@ -69,5 +69,3 @@ class CICSelectTutorial : public CInterfaceCommandBase<CInterfaceSelectTutorial>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

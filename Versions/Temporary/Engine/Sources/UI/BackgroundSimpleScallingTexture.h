@@ -18,4 +18,3 @@ public:
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 	virtual void SetTexture( const struct NDb::STexture *_pDesc );
 };
-

@@ -43,5 +43,3 @@ public:
 	void SetCapturedFlags( const int nParty, const int nFlags );
 
 };
-
-

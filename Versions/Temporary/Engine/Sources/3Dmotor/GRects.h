@@ -24,5 +24,3 @@ void RenderRect( NGfx::C2DQuadsRenderer *pRes, NGfx::CTexture *pTex,
 	const CVec2 *pPos4, const NGfx::SPixel8888 *pColors4, const CTRect<float> &rSrc, float fZ = 1.0f );
 
 }
-
-

@@ -207,5 +207,3 @@ public:
 // travels in those commands, so both implementations of the palette share it
 // rather than each restating what the other means.
 typedef CEditParameterCommands<CFieldState::SEditParameters> CFieldCommands;
-
-

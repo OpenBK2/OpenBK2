@@ -186,5 +186,3 @@ void CStoreInputState::OnContextMenu( const CTPoint<int> &rMousePoint )
 }
 
 // basement storage
-
-

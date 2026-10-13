@@ -8,6 +8,3 @@ void CUserActions::ReportMetaInfo( const std::string &szAddName, uint8_t *pThis 
 {
 //	NMetaInfo::ReportStructArrayMetaInfo( szAddName + "actions", &actions, pThis );
 }
-
-
-

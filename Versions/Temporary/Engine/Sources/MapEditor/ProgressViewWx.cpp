@@ -257,4 +257,3 @@ namespace NProgressView
 		return new CWxProgressView;
 	}
 }
-

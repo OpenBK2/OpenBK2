@@ -29,5 +29,3 @@ namespace NText
 #define CHECK_TEXT_NOT_EMPTY( name ) ( !sz##name##FileRef.empty() )
 #define GET_TEXT( name ) NText::GetText( sz##name##FileRef )
 // CRAP}
-
-

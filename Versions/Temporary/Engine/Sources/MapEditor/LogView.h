@@ -66,4 +66,3 @@ namespace NLogView
 	// on failure.
 	ILogView* CreateWxLogViewIn( wxWindow *pParent, ICommandHandler *pSelectionHandler, wxWindow **ppWindow );
 }
-

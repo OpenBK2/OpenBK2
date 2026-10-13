@@ -105,6 +105,3 @@ struct IObjectCollector : public CObjectBase
 	};
 	virtual IImageList* GetImageList( int nImageListType ) = 0;
 };
-
-
-

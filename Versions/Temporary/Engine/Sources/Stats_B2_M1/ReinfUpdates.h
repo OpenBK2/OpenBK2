@@ -47,5 +47,3 @@ public:
 public:
 	SAIReinfRecycleUpdate() : bEnabled( false ), fProgress( 0.0f ), timeRecycleEnd( 0 ) {}
 };
-
-

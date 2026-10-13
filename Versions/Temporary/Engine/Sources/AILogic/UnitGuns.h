@@ -107,5 +107,3 @@ public:
 	virtual bool SetActiveShellType( const NDb::SWeaponRPGStats::SShell::EShellDamageType eShellType ) { return false; }
 	virtual const int GetActiveShellType() const { return NDb::SWeaponRPGStats::SShell::DAMAGE_HEALTH; }
 };
-
-

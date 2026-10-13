@@ -1200,5 +1200,3 @@ REGISTER_VAR_EX( "minimap_dark_warfog_alpha", NGlobal::VarIntHandler, &s_nDarkWa
 REGISTER_VAR_EX( "minimap_light_warfog_alpha", NGlobal::VarIntHandler, &s_nLightWarFogAlpha, 0, STORAGE_NONE );
 
 FINISH_REGISTER
-
-

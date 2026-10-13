@@ -27,6 +27,3 @@ public:
 											const std::string &rszObjectName,
 											const std::string &rszDataExtractorType );
 };
-
-
-

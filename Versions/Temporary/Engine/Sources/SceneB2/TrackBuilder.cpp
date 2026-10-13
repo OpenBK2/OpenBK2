@@ -277,5 +277,3 @@ void CTerraGen::AddTrack( const int nID, const float fFadingSpeed,
 
 	pTracksManager->AddTrack( nID, fFadingSpeed, data, vBBMin, vBBMax );
 }
-
-

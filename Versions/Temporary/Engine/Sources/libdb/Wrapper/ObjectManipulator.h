@@ -56,5 +56,3 @@ public:
 	unsigned GetID() const { return INVALID_NODE_ID; }
 	bool IsFolder() const { return false; }
 };
-
-

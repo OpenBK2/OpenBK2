@@ -25,5 +25,3 @@ public:
 	CShowLobbyGamesPacket() : nLobbyID( 0 ) { }
 	CShowLobbyGamesPacket( const int _nLobbyID ) : nLobbyID( _nLobbyID ) { }
 };
-
-

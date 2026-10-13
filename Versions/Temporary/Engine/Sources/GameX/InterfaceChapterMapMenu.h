@@ -364,5 +364,3 @@ public:
 	void Configure( const char *pszConfig );
 };
 #endif // !defined(_SINGLE_DEMO) || defined(_MP_DEMO)
-
-

@@ -54,5 +54,3 @@ public:
 };
 
 STATS_B2_M1_EXPORT int StatsB2M1LinkCheatFunction();
-
-

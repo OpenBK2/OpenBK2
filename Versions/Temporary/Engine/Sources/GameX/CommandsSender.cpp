@@ -137,4 +137,3 @@ void CCommandsSender::SendCommand( IAILogicCommandB2 *pCmd )
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x3009E581, CCommandsSender );
-

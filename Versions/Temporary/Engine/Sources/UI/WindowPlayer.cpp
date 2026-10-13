@@ -257,5 +257,3 @@ void CWindowPlayer::PlayFragment( int nStartFrame, int nEndFrame, int nFrameSkip
 
 	}
 }
-
-

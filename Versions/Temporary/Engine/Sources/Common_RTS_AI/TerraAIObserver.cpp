@@ -357,4 +357,3 @@ REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x11097CC0, CTerraAIObserver )
 START_REGISTER( TerraAIObserverConsts )
 REGISTER_VAR_EX( "TerraAIObserver.TileHeightDiffToLock", NGlobal::VarFloatHandler, &s_fHeightsDiffToLock, 20.0f, STORAGE_NONE );
 FINISH_REGISTER
-

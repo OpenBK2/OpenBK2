@@ -739,4 +739,3 @@ B2_M1_TERRAIN_EXPORT void CreateConvexHull( std::vector<CVec3> *pResPoints, cons
 void GetIntersectionTriangles( std::vector<CTriangleEx> *pIntersection, const CTriangleEx &rTriangle1, const CTriangleEx &rTriangle2 );
 bool IsInsideTriangle( const CTriangleEx &rTriangle, const CVec3dEx &rPoint, bool bIncludeBorders = false );
 bool AreTrianglesTakenUp( const CTriangleEx rOuterTriangle, const CTriangleEx rInnerTriangle, bool bIncludeBorders = true );
-

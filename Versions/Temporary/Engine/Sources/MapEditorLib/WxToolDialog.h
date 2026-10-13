@@ -69,4 +69,3 @@ public:
 	}
 #endif // __WXMSW__
 };
-

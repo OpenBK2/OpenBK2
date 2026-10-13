@@ -590,5 +590,3 @@ void CStaticObjects::UpdateAllObjectsPos()
 		it->second->InitEntireBridge();
 
 }
-
-

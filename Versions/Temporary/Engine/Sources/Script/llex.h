@@ -66,6 +66,3 @@ void luaX_checklimit (LexState *ls, int val, int limit, const char *msg);
 void luaX_syntaxerror (LexState *ls, const char *s, const char *token);
 void luaX_error (LexState *ls, const char *s, int token);
 void luaX_token2str (int token, char *s);
-
-
-

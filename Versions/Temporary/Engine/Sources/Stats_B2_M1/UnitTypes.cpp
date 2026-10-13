@@ -89,4 +89,3 @@ namespace NDb
 		return RPG_CLASS_UNKNOWN;
 	}
 }
-

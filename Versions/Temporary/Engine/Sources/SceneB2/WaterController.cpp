@@ -1339,5 +1339,3 @@ void CWaterController::InitOceanWater( const CArray2D<uint8_t> &seaMap,
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x130C8300, SWaterNode );
-
-

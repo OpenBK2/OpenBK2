@@ -88,5 +88,3 @@ public:
 	//
 	int operator&( CStructureSaver &f );
 };
-
-

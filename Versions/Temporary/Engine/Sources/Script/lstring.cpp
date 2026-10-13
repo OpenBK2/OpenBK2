@@ -69,5 +69,3 @@ TString *luaS_newfixed (lua_State *L, const char *str) {
   if (ts->marked == 0) ts->marked = FIXMARK;  /* avoid GC */
   return ts;
 }
-
-

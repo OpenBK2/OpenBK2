@@ -95,5 +95,3 @@ void CScene::AddPostEffectObjects( const std::list<int> &objects, const CVec4 &v
 	data[eScene]->postEffects.push_back( data[eScene]->GetGScene()->AddPostFilter( filterObjects,
 		new NGScene::COccludedColorer( new NGScene::CCVec4( vColor ) ) ) );
 }
-
-

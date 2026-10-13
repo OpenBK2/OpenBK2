@@ -780,5 +780,3 @@ void CICInterfaceSaveLoad::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x170CC400, CInterfaceSaveLoadMenu );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_SAVE_LOAD_MENU, CICInterfaceSaveLoad );
 REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x170CC401, CReactions, CInterfaceSaveLoadMenu );
-
-

@@ -853,4 +853,3 @@ namespace NHeightViewV3
 		return pWindow;
 	}
 }
-

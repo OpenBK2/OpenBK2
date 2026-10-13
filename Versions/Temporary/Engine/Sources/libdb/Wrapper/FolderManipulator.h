@@ -66,5 +66,3 @@ public:
 	bool IsFolder() const;
 	void Reset();
 };
-
-

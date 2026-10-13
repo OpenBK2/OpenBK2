@@ -13,5 +13,3 @@ IVisReflowObject* CreateTabObject();
 IVisReflowObject* CreateSpringObject( int nSize );
 
 } // NAMESPACE
-
-

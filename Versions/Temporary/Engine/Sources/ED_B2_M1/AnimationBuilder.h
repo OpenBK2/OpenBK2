@@ -25,5 +25,3 @@ protected:
 	// methods
 	uint32_t GetWeaponBits( const SGrannyBoneAttributes & gba ) const;
 };
-
-

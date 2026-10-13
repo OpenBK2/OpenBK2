@@ -57,4 +57,3 @@ void SMechUnitRPGStats::ToAIUnits( bool bInEditor )
 }
 
 }
-

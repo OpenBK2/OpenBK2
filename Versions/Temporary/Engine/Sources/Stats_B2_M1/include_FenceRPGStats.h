@@ -176,5 +176,3 @@ ETypesOfLife GetDamageTypeByFrameIndex( const int _nFrameIndex ) const
 	NI_ASSERT( false, fmt::format( "[MAP DESIGNER ERROR] Invalid frame index ({}). Object \"{}\" has no appropriate lite type.", _nFrameIndex, GetDBID().ToString() ) );
 	return ETOL_SAFE;
 }
-
-

@@ -32,5 +32,3 @@ struct THermitInterpolate
 				return ( (2*p0 - 2*p1 + v0 + v1)*fCoeff*fCoeff*fCoeff + (-3*p0 + 3*p1 -2*v0 - v1)*fCoeff*fCoeff + v0*fCoeff + p0 );
 		}
 };
-
-

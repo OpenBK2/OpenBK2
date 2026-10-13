@@ -144,5 +144,3 @@ bool CWindowSimpleSharedBuilder::InternalInsertObject( std::string *pszObjectTyp
 
 
 // basement storage
-
-

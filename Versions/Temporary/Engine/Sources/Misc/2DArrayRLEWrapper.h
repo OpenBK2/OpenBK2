@@ -222,5 +222,3 @@ inline int CArray2DRLEWrapper<T>::operator&( IBinSaver &saver )
 
 	return 0;
 }
-
-

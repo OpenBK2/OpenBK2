@@ -26,5 +26,3 @@ namespace NStatistics
 	IStatisticsData * CreateEventsCounter();
 	void Reset();
 }
-
-

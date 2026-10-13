@@ -228,5 +228,3 @@ void SMarkerSet::AddMarker( const CVec3 &rPos,
 	else
 		points.push_back( point );
 }
-
-

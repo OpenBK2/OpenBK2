@@ -37,4 +37,3 @@ int CNodeAddress::GetPort()
 }
 
 }
-

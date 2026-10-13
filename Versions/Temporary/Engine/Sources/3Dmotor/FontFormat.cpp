@@ -19,4 +19,3 @@ int CFontFormatInfo::operator&( CStructureSaver &f )
 }
 
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x02321170, CFontFormatInfo );
-

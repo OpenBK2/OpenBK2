@@ -13,6 +13,3 @@ namespace NProgress
 	MAPEDITORLIB_EXPORT void SetPosition( int nPosition );
 	MAPEDITORLIB_EXPORT void IteratePosition();
 };
-
-
-

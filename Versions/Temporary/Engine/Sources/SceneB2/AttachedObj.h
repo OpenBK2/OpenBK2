@@ -109,5 +109,3 @@ public:
 	CCenterOffsetTransform() : pBaseTransform( 0 ), nTargetID( -1 ) {}
 	CCenterOffsetTransform( const int _nTargetID, CFuncBase<SFBTransform> *_pBaseTransform, const SHMatrix &_mMultiplier );
 };
-
-

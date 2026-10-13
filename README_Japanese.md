@@ -84,4 +84,3 @@
 - **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - zlibライセンス
 
 このコードを使用する前に、完全な[ライセンス契約](LICENSE.md)をご確認ください。  
-

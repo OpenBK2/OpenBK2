@@ -140,5 +140,3 @@ public:
 	CLadderInvalidStatisticsPacket( const int nClientID, const int _nGameID, const int _nReason )
 		: CNetPacket( nClientID ), nGameID( _nGameID ), nReason( _nReason	) {}
 };
-
-

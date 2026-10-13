@@ -87,5 +87,3 @@ public:
 	void TogglePauseAcceptGamersNet( bool bPause );
 	void TogglePauseConnectGamer( const int nGamer, bool bPause );
 };
-
-

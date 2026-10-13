@@ -44,5 +44,3 @@ public:
 		return 0;
 	}
 };
-
-

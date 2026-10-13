@@ -33,5 +33,3 @@ public:
 	bool Update( const NTimer::STime &time );
 	const bool IsEmpty() const { return animations.empty(); }
 };
-
-

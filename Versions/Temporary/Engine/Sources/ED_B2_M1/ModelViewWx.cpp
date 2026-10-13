@@ -683,4 +683,3 @@ namespace NModelView
 		return new CWxModelView();
 	}
 }
-

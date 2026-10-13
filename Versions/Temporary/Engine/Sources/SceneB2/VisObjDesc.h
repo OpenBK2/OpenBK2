@@ -216,5 +216,3 @@ public:
 	CCSFBTransform* GetTransform() const { return pTransform; }
 	void ReCreateObject( NGScene::IGameView *pGView, CSyncSrc<IVisObj> *pSyncSrc, CCSTime *pTimer, bool bShowBB );
 };
-
-

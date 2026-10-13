@@ -203,5 +203,3 @@ const char* ReadText( std::string *pszText, const char *pszBegin, const char *ps
 }
 
 }; // end of namespace NLXML
-
-

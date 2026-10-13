@@ -26,4 +26,3 @@ MAIN_EXPORT std::string GetCurrentProfileDir();
 MAIN_EXPORT std::string GetSaveDir();
 MAIN_EXPORT std::string GetReplayDir();
 }
-

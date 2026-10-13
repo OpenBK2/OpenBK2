@@ -59,5 +59,3 @@ LIBDB_EXPORT bool IsFileRegistered( const std::string &szFileName );
 LIBDB_EXPORT void AddDbObserver( IDbObserver *pObserver );
 
 }
-
-

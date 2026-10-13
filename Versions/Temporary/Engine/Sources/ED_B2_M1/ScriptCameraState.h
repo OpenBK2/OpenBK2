@@ -82,5 +82,3 @@ public:
 	CScriptCameraState( CMapInfoEditor *_pMapInfoEditor = 0 );
 	virtual ~CScriptCameraState() {};
 };
-
-

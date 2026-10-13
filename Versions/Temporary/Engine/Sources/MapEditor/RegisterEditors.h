@@ -32,5 +32,3 @@ public:
 };
 
 extern CRegisterEditorsSemiAutoMagic g_RegisterEditorsSemiAutoMagic;
-
-

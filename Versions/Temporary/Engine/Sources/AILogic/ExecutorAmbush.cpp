@@ -32,5 +32,3 @@ int CExecutorAmbush::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19124C00, CExecutorAmbush )
-
-

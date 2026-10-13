@@ -75,5 +75,3 @@ class CICHallOfFame : public CInterfaceCommandBase<CInterfaceHallOfFame>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

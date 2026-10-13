@@ -33,5 +33,3 @@ bool IsUnitNearObject( const class CAIUnit * pUnit, const class CStaticObject * 
 bool IsUnitNearUnit( const class CAIUnit * pUnit1, const class CAIUnit * pUnit2 );
 bool IsUnitNearPoint( const class CAIUnit * pUnit1, const class CVec2 & point, const int add = 0 );
 bool IsPointNearPoint( const class CVec2 & point1, const class CVec2 & point2 );
-
-

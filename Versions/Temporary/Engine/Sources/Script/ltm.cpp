@@ -154,5 +154,3 @@ void lua_settagmethod (lua_State *L, int t, const char *event) {
   }
   L->pCT->top--;
 }
-
-

@@ -147,5 +147,3 @@ public:
 
 	void SetCellInUse( const int nResistanceCell, bool bInUse );
 };
-
-

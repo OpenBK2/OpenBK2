@@ -214,5 +214,3 @@ void CWindowTabControl::StateChanged( class CWindow *pWho )
 	}
 	}*/
 }
-
-

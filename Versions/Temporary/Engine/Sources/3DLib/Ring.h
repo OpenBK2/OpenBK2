@@ -135,5 +135,3 @@ public:
 	iterator begin() { return iterator( pList ); }
 	const_iterator begin() const { return const_iterator( pList ); }
 };
-
-

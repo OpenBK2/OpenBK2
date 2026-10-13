@@ -345,6 +345,3 @@ void CTerraGen::RestoreTerrainInfoAfterOptimizing()
 
 	//InitWaterParams();
 }
-
-
-

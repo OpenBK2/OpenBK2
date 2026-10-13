@@ -21,5 +21,3 @@ public:
 	// function returns size Y of noise array
 	unsigned int GetSizeY() const { return noise.GetSizeY(); }
 };
-
-

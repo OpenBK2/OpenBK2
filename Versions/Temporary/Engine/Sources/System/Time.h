@@ -22,4 +22,3 @@ public:
 	CCTime* GetTime() const { return pTime; }
 	int GetDeltaT( float fMult, STime currentTime );
 };
-

@@ -301,5 +301,3 @@ const NDb::STerrainSpotInstance* CTerraGen::FindTerraSpot( int nID ) const
 	}
 	return 0;
 }
-
-

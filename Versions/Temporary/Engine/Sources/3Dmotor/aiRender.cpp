@@ -514,4 +514,3 @@ void CFastRenderer::TraceEntity( const SConvexHull &e, bool bTerrain )
 }
 
 }
-

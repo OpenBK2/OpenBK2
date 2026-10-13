@@ -390,5 +390,3 @@ void luaC_checkGC (lua_State *L)
 		L->nGCticks = 0;
 	}
 }
-
-

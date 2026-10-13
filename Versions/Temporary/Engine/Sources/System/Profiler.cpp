@@ -79,4 +79,3 @@ static void Profile( const std::string &szID, const std::vector<std::wstring> &p
 START_REGISTER(ProfileCommands)
 REGISTER_CMD( "profile", Profile )
 FINISH_REGISTER
-

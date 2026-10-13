@@ -24,5 +24,3 @@ public:
 	CIdleMechProcess( int nObjectID, const std::vector<std::string> &effectBones, const NDb::SComplexEffect *pComplexEffect, const bool _bRandomLocator = false );
 	bool Update( const NTimer::STime &time );
 };
-
-

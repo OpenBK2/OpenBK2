@@ -461,5 +461,3 @@ inline void CFBMatrixStack<nMaxNumMatrices>::PushScale( float val )
 {
 	PushScale( val, val, val );
 }
-
-

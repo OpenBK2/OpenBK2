@@ -9,5 +9,3 @@ CTextureInterface::CTextureInterface()
 CTextureInterface::~CTextureInterface()
 {
 }
-
-

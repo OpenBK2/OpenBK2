@@ -279,5 +279,3 @@ public:
 	virtual void SetHitPoints( const float fNewHP );
 	void CheckHitPoints();
 };
-
-

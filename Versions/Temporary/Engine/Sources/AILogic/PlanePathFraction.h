@@ -59,4 +59,3 @@ struct IPathFraction : public CAIObjectBase
 	virtual void GetPrevPoints( struct SPrevPathParams *pParams ) const { NI_ASSERT( false, "wrong call" ); }
 	//virtual void GetPrevPoints( CVec3 *p0, CVec3 *p1, CVec3 *p2, CVec3 *pCur, float *pfSplineProgress  ) const { NI_ASSERT( false, "wrong call" ); }
 };
-

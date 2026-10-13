@@ -539,5 +539,3 @@ void CWindowScrollableContainerBase::SetDiscreteScroll( int nVisibleSlots )
 
 	UpdateScrollBar();
 }
-
-

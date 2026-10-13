@@ -30,5 +30,3 @@ public:
 	static void InitInGame();
 	int operator&( IBinSaver &saver );
 };
-
-

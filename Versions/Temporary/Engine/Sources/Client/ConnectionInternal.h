@@ -62,5 +62,3 @@ public:
 
 	virtual void TogglePauseNet( const bool bPause ) const;
 };
-
-

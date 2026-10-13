@@ -252,5 +252,3 @@ bool Create( const NDb::SMapInfo *pMapInfo,
 						 const CCreateParameterList &rCreateParameterList, std::string *pError = nullptr );
 
 }
-
-

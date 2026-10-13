@@ -75,5 +75,3 @@ public:
 
 	void SetInternalFadeValue( float fValue );
 };
-
-

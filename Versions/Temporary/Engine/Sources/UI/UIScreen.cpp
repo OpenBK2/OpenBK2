@@ -664,5 +664,3 @@ void CWindowScreen::RegisterTabOrder( IWindow * pWindow, int nTabOrder )
 	if ( nTabOrder != -1 )
 		tabOrder.Push( std::pair<CObj<CWindow>, int>(dynamic_cast<CWindow*>(pWindow), nTabOrder) );
 }
-
-

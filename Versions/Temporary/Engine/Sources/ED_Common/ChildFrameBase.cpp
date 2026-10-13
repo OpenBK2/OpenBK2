@@ -94,5 +94,3 @@ void CChildFrameBase::Leave()
 }
 
 // basement storage
-
-

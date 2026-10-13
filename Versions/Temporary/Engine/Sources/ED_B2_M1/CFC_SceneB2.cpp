@@ -404,5 +404,3 @@ void CCFCSceneB2::DrawFrameBorders( IPaintContext *pPaintContext )
 
 
 // basement storage
-
-

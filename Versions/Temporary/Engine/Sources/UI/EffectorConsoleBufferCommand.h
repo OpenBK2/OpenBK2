@@ -16,5 +16,3 @@ public:
 	virtual void Visit( struct IUIVisitor *pVisitor ) { }
 	virtual void Reverse() {  }
 };
-
-

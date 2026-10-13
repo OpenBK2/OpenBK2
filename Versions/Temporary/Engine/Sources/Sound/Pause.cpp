@@ -61,4 +61,3 @@ CPause::CPause( const NDb::SPlayPause &_Pause )
 }
 
 REGISTER_SAVELOAD_CLASS_NM( SOUND, 0x111813C2, CPause, NMusicSystem )
-

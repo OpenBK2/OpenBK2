@@ -79,5 +79,3 @@ void CLogger::SetLogStream( CDataStream *_pStream )
 {
 	pStream = _pStream;
 }
-
-

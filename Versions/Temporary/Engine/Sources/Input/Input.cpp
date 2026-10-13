@@ -2067,4 +2067,3 @@ bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszG
 }
 
 }; // end of namespace NInput
-

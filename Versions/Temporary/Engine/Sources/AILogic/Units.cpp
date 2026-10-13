@@ -671,4 +671,3 @@ void CUnits::ApplyModifierToAll( const NDb::SUnitStatsModifier *pBonus, const bo
 		pUnit->WarFogChanged();
 	}
 }
-

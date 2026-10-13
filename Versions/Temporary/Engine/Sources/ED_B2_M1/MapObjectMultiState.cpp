@@ -214,5 +214,3 @@ int CMapObjectMultiState::SEditParameters::operator&( IXmlSaver &xs )
 }
 
 // basement storage
-
-

@@ -65,5 +65,3 @@ inline IEditorScene* GetEditorScene()
 	NI_ASSERT( pScene != 0, "GetScene(): pScene == 0" );
 	return pScene;
 }
-
-

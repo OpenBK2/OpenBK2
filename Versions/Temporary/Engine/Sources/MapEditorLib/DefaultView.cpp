@@ -47,5 +47,3 @@ void CDefaultView::Leave()
 
 
 // basement storage
-
-

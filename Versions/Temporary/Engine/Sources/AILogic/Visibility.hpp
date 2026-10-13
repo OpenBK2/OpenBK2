@@ -74,6 +74,3 @@ CWarFogVisibility* CreateWarFogVisibility( CGlobalWarFog *pWarFog, const SWarFog
 	else
 		return new CVisForGroundUnitWithSector( pWarFog, unitInfo.vPos, unitInfo.sector );
 }
-
-
-

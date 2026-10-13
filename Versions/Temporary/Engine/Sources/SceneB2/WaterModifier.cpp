@@ -808,5 +808,3 @@ void CTerraGen::InitRainyWater( CDBPtr< NDb::SWater > pWater )
 
 	TIME_STAT_FINISH( CTerraGen__InitRainyWater )
 }
-
-

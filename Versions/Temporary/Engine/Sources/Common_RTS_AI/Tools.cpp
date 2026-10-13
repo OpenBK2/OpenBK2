@@ -246,5 +246,3 @@ const SRect GetUnitNormalRect( const CBasePathUnit *pUnit )
 
 	return unitRect;
 }
-
-

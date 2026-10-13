@@ -104,5 +104,3 @@ struct IAILogic : public ICommonB2M1AI
 	virtual const NDb::SAIGameConsts *GetAIConsts() const = 0;
 	virtual void DumpAfterAssinc() const = 0;
 };
-
-

@@ -100,5 +100,3 @@ void CICMissionMovieBorder::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17149C80, CInterfaceMissionMovieBorder );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BORDER, CICMissionMovieBorder );
-
-

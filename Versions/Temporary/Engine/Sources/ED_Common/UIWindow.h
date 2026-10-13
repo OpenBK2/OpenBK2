@@ -83,6 +83,3 @@ protected:
 };
 
 CUIWindow *CreateUIWindow( int x, int y, int w, int h, uint32_t _color, const NDb::STexture *_pTexture );
-
-
-

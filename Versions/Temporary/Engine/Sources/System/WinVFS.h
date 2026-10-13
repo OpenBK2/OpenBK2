@@ -14,5 +14,3 @@ namespace NVFS
 	SYSTEM_EXPORT bool DoesWinFileExist( const std::string &szPath );
 	SYSTEM_EXPORT void VFSSegmentProfiler();
 }
-
-

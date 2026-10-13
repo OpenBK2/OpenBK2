@@ -139,5 +139,3 @@ void CLakeState::UpdateVSOInTerrain( int nVSOID )
 }
 
 // basement storage
-
-

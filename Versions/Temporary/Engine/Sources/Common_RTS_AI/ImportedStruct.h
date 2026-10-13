@@ -37,5 +37,3 @@ public:
 	}
 	const CLine GetPerpendicular( const SVector &point ) const { return CLine( point, SVector( point.x - a, point.y - b ) ); }
 };
-
-

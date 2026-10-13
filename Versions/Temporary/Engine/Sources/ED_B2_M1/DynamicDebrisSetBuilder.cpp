@@ -43,5 +43,3 @@ bool CDynamicDebrisSetBuilder::InternalInsertObject( std::string *pszObjectTypeN
 }
 
 // basement storage
-
-

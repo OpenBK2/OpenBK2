@@ -237,4 +237,3 @@ namespace NOpenMod
 		return bAccepted && dialog.GetMod( pMod );
 	}
 }
-

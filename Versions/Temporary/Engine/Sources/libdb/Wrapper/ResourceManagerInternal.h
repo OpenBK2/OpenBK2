@@ -46,5 +46,3 @@ public:
 
 	virtual bool InitializeVersionControl();
 };
-
-

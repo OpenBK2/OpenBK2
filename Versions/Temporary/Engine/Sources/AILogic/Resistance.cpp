@@ -279,5 +279,3 @@ void CResistancesContainer::CIter::Iterate()
 		IterateToNotInUse();
 	}
 }
-
-

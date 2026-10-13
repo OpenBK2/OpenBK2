@@ -66,7 +66,3 @@ namespace NCheckSums
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 COMMON_RTS_AI_EXPORT IBinSaver *CreateCheckSumSaver( unsigned long *pCheckSum, struct ICheckSumLog * pLog, const uint32_t segmentTime );
-
-
-
-

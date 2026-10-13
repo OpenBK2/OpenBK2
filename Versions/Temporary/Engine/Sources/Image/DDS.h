@@ -132,5 +132,3 @@ struct SDDSFileHeader
 	//
 	SDDSFileHeader() { dwSignature = SDDSFileHeader::SIGNATURE; }
 };
-
-

@@ -138,4 +138,3 @@ void CMessageReactions::Register( const std::string &szReactionKey, IMessageReac
 {
 	reactions[szReactionKey] = pReaction;
 }
-

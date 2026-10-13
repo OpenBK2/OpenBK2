@@ -608,5 +608,3 @@ void CMPManagerMode::RehashSlots( const std::vector<uint8_t> &order )
 			DebugTrace( "+++ New Slot %d: %s, CID %d, side %d, team %d", i, slot.szName.c_str(), slot.nClientID, slot.nCountry, slot.nTeam );
 	}
 }
-
-

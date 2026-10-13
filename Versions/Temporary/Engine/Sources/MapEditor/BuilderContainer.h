@@ -43,6 +43,3 @@ public:
 											IBuildDataCallback *pBuildDataCallback );
 	bool FillNewObjectName( SBuildDataParams *pBuildDataParams );
 };
-
-
-

@@ -69,4 +69,3 @@ int CChapterEditorSettings::operator&( IXmlSaver &xs )
 	xs.Add( "TemplateScreenID", &dbidTemplateScreenID );
 	return 0;
 }
-

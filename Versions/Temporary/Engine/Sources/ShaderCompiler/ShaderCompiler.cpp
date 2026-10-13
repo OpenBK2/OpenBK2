@@ -680,6 +680,3 @@ int PORT_CDECL main( int argc, char* argv[] )
 	WriteResult( argv[2] );
 	return 0;
 }
-
-
-

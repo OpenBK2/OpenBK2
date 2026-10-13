@@ -30,5 +30,3 @@ MAIN_EXPORT bool Initialize()
 }
 
 }
-
-

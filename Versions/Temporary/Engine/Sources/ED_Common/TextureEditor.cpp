@@ -29,6 +29,3 @@ void CTextureEditor::Destroy()
 	delete pState;
 	pState = 0;
 }
-
-
-

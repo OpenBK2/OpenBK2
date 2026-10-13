@@ -631,5 +631,3 @@ void CGeneralArtilleryTask::Segment()
 		}
 	}
 }
-
-

@@ -11,5 +11,3 @@ struct IAICmdsAutoMagic : public CObjectBase
 	virtual int GetIDSize() const = 0;
 };
 IAICmdsAutoMagic *CreateDefaultCmdsCreator();
-
-

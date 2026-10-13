@@ -31,5 +31,3 @@ struct ICursor : public CObjectBase
 
 SCENEB2_EXPORT ICursor *CreateCursor();
 inline ICursor* Cursor() { return Singleton<ICursor>(); }
-
-

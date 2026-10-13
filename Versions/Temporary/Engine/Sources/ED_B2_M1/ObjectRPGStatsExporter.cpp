@@ -75,5 +75,3 @@ EXPORT_RESULT CObjectRPGStatsExporter::CheckObject( IManipulator* pManipulator,
 }
 
 // basement storage
-
-

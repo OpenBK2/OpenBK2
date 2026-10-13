@@ -96,5 +96,3 @@ struct SHullSet
 };
 
 }
-
-

@@ -138,5 +138,3 @@ void ClearLog()
 }
 
 // basement storage
-
-

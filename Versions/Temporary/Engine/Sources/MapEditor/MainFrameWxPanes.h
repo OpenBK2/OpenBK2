@@ -263,4 +263,3 @@ namespace NMainFrameWxPanes
 		virtual IWidget* GetOwner() { return pOwner; }
 	};
 }
-

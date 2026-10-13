@@ -38,5 +38,3 @@ public:
 	int operator&( IBinSaver &saver );
 	int operator&( IXmlSaver &saver );
 };
-
-

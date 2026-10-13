@@ -1297,5 +1297,3 @@ REGISTER_VAR_EX( "check_ui_textures_instant_load", NGlobal::VarIntHandler, &CHEC
 REGISTER_VAR_EX( "ui_common_show_warnings", NGlobal::VarBoolHandler, &s_bUICommonShowWarnings, false, STORAGE_NONE );
 
 FINISH_REGISTER
-
-

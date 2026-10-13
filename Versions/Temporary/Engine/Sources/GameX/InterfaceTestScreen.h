@@ -40,5 +40,3 @@ class CICTestScreen : public CInterfaceCommandBase<CInterfaceTestScreen>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

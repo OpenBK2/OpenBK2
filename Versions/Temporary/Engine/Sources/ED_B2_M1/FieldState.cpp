@@ -1100,5 +1100,3 @@ int CFieldState::SEditParameters::operator&( IXmlSaver &xs )
 }
 
 // basement storage
-
-

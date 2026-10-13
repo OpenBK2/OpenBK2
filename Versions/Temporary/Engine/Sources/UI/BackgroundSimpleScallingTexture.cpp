@@ -62,5 +62,3 @@ int CBackgroundSimpleScallingTexture::operator&( struct IBinSaver &saver )
 	saver.Add( 4, &vSize );
 	return 0;
 }
-
-

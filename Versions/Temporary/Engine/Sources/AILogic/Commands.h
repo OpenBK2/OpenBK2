@@ -78,5 +78,3 @@ public:
 	friend class CGroupLogic;
 	friend class CStaticMembers;
 };
-
-

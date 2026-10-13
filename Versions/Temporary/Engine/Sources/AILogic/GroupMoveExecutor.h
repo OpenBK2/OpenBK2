@@ -112,5 +112,3 @@ public:
 	virtual bool NotifyEvent( const CExecutorEvent &event );
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 };
-
-

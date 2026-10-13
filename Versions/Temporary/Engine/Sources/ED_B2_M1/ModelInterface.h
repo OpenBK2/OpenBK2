@@ -8,5 +8,3 @@ class CModelInterface : public CEditorInterfaceBase
 };
 
 INTERFACE_COMMAND_DECLARE( CModelInterfaceCommand, CModelInterface )
-
-

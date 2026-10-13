@@ -54,4 +54,3 @@ public:
 	bool NotifyEvent( const CExecutorEvent &event );
 	bool IsExecutorValid() const { return IsValid( pUnit ); }
 };
-

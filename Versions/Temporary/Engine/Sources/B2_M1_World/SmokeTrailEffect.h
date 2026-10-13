@@ -33,5 +33,3 @@ public:
 };
 
 void CalcRelativePos( SHMatrix *pmRelativePos, const SHMatrix &mPos, const std::string &szBoneName, NAnimation::ISkeletonAnimator *pAnimator );
-
-

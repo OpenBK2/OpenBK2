@@ -19,6 +19,3 @@ public:
 	void Draw();
 	NGScene::I2DGameView *GetG2DView();
 };
-
-
-

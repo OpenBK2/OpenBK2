@@ -200,5 +200,3 @@ int Proto::operator&( IBinSaver &f )
 		lua_AddString( f, 15, &strings[i], i + 1 );
 	return 0;
 }
-
-

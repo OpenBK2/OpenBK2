@@ -32,6 +32,3 @@ void MakeInvisibleElementsList( IRender *pRender, CTransformStack *pTS,
 	CObj<IHZBuffer> *pHZBuffer );
 
 } // namespace
-
-
-

@@ -25,4 +25,3 @@ bool CSoundsWithinDeltaPredicate::operator()( const CSound * sound ) const
 {
 	return sound->GetBeginTime() >= timeToCompare;
 }
-

@@ -977,4 +977,3 @@ void CGrannyMeshLoader::Recalc()
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x13173BC1, CGrannyMemFileLoader )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x30174280, CGrannyMeshLoader )
-

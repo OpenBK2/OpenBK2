@@ -131,5 +131,3 @@ inline void SegmentWOMove( const NTimer::STime lastSegmTime, const NTimer::STime
 }
 
 };
-
-

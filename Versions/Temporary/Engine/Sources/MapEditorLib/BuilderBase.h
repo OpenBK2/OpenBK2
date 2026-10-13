@@ -14,6 +14,3 @@ public:
 	virtual bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName );
 	virtual void GetDefaultFolder( const std::string &rszObjectTypeName, std::string *pszDefaultFolder ) { if ( pszDefaultFolder ) { pszDefaultFolder->clear(); } }
 };
-
-
-

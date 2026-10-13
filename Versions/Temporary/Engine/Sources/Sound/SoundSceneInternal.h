@@ -274,5 +274,3 @@ public:
 	static bool Is3D();
 
 };
-
-

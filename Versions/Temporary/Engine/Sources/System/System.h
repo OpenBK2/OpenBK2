@@ -91,5 +91,3 @@ namespace NSystem
 {
 	SYSTEM_EXPORT void Serialize( const char chunkID, IBinSaver &saver );
 };
-
-

@@ -7,4 +7,3 @@ namespace NGScene
 class CTextLocaleInfo;
 _3DMOTOR_EXPORT CTextLocaleInfo *GetTextLocaleInfo();
 }
-

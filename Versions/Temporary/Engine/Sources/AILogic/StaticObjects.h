@@ -178,5 +178,3 @@ public:
 	friend class CStObjIter<false>;
 	friend class CStObjIter<true>;
 };
-
-

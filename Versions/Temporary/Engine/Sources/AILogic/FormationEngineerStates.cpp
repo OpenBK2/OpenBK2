@@ -2984,5 +2984,3 @@ void CFormationRepairBuildingState::SetHomeTransport( class CAITransportUnit *pT
 	pHomeTransport = pTransport;
 	fWorkLeft = (std::min)( SConsts::ENGINEER_RU_CARRY_WEIGHT, pTransport->GetResursUnitsLeft() );
 }
-
-

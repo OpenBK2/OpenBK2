@@ -24,5 +24,3 @@ public:																																		\
 	CommandClass() : CInterfaceCommandDeclare( 0 )	{}											\
 	CommandClass( InterfaceClass * pI ) : CInterfaceCommandDeclare( pI ) {}	\
 };
-
-

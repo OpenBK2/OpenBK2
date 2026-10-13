@@ -92,5 +92,3 @@ public:
 	void OnFocus( const bool bFocus );
 	//}
 };
-
-

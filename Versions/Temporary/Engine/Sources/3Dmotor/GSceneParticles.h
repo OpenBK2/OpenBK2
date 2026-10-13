@@ -280,4 +280,3 @@ public:
 #pragma warning( default : 4799 )
 
 }
-

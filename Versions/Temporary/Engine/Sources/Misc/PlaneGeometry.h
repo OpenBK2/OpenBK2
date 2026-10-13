@@ -2008,5 +2008,3 @@ inline bool ApplyTilesInCircle( const CTRect<int> &rRect,
 {
 	return ApplyTilesInCircle( rRect, rCenter.x, rCenter.y, nRadius, rApplyFunctional );
 }
-
-

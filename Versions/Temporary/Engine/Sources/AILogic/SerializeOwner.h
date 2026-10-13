@@ -16,5 +16,3 @@ void SerializeOwner( const int nChunk, T **pOwner, IBinSaver* pSaver )
 		pSaver->Add( nChunk, &pSaverUnit );
 	}
 }
-
-

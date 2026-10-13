@@ -10,5 +10,3 @@ struct IAILogicCommandB2 : public CObjectBase
 	virtual std::string GetDebugInfo() const { return "\n"; }
 #endif
 };
-
-

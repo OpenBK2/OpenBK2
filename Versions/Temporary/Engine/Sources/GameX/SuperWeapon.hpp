@@ -47,5 +47,3 @@ public:
 	void Deactivate();
 	void UpdateObject( CMapObj *pMO );
 };
-
-

@@ -34,5 +34,3 @@ public:
 	int GetImagePosX() const { return nCurrX * nScreenSizeX; }
 	int GetImagePosY() const { return nCurrY * nScreenSizeY; }
 };
-
-

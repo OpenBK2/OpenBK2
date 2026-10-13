@@ -146,5 +146,3 @@ void CRndRunUpToEnemy::OnSerialize( IBinSaver &saver )
 {
 	SerializeOwner( 1, &pOwner, &saver );
 }
-
-

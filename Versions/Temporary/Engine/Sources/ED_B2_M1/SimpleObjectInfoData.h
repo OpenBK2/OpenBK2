@@ -28,5 +28,3 @@ namespace NMapInfoEditor
 		virtual void GetMask( std::string *pszMask ) {}
 	};
 };
-
-

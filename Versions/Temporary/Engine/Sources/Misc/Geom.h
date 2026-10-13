@@ -1985,4 +1985,3 @@ inline int mDistance( const SVector &vec1, const SVector &vec2 )
 }
 
 #pragma pack( pop )
-

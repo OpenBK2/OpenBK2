@@ -33,5 +33,3 @@ int CScripts::operator&( IBinSaver &saver )
 	saver.Add( 19, &rememberedUnits );
 	return 0;
 }
-
-

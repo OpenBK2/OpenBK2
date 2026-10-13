@@ -25,5 +25,3 @@ public:
 	IWindow* GetPressed() const;
 	IWindow* GetButton( int i );
 };
-
-

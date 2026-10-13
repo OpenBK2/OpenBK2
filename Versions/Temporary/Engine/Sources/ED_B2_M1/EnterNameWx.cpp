@@ -86,4 +86,3 @@ namespace NEnterName
 		return true;
 	}
 }
-

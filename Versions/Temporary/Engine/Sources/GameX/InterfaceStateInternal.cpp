@@ -839,5 +839,3 @@ void StartSingleMission( const std::string &szID, const std::vector<std::wstring
 START_REGISTER(InterfaceState)
 REGISTER_CMD( "mission", StartSingleMission );
 FINISH_REGISTER
-
-

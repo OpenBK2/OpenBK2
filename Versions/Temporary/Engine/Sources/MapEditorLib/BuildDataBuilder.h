@@ -27,5 +27,3 @@ public:
 
 	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 };
-
-

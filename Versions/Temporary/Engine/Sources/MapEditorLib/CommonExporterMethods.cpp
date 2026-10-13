@@ -421,5 +421,3 @@ void MoveTempFileToDestination( const std::string &szTempFileFullName, const std
 }
 
 // basement storage
-
-

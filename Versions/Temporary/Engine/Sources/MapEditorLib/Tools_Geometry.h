@@ -48,5 +48,3 @@ inline void UpdateBoundingBox( CVec3 *pvMin, CVec3 *pvMax, const CVec3 &rvPositi
 
 //3D Geometry
 MAPEDITORLIB_EXPORT float GetDistanceTo3DLine( const CVec3 &rvPoint, const CVec3 &rvOrigin, const CVec3 &rvDirection );
-
-

@@ -58,6 +58,3 @@ struct IViewContainer : public CObjectBase
 	// Если в качестве pViewSet указан 0 то просто возвращает наличие обработчиков
 	virtual bool GetViewSet( CViewSet *pViewSet, const SObjectSet &rObjectSet, IView *pViewToExlude ) const = 0;
 };
-
-
-

@@ -58,5 +58,3 @@ public:
 		DebugTrace( "free ID collector, end" );
 	}
 };
-
-

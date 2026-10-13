@@ -199,5 +199,3 @@ namespace NScene
 };
 
 #define DEF_DEBRIS_SMOOTH_RADIUS 20
-
-

@@ -332,5 +332,3 @@ public:
 	SAINotifyUpdateLaseMark( const int _nLaserMarkID, const int _nUnitID, const int _nPlatform, const int _nGun, const CVec3 &_vTarget )
 		: nLaserMarkID( _nLaserMarkID ), nUnitID( _nUnitID ), nPlatform( _nPlatform ), nGun( _nGun ), vTarget( _vTarget ) {}
 };
-
-

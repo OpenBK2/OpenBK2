@@ -17,5 +17,3 @@ enum EMultiTestModes
 };
 
 IMultiTester *CreateMultiTester();
-
-

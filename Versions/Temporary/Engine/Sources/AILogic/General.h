@@ -67,5 +67,3 @@ public:
 
 	bool IsInResistanceCircle( const CVec2 &vPoint, const int nGeneralParty );
 };
-
-

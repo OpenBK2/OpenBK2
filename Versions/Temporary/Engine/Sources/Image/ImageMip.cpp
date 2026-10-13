@@ -503,4 +503,3 @@ void GenerateNormals( CArray2D<CVec4> *pData, const CVec4 &conv, float fMappingS
 }
 
 }
-

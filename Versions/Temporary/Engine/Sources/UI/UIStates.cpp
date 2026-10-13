@@ -143,5 +143,3 @@ void CStates::SetAnimatedWindow( const int nID, class CWindow * pWindow )
 	id.first = nID;
 	id.second = pWindow;
 }
-
-

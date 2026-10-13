@@ -825,5 +825,3 @@ void CClients::DBLogServerStatistics( const std::vector<std::string> &names, con
 	szQuery += " )";
 	Execute( szQuery );
 }
-
-

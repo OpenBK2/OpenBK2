@@ -127,5 +127,3 @@ void GenerateSpiral( std::vector<SSpiralPoint> &spiral, CArray2D<int> &spiralCoo
 		}
 	}
 }
-
-

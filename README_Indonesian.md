@@ -84,4 +84,3 @@ Proyek ini dirilis di bawah **lisensi khusus non-komersial** dari NIVAL INTERNAT
 - **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - Lisensi zlib
 
 Silakan tinjau [perjanjian lisensi](LICENSE.md) lengkap sebelum menggunakan kode ini.  
-

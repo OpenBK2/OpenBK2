@@ -413,5 +413,3 @@ uint32_t CAnimationBuilder::GetWeaponBits( const SGrannyBoneAttributes & gba ) c
 
 
 // basement storage
-
-

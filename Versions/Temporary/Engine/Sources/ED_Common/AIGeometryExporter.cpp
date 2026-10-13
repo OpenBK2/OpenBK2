@@ -119,5 +119,3 @@ EXPORT_RESULT CAIGeometryExporter::CustomCheck( const std::string &szTypeName,
 	}
 	return ER_SUCCESS;
 }
-
-

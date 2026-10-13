@@ -223,4 +223,3 @@ struct IManuver* CManuverBuilder::CreateManuver ( class CPlanesFormation *pPos, 
 	else*/
 		return CreateDefaultManuver( att, pPos, pEnemy );
 }
-

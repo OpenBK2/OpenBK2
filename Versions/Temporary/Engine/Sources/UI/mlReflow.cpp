@@ -336,4 +336,3 @@ IReflowLayout* CreateReflowLayout()
 
 using namespace NML;
 REGISTER_SAVELOAD_CLASS( UI, 0xB5529180, CReflowLayout )
-

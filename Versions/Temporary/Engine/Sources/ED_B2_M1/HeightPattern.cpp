@@ -47,5 +47,3 @@ bool SHeightPattern::CreateByValue( float fValue, int nGridLines, bool bEllipse 
 }
 
 // basement storage
-
-

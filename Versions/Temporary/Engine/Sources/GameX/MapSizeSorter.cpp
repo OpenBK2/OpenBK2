@@ -62,5 +62,3 @@ bool CListControlSorterMapSize::IsAscending() const
 {
 	return bAscending;
 }
-
-

@@ -1070,4 +1070,3 @@ namespace NMoviesEditorView
 		return new CWxMoviesEditorView;
 	}
 }
-

@@ -112,5 +112,3 @@ bool CArtilleryBeingTowedPath::Init( float _fSpeedLen, const class CVec2 &_vCurP
 
 	return true;
 }
-
-

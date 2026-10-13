@@ -19,5 +19,3 @@ public:
 	CTerraAIObserverInEditor( const int nAIMapSizeX, const int nAIMapSizeY );
 	virtual ~CTerraAIObserverInEditor() {}
 };
-
-

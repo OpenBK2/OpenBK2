@@ -20,6 +20,3 @@ protected:
 	CDBID dbid;
 	std::string szTypeName;
 };
-
-
-

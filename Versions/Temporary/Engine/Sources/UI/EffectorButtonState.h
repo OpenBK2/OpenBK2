@@ -22,5 +22,3 @@ public:
 	virtual void Reverse();
 	virtual int operator&( IBinSaver &saver );
 };
-
-

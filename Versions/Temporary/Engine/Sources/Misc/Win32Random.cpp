@@ -30,5 +30,3 @@ const SRandomFunc& RndFunc()
 }
 
 };
-
-

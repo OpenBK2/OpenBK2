@@ -8,5 +8,3 @@ class CEditorTestInterface : public CEditorInterfaceBase
 };
 
 INTERFACE_COMMAND_DECLARE( CEditorTestInterfaceCommand, CEditorTestInterface )
-
-

@@ -26,7 +26,3 @@ turned off, must be turned back in in WarningsOn.h
 
 /* Force everything to warning level 3. */
 #pragma warning ( push , 3 )
-
-
-
-

@@ -340,5 +340,3 @@ protected:
 		(*pnFX) = (std::min)( *pnFX, region.x2 );
 	}
 };
-
-

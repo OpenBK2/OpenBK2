@@ -35,5 +35,3 @@ public:
 	bool CanBePaused() { return false; }
 
 };
-
-

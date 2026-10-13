@@ -66,5 +66,3 @@ const CVec2 MoveVectorByDirection( const CVec2 &vPoint, uint16_t wDir )
 	const float fCos = NMath::Cos( fAngle );
 	return CVec2( vPoint.x * fCos - vPoint.y * fSin, vPoint.x * fSin + vPoint.y * fCos );
 }
-
-

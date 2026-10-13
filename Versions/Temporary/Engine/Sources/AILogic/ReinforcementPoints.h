@@ -57,5 +57,3 @@ public:
 	int operator&( IBinSaver &saver );
 	CPlayerPointsTracker* operator[]( const int &nIndex );
 };*/
-
-

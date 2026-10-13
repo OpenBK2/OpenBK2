@@ -35,4 +35,3 @@ const CVec2 SRailRoadSystem::SRRInstance::GetPoint( const float fPos ) const
 
 	return CVec2( vPos.x, vPos.y );
 }
-

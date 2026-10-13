@@ -23,5 +23,3 @@ struct SAIBoredAcknowledgement
 	SAIBoredAcknowledgement( int _nAck, const int _nObjUniqueID, bool _bPresent )
 		: nAck( _nAck ), nObjUniqueID( _nObjUniqueID ), bPresent( _bPresent ) { }
 };
-
-

@@ -14,4 +14,3 @@ CPtrFuncBase<CObjectInfo>* CreateObjectInfo( CMemObject *pO )
 } // namespace
 
 using namespace NGScene;
-

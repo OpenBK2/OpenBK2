@@ -39,5 +39,3 @@ _3DMOTOR_EXPORT IFader *CreateSimpleFader();
 _3DMOTOR_EXPORT IFader *CreateSimpleFader( const SFaderInfo &faderInfo );
 
 } // namespace NGScene
-
-

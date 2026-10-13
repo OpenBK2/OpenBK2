@@ -386,4 +386,3 @@ namespace NUnitStartCmdDialog
 		return pDialog;
 	}
 }
-

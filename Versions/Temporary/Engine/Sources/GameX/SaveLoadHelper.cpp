@@ -437,5 +437,3 @@ START_REGISTER(SaveLoad)
 REGISTER_VAR_EX( "recording_replay", NGlobal::VarBoolHandler, &NSaveLoad::RECORDING_REPLAY, false, STORAGE_USER );
 
 FINISH_REGISTER
-
-

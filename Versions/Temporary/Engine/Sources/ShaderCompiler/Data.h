@@ -37,4 +37,3 @@ struct SPShader
 
 extern vector<SVShader> vertexShaders;
 extern vector<SPShader> pixelShaders;
-

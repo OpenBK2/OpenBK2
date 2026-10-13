@@ -43,5 +43,3 @@ public:
 	void StopNewPlayerAccept();
 	int GetOwnClientID() { return pNetDriver->GetSelfClientID(); }
 };
-
-

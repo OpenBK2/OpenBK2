@@ -21,4 +21,3 @@ ISound* CSoundManager::CreateSound3D( const NDb::SSoundDesc *pDesc, const bool b
 	CSound3D *pS = new CSound3D( pDesc, bLooped );
 	return pS;
 }
-

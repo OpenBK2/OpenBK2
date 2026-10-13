@@ -21,5 +21,3 @@ class CPCBaseDialog : public ICommandHandler
 	// не использовать без надобности, использовать только с MaskManipulator
 	virtual void UpdateValues() = 0;
 };
-
-

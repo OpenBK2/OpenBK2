@@ -135,5 +135,3 @@ int CTreeFallingMutator::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x12094B80, CTreeFallingMutator )
-
-

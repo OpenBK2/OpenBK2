@@ -92,5 +92,3 @@ public:
 };
 
 SYSTEM_EXPORT void SerializeShared( IBinSaver *pFile );
-
-

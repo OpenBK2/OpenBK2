@@ -67,5 +67,3 @@ public:
 	virtual void SetWarFog( const CArray2D<unsigned char> &fog, float fScale );
 	virtual void SetWarFogBlend( const float fBlend );
 };
-
-

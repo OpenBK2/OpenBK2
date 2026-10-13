@@ -45,5 +45,3 @@ public:
 
 	IManipulator* CreateChapterManipulator();
 };
-
-

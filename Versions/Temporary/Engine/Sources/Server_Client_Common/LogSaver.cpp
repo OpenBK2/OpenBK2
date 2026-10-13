@@ -84,5 +84,3 @@ IBinSaver* CreateLogSaver( std::string *pszLog )
 {
 	return new CLogSaver( pszLog );
 }
-
-

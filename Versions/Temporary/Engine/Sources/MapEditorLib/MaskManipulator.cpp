@@ -367,5 +367,3 @@ unsigned CMaskManipulatorIterator::GetID() const
 }
 
 // basement storage
-
-

@@ -26,5 +26,3 @@ public:
 	CCustomLobbyClientsPacket() { }
 	CCustomLobbyClientsPacket( const int nClientID ) : CNetPacket( nClientID ) { }
 };
-
-

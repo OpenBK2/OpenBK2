@@ -1309,5 +1309,3 @@ bool CVSOState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbChec
 
 
 // basement storage
-
-

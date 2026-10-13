@@ -156,5 +156,3 @@ void CMissionSuperWeapon::UpdateObject( CMapObj *_pMO )
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17249BC0, CMissionSuperWeapon )
-
-

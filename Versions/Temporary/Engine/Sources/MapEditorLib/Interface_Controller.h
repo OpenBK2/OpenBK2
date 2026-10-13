@@ -76,6 +76,3 @@ struct IControllerContainer : public CObjectBase
 	// Modal property editors need complete undo data until OK or Cancel.
 	virtual bool IsEditSessionActive() const { return false; }
 };
-
-
-

@@ -137,5 +137,3 @@ public:
 	virtual const bool IsAviation() const { return true; }
 	virtual const float GetVisZ() const { return GetCenter().z; }
 };
-
-

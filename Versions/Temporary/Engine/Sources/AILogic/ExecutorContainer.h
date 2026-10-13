@@ -90,5 +90,3 @@ public:
 
 	virtual void Segment();
 };
-
-

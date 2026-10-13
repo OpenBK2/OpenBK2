@@ -32,5 +32,3 @@ public:
 	void DrawStatistic( IPaintContext *pPaintContext );
 	void DrawFrameBorders( IPaintContext *pPaintContext );
 };
-
-

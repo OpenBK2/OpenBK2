@@ -75,5 +75,3 @@ class CICLoadMod : public CInterfaceCommandBase<CInterfaceLoadMod>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

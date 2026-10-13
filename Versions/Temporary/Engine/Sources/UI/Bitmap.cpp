@@ -114,5 +114,3 @@ void CBitmapWindow::Fill( const NGfx::SPixel8888 &color )
 {
 	pBitmap->Fill( color );
 }
-
-

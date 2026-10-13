@@ -13,6 +13,3 @@ public:
 	void Enter();
 	void Leave();
 };
-
-
-

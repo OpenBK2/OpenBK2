@@ -301,5 +301,3 @@ namespace NImage
 	}
 
 }
-
-

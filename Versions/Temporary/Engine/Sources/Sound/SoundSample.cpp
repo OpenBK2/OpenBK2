@@ -84,4 +84,3 @@ int CSoundSample::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( SOUND, 0x110B2C00, CSoundSample );
-

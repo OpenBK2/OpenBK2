@@ -93,4 +93,3 @@ const std::list<TData> TVersionBaseList<TData>::GetRemoveDiff( const uint32_t _d
 }
 
 #undef MAX_HISTORY_LENGTH
-

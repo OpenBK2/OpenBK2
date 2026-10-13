@@ -9,4 +9,3 @@ class CWinToInputMessageConverter
 public:
 	void Do();
 };
-

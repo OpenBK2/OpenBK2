@@ -433,4 +433,3 @@ void CGraveyard::OnSerialize( IBinSaver &saver )
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1108D4CB, CDeadUnit );
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x3015A500, SKilledUnit );
-

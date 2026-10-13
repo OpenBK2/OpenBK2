@@ -56,6 +56,3 @@ public:
 	virtual void GetPassangers( std::vector<IB2MapObj*> *pPassangers ) const { }
 	virtual int GetPassangersCount() const { return 0; }
 };
-
-
-

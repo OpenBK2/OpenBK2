@@ -65,5 +65,3 @@ public:
 	void SetIDForMLHandler( int nID );
 	int GetIDForMLHandler() const { return nIDForMLHandler; }
 };
-
-

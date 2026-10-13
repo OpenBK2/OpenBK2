@@ -604,5 +604,3 @@ void DrawLine( CArray2D<uint32_t> *pImage, const SVector &vStart, const SVector 
 	}
 }
 }
-
-

@@ -44,5 +44,3 @@ public:
 
 	friend struct SGetClientInfoFunc;
 };
-
-

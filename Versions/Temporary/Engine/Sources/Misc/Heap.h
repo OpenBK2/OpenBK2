@@ -184,5 +184,3 @@ int CHeap<T, TCmp, TWillSwap>::operator&( IBinSaver &ss )
 	ss.Add( 2, &nEl );
 	return 0;
 }
-
-

@@ -888,5 +888,3 @@ bool ExportFilesList( const std::string &szFilesListFileName, bool bForce, const
 	}
 	return true;
 }
-
-

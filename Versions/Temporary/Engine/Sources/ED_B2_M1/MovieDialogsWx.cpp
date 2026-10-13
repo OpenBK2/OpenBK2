@@ -200,4 +200,3 @@ namespace NMovieKeySettings
 		return true;
 	}
 }
-

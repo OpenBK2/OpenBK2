@@ -39,5 +39,3 @@ CVec3 GetBgMapAnchor( const std::string &szDesiredSeason );
 std::string GetMiscString( const std::string &szName );
 
 }
-
-

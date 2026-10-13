@@ -9,7 +9,3 @@ public:
 };
 
 extern CAIGeneralParcelTypeMnemonics typeAIGeneralParcel;
-
-
-
-

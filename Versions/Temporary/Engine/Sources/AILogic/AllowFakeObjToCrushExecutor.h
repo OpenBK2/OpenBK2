@@ -24,5 +24,3 @@ public:
 	virtual int Segment();
 	virtual bool NotifyEvent( const CExecutorEvent &event ) { return false; }
 };
-
-

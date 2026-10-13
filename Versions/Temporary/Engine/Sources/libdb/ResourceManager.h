@@ -72,5 +72,3 @@ struct LIBDB_EXPORT IResourceManager : CObjectBase
 	static void InitSingleton();
 	static void UninitSingleton();
 };
-
-

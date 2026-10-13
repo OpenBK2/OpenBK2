@@ -19,5 +19,3 @@ public:
 	void Init( int nObjectID, const NTimer::STime &time, const NDb::SAnimB2 *pAnimation );
 	bool Update( const NTimer::STime &time );
 };
-
-

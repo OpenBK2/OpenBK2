@@ -369,5 +369,3 @@ int CBuildingRPGStatsEditorSettings::operator&( IXmlSaver &xs )
 	xs.Add( "ShowShortcutBar", &bShowShortcutBar );
 	return 0;
 }
-
-

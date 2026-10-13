@@ -14,5 +14,3 @@ public:
 	void Called( int nCommand );
 	void Clear() { registeredCommands.clear(); }
 };
-
-

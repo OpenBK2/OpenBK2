@@ -111,4 +111,3 @@ CConstructorInfo* CreateConstructorInfo()
 }
 
 REGISTER_SAVELOAD_CLASS( STATS_B2_M1, 0x3013EC01, CConstructorInfo );
-

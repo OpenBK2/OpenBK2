@@ -142,5 +142,3 @@ EXPORT_RESULT CGeometryExporter::CustomCheck( const std::string &szTypeName,
 }
 
 // basement storage
-
-

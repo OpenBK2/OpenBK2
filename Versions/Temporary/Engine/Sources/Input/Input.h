@@ -59,5 +59,3 @@ INPUT_EXPORT std::string GetControlLocalName( int nAction );
 INPUT_EXPORT bool ConvertMessage( const NWinFrame::SWindowsMsg &rWindowMsg, std::string *pszGameMessage, int *pnParam1, int *pnParam2, int *pnCount, NInput::EControlType *peControlType );
 
 };
-
-

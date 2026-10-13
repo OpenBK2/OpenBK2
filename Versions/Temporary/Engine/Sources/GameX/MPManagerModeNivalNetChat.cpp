@@ -176,5 +176,3 @@ bool CMPManagerModeNivalNet::OnChatAFKResponsePacket( class CChatAFKResponsePack
 	PushMessage( new SMPUIChatMessage( NStr::ToUnicode( pPacket->szAFKNick ) + L" - " + InterfaceState()->GetTextEntry( "T_CHAT_AFK_RESPONSE" ) ) );
 	return true;
 }
-
-

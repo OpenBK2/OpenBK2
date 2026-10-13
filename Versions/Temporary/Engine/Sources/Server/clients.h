@@ -140,5 +140,3 @@ public:
 
 	int GetMaxXP() const { return nMaxXP; }
 };
-
-

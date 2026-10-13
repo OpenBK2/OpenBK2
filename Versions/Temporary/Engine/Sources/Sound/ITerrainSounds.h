@@ -20,5 +20,3 @@ struct ITerrainSounds : public virtual CObjectBase
 	//returns relative volume of all sounds for specific terrain
 	virtual float GetSoundVolume( int nTerrainType ) const = 0 ;
 };
-
-

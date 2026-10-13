@@ -18,6 +18,3 @@ bool HasValidSequence() const
 
 	return false;
 }
-
-
-

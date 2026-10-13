@@ -62,5 +62,3 @@ void CDifficultyLevel::OnSerialize( IBinSaver &saver )
 	if ( saver.IsReading() )
 		Init();
 }
-
-

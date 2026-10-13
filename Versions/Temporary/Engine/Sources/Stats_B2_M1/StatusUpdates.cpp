@@ -86,5 +86,3 @@ const char *GetStatusName( const EUnitStatus eStatus )
 		default: return "Unknown status";
 	}
 }
-
-

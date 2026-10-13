@@ -1454,5 +1454,3 @@ REGISTER_VAR_EX( "show_buildings_info", NGlobal::VarBoolHandler, &s_bShowBuildin
 FINISH_REGISTER
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x15078B00, CSelector );
-
-

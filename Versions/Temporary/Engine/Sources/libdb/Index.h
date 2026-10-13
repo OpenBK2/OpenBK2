@@ -29,4 +29,3 @@ inline bool LoadIndexData( std::vector<SFullTypeHeader> *pRes, CDataStream *pStr
 }
 
 }
-

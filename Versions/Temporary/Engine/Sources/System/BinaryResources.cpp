@@ -37,4 +37,3 @@ std::string GetExistentBinaryFileName( const std::string &rszDirPrefix, const in
 }
 
 }
-

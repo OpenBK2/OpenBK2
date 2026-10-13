@@ -101,5 +101,3 @@ const NDb::SComplexSoundDesc *ChooseAcknowledgement( const NDb::SAckSetRPGStats 
 const float fCellSizeY = 16;
 const float fCellSizeX = fCellSizeY * 2.0f;
 const float fWorldCellSize = VIS_TILE_SIZE;
-
-

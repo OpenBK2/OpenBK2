@@ -7,4 +7,3 @@ void CBSpline::DumpState() const
 }
 
 */
-

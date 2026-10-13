@@ -73,5 +73,3 @@ struct SGeneralHelper
 		bool operator() ( class CCommonUnit * pUnit );
 	};
 };
-
-

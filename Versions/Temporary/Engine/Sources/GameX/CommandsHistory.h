@@ -215,5 +215,3 @@ public:
 	const unsigned long GetLastChecksum() const { return dwLastCheckSum; }
 	CHistory GetCommandsHistory() const;
 };
-
-

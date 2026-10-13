@@ -36,5 +36,3 @@ void DebugUnLock( const std::string &szFileName, const int nLine )
 }
 
 }
-
-

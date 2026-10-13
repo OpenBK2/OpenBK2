@@ -150,4 +150,3 @@ IBinSaver *CreateChunklessSaver( IPointerSerialization *pPtr, CMemoryStream *pSt
 {
 	return new CChunklessSerializer( pPtr, pStream , mode );
 }
-

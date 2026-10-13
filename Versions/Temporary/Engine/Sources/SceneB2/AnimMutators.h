@@ -45,5 +45,3 @@ struct IWingScaleMutator : public IAnimMutator
 	virtual void SetScale( const float fScale ) = 0;
 	virtual void ShowStatic( const bool bShow ) = 0;
 };
-
-

@@ -323,6 +323,3 @@ public:
 
 	friend class CBitArray2DRLEWrapper<CArray2D1Bit>;
 };
-
-
-

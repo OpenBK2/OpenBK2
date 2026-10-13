@@ -1183,6 +1183,3 @@ void CUnitStartCmdState::ClearCmdMarkers()
 	markers.clear();
 	currentCmdMarker = SCmdMarker();
 }
-
-
-

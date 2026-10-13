@@ -27,4 +27,3 @@ public:
 		const float r0, const float r1 );			// turn radii
 	virtual void GetSimplePath( CPathList *pPaths );
 };
-

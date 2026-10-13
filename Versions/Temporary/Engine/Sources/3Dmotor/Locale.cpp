@@ -19,4 +19,3 @@ CTextLocaleInfo *GetTextLocaleInfo()
 
 
 }
-

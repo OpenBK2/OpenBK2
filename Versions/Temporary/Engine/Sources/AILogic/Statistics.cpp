@@ -267,5 +267,3 @@ int CStatistics::operator&( IBinSaver &saver )
 //SKIP	saver.Add( 4, &playerMisisons );
 	return 0;
 }
-
-

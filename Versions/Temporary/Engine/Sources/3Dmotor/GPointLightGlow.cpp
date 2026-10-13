@@ -113,4 +113,3 @@ void CPointGlowAnimator::Recalc()
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x114a2180, CPointGlowEffect )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x114a2181, CPointGlowAnimator )
-

@@ -751,5 +751,3 @@ bool CTerraMeshStaticObject::CanFall()
 	else
 		return false;
 }
-
-

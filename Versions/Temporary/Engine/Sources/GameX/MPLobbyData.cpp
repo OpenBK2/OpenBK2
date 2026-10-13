@@ -58,5 +58,3 @@ void CChannelListViewer::MakeInterior( CObjectBase *pWindow, const CObjectBase *
 	CDynamicCast<ITextView> pTxt = pItem->GetChild( "ItemComboText", true );
 	NMPSetData::SetText( pTxt, wszText );
 }
-
-

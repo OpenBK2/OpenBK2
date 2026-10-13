@@ -10,5 +10,3 @@ class CInFormationPath : public CInGroupPathBasis
 	ZEND int operator&( IBinSaver &f ) { f.Add(1,( CInGroupPathBasis *)this); return 0; }
 public:
 };
-
-

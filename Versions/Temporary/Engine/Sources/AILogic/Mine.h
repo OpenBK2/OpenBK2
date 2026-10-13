@@ -76,5 +76,3 @@ public:
 	virtual bool CanUnitGoThrough( const EAIClasses &eClass ) const { return true; }
 	virtual bool ShouldSuspendAction( const EActionNotify &eAction ) const;
 };
-
-

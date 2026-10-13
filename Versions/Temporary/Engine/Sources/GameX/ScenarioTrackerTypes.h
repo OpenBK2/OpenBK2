@@ -79,5 +79,3 @@ enum EScenarioTrackerUnitTypes
 	//
 	STUT_NUM_ELEMENTS
 };
-
-

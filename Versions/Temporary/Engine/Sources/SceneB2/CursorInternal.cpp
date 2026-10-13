@@ -199,5 +199,3 @@ ICursor *CreateCursor()
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x1007AC00, CCursor )
-
-

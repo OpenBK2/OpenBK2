@@ -20,4 +20,3 @@ void CPathFractionLine::Init( const CVec3 &_x0, const CVec3 &_x1 )
 	Normalize( &v0 );
 	fLength = fabs( x0 - x1 );
 }
-

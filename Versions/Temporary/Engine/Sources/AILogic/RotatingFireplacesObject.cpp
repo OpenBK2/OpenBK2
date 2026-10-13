@@ -144,5 +144,3 @@ void CRotatingFireplacesObject::Segment()
 		}
 	}
 }
-
-

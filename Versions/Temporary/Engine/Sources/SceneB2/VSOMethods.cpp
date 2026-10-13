@@ -115,6 +115,3 @@ void CTerraGen::UpdateVectorAreaInfo( const int nTileX1, const int nTileY1, cons
 	UpdateArea( nTileX1, nTileY1, nTileX2 + 1, nTileY2 + 1, dwUpdateFlags );
 	UpdateAllOnTerrainObjectsInArea( CVec2i(nTileX1, nTileY1), CVec2i(nTileX2, nTileY2) );
 }
-
-
-

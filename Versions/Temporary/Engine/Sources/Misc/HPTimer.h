@@ -16,5 +16,3 @@ namespace NHPTimer
 	// recalc CPU frequency, call regularly to support SpeedStep processors
 	void UpdateHPTimerFrequency();
 };
-
-

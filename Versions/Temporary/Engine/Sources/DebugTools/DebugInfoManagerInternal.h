@@ -170,5 +170,3 @@ public:
 	const NDebugInfo::SDebugInfoUpdate *GetUpdate() const;
 	const bool PopUpdate();
 };
-
-

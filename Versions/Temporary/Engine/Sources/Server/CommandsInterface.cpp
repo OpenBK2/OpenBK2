@@ -49,5 +49,3 @@ void CCommandsBase::PreprocessLine( std::string *pszLine, std::vector<std::strin
 
 	NStr::ToLower( &(*pszWords)[0] );
 }
-
-

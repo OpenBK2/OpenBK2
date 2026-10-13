@@ -197,5 +197,3 @@ float CBridgeCreation::GetPrice()
 	const SHPObjectRPGStats *pStats = spans[nCurIndex]->GetStats();
 	return pStats->fMaxHP * pStats->fRepairCost * SConsts::REPAIR_COST_ADJUST/ pFullBridge->GetNSpans();
 }
-
-

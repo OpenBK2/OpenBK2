@@ -115,5 +115,3 @@ bool CPCIEMnemonics::IsMultiRef( EPCIEType nType )
 CPCIEMnemonics typePCIEMnemonics;
 
 // basement storage
-
-

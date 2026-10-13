@@ -586,5 +586,3 @@ NAnimation::ISkeletonAnimator *CScene::GetInterfaceObjAnimator( IWindow *pScreen
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x13129440, CVisObjReflectionInfo );
-
-

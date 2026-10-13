@@ -539,5 +539,3 @@ void CEditorApp::RegisterEditors()
 }
 
 // basement storage
-
-

@@ -2,5 +2,3 @@
 #include "DefaultInputState.h"
 
 // basement storage
-
-

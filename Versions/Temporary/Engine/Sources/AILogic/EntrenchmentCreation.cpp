@@ -550,4 +550,3 @@ float CEntrenchmentCreation::GetTrenchWidth( int nType )// 0 - секция , 1 
 
 	return pRPG->segments[nFrameIndex].vAABBHalfSize.x * 2;
 }
-

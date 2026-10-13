@@ -860,5 +860,3 @@ void CPlayerReinforcementArray::GiveReinforcementCalls( const int nPlayer, const
 	if ( nPlayer >= 0 && nPlayer < size() )
 		operator[]( nPlayer ).GiveReinforcementCalls( nCalls, bResetCounter );
 }
-
-

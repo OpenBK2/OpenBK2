@@ -34,5 +34,3 @@ bool CDefaultBuilderBase::InsertObject( std::string *pszObjectTypeName, std::str
 }
 
 // basement storage
-
-

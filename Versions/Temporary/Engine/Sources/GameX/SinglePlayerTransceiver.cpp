@@ -162,4 +162,3 @@ ITransceiver *CreateSinglePlayerTransceiver( const SReplayInfo &replay, IAILogic
 
 BASIC_REGISTER_CLASS( GAMEX, IAILogicCommandB2 )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1007AB40, CSinglePlayerTransceiver )
-

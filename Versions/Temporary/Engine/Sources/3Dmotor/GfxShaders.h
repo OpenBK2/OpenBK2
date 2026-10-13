@@ -118,4 +118,3 @@ extern SPShader psG5DiffuseTexTerrain;
 extern SPShader psG5DiffuseTex2Terrain;
 
 extern SPShader *psAllShaders[62];
-

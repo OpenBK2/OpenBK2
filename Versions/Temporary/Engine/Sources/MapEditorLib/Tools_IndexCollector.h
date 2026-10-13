@@ -157,5 +157,3 @@ public:
 		DebugTrace( "index collector, end" );
 	}
 };
-
-

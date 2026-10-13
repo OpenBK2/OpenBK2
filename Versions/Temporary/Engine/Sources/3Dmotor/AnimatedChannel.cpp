@@ -6,4 +6,3 @@
 
 using namespace NAnimation;
 REGISTER_SAVELOAD_TEMPL_CLASS( _3DMOTOR, 0x5015A480, CAnimatedChannel<CIdentityFunc>, CAnimatedChannel )
-

@@ -195,4 +195,3 @@ void CVolumeContainer::Add( const SVolumeBounds &b, int nData )
 		fetchMark.resize( nData + 1, 0 );
 }
 }
-

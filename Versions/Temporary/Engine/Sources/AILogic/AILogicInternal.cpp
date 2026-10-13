@@ -1985,4 +1985,3 @@ REGISTER_CMD( "pathfinder_test", PathfinderTest );
 REGISTER_CMD( "trace_warfog", DumpWarFogHeights )
 
 FINISH_REGISTER
-

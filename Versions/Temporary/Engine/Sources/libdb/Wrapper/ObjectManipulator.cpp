@@ -287,5 +287,3 @@ bool CObjectManipulatorIteratorWrapper::GetType( std::string *pszType ) const
 	*pszType = pDesc->szPropControlType;
 	return true;
 }
-
-

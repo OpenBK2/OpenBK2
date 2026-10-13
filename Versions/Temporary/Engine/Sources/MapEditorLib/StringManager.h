@@ -26,5 +26,3 @@ public:
 	static void RemoveDoubleSlashes( std::string *pszFilePath );
 	static int Compare( const std::string &rszLeft, const std::string &rszRight, bool bIgnoreCase, bool bIgnoreSlash, bool bSubString );
 };
-
-

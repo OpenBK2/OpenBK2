@@ -276,4 +276,3 @@ NGfx::CTexture* Get16bitDepthLookup()
 
 }
 using namespace NGScene;
-

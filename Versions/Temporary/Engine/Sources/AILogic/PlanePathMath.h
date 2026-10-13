@@ -124,6 +124,3 @@ public:
 	TVEC Get( const float fT ) const { return fT * fT * fT * a + fT * fT * b + fT * c + d; }
 	TVEC GetDiff1( const float fT ) const { return 3 * fT * fT * a + 2 * fT * b + c; }
 };
-
-
-

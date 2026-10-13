@@ -127,5 +127,3 @@ public:
 		return pGun;
 	}
 };
-
-

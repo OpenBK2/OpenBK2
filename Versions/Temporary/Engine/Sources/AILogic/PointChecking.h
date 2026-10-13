@@ -72,5 +72,3 @@ public:
 
 	virtual bool IsGoodTile( const SVector &curTile ) const;
 };
-
-

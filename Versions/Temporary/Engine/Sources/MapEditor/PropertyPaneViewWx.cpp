@@ -2493,4 +2493,3 @@ namespace NPropertyPane
 		return pPane;
 	}
 }
-

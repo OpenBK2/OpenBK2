@@ -6,4 +6,3 @@ struct IClientGameConsts :  public CObjectBase
 	enum { tidTypeID = 0x32168C00 };
 	virtual const NDb::SClientGameConsts *GetClientGameConsts() = 0;
 };
-

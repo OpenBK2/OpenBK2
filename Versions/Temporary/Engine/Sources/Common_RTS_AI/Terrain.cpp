@@ -1869,4 +1869,3 @@ CTemporaryUnitProfileLocker::~CTemporaryUnitProfileLocker()
 }
 
 REGISTER_SAVELOAD_CLASS( COMMON_RTS_AI, 0x3015A481, CTerrain )
-

@@ -70,4 +70,3 @@ void CAIUnitInfoForGeneral::Die()
 {
 	theSupremeBeing.UnitDied( this );
 }
-

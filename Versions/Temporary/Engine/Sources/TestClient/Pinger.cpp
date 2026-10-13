@@ -74,5 +74,3 @@ bool CPinger::ProcessConnectServerResult( CConnectServerPacket *pPacket )
 	pServerClient = 0;
 	return true;
 }
-
-

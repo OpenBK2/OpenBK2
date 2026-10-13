@@ -35,5 +35,3 @@ CUIWindow *CreateUIWindow( int x, int y, int w, int h, uint32_t _color, const ND
 	CUIWindow *pUIWindow = new CUIWindow( x, y, w, h, _color, _pTexture );
 	return pUIWindow;
 }
-
-

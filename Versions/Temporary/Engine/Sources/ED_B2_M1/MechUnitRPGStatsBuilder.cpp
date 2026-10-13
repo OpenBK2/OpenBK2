@@ -508,5 +508,3 @@ bool CMechUnitRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 }
 
 // basement storage
-
-

@@ -55,4 +55,3 @@ public:
 	void CreateObjects( SAIObjectsUnderConstructionUpdate * pUpdate );
 	bool IsCheatPath() const;
 };
-

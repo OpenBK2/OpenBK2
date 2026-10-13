@@ -505,5 +505,3 @@ public:
 	void GameResetForcedAction();
 	void OnChangeForcedAction( NDb::EUserAction eOldForcedAction );
 };
-
-

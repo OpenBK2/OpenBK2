@@ -26,5 +26,3 @@ ED_COMMON_EXPORT granny_file_info *GetAttribs( const std::string &szFileName, co
 void GetAttributesFromBone( void *pDstData, granny_bone *pBone, const char **ppszAttribNames, const int nNumAttribs );
 
 };
-
-

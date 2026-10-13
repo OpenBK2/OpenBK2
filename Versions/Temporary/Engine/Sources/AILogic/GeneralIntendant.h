@@ -320,5 +320,3 @@ public:
 
 	void MarkCellsDangerous( const SVector &vCell );
 };
-
-

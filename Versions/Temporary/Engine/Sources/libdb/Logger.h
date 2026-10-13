@@ -24,5 +24,3 @@ public:
 	bool ShouldCheckReferences() const { return bCheckReferences; }
 	void Finalize();
 };
-
-

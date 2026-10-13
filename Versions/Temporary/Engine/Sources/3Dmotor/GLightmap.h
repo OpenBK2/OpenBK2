@@ -84,4 +84,3 @@ void EnableLMGeometryDump(bool flag);
 bool GetDumpFlag();
 void SetDumpDirectory(const std::string &szDirectoryName);
 }
-

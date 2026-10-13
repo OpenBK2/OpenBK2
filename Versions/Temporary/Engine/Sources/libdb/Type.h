@@ -63,6 +63,3 @@ struct SKnownEnum<NDb::NTypeDef::ETypeType>
 	static NDb::NTypeDef::ETypeType ToEnum( const std::string &szName ) { return StringToEnum_NDb_NTypeDef_ETypeType( szName ); }
 	static const char *ToString( NDb::NTypeDef::ETypeType eType ) { return EnumToString_NDb_NTypeDef_ETypeType( eType ); }
 };
-
-
-

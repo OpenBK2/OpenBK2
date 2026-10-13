@@ -582,5 +582,3 @@ bool CMapInfoBuilder::InsertObject( std::string *pszObjectTypeName,
 }
 
 // basement storage
-
-

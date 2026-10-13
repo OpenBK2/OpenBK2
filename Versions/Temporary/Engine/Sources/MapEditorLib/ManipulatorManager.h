@@ -614,5 +614,3 @@ public:
 	//
 	static bool Remove2DArray( struct IManipulator *pManipulator, const std::string &rszName );
 };
-
-

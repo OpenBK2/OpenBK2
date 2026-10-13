@@ -20,5 +20,3 @@ class MAPEDITORLIB_EXPORT CPCIEMnemonics : public CMnemonicsCollector<int>
 
 
 EXTERNVAR MAPEDITORLIB_EXPORT CPCIEMnemonics typePCIEMnemonics;
-
-

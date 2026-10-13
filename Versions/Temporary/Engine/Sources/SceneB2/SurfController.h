@@ -47,5 +47,3 @@ public:
 	void Init( const float fAngle, const CVec2i &vMapSize, const std::vector<NWaterStuff::SSurfBorder> &borders, NGScene::IGameView *_pGScene );
 	void AttachTimer( CFuncBase<STime> *_pTimer ) { pTimer = _pTimer; }
 };
-
-

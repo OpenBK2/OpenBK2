@@ -25,5 +25,3 @@ struct SStoredPiece
 
 typedef std::unordered_map<int, SStoredPiece > CStoredPieceMap;
 const int N_PIECES_CHUNK = 4;
-
-

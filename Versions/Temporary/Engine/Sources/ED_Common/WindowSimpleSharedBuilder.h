@@ -26,5 +26,3 @@ protected:
 														 bool *pbNeedEdit,
 														 IManipulator *pBuildDataManipulator );
 };
-
-

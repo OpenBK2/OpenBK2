@@ -64,5 +64,3 @@ const TObject *luaH_getglobal (lua_State *L, const char *name) {
 	Hash *gt = L->tables[ L->nGT ];
   return gt->GetStr( luaS_new(L, name) );
 }
-
-

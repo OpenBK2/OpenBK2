@@ -152,5 +152,3 @@ namespace NMapInfoEditor
 		bool PasteSelf( CLinkIDMap *pNew2OldLinkIDMap, CLinkIDMap *pOld2NewLinkIDMap, IEditorScene *pEditorScene, CObjectBaseController *pObjectController, IManipulator *pManipulator );
 	};
 };
-
-

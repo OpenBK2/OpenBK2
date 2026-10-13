@@ -72,5 +72,3 @@ public:
 };
 
 CGroupMover *CreateGroupMover( const SAIUnitCmd &command );
-
-

@@ -48,5 +48,3 @@ const char *luaF_getlocalname (const Proto *f, int local_number, int pc) {
   }
   return NULL;  /* not found */
 }
-
-

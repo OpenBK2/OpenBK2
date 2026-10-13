@@ -73,5 +73,3 @@ public:
 	const bool IsForward() const { return bForward; }
 	int operator&( IBinSaver &saver );
 };
-
-

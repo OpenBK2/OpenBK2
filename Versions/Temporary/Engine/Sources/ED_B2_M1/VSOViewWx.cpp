@@ -800,4 +800,3 @@ namespace NVSOView
 		return pWindow;
 	}
 }
-

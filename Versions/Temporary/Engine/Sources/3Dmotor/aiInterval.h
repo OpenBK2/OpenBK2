@@ -60,4 +60,3 @@ void FillIntersectionResults( std::vector<SSimpleInterval> *pRes,
 	const SSourceInfo &_src, int _nUserID, bool bTerrain );
 
 }
-

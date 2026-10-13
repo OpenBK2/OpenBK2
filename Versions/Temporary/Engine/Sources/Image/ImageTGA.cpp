@@ -103,4 +103,3 @@ bool SaveImageAsTGA( CDataStream *pStream, const CArray2D<uint32_t> &image )
 }
 
 }
-

@@ -426,5 +426,3 @@ namespace NMapInfoEditor
 		void Trace();
 	};
 };
-
-

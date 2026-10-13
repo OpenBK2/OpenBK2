@@ -138,4 +138,3 @@ int CScriptWrapper::RunScriptFile( const char *pszFileName )
 using namespace NScript;
 REGISTER_SAVELOAD_CLASS( SCRIPT, 0x11061C00, CScriptWrapper )
 BASIC_REGISTER_CLASS(SCRIPT, IScriptWrapper)
-

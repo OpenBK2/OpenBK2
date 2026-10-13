@@ -81,5 +81,3 @@ void SMainFrameParams::Save()
 
 
 // basement storage
-
-

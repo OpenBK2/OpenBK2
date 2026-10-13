@@ -158,5 +158,3 @@ int CCommonUnit::operator&( IBinSaver &saver )
 		nCommandLeft = -1;
 	return 0;
 }
-
-

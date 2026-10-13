@@ -44,4 +44,3 @@ public:
 	bool CanViolateHeghtLimits() const { return bCanViolateHeghtLimits; }
 	uint16_t GetDivingAngle() const;
 };
-

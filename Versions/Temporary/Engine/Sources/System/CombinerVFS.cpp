@@ -70,5 +70,3 @@ ICombinerVFS *CreateCombinerVFS( IVFS *pVFS )
 }
 
 }
-
-

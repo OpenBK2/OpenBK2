@@ -62,6 +62,3 @@ void luaK_storevar (LexState *ls, const expdesc *var);
 void luaK_prefix (LexState *ls, UnOpr op, expdesc *v);
 void luaK_infix (LexState *ls, BinOpr op, expdesc *v);
 void luaK_posfix (LexState *ls, BinOpr op, expdesc *v1, expdesc *v2);
-
-
-

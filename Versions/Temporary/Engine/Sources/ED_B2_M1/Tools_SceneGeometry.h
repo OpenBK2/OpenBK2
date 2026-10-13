@@ -11,6 +11,3 @@ void UpdateTerrainHeight( CVec3 *pvPos );
 
 void GetCameraPosition( CVec3 *pvCamAnchor );
 void SetCameraPosition( const CVec3 &rvCamAnchor );
-
-
-

@@ -18,4 +18,3 @@ enum ETransparentMode : int;
 void RenderTnL( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderContext *pRC,
 	IRender *pRender, CSceneFragments &scene, CTransparentRenderer *pTransp, ETransparentMode trMode, NGfx::CCubeTexture *_pSky );
 }
-

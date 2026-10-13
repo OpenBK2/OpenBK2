@@ -298,4 +298,3 @@ namespace NScriptAreaView
 		return pWindow;
 	}
 }
-

@@ -142,5 +142,3 @@ void CBackgroundTiledTexture::Visit( struct IUIVisitor * pVisitor )
 CBackgroundTiledTexture::CBackgroundTiledTexture()
 {
 }
-
-

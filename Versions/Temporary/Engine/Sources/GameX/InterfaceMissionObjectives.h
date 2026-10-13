@@ -117,5 +117,3 @@ class CICMissionObjectives : public CInterfaceCommandBase<CInterfaceMissionObjec
 public:
 	void Configure( const char *pszConfig );
 };
-
-

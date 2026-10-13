@@ -681,4 +681,3 @@ CXMLElement *CXMLDocument::GetRootElement()
 }
 
 }
-

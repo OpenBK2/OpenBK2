@@ -139,4 +139,3 @@ public:
 	void MarkPoints();
 	const bool IsPathFound() const { return bPathFound; }
 };
-

@@ -486,5 +486,3 @@ void CMPManagerModeLAN::ExtractGameInfo( SNetGameInfo *pDst, NNet::IDriver::SGam
 		pDst->nSizeY = miscInfo.pMPMap->nSizeY;
 	}
 }
-
-

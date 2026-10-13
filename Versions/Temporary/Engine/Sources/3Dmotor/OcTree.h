@@ -131,5 +131,3 @@ public:
 		return 0;
 	}
 };
-
-

@@ -6,6 +6,3 @@ namespace NDb
 	struct SBonusData;
 	struct SReinforcement;
 }
-
-
-

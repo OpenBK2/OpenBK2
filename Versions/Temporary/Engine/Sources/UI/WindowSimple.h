@@ -28,5 +28,3 @@ public:
 		CWindow::InitByDesc( pDesc );
 	}
 };
-
-

@@ -15,5 +15,3 @@ public:
 	void AddUpdate( CObjectBase *pUpdate );
 	CObjectBase* GetUpdate();
 };
-
-

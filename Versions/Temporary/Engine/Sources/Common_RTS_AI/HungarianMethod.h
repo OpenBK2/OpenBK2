@@ -34,5 +34,3 @@ public:
 	const int GetSize() const { return nSize; }
 	const int GetResult( const int nIndex ) const { return result[nIndex]; }
 };
-
-

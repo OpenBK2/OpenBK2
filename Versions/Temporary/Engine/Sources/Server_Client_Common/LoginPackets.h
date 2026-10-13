@@ -98,5 +98,3 @@ public:
 			eConnectType( _eConnectType ), szNick( _szNick ), szPassword( _szPassword ),
 			szCDKey( _szCDKey ), szEmail( _szEmail ) { }
 };
-
-

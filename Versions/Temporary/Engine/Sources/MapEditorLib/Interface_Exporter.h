@@ -170,6 +170,3 @@ struct IExporterContainer : public CObjectBase
 	// Проверить на удачность конвертации данного объекта
 	virtual EXPORT_RESULT GetExportResult( const std::string &rszObjectTypeName, const std::string &rszObjectName ) = 0;
 };
-
-
-

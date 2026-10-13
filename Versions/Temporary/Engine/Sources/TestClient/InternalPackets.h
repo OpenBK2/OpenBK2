@@ -31,5 +31,3 @@ public:
 	CTestSpecGameInfo() { }
 	CTestSpecGameInfo( const std::string &_szMapName ) : szMapName( _szMapName ) { }
 };
-
-

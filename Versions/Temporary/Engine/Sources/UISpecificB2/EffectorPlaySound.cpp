@@ -43,4 +43,3 @@ void CEffectorPlaySound::Reverse()
 	bForward = !bForward;
 	bFinished = false;
 }
-

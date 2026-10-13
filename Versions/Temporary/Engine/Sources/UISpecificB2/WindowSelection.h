@@ -36,5 +36,3 @@ public:
 	virtual void Visit( struct IUIVisitor *pVisitor );
 	virtual void InitByDesc( const struct NDb::SUIDesc *pDesc );
 };
-
-

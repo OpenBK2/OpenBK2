@@ -63,6 +63,3 @@ protected:
 	void RemoveVSOFromTerrain( int nVSOID );
 	void UpdateVSOInTerrain( int nVSOID );
 };
-
-
-

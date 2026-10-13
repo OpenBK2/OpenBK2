@@ -1111,5 +1111,3 @@ static void chunk (LexState *ls) {
                "stack size != # local vars");
   }
 }
-
-

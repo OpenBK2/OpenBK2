@@ -882,4 +882,3 @@ bool CEditorDatabase::GetObjectsList( std::vector<CDBID> *pRes, const std::strin
 }
 
 }
-

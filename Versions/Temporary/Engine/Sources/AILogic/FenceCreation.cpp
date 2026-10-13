@@ -230,4 +230,3 @@ const CVec2 CFenceCreation::GetNextPoint( const int nPlace, const int nMaxPlace 
 
 	return vPoints[nCurIndex]  + vDirPerp * SConsts::TILE_SIZE * 2.0f * nPlace / nMaxPlace;
 }
-

@@ -140,5 +140,3 @@ public:
 	int GetMemberIndexBySceneID( int nSceneID );
 	//
 };
-
-

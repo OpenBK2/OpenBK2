@@ -364,5 +364,3 @@ public:
 	virtual void GetPlacement( struct SAINotifyPlacement *pPlacement, const NTimer::STime timeDiff );
 	bool CanFall();
 };
-
-

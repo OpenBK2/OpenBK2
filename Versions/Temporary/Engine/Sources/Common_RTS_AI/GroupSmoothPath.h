@@ -159,5 +159,3 @@ public:
 	//! получить проекцию позиции юнита на путь (ушел вперед/назад)
 	virtual const float GetUnitPathShift( const CBasePathUnit *pUnit ) const { return GetDirection() * ( pUnit->GetCenterPlain() - GetCenter() ) - GetUnitFormationProjection( pUnit ); }
 };
-
-

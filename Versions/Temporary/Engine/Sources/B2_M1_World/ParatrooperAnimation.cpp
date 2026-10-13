@@ -38,4 +38,3 @@ bool CParachuteFinishProcess::Update( const NTimer::STime &time )
 
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x1015CD00, CParatrooperAnimationProcess );
 REGISTER_SAVELOAD_CLASS( B2_M1_WORLD, 0x1015E400, CParachuteFinishProcess );
-

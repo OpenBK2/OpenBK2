@@ -316,5 +316,3 @@ public:
 };
 
 }; // end of namespace NLXML
-
-

@@ -54,5 +54,3 @@ public:
 
 	void Segment();
 };
-
-

@@ -42,5 +42,3 @@ public:
 void DiscretisizeBoundSphere( SSphere *pResult, const CVec3 &ptCenter, const float fRadius, const float fDiscrStep );
 
 } // namespace
-
-

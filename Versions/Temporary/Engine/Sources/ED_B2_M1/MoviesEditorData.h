@@ -79,6 +79,3 @@ struct SScriptMovieEditorData
 		eLastAction = eAction;
 	}
 };
-
-
-

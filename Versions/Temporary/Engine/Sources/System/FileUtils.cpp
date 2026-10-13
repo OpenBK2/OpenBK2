@@ -627,5 +627,3 @@ void SetCurrDir( const std::string &szDir )
 }
 
 }; // namespace NFile ends
-
-

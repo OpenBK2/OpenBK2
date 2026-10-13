@@ -142,4 +142,3 @@ namespace NWxResourceImages
 		return icons;
 	}
 }
-

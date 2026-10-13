@@ -38,4 +38,3 @@ struct IAIVisitor : public IVisitorBase
 	virtual void LoadSkinGeometry( const NDb::SAIGeometry *pAIGeom, const NDb::SSkeleton *pSkeleton ) {}
 	*/
 };
-

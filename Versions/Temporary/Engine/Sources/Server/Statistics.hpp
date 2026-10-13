@@ -106,7 +106,3 @@ namespace NStatistics
 	std::string DumpToString() { return CStatisticsCollector::DumpToString(); }
 	void DumpToNameValueVectors( std::vector<std::string> *pNames, std::vector<float> *pValues ) { CStatisticsCollector::DumpToNameValueVectors( pNames, pValues ); }
 }
-
-
-
-

@@ -88,5 +88,3 @@ namespace NLang
 	// exported for dbcodegen, which parses the .cll files through it
 	PARSER_EXPORT bool Parse( const std::vector<std::string> &files, const std::string &szBaseFileName );
 }
-
-

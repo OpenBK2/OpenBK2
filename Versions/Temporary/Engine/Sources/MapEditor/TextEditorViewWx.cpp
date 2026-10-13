@@ -821,4 +821,3 @@ namespace NTextEditor
 		return true;
 	}
 }
-

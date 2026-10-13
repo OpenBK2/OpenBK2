@@ -43,5 +43,3 @@ public:
 
 	int MarkStaticPath( const int nID, const NDebugInfo::EColor color ) const;
 };
-
-

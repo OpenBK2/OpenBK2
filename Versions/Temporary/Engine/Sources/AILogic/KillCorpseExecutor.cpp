@@ -42,4 +42,3 @@ int CKillCorpseExecutor::Segment()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x30147C40, CKillCorpseExecutor )
-

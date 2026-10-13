@@ -51,6 +51,3 @@ COMMON_RTS_AI_EXPORT bool operator>( const SAIAngle &_1, int _2 );
 COMMON_RTS_AI_EXPORT bool operator<( const SAIAngle &_1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator<( int _1, const SAIAngle &_2 );
 COMMON_RTS_AI_EXPORT bool operator<( const SAIAngle &_1, int _2 );
-
-
-

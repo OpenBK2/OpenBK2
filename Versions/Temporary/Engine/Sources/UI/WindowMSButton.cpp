@@ -634,5 +634,3 @@ void CWindowMSButton::Visit( struct IUIVisitor *pVisitor )
 {
 	CWindow::Visit( pVisitor );
 }
-
-

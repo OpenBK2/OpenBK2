@@ -88,5 +88,3 @@ void CFreeFireManager::SShotInfo::SetInfo( CAIUnit *pNewTarget, CBasicGun *pGun 
 	unitDir = pNewTarget->GetFrontDirection();
 	gunDir = pGun->GetGlobalDir();
 }
-
-

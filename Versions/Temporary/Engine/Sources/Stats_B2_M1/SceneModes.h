@@ -48,4 +48,3 @@ enum ESceneMarkerType : int
 };
 
 DEFINE_DG_CONSTANT_NODE( CCSTime, NTimer::STime );
-

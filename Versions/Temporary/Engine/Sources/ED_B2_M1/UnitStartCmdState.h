@@ -151,5 +151,3 @@ public:
 	void EdCmdClear();
 	void EdCmdTypeChange() {}
 };
-
-

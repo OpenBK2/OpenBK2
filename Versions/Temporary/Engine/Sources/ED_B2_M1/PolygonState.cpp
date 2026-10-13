@@ -700,5 +700,3 @@ bool CPolygonState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pb
 
 
 // basement storage
-
-

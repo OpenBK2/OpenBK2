@@ -132,4 +132,3 @@ REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x114c1110, CCTPoint )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x022a2120, CExtractTranslation )
 
 extern "C" void PORT_CDECL ForceGSceneGraph() {}
-

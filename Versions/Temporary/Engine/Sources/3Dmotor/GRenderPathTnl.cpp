@@ -37,4 +37,3 @@ void RenderTnL( CTransformStack *pTS, CTransformStack *pClipTS, NGfx::CRenderCon
 	}
 }
 }
-

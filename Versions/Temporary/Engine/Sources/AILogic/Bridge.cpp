@@ -752,5 +752,3 @@ void CFullBridge::InitEntireBridge()
 			(*it)->RealLockTiles();
 	}
 }
-
-

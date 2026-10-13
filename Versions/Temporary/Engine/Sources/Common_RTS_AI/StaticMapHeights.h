@@ -81,5 +81,3 @@ public:
 	const CVec3 GetGroundPoint( const CVec3 &vPoint ) { return CVec3( vPoint.x, vPoint.y, GetZ( vPoint.x, vPoint.y ) ); }
 	const float GetZ( const CVec3 &vPoint ) const { return GetZ( vPoint.x, vPoint.y ); }
 };
-
-

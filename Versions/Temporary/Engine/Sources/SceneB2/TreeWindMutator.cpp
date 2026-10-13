@@ -123,5 +123,3 @@ int CTreeWindMutator::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x19132B40, CTreeWindMutator)
-
-

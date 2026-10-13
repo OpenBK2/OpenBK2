@@ -65,4 +65,3 @@ struct IManuver : public CAIObjectBase
 	virtual const CVec3 GetEndPoint() const = 0;
 	//CRAP}
 };
-

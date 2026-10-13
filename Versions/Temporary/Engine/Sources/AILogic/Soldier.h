@@ -361,5 +361,3 @@ struct SSniperTrace
 
 };
 */
-
-

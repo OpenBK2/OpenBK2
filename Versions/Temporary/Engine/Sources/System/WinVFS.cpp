@@ -542,4 +542,3 @@ IFileCreator* CreateWinFileCreator( const std::string &szBasePath )
 }
 
 }
-

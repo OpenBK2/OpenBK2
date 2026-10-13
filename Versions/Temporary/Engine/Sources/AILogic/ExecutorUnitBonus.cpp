@@ -130,5 +130,3 @@ void CExecutorUnitBonus::ForceActivate()
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x19126C80, CExecutorUnitBonus )
-
-

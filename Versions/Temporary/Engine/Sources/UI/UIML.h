@@ -229,5 +229,3 @@ struct IML: public CObjectBase
 };
 
 UI_EXPORT IML* CreateML( struct IWindow *pFontScaleWindow = nullptr );
-
-

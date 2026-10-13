@@ -154,5 +154,3 @@ public:
 	const CVec2 GetPurposePoint() const { return vDestination; }
 	EUnitStateNames GetName() { return EUSN_MECHUNIT_REST_ON_BOARD; }
 };
-
-

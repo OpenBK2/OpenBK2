@@ -705,5 +705,3 @@ REGISTER_VAR_EX( "frontlines_perlin_gridsize", NGlobal::VarIntHandler, &s_nPerli
 REGISTER_VAR_EX( "frontlines_gridsize", NGlobal::VarIntHandler, &s_nPotentialGridSize, 10, STORAGE_NONE );
 REGISTER_VAR_EX( "frontlines_border_width", NGlobal::VarIntHandler, &s_nPotentialGridSize, 10, STORAGE_NONE );
 FINISH_REGISTER
-
-

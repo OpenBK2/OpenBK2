@@ -269,5 +269,3 @@ public:
 	virtual const bool CheckTurn( const float fRectCoeff, const CVec2 &vDir, const bool bWithUnits, const bool bCanGoBackward ) const;
 	bool CalculateUnitVisibility4Party( const uint8_t party );
 };
-
-

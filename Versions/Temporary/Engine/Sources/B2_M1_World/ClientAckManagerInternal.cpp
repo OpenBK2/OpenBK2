@@ -492,5 +492,3 @@ IClientAckManager *CreateAckManager()
 {
 	return new CClientAckManager();
 }
-
-

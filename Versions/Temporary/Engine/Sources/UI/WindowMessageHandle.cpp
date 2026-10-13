@@ -42,5 +42,3 @@ IMPLEMENT_MESSAGE_HANDLER(CWindow,Enable)
 		pChild->Enable( msg.nParam );
 	return pChild;
 }
-
-

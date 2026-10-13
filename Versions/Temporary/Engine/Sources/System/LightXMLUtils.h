@@ -232,4 +232,3 @@ BOOST_FORCEINLINE const char* GetChar( const char *p, char *pValue )
 }
 
 }
-

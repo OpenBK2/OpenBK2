@@ -109,5 +109,3 @@ inline int GetVSOSeed( const NDb::SVSOInstance *pInstance )
 	const float fLength = fabs( v1 - v2 );
 	return (int)( fLength * 1000 );
 }
-
-

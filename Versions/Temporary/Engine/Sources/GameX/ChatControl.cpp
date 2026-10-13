@@ -42,5 +42,3 @@ void CChatControlWrapper::AddItem( const std::wstring &wszText )
 	pList->EnsureElementVisible( pNewItem );
 	pList->Update();
 }
-
-

@@ -62,5 +62,3 @@ public:
 	const CElementMap& GetMap() const { return elementMap; }
 	const TList& GetList() const { return elementList; }
 };
-
-

@@ -10,5 +10,3 @@ class CSpotDataExtractor : public CBasicDataExtractor
 	//
 	bool GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uint32_t> *pNormalImage, const std::string &rszObjectTypeName, const std::string &rszObjectName, IManipulator *pObjectManipulator );
 };
-
-

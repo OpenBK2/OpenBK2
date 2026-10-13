@@ -43,6 +43,3 @@ public:
 	void Save( bool bSaveChanges );
 	bool IsModified();
 };
-
-
-

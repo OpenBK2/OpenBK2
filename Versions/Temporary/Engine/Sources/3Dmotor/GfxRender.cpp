@@ -1696,5 +1696,3 @@ START_REGISTER(GfxRender)
 	REGISTER_VAR_EX( "gfx_register_resolution", NGlobal::VarFloatHandler, &fRegisterResolution, 1.0f, STORAGE_USER )
 FINISH_REGISTER
 }
-
-

@@ -89,5 +89,3 @@ public:
 	virtual class CAIUnit* GetTargetUnit() const;
 	virtual EUnitStateNames GetName() { return EUSN_ATTACK_IN_ENTRENCH; }
 };
-
-

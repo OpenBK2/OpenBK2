@@ -29,5 +29,3 @@ public:
 	void SetTexture( const struct NDb::STexture *pDesc );
 	//}
 };
-
-

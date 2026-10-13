@@ -85,5 +85,3 @@ inline const SVector GetAIMapTile( const float x, const float y, const int nTile
 {
 	return SVector( x < 0.0f ? 0.0f : x / nTileSize, y < 0.0f ? 0.0f : y / nTileSize );
 }
-
-

@@ -19,5 +19,3 @@ public:
 	virtual int GetIDSize() const { return 1; }
 };
 IAICmdsAutoMagic *CreateAICmdsAutoMagic();
-
-

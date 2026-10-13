@@ -423,5 +423,3 @@ void CInfantryGuns::Init( CCommonUnit *pCommonUnit )
 		NI_ASSERT( bSuccess, fmt::format("Can't add gun to unit \"{}\"", NDb::GetResName(pStats)) );
 	}
 }
-
-

@@ -43,6 +43,3 @@ public:
 	virtual bool IsWithFormation() const { NI_ASSERT(false, "wrong call" ); return true; }
 	virtual void Stop() { NI_ASSERT(false, "wrong call" ); }
 };
-
-
-

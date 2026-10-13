@@ -21,5 +21,3 @@ class CAnimationMnemonics : public CMnemonicsCollector<int>
 
 extern CMayaAnimationMnemonics typeMayaAnimationMnemonics;
 extern CAnimationMnemonics typeAnimationMnemonics;
-
-

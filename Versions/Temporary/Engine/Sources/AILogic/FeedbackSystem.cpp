@@ -170,5 +170,3 @@ void CFeedBackSystem::Segment()
 		}
 	}
 }
-
-

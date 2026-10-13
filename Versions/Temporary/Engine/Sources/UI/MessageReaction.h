@@ -85,7 +85,3 @@ public:
 	virtual bool Execute( struct IScreen *pScreen, struct IScriptWrapper *pScript, struct IProgrammedReactionsAndChecks *pProg, uint16_t wKeyboardFlags ) const;
 	virtual void InitByDesc( const struct NDb::SUIDesc *_pDesc );
 };
-
-
-
-

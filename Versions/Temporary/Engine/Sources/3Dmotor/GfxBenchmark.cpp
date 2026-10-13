@@ -202,4 +202,3 @@ const SPerformanceInfo &GetPerformanceInfo()
 	return perf;
 }
 }
-

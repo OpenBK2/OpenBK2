@@ -100,5 +100,3 @@ class CICMPStatistics : public CInterfaceCommandBase<CInterfaceMPStatistics>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

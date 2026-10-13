@@ -47,6 +47,3 @@ struct zio {
   const char *name;
   unsigned char buffer[ZBSIZE];		/* buffer */
 };
-
-
-

@@ -112,5 +112,3 @@ public:
 	virtual struct IConnection* CreateConnection() const;
 	class CConnectionEffort* CreateNextEffort( const int nOurGameID ) { return 0; }
 };
-
-

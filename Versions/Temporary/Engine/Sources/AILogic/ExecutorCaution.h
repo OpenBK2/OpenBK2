@@ -27,4 +27,3 @@ public:
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	bool NotifyEvent( const CExecutorEvent &event );
 };
-

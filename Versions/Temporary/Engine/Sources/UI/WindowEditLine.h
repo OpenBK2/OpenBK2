@@ -124,6 +124,3 @@ public:
 	void OnSelectAll( const struct SGameMessage &msg );
 	//end message sinks
 };
-
-
-

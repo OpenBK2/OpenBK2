@@ -38,5 +38,3 @@ public:
 
 	void SetFadeValue( float fValue ) { fFadeValue = fValue; }
 };
-
-

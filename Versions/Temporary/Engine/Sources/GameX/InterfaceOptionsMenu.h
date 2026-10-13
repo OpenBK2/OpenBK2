@@ -125,6 +125,3 @@ class CICOptionsMenu : public CInterfaceCommandBase<CInterfaceOptionsMenu>
 public:
 	void Configure( const char *pszConfig );
 };
-
-
-

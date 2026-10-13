@@ -117,4 +117,3 @@ void CLongObjectCreation::UnlockPreventingUnits( std::list<CPtr<CAIUnit> > &prev
 			pUnit->UnlockTiles();
 	}
 }
-

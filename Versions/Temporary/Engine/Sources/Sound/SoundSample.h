@@ -26,5 +26,3 @@ public:
 	void SetLoop( bool bEnable );
 	void SetKey( const CDBID &dbid );
 };
-
-

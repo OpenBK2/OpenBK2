@@ -66,5 +66,3 @@ class CICWinLooseDialog : public CInterfaceCommandBase<CInterfaceWinLoose>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

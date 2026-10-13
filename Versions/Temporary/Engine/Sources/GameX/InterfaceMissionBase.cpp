@@ -143,4 +143,3 @@ int CInterfaceMissionBase::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x11135C00, CVisualNotificationsEmpty );
-

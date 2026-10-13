@@ -143,5 +143,3 @@ CMayaAnimationMnemonics typeMayaAnimationMnemonics;
 CAnimationMnemonics typeAnimationMnemonics;
 
 // basement storage
-
-

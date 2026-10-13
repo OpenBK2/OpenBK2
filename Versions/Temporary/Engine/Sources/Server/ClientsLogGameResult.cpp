@@ -116,5 +116,3 @@ void CClients::DBLogRawGameResult( const std::unordered_map<std::string,int> &in
 	Execute( szQuery );
 #endif
 }
-
-

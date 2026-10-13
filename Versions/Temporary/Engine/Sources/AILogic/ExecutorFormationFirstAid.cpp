@@ -99,4 +99,3 @@ int CExecutorFormationFirstAid::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x11136340, CExecutorFormationFirstAid )
-

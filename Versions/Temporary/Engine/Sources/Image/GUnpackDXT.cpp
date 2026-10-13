@@ -622,4 +622,3 @@ void UnpackDXT( int nDxt, int nXSize, int nYSize, const void *pData, CArray2D<ui
 	}
 }
 }
-

@@ -389,4 +389,3 @@ void MakeSData( CObjectInfo::SData *pRes, const CObjectInfo &src )
 	}
 }
 }
-

@@ -22,7 +22,3 @@ protected:
 protected:
 	class CTextureEditor *pEditor;
 };
-
-
-
-

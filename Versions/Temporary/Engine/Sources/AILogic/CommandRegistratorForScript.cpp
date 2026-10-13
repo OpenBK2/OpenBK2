@@ -18,5 +18,3 @@ void CCommandRegistratorForScript::Called( int nCommand ) {
 		pScripts->CallScriptFunction(function.c_str());
 	}
 }
-
-

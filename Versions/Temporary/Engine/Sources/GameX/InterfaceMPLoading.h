@@ -57,5 +57,3 @@ public:
 	CInterfaceMPLoading2D();
 	CInterfaceMPLoading2D( const SParams &params );
 };
-
-

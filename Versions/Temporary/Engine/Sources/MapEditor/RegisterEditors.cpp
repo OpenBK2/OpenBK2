@@ -74,5 +74,3 @@ const char* CRegisterEditorsSemiAutoMagic::GetLabel() const
 {
 	return "Editors";
 }
-
-

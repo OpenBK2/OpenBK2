@@ -145,5 +145,3 @@ void CExecutorThrowGrenade::RegisterOnEvents( IExecutorContainer *pContainer )
 	par.eEventID = EID_ABILITY_DISABLE;
 	pContainer->RegisterOnEvent( this, par );
 }
-
-

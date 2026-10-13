@@ -88,5 +88,3 @@ void CClassFactory<T>::RegisterTypeBase( int nTypeID, newFunc func, VFT vft )
 	typeIndex[ vft ] = nTypeID;
 	typeInfo[ nTypeID ] = func;
 }
-
-

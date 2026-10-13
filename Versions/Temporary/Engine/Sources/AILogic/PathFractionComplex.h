@@ -47,4 +47,3 @@ public:
 		return 0;
 	}
 };
-

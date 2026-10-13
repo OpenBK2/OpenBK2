@@ -26,6 +26,3 @@ class CGeometryExporter : public CBasicSceneExporter
 	//
 	CGeometryExporter() {}
 };
-
-
-

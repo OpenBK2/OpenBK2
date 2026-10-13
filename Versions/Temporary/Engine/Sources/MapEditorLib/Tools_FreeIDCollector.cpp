@@ -177,5 +177,3 @@ void CFreeIDCollector::FreeID( const unsigned nID )
 }
 
 // basement storage
-
-

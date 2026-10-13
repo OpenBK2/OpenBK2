@@ -144,5 +144,3 @@ namespace NCamera
 	float IncrementValue( float fCurrValue, float fAdd, const SLimit &limit, float fTimeDiff, const bool bAutoPositioning, bool bFreeCamera );
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
-
-

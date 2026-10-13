@@ -84,4 +84,3 @@ Este projeto é lançado sob uma **licença especial não comercial** da NIVAL I
 - **zlib** (v1.1.3) - Copyright (C) 1995-1998 Jean-loup Gailly and Mark Adler - Licença zlib
 
 Consulte o [acordo de licença](LICENSE.md) completo antes de usar este código.  
-

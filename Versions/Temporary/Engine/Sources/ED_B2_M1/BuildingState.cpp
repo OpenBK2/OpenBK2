@@ -184,5 +184,3 @@ bool CBuildingState::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *p
 	}
 	return false;
 }
-
-

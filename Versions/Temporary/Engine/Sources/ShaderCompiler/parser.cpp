@@ -149,4 +149,3 @@ void SplitString( const char *pszData, vector<string> *pRes )
 			break;
 	}
 }
-

@@ -28,5 +28,3 @@ public:
 		const CVec2 &GetPoint() const { return vPoint; }
 		float GetRange() const { return fRange; }
 };
-
-

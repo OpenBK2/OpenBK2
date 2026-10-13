@@ -240,5 +240,3 @@ void CModelEditor::DeleteTarget()
 {
 	NTargetMesh::DeleteTargetMesh();
 }
-
-

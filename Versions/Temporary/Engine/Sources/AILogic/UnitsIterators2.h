@@ -504,5 +504,3 @@ public:
 	class CAIUnit* operator*() const { return units[units.unitsInCells[cCurVis].GetEl( nIter ).nValue]; }
 	const bool IsFinished() const { return cCurMech >= cMechEnd; }
 };
-
-

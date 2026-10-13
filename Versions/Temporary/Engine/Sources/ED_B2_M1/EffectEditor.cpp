@@ -97,5 +97,3 @@ void CEffectEditor::Destroy()
 }
 
 // basement storage
-
-

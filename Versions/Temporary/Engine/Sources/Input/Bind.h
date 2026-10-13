@@ -86,5 +86,3 @@ INPUT_EXPORT void PurgeEvents();
 INPUT_EXPORT void PurgeUIEvents();
 
 };
-
-

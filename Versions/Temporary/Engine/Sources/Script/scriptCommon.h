@@ -37,4 +37,3 @@ void ScriptWarning( const std::string &message );
 void ScriptError( const std::string &message );
 }
 //
-

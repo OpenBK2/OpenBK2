@@ -105,5 +105,3 @@ public:
 IReflowLayout* CreateReflowLayout();
 
 } // NAMESPACE
-
-

@@ -99,5 +99,3 @@ int CObjectFilter::operator&( IXmlSaver &saver )
 	saver.Add( "Entries", &entries );
 	return 0;
 }
-
-

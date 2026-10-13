@@ -8,5 +8,3 @@ class CBuildingInterface : public CEditorInterfaceBase
 };
 
 INTERFACE_COMMAND_DECLARE( CBuildingInterfaceCommand, CBuildingInterface )
-
-

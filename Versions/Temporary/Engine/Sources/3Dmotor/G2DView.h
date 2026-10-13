@@ -57,4 +57,3 @@ _3DMOTOR_EXPORT void Flip();
 _3DMOTOR_EXPORT void ClearScreen( const CVec3 &vColor );
 
 }
-

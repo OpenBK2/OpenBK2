@@ -33,5 +33,3 @@ CPrimeNumbers::CPrimeNumbers()
 			++nNum;
 	}
 }
-
-

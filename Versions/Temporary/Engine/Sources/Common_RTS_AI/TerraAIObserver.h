@@ -90,5 +90,3 @@ public:
 	virtual bool IsPassabilityOn() const { return bShowPassability; }
 	virtual bool IsBridge( const int nX, const int nY ) const;
 };
-
-

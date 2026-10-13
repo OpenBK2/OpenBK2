@@ -13,5 +13,3 @@ struct SKnownEnum
 {
 	enum { isKnown = 0 };
 };
-
-

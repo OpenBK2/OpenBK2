@@ -2006,4 +2006,3 @@ REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x11165340, CScenarioTracker, NScenarioTracke
 BASIC_REGISTER_CLASS( GAMEX, IScenarioTracker )
 using namespace NScenarioTracker;
 REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x33234C40, SLeaderInfo, IScenarioTracker )
-

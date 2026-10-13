@@ -50,4 +50,3 @@ void MakeShadowMatrix( SNLProjectionInfo *pRes, CTransformStack *pShadowGeomTS, 
 	const CVec3 &ptDir, float fMaxHeight, const SBound &sceneBound, float fSceneHeight, SShadowMatrixAlign *pAlign );
 
 }
-

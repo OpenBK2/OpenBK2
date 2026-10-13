@@ -444,5 +444,3 @@ bool CWindowSlider::OnButtonUp( const CVec2 &vPos, const int nButton )
 	bManualScrolling = false;
 	return false;
 }
-
-

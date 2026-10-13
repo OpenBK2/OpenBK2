@@ -44,5 +44,3 @@ void CExplosionsManager::RemoveExplosion( const int nID )
 			++it;
 	}
 }
-
-

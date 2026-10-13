@@ -18,5 +18,3 @@ public:
 	void ShowUnderConstruction( EActionCommand eCommand, const CVec2 &vStart, const CVec2 &vFinish, bool bFinished, CAILogic *pAI );
 	int operator&( IBinSaver &saver );
 };
-
-

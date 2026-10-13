@@ -474,4 +474,3 @@ namespace NScriptCameraView
 		return pWindow;
 	}
 }
-

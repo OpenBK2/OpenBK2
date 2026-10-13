@@ -56,4 +56,3 @@ class CUpdatableObj * CObstacleStaticObject::GetObject() const
 {
 	return pObj.GetPtr();
 }
-

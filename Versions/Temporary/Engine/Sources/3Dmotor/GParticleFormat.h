@@ -161,5 +161,3 @@ class _3DMOTOR_EXPORT CParticlesLoader: public CLazyResourceLoader<int, CParticl
 };
 
 }
-
-

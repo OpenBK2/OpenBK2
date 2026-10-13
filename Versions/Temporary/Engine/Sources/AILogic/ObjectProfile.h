@@ -33,5 +33,3 @@ public:
 	const std::vector<SVector>& GetTilesUnder() const { return tilesUnderVector; }
 	const CTRect<float>& GetAABBRect() const { return aabbRect; }
 };
-
-

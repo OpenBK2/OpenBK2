@@ -45,5 +45,3 @@ struct ITerraAIObserver : public CObjectBase
 	virtual bool IsPassabilityOn() const { return false; }
 	virtual bool IsBridge( const int nX, const int nY ) const { return false; }
 };
-
-

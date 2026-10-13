@@ -21,5 +21,3 @@ struct SIntThree
 		return !operator==(p);
 	}
 };
-
-

@@ -32,6 +32,3 @@ struct IChildFrameContainer : public CObjectBase
 	//
 	virtual void Leave() = 0;
 };
-
-
-

@@ -24,5 +24,3 @@ namespace NLog
 	MAPEDITORLIB_EXPORT void Log( ELogOutputType eLogOutputType, const char *pszFormat, ... );
 	void ClearLog();
 }
-
-

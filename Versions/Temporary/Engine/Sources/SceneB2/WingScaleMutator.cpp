@@ -74,5 +74,3 @@ void CWingScaleMutator::MutateSkeletonPose( NAnimation::SSkeletonPose *pPose )
 }
 
 REGISTER_SAVELOAD_CLASS( SCENEB2, 0x3119AB00, CWingScaleMutator );
-
-

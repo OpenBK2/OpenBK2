@@ -143,5 +143,3 @@ void CWeather::Segment()
 		break;
 	}
 }
-
-

@@ -34,5 +34,3 @@ public:
 		: timeToCompare( timeBase+timeDelta ) {  }
 	bool operator()( const CSound * sound ) const;
 };
-
-

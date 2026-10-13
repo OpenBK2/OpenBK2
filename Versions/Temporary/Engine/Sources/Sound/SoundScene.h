@@ -79,5 +79,3 @@ struct ISoundScene : public CObjectBase
 };
 inline ISoundScene *SoundScene() { return Singleton<ISoundScene>(); }
 SOUND_EXPORT ISoundScene* CreateSoundScene();
-
-

@@ -131,5 +131,3 @@ class CICMPCustomGame : public CInterfaceCommandBase<CInterfaceMPCustomGame>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

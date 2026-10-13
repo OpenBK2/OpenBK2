@@ -301,5 +301,3 @@ public:
 	virtual const float GetZ() const { return 0.0f; }
 	const bool TryExecuteCommand( class CAICommand *pCommand, const bool bPlaceInQueue, bool bOnlyThisUnitCommand );
 };
-
-

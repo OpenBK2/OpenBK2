@@ -83,5 +83,3 @@ bool IsFloat( const std::string &szVal )
 }
 
 }
-
-

@@ -106,5 +106,3 @@ void CWindowFrameSequence::Reset()
 }
 
 REGISTER_SAVELOAD_CLASS(UISPECIFICB2, 0x1717A442, CWindowFrameSequence)
-
-

@@ -230,4 +230,3 @@ CLightmapsHolder *CalcLightmaps( IGScene *pScene, CObjectBase *pUser, int nUserI
 void ApplyLightmaps( IGScene *pScene, CObjectBase *pUser, CLightmapsHolder *pLightmaps,  CLightmapsLoader * pLD  );
 
 }
-

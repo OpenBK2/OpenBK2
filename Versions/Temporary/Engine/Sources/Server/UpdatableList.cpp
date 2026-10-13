@@ -118,5 +118,3 @@ void CUpdatableList::GetDiff( const int nNoIncludeID, const uint32_t dwOldVersio
 			GetFullUpdate( nNoIncludeID, pUpdate );
 	}
 }
-
-

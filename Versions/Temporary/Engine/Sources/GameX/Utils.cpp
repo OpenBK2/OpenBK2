@@ -24,5 +24,3 @@ CVec3 CorrectPosByCameraAndHeight( const CVec3 &vCenter )
 
 	return vVisPos;
 }
-
-

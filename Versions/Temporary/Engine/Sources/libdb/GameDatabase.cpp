@@ -347,4 +347,3 @@ void CGameDatabase::SaveChanges()
 }
 
 }
-

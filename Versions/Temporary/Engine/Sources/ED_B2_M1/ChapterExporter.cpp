@@ -41,5 +41,3 @@ EXPORT_RESULT CChapterExporter::ExportObject( IManipulator* pManipulator,
 	//
 	return ER_SUCCESS;
 }
-
-

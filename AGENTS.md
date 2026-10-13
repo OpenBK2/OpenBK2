@@ -20,7 +20,7 @@ Few rules:
 - The game database schema and its C++ structs are generated from the .cll files by dbcodegen: change the .cll and regenerate, never the generated DB*.h/.cpp or types.xml. See "adding things to the game database" in Contributing.md
 
 ### Determinism coding rules
-1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation. 
+1. Do not iterate over `std::unordered_map` and `std::unordered_set`, since the iteration order is not specified! Use `det_map` and `det_set` instead or thier sorted std variants. It is allowed to use their iteration to make a sorted (by Unique IDs and with no ties!) vector/list and then iterate over that for simulation.
 2. Do not using client specific functions/variables in simulation code. E.g. `CDiplomacy::GetMyNumber()` or `CCommonUnit::IsSelectable()`
 3. Bugs, uninitialized variables, special rare hacks or undefined behaviour will likely break determinism too
 4. Do not use bad sorting operators that have ties, which have non deterministic effects

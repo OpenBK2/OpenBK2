@@ -57,5 +57,3 @@ class CICInterfaceCredist : public CInterfaceCommandBase<CInterfaceCredits>
 public:
 	void Configure( const char *pszConfig );
 };
-
-

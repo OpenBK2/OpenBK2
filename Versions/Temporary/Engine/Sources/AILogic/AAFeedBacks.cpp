@@ -47,4 +47,3 @@ void CAAFeedBacks::PlaneDeleted( CAIUnit *pTarget )
 	for ( CAAFeedBacksList::iterator it = feedbacks.begin(); it != feedbacks.end(); ++it )
 		it->second.remove( nTargetID );
 }
-

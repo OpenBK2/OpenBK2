@@ -134,4 +134,3 @@ int SVectorStripeObject::operator&( IBinSaver &saver )
 	}
 	return 0;
 }
-

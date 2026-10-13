@@ -207,5 +207,3 @@ public:
 		return ( vPos.x >= 0 ) && (vPos.y >= 0) && (vPos.x < this->GetSizeX()*tCellSize) && (vPos.y < this->GetSizeY()*tCellSize);
 	}
 };
-
-

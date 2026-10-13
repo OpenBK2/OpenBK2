@@ -65,5 +65,3 @@ public:
 	unsigned GetID() const { return itCurrType->second->nClassTypeID; }
 	bool IsFolder() const { return false; }
 };
-
-

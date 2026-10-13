@@ -30,5 +30,3 @@ void CDynamicDebrisManager::AddDynamicDebris( const NMeshData::SMeshDataTex2 &de
 		debrisPatches.back().pHolder = pGScene->CreateMesh( pGScene->MakeMeshInfo( pCurPatch, pMaterial ), placement, 0, 0 );
 	}
 }
-
-

@@ -85,5 +85,3 @@ void ConvertToString( std::string *pStr )
 	str.resize( nCnt );
 }
 }
-
-

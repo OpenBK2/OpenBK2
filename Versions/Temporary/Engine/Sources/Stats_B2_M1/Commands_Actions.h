@@ -116,5 +116,3 @@ public:
 	//
 	void ReportMetaInfo( const std::string &szAddName, uint8_t *pThis ) const;
 };
-
-

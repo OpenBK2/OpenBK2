@@ -33,6 +33,3 @@ protected:
 	bool RemoveObject( const std::string &rszObjectTypeName, const std::string &rszObjectName, bool bRecursive );
 	bool SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor );
 };
-
-
-

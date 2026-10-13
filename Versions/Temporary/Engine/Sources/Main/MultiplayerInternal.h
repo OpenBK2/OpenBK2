@@ -47,5 +47,3 @@ public:
 	struct NNet::IDriver* GetNetDriver() const { return pNetDriver; }
 	// CRAP}
 };
-
-

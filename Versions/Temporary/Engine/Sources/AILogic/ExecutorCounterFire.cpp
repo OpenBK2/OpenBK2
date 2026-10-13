@@ -280,6 +280,3 @@ void CExecutorCounterFire::RegisterOnEvents( IExecutorContainer *pContainer )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1912D300, CExecutorCounterFire )
-
-
-

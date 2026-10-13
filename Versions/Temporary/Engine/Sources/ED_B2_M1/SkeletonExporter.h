@@ -32,6 +32,3 @@ public:
 	// Import metadata independently of the export UI (also used by headless checks).
 	ED_B2_M1_EXPORT bool ImportGltfInfo( IManipulator *pManipulator ) override;
 };
-
-
-

@@ -40,4 +40,3 @@ bool CListControlSorterAlphabet::IsAscending() const
 {
 	return bAscending;
 }
-

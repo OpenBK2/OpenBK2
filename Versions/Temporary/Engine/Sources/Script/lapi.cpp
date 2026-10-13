@@ -630,7 +630,3 @@ void lua_concat (lua_State *L, int n) {
   L->pCT->top = top-(n-1);
   luaC_checkGC(L);
 }
-
-
-
-

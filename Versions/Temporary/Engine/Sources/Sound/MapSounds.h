@@ -93,4 +93,3 @@ public:
 	uint16_t AddSound( const CVec3 &vPos, const NDb::SComplexSoundDesc* pDesc );
 	void RemoveSound( const uint16_t wInstanceID );
 };
-

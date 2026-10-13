@@ -236,4 +236,3 @@ void CSuperCollider::AddEntity( const SHMatrix &pos, const std::vector<CVec3> &_
 }
 
 }
-

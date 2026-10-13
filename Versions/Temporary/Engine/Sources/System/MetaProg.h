@@ -46,5 +46,3 @@ public:
 #define SUPERSUBCLASS_STRICT( T, U ) \
 	( SUPERSUBCLASS( T, U ) && \
 	(!NMeta::CConversion<const T, const U>::sameType) )
-
-

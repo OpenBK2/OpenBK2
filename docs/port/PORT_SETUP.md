@@ -203,5 +203,3 @@ the ones that break 32-bit and nothing else.
 | `build` | if it compiles on x64 and x86, it is correct. No run needed. |
 | `run` | build + launch, load a mission, play a little. |
 | `run+sim` | build + run + save/load + a replay or MP check. Determinism-critical. |
-
-

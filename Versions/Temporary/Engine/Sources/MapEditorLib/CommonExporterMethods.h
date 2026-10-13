@@ -148,6 +148,3 @@ bool ForEachObject( const SObjectSet &rObjectSet, TObjectHookFunctional objectHo
 
 //! move temp file, made during export, to real destination and register it in RCS
 MAPEDITORLIB_EXPORT void MoveTempFileToDestination( const std::string &szTempFileFullName, const std::string &szDstFileFullName );
-
-
-

@@ -119,5 +119,3 @@ const int N_MAX_RECTANGLES = 16000;
 void MakeQuadTriList( int nRects, STriangleList *pRes );
 //void CopyRegister( int nDst, int nSrc );
 }
-
-

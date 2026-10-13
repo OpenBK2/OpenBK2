@@ -621,5 +621,3 @@ void CFenceDesignTool::GetSectionsInfo( std::vector<SFenceSectionInfo> *pSection
 	}
 	vLastPos = cp;
 }
-
-

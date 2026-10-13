@@ -36,5 +36,3 @@ public:
 	void RegisterOnEvents( IExecutorContainer *pContainer );
 	int operator&( IBinSaver &saver );
 };
-
-

@@ -241,4 +241,3 @@ void CBilinearTexture::Recalc()
 using namespace NGScene;
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0xF0821150, CSWTexture )
 REGISTER_SAVELOAD_CLASS( _3DMOTOR, 0x007c1140, CBilinearTexture )
-

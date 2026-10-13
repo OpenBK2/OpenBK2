@@ -352,5 +352,3 @@ inline CVec2 UnPackCoords( int _nPacked )
 	unsigned int dwPacked = _nPacked;
 	return CVec2( dwPacked & 0x7FFF, (dwPacked >> 15) & 0x7FFF );
 }
-
-

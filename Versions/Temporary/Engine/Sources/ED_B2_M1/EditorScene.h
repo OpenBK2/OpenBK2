@@ -92,4 +92,3 @@ struct IEditorScene : public CObjectBase
 };
 
 IEditorScene* EditorScene();
-

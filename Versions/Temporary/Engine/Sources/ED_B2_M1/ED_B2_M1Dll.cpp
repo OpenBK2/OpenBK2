@@ -197,5 +197,3 @@ ED_B2_M1_EXPORT IEditorModule* GetEditorModule1()
 {
 	return &theEDB2Module;
 }
-
-

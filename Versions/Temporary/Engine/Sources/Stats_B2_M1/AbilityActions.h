@@ -24,5 +24,3 @@ public:
 		SSpecialAbilityInfo info;
 	ZEND public: int operator&( IBinSaver &f ) { f.Add(1,(SAIBasicUpdate*)this); f.Add(2,&info); return 0; }
 };
-
-

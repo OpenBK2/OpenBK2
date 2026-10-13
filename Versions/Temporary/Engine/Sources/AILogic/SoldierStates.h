@@ -651,5 +651,3 @@ public:
 	const CVec2 GetPurposePoint() const;
 	EUnitStateNames GetName() { return EUSN_LEAVE_SELF_ENTRENCH; }
 };
-
-

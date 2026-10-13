@@ -137,5 +137,3 @@ bool CBuildingRPGStatsBuilder::InternalInsertObject( std::string *pszObjectTypeN
 }
 
 // basement storage
-
-

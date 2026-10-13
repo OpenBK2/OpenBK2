@@ -208,5 +208,3 @@ void CTerraGen::AddEntrenchment( const std::vector<CVec2> &_ctrlPoints, const fl
 START_REGISTER(GView)
 REGISTER_VAR_EX( "misc_holes_for_entrenchment", NGlobal::VarBoolHandler, &s_bMakeHolesForEntrenchment, true, STORAGE_USER )
 FINISH_REGISTER
-
-

@@ -310,4 +310,3 @@ public:
 	bool m_ownState = {};
 	int operator&( IBinSaver &f );
 };
-

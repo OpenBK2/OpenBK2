@@ -122,5 +122,3 @@ int CExecutorSpyMode::operator&( IBinSaver &saver )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1916C380, CExecutorSpyMode )
-
-

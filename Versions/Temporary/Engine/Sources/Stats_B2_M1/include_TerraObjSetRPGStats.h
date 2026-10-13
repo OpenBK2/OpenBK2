@@ -28,5 +28,3 @@ virtual const SPassProfile& GetVisProfile( const int nIndex = -1 ) const
 	static SPassProfile emptyProfile;
 	return emptyProfile;
 }
-
-

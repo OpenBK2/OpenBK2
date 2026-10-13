@@ -233,5 +233,3 @@ bool NImage::LoadImageBMP( CArray2D<uint32_t> *pRes, CDataStream *pStream )
 	memcpy( &(*pRes)[0][0], &image[0], sizeof(image[0]) * dwWidth * dwHeight );
 	return true;
 }
-
-

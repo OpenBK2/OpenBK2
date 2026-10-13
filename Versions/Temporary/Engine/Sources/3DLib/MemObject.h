@@ -31,5 +31,3 @@ public:
 	const std::vector<STriangle>& GetTris() const { return resTris; }
 	friend class CMemObjectBuilder;
 };
-
-

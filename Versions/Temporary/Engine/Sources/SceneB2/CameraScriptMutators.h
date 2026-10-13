@@ -286,6 +286,3 @@ public:
 
 	void GetPlacement( float *pfDist, float *pfPitch, float *pfYaw ) const;
 };
-
-
-

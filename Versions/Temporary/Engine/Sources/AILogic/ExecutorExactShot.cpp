@@ -98,5 +98,3 @@ bool CExecutorExactShot::NotifyEvent( const CExecutorEvent &event )
 }
 
 REGISTER_SAVELOAD_CLASS( AILOGIC, 0x1112D400, CExecutorExactShot )
-
-

@@ -170,5 +170,3 @@ void CICMissionBackground::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x17117B81, CInterfaceMissionBackground )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_MISSION_BACKGROUND, CICMissionBackground )
-
-

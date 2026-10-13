@@ -481,4 +481,3 @@ void CICInterfaceReplaySaveLoad::Configure( const char *pszConfig )
 
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x19288C40, CInterfaceReplaySaveLoad );
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_REPLAY_SAVE_LOAD, CICInterfaceReplaySaveLoad );
-

@@ -18,4 +18,3 @@ NGfx::CTexture* GetCheckerTexture();
 NGfx::CTexture* Get16bitDepthLookup();
 
 }
-

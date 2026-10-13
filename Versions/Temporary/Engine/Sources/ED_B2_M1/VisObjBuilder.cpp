@@ -914,5 +914,3 @@ bool CVisObjBuilder::RemoveObject( const std::string &rszObjectTypeName, const s
 }
 
 // basement storage
-
-

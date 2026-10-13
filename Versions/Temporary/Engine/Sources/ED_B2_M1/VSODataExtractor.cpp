@@ -53,5 +53,3 @@ bool CVSODataExtractor::GetImages( CArray2D<uint32_t> *pSmallImage, CArray2D<uin
 	}
 	return false;
 }
-
-

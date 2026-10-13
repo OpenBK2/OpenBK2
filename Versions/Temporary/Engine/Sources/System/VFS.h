@@ -54,4 +54,3 @@ struct IFileCreator : public CObjectBase
 };
 
 }
-

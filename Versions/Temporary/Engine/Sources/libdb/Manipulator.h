@@ -214,5 +214,3 @@ inline bool IsDBIDEmpty( const CVariant &var )
 {
 	return var.GetType() == CVariant::VT_NULL || ( var.GetType() == CVariant::VT_DBID && var.GetDBID().IsEmpty() );
 }
-
-

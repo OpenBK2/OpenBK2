@@ -456,5 +456,3 @@ public:
 	}
   static void InitPriorities( const std::vector<NDb::SUnitTypePriority> &priorities );
 };
-
-

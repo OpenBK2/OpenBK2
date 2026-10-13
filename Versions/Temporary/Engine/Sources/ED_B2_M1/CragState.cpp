@@ -173,6 +173,3 @@ void CCragState::UpdateVSOInTerrain( int nVSOID )
 
 
 // basement storage
-
-
-

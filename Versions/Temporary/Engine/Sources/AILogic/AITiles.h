@@ -57,4 +57,3 @@ inline const CVec2 GetPointByTile( const SVector &tile )
 }
 
 }
-

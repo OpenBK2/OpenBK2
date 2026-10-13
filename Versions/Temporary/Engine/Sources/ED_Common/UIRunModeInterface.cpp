@@ -100,6 +100,3 @@ void CUIRunModeInterface::LoadWindow( const std::string &rszTypeName, const CDBI
 	// avoid fitting UI to window size
 	Singleton<IUIInitialization>()->GetVirtualScreenController()->SetResolution( 1024, 768 );
 }
-
-
-

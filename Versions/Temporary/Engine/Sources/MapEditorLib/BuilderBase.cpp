@@ -64,5 +64,3 @@ bool HierarchicalDelete( const std::string &szObjectTypeName, const std::string 
 /**/
 
 // basement storage
-
-

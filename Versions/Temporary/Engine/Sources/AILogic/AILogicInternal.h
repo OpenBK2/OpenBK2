@@ -241,5 +241,3 @@ public:
 	virtual const bool HasPlayerNoUnits( const int nPlayer ) const;
 	virtual void DumpAfterAssinc() const;
 };
-
-

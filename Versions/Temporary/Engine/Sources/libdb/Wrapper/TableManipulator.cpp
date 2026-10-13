@@ -131,5 +131,3 @@ bool CTableManipulatorIteratorWrapper::GetName( std::string *pszName ) const
 	}
 	return false;
 }
-
-

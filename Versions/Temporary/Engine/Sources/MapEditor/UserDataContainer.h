@@ -20,6 +20,3 @@ public:
 	void Load();
 	void Save();
 };
-
-
-

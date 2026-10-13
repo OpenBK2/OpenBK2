@@ -32,6 +32,3 @@ struct IFolderCallback : public CObjectBase
 	// Установить свойство объекта
 	virtual bool SetColor( const std::string &rszObjectTypeName, const std::string &rszObjectName, const int nNewColor ) = 0;
 };
-
-
-

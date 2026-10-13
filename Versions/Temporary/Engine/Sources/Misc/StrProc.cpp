@@ -302,5 +302,3 @@ void* StringToBin( const char *pszData, void *pBuffer, int *pnSize )
 }
 
 }; // end of namespace NStr
-
-

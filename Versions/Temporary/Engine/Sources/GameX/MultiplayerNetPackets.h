@@ -104,5 +104,3 @@ public:
 	CB2DropPlayerAtSegmentPacket( int nClientID, int _nSlotToDrop, int _nSegment )
 		: CNetPacket( nClientID ), nSlotToDrop( uint8_t( _nSlotToDrop ) ), nSegment( _nSegment ) {}
 };
-
-

@@ -939,4 +939,3 @@ void CGroupLogic::UpdateDebugChecksums(FILE* f)
 	}
 	fprintf(f, "\n");
 }
-

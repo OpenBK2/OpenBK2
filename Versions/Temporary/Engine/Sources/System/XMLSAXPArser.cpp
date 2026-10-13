@@ -711,5 +711,3 @@ bool ParseXML( IXmlSaxVisitor *pVisitor, CDataStream *pStream )
 }
 
 }
-
-

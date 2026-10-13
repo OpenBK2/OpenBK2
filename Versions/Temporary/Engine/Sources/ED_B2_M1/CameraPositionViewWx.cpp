@@ -206,4 +206,3 @@ namespace NCameraPositionView
 		return pWindow;
 	}
 }
-

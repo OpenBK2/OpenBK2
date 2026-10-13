@@ -908,5 +908,3 @@ bool CXMLChunkSaver::AddAttribute( const chunk_id attrName, std::wstring *pData 
 	}
 	return false;
 }
-
-

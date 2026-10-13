@@ -21,5 +21,3 @@ protected:
 	bool IsValidBuildData( IManipulator *pBuildDataManipulator, std::string *pszDescription, IView *pBuildDataView );
 	bool IsUniqueObjectName( const std::string &szObjectType, const std::string &szObjectName );
 };
-
-

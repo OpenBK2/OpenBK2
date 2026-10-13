@@ -80,5 +80,3 @@ public:
 	bool Check();
 	void ProcessSegment();
 };
-
-

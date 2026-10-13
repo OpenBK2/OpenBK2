@@ -6,5 +6,3 @@ enum ECommonClientState
 	ES_AWAY = 1,
 	ES_INGAME = 2,
 };
-
-

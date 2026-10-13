@@ -30,5 +30,3 @@ bool CheckIntValue( std::string *pszDescription, const std::string &szValueName,
 }
 
 // basement storage
-
-

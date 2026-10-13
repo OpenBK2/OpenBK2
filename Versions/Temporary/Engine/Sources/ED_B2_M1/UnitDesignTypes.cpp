@@ -50,5 +50,3 @@ CMnemonicsCollector<int>(-1, "UNIT_TYPE_UNKNOWN" )
 }
 
 CUnitDesignTypeMnemonics typeUnitDesignTypeMnemonics;
-
-

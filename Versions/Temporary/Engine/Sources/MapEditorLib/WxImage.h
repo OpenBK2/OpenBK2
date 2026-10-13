@@ -158,4 +158,3 @@ namespace NWxImage
 		return LoadIconFile( AssetPath( rFileName ), nSize );
 	}
 }
-

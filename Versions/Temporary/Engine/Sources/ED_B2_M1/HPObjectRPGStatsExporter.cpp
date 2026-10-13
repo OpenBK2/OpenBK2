@@ -392,5 +392,3 @@ EXPORT_RESULT CHPObjectRPGStatsExporter::ExportObject( IManipulator *pManipulato
 	}
 	return result;
 }
-
-

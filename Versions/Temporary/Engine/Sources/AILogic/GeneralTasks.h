@@ -211,6 +211,3 @@ public:
 	virtual bool IsTimeToRun() const { return pGeneralTask->IsTimeToRun(); }
 	virtual void Run() { pGeneralTask->Run(); }
 };
-
-
-

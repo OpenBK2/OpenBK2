@@ -91,4 +91,3 @@ IMaterial* GetExactDecal( IMaterial *p );
 IMaterial *AttachColor( IMaterial *pSrc, CFuncBase<CVec4> *pColor );
 
 }
-

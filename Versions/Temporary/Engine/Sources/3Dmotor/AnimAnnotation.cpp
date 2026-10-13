@@ -64,4 +64,3 @@ namespace NAnimation
 		return 0;
 	}
 }
-

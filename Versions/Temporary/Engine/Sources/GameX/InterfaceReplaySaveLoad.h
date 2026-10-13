@@ -91,5 +91,3 @@ class CICInterfaceReplaySaveLoad : public CInterfaceCommandBase<CInterfaceReplay
 public:
 	void Configure( const char *pszConfig );
 };
-
-

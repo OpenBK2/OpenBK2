@@ -123,4 +123,3 @@ IWindow * CWindow1LvlTreeControl::AddSubItem( IWindow *pItem )
 	}
 	return 0;
 }
-

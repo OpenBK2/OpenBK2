@@ -283,4 +283,3 @@ void MatchPacketTrace_Flush( const char *szReason )
 	g_trace.bFlushed = !bWriteFailed && nCloseResult == 0;
 }
 }
-

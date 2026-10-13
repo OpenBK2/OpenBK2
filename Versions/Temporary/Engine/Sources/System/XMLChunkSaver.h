@@ -91,5 +91,3 @@ public:
 	//
 	bool IsReading() const { return bReading; }
 };
-
-

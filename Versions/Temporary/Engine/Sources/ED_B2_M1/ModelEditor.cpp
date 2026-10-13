@@ -282,5 +282,3 @@ bool CModelEditor::UpdateCommand( unsigned nCommandID, bool *pbEnable, bool *pbC
 
 
 // basement storage
-
-

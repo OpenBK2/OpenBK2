@@ -129,4 +129,3 @@ void CICInterfaceCredist::Configure( const char *pszConfig )
 REGISTER_SAVELOAD_CLASS( GAMEX, 0x1119C382, CInterfaceCredits )
 REGISTER_SAVELOAD_CLASS( GAMEX, ML_COMMAND_CREDITS, CICInterfaceCredist )
 REGISTER_SAVELOAD_CLASS_NM( GAMEX, 0x1119C381, CReactions, CInterfaceCredits );
-

@@ -114,5 +114,3 @@ float CAverageValuePerTime::GetValue() const
 	const uint64_t nTimeDiff = GetLongTickCount() - nStartTime;
 	return nTimeDiff == 0ULL ? 0.0f : ( fEventsSum / nTimeDiff * 1000 );
 }
-
-
