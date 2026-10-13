@@ -2316,12 +2316,63 @@ bool CInterfaceMission::MsgScrollMap( const SGameMessage &msg )
 	return false;
 }
 
+// The map, the outcome and the wall clock, so that a directory of automatically
+// saved replays says what each one is without opening it and two runs of the
+// same mission do not collide. Seconds are in because an unattended generator
+// can finish a mission more than once a minute.
+//
+// Everything outside a conservative set of characters becomes an underscore: a
+// database id is not written with a file name in mind, and this one goes
+// straight into a path.
+static std::string MakeAutoSaveReplayName( const NDb::SMapInfo *pMap, const bool bWin )
+{
+	std::string szMap = pMap != 0 ? pMap->GetDBID().ToString() : "unknown";
+	for ( char &c : szMap )
+	{
+		const bool bSafe = ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) ||
+		                   ( c >= '0' && c <= '9' ) || c == '.' || c == '-';
+		if ( !bSafe )
+			c = '_';
+	}
+
+	SSystemTime now;
+	if ( !GetLocalSystemTime( &now ) )
+		now = SSystemTime();
+
+	return fmt::format( "auto_{}_{}_{:04d}{:02d}{:02d}-{:02d}{:02d}{:02d}",
+		szMap, bWin ? "win" : "lose",
+		now.wYear, now.wMonth, now.wDay, now.wHour, now.wMinute, now.wSecond );
+}
+
 void CInterfaceMission::MsgWinLoose( const SGameMessage &msg )
 {
 	if ( !Singleton<IScenarioTracker>()->IsMissionActive() )
 		return;
 
 	bool bWin = (msg.nParam1 == 1);
+
+	// A replay is only comparable against the build that recorded it, so a
+	// corpus has to be regenerated whenever the simulation changes and the cost
+	// of producing one decides whether anything gets verified at all. A mission
+	// that has just resolved is the cheapest moment there is to take one, and a
+	// defeat is often the most useful recording because it is short.
+	//
+	// Here rather than after the calls below: those end the mission, and
+	// SaveReplay needs the transceiver and its commands history, which this
+	// screen owns until then.
+	//
+	// Off unless asked for. It writes a file on every finished mission, which
+	// only someone comparing builds wants.
+	if ( NGlobal::GetVar( "replay_autosave", 0 ) != 0 )
+	{
+		const std::string szName = MakeAutoSaveReplayName( pMission, bWin );
+		const auto message = SaveReplay( szName )
+			? fmt::format( "replay autosaved as \"{}\"", szName )
+			: fmt::format( "replay autosave failed for \"{}\"", szName );
+		Singleton<IConsoleBuffer>()->WriteASCII( CONSOLE_STREAM_CONSOLE, message.c_str() );
+		fmt::print( "{}\n", message );
+		fflush( stdout );
+	}
 
 	NMainLoop::Command( ML_COMMAND_WIN_LOOSE, bWin ? "win" : "lose" );
 
