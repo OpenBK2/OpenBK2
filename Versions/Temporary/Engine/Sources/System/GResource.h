@@ -11,6 +11,7 @@
 
 #include "UuidChunk.h"
 
+#include <atomic>
 #include <thread>
 
 namespace NGScene
@@ -138,7 +139,14 @@ class SYSTEM_EXPORT CFileRequest : public CObjectBase
 	const char *pszResName = nullptr;
 	int  nID = 0;
 	boost::uuids::uuid uid;
-	bool bIsReady = false, bDelayedLoad = false;
+	// The loader thread fills `data` and then announces it by setting this flag,
+	// while the main thread polls IsReady() without taking the loader's mutex.
+	// As a plain bool that handoff carries no happens-before edge, so every read
+	// of the loaded bytes afterwards is a data race even though the polling
+	// works in practice: release on the store and acquire on the load is the
+	// edge the handoff always meant to have, and publishes the buffer with it.
+	std::atomic<bool> bIsReady{ false };
+	bool bDelayedLoad = false;
 	CMemoryStream data;
 public:
 	CFileRequest() : pszResName(0), nID(0), bIsReady(true), bDelayedLoad(true) {}
@@ -148,7 +156,9 @@ public:
 	CMemoryStream* operator->() { return &data; }
 	CMemoryStream* GetStream() { return &data; }
 	void Read();
-	bool IsReady() const { return bIsReady; }
+	// Acquire, to pair with the release store in Read(): a caller that sees true
+	// here is guaranteed to see the bytes the loader thread wrote into `data`.
+	bool IsReady() const { return bIsReady.load( std::memory_order_acquire ); }
 	bool IsDelayedLoad() const { return bDelayedLoad; }
 	// For tracing only, so that an event can name what it was waiting for.
 	const char *GetResName() const { return pszResName; }

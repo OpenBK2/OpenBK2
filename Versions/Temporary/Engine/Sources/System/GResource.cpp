@@ -4,6 +4,7 @@
 #include "GResource.h"
 #include "VFSOperations.h"
 
+#include <atomic>
 #include <condition_variable>
 #include <cstdint>
 #include <mutex>
@@ -123,16 +124,22 @@ CFileRequest::CFileRequest( const char *_pszResName, const SResKey<int> &key, bo
 }
 
 static std::mutex readResource;
-static bool bIsFileReading = false;
+// Written here under readResource and read by HasFileRequestsInFly() under
+// reqQueue, which is a different mutex and therefore no mutual exclusion at
+// all. Atomic, because the two sides cannot be brought under one lock without
+// holding readResource across a file read.
+static std::atomic<bool> bIsFileReading{ false };
 void CFileRequest::Read()
 {
-	ASSERT(!bIsReady);
-	if ( bIsReady )
+	// Relaxed: this is the only writer of bIsReady, so the guard only has to see
+	// its own stores.
+	ASSERT( !bIsReady.load( std::memory_order_relaxed ) );
+	if ( bIsReady.load( std::memory_order_relaxed ) )
 		return;
 	std::lock_guard l( readResource );
 	bIsFileReading = true;
 	const std::string szResourceName = DoesFileExist( pszResName, uid ) ? GetFileResourceUidName( pszResName, uid ) : GetFileResourceName( pszResName, nID );
-	
+
 	CFileStream f( NVFS::GetMainVFS(), szResourceName );
 	if ( f.IsOk() )
 	{
@@ -141,7 +148,9 @@ void CFileRequest::Read()
 	}
 
 	bIsFileReading = false;
-	bIsReady = true;
+	// Release, and last: everything written into `data` above has to be visible
+	// to whoever sees the flag set, and this store is what makes it so.
+	bIsReady.store( true, std::memory_order_release );
 }
 
 // Resource loading thread
@@ -170,15 +179,22 @@ static void LoaderThread()
 		// front so shutdown does not wait for the queue to drain
 		if ( pRes == 0 )
 			return;
-		if ( !IsValid(pRes) )
-			continue;
+		// Validity is deliberately not tested here. IsValid() reads the object's
+		// refcount word, and CObjectBase refcounting is single-threaded by
+		// design, so testing it on this thread races with every CPtr and CObj
+		// assignment the main thread makes to the same request. The test now
+		// happens in AddFileRequest, on the thread that owns those refcounts.
+		// Read() touches only the request's own fields, never its refcount.
 		pRes->Read();
 	}
 }
 
 void AddFileRequest( NGScene::CFileRequest *pReq )
 {
-	if ( pReq->IsReady() )
+	// Both tests belong on this thread: it is the one that owns the refcounts
+	// the validity flag lives in. The loader thread used to retest validity
+	// after popping, which it cannot do without racing those refcounts.
+	if ( !IsValid( pReq ) || pReq->IsReady() )
 		return;
 	// resource_sync_load reads every request on the calling thread, so that
 	// whether a resource is ready stops being a question about how fast the
@@ -216,7 +232,13 @@ int CountFileRequestsInFly()
 void ReleaseFileRequestHolder()
 {
 	std::lock_guard l( reqQueue );
-	if ( requests.empty() )
+	// bIsFileReading as well as the queue: the request being read has already
+	// been popped, so an empty queue does not mean nothing is in flight, and
+	// this list holds the reference that keeps a request alive after its owner
+	// has let go of it. Clearing it mid-read can free the object the loader
+	// thread is still writing into. This is the same "in flight" test
+	// HasFileRequestsInFly() answers with.
+	if ( requests.empty() && !bIsFileReading )
 		holdRequests.clear();
 }
 
