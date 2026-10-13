@@ -1,5 +1,34 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+# These sources are UTF-8, as .editorconfig declares. Say so to the compiler,
+# which otherwise guesses.
+#
+# MSVC reads a file without a byte order mark in whatever code page the build
+# machine runs, so what reaches the binary depends on the machine rather than on
+# the source. Narrow literals survive that either way, since the source and
+# execution charsets both default to that same code page and the bytes make a
+# round trip unchanged; the process code page is UTF-8 at run time regardless
+# (Game/utf8.manifest). The nine wide literals are what moves: Russian test
+# values in TestDB/TestType.h and libdb/test, whose UTF-8 bytes MSVC has been
+# reading as single-byte characters. GCC has always read them as UTF-8, so this
+# is also what makes the two compilers agree on them.
+#
+# Here rather than at the top level, because the top level adds its options
+# before the dependencies are brought in, and a dependency source file that is
+# not valid UTF-8 would then stop building. This covers the engine's own code
+# and nothing else.
+#
+# Scoped to C and C++ for the same reason the /wd flags in the top-level file
+# are: ml and ml64 reject an unknown switch with A4018.
+if(MSVC)
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:/utf-8>")
+else()
+    # Already the default on GCC and Clang, on every locale. Stating it keeps a
+    # changed default from quietly changing the binaries.
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-finput-charset=UTF-8>")
+    add_compile_options("$<$<COMPILE_LANGUAGE:C,CXX>:-fexec-charset=UTF-8>")
+endif()
+
 add_subdirectory("Misc")
 add_subdirectory("System")
 add_subdirectory("Game")
