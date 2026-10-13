@@ -1,0 +1,93 @@
+---
+# The style this tree is already written in, not a new one.
+#
+# Enforcement is on changed lines only, through the clang-format-changed hook in
+# .pre-commit-config.yaml: a commit's own lines are formatted and every line
+# around them is left exactly as it was. A whole-tree pass would rewrite about a
+# third of every file, which is a diff nobody can review, so it is not done. See
+# "file hygiene" in Contributing.md.
+#
+# Most of the values below were chosen by measurement rather than taste: each
+# was set to whichever setting a full pass would disturb least, over a sample of
+# the sources. That is the best available proxy for "looks like the code around
+# it". Where two settings came out within a few lines of each other the comment
+# says which way the tie was broken.
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: c++17
+
+# A tab is two columns, as .editorconfig also declares, and indentation is tabs
+# while alignment is spaces. dbcodegen's generated sources indent with tabs too.
+UseTab: AlignWithSpaces
+TabWidth: 2
+IndentWidth: 2
+ContinuationIndentWidth: 2
+ConstructorInitializerIndentWidth: 2
+AccessModifierOffset: -2
+
+# No line length limit, which is what keeps this config usable on changed lines
+# only: existing line breaks are kept, so a touched line is re-indented and
+# re-spaced but never rewrapped. The sources run to 137 columns at the 99th
+# percentile and a limit would rewrap 13724 lines that are otherwise fine.
+ColumnLimit: 0
+
+# void Foo( int n ) and if ( x ), as the tree writes them. A C-style cast keeps
+# its tight parentheses: (std::min)( a, b ), (int)x.
+SpaceBeforeParens: ControlStatements
+SpacesInParens: Custom
+SpacesInParensOptions:
+  InConditionalStatements: true
+  InCStyleCasts: false
+  InEmptyParentheses: false
+  Other: true
+SpacesInSquareBrackets: false
+Cpp11BracedListStyle: false
+
+BreakBeforeBraces: Allman
+PointerAlignment: Right
+ReferenceAlignment: Right
+DerivePointerAlignment: false
+
+# Both halves of the tree's switch layout are in use, 427 switches indenting
+# their case labels against 446 not. Indenting them is what two independent
+# samples of the sources agree costs fewer lines.
+IndentCaseLabels: true
+
+# The one-line forms the tree uses: empty constructors, one-line getters and
+# OBJECT_BASIC_METHODS-style bodies stay on their line. Short if statements are
+# left at WithoutElse, which came out one line behind AllIfsAndElse over 28103
+# and is the conservative reading; new code braces its conditionals anyway, and
+# a braced body is governed by AllowShortBlocksOnASingleLine.
+AllowShortFunctionsOnASingleLine: All
+AllowShortBlocksOnASingleLine: Always
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+
+# Namespaces at file scope are not indented; a namespace inside a namespace is.
+NamespaceIndentation: Inner
+
+# Include order is load-bearing here. stdafx.h must come first, and several
+# headers name types an earlier include has to have declared, so sorting them
+# breaks the build rather than the layout.
+SortIncludes: Never
+
+# Comments carry Russian text, box drawing and quoted Intel pseudocode, none of
+# which survives being rewrapped or realigned into a column.
+ReflowComments: Never
+AlignTrailingComments:
+  Kind: Never
+FixNamespaceComments: false
+
+AlignAfterOpenBracket: DontAlign
+AlignOperands: DontAlign
+AlignEscapedNewlines: DontAlign
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+
+BinPackArguments: true
+BinPackParameters: true
+IndentPPDirectives: None
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 1
+InsertNewlineAtEOF: true

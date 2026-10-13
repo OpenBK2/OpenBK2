@@ -81,3 +81,24 @@ repos:
       - id: check-merge-conflict
       - id: check-yaml
         files: ^\.github/.*\.ya?ml$
+
+  - repo: local
+    hooks:
+      # Formats the lines a commit writes, and no others. A whole-tree pass
+      # with .clang-format would rewrite about a third of every source file,
+      # because the tree was never formatted mechanically; that diff is not
+      # reviewable and would bury every real change made alongside it. So the
+      # style is enforced from here on rather than retroactively, and git blame
+      # stays readable. See "file hygiene" in Contributing.md.
+      #
+      # The clang-format version is pinned because its output changes between
+      # releases: an unpinned one would reformat lines it disagreed with the
+      # last release about. pre-commit installs that exact wheel, on Windows
+      # and Linux alike, so nobody has to have clang-format installed.
+      - id: clang-format-changed
+        name: clang-format (changed lines)
+        entry: python scripts/hygiene/clang-format-changed.py --staged
+        language: python
+        additional_dependencies: ['clang-format==22.1.8']
+        types_or: [c, c++]
+        require_serial: true

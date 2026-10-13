@@ -1,0 +1,14 @@
+# The SIMD and MMX unit tests, indented with spaces end to end unlike the engine
+# sources, so they keep spaces: formatting one line here into tabs would leave
+# the file arguing with itself.
+#
+# This covers original/ as well, whose files are verbatim copies of the
+# implementations the ported routines are checked against. Being byte-identical
+# is their purpose; the hook only formats lines a change writes, so a copy that
+# is not edited is never touched either way.
+#
+# Everything else is inherited from the .clang-format at the repository root.
+BasedOnStyle: InheritParentConfig
+UseTab: Never
+IndentWidth: 2
+TabWidth: 2

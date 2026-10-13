@@ -490,6 +490,55 @@ trailers this history does not use:
 cp scripts/git-hooks/commit-msg .git/hooks/commit-msg
 ```
 
+## formatting
+
+[.clang-format](.clang-format) is the style the tree is already written in: allman braces,
+`void Foo( int n )` and `if ( x )` with spaces inside the parentheses, tabs two columns
+wide, no line length limit, and no include sorting, since `stdafx.h` has to come first and
+several headers need a type an earlier include declares.
+
+it is enforced **on the lines a change writes, and no others**. a whole-tree pass would
+rewrite about a third of every source file, because the tree was never formatted
+mechanically; that diff is not reviewable, it would bury every real change made in the
+same release, and it would make `git blame` useless. so the style applies from here on
+rather than retroactively, through
+[scripts/hygiene/clang-format-changed.py](scripts/hygiene/clang-format-changed.py), which
+asks git which lines the change wrote and passes those to `clang-format --lines`.
+
+"wrote" ignores whitespace: a line whose indentation or trailing space alone moved was not
+written here, so it is not reformatted. without that, stripping a trailing space off a
+thousand files would queue a thousand files up for reformatting.
+
+the clang-format version is pinned to 22.1.8, because its output changes between releases
+and an unpinned one reformats lines it disagreed with the last release about. pre-commit
+installs that exact wheel, so nobody needs clang-format installed to commit.
+
+to check or fix a branch by hand:
+
+```bash
+python scripts/hygiene/clang-format-changed.py --base origin/port --check
+python scripts/hygiene/clang-format-changed.py --base origin/port
+```
+
+two things to know when it fires:
+
+- a braced initialiser with a trailing comma after its last element is formatted one
+  element per line, by clang-format's own rule. editing a line inside a long byte table
+  therefore expands the whole table. wrap it in `// clang-format off` and
+  `// clang-format on`
+- sixteen files in the engine sources still indent partly with spaces, mostly original
+  nival files such as `Misc/Tools.h` and `Image/ImageScale.cpp`. a line edited in one of
+  them comes out tab-indented, since that is what the tree declares. converting the files
+  wholesale would mean reformatting determinism-critical headers and original code for
+  cosmetic reasons, so it is not done. the test and benchmark directories, which are
+  space-indented end to end, carry a nested `.clang-format` instead
+
+generated sources are never formatted: the 101 dbcodegen outputs, `3Dmotor/GfxShaders.*`
+and the bison and flex output in `Parser`. the generator decides their layout, and
+formatting one only makes the next `regenerate-db` revert it and CI fail on the
+difference. nor is the vendored lua in `Script/` (`lsaver.cpp` is nival's and is
+formatted).
+
 four things are left alone on purpose, and the hook config says so too:
 
 - `Parser/test/cases`, the `.cll` grammar's fixture corpus. every byte is input to
