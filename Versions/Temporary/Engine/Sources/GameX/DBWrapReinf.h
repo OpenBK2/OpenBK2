@@ -1,4 +1,5 @@
 #pragma once
+#include "GameX/DBScenario.h" // NDb::SChapter
 
 namespace NDb
 {

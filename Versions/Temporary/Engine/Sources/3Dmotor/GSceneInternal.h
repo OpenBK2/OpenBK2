@@ -4,6 +4,7 @@
 #include "GParts.h"
 
 #include <cstdint>
+#include "3Dmotor/GSceneUtils.h" // CCVec3, made by DEFINE_DG_CONSTANT_NODE
 
 namespace NDb
 {

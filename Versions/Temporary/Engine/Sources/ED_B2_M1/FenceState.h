@@ -9,6 +9,7 @@
 #include <cstdint>
 
 #include <zconf.h>
+#include "ED_B2_M1/MapInfoEditorData_Consts.h" // CSceneIDList
 
 //
 //

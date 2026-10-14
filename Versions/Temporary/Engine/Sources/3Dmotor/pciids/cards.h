@@ -1,4 +1,5 @@
 #pragma once
+#include "vendors.h" // the VENDOR_* ids
 
 struct SVideoCardType
 {

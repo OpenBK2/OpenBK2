@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Main_export.h"
+#include "Misc/Progress.h" // IProgressHook, which Serialize() below takes
 
 // ************************************************************************************************************************ //
 // **
@@ -55,7 +56,7 @@ MAIN_EXPORT void PopInterface();
 MAIN_EXPORT IInterfaceBase *GetTopInterface();
 MAIN_EXPORT IInterfaceBase *GetPrevInterface( IInterfaceBase *pCurrentInterface );
 MAIN_EXPORT void SetInputEnabled( bool bEnabled );
-MAIN_EXPORT void Serialize( IBinSaver &saver, struct IProgressHook *pHook = 0 );
+MAIN_EXPORT void Serialize( IBinSaver &saver, IProgressHook *pHook = 0 );
 void AfterLoad();
 } // namespace NMainLoop
 

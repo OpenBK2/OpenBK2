@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include <boost/config.hpp>
+#include "Misc/Asserts.h" // NI_VERIFY
 
 namespace NStr
 {

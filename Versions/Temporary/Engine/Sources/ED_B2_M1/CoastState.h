@@ -3,6 +3,8 @@
 #pragma once
 
 #include "VSOState.h"
+#include "ED_B2_M1/MapInfoController.h" // CMapInfoController
+#include "Stats_B2_M1/DBMapInfo.h"      // NDb::SMapInfo
 
 class CCoastState : public CVSOState
 {

@@ -1,4 +1,7 @@
 #pragma once
+#include "UI/mlMain.h"    // CMLStream and IReflowLayout
+#include "UI/mlObjects.h" // CreateHAlignObject and the other factories
+#include "UI/mlReflow.h"  // IReflowLayout, needed complete
 
 namespace NML
 {

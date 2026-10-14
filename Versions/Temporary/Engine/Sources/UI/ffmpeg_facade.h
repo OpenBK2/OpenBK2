@@ -16,6 +16,7 @@ extern "C"
 #include <chrono>
 #include <optional>
 #include <vector>
+#include <memory> // std::unique_ptr
 
 namespace ffmpeg::utils
 {

@@ -1,4 +1,5 @@
 #pragma once
+#include "Stats_B2_M1/IconsSet.h" // NDb::SVisObjIconsSet, which DBSceneConsts.h only forward-declares
 
 // unit's icons and hitbars
 struct SSceneObjIconInfo

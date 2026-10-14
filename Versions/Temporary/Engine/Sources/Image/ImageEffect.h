@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include "Image_export.h"
+#include "Misc/2Darray.h" // CArray2D
 
 namespace NImage
 {

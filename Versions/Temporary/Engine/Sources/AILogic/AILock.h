@@ -4,6 +4,8 @@
 #include "StaticObjectRotation.h"
 
 #include <cstdint>
+#include "AILogic/StaticObjectRotation.h" // CSmoothRotatedArray2D
+#include "Stats_B2_M1/RPGStats.h"         // SHPObjectRPGStats::SByteArray2
 
 namespace NLock
 {

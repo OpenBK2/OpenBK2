@@ -1,4 +1,5 @@
 #pragma once
+#include "System/Dg.h" // CFuncBase
 
 // simple grayscale fullscreen fader
 // easly can be upgraded to color fader, etc

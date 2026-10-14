@@ -9,6 +9,7 @@
 // this header on its own and got "memcpy was not declared in this scope".
 #include <cstring>
 #include <system_error>
+#include "Misc/Asserts.h" // ASSERT
 
 namespace NVFS
 {

@@ -14,6 +14,7 @@
 #include <map>
 
 #include <boost/uuid/uuid.hpp>
+#include "Misc/Geom.h" // CVec2, CVec3, CVec4, CQuat, CTPoint, CTRect
 
 template <class T>
 class CArray2D;

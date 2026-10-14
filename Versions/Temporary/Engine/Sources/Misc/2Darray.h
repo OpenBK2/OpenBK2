@@ -1,4 +1,5 @@
 #pragma once
+#include "System/BinSaver.h" // ZDATA and ZEND
 
 // Defensive member defaults; explicit constructor values still take precedence.
 template <class T>

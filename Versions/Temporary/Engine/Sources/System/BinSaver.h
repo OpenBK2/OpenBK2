@@ -9,6 +9,15 @@
 #include "det_set.h"
 
 #include "port/cdecl.h"
+#include "System/Basic.h"   // CObjectBase and CPtrBase
+#include "System/Streams.h" // CDataStream and CMemoryStream
+#include "System/System.h"  // SInt2Type
+#include <map>
+#include <set>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 #define REGISTER_SAVELOAD_CLASS( module, N, name ) \
 	BASIC_REGISTER_CLASS( module, name )             \

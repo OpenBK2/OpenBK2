@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "Image_export.h"
+#include "System/Streams.h" // CDataStream
 
 namespace NGfx
 {

@@ -3,6 +3,7 @@
 #include "Sound_export.h"
 
 #include <cstdint>
+#include "System/Dg.h" // CFuncBase
 
 enum ESoundSceneMode : int
 {

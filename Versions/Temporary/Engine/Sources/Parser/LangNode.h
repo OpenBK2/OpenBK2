@@ -3,6 +3,8 @@
 #include <cstdint>
 
 #include "Parser_export.h"
+#include "System/Basic.h" // CObjectBase, the base of CLangNode
+#include <string>
 
 namespace NLang
 {

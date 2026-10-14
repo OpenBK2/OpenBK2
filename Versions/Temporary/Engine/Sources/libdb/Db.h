@@ -1,6 +1,7 @@
 #pragma once
 
 #include "libdb_export.h"
+#include "System/DB.h" // CDBID
 
 namespace NVFS
 {

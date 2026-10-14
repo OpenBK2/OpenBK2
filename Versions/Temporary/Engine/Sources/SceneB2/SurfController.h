@@ -3,6 +3,7 @@
 #include "System/Dg.h"
 #include "B2_M1_Terrain/PatchHolder.h"
 #include "WaterStuff.h"
+#include "B2_M1_Terrain/TerrUtils.h" // CVec2i
 
 class CCSBound;
 
