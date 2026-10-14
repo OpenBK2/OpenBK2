@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Nodes2TypeDefs.h"
+// FillAttributes below calls through a CAttributeNode, so this header needs the
+// definition and not just Visitor.h's forward declaration.
+#include "Parser/LangNodesDefinitions.h"
 #include "Parser/Visitor.h"
 #include "TerminalTypesDesc.h"
 #include "TypeDef.h"
@@ -11,7 +14,6 @@ namespace NLang
 class CFileNode;
 class CLangNode;
 class CVariable;
-class CAttributeNode;
 class CTerminalTypesDescriptor;
 } // namespace NLang
 
