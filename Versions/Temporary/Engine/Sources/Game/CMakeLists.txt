@@ -39,10 +39,22 @@ else()
     # has no -g and resolves to library names and offsets, which still says which
     # library threw but not where. RelWithDebInfo, which is what the Release
     # presets map to, carries -g.
-    target_link_libraries(Game PRIVATE
-        Boost::stacktrace_from_exception
-        Boost::stacktrace_backtrace)
-    target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_BACKTRACE)
+    #
+    # libbacktrace is not always reachable, so take it when it is and fall back
+    # to addr2line when it is not. Boost builds stacktrace_backtrace only if its
+    # own configure check compiled <backtrace.h>, and that header is shipped in
+    # GCC's private include directory rather than as a distro package, so the
+    # check succeeds under GCC and fails under clang on the same machine. Asking
+    # for the target unconditionally is a generate-time error there, not a
+    # degraded trace. The link and the define have to name the same backend.
+    target_link_libraries(Game PRIVATE Boost::stacktrace_from_exception)
+    if(TARGET Boost::stacktrace_backtrace)
+        target_link_libraries(Game PRIVATE Boost::stacktrace_backtrace)
+        target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_BACKTRACE)
+    else()
+        target_link_libraries(Game PRIVATE Boost::stacktrace_addr2line)
+        target_compile_definitions(Game PRIVATE BOOST_STACKTRACE_USE_ADDR2LINE)
+    endif()
 endif()
 install(TARGETS Game DESTINATION bin)
 
