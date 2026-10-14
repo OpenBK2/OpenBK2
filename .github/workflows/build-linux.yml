@@ -186,15 +186,25 @@ jobs:
       #
       # Pinned to a version rather than installing bare "clang", so that a
       # refresh of the runner image cannot quietly change which compiler is
-      # gating the tree. Bump it deliberately. apt-get update already ran in the
-      # step above, so this needs only the install.
+      # gating the tree. apt-get update already ran in the step above, so this
+      # needs only the install.
+      #
+      # 19 is a floor, not a preference, and going below it does not work.
+      # P0522, the C++17 rule that lets std::basic_string bind to a
+      # template <typename> class parameter, is on by default in clang from 19
+      # and off before it, while GCC and MSVC have both implemented it for
+      # years. libdb/ObjMan.h relies on it: the specialisations of SetValue and
+      # GetValue for <std::basic_string, char> are the ones that stop a
+      # std::string being serialised as a container of chars, and clang 18
+      # rejects all four as matching no template. The construct is valid C++17,
+      # so the floor belongs here rather than in the header.
       #
       # The version goes to the log because a build log that does not say what
       # built it cannot be compared against a later one.
       - name: Install clang
         run: |
-          sudo apt-get install -y --no-install-recommends clang-18
-          clang++-18 --version
+          sudo apt-get install -y --no-install-recommends clang-19
+          clang++-19 --version
 
       # The preset names plain clang/clang++, which is right on a developer's
       # machine and wrong here, where the point is the pin above. Cache
@@ -210,8 +220,8 @@ jobs:
         run: >
           cmake --preset Linux-x64-Clang-Release
           -DBUILD_EDITOR=OFF
-          -DCMAKE_C_COMPILER=clang-18
-          -DCMAKE_CXX_COMPILER=clang++-18
+          -DCMAKE_C_COMPILER=clang-19
+          -DCMAKE_CXX_COMPILER=clang++-19
 
       - name: Build with preset
         run: cmake --build --preset Linux-x64-Clang-Release --parallel
