@@ -283,17 +283,17 @@ public:                                                             \
 	{                                                                 \
 		return dynamic_cast<classname *>( MakeCopy() );                 \
 	}                                                                 \
-	virtual int GetSizeOf() const                                     \
+	int GetSizeOf() const override                                    \
 	{                                                                 \
 		return sizeof( classname );                                     \
 	}                                                                 \
                                                                     \
 protected:                                                          \
-	CObjectBase *MakeCopy() const                                     \
+	CObjectBase *MakeCopy() const override                            \
 	{                                                                 \
 		return new classname( *this );                                  \
 	}                                                                 \
-	virtual void DestroyContents()                                    \
+	void DestroyContents() override                                   \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
@@ -302,7 +302,7 @@ protected:                                                          \
 		this->nRefData += nHoldRefs;                                    \
 		this->nObjData += nHoldObjs;                                    \
 	}                                                                 \
-	virtual ~classname() {}                                           \
+	~classname() override {}                                          \
                                                                     \
 private:
 #define OBJECT_NOCOPY_METHODS( classname )                          \
@@ -311,13 +311,13 @@ public:                                                             \
 	{                                                                 \
 		return new classname();                                         \
 	}                                                                 \
-	virtual int GetSizeOf() const                                     \
+	int GetSizeOf() const override                                    \
 	{                                                                 \
 		return sizeof( classname );                                     \
 	}                                                                 \
                                                                     \
 protected:                                                          \
-	virtual void DestroyContents()                                    \
+	void DestroyContents() override                                   \
 	{                                                                 \
 		int *pnRefData = &this->nRefData, *pnObjData = &this->nObjData; \
 		this->classname::~classname();                                  \
