@@ -539,8 +539,10 @@ what it does, in the parts worth knowing before you write a line:
 - a blank line between definitions, and `} // namespace NFoo` where a namespace closes
   far from where it opened. these two are what keep a file from reading as one block
 - a semicolon after a function body is removed, since `void f() {};` closes nothing
-- includes and `using` declarations are never reordered, since `stdafx.h` has to come
-  first and several headers need a type an earlier include declared
+- includes are sorted, in groups: the prelude, then project headers, then the generated
+  `*_export.h`, then the standard library, then everything else. each `stdafx.h` fences
+  its own list with `clang-format off`, because those are hub headers whose order is
+  still load-bearing. `using` declarations are left in the order you wrote them
 - comments are never rewrapped, and a long string is never split into adjacent literals
 
 ### running it
@@ -570,6 +572,30 @@ pipx install clang-format==22.1.8
 an editor that formats on save should be pointed at the same version. clion and visual
 studio both read `.clang-format` from the repository root on their own; vs code needs the
 `xaver.clang-format` extension or `C_Cpp.formatting: clangFormat`.
+
+### headers and include order
+
+sorting includes is only safe because a header does not depend on what the file
+including it happened to include first. that was not true until recently: thirty headers
+named a type without including whatever declares it, and `System/BinSaver.h` named
+`CMemoryStream` while leaving `System/Streams.h` to somebody else. when you add a header,
+include what you use in it, even if the prelude would have covered you.
+
+the preludes themselves are the exception and are fenced off: `stdafx.h` files are
+hand-ordered hub headers, and sorting one breaks the module.
+
+to find out whether a header stands on its own:
+
+```bash
+python scripts/hygiene/check-header-selfcontained.py            # with the module prelude
+python scripts/hygiene/check-header-selfcontained.py --strict    # without it
+```
+
+needs a configured build, because it reads the real compile flags from
+`compile_commands.json`. with the prelude, 1424 of 1634 headers pass; `--strict` is the
+standard that would let `stdafx.h` stop being load-bearing, and far fewer pass it. that
+is a backlog item, not a rule yet. `include-what-you-use` is the tool for working it
+down.
 
 ### when the formatter is wrong
 

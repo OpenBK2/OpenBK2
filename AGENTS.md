@@ -95,8 +95,13 @@ your code if you do not:
   closes far from where it opened
 - move a one-line function body below its signature, and drop a semicolon that follows a
   body (`void f() {};`), which closes nothing
-- leave your includes and `using` declarations in the order you wrote them, since
-  `stdafx.h` has to come first; it never sorts them
+- sort your includes into groups: the prelude, project headers, the generated
+  `*_export.h`, the standard library, then the rest. `using` declarations keep the order
+  you wrote them in
+- **include what you use in a header.** a header must not rely on whoever includes it
+  having included something else first; that is what made include order unsortable until
+  recently. the `stdafx.h` preludes are fenced with `clang-format off` and are the one
+  exception
 - leave comments alone: it does not rewrap them, and it does not split a long string
   literal, so a log line stays greppable
 
